@@ -551,11 +551,13 @@ void TRestrictionEditor::res_ct ( wxCommandEvent &event )
         event.Skip() ;
         return ;
         }
-    
+
+    myass ( nfst , "TRestrictionEditor::res_ct:1" ) ;
+    myass ( v , "TRestrictionEditor::res_ct:2" ) ;
+    myass ( remoteCocktail , "TRestrictionEditor::res_ct:3" ) ;
+
     if ( nfst->GetValue() ) v->setAction ( "RESTRICTION" , nfstv->GetValue() ) ;
     else v->setAction ( "RESTRICTION" , 0 ) ;
-    
-    
     
     EndModal ( wxID_OK ) ;
     }
