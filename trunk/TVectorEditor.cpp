@@ -405,44 +405,4 @@ void TVectorEditor::proteaseSelChange ( wxCommandEvent &ev )
     pro_txt->SetValue ( t ) ;
     }
 
-void TVectorEditor::enzymeDelGr ( wxCommandEvent &ev )
-    {
-    wxString group = listGroups->GetStringSelection() ;
-    group = myapp()->frame->LS->UCfirst ( group ) ;
-    if ( group == txt("All") ) return ;
-    
-    wxString s = wxString::Format ( txt("t_del_group") , group.c_str() ) ;
-    if ( wxMessageBox ( s , txt("msg_box") , wxYES_NO|wxICON_QUESTION ) != wxYES ) return ;
 
-    wxString sql ;
-    sql = "DELETE FROM link_enzyme_group WHERE leg_group=\"" + group + "\"" ;
-    myapp()->frame->LS->getObject ( sql ) ; 
-    sql = "DELETE FROM enzyme_group WHERE eg_name=\"" + group + "\"" ;
-    myapp()->frame->LS->getObject ( sql ) ; 
-    showEnzymeGroups () ;
-    }
-
-void TVectorEditor::enzymeDelFromGr ( wxCommandEvent &ev )
-    {
-    wxString group = listGroups->GetStringSelection() ;
-    group = myapp()->frame->LS->UCfirst ( group ) ;
-    if ( group == txt("All") ) return ;
-    
-    wxString sql ;
-    wxArrayInt vi ;
-    int i , k , n = listGE->GetSelections ( vi ) ;
-    for ( k = n-1 ; k >= 0 ; k-- )
-        {
-        i = vi[k] ;
-        wxString s = listGE->GetString(i) ;
-        sql = "DELETE FROM link_enzyme_group WHERE "
-              "leg_enzyme=\"" +
-              s +
-              "\" AND leg_group=\"" +
-              group +
-              "\"" ;
-        myapp()->frame->LS->getObject ( sql ) ;              
-        }
-    showGroupEnzymes ( group ) ;
-    }
-    

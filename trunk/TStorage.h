@@ -107,6 +107,10 @@ class TStorage
     virtual bool getWriteProtect () ;
     static wxString createMySQLdb ( wxString ip , wxString db , wxString name , wxString pwd ) ;
     virtual void optimizeDatabase () ;
+    virtual wxString getDefaultDB () ;
+    virtual void addEnzymeToGroup ( wxString enzyme , wxString group ) ;
+    virtual void removeEnzymeFromGroup ( wxString enzyme , wxString group ) ;
+    virtual void removeEnzymeGroup ( wxString group ) ;
     virtual void startRecord () ;
     virtual void endRecord () ;
     
@@ -121,6 +125,8 @@ class TStorage
     virtual wxString makeInsert ( wxString table , TVS &field , TVS &data ) ;
     virtual void replaceTable ( wxString table , TVS &f , TVS &t ) ;
     virtual void tableInfoSet ( TVS &f , TVS &t , wxString nf , wxString nt ) ;
+    virtual TStorage *getDBfromEnzymeGroup ( wxString group ) ;
+    virtual wxString stripGroupName ( wxString s ) ;
     
     // Variables
     wxString dbname , error ;

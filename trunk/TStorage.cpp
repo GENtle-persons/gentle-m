@@ -212,113 +212,6 @@ void TStorage::import ()
         }
     }
 
-TRestrictionEnzyme* TStorage::getRestrictionEnzyme ( wxString s )
-    {
-    TRestrictionEnzyme *ret = NULL , *ret2 ;
-    if ( storagetype == TEMP_STORAGE ) 
-        {
-        ret2 = myapp()->frame->LS->getRestrictionEnzyme ( s ) ;
-        if ( ret2 ) return ret2 ;
-        }
-
-    for ( int a = 0 ; !ret && a < re.GetCount() ; a++ )
-        if ( re[a]->name == s )
-           ret = re[a] ;
-           
-    if ( storagetype == TEMP_STORAGE && ret )
-        {
-        ret2 = new TRestrictionEnzyme ;
-        *ret2 = *ret ;
-        myapp()->frame->LS->re.Add ( ret2 ) ;
-        myapp()->frame->LS->updateRestrictionEnzyme ( ret2 ) ;
-        ret = ret2 ;
-        }
-           
-    return ret ;
-    }
-
-void TStorage::getEnzymesInGroup ( wxString gn , wxArrayString &vs )
-    {
-    TSQLresult sr ;
-    int a ;
-    vs.Clear() ;
-    wxString sql ;
-    gn = UCfirst ( gn ) ;
-    if ( gn != txt("All") )
-        {
-        sql = "SELECT leg_enzyme FROM link_enzyme_group" ;
-        sql += " WHERE leg_group=\""+gn+"\"" ;
-        sr = getObject ( sql ) ;
-        for ( a = 0 ; a < sr.content.size() ; a++ )
-           if ( sr[a][sr["leg_enzyme"]].GetChar(0) != '*' )
-              vs.Add ( sr[a][sr["leg_enzyme"]] ) ;
-        }
-    else
-        {
-        sql = "SELECT e_name from enzyme" ;
-        sr = getObject ( sql ) ;
-        for ( a = 0 ; a < sr.content.size() ; a++ )
-           if ( sr[a][sr["e_name"]].GetChar(0) != '*' )
-              vs.Add ( sr[a][sr["e_name"]] ) ;
-        }
-    
-    for ( a = 0 ; a < vs.GetCount() ; a++ )
-        {
-        if ( vs[a].IsEmpty() )
-           {
-           vs.Remove ( a ) ;
-           a-- ;
-           }
-        }
-    }
-
-void TStorage::getEnzymeGroups ( wxArrayString &vs )
-    {
-    TSQLresult sr ;
-    int a ;
-    vs.Clear() ;
-    wxString sql = "SELECT eg_name FROM enzyme_group" ;
-    sr = getObject ( sql ) ;
-    for ( a = 0 ; a < sr.content.size() ; a++ )
-        vs.Add ( UCfirst ( sr[a][sr["eg_name"]] ) ) ;
-    }
-    
-void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme *e )
-    {
-    TSQLresult sr ;
-    wxString sql ;
-    char u[100] ;
-    if ( e->name.IsEmpty() ) return ;
-    
-    // Remove old enzyme, if any
-    sql = "DELETE FROM enzyme WHERE e_name=\""+e->name+"\"" ;
-    getObject ( sql ) ;
-    
-    // Get new id
-    sql = "SELECT max(e_id) FROM enzyme" ;
-    sr = getObject ( sql ) ;
-    if ( ierror ) return ;
-    int e_id = atoi ( sr.content[0][0].c_str() ) ;
-    sprintf ( u , "%d" , e_id+1 ) ;
-    e->dbid = e_id ;
-    
-    // Insert new enzyme
-    sql = "INSERT INTO enzyme (e_id,e_name,e_sequence,e_location,e_note,e_cut,e_overlap) VALUES (\"" ;
-    sql += u ;
-    sql += "\",\"" ;
-    sql += e->name + "\",\"" ;
-    sql += e->sequence + "\",\"" ;
-    sql += e->location + "\",\"" ;
-    sql += e->note + "\",\"" ;
-    sprintf ( u , "%d" , e->cut ) ;
-    sql += u ;
-    sql += "\",\"" ;
-    sprintf ( u , "%d" , e->overlap ) ;
-    sql += u ;
-    sql += "\")" ;
-    getObject ( sql ) ;
-    }
-
 void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , wxString key , wxString value )
     {
     int a ;
@@ -351,10 +244,9 @@ void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , wxString key , int value )
 wxString TStorage::getDatabaseList ( wxArrayString &name , wxArrayString &file )
     {
     TSQLresult r ;
-    wxString defdb = txt("local_db") ;
     name.Clear() ;
     file.Clear() ;
-    name.Add ( defdb ) ;
+    name.Add ( txt("local_db") ) ;
     file.Add ( dbname ) ;
     wxString sql = "SELECT * FROM stuff WHERE s_type=\"DATABASE\"" ;
     r = getObject ( sql ) ;
@@ -363,8 +255,14 @@ wxString TStorage::getDatabaseList ( wxArrayString &name , wxArrayString &file )
         name.Add ( r[a][r["s_name"]] ) ;
         file.Add ( r[a][r["s_value"]] ) ;
         }
+    return getDefaultDB () ;
+    }    
 
-    sql = "SELECT * FROM stuff WHERE s_type=\"DEFAULT_DATABASE\"" ;
+wxString TStorage::getDefaultDB ()
+	{
+    TSQLresult r ;
+    wxString defdb = txt("local_db") ;
+    wxString sql = "SELECT * FROM stuff WHERE s_type=\"DEFAULT_DATABASE\"" ;
     r = getObject ( sql ) ;
     if ( r.content.size() == 0 ) return defdb ;
     else return r[0][r["s_name"]] ;
@@ -412,25 +310,7 @@ wxString TStorage::UCfirst ( wxString s )
     return s ;
     }
     
-bool TStorage::addEnzymeGroup ( wxString s )
-    {
-    if ( s.IsEmpty() ) return false ;
-    s = UCfirst ( s ) ;
-    if ( s == txt("all") ) return false ;
 
-    TSQLresult sr ;
-    wxString sql = "SELECT eg_name FROM enzyme_group WHERE eg_name=\"" + 
-                 s + "\"" ;
-    sr = getObject ( sql ) ;
-    if ( sr.rows() > 0 ) return false ; // Already exists
-    
-    wxString s1 , s2 ;
-    sqlAdd ( s1 , s2 , "eg_name" , s ) ;
-    sql = "INSERT INTO enzyme_group (" + s1 + ") VALUES (" + s2 + ")" ;    
-    getObject ( sql ) ;
-    return true ;
-    }
-    
 bool TStorage::copySQLfields ( TStorage &target , wxString table , wxString cond )
     {
     int a , b ;
@@ -734,11 +614,7 @@ void TStorage::updateProtease ( TProtease *p )
     updateRestrictionEnzyme ( &e ) ;
     }
     
-void TStorage::addRestrictionEnzyme ( TRestrictionEnzyme *r )
-    {
-    re.Add ( r ) ;
-    }
-    
+
 wxString TStorage::getDBname ()
     {
     return dbname ;
@@ -814,5 +690,234 @@ void TStorage::endRecord ()
 	getObject ( record ) ;
 	record = "" ;
 	}
+
+// Enzyme functions
+
+bool TStorage::addEnzymeGroup ( wxString s )
+    {
+    if ( s.IsEmpty() ) return false ;
+    s = UCfirst ( s ) ;
+    if ( s == txt("all") ) return false ;
+
+	TStorage *t = getDBfromEnzymeGroup ( s ) ;
+	if ( t )
+		{
+		bool b = t->addEnzymeGroup ( stripGroupName ( s ) ) ;
+		return b ;
+		}    
+
+
+    TSQLresult sr ;
+    wxString sql = "SELECT eg_name FROM enzyme_group WHERE eg_name=\"" + 
+                 s + "\"" ;
+    sr = getObject ( sql ) ;
+    if ( sr.rows() > 0 ) return false ; // Already exists
     
+    wxString s1 , s2 ;
+    sqlAdd ( s1 , s2 , "eg_name" , s ) ;
+    sql = "INSERT INTO enzyme_group (" + s1 + ") VALUES (" + s2 + ")" ;    
+    getObject ( sql ) ;
+    return true ;
+    }
+    
+void TStorage::addRestrictionEnzyme ( TRestrictionEnzyme *r )
+    {
+    re.Add ( r ) ;
+    }
+    
+TRestrictionEnzyme* TStorage::getRestrictionEnzyme ( wxString s )
+    {
+    TRestrictionEnzyme *ret = NULL , *ret2 ;
+    if ( storagetype == TEMP_STORAGE ) 
+        {
+        ret2 = myapp()->frame->LS->getRestrictionEnzyme ( s ) ;
+        if ( ret2 ) return ret2 ;
+        }
+
+    for ( int a = 0 ; !ret && a < re.GetCount() ; a++ )
+        if ( re[a]->name == s )
+           ret = re[a] ;
+           
+    if ( storagetype == TEMP_STORAGE && ret )
+        {
+        ret2 = new TRestrictionEnzyme ;
+        *ret2 = *ret ;
+        myapp()->frame->LS->re.Add ( ret2 ) ;
+        myapp()->frame->LS->updateRestrictionEnzyme ( ret2 ) ;
+        ret = ret2 ;
+        }
+           
+    return ret ;
+    }
+
+void TStorage::getEnzymesInGroup ( wxString gn , wxArrayString &vs )
+    {
+	TStorage *t = getDBfromEnzymeGroup ( gn ) ;
+	if ( t )
+		{
+		t->getEnzymesInGroup ( stripGroupName ( gn ) , vs ) ;
+		return ;
+		}
+    TSQLresult sr ;
+    int a ;
+    vs.Clear() ;
+    wxString sql ;
+    gn = UCfirst ( gn ) ;
+    if ( gn != txt("All") )
+        {
+        sql = "SELECT leg_enzyme FROM link_enzyme_group" ;
+        sql += " WHERE leg_group=\""+gn+"\"" ;
+        sr = getObject ( sql ) ;
+        for ( a = 0 ; a < sr.content.size() ; a++ )
+           if ( sr[a][sr["leg_enzyme"]].GetChar(0) != '*' )
+              vs.Add ( sr[a][sr["leg_enzyme"]] ) ;
+        }
+    else
+        {
+        sql = "SELECT e_name from enzyme" ;
+        sr = getObject ( sql ) ;
+        for ( a = 0 ; a < sr.content.size() ; a++ )
+           if ( sr[a][sr["e_name"]].GetChar(0) != '*' )
+              vs.Add ( sr[a][sr["e_name"]] ) ;
+        }
+    
+    for ( a = 0 ; a < vs.GetCount() ; a++ )
+        {
+        if ( vs[a].IsEmpty() )
+           {
+           vs.Remove ( a ) ;
+           a-- ;
+           }
+        }
+    }
+
+void TStorage::getEnzymeGroups ( wxArrayString &vs )
+    {
+    wxString defdb = getDefaultDB() ;
+    TStorage *t = getDBfromEnzymeGroup ( defdb + ":dummy" ) ;
+    if ( t && this == myapp()->frame->LS && t != this )
+    	{
+	    t->getEnzymeGroups ( vs ) ;
+	    for ( int a = 0 ; a < vs.GetCount() ; a++ )
+	    	vs[a] = defdb + ":" + vs[a] ;
+     	}   	
+   	else vs.Clear() ;
+
+    TSQLresult sr ;
+    int a ;
+    wxString sql = "SELECT eg_name FROM enzyme_group" ;
+    sr = getObject ( sql ) ;
+    for ( a = 0 ; a < sr.content.size() ; a++ )
+        vs.Add ( UCfirst ( sr[a][sr["eg_name"]] ) ) ;
+    }
+    
+void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme *e )
+    {
+    TSQLresult sr ;
+    wxString sql ;
+    char u[100] ;
+    if ( e->name.IsEmpty() ) return ;
+    
+    // Remove old enzyme, if any
+    sql = "DELETE FROM enzyme WHERE e_name=\""+e->name+"\"" ;
+    getObject ( sql ) ;
+    
+    // Get new id
+    sql = "SELECT max(e_id) FROM enzyme" ;
+    sr = getObject ( sql ) ;
+    if ( ierror ) return ;
+    int e_id = atoi ( sr.content[0][0].c_str() ) ;
+    sprintf ( u , "%d" , e_id+1 ) ;
+    e->dbid = e_id ;
+    
+    // Insert new enzyme
+    sql = "INSERT INTO enzyme (e_id,e_name,e_sequence,e_location,e_note,e_cut,e_overlap) VALUES (\"" ;
+    sql += u ;
+    sql += "\",\"" ;
+    sql += e->name + "\",\"" ;
+    sql += e->sequence + "\",\"" ;
+    sql += e->location + "\",\"" ;
+    sql += e->note + "\",\"" ;
+    sprintf ( u , "%d" , e->cut ) ;
+    sql += u ;
+    sql += "\",\"" ;
+    sprintf ( u , "%d" , e->overlap ) ;
+    sql += u ;
+    sql += "\")" ;
+    getObject ( sql ) ;
+    }
+    
+void TStorage::addEnzymeToGroup ( wxString enzyme , wxString group )
+	{
+	TStorage *t = getDBfromEnzymeGroup ( group ) ;
+	if ( t )
+		{
+		t->addEnzymeToGroup ( enzyme , stripGroupName ( group ) ) ;
+		return ;
+		}
+    wxString sql ;
+    
+    sql = "DELETE FROM link_enzyme_group WHERE leg_enzyme=\"" +
+          enzyme + "\" AND leg_group=\"" + group + "\"" ;
+    getObject ( sql ) ;
+    
+    sql = "INSERT INTO link_enzyme_group (leg_enzyme,leg_group) "
+          "VALUES (\"" + enzyme + "\",\"" + group + "\")" ;
+    getObject ( sql ) ;              
+	}
+     
+TStorage *TStorage::getDBfromEnzymeGroup ( wxString group )
+	{
+	wxString s = group.BeforeLast ( ':' ) ;
+	if ( s.IsEmpty() ) return NULL ;
+	
+	wxArrayString db_name , db_file ;
+    myapp()->frame->LS->getDatabaseList ( db_name , db_file ) ;
+    for ( int a = 0 ; a < db_name.GetCount() ; a++ )
+    	{
+	    if ( db_name[a] == s )
+	    	return myapp()->frame->getTempDB ( db_file[a] ) ;
+    	}    
+	return NULL ;
+	}    
+	
+wxString TStorage::stripGroupName ( wxString s )
+	{
+	return UCfirst ( s.AfterLast ( ':' ) ) ;
+	}    
+
+void TStorage::removeEnzymeFromGroup ( wxString enzyme , wxString group )
+	{
+	TStorage *t = getDBfromEnzymeGroup ( group ) ;
+	if ( t )
+		{
+		t->removeEnzymeFromGroup ( enzyme , stripGroupName ( group ) ) ;
+		return ;
+		}    
+
+    wxString sql ;
+    sql = "DELETE FROM link_enzyme_group WHERE "
+          "leg_enzyme=\"" +
+          enzyme +
+          "\" AND leg_group=\"" +
+          group +
+          "\"" ;
+    getObject ( sql ) ;              
+	}    
+
+void TStorage::removeEnzymeGroup ( wxString group )
+	{
+	TStorage *t = getDBfromEnzymeGroup ( group ) ;
+	if ( t )
+		{
+		t->removeEnzymeGroup ( stripGroupName ( group ) ) ;
+		return ;
+		}    
+
+    wxString sql ;
+    sql = "DELETE FROM link_enzyme_group WHERE leg_group=\"" + group + "\"" ;
+    getObject ( sql ) ; 
+    sql = "DELETE FROM enzyme_group WHERE eg_name=\"" + group + "\"" ;
+    getObject ( sql ) ; 
+	}    
 
