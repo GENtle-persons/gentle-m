@@ -813,7 +813,8 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
           if ( lastbp != int(bp) )
              p->cSequence->mark ( "DNA" , lastbp , int(bp) ) ;
           else
-             p->cSequence->mark ( "DNA" , -1 , -1 ) ;
+          	 p->cSequence->unmark () ;
+//             p->cSequence->mark ( "DNA" , -1 , -1 ) ;
           }
        }
     else if ( event.MiddleDown() && p->cSequence->markedFrom() != -1 )
@@ -825,7 +826,8 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
        int bp = circular_pos ( angle ) ;
        p->cSequence->mark ( "DNA" , bp , bp ) ;
        p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
-       p->cSequence->mark ( "DNA" , -1 , -1 ) ;
+       p->cSequence->unmark () ;
+//       p->cSequence->mark ( "DNA" , -1 , -1 ) ;
        }
     else
        {

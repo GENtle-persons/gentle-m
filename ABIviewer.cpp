@@ -372,7 +372,8 @@ void TABIviewer::OnEditMode(wxCommandEvent& event)
     else
         {
         sc->setEditMode ( false ) ;
-        sc->mark ( "ABI" , -1 , -1 ) ;
+        sc->unmark() ;
+//        sc->mark ( "ABI" , -1 , -1 ) ;
         vec->eraseSequence ( vec->getSequenceLength()-1 , 1 ) ;
         sc->findID("ABI")->s.erase ( sc->findID("ABI")->s.length()-1 , 1 ) ;
         sc->arrange () ;

@@ -258,14 +258,15 @@ int SeqDNA::arrange_direct ( int n )
 
 void SeqDNA::show_direct ( wxDC& dc )
     {
+    myass ( can , "SeqDNA::show_direct1" ) ;
     can->SetFont(*can->font);
     dc.SetFont(*can->font);
     int a , b , w , h , n , bo = can->border ;
     int csgc = can->NumberOfLines() , cbs = can->blocksize ;
     int cih = can->isHorizontal() ;
     int xa , xb , ya , yb ;
-    for ( n = 0 ; n < csgc && can->seq[n] != this ; n++ ) ;
-    if ( n == csgc ) return ;
+    for ( n = 0 ; n < can->seq.GetCount() && can->seq[n] != this ; n++ ) ;
+    if ( n == can->seq.GetCount() ) return ;
     
     // Setting basic values
     int cw = can->charwidth , ch = can->charheight ;
@@ -289,9 +290,13 @@ void SeqDNA::show_direct ( wxDC& dc )
     ya = -ya ;
     yb += ya ;
     
+    myass ( ch , "SeqDNA::show_direct2a" ) ;
+    myass ( csgc , "SeqDNA::show_direct2b" ) ;
     b = ( ya - ch - oy ) / ( ch * csgc ) * itemsperline ;
     for ( a = 0 ; a < b && a < s.length() ; a += itemsperline ) ;
         
+    myass ( itemsperline , "SeqDNA::show_direct3" ) ;
+    myass ( cbs , "SeqDNA::show_direct4" ) ;
     for ( a = 0 ; a < s.length() ; a++ )
         {
         int px = a % itemsperline , py = a / itemsperline ;

@@ -107,6 +107,13 @@ SequenceCanvas::~SequenceCanvas()
     {
     CLEAR_DELETE ( seq ) ;
     }
+    
+void SequenceCanvas::unmark ()
+	{
+	if ( lastmarked < 0 || lastmarked >= seq.GetCount() ) return ;
+	if ( markedFrom() == -1 ) return ;
+	mark ( seq[lastmarked]->whatsthis() , -1 , -1 ) ;
+	}    
 
 SeqBasic* SequenceCanvas::findID ( wxString id ) 
     {
@@ -1834,7 +1841,7 @@ void SequenceCanvas::stopEdit ()
     for ( int a = 0 ; a < seq.GetCount() ; a++ ) seq[a]->editMode ( false ) ;
     arrange () ;
     mylog ( "stopEdit" , "3" ) ;
-    if ( id != "" ) mark ( id , -1 , -1 ) ;
+    if ( id != "" ) unmark () ; //mark ( id , -1 , -1 ) ;
     mylog ( "stopEdit" , "END" ) ;
     }
 
@@ -1983,8 +1990,9 @@ void TMarkMem::unmark()
     if ( !sc ) return ;
     if ( l >= 0 && l < sc->seq.GetCount() && f != -1 )
        {
-       wxString ls = sc->seq[l]->whatsthis() ;
-       sc->mark ( ls , -1 , -1 ) ;
+       sc->unmark() ;
+//       wxString ls = sc->seq[l]->whatsthis() ;
+//       sc->mark ( ls , -1 , -1 ) ;
        }
     }
     

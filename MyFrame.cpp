@@ -56,7 +56,9 @@ MyFrame::MyFrame(wxWindow *parent,
     dying = false ;
     activating = false ;
     locked = 0 ;
+#ifdef MYTEST
     test_suite = NULL ;
+#endif
 
     // Accelerators
     wxAcceleratorEntry entries[ACC_ENT];
@@ -1500,7 +1502,7 @@ TVirtualGel *MyFrame::useGel ( wxString type )
 
 void MyFrame::TestMenu(wxCommandEvent& event)
     {
-#ifdef MYLOG
+#ifdef MYTEST
     if ( test_suite == NULL ) test_suite = new TTestSuite ;
     test_suite->Step () ;
     wxCommandEvent ev ( wxEVT_COMMAND_MENU_SELECTED , Y___ ) ;
@@ -1509,6 +1511,8 @@ void MyFrame::TestMenu(wxCommandEvent& event)
     }
     	
 //******************************************************************* TTestSuite
+
+#ifdef MYTEST
 
 TTestSuite::TTestSuite ()
 	{
@@ -1520,6 +1524,7 @@ void TTestSuite::pressKey ( ChildBase *ac )
 	{
 	if ( ac->def == "dna" ) vectorPressKey ( ac ) ;
 	if ( ac->def == "AminoAcids" ) vectorPressKey ( ac ) ;
+	if ( ac->def == "PrimerDesign" ) vectorPressKey ( ac ) ;
 	}    
 	
 void TTestSuite::action ( ChildBase *ac )
@@ -1533,6 +1538,7 @@ void TTestSuite::editMode ( ChildBase *ac )
 	wxCommandEvent event ;
     mylog ( "Testsuite:Edit mode" , "" ) ;
     if ( ac->def == "dna" ) ((MyChild*)ac)->OnEditMode(event) ;
+    if ( ac->def == "PrimerDesign" ) ((TPrimerDesign*)ac)->OnEditMode(event) ;
     if ( ac->def == "AminoAcids" )
     	{
         ((TAminoAcids*)ac)->OnEditMode(event) ;
@@ -1541,7 +1547,7 @@ void TTestSuite::editMode ( ChildBase *ac )
           
 void TTestSuite::vectorPressKey ( ChildBase *ac )
 	{
-    if ( !ac->cSequence ) { mylog ("D'oh!",""); return ;}
+//    if ( !ac->cSequence ) { mylog ("D'oh!",""); return ;}
     wxKeyEvent ev ( wxEVT_CHAR_HOOK ) ;
     ev.m_altDown = false ;
     ev.m_controlDown = rand() % 2 ;
@@ -1567,14 +1573,15 @@ void TTestSuite::vectorPressKey ( ChildBase *ac )
     if ( r == 13 ) { ev.m_keyCode = WXK_PRIOR ; msg = "PRIOR" ; }
     if ( r == 14 ) { ev.m_keyCode = WXK_NEXT ; msg = "NEXT" ; }
     mylog ( "Testsuite:Key" , wxString::Format ( "%s" , msg.c_str() ) ) ;
-    ac->cSequence->OnCharHook(ev) ;
+    if ( ac->def == "PrimerDesign" ) ((TPrimerDesign*)ac)->sc->OnCharHook(ev) ;
+    else ac->cSequence->OnCharHook(ev) ;
 	}
      
 void TTestSuite::vectorAction ( ChildBase *ac )
 	{
     MyChild *c = (MyChild*) ac ;
     wxCommandEvent ev ;
-    int r = rand() % 22 ;
+    int r = rand() % 24 ;
     mylog ( "Testsuite:Message" , wxString::Format ( "%d" , r ) ) ;
     switch ( r )
 		{
@@ -1600,6 +1607,8 @@ void TTestSuite::vectorAction ( ChildBase *ac )
 	    case 19 : c->OnToggleFeatures ( ev ) ; break ;
 	    case 20 : c->OnToggleRestriction ( ev ) ; break ;
 	    case 21 : c->OnToggleIDNA ( ev ) ; break ;
+	    case 22 : c->Undo ( ev ) ; break ;
+	    case 23 : if ( c->cSequence ) c->OnRunPCR ( ev ) ; break ;
 	    }    
 	}	
      
@@ -1631,6 +1640,37 @@ void TTestSuite::aaAction ( ChildBase *ac )
      	}   	
 	}	
      
+void TTestSuite::mouseEvent ( ChildBase *ac )
+	{
+	SequenceCanvas *can = ac->cSequence ;
+	if ( !can && ac->def == "PrimerDesign" ) can = ((TPrimerDesign*)ac)->sc ;
+	if ( !can ) return ;
+	
+	wxArrayInt vi ;
+	vi.Add ( wxEVT_ENTER_WINDOW ) ;
+	vi.Add ( wxEVT_LEAVE_WINDOW ) ;
+	vi.Add ( wxEVT_LEFT_DOWN ) ;
+	vi.Add ( wxEVT_LEFT_UP ) ;
+//	vi.Add ( wxEVT_LEFT_DCLICK ) ;
+	vi.Add ( wxEVT_MIDDLE_DOWN ) ;
+	vi.Add ( wxEVT_MIDDLE_UP ) ;
+	vi.Add ( wxEVT_MIDDLE_DCLICK ) ;
+//	vi.Add ( wxEVT_RIGHT_DOWN ) ;
+	vi.Add ( wxEVT_RIGHT_UP ) ;
+	vi.Add ( wxEVT_RIGHT_DCLICK ) ;
+	vi.Add ( wxEVT_MOTION ) ;
+	vi.Add ( wxEVT_MOUSEWHEEL ) ;
+
+	int et = vi[rand()%vi.GetCount()] ;
+	
+	wxMouseEvent event ( et ) ;
+	int w , h ;
+	can->GetClientSize ( &w , &h ) ;
+	event.m_x = rand() % w ;
+	event.m_y = rand() % h ;
+	can->OnEvent ( event ) ;
+	}	
+     
 void TTestSuite::Step()
     {
     if ( cnt == 0 ) start = wxGetLocalTime() ;
@@ -1658,7 +1698,8 @@ void TTestSuite::Step()
     if ( ac->cSequence ) x += wxString::Format ( ", Mark %d-%d" , ac->cSequence->markedFrom() , ac->cSequence->markedTo() ) ;
     mylog ( "Testsuite:Status" , x ) ;
     
-    if ( r < 7 ) pressKey ( ac ) ;
+    if ( r < 6 ) pressKey ( ac ) ;
+   	else if ( r == 6 ) mouseEvent ( ac ) ;
    	else if ( r == 7 ) editMode ( ac ) ;
    	else if ( r == 8 )
    		{
@@ -1668,6 +1709,8 @@ void TTestSuite::Step()
    		}    
    	else if ( r == 9 ) action ( ac ) ;
     }            
+
+#endif
                 
 // DROP TARGET
 
