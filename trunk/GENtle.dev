@@ -820,7 +820,7 @@ BuildCmd=
 [Unit84]
 FileName=SequenceTypePlot.cpp
 CompileCpp=1
-Folder=
+Folder=Canvases
 Compile=1
 Link=1
 Priority=1000
