@@ -276,10 +276,10 @@ void MyChild::initme ()
     sw = new MySplitter ( this , SPLIT_1 , this ) ;
     swu = new MySplitter ( sw , SPLIT_2 , this ) ;
     swl = new MySplitter ( swu , SPLIT_3 , this ) ;
-
+/*
     if ( app->frame->useCoolCanvas )
        cPlasmid = (PlasmidCanvas*) new CoolCanvas(swu, wxPoint(0, 0), wxSize(width*2/3, height/2));
-    else
+    else*/
        cPlasmid = new PlasmidCanvas(swu, wxPoint(0, 0), wxSize(width*2/3, height/2));
        
     cPlasmid->p = this ;

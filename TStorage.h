@@ -2,8 +2,14 @@
 #define _TSTORAGE_H_
 
 #include <stdio.h>
-#include "sqlite.h"
+
+#ifdef __WXMSW__
+#include "win_sqlite.h"
 #include <wx/msw/winundef.h>
+#else
+#include "lin_sqlite.h"
+#endif
+
 #include "main.h"
 
 #define LOCAL_STORAGE 1
