@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the TIMGreader class, and its TIMGitem helper class
+*/
 #include "TIMGreader.h"
 #include <wx/image.h>
 

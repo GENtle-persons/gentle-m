@@ -1,26 +1,30 @@
+/** \file
+	\brief The TStorage and TSQLresult classes
+*/
 #ifndef _TSTORAGE_H_
 #define _TSTORAGE_H_
 
 #include <stdio.h>
 #include "main.h"
 
+/// Additionally, use MySQL (instead of sqlite only)
 #define USEMYSQL
 
 #ifdef USEMYSQL
-#ifdef __WXMSW__
-#include <mysql.h>
-#else
-#include "/usr/include/mysql/mysql.h"
-#endif
+ #ifdef __WXMSW__
+  #include <mysql.h>
+ #else
+  #include "/usr/include/mysql/mysql.h"
+ #endif
 #endif
 
 #ifdef __WXMSW__
-#include "win_sqlite.h"
-#include "win_sqlite3.h"
-#define USING_SQLITE_3
-#include <wx/msw/winundef.h>
+ #include "win_sqlite.h"
+ #include "win_sqlite3.h"
+ #define USING_SQLITE_3
+ #include <wx/msw/winundef.h>
 #else
-#include "lin_sqlite.h"
+ #include "lin_sqlite.h"
 #endif
 
 #define LOCAL_STORAGE 1
@@ -31,21 +35,21 @@ class TRestrictionEnzyme ;
 class MyApp ;
 class TProtease ;
 
-typedef wxArrayString TVS ;
-
+/// This class stores the results from SQL queries
 class TSQLresult
     {
     public:
-    TVS field ;
-    vector <TVS> content ;
-    virtual void clean()
+    wxArrayString field ; ///< List of result fields (or column names)
+    vector <wxArrayString> content ; ///< The results table ([row][column])
+    
+    virtual void clean() ///< Reset internal state
         {
         field.Clear() ;
         while ( content.size() ) content.pop_back() ;
         }
-    virtual int cols () { return field.GetCount() ; }
-    virtual int rows () { return content.size() ; }
-    virtual wxString item ( char *s , int i )
+    virtual int cols () { return field.GetCount() ; }  ///< Number of columns (fields) in the result table
+    virtual int rows () { return content.size() ; } ///< Number of rows in the result table
+    virtual wxString item ( char *s , int i ) ///< Returns entry for field s in row i
         {
         int a ;
         wxString s2 = s ;
@@ -54,11 +58,11 @@ class TSQLresult
                return content[i][a] ;
         return "" ;
         }
-    virtual TVS & operator [] ( int i )
+    virtual wxArrayString & operator [] ( int i ) ///< Returns row i
         {
         return content[i] ;
         }
-    virtual int operator [] ( char *s )
+    virtual int operator [] ( char *s ) ///< Returns the number of field s
         {
         int a ;
         wxString s2 = s ;
@@ -69,7 +73,7 @@ class TSQLresult
         }
     } ;
 
-
+/// This is the famous storage class. It manages all MySQL and sqlite traffic
 class TStorage
     {
     public :
@@ -125,9 +129,9 @@ class TStorage
     private :
     virtual wxString getSingleField ( wxString query , wxString field , wxString def = "" ) ;
     virtual int getSingleField ( wxString query , wxString field , int def = 0 ) ;
-    virtual wxString makeInsert ( wxString table , TVS &field , TVS &data ) ;
-    virtual void replaceTable ( wxString table , TVS &f , TVS &t ) ;
-    virtual void tableInfoSet ( TVS &f , TVS &t , wxString nf , wxString nt ) ;
+    virtual wxString makeInsert ( wxString table , wxArrayString &field , wxArrayString &data ) ;
+    virtual void replaceTable ( wxString table , wxArrayString &f , wxArrayString &t ) ;
+    virtual void tableInfoSet ( wxArrayString &f , wxArrayString &t , wxString nf , wxString nt ) ;
     virtual TStorage *getDBfromEnzymeGroup ( wxString group ) ;
     virtual wxString stripGroupName ( wxString s ) ;
     virtual void cleanEnzymeGroupCache () ;
