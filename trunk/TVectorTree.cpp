@@ -46,6 +46,7 @@ void TVectorTree::initme ()
     wxTreeItemId x , y ;
     
     // Basic stuff
+    Freeze () ;
     DeleteAllItems () ;
     treeroot = AddRoot ( p->vec->getName() ) ;
     sprintf ( u , txt("#bp") , p->vec->getSequenceLength() ) ;
@@ -128,7 +129,7 @@ void TVectorTree::initme ()
            }
         }
     
-    
+    Thaw();
     EnsureVisible ( x ) ; // Making vector properties visible
     SelectItem ( vroot ) ;
     }

@@ -138,24 +138,31 @@ void TGenBank::remap ( TVector *v )
 	wxString k1 ;
 	vector <wxArrayString> items ;
 	wxString ns ;
-	ns.Alloc ( vs.GetCount() * 40 ) ;
+	
+	int a = 0 ;
+	bool validseq[256] ;
+	for ( a = 0 ; a < 256 ; a++ ) validseq[a] = isValidSequence ( a ) ;
+	
+	for ( line = 0 ; line < vs.GetCount() ; line++ ) a += (vi[line]==5) ? 1 : 0 ;
+	items.reserve ( a ) ;
+	
+	wxString l , l2 ;
 	for ( line = 0 ; line < vs.GetCount() ; line++ )
 	 {
-	 wxString l = vs[line] ;
+	 l = vs[line] ;
 	 int i = vi[line] ;
 	 if ( i == 0 ) // New main level keyword
 	     {
 	     l += " " ;
 	     k1 = l.BeforeFirst ( ' ' ) . Upper() ;
-	     wxString l2 = trim ( l.AfterFirst ( ' ' ) ) ;
+	     l2 = trim ( l.AfterFirst ( ' ' ) ) ;
 	     i += l.Length() - l2.Length() ;
 	     l = l2 ;
 	     }
      if ( k1 == "LOCUS" )
           {
-          wxString n = l ;
-          v->setName ( n.BeforeFirst ( ' ' ) ) ;
-          v->setDescription ( n.AfterFirst ( ' ' ) ) ;
+          v->setName ( l.BeforeFirst ( ' ' ) ) ;
+          v->setDescription ( l.AfterFirst ( ' ' ) ) ;
           l += " " ; // For substring search
           if ( l.MakeUpper().Contains ( " AA " ) ) v->type = TYPE_AMINO_ACIDS ;
           else v->type = TYPE_VECTOR ;
@@ -168,7 +175,7 @@ void TGenBank::remap ( TVector *v )
              {
              items.push_back ( wxArrayString() ) ;
              items[items.size()-1].Add ( l.BeforeFirst ( ' ' ) ) ;
-             wxString l2 = trim ( l.AfterFirst ( ' ' ) ) ;
+             l2 = l.AfterFirst ( ' ' ) ;
              i += l.Length() - l2.Length() ;
              l = l2 ;
              }
@@ -176,20 +183,26 @@ void TGenBank::remap ( TVector *v )
           }
      else if ( k1 == "ORIGIN" )
           {
-          l = l.MakeUpper() ;
-          for ( int a = 0 ; a < l.Length() ; a++ )
-             if ( isValidSequence ( l.GetChar(a) ) )
-                ns.Append ( l.GetChar(a) ) ;
+          if ( ns.IsEmpty() ) ns.Alloc ( ( vs.GetCount() - line ) * 60 ) ;
+          for ( a = 0 ; a < l.length() && !validseq[l.GetChar(a)] ; a++ ) ;
+          if ( a < l.length() )
+             {
+             l2 = l.Mid ( a ) ;
+             l2.Replace ( " " , "" ) ;
+             ns += l2 ;
+             }    
           }
 	 }
-    v->setSequence ( ns ) ;
-    for ( int a = 0 ; a < items.size() ; a++ ) addItem ( v , items[a] ) ;
+	 
+    v->setSequence ( ns.MakeUpper() ) ;
+    for ( a = 0 ; a < items.size() ; a++ ) addItem ( v , items[a] ) ;
 	}
 
 bool TGenBank::isValidSequence ( char a )
     {
     if ( a == '-' ) return true ;
     if ( a >= 'A' && a <= 'Z' ) return true ;
+    if ( a >= 'a' && a <= 'z' ) return true ;
     return false ;
     }
 
@@ -202,7 +215,11 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
     if ( va[0].MakeLower() == "source" ) return ;
     for ( a = 0 ; a < VIT_TYPES ; a++ )
         {
-        if ( va[0].CmpNoCase ( gb_item_type[a] ) == 0 ) i.setType ( a ) ;
+        if ( va[0].CmpNoCase ( gb_item_type[a] ) == 0 )
+           {
+           i.setType ( a ) ;
+           break ;
+           }    
         }
        
     // Properties
@@ -236,7 +253,7 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
            i.setParam ( p , v ) ;
            }
         }
-        
+    
     // From / To
     for ( a = 1 ; a < va.GetCount() ; a++ )
         {
@@ -332,7 +349,7 @@ void TGenBank::iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag 
     }
 
 
-wxString TGenBank::trim ( wxString s )
+wxString TGenBank::trim ( const wxString &s )
 	{
     int a ;
     for ( a = 0 ; a < s.length() && ( s.GetChar(a) == ' ' || s.GetChar(a) < 15 ) ; a++ ) ;

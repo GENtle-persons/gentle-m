@@ -684,6 +684,7 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
         gb.vi = gb.vi_l[n] ;
         nv = new TVector ;
         gb.remap ( nv ) ;
+        mylog ( "GenBank import" , "remapped " + nv->getName() ) ;
         vs.Add ( nv->getSequence() ) ;
         vv.Add ( nv ) ;
         nv->setDescription ( nv->getDescription() + "\n" + wxGetUserName() ) ;
