@@ -123,6 +123,7 @@ void TAlignment::initme ()
 
     view_menu->Append(ALIGN_BOLD, txt("m_align_bold") , "" , true ) ;
     view_menu->Append(ALIGN_MONO, txt("m_align_mono") , "" , true ) ;
+    view_menu->Append(ALIGN_CONS, txt("m_align_cons") , "" , true ) ;
     view_menu->AppendSeparator();
     view_menu->Append(ALIGN_NORM, txt("m_align_norm") , "" , true ) ;
     view_menu->Append(ALIGN_INVS, txt("m_align_invs") , "" , true ) ;
@@ -133,7 +134,6 @@ void TAlignment::initme ()
     view_menu->Append(ALIGN_FEAT, txt("m_align_feat") , "" , true ) ;
     view_menu->Append(ALIGN_RNA , txt("m_align_rna")  , "" , true ) ;
     view_menu->AppendSeparator();
-    view_menu->Append(ALIGN_CONS, txt("m_align_cons") , "" , true ) ;
     view_menu->Append(ALIGN_IDENT, txt("m_align_ident") , "" , true ) ;
 
     wxMenuBar *menu_bar = new wxMenuBar;
@@ -194,6 +194,7 @@ void TAlignment::initme ()
     toolBar->AddTool( MDI_FILE_OPEN, 
                 myapp()->frame->bitmaps[1] ,
             txt("m_open") , txt("m_opentxt") );
+    toolBar->AddSeparator () ;
     wxCheckBox *mycb = new wxCheckBox ( toolBar , ALIGN_HORIZ , txt("t_horizontal") ) ;
     toolBar->AddControl ( mycb ) ;
     toolBar->Realize() ;
@@ -206,16 +207,9 @@ void TAlignment::initme ()
     myapp()->frame->setChild ( this ) ;
     }
 
-// Callung clustalw.exe
-void TAlignment::redoAlignments ()
+// Calling clustalw.exe, eventually
+void TAlignment::recalcAlignments ()
     {
-    // Cleaning up
-    while ( sc->seq.size() )
-        {
-        delete sc->seq[sc->seq.size()-1] ;
-        sc->seq.pop_back () ;
-        }
-
     while ( lines.size() && lines[lines.size()-1].isIdentity )
         lines.pop_back () ;
     if ( lines.size() == 0 ) return ;
@@ -297,7 +291,20 @@ void TAlignment::redoAlignments ()
         generateConsensusSequene () ;
         }
     SetCursor ( *wxSTANDARD_CURSOR ) ;
+    }
 
+void TAlignment::redoAlignments ( bool doRecalc )
+    {
+    int a ;
+    // Cleaning up
+    while ( sc->seq.size() )
+        {
+        delete sc->seq[sc->seq.size()-1] ;
+        sc->seq.pop_back () ;
+        }
+        
+    if ( doRecalc ) recalcAlignments () ;
+        
     // Display
     sc->maxendnumberlength = strlen ( txt("t_identity") ) ;
 
@@ -910,6 +917,24 @@ void TAlignment::OnHorizontal ( wxCommandEvent& event )
     sc->isHorizontal = !sc->isHorizontal ;
     sc->arrange () ;
     sc->SilentRefresh() ;    
+    }
+    
+void TAlignment::MoveUpDown ( int what , int where )
+    {
+    while ( what != where )
+        {
+//        wxMessageBox ( wxString::Format ( "%d" , what ) ) ;
+        int a = 1 ;
+        if ( what > where ) a = -1 ;    
+        TAlignLine dummy = lines[what] ;
+        lines[what] = lines[what+a] ;
+        lines[what+a] = dummy ;
+        what += a ;
+        }
+    redoAlignments ( false ) ;    
+/*    updateSequence () ;
+    sc->arrange () ;
+    sc->SilentRefresh() ;*/
     }
 
 // *****************************************************************************
