@@ -167,6 +167,7 @@ class MyApp : public wxApp
     virtual void do_my_log ( wxString function , wxString msg = "" ) ;
     virtual wxString getHTMLCommand ( wxString command ) ; ///< Returns the command line for running a browser
     virtual wxString getFileFormatApplication ( wxString type ) ; ///< Returns application associated with a file type
+    virtual wxString getFileFormatCommand ( wxString type , wxString file ) ; ///< Returns the command line for running this file
     virtual wxString get_GENtle_version () ; ///< Returns the GENtle version string
     
     MyFrame *frame; ///< The application frame
@@ -221,6 +222,7 @@ WX_DEFINE_ARRAY(TProteaseCut *,wxArrayTProteaseCut);
 #include "enums.h"
 #include "TVector.h"
 #include "TUReadSeq.h"
+#include "CGview.h"
 #include "ChildBase.h"
 #include "ABItype.h"
 #include "MiscDialogs.h"

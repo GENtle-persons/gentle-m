@@ -299,9 +299,20 @@ int MyApp::OnExit ()
 */
 wxString MyApp::getHTMLCommand ( wxString command )
     {
-    wxFileType *ft = mtm.GetFileTypeFromExtension ( "html" ) ;
-    return ft->GetOpenCommand ( command ) ;
+    return getFileFormatCommand ( command , "html" ) ;
     }
+
+/**	\fn MyApp::getHTMLCommand ( wxString command )
+	\brief Returns the command line to invoke the browser.
+	\param type The file ending to find the application for.
+	\param file The URL/file.
+*/
+wxString MyApp::getFileFormatCommand ( wxString type , wxString file )
+	{
+    wxFileType *ft = mtm.GetFileTypeFromExtension ( type ) ;
+    if ( !ft ) return "" ;
+    return ft->GetOpenCommand ( file ) ;
+	}    
     
 /**	\fn MyApp::getFileFormatApplication ( wxString type )
 	\brief Returns the application associated with a file type. Windows only.

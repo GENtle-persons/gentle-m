@@ -1,7 +1,7 @@
 [Project]
 FileName=GENtle.dev
 Name=GENtle
-UnitCount=132
+UnitCount=134
 Type=0
 Ver=1
 ObjFiles=
@@ -11,7 +11,7 @@ PrivateResource=GENtle_private.rc
 ResourceIncludes=C:\Programme\Dev-Cpp\include;"C:\Program Files\Dev-Cpp\include"
 MakeIncludes=
 Compiler=--pipe -D_X86_=1 -DWIN32 -D_WIN32 -DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -D__WIN32__ -mthreads -DSTRICT  -D__WXMSW__ -D__WINDOWS__ -Wall  -fno-pcc-struct-return -O2 -fno-rtti -fno-exceptions_@@_
-CppCompiler=--pipe -D_X86_=1 -DWIN32 -D_WIN32 -DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -D__WIN32__ -mthreads -DSTRICT  -D__WXMSW__ -D__WINDOWS__ -Wall -fno-pcc-struct-return -O2 -fno-rtti -fno-exceptions_@@_
+CppCompiler=--pipe -D_X86_=1 -DWIN32 -D_WIN32 -DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -D__WIN32__ -mthreads -DSTRICT  -D__WXMSW__ -D__WINDOWS__ -Wall -fno-pcc-struct-return -O2 -fno-rtti -fno-exceptions -finline-functions_@@_
 Linker=-lwxmsw25_@@_-lwxmsw25_gl_@@_-lwxtiff_@@_-lwxjpeg_@@_-lwxpng_@@_-lwxzlib_@@_-lwxregex_@@_-lwxexpat_@@_-lstdc++_@@_-lgcc_@@_-lodbc32_@@_-lwsock32_@@_-lwinspool_@@_-lwinmm_@@_-lshell32_@@_-lcomctl32_@@_-lctl3d32_@@_-lodbc32_@@_-ladvapi32 _@@_-lodbc32 _@@_-lwsock32 _@@_-lopengl32 _@@_-lglu32 _@@_-lole32 _@@_-loleaut32 _@@_-luuid_@@_sqlite.dll_@@_libmysql.a_@@_sqlite3.dll_@@_-s_@@_
 IsCpp=1
 Icon=GENtle.ico
@@ -1361,6 +1361,26 @@ BuildCmd=
 FileName=clustalw\util.c
 CompileCpp=1
 Folder=ClustalW
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit133]
+FileName=CGview.h
+CompileCpp=1
+Folder=Data structures
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit134]
+FileName=CGview.cpp
+CompileCpp=1
+Folder=Data structures
 Compile=1
 Link=1
 Priority=1000

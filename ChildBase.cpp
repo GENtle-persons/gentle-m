@@ -178,28 +178,32 @@ void ChildBase::OnExport (wxCommandEvent& event)
     wxString wcPlain = "Plain text|*.*" ;
     wxString wcIG = "IntelliGenetics format (*.ig)|*.ig" ;
     wxString wcClone = "CLONE|*.*" ;
+    wxString wcGCviewXML = "GCview (XML)|*.xml" ;
     wxString wildcard = wcGenBank + "|" +
                         wcPlain + "|" +
                         wcFasta + "|" + 
                         wcEMBL + "|" + 
-                        wcIG ; 
+                        wcIG + "|" +
+                        wcGCviewXML ; 
     wxString lastdir = myapp()->frame->LS->getOption ( "LAST_IMPORT_DIR" , "C:" ) ;
-    wxFileDialog d ( this , txt("export_file") , lastdir , "" , wildcard , wxSAVE ) ;
+    wxFileDialog d ( this , txt("export_file") , lastdir , "" , wildcard , wxSAVE/*|wxOVERWRITE_PROMPT*/ ) ;
+    d.SetFilterIndex ( myapp()->frame->LS->getOption ( "LAST_EXPORT_FILTER" , 0 ) ) ;
     int x = d.ShowModal() ;
     if ( x != wxID_OK ) return ;
 
+    myapp()->frame->LS->setOption ( "LAST_EXPORT_FILTER" , d.GetFilterIndex() ) ;
     myapp()->frame->LS->setOption ( "LAST_IMPORT_DIR" , d.GetDirectory() ) ;
-    doExport ( d.GetPath() , d.GetFilterIndex () ) ;    
+    doExport ( d.GetPath() , d.GetFilterIndex() ) ;    
     }   
     
 void ChildBase::doExport ( wxString filename , int filter )
     {
     wxFile out ( filename , wxFile::write ) ;
-    exportVector ( vec , out , filter ) ;
+    exportVector ( vec , out , filter , filename ) ;
     out.Close () ;
     }    
 
-void ChildBase::exportVector ( TVector *vec , wxFile &out , int filter )
+void ChildBase::exportVector ( TVector *vec , wxFile &out , int filter , wxString filename )
     {
     if ( filter == 0 ) // GeneBank 
         {
@@ -244,6 +248,13 @@ void ChildBase::exportVector ( TVector *vec , wxFile &out , int filter )
            out.Write ( s.Left ( 79 ) + "\n" ) ;
            s = s.Mid ( 80 ) ;
            }    
+        }
+    else if ( filter == 5 ) // GCview XML
+        {
+        CGview cgv ( vec ) ;
+        if ( !cgv.runSettingsDialog () ) return ; // Cancel
+        out.Write ( cgv.getXML() ) ;
+        cgv.postProcess ( filename ) ;
         }
     }
         

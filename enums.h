@@ -342,6 +342,9 @@ enum {
     STRAND_NEW_53,
     STRAND_NEW_BOTH,
     
+    CGVIEW_RUN_CGVIEWER ,
+    CGVIEW_CHOOSE_JAR ,
+    
     Y___,
     Z___
     } ;

@@ -1577,6 +1577,7 @@ wxString MyFrame::check4update ()
         if ( td > lu )
            {
            wxString msg = it.AfterFirst ( '\n' ) ;
+           msg += "\n(" + wxString ( txt("t_you_use_version") ) + myapp()->get_GENtle_version() + ")" ;
            wxMessageDialog md ( this , msg , txt("t_new_version" ) ,
                               wxOK | wxCANCEL | wxCENTRE | wxICON_INFORMATION ) ;
            if ( wxID_OK != md.ShowModal() )

@@ -111,7 +111,7 @@ class TStorage
     virtual void setOption ( wxString oname , wxString vname ) ; ///< Set option in local database
     virtual int getOption ( wxString oname , int def ) ; ///< Get option from local database
     virtual wxString getOption ( wxString oname , wxString def ) ; ///< Get option from local database
-    virtual bool copySQLfields ( TStorage &target , wxString table , wxString cond ) ; ///< ???
+    virtual bool copySQLfields ( TStorage &target , wxString table , wxString cond ) ; ///< Internal use for update
     virtual void synchronize () ; ///< Synchronize information between databases (not used)
 
     virtual void autoUpdateSchema () ; ///< Update database to a new schema
