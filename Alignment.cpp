@@ -238,7 +238,7 @@ void TAlignment::redoAlignments ()
     for ( a = 0 ; a < qAlign[0].length() ; a++ )
         {
         if ( qAlign[0][a] == '-' )
-           dv->insert_char ( '-' , a , false ) ;
+           dv->insert_char ( '-' , a+1 , false ) ;
         }
     
     f->initFromTVector ( dv ) ;
