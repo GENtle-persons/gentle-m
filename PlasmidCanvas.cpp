@@ -133,8 +133,12 @@ bool PlasmidCanvas::intersects ( wxRect &a , wxRect &b )
 void PlasmidCanvas::OnDraw(wxDC& pdc)
 {
     if ( !p || !p->vec ) return ;
-    if ( p->vec->getSequenceLength() == 0 ) return ;
     if ( myapp()->frame->isLocked() ) return ;
+    if ( p->vec->getSequenceLength() == 0 )
+    	{
+	    pdc.Clear () ;
+        return ;
+        }    
     if ( printing )
         {
         hasBeenPainted = true ;

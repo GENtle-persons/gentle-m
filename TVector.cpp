@@ -1470,6 +1470,7 @@ wxBrush *TVectorItem::getBrush ()
 wxColour TVectorItem::getFontColor ()
     {
     wxBrush *b = getBrush() ;
+    myass ( b , "Brush is NULL!" ) ;
     wxColour c = b->GetColour() ;
     if ( b == wxTRANSPARENT_BRUSH || b == wxWHITE_BRUSH )
         c = wxColour ( 255 , 255 , 255 ) ;
@@ -1772,7 +1773,7 @@ void TVectorItem::getArrangedAA ( TVector *v , wxString &s , int disp , SeqAA *a
 
 int TVectorItem::getOffsetAt ( int i )
     {
-    myass ( lastVector , "TVectorItem::getOffsetAt" ) ;
+//    myass ( lastVector , "TVectorItem::getOffsetAt" ) ;
     if ( !lastVector ) return -1 ;
     if ( lastVector && lastVector->getGenomeMode() ) return -1 ;
     if ( getOffset () == -1 ) return -1 ;
