@@ -45,7 +45,7 @@ BEGIN_EVENT_TABLE(MyFrame, MyFrameType)
 END_EVENT_TABLE()
 
 /// \brief Number of wxAcceleratorEntry entries
-#define ACC_ENT 40
+#define ACC_ENT 41
 
 /** \brief Constructor
 
@@ -109,6 +109,7 @@ MyFrame::MyFrame(wxWindow *parent,
     entries[37].Set(wxACCEL_NORMAL, WXK_F8, MDI_TOGGLE_IDNA);
     entries[38].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_F12, Y___);
     entries[39].Set(wxACCEL_CTRL, WXK_F1, MDI_ABOUT);
+    entries[40].Set(wxACCEL_NORMAL, WXK_F9, MDI_AUTO_ANNOTATE);
     
     
     wxAcceleratorTable accel(ACC_ENT, entries);

@@ -17,7 +17,7 @@ TStorage::TStorage ( int nt , wxString fn )
     recording = false ;
     writeProtect = false ;
     storagetype = nt ;
-    if ( fn.IsEmpty() ) fn = myapp()->homedir+"/local.db" ;
+    if ( fn.IsEmpty() ) fn = myapp()->homedir + myapp()->slash + "local.db" ;
     dbname = fn ;
 
     isSqlite3 = false ;

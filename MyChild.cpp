@@ -47,6 +47,7 @@ BEGIN_EVENT_TABLE(MyChild, MyChildBase)
     EVT_MENU(MDI_RUN_PCR,MyChild::OnRunPCR)
     EVT_MENU(MDI_SEQUENCING_PRIMER,MyChild::OnSequencingPrimer)
     EVT_MENU(MDI_REMOVE_SEQUENCING_PRIMERS,MyChild::OnRemoveSequencingPrimers)
+    EVT_MENU(MDI_AUTO_ANNOTATE,MyChild::OnAutoAnnotate)
 
     EVT_CHOICE(PC_ZOOM,MyChild::OnZoom)
     EVT_UPDATE_UI(MDI_REFRESH, MyChild::OnUpdateRefresh)
@@ -318,6 +319,7 @@ void MyChild::initMenus ()
     edit_menu->Append(MDI_EDIT_ORFS, txt("m_edit_orfs") );
     edit_menu->Append(MDI_SEQUENCING_PRIMER, txt("m_show_sequencing_primers") );
     edit_menu->Append(MDI_REMOVE_SEQUENCING_PRIMERS, txt("m_remove_sequencing_primers") );
+    edit_menu->Append(MDI_AUTO_ANNOTATE, txt("m_auto_annotate") );
 
     wxMenu *view_menu = new wxMenu;
 //    view_menu->Append(MDI_REFRESH, txt("m_refresh_picture") );

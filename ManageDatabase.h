@@ -127,6 +127,7 @@ class TManageDatabaseDialog : public wxDialog
     wxArrayString context_names ;
     int actionMode ;
     TVector *v ;
+    bool justload ;
     
     private:
     bool doSave , doLoad , isProject ;

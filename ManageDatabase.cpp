@@ -53,6 +53,7 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , char *title ,
     doSave = ( mode & ACTION_MODE_SAVE ) != 0 ;
     isProject = ( mode & ACTION_MODE_PROJECT ) != 0 ;
     bool startup = ( mode & ACTION_MODE_STARTUP ) != 0 ;
+    justload = false ;
     
     int w , h ;
 #ifdef __WXMSW__
@@ -963,6 +964,8 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
 
     v->updateDisplay() ;
     v->undo.clear() ;
+    
+    if ( justload ) return true ;
     
     ChildBase *n = NULL ;
     if ( v->getType() == TYPE_AMINO_ACIDS )
