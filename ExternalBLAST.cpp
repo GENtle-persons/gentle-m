@@ -2,6 +2,7 @@
 
 void EIpanel::init_blast()
 {
+    RETMAX = 10 ;
     t1 = new wxTextCtrl ( up , ID_T1 , "" , wxDefaultPosition , wxDefaultSize , wxTE_PROCESS_ENTER ) ;
     b1 = new wxButton ( up , ID_B1 , txt("b_find") , wxDefaultPosition ) ;
     b2 = new wxButton ( up , ID_B2 , txt("t_open") , wxDefaultPosition ) ;
@@ -196,10 +197,14 @@ void EIpanel::process_blast() // This starts the thread
 
 void EIpanel::process_blast2() // This is called upon termination of the thread
 {
+//    bool initial = false ;
     if ( blast_thread )
     {
 	blast_thread = NULL ;
 	b1->Enable() ;
+//	initial = true ;
+//	res_count = 0 ;
+//	res_start = 0 ;
     }
 
     TiXmlDocument blast_doc ;
@@ -223,8 +228,20 @@ void EIpanel::process_blast2() // This is called upon termination of the thread
     x = x->FirstChild ( "Iteration_hits" ) ;
     
     int a = 0 ;
-    for ( x = x->FirstChild ( "Hit" ) ; x ; x = x->NextSibling ( "Hit" ) )
+    for ( x = x->FirstChild ( "Hit" ) ; x ; x = x->NextSibling ( "Hit" ) , a++ )
     {
+/*
+	if ( !initial && a < res_start )
+	{
+	    continue ;
+	}
+	if ( initial )
+	{
+	    res_count++ ;
+	    if ( initial && a > RETMAX ) continue ;
+	}
+	if ( !initial && a > res_start + RETMAX ) continue ;
+*/
 	wxString html ;
 	wxString name = valFC ( x->FirstChild ( "Hit_def" ) ) ;
 	wxString id = valFC ( x->FirstChild ( "Hit_id" ) ) ;
@@ -249,7 +266,7 @@ void EIpanel::process_blast2() // This is called upon termination of the thread
 	wxString hseq = valFC ( h->FirstChild ( "Hsp_hseq" ) ) ;
 
 	html = "<table width=100%><tr>" ;
-	html += "<td valign=top>" + name + "</td>" ;
+	html += "<td valign=top width=100%>" + name + "</td>" ;
 	html += "<td align=right valign=top>" + evalue + "</td>" ;
 	html += "</tr><tr>" ;
 	html += "<td colspan=2><tt><font size=2>\n" ;
