@@ -76,7 +76,7 @@ TAlignmentDialog::TAlignmentDialog(wxWindow *parent, const wxString& title )
     nb = new wxNotebook ( this , -1 , wxPoint ( 0 , 0 ) , wxSize ( w , h-40 ) ) ;
     init_what () ;
     init_how () ;
-    init_disp () ;
+//    init_disp () ;
     wxButton *b = new wxButton ( this , AL_OK , txt("b_OK") , wxPoint ( w/3 , h-30 ) ) ;
     new wxButton ( this , AL_CANCEL , txt("b_cancel") , wxPoint ( w/2 , h-30 ) ) ;
     b->SetDefault () ;
