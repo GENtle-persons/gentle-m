@@ -128,7 +128,7 @@ void TAminoAcids::initme ()
     vs->SplitVertically ( stat , desc , w/2 ) ;
     hs->SetMinimumPaneSize ( h+bo ) ;
     
-                            
+#ifdef __WXMSW__                            
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
     myapp()->frame->InitToolBar(toolBar);
     toolBar->AddTool( MDI_TEXT_IMPORT , 
@@ -149,6 +149,7 @@ void TAminoAcids::initme ()
     toolBar->AddTool( MDI_PASTE,
         wxBitmap (myapp()->bmpdir+"\\paste.bmp", wxBITMAP_TYPE_BMP)) ;
     toolBar->Realize() ;
+#endif
 
     showSequence () ;
     showStat () ;

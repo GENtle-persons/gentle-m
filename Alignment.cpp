@@ -480,13 +480,19 @@ void TAlignment::MatrixBacktrack ( vector <tvc> &back ,
 // ******************************************* TAlignmentDialog
 
 TAlignmentDialog::TAlignmentDialog(wxWindow *parent, const wxString& title )
-    : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 600 , 450 ) )
+    : wxDialog ( myapp()->frame , -1 , title , wxDefaultPosition , wxSize ( 600 , 450 ) )
     {
     bo = 5 ;
     th = 15 ;
     al = (TAlignment*) parent ;
+    Show ( TRUE ) ;
     int w , h ;
+#ifdef __WXMSW__
     GetClientSize ( &w , &h ) ;
+#else
+    w = 600 ;
+    h = 450 ;
+#endif
     nb = new wxNotebook ( this , -1 , wxPoint ( 0 , 0 ) , wxSize ( w , h-40 ) ) ;
     init_what () ;
     init_how () ;
