@@ -132,6 +132,7 @@ class TVector
     virtual TVector *getAAvector ( int from , int to , int dir = 1 ) ;
     virtual bool reduceToFragment ( TRestrictionCut left , TRestrictionCut right ) ;
     virtual void doRestriction () ;
+    virtual void sortRestrictionSites () ;
     virtual void doAction () ;
     virtual void doRemove ( int from , int to , bool update = true ) ;
     virtual int countCuts ( string enzyme ) ;
