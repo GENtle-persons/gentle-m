@@ -25,7 +25,7 @@ class TMyDropTarget : public wxTextDropTarget
 class TManageDatabaseDialog : public wxDialog
     {
     public :
-    TManageDatabaseDialog ( wxWindow *parent , char *title , MyApp *_app , 
+    TManageDatabaseDialog ( wxWindow *parent , char *title ,  
                         int mode = ACTION_MODE_MANAGE , TVector *_v = NULL ) ;
     virtual ~TManageDatabaseDialog () ;
 
@@ -95,7 +95,6 @@ class TManageDatabaseDialog : public wxDialog
     void pmGetContext ( wxListCtrl *side ) ;
 
     vector <string> db_name , db_file ;
-    MyApp *app ;
     MyFrame *f ;
     TStorage *storage ;
     wxNotebook *nb ;

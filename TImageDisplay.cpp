@@ -39,27 +39,16 @@ void TImageDisplay::OnClose(wxCloseEvent& event)
     p->mainTree->removeChild ( this ) ;
     p->SetTitle ( txt("gentle") ) ;
     SetTitle ( txt("gentle") ) ;
-    
-    // Removing from frame children list
-    int a ;
-    for ( a = 0 ; a < p->children.size() && p->children[a] != this ; a++ ) ;
-    if ( a < p->children.size() )
-        {
-        p->children[a] = p->children[p->children.size()-1] ;
-        p->children.pop_back () ;
-        }
-
+    p->removeChild ( this ) ;
     event.Skip();
 }
 
-void TImageDisplay::initme ( MyApp *_app )
+void TImageDisplay::initme ()
     {
-    app = _app ;
-
     // Menus
-    wxMenu *file_menu = app->frame->getFileMenu () ;
-    wxMenu *tool_menu = app->frame->getToolMenu () ;
-    wxMenu *help_menu = app->frame->getHelpMenu () ;
+    wxMenu *file_menu = myapp()->frame->getFileMenu () ;
+    wxMenu *tool_menu = myapp()->frame->getToolMenu () ;
+    wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
 
     wxMenuBar *menu_bar = new wxMenuBar;
 
@@ -84,8 +73,9 @@ void TImageDisplay::initme ( MyApp *_app )
     
     ud->SplitHorizontally ( bu , lb , 20 ) ;
     
-    string s_dir = app->frame->LS->getOption ( "IMGDIR" , wxGetCwd().c_str() ) ;    
+    string s_dir = myapp()->frame->LS->getOption ( "IMGDIR" , wxGetCwd().c_str() ) ;    
     ShowDir ( s_dir.c_str() ) ;
+    myapp()->frame->setChild ( this ) ;
     }
     
 void TImageDisplay::ShowDir ( wxString s )
@@ -97,7 +87,7 @@ void TImageDisplay::ShowDir ( wxString s )
     if ( !dir.IsOpened() )
         return;
 
-    app->frame->LS->setOption ( "IMGDIR" , s.c_str() ) ;
+    myapp()->frame->LS->setOption ( "IMGDIR" , s.c_str() ) ;
     wxString filename;
 
     bool cont = dir.GetFirst(&filename, "*.img", wxDIR_FILES);

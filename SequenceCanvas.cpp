@@ -31,6 +31,9 @@ BEGIN_EVENT_TABLE(SequenceCanvas, wxScrolledWindow)
 
     EVT_MENU(MDI_CUT, SequenceCanvas::OnCut)
     EVT_MENU(MDI_COPY, SequenceCanvas::OnCopy)
+
+    EVT_SET_FOCUS(SequenceCanvas::OnFocus)
+    EVT_KILL_FOCUS(SequenceCanvas::OnKillFocus)
 END_EVENT_TABLE()
 
 // Define a constructor for my canvas
@@ -53,6 +56,7 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
     forceoverwrite = false ;
     wantOverwrite = false ;
     maxendnumberlength = 9 ;
+    lastyoffset = 0 ;
 
     m_dirty = FALSE;
     editMode = false ;
@@ -315,7 +319,7 @@ void SequenceCanvas::vecEdit ( wxCommandEvent &ev )
     else if ( pd )
         {
         TVector *vec = pd->w ;
-        TVectorEditor ve ( this , txt("t_vector_editor") , vec , pd->app ) ;
+        TVectorEditor ve ( this , txt("t_vector_editor") , vec ) ;
         ve.initialViewEnzyme ( "" ) ;
         ve.hideProp = true ;
         ve.hideItem = true ;
@@ -355,7 +359,7 @@ void SequenceCanvas::blastAA ( wxCommandEvent &ev )
     else if ( aa )
         {
         string seq = getSelection() ;
-        aa->app->frame->blast ( seq , "blastp" ) ;
+        myapp()->frame->blast ( seq , "blastp" ) ;
         }
     }
 
@@ -719,7 +723,7 @@ void SequenceCanvas::mark ( string id , int from , int to , int value )
                if ( from == -1 ) *tt = 0 ;
                }
             else *tt = 0 ;
-	    MyFrame *f = app->frame ;
+	    MyFrame *f = myapp()->frame ;
             f->SetStatusText ( tt , 1 ) ;
             }
         }
@@ -737,7 +741,7 @@ void SequenceCanvas::mark ( string id , int from , int to , int value )
                if ( from == -1 ) *tt = 0 ;
                }
             else *tt = 0 ;
-            MyFrame *f = (MyFrame*) pd->app->frame ;
+            MyFrame *f = (MyFrame*) myapp()->frame ;
             f->SetStatusText ( tt , 1 ) ;
            }
         }
@@ -759,7 +763,7 @@ void SequenceCanvas::arrange ()
         }
     
     if ( printing ) return ;
-        
+    
     MyGetViewStart ( &vx , &vy ) ;
     if ( lowy != oldlowy )
        SetScrollbars ( 0 , charheight , vy , lowy/charheight , false ) ;
@@ -784,7 +788,6 @@ void SequenceCanvas::OnDraw(wxDC& dc)
     if ( seq.size() == 0 ) return ;
     if ( doHide ) return ;
     int wx , wy ;
-    if ( p ) app = p->app ;
     dc.SetFont ( *font ) ;
     dc.GetTextExtent ( "A" , &wx , &wy ) ;
     if ( wx != charwidth || wy != charheight )
@@ -808,12 +811,13 @@ void SequenceCanvas::OnDraw(wxDC& dc)
         
     if ( printing ) return ;
         
-    if ( app->frame->enhancedRefresh && !printing )
+    int vx , vy ;
+    GetViewStart ( &vx , &vy ) ;
+
+    if ( myapp()->frame->enhancedRefresh && !printing )
         { // MemoryDC
         int w , h ;
         MyGetClientSize ( &w , &h ) ;
-        int vx , vy ;
-        MyGetViewStart ( &vx , &vy ) ;
         int yoff = wy * vy ;
         wxBitmap bmp ( w , h , -1 ) ;
         wxMemoryDC pdc ;
@@ -1106,7 +1110,7 @@ void SequenceCanvas::OnNewFromResultDNA ( wxCommandEvent &ev )
                                         1 , 
                                         s.length() , 
                                         VIT_MISC ) ) ;
-    pd->app->frame->newFromVector ( nv ) ;
+    myapp()->frame->newFromVector ( nv ) ;
     }
     
 void SequenceCanvas::OnNewFromResultAA ( wxCommandEvent &ev )
@@ -1128,7 +1132,7 @@ void SequenceCanvas::OnNewFromResultAA ( wxCommandEvent &ev )
     string n = pd->vec->name + " (" ;
     n += txt ( "t_pcr_result" ) ;
     n += ")" ;
-    pd->app->frame->newAminoAcids ( seq , n ) ;
+    myapp()->frame->newAminoAcids ( seq , n ) ;
     }
 
 void SequenceCanvas::SilentRefresh ()
@@ -1136,6 +1140,16 @@ void SequenceCanvas::SilentRefresh ()
     wxClientDC dc(this);
     PrepareDC(dc);
     OnDraw ( dc ) ;
+    }
+    
+void SequenceCanvas::OnFocus(wxFocusEvent& event)
+    {
+    event.Skip () ;
+    }
+
+void SequenceCanvas::OnKillFocus(wxFocusEvent& event)
+    {
+    event.Skip () ;
     }
 
 // -------------------------------------------------------- TMarkMem

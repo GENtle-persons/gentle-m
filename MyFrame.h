@@ -21,60 +21,62 @@ public:
 
     MyFrame(wxWindow *parent, const wxWindowID id, const wxString& title,
             const wxPoint& pos, const wxSize& size, const long style);
-    ~MyFrame () ;
+    virtual ~MyFrame () ;
 
-    void initme () ;
-    void rememberLastProject () ;
-    void fixMax () ;
-    string check4update () ;
-    void update2version ( string ver ) ;
+    virtual void initme () ;
+    virtual void rememberLastProject () ;
+    virtual void fixMax () ;
+    virtual string check4update () ;
+    virtual void update2version ( string ver ) ;
     
-    wxMenu *getFileMenu ( bool _save = false , bool _exp = false , bool _print = false ) ;
-    wxMenu *getToolMenu ( bool _pcr = false ) ;
-    wxMenu *getHelpMenu () ;
+    virtual wxMenu *getFileMenu ( bool _save = false , bool _exp = false , bool _print = false ) ;
+    virtual wxMenu *getToolMenu ( bool _pcr = false ) ;
+    virtual wxMenu *getHelpMenu () ;
     
-    void InitToolBar(wxToolBar* toolBar);
+    virtual void InitToolBar(wxToolBar* toolBar);
 
-    void OnSize(wxSizeEvent& event);
-    void OnAbout(wxCommandEvent& event);
-    void OnHelp(wxCommandEvent& event);
-    void OnProgramOptions(wxCommandEvent& event);
-    void OnProjectSave(wxCommandEvent& event);
-    void OnProjectLoad(wxCommandEvent& event);
-    void OnProjectClose(wxCommandEvent& event);
-    void OnImageViewer(wxCommandEvent& event);
-    void OnCalculator(wxCommandEvent& event);
+    virtual void OnSize(wxSizeEvent& event);
+    virtual void OnAbout(wxCommandEvent& event);
+    virtual void OnHelp(wxCommandEvent& event);
+    virtual void OnProgramOptions(wxCommandEvent& event);
+    virtual void OnProjectSave(wxCommandEvent& event);
+    virtual void OnProjectLoad(wxCommandEvent& event);
+    virtual void OnProjectClose(wxCommandEvent& event);
+    virtual void OnImageViewer(wxCommandEvent& event);
+    virtual void OnCalculator(wxCommandEvent& event);
 
-    void OnEnzymeEditor(wxCommandEvent& event);
-    void OnAlignment(wxCommandEvent& event);
-    void OnFileOpen(wxCommandEvent& event);
-    void OnFileImport(wxCommandEvent& event ) ;
-    void OnManageDatabase(wxCommandEvent& event ) ;
-    void OnTextImport(wxCommandEvent& event ) ;
-    void OnQuit(wxCommandEvent& event);
-    void OnClose(wxCloseEvent& event);
+    virtual void OnEnzymeEditor(wxCommandEvent& event);
+    virtual void OnAlignment(wxCommandEvent& event);
+    virtual void OnFileOpen(wxCommandEvent& event);
+    virtual void OnFileImport(wxCommandEvent& event ) ;
+    virtual void OnManageDatabase(wxCommandEvent& event ) ;
+    virtual void OnTextImport(wxCommandEvent& event ) ;
+    virtual void OnQuit(wxCommandEvent& event);
+    virtual void OnClose(wxCloseEvent& event);
     
-    MyChild* newFromVector ( TVector *nv , int type = TYPE_VECTOR ) ;
-    TAminoAcids *newAminoAcids ( string aa , string title = "" ) ;
-    TAminoAcids *newAminoAcids ( TVector *nv , string title = "" ) ;
-    TABIviewer *newABI ( string filename , string title ) ;
-    MyChild *newCLONE ( TClone &clone ) ;
-    MyChild *newGB ( TGenBank &gb ) ;
-    MyChild *newFASTA ( TFasta &fasta ) ;
-    void blast ( string seq , string prg ) ;
-    void importFile ( string file , string path , int filter = -1 ) ;
+    virtual MyChild* newFromVector ( TVector *nv , int type = TYPE_VECTOR ) ;
+    virtual TAminoAcids *newAminoAcids ( string aa , string title = "" ) ;
+    virtual TAminoAcids *newAminoAcids ( TVector *nv , string title = "" ) ;
+    virtual TABIviewer *newABI ( string filename , string title ) ;
+    virtual MyChild *newCLONE ( TClone &clone ) ;
+    virtual MyChild *newGB ( TGenBank &gb ) ;
+    virtual MyChild *newFASTA ( TFasta &fasta ) ;
+    virtual void blast ( string seq , string prg ) ;
+    virtual void importFile ( string file , string path , int filter = -1 ) ;
+    virtual void setChild ( ChildBase *ch ) ;
+    virtual void removeChild ( ChildBase *ch ) ;
+
 
     TMainTree *mainTree ;
-    MyApp *app ;
     TStorage *LS ;
-    vector <ChildBase*> children ;
     bool dying , enhancedRefresh , showVectorTitle , showVectorLength , 
             loadLastProject , useMetafile , showSplashScreen , checkUpdate ,
             useCoolCanvas ;
     string lang_string ;
     string project_name , project_desc , project_db ;
     vector <string> lastCocktail ;
-
+    vector <ChildBase*> children ;
+    
     DECLARE_EVENT_TABLE()
 };
 

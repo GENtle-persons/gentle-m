@@ -175,7 +175,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
         }
 
     // Show title
-    if ( p->app->frame->showVectorTitle )
+    if ( myapp()->frame->showVectorTitle )
         {
         char *c1 , *c2 ;
         strcpy ( t , p->vec->name.c_str() ) ;
@@ -199,7 +199,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
         }
     
     // Show length
-    if ( p->app->frame->showVectorLength )
+    if ( myapp()->frame->showVectorLength )
         {
         sprintf ( t , txt("#bp") , p->vec->sequence.length() ) ;
         dc.SetFont ( normalFont ) ;
@@ -498,10 +498,9 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
            invokeVectorEditor ( "enzyme" , rs ) ;
         else if ( event.MiddleDown() )
            {
-           TRestrictionEditor ed ( p->app->frame , "" , wxPoint(-1,-1) , 
+           TRestrictionEditor ed ( myapp()->frame , "" , wxPoint(-1,-1) , 
                       wxSize(600,400) , 
                       wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL);
-           ed.app = p->app ;
            ed.pre = s ;
            ed.cocktail = p->vec->cocktail ;
            ed.initme ( p->vec ) ;

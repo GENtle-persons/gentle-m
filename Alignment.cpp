@@ -33,7 +33,7 @@ TAlignment::TAlignment(wxMDIParentFrame *parent, const wxString& title)
     
 TAlignment::~TAlignment ()
     {
-//    app->my_children.DeleteObject(this);    
+//    myapp()->my_children.DeleteObject(this);    
     }
 
 
@@ -53,33 +53,22 @@ wxColour TAlignment::findColors ( char c1 , char c2 , bool fg )
 void TAlignment::OnClose(wxCloseEvent& event)
 {
     // Removing the window from the main tree
-    //MyFrame *p = (MyFrame*)GetParent();
-  MyFrame *p = app->frame ;
+    MyFrame *p = myapp()->frame ;
     p->mainTree->removeChild ( this ) ;
     p->SetTitle ( txt("gentle") ) ;
     SetTitle ( txt("gentle") ) ;
-    
-    // Removing from frame children list
-    int a ;
-    for ( a = 0 ; a < p->children.size() && p->children[a] != this ; a++ ) ;
-    if ( a < p->children.size() )
-        {
-        p->children[a] = p->children[p->children.size()-1] ;
-        p->children.pop_back () ;
-        }
-
+    p->removeChild ( this ) ;
     event.Skip();
 }
     
-void TAlignment::initme ( MyApp *_app )
+void TAlignment::initme ()
     {
-    app = _app ;
     int bo = 5 ;
 
     // Menus
-    wxMenu *file_menu = app->frame->getFileMenu () ;
-    wxMenu *tool_menu = app->frame->getToolMenu () ;
-    wxMenu *help_menu = app->frame->getHelpMenu () ;
+    wxMenu *file_menu = myapp()->frame->getFileMenu () ;
+    wxMenu *tool_menu = myapp()->frame->getToolMenu () ;
+    wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
 
     wxMenuBar *menu_bar = new wxMenuBar;
 
@@ -94,7 +83,6 @@ void TAlignment::initme ( MyApp *_app )
     // Sequence Canvas
     sc = new SequenceCanvas ( hs , wxPoint ( 0 , 0 ) , wxSize ( 100 , 100 ) ) ;
     sc->blankline = 1 ;
-    sc->app = app ;
     sc->child = this ;
 
     // Upper panel
@@ -103,7 +91,7 @@ void TAlignment::initme ( MyApp *_app )
     int w , h ;
     up->GetClientSize ( &w , &h ) ;
     wxBitmapButton *sb = new wxBitmapButton ( up , ALIGNMENT_SETTINGS ,
-            wxBitmap (app->bmpdir+"\\align.bmp", wxBITMAP_TYPE_BMP),
+            wxBitmap (myapp()->bmpdir+"\\align.bmp", wxBITMAP_TYPE_BMP),
             wxPoint ( bo , bo ) ,
             wxDefaultSize ,
             wxBU_AUTODRAW ,
@@ -116,28 +104,20 @@ void TAlignment::initme ( MyApp *_app )
     
 #ifdef __WXMSW__ // LINUX
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
-    app->frame->InitToolBar(toolBar);
+    myapp()->frame->InitToolBar(toolBar);
     toolBar->AddTool( MDI_TEXT_IMPORT , 
-                wxBitmap (app->bmpdir+"\\new.bmp", wxBITMAP_TYPE_BMP),
+                wxBitmap (myapp()->bmpdir+"\\new.bmp", wxBITMAP_TYPE_BMP),
                 txt("m_new_sequence") ) ;
     toolBar->AddTool( MDI_FILE_OPEN, 
-            wxBitmap (app->bmpdir+"\\open.bmp", wxBITMAP_TYPE_BMP), 
+            wxBitmap (myapp()->bmpdir+"\\open.bmp", wxBITMAP_TYPE_BMP), 
             txt("m_open") , txt("m_opentxt") );
     toolBar->Realize() ;
 #endif
-    
-    
-/*
-    qOrig.push_back ( "GAATTCAGTTA" ) ;
-    qOrig.push_back ( "GGATCGA" ) ;
-    qName.push_back ( "One" ) ;
-    qName.push_back ( "Two" ) ;
-*/
-//    Maximize () ;
 
     wxCommandEvent ev ;
     OnSettings ( ev ) ;
     sc->SetFocus() ;
+    myapp()->frame->setChild ( this ) ;
     }
 
 // Callung clustalw.exe
@@ -169,7 +149,7 @@ void TAlignment::redoAlignments ()
         SetCursor ( *wxHOURGLASS_CURSOR ) ;
 
         wxString cwt = "clustalw.txt" ;
-        wxString hd = app->homedir ;
+        wxString hd = myapp()->homedir ;
         wxString tx = hd + "\\" + cwt ;
         ofstream out ( tx.c_str() , ios::out ) ;
         for ( a = 0 ; a < qVec.size() ; a++ )
@@ -559,7 +539,7 @@ void TAlignmentDialog::init_what ()
     new wxButton ( p , AL_DOWN , txt("b_down_in_list") , wxPoint ( w/3+bo , th*9 ) , wxSize ( w/6 , th*3/2 ) ) ;
     
     int a ;
-    MyFrame *f = al->app->frame ;
+    MyFrame *f = myapp()->frame ;
     // All
     for ( a = 0 ; a < f->children.size() ; a++ )
         {

@@ -99,6 +99,8 @@ public:
     virtual void OnZoom ( wxCommandEvent &ev ) ;
     virtual void OnUpdateRefresh(wxUpdateUIEvent& event);
     
+    int ly ;
+    
     DECLARE_EVENT_TABLE()
 };
 

@@ -62,7 +62,7 @@ class TSQLresult
 class TStorage
     {
     public :
-    TStorage ( int nt , MyApp *_app , string fn = "" ) ;
+    TStorage ( int nt , string fn = "" ) ;
     virtual ~TStorage () ;
     void createDatabase () ;
     TSQLresult getObject ( string query ) ;
@@ -109,7 +109,6 @@ class TStorage
     string dbname , error ;
     int storagetype , ierror ;
     bool writeProtect ;
-    MyApp *app ;
     int rpv ;
     } ;
  

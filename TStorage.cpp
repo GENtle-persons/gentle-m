@@ -4,13 +4,12 @@ using namespace std ;
 
 bool TStorage::getWriteProtect () { return writeProtect ; }
 
-TStorage::TStorage ( int nt , MyApp *_app , string fn )
+TStorage::TStorage ( int nt , string fn )
     {
     rpv = 0 ;
     writeProtect = false ;
     storagetype = nt ;
-    app = _app ;
-    if ( fn == "" ) fn = app->homedir+"/local.db" ;
+    if ( fn == "" ) fn = myapp()->homedir+"/local.db" ;
     dbname = fn ;
     autoUpdateSchema() ;
     }
@@ -127,7 +126,7 @@ TRestrictionEnzyme* TStorage::getRestrictionEnzyme ( string s )
     TRestrictionEnzyme *ret = NULL , *ret2 ;
     if ( storagetype == TEMP_STORAGE ) 
         {
-        ret2 = app->frame->LS->getRestrictionEnzyme ( s ) ;
+        ret2 = myapp()->frame->LS->getRestrictionEnzyme ( s ) ;
         if ( ret2 ) return ret2 ;
         }
 
@@ -139,8 +138,8 @@ TRestrictionEnzyme* TStorage::getRestrictionEnzyme ( string s )
         {
         ret2 = new TRestrictionEnzyme ;
         *ret2 = *ret ;
-        app->frame->LS->re.push_back ( ret2 ) ;
-        app->frame->LS->updateRestrictionEnzyme ( ret2 ) ;
+        myapp()->frame->LS->re.push_back ( ret2 ) ;
+        myapp()->frame->LS->updateRestrictionEnzyme ( ret2 ) ;
         ret = ret2 ;
         }
            
@@ -538,7 +537,7 @@ void TStorage::synchronize ()
         changed = false ;
         for ( a = 0 ; a < files.size() ; a++ )
            {
-           TStorage t ( TEMP_STORAGE , app , files[a] ) ;
+           TStorage t ( TEMP_STORAGE , files[a] ) ;
 
            TSQLresult r1 , r2 ;
            r1 = getObject ( "SELECT * FROM enzyme ORDER BY e_name" ) ;

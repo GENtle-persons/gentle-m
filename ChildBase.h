@@ -7,15 +7,13 @@
 
 using namespace std ;
 
-class MyApp ;
 class TVector ;
 
 class ChildBase : public wxMDIChildFrame
     {
     public :
-    ChildBase () { app = NULL ; vec = NULL ; }
+    ChildBase () { vec = NULL ; }
     string def ;
-    MyApp *app ;
     TVector *vec ;
     wxTreeItemId inMainTree ;
     

@@ -47,7 +47,6 @@ class TRestrictionEditor : public wxDialog
     virtual void OnCharHook(wxKeyEvent& event) ;
     
     // Variables
-    MyApp *app ;
     wxListCtrl *el , *el2 , *rsl , *rsl2 ;
     wxRadioBox *rb ;
     wxChoice *gl ;

@@ -67,13 +67,12 @@ TPrimerDesign::TPrimerDesign(wxMDIParentFrame *parent,
     stat = NULL ;
     lastPrimerActivated = -1 ;
     
-    app = ((MyFrame*) parent)->app ;
     }
     
 TPrimerDesign::~TPrimerDesign ()
     {
     if ( stat ) delete stat ;
-//    if ( app ) app->my_children.DeleteObject(this);    
+//    myapp()->my_children.DeleteObject(this);    
     delete vc ;
     delete w ;
     }
@@ -92,7 +91,7 @@ void TPrimerDesign::OnExportPrimer ( wxCommandEvent &ev )
     if ( primer[lastPrimerActivated].upper ) v->name += "-5'" ;
     else v->name += "-3'" ;
     v->type = TYPE_PRIMER ;
-    app->frame->newFromVector ( v , TYPE_PRIMER ) ;
+    myapp()->frame->newFromVector ( v , TYPE_PRIMER ) ;
     }
 
 void TPrimerDesign::OnImportPrimer ( wxCommandEvent &ev )
@@ -100,9 +99,9 @@ void TPrimerDesign::OnImportPrimer ( wxCommandEvent &ev )
     int a ;
     vector <ChildBase*> cbl ;
     
-    for ( a = 0 ; a < app->frame->children.size() ; a++ )
-       if ( app->frame->children[a]->vec->type == TYPE_PRIMER )
-          cbl.push_back ( app->frame->children[a] ) ;
+    for ( a = 0 ; a < myapp()->frame->children.size() ; a++ )
+       if ( myapp()->frame->children[a]->vec->type == TYPE_PRIMER )
+          cbl.push_back ( myapp()->frame->children[a] ) ;
     
     if ( cbl.size() == 0 )
        {
@@ -267,32 +266,22 @@ void TPrimerDesign::OnClose(wxCloseEvent& event)
     if ( !caniclose ( event ) ) return ;
     
     // Removing the window from the main tree
-    MyFrame *p = app->frame ;
+    MyFrame *p = myapp()->frame ;
     p->mainTree->removeChild ( this ) ;
     p->SetTitle ( txt("gentle") ) ;
     SetTitle ( txt("gentle") ) ;
-    
-    // Removing from frame children list
-    int a ;
-    for ( a = 0 ; a < p->children.size() && p->children[a] != this ; a++ ) ;
-    if ( a < p->children.size() )
-        {
-        p->children[a] = p->children[p->children.size()-1] ;
-        p->children.pop_back () ;
-        }
-
+    p->removeChild ( this ) ;
     event.Skip();
 }
     
-void TPrimerDesign::initme ( MyApp *_app )
+void TPrimerDesign::initme ()
     {
-    app = _app ;
     int bo = 5 ;
 
     // Menus
-    wxMenu *file_menu = app->frame->getFileMenu () ;
-    wxMenu *tool_menu = app->frame->getToolMenu () ;
-    wxMenu *help_menu = app->frame->getHelpMenu () ;
+    wxMenu *file_menu = myapp()->frame->getFileMenu () ;
+    wxMenu *tool_menu = myapp()->frame->getToolMenu () ;
+    wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
 
 /*
     wxMenu *edit_menu = new wxMenu;
@@ -357,7 +346,6 @@ void TPrimerDesign::initme ( MyApp *_app )
     // Sequence Canvas
     sc = new SequenceCanvas ( hs , wxPoint ( 0 , 0 ) , wxSize ( 100 , 100 ) ) ;
     sc->blankline = 1 ;
-    sc->app = app ;
     sc->child = this ;
 //    sc->aa = (MyChild*) this ;
     sc->pd = this ;
@@ -367,23 +355,23 @@ void TPrimerDesign::initme ( MyApp *_app )
     
 #ifdef __WXMSW__
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
-    app->frame->InitToolBar(toolBar);
+    myapp()->frame->InitToolBar(toolBar);
     toolBar->AddTool( MDI_TEXT_IMPORT , 
-                wxBitmap (app->bmpdir+"\\new.bmp", wxBITMAP_TYPE_BMP),
+                wxBitmap (myapp()->bmpdir+"\\new.bmp", wxBITMAP_TYPE_BMP),
                 txt("m_new_primer") ) ;
     toolBar->AddTool( MDI_FILE_OPEN, 
-            wxBitmap (app->bmpdir+"\\open.bmp", wxBITMAP_TYPE_BMP), 
+            wxBitmap (myapp()->bmpdir+"\\open.bmp", wxBITMAP_TYPE_BMP), 
             txt("m_open") , txt("m_opentxt") );
     toolBar->AddTool( PD_IMPORT, 
-                wxBitmap (app->bmpdir+"\\primer_import.bmp", wxBITMAP_TYPE_BMP),
+                wxBitmap (myapp()->bmpdir+"\\primer_import.bmp", wxBITMAP_TYPE_BMP),
                 txt("b_import_primer") ) ;
     toolBar->AddTool( PD_EXPORT, 
-                wxBitmap (app->bmpdir+"\\primer_export.bmp", wxBITMAP_TYPE_BMP),
+                wxBitmap (myapp()->bmpdir+"\\primer_export.bmp", wxBITMAP_TYPE_BMP),
                 txt("b_export_primer") ) ;
     toolBar->AddSeparator() ;
     toolBar->AddTool( MDI_EDIT_MODE,
-        wxBitmap (app->bmpdir+"\\mode_edit.bmp", wxBITMAP_TYPE_BMP),
-        wxBitmap (app->bmpdir+"\\mode_edit.bmp", wxBITMAP_TYPE_BMP),
+        wxBitmap (myapp()->bmpdir+"\\mode_edit.bmp", wxBITMAP_TYPE_BMP),
+        wxBitmap (myapp()->bmpdir+"\\mode_edit.bmp", wxBITMAP_TYPE_BMP),
         TRUE, -1, -1, (wxObject *) NULL, txt("m_edit_mode") ) ;
     toolBar->Realize() ;
 #endif
@@ -418,6 +406,7 @@ void TPrimerDesign::initme ( MyApp *_app )
     showSequence () ;
     updatePrimersFromSequence() ;
     sc->SetFocus() ;
+    myapp()->frame->setChild ( this ) ;
     }
     
 void TPrimerDesign::OnEditPrimer ( wxCommandEvent &ev )

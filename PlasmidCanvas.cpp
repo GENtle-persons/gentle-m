@@ -136,7 +136,7 @@ void PlasmidCanvas::OnCopyImage ( wxCommandEvent &ev )
 
 // Metafile support only exists for windows, so...
 #ifdef __WXMSW__
-    if ( p->app->frame->useMetafile ) // Use metafile DC
+    if ( myapp()->frame->useMetafile ) // Use metafile DC
         {
         GetClientSize(&w, &h);
         wxMetafileDC dc ;
@@ -269,7 +269,7 @@ bool PlasmidCanvas::pointinrect ( int x , int y , wxRect &a )
 void PlasmidCanvas::invokeVectorEditor ( string what , int num , bool forceUpdate )
     {
     p->vec->undo.start ( txt("u_vec_edit") ) ;
-    TVectorEditor ve ( this , txt("t_vector_editor") , p->vec , p->app ) ;
+    TVectorEditor ve ( this , txt("t_vector_editor") , p->vec ) ;
     bool changed = p->vec->isChanged() ;
     string on = p->vec->name ;
     p->vec->setChanged ( false ) ;
@@ -287,7 +287,7 @@ void PlasmidCanvas::invokeVectorEditor ( string what , int num , bool forceUpdat
     ve.cleanup () ;
     if ( forceUpdate || p->vec->isChanged() )
         {
-        p->app->frame->mainTree->SetItemText ( p->inMainTree , p->getName().c_str() ) ;
+        myapp()->frame->mainTree->SetItemText ( p->inMainTree , p->getName().c_str() ) ;
         p->treeBox->initme() ;
         p->showName() ;
         p->treeBox->SelectItem ( p->treeBox->vroot ) ;
