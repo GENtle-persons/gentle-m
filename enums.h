@@ -349,6 +349,9 @@ enum {
     CGVIEW_CHOOSE_BACKGROUND_COLOR ,
     
     GRAPH_SWAP_SIDE,
+    GRAPH_ZOOM_X,
+    GRAPH_ZOOM_Y,
+    GRAPH_ZOOM_LINKED,
     
     Y___,
     Z___
