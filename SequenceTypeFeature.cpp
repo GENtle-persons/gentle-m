@@ -31,18 +31,20 @@ void SeqFeature::show ( wxDC& dc )
 
     for ( int l = 0 ; l < pl.maxlevels ; l++ )
         {
-
-        for ( a = 0 ; a < pos.p.GetCount() ; a++ )
+        int pcnt = 0 ;
+        for ( a = 0 ; a < pos.r.size() ; a++ )
             {
             if ( can->hardstop > -1 && a > can->hardstop ) break ;
-            b = pos.p[a] ;
+            b = pcnt+1 ;//pos.p[a] ;
+            if ( a == 0 || ( a > 0 && pos.r[a].GetTop() != pos.r[a-1].GetTop() ) ) b = -1 ;
+            else pcnt++ ;
             int tx = pos.r[a].x , ty = pos.r[a].y ;
             int tz = ty + can->charheight ;
             bool insight = true ; // Meaning "is this part visible"
             if ( tz < ya ) insight = false ;
             if ( ty > yb ) insight = false ;
             if ( can->getDrawAll() ) insight = true ;
-            else if ( ty > yb ) a = pos.p.GetCount() ;
+            else if ( ty > yb ) a = pos.r.size() ;
             if ( b > 0 ) // Character
                {
                t = " " ;
@@ -78,12 +80,12 @@ void SeqFeature::show ( wxDC& dc )
                        dc.SetPen ( *MYPEN ( col ) ) ;
                        }
     
-                    // Offsets
 /*                    if ( aaa && !newline && 
                          b-1 < aaa->offsets.GetCount()  && 
                          aaa->offsets[b-1] != -1 && 
                          aaa->offset_items[b-1] == &vec->items[pl.getID(i)] )*/
                          
+                    // Offsets
                     int o = -1 ;
                     if ( (b-1) % 10 == 0 && !newline )
                        o = vec->items[pl.getID(i)].getOffsetAt ( b-1 ) ;

@@ -663,7 +663,7 @@ void MyFrame::newPDB ( TPDB &pdb , wxString title )
     pdb.remap () ;
     for ( int a = 0 ; a < pdb.seqres.size() ; a++ )
         {
-        newAminoAcids ( pdb.seqres[a].v , pdb.seqres[a].v->getName() ) ;
+        newAminoAcids ( pdb.seqres[a].v , pdb.seqres[a].v->getName() ) -> Activate () ;
         delete pdb.seqres[a].v ;
         }    
     }
@@ -991,13 +991,14 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , wxString title )
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
 
-    subframe->initme () ;
     mainTree->addChild ( subframe , TYPE_AMINO_ACIDS ) ;
+    subframe->initme () ;
     if ( locked != 0 ) return subframe ;
     subframe->Show() ;
     subframe->Maximize() ;
     subframe->showName() ;
     subframe->Activate () ;
+    children.Last()->Activate () ;
     return subframe ;
     }
 
@@ -1022,8 +1023,8 @@ TABIviewer *MyFrame::newABI ( wxString filename , wxString title )
     subframe->Maximize() ;
     subframe->showName() ;
     
-    mainTree->addChild ( subframe , TYPE_SEQUENCE ) ;
     setChild ( subframe ) ;
+    mainTree->addChild ( subframe , TYPE_SEQUENCE ) ;
 
     if ( LS->getOption ( "SHOWABIHORIZONTAL" , false ) )
         {

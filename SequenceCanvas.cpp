@@ -89,6 +89,7 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
     marking = false ;
     drawing = false ;
     hardstop = -1 ;
+    border = 4 ;
 
     setMiniDisplay ( false ) ;
     editMode = false ;
@@ -568,14 +569,14 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
     if ( printSelection )
        {
        int a , _f = -1 , _t = -1 , _fin = -1 ;
-       for ( a = 0 ; a < seq[lastmarked]->pos.m.GetCount() ; a++ )
+       for ( a = 0 ; a < seq[lastmarked]->getMarkSize() ; a++ )
           {
-          if ( seq[lastmarked]->pos.m[a] == 1 )
+          if ( seq[lastmarked]->getMark ( a ) == 1 )
              {
-             if ( _f == -1 ) _f = seq[lastmarked]->pos.r[a].y ;
-             _t = seq[lastmarked]->pos.r[a].y ;
+             if ( _f == -1 ) _f = seq[lastmarked]->getRect(a).y ;
+             _t = seq[lastmarked]->getRect(a).y ;
              }
-          if ( _t == seq[lastmarked]->pos.r[a].y ) _fin = a ;
+          if ( _t == seq[lastmarked]->getRect(a).y ) _fin = a ;
           }
        if ( _f != -1 )
           {
@@ -761,7 +762,7 @@ wxBitmap *SequenceCanvas::getSequenceBitmap ()
 int SequenceCanvas::getBatchMark ()
     {
     int r = vpy ;
-    r -= vpy % seq.GetCount() ;
+    r -= vpy % NumberOfLines() ;//seq.GetCount() ;
     return r ;
     }
         
@@ -871,28 +872,27 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
     if ( p && p->vec ) seqlen = p->vec->getSequenceLength() ;
     else seqlen = seq[b]->s.length() ;
 
-
     int l = seqlen ;
-    for ( a = 0 ; a < seq[b]->pos.m.GetCount()/* && charwidth && charheight*/ ; a++ )
+    for ( a = 0 ; a < seq[b]->getMarkSize()/* && charwidth && charheight*/ ; a++ )
         {
-        if ( inMarkRange ( seq[b]->pos.p[a] , from , to , l ) ) 
+        if ( inMarkRange ( seq[b]->getPos(a) , from , to , l ) ) 
            {
-           seq[b]->pos.m[a] = value ;
+           seq[b]->setMark ( a , value ) ;
            cnt += value ;
-           if ( vpx == -1 ) vpx = seq[b]->pos.r[a].GetLeft() / charwidth ;
-           if ( vpy == -1 ) vpy = seq[b]->pos.r[a].GetTop() / charheight ;
+           if ( vpx == -1 ) vpx = seq[b]->getRect(a).GetLeft() / charwidth ;
+           if ( vpy == -1 ) vpy = seq[b]->getRect(a).GetTop() / charheight ;
            }
         else 
-           seq[b]->pos.m[a] = 0 ;
+           seq[b]->setMark ( a , 0 ) ;
         }
         
     for ( int other = 0 ; other < seq.GetCount() ; other++ )
         {
         bool canbemarked = seq[other]->takesMouseActions ;
         if ( other == b ) canbemarked = false ;
-        for ( a = 0 ; canbemarked && a < seq[other]->pos.m.GetCount() ; a++ )
+        for ( a = 0 ; canbemarked && a < seq[other]->getMarkSize() ; a++ )
             {
-            seq[other]->pos.m[a] = 0 ;
+            seq[other]->setMark ( a , 0 ) ;
             }
         }
 
@@ -988,7 +988,7 @@ void SequenceCanvas::arrange ()
     int a , b ;
     
     wxBeginBusyCursor() ;    
-
+    
     if ( isHorizontal() )
         {
         blocksize = 0 ;
@@ -1000,6 +1000,18 @@ void SequenceCanvas::arrange ()
         }
     else blocksize = 10 ;
     
+    // End-number length
+    maxendnumberlength = 0 ;
+    for ( a = 0 ; a < seq.GetCount() ; a++ )
+        {
+        seq[a]->makeEndnumberLength() ;
+        if ( seq[a]->endnumberlength > maxendnumberlength )
+           maxendnumberlength = seq[a]->endnumberlength ;
+        }
+    for ( a = 0 ; a < seq.GetCount() ; a++ )
+        seq[a]->endnumberlength = maxendnumberlength ;
+            
+    // Arranging
     for ( a = 0 ; a < seq.GetCount() ; a++ )
         {
         b = seq[a]->arrange ( a ) ;
@@ -1052,10 +1064,10 @@ void SequenceCanvas::OnDraw(wxDC& dc)
             {
             for ( int a = 0 ; a < seq.GetCount() ; a++ )
                {
-               for ( int b = 0 ; b < seq[a]->pos.r.size() ; b++ )
+               for ( int b = 0 ; b < seq[a]->getRectSize() ; b++ )
                   {
-                  if ( seq[a]->pos.r[b].GetRight() > print_maxx )
-                     print_maxx = seq[a]->pos.r[b].GetRight() ;
+                  if ( seq[a]->getRect(b).GetRight() > print_maxx )
+                     print_maxx = seq[a]->getRect(b).GetRight() ;
                   }
                }
             drawing = false ;
@@ -1113,7 +1125,9 @@ void SequenceCanvas::safeShow ( wxDC &dc )
     for ( a = 0 ; a < seq.GetCount() ; a++ )
        {
        if ( !seq[a]->shown )
+          {
           seq[a]->show ( dc ) ;
+          }    
        }
     }
     
@@ -1142,7 +1156,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
     SeqBasic *where ;
     where = findMouseTarget ( pt , pos ) ;
     if ( pos <= 0 ) pos = -1 ;
-    else pos = where->pos.p[pos] ;
+    else pos = where->getPos(pos) ;
     if ( pos != -1 && where && where->takesMouseActions )
         {
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
@@ -1422,13 +1436,14 @@ SeqBasic* SequenceCanvas::findMouseTarget ( wxPoint pt , int &pos )
     pos = 0 ;
     for ( a = 0 ; a < seq.GetCount() && pos == 0 ; a++ )
         {
-        b = seq[a]->pos.getLine ( pt.y ) ;
+        if ( seq[a]->isDisplayOnly() ) continue ;
+        b = seq[a]->getLine ( pt.y ) ;
 
         if ( b != -1 )
            {
            ret = seq[a] ;
-           pos = ret->pos.getItem ( pt , b ) ;
-           if ( !pos ) ret = NULL ;
+           pos = ret->getItem ( pt , b ) ;
+           if ( pos == 0 ) ret = NULL ;
            }
         }
     return ret ;
@@ -1439,7 +1454,7 @@ int SequenceCanvas::findMouseTargetItem ( wxPoint pt )
     int a , b ;
     for ( a = 0 ; a < seq.GetCount() ; a++ )
         {
-        b = seq[a]->pos.getLine ( pt.y ) ;
+        b = seq[a]->getLine ( pt.y ) ;
         if ( b != -1 ) return a ;
         }
     return -1 ;
@@ -1720,7 +1735,7 @@ void SequenceCanvas::startEdit ( wxString id )
     myass ( !getEditMode() , "SequenceCanvas::startEdit" ) ;
     setEditMode ( true ) ;
     findID(id)->s += " " ;
-    if ( child ) child->vec->getSequence() += " " ;
+    if ( child ) child->vec->addToSequence ( " " ) ;
     arrange () ;
     if ( _from == -1 ) mark ( id , 1 , 1 , 2 ) ;
     else mark ( id , _from , _from , 2 ) ;
@@ -1733,11 +1748,15 @@ void SequenceCanvas::stopEdit ()
     setEditMode ( false ) ;
     myass ( lastmarked >= 0 , "SequenceCanvas::stopEdit2" ) ;
     myass ( seq[lastmarked] , "SequenceCanvas::stopEdit3" ) ;
-    wxString id = seq[lastmarked]->whatsthis() ;
-    if ( child ) child->vec->getSequence().erase ( child->vec->getSequenceLength()-1 , 1 ) ;
-    seq[lastmarked]->s.erase ( seq[lastmarked]->s.length()-1 , 1 ) ;
+    if ( child ) child->vec->eraseSequence ( child->vec->getSequenceLength()-1 , 1 ) ; //getSequence().erase ( child->vec->getSequenceLength()-1 , 1 ) ;
+    wxString id ;
+    if ( lastmarked >= 0 )
+        {
+        id = seq[lastmarked]->whatsthis() ;
+        seq[lastmarked]->s.erase ( seq[lastmarked]->s.length()-1 , 1 ) ;
+        }    
     arrange () ;
-    mark ( id , -1 , -1 ) ;
+    if ( id != "" ) mark ( id , -1 , -1 ) ;
     }
 
 void SequenceCanvas::rsHideLimit ( wxCommandEvent &ev )
@@ -1901,11 +1920,11 @@ void SeqPos::cleanup ()
     l.clear () ;
     }
     
-void SeqPos::add ( int np , int x , int y , int w , int h )
+void SeqPos::add ( int np , int x , int y , int w , int h , bool memsave )
     {
-    p.Add ( np ) ;
+    if ( !memsave ) p.Add ( np ) ;
     r.push_back ( wxRect ( x , y , w , h ) ) ;
-    m.Add ( 0 ) ;
+    if ( !memsave ) m.Append ( ' ' ) ;
     }
     
 void SeqPos::addline ( int from , int to , int vfrom , int vto )
@@ -1934,11 +1953,11 @@ int SeqPos::getItem ( wxPoint pt , int line )
     return 0 ;
     }
     
-void SeqPos::reserve ( int n , int n2 )
+void SeqPos::reserve ( int n , int n2 , bool memsave )
     {
     r.reserve ( n ) ;
-    l.reserve ( n2 == -1 ? n / 5 : n2 ) ; // Guessing...
-    p.Alloc ( n ) ;
-    m.Alloc ( n ) ;
+    if ( !memsave ) l.reserve ( n2 == -1 ? n / 5 : n2 ) ; // Guessing...
+    if ( !memsave ) p.Alloc ( n ) ;
+    if ( !memsave ) m.Alloc ( n ) ;
     }
         

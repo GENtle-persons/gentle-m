@@ -169,11 +169,11 @@ void TAminoAcids::initme ()
     wxCheckBox *mycb = new wxCheckBox ( toolBar , ALIGN_HORIZ , txt("t_horizontal") ) ;
     toolBar->AddControl ( mycb ) ;
     inlinePlot = new wxChoice ( toolBar , AA_IP ) ;
+    toolBar->AddControl ( inlinePlot ) ;
+    toolBar->Realize() ;
     inlinePlot->Append ( txt("t_no_plot") ) ;
     inlinePlot->Append ( txt("t_chou_fasman") ) ;
     inlinePlot->SetStringSelection ( txt("t_no_plot") ) ;
-    toolBar->AddControl ( inlinePlot ) ;
-    toolBar->Realize() ;
 #endif
 
 
@@ -559,6 +559,7 @@ void TAminoAcids::OnListBox ( wxCommandEvent& event )
     if ( !update )
         {
         h1->Layout() ;
+        GetToolBar()->Refresh () ;
         }
     sc->SetFocus() ;
     }

@@ -49,12 +49,13 @@ void SeqPrimer::show ( wxDC& dc )
         if ( b > 0 && insight ) // Character
            {
            t = s.GetChar(b-1) ;
-           if ( pos.m[a] == 1 )
+           int pm = getMark ( a ) ;
+           if ( pm == 1 )
               {
               dc.SetTextBackground ( *wxLIGHT_GREY ) ;
               dc.SetTextForeground ( *wxBLACK ) ;
               }
-           else if ( pos.m[a] == 2 && can->doOverwrite() )
+           else if ( pm == 2 && can->doOverwrite() )
               {
               dc.SetTextBackground ( *wxBLACK ) ;
               dc.SetTextForeground ( *wxWHITE ) ;
@@ -69,7 +70,7 @@ void SeqPrimer::show ( wxDC& dc )
 
            dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
 
-           if ( pos.m[a] == 2 && !can->doOverwrite() )
+           if ( pm == 2 && !can->doOverwrite() )
               {
                  int tx = pos.r[a].x , ty = pos.r[a].y ;
                  int tz = ty + can->charheight ;
@@ -78,7 +79,7 @@ void SeqPrimer::show ( wxDC& dc )
                  dc.DrawLine ( tx-3 , ty , tx+2 , ty ) ;
                  dc.DrawLine ( tx-3 , tz , tx+2 , tz ) ;
               }
-           if ( pos.m[a] > 0 )
+           if ( pm > 0 )
               {
               dc.SetTextBackground ( *wxWHITE ) ;
               dc.SetTextForeground ( *wxBLACK ) ;
@@ -133,7 +134,7 @@ void SeqPrimer::addPrimer ( TPrimer *p )
 
 int SeqNum::arrange ( int n )
     {
-    int a , x , y , w , h , l = 0 , bo = 4 , lowy = 0 ;
+    int a , x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
     int lasta = 0 ;
     
     // Setting basic values
@@ -211,7 +212,7 @@ void SeqNum::show ( wxDC& dc )
 
 int SeqDivider::arrange ( int n )
     {
-    int a , x , y , w , h , l = 0 , bo = 4 , lowy = 0 ;
+    int a , x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
     int lasta = 0 ;
     
     // Setting basic values
