@@ -321,7 +321,7 @@
 "p_item_copy_dna","Copy (coding) DNA sequence","Kopiere (kodierende) DNS-Sequenz"
 "p_item_copy_aa","Copy amino acid sequence","Kopiere Aminosäure-Sequenz"
 "b_export_primer","Export primer","Primer exportieren"
-"b_import_primer","Import primer","Primer importieren"
+"b_import_primer","Add primer","Primer hinzufügen"
 "t_melting_temperatures","%2.1f°C (nearest neighbour)\n%2.1f°C (salt-adjusted)\n%2.1f°C (GC-method)\n","%2.1f°C (Nächster Nachbar)\n%2.1f°C (Salz-adjustiert)\n%2.1f°C (GC-Methode)\n"
 "m_print_sequence","Print sequence","Sequenz drucken"
 "t_page_of","Page %d of %d","Seite %d von %d"
@@ -537,3 +537,4 @@
 "t_method_kyte-doolittle","Kyte-Doolittle","Kyte-Doolittle"
 "t_method_hopp-woods","Hopp-Woods","Hopp-Woods"
 "t_loading","Loading %s","Lade %s"
+"m_sel_as_new_primer","Selection as new primer","Auswahl als neuen Primer"

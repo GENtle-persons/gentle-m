@@ -27,6 +27,7 @@ BEGIN_EVENT_TABLE(MyFrame, MyFrameType)
     
     EVT_MENU(MDI_RESTRICTION, MyFrame::BollocksMenu)
     EVT_MENU(MDI_LIGATION, MyFrame::BollocksMenu)
+    EVT_MENU(MDI_PRINT_REPORT, MyFrame::BollocksMenu)
 
     EVT_MENU(MDI_NEXT_WINDOW, MyFrame::BollocksMenu)
     EVT_MENU(MDI_PREV_WINDOW, MyFrame::BollocksMenu)
@@ -446,7 +447,7 @@ void MyFrame::OnTextImport(wxCommandEvent& WXUNUSED(event) )
     TextImportDialog d ( this , txt("m_text_importtxt") ) ;
     
     ChildBase *c = (ChildBase*) GetActiveChild() ;
-    if ( c && c->def == "PrimerDesign" ) d.type->SetSelection ( 3 ) ;
+    if ( c && c->def == "PrimerDesign" ) d.type->SetSelection ( 4 ) ;
     
     if ( d.ShowModal () != wxID_OK ) return ;
 
@@ -1373,6 +1374,8 @@ void MyFrame::setActiveChild ( ChildBase *c )
        if ( c->vec ) c->vec->recalcvisual = true ;
        c->SetSize ( s ) ;
        }
+    if ( c->inMainTree.IsOk() && mainTree->GetSelection() != c->inMainTree )
+        mainTree->SelectItem ( c->inMainTree ) ;
     c->Refresh () ;
     }
 

@@ -51,6 +51,7 @@ BEGIN_EVENT_TABLE(SequenceCanvas, wxScrolledWindow)
 
     EVT_MENU(MDI_CUT, SequenceCanvas::OnCut)
     EVT_MENU(MDI_COPY, SequenceCanvas::OnCopy)
+    EVT_MENU(MDI_SEL_AS_NEW_PRIMER, SequenceCanvas::OnSelAsNewPrimer)
 
     EVT_SET_FOCUS(SequenceCanvas::OnFocus)
     EVT_KILL_FOCUS(SequenceCanvas::OnKillFocus)
@@ -322,8 +323,17 @@ void SequenceCanvas::OnCharHook(wxKeyEvent& event)
         else
            {
            string dummy ;
-           dummy = (char) k ;
            int new_from = from + 1 ;
+           
+           if ( k == '.' && getPD() )
+              {
+              int u ;
+              for ( u = 0 ; u < seq.size() && seq[u]->whatsthis() != edit_id ; u++ ) ;
+              if ( edit_id == "PRIMER_UP" ) k = seq[u+1]->s[from-1] ;
+              if ( edit_id == "PRIMER_DOWN" ) k = seq[u-1]->s[from-1] ;
+              }
+              
+           dummy = (char) k ;           
            if ( v )
               {
               v->insert_char ( k , from , doOverwrite() ) ;
@@ -1287,6 +1297,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
               {
               cm->AppendSeparator () ;
               cm->Append ( MDI_COPY , txt("m_copy") ) ;
+              cm->Append ( MDI_SEL_AS_NEW_PRIMER , txt("m_sel_as_new_primer") ) ;
               }
            }
         else if ( child && child->def == "ABIviewer" )
@@ -1639,7 +1650,27 @@ void SequenceCanvas::OnViewCondensed ( wxCommandEvent &ev )
     getAA()->miniDisplayOptions = MINI_DISPLAY_CONDENSED ;
     getAA()->OnListBox ( ev ) ;
     }
-    
+
+void SequenceCanvas::OnSelAsNewPrimer ( wxCommandEvent &ev )
+    {
+    if ( _from < 0 ) return ;
+    if ( !getPD() ) return ;
+    int id = -1 ;
+    if ( seq[lastmarked]->whatsthis() == "PRIMER_UP" ) id = lastmarked + 1 ;
+    if ( seq[lastmarked]->whatsthis() == "PRIMER_DOWN" ) id = lastmarked - 1 ;
+    if ( id == -1 ) return ;
+    string sel = seq[id]->s.substr ( _from-1 , _to-_from+1 ) ;
+    if ( seq[lastmarked]->whatsthis() == "PRIMER_DOWN" )
+        {
+        int a ;
+        string sel2 ;
+        for ( a = 0 ; a < sel.length() ; a++ )
+           sel2 = sel[a] + sel2 ;
+        sel = sel2 ;
+        }
+    getPD()->AddPrimer ( sel ) ;
+    }
+        
 TAminoAcids *SequenceCanvas::getAA()
     {
     if ( !child ) return NULL ;

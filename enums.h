@@ -306,6 +306,7 @@ enum {
     MDI_CLOSE,
     MDI_NEXT_WINDOW,
     MDI_PREV_WINDOW,
+    MDI_SEL_AS_NEW_PRIMER,
     
     Z___
     } ;

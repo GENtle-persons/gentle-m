@@ -333,6 +333,7 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void OnPrimerMutation ( wxCommandEvent &ev ) ;
     virtual void OnSilmut ( wxCommandEvent &ev ) ;
     virtual void OnWhatCuts(wxCommandEvent& event);
+    virtual void OnSelAsNewPrimer( wxCommandEvent &ev ) ;
 
     virtual void OnViewOriginal ( wxCommandEvent &ev ) ;
     virtual void OnViewReal ( wxCommandEvent &ev ) ;

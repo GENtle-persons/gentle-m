@@ -15,6 +15,7 @@ BEGIN_EVENT_TABLE(TPrimerDesign, MyChildBase)
     EVT_BUTTON(PD_EDIT,TPrimerDesign::OnEditPrimer)
     EVT_BUTTON(PD_DEL,TPrimerDesign::OnDeletePrimer)
     EVT_SPINCTRL(PCR_SPIN, TPrimerDesign::OnSpin)
+    EVT_TEXT(PCR_SPIN,TPrimerDesign::OnSpinText)
 
     EVT_MENU(PD_SILMUT,TPrimerDesign::OnSilmut)
     EVT_MENU(MDI_TOGGLE_FEATURES,TPrimerDesign::OnToggleFeatures)
@@ -51,6 +52,7 @@ TPrimerDesign::TPrimerDesign(wxWindow *parent,
     {
     int a ;
     show_features = 1 ;
+    spinTextEnabeled = false ;
     mut = _mut ;
     vec = new TVector ;
     vc = new TVector ;
@@ -164,6 +166,7 @@ void TPrimerDesign::OnImportPrimer ( wxCommandEvent &ev )
        if ( scd.IsChecked ( a ) )
           AddPrimer ( cbl[a]->vec->sequence ) ;
        }
+    guessOptNuc () ;
     }
     
 void TPrimerDesign::AddPrimer ( string s )
@@ -374,7 +377,7 @@ void TPrimerDesign::initme ()
     sc->blankline = 1 ;
     sc->child = this ;
     sc->edit_id = "DNA" ;
-    sc->edit_valid = "ACTG " ;
+    sc->edit_valid = "ACTG ." ;
     sc->forceOverwrite ( true ) ;
     
 #ifdef __WXMSW__
@@ -463,6 +466,7 @@ void TPrimerDesign::initme ()
     updatePrimersFromSequence() ;
     sc->SetFocus() ;
     myapp()->frame->setChild ( this ) ;
+    spinTextEnabeled = true ;
     }
     
 void TPrimerDesign::OnEditPrimer ( wxCommandEvent &ev )
@@ -803,5 +807,10 @@ void TPrimerDesign::OnToggleFeatures ( wxCommandEvent &ev )
 void TPrimerDesign::OnSpin(wxSpinEvent& event)
     {
     showSequence() ;
+    }
+    
+void TPrimerDesign::OnSpinText(wxCommandEvent& event)
+    {
+    if ( spinTextEnabeled ) showSequence() ;
     }
     
