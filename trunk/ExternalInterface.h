@@ -69,6 +69,8 @@ class EIpanel : public wxPanel
     // BLAST-specific
     blastThread *blast_thread ;
     wxString blast_res ;
+    wxCriticalSection m_critsect;
+
     
     DECLARE_EVENT_TABLE()
 	} ;    

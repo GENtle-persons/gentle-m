@@ -122,6 +122,7 @@ EILB::EILB ( wxWindow *parent , int id )
 
 wxString EILB::OnGetItem(size_t n) const
 	{
+	    if ( n >= was.GetCount() ) return "" ;
 	wxString ret = was[n] ;
 	wxString bgcolor ;
 	if ( n % 3 == 0 ) bgcolor = "#FFFFFF" ;
@@ -233,11 +234,9 @@ class blastThread : public wxThread
 public :
     blastThread ( EIpanel *panel , wxString seq ) : wxThread ()
 	{
-	    wxThread::Yield() ;
-
 	    p = panel ;
 	    // Put
-/*	    url = "http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?" ;
+	    url = "http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?" ;
 	    url += "CMD=Put" ;
 	    url += "&QUERY=" + seq ;
 	    url += "&DATABASE=nr" ;
@@ -256,8 +255,12 @@ public :
 	    url += "CMD=Get" ;
 	    url += "&RID=" + RID ;
 	    url += "&FORMAT_TYPE=XML" ;	    
-*/
+
 	} ;
+
+    virtual void OnExit() 
+	{
+	}
 
     virtual void *Entry ()
 	{
@@ -267,7 +270,7 @@ public :
     wxString fn = "/home/manske/blast.html" ;
 #endif
 	    
-/*
+
 	    do {
 		while ( wait )
 		{
@@ -285,32 +288,31 @@ public :
 		if ( hs["STATUS"].Upper() == "WAITING" ) wait = 10 ; // Wait another 10 seconds
 		else wait = 0 ; // Done!
 	    } while ( wait ) ;
-	    wxFile out ( fn , wxFile::write ) ; out.Write ( res ) ; out.Close() ;
-*/
+	    p->blast_res = res ;
+//	    wxFile out ( fn , wxFile::write ) ; out.Write ( res ) ; out.Close() ;
 
+/*
 	    // Dirty hack
 	    wxMutexGuiEnter() ;
 	    wxFile in ( fn , wxFile::read ) ; 
-	    char *c = new char[in.Length()+5] ;
-	    in.Read ( c , in.Length() ) ;
+	    p->blast_res = "" ;
+	    char c[1024] ;
+	    while ( !in.Eof() )
+	    {
+		cout << "!" ; 
+		int l = in.Read ( c , 1000 ) ;
+		if ( l >= 0 ) c[l] = 0 ;
+		p->blast_res += c ;
+		}
+	    cout << endl ;
 	    in.Close () ;
-	    res = c ;
-	    delete c ;
 	    // End dirty hack
 
-	    p->blast_res = res ;
-
 	    wxMutexGuiLeave() ;
-
+*/
 	    wxCommandEvent event( wxEVT_COMMAND_BUTTON_CLICKED, ID_B1 );
 	    wxPostEvent ( p , event ) ;
 
-//	    wxMutexGuiEnter() ;
-//	    p->process_blast2 () ;
-//	    wxMutexGuiLeave() ;
-
-	    wxThread::Exit() ;
-//	    delete this ;
 	    return NULL ;
 	}
 private :
@@ -367,14 +369,12 @@ void EIpanel::process_blast() // This starts the thread
     if ( !blast_thread || wxTHREAD_NO_ERROR != blast_thread->Create() )
     {
 	blast_thread = NULL ;
-//	wxMessageBox ( txt("t_blast_failed") ) ;
 	return ;
     }
 
     if ( wxTHREAD_NO_ERROR != blast_thread->Run() )
     {
 	blast_thread = NULL ;
-//	wxMessageBox ( txt("t_blast_failed") ) ;
 	return ;
     }
 
@@ -383,9 +383,11 @@ void EIpanel::process_blast() // This starts the thread
 
 void EIpanel::process_blast2() // This is called upon termination of the thread
 {
-    if ( blast_thread ) blast_thread->Wait();
-    blast_thread = NULL ;
-    b1->Enable() ;
+    if ( blast_thread )
+    {
+	blast_thread = NULL ;
+	b1->Enable() ;
+    }
 
     TiXmlDocument blast_doc ;
     blast_doc.SetCondenseWhiteSpace(false);
