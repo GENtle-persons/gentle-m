@@ -272,6 +272,7 @@ string MyApp::getHTMLCommand ( string command )
     regKey.SetName ( s ) ;
     wxString q = regKey ;
     regKey.Close();
+    q.Replace ( "-nohome" , "" ) ;
     if ( 0 == q.Replace ( wxString("%1") , wxString((char*)command.c_str()) ) )
         q += " \"" + wxString ( command.c_str() ) + "\"" ;
     return q.c_str() ;

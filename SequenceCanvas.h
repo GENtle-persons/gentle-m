@@ -282,6 +282,7 @@ class SeqPlot : public SeqDNA
     virtual void useHP () ;
     virtual void showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph ) ;
     virtual void init ( SequenceCanvas *ncan = NULL ) ;
+    virtual wxString getTip ( int pos ) ;
 
     private :
     virtual void scanMinMax () ;

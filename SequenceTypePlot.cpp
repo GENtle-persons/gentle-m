@@ -2,6 +2,17 @@
 
 //************************************************ SeqPlot
 
+wxString SeqPlot::getTip ( int pos )
+    {
+    if ( pos < 0 ) return "" ;
+    if ( pos >= s.length() ) return "" ;
+    wxString r = wxString::Format(txt("seq_loc"),pos+1) ;
+    if ( pos >= prop.size() || prop[pos].data.size() != 1 ) return r ;
+    r += " : " ;
+    r += s[pos] ;
+    r += wxString::Format ( " [%2.2f]" , prop[pos].data[0] ) ;
+    return r ;
+    }
 
 int SeqPlot::arrange ( int n )
     {
@@ -298,7 +309,7 @@ void SeqPlot::showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph )
     
     // Dotted lines
     dc.SetPen ( *wxBLACK_PEN ) ;
-    for ( float j = data_min + data_step ; j + data_step < data_max ; j += data_step )
+    for ( float j = data_min + data_step ; j + data_step <= data_max ; j += data_step )
         {
         int k = bottom - ( j - data_min ) * ph / data_h ;
         drawDottedLine ( dc , lx , k , tx + cw , k ) ;
