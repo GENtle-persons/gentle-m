@@ -501,7 +501,7 @@ void SeqRestriction::show ( wxDC& dc )
                else dc.DrawText ( ven[layer].c_str() , llx , ly ) ;
                }
             lc = c ;
-            if ( pos.r[a].GetTop() > yb ) a = pos.p.size() ;
+            if ( !can->drawall && pos.r[a].GetTop() > yb ) a = pos.p.size() ;
             }
         }
     dc.SetTextForeground ( wxColor ( *wxBLACK ) ) ;
@@ -1494,7 +1494,7 @@ void SeqFeature::show ( wxDC& dc )
     while ( li.size() < vr.size() ) li.push_back ( -1 ) ;
     while ( lx.size() < vr.size() ) lx.push_back ( -1 ) ;
     while ( used.size() < vr.size() ) used.push_back ( 0 ) ;
-    
+
     for ( a = 0 ; a < pos.p.size() ; a++ )
         {
         b = pos.p[a] ;
@@ -1504,7 +1504,7 @@ void SeqFeature::show ( wxDC& dc )
         if ( tz < ya ) insight = false ;
         if ( ty > yb ) insight = false ;
         if ( can->drawall ) insight = true ;
-        if ( ty > yb ) a = pos.p.size() ;
+        else if ( ty > yb ) a = pos.p.size() ;
         if ( b > 0 ) // Character
            {
            t = " " ;
