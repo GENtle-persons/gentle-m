@@ -554,6 +554,9 @@ void TRestrictionEditor::res_ct ( wxCommandEvent &event )
     
     if ( nfst->GetValue() ) v->setAction ( "RESTRICTION" , nfstv->GetValue() ) ;
     else v->setAction ( "RESTRICTION" , 0 ) ;
+    
+    
+    
     EndModal ( wxID_OK ) ;
     }
     
