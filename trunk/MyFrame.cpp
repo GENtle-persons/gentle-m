@@ -1654,6 +1654,7 @@ void TTestSuite::Step()
     x += wxString::Format ( " [%ds, #%d]" , wxGetLocalTime()-start , cnt ) ;
     if ( ac->vec ) x += wxString::Format ( ", seq : %d" , ac->vec->getSequenceLength() ) ;
     if ( ac->cSequence ) x += wxString::Format ( ", EditMode : %d" , ac->cSequence->getEditMode() ) ;
+    if ( ac->cSequence ) x += wxString::Format ( ", Overwrite : %d" , ac->cSequence->doOverwrite() ) ;
     if ( ac->cSequence ) x += wxString::Format ( ", Mark %d-%d" , ac->cSequence->markedFrom() , ac->cSequence->markedTo() ) ;
     mylog ( "Testsuite:Status" , x ) ;
     
