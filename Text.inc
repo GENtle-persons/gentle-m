@@ -60,14 +60,14 @@ void init_txt ( string lang )
            else if ( *c == ',' && !quote )
               {
               *c = 0 ;
-              v.push_back ( dummy.trimQuotes ( l ) ) ;
+              v.push_back ( dummy.trimQuotes(l).c_str() ) ;
               l = c+1 ;
               }
            }
         if ( l < c )
            {
            *(c-1) = 0 ;
-           v.push_back ( dummy.trimQuotes ( l ) ) ;
+           v.push_back ( dummy.trimQuotes(l).c_str() ) ;
            }
         
         if ( firstline )

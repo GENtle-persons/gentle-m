@@ -952,6 +952,15 @@ void TVector::clear ()
     hiddenEnzymes.clear () ;
     proteases.clear () ;
     }
+    
+int TVector::find_item ( string s )
+    {
+    int a ;
+    for ( a = 0 ; a < items.size() ; a++ )
+       if ( items[a].name == s.c_str() )
+          return a ;
+    return -1 ; // Not found
+    }
 
     
 // ***************************************************************************************

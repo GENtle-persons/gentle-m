@@ -18,7 +18,6 @@
 #endif
 
 #include <wx/toolbar.h>
-#include <wx/snglinst.h>
 #include <wx/filesys.h>
 #include <wx/fs_inet.h>
 #include <wx/file.h>
@@ -93,6 +92,8 @@ class MyApp : public wxApp
 
 class TUndo ;
 
+
+
 #include "enums.h"
 #include "TVector.h"
 #include "TUReadSeq.h"
@@ -145,6 +146,7 @@ void myass ( bool b , wxString msg = "" ) ;
 #endif
 
 vector <string> explode ( string sep , string s ) ;
+wxArrayString explode ( wxString sep , wxString s ) ;
 char* txt ( string item ) ;
 void init_txt ( string lang ) ;
 MyApp *myapp () ;
