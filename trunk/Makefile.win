@@ -1,18 +1,18 @@
 # Project: GENtle
-# Makefile created by Dev-C++ 4.9.8.0
+# Makefile created by Dev-C++ 4.9.8.1
 
 CPP  = g++.exe
 CC   = gcc.exe
 WINDRES = windres.exe
 RES  = GENtle_private.res
-OBJ  = main.o ABIviewer.o GenBank.o Alignment.o MiscDialogs.o MyChild.o MyFrame.o PlasmidCanvas.o RestrictionEnzymes.o SequenceCanvas.o TClone.o TextImportDialog.o TLigationDialog.o TMainTree.o TRestrictioneditor.o TStorage.o TVector.o TVectorEditor.o TVectorTree.o ManageDatabase.o PrimerDesign.o SequenceTypes.o PlasmidCanvasLinear.o PlasmidCanvasCircular.o PlasmidCanvasHandlers.o AminoAcids.o ABItype.o TODO.o TPrimer.o TPrimerDialog.o TItemEditDialog.o $(RES)
-LINKOBJ  = main.o ABIviewer.o GenBank.o Alignment.o MiscDialogs.o MyChild.o MyFrame.o PlasmidCanvas.o RestrictionEnzymes.o SequenceCanvas.o TClone.o TextImportDialog.o TLigationDialog.o TMainTree.o TRestrictioneditor.o TStorage.o TVector.o TVectorEditor.o TVectorTree.o ManageDatabase.o PrimerDesign.o SequenceTypes.o PlasmidCanvasLinear.o PlasmidCanvasCircular.o PlasmidCanvasHandlers.o AminoAcids.o ABItype.o TODO.o TPrimer.o TPrimerDialog.o TItemEditDialog.o $(RES)
+OBJ  = main.o ABIviewer.o GenBank.o Alignment.o MiscDialogs.o MyChild.o MyFrame.o PlasmidCanvas.o RestrictionEnzymes.o SequenceCanvas.o TClone.o TextImportDialog.o TLigationDialog.o TMainTree.o TRestrictioneditor.o TStorage.o TVector.o TVectorEditor.o TVectorTree.o ManageDatabase.o PrimerDesign.o SequenceTypes.o PlasmidCanvasLinear.o PlasmidCanvasCircular.o PlasmidCanvasHandlers.o AminoAcids.o ABItype.o TODO.o TPrimer.o TPrimerDialog.o TItemEditDialog.o TIMGreader.o TImageDisplay.o TCalculator.o $(RES)
+LINKOBJ  = main.o ABIviewer.o GenBank.o Alignment.o MiscDialogs.o MyChild.o MyFrame.o PlasmidCanvas.o RestrictionEnzymes.o SequenceCanvas.o TClone.o TextImportDialog.o TLigationDialog.o TMainTree.o TRestrictioneditor.o TStorage.o TVector.o TVectorEditor.o TVectorTree.o ManageDatabase.o PrimerDesign.o SequenceTypes.o PlasmidCanvasLinear.o PlasmidCanvasCircular.o PlasmidCanvasHandlers.o AminoAcids.o ABItype.o TODO.o TPrimer.o TPrimerDialog.o TItemEditDialog.o TIMGreader.o TImageDisplay.o TCalculator.o $(RES)
 LIBS =  -L"C:/Programme/Dev-Cpp/lib" -L"C:/Programme/Dev-Cpp/Mine/GENtle" -mwindows -lwxmswu -lstdc++ -lgcc -lodbc32 -lwsock32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lctl3d32 -lodbc32 -ladvapi32 -lodbc32 -lwsock32 -lopengl32 -lglu32 -lole32 -loleaut32 -luuid sqlite.dll 
 INCS =  -I"C:/Programme/Dev-Cpp/include"  -I"C:/Programme/Dev-Cpp/Mine/GENtle" 
 CXXINCS =  -I"C:/Programme/Dev-Cpp/include/c++"  -I"C:/Programme/Dev-Cpp/include/c++/mingw32"  -I"C:/Programme/Dev-Cpp/include/c++/backward"  -I"C:/Programme/Dev-Cpp/include"  -I"C:/Programme/Dev-Cpp/Mine/GENtle" 
 BIN  = GENtle.exe
 CXXFLAGS = $(CXXINCS)--pipe -D_X86_=1 -DWIN32 -D_WIN32 -DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -D__WIN32__ -mthreads -DSTRICT  -D__WXMSW__ -D__WINDOWS__ -Wall -fno-pcc-struct-return -O2 -fno-rtti -fno-exceptions   -traditional-cpp -w -fsave-memoized -O3
-CFLAGS = $(INCS)--pipe -D_X86_=1 -DWIN32 -D_WIN32 -DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -D__WIN32__ -mthreads -DSTRICT  -D__WXMSW__ -D__WINDOWS__ -Wall -fno-pcc-struct-return -O2 -fno-rtti -fno-exceptions   -traditional-cpp -w -fsave-memoized -O3
+CFLAGS = $(INCS)--pipe -D_X86_=1 -DWIN32 -D_WIN32 -DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -D__WIN32__ -mthreads -DSTRICT  -D__WXMSW__ -D__WINDOWS__ -Wall -fno-pcc-struct-return -O2 -fno-rtti -fno-exceptions   -fmessage-length=0 -traditional-cpp -w -fsave-memoized -O3
 
 .PHONY: all all-before all-after clean clean-custom
 
@@ -117,6 +117,15 @@ TPrimerDialog.o: TPrimerDialog.cpp
 
 TItemEditDialog.o: TItemEditDialog.cpp
 	$(CPP) -c TItemEditDialog.cpp -o TItemEditDialog.o $(CXXFLAGS)
+
+TIMGreader.o: TIMGreader.cpp
+	$(CPP) -c TIMGreader.cpp -o TIMGreader.o $(CXXFLAGS)
+
+TImageDisplay.o: TImageDisplay.cpp
+	$(CPP) -c TImageDisplay.cpp -o TImageDisplay.o $(CXXFLAGS)
+
+TCalculator.o: TCalculator.cpp
+	$(CPP) -c TCalculator.cpp -o TCalculator.o $(CXXFLAGS)
 
 GENtle_private.res: GENtle_private.rc ../../include/wx/msw/wx.rc 
 	$(WINDRES) -i GENtle_private.rc -I rc -o GENtle_private.res -O coff  --include-dir C:/PROGRA~1/Dev-Cpp/include
