@@ -178,7 +178,7 @@ void ChildBase::OnExport (wxCommandEvent& event)
     wxString wcPlain = "Plain text|*.*" ;
     wxString wcIG = "IntelliGenetics format (*.ig)|*.ig" ;
     wxString wcClone = "CLONE|*.*" ;
-    wxString wcGCviewXML = "GCview (XML)|*.xml" ;
+    wxString wcGCviewXML = "CGview (XML)|*.xml" ;
     wxString wildcard = wcGenBank + "|" +
                         wcPlain + "|" +
                         wcFasta + "|" + 

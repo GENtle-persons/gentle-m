@@ -617,7 +617,7 @@ void TManageDatabaseDialog::pdOnNew ( wxCommandEvent &ev )
 
     wxString fn = d.GetPath() ;
     wxString blank = myapp()->homedir ;
-    blank += "\\blank.db" ;
+    blank += "/blank.db" ;
     
     bool b = wxCopyFile ( blank , fn , true ) ;
     if ( !b )
@@ -637,6 +637,7 @@ void TManageDatabaseDialog::pdOnAdd ( wxCommandEvent &ev )
     if ( x != wxID_OK ) return ;
     
     wxString fn = d.GetPath() ;
+    if ( !wxFileExists ( fn ) ) return ;
     addDatabase ( fn ) ;
     }
     
