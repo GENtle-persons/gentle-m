@@ -40,8 +40,7 @@ bin_PROGRAMS = main$(EXEEXT)
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(top_srcdir)/configure AUTHORS COPYING \
-	ChangeLog INSTALL NEWS config.guess config.sub depcomp \
-	install-sh ltmain.sh missing
+	ChangeLog INSTALL NEWS depcomp install-sh missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -116,13 +115,13 @@ DIST_ARCHIVES = $(distdir).tar.gz
 GZIP_ENV = --best
 distuninstallcheck_listfiles = find . -type f -print
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /home/manske/xGENtle/missing --run aclocal-1.9
+ACLOCAL = ${SHELL} /home/manske/GENtle/missing --run aclocal-1.9
 AMDEP_FALSE = #
 AMDEP_TRUE = 
-AMTAR = ${SHELL} /home/manske/xGENtle/missing --run tar
-AUTOCONF = ${SHELL} /home/manske/xGENtle/missing --run autoconf
-AUTOHEADER = ${SHELL} /home/manske/xGENtle/missing --run autoheader
-AUTOMAKE = ${SHELL} /home/manske/xGENtle/missing --run automake-1.9
+AMTAR = ${SHELL} /home/manske/GENtle/missing --run tar
+AUTOCONF = ${SHELL} /home/manske/GENtle/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/manske/GENtle/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/manske/GENtle/missing --run automake-1.9
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -146,7 +145,7 @@ LDFLAGS =
 LIBOBJS = 
 LIBS = 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/manske/xGENtle/missing --run makeinfo
+MAKEINFO = ${SHELL} /home/manske/GENtle/missing --run makeinfo
 OBJEXT = o
 PACKAGE = GENtle
 PACKAGE_BUGREPORT = 
@@ -179,7 +178,7 @@ exec_prefix = ${prefix}
 host_alias = 
 includedir = ${prefix}/include
 infodir = ${prefix}/info
-install_sh = /home/manske/xGENtle/install-sh
+install_sh = /home/manske/GENtle/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localstatedir = ${prefix}/var
