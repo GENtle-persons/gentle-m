@@ -160,17 +160,20 @@ void SeqPlot::show ( wxDC& dc )
            {
            if ( lx == 0 ) lx = tx ;
            t = s.GetChar(b-1) ;
-           if ( can->isPrinting() && getMark ( a ) == 1 )
-              {
-              dc.SetBrush ( *MYBRUSH ( wxColour ( 230 , 230 , 230 ) ) ) ;
-              dc.SetPen(*wxTRANSPARENT_PEN);
-              dc.DrawRectangle ( tx , ty , can->charwidth , can->charheight ) ;
-              }
-           if ( can->isPrinting() && !can->getPrintToColor() )
-              {
-              dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-              dc.SetTextForeground ( *wxBLACK ) ;
-              }
+           if ( can->isPrinting() )
+	       {
+		   if (getMark ( a ) == 1 )
+		   {
+		       dc.SetBrush ( *MYBRUSH ( wxColour ( 230 , 230 , 230 ) ) ) ;
+		       dc.SetPen(*wxTRANSPARENT_PEN);
+		       dc.DrawRectangle ( tx , ty , can->charwidth , can->charheight ) ;
+		   }
+		   if ( !can->getPrintToColor() )
+		   {
+		       dc.SetBackgroundMode ( wxTRANSPARENT ) ;
+		       dc.SetTextForeground ( *wxBLACK ) ;
+		   }
+	       }
            switch ( type )
               {
               case CHOU_FASMAN : showChouFasman ( dc , b-1 , tx , ty , lx ) ; break ;
@@ -203,8 +206,13 @@ void SeqPlot::show ( wxDC& dc )
            dc.GetTextExtent ( t , &tw , &th ) ;
            int ty = pos.r[a].y ;
            ty += lines * can->charheight ;
+#ifdef __WXGTK__
+	   ty += th / 2 ;
+	   dc.DrawText ( t , pos.r[a].x , ty ) ;
+#else
            ty -= ( lines * can->charheight - tw ) / 2 ;
            dc.DrawRotatedText ( t , pos.r[a].x, ty , 90 ) ;
+#endif
            dc.SetFont(*can->font);
            }
         }
