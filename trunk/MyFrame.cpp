@@ -196,7 +196,14 @@ void MyFrame::initme ()
     loadLastProject = LS->getOption ( "LOADLASTPROJECT" , true ) ;
     useMetafile = LS->getOption ( "USEMETAFILE" , false ) ;
     showSplashScreen = LS->getOption ( "SHOWSPLASHSCREEN" , true ) ;
-    checkUpdate = LS->getOption ( "CHECKUPDATE" , true ) ;
+
+#ifndef MISER_MODE
+    bool default_update = false ;
+#else
+    bool default_update = true ;
+#endif
+    
+    checkUpdate = LS->getOption ( "CHECKUPDATE" , default_update ) ;
     lang_string = LS->getOption ( "LANGUAGE" , "en" ) ;
     useCoolCanvas = LS->getOption ( "USECOOLCANVAS" , false ) ; // Not saved yet
     useInternalHelp = LS->getOption ( "USEINTERNALHELP" , false ) ; // Not saved yet
@@ -303,8 +310,10 @@ void MyFrame::initme ()
 
     html_ep = new wxHtmlEasyPrinting ( "" , this ) ;
     
-    wxBeginBusyCursor() ;       
+    wxBeginBusyCursor() ;      
+#ifndef MISER_MODE
     lockDisplay ( true ) ;
+#endif
        
     // Load last project?
 //    loadLastProject = false ;
@@ -356,7 +365,9 @@ void MyFrame::initme ()
           }
        }
         
+#ifndef MISER_MODE
     lockDisplay ( false ) ;
+#endif
     wxEndBusyCursor() ;
     Raise () ;
     
