@@ -34,6 +34,12 @@ typedef unsigned int uint ;
 
 #include "wx/wxprec.h"
 
+#ifdef __WXGTK__
+#define MYLISTBORDER wxSIMPLE_BORDER
+#else
+#define MYLISTBORDER 0
+#endif
+
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
