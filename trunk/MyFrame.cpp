@@ -1500,11 +1500,12 @@ TVirtualGel *MyFrame::useGel ( wxString type )
 
 void MyFrame::TestMenu(wxCommandEvent& event)
     {
+#ifdef MYLOG
     if ( test_suite == NULL ) test_suite = new TTestSuite ;
     test_suite->Step () ;
     wxCommandEvent ev ( wxEVT_COMMAND_MENU_SELECTED , Y___ ) ;
     wxPostEvent ( this , ev ) ;
-//    myapp()->Yield ( true ) ;
+#endif
     }
     	
 //******************************************************************* TTestSuite
@@ -1530,7 +1531,7 @@ void TTestSuite::action ( ChildBase *ac )
 void TTestSuite::editMode ( ChildBase *ac )
 	{
 	wxCommandEvent event ;
-    mylog ( "Testsuite:Edit mode" ) ;
+    mylog ( "Testsuite:Edit mode" , "" ) ;
     if ( ac->def == "dna" ) ((MyChild*)ac)->OnEditMode(event) ;
     if ( ac->def == "AminoAcids" )
     	{

@@ -8,7 +8,7 @@ typedef unsigned int uint ;
 //#define MYDEBUG
 
 // Turn logging on/off
-#define MYLOG
+//#define MYLOG
 
 #include "wx/wxprec.h"
 
@@ -175,7 +175,7 @@ void myass ( bool b , wxString msg = "" ) ;
 #else
 #define myass(a,b)
 #endif
-
+ 
 #ifdef MYLOG
 void mylog ( wxString function , wxString msg = "" ) ;
 #else
