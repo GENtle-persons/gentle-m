@@ -1,5 +1,8 @@
 #include "Alignment.h"
 #include <wx/textfile.h>
+#include "clustalw/clustalw.h"
+
+int clustalw_main(int argc,char **argv) ;
 
 BEGIN_EVENT_TABLE(TAlignment, MyChildBase)
     EVT_CLOSE(ChildBase::OnClose)
@@ -64,11 +67,7 @@ TAlignment::TAlignment(wxWindow *parent, const wxString& title)
     gap_penalty = -2 ; // Gap penalty
     matrix = "BLOSUM" ;
     gap = "-" ;
-#ifdef __WXMSW__
     algorithm = ALG_CW ;
-#else
-    algorithm = ALG_SW ;
-#endif
     vec = NULL ;
     aaa = NULL ;
     colCur = NULL ;
@@ -274,7 +273,7 @@ void TAlignment::recalcAlignments ()
         {
         lines[0].ResetSequence() ;
         }
-    else if ( algorithm == ALG_CW ) // Clustal-W, external
+    else if ( algorithm == ALG_CW ) // Clustal-W
         {
 
         wxString cwt = "clustalw.txt" ;
@@ -289,7 +288,7 @@ void TAlignment::recalcAlignments ()
            }
         out.Close() ;
         
-#ifdef __WXMSW__
+#ifdef USE_EXTERNAL_BLAST
         wxString bn = hd + "\\clustalw.bat" ;
         wxFile bat ( bn , wxFile::write ) ;
         bat.Write ( "@echo off\n" ) ;
@@ -299,6 +298,15 @@ void TAlignment::recalcAlignments ()
                     wxString::Format ( " /gapext=%d" , mismatch ) + "\n" ) ;
         bat.Close() ;
         wxExecute ( bn , wxEXEC_SYNC ) ;
+#else // Using internal BLAST - cool!
+		wxString a1 = wxString::Format ( "/gapopen=%d" , gap_penalty ) ;
+        wxString a2 = wxString::Format ( "/gapext=%d" , mismatch ) ;
+		char *av[4] ;
+		av[0] = new char[100] ; strcpy ( av[0] , "clustalw.exe" ) ;
+		av[1] = new char[100] ; strcpy ( av[1] , "clustalw.txt" ) ;
+		av[2] = new char[100] ; strcpy ( av[2] , a1.c_str() ) ;
+		av[3] = new char[100] ; strcpy ( av[3] , a2.c_str() ) ;
+		clustalw_main ( 4 , av ) ;
 #endif
 
         wxString aln = hd + "\\clustalw.aln" ;
