@@ -432,7 +432,7 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
         {
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
         s = p->vec->rc[rs].e->name ;
-        wxLogStatus(txt("rsite_status_bar") , s ) ;
+        wxLogStatus(txt("rsite_status_bar") , s.c_str() ) ;
         char ttt[1000] ;
         sprintf ( ttt , txt("tt_rs") , s.c_str() , p->vec->countCuts ( s ) ) ;
         SetMyToolTip ( ttt , TT_RS ) ;
@@ -470,7 +470,7 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
         {
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
         s = p->vec->items[vo].name ;
-        wxLogStatus(txt("item_status_bar") , s ) ;
+        wxLogStatus(txt("item_status_bar") , s.c_str() ) ;
         char ttt[1000] ;
         sprintf ( ttt , "itemtype%d" , p->vec->items[vo].type ) ;
         wxString tt_type = txt(ttt) ;

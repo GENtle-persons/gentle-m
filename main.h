@@ -131,6 +131,7 @@ WX_DEFINE_ARRAY(TVector *, wxArrayTVector);
 #include "TRestrictionEditor.h"
 #include "TClone.h"
 #include "GenBank.h"
+#include "TPDB.h"
 #include "TXMLfile.h"
 #include "TVectorTree.h"
 #include "TMainTree.h"
@@ -168,7 +169,7 @@ void myass ( bool b , wxString msg = "" ) ;
 #endif
 
 void wxStringInsert ( wxString &s , int from , wxString t ) ;
-wxArrayString explode ( wxString sep , wxString s ) ;
+void explode ( wxString sep , wxString s , wxArrayString &r ) ;
 char* txt ( wxString item ) ;
 void init_txt ( wxString lang ) ;
 MyApp *myapp () ;

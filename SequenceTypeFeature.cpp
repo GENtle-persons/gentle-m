@@ -65,6 +65,8 @@ void SeqFeature::show ( wxDC& dc )
                  int level = can->charheight ;
                  int lh = level * l / ( maxlayers + 1 ) ;
                  level = ty + level - lh - 1 ;
+                 lh = ( ( can->charheight / 2 ) / ( maxlayers + 1 ) ) ;
+                 if ( lh < 5 ) lh = 5 ;
 
                  if ( insight )
                     {
@@ -72,16 +74,13 @@ void SeqFeature::show ( wxDC& dc )
                     myass ( vr[i].GetX() < vec->items.size() , "SeqFeature::show_8" ) ;
                     int mode = atoi((vec->items[vr[i].GetX()].getParam("SEQUENCE_STYLE")).c_str()) ;
                     wxColour col = *wxBLACK ;
-                    wxPen *thisPen = wxBLACK_PEN ;
                     
                     if ( can->isPrinting() && !can->getPrintToColor() ) dc.SetPen ( *wxBLACK_PEN ) ;
                     else
                        {
                        col = vec->items[vr[i].GetX()].getFontColor() ;
-                       int pw = 1 ;
-                       thisPen = new wxPen ( col , pw , wxSOLID ) ;
+                       dc.SetPen ( *MYPEN ( col ) ) ;
                        }
-                    dc.SetPen ( *thisPen ) ;
 
                     // Offsets
                     if ( aaa && !newline && 
@@ -148,7 +147,6 @@ void SeqFeature::show ( wxDC& dc )
                        }
                        
                     dc.SetPen ( *wxBLACK_PEN ) ;
-                    if ( thisPen != wxBLACK_PEN ) delete thisPen ;
                     }
 
                  myass ( l >= 0 && l < li.GetCount() , "!!1" ) ;   
@@ -270,11 +268,11 @@ void SeqFeature::initFromTVector ( TVector *v )
           }
        }
        
-    pens.clear() ;
+/*    pens.clear() ;
     pens.push_back ( *wxBLACK_PEN ) ;
     pens.push_back ( *wxRED_PEN ) ;
     pens.push_back ( *MYPEN(wxColour(0,100,0)) ) ;
-    for ( a = 0 ; pens.size() <= maxlayers ; a++ ) pens.push_back ( pens[a] ) ;
+    for ( a = 0 ; pens.size() <= maxlayers ; a++ ) pens.push_back ( pens[a] ) ;*/
     }
     
 bool SeqFeature::collide ( int a , int b )

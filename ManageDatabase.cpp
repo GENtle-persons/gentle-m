@@ -302,7 +302,8 @@ void TManageDatabaseDialog::pm_list_items ( int x )
            {
            for ( a = 0 ; a < filter.length() ; a++ )
               if ( filter.GetChar(a) == '\"' ) filter.SetChar ( a , '\'' ) ;
-           wxArrayString vf = explode ( " " , filter ) ;
+           wxArrayString vf ;
+           explode ( " " , filter , vf ) ;
            wxString sql2 , sql3 ;
            for ( a = 0 ; a < vf.GetCount() ; a++ )
               {
@@ -651,7 +652,7 @@ void TManageDatabaseDialog::addDatabase ( wxString fn )
     if ( fn.GetChar(0) == ':' )
         {
         wxArrayString vv ;
-        vv = explode ( ":" , fn + ":" ) ;
+        explode ( ":" , fn + ":" , vv ) ;
         t = vv[4] ;
         }
     else

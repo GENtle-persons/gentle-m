@@ -1150,8 +1150,16 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
            }
         else
            {
-           wxLogStatus(txt("seq_loc"), pos ) ;
-           newToolTip = wxString::Format(txt("seq_loc"),pos) ;
+           wxString q = wxString::Format(txt("seq_loc"),pos) ;
+           if ( where->whatsthis() == "AA" && getAA() )
+              {
+              char c = where->s.GetChar ( pos - 1 ) ;
+              wxString qx = getAA()->vec->one2three ( c ) ;
+              wxString qy = txt(wxString::Format("t_aa_%c",c).c_str()) ;
+              q += " [" + wxString ( c ) + "; " + qx + "; " + qy + "]" ;
+              }
+           wxLogStatus ( q ) ;
+           newToolTip = q ;
            }
         }
     else if ( where && child && child->def == "alignment" )

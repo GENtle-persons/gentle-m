@@ -33,32 +33,29 @@ class TGenBank
     {
     public :
     TGenBank () ;
-    void load ( wxString s ) ;
-    void paste ( wxString s ) ;
-//    void parseLines ( char *t , long l ) ;
-//    void makeTree () ;
-//    void showtree ( TVectorTree *z ) ;
-    void remap ( TVector *v ) ;
-    void doExport ( TVector *v , wxArrayString &ex ) ;
-//    void scanItem ( TVector *v , int k , int f , int type , bool descfirst = false ) ;
-//    void addItem ( TVector *v , TVectorItem *vi , wxString l , int depth = 0 ) ;
-    wxString trim ( wxString s ) ;
-    wxString trimQuotes ( wxString s ) ;
-    wxString quote ( wxString pre , wxString q ) ;
-//    wxArrayString explode ( char p , wxString s ) ;
-    void wrapit ( wxArrayString &ex , wxString init , wxString data , int limit = 80 ) ;
-    wxString expand ( wxString init , int to , wxString with = " " ) ;
-    
-    vector <wxArrayString> vs_l ;
-    vector <wxArrayInt> vi_l ;
-    wxArrayInt vi ;
-    vector <TGenBankKey> keys ;
-    wxArrayString vs ;
-    bool perm[256] ;
+    virtual void load ( wxString s ) ;
+    virtual void paste ( wxString s ) ;
+    virtual void remap ( TVector *v ) ;
+    virtual void doExport ( TVector *v , wxArrayString &ex ) ;
+    virtual wxString trim ( wxString s ) ;
+    virtual wxString trimQuotes ( wxString s ) ;
+    virtual wxString quote ( wxString pre , wxString q ) ;
+    virtual void wrapit ( wxArrayString &ex , wxString init , wxString data , int limit = 80 ) ;
+    virtual wxString expand ( wxString init , int to , wxString with = " " ) ;
+
     bool success ;
-    wxString params , title , description ;
     
     private :
+    friend class TAlignment ;
+    friend class MyFrame ;
+    vector <wxArrayString> vs_l ;
+    vector <wxArrayInt> vi_l ;
+    wxArrayString vs ;
+    wxArrayInt vi ;
+    vector <TGenBankKey> keys ;
+    bool perm[256] ;
+    wxString params , title , description ;
+    
     void parseLines () ;
     void addItem ( TVector *v , wxArrayString &va ) ;
     void iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag = 0 ) ;

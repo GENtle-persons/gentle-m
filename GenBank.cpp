@@ -37,7 +37,7 @@ void TGenBank::load ( wxString s )
     
 void TGenBank::paste ( wxString s )
     {
-    vs = explode ( "\n" , s ) ;
+    explode ( "\n" , s , vs ) ;
     parseLines () ;
     }
 

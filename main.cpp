@@ -60,11 +60,11 @@ void wxStringInsert ( wxString &s , int from , wxString t )
     s = s.Mid ( 0 , from ) + t + s.Mid ( from ) ;
     }    
 
-wxArrayString explode ( wxString sep , wxString s )
+void explode ( wxString sep , wxString s , wxArrayString &r )
     {
     int a , b ;
-    wxArrayString r ;
     wxString n ;
+    r.Clear () ;
     for ( a = 0 ; a + sep.Length() <= s.Length() ; a++ )
         {
         for ( b = 0 ; b < sep.Length() && s.GetChar(a+b) == sep.GetChar(b) ; b++ ) ;
@@ -76,7 +76,6 @@ wxArrayString explode ( wxString sep , wxString s )
         else n += s.GetChar(a) ;
         }
     if ( !n.IsEmpty() ) r.Add ( n ) ; 
-    return r ;
     }
 
 

@@ -562,6 +562,18 @@ void MyFrame::importFile ( wxString file , wxString path , int filter )
            }
        }
        
+    // Trying PDB format
+    if ( filter == 1 || filter == -1 )
+       {
+        TPDB pdb ;
+        pdb.load ( path ) ;
+        if ( pdb.success )
+           {
+           newPDB ( pdb , file ) ;
+           return ;
+           }
+       }
+       
     // Trying XML formats
     if ( filter == -1 )
        {
@@ -645,6 +657,16 @@ MyChild *MyFrame::newCLONE ( TClone &clone )
     subframe->Maximize() ;
     }
 
+void MyFrame::newPDB ( TPDB &pdb , wxString title )
+    {
+    pdb.remap () ;
+    for ( int a = 0 ; a < pdb.seqres.size() ; a++ )
+        {
+        newAminoAcids ( pdb.seqres[a].v , pdb.seqres[a].v->getName() ) ;
+        delete pdb.seqres[a].v ;
+        }    
+    }
+        
 void MyFrame::newGB ( TGenBank &gb , wxString title )
     {
     int n ;
