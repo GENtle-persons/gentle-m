@@ -272,22 +272,23 @@ void SequenceCanvas::editSpecialKeyPressed ( int k , TVector *v , wxString *the_
       {
       if ( event.ControlDown () )
          {
-/*         from += blocksize - 1 ;
+         from += blocksize - 1 ;
          from -= from % blocksize ;
-         if ( from > the_sequence->length() ) from = the_sequence->length();
-         mark ( id , from+1 , from+1 , 2 ) ;*/
+         if ( from > the_sequence->length() ) from = the_sequence->length() - 1 ;
+         mark ( id , from+1 , from+1 , 2 ) ;
          }
       else if ( from < the_sequence->length() )
          mark ( id , from+1 , from+1 , 2 ) ;
+      else mark ( id , the_sequence->length() , the_sequence->length() , 2 ) ;
       }
     else if ( k == WXK_LEFT )
       {
       if ( event.ControlDown () )
          {
-/*         from -= blocksize ;
+         from -= blocksize ;
          while ( from > 1 && (from-1) % blocksize > 0 ) from++ ;
          if ( from < 1 ) from = 1 ;
-         mark ( id , from , from , 2 ) ;*/
+         mark ( id , from , from , 2 ) ;
          }
       else if ( from > 1 )
          mark ( id , from-1 , from-1 , 2 ) ;
@@ -321,7 +322,7 @@ void SequenceCanvas::editSpecialKeyPressed ( int k , TVector *v , wxString *the_
       mark ( id , from , from , 2 ) ;
       }
 //
-    else if ( !forceoverwrite && k == WXK_DELETE && from+1 <= the_sequence->length() )
+    else if ( !forceoverwrite && k == WXK_DELETE && from != -1 && from+1 <= the_sequence->length() )
       {
       mylog ( "DEL" , wxString::Format ( "1 (%d of %d / %d)" , from , the_sequence->length() , (int)v ) ) ;
       if ( v ) v->doRemove ( from , from , false ) ;
@@ -505,6 +506,7 @@ void SequenceCanvas::OnCut ( wxCommandEvent &ev )
 
     arrange() ;
     Refresh() ;
+    getAA()->OnListBox ( ev ) ;
     }
 
 void SequenceCanvas::OnCopyText ( wxCommandEvent &ev )
