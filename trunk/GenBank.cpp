@@ -142,9 +142,9 @@ void TGenBank::remap ( TVector *v )
           v->name = n.BeforeFirst ( ' ' ) .c_str() ;
           v->desc = n.AfterFirst ( ' ' ) .c_str() ;
           l += " " ; // For substring search
-          if ( l.Contains ( " AA " ) ) v->type = TYPE_AMINO_ACIDS ;
+          if ( l.MakeUpper().Contains ( " AA " ) ) v->type = TYPE_AMINO_ACIDS ;
           else v->type = TYPE_VECTOR ;
-          if ( l.Contains ( " CIRCULAR " ) ) v->setCircular ( true ) ;
+          if ( l.MakeUpper().Contains ( " CIRCULAR" ) ) v->setCircular ( true ) ;
           else v->setCircular ( false ) ;
           }
      else if ( k1 == "FEATURES" )

@@ -83,6 +83,7 @@ public:
     virtual void setActiveChild ( ChildBase *c ) ;
     virtual wxWindow *getCommonParent() ;
     virtual int getChildIndex ( ChildBase *c ) ;
+    virtual void activateChild ( int a ) ;
 
     TMainTree *mainTree ;
     TStorage *LS ;
