@@ -61,8 +61,8 @@ public :
 	    url += "CMD=Put" ;
 	    url += "&QUERY=" + seq ;
 	    url += "&DATABASE=nr" ;
-	    if ( c1->GetSelection() == 0 ) url += "&PROGRAM=blastp" ;
-	    if ( c1->GetSelection() == 1 ) url += "&PROGRAM=blastn" ;
+	    if ( p->c1->GetSelection() == 0 ) url += "&PROGRAM=blastp" ;
+	    if ( p->c1->GetSelection() == 1 ) url += "&PROGRAM=blastn" ;
 	    url += "&HITLIST_SIZE=" + p->c2->GetStringSelection() ;
 	    
 	    res = ex.getText ( url ) ;
@@ -252,6 +252,8 @@ void EIpanel::process_blast2() // This is called upon termination of the thread
 	wxString name = valFC ( x->FirstChild ( "Hit_def" ) ) ;
 	wxString id = valFC ( x->FirstChild ( "Hit_id" ) ) ;
 
+	name = name.BeforeFirst ( '>' ) ;
+
 	TiXmlNode *h = x->FirstChild ( "Hit_hsps" ) ;
 	h = h->FirstChild ( "Hsp" ) ;
 	wxString evalue = valFC ( h->FirstChild ( "Hsp_evalue" ) ) ;
@@ -292,7 +294,7 @@ void EIpanel::process_blast2() // This is called upon termination of the thread
 
     int max = res_start + RETMAX ;
     if ( max > res_count ) max = res_count ;
-    showMessage ( wxString::Format ( txt("t_blast_results_by" ) , blast_version.c_str() , res_start+1 , max ) ) ;
+    showMessage ( wxString::Format ( txt("t_blast_results_by" ) , blast_version.c_str() , res_start+1 , max , res_count ) ) ;
 }
 
 wxString EIpanel::blast_align ( wxString qseq , wxString mseq , wxString hseq , int cpl , int qoff , int hoff )
@@ -305,6 +307,8 @@ wxString EIpanel::blast_align ( wxString qseq , wxString mseq , wxString hseq , 
     lead[1].Append ( ' ' , lead[0].Length() ) ;
 
     cpl -= lead[0].Length() + 1 ;
+    qoff-- ;
+    hoff-- ;
 
     // Unify length
     int max = qseq.Length() ;

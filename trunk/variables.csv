@@ -694,6 +694,6 @@
 "t_hl_unknown","unknown","unbekannt"
 "t_blast_time","Waiting for BLAST (%d seconds remaining)","Warte auf BLAST (noch %d Sekunden)"
 "t_blast_failed","BLAST failed!","Fehler beim BLAST!"
-"t_blast_results_by","BLAST results by %s (%d-%d)","BLAST-Ergebnisse von %s (%d-%d)"
+"t_blast_results_by","BLAST results by %s (%d-%d of %d)","BLAST-Ergebnisse von %s (%d-%d of %d)"
 "t_blast_qseq","Query:","Abfrage:"
 "t_blast_hseq","Sbjct:","Ergebn.:"
