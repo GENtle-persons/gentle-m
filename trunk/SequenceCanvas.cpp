@@ -642,8 +642,7 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
        print_dc->SetTextBackground ( *wxWHITE ) ;
 
        // Page number
-       char t[100] ;
-       sprintf ( t , txt("t_page_of") , page , totalpages ) ;
+       wxString t = wxString::Format ( txt("t_page_of") , page , totalpages ) ;
        print_dc->SetFont ( *medfont ) ;
        print_dc->GetTextExtent ( t , &tw , &th ) ;
        print_dc->DrawText ( t ,

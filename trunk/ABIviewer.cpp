@@ -241,15 +241,16 @@ wxString TABIviewer::getStat ()
     int runt1 = at->getRecordValue("RUNT",1) ;
     int runt2 = at->getRecordValue("RUNT",2) ;
     
-    char start[100] , stop[100] ;
-    sprintf ( start , txt("t_abi_start") ,
+//    char start[100] , stop[100] ;
+    wxString start , stop ;
+    start = wxString::Format ( txt("t_abi_start") ,
                         rund1 >> 16 ,
                         ( rund1 >> 8 ) & 255 ,
                         rund1 & 255 ,
                         ( runt1 >> 24 ) & 255 ,
                         ( runt1 >> 16 ) & 255 ,
                         ( runt1 >>  8 ) & 255 ) ;
-    sprintf ( stop , txt("t_abi_stop") ,
+    stop = wxString::Format ( txt("t_abi_stop") ,
                         rund2 >> 16 ,
                         ( rund2 >> 8 ) & 255 ,
                         rund2 & 255 ,
@@ -267,15 +268,14 @@ wxString TABIviewer::getStat ()
        if ( u[a] > 0 )
           {
           if ( !bases.IsEmpty() ) bases += ";  " ;
-          sprintf ( t , "%c: %d" , (char) a , u[a] ) ;
-          bases += t ;
+          bases += wxString::Format ( "%c: %d" , (char) a , u[a] ) ;
           }
        }
 
     wxString r ;
     r += bases + "\n" ;
     r += txt("t_abi_sample") + smpl + "\n" ;
-    sprintf ( t , txt("t_abi_lane") , lane ) ; r += t ;
+    r += wxString::Format ( txt("t_abi_lane") , lane ) ;
     r += start ;
     r += stop ;
     if ( !comb.IsEmpty() ) r += txt("t_abi_comb") + comb + "\n" ;
