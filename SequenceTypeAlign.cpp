@@ -124,12 +124,8 @@ void SeqAlign::show ( wxDC& dc )
         if ( b > 0 && insight ) // Character
            {
            t = s.GetChar(b-1) ;
-/*           if ( getMark ( a ) == 1 )
-              {
-              dc.SetTextBackground ( *wxLIGHT_GREY ) ;
-              dc.SetTextForeground ( *wxBLACK ) ;
-              }
-           else */if ( !thisisidentity )
+           
+           if ( !thisisidentity )
               {
               fg = al->findColors ( s.GetChar(b-1) , can->seq[first]->s.GetChar(b-1) , true ) ;
               bg = al->findColors ( s.GetChar(b-1) , can->seq[first]->s.GetChar(b-1) , false ) ;
@@ -154,26 +150,28 @@ void SeqAlign::show ( wxDC& dc )
 
            if ( t == "." )
               {
+              dc.SetPen(*wxTRANSPARENT_PEN);
+              if ( al->invs )
+                 {
+                 dc.SetBrush ( *MYBRUSH ( dc.GetTextBackground() ) ) ;
+                 dc.DrawRectangle ( rax-1 , ray , wx+2 , wy ) ;
+                 }    
               dc.SetBrush ( *MYBRUSH ( dc.GetTextForeground() ) ) ;
               dc.DrawCircle ( rax + wx / 2 ,
                               ray + wy / 2 ,
-                              wy / 8 ) ;
-              dc.SetPen(*wxTRANSPARENT_PEN);
+                              wy / (al->bold?6:8) ) ;
               }
-           else dc.DrawText ( t , rax, ray ) ;
-           
-           if ( al->bold )
+           else
               {
-              dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-              dc.DrawText ( t, rax-1, ray ) ;
-              dc.SetBackgroundMode ( wxSOLID ) ;
-              }
+              dc.DrawText ( t , rax, ray ) ;       
+              if ( al->bold )
+                 {
+                 dc.SetBackgroundMode ( wxTRANSPARENT ) ;
+                 dc.DrawText ( t, rax-1, ray ) ;
+                 dc.SetBackgroundMode ( wxSOLID ) ;
+                 }
+              }    
 
-/*           if ( getMark ( a ) > 0 )
-              {
-              dc.SetTextForeground ( fg ) ;
-              dc.SetTextBackground ( bg ) ;
-              }*/
            cnt++ ;
            }
         else if ( b < 0 && insight ) // Front number

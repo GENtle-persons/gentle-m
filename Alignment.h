@@ -85,7 +85,7 @@ class TAlignment : public ChildBase
     wxPanel *up ;
     wxSplitterWindow *hs ;
     vector <TAlignLine> lines ;
-    vector <wxColour> colDNA , colAA , *colCur ;
+    wxColour colDNA[256] , colAA[256] , *colCur ;
     wxString gap , matrix , consensusSequence , name , database ;
     int match , mismatch , gap_penalty , algorithm ;
     bool bold , mono , cons , invs , showIdentity ;
@@ -101,6 +101,7 @@ class TAlignment : public ChildBase
     
     protected :
     virtual void doExport ( wxString filename , int filter ) ;
+    virtual void readTabColors ( wxString filename ) ;
     
     DECLARE_EVENT_TABLE()
     } ;

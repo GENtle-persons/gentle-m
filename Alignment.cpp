@@ -68,23 +68,38 @@ TAlignment::TAlignment(wxWindow *parent, const wxString& title)
     vec = NULL ;
     aaa = NULL ;
     colCur = NULL ;
+    readTabColors ( myapp()->homedir + myapp()->slash + "default.tab" ) ;
+    }
+
+TAlignment::~TAlignment ()
+    {
+    }
+
     
-    // Now we read the default color scheme from BioEdit...
-    wxString fn = myapp()->homedir + myapp()->slash + "default.tab" ;
+void TAlignment::readTabColors ( wxString filename )
+    {
+    // Now we read a color scheme in BioEdit format
+    wxString fn = filename ;
     wxTextFile in ( fn ) ;
     in.Open () ;
     int a ;
-    vector <wxColour> *c = NULL ;
-    while ( colDNA.size() < 256 ) colDNA.push_back ( wxColour(0,0,0) ) ;
-    colAA = colDNA ;
+    wxColour *c = NULL ;
+    for ( a = 0 ; a < 256 ; a++ )
+        {
+        c = colDNA ;
+        c[a].Set ( 0 , 100 , 0  ) ;
+        c = colAA ;
+        c[a].Set ( 0 , 100 , 0  ) ;
+        }    
     while ( !in.Eof() )
         {
         wxString s = in.GetNextLine() ;
         if ( s.IsEmpty() ) ;
         else if ( s.GetChar(0) == '/' )
            {
-           if ( s == "/amino acids/" ) c = &colAA ;
-           if ( s == "/nucleotides/" ) c = &colDNA ;
+           if ( s == "/amino acids/" ) c = colAA ;
+           else if ( s == "/nucleotides/" ) c = colDNA ;
+           else c = NULL ;
            }
         else if ( c )
            {
@@ -92,20 +107,17 @@ TAlignment::TAlignment(wxWindow *parent, const wxString& title)
            int x = atoi ( s.c_str() ) ;
            for ( int b = 0 ; b < t.length() ; b++ )
               {
-              (*c)[(unsigned char)t.GetChar(b)] = wxColour (
-                          ( x >> 16 ) & 255 ,
-                          ( x >> 8 ) & 255 ,
-                          x & 255 ) ;
+              unsigned char ch = (unsigned char)t.GetChar(b) ;
+              int red = ( x >> 16 ) & 255 ;
+              int green = ( x >> 8 ) & 255 ;
+              int blue = x & 255 ;
+              c[ch].Set ( red , green , blue ) ;
               }
            }
         }
-    colCur = &colAA ;
+    colCur = colAA ;
     }
     
-TAlignment::~TAlignment ()
-    {
-    }
-
 
 wxColour TAlignment::findColors ( char c1 , char c2 , bool fg )
     {
@@ -116,8 +128,8 @@ wxColour TAlignment::findColors ( char c1 , char c2 , bool fg )
         {
         int cc = (unsigned char) c1 ;
         if ( !colCur ) r = *wxBLACK ;
-        else if ( cc < 0 || cc >= colCur->size() ) r = *wxBLACK ;
-        else r = (*colCur)[cc] ;
+        else if ( cc < 0 || cc >= 256 ) r = *wxBLACK ;
+        else r = colCur[cc] ;
         }
     else r = *wxWHITE ;
     
@@ -150,6 +162,7 @@ void TAlignment::initme ()
     view_menu->Append(ALIGN_SEQ , txt("m_align_seq")  , "" , true ) ;
     view_menu->Append(ALIGN_FEAT, txt("m_align_feat") , "" , true ) ;
     view_menu->Append(ALIGN_RNA , txt("m_align_rna")  , "" , true ) ;
+    
     view_menu->AppendSeparator();
     view_menu->Append(ALIGN_IDENT, txt("m_align_ident") , "" , true ) ;
 
@@ -164,6 +177,16 @@ void TAlignment::initme ()
     menu_bar->FindItem(ALIGN_NORM)->Check ( true ) ;
     menu_bar->FindItem(ALIGN_CONS)->Check ( true ) ;
     menu_bar->FindItem(ALIGN_IDENT)->Check ( true ) ;
+    
+    // Not implemented yet
+    menu_bar->FindItem(ALIGN_SOA )->Enable ( false ) ;
+    menu_bar->FindItem(ALIGN_SOAI)->Enable ( false ) ;
+    menu_bar->FindItem(ALIGN_SIML)->Enable ( false ) ;
+    menu_bar->FindItem(ALIGN_SEQ )->Enable ( false ) ;
+    menu_bar->FindItem(ALIGN_FEAT)->Enable ( false ) ;
+    menu_bar->FindItem(ALIGN_RNA )->Enable ( false ) ;
+
+    
     cons = true ;
     showIdentity = true ;
 
@@ -232,6 +255,7 @@ void TAlignment::initme ()
 //    Maximize () ;
     sc->SetFocus() ;
     myapp()->frame->setChild ( this ) ;
+    readTabColors ( myapp()->homedir + myapp()->slash + "default.tab" ) ;
     }
 
 // Calling clustalw.exe, eventually
@@ -537,7 +561,7 @@ void TAlignment::updateSequence ()
         int id = f->id ;
         if ( lines[id].getFeatures()->type == TYPE_AMINO_ACIDS )
             {
-            colCur = &colAA ;
+            colCur = colAA ;
             if ( aaa ) delete aaa ;
             aaa = new SeqAA ( NULL ) ;
             sc->seq[g] = aaa ;
@@ -551,7 +575,7 @@ void TAlignment::updateSequence ()
             }
         else if ( lines[id].getFeatures()->type == TYPE_VECTOR )
             {
-            colCur = &colDNA ;
+            colCur = colDNA ;
             if ( aaa ) delete aaa ;
             aaa = new SeqAA ( NULL ) ;
             sc->seq[g] = aaa ;
@@ -842,6 +866,8 @@ void TAlignment::OnMenuBold ( wxCommandEvent &ev )
 void TAlignment::OnMenuMono ( wxCommandEvent &ev )
     {
     mono = !mono ;
+    sc->arrange () ;
+    sc->SilentRefresh() ;    
     }
 
 void TAlignment::OnMenuNorm ( wxCommandEvent &ev )
