@@ -204,7 +204,7 @@ void MyFrame::initme ()
     if ( checkUpdate )
         {
         wxString cur_update = check4update () ;
-        if ( cur_update != "" )
+        if ( !cur_update.IsEmpty() )
             {
             update2version ( cur_update ) ;
 //            miniFrame->Close() ;
@@ -331,7 +331,7 @@ void MyFrame::initme ()
         sql = "SELECT s_value FROM stuff WHERE s_type='LASTPROJECT' AND s_name='DATABASE'" ;
         r = LS->getObject ( sql ) ;
         if ( r.rows() > 0 ) d = r[0][0] ;
-        if ( n != "" && d != "" )
+        if ( !n.IsEmpty() && !d.IsEmpty() )
            {
            TManageDatabaseDialog mdb ( this , "dummy" , ACTION_MODE_STARTUP ) ;
            mdb.do_load_project ( n , d ) ;
@@ -349,8 +349,6 @@ void MyFrame::initme ()
        for ( a = 1 ; a < myapp()->argc ; a++ )
           {
           wxString path = myapp()->argv[a] ;
-//          for ( b = path.length() - 1 ; path[b] != '\\' && path[b] != '/' ; b-- ) ;
-//          wxString file = path.substr ( b+1 ) ;
           wxString file = path.AfterLast ( '/' ) ;
           file = file.AfterLast ( '\\' ) ;
           importFile ( file , path , -1 ) ;
@@ -360,25 +358,11 @@ void MyFrame::initme ()
        
     SetSizeHints ( 600 , 400 ) ;
     Show(TRUE);
-    if ( children.size() )
+    if ( children.GetCount() )
        {
        children[0]->Activate () ;
-//       children[0]->Refresh () ;
        }
     }
-    /*
-void MyFrame::SetMenuBar ( wxMenuBar *menu_bar )
-    {
-    }
-
-void MyFrame::SetIcon ( wxIcon icon )
-    {
-    }
-
-void MyFrame::CreateStatusBar ()
-    {
-    }
-    */
     
 void MyFrame::OnClose(wxCloseEvent& event)
 {
@@ -618,7 +602,7 @@ void MyFrame::newXML (  TXMLfile &xml , wxString title )
        {
        TVector *nv = xml.getVector ( n ) ;
        short type = nv->type ;
-       if ( title != "" ) nv->setName ( title ) ;
+       if ( !title.IsEmpty() ) nv->setName ( title ) ;
        nv->addDescription ( "\n" + wxGetUserName() ) ;
        if ( type == TYPE_AMINO_ACIDS )
           newAminoAcids ( nv , nv->getName() ) ;
@@ -656,8 +640,8 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
     {
     int n ;
     TVector *nv ;
-    vector <TVector *> vv ;
-    vector <ChildBase*> vc ;
+    wxArrayTVector vv ;
+    wxArrayChildBase vc ;
     wxArrayString vs ;
     bool alignment = false ;
     for ( n = 0 ; n < gb.vs_l.size() ; n++ )
@@ -667,7 +651,7 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
         nv = new TVector ;
         gb.remap ( nv ) ;
         vs.Add ( nv->getSequence() ) ;
-        vv.push_back ( nv ) ;
+        vv.Add ( nv ) ;
         nv->setDescription ( nv->getDescription() + "\n" + wxGetUserName() ) ;
         if ( nv->getSequenceLength() != vv[0]->getSequenceLength() ) alignment = false ;
         else if ( nv->getSequence().find ( '-' ) != -1 ) alignment = true ;
@@ -675,7 +659,7 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
     if ( gb.vs_l.size() == 1 ) alignment = false ;
         
     // Removing alignment artifacts from sequences
-    for ( n = 0 ; n < vv.size() ; n++ )
+    for ( n = 0 ; n < vv.GetCount() ; n++ )
         {
         for ( int m = 0 ; m < vv[n]->getSequenceLength() ; m++ )
            {
@@ -700,15 +684,15 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
     for ( n = 0 ; n < gb.vs_l.size() ; n++ )
         {
         nv = vv[n] ;
-        if ( gb.vs_l.size() == 1 && title != "" && nv->getName() == "" )
+        if ( gb.vs_l.size() == 1 && !title.IsEmpty() && nv->getName().IsEmpty() )
            nv->setName ( title ) ;
         short type = TUReadSeq::getSeqType ( nv->getSequence() ) ;
         if ( type == TYPE_AMINO_ACIDS )
-           vc.push_back ( newAminoAcids ( nv , nv->getName() ) ) ;
+           vc.Add ( newAminoAcids ( nv , nv->getName() ) ) ;
         else
-           vc.push_back ( newFromVector ( nv , type ) ) ;
+           vc.Add ( newFromVector ( nv , type ) ) ;
         }
-    vv.clear () ;
+    vv.Clear () ;
         
     if ( alignment )
         {
@@ -762,7 +746,7 @@ void MyFrame::InitToolBar(wxToolBar* toolBar)
 {
 }
 
-TAlignment *MyFrame::runAlignment ( wxArrayString &vs , vector <ChildBase*> &vc , TVector *nv )
+TAlignment *MyFrame::runAlignment ( wxArrayString &vs , wxArrayChildBase &vc , TVector *nv )
     {
 //    Thaw () ;
     TAlignment *subframe = new TAlignment ( getCommonParent() , "Alignment" ) ;
@@ -802,7 +786,7 @@ TAlignment *MyFrame::runAlignment ( wxArrayString &vs , vector <ChildBase*> &vc 
 void MyFrame::OnAlignment(wxCommandEvent& event)
     {
     wxArrayString vs ; // Dummy
-    vector <ChildBase*> vc ; // Dummy
+    wxArrayChildBase vc ; // Dummy
     runAlignment ( vs , vc ) ;
     }
     
@@ -851,16 +835,16 @@ void MyFrame::OnProjectLoad(wxCommandEvent& event)
     // Are all objects stored in a database?
     int a ;
     wxString notindb ;
-    for ( a = 0 ; a < children.size() ; a++ )
+    for ( a = 0 ; a < children.GetCount() ; a++ )
         {
         if ( children[a]->def == "dna" )
            {
            MyChild *c = (MyChild*) children[a] ;
-           if ( c->vec->getDatabase() == "" )
+           if ( c->vec->getDatabase().IsEmpty() )
               notindb += "\n" + c->getName() ;
            }
         }
-    if ( notindb != "" )
+    if ( !notindb.IsEmpty() )
         {
         notindb = txt("t_following_not_in_db_open") + 
                         notindb + txt("t_following_end_open") ;
@@ -880,16 +864,16 @@ void MyFrame::OnProjectSave(wxCommandEvent& event)
     // Are all objects stored in a database?
     int a ;
     wxString notindb ;
-    for ( a = 0 ; a < children.size() ; a++ )
+    for ( a = 0 ; a < children.GetCount() ; a++ )
         {
         if ( children[a]->def == "dna" )
            {
            MyChild *c = (MyChild*) children[a] ;
-           if ( c->vec->getDatabase() == "" )
+           if ( c->vec->getDatabase().IsEmpty() )
               notindb += "\n" + c->getName() ;
            }
         }
-    if ( notindb != "" )
+    if ( !notindb.IsEmpty() )
         {
         notindb = txt("t_following_not_in_db") + notindb + txt("t_following_end") ;
         wxMessageDialog md ( this , notindb ,
@@ -906,12 +890,12 @@ void MyFrame::OnProjectSave(wxCommandEvent& event)
 void MyFrame::OnProjectClose(wxCommandEvent& event)
     {
     int a ;
-    for ( a = 0 ; a < children.size() ; a++ )
+    for ( a = 0 ; a < children.GetCount() ; a++ )
         {
 //        children[a]->Close() ;
         delete children[a] ;
         }
-    children.clear() ;
+    children.Clear() ;
     project_name = txt("project") ;
     project_desc = "" ;
     project_db = "" ;
@@ -946,7 +930,7 @@ TAminoAcids *MyFrame::newAminoAcids ( wxString aa , wxString title )
 TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , wxString title )
     {
     int a ;
-    if ( title == "" ) title = "Surprise!" ;
+    if ( title.IsEmpty() ) title = "Surprise!" ;
     
     TAminoAcids *subframe = new TAminoAcids ( (wxWindow*) getCommonParent() , title ) ;
     setChild ( subframe ) ;
@@ -987,7 +971,7 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , wxString title )
 
 TABIviewer *MyFrame::newABI ( wxString filename , wxString title )
     {
-    if ( title == "" ) title = "Surprise!" ;
+    if ( title.IsEmpty() ) title = "Surprise!" ;
     TABIviewer *subframe = new TABIviewer ( getCommonParent() , title ) ;
     subframe->filename = filename ;
     subframe->vec->type = TYPE_SEQUENCE ;
@@ -1155,27 +1139,28 @@ wxMenu *MyFrame::getHelpMenu ()
 void MyFrame::setChild ( ChildBase *ch )
     {
     int a ;
-    for ( a = 0 ; a < children.size() && children[a] != ch ; a++ ) ;
-    if ( a == children.size() ) children.push_back ( ch ) ;
+    for ( a = 0 ; a < children.GetCount() && children[a] != ch ; a++ ) ;
+    if ( a == children.GetCount() ) children.Add ( ch ) ;
     }
     
 void MyFrame::removeChild ( ChildBase *ch )
     {
     int a ;
-    for ( a = 0 ; a < children.size() && children[a] != ch ; a++ ) ;
-    if ( a == children.size() ) return ;
+    for ( a = 0 ; a < children.GetCount() && children[a] != ch ; a++ ) ;
+    if ( a == children.GetCount() ) return ;
     children[a]->Disable () ;
     children[a]->Hide() ;
-    children[a] = children[children.size()-1] ;
-    children.pop_back () ;
+//    children[a] = children[children.GetCount()-1] ;
+//    children.pop_back () ;
+    children.RemoveAt ( a ) ;
     lastChild = NULL ;
     activateChild ( 0 ) ;
     }
 
 void MyFrame::activateChild ( int a )
     {
-    if ( a >= children.size() ) a = 0 ;
-    if ( children.size() )
+    if ( a >= children.GetCount() ) a = 0 ;
+    if ( children.GetCount() )
        {
        children[a]->Activate () ;
        mainTree->EnsureVisible ( children[a]->inMainTree ) ;
@@ -1215,7 +1200,7 @@ wxString MyFrame::check4update ()
         td = td.BeforeFirst ( '\m' ) ;
         
         wxString lu = LS->getOption ( "LAST_UPDATE" , "" ) ;
-        if ( lu == "" ) // Assuming new installation of the latest version, so no update
+        if ( lu.IsEmpty() ) // Assuming new installation of the latest version, so no update
            {
            lu = td ;
            LS->setOption ( "LAST_UPDATE" , lu ) ;
@@ -1274,7 +1259,7 @@ void MyFrame::update2version ( wxString ver )
        return ;
        }
        
-    if ( do_run == "" ) return ;    
+    if ( do_run.IsEmpty() ) return ;    
     
     LS->setOption ( "LAST_UPDATE" , ver ) ;
     wxExecute ( do_run , wxEXEC_ASYNC ) ;
@@ -1333,7 +1318,7 @@ void MyFrame::setActiveChild ( ChildBase *c )
     lastChild = c ;
     if ( !IsShown() ) return ;
     int a ;
-    for ( a = 0 ; a < children.size() ; a++ )
+    for ( a = 0 ; a < children.GetCount() ; a++ )
        {
        ChildBase *d = children[a] ;
        if ( d != c )
@@ -1342,7 +1327,7 @@ void MyFrame::setActiveChild ( ChildBase *c )
           if ( d->IsEnabled() ) d->Disable () ;
           }
        }
-    if ( children.size() == 0 && GetMenuBar() != menu_bar ) SetMenuBar ( menu_bar ) ;
+    if ( children.GetCount() == 0 && GetMenuBar() != menu_bar ) SetMenuBar ( menu_bar ) ;
     if ( !c ) return ;
     if ( !c->IsEnabled() ) c->Enable() ;
     if ( !c->IsShown() ) c->Show() ;
@@ -1375,9 +1360,9 @@ void MyFrame::BollocksMenu(wxCommandEvent& event)
        int a = getChildIndex ( lastChild ) ;
        if ( event.GetId() == MDI_NEXT_WINDOW ) a++ ;
        else a-- ;
-       if ( a < 0 ) a = children.size()-1 ;
-       if ( a >= children.size() ) a = 0 ;
-       if ( a >= 0 && a <= children.size() )
+       if ( a < 0 ) a = children.GetCount()-1 ;
+       if ( a >= children.GetCount() ) a = 0 ;
+       if ( a >= 0 && a <= children.GetCount() )
           {
           mainTree->EnsureVisible ( children[a]->inMainTree ) ;
           mainTree->SelectItem ( children[a]->inMainTree ) ;
@@ -1398,7 +1383,7 @@ void MyFrame::RerouteMenu(wxCommandEvent& event)
 int MyFrame::getChildIndex ( ChildBase *c )
     {
     int a ;
-    for ( a = 0 ; a < children.size() && children[a] != c ; a++ ) ;
+    for ( a = 0 ; a < children.GetCount() && children[a] != c ; a++ ) ;
     return a ;
     }
 

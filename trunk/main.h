@@ -91,8 +91,17 @@ class MyApp : public wxApp
     };
 
 class TUndo ;
+class ChildBase ;
+class TVector ;
+class TRestrictionEnzyme ;
 
-typedef vector <char> TVC ;
+WX_DEFINE_ARRAY(ChildBase *, wxArrayChildBase);
+WX_DEFINE_ARRAY(TRestrictionEnzyme *, wxArrayTRestrictionEnzyme);
+
+#ifndef _wxArrayTVector
+#define _wxArrayTVector
+WX_DEFINE_ARRAY(TVector *, wxArrayTVector);
+#endif
 
 #include "enums.h"
 #include "TVector.h"
@@ -151,6 +160,7 @@ char* txt ( wxString item ) ;
 void init_txt ( wxString lang ) ;
 MyApp *myapp () ;
 int cmpint(int *first, int *second) ;
+int cmpre(TRestrictionEnzyme *first, TRestrictionEnzyme *second) ;
 
 #endif
 // _MAIN_H__

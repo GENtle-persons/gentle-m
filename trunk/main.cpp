@@ -49,6 +49,11 @@ int cmpint(int *first, int *second)
     {
     return *first > *second ;
     }    
+    
+int cmpre(TRestrictionEnzyme *first, TRestrictionEnzyme *second)
+    {
+    return first > second ; //????
+    }    
 
 void wxStringInsert ( wxString &s , int from , wxString t )
     {
@@ -70,7 +75,7 @@ wxArrayString explode ( wxString sep , wxString s )
            }
         else n += s.GetChar(a) ;
         }
-    if ( n != "" ) r.Add ( n ) ; 
+    if ( !n.IsEmpty() ) r.Add ( n ) ; 
     return r ;
     }
 
@@ -337,7 +342,7 @@ void ChildBase::Maximize ( bool isit )
 
 void ChildBase::showName ( wxString x )
     {
-    if ( x == "" )
+    if ( x.IsEmpty() )
        {
        x = getName() ;
        if ( vec && vec->isChanged() ) x += "*" ;

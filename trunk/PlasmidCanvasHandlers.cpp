@@ -236,11 +236,11 @@ void PlasmidCanvas::rsDel ( wxCommandEvent &ev )
     if ( a < p->vec->cocktail.GetCount() )
         rsAdd2Cocktail ( ev ) ; // Effectively removing enzyme from cocktail
         
-    for ( a = 0 ; a < p->vec->re.size() &&
+    for ( a = 0 ; a < p->vec->re.GetCount() &&
                         p->vec->re[a] != p->vec->rc[context_last_rs].e ; a++ ) ;
-    for ( a++ ; a < p->vec->re.size() ; a++ )
+    for ( a++ ; a < p->vec->re.GetCount() ; a++ )
         p->vec->re[a-1] = p->vec->re[a] ;
-    p->vec->re.pop_back() ;
+    p->vec->re.RemoveAt ( p->vec->re.GetCount() ) ;
     p->vec->recalcvisual = true ;
     p->vec->recalculateCuts() ;
     p->treeBox->initme() ;
@@ -338,7 +338,7 @@ void PlasmidCanvas::blastDNA ( wxCommandEvent &ev )
         {
         seq += p->vec->getNucleotide ( a-1 ) ;
         }
-    if ( seq == "" ) return ;
+    if ( seq.IsEmpty() ) return ;
     myapp()->frame->blast ( seq , "blastn" ) ;
     }
         
@@ -380,7 +380,7 @@ void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl , int mut)
     
     myapp()->frame->mainTree->addChild ( subframe , TYPE_PRIMER ) ;
     myapp()->frame->setChild ( subframe ) ;
-//    myapp()->frame->children.push_back ( subframe ) ;
+//    myapp()->frame->children.Add ( subframe ) ;
     }
 
 // Primer handler
@@ -550,7 +550,7 @@ void PlasmidCanvas::orfBlastDNA ( wxCommandEvent &ev )
     int from = p->vec->worf[context_last_orf].from ;
     int to = p->vec->worf[context_last_orf].to ;
     wxString s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf ) ;
-    if ( s == "" ) return ;
+    if ( s.IsEmpty() ) return ;
     myapp()->frame->blast ( s , "blastn" ) ;
     }
         
@@ -559,7 +559,7 @@ void PlasmidCanvas::orfBlastAA ( wxCommandEvent &ev )
     int from = p->vec->worf[context_last_orf].from ;
     int to = p->vec->worf[context_last_orf].to ;
     wxString s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf , false ) ;
-    if ( s == "" ) return ;
+    if ( s.IsEmpty() ) return ;
     myapp()->frame->blast ( s , "blastp" ) ;
     }
 
@@ -571,7 +571,7 @@ void PlasmidCanvas::itemBlastDNA ( wxCommandEvent &ev )
     int to = p->vec->items[context_last_item].to ;
     int dir = p->vec->items[context_last_item].direction ;
     wxString s = getDNAorAA ( from , to , dir ) ;
-    if ( s == "" ) return ;
+    if ( s.IsEmpty() ) return ;
     myapp()->frame->blast ( s , "blastn" ) ;
     }
         
@@ -585,7 +585,7 @@ void PlasmidCanvas::itemBlastAA ( wxCommandEvent &ev )
     from += dir * ( rf - 1 ) ;
     to += dir * ( rf - 1 ) ;
     wxString s = getDNAorAA ( from , to , dir , false ) ;
-    if ( s == "" ) return ;
+    if ( s.IsEmpty() ) return ;
     myapp()->frame->blast ( s , "blastp" ) ;
     }
 
@@ -681,10 +681,10 @@ void PlasmidCanvas::OnFillKlenow(wxCommandEvent& event)
     wxString l = v->getStickyEnd(true,true) + v->getStickyEnd(true,false) ;
     wxString r = v->getStickyEnd(false,true) + v->getStickyEnd(false,false) ;
     int a ;
-    if ( v->getStickyEnd(true,false) != "" )
+    if ( !v->getStickyEnd(true,false).IsEmpty() )
         for ( a = 0 ; a < l.length() ; a++ )
            l[(uint)a] = v->getComplement ( l[(uint)a] ) ;
-    if ( v->getStickyEnd(false,false) != "" )
+    if ( !v->getStickyEnd(false,false).IsEmpty() )
         for ( a = 0 ; a < r.length() ; a++ )
            r[(uint)a] = v->getComplement ( r[(uint)a] ) ;
     v->setSequence ( l + v->getSequence() + r ) ;

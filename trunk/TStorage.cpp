@@ -6,12 +6,12 @@ bool TStorage::getWriteProtect () { return writeProtect ; }
 
 TStorage::TStorage ( int nt , wxString fn )
     {
-    if ( fn == "" ) isMySQL = false ;
+    if ( fn.IsEmpty() ) isMySQL = false ;
     else isMySQL = (fn.GetChar(0)==':') ;
     rpv = 0 ;
     writeProtect = false ;
     storagetype = nt ;
-    if ( fn == "" ) fn = myapp()->homedir+"/local.db" ;
+    if ( fn.IsEmpty() ) fn = myapp()->homedir+"/local.db" ;
     dbname = fn ;
 #ifdef USEMYSQL
     if ( isMySQL )
@@ -43,7 +43,7 @@ TStorage::~TStorage ()
         delete conn ;
         }
 #endif
-    for ( int a = 0 ; a < re.size() ; a++ ) // Cleaning up enzymes
+    for ( int a = 0 ; a < re.GetCount() ; a++ ) // Cleaning up enzymes
         delete re[a] ;
     }    
     
@@ -181,7 +181,7 @@ void TStorage::import ()
     for ( a = 0 ; a < sr.content.size() ; a++ )
         {
         wxString name = sr[a][sr["e_name"]] ;
-        if ( name == "" ) {}
+        if ( name.IsEmpty() ) {}
         else if ( name.GetChar(0) == '*' )
            {
            name = name.substr ( 1 , name.length() - 1 ) ;
@@ -199,7 +199,7 @@ void TStorage::import ()
            e->location = sr[a][sr["e_location"]] ;
            e->cut = atoi ( sr[a][sr["e_cut"]].c_str() ) ;
            e->overlap = atoi ( sr[a][sr["e_overlap"]].c_str() ) ;
-           re.push_back ( e ) ;
+           re.Add ( e ) ;
            }
         }
     }
@@ -213,7 +213,7 @@ TRestrictionEnzyme* TStorage::getRestrictionEnzyme ( wxString s )
         if ( ret2 ) return ret2 ;
         }
 
-    for ( int a = 0 ; !ret && a < re.size() ; a++ )
+    for ( int a = 0 ; !ret && a < re.GetCount() ; a++ )
         if ( re[a]->name == s )
            ret = re[a] ;
            
@@ -221,7 +221,7 @@ TRestrictionEnzyme* TStorage::getRestrictionEnzyme ( wxString s )
         {
         ret2 = new TRestrictionEnzyme ;
         *ret2 = *ret ;
-        myapp()->frame->LS->re.push_back ( ret2 ) ;
+        myapp()->frame->LS->re.Add ( ret2 ) ;
         myapp()->frame->LS->updateRestrictionEnzyme ( ret2 ) ;
         ret = ret2 ;
         }
@@ -256,7 +256,7 @@ void TStorage::getEnzymesInGroup ( wxString gn , wxArrayString &vs )
     
     for ( a = 0 ; a < vs.GetCount() ; a++ )
         {
-        if ( vs[a] == "" )
+        if ( vs[a].IsEmpty() )
            {
            vs.Remove ( a ) ;
            a-- ;
@@ -280,7 +280,7 @@ void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme *e )
     TSQLresult sr ;
     wxString sql ;
     char u[100] ;
-    if ( e->name == "" ) return ;
+    if ( e->name.IsEmpty() ) return ;
     
     // Remove old enzyme, if any
     sql = "DELETE FROM enzyme WHERE e_name=\""+e->name+"\"" ;
@@ -316,8 +316,8 @@ void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , wxString key , wxString va
     int a ;
     for ( a = 0 ; a < value.length() ; a++ ) // Avoiding single quotes in value
         if ( value.GetChar(a) == '"' ) value.SetChar(a,39) ;
-    if ( s1 != "" ) s1 += "," ;
-    if ( s2 != "" ) s2 += "," ;
+    if ( !s1.IsEmpty() ) s1 += "," ;
+    if ( !s2.IsEmpty() ) s2 += "," ;
     s1 += key ;
     s2 += "\"" + value + "\"" ;
     }
@@ -331,8 +331,8 @@ void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , wxString key , int value )
     {
     char t[1000] ;
     sprintf ( t , "%d" , value ) ;
-    if ( s1 != "" ) s1 += "," ;
-    if ( s2 != "" ) s2 += "," ;
+    if ( !s1.IsEmpty() ) s1 += "," ;
+    if ( !s2.IsEmpty() ) s2 += "," ;
     s1 += key ;
     s2 += "\"" + wxString ( t ) + "\"" ;
     }
@@ -406,7 +406,7 @@ wxString TStorage::UCfirst ( wxString s )
     
 bool TStorage::addEnzymeGroup ( wxString s )
     {
-    if ( s == "" ) return false ;
+    if ( s.IsEmpty() ) return false ;
     s = UCfirst ( s ) ;
     if ( s == txt("all") ) return false ;
 
@@ -458,7 +458,7 @@ void TStorage::replaceTable ( wxString table , TVS &f , TVS &t )
     wxString create ;
     for ( a = 0 ; a < f.GetCount() ; a++ )
         {
-        if ( create != "" ) create += ",\n" ;
+        if ( !create.IsEmpty() ) create += ",\n" ;
         create += f[a] + " " + t[a] ;
         }
     create = "CREATE TABLE " + table + "(\n" + create + ")" ;
@@ -707,7 +707,7 @@ void TStorage::updateProtease ( TProtease *p )
     
 void TStorage::addRestrictionEnzyme ( TRestrictionEnzyme *r )
     {
-    re.push_back ( r ) ;
+    re.Add ( r ) ;
     }
     
 wxString TStorage::getDBname ()

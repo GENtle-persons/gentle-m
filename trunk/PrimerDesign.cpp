@@ -141,35 +141,35 @@ void TPrimerDesign::OnExportPrimer ( wxCommandEvent &ev )
 void TPrimerDesign::OnImportPrimer ( wxCommandEvent &ev )
     {
     int a ;
-    vector <ChildBase*> cbl ;
+    wxArrayChildBase cbl ;
     
-    for ( a = 0 ; a < myapp()->frame->children.size() ; a++ )
+    for ( a = 0 ; a < myapp()->frame->children.GetCount() ; a++ )
        if ( myapp()->frame->children[a]->vec->type == TYPE_PRIMER )
-          cbl.push_back ( myapp()->frame->children[a] ) ;
+          cbl.Add ( myapp()->frame->children[a] ) ;
     
-    if ( cbl.size() == 0 )
+    if ( cbl.GetCount() == 0 )
        {
        wxMessageBox ( txt("t_load_primers_first") ) ;
        return ;
        }
     
-    wxString *sl = new wxString[cbl.size()] ;
-    for ( a = 0 ; a < cbl.size() ; a++ )
+    wxString *sl = new wxString[cbl.GetCount()] ;
+    for ( a = 0 ; a < cbl.GetCount() ; a++ )
         sl[a] = cbl[a]->getName() ;
 
     TMyMultipleChoiceDialog scd ( this , 
                             txt("t_chose_primer_txt") , 
                             txt("t_chose_primer") ,
-                            cbl.size() ,
+                            cbl.GetCount() ,
                             sl
                             ) ;
                             
-    if ( cbl.size() <= 2 ) scd.CheckAll () ;
+    if ( cbl.GetCount() <= 2 ) scd.CheckAll () ;
     int res = scd.ShowModal() ;
     delete sl ;
     if ( res != wxID_OK ) return ;
     
-    for ( a = 0 ; a < cbl.size() ; a++ )
+    for ( a = 0 ; a < cbl.GetCount() ; a++ )
        {
        if ( scd.IsChecked ( a ) )
           AddPrimer ( cbl[a]->vec->getSequence() ) ;
@@ -796,7 +796,7 @@ void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
     sd.initme ( w , sc->_from , sc->_to ) ;
     if ( wxID_OK != sd.ShowModal () ) return ;
     wxString ns = sd.getSequence() ;
-    if ( ns == "" ) return ;
+    if ( ns.IsEmpty() ) return ;
     
     TVector z ;
     z.setSequence ( ns ) ;
@@ -812,8 +812,8 @@ void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
            if ( sc->seq[4+show_features]->s.GetChar(b) != ' ' ) sc->seq[4+show_features]->s.SetChar(b,nt.GetChar(a)) ;
            }
         }
-    for ( a = 0 ; a < w->re.size() && w->re[a] != e ; a++ ) ;
-    if ( a == w->re.size() ) w->re.push_back ( e ) ;
+    for ( a = 0 ; a < w->re.GetCount() && w->re[a] != e ; a++ ) ;
+    if ( a == w->re.GetCount() ) w->re.Add ( e ) ;
     updatePrimersFromSequence () ;
     showSequence () ;
     }

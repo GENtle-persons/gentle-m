@@ -29,7 +29,7 @@ class TLigationDialog : public wxDialog
 
     wxCheckListBox *l_sources , *l_targets ;
 
-    vector <TVector*> vv ;
+    wxArrayTVector vv ;
     vector <TVector> ligates ;
     wxArrayString vt ;
     vector <bool> orientation ;

@@ -266,7 +266,7 @@ wxString TABIviewer::getStat ()
        {
        if ( u[a] > 0 )
           {
-          if ( bases != "" ) bases += ";  " ;
+          if ( !bases.IsEmpty() ) bases += ";  " ;
           sprintf ( t , "%c: %d" , (char) a , u[a] ) ;
           bases += t ;
           }
@@ -278,7 +278,7 @@ wxString TABIviewer::getStat ()
     sprintf ( t , txt("t_abi_lane") , lane ) ; r += t ;
     r += start ;
     r += stop ;
-    if ( comb != "" ) r += txt("t_abi_comb") + comb + "\n" ;
+    if ( !comb.IsEmpty() ) r += txt("t_abi_comb") + comb + "\n" ;
     r += txt("t_abi_gel") + geln + "\n" ;
     r += txt("t_abi_file") + gelp + "\n" ;
     r += txt("t_abi_primer_mobility_correction") + pdmf ;
@@ -346,7 +346,7 @@ void TABIviewer::OnEditName(wxCommandEvent& event)
     wxString nn = wxGetTextFromUser ( txt("t_edit_aa_name_txt") ,
                                       txt("t_edit_aa_name") , 
                                       vec->getName() ) ;
-    if ( nn == "" ) return ;
+    if ( nn.IsEmpty() ) return ;
     if ( nn == vec->getName() ) return ;
     
     vec->undo.start ( txt("u_title_change") ) ;

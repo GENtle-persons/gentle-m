@@ -245,11 +245,11 @@ void TManageDatabaseDialog::pm_init_lists ()
     if ( doSave )
         {
         wxString db = defdb ;
-        if ( isProject && myapp()->frame->project_db != "" )
+        if ( isProject && !myapp()->frame->project_db.IsEmpty() )
            db = myapp()->frame->project_db ;
         else if ( !isProject )
            db = v->getDatabase() ;
-        if ( db == "" ) db = defdb ;
+        if ( db.IsEmpty() ) db = defdb ;
         pm_dd_save->SetStringSelection ( db ) ;
         }
 
@@ -298,7 +298,7 @@ void TManageDatabaseDialog::pm_list_items ( int x )
     else
         {
         wxString sql = "SELECT dna_name,dna_type FROM dna" ;
-//        if ( filter != "" )
+//        if ( !filter.IsEmpty() )
            {
            for ( a = 0 ; a < filter.length() ; a++ )
               if ( filter.GetChar(a) == '\"' ) filter.SetChar ( a , '\'' ) ;
@@ -306,9 +306,9 @@ void TManageDatabaseDialog::pm_list_items ( int x )
            wxString sql2 , sql3 ;
            for ( a = 0 ; a < vf.GetCount() ; a++ )
               {
-              if ( vf[a] != "" )
+              if ( !vf[a].IsEmpty() )
                  {
-                 if ( sql2 != "" ) sql2 += " AND" ;
+                 if ( !sql2.IsEmpty() ) sql2 += " AND" ;
                  sql2 += " (dna_name LIKE \"%" + vf[a] + "%\"" ;
                  if ( f_desc->GetValue() )
                     sql2 += " OR dna_description LIKE \"%" + vf[a] + "%\"" ;
@@ -319,30 +319,30 @@ void TManageDatabaseDialog::pm_list_items ( int x )
               }
            if ( f_dna->GetValue() )
               {
-              if ( sql3 != "" ) sql3 += " OR " ;
+              if ( !sql3.IsEmpty() ) sql3 += " OR " ;
               sql3 += "dna_type=0 OR dna_type=1 OR dna_type=2" ;
               }
            if ( f_prot->GetValue() )
               {
-              if ( sql3 != "" ) sql3 += " OR " ;
+              if ( !sql3.IsEmpty() ) sql3 += " OR " ;
               sql3 += "dna_type=5" ;
               }
            if ( f_primer->GetValue() )
               {
-              if ( sql3 != "" ) sql3 += " OR " ;
+              if ( !sql3.IsEmpty() ) sql3 += " OR " ;
               sql3 += "dna_type=3" ;
               }
            if ( false ) // Alignment
               {
-              if ( sql3 != "" ) sql3 += " OR " ;
+              if ( !sql3.IsEmpty() ) sql3 += " OR " ;
               sql3 += "dna_type=4" ;
               }
-           if ( sql3 != "" )
+           if ( !sql3.IsEmpty() )
               {
-              if ( sql2 != "" ) sql2 += " AND (" + sql3 + ")" ;
+              if ( !sql2.IsEmpty() ) sql2 += " AND (" + sql3 + ")" ;
               else sql2 = " " + sql3 ;
               }
-           if ( sql2 != "" ) sql += " WHERE" + sql2 ;
+           if ( !sql2.IsEmpty() ) sql += " WHERE" + sql2 ;
            }
         r = st->getObject ( sql ) ;        
         for ( a = 0 ; a < r.rows() ; a++ )
@@ -472,12 +472,12 @@ bool TManageDatabaseDialog::copyDNA ( wxString name , wxString sdb , wxString td
         {
         if ( s.GetChar(a) == ',' )
            {
-           if ( t != "" ) ve.Add ( t ) ;
+           if ( !t.IsEmpty() ) ve.Add ( t ) ;
            t = "" ;
            }
         else t += s.GetChar(a) ;
         }
-    if ( t != "" ) ve.Add ( t ) ;
+    if ( !t.IsEmpty() ) ve.Add ( t ) ;
 
     for ( a = 0 ; a < ve.GetCount() ; a++ )
         {
@@ -694,7 +694,7 @@ void TManageDatabaseDialog::addDatabase ( wxString fn )
 void TManageDatabaseDialog::pdOnDel ( wxCommandEvent &ev )
     {
     wxString name = pd_db->GetStringSelection() ;
-    if ( name == txt("local_db") || name == "" )
+    if ( name == txt("local_db") || name.IsEmpty() )
         {
         wxMessageDialog md ( this , txt("t_cannot_del_local_db") ) ;
         md.ShowModal() ;
@@ -719,7 +719,7 @@ void TManageDatabaseDialog::pdOnDel ( wxCommandEvent &ev )
 void TManageDatabaseDialog::pdOnSetDefault ( wxCommandEvent &ev )
     {
     wxString name = pd_db->GetStringSelection() ;
-    if ( name == "" ) return ;
+    if ( name.IsEmpty() ) return ;
     defdb = name ;
     
     
@@ -824,7 +824,7 @@ bool TManageDatabaseDialog::do_load_project ( wxString name , wxString db )
     TSQLresult sr ;
 
     MyFrame *f = myapp()->frame ;
-    int oc = f->children.size() ;
+    int oc = f->children.GetCount() ;
     
     // Closing current windows
     wxCommandEvent dummy ;
@@ -883,7 +883,7 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
     TSQLresult sr ;
     v = new TVector () ;
 
-    if ( name == "" ) return false ;
+    if ( name.IsEmpty() ) return false ;
 
     // Loading vector
     sql = "SELECT * FROM dna WHERE dna_name=\"" + name + "\"" ;
@@ -909,19 +909,19 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
         {
         if ( s.GetChar(a) == ',' )
            {
-           if ( t != "" )
+           if ( !t.IsEmpty() )
               {
               if ( t.GetChar(0) == '*' ) v->proteases.Add ( t.substr ( 1 ) ) ;
-              else v->re.push_back ( tstorage->getRestrictionEnzyme ( t ) ) ;
+              else v->re.Add ( tstorage->getRestrictionEnzyme ( t ) ) ;
               }
            t = "" ;
            }
         else t += s.GetChar(a) ;
         }
-    if ( t != "" )
+    if ( !t.IsEmpty() )
         {
         if ( t.GetChar(0) == '*' ) v->proteases.Add ( t.substr ( 1 ) ) ;
-        else v->re.push_back ( tstorage->getRestrictionEnzyme ( t ) ) ;
+        else v->re.Add ( tstorage->getRestrictionEnzyme ( t ) ) ;
         }
 
     // Loading items
@@ -967,7 +967,7 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
     else if ( v->type == TYPE_ALIGNMENT )
         {
         wxArrayString vs ;
-        vector <ChildBase*> vc ;
+        wxArrayChildBase vc ;
         TAlignment *ali = myapp()->frame->runAlignment ( vs , vc , v ) ;
         ali->name = name ;
         ali->database = db ;
@@ -1069,7 +1069,7 @@ void TManageDatabaseDialog::do_save_project ()
     sql = "INSERT INTO project ("+s1+") VALUES ("+s2+")" ;
     storage->getObject ( sql ) ;
     
-    for ( a = 0 ; a < myapp()->frame->children.size() ; a++ )
+    for ( a = 0 ; a < myapp()->frame->children.GetCount() ; a++ )
         {
         if ( myapp()->frame->children[a]->def == "dna" ||
              myapp()->frame->children[a]->def == "AminoAcids" ||
@@ -1088,7 +1088,7 @@ void TManageDatabaseDialog::do_save_project ()
               dna_name = c->vec->getName() ;
               dna_db = c->vec->getDatabase() ;
               }
-           if ( dna_db != "" )
+           if ( !dna_db.IsEmpty() )
               {
               s1 = s2 = "" ;
               storage->sqlAdd ( s1 , s2 , "pd_project" , x ) ;
@@ -1139,7 +1139,7 @@ void TManageDatabaseDialog::do_save_DNA ()
     wxString enzymes = "," ;
     
     // Restriction enzymes
-    for ( a = 0 ; a < v->re.size() ; a++ )
+    for ( a = 0 ; a < v->re.GetCount() ; a++ )
         enzymes += v->re[a]->name + "," ;
         
     // Proteases

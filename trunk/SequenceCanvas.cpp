@@ -450,7 +450,7 @@ void SequenceCanvas::OnCut ( wxCommandEvent &ev )
     if ( p ) { p->OnCut ( ev ) ; return ; }
     if ( !getAA() || _from == -1 ) return ;
     wxString s = getSelection () ;
-    if ( s == "" ) return ;
+    if ( s.IsEmpty() ) return ;
     if (wxTheClipboard->Open())
         {
         wxTheClipboard->SetData( new wxTextDataObject(s) );
@@ -493,7 +493,7 @@ void SequenceCanvas::OnCopyText ( wxCommandEvent &ev )
         if ( p.y > maxline && p.y >= 0 ) maxline = p.y ;
         }
 
-    while ( out.GetCount() && out[out.GetCount()-1] == "" )
+    while ( out.GetCount() && out.Last().IsEmpty() )
         out.Remove ( out.GetCount()-1 ) ;
 
     if ( minline < 0 ) minline = 0 ;
@@ -771,7 +771,7 @@ void SequenceCanvas::OnCopy ( wxCommandEvent &ev )
     {
     if ( p ) { p->OnCopy ( ev ) ; return ; }
     wxString s = getSelection () ;
-    if ( s == "" ) return ;
+    if ( s.IsEmpty() ) return ;
     if (wxTheClipboard->Open())
         {
         wxTheClipboard->SetData( new wxTextDataObject(s) );
@@ -1467,7 +1467,7 @@ void SequenceCanvas::OnCopyResultAA ( wxCommandEvent &ev )
           else s = sa + s ;
           }
        }    
-    if ( s == "" ) return ;
+    if ( s.IsEmpty() ) return ;
     if (wxTheClipboard->Open())
         {
         wxTheClipboard->SetData( new wxTextDataObject(s) );
@@ -1531,7 +1531,7 @@ void SequenceCanvas::OnNewFromResultAA ( wxCommandEvent &ev )
           else s = sa + s ;
           }
        }    
-    if ( s == "" ) return ;
+    if ( s.IsEmpty() ) return ;
 
     wxString seq = s ;
     wxString n = getPD()->vec->getName() + " (" ;
@@ -1567,11 +1567,11 @@ void SequenceCanvas::OnWhatCuts(wxCommandEvent& event)
     
     int a ;
     TRestrictionEnzyme *e = sd.getEnzyme() ;
-    for ( a = 0 ; a < p->vec->re.size() && p->vec->re[a] != e ; a++ ) ;
-    if ( a == p->vec->re.size() )
+    for ( a = 0 ; a < p->vec->re.GetCount() && p->vec->re[a] != e ; a++ ) ;
+    if ( a == p->vec->re.GetCount() )
         {
         p->vec->undo.start ( txt("u_what_cuts") ) ;
-        p->vec->re.push_back ( e ) ;
+        p->vec->re.Add ( e ) ;
         p->vec->recalculateCuts() ;
         p->vec->recalcvisual = true ;
         p->vec->undo.stop () ;
@@ -1734,7 +1734,7 @@ void SequenceCanvas::rsHideLimit ( wxCommandEvent &ev )
     if ( wxID_OK != ted.ShowModal() ) return ;
     int limit = atoi ( ted.GetValue().c_str() ) ;
     int a , b ;
-    for ( a = 0 ; a < p->vec->re.size() ; a++ )
+    for ( a = 0 ; a < p->vec->re.GetCount() ; a++ )
        {
        int cnt = 0 ;
        for ( b = 0 ; b < p->vec->rc.size() ; b++ )

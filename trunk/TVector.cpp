@@ -11,7 +11,7 @@ char TVector::COMPLEMENT[256] ;
 vector <TAAProp> TVector::aaprop ;
 
 wxString TVector::getParams () { return params ; }
-void TVector::setParams ( wxString s ) { params = s ; }
+void TVector::setParams ( const wxString &s ) { params = s ; }
 void TVector::setWindow ( ChildBase *c ) { window = c ; }
 void TVector::setCircular ( bool c ) { circular = c ; }
 bool TVector::isCircular () { return circular ; }
@@ -40,7 +40,7 @@ TVector *TVector::newFromMark ( int from , int to )
     
     if ( to > sequence.length() )
             nv->turn ( sequence.length() - from + 1 ) ;
-    if ( nv->getDescription() != "" ) nv->addDescription ( "\n" ) ;
+    if ( !nv->getDescription().IsEmpty() ) nv->addDescription ( "\n" ) ;
     sprintf ( t , txt("t_cropped_fragment") , nv->getName().c_str() , from , to ) ;
     nv->addDescription ( t ) ;
     nv->addName ( "*" ) ;
@@ -270,7 +270,7 @@ void TVector::removeBlanksFromVector ()
     
 void TVector::doRemoveNucleotide ( int x )
     {
-    if ( sequence == "" )
+    if ( sequence.IsEmpty() )
         {
         while ( items.size() ) items.pop_back () ;
         return ;
@@ -379,7 +379,7 @@ void TVector::recalculateCuts ()
     rc.clear () ;
     if ( type == TYPE_AMINO_ACIDS ) return ;
     int a , b , c ;
-    for ( a = 0 ; a < re.size() ; a++ )
+    for ( a = 0 ; a < re.GetCount() ; a++ )
        {
        vector <TRestrictionCut> x = getCuts ( re[a] ) ;
        for ( c = 0 ; c < x.size() ; c++ )
@@ -515,13 +515,13 @@ void TVector::doRestriction ()
     bool doRecalc = false ;
     for ( a = 0 ; a < cocktail.GetCount() ; a++ )
        {
-       for ( b = 0 ; b < re.size() && re[b]->name != cocktail[a] ; b++ ) ;
-       if ( b == re.size() )
+       for ( b = 0 ; b < re.GetCount() && re[b]->name != cocktail[a] ; b++ ) ;
+       if ( b == re.GetCount() )
           {
           doRecalc = true ;
           recalcvisual = true ;
-          re.push_back ( myapp()->frame->LS->getRestrictionEnzyme ( cocktail[a] ) ) ;
-          myass ( re[re.size()-1] , "Oh no! Unknown enzyme!" ) ;
+          re.Add ( myapp()->frame->LS->getRestrictionEnzyme ( cocktail[a] ) ) ;
+          myass ( re[re.GetCount()-1] , "Oh no! Unknown enzyme!" ) ;
           }
        }
     if ( doRecalc ) recalculateCuts() ;
@@ -561,7 +561,7 @@ void TVector::doRestriction ()
         nv->reduceToFragment ( cl[a] , cl[a+1] ) ;
         nv->recalculateCuts () ;
         nv->recalcvisual = true ;
-        if ( nv->getDescription() != "" ) nv->addDescription ( "\n" ) ;
+        if ( !nv->getDescription().IsEmpty() ) nv->addDescription ( "\n" ) ;
         char tx[1000] ;
         sprintf ( tx , txt("res_desc") , nv->getName().c_str() , cl[a].e->name.c_str() , t1 ) ;
         nv->addDescription ( tx ) ;
@@ -646,16 +646,23 @@ void TVector::ligate_right ( TVector &v , bool inverted )
         }
     
     // Merging restriction enzymes
-    vector <TRestrictionEnzyme*> e ;
-    for ( a = 0 ; a < re.size() ; a++ ) e.push_back ( re[a] ) ;
-    for ( a = 0 ; a < v.re.size() ; a++ ) e.push_back ( v.re[a] ) ;
-    sort ( e.begin() , e.end() ) ;
-    re.clear() ;
-    for ( a = 0 ; a < e.size() ; a++ )
+    for ( a = 0 ; a < v.re.GetCount() ; a++ )
+        {
+        if ( wxNOT_FOUND == re.Index ( v.re[a] ) )
+           re.Add ( v.re[a] ) ;
+        }    
+    /*
+    wxArrayTRestrictionEnzyme e ;
+    for ( a = 0 ; a < re.GetCount() ; a++ ) e.Add ( re[a] ) ;
+    for ( a = 0 ; a < v.re.GetCount() ; a++ ) e.Add ( v.re[a] ) ;
+    e.Sort ( cmpre ) ;
+    re.Clear() ;
+    for ( a = 0 ; a < e.GetCount() ; a++ )
         {
         if ( a == 0 || e[a] != e[a-1] )
-           re.push_back ( e[a] ) ;
+           re.Add ( e[a] ) ;
         }
+    */
     }
     
 // This function can close the circle after ligation.
@@ -950,7 +957,7 @@ TVector *TVector::getAAvector ( int from , int to , int dir )
     
     
     // Cleaning restriction enzymes
-    v->re.clear() ;
+    v->re.Clear() ;
     v->rc.clear() ;
 
     // Removing non-AA sequence and features
@@ -1017,7 +1024,7 @@ void TVector::clear ()
     type = TYPE_VECTOR ;
     recalcvisual = false ;
     items.clear () ;
-    re.clear () ;
+    re.Clear () ;
     rc.clear () ;
     cocktail.Clear () ;
     worf.clear () ;
@@ -1255,7 +1262,7 @@ void TVectorItem::explodeParams ( wxString _s )
     wxString s = _s ;
     int a ;
     initParams () ;
-    while ( s != "" )
+    while ( !s.IsEmpty() )
         {
         for ( a = 0 ; s.GetChar(a) != '\n' ; a++ ) ;
         wxString n = s.substr ( 0 , a ) ;

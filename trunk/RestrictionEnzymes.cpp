@@ -87,13 +87,13 @@ TProtease::TProtease ( wxString _name , wxString m , wxString _note )
         char ma = m.GetChar(a) ;
         if ( ma == ',' || ma == ' ' || ma == '|' )
            {
-           if ( s != "" ) match.Add ( s ) ;
+           if ( !s.IsEmpty() ) match.Add ( s ) ;
            s = "" ;
            if ( ma == '|' ) cut = match.GetCount() - 1 ;
            }
         else s += m.GetChar(a) ;
         }
-    if ( s != "" ) match.Add ( s ) ;
+    if ( !s.IsEmpty() ) match.Add ( s ) ;
     use = true ;
     note = _note ;
     }

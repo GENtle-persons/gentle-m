@@ -173,7 +173,7 @@ class TVector
     virtual void removeBlanksFromVector () ;
     
     virtual wxString getParams () ;
-    virtual void setParams ( wxString s ) ;
+    virtual void setParams ( const wxString &s ) ;
     virtual void setWindow ( ChildBase *c ) ;
     virtual void setCircular ( bool c = true ) ;
     virtual bool isCircular () ;
@@ -212,7 +212,7 @@ class TVector
     int type ;
     bool recalcvisual ;
     vector <TVectorItem> items ;
-    vector <TRestrictionEnzyme*> re ;
+    wxArrayTRestrictionEnzyme re ;
     vector <TRestrictionCut> rc ;
     vector <TORF> worf ;
 

@@ -26,7 +26,7 @@ class TXMLfile
     virtual void readGBqualifiers ( TVectorItem &i , TiXmlNode *n ) ;
     virtual void readGBintervals ( vector <TVectorItem> &vi , const TVectorItem &i , TiXmlNode *n ) ;
     bool _success ;
-    vector <TVector*> _v ;
+    wxArrayTVector _v ;
     } ;
     
 

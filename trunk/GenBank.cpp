@@ -29,9 +29,9 @@ void TGenBank::load ( wxString s )
 	wxString str ;
 	for ( str = file.GetFirstLine(); !file.Eof(); str = file.GetNextLine() )
 	 {
-	 if ( trim ( str ) != "" ) vs.Add ( str ) ;
+	 if ( !trim(str).IsEmpty() ) vs.Add ( str ) ;
 	 }
-    if ( trim ( str ) != "" ) vs.Add ( str ) ;
+    if ( !trim(str).IsEmpty() ) vs.Add ( str ) ;
     parseLines () ;
     }
     
@@ -79,7 +79,7 @@ void TGenBank::parseLines ()
            t.Clear () ;
            ti.Clear () ;
            }
-        else if ( trim(vs[a]) != "" ) 
+        else if ( !trim(vs[a]).IsEmpty() ) 
            {
            t.Add ( trim ( vs[a] ) ) ;
            ti.Add ( vi[a] ) ;
@@ -177,7 +177,7 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
         if ( va[a].GetChar(0) != '/' ) continue ;
         wxString l = va[a].Mid ( 1 ) ;
         wxString p = l.BeforeFirst ( '=' ) ;
-        if ( p == "" ) continue ;
+        if ( p.IsEmpty() ) continue ;
         p = trim ( p.Trim ( true ) ) ;
         p = trim ( trimQuotes ( p.Lower() ) ) ;
         wxString v = l.AfterFirst ( '=' ) ;
@@ -190,7 +190,7 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
            if ( p == "product" || p == "organism" || p == "db_xref" ||
                 p == "mol_type" || p == "chromosome" )
               {
-              if ( i.desc != "" ) i.desc += "\n" ;
+              if ( !i.desc.IsEmpty() ) i.desc += "\n" ;
               if ( p == "chromosome" || p == "db_xref" )
                  {
                  i.desc += p ;
@@ -216,7 +216,7 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
     
 void TGenBank::iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag )
     {
-    while ( l != "" )
+    while ( !l.IsEmpty() )
         {
         char c = l.GetChar(0) ;
         if ( c == '<' ) l = l.Mid ( 1 ) ;
@@ -227,7 +227,7 @@ void TGenBank::iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag 
            wxString from , to ;
            from = l.BeforeFirst ( '.' ) ;
            l = l.AfterFirst ( '.' ) ;
-           while ( l != "" && ( l.GetChar(0) < '0' || l.GetChar(0) > '9' ) ) l = l.Mid ( 1 ) ;
+           while ( !l.IsEmpty() && ( l.GetChar(0) < '0' || l.GetChar(0) > '9' ) ) l = l.Mid ( 1 ) ;
            for ( a = 0 ; a < l.Length() && l.GetChar(a) >= '0' && l.GetChar(a) <= '9' ; a++ ) ;
            to = l.Left ( a ) ;
            l = l.Mid ( a ) ;
@@ -300,8 +300,7 @@ void TGenBank::iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag 
 
 wxString TGenBank::trim ( wxString s )
 	{
-//	return s.Trim() ;
-	while ( s != "" && ( s.GetChar(0) == ' ' || s.GetChar(0) < 15 ) ) s = s.Mid ( 1 ) ;
+	while ( !s.IsEmpty() && ( s.GetChar(0) == ' ' || s.GetChar(0) < 15 ) ) s = s.Mid ( 1 ) ;
 	return s ;
 	}
 
@@ -313,41 +312,12 @@ wxString TGenBank::trimQuotes ( wxString s )
     return s ;
 	}
 
-
-/*
-wxString TGenBank::quote ( wxString pre , wxString q )
-	{
-	return "" ;
-	}
-
-
-wxArrayString TGenBank::explode ( char p , wxString s )
-	{
-	wxArrayString x ;
-	return x ;
-	}
-
-
-void TGenBank::wrapit ( wxArrayString &ex , wxString init , wxString data , int limit )
-	{
-	}
-
-
-wxString TGenBank::expand ( wxString init , int to , wxString with )
-	{
-	return "" ;
-	}
-
-*/
-
-
-
 void TGenBank::wrapit ( wxArrayString &ex , wxString init , wxString data , int limit )
     {
     wxString blanks = expand ( "" , init.Length() ) ;
     int allow = limit - blanks.length() ;
     wxString first = init ;
-    while ( data != "" )
+    while ( !data.IsEmpty() )
         {
         wxString s , t ;
         s = first ;
@@ -410,8 +380,8 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
     // Definition
     wrapit ( ex , "DEFINITION  " , v->getDescription() ) ;
     s = v->getParams() ;
-    while ( s != "" && s[s.length()-1] == '\n' )
-       s = s.substr ( 0 , s.length()-1 ) ;
+    while ( !s.IsEmpty() && s[s.length()-1] == '\n' )
+       s.RemoveLast() ;
     ex.Add ( s ) ;
     
     // Features
@@ -425,9 +395,9 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
         else
            sprintf ( z , "complement(%d..%d)" , v->items[a].from , v->items[a].to ) ;
         ex.Add ( s + z ) ;
-        if ( v->items[a].name != "" )
+        if ( !v->items[a].name.IsEmpty() )
            wrapit ( ex , b21 , quote ( "/gene" , v->items[a].name ) ) ;
-        if ( v->items[a].desc != "" )
+        if ( !v->items[a].desc.IsEmpty() )
            wrapit ( ex , b21 , quote ( "/note" , v->items[a].desc ) ) ;
            
         wxArrayString vs ;

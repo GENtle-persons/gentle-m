@@ -399,12 +399,12 @@ void MyChild::OnLigation(wxCommandEvent& event)
     {
     TLigationDialog ld ( this , txt("t_ligation") ) ;
     long l ;
-    for ( l = 0 ; l < myapp()->frame->children.size() ; l++ )
+    for ( l = 0 ; l < myapp()->frame->children.GetCount() ; l++ )
         {
         MyChild *p = (MyChild*) myapp()->frame->children[l] ;
         if ( p->def == "dna" && !p->vec->isCircular() )
            {
-           ld.vv.push_back ( p->vec ) ;
+           ld.vv.Add ( p->vec ) ;
            }
         }
     
@@ -413,7 +413,7 @@ void MyChild::OnLigation(wxCommandEvent& event)
     if ( !ld.doLigate ) return ;
     for ( l = 0 ; l < ld.ligates.size() ; l++ )
         {
-        if ( ld.ligates[l].getSequence() != "" )
+        if ( !ld.ligates[l].getSequence().IsEmpty() )
            {
            TVector *v = new TVector ;
            v->setFromVector ( ld.ligates[l] ) ;
@@ -433,7 +433,7 @@ wxString MyChild::getName ()
 void MyChild::OnCut(wxCommandEvent& event)
     {
     wxString s = cPlasmid->getSelection () ;
-    if ( s == "" ) return ;
+    if ( s.IsEmpty() ) return ;
     if (wxTheClipboard->Open())
         {
         vec->undo.start ( txt("u_cut") ) ;
@@ -463,7 +463,7 @@ void MyChild::OnCut(wxCommandEvent& event)
 void MyChild::OnCopy(wxCommandEvent& event)
     {
     wxString s = cPlasmid->getSelection () ;
-    if ( s == "" ) return ;
+    if ( s.IsEmpty() ) return ;
     if (wxTheClipboard->Open())
         {
         wxTheClipboard->SetData( new wxTextDataObject(s) );
@@ -889,7 +889,7 @@ wxString MyChild::doExtractAA ( bool coding )
 void MyChild::OnExtractAA(wxCommandEvent& event)
     {
     wxString seq = doExtractAA () ;
-    if ( seq == "" ) return ;
+    if ( seq.IsEmpty() ) return ;
     char tt[1000] ;
     sprintf ( tt , txt("t_aa_from_vec") , vec->getName().c_str() ) ;
     myapp()->frame->newAminoAcids ( seq , tt ) ;
@@ -1106,7 +1106,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
         if ( vec->items[a].direction > 0 ) pdc->DrawText ( txt("cw") , x5 , y ) ;
         else pdc->DrawText ( txt("ccw") , x5 , y ) ;
         
-        if ( vec->items[a].desc != "" )
+        if ( !vec->items[a].desc.IsEmpty() )
            {
            wxArrayString vs ;
            wxString s ;
@@ -1133,7 +1133,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
                  s = "" ;
                  }
               }
-           if ( s != "" ) vs.Add ( s ) ;
+           if ( !s.IsEmpty() ) vs.Add ( s ) ;
            int dx , dy ;
            y += ch ;
            pdc->SetFont ( *sfont ) ;
@@ -1200,7 +1200,7 @@ void MyChild::updateUndoMenu ()
     wxMenuItem *mi = mb->FindItem ( MDI_UNDO ) ;
     if ( !mi ) return ;
     bool canUndo ;
-    if ( lm == "" )
+    if ( lm.IsEmpty() )
         {
         mi->SetText ( txt("u_no") ) ;
         mi->Enable ( false ) ;

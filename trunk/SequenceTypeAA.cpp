@@ -240,7 +240,7 @@ wxPoint SeqAA::showText ( int ystart , wxArrayString &tout )
               }
            else x++ ;
            if ( (x) % (can->blocksize+1) == 0 ) x++ ;
-           if ( t != "" )
+           if ( !t.IsEmpty() )
               {
               if ( b >= can->_from && p.x == -1 ) p.x = y ;
               if ( b <= can->_to ) p.y = y ;

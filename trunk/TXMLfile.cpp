@@ -43,12 +43,12 @@ void TXMLfile::analyze ( const TiXmlDocument &doc )
            readGBSeq ( x ) ;
         }
     
-    _success = _v.size() > 0 ;
+    _success = _v.GetCount() > 0 ;
     }
     
 int TXMLfile::countVectors ()
     {
-    return _v.size() ;
+    return _v.GetCount() ;
     }
     
 TVector *TXMLfile::getVector ( int a )
@@ -127,7 +127,7 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
         
     v->recalcvisual = true ;
     v->recalculateCuts () ;
-    _v.push_back ( v ) ;
+    _v.Add ( v ) ;
     }
     
 void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
@@ -139,22 +139,22 @@ void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
         TiXmlHandle h ( n2 ) ;
         wxString name = t ( h.FirstChild("GBQualifier_name").FirstChild().Text() ) . MakeUpper() ;
         wxString value = t ( h.FirstChild("GBQualifier_value").FirstChild().Text() ) ;
-        if ( name == "" ) continue ;
+        if ( name.IsEmpty() ) continue ;
         i.setParam ( "/" + name , value ) ;
         if ( name == "CODON_START" ) i.setRF ( atoi ( value.c_str() ) ) ;
         if ( name == "GENE" || name == "LABEL" ) i.name = value ;
         if ( name == "PRODUCT" || name == "NOTE" || name == "REGION_NAME" )
            {
-           if ( i.desc != "" ) i.desc += "\n" ;
+           if ( !i.desc.IsEmpty() ) i.desc += "\n" ;
            i.desc += value ;
            }
         }
-    if ( i.name == "" && i.desc.length() < 10 )
+    if ( i.name.IsEmpty() && i.desc.length() < 10 )
         {
         i.name = i.desc ;
         i.desc = "" ;
         }
-    if ( i.name == "" )
+    if ( i.name.IsEmpty() )
         {
         char u[100] ;
         sprintf ( u , "short_itemtype%d" , i.type ) ;
@@ -176,7 +176,7 @@ void TXMLfile::readGBintervals ( vector <TVectorItem> &vi , const TVectorItem &i
         TiXmlHandle h ( n2 ) ;
         wxString from = t ( h.FirstChild("GBInterval_from").FirstChild().Text() ) ;
         wxString to = t ( h.FirstChild("GBInterval_to").FirstChild().Text() ) ;
-        if ( from == "" || to == "" ) continue ;
+        if ( from.IsEmpty() || to.IsEmpty() ) continue ;
         TVectorItem j = i ;
         j.from = atoi ( from.c_str() ) ;
         j.to = atoi ( to.c_str() ) ;
