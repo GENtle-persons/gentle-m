@@ -23,11 +23,13 @@ class TAlignLine // pun intended
     {
     public :
     TAlignLine () ;
+    ~TAlignLine () ;
     void ResetSequence () ;
     ChildBase *FindOrigin () ;
     string name , s ;
     TVector *v ;
     bool isIdentity ;
+    TVector *features ;
     } ;
 
 class TAlignment : public ChildBase
@@ -70,7 +72,7 @@ class TAlignment : public ChildBase
     
     void OnHorizontal ( wxCommandEvent& event ) ;
     
-    void callMiddleMouseButton ( string id , int pos ) ;
+    void callMiddleMouseButton ( int id , int pos ) ;
     void MoveUpDown ( int what , int where ) ;
     
     // Variables
@@ -84,7 +86,6 @@ class TAlignment : public ChildBase
     int match , mismatch , gap_penalty ;
     int algorithm ;
     string matrix ;
-    TVector *dv ;
     bool bold , mono ;
     
     private :

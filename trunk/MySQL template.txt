@@ -1,0 +1,52 @@
+CREATE TABLE dna(
+dna_name tinytext,
+dna_description tinytext,
+dna_type int,
+dna_sequence mediumtext,
+dna_sticky_ul varchar(32),
+dna_sticky_ur varchar(32),
+dna_sticky_ll varchar(32),
+dna_sticky_lr varchar(32),
+dna_restriction_enzymes mediumtext,
+dna_circular bool,
+dna_params mediumtext);
+CREATE TABLE dna_item (
+  di_name tinytext,
+  di_dna tinytext,
+  di_description tinytext,
+  di_type varchar(32),
+  di_from int,
+  di_to int,
+  di_direction int,
+di_params mediumtext
+);
+CREATE TABLE enzyme (
+  e_id bigint(20) NOT NULL default '0',
+  e_name varchar(100) NOT NULL default '',
+  e_sequence varchar(100) NOT NULL default '',
+  e_note varchar(255) NOT NULL default '',
+  e_location varchar(255) NOT NULL default '',
+  e_cut int(11) NOT NULL default '0',
+  e_overlap int(11) NOT NULL default '0',
+  PRIMARY KEY  (e_id)
+);
+CREATE TABLE enzyme_group ( eg_name tinytext );
+CREATE TABLE link_enzyme_group (
+  leg_enzyme varchar(100) NOT NULL default '',
+  leg_group varchar(100) NOT NULL default ''
+);
+CREATE TABLE project (
+  pr_name tinytext,
+  pr_desc mediumtext
+);
+CREATE TABLE project_dna (
+  pd_project tinytext,
+  pd_dna tinytext,
+  pd_database tinytext
+);
+CREATE TABLE stuff (
+  s_type tinytext,
+  s_name tinytext,
+  s_value mediumtext
+);
+INSERT INTO stuff VALUES("INTERNAL","DATABASE_VERSION","3");

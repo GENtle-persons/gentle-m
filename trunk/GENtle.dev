@@ -5,14 +5,14 @@ UnitCount=75
 Type=0
 Ver=1
 ObjFiles=
-Includes=C:\Programme\Dev-Cpp\Mine\GENtle;C:\Programme\Dev-Cpp\Mine\GENtle\clustal
+Includes=C:\Programme\Dev-Cpp\Mine\GENtle;C:\Programme\Dev-Cpp\Mine\GENtle\clustal;C:\Programme\Dev-Cpp\include\MySQL
 Libs=C:\Programme\Dev-Cpp\Mine\GENtle
 PrivateResource=GENtle_private.rc
 ResourceIncludes=C:\Programme\Dev-Cpp\include
 MakeIncludes=
 Compiler=--pipe -D_X86_=1 -DWIN32 -D_WIN32 -DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -D__WIN32__ -mthreads -DSTRICT  -D__WXMSW__ -D__WINDOWS__ -Wall -fno-pcc-struct-return -O2 -fno-rtti -fno-exceptions_@@_
 CppCompiler=--pipe -D_X86_=1 -DWIN32 -D_WIN32 -DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -D__WIN32__ -mthreads -DSTRICT  -D__WXMSW__ -D__WINDOWS__ -Wall -fno-pcc-struct-return -O2 -fno-rtti -fno-exceptions_@@_
-Linker=-lwxmswu -lstdc++ -lgcc -lodbc32 -lwsock32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lctl3d32 -lodbc32 -ladvapi32 -lodbc32 -lwsock32 -lopengl32 -lglu32 -lole32 -loleaut32 -luuid_@@_sqlite.dll_@@_
+Linker=-lwxmswu -lstdc++ -lgcc -lodbc32 -lwsock32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lctl3d32 -lodbc32 -ladvapi32 -lodbc32 -lwsock32 -lopengl32 -lglu32 -lole32 -loleaut32 -luuid_@@_sqlite.dll_@@_libmySQL.a_@@_
 IsCpp=1
 Icon=GENtle.ico
 ExeOutput=
@@ -25,7 +25,7 @@ CommandLine=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=011001000000100000
+CompilerSettings=0110010000001000000
 UseCustomMakefile=0
 CustomMakefile=
 
