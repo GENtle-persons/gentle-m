@@ -1,5 +1,6 @@
 #include "ExternalInterface.h"
 #include "SendHTTP.h"
+#include <wx/thread.h>
 
 #define RETMAX 25
 
@@ -52,15 +53,15 @@ BEGIN_EVENT_TABLE(ExternalInterface, MyChildBase)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(EIpanel, wxPanel)
-	EVT_BUTTON(ID_B1, EIpanel::OnB1)
-	EVT_BUTTON(ID_B2, EIpanel::OnB2)
-	EVT_BUTTON(ID_B_LAST, EIpanel::OnBlast)
-	EVT_BUTTON(ID_B_NEXT, EIpanel::OnBnext)
-	EVT_TEXT_ENTER(ID_T1, EIpanel::OnB1)
-	EVT_TEXT_ENTER(ID_T2, EIpanel::OnB1)
-	EVT_TEXT_ENTER(ID_T3, EIpanel::OnB1)
-	EVT_TEXT_ENTER(ID_T4, EIpanel::OnB1)
-	EVT_CHOICE(ID_C1, EIpanel::OnC1)
+    EVT_BUTTON(ID_B1, EIpanel::OnB1)
+    EVT_BUTTON(ID_B2, EIpanel::OnB2)
+    EVT_BUTTON(ID_B_LAST, EIpanel::OnBlast)
+    EVT_BUTTON(ID_B_NEXT, EIpanel::OnBnext)
+    EVT_TEXT_ENTER(ID_T1, EIpanel::OnB1)
+    EVT_TEXT_ENTER(ID_T2, EIpanel::OnB1)
+    EVT_TEXT_ENTER(ID_T3, EIpanel::OnB1)
+    EVT_TEXT_ENTER(ID_T4, EIpanel::OnB1)
+    EVT_CHOICE(ID_C1, EIpanel::OnC1)
     EVT_LISTBOX_DCLICK(ID_HLB, EIpanel::OnLboxDClick)
 END_EVENT_TABLE()
 
@@ -93,6 +94,7 @@ void ExternalInterface::initme ()
     nb = new wxNotebook ( this , -1 ) ;
     
     nb->AddPage ( new EIpanel ( nb , EI_NCBI ) , "NCBI" ) ;
+    nb->AddPage ( new EIpanel ( nb , EI_BLAST ) , "BLAST" ) ;
 
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
 //    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
@@ -110,9 +112,8 @@ wxString ExternalInterface::getName ()
     return "External Interface" ;
     }
     
-    
-// *****************************************************************************
 
+// *****************************************************************************
 EILB::EILB ( wxWindow *parent , int id )
 	: wxHtmlListBox ( parent , id , wxDefaultPosition , wxDefaultSize , wxLB_MULTIPLE )
 	{
@@ -169,22 +170,313 @@ void EILB::Update()
 // *****************************************************************************
 
 EIpanel::EIpanel ( wxWindow *parent , int _mode )
-	: wxPanel ( parent )
-	{
-	mode = _mode ;
-	
-	up = new wxPanel ( this ) ;
-	hlb = new EILB ( this , ID_HLB ) ;
-	
-	if ( mode == EI_NCBI ) init_ncbi() ;
+    : wxPanel ( parent )
+{
+    mode = _mode ;
+    
+    blast_thread = NULL ;
 
+    up = new wxPanel ( this ) ;
+    hlb = new EILB ( this , ID_HLB ) ;
+    
+    if ( mode == EI_NCBI ) init_ncbi() ;
+    if ( mode == EI_BLAST ) init_blast() ;
+    
     v0 = new wxBoxSizer ( wxVERTICAL ) ;
     v0->Add ( up , 0 , wxEXPAND , 5 ) ;
     v0->Add ( hlb , 1 , wxEXPAND , 5 ) ;
     SetSizer ( v0 ) ;
-//    v0->Fit ( this ) ;
-	}
+}
      
+void EIpanel::init_blast()
+{
+    t1 = new wxTextCtrl ( up , ID_T1 , "" , wxDefaultPosition , wxDefaultSize , wxTE_PROCESS_ENTER ) ;
+    b1 = new wxButton ( up , ID_B1 , txt("b_find") , wxDefaultPosition ) ;
+    b2 = new wxButton ( up , ID_B2 , txt("t_open") , wxDefaultPosition ) ;
+    c1 = new wxChoice ( up , ID_C1 ) ;
+    c1->Append ( "Protein" ) ;
+    c1->Append ( "Nucleotide" ) ;
+
+    b_last = new wxButton ( up , ID_B_LAST , txt("b_last") , wxDefaultPosition ) ;
+    b_next = new wxButton ( up , ID_B_NEXT , txt("b_next") , wxDefaultPosition ) ;
+    b_last->Disable () ;
+    b_next->Disable () ;
+
+    v1 = new wxBoxSizer ( wxVERTICAL ) ;
+    h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    h0->Add ( c1 , 0 , wxEXPAND , 5 ) ;
+    h0->Add ( t1 , 1 , wxEXPAND , 5 ) ;
+    h0->Add ( b1 , 0 , wxEXPAND , 5 ) ;
+    h0->Add ( b2 , 0 , wxEXPAND , 5 ) ;
+    h0->Add ( b_last , 0 , wxEXPAND , 5 ) ;
+    h0->Add ( b_next , 0 , wxEXPAND , 5 ) ;
+
+    st_msg = new wxStaticText ( up , -1 , "" ) ;
+
+    v1->Add ( h0 , 0 , wxEXPAND , 0 ) ;
+//    v1->Add ( h1 , 0 , wxEXPAND|wxTOP|wxBOTTOM , 3 ) ;
+    v1->Add ( st_msg , 0 , wxEXPAND|wxTOP|wxBOTTOM , 3 ) ;
+    up->SetSizer ( v1 ) ;
+
+    c1->SetSelection ( 0 ) ;
+    t1->SetValue ( "MSPILGYWKIKGLVQPTRLLLEYLEEKYEEHLYERDEGDKWRNKKFELGLEFPNLPYYIDGDVKLTQSMAIIRYIADKHNMLGGCPKERAEISMLEGAVLDIRYGVSRIAYSKDFETLKVDFLSKLPEMLKMFEDRLCHKTYLNGDHVTHPDFMLYDALDVVLYMDPMCLDAFPKLVCFKKRIEAIPQIDKYLKSSKYIAWPLQGWQATFGGGDHPPKSDLIEGRGIENLYFQGIPGNSS" ) ;
+    t1->SetFocus() ;
+}
+
+
+#if !wxUSE_THREADS
+    #error "This requires thread support!"
+#endif // wxUSE_THREADS
+
+class blastThread : public wxThread
+{
+public :
+    blastThread ( EIpanel *panel , wxString seq ) : wxThread ()
+	{
+	    wxThread::Yield() ;
+	    p = panel ;
+	    // Put
+	    url = "http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?" ;
+	    url += "CMD=Put" ;
+	    url += "&QUERY=" + seq ;
+	    url += "&DATABASE=nr" ;
+	    url += "&PROGRAM=blastp" ;
+	    url += "&HITLIST_SIZE=10" ;
+	    
+	    res = ex.getText ( url ) ;
+	    
+	    hs = parseQblast ( res ) ;
+	    RID = hs["RID"] ;
+	    RTOE = hs["RTOE"] ;
+	    
+	    // Get & wait
+	    RTOE.ToLong ( &wait ) ;
+	    url = "http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?" ;
+	    url += "CMD=Get" ;
+	    url += "&RID=" + RID ;
+	    url += "&FORMAT_TYPE=XML" ;	    
+	} ;
+
+    virtual void *Entry ()
+	{
+/*		
+	    do {
+		while ( wait )
+		{
+		    wxMutexGuiEnter() ;
+		    p->showMessage ( wxString::Format ( txt("t_blast_time") , wait ) ) ;
+		    wxMutexGuiLeave() ;
+		    wxThread::Sleep ( 1000 ) ; // Wait 1 sec
+		    wait-- ;
+		    if ( TestDestroy() ) wxThread::Exit() ;
+		}
+		wxMutexGuiEnter() ;
+		res = ex.getText ( url ) ;
+		wxMutexGuiLeave() ;
+		hs = parseQblast ( res ) ;
+		if ( hs["STATUS"].Upper() == "WAITING" ) wait = 10 ; // Wait another 10 seconds
+		else wait = 0 ; // Done!
+	    } while ( wait ) ;
+*/
+
+	    // Dirty hack
+	    wxMutexGuiEnter() ;
+	    wxFile in ( "/home/manske/blast.html" , wxFile::read ) ; 
+	    char *c = new char[in.Length()+5] ;
+	    in.Read ( c , in.Length() ) ;
+	    in.Close () ;
+	    res = c ;
+	    delete c ;
+	    // End dirty hack
+
+	    p->blast_res = res ;
+
+	    wxMutexGuiLeave() ;
+
+	    wxCommandEvent event( wxEVT_COMMAND_BUTTON_CLICKED, ID_B1 );
+	    wxPostEvent ( p , event ) ;
+
+//	    wxMutexGuiEnter() ;
+//	    p->process_blast2 () ;
+//	    wxMutexGuiLeave() ;
+
+//	    wxThread::Exit() ;
+//	    delete this ;
+	    return NULL ;
+	}
+private :
+
+    wxHashString parseQblast ( wxString res )
+	{
+	    wxHashString ret ;
+	    wxString q1 = "QBlastInfoBegin" ;
+	    wxString q2 = "QBlastInfoEnd" ;
+	    
+	    int i ;
+	    i = res.First ( q1 ) ;
+	    if ( i == -1 ) return ret ;
+	    res = res.Mid ( i + q1.Length() ) ;
+	    
+	    i = res.First ( q2 ) ;
+	    if ( i == -1 ) return ret ;
+	    res = res.Left ( i - 1 ) ;
+	    
+	    while ( !res.IsEmpty() )
+	    {
+		wxString k , v ;
+		k = res.BeforeFirst ( '\n' ) ;
+		res = res.AfterFirst ( '\n' ) ;
+		v = k.AfterFirst ( '=' ) ;
+		k = k.BeforeFirst ( '=' ) ;
+		v = v.Trim(true).Trim(false) ;
+		k = k.Trim(true).Trim(false) ;
+		if ( v.IsEmpty() || k.IsEmpty() ) continue ;
+		k.MakeUpper() ;
+		ret[k] = v ;
+	    }
+	    return ret ;
+	}
+    
+    wxString res , url , RID , RTOE ;
+    myExternal ex ;
+    wxHashString hs ;
+    long wait ;
+    EIpanel *p ;
+} ;
+
+void EIpanel::process_blast() // This starts the thread
+{
+    if ( blast_thread )
+    {
+	process_blast2() ;
+	return ;
+    }
+
+    blast_res.Empty() ;
+    wxString seq = t1->GetValue() ;
+    blast_thread = new blastThread ( this , seq ) ;
+    if ( !blast_thread || wxTHREAD_NO_ERROR != blast_thread->Create() )
+    {
+	blast_thread = NULL ;
+//	wxMessageBox ( txt("t_blast_failed") ) ;
+	return ;
+    }
+
+    if ( wxTHREAD_NO_ERROR != blast_thread->Run() )
+    {
+	blast_thread = NULL ;
+//	wxMessageBox ( txt("t_blast_failed") ) ;
+	return ;
+    }
+
+    b1->Disable() ;
+}
+
+void EIpanel::process_blast2() // This is called upon termination of the thread
+{
+    if ( blast_thread ) blast_thread->Wait();
+    blast_thread = NULL ;
+    b1->Enable() ;
+
+    TiXmlDocument blast_doc ;
+    blast_doc.SetCondenseWhiteSpace(false);
+    blast_doc.Parse ( blast_res.c_str() ) ;
+
+    hlb->Clear () ;
+    showMessage ( txt("t_blast_failed") ) ;
+    TiXmlNode *x = blast_doc.FirstChild ( "BlastOutput" ) ;
+    if ( !x ) return ;
+    
+    int w , h ;
+    hlb->GetClientSize ( &w , &h ) ;
+    w /= 8 ;
+    
+    wxString blast_version = valFC ( x->FirstChild ( "BlastOutput_version" ) ) ;
+    showMessage ( wxString::Format ( txt("t_blast_results_by" ) , blast_version.c_str() ) ) ;
+
+    x = x->FirstChild ( "BlastOutput_iterations" ) ;
+    x = x->FirstChild ( "Iteration" ) ;
+    x = x->FirstChild ( "Iteration_hits" ) ;
+    
+    int a = 0 ;
+    for ( x = x->FirstChild ( "Hit" ) ; x ; x = x->NextSibling ( "Hit" ) )
+    {
+	wxString html ;
+	wxString name = valFC ( x->FirstChild ( "Hit_def" ) ) ;
+	wxString id = valFC ( x->FirstChild ( "Hit_id" ) ) ;
+
+	TiXmlNode *h = x->FirstChild ( "Hit_hsps" ) ;
+	h = h->FirstChild ( "Hsp" ) ;
+	wxString evalue = valFC ( h->FirstChild ( "Hsp_evalue" ) ) ;
+	if ( evalue.Find ( 'e' ) > -1 )
+	{
+	    wxString base = evalue.BeforeFirst ( 'e' ) + "&times;10" ;
+	    wxString exp = "<font size=2>" + evalue.AfterFirst ( 'e' )  + "</font>" ;
+	    
+	    evalue = "<table border=0 cellpadding=0 cellspacing=0><tr><td rowspan=2 valign=bottom>E-Value=</td>" ;
+	    evalue += "<td align=left valign=bottom><br>" + base + "</td>" ;
+	    evalue += "<td align=right valign=top>" + exp + "</td>" ;
+	    evalue += "</tr></table>" ;
+	}
+	else evalue = "E-Value=" + evalue ;
+	
+	wxString qseq = valFC ( h->FirstChild ( "Hsp_qseq" ) ) ;
+	wxString mseq = valFC ( h->FirstChild ( "Hsp_midline" ) ) ;
+	wxString hseq = valFC ( h->FirstChild ( "Hsp_hseq" ) ) ;
+
+	html = "<table width=100%><tr>" ;
+	html += "<td valign=top>" + name + "</td>" ;
+	html += "<td align=right valign=top>" + evalue + "</td>" ;
+	html += "</tr><tr>" ;
+	html += "<td colspan=2><tt><font size=2>\n" ;
+	html += blast_align ( qseq , mseq , hseq , w ) ;
+	html += "</font></tt></td>" ;
+	html += "</tr></table>" ;
+	hlb->Set ( a++ , html , id ) ;
+    }
+    hlb->Update () ;
+}
+
+wxString EIpanel::blast_align ( wxString qseq , wxString mseq , wxString hseq , int cpl )
+{
+    wxString lead[3] ;
+    lead[0] = txt("t_blast_qseq" ) ;
+    lead[2] = txt("t_blast_hseq" ) ;
+    while ( lead[0].Length() < lead[2].Length() ) lead[0] += " " ;
+    while ( lead[0].Length() > lead[2].Length() ) lead[2] += " " ;
+    lead[1].Append ( ' ' , lead[0].Length() ) ;
+
+    cpl -= lead[0].Length() + 1 ;
+
+    // Unify length
+    int max = qseq.Length() ;
+    max = max < mseq.Length() ? mseq.Length() : max ;
+    max = max < hseq.Length() ? hseq.Length() : max ;
+    while ( max % cpl ) max++ ;
+    qseq.Append ( ' ' , max - qseq.Length() ) ;
+    mseq.Append ( ' ' , max - mseq.Length() ) ;
+    hseq.Append ( ' ' , max - hseq.Length() ) ;
+
+    wxString ret ;
+    while ( !qseq.IsEmpty() )
+    {
+//	ret += "<p>" ;
+	ret += lead[0] + " " + qseq.Left ( cpl ) + "\n" ;
+	ret += lead[1] + " " + mseq.Left ( cpl ) + "\n" ;
+	ret += lead[2] + " " + hseq.Left ( cpl ) + "\n" ;
+	qseq = qseq.Mid ( cpl ) ;
+	mseq = mseq.Mid ( cpl ) ;
+	hseq = hseq.Mid ( cpl ) ;
+	if ( !qseq.IsEmpty() ) ret += "<p></p>\n" ;
+    }
+    ret.Replace ( " " , "&nbsp;" ) ;
+    return ret ;
+}
+
+void EIpanel::execute_blast()
+{
+}
+
 void EIpanel::init_ncbi()
 	{
 	t1 = new wxTextCtrl ( up , ID_T1 , "" , wxDefaultPosition , wxDefaultSize , wxTE_PROCESS_ENTER ) ;
@@ -542,6 +834,7 @@ void EIpanel::process ()
 	wxBeginBusyCursor () ;
 	hlb->Clear () ;
 	if ( mode == EI_NCBI ) process_ncbi() ;
+	if ( mode == EI_BLAST ) process_blast() ;
 	hlb->Update () ;
 	wxEndBusyCursor () ;
 	}    

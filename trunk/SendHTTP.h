@@ -10,6 +10,7 @@ class myExternal
 	myExternal () ;
 	virtual int copyFile ( wxString url , wxString file , int _t = -1 ) ;
 	virtual wxString getText ( wxString url ) ;
+//	virtual wxString getPostText
 	
 	wxProgressDialog *pd ;
 	
