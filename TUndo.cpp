@@ -1,3 +1,6 @@
+/** \file
+	\brief The TUndo class
+*/
 #include "TUndo.h"
 #include "TVector.h"
 
