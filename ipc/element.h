@@ -19,6 +19,32 @@
 #include <string.h>
 #include <ctype.h>
 
+#define MAX_LINE    30
+
+class TIPC ;
+class TIPC_PARS ;
+
+class TIPC_ELEMENT
+	{
+	public :
+ 	TIPC_ELEMENT ( TIPC *i ) ;
+ 	
+ 	private :
+    friend class TIPC ;
+    friend class TIPC_PARS ;
+    int init_elements(void);
+    FILE* open_file(char *filename);
+    void add_element(element *ce);
+    void add_isotope(isotope *ci,element *ce);
+    char *get_token(char *linebuffer);
+    
+  	element *elements;
+    TIPC *ipc ;
+    char * ELEMENTFILE ;
+	} ;    
+
+/*
+
 #define ELEMENTFILE  "ipc/elemente"
 #define MAX_LINE    30
 
@@ -27,5 +53,6 @@ FILE* open_file(char *filename);
 void add_element(element *ce);
 void add_isotope(isotope *ci,element *ce);
 char *get_token(char *linebuffer);
+*/
 
 #endif

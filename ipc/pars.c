@@ -13,15 +13,23 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "global.h"
+//#include "global.h"
+#include "ipc.h"
 #include "pars.h"
 #include "element.h"
 
-int is_symbol(char *probe)
+TIPC_PARS::TIPC_PARS ( TIPC *i )
+	{
+	MAX_DIGITS = 10 ;
+	MAX_PEP_LINE = 81 ;
+	ipc = i ;
+	}    
+
+int TIPC_PARS::is_symbol(char *probe)
 {
   element *cur;
 
-  cur=elements;
+  cur=ipc->element->elements;
   while(cur)
     {
       if(!strcmp(probe,cur->symbol))
@@ -31,12 +39,12 @@ int is_symbol(char *probe)
   return 0;
 }
 
-int add_component(char *symbol,int number)
+int TIPC_PARS::add_component(char *symbol,int number)
 {
   element *el;
   compound *newco=NULL,*co;
 
-  el=elements;
+  el=ipc->element->elements;
   while(el)
     {
       if(!strcmp(symbol,el->symbol))
@@ -55,11 +63,11 @@ int add_component(char *symbol,int number)
       return 0;
     }
 
-  co=verbindung;
-  if(!verbindung)
+  co=ipc->verbindung;
+  if(!ipc->verbindung)
     {
       newco->previous=NULL;
-      verbindung=newco;
+      ipc->verbindung=newco;
       return 1;
     }
 
@@ -74,7 +82,7 @@ int add_component(char *symbol,int number)
       co=co->next;
     }
 
-  co=verbindung;
+  co=ipc->verbindung;
   while(co->next)
     co=co->next;
   co->next=newco;
@@ -82,7 +90,7 @@ int add_component(char *symbol,int number)
   return 1;
 }
 
-int pars_chem_form(char *formel)
+int TIPC_PARS::pars_chem_form(char *formel)
 {
   char par[MAX_DIGITS],par1[MAX_DIGITS];
   int m=0,number=0;
@@ -123,7 +131,7 @@ int pars_chem_form(char *formel)
   return 1;
 }
 
-int add_amino_acid(char acid)
+int TIPC_PARS::add_amino_acid(char acid)
 {
   switch(acid)
     {
@@ -254,7 +262,7 @@ int add_amino_acid(char acid)
   return 1;
 }
 
-int pars_amino_acid(char *formel)
+int TIPC_PARS::pars_amino_acid(char *formel)
 {
   while(*formel)
     {
@@ -268,7 +276,7 @@ int pars_amino_acid(char *formel)
   return 1;
 }
 
-int pars_peptid(char *formel)
+int TIPC_PARS::pars_peptid(char *formel)
 {
   FILE *peptid_file;
   char linebuffer[MAX_PEP_LINE];
@@ -299,17 +307,17 @@ int pars_peptid(char *formel)
 }
 
 
-int print_sum()
+int TIPC_PARS::print_sum()
 {
   element *el;
   compound *co;
 
   printf("\nChemical formula: ");
-  co=verbindung;
+  co=ipc->verbindung;
 
   while(co)
     {
-      el=elements;
+      el=ipc->element->elements;
       while( el && ( co->isotopes != el->isotopes) )
 	el=el->next;
 

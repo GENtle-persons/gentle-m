@@ -21,11 +21,22 @@
 #include <signal.h>
 #include <math.h>
 
-compound *verbindung=NULL;
-isotope *peaks;
-int fast_calc=0;
+TIPC::TIPC ()
+	{
+    verbindung = NULL ;
+    peaks = NULL ;
+    fast_calc = 0 ;
+    
+    pars = new TIPC_PARS ( this ) ;
+    gpout = new GPOUT ( this ) ;
+    element = new TIPC_ELEMENT ( this ) ;
+	}    
 
-void free_list(isotope *target)
+TIPC::~TIPC ()
+	{
+	}	
+
+void TIPC::free_list(isotope *target)
 {
   while(target->next)
     {
@@ -35,7 +46,7 @@ void free_list(isotope *target)
   free(target);
 }
 
-void cut_peaks(isotope *spectrum)
+void TIPC::cut_peaks(isotope *spectrum)
 {
   int dummy=1;
 
@@ -52,7 +63,7 @@ void cut_peaks(isotope *spectrum)
     }
 }
 
-void summarize_peaks()
+void TIPC::summarize_peaks()
 {  isotope *dummy,*d2;
 
  for(dummy=peaks;dummy;dummy=dummy->next)
@@ -68,7 +79,7 @@ void summarize_peaks()
       }
 }
 
-isotope *add_peak(isotope *base,isotope *peak)
+isotope *TIPC::add_peak(isotope *base,isotope *peak)
 {
  static isotope *reiter;
 
@@ -108,7 +119,7 @@ isotope *add_peak(isotope *base,isotope *peak)
   return 0;
 }
 
-int calculate_peaks(){
+int TIPC::calculate_peaks(){
   compound *c;
   isotope *npeaks,*p,*i,*np1;
   int anzahl;
@@ -150,7 +161,7 @@ int calculate_peaks(){
 }
 
 
-void print_result(int digits,int charge){
+void TIPC::print_result(int digits,int charge){
   isotope *d;
   double maxp=0,relint=0,sump=0;
   int permutationen=0;
@@ -185,7 +196,7 @@ void print_result(int digits,int charge){
     }
 }
 
-int ipc_main2 ( const char *filename , const char *aaseq , int f )
+int TIPC::ipc_main2 ( const char *filename , const char *aaseq , int f )
 	{
     char *gnuplotfile=NULL;
     
@@ -193,15 +204,15 @@ int ipc_main2 ( const char *filename , const char *aaseq , int f )
     peaks=NULL;
     fast_calc=f; // -f
     
-    if(!init_elements()) return 1 ;
+    if(!element->init_elements()) return 1 ;
     
 	if(!(gnuplotfile=strdup(filename))) return 1 ;
 
-	if(!pars_amino_acid((char*)aaseq)) return 2 ; // -a
+	if(!pars->pars_amino_acid((char*)aaseq)) return 2 ; // -a
 
     if(!calculate_peaks()) return 3 ;
     
-    if(!(make_gnuplot_output(gnuplotfile))) return 4 ;
+    if(!(gpout->make_gnuplot_output(gnuplotfile))) return 4 ;
     
     if ( verbindung ) delete verbindung ;
     if ( peaks ) delete peaks ;
@@ -209,8 +220,8 @@ int ipc_main2 ( const char *filename , const char *aaseq , int f )
 	return 0 ;
 	}    
 
-int ipc_main(int argc,char **argv){
-  long seconds;
+int TIPC::ipc_main(int argc,char **argv){
+/*  long seconds;
   int d=1,zeig_summenformel=0,calc_peaks=1,gnuplot=0,use_digits=USE_DIGITS,charge=1;
   char *gnuplotfile=NULL;
 
@@ -370,11 +381,11 @@ int ipc_main(int argc,char **argv){
       return 16;
     }
 
-  return 0;
+  return 0;*/
 }
 
 
-void usage()
+void TIPC::usage()
 {
   printf("\nThis is IPC v %s\nCopyright Dirk Nolting 2001-2004\n\n",VERSION);
   printf("\nSynopsis:\n ipc -d <int> -z <int> -f <int> <-a <amino acid> -c <chemical formula> -p <File> -g <name> -s -x -h\n\n");

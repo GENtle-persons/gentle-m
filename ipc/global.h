@@ -42,10 +42,10 @@ typedef struct element {
   struct isotope *isotopes;
 } element;
 
-extern element *elements;
-extern compound *verbindung;
-extern isotope *peaks;
+//extern element *elements;
+//extern compound *verbindung;
+//extern isotope *peaks;
 
-extern int fast_calc;
+//extern int fast_calc;
 
 #endif

@@ -69,25 +69,21 @@ TAminoAcids::~TAminoAcids ()
 
 void TAminoAcids::OnIPC ( wxCommandEvent& event )
     {
-    wxString filename = "testfile" ;
+    wxString filename = wxFileName::CreateTempFileName ( "ipc" ) ;
 
    	wxBeginBusyCursor() ;
-	int r = ipc_main2 ( filename.c_str() , vec->getSequence().c_str() , 1000 ) ;
+   	TIPC ipc ;
+	int r = ipc.ipc_main2 ( filename.c_str() , vec->getSequence().c_str() , 1000 ) ;
    	wxEndBusyCursor() ;
-   	if ( r != 0 ) return ; // ERROR
-   	
-   	wxMessageBox ( wxString::Format ( "%d" , r ) ) ;
+   	if ( r != 0 ) { return ; } // ERROR
    	
    	TGraph *g = myapp()->frame->RunGraph() ;
-   	wxMessageBox ( "0" ) ;
    	g->gd->setupIPCfile ( filename ) ;
-   	wxMessageBox ( "1" ) ;
    	g->gd->AutoScale () ;
-   	wxMessageBox ( "2" ) ;
    	g->gd->UpdateDisplay () ;
-   	wxMessageBox ( "3" ) ;
    	
-//   	wxRemoveFile ( filename ) ;
+   	wxRemoveFile ( filename ) ;
+   	wxRemoveFile ( filename + ".gnu" ) ;
     }
     
 void TAminoAcids::OnBacktranslate ( wxCommandEvent& event )
