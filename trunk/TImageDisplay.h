@@ -21,6 +21,7 @@ class TImageDisplay : public ChildBase
     void initme () ;
     virtual wxString getName () ;
 
+    virtual void OnCB ( wxCommandEvent &event ) ;
     virtual void OnDir ( wxCommandEvent &event ) ;
     virtual void OnFile ( wxCommandEvent &event ) ;
     
@@ -28,9 +29,11 @@ class TImageDisplay : public ChildBase
 
     TIMGreader *r ;
     
+    private :    
     TMyImagePanel *right ;
     wxListBox *lb ;
     wxButton *bu ;
+    wxCheckBox *cb ;
     
     DECLARE_EVENT_TABLE()
     } ;
@@ -52,10 +55,12 @@ class TMyImagePanel : public wxPanel
     virtual void OnPrint(wxCommandEvent &event);
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){};
     
+    virtual void WriteIntoBitmap(wxBitmap &bmp2) ;
+
     wxBitmap *bmp ;
     wxImage i ;
     wxString dir , file ;
-    bool printing ;
+    bool printing , show_text ;
     TImageDisplay *imdi ;
 
     DECLARE_EVENT_TABLE()

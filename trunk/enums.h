@@ -73,6 +73,7 @@ enum {
     IED_OK,
     IED_USEOFFSET,
     IV_BUTTON,
+    IV_CB,
     IV_IMAGE,
     IV_LIST,
     IV_MENU_COPY,
