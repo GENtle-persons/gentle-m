@@ -4,6 +4,9 @@
 
 void SeqFeature::show ( wxDC& dc )
     {
+    myass ( can , "SeqFeature::show can==NULL" ) ;
+    myass ( vec , "SeqFeature::show vec==NULL" ) ;
+    myass ( can->smallFont , "SeqFeature::show can->smallFont==NULL" ) ;
     int cw2 , ch2 ;
     dc.SetFont(*can->smallFont);
     dc.GetTextExtent ( "A" , &cw2 , &ch2 ) ;
@@ -31,6 +34,8 @@ void SeqFeature::show ( wxDC& dc )
     
     bool drawOffsets = true ;
     if ( can->child && can->child->def == "alignment" ) drawOffsets = false ;
+
+    mylog ( "Feature" , "1" ) ;
 
     for ( int l = 0 ; l < pl.maxlevels ; l++ )
         {
@@ -61,6 +66,9 @@ void SeqFeature::show ( wxDC& dc )
                
               if ( i != -1 )  
                  {
+                 myass ( l < used.GetCount() , "SeqFeature::show 1" ) ;
+                 myass ( l < lx.GetCount() , "SeqFeature::show 2" ) ;
+                 myass ( maxlayers != -1 , "SeqFeature::show 3" ) ;
                  used[l] = 1 ;
                  int x_from = lx[l] ;
                  if ( x_from < 0 ) x_from = tx ;
@@ -79,6 +87,7 @@ void SeqFeature::show ( wxDC& dc )
                     if ( can->isPrinting() && !can->getPrintToColor() ) dc.SetPen ( *wxBLACK_PEN ) ;
                     else
                        {
+                       myass ( pl.getID(i) < vec->items.size() , "SeqFeature::show 4" ) ;
                        col = vec->items[pl.getID(i)].getFontColor() ;
                        dc.SetPen ( *MYPEN ( col ) ) ;
                        }
@@ -97,6 +106,7 @@ void SeqFeature::show ( wxDC& dc )
                           if ( can->getAA() )
                              {
                              TVectorItem *ip = &vec->items[pl.getID(i)] ;
+                             myass ( ip , "SeqFeature::show ip==NULL" ) ;
                              if ( ip->getType() == VIT_CDS && ip->getRF() != 0 )
                                 o = b + ip->getOffset() - ip->from ;
                              }
@@ -220,6 +230,7 @@ void SeqFeature::show ( wxDC& dc )
             }
             
         }    
+    mylog ( "Feature" , "Finish" ) ;
     dc.SetBackgroundMode ( bm ) ;
     dc.SetTextBackground ( tbg ) ;
     dc.SetTextForeground ( tfg ) ;

@@ -45,20 +45,22 @@ void myass ( bool b , wxString msg )
     }
 #endif
 
-#ifdef MYLOG
+#ifdef MYLOG 
 wxFile logout ( "LOG.txt" , wxFile::write ) ;
 int total_log_time = 0 ;
 int total_log_counter = 0 ;
 
 void mylog ( wxString function , wxString msg )
     {
+
     if ( total_log_counter > 5000 )
     	{
 	    logout.Close () ;
 	    logout.Open ( "LOG.txt" , wxFile::write ) ;
 	    total_log_counter = 0 ;
     	}
-    total_log_counter++ ;    
+    total_log_counter++ ;
+
     int i = wxGetElapsedTime() ;
     total_log_time += i ;
     logout.Write ( function + " : " + msg + " (" + wxString::Format ( "%d ms" , i ) + ")\n" ) ;

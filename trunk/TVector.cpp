@@ -1772,6 +1772,8 @@ void TVectorItem::getArrangedAA ( TVector *v , wxString &s , int disp , SeqAA *a
 
 int TVectorItem::getOffsetAt ( int i )
     {
+    myass ( lastVector , "TVectorItem::getOffsetAt" ) ;
+    if ( !lastVector ) return -1 ;
     if ( lastVector && lastVector->getGenomeMode() ) return -1 ;
     if ( getOffset () == -1 ) return -1 ;
     for ( int a = 0 ; a < dna2aa_item.size() ; a++ )
