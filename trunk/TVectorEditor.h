@@ -44,28 +44,29 @@ class TVectorEditor : public wxDialog
 
     void showGroupEnzymes ( wxString gr ) ;
     void showEnzymeGroups () ;
-    void enzymeSelChange ( wxEvent &ev ) ;
-    void enzymeListDlbClick ( wxEvent &ev ) ;
-    void enzymeAddEn ( wxEvent &ev ) ;
-    void enzymeAddGr ( wxEvent &ev ) ;
-    void enzymeAddToGr ( wxEvent &ev ) ;
-    void enzymeAddToNewGr ( wxEvent &ev ) ;
-    void enzymeDelGr ( wxEvent &ev ) ;
-    void enzymeDelFromGr ( wxEvent &ev ) ;
-    void enzymeDelEn ( wxEvent &ev ) ;
-    void newEnzyme ( wxEvent &ev ) ;
-    void importCloneEnzymes () ;
-    void proteaseSelChange ( wxEvent &ev ) ;
+    void enzymeSelChange ( wxCommandEvent &ev ) ;
+    void enzymeListDlbClick ( wxCommandEvent &ev ) ;
+    void enzymeAddEn ( wxCommandEvent &ev ) ;
+    void enzymeAddGr ( wxCommandEvent &ev ) ;
+    void enzymeAddToGr ( wxCommandEvent &ev ) ;
+    void enzymeAddToNewGr ( wxCommandEvent &ev ) ;
+    void enzymeDelGr ( wxCommandEvent &ev ) ;
+    void enzymeDelFromGr ( wxCommandEvent &ev ) ;
+    void enzymeDelEn ( wxCommandEvent &ev ) ;
+    void newEnzyme ( wxCommandEvent &ev ) ;
+    void importCloneEnzymes ( wxCommandEvent &ev ) ;
+    void proteaseSelChange ( wxCommandEvent &ev ) ;
 
-    void newProtease ( wxEvent &ev ) ;
-    void editProtease ( wxEvent &ev ) ;
+    void newProtease ( wxCommandEvent &ev ) ;
+    void editProtease ( wxCommandEvent &ev ) ;
     void showProteases () ;
 
-    void itemAdd ( wxEvent &ev ) ;
-    void itemDel ( wxEvent &ev ) ;
-    void itemClr ( wxEvent &ev ) ;
-    void itemCol ( wxEvent &ev ) ;
-    void itemChoice ( wxEvent &ev ) ;
+    void itemAdd ( wxCommandEvent &ev ) ;
+    void itemDel ( wxCommandEvent &ev ) ;
+    void itemClr ( wxCommandEvent &ev ) ;
+    void itemCol ( wxListEvent &ev ) ;
+    void itemCol2 ( wxCommandEvent &ev ) ;
+    void itemChoice ( wxCommandEvent &ev ) ;
 
     bool hideProp , hideItem , hideEnzym ;
 

@@ -84,9 +84,7 @@ class TStorage
     void import () ;
     TRestrictionEnzyme* getRestrictionEnzyme ( wxString s ) ;
     void getEnzymeGroups ( wxArrayString &vs ) ;
-//    void getEnzymeGroups ( vector <string> &vs ) ;
     void getEnzymesInGroup ( wxString gn , wxArrayString &vs ) ;
-//    void getEnzymesInGroup ( wxString gn , vector <string> &vs ) ;
     void updateRestrictionEnzyme ( TRestrictionEnzyme *e ) ;
     void addRestrictionEnzyme ( TRestrictionEnzyme *r ) ;
     bool addEnzymeGroup ( wxString s ) ;

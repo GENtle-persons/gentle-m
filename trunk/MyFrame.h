@@ -49,7 +49,7 @@ public:
     virtual void OnProjectLoad(wxCommandEvent& event);
     virtual void OnProjectClose(wxCommandEvent& event);
     virtual void OnImageViewer(wxCommandEvent& event);
-    virtual TCalculator *OnCalculator(wxCommandEvent& event);
+    virtual void OnCalculator(wxCommandEvent& event);
     
     virtual void RerouteMenu(wxCommandEvent& event);
     virtual void BollocksMenu(wxCommandEvent& event);
@@ -65,6 +65,7 @@ public:
     virtual void OnClose(wxCloseEvent& event);
     virtual void OnSashDrag(wxSashEvent& event);
     
+    virtual TCalculator *RunCalculator () ;
     virtual MyChild* newFromVector ( TVector *nv , int type = TYPE_VECTOR ) ;
     virtual TAminoAcids *newAminoAcids ( wxString aa , wxString title = "" ) ;
     virtual TAminoAcids *newAminoAcids ( TVector *nv , wxString title = "" ) ;

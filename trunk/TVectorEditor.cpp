@@ -31,7 +31,7 @@ BEGIN_EVENT_TABLE(TVectorEditor, wxDialog )
     EVT_BUTTON(TVE_I_ADD,TVectorEditor::itemAdd)
     EVT_BUTTON(TVE_I_DEL,TVectorEditor::itemDel)
     EVT_BUTTON(TVE_I_CLR,TVectorEditor::itemClr)
-    EVT_BUTTON(TVE_I_COL,TVectorEditor::itemCol)
+    EVT_BUTTON(TVE_I_COL,TVectorEditor::itemCol2)
     
     EVT_CHAR_HOOK(TVectorEditor::OnCharHook)
 END_EVENT_TABLE()
@@ -383,7 +383,7 @@ void TVectorEditor::initPanEnzym ()
         {
         wxString s = v->re[a]->name ;
         listCE->Append ( s ) ;
-        ce.push_back ( s ) ;
+        ce.Add ( s ) ;
         }
     
     addOkCancel ( panEnzym ) ;
@@ -578,7 +578,7 @@ void TVectorEditor::cleanup ()
     
 // Handlers "enzyme"
 
-void TVectorEditor::enzymeSelChange ( wxEvent &ev )
+void TVectorEditor::enzymeSelChange ( wxCommandEvent &ev )
     {
     wxListBox *lb = (wxListBox*) ev.GetEventObject() ;
     if ( lb == listGroups )
@@ -587,7 +587,7 @@ void TVectorEditor::enzymeSelChange ( wxEvent &ev )
         }
     }
     
-void TVectorEditor::enzymeListDlbClick ( wxEvent &ev )
+void TVectorEditor::enzymeListDlbClick ( wxCommandEvent &ev )
     {
     wxListBox *lb = (wxListBox*) ev.GetEventObject() ;
     if ( lb == listGE )
@@ -667,7 +667,7 @@ void TVectorEditor::showGroupEnzymes ( wxString gr )
         }
     }
 
-void TVectorEditor::enzymeAddEn ( wxEvent &ev )
+void TVectorEditor::enzymeAddEn ( wxCommandEvent &ev )
     {
     wxArrayInt vi ;
     int i , k , n = listGE->GetSelections ( vi ) ;
@@ -685,7 +685,7 @@ void TVectorEditor::enzymeAddEn ( wxEvent &ev )
         }
     }
 
-void TVectorEditor::enzymeAddGr ( wxEvent &ev )
+void TVectorEditor::enzymeAddGr ( wxCommandEvent &ev )
     {
     int a , b ;
     wxString s ;
@@ -696,12 +696,12 @@ void TVectorEditor::enzymeAddGr ( wxEvent &ev )
         if ( b == wxNOT_FOUND )
            {
            listCE->Append ( s ) ;
-           ce.push_back ( s ) ;
+           ce.Add ( s ) ;
            }
         }
     }
 
-void TVectorEditor::enzymeAddToGr ( wxEvent &ev )
+void TVectorEditor::enzymeAddToGr ( wxCommandEvent &ev )
     {
     wxString group = listGroups->GetStringSelection() ;
     group = myapp()->frame->LS->UCfirst ( group ) ;
@@ -731,7 +731,7 @@ void TVectorEditor::enzymeAddToGr ( wxEvent &ev )
     showGroupEnzymes ( group ) ;
     }
 
-void TVectorEditor::enzymeAddToNewGr ( wxEvent &ev )
+void TVectorEditor::enzymeAddToNewGr ( wxCommandEvent &ev )
     {
     wxTextEntryDialog ted ( this , txt("b_add_as_new_group") ,
                                 txt("t_new_enzyme_group_name") ) ;
@@ -744,7 +744,7 @@ void TVectorEditor::enzymeAddToNewGr ( wxEvent &ev )
     enzymeAddToGr ( ev ) ;
     }
 
-void TVectorEditor::enzymeDelEn ( wxEvent &ev )
+void TVectorEditor::enzymeDelEn ( wxCommandEvent &ev )
     {
     wxArrayInt vi ;
     int i , k , n = listCE->GetSelections ( vi ) ;
@@ -780,7 +780,7 @@ void TVectorEditor::initialViewEnzyme ( wxString e )
     listCE->SetStringSelection ( e ) ;
     }
     
-void TVectorEditor::importCloneEnzymes ()
+void TVectorEditor::importCloneEnzymes ( wxCommandEvent &ev )
     {
     TStorage TS ( TEMP_STORAGE ) ;
     TClone clone ;
@@ -871,7 +871,7 @@ void TVectorEditor::storeItemData ()
         }
     }
 
-void TVectorEditor::itemAdd ( wxEvent &ev )
+void TVectorEditor::itemAdd ( wxCommandEvent &ev )
     {
     storeItemData () ;
     int num = newitems.size() ;
@@ -892,7 +892,7 @@ void TVectorEditor::itemAdd ( wxEvent &ev )
                             wxLIST_MASK_IMAGE|wxLIST_MASK_STATE ) ;
     }
     
-void TVectorEditor::itemDel ( wxEvent &ev )
+void TVectorEditor::itemDel ( wxCommandEvent &ev )
     {
     int i = icur , num ;
     if ( icur == -1 ) return ;
@@ -906,7 +906,7 @@ void TVectorEditor::itemDel ( wxEvent &ev )
     icur = -1 ;
     }
     
-void TVectorEditor::itemClr ( wxEvent &ev )
+void TVectorEditor::itemClr ( wxCommandEvent &ev )
     {
     icur = -1 ;
     iname->SetValue ( "" ) ;
@@ -922,7 +922,7 @@ void TVectorEditor::itemClr ( wxEvent &ev )
 
 // Invokes "Edit feature" dialog
 // Color, sequence display type, AA offset etc.
-void TVectorEditor::itemCol ( wxEvent &ev )
+void TVectorEditor::itemCol ( wxListEvent &ev )
     {
     if ( icur == -1 ) return ;
     storeItemData () ;    
@@ -931,10 +931,16 @@ void TVectorEditor::itemCol ( wxEvent &ev )
     *newitems[icur] = *ied.vi ;
     }    
     
+void TVectorEditor::itemCol2 ( wxCommandEvent &ev )
+    {
+    wxListEvent ev2 ;
+    itemCol ( ev2 ) ;
+    }    
+    
 // Item choice dropdown box handler
 // Enables reading frame selection box if item type is CDS,
 // disables it if not
-void TVectorEditor::itemChoice ( wxEvent &ev )
+void TVectorEditor::itemChoice ( wxCommandEvent &ev )
     {
     int i = ichoice->GetSelection () ;
     if ( i == -1 ) return ;
@@ -967,7 +973,7 @@ void TVectorEditor::hideEm ()
 
 // *************************
 
-void TVectorEditor::newEnzyme ( wxEvent &ev )
+void TVectorEditor::newEnzyme ( wxCommandEvent &ev )
     {
     TRestrictionEnzyme *e = new TRestrictionEnzyme ;
     e->cut = 0 ;
@@ -984,7 +990,7 @@ void TVectorEditor::newEnzyme ( wxEvent &ev )
     }
     
 
-void TVectorEditor::newProtease ( wxEvent &ev )
+void TVectorEditor::newProtease ( wxCommandEvent &ev )
     {
     TRestrictionEnzyme *e = new TRestrictionEnzyme ;
     e->cut = 0 ;
@@ -1001,12 +1007,12 @@ void TVectorEditor::newProtease ( wxEvent &ev )
     showProteases () ;
     }
 
-void TVectorEditor::editProtease ( wxEvent &ev )
+void TVectorEditor::editProtease ( wxCommandEvent &ev )
     {
     wxMessageBox ( "Not implemented yet!" ) ;
     }
 
-void TVectorEditor::proteaseSelChange ( wxEvent &ev )
+void TVectorEditor::proteaseSelChange ( wxCommandEvent &ev )
     {
     wxString s = prots->GetStringSelection() ;
     TProtease *pro = myapp()->frame->LS->getProtease ( s ) ;
@@ -1017,7 +1023,7 @@ void TVectorEditor::proteaseSelChange ( wxEvent &ev )
     pro_txt->SetValue ( t ) ;
     }
 
-void TVectorEditor::enzymeDelGr ( wxEvent &ev )
+void TVectorEditor::enzymeDelGr ( wxCommandEvent &ev )
     {
     wxString group = listGroups->GetStringSelection() ;
     group = myapp()->frame->LS->UCfirst ( group ) ;
@@ -1034,7 +1040,7 @@ void TVectorEditor::enzymeDelGr ( wxEvent &ev )
     showEnzymeGroups () ;
     }
 
-void TVectorEditor::enzymeDelFromGr ( wxEvent &ev )
+void TVectorEditor::enzymeDelFromGr ( wxCommandEvent &ev )
     {
     wxString group = listGroups->GetStringSelection() ;
     group = myapp()->frame->LS->UCfirst ( group ) ;

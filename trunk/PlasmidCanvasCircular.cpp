@@ -584,11 +584,11 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
         wxLogStatus(txt("rsite_status_bar") , s.c_str() ) ;
         if ( event.LeftDown() )
            {
-#ifdef __WXMSW__
+/*#ifdef __WXMSW__
            p->treeBox->SelectItem ( p->treeBox->GetParent ( p->vec->rc[rs].treeid ) ) ;
-#else
+#else*/
 				   p->treeBox->SelectItem ( p->treeBox->GetParent ( ) ) ; // Frell
-#endif
+//#endif
            }
         else if ( event.RightDown() )
            invokeRsPopup ( rs , pt_abs ) ;
