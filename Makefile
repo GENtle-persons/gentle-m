@@ -193,6 +193,65 @@ sharedstatedir = ${prefix}/com
 sysconfdir = ${prefix}/etc
 target_alias = 
 SUFFIXES = .cpp .rc
+EXTRA_DIST = mondrian.xpm \
+variables.csv \
+blank.db \
+default.tab \
+bitmaps/align.bmp \
+bitmaps/cocktail.bmp \
+bitmaps/display_features.bmp \
+bitmaps/helpcs.bmp \
+bitmaps/new.xpm \
+bitmaps/plasmid_linear.bmp \
+bitmaps/print.xpm \
+bitmaps/settings_tool.bmp \
+bitmaps/alignment.bmp \
+bitmaps/copy.bmp \
+bitmaps/display_restriction.bmp \
+bitmaps/help.xpm \
+bitmaps/open.bmp \
+bitmaps/preview.bmp \
+bitmaps/project.bmp \
+bitmaps/splash.bmp \
+bitmaps/align_tool.bmp \
+bitmaps/copy.xpm \
+bitmaps/draft.xbm \
+bitmaps/image.bmp \
+bitmaps/open.xpm \
+bitmaps/preview.xpm \
+bitmaps/protein.bmp \
+bitmaps/tick.bmp \
+bitmaps/bitmap1.bmp \
+bitmaps/cut.bmp \
+bitmaps/drawing.xbm\
+bitmaps/mode_both.bmp \
+bitmaps/orfs.bmp \
+bitmaps/primer.bmp \
+bitmaps/redo.bmp \
+bitmaps/undo.bmp \
+bitmaps/bitmap2.bmp \
+bitmaps/cut.xpm       \
+bitmaps/flowchar.xbm \
+bitmaps/mode_edit.bmp \
+bitmaps/paste.bmp \
+bitmaps/primer_export.bmp \
+bitmaps/save.bmp \
+bitmaps/web.bmp \
+bitmaps/calc.bmp \
+bitmaps/Helix.bmp \
+bitmaps/mode_view.bmp \
+bitmaps/paste.xpm \
+bitmaps/primer_import.bmp \
+bitmaps/save.xpm \
+bitmaps/write.xbm\
+bitmaps/calc_tool.bmp \
+bitmaps/dirplain.xbm \
+bitmaps/help.bmp \
+bitmaps/new.bmp \
+bitmaps/plasmid_circular.bmp \
+bitmaps/print.bmp \
+bitmaps/scissors.bmp
+
 main_LDADD = $(WX_LIBS) -L/usr/lib -lsqlite -lmysqlclient
 main_SOURCES = TXMLfile.cpp\
 TVectorTree.cpp\
@@ -273,7 +332,59 @@ clustalw/readmat.cpp\
 clustalw/sequence.cpp\
 clustalw/showpair.cpp\
 clustalw/trees.cpp\
-clustalw/util.cpp
+clustalw/util.cpp\
+enums.h \
+lin_sqlite.h \
+TXMLfile.h\
+TVectorTree.h\
+TVirtualGel.h\
+TVectorEditor.h\
+TVector.h\
+TUndo.h\
+TUReadSeq.h\
+TStorage.h\
+TSilmutDialog.h\
+TRestrictionEditor.h\
+TPrimer.h\
+TPrimerDialog.h\
+TPDB.h\
+TLigationDialog.h\
+TMainTree.h\
+TItemEditDialog.h\
+TImageDisplay.h\
+TIMGreader.h\
+TextImportDialog.h\
+TClone.h\
+TCalculator.h\
+SequenceCanvas.h\
+SendHTTP.h\
+RestrictionEnzymes.h\
+ProgramOptionsDialog.h\
+PrimerDesign.h\
+PlasmidCanvas.h\
+MyFrame.h\
+MyChild.h\
+MiscDialogs.h\
+ManageDatabase.h\
+main.h\
+GenBank.h\
+FindSequenceDialog.h\
+ExternalInterface.h\
+ChildBase.h\
+CoolCanvas.h\
+AminoAcids.h\
+Alignment.h\
+ABIviewer.h\
+ABItype.h\
+ureadseq.h\
+tinyxml/tinyxml.h\
+tinyxml/tinystr.h\
+clustalw/clustalw.h\
+clustalw/dayhoff.h \
+clustalw/general.h \
+clustalw/matrices.h \
+clustalw/param.h \
+clustalw/xmenu.h
 
 all: all-am
 
@@ -814,6 +925,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
+	$(mkdir_p) $(distdir)/bitmaps
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
