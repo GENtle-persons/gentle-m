@@ -61,6 +61,10 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
         dc.SetBrush ( *wxLIGHT_GREY_BRUSH ) ;
         if ( mt <= l )
             {
+            dc.DrawLine ( lineOff + lineLen * mf / (l+1) ,
+                          lineH ,
+                          lineOff + lineLen * mf / (l+1) ,
+                          h ) ;
             dc.DrawRectangle ( lineOff + lineLen * mf / (l+1) ,
                                lineH ,
                                lineLen * ( mt - mf ) / (l+1) ,

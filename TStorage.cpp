@@ -167,7 +167,7 @@ TSQLresult TStorage::getObject_MySQL ( const wxString &query )
         else
         	{
              wxMessageBox ( mysql_error(conn) , wxString::Format ( "MySQL error %d" , err ) ) ;
-             wxFile of ( "mysqlwrr.txt" , wxFile::write ) ;
+             wxFile of ( "mysqlerr.txt" , wxFile::write ) ;
              of.Write ( query ) ;
          }    
         }    
@@ -216,19 +216,6 @@ TSQLresult TStorage::getObjectSqlite3 ( const wxString &query )
     return results ;
     }
         
-TSQLresult TStorage::getObject ( const wxString &query )
-    {
-    if ( recording )
-    	{
-	    record += query + "; " ;
-        results.clean() ;
-	    return results ;
-    	}    
-    if ( isMySQL ) return getObject_MySQL ( query ) ;
-    if ( isSqlite3 ) return getObjectSqlite3 ( query ) ;
-   	return getObjectSqlite2 ( query ) ;
-   	}   	
-
 TSQLresult TStorage::getObjectSqlite2 ( const wxString &query )
 	{    
     sqlite *db ;
@@ -780,19 +767,35 @@ void TStorage::optimizeDatabase ()
 	getObject ( "VACUUM;" ) ;
 	}
 
+TSQLresult TStorage::getObject ( const wxString &query )
+    {
+    if ( recording )
+    	{
+	    record += query + "; " ;
+        results.clean() ;
+	    return results ;
+    	}    
+    if ( isMySQL ) return getObject_MySQL ( query ) ;
+    if ( isSqlite3 ) return getObjectSqlite3 ( query ) ;
+   	return getObjectSqlite2 ( query ) ;
+   	}   	
+
 void TStorage::startRecord ()
 	{
- 	if ( isMySQL ) return ;
+ 	if ( isMySQL ) { /*getObject ( "BEGIN" ) ; */return ; }
 	record = "" ;
 	recording = true ;
 	}    
 
 void TStorage::endRecord ()
 	{
- 	if ( isMySQL ) return ;
+ 	if ( isMySQL ) { /*getObject ( "COMMIT" ) ; */return ; }
 	recording = false ;
-	record = "BEGIN; " + record + " END;" ;
-	getObject ( record ) ;
+	if ( !record.IsEmpty() )
+		{
+    	record = "BEGIN; " + record + "COMMIT;" ;
+		getObject ( record ) ;
+		}		
 	record = "" ;
 	}
 
