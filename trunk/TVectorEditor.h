@@ -42,7 +42,7 @@ class TVectorEditor : public wxDialog
     void commitEnzymes () ;
     void commitProteases () ;
 
-    void showGroupEnzymes ( string gr ) ;
+    void showGroupEnzymes ( wxString gr ) ;
     void showEnzymeGroups () ;
     void enzymeSelChange ( wxEvent &ev ) ;
     void enzymeListDlbClick ( wxEvent &ev ) ;
@@ -67,6 +67,9 @@ class TVectorEditor : public wxDialog
     void itemCol ( wxEvent &ev ) ;
     void itemChoice ( wxEvent &ev ) ;
 
+    bool hideProp , hideItem , hideEnzym ;
+
+    private :
     wxListBox *listCE , *listGroups , *listGE ;
     vector <string> eig , ce ;
     
@@ -85,7 +88,6 @@ class TVectorEditor : public wxDialog
     wxChoice *ichoice ;
     wxCheckBox *icb , *icv ;
     wxCheckListBox *prots ;
-    bool hideProp , hideItem , hideEnzym ;
     
     vector <TVectorItem*> newitems ;
     

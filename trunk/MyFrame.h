@@ -90,7 +90,7 @@ public:
             loadLastProject , useMetafile , showSplashScreen , checkUpdate ,
             useCoolCanvas , useInternalHelp ;
     wxString lang_string , project_name , project_desc , project_db ;
-    vector <string> lastCocktail ;
+    wxArrayString lastCocktail ;
     vector <ChildBase*> children ;
     wxHtmlEasyPrinting *html_ep ;
     vector <wxBitmap> bitmaps ;

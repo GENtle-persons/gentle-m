@@ -1061,8 +1061,8 @@ void TAlignment::fromVector ( TVector *nv )
     TGenBank gb ;
     vec = nv ;
     gb.paste ( vec->sequence.c_str() ) ;
-    string vdesc = vec->desc.c_str() ;
-    vector <string> vs = explode ( "\n" , vdesc ) ;
+    wxString vdesc = vec->desc ;
+    wxArrayString vs = explode ( "\n" , vdesc ) ;
     int nol = atoi ( vs[0].c_str() ) ; // Number of lines
     int n ;
     string broken ;
@@ -1070,15 +1070,15 @@ void TAlignment::fromVector ( TVector *nv )
     lines.clear () ;
     for ( n = 0 ; n < nol ; n++ )
         {
-        string name = vs[1+n*3] ;
-        string db = vs[2+n*3] ;
-        string seq = vs[3+n*3] ;
+        wxString name = vs[1+n*3] ;
+        wxString db = vs[2+n*3] ;
+        wxString seq = vs[3+n*3] ;
 
         TAlignLine line ; 
-        line.name = name.c_str() ;
+        line.name = name ;
 
         bool success = false ;
-        if ( db != "" ) success = mdb.do_load_DNA ( name.c_str() , db.c_str() ) ;
+        if ( db != "" ) success = mdb.do_load_DNA ( name , db ) ;
         if ( success ) line.v = mdb.v ;
         else
            {
@@ -1086,19 +1086,10 @@ void TAlignment::fromVector ( TVector *nv )
            gb.vi = gb.vi_l[n] ;
            TVector *vv = new TVector ;
            gb.remap ( vv ) ;
-/*           if ( vv->items.size() > 0 ) wxMessageBox ( name.c_str() ) ;
-           else 
-              {
-              string u ;
-              for ( int z = 0 ; z < gb.vs.size() ; z++ )
-                 u += gb.vs_l[n][z] + "\n" ;
-              wxMessageBox ( u.c_str() , name.c_str() ) ;
-              }*/
-
            short type = TUReadSeq::getSeqType ( vv->sequence.c_str() ) ;
            if ( type == TYPE_AMINO_ACIDS )
               {
-              TAminoAcids *p = myapp()->frame->newAminoAcids ( vv , name.c_str() ) ;
+              TAminoAcids *p = myapp()->frame->newAminoAcids ( vv , name ) ;
               delete vv ;
               vv = p->vec ;
               }
@@ -1111,7 +1102,7 @@ void TAlignment::fromVector ( TVector *nv )
               }
            line.v = vv ;
            }
-        line.s = seq.c_str() ;
+        line.s = seq ;
         lines.push_back ( line ) ;
         }
     vec = NULL ;

@@ -202,11 +202,9 @@ class TVector
     vector <TVectorItem> items ;
     vector <TRestrictionEnzyme*> re ;
     vector <TRestrictionCut> rc ;
-    vector <string> cocktail ;
     vector <TORF> worf ;
 
-    wxArrayString hiddenEnzymes ;
-    wxArrayString proteases ;
+    wxArrayString hiddenEnzymes , proteases , cocktail ;
     TUndo undo ;
     
     private :

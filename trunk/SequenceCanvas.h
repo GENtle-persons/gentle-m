@@ -185,9 +185,9 @@ class SeqRestriction : public SeqBasic
     
     // Variables
     TVector *vec ;
-    vector <string> vs ;  // The different lines
-    vector <string> ven ; // The vector name for each cut
-    vector <int> yoff , eoe ;
+    wxArrayString vs ;  // The different lines
+    wxArrayString ven ; // The vector name for each cut
+    wxArrayInt yoff , eoe ;
     bool down ;
     } ;
 
@@ -299,7 +299,7 @@ class SeqPlot : public SeqDNA
     virtual void myRect ( wxDC &dc , int x , int y , int w , int h ) ;
     enum { CHOU_FASMAN , P_I , M_W , H_P } type ;
     int lines , l_top, l_bottom ;
-    vector <string> d1 , d2 , d3 ;
+    wxArrayString d1 , d2 , d3 ;
     vector <TAAProp> prop ;
     bool startOfLine ;
     float data_max , data_min , data_h , data_step ;

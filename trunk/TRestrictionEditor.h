@@ -25,12 +25,12 @@ class TRestrictionEditor : public wxDialog
     virtual void initme ( TVector *_v ) ;
     virtual void initRestrictionPage () ;
     virtual void pR_showGroupEnzymes ( wxString gr ) ;
-    virtual vector <int> getcuts ( string enzyme ) ;
+    virtual wxArrayInt getcuts ( wxString enzyme ) ;
     virtual void pR_showFragments ( int i ) ;
     virtual void add2cocktail ( wxString s ) ;
     virtual void del_from_cocktail ( wxString s ) ;
     virtual void refreshCocktail () ;
-    virtual void listFragments ( wxListCtrl *list , vector <int> &vi ) ;
+    virtual void listFragments ( wxListCtrl *list , wxArrayInt &vi ) ;
     
     virtual void res_ll ( wxListEvent &event ) ;
     virtual void res_coc_ll ( wxListEvent &event ) ;
@@ -58,8 +58,7 @@ class TRestrictionEditor : public wxDialog
     int _w , _h ;
     int numberoffragments ;
     vector <TREcache> cutcache ;
-    vector <string> nocut ;
-    vector <string> cocktail , *remoteCocktail ;
+    wxArrayString nocut , cocktail , *remoteCocktail ;
     wxString pre , last_enzyme_selected , last_enzyme_selected_coc ;
 
     DECLARE_EVENT_TABLE()

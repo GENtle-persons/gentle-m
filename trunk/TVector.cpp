@@ -495,7 +495,7 @@ void TVector::doRestriction ()
     vector <TRestrictionCut> cl ;
     int a , b , c ;
     
-    if ( cocktail.size() == 0 ) return ;
+    if ( cocktail.GetCount() == 0 ) return ;
     myass ( myapp() , "Oh no! No application defined!" ) ;
     myapp()->frame->lastCocktail = cocktail ;
     
@@ -507,24 +507,24 @@ void TVector::doRestriction ()
         cl.push_back ( TRestrictionCut ( 0 , &blankEnzyme ) ) ;
 
     bool doRecalc = false ;
-    for ( a = 0 ; a < cocktail.size() ; a++ )
+    for ( a = 0 ; a < cocktail.GetCount() ; a++ )
        {
-       for ( b = 0 ; b < re.size() && re[b]->name.c_str() != cocktail[a] ; b++ ) ;
+       for ( b = 0 ; b < re.size() && re[b]->name != cocktail[a] ; b++ ) ;
        if ( b == re.size() )
           {
           doRecalc = true ;
           recalcvisual = true ;
-          re.push_back ( myapp()->frame->LS->getRestrictionEnzyme ( cocktail[a].c_str() ) ) ;
+          re.push_back ( myapp()->frame->LS->getRestrictionEnzyme ( cocktail[a] ) ) ;
           myass ( re[re.size()-1] , "Oh no! Unknown enzyme!" ) ;
           }
        }
     if ( doRecalc ) recalculateCuts() ;
 
     
-    for ( a = 0 ; a < cocktail.size() ; a++ )
+    for ( a = 0 ; a < cocktail.GetCount() ; a++ )
         {
         for ( b = 0 ; b < rc.size() ; b++ )
-           if ( rc[b].e->name == cocktail[a].c_str() )
+           if ( rc[b].e->name == cocktail[a] )
               cl.push_back ( rc[b] ) ;
         }
 
@@ -575,12 +575,12 @@ void TVector::doRestriction ()
            nv->name += cl[a+1].e->name.c_str() ;
            nv->name += ")" ;
            }
-        nv->cocktail.clear() ; // Cleaning up cocktail
+        nv->cocktail.Clear() ; // Cleaning up cocktail
         if ( nv->sequence.length() >= action_value ) // "No fragments smaller than XX base pairs"
            myapp()->frame->newFromVector ( nv , TYPE_FRAGMENT ) ;        
         else delete nv ;
         }
-    cocktail.clear() ;
+    cocktail.Clear() ;
     }
         
 void TVector::doAction ()
@@ -989,7 +989,7 @@ void TVector::clear ()
     items.clear () ;
     re.clear () ;
     rc.clear () ;
-    cocktail.clear () ;
+    cocktail.Clear () ;
     worf.clear () ;
     hiddenEnzymes.Clear () ;
     proteases.Clear () ;

@@ -1,6 +1,8 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
+typedef unsigned int uint ;
+
 // This will turn the myass error logging on/off
 // Place a comment in front of the following line when compiling releases
 //#define MYDEBUG
@@ -150,6 +152,7 @@ char* txt ( wxString item ) ;
 void init_txt ( wxString lang ) ;
 MyApp *myapp () ;
 string toupper ( string s ) ;
+int cmpint(int *first, int *second) ;
 
 #endif
 // _MAIN_H__

@@ -47,6 +47,11 @@ void myass ( bool b , wxString msg )
     }
 #endif
 
+int cmpint(int *first, int *second)
+    {
+    return *first > *second ;
+    }    
+    
 string toupper ( string s )
     {
     for ( int a = 0 ; a < s.length() ; a++ )
