@@ -7,10 +7,10 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
     if ( printing ) h = h * 2 / 3 ;
     int fontfactor = 10 ;
     if ( printing ) fontfactor = (w>h?h:w)/10000 ;
-    wxFont smallFont ( fontfactor , wxSWISS , wxNORMAL , wxNORMAL ) ;
-    wxFont normalFont ( fontfactor*6/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
-    wxFont bigFont ( fontfactor*7/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
-    wxFont hugeFont ( fontfactor*9/5 , wxSWISS , wxNORMAL , wxBOLD ) ;
+    wxFont *smallFont = MYFONT ( fontfactor , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    wxFont *normalFont = MYFONT ( fontfactor*6/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    wxFont *bigFont = MYFONT ( fontfactor*7/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    wxFont *hugeFont = MYFONT ( fontfactor*9/5 , wxSWISS , wxNORMAL , wxBOLD ) ;
 
     // Initial calculations    
     char t[100] ;
@@ -83,7 +83,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
     dc.DrawLine ( lineOff , lineH , w - lineOff , lineH ) ;
 
     // Numbers
-    dc.SetFont(smallFont);
+    dc.SetFont(*smallFont);
     for ( a = 0 ; a < l ; a += d ) 
         {
         dc.DrawLine ( lineOff + lineLen * a / l ,
@@ -183,7 +183,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
         }
         
     // Drawing Restriction Sites
-    dc.SetFont(smallFont);
+    dc.SetFont(*smallFont);
     for ( a = 0 ; a < p->vec->rc.size() ; a++ )
         {
         TRestrictionCut *c = &p->vec->rc[a] ;
@@ -220,11 +220,9 @@ void PlasmidCanvas::drawLinearORFs ( wxDC &dc )
         if ( rf == 1 || rf == -1 ) col = wxColour ( 200 , 0 , 0 ) ;
         if ( rf == 2 || rf == -2 ) col = wxColour ( 0 , 200 , 0 ) ;
         if ( rf == 3 || rf == -3 ) col = wxColour ( 0 , 0 , 200 ) ;
-        wxBrush brush ( col , wxSOLID ) ;
-        wxPen pen ( col , 1 , wxSOLID ) ;
         dc.SetBackgroundMode ( wxSOLID ) ;
-        dc.SetBrush ( brush ) ;
-        dc.SetPen ( pen ) ;
+        dc.SetBrush ( *MYBRUSH(col) ) ;
+        dc.SetPen ( *MYPEN(col) ) ;
 
         p->vec->worf[a].dist1 = mh - ah/4 ;
         p->vec->worf[a].dist2 = mh + ah/4 ;
@@ -293,8 +291,8 @@ bool PlasmidCanvas::intersectsLine ( wxRect &a , wxPoint p )
 void PlasmidCanvas::drawLinearItem ( wxDC& dc , int r1 , int r2 , float a1 , float a2 , TVectorItem *i )
     {
     if ( i->direction == -1 ) { int rr = r1 ; r1 = r2 ; r2 = rr ; }
-    wxFont normalFont ( 12 , wxSWISS , wxNORMAL , wxNORMAL ) ;
-    wxFont smallFont ( 8 , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    wxFont *normalFont = MYFONT ( 12 , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    wxFont *smallFont = MYFONT ( 8 , wxSWISS , wxNORMAL , wxNORMAL ) ;
     int r1b = r2 - ( r2 - r1 ) / 10 ;
     int y1 = (int) ( a2 - a1 ) / 3 ;
     int y2 = (int) ( a1 + a2 ) / 2 ;
@@ -321,8 +319,8 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , int r1 , int r2 , float a1 , flo
     wxCoord dx , dy ;
     wxColor fc = dc.GetTextForeground () ;
     dc.SetTextForeground ( i->getFontColor() ) ;
-    if ( p->def == "dna" ) dc.SetFont(normalFont);
-    else if ( p->def == "AminoAcids" ) dc.SetFont(smallFont);
+    if ( p->def == "dna" ) dc.SetFont(*normalFont);
+    else if ( p->def == "AminoAcids" ) dc.SetFont(*smallFont);
     sprintf ( t , "%s" , i->name.c_str() ) ;
     dc.GetTextExtent ( t , &dx , &dy ) ;
     dc.DrawText ( t ,
@@ -481,8 +479,6 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
            context_last_item = vo ;
            itemMarkShow ( dummyEvent ) ;
            p->cSequence->SetFocus () ;
-//           p->cSequence->mark ( "DNA" , p->vec->items[vo].from , p->vec->items[vo].to ) ;
-//           p->OnCopyToNew ( dummyEvent ) ;
            }
         }
     else if ( orf != -1 )
@@ -508,7 +504,7 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
         else if ( event.RightDown() ) invokeVectorPopup ( pt_abs ) ;
         }
 
-    string id = "dna" ;
+    string id = "DNA" ;
     if ( p->def == "AminoAcids" ) id = "AA" ;
     
     // Dragging
@@ -580,21 +576,3 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
        }
 }
 
-int PlasmidCanvas::findORFcircular ( float angle , float radius )
-    {
-    int a , found = -1 ;
-    for ( a = 0 ; a < p->vec->worf.size() ; a++ )
-        {
-        if ( angle >= p->vec->worf[a].deg1 &&
-             angle <= p->vec->worf[a].deg2 &&
-             radius >= p->vec->worf[a].dist1 &&
-             radius <= p->vec->worf[a].dist2 )
-             found = a ;
-        if ( p->vec->worf[a].deg2 > 360 &&
-             angle <= p->vec->worf[a].deg2-360 &&
-             radius >= p->vec->worf[a].dist1 &&
-             radius <= p->vec->worf[a].dist2 )
-             found = a ;
-        }
-    return found ;
-    }

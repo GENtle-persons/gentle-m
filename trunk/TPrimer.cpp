@@ -15,12 +15,14 @@ float TPrimer::getTm ( int type )
 float TPrimer::getEvaluation () { return evaluation ; }
 float TPrimer::getGCcontents () { return pgc ; }
 
-void TPrimer::getSequenceFromVector ( TVector *v )
+void TPrimer::getSequenceFromVector ( TVector *v , bool from3 )
     {
     int a ;
     sequence = "" ;
+    bool invert = !upper ;
+    if ( from3 ) invert = !invert ;
     for ( a = from ; a <= to ; a++ )
-        sequence += v->getNucleotide ( a-1 , !upper ) ;
+        sequence += v->getNucleotide ( a-1 , invert ) ;
     }
     
 void TPrimer::makeStats ()
@@ -100,10 +102,7 @@ float TPrimer::evaluateTm ( double conc_nm , double Na_mm )
     double y = 50.0 / 1000000000.0 ;
     double ret ;
 
-//    if ( !upper ) invertSequence() ;
-
     string s = getAnnealingSequence() ;
-    
 
     // Salt
     tm_salt = tm_gc = 0 ;
@@ -134,7 +133,6 @@ float TPrimer::evaluateTm ( double conc_nm , double Na_mm )
 	S = deltaSValmin ;
     
     ret = NeighbourTM ( false , 50 , 50 ) ;
-//    if ( !upper ) invertSequence() ;
     
     return ret ;
     }
@@ -518,5 +516,11 @@ string TPrimer::getAnnealingSequence()
     if ( !annealingVector ) return get53sequence () ;
     string s = get53sequence () ;
     return s.substr ( s.length() - checkFit ( annealingVector , true ) ) ;
+    }
+    
+bool TPrimer::overlap ( TPrimer &op )
+    {
+    if ( op.from <= to && op.to >= from ) return true ;
+    return false ;
     }
     

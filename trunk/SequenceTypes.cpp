@@ -110,20 +110,23 @@ void SeqPrimer::initFromTVector ( TVector *v )
     for ( int a = 0 ; a < s.length() ; a++ ) s[a] = ' ' ;
     takesMouseActions = true ;
     showNumbers = false ;
-    circular = v->isCircular() ;
     }
     
 void SeqPrimer::addPrimer ( TPrimer *p )
     {
     int a ;
     TVector d ;
+    myass ( p , "SeqPrimer::addPrimer_0" ) ;
+    myass ( vec , "SeqPrimer::addPrimer_1" ) ;
     d.sequence = s ;
-    d.setCircular(circular) ;
-    if ( d.isCircular() ) wxMessageBox ( wxString::Format("%d-%d",p->from,p->to) ) ;
+    d.setCircular(vec->isCircular()) ;
     for ( a = p->from ; a <= p->to ; a++ )
+        {
+        myass ( a-p->from >= 0 , "SeqPrimer::addPrimer_2" ) ;
+        myass ( a-p->from < p->sequence.length() , "SeqPrimer::addPrimer_3" ) ;
         d.setNucleotide ( a-1 , p->sequence[a-p->from] ) ;
+        }
     s = d.sequence ;
-//        s[a-1] = p->sequence[a-p->from] ;
     }
     
 //************************************************ SeqNum
@@ -259,11 +262,13 @@ void SeqDivider::show ( wxDC& dc )
         {
         int y = pos.r[a].y + can->charheight/2 ;
         dc.SetPen(*wxGREY_PEN);
+        dc.DrawLine ( 0 , y-2 , w , y-2 ) ;
         dc.DrawLine ( 0 , y-1 , w , y-1 ) ;
         dc.SetPen(*wxBLACK_PEN);
         dc.DrawLine ( 0 , y , w , y ) ;
         dc.SetPen(*wxLIGHT_GREY_PEN);
         dc.DrawLine ( 0 , y+1 , w , y+1 ) ;
+        dc.DrawLine ( 0 , y+2 , w , y+2 ) ;
         }
     }
 

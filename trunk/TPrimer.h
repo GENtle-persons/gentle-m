@@ -26,13 +26,14 @@ class TPrimer
         upper = _upper ;
         annealingVector = NULL ;
         }
-    void getSequenceFromVector ( TVector *v ) ;
+    void getSequenceFromVector ( TVector *v , bool from3 = false ) ;
     void makeStats () ;
     void evaluate ( float tm_opt = 0 ) ;
     string report () ;
     string get53sequence () ;
     string get35sequence () ;
     int checkFit ( TVector *v , bool justCount = false ) ;
+    bool overlap ( TPrimer &op ) ;
 
     float getTm ( int type = TM_STANDARD ) ;
     float getEvaluation () ;

@@ -125,10 +125,7 @@ void TPrimerDialog::initme ( TPrimer *_p , TPrimerDesign *_pd )
                             wxSize ( w , h-210 ) , 
                             wxLC_REPORT|wxLC_SINGLE_SEL ) ;
 
-    wxFont *myFont = new wxFont ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ;
-    rep->SetFont ( *myFont ) ;
-
-
+    rep->SetFont ( *MYFONT ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
                         
     bo->SetDefault() ;
                         

@@ -53,6 +53,7 @@ class TSilmutDialog : public wxDialog
     int last_selection ;
     int mode ;
     int mut_pos , mut_dir ;
+    bool running ;
 
     DECLARE_EVENT_TABLE()
     } ;

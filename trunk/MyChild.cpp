@@ -492,34 +492,10 @@ void MyChild::OnExport(wxCommandEvent& event)
     
 void MyChild::OnCopyToNew(wxCommandEvent& event)
     {
-    char t[1000] ;
     int from , to ;
     cPlasmid->getMark ( from , to ) ;
     if ( from == -1 ) return ;
-    
-    TVector *nv = new TVector ;
-    *nv = *vec ;
-    if ( to > nv->sequence.length() ) // Marking includes "0" point
-        {
-        nv->doRemove ( to+1-nv->sequence.length() , from-1 , false ) ;
-        }
-    else
-        {
-        nv->doRemove ( to+1 , nv->sequence.length() , false ) ;
-        nv->doRemove ( 1 , from-1 , false ) ;
-        }
-    
-    if ( to > vec->sequence.length() )
-            nv->turn ( vec->sequence.length() - from + 1 ) ;
-    if ( nv->desc != "" ) nv->desc += "\n" ;
-    sprintf ( t , txt("t_cropped_fragment") , nv->name.c_str() , from , to ) ;
-    nv->desc += t ;
-    nv->name += "*" ;
-    nv->setChanged () ;
-    nv->setCircular ( false ) ;
-    nv->recalculateCuts() ;
-    nv->recalcvisual = true ;
-    myapp()->frame->newFromVector ( nv ) ;
+    myapp()->frame->newFromVector ( vec->newFromMark ( from , to ) ) ;
     }
     
 void MyChild::OnAsNewFeature(wxCommandEvent& event)
@@ -1030,7 +1006,7 @@ void MyChild::OnORFs(wxCommandEvent& event)
 #ifdef __WXMSW__ // LINUX
     GetToolBar()->ToggleTool(MDI_ORFS,showORFs);
 #endif
-//    if ( !cPlasmid->painting ) cPlasmid->Refresh() ;
+    cPlasmid->Refresh() ;
     }
     
 void MyChild::OnSeqPrint(wxCommandEvent& event)
@@ -1064,10 +1040,10 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
     // Feature list
     pdc->SetDeviceOrigin ( 0 , h/2 ) ;
     int cw , ch ;
-    wxFont font ( w/80 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
-    wxFont sfont ( w/120 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
-    wxFont bfont ( w/40 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
-    pdc->SetFont ( font ) ;
+    wxFont *font = MYFONT ( w/80 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
+    wxFont *sfont = MYFONT ( w/120 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
+    wxFont *bfont = MYFONT ( w/40 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
+    pdc->SetFont ( *font ) ;
     pdc->GetTextExtent ( "A" , &cw , &ch ) ;
     
     int a , b ;
@@ -1138,7 +1114,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
            if ( s != "" ) vs.push_back ( s ) ;
            int dx , dy ;
            y += ch ;
-           pdc->SetFont ( sfont ) ;
+           pdc->SetFont ( *sfont ) ;
            for ( b = 0 ; b < vs.size() ; b++ )
               {
               pdc->GetTextExtent ( vs[b].c_str() , &dx , &dy ) ;
@@ -1146,7 +1122,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
               y += dy ;
               }
            y -= ch ;
-           pdc->SetFont ( font ) ;
+           pdc->SetFont ( *font ) ;
            }
         
         pdc->DrawLine ( x0 , y + ch + 2 , w - x0 , y + ch + 2 ) ;
@@ -1162,7 +1138,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
     string printtime = now.Format("%c", wxDateTime::Local).c_str() ;
     pdc->GetTextExtent ( printtime.c_str() , &tw , &th ) ;
     pdc->DrawText ( printtime.c_str() , w - x0 - tw , 0 ) ;
-    pdc->SetFont ( bfont ) ;
+    pdc->SetFont ( *bfont ) ;
     pdc->DrawText ( vec->name.c_str() , x0 , 0 ) ;
 
     

@@ -106,7 +106,6 @@ class TVectorItem
     
     private :
     virtual void initParams () ;
-    wxBrush brush ;
     vector <string> pname , pvalue ;
     } ;
 
@@ -146,6 +145,7 @@ class TVector
     virtual void setAction ( string _action , int _action_value = 0 ) ;
     virtual void setDatabase ( string s ) { database = s ; }
     virtual string getDatabase () { return database ; }
+    virtual TVector *newFromMark ( int from , int to ) ;
     
     virtual void setChanged ( bool c = true ) ;
     virtual bool isChanged () { return changed ; }

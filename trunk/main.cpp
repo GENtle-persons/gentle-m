@@ -34,13 +34,14 @@ IMPLEMENT_APP(MyApp)
 // Some often needed stuff...
 
 #ifdef MYDEBUG
-ofstream errout ( "ERROR.txt" , ios::out ) ;
+ofstream errout ( "C:\\ERROR.txt" , ios::out ) ;
 
 void myass ( bool b , wxString msg )
     {
     if ( b ) return ;
     errout << msg << "\n" ;
     wxBell();
+    wxCHECK_RET ( b , msg ) ;
 //    wxSafeShowMessage ( msg , "Error" ) ;
     }
 #endif
@@ -248,8 +249,8 @@ void ChildBase::showName ( string x )
     
 void ChildBase::OnFocus(wxFocusEvent& event)
     {
-    wxASSERT_MSG ( myapp() , "Oh no! No application defined!" ) ;
-    wxASSERT_MSG ( myapp()->frame , "Oh no! No frame defined!" ) ;
+    myass ( myapp() , "Oh no! No application defined!" ) ;
+    myass ( myapp()->frame , "Oh no! No frame defined!" ) ;
     if ( myapp()->frame->dying ) return ;
     showName ( ) ;
     myapp()->frame->mainTree->SelectItem ( inMainTree ) ;

@@ -10,16 +10,16 @@ void PlasmidCanvas::invokeORFpopup ( int item , wxPoint pt )
     cm->Append ( ORF_AS_NEW_ITEM , txt("p_orf_as_new_item") ) ;
 
     wxMenu *dm = new wxMenu ;
-    cm->Append ( POPUP_DUMMY , txt("p_dna_sequence") , dm ) ;
     dm->Append ( ORF_COPY_DNA , txt("p_orf_copy_dna") ) ;
     dm->Append ( ORF_AS_NEW_DNA , txt("p_orf_as_new_dna") ) ;
     dm->Append ( ORF_BLAST_DNA , txt("m_blast_dna") ) ;
+    cm->Append ( POPUP_DUMMY , txt("p_dna_sequence") , dm ) ;
     
     wxMenu *am = new wxMenu ;
-    cm->Append ( POPUP_DUMMY , txt("p_aa_sequence") , am ) ;
     am->Append ( ORF_COPY_AA , txt("p_orf_copy_aa") ) ;
     am->Append ( ORF_AS_NEW_AA , txt("p_orf_as_new_aa") ) ;
     am->Append ( ORF_BLAST_AA , txt("m_blast_aa") ) ;
+    cm->Append ( POPUP_DUMMY , txt("p_aa_sequence") , am ) ;
     
     PopupMenu ( cm , pt ) ;
     delete cm ;
@@ -40,21 +40,21 @@ wxMenu *PlasmidCanvas::invokeItemPopup ( int item , wxPoint pt , bool doreturn )
     cm->AppendSeparator () ;
 
     wxMenu *dm = new wxMenu ;
-    cm->Append ( POPUP_DUMMY , txt("p_dna_sequence") , dm ) ;
     dm->Append ( PC_ITEM_MARK , txt("p_item_mark") ) ;
     dm->Append ( PC_ITEM_MARK_SHOW , txt("p_item_mark_show") ) ;
     dm->AppendSeparator () ;
     dm->Append ( PC_ITEM_COPY_DNA , txt("p_item_copy_dna") ) ;
     dm->Append ( PC_ITEM_AS_NEW_SEQUENCE , txt("p_item_as_new_entry") ) ;
     dm->Append ( PC_ITEM_BLAST_DNA , txt("p_item_blast_dna") ) ;
+    cm->Append ( POPUP_DUMMY , txt("p_dna_sequence") , dm ) ;
 
     if ( rf != 0 )
         {
         wxMenu *am = new wxMenu ;
-        cm->Append ( POPUP_DUMMY , txt("p_aa_sequence") , am ) ;
         am->Append ( PC_ITEM_COPY_AA , txt("p_item_copy_aa") ) ;
         am->Append ( PC_ITEM_AS_NEW_AA_SEQUENCE , txt("p_item_as_new_aa_entry") ) ;
         am->Append ( PC_ITEM_BLAST_AA , txt("p_item_blast_aa") ) ;
+        cm->Append ( POPUP_DUMMY , txt("p_aa_sequence") , am ) ;
         }
 
     lastvectorobject = -1 ;

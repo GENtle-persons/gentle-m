@@ -163,7 +163,7 @@ void SeqABI::show ( wxDC& dc )
         if ( can->isPrinting() && !can->getPrintToColor() )
            dc.SetPen ( *wxBLACK_PEN ) ;
         else
-           dc.SetPen ( wxPen ( colors[data] , 1 , wxSOLID ) ) ;
+           dc.SetPen ( *MYPEN ( colors[data] ) ) ;
         
         int a ;
         int id = at->getRecord ( "DATA" , 9 + data ) ;

@@ -194,8 +194,7 @@ void TABIviewer::initme ()
     toolBar->Realize() ;
 #endif
 
-    wxFont myFont ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ;
-    stat->SetFont ( myFont ) ;
+    stat->SetFont ( *MYFONT ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
 
     showSequence () ;
     showStat () ;

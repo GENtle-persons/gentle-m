@@ -174,11 +174,9 @@ void PlasmidCanvas::drawCircularORFs ( wxDC &dc )
         if ( rf == 1 || rf == -1 ) col = wxColour ( 200 , 0 , 0 ) ;
         if ( rf == 2 || rf == -2 ) col = wxColour ( 0 , 200 , 0 ) ;
         if ( rf == 3 || rf == -3 ) col = wxColour ( 0 , 0 , 200 ) ;
-        wxBrush brush ( col , wxSOLID ) ;
-        wxPen pen ( col , 1 , wxSOLID ) ;
         dc.SetBackgroundMode ( wxSOLID ) ;
-        dc.SetBrush ( brush ) ;
-        dc.SetPen ( pen ) ;
+        dc.SetBrush ( *MYBRUSH ( col ) ) ;
+        dc.SetPen ( *MYPEN ( col ) ) ;
 
         int dir ;
         float mm , mn ;
@@ -232,10 +230,10 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
 
     int fontfactor = 10 ;
     if ( printing ) fontfactor = mwh/80;
-    wxFont smallFont ( fontfactor , wxSWISS , wxNORMAL , wxNORMAL ) ;
-    wxFont normalFont ( fontfactor*6/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
-    wxFont bigFont ( fontfactor*7/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
-    wxFont hugeFont ( fontfactor*9/5 , wxSWISS , wxNORMAL , wxBOLD ) ;
+    wxFont *smallFont = MYFONT ( fontfactor , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    wxFont *normalFont = MYFONT ( fontfactor*6/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    wxFont *bigFont = MYFONT ( fontfactor*7/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    wxFont *hugeFont = MYFONT ( fontfactor*9/5 , wxSWISS , wxNORMAL , wxBOLD ) ;
     
     int d ;
     for ( d = 1 ; d*10 < l ; d *= 10 ) ;
@@ -278,7 +276,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
         strcpy ( t , p->vec->name.c_str() ) ;
         strcat ( t , " " ) ;
         a = 0 ;
-        dc.SetFont ( bigFont ) ;
+        dc.SetFont ( *bigFont ) ;
         dc.GetTextExtent ( t , &dx , &dy ) ;
         for ( c1 = t ; *c1 ; c1++ )
            if ( *c1 == ' ' ) a -= dy ;
@@ -299,13 +297,13 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
     if ( myapp()->frame->showVectorLength )
         {
         sprintf ( t , txt("#bp") , p->vec->sequence.length() ) ;
-        dc.SetFont ( normalFont ) ;
+        dc.SetFont ( *normalFont ) ;
         dc.GetTextExtent ( t , &dx , &dy ) ;
         dc.DrawText ( t , w/2-dx/2 , h/2-dy/2 ) ;
         }
     
     // Numbers
-    dc.SetFont(smallFont);
+    dc.SetFont(*smallFont);
     dc.SetBackgroundMode ( wxTRANSPARENT ) ;
     for ( a = 0 ; a <= l ; a += d )
         {
@@ -352,23 +350,8 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
             p->vec->items[a].a1 = df ;
             p->vec->items[a].a2 = dt ;
             }
-        // Restriction sites
-/*        for ( a = p->vec->rc.size() -1 ; a >= 0 ; a-- )
-            {
-            TRestrictionCut *c = &p->vec->rc[a] ;
-            float angle = c->pos*360/l ;
-            c->angle = angle ;
-            c->angle3 = angle ;
-            c->r1 = STANDARDRADIUS ;
-            c->r2 = STANDARDRADIUS*22/20 ;
-            c->r3 = STANDARDRADIUS*(22+zoom/50)/20 ;
             
-            wxPoint p2 ( deg2x ( c->angle , c->r2 )+w/2 , deg2y ( c->angle , c->r2 )+h/2 ) ;
-            wxPoint p3 ( deg2x ( c->angle3 , c->r3 )+w/2 , p2.y ) ;
-            p->vec->rc[a].p = p3 ;
-            makeLastRect ( a , dc ) ;
-            arrangeRestrictionSite ( a , dc ) ;
-            }*/
+        // Restriction sites
         arrangeRestrictionSitesCircular ( dc ) ;
 
         // ORFs
@@ -451,7 +434,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
             // Drawing name
             wxColor fc = dc.GetTextForeground () ;
             dc.SetTextForeground ( i.getFontColor() ) ;
-            dc.SetFont(normalFont);
+            dc.SetFont(*normalFont);
             dc.GetTextExtent ( i.name , &dx , &dy ) ;
             dd = (df+(dt-df)/2) ;
             while ( dd >= 360 ) dd -= 360 ;
@@ -466,7 +449,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
         }
 
     // Restriction sites        
-    dc.SetFont(smallFont);
+    dc.SetFont(*smallFont);
     for ( a = 0 ; a < p->vec->rc.size() ; a++ )
         {
         TRestrictionCut c = p->vec->rc[a] ;
@@ -646,8 +629,6 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
            context_last_item = vo ;
            itemMarkShow ( dummyEvent ) ;
            p->cSequence->SetFocus () ;
-//           p->cSequence->mark ( "DNA" , p->vec->items[vo].from , p->vec->items[vo].to ) ;
-//           p->OnCopyToNew ( dummyEvent ) ;
            }
         
         }
@@ -761,3 +742,22 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
        lastvectorobject = vo ;
        }
 }
+
+int PlasmidCanvas::findORFcircular ( float angle , float radius )
+    {
+    int a , found = -1 ;
+    for ( a = 0 ; a < p->vec->worf.size() ; a++ )
+        {
+        if ( angle >= p->vec->worf[a].deg1 &&
+             angle <= p->vec->worf[a].deg2 &&
+             radius >= p->vec->worf[a].dist1 &&
+             radius <= p->vec->worf[a].dist2 )
+             found = a ;
+        if ( p->vec->worf[a].deg2 > 360 &&
+             angle <= p->vec->worf[a].deg2-360 &&
+             radius >= p->vec->worf[a].dist1 &&
+             radius <= p->vec->worf[a].dist2 )
+             found = a ;
+        }
+    return found ;
+    }

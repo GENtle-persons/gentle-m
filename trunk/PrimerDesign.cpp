@@ -14,6 +14,7 @@ BEGIN_EVENT_TABLE(TPrimerDesign, MyChildBase)
 
     EVT_BUTTON(PD_EDIT,TPrimerDesign::OnEditPrimer)
     EVT_BUTTON(PD_DEL,TPrimerDesign::OnDeletePrimer)
+    EVT_SPINCTRL(PCR_SPIN, TPrimerDesign::OnSpin)
 
     EVT_MENU(PD_SILMUT,TPrimerDesign::OnSilmut)
     EVT_MENU(MDI_TOGGLE_FEATURES,TPrimerDesign::OnToggleFeatures)
@@ -56,7 +57,6 @@ TPrimerDesign::TPrimerDesign(MyFrame *parent,
     w = new TVector ;
     vec->setFromVector ( *_vec ) ;
     w->setFromVector ( *vec ) ;
-//    *w = *vec ;
     
     aa_state = AA_ALL ;
     aa_disp = AA_ONE ;
@@ -88,6 +88,27 @@ TPrimerDesign::~TPrimerDesign ()
     if ( stat ) delete stat ;
     delete vc ;
     delete w ;
+    }
+    
+void TPrimerDesign::guessOptNuc ()
+    {
+    int nuc = vec->sequence.length() ;
+    
+    if ( primer.size() == 2 )
+        {
+        if ( primer[0].overlap ( primer[1] ) ) // Mutagenesis?
+           {
+           }
+        else // Probably just a piece
+           {
+           if ( primer[0].upper ) nuc = primer[1].from - primer[0].to ;
+           else nuc = primer[1].to - primer[0].from ;
+           if ( nuc < 0 ) nuc = vec->sequence.length() + nuc ;
+           nuc++ ;
+           }
+        }
+    
+    spin->SetValue ( wxString::Format("%d",nuc) ) ;
     }
 
 void TPrimerDesign::OnPrint ( wxCommandEvent &ev )
@@ -214,13 +235,19 @@ void TPrimerDesign::updatePrimersFromSequence ()
         {
         if ( primer[a].upper ) s = sc->seq[show_features]->s ;
         else s = sc->seq[4+show_features]->s ;
-        for ( b = primer[a].from-1 ; b < s.length() && s[b] == ' ' ; b++ ) ;
-        while ( b >= 0 && s[b] != ' ' ) b-- ;
+        
+        TVector d ;
+        d.sequence = s ;
+        d.setCircular ( vec->isCircular() ) ;
+
+        for ( b = primer[a].from-1 ; d.getNucleotide(b) == ' ' ; b++ ) ;
+        while ( d.getNucleotide(b) != ' ' ) b-- ;
         primer[a].from = b+2 ;
-        for ( b = primer[a].to-1 ; b >= 0 && s[b] == ' ' ; b-- ) ;
-        while ( b < s.length() && s[b] != ' ' ) b++ ;
+        for ( b = primer[a].to-1 ; d.getNucleotide(b) == ' ' ; b-- ) ;
+        while ( d.getNucleotide(b) != ' ' ) b++ ;
         primer[a].to = b ;
-        primer[a].sequence = s.substr ( primer[a].from-1 , primer[a].to-primer[a].from+1 ) ;
+        
+        primer[a].getSequenceFromVector ( &d , !primer[a].upper ) ;
         }
     updatePrimerStats () ;
     }
@@ -392,11 +419,15 @@ void TPrimerDesign::initme ()
     spin = new wxSpinCtrl ( toolBar , PCR_SPIN ) ;
     spin->SetRange ( 1 , vec->sequence.length() ) ;
     spin->SetValue ( wxString::Format("%d",vec->sequence.length()) ) ;
-//    toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_pcr_spin_1") ) ) ;
+    toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_pcr_spin_1") ) ) ;
     toolBar->AddControl ( spin ) ;
+    toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_pcr_spin_2") ) ) ;
+    spin->SetSize ( -1 , -1 , 50 , -1 , wxSIZE_USE_EXISTING ) ;
     toolBar->Realize() ;
 #else
 #endif
+
+    guessOptNuc () ;
 
     int w , h ;
     Maximize () ;
@@ -426,8 +457,7 @@ void TPrimerDesign::initme ()
                             wxSize ( w*2/3 - 70 , h ) ,
                             wxTE_MULTILINE | wxTE_READONLY ) ;
                             
-    wxFont myFont ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ;
-    stat->SetFont ( myFont ) ;
+    stat->SetFont ( *MYFONT ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
 
 #ifdef __WXMSW__ // LINUX
     GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,show_features);
@@ -492,6 +522,7 @@ void TPrimerDesign::showSequence ()
     int a , b ;
     sc->blankline = 0 ;
     vc->sequence = vec->transformSequence ( true , false ) ;
+    vc->setCircular ( vec->isCircular() ) ;
     
     SeqFeature *seqF ;
     if ( show_features )
@@ -547,45 +578,33 @@ void TPrimerDesign::showSequence ()
     updatePrimerStats () ;
     }
     
-void TPrimerDesign::updateResultSequence()
+void TPrimerDesign::calculateResultSequence()
     {
     int a , b ;
     
     // Constructing result vector
-    w->sequence = vec->sequence ;
-    if ( primer.size() < 2 )
-       {
-       for ( a = 0 ; a < w->sequence.length() ; a++ )
-          w->sequence[a] = ' ' ;
-       }
-    else
-       {
-       int l = w->sequence.length() , r = 0 ;
-       int lp = -1 , rp = -1 ;
-       for ( a = 0 ; a < primer.size() ; a++ )
-          {
-          if ( primer[a].upper && l > primer[a].from - 1 )
-             {
-             l = primer[a].from - 1 ;
-             lp = a ;
-             }
-          if ( !primer[a].upper && r < primer[a].to - 1 )
-             {
-             r = primer[a].to - 1 ;
-             rp = a ;
-             }
-          }
-          
-       if ( vec->isCircular() && lp > -1 && rp > -1 )
-          {
-          for ( b = primer[lp].from ; b <= primer[lp].to ; b++ )
-             if ( b >= primer[rp].from && b <= primer[rp].to )
-                { l = 0 ; r = w->sequence.length() ; }
-          }
-
-       for ( a = 0 ; a < l ; a++ ) w->sequence[a] = ' ' ;
-       for ( a = r ; a < w->sequence.length() ; a++ ) w->sequence[a] = ' ' ;
-       }
+    w->setFromVector ( *vec ) ;
+    
+    int nuc = spin->GetValue() ;
+    for ( a = 0 ; a < w->sequence.length() ; a++ ) w->sequence[a] = ' ' ;
+    TVector w2 ;
+    w2.setFromVector ( *w ) ;
+    
+    for ( a = 0 ; a < primer.size() ; a++ )
+        {
+        TVector *wp = primer[a].upper ? w : &w2 ;
+        int factor = primer[a].upper ? 1 : -1 ;
+        int start = primer[a].upper ? primer[a].to : primer[a].from ;
+        for ( b = 0 ; b < nuc ; b++ )
+           {
+           int pos = b * factor + start ;
+           wp->setNucleotide ( pos , vec->getNucleotide ( pos ) ) ;
+           }
+        }
+        
+    for ( a = 0 ; a < w->sequence.length() ; a++ )
+        w->sequence[a] = ( w->sequence[a] != ' ' && w2.sequence[a] != ' ' ) 
+                                ? vec->sequence[a] : ' ' ;
        
     // Overwriting result sequence with primer sequences
     for ( a = 0 ; a < w->sequence.length() ; a++ )
@@ -597,10 +616,14 @@ void TPrimerDesign::updateResultSequence()
            if ( t != ' ' ) t = w->getComplement ( t ) ;
            }
         if ( t != ' ' ) w->setNucleotide ( a , t ) ;
-        //w->sequence[a] = t ;
         }
     
     w->recalculateCuts() ;
+    }
+    
+void TPrimerDesign::updateResultSequence()
+    {
+    calculateResultSequence() ;
     
     SeqRestriction *r3 = new SeqRestriction ( sc ) ;
     r3->initFromTVector ( w ) ;
@@ -619,9 +642,8 @@ void TPrimerDesign::updateResultSequence()
     a3->disp = aa_disp ;
     a3->unknownAA = ' ' ;
     a3->initFromTVector ( w ) ;
+    a3->takesMouseActions = false ;
     a3->showNumbers = false ;
-    s3->takesMouseActions = false ;
-
 
     SeqDivider *div = new SeqDivider ( sc ) ;
     div->initFromTVector ( vec ) ;    
@@ -722,11 +744,13 @@ void TPrimerDesign::doShowPrimer ( int i )
     {
     int from = primer[i].from ;
     int to = primer[i].to ;
+    if ( to >= vec->sequence.length() ) to -= vec->sequence.length() ;
     string p ;
     if ( primer[i].upper ) p = "PRIMER_UP" ;
     else p = "PRIMER_DOWN" ;
     sc->mark ( p , from , to ) ;
     sc->Scroll ( 0 , sc->getBatchMark() ) ;
+    sc->SetFocus () ;
     }
 
 void TPrimerDesign::OnSelectPrimer ( wxListEvent& event)
@@ -734,6 +758,7 @@ void TPrimerDesign::OnSelectPrimer ( wxListEvent& event)
     lastPrimerActivated = event.GetIndex () ;
     string x = primer[lastPrimerActivated].report() ;
     stat->SetValue ( x.c_str() ) ;
+    sc->SetFocus () ;
     }
     
 void TPrimerDesign::OnActivatePrimer ( wxListEvent& event)
@@ -777,5 +802,10 @@ void TPrimerDesign::OnToggleFeatures ( wxCommandEvent &ev )
 #ifdef __WXMSW__ // LINUX
     GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,show_features);
 #endif
+    }
+    
+void TPrimerDesign::OnSpin(wxCommandEvent& event)
+    {
+    showSequence() ;
     }
     
