@@ -261,8 +261,6 @@ void TAlignment::initme ()
 
 void* TAlignment::Entry()
 {
-    threadRunning = true ;
-
     int a ;
     TAlignLine line ;
     wxString cwt = "clustalw.txt" ;
@@ -325,7 +323,6 @@ void* TAlignment::Entry()
 	if ( !in.Eof() ) s = in.GetNextLine() ; // Blank line
     }
     wxMutexGuiEnter() ;
-    Thaw() ;
     redoAlignments ( true ) ;
     wxMutexGuiLeave() ;
 }
@@ -356,7 +353,8 @@ void TAlignment::recalcAlignments ()
 	    }
 	    else
 	    {
-		Freeze() ;
+		threadRunning = true ;
+		sc->SilentRefresh() ;
 		wxThreadHelper::Create () ;
 		GetThread()->Run() ;
 		return ;
