@@ -15,7 +15,7 @@ class ChildBase ;
 class SeqAA ;
 class TEnzymeRules ;
 
-#define VIT_TYPES      9//number of possible types
+#define VIT_TYPES     10//number of possible types
 
 #define VIT_GENE       1
 #define VIT_CDS        2
@@ -25,6 +25,7 @@ class TEnzymeRules ;
 #define VIT_MISC       6
 #define VIT_PROT_BIND  7
 #define VIT_ORI_T      8
+#define VIT_SEQUENCING 9
 
 class TAAProp
     {

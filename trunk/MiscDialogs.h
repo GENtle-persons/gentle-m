@@ -121,6 +121,29 @@ class TEnzymeDialog : public wxDialog
     } ;
 
 
+class TSequencingPrimerDialog : public wxDialog
+    {
+    public :
+    TSequencingPrimerDialog ( wxWindow *parent, const wxString& title ) ;
+    ~TSequencingPrimerDialog () ;
+    
+    virtual void OnCharHook ( wxKeyEvent& event ) ;
+    virtual void getPrimerList ( wxArrayString &p_name , wxArrayString &p_seq ) ;
+    virtual bool matchToVector ( TVector *v , wxString name , wxString seq ) ;
+    
+    private :
+    virtual int findBestMatch ( wxString &s , wxString seq , int &pos , int ml ) ;
+    virtual void addSequencingPrimer ( TVector *v , wxString name , wxString seq , 
+    								int best_pos , int best_score , int dir ) ;
+
+    wxTextCtrl *t_ma ;
+    wxChoice *c_db ;
+    wxCheckBox *cb_db ;
+    wxArrayString db_names , db_files ;
+    
+    DECLARE_EVENT_TABLE()
+    } ;
+
 class TransformSequenceDialog : public wxDialog
     {
     public :

@@ -7,6 +7,8 @@ BEGIN_EVENT_TABLE(TLigationDialog, wxDialog )
     EVT_CHAR_HOOK(TLigationDialog::OnCharHook)
 END_EVENT_TABLE()
 
+#define MAX_LIGATIONS 20
+
 void TLigationDialog::OnCharHook(wxKeyEvent& event)
     {
     int k = event.GetKeyCode () ;
@@ -51,7 +53,7 @@ void TLigationDialog::init ()
         l_sources->Append ( vv[a]->getName() ) ;
         l_sources->Check ( a , state ) ;
         }
-        
+
     Center() ;
     generateTargets () ;
     }
@@ -94,6 +96,11 @@ void TLigationDialog::generateTargets ()
         l_targets->Append ( vt[a] ) ;
         l_targets->Check ( a , true ) ;
         }
+    if ( vt.GetCount() > MAX_LIGATIONS )
+    	{
+	    wxMessageBox ( txt("t_too_many_ligations") ) ;
+    	}    
+
     }
     
 void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , wxArrayInt &vi  )
@@ -117,6 +124,7 @@ void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , w
         
     for ( a = 0 ; a < vc.size() ; a++ )
         {
+        if ( vt.GetCount() > MAX_LIGATIONS ) return ;
         myass ( cnt-1 >= 0 && cnt-1 < vi.GetCount() , "TLigationDialog::curseTargets:3a" ) ;
         myass ( a >= 0 && a < vc.size() , "TLigationDialog::curseTargets:3b" ) ;
         myass ( a >= 0 && a < used.size() , "TLigationDialog::curseTargets:3c" ) ;
@@ -134,6 +142,7 @@ void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , w
 
     for ( a = 0 ; a < vc.size() ; a++ )
         {
+        if ( vt.GetCount() > MAX_LIGATIONS ) return ;
         myass ( cnt-1 >= 0 && cnt-1 < vi.GetCount() , "TLigationDialog::curseTargets:4a" ) ;
         myass ( a >= 0 && a < vc.size() , "TLigationDialog::curseTargets:4b" ) ;
         myass ( a >= 0 && a < used.size() , "TLigationDialog::curseTargets:4c" ) ;

@@ -45,6 +45,8 @@ BEGIN_EVENT_TABLE(MyChild, MyChildBase)
     EVT_MENU(MDI_TOGGLE_RESTRICTION,MyChild::OnToggleRestriction)
     EVT_MENU(MDI_TOGGLE_IDNA,MyChild::OnToggleIDNA)
     EVT_MENU(MDI_RUN_PCR,MyChild::OnRunPCR)
+    EVT_MENU(MDI_SEQUENCING_PRIMER,MyChild::OnSequencingPrimer)
+    EVT_MENU(MDI_REMOVE_SEQUENCING_PRIMERS,MyChild::OnRemoveSequencingPrimers)
 
     EVT_CHOICE(PC_ZOOM,MyChild::OnZoom)
     EVT_UPDATE_UI(MDI_REFRESH, MyChild::OnUpdateRefresh)
@@ -92,6 +94,64 @@ MyChild::~MyChild()
     delete swu ;
     delete sw ;
 }
+
+void MyChild::OnRemoveSequencingPrimers(wxCommandEvent& event)
+	{
+	bool found = false ;
+	int a , b ;
+	vec->undo.start ( txt("m_undo") + wxString ( " " ) + txt("m_remove_sequencing_primers") ) ;
+	for ( a = 0 ; a < vec->items.size() ; a++ )
+		{
+		if ( vec->items[a].getParam ( "AUTOMATIC" ) == "SEQUENCING PRIMER" )
+			{
+			for ( b = a + 1 ; b < vec->items.size() ; b++ )
+				vec->items[b-1] = vec->items[b] ;
+			vec->items.pop_back() ;
+			a-- ;
+			found = true ;
+			}    
+		}    
+	if ( !found )
+ 		{
+   		vec->undo.abort() ;
+        return ;
+        }    
+	
+	vec->undo.stop() ;
+	vec->recalcvisual = true ;
+	vec->setChanged () ;
+	Refresh () ;
+	updateSequenceCanvas ( true ) ;
+	}
+     
+void MyChild::OnSequencingPrimer(wxCommandEvent& event)
+    {
+    TSequencingPrimerDialog spd ( this , txt("t_sequencing_primers") ) ;
+    if ( wxID_OK != spd.ShowModal() ) return ; // Cancel
+    
+    wxArrayString p_name , p_seq ;
+    wxBeginBusyCursor() ;
+    spd.getPrimerList ( p_name , p_seq ) ;
+    bool found = false ;
+	vec->undo.remember ( txt("m_undo") + wxString ( " " ) + txt("m_show_sequencing_primers") ) ;
+    for ( int a = 0 ; a < p_name.GetCount() ; a++ )
+    	{
+	    if ( spd.matchToVector ( vec , p_name[a] , p_seq[a] ) )
+	    	{
+	    	vec->recalcvisual = true ;
+	    	found = true ;
+	    	}   	
+    	}    
+   	if ( found )
+   		{
+	    vec->undo.stop() ;
+   		vec->setChanged () ;
+   		Refresh () ;
+   		updateSequenceCanvas ( true ) ;
+   		}    
+	else vec->undo.abort() ;
+    wxEndBusyCursor() ;
+    }
 
 void MyChild::OnRunPCR(wxCommandEvent& event)
     {
@@ -248,6 +308,8 @@ void MyChild::initMenus ()
     edit_menu->Append(MDI_TRANSFORM_SEQUENCE, txt("t_transform_sequence") );
     edit_menu->Append(MDI_ORFS, txt("m_orfs"), txt("m_orfs_txt") );
     edit_menu->Append(MDI_EDIT_ORFS, txt("m_edit_orfs") );
+    edit_menu->Append(MDI_SEQUENCING_PRIMER, txt("m_show_sequencing_primers") );
+    edit_menu->Append(MDI_REMOVE_SEQUENCING_PRIMERS, txt("m_remove_sequencing_primers") );
 
     wxMenu *view_menu = new wxMenu;
 //    view_menu->Append(MDI_REFRESH, txt("m_refresh_picture") );

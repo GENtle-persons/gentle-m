@@ -1,5 +1,6 @@
 #include "MiscDialogs.h"
 
+
 BEGIN_EVENT_TABLE(TAlignmentDialog, wxDialog)
     EVT_BUTTON(AL_ADD,TAlignmentDialog::OnAdd)
     EVT_BUTTON(AL_DEL,TAlignmentDialog::OnDel)
@@ -20,6 +21,12 @@ BEGIN_EVENT_TABLE(TEnzymeDialog, wxDialog )
     EVT_CHAR_HOOK(TEnzymeDialog::OnCharHook)
 END_EVENT_TABLE()
 
+BEGIN_EVENT_TABLE(TSequencingPrimerDialog, wxDialog )
+    EVT_BUTTON(ED_OK,wxDialog::OnOK)
+    EVT_BUTTON(ED_CANCEL,wxDialog::OnCancel)
+    EVT_CHAR_HOOK(TSequencingPrimerDialog::OnCharHook)
+END_EVENT_TABLE()
+
 BEGIN_EVENT_TABLE(TransformSequenceDialog, wxDialog )
     EVT_BUTTON(TSD_OK,TransformSequenceDialog::OnOK)
     EVT_BUTTON(TSD_CANCEL,TransformSequenceDialog::OnCancel)
@@ -29,6 +36,163 @@ END_EVENT_TABLE()
 BEGIN_EVENT_TABLE(TURLtext, wxTextCtrl )
     EVT_TEXT_URL(URLTEXT_DUMMY, TURLtext::OnURL)
 END_EVENT_TABLE()
+
+// ******************************************* TSequencingPrimerDialog
+
+TSequencingPrimerDialog::TSequencingPrimerDialog (wxWindow *parent, const wxString& title )
+    : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 600 , 450 ) )
+    {
+    wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+    wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    
+    wxString defdb = myapp()->frame->LS->getOption ( "SEQUENCINGPRIMER_DB" , myapp()->frame->LS->getDefaultDB() ) ;
+    bool usedb = myapp()->frame->LS->getOption ( "SEQUENCINGPRIMER_USE_DB" , true ) ;
+    int ml = myapp()->frame->LS->getOption ( "SEQUENCINGPRIMER_MIN_ALIGNMENT" , 20 ) ;
+    
+    t_ma = new wxTextCtrl ( this , -1 , wxString::Format ( "%d" , ml ) ) ;
+    h0->Add ( new wxStaticText ( this , -1 , txt("t_minimum_alignment") ) , 0 , wxEXPAND ) ;    
+    h0->Add ( t_ma , 0 , wxEXPAND ) ;
+    h0->Add ( new wxStaticText ( this , -1 , "bp" ) , 0 , wxEXPAND ) ;
+    
+    c_db = new wxChoice ( this , -1 ) ;
+    cb_db = new wxCheckBox ( this , -1 , txt("t_use_this_database") ) ;
+    h1->Add ( cb_db , 0 , wxEXPAND ) ;
+    h1->Add ( c_db , 0 , wxEXPAND ) ;
+    
+    myapp()->frame->LS->getDatabaseList ( db_names , db_files ) ;
+    for ( int a = 0 ; a < db_names.GetCount() ; a++ )
+	    c_db->Append ( db_names[a] ) ;
+    cb_db->SetValue ( usedb ) ;
+    c_db->SetStringSelection ( defdb ) ;
+    
+    h2->Add ( new wxButton ( this , ED_OK , txt("b_ok") ) , 0 , wxEXPAND|wxALL , 5 ) ;
+    h2->Add ( new wxButton ( this , ED_CANCEL , txt("b_cancel") ) , 0 , wxEXPAND|wxALL , 5 ) ;
+    
+    v0->Add ( h0 , 0 , wxEXPAND|wxALL , 5 ) ;
+    v0->Add ( h1 , 0 , wxEXPAND|wxALL , 5 ) ;
+    v0->Add ( h2 , 0 , wxEXPAND|wxALL|wxALIGN_CENTER_VERTICAL , 5 ) ;
+    
+    SetSizer ( v0 ) ;
+    v0->Fit ( this ) ;    
+    
+    Center () ;
+    }
+
+void TSequencingPrimerDialog::OnCharHook ( wxKeyEvent& event )
+    {
+    int k = event.GetKeyCode () ;
+    wxCommandEvent ev ;
+    if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    else if ( k == WXK_RETURN ) OnOK ( ev ) ;
+    else event.Skip() ;
+    }
+    
+void TSequencingPrimerDialog::getPrimerList ( wxArrayString &p_name , wxArrayString &p_seq )
+	{
+	p_name.Clear () ;
+	p_seq.Clear () ;
+	if ( cb_db->GetValue() )
+		{
+		TStorage *db = myapp()->frame->getTempDB ( db_files[c_db->GetSelection()] ) ;
+		TSQLresult r ;
+		wxString sql = "SELECT dna_name,dna_sequence FROM dna WHERE dna_type=" + wxString::Format ( "%d" , TYPE_PRIMER ) ;
+		r = db->getObject ( sql ) ;
+		for ( int a = 0 ; a < r.rows() ; a++ )
+			{
+			p_name.Add ( r[a][r["dna_name"]] ) ;
+			p_seq.Add ( r[a][r["dna_sequence"]] ) ;
+			}    
+		}    
+    long ml ;
+    t_ma->GetValue().ToLong ( &ml ) ;
+    myapp()->frame->LS->setOption ( "SEQUENCINGPRIMER_MIN_ALIGNMENT" , ml ) ;
+    myapp()->frame->LS->setOption ( "SEQUENCINGPRIMER_DB" , c_db->GetStringSelection() ) ;
+    myapp()->frame->LS->setOption ( "SEQUENCINGPRIMER_USE_DB" , cb_db->GetValue() ) ;
+	}    
+	
+bool TSequencingPrimerDialog::matchToVector ( TVector *v , wxString name , wxString seq )
+	{
+	bool ret = false ;
+	long ml ; // Minimum length
+    t_ma->GetValue().ToLong ( &ml ) ;
+	wxString s ;
+	
+ 	s = v->getSequence() ;
+	if ( v->isCircular() ) s += s.Left ( seq.length() - 1 ) ;
+	int best_pos , best_score ;	
+	best_score = findBestMatch ( s , seq , best_pos , ml ) ;
+	if ( best_score > 0 )
+ 		{
+ 		addSequencingPrimer ( v , name , seq , best_pos , best_score , 1 ) ;
+ 		ret = true ;
+ 		}
+	
+	// opposite direction
+	s = v->transformSequence ( true , true ) ;
+	if ( v->isCircular() ) s += s.Left ( seq.length() - 1 ) ; // ???
+	best_score = findBestMatch ( s , seq , best_pos , ml ) ;
+	if ( best_score > 0 )
+ 		{
+ 		addSequencingPrimer ( v , name , seq , v->getSequenceLength() - best_pos , best_score , -1 ) ;
+ 		ret = true ;
+ 		} 		
+	
+	
+	return ret ;
+	}    
+	
+void TSequencingPrimerDialog::addSequencingPrimer ( TVector *v , wxString name , 
+						wxString seq , int best_pos , int best_score , int dir )
+	{
+	int from = best_pos + 1 ;
+	int to = best_pos + seq.length() ;
+	if ( dir == 1 ) from += seq.length() - best_score ;
+	if ( dir == -1 )
+		{
+		from -= seq.length() ;
+		to -= seq.length() ;
+		to -= seq.length() - best_score ;
+		}    
+	TVectorItem i ( name , name , from , to , VIT_SEQUENCING ) ;
+	i.setParam ( "AUTOMATIC", "SEQUENCING PRIMER" ) ;
+	i.setDirection ( dir ) ;
+	i.setColor ( wxColour ( 255 , 205 + 25 * dir , 0 ) ) ; // Yellow
+	i.desc = wxString::Format ( txt("t_desc_sequencing_primer") , best_score ) ;
+	i.desc += "\n" ;
+	i.desc += i.getDirection()==1 ? txt("cw") : txt("ccw") ;
+	i.desc += "\n" ;
+	i.desc += seq ;
+	v->items.push_back ( i ) ;
+	}    
+
+	
+int TSequencingPrimerDialog::findBestMatch ( wxString &s , wxString seq , int &pos , int ml )
+	{
+	int a , b , cnt ;
+	int best_score = 0 ;
+	pos = -1 ;
+	for ( a = 0 ; a + seq.length() < s.length() ; a++ )
+		{
+ 		cnt = 0 ;
+ 		for ( b = 0 ; b < seq.length() ; b++ )
+ 			{
+ 			if ( seq.GetChar(b) == s.GetChar(a+b) ) cnt++ ;
+ 			else cnt = 0 ;
+ 			}    
+		if ( cnt > best_score && cnt >= ml )
+			{
+			best_score = cnt ;
+			pos = a ;
+			}    
+		}    
+	return best_score ;
+	}    
+    
+TSequencingPrimerDialog::~TSequencingPrimerDialog ()
+    {
+    }
 
 // ******************************************* TMutationDialog
 

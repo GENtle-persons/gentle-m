@@ -9,6 +9,8 @@ BEGIN_EVENT_TABLE(FindSequenceDialog, wxDialog )
     EVT_CHAR_HOOK(FindSequenceDialog::OnCharHook)
 END_EVENT_TABLE()
 
+#define FIND_MAX 1000
+
 
 FindSequenceDialog::FindSequenceDialog ( wxWindow *parent, const wxString& title )
          : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 350 , 400 ) )
@@ -177,6 +179,8 @@ void FindSequenceDialog::OnSearch ( wxCommandEvent &ev )
         lb->SetSelection ( 0 ) ;
         OnLB ( ev ) ;
         }    
+    if ( lb->GetCount() > FIND_MAX )
+    	wxMessageBox ( txt("t_too_many_search_results") ) ;
     }
     
 void FindSequenceDialog::aaSearch ()
@@ -200,6 +204,7 @@ void FindSequenceDialog::aaSearch ()
         b = subsearch ( ls , s , p ) ;
         while ( b != -1 )
            {
+           if ( lb->GetCount() > FIND_MAX ) return ;
            if ( dna2aa.size() == 0 )
               v->items[a].translate ( v , NULL , dna2aa ) ;
            int from = dir==1?b:last ;
@@ -260,6 +265,7 @@ void FindSequenceDialog::aaSubSearch ( const wxString &s , int start , int dir ,
 	a = res.Find ( sub ) ;
 	while ( a != -1 )
 		{
+  		if ( lb->GetCount() > FIND_MAX ) return ;
 		int from = ai[a] + 1 - ostart ;
 		int to = ai[a+sub.length()-1] + dir * 2 + 1 - ostart ;
 		if ( from > to ) { int z = from ; from = to ; to = z ; }
@@ -280,6 +286,7 @@ void FindSequenceDialog::itemSearch ()
     wxString s = t->GetValue().Upper() ;
     for ( a = 0 ; a < v->items.size() ; a++ )
         {
+        if ( lb->GetCount() > FIND_MAX ) return ;
         if ( v->items[a].name.Upper().Find(s) != -1 ||
              v->items[a].desc.Upper().Find(s) != -1 )
            {
@@ -300,6 +307,7 @@ void FindSequenceDialog::restrictionSearch ()
     wxString s = t->GetValue().Upper() ;
     for ( a = 0 ; a < v->rc.size() ; a++ )
         {
+        if ( lb->GetCount() > FIND_MAX ) return ;
         if ( v->rc[a].e->name.Upper().Find(s) != -1 )
            {
            lb->Append ( wxString::Format ( "%s: %s (%d)" , 
@@ -333,20 +341,11 @@ void FindSequenceDialog::sequenceSearch ( bool invers )
 
     while ( cont )
         {
-/*        wxString dummy , allow = allowed_chars + "?*" ;
-        for ( a = 0 ; a < sub.length() ; a++ ) // Filtering bogus chars
-            {
-            if ( sub.GetChar(a) >= 'a' && sub.GetChar(a) <= 'z' ) sub.SetChar ( a , sub.GetChar(a) - 'a' + 'A' ) ;
-            for ( b = 0 ; b < allow.length() && sub.GetChar(a) != allow.GetChar(b) ; b++ ) ;
-            if ( b < allow.length() ) dummy += sub.GetChar(a) ;
-            }
-        sub = dummy ;
-        if ( sub.IsEmpty() ) return ;
-*/
         // Now we search...
         a = subsearch ( s , sub , p ) ;
         if ( a > -1 )
             {
+            if ( lb->GetCount() > FIND_MAX ) return ;
             p = a+1 ;
             int from = a + 1 ;
             int to = last + 1 ;
