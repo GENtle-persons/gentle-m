@@ -1,0 +1,20 @@
+#ifndef __AUTOANNOTATE__
+#define __AUTOANNOTATE__
+
+#include "main.h"
+
+class MyChild ;
+
+class AutoAnnotate
+	{
+	public :
+	AutoAnnotate ( MyChild *_p = NULL ) ;
+	virtual void ScanDatabase ( wxString database ) ;
+	
+	private :
+ 	virtual bool MatchItem ( TVector *tv , TVectorItem &item , TVector *v , wxString &oseq ) ;
+ 	MyChild *p ;
+ 	wxArrayString alreadyin ;
+	} ;    
+
+#endif

@@ -91,6 +91,7 @@ public:
     virtual void OnUpdateRefresh(wxUpdateUIEvent& event);
     virtual void OnSequencingPrimer(wxCommandEvent& WXUNUSED(event));
     virtual void OnRemoveSequencingPrimers(wxCommandEvent& WXUNUSED(event));
+    virtual void OnAutoAnnotate(wxCommandEvent& WXUNUSED(event));
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){};
     
     virtual void initme () ;

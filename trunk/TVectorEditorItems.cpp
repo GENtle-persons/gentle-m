@@ -38,6 +38,21 @@ void TVectorEditor::commitItems ()
             v->updateDisplay() ;
             }
         }
+        
+    vector <TVectorItem> ni ;
+    bool doUpdate = false ;
+    for ( a = 0 ; a < found.size() ; a++ )
+    	{
+	    if ( found[a] ) ni.push_back ( v->items[a] ) ;
+	    else doUpdate = true ;
+    	}    
+   	v->items = ni ;
+   	if ( doUpdate )
+   		{
+        v->setChanged () ;
+        v->updateDisplay() ;
+   		}    
+/*
     for ( a = found.size() - 1 ; a >= 0 ; a-- )
         {
         if ( !found[a] ) 
@@ -48,6 +63,7 @@ void TVectorEditor::commitItems ()
             v->updateDisplay() ;
             }
         }
+*/
     }
 
 void TVectorEditor::initialViewItem ( int num )

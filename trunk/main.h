@@ -223,6 +223,7 @@ WX_DEFINE_ARRAY(TProteaseCut *,wxArrayTProteaseCut);
 #include "TVector.h"
 #include "TUReadSeq.h"
 #include "CGview.h"
+#include "AutoAnnotate.h"
 #include "ChildBase.h"
 #include "ABItype.h"
 #include "MiscDialogs.h"
