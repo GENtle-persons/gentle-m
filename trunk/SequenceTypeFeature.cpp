@@ -22,45 +22,40 @@ void SeqFeature::show ( wxDC& dc )
     bool newline = true ;
     
     wxArrayInt li , lx , used ;
-    li.Alloc ( pl.size() ) ;
-    lx.Alloc ( pl.size() ) ;
-    used.Alloc ( pl.size() ) ;
-    while ( li.GetCount() < pl.size() ) li.Add ( -1 ) ;
-    while ( lx.GetCount() < pl.size() ) lx.Add ( -1 ) ;
-    while ( used.GetCount() < pl.size() ) used.Add ( 0 ) ;
+    li.Alloc ( pl.maxlevels ) ;
+    lx.Alloc ( pl.maxlevels ) ;
+    used.Alloc ( pl.maxlevels ) ;
+    while ( li.GetCount() < pl.maxlevels ) li.Add ( -1 ) ;
+    while ( lx.GetCount() < pl.maxlevels ) lx.Add ( -1 ) ;
+    while ( used.GetCount() < pl.maxlevels ) used.Add ( 0 ) ;
 
-    for ( a = 0 ; a < pos.p.GetCount() ; a++ )
+    for ( int l = 0 ; l < pl.maxlevels ; l++ )
         {
-        if ( can->hardstop > -1 && a > can->hardstop ) break ;
-        b = pos.p[a] ;
-        int tx = pos.r[a].x , ty = pos.r[a].y ;
-        int tz = ty + can->charheight ;
-        bool insight = true ; // Meaning "is this part visible"
-        if ( tz < ya ) insight = false ;
-        if ( ty > yb ) insight = false ;
-        if ( can->getDrawAll() ) insight = true ;
-        else if ( ty > yb ) a = pos.p.GetCount() ;
-        if ( b > 0 ) // Character
-           {
-           t = " " ;
-           int i ;
-           wxArrayInt _i ;
-           wxArrayString _name ;
-           vector <wxPoint> _point ;
-           myass ( vec , "SeqFeature::show_0" ) ;
-           myass ( used.GetCount() >= pl.size() , "SeqFeature::show_1" ) ;
 
-           for ( i = 0 ; i < pl.size() ; i++ ) used[i] = 0 ;
-           for ( i = 0 ; i < pl.size() ; i++ )
-              {
-              if ( doesHit ( i , b ) )
+        for ( a = 0 ; a < pos.p.GetCount() ; a++ )
+            {
+            if ( can->hardstop > -1 && a > can->hardstop ) break ;
+            b = pos.p[a] ;
+            int tx = pos.r[a].x , ty = pos.r[a].y ;
+            int tz = ty + can->charheight ;
+            bool insight = true ; // Meaning "is this part visible"
+            if ( tz < ya ) insight = false ;
+            if ( ty > yb ) insight = false ;
+            if ( can->getDrawAll() ) insight = true ;
+            else if ( ty > yb ) a = pos.p.GetCount() ;
+            if ( b > 0 ) // Character
+               {
+               t = " " ;
+               int i ;
+               wxArrayInt _i ;
+               wxArrayString _name ;
+               vector <wxPoint> _point ;
+    
+               for ( i = 0 ; i < pl.maxlevels ; i++ ) used[i] = 0 ;
+               i = pl.here ( b-1 , l ) ;
+    
+              if ( i != -1 )  
                  {
-                 int l = pl.getLevel ( i ) ; //vr[i].y ;
-                 myass ( maxlayers >= l , "SeqFeature::show_2" ) ;
-                 myass ( l < used.GetCount() , "SeqFeature::show_3" ) ;
-                 myass ( l < lx.GetCount() , "SeqFeature::show_4" ) ;
-                 myass ( can , "SeqFeature::show_5" ) ;
-                 myass ( maxlayers+1 != 0 , "SeqFeature::show_6" ) ;
                  used[l] = 1 ;
                  int x_from = lx[l] ;
                  if ( x_from < 0 ) x_from = tx ;
@@ -70,7 +65,7 @@ void SeqFeature::show ( wxDC& dc )
                  level = ty + level - lh - 1 ;
                  lh = ( ( can->charheight / 2 ) / ( maxlayers + 1 ) ) ;
                  if ( lh < 5 ) lh = 5 ;
-
+    
                  if ( insight )
                     {
                     int mode = atoi((vec->items[pl.getID(i)/*vr[i].GetX()*/].getParam("SEQUENCE_STYLE")).c_str()) ;
@@ -82,22 +77,25 @@ void SeqFeature::show ( wxDC& dc )
                        col = vec->items[pl.getID(i)/*vr[i].GetX()*/].getFontColor() ;
                        dc.SetPen ( *MYPEN ( col ) ) ;
                        }
-
+    
                     // Offsets
-                    if ( aaa && !newline && 
-                         b-1 < aaa->offsets.GetCount() && 
+/*                    if ( aaa && !newline && 
+                         b-1 < aaa->offsets.GetCount()  && 
                          aaa->offsets[b-1] != -1 && 
-                         aaa->offset_items[b-1] == &vec->items[pl.getID(i)/*vr[i].GetX()*/] )
+                         aaa->offset_items[b-1] == &vec->items[pl.getID(i)] )*/
+                         
+                    int o = -1 ;
+                    if ( (b-1) % 10 == 0 && !newline )
+                       o = vec->items[pl.getID(i)].getOffsetAt ( b-1 ) ;
+                    if ( o != -1 )     
                        {
-                       myass ( b-1 >= 0 && b-1 < aaa->offsets.GetCount() , "SeqFeature::show_9" ) ;
                        dc.SetTextForeground ( col ) ;
-                       wxString pn = wxString::Format ( "%d" , aaa->offsets[b-1] ) ;
+                       wxString pn = wxString::Format ( "%d" , o ) ;  //aaa->offsets[b-1] ) ;
                        int u1 , u2 ;
                        dc.GetTextExtent ( pn , &u1 , &u2 ) ;
                        dc.DrawText ( pn , x_to - can->charwidth , level - u2 ) ;
                        }
-
-                    myass ( can && can->charwidth , "SeqFeature::show_10" ) ;
+    
                     if ( mode == FEAT_ALPHA ) // Alpha helix
                        {
                        int px , py = 0 ;
@@ -149,13 +147,11 @@ void SeqFeature::show ( wxDC& dc )
                        
                     dc.SetPen ( *wxBLACK_PEN ) ;
                     }
-
-                 myass ( l >= 0 && l < li.GetCount() , "!!1" ) ;   
+    
                  if ( newline || li[l] != i ) // Start of new item on this lane
                     {
                     if ( insight )
                        {
-                       myass ( i >= 0 && i < pl.size() , "!!2" ) ;   
                        wxString name = vec->items[pl.getID(i)/*vr[i].GetX()*/].name ;
                        if ( newline && li[l] == i ) name = "(" + name + ")" ;
                        _i.Add ( i ) ;
@@ -166,51 +162,46 @@ void SeqFeature::show ( wxDC& dc )
                     }
                  lx[l] = x_to ;
                  }
-              }
-
-
-           for ( i = 0 ; i < pl.size() ; i++ )
-              {
-              myass ( i >= 0 && i <= used.GetCount() , "!!4" ) ;
-              myass ( i >= 0 && i <= lx.GetCount() , "!!5" ) ;
-              if ( !used[i] && lx[i] >= 0 )
-                 lx[i] = -1 ;
-              }
-
-              
-           // Now drawing the names
-           for ( i = 0 ; i < _i.GetCount() ; i++ )
-              {
-               if ( can->isPrinting() && !can->getPrintToColor() )
+    
+    
+               for ( i = 0 ; i < pl.maxlevels ; i++ )
                   {
-                  dc.SetTextForeground ( *wxBLACK ) ;
+                  if ( !used[i] && lx[i] >= 0 )
+                     lx[i] = -1 ;
                   }
-               else
+    
+                  
+               // Now drawing the names
+               for ( i = 0 ; i < _i.GetCount() ; i++ )
                   {
-                  myass ( i >= 0 && i < _i.GetCount() , "SeqFeature::show_names_1" ) ;
-                  myass ( _i[i] >= 0 && _i[i] < pl.size() , "SeqFeature::show_names_2" ) ;
-                  wxColour col = vec->items[pl.getID(_i[i])/*vr[_i[i]].GetX()*/].getFontColor() ;
-                  dc.SetTextForeground ( col ) ;
+                   if ( can->isPrinting() && !can->getPrintToColor() )
+                      {
+                      dc.SetTextForeground ( *wxBLACK ) ;
+                      }
+                   else
+                      {
+                      wxColour col = vec->items[pl.getID(_i[i])/*vr[_i[i]].GetX()*/].getFontColor() ;
+                      dc.SetTextForeground ( col ) ;
+                      }
+                   if ( _name[i] != "()" )
+                      dc.DrawText ( _name[i] , _point[i] ) ;
                   }
-               myass ( i >= 0 && i < _name.GetCount() , "SeqFeature::show_names_4" ) ;
-               myass ( i >= 0 && i < _point.size() , "SeqFeature::show_names_5" ) ;
-               if ( _name[i] != "()" )
-                  dc.DrawText ( _name[i] , _point[i] ) ;
-              }
-
-
-           newline = false ;
-           cnt++ ;
-           }
-        else // New line
-           {
-           newline = true ;
-           int i ;
-           for ( i = 0 ; i < pl.size() ; i++ )
-              if ( lx[i] >= 0 )
-                 lx[i] = -2 ;
-           }
-        }
+    
+    
+               newline = false ;
+               cnt++ ;
+               }
+            else // New line
+               {
+               newline = true ;
+               int i ;
+               for ( i = 0 ; i < pl.maxlevels ; i++ )
+                  if ( lx[i] >= 0 )
+                     lx[i] = -2 ;
+               }
+            }
+            
+        }    
     dc.SetBackgroundMode ( bm ) ;
     dc.SetTextBackground ( tbg ) ;
     dc.SetTextForeground ( tfg ) ;
@@ -226,21 +217,14 @@ void SeqFeature::initFromTVector ( TVector *v )
     for ( a = 0 ; a < vec->items.size() ; a++ )
         {
         if ( vec->items[a].isVisible() )
-           pl.add ( a , vec->items[a].from , vec->items[a].to ) ;
+           pl.add ( a , vec->items[a].from-1 , vec->items[a].to-1 ) ;
         }    
     pl.makeLevels () ;
     maxlayers = pl.maxlevels ;
     }
     
 bool SeqFeature::collide ( int a , int b )
-    {/*
-    myass ( a < vr.size() , "SeqFeature::collide" ) ;
-    myass ( b < vr.size() , "SeqFeature::collide" ) ;
-    if ( vr[a].y != vr[b].y ) return false ;
-    int i ;
-    for ( i = 0 ; i < vec->getSequenceLength() ; i++ )
-       if ( doesHit ( a , i+1 ) && doesHit ( b , i+1 ) )
-          return true ;*/
+    {
     return false ;
     }
     
@@ -254,7 +238,6 @@ bool SeqFeature::doesHit ( int a , int x )
        }
     else
        {
-//       return false ;
        return ( x <= to || x >= from ) ;
        }
     }

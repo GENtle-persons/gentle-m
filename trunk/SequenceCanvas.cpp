@@ -978,6 +978,7 @@ void SequenceCanvas::arrange ()
     {
     if ( seq.GetCount() == 0 ) return ;
     if ( charheight == 0 ) return ;
+//    wxStartTimer() ;    
     int vx , vy ;
     int oldlowy = lowy ;
     int oldlowx = lowx ;
@@ -1020,6 +1021,7 @@ void SequenceCanvas::arrange ()
         p->cPlasmid->Refresh () ;
         }
     wxEndBusyCursor() ;
+//    wxMessageBox ( wxString::Format ( "Arrange : %d ms" , wxGetElapsedTime() ) ) ;
     }
 
 void SequenceCanvas::OnSize(wxSizeEvent &event)

@@ -36,6 +36,7 @@ void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc )
     if ( p->vec->rc.size() == 0 ) return ;
     
     vector <TRestrictionCut> trc ;
+    trc.reserve ( p->vec->rc.size() ) ;
     for ( a = 0 ; a < p->vec->rc.size() ; a++ ) // Removing invisible
         {
         if ( p->vec->rc[a].isHidden ( p->vec ) )
@@ -82,6 +83,7 @@ void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc )
         }
         
     // Appending hidden ones
+    p->vec->rc.reserve ( trc.size() ) ;
     for ( a = 0 ; a < trc.size() ; a++ )
         p->vec->rc.push_back ( trc[a] ) ;
     p->vec->sortRestrictionSites() ;
@@ -392,6 +394,8 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
                 p.push_back ( wxPoint ( deg2x ( df-dd , (r1+r2)/2 ) , 
                                         deg2y ( df-dd , (r1+r2)/2 ) ) ) ;
                 }
+
+            p.reserve ( ( dt - df ) / ds * 2 ) ;
 
             for ( float b = df ; b < dt ; b += ds )
                     p.push_back ( wxPoint ( deg2x ( b , r1 ) , deg2y ( b , r1 ) ) ) ;

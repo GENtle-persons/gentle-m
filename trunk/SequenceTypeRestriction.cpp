@@ -61,7 +61,14 @@ int SequencePartList::here ( int pos , int level )
     for ( int a = 0 ; a < vl2[level].GetCount() ; a++ )
         {
         if ( pos >= vx[vl2[level][a]] && pos <= vy[vl2[level][a]] ) return vl2[level][a] ;
-        if ( vy[a] >= slen && pos <= vy[a] - slen ) return vl2[level][a] ;
+        if ( vy[a] < vx[a] )
+           {
+           if ( pos >= vx[a] || pos <= vy[a] ) return vl2[level][a] ;
+           }    
+        else if ( vy[a] >= slen )
+           {
+           if ( pos >= vx[a] || pos <= vy[a] - slen ) return vl2[level][a] ;
+           }    
         }    
     return -1 ;
     }    
