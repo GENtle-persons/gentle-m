@@ -20,7 +20,7 @@
 
 
 #include "main.h"
-#include <wx/tipdlg.h>
+#include <wx/tipdlg.h> 
 
 #ifdef __WXMSW__
 #include "wx/msw/registry.h"
@@ -88,7 +88,7 @@ wxArrayString explode ( wxString sep , wxString s )
            }
         else n += s.GetChar(a) ;
         }
-    if ( n != "" ) r.Add ( n ) ;
+    if ( n != "" ) r.Add ( n ) ; 
     return r ;
     }
 
@@ -97,7 +97,70 @@ wxArrayString explode ( wxString sep , wxString s )
 // implementation
 // ===========================================================================
 
-#include "Text.inc"
+// Text
+WX_DECLARE_STRING_HASH_MAP( wxString, wxHashString );
+
+wxHashString _text ;
+
+void init_txt ( string lang )
+    {
+    ifstream in ( "variables.csv" , ios::in ) ;
+    char t[10000] ;
+    bool firstline = true ;
+    int ln = 1 ; // English is default
+    TGenBank dummy ;
+    while ( !in.eof() )
+        {
+        wxArrayString v ;
+        in.getline ( t , sizeof ( t ) ) ;
+        if ( *t == 0 ) break ;
+        char *c , *l ;
+        bool quote = false ;
+        for ( c = l = t ; *c ; c++ )
+           {
+           if ( *c == '\\' )
+              {
+              *c = ' ' ;
+              c++ ;
+              if ( *c == 't' ) *c = '\t' ;
+              else if ( *c == '"' ) *c = '"' ;
+              else if ( *c == 'n' ) *c = '\n' ;
+              }
+           else if ( *c == '"' ) quote = !quote ;
+           else if ( *c == ',' && !quote )
+              {
+              *c = 0 ;
+              v.Add ( dummy.trimQuotes(l) ) ;
+              l = c+1 ;
+              }
+           }
+        if ( l < c )
+           {
+           *(c-1) = 0 ;
+           v.Add ( dummy.trimQuotes(l) ) ;
+           }
+        
+        if ( firstline )
+           {
+           for ( int a = 0 ; a < v.GetCount() ; a++ )
+              if ( v[a] == lang.c_str() )
+                 ln = a ;
+           }
+        else
+           {
+           if ( v[ln].Find ( '\t' ) > -1 ) v[ln] += " " ;
+           _text[v[0].MakeUpper()] = v[ln] ;
+           }
+        firstline = false ;
+        }
+    }
+
+char * txt ( string item )
+    {
+    wxString s = item.c_str() ;
+    return (char*) _text[s.MakeUpper()].c_str() ;
+    }
+
 
 
 // ---------------------------------------------------------------------------
