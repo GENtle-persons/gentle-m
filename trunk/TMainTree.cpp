@@ -6,13 +6,16 @@ BEGIN_EVENT_TABLE(TMainTree, wxTreeCtrl)
     EVT_MENU(MT_CLOSE,TMainTree::OnCloseChild)
 END_EVENT_TABLE()
 
-
+/** \brief Constructor
+*/
 TMainTree::TMainTree ( wxSashLayoutWindow *parent , int i )
     :wxTreeCtrl ( parent , i )
     {
     lastChild = NULL ;
     }
     
+/** \brief Initialization of the tree; removal of old items, if any
+*/
 void TMainTree::initme()
     {
     // Basic stuff
@@ -31,6 +34,8 @@ void TMainTree::initme()
     EnsureVisible ( vectors ) ;
     }
 
+/** \brief Handles right click on an item (context menu)
+*/
 void TMainTree::OnRightClick ( wxTreeEvent &event )
     {
     wxPoint pt = event.GetPoint() ;
@@ -47,6 +52,10 @@ void TMainTree::OnRightClick ( wxTreeEvent &event )
     delete cm ;
     }
     
+/** \brief Adds a child to the tree
+	\param c Pointer to child
+	\param type Where to add it
+*/
 void TMainTree::addChild ( ChildBase *c , int type )
     {
     wxTreeItemId theroot ;
@@ -63,12 +72,16 @@ void TMainTree::addChild ( ChildBase *c , int type )
 //    SelectItem ( c->inMainTree ) ;
     }
 
+/** \brief Remove child from the tree
+*/
 void TMainTree::removeChild ( ChildBase *c )
     {
     if ( !c || !c->inMainTree.IsOk() ) return ;
     Delete ( c->inMainTree ) ;
     }
     
+/** \brief Event handler (when an item gets the focus, via keyboard or mouse)
+*/
 void TMainTree::OnEvent ( wxTreeEvent &event )
     {
     if ( myapp()->frame->isActivating() ) return ;
@@ -81,6 +94,8 @@ void TMainTree::OnEvent ( wxTreeEvent &event )
     d->c->Activate () ;
     }
     
+/** \brief Closes the current child
+*/
 void TMainTree::OnCloseChild ( wxCommandEvent &event )
     {
     if ( !lastChild ) return ;

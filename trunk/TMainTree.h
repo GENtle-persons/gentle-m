@@ -1,3 +1,7 @@
+/** \file
+	\brief Contains the TMainTree and TMainTreeItem classes
+*/
+
 #ifndef _TMAINTREE_H_
 #define _TMAINTREE_H_
 
@@ -6,14 +10,20 @@
 class MyFrame ;
 class ChildBase ;
 
+/** \class TMainTreeItem
+	\brief Item in TMainTree
+*/
 class TMainTreeItem : public wxTreeItemData
     {
     public :
-    TMainTreeItem () : wxTreeItemData() {} ;
-    TMainTreeItem ( ChildBase *_c ) : wxTreeItemData() { c = _c ; } ;
-    ChildBase *c ;
+    TMainTreeItem () : wxTreeItemData() {} ; ///< \brief Blank constructor
+    TMainTreeItem ( ChildBase *_c ) : wxTreeItemData() { c = _c ; } ; ///< \brief Constructor
+    ChildBase *c ; ///< \brief Pointer to the associated child
     } ;
 
+/** \class TMainTree
+	\brief The main tree class
+*/
 class TMainTree : public wxTreeCtrl
     {
     public :
@@ -33,7 +43,7 @@ class TMainTree : public wxTreeCtrl
                     alignments , amino_acids , misc ;
                     
     private :
-    ChildBase *lastChild ;
+    ChildBase *lastChild ; ///< \brief Pointer to the last selected child
     
     DECLARE_EVENT_TABLE()
     } ;
