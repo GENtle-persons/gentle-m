@@ -518,3 +518,7 @@
 "t_chou_fasman","Chou-Fasman plot","Chou-Fasman-Plot"
 "t_data","Data","Daten"
 "t_no_plot","No plot","Kein Plot"
+"m_aa_view","&View","&Ansicht"
+"m_aa_view_original","&Original","&Original"
+"m_aa_view_real","&1:1","&1:1"
+"m_aa_view_condensed","&Compact","&Kompakt"

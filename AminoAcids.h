@@ -49,6 +49,7 @@ class TAminoAcids : public ChildBase
     TURLtext *desc ;
     wxSplitterWindow *hs , *vs ;
     int from ;
+    int miniDisplayOptions ;
     
     wxWindow *curDisplay ;
     PlasmidCanvas *pc ;

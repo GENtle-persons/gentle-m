@@ -272,7 +272,7 @@ class SeqPlot : public SeqDNA
     virtual void setLines ( int l ) ;
     virtual void useChouFasman () ;
     virtual void showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph ) ;
-        
+
     private :
     virtual void scanChouFasman ( int x , int y , int t , int min , 
                                     int seek_cnt , int seek_avg , int avg ) ;
@@ -287,6 +287,7 @@ class SeqPlot : public SeqDNA
     vector <TAAProp> prop ;
     bool startOfLine ;
     float data_max , data_min , data_h , data_step ;
+    wxRect plotr ;
     } ;
 
 class SequenceCanvas : public wxScrolledWindow
@@ -316,6 +317,10 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void OnPrimerMutation ( wxCommandEvent &ev ) ;
     virtual void OnSilmut ( wxCommandEvent &ev ) ;
     virtual void OnWhatCuts(wxCommandEvent& event);
+
+    virtual void OnViewOriginal ( wxCommandEvent &ev ) ;
+    virtual void OnViewReal ( wxCommandEvent &ev ) ;
+    virtual void OnViewCondensed ( wxCommandEvent &ev ) ;
 
     virtual void OnSeqUp ( wxCommandEvent &ev ) ;
     virtual void OnSeqDown ( wxCommandEvent &ev ) ;
