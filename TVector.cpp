@@ -121,49 +121,51 @@ void TVector::init ()
     while ( aaprop.size() < 256 ) aaprop.push_back ( TAAProp() ) ;
     
     // MW, pI, three-letter-acronym
-    aaprop['|'].set_data ( 0 , 0 , "STP") ;
-    aaprop['A'].set_data ( 71.0788 , 6.01 , "Ala") ;
-    aaprop['C'].set_data ( 103.1388 , 5.07 , "Cys") ;
-    aaprop['D'].set_data ( 115.0886 , 2.77 , "Asp") ;
-    aaprop['E'].set_data ( 129.1155 , 3.22 , "Glu") ;
-    aaprop['F'].set_data ( 147.1766 , 5.48 , "Phe") ;
-    aaprop['G'].set_data ( 57.0519 , 5.97 , "Gly") ;
-    aaprop['H'].set_data ( 137.1411 , 7.59 , "His") ;
-    aaprop['I'].set_data ( 113.1594 , 6.02 , "Ile") ;
-    aaprop['K'].set_data ( 128.1741 , 9.74 , "Lys") ;
-    aaprop['L'].set_data ( 113.1594 , 5.98 , "Leu") ;
-    aaprop['M'].set_data ( 131.1926 , 5.74 , "Met") ;
-    aaprop['N'].set_data ( 114.1038 , 5.41 , "Asn") ;
-    aaprop['P'].set_data ( 97.1167 , 6.48 , "Pro") ;
-    aaprop['Q'].set_data ( 128.1307 , 5.65 , "Gln") ;
+    aaprop['|'].set_data (   0      ,  0    , "STP") ;
+    aaprop['A'].set_data (  71.0788 ,  6.01 , "Ala") ;
+    aaprop['C'].set_data ( 103.1388 ,  5.07 , "Cys") ;
+    aaprop['D'].set_data ( 115.0886 ,  2.77 , "Asp") ;
+    aaprop['E'].set_data ( 129.1155 ,  3.22 , "Glu") ;
+    aaprop['F'].set_data ( 147.1766 ,  5.48 , "Phe") ;
+    aaprop['G'].set_data (  57.0519 ,  5.97 , "Gly") ;
+    aaprop['H'].set_data ( 137.1411 ,  7.59 , "His") ;
+    aaprop['I'].set_data ( 113.1594 ,  6.02 , "Ile") ;
+    aaprop['K'].set_data ( 128.1741 ,  9.74 , "Lys") ;
+    aaprop['L'].set_data ( 113.1594 ,  5.98 , "Leu") ;
+    aaprop['M'].set_data ( 131.1926 ,  5.74 , "Met") ;
+    aaprop['N'].set_data ( 114.1038 ,  5.41 , "Asn") ;
+    aaprop['P'].set_data (  97.1167 ,  6.48 , "Pro") ;
+    aaprop['Q'].set_data ( 128.1307 ,  5.65 , "Gln") ;
     aaprop['R'].set_data ( 156.1875 , 10.76 , "Arg") ;
-    aaprop['S'].set_data ( 87.0782 , 5.68 , "Ser") ;
-    aaprop['T'].set_data ( 101.1051 , 5.87 , "Thr") ;
-    aaprop['V'].set_data ( 99.1326 , 5.97 , "Val") ;
-    aaprop['W'].set_data ( 186.2132 , 5.89 , "Trp") ;
-    aaprop['Y'].set_data ( 163.176 , 5.66 , "Tyr") ;
+    aaprop['S'].set_data (  87.0782 ,  5.68 , "Ser") ;
+    aaprop['T'].set_data ( 101.1051 ,  5.87 , "Thr") ;
+    aaprop['V'].set_data (  99.1326 ,  5.97 , "Val") ;
+    aaprop['W'].set_data ( 186.2132 ,  5.89 , "Trp") ;
+    aaprop['Y'].set_data ( 163.1760 ,  5.66 , "Tyr") ;
          
     // Chou-Fasman algorithm data
-    aaprop['A'].set_cf ( 142 , 83 , 66 , 0.06 , 0.076 , 0.035 , 0.058 ) ;
-    aaprop['C'].set_cf ( 70 , 119 , 119 , 0.149 , 0.05 , 0.117 , 0.128 ) ;
-    aaprop['D'].set_cf ( 101 , 54 , 146 , 0.147 , 0.11 , 0.179 , 0.081 ) ;
-    aaprop['E'].set_cf ( 151 , 37 , 74 , 0.056 , 0.06 , 0.077 , 0.064 ) ;
-    aaprop['F'].set_cf ( 113 , 138 , 60 , 0.059 , 0.041 , 0.065 , 0.065 ) ;
-    aaprop['G'].set_cf ( 57 , 75 , 156 , 0.102 , 0.085 , 0.19 , 0.152 ) ;
-    aaprop['H'].set_cf ( 100 , 87 , 95 , 0.14 , 0.047 , 0.093 , 0.054 ) ;
-    aaprop['I'].set_cf ( 108 , 160 , 47 , 0.043 , 0.034 , 0.013 , 0.056 ) ;
-    aaprop['K'].set_cf ( 114 , 74 , 101 , 0.055 , 0.115 , 0.072 , 0.095 ) ;
-    aaprop['L'].set_cf ( 121 , 130 , 59 , 0.061 , 0.025 , 0.036 , 0.07 ) ;
-    aaprop['M'].set_cf ( 145 , 105 , 60 , 0.068 , 0.082 , 0.014 , 0.055 ) ;
-    aaprop['N'].set_cf ( 67 , 89 , 156 , 0.161 , 0.083 , 0.191 , 0.091 ) ;
-    aaprop['P'].set_cf ( 57 , 55 , 152 , 0.102 , 0.301 , 0.034 , 0.068 ) ;
-    aaprop['Q'].set_cf ( 111 , 110 , 98 , 0.074 , 0.098 , 0.037 , 0.098 ) ;
-    aaprop['R'].set_cf ( 98 , 93 , 95 , 0.07 , 0.106 , 0.099 , 0.085 ) ;
-    aaprop['S'].set_cf ( 77 , 75 , 143 , 0.12 , 0.139 , 0.125 , 0.106 ) ;
-    aaprop['T'].set_cf ( 83 , 119 , 96 , 0.086 , 0.108 , 0.065 , 0.079 ) ;
-    aaprop['V'].set_cf ( 106 , 170 , 50 , 0.062 , 0.048 , 0.028 , 0.053 ) ;
-    aaprop['W'].set_cf ( 108 , 137 , 96 , 0.077 , 0.013 , 0.064 , 0.167 ) ;
-    aaprop['Y'].set_cf ( 69 , 147 , 114 , 0.082 , 0.065 , 0.114 , 0.125 ) ;
+    aaprop['A'].set_cf ( 142 ,  83 ,  66 , 0.06  , 0.076 , 0.035 , 0.058 ) ;
+    aaprop['C'].set_cf (  70 , 119 , 119 , 0.149 , 0.05  , 0.117 , 0.128 ) ;
+    aaprop['D'].set_cf ( 101 ,  54 , 146 , 0.147 , 0.11  , 0.179 , 0.081 ) ;
+    aaprop['E'].set_cf ( 151 ,  37 ,  74 , 0.056 , 0.06  , 0.077 , 0.064 ) ;
+    aaprop['F'].set_cf ( 113 , 138 ,  60 , 0.059 , 0.041 , 0.065 , 0.065 ) ;
+    aaprop['G'].set_cf (  57 ,  75 , 156 , 0.102 , 0.085 , 0.19  , 0.152 ) ;
+    aaprop['H'].set_cf ( 100 ,  87 ,  95 , 0.14  , 0.047 , 0.093 , 0.054 ) ;
+    aaprop['I'].set_cf ( 108 , 160 ,  47 , 0.043 , 0.034 , 0.013 , 0.056 ) ;
+    aaprop['K'].set_cf ( 114 ,  74 , 101 , 0.055 , 0.115 , 0.072 , 0.095 ) ;
+    aaprop['L'].set_cf ( 121 , 130 ,  59 , 0.061 , 0.025 , 0.036 , 0.07  ) ;
+    aaprop['M'].set_cf ( 145 , 105 ,  60 , 0.068 , 0.082 , 0.014 , 0.055 ) ;
+    aaprop['N'].set_cf (  67 ,  89 , 156 , 0.161 , 0.083 , 0.191 , 0.091 ) ;
+    aaprop['P'].set_cf (  57 ,  55 , 152 , 0.102 , 0.301 , 0.034 , 0.068 ) ;
+    aaprop['Q'].set_cf ( 111 , 110 ,  98 , 0.074 , 0.098 , 0.037 , 0.098 ) ;
+    aaprop['R'].set_cf (  98 ,  93 ,  95 , 0.07  , 0.106 , 0.099 , 0.085 ) ;
+    aaprop['S'].set_cf (  77 ,  75 , 143 , 0.12  , 0.139 , 0.125 , 0.106 ) ;
+    aaprop['T'].set_cf (  83 , 119 ,  96 , 0.086 , 0.108 , 0.065 , 0.079 ) ;
+    aaprop['V'].set_cf ( 106 , 170 ,  50 , 0.062 , 0.048 , 0.028 , 0.053 ) ;
+    aaprop['W'].set_cf ( 108 , 137 ,  96 , 0.077 , 0.013 , 0.064 , 0.167 ) ;
+    aaprop['Y'].set_cf (  69 , 147 , 114 , 0.082 , 0.065 , 0.114 , 0.125 ) ;
+
+    for ( a = 'a' ; a <= 'z' ; a++ ) aaprop[a] = aaprop[a-'a'+'A'] ;
     }
 
 void TVector::removeBlanksFromSequence ()

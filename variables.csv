@@ -515,3 +515,6 @@
 "u_what_cuts","&Undo what cuts","Welche Enzyme schneiden hier &rückgängig"
 "t_schema","Scheme","Schema"
 "X-Y (# aa)","%d - %d (%d amino acids)","%d - %d (%d Aminosäuren)"
+"t_chou_fasman","Chou-Fasman plot","Chou-Fasman-Plot"
+"t_data","Data","Daten"
+"t_no_plot","No plot","Kein Plot"

@@ -10,8 +10,6 @@ void SeqBasic::init ( SequenceCanvas *ncan )
     endnumberlength = 0 ;
     }
 
-
-
 //************************************************ SeqPrimer
 
 void SeqPrimer::show ( wxDC& dc )

@@ -645,6 +645,7 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
            wxCommandEvent dummyEvent ;
            context_last_item = vo ;
            itemMarkShow ( dummyEvent ) ;
+           p->cSequence->SetFocus () ;
 //           p->cSequence->mark ( "DNA" , p->vec->items[vo].from , p->vec->items[vo].to ) ;
 //           p->OnCopyToNew ( dummyEvent ) ;
            }

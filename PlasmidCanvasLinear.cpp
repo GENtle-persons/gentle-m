@@ -125,13 +125,12 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
             i->a2 = lineH + markH / 2 ; // To Y
             
             int tf = ( i->type % 3 ) * STANDARDRADIUS / 15 ;
-            
+        
             i->r1 = i->r1 * STANDARDRADIUS / w ;
             i->r2 = i->r2 * STANDARDRADIUS / w ;
             i->a1 = i->a1 * STANDARDRADIUS / h + tf ;
             i->a2 = i->a2 * STANDARDRADIUS / h + tf ;
             }
-        
         
         // Restriction sites
         for ( a = 0 ; a < p->vec->rc.size() ; a++ )
@@ -295,25 +294,26 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , int r1 , int r2 , float a1 , flo
     {
     if ( i->direction == -1 ) { int rr = r1 ; r1 = r2 ; r2 = rr ; }
     wxFont normalFont ( 12 , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    wxFont smallFont ( 8 , wxSWISS , wxNORMAL , wxNORMAL ) ;
     int r1b = r2 - ( r2 - r1 ) / 10 ;
     int y1 = (int) ( a2 - a1 ) / 3 ;
     int y2 = (int) ( a1 + a2 ) / 2 ;
-    vector <wxPoint> p ;
-    p.push_back ( wxPoint ( r1  , y2 - y1 ) ) ;
-    p.push_back ( wxPoint ( r1b , y2 - y1 ) ) ;
-    p.push_back ( wxPoint ( r1b , (int) a1 ) ) ;
-    p.push_back ( wxPoint ( r2  , y2 ) ) ;
-    p.push_back ( wxPoint ( r1b , (int) a2 ) ) ;
-    p.push_back ( wxPoint ( r1b , y2 + y1 ) ) ;
-    p.push_back ( wxPoint ( r1  , y2 + y1 ) ) ;
+    vector <wxPoint> pt ;
+    pt.push_back ( wxPoint ( r1  , y2 - y1 ) ) ;
+    pt.push_back ( wxPoint ( r1b , y2 - y1 ) ) ;
+    pt.push_back ( wxPoint ( r1b , (int) a1 ) ) ;
+    pt.push_back ( wxPoint ( r2  , y2 ) ) ;
+    pt.push_back ( wxPoint ( r1b , (int) a2 ) ) ;
+    pt.push_back ( wxPoint ( r1b , y2 + y1 ) ) ;
+    pt.push_back ( wxPoint ( r1  , y2 + y1 ) ) ;
 
     // Drawing polygon
     wxPoint *wp ;
-    wp = (wxPoint*) malloc ( sizeof ( wxPoint ) * (p.size()+1) ) ;
-    for ( int b = 0 ; b < p.size() ; b++ ) wp[b] = p[b] ;
+    wp = (wxPoint*) malloc ( sizeof ( wxPoint ) * (pt.size()+1) ) ;
+    for ( int b = 0 ; b < pt.size() ; b++ ) wp[b] = pt[b] ;
     dc.SetPen(*wxBLACK_PEN);
     dc.SetBrush ( *i->getBrush() ) ;
-    dc.DrawPolygon ( p.size() , wp , 0 , 0 ) ;
+    dc.DrawPolygon ( pt.size() , wp , 0 , 0 ) ;
     free ( wp ) ;
     
     // Name
@@ -321,7 +321,8 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , int r1 , int r2 , float a1 , flo
     wxCoord dx , dy ;
     wxColor fc = dc.GetTextForeground () ;
     dc.SetTextForeground ( i->getFontColor() ) ;
-    dc.SetFont(normalFont);
+    if ( p->def == "dna" ) dc.SetFont(normalFont);
+    else if ( p->def == "AminoAcids" ) dc.SetFont(smallFont);
     sprintf ( t , "%s" , i->name.c_str() ) ;
     dc.GetTextExtent ( t , &dx , &dy ) ;
     dc.DrawText ( t ,
@@ -479,6 +480,7 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
            wxCommandEvent dummyEvent ;
            context_last_item = vo ;
            itemMarkShow ( dummyEvent ) ;
+           p->cSequence->SetFocus () ;
 //           p->cSequence->mark ( "DNA" , p->vec->items[vo].from , p->vec->items[vo].to ) ;
 //           p->OnCopyToNew ( dummyEvent ) ;
            }
