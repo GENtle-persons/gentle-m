@@ -56,6 +56,7 @@ TVectorEditor::TVectorEditor(wxWindow *parent, const wxString& title , TVector *
     GetClientSize ( &w , &h ) ;
     bo = 5 ;
     th = 22 ;
+    oldEnzymeRules = NULL ;
     
     nb = new wxNotebook ( (wxWindow*) this ,
                           -1 ,
@@ -182,13 +183,14 @@ void TVectorEditor::initPanProp ()
     
 void TVectorEditor::initPanEnzym2 ()
     {
-    oldEnzymeRules = v->getEnzymeRule() ;
+    oldEnzymeRules = new TEnzymeRules ;
+    *oldEnzymeRules = *v->getEnzymeRule() ;
     e_diduseit = oldEnzymeRules->useit ;
     if ( !v->getEnzymeRules() )
     	{
 	    v->setEnzymeRules ( new TEnzymeRules ) ;
+	    oldEnzymeRules->useit = false ;
 	    *(v->getEnzymeRules()) = *oldEnzymeRules ;
-	    v->getEnzymeRules()->useit = false ;
     	}    
     panEnzyme2 = new TEnzymeSettingsTab ( nb , EST_SINGLE ) ;
     v->getEnzymeRules()->setup_options ( panEnzyme2 ) ;
@@ -240,7 +242,7 @@ void TVectorEditor::commitVector ()
         }
     }
     
-
+        
 void TVectorEditor::commitEnzymes ()
     {
     int a , b ;
@@ -270,8 +272,7 @@ void TVectorEditor::commitEnzymes ()
         }
         
     v->getEnzymeRules()->lookup_options ( panEnzyme2 ) ;
-    if ( v->getEnzymeRules() != oldEnzymeRules || 
-    	( v->getEnzymeRules()->useit != e_diduseit ) )
+	if ( !v->getEnzymeRules()->isEqual ( *oldEnzymeRules ) || v->getEnzymeRules()->useit != e_diduseit )
     	{
     	changed = true ;
     	v->setParam ( "enzymerule" , v->getEnzymeRules()->to_string() ) ;
@@ -283,6 +284,7 @@ void TVectorEditor::commitEnzymes ()
         v->updateDisplay() ;
         }
     v->setChanged ( changed | v->isChanged() ) ;
+    if ( oldEnzymeRules ) delete oldEnzymeRules ;
     }
 
 void TVectorEditor::commitProteases ()

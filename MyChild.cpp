@@ -553,6 +553,14 @@ void MyChild::OnCut(wxCommandEvent& event)
     mylog ( "MyChild::OnCut" , "5" ) ;
     }
     
+void MyChild::EnforceRefesh ()
+	{
+    treeBox->initme() ;
+    treeBox->Refresh() ;
+    cPlasmid->Refresh() ;
+    cSequence->Refresh() ;
+	}    
+    
 void MyChild::OnCopy(wxCommandEvent& event)
     {
     wxString s = cPlasmid->getSelection () ;

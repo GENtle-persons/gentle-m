@@ -39,6 +39,7 @@ class ChildBase : public MyChildBase
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){};
     virtual void OnPaste (wxCommandEvent& WXUNUSED(event)) {} ;
     virtual void OnExport (wxCommandEvent& WXUNUSED(event)) ;
+    virtual void EnforceRefesh () {} ;
 
     
     // Compatability functions

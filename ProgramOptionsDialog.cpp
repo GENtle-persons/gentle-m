@@ -398,6 +398,11 @@ void TEnzymeRules::lookup_options ( TEnzymeSettingsTab *est )
 	if ( est->met_dam->GetValue() ) methylation += DAM_METHYLATION ;
 	if ( est->met_dcm->GetValue() ) methylation += DCM_METHYLATION ;
 	}
+	
+bool TEnzymeRules::isEqual ( TEnzymeRules &r )
+	{
+ 	return to_string() == r.to_string() ;
+	}    
      
 wxString TEnzymeRules::to_string ()
 	{

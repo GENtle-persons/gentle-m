@@ -2,6 +2,7 @@
 Bugs :
 * Optimierung Überhang-Primer?
 * Bericht drucken : lange Zeilen in Vektor-Beschreibung umbrechen
+* ABSTURZ Ausblenden Restriktionsenzym
 
 Feature Requests :
 

@@ -74,6 +74,7 @@ class TEnzymeRules
 	virtual void save_global_settings () ;
 	virtual void setup_options ( TEnzymeSettingsTab *est ) ;
 	virtual void lookup_options ( TEnzymeSettingsTab *est ) ;
+	virtual bool isEqual ( TEnzymeRules &r ) ;
 	
 	virtual wxString to_string () ;
 	virtual void from_string ( wxString &s ) ;

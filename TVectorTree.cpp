@@ -215,14 +215,22 @@ void TVectorTree::OnActivation ( wxTreeEvent &event )
 */
 void TVectorTree::ToggleEnzymeVisibility ( TRestrictionEnzyme *e )
     {
+    if ( !e ) return ;
     wxTreeItemId y ;
     long l ;
     y = GetFirstChild ( enzroot , l ) ;
-    while ( GetItemText ( y ) != e->name.c_str() )
+    while ( y.IsOk() && GetItemText ( y ) != e->name.c_str() )
        y = GetNextChild ( enzroot , l ) ;
+    if ( !y.IsOk() ) // Automatically added enzyme
+    	{
+        p->vec->hideEnzyme ( e->name , true ) ;
+        }    
+    else // Manually added enzyme
+    	{
+        p->vec->hideEnzyme ( e->name , IsBold ( y ) ) ;
+        SetItemBold ( y , !IsBold ( y ) ) ;
+    	}    
     
-    p->vec->hideEnzyme ( e->name , IsBold ( y ) ) ;
-    SetItemBold ( y , !IsBold ( y ) ) ;
     p->cPlasmid->Refresh() ;
     p->cSequence->arrange() ;
     p->cSequence->SilentRefresh() ;
