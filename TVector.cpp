@@ -1238,7 +1238,101 @@ void TVectorItem::setType ( string s )
     else if ( s == "PROTEIN" ) type = VIT_MISC ;
     else if ( s == "REGION" ) type = VIT_MISC ; 
     }
+    
 
+void TVectorItem::translate ( TVector *v , SeqAA *aa )
+   {
+   dna2aa.clear () ;
+   if ( getRF() == 0 ) return ;
+
+   char c = ' ' ;
+   bool complement , roundOnce = false ;
+   int b , coff , rf = getRF () , voff = getOffset() ;
+
+   if ( direction == 1 )
+      {
+      b = from - 1 ;
+      coff = 0 ;
+      complement = false ;
+      }
+   else
+      {
+      b = to - 1 ;
+      coff = -2 ;
+      complement = true ;
+      }
+   b += direction * (rf-1) ;
+
+   while ( c != '|' && rf != 0 )
+      {
+      string three ;
+      three += v->getNucleotide ( b + 0 * direction , complement ) ;
+      three += v->getNucleotide ( b + 1 * direction , complement ) ;
+      three += v->getNucleotide ( b + 2 * direction , complement ) ;
+      c = v->dna2aa ( three )[0] ;
+  
+      // SeqAA update
+      if ( aa )
+         {
+         // Protease analysis
+         aa->pa_w += c ;
+         aa->pa_wa.push_back ( b+coff ) ;
+         aa->analyzeProteases () ;
+
+         // Offset?
+         int pawl = dna2aa.size() ;
+         if ( voff != -1 && ( b + coff ) % 10 == 0 )
+            {
+            while ( aa->offsets.size() <= b+coff ) aa->offsets.push_back ( -1 ) ;
+            while ( aa->offset_items.size() <= b+coff ) aa->offset_items.push_back ( NULL ) ;
+            aa->offsets[b+coff] = voff + pawl - 1 ;
+            aa->offset_items[b+coff] = this ;
+            }
+         }
+
+      // Output
+      dna2aa.push_back ( Tdna2aa ( c , b+0+coff , b+1+coff , b+2+coff ) ) ;
+      
+      b += direction * 3 ;
+      if ( !v->isCircular() && b+direction*3 < 0 ) rf = 0 ;
+      if ( !v->isCircular() && b+direction*3 > v->sequence.length() ) rf = 0 ;
+      if ( v->isCircular() && ( b < 0 || b >= v->sequence.length() ) )
+         {
+         if ( roundOnce ) rf = 0 ;
+         else if ( b < 0 ) b += v->sequence.length() ;
+         else b -= v->sequence.length() ;
+         roundOnce = true ;
+         }
+      if ( /*can->getPD() &&*/ c == '?' ) c = '|' ;
+      }
+    }
+
+void TVectorItem::getArrangedAA ( TVector *v , string &s , int disp )
+    {
+    int a ;
+    for ( a = 0 ; a < dna2aa.size() ; a++ )
+       {
+       if ( disp == AA_ONE ) s[dna2aa[a].dna[0]] = dna2aa[a].aa ;
+       else
+          {
+          string three = v->one2three((int)dna2aa[a].aa) ;
+          s[dna2aa[a].dna[0]] = three[0] ;
+          s[dna2aa[a].dna[1]] = three[1] ;
+          s[dna2aa[a].dna[2]] = three[2] ;
+          }
+       }
+    }
+        
+// ******************************************************************* Tdna2aa
+
+Tdna2aa::Tdna2aa ( char _aa , int i1 , int i2 , int i3 )
+    {
+    aa = _aa ;
+    dna[0] = i1 ;
+    dna[1] = i2 ;
+    dna[2] = i3 ;
+    }
+    
 // ******************************************************************* TAAProp
 
 TAAProp::TAAProp ()
