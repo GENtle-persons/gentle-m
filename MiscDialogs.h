@@ -152,6 +152,7 @@ class TransformSequenceDialog : public wxDialog
     public :
     TransformSequenceDialog ( wxWindow *parent, const wxString& title ) ;
     ~TransformSequenceDialog () ;
+    virtual void OnCharHook ( wxKeyEvent& event ) ;
     
     wxCheckBox *invert , *complement , *new_item ;
 

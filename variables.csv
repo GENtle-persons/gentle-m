@@ -710,4 +710,5 @@
 "t_editfeaturemode_1","Keep unchanged","Unverändert lassen"
 "t_editfeaturemode_2","Mark name","Namen markieren"
 "t_editfeaturemode_3","Cut off","Abschneiden"
-
+"t_invert","Invert","Invertieren"
+"t_insert_restriction_site","Insert restriction site","Restriktionsschnittstelle einfügen"

@@ -7,6 +7,7 @@ BEGIN_EVENT_TABLE(TImageDisplay, MyChildBase)
     EVT_BUTTON(IV_BUTTON,TImageDisplay::OnDir)
     EVT_LISTBOX(IV_LIST,TImageDisplay::OnFile)
     EVT_CHECKBOX(IV_CB, TImageDisplay::OnCB)
+    EVT_CHECKBOX(IV_CB_INVERT, TImageDisplay::OnCBinvert)
     EVT_CLOSE(ChildBase::OnClose)
     EVT_SET_FOCUS(ChildBase::OnFocus)
 
@@ -83,16 +84,21 @@ void TImageDisplay::initme ()
     right->imdi = this ;
     
     wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     
     lb = new wxListBox ( this , IV_LIST , wxDefaultPosition , wxDefaultSize ,
                             0 , NULL , wxLB_SORT ) ;
     bu = new wxButton ( this , IV_BUTTON , "" , wxDefaultPosition , wxSize ( 180 , -1 ) ) ;
     cb = new wxCheckBox ( this , IV_CB , txt("img_show_text" ) ) ;
+    invert = new wxCheckBox ( this , IV_CB_INVERT , txt("t_invert" ) ) ;
     
     v0->Add ( bu , 0 , wxEXPAND|wxALL , 5 ) ;
     v0->Add ( lb , 1 , wxEXPAND|wxALL , 5 ) ;
-    v0->Add ( cb , 0 , wxEXPAND|wxALL , 5 ) ;
+    
+    h1->Add ( cb , 0 , wxEXPAND , 5 ) ;
+    h1->Add ( invert , 0 , wxEXPAND , 5 ) ;
+    v0->Add ( h1 , 0 , wxEXPAND|wxALL , 5 ) ;
     
     h0->Add ( v0 , 0 , wxEXPAND , 5 ) ;
     h0->Add ( right , 1 , wxEXPAND , 5 ) ;
@@ -189,6 +195,13 @@ void TImageDisplay::OnCB ( wxCommandEvent &event )
 	right->Refresh () ;
 	}    
 
+void TImageDisplay::OnCBinvert ( wxCommandEvent &event )
+	{
+	right->invert = invert->GetValue() ;
+	right->ClearBackground () ;
+	right->Refresh () ;
+	}    
+
 wxString TImageDisplay::getName ()
     {
     return "Image Viewer" ;
@@ -202,6 +215,7 @@ TMyImagePanel::TMyImagePanel ( wxWindow *parent , int id )
     bmp = NULL ;
     printing = false ;
     show_text = true ;
+    invert = false ;
     }
     
 TMyImagePanel::~TMyImagePanel ()
@@ -256,7 +270,18 @@ void TMyImagePanel::OnDraw(wxDC& pdc)
         y /= ys ;
         
         pdc.DrawBitmap ( *bmp , (int)x , (int)y ) ;
+
+        if ( invert )
+        	{
+            int lf = pdc.GetLogicalFunction() ;
+            pdc.SetLogicalFunction ( wxINVERT ) ;
+            pdc.SetBrush ( *wxWHITE_BRUSH ) ;
+            pdc.SetPen ( *wxWHITE_PEN ) ;
+            pdc.DrawRectangle ( x , y , nw / xs , nh / ys ) ;
+            pdc.SetLogicalFunction ( lf ) ;
+            }    
         
+        pdc.SetTextForeground ( wxColour ( 0 , 0 , 150 ) ) ;
         if ( show_text )
         	{
             for ( int i = 0 ; i < imdi->r->items.size() ; i++ )

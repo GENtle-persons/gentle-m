@@ -446,7 +446,9 @@ void TPrimerDesign::initme ()
     toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_pcr_spin_1") ) ) ;
     toolBar->AddControl ( spin ) ;
     toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_pcr_spin_2") ) ) ;
+#ifdef __WXGTK
     spin->SetSize ( -1 , -1 , 50 , -1 , wxSIZE_USE_EXISTING ) ;
+#endif
 
     toolBar->AddSeparator () ;
     wxCheckBox *mycb = new wxCheckBox ( toolBar , ALIGN_HORIZ , txt("t_horizontal") ) ;

@@ -241,8 +241,8 @@ void TVector::setNucleotide ( int pos , char t )
     if ( isLinear() && ( pos < 0 || pos >= sl ) ) return ;
     while ( pos < 0 ) pos += sl ;
     while ( pos >= sequence.length() ) pos -= sl ;
-    insert_char ( t , pos+1 , true ) ;
-//    sequence.SetChar(pos,t);
+//    insert_char ( t , pos+1 , true ) ;
+    sequence.SetChar(pos,t);
     }    
 
 bool TVector::basematch ( char b1 , char b2 ) // b1 in IUPAC, b2 in SIUPAC

@@ -74,6 +74,7 @@ enum {
     IED_USEOFFSET,
     IV_BUTTON,
     IV_CB,
+    IV_CB_INVERT,
     IV_IMAGE,
     IV_LIST,
     IV_MENU_COPY,

@@ -4,6 +4,10 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
+#define GENTLE_VERSION_MAJOR 1
+#define GENTLE_VERSION_MINOR 5
+#define GENTLE_VERSION_SUB 2
+
 typedef unsigned int uint ;
 
 /**	\fn myass ( bool b , wxString msg )
@@ -147,10 +151,6 @@ WX_DECLARE_STRING_HASH_MAP( wxString, wxHashString );
 #define DAM_METHYLATION 1 /**< \brief Show DAM methylation */
 #define DCM_METHYLATION 2 /**< \brief Show DCM methylation */
 #define ALL_METHYLATION_ENZYMES ( DAM_METHYLATION + DCM_METHYLATION ) /**< \brief Show all methylations */
-
-#define GENTLE_VERSION_MAJOR 1
-#define GENTLE_VERSION_MINOR 5
-#define GENTLE_VERSION_SUB 1
 
 class MyFrame ;
 

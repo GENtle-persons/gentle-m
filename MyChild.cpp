@@ -1060,6 +1060,8 @@ void MyChild::OnTransformSequence(wxCommandEvent& event)
     bool complement = tsd.complement->GetValue() ;
     bool invert = tsd.invert->GetValue() ;
     
+    if ( !complement && !invert ) return ; // Noting to do
+    
     doTransformSequence ( inNewVector , complement , invert ) ;
     }    
     
