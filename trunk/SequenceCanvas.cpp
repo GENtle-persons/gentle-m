@@ -620,6 +620,7 @@ wxBitmap *SequenceCanvas::getSequenceBitmap ()
     wxMemoryDC pdc ;
     pdc.SelectObject ( *bmp ) ;
     pdc.Clear() ;
+    arrange () ;
     drawall = true ;
     safeShow ( pdc ) ;
     drawall = false ;
