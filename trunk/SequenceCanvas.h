@@ -356,6 +356,9 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void OnInsertOtherGaps ( wxCommandEvent &ev ) ;
     virtual void OnDeleteOtherGaps ( wxCommandEvent &ev ) ;
 
+    virtual void OnInsertRestrictionSiteLeft ( wxCommandEvent &ev ) ;
+    virtual void OnInsertRestrictionSiteRight ( wxCommandEvent &ev ) ;
+
     virtual void OnPaste ( wxCommandEvent &ev ) ;
     virtual void OnFocus(wxFocusEvent& event) ;
     virtual void OnKillFocus(wxFocusEvent& event) ;
@@ -401,10 +404,11 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void setLowX ( int _i ) { if ( lowx < _i ) lowx = _i ; }
     virtual void startEdit ( wxString id ) ;
     virtual void stopEdit () ;
+    virtual int markedFrom () { return _from ; }
+    virtual int markedTo () { return _to ; }
 
     ChildBase *child ; // Wanna-be universal com port to "parent"
     MyChild *p ;
-    int _from , _to ; // Mark
     int blankline , charwidth , charheight , hardstop ;
     int lastmarked , maxendnumberlength , lastyoffset , blocksize ;
     wxArraySeqBasic seq ;
@@ -412,13 +416,16 @@ class SequenceCanvas : public wxScrolledWindow
     wxString edit_id , edit_valid ;
     
     private :
-    wxBitmap *getSequenceBitmap () ;
-    TVector *getPCR_DNA_vector() ;
+    virtual wxBitmap *getSequenceBitmap () ;
+    virtual TVector *getPCR_DNA_vector() ;
+    virtual void showContextMenu ( SeqBasic *where , int pos , wxPoint pt ) ;
+    virtual void insertRestrictionSite ( bool left ) ;
 
     bool printToColor , drawall , horizontal , hide , miniDisplay ;
     bool marking , drawing , printing , wantOverwrite , forceoverwrite ;
     bool editMode ;
     wxDC *print_dc ;
+    int _from , _to ; // Mark
     int lastclick , lowx , lowy , lastpos , print_maxx , vpx , vpy ;
     wxString lastToolTip ;
     SeqAlign *last_al ;

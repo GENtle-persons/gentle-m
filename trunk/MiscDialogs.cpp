@@ -745,7 +745,7 @@ void FindSequenceDialog::OnSearch ( wxCommandEvent &ev )
            {
            TAminoAcids *d = (TAminoAcids*) c ;
            d->sc->mark ( "AA" , a+1 , last+1) ;
-           d->sc->ensureVisible ( d->sc->_from ) ;
+           d->sc->ensureVisible ( d->sc->markedFrom() ) ;
            }
         p = a+1 ;
         }

@@ -16,6 +16,7 @@ BEGIN_EVENT_TABLE(TABIviewer, MyChildBase)
     EVT_SPINCTRL(ABI_WIDTH, TABIviewer::OnSpinWidth)
     EVT_SPINCTRL(ABI_HEIGHT, TABIviewer::OnSpinHeight)
     EVT_COMMAND_SCROLL(ABI_SLIDER, TABIviewer::OnZoom)
+    EVT_CHECKBOX(ALIGN_HORIZ, TABIviewer::OnHorizontal)
 
     EVT_SET_FOCUS(ChildBase::OnFocus)
     EVT_CLOSE(ChildBase::OnClose)
@@ -61,6 +62,24 @@ TABIviewer::~TABIviewer ()
     if ( stat ) delete stat ;
     }
     
+void TABIviewer::OnHorizontal(wxScrollEvent& event)
+    {
+    if ( sc->isHorizontal() )
+        {
+        f_height->SetValue ( oldh ) ;
+        }
+    else
+        {
+        oldh = f_height->GetValue () ;
+        wxSize s = sc->MyGetClientSize()  ;
+        int newh = s.GetHeight() / sc->charheight - 2 ;
+        f_height->SetValue ( newh ) ;
+        }        
+    sc->toggleHorizontal () ;
+    wxSpinEvent ev2 ;
+    OnSpinHeight ( ev2 ) ;
+    }    
+    
 void TABIviewer::OnZoom(wxScrollEvent& event)
     {
     int i = event.GetPosition() ;
@@ -92,6 +111,7 @@ void TABIviewer::OnSpinHeight(wxSpinEvent& event)
     sc->blankline = value + 1 ;
     sc->arrange () ;
     sc->SilentRefresh () ;    
+    sc->SetFocus () ;
     }
 
 void TABIviewer::initme ()
@@ -148,6 +168,8 @@ void TABIviewer::initme ()
 //    toolBar->AddTool( MDI_CUT, myapp()->frame->bitmaps[4] ) ;
     toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] ) ;
 //    toolBar->AddTool( MDI_PASTE, myapp()->frame->bitmaps[6] ) ;
+    toolBar->AddSeparator() ;
+    toolBar->AddControl ( new wxCheckBox ( toolBar , ALIGN_HORIZ , txt("t_horizontal") ) ) ;
     toolBar->Realize() ;
 #endif
 
@@ -179,7 +201,7 @@ void TABIviewer::initme ()
     inv_compl = new wxCheckBox ( up , ABI_INV_COMP , txt("t_abi_inv_comp") , wxPoint ( r.GetRight()+bo , r.GetTop() ) ) ;
     f_height = new wxSpinCtrl ( up , ABI_HEIGHT , "5" , wxPoint ( bo , bo + th * 1 ) , wxSize ( 50 , -1 ) ) ;
     f_width = new wxSpinCtrl ( up , ABI_WIDTH , "2" , wxPoint ( bo , bo + th * 2 ) , wxSize ( 50 , -1 ) ) ;
-    f_height->SetRange ( 1 , 20 ) ;
+    f_height->SetRange ( 1 , 50 ) ;
     f_width->SetRange ( 1 , 9 ) ;
     aidLines->SetValue ( true ) ;
     r = f_height->GetRect() ;
@@ -322,8 +344,8 @@ void TABIviewer::OnEditMode(wxCommandEvent& event)
         sc->findID("ABI")->s += " " ;
         vec->addToSequence ( " " ) ;
         sc->arrange () ;
-        if ( sc->_from == -1 ) sc->mark ( "ABI" , 1 , 1 , 2 ) ;
-        else sc->mark ( "ABI" , sc->_from , sc->_from , 2 ) ;
+        if ( sc->markedFrom() == -1 ) sc->mark ( "ABI" , 1 , 1 , 2 ) ;
+        else sc->mark ( "ABI" , sc->markedFrom() , sc->markedFrom() , 2 ) ;
         sc->SetFocus() ;
         }
     else
@@ -373,7 +395,7 @@ void TABIviewer::OnCopyToNew(wxCommandEvent& event)
     {
     TVector *nv = new TVector ;
     wxString s ;
-    if ( sc->_from == -1 ) s = vec->getSequence() ; // All of it
+    if ( sc->markedFrom() == -1 ) s = vec->getSequence() ; // All of it
     else s = sc->getSelection() ;
     nv->setName ( vec->getName() ) ;
     nv->setSequence ( s ) ;

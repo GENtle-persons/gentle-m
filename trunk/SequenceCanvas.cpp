@@ -1,6 +1,7 @@
 #include "SequenceCanvas.h"
 #include <wx/printdlg.h>
 #include <wx/datetime.h>
+#include <wx/choicdlg.h>
 
 #define SCROLL_TO_END (-100)
 
@@ -32,6 +33,8 @@ BEGIN_EVENT_TABLE(SequenceCanvas, wxScrolledWindow)
     EVT_MENU(SEQ_AA_VIEW_REAL,SequenceCanvas::OnViewReal)
     EVT_MENU(SEQ_AA_VIEW_CONDENSED,SequenceCanvas::OnViewCondensed)
     EVT_MENU(SEQ_AA_BACKTRANSLATE,SequenceCanvas::OnBacktranslate)
+    EVT_MENU(SEQ_INSERT_RESTRICTION_SITE_LEFT,SequenceCanvas::OnInsertRestrictionSiteLeft)
+    EVT_MENU(SEQ_INSERT_RESTRICTION_SITE_RIGHT,SequenceCanvas::OnInsertRestrictionSiteRight)
 
     EVT_MENU(SEQ_UP,SequenceCanvas::OnSeqUp)
     EVT_MENU(SEQ_DOWN,SequenceCanvas::OnSeqDown)
@@ -183,14 +186,8 @@ void SequenceCanvas::updateEdit ( TVector *v , wxString id , int from )
         }
     else if ( getPD() )
         {
-        myass ( seq.GetCount() , "SequenceCanvas::updateEdit_1a" ) ;
-        seq.RemoveAt ( seq.GetCount()-1 ) ;
-        myass ( seq.GetCount() , "SequenceCanvas::updateEdit_1b" ) ;
-        seq.RemoveAt ( seq.GetCount()-1 ) ;
-        myass ( seq.GetCount() , "SequenceCanvas::updateEdit_1c" ) ;
-        seq.RemoveAt ( seq.GetCount()-1 ) ;
-        myass ( seq.GetCount() , "SequenceCanvas::updateEdit_1d" ) ;
-        seq.RemoveAt ( seq.GetCount()-1 ) ;
+        for ( int a = 0 ; a < 4 ; a++ )
+           seq.RemoveAt ( seq.GetCount()-1 ) ;
         getPD()->updatePrimersFromSequence () ;
         getPD()->updateResultSequence() ;
         arrange () ;
@@ -417,6 +414,7 @@ void SequenceCanvas::vecEdit ( wxCommandEvent &ev )
         TAminoAcids *ama = (TAminoAcids*) child ;
         ama->OnEditName ( ev ) ;
         }
+    SetFocus() ;
     }
 
 void SequenceCanvas::blastDNA ( wxCommandEvent &ev )
@@ -1268,118 +1266,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         }
 
     if ( event.RightDown() )
-        {
-        wxMenu *cm ;
-        if ( p && p->cPlasmid )
-           {
-           cm = p->cPlasmid->invokeVectorPopup ( pt , true ) ;
-           }
-        else if ( getAA() )
-           {
-           cm = new wxMenu ;
-           cm->Append ( AMINOACIDS_EDIT_NAME , txt("m_edit_aa") ) ;
-           cm->Append ( SEQ_AA_BACKTRANSLATE, txt("m_aa_backtranslate") ) ;
-           if ( _from != -1  )
-              {
-               cm->Append ( MDI_CUT , txt("m_cut") ) ;
-               cm->Append ( MDI_COPY , txt("m_copy") ) ;
-               cm->Append ( MDI_AS_NEW_FEATURE , txt("m_as_new_feature") ) ;
-               }
-           cm->Append ( AMINOACIDS_BLAST_AA , txt("m_blast_aa") ) ;
-           }
-        else if ( getPD() )
-           {
-           cm = new wxMenu ;
-           wxMenu *crd = new wxMenu ;
-           cm->Append ( PC_VECTOR_EDIT , txt ( "t_vector_editor" ) ) ;
-           cm->Append ( POPUP_DUMMY , txt("m_result_dna" ) , crd ) ;
-           crd->Append ( SEQ_COPY_RESLUT_DNA , txt("m_copy_result_dna") ) ;
-           crd->Append ( SEQ_NEW_FROM_RESLUT_DNA , txt("m_new_from_result_dna") ) ;
-           
-           if ( getPD()->aa_state != AA_ALL && getPD()->aa_state != AA_NONE )
-              {
-              wxMenu *cra = new wxMenu ;
-              cm->Append ( POPUP_DUMMY , txt("m_result_aa" ) , cra ) ;
-              cra->Append ( SEQ_COPY_RESLUT_AA , txt("m_copy_result_aa") ) ;
-              cra->Append ( SEQ_NEW_FROM_RESLUT_AA , txt("m_new_from_result_aa") ) ;
-              if ( _from != -1 ) cm->Append ( PD_SILMUT , txt("m_silmut") ) ;
-              }
-                      
-           if ( _from != -1  )
-              {
-              cm->AppendSeparator () ;
-              cm->Append ( MDI_COPY , txt("m_copy") ) ;
-              cm->Append ( MDI_SEL_AS_NEW_PRIMER , txt("m_sel_as_new_primer") ) ;
-              }
-           }
-        else if ( child && child->def == "ABIviewer" )
-           {
-           cm = new wxMenu ;
-           cm->Append ( MDI_COPY_TO_NEW , txt("m_copy_to_new") ) ;
-           if ( _from != -1  )
-              {
-              cm->Append ( MDI_COPY , txt("m_copy") ) ;
-              }
-           cm->AppendSeparator () ;
-           }
-        else if ( child && child->def == "alignment" && ( where || ( findMouseTargetItem ( pt ) != -1 ) ) )
-           {
-           int item = findMouseTargetItem ( pt ) ;
-           cm = new wxMenu ;
-           SeqAlign *al ;
-           if ( item != -1 ) al = (SeqAlign*)seq[item] ;
-           else al = (SeqAlign*) where ;
-           if ( al->myname == txt("t_identity") ) {} // Do nothing
-           else if ( al->whatsthis() == "FEATURE" ) {} // Do nothing
-           else
-              {
-              last_al = al ;
-              if ( where ) 
-                 {
-                 lastclick = pos ;
-                 wxMenu *cc = new wxMenu ;
-                 cc->Append ( SEQ_INSERT_GAP , txt("t_mmb_insert_gap") ) ;
-                 cc->Append ( SEQ_DELETE_GAP , txt("t_mmb_delete_gap") ) ;
-                 cc->Append ( SEQ_INSERT_OTHER_GAPS , txt("t_mmb_insert_gap_others") ) ;
-                 cc->Append ( SEQ_DELETE_OTHER_GAPS , txt("t_mmb_delete_gap_others") ) ;
-                 cm->Append ( SEQ_COPY_AS , txt("m_align_gap") , cc ) ;
-                 } 
-
-              wxMenu *cb = new wxMenu ;
-              TAlignment *ali = (TAlignment*) child ;
-              if ( last_al->id > 0 ) cb->Append ( SEQ_UP , txt("t_seq_up") ) ;
-              if ( last_al->id + 2 < ali->lines.size() ) cb->Append ( SEQ_DOWN , txt("t_seq_down") ) ;
-              if ( last_al->id > 0 ) cb->Append ( SEQ_TOP , txt("t_seq_top") ) ;
-              if ( last_al->id + 2 < ali->lines.size() ) cb->Append ( SEQ_BOTTOM , txt("t_seq_bottom") ) ;
-              if ( cb->GetMenuItemCount() > 0 ) cm->Append ( SEQ_COPY_AS , txt("t_seq_move") , cb ) ;
-              if ( ali->lines[last_al->id].hasFeatures() ) cm->Append ( SEQ_FEAT_HIDE , txt("t_hide_feature_line") ) ;
-              else cm->Append ( SEQ_FEAT_SHOW , txt("t_show_feature_line") ) ;
-              cm->AppendSeparator () ;
-              }
-           }
-        else
-           {
-           cm = new wxMenu ;
-           }
-           
-        if ( isMiniDisplay() )
-           {
-           wxMenu *ca = new wxMenu ;
-           ca->Append ( SEQ_AA_VIEW_ORIGINAL , txt("m_aa_view_original") ) ;
-           ca->Append ( SEQ_AA_VIEW_REAL , txt("m_aa_view_real") ) ;
-           ca->Append ( SEQ_AA_VIEW_CONDENSED , txt("m_aa_view_condensed") ) ;
-           cm->Append ( SEQ_AA_VIEW , txt("m_aa_view") , ca ) ;
-           }
-        
-//        wxMenu *ca = new wxMenu ;
-//        if ( !isMiniDisplay() ) ca->Append ( SEQ_COPY_TEXT , txt("m_copy_as_text") ) ;
-        cm->Append ( SEQ_COPY_IMAGE , txt("m_copy_as_image") ) ;
-        cm->Append ( SEQ_SAVE_IMAGE , txt("m_save_as_image") ) ;
-//        cm->Append ( SEQ_COPY_AS , txt("m_copy_as") , ca ) ;
-        cm->Append ( SEQ_PRINT , txt("m_print_sequence") ) ;
-        PopupMenu ( cm , event.GetPosition() ) ;
-        delete cm ;
-        }
+        showContextMenu ( where , pos , event.GetPosition() ) ;
 
     if ( event.Dragging() || ( event.LeftDown() && where && where->takesMouseActions ) )
         {
@@ -1406,10 +1293,121 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
                }
             }
         }
-
-//    xpos = pt.x;
-//    ypos = pt.y;
 }
+
+void SequenceCanvas::showContextMenu ( SeqBasic *where , int pos , wxPoint pt )
+    {
+    wxMenu *cm ;
+    if ( p && p->cPlasmid ) // DNA
+       {
+       cm = p->cPlasmid->invokeVectorPopup ( pt , true ) ;
+       }
+    else if ( getAA() ) // Amino acids
+       {
+       cm = new wxMenu ;
+       cm->Append ( AMINOACIDS_EDIT_NAME , txt("m_edit_aa") ) ;
+       cm->Append ( SEQ_AA_BACKTRANSLATE, txt("m_aa_backtranslate") ) ;
+       if ( _from != -1  )
+          {
+           cm->Append ( MDI_CUT , txt("m_cut") ) ;
+           cm->Append ( MDI_COPY , txt("m_copy") ) ;
+           cm->Append ( MDI_AS_NEW_FEATURE , txt("m_as_new_feature") ) ;
+           }
+       cm->Append ( AMINOACIDS_BLAST_AA , txt("m_blast_aa") ) ;
+       }
+    else if ( getPD() ) // Primer design
+       {
+       cm = new wxMenu ;
+       wxMenu *crd = new wxMenu ;
+       cm->Append ( PC_VECTOR_EDIT , txt ( "t_vector_editor" ) ) ;
+       cm->Append ( POPUP_DUMMY , txt("m_result_dna" ) , crd ) ;
+       crd->Append ( SEQ_COPY_RESLUT_DNA , txt("m_copy_result_dna") ) ;
+       crd->Append ( SEQ_NEW_FROM_RESLUT_DNA , txt("m_new_from_result_dna") ) ;
+       
+       if ( getPD()->aa_state != AA_ALL && getPD()->aa_state != AA_NONE )
+          {
+          wxMenu *cra = new wxMenu ;
+          cm->Append ( POPUP_DUMMY , txt("m_result_aa" ) , cra ) ;
+          cra->Append ( SEQ_COPY_RESLUT_AA , txt("m_copy_result_aa") ) ;
+          cra->Append ( SEQ_NEW_FROM_RESLUT_AA , txt("m_new_from_result_aa") ) ;
+          if ( _from != -1 ) cm->Append ( PD_SILMUT , txt("m_silmut") ) ;
+          }
+                  
+       if ( _from != -1  )
+          {
+          cm->AppendSeparator () ;
+          cm->Append ( MDI_COPY , txt("m_copy") ) ;
+          cm->Append ( MDI_SEL_AS_NEW_PRIMER , txt("m_sel_as_new_primer") ) ;
+          cm->Append ( SEQ_INSERT_RESTRICTION_SITE_LEFT , txt("m_insert_restiction_site_left") ) ;
+          cm->Append ( SEQ_INSERT_RESTRICTION_SITE_RIGHT , txt("m_insert_restiction_site_right") ) ;
+          }
+       }
+    else if ( child && child->def == "ABIviewer" ) // Sequencer data
+       {
+       cm = new wxMenu ;
+       cm->Append ( MDI_COPY_TO_NEW , txt("m_copy_to_new") ) ;
+       if ( _from != -1  )
+          {
+          cm->Append ( MDI_COPY , txt("m_copy") ) ;
+          }
+       cm->AppendSeparator () ;
+       }
+    else if ( child && child->def == "alignment" && ( where || ( findMouseTargetItem ( pt ) != -1 ) ) ) // Alignment
+       {
+       int item = findMouseTargetItem ( pt ) ;
+       cm = new wxMenu ;
+       SeqAlign *al ;
+       if ( item != -1 ) al = (SeqAlign*)seq[item] ;
+       else al = (SeqAlign*) where ;
+       if ( al->myname == txt("t_identity") ) {} // Do nothing
+       else if ( al->whatsthis() == "FEATURE" ) {} // Do nothing
+       else
+          {
+          last_al = al ;
+          if ( where ) 
+             {
+             lastclick = pos ;
+             wxMenu *cc = new wxMenu ;
+             cc->Append ( SEQ_INSERT_GAP , txt("t_mmb_insert_gap") ) ;
+             cc->Append ( SEQ_DELETE_GAP , txt("t_mmb_delete_gap") ) ;
+             cc->Append ( SEQ_INSERT_OTHER_GAPS , txt("t_mmb_insert_gap_others") ) ;
+             cc->Append ( SEQ_DELETE_OTHER_GAPS , txt("t_mmb_delete_gap_others") ) ;
+             cm->Append ( SEQ_COPY_AS , txt("m_align_gap") , cc ) ;
+             } 
+
+          wxMenu *cb = new wxMenu ;
+          TAlignment *ali = (TAlignment*) child ;
+          if ( last_al->id > 0 ) cb->Append ( SEQ_UP , txt("t_seq_up") ) ;
+          if ( last_al->id + 2 < ali->lines.size() ) cb->Append ( SEQ_DOWN , txt("t_seq_down") ) ;
+          if ( last_al->id > 0 ) cb->Append ( SEQ_TOP , txt("t_seq_top") ) ;
+          if ( last_al->id + 2 < ali->lines.size() ) cb->Append ( SEQ_BOTTOM , txt("t_seq_bottom") ) ;
+          if ( cb->GetMenuItemCount() > 0 ) cm->Append ( SEQ_COPY_AS , txt("t_seq_move") , cb ) ;
+          if ( ali->lines[last_al->id].hasFeatures() ) cm->Append ( SEQ_FEAT_HIDE , txt("t_hide_feature_line") ) ;
+          else cm->Append ( SEQ_FEAT_SHOW , txt("t_show_feature_line") ) ;
+          cm->AppendSeparator () ;
+          }
+       }
+    else
+       {
+       cm = new wxMenu ;
+       }
+       
+    if ( isMiniDisplay() )
+       {
+       wxMenu *ca = new wxMenu ;
+       ca->Append ( SEQ_AA_VIEW_ORIGINAL , txt("m_aa_view_original") ) ;
+       ca->Append ( SEQ_AA_VIEW_REAL , txt("m_aa_view_real") ) ;
+       ca->Append ( SEQ_AA_VIEW_CONDENSED , txt("m_aa_view_condensed") ) ;
+       cm->Append ( SEQ_AA_VIEW , txt("m_aa_view") , ca ) ;
+       }
+    
+    cm->Append ( SEQ_COPY_IMAGE , txt("m_copy_as_image") ) ;
+    cm->Append ( SEQ_SAVE_IMAGE , txt("m_save_as_image") ) ;
+    cm->Append ( SEQ_PRINT , txt("m_print_sequence") ) ;
+    PopupMenu ( cm , pt ) ;
+    delete cm ;
+    }    
+
 
 SeqBasic* SequenceCanvas::findMouseTarget ( wxPoint pt , int &pos )
     {
@@ -1793,6 +1791,64 @@ void SequenceCanvas::OnPaste ( wxCommandEvent &ev )
     if ( p && p->vec ) p->vec->undo.stop() ;    
     }
     
+void SequenceCanvas::OnInsertRestrictionSiteLeft ( wxCommandEvent &ev )
+    {
+    insertRestrictionSite ( true ) ;
+    }    
+    
+void SequenceCanvas::OnInsertRestrictionSiteRight ( wxCommandEvent &ev )
+    {
+    insertRestrictionSite ( false ) ;
+    }    
+
+void SequenceCanvas::insertRestrictionSite ( bool left )
+    {
+    if ( _from == -1 ) return ;
+    if ( getAA() ) return ;
+    TVector *v = NULL ;
+    if ( child ) v = child->vec ;
+    if ( !v ) return ;
+    wxArrayString vs ;
+    myapp()->frame->LS->getEnzymesInGroup ( txt("All") , vs ) ;
+    vs.Sort () ;
+    wxString *as = new wxString [ vs.GetCount() ] ;
+    for ( int a = 0 ; a < vs.GetCount() ; a++ ) as[a] = vs[a] ;
+    wxSingleChoiceDialog scd ( this , txt("t_vec_enzym") , "" , vs.GetCount() , as ) ;
+    if ( wxID_OK != scd.ShowModal() )
+        {
+        delete [] as ;
+        return ;
+        }    
+    delete [] as ;
+    
+    TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme(scd.GetStringSelection()) ;
+    wxString se = e->sequence ;
+
+    int a , p1 = _from - se.length() - 1 ;
+    if ( !left ) p1 = _to ;
+    
+    TVector tv ;
+    tv.setFromVector ( *v ) ;
+    tv.setSequence ( seq[lastmarked]->s ) ;
+    for ( a = 0 ; a < se.length() ; a++ )
+        {
+        char c = se.GetChar(a) ;
+        if ( seq[lastmarked]->whatsthis() == "PRIMER_DOWN" )
+           c = tv.getComplement ( c ) ;
+        tv.setNucleotide ( p1+a , c ) ;
+        }    
+    seq[lastmarked]->s = tv.getSequence() ;
+
+
+    for ( a = 0 ; a < v->re.GetCount() && v->re[a] != e ; a++ ) ;
+    if ( a == v->re.GetCount() ) v->re.Add ( e ) ;
+
+    if ( getPD() ) v = NULL ;
+    wxString id = seq[lastmarked]->whatsthis() ;
+    TMarkMem m ( this ) ;
+    updateEdit ( v , id , _from ) ;
+    m.remark() ;
+    }        
 
 
 // -------------------------------------------------------- TMarkMem
@@ -1801,8 +1857,8 @@ TMarkMem::TMarkMem ( SequenceCanvas *_sc )
     {
     sc = _sc ;
     if ( !sc ) return ;
-    f = sc->_from ;
-    t = sc->_to ;
+    f = sc->markedFrom() ;
+    t = sc->markedTo() ;
     l = sc->lastmarked ;
     }
     

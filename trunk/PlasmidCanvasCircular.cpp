@@ -737,7 +737,7 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
              p->cSequence->mark ( "DNA" , -1 , -1 ) ;
           }
        }
-    else if ( event.MiddleDown() && p->cSequence->_from != -1 )
+    else if ( event.MiddleDown() && p->cSequence->markedFrom() != -1 )
        {
        p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
        }

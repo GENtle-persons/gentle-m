@@ -580,3 +580,5 @@
 "t_aa_I","Isoleucine","Isoleucin"
 "t_aa_V","Valine","Valin"
 "m_aa_backtranslate","'Backtranslate' DNA","DNS 'zurückübersetzen'"
+"m_insert_restiction_site_left","Insert restriction site left of this selection","Restriktionsschnittstelle links von der Markierung einfügen"
+"m_insert_restiction_site_right","Insert restriction site right of this selection","Restriktionsschnittstelle rechts von der Markierung einfügen"

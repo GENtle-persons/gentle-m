@@ -225,10 +225,10 @@ void TPrimerDesign::OnEditMode(wxCommandEvent& event)
         {
         sc->setEditMode ( true ) ;
         sc->arrange () ;
-        if ( sc->_from == -1 )
+        if ( sc->markedFrom() == -1 )
            sc->mark ( item , 1 , 1 , 2 ) ;
         else
-           sc->mark ( item , sc->_from , sc->_from , 2 ) ;
+           sc->mark ( item , sc->markedFrom() , sc->markedFrom() , 2 ) ;
         sc->SetFocus() ;
         sc->Scroll ( 0 , sc->getBatchMark() ) ;
         }
@@ -265,6 +265,7 @@ void TPrimerDesign::updatePrimersFromSequence ()
         primer[a].getSequenceFromVector ( &d , !primer[a].upper ) ;
         }
     updatePrimerStats () ;
+    guessOptNuc() ;
     }
 
 void TPrimerDesign::updatePrimerStats ()
@@ -674,7 +675,7 @@ void TPrimerDesign::updateResultSequence()
 
 void TPrimerDesign::OnAA_setit(int mode)
     {
-    int oldto = sc->_to , oldfrom = sc->_from , lastmarked = sc->lastmarked ;
+    int oldto = sc->markedTo() , oldfrom = sc->markedFrom() , lastmarked = sc->lastmarked ;
     bool wasZero = aa_state == AA_NONE ;
     int oldscrollpos , dummy ;
     sc->GetViewStart ( &dummy , &oldscrollpos ) ;
@@ -767,7 +768,7 @@ void TPrimerDesign::doShowPrimer ( int i )
     if ( primer[i].upper ) p = "PRIMER_UP" ;
     else p = "PRIMER_DOWN" ;
     sc->mark ( p , from , to ) ;
-    sc->ensureVisible(sc->_from) ;
+    sc->ensureVisible(sc->markedFrom()) ;
 //    sc->Scroll ( 0 , sc->getBatchMark() ) ;
     sc->SetFocus () ;
     }
@@ -789,7 +790,7 @@ void TPrimerDesign::OnActivatePrimer ( wxListEvent& event)
 void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
     {
     TSilmutDialog sd ( this , txt("t_silmut") ) ;
-    sd.initme ( w , sc->_from , sc->_to ) ;
+    sd.initme ( w , sc->markedFrom() , sc->markedTo() ) ;
     if ( wxID_OK != sd.ShowModal () ) return ;
     wxString ns = sd.getSequence() ;
     if ( ns.IsEmpty() ) return ;
@@ -803,7 +804,7 @@ void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
         {
         if ( ns.GetChar(a) >= 'A' && ns.GetChar(a) <= 'Z' )
            {
-           b = a + sc->_from - 1 ;
+           b = a + sc->markedFrom() - 1 ;
            if ( sc->seq[show_features]->s.GetChar(b) != ' ' ) sc->seq[show_features]->s.SetChar(b,ns.GetChar(a)) ;
            if ( sc->seq[4+show_features]->s.GetChar(b) != ' ' ) sc->seq[4+show_features]->s.SetChar(b,nt.GetChar(a)) ;
            }

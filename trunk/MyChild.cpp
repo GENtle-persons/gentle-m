@@ -694,8 +694,8 @@ void MyChild::OnAA_setit(int mode)
     {
     bool wasZero = aa_state == AA_NONE ;
     int oldscrollpos , dummy , oldmarkfrom , oldmarkto , oldmarkwhat ;
-    oldmarkfrom = cSequence->_from ;
-    oldmarkto = cSequence->_to ;
+    oldmarkfrom = cSequence->markedFrom() ;
+    oldmarkto = cSequence->markedTo() ;
     oldmarkwhat = cSequence->lastmarked ;
     cSequence->GetViewStart ( &dummy , &oldscrollpos ) ;
     if ( aa_state == mode ) return ;

@@ -349,8 +349,8 @@ void TAminoAcids::OnCopy(wxCommandEvent& event)
 void TAminoAcids::OnAsNewFeature(wxCommandEvent& event)
     {
     char t[1000] ;
-    int from = sc->_from ;
-    int to = sc->_to ;
+    int from = sc->markedFrom() ;
+    int to = sc->markedTo() ;
     if ( from == -1 ) return ;
     
     vec->undo.start ( txt("u_new_feature") ) ;
@@ -386,7 +386,7 @@ void TAminoAcids::OnBlastAA(wxCommandEvent& event)
     {
     wxString seq ;
     int a ;
-    if ( sc->_from < 0 ) seq = vec->getSequence() ;
+    if ( sc->markedFrom() < 0 ) seq = vec->getSequence() ;
     else seq = sc->getSelection() ;
     myapp()->frame->blast ( seq , "blastp" ) ;
     }
