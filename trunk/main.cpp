@@ -270,6 +270,13 @@ bool MyApp::OnInit()
     return TRUE;
 }
 
+wxString MyApp::get_GENtle_version ()
+	{
+ 	return wxString::Format ( "%d.%d.%d" , GENTLE_VERSION_MAJOR , 
+  											GENTLE_VERSION_MINOR , 
+  											GENTLE_VERSION_SUB ) ;
+	}    
+
 /**	\fn MyApp::OnExit ()
 	\brief Exits the application.
 	
