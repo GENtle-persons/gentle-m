@@ -29,21 +29,15 @@ class TVirtualGel : public ChildBase
     void initme () ;
     virtual wxString getName () ;
 
-//    virtual void OnDir ( wxCommandEvent &event ) ;
-//    virtual void OnFile ( wxCommandEvent &event ) ;
-    
-//    void ShowDir ( wxString s ) ;
-//    virtual void Refresh () ;    
-//    virtual void OnSize(wxSizeEvent &event) ;
+    virtual void OnPercent ( wxCommandEvent &ev ) ;
+    virtual void OnLabel ( wxCommandEvent &ev ) ;
 
     TMyGelControl *right ;
-/*    wxSplitterWindow *rl ;
-    wxListBox *lb ;
-    wxButton *bu ;*/
-
+    wxChoice *ch_percent ;
+    wxCheckBox *cb_label ;
     vector <TGelLane> lanes ;
     wxString type ;
-    float percent ;
+    double percent ;
     int cutoff , maxband ;
     
     DECLARE_EVENT_TABLE()

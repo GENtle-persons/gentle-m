@@ -9,6 +9,9 @@ BEGIN_EVENT_TABLE(TVirtualGel, MyChildBase)
     EVT_CLOSE(ChildBase::OnClose)
     EVT_SET_FOCUS(ChildBase::OnFocus)
     EVT_SIZE(TVirtualGel::OnSize)
+    
+    EVT_CHOICE(VG_PERCENT,TVirtualGel::OnPercent)
+    EVT_CHECKBOX(VG_LABEL,TVirtualGel::OnLabel)
 
     // Dummies
     EVT_MENU(MDI_TOGGLE_FEATURES,ChildBase::OnDummy)
@@ -56,6 +59,8 @@ TVirtualGel::TVirtualGel(wxWindow *parent, const wxString& title)
     def = "GEL" ;
     vec = NULL ;
     percent = 1 ;
+    cb_label = NULL ;
+    ch_percent = NULL ;
     }
 
 void TVirtualGel::initme ()
@@ -76,14 +81,28 @@ void TVirtualGel::initme ()
     right = new TMyGelControl ( this , IV_IMAGE ) ;
     right->vg = this ;
 
+    int a ;
+    wxBoxSizer *hs = new wxBoxSizer ( wxHORIZONTAL ) ;
+    ch_percent = new wxChoice ( this , VG_PERCENT , wxDefaultPosition , wxSize ( 50 , -1 ) ) ;
+    cb_label = new wxCheckBox ( this , VG_LABEL , "Show label" ) ;
+    cb_label->SetValue ( true ) ;
+   	
+   	hs->Add ( cb_label , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
+   	hs->Add ( new wxStaticText ( this , -1 , "   Gel concentration" ) , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
+   	hs->Add ( ch_percent , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
+
     wxBoxSizer *vs = new wxBoxSizer ( wxVERTICAL ) ;
-    vs->Add ( new wxStaticText ( this , -1 , "Test" ) , 0 , wxEXPAND , 5 ) ;
+    vs->Add ( hs , 0 , wxEXPAND , 5 ) ;
     vs->Add ( right , 1 , wxEXPAND , 5 ) ;
 
     myapp()->frame->setChild ( this ) ;
 
     if ( type == "DNA" )
     	{
+        for ( a = 3 ; a <= 30 ; a++ )
+        	ch_percent->Append ( wxString::Format ( "%1.1f %%" , ((float)a)/10.0 ) ) ;
+       	ch_percent->SetStringSelection ( "1.0 %" ) ;
+       	
         lanes.push_back ( TGelLane() ) ;
         lanes[0].setMarker ( "Mass Ruler" ) ;
     	}    
@@ -98,6 +117,17 @@ wxString TVirtualGel::getName ()
     return "Virtual Gel" ;
     }
     
+void TVirtualGel::OnPercent ( wxCommandEvent &ev )
+	{
+	Refresh () ;
+	}    
+
+void TVirtualGel::OnLabel ( wxCommandEvent &ev )
+	{
+	Refresh () ;
+	}    
+
+    
 // ****************************************************************
 
 TMyGelControl::TMyGelControl ( wxWindow *parent , int id )
@@ -108,12 +138,35 @@ TMyGelControl::TMyGelControl ( wxWindow *parent , int id )
     
 void TMyGelControl::OnDraw(wxDC& dc)
     {
+    if ( !vg->cb_label ) return ; //Pre-drawing
     if ( vg->lanes.size() == 0 ) return ; // no lanes, nothing to do
+    
+    // Initialize
+    vg->ch_percent->GetStringSelection().ToDouble ( &vg->percent ) ;
+    vg->percent /= 10.0 ;
+    
     int a , b ;
     int w , h ;
     dc.GetSize ( &w , &h ) ;
-    int lw = w / vg->lanes.size() ;
-    if ( lw > 100 ) lw = 100 ;
+    int lw ; // Lane width
+    int go ; // gel offset (y)
+    
+    if ( printing )
+    	{
+	    w = w > h ? h : w ; // smallest side
+	    w /= 2 ; // half of it
+	    h = w ;
+	    lw = w / ( vg->lanes.size() > 6 ? vg->lanes.size() : 6 ) ; // min 6 lanes
+	    dc.SetDeviceOrigin ( w / 2 , h / 2 ) ; // center it
+	    go = h / 10 ;
+    	}
+    else
+    	{
+	    lw = w / vg->lanes.size() ;
+	    if ( lw > 100 ) lw = 100 ;
+	    go = 50 ;
+    	}    
+    
     int x = lw / 10 ;
 
     // Calculating presets
@@ -129,7 +182,7 @@ void TMyGelControl::OnDraw(wxDC& dc)
  	    	if ( vg->lanes[a].vi[b] < vg->cutoff )
        			vg->cutoff = vg->lanes[a].vi[b] ;
 	    	}    
-	    wxRect r ( x+5 , 50 , lw-10 , h - 55 ) ;
+	    wxRect r ( x+go/10 , go , lw-go*2/10 , h - go*11/10 ) ;
 	    vg->lanes[a].pos = r ;
 	    x += lw ;
      	}   	
@@ -138,8 +191,8 @@ void TMyGelControl::OnDraw(wxDC& dc)
 
    	// Drawing gel
     int fontfactor = 10 ;
-    if ( printing ) fontfactor = (w>h?h:w)/10000 ;
-    wxFont *smallFont = MYFONT ( fontfactor , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    if ( printing ) fontfactor = w/5000 ;
+    wxFont *smallFont = MYFONT ( fontfactor * 9 / 10 , wxSWISS , wxNORMAL , wxNORMAL ) ;
     wxFont *normalFont = MYFONT ( fontfactor * 11 / 10 , wxSWISS , wxNORMAL , wxNORMAL ) ;
     wxFont *bigFont = MYFONT ( fontfactor * 14 / 10 , wxSWISS , wxNORMAL , wxNORMAL ) ;
 
@@ -167,13 +220,11 @@ void TMyGelControl::OnDraw(wxDC& dc)
 	    dc.GetTextExtent ( title , &tw , &th ) ;
 	    dc.DrawText ( title ,
 	    				( vg->lanes[a].pos.GetLeft() + vg->lanes[a].pos.GetRight() - tw ) / 2 ,
-	    				vg->lanes[a].pos.GetTop() - th - 2 ) ;
+	    				vg->lanes[a].pos.GetTop() - th * 3 / 2 ) ;
 
-	    dc.SetFont ( *smallFont ) ;
+//	    dc.SetFont ( *smallFont ) ;
 	    for ( b = 0 ; b < vg->lanes[a].vi.GetCount() ; b++ )
-	    	{
  	    	drawBand ( dc , vg->lanes[a] , b ) ;
-	    	}    
 	    
 	    
     	}    
@@ -201,54 +252,47 @@ void TMyGelControl::drawBand ( wxDC &dc , TGelLane &lane , int band )
     	dc.DrawLine ( lane.pos.GetLeft() + c , y - b , 
     				  lane.pos.GetRight() - c, y - b ) ;
         }		  
+        
+    // Label
+    if ( !vg->cb_label->GetValue() ) return ; // Don't show labels
     wxString title = wxString::Format ( "%d" , lane.vi[band] ) ;
     if ( lane.vs[band] != "" ) title = lane.vs[band] ;
+    /*
+    int i = y ;
+    i -= getLanePos ( lane.vi[0] , h ) + lane.pos.GetTop() ;
+    title = wxString::Format ( "%d (%dbp)" , i , lane.vi[band] ) ;
+    */
     int tw , th ;
-    dc.GetTextExtent ( title , &tw , &th ) ;
-
-    dc.SetTextForeground ( *wxWHITE ) ;
-    
-    tw = ( lane.pos.GetLeft() + lane.pos.GetRight() - tw ) / 2 ;
-    dc.DrawText ( title , tw - 1 , y - th / 2 ) ;
-    dc.DrawText ( title , tw + 1 , y - th / 2 ) ;
-    dc.DrawText ( title , tw - 1 , y - th / 2 - 1 ) ;
-    dc.DrawText ( title , tw + 1 , y - th / 2 - 1 ) ;
-    dc.DrawText ( title , tw - 1 , y - th / 2 + 1 ) ;
-    dc.DrawText ( title , tw + 1 , y - th / 2 + 1 ) ;
-
     dc.SetTextForeground ( *wxBLUE ) ;
-    dc.DrawText ( title , tw , y - th / 2 ) ;
+    
+    int ps = dc.GetFont().GetPointSize() + 1 ;
+
+    do {
+        ps-- ;
+        dc.SetFont ( *MYFONT ( ps , wxROMAN , wxNORMAL , wxNORMAL ) ) ;
+        dc.GetTextExtent ( title , &tw , &th ) ;
+       } while ( tw > lane.pos.GetRight() - lane.pos.GetLeft() ) ;
+    tw = lane.pos.GetRight() - tw ;
+    dc.DrawText ( title , tw , y ) ;
 	}    
     
 int TMyGelControl::getLanePos ( int size , int height , float perc )
 	{	
-	int border = 10 ;
-	    
-	// Factor
-	double x = height - ( border * 2 ) ;
-	x *= log ( fix_percent ( vg->cutoff ) ) ;
-	
-	double max = x ;
-	max /= log ( fix_percent ( vg->maxband ) ) ;
-
-	double rh = height - ( border * 2 ) - max ;
-	
-	double ret = x ;
-	ret /= log ( fix_percent ( size ) ) ;
-	
-	// Stretching
-	ret -= max ;
-	ret *= (double) height ;
-	ret /= (double) rh ;
-	
-	return ret + border ;
+	int border = height / 100 ;
+	double ret = height - border * 2 ;
+	ret *= fix_percent ( size ) - fix_percent ( vg->maxband ) ;
+	ret /= fix_percent ( vg->cutoff ) - fix_percent ( vg->maxband ) ;
+	return (int) ret + border ;
 	}    
 
 double TMyGelControl::fix_percent ( int size , float perc )
 	{
 	if ( perc == 0 ) perc = vg->percent ;
-	float ret = size ;
-	ret = ret * 100 / perc ;
+	double ret = size ;
+	ret = 400 / log10 ( ret / perc ) ;
+/*	double a = -0.000235 ;
+	double b = 1.8564 ;
+	ret = pow ( 10 , a * ret + b ) * 10 ;*/
 	return ret ;
 	}    
 
@@ -261,12 +305,12 @@ void TMyGelControl::OnPaint(wxPaintEvent& event)
 void TMyGelControl::OnEvent(wxMouseEvent& event)
     {
     wxPoint pt(event.GetPosition());
-    return ;
+
     if ( event.RightDown() )
         {
         wxMenu *cm = new wxMenu ;
-        cm->Append ( IV_MENU_SAVE_AS_BITMAP , txt("m_save_as_bitmap") ) ;
-        cm->Append ( IV_MENU_COPY , txt("m_copy_to_clipboard") ) ;
+//        cm->Append ( IV_MENU_SAVE_AS_BITMAP , txt("m_save_as_bitmap") ) ;
+//        cm->Append ( IV_MENU_COPY , txt("m_copy_to_clipboard") ) ;
         cm->Append ( IV_MENU_PRINT , txt("m_print") ) ;
         PopupMenu ( cm , pt ) ;
         delete cm ;    

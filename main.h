@@ -8,7 +8,7 @@ typedef unsigned int uint ;
 //#define MYDEBUG
 
 // Turn logging on/off
-//#define MYLOG
+#define MYLOG
 
 #include "wx/wxprec.h"
 

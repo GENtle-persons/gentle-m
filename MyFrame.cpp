@@ -25,7 +25,8 @@ BEGIN_EVENT_TABLE(MyFrame, MyFrameType)
     EVT_MENU(MDI_MANAGE_DATABASE, MyFrame::OnManageDatabase)
     EVT_MENU(PROGRAM_OPTIONS, MyFrame::OnProgramOptions)
     
-    EVT_MENU(MDI_RESTRICTION, MyFrame::TestMenu)
+    EVT_MENU(Y___, MyFrame::TestMenu)
+    EVT_MENU(MDI_RESTRICTION, MyFrame::BollocksMenu)
     EVT_MENU(MDI_LIGATION, MyFrame::BollocksMenu)
     EVT_MENU(MDI_PRINT_REPORT, MyFrame::BollocksMenu)
 
@@ -94,7 +95,7 @@ MyFrame::MyFrame(wxWindow *parent,
     entries[34].Set(wxACCEL_CTRL, WXK_TAB, MDI_NEXT_WINDOW);
     entries[35].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_TAB, MDI_PREV_WINDOW);
     entries[36].Set(wxACCEL_NORMAL, WXK_F8, MDI_TOGGLE_IDNA);
-    entries[37].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_F12, MDI_RESTRICTION);
+    entries[37].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_F12, Y___);
     
     wxAcceleratorTable accel(ACC_ENT, entries);
     SetAcceleratorTable(accel);
@@ -1201,6 +1202,7 @@ void MyFrame::activateChild ( int a )
        mainTree->SelectItem ( children[a]->inMainTree ) ;
        }
     else setActiveChild ( NULL ) ;
+    wxSafeYield () ;
     }
 
 void MyFrame::lockDisplay ( bool lock )
@@ -1433,7 +1435,7 @@ void MyFrame::BollocksMenu(wxCommandEvent& event)
     lastChild->ProcessEvent ( event ) ;
     }
     
-void MyFrame::RerouteMenu(wxCommandEvent& event)
+void MyFrame::RerouteMenu(wxCommandEvent& event) 
     {
     bool b = false ;
     if ( lastChild ) b = lastChild->ProcessEvent ( event ) ;
@@ -1486,7 +1488,91 @@ TVirtualGel *MyFrame::useGel ( wxString type )
 
 void MyFrame::TestMenu(wxCommandEvent& event)
     {
-    useGel ( "DNA" ) ;
+    srand ( time(NULL) );
+    while ( true )
+    	{
+        ChildBase *ac = GetActiveChild () ;
+        int r = rand() ;
+        r %= 10 ;
+        
+        if ( ac )
+        	{
+    	    wxString x ;
+    	    x = ac->getName() ;
+    	    if ( ac->cSequence ) x += wxString::Format ( ", EditMode : %d" , ac->cSequence->getEditMode() ) ;
+    	    mylog ( "Testsuite:Status" , x ) ;
+        	}    
+        
+        if ( r < 7 )
+        	{
+    	    if ( !ac->cSequence ) continue ;
+    	    wxKeyEvent ev ;
+    	    r = rand () % 40 ;
+    	    if ( r > 12 ) r = 9 + r % 4 ;
+    	    wxString msg ;
+    	    if ( r == 0 ) { ev.m_keyCode = 'A' ; msg = "A" ; }
+    	    if ( r == 1 ) { ev.m_keyCode = 'C' ; msg = "C" ; }
+    	    if ( r == 2 ) { ev.m_keyCode = 'T' ; msg = "G" ; }
+    	    if ( r == 3 ) { ev.m_keyCode = 'G' ; msg = "T" ; }
+    	    if ( r == 4 ) { ev.m_keyCode = WXK_BACK ; msg = "BACK" ; }
+    	    if ( r == 5 ) { ev.m_keyCode = WXK_DELETE ; msg = "DEL" ; }
+    	    if ( r == 6 ) { ev.m_keyCode = WXK_HOME ; msg = "HOME" ; }
+    	    if ( r == 7 ) { ev.m_keyCode = WXK_END ; msg = "END" ; }
+    	    if ( r == 8 ) { ev.m_keyCode = WXK_INSERT ; msg = "INSERT" ; }
+    	    if ( r == 9 ) { ev.m_keyCode = WXK_RIGHT ; msg = "RIGHT" ; }
+    	    if ( r == 10 ) { ev.m_keyCode = WXK_LEFT ; msg = "LEFT" ; }
+    	    if ( r == 11 ) { ev.m_keyCode = WXK_UP ; msg = "UP" ; }
+    	    if ( r == 12 ) { ev.m_keyCode = WXK_DOWN ; msg = "DOWN" ; }
+    	    mylog ( "Testsuite:Key" , wxString::Format ( "%s" , msg.c_str() ) ) ;
+    	    ac->cSequence->OnCharHook(ev) ;
+        	}    
+       	else if ( r == 7 )
+        	{
+    	    if ( !ac->cSequence ) continue ;
+    	    mylog ( "Testsuite:Edit mode" ) ;
+    	    ((MyChild*)ac)->OnEditMode(event) ;
+         	}   	    
+       	else if ( r == 8 )
+       		{
+   		    r = rand() % children.GetCount() ;
+    	    mylog ( "Testsuite:Activate" , wxString::Format ( "%d" , r ) ) ;
+   		    activateChild ( r ) ;
+       		}    
+       	else if ( r == 9 )
+       		{
+   		    if ( ac->def != "dna" ) continue ;
+   		    MyChild *c = (MyChild*) ac ;
+   		    wxCommandEvent ev ;
+   		    r = rand() % 22 ;
+    	    mylog ( "Testsuite:Message" , wxString::Format ( "%d" , r ) ) ;
+   		    switch ( r )
+         		{
+     		    case  0 : c->OnAA_none ( ev ) ; break ;
+     		    case  1 : c->OnAA_known ( ev ) ; break ;
+     		    case  2 : c->OnAA_all ( ev ) ; break ;
+     		    case  3 : c->OnAA_three ( ev ) ; break ;
+     		    case  4 : c->OnAA_one ( ev ) ; break ;
+     		    case  5 : c->OnAA_three_1 ( ev ) ; break ;
+     		    case  6 : c->OnAA_three_2 ( ev ) ; break ;
+     		    case  7 : c->OnAA_three_3 ( ev ) ; break ;
+     		    case  8 : c->OnAA_three_M1 ( ev ) ; break ;
+     		    case  9 : c->OnAA_three_M2 ( ev ) ; break ;
+     		    case 10 : c->OnAA_three_M3 ( ev ) ; break ;
+     		    case 11 : c->OnCircularLinear ( ev ) ; break ;
+     		    case 12 : c->OnMarkAll ( ev ) ; break ;
+     		    case 13 : c->OnCut ( ev ) ; break ;
+     		    case 14 : c->OnCopy ( ev ) ; break ;
+     		    case 15 : c->OnPaste ( ev ) ; break ;
+     		    case 16 : c->OnCopyToNew ( ev ) ; break ;
+     		    case 17 : c->OnViewMode ( ev ) ; break ;
+     		    case 18 : c->OnORFs ( ev ) ; break ;
+     		    case 19 : c->OnToggleFeatures ( ev ) ; break ;
+     		    case 20 : c->OnToggleRestriction ( ev ) ; break ;
+     		    case 21 : c->OnToggleIDNA ( ev ) ; break ;
+                }
+   		    wxSafeYield() ;
+       		}   
+     	}
     }            
                 
 // DROP TARGET

@@ -482,6 +482,7 @@ void MyChild::OnPaste(wxCommandEvent& event)
 void MyChild::OnCopyToNew(wxCommandEvent& event)
     {
     int from , to ;
+    if ( cSequence->getEditMode() ) return ;
     cPlasmid->getMark ( from , to ) ;
     if ( from == -1 ) return ;
     myapp()->frame->newFromVector ( vec->newFromMark ( from , to ) ) ;

@@ -325,7 +325,10 @@ enum {
     GES_COL_2,
     GES_COL_3,
     GES_USE_COLOR_CODING,
+    VG_LABEL,
+    VG_PERCENT,
     
+    Y___,
     Z___
     } ;
 
