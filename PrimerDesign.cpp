@@ -122,6 +122,7 @@ void TPrimerDesign::OnImportPrimer ( wxCommandEvent &ev )
                             sl
                             ) ;
                             
+    if ( cbl.size() <= 2 ) scd.CheckAll () ;
     int res = scd.ShowModal() ;
     delete sl ;
     if ( res != wxID_OK ) return ;
@@ -706,11 +707,11 @@ void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
     if ( wxID_OK != sd.ShowModal () ) return ;
     string ns = sd.getSequence() ;
     if ( ns == "" ) return ;
-    TRestrictionEnzyme *e = sd.getEnzyme() ;
     
     TVector z ;
     z.sequence = ns ;
     string nt = z.transformSequence ( true , false ) ;
+    TRestrictionEnzyme *e = sd.getEnzyme() ;
     int a , b ;
     for ( a = 0 ; a < ns.length() ; a++ )
         {
@@ -721,6 +722,8 @@ void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
            if ( sc->seq[4]->s[b] != ' ' ) sc->seq[4]->s[b] = nt[a] ;
            }
         }
+    for ( a = 0 ; a < w->re.size() && w->re[a] != e ; a++ ) ;
+    if ( a == w->re.size() ) w->re.push_back ( e ) ;
     updatePrimersFromSequence () ;
     showSequence () ;
     }
