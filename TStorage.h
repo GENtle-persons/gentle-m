@@ -4,9 +4,7 @@
 #include <stdio.h>
 #include "main.h"
 
-//#ifdef __WXMSW__ // Linux
-#define USEMYSQL
-//#endif
+//#define USEMYSQL
 
 #ifdef USEMYSQL
 #ifdef __WXMSW__

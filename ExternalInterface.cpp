@@ -234,9 +234,10 @@ public :
     blastThread ( EIpanel *panel , wxString seq ) : wxThread ()
 	{
 	    wxThread::Yield() ;
+
 	    p = panel ;
 	    // Put
-	    url = "http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?" ;
+/*	    url = "http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?" ;
 	    url += "CMD=Put" ;
 	    url += "&QUERY=" + seq ;
 	    url += "&DATABASE=nr" ;
@@ -255,11 +256,18 @@ public :
 	    url += "CMD=Get" ;
 	    url += "&RID=" + RID ;
 	    url += "&FORMAT_TYPE=XML" ;	    
+*/
 	} ;
 
     virtual void *Entry ()
 	{
-/*		
+#ifdef __WXMSW__
+    wxString fn = "C:\\blast.html" ;
+#else
+    wxString fn = "/home/manske/blast.html" ;
+#endif
+	    
+/*
 	    do {
 		while ( wait )
 		{
@@ -277,11 +285,12 @@ public :
 		if ( hs["STATUS"].Upper() == "WAITING" ) wait = 10 ; // Wait another 10 seconds
 		else wait = 0 ; // Done!
 	    } while ( wait ) ;
+	    wxFile out ( fn , wxFile::write ) ; out.Write ( res ) ; out.Close() ;
 */
 
 	    // Dirty hack
 	    wxMutexGuiEnter() ;
-	    wxFile in ( "/home/manske/blast.html" , wxFile::read ) ; 
+	    wxFile in ( fn , wxFile::read ) ; 
 	    char *c = new char[in.Length()+5] ;
 	    in.Read ( c , in.Length() ) ;
 	    in.Close () ;
@@ -300,7 +309,7 @@ public :
 //	    p->process_blast2 () ;
 //	    wxMutexGuiLeave() ;
 
-//	    wxThread::Exit() ;
+	    wxThread::Exit() ;
 //	    delete this ;
 	    return NULL ;
 	}
