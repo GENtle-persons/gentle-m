@@ -56,7 +56,7 @@ MYDEFS = $(MYOBJECTS:.o=.d)
 
 OBJECTS =$(PROGRAM).o $(MYOBJECTS)
 DEPFILES=$(PROGRAM).d $(MYDEFS)
-LIBRARIES=-L/home/magnus/sqlite/bld/.libs -lsqlite
+LIBRARIES=-L~/bld/.libs -lsqlite
 # LDLIBS=
 
 include ../../src/makeprog.env

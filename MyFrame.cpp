@@ -233,7 +233,8 @@ void MyFrame::initme ()
     // Drag'n'drop    
     MyFrameDropTarget *dt = new MyFrameDropTarget ;
     SetDropTarget ( dt ) ;
-#ifdef __WXGTK__
+
+#ifdef __WXGTK_______
     // Toolbar
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
     InitToolBar(toolBar);
