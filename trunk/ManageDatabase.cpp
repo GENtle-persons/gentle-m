@@ -896,7 +896,7 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
     v->setName ( sr[0][sr["dna_name"]] ) ;
     v->setDescription ( sr[0][sr["dna_description"]] ) ;
     v->setSequence ( sr[0][sr["dna_sequence"]] ) ;
-    v->type = atoi ( sr[0][sr["dna_type"]].c_str() ) ;
+    v->setType ( atoi ( sr[0][sr["dna_type"]].c_str() ) ) ;
     v->setStickyEnd ( true , true , sr[0][sr["dna_sticky_ul"]] ) ;
     v->setStickyEnd ( true , false , sr[0][sr["dna_sticky_ll"]] ) ;
     v->setStickyEnd ( false , true , sr[0][sr["dna_sticky_ur"]] ) ;
@@ -906,7 +906,7 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
     if ( sr[0][sr["dna_circular"]] == "1" ) v->setCircular ( true ) ;
     else v->setCircular ( false ) ;
     v->setDatabase ( db ) ;
-    if ( v->type != TYPE_ALIGNMENT ) v->removeBlanksFromSequence () ;
+    if ( v->getType() != TYPE_ALIGNMENT ) v->removeBlanksFromSequence () ;
 
     wxString s = sr[0][sr["dna_restriction_enzymes"]] , t = "" ;
     for ( a = 0 ; a < s.length() ; a++ )
@@ -960,11 +960,11 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
             }    
         }
 
-    v->recalcvisual = true ;
+    v->updateDisplay() ;
     v->undo.clear() ;
     
     ChildBase *n = NULL ;
-    if ( v->type == TYPE_AMINO_ACIDS )
+    if ( v->getType() == TYPE_AMINO_ACIDS )
         {
         wxString db1 = v->getDatabase() ;
         n = myapp()->frame->newAminoAcids ( v , v->getName() ) ;
@@ -972,7 +972,7 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
         n->vec->setDatabase ( db1 ) ;
         n->vec->setWindow ( n ) ;
         }
-    else if ( v->type == TYPE_ALIGNMENT )
+    else if ( v->getType() == TYPE_ALIGNMENT )
         {
         wxArrayString vs ;
         wxArrayChildBase vc ;
@@ -985,7 +985,7 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
         {
         v->recalculateCuts () ;
         wxString db1 = v->getDatabase() ;
-        n = myapp()->frame->newFromVector ( v , v->type ) ;
+        n = myapp()->frame->newFromVector ( v , v->getType() ) ;
         myass ( n , "Error opening DNA" ) ;
         n->vec->setDatabase ( db1 ) ;
         }
@@ -1159,7 +1159,7 @@ void TManageDatabaseDialog::do_save_DNA ()
     s1 = s2 = "" ;
     storage->sqlAdd ( s1 , s2 , "dna_name" , x ) ;
     storage->sqlAdd ( s1 , s2 , "dna_description" , v->getDescription() ) ;
-    storage->sqlAdd ( s1 , s2 , "dna_type" , v->type ) ;
+    storage->sqlAdd ( s1 , s2 , "dna_type" , v->getType() ) ;
     storage->sqlAdd ( s1 , s2 , "dna_sequence" , v->getSequence() ) ;
     storage->sqlAdd ( s1 , s2 , "dna_sticky_ul" , v->getStickyEnd(true,true) ) ;
     storage->sqlAdd ( s1 , s2 , "dna_sticky_ll" , v->getStickyEnd(true,false) ) ;

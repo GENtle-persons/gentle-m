@@ -135,13 +135,7 @@ void TVectorTree::initme ()
         else
            {
            SetItemData ( y , new TTreeItem ( out , "RE" , p->vec->re[a] ) ) ;
-
-           // Visibility check; "used" = "visible"
-           for ( b = 0 ; visible && b < p->vec->hiddenEnzymes.GetCount() ; b++ )
-              {
-              if ( p->vec->hiddenEnzymes[b] == p->vec->re[a]->name )
-                 visible = false ;
-              }
+           visible = !p->vec->isEnzymeHidden ( p->vec->re[a]->name ) ;
            SetItemBold ( y , visible ) ;
            }
         }
@@ -210,7 +204,7 @@ void TVectorTree::OnActivation ( wxTreeEvent &event )
         {
         TRestrictionEnzyme *e = (TRestrictionEnzyme*) d->p ;
         ToggleEnzymeVisibility ( e ) ;
-        p->vec->recalcvisual = true ;
+        p->vec->updateDisplay() ;
         p->cPlasmid->Refresh () ;
         p->cSequence->arrange() ;
         p->cSequence->SilentRefresh() ;
@@ -227,16 +221,7 @@ void TVectorTree::ToggleEnzymeVisibility ( TRestrictionEnzyme *e )
     while ( GetItemText ( y ) != e->name.c_str() )
        y = GetNextChild ( enzroot , l ) ;
     
-    if ( IsBold ( y ) )
-       {
-       p->vec->hiddenEnzymes.Add ( e->name ) ;
-       }
-    else
-       {
-       int a ;
-       for ( a = 0 ; p->vec->hiddenEnzymes[a] != e->name ; a++ ) ;
-       p->vec->hiddenEnzymes.RemoveAt ( a ) ;
-       }
+    p->vec->hideEnzyme ( e->name , IsBold ( y ) ) ;
     SetItemBold ( y , !IsBold ( y ) ) ;
     p->cPlasmid->Refresh() ;
     p->cSequence->arrange() ;

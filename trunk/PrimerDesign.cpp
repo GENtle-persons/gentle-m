@@ -137,7 +137,7 @@ void TPrimerDesign::OnExportPrimer ( wxCommandEvent &ev )
     v->setName ( vec->getName() ) ;
     if ( primer[lastPrimerActivated].upper ) v->addName ( "-5'" ) ;
     else v->addName ( "-3'" ) ;
-    v->type = TYPE_PRIMER ;
+    v->setType ( TYPE_PRIMER ) ;
     myapp()->frame->newFromVector ( v , TYPE_PRIMER ) ;
     }
 
@@ -147,7 +147,7 @@ void TPrimerDesign::OnImportPrimer ( wxCommandEvent &ev )
     wxArrayChildBase cbl ;
     
     for ( a = 0 ; a < myapp()->frame->children.GetCount() ; a++ )
-       if ( myapp()->frame->children[a]->vec->type == TYPE_PRIMER )
+       if ( myapp()->frame->children[a]->vec->getType() == TYPE_PRIMER )
           cbl.Add ( myapp()->frame->children[a] ) ;
     
     if ( cbl.GetCount() == 0 )

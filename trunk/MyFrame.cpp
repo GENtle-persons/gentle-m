@@ -204,6 +204,7 @@ void MyFrame::initme ()
     checkUpdate = LS->getOption ( "CHECKUPDATE" , default_update ) ;
     lang_string = LS->getOption ( "LANGUAGE" , "en" ) ;
     doRegisterStuff = LS->getOption ( "REGISTERSTUFF" , true ) ;
+    editFeatureMode = LS->getOption ( "EDITFEATUREMODE" , 0 ) ;
     useCoolCanvas = LS->getOption ( "USECOOLCANVAS" , false ) ; // Not saved yet
     useInternalHelp = LS->getOption ( "USEINTERNALHELP" , false ) ; // Not saved yet
     myapp()->init_txt ( lang_string.c_str() , "variables.csv" ) ;
@@ -523,7 +524,7 @@ void MyFrame::OnTextImport(wxCommandEvent& event )
         TVector *v = new TVector ;
         v->setName ( d.sName ) ;
         v->setSequence ( d.sSequence ) ;
-        v->type = TYPE_PRIMER ;
+        v->setType ( TYPE_PRIMER ) ;
         v->setDescription ( txt("manually_entered_sequence") + wxString("\n") + wxGetUserName() ) ;
         newFromVector ( v , TYPE_PRIMER ) ;
         }
@@ -710,7 +711,7 @@ void MyFrame::newXML (  TXMLfile &xml , wxString title )
    for ( n = 0 ; n < xml.countVectors() ; n++ )
        {
        TVector *nv = xml.getVector ( n ) ;
-       short type = nv->type ;
+       short type = nv->getType() ;
        if ( !title.IsEmpty() ) nv->setName ( title ) ;
        nv->addDescription ( "\n" + wxGetUserName() ) ;
        if ( type == TYPE_AMINO_ACIDS )
@@ -877,7 +878,7 @@ void MyFrame::OnSize(wxSizeEvent& event)
     if ( lastChild )
     	{
 	    setActiveChild ( lastChild ) ;
-//	    if ( lastChild->vec ) lastChild->vec->recalcvisual = true ;
+//	    if ( lastChild->vec ) lastChild->vec->updateDisplay() ;
 //        lastChild->Activate() ;
         lastChild->Refresh() ;
         }    
@@ -981,6 +982,7 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     checkUpdate = pod.checkUpdate->GetValue() ;
     useInternalHelp = pod.useInternalHelp->GetValue() ;
     doRegisterStuff = pod.doRegisterStuff->GetValue() ;
+    editFeatureMode = pod.editFeatureMode->GetSelection() ;
     wxString lang = pod.language->GetStringSelection() ;
     if ( lang != lang_string )
         {
@@ -1000,13 +1002,14 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     LS->setOption ( "CHECKUPDATE" , checkUpdate ) ;
     LS->setOption ( "USEINTERNALHELP" , useInternalHelp ) ;
     LS->setOption ( "REGISTERSTUFF" , doRegisterStuff ) ;
+    LS->setOption ( "EDITFEATUREMODE" , editFeatureMode ) ;
     global_enzyme_rules->save_global_settings() ;
     LS->endRecord() ;
     for ( int a = 0 ; a < children.GetCount() ; a++ )
     	{
 	    if ( !children[a]->vec ) continue ;
 	    children[a]->vec->recalculateCuts() ;
-	    children[a]->vec->recalcvisual = true ;
+	    children[a]->vec->updateDisplay() ;
     	}    
    	if ( GetActiveChild() ) GetActiveChild()->Refresh () ;
    	wxEndBusyCursor() ;
@@ -1150,7 +1153,7 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , wxString title )
     
     mylog ( "MyFrame::newAminoAcids" , "4" ) ;    
     subframe->vec->setWindow ( subframe ) ;
-    subframe->vec->type = TYPE_AMINO_ACIDS ;
+    subframe->vec->setType ( TYPE_AMINO_ACIDS ) ;
     subframe->vec->setName ( title ) ;
     subframe->vec->undo.clear() ;
 
@@ -1190,7 +1193,7 @@ TABIviewer *MyFrame::newABI ( wxString filename , wxString title )
     if ( title.IsEmpty() ) title = "Surprise!" ;
     TABIviewer *subframe = new TABIviewer ( getCommonParent() , title ) ;
     subframe->filename = filename ;
-    subframe->vec->type = TYPE_SEQUENCE ;
+    subframe->vec->setType ( TYPE_SEQUENCE ) ;
     subframe->vec->addDescription ( "\n" + wxGetUserName() ) ;    
 
     // Give it an icon
@@ -1693,7 +1696,7 @@ void MyFrame::setActiveChild ( ChildBase *c )
     wxSize s = c->GetParent()->GetClientSize() ;
     if ( c->GetSize() != s )
        {
-       if ( c->vec ) c->vec->recalcvisual = true ;
+       if ( c->vec ) c->vec->updateDisplay() ;
        c->SetSize ( s ) ;
        }
     if ( mainTree && c->inMainTree.IsOk() && mainTree->GetSelection() != c->inMainTree )
@@ -1754,7 +1757,8 @@ int MyFrame::getChildIndex ( ChildBase *c )
     return a ;
     }
 
-/** \brief OBSOLETE MDI close
+
+/** \brief Closes MDI child via (Crtl-F4)
 */
 void MyFrame::OnMDIClose(wxCommandEvent& event)
     {

@@ -211,8 +211,8 @@ void TGenBank::remap ( TVector *v , const wxArrayString &vs , const wxArrayInt &
           v->setDescription ( l.AfterFirst ( ' ' ) ) ;
           l += " " ; // For substring search
           l.MakeUpper() ;
-          if ( l.Contains ( " AA " ) ) v->type = TYPE_AMINO_ACIDS ;
-          else v->type = TYPE_VECTOR ;
+          if ( l.Contains ( " AA " ) ) v->setType ( TYPE_AMINO_ACIDS ) ;
+          else v->setType ( TYPE_VECTOR ) ;
           if ( l.Contains ( " CIRCULAR" ) ) v->setCircular ( true ) ;
           else v->setCircular ( false ) ;
           }
@@ -559,7 +559,7 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
     s = "LOCUS       " ;
     s += t ;
     s += u ;
-    if ( v->type == TYPE_AMINO_ACIDS ) s += "AA      " ;
+    if ( v->getType() == TYPE_AMINO_ACIDS ) s += "AA      " ;
     else s += "DNA     " ;
     if ( v->isCircular() ) s += "circular " ;
     else s += "linear " ;
@@ -611,7 +611,7 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
         q[b]++ ;
         }
         
-    if ( v->type != TYPE_AMINO_ACIDS )
+    if ( v->getType() != TYPE_AMINO_ACIDS )
        {
        s = "BASE COUNT   " ;
        sprintf ( z , "%6d a %6d c %6d g %6d t" , q['a'] , q['c'] , q['g'] , q['t'] ) ;

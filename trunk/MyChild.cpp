@@ -118,7 +118,7 @@ void MyChild::OnRemoveSequencingPrimers(wxCommandEvent& event)
         }    
 	
 	vec->undo.stop() ;
-	vec->recalcvisual = true ;
+	vec->updateDisplay() ;
 	vec->setChanged () ;
 	Refresh () ;
 	treeBox->initme() ;
@@ -143,7 +143,7 @@ void MyChild::OnSequencingPrimer(wxCommandEvent& event)
     	{
 	    if ( spd.matchToVector ( vec , p_name[a] , p_seq[a] ) )
 	    	{
-	    	vec->recalcvisual = true ;
+	    	vec->updateDisplay() ;
 	    	found = true ;
 	    	}   	
     	}    
@@ -282,7 +282,7 @@ void MyChild::OnCircularLinear(wxCommandEvent& event)
         }
     for ( int a = 0 ; a < vec->items.size() ; a++ ) vec->items[a].r1 = -1 ;
     vec->setCircular ( vec->isLinear() ) ;
-    vec->recalcvisual = true ;
+    vec->updateDisplay() ;
     vec->recalculateCuts() ;
     treeBox->Refresh() ;
     cPlasmid->Refresh() ;
@@ -599,7 +599,7 @@ void MyChild::OnAsNewFeature(wxCommandEvent& event)
     vec->setChanged () ;
     vec->items.push_back ( nvi ) ;
     cPlasmid->invokeVectorEditor ( "item" , vec->items.size()-1 , true ) ;
-    vec->recalcvisual = true ;
+    vec->updateDisplay() ;
     cPlasmid->Refresh () ;
     updateSequenceCanvas () ;
     vec->undo.stop () ;
@@ -630,7 +630,7 @@ void MyChild::OnViewMode(wxCommandEvent& event)
         cPlasmid->setMark ( -1 , -1 ) ;
         cSequence->setEditMode ( false ) ;
         cSequence->arrange () ;
-        vec->recalcvisual = true ;
+        vec->updateDisplay() ;
         sw->SplitHorizontally ( swu , cSequence ) ;
         swu->SplitVertically ( swl , cPlasmid ) ;
         sw->SetSashPosition ( sp1 , true ) ;
@@ -662,6 +662,7 @@ void MyChild::OnEditMode(wxCommandEvent& event)
     
     if ( !cSequence->getEditMode() )
         {
+        vec->undo.start ( txt("u_edit") ) ;
         sp1 = sw->GetSashPosition () ;
         sp2 = swl->GetSashPosition () ;
         sw->Unsplit ( swu ) ;
@@ -670,16 +671,15 @@ void MyChild::OnEditMode(wxCommandEvent& event)
         }
     else
         {
-        vec->recalcvisual = true ;        
+        vec->updateDisplay() ;        
         cSequence->stopEdit() ;
         sw->SplitHorizontally ( swu , cSequence ) ;
         sw->SetSashPosition ( sp1 , true ) ;
         swl->SetSashPosition ( sp2 , true ) ;
         swu->Show ( TRUE ) ;
+        vec->undo.stop () ;
         }
     mi->Check ( cSequence->getEditMode() ) ;
-    if ( cSequence->getEditMode() ) vec->undo.start ( txt("u_edit") ) ;
-    else vec->undo.stop () ;
 #ifdef __WXMSW__ // LINUX
     myass ( GetToolBar() , "MyChild::OnEditMode_3" ) ;
     GetToolBar()->ToggleTool(MDI_EDIT_MODE,cSequence->getEditMode());
@@ -1102,14 +1102,14 @@ MyChild *MyChild::doTransformSequence ( bool inNewVector , bool complement , boo
     if ( inNewVector )
         {
         v->addName ( "*" ) ;
-        v->recalcvisual = true ;
+        v->updateDisplay() ;
         v->recalculateCuts() ;
         MyChild *c = myapp()->frame->newFromVector(v) ;
         return c ;
         }
     else
         {
-        v->recalcvisual = true ;
+        v->updateDisplay() ;
         v->recalculateCuts() ;
         vec->undo.stop() ;
         cSequence->findID("DNA")->initFromTVector ( v ) ;

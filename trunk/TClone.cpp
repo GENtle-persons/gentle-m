@@ -68,7 +68,7 @@ void TClone::loadEnzymeList ( TStorage *st , wxString filename )
 void TClone::remap ( TVector *v )
 {
     int a , b ;
-    v->recalcvisual = true ;
+    v->updateDisplay() ;
     
     v->setSequence ( sequence ) ;
     v->setName ( name ) ;

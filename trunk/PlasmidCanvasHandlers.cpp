@@ -90,7 +90,7 @@ void PlasmidCanvas::itemDelete ( wxCommandEvent &ev )
     for ( int a = context_last_item+1 ; a < p->vec->items.size() ; a++ )
         p->vec->items[a-1] = p->vec->items[a] ;
     p->vec->items.pop_back () ;
-    p->vec->recalcvisual = true ;
+    p->vec->updateDisplay() ;
     p->vec->undo.stop() ;
     Refresh () ;
     p->updateSequenceCanvas ( true ) ;
@@ -241,7 +241,7 @@ void PlasmidCanvas::rsDel ( wxCommandEvent &ev )
     for ( a++ ; a < p->vec->re.GetCount() ; a++ )
         p->vec->re[a-1] = p->vec->re[a] ;
     p->vec->re.RemoveAt ( p->vec->re.GetCount() ) ;
-    p->vec->recalcvisual = true ;
+    p->vec->updateDisplay() ;
     p->vec->recalculateCuts() ;
     p->treeBox->initme() ;
     p->treeBox->SelectItem ( p->treeBox->vroot ) ;
@@ -261,7 +261,7 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn )
     if ( p->def == "dna" )
        {
         cm->Append(MDI_TRANSFORM_SEQUENCE, txt("t_transform_sequence") );
-        if ( p->vec->type != TYPE_AMINO_ACIDS )
+        if ( p->vec->getType() != TYPE_AMINO_ACIDS )
            cm->Append(PC_RS_HIDE_LIMIT, txt("m_hide_enzymes_limit") );
 
         // Strands
@@ -486,9 +486,9 @@ wxString PlasmidCanvas::getDNAorAA ( int from , int to , int dir , bool dna )
 
 void PlasmidCanvas::orfCopyDNA ( wxCommandEvent &ev )
     {
-    int from = p->vec->worf[context_last_orf].from ;
-    int to = p->vec->worf[context_last_orf].to ;
-    wxString s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf ) ;
+    int from = p->vec->getORF(context_last_orf).from ;
+    int to = p->vec->getORF(context_last_orf).to ;
+    wxString s = getDNAorAA ( from , to , p->vec->getORF(context_last_orf).rf ) ;
     if (wxTheClipboard->Open())
         {
         wxTheClipboard->SetData( new wxTextDataObject(s) );
@@ -498,9 +498,9 @@ void PlasmidCanvas::orfCopyDNA ( wxCommandEvent &ev )
 
 void PlasmidCanvas::orfCopyAA ( wxCommandEvent &ev )
     {
-    int from = p->vec->worf[context_last_orf].from ;
-    int to = p->vec->worf[context_last_orf].to ;
-    wxString s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf , false ) ;
+    int from = p->vec->getORF(context_last_orf).from ;
+    int to = p->vec->getORF(context_last_orf).to ;
+    wxString s = getDNAorAA ( from , to , p->vec->getORF(context_last_orf).rf , false ) ;
     if (wxTheClipboard->Open())
         {
         wxTheClipboard->SetData( new wxTextDataObject(s) );
@@ -511,8 +511,8 @@ void PlasmidCanvas::orfCopyAA ( wxCommandEvent &ev )
 void PlasmidCanvas::orfAsNewItem ( wxCommandEvent &ev )
     {
     char t[1000] ;
-    int from = p->vec->worf[context_last_orf].from+1 ;
-    int to = p->vec->worf[context_last_orf].to+1 ;
+    int from = p->vec->getORF(context_last_orf).from+1 ;
+    int to = p->vec->getORF(context_last_orf).to+1 ;
 
     if ( to > p->vec->getSequenceLength() )
         to -= p->vec->getSequenceLength() ;
@@ -520,7 +520,7 @@ void PlasmidCanvas::orfAsNewItem ( wxCommandEvent &ev )
     TVectorItem nvi ;
     sprintf ( t , txt("t_new_item_title") , from , to ) ;
     nvi.name = t ;
-    nvi.direction = (p->vec->worf[context_last_orf].rf>0)?1:-1 ;
+    nvi.direction = (p->vec->getORF(context_last_orf).rf>0)?1:-1 ;
     nvi.type = VIT_CDS ;
     nvi.from = from ;
     nvi.to = to ;
@@ -529,52 +529,52 @@ void PlasmidCanvas::orfAsNewItem ( wxCommandEvent &ev )
     p->vec->items.push_back ( nvi ) ;
     invokeVectorEditor ( "item" , p->vec->items.size()-1 , true ) ;
     p->vec->undo.stop() ;
-    p->vec->recalcvisual = true ;
+    p->vec->updateDisplay() ;
     Refresh () ;
     }
 
 void PlasmidCanvas::orfAsNewDNA ( wxCommandEvent &ev )
     {
     TVector *nv = new TVector ;
-    int from = p->vec->worf[context_last_orf].from ;
-    int to = p->vec->worf[context_last_orf].to ;
-    nv->setSequence ( getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf ) ) ;
+    int from = p->vec->getORF(context_last_orf).from ;
+    int to = p->vec->getORF(context_last_orf).to ;
+    nv->setSequence ( getDNAorAA ( from , to , p->vec->getORF(context_last_orf).rf ) ) ;
     nv->setName ( p->vec->getName() + " (" + wxString ( txt ( "t_orf_extracted" ) ) + ")" ) ;
     nv->setDescription ( p->vec->getDescription() + "\n" + wxString ( txt ( "t_orf_extracted" ) ) ) ;
     nv->setChanged () ;
     nv->setCircular ( false ) ;
     nv->recalculateCuts() ;
-    nv->recalcvisual = true ;
+    nv->updateDisplay() ;
     myapp()->frame->newFromVector ( nv ) ;
     }
 
 void PlasmidCanvas::orfAsNewAA ( wxCommandEvent &ev )
     {
-    int from = p->vec->worf[context_last_orf].from ;
-    int to = p->vec->worf[context_last_orf].to ;
-    wxString seq = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf , false ) ;
+    int from = p->vec->getORF(context_last_orf).from ;
+    int to = p->vec->getORF(context_last_orf).to ;
+    wxString seq = getDNAorAA ( from , to , p->vec->getORF(context_last_orf).rf , false ) ;
     wxString n = p->vec->getName() + " (" ;
     n += txt ( "t_orf_extracted" ) ;
     n += ")" ;
-    TVector *vvv = p->vec->getAAvector ( from+1 , to+1 , p->vec->worf[context_last_orf].rf ) ;
+    TVector *vvv = p->vec->getAAvector ( from+1 , to+1 , p->vec->getORF(context_last_orf).rf ) ;
     TAminoAcids *aaa = myapp()->frame->newAminoAcids ( vvv , n ) ;
     aaa->vec->setChanged() ;
     }
 
 void PlasmidCanvas::orfBlastDNA ( wxCommandEvent &ev )
     {
-    int from = p->vec->worf[context_last_orf].from ;
-    int to = p->vec->worf[context_last_orf].to ;
-    wxString s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf ) ;
+    int from = p->vec->getORF(context_last_orf).from ;
+    int to = p->vec->getORF(context_last_orf).to ;
+    wxString s = getDNAorAA ( from , to , p->vec->getORF(context_last_orf).rf ) ;
     if ( s.IsEmpty() ) return ;
     myapp()->frame->blast ( s , "blastn" ) ;
     }
         
 void PlasmidCanvas::orfBlastAA ( wxCommandEvent &ev )
     {
-    int from = p->vec->worf[context_last_orf].from ;
-    int to = p->vec->worf[context_last_orf].to ;
-    wxString s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf , false ) ;
+    int from = p->vec->getORF(context_last_orf).from ;
+    int to = p->vec->getORF(context_last_orf).to ;
+    wxString s = getDNAorAA ( from , to , p->vec->getORF(context_last_orf).rf , false ) ;
     if ( s.IsEmpty() ) return ;
     myapp()->frame->blast ( s , "blastp" ) ;
     }
@@ -665,7 +665,7 @@ void PlasmidCanvas::itemAsNewSequence ( wxCommandEvent &ev )
         nv->setChanged () ;
         nv->setCircular ( false ) ;
         nv->recalculateCuts() ;
-        nv->recalcvisual = true ;
+        nv->updateDisplay() ;
         myapp()->frame->newFromVector ( nv ) ;
         }
     }    
@@ -715,7 +715,7 @@ void PlasmidCanvas::OnFillKlenow(wxCommandEvent& event)
     v->setStickyEnd ( false , true , "" ) ;
     v->setStickyEnd ( true , false , "" ) ;
     v->setStickyEnd ( false , false , "" ) ;
-    v->recalcvisual = true ;
+    v->updateDisplay() ;
     v->recalculateCuts() ;
     Refresh () ;
     SeqDNA *dna = (SeqDNA*) p->cSequence->findID ( "DNA" ) ;
@@ -736,7 +736,7 @@ void PlasmidCanvas::OnRunPCR(wxCommandEvent& event)
 void PlasmidCanvas::setZoom ( int factor )
     {
     zoom = factor ;
-    p->vec->recalcvisual = true ;
+    p->vec->updateDisplay() ;
     int vx , vy ;
     GetClientSize ( &vx , &vy ) ;
     vx = vx * factor / 100 ;

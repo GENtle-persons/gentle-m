@@ -27,7 +27,7 @@ void TVectorEditor::commitItems ()
                  v->items[c.r2] = c ;
                  v->items[c.r2].r2 = -1 ;
                  v->setChanged () ;
-                 v->recalcvisual = true ;
+                 v->updateDisplay() ;
                  }
             }
         else
@@ -35,7 +35,7 @@ void TVectorEditor::commitItems ()
             v->items.push_back ( c ) ;
             v->items[v->items.size()-1].r2 = -1 ;
             v->setChanged () ;
-            v->recalcvisual = true ;
+            v->updateDisplay() ;
             }
         }
     for ( a = found.size() - 1 ; a >= 0 ; a-- )
@@ -45,7 +45,7 @@ void TVectorEditor::commitItems ()
             for ( b = a+1 ; b < found.size() ; b++ ) v->items[b-1] = v->items[b] ;
             v->items.pop_back () ;
             v->setChanged () ;
-            v->recalcvisual = true ;
+            v->updateDisplay() ;
             }
         }
     }
@@ -172,7 +172,7 @@ void TVectorEditor::initPanItem ()
     v2->Add ( bDel ) ;
     v2->Add ( bCol ) ;
 
-    if ( v->type == TYPE_AMINO_ACIDS )
+    if ( v->getType() == TYPE_AMINO_ACIDS )
         {
         icb->Disable () ;
         ichoice->Disable () ;

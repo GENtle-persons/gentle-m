@@ -373,7 +373,7 @@ void SeqDNA::show_direct ( wxDC& dc )
            }
 
         // Methylation
-        if ( !invers && alternateName.IsEmpty() && wxNOT_FOUND != vec->methyl.Index ( a ) )
+        if ( !invers && alternateName.IsEmpty() && wxNOT_FOUND != vec->getMethylationSiteIndex ( a ) )
         	{
             dc.SetPen(*wxRED_PEN);
             dc.DrawLine ( px , py + ch - 2 , px + cw , py + ch - 2 ) ;

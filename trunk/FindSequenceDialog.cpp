@@ -187,9 +187,9 @@ void FindSequenceDialog::aaSearch ()
     {
     int a , b ;
     TVector *v = c->vec ;
-    if ( v->type != TYPE_VECTOR && 
-    	 v->type != TYPE_SEQUENCE && 
-    	 v->type != TYPE_PRIMER )
+    if ( v->getType() != TYPE_VECTOR && 
+    	 v->getType() != TYPE_SEQUENCE && 
+    	 v->getType() != TYPE_PRIMER )
     	 return ;
     	 
     wxString s = t->GetValue().Upper() ;

@@ -706,3 +706,8 @@
 "t_conversion_complete","Conversion complete!","Konvertierung vollständig!"
 "t_mysql_error_1153","MySQL error 1153: Increase the max_allowed_packet setting at the server","MySQL Fehler 1153: Die Einstellung 'max_allowed_packet' an Server erhöhen"
 "t_doregisterstuff","Register protocols and extensions on startup","Protokolle und Dateitypen beim Start registrieren"
+"t_editfeaturemode","Change edited feature","Bearbeitetes Feature verändern"
+"t_editfeaturemode_1","Keep unchanged","Unverändert lassen"
+"t_editfeaturemode_2","Mark name","Namen markieren"
+"t_editfeaturemode_3","Cut off","Abschneiden"
+

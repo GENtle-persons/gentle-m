@@ -151,7 +151,7 @@ void TVectorEditor::initPanProp ()
     desc = new TURLtext(panProp,URLTEXT_DUMMY,v->getDescription(),wxPoint(bo,r.GetBottom()+bo),
                 wxSize(w-bo*2,th*5),wxTE_MULTILINE);
     
-    if ( v->type != TYPE_AMINO_ACIDS )
+    if ( v->getType() != TYPE_AMINO_ACIDS )
         {
         // Sticky ends
         r = (new wxStaticText(panProp,-1,"5'-",wxPoint(bo,th*8)))->GetRect() ;
@@ -227,7 +227,7 @@ void TVectorEditor::commitVector ()
     if(n!=v->getName()){v->setName(n);v->setChanged();}
     if(d!=v->getDescription()){v->setDescription(d);v->setChanged();}
 
-    if ( v->type != TYPE_AMINO_ACIDS )
+    if ( v->getType() != TYPE_AMINO_ACIDS )
         {
         wxString _lu = lu->GetValue().MakeUpper() ;
         wxString _ll = ll->GetValue().MakeUpper() ;
@@ -280,7 +280,7 @@ void TVectorEditor::commitEnzymes ()
     if ( changed )
         {
         v->recalculateCuts() ;
-        v->recalcvisual = true ;
+        v->updateDisplay() ;
         }
     v->setChanged ( changed | v->isChanged() ) ;
     }

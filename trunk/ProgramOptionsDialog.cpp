@@ -263,6 +263,18 @@ void ProgramOptionsDialog::initGlobalSettings ()
                         txt("t_doregisterstuff") , 
                         wxPoint ( bo , lh*11 ) ) ;
                         
+                        
+    wxString efm[3] ;
+    efm[0] = txt("t_editfeaturemode_1") ;
+    efm[1] = txt("t_editfeaturemode_2") ;
+    efm[2] = txt("t_editfeaturemode_3") ;
+    editFeatureMode = new wxRadioBox ( globalSettingsPanel , -1 , 
+                        txt("t_editfeaturemode") , 
+                        wxPoint ( bo , lh*12 ) , 
+                        wxDefaultSize ,
+                        3 , efm , 1 , wxRA_SPECIFY_ROWS ) ;
+    editFeatureMode->SetSelection ( myapp()->frame->editFeatureMode ) ;
+                        
     enhancedDisplay->SetValue ( myapp()->frame->enhancedRefresh ) ;
     vectorTitle->SetValue ( myapp()->frame->showVectorTitle ) ;
     vectorLength->SetValue ( myapp()->frame->showVectorLength ) ;
