@@ -455,7 +455,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
             
             // Calculating polygon
             vector <wxPoint> p ;
-            if ( i->direction ==  1 ) 
+            if ( i->direction ==  1 && abs ( dt - df ) > 3 ) 
                 {
                 dt -= dd ;
                 p.push_back ( wxPoint ( deg2x ( df+dd , (r1+r2)/2 ) , 
@@ -468,16 +468,15 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
                                         deg2y ( df-dd , (r1+r2)/2 ) ) ) ;
                 }
 
-            p.reserve ( ( dt - df ) / ds * 2 ) ;
-
+            p.reserve ( ( dt - df ) / ds * 2 + 10 ) ;
             for ( float b = df ; b < dt ; b += ds )
                     p.push_back ( wxPoint ( deg2x ( b , r1 ) , deg2y ( b , r1 ) ) ) ;
-            if ( i->direction ==  1 )
-                        p.push_back ( wxPoint ( deg2x ( dt+dd , (r1+r2)/2 ) , 
-                                                deg2y ( dt+dd , (r1+r2)/2 ) ) ) ;
-            if ( i->direction == -1 )
-                        p.push_back ( wxPoint ( deg2x ( dt-dd , (r1+r2)/2 ) , 
-                                                deg2y ( dt-dd , (r1+r2)/2 ) ) ) ;
+                    
+                    
+            if ( i->direction > 0 || ( i->direction < 0 && abs ( dt - df ) > 3 ) )
+            	p.push_back ( wxPoint ( deg2x ( dt+dd*i->direction , (r1+r2)/2 ) , 
+             							deg2y ( dt+dd*i->direction , (r1+r2)/2 ) ) ) ;
+
             for ( float b = dt ; b > df ; b -= ds )
                     p.push_back ( wxPoint ( deg2x ( b , r2 ) , deg2y ( b , r2 ) ) ) ;
 

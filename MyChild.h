@@ -89,6 +89,8 @@ public:
     virtual void OnRunPCR(wxCommandEvent& event);
     virtual void OnZoom ( wxCommandEvent &ev ) ;
     virtual void OnUpdateRefresh(wxUpdateUIEvent& event);
+    virtual void OnSequencingPrimer(wxCommandEvent& WXUNUSED(event));
+    virtual void OnRemoveSequencingPrimers(wxCommandEvent& WXUNUSED(event));
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){};
     
     virtual void initme () ;
