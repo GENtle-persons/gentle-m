@@ -1,12 +1,12 @@
 [Project]
 FileName=GENtle.dev
 Name=GENtle
-UnitCount=84
+UnitCount=90
 Type=0
 Ver=1
 ObjFiles=
 Includes=C:\Programme\Dev-Cpp\Mine\GENtle;C:\Programme\Dev-Cpp\Mine\GENtle\clustal;C:\Programme\Dev-Cpp\include\MySQL
-Libs=C:\Programme\Dev-Cpp\Mine\GENtle
+Libs=C:\Programme\Dev-Cpp\Mine\GENtle;C:\Programme\Dev-Cpp\Mine\GENtle\tinyxml
 PrivateResource=GENtle_private.rc
 ResourceIncludes=C:\Programme\Dev-Cpp\include
 MakeIncludes=
@@ -828,9 +828,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit85]
-FileName=clustal\clustalw.c
+FileName=tinyxml\tinystr.cpp
 CompileCpp=1
-Folder=Clustal-W
+Folder=External sources
 Compile=1
 Link=1
 Priority=1000
@@ -838,9 +838,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit86]
-FileName=clustal\gcgcheck.c
+FileName=tinyxml\tinystr.h
 CompileCpp=1
-Folder=Clustal-W
+Folder=External sources
 Compile=1
 Link=1
 Priority=1000
@@ -848,9 +848,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit87]
-FileName=clustal\interfac.c
+FileName=tinyxml\tinyxml.cpp
 CompileCpp=1
-Folder=Clustal-W
+Folder=External sources
 Compile=1
 Link=1
 Priority=1000
@@ -858,9 +858,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit88]
-FileName=clustal\malign.c
+FileName=tinyxml\tinyxml.h
 CompileCpp=1
-Folder=Clustal-W
+Folder=External sources
 Compile=1
 Link=1
 Priority=1000
@@ -868,9 +868,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit89]
-FileName=clustal\palign.c
+FileName=tinyxml\tinyxmlerror.cpp
 CompileCpp=1
-Folder=Clustal-W
+Folder=External sources
 Compile=1
 Link=1
 Priority=1000
@@ -878,9 +878,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit90]
-FileName=clustal\prfalign.c
+FileName=tinyxml\tinyxmlparser.cpp
 CompileCpp=1
-Folder=Clustal-W
+Folder=External sources
 Compile=1
 Link=1
 Priority=1000
