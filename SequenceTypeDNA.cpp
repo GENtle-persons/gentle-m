@@ -221,7 +221,7 @@ void SeqDNA::initFromTVector ( TVector *v )
        {
        int a ;
        for ( a = 0 ; a < s.length() ; a++ )
-          s[(uint)a] = vec->getComplement ( s[(uint)a] ) ;
+          s.SetChar ( a , vec->getComplement ( s.GetChar(a) ) ) ;
        takesMouseActions = false ;
        showNumbers = false ;
        alternateName = "" ;

@@ -1078,6 +1078,7 @@ void TVector::callUpdateUndoMenu ()
 void TVector::setFromVector ( TVector &v )
     {
     *this = v ;
+    for ( int a = 0 ; a < items.size() ; a++ ) items[a].setLastVector ( this ) ;
     undo.clear () ;
     }
 
@@ -1177,6 +1178,12 @@ wxString TVector::getSequence ()
     return sequence ;
     }
     
+void TVector::removeAlignmentArtifacts ( char what )
+    {
+    wxString what2 ( what ) ;
+    sequence.Replace ( what2 , "" ) ;
+    }    
+    
 char TVector::getSequenceChar ( int x )
     {
     return sequence.GetChar(x) ;
@@ -1184,12 +1191,13 @@ char TVector::getSequenceChar ( int x )
         
 void TVector::setSequence ( wxString ns )
     {
+    sequence.Alloc ( ns.length() + 10 ) ;
     sequence = ns ;
     }    
     
 void TVector::addToSequence ( wxString x )
     {
-    sequence += x ;
+    sequence.Append ( x ) ;
     }    
     
 void TVector::alterSequence ( int pos , char c )
@@ -1407,6 +1415,7 @@ void TVectorItem::initParams ()
     pvalue.Clear() ;
     setParam ( "ISDEFAULTBRUSH" , true ) ;
     setVisible ( true ) ;
+    lastVector = NULL ;
     }
 
 int TVectorItem::getRF ()
@@ -1489,9 +1498,10 @@ void TVectorItem::setType ( wxString s )
     }
     
 
-void TVectorItem::translate ( TVector *v , SeqAA *aa )
+void TVectorItem::translate ( TVector *v , SeqAA *aa , vector <Tdna2aa> &dna2aa )
    {
-   dna2aa.clear () ;
+   lastVector = v ;
+//   dna2aa.clear () ;
    if ( type != VIT_CDS ) return ;
    if ( getRF() == 0 ) return ;
 
@@ -1513,8 +1523,8 @@ void TVectorItem::translate ( TVector *v , SeqAA *aa )
       }
    b += direction * (rf-1) ;
    
-   if ( to >= from ) dna2aa.reserve ( ( to - from + 1 ) / 3 + 2 ) ;
-   else dna2aa.reserve ( ( to + v->getSequenceLength() - from + 1 ) / 3 + 2 ) ;
+   if ( to >= from ) dna2aa.reserve ( ( to - from + 1 ) / 3 + 5 ) ;
+   else dna2aa.reserve ( ( to + v->getSequenceLength() - from + 1 ) / 3 + 5 ) ;
    
    long translation_table = -1 ;
    getParam("/transl_table","-1").ToLong ( &translation_table ) ;
@@ -1573,31 +1583,42 @@ void TVectorItem::translate ( TVector *v , SeqAA *aa )
 wxString TVectorItem::getAminoAcidSequence ()
     {
     wxString s ;
+    vector <Tdna2aa> dna2aa ;
+    translate ( lastVector , NULL , dna2aa ) ;
     for ( int a = 0 ; a < dna2aa.size() ; a++ ) s += dna2aa[a].aa ;
     return s ;
     }    
 
-void TVectorItem::getArrangedAA ( TVector *v , wxString &s , int disp )
+void TVectorItem::getArrangedAA ( TVector *v , wxString &s , int disp , SeqAA *aa )
     {
-    for ( int a = 0 ; a < dna2aa.size() ; a++ )
+    vector <Tdna2aa> dna2aa_temp , *dna2aa ;
+    if ( v->getGenomeMode() ) dna2aa = &dna2aa_temp ;
+    else 
+        {
+        dna2aa_item.clear() ;
+        dna2aa = &dna2aa_item ;
+        }    
+    translate ( v , aa , *dna2aa ) ;
+    for ( int a = 0 ; a < dna2aa->size() ; a++ )
        {
-       if ( disp == AA_ONE ) s.SetChar(dna2aa[a].dna[0],dna2aa[a].aa) ;
+       if ( disp == AA_ONE ) s.SetChar((*dna2aa)[a].dna[0],(*dna2aa)[a].aa) ;
        else
           {
-          wxString three = v->one2three((int)dna2aa[a].aa) ;
-          s.SetChar(dna2aa[a].dna[0], three.GetChar(0) ) ;
-          s.SetChar(dna2aa[a].dna[1], three.GetChar(1) ) ;
-          s.SetChar(dna2aa[a].dna[2], three.GetChar(2) ) ;
+          wxString three = v->one2three((int)(*dna2aa)[a].aa) ;
+          s.SetChar((*dna2aa)[a].dna[0], three.GetChar(0) ) ;
+          s.SetChar((*dna2aa)[a].dna[1], three.GetChar(1) ) ;
+          s.SetChar((*dna2aa)[a].dna[2], three.GetChar(2) ) ;
           }
        }
     }
 
 int TVectorItem::getOffsetAt ( int i )
     {
+    if ( lastVector && lastVector->getGenomeMode() ) return -1 ;
     if ( getOffset () == -1 ) return -1 ;
-    for ( int a = 0 ; a < dna2aa.size() ; a++ )
+    for ( int a = 0 ; a < dna2aa_item.size() ; a++ )
        {
-       if ( dna2aa[a].dna[0] == i )
+       if ( dna2aa_item[a].dna[0] == i )
           return a + getOffset() ;
        }    
     return -1 ;
@@ -1607,12 +1628,17 @@ int TVectorItem::getMem ()
     {
     int a , r = 0 ;
     for ( a = 0 ; a < pname.GetCount() ; a++ ) r += pname[a].length() + pvalue[a].length() ;
-    r += dna2aa.size() * sizeof ( Tdna2aa ) ;
+//    r += dna2aa.size() * sizeof ( Tdna2aa ) ;
     r += 7 * sizeof ( int ) ;
     r += desc.length() + name.length() ;
     r += 2 * sizeof ( float ) + sizeof ( wxTreeItemId ) ;
     r += sizeof ( TVectorItem ) ;
     return r ;
+    }    
+    
+void TVectorItem::setLastVector ( TVector *v )
+    {
+    lastVector = v ;
     }    
                 
 // ******************************************************************* Tdna2aa

@@ -542,7 +542,7 @@ void TAlignment::updateSequence ()
             aaa = new SeqAA ( NULL ) ;
             sc->seq[g] = aaa ;
             aaa->initFromString ( lines[id].getFeatures()->getSequence() ) ;
-            aaa->fixOffsets ( lines[id].getFeatures() ) ;
+//            aaa->fixOffsets ( lines[id].getFeatures() ) ;
             aaa->can = sc ;
             sc->arrange () ;
             sc->seq[g] = f ;

@@ -12,10 +12,12 @@
 class TFLAG
     {
     public :
+    TFLAG () ;
+    virtual ~TFLAG () ;
     int pos , after ;
     unsigned char *data ;
     
-    wxString getPascalString () ;
+    virtual wxString getPascalString () ;
     
     wxString flag ;
     int instance ;

@@ -20,22 +20,15 @@ class TGenBankFeature
     wxArrayString qname , qvalue ;
     } ;
 
-class TGenBankKey
-    {
-    public :
-    TGenBankKey () {} ;
-    TGenBankKey ( wxString _k , wxString _v ) { key = _k ; value = _v ; }
-    wxString key , value ;
-    vector <TGenBankFeature> features ;
-    } ;
-
 class TGenBank
     {
     public :
     TGenBank () ;
+    virtual ~TGenBank () ;
     virtual void load ( wxString s ) ;
     virtual void paste ( wxString s ) ;
     virtual void remap ( TVector *v ) ;
+    virtual void remap ( TVector *v , const wxArrayString &vs , const wxArrayInt &vi ) ;
     virtual void doExport ( TVector *v , wxArrayString &ex ) ;
     virtual wxString trim ( wxString s ) ;
     virtual void itrim ( wxString &s ) ;
@@ -55,7 +48,6 @@ class TGenBank
     vector <wxArrayInt> vi_l ;
     wxArrayString vs ;
     wxArrayInt vi ;
-    vector <TGenBankKey> keys ;
     bool perm[256] ;
     wxString params , title , description ;
     

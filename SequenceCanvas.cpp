@@ -1733,7 +1733,7 @@ void SequenceCanvas::startEdit ( wxString id )
     {
     myass ( !getEditMode() , "SequenceCanvas::startEdit" ) ;
     setEditMode ( true ) ;
-    findID(id)->s += " " ;
+    findID(id)->s.Append ( " " ) ;
     if ( child ) child->vec->addToSequence ( " " ) ;
     arrange () ;
     if ( _from == -1 ) mark ( id , 1 , 1 , 2 ) ;
