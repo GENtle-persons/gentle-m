@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the TRestrictionEnzyme, TRestrictionCut, TProtease, and TProteaseCut classes
+*/
 #include "RestrictionEnzymes.h"
 
 bool operator < ( const TRestrictionCut &c1 , const TRestrictionCut &c2 )
@@ -9,7 +12,13 @@ bool operator == ( const TRestrictionCut &c1 , const TRestrictionCut &c2 )
     {
     return c1.pos == c2.pos && c1.e->name == c2.e->name ;
     }
-    
+
+/** \brief Compares two restriction enzymes
+	\param e The enzyme to compare this one to
+	
+	If any of name, sequence, note, location, cut, or overlap do
+	not match, FALSE is returned
+*/
 bool TRestrictionEnzyme::differ ( TRestrictionEnzyme &e )
     {
     if ( name != e.name ) return true ;
@@ -64,6 +73,10 @@ wxString TRestrictionEnzyme::invertSequence ()
 
 //------------------------------------------------------------------------------
 
+/** \brief updates the cut position in linear display
+	\param w Screen width
+	\param h Screen height
+*/
 void TRestrictionCut::linearUpdate ( int w , int h )
     {
     p.x = lp.x * w / STANDARDRADIUS + 2 ;
@@ -89,7 +102,10 @@ wxString TRestrictionCut::getDisplayName ()
 	if ( display_name.IsEmpty() ) return e->name ;
 	return display_name ;
 	}    
-	
+
+/** \brief Merges a cut with an isoenzyme for simplified display
+	\param c The restriction cut to merge
+*/
 bool TRestrictionCut::join ( TRestrictionCut *c )
 	{
 	if ( pos != c->pos ) return false ;

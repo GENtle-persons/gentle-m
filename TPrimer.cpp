@@ -1,6 +1,17 @@
+/** \file
+	\brief The TPrimer class
+*/
 #include "TPrimer.h"
 
 //********************************************************************** TPrimer
+
+TPrimer ( int _from = 0 , int _to = 0 , bool _upper )
+    {
+    from = _from ;
+    to = _to ;
+    upper = _upper ;
+    annealingVector = NULL ;
+    }
 
 float TPrimer::getTm ( int type )
     {

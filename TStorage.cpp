@@ -1,3 +1,6 @@
+/** \file
+	\brief The TStorage and TSQLresult classes
+*/
 #include "TStorage.h"
 #include <wx/textfile.h>
 #include <wx/filename.h>
@@ -73,7 +76,7 @@ static int callback (void *NotUsed, int argc, char **argv, char **azColName)
         }
         
     nf = st->results.content.size() ;
-    st->results.content.push_back ( TVS() ) ;
+    st->results.content.push_back ( wxArrayString() ) ;
 
     for(i=0; i<argc; i++)
         {
@@ -142,7 +145,7 @@ TSQLresult TStorage::getObject_MySQL ( const wxString &query )
                unsigned long *lengths;
                lengths = mysql_fetch_lengths(result);
                int rownum = results.content.size() ;
-               results.content.push_back ( TVS() ) ;
+               results.content.push_back ( wxArrayString() ) ;
                for(i = 0; i < num_fields; i++)
                {
                   results.content[rownum].Add ( row[i] ? row[i] : "" ) ;
@@ -431,7 +434,7 @@ bool TStorage::copySQLfields ( TStorage &target , wxString table , wxString cond
     
     
     
-void TStorage::replaceTable ( wxString table , TVS &f , TVS &t )
+void TStorage::replaceTable ( wxString table , wxArrayString &f , wxArrayString &t )
     {
     int a , b ;
     TSQLresult r ;
@@ -464,7 +467,7 @@ void TStorage::replaceTable ( wxString table , TVS &f , TVS &t )
         }
     }
     
-void TStorage::tableInfoSet ( TVS &f , TVS &t , wxString nf , wxString nt )
+void TStorage::tableInfoSet ( wxArrayString &f , wxArrayString &t , wxString nf , wxString nt )
     {
     int a ;
     for ( a = 0 ; a < f.GetCount() && f[a] != nf ; a++ ) ;
@@ -535,7 +538,7 @@ void TStorage::autoUpdateSchema ()
           }
        }
     
-    TVS dnaF , dnaT ;
+    wxArrayString dnaF , dnaT ;
     
     // Version 0
     tableInfoSet ( dnaF , dnaT , "dna_name" , "tinytext" ) ;
@@ -684,7 +687,7 @@ void TStorage::synchronize ()
         } while ( changed ) ;
     }
     
-wxString TStorage::makeInsert ( wxString table , TVS &field , TVS &data )
+wxString TStorage::makeInsert ( wxString table , wxArrayString &field , wxArrayString &data )
     {
     wxString sql , s1 , s2 ;
     for ( int a = 0 ; a < field.GetCount() ; a++ )
@@ -1115,7 +1118,7 @@ bool TStorage::convertSqlite2to3 ()
     TSQLresult r ;
     r = getObjectSqlite2 ( sql ) ;
     
-    TVS tables ;
+    wxArrayString tables ;
     int a , b , c ;
     for ( a = 0 ; a < r.content.size() ; a++ )
     	tables.Add ( r[a][r["name"]] ) ;

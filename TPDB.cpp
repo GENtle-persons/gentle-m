@@ -1,3 +1,6 @@
+/** \file
+	\brief TPDB class, and its tseqres helper class
+*/
 #include "TPDB.h"
 #include <wx/textfile.h>
 

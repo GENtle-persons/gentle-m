@@ -132,7 +132,6 @@ void TClone::cleanup ()
 	description = "" ;
 	size = -1 ;
 	isLinear = false ;
-	changed = false ;
 	linear_e1 = linear_e2 = linear_s1 = linear_s2 = "" ;
 	genes.clear () ;
 	enzymes.clear () ;
@@ -263,7 +262,6 @@ void TClone::load ( wxString s )
 	}
 	
 //	sort ( enzymes.begin() , enzymes.end() ) ;
-    changed = false ;
     if ( sequence.IsEmpty() ) success = false ;
 }
 
@@ -345,7 +343,7 @@ void TClone_Gene::setCCW(bool x)
 	else if ( !cmp ( type , "GENE" ) && x ) direction = "CCW" ;
 	else if ( !cmp ( type , "GENE" ) && !x ) direction = "CW" ;
 }
-
+/*
 wxString TClone::getGeneSequence(int i)
 {
 	if ( sequence.IsEmpty() ) return "" ;
@@ -368,7 +366,7 @@ void TClone::setGeneSequence(int i, wxString s) // VERY BASIC, NO LENGTH CHANGES
 		sequence[b] = s[a] ;
 	}
 }
-
+*/
 
 int TClone_Gene::getRealBegin()
 {
@@ -387,7 +385,6 @@ TClone_Gene::TClone_Gene ( const TClone_Gene &g )
 	direction = g.direction ;
 	five = g.five ;
 	fullname = g.fullname ;
-	selected = g.selected ;
 	shortname = g.shortname ;
 	type = g.type ;
 }
