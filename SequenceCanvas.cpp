@@ -924,7 +924,7 @@ void SequenceCanvas::safeShow ( wxDC &dc )
 void SequenceCanvas::OnEvent(wxMouseEvent& event)
 {
     wxClientDC dc(this);
-    if ( !event.RightDown() ) PrepareDC(dc);
+    PrepareDC(dc);
 
     wxPoint pt(event.GetLogicalPosition(dc));
     int my = dc.LogicalToDeviceY ( pt.y ) ;
@@ -1121,7 +1121,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
               if ( last_al->id > 0 ) cb->Append ( SEQ_TOP , txt("t_seq_top") ) ;
               if ( last_al->id + 2 < ali->lines.size() ) cb->Append ( SEQ_BOTTOM , txt("t_seq_bottom") ) ;
               if ( cb->GetMenuItemCount() > 0 ) cm->Append ( SEQ_COPY_AS , txt("t_seq_move") , cb ) ;
-              if ( ali->lines[last_al->id].features ) cm->Append ( SEQ_FEAT_HIDE , txt("t_hide_feature_line") ) ;
+              if ( ali->lines[last_al->id].hasFeatures() ) cm->Append ( SEQ_FEAT_HIDE , txt("t_hide_feature_line") ) ;
               else cm->Append ( SEQ_FEAT_SHOW , txt("t_show_feature_line") ) ;
               cm->AppendSeparator () ;
               }
@@ -1137,7 +1137,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         ca->Append ( SEQ_SAVE_IMAGE , txt("m_save_as_image") ) ;
         cm->Append ( SEQ_COPY_AS , txt("m_copy_as") , ca ) ;
         cm->Append ( SEQ_PRINT , txt("m_print_sequence") ) ;
-        PopupMenu ( cm , pt ) ;
+        PopupMenu ( cm , event.GetPosition() ) ;
         delete cm ;
         }
 
@@ -1300,6 +1300,7 @@ void SequenceCanvas::OnNewFromResultAA ( wxCommandEvent &ev )
 
 void SequenceCanvas::SilentRefresh ()
     {
+    if ( isHorizontal ) Clear () ;
     wxClientDC dc(this);
     PrepareDC(dc);
     OnDraw ( dc ) ;
@@ -1364,16 +1365,9 @@ void SequenceCanvas::OnSeqBottom ( wxCommandEvent &ev )
 void SequenceCanvas::OnToggleFeat ( wxCommandEvent &ev )
     {
     TAlignment *al = (TAlignment*) child ;
-    if ( al->lines[last_al->id].features )
-        {
-        delete al->lines[last_al->id].features ;
-        al->lines[last_al->id].features = NULL ;
-        }
-    else
-        {
-        al->lines[last_al->id].features = new TVector ;
-        *(al->lines[last_al->id].features) = *(al->lines[last_al->id].v) ;
-        }
+    TAlignLine *all = &al->lines[last_al->id] ;
+    if ( all->hasFeatures() ) all->hideFeatures() ;
+    else all->showFeatures() ;
     al->redoAlignments ( false ) ;
     }
 

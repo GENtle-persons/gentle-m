@@ -9,6 +9,8 @@ BEGIN_EVENT_TABLE(TManageDatabaseDialog, wxDialog )
     EVT_BUTTON(MD_PD_DEL,TManageDatabaseDialog::pdOnDel)
     EVT_BUTTON(MD_PD_DEFAULT,TManageDatabaseDialog::pdOnSetDefault)
     EVT_BUTTON(MD_PM_SAVE,TManageDatabaseDialog::pmOnSave)
+    EVT_BUTTON(MD_PD_ADD_MYSQL,TManageDatabaseDialog::pmAddSQL)
+    EVT_BUTTON(MD_PM_NEW_MYSQL,TManageDatabaseDialog::pmNewSQL)
     EVT_LISTBOX(MD_PD_DBLIST,TManageDatabaseDialog::pdOnDBchange)
     EVT_LIST_BEGIN_DRAG(MD_PM_LEFT,TManageDatabaseDialog::pmOnLeftListEvent)
     EVT_LIST_BEGIN_DRAG(MD_PM_RIGHT,TManageDatabaseDialog::pmOnRightListEvent)
@@ -427,17 +429,20 @@ void TManageDatabaseDialog::do_del  ( string name , string db )
 bool TManageDatabaseDialog::copyDNA ( string name , string sdb , string tdb )
     {
     if ( sdb == tdb ) return false ;
-    TStorage source ( TEMP_STORAGE , getFileName ( sdb ) ) ;
-    TStorage target ( TEMP_STORAGE , getFileName ( tdb ) ) ;
+    SetCursor ( *wxHOURGLASS_CURSOR ) ;
+    TStorage *source = getTempDB ( getFileName ( sdb ) ) ;
+    TStorage *target = getTempDB ( getFileName ( tdb ) ) ;
+//    TStorage source ( TEMP_STORAGE , getFileName ( sdb ) ) ;
+//    TStorage target ( TEMP_STORAGE , getFileName ( tdb ) ) ;
     string sql , s , t ;
 
     int a ;
     TSQLresult r ;
-    name = source.fixDNAname ( name ) ;
+    name = source->fixDNAname ( name ) ;
         
     // Already there?
     sql = "SELECT dna_name FROM dna WHERE dna_name=\""+name+"\"" ;
-    r = target.getObject ( sql ) ;
+    r = target->getObject ( sql ) ;
     if ( r.rows() > 0 )
         {
         wxMessageDialog md ( this , txt("t_entry_exists_brief") , txt("msg_box") ) ;
@@ -446,12 +451,12 @@ bool TManageDatabaseDialog::copyDNA ( string name , string sdb , string tdb )
         }
         
     // Copy DNA and items
-    source.copySQLfields ( target , "dna" , "dna_name=\""+name+"\"" ) ;
-    source.copySQLfields ( target , "dna_item" , "di_dna=\""+name+"\"" ) ;
+    source->copySQLfields ( *target , "dna" , "dna_name=\""+name+"\"" ) ;
+    source->copySQLfields ( *target , "dna_item" , "di_dna=\""+name+"\"" ) ;
     
     // Enzymes
     sql = "SELECT dna_restriction_enzymes FROM dna WHERE dna_name=\"" + name + "\"" ;
-    r = source.getObject ( sql ) ;
+    r = source->getObject ( sql ) ;
     if ( r.rows() == 0 ) return false ;
     s = r[0][0] ;
     t = "" ;
@@ -470,11 +475,12 @@ bool TManageDatabaseDialog::copyDNA ( string name , string sdb , string tdb )
     for ( a = 0 ; a < ve.size() ; a++ )
         {
         sql = "SELECT e_name FROM enzyme WHERE e_name=\"" + ve[a] + "\"" ;
-        r = target.getObject ( sql ) ;
+        r = target->getObject ( sql ) ;
         if ( r.rows() == 0 )
-           source.copySQLfields ( target , "enzyme" , "e_name=\"" + ve[a] + "\"" ) ;
+           source->copySQLfields ( *target , "enzyme" , "e_name=\"" + ve[a] + "\"" ) ;
         }
-
+        
+    SetCursor ( *wxSTANDARD_CURSOR ) ;
 	return true ;
     }
 
@@ -524,7 +530,7 @@ void TManageDatabaseDialog::initDatabases ()
 
     g1->Add ( new wxStaticText ( p , -1 , txt("t_mysql") ) , 1 , wxEXPAND , 5 ) ;
     g1->Add ( new wxButton ( p , MD_PD_ADD_MYSQL , txt("b_add") ) , 1 , wxEXPAND , 5 ) ;
-    g1->Add ( new wxButton ( p , MD_PM_NEW_MYSQL , txt("b_new") ) , 1 , wxEXPAND , 5 ) ;
+//    g1->Add ( new wxButton ( p , MD_PM_NEW_MYSQL , txt("b_new") ) , 1 , wxEXPAND , 5 ) ;
 
     pd_db_name = new wxStaticText ( p , -1 , "" ) ;
     pd_db_file = new wxStaticText ( p , -1 , "" ) ;
@@ -633,14 +639,25 @@ void TManageDatabaseDialog::addDatabase ( string fn )
         md.ShowModal() ;
         return ;
         }
-    for ( a = b = 0 ; a < fn.length() ; a++ )
-        if ( fn[a] == '\\' || fn[a] == '/' )
-           b = a ;
-    string t = fn.substr ( b+1 ) ;
-    for ( a = b = 0 ; a < t.length() && b == 0 ; a++ )
-        if ( t[a] == '.' )
-           b = a ;
-    t = t.substr ( 0 , b ) ;
+        
+    string t ;
+    if ( fn[0] == ':' )
+        {
+        vector <string> vv ;
+        vv = explode ( ":" , fn + ":" ) ;
+        t = vv[4] ;
+        }
+    else
+        {
+        for ( a = b = 0 ; a < fn.length() ; a++ )
+            if ( fn[a] == '\\' || fn[a] == '/' )
+               b = a ;
+        t = fn.substr ( b+1 ) ;
+        for ( a = b = 0 ; a < t.length() && b == 0 ; a++ )
+            if ( t[a] == '.' )
+               b = a ;
+        t = t.substr ( 0 , b ) ;
+        }
 
     // Avoiding double names
     if ( t[0] >= 'a' && t[0] <= 'z' ) t[0] = t[0] - 'a' + 'A' ; // Uppercase
@@ -1331,6 +1348,22 @@ void TManageDatabaseDialog::pmOnTwoPanes ( wxCommandEvent &ev )
     {
     updateTwoLists () ;
     }
+    
+void TManageDatabaseDialog::pmAddSQL ( wxCommandEvent &ev )
+    {
+    TMySQLDialog m ( this , "Add" ) ;
+    if ( wxID_OK != m.ShowModal() ) return ;
+    wxString fn ;
+    fn = ":" + m.s->GetValue () ;
+    fn += ":" + m.u->GetValue () ;
+    fn += ":" + m.p->GetValue () ;
+    fn += ":" + m.d->GetValue () ;
+    addDatabase ( fn.c_str() ) ;
+    }
+
+void TManageDatabaseDialog::pmNewSQL ( wxCommandEvent &ev )
+    {
+    }
 
 // **************************************************************
 
@@ -1345,4 +1378,34 @@ bool TMyDropTarget::OnDropText(int x, int y, const wxString &data)
     {
     return ( d->thetarget == me && data == GENTLE_DRAG_DATA ) ;
     }
+
+// *****************************************************************
+
+TMySQLDialog::TMySQLDialog ( wxWindow *parent , wxString title , wxString server ,
+        wxString db , wxString user , wxString password )
+        : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 200 , 180 ) )
+   {
+   wxBoxSizer *v = new wxBoxSizer ( wxVERTICAL ) ;
+   wxFlexGridSizer *g = new wxFlexGridSizer ( 4 , 2 , 10 , 10 ) ;
+
+   s = new wxTextCtrl ( this , -1 , server ) ;
+   d = new wxTextCtrl ( this , -1 , db ) ;
+   u = new wxTextCtrl ( this , -1 , user ) ;
+   p = new wxTextCtrl ( this , -1 , password ) ;
+   g->Add ( new wxStaticText ( this , -1 , "IP" ) , 1 , wxEXPAND , 5 ) ;
+   g->Add ( s , 1 , wxEXPAND , 5 ) ;
+   g->Add ( new wxStaticText ( this , -1 , "DB" ) , 1 , wxEXPAND , 5 ) ;
+   g->Add ( d , 1 , wxEXPAND , 5 ) ;
+   g->Add ( new wxStaticText ( this , -1 , "Name" ) , 1 , wxEXPAND , 5 ) ;
+   g->Add ( u , 1 , wxEXPAND , 5 ) ;
+   g->Add ( new wxStaticText ( this , -1 , "PWD" ) , 1 , wxEXPAND , 5 ) ;
+   g->Add ( p , 1 , wxEXPAND , 5 ) ;
+   
+   v->Add ( g , 1 , wxEXPAND , 5 ) ;
+   v->Add ( CreateButtonSizer ( wxOK | wxCANCEL ) , 0 , wxEXPAND , 5 ) ;
+   
+   SetSizer( v );
+   Center () ;
+   }
+
 

@@ -247,9 +247,11 @@ void TVector::insert_char ( char x , int pos , bool overwrite )
     dummy = (char) x ;
     if ( overwrite )
        {
+       myass ( pos-1 >= 0 && pos-1 < sequence.length() , "insert_char" ) ;
        sequence[pos-1] = x ;
        return ;
        }
+    myass ( pos-1 >= 0 , "insert_char (2)" ) ;
     sequence.insert ( pos-1 , dummy ) ;
     int a ;
     for ( a = 0 ; a < items.size() ; a++ )
@@ -905,6 +907,29 @@ int TVector::getItemLength ( int a )
     {
     if ( items[a].to >= items[a].from ) return items[a].to - items[a].from + 1 ;
     return items[a].to + sequence.length() - items[a].from + 1 ;
+    }
+    
+void TVector::clear ()
+    {
+    _lu = _ll = _ru = _rl = "" ;
+    circular = false ;
+    params = "" ;
+    turned = 0 ;
+    action = "" ;
+    action_value = 0 ;
+    aa = database = "" ;
+    changed = false ;
+    undo.clear() ;
+    sequence = name = desc = "" ;
+    type = TYPE_VECTOR ;
+    recalcvisual = false ;
+    items.clear () ;
+    re.clear () ;
+    rc.clear () ;
+    cocktail.clear () ;
+    worf.clear () ;
+    hiddenEnzymes.clear () ;
+    proteases.clear () ;
     }
 
     

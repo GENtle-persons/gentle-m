@@ -1058,11 +1058,11 @@ void SeqAlign::show ( wxDC& dc )
     
     wxColour nbgc ;
     for ( a = 0 ; can->seq[a] != this ; a++ ) ;
-    switch ( a%3 )
+    switch ( id%3 )
         {
-        case 0 : nbgc = wxColour ( 200 , 255 , 255 ) ; break ;
-        case 1 : nbgc = wxColour ( 200 , 200 , 255 ) ; break ;
-        case 2 : nbgc = wxColour ( 200 , 255 , 200 ) ; break ;
+        case 0 : nbgc = wxColour ( 200 , 200 , 255 ) ; break ;
+        case 1 : nbgc = wxColour ( 200 , 255 , 200 ) ; break ;
+        case 2 : nbgc = wxColour ( 200 , 255 , 255 ) ; break ;
         }
     
     int first = -1 , me = -1 ;
@@ -1079,30 +1079,27 @@ void SeqAlign::show ( wxDC& dc )
     dc.SetTextBackground ( bg ) ;
     dc.SetBackgroundMode ( wxSOLID ) ;
     
-    int xa , ya , yb ;
+    int xa , xb , ya , yb ;
     dc.GetDeviceOrigin ( &xa , &ya ) ;
     ya = -ya ;
-    can->MyGetClientSize ( &xa , &yb ) ;
+    xa = -xa ;
+    can->MyGetClientSize ( &xb , &yb ) ;
     yb += ya ;
+    xb += xa ;
     for ( a = 0 ; a < pos.p.size() ; a++ )
         {
         b = pos.p[a] ;
         int tx = pos.r[a].x , ty = pos.r[a].y ;
-        int tz = ty + can->charheight ;
+        int tzx = tx + can->charwidth ;
+        int tzy = ty + can->charheight ;
         bool insight = true ; // Meaning "is this part visible"
-        if ( tz < ya ) insight = false ;
-        if ( ty > yb ) insight = false ;
+        if ( tzy < ya || ty > yb ) insight = false ;
+        if ( b > 0 && ( tzx < xa || tx > xb ) ) insight = false ;
         if ( can->drawall ) insight = true ;
         if ( !insight && ty > yb ) a = pos.p.size() ;
+        if ( !insight && tx > xb ) a = pos.p.size() ;
         if ( b > 0 && !insight ) cnt++ ;
         if ( b > 0 && insight ) // Character
-
-    
-/*    for ( a = 0 ; a < pos.p.size() ; a++ )
-        {
-        b = pos.p[a] ;
-        if ( b > 0 ) // Character
-        */
            {
            t = s[b-1] ;
            if ( pos.m[a] == 1 )

@@ -157,7 +157,8 @@ void MyFrame::initme ()
     LS->createDatabase() ;
 
     // Synchronize enzymes in known databases
-    LS->synchronize () ;
+    // Turned of temporarily
+//    LS->synchronize () ;
     
     // Import enzymes from local database
     LS->import() ;

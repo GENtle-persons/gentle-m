@@ -99,6 +99,7 @@ class TVector
     TVector ( ChildBase *win = NULL ) ;  
     virtual ~TVector () ;
     virtual void init () ;
+    virtual void clear () ;
     virtual void recalculateCuts () ;
     virtual vector <TRestrictionCut> getCuts ( TRestrictionEnzyme *e ) ;
     
