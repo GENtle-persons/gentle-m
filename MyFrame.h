@@ -123,6 +123,7 @@ public:
     virtual bool isLocked () ;
     virtual bool isActivating () ;
     virtual TVirtualGel *useGel ( wxString type ) ;
+    virtual void saveImage ( wxBitmap *bmp , wxString name = "" ) ;
 
     TMainTree *mainTree ;
     TStorage *LS ;

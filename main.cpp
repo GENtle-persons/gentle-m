@@ -257,6 +257,7 @@ bool MyApp::OnInit()
 
     wxString s1 , s2 ;
     wxFileName::SplitPath ( argv[0] , &homedir , &s1 , &s2 ) ;
+    wxInitAllImageHandlers() ;
     
     wxSetWorkingDirectory ( homedir ) ;
     // Is an instance already running?
@@ -319,11 +320,12 @@ bool MyApp::OnInit()
         tipfile += frame->lang_string ;
         tipfile += ".txt" ;
         wxTipProvider *tipProvider = wxCreateFileTipProvider(tipfile, tip);
-        wxShowTip(frame, tipProvider);
+        showTip = wxShowTip(frame, tipProvider, showTip);
 //        showTip = tipProvider->ShowTipsOnStartup() ;
         tip = tipProvider->GetCurrentTip() ;
 //        frame->LS->setOption ( "SHOWTIP" , showTip ) ;
         frame->LS->setOption ( "NEXTTIP" , tip ) ;
+        frame->LS->setOption ( "SHOWTIP" , showTip ) ;
         delete tipProvider;
         }
         

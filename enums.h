@@ -194,6 +194,7 @@ enum {
     PC_RS_MARK,
     PC_RS_MARK_SHOW,
     PC_RS_SHOW_HIDE,
+    PC_SAVE_IMAGE,
     PC_VECTOR_EDIT,
     PC_WHAT_CUTS,
     PC_ZOOM,

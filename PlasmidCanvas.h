@@ -37,6 +37,8 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void OnPrimerBackward ( wxCommandEvent &ev ) ;
     virtual void OnPrimerBoth ( wxCommandEvent &ev ) ;
     virtual void OnPrimerMutation ( wxCommandEvent &ev ) ;
+    virtual void OnPaint(wxPaintEvent& event) ;
+    virtual void OnSaveImage ( wxCommandEvent &ev ) ;
     
     virtual void invokeVectorEditor ( wxString what = "" , int num = 0 , bool forceUpdate = false ) ;
     virtual wxMenu *invokeItemPopup ( int item , wxPoint pt , bool doreturn = false ) ;

@@ -17,7 +17,7 @@ class TItemEditDialog : public wxDialog
     virtual void OnOK ( wxCommandEvent &ev ) ;
     virtual void OnCancel ( wxCommandEvent &ev ) ;
     virtual void OnUseOffset ( wxCommandEvent &ev ) ;
-    virtual void OnList ( wxListEvent &ev ) ;
+    virtual void OnList ( wxCommandEvent & WXUNUSED(ev) ) ;
     virtual void initlb () ;
                                             
     // Variables

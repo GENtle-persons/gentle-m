@@ -1,5 +1,6 @@
 #include "PlasmidCanvas.h"
 #include <wx/printdlg.h>
+#include <wx/dcbuffer.h>
 
 // ---------------------------------------------------------------------------
 // PlasmidCanvas
@@ -31,6 +32,7 @@ BEGIN_EVENT_TABLE(PlasmidCanvas, wxScrolledWindow)
     EVT_MENU(PC_BLAST_DNA, PlasmidCanvas::blastDNA)
     EVT_MENU(PC_BLAST_AA, PlasmidCanvas::blastAA)
     EVT_MENU(PC_COPY_IMAGE, PlasmidCanvas::OnCopyImage)
+    EVT_MENU(PC_SAVE_IMAGE, PlasmidCanvas::OnSaveImage)
     EVT_MENU(PC_ITEM_BLAST_DNA, PlasmidCanvas::itemBlastDNA)
     EVT_MENU(PC_ITEM_BLAST_AA, PlasmidCanvas::itemBlastAA)
     EVT_MENU(PRIMER_FORWARD, PlasmidCanvas::OnPrimerForward)
@@ -47,12 +49,19 @@ BEGIN_EVENT_TABLE(PlasmidCanvas, wxScrolledWindow)
     EVT_MENU(MDI_FILL_KLENOW,PlasmidCanvas::OnFillKlenow)
     EVT_MENU(MDI_RUN_PCR,PlasmidCanvas::OnRunPCR)
     EVT_MENU(PC_WHAT_CUTS,PlasmidCanvas::OnWhatCuts)
+//    EVT_PAINT(PlasmidCanvas::OnPaint)
 END_EVENT_TABLE()
 
+void PlasmidCanvas::OnPaint(wxPaintEvent& event)
+	{
+/*    wxPaintDC dc(this);
+    dc.Clear () ;
+    OnDraw ( dc ) ;*/
+    }
 
 void PlasmidCanvas::setPrinting ( bool _b ) { printing = _b ; }
 void PlasmidCanvas::setLastContextItem ( int _i ) { context_last_item = _i ; }
-	void PlasmidCanvas::getMark ( int &i1 , int &i2 ) { i1 = getMarkFrom() ; i2 = getMarkTo() ; }
+void PlasmidCanvas::getMark ( int &i1 , int &i2 ) { i1 = getMarkFrom() ; i2 = getMarkTo() ; }
 void PlasmidCanvas::setRootChild ( MyChild *_p ) { p = _p ; }
 int PlasmidCanvas::getZoom () { return zoom ; }
 
@@ -107,12 +116,12 @@ PlasmidCanvas::~PlasmidCanvas ()
 void PlasmidCanvas::Refresh ()
     {
     if ( p && p->cSequence->getEditMode() && p->def == "DNA" ) return ;
-    if ( painting ) return ;
-    painting = true ;
+//    if ( painting ) return ;
+//    painting = true ;
     wxClientDC dc ( (wxWindow*) this ) ;
     PrepareDC ( dc ) ;
     OnDraw ( dc ) ;
-    painting = false ;
+//    painting = false ;
     }
     
 bool PlasmidCanvas::isEnzymeVisible ( wxString s )
@@ -134,6 +143,8 @@ void PlasmidCanvas::OnDraw(wxDC& pdc)
 {
     if ( !p || !p->vec ) return ;
     if ( myapp()->frame->isLocked() ) return ;
+    if ( !p->IsShown() ) return ;
+    if ( !p->IsEnabled() ) return ;
     if ( p->vec->getSequenceLength() == 0 )
     	{
 	    pdc.Clear () ;
@@ -149,13 +160,28 @@ void PlasmidCanvas::OnDraw(wxDC& pdc)
         }
     else
         {
+        if ( painting ) return ;
+        painting = true ;
         int vx , vy ;
         GetViewStart ( &vx , &vy ) ;
         GetClientSize(&w, &h);
-        if ( w == 0 || h == 0 ) return ;
+        if ( w == 0 || h == 0 ) { painting = false ; pdc.Clear() ; return ; }
         hasBeenPainted = true ;
         wxBitmap bmp ( w , h , -1 ) ;
         GetVirtualSize ( &w , &h ) ;
+        if ( h < 20 )
+        	{
+    	    pdc.Clear () ;
+    	    painting = false ;
+    	    return ;
+            }    
+/*        
+        wxBufferedDC dc ( &pdc , wxSize ( w , h ) ) ;
+        dc.Clear () ;
+        if ( p->vec->isCircular() ) OnDrawCircular ( dc ) ;
+        else OnDrawLinear ( dc ) ;
+*/
+
         wxMemoryDC dc ;
         dc.SelectObject ( bmp ) ;
         dc.Clear() ;
@@ -164,6 +190,7 @@ void PlasmidCanvas::OnDraw(wxDC& pdc)
         else OnDrawLinear ( dc ) ;
         dc.SetDeviceOrigin ( 0 , 0 ) ;
         pdc.Blit ( vx , vy , w , h , &dc , 0 , 0 ) ;
+        painting = false ;
         }
 }
 
@@ -219,6 +246,21 @@ void PlasmidCanvas::OnCopyImage ( wxCommandEvent &ev )
         }
     }
 
+void PlasmidCanvas::OnSaveImage ( wxCommandEvent &ev )
+    {
+    w = 2000 ;
+    h = 1600 ;
+    wxBitmap bmp ( w , h , -1 ) ;
+    wxMemoryDC dc ;
+    dc.SelectObject ( bmp ) ;
+    dc.Clear() ;
+    if ( p->vec->isCircular() ) OnDrawCircular ( dc ) ;
+    else OnDrawLinear ( dc ) ;
+
+    myapp()->frame->saveImage ( &bmp , p->getName() ) ;
+
+    GetClientSize(&w, &h);
+    }    
 
 wxString PlasmidCanvas::getSelection()
     {
@@ -735,9 +777,10 @@ void PlasmidCanvas::showGClegend ( wxDC &dc )
     t = wxString::Format ( txt("t_gc_blocks") , p->vec->getSequenceLength() / p->vec->showGC() ) ;
     int tw , th ;
     dc.GetTextExtent ( t , &tw , &th ) ;
+    if ( tw * 11 / 10 > nw ) nw = tw ;
 	if ( p->vec->isLinear() )
 		{
-  		r = wxRect ( w/2 - nw/2 , h / 40 , nw , th*5/2 ) ;
+  		r = wxRect ( w/2 - nw/2 , h / 25 , nw , th*5/2 ) ;
 		}
   	else
    		{
