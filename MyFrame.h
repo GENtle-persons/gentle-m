@@ -23,6 +23,7 @@ class TCalculator ;
 class TPDB ;
 class TEnzymeRules ;
 class TVirtualGel ;
+class TGraph ;
 
 typedef wxFrame MyFrameType ;
 
@@ -106,6 +107,7 @@ public:
     virtual void OnImageViewer(wxCommandEvent& event);
     virtual void OnExternalInterface(wxCommandEvent& event);
     virtual void OnCalculator(wxCommandEvent& event);
+    virtual void OnGraph(wxCommandEvent& event);
     
     virtual void RerouteMenu(wxCommandEvent& event);
     virtual void BollocksMenu(wxCommandEvent& event);
@@ -124,6 +126,7 @@ public:
     
     virtual void addDefaultTools(wxToolBar* toolBar) ;
     virtual TCalculator *RunCalculator () ;
+    virtual TGraph *RunGraph () ;
     virtual MyChild* newFromVector ( TVector *nv , int type = TYPE_VECTOR ) ;
     virtual TAminoAcids *newAminoAcids ( wxString aa , wxString title = "" ) ;
     virtual TAminoAcids *newAminoAcids ( TVector *nv , wxString title = "" ) ;

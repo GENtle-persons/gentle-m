@@ -64,7 +64,7 @@ void FindSequenceDialog::doAction ( bool doubleclick )
     wxString data = s.AfterFirst ( ':' ) ;
     
     wxString mark ;
-    SequenceCanvas *canvas ;
+    SequenceCanvas *canvas = NULL ;
     if ( c->def == "dna" )
         {
         mark = "DNA" ;
@@ -80,6 +80,13 @@ void FindSequenceDialog::doAction ( bool doubleclick )
         mark = "AA" ;
         canvas = ( (TAminoAcids*) c ) -> sc ;
         }    
+    else if ( c->def == "ABIviewer" )
+        {
+        mark = "ABI" ;
+        canvas = ( (TABIviewer*) c ) -> sc ;
+        }    
+        
+    if ( !canvas ) return ; // Just a safety
     
     if ( type == txt("sequence") )
         {
@@ -178,7 +185,7 @@ void FindSequenceDialog::OnSearch ( wxCommandEvent &ev )
         {
         lb->SetSelection ( 0 ) ;
         OnLB ( ev ) ;
-        }    
+        }
     if ( lb->GetCount() > FIND_MAX )
     	wxMessageBox ( txt("t_too_many_search_results") ) ;
     }
