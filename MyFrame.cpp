@@ -188,7 +188,7 @@ void MyFrame::initme ()
     
     // Import enzymes from local database
     LS->import() ;
-    
+
     // Loading program options from database
     showVectorTitle = LS->getOption ( "SHOWVECTORTITLE" , true ) ;
     showVectorLength = LS->getOption ( "SHOWVECTORLENGTH" , true ) ;
