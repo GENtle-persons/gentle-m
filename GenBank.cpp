@@ -37,6 +37,20 @@ string TGenBank::expand ( string init , int to , string with )
     
 string TGenBank::quote ( string pre , string q )
     {
+    int a ;
+    for ( a = 0 ; a < q.length() ; a++ )
+       {
+       if ( q[a] == '\n' || q[a] == '\r' ) q[a] = ' ' ;
+       else if ( q[a] == '\"' ) q[a] = '-' ;
+       }
+    for ( a = 1 ; a < q.length() ; a++ )
+       {
+       if ( q[a-1] == ' ' && q[a] == ' ' )
+          {
+          q.erase ( a , 1 ) ;
+          a-- ;
+          }
+       }
     return pre + "=\"" + q + "\"" ;
     }
 
@@ -56,7 +70,8 @@ void TGenBank::doExport ( TVector *v , vector <string> &ex )
     s = "LOCUS       " ;
     s += t ;
     s += u ;
-    s += "DNA     " ;
+    if ( v->type == TYPE_AMINO_ACIDS ) s += "AA      " ;
+    else s += "DNA     " ;
     if ( v->isCircular() ) s += "circular " ;
     else s += "linear " ;
     ex.push_back ( s ) ;
@@ -104,9 +119,13 @@ void TGenBank::doExport ( TVector *v , vector <string> &ex )
         t[a] = b ;
         q[b]++ ;
         }
-    s = "BASE COUNT   " ;
-    sprintf ( z , "%6d a %6d c %6d g %6d t" , q['a'] , q['c'] , q['g'] , q['t'] ) ;
-    ex.push_back ( s + z ) ;
+        
+    if ( v->type != TYPE_AMINO_ACIDS )
+       {
+       s = "BASE COUNT   " ;
+       sprintf ( z , "%6d a %6d c %6d g %6d t" , q['a'] , q['c'] , q['g'] , q['t'] ) ;
+       ex.push_back ( s + z ) ;
+       }
     while ( t.length() % 60 != 0 ) t += " " ;
     ex.push_back ( "ORIGIN" ) ;
     for ( a = 0 ; a < t.length() ; a += 60 )
@@ -218,7 +237,6 @@ void TGenBank::makeTree ()
            {
            vs[a] = "     " + vs[a].substr ( 21 , 255 ) ;
            vi[a] = 5 ;
-//           wxMessageBox ( vs[a].c_str() ) ;
            }
         }
     

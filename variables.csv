@@ -511,3 +511,4 @@
 "t_tip","Tip of the day","Tip des Tages"
 "m_align_gap","Gap","Lücke"
 "t_alignment","Alignment","Alignment"
+"t_align_not_found","%s could not be found; using alternative data","%s konnte nicht gefunden werden; benutzt alternative Daten"

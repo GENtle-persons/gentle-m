@@ -983,11 +983,14 @@ void TAlignment::OnFileSave ( wxCommandEvent &ev )
     int a , b ;
     string s , d ;
     TGenBank gb ;
-    d = wxString::Format("%d\n",lines.size()).c_str() ;
+    for ( a = b = 0 ; a < lines.size() ; a++ ) b += lines[a].isIdentity?0:1 ;
+    d = wxString::Format("%d\n",b).c_str() ;
     for ( a = 0 ; a < lines.size() ; a++ )
         {
         if ( !lines[a].isIdentity )
             {
+            string p = lines[a].v->getParams () ;
+            lines[a].v->setParams ( "" ) ;
             d += lines[a].v->name + "\n" ;
             d += lines[a].v->getDatabase() + "\n" ;
             d += lines[a].s + "\n" ;
@@ -995,9 +998,10 @@ void TAlignment::OnFileSave ( wxCommandEvent &ev )
             gb.doExport ( lines[a].v , ex ) ;
             for ( b = 0 ; b < ex.size() ; b++ )
                s += ex[b] + "\n" ;
+            lines[a].v->setParams ( p ) ;
             }
         }
-    if ( !vec ) vec = new TVector ;
+    if ( !vec ) vec = new TVector ; // Wasting memory
     vec->name = txt("t_alignment") ;
     vec->desc = d ;
     vec->sequence = s ;
@@ -1014,7 +1018,7 @@ void TAlignment::fromVector ( TVector *nv )
     vector <string> vs = explode ( "\n" , vec->desc ) ;
     int nol = atoi ( vs[0].c_str() ) ; // Number of lines
     int n ;
-    bool all = true ;
+    string broken ;
     TManageDatabaseDialog mdb ( this , "dummy" , ACTION_MODE_STARTUP ) ;
     lines.clear () ;
     for ( n = 0 ; n < nol ; n++ )
@@ -1022,36 +1026,54 @@ void TAlignment::fromVector ( TVector *nv )
         string name = vs[1+n*3] ;
         string db = vs[2+n*3] ;
         string seq = vs[3+n*3] ;
-        
+
         TAlignLine line ; 
         line.name = name ;
 
-        bool success = mdb.do_load_DNA ( name , db ) ;
-        all &= success ;
-        if ( success )
-           {
-           line.v = mdb.v ;
-           }
+        bool success = false ;
+        if ( db != "" ) success = mdb.do_load_DNA ( name , db ) ;
+        if ( success ) line.v = mdb.v ;
         else
            {
            gb.vs = gb.vs_l[n] ;
            gb.vi = gb.vi_l[n] ;
            TVector *vv = new TVector ;
            gb.remap ( vv ) ;
+/*           if ( vv->items.size() > 0 ) wxMessageBox ( name.c_str() ) ;
+           else 
+              {
+              string u ;
+              for ( int z = 0 ; z < gb.vs.size() ; z++ )
+                 u += gb.vs_l[n][z] + "\n" ;
+              wxMessageBox ( u.c_str() , name.c_str() ) ;
+              }*/
 
            short type = TUReadSeq::getSeqType ( vv->sequence ) ;
            if ( type == TYPE_AMINO_ACIDS )
-              myapp()->frame->newAminoAcids ( vv , name ) ;
+              {
+              TAminoAcids *p = myapp()->frame->newAminoAcids ( vv , name ) ;
+              delete vv ;
+              vv = p->vec ;
+              }
            else myapp()->frame->newFromVector ( vv , type ) ;
-           
+
+           if ( db != "" )
+              {
+              if ( broken != "" ) broken += ", " ;
+              broken += vv->name ;
+              }
            line.v = vv ;
            }
-        line.ResetSequence () ;
         line.s = seq ;
         lines.push_back ( line ) ;
         }
-    delete vec ;
     vec = NULL ;
+    if ( broken != "" ) 
+        {
+        myapp()->frame->Thaw() ;
+        wxMessageBox ( wxString::Format(txt("t_align_not_found"),broken.c_str()) ) ;
+        myapp()->frame->Freeze() ;
+        }
     redoAlignments ( false ) ;
     }
 

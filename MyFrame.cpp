@@ -695,8 +695,7 @@ void MyFrame::newGB ( TGenBank &gb , string title )
     Freeze () ;
     for ( n = 0 ; n < gb.vs_l.size() ; n++ )
         {
-        nv = vv[vv.size()-1] ;
-        vv.pop_back () ;
+        nv = vv[n] ;
         if ( gb.vs_l.size() == 1 && title != "" ) nv->name = title ;
         short type = TUReadSeq::getSeqType ( nv->sequence ) ;
         if ( type == TYPE_AMINO_ACIDS )
@@ -704,6 +703,7 @@ void MyFrame::newGB ( TGenBank &gb , string title )
         else
            vc.push_back ( newFromVector ( nv , type ) ) ;
         }
+    vv.clear () ;
         
     if ( alignment )
         {
