@@ -1401,28 +1401,21 @@ void MyFrame::setActiveChild ( ChildBase *c )
     if ( !c ) return ;
     activating = true ;
     wxSafeYield() ;
-    mylog ( "setActiveChild" , "0" ) ;
     if ( !c->IsEnabled() ) c->Enable() ;
-    mylog ( "setActiveChild" , "1" ) ;
     if ( !c->IsShown() ) c->Show() ;
-    mylog ( "setActiveChild" , "2" ) ;
     if ( c->menubar && GetMenuBar() != c->menubar )
        {
        SetMenuBar ( c->menubar ) ;
        }
-    mylog ( "setActiveChild" , "3" ) ;
     wxSize s = c->GetParent()->GetClientSize() ;
     if ( c->GetSize() != s )
        {
        if ( c->vec ) c->vec->recalcvisual = true ;
        c->SetSize ( s ) ;
        }
-    mylog ( "setActiveChild" , "4" ) ;
     if ( mainTree && c->inMainTree.IsOk() && mainTree->GetSelection() != c->inMainTree )
         mainTree->SelectItem ( c->inMainTree ) ;
-    mylog ( "setActiveChild" , "5" ) ;
     c->Refresh () ;
-    mylog ( "setActiveChild" , "6" ) ;
     wxSafeYield () ;
     activating = false ;
     }
@@ -1511,7 +1504,7 @@ void MyFrame::TestMenu(wxCommandEvent& event)
     test_suite->Step () ;
     wxCommandEvent ev ( wxEVT_COMMAND_MENU_SELECTED , Y___ ) ;
     wxPostEvent ( this , ev ) ;
-    myapp()->Yield ( true ) ;
+//    myapp()->Yield ( true ) ;
     }
     	
 //******************************************************************* TTestSuite
@@ -1552,7 +1545,7 @@ void TTestSuite::vectorPressKey ( ChildBase *ac )
     ev.m_altDown = false ;
     ev.m_controlDown = rand() % 2 ;
     ev.m_metaDown = false ;
-    ev.m_shiftDown = false ;
+    ev.m_shiftDown = rand() % 2 ;
     int r = rand () % 40 ;
     if ( r > 14 ) r = 9 + r % 6 ;
     wxString msg ;
@@ -1613,9 +1606,24 @@ void TTestSuite::aaAction ( ChildBase *ac )
 	{
     wxCommandEvent ev ;
 	TAminoAcids *aa = (TAminoAcids*) ac ;
-	int num = aa->lb->GetCount() ;
-	aa->lb->SetSelection ( rand() % num , true ) ;
-	aa->OnListBox ( ev ) ;
+	
+	int r = rand() % 15 ;
+	if ( r == 0 )
+		{
+		int num = aa->inlinePlot->GetCount() ;
+		aa->inlinePlot->SetSelection ( rand() % num ) ;
+		aa->OnIP ( ev ) ;
+		}
+	else if ( r == 1 ) aa->OnHorizontal ( ev ) ;
+	else if ( r == 2 ) aa->OnMarkAll ( ev ) ;
+	else if ( r == 3 ) aa->OnCut ( ev ) ;
+	else if ( r == 4 ) aa->OnPhotometer ( ev ) ;
+	else
+ 		{    
+ 		int num = aa->lb->GetCount() ;
+ 		aa->lb->SetSelection ( rand() % num , true ) ;
+    	aa->OnListBox ( ev ) ;
+     	}   	
 	}	
      
 void TTestSuite::Step()
