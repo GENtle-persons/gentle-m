@@ -601,4 +601,6 @@
 "codontable23","Thraustochytrium Mitochondrial","Thraustochytrium Mitochondrial"
 "PDB_SLTBRG","Salt bridge with","Salzbrücke mit"
 "PDB_LINK","Link to","Verbindung zu"
+"t_add_sql","Add MySQL database","MySQL-Datenbank hinzufügen"
+"t_new_sql","New MySQL database","Neue MySQL-Datenbank"
 

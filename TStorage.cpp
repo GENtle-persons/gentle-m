@@ -1,4 +1,5 @@
 #include "TStorage.h"
+#include <wx/textfile.h>
 
 using namespace std ;
 
@@ -738,3 +739,54 @@ wxString TStorage::getDBname ()
     return dbname ;
     }
     
+wxString TStorage::createMySQLdb ( wxString ip , wxString db , wxString name , wxString pwd )
+    {
+#ifdef USEMYSQL
+    MYSQL c ;
+    mysql_init (&c);
+    mysql_real_connect ( &c , ip.c_str() , 
+                                    name.c_str() , pwd.c_str() ,
+                                    "mysql" ,
+                                    0 , 
+                                    NULL , CLIENT_COMPRESS ) ;
+    
+    wxString query = "CREATE DATABASE " + db ;
+    int err = mysql_query ( &c , query.c_str() ) ;
+    
+    if ( err != 0 )
+       {
+       mysql_close ( &c ) ;
+       return "" ;
+       }
+       
+    mysql_real_connect ( &c , ip.c_str() , 
+                                    name.c_str() , pwd.c_str() ,
+                                    db.c_str() ,
+                                    0 , 
+                                    NULL , CLIENT_COMPRESS ) ;
+
+    wxString t , fn = myapp()->homedir + myapp()->slash + "MySQL template.txt" ;
+    wxTextFile tf ( fn ) ;
+    tf.Open () ;
+    for ( int lc = 0 ; lc < tf.GetLineCount() ; lc++ )
+        {
+        wxString s = tf[lc].Trim().Trim(true) ;
+        if ( s != "" && !s.StartsWith ( "#" ) )
+           {
+           t += s + " " ;
+           if ( s.Last() == ';' )
+              {
+              t.Truncate ( t.length() - 2 ) ;
+              err = mysql_query ( &c , t.c_str() ) ;
+              if ( err != 0 ) wxMessageBox ( t , wxString::Format ( "Error %d" , err ) ) ;
+              t = "" ;
+              }    
+           }    
+        }    
+    
+    mysql_close ( &c ) ;
+    return ":" + ip + ":" + name + ":" + pwd + ":" + db ;
+#endif  
+    return "" ;  
+    }    
+

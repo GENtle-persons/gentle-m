@@ -61,6 +61,7 @@ Section "GENtle (required)"
   File "variables.csv"
   File "blank.db"
   File "gpl.txt"
+  File "MySQL template.txt"
 
   SetOutPath "$INSTDIR\help"
   File "help\*.htm"

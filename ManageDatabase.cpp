@@ -537,8 +537,10 @@ void TManageDatabaseDialog::initDatabases ()
     g1->Add ( new wxButton ( p , MD_PM_NEW , txt("b_new") ) , 1 , wxEXPAND , 5 ) ;
 
     g1->Add ( new wxStaticText ( p , -1 , txt("t_mysql") ) , 1 , wxEXPAND , 5 ) ;
+#ifdef USEMYSQL
     g1->Add ( new wxButton ( p , MD_PD_ADD_MYSQL , txt("b_add") ) , 1 , wxEXPAND , 5 ) ;
-//    g1->Add ( new wxButton ( p , MD_PM_NEW_MYSQL , txt("b_new") ) , 1 , wxEXPAND , 5 ) ;
+    g1->Add ( new wxButton ( p , MD_PM_NEW_MYSQL , txt("b_new") ) , 1 , wxEXPAND , 5 ) ;
+#endif
 
     pd_db_name = new wxStaticText ( p , -1 , "" ) ;
     pd_db_file = new wxStaticText ( p , -1 , "" ) ;
@@ -1387,7 +1389,7 @@ void TManageDatabaseDialog::pmOnTwoPanes ( wxCommandEvent &ev )
     
 void TManageDatabaseDialog::pmAddSQL ( wxCommandEvent &ev )
     {
-    TMySQLDialog m ( this , "Add" ) ;
+    TMySQLDialog m ( this , txt("t_add_sql") ) ;
     if ( wxID_OK != m.ShowModal() ) return ;
     wxString fn ;
     fn = ":" + m.s->GetValue () ;
@@ -1399,6 +1401,16 @@ void TManageDatabaseDialog::pmAddSQL ( wxCommandEvent &ev )
 
 void TManageDatabaseDialog::pmNewSQL ( wxCommandEvent &ev )
     {
+#ifdef USEMYSQL
+    TMySQLDialog m ( this , txt("t_new_sql") ) ;
+    if ( wxID_OK != m.ShowModal() ) return ;
+    wxString fn = TStorage::createMySQLdb ( m.s->GetValue () ,
+                              m.d->GetValue () ,
+                              m.u->GetValue () ,
+                              m.p->GetValue () ) ;
+
+    addDatabase ( fn ) ;
+#endif
     }
 
 // **************************************************************
