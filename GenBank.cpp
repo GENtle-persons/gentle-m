@@ -147,7 +147,6 @@ void TGenBank::load ( string s )
 	f.Close() ;
 	parseLines ( t , l ) ;
 	delete t ;
-	makeTree () ;
 	}
 
 void TGenBank::paste ( string s ) 
@@ -159,42 +158,59 @@ void TGenBank::paste ( string s )
 	
 	parseLines ( t , l ) ;
 	delete t ;
-	makeTree () ;
 	}
 
 void TGenBank::parseLines ( char *t , long l ) 
     {
-	char *c , *d ;
 	int i ;
-	t[l] = 0 ;
-	while ( vs.size() ) vs.pop_back () ;
-	while ( vi.size() ) vi.pop_back () ;
-	for ( c = d = t ; c-t < l ; c++ )
-	{
-		if ( !*c ) *c = 1 ;
-		if ( *c < 14 )
-		{
-			*c = 0 ;
-			vs.push_back ( d ) ;
-			for ( i = 0 ; *d == ' ' ; d++ ) i++ ;
-			vi.push_back ( i ) ;
-			for ( c++ ; *c < 14 ; c++ ) ;
-			d = c ;
-			c-- ;
-		} 
-	}
+	char *c ;
+	for ( c = t ; *c ; c++ ) *c = *c == '\r' ? '\n' : *c ;
+	vi.clear () ;
+	vs = explode ( '\n' , t ) ;
+	for ( i = 0 ; i < vs.size() ; i++ )
+	   vi.push_back ( vs[i].length() - trim(vs[i]).length() ) ;
 	success = true ;
 	if ( vs.size() == 0 ) success = false ;
 	else if ( vs[0].length() < 5 ) success = false ;
 	else if ( vs[0].substr(0,5) != "LOCUS" ) success = false ;
+	if ( success == false ) return ;
+	
+    TVS temp ;
+    TVI temp_i ;
+    vs_l.clear () ;
+    vi_l.clear () ;
+	for ( i = 0 ; i < vs.size() ; i++ )
+	   {
+	   if ( vs[i] == "//" )
+	       {
+	       vs_l.push_back ( temp ) ;
+	       vi_l.push_back ( temp_i ) ;
+	       temp.clear () ;
+	       temp_i.clear () ;
+	       }
+       else if ( trim ( vs[i] ) != "" )
+           {
+           temp.push_back ( vs[i] ) ;
+           temp_i.push_back ( vi[i] ) ;
+           }
+	   }
+    if ( vs_l.size() == 0 )
+        {
+        success = false ;
+        return ;
+        }
+	vs = vs_l[0] ;
+	vi = vi_l[0] ;
 }
 	
 void TGenBank::makeTree ()
     {
     int a , b ;
+    title = description = "" ;
     char z ;
     string s ;
     params = "" ;
+    keys.clear () ;
     for ( a = 0 ; a < vs.size() ; a++ )
         {
         s = trim ( vs[a] ) ;
@@ -208,6 +224,17 @@ void TGenBank::makeTree ()
            keys.push_back ( TGenBankKey ( key , value ) ) ;
            for ( b = 0 ; b < key.length() ; b++ )
               if ( key[b] >= 'a' && key[b] <= 'z' ) key[b] = key[b] - 'a' + 'A';
+           if ( vi[a] == 0 )
+              {
+              if ( key == "TITLE" ) title = value ;
+              if ( key == "ACCESSION" || key == "PID" || key == "DBSOURCE" ||
+                   key == "KEYWORDS" || key == "DEFINITION" )
+                 {  
+                 if ( description != "" ) description += "\n" ;
+                 if ( key != "DEFINITION" ) description += key + " : " ;
+                 description += value ;
+                 }
+              }
            if ( key != "LOCUS" &&
                 key != "DEFINITION" &&   
                 key != "ORIGIN" &&   
@@ -252,7 +279,6 @@ void TGenBank::makeTree ()
            z = 'L' ;
            }
         
-
         string t = " " ;
         t[0] = z ;
         vs[a] = t + " " + vs[a] ;
@@ -262,7 +288,7 @@ void TGenBank::makeTree ()
 string TGenBank::trim ( string s ) // Left only!
     {
     int a ;
-    for ( a = 0 ; a < s.length() && s[a] == ' ' ; a++ ) ;
+    for ( a = 0 ; a < s.length() && ( s[a] == ' ' || s[a] == 8 ) ; a++ ) ;
     s = s.substr ( a ) ;
     return s ;
     }
@@ -291,6 +317,7 @@ vector <string> TGenBank::explode ( char p , string s )
        vs.push_back ( s ) ;
     return vs ;
     }
+
     	
 void TGenBank::remap ( TVector *v )
     {
@@ -298,12 +325,16 @@ void TGenBank::remap ( TVector *v )
     string seq ;
     v->setCircular ( false ) ;
     v->setParams ( params ) ;
+	makeTree () ;
     for ( k = 0 ; k < keys.size() ; k++ )
         {
         if ( keys[k].key == "ORIGIN" ) // This is the sequence
            {
            for ( f = 0 ; f < keys[k].features.size() ; f++ )
               seq += keys[k].features[f].value ;
+           for ( f = k+1 ; f < keys.size() ; f++ )
+              seq += keys[f].key + keys[f].value ;
+           k = keys.size() ;
            }
         else if ( keys[k].key == "LOCUS" ) // This is the name
            {
@@ -315,10 +346,6 @@ void TGenBank::remap ( TVector *v )
               if ( vs[a] == "circular" ) v->setCircular ( true ) ;
               if ( vs[a] == "linear" ) v->setCircular ( false ) ;
               }
-           }
-        else if ( keys[k].key == "DEFINITION" ) // This is the description
-           {
-           v->desc += keys[k].value ;
            }
         else if ( keys[k].key == "FEATURES" ) // This is the items list
            {
@@ -350,13 +377,24 @@ void TGenBank::remap ( TVector *v )
         }
     
     for ( a = 0 ; a < seq.length() ; a++ )
-        if ( seq[a] != ' ' )
-           v->sequence += seq[a]-'a'+'A' ;
+        {
+        char c = seq[a] ;
+        if ( c != ' ' )
+           {
+           if ( c >= 'a' && c <= 'z' )
+              c = c-'a'+'A' ;
+           if ( ( c >= 'A' && c <= 'Z' ) || c == '-' )
+              v->sequence += c ;
+           }
+        }
            
+    if ( title != "" ) v->name = title ;
+    v->desc = description ;
     v->recalcvisual = true ;
     v->recalculateCuts () ;
     }
-    
+ 
+ 
 void TGenBank::scanItem ( TVector *v , int k , int f , int type , bool descfirst )
     {
     int a ;

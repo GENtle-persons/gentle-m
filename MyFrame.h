@@ -64,7 +64,7 @@ public:
     virtual TAminoAcids *newAminoAcids ( TVector *nv , string title = "" ) ;
     virtual TABIviewer *newABI ( string filename , string title ) ;
     virtual MyChild *newCLONE ( TClone &clone ) ;
-    virtual MyChild *newGB ( TGenBank &gb ) ;
+    virtual void newGB ( TGenBank &gb , string title = "" ) ;
     virtual MyChild *newFASTA ( TFasta &fasta ) ;
     virtual void blast ( string seq , string prg ) ;
     virtual void importFile ( string file , string path , int filter = -1 ) ;

@@ -20,6 +20,7 @@
 
 
 #include "main.h"
+#include <wx/tipdlg.h>
 
 #ifdef __WXMSW__
 #include "wx/msw/registry.h"
@@ -192,7 +193,25 @@ bool MyApp::OnInit()
             }
         wxYield();
         }
-//mydb() ;
+        
+    // Tips turned off until I can figure out how the hell
+    // to get the state of the !"§$%& show-again-checkbox
+    bool showTip = frame->LS->getOption ( "SHOWTIP" , false ) ;
+    if ( showTip )
+        {
+        int tip = frame->LS->getOption ( "NEXTTIP" , 0 ) ;
+        wxString tipfile = "tips_" ;
+        tipfile += frame->lang_string.c_str() ;
+        tipfile += ".txt" ;
+        wxTipProvider *tipProvider = wxCreateFileTipProvider(tipfile, tip);
+        wxShowTip(frame, tipProvider);
+//        showTip = tipProvider->ShowTipsOnStartup() ;
+        tip = tipProvider->GetCurrentTip() ;
+//        frame->LS->setOption ( "SHOWTIP" , showTip ) ;
+        frame->LS->setOption ( "NEXTTIP" , tip ) ;
+        delete tipProvider;
+        }
+
     return TRUE;
 }
 

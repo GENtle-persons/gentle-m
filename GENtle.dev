@@ -1,7 +1,7 @@
 [Project]
 FileName=GENtle.dev
 Name=GENtle
-UnitCount=75
+UnitCount=77
 Type=0
 Ver=1
 ObjFiles=
@@ -969,9 +969,29 @@ BuildCmd=
 
 [Unit75]
 FileName=variables.csv
-Folder=GENtle
+Folder=
 Compile=0
 Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit76]
+FileName=TUReadSeq.h
+CompileCpp=1
+Folder=Data structures
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit77]
+FileName=TUReadSeq.cpp
+CompileCpp=1
+Folder=Data structures
+Compile=1
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
