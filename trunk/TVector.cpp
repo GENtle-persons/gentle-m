@@ -822,10 +822,8 @@ void TVector::callUpdateUndoMenu ()
     
 void TVector::setFromVector ( TVector &v )
     {
-//    TUndo *u = undo ;
     *this = v ;
     undo.clear () ;
-//    undo = u ;
     }
 
     

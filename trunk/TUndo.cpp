@@ -25,7 +25,6 @@ void TUndo::start ( wxString _msg )
     *v = *base ;
     mem.push_back ( v ) ;
     msg.push_back ( _msg ) ;
-//    if ( base ) base->callUpdateUndoMenu() ;
     }
 
 void TUndo::stop ()
