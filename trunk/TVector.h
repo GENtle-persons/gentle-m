@@ -22,6 +22,18 @@ class ChildBase ;
 #define VIT_TERMINATOR 5
 #define VIT_MISC       6
 
+class TAAProp
+    {
+    public :
+    TAAProp () ;
+    virtual void set_cf ( int pa , int pb , int pt , float f0 , float f1 , float f2 , float f3 ) ;
+    virtual void set_data ( float _mw , float _pi , string _tla ) ;
+    string tla ;
+    float mw , pi ;
+    float cf_f[4] ;
+    int cf_pa , cf_pb , cf_pt ;
+    } ;
+
 class TORF
     {
     public :
@@ -152,6 +164,8 @@ class TVector
     virtual void setFromVector ( TVector &v ) ;
     virtual void doRemoveNucleotide ( int x ) ;
     virtual int getItemLength ( int a ) ;
+
+    virtual TAAProp getAAprop ( char a ) ;
     
     // Variables
     string sequence ;
@@ -172,18 +186,18 @@ class TVector
     string invert ( string s ) ;
     
     string _lu , _ll , _ru , _rl ; // Sticky ends
-    string _one2three[256] ;
     bool circular ;
     ChildBase *window ;
     string params ;
-    float aa_mw[256] , aa_pi[256] ;
-    char IUPAC[256] , SIUPAC[256] , COMPLEMENT[256] ;
-    char ACGT[256] ;
     int turned ;
     string action ;
     int action_value ;
     string aa , database ;
     bool changed ;
+    
+    static char IUPAC[256] , SIUPAC[256] , COMPLEMENT[256] ;
+    static char ACGT[256] ;
+    static vector <TAAProp> aaprop ;
     } ;
     
 #endif
