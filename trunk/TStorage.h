@@ -105,6 +105,7 @@ class TStorage
     wxString UCfirst ( wxString s ) ;
     wxString getDBname () ;    
     bool getWriteProtect () ;
+    static wxString createMySQLdb ( wxString ip , wxString db , wxString name , wxString pwd ) ;
     
     // Variables
     wxArrayTRestrictionEnzyme re ;
