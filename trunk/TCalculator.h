@@ -6,7 +6,8 @@
 #include <wx/notebook.h>
 #include <wx/grid.h>
 
-    
+#define HTML_PRINT_PREVIEW 1
+#define HTML_PRINT 2
     
 
 class TGridBasic : public wxGrid
@@ -20,6 +21,7 @@ class TGridBasic : public wxGrid
     virtual void gridSetEditable ( int y , int x ) ;
     virtual void gridSetEntry ( int y , int x , wxString title , wxString value = "0" , wxString unit = "" ) ;
     virtual void gridSetValue ( int y , int x , wxString value , wxString unit = "" ) ;
+    virtual void print ( int mode ) ;
     } ;
     
 class TGridLigation : public TGridBasic
@@ -58,6 +60,8 @@ class TCalculator : public ChildBase
     virtual string getName () ;
 
     virtual void OnClose(wxCloseEvent& event) ;
+    virtual void OnSeqPrint(wxCommandEvent& event) ;
+    virtual void OnPrintPreview(wxCommandEvent& event) ;
     
     private :
     wxNotebook *nb ;

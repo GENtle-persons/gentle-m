@@ -481,3 +481,4 @@
 "b_del_from_group","Delete from group","Aus Gruppe löschen"
 "t_del_group","Are you sure you want to delete enzyme group '%s'?","Wollen Sie die Enzymgruppe '%s' wirklich löschen?"
 "t_useinternalhelp","Use &internal help (if F1 doesn't work otherwise)","&Interne Hilfe benutzen (falls F1 sonst nicht funktioniert)"
+"m_print_preview","Print preview","Druck&vorschau"

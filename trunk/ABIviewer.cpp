@@ -179,22 +179,19 @@ void TABIviewer::initme ()
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
     myapp()->frame->InitToolBar(toolBar);
     toolBar->AddTool( MDI_TEXT_IMPORT , 
-                wxBitmap (myapp()->bmpdir+"\\new.bmp", wxBITMAP_TYPE_BMP),
+                myapp()->frame->bitmaps[0] ,
                 txt("m_new_sequence") ) ;
     toolBar->AddTool( MDI_FILE_OPEN, 
-            wxBitmap (myapp()->bmpdir+"\\open.bmp", wxBITMAP_TYPE_BMP), 
+            myapp()->frame->bitmaps[1] ,
             txt("m_open") , txt("m_opentxt") );
     toolBar->AddTool( MDI_FILE_SAVE, 
-                wxBitmap (myapp()->bmpdir+"\\save.bmp", wxBITMAP_TYPE_BMP),
+                myapp()->frame->bitmaps[2] ,
                 txt("m_store_in_db") , 
                 txt("m_txt_store_in_db"));
     toolBar->AddSeparator() ;
-//    toolBar->AddTool( MDI_CUT,
-//        wxBitmap (myapp()->bmpdir+"\\cut.bmp", wxBITMAP_TYPE_BMP)) ;
-    toolBar->AddTool( MDI_COPY,
-        wxBitmap (myapp()->bmpdir+"\\copy.bmp", wxBITMAP_TYPE_BMP)) ;
-//    toolBar->AddTool( MDI_PASTE,
-//        wxBitmap (myapp()->bmpdir+"\\paste.bmp", wxBITMAP_TYPE_BMP)) ;
+//    toolBar->AddTool( MDI_CUT, myapp()->frame->bitmaps[4] ) ;
+    toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] ) ;
+//    toolBar->AddTool( MDI_PASTE, myapp()->frame->bitmaps[6] ) ;
     toolBar->Realize() ;
 #endif
 
