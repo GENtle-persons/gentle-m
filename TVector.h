@@ -174,6 +174,7 @@ class TVector
 
     virtual TAAProp getAAprop ( char a ) ;
     virtual int find_item ( string s ) ;
+    virtual bool isEnzymeHidden ( string s ) ;
     
     // Variables
     string sequence ;

@@ -538,5 +538,5 @@
 "t_method_hopp-woods","Hopp-Woods","Hopp-Woods"
 "t_loading","Loading %s","Lade %s"
 "m_sel_as_new_primer","Selection as new primer","Auswahl als neuen Primer"
-"m_hide_enzymes_limit","Hide enzymes that cut more than X times","Enzyme ausblenden, die mehr X-mal schneiden"
+"m_hide_enzymes_limit","Limit enzymes","Enzyme limitieren"
 

@@ -1199,6 +1199,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         {
         if ( p && p->cPlasmid ) p->cPlasmid->invokeVectorEditor() ;
         else if ( getAA() ) getAA()->invokeVectorEditor() ;
+        else if ( getPD() ) { wxCommandEvent ev ; vecEdit ( ev ) ; }
         else if ( where && child && child->def == "alignment" )
            {
            SeqAlign *al = (SeqAlign*)where ;

@@ -26,6 +26,8 @@ BEGIN_EVENT_TABLE(TPrimerDesign, MyChildBase)
     EVT_LIST_ITEM_ACTIVATED(PD_LC,TPrimerDesign::OnActivatePrimer)
     EVT_LIST_ITEM_SELECTED(PD_LC,TPrimerDesign::OnSelectPrimer)
 
+    EVT_CHECKBOX(ALIGN_HORIZ, TPrimerDesign::OnHorizontal)
+
 
 /*    EVT_MENU(MDI_EDIT_MODE, TPrimerDesign::OnEditMode)
     EVT_MENU(MDI_MARK_ALL, TPrimerDesign::OnMarkAll)
@@ -208,6 +210,10 @@ void TPrimerDesign::OnEditMode(wxCommandEvent& event)
     string item = "PRIMER_UP" ;
     if ( sc->lastmarked != -1 ) item = sc->seq[sc->lastmarked]->whatsthis() ;
     sc->edit_id = item ;
+    
+    if ( sc->getEditMode() ) sc->stopEdit() ;
+    else sc->startEdit ( item ) ;
+    /*
 //    sc->edit_valid = "AGCT " ;
     if ( !sc->getEditMode() )
         {
@@ -226,7 +232,7 @@ void TPrimerDesign::OnEditMode(wxCommandEvent& event)
         sc->setEditMode ( false ) ;
         sc->arrange () ;
         Refresh () ;
-        }
+        }*/
     mi->Check ( sc->getEditMode() ) ;
     }
     
@@ -414,6 +420,11 @@ void TPrimerDesign::initme ()
     toolBar->AddControl ( spin ) ;
     toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_pcr_spin_2") ) ) ;
     spin->SetSize ( -1 , -1 , 50 , -1 , wxSIZE_USE_EXISTING ) ;
+
+    toolBar->AddSeparator () ;
+    wxCheckBox *mycb = new wxCheckBox ( toolBar , ALIGN_HORIZ , txt("t_horizontal") ) ;
+    toolBar->AddControl ( mycb ) ;
+
     toolBar->Realize() ;
 #else
 #endif
@@ -645,13 +656,16 @@ void TPrimerDesign::updateResultSequence()
     a3->takesMouseActions = false ;
     a3->showNumbers = false ;
 
-    SeqDivider *div = new SeqDivider ( sc ) ;
-    div->initFromTVector ( vec ) ;    
-
     sc->seq.push_back ( r3 ) ;
     sc->seq.push_back ( s3 ) ;
     sc->seq.push_back ( a3 ) ;
-    sc->seq.push_back ( div ) ;
+
+    if ( !sc->isHorizontal() )
+        {
+        SeqDivider *div = new SeqDivider ( sc ) ;
+        div->initFromTVector ( vec ) ;    
+        sc->seq.push_back ( div ) ;
+        }
     }
 
 void TPrimerDesign::OnAA_setit(int mode)
@@ -749,7 +763,8 @@ void TPrimerDesign::doShowPrimer ( int i )
     if ( primer[i].upper ) p = "PRIMER_UP" ;
     else p = "PRIMER_DOWN" ;
     sc->mark ( p , from , to ) ;
-    sc->Scroll ( 0 , sc->getBatchMark() ) ;
+    sc->ensureVisible(sc->_from) ;
+//    sc->Scroll ( 0 , sc->getBatchMark() ) ;
     sc->SetFocus () ;
     }
 
@@ -812,5 +827,24 @@ void TPrimerDesign::OnSpin(wxSpinEvent& event)
 void TPrimerDesign::OnSpinText(wxCommandEvent& event)
     {
     if ( spinTextEnabeled ) showSequence() ;
+    }
+    
+void TPrimerDesign::OnHorizontal ( wxCommandEvent& event )
+    {
+    sc->toggleHorizontal () ;
+    if ( sc->isHorizontal() )
+       {
+       delete sc->seq[sc->seq.size()-1] ;
+       sc->seq.pop_back () ;
+       }
+    else
+       {
+       SeqDivider *div = new SeqDivider ( sc ) ;
+       div->initFromTVector ( vec ) ;    
+       sc->seq.push_back ( div ) ;
+       }
+    sc->arrange () ;
+    sc->SilentRefresh() ;    
+    sc->SetFocus () ;
     }
     

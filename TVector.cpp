@@ -857,7 +857,8 @@ TVector *TVector::getAAvector ( int from , int to , int dir )
     char UNIQUE = '#' ;
     // Creating new vector
     TVector *v = new TVector ;
-    *v = *this ;
+    v->setFromVector ( *this ) ;
+//    *v = *this ;
     v->type = TYPE_AMINO_ACIDS ;
 
     if ( to < from ) to += v->sequence.length() ;
@@ -982,6 +983,14 @@ int TVector::find_item ( string s )
        if ( items[a].name == s.c_str() )
           return a ;
     return -1 ; // Not found
+    }
+    
+bool TVector::isEnzymeHidden ( string s )
+    {
+    int a ;
+    for ( a = 0 ; a < hiddenEnzymes.size() ; a++ )
+       if ( hiddenEnzymes[a] == s ) return true ;
+    return false ;
     }
 
     

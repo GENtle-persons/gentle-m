@@ -235,6 +235,9 @@ void PlasmidCanvas::rsHideLimit ( wxCommandEvent &ev )
        if ( cnt > limit && b == p->vec->hiddenEnzymes.size() )
           p->treeBox->ToggleEnzymeVisibility ( p->vec->re[a] ) ;
        }
+//    p->vec->recalculateCuts() ;
+    p->vec->recalcvisual = true ;
+    Refresh () ;
     }
     
 void PlasmidCanvas::rsDel ( wxCommandEvent &ev )
@@ -271,7 +274,8 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn )
     if ( p->def == "dna" )
        {
         cm->Append(MDI_TRANSFORM_SEQUENCE, txt("t_transform_sequence") );
-        cm->Append(PC_RS_HIDE_LIMIT, txt("m_hide_enzymes_limit") );
+        if ( p->vec->type != TYPE_AMINO_ACIDS )
+           cm->Append(PC_RS_HIDE_LIMIT, txt("m_hide_enzymes_limit") );
         
         if ( getMarkFrom() == -1 )
            {
@@ -632,7 +636,8 @@ void PlasmidCanvas::itemAsNewAA ( wxCommandEvent &ev )
 //    string s = getDNAorAA ( from , to , dir , false ) ;
     string n = p->vec->items[context_last_item].name.c_str() ;
     n += " (" + p->vec->name + ")" ;
-    TAminoAcids *aaa = myapp()->frame->newAminoAcids ( p->vec->getAAvector ( from+1 , to+1 , dir ) , n ) ;
+    TVector *nv = p->vec->getAAvector ( from+1 , to+1 , dir ) ;
+    TAminoAcids *aaa = myapp()->frame->newAminoAcids ( nv , n ) ;
     aaa->vec->setChanged() ;
     }
     

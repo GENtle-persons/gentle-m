@@ -35,6 +35,19 @@ void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc )
     int l = p->vec->sequence.length() ;
     if ( p->vec->rc.size() == 0 ) return ;
     
+    vector <TRestrictionCut> trc ;
+    for ( a = 0 ; a < p->vec->rc.size() ; a++ ) // Removing invisible
+        {
+        if ( p->vec->rc[a].isHidden ( p->vec ) )
+           {
+           trc.push_back ( p->vec->rc[a] ) ;
+           p->vec->rc[a] = p->vec->rc[p->vec->rc.size()-1] ;
+           p->vec->rc.pop_back() ;
+           a-- ;
+           }
+        }
+    
+    
     for ( a = 1 ; a < p->vec->rc.size() ; a++ ) // Sort by pos
         {
         if ( p->vec->rc[a].pos < p->vec->rc[a-1].pos )
@@ -46,9 +59,11 @@ void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc )
            }
         }
     
+    
     for ( a = 0 ; a < p->vec->rc.size() ; a++ ) // Init
         {
         TRestrictionCut *c = &p->vec->rc[a] ;
+        if ( c->isHidden ( p->vec ) ) continue ;
         float angle = (float) c->pos * 360 / l ;
         c->angle = angle ;
         c->angle3 = angle ; //(float) (a+1) * 360 / p->vec->rc.size() ;
@@ -61,10 +76,12 @@ void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc )
 
     for ( a = 1 ; a < p->vec->rc.size() ; a++ ) // Ensure different angle
         {
+        if ( p->vec->rc[a].isHidden ( p->vec ) ) continue ;
+        if ( p->vec->rc[a-1].isHidden ( p->vec ) ) continue ;
         while ( p->vec->rc[a].angle3 <= p->vec->rc[a-1].angle3 )
            p->vec->rc[a].angle3 += 0.001 ;
         }
-    
+
     bool redo = true ;
     int cnt = 0 ;
     while ( redo && cnt < 200 )
@@ -72,21 +89,28 @@ void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc )
         redo = false ;    
         for ( a = 0 ; a < p->vec->rc.size() ; a++ ) // Optimize
            redo |= optimizeCircularRestrictionSites ( a , dc ) ;
+        cnt++ ;
         }
         
+    // Appending hidden ones
+    for ( a = 0 ; a < trc.size() ; a++ )
+        p->vec->rc.push_back ( trc[a] ) ;
     }
     
 bool PlasmidCanvas::optimizeCircularRestrictionSites ( int a , wxDC &dc )
     {
     TRestrictionCut *c = &p->vec->rc[a] ;
+    if ( p->vec->rc[a].isHidden ( p->vec ) ) return false ;
     bool ret = false ;
-    if ( a > 0 && intersects ( c->lastrect , p->vec->rc[a-1].lastrect ) )
+    if ( a > 0 && !p->vec->rc[a-1].isHidden ( p->vec ) &&
+            intersects ( c->lastrect , p->vec->rc[a-1].lastrect ) )
         {
         push_rc_left ( a-1 , dc ) ; 
         push_rc_right ( a , dc ) ; 
         ret = true ; 
         }
-    if ( a < p->vec->rc.size()-1 && intersects ( c->lastrect , p->vec->rc[a+1].lastrect ) )
+    if ( a < p->vec->rc.size()-1 && !p->vec->rc[a+1].isHidden ( p->vec ) &&
+            intersects ( c->lastrect , p->vec->rc[a+1].lastrect ) )
         {
         push_rc_right ( a+1 , dc ) ; 
         push_rc_left ( a , dc ) ; 
