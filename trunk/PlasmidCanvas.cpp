@@ -321,7 +321,7 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
         pt2.y = pt.y * STANDARDRADIUS / h ;
         vo = findVectorObjectLinear ( pt2 ) ;
      	}   	
-     
+
     // Capturing/releasing mouse for left click
     if ( event.LeftDown() )
         {
@@ -443,10 +443,10 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
         }
     else if ( orf != -1 )
         {
-        wxString ttt = p->vec->getORF(orf).getText() ;
+        wxString ttt = p->vec->getORF(orf)->getText() ;
         SetMyToolTip ( ttt , TT_ORF ) ;
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
-        wxLogStatus(txt("item_status_bar") , ttt ) ;
+        wxLogStatus(txt("item_status_bar") , ttt.c_str() ) ;
         if ( event.LeftDClick() )
            p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
         }
@@ -536,14 +536,14 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
     else if ( event.LeftIsDown() && orf != -1 )
         {
         p->cSequence->mark ( id ,
-                                p->vec->getORF(orf).from + 1 ,
-                                p->vec->getORF(orf).to + 1 ) ;
+                                p->vec->getORF(orf)->from + 1 ,
+                                p->vec->getORF(orf)->to + 1 ) ;
         }
     else if ( event.RightDown() && orf != -1 )
         {
         p->cSequence->mark ( id ,
-                                p->vec->getORF(orf).from + 1 ,
-                                p->vec->getORF(orf).to + 1 ) ;
+                                p->vec->getORF(orf)->from + 1 ,
+                                p->vec->getORF(orf)->to + 1 ) ;
         invokeORFpopup ( orf , pt_abs ) ;
         }
     else if ( event.LeftIsDown() && rs == -1 && vo == -1 && orf == -1 )

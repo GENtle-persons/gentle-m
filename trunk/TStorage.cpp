@@ -80,8 +80,11 @@ static int callback (void *NotUsed, int argc, char **argv, char **azColName)
 
     for(i=0; i<argc; i++)
         {
-        if ( argv[i] ) st->results.content[nf].Add( argv[i] ) ;
-        else st->results.content[nf].Add ( "" ) ;
+        wxString tmp ;
+        if ( argv[i] ) { tmp = argv[i] ; tmp.Replace ( "\013" , "\n" ) ; }
+        st->results.content[nf].Add ( tmp ) ;
+//        if ( argv[i] ) st->results.content[nf].Add( argv[i] ) ;
+//        else st->results.content[nf].Add ( "" ) ;
         }
     return 0;
     }
@@ -148,7 +151,9 @@ TSQLresult TStorage::getObject_MySQL ( const wxString &query )
                results.content.push_back ( wxArrayString() ) ;
                for(i = 0; i < num_fields; i++)
                {
-                  results.content[rownum].Add ( row[i] ? row[i] : "" ) ;
+               	  wxString tmp = row[i] ? row[i] : "" ;
+               	  tmp.Replace ( "\013" , "\n" ) ;
+                  results.content[rownum].Add ( tmp ) ;
                }
             }        
             
@@ -313,7 +318,8 @@ void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , wxString key , wxString va
     {
     int a ;
     for ( a = 0 ; a < value.length() ; a++ ) // Avoiding single quotes in value
-        if ( value.GetChar(a) == '"' ) value.SetChar(a,39) ;
+        if ( value .GetChar(a) == '"' ) value.SetChar(a,39) ;
+    value.Replace ( "\n" , "\013" ) ;
     if ( !s1.IsEmpty() ) s1 += "," ;
     if ( !s2.IsEmpty() ) s2 += "," ;
     s1 += key ;

@@ -25,7 +25,7 @@ TAAProp TVector::getAAprop ( char a ) { return aaprop[a] ; }
 void TVector::setGenomeMode ( bool gm ) { genomeMode = gm ; }
 bool TVector::getGenomeMode () { return genomeMode ; }
 wxString *TVector::getSequencePointer () { return &sequence ; }
-TORF TVector::getORF ( int a ) { return worf[a] ; }
+TORF *TVector::getORF ( int a ) { return &worf[a] ; }
 int TVector::countORFs () { return worf.size() ; }
 void TVector::updateDisplay ( bool update ) { recalcvisual = update ; }
 bool TVector::displayUpdate () { return recalcvisual ; }

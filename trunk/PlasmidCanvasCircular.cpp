@@ -152,9 +152,9 @@ void PlasmidCanvas::drawCircularORFs ( wxDC &dc )
     int l = p->vec->getSequenceLength() ;
     for ( a = 0 ; a < p->vec->countORFs() ; a++ )
         {
-        float mf = p->vec->getORF(a).from ;
-        float mt = p->vec->getORF(a).to ;
-        int rf = p->vec->getORF(a).rf ;
+        float mf = p->vec->getORF(a)->from ;
+        float mt = p->vec->getORF(a)->to ;
+        int rf = p->vec->getORF(a)->rf ;
         
         float ro , roi = r / 10 ;
         ro = roi * 7 + roi * rf ;
@@ -202,11 +202,11 @@ void PlasmidCanvas::drawCircularORFs ( wxDC &dc )
         dc.SetBrush ( *wxTRANSPARENT_BRUSH ) ;    
         dc.DrawEllipticArc ( (int)(w/2-r-ro/2) , (int)(h/2-r-ro/2) , (int)(r*2+ro) , (int)(r*2+ro) , 90-mt , 90-mf ) ;
 
-        p->vec->getORF(a).dist1 = r+ro/2-roi/4 ;
-        p->vec->getORF(a).dist2 = r+ro/2+roi/4 ;
-        p->vec->getORF(a).deg1 = mf;
-        p->vec->getORF(a).deg2 = mt ;
-        if ( mt < mf ) p->vec->getORF(a).deg2 = mt + 360 ;
+        p->vec->getORF(a)->dist1 = r+ro/2-roi/4 ;
+        p->vec->getORF(a)->dist2 = r+ro/2+roi/4 ;
+        p->vec->getORF(a)->deg1 = mf;
+        p->vec->getORF(a)->deg2 = mt ;
+        if ( mt < mf ) p->vec->getORF(a)->deg2 = mt + 360 ;
         }
     dc.SetPen(*wxBLACK_PEN);
     }
@@ -569,15 +569,15 @@ int PlasmidCanvas::findORFcircular ( float angle , float radius )
     int a , found = -1 ;
     for ( a = 0 ; a < p->vec->countORFs() ; a++ )
         {
-        if ( angle >= p->vec->getORF(a).deg1 &&
-             angle <= p->vec->getORF(a).deg2 &&
-             radius >= p->vec->getORF(a).dist1 &&
-             radius <= p->vec->getORF(a).dist2 )
+        if ( angle >= p->vec->getORF(a)->deg1 &&
+             angle <= p->vec->getORF(a)->deg2 &&
+             radius >= p->vec->getORF(a)->dist1 &&
+             radius <= p->vec->getORF(a)->dist2 )
              found = a ;
-        if ( p->vec->getORF(a).deg2 > 360 &&
-             angle <= p->vec->getORF(a).deg2-360 &&
-             radius >= p->vec->getORF(a).dist1 &&
-             radius <= p->vec->getORF(a).dist2 )
+        if ( p->vec->getORF(a)->deg2 > 360 &&
+             angle <= p->vec->getORF(a)->deg2-360 &&
+             radius >= p->vec->getORF(a)->dist1 &&
+             radius <= p->vec->getORF(a)->dist2 )
              found = a ;
         }
     return found ;

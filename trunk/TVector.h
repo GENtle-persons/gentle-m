@@ -258,7 +258,7 @@ class TVector
     virtual bool getVectorCuts ( TVector *v ) ; ///< Returns wether or not isoenzymes should be joined
     virtual TEnzymeRules *getEnzymeRule () ; ///< Gets the enzyme rules to follow
     virtual int showGC () ; ///< Returns 0 for "no", otherwise the number of blocks
-    virtual TORF getORF ( int a ) ; ///< Returns an open reading frame
+    virtual TORF *getORF ( int a ) ; ///< Returns an open reading frame
     virtual int countORFs () ; ///< Returns the number of found open reading frames
     virtual void updateDisplay ( bool update = true ) ; ///< Recalc visual information on next draw
     virtual bool displayUpdate () ; ///< Update the display?
