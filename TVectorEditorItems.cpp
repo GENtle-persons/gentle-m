@@ -55,6 +55,7 @@ void TVectorEditor::initialViewItem ( int num )
     nb->SetSelection ( 1 ) ;
     items->SetItemState ( num , wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED ,
                             wxLIST_MASK_IMAGE|wxLIST_MASK_STATE ) ;
+    items->EnsureVisible ( num ) ;
     }
 
 
