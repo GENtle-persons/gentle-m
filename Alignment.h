@@ -41,6 +41,8 @@ class TAlignment : public ChildBase
     void OnClose(wxCloseEvent& event) ;
     void invokeOriginal ( string name , int pos ) ;
     
+    void callMiddleMouseButton ( string id , int pos ) ;
+    
     // Variables
     SequenceCanvas *sc ;
     wxPanel *up ;
@@ -53,6 +55,11 @@ class TAlignment : public ChildBase
     int algorithm ;
     string matrix ;
     TVector *dv ;
+    
+    private :
+    wxListBox *mmb ;
+    void myInsert ( int line , int pos , char what ) ;
+    void myDelete ( int line , int pos ) ;
         
     DECLARE_EVENT_TABLE()
     } ;

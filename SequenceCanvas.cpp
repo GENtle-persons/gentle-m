@@ -936,6 +936,18 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         wxLogStatus("") ;
         SetCursor(wxCursor(*wxSTANDARD_CURSOR)) ;
         }
+        
+    if ( event.MiddleDown() && where )
+        {
+        if ( child && child->def == "alignment" )
+           {
+           SeqAlign *al = (SeqAlign*)where ;
+           TAlignment *alg = (TAlignment*) child ;
+           if ( al->myname == txt("t_consensus") ) {} // Do nothing
+           else if ( al->whatsthis() == "FEATURE" ) {} // Do nothing
+           else alg->callMiddleMouseButton ( al->myname , pos ) ;
+           }
+        }
     
     if ( event.LeftDClick() )
         {

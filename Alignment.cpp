@@ -98,6 +98,16 @@ void TAlignment::initme ()
             wxBU_AUTODRAW ,
             wxDefaultValidator ) ;
     new wxStaticText ( up , -1 , txt("t_settings") , wxPoint ( bo , h-20 ) );
+    wxRect r = sb->GetRect () ;
+    new wxStaticText ( up , -1 , txt("t_mmb") , wxPoint ( r.GetRight()+bo , r.GetTop() ) );
+    mmb = new wxListBox ( up , -1 , 
+                wxPoint ( r.GetRight() + bo , r.GetTop() + 15 ) ,
+                wxSize ( 200 , r.GetBottom() - r.GetTop() ) ) ;
+    mmb->Append ( txt("t_mmb_insert_gap") ) ;
+    mmb->Append ( txt("t_mmb_delete_gap") ) ;
+    mmb->Append ( txt("t_mmb_insert_gap_others") ) ;
+    mmb->Append ( txt("t_mmb_delete_gap_others") ) ;
+    mmb->SetStringSelection ( txt("t_mmb_insert_gap") ) ;
 
 
     hs->SplitHorizontally ( up , sc ,h+bo ) ;
@@ -242,9 +252,91 @@ void TAlignment::redoAlignments ()
         }
     
     f->initFromTVector ( dv ) ;
-
     sc->arrange () ;
     sc->Refresh () ;
+    }
+    
+void TAlignment::myInsert ( int line , int pos , char what )
+    {
+    if ( line == 0 )
+        {
+        dv->insert_char ( '-' , pos , false ) ;
+        qAlign[0] = dv->sequence ;
+        }
+    else qAlign[line].insert ( pos-1 , wxString ( what ) ) ;
+    }
+
+void TAlignment::myDelete ( int line , int pos )
+    {
+    if ( line == 0 )
+        {
+        dv->doRemoveNucleotide ( pos - 1 ) ;
+        qAlign[0] = dv->sequence ;
+        }
+    else qAlign[line].erase ( pos-1 , 1 ) ;
+    }
+        
+void TAlignment::callMiddleMouseButton ( string id , int pos )
+    {
+    wxString mode = mmb->GetStringSelection () ;
+    int a , line ;
+    for ( line = 0 ; line < qName.size() && qName[line] != id ; line++ ) ;
+    if ( line == qName.size() ) return ;
+    if ( qAlign[line][pos-1] != '-' && mode == txt("t_mmb_delete_gap") )
+       {
+       wxBell() ;
+       return ;
+       }
+    
+    for ( a = 0 ; a+1 < qAlign.size() ; a++ )
+        {
+        if ( mode == txt("t_mmb_insert_gap") )
+            {
+            if ( line == a ) myInsert ( a , pos , '-' ) ;
+            else myInsert ( a , qAlign[a].length()+1 , '-' ) ;
+            }
+        else if ( mode == txt("t_mmb_delete_gap") )
+            {
+            if ( line == a )
+               {
+               myDelete ( a , pos ) ;
+               myInsert (  a , qAlign[a].length()+1 , '-' ) ;
+               }
+            }
+        else if ( mode == txt("t_mmb_insert_gap_others") )
+            {
+            if ( line != a ) myInsert ( a , pos , '-' ) ;
+            else myInsert ( a , qAlign[a].length()+1 , '-' ) ;
+            }
+        else if ( mode == txt("t_mmb_delete_gap_others") )
+            {
+            if ( line != a && qAlign[a][pos-1] == '-' )
+               {
+               myDelete ( a , pos ) ;
+               myInsert ( a , qAlign[a].length()+1 , '-' ) ;
+               }
+            }
+        SeqAlign *d = (SeqAlign*) sc->seq[a+1] ;
+        d->s = qAlign[a] ;
+        }
+        
+    // Cleanup of '-' ends
+    bool again = true ;
+    while ( again )
+        {
+        for ( a = 0 ; a+1 < qAlign.size() && qAlign[a][qAlign[a].length()-1] == '-' ; a++ ) ;
+        if ( a+1 == qAlign.size() )
+            {
+            for ( a = 0 ; a+1 < qAlign.size() ; a++ )
+               myDelete ( a , qAlign[a].length() ) ;
+            }
+        else again = false ;
+        }
+    
+    SeqFeature *f = (SeqFeature*) sc->seq[0] ;
+    f->initFromTVector ( dv ) ;
+    sc->arrange () ;
+    sc->SilentRefresh() ;
     }
     
 string TAlignment::getName ()
@@ -588,6 +680,8 @@ void TAlignmentDialog::init_what ()
     new wxButton ( p , AL_DEL , txt("del -->") , wxPoint ( w*3/8 , th*4 ) , wxSize ( w/4 , th*3/2 ) ) ;
     new wxButton ( p , AL_UP , txt("b_up_in_list") , wxPoint ( w/3+bo , th*7 ) , wxSize ( w/6 , th*3/2 ) ) ;
     new wxButton ( p , AL_DOWN , txt("b_down_in_list") , wxPoint ( w/3+bo , th*9 ) , wxSize ( w/6 , th*3/2 ) ) ;
+    
+    new wxStaticText ( p , -1 , txt("t_alignment_txt") , wxPoint ( w/3+bo , th*11 ) , wxSize ( w/4 , th*4 ) ) ;
     
     int a ;
     MyFrame *f = myapp()->frame ;
