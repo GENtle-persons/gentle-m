@@ -250,7 +250,7 @@ void TManageDatabaseDialog::pm_init_lists ()
         }
 
     pm_list_items ( PM_LEFT ) ;
-    pm_list_items ( PM_RIGHT ) ;
+//    pm_list_items ( PM_RIGHT ) ;
     pm_left->SetFocus() ;
     }
     
