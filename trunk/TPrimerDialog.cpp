@@ -25,12 +25,16 @@ END_EVENT_TABLE()
 
 bool operator < ( const TPrimer &p1 , const TPrimer &p2 )
     {
-    return p1.evaluation > p2.evaluation ;
+    TPrimer *x1 = (TPrimer*) &p1 ;
+    TPrimer *x2 = (TPrimer*) &p2 ;
+    return x1->getEvaluation() > x2->getEvaluation() ;
     }
     
 bool operator == ( const TPrimer &p1 , const TPrimer &p2 )
     {
-    return p1.evaluation == p2.evaluation ;
+    TPrimer *x1 = (TPrimer*) &p1 ;
+    TPrimer *x2 = (TPrimer*) &p2 ;
+    return x1->getEvaluation() == x2->getEvaluation() ;
     }
     
 
@@ -207,14 +211,14 @@ void TPrimerDialog::updateList ()
        for ( b = r1 ; b <= r2 ; b++ )
           {
           int len = b - a + 1 ;
-          if ( len >= minlen && len <= maxlen )
+          if ( a >= 0 && len >= minlen && len <= maxlen )
              {
              TPrimer np ( a+1 , b+1 , p->upper ) ;
              np.sequence = s.substr ( a , b-a+1 ) ;
              np.annealingVector = pd->vec ;
              np.makeStats() ;
              np.evaluate ( ( mintmp + maxtmp ) / 2 ) ;
-             if ( np.tm >= mintmp && np.tm <= maxtmp )
+             if ( np.getTm() >= mintmp && np.getTm() <= maxtmp )
                 pl.push_back ( np ) ;
              }
           }
@@ -258,10 +262,10 @@ void TPrimerDialog::ShowLC ()
         sprintf ( t , "%d" , len ) ;
         lc->SetItem ( l , 1 , t ) ;
         
-        sprintf ( t , "%2.1f" , pl[a].tm ) ;
+        sprintf ( t , "%2.1f" , pl[a].getTm() ) ;
         lc->SetItem ( l , 2 , t ) ;
         
-        sprintf ( t , "%2.1f" , pl[a].evaluation ) ;
+        sprintf ( t , "%2.1f" , pl[a].getEvaluation() ) ;
         lc->SetItem ( l , 3 , t ) ;
 
         lc->SetItem ( l , 4 , pl[a].sequence.c_str() ) ;

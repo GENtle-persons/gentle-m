@@ -107,9 +107,12 @@ void MyFrame::initme ()
     useMetafile = LS->getOption ( "USEMETAFILE" , false ) ;
     showSplashScreen = LS->getOption ( "SHOWSPLASHSCREEN" , true ) ;
     checkUpdate = LS->getOption ( "CHECKUPDATE" , true ) ;
-    lang_string = LS->getOption ( "LANGUAGE" , "de" ) ;
+    lang_string = LS->getOption ( "LANGUAGE" , "en" ) ;
+    useCoolCanvas = LS->getOption ( "USECOOLCANVAS" , false ) ; // Not saved yet
     init_txt ( lang_string ) ;
-    
+
+
+#ifdef __WXMSW__
     if ( checkUpdate )
         {
         string cur_update = check4update () ;
@@ -119,6 +122,7 @@ void MyFrame::initme ()
             return ;
             }
         }
+#endif
         
     project_name = txt("project") ;
     SetTitle ( txt("gentle") ) ;
@@ -995,7 +999,7 @@ wxMenu *MyFrame::getToolMenu ( bool _pcr )
     tool_menu->Append(MDI_ALIGNMENT, txt("m_alignment") , txt("m_alignmenttxt") ) ;
     tool_menu->Append(MDI_RESTRICTION, txt("m_restriction") , txt("m_restrictiontxt") ) ;
     tool_menu->Append(MDI_LIGATION, txt("m_ligation") );
-    if ( _pcr ) tool_menu->Append(MDI_RUN_PCR, txt("t_pcr") );
+    if ( _pcr ) tool_menu->Append(MDI_RUN_PCR, txt("m_pcr") );
     tool_menu->Append(MDI_MANAGE_DATABASE, txt("m_manage_db") , txt("m_manage_dbtxt") ) ;
     tool_menu->Append(MDI_IMAGE_VIEWER, txt("m_image_viewer") , txt("m_image_viewer_txt") ) ;
     tool_menu->Append(MDI_CALCULATOR, txt("m_calculator") , txt("m_calculator_txt") ) ;

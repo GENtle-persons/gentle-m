@@ -46,7 +46,7 @@ void TLigationDialog::init ()
     for ( int a = 0 ; a < vv.size() ; a++ )
         {
         bool state = true ;
-        if ( vv[a]->hasStickyEnds() )
+        if ( !vv[a]->hasStickyEnds() )
            state = false ; // blunt ends are not ligated by default...
         l_sources->Append ( vv[a]->name.c_str() ) ;
         l_sources->Check ( a , state ) ;
@@ -67,8 +67,9 @@ void TLigationDialog::generateTargets ()
         vc.push_back ( l_sources->IsChecked ( a ) ) ;
         used.push_back ( !l_sources->IsChecked ( a ) ) ;
         }
-    while ( vt.size() ) vt.pop_back () ;
-    while ( ligates.size() ) ligates.pop_back() ;
+    orientation.clear () ;
+    vt.clear () ;
+    ligates.clear () ;
     l_targets->Clear () ;
 
     // Using each selected item as a starter
@@ -78,7 +79,9 @@ void TLigationDialog::generateTargets ()
            {
            used[a] = true ;
            vi.push_back ( a ) ;
+           orientation.push_back ( false ) ;
            curseTargets ( vc , used , vi ) ;
+           orientation.pop_back () ;
            vi.pop_back () ;
            used[a] = false ;
            }
@@ -96,7 +99,8 @@ void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , v
     int a , b ;
     int cnt = vi.size() ;
     string name ;
-    if ( doMatch ( vi[cnt-1] , vi[0] ) )
+    bool o = orientation[cnt-1] ;
+    if ( doMatch ( vi[cnt-1] , vi[0] , o ) )
         {
         name = getVIName ( vi ) + txt("_circ") ;
         addVTname ( name , vi , true ) ;
@@ -109,21 +113,56 @@ void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , v
         
     for ( a = 0 ; a < vc.size() ; a++ )
         {
-        if ( vc[a] && !used[a] && doMatch ( vi[cnt-1] , a ) )
+        if ( vc[a] && !used[a] && doMatch ( vi[cnt-1] , a ) ) // Normal orientation
            {
            used[a] = true ;
            vi.push_back ( a ) ;
+           orientation.push_back ( false ) ;
            curseTargets ( vc , used , vi ) ;
+           orientation.pop_back () ;
+           vi.pop_back () ;
+           used[a] = false ;
+           }
+        }
+
+    for ( a = 0 ; a < vc.size() ; a++ )
+        {
+        if ( vc[a] && !used[a] && doMatch ( vi[cnt-1] , a , true ) ) // Turned around
+           {
+           used[a] = true ;
+           vi.push_back ( a ) ;
+           orientation.push_back ( true ) ;
+           curseTargets ( vc , used , vi ) ;
+           orientation.pop_back () ;
            vi.pop_back () ;
            used[a] = false ;
            }
         }
     }
     
-bool TLigationDialog::doMatch ( int l , int r )
+string TLigationDialog::invert ( string s )
     {
-    string s1 = vv[l]->getStickyEnd(false,true) + vv[r]->getStickyEnd(true,true) ;
-    string s2 = vv[l]->getStickyEnd(false,false) + vv[r]->getStickyEnd(true,false) ;
+    string t ;
+    for ( int a = 0 ; a < s.length() ; a++ ) t = s[a] + t ;
+    return t ;
+    }
+
+bool TLigationDialog::doMatch ( int l , int r , bool invertSecond )
+    {
+    string s1 ; 
+    string s2 ; 
+    
+    if ( invertSecond )
+       {
+       s1 = vv[l]->getStickyEnd(false,true) + invert ( vv[r]->getStickyEnd(false,false) ) ;
+       s2 = vv[l]->getStickyEnd(false,false) + invert ( vv[r]->getStickyEnd(false,true) ) ;
+       }
+    else
+       {
+       s1 = vv[l]->getStickyEnd(false,true) + vv[r]->getStickyEnd(true,true) ;
+       s2 = vv[l]->getStickyEnd(false,false) + vv[r]->getStickyEnd(true,false) ;
+       }
+    
     TVector v ;
     v.sequence = s1 ;
     string s3 = v.transformSequence ( true , false ) ;
@@ -137,8 +176,10 @@ string TLigationDialog::getVIName ( vector <int> &vi )
     string ret ;
     for ( a = 0 ; a < vi.size() ; a++ )
         {
+        string name = vv[vi[a]]->name ;
+        if ( a < orientation.size() && orientation[a] ) name = "!" + name ;
         if ( ret != "" ) ret += "-" ;
-        ret += vv[vi[a]]->name ;
+        ret += name ;
         }
     return ret ;
     }
@@ -156,15 +197,12 @@ void TLigationDialog::addVTname ( string name , vector <int> &vi , bool circular
     v.name = name ;
     for ( a = 1 ; a < vi.size() ; a++ )
         {
-        v.ligate_right ( *vv[vi[a]] ) ;
-        if ( a+1 < vi.size() )
-           {
-           d += ", " + vv[vi[a]]->name + " (" + vv[vi[a]]->desc + ")" ;
-           }
-        else
-           {
-           d += ", " + vv[vi[a]]->name + " (" + vv[vi[a]]->desc + ")" ;
-           }
+        bool o = false ;
+        if ( a < orientation.size() && orientation[a] ) o = true ;
+        v.ligate_right ( *vv[vi[a]] , o ) ;
+        d += ", " ;
+        if ( o ) d += "!" ;
+        d += vv[vi[a]]->name + " (" + vv[vi[a]]->desc + ")" ;
         }
     if ( circular ) v.closeCircle () ;
     v.recalculateCuts () ;

@@ -20,6 +20,7 @@ MYOBJECTS = ABItype.o \
 	ABIviewer.o \
 	Alignment.o \
 	AminoAcids.o \
+	CoolCanvas.o \
 	GenBank.o \
 	ManageDatabase.o \
 	MiscDialogs.o \

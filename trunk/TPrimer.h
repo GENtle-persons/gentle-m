@@ -12,6 +12,9 @@ class TPrimerDesign ;
 typedef vector <int> tvi ;
 typedef vector <char> tvc ;
 
+#define TM_STANDARD 0
+#define TM_SALT 1
+#define TM_GC 2
 
 class TPrimer
     {
@@ -31,8 +34,17 @@ class TPrimer
     string get35sequence () ;
     int checkFit ( TVector *v , bool justCount = false ) ;
 
+    float getTm ( int type = TM_STANDARD ) ;
+    float getEvaluation () ;
+    float getGCcontents () ;
+    
+    // Variables
+    int from , to ;
+    string sequence ;
+    bool upper ;
+    TVector *annealingVector ;
+    
     private :
-    friend class TPrimerDesign ;
     void evaluateSelfAnnealing () ;
     float evaluateTm ( double conc_nm = 50 , double Na_mm = 50 ) ;
 
@@ -48,18 +60,11 @@ class TPrimer
     void invertSequence() ;
     string getAnnealingSequence() ;
     
-    public :
     // Variables
-    int from , to ;
-    string sequence ;
-    bool upper ;
     int contents[256] ;
-    float tm , tm_salt , tm_gc ;
     float pgc ;
     float evaluation ;
-    TVector *annealingVector ;
-    
-    private :
+    float tm , tm_salt , tm_gc ;
     string ann1 , ann2 , annm ;
     int annScore ;
     double S , H ;

@@ -20,7 +20,7 @@ class TLigationDialog : public wxDialog
     void init () ;
     void generateTargets () ;
     void curseTargets ( vector <bool> &vc , vector <bool> &used , vector <int> &vi ) ;
-    bool doMatch ( int l , int r ) ;
+    bool doMatch ( int l , int r , bool invertSecond = false ) ;
     string getVIName ( vector <int> &vi ) ;
     void addVTname ( string name , vector <int> &vi , bool circular ) ;
 
@@ -33,7 +33,11 @@ class TLigationDialog : public wxDialog
     vector <TVector*> vv ;
     vector <TVector> ligates ;
     vector <string> vt ;
+    vector <bool> orientation ;
     bool doLigate ;
+    
+    private :
+    string invert ( string s ) ;
 
     DECLARE_EVENT_TABLE()
     } ;

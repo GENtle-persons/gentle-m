@@ -105,7 +105,7 @@ class TVector
     string transformSequence ( bool inverse , bool reverse ) ;
     char getNucleotide ( int pos , bool complement = false ) ;
     char getComplement ( char c ) ;
-    void ligate_right ( TVector &v ) ;
+    void ligate_right ( TVector v , bool inverted = false ) ;
     void closeCircle () ;
     
     TVector *getAAvector ( int from , int to , int dir = 1 ) ;
@@ -160,6 +160,8 @@ class TVector
     vector <string> proteases ;
     
     private :
+    string invert ( string s ) ;
+    
     string _lu , _ll , _ru , _rl ; // Sticky ends
     string _one2three[256] ;
     bool circular ;

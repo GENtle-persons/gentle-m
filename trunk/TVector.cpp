@@ -10,7 +10,7 @@ void TVector::setWindow ( ChildBase *c ) { window = c ; }
 void TVector::setCircular ( bool c ) { circular = c ; }
 bool TVector::isCircular () { return circular ; }
 bool TVector::isLinear () { return !circular ; }
-bool TVector::hasStickyEnds () { return (_lu+_ll+_ru+_rl=="") ; }
+bool TVector::hasStickyEnds () { return (_lu+_ll+_ru+_rl!="") ; }
 
 string TVector::one2three ( int a )
     {
@@ -452,13 +452,35 @@ void TVector::doAction ()
     return ;
     }
     
+string TVector::invert ( string s )
+    {
+    string t ;
+    for ( int a = 0 ; a < s.length() ; a++ ) t = s[a] + t ;
+    return t ;
+    }
+    
 // This function can attach a linear vector at the "right" end.
 // It does *NOT* test if the action is valid!
-void TVector::ligate_right ( TVector &v )
+void TVector::ligate_right ( TVector v , bool inverted )
     {
     if ( circular ) return ;
     if ( v.circular ) return ;
     int a , b ;
+    
+    // Is the ligand (to the right!) inverted?
+    if ( inverted )
+        {
+        v.items.clear () ; // Inversion will delete all features!
+        string ll = v._ll ;
+        string lu = v._lu ;
+        string rl = v._rl ;
+        string ru = v._ru ;
+        v._ll = invert ( ru ) ;
+        v._lu = invert ( rl ) ;
+        v._rl = invert ( lu ) ;
+        v._ru = invert ( ll ) ;
+        v.sequence = v.transformSequence ( true , true ) ;
+        }
     
     // Merging sequence
     string ol = _ru + v._lu ;

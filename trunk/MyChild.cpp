@@ -277,7 +277,11 @@ void MyChild::initme ()
     swu = new MySplitter ( sw , SPLIT_2 , this ) ;
     swl = new MySplitter ( swu , SPLIT_3 , this ) ;
 
-    cPlasmid = new PlasmidCanvas(swu, wxPoint(0, 0), wxSize(width*2/3, height/2));
+    if ( app->frame->useCoolCanvas )
+       cPlasmid = (PlasmidCanvas*) new CoolCanvas(swu, wxPoint(0, 0), wxSize(width*2/3, height/2));
+    else
+       cPlasmid = new PlasmidCanvas(swu, wxPoint(0, 0), wxSize(width*2/3, height/2));
+       
     cPlasmid->p = this ;
     
     cSequence = new SequenceCanvas(sw, wxPoint(0, 0), wxSize(width, height/2));
