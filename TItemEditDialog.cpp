@@ -6,11 +6,12 @@ BEGIN_EVENT_TABLE(TItemEditDialog, wxDialog )
     EVT_BUTTON(IED_CANCEL,TItemEditDialog::OnCancel)
     EVT_CHECKBOX(IED_USEOFFSET,TItemEditDialog::OnUseOffset)
     EVT_CHAR_HOOK(TItemEditDialog::OnCharHook)
+    EVT_LISTBOX_DCLICK(IED_LIST,TItemEditDialog::OnList)
 END_EVENT_TABLE()
 
 TItemEditDialog::TItemEditDialog ( wxWindow *parent, const wxString& title ,
                         TVectorItem &_vi )
-   : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 400 , 200 ) )
+   : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 400 , 400 ) )
    {
    vi = new TVectorItem ;
    *vi = _vi ;
@@ -45,7 +46,14 @@ TItemEditDialog::TItemEditDialog ( wxWindow *parent, const wxString& title ,
    r = useOffset->GetRect() ;
    offset = new wxTextCtrl ( this , -1 , off_t ,
                                  wxPoint ( r.GetRight()+bo , r.GetTop() ) ) ;
+   r = offset->GetRect() ;
    if ( off == -1 ) offset->Disable() ;
+   
+   lb = new wxListBox ( this , IED_LIST , 
+                           wxPoint ( bo , r.GetBottom() + bo ) , 
+                           wxSize ( w - bo*2 , h - r.GetBottom() - th - bo*2 ) ,
+                           0 , NULL , wxLB_SORT|wxLB_HSCROLL|wxLB_ALWAYS_SB ) ;
+   initlb () ;
 
    wxButton *OK ;
    OK = new wxButton ( this , IED_OK , txt("b_ok") , wxPoint ( w/5 , h-th ) ) ;
@@ -98,5 +106,30 @@ void TItemEditDialog::OnUseOffset ( wxCommandEvent &ev )
     {
     if ( useOffset->IsChecked() ) offset->Enable() ;
     else offset->Disable() ;
+    }
+    
+void TItemEditDialog::initlb ()
+    {
+    lb->Clear () ;
+    wxArrayString vs = vi->getParamKeys () ;
+    for ( int a = 0 ; a < vs.GetCount() ; a++ )
+        {
+        wxString line = vs[a] + " : " + vi->getParam ( vs[a] ) ;
+        if ( line.Left ( 1 ) == "/" )
+           lb->Append ( line.Mid ( 1 ) ) ;
+        }    
+    }    
+    
+void TItemEditDialog::OnList ( wxListEvent &ev )
+    {
+    wxString sel = lb->GetStringSelection () ;
+    wxString key = sel.BeforeFirst ( ':' ) ;
+    wxString val = sel.AfterFirst ( ':' ) ;
+    key = key . Trim() . Trim ( false ) ;
+    val = val . Trim() . Trim ( false ) ;
+    wxTextEntryDialog ted ( this , "1" , key , val ) ;
+    if ( ted.ShowModal () != wxID_OK ) return ;
+    vi->setParam ( "/" + key , ted.GetValue() ) ;
+    initlb () ;
     }
     

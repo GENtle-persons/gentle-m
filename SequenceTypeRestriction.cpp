@@ -9,8 +9,8 @@ int SeqRestriction::arrange ( int n )
     int x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
     int lasta = 0 , cut , thepos ;
     wxString t ;
-    
-    pl.slen = vec->getSequenceLength() ;
+
+    pl.slen = vec->getSequenceLength() + ( ( can && can->getEditMode() ) ? -1 : 0 ) ;
     pl.prepare ( vec->rc.size() ) ;    
     for ( a = 0 ; a < vec->rc.size() ; a++ )
         {
@@ -24,7 +24,7 @@ int SeqRestriction::arrange ( int n )
     // Setting basic values
     int wx = can->charwidth , wy = can->charheight ;
     endnumberlength = 0 ;
-    int ox = bo+wx , oy = n*wy+bo , endnumber = offset + vec->getSequenceLength() ;
+    int ox = bo+wx , oy = n*wy+bo , endnumber = offset + pl.slen ;
     while ( endnumber > 0 ) { endnumber /= 10 ; ox += wx ; endnumberlength++ ; }
     
     can->MyGetClientSize ( &w , &h ) ;
@@ -33,12 +33,12 @@ int SeqRestriction::arrange ( int n )
 
     pos.cleanup() ;
     bool direct = useDirectRoutines() ;
-    if ( !direct ) pos.reserve ( vec->getSequenceLength() , 0 , true ) ;
+    if ( !direct ) pos.reserve ( pl.slen , 0 , true ) ;
     x = ox ;
     y = oy ;
 
     int icnt = 0 , rcnt = 0 ;
-    for ( a = 0 ; a < vec->getSequenceLength() ; a++ )
+    for ( a = 0 ; a < pl.slen ; a++ )
         {
         icnt++ ;
         rcnt++ ;
@@ -51,7 +51,7 @@ int SeqRestriction::arrange ( int n )
            if ( icnt == itemsperline )
               {
               icnt = 0 ;
-              lasta = rcnt + 1 ; //pos.r.size()+1 ;
+              lasta = rcnt + 1 ;
               x = ox ;
               y += wy * ( can->seq.GetCount() + can->blankline ) ;
               }

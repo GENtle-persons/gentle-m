@@ -86,6 +86,7 @@ class TPrimerDesign : public ChildBase
     virtual void calculateResultSequence () ;
     wxSpinCtrl *spin ;
     bool spinTextEnabeled ;
+    bool updating ;
     
     DECLARE_EVENT_TABLE()
     } ;

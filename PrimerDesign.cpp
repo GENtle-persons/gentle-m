@@ -61,6 +61,7 @@ TPrimerDesign::TPrimerDesign(wxWindow *parent,
     : ChildBase(parent, title)
     {
     int a ;
+    updating = false ;
     show_features = _vec->getGenomeMode() ? 0 : 1 ;
     spinTextEnabeled = false ;
     mut = _mut ;
@@ -248,6 +249,7 @@ void TPrimerDesign::updatePrimersFromSequence ()
     {
     int a , b ;
     wxString s ;
+    updating = true ;
     for ( a = 0 ; a < primer.size() ; a++ )
         {
         if ( primer[a].upper ) s = sc->seq[show_features]->s ;
@@ -256,6 +258,16 @@ void TPrimerDesign::updatePrimersFromSequence ()
         TVector d ;
         d.setSequence ( s ) ;
         d.setCircular ( vec->isCircular() ) ;
+
+        for ( b = primer[a].from-1 ; b <= primer[a].to-1 && d.getNucleotide(b) == ' ' ; b++ ) ;
+        if ( b == primer[a].to ) // Primer has been deleted
+           {
+           for ( b = a+1 ; b < primer.size() ; b++ )
+              primer[b-1] = primer[b] ;
+           primer.pop_back() ;
+           a-- ;
+           continue ;
+           }    
 
         for ( b = primer[a].from-1 ; d.getNucleotide(b) == ' ' ; b++ ) ;
         while ( d.getNucleotide(b) != ' ' ) b-- ;
@@ -268,6 +280,7 @@ void TPrimerDesign::updatePrimersFromSequence ()
         }
     updatePrimerStats () ;
     guessOptNuc() ;
+    updating = false ;
     }
 
 void TPrimerDesign::updatePrimerStats ()
@@ -642,20 +655,27 @@ void TPrimerDesign::calculateResultSequence()
 void TPrimerDesign::updateResultSequence()
     {
     calculateResultSequence() ;
-    
+   
+    while ( sc && sc->seq.GetCount() > 5 + show_features )
+        {
+        delete sc->seq[sc->seq.GetCount()-1] ;
+        sc->seq.RemoveAt ( sc->seq.GetCount()-1 ) ;
+        }    
+
     SeqRestriction *r3 = new SeqRestriction ( sc ) ;
+    SeqDNA *s3 = new SeqDNA ( sc ) ;
+    SeqAA *a3 = new SeqAA ( sc ) ;
+
     r3->initFromTVector ( w ) ;
     r3->down = true ;
     r3->takesMouseActions = false ;
 
-    SeqDNA *s3 = new SeqDNA ( sc ) ;
     s3->initFromTVector ( w ) ;
     s3->showNumbers = false ;
     s3->fontColor.Set ( 0 , 100 , 0 ) ;
     s3->takesMouseActions = false ;
     s3->alternateName = "RES" ;
     
-    SeqAA *a3 = new SeqAA ( sc ) ;
     a3->mode = aa_state ;
     a3->disp = aa_disp ;
     a3->unknownAA = ' ' ;
@@ -828,12 +848,19 @@ void TPrimerDesign::OnToggleFeatures ( wxCommandEvent &ev )
     
 void TPrimerDesign::OnSpin(wxSpinEvent& event)
     {
-    showSequence() ;
+    updateResultSequence() ;
+    sc->arrange () ;
+    sc->Refresh ( false ) ;    
     }
     
 void TPrimerDesign::OnSpinText(wxCommandEvent& event)
     {
-    if ( spinTextEnabeled ) showSequence() ;
+    if ( spinTextEnabeled )
+        {
+        updateResultSequence() ;
+        sc->arrange () ;
+        sc->Refresh ( false ) ;    
+        }    
     }
     
 void TPrimerDesign::OnHorizontal ( wxCommandEvent& event )

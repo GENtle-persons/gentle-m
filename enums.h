@@ -69,6 +69,7 @@ enum {
     FRAME_SASH_TOP,
     IED_CANCEL,
     IED_COLOR,
+    IED_LIST,
     IED_OK,
     IED_USEOFFSET,
     IV_BUTTON,

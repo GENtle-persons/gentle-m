@@ -10,6 +10,7 @@ char TVector::IUPAC[256] ;
 char TVector::SIUPAC[256] ;
 char TVector::COMPLEMENT[256] ;
 vector <TAAProp> TVector::aaprop ;
+wxArrayString TVector::codon_tables ;
 
 wxString TVector::getParams () { return params ; }
 void TVector::setParams ( const wxString &s ) { params = s ; }
@@ -24,6 +25,7 @@ char TVector::getComplement ( char c ) { return COMPLEMENT[c] ; }
 TAAProp TVector::getAAprop ( char a ) { return aaprop[a] ; }
 void TVector::setGenomeMode ( bool gm ) { genomeMode = gm ; }
 bool TVector::getGenomeMode () { return genomeMode ; }
+wxString *TVector::getSequencePointer () { return &sequence ; }
 
 TVector *TVector::newFromMark ( int from , int to ) 
     {
@@ -119,21 +121,52 @@ TVector::~TVector ()
     undo.setbase ( NULL ) ;
     undo.clear () ;
     }
+    
+void TVector::setCodonTable ( int table , wxString sequence )
+    {
+    while ( codon_tables.GetCount() <= table ) codon_tables.Add ( "" ) ;
+    codon_tables[table] = sequence ;
+    }    
         
 void TVector::init ()
     {
     // Setting DNA => AA matrix
     // Can be adapted for other organisms
-    aa = "FFLLSSSSYY||CC|W"
-         "LLLLPPPPHHQQRRRR"
-         "IIIMTTTTNNKKSSRR"
-         "VVVVAAAADDEEGGGG" ;
+    
+//    aa = "FFLLSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ;
          
     // Static initialization
-    if ( aaprop.size() > 0 ) return ;
-
+    if ( aaprop.size() > 0 )
+        {
+        aa = codon_tables[1] ;
+        return ;
+        }    
+    
     int a ;
     
+    setCodonTable (  1 , "FFLLSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
+    setCodonTable (  2 , "FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSS||VVVVAAAADDEEGGGG" ) ;
+    setCodonTable (  3 , "FFLLSSSSYY||CCWWTTTTPPPPHHQQRRRRIIMMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
+    setCodonTable (  4 , "FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
+    setCodonTable (  5 , "FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSSSVVVVAAAADDEEGGGG" ) ;
+    setCodonTable (  6 , "FFLLSSSSYYQQCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
+    setCodonTable (  9 , "FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG" ) ;
+    setCodonTable ( 10 , "FFLLSSSSYY||CCCWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
+    setCodonTable ( 11 , "FFLLSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
+    setCodonTable ( 12 , "FFLLSSSSYY||CC|WLLLSPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
+    setCodonTable ( 13 , "FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSGGVVVVAAAADDEEGGGG" ) ;
+    setCodonTable ( 14 , "FFLLSSSSYYY|CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG" ) ;
+    setCodonTable ( 15 , "FFLLSSSSYY|QCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
+    setCodonTable ( 16 , "FFLLSSSSYY|LCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
+    setCodonTable ( 21 , "FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNNKSSSSVVVVAAAADDEEGGGG" ) ;
+    setCodonTable ( 22 , "FFLLSS|SYY|LCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
+    setCodonTable ( 23 , "FF|LSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
+    for ( a = 0 ; a < codon_tables.GetCount() ; a++ ) // Setting all empty tables to standard one
+        {
+        if ( codon_tables[a] == "" ) codon_tables[a] = codon_tables[1] ;
+        }    
+    aa = codon_tables[1] ;
+
     // IUPAC DNA
     for ( a = 0 ; a < 256 ; a++ ) IUPAC[a] = 0 ;
     setIUPAC ( 'A' , "A" ) ;
@@ -425,9 +458,18 @@ void TVector::recalculateCuts ()
     {
     rc.clear () ;
     if ( type == TYPE_AMINO_ACIDS ) return ;
+    if ( sequence == "" ) return ;
+    bool truncate = false ;
+    if ( sequence.GetChar(sequence.length()-1) == ' ' )
+        {
+        eraseSequence ( getSequenceLength()-1 , 1 ) ;
+        truncate = true ;
+        }    
     int a , b , c ;
     for ( a = 0 ; a < re.GetCount() ; a++ )
        getCuts ( re[a] , rc , false ) ;
+    
+    if ( truncate ) sequence += " " ;
     
     // Sorting by position; might be unnecessary
     sort ( rc.begin() , rc.end() ) ;
@@ -758,9 +800,12 @@ void TVector::doRemove ( int from , int to , bool update , bool enableUndo )
     
 // Currently returns only the direct encoding (a single char) or 'X'
 // Could return all possible AAs (see IUPAC) in the future
-wxString TVector::dna2aa ( wxString codon )
+wxString TVector::dna2aa ( wxString codon , int translation_table )
     {
     if ( codon.length() != 3 ) return "?" ;
+    wxString aa ; // Replacing object variable
+    if ( translation_table == -1 ) aa = this->aa ;
+    else aa = codon_tables[translation_table] ;
     wxString r ;
     char c0 = codon.GetChar(0) ;
     char c1 = codon.GetChar(1) ;
@@ -1470,6 +1515,9 @@ void TVectorItem::translate ( TVector *v , SeqAA *aa )
    
    if ( to >= from ) dna2aa.reserve ( ( to - from + 1 ) / 3 + 2 ) ;
    else dna2aa.reserve ( ( to + v->getSequenceLength() - from + 1 ) / 3 + 2 ) ;
+   
+   long translation_table = -1 ;
+   getParam("/transl_table","-1").ToLong ( &translation_table ) ;
 
    wxString three ;
    while ( c != '|' && rf != 0 )
@@ -1478,7 +1526,7 @@ void TVectorItem::translate ( TVector *v , SeqAA *aa )
       three += v->getNucleotide ( b + 0 * direction , complement ) ;
       three += v->getNucleotide ( b + 1 * direction , complement ) ;
       three += v->getNucleotide ( b + 2 * direction , complement ) ;
-      c = v->dna2aa ( three ) . GetChar ( 0 ) ;
+      c = v->dna2aa ( three , translation_table ) . GetChar ( 0 ) ;
   
       // SeqAA update
       if ( aa )

@@ -189,11 +189,7 @@ void SequenceCanvas::updateEdit ( TVector *v , wxString id , int from )
         }
     else if ( getPD() )
         {
-        for ( int a = 0 ; a < 4 ; a++ )
-           seq.RemoveAt ( seq.GetCount()-1 ) ;
         getPD()->updatePrimersFromSequence () ;
-//        getPD()->updateResultSequence() ;
-        arrange () ;
         }
     mark ( id , from , from , 2 ) ;
     }
@@ -218,7 +214,7 @@ void SequenceCanvas::OnCharHook(wxKeyEvent& event)
         int from = _from ;
         wxString *the_sequence ;
         if ( dna->whatsthis() == "AA" ) the_sequence = &getAA()->vec->getSequence() ;
-        else if ( dna->whatsthis() == "DNA" ) the_sequence = &dna->vec->getSequence() ;
+        else if ( dna->whatsthis() == "DNA" ) the_sequence = dna->vec->getSequencePointer() ;
         else the_sequence = &dna->s ;
         TVector *v = NULL ;
         if ( p ) v = dna->vec ;
