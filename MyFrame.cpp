@@ -1372,12 +1372,12 @@ void MyFrame::OnSashDrag(wxSashEvent& event)
 //    GetClientWindow()->Refresh();    
     }
 
-TStorage *MyFrame::getTempDB ( wxString filename )
+TStorage *MyFrame::getTempDB ( wxString name )
     {
     int a ;
-    for ( a = 0 ; a < dbcache.GetCount() && dbcache[a]->getDBname() != filename ; a++ ) ;
+    for ( a = 0 ; a < dbcache.GetCount() && dbcache[a]->getDBname() != name ; a++ ) ;
     if ( a == dbcache.GetCount() ) 
-        dbcache.Add ( new TStorage ( TEMP_STORAGE , filename ) ) ;
+        dbcache.Add ( new TStorage ( TEMP_STORAGE , name ) ) ;
     return dbcache[a] ;
     }
     

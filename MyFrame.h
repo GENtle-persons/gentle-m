@@ -108,7 +108,7 @@ public:
     virtual void importFile ( wxString file , wxString path , int filter = -1 ) ;
     virtual void setChild ( ChildBase *ch ) ;
     virtual void removeChild ( ChildBase *ch ) ;
-    virtual TStorage *getTempDB ( wxString filename ) ;
+    virtual TStorage *getTempDB ( wxString name ) ;
     virtual TAlignment *runAlignment ( wxArrayString &vs , wxArrayChildBase &vc , TVector *nv = NULL ) ;
     virtual ChildBase *GetActiveChild() ;
     virtual void setActiveChild ( ChildBase *c ) ;
