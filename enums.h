@@ -263,6 +263,7 @@ enum {
     SH_CANCEL,
     SH_SEARCH,
     SH_LB,
+    SH_TEXT,
     SPLIT_1,
     SPLIT_2,
     SPLIT_3,

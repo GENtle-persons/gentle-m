@@ -143,6 +143,7 @@ class FindSequenceDialog : public wxDialog
     virtual void OnCharHook(wxKeyEvent& event) ;
     virtual void OnSearch ( wxCommandEvent &ev ) ;
     virtual void OnCancel ( wxCommandEvent &ev ) ;
+    virtual void OnTextChange ( wxCommandEvent &ev ) ;
     virtual void OnLB ( wxCommandEvent &ev ) ;
     virtual void OnLBdclick ( wxCommandEvent &ev ) ;
 
