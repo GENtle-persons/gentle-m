@@ -790,3 +790,9 @@ wxString TStorage::createMySQLdb ( wxString ip , wxString db , wxString name , w
     return "" ;  
     }    
 
+void TStorage::optimizeDatabase ()
+	{
+    if ( isMySQL ) return ;
+	getObject ( "VACUUM;" ) ;
+	}
+    

@@ -71,41 +71,42 @@ class TStorage
     public :
     TStorage ( int nt , wxString fn = "" ) ;
     virtual ~TStorage () ;
-    void createDatabase () ;
-    TSQLresult getObject ( wxString query ) ;
-    TSQLresult getObject_MySQL ( wxString query ) ;
+    virtual void createDatabase () ;
+    virtual TSQLresult getObject ( wxString query ) ;
+    virtual TSQLresult getObject_MySQL ( wxString query ) ;
 
     // Access
-    void sqlAdd ( wxString &s1 , wxString &s2 , wxString key , wxString value ) ;
-    void sqlAdd ( wxString &s1 , wxString &s2 , wxString key , char* value ) ;
-    void sqlAdd ( wxString &s1 , wxString &s2 , wxString key , int value ) ;
+    virtual void sqlAdd ( wxString &s1 , wxString &s2 , wxString key , wxString value ) ;
+    virtual void sqlAdd ( wxString &s1 , wxString &s2 , wxString key , char* value ) ;
+    virtual void sqlAdd ( wxString &s1 , wxString &s2 , wxString key , int value ) ;
     
     // Restriction enzymes
-    void import () ;
-    TRestrictionEnzyme* getRestrictionEnzyme ( wxString s ) ;
-    void getEnzymeGroups ( wxArrayString &vs ) ;
-    void getEnzymesInGroup ( wxString gn , wxArrayString &vs ) ;
-    void updateRestrictionEnzyme ( TRestrictionEnzyme *e ) ;
-    void addRestrictionEnzyme ( TRestrictionEnzyme *r ) ;
-    bool addEnzymeGroup ( wxString s ) ;
+    virtual void import () ;
+    virtual TRestrictionEnzyme* getRestrictionEnzyme ( wxString s ) ;
+    virtual void getEnzymeGroups ( wxArrayString &vs ) ;
+    virtual void getEnzymesInGroup ( wxString gn , wxArrayString &vs ) ;
+    virtual void updateRestrictionEnzyme ( TRestrictionEnzyme *e ) ;
+    virtual void addRestrictionEnzyme ( TRestrictionEnzyme *r ) ;
+    virtual bool addEnzymeGroup ( wxString s ) ;
 
-    TProtease *getProtease ( wxString s ) ;
-    void updateProtease ( TProtease *p ) ;
+    virtual TProtease *getProtease ( wxString s ) ;
+    virtual void updateProtease ( TProtease *p ) ;
     
-    wxString getDatabaseList ( wxArrayString &name , wxArrayString &file ) ;
-    void setOption ( wxString oname , int value ) ;
-    void setOption ( wxString oname , wxString vname ) ;
-    int getOption ( wxString oname , int def ) ;
-    wxString getOption ( wxString oname , wxString def ) ;
-    bool copySQLfields ( TStorage &target , wxString table , wxString cond ) ;
-    void synchronize () ;
+    virtual wxString getDatabaseList ( wxArrayString &name , wxArrayString &file ) ;
+    virtual void setOption ( wxString oname , int value ) ;
+    virtual void setOption ( wxString oname , wxString vname ) ;
+    virtual int getOption ( wxString oname , int def ) ;
+    virtual wxString getOption ( wxString oname , wxString def ) ;
+    virtual bool copySQLfields ( TStorage &target , wxString table , wxString cond ) ;
+    virtual void synchronize () ;
 
-    void autoUpdateSchema () ;
-    wxString fixDNAname ( wxString s ) ;
-    wxString UCfirst ( wxString s ) ;
-    wxString getDBname () ;    
-    bool getWriteProtect () ;
+    virtual void autoUpdateSchema () ;
+    virtual wxString fixDNAname ( wxString s ) ;
+    virtual wxString UCfirst ( wxString s ) ;
+    virtual wxString getDBname () ;    
+    virtual bool getWriteProtect () ;
     static wxString createMySQLdb ( wxString ip , wxString db , wxString name , wxString pwd ) ;
+    virtual void optimizeDatabase () ;
     
     // Variables
     wxArrayTRestrictionEnzyme re ;
@@ -113,11 +114,11 @@ class TStorage
     TSQLresult results ;
     
     private :
-    wxString getSingleField ( wxString query , wxString field , wxString def = "" ) ;
-    int getSingleField ( wxString query , wxString field , int def = 0 ) ;
-    wxString makeInsert ( wxString table , TVS &field , TVS &data ) ;
-    void replaceTable ( wxString table , TVS &f , TVS &t ) ;
-    void tableInfoSet ( TVS &f , TVS &t , wxString nf , wxString nt ) ;
+    virtual wxString getSingleField ( wxString query , wxString field , wxString def = "" ) ;
+    virtual int getSingleField ( wxString query , wxString field , int def = 0 ) ;
+    virtual wxString makeInsert ( wxString table , TVS &field , TVS &data ) ;
+    virtual void replaceTable ( wxString table , TVS &f , TVS &t ) ;
+    virtual void tableInfoSet ( TVS &f , TVS &t , wxString nf , wxString nt ) ;
     
     // Variables
     wxString dbname , error ;

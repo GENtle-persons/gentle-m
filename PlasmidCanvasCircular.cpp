@@ -456,6 +456,9 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
         TRestrictionCut c = p->vec->rc[a] ;
         if ( isEnzymeVisible ( c.e->name ) )
            {
+           wxColour *col = myapp()->frame->global_enzyme_rules->getColor ( p->vec->countCuts ( c.e->name ) ) ;
+           dc.SetTextForeground ( *col ) ;
+           dc.SetPen ( *MYPEN(*col) ) ;
            c.r1 = c.r1 * 100 * r / ( STANDARDRADIUS * 100 ) ;
            c.r2 = c.r2 * 100 * r / ( STANDARDRADIUS * 100 ) ;
            c.r3 = c.r3 * 100 * r / ( STANDARDRADIUS * 100 ) ;

@@ -193,6 +193,9 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
         TRestrictionCut *c = &p->vec->rc[a] ;
         if ( isEnzymeVisible ( c->e->name ) )
            {
+           wxColour *col = myapp()->frame->global_enzyme_rules->getColor ( p->vec->countCuts ( c->e->name ) ) ;
+           dc.SetTextForeground ( *col ) ;
+           dc.SetPen ( *MYPEN(*col) ) ;
            c->linearUpdate ( w , h ) ;
            int xx = lineOff + c->pos*lineLen/l ;
            dc.DrawLine ( c->lastrect.GetRight() , c->lastrect.GetBottom() , xx , lineH - markH ) ;
