@@ -102,6 +102,8 @@ void ExternalInterface::runBlast ( wxString seq , wxString prg )
     if ( prg == "BLASTN" ) bl->c1->SetSelection ( 1 ) ;
     bl->t1->SetValue ( seq ) ;
     nb->SetSelection ( nb->GetPageCount()-1 ) ;
+    wxCommandEvent event( wxEVT_COMMAND_BUTTON_CLICKED, ID_B1 );
+    wxPostEvent ( bl , event ) ;
 }
 
 
