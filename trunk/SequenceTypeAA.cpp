@@ -277,14 +277,14 @@ void SeqAA::initFromString ( string t )
 void SeqAA::updateProteases ()
     {
     proteases.clear () ;
-    pc.clear () ;
+    DEL_POINTERS ( pc ) ;
     if ( !can ) return ;
 
     vector <string> vs ;
     if ( can->child ) vs = can->child->vec->proteases ;
     else if ( can->p ) vs = can->p->vec->proteases ;
     else if ( can->getAA() ) vs = can->getAA()->vec->proteases ;
-    
+
     int a ;
     for ( a = 0 ; a < vs.size() ; a++ )
         {
@@ -295,8 +295,7 @@ void SeqAA::updateProteases ()
     
 void SeqAA::analyzeProteases ()
     {
-    if ( !can ) return ;
-    DEL_POINTERS ( pc ) ;
+    if ( !can ) return ; 
     for ( int q = 0 ; q < proteases.size() ; q++ )
        {
        TProtease *pr = proteases[q] ;
