@@ -13,6 +13,7 @@ BEGIN_EVENT_TABLE(TAminoAcids, MyChildBase)
     EVT_MENU(MDI_AS_NEW_FEATURE, TAminoAcids::OnAsNewFeature)
     EVT_MENU(AMINOACIDS_BLAST_AA, TAminoAcids::OnBlastAA)
     EVT_MENU(AMINOACIDS_PHOTOMETER, TAminoAcids::OnPhotometer)
+    EVT_MENU(SEQ_AA_BACKTRANSLATE,TAminoAcids::OnBacktranslate)
 
     EVT_MENU(MDI_UNDO, TAminoAcids::Undo)
     EVT_MENU(MDI_REDO, TAminoAcids::Redo)
@@ -65,6 +66,10 @@ TAminoAcids::~TAminoAcids ()
     if ( vec ) delete vec ;
     }
 
+void TAminoAcids::OnBacktranslate ( wxCommandEvent& event )
+    {
+    sc->OnBacktranslate ( event ) ;
+    }    
 
 void TAminoAcids::initme ()
     {
@@ -93,6 +98,7 @@ void TAminoAcids::initme ()
 //    edit_menu->Append(MDI_EXTRACT_AA, txt("m_extract_aa") );
     edit_menu->Append(AMINOACIDS_BLAST_AA, txt("m_blast_aa") ) ;
     edit_menu->Append(AMINOACIDS_PHOTOMETER, txt("m_aa_photometer") ) ;
+    edit_menu->Append(SEQ_AA_BACKTRANSLATE, txt("m_aa_backtranslate") ) ;
 
     wxMenu *view_menu = new wxMenu;
     view_menu->Append(MDI_EDIT_MODE, txt("m_edit_mode") , "" , true );

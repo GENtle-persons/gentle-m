@@ -22,6 +22,8 @@ BEGIN_EVENT_TABLE(TPrimerDesign, MyChildBase)
     EVT_MENU(PD_EXPORT,TPrimerDesign::OnExportPrimer)
     EVT_MENU(PD_IMPORT,TPrimerDesign::OnImportPrimer)
     EVT_MENU(SEQ_PRINT,TPrimerDesign::OnPrint)
+    EVT_MENU(SEQ_INSERT_RESTRICTION_SITE_LEFT,TPrimerDesign::OnInsertRestrictionSiteLeft)
+    EVT_MENU(SEQ_INSERT_RESTRICTION_SITE_RIGHT,TPrimerDesign::OnInsertRestrictionSiteRight)
     
     EVT_LIST_ITEM_ACTIVATED(PD_LC,TPrimerDesign::OnActivatePrimer)
     EVT_LIST_ITEM_SELECTED(PD_LC,TPrimerDesign::OnSelectPrimer)
@@ -344,6 +346,8 @@ void TPrimerDesign::initme ()
 //    edit_menu->Append(MDI_MARK_ALL, txt("m_mark_all") );
 //    edit_menu->Append(MDI_CUT, txt("m_cut") );
     edit_menu->Append(MDI_COPY, txt("m_copy") );
+    edit_menu->Append ( SEQ_INSERT_RESTRICTION_SITE_LEFT , txt("m_insert_restiction_site_left") ) ;
+    edit_menu->Append ( SEQ_INSERT_RESTRICTION_SITE_RIGHT , txt("m_insert_restiction_site_right") ) ;
 
 
     wxMenu *view_menu = new wxMenu;
@@ -859,3 +863,13 @@ void TPrimerDesign::OnFind(wxCommandEvent& event)
     fsd.ShowModal () ;
     }
 
+void TPrimerDesign::OnInsertRestrictionSiteLeft(wxCommandEvent& event)
+    {
+    sc->OnInsertRestrictionSiteLeft ( event ) ;
+    }
+
+void TPrimerDesign::OnInsertRestrictionSiteRight(wxCommandEvent& event)
+    {
+    sc->OnInsertRestrictionSiteRight ( event ) ;
+    }
+        

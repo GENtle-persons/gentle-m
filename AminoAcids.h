@@ -35,6 +35,7 @@ class TAminoAcids : public ChildBase
     virtual void OnHorizontal ( wxCommandEvent& event ) ;
     virtual void OnListBox ( wxCommandEvent& event ) ;
     virtual void OnIP ( wxCommandEvent& event ) ;
+    virtual void OnBacktranslate ( wxCommandEvent& event ) ;
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){};
     
     virtual void Undo(wxCommandEvent& event);
