@@ -412,15 +412,22 @@ void MyFrame::OnTextImport(wxCommandEvent& WXUNUSED(event) )
         }
     else if ( type == 2 ) // GenBank
         {
-//        TVector *v = new TVector ;
         TGenBank gb ;
         gb.paste ( d.sequence->GetValue().c_str() ) ;
         newGB ( gb , d.sName.c_str() ) ;
-//        gb.remap ( v ) ;
-//        if ( d.sName != "" ) v->name = d.sName ;
-//        newFromVector ( v ) ;
         }        
-    else if ( type == 3 ) // Primer
+    else if ( type == 3 ) // XML
+        {
+        // Trying XML formats
+        TXMLfile xml ;
+        xml.parse ( d.sequence->GetValue().c_str() ) ;
+        if ( xml.success() )
+           {
+           newXML ( xml , d.sName.c_str() ) ;
+           return ;
+           }
+        }
+    else if ( type == 4 ) // Primer
         {
         TVector *v = new TVector ;
         v->name = d.sName ;
@@ -482,6 +489,15 @@ void MyFrame::importFile ( string file , string path , int filter )
         if ( gb.success )
            {
            newGB ( gb ) ;
+           return ;
+           }
+           
+        // Trying XML formats
+        TXMLfile xml ;
+        xml.load ( path ) ;
+        if ( xml.success() )
+           {
+           newXML ( xml ) ;
            return ;
            }
 
@@ -602,6 +618,24 @@ void MyFrame::importFile ( string file , string path , int filter )
     subframe->Maximize() ;
 }
 
+void MyFrame::newXML (  TXMLfile &xml , string title )
+   {
+   int n ;
+   SetCursor ( *wxHOURGLASS_CURSOR ) ;
+   Freeze () ;
+   for ( n = 0 ; n < xml.countVectors() ; n++ )
+       {
+       TVector *nv = xml.getVector ( n ) ;
+       short type = nv->type ;
+       if ( title != "" ) nv->name = title ;
+       if ( type == TYPE_AMINO_ACIDS )
+          newAminoAcids ( nv , nv->name ) ;
+       else
+          newFromVector ( nv , type ) ;
+       }
+   Thaw () ;
+   SetCursor ( *wxSTANDARD_CURSOR ) ;
+   }
 
 MyChild *MyFrame::newCLONE ( TClone &clone )
     {

@@ -1,13 +1,9 @@
 #ifndef _UNDO_H_
 #define _UNDO_H_
 
-//#include "main.h"
-
 #include <wx/wx.h>
 #include <string>
 #include <vector>
-
-#define IS_UNDO_OFF //return ;
 
 using namespace std ;
 

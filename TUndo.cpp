@@ -1,6 +1,10 @@
 #include "TUndo.h"
 #include "TVector.h"
 
+// To turn undo on,  change it to "#define IS_UNDO_OFF return ;"
+// To turn undo off, change it to "#define IS_UNDO_OFF //return ;"
+#define IS_UNDO_OFF //return ;
+
 TUndo::TUndo ()
     {
     cnt = 0 ;

@@ -8,7 +8,9 @@ char* gb_item_type[VIT_TYPES] =
     "rep_origin",
     "promoter",
     "terminator",
-    "misc_feature"
+    "misc_feature",
+    "prot_bind",
+    "oriT"
     } ;
 
 void TGenBank::wrapit ( vector <string> &ex , string init , string data , int limit )

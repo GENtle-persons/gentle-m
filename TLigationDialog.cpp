@@ -77,6 +77,8 @@ void TLigationDialog::generateTargets ()
         {
         if ( vc[a] )
            {
+           myass ( a < vc.size() , "TLigationDialog::generateTargets:1" ) ;
+           myass ( a < used.size() , "TLigationDialog::generateTargets:2" ) ;
            used[a] = true ;
            vi.push_back ( a ) ;
            orientation.push_back ( false ) ;
@@ -99,6 +101,8 @@ void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , v
     int a , b ;
     int cnt = vi.size() ;
     string name ;
+    myass ( cnt-1 >= 0 && cnt-1 < orientation.size() , "TLigationDialog::curseTargets:1" ) ;
+    myass ( cnt-1 >= 0 && cnt-1 < vi.size() , "TLigationDialog::curseTargets:2" ) ;
     bool o = orientation[cnt-1] ;
     if ( doMatch ( vi[cnt-1] , vi[0] , o ) )
         {
@@ -113,6 +117,9 @@ void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , v
         
     for ( a = 0 ; a < vc.size() ; a++ )
         {
+        myass ( cnt-1 >= 0 && cnt-1 < vi.size() , "TLigationDialog::curseTargets:3a" ) ;
+        myass ( a >= 0 && a < vc.size() , "TLigationDialog::curseTargets:3b" ) ;
+        myass ( a >= 0 && a < used.size() , "TLigationDialog::curseTargets:3c" ) ;
         if ( vc[a] && !used[a] && doMatch ( vi[cnt-1] , a ) ) // Normal orientation
            {
            used[a] = true ;
@@ -127,6 +134,9 @@ void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , v
 
     for ( a = 0 ; a < vc.size() ; a++ )
         {
+        myass ( cnt-1 >= 0 && cnt-1 < vi.size() , "TLigationDialog::curseTargets:4a" ) ;
+        myass ( a >= 0 && a < vc.size() , "TLigationDialog::curseTargets:4b" ) ;
+        myass ( a >= 0 && a < used.size() , "TLigationDialog::curseTargets:4c" ) ;
         if ( vc[a] && !used[a] && doMatch ( vi[cnt-1] , a , true ) ) // Turned around
            {
            used[a] = true ;
@@ -151,7 +161,11 @@ bool TLigationDialog::doMatch ( int l , int r , bool invertSecond )
     {
     string s1 ; 
     string s2 ; 
-    
+
+    myass ( l >= 0 && l < vv.size() , "TLigationDialog::doMatch:1" ) ;
+    myass ( vv[l] , "TLigationDialog::doMatch:2" ) ;
+    myass ( r >= 0 && r < vv.size() , "TLigationDialog::doMatch:3" ) ;
+    myass ( vv[r] , "TLigationDialog::doMatch:4" ) ;
     if ( invertSecond )
        {
        s1 = vv[l]->getStickyEnd(false,true) + invert ( vv[r]->getStickyEnd(false,false) ) ;
@@ -176,6 +190,9 @@ string TLigationDialog::getVIName ( vector <int> &vi )
     string ret ;
     for ( a = 0 ; a < vi.size() ; a++ )
         {
+        myass ( a >= 0 && a < vi.size() , "TLigationDialog::getVIName:1" ) ;
+        myass ( vi[a] >= 0 && vi[a] < vv.size() , "TLigationDialog::getVIName:2" ) ;
+        myass ( vv[vi[a]] , "TLigationDialog::getVIName:3" ) ;
         string name = vv[vi[a]]->name ;
         if ( a < orientation.size() && orientation[a] ) name = "!" + name ;
         if ( ret != "" ) ret += "-" ;
@@ -191,7 +208,8 @@ void TLigationDialog::addVTname ( string name , vector <int> &vi , bool circular
     int a ;
     TVector v ;
     string d ;
-//    v = *vv[vi[0]] ;
+    myass ( vi[0] >= 0 && vi[0] < vv.size() , "TLigationDialog::addVTname:1" ) ;
+    myass ( vv[vi[0]] , "TLigationDialog::addVTname:2" ) ;
     v.setFromVector ( *vv[vi[0]] ) ;
     d = txt("lig_of") ;
     d += v.name + " (" + v.desc + ")" ;
@@ -201,6 +219,8 @@ void TLigationDialog::addVTname ( string name , vector <int> &vi , bool circular
         bool o = false ;
         if ( a < orientation.size() && orientation[a] ) o = true ;
         TVector tv ;
+        myass ( vi[a] >= 0 && vi[a] < vv.size() , "TLigationDialog::addVTname:3" ) ;
+        myass ( vv[vi[a]] , "TLigationDialog::addVTname:4" ) ;
         tv.setFromVector ( *vv[vi[a]] ) ;
         v.ligate_right ( tv , o ) ;
         d += ", " ;

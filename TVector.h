@@ -13,7 +13,7 @@ class PlasmidCanvas ;
 class TVectorEditor ;
 class ChildBase ;
 
-#define VIT_TYPES      7 //number of possible types
+#define VIT_TYPES      9//number of possible types
 
 #define VIT_GENE       1
 #define VIT_CDS        2
@@ -21,6 +21,8 @@ class ChildBase ;
 #define VIT_PROMOTER   4
 #define VIT_TERMINATOR 5
 #define VIT_MISC       6
+#define VIT_PROT_BIND  7
+#define VIT_ORI_T      8
 
 class TAAProp
     {
@@ -67,6 +69,7 @@ class TVectorItem
     void setRF ( int x ) ;
     int getOffset () ;
     void setOffset ( int o = -1 ) ; // -1 = no offset
+    void setType ( string s ) ;
     void dummyInfo ( string s , int l ) ;  // For testing only
     
     // Variables
@@ -85,6 +88,7 @@ class TVectorItem
     friend class TGenBank ;
     friend class TItemEditDialog ;
     friend class PlasmidCanvas ;
+    friend class TXMLfile ;
     virtual void setParam ( string p , string v ) ;
     virtual void setParam ( string p , int v ) ;
     virtual vector <string> getParamKeys () ;
