@@ -97,7 +97,6 @@ class TVectorItem
     wxTreeItemId treeid ;
 
     // Visual information
-    friend class PlasmidCanvas ;
     friend class TVectorEditor ;
     friend class MyChild ;
     int r1 , r2 ;
