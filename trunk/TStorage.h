@@ -3,14 +3,14 @@
 
 #include <stdio.h>
 
+#include "main.h"
+
 #ifdef __WXMSW__
 #include "win_sqlite.h"
 #include <wx/msw/winundef.h>
 #else
 #include "lin_sqlite.h"
 #endif
-
-#include "main.h"
 
 #define LOCAL_STORAGE 1
 #define SHARED_STORAGE 2
