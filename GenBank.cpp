@@ -228,6 +228,7 @@ void TGenBank::remap ( TVector *v )
 	 }
 	 
     v->setSequence ( ns.MakeUpper() ) ;
+    v->items.reserve ( items.size() ) ;
     for ( a = 0 ; a < items.size() ; a++ ) addItem ( v , items[a] ) ;
 	}
 

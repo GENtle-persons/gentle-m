@@ -881,8 +881,8 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
            {
            seq[b]->setMark ( a , value ) ;
            cnt += value ;
-           if ( vpx == -1 ) vpx = seq[b]->getRect(a).GetLeft() / charwidth ;
-           if ( vpy == -1 ) vpy = seq[b]->getRect(a).GetTop() / charheight ;
+           if ( vpx == -1 ) vpx = seq[b]->getRect(a).x / charwidth ;
+           if ( vpy == -1 ) vpy = seq[b]->getRect(a).y / charheight ;
            }
         else 
            seq[b]->setMark ( a , 0 ) ;
@@ -2013,4 +2013,14 @@ int SeqPos::getmark ( int where )
         }    
     return -1 ;
     }
-        
+
+void SeqBasic::logsize ()
+    {
+    mylog ( whatsthis() , wxString::Format ( "s %d" , s.length() ) ) ;
+    mylog ( whatsthis() , wxString::Format ( "p %d" , pos.p.GetCount() * sizeof ( int ) ) ) ;
+    mylog ( whatsthis() , wxString::Format ( "m %d" , pos.m.length() ) ) ;
+    mylog ( whatsthis() , wxString::Format ( "r %d" , pos.r.size() * sizeof ( wxRect ) ) ) ;
+    mylog ( whatsthis() , wxString::Format ( "l %d" , pos.l.size() * sizeof ( wxRect ) ) ) ;
+    mylog ( "---" ) ;
+    }    
+

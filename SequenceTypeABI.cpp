@@ -171,7 +171,7 @@ void SeqABI::show ( wxDC& dc )
         myass ( id > -1 , "SeqABI::show" ) ;
         int diffx = 0 ;
         int l = 0 ;
-        wxPoint last ( minx , pos.l[l].GetHeight() + hy ) ;
+        wxPoint last ( minx , pos.l[l].height + hy ) ;
         int x = 0 ;
         for ( a = 0 ; a < at->vf[id].nrecords ; a++ )
            {
@@ -185,12 +185,12 @@ void SeqABI::show ( wxDC& dc )
               {
               x -= maxx ;
               diffx += maxx ;
-              if ( l > 0 ) drawTopLine ( dc , pos.l[l].GetWidth() - wy / 2 ) ;
+              if ( l > 0 ) drawTopLine ( dc , pos.l[l].width - wy / 2 ) ;
               l++ ;
               if ( l < pos.l.size() )
                  {
-                 int yo = last.y - pos.l[l-1].GetHeight() ;
-                 last = wxPoint ( minx , pos.l[l].GetHeight() + yo ) ;
+                 int yo = last.y - pos.l[l-1].height ;
+                 last = wxPoint ( minx , pos.l[l].height + yo ) ;
                  }
               }
            wxPoint cur ;
@@ -198,12 +198,12 @@ void SeqABI::show ( wxDC& dc )
               {
               b *= zoom ;
               if ( b > high ) b = high ;
-              cur = wxPoint ( x + minx , hy - b * hy / high + pos.l[l].GetHeight() ) ;
+              cur = wxPoint ( x + minx , hy - b * hy / high + pos.l[l].height ) ;
               dc.DrawLine ( last , cur ) ;
               }
            last = cur ;
            }
-        if ( l > 0 ) drawTopLine ( dc , pos.l[l].GetWidth() - wy / 2 ) ;
+        if ( l > 0 ) drawTopLine ( dc , pos.l[l].width - wy / 2 ) ;
         }
 
     }
