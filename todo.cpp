@@ -17,6 +17,7 @@ That ligation thingy
 * Bericht drucken : lange Zeilen in Vektor-Beschreibung umbrechen
 * AS-Sequenz Protease-schneiden
 
+SEE: http://eutils.ncbi.nlm.nih.gov/entrez/query/static/eutils_help.html
 PubMed nucleotide search :
 * http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&retmode=xml&term=pgex+3x
 PubMed Retrieval

@@ -1,6 +1,9 @@
 #ifndef _SENDHTTP_H_
 #define _SENDHTTP_H_
 
+class wxString ;
+class wxProgressDialog ;
+
 /* HTTPRequest: Structure that returns the HTTP headers and message
                 from the request*/
 typedef struct
@@ -10,17 +13,24 @@ typedef struct
 	long messageLength;/* Length of the message */
 } HTTPRequest;
 
-/* MemBuffer: Structure used to implement a memory buffer, which is a
-              buffer of memory that will grow to hold variable sized
-              parts of the HTTP message. */
-typedef struct
-{
-	unsigned char *buffer;
-	unsigned char *position;
-	size_t size;
-} MemBuffer;
-
-
 int SendHTTP(LPCSTR url,LPCSTR headers,BYTE *post,DWORD postLength,HTTPRequest *req) ;
+
+class myExternal
+	{
+	public :
+	myExternal () ;
+	virtual int copyFile ( wxString url , wxString file , int _t = -1 ) ;
+	virtual wxString getText ( wxString url ) ;
+	
+	wxProgressDialog *pd ;
+	
+	private :
+	virtual int copyFileLocal ( wxString url , wxString file ) ;
+	virtual wxString getTextLocal ( wxString url ) ;
+	virtual int copyFileHTTP ( wxString _url , wxString _file ) ;
+	virtual wxString getTextHTTP ( wxString url ) ;
+	
+	int targetSize ;
+	} ;    
 
 #endif
