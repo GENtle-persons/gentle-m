@@ -31,7 +31,7 @@ BEGIN_EVENT_TABLE(MyFrame, wxMDIParentFrame)
 END_EVENT_TABLE()
 
 // Define my frame constructor
-#define ACC_ENT 32
+#define ACC_ENT 33
 MyFrame::MyFrame(wxWindow *parent,
                  const wxWindowID id,
                  const wxString& title,
@@ -76,6 +76,7 @@ MyFrame::MyFrame(wxWindow *parent,
     entries[29].Set(wxACCEL_CTRL, (int) 'O', MDI_FILE_OPEN);
     entries[30].Set(wxACCEL_CTRL, (int) 'I', MDI_FILE_IMPORT);
     entries[31].Set(wxACCEL_CTRL, (int) 'Z', MDI_UNDO);
+    entries[32].Set(wxACCEL_CTRL, (int) 'N', MDI_TEXT_IMPORT);
     
     wxAcceleratorTable accel(ACC_ENT, entries);
     SetAcceleratorTable(accel);
@@ -861,7 +862,7 @@ TAminoAcids *MyFrame::newAminoAcids ( string aa , string title )
     subframe->Maximize() ;
     subframe->showName() ;
     
-//    mainTree->addChild ( subframe , TYPE_AMINO_ACIDS ) ;
+    mainTree->addChild ( subframe , TYPE_AMINO_ACIDS ) ;
     setChild ( subframe ) ;
 
     return subframe ;
