@@ -96,7 +96,10 @@ public :
 			    return NULL ;
 			}
 		}
+//		cout << res << endl << "----\n\n" ;
+		wxMutexGuiEnter() ;
 		res = ex.getText ( url ) ;
+		wxMutexGuiLeave() ;
 		hs = parseQblast ( res ) ;
 		if ( hs["STATUS"].Upper() == "WAITING" ) wait = 5 ; // Wait another 5 seconds
 		else wait = 0 ; // Done!
