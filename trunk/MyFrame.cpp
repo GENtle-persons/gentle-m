@@ -167,6 +167,8 @@ void MyFrame::initme ()
     useCoolCanvas = LS->getOption ( "USECOOLCANVAS" , false ) ; // Not saved yet
     init_txt ( lang_string ) ;
 
+    // Set the DEBUGGING option in your local test database,
+    // so you won't be bothered with updates anymore :-)
     if ( LS->getOption ( "DEBUGGING" , "" ) == "1" ) checkUpdate = false ;
 
 #ifdef __WXMSW__
@@ -279,7 +281,7 @@ void MyFrame::initme ()
         if ( r.rows() > 0 ) d = r[0][0] ;
         if ( n != "" && d != "" )
            {
-           TManageDatabaseDialog mdb ( this , "dummy" ) ;
+           TManageDatabaseDialog mdb ( this , "dummy" , ACTION_MODE_STARTUP ) ;
            mdb.do_load_project ( n , d ) ;
            }
         }

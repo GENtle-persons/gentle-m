@@ -43,7 +43,6 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , char *title ,
     : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 700 , 550 ) )
     {
     actionMode = mode ;
-    storage = NULL ;
     il = NULL ;
     thetarget = NULL ;
     v = _v ;
@@ -51,6 +50,7 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , char *title ,
     doLoad = ( mode & ACTION_MODE_LOAD ) != 0 ;
     doSave = ( mode & ACTION_MODE_SAVE ) != 0 ;
     isProject = ( mode & ACTION_MODE_PROJECT ) != 0 ;
+    bool startup = ( mode & ACTION_MODE_STARTUP ) != 0 ;
     
     int w , h ;
 #ifdef __WXMSW__
@@ -75,7 +75,8 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , char *title ,
     initDatabases () ;
     initCopynMove () ;
 
-    if ( doLoad || doSave )
+    if ( startup ) f_twopanes->SetValue ( 0 ) ;
+    else if ( doLoad || doSave )
         {
         int tp = myapp()->frame->LS->getOption ( "TWOPANES" , 0 ) ;
         f_twopanes->SetValue ( tp ) ;
@@ -91,7 +92,6 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , char *title ,
 TManageDatabaseDialog::~TManageDatabaseDialog ()
     {
     nb->DeleteAllPages() ;
-    if ( storage ) delete storage ;
     if ( il ) delete il ;
     }
     
@@ -135,7 +135,6 @@ void TManageDatabaseDialog::initCopynMove ()
                                 
     TMyDropTarget *ldt = new TMyDropTarget ( this , pm_left ) ;
     pm_left->SetDropTarget ( (wxDropTarget*) ldt ) ;
-
 
 
     wxBitmap bmp_helix ( myapp()->bmpdir+myapp()->slash+"Helix.bmp" , wxBITMAP_TYPE_BMP ) ;
@@ -270,6 +269,7 @@ void TManageDatabaseDialog::pm_list_items ( int x )
         l = pm_right ;
         }
     if ( !l->IsShown() ) return ; // No need to load data for a list that isn't visible
+    SetCursor ( *wxHOURGLASS_CURSOR ) ;
     string name = c->GetStringSelection().c_str() ;
     TStorage st ( TEMP_STORAGE , getFileName ( name ) ) ;
     
@@ -338,6 +338,7 @@ void TManageDatabaseDialog::pm_list_items ( int x )
            else l->InsertItem ( a , s.c_str() , 0 ) ;
            }
         }
+    SetCursor ( *wxSTANDARD_CURSOR ) ;
     }
     
 vector <int> TManageDatabaseDialog::getSelectedListItems ( wxListCtrl *l )
@@ -543,20 +544,17 @@ void TManageDatabaseDialog::initDatabases ()
                         wxSize ( w/5 , th ) ) ;
 
     pd_loadList () ;
-    pd_db->SetStringSelection ( defdb.c_str() ) ;
+    pd_db->SetStringSelection ( txt("local_db") ) ;
     accessDB () ;
     }
     
 void TManageDatabaseDialog::accessDB ()
     {
-    if ( storage ) delete storage ;
     int a ;
     string name , file ;
     name = pd_db->GetStringSelection().c_str() ;
     for ( a = 0 ; db_name[a] != name ; a++ ) ;
     file = db_file[a] ;
-    storage = new TStorage ( TEMP_STORAGE , file ) ;
-    storage->import() ;
     pd_db_name->SetTitle ( db_name[a].c_str() ) ;
     pd_db_file->SetTitle ( db_file[a].c_str() ) ;
     }
@@ -791,6 +789,8 @@ bool TManageDatabaseDialog::do_load ( string name , string db )
     
 bool TManageDatabaseDialog::do_load_project ( string name , string db )
     {
+    myapp()->frame->Freeze () ;
+    SetCursor ( *wxHOURGLASS_CURSOR ) ;
     int a ;
     string sql ;
     TStorage tstorage ( TEMP_STORAGE , getFileName ( db ) ) ;
@@ -804,17 +804,22 @@ bool TManageDatabaseDialog::do_load_project ( string name , string db )
     name = fixQuotes ( name ) ;
     sql = "SELECT pr_desc FROM project WHERE pr_name=\""+name+"\"" ;
     sr = tstorage.getObject ( sql ) ;
-    if ( sr.rows() == 0 ) return false ;
+    if ( sr.rows() == 0 )
+        {
+        SetCursor ( *wxSTANDARD_CURSOR ) ;
+        myapp()->frame->Thaw () ;
+        return false ;
+        }
+        
     myapp()->frame->project_name = name ;
     myapp()->frame->mainTree->SetItemText ( myapp()->frame->mainTree->treeroot , name.c_str() ) ;
     myapp()->frame->project_db = db ;
     myapp()->frame->project_desc = sr[0][0] ;
-    
-    
+
     // Load associated DNA list
     sql = "SELECT * FROM project_dna WHERE pd_project=\""+name+"\"" ;
     sr = tstorage.getObject ( sql ) ;
-    
+
     // Load DNA
     bool all = true ;
     for ( a = 0 ; a < sr.rows() ; a++ )
@@ -830,6 +835,8 @@ bool TManageDatabaseDialog::do_load_project ( string name , string db )
         md.ShowModal() ;
         }
     
+    SetCursor ( *wxSTANDARD_CURSOR ) ;
+    myapp()->frame->Thaw () ;
     return true ;
     }
     
