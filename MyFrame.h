@@ -4,6 +4,7 @@
 #include "main.h"
 #include <wx/utils.h>
 #include <wx/dnd.h>
+#include <wx/docview.h>
 
 class ChildBase ;
 class TStorage ;
@@ -14,8 +15,10 @@ class TClone ;
 class TGenBank ;
 class TFasta ;
 
+typedef wxMDIParentFrame MyFrameType ;
+
 // Define a new frame
-class MyFrame : public wxMDIParentFrame
+class MyFrame : public MyFrameType
 {
 public:
 

@@ -13,7 +13,7 @@ typedef vector <char> tvc ;
 class TABIviewer : public ChildBase
     {
     public :
-    TABIviewer(wxMDIParentFrame *parent, const wxString& title) ;
+    TABIviewer(MyFrame *parent, const wxString& title) ;
     ~TABIviewer () ;
     
     void initme () ;

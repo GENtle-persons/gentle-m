@@ -1,6 +1,6 @@
 #include "AminoAcids.h"
 
-BEGIN_EVENT_TABLE(TABIviewer, wxMDIChildFrame)
+BEGIN_EVENT_TABLE(TABIviewer, MyChildBase)
     EVT_MENU(MDI_EDIT_MODE, TABIviewer::OnEditMode)
     EVT_MENU(MDI_MARK_ALL, TABIviewer::OnMarkAll)
     EVT_MENU(MDI_FILE_SAVE, TABIviewer::OnFileSave)
@@ -19,7 +19,7 @@ BEGIN_EVENT_TABLE(TABIviewer, wxMDIChildFrame)
     EVT_CLOSE(TABIviewer::OnClose)
 END_EVENT_TABLE()
 
-TABIviewer::TABIviewer(wxMDIParentFrame *parent, const wxString& title)
+TABIviewer::TABIviewer(MyFrame *parent, const wxString& title)
     : ChildBase(parent, title)
     {
     vec = new TVector ( this ) ;

@@ -6,7 +6,7 @@
 // MyFrame
 // ---------------------------------------------------------------------------
 
-BEGIN_EVENT_TABLE(MyFrame, wxMDIParentFrame)
+BEGIN_EVENT_TABLE(MyFrame, MyFrameType)
     EVT_MENU(MDI_ABOUT, MyFrame::OnAbout)
     EVT_MENU(MDI_HELP, MyFrame::OnHelp)
     EVT_MENU(MDI_ENZYME_EDITOR, MyFrame::OnEnzymeEditor)
@@ -38,7 +38,7 @@ MyFrame::MyFrame(wxWindow *parent,
                  const wxPoint& pos,
                  const wxSize& size,
                  const long style)
-       : wxMDIParentFrame(parent, id, title, pos, size, style)
+       : MyFrameType(parent, id, title, pos, size, style)
 {
     dying = false ;
 

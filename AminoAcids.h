@@ -14,7 +14,7 @@ typedef vector <char> tvc ;
 class TAminoAcids : public ChildBase
     {
     public :
-    TAminoAcids(wxMDIParentFrame *parent, const wxString& title) ;
+    TAminoAcids(MyFrame *parent, const wxString& title) ;
     virtual ~TAminoAcids () ;
     
     virtual void initme () ;

@@ -32,7 +32,7 @@ BEGIN_EVENT_TABLE(TVectorTree, wxTreeCtrl)
 END_EVENT_TABLE()
 
 
-TVectorTree::TVectorTree ( wxMDIChildFrame *parent , int i )
+TVectorTree::TVectorTree ( ChildBase *parent , int i )
     :wxTreeCtrl ( parent , i )
     {
     p = (MyChild*) parent ;

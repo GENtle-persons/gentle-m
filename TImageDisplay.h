@@ -15,7 +15,7 @@ class TMyFileBox ;
 class TImageDisplay : public ChildBase
     {
     public :
-    TImageDisplay(wxMDIParentFrame *parent, const wxString& title) ;
+    TImageDisplay(MyFrame *parent, const wxString& title) ;
     ~TImageDisplay () ;
     
     void initme () ;

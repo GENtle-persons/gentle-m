@@ -63,7 +63,7 @@ void TRestrictionEditor::res_ll_col ( wxListEvent &event )
     pR_showGroupEnzymes ( gl->GetStringSelection().c_str() ) ;    
     }
 
-TRestrictionEditor::TRestrictionEditor(wxMDIParentFrame *parent, const wxString& title,
+TRestrictionEditor::TRestrictionEditor(MyFrame *parent, const wxString& title,
                  const wxPoint& pos , const wxSize& size ,
                  const long style )
          : wxDialog ( parent , -1 , title , pos , size , style )

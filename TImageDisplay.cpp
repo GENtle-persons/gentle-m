@@ -3,7 +3,7 @@
 #include <wx/clipbrd.h>
 #include <wx/printdlg.h>
 
-BEGIN_EVENT_TABLE(TImageDisplay, wxMDIChildFrame)
+BEGIN_EVENT_TABLE(TImageDisplay, MyChildBase)
     EVT_BUTTON(IV_BUTTON,TImageDisplay::OnDir)
     EVT_LISTBOX(IV_LIST,TImageDisplay::OnFile)
 END_EVENT_TABLE()
@@ -18,7 +18,7 @@ BEGIN_EVENT_TABLE(TMyImagePanel, wxPanel)
 END_EVENT_TABLE()
 
 
-TImageDisplay::TImageDisplay(wxMDIParentFrame *parent, const wxString& title) 
+TImageDisplay::TImageDisplay(MyFrame *parent, const wxString& title) 
     : ChildBase(parent, title)
     {
     def = "IMAGE" ;

@@ -181,7 +181,7 @@ string MyApp::getFileFormatApplication ( string type )
 wxToolBar *ChildBase::CreateToolBar ( int i )
 {
 #ifdef __WXMSW__
-  return wxMDIChildFrame::CreateToolBar ( i , -1 , "" ) ;
+  return MyChildBase::CreateToolBar ( i , -1 , "" ) ;
 #else
   wxToolBar *bar = new wxToolBar ( myapp()->frame , -1 ) ;
   //  SetToolBar ( bar ) ;
@@ -192,7 +192,7 @@ wxToolBar *ChildBase::CreateToolBar ( int i )
 
 void ChildBase::Maximize ( bool isit )
 {
-  wxMDIChildFrame::Maximize ( isit ) ;
+  MyChildBase::Maximize ( isit ) ;
   showName () ;
 }
 

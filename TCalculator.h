@@ -51,7 +51,7 @@ class TGridDNA : public TGridBasic
 class TCalculator : public ChildBase
     {
     public :
-    TCalculator(wxMDIParentFrame *parent, const wxString& title) ;
+    TCalculator(MyFrame *parent, const wxString& title) ;
     ~TCalculator () ;
     
     void initme () ;

@@ -1,6 +1,6 @@
 #include "TCalculator.h"
 
-BEGIN_EVENT_TABLE(TCalculator, wxMDIChildFrame)
+BEGIN_EVENT_TABLE(TCalculator, MyChildBase)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(TGridLigation, wxGrid)
@@ -15,7 +15,7 @@ BEGIN_EVENT_TABLE(TGridDNA, wxGrid)
    EVT_GRID_SELECT_CELL(TGridDNA::OnSelectCell)
 END_EVENT_TABLE()
 
-TCalculator::TCalculator(wxMDIParentFrame *parent, const wxString& title) 
+TCalculator::TCalculator(MyFrame *parent, const wxString& title) 
     : ChildBase(parent, title)
     {
     def = "CALCULATOR" ;

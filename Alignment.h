@@ -20,7 +20,7 @@ typedef vector <char> tvc ;
 class TAlignment : public ChildBase
     {
     public :
-    TAlignment(wxMDIParentFrame *parent, const wxString& title) ;
+    TAlignment(MyFrame *parent, const wxString& title) ;
     ~TAlignment () ;
     
     void initme () ;

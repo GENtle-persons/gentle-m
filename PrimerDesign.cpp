@@ -1,6 +1,6 @@
 #include "PrimerDesign.h"
 
-BEGIN_EVENT_TABLE(TPrimerDesign, wxMDIChildFrame)
+BEGIN_EVENT_TABLE(TPrimerDesign, MyChildBase)
     EVT_MENU(AA_ALL, TPrimerDesign::OnAA_all)
     EVT_MENU(AA_THREE, TPrimerDesign::OnAA_three)
     EVT_MENU(AA_ONE, TPrimerDesign::OnAA_one)
@@ -41,7 +41,7 @@ BEGIN_EVENT_TABLE(TPrimerDesign, wxMDIChildFrame)
     EVT_CLOSE(TPrimerDesign::OnClose)
 END_EVENT_TABLE()
 
-TPrimerDesign::TPrimerDesign(wxMDIParentFrame *parent, 
+TPrimerDesign::TPrimerDesign(MyFrame *parent, 
                     wxString title,
                     TVector *_vec,
                     vector <TPrimer> pl )
