@@ -1935,12 +1935,14 @@ void SequenceCanvas::insertRestrictionSite ( bool left )
     TVector *v = NULL ;
     if ( child ) v = child->vec ;
     if ( !v ) return ;
+    wxBeginBusyCursor() ;
     wxArrayString vs ;
     myapp()->frame->LS->getEnzymesInGroup ( txt("All") , vs ) ;
     vs.Sort () ;
     wxString *as = new wxString [ vs.GetCount() ] ;
     for ( int a = 0 ; a < vs.GetCount() ; a++ ) as[a] = vs[a] ;
     wxSingleChoiceDialog scd ( this , txt("t_vec_enzym") , "" , vs.GetCount() , as ) ;
+    wxEndBusyCursor() ;
     if ( wxID_OK != scd.ShowModal() )
         {
         delete [] as ;
@@ -1975,6 +1977,10 @@ void SequenceCanvas::insertRestrictionSite ( bool left )
     TMarkMem m ( this ) ;
     updateEdit ( v , id , _from ) ;
     m.remark() ;
+
+    if ( !getPD() ) return ;
+    wxCommandEvent event ;
+    getPD()->OnSpinText( event);
     }        
 
 

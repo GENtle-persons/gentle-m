@@ -400,10 +400,10 @@ void TPrimerDesign::initme ()
 
 
 
-    hs = new wxSplitterWindow ( this , SPLIT_AMINOACIDS ) ;
+//    hs = new wxSplitterWindow ( this , SPLIT_AMINOACIDS ) ;
 
     // Sequence Canvas
-    sc = new SequenceCanvas ( hs , wxPoint ( 0 , 0 ) , wxSize ( 100 , 100 ) ) ;
+    sc = new SequenceCanvas ( this , wxDefaultPosition , wxDefaultSize ) ;//wxPoint ( 0 , 0 ) , wxSize ( 1000 , 1000 ) ) ;
     sc->blankline = 1 ;
     sc->child = this ;
     sc->edit_id = "DNA" ;
@@ -440,7 +440,7 @@ void TPrimerDesign::initme ()
     
     toolBar->AddSeparator() ;
     
-    spin = new wxSpinCtrl ( toolBar , PCR_SPIN , "" , wxDefaultPosition , wxSize ( MYSPINBOXSIZE , 30 ) ) ;
+    spin = new wxSpinCtrl ( toolBar , PCR_SPIN , "" , wxDefaultPosition , wxSize ( MYSPINBOXSIZE , -1 ) ) ;
     spin->SetRange ( 1 , vec->getSequenceLength() ) ;
     spin->SetValue ( wxString::Format("%d",vec->getSequenceLength()) ) ;
     toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_pcr_spin_1") ) ) ;
@@ -463,32 +463,36 @@ void TPrimerDesign::initme ()
     GetClientSize ( &w , &h ) ;
 
     // Upper panel
-    up = new wxPanel ( hs , -1 , wxDefaultPosition , wxSize ( w , 100 ) ) ;
+    v0 = new wxBoxSizer ( wxVERTICAL ) ;
+    wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *v1 = new wxBoxSizer ( wxVERTICAL ) ;
 
-    up->GetClientSize ( &w , &h ) ;
+    GetClientSize ( &w , &h ) ;
     
-    hs->SplitHorizontally ( up , sc ,h+bo ) ;
-    hs->SetMinimumPaneSize ( h+bo ) ;
-    
-    lc = new wxListCtrl ( up , PD_LC , wxPoint ( 0 , 0 ) , wxSize ( w/3 , h ) , wxLC_REPORT|wxLC_SINGLE_SEL ) ;
+    lc = new wxListCtrl ( this , PD_LC , wxDefaultPosition , wxDefaultSize , wxLC_REPORT|wxLC_SINGLE_SEL ) ;
+//wxPoint ( 0 , 0 ) , wxSize ( w/3 , h ) , 
 
-    new wxButton ( up , PD_EDIT , txt("m_edit") , wxPoint ( w/3 + 5 , 20 ) , wxSize ( 60 , 20 ) ) ;
-    new wxButton ( up , PD_DEL , txt("b_del") , wxPoint ( w/3 + 5 , 50 ) , wxSize ( 60 , 20 ) ) ;
+    v1->Add ( new wxButton ( this , PD_EDIT , txt("m_edit") , wxPoint ( w/3 + 5 , 20 ) ) , 0 , 0 , 5 ) ;
+    v1->Add ( new wxButton ( this , PD_DEL , txt("b_del") , wxPoint ( w/3 + 5 , 50 ) ) , 0 , 0 , 5 ) ;
 
-    stat = new wxTextCtrl ( up ,
+    stat = new wxTextCtrl ( this ,
                             -1 ,
                             "" ,
-                            wxPoint ( w/3 + 70 , 0 ) ,
-                            wxSize ( w*2/3 - 70 , h ) ,
+                            wxDefaultPosition,//wxPoint ( w/3 + 70 , 0 ) ,
+                            wxDefaultSize,//wxSize ( w*2/3 - 70 , h ) ,
                             wxTE_MULTILINE | wxTE_READONLY ) ;
                             
     stat->SetFont ( *MYFONT ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
 
     GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,show_features);
 
-    wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+    h0->Add ( lc , 1 , wxALL , 5 ) ;
+    h0->Add ( v1 , 0 , wxEXPAND|wxALL , 5 ) ;
+    h0->Add ( stat , 2 , wxEXPAND|wxALL , 5 ) ;
+
     v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
-    v0->Add ( hs , 1 , wxEXPAND , 5 ) ;
+    v0->Add ( h0 , 0 , wxEXPAND , 5 ) ;
+    v0->Add ( sc , 1 , wxEXPAND , 5 ) ;
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;
 
@@ -497,6 +501,8 @@ void TPrimerDesign::initme ()
     myapp()->frame->setChild ( this ) ;
     spinTextEnabeled = true ;
     sc->SetFocus() ;
+    for ( int a = 0 ; a < lc->GetColumnCount() ; a++ )
+	lc->SetColumnWidth ( a , wxLIST_AUTOSIZE_USEHEADER ) ;
     }
     
 void TPrimerDesign::OnEditPrimer ( wxCommandEvent &ev )
@@ -886,10 +892,6 @@ void TPrimerDesign::OnFind(wxCommandEvent& event)
 void TPrimerDesign::OnInsertRestrictionSiteLeft(wxCommandEvent& event)
     {
     sc->OnInsertRestrictionSiteLeft ( event ) ;
-    updatePrimersFromSequence () ;
-    guessOptNuc () ;
-    updateResultSequence () ;
-    showSequence () ;
     }
 
 void TPrimerDesign::OnInsertRestrictionSiteRight(wxCommandEvent& event)

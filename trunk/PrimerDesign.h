@@ -68,16 +68,12 @@ class TPrimerDesign : public ChildBase
     
     // Variables
     SequenceCanvas *sc ;
-    wxTextCtrl *stat ;
-    wxPanel *up ;
-    wxSplitterWindow *hs ;
     int from ;
     vector <TPrimer> primer ;
     TVector *vc , *w ;
     
     int aa_state , aa_disp ;
     int lastPrimerActivated ;
-    wxListCtrl *lc ;
     int show_features ;
     int mut ;
     
@@ -85,6 +81,9 @@ class TPrimerDesign : public ChildBase
     virtual void guessOptNuc () ;
     virtual void calculateResultSequence () ;
     wxSpinCtrl *spin ;
+    wxTextCtrl *stat ;
+    wxBoxSizer *v0 ;
+    wxListCtrl *lc ;
     bool spinTextEnabeled ;
     bool updating ;
     

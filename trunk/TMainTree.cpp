@@ -60,7 +60,7 @@ void TMainTree::addChild ( ChildBase *c , int type )
     c->inMainTree = AppendItem ( theroot , c->getName() , -1 ) ;
     SetItemData ( c->inMainTree , new TMainTreeItem ( c ) ) ;
     EnsureVisible ( c->inMainTree ) ;
-    SelectItem ( c->inMainTree ) ;
+//    SelectItem ( c->inMainTree ) ;
     }
 
 void TMainTree::removeChild ( ChildBase *c )

@@ -1062,7 +1062,7 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , wxString title )
     subframe->vec->type = TYPE_AMINO_ACIDS ;
     subframe->vec->setName ( title ) ;
     subframe->vec->undo.clear() ;
-    
+
     mylog ( "MyFrame::newAminoAcids" , "5" ) ;    
     for ( a = 0 ; a < nv->items.size() ; a++ )
         {
