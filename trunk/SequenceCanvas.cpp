@@ -1087,8 +1087,18 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
     if ( pos != -1 && where && where->takesMouseActions )
         {
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
-        wxLogStatus(txt("seq_loc"), pos ) ;
-        newToolTip = wxString::Format(txt("seq_loc"),pos) ;
+        if ( where->whatsthis() == "PLOT" && isMiniDisplay() )
+           {
+           SeqPlot *plot = (SeqPlot*) where ;
+           wxString q = plot->getTip ( pos-1 ) ;
+           wxLogStatus ( q ) ;
+           newToolTip = q ;
+           }
+        else
+           {
+           wxLogStatus(txt("seq_loc"), pos ) ;
+           newToolTip = wxString::Format(txt("seq_loc"),pos) ;
+           }
         }
     else if ( where && child && child->def == "alignment" )
         {
@@ -1177,8 +1187,13 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
             {
             lastpos = -1 ;
             for ( int a = 0 ; a < seq.size() ; a++ )
+               {
                if ( seq[a]->takesMouseActions )
+                  {
                   mark ( seq[a]->whatsthis() , 0 , 0 , 0 ) ;
+//                  break ;
+                  }
+               }
             }
         }
     else if ( event.LeftUp() )

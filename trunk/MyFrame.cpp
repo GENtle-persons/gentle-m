@@ -136,22 +136,22 @@ void MyFrame::initme ()
     win->SetSashVisible(wxSASH_RIGHT, TRUE);
 //    win->SetExtraBorderSize(10);
     mainTree = new TMainTree ( win , MAIN_TREE_DUMMY ) ;
-
+    
 
   m_leftWindow1 = win;
-
+/*
   // Another window to the left of the client window
-/*  win = new wxSashLayoutWindow(this, FRAME_SASH_2,
-                               wxDefaultPosition, wxSize(200, 30),
+  win = new wxSashLayoutWindow(this, FRAME_SASH_2,
+                               wxDefaultPosition, wxSize(500, 30),
                                wxNO_BORDER | wxSW_3D | wxCLIP_CHILDREN);
-  win->SetDefaultSize(wxSize(120, 1000));
+  win->SetDefaultSize(wxSize(500, 1000));
   win->SetOrientation(wxLAYOUT_VERTICAL);
   win->SetAlignment(wxLAYOUT_LEFT);
   win->SetBackgroundColour(wxColour(0, 255, 255));
   win->SetSashVisible(wxSASH_RIGHT, TRUE);
 
-  m_leftWindow2 = win;*/
-
+  m_leftWindow2 = win;
+*/  
     // Database access
     LS = new TStorage ( LOCAL_STORAGE ) ;
     LS->createDatabase() ;
@@ -254,6 +254,7 @@ void MyFrame::initme ()
     MyFrameDropTarget *dt = new MyFrameDropTarget ;
     SetDropTarget ( dt ) ;
 
+    // Bitmap library
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"new.bmp", wxBITMAP_TYPE_BMP) ) ;  // 0
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"open.bmp", wxBITMAP_TYPE_BMP) ) ; // 1
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"save.bmp", wxBITMAP_TYPE_BMP) ) ; // 2 

@@ -245,6 +245,7 @@ void TAminoAcids::showSequence ()
         seqP->initFromTVector ( vec ) ;
         seqP->setLines ( 1 ) ;
         seqP->useChouFasman() ;
+        seqP->takesMouseActions = false ;
         }
     
     seqF->aaa = d ;
