@@ -114,7 +114,10 @@ void SeqFeature::show ( wxDC& dc )
                              if ( ip->getOffset () != -1 )
                              	o = b + ip->getOffset() - ip->from ;
                              }
-                          else o = vec->items[pl.getID(i)].getOffsetAt ( b-1 ) ;
+                          else
+                          	{
+                               o = vec->items[pl.getID(i)].getOffsetAt ( b-1 ) ;
+                            }    
                           }    
                        if ( o != -1 )     
                           {

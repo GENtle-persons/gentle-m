@@ -407,7 +407,9 @@ void EIpanel::process_ncbi()
 		
 	int res_to = res_start + RETMAX ;
 	if ( res_to > res_count ) res_to = res_count ;
-	showMessage ( wxString::Format ( txt("t_ext_show_res") , res_start + 1 , res_to , res_count ) ) ;
+	wxString msg = wxString::Format ( txt("t_ext_show_res") , res_start + 1 , res_to , res_count ) ;
+	msg += " (" + wxString ( txt("t_data_by_ncbi") ) + ")" ;
+	showMessage ( msg  ) ;
 	b_next->Enable ( res_start + RETMAX <= res_count ) ;
 	b_last->Enable ( res_start > 0 ) ;
 	t1->SetFocus() ;

@@ -674,3 +674,4 @@
 "b_last","<<","<<"
 "b_next",">>",">>"
 "t_ext_show_res","Showing results %d-%d of %d","Suchergebnisse %d-%d von %d"
+"t_data_by_ncbi","all data by NCBI","alle Daten von NBCI"
