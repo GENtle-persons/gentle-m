@@ -32,6 +32,7 @@ class TAAProp
     float mw , pi ;
     float cf_f[4] ;
     int cf_pa , cf_pb , cf_pt ;
+    vector <float> data ; // For temporary data only
     } ;
 
 class TORF

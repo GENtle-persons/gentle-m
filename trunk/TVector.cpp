@@ -301,8 +301,9 @@ vector <TRestrictionCut> TVector::getCuts ( TRestrictionEnzyme *e )
     
 void TVector::recalculateCuts ()
     {
+    rc.clear () ;
+    if ( type == TYPE_AMINO_ACIDS ) return ;
     int a , b , c ;
-    while ( rc.size() ) rc.pop_back () ;
     for ( a = 0 ; a < re.size() ; a++ )
        {
        vector <TRestrictionCut> x = getCuts ( re[a] ) ;
@@ -511,12 +512,12 @@ void TVector::doRestriction ()
            sprintf ( tx , txt("res_desc2") , cl[a+1].e->name.c_str() , t2 ) ;
            nv->name += " (" + cl[a].e->name + "/" + cl[a+1].e->name + ")" ;
            }
-        while ( nv->cocktail.size() ) nv->cocktail.pop_back () ; // Cleaning up cocktail
+        nv->cocktail.clear() ; // Cleaning up cocktail
         if ( nv->sequence.length() >= action_value ) // "No fragments smaller than XX base pairs"
            myapp()->frame->newFromVector ( nv , TYPE_FRAGMENT ) ;        
         else delete nv ;
         }
-    while ( cocktail.size() ) cocktail.pop_back () ;
+    cocktail.clear() ;
     }
         
 void TVector::doAction ()
@@ -586,7 +587,7 @@ void TVector::ligate_right ( TVector &v , bool inverted )
     for ( a = 0 ; a < re.size() ; a++ ) e.push_back ( re[a] ) ;
     for ( a = 0 ; a < v.re.size() ; a++ ) e.push_back ( v.re[a] ) ;
     sort ( e.begin() , e.end() ) ;
-    while ( re.size() ) re.pop_back () ;
+    re.clear() ;
     for ( a = 0 ; a < e.size() ; a++ )
         {
         if ( a == 0 || e[a] != e[a-1] )
@@ -741,7 +742,7 @@ void TVector::setChanged ( bool c )
     
 void TVector::ClearORFs ()
     {
-    while ( worf.size() ) worf.pop_back () ;
+    worf.clear() ;
     }
     
 void TVector::addORFs ( int off )

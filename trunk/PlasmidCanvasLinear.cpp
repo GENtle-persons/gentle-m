@@ -21,6 +21,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
     int lineOff = w / 20 ;
     int lineLen = w - 2 * lineOff ;
     int lineH = h * 3 / 4 ;
+    if ( p->def == "AminoAcids" ) lineH = h / 2 ;
     int markH = 20 ;
     wxCoord dx , dy ;
     
@@ -147,7 +148,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
             }
         
         // ORFs
-        if ( p->showORFs )
+        if ( p->def == "dna" && p->showORFs )
            {
            p->showORFs = false ;
            wxCommandEvent event ;
@@ -430,7 +431,9 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
         sprintf ( ttt , txt("tt_rs") , s.c_str() , p->vec->countCuts ( s ) ) ;
         SetMyToolTip ( ttt , TT_RS ) ;
         if ( event.LeftDown() )
-           p->treeBox->SelectItem ( p->treeBox->GetParent ( p->vec->rc[rs].treeid ) ) ;
+           {
+           if ( p->def == "dna" ) p->treeBox->SelectItem ( p->treeBox->GetParent ( p->vec->rc[rs].treeid ) ) ;
+           }
         else if ( event.MiddleDown() )
            {
            TRestrictionEditor ed ( myapp()->frame , "" , wxPoint(-1,-1) , wxSize(600,400) , 
@@ -463,7 +466,10 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
                                         p->vec->items[vo].desc.c_str() ) ;
         SetMyToolTip ( ttt , TT_ITEM ) ;
         if ( event.LeftDown() )
-           p->treeBox->SelectItem ( p->vec->items[vo].getTreeID() ) ;
+           {
+           if ( p->def == "dna" )
+              p->treeBox->SelectItem ( p->vec->items[vo].getTreeID() ) ;
+           }
         else if ( event.RightDown() )
              invokeItemPopup ( vo , pt_abs ) ;
         else if ( event.LeftDClick() )
@@ -500,7 +506,8 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
         else if ( event.RightDown() ) invokeVectorPopup ( pt_abs ) ;
         }
 
-
+    string id = "dna" ;
+    if ( p->def == "AminoAcids" ) id = "AA" ;
     
     // Dragging
     if ( event.Dragging() && event.LeftIsDown() && lastrestrictionsite != -1 )
@@ -540,13 +547,13 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
        }
     else if ( event.LeftIsDown() && orf != -1 )
         {
-        p->cSequence->mark ( "DNA" ,
+        p->cSequence->mark ( id ,
                                 p->vec->worf[orf].from + 1 ,
                                 p->vec->worf[orf].to + 1 ) ;
         }
     else if ( event.RightDown() && orf != -1 )
         {
-        p->cSequence->mark ( "DNA" ,
+        p->cSequence->mark ( id ,
                                 p->vec->worf[orf].from + 1 ,
                                 p->vec->worf[orf].to + 1 ) ;
         invokeORFpopup ( orf , pt_abs ) ;
@@ -554,7 +561,11 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
     else if ( event.LeftIsDown() && rs == -1 && vo == -1 )
        {
        if ( initialclick && lastbp == -1 ) lastbp = bp ;
-       if ( lastbp != -1 ) p->cSequence->mark ( "DNA" , lastbp , bp ) ;
+       if ( lastbp != -1 ) 
+          {
+          if ( lastbp > bp ) p->cSequence->mark ( id , bp , lastbp ) ;
+          else p->cSequence->mark ( id , lastbp , bp ) ;
+          }
        } 
     else if ( event.MiddleDown() && p->cSequence->_from != -1 )
        {

@@ -269,6 +269,12 @@ bool PlasmidCanvas::pointinrect ( int x , int y , wxRect &a )
     
 void PlasmidCanvas::invokeVectorEditor ( string what , int num , bool forceUpdate )
     {
+    if ( p->def == "AminoAcids" )
+       {
+       wxCommandEvent ce ;
+       p->cSequence->vecEdit ( ce ) ;
+       return ;
+       }
     p->vec->undo.start ( txt("u_vec_edit") ) ;
     TVectorEditor ve ( this , txt("t_vector_editor") , p->vec ) ;
     bool changed = p->vec->isChanged() ;

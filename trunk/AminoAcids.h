@@ -36,6 +36,7 @@ class TAminoAcids : public ChildBase
     virtual void invokeVectorEditor ( string what = "" , int num = 0 , bool forceUpdate = false ) ;
     virtual void OnClose(wxCloseEvent& event) ;
     virtual void OnHorizontal ( wxCommandEvent& event ) ;
+    virtual void OnListBox ( wxCommandEvent& event ) ;
     
     virtual void Undo(wxCommandEvent& event);
     virtual void Redo(wxCommandEvent& event);
@@ -47,6 +48,13 @@ class TAminoAcids : public ChildBase
     TURLtext *desc ;
     wxSplitterWindow *hs , *vs ;
     int from ;
+    
+    wxWindow *curDisplay ;
+    PlasmidCanvas *pc ;
+
+    private :
+    wxListBox *lb ;
+    wxBoxSizer *h1 , *v1 ;
     
     DECLARE_EVENT_TABLE()
     } ;
