@@ -184,16 +184,16 @@ void TRestrictionEditor::initRestrictionPage ()
     
     int i ;
     for ( i = 0 ; i < v->rc.size() ; i++ )
-        cutcache.push_back ( TREcache ( v->rc[i].e->name , v->rc[i].pos ) ) ;
+        cutcache.push_back ( TREcache ( v->rc[i].e->name.c_str() , v->rc[i].pos ) ) ;
     
     pR_showGroupEnzymes ( txt("Current") ) ;
     
     for ( i = 0 ; i < myapp()->frame->lastCocktail.size() ; i++ )
-       add2cocktail ( myapp()->frame->lastCocktail[i] ) ;
+       add2cocktail ( myapp()->frame->lastCocktail[i].c_str() ) ;
     myapp()->frame->lastCocktail.clear() ;
     }
 
-void TRestrictionEditor::pR_showGroupEnzymes ( string gr )
+void TRestrictionEditor::pR_showGroupEnzymes ( wxString gr )
     {
     vector <string> vs ;
     el->DeleteAllItems() ;
@@ -203,7 +203,7 @@ void TRestrictionEditor::pR_showGroupEnzymes ( string gr )
         for ( int i = 0 ; i < v->re.size() ; i++ )
             vs.push_back ( v->re[i]->name ) ;
         }
-    else myapp()->frame->LS->getEnzymesInGroup ( gr , vs ) ;
+    else myapp()->frame->LS->getEnzymesInGroup ( gr.c_str() , vs ) ;
     char t[100] ;
     int sel = rb->GetSelection() ;
     bool docut = true , donotcut = true ;
@@ -214,11 +214,11 @@ void TRestrictionEditor::pR_showGroupEnzymes ( string gr )
     vector <TREcache> list ;
     for ( i = 0 ; i < vs.size() ; i++ )
         {
-        int k = getcuts(vs[i]).size() ;
+        int k = getcuts(vs[i].c_str()).size() ;
         if ( ( k == 0 && donotcut ) ||
              ( k > 0 && docut ) )
            {
-           list.push_back ( TREcache ( vs[i] , k ) ) ;
+           list.push_back ( TREcache ( vs[i].c_str() , k ) ) ;
            }
         }
 
@@ -243,7 +243,7 @@ void TRestrictionEditor::pR_showGroupEnzymes ( string gr )
         }
     }
     
-vector <int> TRestrictionEditor::getcuts ( string enzyme )
+vector <int> TRestrictionEditor::getcuts ( wxString enzyme )
     {
     vector <int> ret ;
     int j , k = 0 ;
@@ -257,7 +257,7 @@ vector <int> TRestrictionEditor::getcuts ( string enzyme )
 
     if ( ret.size() == 0 ) // Determine cuts
         {
-        TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( enzyme );
+        TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( enzyme.c_str() );
         vector <TRestrictionCut> x = v->getCuts ( e ) ;
         if ( x.size() == 0 ) // No cuts
             {
@@ -276,8 +276,8 @@ vector <int> TRestrictionEditor::getcuts ( string enzyme )
 void TRestrictionEditor::res_ll_act ( wxListEvent &event )
     {
     int i = event.GetIndex () ;
-    string s = el->GetItemText ( i ).c_str() ;
-    TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( s ) ;
+    wxString s = el->GetItemText ( i ).c_str() ;
+    TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( s.c_str() ) ;
     TEnzymeDialog ed ( this , s.c_str() , wxPoint(-1,-1) , wxSize(600,400) , 
                     wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL ) ;
     ed.initme ( e , true ) ;
@@ -293,7 +293,7 @@ void TRestrictionEditor::res_ll ( wxListEvent &event )
     
 void TRestrictionEditor::pR_showFragments ( int i )
     {
-    string enzyme = el->GetItemText ( i ).c_str() ;
+    wxString enzyme = el->GetItemText ( i ).c_str() ;
     vector <int> vi = getcuts ( enzyme ) ;
     listFragments ( rsl , vi ) ;
     }
@@ -337,7 +337,7 @@ void TRestrictionEditor::listFragments ( wxListCtrl *list , vector <int> &vi )
     
 void TRestrictionEditor::refreshCocktail ()
     {
-    vector <string> vs = cocktail ;
+    vector <wxString> vs = cocktail ;
     el2->DeleteAllItems() ;
     char t[100] ;
     int i , j ;
@@ -345,7 +345,7 @@ void TRestrictionEditor::refreshCocktail ()
         {
         int k = getcuts(vs[i]).size() ;
         sprintf ( t , "%d" , k ) ;
-        int z = el2->InsertItem ( i , vs[i].c_str() ) ;
+        int z = el2->InsertItem ( i , vs[i] ) ;
         el2->SetItem ( z , 1 , t ) ;
         }
         
@@ -367,7 +367,7 @@ void TRestrictionEditor::refreshCocktail ()
     listFragments ( rsl2 , vi ) ;
     }
 
-void TRestrictionEditor::add2cocktail ( string s )
+void TRestrictionEditor::add2cocktail ( wxString s )
     {
     if ( s == "" ) return ;
     int i ;
@@ -377,7 +377,7 @@ void TRestrictionEditor::add2cocktail ( string s )
     refreshCocktail () ;
     }
 
-void TRestrictionEditor::del_from_cocktail ( string s )
+void TRestrictionEditor::del_from_cocktail ( wxString s )
     {
     int i ;
     for ( i = 0 ; i < cocktail.size() && cocktail[i] != s ; i++ ) ;

@@ -11,8 +11,8 @@ class TRestrictionEnzyme ;
 class TREcache
     {
     public :
-    TREcache ( string a , int b ) { enzyme = a ; cut = b ; }
-    string enzyme ;
+    TREcache ( wxString a , int b ) { enzyme = a ; cut = b ; }
+    wxString enzyme ;
     int cut ;
     } ;
 
@@ -24,11 +24,11 @@ class TRestrictionEditor : public wxDialog
 
     virtual void initme ( TVector *_v ) ;
     virtual void initRestrictionPage () ;
-    virtual void pR_showGroupEnzymes ( string gr ) ;
-    virtual vector <int> getcuts ( string enzyme ) ;
+    virtual void pR_showGroupEnzymes ( wxString gr ) ;
+    virtual vector <int> getcuts ( wxString enzyme ) ;
     virtual void pR_showFragments ( int i ) ;
-    virtual void add2cocktail ( string s ) ;
-    virtual void del_from_cocktail ( string s ) ;
+    virtual void add2cocktail ( wxString s ) ;
+    virtual void del_from_cocktail ( wxString s ) ;
     virtual void refreshCocktail () ;
     virtual void listFragments ( wxListCtrl *list , vector <int> &vi ) ;
     
@@ -58,9 +58,9 @@ class TRestrictionEditor : public wxDialog
     int _w , _h ;
     int numberoffragments ;
     vector <TREcache> cutcache ;
-    vector <string> nocut ;
-    vector <string> cocktail , *remoteCocktail ;
-    string pre , last_enzyme_selected , last_enzyme_selected_coc ;
+    vector <wxString> nocut ;
+    vector <wxString> cocktail , *remoteCocktail ;
+    wxString pre , last_enzyme_selected , last_enzyme_selected_coc ;
 
     DECLARE_EVENT_TABLE()
     } ;

@@ -382,12 +382,12 @@ void TVector::doRestriction ()
     bool doRecalc = false ;
     for ( a = 0 ; a < cocktail.size() ; a++ )
        {
-       for ( b = 0 ; b < re.size() && re[b]->name != cocktail[a] ; b++ ) ;
+       for ( b = 0 ; b < re.size() && re[b]->name.c_str() != cocktail[a] ; b++ ) ;
        if ( b == re.size() )
           {
           doRecalc = true ;
           recalcvisual = true ;
-          re.push_back ( myapp()->frame->LS->getRestrictionEnzyme ( cocktail[a] ) ) ;
+          re.push_back ( myapp()->frame->LS->getRestrictionEnzyme ( cocktail[a].c_str() ) ) ;
           wxASSERT_MSG ( re[re.size()-1] , "Oh no! Unknown enzyme!" ) ;
           }
        }
@@ -397,7 +397,7 @@ void TVector::doRestriction ()
     for ( a = 0 ; a < cocktail.size() ; a++ )
         {
         for ( b = 0 ; b < rc.size() ; b++ )
-           if ( rc[b].e->name == cocktail[a] )
+           if ( rc[b].e->name == cocktail[a].c_str() )
               cl.push_back ( rc[b] ) ;
         }
 

@@ -904,7 +904,7 @@ bool TManageDatabaseDialog::doesNameExist ( string name , string dbname )
     if ( s == sc )
         {
         wxMessageDialog md ( this , txt("t_entry_exists_but") , txt("msg_box") ,
-                                wxYES|wxNO|wxNO_DEFAULT ) ;
+                                wxYES|wxNO|wxYES_DEFAULT ) ;
         int r = md.ShowModal () ;
         if ( r == wxID_YES ) return false ;
         }

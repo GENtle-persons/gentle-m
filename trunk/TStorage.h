@@ -72,6 +72,8 @@ class TStorage
     TRestrictionEnzyme* getRestrictionEnzyme ( string s ) ;
     void getEnzymeGroups ( vector <string> &vs ) ;
     void getEnzymesInGroup ( string gn , vector <string> &vs ) ;
+    void getEnzymeGroups ( vector <wxString> &vs ) ;
+    void getEnzymesInGroup ( wxString gn , vector <wxString> &vs ) ;
     void updateRestrictionEnzyme ( TRestrictionEnzyme *e ) ;
     bool addEnzymeGroup ( string s ) ;
     void sqlAdd ( string &s1 , string &s2 , string key , string value ) ;
