@@ -537,11 +537,19 @@ void TStorage::autoUpdateSchema ()
         }
     }
     
+// This is only called for the local database
+// It synchronizes the enzyme lists between known databases
 void TStorage::synchronize ()
     {
     bool changed ;
     TSQLresult r ;
     int a , b , c ;
+    
+    // Sync only once a day
+    wxDateTime d = wxDateTime::Now () ;
+    wxString ds = wxString::Format ( "%4d-%3d" , d.GetYear() , d.GetDayOfYear() ) ;
+    if ( getOption ( "LASTSYNC" , "" ) == ds.c_str() ) return ;
+    setOption ( "LASTSYNC" , ds.c_str() ) ;
     
     // Known database list
     vector <string> files ;

@@ -12,6 +12,7 @@ class TManageDatabaseDialog ;
 #define ACTION_MODE_SAVE 1
 #define ACTION_MODE_LOAD 2
 #define ACTION_MODE_PROJECT 4
+#define ACTION_MODE_STARTUP 8
 
 class TMyDropTarget : public wxTextDropTarget
     {
@@ -99,7 +100,6 @@ class TManageDatabaseDialog : public wxDialog
     virtual void updateTwoLists() ;
 
     vector <string> db_name , db_file ;
-    TStorage *storage ;
     wxNotebook *nb ;
     wxPanel *pDatabases , *pCopynMove ;
     wxStaticText *pd_db_name , *pd_db_file ;
