@@ -2,12 +2,12 @@
 #include <wx/textfile.h>
 
 BEGIN_EVENT_TABLE(TAlignment, MyChildBase)
-    EVT_BUTTON(ALIGNMENT_SETTINGS,TAlignment::OnSettings)
     EVT_CLOSE(ChildBase::OnClose)
     EVT_SET_FOCUS(ChildBase::OnFocus)
     EVT_CHECKBOX(ALIGN_HORIZ, TAlignment::OnHorizontal)
     EVT_MENU(MDI_FILE_SAVE, TAlignment::OnFileSave)
     
+    EVT_MENU(ALIGNMENT_SETTINGS,TAlignment::OnSettings)
     EVT_MENU(ALIGN_BOLD,TAlignment::OnMenuBold)
     EVT_MENU(ALIGN_MONO,TAlignment::OnMenuMono)
     EVT_MENU(ALIGN_NORM,TAlignment::OnMenuNorm)
@@ -192,30 +192,30 @@ void TAlignment::initme ()
 
     Hide () ;
 
-    hs = new wxSplitterWindow ( this , SPLIT_ALIGNMENT ) ;
+//    hs = new wxSplitterWindow ( this , SPLIT_ALIGNMENT ) ;
 
     // Sequence Canvas
-    sc = new SequenceCanvas ( hs , wxPoint ( 0 , 0 ) , wxSize ( 100 , 100 ) ) ;
+    sc = new SequenceCanvas ( this , wxPoint ( 0 , 0 ) , wxSize ( -1 , -1 ) ) ;
     sc->blankline = 1 ;
     sc->child = this ;
     sc->EnableScrolling ( true , true ) ;
 
     // Upper panel
-    up = new wxPanel ( hs , -1 , wxDefaultPosition , wxSize ( 1000 , 100 ) ) ;
+//    up = new wxPanel ( hs , -1 , wxDefaultPosition , wxSize ( 1000 , 100 ) ) ;
     
-    int w , h ;
-    up->GetClientSize ( &w , &h ) ;
-    wxBitmapButton *sb = new wxBitmapButton ( up , ALIGNMENT_SETTINGS ,
+//    int w , h ;
+//    up->GetClientSize ( &w , &h ) ;
+/*    wxBitmapButton *sb = new wxBitmapButton ( up , ALIGNMENT_SETTINGS ,
             wxBitmap (myapp()->bmpdir+"\\align.bmp", wxBITMAP_TYPE_BMP),
             wxPoint ( bo , bo ) ,
             wxDefaultSize ,
             wxBU_AUTODRAW ,
             wxDefaultValidator ) ;
     new wxStaticText ( up , -1 , txt("t_settings") , wxPoint ( bo , h-20 ) );
+*/
 
-
-    hs->SplitHorizontally ( up , sc ,h+bo ) ;
-    hs->SetMinimumPaneSize ( h+bo ) ;
+//    hs->SplitHorizontally ( up , sc ,h+bo ) ;
+//    hs->SetMinimumPaneSize ( h+bo ) ;
     
 #ifdef __WXMSW__ // LINUX
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
@@ -230,7 +230,15 @@ void TAlignment::initme ()
                 myapp()->frame->bitmaps[2],
                 txt("m_store_in_db") , 
                 txt("m_txt_store_in_db"));
+    toolBar->AddTool( SEQ_PRINT, 
+                myapp()->frame->bitmaps[16],
+                txt("m_print_sequence") ) ;
     toolBar->AddSeparator () ;
+    toolBar->AddTool( ALIGNMENT_SETTINGS, 
+                wxBitmap (myapp()->bmpdir+"\\alignment.bmp", wxBITMAP_TYPE_BMP),
+                txt("t_settings") ) ;
+    toolBar->AddSeparator () ;
+
     wxCheckBox *mycb = new wxCheckBox ( toolBar , ALIGN_HORIZ , txt("t_horizontal") ) ;
     toolBar->AddControl ( mycb ) ;
     toolBar->AddSeparator () ;
@@ -248,7 +256,7 @@ void TAlignment::initme ()
 
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
-    v0->Add ( hs , 1 , wxEXPAND , 5 ) ;
+    v0->Add ( sc , 1 , wxEXPAND , 5 ) ;
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;
 

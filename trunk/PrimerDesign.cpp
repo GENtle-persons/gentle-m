@@ -419,6 +419,10 @@ void TPrimerDesign::initme ()
     toolBar->AddTool( MDI_FILE_OPEN, 
             myapp()->frame->bitmaps[1] ,
             txt("m_open") , txt("m_opentxt") );
+    toolBar->AddTool( SEQ_PRINT, 
+                myapp()->frame->bitmaps[16],
+                txt("m_print_sequence") ) ;
+    toolBar->AddSeparator() ;
     toolBar->AddTool( PD_IMPORT, 
             myapp()->frame->bitmaps[14] ,
             txt("b_import_primer") ) ;

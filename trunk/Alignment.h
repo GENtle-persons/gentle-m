@@ -82,8 +82,8 @@ class TAlignment : public ChildBase
     
     // Variables
     SequenceCanvas *sc ;
-    wxPanel *up ;
-    wxSplitterWindow *hs ;
+//    wxPanel *up ;
+//    wxSplitterWindow *hs ;
     vector <TAlignLine> lines ;
     wxColour colDNA[256] , colAA[256] , *colCur ;
     wxString gap , matrix , consensusSequence , name , database ;

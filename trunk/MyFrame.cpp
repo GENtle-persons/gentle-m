@@ -288,6 +288,7 @@ void MyFrame::initme ()
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"mode_edit.bmp", wxBITMAP_TYPE_BMP) ) ; // 13
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"primer_import.bmp", wxBITMAP_TYPE_BMP) ) ; // 14
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"primer_export.bmp", wxBITMAP_TYPE_BMP) ) ; // 15
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"print.bmp", wxBITMAP_TYPE_BMP) ) ; // 16
 /*
 #ifdef __WXGTK_______
     // Toolbar
