@@ -228,7 +228,8 @@ TRestrictionEnzyme* TStorage::getRestrictionEnzyme ( wxString s )
            
     return ret ;
     }
-    
+
+/*    
 void TStorage::getEnzymesInGroup ( wxString gn , vector <string> &vs )
     {
     wxArrayString nvs ;
@@ -236,7 +237,8 @@ void TStorage::getEnzymesInGroup ( wxString gn , vector <string> &vs )
     vs.clear () ;
     for ( int a = 0 ; a < nvs.GetCount() ; a++ ) vs.push_back ( nvs[a].c_str() ) ;
     }
-    
+*/
+
 void TStorage::getEnzymesInGroup ( wxString gn , wxArrayString &vs )
     {
     TSQLresult sr ;
@@ -281,6 +283,15 @@ void TStorage::getEnzymesInGroup ( wxString gn , wxArrayString &vs )
     getEnzymesInGroup ( gn.c_str() , dummy ) ;
     for ( int a = 0 ; a < dummy.size() ; a++ ) vs.Add ( dummy[a].c_str() ) ;
     }
+
+void TStorage::getEnzymeGroups ( vector <string> &vs )
+    {
+    wxArrayString dummy ;
+    getEnzymeGroups ( dummy ) ;
+    vs.clear () ;
+    for ( int a = 0 ; a < dummy.GetCount() ; a++ ) vs.push_back ( dummy[a].c_str() ) ;
+    }
+
 */
 void TStorage::getEnzymeGroups ( wxArrayString &vs )
     {
@@ -291,14 +302,6 @@ void TStorage::getEnzymeGroups ( wxArrayString &vs )
     sr = getObject ( sql ) ;
     for ( a = 0 ; a < sr.content.size() ; a++ )
         vs.Add ( UCfirst ( sr[a][sr["eg_name"]] ) ) ;
-    }
-
-void TStorage::getEnzymeGroups ( vector <string> &vs )
-    {
-    wxArrayString dummy ;
-    getEnzymeGroups ( dummy ) ;
-    vs.clear () ;
-    for ( int a = 0 ; a < dummy.GetCount() ; a++ ) vs.push_back ( dummy[a].c_str() ) ;
     }
     
 void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme *e )

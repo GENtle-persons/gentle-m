@@ -217,7 +217,7 @@ void SeqPlot::showMW ( wxDC &dc , int b , int tx , int ty , int lx )
     int cw = can->charwidth ;
     int bottom = ty + lines * can->charheight ;
     int u ;
-    for ( u = 1 ; u < d1.size() ; u++ )
+    for ( u = 1 ; u < d1.GetCount() ; u++ )
         {
         int tz = ty + (u-1) * ch + 1 ;
         int tw = ( tx + cw ) - lx ;
@@ -250,7 +250,7 @@ void SeqPlot::showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx )
     int ch = can->charheight / 2 ;
     int cw = can->charwidth ;
     int u ;
-    for ( u = 1 ; u < d1.size() ; u++ )
+    for ( u = 1 ; u < d1.GetCount() ; u++ )
         {
         wxPen *pen = wxRED_PEN ;
         if ( u == 2 ) pen = wxGREEN_PEN ;
@@ -264,16 +264,16 @@ void SeqPlot::showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx )
            myRect ( dc , lx , tz , tw , ch*can->charheight - 2 ) ;
            }
 
-        if ( d1[u][b] == 'X' )
+        if ( d1[u][(uint)b] == 'X' )
            {
            dc.SetPen(*pen);
            myRect ( dc , lx , tz , tw , ch - 2 ) ;
            dc.SetPen(*wxBLACK_PEN);
            dc.DrawLine ( lx , tz , lx + tw , tz ) ;
            dc.DrawLine ( lx , tz + ch - 2 , lx + tw , tz + ch - 2 ) ;
-           if ( b == 0 || d1[u][b-1] == ' ' )
+           if ( b == 0 || d1[u][(uint)b-1] == ' ' )
               dc.DrawLine ( lx , tz , lx , tz + ch - 2 ) ;
-           if ( b + 1 == s.length() || d1[u][b+1] == ' ' )
+           if ( b + 1 == s.length() || d1[u][(uint)b+1] == ' ' )
               dc.DrawLine ( lx + tw , tz , lx + tw , tz + ch - 2 ) ;
            }
         else
@@ -290,7 +290,7 @@ void SeqPlot::showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx )
            }
         }
     
-    showPlot ( dc , b , tx , ty , lx , bottom - d1.size() * ch - ty ) ;
+    showPlot ( dc , b , tx , ty , lx , bottom - d1.GetCount() * ch - ty ) ;
     }
         
     
@@ -454,14 +454,14 @@ void SeqPlot::setLines ( int l )
 void SeqPlot::useChouFasman ()
     {
     type = CHOU_FASMAN ;
-    d1.clear () ;
-    d2.clear () ;
-    d3.clear () ;
+    d1.Clear () ;
+    d2.Clear () ;
+    d3.Clear () ;
     l_top = 4 ;
     l_bottom = 0 ;
 //    if ( l_top + l_bottom + 1 > lines ) setLines ( l_top + l_bottom + 1 ) ;
     
-    int a ;
+    unsigned int a ;
     prop.clear () ;
     for ( a = 0 ; a < s.length() ; a++ )
         {
@@ -469,9 +469,9 @@ void SeqPlot::useChouFasman ()
         prop[a].data.clear() ;
         while ( prop[a].data.size() < 3 ) prop[a].data.push_back ( 0 ) ;
         }
-    string x ;
+    wxString x ;
     while ( x.length() < s.length() ) x += " " ;
-    while ( d1.size() < 4 ) d1.push_back ( x ) ;
+    while ( d1.GetCount() < 4 ) d1.Add ( x ) ;
     scanChouFasman ( 4 , 6 , 0 , 100 , 4 , 100 , 5 ) ; // Alpha helices
     scanChouFasman ( 3 , 5 , 1 , 100 , 4 , 100 , 105 ) ; // Beta sheets
     
@@ -479,7 +479,7 @@ void SeqPlot::useChouFasman ()
     for ( a = 0 ; a < s.length() ; a++ )
         {
         if ( d1[1][a] != 'X' || d1[2][a] != 'X' ) continue ;
-        int b ;
+        unsigned int b ;
         float avg0 = 0 , avg1 = 0 ;
         for ( b = a ; b < s.length() && d1[1][b] == 'X' && d1[2][b] == 'X' ; b++ )
            {
@@ -488,7 +488,7 @@ void SeqPlot::useChouFasman ()
            }
         int kill = 1 ; // delete alpha helix
         if ( avg1 < avg0 ) kill = 2 ; // delete beta sheet
-        for ( int c = a ; c < b ; c++ ) d1[kill][c] = ' ' ;
+        for ( uint c = a ; c < b ; c++ ) d1[kill][c] = ' ' ;
         }
         
     // Turns
@@ -560,7 +560,7 @@ void SeqPlot::scanMinMax ()
 void SeqPlot::scanChouFasman ( int x , int y , int t , int min , 
                                     int seek_cnt , int seek_avg , int avg )
     {
-    int p ;
+    uint p ;
     for ( p = 0 ; p + y < s.length() ; p++ )
         {
         int i , cnt = 0 ;
@@ -597,7 +597,7 @@ void SeqPlot::scanChouFasman ( int x , int y , int t , int min ,
         if ( ( t == 0 && to - from + 1 > avg && avg0 > avg1 ) ||
              ( t == 1 && avg1 > avg && avg1 > avg0 ) )
            {
-           for ( i = from ; i <= to ; i++ ) d1[t+1][i] = 'X' ;
+           for ( i = from ; i <= to ; i++ ) d1[t+1][(uint)i] = 'X' ;
            }
         }
     }
@@ -605,9 +605,9 @@ void SeqPlot::scanChouFasman ( int x , int y , int t , int min ,
 void SeqPlot::useMW ()
     {
     type = M_W ;
-    d1.clear () ;
-    d2.clear () ;
-    d3.clear () ;
+    d1.Clear () ;
+    d2.Clear () ;
+    d3.Clear () ;
     l_top = 4 ;
     l_bottom = 0 ;
     
@@ -620,18 +620,18 @@ void SeqPlot::useMW ()
         prop[a].data.push_back ( prop[a].mw ) ;
 //        while ( prop[a].data.size() < 3 ) prop[a].data.push_back ( 0 ) ;
         }
-    string x ;
+    wxString x ;
     while ( x.length() < s.length() ) x += " " ;
-    while ( d1.size() < 4 ) d1.push_back ( x ) ;
+    while ( d1.GetCount() < 4 ) d1.Add ( x ) ;
     scanMinMax () ;
     }
 
 void SeqPlot::usePI ()
     {
     type = P_I ;
-    d1.clear () ;
-    d2.clear () ;
-    d3.clear () ;
+    d1.Clear () ;
+    d2.Clear () ;
+    d3.Clear () ;
     l_top = 4 ;
     l_bottom = 0 ;
     
@@ -644,18 +644,18 @@ void SeqPlot::usePI ()
         prop[a].data.push_back ( prop[a].pi ) ;
 //        while ( prop[a].data.size() < 3 ) prop[a].data.push_back ( 0 ) ;
         }
-    string x ;
+    wxString x ;
     while ( x.length() < s.length() ) x += " " ;
-    while ( d1.size() < 4 ) d1.push_back ( x ) ;
+    while ( d1.GetCount() < 4 ) d1.Add ( x ) ;
     scanMinMax () ;
     }
 
 void SeqPlot::useHP ()
     {
     type = H_P ;
-    d1.clear () ;
-    d2.clear () ;
-    d3.clear () ;
+    d1.Clear () ;
+    d2.Clear () ;
+    d3.Clear () ;
     l_top = 4 ;
     l_bottom = 0 ;
     
@@ -684,9 +684,9 @@ void SeqPlot::useHP ()
         prop[a].data.push_back ( avg ) ;
 //        while ( prop[a].data.size() < 3 ) prop[a].data.push_back ( 0 ) ;
         }
-    string x ;
+    wxString x ;
     while ( x.length() < s.length() ) x += " " ;
-    while ( d1.size() < 4 ) d1.push_back ( x ) ;
+    while ( d1.GetCount() < 4 ) d1.Add ( x ) ;
     scanMinMax () ;
     }
     

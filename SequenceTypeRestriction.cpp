@@ -4,30 +4,31 @@
 
 int SeqRestriction::arrange ( int n )
     {
-    int a , b , x , y , w , h , l = 0 , bo = 4 , lowy = 0 ;
+    unsigned int a , b ;
+    int x , y , w , h , l = 0 , bo = 4 , lowy = 0 ;
     int lasta = 0 , cut , thepos ;
-    string t = "" ;
+    wxString t = "" ;
     
-    while ( vs.size() ) vs.pop_back () ;
-    while ( ven.size() ) ven.pop_back () ;
-    while ( eoe.size() ) eoe.pop_back () ;
+    vs.Clear() ;
+    ven.Clear() ;
+    eoe.Clear() ;
     while ( t.length() < s.length() ) t += " " ;
     s = t ;
     for ( cut = 0 ; cut < vec->rc.size() ; cut++ )
         {
         TRestrictionEnzyme *e = vec->rc[cut].e ;
         if ( vec->isEnzymeHidden ( e->name ) ) continue ;
-        vs.push_back ( t ) ;
-        eoe.push_back ( -1 ) ;
-        ven.push_back ( e->name.c_str() ) ;
+        vs.Add ( t ) ;
+        eoe.Add ( -1 ) ;
+        ven.Add ( e->name ) ;
         
-        int vsl = vs.size() - 1 ;
+        int vsl = vs.GetCount() - 1 ;
         
         for ( a = 0 ; a < e->sequence.length() ; a++ )
            {
            thepos = a + vec->rc[cut].pos - e->cut ;
            if ( thepos >= 0 && thepos < t.length() )
-              vs[vsl][thepos] = '-' ;
+              vs[vsl][(uint)thepos] = '-' ;
            }
            
         // Arranging enzyme text
@@ -36,8 +37,8 @@ int SeqRestriction::arrange ( int n )
         thepos = vec->rc[cut].pos ;
         if ( thepos-1 >= 0 && thepos < t.length() )
            {
-           vs[vsl][thepos] = '|' ;
-           vs[vsl][vec->rc[cut].pos-1] = '#' ;
+           vs[vsl][(uint)thepos] = '|' ;
+           vs[vsl][(uint)vec->rc[cut].pos-1] = '#' ;
            }
         }
     
@@ -45,23 +46,23 @@ int SeqRestriction::arrange ( int n )
     for ( a = 0 ; a < s.length() ; a++ )
         {
         s[a] = ' ' ;
-        for ( cut = 0 ; cut < vs.size() ; cut++ )
+        for ( cut = 0 ; cut < vs.GetCount() ; cut++ )
            if ( s[a] == ' ' )
               s[a] = vs[cut][a] ;
         }
         
     // Generating Y offsets
-    vector <string> vt = vs ;
+    wxArrayString vt = vs ;
 
     // An yoff for each vs (and each vt)
-    while ( yoff.size() > 0 ) yoff.pop_back() ;
-    while ( yoff.size() < vs.size() ) yoff.push_back ( yoff.size() ) ;
+    yoff.Clear() ;
+    while ( yoff.GetCount() < vs.GetCount() ) yoff.Add ( yoff.GetCount() ) ;
     
     // Trying to merge several lines together
-    for ( cut = 1 ; cut < vt.size() ; cut++ )
+    for ( cut = 1 ; cut < vt.GetCount() ; cut++ )
         {
         x = -1 ;
-        for ( a = 0 ; x == -1 && a < vt.size() ; a++ )
+        for ( a = 0 ; x == -1 && a < vt.GetCount() ; a++ )
            {
            for ( b = 0 ; b < s.length() && ( vt[cut][b] == ' ' || vt[a][b] == ' ' ) ; b++ ) ;
            if ( b == s.length() ) x = a ;
@@ -93,7 +94,7 @@ int SeqRestriction::arrange ( int n )
     w -= 20 ; // Scrollbar dummy
 
     pos.cleanup() ;
-    for ( int layer = 0 ; layer < vs.size() ; layer++ )
+    for ( int layer = 0 ; layer < vs.GetCount() ; layer++ )
         {
         x = ox ;
         y = oy ;
@@ -132,7 +133,7 @@ void SeqRestriction::show ( wxDC& dc )
     ya = -ya ;
     can->MyGetClientSize ( &xa , &yb ) ;
     yb += ya ;
-    for ( int layer = 0 ; layer < vs.size() ; layer++ )
+    for ( int layer = 0 ; layer < vs.GetCount() ; layer++ )
         {
         int a , b , cut ;
         char u[100] ;
@@ -163,7 +164,7 @@ void SeqRestriction::show ( wxDC& dc )
             {
             if ( can->hardstop > -1 && a > can->hardstop ) break ;
             b = pos.p[a] ;
-            char c = vs[layer][b-1] ;
+            char c = vs[layer][(uint)b-1] ;
             if ( c != ' ' )
                {
                if ( qlx == -1 ) qlx = pos.r[a].GetLeft() ;

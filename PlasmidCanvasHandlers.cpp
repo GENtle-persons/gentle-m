@@ -122,10 +122,10 @@ wxMenu *PlasmidCanvas::invokeRsPopup ( int rs , wxPoint pt , bool doreturn )
     cm->Append ( PC_RS_INFO , txt("p_rs_info") ) ;
     cm->Append ( -1 , "" ) ;
     
-    for ( a = 0 ; a < p->vec->cocktail.size() && 
-                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->name.c_str() ;
+    for ( a = 0 ; a < p->vec->cocktail.GetCount() && 
+                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->name ;
                     a++ ) ;
-    if ( a == p->vec->cocktail.size() )
+    if ( a == p->vec->cocktail.GetCount() )
         {
         cm->Append ( PC_RS_ADD2COCKTAIL , txt("p_rs_add_to_cocktail") ) ;
         cm->Append ( PC_RS_ADD_AND_CUT , txt("p_rs_add_to_cocktail_and_cut") ) ;
@@ -135,18 +135,18 @@ wxMenu *PlasmidCanvas::invokeRsPopup ( int rs , wxPoint pt , bool doreturn )
         cm->Append ( PC_RS_ADD2COCKTAIL , txt("p_rs_del_from_cocktail") ) ;
         }
     
-    if ( p->vec->cocktail.size() > 0 )
+    if ( p->vec->cocktail.GetCount() > 0 )
         {
         cm->Append ( PC_RS_CUT_WITH_COCKTAIL , txt("p_cut_with_cocktail") ) ;
         cm->Append ( -1 , "" ) ;
-        string c = txt("cocktail") ;
+        wxString c = txt("cocktail") ;
         c += " :" ;
         cm->Append ( PC_DUMMY , c.c_str() ) ;
-        for ( a = 0 ; a < p->vec->cocktail.size() ; a++ )
+        for ( a = 0 ; a < p->vec->cocktail.GetCount() ; a++ )
             {
             c = "  " ;
             c += p->vec->cocktail[a] ;
-            cm->Append ( PC_DUMMY , c.c_str() ) ;
+            cm->Append ( PC_DUMMY , c ) ;
             }
         }
         
@@ -174,18 +174,19 @@ void PlasmidCanvas::rsMarkShow ( wxCommandEvent &ev )
 void PlasmidCanvas::rsAdd2Cocktail ( wxCommandEvent &ev )
     {
     int a , b ;
-    for ( a = 0 ; a < p->vec->cocktail.size() && 
-                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->name.c_str() ;
+    for ( a = 0 ; a < p->vec->cocktail.GetCount() && 
+                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->name ;
                     a++ ) ;
-    if ( a == p->vec->cocktail.size() ) // Add to cocktail
+    if ( a == p->vec->cocktail.GetCount() ) // Add to cocktail
         {
-        p->vec->cocktail.push_back ( p->vec->rc[context_last_rs].e->name.c_str() ) ;
+        p->vec->cocktail.Add ( p->vec->rc[context_last_rs].e->name ) ;
         }
     else // Remove from cocktail
         {
-        for ( b = a+1 ; b < p->vec->cocktail.size() ; b++ )
+        p->vec->cocktail.RemoveAt ( a ) ;
+/*        for ( b = a+1 ; b < p->vec->cocktail.GetCount() ; b++ )
            p->vec->cocktail[b-1] = p->vec->cocktail[b] ;
-        p->vec->cocktail.pop_back () ;
+        p->vec->cocktail.pop_back () ;*/
         }
     }
     
@@ -229,10 +230,10 @@ void PlasmidCanvas::rsDel ( wxCommandEvent &ev )
     {
     p->vec->undo.start ( txt("u_del_enzyme") ) ;
     int a ;
-    for ( a = 0 ; a < p->vec->cocktail.size() && 
-                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->name.c_str() ;
+    for ( a = 0 ; a < p->vec->cocktail.GetCount() && 
+                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->name ;
                     a++ ) ;
-    if ( a < p->vec->cocktail.size() )
+    if ( a < p->vec->cocktail.GetCount() )
         rsAdd2Cocktail ( ev ) ; // Effectively removing enzyme from cocktail
         
     for ( a = 0 ; a < p->vec->re.size() &&
@@ -299,7 +300,7 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn )
             mm->Append ( PC_BLAST_DNA , txt("m_blast_dna") ) ;
             
             }
-        if ( p->vec->cocktail.size() > 0 )
+        if ( p->vec->cocktail.GetCount() > 0 )
             {
             cm->Append ( PC_RS_CUT_WITH_COCKTAIL , txt("p_cut_with_cocktail") ) ;
             }

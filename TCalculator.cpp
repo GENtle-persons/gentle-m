@@ -326,8 +326,8 @@ void TGridProtein::init ()
     
     cleanup () ;
         
-    gridSetEntry ( 0 , 0 , txt("t_calc_prot_1") , "0" , txt("t_calc_nm") ) ;
-    gridSetEntry ( 1 , 0 , txt("t_calc_prot_2") , "0" , txt("t_calc_nm") ) ;
+    gridSetEntry ( 0 , 0 , txt("t_calc_prot_1") , "0" ) ;
+    gridSetEntry ( 1 , 0 , txt("t_calc_prot_2") , "0" ) ;
     gridSetEntry ( 2 , 0 , txt("t_calc_prot_3") , "0" ) ;
     gridSetEntry ( 3 , 0 , txt("t_calc_prot_4") , "0" ) ;
     gridSetEntry ( 4 , 0 , txt("t_calc_prot_5") , "0" ) ;
@@ -362,15 +362,15 @@ void TGridProtein::recalc ()
     GetCellValue(6,1).ToDouble ( &d ) ;
     
     double a , c , e , r ;
-    r = ( e280 != 0 ) ? e280 / e250 : 0 ;
+    r = ( e250 != 0 && e280 != 0 ) ? e280 / e250 : 0 ;
     
     e = 5500 * trp + 1490 * tyr + 125 * cys ;    
     a = ( mw != 0 ) ? e / mw : 0 ;
     c = a * d ;
     c = ( c != 0 ) ? e280 / c : 0 ;
     
-    SetCellValue ( 8 , 1 , wxString::Format("%0.2f", r) ) ;
-    SetCellValue ( 9 , 1 , wxString::Format("%0.2f", c) ) ;
+    SetCellValue ( 8 , 1 , wxString::Format("%0.3f", r) ) ;
+    SetCellValue ( 9 , 1 , wxString::Format("%0.3f", c) ) ;
     }
 
 

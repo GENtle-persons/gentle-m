@@ -584,7 +584,7 @@ void TVectorEditor::enzymeSelChange ( wxEvent &ev )
     wxListBox *lb = (wxListBox*) ev.GetEventObject() ;
     if ( lb == listGroups )
         {
-        showGroupEnzymes ( lb->GetString ( lb->GetSelection() ).c_str() ) ;
+        showGroupEnzymes ( lb->GetString ( lb->GetSelection() ) ) ;
         }
     }
     
@@ -634,19 +634,19 @@ void TVectorEditor::showEnzymeGroups ()
     wxString all = txt("All") ;
     listGroups->Clear() ;
     listGroups->Append ( all ) ;
-    vector <string> vs ;
+    wxArrayString vs ;
     myapp()->frame->LS->getEnzymeGroups ( vs ) ;
-    for ( int i = 0 ; i < vs.size() ; i++ )
-        listGroups->Append ( vs[i].c_str() ) ;
-    showGroupEnzymes ( all.c_str() ) ;
+    for ( int i = 0 ; i < vs.GetCount() ; i++ )
+        listGroups->Append ( vs[i] ) ;
+    showGroupEnzymes ( all ) ;
     listGroups->SetStringSelection ( all ) ;
     }
     
-void TVectorEditor::showGroupEnzymes ( string gr )
+void TVectorEditor::showGroupEnzymes ( wxString gr )
     {
     wxArrayString vs ;
     listGE->Clear() ;
-    wxString gr2 = myapp()->frame->LS->UCfirst ( gr.c_str() ) ;
+    wxString gr2 = myapp()->frame->LS->UCfirst ( gr ) ;
     myapp()->frame->LS->getEnzymesInGroup ( gr2 , vs ) ;
     eig.clear () ;
     for ( int i = 0 ; i < vs.GetCount() ; i++ )
@@ -791,7 +791,7 @@ void TVectorEditor::importCloneEnzymes ()
        myapp()->frame->LS->updateRestrictionEnzyme ( TS.re[a] ) ;
        TS.re[a] = NULL ; // avoid deletion
        }
-    string group = listGroups->GetStringSelection().c_str() ;
+    wxString group = listGroups->GetStringSelection() ;
     showGroupEnzymes ( group ) ;
     }
 
