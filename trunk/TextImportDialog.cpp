@@ -41,6 +41,8 @@ TextImportDialog::TextImportDialog(wxWindow *parent, const wxString& title )
     type->Append ( txt("t_xml") ) ;
     type->Append ( txt("t_primer") ) ;
     type->SetSelection ( 0 ) ;
+    
+    sequence->SetMaxLength ( 0 ) ; // Text length only limited by native gadget now
 
     Center () ;
     OK->SetDefault () ;
