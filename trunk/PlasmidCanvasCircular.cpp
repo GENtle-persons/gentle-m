@@ -47,18 +47,7 @@ void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc )
            }
         }
     
-    
-    for ( a = 1 ; a < p->vec->rc.size() ; a++ ) // Sort by pos
-        {
-        if ( p->vec->rc[a].pos < p->vec->rc[a-1].pos )
-           {
-           TRestrictionCut dummy = p->vec->rc[a] ;
-           p->vec->rc[a] = p->vec->rc[a-1] ;
-           p->vec->rc[a-1] = dummy ;
-           a = 0 ;
-           }
-        }
-    
+    p->vec->sortRestrictionSites() ;
     
     for ( a = 0 ; a < p->vec->rc.size() ; a++ ) // Init
         {
@@ -83,18 +72,19 @@ void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc )
         }
 
     bool redo = true ;
-    int cnt = 0 ;
-    while ( redo && cnt < 200 )
+    int cnt = 200 ;
+    while ( redo && cnt > 0 )
         {
         redo = false ;    
         for ( a = 0 ; a < p->vec->rc.size() ; a++ ) // Optimize
            redo |= optimizeCircularRestrictionSites ( a , dc ) ;
-        cnt++ ;
+        cnt-- ;
         }
         
     // Appending hidden ones
     for ( a = 0 ; a < trc.size() ; a++ )
         p->vec->rc.push_back ( trc[a] ) ;
+    p->vec->sortRestrictionSites() ;
     }
     
 bool PlasmidCanvas::optimizeCircularRestrictionSites ( int a , wxDC &dc )
@@ -121,22 +111,28 @@ bool PlasmidCanvas::optimizeCircularRestrictionSites ( int a , wxDC &dc )
     
 void PlasmidCanvas::push_rc_left ( int a , wxDC &dc )
     {
+    if ( p->vec->rc.size() < 2 ) return ;
     TRestrictionCut *c = &p->vec->rc[a] ;
     c->angle3 -= 1 ;
     recalc_rc ( a , dc ) ;
-    if ( a == 0 ) return ;
-    TRestrictionCut *cl = &p->vec->rc[a-1] ;
-    while ( c->angle3 < cl->angle3 ) push_rc_left ( a-1 , dc ) ;
+    float add = 0 ;
+    int b = a - 1 ;
+    if ( a == 0 ) { b = p->vec->rc.size()-1 ; add = 360 ; }
+    TRestrictionCut *cl = &p->vec->rc[b] ;
+    while ( c->angle3 + add < cl->angle3 ) push_rc_left ( b , dc ) ;
     }
     
 void PlasmidCanvas::push_rc_right ( int a , wxDC &dc )
     {
+    if ( p->vec->rc.size() < 2 ) return ;
     TRestrictionCut *c = &p->vec->rc[a] ;
     c->angle3 += 1 ;
     recalc_rc ( a , dc ) ;
-    if ( a == p->vec->rc.size()-1 ) return ;
-    TRestrictionCut *cr = &p->vec->rc[a+1] ;
-    while ( c->angle3 > cr->angle3 ) push_rc_right ( a+1 , dc ) ;
+    float add = 0 ;
+    int b = a + 1 ;
+    if ( a == p->vec->rc.size()-1 ) { b = 0 ; add = 360 ; }
+    TRestrictionCut *cr = &p->vec->rc[b] ;
+    while ( c->angle3 > cr->angle3 + add ) push_rc_right ( b , dc ) ;
     }
     
 void PlasmidCanvas::recalc_rc ( int a, wxDC &dc )
@@ -146,34 +142,6 @@ void PlasmidCanvas::recalc_rc ( int a, wxDC &dc )
     wxPoint p3 ( deg2x ( c->angle3 , c->r3 )+w/2 , deg2y ( c->angle3 , c->r3 )+h/2 ) ;
     c->p = p3 ;
     makeLastRect ( a , dc ) ;    
-    }
-    
-void PlasmidCanvas::arrangeRestrictionSite ( int q , wxDC &dc )
-    {
-    TVector *v = p->vec ;
-    int diff = 100 ;
-    int dx , dy ;
-    int a ;
-    bool doOverlap ;
-    do {
-        doOverlap = false ;
-        for ( a = 0 ; a < v->rc.size() && !doOverlap ; a++ )
-           {
-           if ( a != q && intersects ( v->rc[a].lastrect , v->rc[q].lastrect ) )
-              {
-              doOverlap = true ;
-              
-              dx = deg2x ( v->rc[q].angle , 10000 ) ;
-              dy = deg2y ( v->rc[q].angle , 10000 ) ;
-              dx = dx > 0 ? diff : -diff ;
-              dy = dy > 0 ? diff : -diff ;
-
-              v->rc[q].p.x += dx ;
-              v->rc[q].p.y += dy ;
-              makeLastRect ( q , dc ) ;
-              }
-           }
-       } while ( doOverlap ) ;
     }
     
 void PlasmidCanvas::drawCircularORFs ( wxDC &dc )
@@ -254,6 +222,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
 
     int fontfactor = 10 ;
     if ( printing ) fontfactor = mwh/80;
+    wxFont *tinyFont = MYFONT ( fontfactor*4/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
     wxFont *smallFont = MYFONT ( fontfactor , wxSWISS , wxNORMAL , wxNORMAL ) ;
     wxFont *normalFont = MYFONT ( fontfactor*6/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
     wxFont *bigFont = MYFONT ( fontfactor*7/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
@@ -376,7 +345,9 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
             }
 
         // Restriction sites
+        dc.SetFont ( *tinyFont ) ;
         arrangeRestrictionSitesCircular ( dc ) ;
+        dc.SetFont ( *smallFont ) ;
 
         // ORFs
         if ( p->showORFs )
@@ -475,7 +446,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
         }
 
     // Restriction sites        
-    dc.SetFont(*smallFont);
+    dc.SetFont ( *tinyFont ) ;
     for ( a = 0 ; a < p->vec->rc.size() ; a++ )
         {
         TRestrictionCut c = p->vec->rc[a] ;
@@ -505,6 +476,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
            dc.DrawText ( u , p3.x , p3.y ) ;
            }    
         }
+    dc.SetFont(*smallFont);
 }
 
 wxPoint PlasmidCanvas::makeLastRect ( int a , wxDC &dc )

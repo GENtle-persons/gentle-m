@@ -992,6 +992,21 @@ bool TVector::isEnzymeHidden ( string s )
        if ( hiddenEnzymes[a] == s ) return true ;
     return false ;
     }
+    
+void TVector::sortRestrictionSites ()
+    {
+    int a ;
+    for ( a = 1 ; a < rc.size() ; a++ ) // Sort by pos
+        {
+        if ( rc[a].pos < rc[a-1].pos )
+           {
+           TRestrictionCut dummy = rc[a] ;
+           rc[a] = rc[a-1] ;
+           rc[a-1] = dummy ;
+           a = 0 ;
+           }
+        }
+    }
 
     
 // ***************************************************************************************
