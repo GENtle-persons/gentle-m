@@ -164,6 +164,14 @@ void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
         i.desc = "" ;
         }
     if ( i.name.IsEmpty() )
+    	{
+	    wxString try2 = i.desc ; 
+	    while ( try2.Right ( 1 ) == "\n" ) try2 = try2.Left ( try2.length() - 1 ) ;
+     	try2 = try2.AfterLast('\n').AfterLast('\r') ;
+     	wxMessageBox ( try2 ) ;
+	    if ( !try2.IsEmpty() && try2.length() < 20 ) i.name = try2 ;
+    	}    
+    if ( i.name.IsEmpty() )
         {
         char u[100] ;
         sprintf ( u , "short_itemtype%d" , i.getType() ) ;

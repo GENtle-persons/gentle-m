@@ -41,6 +41,8 @@ void AutoAnnotate::ScanDatabase ( wxString database )
 	    	foundany |= MatchItem ( v , v->items[b] , p->vec , oseq ) ;
   		delete v ;
 		}
+		
+	machete ( p->vec ) ;
 
 	foundany |= addORFs ( p->vec ) ;
 
@@ -150,6 +152,42 @@ bool AutoAnnotate::addORFs ( TVector *v )
 		}    
 	v->ClearORFs () ;
 	return found ;
+	}    
+	
+bool AutoAnnotate::within ( TVectorItem &i1 , TVectorItem &i2 , TVector *v ) // i2 within i1?
+	{
+ 	int f1 = i1.from ;
+ 	int f2 = i2.from ;
+ 	int t1 = i1.to ;
+ 	int t2 = i2.to ;
+ 	if ( t1 < f1 ) t1 += v->getSequenceLength() ;
+ 	if ( t2 < f2 ) t2 += v->getSequenceLength() ;
+ 	if ( f2 >= f1 && t2 <= t1 ) return true ;
+ 	return false ;
+	}    
+
+void AutoAnnotate::machete ( TVector *v )
+	{
+	vector <TVectorItem> i2 ;
+	int a , b ;
+	for ( a = 0 ; a < v->items.size() ; a++ )
+		{
+ 		if ( v->items[a].from == -1 ) continue ;
+  		for ( b = 0 ; b < v->items.size() ; b++ )
+  			{
+	    	if ( a == b ) continue ;
+	    	if ( v->items[b].from == -1 ) continue ;
+	    	if ( !within ( v->items[a] , v->items[b] , v ) ) continue ;
+	    	if ( v->items[a].getType() == v->items[b].getType() ||
+	    		 ( v->items[a].getType() == VIT_CDS && v->items[b].getType() != VIT_GENE )
+	    		 )
+	    	v->items[b].from = -1 ;
+  			}    
+		}    
+	for ( a = 0 ; a < v->items.size() ; a++ )
+		if ( v->items[a].from != -1 )
+			i2.push_back ( v->items[a] ) ;
+	v->items = i2 ;
 	}    
 
 
