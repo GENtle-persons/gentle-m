@@ -5,8 +5,8 @@ CPP  = g++.exe
 CC   = gcc.exe
 WINDRES = windres.exe
 RES  = GENtle_private.res
-OBJ  = main.o ABIviewer.o GenBank.o Alignment.o MiscDialogs.o MyChild.o MyFrame.o PlasmidCanvas.o RestrictionEnzymes.o SequenceCanvas.o TClone.o TextImportDialog.o TLigationDialog.o TMainTree.o TRestrictioneditor.o TStorage.o TVector.o TVectorEditor.o TVectorTree.o ManageDatabase.o PrimerDesign.o SequenceTypes.o PlasmidCanvasLinear.o PlasmidCanvasCircular.o PlasmidCanvasHandlers.o AminoAcids.o ABItype.o TODO.o TPrimer.o TPrimerDialog.o TItemEditDialog.o TIMGreader.o TImageDisplay.o TCalculator.o TSilmutDialog.o $(RES)
-LINKOBJ  = main.o ABIviewer.o GenBank.o Alignment.o MiscDialogs.o MyChild.o MyFrame.o PlasmidCanvas.o RestrictionEnzymes.o SequenceCanvas.o TClone.o TextImportDialog.o TLigationDialog.o TMainTree.o TRestrictioneditor.o TStorage.o TVector.o TVectorEditor.o TVectorTree.o ManageDatabase.o PrimerDesign.o SequenceTypes.o PlasmidCanvasLinear.o PlasmidCanvasCircular.o PlasmidCanvasHandlers.o AminoAcids.o ABItype.o TODO.o TPrimer.o TPrimerDialog.o TItemEditDialog.o TIMGreader.o TImageDisplay.o TCalculator.o TSilmutDialog.o $(RES)
+OBJ  = main.o ABIviewer.o GenBank.o Alignment.o MiscDialogs.o MyChild.o MyFrame.o PlasmidCanvas.o RestrictionEnzymes.o SequenceCanvas.o TClone.o TextImportDialog.o TLigationDialog.o TMainTree.o TRestrictioneditor.o TStorage.o TVector.o TVectorEditor.o TVectorTree.o ManageDatabase.o PrimerDesign.o SequenceTypes.o PlasmidCanvasLinear.o PlasmidCanvasCircular.o PlasmidCanvasHandlers.o AminoAcids.o ABItype.o TODO.o TPrimer.o TPrimerDialog.o TItemEditDialog.o TIMGreader.o TImageDisplay.o TCalculator.o TSilmutDialog.o TUndo.o $(RES)
+LINKOBJ  = main.o ABIviewer.o GenBank.o Alignment.o MiscDialogs.o MyChild.o MyFrame.o PlasmidCanvas.o RestrictionEnzymes.o SequenceCanvas.o TClone.o TextImportDialog.o TLigationDialog.o TMainTree.o TRestrictioneditor.o TStorage.o TVector.o TVectorEditor.o TVectorTree.o ManageDatabase.o PrimerDesign.o SequenceTypes.o PlasmidCanvasLinear.o PlasmidCanvasCircular.o PlasmidCanvasHandlers.o AminoAcids.o ABItype.o TODO.o TPrimer.o TPrimerDialog.o TItemEditDialog.o TIMGreader.o TImageDisplay.o TCalculator.o TSilmutDialog.o TUndo.o $(RES)
 LIBS =  -L"C:/Programme/Dev-Cpp/lib" -L"C:/Programme/Dev-Cpp/Mine/GENtle" -mwindows -lwxmswu -lstdc++ -lgcc -lodbc32 -lwsock32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lctl3d32 -lodbc32 -ladvapi32 -lodbc32 -lwsock32 -lopengl32 -lglu32 -lole32 -loleaut32 -luuid sqlite.dll 
 INCS =  -I"C:/Programme/Dev-Cpp/include"  -I"C:/Programme/Dev-Cpp/Mine/GENtle" 
 CXXINCS =  -I"C:/Programme/Dev-Cpp/include/c++"  -I"C:/Programme/Dev-Cpp/include/c++/mingw32"  -I"C:/Programme/Dev-Cpp/include/c++/backward"  -I"C:/Programme/Dev-Cpp/include"  -I"C:/Programme/Dev-Cpp/Mine/GENtle" 
@@ -129,6 +129,9 @@ TCalculator.o: TCalculator.cpp
 
 TSilmutDialog.o: TSilmutDialog.cpp
 	$(CPP) -c TSilmutDialog.cpp -o TSilmutDialog.o $(CXXFLAGS)
+
+TUndo.o: TUndo.cpp
+	$(CPP) -c TUndo.cpp -o TUndo.o $(CXXFLAGS)
 
 GENtle_private.res: GENtle_private.rc ../../include/wx/msw/wx.rc 
 	$(WINDRES) -i GENtle_private.rc -I rc -o GENtle_private.res -O coff  --include-dir C:/PROGRA~1/Dev-Cpp/include

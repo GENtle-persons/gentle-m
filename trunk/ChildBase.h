@@ -31,6 +31,7 @@ class ChildBase : public wxMDIChildFrame
     virtual void OnFileSave(wxCommandEvent& WXUNUSED(event) ) {} ;
     virtual wxToolBar *CreateToolBar ( int i ) ;
     virtual void Maximize ( bool isit = true ) ;
+    virtual void updateUndoMenu () ;
     } ;
 
 #endif

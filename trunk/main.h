@@ -80,6 +80,7 @@ int dbWarningIssued ;
 };
 
 #include "enums.h"
+#include "TUndo.h"
 #include "TVector.h"
 #include "ABItype.h"
 #include "MiscDialogs.h"

@@ -11,6 +11,7 @@ class TVectorTree ;
 class PlasmidCanvas ;
 class TVectorEditor ;
 class ChildBase ;
+class TUndo ;
 
 #define VIT_TYPES      7 //number of possible types
 
@@ -96,54 +97,56 @@ class TVector
     {
     public :
     TVector ( ChildBase *win = NULL ) ;  
-    void init () ;
-    void recalculateCuts () ;
-    vector <TRestrictionCut> getCuts ( TRestrictionEnzyme *e ) ;
+    virtual ~TVector () ;
+    virtual void init () ;
+    virtual void recalculateCuts () ;
+    virtual vector <TRestrictionCut> getCuts ( TRestrictionEnzyme *e ) ;
     
-    bool basematch ( char b1 , char b2 ) ; // b1 in IUPAC, b2 in SIUPAC
-    void setIUPAC ( char b , char *s , char *pac = NULL ) ;
-    string transformSequence ( bool inverse , bool reverse ) ;
-    char getNucleotide ( int pos , bool complement = false ) ;
-    char getComplement ( char c ) ;
-    void ligate_right ( TVector v , bool inverted = false ) ;
-    void closeCircle () ;
+    virtual bool basematch ( char b1 , char b2 ) ; // b1 in IUPAC, b2 in SIUPAC
+    virtual void setIUPAC ( char b , char *s , char *pac = NULL ) ;
+    virtual string transformSequence ( bool inverse , bool reverse ) ;
+    virtual char getNucleotide ( int pos , bool complement = false ) ;
+    virtual char getComplement ( char c ) ;
+    virtual void ligate_right ( TVector v , bool inverted = false ) ;
+    virtual void closeCircle () ;
     
-    TVector *getAAvector ( int from , int to , int dir = 1 ) ;
-    bool reduceToFragment ( TRestrictionCut left , TRestrictionCut right ) ;
-    void doRestriction () ;
-    void doAction () ;
-    void doRemove ( int from , int to , bool update = true ) ;
-    int countCuts ( string enzyme ) ;
+    virtual TVector *getAAvector ( int from , int to , int dir = 1 ) ;
+    virtual bool reduceToFragment ( TRestrictionCut left , TRestrictionCut right ) ;
+    virtual void doRestriction () ;
+    virtual void doAction () ;
+    virtual void doRemove ( int from , int to , bool update = true ) ;
+    virtual int countCuts ( string enzyme ) ;
     
-    string getSubstring ( int mf , int mt ) ;
-    void insert_char ( char x , int pos , bool overwrite = false ) ;
+    virtual string getSubstring ( int mf , int mt ) ;
+    virtual void insert_char ( char x , int pos , bool overwrite = false ) ;
     
-    float getAAmw ( char aa ) ;
-    float getAApi ( char aa ) ;
-    string dna2aa ( string codon ) ;
-    void turn ( int off ) ;
-    void setAction ( string _action , int _action_value = 0 ) ;
-    void setDatabase ( string s ) { database = s ; }
-    string getDatabase () { return database ; }
+    virtual float getAAmw ( char aa ) ;
+    virtual float getAApi ( char aa ) ;
+    virtual string dna2aa ( string codon ) ;
+    virtual void turn ( int off ) ;
+    virtual void setAction ( string _action , int _action_value = 0 ) ;
+    virtual void setDatabase ( string s ) { database = s ; }
+    virtual string getDatabase () { return database ; }
     
-    void setChanged ( bool c = true ) ;
-    bool isChanged () { return changed ; }
+    virtual void setChanged ( bool c = true ) ;
+    virtual bool isChanged () { return changed ; }
     
-    void ClearORFs () ;
-    void addORFs ( int off ) ;
+    virtual void ClearORFs () ;
+    virtual void addORFs ( int off ) ;
 
-    void removeBlanksFromSequence () ;
+    virtual void removeBlanksFromSequence () ;
     
-    string getParams () ;
-    void setParams ( string s ) ;
-    void setWindow ( ChildBase *c ) ;
-    void setCircular ( bool c = true ) ;
-    bool isCircular () ;
-    bool isLinear () ;
-    string one2three ( int a ) ;
-    void setStickyEnd ( bool left , bool upper , string s ) ;
-    string getStickyEnd ( bool left , bool upper ) ;
-    bool hasStickyEnds () ;
+    virtual string getParams () ;
+    virtual void setParams ( string s ) ;
+    virtual void setWindow ( ChildBase *c ) ;
+    virtual void setCircular ( bool c = true ) ;
+    virtual bool isCircular () ;
+    virtual bool isLinear () ;
+    virtual string one2three ( int a ) ;
+    virtual void setStickyEnd ( bool left , bool upper , string s ) ;
+    virtual string getStickyEnd ( bool left , bool upper ) ;
+    virtual bool hasStickyEnds () ;
+    virtual void callUpdateUndoMenu () ;
     
     // Variables
     string sequence ;
@@ -158,6 +161,8 @@ class TVector
 
     vector <string> hiddenEnzymes ;
     vector <string> proteases ;
+    
+    TUndo *undo ;
     
     private :
     string invert ( string s ) ;

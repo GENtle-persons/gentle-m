@@ -276,6 +276,9 @@ enum {
     PD_SILMUT_CANCEL,
     PD_SILMUT_LB,
     
+    MDI_UNDO,
+    MDI_REDO,
+    
     } ;
 
 #endif

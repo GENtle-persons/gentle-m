@@ -15,6 +15,9 @@ BEGIN_EVENT_TABLE(MyChild, wxMDIChildFrame)
     EVT_MENU(AA_THREE_M2, MyChild::OnAA_three_M2)
     EVT_MENU(AA_THREE_M3, MyChild::OnAA_three_M3)
 
+    EVT_MENU(MDI_UNDO, MyChild::Undo)
+    EVT_MENU(MDI_REDO, MyChild::Redo)
+
     EVT_MENU(MDI_CHILD_QUIT, MyChild::OnQuit)
     EVT_MENU(MDI_MARK_ALL, MyChild::OnMarkAll)
     EVT_MENU(MDI_EXTRACT_AA, MyChild::OnExtractAA)
@@ -212,6 +215,9 @@ void MyChild::initme ()
     wxMenu *help_menu = app->frame->getHelpMenu () ;
 
     wxMenu *edit_menu = new wxMenu;
+    edit_menu->Append(MDI_UNDO, txt("m_undo") );
+//    edit_menu->Append(MDI_REDO, txt("m_redo") );
+    edit_menu->AppendSeparator();
     edit_menu->Append(MDI_MARK_ALL, txt("m_mark_all") );
     edit_menu->Append(MDI_CUT, txt("m_cut") );
     edit_menu->Append(MDI_COPY, txt("m_copy") );
@@ -370,6 +376,7 @@ void MyChild::initme ()
 #endif
 
     Show(TRUE);
+    updateUndoMenu () ;
 //    Maximize() ;
     }
 
@@ -411,6 +418,7 @@ void MyChild::OnCut(wxCommandEvent& event)
     if ( s == "" ) return ;
     if (wxTheClipboard->Open())
         {
+        vec->undo->start ( txt("u_cut") ) ;
         wxTheClipboard->SetData( new wxTextDataObject(s.c_str()) );
         wxTheClipboard->Close();
 
@@ -425,6 +433,7 @@ void MyChild::OnCut(wxCommandEvent& event)
         treeBox->Refresh() ;
         cPlasmid->Refresh() ;
         cSequence->Refresh() ;
+        vec->undo->stop() ;
         }
     }
     
@@ -445,6 +454,8 @@ void MyChild::OnPaste(wxCommandEvent& event)
     if (!wxTheClipboard->Open()) return ;
     if (!wxTheClipboard->IsSupported( wxDF_TEXT )) return ;
 
+    vec->undo->start ( txt("u_cut") ) ;
+
     wxTextDataObject data;
     wxTheClipboard->GetData( data );
     string s = data.GetText().c_str() ;
@@ -462,6 +473,7 @@ void MyChild::OnPaste(wxCommandEvent& event)
     cSequence->doHide = false ;
     cSequence->Refresh () ;
     SetCursor ( *wxSTANDARD_CURSOR ) ;
+    vec->undo->stop() ;
     }
 
 void MyChild::OnExport(wxCommandEvent& event)
@@ -625,6 +637,8 @@ void MyChild::OnEditMode(wxCommandEvent& event)
         Refresh () ;
         }
     mi->Check ( cSequence->editMode ) ;
+    if ( cSequence->editMode ) vec->undo->start ( txt("u_edit") ) ;
+    else vec->undo->stop () ;
 #ifdef __WXMSW__ // LINUX
     GetToolBar()->ToggleTool(MDI_EDIT_MODE,cSequence->editMode);
 #endif
@@ -632,12 +646,12 @@ void MyChild::OnEditMode(wxCommandEvent& event)
 
 void MyChild::initPanels ()
     {
-      //    MyFrame *f = (MyFrame*) GetParent() ;
-      MyFrame *f = (MyFrame*) app->frame ;
+    MyFrame *f = (MyFrame*) app->frame ;
     SeqFeature *seqF = new SeqFeature ( cSequence ) ;
     SeqDNA *seq = new SeqDNA ( cSequence ) ;
     SeqRestriction *seqR = new SeqRestriction ( cSequence ) ;
     SeqAA *seqAA = new SeqAA ( cSequence ) ;
+    cSequence->seq.clear () ;
     cSequence->seq.push_back ( seqF ) ;
     cSequence->seq.push_back ( seqAA ) ;
     cSequence->seq.push_back ( seq ) ;
@@ -1185,6 +1199,52 @@ void MyChild::OnZoom ( wxCommandEvent &ev )
     cPlasmid->setZoom ( i ) ;
     }
 
+void MyChild::Undo(wxCommandEvent& event)
+    {
+    if ( !vec->undo->canUndo() ) return ;
+    vec->undo->pop() ;
+    initPanels () ;
+
+    updateSequenceCanvas ( false ) ;
+    cPlasmid->Refresh() ;
+    treeBox->Refresh() ;
+    updateUndoMenu () ;
+    /*
+    vec->recalcvisual = true ;
+//    updateSequenceCanvas () ;
+//    cSequence->Refresh() ;
+    cPlasmid->Refresh() ;
+    treeBox->Refresh() ;
+
+    cSequence->arrange () ;
+//        Refresh () ;
+    updateSequenceCanvas ( false ) ;
+    cSequence->SetFocus() ;
+    */
+    }
+    
+void MyChild::updateUndoMenu ()
+    {
+    wxString lm = vec->undo->getLastMessage() ;
+    wxMenuBar *mb = GetMenuBar () ;
+    wxMenuItem *mi = mb->FindItem ( MDI_UNDO ) ;
+    if ( !mi ) return ;
+    if ( lm == "" )
+        {
+        mi->SetText ( txt("u_no") ) ;
+        mi->Enable ( false ) ;
+        }
+    else
+        {
+        mi->Enable ( true ) ;
+        mi->SetText ( lm ) ;
+        }
+    }
+    
+void MyChild::Redo(wxCommandEvent& event)
+    {
+    
+    }
     
 // *************************
 

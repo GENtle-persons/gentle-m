@@ -43,11 +43,21 @@ TVector::TVector ( ChildBase *win )
     type = TYPE_VECTOR ;
     circular = false ;
     window = win ;
+    undo = NULL ;
     init () ;
+    }
+    
+TVector::~TVector ()
+    {
+    if ( undo ) delete undo ;
     }
         
 void TVector::init ()
     {
+    if ( undo ) delete undo ;
+    undo = new TUndo ( this ) ;
+    undo->setbase ( this ) ;
+    
     int a ;
     for ( a = 0 ; a < 256 ; a++ ) IUPAC[a] = 0 ;
     setIUPAC ( 'A' , "A" ) ;
@@ -803,6 +813,12 @@ TVector *TVector::getAAvector ( int from , int to , int dir )
 
     v->circular = false ;
     return v ;
+    }
+    
+void TVector::callUpdateUndoMenu ()
+    {
+    if ( !window ) return ;
+    window->updateUndoMenu() ;
     }
 
     
