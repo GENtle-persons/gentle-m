@@ -18,9 +18,11 @@ void TSilmutDialog::OnCharHook(wxKeyEvent& event)
     else event.Skip() ;
     }
 
-TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode )
+TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode , int _mut_pos , int _mut_dir )
     : wxDialog ( parent , -1 , s )
     {
+    mut_pos = _mut_pos ;
+    mut_dir = _mut_dir ;
     SetSize ( 600 , 400 ) ;
     Center () ;
     mode = _mode ;
@@ -84,6 +86,11 @@ TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode 
     r = bd->GetRect() ;
     bd = new wxButton ( this , PD_SILMUT_CANCEL , txt("b_cancel") , wxPoint ( r.GetRight()+th , r.GetTop() ) ) ;
     r = bd->GetRect() ;
+    
+    if ( mut_pos > -1 )
+        {
+        mut = new wxChoice ( this , PD_SILMUT_EGR , wxPoint ( r.GetRight() + bo , r.GetTop() ) ) ;
+        }
 
     wxFont myFont ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ;
     lb->SetFont ( myFont ) ;

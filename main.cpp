@@ -33,6 +33,13 @@ IMPLEMENT_APP(MyApp)
 
 // Some often needed stuff...
 
+string toupper ( string s )
+    {
+    for ( int a = 0 ; a < s.length() ; a++ )
+        s[a] = (s[a]>='a'&&s[a]<='z')?s[a]-'a'+'A':s[a] ;
+    return s ;
+    }
+
 vector <string> explode ( string sep , string s )
     {
     int a , b ;

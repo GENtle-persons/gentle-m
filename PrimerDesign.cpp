@@ -44,11 +44,13 @@ END_EVENT_TABLE()
 TPrimerDesign::TPrimerDesign(MyFrame *parent, 
                     wxString title,
                     TVector *_vec,
-                    vector <TPrimer> pl )
+                    vector <TPrimer> pl ,
+                    int _mut )
     : ChildBase(parent, title)
     {
     int a ;
     show_features = 1 ;
+    mut = _mut ;
     vec = new TVector ;
     vc = new TVector ;
     w = new TVector ;

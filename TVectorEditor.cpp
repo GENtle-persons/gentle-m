@@ -422,10 +422,10 @@ void TVectorEditor::commitVector ()
 
     if ( v->type != TYPE_AMINO_ACIDS )
         {
-        string _lu = lu->GetValue().c_str() ;
-        string _ll = ll->GetValue().c_str() ;
-        string _ru = ru->GetValue().c_str() ;
-        string _rl = rl->GetValue().c_str() ;
+        string _lu = toupper ( lu->GetValue().c_str() ) ;
+        string _ll = toupper ( ll->GetValue().c_str() ) ;
+        string _ru = toupper ( ru->GetValue().c_str() ) ;
+        string _rl = toupper ( rl->GetValue().c_str() ) ;
         VCOMMIT_STICKY(_lu,true,true);
         VCOMMIT_STICKY(_ll,true,false);
         VCOMMIT_STICKY(_ru,false,true);

@@ -63,7 +63,7 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void OnEventLinear(wxMouseEvent& event);
     virtual void OnEventCircular(wxMouseEvent& event);
     
-    virtual void RunPrimerEditor ( vector <TPrimer> &pl ) ;
+    virtual void RunPrimerEditor ( vector <TPrimer> &pl , int mut = -1 ) ;
     virtual void OnPrimerForward ( wxCommandEvent &ev ) ;
     virtual void OnPrimerBackward ( wxCommandEvent &ev ) ;
     virtual void OnPrimerBoth ( wxCommandEvent &ev ) ;

@@ -19,7 +19,8 @@ class TPrimerDesign : public ChildBase
     TPrimerDesign(MyFrame *parent, 
                     wxString title,
                     TVector *_vec,
-                    vector <TPrimer> pl ) ;
+                    vector <TPrimer> pl ,
+                    int _mut = -1 ) ;
     ~TPrimerDesign () ;
     
     void initme () ;
@@ -82,6 +83,7 @@ class TPrimerDesign : public ChildBase
     int lastPrimerActivated ;
     wxListCtrl *lc ;
     int show_features ;
+    int mut ;
     
     DECLARE_EVENT_TABLE()
     } ;
