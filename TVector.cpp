@@ -28,16 +28,16 @@ wxString *TVector::getSequencePointer () { return &sequence ; }
 
 int TVector::showGC () // Return 0 for "no", otherwise number of blocks
 	{
-	int r = getEnzymeRule()->showgc ? 400 : 0 ;
-	if ( getSequenceLength() <= r ) return 0 ;
-	return r ;
+    if ( type == TYPE_AMINO_ACIDS ) return 0 ;
+	int r = getSequenceLength() / 5 ;
+	return getEnzymeRule()->showgc ? ( r > 400 ? 400 : r ) : 0 ;
 	}    
 
 wxString TVector::getParams ()
 	{
 	wxString params ;
 	for ( int a = 0 ; a < paramk.GetCount() ; a++ )
-		params += "#" + paramk[a] + "\n" + paramv[a] ;
+		params += "#" + paramk[a] + "\n" + paramv[a] + "\n" ;
     return params ;
     }
     
