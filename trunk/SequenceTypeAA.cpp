@@ -372,71 +372,8 @@ void SeqAA::initFromTVector ( TVector *v )
         {
         for ( a = 0 ; a < v->items.size() ; a++ )
            {
-           int rf = v->items[a].getRF () ;
-           int dir = v->items[a].direction ;
-           int voff = v->items[a].getOffset() ;
-           char c = ' ' ;
-           int coff ;
-           bool complement , roundOnce = false ;
-           pa_w = "" ;
-           pa_wa.clear() ;
-           if ( dir == 1 )
-              {
-              b = v->items[a].from - 1 ;
-              coff = 0 ;
-              complement = false ;
-              }
-           else
-              {
-              b = v->items[a].to - 1 ;
-              coff = -2 ;
-              complement = true ;
-              }
-           b += dir * (rf-1) ;
-           while ( c != '|' && rf != 0 )
-              {
-              string three ;
-              three += v->getNucleotide ( b + 0 * dir , complement ) ;
-              three += v->getNucleotide ( b + 1 * dir , complement ) ;
-              three += v->getNucleotide ( b + 2 * dir , complement ) ;
-              c = v->dna2aa ( three )[0] ;
-              three = v->one2three((int)c) ;
-              
-              // Protease analysis
-              pa_w += c ;
-              pa_wa.push_back ( b+coff ) ;
-              analyzeProteases () ;
-              
-              // Offset?
-              int pawl = pa_w.length() ;
-              if ( voff != -1 && ( b + coff ) % 10 == 0 )
-                 {
-                 while ( offsets.size() <= b+coff ) offsets.push_back ( -1 ) ;
-                 while ( offset_items.size() <= b+coff ) offset_items.push_back ( NULL ) ;
-                 offsets[b+coff] = voff + pawl - 1 ;
-                 offset_items[b+coff] = &(v->items[a]) ; //????
-                 }
-
-              // Output
-              if ( disp == AA_ONE ) s[b+coff] = c ;
-              else
-                 {
-                 s[b+0+coff] = three[0] ;
-                 s[b+1+coff] = three[1] ;
-                 s[b+2+coff] = three[2] ;
-                 }
-              b += dir * 3 ;
-              if ( !v->isCircular() && b+dir*3 < 0 ) rf = 0 ;
-              if ( !v->isCircular() && b+dir*3 > v->sequence.length() ) rf = 0 ;
-              if ( v->isCircular() && ( b < 0 || b >= v->sequence.length() ) )
-                 {
-                 if ( roundOnce ) rf = 0 ;
-                 else if ( b < 0 ) b += v->sequence.length() ;
-                 else b -= v->sequence.length() ;
-                 roundOnce = true ;
-                 }
-              if ( /*can->getPD() &&*/ c == '?' ) c = '|' ;
-              }
+           v->items[a].translate ( v , this ) ;
+           v->items[a].getArrangedAA ( v , s , disp ) ;
            }
         }
     else
