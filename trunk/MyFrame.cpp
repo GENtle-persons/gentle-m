@@ -44,8 +44,14 @@ BEGIN_EVENT_TABLE(MyFrame, MyFrameType)
     EVT_SIZE(MyFrame::OnSize)
 END_EVENT_TABLE()
 
-// Define my frame constructor
+/// \brief Number of wxAcceleratorEntry entries
 #define ACC_ENT 39
+
+/** \brief Constructor
+
+	* - Initializes variables
+	* - Sets the accelerator keys
+*/
 MyFrame::MyFrame(wxWindow *parent,
                  const wxWindowID id,
                  const wxString& title,
@@ -110,6 +116,11 @@ MyFrame::MyFrame(wxWindow *parent,
     tb_mychild = NULL ;
 }
 
+/** \brief Destructor
+	
+	* - Stores the last project used, so it can be reopened on the next program start
+	* - Clears memory
+*/
 MyFrame::~MyFrame ()
     {
     if ( html_ep ) delete html_ep ;
@@ -1244,6 +1255,7 @@ void MyFrame::OnImageViewer(wxCommandEvent& event)
     
     mainTree->addChild ( subframe , TYPE_MISC ) ;
     setChild ( subframe ) ;
+    activateChild ( children.GetCount()-1 ) ;
     }
     
 void MyFrame::OnCalculator(wxCommandEvent& event)

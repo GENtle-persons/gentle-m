@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains classes MyFrame, TProject, MyFrameDropTarget, and TTestSuite (only when compiled with MYTEST)
+*/
 #ifndef _MYFRAME_H_
 #define _MYFRAME_H_
 
@@ -24,37 +27,50 @@ class TVirtualGel ;
 typedef wxFrame MyFrameType ;
 
 #ifdef MYTEST
+/** \class TTestSuite
+	\brief Test suite class
+*/
 class TTestSuite
 	{
 	public :
-	TTestSuite () ;
-	virtual void Step () ;
+	TTestSuite () ; ///< \brief Constructor
+	virtual void Step () ; ///< \brief Performs a (random) step
 
 	private :
-	virtual void pressKey ( ChildBase *ac ) ;
-	virtual void action ( ChildBase *ac ) ;
-	virtual void editMode ( ChildBase *ac ) ;
+	virtual void pressKey ( ChildBase *ac ) ; ///< \brief Simulates a random key pressed
+	virtual void action ( ChildBase *ac ) ; ///< \brief Simulates a random action
+	virtual void editMode ( ChildBase *ac ) ; ///< \brief Toggles edit mode
 
-	virtual void vectorPressKey ( ChildBase *ac ) ;
-	virtual void vectorAction ( ChildBase *ac ) ;
+	virtual void vectorPressKey ( ChildBase *ac ) ; ///< \brief Simulates a random key pressed
+	virtual void vectorAction ( ChildBase *ac ) ; ///< \brief Simulates a random action
 
-	virtual void mouseEvent ( ChildBase *ac ) ;
+	virtual void mouseEvent ( ChildBase *ac ) ; ///< \brief Simulates a mouse event
 	
-	virtual void aaAction ( ChildBase *ac ) ;
-    int start ;
-    int cnt ;
+	virtual void aaAction ( ChildBase *ac ) ; ///< \brief Simulates a random action
+    int start ; ///< \brief Internal start value
+    int cnt ; ///< \brief Internal counter
 	} ;    
 #endif
 
+/** \class TProject
+	\brief Project class
+*/
 class TProject
 	{
 	public :
- 	TProject () ;
-	TEnzymeRules *enzyme_rules ;
-    wxString name , desc , db ;
+ 	TProject () ; ///< \brief Constructor
+	TEnzymeRules *enzyme_rules ; ///< \brief The enzyme rules of the project
+    wxString name ;  ///< \brief The project name
+    wxString desc ;  ///< \brief The project description
+    wxString db ;    ///< \brief The name of the database the project is stored in
 	} ;    
 
-// Define a new frame
+/** \class MyFrame
+	\brief Frame class
+	
+	This class contains the actually displayed frame, as well as several
+	often-used functions.
+*/
 class MyFrame : public MyFrameType
 {
 public:
@@ -127,33 +143,32 @@ public:
     virtual TVirtualGel *useGel ( wxString type ) ;
     virtual void saveImage ( wxBitmap *bmp , wxString name = "" ) ;
 
-    TMainTree *mainTree ;
-    TStorage *LS ;
+    TMainTree *mainTree ; ///< \brief The main tree (for sequences etc.)
+    TStorage *LS ; ///< \brief Pointer to the local TStorage database structure
     bool dying , enhancedRefresh , showVectorTitle , showVectorLength , 
             loadLastProject , useMetafile , showSplashScreen , checkUpdate ,
             useCoolCanvas , useInternalHelp ;
-    TProject project ;
-    TEnzymeRules *global_enzyme_rules ;
-    wxString lang_string ;
-    wxArrayString lastCocktail ;
-    wxArrayChildBase children ;
-    wxHtmlEasyPrinting *html_ep ;
-    vector <wxBitmap> bitmaps ;
-    wxToolBar *tb_mychild ;
+    TProject project ; ///< \brief The current project
+    TEnzymeRules *global_enzyme_rules ; ///< \brief The global rules for which enzymes to use/display
+    wxString lang_string ; ///< \brief The user interface language name
+    wxArrayString lastCocktail ; ///< \brief Enzymes of the last restriction cocktail
+    wxArrayChildBase children ; ///< \brief List of pointers to all child windows
+    wxHtmlEasyPrinting *html_ep ; ///< \brief HTML printer wrapper for TCalculator
+    vector <wxBitmap> bitmaps ; ///< \brief The bitmaps in the user interface
+    wxToolBar *tb_mychild ; ///< \brief The shared toolbar (?)
 
     private :
-    wxSashLayoutWindow* m_topWindow;
-    wxSashLayoutWindow* m_leftWindow1;
-    wxSashLayoutWindow* m_leftWindow2;
-    wxSashLayoutWindow* m_bottomWindow;
-    wxArrayTStorage dbcache ;
-    wxMiniFrame *miniFrame ;
-    ChildBase *lastChild ;
-    wxMenuBar *menu_bar ;
-    int locked ;
-    bool activating ;
+    wxSashLayoutWindow* m_topWindow; ///< \brief Frame layout, top window (unused)
+    wxSashLayoutWindow* m_leftWindow1; ///< \brief Frame layout, left window
+    wxSashLayoutWindow* m_leftWindow2; ///< \brief Frame layout, right window
+    wxSashLayoutWindow* m_bottomWindow; ///< \brief Frame layout, bottom window (unused)
+    wxArrayTStorage dbcache ; ///< \brief Cache of databases for faster access
+    ChildBase *lastChild ; ///< \brief Last child shown
+    wxMenuBar *menu_bar ; ///< \brief The current menu bar
+    int locked ; ///< \brief State of display locking
+    bool activating ; ///< \brief In child activation?
 #ifdef MYTEST
-    TTestSuite *test_suite ;
+    TTestSuite *test_suite ; ///< \brief The Test suite
 #endif
     
     DECLARE_EVENT_TABLE()
