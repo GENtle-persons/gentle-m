@@ -77,17 +77,17 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void blastAA ( wxCommandEvent &ev ) ;
     virtual void itemShowHide ( wxCommandEvent &ev ) ;
 
-    virtual void setPrinting ( bool _b ) { printing = _b ; }
-    virtual void setLastContextItem ( int _i ) { context_last_item = _i ; }
+    virtual void setPrinting ( bool _b ) ;
+    virtual void setLastContextItem ( int _i ) ;
     
-    virtual int getMarkFrom () { return mark_from ; }
-    virtual int getMarkTo () { return mark_to ; }
-    virtual void setMarkFrom ( int _i ) { mark_from = _i ; }
-    virtual void setMarkTo ( int _i ) { mark_to = _i ; }
-    virtual void getMark ( int &i1 , int &i2 ) { i1 = getMarkFrom() ; i2 = getMarkTo() ; }
-    virtual void setMark ( int i1 , int i2 ) { setMarkFrom ( i1 ) ; setMarkTo ( i2 ) ; }
-    virtual void setRootChild ( MyChild *_p ) { p = _p ; }
-    virtual int getZoom () { return zoom ; }
+    virtual int getMarkFrom () ;
+    virtual int getMarkTo () ;
+    virtual void setMarkFrom ( int _i ) ;
+    virtual void setMarkTo ( int _i ) ;
+    virtual void getMark ( int &i1 , int &i2 ) ;
+    virtual void setMark ( int i1 , int i2 ) ;
+    virtual void setRootChild ( MyChild *_p ) ;
+    virtual int getZoom () ;
 
     private :
     // Event handlers

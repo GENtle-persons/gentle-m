@@ -804,6 +804,8 @@ wxString SequenceCanvas::getSelection ()
     
 void SequenceCanvas::ensureVisible ( int pos )
     {
+    if ( charwidth == 0 || charheight == 0 ) return ;
+    if ( NumberOfLines() == 0 ) return ;
     int vx , vy , wx , wy ;
     MyGetViewStart ( &vx , &vy ) ;
     MyGetClientSize ( &wx , &wy ) ;
@@ -849,7 +851,7 @@ bool SequenceCanvas::inMarkRange ( int x , int f , int t , int l )
 
 void SequenceCanvas::mark ( wxString id , int from , int to , int value )
     {
-//    mylog ( "MARK" , wxString::Format ( "%s %d-%d %d" , id.c_str() , from , to , value ) ) ;
+    mylog ( "MARK" , wxString::Format ( "%s %d-%d %d" , id.c_str() , from , to , value ) ) ;
     if ( seq.GetCount() == 0 ) return ;
     if ( marking ) return ;
     marking = true ;
@@ -866,6 +868,7 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
         }
     marking = false ;
 
+    mylog ( "MARK" , "1" ) ;
     int a , b = -1 , cnt = 0 ;
     vpx = -1 ;
     vpy = -1 ; 
@@ -881,6 +884,7 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
 
     if ( charwidth == 0 || charheight == 0 ) SilentRefresh () ;
 
+    mylog ( "MARK" , "2" ) ;
     int seqlen ;
     if ( p && p->vec ) seqlen = p->vec->getSequenceLength() ;
     else seqlen = seq[b]->s.length() ;
@@ -899,6 +903,7 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
            seq[b]->setMark ( a , 0 ) ;
         }
         
+    mylog ( "MARK" , "3" ) ;
     for ( int other = 0 ; other < seq.GetCount() ; other++ )
         {
         bool canbemarked = seq[other]->takesMouseActions ;
@@ -908,7 +913,8 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
             seq[other]->setMark ( a , 0 ) ;
             }
         }
-
+        
+    mylog ( "MARK" , "4" ) ;
     if ( !printing )
         {
         // Refreshing sequence canvas
@@ -922,14 +928,16 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
     _to = to ;
     if ( p )
         {
+        mylog ( "MARK" , "4a" ) ;
         // Refreshing plasmid canvas
         p->cPlasmid->setMark ( from , to ) ;
         if ( !editMode )
             {
             p->cPlasmid->Refresh() ;
+            mylog ( "MARK" , "4b" ) ;
             
             char tt[1000] ;
-            if ( value == 1 )
+            if ( value == 1 && seqlen > 0 )
                {
                int to2 = to ;
                while ( to2 > seqlen )
@@ -938,6 +946,7 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
                if ( from == -1 ) *tt = 0 ;
                }
             else *tt = 0 ;
+            mylog ( "MARK" , "4c" ) ;
             MyFrame *f = myapp()->frame ;
             f->SetStatusText ( tt , 1 ) ;
             }
@@ -985,6 +994,7 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
             f->SetStatusText ( tt , 1 ) ;
            }
         }
+    mylog ( "MARK" , "5" ) ;
     }
 
 void SequenceCanvas::arrange ()

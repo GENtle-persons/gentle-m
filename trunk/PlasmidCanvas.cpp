@@ -50,6 +50,18 @@ BEGIN_EVENT_TABLE(PlasmidCanvas, wxScrolledWindow)
 END_EVENT_TABLE()
 
 
+void PlasmidCanvas::setPrinting ( bool _b ) { printing = _b ; }
+void PlasmidCanvas::setLastContextItem ( int _i ) { context_last_item = _i ; }
+int PlasmidCanvas::getMarkFrom () { return p->cSequence->markedFrom() ; }
+int PlasmidCanvas::getMarkTo () { return p->cSequence->markedTo() ; }
+void PlasmidCanvas::setMarkFrom ( int _i ) { mark_from = _i ; }
+void PlasmidCanvas::setMarkTo ( int _i ) { mark_to = _i ; }
+void PlasmidCanvas::getMark ( int &i1 , int &i2 ) { i1 = getMarkFrom() ; i2 = getMarkTo() ; }
+void PlasmidCanvas::setMark ( int i1 , int i2 ) { setMarkFrom ( i1 ) ; setMarkTo ( i2 ) ; }
+void PlasmidCanvas::setRootChild ( MyChild *_p ) { p = _p ; }
+int PlasmidCanvas::getZoom () { return zoom ; }
+
+
 // Define a constructor for my canvas
 PlasmidCanvas::PlasmidCanvas(wxWindow *parent, const wxPoint& pos, const wxSize& size)
         : wxScrolledWindow(parent, -1, pos, size,
@@ -189,8 +201,9 @@ void PlasmidCanvas::OnCopyImage ( wxCommandEvent &ev )
 
 wxString PlasmidCanvas::getSelection()
     {
-    if ( getMarkFrom() != -1 ) return p->vec->getSubstring ( getMarkFrom() , getMarkTo() ) ;
-    else return "" ;
+    if ( !p || !p->cSequence || p->cSequence->getEditMode() || p->def != "DNA" ) return "" ;
+    if ( getMarkFrom() == -1 ) return "" ;
+    return p->vec->getSubstring ( getMarkFrom() , getMarkTo() ) ;
     }
     
 
