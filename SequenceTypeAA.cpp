@@ -19,6 +19,7 @@ SeqAA::~SeqAA ()
 int SeqAA::arrange ( int n )
     {
     if ( useDirectRoutines() ) return arrange_direct ( n ) ;
+    wxMessageBox ( "One has to wonder...1" ) ;
     int a , b , x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
     int lasta = 0 ;
     
@@ -95,7 +96,8 @@ int SeqAA::arrange ( int n )
     
 void SeqAA::show ( wxDC& dc )
     {
-    if ( useDirectRoutines() ) show_direct ( dc ) ;
+    if ( useDirectRoutines() ) { show_direct ( dc ) ; return ; }
+    wxMessageBox ( "One has to wonder...2" ) ;
     int cw2 , ch2 ;
     dc.SetFont(*can->smallFont);
     dc.GetTextExtent ( "A" , &cw2 , &ch2 ) ;
@@ -380,11 +382,13 @@ void SeqAA::initFromTVector ( TVector *v )
         }
     else if ( mode == AA_KNOWN )
         {
+        if ( can->getEditMode() ) v->eraseSequence ( v->getSequenceLength()-1 , 1 ) ;
         for ( a = 0 ; a < v->items.size() ; a++ )
            {
            v->items[a].translate ( v , this ) ;
            v->items[a].getArrangedAA ( v , s , disp ) ;
            }
+        if ( can->getEditMode() ) v->addToSequence ( " " ) ;
         }
     else
         {
@@ -436,6 +440,13 @@ void SeqAA::initFromTVector ( TVector *v )
        v->getSequence() += " " ;
        s += " " ;
        }
+       
+    int mem = 0 ;
+//    mem += pa_w.length() ;
+    mem += offsets.GetCount() * sizeof ( int ) ;
+//    mem += pa_wa.GetCount() * sizeof ( int ) ;
+//    mem += sizeof ( wxArrayTProteaseCut ) + sizeof ( wxArrayTProtease ) + sizeof ( wxArrayTVectorItem ) ;
+    mylog ( "AA" , wxString::Format ( "%d" , mem ) ) ;
     }
     
 // direct
@@ -490,7 +501,7 @@ void SeqAA::show_direct ( wxDC& dc )
     int bm = dc.GetBackgroundMode () ;
     wxColour tf ;
     if ( primaryMode ) tf = *wxBLACK ;
-    else tf = *wxLIGHT_GREY ;
+    else tf = wxColour ( 130 , 130 , 130 ) ;//*wxLIGHT_GREY ;
     dc.SetTextForeground ( tf ) ;
     dc.SetBackgroundMode ( wxTRANSPARENT ) ;
 
@@ -512,12 +523,15 @@ void SeqAA::show_direct ( wxDC& dc )
         px = px * cw + ( px / cbs ) * ( cw - 1 ) + ox ;
         py = py * ch * csgc + oy ;
         
-        if ( py + ch < ya ) continue ;
-        if ( py > yb ) break ;
-        if ( cih )
+        if ( !can->getDrawAll() )
            {
-           if ( px + cw < xa ) continue ;
-           if ( px > xb ) continue ;
+           if ( py + ch < ya ) continue ;
+           if ( py > yb ) break ;
+           if ( cih )
+              {
+              if ( px + cw < xa ) continue ;
+              if ( px > xb ) continue ;
+              }    
            }    
 
        int pm = getMark ( a ) ;

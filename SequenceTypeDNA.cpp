@@ -110,7 +110,7 @@ wxPoint SeqDNA::showText ( int ystart , wxArrayString &tout )
 
 void SeqDNA::show ( wxDC& dc )
     {
-    if ( useDirectRoutines() ) show_direct ( dc ) ;
+    if ( useDirectRoutines() ) { show_direct ( dc ) ; return ; }
     dc.SetFont(*can->font);
     wxColour tbg = dc.GetTextBackground () ;
     wxColour tfg = dc.GetTextForeground () ;
@@ -271,6 +271,8 @@ void SeqDNA::show_direct ( wxDC& dc )
     int cw = can->charwidth , ch = can->charheight ;
     int ox = bo + cw + cw * endnumberlength ;
     int oy = n*ch+bo ;
+    bool isPrimer = false ;
+    if ( whatsthis().StartsWith ( "PRIMER" ) ) isPrimer = true ;
     
     can->MyGetClientSize ( &w , &h ) ;
     xb = w ;
@@ -281,7 +283,6 @@ void SeqDNA::show_direct ( wxDC& dc )
     int bm = dc.GetBackgroundMode () ;
     dc.SetTextForeground ( fontColor ) ;
     dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-
     dc.GetDeviceOrigin ( &xa , &ya ) ;
     xa = -xa ;
     xb += xa ;
@@ -300,61 +301,84 @@ void SeqDNA::show_direct ( wxDC& dc )
         px = px * cw + ( px / cbs ) * ( cw - 1 ) + ox ;
         py = py * ch * csgc + oy ;
         
-        if ( py + ch < ya ) continue ;
-        if ( py > yb ) break ;
-        if ( cih )
+        if ( !can->getDrawAll() )
            {
-           if ( px + cw < xa ) continue ;
-           if ( px > xb ) continue ;
+           if ( py + ch < ya ) continue ;
+           if ( py > yb ) break ;
+           if ( cih )
+              {
+              if ( px + cw < xa ) continue ;
+              if ( px > xb ) continue ;
+              }    
            }    
 
-       int pm = getMark ( a ) ;
-       if ( pm == 1 ) // Marked (light gray background)
-          {
-          dc.SetBackgroundMode ( wxSOLID ) ;
-          dc.SetTextBackground ( *wxLIGHT_GREY ) ;
-          dc.SetTextForeground ( *wxBLACK ) ;
-          }
-       else if ( pm == 2 && can->doOverwrite() ) // Overwrite cursor
-          {
-          dc.SetBackgroundMode ( wxSOLID ) ;
-          dc.SetTextBackground ( *wxBLACK ) ;
-          }
-       if ( pm == 2 && can->doOverwrite() ) dc.SetTextForeground ( *wxWHITE ) ;
-       else dc.SetTextForeground ( getBaseColor ( s.GetChar(a) ) ) ;
-       if ( can->isPrinting() && pm == 1 )
-          {
-          dc.SetBrush ( *MYBRUSH ( wxColour ( 230 , 230 , 230 ) ) ) ;
-          dc.SetPen(*wxTRANSPARENT_PEN);
-          dc.DrawRectangle ( px , py , cw , ch ) ;
-          }
-       if ( can->isPrinting() && !can->getPrintToColor() )
-          {
-          dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-          dc.SetTextForeground ( *wxBLACK ) ;
-          }
+        int pm = getMark ( a ) ;
+        char ac = s.GetChar(a) ;
+        if ( pm == 0 && !showNumber && ac == ' ' ) continue ;
+        
+        if ( pm == 1 ) // Marked (light gray background)
+           {
+           dc.SetBackgroundMode ( wxSOLID ) ;
+           dc.SetTextBackground ( *wxLIGHT_GREY ) ;
+           dc.SetTextForeground ( *wxBLACK ) ;
+           }
+        else if ( pm == 2 && can->doOverwrite() ) // Overwrite cursor
+           {
+           dc.SetBackgroundMode ( wxSOLID ) ;
+           dc.SetTextBackground ( *wxBLACK ) ;
+           dc.SetTextForeground ( *wxWHITE ) ;
+           }
+        else dc.SetTextForeground ( getBaseColor ( ac ) ) ;
+        
+        if ( isPrimer )
+           {
+           if ( s.GetChar(a) == vec->getSequenceChar(a) ) dc.SetTextForeground ( *wxBLUE ) ;
+           else dc.SetTextForeground ( *wxRED ) ;
+           }    
+        
+        if ( can->isPrinting() && pm == 1 )
+           {
+           dc.SetBrush ( *MYBRUSH ( wxColour ( 230 , 230 , 230 ) ) ) ;
+           dc.SetPen(*wxTRANSPARENT_PEN);
+           dc.DrawRectangle ( px , py , cw , ch ) ;
+           }
+        if ( can->isPrinting() && !can->getPrintToColor() )
+           {
+           dc.SetBackgroundMode ( wxTRANSPARENT ) ;
+           dc.SetTextForeground ( *wxBLACK ) ;
+           }
 
-       dc.DrawText ( wxString ( s.GetChar(a) ) , px , py ) ;
-       
-       int pz = py + ch ;
+        dc.DrawText ( wxString ( ac ) , px , py ) ;
+        
+        int pz = py + ch ; 
 
-       if ( pm == 2 && !can->doOverwrite() ) // Insert cursor
-          {
-             dc.SetPen(*wxBLACK_PEN);
-             dc.DrawLine ( px-1 , py , px-1 , pz ) ;
-             dc.DrawLine ( px-3 , py , px+2 , py ) ;
-             dc.DrawLine ( px-3 , pz , px+2 , pz ) ;
-          }
-       if ( pm > 0 ) // Reverting cursor settings
-          {
-          dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-          dc.SetTextForeground ( fontColor ) ;
-          }
+        if ( pm == 2 && !can->doOverwrite() ) // Insert cursor
+           {
+              dc.SetPen(*wxBLACK_PEN);
+              dc.DrawLine ( px-1 , py , px-1 , pz ) ;
+              dc.DrawLine ( px-3 , py , px+2 , py ) ;
+              dc.DrawLine ( px-3 , pz , px+2 , pz ) ;
+           }
+        if ( pm > 0 ) // Reverting cursor settings
+           {
+           dc.SetBackgroundMode ( wxTRANSPARENT ) ;
+           dc.SetTextForeground ( fontColor ) ;
+           }
 
         if ( showNumber )
            {
-           wxString t = wxString::Format ( "%d" , a + 1 ) ;
-           t.Pad ( endnumberlength - t.length() , '0' , false ) ;
+           wxString t ;
+           if ( showNumbers )
+              {
+              t = wxString::Format ( "%d" , a + 1 ) ;
+              t.Pad ( endnumberlength - t.length() , '0' , false ) ;
+              }    
+           else
+              {
+              if ( isPrimer ) dc.SetTextForeground ( *wxBLUE ) ;
+              else dc.SetTextForeground ( *wxBLACK ) ;
+              t = alternateName ;
+              }    
            dc.DrawText ( t , bo , py ) ;
            }    
         }    

@@ -1197,6 +1197,21 @@ TVector *TVector::backtranslate ()
     return nv ;
     }    
 
+int TVector::getMem ()
+    {
+    int a , r = 0 ;
+    for ( a = 0 ; a < items.size() ; a++ ) r += items[a].getMem() ;
+    r += sizeof ( TVector ) ;
+    r += sizeof ( TORF ) * worf.size () ;
+    r += rc.size() * sizeof ( TRestrictionCut ) ;
+    r += re.GetCount() * 4 ; // Pointer
+    for ( a = 0 ; a < hiddenEnzymes.GetCount() ; a++ ) r += hiddenEnzymes[a].length() ;
+    for ( a = 0 ; a < proteases.GetCount() ; a++ ) r += proteases[a].length() ;
+    for ( a = 0 ; a < cocktail.GetCount() ; a++ ) r += cocktail[a].length() ;
+    r += sequence.length() + name.length() + desc.length() + params.length() ;
+    // Some minor ones not listed
+    return r ;
+    }    
 
     
 // ***************************************************************************************
@@ -1419,12 +1434,14 @@ void TVectorItem::setType ( wxString s )
     else if ( s == "ORIT" ) type = VIT_ORI_T ;
     else if ( s == "PROTEIN" ) type = VIT_MISC ;
     else if ( s == "REGION" ) type = VIT_MISC ; 
+    if ( type != VIT_MISC && name == "" ) name = s ;
     }
     
 
 void TVectorItem::translate ( TVector *v , SeqAA *aa )
    {
    dna2aa.clear () ;
+   if ( type != VIT_CDS ) return ;
    if ( getRF() == 0 ) return ;
 
    char c = ' ' ;
@@ -1449,7 +1466,6 @@ void TVectorItem::translate ( TVector *v , SeqAA *aa )
    else dna2aa.reserve ( ( to + v->getSequenceLength() - from + 1 ) / 3 + 2 ) ;
 
    wxString three ;
-   three.Alloc ( 5 ) ;
    while ( c != '|' && rf != 0 )
       {
       three.Empty() ;
@@ -1479,7 +1495,8 @@ void TVectorItem::translate ( TVector *v , SeqAA *aa )
             while ( aa->offset_items.GetCount() <= b+coff ) aa->offset_items.Add ( NULL ) ;
             aa->offsets[b+coff] = voff + pawl - 1 ;
             aa->offset_items[b+coff] = this ;
-            }*/
+            }
+            */
          }
 
       // Output
@@ -1521,10 +1538,22 @@ int TVectorItem::getOffsetAt ( int i )
     for ( int a = 0 ; a < dna2aa.size() ; a++ )
        {
        if ( dna2aa[a].dna[0] == i )
-       return a + getOffset() ;
+          return a + getOffset() ;
        }    
     return -1 ;
     }
+    
+int TVectorItem::getMem ()
+    {
+    int a , r = 0 ;
+    for ( a = 0 ; a < pname.GetCount() ; a++ ) r += pname[a].length() + pvalue[a].length() ;
+    r += dna2aa.size() * sizeof ( Tdna2aa ) ;
+    r += 7 * sizeof ( int ) ;
+    r += desc.length() + name.length() ;
+    r += 2 * sizeof ( float ) + sizeof ( wxTreeItemId ) ;
+    r += sizeof ( TVectorItem ) ;
+    return r ;
+    }    
                 
 // ******************************************************************* Tdna2aa
 

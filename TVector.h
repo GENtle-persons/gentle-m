@@ -94,6 +94,7 @@ class TVectorItem
     virtual void setDirection ( int newdir ) { direction = newdir ; }
     virtual char getType () { return type ; }
     virtual void setType ( char newtype ) { type = newtype ; }
+    virtual int getMem () ;
 
     // Parameters
     virtual wxString getParam ( wxString p , wxString def = "" ) ;
@@ -217,6 +218,7 @@ class TVector
     virtual void addName ( wxString s ) ;
     virtual void setGenomeMode ( bool gm = true ) ;
     virtual bool getGenomeMode () ;
+    virtual int getMem () ;
     
     // Variables
     int type ;

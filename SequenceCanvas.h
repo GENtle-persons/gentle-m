@@ -24,7 +24,6 @@ class SequencePartList
     virtual void prepare ( int size ) ;
     virtual void add ( int id , int from , int to ) ;
     virtual void makeLevels () ;
-    virtual void here ( int pos , wxArrayInt &ret ) ;
     virtual int here ( int pos , int level ) ;
     virtual int getID ( int internalID ) ;
     virtual int getFrom ( int internalID ) ;
@@ -189,9 +188,9 @@ class SeqPrimer : public SeqDNA
     virtual void initFromTVector ( TVector *v ) ;
     virtual void addPrimer ( TPrimer *p ) ;
     virtual wxString whatsthis () { return myname ; }
-    virtual int arrange_direct ( int n ) { return arrange ( n ) ; }
-    virtual void show_direct ( wxDC& dc ) { show ( dc ) ; } ;
-    virtual bool useDirectRoutines () { return false ; }
+    virtual int arrange_direct ( int n ) ;
+    virtual void show_direct ( wxDC& dc ) ;
+    virtual bool useDirectRoutines () ;
     
     // Variables
     wxString myname ;

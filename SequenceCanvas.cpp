@@ -182,7 +182,9 @@ void SequenceCanvas::updateEdit ( TVector *v , wxString id , int from )
         {
         v->setChanged () ;
         for ( int a = 0 ; a < seq.GetCount() ; a++ )
-            seq[a]->initFromTVector ( v ) ;
+           {
+           seq[a]->initFromTVector ( v ) ;
+           }    
         arrange () ;
         }
     else if ( getPD() )
@@ -190,7 +192,7 @@ void SequenceCanvas::updateEdit ( TVector *v , wxString id , int from )
         for ( int a = 0 ; a < 4 ; a++ )
            seq.RemoveAt ( seq.GetCount()-1 ) ;
         getPD()->updatePrimersFromSequence () ;
-        getPD()->updateResultSequence() ;
+//        getPD()->updateResultSequence() ;
         arrange () ;
         }
     mark ( id , from , from , 2 ) ;
@@ -1749,12 +1751,13 @@ void SequenceCanvas::stopEdit ()
     setEditMode ( false ) ;
     myass ( lastmarked >= 0 , "SequenceCanvas::stopEdit2" ) ;
     myass ( seq[lastmarked] , "SequenceCanvas::stopEdit3" ) ;
-    if ( child ) child->vec->eraseSequence ( child->vec->getSequenceLength()-1 , 1 ) ; //getSequence().erase ( child->vec->getSequenceLength()-1 , 1 ) ;
+    if ( child ) child->vec->eraseSequence ( child->vec->getSequenceLength()-1 , 1 ) ;
     wxString id ;
     if ( lastmarked >= 0 )
         {
         id = seq[lastmarked]->whatsthis() ;
         seq[lastmarked]->s.erase ( seq[lastmarked]->s.length()-1 , 1 ) ;
+//        if ( child ) updateEdit ( child->vec , id , markedFrom() ) ;
         }    
     arrange () ;
     if ( id != "" ) mark ( id , -1 , -1 ) ;
@@ -2014,13 +2017,78 @@ int SeqPos::getmark ( int where )
     return -1 ;
     }
 
-void SeqBasic::logsize ()
+//------------------------------------------------------------- SequencePartList
+
+int SequencePartList::getID ( int internalID ) { return vi[internalID] ; }
+int SequencePartList::getFrom ( int internalID ) { return vx[internalID] ; }
+int SequencePartList::getTo ( int internalID ) { return vy[internalID] ; }
+
+void SequencePartList::prepare ( int size )
     {
-    mylog ( whatsthis() , wxString::Format ( "s %d" , s.length() ) ) ;
-    mylog ( whatsthis() , wxString::Format ( "p %d" , pos.p.GetCount() * sizeof ( int ) ) ) ;
-    mylog ( whatsthis() , wxString::Format ( "m %d" , pos.m.length() ) ) ;
-    mylog ( whatsthis() , wxString::Format ( "r %d" , pos.r.size() * sizeof ( wxRect ) ) ) ;
-    mylog ( whatsthis() , wxString::Format ( "l %d" , pos.l.size() * sizeof ( wxRect ) ) ) ;
-    mylog ( "---" ) ;
+    vi.Clear () ;
+    vx.Clear () ;
+    vy.Clear () ;
+    vl.Clear () ;
+    vi.Alloc ( size ) ;
+    vl.Alloc ( size ) ;
+    vx.Alloc ( size ) ;
+    vy.Alloc ( size ) ;
+    }    
+    
+void SequencePartList::add ( int id , int from , int to )
+    {
+    vi.Add ( id ) ;
+    vx.Add ( from ) ;
+    vy.Add ( to ) ;
+    vl.Add ( 0 ) ;
+    }    
+    
+void SequencePartList::makeLevels ()
+    {
+    int a , b ;
+    wxString t ;
+    maxlevels = 0 ;
+    vl2.clear () ;
+    for ( a = 0 ; a < vi.GetCount() ; a++ )
+        {
+        wxString t ( ' ' , maxlevels + 5 ) ;
+        for ( b = 0 ; b < a ; b++ )
+           {
+           if ( vx[b] <= vy[a] && vy[b] >= vx[a] )
+              t.SetChar ( vl[b] , '*' ) ;
+           }    
+        vl[a] = t.First ( ' ' ) ;
+        if ( vl[a]+1 > maxlevels ) maxlevels = vl[a]+1 ;
+        while ( vl2.size() < maxlevels ) vl2.push_back ( wxArrayInt() ) ;
+        vl2[vl[a]].Add ( a ) ;
+        }    
+    }    
+    
+int SequencePartList::here ( int pos , int level )
+    {
+    for ( int a = 0 ; a < vl2[level].GetCount() ; a++ )
+        {
+        int b = vl2[level][a] ;
+        if ( pos >= vx[b] && pos <= vy[b] ) return b ;
+        if ( vy[b] < vx[b] )
+           {
+           if ( pos >= vx[b] || pos <= vy[b] ) return b ;
+           }    
+        else if ( vy[b] >= slen )
+           {
+           if ( pos >= vx[b] || pos <= vy[b] - slen ) return b ;
+           }    
+        }    
+    return -1 ;
+    }    
+    
+int SequencePartList::size ()
+    {
+    return vi.GetCount() ;
     }    
 
+int SequencePartList::getLevel ( int i )
+    {
+    return vl[i] ;
+    }    
+    
