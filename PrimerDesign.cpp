@@ -385,11 +385,37 @@ void TPrimerDesign::initme ()
         wxBitmap (myapp()->bmpdir+myapp()->slash+"display_features.bmp", wxBITMAP_TYPE_BMP),
         TRUE, -1, -1, (wxObject *) NULL, txt("m_display_features") ) ;
     toolBar->Realize() ;
+#else
+    MyFrame *f = myapp()->frame ;
+    wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
+    toolBar->AddTool( MDI_TEXT_IMPORT , 
+                wxBitmap (myapp()->bmpdir+"/new.bmp", wxBITMAP_TYPE_BMP),
+                txt("m_new_primer") ) ;
+    toolBar->AddTool( MDI_FILE_OPEN, 
+            wxBitmap (myapp()->bmpdir+"/open.bmp", wxBITMAP_TYPE_BMP), 
+            txt("m_open") , txt("m_opentxt") );
+    toolBar->AddTool( PD_IMPORT, 
+                wxBitmap (myapp()->bmpdir+"/primer_import.bmp", wxBITMAP_TYPE_BMP),
+                txt("b_import_primer") ) ;
+    toolBar->AddTool( PD_EXPORT, 
+                wxBitmap (myapp()->bmpdir+"/primer_export.bmp", wxBITMAP_TYPE_BMP),
+                txt("b_export_primer") ) ;
+    toolBar->AddSeparator() ;
+    toolBar->AddTool( MDI_EDIT_MODE,
+        wxBitmap (myapp()->bmpdir+"/mode_edit.bmp", wxBITMAP_TYPE_BMP),
+        wxBitmap (myapp()->bmpdir+"/mode_edit.bmp", wxBITMAP_TYPE_BMP),
+        TRUE, -1, -1, (wxObject *) NULL, txt("m_edit_mode") ) ;
+    toolBar->Realize() ;    
+    ((wxFrame*)GetParent())->SetToolBar(toolBar);
 #endif
 
     int w , h ;
     Maximize () ;
+#ifdef __WXMSW__
     GetClientSize ( &w , &h ) ;
+#else
+    GetParent()->GetClientSize( &w , &h ) ;
+#endif
 
     // Upper panel
     up = new wxPanel ( hs , -1 , wxDefaultPosition , wxSize ( w , 100 ) ) ;

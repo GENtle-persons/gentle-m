@@ -24,6 +24,25 @@ using namespace std ;
 int global_sort_mode ;
 bool global_sort_ascending ;
 
+bool operator < ( const TREcache c1 , const TREcache c2 )
+    {
+    if ( global_sort_mode == BY_NAME )
+        return global_sort_ascending?(c1.enzyme<c2.enzyme):(c1.enzyme>c2.enzyme);
+    else if ( global_sort_mode == BY_CUTS )
+        return global_sort_ascending?(c1.cut<c2.cut):(c1.cut>c2.cut);
+    }
+
+bool operator == ( const TREcache c1 , const TREcache c2 )
+    {
+    if ( global_sort_mode == BY_NAME )
+        return c1.enzyme == c2.enzyme ;
+    else if ( global_sort_mode == BY_CUTS )
+        return c1.cut == c2.cut ;
+    }
+
+//******************************************************************************    
+
+
 void TRestrictionEditor::OnCharHook(wxKeyEvent& event)
     {
     int k = event.GetKeyCode () ;
@@ -452,23 +471,5 @@ void TRestrictionEditor::res_ct ( wxCommandEvent &event )
 void TRestrictionEditor::res_checkbox ( wxCommandEvent &event )
     {
     nfstv->Enable ( nfst->GetValue() ) ;
-    }
-
-//******************************************************************************    
-
-bool operator < ( const TREcache c1 , const TREcache c2 )
-    {
-    if ( global_sort_mode == BY_NAME )
-        return global_sort_ascending?(c1.enzyme<c2.enzyme):(c1.enzyme>c2.enzyme);
-    else if ( global_sort_mode == BY_CUTS )
-        return global_sort_ascending?(c1.cut<c2.cut):(c1.cut>c2.cut);
-    }
-
-bool operator == ( const TREcache c1 , const TREcache c2 )
-    {
-    if ( global_sort_mode == BY_NAME )
-        return c1.enzyme == c2.enzyme ;
-    else if ( global_sort_mode == BY_CUTS )
-        return c1.cut == c2.cut ;
     }
 
