@@ -315,6 +315,7 @@ class SequenceCanvas : public wxScrolledWindow
     int _from , _to ; // Mark
     bool printToColor ;
     ChildBase *child ; // Wanna-be universal com port to "parent"
+    int maxendnumberlength ;
 
     DECLARE_EVENT_TABLE()
     };

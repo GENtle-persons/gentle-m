@@ -12,6 +12,7 @@
 
 #define ALG_SW 0
 #define ALG_NW 1
+#define ALG_CW 2
 
 typedef vector <int> tvi ;
 typedef vector <char> tvc ;
@@ -24,7 +25,7 @@ class TAlignment : public ChildBase
     
     void initme ( MyApp *_app ) ;
     virtual string getName () ;
-    
+
     int NeedlemanWunsch ( string &s1 , string &s2 )  ;
     int SmithWaterman ( string &s1 , string &s2 )  ;
     int MatrixAlignment ( string &s1 , string &s2 , bool local )  ;
@@ -32,6 +33,7 @@ class TAlignment : public ChildBase
                                     string s1 , string s2 , 
                                     string &t1 , string &t2 ,
                                     int i , int j ) ;
+    
     void redoAlignments () ;
     wxColour findColors ( char c1 , char c2 , bool fg ) ;
 
@@ -49,8 +51,8 @@ class TAlignment : public ChildBase
     int match , mismatch , gap_penalty ;
     vector <TVector*> qVec ;
     int algorithm ;
-    
-    string def ;
+    string matrix ;
+        
     DECLARE_EVENT_TABLE()
     } ;
 
@@ -67,6 +69,7 @@ class TAlignmentDialog : public wxDialog
     wxPanel *pwhat , *phow , *pdisp ;
     wxListBox *cur , *all , *alg ;
     wxSpinCtrl *alg_match , *alg_mismatch , *alg_penalty ;
+    wxChoice *alg_matrix ;
     
     int bo , th ;
     TAlignment *al ;
