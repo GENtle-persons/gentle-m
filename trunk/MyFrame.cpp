@@ -320,13 +320,29 @@ void MyFrame::initme ()
     if ( myapp()->argc > 1 )
        {
        int a , b ;
+       wxProgressDialog pd ( txt("t_loading") , "" , myapp()->argc-1 , NULL , wxPD_ALL ) ;
        for ( a = 1 ; a < myapp()->argc ; a++ )
           {
           wxString path = myapp()->argv[a] ;
-          wxString file = path.AfterLast ( '/' ) ;
-          file = file.AfterLast ( '\\' ) ;
-          importFile ( file , path , -1 ) ;
-          wxSetWorkingDirectory ( myapp()->homedir ) ;
+          if ( !pd.Update ( a-1 , path ) ) break ;
+          if ( path.Left(9).Upper() == "GENTLE://" )
+          	{
+      	    path = path.Mid ( 9 ) ;
+      	    if ( path.GetChar ( path.length()-1 ) == '/' ) // Trailing '/'
+      	    	path = path.Mid ( 0 , path.length() - 1 ) ;
+ 	    	wxString db = path.BeforeFirst ( ':' ) ;
+ 	    	wxString name = path.AfterFirst ( ':' ) ;
+      	    TManageDatabaseDialog mdb ( this , "dummy" , ACTION_MODE_STARTUP ) ;
+      	    if ( !mdb.do_load_DNA ( name , db ) ) wxMessageBox ( txt("t_not_all_files_imported") ) ;
+            mainTree->Refresh () ;
+          	}
+          else
+          	{
+          	wxString file = path.AfterLast ( '/' ) ;
+          	file = file.AfterLast ( '\\' ) ;
+          	importFile ( file , path , -1 ) ;
+          	wxSetWorkingDirectory ( myapp()->homedir ) ;
+          	}   	
           }
        }
         
@@ -497,16 +513,22 @@ void MyFrame::OnFileImport(wxCommandEvent& WXUNUSED(event) )
     d.GetFilenames ( files ) ;
     d.GetPaths ( paths ) ;
     wxBeginBusyCursor();
-    wxDialog dlg ( NULL , -1 , "Test" , wxDefaultPosition , wxSize ( 300 , 20 ) ) ;
-    if ( files.GetCount() > 1 ) dlg.Show() ;
+    wxProgressDialog pd ( txt("t_loading") , "" , files.GetCount() , NULL , wxPD_ALL ) ;
     lockDisplay ( true ) ;
-    for ( int a = 0 ; a < files.GetCount() ; a++ )
+    wxString unknown ;
+    int a ;
+    for ( a = 0 ; a < files.GetCount() ; a++ )
        {
-       wxString msg = wxString::Format ( txt("t_loading") , files[a].c_str() ) ;
-       dlg.SetTitle ( msg ) ;
-       dlg.SetFocus() ;
-       importFile ( files[a] , paths[a] , filter ) ;
+       if ( !pd.Update ( a , files[a] ) ) break ;
+       if ( !importFile ( files[a] , paths[a] , filter ) )
+       		{
+   		    if ( !unknown.IsEmpty() ) unknown += ", " ;
+            unknown += files[a] ;
+            }    
        }
+    if ( a == files.GetCount() ) pd.Update ( a ) ; // Hide progress dialog
+    if ( !unknown.IsEmpty() )
+    	wxMessageBox ( unknown , txt("t_unable_to_detect_file_type") ) ;
     lockDisplay ( false ) ;
     SetFocus () ;
     wxEndBusyCursor();
@@ -515,7 +537,7 @@ void MyFrame::OnFileImport(wxCommandEvent& WXUNUSED(event) )
     activateChild ( getChildIndex ( lastChild ) ) ;
     }
     
-void MyFrame::importFile ( wxString file , wxString path , int filter )
+bool MyFrame::importFile ( wxString file , wxString path , int filter )
     {
     // Trying GenBank format
     if ( filter == 1 || filter == -1 )
@@ -527,7 +549,7 @@ void MyFrame::importFile ( wxString file , wxString path , int filter )
        if ( gb.success )
           {
           newGB ( gb , file ) ;
-          return ;
+          return true ;
           }
        }
        
@@ -539,7 +561,7 @@ void MyFrame::importFile ( wxString file , wxString path , int filter )
         if ( dummy.vf.size() > 0 ) // Success
            {
            newABI ( path , file ) ;
-           return ;
+           return true ;
            }
         }
 
@@ -551,7 +573,7 @@ void MyFrame::importFile ( wxString file , wxString path , int filter )
         if ( pdb.success )
            {
            newPDB ( pdb , file ) ;
-           return ;
+           return true ;
            }
        }
        
@@ -563,7 +585,7 @@ void MyFrame::importFile ( wxString file , wxString path , int filter )
         if ( xml.success() )
            {
            newXML ( xml ) ;
-           return ;
+           return true ;
            }
        }
 
@@ -576,7 +598,7 @@ void MyFrame::importFile ( wxString file , wxString path , int filter )
            TGenBank gb ;
            u.convert ( gb ) ;
            newGB ( gb ) ;
-           return ;
+           return true ;
            }
         }
 
@@ -589,12 +611,11 @@ void MyFrame::importFile ( wxString file , wxString path , int filter )
         if ( clone.success )
            {
            newCLONE ( clone ) ;
-           return ;
+           return true ;
            }
        }
 
-    wxMessageBox ( txt("t_unable_to_detect_file_type") , file ) ;
-    return ;
+    return false ;
 }
 
 void MyFrame::newXML (  TXMLfile &xml , wxString title )
@@ -682,6 +703,8 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
         vv[n]->removeAlignmentArtifacts () ;
     mylog ( "GenBank import" , "artifacts removed" ) ;
         
+/*
+	// Ask if GenBank alignment should be opened as such (not using this right now)
     if ( alignment )
         {
         if ( wxYES != wxMessageBox ( txt("t_possible_alignment") ,
@@ -689,7 +712,7 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
            {
            alignment = false ;
            }        
-        }
+        }*/
         
     wxBeginBusyCursor() ;
     for ( n = 0 ; n < gb.vs_l.size() ; n++ )
@@ -917,6 +940,13 @@ void MyFrame::OnProjectSave(wxCommandEvent& event)
 void MyFrame::OnProjectClose(wxCommandEvent& event)
     {
     int a ;
+    if ( tb_mychild )
+    	{
+    	tb_mychild->Close ( TRUE ) ;
+    	delete tb_mychild ;
+    	tb_mychild = NULL ;
+     	}   	
+    lastChild = NULL ;
     for ( a = 0 ; a < children.GetCount() ; a++ )
         {
 //        children[a]->Close() ;

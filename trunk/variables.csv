@@ -239,6 +239,7 @@
 "t_following_not_in_db_open","The following objects are not stored in any database:","Die folgenden Objekte sind in keiner Datenbank vorhanden:"
 "t_following_end_open","\nDiscard them and load new project?","\nObjekte verwerfen und neues Projekt laden?"
 "t_not_all_files_loaded","Not all files of the project could be loaded!","Nicht alle Projekt-Dateien konnten geladen werden!"
+"t_not_all_files_imported","Not all files could be imported!","Nicht alle Dateien konnten importiert werden!"
 "t_load_last_project","Load last project on startup","Beim Starten das letzte Projekt laden"
 "m_project_close","Close project","Projekt schließen"
 "m_project_closetxt","Close the current project","Das aktuelle Projekt schließen"
@@ -637,3 +638,4 @@
 "t_one_lane_each","One lane each","Eins pro Lane"
 "t_add_all","Add all","Alle hinzufügen"
 "t_gelname_DNA","DNA Agarose gel, %2.1f%%","DNA-Agarose-Gel, %2.1f%%"
+"t_loading","Loading...","Laden..."

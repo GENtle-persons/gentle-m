@@ -22,6 +22,7 @@
 #include "main.h"
 #include <wx/tipdlg.h> 
 #include <wx/splash.h>
+#include <wx/mimetype.h>
 
 #ifdef __WXMSW__
 #include "wx/msw/registry.h"
@@ -100,6 +101,15 @@ void explode ( wxString sep , wxString s , wxArrayString &r )
         }
     if ( !n.IsEmpty() ) r.Add ( n ) ; 
     }
+    
+wxString implode ( wxString sep , wxArrayString &r )
+	{
+	if ( r.GetCount() == 0 ) return "" ;
+	wxString ret = r[0] ;
+	for ( int a = 1 ; a < r.GetCount() ; a++ )
+		ret += sep + r[a] ;
+	return ret ;
+	}    
 
 
 // ===========================================================================
@@ -187,6 +197,34 @@ void registerFileExtension ( wxString extension )
     wxString s = "" , t = regKey ;
     s += "HKEY_CLASSES_ROOT\\" ;
     s += t ;
+    s += "\\shell\\open\\command" ;
+    regKey.SetName ( s ) ;
+
+    if ( !regKey.Exists() ) regKey.Create () ;
+
+    regKey.SetValue ( "" , "\"" + wxString ( myapp()->argv[0] ) + "\" \"%1\"" ) ;
+#else
+#endif
+    }
+    
+void registerProtocol ( wxString extension )
+    {
+#ifdef __WXMSW__    
+    wxRegKey regKey;
+    wxString idName("HKEY_CLASSES_ROOT\\"+extension);
+    regKey.SetName(idName);    
+  
+    if ( !regKey.Exists() )
+        {
+        regKey.Create () ;
+        regKey.SetValue ( "" , "URL: GENtle Protocol" ) ;
+        regKey.SetValue ( "URL Protocol" , "" ) ;
+        }    
+  
+    wxString s = "" , t = regKey ;
+    s += "HKEY_CLASSES_ROOT\\" ;
+//    s += t ;
+	s += extension ;
     s += "\\shell\\open\\command" ;
     regKey.SetName ( s ) ;
 
@@ -302,6 +340,7 @@ bool MyApp::OnInit()
     registerFileExtension ( "codata" ) ;
     registerFileExtension ( "NBRF_PIR" ) ;
     registerFileExtension ( "swissprot" ) ;
+    registerProtocol ( "gentle" ) ;
 
     return TRUE;
 }
@@ -318,6 +357,10 @@ int MyApp::OnExit ()
     
 wxString MyApp::getHTMLCommand ( wxString command )
     {
+    wxMimeTypesManager mtm ;
+    wxFileType *ft = mtm.GetFileTypeFromExtension ( "html" ) ;
+    return ft->GetOpenCommand ( command ) ;
+/*
 #ifdef __WXMSW__    
     wxRegKey regKey;
     wxString idName("HKEY_CLASSES_ROOT\\.html");
@@ -336,6 +379,7 @@ wxString MyApp::getHTMLCommand ( wxString command )
 #else
     return "" ;
 #endif
+*/
     }
     
 wxString MyApp::getFileFormatApplication ( wxString type )

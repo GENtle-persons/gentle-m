@@ -127,8 +127,13 @@ class TStorage
     virtual void tableInfoSet ( TVS &f , TVS &t , wxString nf , wxString nt ) ;
     virtual TStorage *getDBfromEnzymeGroup ( wxString group ) ;
     virtual wxString stripGroupName ( wxString s ) ;
+    virtual void cleanEnzymeGroupCache () ;
+    virtual void setEnzymeCache ( wxString group , wxArrayString &enzymes ) ;
+    virtual void getEnzymeCache ( wxString group , wxArrayString &enzymes ) ;
+    virtual bool isLocalDB () ;
     
     // Variables
+    wxArrayString enzymeGroupCache , enzymeGroupNameCache ;
     wxString dbname , error ;
     int storagetype , ierror ;
     bool writeProtect ;

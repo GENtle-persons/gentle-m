@@ -109,7 +109,7 @@ public:
     virtual void newPDB ( TPDB &pdb , wxString title = "" ) ;
     virtual void newXML ( TXMLfile &xml , wxString title = "" ) ;
     virtual void blast ( wxString seq , wxString prg ) ;
-    virtual void importFile ( wxString file , wxString path , int filter = -1 ) ;
+    virtual bool importFile ( wxString file , wxString path , int filter = -1 ) ;
     virtual void setChild ( ChildBase *ch ) ;
     virtual void removeChild ( ChildBase *ch ) ;
     virtual TStorage *getTempDB ( wxString name ) ;

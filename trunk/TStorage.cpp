@@ -708,8 +708,8 @@ bool TStorage::addEnzymeGroup ( wxString s )
 
 
     TSQLresult sr ;
-    wxString sql = "SELECT eg_name FROM enzyme_group WHERE eg_name=\"" + 
-                 s + "\"" ;
+    cleanEnzymeGroupCache () ;
+    wxString sql = "SELECT eg_name FROM enzyme_group WHERE eg_name=\"" + s + "\"" ;
     sr = getObject ( sql ) ;
     if ( sr.rows() > 0 ) return false ; // Already exists
     
@@ -722,6 +722,7 @@ bool TStorage::addEnzymeGroup ( wxString s )
     
 void TStorage::addRestrictionEnzyme ( TRestrictionEnzyme *r )
     {
+    cleanEnzymeGroupCache() ;
     re.Add ( r ) ;
     }
     
@@ -752,14 +753,21 @@ TRestrictionEnzyme* TStorage::getRestrictionEnzyme ( wxString s )
 
 void TStorage::getEnzymesInGroup ( wxString gn , wxArrayString &vs )
     {
+    int a ;
 	TStorage *t = getDBfromEnzymeGroup ( gn ) ;
 	if ( t )
 		{
 		t->getEnzymesInGroup ( stripGroupName ( gn ) , vs ) ;
 		return ;
 		}
+		
+	if ( !isLocalDB() ) // Use cache
+		{
+		getEnzymeCache ( gn , vs ) ;
+		if ( vs.GetCount() ) return ;
+		}    
+		
     TSQLresult sr ;
-    int a ;
     vs.Clear() ;
     wxString sql ;
     gn = UCfirst ( gn ) ;
@@ -789,13 +797,15 @@ void TStorage::getEnzymesInGroup ( wxString gn , wxArrayString &vs )
            a-- ;
            }
         }
+        
+    if ( !isLocalDB() ) setEnzymeCache ( gn , vs ) ;
     }
 
 void TStorage::getEnzymeGroups ( wxArrayString &vs )
     {
     wxString defdb = getDefaultDB() ;
     TStorage *t = getDBfromEnzymeGroup ( defdb + ":dummy" ) ;
-    if ( t && this == myapp()->frame->LS && t != this )
+    if ( t && isLocalDB() && t != this )
     	{
 	    t->getEnzymeGroups ( vs ) ;
 	    for ( int a = 0 ; a < vs.GetCount() ; a++ )
@@ -803,12 +813,28 @@ void TStorage::getEnzymeGroups ( wxArrayString &vs )
      	}   	
    	else vs.Clear() ;
 
-    TSQLresult sr ;
     int a ;
+   	if ( !isLocalDB() && enzymeGroupNameCache.GetCount() ) // Use cache
+   		{
+	    for ( a = 0 ; a < enzymeGroupNameCache.GetCount() ; a++ )
+	    	vs.Add ( enzymeGroupNameCache[a] ) ;
+    	return ;
+   		}    
+
+    TSQLresult sr ;
+    if ( !isLocalDB() ) cleanEnzymeGroupCache () ;
     wxString sql = "SELECT eg_name FROM enzyme_group" ;
     sr = getObject ( sql ) ;
     for ( a = 0 ; a < sr.content.size() ; a++ )
-        vs.Add ( UCfirst ( sr[a][sr["eg_name"]] ) ) ;
+    	{
+	    wxString groupname = UCfirst ( sr[a][sr["eg_name"]] ) ;
+        vs.Add ( groupname ) ;
+        if ( !isLocalDB() )
+        	{
+        	enzymeGroupNameCache.Add ( groupname ) ; // Add to cache
+        	enzymeGroupCache.Add ( "" ) ; // Add blank dummy to cache
+        	}   	
+        }    
     }
     
 void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme *e )
@@ -818,6 +844,7 @@ void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme *e )
     char u[100] ;
     if ( e->name.IsEmpty() ) return ;
     
+    cleanEnzymeGroupCache() ;
     // Remove old enzyme, if any
     sql = "DELETE FROM enzyme WHERE e_name=\""+e->name+"\"" ;
     getObject ( sql ) ;
@@ -847,16 +874,24 @@ void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme *e )
     getObject ( sql ) ;
     }
     
+void TStorage::cleanEnzymeGroupCache ()
+	{
+	enzymeGroupNameCache.Clear () ;
+	enzymeGroupCache.Clear () ;
+	}    
+    
 void TStorage::addEnzymeToGroup ( wxString enzyme , wxString group )
 	{
 	TStorage *t = getDBfromEnzymeGroup ( group ) ;
 	if ( t )
 		{
+		t->cleanEnzymeGroupCache () ;
 		t->addEnzymeToGroup ( enzyme , stripGroupName ( group ) ) ;
 		return ;
 		}
     wxString sql ;
     
+    cleanEnzymeGroupCache() ;
     sql = "DELETE FROM link_enzyme_group WHERE leg_enzyme=\"" +
           enzyme + "\" AND leg_group=\"" + group + "\"" ;
     getObject ( sql ) ;
@@ -895,6 +930,7 @@ void TStorage::removeEnzymeFromGroup ( wxString enzyme , wxString group )
 		return ;
 		}    
 
+    cleanEnzymeGroupCache() ;
     wxString sql ;
     sql = "DELETE FROM link_enzyme_group WHERE "
           "leg_enzyme=\"" +
@@ -914,10 +950,41 @@ void TStorage::removeEnzymeGroup ( wxString group )
 		return ;
 		}    
 
+    cleanEnzymeGroupCache() ;
     wxString sql ;
     sql = "DELETE FROM link_enzyme_group WHERE leg_group=\"" + group + "\"" ;
     getObject ( sql ) ; 
     sql = "DELETE FROM enzyme_group WHERE eg_name=\"" + group + "\"" ;
     getObject ( sql ) ; 
 	}    
+
+bool TStorage::isLocalDB ()
+	{
+	return dbname == myapp()->frame->LS->dbname ;
+	}
+    
+void TStorage::setEnzymeCache ( wxString group , wxArrayString &enzymes )
+	{
+	if ( group == txt("All") ) return ;
+	int a ;
+	for ( a = 0 ; a < enzymeGroupNameCache.GetCount() && group != enzymeGroupNameCache[a] ; a++ ) ;
+	if ( a == enzymeGroupNameCache.GetCount() )
+		{
+		enzymeGroupNameCache.Add ( group ) ;
+		enzymeGroupCache.Add ( "" ) ;
+		}    
+	enzymeGroupCache[a] = implode ( "," , enzymes ) ;
+	}
+
+void TStorage::getEnzymeCache ( wxString group , wxArrayString &enzymes )
+	{
+	enzymes.Clear () ;
+	if ( group == txt("All") ) return ;
+
+	int a ;
+	for ( a = 0 ; a < enzymeGroupNameCache.GetCount() && group != enzymeGroupNameCache[a] ; a++ ) ;
+	if ( a == enzymeGroupNameCache.GetCount() ) return ;
+
+	explode ( "," , enzymeGroupCache[a] , enzymes ) ;
+	}
 
