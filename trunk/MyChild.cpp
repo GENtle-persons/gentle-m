@@ -584,7 +584,7 @@ void MyChild::OnEditMode(wxCommandEvent& event)
 
 void MyChild::initPanels ()
     {
-    if ( vec->getSequenceLength() > 1000000 ) // Arbitary number
+    if ( vec->getSequenceLength() > 100000 ) // Arbitary number, 100K
         {
         vec->setGenomeMode ( true ) ;
 //        vec->re.Add ( myapp()->frame->LS->getRestrictionEnzyme("BamHI") ) ; // TESTING!!!!!
