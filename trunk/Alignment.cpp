@@ -27,7 +27,7 @@ TAlignment::TAlignment(wxMDIParentFrame *parent, const wxString& title)
     gap_penalty = -2 ; // Gap penalty
     matrix = "BLOSUM" ;
     gap = "-" ;
-    algorithm = ALG_SW ;
+    algorithm = ALG_CW ;
     vec = NULL ;
     }
     
@@ -114,6 +114,7 @@ void TAlignment::initme ()
     toolBar->Realize() ;
 #endif
 
+    Maximize () ;
     wxCommandEvent ev ;
     OnSettings ( ev ) ;
     sc->SetFocus() ;
@@ -140,13 +141,13 @@ void TAlignment::redoAlignments ()
     for ( a = 0 ; a < qVec.size() ; a++ )
         qName.push_back ( qVec[a]->name ) ;
 
+    SetCursor ( *wxHOURGLASS_CURSOR ) ;
     if ( qName.size() <= 1 ) // Just one sequence
         {
         qAlign.push_back ( qVec[0]->sequence ) ;
         }
     else if ( algorithm == ALG_CW ) // Clustal-W, external
         {
-        SetCursor ( *wxHOURGLASS_CURSOR ) ;
 
         wxString cwt = "clustalw.txt" ;
         wxString hd = myapp()->homedir ;
@@ -154,7 +155,7 @@ void TAlignment::redoAlignments ()
         ofstream out ( tx.c_str() , ios::out ) ;
         for ( a = 0 ; a < qVec.size() ; a++ )
            {
-           out << ">" << qName[a] << endl ;
+           out << ">" << wxString::Format ( "%d" , a ) << endl ;
            out << qVec[a]->sequence << endl ;
            }
         out.close () ;
@@ -195,12 +196,9 @@ void TAlignment::redoAlignments ()
            getline ( in , s ) ; // Blank line
            }
 
-        SetCursor ( *wxSTANDARD_CURSOR ) ;
         }
     else // Internal routines
         {
-        SetCursor ( *wxHOURGLASS_CURSOR ) ;
-        wxStopWatch sw ;
         
         for ( a = 0 ; a < 2 ; a++ ) qAlign.push_back ( qVec[a]->sequence ) ;
 
@@ -208,33 +206,16 @@ void TAlignment::redoAlignments ()
            NeedlemanWunsch ( qAlign[0] , qAlign[1] ) ; 
         else if ( algorithm == ALG_SW )
            SmithWaterman ( qAlign[0] , qAlign[1] ) ; 
-/*
-        int first , second ;
-        for ( first = 0 ; first < qAlign.size() ; first++ )
-           {
-           for ( second = first+1 ; second < qAlign.size() ; second++ )
-              {
-              sw.Start () ;
-              int rating = 0 ;
-              if ( algorithm == ALG_NW )
-                 rating = NeedlemanWunsch ( qAlign[first] , qAlign[second] ) ; 
-              else if ( algorithm == ALG_SW )
-                 rating = SmithWaterman ( qAlign[first] , qAlign[second] ) ; 
-              long time = sw.Time() ;
-              wxMessageBox ( wxString::Format ( "%d-%d: time %d ms, rating %d" , first , second , time , rating ) ) ;
-              }
-           }
-*/
 
         while ( qName.size() > 2 ) qName.pop_back () ;
-        SetCursor ( *wxSTANDARD_CURSOR ) ;
         }
+    SetCursor ( *wxSTANDARD_CURSOR ) ;
 
     // Display
     sc->maxendnumberlength = strlen ( txt("t_consensus") ) ;
-    SeqNum *n = new SeqNum ( sc ) ;
-    sc->seq.push_back ( n ) ;
-    n->s = qAlign[0] ;
+//    SeqNum *n = new SeqNum ( sc ) ;
+//    sc->seq.push_back ( n ) ;
+//    n->s = qAlign[0] ;
 
     for ( a = 0 ; a < qName.size() ; a++ )
         {
@@ -245,6 +226,29 @@ void TAlignment::redoAlignments ()
         }
     sc->arrange () ;
     sc->Refresh () ;
+    }
+    
+string TAlignment::getName ()
+    {
+    return "Alignment" ;
+    }
+
+void TAlignment::OnSettings ( wxCommandEvent &ev )
+    {
+    TAlignmentDialog ad ( this , txt("t_settings") ) ;
+    int r = ad.ShowModal () ;
+    if ( r != wxID_OK ) return ;
+
+    qName = ad.vcn ;
+    qVec = ad.vcv ;
+    match = ad.alg_match->GetValue() ;
+    mismatch = ad.alg_mismatch->GetValue() ;
+    gap_penalty = ad.alg_penalty->GetValue() ;
+    matrix = ad.alg_matrix->GetStringSelection().c_str() ;
+    
+    algorithm = ad.alg->GetSelection () ;
+    
+    redoAlignments () ;
     }
 
 // Old internal code
@@ -468,28 +472,6 @@ void TAlignment::MatrixBacktrack ( vector <tvc> &back ,
         }
     }
     
-string TAlignment::getName ()
-    {
-    return "Alignment" ;
-    }
-
-void TAlignment::OnSettings ( wxCommandEvent &ev )
-    {
-    TAlignmentDialog ad ( this , txt("t_settings") ) ;
-    int r = ad.ShowModal () ;
-    if ( r != wxID_OK ) return ;
-
-    qName = ad.vcn ;
-    qVec = ad.vcv ;
-    match = ad.alg_match->GetValue() ;
-    mismatch = ad.alg_mismatch->GetValue() ;
-    gap_penalty = ad.alg_penalty->GetValue() ;
-    matrix = ad.alg_matrix->GetStringSelection().c_str() ;
-    
-    algorithm = ad.alg->GetSelection () ;
-    
-    redoAlignments () ;
-    }
 
 // ******************************************* TAlignmentDialog
 
@@ -550,7 +532,7 @@ void TAlignmentDialog::init_what ()
            all->Append ( f->children[a]->getName().c_str() ) ;
            }
         }
-    
+        
     // Current
     for ( a = 0 ; a < al->qName.size() ; a++ )
         {
@@ -585,9 +567,9 @@ void TAlignmentDialog::init_how ()
                 wxPoint ( bo , r.GetBottom()+bo ) , 
                 wxSize ( w/2-bo , h/2 ) ,
                 0 , NULL , wxLB_SINGLE ) ;
+    alg->Append ( txt("t_clustal_w") ) ;
     alg->Append ( txt("t_smith_waterman") ) ;
     alg->Append ( txt("t_needleman_wunsch") ) ;
-    alg->Append ( txt("t_clustal_w") ) ;
     alg->SetSelection ( al->algorithm ) ;
     
     new wxStaticText ( p , -1 , txt("t_alg_param") , wxPoint ( w/2+bo , th ) ) ;

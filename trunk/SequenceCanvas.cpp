@@ -44,6 +44,7 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
 
     font = new wxFont ( 12 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
     smallFont = new wxFont ( 8 , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    varFont = new wxFont ( 11 , wxROMAN  , wxNORMAL , wxNORMAL ) ;
     charwidth = 0 ;
     charheight = 0 ;
     blankline = 0 ;
@@ -883,6 +884,19 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         {
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
         wxLogStatus(txt("seq_loc"), pos ) ;
+        }
+    else if ( where && child && child->def == "alignment" )
+        {
+        SeqAlign *al = (SeqAlign*)where ;
+        if ( al->s[pos] == '-' ) wxLogStatus ( al->myname.c_str() ) ;
+        else
+           {
+           int a , b ;
+           for ( a = b = 0 ; a < pos ; a++ )
+              if ( al->s[a] != '-' )
+                b++ ;
+           wxLogStatus(wxString::Format("%s (%d)",al->myname.c_str(),b)) ;
+           }
         }
     else
         {

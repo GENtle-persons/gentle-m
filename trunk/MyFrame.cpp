@@ -616,8 +616,6 @@ void MyFrame::InitToolBar(wxToolBar* toolBar)
 void MyFrame::OnAlignment(wxCommandEvent& event)
     {
     TAlignment *subframe = new TAlignment ( myapp()->frame , "Alignment" ) ;
-//    myapp()->my_children.Append(subframe);
-    
     
     // Give it an icon
 #ifdef __WXMSW__
@@ -632,7 +630,7 @@ void MyFrame::OnAlignment(wxCommandEvent& event)
     subframe->Maximize() ;
     
     mainTree->addChild ( subframe , TYPE_ALIGNMENT ) ;
-    children.push_back ( subframe ) ;
+    setChild ( subframe ) ;
     }
     
 void MyFrame::OnManageDatabase(wxCommandEvent& event)
@@ -770,9 +768,6 @@ TAminoAcids *MyFrame::newAminoAcids ( string aa , string title )
     subframe->vec->sequence = aa ;
     subframe->vec->type = TYPE_AMINO_ACIDS ;
 
-//    myapp()->my_children.Append(subframe);
-    
-    
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon("chrt_icn"));
@@ -786,8 +781,8 @@ TAminoAcids *MyFrame::newAminoAcids ( string aa , string title )
     subframe->Maximize() ;
     subframe->showName() ;
     
-    mainTree->addChild ( subframe , TYPE_AMINO_ACIDS ) ;
-    children.push_back ( subframe ) ;
+//    mainTree->addChild ( subframe , TYPE_AMINO_ACIDS ) ;
+    setChild ( subframe ) ;
 
     return subframe ;
     }
@@ -828,7 +823,7 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , string title )
     subframe->showName() ;
     
     mainTree->addChild ( subframe , TYPE_AMINO_ACIDS ) ;
-    children.push_back ( subframe ) ;
+    setChild ( subframe ) ;
 
     return subframe ;
     }
@@ -857,7 +852,7 @@ TABIviewer *MyFrame::newABI ( string filename , string title )
     subframe->showName() ;
     
     mainTree->addChild ( subframe , TYPE_SEQUENCE ) ;
-    children.push_back ( subframe ) ;
+    setChild ( subframe ) ;
 
     return subframe ;
     }
@@ -948,7 +943,7 @@ void MyFrame::OnImageViewer(wxCommandEvent& event)
     subframe->showName() ;
     
     mainTree->addChild ( subframe , TYPE_MISC ) ;
-    children.push_back ( subframe ) ;
+    setChild ( subframe ) ;
     }
     
 void MyFrame::OnCalculator(wxCommandEvent& event)
@@ -972,7 +967,7 @@ void MyFrame::OnCalculator(wxCommandEvent& event)
     subframe->showName() ;
     
     mainTree->addChild ( subframe , TYPE_MISC ) ;
-    children.push_back ( subframe ) ;
+    setChild ( subframe ) ;
     }
     
 wxMenu *MyFrame::getFileMenu ( bool _save , bool _exp , bool _print )

@@ -844,9 +844,8 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
         v->items.push_back ( i ) ;
         }
 
-    v->undo.clear() ;
     v->recalcvisual = true ;
-    v->recalculateCuts () ;
+    v->undo.clear() ;
     
     ChildBase *n = NULL ;
     if ( v->type == TYPE_AMINO_ACIDS )
@@ -858,6 +857,7 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
         }
     else
         {
+        v->recalculateCuts () ;
         n = f->newFromVector ( v , v->type ) ;
         }
 
