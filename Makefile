@@ -14,7 +14,7 @@
 
 
 
-SOURCES = $(main_SOURCES)
+SOURCES = $(GENtle_SOURCES)
 
 srcdir = .
 top_srcdir = .
@@ -36,7 +36,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = main$(EXEEXT)
+bin_PROGRAMS = GENtle$(EXEEXT)
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(top_srcdir)/configure AUTHORS COPYING \
@@ -52,7 +52,7 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am_main_OBJECTS = TXMLfile.$(OBJEXT) TVectorTree.$(OBJEXT) \
+am_GENtle_OBJECTS = TXMLfile.$(OBJEXT) TVectorTree.$(OBJEXT) \
 	TVirtualGel.$(OBJEXT) TVectorEditorItems.$(OBJEXT) \
 	TVectorEditorEnzymes.$(OBJEXT) TVectorEditor.$(OBJEXT) \
 	TVector.$(OBJEXT) TUndo.$(OBJEXT) TUReadSeq.$(OBJEXT) \
@@ -85,9 +85,9 @@ am_main_OBJECTS = TXMLfile.$(OBJEXT) TVectorTree.$(OBJEXT) \
 	malign.$(OBJEXT) palign.$(OBJEXT) prfalign.$(OBJEXT) \
 	random.$(OBJEXT) readmat.$(OBJEXT) sequence.$(OBJEXT) \
 	showpair.$(OBJEXT) trees.$(OBJEXT) util.$(OBJEXT)
-main_OBJECTS = $(am_main_OBJECTS)
+GENtle_OBJECTS = $(am_GENtle_OBJECTS)
 am__DEPENDENCIES_1 =
-main_DEPENDENCIES = $(am__DEPENDENCIES_1)
+GENtle_DEPENDENCIES = $(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I. -I$(srcdir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -100,8 +100,8 @@ CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
-SOURCES = $(main_SOURCES)
-DIST_SOURCES = $(main_SOURCES)
+SOURCES = $(GENtle_SOURCES)
+DIST_SOURCES = $(GENtle_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -251,8 +251,8 @@ bitmaps/plasmid_circular.bmp \
 bitmaps/print.bmp \
 bitmaps/scissors.bmp
 
-main_LDADD = $(WX_LIBS) -L/usr/lib -lsqlite -lmysqlclient
-main_SOURCES = TXMLfile.cpp\
+GENtle_LDADD = $(WX_LIBS) -L/usr/lib -lsqlite -lmysqlclient
+GENtle_SOURCES = TXMLfile.cpp\
 TVectorTree.cpp\
 TVirtualGel.cpp\
 TVectorEditorItems.cpp\
@@ -445,9 +445,9 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
-main$(EXEEXT): $(main_OBJECTS) $(main_DEPENDENCIES) 
-	@rm -f main$(EXEEXT)
-	$(CXXLINK) $(main_LDFLAGS) $(main_OBJECTS) $(main_LDADD) $(LIBS)
+GENtle$(EXEEXT): $(GENtle_OBJECTS) $(GENtle_DEPENDENCIES) 
+	@rm -f GENtle$(EXEEXT)
+	$(CXXLINK) $(GENtle_LDFLAGS) $(GENtle_OBJECTS) $(GENtle_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
