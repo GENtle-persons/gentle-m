@@ -15,6 +15,12 @@ class TREcache
     wxString enzyme ;
     int cut ;
     } ;
+    
+class TFragment
+	{
+	public :
+	int from , to , length ;
+	} ;    
 
 class TRestrictionEditor : public wxDialog
     {
@@ -30,7 +36,9 @@ class TRestrictionEditor : public wxDialog
     virtual void add2cocktail ( wxString s ) ;
     virtual void del_from_cocktail ( wxString s ) ;
     virtual void refreshCocktail () ;
+    virtual void getFragmentList ( wxArrayInt &cuts , vector <TFragment> &fragments ) ;
     virtual void listFragments ( wxListCtrl *list , wxArrayInt &vi ) ;
+    virtual void listEnzymesInGroup ( wxString gr , wxArrayString &vs ) ;
     
     virtual void res_ll ( wxListEvent &event ) ;
     virtual void res_coc_ll ( wxListEvent &event ) ;
@@ -41,12 +49,15 @@ class TRestrictionEditor : public wxDialog
     virtual void res_ac ( wxCommandEvent &event ) ;
     virtual void res_ct ( wxCommandEvent &event ) ;
     virtual void res_checkbox ( wxCommandEvent &event ) ;
+    virtual void res_cb_add2gel ( wxCommandEvent &event ) ;
     virtual void res_coc_rm ( wxCommandEvent &event ) ;
     virtual void onOK ( wxCommandEvent &event ) ;
     virtual void onCancel ( wxCommandEvent &event ) ;
+    virtual void onAddAll ( wxCommandEvent &event ) ;
     virtual void OnCharHook(wxKeyEvent& event) ;
     
     // Variables
+    wxCheckBox *createFragments , *add2gel , *oneLaneEach ;
     wxListCtrl *el , *el2 , *rsl , *rsl2 ;
     wxRadioBox *rb ;
     wxChoice *gl ;
@@ -60,6 +71,7 @@ class TRestrictionEditor : public wxDialog
     vector <TREcache> cutcache ;
     wxArrayString nocut , cocktail , *remoteCocktail ;
     wxString pre , last_enzyme_selected , last_enzyme_selected_coc ;
+    wxArrayInt cocktailFragments ;
 
     DECLARE_EVENT_TABLE()
     } ;

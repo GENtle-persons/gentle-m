@@ -632,3 +632,8 @@
 "t_ges_met_dcm","DCM","DCM"
 "t_ges_showgc","Show GC contents","Zeige GC-Gehalt"
 "t_gc_blocks","GC%% in %d bp blocks","GC%% in %d bp Blöcken"
+"t_create_fragments","Create fragments","Fragmente erzeugen"
+"t_add2gel","Add to gel","Zum Gel hinzufügen"
+"t_one_lane_each","One lane each","Eins pro Lane"
+"t_add_all","Add all","Alle hinzufügen"
+"t_gelname_DNA","DNA Agarose gel, %2.0f%%","DNA-Agarose-Gel, %2.0f%%"

@@ -11,8 +11,8 @@ class TGelLane
 	public :
 	virtual void clear () ;
 	virtual void setMarker ( wxString _name ) ;
-	virtual void add ( int size , int weight = 0 ) ;
-	virtual void add ( int size , wxString title = "" ) ;
+	virtual void add ( int size , int weight = 1 ) ;
+	virtual void add ( int size , wxString title ) ;
 	virtual void add ( int size , int weight , wxString title ) ;
 	wxString name , type ;
 	wxArrayInt vi , vw ;
@@ -54,7 +54,7 @@ class TMyGelControl : public wxControl
     public :
     TMyGelControl ( wxWindow *parent , int id = -1 ) ;
 
-    virtual void OnDraw(wxDC& pdc) ;
+    virtual void OnDraw(wxDC& dc) ;
     virtual void OnPaint(wxPaintEvent& event) ;
 
     virtual void OnEvent(wxMouseEvent& event);
@@ -63,8 +63,8 @@ class TMyGelControl : public wxControl
     virtual void OnPrint(wxCommandEvent &event);
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){};
     
-    virtual int getLanePos ( int size , int height , float percent = 0 ) ;
-    virtual double fix_percent ( int size , float percent = 0 ) ;
+    virtual int getLanePos ( int size , int height , float perc = 0 ) ;
+    virtual double fix_percent ( int size , float perc = 0 ) ;
     
     virtual void drawBand ( wxDC &dc , TGelLane &lane , int band ) ;
     

@@ -897,20 +897,57 @@ void MyChild::OnExtractAA(wxCommandEvent& event)
     myapp()->frame->newAminoAcids ( seq , tt ) ;
     }
         
-void MyChild::OnRestriction(wxCommandEvent& event)
-    {
+void MyChild::runRestriction ( wxString s )
+	{
     MyFrame *f = myapp()->frame ; //(MyFrame*) GetParent() ;
     TRestrictionEditor ed ( f , "" , wxPoint(-1,-1) , wxSize(600,400) , 
                wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL);
-//    ed.pre = s ;
+    ed.pre = s ;
     ed.cocktail = vec->cocktail ;
     ed.remoteCocktail = &vec->cocktail ;
     ed.initme ( vec ) ;
-    if ( ed.ShowModal () == wxID_OK )
-       {
-       vec->cocktail = ed.cocktail ;
-       vec->doAction() ;
-       }
+    if ( ed.ShowModal () != wxID_OK ) return ;
+
+    vec->cocktail = ed.cocktail ;
+    if ( ed.createFragments->GetValue() ) vec->doAction() ; // Cut it!
+    if ( FALSE == ed.add2gel->GetValue() ) return ; // No add to gel
+    
+    TVirtualGel *gel = myapp()->frame->useGel ( "DNA" ) ;
+    if ( ed.oneLaneEach->GetValue() )
+    	{
+	    int c ;
+	    for ( c = 0 ; c < ed.cocktail.GetCount() ; c++ )
+	    	{
+ 	    	wxArrayInt vi ;
+ 	    	vi = ed.getcuts ( ed.cocktail[c] ) ;
+ 	    	addFragmentsToGel ( ed.cocktail[c] , vi , gel , ed ) ;
+	    	}
+    	}
+    else
+    	{
+	    addFragmentsToGel ( "Cuts" , ed.cocktailFragments , gel , ed ) ;
+    	}    
+   	gel->Refresh() ;
+   	gel->Activate () ;
+	}    
+	
+void MyChild::addFragmentsToGel ( wxString title , wxArrayInt &cuts , TVirtualGel *gel , TRestrictionEditor &ed )
+	{
+	TGelLane lane ;
+    lane.name = title ;
+    vector <TFragment> fragments ;
+    ed.getFragmentList ( cuts , fragments ) ;
+    for ( int a = 0 ; a < fragments.size() ; a++ )
+    	{
+    	wxString text = wxString::Format ( "%d [%d-%d]" , fragments[a].length , fragments[a].from+1 , fragments[a].to+1 ) ;
+    	lane.add ( fragments[a].length , text ) ;
+    	}   	
+	gel->lanes.push_back ( lane ) ;
+	}    
+        
+void MyChild::OnRestriction(wxCommandEvent& event)
+    {
+    runRestriction ( "" ) ;
     }
     
 void MyChild::OnTransformSequence(wxCommandEvent& event)
