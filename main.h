@@ -3,8 +3,9 @@
 
 typedef unsigned int uint ;
 
-// This will turn the myass error logging on/off
-// Place a comment in front of the following line when compiling releases
+// Place a comment in front of the following lines when compiling releases
+
+// Turn error logging on/off
 //#define MYDEBUG
 
 // Turn logging on/off
@@ -23,7 +24,7 @@ typedef unsigned int uint ;
 #define MYDEBUG
 #endif
 
-#endif
+#endif // MYTEST
 
 #include "wx/wxprec.h"
 
@@ -74,6 +75,9 @@ using namespace std ;
 #include <wx/listctrl.h>
 #include <wx/snglinst.h>
 #include <wx/laywin.h>
+#include <wx/progdlg.h>
+
+#define wxPD_ALL (wxPD_AUTO_HIDE|wxPD_APP_MODAL|wxPD_CAN_ABORT|wxPD_ELAPSED_TIME|wxPD_ESTIMATED_TIME|wxPD_REMAINING_TIME)
 
 #define TYPE_VECTOR 0
 #define TYPE_FRAGMENT 1
@@ -199,6 +203,7 @@ void mylog ( wxString function , wxString msg = "" ) ;
 
 void wxStringInsert ( wxString &s , int from , wxString t ) ;
 void explode ( wxString sep , wxString s , wxArrayString &r ) ;
+wxString implode ( wxString sep , wxArrayString &r ) ;
 char* txt ( wxString item ) ;
 void init_txt ( wxString lang ) ;
 MyApp *myapp () ;

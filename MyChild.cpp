@@ -294,6 +294,10 @@ void MyChild::initme ()
     vec = new TVector ;
     vec->init () ;
 
+
+
+
+
     // Canvas
     int width, height;
     GetParent()->GetClientSize(&width, &height);
@@ -316,7 +320,7 @@ void MyChild::initme ()
     treeBox = new TVectorTree((ChildBase*)swl, TREE_DUMMY ) ;
     treeBox->textWindow = propBox ;
     treeBox->p = this ;
-
+    
     sw->SplitHorizontally ( swu , cSequence , height/2 ) ;
     swu->SplitVertically ( swl , cPlasmid , width/4 ) ;
     swl->SplitHorizontally ( treeBox , propBox , height/3 ) ;

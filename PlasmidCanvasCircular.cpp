@@ -267,9 +267,14 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
 
             // Drawing polygon
             vector <wxPoint> p ;
+            int b = a + 1 , c ;
             p.push_back ( wxPoint ( deg2x ( 360*a/nob , r1 ) , deg2y ( 360*a/nob , r1 ) ) ) ;
-            p.push_back ( wxPoint ( deg2x ( 360*(a+1)/nob , r1 ) , deg2y ( 360*(a+1)/nob , r1 ) ) ) ;
-            p.push_back ( wxPoint ( deg2x ( 360*(a+1)/nob , r2 ) , deg2y ( 360*(a+1)/nob , r2 ) ) ) ;
+            for ( c = int(360*a/nob) ; c%361 != int(360*b/nob)%361 ; c++ )
+            	p.push_back ( wxPoint ( deg2x ( c , r1 ) , deg2y ( c , r1 ) ) ) ;
+            p.push_back ( wxPoint ( deg2x ( 360*b/nob , r1 ) , deg2y ( 360*b/nob , r1 ) ) ) ;
+            p.push_back ( wxPoint ( deg2x ( 360*b/nob , r2 ) , deg2y ( 360*b/nob , r2 ) ) ) ;
+            for ( c = int(360*b/nob) ; c%361 != int(360*a/nob)%361 ; c-- )
+            	p.push_back ( wxPoint ( deg2x ( c , r2 ) , deg2y ( c , r2 ) ) ) ;
             p.push_back ( wxPoint ( deg2x ( 360*a/nob , r2 ) , deg2y ( 360*a/nob , r2 ) ) ) ;
             p.push_back ( wxPoint ( deg2x ( 360*a/nob , r1 ) , deg2y ( 360*a/nob , r1 ) ) ) ;
             wxPoint *wp ;

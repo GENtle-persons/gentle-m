@@ -803,21 +803,15 @@ void TManageDatabaseDialog::pmOpenFiles ( wxArrayString &_names , wxString _db )
     wxBeginBusyCursor () ;
     myapp()->frame->lockDisplay ( true ) ;
 
-//    wxStopWatch sw ;
-//    sw.Start () ;
-
+    wxProgressDialog pd ( txt("t_loading") , "" , _names.GetCount() , NULL , wxPD_ALL ) ;
     for ( int a = 0 ; a < _names.GetCount() ; a++ )
-       do_load ( _names[a] , _db ) ;
-
-//    sw.Pause() ;
-//    wxMessageBox ( wxString::Format ( "%d ms" , sw.Time() ) ) ;
+    	{
+	    if ( !pd.Update ( a , _names[a] ) ) break ;
+    	do_load ( _names[a] , _db ) ;
+     	}   	
 
     myapp()->frame->lockDisplay ( false ) ;
     wxEndBusyCursor () ;
-
-//    wxSizeEvent se ;
-//    myapp()->frame->OnSize ( se ) ;
-//    myapp()->frame->mainTree->Refresh () ;
     }
 
 // --------------------------------
@@ -863,8 +857,13 @@ bool TManageDatabaseDialog::do_load_project ( wxString name , wxString db )
 
     // Load DNA
     bool all = true ;
+    wxProgressDialog pd ( txt("t_loading") , "" , sr.rows() , NULL , wxPD_ALL ) ;
     for ( a = 0 ; a < sr.rows() ; a++ )
+    	{
+	    if ( !pd.Update ( a , sr[a][sr["pd_dna"]] ) ) break ;
         all &= do_load_DNA ( sr[a][sr["pd_dna"]] , sr[a][sr["pd_database"]] ) ;
+        }    
+    if ( a == sr.rows() ) pd.Update ( a ) ; // Close dialog
 
     myapp()->frame->lockDisplay ( false ) ;
     wxEndBusyCursor() ;
