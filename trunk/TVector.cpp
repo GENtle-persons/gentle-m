@@ -505,7 +505,6 @@ void TVector::insert_char ( char x , int pos , bool overwrite )
        sequence.SetChar(pos-1,x) ;
        return ;
        }
-    myass ( pos-1 >= 0 , "TVector::insert_char_2" ) ;
     wxStringInsert ( sequence , pos-1 , dummy ) ;
 //    sequence.insert ( pos-1 , dummy ) ;
     int a ;

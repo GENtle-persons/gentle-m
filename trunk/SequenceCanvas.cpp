@@ -362,6 +362,8 @@ void SequenceCanvas::editCharPressed ( int k , TVector *v , wxString *the_sequen
 	int from = markedFrom () ;
     wxString dummy ;
     int new_from = from + 1 ;
+    
+    if ( from == -1 ) return ;
    
     if ( k == '.' && getPD() )
        {
