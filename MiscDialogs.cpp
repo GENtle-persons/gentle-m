@@ -1,5 +1,15 @@
 #include "MiscDialogs.h"
 
+BEGIN_EVENT_TABLE(TAlignmentDialog, wxDialog)
+    EVT_BUTTON(AL_ADD,TAlignmentDialog::OnAdd)
+    EVT_BUTTON(AL_DEL,TAlignmentDialog::OnDel)
+    EVT_BUTTON(AL_UP,TAlignmentDialog::OnUp)
+    EVT_BUTTON(AL_DOWN,TAlignmentDialog::OnDown)
+    EVT_BUTTON(AL_OK,TAlignmentDialog::OnOK)
+    EVT_BUTTON(AL_CANCEL,TAlignmentDialog::OnCancel)
+    EVT_CHAR_HOOK(TAlignmentDialog::OnCharHook)
+END_EVENT_TABLE()
+
 BEGIN_EVENT_TABLE(TMyMultipleChoiceDialog, wxDialog )
     EVT_BUTTON(MCD_OK,TMyMultipleChoiceDialog::OnOK)
 END_EVENT_TABLE()
@@ -33,6 +43,255 @@ BEGIN_EVENT_TABLE(TURLtext, wxTextCtrl )
 END_EVENT_TABLE()
 
 
+
+// ******************************************* TAlignmentDialog
+
+TAlignmentDialog::TAlignmentDialog(wxWindow *parent, const wxString& title )
+    : wxDialog ( myapp()->frame , -1 , title , wxDefaultPosition , wxSize ( 600 , 450 ) )
+    {
+    bo = 5 ;
+    th = 15 ;
+    al = (TAlignment*) parent ;
+    Show ( TRUE ) ;
+    int w , h ;
+#ifdef __WXMSW__
+    GetClientSize ( &w , &h ) ;
+#else
+    w = 600 ;
+    h = 450 ;
+#endif
+    nb = new wxNotebook ( this , -1 , wxPoint ( 0 , 0 ) , wxSize ( w , h-40 ) ) ;
+    init_what () ;
+    init_how () ;
+    init_disp () ;
+    wxButton *b = new wxButton ( this , AL_OK , txt("b_OK") , wxPoint ( w/3 , h-30 ) ) ;
+    new wxButton ( this , AL_CANCEL , txt("b_cancel") , wxPoint ( w/2 , h-30 ) ) ;
+    b->SetDefault () ;
+    b->SetFocus () ;
+    }
+    
+TAlignmentDialog::~TAlignmentDialog ()
+    {
+    nb->DeleteAllPages() ;
+    }
+    
+void TAlignmentDialog::init_what ()
+    {
+    pwhat = new wxPanel ( this , -1 ) ;
+    nb->AddPage ( pwhat , txt("t_sequences") ) ;
+    wxPanel *p = pwhat ;
+    int w , h ;
+    p->GetClientSize ( &w , &h ) ;
+    new wxStaticText ( p , -1 , txt("al_cur") , wxPoint ( bo , bo ) ) ;
+    new wxStaticText ( p , -1 , txt("al_all") , wxPoint ( bo + w*2/3 , bo ) ) ;
+    cur = new wxListBox ( p , AL_CUR , 
+                wxPoint ( bo , bo*2+th ) , 
+                wxSize ( w/3-bo , h-bo*2-th ) ,
+                0 , NULL , wxLB_EXTENDED ) ;
+    all = new wxListBox ( p , AL_ALL , 
+                wxPoint ( bo + w*2/3 , bo*2+th ) , 
+                wxSize ( w*2/3-bo , h-bo*2-th ) ,
+                0 , NULL , wxLB_EXTENDED ) ;
+    new wxButton ( p , AL_ADD , txt("<-- add") , wxPoint ( w*3/8 , th*2 ) , wxSize ( w/4 , th*3/2 ) ) ;
+    new wxButton ( p , AL_DEL , txt("del -->") , wxPoint ( w*3/8 , th*4 ) , wxSize ( w/4 , th*3/2 ) ) ;
+    new wxButton ( p , AL_UP , txt("b_up_in_list") , wxPoint ( w/3+bo , th*7 ) , wxSize ( w/6 , th*3/2 ) ) ;
+    new wxButton ( p , AL_DOWN , txt("b_down_in_list") , wxPoint ( w/3+bo , th*9 ) , wxSize ( w/6 , th*3/2 ) ) ;
+    
+    new wxStaticText ( p , -1 , txt("t_alignment_txt") , wxPoint ( w/3+bo , th*11 ) , wxSize ( w/4 , th*4 ) ) ;
+    
+    int a ;
+    MyFrame *f = myapp()->frame ;
+    // All
+    for ( a = 0 ; a < f->children.size() ; a++ )
+        {
+        if ( f->children[a]->def == "dna" || 
+             f->children[a]->def == "AminoAcids" ||
+             f->children[a]->def == "ABIviewer" )
+           {
+           vav.push_back ( ((MyChild*)f->children[a])->vec ) ;
+           van.push_back ( f->children[a]->getName() ) ;
+           all->Append ( f->children[a]->getName().c_str() ) ;
+           }
+        }
+        
+    // Current
+    for ( a = 0 ; a < al->lines.size() ; a++ )
+        {
+        if ( al->lines[a].name != txt("t_identity") )
+           {
+           vcv.push_back ( al->lines[a].v ) ;
+           vcn.push_back ( al->lines[a].name ) ;
+           cur->Append ( al->lines[a].name.c_str() ) ;
+           }
+        }
+        
+    if ( vcn.size() == 0 )
+        {
+        for ( a = 0 ; a < van.size() ; a++ )
+           {
+           vcn.push_back ( van[a] ) ;
+           vcv.push_back ( vav[a] ) ;
+           cur->Append ( van[a].c_str() ) ;
+           }
+        }
+    }
+    
+void TAlignmentDialog::init_how ()
+    {
+    phow = new wxPanel ( this , -1 ) ;
+    nb->AddPage ( phow , txt("t_algorithm") ) ;
+    wxPanel *p = phow ;
+    int w , h ;
+    p->GetClientSize ( &w , &h ) ;
+    wxStaticText *st ;
+    wxRect r ;
+    st = new wxStaticText ( p , -1 , txt("t_algorithm") , wxPoint ( bo , th ) ) ;
+    r = st->GetRect () ;
+    alg = new wxListBox ( p , AL_ALG , 
+                wxPoint ( bo , r.GetBottom()+bo ) , 
+                wxSize ( w/2-bo , h/2 ) ,
+                0 , NULL , wxLB_SINGLE ) ;
+    alg->Append ( txt("t_clustal_w") ) ;
+    alg->Append ( txt("t_smith_waterman") ) ;
+    alg->Append ( txt("t_needleman_wunsch") ) ;
+    alg->SetSelection ( al->algorithm ) ;
+    
+    new wxStaticText ( p , -1 , txt("t_alg_param") , wxPoint ( w/2+bo , th ) ) ;
+    st = new wxStaticText ( p , -1 , txt("t_match") , wxPoint ( w/2+bo , th*2+bo ) ) ;
+    r = st->GetRect() ;
+    int xo = r.GetRight() ;
+    
+    st = new wxStaticText ( p , -1 , txt("t_mismatch") , wxPoint ( w/2+bo , th*4+bo ) ) ;
+    r = st->GetRect() ;
+    if ( xo < r.GetRight() ) xo = r.GetRight() ;
+    
+    st = new wxStaticText ( p , -1 , txt("t_gap_penalty") , wxPoint ( w/2+bo , th*6+bo ) ) ;
+    r = st->GetRect() ;
+    if ( xo < r.GetRight() ) xo = r.GetRight() ;
+    xo += bo ;
+    
+    alg_match = new wxSpinCtrl ( p , AL_MATCH , "" ,
+                                    wxPoint ( xo , th*2 ) ,
+                                    wxSize ( w/5 , th*3/2 ) ) ;
+    alg_match->SetRange ( -100 , 100 ) ;
+    alg_match->SetValue ( al->match ) ;
+
+    alg_mismatch = new wxSpinCtrl ( p , AL_MISMATCH , "" ,
+                                    wxPoint ( xo , th*4 ) ,
+                                    wxSize ( w/5 , th*3/2 ) ) ;
+    alg_mismatch->SetRange ( -100 , 100 ) ;
+    alg_mismatch->SetValue ( al->mismatch ) ;
+
+    alg_penalty = new wxSpinCtrl ( p , AL_PENALTY , "" ,
+                                    wxPoint ( xo , th*6 ) ,
+                                    wxSize ( w/5 , th*3/2 ) ) ;
+    alg_penalty->SetRange ( -100 , 100 ) ;
+    alg_penalty->SetValue ( al->gap_penalty ) ;
+    
+    alg_matrix = new wxChoice ( p , AL_MATRIX , wxPoint ( xo , th*8 ) ) ;
+    alg_matrix->Append ( txt("t_matrix_blosum") ) ;
+    alg_matrix->Append ( txt("t_matrix_pam") ) ;
+    alg_matrix->Append ( txt("t_matrix_gonnet") ) ;
+    alg_matrix->Append ( txt("t_matrix_id") ) ;
+    alg_matrix->SetSelection ( 0 ) ;
+    }
+
+void TAlignmentDialog::init_disp ()
+    {
+    pdisp = new wxPanel ( this , -1 ) ;
+    nb->AddPage ( pdisp , txt("t_display") ) ;
+    wxPanel *p = pdisp ;
+    int w , h ;
+    p->GetClientSize ( &w , &h ) ;
+    }
+
+void TAlignmentDialog::OnOK ( wxCommandEvent &ev )
+    {
+    wxDialog::OnOK ( ev ) ;
+    }
+
+void TAlignmentDialog::OnCancel ( wxCommandEvent &ev )
+    {
+    wxDialog::OnCancel ( ev ) ;
+    }
+
+void TAlignmentDialog::OnCharHook ( wxKeyEvent& event )
+    {
+    int k = event.GetKeyCode () ;
+    wxCommandEvent ev ;
+    if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    else event.Skip() ;
+    }
+
+void TAlignmentDialog::OnAdd ( wxCommandEvent &ev )
+    {
+    wxArrayInt sel ;
+    int a , b , n = all->GetSelections ( sel ) ;
+    for ( a = 0 ; a < n ; a++ )
+        {
+        for ( b = 0 ; b < vcv.size() && vcv[b] != vav[sel[a]] ; b++ ) ;
+        if ( b == vcv.size() )
+           {
+           vcv.push_back ( vav[sel[a]] ) ;
+           vcn.push_back ( van[sel[a]] ) ;
+           cur->Append ( van[sel[a]].c_str() ) ;
+           }
+        }
+    }
+
+void TAlignmentDialog::OnDel ( wxCommandEvent &ev )
+    {
+    wxArrayInt sel ;
+    int a , b , n = cur->GetSelections ( sel ) ;
+    for ( a = 0 ; a < n ; a++ ) vcv[sel[a]] = NULL ;
+    for ( a = 0 ; a < vcv.size() ; a++ )
+        {
+        if ( vcv[a] == NULL )
+           {
+           for ( b = a+1 ; b < vcv.size() ; b++ )
+              {
+              vcv[b-1] = vcv[b] ;
+              vcn[b-1] = vcn[b] ;
+              }
+           vcv.pop_back () ;
+           vcn.pop_back () ;
+           a-- ;
+           }
+        }
+    cur->Clear () ;
+    for ( a = 0 ; a < vcn.size() ; a++ )
+        cur->Append ( vcn[a].c_str() ) ;
+    }
+
+void TAlignmentDialog::OnUp ( wxCommandEvent &ev )
+    {
+    wxArrayInt sel ;
+    int a , b , n = cur->GetSelections ( sel ) ;
+    if ( n != 1 ) return ;
+    b = sel[0] ;
+    if ( b == 0 ) return ;
+    TVector *d_v = vcv[b] ; vcv[b] = vcv[b-1] ; vcv[b-1] = d_v ;
+    string d_n = vcn[b] ; vcn[b] = vcn[b-1] ; vcn[b-1] = d_n ;
+    cur->Clear () ;
+    for ( a = 0 ; a < vcn.size() ; a++ )
+        cur->Append ( vcn[a].c_str() ) ;
+    cur->SetSelection ( b-1 ) ;
+    }
+
+void TAlignmentDialog::OnDown ( wxCommandEvent &ev )
+    {
+    wxArrayInt sel ;
+    int a , b , n = cur->GetSelections ( sel ) ;
+    if ( n != 1 ) return ;
+    b = sel[0] ;
+    if ( b == vcv.size()-1 ) return ;
+    TVector *d_v = vcv[b] ; vcv[b] = vcv[b+1] ; vcv[b+1] = d_v ;
+    string d_n = vcn[b] ; vcn[b] = vcn[b+1] ; vcn[b+1] = d_n ;
+    cur->Clear () ;
+    for ( a = 0 ; a < vcn.size() ; a++ )
+        cur->Append ( vcn[a].c_str() ) ;
+    cur->SetSelection ( b+1 ) ;
+    }
 
 
 // TStandbyDialog

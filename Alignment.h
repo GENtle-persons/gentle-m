@@ -19,6 +19,17 @@ typedef vector <char> tvc ;
 
 class SeqAA ;
 
+class TAlignLine // pun intended
+    {
+    public :
+    TAlignLine () ;
+    void ResetSequence () ;
+    ChildBase *FindOrigin () ;
+    string name , s ;
+    TVector *v ;
+    bool isIdentity ;
+    } ;
+
 class TAlignment : public ChildBase
     {
     public :
@@ -41,7 +52,22 @@ class TAlignment : public ChildBase
 
     void OnSettings ( wxCommandEvent &ev ) ;
     void OnClose(wxCloseEvent& event) ;
-    void invokeOriginal ( string name , int pos ) ;
+    void invokeOriginal ( int id , int pos ) ;
+
+    void OnMenuBold ( wxCommandEvent &ev ) ;
+    void OnMenuMono ( wxCommandEvent &ev ) ;
+    void OnMenuNorm ( wxCommandEvent &ev ) ;
+    void OnMenuInvs ( wxCommandEvent &ev ) ;
+    void OnMenuSoa ( wxCommandEvent &ev ) ;
+    void OnMenuSoaI ( wxCommandEvent &ev ) ;
+    void OnMenuSiml ( wxCommandEvent &ev ) ;
+    void OnMenuSeq ( wxCommandEvent &ev ) ;
+    void OnMenuFeat ( wxCommandEvent &ev ) ;
+    void OnMenuRNA ( wxCommandEvent &ev ) ;
+    void OnMenuCons ( wxCommandEvent &ev ) ;
+    void OnMenuIdent ( wxCommandEvent &ev ) ;
+    
+    void OnHorizontal ( wxCommandEvent& event ) ;
     
     void callMiddleMouseButton ( string id , int pos ) ;
     
@@ -51,12 +77,13 @@ class TAlignment : public ChildBase
     wxSplitterWindow *hs ;
     string gap ;
     
-    vector <string> qAlign , qName ;
+    vector <TAlignLine> lines ;
+
     int match , mismatch , gap_penalty ;
-    vector <TVector*> qVec ;
     int algorithm ;
     string matrix ;
     TVector *dv ;
+    bool bold , mono ;
     
     private :
     wxListBox *mmb ;
@@ -64,41 +91,18 @@ class TAlignment : public ChildBase
     void myInsert ( int line , int pos , char what ) ;
     void myDelete ( int line , int pos ) ;
     void updateSequence () ;
-    void generateConsensusSequene () ;
+    void generateConsensusSequene ( bool addit = true ) ;
+    void fixMenus ( int i ) ;
+    
+    public :
+    string consensusSequence ;
+    vector <wxColour> colDNA , colAA , *colCur ;
+    bool cons , invs ;
+    bool showIdentity ;
         
     DECLARE_EVENT_TABLE()
     } ;
 
-class TAlignmentDialog : public wxDialog
-    {
-    public :
-    TAlignmentDialog(wxWindow *parent, const wxString& title ) ;
-    ~TAlignmentDialog();
-    void init_what () ;
-    void init_how () ;
-    void init_disp () ;
-    
-    wxNotebook *nb ;
-    wxPanel *pwhat , *phow , *pdisp ;
-    wxListBox *cur , *all , *alg ;
-    wxSpinCtrl *alg_match , *alg_mismatch , *alg_penalty ;
-    wxChoice *alg_matrix ;
-    
-    int bo , th ;
-    TAlignment *al ;
-    
-    virtual void OnCharHook(wxKeyEvent& event) ;
-    void OnOK ( wxCommandEvent &ev ) ;
-    void OnCancel ( wxCommandEvent &ev ) ;
-    void OnAdd ( wxCommandEvent &ev ) ;
-    void OnDel ( wxCommandEvent &ev ) ;
-    void OnUp ( wxCommandEvent &ev ) ;
-    void OnDown ( wxCommandEvent &ev ) ;
-    
-    vector <TVector*> vav , vcv ;
-    vector <string> van , vcn ;
 
-    DECLARE_EVENT_TABLE()
-    } ;
 
 #endif

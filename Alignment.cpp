@@ -4,23 +4,30 @@ BEGIN_EVENT_TABLE(TAlignment, MyChildBase)
     EVT_BUTTON(ALIGNMENT_SETTINGS,TAlignment::OnSettings)
     EVT_CLOSE(TAlignment::OnClose)
     EVT_SET_FOCUS(ChildBase::OnFocus)
+    EVT_CHECKBOX(ALIGN_HORIZ, TAlignment::OnHorizontal)
+    
+    EVT_MENU(ALIGN_BOLD,TAlignment::OnMenuBold)
+    EVT_MENU(ALIGN_MONO,TAlignment::OnMenuMono)
+    EVT_MENU(ALIGN_NORM,TAlignment::OnMenuNorm)
+    EVT_MENU(ALIGN_INVS,TAlignment::OnMenuInvs)
+    EVT_MENU(ALIGN_SOA,TAlignment::OnMenuSoa)
+    EVT_MENU(ALIGN_SOAI,TAlignment::OnMenuSoaI)
+    EVT_MENU(ALIGN_SIML,TAlignment::OnMenuSiml)
+    EVT_MENU(ALIGN_SEQ,TAlignment::OnMenuSeq)
+    EVT_MENU(ALIGN_FEAT,TAlignment::OnMenuFeat)
+    EVT_MENU(ALIGN_RNA,TAlignment::OnMenuRNA)
+    EVT_MENU(ALIGN_CONS,TAlignment::OnMenuCons)
+    EVT_MENU(ALIGN_IDENT,TAlignment::OnMenuIdent)
+
 END_EVENT_TABLE()
 
-BEGIN_EVENT_TABLE(TAlignmentDialog, wxDialog)
-    EVT_BUTTON(AL_ADD,TAlignmentDialog::OnAdd)
-    EVT_BUTTON(AL_DEL,TAlignmentDialog::OnDel)
-    EVT_BUTTON(AL_UP,TAlignmentDialog::OnUp)
-    EVT_BUTTON(AL_DOWN,TAlignmentDialog::OnDown)
-    EVT_BUTTON(AL_OK,TAlignmentDialog::OnOK)
-    EVT_BUTTON(AL_CANCEL,TAlignmentDialog::OnCancel)
-    EVT_CHAR_HOOK(TAlignmentDialog::OnCharHook)
-END_EVENT_TABLE()
 
 
 
 TAlignment::TAlignment(MyFrame *parent, const wxString& title)
     : ChildBase(parent, title)
     {
+    invs = cons = bold = mono = false ;
     dv = NULL ;
     def = "alignment" ;
     match = 2 ; // Match value
@@ -31,6 +38,40 @@ TAlignment::TAlignment(MyFrame *parent, const wxString& title)
     algorithm = ALG_CW ;
     vec = NULL ;
     aaa = NULL ;
+    colCur = NULL ;
+    
+    // Now we read the default color scheme from BioEdit...
+    wxString fn = myapp()->homedir + myapp()->slash + "default.tab" ;
+    ifstream in ( fn.c_str() , ios::in ) ;
+    int a ;
+    vector <wxColour> *c = NULL ;
+    while ( colDNA.size() < 256 ) colDNA.push_back ( wxColour(0,0,0) ) ;
+    colAA = colDNA ;
+    while ( !in.eof() )
+        {
+        string s ;
+        getline ( in , s ) ;
+        if ( s == "" ) ;
+        else if ( s[0] == '/' )
+           {
+           if ( s == "/amino acids/" ) c = &colAA ;
+           if ( s == "/nucleotides/" ) c = &colDNA ;
+           }
+        else if ( c )
+           {
+           string t ;
+           getline ( in , t ) ; // s in int, t is list of chars
+           int x = atoi ( s.c_str() ) ;
+           for ( int b = 0 ; b < t.length() ; b++ )
+              {
+              (*c)[(unsigned char)t[b]] = wxColour (
+                          ( x >> 16 ) & 255 ,
+                          ( x >> 8 ) & 255 ,
+                          x & 255 ) ;
+              }
+           }
+        }
+    colCur = &colAA ;
     }
     
 TAlignment::~TAlignment ()
@@ -43,11 +84,18 @@ wxColour TAlignment::findColors ( char c1 , char c2 , bool fg )
     {
     int a ;
     wxColour r ;
-    if ( fg ) r = *wxBLACK ;
+    if ( invs && c1 != '-' ) fg = !fg ;
+    if ( fg )
+        {
+        int cc = (unsigned char) c1 ;
+        if ( !colCur ) r = *wxBLACK ;
+        else if ( cc < 0 || cc >= colCur->size() ) r = *wxBLACK ;
+        else r = (*colCur)[cc] ;
+        }
     else r = *wxWHITE ;
     
-    if ( fg && c1 != '-' && c2 != '-' && c1 != c2 )
-        r = wxColour ( 200 , 0 , 0 ) ;
+//    if ( fg && c1 != '-' && c2 != '-' && c1 != c2 )
+//        r = wxColour ( 200 , 0 , 0 ) ;
     
     return r ;
     }
@@ -71,21 +119,44 @@ void TAlignment::initme ()
     wxMenu *file_menu = myapp()->frame->getFileMenu () ;
     wxMenu *tool_menu = myapp()->frame->getToolMenu () ;
     wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
+    wxMenu *view_menu = new wxMenu ;
+
+    view_menu->Append(ALIGN_BOLD, txt("m_align_bold") , "" , true ) ;
+    view_menu->Append(ALIGN_MONO, txt("m_align_mono") , "" , true ) ;
+    view_menu->AppendSeparator();
+    view_menu->Append(ALIGN_NORM, txt("m_align_norm") , "" , true ) ;
+    view_menu->Append(ALIGN_INVS, txt("m_align_invs") , "" , true ) ;
+    view_menu->Append(ALIGN_SOA , txt("m_align_soa")  , "" , true ) ;
+    view_menu->Append(ALIGN_SOAI, txt("m_align_soai") , "" , true ) ;
+    view_menu->Append(ALIGN_SIML, txt("m_align_siml") , "" , true ) ;
+    view_menu->Append(ALIGN_SEQ , txt("m_align_seq")  , "" , true ) ;
+    view_menu->Append(ALIGN_FEAT, txt("m_align_feat") , "" , true ) ;
+    view_menu->Append(ALIGN_RNA , txt("m_align_rna")  , "" , true ) ;
+    view_menu->AppendSeparator();
+    view_menu->Append(ALIGN_CONS, txt("m_align_cons") , "" , true ) ;
+    view_menu->Append(ALIGN_IDENT, txt("m_align_ident") , "" , true ) ;
 
     wxMenuBar *menu_bar = new wxMenuBar;
 
     menu_bar->Append(file_menu, txt("m_file") );
+    menu_bar->Append(view_menu, txt("m_view") );
     menu_bar->Append(tool_menu, txt("m_tools") );
     menu_bar->Append(help_menu, txt("m_help") );
 
     SetMenuBar(menu_bar);
-
+    menu_bar->FindItem(ALIGN_NORM)->Check ( true ) ;
+    menu_bar->FindItem(ALIGN_CONS)->Check ( true ) ;
+    menu_bar->FindItem(ALIGN_IDENT)->Check ( true ) ;
+    cons = true ;
+    showIdentity = true ;
+    
     hs = new wxSplitterWindow ( this , SPLIT_ALIGNMENT ) ;
 
     // Sequence Canvas
     sc = new SequenceCanvas ( hs , wxPoint ( 0 , 0 ) , wxSize ( 100 , 100 ) ) ;
     sc->blankline = 1 ;
     sc->child = this ;
+    sc->EnableScrolling ( true , true ) ;
 
     // Upper panel
     up = new wxPanel ( hs , -1 , wxDefaultPosition , wxSize ( 1000 , 100 ) ) ;
@@ -123,6 +194,8 @@ void TAlignment::initme ()
     toolBar->AddTool( MDI_FILE_OPEN, 
                 myapp()->frame->bitmaps[1] ,
             txt("m_open") , txt("m_opentxt") );
+    wxCheckBox *mycb = new wxCheckBox ( toolBar , ALIGN_HORIZ , txt("t_horizontal") ) ;
+    toolBar->AddControl ( mycb ) ;
     toolBar->Realize() ;
 #endif
 
@@ -143,20 +216,17 @@ void TAlignment::redoAlignments ()
         sc->seq.pop_back () ;
         }
 
-    if ( qName.size() == 0 ) return ;
+    while ( lines.size() && lines[lines.size()-1].isIdentity )
+        lines.pop_back () ;
+    if ( lines.size() == 0 ) return ;
 
     // Align
     int a ;
-    qAlign.clear () ;
-    qName.clear () ;
-    while ( qAlign.size() ) qAlign.pop_back () ;
-    for ( a = 0 ; a < qVec.size() ; a++ )
-        qName.push_back ( qVec[a]->name ) ;
-
+    TAlignLine line ;
     SetCursor ( *wxHOURGLASS_CURSOR ) ;
-    if ( qName.size() <= 1 ) // Just one sequence
+    if ( lines.size() <= 1 ) // Just one sequence
         {
-        qAlign.push_back ( qVec[0]->sequence ) ;
+        lines[0].ResetSequence() ;
         }
     else if ( algorithm == ALG_CW ) // Clustal-W, external
         {
@@ -165,10 +235,10 @@ void TAlignment::redoAlignments ()
         wxString hd = myapp()->homedir ;
         wxString tx = hd + "\\" + cwt ;
         ofstream out ( tx.c_str() , ios::out ) ;
-        for ( a = 0 ; a < qVec.size() ; a++ )
+        for ( a = 0 ; a < lines.size() ; a++ )
            {
            out << ">" << wxString::Format ( "%d" , a ) << endl ;
-           out << qVec[a]->sequence << endl ;
+           out << lines[a].v->sequence << endl ;
            }
         out.close () ;
         
@@ -194,78 +264,97 @@ void TAlignment::redoAlignments ()
            } while ( s == "" ) ;
         int off ;
         for ( off = s.length()-1 ; s[off-1] != ' ' ; off-- ) ;
-        qAlign.clear() ;
-        while ( qAlign.size() < qVec.size() ) qAlign.push_back ( "" ) ;
-        qName.push_back ( txt("t_consensus") ) ;
-        qAlign.push_back ( "" ) ; // Consensus sequence
+        line.isIdentity = true ;
+        line.name = txt("t_identity") ;
+        lines.push_back ( line ) ;
         bool first = true ;
+        for ( a = 0 ; a < lines.size() ; a++ ) lines[a].s = "" ;
         while ( !in.eof() )
            {
-           for ( a = 0 ; a < qAlign.size() ; a++ )
+           for ( a = 0 ; a < lines.size() ; a++ )
               {
               if ( !first ) getline ( in , s ) ;
               else first = false ;
               int index = atoi ( s.substr ( 0 , off-1 ) . c_str() ) ;
-              if ( s[0] == ' ' ) index = qAlign.size()-1 ;
-              qAlign[index] += s.substr ( off , s.length() ) ;
+              if ( s[0] == ' ' ) index = lines.size()-1 ;
+              lines[index].s += s.substr ( off , s.length() ) ;
               }
            getline ( in , s ) ; // Blank line
            }
 
+        generateConsensusSequene ( false ) ;
         }
     else // Internal routines
         {
-        
-        for ( a = 0 ; a < 2 ; a++ ) qAlign.push_back ( qVec[a]->sequence ) ;
+        while ( lines.size() > 2 ) lines.pop_back () ;      
+        for ( a = 0 ; a < 2 ; a++ ) lines[a].ResetSequence () ;
 
         if ( algorithm == ALG_NW )
-           NeedlemanWunsch ( qAlign[0] , qAlign[1] ) ; 
+           NeedlemanWunsch ( lines[0].s , lines[1].s ) ; 
         else if ( algorithm == ALG_SW )
-           SmithWaterman ( qAlign[0] , qAlign[1] ) ; 
+           SmithWaterman ( lines[0].s , lines[1].s ) ; 
 
-        while ( qName.size() > 2 ) qName.pop_back () ;
-        while ( qAlign.size() > 2 ) qAlign.pop_back () ;
         generateConsensusSequene () ;
         }
     SetCursor ( *wxSTANDARD_CURSOR ) ;
 
     // Display
-    sc->maxendnumberlength = strlen ( txt("t_consensus") ) ;
+    sc->maxendnumberlength = strlen ( txt("t_identity") ) ;
 
     SeqFeature *f = new SeqFeature ( sc ) ;
     sc->seq.push_back ( f ) ;
 
-    for ( a = 0 ; a < qName.size() ; a++ )
+    for ( a = 0 ; a < lines.size() ; a++ )
         {
         SeqAlign *d = new SeqAlign ( sc ) ;
         sc->seq.push_back ( d ) ;
-        d->s = qAlign[a] ;
-        d->myname = qName[a] ;
+        d->id = a ;
+        d->s = lines[a].s ;
+        d->myname = lines[a].name ;
         }
 
     // Features
     if ( dv ) delete dv ;
     dv = new TVector ;
-    *dv = *qVec[0] ;
+    *dv = *(lines[0].v) ;
     
-    for ( a = 0 ; a < qAlign[0].length() ; a++ )
+    for ( a = 0 ; a < lines[0].s.length() ; a++ )
         {
-        if ( qAlign[0][a] == '-' )
+        if ( lines[0].s[a] == '-' )
            dv->insert_char ( '-' , a+1 , false ) ;
         }
 
     updateSequence () ;
     }
     
-void TAlignment::generateConsensusSequene ()
+void TAlignment::generateConsensusSequene ( bool addit )
     {
-    int a ;
-    qName.push_back ( txt("t_consensus") ) ;
+    int a , b ;
+    // The stars'n'stripes sequence ;-)
+    TAlignLine line ;
+    line.isIdentity = true ;
+    line.name = txt("t_identity") ;
     string s ;
-    for ( a = 0 ; a < qAlign[0].length() ; a++ )
-        if ( qAlign[0][a] == qAlign[1][a] ) s += "*" ;
+    for ( a = 0 ; a < lines[0].s.length() ; a++ )
+        if ( lines[0].s[a] == lines[1].s[a] ) s += "*" ;
         else s += " " ;
-    qAlign.push_back ( s ) ;
+    if ( addit ) lines.push_back ( line ) ;
+    
+    // The REAL consensus sequence
+    consensusSequence = lines[0].s ;
+    for ( a = 0 ; a < consensusSequence.length() ; a++ )
+        {
+        int c[256] ;
+        for ( b = 0 ; b < 256 ; b++ ) c[b] = 0 ;
+        for ( b = 0 ; b + 1 < lines.size() ; b++ ) c[lines[b].s[a]]++ ;
+        consensusSequence[a] = ' ' ;
+        for ( b = 0 ; b < 256 ; b++ )
+           {
+           float f = 100 * c[b] ;
+           f /= lines.size() - 1 ;
+           if ( f >= 60 ) consensusSequence[a] = b ;
+           }
+        }
     }
     
 void TAlignment::myInsert ( int line , int pos , char what )
@@ -273,9 +362,9 @@ void TAlignment::myInsert ( int line , int pos , char what )
     if ( line == 0 )
         {
         dv->insert_char ( '-' , pos , false ) ;
-        qAlign[0] = dv->sequence ;
+        lines[0].s = dv->sequence ;
         }
-    else qAlign[line].insert ( pos-1 , wxString ( what ) ) ;
+    else lines[line].s.insert ( pos-1 , wxString ( what ) ) ;
     }
 
 void TAlignment::myDelete ( int line , int pos )
@@ -283,64 +372,69 @@ void TAlignment::myDelete ( int line , int pos )
     if ( line == 0 )
         {
         dv->doRemoveNucleotide ( pos - 1 ) ;
-        qAlign[0] = dv->sequence ;
+        lines[0].s = dv->sequence ;
         }
-    else qAlign[line].erase ( pos-1 , 1 ) ;
+    else lines[line].s.erase ( pos-1 , 1 ) ;
     }
         
 void TAlignment::callMiddleMouseButton ( string id , int pos )
     {
     wxString mode = mmb->GetStringSelection () ;
     int a , line ;
-    for ( line = 0 ; line < qName.size() && qName[line] != id ; line++ ) ;
-    if ( line == qName.size() ) return ;
-    if ( qAlign[line][pos-1] != '-' && mode == txt("t_mmb_delete_gap") )
+    for ( line = 0 ; line < lines.size() && lines[line].name != id ; line++ ) ;
+    if ( line == lines.size() ) return ;
+    if ( lines[line].s[pos-1] != '-' && mode == txt("t_mmb_delete_gap") )
        {
        wxBell() ;
        return ;
        }
     
-    for ( a = 0 ; a+1 < qAlign.size() ; a++ )
+    for ( a = 0 ; a < lines.size() ; a++ )
         {
-        if ( mode == txt("t_mmb_insert_gap") )
+        if ( lines[a].isIdentity ) {}
+        else if ( mode == txt("t_mmb_insert_gap") )
             {
             if ( line == a ) myInsert ( a , pos , '-' ) ;
-            else myInsert ( a , qAlign[a].length()+1 , '-' ) ;
+            else myInsert ( a , lines[a].s.length()+1 , '-' ) ;
             }
         else if ( mode == txt("t_mmb_delete_gap") )
             {
             if ( line == a )
                {
                myDelete ( a , pos ) ;
-               myInsert (  a , qAlign[a].length()+1 , '-' ) ;
+               myInsert (  a , lines[a].s.length()+1 , '-' ) ;
                }
             }
         else if ( mode == txt("t_mmb_insert_gap_others") )
             {
             if ( line != a ) myInsert ( a , pos , '-' ) ;
-            else myInsert ( a , qAlign[a].length()+1 , '-' ) ;
+            else myInsert ( a , lines[a].s.length()+1 , '-' ) ;
             }
         else if ( mode == txt("t_mmb_delete_gap_others") )
             {
-            if ( line != a && qAlign[a][pos-1] == '-' )
+            if ( line != a && lines[a].s[pos-1] == '-' )
                {
                myDelete ( a , pos ) ;
-               myInsert ( a , qAlign[a].length()+1 , '-' ) ;
+               myInsert ( a , lines[a].s.length()+1 , '-' ) ;
                }
             }
         SeqAlign *d = (SeqAlign*) sc->seq[a+1] ;
-        d->s = qAlign[a] ;
+        d->id = a ;
+        d->s = lines[a].s ;
         }
         
     // Cleanup of '-' ends
     bool again = true ;
     while ( again )
         {
-        for ( a = 0 ; a+1 < qAlign.size() && qAlign[a][qAlign[a].length()-1] == '-' ; a++ ) ;
-        if ( a+1 == qAlign.size() )
+        int max = 0 ;
+        for ( a = 0 ; a < lines.size() && !lines[a].isIdentity ; a++ ) max++ ;
+        for ( a = 0 ; a < lines.size() && !lines[a].isIdentity && lines[a].s[lines[a].s.length()-1] == '-' ; a++ ) ;
+        if ( a == max )
             {
-            for ( a = 0 ; a+1 < qAlign.size() ; a++ )
-               myDelete ( a , qAlign[a].length() ) ;
+            for ( a = 0 ; a < lines.size() ; a++ )
+               if ( !lines[a].isIdentity )
+                  myDelete ( a , lines[a].s.length() ) ;
             }
         else again = false ;
         }
@@ -352,6 +446,7 @@ void TAlignment::updateSequence ()
     SeqFeature *f = (SeqFeature*) sc->seq[0] ;
     if ( dv->type == TYPE_AMINO_ACIDS )
         {
+        colCur = &colAA ;
         if ( aaa ) delete aaa ;
         aaa = new SeqAA ( NULL ) ;
         sc->seq[0] = aaa ;
@@ -365,6 +460,7 @@ void TAlignment::updateSequence ()
         }
     else if ( dv->type == TYPE_VECTOR )
         {
+        colCur = &colDNA ;
         if ( aaa ) delete aaa ;
         aaa = new SeqAA ( NULL ) ;
         sc->seq[0] = aaa ;
@@ -394,8 +490,17 @@ void TAlignment::OnSettings ( wxCommandEvent &ev )
     int r = ad.ShowModal () ;
     if ( r != wxID_OK ) return ;
 
-    qName = ad.vcn ;
-    qVec = ad.vcv ;
+    lines.clear () ;
+    for ( int a = 0 ; a < ad.vcn.size() ; a++ )
+        {
+        TAlignLine line ;
+        line.name = ad.vcn[a] ;
+        line.v = ad.vcv[a] ;
+//        line.origin = NULL ;
+        line.ResetSequence() ;
+        lines.push_back ( line ) ;
+        }
+    
     match = ad.alg_match->GetValue() ;
     mismatch = ad.alg_mismatch->GetValue() ;
     gap_penalty = ad.alg_penalty->GetValue() ;
@@ -565,12 +670,13 @@ void TAlignment::MatrixBacktrack ( vector <tvc> &back ,
     }
 
 
-void TAlignment::invokeOriginal ( string name , int pos )
+void TAlignment::invokeOriginal ( int id , int pos )
     {
     int a ;
     MyFrame *f = myapp()->frame ;
     ChildBase *c = NULL ;
-    
+    c = lines[id].FindOrigin() ;
+    /*
     for ( a = 0 ; a < f->children.size() ; a++ )
         {
         if ( ( f->children[a]->def == "dna" || 
@@ -585,7 +691,7 @@ void TAlignment::invokeOriginal ( string name , int pos )
               }
            else c = f->children[a] ;
            }
-        }
+        }*/
     if ( !c ) return ;
 
     c->Activate() ;
@@ -622,22 +728,22 @@ void TAlignment::redoAlignments ()
         sc->seq.pop_back () ;
         }
 
-    if ( qName.size() == 0 ) return ;
+    if ( lines.size() == 0 ) return ;
 
     // Align
-    while ( qAlign.size() ) qAlign.pop_back () ;
+    while ( lines.size() ) qAlign.pop_back () ;
     for ( a = 0 ; a < qVec.size() ; a++ )
         qAlign.push_back ( qVec[a]->sequence ) ;
 
-    if ( qName.size() > 1 )
+    if ( lines.size() > 1 )
         {
         SetCursor ( *wxHOURGLASS_CURSOR ) ;
         wxStopWatch sw ;
 
         int first , second ;
-        for ( first = 0 ; first < qAlign.size() ; first++ )
+        for ( first = 0 ; first < lines.size() ; first++ )
            {
-           for ( second = first+1 ; second < qAlign.size() ; second++ )
+           for ( second = first+1 ; second < lines.size() ; second++ )
               {
               sw.Start () ;
               int rating = 0 ;
@@ -662,7 +768,7 @@ void TAlignment::redoAlignments ()
     sc->seq.push_back ( n ) ;
     n->s = qAlign[0] ;
 
-    for ( a = 0 ; a < qName.size() ; a++ )
+    for ( a = 0 ; a < lines.size() ; a++ )
         {
         SeqAlign *d = new SeqAlign ( sc ) ;
         sc->seq.push_back ( d ) ;
@@ -674,252 +780,161 @@ void TAlignment::redoAlignments ()
     }
 */
 
-// ******************************************* TAlignmentDialog
+void TAlignment::fixMenus ( int i )
+    {
+    wxMenuBar *mb = GetMenuBar () ;
+    mb->FindItem(ALIGN_BOLD)->Check ( bold ) ;
+    mb->FindItem(ALIGN_MONO)->Check ( mono ) ;
+    mb->FindItem(ALIGN_NORM)->Check ( false ) ;
+    mb->FindItem(ALIGN_INVS)->Check ( false ) ;
+    mb->FindItem(ALIGN_SOA)->Check ( false ) ;
+    mb->FindItem(ALIGN_SOAI)->Check ( false ) ;
+    mb->FindItem(ALIGN_SIML)->Check ( false ) ;
+    mb->FindItem(ALIGN_SEQ)->Check ( false ) ;
+    mb->FindItem(ALIGN_FEAT)->Check ( false ) ;
+    mb->FindItem(ALIGN_RNA)->Check ( false ) ;
+    
+    mb->FindItem(i)->Check ( true ) ;    
+    
+    invs = mb->FindItem(ALIGN_INVS)->IsChecked () ;
+    sc->arrange () ;
+    sc->SilentRefresh() ;    
+    }
 
-TAlignmentDialog::TAlignmentDialog(wxWindow *parent, const wxString& title )
-    : wxDialog ( myapp()->frame , -1 , title , wxDefaultPosition , wxSize ( 600 , 450 ) )
+void TAlignment::OnMenuBold ( wxCommandEvent &ev )
     {
-    bo = 5 ;
-    th = 15 ;
-    al = (TAlignment*) parent ;
-    Show ( TRUE ) ;
-    int w , h ;
-#ifdef __WXMSW__
-    GetClientSize ( &w , &h ) ;
-#else
-    w = 600 ;
-    h = 450 ;
-#endif
-    nb = new wxNotebook ( this , -1 , wxPoint ( 0 , 0 ) , wxSize ( w , h-40 ) ) ;
-    init_what () ;
-    init_how () ;
-    init_disp () ;
-    wxButton *b = new wxButton ( this , AL_OK , txt("b_OK") , wxPoint ( w/3 , h-30 ) ) ;
-    new wxButton ( this , AL_CANCEL , txt("b_cancel") , wxPoint ( w/2 , h-30 ) ) ;
-    b->SetDefault () ;
-    b->SetFocus () ;
+    bold = !bold ;
+    sc->arrange () ;
+    sc->SilentRefresh() ;    
     }
-    
-TAlignmentDialog::~TAlignmentDialog ()
+
+void TAlignment::OnMenuMono ( wxCommandEvent &ev )
     {
-    nb->DeleteAllPages() ;
+    mono = !mono ;
     }
-    
-void TAlignmentDialog::init_what ()
+
+void TAlignment::OnMenuNorm ( wxCommandEvent &ev )
     {
-    pwhat = new wxPanel ( this , -1 ) ;
-    nb->AddPage ( pwhat , txt("t_sequences") ) ;
-    wxPanel *p = pwhat ;
-    int w , h ;
-    p->GetClientSize ( &w , &h ) ;
-    new wxStaticText ( p , -1 , txt("al_cur") , wxPoint ( bo , bo ) ) ;
-    new wxStaticText ( p , -1 , txt("al_all") , wxPoint ( bo + w*2/3 , bo ) ) ;
-    cur = new wxListBox ( p , AL_CUR , 
-                wxPoint ( bo , bo*2+th ) , 
-                wxSize ( w/3-bo , h-bo*2-th ) ,
-                0 , NULL , wxLB_EXTENDED ) ;
-    all = new wxListBox ( p , AL_ALL , 
-                wxPoint ( bo + w*2/3 , bo*2+th ) , 
-                wxSize ( w*2/3-bo , h-bo*2-th ) ,
-                0 , NULL , wxLB_EXTENDED ) ;
-    new wxButton ( p , AL_ADD , txt("<-- add") , wxPoint ( w*3/8 , th*2 ) , wxSize ( w/4 , th*3/2 ) ) ;
-    new wxButton ( p , AL_DEL , txt("del -->") , wxPoint ( w*3/8 , th*4 ) , wxSize ( w/4 , th*3/2 ) ) ;
-    new wxButton ( p , AL_UP , txt("b_up_in_list") , wxPoint ( w/3+bo , th*7 ) , wxSize ( w/6 , th*3/2 ) ) ;
-    new wxButton ( p , AL_DOWN , txt("b_down_in_list") , wxPoint ( w/3+bo , th*9 ) , wxSize ( w/6 , th*3/2 ) ) ;
-    
-    new wxStaticText ( p , -1 , txt("t_alignment_txt") , wxPoint ( w/3+bo , th*11 ) , wxSize ( w/4 , th*4 ) ) ;
-    
+    fixMenus ( ALIGN_NORM ) ;
+    }
+
+void TAlignment::OnMenuInvs ( wxCommandEvent &ev )
+    {
+    fixMenus ( ALIGN_INVS ) ;
+    }
+
+void TAlignment::OnMenuSoa ( wxCommandEvent &ev )
+    {
     int a ;
-    MyFrame *f = myapp()->frame ;
-    // All
-    for ( a = 0 ; a < f->children.size() ; a++ )
+    for ( a = 0 ; a < sc->seq.size() ; a++ )
         {
-        if ( f->children[a]->def == "dna" || 
-             f->children[a]->def == "AminoAcids" ||
-             f->children[a]->def == "ABIviewer" )
-           {
-           vav.push_back ( ((MyChild*)f->children[a])->vec ) ;
-           van.push_back ( f->children[a]->getName() ) ;
-           all->Append ( f->children[a]->getName().c_str() ) ;
-           }
-        }
-        
-    // Current
-    for ( a = 0 ; a < al->qName.size() ; a++ )
-        {
-        if ( al->qName[a] != txt("t_consensus") )
-           {
-           vcv.push_back ( al->qVec[a] ) ;
-           vcn.push_back ( al->qName[a] ) ;
-           cur->Append ( al->qName[a].c_str() ) ;
-           }
-        }
-        
-    if ( vcn.size() == 0 )
-        {
-        for ( a = 0 ; a < van.size() ; a++ )
-           {
-           vcn.push_back ( van[a] ) ;
-           vcv.push_back ( vav[a] ) ;
-           cur->Append ( van[a].c_str() ) ;
-           }
-        }
-    }
-    
-void TAlignmentDialog::init_how ()
-    {
-    phow = new wxPanel ( this , -1 ) ;
-    nb->AddPage ( phow , txt("t_algorithm") ) ;
-    wxPanel *p = phow ;
-    int w , h ;
-    p->GetClientSize ( &w , &h ) ;
-    wxStaticText *st ;
-    wxRect r ;
-    st = new wxStaticText ( p , -1 , txt("t_algorithm") , wxPoint ( bo , th ) ) ;
-    r = st->GetRect () ;
-    alg = new wxListBox ( p , AL_ALG , 
-                wxPoint ( bo , r.GetBottom()+bo ) , 
-                wxSize ( w/2-bo , h/2 ) ,
-                0 , NULL , wxLB_SINGLE ) ;
-    alg->Append ( txt("t_clustal_w") ) ;
-    alg->Append ( txt("t_smith_waterman") ) ;
-    alg->Append ( txt("t_needleman_wunsch") ) ;
-    alg->SetSelection ( al->algorithm ) ;
-    
-    new wxStaticText ( p , -1 , txt("t_alg_param") , wxPoint ( w/2+bo , th ) ) ;
-    st = new wxStaticText ( p , -1 , txt("t_match") , wxPoint ( w/2+bo , th*2+bo ) ) ;
-    r = st->GetRect() ;
-    int xo = r.GetRight() ;
-    
-    st = new wxStaticText ( p , -1 , txt("t_mismatch") , wxPoint ( w/2+bo , th*4+bo ) ) ;
-    r = st->GetRect() ;
-    if ( xo < r.GetRight() ) xo = r.GetRight() ;
-    
-    st = new wxStaticText ( p , -1 , txt("t_gap_penalty") , wxPoint ( w/2+bo , th*6+bo ) ) ;
-    r = st->GetRect() ;
-    if ( xo < r.GetRight() ) xo = r.GetRight() ;
-    xo += bo ;
-    
-    alg_match = new wxSpinCtrl ( p , AL_MATCH , "" ,
-                                    wxPoint ( xo , th*2 ) ,
-                                    wxSize ( w/5 , th*3/2 ) ) ;
-    alg_match->SetRange ( -100 , 100 ) ;
-    alg_match->SetValue ( al->match ) ;
-
-    alg_mismatch = new wxSpinCtrl ( p , AL_MISMATCH , "" ,
-                                    wxPoint ( xo , th*4 ) ,
-                                    wxSize ( w/5 , th*3/2 ) ) ;
-    alg_mismatch->SetRange ( -100 , 100 ) ;
-    alg_mismatch->SetValue ( al->mismatch ) ;
-
-    alg_penalty = new wxSpinCtrl ( p , AL_PENALTY , "" ,
-                                    wxPoint ( xo , th*6 ) ,
-                                    wxSize ( w/5 , th*3/2 ) ) ;
-    alg_penalty->SetRange ( -100 , 100 ) ;
-    alg_penalty->SetValue ( al->gap_penalty ) ;
-    
-    alg_matrix = new wxChoice ( p , AL_MATRIX , wxPoint ( xo , th*8 ) ) ;
-    alg_matrix->Append ( txt("t_matrix_blosum") ) ;
-    alg_matrix->Append ( txt("t_matrix_pam") ) ;
-    alg_matrix->Append ( txt("t_matrix_gonnet") ) ;
-    alg_matrix->Append ( txt("t_matrix_id") ) ;
-    alg_matrix->SetSelection ( 0 ) ;
-    }
-
-void TAlignmentDialog::init_disp ()
-    {
-    pdisp = new wxPanel ( this , -1 ) ;
-    nb->AddPage ( pdisp , txt("t_display") ) ;
-    wxPanel *p = pdisp ;
-    int w , h ;
-    p->GetClientSize ( &w , &h ) ;
-    }
-
-void TAlignmentDialog::OnOK ( wxCommandEvent &ev )
-    {
-    wxDialog::OnOK ( ev ) ;
-    }
-
-void TAlignmentDialog::OnCancel ( wxCommandEvent &ev )
-    {
-    wxDialog::OnCancel ( ev ) ;
-    }
-
-void TAlignmentDialog::OnCharHook ( wxKeyEvent& event )
-    {
-    int k = event.GetKeyCode () ;
-    wxCommandEvent ev ;
-    if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
-    else event.Skip() ;
-    }
-
-void TAlignmentDialog::OnAdd ( wxCommandEvent &ev )
-    {
-    wxArrayInt sel ;
-    int a , b , n = all->GetSelections ( sel ) ;
-    for ( a = 0 ; a < n ; a++ )
-        {
-        for ( b = 0 ; b < vcv.size() && vcv[b] != vav[sel[a]] ; b++ ) ;
-        if ( b == vcv.size() )
-           {
-           vcv.push_back ( vav[sel[a]] ) ;
-           vcn.push_back ( van[sel[a]] ) ;
-           cur->Append ( van[sel[a]].c_str() ) ;
-           }
+        SeqAlign *x = (SeqAlign*) sc->seq[a] ;
         }
     }
 
-void TAlignmentDialog::OnDel ( wxCommandEvent &ev )
+void TAlignment::OnMenuSoaI ( wxCommandEvent &ev )
     {
-    wxArrayInt sel ;
-    int a , b , n = cur->GetSelections ( sel ) ;
-    for ( a = 0 ; a < n ; a++ ) vcv[sel[a]] = NULL ;
-    for ( a = 0 ; a < vcv.size() ; a++ )
+    int a ;
+    for ( a = 0 ; a < sc->seq.size() ; a++ )
         {
-        if ( vcv[a] == NULL )
-           {
-           for ( b = a+1 ; b < vcv.size() ; b++ )
-              {
-              vcv[b-1] = vcv[b] ;
-              vcn[b-1] = vcn[b] ;
-              }
-           vcv.pop_back () ;
-           vcn.pop_back () ;
-           a-- ;
-           }
+        SeqAlign *x = (SeqAlign*) sc->seq[a] ;
         }
-    cur->Clear () ;
-    for ( a = 0 ; a < vcn.size() ; a++ )
-        cur->Append ( vcn[a].c_str() ) ;
     }
 
-void TAlignmentDialog::OnUp ( wxCommandEvent &ev )
+void TAlignment::OnMenuSiml ( wxCommandEvent &ev )
     {
-    wxArrayInt sel ;
-    int a , b , n = cur->GetSelections ( sel ) ;
-    if ( n != 1 ) return ;
-    b = sel[0] ;
-    if ( b == 0 ) return ;
-    TVector *d_v = vcv[b] ; vcv[b] = vcv[b-1] ; vcv[b-1] = d_v ;
-    string d_n = vcn[b] ; vcn[b] = vcn[b-1] ; vcn[b-1] = d_n ;
-    cur->Clear () ;
-    for ( a = 0 ; a < vcn.size() ; a++ )
-        cur->Append ( vcn[a].c_str() ) ;
-    cur->SetSelection ( b-1 ) ;
+    int a ;
+    for ( a = 0 ; a < sc->seq.size() ; a++ )
+        {
+        SeqAlign *x = (SeqAlign*) sc->seq[a] ;
+        }
     }
 
-void TAlignmentDialog::OnDown ( wxCommandEvent &ev )
+void TAlignment::OnMenuSeq ( wxCommandEvent &ev )
     {
-    wxArrayInt sel ;
-    int a , b , n = cur->GetSelections ( sel ) ;
-    if ( n != 1 ) return ;
-    b = sel[0] ;
-    if ( b == vcv.size()-1 ) return ;
-    TVector *d_v = vcv[b] ; vcv[b] = vcv[b+1] ; vcv[b+1] = d_v ;
-    string d_n = vcn[b] ; vcn[b] = vcn[b+1] ; vcn[b+1] = d_n ;
-    cur->Clear () ;
-    for ( a = 0 ; a < vcn.size() ; a++ )
-        cur->Append ( vcn[a].c_str() ) ;
-    cur->SetSelection ( b+1 ) ;
+    int a ;
+    for ( a = 0 ; a < sc->seq.size() ; a++ )
+        {
+        SeqAlign *x = (SeqAlign*) sc->seq[a] ;
+        }
+    }
+
+void TAlignment::OnMenuFeat ( wxCommandEvent &ev )
+    {
+    int a ;
+    for ( a = 0 ; a < sc->seq.size() ; a++ )
+        {
+        SeqAlign *x = (SeqAlign*) sc->seq[a] ;
+        }
+    }
+
+void TAlignment::OnMenuRNA ( wxCommandEvent &ev )
+    {
+    int a ;
+    for ( a = 0 ; a < sc->seq.size() ; a++ )
+        {
+        SeqAlign *x = (SeqAlign*) sc->seq[a] ;
+        }
+    }
+
+void TAlignment::OnMenuCons ( wxCommandEvent &ev )
+    {
+    cons = !cons ;
+    sc->arrange () ;
+    sc->SilentRefresh() ;    
+    }
+    
+void TAlignment::OnMenuIdent ( wxCommandEvent &ev )
+    {
+    showIdentity = !showIdentity ;
+    if ( showIdentity )
+        {
+        int a = lines.size()-1 ;
+        SeqAlign *d = new SeqAlign ( sc ) ;
+        sc->seq.push_back ( d ) ;
+        d->id = a ;
+        d->s = lines[a].s ;
+        d->myname = lines[a].name ;
+        }
+    else
+        {
+        delete sc->seq[sc->seq.size()-1] ;
+        sc->seq.pop_back () ;
+        }
+    sc->arrange () ;
+    sc->SilentRefresh() ;    
+    }
+    
+void TAlignment::OnHorizontal ( wxCommandEvent& event )
+    {
+    sc->isHorizontal = !sc->isHorizontal ;
+    sc->arrange () ;
+    sc->SilentRefresh() ;    
+    }
+
+// *****************************************************************************
+
+TAlignLine::TAlignLine ()
+    {
+    v = NULL ;
+//    origin = NULL ;
+    isIdentity = false ;
+    }
+
+void TAlignLine::ResetSequence ()
+    {
+    if ( v ) s = v->sequence ;
+    else s = "" ;
+    }
+    
+ChildBase *TAlignLine::FindOrigin ()
+    {
+    int a ;
+    for ( a = 0 ; a < myapp()->frame->children.size() ; a++ )
+        {
+        if ( myapp()->frame->children[a]->vec == v )
+           return myapp()->frame->children[a] ;
+        }
+    return NULL ;
     }
 

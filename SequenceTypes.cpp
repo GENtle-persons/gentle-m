@@ -5,7 +5,6 @@
 void SeqBasic::init ( SequenceCanvas *ncan )
     {
     offset = 0 ;
-    blocksize = 10 ;
     takesMouseActions = false ;
     can = ncan ;
     endnumberlength = 0 ;
@@ -36,8 +35,8 @@ int SeqDNA::arrange ( int n )
     can->MyGetSize ( &w , &h ) ;
     w -= 20 ; // Scrollbar dummy
 
-    itemsperline = ( w - ox ) / ( ( blocksize + 1 ) * wx ) ;
-    itemsperline *= blocksize ;
+    itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx ) ;
+    itemsperline *= can->blocksize ;
     
     pos.cleanup() ;
     x = ox ;
@@ -48,10 +47,10 @@ int SeqDNA::arrange ( int n )
         pos.add ( a+1 , x , y , wx-1 , wy-1 ) ;
         lowy = y+wy ;
         x += wx ;
-        if ( (a+1) % blocksize == 0 )
+        if ( (a+1) % can->blocksize == 0 )
            {
            x += wx-1 ;
-           if ( x+wx*(blocksize+1) >= w )
+           if ( x+wx*(can->blocksize+1) >= w )
               {
               pos.addline ( lasta , pos.p.size() , y , y+wy-1 ) ;
               lasta = pos.p.size()+1 ;
@@ -87,7 +86,7 @@ wxPoint SeqDNA::showText ( int ystart , vector <string> &tout )
               while ( y >= tout.size() ) tout.push_back ( "" ) ;
               }
            else x++ ;
-           if ( (x) % (blocksize+1) == 0 ) x++ ;
+           if ( (x) % (can->blocksize+1) == 0 ) x++ ;
            if ( t != "" )
               {
               if ( b >= can->_from && p.x == -1 ) p.x = y ;
@@ -412,14 +411,14 @@ int SeqRestriction::arrange ( int n )
         for ( a = 0 ; a < s.length() ; a++ )
             {
             int xoff = 0 ;
-            if ( (a+1) % blocksize == 0 ) xoff = wx/3 ;
+            if ( (a+1) % can->blocksize == 0 ) xoff = wx/3 ;
             if ( vs[layer][a] != ' ' ) pos.add ( a+1 , x , y , wx-1+xoff , wy-1 ) ;
             if ( y+wy > lowy ) lowy = y+wy ;
             x += wx ;
-            if ( (a+1) % blocksize == 0 )
+            if ( (a+1) % can->blocksize == 0 )
                {
                x += wx ;
-               if ( x+wx*(blocksize+1) >= w )
+               if ( x+wx*(can->blocksize+1) >= w )
                   {
                   pos.addline ( lasta , pos.p.size() , y , y+wy-1 ) ;
                   lasta = pos.p.size()+1 ;
@@ -540,8 +539,8 @@ int SeqAA::arrange ( int n )
     can->MyGetSize ( &w , &h ) ;
     w -= 20 ; // Scrollbar dummy
 
-    itemsperline = ( w - ox ) / ( ( blocksize + 1 ) * wx ) ;
-    itemsperline *= blocksize ;
+    itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx ) ;
+    itemsperline *= can->blocksize ;
     
     pos.cleanup() ;
     x = ox ;
@@ -553,10 +552,10 @@ int SeqAA::arrange ( int n )
         pos.add ( a+1 , x , y , wx-1 , wy-1 ) ;
         lowy = y+wy ;
         x += wx ;
-        if ( (a+1) % blocksize == 0 )
+        if ( (a+1) % can->blocksize == 0 )
            {
            x += wx-1 ;
-           if ( x+wx*(blocksize+1) >= w )
+           if ( x+wx*(can->blocksize+1) >= w )
               {
               pos.addline ( lasta , pos.p.size() , y , y+wy-1 ) ;
               lasta = pos.p.size()+1 ;
@@ -747,7 +746,7 @@ wxPoint SeqAA::showText ( int ystart , vector <string> &tout )
               while ( y >= tout.size() ) tout.push_back ( "" ) ;
               }
            else x++ ;
-           if ( (x) % (blocksize+1) == 0 ) x++ ;
+           if ( (x) % (can->blocksize+1) == 0 ) x++ ;
            if ( t != "" )
               {
               if ( b >= can->_from && p.x == -1 ) p.x = y ;
@@ -1014,8 +1013,8 @@ int SeqAlign::arrange ( int n )
     can->MyGetSize ( &w , &h ) ;
     w -= 20 ; // Scrollbar dummy
 
-    itemsperline = ( w - ox ) / ( ( blocksize + 1 ) * wx ) ;
-    itemsperline *= blocksize ;
+    itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx ) ;
+    itemsperline *= can->blocksize ;
     
     pos.cleanup() ;
     x = ox ;
@@ -1024,12 +1023,13 @@ int SeqAlign::arrange ( int n )
     for ( a = 0 ; a < s.length() ; a++ )
         {
         pos.add ( a+1 , x , y , wx-1 , wy-1 ) ;
+        if ( x + wx*2 > can->lowx ) can->lowx = x + wx*2 ;
         lowy = y+wy ;
         x += wx ;
-        if ( (a+1) % blocksize == 0 )
+        if ( (a+1) % can->blocksize == 0 )
            {
            x += wx-1 ;
-           if ( x+wx*(blocksize+1) >= w )
+           if ( x+wx*(can->blocksize+1) >= w )
               {
               pos.addline ( lasta , pos.p.size() , y , y+wy-1 ) ;
               lasta = pos.p.size()+1 ;
@@ -1054,6 +1054,7 @@ void SeqAlign::show ( wxDC& dc )
     int a , b , cnt = offset+1 ;
     string t ;
     char u[100] ;
+//    TAlignment *win = (TAlignment*) can->child ;
     
     wxColour nbgc ;
     for ( a = 0 ; can->seq[a] != this ; a++ ) ;
@@ -1073,7 +1074,7 @@ void SeqAlign::show ( wxDC& dc )
            me = a ;
         }
     wxColour fg = *wxBLACK , bg = *wxWHITE ;
-    TAlignment *al = (TAlignment*) can->p ;
+    TAlignment *al = (TAlignment*) can->child ;
     dc.SetTextForeground ( fg ) ;
     dc.SetTextBackground ( bg ) ;
     dc.SetBackgroundMode ( wxSOLID ) ;
@@ -1088,7 +1089,7 @@ void SeqAlign::show ( wxDC& dc )
               dc.SetTextBackground ( *wxLIGHT_GREY ) ;
               dc.SetTextForeground ( *wxBLACK ) ;
               }
-           else if ( first != me )
+           else if ( myname != txt("t_identity") )
               {
               fg = al->findColors ( s[b-1] , can->seq[first]->s[b-1] , true ) ;
               bg = al->findColors ( s[b-1] , can->seq[first]->s[b-1] , false ) ;
@@ -1100,8 +1101,24 @@ void SeqAlign::show ( wxDC& dc )
               dc.SetTextForeground ( *wxBLACK ) ;
               dc.SetBackgroundMode ( wxTRANSPARENT ) ;
               }
+           if ( al->mono )
+              {
+              dc.SetTextForeground ( *wxBLACK ) ;
+              dc.SetBackgroundMode ( wxTRANSPARENT ) ;
+              }
+           if ( myname != txt("t_identity") && 
+                al->cons && 
+                first != me &&
+                t[0] == can->seq[first]->s[b-1] )
+                   t[0] = '.' ;
 
            dc.DrawText ( t.c_str(), pos.r[a].x, pos.r[a].y ) ;
+           if ( al->bold )
+              {
+              dc.SetBackgroundMode ( wxTRANSPARENT ) ;
+              dc.DrawText ( t.c_str(), pos.r[a].x-1, pos.r[a].y ) ;
+              dc.SetBackgroundMode ( wxSOLID ) ;
+              }
 
            if ( pos.m[a] > 0 )
               {
@@ -1174,11 +1191,11 @@ int SeqNum::arrange ( int n )
         blockstart = false ;
         lowy = y+wy ;
         x += wx ;
-        if ( (a+1) % blocksize == 0 )
+        if ( (a+1) % can->blocksize == 0 )
            {
            blockstart = true ;
            x += wx-1 ;
-           if ( x+wx*(blocksize+1) >= w )
+           if ( x+wx*(can->blocksize+1) >= w )
               {
               pos.addline ( lasta , pos.p.size() , y , y+wy-1 ) ;
               lasta = pos.p.size()+1 ;
@@ -1228,8 +1245,8 @@ int SeqDivider::arrange ( int n )
     can->MyGetSize ( &w , &h ) ;
     w -= 20 ; // Scrollbar dummy
 
-    itemsperline = ( w - ox ) / ( ( blocksize + 1 ) * wx ) ;
-    itemsperline *= blocksize ;
+    itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx ) ;
+    itemsperline *= can->blocksize ;
     
     pos.cleanup() ;
     x = ox ;
@@ -1240,10 +1257,10 @@ int SeqDivider::arrange ( int n )
 //        pos.add ( a+1 , x , y , wx-1 , wy-1 ) ;
         lowy = y+wy ;
         x += wx ;
-        if ( (a+1) % blocksize == 0 )
+        if ( (a+1) % can->blocksize == 0 )
            {
            x += wx-1 ;
-           if ( x+wx*(blocksize+1) >= w )
+           if ( x+wx*(can->blocksize+1) >= w )
               {
               pos.addline ( lasta , pos.p.size() , y , y+wy-1 ) ;
               lasta = pos.p.size()+1 ;
@@ -1305,8 +1322,8 @@ int SeqABI::arrange ( int n )
        w = w * 9 / 10 ;
        }
 
-    itemsperline = ( w - ox ) / ( ( blocksize + 1 ) * wx ) ;
-    itemsperline *= blocksize ;
+    itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx ) ;
+    itemsperline *= can->blocksize ;
 
     int id ;
 
@@ -1326,7 +1343,7 @@ int SeqABI::arrange ( int n )
 */
     // Base order
     id = at->getRecord ( "FWO_" , 1 ) ;
-    assert ( id != -1 ) ;
+    myass ( id != -1 ) ;
     
     // GATC
     int *ii = (int*) base2color ;
@@ -1337,7 +1354,7 @@ int SeqABI::arrange ( int n )
     maxx = w - ox - wx ;
     int diffx = 0 ;
     id = at->getRecord ( "PLOC" , 2 ) ;
-    assert ( id != -1 ) ;
+    myass ( id != -1 ) ;
 
     pos.cleanup() ;
     x = ox ;
@@ -1445,7 +1462,7 @@ void SeqABI::show ( wxDC& dc )
         
         int a ;
         int id = at->getRecord ( "DATA" , 9 + data ) ;
-        assert ( id > -1 ) ;
+        myass ( id > -1 ) ;
         int diffx = 0 ;
         int l = 0 ;
         wxPoint last ( minx , pos.l[l].GetHeight() + hy ) ;
@@ -1569,7 +1586,7 @@ void SeqFeature::show ( wxDC& dc )
               if ( doesHit ( i , b ) )
                  {
                  int l = vr[i].y ;
-                 wxASSERT_MSG ( maxlayers >= l , "Oh no!" ) ;
+                 myass ( maxlayers >= l , "Oh no!" ) ;
                  used[l] = 1 ;
                  int x_from = lx[l] ;
                  if ( x_from < 0 ) x_from = tx ;
