@@ -99,6 +99,9 @@ class TAlignment : public ChildBase
     void generateConsensusSequence ( bool addit = true ) ;
     void fixMenus ( int i ) ;
     
+    protected :
+    virtual void doExport ( wxString filename , int filter ) ;
+    
     DECLARE_EVENT_TABLE()
     } ;
 

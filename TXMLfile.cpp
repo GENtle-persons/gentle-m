@@ -102,8 +102,8 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
         i.name = "" ;
         i.from = 1 ;
         i.to = 1 ;
-        i.type = 0 ;
-        i.direction = 1 ;
+        i.setType ( 0 ) ;
+        i.setDirection ( 1 ) ;
         i.setType ( s ) ;
         readGBqualifiers ( i , n ) ;
         
@@ -157,7 +157,7 @@ void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
     if ( i.name.IsEmpty() )
         {
         char u[100] ;
-        sprintf ( u , "short_itemtype%d" , i.type ) ;
+        sprintf ( u , "short_itemtype%d" , i.getType() ) ;
         i.name = txt(u) ;
         wxString d2 = i.desc ;
         int k = d2.find ( "\n" ) ;
@@ -185,7 +185,7 @@ void TXMLfile::readGBintervals ( vector <TVectorItem> &vi , const TVectorItem &i
            int o = j.from ;
            j.from = j.to ;
            j.to = o ;
-           j.direction = -1 ;
+           j.setDirection ( -1 ) ;
            }
         vi.push_back ( j ) ;
         }

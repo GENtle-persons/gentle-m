@@ -1,7 +1,7 @@
 [Project]
 FileName=GENtle.dev
 Name=GENtle
-UnitCount=93
+UnitCount=95
 Type=0
 Ver=1
 ObjFiles=
@@ -888,9 +888,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit94]
-FileName=clustal\showpair.c
+FileName=ChildBase.cpp
 CompileCpp=1
-Folder=Clustal-W
+Folder=Child-Types
 Compile=1
 Link=1
 Priority=1000
@@ -898,9 +898,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit95]
-FileName=clustal\trees.c
+FileName=TVectorEditorItems.cpp
 CompileCpp=1
-Folder=Clustal-W
+Folder=Dialogs
 Compile=1
 Link=1
 Priority=1000

@@ -636,7 +636,7 @@ void TVector::ligate_right ( TVector &v , bool inverted )
         i.to += sequence.length() - v.sequence.length() ;
         for ( b = 0 ; b < items.size() ; b++ )
            {
-           if ( items[b].name == i.name && items[b].type == i.type )
+           if ( items[b].name == i.name && items[b].getType() == i.getType() )
               {
               b = -1 ;
               i.name += "*" ;

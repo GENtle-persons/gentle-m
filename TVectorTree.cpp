@@ -66,7 +66,7 @@ void TVectorTree::initme ()
         }
     for ( a = 0 ; a < p->vec->items.size() ; a++ )
         {
-        int it = p->vec->items[a].type ;
+        int it = p->vec->items[a].getType() ;
         y = AppendItem ( irs[it-1] , p->vec->items[a].name , -1 , -1 , new TTreeItem ( "Test" ) ) ;
         SetItemBold ( y , p->vec->items[a].isVisible() ) ;
         
@@ -77,15 +77,15 @@ void TVectorTree::initme ()
         sTo = u ;
         sprintf ( u , txt("s_length") , abs ( p->vec->items[a].to - p->vec->items[a].from ) ) ;
         sLength = u ;
-        sprintf ( u , "itemtype%d" , p->vec->items[a].type ) ;
+        sprintf ( u , "itemtype%d" , p->vec->items[a].getType() ) ;
         sprintf ( u , txt("s_type") , txt(u) ) ;
         sType = u ;
-        if ( p->vec->items[a].direction == 1 ) sOritentation = txt("cw") ;
+        if ( p->vec->items[a].getDirection() == 1 ) sOritentation = txt("cw") ;
         else sOritentation = txt("ccw") ;
         sprintf ( u , txt("s_desc") , p->vec->items[a].desc.c_str() ) ;
         sDescription = u ;
         
-        p->vec->items[a].treeid = y ;
+        p->vec->items[a].setTreeID ( y ) ;
         
         // Item data
         wxString out = p->vec->items[a].name ;

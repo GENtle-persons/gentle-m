@@ -27,7 +27,7 @@ BEGIN_EVENT_TABLE(MyChild, MyChildBase)
     EVT_MENU(MDI_CUT, MyChild::OnCut)
     EVT_MENU(MDI_COPY, MyChild::OnCopy)
     EVT_MENU(MDI_PASTE, MyChild::OnPaste)
-    EVT_MENU(MDI_EXPORT, MyChild::OnExport)
+    EVT_MENU(MDI_EXPORT, ChildBase::OnExport)
     EVT_MENU(MDI_FIND, MyChild::OnFind)
     EVT_MENU(MDI_COPY_TO_NEW, MyChild::OnCopyToNew)
     EVT_MENU(MDI_EDIT_MODE, MyChild::OnEditMode)
@@ -476,36 +476,6 @@ void MyChild::OnPaste(wxCommandEvent& event)
     cSequence->OnPaste ( event ) ;
     }
 
-void MyChild::OnExport(wxCommandEvent& event)
-    {
-    wxString wcGenBank = "GenBank (*.gb)|*.gb" ;
-    wxString wcClone = "CLONE (*.*)|*.*" ;
-    wxString wildcard = wcGenBank + "|" + wcClone ; 
-    wxString lastdir = myapp()->frame->LS->getOption ( "LAST_IMPORT_DIR" , "C:" ) ;
-    wxFileDialog d ( this , txt("export_file") , lastdir , "" , wildcard , wxSAVE ) ;
-    int x = d.ShowModal() ;
-    if ( x != wxID_OK ) return ;
-
-    myapp()->frame->LS->setOption ( "LAST_IMPORT_DIR" , d.GetDirectory() ) ;
-    
-    int filter = d.GetFilterIndex () ;
-    if ( filter == 0 ) // GeneBank
-        {
-        TGenBank gb ;
-        wxArrayString ex ;
-        gb.doExport ( vec , ex ) ;
-        wxFile out ( d.GetPath() , wxFile::write ) ;
-        for ( int a = 0 ; a < ex.GetCount() ; a++ )
-           out.Write ( ex[a] + "\n" ) ;
-        out.Close () ;
-        }
-    else if ( filter == 1 ) // CLONE
-        {
-        // !!!! NOT YET IMPLEMENTED
-        }
-           
-    }
-    
 void MyChild::OnCopyToNew(wxCommandEvent& event)
     {
     int from , to ;

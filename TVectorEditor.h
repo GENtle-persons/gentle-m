@@ -15,72 +15,76 @@ class TVectorEditor : public wxDialog
     {
     public :
     TVectorEditor(wxWindow *parent, const wxString& title , TVector *_v ) ;
-    ~TVectorEditor () ;
+    virtual ~TVectorEditor () ;
     
-    void initialViewItem ( int num ) ;
-    void initialViewEnzyme ( wxString e ) ;
+    virtual void initialViewItem ( int num ) ;
+    virtual void initialViewEnzyme ( wxString e ) ;
     virtual void GetMyClientSize ( int *w , int *h , wxPanel *pan ) ;
 
-    void OnOK ( wxCommandEvent &ev ) ;
-    void OnCancel ( wxCommandEvent &ev ) ;
-    void SelChangeItems ( wxListEvent &ev ) ;
+    virtual void OnOK ( wxCommandEvent& WXUNUSED(event) ) ;
+    virtual void OnCancel ( wxCommandEvent& WXUNUSED(event) ) ;
+    virtual void SelChangeItems ( wxListEvent &ev ) ;
+    virtual void DeselItems ( wxListEvent &ev ) ;
     virtual void OnCharHook(wxKeyEvent& event) ;
-    void addItem2list ( TVectorItem &i , int a ) ;
+    virtual void addItem2list ( TVectorItem &i , int a ) ;
     
-    void cleanup () ;
-    void initPanProp () ;
-    void initPanItem () ;
-    void initPanEnzym () ;
-    void initPanProt () ;
-    void addOkCancel ( wxPanel *p ) ;
-    void makeItemsList () ;
-    void storeItemData () ;
-    void hideEm () ;
+    virtual void cleanup () ;
+    virtual void initPanProp () ;
+    virtual void initPanItem () ;
+    virtual void initPanEnzym () ;
+    virtual void initPanProt () ;
+    virtual void addOkCancel ( wxPanel *p ) ;
+    virtual void makeItemsList () ;
+    virtual void storeItemData ( int i = -1 ) ;
+    virtual void hideEm () ;
     
-    void commitVector () ;
-    void commitItems () ;
-    void commitEnzymes () ;
-    void commitProteases () ;
+    virtual void commitVector () ;
+    virtual void commitItems () ;
+    virtual void commitEnzymes () ;
+    virtual void commitProteases () ;
 
-    void showGroupEnzymes ( wxString gr ) ;
-    void showEnzymeGroups () ;
-    void enzymeSelChange ( wxCommandEvent &ev ) ;
-    void enzymeListDlbClick ( wxCommandEvent &ev ) ;
-    void enzymeAddEn ( wxCommandEvent &ev ) ;
-    void enzymeAddGr ( wxCommandEvent &ev ) ;
-    void enzymeAddToGr ( wxCommandEvent &ev ) ;
-    void enzymeAddToNewGr ( wxCommandEvent &ev ) ;
-    void enzymeDelGr ( wxCommandEvent &ev ) ;
-    void enzymeDelFromGr ( wxCommandEvent &ev ) ;
-    void enzymeDelEn ( wxCommandEvent &ev ) ;
-    void newEnzyme ( wxCommandEvent &ev ) ;
-    void importCloneEnzymes ( wxCommandEvent &ev ) ;
-    void proteaseSelChange ( wxCommandEvent &ev ) ;
+    virtual void showGroupEnzymes ( wxString gr ) ;
+    virtual void showEnzymeGroups () ;
+    virtual void enzymeSelChange ( wxCommandEvent& WXUNUSED(event) ) ;
+    virtual void enzymeListDlbClick ( wxCommandEvent& WXUNUSED(event) ) ;
+    virtual void enzymeAddEn ( wxCommandEvent& WXUNUSED(event) ) ;
+    virtual void enzymeAddGr ( wxCommandEvent& WXUNUSED(event) ) ;
+    virtual void enzymeAddToGr ( wxCommandEvent& WXUNUSED(event) ) ;
+    virtual void enzymeAddToNewGr ( wxCommandEvent& WXUNUSED(event) ) ;
+    virtual void enzymeDelGr ( wxCommandEvent& WXUNUSED(event) ) ;
+    virtual void enzymeDelFromGr ( wxCommandEvent& WXUNUSED(event) ) ;
+    virtual void enzymeDelEn ( wxCommandEvent& WXUNUSED(event) ) ;
+    virtual void newEnzyme ( wxCommandEvent& WXUNUSED(event) ) ;
+    virtual void importCloneEnzymes ( wxCommandEvent& WXUNUSED(event) ) ;
+    virtual void proteaseSelChange ( wxCommandEvent& WXUNUSED(event) ) ;
 
-    void newProtease ( wxCommandEvent &ev ) ;
-    void editProtease ( wxCommandEvent &ev ) ;
+    void newProtease ( wxCommandEvent& WXUNUSED(event) ) ;
+    void editProtease ( wxCommandEvent& WXUNUSED(event) ) ;
     void showProteases () ;
 
-    void itemAdd ( wxCommandEvent &ev ) ;
-    void itemDel ( wxCommandEvent &ev ) ;
-    void itemClr ( wxCommandEvent &ev ) ;
+    void itemAdd ( wxCommandEvent& WXUNUSED(event) ) ;
+    void itemDel ( wxCommandEvent& WXUNUSED(event) ) ;
+    void itemClr () ;
     void itemCol ( wxListEvent &ev ) ;
-    void itemCol2 ( wxCommandEvent &ev ) ;
-    void itemChoice ( wxCommandEvent &ev ) ;
+    void itemCol2 ( wxCommandEvent& WXUNUSED(event) ) ;
+    void itemChoice ( wxCommandEvent& WXUNUSED(event) ) ;
 
     bool hideProp , hideItem , hideEnzym ;
 
     private :
+    virtual int getCurrentItem () ;
+    virtual void clearItemSelection () ;
+
+        
     wxListBox *listCE , *listGroups , *listGE ;
     wxArrayString eig , ce ;
     
     TVector *v ;
     int bo , th ;
-    int icur ;
 
     wxNotebook *nb ;
     wxPanel *panProp , *panItem , *panEnzym , *panProt ;
-    wxButton *bClear , *bAdd , *bDel , *bCol , *b_atg , *b_dfg , *b_dg ;
+    wxButton *bAdd , *bDel , *bCol , *b_atg , *b_dfg , *b_dg ;
     wxTextCtrl *name , *lu , *ll , *ru , *rl ;
     TURLtext *desc , *idesc , *pro_txt ;
     wxTextCtrl *iname , *ifrom , *ito ;
@@ -91,6 +95,10 @@ class TVectorEditor : public wxDialog
     wxCheckListBox *prots ;
     
     wxArrayTVectorItem newitems ;
+    int lastSelection ;
+    
+    virtual void loadItemData ( int i ) ;
+    virtual void updateItem ( TVectorItem &i ) ;
     
     DECLARE_EVENT_TABLE()
     } ;

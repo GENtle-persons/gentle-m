@@ -21,7 +21,6 @@ class TABIviewer : public ChildBase
     
     virtual void OnMarkAll(wxCommandEvent& event);
     virtual void OnFileSave(wxCommandEvent& event);
-    virtual void OnExport(wxCommandEvent& event);
     virtual void OnFind(wxCommandEvent& event);
     virtual void OnCopy(wxCommandEvent& event);
     virtual void OnCopyToNew(wxCommandEvent& event);

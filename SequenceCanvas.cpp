@@ -1178,7 +1178,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
            newToolTip = al->myname ;
            newToolTip += ", " ;
            newToolTip += wxString::Format(txt("seq_loc"),b) ;
-           wxLogStatus(wxString::Format("%s (%d)",al->myname,b)) ;
+           wxLogStatus(wxString::Format("%s (%d)",al->myname.c_str(),b)) ;
            }
         }
     else

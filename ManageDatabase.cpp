@@ -933,10 +933,10 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
         TVectorItem i ;
         i.name = sr[a][sr["di_name"]] ;
         i.desc = sr[a][sr["di_description"]] ;
-        i.type = sr[a][sr["di_type"]].GetChar(0) ;
+        i.setType ( sr[a][sr["di_type"]].GetChar(0) ) ;
         i.from = atoi ( sr[a][sr["di_from"]].c_str() ) ;
         i.to = atoi ( sr[a][sr["di_to"]].c_str() ) ;
-        i.direction = atoi ( sr[a][sr["di_direction"]].c_str() ) ;
+        i.setDirection ( atoi ( sr[a][sr["di_direction"]].c_str() ) ) ;
         i.explodeParams ( sr[a][sr["di_params"]] ) ;
         v->items.push_back ( i ) ;
         }
@@ -1168,14 +1168,14 @@ void TManageDatabaseDialog::do_save_DNA ()
     for ( a = 0 ; a < v->items.size() ; a++ )
         {
         s1 = s2 = "" ;
-        type.SetChar ( 0 , v->items[a].type ) ;
+        type.SetChar ( 0 , v->items[a].getType() ) ;
         storage->sqlAdd ( s1 , s2 , "di_name" , v->items[a].name ) ;
         storage->sqlAdd ( s1 , s2 , "di_dna" , x ) ;
         storage->sqlAdd ( s1 , s2 , "di_description" , v->items[a].desc ) ;
         storage->sqlAdd ( s1 , s2 , "di_type" , type ) ;
         storage->sqlAdd ( s1 , s2 , "di_from" , v->items[a].from ) ;
         storage->sqlAdd ( s1 , s2 , "di_to" , v->items[a].to ) ;
-        storage->sqlAdd ( s1 , s2 , "di_direction" , v->items[a].direction ) ;
+        storage->sqlAdd ( s1 , s2 , "di_direction" , v->items[a].getDirection() ) ;
         storage->sqlAdd ( s1 , s2 , "di_params" , v->items[a].implodeParams() ) ;
         sql = "INSERT INTO dna_item (" + s1 + ") VALUES (" + s2 + ")" ;
         sr = storage->getObject ( sql ) ;

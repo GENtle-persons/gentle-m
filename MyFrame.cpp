@@ -979,8 +979,8 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , wxString title )
     
     for ( a = 0 ; a < nv->items.size() ; a++ )
         {
-        nv->items[a].type = VIT_MISC ;
-        nv->items[a].direction = 1 ;
+        nv->items[a].setType ( VIT_MISC ) ;
+        nv->items[a].setDirection ( 1 ) ;
         }
     
     // Give it an icon
