@@ -421,7 +421,7 @@ void TAminoAcids::updateUndoMenu ()
     wxMenuItem *mi = mb->FindItem ( MDI_UNDO ) ;
     if ( !mi ) return ;
     bool canUndo ;
-    if ( lm == "" )
+    if ( lm.IsEmpty() )
         {
         mi->SetText ( txt("u_no") ) ;
         mi->Enable ( false ) ;

@@ -208,14 +208,14 @@ void PlasmidCanvas::updateLinkedItems ( TVector *vec , int in )
     wxString s ;
     int cur ;
     s = i->getParam ( "PREDECESSOR" ) ;
-    while ( s != "" )
+    while ( !s.IsEmpty() )
         {
         cur = vec->find_item( s ) ;
         if ( cur == -1 ) return ; // Not found
         i = &vec->items[cur] ;
         s = i->getParam ( "PREDECESSOR" ) ;
         }
-    if ( i->getParam ("SUCCESSOR" ) == "" ) return ;
+    if ( i->getParam ("SUCCESSOR" ).IsEmpty() ) return ;
     do {
         s = i->getParam ("SUCCESSOR" ) ;
         if ( vec->isLinear() )
@@ -231,7 +231,7 @@ void PlasmidCanvas::updateLinkedItems ( TVector *vec , int in )
         cur = vec->find_item( s ) ;
         if ( cur == -1 ) return ; // Not found
         i = &vec->items[cur] ;        
-        } while ( s != "" ) ;
+        } while ( !s.IsEmpty() ) ;
     }
 
 void PlasmidCanvas::SetMyToolTip ( wxString s , int mode )

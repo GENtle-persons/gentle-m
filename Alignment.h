@@ -6,6 +6,9 @@
 #include <wx/splitter.h>
 #include <wx/spinctrl.h>
 
+//typedef wxArrayInt TVC ;
+typedef vector <char> TVC ;
+
 #define BACK_LEFT 1
 #define BACK_UP 2
 #define BACK_LU 4
@@ -77,7 +80,7 @@ class TAlignment : public ChildBase
     virtual void invokeOriginal ( int id , int pos ) ;
     virtual void callMiddleMouseButton ( int id , int pos , wxString _mode = "" ) ;
     virtual void MoveUpDown ( int what , int where ) ;
-    virtual void prealigned ( wxArrayString &vs , vector <ChildBase*> &vc ) ;
+    virtual void prealigned ( wxArrayString &vs , wxArrayChildBase &vc ) ;
     virtual void fromVector ( TVector *nv ) ;
     
     // Variables

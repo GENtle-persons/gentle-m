@@ -43,7 +43,7 @@ void TLigationDialog::init ()
                                 ) ;
 
     
-    for ( int a = 0 ; a < vv.size() ; a++ )
+    for ( int a = 0 ; a < vv.GetCount() ; a++ )
         {
         bool state = true ;
         if ( !vv[a]->hasStickyEnds() )
@@ -161,9 +161,9 @@ bool TLigationDialog::doMatch ( int l , int r , bool invertSecond )
     {
     wxString s1 , s2 ; 
 
-    myass ( l >= 0 && l < vv.size() , "TLigationDialog::doMatch:1" ) ;
+    myass ( l >= 0 && l < vv.GetCount() , "TLigationDialog::doMatch:1" ) ;
     myass ( vv[l] , "TLigationDialog::doMatch:2" ) ;
-    myass ( r >= 0 && r < vv.size() , "TLigationDialog::doMatch:3" ) ;
+    myass ( r >= 0 && r < vv.GetCount() , "TLigationDialog::doMatch:3" ) ;
     myass ( vv[r] , "TLigationDialog::doMatch:4" ) ;
     if ( invertSecond )
        {
@@ -190,11 +190,11 @@ wxString TLigationDialog::getVIName ( wxArrayInt &vi )
     for ( a = 0 ; a < vi.GetCount() ; a++ )
         {
         myass ( a >= 0 && a < vi.GetCount() , "TLigationDialog::getVIName:1" ) ;
-        myass ( vi[a] >= 0 && vi[a] < vv.size() , "TLigationDialog::getVIName:2" ) ;
+        myass ( vi[a] >= 0 && vi[a] < vv.GetCount() , "TLigationDialog::getVIName:2" ) ;
         myass ( vv[vi[a]] , "TLigationDialog::getVIName:3" ) ;
         wxString name = vv[vi[a]]->getName() ;
         if ( a < orientation.size() && orientation[a] ) name = "!" + name ;
-        if ( ret != "" ) ret += "-" ;
+        if ( !ret.IsEmpty() ) ret += "-" ;
         ret += name ;
         }
     return ret ;
@@ -207,7 +207,7 @@ void TLigationDialog::addVTname ( wxString name , wxArrayInt &vi , bool circular
     int a ;
     TVector v ;
     wxString d ;
-    myass ( vi[0] >= 0 && vi[0] < vv.size() , "TLigationDialog::addVTname:1" ) ;
+    myass ( vi[0] >= 0 && vi[0] < vv.GetCount() , "TLigationDialog::addVTname:1" ) ;
     myass ( vv[vi[0]] , "TLigationDialog::addVTname:2" ) ;
     v.setFromVector ( *vv[vi[0]] ) ;
     d = txt("lig_of") ;
@@ -218,7 +218,7 @@ void TLigationDialog::addVTname ( wxString name , wxArrayInt &vi , bool circular
         bool o = false ;
         if ( a < orientation.size() && orientation[a] ) o = true ;
         TVector tv ;
-        myass ( vi[a] >= 0 && vi[a] < vv.size() , "TLigationDialog::addVTname:3" ) ;
+        myass ( vi[a] >= 0 && vi[a] < vv.GetCount() , "TLigationDialog::addVTname:3" ) ;
         myass ( vv[vi[a]] , "TLigationDialog::addVTname:4" ) ;
         tv.setFromVector ( *vv[vi[a]] ) ;
         v.ligate_right ( tv , o ) ;

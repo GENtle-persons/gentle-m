@@ -181,7 +181,7 @@ void TSilmutDialog::calc ()
     int a , b , c ;
     int match , mismatch ;
     
-    vector <TRestrictionEnzyme*> re ;
+    wxArrayTRestrictionEnzyme re ;
     wxString group = egr->GetStringSelection() ;
     if ( group == txt("Current") ) re = v->re ;
     else
@@ -189,7 +189,7 @@ void TSilmutDialog::calc ()
         wxArrayString z ;
         myapp()->frame->LS->getEnzymesInGroup ( group , z ) ;
         for ( a = 0 ; a < z.GetCount() ; a++ )
-           re.push_back ( myapp()->frame->LS->getRestrictionEnzyme ( z[a] ) ) ;
+           re.Add ( myapp()->frame->LS->getRestrictionEnzyme ( z[a] ) ) ;
         }
     
     wxString vseq = v->getSequence() ;
@@ -199,7 +199,7 @@ void TSilmutDialog::calc ()
         if ( vseq.GetChar(a) >= 'A' && vseq.GetChar(a) <= 'Z' )
            vseq_l.SetChar ( a , vseq.GetChar(a) - 'A' + 'a' ) ;
         }
-    for ( a = 0 ; a < re.size() ; a++ )
+    for ( a = 0 ; a < re.GetCount() ; a++ )
         {
         TRestrictionEnzyme *e = re[a] ;
         wxString s = e->sequence ;
@@ -266,7 +266,7 @@ void TSilmutDialog::calc ()
               si.fragments[0]++ ;
               if ( v->isCircular() )
                  {
-                 si.fragments[0] += si.fragments[si.fragments.GetCount()-1] ;
+                 si.fragments[0] += si.fragments.Last() ;
                  si.fragments.RemoveAt ( si.fragments.GetCount()-1 ) ;
                  }
               si.fragments.Sort(cmpint) ;

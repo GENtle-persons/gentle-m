@@ -2,11 +2,15 @@
 #define _UNDO_H_
 
 #include <wx/wx.h>
-#include <vector>
 
 using namespace std ;
 
 class TVector ;
+
+#ifndef _wxArrayTVector
+#define _wxArrayTVector
+WX_DEFINE_ARRAY(TVector *, wxArrayTVector);
+#endif
 
 class TUndo
     {
@@ -25,7 +29,7 @@ class TUndo
     virtual TUndo & operator = ( TUndo &u ) ;
     
     private :
-    vector <TVector*> mem ;
+    wxArrayTVector mem ;
     wxArrayString msg ;
     int cnt ;
     TVector *base ;

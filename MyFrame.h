@@ -77,7 +77,7 @@ public:
     virtual void setChild ( ChildBase *ch ) ;
     virtual void removeChild ( ChildBase *ch ) ;
     virtual TStorage *getTempDB ( wxString filename ) ;
-    virtual TAlignment *runAlignment ( wxArrayString &vs , vector <ChildBase*> &vc , TVector *nv = NULL ) ;
+    virtual TAlignment *runAlignment ( wxArrayString &vs , wxArrayChildBase &vc , TVector *nv = NULL ) ;
     virtual ChildBase *GetActiveChild() ;
     virtual void setActiveChild ( ChildBase *c ) ;
     virtual wxWindow *getCommonParent() ;
@@ -91,7 +91,7 @@ public:
             useCoolCanvas , useInternalHelp ;
     wxString lang_string , project_name , project_desc , project_db ;
     wxArrayString lastCocktail ;
-    vector <ChildBase*> children ;
+    wxArrayChildBase children ;
     wxHtmlEasyPrinting *html_ep ;
     vector <wxBitmap> bitmaps ;
 

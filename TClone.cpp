@@ -87,7 +87,7 @@ void TClone::remap ( TVector *v )
         if ( genes[a].getCCW() ) { long gg = gf ; gf = gt ; gt = gg ; }
         
         wxString sname = genes[a].shortname ;
-        if ( sname == "" ) sname = genes[a].fullname ;
+        if ( sname.IsEmpty() ) sname = genes[a].fullname ;
         TVectorItem vi ( sname ,
                          genes[a].fullname ,
                          gf ,
@@ -109,7 +109,7 @@ void TClone::remap ( TVector *v )
         {
         TRestrictionEnzyme *e = LS->getRestrictionEnzyme(vs[a]) ;
         if ( e )
-           v->re.push_back ( e ) ;
+           v->re.Add ( e ) ;
         }
     v->recalculateCuts () ;
 }
@@ -186,7 +186,7 @@ void TClone::load ( wxString s )
 
 	int i ;
 	success = true ;
-	if ( v.GetCount() < 3 || v[0] == "" || v[0].length() > 50 )
+	if ( v.GetCount() < 3 || v[0].IsEmpty() || v[0].length() > 50 )
 	{
 	    success = false ;
 		return ;
@@ -264,7 +264,7 @@ void TClone::load ( wxString s )
 	
 //	sort ( enzymes.begin() , enzymes.end() ) ;
     changed = false ;
-    if ( sequence == "" ) success = false ;
+    if ( sequence.IsEmpty() ) success = false ;
 }
 
 void TClone::save ( wxString s )
@@ -348,7 +348,7 @@ void TClone_Gene::setCCW(bool x)
 
 wxString TClone::getGeneSequence(int i)
 {
-	if ( sequence == "" ) return "" ;
+	if ( sequence.IsEmpty() ) return "" ;
 	wxString s ;
 	for ( uint a = genes[i].begin ; a != genes[i].end ; a++ )
 	{

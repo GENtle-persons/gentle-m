@@ -391,8 +391,8 @@ void TGridBasic::gridSetEditable ( int y , int x )
 void TGridBasic::gridSetEntry ( int y , int x , wxString title , wxString value , wxString unit )
     {
     SetCellValue ( y , x , title ) ;
-    if ( value != "" ) SetCellValue ( y , x+1 , value ) ;
-    if ( unit != "" ) SetCellValue ( y , x+2 , unit ) ;
+    if ( !value.IsEmpty() ) SetCellValue ( y , x+1 , value ) ;
+    if ( !unit.IsEmpty() ) SetCellValue ( y , x+2 , unit ) ;
     gridSetEditable ( y , x+1 ) ;
     }
 
@@ -401,7 +401,7 @@ void TGridBasic::gridSetValue ( int y , int x , wxString value , wxString unit )
     {
     SetCellValue ( y , x , value ) ;
     SetCellAlignment ( y , x , wxALIGN_RIGHT , wxALIGN_CENTRE ) ;
-    if ( unit != "" ) SetCellValue ( y , x+1 , unit ) ;
+    if ( !unit.IsEmpty() ) SetCellValue ( y , x+1 , unit ) ;
     }
 
 void TGridBasic::recalc ()
@@ -453,8 +453,8 @@ void TGridBasic::print ( int mode )
            GetCellAlignment ( row , col , &ha , &va ) ;
            wxString align = (ha==wxALIGN_CENTRE)?"center":((ha==wxALIGN_RIGHT)?"right":"") ;
            wxString valign = (va==wxALIGN_CENTRE)?"center":((ha==wxALIGN_BOTTOM)?"bottom":"top") ;
-           if ( align != "" ) align = " align=" + align ;
-           if ( valign != "" ) valign = " valign=" + valign ;
+           if ( !align.IsEmpty() ) align = " align=" + align ;
+           if ( !valign.IsEmpty() ) valign = " valign=" + valign ;
            wxString tct = wxString::Format ( "color='#%2x%2x%2x'" , 
                                             tc.Red() , 
                                             tc.Green() , 

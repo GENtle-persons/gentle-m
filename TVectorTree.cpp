@@ -101,7 +101,7 @@ void TVectorTree::initme ()
     
     // Enzymes
     enzroot = AppendItem ( treeroot , txt("res_enzymes") ) ;
-    for ( a = 0 ; a < p->vec->re.size() ; a++ )
+    for ( a = 0 ; a < p->vec->re.GetCount() ; a++ )
         {
         y = AppendItem ( enzroot , p->vec->re[a]->name.c_str() ) ;
 //        p->vec->re[a]->treeid = y ;
@@ -211,8 +211,7 @@ void TVectorTree::ToggleEnzymeVisibility ( TRestrictionEnzyme *e )
        {
        int a ;
        for ( a = 0 ; p->vec->hiddenEnzymes[a] != e->name ; a++ ) ;
-       p->vec->hiddenEnzymes[a] = p->vec->hiddenEnzymes[p->vec->hiddenEnzymes.GetCount()-1] ;
-       p->vec->hiddenEnzymes.RemoveAt ( p->vec->hiddenEnzymes.GetCount()-1 ) ;
+       p->vec->hiddenEnzymes.RemoveAt ( a ) ;
        }
     SetItemBold ( y , !IsBold ( y ) ) ;
     p->cPlasmid->Refresh() ;

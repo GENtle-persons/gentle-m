@@ -80,7 +80,7 @@ TAlignment::TAlignment(wxWindow *parent, const wxString& title)
     while ( !in.Eof() )
         {
         wxString s = in.GetNextLine() ;
-        if ( s == "" ) ;
+        if ( s.IsEmpty() ) ;
         else if ( s.GetChar(0) == '/' )
            {
            if ( s == "/amino acids/" ) c = &colAA ;
@@ -280,7 +280,7 @@ void TAlignment::recalcAlignments ()
         wxString s = in.GetFirstLine() ;
         do {
            s = in.GetNextLine() ;
-           } while ( s == "" ) ;
+           } while ( s.IsEmpty() ) ;
         int off ;
         for ( off = s.length()-1 ; s.GetChar(off-1) != ' ' ; off-- ) ;
         line.isIdentity = true ;
@@ -458,7 +458,7 @@ void TAlignment::myDelete ( int line , int pos )
 void TAlignment::callMiddleMouseButton ( int id , int pos , wxString _mode )
     {
     wxString mode = mmb->GetStringSelection () ;
-    if ( _mode != "" ) mode = txt(_mode.c_str()) ;
+    if ( !_mode.IsEmpty() ) mode = txt(_mode.c_str()) ;
     int a , line = id ;
     if ( lines[line].s.GetChar(pos-1) != '-' && mode == txt("t_mmb_delete_gap") )
        {
@@ -603,10 +603,10 @@ void TAlignment::OnSettings ( wxCommandEvent &ev )
     redoAlignments () ;
     }
 
-void TAlignment::prealigned ( wxArrayString &vs , vector <ChildBase*> &vc )
+void TAlignment::prealigned ( wxArrayString &vs , wxArrayChildBase &vc )
     {
     lines.clear () ;
-    for ( int a = 0 ; a < vc.size() ; a++ )
+    for ( int a = 0 ; a < vc.GetCount() ; a++ )
         {
         TAlignLine line ;
         line.name = vc[a]->getName() ;
@@ -1079,7 +1079,7 @@ void TAlignment::fromVector ( TVector *nv )
         line.name = name ;
 
         bool success = false ;
-        if ( db != "" ) success = mdb.do_load_DNA ( name , db ) ;
+        if ( !db.IsEmpty() ) success = mdb.do_load_DNA ( name , db ) ;
         if ( success ) line.v = mdb.v ;
         else
            {
@@ -1096,9 +1096,9 @@ void TAlignment::fromVector ( TVector *nv )
               }
            else myapp()->frame->newFromVector ( vv , type ) ;
 
-           if ( db != "" )
+           if ( !db.IsEmpty() )
               {
-              if ( broken != "" ) broken += ", " ;
+              if ( !broken.IsEmpty() ) broken += ", " ;
               broken += vv->getName() ;
               }
            line.v = vv ;
@@ -1108,7 +1108,7 @@ void TAlignment::fromVector ( TVector *nv )
         }
     vec = NULL ;
     generateConsensusSequence ( true ) ;
-    if ( broken != "" ) 
+    if ( !broken.IsEmpty() ) 
         {
         myapp()->frame->Thaw() ;
         wxMessageBox ( wxString::Format(txt("t_align_not_found"),broken.c_str()) ) ;
@@ -1152,7 +1152,7 @@ void TAlignLine::ResetSequence ()
 ChildBase *TAlignLine::FindOrigin ()
     {
     int a ;
-    for ( a = 0 ; a < myapp()->frame->children.size() ; a++ )
+    for ( a = 0 ; a < myapp()->frame->children.GetCount() ; a++ )
         {
         if ( myapp()->frame->children[a]->vec == v )
            return myapp()->frame->children[a] ;
@@ -1162,6 +1162,7 @@ ChildBase *TAlignLine::FindOrigin ()
 
 void TAlignLine::showFeatures ()
     {
+    if ( features ) delete features ;
     features = new TVector ; // wasting memory each time
     features->setFromVector ( *v ) ;
     features->setWindow ( (ChildBase*) this ) ;

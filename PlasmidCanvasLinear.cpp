@@ -320,7 +320,7 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , int r1 , int r2 , float a1 , flo
     free ( wp ) ;
     
     // Name
-    if ( i->getParam ( "PREDECESSOR" ) != "" ) return ; // Only first name
+    if ( !i->getParam("PREDECESSOR").IsEmpty() ) return ; // Only first name
     char t[1000] ;
     wxCoord dx , dy ;
     wxColor fc = dc.GetTextForeground () ;

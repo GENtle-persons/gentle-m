@@ -115,13 +115,13 @@ void TAlignmentDialog::init_what ()
     int a ;
     MyFrame *f = myapp()->frame ;
     // All
-    for ( a = 0 ; a < f->children.size() ; a++ )
+    for ( a = 0 ; a < f->children.GetCount() ; a++ )
         {
         if ( f->children[a]->def == "dna" || 
              f->children[a]->def == "AminoAcids" ||
              f->children[a]->def == "ABIviewer" )
            {
-           vav.push_back ( ((MyChild*)f->children[a])->vec ) ;
+           vav.Add ( ((MyChild*)f->children[a])->vec ) ;
            van.Add ( f->children[a]->getName() ) ;
            all->Append ( f->children[a]->getName() ) ;
            }
@@ -132,7 +132,7 @@ void TAlignmentDialog::init_what ()
         {
         if ( al->lines[a].name != txt("t_identity") )
            {
-           vcv.push_back ( al->lines[a].v ) ;
+           vcv.Add ( al->lines[a].v ) ;
            vcn.Add ( al->lines[a].name ) ;
            cur->Append ( al->lines[a].name ) ;
            }
@@ -143,7 +143,7 @@ void TAlignmentDialog::init_what ()
         for ( a = 0 ; a < van.GetCount() ; a++ )
            {
            vcn.Add ( van[a] ) ;
-           vcv.push_back ( vav[a] ) ;
+           vcv.Add ( vav[a] ) ;
            cur->Append ( van[a] ) ;
            }
         }
@@ -242,10 +242,10 @@ void TAlignmentDialog::OnAdd ( wxCommandEvent &ev )
     int a , b , n = all->GetSelections ( sel ) ;
     for ( a = 0 ; a < n ; a++ )
         {
-        for ( b = 0 ; b < vcv.size() && vcv[b] != vav[sel[a]] ; b++ ) ;
-        if ( b == vcv.size() )
+        for ( b = 0 ; b < vcv.GetCount() && vcv[b] != vav[sel[a]] ; b++ ) ;
+        if ( b == vcv.GetCount() )
            {
-           vcv.push_back ( vav[sel[a]] ) ;
+           vcv.Add ( vav[sel[a]] ) ;
            vcn.Add ( van[sel[a]] ) ;
            cur->Append ( van[sel[a]] ) ;
            }
@@ -257,16 +257,16 @@ void TAlignmentDialog::OnDel ( wxCommandEvent &ev )
     wxArrayInt sel ;
     int a , b , n = cur->GetSelections ( sel ) ;
     for ( a = 0 ; a < n ; a++ ) vcv[sel[a]] = NULL ;
-    for ( a = 0 ; a < vcv.size() ; a++ )
+    for ( a = 0 ; a < vcv.GetCount() ; a++ )
         {
         if ( vcv[a] == NULL )
            {
-           for ( b = a+1 ; b < vcv.size() ; b++ )
+           for ( b = a+1 ; b < vcv.GetCount() ; b++ )
               {
               vcv[b-1] = vcv[b] ;
               vcn[b-1] = vcn[b] ;
               }
-           vcv.pop_back () ;
+           vcv.RemoveAt ( vcv.GetCount()-1 ) ;
            vcn.RemoveAt ( vcn.GetCount()-1 ) ;
            a-- ;
            }
@@ -297,7 +297,7 @@ void TAlignmentDialog::OnDown ( wxCommandEvent &ev )
     int a , b , n = cur->GetSelections ( sel ) ;
     if ( n != 1 ) return ;
     b = sel[0] ;
-    if ( b == vcv.size()-1 ) return ;
+    if ( b == vcv.GetCount()-1 ) return ;
     TVector *d_v = vcv[b] ; vcv[b] = vcv[b+1] ; vcv[b+1] = d_v ;
     wxString d_n = vcn[b] ; vcn[b] = vcn[b+1] ; vcn[b+1] = d_n ;
     cur->Clear () ;
@@ -336,7 +336,7 @@ void TURLtext::OnURL(wxTextUrlEvent& event)
     long from = event.GetURLStart() ;
     long to = event.GetURLEnd() ;
     wxString url = GetRange ( from , to ) ;
-    if ( url == "" ) return ; // No url    
+    if ( url.IsEmpty() ) return ; // No url    
     wxExecute ( myapp()->getHTMLCommand ( url ) ) ;
     }
 
@@ -368,7 +368,7 @@ TMyMultipleChoiceDialog::TMyMultipleChoiceDialog ( wxWindow *parent ,
            
    wxRect q ( 0 , 0 , w , 0 ) ;
    wxRect r ( 0 , h , w , h ) ;
-   if ( message != "" )
+   if ( !message.IsEmpty() )
       {
       wxStaticText *st = new wxStaticText ( this , 
                                             -1 , 
@@ -713,7 +713,7 @@ void FindSequenceDialog::OnSearch ( wxCommandEvent &ev )
         if ( b < allow.length() ) dummy += sub.GetChar(a) ;
         }
     sub = dummy ;
-    if ( sub == "" ) return ;
+    if ( sub.IsEmpty() ) return ;
 
     // Preparing sequence    
     wxString s = c->vec->getSequence() ;

@@ -254,7 +254,7 @@ void TRestrictionEditor::pR_showGroupEnzymes ( wxString gr )
     rsl->DeleteAllItems() ;
     if ( gr == txt("Current") )
         {
-        for ( int i = 0 ; i < v->re.size() ; i++ )
+        for ( int i = 0 ; i < v->re.GetCount() ; i++ )
             vs.Add ( v->re[i]->name ) ;
         }
     else myapp()->frame->LS->getEnzymesInGroup ( gr , vs ) ;
@@ -287,7 +287,7 @@ void TRestrictionEditor::pR_showGroupEnzymes ( wxString gr )
         }
         
         
-    if ( pre != "" )
+    if ( !pre.IsEmpty() )
         {
         int pre_id = el->FindItem ( 0 , pre ) ;
         el->SetItemState ( pre_id , wxLIST_STATE_SELECTED , wxLIST_STATE_SELECTED );
@@ -358,7 +358,7 @@ void TRestrictionEditor::listFragments ( wxListCtrl *list , wxArrayInt &vi )
     if ( vi.GetCount() == 0 ) return ;
     if ( !v->isCircular() ) // Adding last fragment for linear DNA
         {
-        int from = vi[vi.GetCount()-1] ;
+        int from = vi.Last() ;
         int to = v->getSequenceLength() ;
         if ( from != to )
            vi.Add ( to ) ;
@@ -374,7 +374,7 @@ void TRestrictionEditor::listFragments ( wxListCtrl *list , wxArrayInt &vi )
         
         int from = 0 ;
         if ( i > 0 ) from = vi[i-1] ;
-        if ( i == 0 && v->isCircular() ) from = vi[vi.GetCount()-1] ;
+        if ( i == 0 && v->isCircular() ) from = vi.Last() ;
         sprintf ( u , "%d" , from ) ; // From
         list->SetItem ( k , 1 , u ) ;
         
@@ -414,7 +414,7 @@ void TRestrictionEditor::refreshCocktail ()
     vi.Clear () ;
     for ( i = 0 ; i < vit.GetCount() ; i++ )
         {
-        if ( vi.GetCount() == 0 || vi[vi.GetCount()-1] != vit[i] )
+        if ( vi.GetCount() == 0 || vi.Last() != vit[i] )
            vi.Add ( vit[i] ) ;
         }
     listFragments ( rsl2 , vi ) ;
@@ -422,7 +422,7 @@ void TRestrictionEditor::refreshCocktail ()
 
 void TRestrictionEditor::add2cocktail ( wxString s )
     {
-    if ( s == "" ) return ;
+    if ( s.IsEmpty() ) return ;
     wxString s2 = s ;
     int i ;
     for ( i = 0 ; i < cocktail.GetCount() && cocktail[i] != s2 ; i++ ) ;
@@ -437,8 +437,7 @@ void TRestrictionEditor::del_from_cocktail ( wxString s )
     wxString s2 = s ;
     for ( i = 0 ; i < cocktail.GetCount() && cocktail[i] != s2 ; i++ ) ;
     if ( i == cocktail.GetCount() ) return ; // Not there
-    cocktail[i] = cocktail[cocktail.GetCount()-1] ;
-    cocktail.RemoveAt ( cocktail.GetCount()-1 ) ;
+    cocktail.RemoveAt ( i ) ;
     refreshCocktail () ;
     }
 

@@ -419,7 +419,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
     for ( a = 0 ; a < p->vec->items.size() ; a++ ) // Item titles
         {
         TVectorItem *i = &p->vec->items[a] ;
-        if ( i->isVisible() && i->getParam ( "PREDECESSOR" ) == "" )
+        if ( i->isVisible() && i->getParam ( "PREDECESSOR" ).IsEmpty() )
             {
             int r1 = i->r1 * 100 * r / ( STANDARDRADIUS * 100 ) ;
             int r2 = i->r2 * 100 * r / ( STANDARDRADIUS * 100 ) ;

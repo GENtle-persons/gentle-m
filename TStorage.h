@@ -107,7 +107,7 @@ class TStorage
     bool getWriteProtect () ;
     
     // Variables
-    vector <TRestrictionEnzyme*> re ;
+    wxArrayTRestrictionEnzyme re ;
     vector <TProtease*> pr ;
     TSQLresult results ;
     

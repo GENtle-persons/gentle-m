@@ -318,7 +318,7 @@ double *TPrimer::CalcIUpair ( wxString base0 , wxString base , int i , bool max 
 			else if(pair1=="GC"){temp1[0]=2.3  ;temp1[1]=10.5; temp1[2]=26.4  ;}
 			else if(pair1=="GG"){temp1[0]=2.1  ;temp1[1]=10.9; temp1[2]=28.4  ;}
 			
-			if(base2==""){
+			if(base2.IsEmpty()){
 				for(k=0; k<2; k++)
 				{	temp2[k]=0.0;	}
 			

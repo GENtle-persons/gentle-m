@@ -379,7 +379,7 @@ void TVectorEditor::initPanEnzym ()
     
     int a ;
     ce.Clear() ;
-    for ( a = 0 ; v && a < v->re.size() ; a++ )
+    for ( a = 0 ; v && a < v->re.GetCount() ; a++ )
         {
         wxString s = v->re[a]->name ;
         listCE->Append ( s ) ;
@@ -451,7 +451,7 @@ void TVectorEditor::commitItems ()
                  o.from != c.from ||
                  o.to != c.to ||
                  o.direction != c.direction ||
-                 c.getParam ( "CHANGED" ) != "" ||
+                 !c.getParam("CHANGED").IsEmpty() ||
                  o.getRF() != c.getRF() ||
                  o.isVisible() != c.isVisible() ||
                  o.getFontColor() != c.getFontColor() )
@@ -488,14 +488,13 @@ void TVectorEditor::commitEnzymes ()
     bool changed = false ;
     
     // Removed enzymes
-    for ( a = 0 ; a < v->re.size() ; a++ )
+    for ( a = 0 ; a < v->re.GetCount() ; a++ )
         {
         for ( b = 0 ; b < ce.GetCount() && ce[b] != v->re[a]->name ; b++ ) ;
         if ( b == ce.GetCount() )
            {
            changed = true ;
-           v->re[a] = v->re[v->re.size()-1] ;
-           v->re.pop_back () ;
+           v->re.RemoveAt ( a ) ;
            a-- ;
            }
         }
@@ -503,11 +502,11 @@ void TVectorEditor::commitEnzymes ()
     // Added enzymes
     for ( b = 0 ; b < ce.GetCount() ; b++ )
         {
-        for ( a = 0 ; a < v->re.size() && ce[b] != v->re[a]->name ; a++ ) ;
-        if ( a == v->re.size() )
+        for ( a = 0 ; a < v->re.GetCount() && ce[b] != v->re[a]->name ; a++ ) ;
+        if ( a == v->re.GetCount() )
            {
            changed = true ;
-           v->re.push_back ( myapp()->frame->LS->getRestrictionEnzyme ( ce[b] )  ) ;
+           v->re.Add ( myapp()->frame->LS->getRestrictionEnzyme ( ce[b] )  ) ;
            }
         }
         
@@ -786,10 +785,10 @@ void TVectorEditor::importCloneEnzymes ( wxCommandEvent &ev )
     TClone clone ;
     clone.loadEnzymeList ( &TS , "./CLONE.ENZ" ) ;
     int a ;
-    for ( a = 0 ; a < TS.re.size() ; a++ )
+    for ( a = 0 ; a < TS.re.GetCount() ; a++ )
        {
        listCE->Append ( TS.re[a]->name ) ;
-       myapp()->frame->LS->re.push_back ( TS.re[a] ) ;
+       myapp()->frame->LS->re.Add ( TS.re[a] ) ;
        myapp()->frame->LS->updateRestrictionEnzyme ( TS.re[a] ) ;
        TS.re[a] = NULL ; // avoid deletion
        }
@@ -983,7 +982,7 @@ void TVectorEditor::newEnzyme ( wxCommandEvent &ev )
     ed.initme ( e ) ;
     if ( ed.ShowModal() == wxID_OK )
        {
-       myapp()->frame->LS->re.push_back ( ed.e ) ;
+       myapp()->frame->LS->re.Add ( ed.e ) ;
        myapp()->frame->LS->updateRestrictionEnzyme ( ed.e ) ;
        }
     showEnzymeGroups () ;
