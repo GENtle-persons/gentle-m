@@ -294,11 +294,15 @@ void SequenceCanvas::OnCharHook(wxKeyEvent& event)
               }
            else if ( !forceoverwrite && k == WXK_DELETE && from <= the_sequence->length()-1 )
               {
+              mylog ( "DEL" , "1" ) ;
               if ( v ) v->doRemove ( from , from , false ) ;
               else the_sequence->erase ( from-1 , 1 ) ;
+              mylog ( "DEL" , "2" ) ;
               if ( from > the_sequence->length() ) from = the_sequence->length() ;
               if ( v ) v->recalculateCuts() ;
+              mylog ( "DEL" , "3" ) ;
               updateEdit ( v , id , from ) ;
+              mylog ( "DEL" , "4" ) ;
               }
            else if ( !forceoverwrite && k == WXK_BACK && from > 1 )
               {
@@ -449,27 +453,26 @@ void SequenceCanvas::OnCut ( wxCommandEvent &ev )
     if ( !getAA() || _from == -1 ) return ;
     wxString s = getSelection () ;
     if ( s.IsEmpty() ) return ;
-    if (wxTheClipboard->Open())
-        {
-        wxTheClipboard->SetData( new wxTextDataObject(s) );
-        wxTheClipboard->Close();
+    if (!wxTheClipboard->Open()) return ;
 
-        getAA()->vec->doRemove ( _from , _to ) ;
-        _from = -1 ;
-        
-        for ( int a = 0 ; a < seq.GetCount() ; a++ )
-           {
-           if ( seq[a]->whatsthis() == "AA" )
-              {
-              SeqAA *x = (SeqAA*) seq[a] ;
-              x->initFromString ( getAA()->vec->getSequence() ) ;
-              }
-//           else seq[a]->initFromTVector ( getAA()->vec ) ;
-           }
+    wxTheClipboard->SetData( new wxTextDataObject(s) );
+    wxTheClipboard->Close();
 
-        arrange() ;
-        Refresh() ;
-        }
+    getAA()->vec->doRemove ( _from , _to ) ;
+    _from = -1 ;
+    
+    for ( int a = 0 ; a < seq.GetCount() ; a++ )
+       {
+       if ( seq[a]->whatsthis() == "AA" )
+          {
+          SeqAA *x = (SeqAA*) seq[a] ;
+          x->initFromString ( getAA()->vec->getSequence() ) ;
+          }
+       else seq[a]->initFromTVector ( getAA()->vec ) ;
+       }
+
+    arrange() ;
+    Refresh() ;
     }
 
 void SequenceCanvas::OnCopyText ( wxCommandEvent &ev )
@@ -867,6 +870,7 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
         getAA()->sc2->mark ( getAA()->sc2->seq[0]->whatsthis() , from , to , value ) ;        
         }
     marking = false ;
+    mylog ( "MARK" , "2" ) ;
 
     int a , b = -1 , cnt = 0 ;
     vpx = -1 ;
@@ -881,12 +885,14 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
        return ; 
        }
 
+    mylog ( "MARK" , "3" ) ;
     if ( charwidth == 0 || charheight == 0 ) SilentRefresh () ;
 
     int seqlen ;
     if ( p && p->vec ) seqlen = p->vec->getSequenceLength() ;
     else seqlen = seq[b]->s.length() ;
 
+    mylog ( "MARK" , "4" ) ;
     int l = seqlen ;
     for ( a = 0 ; a < seq[b]->getMarkSize() ; a++ )
         {
@@ -901,6 +907,7 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
            seq[b]->setMark ( a , 0 ) ;
         }
         
+    mylog ( "MARK" , "5" ) ;
     for ( int other = 0 ; other < seq.GetCount() ; other++ )
         {
         bool canbemarked = seq[other]->takesMouseActions ;
@@ -911,12 +918,14 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
             }
         }
         
+    mylog ( "MARK" , "6" ) ;
     if ( !printing )
         {
         // Refreshing sequence canvas
         SilentRefresh () ;
         }
     
+    mylog ( "MARK" , "7" ) ;
     if ( from > to ) to += l ;
     if ( cnt == 0 ) from = -1 ;
 
@@ -953,8 +962,8 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
             ama->pc->setMark ( from , to ) ;
             if ( !editMode )
                 {
-                ama->pc->Refresh() ;
                 char tt[1000] ;
+                ama->pc->Refresh() ;
                 if ( value == 1 )
                    {
                    int to2 = to ;
@@ -1131,6 +1140,7 @@ void SequenceCanvas::safeShow ( wxDC &dc )
        if ( seq[a]->whatsthis() != "RESTRICTION" &&
             seq[a]->whatsthis() != "FEATURE" )
           {
+//          mylog ( "SequenceCanvas::safeShow" , wxString::Format ( "Trying %d (%s)" , a , seq[a]->whatsthis().c_str() ) ) ;
           seq[a]->show ( dc ) ;
           seq[a]->shown = true ;
           }
@@ -1140,6 +1150,7 @@ void SequenceCanvas::safeShow ( wxDC &dc )
        {
        if ( !seq[a]->shown )
           {
+//          mylog ( "SequenceCanvas::safeShow" , wxString::Format ( "Finalizing %d (%s)" , a , seq[a]->whatsthis().c_str() ) ) ;
           seq[a]->show ( dc ) ;
           }    
        }
@@ -1746,6 +1757,7 @@ TAlignment *SequenceCanvas::getAln()
 
 void SequenceCanvas::startEdit ( wxString id )
     {
+    mylog ( "startEdit" , "1" ) ;
     setEditMode ( true ) ;
     findID(id)->s.Append ( " " ) ;
     if ( child ) child->vec->addToSequence ( " " ) ;
@@ -1753,22 +1765,30 @@ void SequenceCanvas::startEdit ( wxString id )
     if ( _from == -1 ) mark ( id , 1 , 1 , 2 ) ;
     else mark ( id , _from , _from , 2 ) ;
     SetFocus() ;
+    mylog ( "startEdit" , "END" ) ;
     }
     
 void SequenceCanvas::stopEdit ()
     {
+    mylog ( "stopEdit" , "1" ) ;
     setEditMode ( false ) ;
     if ( child ) child->vec->eraseSequence ( child->vec->getSequenceLength()-1 , 1 ) ;
+    mylog ( "stopEdit" , "3" ) ;
     wxString id ;
     if ( lastmarked >= 0 && lastmarked < seq.GetCount() )
         {
         id = seq[lastmarked]->whatsthis() ;
+    mylog ( "stopEdit" , "3a" ) ;
         seq[lastmarked]->s.erase ( seq[lastmarked]->s.length()-1 , 1 ) ;
+    mylog ( "stopEdit" , "3b" ) ;
 //        if ( child ) updateEdit ( child->vec , id , markedFrom() ) ;
         }    
+    mylog ( "stopEdit" , "4" ) ;
     arrange () ;
+    mylog ( "stopEdit" , "5" ) ;
     if ( id != "" ) mark ( id , -1 , -1 ) ;
-     }
+    mylog ( "stopEdit" , "END" ) ;
+    }
 
 void SequenceCanvas::rsHideLimit ( wxCommandEvent &ev )
     {

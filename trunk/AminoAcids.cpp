@@ -284,12 +284,8 @@ void TAminoAcids::showSequence ()
     
 void TAminoAcids::OnEditMode(wxCommandEvent& event)
     {
-//    wxMenuBar *mb = GetMenuBar () ;
-//    wxMenuItem *mi = mb->FindItem ( MDI_EDIT_MODE ) ;
 	if ( sc->getEditMode() ) sc->stopEdit() ;
 	else sc->startEdit ( "AA" ) ;
-//    if ( mi->IsChecked() ) sc->startEdit ( "AA" ) ;
-//    else sc->stopEdit() ;
     if ( sc->getEditMode() ) vec->undo.start ( txt("u_edit") ) ;
     else vec->undo.stop () ;
     }
@@ -463,7 +459,7 @@ void TAminoAcids::OnIP ( wxCommandEvent& event )
     
 void TAminoAcids::OnListBox ( wxCommandEvent& event )
     {
-    if ( sc->getEditMode() ) sc->stopEdit() ;
+//    if ( sc->getEditMode() ) sc->stopEdit() ;
     bool update = false ;
     wxString t = lb->GetStringSelection() ;
     if ( t == lastLBsel ) update = true ;

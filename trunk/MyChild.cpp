@@ -438,7 +438,7 @@ wxString MyChild::getName ()
     
 void MyChild::OnCut(wxCommandEvent& event)
     {
-    wxString s = cPlasmid->getSelection () ;
+    wxString s = cSequence->getSelection () ;
     if ( s.IsEmpty() ) return ;
     if (wxTheClipboard->Open())
         {
