@@ -32,6 +32,7 @@ TAminoAcids::TAminoAcids(MyFrame *parent, const wxString& title)
     from = -1 ;
     stat = NULL ;
     pc = NULL ;
+    sc2 = NULL ;
     miniDisplayOptions = MINI_DISPLAY_CONDENSED ;
     }
     

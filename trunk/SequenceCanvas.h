@@ -83,6 +83,8 @@ class SeqBasic
     virtual wxPoint showText ( int ystart , vector <string> &tout )
         { return wxPoint ( -1 , -1 ) ; } ;
     virtual string whatsthis () { return "BASIC" ; }
+    
+    // Variables
     SeqPos pos ;
     string s ;
     int offset , endnumberlength ;
@@ -390,7 +392,7 @@ class SequenceCanvas : public wxScrolledWindow
     SeqAlign *last_al ;
     int lastclick ;
     wxPen blue_pen ;
-    bool isMiniDisplay ;
+    bool isMiniDisplay , marking ;
 
     DECLARE_EVENT_TABLE()
     };

@@ -44,7 +44,7 @@ class TAminoAcids : public ChildBase
     virtual void updateUndoMenu () ;
         
     // Variables
-    SequenceCanvas *sc ;
+    SequenceCanvas *sc , *sc2 ;
     wxTextCtrl *stat ;
     TURLtext *desc ;
     wxSplitterWindow *hs , *vs ;
@@ -57,7 +57,6 @@ class TAminoAcids : public ChildBase
     private :
     wxListBox *lb ;
     wxBoxSizer *h1 , *v1 ;
-    SequenceCanvas *sc2 ;
     wxChoice *inlinePlot ;
     
     DECLARE_EVENT_TABLE()
