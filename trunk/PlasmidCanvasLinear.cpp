@@ -136,6 +136,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
         for ( a = 0 ; a < p->vec->rc.size() ; a++ )
             {
             TRestrictionCut *c = &p->vec->rc[a] ;
+            if ( p->vec->isEnzymeHidden ( c->e->name ) ) continue ;
             c->p = wxPoint ( lineOff + lineLen * c->pos / l , lineH - markH ) ;
             arrangeRestrictionSitesLinear ( a , dc ) ;
             }
@@ -265,6 +266,7 @@ void PlasmidCanvas::arrangeRestrictionSitesLinear ( int a , wxDC &dc )
         {
         c->lastrect = wxRect ( x1 , y1 , x2-x1+1 , y2-y1 ) ;
         for ( b = 0 ; b < a &&
+                      !p->vec->isEnzymeHidden(c->e->name) &&
                       !intersects(c->lastrect,p->vec->rc[b].lastrect) &&
                       !intersectsLine(c->lastrect,p->vec->rc[b].p)
                       ; b++ ) ;

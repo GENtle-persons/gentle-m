@@ -62,6 +62,7 @@ class TPrimerDesign : public ChildBase
     virtual void OnAA_setit(int mode);
     
     virtual void OnSilmut ( wxCommandEvent& event) ;
+    virtual void OnHorizontal ( wxCommandEvent& event ) ;
     
     // Variables
     SequenceCanvas *sc ;

@@ -28,6 +28,7 @@ class TRestrictionCut
         
     virtual void linearUpdate ( int w , int h ) ;
     virtual string getNameAndPosition () ;
+    virtual bool isHidden ( TVector *v ) ;
         
     int pos ;
     TRestrictionEnzyme *e ;

@@ -182,6 +182,10 @@ void TVectorTree::OnActivation ( wxTreeEvent &event )
         {
         TRestrictionEnzyme *e = (TRestrictionEnzyme*) d->p ;
         ToggleEnzymeVisibility ( e ) ;
+        p->vec->recalcvisual = true ;
+        p->cPlasmid->Refresh () ;
+        p->cSequence->arrange() ;
+        p->cSequence->SilentRefresh() ;
         }
     }
 

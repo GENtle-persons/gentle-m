@@ -345,7 +345,8 @@ void SeqAA::initFromTVector ( TVector *v )
     showNumbers = true ;
     vec = v ;
     bool truncateEditSequence = false ;
-    if ( can->getEditMode() && v->sequence[v->sequence.length()-1] == ' ' )
+    if ( can && can->getEditMode() && v->sequence.length() &&
+            v->sequence[v->sequence.length()-1] == ' ' )
        {
        v->sequence.erase ( v->sequence.length()-1 , 1 ) ;
        truncateEditSequence = true ;
@@ -361,7 +362,7 @@ void SeqAA::initFromTVector ( TVector *v )
     else t += "  " ;
     int a , b , sl = s.length() ;
     s += "  " ;
-    
+
     if ( mode == AA_ALL )
         {
         for ( a = 0 ; a < sl ; a++ )

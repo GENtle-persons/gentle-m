@@ -70,7 +70,12 @@ string TRestrictionCut::getNameAndPosition ()
     sprintf ( t , "%s:%d" , e->name.c_str() , pos ) ;
     return t ;
     }
-    
+
+bool TRestrictionCut::isHidden ( TVector *v )
+    {
+    return v->isEnzymeHidden ( e->name ) ;
+    }
+        
 //------------------------------------------------------------------------------
 
 TProtease::TProtease ( string _name , string m , string _note )
