@@ -1,6 +1,8 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
+#define MYDEBUG
+
 #include "wx/wxprec.h"
 
 #ifdef __BORLANDC__
@@ -134,7 +136,11 @@ vector <string> explode ( string sep , string s ) ;
 char* txt ( string item ) ;
 void init_txt ( string lang ) ;
 MyApp *myapp () ;
+#ifdef MYDEBUG
 void myass ( bool b , wxString msg = "" ) ;
+#else
+#define myass(a,b)
+#endif
 string toupper ( string s ) ;
 
 //IMPLEMENT_APP(MainApp)

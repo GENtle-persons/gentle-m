@@ -1157,6 +1157,7 @@ void TManageDatabaseDialog::do_save_DNA ()
     v->undo.clear() ;
     wxFocusEvent fev ;
     MyChild *c = (MyChild*)GetParent() ;
+    myass ( c , "Storage dialog has no parent" ) ;
     c->OnFocus(fev) ;
 //    c->SetTitle ( c->vec->name.c_str() ) ;
     if ( c->def == "dna" )

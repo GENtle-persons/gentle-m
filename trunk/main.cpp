@@ -93,57 +93,26 @@ vector <string> explode ( string sep , string s )
 // ---------------------------------------------------------------------------
 #include <wx/splash.h>
 
+#ifdef MYDEBUG
+ofstream errout ( "ERROR.txt" , ios::out ) ;
+#endif
+
 MyApp *theapp ;
 
 MyApp *myapp ()
    {
    return theapp ;
    }
-   
+
+#ifdef MYDEBUG
 void myass ( bool b , wxString msg )
     {
     if ( b ) return ;
-    wxSafeShowMessage ( msg , "Error" ) ;
+    errout << msg << "\n" ;
+//    wxSafeShowMessage ( msg , "Error" ) ;
     }
-/*
-void mydb ()
-    {
-    MYSQL *conn,mysql;
-    mysql_init (&mysql);
-    conn = mysql_real_connect ( &mysql , "134.95.200.164" , "root" , "" , "GENtle" , 0 , NULL , 0 ) ;
-    if ( conn == NULL ) return ;
-    string query = "SELECT * from enzyme WHERE e_name=\"BamHI\"" ;
-    int err = mysql_query ( conn , query.c_str() ) ;
-    if ( err == 0 )
-        {
-        MYSQL_RES *result ;
-        result = mysql_store_result ( conn ) ;
-        if ( result == NULL ) wxMessageBox ( "No result!" , query.c_str() ) ;
-        else
-            {
-            wxString show ;
-            MYSQL_ROW row;
-            unsigned int i , num_fields = mysql_num_fields(result) ;
-            while ((row = mysql_fetch_row(result)))
-            {
-               unsigned long *lengths;
-               lengths = mysql_fetch_lengths(result);
-               for(i = 0; i < num_fields; i++)
-               {
-                   show += wxString::Format ("[%.*s] ", (int) lengths[i], row[i] ? row[i] : "NULL");
-    //               printf("[%.*s] ", (int) lengths[i], row[i] ? row[i] : "NULL");
-               }
-               show += "\n" ;
-    //           printf("\n");
-            }        
-            mysql_free_result ( result ) ;
-            wxMessageBox ( show ) ;
-            }
-        }
-    else wxMessageBox ( wxString::Format ( "MySQL error %d" , err ) , query.c_str() ) ;
-    mysql_close (conn);
-    }
-*/
+#endif
+
 // Initialise this in OnInit, not statically
 bool MyApp::OnInit()
 {
