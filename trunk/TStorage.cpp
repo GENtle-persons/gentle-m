@@ -170,6 +170,16 @@ void TStorage::getEnzymesInGroup ( string gn , vector <string> &vs )
            if ( sr[a][sr["e_name"]][0] != '*' )
               vs.push_back ( sr[a][sr["e_name"]] ) ;
         }
+    
+    for ( a = 0 ; a < vs.size() ; a++ )
+        {
+        if ( vs[a] == "" )
+           {
+           vs[a] = vs[vs.size()-1] ;
+           vs.pop_back () ;
+           a-- ;
+           }
+        }
     }
     
 void TStorage::getEnzymeGroups ( vector <string> &vs )
@@ -480,12 +490,21 @@ void TStorage::autoUpdateSchema ()
     // Version 0.1
     tableInfoSet ( dnaF , dnaT , "dna_params" , "mediumtext" ) ;
     tableInfoSet ( dnaF , dnaT , "dna_type" , "int" ) ;
-    if ( version < 1 )
+    if ( version < 1 ) // Enabeling different DNA types
         {
         version = 1 ;
         sql = "UPDATE dna SET dna_type=\"0\"" ;
         getObject ( sql ) ;
         replaceTable ( "dna" , dnaF , dnaT ) ;
+        }
+        
+    // Version 0.2
+    if ( version < 2 ) // Creating indices
+        {
+        version = 2 ;
+        getObject ( "CREATE INDEX k_dna ON dna (dna_name)" ) ;
+        getObject ( "CREATE INDEX k_dna_type ON dna (dna_type)" ) ;
+        getObject ( "CREATE INDEX k_dna_desc ON dna (dna_description)" ) ;
         }
     
     // Writing new version, if necessary
