@@ -697,3 +697,4 @@
 "t_blast_results_by","BLAST results by %s (%d-%d of %d)","BLAST-Ergebnisse von %s (%d-%d of %d)"
 "t_blast_qseq","Query:","Abfrage:"
 "t_blast_hseq","Sbjct:","Ergebn.:"
+"t_clustal_running","Standby...","Bitte warten..."

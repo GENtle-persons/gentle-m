@@ -60,6 +60,7 @@ END_EVENT_TABLE()
 TAlignment::TAlignment(wxWindow *parent, const wxString& title)
     : ChildBase(parent, title)
     {
+    threadRunning = false ;
     invs = cons = bold = mono = false ;
     def = "alignment" ;
     match = 2 ; // Match value
@@ -258,7 +259,79 @@ void TAlignment::initme ()
     readTabColors ( myapp()->homedir + myapp()->slash + "default.tab" ) ;
     }
 
-// Calling clustalw.exe, eventually
+void* TAlignment::Entry()
+{
+    threadRunning = true ;
+
+    int a ;
+    TAlignLine line ;
+    wxString cwt = "clustalw.txt" ;
+    wxString hd = myapp()->homedir ;
+    wxString tx = hd + "/" + cwt ;
+    
+    wxFile out ( tx , wxFile::write ) ;
+    for ( a = 0 ; a < lines.size() ; a++ )
+    {
+	out.Write ( wxString::Format ( ">%d\n" , a ) ) ;
+	out.Write ( lines[a].v->getSequence() + "\n" ) ;
+    }
+    out.Close() ;
+    
+#ifdef USE_EXTERNAL_BLAST
+    wxString bn = hd + "\\clustalw.bat" ;
+    wxFile bat ( bn , wxFile::write ) ;
+    bat.Write ( "@echo off\n" ) ;
+    bat.Write ( "cd " + hd + "\n" ) ;
+    bat.Write ( "clustalw.exe clustalw.txt" + 
+		wxString::Format ( " /gapopen=%d" , gap_penalty ) +
+		wxString::Format ( " /gapext=%d" , mismatch ) + "\n" ) ;
+    bat.Close() ;
+    wxExecute ( bn , wxEXEC_SYNC ) ;
+#else // Using internal BLAST - cool!
+    wxString a1 = wxString::Format ( "/gapopen=%d" , gap_penalty ) ;
+    wxString a2 = wxString::Format ( "/gapext=%d" , mismatch ) ;
+    char *av[4] ;
+    av[0] = new char[100] ; strcpy ( av[0] , "clustalw.exe" ) ;
+    av[1] = new char[100] ; strcpy ( av[1] , "clustalw.txt" ) ;
+    av[2] = new char[100] ; strcpy ( av[2] , a1.c_str() ) ;
+    av[3] = new char[100] ; strcpy ( av[3] , a2.c_str() ) ;
+    clustalw_main ( 4 , av ) ;
+#endif
+    
+    wxString aln = hd + "/clustalw.aln" ;
+    wxTextFile in ( aln ) ;
+    in.Open () ;
+    wxString s = in.GetFirstLine() ;
+    do {
+	s = in.GetNextLine() ;
+    } while ( s.IsEmpty() ) ;
+    int off ;
+    for ( off = s.length()-1 ; s.GetChar(off-1) != ' ' ; off-- ) ;
+    line.isIdentity = true ;
+    line.name = txt("t_identity") ;
+    lines.push_back ( line ) ;
+    bool first = true ;
+    for ( a = 0 ; a < lines.size() ; a++ ) lines[a].s = "" ;
+    while ( !in.Eof() )
+    {
+	for ( a = 0 ; a < lines.size() ; a++ )
+	{
+	    if ( !first ) s = in.GetNextLine() ;
+	    else first = false ;
+	    int index = atoi ( s.substr ( 0 , off-1 ) . c_str() ) ;
+	    if ( s.GetChar(0) == ' ' ) index = lines.size()-1 ;
+	    lines[index].s += s.substr ( off , s.length() ) ;
+	}
+	if ( !in.Eof() ) s = in.GetNextLine() ; // Blank line
+    }
+    wxMutexGuiEnter() ;
+    Thaw() ;
+    redoAlignments ( true ) ;
+    wxMutexGuiLeave() ;
+}
+
+
+// Calculating alignments; all changes are lost!
 void TAlignment::recalcAlignments ()
     {
     while ( lines.size() && lines[lines.size()-1].isIdentity )
@@ -275,68 +348,19 @@ void TAlignment::recalcAlignments ()
         }
     else if ( algorithm == ALG_CW ) // Clustal-W
         {
-
-        wxString cwt = "clustalw.txt" ;
-        wxString hd = myapp()->homedir ;
-        wxString tx = hd + "\\" + cwt ;
-        
-        wxFile out ( tx , wxFile::write ) ;
-        for ( a = 0 ; a < lines.size() ; a++ )
-           {
-           out.Write ( wxString::Format ( ">%d\n" , a ) ) ;
-           out.Write ( lines[a].v->getSequence() + "\n" ) ;
-           }
-        out.Close() ;
-        
-#ifdef USE_EXTERNAL_BLAST
-        wxString bn = hd + "\\clustalw.bat" ;
-        wxFile bat ( bn , wxFile::write ) ;
-        bat.Write ( "@echo off\n" ) ;
-        bat.Write ( "cd " + hd + "\n" ) ;
-        bat.Write ( "clustalw.exe clustalw.txt" + 
-                    wxString::Format ( " /gapopen=%d" , gap_penalty ) +
-                    wxString::Format ( " /gapext=%d" , mismatch ) + "\n" ) ;
-        bat.Close() ;
-        wxExecute ( bn , wxEXEC_SYNC ) ;
-#else // Using internal BLAST - cool!
-		wxString a1 = wxString::Format ( "/gapopen=%d" , gap_penalty ) ;
-        wxString a2 = wxString::Format ( "/gapext=%d" , mismatch ) ;
-		char *av[4] ;
-		av[0] = new char[100] ; strcpy ( av[0] , "clustalw.exe" ) ;
-		av[1] = new char[100] ; strcpy ( av[1] , "clustalw.txt" ) ;
-		av[2] = new char[100] ; strcpy ( av[2] , a1.c_str() ) ;
-		av[3] = new char[100] ; strcpy ( av[3] , a2.c_str() ) ;
-		clustalw_main ( 4 , av ) ;
-#endif
-
-        wxString aln = hd + "\\clustalw.aln" ;
-        wxTextFile in ( aln ) ;
-        in.Open () ;
-        wxString s = in.GetFirstLine() ;
-        do {
-           s = in.GetNextLine() ;
-           } while ( s.IsEmpty() ) ;
-        int off ;
-        for ( off = s.length()-1 ; s.GetChar(off-1) != ' ' ; off-- ) ;
-        line.isIdentity = true ;
-        line.name = txt("t_identity") ;
-        lines.push_back ( line ) ;
-        bool first = true ;
-        for ( a = 0 ; a < lines.size() ; a++ ) lines[a].s = "" ;
-        while ( !in.Eof() )
-           {
-           for ( a = 0 ; a < lines.size() ; a++ )
-              {
-              if ( !first ) s = in.GetNextLine() ;
-              else first = false ;
-              int index = atoi ( s.substr ( 0 , off-1 ) . c_str() ) ;
-              if ( s.GetChar(0) == ' ' ) index = lines.size()-1 ;
-              lines[index].s += s.substr ( off , s.length() ) ;
-              }
-           if ( !in.Eof() ) s = in.GetNextLine() ; // Blank line
-           }
-
-        generateConsensusSequence ( false ) ;
+	    if ( threadRunning )
+	    {
+		generateConsensusSequence ( false ) ;
+		threadRunning = false ;
+		SetCursor ( *wxSTANDARD_CURSOR ) ;
+	    }
+	    else
+	    {
+		Freeze() ;
+		wxThreadHelper::Create () ;
+		GetThread()->Run() ;
+		return ;
+	    }
         }
     else // Internal routines
         {
@@ -395,6 +419,7 @@ void TAlignment::redoAlignments ( bool doRecalc )
     CLEAR_DELETE ( sc->seq ) ;
         
     if ( doRecalc ) recalcAlignments () ;
+    if ( threadRunning ) return ;
         
     // Display
     sc->maxendnumberlength = strlen ( txt("t_identity") ) ;
@@ -563,6 +588,7 @@ void TAlignment::callMiddleMouseButton ( int id , int pos , wxString _mode )
     
 void TAlignment::updateSequence ()
     {
+    if ( threadRunning ) return ;
     for ( int g = 0 ; g < sc->seq.GetCount() ; g++ )
         {
         if ( sc->seq[g]->whatsthis() != "FEATURE" ) continue ;
@@ -861,6 +887,7 @@ void TAlignment::fixMenus ( int i )
     mb->FindItem(i)->Check ( true ) ;    
     
     invs = mb->FindItem(ALIGN_INVS)->IsChecked () ;
+    if ( threadRunning ) return ;
     sc->arrange () ;
     sc->SilentRefresh() ;    
     }
@@ -868,6 +895,7 @@ void TAlignment::fixMenus ( int i )
 void TAlignment::OnMenuBold ( wxCommandEvent &ev )
     {
     bold = !bold ;
+    if ( threadRunning ) return ;
     sc->arrange () ;
     sc->SilentRefresh() ;    
     }
@@ -875,6 +903,7 @@ void TAlignment::OnMenuBold ( wxCommandEvent &ev )
 void TAlignment::OnMenuMono ( wxCommandEvent &ev )
     {
     mono = !mono ;
+    if ( threadRunning ) return ;
     sc->arrange () ;
     sc->SilentRefresh() ;    
     }
@@ -946,6 +975,7 @@ void TAlignment::OnMenuRNA ( wxCommandEvent &ev )
 void TAlignment::OnMenuCons ( wxCommandEvent &ev )
     {
     cons = !cons ;
+    if ( threadRunning ) return ;
     sc->arrange () ;
     sc->SilentRefresh() ;    
     }
@@ -953,6 +983,7 @@ void TAlignment::OnMenuCons ( wxCommandEvent &ev )
 void TAlignment::OnMenuIdent ( wxCommandEvent &ev )
     {
     showIdentity = !showIdentity ;
+    if ( threadRunning ) return ;
     if ( showIdentity )
         {
         int a = lines.size()-1 ;
@@ -974,6 +1005,7 @@ void TAlignment::OnMenuIdent ( wxCommandEvent &ev )
 void TAlignment::OnHorizontal ( wxCommandEvent& event )
     {
     sc->toggleHorizontal () ;
+    if ( threadRunning ) return ;
     sc->arrange () ;
     sc->SilentRefresh() ;    
     }

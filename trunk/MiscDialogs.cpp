@@ -424,9 +424,7 @@ void TAlignmentDialog::init_how ()
                 wxPoint ( bo , r.GetBottom()+bo ) , 
                 wxSize ( w/2-bo , h/2 ) ,
                 0 , NULL , wxLB_SINGLE ) ;
-#ifdef __WXMSW__
     alg->Append ( txt("t_clustal_w") ) ;
-#endif
     alg->Append ( txt("t_smith_waterman") ) ;
     alg->Append ( txt("t_needleman_wunsch") ) ;
     alg->SetSelection ( al->algorithm ) ;

@@ -90,7 +90,26 @@ OBJECTS = ABItype.o \
 	tinyxml/tinystr.o \
 	tinyxml/tinyxml.o \
 	tinyxml/tinyxmlparser.o \
-	tinyxml/tinyxmlerror.o
+	tinyxml/tinyxmlerror.o \
+	clustalw/alnscore.o \
+	clustalw/amenu.o \
+	clustalw/calcgap.o \
+	clustalw/calcprf1.o \
+	clustalw/calcprf2.o \
+	clustalw/calctree.o \
+	clustalw/clustalw.o \
+	clustalw/gcgcheck.o \
+	clustalw/interfac.o \
+	clustalw/malign.o \
+	clustalw/palign.o \
+	clustalw/prfalign.o \
+	clustalw/random.o \
+	clustalw/readmat.o \
+	clustalw/sequence.o \
+	clustalw/showpair.o \
+	clustalw/trees.o \
+	clustalw/util.o
+
 
 
 # you shouldn't have to edit anything below this line
@@ -113,3 +132,4 @@ $(PROGRAM):	$(OBJECTS)
 clean: 
 	rm -f *.o $(PROGRAM)
 	rm -f tinyxml/*.o
+	rm -f clustalw/*.o

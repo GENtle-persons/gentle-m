@@ -1121,17 +1121,27 @@ void SequenceCanvas::OnSize(wxSizeEvent &event)
 // Define the repainting behaviour
 void SequenceCanvas::OnDraw(wxDC& dc)
 {
-	mylog ( "SequenceCanvas::OnDraw" , "1" ) ;
+    mylog ( "SequenceCanvas::OnDraw" , "1" ) ;
     if ( drawing ) return ;
     if ( seq.GetCount() == 0 ) return ;
     if ( getHide() ) return ;
     if ( myapp()->frame->isLocked() ) return ;
     if ( child && !child->IsShown() ) return ;
+
     drawing = true ;
-    int wx , wy ;
     dc.SetFont ( *font ) ;
+    if ( getAln() && getAln()->isThreadRunning() )
+    {
+	if ( !printing )
+	{
+	    dc.DrawText ( txt("t_clustal_running") , 10 , 10 ) ;
+	}
+	drawing = false ;
+	return ;
+    }
+    int wx , wy ;
     dc.GetTextExtent ( "A" , &wx , &wy ) ;
-	mylog ( "SequenceCanvas::OnDraw" , "2a" ) ;
+    mylog ( "SequenceCanvas::OnDraw" , "2a" ) ;
     if ( wx != charwidth || wy != charheight )
         {
         charwidth = wx ;
@@ -1225,6 +1235,7 @@ void SequenceCanvas::safeShow ( wxDC &dc )
 void SequenceCanvas::OnEvent(wxMouseEvent& event)
 {
     if ( drawing ) return ;
+    if ( getAln() && getAln()->isThreadRunning() ) return ;
     wxClientDC dc(this);
     PrepareDC(dc);
 
