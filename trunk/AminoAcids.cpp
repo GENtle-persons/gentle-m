@@ -16,6 +16,7 @@ BEGIN_EVENT_TABLE(TAminoAcids, MyChildBase)
     EVT_MENU(MDI_UNDO, TAminoAcids::Undo)
     EVT_MENU(MDI_REDO, TAminoAcids::Redo)
 
+    EVT_CHECKBOX(ALIGN_HORIZ, TAminoAcids::OnHorizontal)
     EVT_SET_FOCUS(ChildBase::OnFocus)
     EVT_CLOSE(TAminoAcids::OnClose)
 END_EVENT_TABLE()
@@ -145,6 +146,9 @@ void TAminoAcids::initme ()
     toolBar->AddTool( MDI_CUT, myapp()->frame->bitmaps[4] ) ;
     toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] ) ;
     toolBar->AddTool( MDI_PASTE, myapp()->frame->bitmaps[6] ) ;
+    toolBar->AddSeparator () ;
+    wxCheckBox *mycb = new wxCheckBox ( toolBar , ALIGN_HORIZ , txt("t_horizontal") ) ;
+    toolBar->AddControl ( mycb ) ;
     toolBar->Realize() ;
 #endif
 
@@ -398,5 +402,12 @@ void TAminoAcids::updateUndoMenu ()
 void TAminoAcids::Redo(wxCommandEvent& event)
     {
     
+    }
+    
+void TAminoAcids::OnHorizontal ( wxCommandEvent& event )
+    {
+    sc->isHorizontal = !sc->isHorizontal ;
+    sc->arrange () ;
+    sc->SilentRefresh() ;    
     }
     
