@@ -345,7 +345,24 @@ void TAlignment::updateSequence ()
         if ( aaa ) delete aaa ;
         aaa = new SeqAA ( NULL ) ;
         sc->seq[0] = aaa ;
+        aaa->initFromString ( dv->sequence ) ;
+        aaa->fixOffsets ( dv ) ;
+        aaa->can = sc ;
+        sc->arrange () ;
+        sc->seq[0] = f ;
+        f->aaa = aaa ;
+        f->initFromTVector ( dv ) ;
+        f->aaa = aaa ;
+        }
+    else if ( dv->type == TYPE_VECTOR )
+        {
+        if ( aaa ) delete aaa ;
+        aaa = new SeqAA ( NULL ) ;
+        sc->seq[0] = aaa ;
+        aaa->mode = AA_KNOWN ;
+        aaa->disp = AA_ONE ;
         aaa->initFromTVector ( dv ) ;
+        aaa->showNumbers = false ;
         aaa->can = sc ;
         sc->arrange () ;
         sc->seq[0] = f ;

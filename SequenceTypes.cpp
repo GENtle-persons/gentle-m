@@ -829,16 +829,19 @@ void SeqAA::fixOffsets ( TVector *v )
     for ( a = 0 ; a < v->items.size() ; a++ )
         {
         int off = v->items[a].getOffset () ;
+        int c = 0 ;
         for ( b = v->items[a].from ; off != -1 && b < v->items[a].to ; b++ )
            {
-           int c = b - v->items[a].from ;
-           if ( ( b - 1 ) % 10 == 0 && c > 0 )
+//           int c = b - v->items[a].from ;
+           char x =  v->sequence[b-1] ;
+           if ( ( b - 1 ) % 10 == 0 && c > 0 && x != '-' )
               {
               while ( offsets.size() < b ) offsets.push_back ( -1 ) ;
               while ( offset_items.size() < b ) offset_items.push_back ( NULL ) ;
               offsets[b-1] = c + off ;
               offset_items[b-1] = &v->items[a] ;
               }
+           if ( x != '-' ) c++ ;
            }
         }
     }
