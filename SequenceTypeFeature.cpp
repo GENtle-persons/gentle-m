@@ -135,7 +135,7 @@ void SeqFeature::show ( wxDC& dc )
                        for ( px = x_from ; px <= x_to ; px++ )
                           {
                           int npy ;
-                          npy = (float) sin ( (float) ( px - x_from ) * PI * 4 / can->charwidth ) * lh / 2 ;
+                          npy = (int)((float) sin ( (float) ( px - x_from ) * PI * 4 / can->charwidth ) * lh / 2 );
                           dc.DrawLine ( px , level + py , px , level + npy ) ;
                           py = npy ;
                           }

@@ -1535,7 +1535,7 @@ void MyFrame::setActiveChild ( ChildBase *c )
         mainTree->SelectItem ( c->inMainTree ) ;
     if ( !c->IsShown() ) c->Show() ;
 //    c->Refresh () ;
-//    wxSafeYield () ;
+    wxSafeYield () ;
     activating = false ;
     }
 

@@ -458,12 +458,13 @@ void MyChild::initme ()
     propBox = new TURLtext(swl, URLTEXT_DUMMY, "",
                                 wxDefaultPosition, wxSize ( width/3 , 0 ) ,
                                 wxTE_MULTILINE | wxSUNKEN_BORDER | wxTE_READONLY );
-                               
+
     treeBox = new TVectorTree( (ChildBase*)swl , TREE_DUMMY ) ;
     treeBox->textWindow = propBox ;
     treeBox->p = this ;
 //    treeBox->Reparent ( swl ) ;
     
+                               
     sw->SplitHorizontally ( swu , cSequence , height/2 ) ;
     swu->SplitVertically ( swl , cPlasmid , width/4 ) ;
     swl->SplitHorizontally ( treeBox , propBox , height/3 ) ;
@@ -1376,7 +1377,7 @@ void MyChild::updateToolbar ()
     toolbar->Reparent ( this ) ;
     if ( !myapp()->frame->isLocked() ) toolbar->Thaw() ;
     toolbar->Enable () ;
-    
+
     // Zoom
     if ( !cPlasmid ) return ;
     int zoom = cPlasmid->getZoom() ;
@@ -1391,6 +1392,9 @@ void MyChild::updateToolbar ()
     toolbar->ToggleTool ( MDI_TOGGLE_FEATURES , cSequence->findID("FEATURE") ) ;
     toolbar->ToggleTool ( MDI_TOGGLE_RESTRICTION , cSequence->findID("RESTRICTION") ) ;
     cSequence->SetFocus() ;
+#ifdef __WXGTK__
+	swl->SetSashPosition ( swl->GetSashPosition() , true ) ;
+#endif
     }    
     
 
@@ -1419,7 +1423,10 @@ void MySplitter::OnChanged ( wxSplitterEvent &ev )
         lp = lp * np / op ;
         c->swl->SetSashPosition ( lp ) ;
         }
-    else if ( this == c->swl ) return ;
+    else if ( this == c->swl )
+	{
+	    return ;
+	}
     
     SetSashPosition ( np ) ;
     c->cPlasmid->Refresh();
