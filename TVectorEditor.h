@@ -36,7 +36,7 @@ class TVectorEditor : public wxDialog
     virtual void initPanEnzym () ;
     virtual void initPanEnzym2 () ;
     virtual void initPanProt () ;
-    virtual void addOkCancel ( wxPanel *p ) ;
+    virtual void addOkCancel ( wxWindow *p ) ;
     virtual void makeItemsList () ;
     virtual void storeItemData ( int i = -1 ) ;
     virtual void hideEm () ;

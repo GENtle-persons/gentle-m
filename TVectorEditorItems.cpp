@@ -169,7 +169,7 @@ void TVectorEditor::initPanItem ()
         irb->Disable () ;
         }
     
-    addOkCancel ( panItem ) ;
+//    addOkCancel ( panItem ) ;
     }
 
 
