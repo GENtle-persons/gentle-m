@@ -1123,6 +1123,17 @@ void SequenceCanvas::OnDraw(wxDC& dc)
 {
     mylog ( "SequenceCanvas::OnDraw" , "1" ) ;
     if ( drawing ) return ;
+    if ( getAln() && getAln()->isThreadRunning() )
+    {
+	if ( !printing )
+	{
+	    dc.SetFont ( *font ) ;
+		dc.SetTextForeground ( *wxBLACK ) ;
+		dc.SetTextBackground ( *wxWHITE ) ;
+	    dc.DrawText ( txt("t_clustal_running") , 10 , 10 ) ;
+	}
+	return ;
+    }
     if ( seq.GetCount() == 0 ) return ;
     if ( getHide() ) return ;
     if ( myapp()->frame->isLocked() ) return ;
@@ -1130,15 +1141,6 @@ void SequenceCanvas::OnDraw(wxDC& dc)
 
     drawing = true ;
     dc.SetFont ( *font ) ;
-    if ( getAln() && getAln()->isThreadRunning() )
-    {
-	if ( !printing )
-	{
-	    dc.DrawText ( txt("t_clustal_running") , 10 , 10 ) ;
-	}
-	drawing = false ;
-	return ;
-    }
     int wx , wy ;
     dc.GetTextExtent ( "A" , &wx , &wy ) ;
     mylog ( "SequenceCanvas::OnDraw" , "2a" ) ;
