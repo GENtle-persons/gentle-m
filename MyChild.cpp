@@ -300,8 +300,6 @@ void MyChild::initme ()
     // Give it scrollbars
     cSequence->SetScrollbars(0, 20, 0, 50);
 
-//    myapp()->frame->SetTitle ( GetTitle() ) ;
-
 
 #ifdef __WXMSW__  // LINUX
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
@@ -371,7 +369,6 @@ void MyChild::initme ()
 
     Show(TRUE);
     updateUndoMenu () ;
-//    Maximize() ;
     }
 
 void MyChild::OnLigation(wxCommandEvent& event)
@@ -384,7 +381,6 @@ void MyChild::OnLigation(wxCommandEvent& event)
         if ( p->def == "dna" && !p->vec->isCircular() )
            {
            ld.vv.push_back ( p->vec ) ;
-//           ld.vv[ld.vv.size()-1]->setFromVector ( p->vec ) ;
            }
         }
     
@@ -396,7 +392,6 @@ void MyChild::OnLigation(wxCommandEvent& event)
         if ( ld.ligates[l].sequence != "" )
            {
            TVector *v = new TVector ;
-//           *v = ld.ligates[l] ;
            v->setFromVector ( ld.ligates[l] ) ;
            for ( int a = 0 ; a < v->items.size() ; a++ )
               v->items[a].r1 = -1 ; // Resetting item radius to "recalc"
@@ -561,8 +556,6 @@ void MyChild::OnAsNewFeature(wxCommandEvent& event)
     cPlasmid->Refresh () ;
     updateSequenceCanvas () ;
     vec->undo.stop () ;
-//    cSequence->arrange() ;
-//    cSequence->Refresh() ;
     }
 
 void MyChild::OnViewMode(wxCommandEvent& event)
@@ -761,10 +754,8 @@ void MyChild::OnAA_setit(int mode)
         mb->FindItem(AA_THREE)->Check ( false ) ;
         mb->FindItem(AA_ONE)->Check () ;
         }
-    if ( mode == AA_THREE || mode == AA_ONE )
-        mi = mb->FindItem ( aa_disp ) ;
-    else
-        mi = mb->FindItem ( aa_state ) ;
+    if ( mode == AA_THREE || mode == AA_ONE ) mi = mb->FindItem ( aa_disp ) ;
+    else mi = mb->FindItem ( aa_state ) ;
     mi->Check ( false ) ;
     if ( aa_state == AA_NONE )
         {
@@ -776,10 +767,8 @@ void MyChild::OnAA_setit(int mode)
         seqAA->initFromTVector ( vec ) ;    
         seqAA->showNumbers = false ;
         }
-    if ( mode == AA_THREE || mode == AA_ONE )
-        aa_disp = mode ;
-    else
-        aa_state = mode ;
+    if ( mode == AA_THREE || mode == AA_ONE ) aa_disp = mode ;
+    else aa_state = mode ;
     mi = mb->FindItem ( aa_state ) ;
     mi->Check () ;
     SeqAA *seqAA = (SeqAA*) cSequence->seq[aa_offset] ;
@@ -791,7 +780,7 @@ void MyChild::OnAA_setit(int mode)
     cSequence->Refresh ( false ) ;
     if ( !wasZero && aa_state != AA_NONE )
         cSequence->Scroll ( -1 , oldscrollpos ) ;
-    if ( !wasZero && !cSequence->editMode && oldmarkfrom != -1 )
+    if ( !wasZero && !cSequence->editMode && oldmarkfrom != -1 && oldmarkwhat >= 0 )
         {
         string s = cSequence->seq[oldmarkwhat]->whatsthis() ;
         cSequence->mark ( s , oldmarkfrom , oldmarkto ) ;
