@@ -21,6 +21,7 @@
 #define MIN_DIF 0.0009
 #define MIN_INT 0.009
 
+int ipc_main2 ( const char *filename , const char *aaseq , int f = 0 ) ;
 int ipc_main(int argc,char **argv);
 int calculate_peaks(void);
 void print_result(int digits,int charge);

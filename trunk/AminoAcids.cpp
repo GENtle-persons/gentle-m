@@ -70,37 +70,24 @@ TAminoAcids::~TAminoAcids ()
 void TAminoAcids::OnIPC ( wxCommandEvent& event )
     {
     wxString filename = "testfile" ;
-    wxArrayString as ;
-    as.Add ( "ipc" ) ;
-    as.Add ( "-a" ) ;
-    as.Add ( vec->getSequence() ) ;
-    as.Add ( "-f" ) ;
-    as.Add ( "1000" ) ;
-    as.Add ( "-g" ) ;
-    as.Add ( filename ) ;
-    char *params[as.GetCount()+2] ;
-    int a ;
-    for ( a = 0 ; a < as.GetCount() ; a++ )
-    	{
-	    params[a] = new char[as[a].Length()+2] ;
-	    strcpy ( params[a] , as[a].c_str() ) ;
-    	}    
-   	params[a] = NULL ;
-   	mylog ( "TAminoAcids::OnIPC" , "1" ) ;
+
    	wxBeginBusyCursor() ;
-   	int r = ipc_main ( as.GetCount()+1 , params ) ;
+	int r = ipc_main2 ( filename.c_str() , vec->getSequence().c_str() , 1000 ) ;
    	wxEndBusyCursor() ;
-   	mylog ( "TAminoAcids::OnIPC" , "2" ) ;
    	if ( r != 0 ) return ; // ERROR
-   	mylog ( "TAminoAcids::OnIPC" , "3" ) ;
+   	
+   	wxMessageBox ( wxString::Format ( "%d" , r ) ) ;
+   	
    	TGraph *g = myapp()->frame->RunGraph() ;
-   	mylog ( "TAminoAcids::OnIPC" , "4" ) ;
+   	wxMessageBox ( "0" ) ;
    	g->gd->setupIPCfile ( filename ) ;
-   	mylog ( "TAminoAcids::OnIPC" , "5" ) ;
+   	wxMessageBox ( "1" ) ;
    	g->gd->AutoScale () ;
-   	mylog ( "TAminoAcids::OnIPC" , "6" ) ;
+   	wxMessageBox ( "2" ) ;
    	g->gd->UpdateDisplay () ;
-   	mylog ( "TAminoAcids::OnIPC" , "7" ) ;
+   	wxMessageBox ( "3" ) ;
+   	
+//   	wxRemoveFile ( filename ) ;
     }
     
 void TAminoAcids::OnBacktranslate ( wxCommandEvent& event )

@@ -185,10 +185,38 @@ void print_result(int digits,int charge){
     }
 }
 
+int ipc_main2 ( const char *filename , const char *aaseq , int f )
+	{
+    char *gnuplotfile=NULL;
+    
+    verbindung=NULL;
+    peaks=NULL;
+    fast_calc=f; // -f
+    
+    if(!init_elements()) return 1 ;
+    
+	if(!(gnuplotfile=strdup(filename))) return 1 ;
+
+	if(!pars_amino_acid((char*)aaseq)) return 2 ; // -a
+
+    if(!calculate_peaks()) return 3 ;
+    
+    if(!(make_gnuplot_output(gnuplotfile))) return 4 ;
+    
+    if ( verbindung ) delete verbindung ;
+    if ( peaks ) delete peaks ;
+
+	return 0 ;
+	}    
+
 int ipc_main(int argc,char **argv){
   long seconds;
   int d=1,zeig_summenformel=0,calc_peaks=1,gnuplot=0,use_digits=USE_DIGITS,charge=1;
   char *gnuplotfile=NULL;
+
+  verbindung=NULL;
+  peaks=NULL;
+  fast_calc=0;
   
   if(!argv[d])
     {

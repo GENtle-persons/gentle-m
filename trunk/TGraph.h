@@ -107,7 +107,12 @@ class TGraphDisplay : public wxPanel
  	vector <TGraphScale*> scales ;
  	vector <TGraphData*> data ;
  	TGraph *g ;
+ 	static wxColour prettyColor ;
  	
+ 	private :
+  	bool IsSetupComplete() ;
+
+  	bool setupCompleted ;
  	TGraphScale *old_scale ;
  	TGraphData *old_data ;
  	
@@ -115,12 +120,7 @@ class TGraphDisplay : public wxPanel
  	wxRect lr ; ///< The legend rectangle
  	int zx , zy ;
  	wxPoint mouse_pos ;
- 	static wxColour prettyColor ;
  	wxRect draggingRect ;
- 	
- 	private :
-  	bool IsSetupComplete() ;
-  	bool setupCompleted ;
 
     DECLARE_EVENT_TABLE()
 	} ;    
