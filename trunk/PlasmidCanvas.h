@@ -108,6 +108,7 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void orfBlastAA ( wxCommandEvent &ev ) ;
     virtual void OnFillKlenow(wxCommandEvent& event);
     virtual void OnRunPCR(wxCommandEvent& event);
+    virtual void OnWhatCuts(wxCommandEvent& event);
 
     private :
     virtual string getDNAorAA ( int from , int to , int dir , bool dna = true ) ;

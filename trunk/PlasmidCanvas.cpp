@@ -45,6 +45,7 @@ BEGIN_EVENT_TABLE(PlasmidCanvas, wxScrolledWindow)
     EVT_MENU(ORF_BLAST_AA, PlasmidCanvas::orfBlastAA)
     EVT_MENU(MDI_FILL_KLENOW,PlasmidCanvas::OnFillKlenow)
     EVT_MENU(MDI_RUN_PCR,PlasmidCanvas::OnRunPCR)
+    EVT_MENU(PC_WHAT_CUTS,PlasmidCanvas::OnWhatCuts)
 END_EVENT_TABLE()
 
 

@@ -24,6 +24,7 @@ BEGIN_EVENT_TABLE(SequenceCanvas, wxScrolledWindow)
     EVT_MENU(SEQ_COPY_RESLUT_AA, SequenceCanvas::OnCopyResultAA)
     EVT_MENU(SEQ_NEW_FROM_RESLUT_DNA, SequenceCanvas::OnNewFromResultDNA)
     EVT_MENU(SEQ_NEW_FROM_RESLUT_AA, SequenceCanvas::OnNewFromResultAA)
+    EVT_MENU(PC_WHAT_CUTS,SequenceCanvas::OnWhatCuts)
 
     EVT_MENU(PRIMER_FORWARD, SequenceCanvas::OnPrimerForward)
     EVT_MENU(PRIMER_BACKWARD, SequenceCanvas::OnPrimerBackward)
@@ -1232,6 +1233,27 @@ void SequenceCanvas::OnFocus(wxFocusEvent& event)
 void SequenceCanvas::OnKillFocus(wxFocusEvent& event)
     {
     event.Skip () ;
+    }
+
+void SequenceCanvas::OnWhatCuts(wxCommandEvent& event)
+    {
+    TSilmutDialog sd ( p , txt("t_what_cuts") , M_WHATCUTS ) ;
+    sd.initme ( p->vec , _from , _to ) ;
+    if ( wxID_OK != sd.ShowModal () ) return ;    
+    
+    int a ;
+    TRestrictionEnzyme *e = sd.getEnzyme() ;
+    for ( a = 0 ; a < p->vec->re.size() && p->vec->re[a] != e ; a++ ) ;
+    if ( a == p->vec->re.size() )
+        {
+        p->vec->re.push_back ( e ) ;
+        p->vec->recalculateCuts() ;
+        p->vec->recalcvisual = true ;
+        p->cPlasmid->Refresh() ;
+        p->updateSequenceCanvas ( true ) ;
+        p->treeBox->initme() ;
+        p->Refresh () ;
+        }
     }
 
 // -------------------------------------------------------- TMarkMem

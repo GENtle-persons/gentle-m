@@ -4,6 +4,9 @@
 #include "main.h"
 #include <wx/spinctrl.h>
 
+#define M_SILMUT 0
+#define M_WHATCUTS 1
+
 class TRestrictionEnzyme ;
 class TPrimerDesign ;
 
@@ -19,7 +22,7 @@ class TSilmutItem
 class TSilmutDialog : public wxDialog
     {
     public :
-    TSilmutDialog ( wxWindow *parent , const wxString &s ) ;
+    TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode = M_SILMUT ) ;
     virtual void initme ( TVector *vec , int _from , int _to ) ;
     virtual void calc () ;
     virtual void showit () ;
@@ -45,6 +48,7 @@ class TSilmutDialog : public wxDialog
     wxChoice *egr ;
     vector <int> lb_retro ;
     int last_selection ;
+    int mode ;
 
     DECLARE_EVENT_TABLE()
     } ;

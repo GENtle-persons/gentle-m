@@ -97,6 +97,7 @@ class TStorage
     void replaceTable ( string table , TVS &f , TVS &t ) ;
     void tableInfoSet ( TVS &f , TVS &t , string nf , string nt ) ;
     string fixDNAname ( string s ) ;
+    string UCfirst ( string s ) ;
     
     bool getWriteProtect () ;
     void addRestrictionEnzyme ( TRestrictionEnzyme *r ) ;

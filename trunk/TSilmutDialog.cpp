@@ -9,11 +9,12 @@ BEGIN_EVENT_TABLE(TSilmutDialog, wxDialog )
     EVT_LISTBOX_DCLICK(PD_SILMUT_LB,TSilmutDialog::OnLbDoubleClick)
 END_EVENT_TABLE()
 
-TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s )
+TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode )
     : wxDialog ( parent , -1 , s )
     {
     SetSize ( 600 , 400 ) ;
     Center () ;
+    mode = _mode ;
     
     int w , h ;
     GetClientSize ( &w , &h ) ;
@@ -26,20 +27,30 @@ TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s )
                             wxLB_SINGLE|wxLB_SORT ) ;
 
     wxRect r ;
-    r = ( new wxStaticText ( this , -1 , txt("t_silmut_max_xhg") , wxPoint ( bo , bo*2 ) ) ) -> GetRect() ;
+    wxStaticText *st ;
+    st = new wxStaticText ( this , -1 , txt("t_silmut_max_xhg") , wxPoint ( bo , bo*2 ) ) ;
+    r = st->GetRect() ;
     lim_xhg = new wxSpinCtrl ( this , PD_SILMUT_MAX_XHG , "2" ,
                             wxPoint ( r.GetRight() + bo , bo ) ,
                             wxSize ( th * 2 , th ) ,
                             wxSP_ARROW_KEYS ,
                             0 , 9 , 2 ) ;
+
+    if ( mode == M_WHATCUTS )
+        {
+        lim_xhg->SetValue ( 0 ) ;
+        lim_xhg->Hide() ;
+        st->Hide() ;
+        }
+
     r = lim_xhg->GetRect() ;
-    wxStaticText *st = new wxStaticText ( this , -1 , txt("t_silmut_max_cut1") , wxPoint ( r.GetRight()+th , bo*2 ) ) ;
+    st = new wxStaticText ( this , -1 , txt("t_silmut_max_cut1") , wxPoint ( r.GetRight()+th , bo*2 ) ) ;
     r = st->GetRect() ;
-    lim_max = new wxSpinCtrl ( this , PD_SILMUT_MAX_CUT , "3" ,
+    lim_max = new wxSpinCtrl ( this , PD_SILMUT_MAX_CUT , "5" ,
                             wxPoint ( r.GetRight() + bo , bo ) ,
                             wxSize ( th * 2 , th ) ,
                             wxSP_ARROW_KEYS ,
-                            0 , 99 , 3 ) ;
+                            0 , 99 , 5 ) ;
     r = lim_max->GetRect() ;
     new wxStaticText ( this , -1 , txt("t_silmut_max_cut2") , wxPoint ( r.GetRight()+bo , bo*2 ) ) ;
     
@@ -54,7 +65,9 @@ TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s )
                             wxSize ( r.GetRight() - bo , th ) ) ;
     for ( int a = 0 ; a < z.size() ; a++ )
         egr->Append ( z[a].c_str() ) ;
-    egr->SetStringSelection ( txt("Current") ) ;
+        
+    if ( mode == M_WHATCUTS ) egr->SetStringSelection ( txt("All") ) ;
+    else if ( mode == M_SILMUT ) egr->SetStringSelection ( txt("Current") ) ;
     
     r = egr->GetRect() ;
     wxButton *bd ;
@@ -275,13 +288,25 @@ void TSilmutDialog::showit ()
            fragments += wxString::Format ( "%d" , vs[a].fragments[b] ) ;
            }
         
-        wxString s = wxString::Format ( "%2d %s %s (%2d=>%2d) [%s]" , 
+        wxString s ;
+        if ( mode == M_SILMUT )
+           {
+           s = wxString::Format ( "%2d %s %s (%2d=>%2d) [%s]" , 
                         vs[a].changes , 
                         e_name.c_str() ,
                         vs[a].mut.c_str() ,
                         cuts_before ,
                         vs[a].cuts ,
                         fragments.c_str() ) ;
+           }
+        else if ( mode == M_WHATCUTS )
+           {
+           s = wxString::Format ( txt("t_whatcuts_format") , 
+                        e_name.c_str() ,
+                        vs[a].cuts ,
+                        fragments.c_str() ) ;
+           }
+           
         lb->Append ( s ) ;
         list.push_back ( s ) ;
         }

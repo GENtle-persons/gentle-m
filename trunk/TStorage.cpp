@@ -152,6 +152,7 @@ void TStorage::getEnzymesInGroup ( string gn , vector <string> &vs )
     int a ;
     vs.clear() ;
     string sql ;
+    gn = UCfirst ( gn ) ;
     if ( gn != txt("All") )
         {
         sql = "SELECT leg_enzyme FROM link_enzyme_group" ;
@@ -197,7 +198,7 @@ void TStorage::getEnzymeGroups ( vector <wxString> &vs )
     string sql = "SELECT eg_name FROM enzyme_group" ;
     sr = getObject ( sql ) ;
     for ( a = 0 ; a < sr.content.size() ; a++ )
-        vs.push_back ( sr[a][sr["eg_name"]].c_str() ) ;
+        vs.push_back ( UCfirst(sr[a][sr["eg_name"]]).c_str() ) ;
     }
 
 void TStorage::getEnzymeGroups ( vector <string> &vs )
@@ -205,7 +206,7 @@ void TStorage::getEnzymeGroups ( vector <string> &vs )
     vector <wxString> dummy ;
     getEnzymeGroups ( dummy ) ;
     vs.clear () ;
-    for ( int a = 0 ; a < dummy.size() ; a++ ) vs.push_back ( dummy[a].c_str() ) ;
+    for ( int a = 0 ; a < dummy.size() ; a++ ) vs.push_back ( UCfirst(dummy[a].c_str()) ) ;
     }
     
 void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme *e )
@@ -336,14 +337,20 @@ int TStorage::getOption ( string oname , int def )
                             "s_value" , def ) ;
     }
     
-bool TStorage::addEnzymeGroup ( string s )
+string TStorage::UCfirst ( string s )
     {
-    if ( s == "" ) return false ;
     int a ;
     for ( a = 0 ; a < s.length() ; a++ )
         if ( s[a] >= 'A' && s[a] <= 'Z' )
            s[a] = s[a] - 'A' + 'a' ;
     if ( s[0] >= 'a' && s[0] <= 'z' ) s[0] = s[0] - 'a' + 'A' ;
+    return s ;
+    }
+    
+bool TStorage::addEnzymeGroup ( string s )
+    {
+    if ( s == "" ) return false ;
+    s = UCfirst ( s ) ;
     if ( s == txt("all") ) return false ;
 
     TSQLresult sr ;
@@ -354,8 +361,6 @@ bool TStorage::addEnzymeGroup ( string s )
     
     string s1 , s2 ;
     sqlAdd ( s1 , s2 , "eg_name" , s ) ;
-    sqlAdd ( s1 , s2 , "eg_index" , 1 ) ;
-    sqlAdd ( s1 , s2 , "eg_creator" , 1 ) ;
     sql = "INSERT INTO enzyme_group (" + s1 + ") VALUES (" + s2 + ")" ;    
     getObject ( sql ) ;
     return true ;
@@ -520,6 +525,22 @@ void TStorage::autoUpdateSchema ()
         getObject ( "CREATE INDEX k_dna ON dna (dna_name)" ) ;
         getObject ( "CREATE INDEX k_dna_type ON dna (dna_type)" ) ;
         getObject ( "CREATE INDEX k_dna_desc ON dna (dna_description)" ) ;
+        }
+        
+    // Version 0.3
+    if ( version < 3 )
+        {
+        version = 3 ;
+        r = getObject ( "SELECT eg_name FROM enzyme_group" ) ;
+        getObject ( "DROP TABLE enzyme_group" ) ;
+        getObject ( "CREATE TABLE enzyme_group ( eg_name tinytext )" ) ;
+        for ( int a = 0 ; a < r.rows() ; a++ )
+           {
+           sql = "INSERT INTO enzyme_group ( eg_name ) VALUES ( \"" ;
+           sql += r[a][0] ;
+           sql += "\")" ;
+           getObject ( sql ) ;
+           }
         }
     
     // Writing new version, if necessary
