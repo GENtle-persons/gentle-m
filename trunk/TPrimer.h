@@ -68,6 +68,7 @@ class TPrimer
     string ann1 , ann2 , annm ;
     int annScore ;
     double S , H ;
+
     double IUpairVals_min[3] , IUpairVals_max[3] ;
     double deltaHValmin , deltaHValmax ;
     double deltaSValmin , deltaSValmax ;

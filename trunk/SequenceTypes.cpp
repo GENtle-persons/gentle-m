@@ -110,13 +110,20 @@ void SeqPrimer::initFromTVector ( TVector *v )
     for ( int a = 0 ; a < s.length() ; a++ ) s[a] = ' ' ;
     takesMouseActions = true ;
     showNumbers = false ;
+    circular = v->isCircular() ;
     }
     
 void SeqPrimer::addPrimer ( TPrimer *p )
     {
     int a ;
+    TVector d ;
+    d.sequence = s ;
+    d.setCircular(circular) ;
+    if ( d.isCircular() ) wxMessageBox ( wxString::Format("%d-%d",p->from,p->to) ) ;
     for ( a = p->from ; a <= p->to ; a++ )
-        s[a-1] = p->sequence[a-p->from] ;
+        d.setNucleotide ( a-1 , p->sequence[a-p->from] ) ;
+    s = d.sequence ;
+//        s[a-1] = p->sequence[a-p->from] ;
     }
     
 //************************************************ SeqNum

@@ -22,7 +22,14 @@ float TVector::getAApi ( char aa ) { return aaprop[aa].pi ; }
 char TVector::getComplement ( char c ) { return COMPLEMENT[c] ; }
 TAAProp TVector::getAAprop ( char a ) { return aaprop[a] ; }
 
-    
+void TVector::setNucleotide ( int pos , char t )
+    {
+    int sl = sequence.length() ;
+    if ( isLinear() && ( pos < 0 || pos >= sl ) ) return ;
+    while ( pos < 0 ) pos += sl ;
+    while ( pos >= sequence.length() ) pos -= sl ;
+    sequence[pos] = t ;
+    }    
 
 bool TVector::basematch ( char b1 , char b2 ) // b1 in IUPAC, b2 in SIUPAC
    {
@@ -397,8 +404,9 @@ bool TVector::reduceToFragment ( TRestrictionCut left , TRestrictionCut right )
 char TVector::getNucleotide ( int pos , bool complement )
     {
     int sl = sequence.length() ;
+    if ( isLinear() && ( pos < 0 || pos >= sl ) ) return ' ' ;
     while ( pos < 0 ) pos += sl ;
-    while ( pos > sl ) pos -= sl ;
+    while ( pos >= sl ) pos -= sl ;
     if ( complement ) return getComplement ( sequence[pos] ) ;
     return sequence[pos] ;
     }
