@@ -7,6 +7,7 @@
 
 class TVector ;
 class TURLtext ;
+class TTestSuite ;
 
 class TAminoAcids : public ChildBase
     {
@@ -57,6 +58,7 @@ class TAminoAcids : public ChildBase
     virtual void updateToolbar () ;
 
     private :
+    friend class TTestSuite ;
     wxListBox *lb ;
     wxBoxSizer *h1 , *v1 ;
     wxChoice *inlinePlot ;

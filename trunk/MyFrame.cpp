@@ -56,6 +56,7 @@ MyFrame::MyFrame(wxWindow *parent,
     dying = false ;
     activating = false ;
     locked = 0 ;
+    test_suite = NULL ;
 
     // Accelerators
     wxAcceleratorEntry entries[ACC_ENT];
@@ -1506,102 +1507,145 @@ TVirtualGel *MyFrame::useGel ( wxString type )
 
 void MyFrame::TestMenu(wxCommandEvent& event)
     {
+    if ( test_suite == NULL ) test_suite = new TTestSuite ;
+    test_suite->Step () ;
+    wxCommandEvent ev ( wxEVT_COMMAND_MENU_SELECTED , Y___ ) ;
+    wxPostEvent ( this , ev ) ;
+    myapp()->Yield ( true ) ;
+    }
+    	
+//******************************************************************* TTestSuite
+
+TTestSuite::TTestSuite ()
+	{
     srand ( time(NULL) );
-    int start = wxGetLocalTime() ;
-    int cnt = 0 ;
-    while ( true )
+    cnt = 0 ;
+	}    
+
+void TTestSuite::pressKey ( ChildBase *ac )
+	{
+	if ( ac->def == "dna" ) vectorPressKey ( ac ) ;
+	if ( ac->def == "AminoAcids" ) vectorPressKey ( ac ) ;
+	}    
+	
+void TTestSuite::action ( ChildBase *ac )
+	{
+	if ( ac->def == "dna" ) vectorAction ( ac ) ;
+	if ( ac->def == "AminoAcids" ) aaAction ( ac ) ;
+	}
+
+void TTestSuite::editMode ( ChildBase *ac )
+	{
+	wxCommandEvent event ;
+    mylog ( "Testsuite:Edit mode" ) ;
+    if ( ac->def == "dna" ) ((MyChild*)ac)->OnEditMode(event) ;
+    if ( ac->def == "AminoAcids" )
     	{
-	    cnt++ ;
-        ChildBase *ac = GetActiveChild () ;
-        int r = rand() ;
-        r %= 10 ;
-        
-        if ( ac )
-        	{
-    	    wxString x ;
-    	    x = ac->getName() ;
-    	    x += wxString::Format ( " [%ds, #%d]" , wxGetLocalTime()-start , cnt ) ;
-    	    if ( ac->vec ) x += wxString::Format ( ", seq : %d" , ac->vec->getSequenceLength() ) ;
-    	    if ( ac->cSequence ) x += wxString::Format ( ", EditMode : %d" , ac->cSequence->getEditMode() ) ;
-    	    mylog ( "Testsuite:Status" , x ) ;
-        	}    
-        
-        if ( r < 7 )
-        	{
-    	    if ( !ac->cSequence ) continue ;
-    	    wxKeyEvent ev ( wxEVT_CHAR_HOOK ) ;
-    	    ev.m_altDown = false ;
-    	    ev.m_controlDown = false ;
-    	    ev.m_metaDown = false ;
-    	    ev.m_shiftDown = false ;
-    	    r = rand () % 40 ;
-    	    if ( r > 14 ) r = 9 + r % 6 ;
-    	    wxString msg ;
-    	    ev.m_keyCode = 'A' ; // Default
-    	    if ( r == 0 ) { ev.m_keyCode = 'A' ; msg = "A" ; }
-    	    if ( r == 1 ) { ev.m_keyCode = 'C' ; msg = "C" ; }
-    	    if ( r == 2 ) { ev.m_keyCode = 'T' ; msg = "G" ; }
-    	    if ( r == 3 ) { ev.m_keyCode = 'G' ; msg = "T" ; }
-    	    if ( r == 4 ) { ev.m_keyCode = WXK_BACK ; msg = "BACK" ; }
-    	    if ( r == 5 ) { ev.m_keyCode = WXK_DELETE ; msg = "DEL" ; }
-    	    if ( r == 6 ) { ev.m_keyCode = WXK_HOME ; msg = "HOME" ; }
-    	    if ( r == 7 ) { ev.m_keyCode = WXK_END ; msg = "END" ; }
-    	    if ( r == 8 ) { ev.m_keyCode = WXK_INSERT ; msg = "INSERT" ; }
-    	    if ( r == 9 ) { ev.m_keyCode = WXK_RIGHT ; msg = "RIGHT" ; }
-    	    if ( r == 10 ) { ev.m_keyCode = WXK_LEFT ; msg = "LEFT" ; }
-    	    if ( r == 11 ) { ev.m_keyCode = WXK_UP ; msg = "UP" ; }
-    	    if ( r == 12 ) { ev.m_keyCode = WXK_DOWN ; msg = "DOWN" ; }
-    	    if ( r == 13 ) { ev.m_keyCode = WXK_PRIOR ; msg = "PRIOR" ; }
-    	    if ( r == 14 ) { ev.m_keyCode = WXK_NEXT ; msg = "NEXT" ; }
-    	    mylog ( "Testsuite:Key" , wxString::Format ( "%s" , msg.c_str() ) ) ;
-    	    ac->cSequence->OnCharHook(ev) ;
-        	}    
-       	else if ( r == 7 )
-        	{
-    	    if ( !ac->cSequence ) continue ;
-    	    mylog ( "Testsuite:Edit mode" ) ;
-    	    ((MyChild*)ac)->OnEditMode(event) ;
-         	}   	    
-       	else if ( r == 8 )
-       		{
-   		    r = rand() % children.GetCount() ;
-    	    mylog ( "Testsuite:Activate" , wxString::Format ( "%d" , r ) ) ;
-   		    activateChild ( r ) ;
-       		}    
-       	else if ( r == 9 )
-       		{
-   		    if ( ac->def != "dna" ) continue ;
-   		    MyChild *c = (MyChild*) ac ;
-   		    wxCommandEvent ev ;
-   		    r = rand() % 22 ;
-    	    mylog ( "Testsuite:Message" , wxString::Format ( "%d" , r ) ) ;
-   		    switch ( r )
-         		{
-     		    case  0 : c->OnAA_none ( ev ) ; break ;
-     		    case  1 : c->OnAA_known ( ev ) ; break ;
-     		    case  2 : c->OnAA_all ( ev ) ; break ;
-     		    case  3 : c->OnAA_three ( ev ) ; break ;
-     		    case  4 : c->OnAA_one ( ev ) ; break ;
-     		    case  5 : c->OnAA_three_1 ( ev ) ; break ;
-     		    case  6 : c->OnAA_three_2 ( ev ) ; break ;
-     		    case  7 : c->OnAA_three_3 ( ev ) ; break ;
-     		    case  8 : c->OnAA_three_M1 ( ev ) ; break ;
-     		    case  9 : c->OnAA_three_M2 ( ev ) ; break ;
-     		    case 10 : c->OnAA_three_M3 ( ev ) ; break ;
-     		    case 11 : c->OnCircularLinear ( ev ) ; break ;
-     		    case 12 : c->OnMarkAll ( ev ) ; break ;
-     		    case 13 : c->OnCut ( ev ) ; break ;
-     		    case 14 : c->OnCopy ( ev ) ; break ;
-//     		    case 15 : c->OnPaste ( ev ) ; break ; // Might paste *real* clipboard;-)
-     		    case 16 : c->OnCopyToNew ( ev ) ; break ;
-     		    case 17 : c->OnViewMode ( ev ) ; break ;
-     		    case 18 : c->OnORFs ( ev ) ; break ;
-     		    case 19 : c->OnToggleFeatures ( ev ) ; break ;
-     		    case 20 : c->OnToggleRestriction ( ev ) ; break ;
-     		    case 21 : c->OnToggleIDNA ( ev ) ; break ;
-                }
-       		}   
-     	}
+        ((TAminoAcids*)ac)->OnEditMode(event) ;
+        }    
+	}
+          
+void TTestSuite::vectorPressKey ( ChildBase *ac )
+	{
+    if ( !ac->cSequence ) return ;
+    wxKeyEvent ev ( wxEVT_CHAR_HOOK ) ;
+    ev.m_altDown = false ;
+    ev.m_controlDown = rand() % 2 ;
+    ev.m_metaDown = false ;
+    ev.m_shiftDown = false ;
+    int r = rand () % 40 ;
+    if ( r > 14 ) r = 9 + r % 6 ;
+    wxString msg ;
+    ev.m_keyCode = 'A' ; // Default
+    if ( r == 0 ) { ev.m_keyCode = 'A' ; msg = "A" ; }
+    if ( r == 1 ) { ev.m_keyCode = 'C' ; msg = "C" ; }
+    if ( r == 2 ) { ev.m_keyCode = 'T' ; msg = "G" ; }
+    if ( r == 3 ) { ev.m_keyCode = 'G' ; msg = "T" ; }
+    if ( r == 4 ) { ev.m_keyCode = WXK_BACK ; msg = "BACK" ; }
+    if ( r == 5 ) { ev.m_keyCode = WXK_DELETE ; msg = "DEL" ; }
+    if ( r == 6 ) { ev.m_keyCode = WXK_HOME ; msg = "HOME" ; }
+    if ( r == 7 ) { ev.m_keyCode = WXK_END ; msg = "END" ; }
+    if ( r == 8 ) { ev.m_keyCode = WXK_INSERT ; msg = "INSERT" ; }
+    if ( r == 9 ) { ev.m_keyCode = WXK_RIGHT ; msg = "RIGHT" ; }
+    if ( r == 10 ) { ev.m_keyCode = WXK_LEFT ; msg = "LEFT" ; }
+    if ( r == 11 ) { ev.m_keyCode = WXK_UP ; msg = "UP" ; }
+    if ( r == 12 ) { ev.m_keyCode = WXK_DOWN ; msg = "DOWN" ; }
+    if ( r == 13 ) { ev.m_keyCode = WXK_PRIOR ; msg = "PRIOR" ; }
+    if ( r == 14 ) { ev.m_keyCode = WXK_NEXT ; msg = "NEXT" ; }
+    mylog ( "Testsuite:Key" , wxString::Format ( "%s" , msg.c_str() ) ) ;
+    ac->cSequence->OnCharHook(ev) ;
+	}
+     
+void TTestSuite::vectorAction ( ChildBase *ac )
+	{
+    MyChild *c = (MyChild*) ac ;
+    wxCommandEvent ev ;
+    int r = rand() % 22 ;
+    mylog ( "Testsuite:Message" , wxString::Format ( "%d" , r ) ) ;
+    switch ( r )
+		{
+	    case  0 : c->OnAA_none ( ev ) ; break ;
+	    case  1 : c->OnAA_known ( ev ) ; break ;
+	    case  2 : c->OnAA_all ( ev ) ; break ;
+	    case  3 : c->OnAA_three ( ev ) ; break ;
+	    case  4 : c->OnAA_one ( ev ) ; break ;
+	    case  5 : c->OnAA_three_1 ( ev ) ; break ;
+	    case  6 : c->OnAA_three_2 ( ev ) ; break ;
+	    case  7 : c->OnAA_three_3 ( ev ) ; break ;
+	    case  8 : c->OnAA_three_M1 ( ev ) ; break ;
+	    case  9 : c->OnAA_three_M2 ( ev ) ; break ;
+	    case 10 : c->OnAA_three_M3 ( ev ) ; break ;
+	    case 11 : c->OnCircularLinear ( ev ) ; break ;
+	    case 12 : c->OnMarkAll ( ev ) ; break ;
+	    case 13 : c->OnCut ( ev ) ; break ;
+	    case 14 : c->OnCopy ( ev ) ; break ;
+//     	    case 15 : c->OnPaste ( ev ) ; break ; // Might paste *real* clipboard;-)
+	    case 16 : c->OnCopyToNew ( ev ) ; break ;
+	    case 17 : c->OnViewMode ( ev ) ; break ;
+	    case 18 : c->OnORFs ( ev ) ; break ;
+	    case 19 : c->OnToggleFeatures ( ev ) ; break ;
+	    case 20 : c->OnToggleRestriction ( ev ) ; break ;
+	    case 21 : c->OnToggleIDNA ( ev ) ; break ;
+	    }    
+	}	
+     
+void TTestSuite::aaAction ( ChildBase *ac )
+	{
+    wxCommandEvent ev ;
+	TAminoAcids *aa = (TAminoAcids*) ac ;
+	int num = aa->lb->GetCount() ;
+	aa->lb->SetSelection ( rand() % num , true ) ;
+	aa->OnListBox ( ev ) ;
+	}	
+     
+void TTestSuite::Step()
+    {
+    if ( cnt == 0 ) start = wxGetLocalTime() ;
+    MyFrame *f = myapp()->frame ;
+
+    ChildBase *ac = f->GetActiveChild () ;
+    if ( !ac ) return ; // No child open
+    
+    cnt++ ;
+    int r = rand() ;
+    r %= 10 ;
+    
+    wxString x ;
+    x = ac->getName() ;
+    x += wxString::Format ( " [%ds, #%d]" , wxGetLocalTime()-start , cnt ) ;
+    if ( ac->vec ) x += wxString::Format ( ", seq : %d" , ac->vec->getSequenceLength() ) ;
+    if ( ac->cSequence ) x += wxString::Format ( ", EditMode : %d" , ac->cSequence->getEditMode() ) ;
+    mylog ( "Testsuite:Status" , x ) ;
+    
+    if ( r < 7 ) pressKey ( ac ) ;
+   	else if ( r == 7 ) editMode ( ac ) ;
+   	else if ( r == 8 )
+   		{
+	    r = rand() % f->children.GetCount() ;
+	    mylog ( "Testsuite:Activate" , wxString::Format ( "%d" , r ) ) ;
+	    f->activateChild ( r ) ;
+   		}    
+   	else if ( r == 9 ) action ( ac ) ;
     }            
                 
 // DROP TARGET
