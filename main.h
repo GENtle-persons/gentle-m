@@ -1,43 +1,62 @@
+/** \file main.h
+	\brief Contains defines, global functions, includes, and the MyApp class
+*/
+
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
 typedef unsigned int uint ;
 
-// Place a comment in front of the following lines when compiling releases
+/**	\fn myass ( bool b , wxString msg )
+	\brief "My assertion" - little inside joke...
+	\param b The condition given in the call. No assertion then b is FALSE.
+	\param msg The message string to write into errout.
+*/
 
-// Turn error logging on/off
+
+/**	\def MYDEBUG
+	\brief Turns on output of the myass function; should not be used for releases
+*/
+
+/**	\def MYLOG
+	\brief Turns on output of logging; should not be used for releases
+*/
+
+/**	\def MYTEST
+	\brief Turns on both MYDEBUG and MYLOG; should not be used for releases
+*/
+
 //#define MYDEBUG
-
-// Turn logging on/off
 //#define MYLOG
-
-// Turn testing (log and error log) on/off
 //#define MYTEST
 
 #ifdef MYTEST
-
-#ifndef MYLOG
-#define MYLOG
-#endif
-
-#ifndef MYDEBUG
-#define MYDEBUG
-#endif
-
+	#ifndef MYLOG
+		#define MYLOG
+	#endif // MYLOG
+	#ifndef MYDEBUG
+		#define MYDEBUG
+	#endif // MYDEBUG
 #endif // MYTEST
 
+/**	\def MYSPINBOXSIZE
+	\brief Width of spin box, for windows only
+*/
 #ifdef __WXMSW__
-#define MYSPINBOXSIZE 50
+	#define MYSPINBOXSIZE 80
 #else
-#define MYSPINBOXSIZE -1
+	#define MYSPINBOXSIZE -1
 #endif
 
 #include "wx/wxprec.h"
 
+/**	\def MYSPINBOXSIZE
+	\brief List box style, for GTK only
+*/
 #ifdef __WXGTK__
-#define MYLISTBORDER wxSIMPLE_BORDER
+	#define MYLISTBORDER wxSIMPLE_BORDER
 #else
-#define MYLISTBORDER 0
+	#define MYLISTBORDER 0
 #endif
 
 #ifdef __BORLANDC__
@@ -73,6 +92,18 @@ typedef unsigned int uint ;
 
 using namespace std ;
 
+/** \def MYPEN(_a)
+	\brief Creates or reuses a solid pen with size 1. _a is of type wxColour
+*/
+
+/** \def MYBRUSH(_a)
+	\brief Creates or reuses a solid brush. _a is of type wxColour
+*/
+
+/** \def MYFONT(_a,_b,_c,_d)
+	\brief Creates or reuses a font. Parameters are the same as wxCreateFont
+*/
+
 #define MYPEN(_a) (wxThePenList->FindOrCreatePen ( _a , 1 , wxSOLID ) )
 #define MYBRUSH(_a) (wxTheBrushList->FindOrCreateBrush ( _a , wxSOLID ) )
 #define MYFONT(_a,_b,_c,_d) (wxTheFontList->FindOrCreateFont(_a,_b,_c,_d) )
@@ -96,44 +127,62 @@ using namespace std ;
 #include <wx/protocol/http.h>
 WX_DECLARE_STRING_HASH_MAP( wxString, wxHashString );
 
+/** \brief Style for Process Dialog */
 #define wxPD_ALL (wxPD_AUTO_HIDE|wxPD_APP_MODAL|wxPD_CAN_ABORT|wxPD_ELAPSED_TIME|wxPD_ESTIMATED_TIME|wxPD_REMAINING_TIME)
 
-#define TYPE_VECTOR 0
-#define TYPE_FRAGMENT 1
-#define TYPE_SEQUENCE 2
-#define TYPE_PRIMER 3
-#define TYPE_ALIGNMENT 4
-#define TYPE_AMINO_ACIDS 5
-#define TYPE_MISC 6
+#define TYPE_VECTOR 0 /**< \brief Vector type */
+#define TYPE_FRAGMENT 1 /**< \brief Fragment type */
+#define TYPE_SEQUENCE 2 /**< \brief Sequence type */
+#define TYPE_PRIMER 3 /**< \brief Primer type */
+#define TYPE_ALIGNMENT 4 /**< \brief Alignment type */
+#define TYPE_AMINO_ACIDS 5 /**< \brief Amino acid type */
+#define TYPE_MISC 6 /**< \brief Misc type */
 
-#define FEAT_NONE 0
-#define FEAT_ALPHA 1
-#define FEAT_BETA 2
-#define FEAT_MUT 3
-#define FEAT_NOLINE 4
-#define FEAT_VLINE 5
+#define FEAT_NONE 0  /**< \brief Do not draw feature  */
+#define FEAT_ALPHA 1  /**< \brief Draw feature as alpha helix */
+#define FEAT_BETA 2  /**< \brief Draw feature as beta sheet */
+#define FEAT_MUT 3  /**< \brief Draw feature as mutation */
+#define FEAT_NOLINE 4  /**< \brief Draw feature without line  */
+#define FEAT_VLINE 5  /**< \brief Draw feature as vertical line */
 
-#define DAM_METHYLATION 1
-#define DCM_METHYLATION 2
-#define ALL_METHYLATION_ENZYMES ( DAM_METHYLATION + DCM_METHYLATION )
+#define DAM_METHYLATION 1 /**< \brief Show DAM methylation */
+#define DCM_METHYLATION 2 /**< \brief Show DCM methylation */
+#define ALL_METHYLATION_ENZYMES ( DAM_METHYLATION + DCM_METHYLATION ) /**< \brief Show all methylations */
 
 class MyFrame ;
 
-// Define a new application
+/** \class MyApp
+	\brief Application class
+*/
 class MyApp : public wxApp
     {
     public:
     bool OnInit();
     int OnExit () ;
+    
     virtual void init_txt ( wxString lang , wxString csv , wxHashString *target = NULL , int ln = 1 ) ;
-    wxString getHTMLCommand ( wxString command ) ;
-    wxString getFileFormatApplication ( wxString type ) ;
-    MyFrame *frame;
-    wxMimeTypesManager mtm ;
-    wxString homedir , bmpdir , slash ;
-    wxSingleInstanceChecker *m_checker ;
-    int programVersion ;
-    int dbWarningIssued ;
+    virtual void do_my_ass ( bool b , wxString msg = "" ) ;
+    virtual void do_my_log ( wxString function , wxString msg = "" ) ;
+    
+    wxString getHTMLCommand ( wxString command ) ; ///< Returns the command line for running a browser
+    wxString getFileFormatApplication ( wxString type ) ; ///< Returns application associated with a file type
+    MyFrame *frame; ///< The application frame
+    wxMimeTypesManager mtm ; ///< The MIME types manager
+    wxString homedir ; ///< Directory of the application
+    wxString bmpdir ; ///< Directory of the bitmaps
+    wxString slash ; ///< The platform-dependent directory separator slash
+    int programVersion ; ///< The current program version
+    int dbWarningIssued ; ///< Was a database warning issued?
+    wxHashString _text ; ///< Contains the current GUI translation.
+    
+    private :
+    virtual void registerFileExtension ( wxString extension ) ; ///< Registers a file extension to GENtle (windows only).
+    virtual void registerProtocol ( wxString extension ) ; ///< Registers a protocol to GENtle (windows only).
+    wxFile *errout ; ///< The ERROR.txt file handler for do_my_ass
+    wxFile *logout ; ///< The LOG.txt file handler for do_my_log
+    int total_log_time ; ///< The log timer for do_my_log
+    int total_log_counter ; ///< The log counter for do_my_log
+    wxSingleInstanceChecker *m_checker ; ///< Checks if another instance is running
     };
 
 class TUndo ;
@@ -155,11 +204,14 @@ WX_DEFINE_ARRAY(SeqBasic *,wxArraySeqBasic);
 WX_DEFINE_ARRAY(TProteaseCut *,wxArrayTProteaseCut);
 
 #ifndef _wxArrayTVector
-#define _wxArrayTVector
-WX_DEFINE_ARRAY(TVector *, wxArrayTVector);
+	#define _wxArrayTVector
+	WX_DEFINE_ARRAY(TVector *, wxArrayTVector);
 #endif
 
+/** \brief Clear wxArray of pointers and delete the not-NULL-pointer objects */
 #define CLEAR_DELETE(__x) { while ( !__x.IsEmpty() ) { if ( __x[0] ) { delete __x[0] ; } __x.RemoveAt ( 0 ) ; } }
+
+/** \brief Create a wxString of __l times the __c char */
 #define FILLSTRING(__x,__c,__l) { __x = wxString ( __c , __l ) ; }
 
 
@@ -194,15 +246,15 @@ WX_DEFINE_ARRAY(TVector *, wxArrayTVector);
 #include "TItemEditDialog.h"
 #include "PrimerDesign.h"
 
-#define PI 3.14
-#define IUPAC_A 1
-#define IUPAC_C 2
-#define IUPAC_G 4
-#define IUPAC_T 8
+#define PI 3.14 /**< \brief Just PI */
+#define IUPAC_A 1 /**< \brief IUPAC bit for A */
+#define IUPAC_C 2 /**< \brief IUPAC bit for C */
+#define IUPAC_G 4 /**< \brief IUPAC bit for G */
+#define IUPAC_T 8 /**< \brief IUPAC bit for T */
 
-#define MINI_DISPLAY_ORIGINAL 0
-#define MINI_DISPLAY_REAL 1
-#define MINI_DISPLAY_CONDENSED 2
+#define MINI_DISPLAY_ORIGINAL 0 /**< \brief Display mini-canvas at original width */
+#define MINI_DISPLAY_REAL 1 /**< \brief Display mini-canvas at real width */
+#define MINI_DISPLAY_CONDENSED 2 /**< \brief Display mini-canvas as condensed width */
 
 #include "ureadseq.h"
 
@@ -212,23 +264,36 @@ WX_DEFINE_ARRAY(TVector *, wxArrayTVector);
 // ---------------------------------------------------------------------------
 
 #ifdef MYDEBUG
-void myass ( bool b , wxString msg = "" ) ;
+	#define myass(a,b) myapp()->do_my_ass(a,b)
 #else
-#define myass(a,b)
+	#define myass(a,b)
 #endif
  
 #ifdef MYLOG
-void mylog ( wxString function , wxString msg = "" ) ;
+	#define mylog(a,b) myapp()->do_my_log(a,b)	
 #else
-#define mylog(a,b)
+	#define mylog(a,b)
 #endif
 
+/** \brief Insert wxString "t" into wxString "s" at position "from" */
 void wxStringInsert ( wxString &s , int from , wxString t ) ;
+
+/** \brief Chop wxString "s" into parts "r" separated by "sep" */
 void explode ( wxString sep , wxString s , wxArrayString &r ) ;
+
+/** \brief Join wxStrings in "r" while putting "sep"s between them */
 wxString implode ( wxString sep , wxArrayString &r ) ;
+
+/** \brief Returns the current language version of the "item" */
 char* txt ( wxString item ) ;
+
+/** \brief Returns a pointer to the application */
 MyApp *myapp () ;
+
+/** \brief Compares the values of two int pointers */
 int cmpint(int *first, int *second) ;
+
+/** \brief Compares the values of two TRestrictionEnzyme pointers */
 int cmpre(TRestrictionEnzyme *first, TRestrictionEnzyme *second) ;
 
 #endif

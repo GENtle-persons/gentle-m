@@ -1,3 +1,8 @@
+/** \file main.cpp
+	\brief Contains global functions, includes, and the MyApp class
+ */
+
+
 /////////////////////////////////////////////////////////////////////////////
 // Name:        GENtle
 // Purpose:     DNA/AA manipulation
@@ -32,43 +37,7 @@ using namespace std ;
 
 IMPLEMENT_APP(MyApp)
 
-
-// Some often needed stuff...
-
-#ifdef MYDEBUG
-wxFile errout ( "ERROR.txt" , wxFile::write ) ;
-
-void myass ( bool b , wxString msg )
-    {
-    if ( b ) return ;
-    errout.Write ( msg + "\n" ) ;
-    errout.Flush() ;
-    }
-#endif
-
-#ifdef MYLOG 
-wxFile logout ( "LOG.txt" , wxFile::write ) ;
-int total_log_time = 0 ;
-int total_log_counter = 0 ;
-
-void mylog ( wxString function , wxString msg )
-    {
-
-    if ( total_log_counter > 5000 )
-    	{
-	    logout.Close () ;
-	    logout.Open ( "LOG.txt" , wxFile::write ) ;
-	    total_log_counter = 0 ;
-    	}
-    total_log_counter++ ;
-
-    int i = wxGetElapsedTime() ;
-    total_log_time += i ;
-    logout.Write ( function + " : " + msg + " (" + wxString::Format ( "%d ms" , i ) + ")\n" ) ;
-    logout.Flush() ;
-    }
-#endif    
-
+// GLOBAL FUNCTIONS
 int cmpint(int *first, int *second)
     {
     return *first > *second ;
@@ -109,79 +78,16 @@ wxString implode ( wxString sep , wxArrayString &r )
 	for ( int a = 1 ; a < r.GetCount() ; a++ )
 		ret += sep + r[a] ;
 	return ret ;
-	}    
-
-
-// ===========================================================================
-// implementation
-// ===========================================================================
-
-// Text
-//WX_DECLARE_STRING_HASH_MAP( wxString, wxHashString );
-
-wxHashString _text ;
-
-void MyApp::init_txt ( wxString lang , wxString csv , wxHashString *target , int ln )
-    {
-    if ( !target ) target = &_text ;
-    wxTextFile in ( myapp()->homedir + "/" + csv) ;
-    in.Open () ;
-    unsigned char t[10000] ;
-    bool firstline = true ;
-    TGenBank dummy ;
-    for ( int lc = 0 ; lc < in.GetLineCount() ; lc++ )
-        {
-        wxArrayString v ;
-        strcpy ( (char*)t , in[lc].c_str() ) ;
-        if ( *t == 0 ) break ;
-        unsigned char *c , *l ;
-        bool quote = false ;
-        for ( c = l = (unsigned char*) t ; *c ; c++ )
-           {
-           if ( *c == '\\' )
-              {
-              *c = ' ' ;
-              c++ ;
-              if ( *c == 't' ) *c = '\t' ;
-              else if ( *c == '"' ) *c = '"' ;
-              else if ( *c == 'n' ) *c = '\n' ;
-              }
-           else if ( *c == '"' ) quote = !quote ;
-           else if ( *c == ',' && !quote )
-              {
-              *c = 0 ;
-              v.Add ( dummy.trimQuotes(l) ) ;
-              l = c+1 ;
-              }
-           }
-        if ( l < c )
-           {
-           *(c-1) = 0 ;
-           v.Add ( dummy.trimQuotes(l) ) ;
-           }
-        
-        if ( firstline )
-           {
-           for ( int a = 0 ; a < v.GetCount() ; a++ )
-              if ( v[a].Upper() == lang.Upper() )
-                 ln = a ;
-           }
-        else if ( v.GetCount() > ln )
-           {
-           if ( v[ln].Find ( '\t' ) > -1 ) v[ln] += " " ;
-           (*target)[v[0].MakeUpper()] = v[ln] ;
-           }
-        firstline = false ;
-        }
-    }
-
+	}
+	
 char * txt ( wxString item )
     {
-    return (char*) _text[item.MakeUpper()].c_str() ;
+    return (char*) myapp()->_text[item.MakeUpper()].c_str() ;
     }
+// END GLOBAL FUNCTIONS
 
 
-void registerFileExtension ( wxString extension )
+void MyApp::registerFileExtension ( wxString extension )
     {
 #ifdef __WXMSW__    
     wxRegKey regKey;
@@ -207,7 +113,7 @@ void registerFileExtension ( wxString extension )
 #endif
     }
     
-void registerProtocol ( wxString extension )
+void MyApp::registerProtocol ( wxString extension )
     {
 #ifdef __WXMSW__    
     wxRegKey regKey;
@@ -234,24 +140,36 @@ void registerProtocol ( wxString extension )
 #else
 #endif
     }
-    
 
-
-
-// ---------------------------------------------------------------------------
-// MyApp
-// ---------------------------------------------------------------------------
-
-MyApp *theapp ;
+MyApp *theapp ; /**< \var theapp Pointer to the current application. */
 
 MyApp *myapp ()
    {
    return theapp ;
    }
 
-// Initialise this in OnInit, not statically
+
+// ---------------------------------------------------------------------------
+// MyApp
+// ---------------------------------------------------------------------------
+
+/**	\fn MyApp::OnInit()
+	\brief Initializes the application.
+	
+	* - Initializes variables
+	* - Initializes handlers
+	* - Checks if another program instance is already running
+	* - Creates a new local database, if necessary
+	* - Creates the frame
+	* - Shows the splash screen
+	* - Shows Tip of the Day (currently deactivated)
+	* - Registers file extensions
+*/
 bool MyApp::OnInit()
 {
+    errout = NULL ;
+    total_log_time = 0 ;
+    total_log_counter = 0 ;
 #ifdef MYLOG
     wxStartTimer() ;
 #endif
@@ -262,6 +180,7 @@ bool MyApp::OnInit()
     wxFileSystem::AddHandler ( new wxInternetFSHandler ) ;
     
     wxSetWorkingDirectory ( homedir ) ;
+    
     // Is an instance already running?
     const wxString name = wxString::Format("GENtle-%s", wxGetUserId().c_str());
     m_checker = new wxSingleInstanceChecker (name);
@@ -348,6 +267,12 @@ bool MyApp::OnInit()
     return TRUE;
 }
 
+/**	\fn MyApp::OnExit ()
+	\brief Exits the application.
+	
+	* - Finished a log, if one is written
+	* - deletes the wxSingleInstanceChecker
+*/
 int MyApp::OnExit ()
     {
 #ifdef MYLOG
@@ -358,32 +283,20 @@ int MyApp::OnExit ()
     return 0;
     }
     
+/**	\fn MyApp::getHTMLCommand ( wxString command )
+	\brief Returns the command line to invoke the browser.
+	\param command The URL/file.
+*/
 wxString MyApp::getHTMLCommand ( wxString command )
     {
     wxFileType *ft = mtm.GetFileTypeFromExtension ( "html" ) ;
     return ft->GetOpenCommand ( command ) ;
-/*
-#ifdef __WXMSW__    
-    wxRegKey regKey;
-    wxString idName("HKEY_CLASSES_ROOT\\.html");
-    regKey.SetName(idName);    
-    wxString s = "" , t = regKey ;
-    s += "HKEY_CLASSES_ROOT\\" ;
-    s += t ;
-    s += "\\shell\\open\\command" ;
-    regKey.SetName ( s ) ;
-    wxString q = regKey ;
-    regKey.Close();
-    q.Replace ( "-nohome" , "" ) ;
-    if ( 0 == q.Replace ( wxString("%1") , wxString((char*)command.c_str()) ) )
-        q += " \"" + command + "\"" ;
-    return q ;
-#else
-    return "" ;
-#endif
-*/
     }
     
+/**	\fn MyApp::getFileFormatApplication ( wxString type )
+	\brief Returns the application associated with a file type. Windows only.
+	\param type The file ending to find the application for.
+*/
 wxString MyApp::getFileFormatApplication ( wxString type )
     {
 #ifdef __WXMSW__    
@@ -404,4 +317,111 @@ wxString MyApp::getFileFormatApplication ( wxString type )
     return "" ;
 #endif
     }
+
+/**	\fn MyApp::do_my_ass ( bool b , wxString msg )
+	\brief "My assertion" - little inside joke...
+	\param b The condition given in the call. No assertion when b is FALSE.
+	\param msg The message string to write into errout.
+	
+	The function writes the text of "msg" to the ERROR.txt file
+	in case "b" is true. This is done to catch possible out-of-range errors.
+	The function should not be used in releases, as the mere out-of-range check
+	might significantly impact on performance. Called as "myass" (see main.h defs).
+*/
+void MyApp::do_my_ass ( bool b , wxString msg )
+    {
+    if ( b ) return ;
+    if ( !errout ) errout = new wxFile ( "ERROR.txt" , wxFile::write ) ;
+    errout->Write ( msg + "\n" ) ;
+    errout->Flush() ;
+    }
     
+/**	\fn MyApp::do_my_log ( wxString function , wxString msg )
+	\brief Logs events to a file.
+	\param function The originating function name of the log event.
+	\param msg The message string to write into logout.
+	
+	The function writes the text of "msg" to the LOG.txt file
+	together with the "function" name. This is done to log events and
+	variable values at certain points in the code. This should not
+	be used in releases, as it <b>will</b> severely impact on
+	performance. Called as "mylog" (see main.h defs).
+*/
+void MyApp::do_my_log ( wxString function , wxString msg )
+    {
+    if ( !logout ) logout = new wxFile ( "LOG.txt" , wxFile::write ) ;
+    if ( total_log_counter > 5000 )
+    	{
+	    logout->Close () ;
+	    logout->Open ( "LOG.txt" , wxFile::write ) ;
+	    total_log_counter = 0 ;
+    	}
+    total_log_counter++ ;
+
+    int i = wxGetElapsedTime() ;
+    total_log_time += i ;
+    logout->Write ( function + " : " + msg + " (" + wxString::Format ( "%d ms" , i ) + ")\n" ) ;
+    logout->Flush() ;
+    }
+
+/** \fn MyApp::init_txt ( wxString lang , wxString csv , wxHashString *target , int ln )
+	\brief Initializes a hash table from a CSV file
+	\param lang the column identifier (first row of the CSV file)
+	\param csv the CSV file
+	\param target the hash table; if NULL (default), the language table is created
+	\param ln the default language number
+*/
+void MyApp::init_txt ( wxString lang , wxString csv , wxHashString *target , int ln )
+    {
+    if ( !target ) target = &_text ;
+    wxTextFile in ( myapp()->homedir + "/" + csv) ;
+    in.Open () ;
+    unsigned char t[10000] ;
+    bool firstline = true ;
+    TGenBank dummy ;
+    for ( int lc = 0 ; lc < in.GetLineCount() ; lc++ )
+        {
+        wxArrayString v ;
+        strcpy ( (char*)t , in[lc].c_str() ) ;
+        if ( *t == 0 ) break ;
+        unsigned char *c , *l ;
+        bool quote = false ;
+        for ( c = l = (unsigned char*) t ; *c ; c++ )
+           {
+           if ( *c == '\\' )
+              {
+              *c = ' ' ;
+              c++ ;
+              if ( *c == 't' ) *c = '\t' ;
+              else if ( *c == '"' ) *c = '"' ;
+              else if ( *c == 'n' ) *c = '\n' ;
+              }
+           else if ( *c == '"' ) quote = !quote ;
+           else if ( *c == ',' && !quote )
+              {
+              *c = 0 ;
+              v.Add ( dummy.trimQuotes(l) ) ;
+              l = c+1 ;
+              }
+           }
+        if ( l < c )
+           {
+           *(c-1) = 0 ;
+           v.Add ( dummy.trimQuotes(l) ) ;
+           }
+        
+        if ( firstline )
+           {
+           for ( int a = 0 ; a < v.GetCount() ; a++ )
+              if ( v[a].Upper() == lang.Upper() )
+                 ln = a ;
+           }
+        else if ( v.GetCount() > ln )
+           {
+           if ( v[ln].Find ( '\t' ) > -1 ) v[ln] += " " ;
+           (*target)[v[0].MakeUpper()] = v[ln] ;
+           }
+        firstline = false ;
+        }
+    }
+

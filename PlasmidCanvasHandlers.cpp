@@ -372,7 +372,7 @@ void PlasmidCanvas::blastAA ( wxCommandEvent &ev )
     myapp()->frame->blast ( seq , "blastp" ) ;
     }
 
-void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl , int mut)
+void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl , int mut )
     {
     TPrimerDesign *subframe = new TPrimerDesign ( 
             myapp()->frame->getCommonParent() , 
@@ -395,6 +395,7 @@ void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl , int mut)
     
     myapp()->frame->mainTree->addChild ( subframe , TYPE_PRIMER ) ;
     myapp()->frame->setChild ( subframe ) ;
+    myapp()->frame->activateChild ( myapp()->frame->children.GetCount()-1 ) ;
 //    myapp()->frame->children.Add ( subframe ) ;
     }
 
