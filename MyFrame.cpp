@@ -457,11 +457,9 @@ void MyFrame::OnTextImport(wxCommandEvent& WXUNUSED(event) )
     if ( type == 0 ) // DNA
         {
         TVector *v = new TVector ;
-        v->name = d.sName ;
-        v->sequence = d.sSequence ;
-        v->desc = txt("manually_entered_sequence") ;
-        v->desc += "\n" ;
-        v->desc += wxGetUserName().c_str() ;
+        v->setName ( d.sName ) ;
+        v->setSequence ( d.sSequence ) ;
+        v->setDescription ( txt("manually_entered_sequence") + wxString ( "\n" + wxGetUserName() ) ) ;
         newFromVector ( v ) ;
         }
     else if ( type == 1 ) // Amino Acids 
@@ -488,12 +486,10 @@ void MyFrame::OnTextImport(wxCommandEvent& WXUNUSED(event) )
     else if ( type == 4 ) // Primer
         {
         TVector *v = new TVector ;
-        v->name = d.sName ;
-        v->sequence = d.sSequence ;
+        v->setName ( d.sName ) ;
+        v->setSequence ( d.sSequence ) ;
         v->type = TYPE_PRIMER ;
-        v->desc = txt("manually_entered_sequence") ;
-        v->desc += "\n" ;
-        v->desc += wxGetUserName() ;
+        v->setDescription ( txt("manually_entered_sequence") + wxString("\n") + wxGetUserName() ) ;
         newFromVector ( v , TYPE_PRIMER ) ;
         }
 }
@@ -620,11 +616,10 @@ void MyFrame::newXML (  TXMLfile &xml , wxString title )
        {
        TVector *nv = xml.getVector ( n ) ;
        short type = nv->type ;
-       if ( title != "" ) nv->name = title ;
-       nv->desc += "\n" ;
-       nv->desc += wxGetUserName() ;
+       if ( title != "" ) nv->setName ( title ) ;
+       nv->addDescription ( "\n" + wxGetUserName() ) ;
        if ( type == TYPE_AMINO_ACIDS )
-          newAminoAcids ( nv , nv->name ) ;
+          newAminoAcids ( nv , nv->getName() ) ;
        else
           newFromVector ( nv , type ) ;
        }
@@ -648,8 +643,7 @@ MyChild *MyFrame::newCLONE ( TClone &clone )
     subframe->initme() ;
     int type = TYPE_VECTOR ;
     clone.remap ( subframe->vec ) ;
-    subframe->vec->desc += "\n" ;
-    subframe->vec->desc += wxGetUserName().c_str() ;
+    subframe->vec->setDescription ( subframe->vec->getDescription() + "\n" + wxGetUserName() ) ;
     subframe->vec->setWindow ( subframe ) ;
     subframe->initPanels() ;
     mainTree->addChild(subframe,type) ;
@@ -670,23 +664,22 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
         gb.vi = gb.vi_l[n] ;
         nv = new TVector ;
         gb.remap ( nv ) ;
-        vs.Add ( nv->sequence.c_str() ) ;
+        vs.Add ( nv->getSequence().c_str() ) ;
         vv.push_back ( nv ) ;
-        nv->desc += "\n" ;
-        nv->desc += wxGetUserName().c_str() ;
-        if ( nv->sequence.length() != vv[0]->sequence.length() ) alignment = false ;
-        else if ( nv->sequence.find ( '-' ) != -1 ) alignment = true ;
+        nv->setDescription ( nv->getDescription() + "\n" + wxGetUserName() ) ;
+        if ( nv->getSequenceLength() != vv[0]->getSequenceLength() ) alignment = false ;
+        else if ( nv->getSequence().find ( '-' ) != -1 ) alignment = true ;
         }
     if ( gb.vs_l.size() == 1 ) alignment = false ;
         
     // Removing alignment artifacts from sequences
     for ( n = 0 ; n < vv.size() ; n++ )
         {
-        for ( int m = 0 ; m < vv[n]->sequence.length() ; m++ )
+        for ( int m = 0 ; m < vv[n]->getSequenceLength() ; m++ )
            {
-           if ( vv[n]->sequence[m] == '-' )
+           if ( vv[n]->getSequenceChar(m) == '-' )
               {
-              vv[n]->sequence.erase ( m , 1 ) ;
+              vv[n]->eraseSequence ( m , 1 ) ;
               m-- ;
               }
            }
@@ -705,11 +698,11 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
     for ( n = 0 ; n < gb.vs_l.size() ; n++ )
         {
         nv = vv[n] ;
-        if ( gb.vs_l.size() == 1 && title != "" && nv->name == "" )
-           nv->name = title ;
-        short type = TUReadSeq::getSeqType ( nv->sequence.c_str() ) ;
+        if ( gb.vs_l.size() == 1 && title != "" && nv->getName() == "" )
+           nv->setName ( title ) ;
+        short type = TUReadSeq::getSeqType ( nv->getSequence().c_str() ) ;
         if ( type == TYPE_AMINO_ACIDS )
-           vc.push_back ( newAminoAcids ( nv , nv->name ) ) ;
+           vc.push_back ( newAminoAcids ( nv , nv->getName() ) ) ;
         else
            vc.push_back ( newFromVector ( nv , type ) ) ;
         }
@@ -944,7 +937,7 @@ void MyFrame::rememberLastProject ()
 TAminoAcids *MyFrame::newAminoAcids ( wxString aa , wxString title )
     {
     TVector nv ;
-    nv.sequence = aa.c_str() ;
+    nv.setSequence ( aa ) ;
     return newAminoAcids ( &nv , title ) ;
     }
 
@@ -958,13 +951,13 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , wxString title )
 
     subframe->vec->setFromVector ( *nv ) ;
     
-    wxString seq = subframe->vec->sequence.c_str() ;
+    wxString seq = subframe->vec->getSequence().c_str() ;
     seq.Replace ( "|" , "" , true ) ;
-    subframe->vec->sequence = seq.c_str() ;
+    subframe->vec->setSequence ( seq ) ;
     
     subframe->vec->setWindow ( subframe ) ;
     subframe->vec->type = TYPE_AMINO_ACIDS ;
-    subframe->vec->name = title ;
+    subframe->vec->setName ( title ) ;
     subframe->vec->undo.clear() ;
     
     for ( a = 0 ; a < nv->items.size() ; a++ )
@@ -996,8 +989,7 @@ TABIviewer *MyFrame::newABI ( wxString filename , wxString title )
     TABIviewer *subframe = new TABIviewer ( getCommonParent() , title ) ;
     subframe->filename = filename ;
     subframe->vec->type = TYPE_SEQUENCE ;
-    subframe->vec->desc += "\n" ;
-    subframe->vec->desc += wxGetUserName() ;    
+    subframe->vec->addDescription ( "\n" + wxGetUserName() ) ;    
 
     // Give it an icon
 #ifdef __WXMSW__

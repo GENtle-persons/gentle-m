@@ -47,14 +47,14 @@ void TVectorTree::initme ()
     
     // Basic stuff
     DeleteAllItems () ;
-    treeroot = AddRoot ( p->vec->name.c_str() ) ;
-    sprintf ( u , txt("#bp") , p->vec->sequence.length() ) ;
+    treeroot = AddRoot ( p->vec->getName() ) ;
+    sprintf ( u , txt("#bp") , p->vec->getSequenceLength() ) ;
     
     // Vector information
     wxString dp = " : " ;
     vroot = AppendItem ( treeroot , txt("vector") ) ;
     SetItemData ( vroot , new TTreeItem ( "" , "VECTOR" , p->vec ) ) ;
-    x = AppendItem ( vroot , txt("name") + dp + wxString ( p->vec->name.c_str() ) ) ;
+    x = AppendItem ( vroot , txt("name") + dp + p->vec->getName() ) ;
     AppendItem ( vroot , txt("size") + dp + wxString ( u ) ) ;
     
     // Genes
@@ -162,8 +162,8 @@ void TVectorTree::OnEvent ( wxTreeEvent &event )
         {
         wxString dp = " : " ;
         TVector *v = (TVector*) d->p ;
-        out += txt("name") + dp + v->name + "\n\n" ;
-        out += txt("desc") + dp + "\n" + v->desc ;
+        out += txt("name") + dp + v->getName() + "\n\n" ;
+        out += txt("desc") + dp + "\n" + v->getDescription() ;
         }
     textWindow->SetValue ( out ) ;
     }

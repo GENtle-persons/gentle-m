@@ -49,7 +49,7 @@ TABIviewer::TABIviewer(wxWindow *parent, const wxString& title)
     {
     vec = new TVector ( this ) ;
     def = "ABIviewer" ;
-    vec->name = title.c_str() ;
+    vec->setName ( title.c_str() ) ;
     from = -1 ;
     vec->undo.clear () ;
     stat = NULL ;
@@ -221,7 +221,7 @@ void TABIviewer::initme ()
     
 wxString TABIviewer::getName ()
     {
-    return vec->name ;
+    return vec->getName() ;
     }
 
 wxString TABIviewer::getStat ()
@@ -259,7 +259,7 @@ wxString TABIviewer::getStat ()
     
     int a ;
     char u[256] ;
-    string bases ;
+    wxString bases ;
     for ( a = 0 ; a < 256 ; a++ ) u[a] = 0 ;
     for ( a = 0 ; a < abi->s.length() ; a++ ) u[abi->s[a]]++ ;
     for ( a = 0 ; a < 256 ; a++ )
@@ -272,7 +272,7 @@ wxString TABIviewer::getStat ()
           }
        }
 
-    string r ;
+    wxString r ;
     r += bases + "\n" ;
     r += txt("t_abi_sample") + smpl + "\n" ;
     sprintf ( t , txt("t_abi_lane") , lane ) ; r += t ;
@@ -283,7 +283,7 @@ wxString TABIviewer::getStat ()
     r += txt("t_abi_file") + gelp + "\n" ;
     r += txt("t_abi_primer_mobility_correction") + pdmf ;
     
-    return r.c_str() ;
+    return r ;
     }
     
 void TABIviewer::showStat ()
@@ -324,7 +324,7 @@ void TABIviewer::OnEditMode(wxCommandEvent& event)
         {
         sc->setEditMode ( true ) ;
         sc->findID("ABI")->s += " " ;
-        vec->sequence += " " ;
+        vec->addToSequence ( " " ) ;
         sc->arrange () ;
         if ( sc->_from == -1 ) sc->mark ( "ABI" , 1 , 1 , 2 ) ;
         else sc->mark ( "ABI" , sc->_from , sc->_from , 2 ) ;
@@ -334,7 +334,7 @@ void TABIviewer::OnEditMode(wxCommandEvent& event)
         {
         sc->setEditMode ( false ) ;
         sc->mark ( "ABI" , -1 , -1 ) ;
-        vec->sequence.erase ( vec->sequence.length()-1 , 1 ) ;
+        vec->eraseSequence ( vec->getSequenceLength()-1 , 1 ) ;
         sc->findID("ABI")->s.erase ( sc->findID("ABI")->s.length()-1 , 1 ) ;
         sc->arrange () ;
         Refresh () ;
@@ -345,19 +345,19 @@ void TABIviewer::OnEditName(wxCommandEvent& event)
     {
     wxString nn = wxGetTextFromUser ( txt("t_edit_aa_name_txt") ,
                                       txt("t_edit_aa_name") , 
-                                      vec->name.c_str() ) ;
+                                      vec->getName().c_str() ) ;
     if ( nn == "" ) return ;
-    if ( nn == vec->name.c_str() ) return ;
+    if ( nn == vec->getName().c_str() ) return ;
     
     vec->undo.start ( txt("u_title_change") ) ;
-    vec->name = nn.c_str() ;
+    vec->setName ( nn ) ;
     myapp()->frame->mainTree->SetItemText ( inMainTree , nn ) ;
     vec->undo.stop() ;
     }
     
 void TABIviewer::OnMarkAll(wxCommandEvent& event)
     {
-    sc->mark ( "ABI" , 1 , vec->sequence.length() ) ;
+    sc->mark ( "ABI" , 1 , vec->getSequenceLength() ) ;
     }
     
 void TABIviewer::OnFileSave(wxCommandEvent& event)
@@ -383,11 +383,11 @@ void TABIviewer::OnCopyToNew(wxCommandEvent& event)
     {
     TVector *nv = new TVector ;
     string s ;
-    if ( sc->_from == -1 ) s = vec->sequence ; // All of it
+    if ( sc->_from == -1 ) s = vec->getSequence() ; // All of it
     else s = sc->getSelection() ;
-    nv->name = vec->name ;
-    nv->sequence = s ;
-    nv->desc = txt("t_abi_original") + getStat() ;
+    nv->setName ( vec->getName() ) ;
+    nv->setSequence ( s ) ;
+    nv->setDescription ( txt("t_abi_original") + getStat() ) ;
     myapp()->frame->newFromVector ( nv ) ;
     }
 

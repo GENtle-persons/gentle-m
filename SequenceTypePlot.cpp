@@ -422,7 +422,7 @@ void SeqPlot::init ( SequenceCanvas *ncan )
 void SeqPlot::initFromTVector ( TVector *v )
     {
     vec = v ;
-    s = vec->sequence ;
+    s = vec->getSequence() ;
     takesMouseActions = true ;
     }
 

@@ -77,10 +77,10 @@ TPrimerDesign::TPrimerDesign(wxWindow *parent,
     
     for ( a = 0 ; a < primer.size() ; a++ )
         {
-        if ( primer[a].from >= vec->sequence.length() )
+        if ( primer[a].from >= vec->getSequenceLength() )
            {
-           primer[a].from -= vec->sequence.length() ;
-           primer[a].to -= vec->sequence.length() ;
+           primer[a].from -= vec->getSequenceLength() ;
+           primer[a].to -= vec->getSequenceLength() ;
            }
         }
     
@@ -102,7 +102,7 @@ TPrimerDesign::~TPrimerDesign ()
     
 void TPrimerDesign::guessOptNuc ()
     {
-    int nuc = vec->sequence.length() ;
+    int nuc = vec->getSequenceLength() ;
     
     if ( primer.size() == 2 )
         {
@@ -113,7 +113,7 @@ void TPrimerDesign::guessOptNuc ()
            {
            if ( primer[0].upper ) nuc = primer[1].from - primer[0].to ;
            else nuc = primer[1].to - primer[0].from ;
-           if ( nuc < 0 ) nuc = vec->sequence.length() + nuc ;
+           if ( nuc < 0 ) nuc = vec->getSequenceLength() + nuc ;
            nuc++ ;
            }
         }
@@ -130,10 +130,10 @@ void TPrimerDesign::OnExportPrimer ( wxCommandEvent &ev )
     {
     if ( lastPrimerActivated == -1 ) return ;
     TVector *v = new TVector ;
-    v->sequence = primer[lastPrimerActivated].get53sequence () ;
-    v->name = vec->name ;
-    if ( primer[lastPrimerActivated].upper ) v->name += "-5'" ;
-    else v->name += "-3'" ;
+    v->setSequence ( primer[lastPrimerActivated].get53sequence () ) ;
+    v->setName ( vec->getName() ) ;
+    if ( primer[lastPrimerActivated].upper ) v->addName ( "-5'" ) ;
+    else v->addName ( "-3'" ) ;
     v->type = TYPE_PRIMER ;
     myapp()->frame->newFromVector ( v , TYPE_PRIMER ) ;
     }
@@ -172,7 +172,7 @@ void TPrimerDesign::OnImportPrimer ( wxCommandEvent &ev )
     for ( a = 0 ; a < cbl.size() ; a++ )
        {
        if ( scd.IsChecked ( a ) )
-          AddPrimer ( cbl[a]->vec->sequence.c_str() ) ;
+          AddPrimer ( cbl[a]->vec->getSequence().c_str() ) ;
        }
     guessOptNuc () ;
     }
@@ -181,7 +181,7 @@ void TPrimerDesign::AddPrimer ( wxString s )
     {
     TPrimer best ;
     int a , bestVal = 0 ;
-    for ( a = 0 ; a + s.length() < vec->sequence.length() ; a++ )
+    for ( a = 0 ; a + s.length() < vec->getSequenceLength() ; a++ )
         {
         TPrimer pu ( a , a + s.length() - 1 , true ) ;
         TPrimer pl ( a , a + s.length() - 1 , false ) ;
@@ -252,7 +252,7 @@ void TPrimerDesign::updatePrimersFromSequence ()
         else s = sc->seq[4+show_features]->s ;
         
         TVector d ;
-        d.sequence = s ;
+        d.setSequence ( s ) ;
         d.setCircular ( vec->isCircular() ) ;
 
         for ( b = primer[a].from-1 ; d.getNucleotide(b) == ' ' ; b++ ) ;
@@ -420,8 +420,8 @@ void TPrimerDesign::initme ()
     toolBar->AddSeparator() ;
     
     spin = new wxSpinCtrl ( toolBar , PCR_SPIN ) ;
-    spin->SetRange ( 1 , vec->sequence.length() ) ;
-    spin->SetValue ( wxString::Format("%d",vec->sequence.length()) ) ;
+    spin->SetRange ( 1 , vec->getSequenceLength() ) ;
+    spin->SetValue ( wxString::Format("%d",vec->getSequenceLength()) ) ;
     toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_pcr_spin_1") ) ) ;
     toolBar->AddControl ( spin ) ;
     toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_pcr_spin_2") ) ) ;
@@ -522,7 +522,7 @@ void TPrimerDesign::OnPaste (wxCommandEvent& event)
 
 wxString TPrimerDesign::getName ()
     {
-    return vec->name ;
+    return vec->getName() ;
     }
 
 void TPrimerDesign::showSequence ()
@@ -537,7 +537,7 @@ void TPrimerDesign::showSequence ()
     // Display
     int a , b ;
     sc->blankline = 0 ;
-    vc->sequence = vec->transformSequence ( true , false ) ;
+    vc->setSequence ( vec->transformSequence ( true , false ) ) ;
     vc->setCircular ( vec->isCircular() ) ;
     
     SeqFeature *seqF ;
@@ -602,7 +602,7 @@ void TPrimerDesign::calculateResultSequence()
     w->setFromVector ( *vec ) ;
     
     int nuc = spin->GetValue() ;
-    for ( a = 0 ; a < w->sequence.length() ; a++ ) w->sequence[a] = ' ' ;
+    for ( a = 0 ; a < w->getSequenceLength() ; a++ ) w->alterSequence ( a , ' ' ) ;
     TVector w2 ;
     w2.setFromVector ( *w ) ;
     
@@ -618,12 +618,15 @@ void TPrimerDesign::calculateResultSequence()
            }
         }
         
-    for ( a = 0 ; a < w->sequence.length() ; a++ )
-        w->sequence[a] = ( w->sequence[a] != ' ' && w2.sequence[a] != ' ' ) 
-                                ? vec->sequence[a] : ' ' ;
+    for ( a = 0 ; a < w->getSequenceLength() ; a++ )
+        {
+        if ( w->getSequenceChar(a) != ' ' && w2.getSequenceChar(a) != ' ' )
+           w->alterSequence ( a , vec->getSequenceChar(a) ) ;
+        else w->alterSequence ( a , ' ' ) ;
+        }    
        
     // Overwriting result sequence with primer sequences
-    for ( a = 0 ; a < w->sequence.length() ; a++ )
+    for ( a = 0 ; a < w->getSequenceLength() ; a++ )
         {
         char t = sc->seq[show_features]->s[a] ;
         if ( t == ' ' )
@@ -763,7 +766,7 @@ void TPrimerDesign::doShowPrimer ( int i )
     {
     int from = primer[i].from ;
     int to = primer[i].to ;
-    if ( to >= vec->sequence.length() ) to -= vec->sequence.length() ;
+    if ( to >= vec->getSequenceLength() ) to -= vec->getSequenceLength() ;
     string p ;
     if ( primer[i].upper ) p = "PRIMER_UP" ;
     else p = "PRIMER_DOWN" ;
@@ -796,7 +799,7 @@ void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
     if ( ns == "" ) return ;
     
     TVector z ;
-    z.sequence = ns ;
+    z.setSequence ( ns ) ;
     string nt = z.transformSequence ( true , false ) ;
     TRestrictionEnzyme *e = sd.getEnzyme() ;
     int a , b ;

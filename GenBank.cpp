@@ -120,8 +120,8 @@ void TGenBank::remap ( TVector *v )
      if ( k1 == "LOCUS" )
           {
           wxString n = l ;
-          v->name = n.BeforeFirst ( ' ' ) .c_str() ;
-          v->desc = n.AfterFirst ( ' ' ) ;
+          v->setName ( n.BeforeFirst ( ' ' ) ) ;
+          v->setDescription ( n.AfterFirst ( ' ' ) ) ;
           l += " " ; // For substring search
           if ( l.MakeUpper().Contains ( " AA " ) ) v->type = TYPE_AMINO_ACIDS ;
           else v->type = TYPE_VECTOR ;
@@ -145,7 +145,7 @@ void TGenBank::remap ( TVector *v )
           l = l.MakeUpper() ;
           for ( int a = 0 ; a < l.Length() ; a++ )
              if ( isValidSequence ( l.GetChar(a) ) )
-                v->sequence += l.GetChar(a) ;
+                v->addToSequence ( l.GetChar(a) ) ;
           }
 	 }
 	 
@@ -395,8 +395,8 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
     wxString b21 = expand ( "" , 21 ) ;
     
     // Vector
-    t = expand ( v->name , 24 ) ;
-    sprintf ( z , "%d bp" , v->sequence.length() ) ;
+    t = expand ( v->getName() , 24 ) ;
+    sprintf ( z , "%d bp" , v->getSequenceLength() ) ;
     u = expand ( z , 11 ) ;
     s = "LOCUS       " ;
     s += t ;
@@ -408,7 +408,7 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
     ex.Add ( s ) ;
     
     // Definition
-    wrapit ( ex , "DEFINITION  " , v->desc ) ;
+    wrapit ( ex , "DEFINITION  " , v->getDescription() ) ;
     s = v->getParams() ;
     while ( s != "" && s[s.length()-1] == '\n' )
        s = s.substr ( 0 , s.length()-1 ) ;
@@ -444,7 +444,7 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
     // Sequence
     int q[256] ;
     for ( a = 0 ; a < 256 ; a++ ) q[a] = 0 ;
-    t = v->sequence.c_str() ;
+    t = v->getSequence().c_str() ;
     for ( a = 0 ; a < t.length() ; a++ )
         {
         b = t.GetChar(a) ;

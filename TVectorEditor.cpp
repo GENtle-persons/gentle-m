@@ -141,11 +141,11 @@ void TVectorEditor::initPanProp ()
     // Name and description
     wxRect r ;
     r = (new wxStaticText(panProp,-1,txt("name"),wxPoint(bo,bo*2)))->GetRect() ;
-    name = new wxTextCtrl(panProp,-1,v->name,wxPoint(r.GetRight()+bo,bo),
+    name = new wxTextCtrl(panProp,-1,v->getName(),wxPoint(r.GetRight()+bo,bo),
                                 wxSize(w-r.GetRight()-bo*2,th)) ;
 
     r = (new wxStaticText(panProp,-1,txt("desc"),wxPoint(bo,bo*2+th)))->GetRect() ;
-    desc = new TURLtext(panProp,URLTEXT_DUMMY,v->desc,wxPoint(bo,r.GetBottom()+bo),
+    desc = new TURLtext(panProp,URLTEXT_DUMMY,v->getDescription(),wxPoint(bo,r.GetBottom()+bo),
                 wxSize(w-bo*2,th*5),wxTE_MULTILINE);
     
     if ( v->type != TYPE_AMINO_ACIDS )
@@ -305,7 +305,7 @@ void TVectorEditor::addItem2list ( TVectorItem &i , int a )
        items->SetItem ( l , 4 , "---" ) ;
 
     int len = i.to - i.from + 1 ;
-    if ( i.to < i.from ) len += v->sequence.length() ;
+    if ( i.to < i.from ) len += v->getSequenceLength() ;
     sprintf ( t , "%d" , len ) ;
     items->SetItem ( l , 5 , t ) ;
     }
@@ -416,8 +416,8 @@ void TVectorEditor::commitVector ()
     {
     wxString n = name->GetValue() ;
     wxString d = desc->GetValue() ;
-    VCOMMIT(n,name);
-    VCOMMIT(d,desc);
+    if(n!=v->getName()){v->setName(n);v->setChanged();}
+    if(d!=v->getDescription()){v->setDescription(d);v->setChanged();}
 
     if ( v->type != TYPE_AMINO_ACIDS )
         {

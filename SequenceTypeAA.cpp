@@ -325,7 +325,7 @@ void SeqAA::fixOffsets ( TVector *v )
         for ( b = v->items[a].from ; off != -1 && b < v->items[a].to ; b++ )
            {
 //           int c = b - v->items[a].from ;
-           char x =  v->sequence[b-1] ;
+           char x =  v->getSequence()[b-1] ;
            if ( ( b - 1 ) % 10 == 0 && c > 0 && x != '-' )
               {
               while ( offsets.GetCount() < b ) offsets.Add ( -1 ) ;
@@ -345,13 +345,13 @@ void SeqAA::initFromTVector ( TVector *v )
     showNumbers = true ;
     vec = v ;
     bool truncateEditSequence = false ;
-    if ( can && can->getEditMode() && v->sequence.length() &&
-            v->sequence[v->sequence.length()-1] == ' ' )
+    if ( can && can->getEditMode() && v->getSequenceLength() &&
+            v->getSequence()[v->getSequenceLength()-1] == ' ' )
        {
-       v->sequence.erase ( v->sequence.length()-1 , 1 ) ;
+       v->getSequence().erase ( v->getSequenceLength()-1 , 1 ) ;
        truncateEditSequence = true ;
        }
-    string t = vec->sequence ;
+    string t = vec->getSequence() ;
     s = "" ;
     while ( s.length() < t.length() ) s += " " ;
     offsets.Clear() ;
@@ -422,7 +422,7 @@ void SeqAA::initFromTVector ( TVector *v )
        if ( s[a] == '?' ) s[a] = unknownAA ;
     if ( truncateEditSequence )
        {
-       v->sequence += " " ;
+       v->getSequence() += " " ;
        s += " " ;
        }
     }

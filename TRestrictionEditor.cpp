@@ -359,7 +359,7 @@ void TRestrictionEditor::listFragments ( wxListCtrl *list , wxArrayInt &vi )
     if ( !v->isCircular() ) // Adding last fragment for linear DNA
         {
         int from = vi[vi.GetCount()-1] ;
-        int to = v->sequence.length() ;
+        int to = v->getSequenceLength() ;
         if ( from != to )
            vi.Add ( to ) ;
         }
@@ -382,7 +382,7 @@ void TRestrictionEditor::listFragments ( wxListCtrl *list , wxArrayInt &vi )
         list->SetItem ( k , 2 , u ) ;
         
         int len = vi[i] - from ;
-        if ( len <= 0 ) len += v->sequence.length() ;
+        if ( len <= 0 ) len += v->getSequenceLength() ;
         sprintf ( u , "%d" , len ) ; // Length
         list->SetItem ( k , 3 , u ) ;
         }

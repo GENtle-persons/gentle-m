@@ -413,7 +413,7 @@ void MyChild::OnLigation(wxCommandEvent& event)
     if ( !ld.doLigate ) return ;
     for ( l = 0 ; l < ld.ligates.size() ; l++ )
         {
-        if ( ld.ligates[l].sequence != "" )
+        if ( ld.ligates[l].getSequence() != "" )
            {
            TVector *v = new TVector ;
            v->setFromVector ( ld.ligates[l] ) ;
@@ -427,7 +427,7 @@ void MyChild::OnLigation(wxCommandEvent& event)
     
 wxString MyChild::getName ()
     {
-    return vec->name.c_str() ;
+    return vec->getName().c_str() ;
     }
     
 void MyChild::OnCut(wxCommandEvent& event)
@@ -551,8 +551,8 @@ void MyChild::OnAsNewFeature(wxCommandEvent& event)
     
     vec->undo.start ( txt("u_new_feature") ) ;
 
-    if ( to > vec->sequence.length() )
-        to -= vec->sequence.length() ;
+    if ( to > vec->getSequenceLength() )
+        to -= vec->getSequenceLength() ;
 
     TVectorItem nvi ;
     sprintf ( t , txt("t_new_item_title") , from , to ) ;
@@ -856,7 +856,7 @@ void MyChild::OnFind(wxCommandEvent& event)
     
 void MyChild::OnMarkAll(wxCommandEvent& event)
     {
-    cSequence->mark ( "DNA" , 1 , vec->sequence.length() ) ;
+    cSequence->mark ( "DNA" , 1 , vec->getSequenceLength() ) ;
     Refresh () ;
     }
 
@@ -919,7 +919,7 @@ void MyChild::OnExtractAA(wxCommandEvent& event)
     string seq = doExtractAA () ;
     if ( seq == "" ) return ;
     char tt[1000] ;
-    sprintf ( tt , txt("t_aa_from_vec") , vec->name.c_str() ) ;
+    sprintf ( tt , txt("t_aa_from_vec") , vec->getName().c_str() ) ;
     myapp()->frame->newAminoAcids ( seq.c_str() , tt ) ;
     }
         
@@ -958,13 +958,13 @@ void MyChild::OnTransformSequence(wxCommandEvent& event)
         }
     
     // Transforming DNA
-    v->sequence = v->transformSequence ( tsd.complement->GetValue() ,
-                                         tsd.invert->GetValue() ) ;
+    v->setSequence ( v->transformSequence ( tsd.complement->GetValue() ,
+                                         tsd.invert->GetValue() ) ) ;
 
     // Transforming items
     if ( tsd.invert->GetValue() )
         {
-        int l = v->sequence.length() ;
+        int l = v->getSequenceLength() ;
         for ( a = 0 ; a < v->items.size() ; a++ )
            {
            v->items[a].direction *= -1 ;
@@ -982,7 +982,7 @@ void MyChild::OnTransformSequence(wxCommandEvent& event)
     // Display
     if ( inNewVector )
         {
-        v->name += "*" ;
+        v->addName ( "*" ) ;
         v->recalcvisual = true ;
         v->recalculateCuts() ;
         MyChild *c = myapp()->frame->newFromVector(v) ;
@@ -1078,7 +1078,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
     int w , h ;
     wxDC *pdc = pd.GetPrintDC () ;
     pdc->GetSize ( &w , &h ) ;
-    pdc->StartDoc ( vec->name.c_str() ) ;
+    pdc->StartDoc ( vec->getName().c_str() ) ;
     pdc->StartPage () ;
     
     // Plasmid canvas
@@ -1126,7 +1126,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
         
         int len = vec->items[a].to - vec->items[a].from + 1 ;
         if ( vec->items[a].to < vec->items[a].from )
-           len += vec->sequence.length() ;
+           len += vec->getSequenceLength() ;
         sprintf ( t , "%d" , len ) ; pdc->DrawText ( t , x3 , y ) ;
         
         sprintf ( t , "itemtype%d" , vec->items[a].type ) ;
@@ -1179,7 +1179,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
         y += 5 ;
         }
     y += ch * 2 ;
-    pdc->DrawText ( vec->desc , x0 , y ) ;
+    pdc->DrawText ( vec->getDescription() , x0 , y ) ;
 
     // Name, date
     int tw , th ;
@@ -1189,7 +1189,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
     pdc->GetTextExtent ( printtime.c_str() , &tw , &th ) ;
     pdc->DrawText ( printtime.c_str() , w - x0 - tw , 0 ) ;
     pdc->SetFont ( *bfont ) ;
-    pdc->DrawText ( vec->name.c_str() , x0 , 0 ) ;
+    pdc->DrawText ( vec->getName().c_str() , x0 , 0 ) ;
 
     
     pdc->EndPage () ;

@@ -173,7 +173,7 @@ void TSilmutDialog::OnChoose ( wxCommandEvent &event )
 void TSilmutDialog::calc ()
     {
     SetCursor ( *wxHOURGLASS_CURSOR ) ;
-    string orig_aa = getAAresult ( v->sequence ) ;
+    string orig_aa = getAAresult ( v->getSequence() ) ;
     int limit ; // Maximum number of exchanges
     limit = lim_xhg->GetValue() ;
     int limit_cuts = lim_max->GetValue() ;
@@ -192,7 +192,7 @@ void TSilmutDialog::calc ()
            re.push_back ( myapp()->frame->LS->getRestrictionEnzyme ( z[a] ) ) ;
         }
     
-    string vseq = v->sequence ;
+    string vseq = v->getSequence() ;
     string vseq_l = vseq ;
     for ( a = 0 ; a < vseq.length() ; a++ )
         {
@@ -227,7 +227,7 @@ void TSilmutDialog::calc ()
                  }
               }
               
-           string new_dna = v->sequence ;
+           string new_dna = v->getSequence() ;
            bool useit = false ;
            if ( mismatch <= limit )
               {
@@ -253,13 +253,13 @@ void TSilmutDialog::calc ()
               si.e = e ;
               si.changes = mismatch ;
               si.mut = y ;
-              string old_dna = v->sequence ;
-              v->sequence = new_dna ;
+              string old_dna = v->getSequence() ;
+              v->setSequence ( new_dna ) ;
               vector <TRestrictionCut> vc = v->getCuts(e) ;
               
               // Calculating the resulting fragments
               for ( c = 0 ; c < vc.size() ; c++ ) si.fragments.Add ( vc[c].pos ) ;
-              si.fragments.Add ( v->sequence.length()-1 ) ;
+              si.fragments.Add ( v->getSequenceLength()-1 ) ;
               for ( c = si.fragments.GetCount()-1 ; c > 0 ; c-- )
                  si.fragments[c] -= si.fragments[c-1] ;
               si.fragments[0]++ ;
@@ -271,7 +271,7 @@ void TSilmutDialog::calc ()
               si.fragments.Sort(cmpint) ;
 
               si.cuts = vc.size() ;
-              v->sequence = old_dna ;
+              v->setSequence ( old_dna ) ;
               if ( vc.size() <= limit_cuts )
                  vs.push_back ( si ) ;
               }
@@ -290,7 +290,7 @@ string TSilmutDialog::getAAresult ( string dna )
         }
     TVector v2 ;
     v2.setFromVector ( *v ) ;
-    v2.sequence = dna ;
+    v2.setSequence ( dna ) ;
     SeqAA *a3 ;
     a3 = new SeqAA ( pd->sc ) ;
     a3->mode = pd->aa_state ;

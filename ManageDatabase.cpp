@@ -181,7 +181,7 @@ void TManageDatabaseDialog::initCopynMove ()
         
     wxString name ;
     if ( isProject ) name = myapp()->frame->project_name ;
-    else name = v->name ;
+    else name = v->getName() ;
     h += th ;
     int w2 = w/5 ;
     pm_dd_save = new wxChoice ( p , MD_PM_SAVE_DB ,
@@ -889,9 +889,9 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
     sql = "SELECT * FROM dna WHERE dna_name=\"" + name + "\"" ;
     sr = tstorage->getObject ( sql ) ;
     if( sr.rows() == 0 ) return false ;
-    v->name = sr[0][sr["dna_name"]] ;
-    v->desc = sr[0][sr["dna_description"]] ;
-    v->sequence = sr[0][sr["dna_sequence"]] ;
+    v->setName ( sr[0][sr["dna_name"]] ) ;
+    v->setDescription ( sr[0][sr["dna_description"]] ) ;
+    v->setSequence ( sr[0][sr["dna_sequence"]] ) ;
     v->type = atoi ( sr[0][sr["dna_type"]].c_str() ) ;
     v->setStickyEnd ( true , true , sr[0][sr["dna_sticky_ul"]] ) ;
     v->setStickyEnd ( true , false , sr[0][sr["dna_sticky_ll"]] ) ;
@@ -959,7 +959,7 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
     if ( v->type == TYPE_AMINO_ACIDS )
         {
         wxString db1 = v->getDatabase() ;
-        n = myapp()->frame->newAminoAcids ( v , v->name ) ;
+        n = myapp()->frame->newAminoAcids ( v , v->getName() ) ;
         myass ( n , "Opening AA" ) ;
         n->vec->setDatabase ( db1 ) ;
         n->vec->setWindow ( n ) ;
@@ -1015,7 +1015,7 @@ bool TManageDatabaseDialog::doesNameExist ( wxString name , wxString dbname )
     else
         {
         s = sr[0][sr["dna_sequence"]] ;
-        sc = v->sequence.c_str() ;
+        sc = v->getSequence().c_str() ;
         }
     if ( s == sc )
         {
@@ -1085,7 +1085,7 @@ void TManageDatabaseDialog::do_save_project ()
               }
            else
               {
-              dna_name = c->vec->name ;
+              dna_name = c->vec->getName() ;
               dna_db = c->vec->getDatabase() ;
               }
            if ( dna_db != "" )
@@ -1148,9 +1148,9 @@ void TManageDatabaseDialog::do_save_DNA ()
         
     s1 = s2 = "" ;
     storage->sqlAdd ( s1 , s2 , "dna_name" , x ) ;
-    storage->sqlAdd ( s1 , s2 , "dna_description" , v->desc ) ;
+    storage->sqlAdd ( s1 , s2 , "dna_description" , v->getDescription() ) ;
     storage->sqlAdd ( s1 , s2 , "dna_type" , v->type ) ;
-    storage->sqlAdd ( s1 , s2 , "dna_sequence" , v->sequence.c_str() ) ;
+    storage->sqlAdd ( s1 , s2 , "dna_sequence" , v->getSequence().c_str() ) ;
     storage->sqlAdd ( s1 , s2 , "dna_sticky_ul" , v->getStickyEnd(true,true).c_str() ) ;
     storage->sqlAdd ( s1 , s2 , "dna_sticky_ll" , v->getStickyEnd(true,false).c_str() ) ;
     storage->sqlAdd ( s1 , s2 , "dna_sticky_ur" , v->getStickyEnd(false,true).c_str() ) ;
@@ -1160,7 +1160,7 @@ void TManageDatabaseDialog::do_save_DNA ()
     storage->sqlAdd ( s1 , s2 , "dna_params" , fixQuotes ( v->getParams() ) ) ;
     sql = "INSERT INTO dna (" + s1 + ") VALUES (" + s2 + ")" ;
     sr = storage->getObject ( sql ) ;
-    v->name = x ;
+    v->setName ( x ) ;
     
     // Inserting items
     wxString type = " " ;
@@ -1192,7 +1192,7 @@ void TManageDatabaseDialog::do_save_DNA ()
         c->treeBox->SelectItem ( c->treeBox->vroot ) ;
         c->cSequence->arrange() ;
         c->cPlasmid->Refresh() ;
-        myapp()->frame->mainTree->SetItemText ( c->inMainTree , c->vec->name ) ;
+        myapp()->frame->mainTree->SetItemText ( c->inMainTree , c->vec->getName() ) ;
         }
 
     SetReturnCode ( wxID_OK ) ;

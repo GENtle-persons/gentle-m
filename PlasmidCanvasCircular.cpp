@@ -32,7 +32,7 @@ float PlasmidCanvas::xy2r ( float x , float y )
 void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc )
     {
     int a ;
-    int l = p->vec->sequence.length() ;
+    int l = p->vec->getSequenceLength() ;
     if ( p->vec->rc.size() == 0 ) return ;
     
     vector <TRestrictionCut> trc ;
@@ -147,7 +147,7 @@ void PlasmidCanvas::recalc_rc ( int a, wxDC &dc )
 void PlasmidCanvas::drawCircularORFs ( wxDC &dc )
     {
     int a ;
-    int l = p->vec->sequence.length() ;
+    int l = p->vec->getSequenceLength() ;
     for ( a = 0 ; a < p->vec->worf.size() ; a++ )
         {
         float mf = p->vec->worf[a].from ;
@@ -214,7 +214,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
     // Initial calculations    
     char t[10000] ;
     wxCoord dx , dy ;
-    int l = p->vec->sequence.length();
+    int l = p->vec->getSequenceLength();
     int a , mwh ;
     mwh = w<h?w:h ;
 
@@ -266,7 +266,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
     if ( myapp()->frame->showVectorTitle )
         {
         char *c1 , *c2 ;
-        strcpy ( t , p->vec->name.c_str() ) ;
+        strcpy ( t , p->vec->getName().c_str() ) ;
         strcat ( t , " " ) ;
         a = 0 ;
         dc.SetFont ( *bigFont ) ;
@@ -289,7 +289,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
     // Show length
     if ( myapp()->frame->showVectorLength )
         {
-        sprintf ( t , txt("#bp") , p->vec->sequence.length() ) ;
+        sprintf ( t , txt("#bp") , p->vec->getSequenceLength() ) ;
         dc.SetFont ( *normalFont ) ;
         dc.GetTextExtent ( t , &dx , &dy ) ;
         dc.DrawText ( t , w/2-dx/2 , h/2-dy/2 ) ;
@@ -500,7 +500,7 @@ wxPoint PlasmidCanvas::makeLastRect ( int a , wxDC &dc )
     
 int PlasmidCanvas::circular_pos ( float angle )
     {
-    int l = p->vec->sequence.length() ;
+    int l = p->vec->getSequenceLength() ;
     float a = l ;
     a /= 360.0 ;
     a *= angle ;
@@ -578,7 +578,7 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
         {
         s = p->vec->rc[rs].e->name ;
         char ttt[1000] ;
-        sprintf ( ttt , txt("tt_rs") , s.c_str() , p->vec->countCuts ( s ) ) ;
+        sprintf ( ttt , txt("tt_rs") , s.c_str() , p->vec->countCuts ( s.c_str() ) ) ;
         SetMyToolTip ( ttt , TT_RS ) ;
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
         wxLogStatus(txt("rsite_status_bar") , s.c_str() ) ;

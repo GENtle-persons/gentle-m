@@ -182,7 +182,7 @@ void TPrimerDialog::updateList ()
     int maxtmp = tmax->GetValue() ;
     if ( p->upper )
         {
-        t = pd->vec->sequence ;
+        t = pd->vec->getSequence() ;
         s = t ;
         for ( a = 0 ; a < p->sequence.length() ; a++ )
            s[a+p->from-1] = p->sequence[a] ;
@@ -193,7 +193,7 @@ void TPrimerDialog::updateList ()
         }
     else // !!!! incomplete!
         {
-        t = pd->vc->sequence ;
+        t = pd->vc->getSequence() ;
         s = t ; 
         for ( a = 0 ; a < p->sequence.length() ; a++ )
            s[a+p->from-1] = p->sequence[a] ;

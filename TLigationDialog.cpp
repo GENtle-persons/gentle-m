@@ -48,7 +48,7 @@ void TLigationDialog::init ()
         bool state = true ;
         if ( !vv[a]->hasStickyEnds() )
            state = false ; // blunt ends are not ligated by default...
-        l_sources->Append ( vv[a]->name.c_str() ) ;
+        l_sources->Append ( vv[a]->getName().c_str() ) ;
         l_sources->Check ( a , state ) ;
         }
         
@@ -178,7 +178,7 @@ bool TLigationDialog::doMatch ( int l , int r , bool invertSecond )
        }
     
     TVector v ;
-    v.sequence = s1 ;
+    v.setSequence ( s1 ) ;
     string s3 = v.transformSequence ( true , false ) ;
     if ( s2 == s3 ) return true ;
     return false ;
@@ -193,7 +193,7 @@ string TLigationDialog::getVIName ( wxArrayInt &vi )
         myass ( a >= 0 && a < vi.GetCount() , "TLigationDialog::getVIName:1" ) ;
         myass ( vi[a] >= 0 && vi[a] < vv.size() , "TLigationDialog::getVIName:2" ) ;
         myass ( vv[vi[a]] , "TLigationDialog::getVIName:3" ) ;
-        wxString name = vv[vi[a]]->name ;
+        wxString name = vv[vi[a]]->getName() ;
         if ( a < orientation.size() && orientation[a] ) name = "!" + name ;
         if ( ret != "" ) ret += "-" ;
         ret += name.c_str() ;
@@ -207,13 +207,13 @@ void TLigationDialog::addVTname ( string name , wxArrayInt &vi , bool circular )
     
     int a ;
     TVector v ;
-    string d ;
+    wxString d ;
     myass ( vi[0] >= 0 && vi[0] < vv.size() , "TLigationDialog::addVTname:1" ) ;
     myass ( vv[vi[0]] , "TLigationDialog::addVTname:2" ) ;
     v.setFromVector ( *vv[vi[0]] ) ;
     d = txt("lig_of") ;
-    d += v.name + " (" + v.desc + ")" ;
-    v.name = name.c_str() ;
+    d += v.getName() + " (" + v.getDescription() + ")" ;
+    v.setName ( name.c_str() ) ;
     for ( a = 1 ; a < vi.GetCount() ; a++ )
         {
         bool o = false ;
@@ -225,11 +225,11 @@ void TLigationDialog::addVTname ( string name , wxArrayInt &vi , bool circular )
         v.ligate_right ( tv , o ) ;
         d += ", " ;
         if ( o ) d += "!" ;
-        d += vv[vi[a]]->name + " (" + vv[vi[a]]->desc + ")" ;
+        d += vv[vi[a]]->getName() + " (" + vv[vi[a]]->getDescription() + ")" ;
         }
     if ( circular ) v.closeCircle () ;
     v.recalculateCuts () ;
-    v.desc = d.c_str() ;
+    v.setDescription ( d ) ;
     ligates.push_back ( v ) ;
     }
     
@@ -251,7 +251,7 @@ void TLigationDialog::OnOK ( wxCommandEvent &ev )
     for ( a = 0 ; a < ligates.size() ; a++ )
         {
         if ( !l_targets->IsChecked ( a ) )
-           ligates[a].sequence = "" ; // Yes, it's brutal ;-)
+           ligates[a].setSequence ( wxString("") ) ; // Yes, it's brutal ;-)
         }
     SetReturnCode ( wxID_OK ) ;
     EndModal ( true ) ;    
