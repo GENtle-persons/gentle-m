@@ -3,8 +3,8 @@ Bugs :
 * Optimierung Überhang-Primer?
 
 Feature Requests :
-* Nur markierte Sequenz drucken
 * Bericht drucken : lange Zeilen in Vektor-Beschreibung umbrechen
+* AS-Sequenz Protease-schneiden
 
 PubMed nucleotide search :
 * http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&retmode=xml&term=pgex+3x

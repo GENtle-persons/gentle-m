@@ -717,7 +717,8 @@ void MyFrame::newGB ( TGenBank &gb , string title )
     for ( n = 0 ; n < gb.vs_l.size() ; n++ )
         {
         nv = vv[n] ;
-        if ( gb.vs_l.size() == 1 && title != "" ) nv->name = title ;
+        if ( gb.vs_l.size() == 1 && title != "" && nv->name == "" )
+           nv->name = title ;
         short type = TUReadSeq::getSeqType ( nv->sequence ) ;
         if ( type == TYPE_AMINO_ACIDS )
            vc.push_back ( newAminoAcids ( nv , nv->name ) ) ;
