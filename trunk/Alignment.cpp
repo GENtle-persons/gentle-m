@@ -186,12 +186,16 @@ void TAlignment::redoAlignments ()
         while ( qAlign.size() < qVec.size() ) qAlign.push_back ( "" ) ;
         qName.push_back ( txt("t_consensus") ) ;
         qAlign.push_back ( "" ) ; // Consensus sequence
+        bool first = true ;
         while ( !in.eof() )
            {
            for ( a = 0 ; a < qAlign.size() ; a++ )
               {
-              if ( qAlign[0] != "" ) getline ( in , s ) ;
-              qAlign[a] += s.substr ( off , s.length() ) ;
+              if ( !first ) getline ( in , s ) ;
+              else first = false ;
+              int index = atoi ( s.substr ( 0 , off-1 ) . c_str() ) ;
+              if ( s[0] == ' ' ) index = qAlign.size()-1 ;
+              qAlign[index] += s.substr ( off , s.length() ) ;
               }
            getline ( in , s ) ; // Blank line
            }
