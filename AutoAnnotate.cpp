@@ -1,14 +1,158 @@
 #include "AutoAnnotate.h"
 
+class TAutoAnnotateDialog : public wxDialog
+	{
+	public :
+    TAutoAnnotateDialog ( wxWindow *parent, const wxString& title , AutoAnnotate *_aa ) ; ///< Constructor
+    virtual void OnCharHook ( wxKeyEvent& event ) ; ///< Key event handler
+    
+    wxCheckBox *useCommonDatabase , *useAdditionalDatabase , *useMachete , *doAddORFs ;
+    wxChoice *additionalDatabase ;
+    
+    private :
+	AutoAnnotate *aa ;
+
+    DECLARE_EVENT_TABLE()
+	} ;    
+	
+BEGIN_EVENT_TABLE(TAutoAnnotateDialog, wxDialog )
+    EVT_BUTTON(wxID_OK,TAutoAnnotateDialog::OnOK)
+    EVT_BUTTON(wxID_CANCEL,TAutoAnnotateDialog::OnCancel)
+    EVT_CHAR_HOOK(TAutoAnnotateDialog::OnCharHook)
+END_EVENT_TABLE()
+
+	
+TAutoAnnotateDialog::TAutoAnnotateDialog ( wxWindow *parent, const wxString& title , AutoAnnotate *_aa )
+    : wxDialog ( parent , TSD , title , wxDefaultPosition , wxSize ( 400 , 200 ) )
+	{
+	aa = _aa ;
+	aa->dbname.Clear () ;
+	aa->dbfile.Clear () ;
+    myapp()->frame->LS->getDatabaseList ( aa->dbname , aa->dbfile ) ;
+
+    wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+    wxBoxSizer *h_last = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *h3 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *h4 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    
+    useCommonDatabase = new wxCheckBox ( this , -1 , txt("t_autoann_use_common_database") ) ;
+    useAdditionalDatabase = new wxCheckBox ( this , -1 , txt("t_autoann_use_additional_database") ) ;
+    useMachete = new wxCheckBox ( this , -1 , txt("t_autoann_reduce_item_number") ) ;
+    doAddORFs = new wxCheckBox ( this , -1 , txt("t_autoann_add_orfs") ) ;
+    
+    additionalDatabase = new wxChoice ( this , -1 ) ;
+
+    h1->Add ( useCommonDatabase , 0 , wxALL , 5 ) ;
+    
+    h2->Add ( useAdditionalDatabase , 0 , wxALL , 5 ) ;
+    h2->Add ( additionalDatabase , 0 , wxALL , 5 ) ;
+    
+    h3->Add ( useMachete , 0 , wxALL , 5 ) ;
+
+    h4->Add ( doAddORFs , 0 , wxALL , 5 ) ;
+    
+    h_last->Add ( new wxButton ( this , wxID_OK , txt("b_ok" ) ) , 0 , wxALL , 5 ) ;
+    h_last->Add ( new wxButton ( this , wxID_CANCEL , txt("b_cancel" ) ) , 0 , wxALL , 5 ) ;
+    
+    v0->Add ( h1 , 0 , 0 ) ;    
+    v0->Add ( h2 , 0 , 0 ) ;    
+    v0->Add ( h3 , 0 , 0 ) ;    
+    v0->Add ( h4 , 0 , 0 ) ;
+    v0->Add ( h_last , 0 , 0 ) ;    
+    
+    useCommonDatabase->SetValue ( aa->useCommonDatabase ) ;
+    useAdditionalDatabase->SetValue ( aa->useAdditionalDatabase ) ;
+    useMachete->SetValue ( aa->useMachete ) ;
+    doAddORFs->SetValue ( aa->doAddORFs ) ;
+    
+    additionalDatabase->Append ( aa->dbname ) ;
+    additionalDatabase->SetStringSelection ( aa->additionalDatabase ) ;
+    if ( additionalDatabase->GetStringSelection() == "" )
+    	additionalDatabase->SetSelection ( 0 ) ;
+    
+    
+    SetSizer ( v0 ) ;
+    v0->Fit ( this ) ;
+    Center () ;    
+	}
+ 
+void TAutoAnnotateDialog::OnCharHook ( wxKeyEvent& event )
+	{
+    int k = event.GetKeyCode () ;
+    wxCommandEvent ev ;
+    if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    else if ( k == WXK_RETURN ) OnOK ( ev ) ;
+    else event.Skip() ;
+	}    
+
+
+//******************************************************************************
+
+bool AutoAnnotate::SettingsDialog ()
+	{
+	TAutoAnnotateDialog aad ( p , txt("u_autoannotate") , this ) ;
+	if ( wxID_OK != aad.ShowModal () ) return false ;
+	useCommonDatabase = aad.useCommonDatabase->GetValue() ;
+	useAdditionalDatabase = aad.useAdditionalDatabase->GetValue() ;
+	useMachete = aad.useMachete->GetValue() ;
+	doAddORFs = aad.doAddORFs->GetValue() ;
+	
+	wxString s = aad.additionalDatabase->GetLabel() ;
+	additionalDatabase = dbfile[dbname.Index(s)] ;
+
+	myapp()->frame->LS->startRecord() ;
+  	myapp()->frame->LS->setOption ( "AUTOANN_ADDITIONALDB" , s ) ;
+ 	myapp()->frame->LS->setOption ( "AUTOANN_USECOMMON" , useCommonDatabase ) ;
+ 	myapp()->frame->LS->setOption ( "AUTOANN_USEADDITIONAL" , useAdditionalDatabase ) ;
+  	myapp()->frame->LS->setOption ( "AUTOANN_USEMACHETE" , useMachete ) ;
+  	myapp()->frame->LS->setOption ( "AUTOANN_DOORFS" , doAddORFs ) ;
+	myapp()->frame->LS->endRecord() ;
+	
+	return true ;
+	}    
+
+void AutoAnnotate::Run ()
+	{
+//	wxStartTimer () ;
+	bool foundany = false ;
+	wxBeginBusyCursor() ;
+	if ( useCommonDatabase ) foundany |= ScanDatabase ( commonVectorsDatabase ) ;
+	if ( useAdditionalDatabase ) foundany |= ScanDatabase ( additionalDatabase ) ;
+	if ( useMachete ) machete ( p->vec ) ;
+	if ( doAddORFs ) foundany |= addORFs ( p->vec ) ;
+
+	if ( foundany )
+		{
+  		p->vec->setChanged () ;
+  		p->vec->updateDisplay() ;
+        p->treeBox->SelectItem ( p->treeBox->vroot ) ;
+        p->updateSequenceCanvas() ;
+        p->cPlasmid->Refresh () ;
+        wxCommandEvent event ;
+        p->OnAA_known ( event ) ;
+        p->vec->undo.stop() ;
+		}    
+	else p->vec->undo.abort () ;
+	wxEndBusyCursor() ;
+//	wxMessageBox ( wxString::Format ( "Took %d ms" , wxGetElapsedTime() ) ) ;
+	}    
+
+
 AutoAnnotate::AutoAnnotate ( MyChild *_p )
 	{
 	p = _p ;
+ 	commonVectorsDatabase = myapp()->homedir + myapp()->slash + "commonvectors.db" ;
+  	additionalDatabase =  myapp()->frame->LS->getOption ( "AUTOANN_ADDITIONALDB" , "" ) ;
+ 	useCommonDatabase = myapp()->frame->LS->getOption ( "AUTOANN_USECOMMON" , true ) ;
+ 	useAdditionalDatabase = myapp()->frame->LS->getOption ( "AUTOANN_USEADDITIONAL" , true ) ;
+  	useMachete = myapp()->frame->LS->getOption ( "AUTOANN_USEMACHETE" , true ) ;
+  	doAddORFs = myapp()->frame->LS->getOption ( "AUTOANN_DOORFS" , true ) ;
 	}
 
-void AutoAnnotate::ScanDatabase ( wxString database )
+bool AutoAnnotate::ScanDatabase ( wxString database )
 	{
-//	wxStartTimer () ;
-	wxBeginBusyCursor() ;
 	int a , b ;
 	wxString oseq = p->vec->getSequence() ;
 	if ( p->vec->isCircular() ) oseq += oseq ;
@@ -42,24 +186,7 @@ void AutoAnnotate::ScanDatabase ( wxString database )
   		delete v ;
 		}
 		
-	machete ( p->vec ) ;
-
-	foundany |= addORFs ( p->vec ) ;
-
-	if ( foundany )
-		{
-  		p->vec->setChanged () ;
-  		p->vec->updateDisplay() ;
-        p->treeBox->SelectItem ( p->treeBox->vroot ) ;
-        p->updateSequenceCanvas() ;
-        p->cPlasmid->Refresh () ;
-        wxCommandEvent event ;
-        p->OnAA_known ( event ) ;
-        p->vec->undo.stop() ;
-		}    
-	else p->vec->undo.abort () ;
-	wxEndBusyCursor() ;
-//	wxMessageBox ( wxString::Format ( "Took %d ms" , wxGetElapsedTime() ) ) ;
+	return foundany ;
 	}    
 	
 bool AutoAnnotate::RawMatch ( TVectorItem &item , TVector *v , wxString &oseq , wxString &s )
@@ -190,13 +317,13 @@ void AutoAnnotate::machete ( TVector *v )
 	v->items = i2 ;
 	}    
 
-
 // *********************
 
 void MyChild::OnAutoAnnotate(wxCommandEvent& event)
 	{
 	AutoAnnotate auan ( this ) ;
-	auan.ScanDatabase ( myapp()->homedir + myapp()->slash + "commonvectors.db" ) ;
+	if ( auan.SettingsDialog () )
+		auan.Run () ;
 	}    
 
 
