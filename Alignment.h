@@ -35,7 +35,7 @@ class TAlignLine // pun intended
     TVector *features ;
     } ;
 
-class TAlignment : public ChildBase
+class TAlignment : public ChildBase,wxThreadHelper
     {
     public :
     TAlignment(wxWindow *parent, const wxString& title) ;
@@ -43,6 +43,8 @@ class TAlignment : public ChildBase
     
     virtual void initme () ;
     virtual wxString getName () ;
+
+    virtual void* Entry() ; // wxThreadHelper
 
     virtual int NeedlemanWunsch ( wxString &s1 , wxString &s2 )  ;
     virtual int SmithWaterman ( wxString &s1 , wxString &s2 )  ;
@@ -79,6 +81,8 @@ class TAlignment : public ChildBase
     virtual void MoveUpDown ( int what , int where ) ;
     virtual void prealigned ( wxArrayString &vs , wxArrayChildBase &vc ) ;
     virtual void fromVector ( TVector *nv ) ;
+
+    virtual bool isThreadRunning() { return threadRunning ; }
     
     // Variables
     SequenceCanvas *sc ;
@@ -93,6 +97,7 @@ class TAlignment : public ChildBase
     private :
     wxChoice *mmb ;
     SeqAA *aaa ;
+    bool threadRunning ;
     void myInsert ( int line , int pos , char what ) ;
     void myDelete ( int line , int pos ) ;
     void updateSequence () ;
