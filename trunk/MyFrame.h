@@ -98,6 +98,7 @@ public:
     wxArrayChildBase children ;
     wxHtmlEasyPrinting *html_ep ;
     vector <wxBitmap> bitmaps ;
+    wxToolBar *tb_mychild ;
 
     private :
     wxSashLayoutWindow* m_topWindow;

@@ -564,3 +564,7 @@ void TAminoAcids::OnListBox ( wxCommandEvent& event )
     sc->SetFocus() ;
     }
     
+void TAminoAcids::updateToolbar ()
+    {
+    }    
+    

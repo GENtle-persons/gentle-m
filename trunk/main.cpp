@@ -161,6 +161,34 @@ char * txt ( wxString item )
     }
 
 
+void registerFileExtension ( wxString extension )
+    {
+#ifdef __WXMSW__    
+    wxRegKey regKey;
+    wxString idName("HKEY_CLASSES_ROOT\\."+extension);
+    regKey.SetName(idName);    
+  
+    if ( !regKey.Exists() )
+        {
+        regKey.Create () ;
+        regKey.SetValue ( "" , extension + "file" ) ;
+        }    
+  
+    wxString s = "" , t = regKey ;
+    s += "HKEY_CLASSES_ROOT\\" ;
+    s += t ;
+    s += "\\shell\\open\\command" ;
+    regKey.SetName ( s ) ;
+
+    if ( !regKey.Exists() ) regKey.Create () ;
+
+    regKey.SetValue ( "" , "\"" + wxString ( myapp()->argv[0] ) + "\" \"%1\"" ) ;
+#else
+#endif
+    }
+    
+
+
 
 // ---------------------------------------------------------------------------
 // MyApp
@@ -251,6 +279,19 @@ bool MyApp::OnInit()
         frame->LS->setOption ( "NEXTTIP" , tip ) ;
         delete tipProvider;
         }
+        
+    registerFileExtension ( "gb" ) ;
+    registerFileExtension ( "genbank" ) ;
+    registerFileExtension ( "gbxml" ) ;
+    registerFileExtension ( "fasta" ) ;
+    registerFileExtension ( "clone" ) ;
+    registerFileExtension ( "abi" ) ;
+    registerFileExtension ( "ab1" ) ;
+    registerFileExtension ( "seq" ) ;
+    registerFileExtension ( "gcg" ) ;
+    registerFileExtension ( "codata" ) ;
+    registerFileExtension ( "NBRF_PIR" ) ;
+    registerFileExtension ( "swissprot" ) ;
 
     return TRUE;
 }

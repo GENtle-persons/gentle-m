@@ -323,6 +323,9 @@ void MyChild::initme ()
 
     // TOOLBAR 
 
+    if ( myapp()->frame->tb_mychild == NULL )
+        {
+            
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);    
     toolBar->AddTool( MDI_TEXT_IMPORT , 
                 myapp()->frame->bitmaps[0],
@@ -368,7 +371,7 @@ void MyChild::initme ()
         TRUE, -1, -1, (wxObject *) NULL, txt("m_edit_mode") ) ;
     toolBar->AddSeparator() ;
     toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_zoom") ) ) ;
-    zoom_cb = new wxChoice ( toolBar , PC_ZOOM , wxDefaultPosition , wxSize ( 60 , -1 ) ) ;
+    wxChoice *zoom_cb = new wxChoice ( toolBar , PC_ZOOM , wxDefaultPosition , wxSize ( 60 , -1 ) ) ;
     zoom_cb->Append ( "100%" ) ;
     zoom_cb->Append ( "200%" ) ;
     zoom_cb->Append ( "300%" ) ;
@@ -378,7 +381,14 @@ void MyChild::initme ()
     zoom_cb->SetSelection ( 0 ) ;
     toolBar->AddControl ( zoom_cb ) ;
     toolBar->Realize() ;    
+    
+    myapp()->frame->tb_mychild = toolbar ;
+        
+            }    
 
+    toolbar = myapp()->frame->tb_mychild ;
+    toolbar->Reparent ( this ) ;
+    
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
     v0->Add ( sw , 1 , wxEXPAND , 5 ) ;
@@ -1166,6 +1176,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
 
 void MyChild::OnZoom ( wxCommandEvent &ev )
     {
+    wxChoice *zoom_cb = (wxChoice*) GetToolBar()->FindControl ( PC_ZOOM ) ;
     wxString s = zoom_cb->GetStringSelection() ;
     int i = atoi ( s.c_str() ) ;
     cPlasmid->setZoom ( i ) ;
@@ -1213,8 +1224,32 @@ void MyChild::updateUndoMenu ()
     
 void MyChild::Redo(wxCommandEvent& event)
     {
-    
     }
+    
+void MyChild::updateToolbar ()
+    {
+    toolbar = myapp()->frame->tb_mychild ;
+    if ( !toolbar ) return ;
+    if ( myapp()->frame->isLocked() ) toolbar->Freeze() ;
+    toolbar->Reparent ( this ) ;
+    if ( !myapp()->frame->isLocked() ) toolbar->Thaw() ;
+    toolbar->Enable () ;
+    
+    // Zoom
+    if ( !cPlasmid ) return ;
+    int zoom = cPlasmid->getZoom() ;
+    wxChoice *zoom_cb = (wxChoice*) GetToolBar()->FindControl ( PC_ZOOM ) ;
+    zoom_cb->SetStringSelection ( wxString::Format ( "%d%%" , zoom ) ) ;
+    
+    // Toggle tools
+    toolbar->ToggleTool ( MDI_ORFS , showORFs ) ;
+    toolbar->ToggleTool ( MDI_EDIT_MODE , GetMenuBar()->FindItem(MDI_EDIT_MODE)->IsChecked() ) ;
+    toolbar->ToggleTool ( MDI_VIEW_MODE , viewMode ) ;
+    if ( !cSequence ) return ;
+    toolbar->ToggleTool ( MDI_TOGGLE_FEATURES , cSequence->findID("FEATURE") ) ;
+    toolbar->ToggleTool ( MDI_TOGGLE_RESTRICTION , cSequence->findID("RESTRICTION") ) ;
+    cSequence->SetFocus() ;
+    }    
     
 // *************************
 

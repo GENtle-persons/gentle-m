@@ -578,14 +578,15 @@ void PlasmidCanvas::itemBlastDNA ( wxCommandEvent &ev )
         
 void PlasmidCanvas::itemBlastAA ( wxCommandEvent &ev )
     {
-    int from = p->vec->items[context_last_item].from ;
+/*    int from = p->vec->items[context_last_item].from ;
     int to = p->vec->items[context_last_item].to ;
     int dir = p->vec->items[context_last_item].direction ;
     int rf = p->vec->items[context_last_item].getRF() ;
     if ( rf == 0 ) return ;
     from += dir * ( rf - 1 ) ;
     to += dir * ( rf - 1 ) ;
-    wxString s = getDNAorAA ( from , to , dir , false ) ;
+    wxString s = getDNAorAA ( from , to , dir , false ) ;*/
+    wxString s = p->vec->items[context_last_item].getAminoAcidSequence () ;
     if ( s.IsEmpty() ) return ;
     myapp()->frame->blast ( s , "blastp" ) ;
     }
