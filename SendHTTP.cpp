@@ -8,7 +8,11 @@
 #include <string.h>
 #include "winsock2.h"
 
+#include "main.h"
+
 #define MEM_BUFFER_SIZE 10
+
+wxProgressDialog *progressdialog = NULL ;
 
 /* MemBuffer: Structure used to implement a memory buffer, which is a
               buffer of memory that will grow to hold variable sized
@@ -279,6 +283,8 @@ int SendHTTP(LPCSTR url,LPCSTR headers,BYTE *post,DWORD postLength,HTTPRequest *
 
 	MemBufferCreate(&messageBuffer);
 
+	unsigned long cnt = 0 ;
+	
 	do
 	{
 		l = recv(sock,buffer,sizeof(buffer)-1,0);
@@ -286,6 +292,15 @@ int SendHTTP(LPCSTR url,LPCSTR headers,BYTE *post,DWORD postLength,HTTPRequest *
 			break;
 		*(buffer+l)=0;
 		MemBufferAddBuffer(&messageBuffer,(BYTE*)buffer,l);
+		
+		if ( progressdialog )
+			{
+			cnt += l ;
+			wxString s = wxString::Format ( "%d bytes read" , cnt ) ;
+			progressdialog->Update ( cnt , s ) ;
+			}			
+		
+		
 	} while(l>0);
 	*messageBuffer.position = 0;
 	req->message = (char*)messageBuffer.buffer;
@@ -608,9 +623,15 @@ int myExternal::copyFileHTTP ( wxString _url , wxString _file )
 wxString myExternal::getTextHTTP ( wxString url )
 	{
 	HTTPRequest req ;
+	progressdialog = pd ;
 	int rtn = SendHTTP ( url.c_str() , NULL , NULL , 0 , &req ) ;
+	progressdialog = NULL ;
 	wxString ret ;
-	if ( !rtn ) ret = req.message ;
+	if ( !rtn )
+ 		{
+   		ret.Alloc ( req.messageLength + 5 ) ;
+       	ret = req.message ;
+       	}   	
 	if ( req.message ) delete req.message ;
 	return ret ;    
 	}

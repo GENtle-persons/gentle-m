@@ -1,23 +1,19 @@
 /*
 Bugs :
 * Optimierung Überhang-Primer?
+* Bericht drucken : lange Zeilen in Vektor-Beschreibung umbrechen
 
 Feature Requests :
 
 Homology Plot
 Export plot data
 Helical wheel
-Code-Sonne o.ä.
-
+AS-Sequenz Protease-schneiden
 That ligation thingy 
-    
-    
----
-* Bericht drucken : lange Zeilen in Vektor-Beschreibung umbrechen
-* AS-Sequenz Protease-schneiden
 
 SEE: http://eutils.ncbi.nlm.nih.gov/entrez/query/static/eutils_help.html
 
+----
 
 EMBOSS:
 * codon usage statistic

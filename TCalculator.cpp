@@ -54,6 +54,12 @@ BEGIN_EVENT_TABLE(TGridProtein, wxGrid)
    EVT_GRID_SELECT_CELL(TGridProtein::OnSelectCell)
 END_EVENT_TABLE()
 
+BEGIN_EVENT_TABLE(TGridData, wxGrid)
+   EVT_GRID_EDITOR_HIDDEN(TGridData::OnCellChanged)
+   EVT_GRID_CELL_CHANGE(TGridData::OnCellChanged)
+   EVT_GRID_SELECT_CELL(TGridData::OnSelectCell)
+END_EVENT_TABLE()
+
 TCalculator::TCalculator(wxWindow *parent, const wxString& title) 
     : ChildBase(parent, title)
     {
@@ -112,6 +118,10 @@ void TCalculator::initme ()
     nb->AddPage ( prot , txt("t_calc_prot") ) ;
     prot->init () ;
 
+    data = new TGridData ( nb , -1 ) ;
+    nb->AddPage ( data , txt("t_calc_data") ) ;
+    data->init () ;
+
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
 //    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
     v0->Add ( nb , 1 , wxEXPAND , 5 ) ;
@@ -126,6 +136,142 @@ void TCalculator::initme ()
 wxString TCalculator::getName ()
     {
     return txt("t_calculator") ;
+    }
+    
+//------------------------------ TGridData
+
+TGridData::TGridData ( wxWindow *parent , int id ) : TGridBasic ( parent , id ) {}
+
+void TGridData::OnSelectCell(wxGridEvent& event)
+    {
+    event.Skip() ;
+    }
+    
+void TGridData::init ()
+    {
+    BeginBatch() ;
+    CreateGrid ( 41 , 6 ) ;
+    SetGridCursor ( 0 , 1 ) ;
+    DisableDragGridSize() ;
+    DisableDragRowSize() ;
+    DisableDragColSize() ;
+    cleanup() ;
+    
+    int a , row ;
+    wxString s ;
+    TVector d ; // Dummy
+    
+    // Amino acids
+    SetCellValue ( 0 , 0 , txt("t_calc_data_amino_acids") ) ;
+    SetCellValue ( 1 , 0 , txt("t_calc_data_olc") ) ;
+    SetCellValue ( 1 , 1 , txt("t_calc_data_tlc") ) ;
+    SetCellValue ( 1 , 2 , txt("t_calc_data_name") ) ;
+    SetCellValue ( 1 , 3 , txt("t_calc_data_mw") ) ;
+    SetCellValue ( 1 , 4 , txt("t_calc_data_pi") ) ;
+    SetCellValue ( 1 , 5 , txt("t_calc_data_codons") ) ;
+    SetCellTextColour ( 0 , 0 , *wxRED ) ;
+    for ( a = 0 ; a < 6 ; a++ )
+    	{
+    	SetCellTextColour ( 1 , a , *wxBLUE ) ;
+    	SetCellAlignment ( 1 , a , wxALIGN_CENTRE , wxALIGN_CENTRE ) ;
+     	}   	
+    
+    int b , c ;
+    wxString iu = "TCAG" ;
+    wxString codons[256] ;
+    for ( a = 0 ; a < iu.length() ; a++ )
+       {
+       for ( b = 0 ; b < iu.length() ; b++ )
+          {
+          for ( c = 0 ; c < iu.length() ; c++ )
+             {
+             wxString codon ;
+             codon += iu.GetChar(a) ;
+             codon += iu.GetChar(b) ;
+             codon += iu.GetChar(c) ;
+             unsigned char z = d.dna2aa ( codon ) . GetChar ( 0 ) ;
+             if ( codons[z] != "" ) codons[z] += ", " ;
+             codons[z] += codon ;
+             }    
+          }    
+       }    
+
+    row = 2 ;
+    for ( a = 'A' ; a < 'Z' ; a++ )
+    	{
+	    TAAProp p = d.getAAprop ( a ) ;
+	    if ( p.tla == "" ) continue ;
+	    if ( p.tla == "???" ) continue ;
+	    s = "t_aa_ " ;
+	    s.SetChar ( 5 , a ) ;
+	    SetCellValue ( row , 0 , wxString ( (char) a ) ) ;
+	    SetCellValue ( row , 1 , p.tla ) ;
+	    SetCellValue ( row , 2 , txt(s) ) ;
+	    SetCellValue ( row , 3 , wxString::Format ( "%4.4f" , p.mw ) ) ;
+	    SetCellValue ( row , 4 , wxString::Format ( "%4.2f" , p.pi ) ) ;
+	    SetCellValue ( row , 5 , codons[a] ) ;
+	    SetCellAlignment ( row , 3 , wxALIGN_RIGHT , wxALIGN_CENTRE ) ;
+	    SetCellAlignment ( row , 4 , wxALIGN_RIGHT , wxALIGN_CENTRE ) ;
+	    row++ ;
+    	}    
+
+
+    // DNA
+    row++ ;
+    SetCellValue ( row , 0 , txt("t_calc_data_dna") ) ;
+    SetCellTextColour ( row , 0 , *wxRED ) ;
+    row++ ;
+    
+    SetCellValue ( row , 0 , "1. \\ 2." ) ;
+    SetCellValue ( row , 5 , "3." ) ;
+    SetCellTextColour ( row , 0 , *wxBLUE ) ;
+    SetCellTextColour ( row , 5 , *wxBLUE ) ;
+    SetCellAlignment ( row , 0 , wxALIGN_RIGHT , wxALIGN_CENTRE ) ;
+    for ( a = 0 ; a < 4 ; a++ )
+    	{
+	    s = iu.GetChar(a) ;
+    	SetCellValue ( row , a+1 , s ) ;
+    	SetCellValue ( row+1+a*4 , 0 , s ) ;
+    	SetCellTextColour ( row , a+1 , *wxBLUE ) ;
+    	SetCellTextColour ( row+1+a*4 , 0 , *wxBLUE ) ;
+    	SetCellAlignment ( row , a+1 , wxALIGN_CENTRE , wxALIGN_CENTRE ) ;
+    	SetCellAlignment ( row+1+a*4 , 0 , wxALIGN_RIGHT , wxALIGN_CENTRE ) ;
+    	for ( b = 0 ; b < 4 ; b++ )
+    		{
+    		SetCellValue ( row+1+a+b*4 , 5 , s ) ;
+    		SetCellTextColour ( row+1+a+b*4 , 5 , *wxBLUE ) ;
+      		}  		
+   		for ( b = 0 ; b < 4 ; b++ )
+   			{
+		    for ( c = 0 ; c < 4 ; c++ )
+		    	{
+  	    		s = "" ;
+  	    		s += iu.GetChar(a) ;
+  	    		s += iu.GetChar(b) ;
+  	    		s += iu.GetChar(c) ;
+  	    		s = d.dna2aa ( s ) . GetChar ( 0 ) ;
+  	    		TAAProp p = d.getAAprop ( s.GetChar(0) ) ;
+  	    		s = wxString ( txt("t_aa_"+s) ) + " (" + p.tla + "; " + s + ")" ;
+  	    		if ( p.tla == "STP" ) s = "STOP" + s ;
+		    	SetCellValue ( row+1+a*4+c , 1+b , s ) ;
+		    	SetCellAlignment ( row+1+a*4+c , 1+b , wxALIGN_CENTRE , wxALIGN_CENTRE ) ;
+		    	}   	
+   			}    
+    	}    
+    
+    for ( a = 0 ; a < GetNumberRows() ; a++ )
+    	{
+	    for ( b = 0 ; b < GetNumberCols() ; b++ )
+	    	SetReadOnly ( a , b , true ) ;
+    	}    
+
+
+    AutoSizeColumns () ;
+    EndBatch () ;
+    }
+    
+void TGridData::recalc ()
+    {
     }
     
 //------------------------------ TGridLigation

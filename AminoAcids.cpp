@@ -233,12 +233,12 @@ void TAminoAcids::showStat ()
     if ( !curDisplay ) return ;
     if ( curDisplay == desc ) desc->SetValue ( vec->getDescription() ) ;
     if ( curDisplay != stat ) return ;
-    char t[10000] ;
+    wxString t ;
     int noaa = 0 , piaa = 0 ;
     float pI = 0 ;
     float ex = 0 , abs = 0 ;
     int num[256] ;
-    int a ;
+    int a , b ;
     float mW = 0 ;
     for ( a = 0 ; a < 256 ; a++ ) num[a] = 0 ;
     for ( a = 0 ; a < vec->getSequenceLength() ; a++ )
@@ -258,8 +258,29 @@ void TAminoAcids::showStat ()
     if ( piaa > 0 ) pI /= piaa ;
     ex = num['W']*5500 + num['Y']*1490 + num['C']*125 ;
     if ( noaa > 0 ) abs = ex / noaa / 100 ;
-    sprintf ( t , txt("aa_info") , noaa , mW , pI , ex , abs ) ;
+    t = txt("aa_info") ;
+    t.Replace ( "%f" , "%9.2f" ) ;
+    t = wxString::Format ( t , noaa , mW , pI , ex , abs ) ;
+    
+    wxString t2 ;
+    b = 0 ;
+    for ( a = 'A' ; a < 'Z' ; a++ )
+    	{
+	    if ( num[a] == 0 ) continue ;
+	    b++ ;
+	    TAAProp p = vec->getAAprop ( a ) ;
+	    t2 += a ;
+	    t2 += "/" ;
+	    t2 += p.tla ;
+	    t2 += wxString::Format ( "%4d" , num[a] ) ;
+	    if ( b % 4 == 0 && a+1 != 'Z' ) t2 += "\n" ;
+	    else if ( a+1 != 'Z' ) t2 += "      " ;
+    	}    
+    t += "\n" + wxString::Format ( txt("aa_info2") , num['D']+num['E'] , num['R']+num['K'] ) ;
+   	t += "\n\n" + t2 ;
+    
     stat->SetValue ( t ) ;
+    stat->SetFont ( *MYFONT ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
     }
 
 void TAminoAcids::showSequence ()

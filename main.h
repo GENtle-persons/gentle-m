@@ -12,7 +12,7 @@ typedef unsigned int uint ;
 //#define MYLOG
 
 // Turn testing (log and error log) on/off
-#define MYTEST
+//#define MYTEST
 
 #ifdef MYTEST
 
