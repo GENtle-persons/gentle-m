@@ -863,7 +863,7 @@ void SeqAA::initFromTVector ( TVector *v )
            int voff = v->items[a].getOffset() ;
            char c = ' ' ;
            int coff ;
-           bool complement ;
+           bool complement , roundOnce = false ;
            pa_w = "" ;
            pa_wa.clear() ;
            if ( dir == 1 )
@@ -914,8 +914,15 @@ void SeqAA::initFromTVector ( TVector *v )
               b += dir * 3 ;
               if ( !v->isCircular() && b+dir*3 < 0 ) rf = 0 ;
               if ( !v->isCircular() && b+dir*3 > v->sequence.length() ) rf = 0 ;
-              if ( v->isCircular() && b < 0 ) b += v->sequence.length() ;
-              if ( v->isCircular() && b >= v->sequence.length() ) b -= v->sequence.length() ;
+              if ( v->isCircular() && ( b < 0 || b >= v->sequence.length() ) )
+                 {
+                 if ( roundOnce ) rf = 0 ;
+                 else if ( b < 0 ) b += v->sequence.length() ;
+                 else b -= v->sequence.length() ;
+                 roundOnce = true ;
+                 }
+//              if ( v->isCircular() && b < 0 ) b += v->sequence.length() ;
+//              if ( v->isCircular() && b >= v->sequence.length() ) b -= v->sequence.length() ;
               }
            }
         }

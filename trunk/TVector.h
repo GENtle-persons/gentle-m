@@ -135,6 +135,7 @@ class TVector
     virtual void addORFs ( int off ) ;
 
     virtual void removeBlanksFromSequence () ;
+    virtual void removeBlanksFromVector () ;
     
     virtual string getParams () ;
     virtual void setParams ( string s ) ;
@@ -148,6 +149,7 @@ class TVector
     virtual bool hasStickyEnds () ;
     virtual void callUpdateUndoMenu () ;
     virtual void setFromVector ( TVector &v ) ;
+    virtual void doRemoveNucleotide ( int x ) ;
     
     // Variables
     string sequence ;

@@ -1106,18 +1106,22 @@ void SequenceCanvas::OnNewFromResultDNA ( wxCommandEvent &ev )
     {
     SeqDNA *rd = (SeqDNA*) seq[seq.size()-3] ;
     string s ;
-    for ( int a = 0 ; a < rd->s.length() ; a++ )
+    int a ;
+    for ( a = 0 ; a < rd->s.length() ; a++ )
        if ( rd->s[a] != ' ' )
           s += rd->s[a] ;
     if ( s == "" ) return ;
 
     TVector *nv = new TVector ;
-    nv->re = pd->w->re ;
-    nv->sequence = s ;
+    *nv = *pd->w ;
+    nv->removeBlanksFromVector () ;
+    if ( nv->sequence.length() != pd->w->sequence.length() ) nv->setCircular ( false ) ;
+//    nv->re = pd->w->re ;
+//    nv->sequence = s ;
     nv->name = pd->vec->name + " (" + string ( txt ( "t_pcr_result" ) ) + ")" ;
     nv->desc = pd->vec->desc + "\n" + string ( txt ( "t_pcr_result" ) ) ;
     nv->setChanged () ;
-    nv->setCircular ( false ) ;
+//    nv->setCircular ( false ) ;
     nv->recalculateCuts() ;
     nv->recalcvisual = true ;
     nv->items.push_back ( TVectorItem ( nv->name.c_str() , 
@@ -1125,6 +1129,7 @@ void SequenceCanvas::OnNewFromResultDNA ( wxCommandEvent &ev )
                                         1 , 
                                         s.length() , 
                                         VIT_MISC ) ) ;
+    if ( nv->isCircular() ) nv->items[nv->items.size()-1].setVisible ( false ) ;
     myapp()->frame->newFromVector ( nv ) ;
     }
     

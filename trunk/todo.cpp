@@ -6,7 +6,6 @@ Bugs :
 
 Feature Requests :
 * Nur markierte Sequenz drucken
-* Kodierende Features in Sequenz numerieren
 * Bericht drucken : lange Zeilen in Vektor-Beschreibung umbrechen
 
 */
