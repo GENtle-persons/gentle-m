@@ -379,11 +379,13 @@ void TAminoAcids::updateUndoMenu ()
         {
         mi->SetText ( txt("u_no") ) ;
         mi->Enable ( false ) ;
+        GetToolBar()->EnableTool ( MDI_UNDO , false ) ;
         }
     else
         {
         mi->Enable ( true ) ;
         mi->SetText ( lm ) ;
+        GetToolBar()->EnableTool ( MDI_UNDO , true ) ;
         }
     }
     
