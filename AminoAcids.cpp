@@ -385,7 +385,7 @@ void TAminoAcids::OnPhotometer(wxCommandEvent& event)
     wxString seq = vec->sequence.c_str() ;
     float mW = 0 ;
     for ( int a = 0 ; a < vec->sequence.length() ; a++ )
-        mW += vec->getAAmw ( c ) ;
+        mW += vec->getAAmw ( vec->sequence[a] ) ;
     c->prot->SetCellValue ( 2 , 1 , wxString::Format("%d", seq.Replace("W","",true)) ) ;
     c->prot->SetCellValue ( 3 , 1 , wxString::Format("%d", seq.Replace("Y","",true)) ) ;
     c->prot->SetCellValue ( 4 , 1 , wxString::Format("%d", seq.Replace("C","",true)) ) ;
