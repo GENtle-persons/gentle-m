@@ -167,7 +167,7 @@ TSQLresult TStorage::getObject ( wxString query )
     
     do {
         rc = sqlite_exec ( db , query.c_str() , callback , 0 , &e ) ;
-        if ( rc == SQLITE_BUSY ) wxUsleep ( 200 ) ; // If busy, wait 200 ms
+        if ( rc == SQLITE_BUSY ) wxMilliSleep ( 200 ) ; // If busy, wait 200 ms
         } while ( rc == SQLITE_BUSY ) ;
     
     ierror = (int) e ;
@@ -306,7 +306,9 @@ wxString TStorage::UCfirst ( wxString s )
     for ( a = 0 ; a < s.length() ; a++ )
         if ( s.GetChar(a) >= 'A' && s.GetChar(a) <= 'Z' )
            s.SetChar ( a , s.GetChar(a) - 'A' + 'a' ) ;
-    if ( s.GetChar(0) >= 'a' && s.GetChar(0) <= 'z' ) s.SetChar ( 0 , s.GetChar(0) - 'a' + 'A' ) ;
+    if ( !s.IsEmpty() && s.GetChar(0) >= 'a' && s.GetChar(0) <= 'z' ) s.SetChar ( 0 , s.GetChar(0) - 'a' + 'A' ) ;
+    for ( a = 0 ; a < s.length() ; a++ )
+	if ( s.GetChar(a) < 10 ) s.SetChar ( a , '_' ) ; // !!!!!!!!!!!!!
     return s ;
     }
     
@@ -811,7 +813,7 @@ void TStorage::getEnzymeGroups ( wxArrayString &vs )
 	    for ( int a = 0 ; a < vs.GetCount() ; a++ )
 	    	vs[a] = defdb + ":" + vs[a] ;
      	}   	
-   	else vs.Clear() ;
+    else vs.Clear() ;
 
     int a ;
    	if ( !isLocalDB() && enzymeGroupNameCache.GetCount() ) // Use cache
