@@ -57,7 +57,7 @@ class TCalculator : public ChildBase
     ~TCalculator () ;
     
     void initme () ;
-    virtual string getName () ;
+    virtual wxString getName () ;
 
 //    virtual void OnClose(wxCloseEvent& event) ;
     virtual void OnSeqPrint(wxCommandEvent& event) ;

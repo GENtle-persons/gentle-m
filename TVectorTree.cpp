@@ -82,13 +82,13 @@ void TVectorTree::initme ()
         sType = u ;
         if ( p->vec->items[a].direction == 1 ) sOritentation = txt("cw") ;
         else sOritentation = txt("ccw") ;
-        sprintf ( u , txt("s_desc") , p->vec->items[a].desc.c_str() ) ;
+        sprintf ( u , txt("s_desc") , p->vec->items[a].desc ) ;
         sDescription = u ;
         
         p->vec->items[a].treeid = y ;
         
         // Item data
-        wxString out = p->vec->items[a].name.c_str() ;
+        wxString out = p->vec->items[a].name ;
         out += "\n" ;
         out += sFrom + "\n" +
                sTo + "\n" +
@@ -143,23 +143,29 @@ void TVectorTree::OnEvent ( wxTreeEvent &event )
         textWindow->SetValue ( "" ) ;
         return ;
         }
-    string out ;
-    out = d->message ;
+    wxString out ;
+    out = d->message.c_str() ;
     if ( d->type == "RE" )
         {
         TRestrictionEnzyme *e = (TRestrictionEnzyme*) d->p ;
-        out += txt("res_seq") + e->sequence + "\n" ;
-        out += txt("res_loc") + e->location + "\n" ;
-        out += txt("res_note") + e->note + "\n" ;
+        out += txt("res_seq") ;
+        out += e->sequence.c_str() ;
+        out += "\n" ;
+        out += txt("res_loc") ;
+        out += e->location.c_str() ;
+        out += "\n" ;
+        out += txt("res_note") ;
+        out += e->note.c_str() ;
+        out += "\n" ;
         }
     else if ( d->type == "VECTOR" )
         {
-        string dp = " : " ;
+        wxString dp = " : " ;
         TVector *v = (TVector*) d->p ;
         out += txt("name") + dp + v->name + "\n\n" ;
         out += txt("desc") + dp + "\n" + v->desc ;
         }
-    textWindow->SetValue ( out.c_str() ) ;
+    textWindow->SetValue ( out ) ;
     }
 
 void TVectorTree::OnActivation ( wxTreeEvent &event )

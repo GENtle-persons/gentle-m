@@ -24,7 +24,7 @@ class TPrimerDesign : public ChildBase
     ~TPrimerDesign () ;
     
     void initme () ;
-    virtual string getName () ;
+    virtual wxString getName () ;
     virtual void AddPrimer ( string s ) ;
     virtual void showSequence () ;
     virtual void updateResultSequence () ;

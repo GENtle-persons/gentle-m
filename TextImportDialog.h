@@ -19,7 +19,7 @@ class TextImportDialog : public wxDialog
 
     wxTextCtrl *name , *sequence ;
     wxChoice *type ;
-    string sName , sSequence ;
+    wxString sName , sSequence ;
 
     DECLARE_EVENT_TABLE()
     } ;

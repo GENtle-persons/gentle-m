@@ -425,7 +425,7 @@ void MyChild::OnLigation(wxCommandEvent& event)
     myapp()->frame->lastCocktail.clear () ;
     }
     
-string MyChild::getName ()
+wxString MyChild::getName ()
     {
     return vec->name.c_str() ;
     }
@@ -917,7 +917,7 @@ void MyChild::OnExtractAA(wxCommandEvent& event)
     if ( seq == "" ) return ;
     char tt[1000] ;
     sprintf ( tt , txt("t_aa_from_vec") , vec->name.c_str() ) ;
-    myapp()->frame->newAminoAcids ( seq , tt ) ;
+    myapp()->frame->newAminoAcids ( seq.c_str() , tt ) ;
     }
         
 void MyChild::OnRestriction(wxCommandEvent& event)
@@ -1135,7 +1135,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
            {
            vector <string> vs ;
            string s ;
-           strcpy ( t , vec->items[a].desc.c_str() ) ;
+           strcpy ( t , vec->items[a].desc ) ;
 
            int cnt = 0 , ls = 0 ;
            for ( b = 0 ; t[b] ; b++ )
@@ -1176,7 +1176,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
         y += 5 ;
         }
     y += ch * 2 ;
-    pdc->DrawText ( vec->desc.c_str() , x0 , y ) ;
+    pdc->DrawText ( vec->desc , x0 , y ) ;
 
     // Name, date
     int tw , th ;

@@ -142,11 +142,11 @@ void TVectorEditor::initPanProp ()
     // Name and description
     wxRect r ;
     r = (new wxStaticText(panProp,-1,txt("name"),wxPoint(bo,bo*2)))->GetRect() ;
-    name = new wxTextCtrl(panProp,-1,v->name.c_str(),wxPoint(r.GetRight()+bo,bo),
+    name = new wxTextCtrl(panProp,-1,v->name,wxPoint(r.GetRight()+bo,bo),
                                 wxSize(w-r.GetRight()-bo*2,th)) ;
 
     r = (new wxStaticText(panProp,-1,txt("desc"),wxPoint(bo,bo*2+th)))->GetRect() ;
-    desc = new TURLtext(panProp,URLTEXT_DUMMY,v->desc.c_str(),wxPoint(bo,r.GetBottom()+bo),
+    desc = new TURLtext(panProp,URLTEXT_DUMMY,v->desc,wxPoint(bo,r.GetBottom()+bo),
                 wxSize(w-bo*2,th*5),wxTE_MULTILINE);
     
     if ( v->type != TYPE_AMINO_ACIDS )
@@ -415,8 +415,8 @@ void TVectorEditor::addOkCancel ( wxPanel *p )
     
 void TVectorEditor::commitVector ()
     {
-    string n = name->GetValue().c_str() ;
-    string d = desc->GetValue().c_str() ;
+    wxString n = name->GetValue() ;
+    wxString d = desc->GetValue() ;
     VCOMMIT(n,name);
     VCOMMIT(d,desc);
 

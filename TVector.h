@@ -82,11 +82,11 @@ class TVectorItem
     virtual void setRF ( int x ) ;
     virtual int getOffset () ;
     virtual void setOffset ( int o = -1 ) ; // -1 = no offset
-    virtual void setType ( string s ) ;
+    virtual void setType ( wxString s ) ;
     
     virtual void doRemove ( int f , int t , int l ) ;
-    virtual string implodeParams () ;
-    virtual void explodeParams ( string s ) ;
+    virtual wxString implodeParams () ;
+    virtual void explodeParams ( wxString _s ) ;
     virtual wxTreeItemId getTreeID () { return treeid ; } ;
     virtual string getParam ( string p , string def = "" ) ;
     virtual vector <string> getParamKeys () ;
@@ -94,8 +94,6 @@ class TVectorItem
     // dna2aa stuff
     virtual void translate ( TVector *v , SeqAA *aa = NULL ) ;
     virtual void getArrangedAA ( TVector *v , string &s , int disp ) ;
-    
-    virtual void dummyInfo ( string s , int l ) ;  // For testing only
     
     // Variables
     wxString desc , name ;
@@ -163,9 +161,9 @@ class TVector
     virtual float getAApi ( char aa ) ;
     virtual string dna2aa ( string codon ) ;
     virtual void turn ( int off ) ;
-    virtual void setAction ( string _action , int _action_value = 0 ) ;
-    virtual void setDatabase ( string s ) { database = s ; }
-    virtual string getDatabase () { return database ; }
+    virtual void setAction ( wxString _action , int _action_value = 0 ) ;
+    virtual void setDatabase ( wxString s ) { database = s ; }
+    virtual wxString getDatabase () { return database ; }
     virtual TVector *newFromMark ( int from , int to ) ;
     
     virtual void setChanged ( bool c = true ) ;
@@ -177,8 +175,8 @@ class TVector
     virtual void removeBlanksFromSequence () ;
     virtual void removeBlanksFromVector () ;
     
-    virtual string getParams () ;
-    virtual void setParams ( string s ) ;
+    virtual wxString getParams () ;
+    virtual void setParams ( wxString s ) ;
     virtual void setWindow ( ChildBase *c ) ;
     virtual void setCircular ( bool c = true ) ;
     virtual bool isCircular () ;
@@ -198,7 +196,7 @@ class TVector
     
     // Variables
     string sequence ;
-    string name , desc ;
+    wxString name , desc ;
     int type ;
     bool recalcvisual ;
     vector <TVectorItem> items ;
@@ -215,14 +213,10 @@ class TVector
     string invert ( string s ) ;
     
     string _lu , _ll , _ru , _rl ; // Sticky ends
-    bool circular ;
+    bool circular , changed ;
     ChildBase *window ;
-    string params ;
-    int turned ;
-    string action ;
-    int action_value ;
-    string aa , database ;
-    bool changed ;
+    int turned , action_value ;
+    wxString params , database , action , aa ;
     
     static char IUPAC[256] , SIUPAC[256] , COMPLEMENT[256] ;
     static char ACGT[256] ;

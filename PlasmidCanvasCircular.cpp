@@ -617,7 +617,7 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
         string tt_type = txt(ttt) ;
         sprintf ( ttt , txt("tt_item") , tt_type.c_str() ,
                                         s.c_str() , 
-                                        p->vec->items[vo].desc.c_str() ) ;
+                                        p->vec->items[vo].desc ) ;
         SetMyToolTip ( ttt , TT_ITEM ) ;
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
         wxLogStatus(txt("item_status_bar") , s.c_str() ) ;

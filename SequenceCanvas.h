@@ -232,7 +232,7 @@ class SeqABI : public SeqDNA
     virtual ~SeqABI () ;
     virtual int  arrange ( int n ) ;
     virtual void show ( wxDC& dc ) ;
-    virtual void initFromFile ( string filename ) ;
+    virtual void initFromFile ( wxString filename ) ;
     virtual string whatsthis () { return "ABI" ; }
     virtual void drawTopLine ( wxDC &dc , int y ) ;
     virtual wxColor getBaseColor ( char b ) ;

@@ -28,7 +28,7 @@ class ChildBase : public MyChildBase
     ChildBase(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style) ;
     ChildBase(wxWindow *parent, const wxString& title);
         
-    virtual string getName () { return "" ; }
+    virtual wxString getName () { return "" ; }
     virtual void showName ( string x = "" ) ;
     virtual void OnFocus(wxFocusEvent& event);
     virtual bool caniclose(wxCloseEvent& event);

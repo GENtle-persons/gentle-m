@@ -113,7 +113,7 @@ void TCalculator::initme ()
     Activate () ;
     }
 
-string TCalculator::getName ()
+wxString TCalculator::getName ()
     {
     return txt("t_calculator") ;
     }

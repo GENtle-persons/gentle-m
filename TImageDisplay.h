@@ -19,7 +19,7 @@ class TImageDisplay : public ChildBase
     ~TImageDisplay () ;
     
     void initme () ;
-    virtual string getName () ;
+    virtual wxString getName () ;
 
 //    virtual void OnClose(wxCloseEvent& event) ;
     virtual void OnDir ( wxCommandEvent &event ) ;

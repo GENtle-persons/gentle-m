@@ -66,15 +66,15 @@ public:
     virtual void OnSashDrag(wxSashEvent& event);
     
     virtual MyChild* newFromVector ( TVector *nv , int type = TYPE_VECTOR ) ;
-    virtual TAminoAcids *newAminoAcids ( string aa , string title = "" ) ;
-    virtual TAminoAcids *newAminoAcids ( TVector *nv , string title = "" ) ;
-    virtual TABIviewer *newABI ( string filename , string title ) ;
+    virtual TAminoAcids *newAminoAcids ( wxString aa , wxString title = "" ) ;
+    virtual TAminoAcids *newAminoAcids ( TVector *nv , wxString title = "" ) ;
+    virtual TABIviewer *newABI ( wxString filename , wxString title ) ;
     virtual MyChild *newCLONE ( TClone &clone ) ;
-    virtual void newGB ( TGenBank &gb , string title = "" ) ;
-    virtual void newXML ( TXMLfile &xml , string title = "" ) ;
+    virtual void newGB ( TGenBank &gb , wxString title = "" ) ;
+    virtual void newXML ( TXMLfile &xml , wxString title = "" ) ;
     virtual MyChild *newFASTA ( TFasta &fasta ) ;
     virtual void blast ( string seq , string prg ) ;
-    virtual void importFile ( string file , string path , int filter = -1 ) ;
+    virtual void importFile ( wxString file , wxString path , int filter = -1 ) ;
     virtual void setChild ( ChildBase *ch ) ;
     virtual void removeChild ( ChildBase *ch ) ;
     virtual TStorage *getTempDB ( string filename ) ;

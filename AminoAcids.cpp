@@ -192,7 +192,7 @@ void TAminoAcids::initme ()
     sc->SetFocus() ;
     }
     
-string TAminoAcids::getName ()
+wxString TAminoAcids::getName ()
     {
     return vec->name ;
     }
@@ -200,7 +200,7 @@ string TAminoAcids::getName ()
 void TAminoAcids::showStat ()
     {
     if ( !curDisplay ) return ;
-    if ( curDisplay == desc ) desc->SetValue ( vec->desc.c_str() ) ;
+    if ( curDisplay == desc ) desc->SetValue ( vec->desc ) ;
     if ( curDisplay != stat ) return ;
     char t[10000] ;
     int noaa = 0 , piaa = 0 ;
@@ -287,7 +287,7 @@ void TAminoAcids::invokeVectorEditor ( string what , int num , bool forceUpdate 
     vec->undo.start ( txt("u_vec_edit") ) ;
     TVectorEditor ve ( this , txt("t_vector_editor") , vec ) ;
     bool changed = vec->isChanged() ;
-    string on = vec->name ;
+//    string on = vec->name ;
     vec->setChanged ( false ) ;
 
     ve.hideEnzym = true ;
@@ -300,7 +300,7 @@ void TAminoAcids::invokeVectorEditor ( string what , int num , bool forceUpdate 
     ve.cleanup () ;
     if ( forceUpdate || vec->isChanged() )
         {
-        myapp()->frame->mainTree->SetItemText ( inMainTree , getName().c_str() ) ;
+        myapp()->frame->mainTree->SetItemText ( inMainTree , getName() ) ;
         showName() ;
         showSequence () ;
         vec->undo.stop() ;
@@ -467,12 +467,12 @@ void TAminoAcids::OnListBox ( wxCommandEvent& event )
         }
     if ( t == txt("desc") )
         {
-        if ( update ) desc->SetValue ( vec->desc.c_str() )  ;
+        if ( update ) desc->SetValue ( vec->desc )  ;
         else
            {
            desc = new TURLtext ( this ,
                             URLTEXT_DUMMY ,
-                            vec->desc.c_str() ,
+                            vec->desc ,
                             wxDefaultPosition,
                             wxSize ( 250 , 90 ) ,
                             wxTE_MULTILINE | wxTE_READONLY ) ;

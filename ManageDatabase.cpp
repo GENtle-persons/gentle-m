@@ -890,8 +890,8 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
     sql = "SELECT * FROM dna WHERE dna_name=\"" + name + "\"" ;
     sr = tstorage->getObject ( sql ) ;
     if( sr.rows() == 0 ) return false ;
-    v->name = sr[0][sr["dna_name"]] ;
-    v->desc = sr[0][sr["dna_description"]] ;
+    v->name = sr[0][sr["dna_name"]].c_str() ;
+    v->desc = sr[0][sr["dna_description"]].c_str() ;
     v->sequence = sr[0][sr["dna_sequence"]] ;
     v->type = atoi ( sr[0][sr["dna_type"]].c_str() ) ;
     v->setStickyEnd ( true , true , sr[0][sr["dna_sticky_ul"]] ) ;
@@ -899,10 +899,10 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
     v->setStickyEnd ( false , true , sr[0][sr["dna_sticky_ur"]] ) ;
     v->setStickyEnd ( false , false , sr[0][sr["dna_sticky_lr"]] ) ;
 
-    v->setParams ( sr[0][sr["dna_params"]] ) ;
+    v->setParams ( sr[0][sr["dna_params"]].c_str() ) ;
     if ( sr[0][sr["dna_circular"]] == "1" ) v->setCircular ( true ) ;
     else v->setCircular ( false ) ;
-    v->setDatabase ( db ) ;
+    v->setDatabase ( db.c_str() ) ;
     if ( v->type != TYPE_ALIGNMENT ) v->removeBlanksFromSequence () ;
 
     string s = sr[0][sr["dna_restriction_enzymes"]] , t = "" ;
@@ -937,7 +937,7 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
         i.from = atoi ( sr[a][sr["di_from"]].c_str() ) ;
         i.to = atoi ( sr[a][sr["di_to"]].c_str() ) ;
         i.direction = atoi ( sr[a][sr["di_direction"]].c_str() ) ;
-        i.explodeParams ( sr[a][sr["di_params"]] ) ;
+        i.explodeParams ( sr[a][sr["di_params"]].c_str() ) ;
         v->items.push_back ( i ) ;
         }
         
@@ -959,7 +959,7 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
     ChildBase *n = NULL ;
     if ( v->type == TYPE_AMINO_ACIDS )
         {
-        string db1 = v->getDatabase() ;
+        wxString db1 = v->getDatabase() ;
         n = myapp()->frame->newAminoAcids ( v , v->name ) ;
         myass ( n , "Opening AA" ) ;
         n->vec->setDatabase ( db1 ) ;
@@ -976,7 +976,7 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
     else
         {
         v->recalculateCuts () ;
-        string db1 = v->getDatabase() ;
+        wxString db1 = v->getDatabase() ;
         n = myapp()->frame->newFromVector ( v , v->type ) ;
         myass ( n , "Opening DNA" ) ;
         n->vec->setDatabase ( db1 ) ;
@@ -1117,17 +1117,17 @@ void TManageDatabaseDialog::do_save_project ()
     
 void TManageDatabaseDialog::do_save_DNA ()
     {
-    string name , dbname ;
-    name = pm_name->GetValue().c_str() ;
-    dbname = pm_dd_save->GetStringSelection().c_str() ;
-    if ( doesNameExist ( name , dbname ) ) return ;
-    TStorage *storage = getTempDB ( getFileName ( dbname ) ) ;
+    wxString name , dbname ;
+    name = pm_name->GetValue() ;
+    dbname = pm_dd_save->GetStringSelection() ;
+    if ( doesNameExist ( name.c_str() , dbname.c_str() ) ) return ;
+    TStorage *storage = getTempDB ( getFileName ( dbname.c_str() ) ) ;
 
     // New name, or overwriting old one
     int a ;
     TSQLresult sr ;
     string sql , s1 , s2 ;
-    string x = fixQuotes ( name ) ;
+    string x = fixQuotes ( name.c_str() ) ;
     v->setDatabase ( dbname ) ; // Now in that database
     
     // Deleting old one, if any
@@ -1158,10 +1158,10 @@ void TManageDatabaseDialog::do_save_DNA ()
     storage->sqlAdd ( s1 , s2 , "dna_sticky_lr" , v->getStickyEnd(false,false) ) ;
     storage->sqlAdd ( s1 , s2 , "dna_circular" , v->isCircular() ) ;
     storage->sqlAdd ( s1 , s2 , "dna_restriction_enzymes" , enzymes ) ;
-    storage->sqlAdd ( s1 , s2 , "dna_params" , fixQuotes ( v->getParams() ) ) ;
+    storage->sqlAdd ( s1 , s2 , "dna_params" , fixQuotes ( v->getParams().c_str() ) ) ;
     sql = "INSERT INTO dna (" + s1 + ") VALUES (" + s2 + ")" ;
     sr = storage->getObject ( sql ) ;
-    v->name = x ;
+    v->name = x.c_str() ;
     
     // Inserting items
     string type = " " ;

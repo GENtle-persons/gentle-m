@@ -93,7 +93,7 @@ public:
     
     virtual void initme () ;
     virtual void initPanels () ;
-    virtual string getName () ;
+    virtual wxString getName () ;
     virtual void updateSequenceCanvas ( bool remember = false ) ;
     virtual string doExtractAA ( bool coding = true ) ;
     

@@ -315,7 +315,7 @@ void PlasmidCanvas::invokeVectorEditor ( string what , int num , bool forceUpdat
     p->vec->undo.start ( txt("u_vec_edit") ) ;
     TVectorEditor ve ( this , txt("t_vector_editor") , p->vec ) ;
     bool changed = p->vec->isChanged() ;
-    string on = p->vec->name ;
+//    string on = p->vec->name ;
     p->vec->setChanged ( false ) ;
     
     if ( what == "item" )

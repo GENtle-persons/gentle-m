@@ -521,7 +521,7 @@ void TPrimerDesign::OnCopy(wxCommandEvent& event)
         }*/
     }
 
-string TPrimerDesign::getName ()
+wxString TPrimerDesign::getName ()
     {
     return vec->name ;
     }
