@@ -1042,9 +1042,17 @@ void MyChild::OnTransformSequence(wxCommandEvent& event)
     TransformSequenceDialog tsd ( this , txt("t_transform_sequence") ) ;
     if ( tsd.ShowModal() != wxID_OK ) return ;
     
+    bool inNewVector = tsd.new_item->GetValue() ;
+    bool complement = tsd.complement->GetValue() ;
+    bool invert = tsd.invert->GetValue() ;
+    
+    doTransformSequence ( inNewVector , complement , invert ) ;
+    }    
+    
+MyChild *MyChild::doTransformSequence ( bool inNewVector , bool complement , bool invers )
+    {
     int a ;
     TVector *v = vec ;
-    bool inNewVector = tsd.new_item->GetValue() ;
     if ( inNewVector ) // Creating new vector, if needed
         {
         v = new TVector ;
@@ -1056,11 +1064,10 @@ void MyChild::OnTransformSequence(wxCommandEvent& event)
         }
     
     // Transforming DNA
-    v->setSequence ( v->transformSequence ( tsd.complement->GetValue() ,
-                                         tsd.invert->GetValue() ) ) ;
+    v->setSequence ( v->transformSequence ( complement , invers ) ) ;
 
     // Transforming items
-    if ( tsd.invert->GetValue() )
+    if ( invers )
         {
         int l = v->getSequenceLength() ;
         for ( a = 0 ; a < v->items.size() ; a++ )
@@ -1084,6 +1091,7 @@ void MyChild::OnTransformSequence(wxCommandEvent& event)
         v->recalcvisual = true ;
         v->recalculateCuts() ;
         MyChild *c = myapp()->frame->newFromVector(v) ;
+        return c ;
         }
     else
         {
@@ -1101,6 +1109,7 @@ void MyChild::OnTransformSequence(wxCommandEvent& event)
         cSequence->arrange () ;
         cSequence->Refresh() ;
         cPlasmid->Refresh() ;
+        return this ;
         }
     }
 
