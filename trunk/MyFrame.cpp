@@ -1132,6 +1132,19 @@ TABIviewer *MyFrame::newABI ( wxString filename , wxString title )
 
 void MyFrame::blast ( wxString seq , wxString prg )
     {
+	int a ;
+	for ( a = 0 ; a < children.GetCount() && children[a]->getName() != "External Interface" ; a++ ) ;
+	if ( a == children.GetCount() ) // Create new external interface
+	{
+	    wxCommandEvent event ;
+	    OnExternalInterface ( event ) ;
+	}
+	activateChild ( a ) ;
+	ExternalInterface *ei = (ExternalInterface*) children[a] ;
+	ei->runBlast ( seq , prg ) ;
+	return ;
+
+// Obsolete
 #ifdef __WXMSW__
     wxString unique = wxNow() ;
     unique.Replace ( ":" , "_" ) ;

@@ -10,6 +10,11 @@ void EIpanel::init_blast()
     c1->Append ( "Protein" ) ;
     c1->Append ( "Nucleotide" ) ;
 
+    c2 = new wxChoice ( up , ID_C2 ) ;
+    c2->Append ( "50" ) ;
+    c2->Append ( "100" ) ;
+    c2->Append ( "250" ) ;
+    c2->Append ( "500" ) ;
     b_last = new wxButton ( up , ID_B_LAST , txt("b_last") , wxDefaultPosition ) ;
     b_next = new wxButton ( up , ID_B_NEXT , txt("b_next") , wxDefaultPosition ) ;
     b_last->Disable () ;
@@ -21,6 +26,7 @@ void EIpanel::init_blast()
     h0->Add ( t1 , 1 , wxEXPAND , 5 ) ;
     h0->Add ( b1 , 0 , wxEXPAND , 5 ) ;
     h0->Add ( b2 , 0 , wxEXPAND , 5 ) ;
+    h0->Add ( c2 , 0 , wxEXPAND , 5 ) ;
     h0->Add ( b_last , 0 , wxEXPAND , 5 ) ;
     h0->Add ( b_next , 0 , wxEXPAND , 5 ) ;
 
@@ -32,7 +38,7 @@ void EIpanel::init_blast()
     up->SetSizer ( v1 ) ;
 
     c1->SetSelection ( 0 ) ;
-    t1->SetValue ( "MSPILGYWKIKGLVQPTRLLLEYLEEKYEEHLYERDEGDKWRNKKFELGLEFPNLPYYIDGDVKLTQSMAIIRYIADKHNMLGGCPKERAEISMLEGAVLDIRYGVSRIAYSKDFETLKVDFLSKLPEMLKMFEDRLCHKTYLNGDHVTHPDFMLYDALDVVLYMDPMCLDAFPKLVCFKKRIEAIPQIDKYLKSSKYIAWPLQGWQATFGGGDHPPKSDLIEGRGIENLYFQGIPGNSS" ) ;
+    c2->SetSelection ( 0 ) ;
     t1->SetFocus() ;
 }
 
@@ -55,8 +61,9 @@ public :
 	    url += "CMD=Put" ;
 	    url += "&QUERY=" + seq ;
 	    url += "&DATABASE=nr" ;
-	    url += "&PROGRAM=blastp" ;
-	    url += "&HITLIST_SIZE=100" ;
+	    if ( c1->GetSelection() == 0 ) url += "&PROGRAM=blastp" ;
+	    if ( c1->GetSelection() == 1 ) url += "&PROGRAM=blastn" ;
+	    url += "&HITLIST_SIZE=" + p->c2->GetStringSelection() ;
 	    
 	    res = ex.getText ( url ) ;
 	    
@@ -230,16 +237,15 @@ void EIpanel::process_blast2() // This is called upon termination of the thread
     for ( x = x->FirstChild ( "Hit" ) ; x ; x = x->NextSibling ( "Hit" ) , a++ )
     {
 
-	if ( !initial )
-	{
-	    if ( a < res_start ) continue ;
-	    if ( a >= res_start + RETMAX ) break ;
-	}
-
 	if ( initial )
 	{
 	    res_count++ ;
 	    if ( a >= RETMAX ) continue ;
+	}
+	else
+	{
+	    if ( a < res_start ) continue ;
+	    if ( a >= res_start + RETMAX ) break ;
 	}
 
 	wxString html ;
@@ -264,6 +270,9 @@ void EIpanel::process_blast2() // This is called upon termination of the thread
 	wxString qseq = valFC ( h->FirstChild ( "Hsp_qseq" ) ) ;
 	wxString mseq = valFC ( h->FirstChild ( "Hsp_midline" ) ) ;
 	wxString hseq = valFC ( h->FirstChild ( "Hsp_hseq" ) ) ;
+	long qoff , hoff ;
+	valFC ( h->FirstChild ( "Hsp_query-from" ) ) . ToLong ( &qoff ) ;
+	valFC ( h->FirstChild ( "Hsp_hit-from" ) ) . ToLong ( &hoff ) ;
 
 	html = "<table width=100%><tr>" ;
 	html += "<td rowspan=2>" + wxString::Format ( "%d" , a+1 ) + "</td>" ;
@@ -271,7 +280,7 @@ void EIpanel::process_blast2() // This is called upon termination of the thread
 	html += "<td align=right valign=top>" + evalue + "</td>" ;
 	html += "</tr><tr>" ;
 	html += "<td colspan=2><tt><font size=2>\n" ;
-	html += blast_align ( qseq , mseq , hseq , w ) ;
+	html += blast_align ( qseq , mseq , hseq , w , qoff , hoff ) ;
 	html += "</font></tt></td>" ;
 	html += "</tr></table>" ;
 	hlb->Set ( a - res_start , html , id ) ;
@@ -286,7 +295,7 @@ void EIpanel::process_blast2() // This is called upon termination of the thread
     showMessage ( wxString::Format ( txt("t_blast_results_by" ) , blast_version.c_str() , res_start+1 , max ) ) ;
 }
 
-wxString EIpanel::blast_align ( wxString qseq , wxString mseq , wxString hseq , int cpl )
+wxString EIpanel::blast_align ( wxString qseq , wxString mseq , wxString hseq , int cpl , int qoff , int hoff )
 {
     wxString lead[3] ;
     lead[0] = txt("t_blast_qseq" ) ;
@@ -310,9 +319,14 @@ wxString EIpanel::blast_align ( wxString qseq , wxString mseq , wxString hseq , 
     while ( !qseq.IsEmpty() )
     {
 //	ret += "<p>" ;
-	ret += lead[0] + " " + qseq.Left ( cpl ) + "\n" ;
+	int a ;
+	wxString z ;
+	for ( a = 0 , z = qseq.Left ( cpl ) ; a < z.length() ; a++ ) if ( z.GetChar(a) >= 'A' && z.GetChar(a) <= 'Z' ) qoff++ ;
+	for ( a = 0 , z = hseq.Left ( cpl ) ; a < z.length() ; a++ ) if ( z.GetChar(a) >= 'A' && z.GetChar(a) <= 'Z' ) hoff++ ;
+
+	ret += lead[0] + " " + qseq.Left ( cpl ) + " " + wxString::Format ( "%5d" , qoff ) + "\n" ;
 	ret += lead[1] + " " + mseq.Left ( cpl ) + "\n" ;
-	ret += lead[2] + " " + hseq.Left ( cpl ) + "\n" ;
+	ret += lead[2] + " " + hseq.Left ( cpl ) + " " + wxString::Format ( "%5d" , hoff ) + "\n" ;
 	qseq = qseq.Mid ( cpl ) ;
 	mseq = mseq.Mid ( cpl ) ;
 	hseq = hseq.Mid ( cpl ) ;

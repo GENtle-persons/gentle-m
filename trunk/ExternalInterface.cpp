@@ -75,8 +75,7 @@ void ExternalInterface::initme ()
 
     nb = new wxNotebook ( this , -1 ) ;
     
-    nb->AddPage ( new EIpanel ( nb , EI_NCBI ) , "NCBI" ) ;
-    nb->AddPage ( new EIpanel ( nb , EI_BLAST ) , "BLAST" ) ;
+    nb->AddPage ( new EIpanel ( nb , EI_NCBI ) , "NCBI" ) ; // Default panel
 
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
 //    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
@@ -93,7 +92,18 @@ wxString ExternalInterface::getName ()
     {
     return "External Interface" ;
     }
-    
+
+void ExternalInterface::runBlast ( wxString seq , wxString prg ) 
+{
+    EIpanel *bl = new EIpanel ( nb , EI_BLAST ) ;    
+    prg.MakeUpper() ;
+    nb->AddPage ( bl , prg ) ;    
+    if ( prg == "BLASTP" ) bl->c1->SetSelection ( 0 ) ;
+    if ( prg == "BLASTN" ) bl->c1->SetSelection ( 1 ) ;
+    bl->t1->SetValue ( seq ) ;
+    nb->SetSelection ( nb->GetPageCount()-1 ) ;
+}
+
 
 // *****************************************************************************
 EILB::EILB ( wxWindow *parent , int id )
