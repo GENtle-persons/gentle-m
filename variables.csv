@@ -8,7 +8,7 @@
 "m_opentxt","Open a file from the database","Eine Datei aus der Datenbank öffnen"
 "m_import","&Import\tCtrl-I","&Importieren\tStrg-I"
 "m_importtxt","Import a CLONE file","Eine CLONE-Datei importieren"
-"m_text_import","&Enter Sequence","Sequenz &eingeben"
+"m_text_import","&Enter Sequence\tStrg-N","Sequenz &eingeben\tStrg-N"
 "m_text_importtxt","Enter or paste a sequence","Eine Sequenz direkt eingeben oder einfügen"
 "m_exit","&Exit\tAlt-X","&Beenden\tAlt-X"
 "m_exittext","Quit the program","Beendet das Programm"
