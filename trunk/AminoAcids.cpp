@@ -124,6 +124,8 @@ void TAminoAcids::initme ()
     lb->Append ( txt("t_data") ) ;
     lb->Append ( txt("desc") ) ;
     lb->Append ( txt("t_schema") ) ;
+    lb->Append ( txt("t_aa_plot_mw") ) ;
+    lb->Append ( txt("t_aa_plot_pi") ) ;
     lb->Append ( txt("t_chou_fasman") ) ;
 
     curDisplay = new wxPanel ( this , -1 ) ;
@@ -507,15 +509,17 @@ void TAminoAcids::OnListBox ( wxCommandEvent& event )
            curDisplay = pc ;
            }
         }
-    else if ( t == txt("t_chou_fasman") )
+    else if ( t == txt("t_chou_fasman") ||
+              t == txt("t_aa_plot_mw" ) ||
+              t == txt("t_aa_plot_pi" ) )
         {
         if ( !update )
            {
            sc2 = new SequenceCanvas(this, wxDefaultPosition, wxSize(250, 90));
            sc2->blankline = 1 ;
            sc2->child = this ;
-           sc2->edit_id = "AA" ;
-           sc2->edit_valid = "ACDEFGHIKLMNPQRSTVWY|" ;
+//           sc2->edit_id = "AA" ;
+//           sc2->edit_valid = "ACDEFGHIKLMNPQRSTVWY|" ;
            h1->Add ( sc2 , 1 , wxEXPAND , 5 ) ;
            sc2->setMiniDisplay ( true );
            sc2->setHorizontal ( true ) ;
@@ -534,7 +538,10 @@ void TAminoAcids::OnListBox ( wxCommandEvent& event )
         sc2->seq.push_back ( seqP ) ;
         seqP->initFromTVector ( vec ) ;
         seqP->setLines ( 6 ) ;
-        seqP->useChouFasman() ;
+        
+        if ( t == txt("t_chou_fasman") ) seqP->useChouFasman() ;
+        else if ( t == txt("t_aa_plot_mw") ) seqP->useMW () ;
+        else if ( t == txt("t_aa_plot_pi") ) seqP->usePI () ;
         
         if ( update )
            {

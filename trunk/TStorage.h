@@ -72,6 +72,12 @@ class TStorage
     void createDatabase () ;
     TSQLresult getObject ( string query ) ;
     TSQLresult getObject_MySQL ( string query ) ;
+
+    // Access
+    void sqlAdd ( string &s1 , string &s2 , string key , string value ) ;
+    void sqlAdd ( string &s1 , string &s2 , string key , wxString value ) ;
+    void sqlAdd ( string &s1 , string &s2 , string key , char* value ) ;
+    void sqlAdd ( string &s1 , string &s2 , string key , int value ) ;
     
     // Restriction enzymes
     void import () ;
@@ -79,43 +85,40 @@ class TStorage
     void getEnzymeGroups ( vector <string> &vs ) ;
     void getEnzymesInGroup ( string gn , vector <string> &vs ) ;
     void getEnzymeGroups ( vector <wxString> &vs ) ;
-//    void getEnzymesInGroup ( wxString gn , vector <wxString> &vs ) ;
     void updateRestrictionEnzyme ( TRestrictionEnzyme *e ) ;
+    void addRestrictionEnzyme ( TRestrictionEnzyme *r ) ;
     bool addEnzymeGroup ( string s ) ;
-    void sqlAdd ( string &s1 , string &s2 , string key , string value ) ;
-    void sqlAdd ( string &s1 , string &s2 , string key , wxString value ) ;
-    void sqlAdd ( string &s1 , string &s2 , string key , char* value ) ;
-    void sqlAdd ( string &s1 , string &s2 , string key , int value ) ;
+
+    TProtease *getProtease ( string s ) ;
+    void updateProtease ( TProtease *p ) ;
+    
     string getDatabaseList ( vector <string> &name , vector <string> &file ) ;
-    string getSingleField ( string query , string field , string def = "" ) ;
-    int getSingleField ( string query , string field , int def = 0 ) ;
     void setOption ( string oname , int value ) ;
     void setOption ( string oname , string vname ) ;
     int getOption ( string oname , int def ) ;
     string getOption ( string oname , string def ) ;
     bool copySQLfields ( TStorage &target , string table , string cond ) ;
     void synchronize () ;
-    string makeInsert ( string table , TVS &field , TVS &data ) ;
-    TProtease *getProtease ( string s ) ;
-    void updateProtease ( TProtease *p ) ;
-    
+
     void autoUpdateSchema () ;
-    void replaceTable ( string table , TVS &f , TVS &t ) ;
-    void tableInfoSet ( TVS &f , TVS &t , string nf , string nt ) ;
     string fixDNAname ( string s ) ;
     string UCfirst ( string s ) ;
-    string getDBname () ;
-    
+    string getDBname () ;    
     bool getWriteProtect () ;
-    void addRestrictionEnzyme ( TRestrictionEnzyme *r ) ;
     
     // Variables
     vector <TRestrictionEnzyme*> re ;
     vector <TProtease*> pr ;
-    
     TSQLresult results ;
     
     private :
+    string getSingleField ( string query , string field , string def = "" ) ;
+    int getSingleField ( string query , string field , int def = 0 ) ;
+    string makeInsert ( string table , TVS &field , TVS &data ) ;
+    void replaceTable ( string table , TVS &f , TVS &t ) ;
+    void tableInfoSet ( TVS &f , TVS &t , string nf , string nt ) ;
+    
+    // Variables
     string dbname , error ;
     int storagetype , ierror ;
     bool writeProtect ;

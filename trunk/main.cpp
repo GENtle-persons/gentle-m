@@ -33,6 +33,18 @@ IMPLEMENT_APP(MyApp)
 
 // Some often needed stuff...
 
+#ifdef MYDEBUG
+ofstream errout ( "ERROR.txt" , ios::out ) ;
+
+void myass ( bool b , wxString msg )
+    {
+    if ( b ) return ;
+    errout << msg << "\n" ;
+    wxBell();
+//    wxSafeShowMessage ( msg , "Error" ) ;
+    }
+#endif
+
 string toupper ( string s )
     {
     for ( int a = 0 ; a < s.length() ; a++ )
@@ -59,27 +71,6 @@ vector <string> explode ( string sep , string s )
     return r ;
     }
 
-/*
-vector <string> explode ( string sep , string s )
-    {
-    int a , b , l = 0 ;
-    vector <string> r ;
-    if ( s != "" ) s += sep ;
-    for ( a = 0 ; a + sep.length() <= s.length() ; a++ )
-       {
-       for ( b = 0 ; b < sep.length() && sep[b] == s[a+b] ; b++ ) ;
-       if ( b == sep.length() )
-          {
-          string t ;
-          for ( b = l ; b < a ; b++ ) t += s[b] ;
-          r.push_back ( t ) ;
-          l = a + sep.length() ;
-          a = l ;
-          }
-       }
-    return r ;
-    }
-*/
 
 // ===========================================================================
 // implementation
@@ -93,25 +84,12 @@ vector <string> explode ( string sep , string s )
 // ---------------------------------------------------------------------------
 #include <wx/splash.h>
 
-#ifdef MYDEBUG
-ofstream errout ( "ERROR.txt" , ios::out ) ;
-#endif
-
 MyApp *theapp ;
 
 MyApp *myapp ()
    {
    return theapp ;
    }
-
-#ifdef MYDEBUG
-void myass ( bool b , wxString msg )
-    {
-    if ( b ) return ;
-    errout << msg << "\n" ;
-//    wxSafeShowMessage ( msg , "Error" ) ;
-    }
-#endif
 
 // Initialise this in OnInit, not statically
 bool MyApp::OnInit()

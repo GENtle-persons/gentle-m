@@ -10,7 +10,7 @@ int TClone::cmp ( const string &s1 , const string &s2 )
     return t1.CmpNoCase ( s2.c_str() ) ;
     }
 
-int TGene::strcmpi ( const string &s1 , const string &s2 )
+int TClone_Gene::strcmpi ( const string &s1 , const string &s2 )
     {
     wxString t1 ( s1.c_str() ) ;
     return t1.CmpNoCase ( s2.c_str() ) ;
@@ -135,7 +135,7 @@ void TClone::cleanup ()
 	size = -1 ;
 	isLinear = false ;
 	changed = false ;
-	linear.e1 = linear.e2 = linear.s1 = linear.s2 = "" ;
+	linear_e1 = linear_e2 = linear_s1 = linear_s2 = "" ;
 	while ( genes.size() ) genes.pop_back () ;
 	while ( enzymes.size() ) enzymes.pop_back () ;
 }
@@ -191,7 +191,6 @@ void TClone::load ( string s )
 	if ( v.size() < 3 || v[0] == "" || v[0].length() > 50 )
 	{
 	    success = false ;
-//		wxMessageBox ( "Dis ain't a CLONE standard plasmid file!" , "File error" ) ;
 		return ;
 	}
 	
@@ -209,7 +208,7 @@ void TClone::load ( string s )
 	n = a2i ( v[cnt++] ) ;
 	for ( a = 0 ; a < n ; a++ )
 	{
-		enzymes.push_back ( TEnzyme () ) ;
+		enzymes.push_back ( TClone_Enzyme () ) ;
 		enzymes[a].name = v[cnt++] ;
 		enzymes[a].position = a2i ( v[cnt++] ) ;
 	}
@@ -218,7 +217,7 @@ void TClone::load ( string s )
 	n = a2i ( v[cnt++] ) ;
 	for ( a = 0 ; a < n ; a++ )
 	{
-		genes.push_back ( TGene () ) ;
+		genes.push_back ( TClone_Gene () ) ;
 		genes[a].fullname = v[cnt++] ;
 		genes[a].begin = a2i ( v[cnt++] ) ;
 		genes[a].end = a2i ( v[cnt++] ) ;
@@ -232,7 +231,7 @@ void TClone::load ( string s )
 	n = a2i ( v[cnt++] ) ;
 	for ( a = 0 ; a < n ; a++ )
 	{
-		genes.push_back ( TGene () ) ;
+		genes.push_back ( TClone_Gene () ) ;
 		genes[genes.size()-1].fullname = v[cnt++] ;
 		genes[genes.size()-1].begin = a2i ( v[cnt++] ) ;
 		genes[genes.size()-1].end = 0 ;
@@ -258,10 +257,10 @@ void TClone::load ( string s )
 		else if ( !cmp ( st , "linear" ) )
 		{
 			isLinear = true ;
-			linear.e1 = v[cnt++] ;
-			linear.e2 = v[cnt++] ;
-			linear.s1 = v[cnt++] ;
-			linear.s2 = v[cnt++] ;
+			linear_e1 = v[cnt++] ;
+			linear_e2 = v[cnt++] ;
+			linear_s1 = v[cnt++] ;
+			linear_s2 = v[cnt++] ;
 		}
 	}
 	
@@ -320,24 +319,24 @@ void TClone::save ( string s )
 	if ( isLinear )
 	{
 		out << "linear" << end ;
-		out << linear.e1 << end ;
-		out << linear.e2 << end ;
-		out << linear.s1 << end ;
-		out << linear.s2 << end ;
+		out << linear_e1 << end ;
+		out << linear_e2 << end ;
+		out << linear_s1 << end ;
+		out << linear_s2 << end ;
 	}
 	if ( sequence != "" ) out << "sequence" << end << sequence << end ;
 	if ( description != "" ) out << "description" << end << description << end ;
 	changed = false ;
 }
 
-bool TGene::getCCW()
+bool TClone_Gene::getCCW()
 {
 	if ( !strcmpi ( direction.c_str() , "L" ) ) return true ;
 	else if ( !strcmpi ( direction.c_str() , "CCW" ) ) return true ;
 	return false ;
 }
 
-void TGene::setCCW(bool x)
+void TClone_Gene::setCCW(bool x)
 {
 	if ( !strcmpi ( type.c_str() , "MARK" ) && x ) direction = "L" ;
 	else if ( !strcmpi ( type.c_str() , "MARK" ) && !x ) direction = "R" ;
@@ -369,17 +368,17 @@ void TClone::setGeneSequence(int i, string s) // VERY BASIC, NO LENGTH CHANGES A
 }
 
 
-int TGene::getRealBegin()
+int TClone_Gene::getRealBegin()
 {
 	return getCCW()?end:begin ;
 }
 
-int TGene::getRealEnd()
+int TClone_Gene::getRealEnd()
 {
 	return !getCCW()?end:begin ;
 }
 
-TGene::TGene ( const TGene &g )
+TClone_Gene::TClone_Gene ( const TClone_Gene &g )
 {
 	begin = g.begin ;
 	end = g.end ;

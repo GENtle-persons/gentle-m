@@ -17,7 +17,17 @@ void TVector::setCircular ( bool c ) { circular = c ; }
 bool TVector::isCircular () { return circular ; }
 bool TVector::isLinear () { return !circular ; }
 bool TVector::hasStickyEnds () { return (_lu+_ll+_ru+_rl!="") ; }
+float TVector::getAAmw ( char aa ) { return aaprop[aa].mw ; }
+float TVector::getAApi ( char aa ) { return aaprop[aa].pi ; }
+char TVector::getComplement ( char c ) { return COMPLEMENT[c] ; }
 TAAProp TVector::getAAprop ( char a ) { return aaprop[a] ; }
+
+    
+
+bool TVector::basematch ( char b1 , char b2 ) // b1 in IUPAC, b2 in SIUPAC
+   {
+   return ( IUPAC[b1] & SIUPAC[b2] ) > 0 ;
+   }
 
 string TVector::one2three ( int a )
     {
@@ -73,6 +83,8 @@ void TVector::init ()
     if ( aaprop.size() > 0 ) return ;
 
     int a ;
+    
+    // IUPAC DNA
     for ( a = 0 ; a < 256 ; a++ ) IUPAC[a] = 0 ;
     setIUPAC ( 'A' , "A" ) ;
     setIUPAC ( 'C' , "C" ) ;
@@ -98,6 +110,7 @@ void TVector::init ()
     ACGT['a'] = ACGT['A'] = 2 ;
     ACGT['g'] = ACGT['G'] = 3 ;
 
+    // DNA complement
     for ( a = 0 ; a < 256 ; a++ ) COMPLEMENT[a] = ' ' ;
     COMPLEMENT['A'] = 'T' ;
     COMPLEMENT['T'] = 'A' ;
@@ -231,11 +244,6 @@ void TVector::doRemoveNucleotide ( int x )
            }
         }
     }
-    
-bool TVector::basematch ( char b1 , char b2 ) // b1 in IUPAC, b2 in SIUPAC
-   {
-   return ( IUPAC[b1] & SIUPAC[b2] ) > 0 ;
-   }
 
 void TVector::insert_char ( char x , int pos , bool overwrite )
     {
@@ -255,16 +263,6 @@ void TVector::insert_char ( char x , int pos , bool overwrite )
         if ( items[a].from >= pos ) items[a].from++ ;
         if ( items[a].to >= pos ) items[a].to++ ;
         }
-    }
-
-float TVector::getAAmw ( char aa )
-    {
-    return aaprop[aa].mw ;
-    }
-    
-float TVector::getAApi ( char aa )
-    {
-    return aaprop[aa].pi ;
     }
     
 void TVector::setIUPAC ( char b , char *s , char *pac )
@@ -403,17 +401,6 @@ char TVector::getNucleotide ( int pos , bool complement )
     while ( pos > sl ) pos -= sl ;
     if ( complement ) return getComplement ( sequence[pos] ) ;
     return sequence[pos] ;
-    }
-    
-char TVector::getComplement ( char c )
-    {
-    return COMPLEMENT[c] ;
-/*  if ( c == 'A' ) return 'T' ;
-    if ( c == 'T' ) return 'A' ;
-    if ( c == 'G' ) return 'C' ;
-    if ( c == 'C' ) return 'G' ;
-    if ( c == 'U' ) return 'A' ;
-    return ' ' ;*/
     }
     
 string TVector::transformSequence ( bool inverse , bool reverse )
@@ -1153,7 +1140,7 @@ void TVectorItem::setType ( string s )
     else if ( s == "PROTEIN_BIND" ) type = VIT_PROT_BIND ;
     else if ( s == "ORIT" ) type = VIT_ORI_T ;
     else if ( s == "PROTEIN" ) type = VIT_MISC ;
-    else if ( s == "REGION" ) type = VIT_MISC ;    
+    else if ( s == "REGION" ) type = VIT_MISC ; 
     }
 
 // ******************************************************************* TAAProp

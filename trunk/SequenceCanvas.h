@@ -274,17 +274,22 @@ class SeqPlot : public SeqDNA
     virtual int  arrange ( int n ) ;
     virtual void setLines ( int l ) ;
     virtual void useChouFasman () ;
+    virtual void useMW () ;
+    virtual void usePI () ;
     virtual void showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph ) ;
 
     private :
+    virtual void scanMinMax () ;
     virtual void scanChouFasman ( int x , int y , int t , int min , 
                                     int seek_cnt , int seek_avg , int avg ) ;
     virtual void drawSymbol ( char c , wxDC &dc , int x1 , int y1 , int x2 , int y2 ) ;
     virtual void showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx ) ;
+    virtual void showMW ( wxDC &dc , int b , int tx , int ty , int lx ) ;
+    virtual void showPI ( wxDC &dc , int b , int tx , int ty , int lx ) ;
     virtual void fixMinMax ( float &f ) ;
     virtual void drawDottedLine ( wxDC &dc , int x1 , int y1 , int x2 , int y2 ) ;
     virtual void myRect ( wxDC &dc , int x , int y , int w , int h ) ;
-    enum { CHOU_FASMAN } type ;
+    enum { CHOU_FASMAN , P_I , M_W } type ;
     int lines , l_top, l_bottom ;
     vector <string> d1 , d2 , d3 ;
     vector <TAAProp> prop ;
