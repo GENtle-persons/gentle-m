@@ -101,6 +101,8 @@ public:
     
     protected :
     virtual void updateToolbar () ;
+    virtual void initToolbar () ;
+    virtual void initMenus () ;
     
     DECLARE_EVENT_TABLE()
 };

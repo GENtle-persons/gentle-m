@@ -728,14 +728,9 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
 
 void SequenceCanvas::OnSaveImage ( wxCommandEvent &ev )
     {
-    wxString wildcard = "Bitmap (*.bmp)|*.bmp" ; 
-    wxString lastdir = myapp()->frame->LS->getOption ( "LAST_IMPORT_DIR" , "C:" ) ;
-    wxFileDialog d ( this , txt("t_save_image") , lastdir , "" , wildcard , wxSAVE|wxOVERWRITE_PROMPT ) ;
-    if ( d.ShowModal() != wxID_OK ) return ;
-    wxString filename = d.GetPath() ;
-
     wxBitmap *bmp = getSequenceBitmap () ;
-    bmp->SaveFile ( filename , wxBITMAP_TYPE_BMP ) ;
+    myapp()->frame->saveImage ( bmp , child ? child->getName() : "" ) ;
+//    delete bmp ;
     }    
     
 void SequenceCanvas::OnCopyImage ( wxCommandEvent &ev )

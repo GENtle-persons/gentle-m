@@ -120,7 +120,7 @@ void TItemEditDialog::initlb ()
         }    
     }    
     
-void TItemEditDialog::OnList ( wxListEvent &ev )
+void TItemEditDialog::OnList ( wxCommandEvent &ev )
     {
     wxString sel = lb->GetStringSelection () ;
     wxString key = sel.BeforeFirst ( ':' ) ;

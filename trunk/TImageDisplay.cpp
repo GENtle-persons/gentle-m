@@ -105,7 +105,8 @@ void TImageDisplay::initme ()
     }
     
 void TImageDisplay::ShowDir ( wxString s )
-   {
+	{
+    wxBeginBusyCursor() ;
     wxDir dir(s);
     lb->Clear() ;
     bu->SetTitle ( s ) ;
@@ -115,32 +116,60 @@ void TImageDisplay::ShowDir ( wxString s )
 
     myapp()->frame->LS->setOption ( "IMGDIR" , s ) ;
     wxString filename;
-
-    bool cont = dir.GetFirst(&filename, "*.img", wxDIR_FILES);
-    while ( cont )
-    {
-        lb->Append ( filename ) ;
-        cont = dir.GetNext(&filename);
-    }
-   }
+    
+    wxArrayString vs ;
+    dir.GetAllFiles ( s , &vs , "" , wxDIR_FILES ) ; // To save listing all types...
+/*    dir.GetAllFiles ( s , &vs , "*.img" ) ;
+    dir.GetAllFiles ( s , &vs , "*.tif" ) ;
+    dir.GetAllFiles ( s , &vs , "*.tiff" ) ;
+    dir.GetAllFiles ( s , &vs , "*.jpg" ) ;
+    dir.GetAllFiles ( s , &vs , "*.jpeg" ) ;
+    dir.GetAllFiles ( s , &vs , "*.png" ) ;
+    dir.GetAllFiles ( s , &vs , "*.bmp" ) ;
+    dir.GetAllFiles ( s , &vs , "*.gif" ) ;
+    dir.GetAllFiles ( s , &vs , "*.pcx" ) ;
+    dir.GetAllFiles ( s , &vs , "*.pnm" ) ;
+*/    
+    int a ;
+    for ( a = 0 ; a < vs.GetCount() ; a++ )
+    	{
+	    vs[a] = vs[a].AfterLast ( '/' ) ;
+	    vs[a] = vs[a].AfterLast ( '\\' ) ;
+     	}        
+    vs.Sort () ;
+    
+    for ( a = 0 ; a < vs.GetCount() ; a++ )
+    	lb->Append ( vs[a] ) ;
+   	wxEndBusyCursor() ;
+   	}
    
 void TImageDisplay::OnDir ( wxCommandEvent &event )
     {
-    wxDirDialog dd ( this  ) ;
-    dd.SetPath ( bu->GetTitle() ) ;
+    wxDirDialog dd ( this  , txt("t_choose_dir") , bu->GetTitle() ) ;
+//    dd.SetPath ( bu->GetTitle() ) ;
     if ( wxID_OK != dd.ShowModal() ) return ;
     ShowDir ( dd.GetPath() ) ;
     }
     
 void TImageDisplay::OnFile ( wxCommandEvent &event )
     {
+    wxBeginBusyCursor () ;
     wxString file = lb->GetStringSelection() ;
     wxString dir = bu->GetTitle() ;
     wxString fn = dir + "/" + file ;
-    r->readFile ( fn ) ;
-    right->i = r->makeImage() ;
+    
+    if ( fn.AfterLast('.').Upper() == "IMG" )
+    	{
+    	r->readFile ( fn ) ;
+    	right->i = r->makeImage() ;
+     	}   	
+   	else
+   		{
+	    right->i.LoadFile ( fn , wxBITMAP_TYPE_ANY ) ;
+/*	    if ( !right->i.LoadFile ( fn , wxBITMAP_TYPE_ANY ) )
+	    	wxMessageBox ( txt("t_invalid_image") , txt("msg_box") ) ;*/
+   		}    
 
-//    i.SaveFile ( "test.bmp" , wxBITMAP_TYPE_BMP ) ;
     wxClientDC dc ( right ) ;
     dc.Clear() ;
     
@@ -150,6 +179,7 @@ void TImageDisplay::OnFile ( wxCommandEvent &event )
     if ( right->bmp ) delete right->bmp ;
     right->bmp = new wxBitmap ( right->i ) ;
     right->Refresh () ;
+    wxEndBusyCursor () ;
     }
 
 wxString TImageDisplay::getName ()
@@ -196,7 +226,7 @@ void TMyImagePanel::OnDraw(wxDC& pdc)
            xs = ys ;
            }
         
-        double factor = 0.6 ;
+        double factor = 0.6 ; factor = 1.0 ;
         xs *= factor ;
         ys *= factor ;        
         pdc.SetUserScale ( xs , ys ) ;
@@ -271,15 +301,8 @@ void TMyImagePanel::OnSaveAsBitmap(wxCommandEvent &event)
     d = NULL ;
     for ( c = t ; *c ; c++ )
        if ( *c == '.' ) d = c ;
-    if ( d ) *d = 0 ;
-    wxFileDialog fd ( this , 
-                        txt("t_export_as_bitmap") , 
-                        dir ,
-                        t ,
-                        "*.bmp" ,
-                        wxSAVE 	 ) ;
-    if ( wxID_OK != fd.ShowModal() ) return ;
-    i.SaveFile ( fd.GetPath() , wxBITMAP_TYPE_BMP ) ;
+    if ( d ) *d = 0 ;    
+    myapp()->frame->saveImage ( bmp , t ) ;
     }
     
 void TMyImagePanel::OnCopy(wxCommandEvent &event)

@@ -293,6 +293,7 @@ void MyFrame::initme ()
     html_ep = new wxHtmlEasyPrinting ( "" , this ) ;
     
     wxBeginBusyCursor() ;       
+    lockDisplay ( true ) ;
        
     // Load last project?
 //    loadLastProject = false ;
@@ -313,8 +314,6 @@ void MyFrame::initme ()
            mainTree->Refresh () ;
            }
         }
-        
-
         
     // Command line parameters?
     if ( myapp()->argc > 1 )
@@ -346,13 +345,11 @@ void MyFrame::initme ()
           }
        }
         
+    lockDisplay ( false ) ;
     wxEndBusyCursor() ;
     
-
-       
     SetSizeHints ( 600 , 400 ) ;
     Show(TRUE);
-    if ( children.GetCount() ) children.Last()->Activate () ;
     }
     
 void MyFrame::OnClose(wxCloseEvent& event)
@@ -483,6 +480,33 @@ void MyFrame::OnTextImport(wxCommandEvent& WXUNUSED(event) )
         newFromVector ( v , TYPE_PRIMER ) ;
         }
 }
+
+void MyFrame::saveImage ( wxBitmap *bmp , wxString name )
+	{
+    wxString wildcard ;
+    wildcard += "PNG (*.png)|*.png" ;
+    wildcard += "|TIF (*.tif)|*.tif" ;
+    wildcard += "|Bitmap (*.bmp)|*.bmp" ;
+    wildcard += "|JPEG (*.jpg)|*.jpg" ;
+    
+    wxString lastdir = LS->getOption ( "LAST_IMPORT_DIR" , "C:" ) ;
+    wxFileDialog d ( this , txt("t_save_image") , lastdir , name , wildcard , wxSAVE|wxOVERWRITE_PROMPT ) ;
+    if ( d.ShowModal() != wxID_OK ) return ;
+    wxString filename = d.GetPath() ;
+    
+    name.Replace ( "*" , "" , TRUE ) ;
+    name.Replace ( ":" , "_" , TRUE ) ;
+    name.Replace ( "/" , "_" , TRUE ) ;
+    name.Replace ( "\\" , "_" , TRUE ) ;
+
+    wxBeginBusyCursor () ;
+    wxString type = filename.AfterLast('.').Upper() ;
+    if ( type == "BMP" ) bmp->SaveFile ( filename , wxBITMAP_TYPE_BMP ) ;
+    if ( type == "PNG" ) bmp->SaveFile ( filename , wxBITMAP_TYPE_PNG ) ;
+    if ( type == "JPG" ) bmp->SaveFile ( filename , wxBITMAP_TYPE_JPEG ) ;
+    if ( type == "TIF" ) bmp->SaveFile ( filename , wxBITMAP_TYPE_TIF ) ;
+    wxEndBusyCursor () ;
+	}    
 
 void MyFrame::OnFileImport(wxCommandEvent& WXUNUSED(event) )
 {
@@ -771,7 +795,13 @@ void MyFrame::OnSize(wxSizeEvent& WXUNUSED(event))
 {
     wxLayoutAlgorithm layout;
     layout.LayoutFrame(this);
-    if ( lastChild ) lastChild->Maximize() ;
+    if ( lastChild )
+    	{
+	    setActiveChild ( lastChild ) ;
+//	    if ( lastChild->vec ) lastChild->vec->recalcvisual = true ;
+//        lastChild->Activate() ;
+        lastChild->Refresh() ;
+        }    
     return ;
 }
 
@@ -1243,7 +1273,7 @@ void MyFrame::lockDisplay ( bool lock )
     {
     if ( lock )
         {
-        if ( locked == 0 ) mainTree->Freeze() ;
+        if ( locked == 0 ) { mainTree->Freeze() ; Freeze() ; }
         locked++ ;
         }
     else
@@ -1252,6 +1282,7 @@ void MyFrame::lockDisplay ( bool lock )
         if ( locked == 0 )
            {
            mainTree->Thaw() ;
+           Thaw() ;
            if ( !children.IsEmpty() )
               {
               if ( GetActiveChild() ) GetActiveChild()->Activate() ;

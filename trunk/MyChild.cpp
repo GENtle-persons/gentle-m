@@ -224,8 +224,8 @@ void MyChild::OnCircularLinear(wxCommandEvent& event)
 #endif
     }
 
-void MyChild::initme ()
-    {
+void MyChild::initMenus ()
+	{
     // Make a menubar
     wxMenu *file_menu = myapp()->frame->getFileMenu ( true , true , true ) ;
     wxMenu *tool_menu = myapp()->frame->getToolMenu ( true ) ;
@@ -289,14 +289,85 @@ void MyChild::initme ()
 
     // Associate the menu bar with the frame
     SetMenuBar(menu_bar);
+	}    
+
+void MyChild::initToolbar ()
+	{
+    if ( myapp()->frame->tb_mychild == NULL )
+        {
+            
+        wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);    
+        toolBar->AddTool( MDI_TEXT_IMPORT , 
+                    myapp()->frame->bitmaps[0],
+                    txt("m_new_sequence") ) ;  
+        toolBar->AddTool( MDI_FILE_OPEN, 
+                    myapp()->frame->bitmaps[1],
+                txt("m_open") , txt("m_opentxt") );
+        toolBar->AddTool( MDI_FILE_SAVE, 
+                    myapp()->frame->bitmaps[2],
+                    txt("m_store_in_db") , 
+                    txt("m_txt_store_in_db"));
+        toolBar->AddSeparator() ;
+        toolBar->AddTool( MDI_UNDO, myapp()->frame->bitmaps[3] ) ;
+        toolBar->AddSeparator() ;
+        toolBar->AddTool( MDI_CUT, myapp()->frame->bitmaps[4] ) ;
+        toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] ) ;
+        toolBar->AddTool( MDI_PASTE, myapp()->frame->bitmaps[6] ) ;
+        toolBar->AddSeparator() ;
+        toolBar->AddTool( MDI_CIRCULAR_LINEAR,
+            myapp()->frame->bitmaps[7],
+            myapp()->frame->bitmaps[8],
+            TRUE, -1, -1, (wxObject *) NULL, txt("m_toggle_rc") ) ;
+        toolBar->AddTool( MDI_ORFS,
+            myapp()->frame->bitmaps[9],
+            myapp()->frame->bitmaps[9],
+            TRUE, -1, -1, (wxObject *) NULL, txt("m_orfs") ) ;
+        toolBar->AddTool( MDI_TOGGLE_FEATURES,
+            myapp()->frame->bitmaps[10],
+            myapp()->frame->bitmaps[10],
+            TRUE, -1, -1, (wxObject *) NULL, txt("m_display_features") ) ;
+        toolBar->AddTool( MDI_TOGGLE_RESTRICTION,
+            myapp()->frame->bitmaps[11],
+            myapp()->frame->bitmaps[11],
+            TRUE, -1, -1, (wxObject *) NULL, txt("m_display_restriction") ) ;        
+        toolBar->AddSeparator() ;
+        toolBar->AddTool( MDI_VIEW_MODE,
+            myapp()->frame->bitmaps[12],
+            myapp()->frame->bitmaps[12],
+            TRUE, -1, -1, (wxObject *) NULL, txt("m_view_mode") ) ;
+        toolBar->AddTool( MDI_EDIT_MODE,
+            myapp()->frame->bitmaps[13],
+            myapp()->frame->bitmaps[13],
+            TRUE, -1, -1, (wxObject *) NULL, txt("m_edit_mode") ) ;
+        toolBar->AddSeparator() ;
+        toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_zoom") ) ) ;
+        wxChoice *zoom_cb = new wxChoice ( toolBar , PC_ZOOM , wxDefaultPosition , wxSize ( 60 , -1 ) ) ;
+        zoom_cb->Append ( "100%" ) ;
+        zoom_cb->Append ( "200%" ) ;
+        zoom_cb->Append ( "300%" ) ;
+        zoom_cb->Append ( "400%" ) ;
+        zoom_cb->Append ( "800%" ) ;
+        zoom_cb->Append ( "1600%" ) ;
+        zoom_cb->SetSelection ( 0 ) ;
+        toolBar->AddControl ( zoom_cb ) ;
+        toolBar->Realize() ;    
+        
+        myapp()->frame->tb_mychild = toolbar ;
+        
+        }    
+
+    toolbar = myapp()->frame->tb_mychild ;
+    toolbar->Reparent ( this ) ;
+	}    
+
+void MyChild::initme ()
+    {
+    initMenus () ;
+    initToolbar () ;
     
     // Vector
     vec = new TVector ;
     vec->init () ;
-
-
-
-
 
     // Canvas
     int width, height;
@@ -325,76 +396,8 @@ void MyChild::initme ()
     swu->SplitVertically ( swl , cPlasmid , width/4 ) ;
     swl->SplitHorizontally ( treeBox , propBox , height/3 ) ;
     
-    // Give it scrollbars
     cSequence->SetScrollbars(0, 20, 0, 50);
 
-    // TOOLBAR 
-
-    if ( myapp()->frame->tb_mychild == NULL )
-        {
-            
-    wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);    
-    toolBar->AddTool( MDI_TEXT_IMPORT , 
-                myapp()->frame->bitmaps[0],
-                txt("m_new_sequence") ) ;  
-    toolBar->AddTool( MDI_FILE_OPEN, 
-                myapp()->frame->bitmaps[1],
-            txt("m_open") , txt("m_opentxt") );
-    toolBar->AddTool( MDI_FILE_SAVE, 
-                myapp()->frame->bitmaps[2],
-                txt("m_store_in_db") , 
-                txt("m_txt_store_in_db"));
-    toolBar->AddSeparator() ;
-    toolBar->AddTool( MDI_UNDO, myapp()->frame->bitmaps[3] ) ;
-    toolBar->AddSeparator() ;
-    toolBar->AddTool( MDI_CUT, myapp()->frame->bitmaps[4] ) ;
-    toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] ) ;
-    toolBar->AddTool( MDI_PASTE, myapp()->frame->bitmaps[6] ) ;
-    toolBar->AddSeparator() ;
-    toolBar->AddTool( MDI_CIRCULAR_LINEAR,
-        myapp()->frame->bitmaps[7],
-        myapp()->frame->bitmaps[8],
-        TRUE, -1, -1, (wxObject *) NULL, txt("m_toggle_rc") ) ;
-    toolBar->AddTool( MDI_ORFS,
-        myapp()->frame->bitmaps[9],
-        myapp()->frame->bitmaps[9],
-        TRUE, -1, -1, (wxObject *) NULL, txt("m_orfs") ) ;
-    toolBar->AddTool( MDI_TOGGLE_FEATURES,
-        myapp()->frame->bitmaps[10],
-        myapp()->frame->bitmaps[10],
-        TRUE, -1, -1, (wxObject *) NULL, txt("m_display_features") ) ;
-    toolBar->AddTool( MDI_TOGGLE_RESTRICTION,
-        myapp()->frame->bitmaps[11],
-        myapp()->frame->bitmaps[11],
-        TRUE, -1, -1, (wxObject *) NULL, txt("m_display_restriction") ) ;        
-    toolBar->AddSeparator() ;
-    toolBar->AddTool( MDI_VIEW_MODE,
-        myapp()->frame->bitmaps[12],
-        myapp()->frame->bitmaps[12],
-        TRUE, -1, -1, (wxObject *) NULL, txt("m_view_mode") ) ;
-    toolBar->AddTool( MDI_EDIT_MODE,
-        myapp()->frame->bitmaps[13],
-        myapp()->frame->bitmaps[13],
-        TRUE, -1, -1, (wxObject *) NULL, txt("m_edit_mode") ) ;
-    toolBar->AddSeparator() ;
-    toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_zoom") ) ) ;
-    wxChoice *zoom_cb = new wxChoice ( toolBar , PC_ZOOM , wxDefaultPosition , wxSize ( 60 , -1 ) ) ;
-    zoom_cb->Append ( "100%" ) ;
-    zoom_cb->Append ( "200%" ) ;
-    zoom_cb->Append ( "300%" ) ;
-    zoom_cb->Append ( "400%" ) ;
-    zoom_cb->Append ( "800%" ) ;
-    zoom_cb->Append ( "1600%" ) ;
-    zoom_cb->SetSelection ( 0 ) ;
-    toolBar->AddControl ( zoom_cb ) ;
-    toolBar->Realize() ;    
-    
-    myapp()->frame->tb_mychild = toolbar ;
-        
-            }    
-
-    toolbar = myapp()->frame->tb_mychild ;
-    toolbar->Reparent ( this ) ;
     
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;

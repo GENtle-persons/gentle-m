@@ -312,6 +312,7 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn )
     
     wxMenu *pm = new wxMenu ;
     cm->Append ( POPUP_DUMMY , txt("m_plasmid_map") , pm ) ;
+    pm->Append ( PC_SAVE_IMAGE , txt("m_save_image") ) ;
     pm->Append ( PC_COPY_IMAGE , txt("m_copy_image") ) ;
     pm->Append ( MDI_PRINT_IMAGE , txt("m_print_image") ) ;
     
