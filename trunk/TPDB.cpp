@@ -117,7 +117,7 @@ void TPDB::remap ()
            TVectorItem vi ( name , desc , from , to , VIT_MISC ) ;
            vi.setParam ( "SEQUENCE_STYLE" , "0" ) ;
            seqres[seq(chain)].v->items.push_back ( vi ) ;
-           }    
+           }
         else if ( six == "SSBOND" )
            {
            wxString name = "SS" ;
@@ -135,6 +135,20 @@ void TPDB::remap ()
            TVectorItem vi2 ( name , desc , from , to , VIT_MISC ) ;
            vi2.setParam ( "SEQUENCE_STYLE" , "5" ) ;
            seqres[seq(chain)].v->items.push_back ( vi2 ) ;
+           }
+        else if ( six == "SLTBRG" || six == "LINK" )
+           {
+           wxString name = txt("PDB_"+six);
+           wxString desc = vs[a] ;
+           int id1 = atoi ( vs[a].Mid(22,4).c_str() ) ;
+           int id2 = atoi ( vs[a].Mid(52,4).c_str() ) ;
+           wxString name2 = vs[a].Mid(47,3) ;
+           char chain1 = vs[a].GetChar ( 21 ) ;
+           char chain2 = vs[a].GetChar ( 51 ) ;
+           name += wxString::Format ( " %s%d %c" , name2.c_str() , id2 , chain2 ) ;
+           TVectorItem vi1 ( name , desc , id1 , id1 , VIT_MISC ) ;
+           vi1.setParam ( "SEQUENCE_STYLE" , "5" ) ;
+           seqres[seq(chain1)].v->items.push_back ( vi1 ) ;
            }    
         }
         
