@@ -61,6 +61,18 @@ class TGridProtein : public TGridBasic
     DECLARE_EVENT_TABLE()
     } ;
 
+class TGridData : public TGridBasic
+    {
+    public :
+    TGridData ( wxWindow *parent , int id = -1 ) ;
+
+    virtual void init () ;
+    virtual void recalc () ;
+    virtual void OnSelectCell(wxGridEvent& event) ;
+    
+    DECLARE_EVENT_TABLE()
+    } ;
+
 
 
 class TCalculator : public ChildBase
@@ -81,6 +93,7 @@ class TCalculator : public ChildBase
     TGridLigation *ligGrid ;
     TGridDNA *ligDNA ;
     TGridProtein *prot ;
+    TGridData *data ;
 
     DECLARE_EVENT_TABLE()
     } ;

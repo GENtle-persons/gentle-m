@@ -43,6 +43,9 @@ class EIpanel : public wxPanel
     virtual void OnBnext ( wxCommandEvent& WXUNUSED(event) ) ;
     virtual void OnC1 ( wxCommandEvent& WXUNUSED(event) ) ;
     virtual void OnLboxDClick ( wxCommandEvent& WXUNUSED(event) ) ;
+    
+    virtual wxString val ( TiXmlNode *n ) ; // Safe value
+    virtual wxString valFC ( TiXmlNode *n ) ; // Value of FirstChild
 	
 	int mode ;
 	wxPanel *up ;

@@ -124,26 +124,22 @@ void TiXmlString ::operator = (const TiXmlString & copy)
 }
 
 
-//// Checks if a TiXmlString contains only whitespace (same rules as isspace)
-//bool TiXmlString::isblank () const
-//{
-//    char * lookup;
-//    for (lookup = cstring; * lookup; lookup++)
-//        if (! isspace (* lookup))
-//            return false;
-//    return true;
-//}
-
 // append a const char * to an existing TiXmlString
 void TiXmlString::append( const char* str, int len )
 {
     char * new_string;
     unsigned new_alloc, new_size, size_suffix;
+	
+	// don't use strlen - it can overrun the len passed in!
+	const char* p = str;
+	size_suffix = 0;
 
-    size_suffix = strlen (str);
-    if (len < (int) size_suffix)
-        size_suffix = len;
-    if (! size_suffix)
+	while ( *p && size_suffix < (unsigned)len )
+	{
+		++p;
+		++size_suffix;
+	}
+    if ( !size_suffix)
         return;
 
     new_size = length () + size_suffix + 1;

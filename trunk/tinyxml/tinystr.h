@@ -30,7 +30,9 @@ distribution.
 #ifndef TIXML_STRING_INCLUDED
 #define TIXML_STRING_INCLUDED
 
-#pragma warning( disable : 4514 )
+#ifdef _MSC_VER
+#pragma warning( disable : 4786 )	// Debugger truncating names.
+#endif
 
 #include <assert.h>
 
@@ -114,11 +116,6 @@ class TiXmlString
         return length () ? false : true;
     }
 
-    // Checks if a TiXmlString contains only whitespace (same rules as isspace)
-	// Not actually used in tinyxml. Conflicts with a C macro, "isblank",
-	// which is a problem. Commenting out. -lee
-//    bool isblank () const;
-
     // single char extraction
     const char& at (unsigned index) const
     {
@@ -197,13 +194,22 @@ class TiXmlString
         append (suffix . c_str ());
     }
 
-    // append for a single char. This could be improved a lot if needed
+    // append for a single char.
     void append (char single)
     {
-        char smallstr [2];
-        smallstr [0] = single;
-        smallstr [1] = 0;
-        append (smallstr);
+        if ( cstring && current_length < (allocated-1) )
+		{
+			cstring[ current_length ] = single;
+			++current_length;
+			cstring[ current_length ] = 0;
+		}
+		else
+		{
+			char smallstr [2];
+			smallstr [0] = single;
+			smallstr [1] = 0;
+			append (smallstr);
+		}
     }
 
 } ;

@@ -251,6 +251,20 @@ void EIpanel::init_ncbi()
     t1->SetSelection ( -1 , -1 ) ;
 	}
 	
+wxString EIpanel::valFC ( TiXmlNode *n )
+	{
+	if ( !n ) return "" ;
+	if ( !n->FirstChild() ) return "" ;
+	return val ( n->FirstChild() ) ;
+	}
+     
+wxString EIpanel::val ( TiXmlNode *n )
+	{
+	if ( !n ) return "" ;
+	if ( !n->Value() ) return "" ;
+	return wxString ( n->Value() ) ;
+	}    
+	
 void EIpanel::process_ncbi()
 	{
 	myExternal ex ;
@@ -307,14 +321,14 @@ void EIpanel::process_ncbi()
 		{
 		TiXmlNode *y ;
 		y = x->FirstChild ( "Count" ) ;
-		if ( y ) wxString(y->FirstChild()->Value()).ToLong ( &res_count ) ;
+		if ( y ) valFC(y).ToLong ( &res_count ) ;
 		y = x->FirstChild ( "ResStart" ) ;
-		if ( y ) wxString(y->FirstChild()->Value()).ToLong ( &res_start ) ;
+		if ( y ) valFC(y).ToLong ( &res_start ) ;
 		x = x->FirstChild ( "IdList" ) ;
 		if ( x )
 			{
    			for ( x = x->FirstChild ( "Id" ) ; x ; x = x->NextSibling ( "Id" ) )
-   				ids.Add ( x->FirstChild()->Value() ) ;
+   				ids.Add ( valFC ( x ) ) ;
 			}    
 		}    
 //	wxMessageBox ( wxString::Format ( "%d of %d" , res_count , res_start ) ) ;
@@ -342,7 +356,7 @@ void EIpanel::process_ncbi()
 	query += "&retmax=" + wxString::Format ( "%d" , RETMAX ) ;
 
 	res = ex.getText ( query ) ; // The XML is now in res
-    wxTheClipboard->Open(); wxTheClipboard->SetData( new wxTextDataObject(res) );    wxTheClipboard->Close();
+//    wxTheClipboard->Open(); wxTheClipboard->SetData( new wxTextDataObject(res) );    wxTheClipboard->Close();
 
     if ( res != "" ) doc.Parse ( res.c_str() ) ;
 	x = doc.FirstChild ( "eSummaryResult" ) ;
@@ -358,15 +372,15 @@ void EIpanel::process_ncbi()
 		{
 		TiXmlNode *y = x ;
 		wxString title , authors , source , pubdate , id , caption ;
-		id = x->FirstChild ( "Id" ) -> FirstChild() -> Value() ;
+		id = valFC ( x->FirstChild ( "Id" ) ) ;
 		for ( y = x->FirstChild ( "Item" ) ; y ; y = y->NextSibling ( "Item" ) )
 			{
    			wxString at = y->ToElement()->Attribute ( "Name" ) ;
    			at = at.Upper() ;
-   			if ( at == "TITLE" ) title = y->FirstChild()->Value() ;
-   			else if ( at == "PUBDATE" ) pubdate = y->FirstChild()->Value() ;
-   			else if ( at == "SOURCE" ) source = y->FirstChild()->Value() ;
-   			else if ( at == "CAPTION" ) caption = y->FirstChild()->Value() ;
+   			if ( at == "TITLE" ) title = valFC ( y ) ;
+   			else if ( at == "PUBDATE" ) pubdate = valFC ( y ) ;
+   			else if ( at == "SOURCE" ) source = valFC ( y ) ;
+   			else if ( at == "CAPTION" ) caption = valFC ( y ) ;
    			else if ( at == "AUTHORLIST" ) 
    				{
 			    TiXmlNode *z ;
@@ -374,7 +388,7 @@ void EIpanel::process_ncbi()
 			    	{
    	    			if ( wxString(z->ToElement()->Attribute("Name")).Upper() != "AUTHOR" ) continue ;
    	    			if ( !authors.IsEmpty() ) authors += ", " ;
-   	    			authors += z->FirstChild()->Value() ;
+   	    			authors += valFC ( z ) ;
 			    	}    
    				}    
 			}    
@@ -441,12 +455,12 @@ void EIpanel::execute_ncbi()
     	query += "&id=" + ids ;
     	if ( database == "nucleotide" ) query += "&retmode=xml&rettype=gb" ;
       	else query += "&retmode=text&rettype=gp" ;
-//      	else query += "&retmode=xml&rettype=gp" ; // One day, when the GenBankXML routine can read amino acids...
     
     	myExternal ex ;
     	wxString res = ex.getText ( query ) ;
-//    wxTheClipboard->Open(); wxTheClipboard->SetData( new wxTextDataObject(res) );    wxTheClipboard->Close();    	
-    
+    	
+    wxTheClipboard->Open(); wxTheClipboard->SetData( new wxTextDataObject(res) );    wxTheClipboard->Close();    	
+
     	if ( database == "nucleotide" )
     		{
             TXMLfile xml ;
