@@ -75,7 +75,11 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , char *title ,
     initDatabases () ;
     initCopynMove () ;
 
-    if ( doLoad || doSave ) f_twopanes->SetValue ( 0 ) ;
+    if ( doLoad || doSave )
+        {
+        int tp = myapp()->frame->LS->getOption ( "TWOPANES" , 0 ) ;
+        f_twopanes->SetValue ( tp ) ;
+        }
     else  f_twopanes->SetValue ( 1 ) ;
     updateTwoLists () ;
     
@@ -766,8 +770,12 @@ void TManageDatabaseDialog::pmOnActivate ( wxListEvent &ev , wxListCtrl *side )
 void TManageDatabaseDialog::pmOpenFiles ( vector <string> &_names , string _db )
     {
     if ( _names.size() == 0 ) return ;
+    if ( doLoad || doSave )
+        myapp()->frame->LS->setOption ( "TWOPANES" , f_twopanes->GetValue() ) ;
+    myapp()->frame->Freeze () ;
     for ( int a = 0 ; a < _names.size() ; a++ )
        do_load ( _names[a] , _db ) ;
+    myapp()->frame->Thaw () ;
 
     SetReturnCode ( wxID_OK ) ;
     EndModal ( true ) ;
