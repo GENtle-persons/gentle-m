@@ -216,8 +216,8 @@ void SequenceCanvas::OnCharHook(wxKeyEvent& event)
         SeqDNA *dna = (SeqDNA*) seq[b] ;
         int from = _from ;
         string *the_sequence ;
-        if ( dna->whatsthis() == "AA" ) the_sequence = &getAA()->vec->sequence ;
-        else if ( dna->whatsthis() == "DNA" ) the_sequence = &dna->vec->sequence ;
+        if ( dna->whatsthis() == "AA" ) the_sequence = &getAA()->vec->getSequence() ;
+        else if ( dna->whatsthis() == "DNA" ) the_sequence = &dna->vec->getSequence() ;
         else the_sequence = &dna->s ;
         TVector *v = NULL ;
         if ( p ) v = dna->vec ;
@@ -463,7 +463,7 @@ void SequenceCanvas::OnCut ( wxCommandEvent &ev )
            if ( seq[a]->whatsthis() == "AA" )
               {
               SeqAA *x = (SeqAA*) seq[a] ;
-              x->initFromString ( getAA()->vec->sequence ) ;
+              x->initFromString ( getAA()->vec->getSequence() ) ;
               }
 //           else seq[a]->initFromTVector ( getAA()->vec ) ;
            }
@@ -529,7 +529,7 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
     TMarkMem mm ( this ) ; // Temporary mark for printing
 
     string name = "GENtle" ;
-    if ( p && p->vec ) name = p->vec->name ;
+    if ( p && p->vec ) name = p->vec->getName() ;
 
     print_dc = pd.GetPrintDC () ;
     print_dc->StartDoc ( name.c_str() ) ;
@@ -629,8 +629,8 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
        string s ;
        
        // Title
-       if ( p ) s = p->vec->name ;
-       else if ( getAA() ) s = getAA()->vec->name ;
+       if ( p ) s = p->vec->getName() ;
+       else if ( getAA() ) s = getAA()->vec->getName() ;
        else if ( child ) s = child->getName() ;
        print_dc->SetTextBackground ( *wxWHITE ) ;
        print_dc->SetFont (* bigfont ) ;
@@ -869,7 +869,7 @@ void SequenceCanvas::mark ( string id , int from , int to , int value )
        }
 
     int seqlen ;
-    if ( p && p->vec ) seqlen = p->vec->sequence.length() ;
+    if ( p && p->vec ) seqlen = p->vec->getSequenceLength() ;
     else seqlen = seq[b]->s.length() ;
 
 
@@ -1441,7 +1441,7 @@ void SequenceCanvas::OnCopyResultDNA ( wxCommandEvent &ev )
     TVector *nv = getPCR_DNA_vector() ;
     if ( !nv ) return ;
     
-    string s = nv->sequence ;
+    string s = nv->getSequence() ;
     delete nv ;
 
     if (wxTheClipboard->Open())
@@ -1487,7 +1487,7 @@ TVector *SequenceCanvas::getPCR_DNA_vector()
     n.setFromVector ( *getPD()->w ) ;
     char blank = '-' ;
     string s , t ;
-    s = n.sequence ;
+    s = n.getSequence() ;
     t = s ;
     if ( getPD()->w->isCircular() )
         {
@@ -1502,7 +1502,8 @@ TVector *SequenceCanvas::getPCR_DNA_vector()
     for ( b = a ; b < t.length() && t[b] != ' ' ; b++ ) ;
     b-- ;
 
-    for ( c = 0 ; c < n.sequence.length() ; c++ ) n.sequence[c] = n.sequence[c]==' '?'-':n.sequence[c] ;
+    for ( c = 0 ; c < n.getSequenceLength() ; c++ )
+        n.alterSequence ( c , n.getSequenceChar(c)==' '?'-':n.getSequenceChar(c) ) ;
     return n.newFromMark ( a+1 , b+1 ) ;
     }
     
@@ -1527,7 +1528,7 @@ void SequenceCanvas::OnNewFromResultAA ( wxCommandEvent &ev )
     if ( s == "" ) return ;
 
     wxString seq = s.c_str() ;
-    wxString n = getPD()->vec->name + " (" ;
+    wxString n = getPD()->vec->getName() + " (" ;
     n += txt ( "t_pcr_result" ) ;
     n += ")" ;
     myapp()->frame->newAminoAcids ( seq , n ) ;
@@ -1700,7 +1701,7 @@ void SequenceCanvas::startEdit ( string id )
     myass ( !getEditMode() , "SequenceCanvas::startEdit" ) ;
     setEditMode ( true ) ;
     findID(id)->s += " " ;
-    if ( child ) child->vec->sequence += " " ;
+    if ( child ) child->vec->getSequence() += " " ;
     arrange () ;
     if ( _from == -1 ) mark ( id , 1 , 1 , 2 ) ;
     else mark ( id , _from , _from , 2 ) ;
@@ -1714,7 +1715,7 @@ void SequenceCanvas::stopEdit ()
     myass ( lastmarked >= 0 , "SequenceCanvas::stopEdit2" ) ;
     myass ( seq[lastmarked] , "SequenceCanvas::stopEdit3" ) ;
     string id = seq[lastmarked]->whatsthis() ;
-    if ( child ) child->vec->sequence.erase ( child->vec->sequence.length()-1 , 1 ) ;
+    if ( child ) child->vec->getSequence().erase ( child->vec->getSequenceLength()-1 , 1 ) ;
     seq[lastmarked]->s.erase ( seq[lastmarked]->s.length()-1 , 1 ) ;
     arrange () ;
     mark ( id , -1 , -1 ) ;

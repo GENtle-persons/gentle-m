@@ -139,7 +139,6 @@ class TVector
     
     virtual bool basematch ( char b1 , char b2 ) ; // b1 in IUPAC, b2 in SIUPAC
     virtual void setIUPAC ( char b , char *s , char *pac = NULL ) ;
-    virtual string transformSequence ( bool inverse , bool reverse ) ;
     virtual char getNucleotide ( int pos , bool complement = false ) ;
     virtual void setNucleotide ( int pos , char t ) ;
     virtual char getComplement ( char c ) ;
@@ -152,9 +151,7 @@ class TVector
     virtual void sortRestrictionSites () ;
     virtual void doAction () ;
     virtual void doRemove ( int from , int to , bool update = true ) ;
-    virtual int countCuts ( string enzyme ) ;
-    
-    virtual string getSubstring ( int mf , int mt ) ;
+    virtual int countCuts ( wxString enzyme ) ;
     virtual void insert_char ( char x , int pos , bool overwrite = false ) ;
     
     virtual float getAAmw ( char aa ) ;
@@ -193,10 +190,27 @@ class TVector
     virtual TAAProp getAAprop ( char a ) ;
     virtual int find_item ( wxString s ) ;
     virtual bool isEnzymeHidden ( wxString s ) ;
+
+    virtual string getSubstring ( int mf , int mt ) ;
+    virtual string transformSequence ( bool inverse , bool reverse ) ;
+    virtual string getSequence () ;
+    virtual char getSequenceChar ( int x ) ;
+    virtual void setSequence ( string ns ) ;
+    virtual void setSequence ( wxString ns ) ;
+    virtual void addToSequence ( string x ) ;
+    virtual void addToSequence ( char x ) ;
+    virtual void alterSequence ( int pos , char c ) ;
+    virtual int getSequenceLength() ;
+    virtual void eraseSequence ( int from , int len ) ;
+    
+    virtual wxString getDescription () ;
+    virtual void setDescription ( wxString s ) ;
+    virtual void addDescription ( wxString s ) ;
+    virtual wxString getName () ;
+    virtual void setName ( wxString s ) ;
+    virtual void addName ( wxString s ) ;
     
     // Variables
-    string sequence ;
-    wxString name , desc ;
     int type ;
     bool recalcvisual ;
     vector <TVectorItem> items ;
@@ -210,8 +224,10 @@ class TVector
     private :
     virtual string invert ( string s ) ;
     virtual string vary_base ( char b ) ;
-    
+
+    string sequence ;    
     string _lu , _ll , _ru , _rl ; // Sticky ends
+    wxString name , desc ;
     bool circular , changed ;
     ChildBase *window ;
     int turned , action_value ;

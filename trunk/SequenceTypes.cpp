@@ -59,7 +59,7 @@ void SeqPrimer::show ( wxDC& dc )
               dc.SetTextBackground ( *wxBLACK ) ;
               dc.SetTextForeground ( *wxWHITE ) ;
               }
-           if ( s[b-1] == vec->sequence[b-1] ) dc.SetTextForeground ( *wxBLUE ) ;
+           if ( s[b-1] == vec->getSequence()[b-1] ) dc.SetTextForeground ( *wxBLUE ) ;
            else dc.SetTextForeground ( *wxRED ) ;
            if ( can->isPrinting() && !can->getPrintToColor() )
               {
@@ -106,7 +106,7 @@ void SeqPrimer::show ( wxDC& dc )
 void SeqPrimer::initFromTVector ( TVector *v )
     {
     vec = v ;
-    s = vec->sequence ;
+    s = vec->getSequence() ;
     for ( int a = 0 ; a < s.length() ; a++ ) s[a] = ' ' ;
     takesMouseActions = true ;
     showNumbers = false ;
@@ -118,15 +118,15 @@ void SeqPrimer::addPrimer ( TPrimer *p )
     TVector d ;
     myass ( p , "SeqPrimer::addPrimer_0" ) ;
     myass ( vec , "SeqPrimer::addPrimer_1" ) ;
-    d.sequence = s ;
+    d.setSequence ( s )  ;
     d.setCircular(vec->isCircular()) ;
     for ( a = p->from ; a <= p->to ; a++ )
         {
         myass ( a-p->from >= 0 , "SeqPrimer::addPrimer_2" ) ;
-        myass ( a-p->from < p->sequence.length() , "SeqPrimer::addPrimer_3" ) ;
+        myass ( a-p->from < p->getSequenceLength() , "SeqPrimer::addPrimer_3" ) ;
         d.setNucleotide ( a-1 , p->sequence[a-p->from] ) ;
         }
-    s = d.sequence ;
+    s = d.getSequence () ;
     }
     
 //************************************************ SeqNum
@@ -275,6 +275,6 @@ void SeqDivider::show ( wxDC& dc )
 void SeqDivider::initFromTVector ( TVector *v )
     {
 //    vec = v ;
-    s = v->sequence ;
+    s = v->getSequence() ;
     }
 

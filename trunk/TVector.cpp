@@ -40,10 +40,10 @@ TVector *TVector::newFromMark ( int from , int to )
     
     if ( to > sequence.length() )
             nv->turn ( sequence.length() - from + 1 ) ;
-    if ( nv->desc != "" ) nv->desc += "\n" ;
-    sprintf ( t , txt("t_cropped_fragment") , nv->name.c_str() , from , to ) ;
-    nv->desc += t ;
-    nv->name += "*" ;
+    if ( nv->getDescription() != "" ) nv->addDescription ( "\n" ) ;
+    sprintf ( t , txt("t_cropped_fragment") , nv->getName().c_str() , from , to ) ;
+    nv->addDescription ( t ) ;
+    nv->addName ( "*" ) ;
     nv->setChanged () ;
     nv->setCircular ( false ) ;
     nv->recalculateCuts() ;
@@ -563,25 +563,19 @@ void TVector::doRestriction ()
         nv->reduceToFragment ( cl[a] , cl[a+1] ) ;
         nv->recalculateCuts () ;
         nv->recalcvisual = true ;
-        if ( nv->desc != "" ) nv->desc += "\n" ;
+        if ( nv->getDescription() != "" ) nv->addDescription ( "\n" ) ;
         char tx[1000] ;
-        sprintf ( tx , txt("res_desc") , nv->name.c_str() , cl[a].e->name.c_str() , t1 ) ;
-        nv->desc += tx ;
+        sprintf ( tx , txt("res_desc") , nv->getName().c_str() , cl[a].e->name.c_str() , t1 ) ;
+        nv->addDescription ( tx ) ;
         if ( cl[a].e->name == cl[a+1].e->name )
            {
-           nv->desc += "." ;
-           nv->name += " (" ;
-           nv->name += cl[a].e->name.c_str() ;
-           nv->name += ")" ;
+           nv->addDescription ( "." ) ;
+           nv->addName ( " (" + cl[a].e->name + ")" ) ;
            }
         else
            {
            sprintf ( tx , txt("res_desc2") , cl[a+1].e->name.c_str() , t2 ) ;
-           nv->name += " (" ;
-           nv->name += cl[a].e->name.c_str() ;
-           nv->name += "/" ;
-           nv->name += cl[a+1].e->name.c_str() ;
-           nv->name += ")" ;
+           nv->addName ( " (" + cl[a].e->name + "/" + cl[a+1].e->name + ")" ) ;
            }
         nv->cocktail.Clear() ; // Cleaning up cocktail
         if ( nv->sequence.length() >= action_value ) // "No fragments smaller than XX base pairs"
@@ -804,11 +798,11 @@ void TVector::turn ( int off )
     turned += off ;
     }
     
-int TVector::countCuts ( string enzyme )
+int TVector::countCuts ( wxString enzyme )
     {
     int a , count ;
     for ( a = count = 0 ; a < rc.size() ; a++ )
-        if ( rc[a].e->name == enzyme.c_str() )
+        if ( rc[a].e->name == enzyme )
            count++ ;
     return count ;
     }
@@ -1062,6 +1056,83 @@ void TVector::sortRestrictionSites ()
            }
         }
     }
+    
+wxString TVector::getDescription ()
+    {
+    return desc ;
+    }    
+    
+void TVector::setDescription ( wxString s )
+    {
+    desc = s ;
+    }
+    
+void TVector::addDescription ( wxString s )
+    {
+    desc += s ;
+    }
+    
+wxString TVector::getName ()
+    {
+    return name ;
+    }    
+    
+void TVector::setName ( wxString s )
+    {
+    name = s ;
+    }
+    
+void TVector::addName ( wxString s )
+    {
+    name += s ;
+    }
+    
+string TVector::getSequence ()
+    {
+    return sequence.c_str() ;
+    }
+    
+char TVector::getSequenceChar ( int x )
+    {
+    return sequence[x] ;
+    }    
+        
+void TVector::setSequence ( string ns )
+    {
+    sequence = ns.c_str() ;
+    }    
+    
+void TVector::setSequence ( wxString ns )
+    {
+    sequence = ns.c_str() ;
+    }    
+    
+void TVector::addToSequence ( string x )
+    {
+    sequence += x.c_str() ;
+    }    
+    
+void TVector::addToSequence ( char x )
+    {
+    sequence += x ;
+    }    
+    
+void TVector::alterSequence ( int pos , char c )
+    {
+    sequence[pos] = c ;
+//    sequence.SetChar ( pos , c ) ;
+    }    
+    
+int TVector::getSequenceLength()
+    {
+    return sequence.length() ;
+    }    
+    
+void TVector::eraseSequence ( int from , int len )
+    {
+    sequence.erase ( from , len ) ;
+    }    
+
 
     
 // ***************************************************************************************
@@ -1357,12 +1428,12 @@ void TVectorItem::translate ( TVector *v , SeqAA *aa )
       
       b += direction * 3 ;
       if ( !v->isCircular() && b+direction*3 < 0 ) rf = 0 ;
-      if ( !v->isCircular() && b+direction*3 > v->sequence.length() ) rf = 0 ;
-      if ( v->isCircular() && ( b < 0 || b >= v->sequence.length() ) )
+      if ( !v->isCircular() && b+direction*3 > v->getSequenceLength() ) rf = 0 ;
+      if ( v->isCircular() && ( b < 0 || b >= v->getSequenceLength() ) )
          {
          if ( roundOnce ) rf = 0 ;
-         else if ( b < 0 ) b += v->sequence.length() ;
-         else b -= v->sequence.length() ;
+         else if ( b < 0 ) b += v->getSequenceLength() ;
+         else b -= v->getSequenceLength() ;
          roundOnce = true ;
          }
       if ( /*can->getPD() &&*/ c == '?' ) c = '|' ;

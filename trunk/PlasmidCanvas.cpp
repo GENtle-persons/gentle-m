@@ -88,11 +88,7 @@ void PlasmidCanvas::Refresh ()
     
 bool PlasmidCanvas::isEnzymeVisible ( wxString s )
     {
-    int a ;
-    for ( a = 0 ; a < p->vec->hiddenEnzymes.GetCount() ; a++ )
-       if ( p->vec->hiddenEnzymes[a] == s )
-          return false ;
-    return true ;
+    return !p->vec->isEnzymeHidden ( s ) ;
     }
     
 bool PlasmidCanvas::intersects ( wxRect &a , wxRect &b )
@@ -108,7 +104,7 @@ bool PlasmidCanvas::intersects ( wxRect &a , wxRect &b )
 void PlasmidCanvas::OnDraw(wxDC& pdc)
 {
     if ( !p || !p->vec ) return ;
-    if ( p->vec->sequence.length() == 0 ) return ;
+    if ( p->vec->getSequenceLength() == 0 ) return ;
     if ( printing )
         {
         hasBeenPainted = true ;
@@ -315,7 +311,6 @@ void PlasmidCanvas::invokeVectorEditor ( string what , int num , bool forceUpdat
     p->vec->undo.start ( txt("u_vec_edit") ) ;
     TVectorEditor ve ( this , txt("t_vector_editor") , p->vec ) ;
     bool changed = p->vec->isChanged() ;
-//    string on = p->vec->name ;
     p->vec->setChanged ( false ) ;
     
     if ( what == "item" )
@@ -350,7 +345,7 @@ void PlasmidCanvas::print ()
     if ( r != wxID_OK ) return ;
 
     wxDC *pdc = pd.GetPrintDC () ;
-    pdc->StartDoc ( p->vec->name.c_str() ) ;
+    pdc->StartDoc ( p->vec->getName().c_str() ) ;
     pdc->StartPage () ;
     printing = true ;
     OnDraw ( *pdc ) ;

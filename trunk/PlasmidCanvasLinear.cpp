@@ -16,7 +16,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
     // Initial calculations    
     char t[100] ;
     int a , b ;
-    int d , l = p->vec->sequence.length() - 1 ;
+    int d , l = p->vec->getSequenceLength() - 1 ;
     for ( d = 1 ; d*10 < l ; d *= 10 ) ;
     
     int lineOff = w / 20 ;
@@ -207,7 +207,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
 void PlasmidCanvas::drawLinearORFs ( wxDC &dc )
     {
     int a ;
-    int l = p->vec->sequence.length() ;
+    int l = p->vec->getSequenceLength() ;
     for ( a = 0 ; a < p->vec->worf.size() ; a++ )
         {
         float mf = p->vec->worf[a].from ;
@@ -418,7 +418,7 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
     if ( pt.x >= lineOff && pt.x <= w - lineOff )
         {
         bp = pt.x - lineOff ;
-        bp = bp * ( p->vec->sequence.length() - 1 ) / ( w - lineOff * 2 ) + 1 ;
+        bp = bp * ( p->vec->getSequenceLength() - 1 ) / ( w - lineOff * 2 ) + 1 ;
         }
 
     if ( lastbp != -1 )
@@ -434,7 +434,7 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
         s = p->vec->rc[rs].e->name ;
         wxLogStatus(txt("rsite_status_bar") , s.c_str() ) ;
         char ttt[1000] ;
-        sprintf ( ttt , txt("tt_rs") , s.c_str() , p->vec->countCuts ( s ) ) ;
+        sprintf ( ttt , txt("tt_rs") , s.c_str() , p->vec->countCuts ( s.c_str() ) ) ;
         SetMyToolTip ( ttt , TT_RS ) ;
         if ( event.LeftDown() )
            {

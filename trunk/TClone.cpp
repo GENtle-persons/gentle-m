@@ -70,9 +70,9 @@ void TClone::remap ( TVector *v )
     int a , b ;
     v->recalcvisual = true ;
     
-    v->sequence = sequence.c_str() ;
-    v->name = name ;
-    v->desc = description ;
+    v->setSequence ( sequence ) ;
+    v->setName ( name ) ;
+    v->setDescription ( description ) ;
     v->setCircular ( !isLinear ) ;
 
     // Genes'n'stuff

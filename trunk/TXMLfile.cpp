@@ -80,8 +80,8 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
     TiXmlElement *e ;
     wxString s ;
     TiXmlHandle h ( base ) ;
-    v->name = t ( h.FirstChild("GBSeq_locus").FirstChild().Text() ) .c_str() ;
-    v->sequence = t ( h.FirstChild("GBSeq_sequence").FirstChild().Text() ) . MakeUpper() ;
+    v->setName ( t ( h.FirstChild("GBSeq_locus").FirstChild().Text() ) ) ;
+    v->setSequence ( t ( h.FirstChild("GBSeq_sequence").FirstChild().Text() ) . MakeUpper() ) ;
     
     e = h.FirstChild("GBSeq_topology").Element() ;
     if ( e ) // topology

@@ -389,7 +389,7 @@ void PlasmidCanvas::OnPrimerForward ( wxCommandEvent &ev )
     {
     vector <TPrimer> pl ;
     int end = getMarkFrom() + 30 ;
-    if ( end >= p->vec->sequence.length() ) end = p->vec->sequence.length() ;
+    if ( end >= p->vec->getSequenceLength() ) end = p->vec->getSequenceLength() ;
     pl.push_back ( TPrimer ( getMarkFrom() , end , true ) ) ;
     RunPrimerEditor ( pl ) ;
     }
@@ -407,7 +407,7 @@ void PlasmidCanvas::OnPrimerBoth ( wxCommandEvent &ev )
     {
     vector <TPrimer> pl ;
     int end = getMarkFrom() + 30 ;
-    if ( end >= p->vec->sequence.length() ) end = p->vec->sequence.length() ;
+    if ( end >= p->vec->getSequenceLength() ) end = p->vec->getSequenceLength() ;
     pl.push_back ( TPrimer ( getMarkFrom() , end , true ) ) ;
     int start = getMarkTo() - 30 ;
     if ( start < 1 ) start = 1 ;
@@ -420,13 +420,13 @@ void PlasmidCanvas::OnPrimerMutation ( wxCommandEvent &ev )
     vector <TPrimer> pl ;
     int start = getMarkFrom() - 10 ;
     int end = getMarkFrom() + 20 ;
-    if ( end >= p->vec->sequence.length() ) end = p->vec->sequence.length() ;
+    if ( end >= p->vec->getSequenceLength() ) end = p->vec->getSequenceLength() ;
     if ( start < 1 ) start = 1 ;
     pl.push_back ( TPrimer ( start , end , true ) ) ;
     
     start = getMarkFrom() - 20 ;
     end = getMarkTo() + 10 ;
-    if ( end >= p->vec->sequence.length() ) end = p->vec->sequence.length() ;
+    if ( end >= p->vec->getSequenceLength() ) end = p->vec->getSequenceLength() ;
     if ( start < 1 ) start = 1 ;    
     pl.push_back ( TPrimer ( start , getMarkTo() , false ) ) ;
     
@@ -439,12 +439,12 @@ string PlasmidCanvas::getDNAorAA ( int from , int to , int dir , bool dna )
     {
     int a ;
     string r , s ;
-    if ( to < from ) to += p->vec->sequence.length() ;
+    if ( to < from ) to += p->vec->getSequenceLength() ;
     
     for ( a = from ; a <= to ; a++ )
         {
         int b = a ;
-        if ( a >= p->vec->sequence.length() ) b -= p->vec->sequence.length() ;
+        if ( a >= p->vec->getSequenceLength() ) b -= p->vec->getSequenceLength() ;
         r += p->vec->getNucleotide ( b ) ;
         }
     
@@ -498,8 +498,8 @@ void PlasmidCanvas::orfAsNewItem ( wxCommandEvent &ev )
     int from = p->vec->worf[context_last_orf].from+1 ;
     int to = p->vec->worf[context_last_orf].to+1 ;
 
-    if ( to > p->vec->sequence.length() )
-        to -= p->vec->sequence.length() ;
+    if ( to > p->vec->getSequenceLength() )
+        to -= p->vec->getSequenceLength() ;
 
     TVectorItem nvi ;
     sprintf ( t , txt("t_new_item_title") , from , to ) ;
@@ -522,9 +522,9 @@ void PlasmidCanvas::orfAsNewDNA ( wxCommandEvent &ev )
     TVector *nv = new TVector ;
     int from = p->vec->worf[context_last_orf].from ;
     int to = p->vec->worf[context_last_orf].to ;
-    nv->sequence = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf ) ;
-    nv->name = p->vec->name + " (" + wxString ( txt ( "t_orf_extracted" ) ) + ")" ;
-    nv->desc = p->vec->desc + "\n" + wxString ( txt ( "t_orf_extracted" ) ) ;
+    nv->setSequence ( getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf ) ) ;
+    nv->setName ( p->vec->getName() + " (" + wxString ( txt ( "t_orf_extracted" ) ) + ")" ) ;
+    nv->setDescription ( p->vec->getDescription() + "\n" + wxString ( txt ( "t_orf_extracted" ) ) ) ;
     nv->setChanged () ;
     nv->setCircular ( false ) ;
     nv->recalculateCuts() ;
@@ -537,7 +537,7 @@ void PlasmidCanvas::orfAsNewAA ( wxCommandEvent &ev )
     int from = p->vec->worf[context_last_orf].from ;
     int to = p->vec->worf[context_last_orf].to ;
     string seq = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf , false ) ;
-    wxString n = p->vec->name + " (" ;
+    wxString n = p->vec->getName() + " (" ;
     n += txt ( "t_orf_extracted" ) ;
     n += ")" ;
 //    myapp()->frame->newAminoAcids ( seq , n ) ;
@@ -621,7 +621,7 @@ void PlasmidCanvas::itemAsNewAA ( wxCommandEvent &ev )
     to += dir * ( rf - 1 ) - 1 ;
 //    string s = getDNAorAA ( from , to , dir , false ) ;
     wxString n = p->vec->items[context_last_item].name ;
-    n += " (" + p->vec->name + ")" ;
+    n += " (" + p->vec->getName() + ")" ;
     TVector *nv = p->vec->getAAvector ( from+1 , to+1 , dir ) ;
     TAminoAcids *aaa = myapp()->frame->newAminoAcids ( nv , n ) ;
     aaa->vec->setChanged() ;
@@ -646,11 +646,11 @@ void PlasmidCanvas::itemAsNewSequence ( wxCommandEvent &ev )
         from += dir * ( rf - 1 ) - 1 ;
         to += dir * ( rf - 1 ) - 1 ;
         wxString n = p->vec->items[context_last_item].name ;
-        n += " (" + p->vec->name + ")" ;
+        n += " (" + p->vec->getName() + ")" ;
     
         TVector *nv = new TVector ;
-        nv->sequence = getDNAorAA ( from , to , dir , true ) ;
-        nv->name = n ;
+        nv->setSequence ( getDNAorAA ( from , to , dir , true ) ) ;
+        nv->setName ( n ) ;
         nv->setChanged () ;
         nv->setCircular ( false ) ;
         nv->recalculateCuts() ;
@@ -694,7 +694,7 @@ void PlasmidCanvas::OnFillKlenow(wxCommandEvent& event)
     if ( v->getStickyEnd(false,false) != "" )
         for ( a = 0 ; a < r.length() ; a++ )
            r[a] = v->getComplement ( r[a] ) ;
-    v->sequence = l + v->sequence + r ;
+    v->setSequence ( l + v->getSequence() + r ) ;
     for ( a = 0 ; a < v->items.size() ; a++ )
         {
         v->items[a].from += l.length() ;

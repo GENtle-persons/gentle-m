@@ -50,7 +50,7 @@ TAminoAcids::TAminoAcids(wxWindow *parent, const wxString& title)
     {
     vec = new TVector ( this ) ;
     def = "AminoAcids" ;
-    vec->name = title.c_str() ;
+    vec->setName ( title ) ;
     from = -1 ;
     stat = NULL ;
     pc = NULL ;
@@ -196,13 +196,13 @@ void TAminoAcids::initme ()
     
 wxString TAminoAcids::getName ()
     {
-    return vec->name ;
+    return vec->getName() ;
     }
 
 void TAminoAcids::showStat ()
     {
     if ( !curDisplay ) return ;
-    if ( curDisplay == desc ) desc->SetValue ( vec->desc ) ;
+    if ( curDisplay == desc ) desc->SetValue ( vec->getDescription() ) ;
     if ( curDisplay != stat ) return ;
     char t[10000] ;
     int noaa = 0 , piaa = 0 ;
@@ -212,9 +212,9 @@ void TAminoAcids::showStat ()
     int a ;
     float mW = 0 ;
     for ( a = 0 ; a < 256 ; a++ ) num[a] = 0 ;
-    for ( a = 0 ; a < vec->sequence.length() ; a++ )
+    for ( a = 0 ; a < vec->getSequenceLength() ; a++ )
         {
-        unsigned char c = (unsigned char)vec->sequence[a] ;
+        unsigned char c = (unsigned char)vec->getSequence()[a] ;
         if ( c != '|' && c != ' ' ) noaa++ ;
         float ppi = vec->getAApi ( c ) ;
         if ( ppi != 0 )
@@ -251,7 +251,7 @@ void TAminoAcids::showSequence ()
     sc->seq.push_back ( d ) ;
     d->primaryMode = true ;
     d->takesMouseActions = true ;
-    d->initFromString ( vec->sequence ) ;
+    d->initFromString ( vec->getSequence() ) ;
     d->fixOffsets ( vec ) ;
 
     // Plot demo
@@ -289,7 +289,6 @@ void TAminoAcids::invokeVectorEditor ( wxString what , int num , bool forceUpdat
     vec->undo.start ( txt("u_vec_edit") ) ;
     TVectorEditor ve ( this , txt("t_vector_editor") , vec ) ;
     bool changed = vec->isChanged() ;
-//    string on = vec->name ;
     vec->setChanged ( false ) ;
 
     ve.hideEnzym = true ;
@@ -318,7 +317,7 @@ void TAminoAcids::OnEditName(wxCommandEvent& event)
     
 void TAminoAcids::OnMarkAll(wxCommandEvent& event)
     {
-    sc->mark ( "AA" , 1 , vec->sequence.length() ) ;
+    sc->mark ( "AA" , 1 , vec->getSequenceLength() ) ;
     }
     
 void TAminoAcids::OnPrint(wxCommandEvent& event)
@@ -382,10 +381,10 @@ void TAminoAcids::OnAsNewFeature(wxCommandEvent& event)
 void TAminoAcids::OnPhotometer(wxCommandEvent& event)
     {
     TCalculator *c = myapp()->frame->RunCalculator () ;
-    wxString seq = vec->sequence.c_str() ;
+    wxString seq = vec->getSequence().c_str() ;
     float mW = 0 ;
-    for ( int a = 0 ; a < vec->sequence.length() ; a++ )
-        mW += vec->getAAmw ( vec->sequence[a] ) ;
+    for ( int a = 0 ; a < vec->getSequenceLength() ; a++ )
+        mW += vec->getAAmw ( vec->getSequence()[a] ) ;
     c->prot->SetCellValue ( 2 , 1 , wxString::Format("%d", seq.Replace("W","",true)) ) ;
     c->prot->SetCellValue ( 3 , 1 , wxString::Format("%d", seq.Replace("Y","",true)) ) ;
     c->prot->SetCellValue ( 4 , 1 , wxString::Format("%d", seq.Replace("C","",true)) ) ;
@@ -397,7 +396,7 @@ void TAminoAcids::OnBlastAA(wxCommandEvent& event)
     {
     string seq ;
     int a ;
-    if ( sc->_from < 0 ) seq = vec->sequence ;
+    if ( sc->_from < 0 ) seq = vec->getSequence() ;
     else seq = sc->getSelection() ;
     myapp()->frame->blast ( seq.c_str() , "blastp" ) ;
     }
@@ -480,12 +479,12 @@ void TAminoAcids::OnListBox ( wxCommandEvent& event )
         }
     if ( t == txt("desc") )
         {
-        if ( update ) desc->SetValue ( vec->desc )  ;
+        if ( update ) desc->SetValue ( vec->getDescription() )  ;
         else
            {
            desc = new TURLtext ( this ,
                             URLTEXT_DUMMY ,
-                            vec->desc ,
+                            vec->getDescription() ,
                             wxDefaultPosition,
                             wxSize ( 250 , 90 ) ,
                             wxTE_MULTILINE | wxTE_READONLY ) ;

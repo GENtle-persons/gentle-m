@@ -257,7 +257,7 @@ void TAlignment::recalcAlignments ()
         for ( a = 0 ; a < lines.size() ; a++ )
            {
            out << ">" << wxString::Format ( "%d" , a ) << endl ;
-           out << lines[a].v->sequence << endl ;
+           out << lines[a].v->getSequence() << endl ;
            }
         out.close () ;
         
@@ -440,7 +440,7 @@ void TAlignment::myInsert ( int line , int pos , char what )
     if ( lines[line].hasFeatures() )
         {
         lines[line].getFeatures()->insert_char ( '-' , pos , false ) ;
-        lines[line].s = lines[line].getFeatures()->sequence.c_str() ;
+        lines[line].s = lines[line].getFeatures()->getSequence().c_str() ;
         }
     else lines[line].s.insert ( pos-1 , wxString ( what ) ) ;
     }
@@ -450,7 +450,7 @@ void TAlignment::myDelete ( int line , int pos )
     if ( lines[line].hasFeatures() )
         {
         lines[line].getFeatures()->doRemoveNucleotide ( pos - 1 ) ;
-        lines[line].s = lines[line].getFeatures()->sequence.c_str() ;
+        lines[line].s = lines[line].getFeatures()->getSequence().c_str() ;
         }
     else lines[line].s.erase ( pos-1 , 1 ) ;
     }
@@ -542,7 +542,7 @@ void TAlignment::updateSequence ()
             if ( aaa ) delete aaa ;
             aaa = new SeqAA ( NULL ) ;
             sc->seq[g] = aaa ;
-            aaa->initFromString ( lines[id].getFeatures()->sequence ) ;
+            aaa->initFromString ( lines[id].getFeatures()->getSequence() ) ;
             aaa->fixOffsets ( lines[id].getFeatures() ) ;
             aaa->can = sc ;
             sc->arrange () ;
@@ -1034,7 +1034,7 @@ void TAlignment::OnFileSave ( wxCommandEvent &ev )
             {
             string p = lines[a].v->getParams().c_str() ;
             lines[a].v->setParams ( "" ) ;
-            d += lines[a].v->name + "\n" ;
+            d += lines[a].v->getName() + "\n" ;
             d += lines[a].v->getDatabase() + "\n" ;
             d += lines[a].s + "\n" ;
             wxArrayString ex ;
@@ -1048,9 +1048,9 @@ void TAlignment::OnFileSave ( wxCommandEvent &ev )
             }
         }
     if ( !vec ) vec = new TVector ; // Wasting memory
-    vec->name = txt("t_alignment") ;
-    vec->desc = d ;
-    vec->sequence = s ;
+    vec->setName ( txt("t_alignment") ) ;
+    vec->setDescription ( d ) ;
+    vec->setSequence ( s ) ;
     vec->type = TYPE_ALIGNMENT ;
     TManageDatabaseDialog dbd ( this , txt("t_store") , ACTION_MODE_SAVE , vec ) ;
     dbd.ShowModal () ;
@@ -1060,8 +1060,8 @@ void TAlignment::fromVector ( TVector *nv )
     {
     TGenBank gb ;
     vec = nv ;
-    gb.paste ( vec->sequence.c_str() ) ;
-    wxString vdesc = vec->desc ;
+    gb.paste ( vec->getSequence().c_str() ) ;
+    wxString vdesc = vec->getDescription() ;
     wxArrayString vs = explode ( "\n" , vdesc ) ;
     int nol = atoi ( vs[0].c_str() ) ; // Number of lines
     int n ;
@@ -1086,7 +1086,7 @@ void TAlignment::fromVector ( TVector *nv )
            gb.vi = gb.vi_l[n] ;
            TVector *vv = new TVector ;
            gb.remap ( vv ) ;
-           short type = TUReadSeq::getSeqType ( vv->sequence.c_str() ) ;
+           short type = TUReadSeq::getSeqType ( vv->getSequence().c_str() ) ;
            if ( type == TYPE_AMINO_ACIDS )
               {
               TAminoAcids *p = myapp()->frame->newAminoAcids ( vv , name ) ;
@@ -1098,7 +1098,7 @@ void TAlignment::fromVector ( TVector *nv )
            if ( db != "" )
               {
               if ( broken != "" ) broken += ", " ;
-              broken += vv->name ;
+              broken += vv->getName() ;
               }
            line.v = vv ;
            }
@@ -1144,7 +1144,7 @@ TAlignLine::~TAlignLine ()
     
 void TAlignLine::ResetSequence ()
     {
-    if ( v ) s = v->sequence.c_str() ;
+    if ( v ) s = v->getSequence().c_str() ;
     else s = "" ;
     }
     

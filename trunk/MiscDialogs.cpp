@@ -505,7 +505,7 @@ void TEnzymeDialog::initme ( TRestrictionEnzyme *_e , bool ro )
     new wxStaticText ( this , -1 , "Cuts at" , wxPoint ( bo , bo+lh*4+lh/3 ) ) ;
     new wxStaticText ( this , -1 , "Overlap" , wxPoint ( bo , bo+lh*5+lh/3 ) ) ;
     
-    eb_name = new wxTextCtrl ( this , -1 , e->name.c_str() , 
+    eb_name = new wxTextCtrl ( this , -1 , e->name , 
                 wxPoint ( x1 , bo ) , wxSize ( w-bo-x1 , lh-bo ) ) ;
     eb_seq  = new wxTextCtrl ( this , -1 , e->sequence.c_str() , 
                 wxPoint ( x1 , bo+lh ) , wxSize ( w-bo-x1 , lh-bo ) ) ;
@@ -720,7 +720,7 @@ void FindSequenceDialog::OnSearch ( wxCommandEvent &ev )
     if ( sub == "" ) return ;
 
     // Preparing sequence    
-    string s = c->vec->sequence ;
+    string s = c->vec->getSequence() ;
     if ( c->vec->isCircular() )
         {
         string t ;

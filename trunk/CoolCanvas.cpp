@@ -27,7 +27,7 @@ void CoolCanvas::OnDrawCircular(wxDC& dc)
     if ( printing ) mwh -= mwh / 5 ;
     int w2 = w * 4 / 10 ;
     int h2 = h * 3 / 10 ;
-    string s = p->vec->sequence ;
+    string s = p->vec->getSequence() ;
     
     int a ;
     for ( a = 0 ; a < s.length() ; a++ )

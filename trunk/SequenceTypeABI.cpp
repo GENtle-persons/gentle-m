@@ -117,7 +117,7 @@ void SeqABI::setInvCompl ( bool x )
         string s2 ;
         for ( int a = 0 ; a < s.length() ; a++ ) s2 = v2.getComplement( s[a] ) + s2 ;
         s = s2 ;
-        can->child->vec->sequence = s ;
+        can->child->vec->setSequence ( s ) ;
         }
     
     inv_compl = x ;
@@ -223,7 +223,7 @@ void SeqABI::initFromFile ( wxString filename )
     if ( !at ) at = new ABItype ;
     at->parse ( filename ) ;
     s = at->getSequence() ;
-    vec->sequence = s ;
+    vec->setSequence ( s ) ;
     showNumbers = true ;
     fontColor.Set ( 0 , 0 , 0 ) ;
     }

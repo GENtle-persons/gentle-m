@@ -229,7 +229,7 @@ void SeqFeature::initFromTVector ( TVector *v )
     // item.to as height
     int a , b ;
     vec = v ;
-    s = vec->sequence ;
+    s = vec->getSequence() ;
     maxlayers = 0 ;
     for ( a = 0 ; a < s.length() ; a++ ) s[a] = ' ' ;
     while ( vr.size() ) vr.pop_back () ;
@@ -283,7 +283,7 @@ bool SeqFeature::collide ( int a , int b )
     myass ( b < vr.size() , "SeqFeature::collide" ) ;
     if ( vr[a].y != vr[b].y ) return false ;
     int i ;
-    for ( i = 0 ; i < vec->sequence.length() ; i++ )
+    for ( i = 0 ; i < vec->getSequenceLength() ; i++ )
        if ( doesHit ( a , i+1 ) && doesHit ( b , i+1 ) )
           return true ;
     return false ;

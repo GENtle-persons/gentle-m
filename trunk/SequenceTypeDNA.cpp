@@ -194,7 +194,7 @@ wxColor SeqDNA::getBaseColor ( char b )
 void SeqDNA::initFromTVector ( TVector *v )
     {
     vec = v ;
-    s = vec->sequence ;
+    s = vec->getSequence() ;
     takesMouseActions = true ;
     showNumbers = true ;
     fontColor.Set ( 0 , 0 , 0 ) ;

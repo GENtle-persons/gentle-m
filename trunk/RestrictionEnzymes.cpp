@@ -46,7 +46,7 @@ wxString TRestrictionEnzyme::getEndLowerRight ()
 wxString TRestrictionEnzyme::invertSequence ()
     {
     TVector v ;
-    v.sequence = sequence.c_str() ;
+    v.setSequence ( sequence ) ;
     return v.transformSequence ( true , false ) . c_str() ;
     }
     
