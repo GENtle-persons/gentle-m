@@ -53,6 +53,7 @@ public:
     virtual void OnTextImport(wxCommandEvent& event ) ;
     virtual void OnQuit(wxCommandEvent& event);
     virtual void OnClose(wxCloseEvent& event);
+    virtual void OnSashDrag(wxSashEvent& event);
     
     virtual MyChild* newFromVector ( TVector *nv , int type = TYPE_VECTOR ) ;
     virtual TAminoAcids *newAminoAcids ( string aa , string title = "" ) ;
@@ -76,6 +77,12 @@ public:
     string project_name , project_desc , project_db ;
     vector <wxString> lastCocktail ;
     vector <ChildBase*> children ;
+
+    private :
+    wxSashLayoutWindow* m_topWindow;
+    wxSashLayoutWindow* m_leftWindow1;
+    wxSashLayoutWindow* m_leftWindow2;
+    wxSashLayoutWindow* m_bottomWindow;
     
     DECLARE_EVENT_TABLE()
 };

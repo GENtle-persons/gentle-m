@@ -282,6 +282,11 @@ enum {
     AL_MATRIX,
     TVE_ICHOICE,
     
+    FRAME_SASH_TOP,
+    FRAME_SASH_1,
+    FRAME_SASH_2,
+    FRAME_SASH_BOTTOM,
+    
     } ;
 
 #endif

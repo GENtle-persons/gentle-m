@@ -7,10 +7,10 @@ BEGIN_EVENT_TABLE(TMainTree, wxTreeCtrl)
 END_EVENT_TABLE()
 
 
-TMainTree::TMainTree ( MyFrame *parent , int i )
+TMainTree::TMainTree ( wxSashLayoutWindow *parent , int i )
     :wxTreeCtrl ( parent , i )
     {
-    p = (MyFrame*) parent ;
+    p = (MyFrame*) myapp()->frame ;
     lastChild = NULL ;
     }
     
