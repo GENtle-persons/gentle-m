@@ -1,7 +1,7 @@
 #include "MyFrame.h"
-#include <wx/textfile.h>
-#include <wx/dir.h>
-#include <wx/html/helpctrl.h>
+#ifdef __WXMSW__
+#include "SendHTTP.h"
+#endif
 
 // ---------------------------------------------------------------------------
 // MyFrame
@@ -201,7 +201,7 @@ void MyFrame::initme ()
 
     // Set the DEBUGGING option in your local test database,
     // so you won't be bothered with updates anymore :-)
-    if ( LS->getOption ( "DEBUGGING" , "" ) == "1" ) checkUpdate = false ;
+//    if ( LS->getOption ( "DEBUGGING" , "" ) == "1" ) checkUpdate = false ;
 
 #ifdef __WXMSW__
     if ( checkUpdate )
@@ -350,6 +350,7 @@ void MyFrame::initme ()
     
     SetSizeHints ( 600 , 400 ) ;
     Show(TRUE);
+    SetStatusText ( txt("t_update_warning") , 1 ) ;
     }
     
 void MyFrame::OnClose(wxCloseEvent& event)
@@ -1327,17 +1328,44 @@ wxString MyFrame::check4update ()
     delete dm ;*/
     
 //    miniFrame->SetTitle ( txt("t_checking4update") ) ;
+  
+  bool error = true ;
+  wxString text ;
+  
+#ifdef __WXMSW__
+	HTTPRequest req;
+	int rtn = SendHTTP("http://gentle.magnusmanske.de/currentversion.txt",NULL,NULL,0,&req);
+	if ( !rtn )
+		{
+		text = req.message ;
+		error = false ;
+		}
+
+#endif
     
+    
+/*    wxURL url ( "http://gentle-m.sf.net/currentversion.txt" );    
+    wxInputStream *in_stream;
+    in_stream = url.GetInputStream();
+    wxString it , td ;
+    while ( !in_stream->Eof() ) it += in_stream->GetC() ;
+    if ( in_stream ) delete in_stream ;*/
+
+/*
+    wxHTTP http ;
+    wxInputStream *in = http.GetInputStream ( "http://gentle.magnusmanske.de/currentversion.txt" );    
     wxString it ;
-    wxFileSystem fs ;
-    wxFSFile *f = fs.OpenFile ( "http://gentle.magnusmanske.de/currentversion.txt" ) ;
-    if ( f )
-        {
-        wxInputStream *in = f->GetStream () ;
+    if ( wxPROTO_NOERR == http.GetError() )
+       {
         while ( !in->Eof() ) it += in->GetC() ;
         delete in ;
-        
         wxString td = it ;
+	    */
+	    
+    if ( !error )
+    	{
+	    wxString it = text ;
+	    wxString td = text ;
         td = td.BeforeFirst ( '\n' ) ;
         td = td.BeforeFirst ( '\r' ) ;
         td = td.BeforeFirst ( '\m' ) ;
@@ -1348,7 +1376,7 @@ wxString MyFrame::check4update ()
            lu = td ;
            LS->setOption ( "LAST_UPDATE" , lu ) ;
            }
-        
+           
         if ( td > lu )
            {
            wxString msg = it.AfterFirst ( '\n' ) ;
@@ -1360,17 +1388,47 @@ wxString MyFrame::check4update ()
            return td ;
            }
         }
+    else
+    	{
+//	    delete in ;
+	    wxMessageBox ( "Error" ) ;
+    	}    
     return "" ;
     }
     
 void MyFrame::update2version ( wxString ver )
     {
     wxString do_run ;
+	HTTPRequest req;
+    wxProgressDialog pd ( "Updating..." , "Downloading installer..." , 2 , NULL , wxPD_ALL ) ;
+	int rtn = SendHTTP("http://gentle.magnusmanske.de/GENtleSetup.exe",NULL,NULL,0,&req);
+	if ( !rtn )
+	   {
+	   pd.Update ( 2 , "" ) ;
+//       unsigned char *uc = new unsigned char [ uv.size() ] ;
+//       for ( int u = 0 ; u < uv.size() ; u++ ) uc[u] = uv[u] ; // __WXMSW__
+       do_run = myapp()->homedir + "\\GENtleSetup.exe" ;
+       wxFile out ( do_run , wxFile::write ) ;
+       out.Write ( req.message , req.messageLength ) ;
+       out.Close () ;
+//       do_run = "\"" + do_run + "\" /D=\"" ;
+       do_run = "\"" + do_run + "\" /S /D=\"" ;
+       do_run += myapp()->homedir ;
+       do_run += "\"" ;
+       }
+    else
+       {
+       wxMessageBox ( "Couldn't read setup file" ) ;
+       return ;
+       }
+    
+        
+/*  // Deactivating wx update system while wxHTTP bug persists
+    wxString do_run ;
     wxFileSystem fs ;
     wxFSFile *f = fs.OpenFile ( "http://gentle.magnusmanske.de/GENtleSetup.exe" ) ;
     if ( f )
        {
-//       miniFrame->SetTitle ( txt("t_downloading_new_version") ) ;
        unsigned char tmp[10000] ;
        wxInputStream *in = f->GetStream () ;
        vector <unsigned char> uv ;
@@ -1388,27 +1446,23 @@ void MyFrame::update2version ( wxString ver )
        out.Write ( uc , uv.size() ) ;
        out.Close () ;
        delete uc ;
-       do_run = "\"" + do_run + "\" /D=\"" ;
-//       do_run = "\"" + do_run + "\" /S /D=\"" ;
+//       do_run = "\"" + do_run + "\" /D=\"" ;
+       do_run = "\"" + do_run + "\" /S /D=\"" ;
        do_run += myapp()->homedir ;
        do_run += "\"" ;
-//       sd.Close () ;
        }
     else
        {
        wxMessageBox ( "Couldn't read setup file" ) ;
        return ;
        }
-       
+*/       
     if ( do_run.IsEmpty() ) return ;    
     
     LS->setOption ( "LAST_UPDATE" , ver ) ;
+	dying = true ;
     if ( 0 == wxExecute ( do_run , wxEXEC_ASYNC ) ) return ; // 0 means the process couldn't start :-(
     wxExit() ; // Hard exit
-/*    SetFocus () ;
-    showSplashScreen = false ;
-    dying = true ;
-    Close() ;*/
     }
     
 void MyFrame::OnSashDrag(wxSashEvent& event)
