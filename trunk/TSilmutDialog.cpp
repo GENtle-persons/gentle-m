@@ -3,8 +3,8 @@
 BEGIN_EVENT_TABLE(TSilmutDialog, wxDialog )
     EVT_SPINCTRL(PD_SILMUT_MAX_XHG,TSilmutDialog::OnSpin)
     EVT_SPINCTRL(PD_SILMUT_MAX_CUT,TSilmutDialog::OnSpin)
-    EVT_TEXT(PD_SILMUT_MAX_XHG,TSilmutDialog::OnSpin)
-    EVT_TEXT(PD_SILMUT_MAX_CUT,TSilmutDialog::OnSpin)
+    EVT_TEXT(PD_SILMUT_MAX_XHG,TSilmutDialog::OnSpin2)
+    EVT_TEXT(PD_SILMUT_MAX_CUT,TSilmutDialog::OnSpin2)
     EVT_CHOICE(PD_SILMUT_EGR,TSilmutDialog::OnChoose)
     EVT_BUTTON(PD_SILMUT_OK,TSilmutDialog::OnOK)
     EVT_BUTTON(PD_SILMUT_CANCEL,TSilmutDialog::OnCancel)
@@ -152,6 +152,12 @@ void TSilmutDialog::OnCancel ( wxCommandEvent &ev )
     }
     
 void TSilmutDialog::OnSpin ( wxSpinEvent &event )
+    {
+ wxCommandEvent event2 ;
+ OnSpin2 ( event2 ) ; 
+    }
+
+void TSilmutDialog::OnSpin2 ( wxCommandEvent &event )
     {
     if ( !running ) return ;
     calc () ;

@@ -29,6 +29,7 @@ class TSilmutDialog : public wxDialog
     virtual void calc () ;
     virtual void showit () ;
     virtual void OnSpin ( wxSpinEvent &event ) ;
+    virtual void OnSpin2 ( wxCommandEvent &event ) ;
     virtual void OnChoose ( wxCommandEvent &event ) ;
     virtual void OnOK ( wxCommandEvent &ev ) ;
     virtual void OnCancel ( wxCommandEvent &ev ) ;

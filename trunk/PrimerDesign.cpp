@@ -804,7 +804,7 @@ void TPrimerDesign::OnToggleFeatures ( wxCommandEvent &ev )
 #endif
     }
     
-void TPrimerDesign::OnSpin(wxCommandEvent& event)
+void TPrimerDesign::OnSpin(wxSpinEvent& event)
     {
     showSequence() ;
     }

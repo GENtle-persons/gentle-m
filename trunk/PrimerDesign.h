@@ -46,7 +46,7 @@ class TPrimerDesign : public ChildBase
     virtual void OnEditPrimer ( wxCommandEvent &ev ) ;
     virtual void OnDeletePrimer ( wxCommandEvent &ev ) ;
     virtual void OnToggleFeatures ( wxCommandEvent &ev ) ;
-    virtual void OnSpin(wxCommandEvent& event);
+    virtual void OnSpin(wxSpinEvent& event);
     
     virtual void OnAA_all(wxCommandEvent& event);
     virtual void OnAA_three(wxCommandEvent& event);

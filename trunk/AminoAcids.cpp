@@ -404,7 +404,7 @@ void TAminoAcids::updateUndoMenu ()
         mi->SetText ( lm ) ;
 	canUndo = true ;
         }
-#ifdef __WXMSW __
+#ifdef __WXMSW__
     GetToolBar()->EnableTool ( MDI_UNDO , canUndo ) ;
 #else
     // myapp()->frame->GetToolBar()->EnableTool ( MDI_UNDO , canUndo ) ;

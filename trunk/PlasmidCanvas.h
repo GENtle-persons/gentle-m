@@ -142,7 +142,7 @@ class PlasmidCanvas : public wxScrolledWindow
     DECLARE_EVENT_TABLE()
     };
     
-#include "CoolCanvas.h"
+//#include "CoolCanvas.h"
 
 
 #endif
