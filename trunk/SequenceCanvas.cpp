@@ -1279,8 +1279,8 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
             }
         }
 
-    xpos = pt.x;
-    ypos = pt.y;
+//    xpos = pt.x;
+//    ypos = pt.y;
 }
 
 SeqBasic* SequenceCanvas::findMouseTarget ( wxPoint pt , int &pos )

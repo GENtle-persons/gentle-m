@@ -3,7 +3,7 @@
 
 // This will turn the myass error logging on/off
 // Place a comment in front of the following line when compiling releases
-//#define MYDEBUG
+#define MYDEBUG
 
 #include "wx/wxprec.h"
 
@@ -43,7 +43,9 @@
 
 using namespace std ;
 
-//#include <wx/splash.h>
+#define TIXML_USE_STL
+#include "tinyxml/tinyxml.h"
+
 #include <wx/wx.h>
 #include <wx/toolbar.h>
 #include <wx/treectrl.h>
@@ -125,28 +127,21 @@ class TUndo ;
 
 
 // ---------------------------------------------------------------------------
-// global variables
+// global functions
 // ---------------------------------------------------------------------------
 
-
-// For drawing lines in a canvas
-static long xpos = -1;
-static long ypos = -1;
-
-
-vector <string> explode ( string sep , string s ) ;
-char* txt ( string item ) ;
-void init_txt ( string lang ) ;
-MyApp *myapp () ;
 #ifdef MYDEBUG
 void myass ( bool b , wxString msg = "" ) ;
 #else
 #define myass(a)
 #define myass(a,b)
 #endif
-string toupper ( string s ) ;
 
-//IMPLEMENT_APP(MainApp)
+vector <string> explode ( string sep , string s ) ;
+char* txt ( string item ) ;
+void init_txt ( string lang ) ;
+MyApp *myapp () ;
+string toupper ( string s ) ;
 
 #endif
 // _MAIN_H__
