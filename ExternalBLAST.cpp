@@ -41,7 +41,7 @@ void EIpanel::init_blast()
     #error "This requires thread support!"
 #endif // wxUSE_THREADS
 
-#define BLAST_TEST_MODE
+//#define BLAST_TEST_MODE
 
 class blastThread : public wxThread
 {
@@ -56,7 +56,7 @@ public :
 	    url += "&QUERY=" + seq ;
 	    url += "&DATABASE=nr" ;
 	    url += "&PROGRAM=blastp" ;
-	    url += "&HITLIST_SIZE=10" ;
+	    url += "&HITLIST_SIZE=100" ;
 	    
 	    res = ex.getText ( url ) ;
 	    
@@ -104,7 +104,7 @@ public :
 		else wait = 0 ; // Done!
 	    } while ( wait ) ;
 	    p->blast_res = res ;
-//	    wxFile out ( fn , wxFile::write ) ; out.Write ( res ) ; out.Close() ;
+	    wxFile out ( fn , wxFile::write ) ; out.Write ( res ) ; out.Close() ; // For testing
 #else
 	    // Dirty hack
 	    wxMutexGuiEnter() ;
@@ -170,7 +170,7 @@ private :
 
 void EIpanel::process_blast() // This starts the thread
 {
-    if ( blast_thread ) // If thread is running
+    if ( !blast_res.IsEmpty() || blast_thread ) // If thread is running, or results are there...
     {
 	process_blast2() ;
 	return ;
@@ -197,14 +197,14 @@ void EIpanel::process_blast() // This starts the thread
 
 void EIpanel::process_blast2() // This is called upon termination of the thread
 {
-//    bool initial = false ;
+    bool initial = false ;
     if ( blast_thread )
     {
 	blast_thread = NULL ;
 	b1->Enable() ;
-//	initial = true ;
-//	res_count = 0 ;
-//	res_start = 0 ;
+	initial = true ;
+	res_count = 0 ;
+	res_start = 0 ;
     }
 
     TiXmlDocument blast_doc ;
@@ -221,7 +221,6 @@ void EIpanel::process_blast2() // This is called upon termination of the thread
     w /= 8 ;
     
     wxString blast_version = valFC ( x->FirstChild ( "BlastOutput_version" ) ) ;
-    showMessage ( wxString::Format ( txt("t_blast_results_by" ) , blast_version.c_str() ) ) ;
 
     x = x->FirstChild ( "BlastOutput_iterations" ) ;
     x = x->FirstChild ( "Iteration" ) ;
@@ -230,18 +229,19 @@ void EIpanel::process_blast2() // This is called upon termination of the thread
     int a = 0 ;
     for ( x = x->FirstChild ( "Hit" ) ; x ; x = x->NextSibling ( "Hit" ) , a++ )
     {
-/*
-	if ( !initial && a < res_start )
+
+	if ( !initial )
 	{
-	    continue ;
+	    if ( a < res_start ) continue ;
+	    if ( a >= res_start + RETMAX ) break ;
 	}
+
 	if ( initial )
 	{
 	    res_count++ ;
-	    if ( initial && a > RETMAX ) continue ;
+	    if ( a >= RETMAX ) continue ;
 	}
-	if ( !initial && a > res_start + RETMAX ) continue ;
-*/
+
 	wxString html ;
 	wxString name = valFC ( x->FirstChild ( "Hit_def" ) ) ;
 	wxString id = valFC ( x->FirstChild ( "Hit_id" ) ) ;
@@ -266,6 +266,7 @@ void EIpanel::process_blast2() // This is called upon termination of the thread
 	wxString hseq = valFC ( h->FirstChild ( "Hsp_hseq" ) ) ;
 
 	html = "<table width=100%><tr>" ;
+	html += "<td rowspan=2>" + wxString::Format ( "%d" , a+1 ) + "</td>" ;
 	html += "<td valign=top width=100%>" + name + "</td>" ;
 	html += "<td align=right valign=top>" + evalue + "</td>" ;
 	html += "</tr><tr>" ;
@@ -273,9 +274,16 @@ void EIpanel::process_blast2() // This is called upon termination of the thread
 	html += blast_align ( qseq , mseq , hseq , w ) ;
 	html += "</font></tt></td>" ;
 	html += "</tr></table>" ;
-	hlb->Set ( a++ , html , id ) ;
+	hlb->Set ( a - res_start , html , id ) ;
     }
     hlb->Update () ;
+//    wxMessageBox ( wxString::Format ( "%d" , res_count ) ) ;
+    b_next->Enable ( res_start + RETMAX < res_count ) ;
+    b_last->Enable ( res_start > 0 ) ;
+
+    int max = res_start + RETMAX ;
+    if ( max > res_count ) max = res_count ;
+    showMessage ( wxString::Format ( txt("t_blast_results_by" ) , blast_version.c_str() , res_start+1 , max ) ) ;
 }
 
 wxString EIpanel::blast_align ( wxString qseq , wxString mseq , wxString hseq , int cpl )
