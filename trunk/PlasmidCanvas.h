@@ -29,6 +29,8 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual int findRestrictionSite ( int x , int y ) ;
     virtual wxPoint makeLastRect ( int a , wxDC &dc ) ;
     virtual void arrangeRestrictionSite ( int q , wxDC &dc ) ;
+    virtual void arrangeRestrictionSitesCircular ( wxDC &dc ) ;
+    virtual bool optimizeCircularRestrictionSites ( int a , wxDC &dc ) ;
     virtual int findORFcircular ( float angle , float radius ) ;
     virtual void drawCircularORFs ( wxDC &dc ) ;
     
@@ -122,6 +124,11 @@ class PlasmidCanvas : public wxScrolledWindow
     int context_last_item , context_last_rs , context_last_orf ;
     int lasttooltip ;
     wxToolTip *tt ;
+    
+    private :
+    virtual void push_rc_left ( int a , wxDC &dc ) ;
+    virtual void push_rc_right ( int a , wxDC &dc ) ;
+    virtual void recalc_rc ( int a, wxDC &dc ) ;
 
     DECLARE_EVENT_TABLE()
     };
