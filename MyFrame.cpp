@@ -427,8 +427,10 @@ void MyFrame::OnEnzymeEditor(wxCommandEvent& WXUNUSED(event) )
 
 void MyFrame::OnFileOpen(wxCommandEvent& WXUNUSED(event) )
 {
+	int i = children.GetCount() ;
     TManageDatabaseDialog dbd ( this , txt("t_open") , ACTION_MODE_LOAD ) ;
     dbd.ShowModal () ;
+    if ( i != children.GetCount() ) setActiveChild ( children[children.GetCount()-1] ) ;
 }
 
 void MyFrame::OnTextImport(wxCommandEvent& WXUNUSED(event) )
@@ -1822,6 +1824,7 @@ void TTestSuite::Step()
     if ( ac->cSequence ) x += wxString::Format ( ", EditMode : %d" , ac->cSequence->getEditMode() ) ;
     if ( ac->cSequence ) x += wxString::Format ( ", Overwrite : %d" , ac->cSequence->doOverwrite() ) ;
     if ( ac->cSequence ) x += wxString::Format ( ", Mark %d-%d" , ac->cSequence->markedFrom() , ac->cSequence->markedTo() ) ;
+    x += wxString::Format ( ", r=%d" , r ) ;
     mylog ( "Testsuite:Status" , x ) ;
     
     if ( r < 6 ) pressKey ( ac ) ;

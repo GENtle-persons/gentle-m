@@ -1079,6 +1079,7 @@ void SequenceCanvas::arrange ()
     // Arranging
     for ( a = 0 ; a < seq.GetCount() ; a++ )
         {
+        mylog ( "SequenceCanvas::arrange" , "Trying " + seq[a]->whatsthis() ) ;
         b = seq[a]->arrange ( a ) ;
         if ( b > lowy ) lowy = b ;
         }
