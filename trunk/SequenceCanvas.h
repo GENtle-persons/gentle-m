@@ -112,6 +112,14 @@ class SeqDivider : public SeqBasic
     int itemsperline ;
     } ;
     
+class SeqBlank : public SeqDivider
+    {
+    public :
+    SeqBlank ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; offset = 0 ; }
+    virtual string whatsthis () { return "BLANK" ; }
+    virtual void show ( wxDC& dc ) {} ;
+    } ;
+
 class SeqDNA : public SeqBasic
     {
     public :
@@ -263,18 +271,22 @@ class SeqPlot : public SeqDNA
     virtual int  arrange ( int n ) ;
     virtual void setLines ( int l ) ;
     virtual void useChouFasman () ;
+    virtual void showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph ) ;
         
     private :
     virtual void scanChouFasman ( int x , int y , int t , int min , 
                                     int seek_cnt , int seek_avg , int avg ) ;
     virtual void drawSymbol ( char c , wxDC &dc , int x1 , int y1 , int x2 , int y2 ) ;
     virtual void showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx ) ;
+    virtual void fixMinMax ( float &f ) ;
+    virtual void drawDottedLine ( wxDC &dc , int x1 , int y1 , int x2 , int y2 ) ;
+    virtual void myRect ( wxDC &dc , int x , int y , int w , int h ) ;
     enum { CHOU_FASMAN } type ;
     int lines , l_top, l_bottom ;
     vector <string> d1 , d2 , d3 ;
     vector <TAAProp> prop ;
     bool startOfLine ;
-    float data_max , data_min , data_h ;
+    float data_max , data_min , data_h , data_step ;
     } ;
 
 class SequenceCanvas : public wxScrolledWindow
@@ -373,6 +385,7 @@ class SequenceCanvas : public wxScrolledWindow
     SeqAlign *last_al ;
     int lastclick ;
     wxPen blue_pen ;
+    bool isMiniDisplay ;
 
     DECLARE_EVENT_TABLE()
     };

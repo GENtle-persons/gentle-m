@@ -16,6 +16,7 @@ BEGIN_EVENT_TABLE(TAminoAcids, MyChildBase)
     EVT_MENU(MDI_UNDO, TAminoAcids::Undo)
     EVT_MENU(MDI_REDO, TAminoAcids::Redo)
 
+    EVT_CHOICE(AA_IP, TAminoAcids::OnIP)
     EVT_CHECKBOX(ALIGN_HORIZ, TAminoAcids::OnHorizontal)
     EVT_LISTBOX(AA_LB, TAminoAcids::OnListBox)
     EVT_SET_FOCUS(ChildBase::OnFocus)
@@ -35,8 +36,9 @@ TAminoAcids::TAminoAcids(MyFrame *parent, const wxString& title)
     
 TAminoAcids::~TAminoAcids ()
     {
+    if ( curDisplay ) delete curDisplay ;
     if ( vec ) delete vec ;
-    if ( stat ) delete stat ;
+//    if ( stat ) delete stat ;
     }
 
 
@@ -112,39 +114,29 @@ void TAminoAcids::initme ()
     h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
     v1 = new wxBoxSizer ( wxVERTICAL ) ;
     
-    stat = new wxTextCtrl ( this ,
-                            -1 ,
-                            "" ,
-                            wxDefaultPosition,
-                            wxSize ( 200 , 90 ) ,
-                            wxTE_MULTILINE | wxTE_READONLY ) ;
-
     lb = new wxListBox ( this ,
                             AA_LB ,
                             wxDefaultPosition ,
-                            wxSize ( 100 , 90 ) ) ;                            
+                            wxSize ( 120 , 150 ) ) ;
                             
+    lb->Append ( txt("t_data") ) ;
     lb->Append ( txt("desc") ) ;
     lb->Append ( txt("t_schema") ) ;
-    lb->SetStringSelection ( txt("desc") ) ;
+    lb->Append ( txt("t_chou_fasman") ) ;
 
-    desc = new TURLtext ( this ,
-                            URLTEXT_DUMMY ,
-                            vec->desc.c_str() ,
-                            wxDefaultPosition,
-                            wxSize ( 250 , 90 ) ,
-                            wxTE_MULTILINE | wxTE_READONLY ) ;
+    curDisplay = new wxPanel ( this , -1 ) ;
 
-    curDisplay = desc ;
-    
-    h1->Add ( stat , 0 , 0 , 5 ) ;
-    h1->Add ( lb   , 0 , 0 , 5 ) ;
-    h1->Add ( desc , 1 , 0 , 5 ) ;
+    h1->Add ( lb   , 0 , wxEXPAND , 5 ) ;
+    h1->Add ( curDisplay , 1 , wxEXPAND , 5 ) ;
     v1->Add ( h1 , 0 , wxEXPAND , 5 ) ;
     v1->Add ( sc , 1 , wxEXPAND , 5 ) ;
 
     SetSizer ( v1 ) ;
     v1->Fit ( this ) ;
+    lb->SetStringSelection ( txt("t_data") ) ;
+    
+    wxCommandEvent event ;
+    OnListBox ( event ) ;
         
 #ifdef __WXMSW__                            
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
@@ -166,6 +158,11 @@ void TAminoAcids::initme ()
     toolBar->AddSeparator () ;
     wxCheckBox *mycb = new wxCheckBox ( toolBar , ALIGN_HORIZ , txt("t_horizontal") ) ;
     toolBar->AddControl ( mycb ) ;
+    inlinePlot = new wxChoice ( toolBar , AA_IP ) ;
+    inlinePlot->Append ( txt("t_no_plot") ) ;
+    inlinePlot->Append ( txt("t_chou_fasman") ) ;
+    inlinePlot->SetStringSelection ( txt("t_no_plot") ) ;
+    toolBar->AddControl ( inlinePlot ) ;
     toolBar->Realize() ;
 #endif
 
@@ -183,6 +180,8 @@ string TAminoAcids::getName ()
 
 void TAminoAcids::showStat ()
     {
+    if ( curDisplay == desc ) desc->SetValue ( vec->desc.c_str() ) ;
+    if ( curDisplay != stat ) return ;
     char t[10000] ;
     int noaa = 0 , piaa = 0 ;
     float pI = 0 ;
@@ -210,7 +209,7 @@ void TAminoAcids::showStat ()
     if ( noaa > 0 ) abs = ex / noaa / 100 ;
     sprintf ( t , txt("aa_info") , noaa , mW , pI , ex , abs ) ;
     stat->SetValue ( t ) ;
-    if ( curDisplay == desc ) desc->SetValue ( vec->desc.c_str() ) ;
+    
     }
 
 void TAminoAcids::showSequence ()
@@ -235,11 +234,14 @@ void TAminoAcids::showSequence ()
     d->fixOffsets ( vec ) ;
 
     // Plot demo
-    SeqPlot *seqP = new SeqPlot ( sc ) ;
-    sc->seq.push_back ( seqP ) ;
-    seqP->initFromTVector ( vec ) ;
-    seqP->setLines ( 7 ) ;
-    seqP->useChouFasman() ;
+    if ( inlinePlot->GetStringSelection() == txt("t_chou_fasman") )
+        {
+        SeqPlot *seqP = new SeqPlot ( sc ) ;
+        sc->seq.push_back ( seqP ) ;
+        seqP->initFromTVector ( vec ) ;
+        seqP->setLines ( 1 ) ;
+        seqP->useChouFasman() ;
+        }
     
     seqF->aaa = d ;
         
@@ -434,30 +436,74 @@ void TAminoAcids::OnHorizontal ( wxCommandEvent& event )
     sc->SilentRefresh() ;    
     }
     
+void TAminoAcids::OnIP ( wxCommandEvent& event )
+    {
+    showSequence () ;
+    }
+    
 void TAminoAcids::OnListBox ( wxCommandEvent& event )
     {
     wxString t = lb->GetStringSelection() ;
-    if ( curDisplay ) h1->Remove ( curDisplay ) ;
-    delete curDisplay ;
+    if ( curDisplay )
+        {
+        h1->Remove ( curDisplay ) ;
+        delete curDisplay ;
+        }
     curDisplay = NULL ;
+    desc = NULL ;
+    stat = NULL ;
+    sc2 = NULL ;
     if ( t == txt("desc") )
         {
-    desc = new TURLtext ( this ,
+        desc = new TURLtext ( this ,
                             URLTEXT_DUMMY ,
                             vec->desc.c_str() ,
                             wxDefaultPosition,
                             wxSize ( 250 , 90 ) ,
                             wxTE_MULTILINE | wxTE_READONLY ) ;
-        h1->Add ( desc , 1 , 0 , 5 ) ;
+        h1->Add ( desc , 1 , wxEXPAND , 5 ) ;
         curDisplay = desc ;
+        }
+    else if ( t == txt("t_data") )
+        {
+        stat = new wxTextCtrl ( this ,
+                            -1 ,
+                            "" ,
+                            wxDefaultPosition,
+                            wxSize ( 200 , 90 ) ,
+                            wxTE_MULTILINE | wxTE_READONLY ) ;
+        curDisplay = stat ;
+        h1->Add ( stat , 1 , wxEXPAND , 5 ) ;
+        showStat () ;
         }
     else if ( t == txt("t_schema") )
         {
         pc = new PlasmidCanvas ( this , wxDefaultPosition , wxSize ( 250 , 90 ) ) ;
         pc->p = (MyChild*) this ;
         vec->recalcvisual = true ;
-        h1->Add ( pc , 1 , 0 , 5 ) ;
+        h1->Add ( pc , 1 , wxEXPAND , 5 ) ;
         curDisplay = pc ;        
+        }
+    else if ( t == txt("t_chou_fasman") )
+        {
+        sc2 = new SequenceCanvas(this, wxDefaultPosition, wxSize(250, 90));
+        sc2->blankline = 1 ;
+        sc2->aa = this ;
+        sc2->child = this ;
+        sc2->edit_id = "AA" ;
+        sc2->edit_valid = "ACDEFGHIKLMNPQRSTVWY|" ;
+        h1->Add ( sc2 , 1 , wxEXPAND , 5 ) ;
+        curDisplay = sc2 ;        
+
+        SeqPlot *seqP = new SeqPlot ( sc2 ) ;
+        sc2->seq.push_back ( seqP ) ;
+        seqP->initFromTVector ( vec ) ;
+        seqP->setLines ( 6 ) ;
+        seqP->useChouFasman() ;
+                    
+        sc2->isMiniDisplay = true ;
+        sc2->isHorizontal = true ;
+//        sc2->arrange () ;
         }
     h1->Layout() ;
     }

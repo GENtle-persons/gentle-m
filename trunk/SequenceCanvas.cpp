@@ -74,6 +74,7 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
     lastyoffset = 0 ;
     blocksize = 10 ;
 
+    isMiniDisplay = false ;
     m_dirty = FALSE;
     editMode = false ;
     edit_id = "DNA" ;
@@ -867,7 +868,7 @@ void SequenceCanvas::arrange ()
     
     MyGetViewStart ( &vx , &vy ) ;
     if ( !isHorizontal && lowy != oldlowy )
-       SetScrollbars ( 0 , charheight , vy , lowy/charheight , false ) ;
+       SetScrollbars ( 0 , charheight , vy , (lowy+charheight-1)/charheight , false ) ;
     if ( isHorizontal && lowx != oldlowx )
        SetScrollbars ( charwidth , 0 , lowx/charwidth , lowx/charwidth , false ) ;
     if ( p && p->cPlasmid->mark_from != -1 && !editMode )

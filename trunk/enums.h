@@ -291,6 +291,7 @@ enum {
     URLTEXT_DUMMY,
 
     AA_LB,
+    AA_IP,
     
     } ;
 

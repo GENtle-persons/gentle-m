@@ -37,6 +37,7 @@ class TAminoAcids : public ChildBase
     virtual void OnClose(wxCloseEvent& event) ;
     virtual void OnHorizontal ( wxCommandEvent& event ) ;
     virtual void OnListBox ( wxCommandEvent& event ) ;
+    virtual void OnIP ( wxCommandEvent& event ) ;
     
     virtual void Undo(wxCommandEvent& event);
     virtual void Redo(wxCommandEvent& event);
@@ -55,6 +56,8 @@ class TAminoAcids : public ChildBase
     private :
     wxListBox *lb ;
     wxBoxSizer *h1 , *v1 ;
+    SequenceCanvas *sc2 ;
+    wxChoice *inlinePlot ;
     
     DECLARE_EVENT_TABLE()
     } ;
