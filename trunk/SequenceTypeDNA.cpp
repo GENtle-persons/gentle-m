@@ -382,19 +382,28 @@ void SeqDNA::show_direct ( wxDC& dc )
 
         if ( showNumber )
            {
+              mylog ( "SeqDNA::show_direct" , "A" ) ;
            wxString t ;
            if ( showNumbers )
               {
+              mylog ( "SeqDNA::show_direct" , "B" ) ;
               t = wxString::Format ( "%d" , a + 1 ) ;
-              t.Pad ( endnumberlength - t.length() , '0' , false ) ;
+              int padd = endnumberlength - t.length() ;
+              mylog ( "SeqDNA::show_direct" , wxString::Format ( "C: %d, %d" , endnumberlength , padd ) ) ;
+              if ( padd > 0 && padd < 20 ) t.Pad ( padd , '0' , false ) ;
+              mylog ( "SeqDNA::show_direct" , "D" ) ;
               }    
            else
               {
+              mylog ( "SeqDNA::show_direct" , "B2" ) ;
               if ( isPrimer ) dc.SetTextForeground ( *wxBLUE ) ;
               else dc.SetTextForeground ( *wxBLACK ) ;
+              mylog ( "SeqDNA::show_direct" , "C2" ) ;
               t = alternateName ;
+              mylog ( "SeqDNA::show_direct" , "D2" ) ;
               }    
            dc.DrawText ( t , bo , py ) ;
+              mylog ( "SeqDNA::show_direct" , "E" ) ;
            }    
         }    
 

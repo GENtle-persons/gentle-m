@@ -692,13 +692,14 @@ void MyChild::initPanels ()
         {
         vec->setGenomeMode ( true ) ;
         }    
+//    cSequence->seq.Clear () ;
+	CLEAR_DELETE ( cSequence->seq ) ;
     SeqFeature *seqF ;
     if ( !vec->getGenomeMode() ) seqF = new SeqFeature ( cSequence ) ;
     SeqDNA *seq = new SeqDNA ( cSequence ) ;
     SeqRestriction *seqR = new SeqRestriction ( cSequence ) ;
     SeqAA *seqAA = new SeqAA ( cSequence ) ;
 
-    cSequence->seq.Clear () ;
     if ( !vec->getGenomeMode() ) cSequence->seq.Add ( seqF ) ;
     cSequence->seq.Add ( seqAA ) ;
     cSequence->seq.Add ( seq ) ;
