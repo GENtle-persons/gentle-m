@@ -23,19 +23,19 @@ int TUReadSeq::getSequenceNames ()
     if ( error != 0 ) return 0 ;
     char  *seqlist;   /* list of sequence names, newline separated, 0 terminated */
 
-    seqlist = listSeqs( filename.c_str(), skiplines, format, &numseqs, &error);
-    string s = seqlist ;
+    seqlist = listSeqs( filename, skiplines, format, &numseqs, &error);
+    wxString s = seqlist ;
     free( seqlist);
     seq_names = explode ( "\n" , s ) ;
-    return seq_names.size() ;
+    return seq_names.GetCount() ;
     }
     
 void TUReadSeq::getSequences ()
     {
     if ( error != 0 ) return ;
     short seqIndex ;
-    seqs.clear () ;
-    for ( seqIndex = 1 ; error == 0 && seqIndex <= seq_names.size() ; seqIndex++ )
+    seqs.Clear () ;
+    for ( seqIndex = 1 ; error == 0 && seqIndex <= seq_names.GetCount() ; seqIndex++ )
         {    
         long  seqlen;     /* length of seq */
         char  seqid[256]; /* sequence name */
@@ -48,22 +48,22 @@ void TUReadSeq::getSequences ()
            if ( *c >= 'a' && *c <= 'z' ) *c = *c - 'a' + 'A' ;
            }
         seq_names[seqIndex-1] = seqid ;
-        seqs.push_back ( string ( seq ) ) ;
+        seqs.Add ( seq ) ;
         free(seq);
         }
     }
     
-int TUReadSeq::getSeqType ( string t )
+int TUReadSeq::getSeqType ( wxString t )
     {
-    short i = getseqtype ( t.c_str() , t.length() ) ;
+    short i = getseqtype ( t , t.length() ) ;
     if ( i == kAmino ) return TYPE_AMINO_ACIDS ;
     return TYPE_VECTOR ;
     }
     
 void TUReadSeq::convert ( TGenBank &gb )
     {
-    string s ;
-    for ( int a = 0 ; a < seqs.size() ; a++ )
+    wxString s ;
+    for ( int a = 0 ; a < seqs.GetCount() ; a++ )
         {
         s += "LOCUS       " + seq_names[a] + "\n" ;
         s += "TITLE       " + seq_names[a] + "\n" ;
@@ -71,6 +71,6 @@ void TUReadSeq::convert ( TGenBank &gb )
         s += " " + seqs[a] + "\n" ;
         s += "//\n" ;
         }
-    gb.paste ( s.c_str() ) ;
+    gb.paste ( s ) ;
     }
     

@@ -587,7 +587,7 @@ void MyFrame::importFile ( wxString file , wxString path , int filter )
     if ( filter == 2 || filter == 3 || filter == 4 || filter == -1 )
        {
         TUReadSeq u ( path.c_str() ) ;
-        if ( u.error == 0 && u.seqs.size() > 0 )
+        if ( u.error == 0 && u.seqs.GetCount() > 0 )
            {
            TGenBank gb ;
            u.convert ( gb ) ;
@@ -656,38 +656,13 @@ MyChild *MyFrame::newCLONE ( TClone &clone )
     subframe->Maximize() ;
     }
 
-MyChild *MyFrame::newFASTA ( TFasta &fasta )
-    {
-    MyChild *subframe = new MyChild(getCommonParent(), txt("imported_vector"),
-                                    wxPoint(-1, -1), wxSize(-1, -1),
-                                    wxDEFAULT_FRAME_STYLE);
-
-    // Give it an icon
-#ifdef __WXMSW__
-    subframe->SetIcon(wxIcon("chrt_icn"));
-#else
-    subframe->SetIcon(wxIcon( mondrian_xpm ));
-#endif
-
-    
-    subframe->initme() ;
-    int type = TYPE_VECTOR ;
-    fasta.remap ( subframe->vec ) ;
-    subframe->vec->setWindow ( subframe ) ;
-    subframe->vec->desc += "\n" ;
-    subframe->vec->desc += wxGetUserName().c_str() ;
-    subframe->initPanels() ;
-    mainTree->addChild(subframe,type) ;
-    subframe->Maximize() ;
-    }
-
 void MyFrame::newGB ( TGenBank &gb , wxString title )
     {
     int n ;
     TVector *nv ;
     vector <TVector *> vv ;
     vector <ChildBase*> vc ;
-    vector <string> vs ;
+    wxArrayString vs ;
     bool alignment = false ;
     for ( n = 0 ; n < gb.vs_l.size() ; n++ )
         {
@@ -695,7 +670,7 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
         gb.vi = gb.vi_l[n] ;
         nv = new TVector ;
         gb.remap ( nv ) ;
-        vs.push_back ( nv->sequence ) ;
+        vs.Add ( nv->sequence.c_str() ) ;
         vv.push_back ( nv ) ;
         nv->desc += "\n" ;
         nv->desc += wxGetUserName().c_str() ;
@@ -732,7 +707,7 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
         nv = vv[n] ;
         if ( gb.vs_l.size() == 1 && title != "" && nv->name == "" )
            nv->name = title ;
-        short type = TUReadSeq::getSeqType ( nv->sequence ) ;
+        short type = TUReadSeq::getSeqType ( nv->sequence.c_str() ) ;
         if ( type == TYPE_AMINO_ACIDS )
            vc.push_back ( newAminoAcids ( nv , nv->name ) ) ;
         else
@@ -792,7 +767,7 @@ void MyFrame::InitToolBar(wxToolBar* toolBar)
 {
 }
 
-TAlignment *MyFrame::runAlignment ( vector <string> &vs , vector <ChildBase*> &vc , TVector *nv )
+TAlignment *MyFrame::runAlignment ( wxArrayString &vs , vector <ChildBase*> &vc , TVector *nv )
     {
 //    Thaw () ;
     TAlignment *subframe = new TAlignment ( getCommonParent() , "Alignment" ) ;
@@ -812,7 +787,7 @@ TAlignment *MyFrame::runAlignment ( vector <string> &vs , vector <ChildBase*> &v
         {
         subframe->fromVector ( nv ) ;
         }
-    else if ( vs.size() == 0 )
+    else if ( vs.GetCount() == 0 )
         {
         wxCommandEvent ev ;
         subframe->OnSettings ( ev ) ;
@@ -831,7 +806,7 @@ TAlignment *MyFrame::runAlignment ( vector <string> &vs , vector <ChildBase*> &v
 
 void MyFrame::OnAlignment(wxCommandEvent& event)
     {
-    vector <string> vs ; // Dummy
+    wxArrayString vs ; // Dummy
     vector <ChildBase*> vc ; // Dummy
     runAlignment ( vs , vc ) ;
     }
@@ -982,11 +957,14 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , wxString title )
     setChild ( subframe ) ;
 
     subframe->vec->setFromVector ( *nv ) ;
-    subframe->vec->desc += "\n" ;
-    subframe->vec->desc += wxGetUserName().c_str() ;    
+    
+    wxString seq = subframe->vec->sequence.c_str() ;
+    seq.Replace ( "|" , "" , true ) ;
+    subframe->vec->sequence = seq.c_str() ;
+    
     subframe->vec->setWindow ( subframe ) ;
     subframe->vec->type = TYPE_AMINO_ACIDS ;
-    subframe->vec->name = title.c_str() ;
+    subframe->vec->name = title ;
     subframe->vec->undo.clear() ;
     
     for ( a = 0 ; a < nv->items.size() ; a++ )
@@ -1124,7 +1102,7 @@ void MyFrame::OnImageViewer(wxCommandEvent& event)
     setChild ( subframe ) ;
     }
     
-void MyFrame::OnCalculator(wxCommandEvent& event)
+TCalculator *MyFrame::OnCalculator(wxCommandEvent& event)
     {
     TCalculator *subframe = new TCalculator ( getCommonParent() , txt("t_calculator") ) ;
 
@@ -1143,6 +1121,7 @@ void MyFrame::OnCalculator(wxCommandEvent& event)
     
     mainTree->addChild ( subframe , TYPE_MISC ) ;
     setChild ( subframe ) ;
+    return subframe ;
     }
     
 wxMenu *MyFrame::getFileMenu ( bool _save , bool _exp , bool _print )

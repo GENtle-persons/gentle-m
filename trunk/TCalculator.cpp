@@ -48,6 +48,12 @@ BEGIN_EVENT_TABLE(TGridDNA, wxGrid)
    EVT_GRID_SELECT_CELL(TGridDNA::OnSelectCell)
 END_EVENT_TABLE()
 
+BEGIN_EVENT_TABLE(TGridProtein, wxGrid)
+   EVT_GRID_EDITOR_HIDDEN(TGridProtein::OnCellChanged)
+   EVT_GRID_CELL_CHANGE(TGridProtein::OnCellChanged)
+   EVT_GRID_SELECT_CELL(TGridProtein::OnSelectCell)
+END_EVENT_TABLE()
+
 TCalculator::TCalculator(wxWindow *parent, const wxString& title) 
     : ChildBase(parent, title)
     {
@@ -102,6 +108,10 @@ void TCalculator::initme ()
     nb->AddPage ( ligDNA , txt("t_lig_dna") ) ;
     ligDNA->init () ;
 
+    prot = new TGridProtein ( nb , -1 ) ;
+    nb->AddPage ( prot , txt("t_calc_prot") ) ;
+    prot->init () ;
+
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
 //    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
     v0->Add ( nb , 1 , wxEXPAND , 5 ) ;
@@ -117,7 +127,7 @@ wxString TCalculator::getName ()
     {
     return txt("t_calculator") ;
     }
-
+    
 //------------------------------ TGridLigation
 
 TGridLigation::TGridLigation ( wxWindow *parent , int id ) : TGridBasic ( parent , id ) {}
@@ -290,6 +300,79 @@ void TGridDNA::recalc ()
     SetCellValue ( 5 , 1 , wxString::Format("%0.2f", conc) ) ;
     SetCellValue ( 6 , 1 , wxString::Format("%0.2f", pure) ) ;
     }
+
+//------------------------------ TGridProtein
+
+TGridProtein::TGridProtein ( wxWindow *parent , int id ) : TGridBasic ( parent , id ) {}
+
+void TGridProtein::OnSelectCell(wxGridEvent& event)
+    {
+    int x = event.GetCol() ;
+    int y = event.GetRow() ;
+    if ( GetBatchCount() > 0 ) event.Skip() ;
+    else if ( x != 1 || y > 7 ) event.Veto() ;
+    else event.Skip() ;
+    }
+    
+void TGridProtein::init ()
+    {
+    BeginBatch() ;
+    CreateGrid ( 10 , 3 ) ;
+    EnableGridLines ( false ) ;
+    SetGridCursor ( 0 , 1 ) ;
+    DisableDragGridSize() ;
+    DisableDragRowSize() ;
+    DisableDragColSize() ;
+    
+    cleanup () ;
+        
+    gridSetEntry ( 0 , 0 , txt("t_calc_prot_1") , "0" , txt("t_calc_nm") ) ;
+    gridSetEntry ( 1 , 0 , txt("t_calc_prot_2") , "0" , txt("t_calc_nm") ) ;
+    gridSetEntry ( 2 , 0 , txt("t_calc_prot_3") , "0" ) ;
+    gridSetEntry ( 3 , 0 , txt("t_calc_prot_4") , "0" ) ;
+    gridSetEntry ( 4 , 0 , txt("t_calc_prot_5") , "0" ) ;
+    gridSetEntry ( 5 , 0 , txt("t_calc_prot_6") , "0" , txt("t_calc_g_mol") ) ;
+    gridSetEntry ( 6 , 0 , txt("t_calc_prot_7") , "1" , txt("t_calc_cm") ) ;
+    
+    SetCellValue ( 8 , 0 , txt("t_calc_prot_8") ) ;
+    SetCellValue ( 9 , 0 , txt("t_calc_prot_9") ) ;
+    
+    gridSetValue (  8 , 1 , "0" , txt("t_calc_prot_10") ) ;
+    gridSetValue (  9 , 1 , "0" , txt("t_calc_mg_ml") ) ;
+    
+    SetCellTextColour ( 8 , 1 , *wxRED ) ;
+    SetCellTextColour ( 9 , 1 , *wxRED ) ;
+        
+    AutoSizeColumns () ;
+    SetColSize ( 1 , 60 ) ;
+    EndBatch () ;
+    
+    recalc () ;
+    }
+    
+void TGridProtein::recalc ()
+    {
+    double e250 , e280 , trp , tyr , cys , mw , d ;
+    GetCellValue(0,1).ToDouble ( &e250 ) ;
+    GetCellValue(1,1).ToDouble ( &e280 ) ;
+    GetCellValue(2,1).ToDouble ( &trp ) ;
+    GetCellValue(3,1).ToDouble ( &tyr ) ;
+    GetCellValue(4,1).ToDouble ( &cys ) ;
+    GetCellValue(5,1).ToDouble ( &mw ) ;
+    GetCellValue(6,1).ToDouble ( &d ) ;
+    
+    double a , c , e , r ;
+    r = ( e280 != 0 ) ? e280 / e250 : 0 ;
+    
+    e = 5500 * trp + 1490 * tyr + 125 * cys ;    
+    a = ( mw != 0 ) ? e / mw : 0 ;
+    c = a * d ;
+    c = ( c != 0 ) ? e280 / c : 0 ;
+    
+    SetCellValue ( 8 , 1 , wxString::Format("%0.2f", r) ) ;
+    SetCellValue ( 9 , 1 , wxString::Format("%0.2f", c) ) ;
+    }
+
 
 // ----
 

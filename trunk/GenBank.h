@@ -66,17 +66,4 @@ class TGenBank
     bool isValidSequence ( char a ) ;
     } ;
 
-// **************************************************** TFasta
-
-class TFasta
-    {
-    public :
-    TFasta () {} ;
-    void load ( wxString s ) ;
-    void remap ( TVector *v ) ;
-    
-    wxArrayString l ;
-    bool success ;
-    } ;
-
 #endif

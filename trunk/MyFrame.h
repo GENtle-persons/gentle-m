@@ -15,8 +15,8 @@ class TAminoAcids ;
 class TABIviewer ;
 class TClone ;
 class TGenBank ;
-class TFasta ;
 class TXMLfile ;
+class TCalculator ;
 
 typedef wxFrame MyFrameType ;
 
@@ -49,7 +49,7 @@ public:
     virtual void OnProjectLoad(wxCommandEvent& event);
     virtual void OnProjectClose(wxCommandEvent& event);
     virtual void OnImageViewer(wxCommandEvent& event);
-    virtual void OnCalculator(wxCommandEvent& event);
+    virtual TCalculator *OnCalculator(wxCommandEvent& event);
     
     virtual void RerouteMenu(wxCommandEvent& event);
     virtual void BollocksMenu(wxCommandEvent& event);
@@ -72,13 +72,12 @@ public:
     virtual MyChild *newCLONE ( TClone &clone ) ;
     virtual void newGB ( TGenBank &gb , wxString title = "" ) ;
     virtual void newXML ( TXMLfile &xml , wxString title = "" ) ;
-    virtual MyChild *newFASTA ( TFasta &fasta ) ;
     virtual void blast ( wxString seq , wxString prg ) ;
     virtual void importFile ( wxString file , wxString path , int filter = -1 ) ;
     virtual void setChild ( ChildBase *ch ) ;
     virtual void removeChild ( ChildBase *ch ) ;
     virtual TStorage *getTempDB ( wxString filename ) ;
-    virtual TAlignment *runAlignment ( vector <string> &vs , vector <ChildBase*> &vc , TVector *nv = NULL ) ;
+    virtual TAlignment *runAlignment ( wxArrayString &vs , vector <ChildBase*> &vc , TVector *nv = NULL ) ;
     virtual ChildBase *GetActiveChild() ;
     virtual void setActiveChild ( ChildBase *c ) ;
     virtual wxWindow *getCommonParent() ;

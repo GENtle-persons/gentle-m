@@ -966,7 +966,7 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
         }
     else if ( v->type == TYPE_ALIGNMENT )
         {
-        vector <string> vs ;
+        wxArrayString vs ;
         vector <ChildBase*> vc ;
         TAlignment *ali = myapp()->frame->runAlignment ( vs , vc , v ) ;
         ali->name = name ;

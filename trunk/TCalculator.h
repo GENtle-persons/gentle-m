@@ -48,6 +48,18 @@ class TGridDNA : public TGridBasic
     DECLARE_EVENT_TABLE()
     } ;
 
+class TGridProtein : public TGridBasic
+    {
+    public :
+    TGridProtein ( wxWindow *parent , int id = -1 ) ;
+
+    virtual void init () ;
+    virtual void recalc () ;
+    virtual void OnSelectCell(wxGridEvent& event) ;
+    
+    DECLARE_EVENT_TABLE()
+    } ;
+
 
 
 class TCalculator : public ChildBase
@@ -64,10 +76,10 @@ class TCalculator : public ChildBase
     virtual void OnPrintPreview(wxCommandEvent& event) ;
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){};
     
-    private :
     wxNotebook *nb ;
     TGridLigation *ligGrid ;
     TGridDNA *ligDNA ;
+    TGridProtein *prot ;
 
     DECLARE_EVENT_TABLE()
     } ;
