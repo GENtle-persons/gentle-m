@@ -106,6 +106,7 @@ wxString TVector::getStickyEnd ( bool left , bool upper )
 
 TVector::TVector ( ChildBase *win )
     {
+    enzyme_rules = NULL ;
     changed = true ;
     turned = 0 ;
     type = TYPE_VECTOR ;
@@ -434,7 +435,8 @@ void TVector::setIUPAC ( char b , char *s , char *pac )
     }
     
     
-void TVector::getCuts ( TRestrictionEnzyme *e , vector <TRestrictionCut> &ret , bool clear_vector )
+void TVector::getCuts ( TRestrictionEnzyme *e , vector <TRestrictionCut> &ret , 
+						bool clear_vector , int max )
     {
     int b , c ;
     if ( clear_vector ) ret.clear () ;
@@ -449,7 +451,10 @@ void TVector::getCuts ( TRestrictionEnzyme *e , vector <TRestrictionCut> &ret , 
            {
            int thecut = (b+e->cut)%sequence.length() ;
            if ( thecut >= 0 && thecut < sequence.length() )
+           	  {
               ret.push_back ( TRestrictionCut ( thecut , e ) ) ;
+              if ( ret.size() > max ) return ;
+              }    
            }
         }
     }
@@ -465,15 +470,32 @@ void TVector::recalculateCuts ()
         eraseSequence ( getSequenceLength()-1 , 1 ) ;
         truncate = true ;
         }    
-    int a , b , c ;
-    for ( a = 0 ; a < re.GetCount() ; a++ )
-       getCuts ( re[a] , rc , false ) ;
-    
+    getVectorCuts ( this ) ;
     if ( truncate ) sequence += " " ;
     
-    // Sorting by position; might be unnecessary
+    // Sorting by position
     sort ( rc.begin() , rc.end() ) ;
+    return ;
+    // Join doubles
+    int a , b ;
+    for ( a = 0 ; a < rc.size() ; a++ )
+    	{
+	    for ( b = a+1 ; b < rc.size() && rc[b].pos == rc[a].pos ; b++ ) ;
+	    if ( b == rc.size() ) continue ;
+	    if ( rc[b].pos != rc[a].pos ) continue ;
+	    if ( !rc[a].join ( &rc[b] ) ) continue ;
+	    rc.erase ( rc.begin() + b ) ;
+	    a-- ;
+    	}    
     }
+    
+void TVector::getVectorCuts ( TVector *v )
+	{
+	if ( enzyme_rules ) enzyme_rules->getVectorCuts ( this ) ; // Vector settings
+	else if ( myapp()->frame->project_enzyme_rules ) // Project settings
+ 		myapp()->frame->project_enzyme_rules->getVectorCuts ( this ) ;
+	else myapp()->frame->global_enzyme_rules->getVectorCuts ( this ) ; // Global settings
+	}    
     
 // ******** ACTION!
 

@@ -319,6 +319,9 @@ enum {
     GES_USE,
     GES_USE_MINCUTOFF,
     GES_USE_MAXCUTOFF,
+    GES_COL_1,
+    GES_COL_2,
+    GES_COL_3,
     
     Z___
     } ;

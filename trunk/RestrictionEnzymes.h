@@ -29,9 +29,12 @@ class TRestrictionCut
     virtual void linearUpdate ( int w , int h ) ;
     virtual wxString getNameAndPosition () ;
     virtual bool isHidden ( TVector *v ) ;
+    virtual wxString getDisplayName () ;
+    virtual bool join ( TRestrictionCut *c ) ;
         
     int pos ;
     TRestrictionEnzyme *e ;
+    wxString display_name ;
     
     // Visual information
     float angle , angle3 , r1 , r2 , r3 ; 

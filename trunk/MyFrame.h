@@ -94,7 +94,7 @@ public:
     bool dying , enhancedRefresh , showVectorTitle , showVectorLength , 
             loadLastProject , useMetafile , showSplashScreen , checkUpdate ,
             useCoolCanvas , useInternalHelp ;
-    TEnzymeRules *global_enzyme_rules ;
+    TEnzymeRules *global_enzyme_rules , *project_enzyme_rules ;
     wxString lang_string , project_name , project_desc , project_db ;
     wxArrayString lastCocktail ;
     wxArrayChildBase children ;

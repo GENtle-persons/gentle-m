@@ -54,6 +54,7 @@ MyFrame::MyFrame(wxWindow *parent,
 {
     dying = false ;
     locked = 0 ;
+    project_enzyme_rules = NULL ;
 
     // Accelerators
     wxAcceleratorEntry entries[ACC_ENT];
@@ -169,6 +170,7 @@ void MyFrame::initme ()
     // Database access
     LS = new TStorage ( LOCAL_STORAGE ) ;
     LS->createDatabase() ;
+//    LS->optimizeDatabase () ; // This will VACUUM sqlite databases
 
     // Synchronize enzymes in known databases
     // Turned of temporarily
@@ -841,6 +843,8 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     int r = pod.ShowModal() ;
     if ( r != wxID_OK ) return ;
 
+   	wxBeginBusyCursor() ;
+
     // retrieving options
     global_enzyme_rules->lookup_options ( &pod ) ;
     enhancedRefresh = pod.enhancedDisplay->GetValue() ;
@@ -869,6 +873,14 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     LS->setOption ( "CHECKUPDATE" , checkUpdate ) ;
     LS->setOption ( "USEINTERNALHELP" , useInternalHelp ) ;
     global_enzyme_rules->save_global_settings() ;
+    for ( int a = 0 ; a < children.GetCount() ; a++ )
+    	{
+	    if ( !children[a]->vec ) continue ;
+	    children[a]->vec->recalculateCuts() ;
+	    children[a]->vec->recalcvisual = true ;
+    	}    
+   	if ( GetActiveChild() ) GetActiveChild()->Refresh () ;
+   	wxEndBusyCursor() ;
     }
 
 void MyFrame::OnProjectLoad(wxCommandEvent& event)

@@ -13,6 +13,7 @@ class PlasmidCanvas ;
 class TVectorEditor ;
 class ChildBase ;
 class SeqAA ;
+class TEnzymeRules ;
 
 #define VIT_TYPES      9//number of possible types
 
@@ -141,8 +142,8 @@ class TVector
     
     // Restriction enzymes
     virtual void recalculateCuts () ;
-//    virtual vector <TRestrictionCut> getCuts ( TRestrictionEnzyme *e ) ;
-    virtual void getCuts ( TRestrictionEnzyme *e , vector <TRestrictionCut> &ret , bool clear_vector = true ) ;
+    virtual void getCuts ( TRestrictionEnzyme *e , vector <TRestrictionCut> &ret , 
+    						bool clear_vector = true , int max = 10000000 ) ;
     virtual bool reduceToFragment ( TRestrictionCut left , TRestrictionCut right ) ;
     virtual void doRestriction () ;
     virtual void sortRestrictionSites () ;
@@ -224,6 +225,7 @@ class TVector
     virtual void setGenomeMode ( bool gm = true ) ;
     virtual bool getGenomeMode () ;
     virtual int getMem () ;
+    virtual void getVectorCuts ( TVector *v ) ;
     
     // Variables
     int type ;
@@ -251,6 +253,7 @@ class TVector
     int turned , action_value ;
     wxString params , database , action , aa ;
     wxString AA2DNA[256] ;
+    TEnzymeRules *enzyme_rules ;
     
     static char IUPAC[256] , SIUPAC[256] , COMPLEMENT[256] ;
     static char ACGT[256] ;
