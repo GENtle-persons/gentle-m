@@ -190,6 +190,7 @@ void SequenceCanvas::updateEdit ( TVector *v , wxString id , int from )
     if ( getAA() )
         {
         getAA()->vec->setChanged () ;
+        getAA()->showStat();
         getAA()->showSequence () ;
         }
     else if ( v )
@@ -1899,7 +1900,38 @@ void SequenceCanvas::rsHideLimit ( wxCommandEvent &ev )
     
 void SequenceCanvas::OnBacktranslate ( wxCommandEvent &ev )
     {
-    TVector *nv = getAA()->vec->backtranslate () ;
+    int a ;
+    TVS cc ;
+    cc.push_back ( txt("t_codon_catalog_abstract") ) ;
+    
+    // Read available code catalog groups
+    wxTextFile in ( myapp()->homedir + "/codon_catalog.csv" ) ;
+    in.Open () ;
+    wxString s = in[0] ;
+    in.Close () ;
+    wxArrayString as ;
+    explode ( "," , s , as ) ;
+    for ( a = 2 ; a < as.GetCount() ; a++ )
+    	{
+	    s = as[a] ;
+	    s.Replace ( "\"" , "" ) ;
+    	cc.push_back ( s ) ;
+     	}   	
+    
+    // Ask to specify code catalog group
+    wxString *list = new wxString[cc.size()] ;
+    for ( a = 0 ; a < cc.size() ; a++ ) list[a] = cc[a] ;
+    wxSingleChoiceDialog scd ( (wxWindow*)this , "" , txt("t_codon_catalog") , cc.size() , list ) ;
+    if ( scd.ShowModal() != wxID_OK ) return ;
+    
+    // Set up code catalog group
+    wxString mode ;
+    if ( scd.GetSelection() > 0 )
+    	mode = scd.GetStringSelection() ;
+   	
+   	// Run the damn thing!
+    TVector *nv = getAA()->vec->backtranslate ( mode ) ;
+    nv->setDescription ( txt("t_backtranslated") + mode + "\n" + nv->getDescription() ) ;
     myapp()->frame->newFromVector ( nv , TYPE_VECTOR ) ;
     }    
     

@@ -699,3 +699,6 @@
 "t_blast_hseq","Sbjct:","Ergebn.:"
 "t_clustal_running","Standby...","Bitte warten..."
 "img_show_text","Show labels","Beschriftung"
+"t_codon_catalog","Codon catalog","Codon-Katalog"
+"t_codon_catalog_abstract","Abstract code","Abstrakter Code"
+"t_backtranslated","THis DNA sequence was backtranslated from an amino acid sequence for ","Diese DNS-Sequenz wurde aus einer Aminosäuresequenz zurückübersetzt für "

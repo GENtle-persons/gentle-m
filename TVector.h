@@ -208,7 +208,7 @@ class TVector
     virtual void setFromVector ( TVector &v ) ;
     virtual void doRemoveNucleotide ( int x ) ;
     virtual int getItemLength ( int a ) ;
-    virtual TVector *backtranslate () ;
+    virtual TVector *backtranslate ( wxString mode = "" ) ;
     virtual wxString getStrand53 () ; // returns a 5'->3' sequence
     virtual wxString getStrand35 () ; // returns a 5'->3' sequence, too!
 
@@ -257,7 +257,7 @@ class TVector
     private :
     virtual wxString invert ( wxString s ) ;
     virtual wxString vary_base ( char b ) ;
-    virtual void makeAA2DNA () ;
+    virtual void makeAA2DNA ( wxString mode = "" ) ;
     virtual wxString mergeCodons ( wxString c1 , wxString c2 ) ;
     virtual void setCodonTable ( int table , wxString sequence ) ;
     virtual void evaluate_key_value ( wxString key , wxString value ) ;

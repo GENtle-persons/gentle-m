@@ -445,26 +445,46 @@ void TVector::init ()
     for ( a = 'a' ; a <= 'z' ; a++ ) aaprop[a] = aaprop[a-'a'+'A'] ;
 }    
     
-void TVector::makeAA2DNA ()
+void TVector::makeAA2DNA ( wxString mode )
     {
     int a , b , c , e ;
     wxString iu = "ACGT" ;
     for ( a = 0 ; a < 256 ; a++ ) AA2DNA[a] = "" ;
-    for ( a = 0 ; a < iu.length() ; a++ )
-       {
-       for ( b = 0 ; b < iu.length() ; b++ )
-          {
-          for ( c = 0 ; c < iu.length() ; c++ )
-             {
-             wxString codon ;
-             codon += iu.GetChar(a) ;
-             codon += iu.GetChar(b) ;
-             codon += iu.GetChar(c) ;
-             unsigned char z = dna2aa ( codon ) . GetChar ( 0 ) ;
-             AA2DNA[z] = mergeCodons ( codon , AA2DNA[z] ) ;
-             }    
-          }    
-       }    
+    
+    if ( mode == "" ) // Default, abstract code
+    	{
+        for ( a = 0 ; a < iu.length() ; a++ )
+           {
+           for ( b = 0 ; b < iu.length() ; b++ )
+              {
+              for ( c = 0 ; c < iu.length() ; c++ )
+                 {
+                 wxString codon ;
+                 codon += iu.GetChar(a) ;
+                 codon += iu.GetChar(b) ;
+                 codon += iu.GetChar(c) ;
+                 unsigned char z = dna2aa ( codon ) . GetChar ( 0 ) ;
+                 AA2DNA[z] = mergeCodons ( codon , AA2DNA[z] ) ;
+                 }    
+              }    
+           }    
+        }
+    else // Species-specific
+    	{
+	    wxString aas = "ACDEFGHIKLMNPQRSTVWY" ;
+	    
+	    wxHashString cc , cc_spec ;
+	    myapp()->init_txt ( "Default" , "codon_catalog.csv" , &cc , 2 ) ;
+	    myapp()->init_txt ( mode , "codon_catalog.csv" , &cc_spec , 2 ) ;
+	    
+	    for ( a = 0 ; a < aas.length() ; a++ )
+	    	{
+ 	    	unsigned char c = aas.GetChar(a) ;
+ 	    	wxString cs = wxString ( aas.GetChar(a) ) ;
+ 	    	if ( cc_spec.count(cs) > 0 ) AA2DNA[c] = cc_spec[cs] ;
+ 	    	else AA2DNA[c] = cc[cs] ;
+	    	}
+    	}    
     for ( a = 0 ; a < 256 ; a++ )
         if ( AA2DNA[a].IsEmpty() )
            AA2DNA[a] = "NNN" ;
@@ -1466,14 +1486,14 @@ char TVector::three2one ( wxString s )
     }    
     
 // "Back-translate" amino acid sequence to DNA
-TVector *TVector::backtranslate ()
+TVector *TVector::backtranslate ( wxString mode )
     {
     TVector *nv = new TVector ;
     nv->setFromVector ( *this ) ;
     nv->type = TYPE_VECTOR ;
     wxString ns ;
     int a ;
-    makeAA2DNA () ;
+    makeAA2DNA ( mode ) ;
     for ( a = 0 ; a < sequence.length() ; a++ )
         {
         unsigned char c = sequence.GetChar ( a ) ;
