@@ -75,6 +75,11 @@ void TUndo::pop ()
     vector <TVector*> _mem = mem ;
     vector <wxString> _msg = msg;
     
+    v->undo.mem.clear() ;
+    v->undo.msg.clear() ;
+    mem.clear() ;
+    msg.clear() ;
+    
     *base = *v ;
     delete v ;
     

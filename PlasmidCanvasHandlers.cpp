@@ -364,7 +364,8 @@ void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl )
     subframe->Maximize() ;
     
     myapp()->frame->mainTree->addChild ( subframe , TYPE_PRIMER ) ;
-    myapp()->frame->children.push_back ( subframe ) ;
+    myapp()->frame->setChild ( subframe ) ;
+//    myapp()->frame->children.push_back ( subframe ) ;
     }
 
 // Primer handler
@@ -465,7 +466,6 @@ void PlasmidCanvas::orfCopyAA ( wxCommandEvent &ev )
 
 void PlasmidCanvas::orfAsNewItem ( wxCommandEvent &ev )
     {
-    p->vec->undo.start ( txt("u_orf_new_item") ) ;
     char t[1000] ;
     int from = p->vec->worf[context_last_orf].from+1 ;
     int to = p->vec->worf[context_last_orf].to+1 ;
@@ -481,10 +481,11 @@ void PlasmidCanvas::orfAsNewItem ( wxCommandEvent &ev )
     nvi.from = from ;
     nvi.to = to ;
     nvi.setParam ( "/codon_start" , 1 ) ;
+    p->vec->undo.start ( txt("u_orf_new_item") ) ;
     p->vec->items.push_back ( nvi ) ;
     invokeVectorEditor ( "item" , p->vec->items.size()-1 , true ) ;
-    p->vec->recalcvisual = true ;
     p->vec->undo.stop() ;
+    p->vec->recalcvisual = true ;
     Refresh () ;
     }
 

@@ -306,7 +306,7 @@ class SequenceCanvas : public wxScrolledWindow
     bool m_dirty , editMode , doHide ;
     int blankline , charwidth , charheight , lowy , lastpos , vpy ;
     vector <SeqBasic *> seq ;
-    wxFont *font , *smallFont ;
+    wxFont *font , *smallFont , *varFont;
     SeqBasic *lastwhere ;
     string edit_id , edit_valid ;
     int lastmarked ;

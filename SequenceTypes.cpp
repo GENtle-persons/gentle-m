@@ -1093,14 +1093,21 @@ void SeqAlign::show ( wxDC& dc )
            }
         else // Front number
            {
-           t = myname ;
-           if ( t.length() > endnumberlength )
-              t = t.substr ( 0 , endnumberlength ) ;
-           while ( t.length() < endnumberlength ) t = " " + t ;
            dc.SetTextForeground ( *wxBLACK ) ;
            dc.SetTextBackground ( nbgc ) ;
+           for ( t = "" ; t.length() < endnumberlength ; t += " " ) ;
+           dc.DrawText ( t.c_str() , pos.r[a].x, pos.r[a].y ) ;
+           dc.SetFont(*can->varFont);
+           t = myname ;
+           t = " " + t ;
+           int tw , th ;
+           do {
+              t = t.substr ( 1 , t.length()-1 ) ;
+              dc.GetTextExtent ( t.c_str() , &tw , &th ) ;
+              } while ( tw > pos.r[a].width ) ;
            dc.DrawText ( t.c_str() , pos.r[a].x, pos.r[a].y ) ;
            dc.SetTextBackground ( *wxWHITE ) ;
+           dc.SetFont(*can->font);
            }
         }
     dc.SetBackgroundMode ( bm ) ;

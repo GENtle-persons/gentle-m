@@ -10,9 +10,9 @@
 #define BACK_UP 2
 #define BACK_LU 4
 
-#define ALG_SW 0
-#define ALG_NW 1
-#define ALG_CW 2
+#define ALG_CW 0
+#define ALG_SW 1
+#define ALG_NW 2
 
 typedef vector <int> tvi ;
 typedef vector <char> tvc ;
