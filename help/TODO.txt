@@ -1,0 +1,7 @@
+FEATURE TO-DO:
+AA -> DNA
+*Plasmidring drehen
+Markierung invertieren
+
+ERROR TO-DO:
+Absturz, wenn keine DB vorhanden
