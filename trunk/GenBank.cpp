@@ -247,7 +247,7 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
             
     // Type
     if ( va[0].MakeLower() == "source" ) return ;
-    for ( a = 0 ; a < VIT_TYPES ; a++ )
+/*    for ( a = 0 ; a < VIT_TYPES ; a++ )
         {
         if ( va[0].CmpNoCase ( gb_item_type[a] ) == 0 )
            {
@@ -255,6 +255,7 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
            break ;
            }    
         }
+    if ( a == VIT_TYPES )*/ i.setType ( va[0] ) ;
        
     // Properties
     i.desc.Alloc ( 1000 ) ;
@@ -267,12 +268,12 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
         p.MakeLower() ;
         wxString v = va[a].AfterFirst ( '=' ) ;
         multitrim ( v , true ) ;
-        if ( p == "standard_name" || p == "gene" || p == "protein_id" )
+        if ( p == "name" || p == "standard_name" || p == "gene" || p == "protein_id" )
            i.name = v ;
         else
            {
            if ( p == "product" || p == "organism" || p == "db_xref" ||
-                p == "mol_type" || p == "chromosome" )
+                p == "mol_type" || p == "chromosome" || p == "bound_moiety" )
               {
               if ( !i.desc.IsEmpty() ) i.desc += "\n" ;
               if ( p == "chromosome" || p == "db_xref" )
@@ -318,6 +319,7 @@ void TGenBank::iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag 
            i.from = ll ;
            to.ToLong ( &ll ) ;
            i.to = ll ;
+           if ( i.to == 0 ) i.to = i.from ;
            if ( ( tag & TAG_COMPLEMENT ) > 0 ) i.setDirection ( -1 ) ;
            v->items.push_back ( i ) ;
            }

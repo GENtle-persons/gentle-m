@@ -58,7 +58,7 @@ void SeqFeature::show ( wxDC& dc )
     
                for ( i = 0 ; i < pl.maxlevels ; i++ ) used[i] = 0 ;
                i = pl.here ( b-1 , l ) ;
-    
+               
               if ( i != -1 )  
                  {
                  used[l] = 1 ;
@@ -93,11 +93,19 @@ void SeqFeature::show ( wxDC& dc )
                        {
                        int o = -1 ;
                        if ( (b-1) % 10 == 0 && !newline )
-                          o = vec->items[pl.getID(i)].getOffsetAt ( b-1 ) ;
+                          {
+                          if ( can->getAA() )
+                             {
+                             TVectorItem *ip = &vec->items[pl.getID(i)] ;
+                             if ( ip->getType() == VIT_CDS && ip->getRF() != 0 )
+                                o = b + ip->getOffset() - ip->from ;
+                             }
+                          else o = vec->items[pl.getID(i)].getOffsetAt ( b-1 ) ;
+                          }    
                        if ( o != -1 )     
                           {
                           dc.SetTextForeground ( col ) ;
-                          wxString pn = wxString::Format ( "%d" , o ) ;  //aaa->offsets[b-1] ) ;
+                          wxString pn = wxString::Format ( "%d" , o ) ;
                           int u1 , u2 ;
                           dc.GetTextExtent ( pn , &u1 , &u2 ) ;
                           dc.DrawText ( pn , x_to - can->charwidth , level - u2 ) ;
@@ -109,7 +117,7 @@ void SeqFeature::show ( wxDC& dc )
                        int px , py = 0 ;
                        for ( px = x_from ; px <= x_to ; px++ )
                           {
-                          int npy ;//= ( px % lh ) - lh/2 ;
+                          int npy ;
                           npy = (float) sin ( (float) ( px - x_from ) * PI * 4 / can->charwidth ) * lh / 2 ;
                           dc.DrawLine ( px , level + py , px , level + npy ) ;
                           py = npy ;
@@ -160,7 +168,7 @@ void SeqFeature::show ( wxDC& dc )
                     {
                     if ( insight )
                        {
-                       wxString name = vec->items[pl.getID(i)/*vr[i].GetX()*/].name ;
+                       wxString name = vec->items[pl.getID(i)].name ;
                        if ( newline && li[l] == i ) name = "(" + name + ")" ;
                        _i.Add ( i ) ;
                        _name.Add ( name ) ;
@@ -192,7 +200,9 @@ void SeqFeature::show ( wxDC& dc )
                       dc.SetTextForeground ( col ) ;
                       }
                    if ( _name[i] != "()" )
+                      {
                       dc.DrawText ( _name[i] , _point[i] ) ;
+                      }
                   }
     
     

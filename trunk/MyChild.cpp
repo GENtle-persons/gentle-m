@@ -638,6 +638,7 @@ void MyChild::initPanels ()
 //    if ( aa_state != b ) OnAA_setit ( b ) ;
     mylog ( "MyChild" , "AA set" ) ;
     
+    mylog ( "MyChild::initPanels" , wxString::Format ( "Vector %d bytes" , vec->getMem() ) ) ;
     if ( myapp()->frame->isLocked() ) return ;
     Show() ;
     mylog ( "MyChild" , "shown" ) ;
@@ -664,6 +665,7 @@ void MyChild::updateSequenceCanvas ( bool remember )
     
     if ( cSequence->findID ( "FEATURE" ) )
        cSequence->findID("FEATURE")->initFromTVector ( vec ) ;
+
     if ( old_mode != AA_NONE )
         {
         wxCommandEvent dummy ;

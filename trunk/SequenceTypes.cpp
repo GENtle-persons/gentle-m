@@ -10,6 +10,16 @@ void SeqBasic::init ( SequenceCanvas *ncan )
     endnumberlength = 0 ;
     }
 
+void SeqBasic::logsize ()
+    {
+    mylog ( whatsthis() , wxString::Format ( "s %d" , s.length() ) ) ;
+    mylog ( whatsthis() , wxString::Format ( "p %d" , pos.p.GetCount() * sizeof ( int ) ) ) ;
+    mylog ( whatsthis() , wxString::Format ( "m %d" , pos.m.length() ) ) ;
+    mylog ( whatsthis() , wxString::Format ( "r %d" , pos.r.size() * sizeof ( wxRect ) ) ) ;
+    mylog ( whatsthis() , wxString::Format ( "l %d" , pos.l.size() * sizeof ( wxRect ) ) ) ;
+    mylog ( "---" ) ;
+    }    
+
 SeqBasic::~SeqBasic ()
     {
     // Farewell, my old faithful friend!
@@ -17,8 +27,23 @@ SeqBasic::~SeqBasic ()
 
 //************************************************ SeqPrimer
 
+bool SeqPrimer::useDirectRoutines () { return true ; }
+
+int SeqPrimer::arrange_direct ( int n )
+    {
+//    arrange ( n ) ;
+    SeqDNA::arrange_direct ( n ) ;
+    }    
+
+void SeqPrimer::show_direct ( wxDC& dc )
+    {
+//    show ( dc ) ;
+    SeqDNA::show_direct ( dc ) ;
+    }    
+
 void SeqPrimer::show ( wxDC& dc )
     {
+    if ( useDirectRoutines() ) show_direct ( dc ) ;
     dc.SetFont(*can->font);
     wxColour tbg = dc.GetTextBackground () ;
     wxColour tfg = dc.GetTextForeground () ;

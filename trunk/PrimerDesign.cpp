@@ -61,7 +61,7 @@ TPrimerDesign::TPrimerDesign(wxWindow *parent,
     : ChildBase(parent, title)
     {
     int a ;
-    show_features = 1 ;
+    show_features = _vec->getGenomeMode() ? 0 : 1 ;
     spinTextEnabeled = false ;
     mut = _mut ;
     vec = new TVector ;

@@ -204,5 +204,6 @@ void SeqAlign::show ( wxDC& dc )
 void SeqAlign::makeEndnumberLength()
     {
     endnumberlength = myname.length() ;
+    while ( endnumberlength > 10 ) endnumberlength-- ;
     }
         
