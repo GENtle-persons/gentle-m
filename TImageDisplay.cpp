@@ -86,7 +86,7 @@ void TImageDisplay::initme ()
     
     lb = new wxListBox ( this , IV_LIST , wxDefaultPosition , wxDefaultSize ,
                             0 , NULL , wxLB_SORT ) ;
-    bu = new wxButton ( this , IV_BUTTON , "" ) ;
+    bu = new wxButton ( this , IV_BUTTON , "" , wxDefaultPosition , wxSize ( 180 , -1 ) ) ;
     
     v0->Add ( bu , 0 , wxEXPAND|wxALL , 5 ) ;
     v0->Add ( lb , 1 , wxEXPAND|wxALL , 5 ) ;

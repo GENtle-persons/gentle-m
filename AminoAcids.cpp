@@ -141,10 +141,16 @@ void TAminoAcids::initme ()
     h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
     v1 = new wxBoxSizer ( wxVERTICAL ) ;
     
+#ifdef __WXMSW__
+	int lbwidth = 130 ;
+#else
+	int lbwidth = -1 ;
+#endif
+    
     lb = new wxListBox ( this ,
 			 AA_LB ,
 			 wxDefaultPosition ,
-			 wxSize ( -1 , 160 ) ) ;
+			 wxSize ( lbwidth , 160 ) ) ;
                             
     lb->Append ( txt("t_data") ) ;
     lb->Append ( txt("desc") ) ;
