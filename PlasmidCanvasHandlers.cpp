@@ -66,7 +66,9 @@ wxMenu *PlasmidCanvas::invokeItemPopup ( int item , wxPoint pt , bool doreturn )
     
 void PlasmidCanvas::itemMark ( wxCommandEvent &ev )
     {
-    p->cSequence->mark ( "DNA" ,
+    string id = "DNA" ;
+    if ( p->def == "AminoAcids" ) id = "AA" ;
+    p->cSequence->mark ( id ,
                     p->vec->items[context_last_item].from ,
                     p->vec->items[context_last_item].to ) ;
     }
@@ -84,11 +86,6 @@ void PlasmidCanvas::itemEdit ( wxCommandEvent &ev )
 
 void PlasmidCanvas::itemDelete ( wxCommandEvent &ev )
     {
-    // Undo mechanism makes "Are you sure" question obsolete
-/*    char t[1000] ;
-    sprintf ( t , txt("t_item_delete") , p->vec->items[context_last_item].name.c_str() ) ;
-    wxMessageDialog md ( this , t , txt("msg_box") , wxYES|wxNO ) ;
-    if ( md.ShowModal() != wxID_YES ) return ;*/
     p->vec->undo.start ( txt("u_del_item") ) ;
     for ( int a = context_last_item+1 ; a < p->vec->items.size() ; a++ )
         p->vec->items[a-1] = p->vec->items[a] ;
@@ -107,7 +104,6 @@ void PlasmidCanvas::itemShowHide ( wxCommandEvent &ev )
     Refresh () ;
     p->updateSequenceCanvas ( true ) ;
     p->treeBox->SetItemBold ( p->vec->items[context_last_item].treeid , newstate ) ;
-//    p->treeBox->initme() ;
     }
 
 // Restriction enzyme context menu
@@ -254,60 +250,67 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn )
     {
     wxMenu *cm = new wxMenu ;
     cm->Append ( PC_VECTOR_EDIT , txt("p_vector_edit") ) ;
-    cm->Append(MDI_TRANSFORM_SEQUENCE, txt("t_transform_sequence") );
     
-    if ( mark_from == -1 )
+    if ( p->def == "dna" )
        {
-       cm->Append(MDI_RUN_PCR, txt("m_pcr") );
-       }
-    else
-       {
-       wxMenu *pm = new wxMenu ;
-       cm->Append ( POPUP_DUMMY , txt ( "m_pcr" ) , pm ) ;
-       pm->Append(MDI_RUN_PCR, txt("m_pcr") );
-       pm->Append ( PRIMER_FORWARD , txt("m_primer_forward") ) ;
-       pm->Append ( PRIMER_BACKWARD , txt("m_primer_backward") ) ;
-       pm->Append ( PRIMER_BOTH , txt("m_primer_both") ) ;
-       if ( mark_from + 2 == mark_to )
-          pm->Append ( PRIMER_MUTATION , txt("m_primer_mutation") ) ;
-       }
-    
-    if ( p->vec->hasStickyEnds() && p->vec->isLinear() )
-        cm->Append ( MDI_FILL_KLENOW , txt("p_fill_klenow") ) ;
-
-    if ( mark_from != -1 )
-        {
-        wxMenu *mm = new wxMenu ;
-        cm->Append ( POPUP_DUMMY , txt("p_selection") , mm ) ;
-        mm->Append ( MDI_CUT , txt("m_cut") ) ;
-        mm->Append ( MDI_COPY , txt("m_copy") ) ;
-        mm->Append ( MDI_COPY_TO_NEW , txt("m_copy_to_new") ) ;
-        mm->Append ( PC_WHAT_CUTS , txt("m_what_cuts") ) ;
-        mm->Append ( MDI_AS_NEW_FEATURE , txt("m_as_new_feature") ) ;
-        if ( p->aa_state != AA_NONE && p->aa_state != AA_ALL )
+        cm->Append(MDI_TRANSFORM_SEQUENCE, txt("t_transform_sequence") );
+        
+        if ( mark_from == -1 )
            {
-           mm->Append ( MDI_EXTRACT_AA , txt("m_extract_aa") ) ;
-           mm->Append ( PC_BLAST_AA , txt("m_blast_aa") ) ;
+           cm->Append(MDI_RUN_PCR, txt("m_pcr") );
            }
-
-        mm->Append ( PC_BLAST_DNA , txt("m_blast_dna") ) ;
+        else
+           {
+           wxMenu *pm = new wxMenu ;
+           cm->Append ( POPUP_DUMMY , txt ( "m_pcr" ) , pm ) ;
+           pm->Append(MDI_RUN_PCR, txt("m_pcr") );
+           pm->Append ( PRIMER_FORWARD , txt("m_primer_forward") ) ;
+           pm->Append ( PRIMER_BACKWARD , txt("m_primer_backward") ) ;
+           pm->Append ( PRIMER_BOTH , txt("m_primer_both") ) ;
+           if ( mark_from + 2 == mark_to )
+              pm->Append ( PRIMER_MUTATION , txt("m_primer_mutation") ) ;
+           }
         
+        if ( p->vec->hasStickyEnds() && p->vec->isLinear() )
+            cm->Append ( MDI_FILL_KLENOW , txt("p_fill_klenow") ) ;
+    
+        if ( mark_from != -1 )
+            {
+            wxMenu *mm = new wxMenu ;
+            cm->Append ( POPUP_DUMMY , txt("p_selection") , mm ) ;
+            mm->Append ( MDI_CUT , txt("m_cut") ) ;
+            mm->Append ( MDI_COPY , txt("m_copy") ) ;
+            mm->Append ( MDI_COPY_TO_NEW , txt("m_copy_to_new") ) ;
+            mm->Append ( PC_WHAT_CUTS , txt("m_what_cuts") ) ;
+            mm->Append ( MDI_AS_NEW_FEATURE , txt("m_as_new_feature") ) ;
+            if ( p->aa_state != AA_NONE && p->aa_state != AA_ALL )
+               {
+               mm->Append ( MDI_EXTRACT_AA , txt("m_extract_aa") ) ;
+               mm->Append ( PC_BLAST_AA , txt("m_blast_aa") ) ;
+               }
+    
+            mm->Append ( PC_BLAST_DNA , txt("m_blast_dna") ) ;
+            
+            }
+        if ( p->vec->cocktail.size() > 0 )
+            {
+            cm->Append ( PC_RS_CUT_WITH_COCKTAIL , txt("p_cut_with_cocktail") ) ;
+            }
+            
+        if ( doreturn ) return cm ;
+        cm->AppendSeparator();
         }
-    if ( p->vec->cocktail.size() > 0 )
-        {
-        cm->Append ( PC_RS_CUT_WITH_COCKTAIL , txt("p_cut_with_cocktail") ) ;
-        }
-        
-    if ( doreturn ) return cm ;
-    cm->AppendSeparator();
     
     wxMenu *pm = new wxMenu ;
     cm->Append ( POPUP_DUMMY , txt("m_plasmid_map") , pm ) ;
     pm->Append ( PC_COPY_IMAGE , txt("m_copy_image") ) ;
     pm->Append ( MDI_PRINT_IMAGE , txt("m_print_image") ) ;
     
-    cm->Append(MDI_ORFS, txt("m_orfs") );
-    cm->Append(MDI_EDIT_ORFS, txt("m_edit_orfs") );
+    if ( p->def == "dna" )
+       {
+       cm->Append(MDI_ORFS, txt("m_orfs") );
+       cm->Append(MDI_EDIT_ORFS, txt("m_edit_orfs") );
+       }
 
     PopupMenu ( cm , pt ) ;
     delete cm ;

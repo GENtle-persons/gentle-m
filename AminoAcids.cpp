@@ -17,6 +17,7 @@ BEGIN_EVENT_TABLE(TAminoAcids, MyChildBase)
     EVT_MENU(MDI_REDO, TAminoAcids::Redo)
 
     EVT_CHECKBOX(ALIGN_HORIZ, TAminoAcids::OnHorizontal)
+    EVT_LISTBOX(AA_LB, TAminoAcids::OnListBox)
     EVT_SET_FOCUS(ChildBase::OnFocus)
     EVT_CLOSE(TAminoAcids::OnClose)
 END_EVENT_TABLE()
@@ -29,7 +30,7 @@ TAminoAcids::TAminoAcids(MyFrame *parent, const wxString& title)
     vec->name = title.c_str() ;
     from = -1 ;
     stat = NULL ;
-    
+    pc = NULL ;
     }
     
 TAminoAcids::~TAminoAcids ()
@@ -95,12 +96,9 @@ void TAminoAcids::initme ()
     SetMenuBar(menu_bar);
 
 
-
-    hs = new wxSplitterWindow ( this , SPLIT_AMINOACIDS ) ;
-    vs = new wxSplitterWindow ( hs , -1 ) ;
-
     // Sequence Canvas
-    sc = new SequenceCanvas ( hs , wxPoint ( 0 , 0 ) , wxSize ( 100 , 100 ) ) ;
+    sc = new SequenceCanvas ( this , wxPoint ( 0 , 0 ) , wxSize ( 100 , 100 ) ) ;
+    cSequence = sc ; // For compatability with PlasmidCanvas
     sc->blankline = 1 ;
     sc->aa = this ;
     sc->child = this ;
@@ -111,24 +109,43 @@ void TAminoAcids::initme ()
     GetParent()->GetClientSize ( &w , &h ) ;
     h = 100 ;
     
-    stat = new wxTextCtrl ( vs ,
+    h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    v1 = new wxBoxSizer ( wxVERTICAL ) ;
+    
+    stat = new wxTextCtrl ( this ,
                             -1 ,
                             "" ,
                             wxDefaultPosition,
-                            wxDefaultSize ,
+                            wxSize ( 200 , 90 ) ,
                             wxTE_MULTILINE | wxTE_READONLY ) ;
 
-    desc = new TURLtext ( vs ,
+    lb = new wxListBox ( this ,
+                            AA_LB ,
+                            wxDefaultPosition ,
+                            wxSize ( 100 , 90 ) ) ;                            
+                            
+    lb->Append ( txt("desc") ) ;
+    lb->Append ( txt("t_schema") ) ;
+    lb->SetStringSelection ( txt("desc") ) ;
+
+    desc = new TURLtext ( this ,
                             URLTEXT_DUMMY ,
                             vec->desc.c_str() ,
                             wxDefaultPosition,
-                            wxDefaultSize ,
+                            wxSize ( 250 , 90 ) ,
                             wxTE_MULTILINE | wxTE_READONLY ) ;
 
-    hs->SplitHorizontally ( vs , sc ,h+bo ) ;
-    vs->SplitVertically ( stat , desc , w/2 ) ;
-    hs->SetMinimumPaneSize ( h+bo ) ;
+    curDisplay = desc ;
     
+    h1->Add ( stat , 0 , 0 , 5 ) ;
+    h1->Add ( lb   , 0 , 0 , 5 ) ;
+    h1->Add ( desc , 1 , 0 , 5 ) ;
+    v1->Add ( h1 , 0 , wxEXPAND , 5 ) ;
+    v1->Add ( sc , 1 , wxEXPAND , 5 ) ;
+
+    SetSizer ( v1 ) ;
+    v1->Fit ( this ) ;
+        
 #ifdef __WXMSW__                            
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
     myapp()->frame->InitToolBar(toolBar);
@@ -193,7 +210,7 @@ void TAminoAcids::showStat ()
     if ( noaa > 0 ) abs = ex / noaa / 100 ;
     sprintf ( t , txt("aa_info") , noaa , mW , pI , ex , abs ) ;
     stat->SetValue ( t ) ;
-    desc->SetValue ( vec->desc.c_str() ) ;
+    if ( curDisplay == desc ) desc->SetValue ( vec->desc.c_str() ) ;
     }
 
 void TAminoAcids::showSequence ()
@@ -415,5 +432,33 @@ void TAminoAcids::OnHorizontal ( wxCommandEvent& event )
     sc->isHorizontal = !sc->isHorizontal ;
     sc->arrange () ;
     sc->SilentRefresh() ;    
+    }
+    
+void TAminoAcids::OnListBox ( wxCommandEvent& event )
+    {
+    wxString t = lb->GetStringSelection() ;
+    if ( curDisplay ) h1->Remove ( curDisplay ) ;
+    delete curDisplay ;
+    curDisplay = NULL ;
+    if ( t == txt("desc") )
+        {
+    desc = new TURLtext ( this ,
+                            URLTEXT_DUMMY ,
+                            vec->desc.c_str() ,
+                            wxDefaultPosition,
+                            wxSize ( 250 , 90 ) ,
+                            wxTE_MULTILINE | wxTE_READONLY ) ;
+        h1->Add ( desc , 1 , 0 , 5 ) ;
+        curDisplay = desc ;
+        }
+    else if ( t == txt("t_schema") )
+        {
+        pc = new PlasmidCanvas ( this , wxDefaultPosition , wxSize ( 250 , 90 ) ) ;
+        pc->p = (MyChild*) this ;
+        vec->recalcvisual = true ;
+        h1->Add ( pc , 1 , 0 , 5 ) ;
+        curDisplay = pc ;        
+        }
+    h1->Layout() ;
     }
     

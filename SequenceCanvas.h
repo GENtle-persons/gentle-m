@@ -263,15 +263,18 @@ class SeqPlot : public SeqDNA
     virtual int  arrange ( int n ) ;
     virtual void setLines ( int l ) ;
     virtual void useChouFasman () ;
-    virtual void showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx ) ;
         
     private :
     virtual void scanChouFasman ( int x , int y , int t , int min , 
                                     int seek_cnt , int seek_avg , int avg ) ;
+    virtual void drawSymbol ( char c , wxDC &dc , int x1 , int y1 , int x2 , int y2 ) ;
+    virtual void showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx ) ;
     enum { CHOU_FASMAN } type ;
     int lines , l_top, l_bottom ;
     vector <string> d1 , d2 , d3 ;
     vector <TAAProp> prop ;
+    bool startOfLine ;
+    float data_max , data_min , data_h ;
     } ;
 
 class SequenceCanvas : public wxScrolledWindow
@@ -369,6 +372,7 @@ class SequenceCanvas : public wxScrolledWindow
     int lowx , blocksize ;
     SeqAlign *last_al ;
     int lastclick ;
+    wxPen blue_pen ;
 
     DECLARE_EVENT_TABLE()
     };

@@ -513,3 +513,5 @@
 "t_alignment","Alignment","Alignment"
 "t_align_not_found","%s could not be found; using alternative data","%s konnte nicht gefunden werden; benutzt alternative Daten"
 "u_what_cuts","&Undo what cuts","Welche Enzyme schneiden hier &rückgängig"
+"t_schema","Scheme","Schema"
+"X-Y (# aa)","%d - %d (%d amino acids)","%d - %d (%d Aminosäuren)"

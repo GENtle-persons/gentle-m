@@ -84,6 +84,7 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
     print_dc = NULL ;
     child = NULL ;   
     isHorizontal = false ; 
+    blue_pen = wxPen ( wxColour ( 0 , 0 , 255 ) , 1 , wxSOLID ) ;
     }
 
 SeqBasic* SequenceCanvas::findID ( string id ) 
@@ -354,6 +355,11 @@ void SequenceCanvas::vecEdit ( wxCommandEvent &ev )
             arrange () ;
             Refresh () ;
             }
+        }
+    else if ( child && child->def == "AminoAcids" )
+        {
+        TAminoAcids *ama = (TAminoAcids*) child ;
+        ama->OnEditName ( ev ) ;
         }
     }
 
@@ -780,6 +786,33 @@ void SequenceCanvas::mark ( string id , int from , int to , int value )
 	    MyFrame *f = myapp()->frame ;
             f->SetStatusText ( tt , 1 ) ;
             }
+        }
+    else if ( child && child->def == "AminoAcids" )
+        {
+        TAminoAcids *ama = (TAminoAcids*) child ;
+        if ( ama->curDisplay == ama->pc )
+           {
+            // Refreshing plasmid canvas
+            ama->pc->mark_from = from ;
+            ama->pc->mark_to = to ;
+            if ( !editMode )
+                {
+                ama->pc->Refresh() ;
+                
+                char tt[1000] ;
+                if ( value == 1 )
+                   {
+                   int to2 = to ;
+                   while ( to2 > seqlen )
+                      to2 -= seqlen ;
+                   sprintf ( tt , txt("X-Y (# aa)") , from , to2 , to-from+1 ) ;
+                   if ( from == -1 ) *tt = 0 ;
+                   }
+                else *tt = 0 ;
+                MyFrame *f = myapp()->frame ;
+                f->SetStatusText ( tt , 1 ) ;
+                }
+            }        
         }
     else if ( pd )
         {

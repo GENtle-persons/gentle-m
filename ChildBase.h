@@ -14,14 +14,16 @@ typedef wxMDIParentFrame MyFrameType ;
 
 class TVector ;
 class MyFrame ;
+class SequenceCanvas ;
 
 class ChildBase : public MyChildBase
     {
     public :
-    ChildBase () { vec = NULL ; }
+    ChildBase () { vec = NULL ; cSequence = NULL ; }
     string def ;
     TVector *vec ;
     wxTreeItemId inMainTree ;
+    SequenceCanvas *cSequence;
     
     ChildBase(MyFrame *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style)
         : MyChildBase((MyFrameType*)parent, -1, title, pos, size, style) {  }

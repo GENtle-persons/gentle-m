@@ -289,6 +289,8 @@ enum {
     TVE_OK,
     TVE_PROTEASE_LIST,
     URLTEXT_DUMMY,
+
+    AA_LB,
     
     } ;
 

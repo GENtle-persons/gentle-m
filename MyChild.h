@@ -31,7 +31,6 @@ public:
     TVectorTree *treeBox ;
     TURLtext *propBox ;
     PlasmidCanvas *cPlasmid;
-    SequenceCanvas *cSequence;
     
     MySplitter *sw , *swu , *swl ;
     int sp1 , sp2 ;
