@@ -90,6 +90,7 @@ class TGraphDisplay : public wxPanel
  	void setupFluorimeterGraph ( const stringField &sf ) ;
  	void setupIPCfile ( wxString filename ) ;
  	void SetupDummy () ;
+ 	bool SetupFromFile ( wxString filename ) ;
  	void SetZoom ( int _zx , int _zy ) ;
  	void UpdateDisplay () ;
 
