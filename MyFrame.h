@@ -5,6 +5,7 @@
 #include <wx/utils.h>
 #include <wx/dnd.h>
 #include <wx/docview.h>
+#include <wx/html/htmprint.h>
 
 class ChildBase ;
 class TStorage ;
@@ -80,6 +81,8 @@ public:
     string project_name , project_desc , project_db ;
     vector <string> lastCocktail ;
     vector <ChildBase*> children ;
+    wxHtmlEasyPrinting *html_ep ;
+    vector <wxBitmap> bitmaps ;
 
     private :
     wxSashLayoutWindow* m_topWindow;

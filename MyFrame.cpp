@@ -81,11 +81,12 @@ MyFrame::MyFrame(wxWindow *parent,
     
     wxAcceleratorTable accel(ACC_ENT, entries);
     SetAcceleratorTable(accel);
-
+    html_ep = NULL ;
 }
 
 MyFrame::~MyFrame ()
     {
+    if ( html_ep ) delete html_ep ;
     rememberLastProject () ;
 //    delete LS ;
     }
@@ -238,38 +239,52 @@ void MyFrame::initme ()
     MyFrameDropTarget *dt = new MyFrameDropTarget ;
     SetDropTarget ( dt ) ;
 
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"new.bmp", wxBITMAP_TYPE_BMP) ) ;  // 0
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"open.bmp", wxBITMAP_TYPE_BMP) ) ; // 1
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"save.bmp", wxBITMAP_TYPE_BMP) ) ; // 2 
+
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"undo.bmp", wxBITMAP_TYPE_BMP) ) ; // 3 
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"cut.bmp", wxBITMAP_TYPE_BMP) ) ;  // 4
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"copy.bmp", wxBITMAP_TYPE_BMP) ) ; // 5
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"paste.bmp", wxBITMAP_TYPE_BMP) ) ;// 6
+
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"plasmid_circular.bmp", wxBITMAP_TYPE_BMP) ) ; // 7
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"plasmid_linear.bmp", wxBITMAP_TYPE_BMP) ) ;   // 8
+
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"orfs.bmp", wxBITMAP_TYPE_BMP) ) ; // 9
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"display_features.bmp", wxBITMAP_TYPE_BMP) ) ; // 10
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"display_restriction.bmp", wxBITMAP_TYPE_BMP) ) ; // 11
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"mode_view.bmp", wxBITMAP_TYPE_BMP) ) ; // 12
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"mode_edit.bmp", wxBITMAP_TYPE_BMP) ) ; // 13
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"primer_import.bmp", wxBITMAP_TYPE_BMP) ) ; // 14
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"primer_export.bmp", wxBITMAP_TYPE_BMP) ) ; // 15
+
 #ifdef __WXGTK_______
     // Toolbar
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
     InitToolBar(toolBar);
-
     toolBar->AddTool( MDI_TEXT_IMPORT , 
-                wxBitmap (myapp()->bmpdir+myapp()->slash+"new.bmp", wxBITMAP_TYPE_BMP),
+                bitmaps[0] ,
                 txt("m_new_sequence") ) ;  
     toolBar->AddTool( MDI_FILE_OPEN, 
-            wxBitmap (myapp()->bmpdir+myapp()->slash+"open.bmp", wxBITMAP_TYPE_BMP), 
-            txt("m_open") , txt("m_opentxt") );
+                bitmaps[1] ,
+                txt("m_open") , txt("m_opentxt") );
     toolBar->AddTool( MDI_FILE_SAVE, 
-                wxBitmap (myapp()->bmpdir+myapp()->slash+"save.bmp", wxBITMAP_TYPE_BMP),
+                bitmaps[2] ,
                 txt("m_store_in_db") , 
                 txt("m_txt_store_in_db"));
     toolBar->AddSeparator() ;
-    toolBar->AddTool( MDI_UNDO,
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"undo.bmp", wxBITMAP_TYPE_BMP)) ;
+    toolBar->AddTool( MDI_UNDO, bitmaps[3] ) ;
     toolBar->AddSeparator() ;
-    toolBar->AddTool( MDI_CUT,
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"cut.bmp", wxBITMAP_TYPE_BMP)) ;
-    toolBar->AddTool( MDI_COPY,
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"copy.bmp", wxBITMAP_TYPE_BMP)) ;
-    toolBar->AddTool( MDI_PASTE,
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"paste.bmp", wxBITMAP_TYPE_BMP)) ;
+    toolBar->AddTool( MDI_CUT, bitmaps[4] ) ;
+    toolBar->AddTool( MDI_COPY, bitmaps[5] ) ;
+    toolBar->AddTool( MDI_PASTE, bitmaps[6] ) ;
     toolBar->AddSeparator() ;
-
-//    toolBar->AddSeparator() ;
-        
     toolBar->Realize() ;    
 #endif
 
+    html_ep = new wxHtmlEasyPrinting ( "" , this ) ;
+    
     // Load last project?
     if ( loadLastProject )
         {

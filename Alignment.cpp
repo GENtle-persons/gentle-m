@@ -118,10 +118,10 @@ void TAlignment::initme ()
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
     myapp()->frame->InitToolBar(toolBar);
     toolBar->AddTool( MDI_TEXT_IMPORT , 
-                wxBitmap (myapp()->bmpdir+"\\new.bmp", wxBITMAP_TYPE_BMP),
+                myapp()->frame->bitmaps[0] ,
                 txt("m_new_sequence") ) ;
     toolBar->AddTool( MDI_FILE_OPEN, 
-            wxBitmap (myapp()->bmpdir+"\\open.bmp", wxBITMAP_TYPE_BMP), 
+                myapp()->frame->bitmaps[1] ,
             txt("m_open") , txt("m_opentxt") );
     toolBar->Realize() ;
 #endif
@@ -224,6 +224,8 @@ void TAlignment::redoAlignments ()
            SmithWaterman ( qAlign[0] , qAlign[1] ) ; 
 
         while ( qName.size() > 2 ) qName.pop_back () ;
+        while ( qAlign.size() > 2 ) qAlign.pop_back () ;
+        generateConsensusSequene () ;
         }
     SetCursor ( *wxSTANDARD_CURSOR ) ;
 
@@ -253,9 +255,17 @@ void TAlignment::redoAlignments ()
         }
 
     updateSequence () ;
-/*    f->initFromTVector ( dv ) ;
-    sc->arrange () ;
-    sc->Refresh () ;*/
+    }
+    
+void TAlignment::generateConsensusSequene ()
+    {
+    int a ;
+    qName.push_back ( txt("t_consensus") ) ;
+    string s ;
+    for ( a = 0 ; a < qAlign[0].length() ; a++ )
+        if ( qAlign[0][a] == qAlign[1][a] ) s += "*" ;
+        else s += " " ;
+    qAlign.push_back ( s ) ;
     }
     
 void TAlignment::myInsert ( int line , int pos , char what )
@@ -350,7 +360,6 @@ void TAlignment::updateSequence ()
         aaa->can = sc ;
         sc->arrange () ;
         sc->seq[0] = f ;
-        f->aaa = aaa ;
         f->initFromTVector ( dv ) ;
         f->aaa = aaa ;
         }
@@ -366,7 +375,6 @@ void TAlignment::updateSequence ()
         aaa->can = sc ;
         sc->arrange () ;
         sc->seq[0] = f ;
-        f->aaa = aaa ;
         f->initFromTVector ( dv ) ;
         f->aaa = aaa ;
         }

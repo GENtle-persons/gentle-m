@@ -306,50 +306,46 @@ void MyChild::initme ()
 #ifdef __WXMSW__  // LINUX
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
     toolBar->AddTool( MDI_TEXT_IMPORT , 
-                wxBitmap (myapp()->bmpdir+myapp()->slash+"new.bmp", wxBITMAP_TYPE_BMP),
+                myapp()->frame->bitmaps[0],
                 txt("m_new_sequence") ) ;  
     toolBar->AddTool( MDI_FILE_OPEN, 
-            wxBitmap (myapp()->bmpdir+myapp()->slash+"open.bmp", wxBITMAP_TYPE_BMP), 
+                myapp()->frame->bitmaps[1],
             txt("m_open") , txt("m_opentxt") );
     toolBar->AddTool( MDI_FILE_SAVE, 
-                wxBitmap (myapp()->bmpdir+myapp()->slash+"save.bmp", wxBITMAP_TYPE_BMP),
+                myapp()->frame->bitmaps[2],
                 txt("m_store_in_db") , 
                 txt("m_txt_store_in_db"));
     toolBar->AddSeparator() ;
-    toolBar->AddTool( MDI_UNDO,
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"undo.bmp", wxBITMAP_TYPE_BMP)) ;
+    toolBar->AddTool( MDI_UNDO, myapp()->frame->bitmaps[3] ) ;
     toolBar->AddSeparator() ;
-    toolBar->AddTool( MDI_CUT,
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"cut.bmp", wxBITMAP_TYPE_BMP)) ;
-    toolBar->AddTool( MDI_COPY,
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"copy.bmp", wxBITMAP_TYPE_BMP)) ;
-    toolBar->AddTool( MDI_PASTE,
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"paste.bmp", wxBITMAP_TYPE_BMP)) ;
+    toolBar->AddTool( MDI_CUT, myapp()->frame->bitmaps[4] ) ;
+    toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] ) ;
+    toolBar->AddTool( MDI_PASTE, myapp()->frame->bitmaps[6] ) ;
     toolBar->AddSeparator() ;
     toolBar->AddTool( MDI_CIRCULAR_LINEAR,
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"plasmid_circular.bmp", wxBITMAP_TYPE_BMP),
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"plasmid_linear.bmp", wxBITMAP_TYPE_BMP),
+        myapp()->frame->bitmaps[7],
+        myapp()->frame->bitmaps[8],
         TRUE, -1, -1, (wxObject *) NULL, txt("m_toggle_rc") ) ;
     toolBar->AddTool( MDI_ORFS,
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"orfs.bmp", wxBITMAP_TYPE_BMP),
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"orfs.bmp", wxBITMAP_TYPE_BMP),
+        myapp()->frame->bitmaps[9],
+        myapp()->frame->bitmaps[9],
         TRUE, -1, -1, (wxObject *) NULL, txt("m_orfs") ) ;
     toolBar->AddTool( MDI_TOGGLE_FEATURES,
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"display_features.bmp", wxBITMAP_TYPE_BMP),
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"display_features.bmp", wxBITMAP_TYPE_BMP),
+        myapp()->frame->bitmaps[10],
+        myapp()->frame->bitmaps[10],
         TRUE, -1, -1, (wxObject *) NULL, txt("m_display_features") ) ;
     toolBar->AddTool( MDI_TOGGLE_RESTRICTION,
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"display_restriction.bmp", wxBITMAP_TYPE_BMP),
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"display_restriction.bmp", wxBITMAP_TYPE_BMP),
+        myapp()->frame->bitmaps[11],
+        myapp()->frame->bitmaps[11],
         TRUE, -1, -1, (wxObject *) NULL, txt("m_display_restriction") ) ;        
     toolBar->AddSeparator() ;
     toolBar->AddTool( MDI_VIEW_MODE,
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"mode_view.bmp", wxBITMAP_TYPE_BMP),
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"mode_view.bmp", wxBITMAP_TYPE_BMP),
+        myapp()->frame->bitmaps[12],
+        myapp()->frame->bitmaps[12],
         TRUE, -1, -1, (wxObject *) NULL, txt("m_view_mode") ) ;
     toolBar->AddTool( MDI_EDIT_MODE,
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"mode_edit.bmp", wxBITMAP_TYPE_BMP),
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"mode_edit.bmp", wxBITMAP_TYPE_BMP),
+        myapp()->frame->bitmaps[13],
+        myapp()->frame->bitmaps[13],
         TRUE, -1, -1, (wxObject *) NULL, txt("m_edit_mode") ) ;
     toolBar->AddSeparator() ;
         

@@ -1,6 +1,8 @@
 #include "TCalculator.h"
 
 BEGIN_EVENT_TABLE(TCalculator, MyChildBase)
+    EVT_MENU(SEQ_PRINT, TCalculator::OnSeqPrint)
+    EVT_MENU(MDI_PRINT_REPORT,TCalculator::OnPrintPreview)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(TGridLigation, wxGrid)
@@ -25,6 +27,18 @@ TCalculator::TCalculator(MyFrame *parent, const wxString& title)
 TCalculator::~TCalculator ()
     {
     delete nb ;
+    }
+    
+void TCalculator::OnSeqPrint(wxCommandEvent& event)
+    {
+    TGridBasic *g = (TGridBasic*) nb->GetPage ( nb->GetSelection () ) ;
+    g->print ( HTML_PRINT ) ;
+    }
+    
+void TCalculator::OnPrintPreview(wxCommandEvent& event)
+    {
+    TGridBasic *g = (TGridBasic*) nb->GetPage ( nb->GetSelection () ) ;
+    g->print ( HTML_PRINT_PREVIEW ) ;
     }
     
     
@@ -53,6 +67,10 @@ void TCalculator::initme ()
     menu_bar->Append(help_menu, txt("m_help") );
 
     SetMenuBar(menu_bar);
+    
+    menu_bar->FindItem ( SEQ_PRINT ) -> SetText ( txt("m_print") ) ;
+    menu_bar->FindItem ( MDI_PRINT_REPORT ) -> SetText ( txt("m_print_preview") ) ;
+    
 
     nb = new wxNotebook ( this , -1 ) ;
 
@@ -297,5 +315,69 @@ void TGridBasic::cleanup ()
         
     SetRowLabelSize ( 0 ) ;
     SetColLabelSize ( 0 ) ;
+    }
+    
+void TGridBasic::print ( int mode )
+    {
+    int cols = GetNumberCols() ;
+    int rows = GetNumberRows() ;
+    int col , row ;
+    wxString html ;
+    html = "<HTML><BODY><TABLE border=0>" ;
+
+    int colwidth = 0 ;
+    for ( col = 0 ; col < cols ; col++ )
+        colwidth += GetColSize ( col ) ;
+
+    for ( row = 0 ; row < rows ; row++ )
+        {
+        html += "<tr>" ;
+        for ( col = 0 ; col < cols ; col++ )
+           {
+           int w = GetColSize ( col ) ;
+           wxColour bgc = GetCellBackgroundColour ( row , col ) ;
+           wxColour tc = GetCellTextColour ( row , col ) ;
+           int ha , va ;
+           GetCellAlignment ( row , col , &ha , &va ) ;
+           wxString align = (ha==wxALIGN_CENTRE)?"center":((ha==wxALIGN_RIGHT)?"right":"") ;
+           wxString valign = (va==wxALIGN_CENTRE)?"center":((ha==wxALIGN_BOTTOM)?"bottom":"top") ;
+           if ( align != "" ) align = " align=" + align ;
+           if ( valign != "" ) valign = " valign=" + valign ;
+           wxString tct = wxString::Format ( "color='#%2x%2x%2x'" , 
+                                            tc.Red() , 
+                                            tc.Green() , 
+                                            tc.Blue() ) ;       
+           tct.Replace ( " " , "0" ) ;                                 
+           tct = "<font " + tct + ">" ;    
+           wxString bgct = wxString::Format ( "#%2x%2x%2x" ,
+                                            bgc.Red() , 
+                                            bgc.Green() , 
+                                            bgc.Blue() ) ;
+           bgct.Replace ( " " , "0" ) ;                                 
+           html += wxString::Format ( "<td width='%d%%' bgcolor='%s'%s%s>" , 
+                                            w * 100 / colwidth , 
+                                            bgct.c_str() ,
+                                            align.c_str() ,
+                                            valign.c_str() ) ;
+           html += tct ;
+           html += GetCellValue ( row , col ) ;
+           html += "</font></td>" ;
+           }
+        html += "</tr>" ;
+        }
+    html += "</TABLE></BODY></HTML>" ;
+
+    wxDateTime now = wxDateTime::Now() ;
+    myapp()->frame->html_ep->SetHeader ( "<p align=right><u>" + now.Format() + "</u></p>" ) ;
+    myapp()->frame->html_ep->SetFooter ( "<p align=right>@PAGENUM@/@PAGESCNT@</p>" ) ;
+
+    if ( mode == HTML_PRINT_PREVIEW )
+        {
+        myapp()->frame->html_ep->PreviewText ( html ) ;
+        }
+    else if ( mode == HTML_PRINT )
+        {
+        myapp()->frame->html_ep->PrinterSetup () ;
+        }
     }
     

@@ -64,6 +64,7 @@ class TAlignment : public ChildBase
     void myInsert ( int line , int pos , char what ) ;
     void myDelete ( int line , int pos ) ;
     void updateSequence () ;
+    void generateConsensusSequene () ;
         
     DECLARE_EVENT_TABLE()
     } ;

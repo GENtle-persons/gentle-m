@@ -364,49 +364,28 @@ void TPrimerDesign::initme ()
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
     myapp()->frame->InitToolBar(toolBar);
     toolBar->AddTool( MDI_TEXT_IMPORT , 
-                wxBitmap (myapp()->bmpdir+"\\new.bmp", wxBITMAP_TYPE_BMP),
-                txt("m_new_primer") ) ;
+            myapp()->frame->bitmaps[0] ,
+            txt("m_new_primer") ) ;
     toolBar->AddTool( MDI_FILE_OPEN, 
-            wxBitmap (myapp()->bmpdir+"\\open.bmp", wxBITMAP_TYPE_BMP), 
+            myapp()->frame->bitmaps[1] ,
             txt("m_open") , txt("m_opentxt") );
     toolBar->AddTool( PD_IMPORT, 
-                wxBitmap (myapp()->bmpdir+"\\primer_import.bmp", wxBITMAP_TYPE_BMP),
-                txt("b_import_primer") ) ;
+            myapp()->frame->bitmaps[14] ,
+            txt("b_import_primer") ) ;
     toolBar->AddTool( PD_EXPORT, 
-                wxBitmap (myapp()->bmpdir+"\\primer_export.bmp", wxBITMAP_TYPE_BMP),
-                txt("b_export_primer") ) ;
+            myapp()->frame->bitmaps[15] ,
+            txt("b_export_primer") ) ;
     toolBar->AddSeparator() ;
     toolBar->AddTool( MDI_EDIT_MODE,
-        wxBitmap (myapp()->bmpdir+"\\mode_edit.bmp", wxBITMAP_TYPE_BMP),
-        wxBitmap (myapp()->bmpdir+"\\mode_edit.bmp", wxBITMAP_TYPE_BMP),
+        myapp()->frame->bitmaps[13] ,
+        myapp()->frame->bitmaps[13] ,
         TRUE, -1, -1, (wxObject *) NULL, txt("m_edit_mode") ) ;
     toolBar->AddTool( MDI_TOGGLE_FEATURES,
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"display_features.bmp", wxBITMAP_TYPE_BMP),
-        wxBitmap (myapp()->bmpdir+myapp()->slash+"display_features.bmp", wxBITMAP_TYPE_BMP),
+        myapp()->frame->bitmaps[10] ,
+        myapp()->frame->bitmaps[10] ,
         TRUE, -1, -1, (wxObject *) NULL, txt("m_display_features") ) ;
     toolBar->Realize() ;
 #else
-    MyFrame *f = myapp()->frame ;
-    wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
-    toolBar->AddTool( MDI_TEXT_IMPORT , 
-                wxBitmap (myapp()->bmpdir+"/new.bmp", wxBITMAP_TYPE_BMP),
-                txt("m_new_primer") ) ;
-    toolBar->AddTool( MDI_FILE_OPEN, 
-            wxBitmap (myapp()->bmpdir+"/open.bmp", wxBITMAP_TYPE_BMP), 
-            txt("m_open") , txt("m_opentxt") );
-    toolBar->AddTool( PD_IMPORT, 
-                wxBitmap (myapp()->bmpdir+"/primer_import.bmp", wxBITMAP_TYPE_BMP),
-                txt("b_import_primer") ) ;
-    toolBar->AddTool( PD_EXPORT, 
-                wxBitmap (myapp()->bmpdir+"/primer_export.bmp", wxBITMAP_TYPE_BMP),
-                txt("b_export_primer") ) ;
-    toolBar->AddSeparator() ;
-    toolBar->AddTool( MDI_EDIT_MODE,
-        wxBitmap (myapp()->bmpdir+"/mode_edit.bmp", wxBITMAP_TYPE_BMP),
-        wxBitmap (myapp()->bmpdir+"/mode_edit.bmp", wxBITMAP_TYPE_BMP),
-        TRUE, -1, -1, (wxObject *) NULL, txt("m_edit_mode") ) ;
-    toolBar->Realize() ;    
-    ((wxFrame*)GetParent())->SetToolBar(toolBar);
 #endif
 
     int w , h ;
