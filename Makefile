@@ -36,6 +36,8 @@ OBJECTS = ABItype.o \
 	ChildBase.o \
 	CoolCanvas.o \
 	ExternalInterface.o \
+	ExternalNCBI.o \
+	ExternalBLAST.o \
 	FindSequenceDialog.o \
 	GenBank.o \
 	main.o \

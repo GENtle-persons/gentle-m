@@ -5,6 +5,24 @@
 #include "ChildBase.h"
 #include <wx/splitter.h>
 #include <wx/htmllbox.h>
+#include "SendHTTP.h"
+#include <wx/thread.h>
+
+#define RETMAX 25
+
+enum {
+	ID_HLB = 6000,
+	ID_T1,
+	ID_T2,
+	ID_T3,
+	ID_T4,
+	ID_B1,
+	ID_B2,
+	ID_B_LAST,
+	ID_B_NEXT,
+	ID_C1,
+	ID_C2,
+	} ;	
 
 enum {
 	EI_NCBI = 1,
@@ -45,6 +63,8 @@ class EIpanel : public wxPanel
     virtual void init_ncbi() ;
     virtual void process_ncbi() ;
     virtual void execute_ncbi() ;
+
+    virtual void execute_ncbi_load ( wxString database ) ;
     
     virtual void OnB1 ( wxCommandEvent& WXUNUSED(event) ) ;
     virtual void OnB2 ( wxCommandEvent& WXUNUSED(event) ) ;
@@ -69,7 +89,6 @@ class EIpanel : public wxPanel
     // BLAST-specific
     blastThread *blast_thread ;
     wxString blast_res ;
-    wxCriticalSection m_critsect;
 
     
     DECLARE_EVENT_TABLE()
