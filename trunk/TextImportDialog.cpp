@@ -26,7 +26,7 @@ TextImportDialog::TextImportDialog(wxWindow *parent, const wxString& title )
     sequence = new wxTextCtrl ( this , -1 , "" ,
                                 wxPoint ( bo , bo*2 + lh ) , 
                                 wxSize ( w - bo*2 , h - bo*4 - lh*2 ) ,
-                                wxTE_MULTILINE ) ;
+                                wxTE_MULTILINE | wxTE_RICH | wxTE_RICH2 ) ;
                                 
     wxButton *OK = new wxButton ( this , TID_OK , txt("b_ok") ,
                                 wxPoint ( bo , h - lh - bo ) ,

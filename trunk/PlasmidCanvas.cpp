@@ -201,7 +201,38 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
     else OnEventLinear ( event ) ;
 }
 
-
+void PlasmidCanvas::updateLinkedItems ( TVector *vec , int in )
+    {
+    TVectorItem *i , *orig = &vec->items[in] ;
+    i = orig ;
+    string s ;
+    int cur ;
+    s = i->getParam ( "PREDECESSOR" ) ;
+    while ( s != "" )
+        {
+        cur = vec->find_item( s ) ;
+        if ( cur == -1 ) return ; // Not found
+        i = &vec->items[cur] ;
+        s = i->getParam ( "PREDECESSOR" ) ;
+        }
+    if ( i->getParam ("SUCCESSOR" ) == "" ) return ;
+    do {
+        s = i->getParam ("SUCCESSOR" ) ;
+        if ( vec->isLinear() )
+           {
+           i->a1 = orig->a1 ;
+           i->a2 = orig->a2 ;
+           }
+        else
+           {
+           i->r1 = orig->r1 ;
+           i->r2 = orig->r2 ;
+           }
+        cur = vec->find_item( s ) ;
+        if ( cur == -1 ) return ; // Not found
+        i = &vec->items[cur] ;        
+        } while ( s != "" ) ;
+    }
 
 void PlasmidCanvas::SetMyToolTip ( string s , int mode )
     {

@@ -72,6 +72,6 @@ void TUReadSeq::convert ( TGenBank &gb )
         s += "//\n" ;
         }
     
-    gb.paste ( s ) ;
+    gb.paste ( s.c_str() ) ;
     }
     

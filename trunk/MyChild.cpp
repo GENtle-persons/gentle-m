@@ -477,11 +477,14 @@ void MyChild::OnExport(wxCommandEvent& event)
     if ( filter == 0 ) // GeneBank
         {
         TGenBank gb ;
-        vector <string> ex ;
+        wxArrayString ex ;
         gb.doExport ( vec , ex ) ;
         ofstream out ( d.GetPath().c_str() , ios::out ) ;
-        for ( int a = 0 ; a < ex.size() ; a++ )
-           out << ex[a] << endl ;
+        for ( int a = 0 ; a < ex.GetCount() ; a++ )
+           {
+           out << ex[a].c_str() ;
+           out << endl ;
+           }
         }
     else if ( filter == 1 ) // CLONE
         {

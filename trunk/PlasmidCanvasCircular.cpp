@@ -422,7 +422,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
     for ( a = 0 ; a < p->vec->items.size() ; a++ ) // Item titles
         {
         TVectorItem i = p->vec->items[a] ;
-        if ( i.isVisible() )
+        if ( i.isVisible() && i.getParam ( "PREDECESSOR" ) == "" )
             {
             int r1 = p->vec->items[a].r1 * 100 * r / ( STANDARDRADIUS * 100 ) ;
             int r2 = p->vec->items[a].r2 * 100 * r / ( STANDARDRADIUS * 100 ) ;
@@ -701,6 +701,7 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
        float r1 = STANDARDRADIUS * radius / r - p->vec->items[vo].r1 ;
        p->vec->items[vo].r1 += int ( r1 ) ;
        p->vec->items[vo].r2 = p->vec->items[vo].r1 + dr ;
+       updateLinkedItems ( p->vec , vo ) ;
        Refresh () ;
        }
 /*    else if ( event.LeftIsDown() && event.RightIsDown() ) // Turning disabeled

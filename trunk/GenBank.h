@@ -17,17 +17,17 @@ class TGenBankFeature
     {
     public :
     TGenBankFeature () {} ;
-    TGenBankFeature ( string _n , string _v ) { name = _n ; value = _v ; }
-    string name , value ;
-    vector <string> qname , qvalue ;
+    TGenBankFeature ( wxString _n , wxString _v ) { name = _n ; value = _v ; }
+    wxString name , value ;
+    wxArrayString qname , qvalue ;
     } ;
 
 class TGenBankKey
     {
     public :
     TGenBankKey () {} ;
-    TGenBankKey ( string _k , string _v ) { key = _k ; value = _v ; }
-    string key , value ;
+    TGenBankKey ( wxString _k , wxString _v ) { key = _k ; value = _v ; }
+    wxString key , value ;
     vector <TGenBankFeature> features ;
     } ;
 
@@ -35,31 +35,36 @@ class TGenBank
     {
     public :
     TGenBank () ;
-    void load ( string s ) ;
-    void paste ( string s ) ;
-    void parseLines ( char *t , long l ) ;
-    void makeTree () ;
-    void showtree ( TVectorTree *z ) ;
+    void load ( wxString s ) ;
+    void paste ( wxString s ) ;
+//    void parseLines ( char *t , long l ) ;
+//    void makeTree () ;
+//    void showtree ( TVectorTree *z ) ;
     void remap ( TVector *v ) ;
-    void doExport ( TVector *v , vector <string> &ex ) ;
-    void scanItem ( TVector *v , int k , int f , int type , bool descfirst = false ) ;
-    void addItem ( TVector *v , TVectorItem *vi , string l , int depth = 0 ) ;
-    string trim ( string s ) ;
-    string trimQuotes ( string s ) ;
-    string quote ( string pre , string q ) ;
-    vector <string> explode ( char p , string s ) ;
-    void wrapit ( vector <string> &ex , string init , string data , int limit = 80 ) ;
-    string expand ( string init , int to , string with = " " ) ;
+    void doExport ( TVector *v , wxArrayString &ex ) ;
+//    void scanItem ( TVector *v , int k , int f , int type , bool descfirst = false ) ;
+//    void addItem ( TVector *v , TVectorItem *vi , wxString l , int depth = 0 ) ;
+    wxString trim ( wxString s ) ;
+    wxString trimQuotes ( wxString s ) ;
+    wxString quote ( wxString pre , wxString q ) ;
+//    wxArrayString explode ( char p , wxString s ) ;
+    void wrapit ( wxArrayString &ex , wxString init , wxString data , int limit = 80 ) ;
+    wxString expand ( wxString init , int to , wxString with = " " ) ;
     
-    vector <TVS> vs_l ;
+    vector <wxArrayString> vs_l ;
     vector <TVI> vi_l ;
-    vector <string> vs ;
     vector <int> vi ;
     vector <TGenBankKey> keys ;
+    wxArrayString vs ;
     bool perm[256] ;
-    string params ;
     bool success ;
-    string title , description ;
+    wxString params , title , description ;
+    
+    private :
+    void parseLines () ;
+    void addItem ( TVector *v , wxArrayString &va ) ;
+    void iterateItem ( TVector *v , TVectorItem &i , wxString l ) ;
+    bool isValidSequence ( char a ) ;
     } ;
 
 // **************************************************** TFasta
@@ -68,10 +73,10 @@ class TFasta
     {
     public :
     TFasta () {} ;
-    void load ( string s ) ;
+    void load ( wxString s ) ;
     void remap ( TVector *v ) ;
     
-    vector <string> l ;
+    wxArrayString l ;
     bool success ;
     } ;
 

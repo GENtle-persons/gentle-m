@@ -979,10 +979,13 @@ void TAlignment::OnFileSave ( wxCommandEvent &ev )
             d += lines[a].v->name + "\n" ;
             d += lines[a].v->getDatabase() + "\n" ;
             d += lines[a].s + "\n" ;
-            vector <string> ex ;
+            wxArrayString ex ;
             gb.doExport ( lines[a].v , ex ) ;
-            for ( b = 0 ; b < ex.size() ; b++ )
-               s += ex[b] + "\n" ;
+            for ( b = 0 ; b < ex.GetCount() ; b++ )
+               {
+               s += ex[b].c_str() ;
+               s += "\n" ;
+               }
             lines[a].v->setParams ( p ) ;
             }
         }
@@ -999,7 +1002,7 @@ void TAlignment::fromVector ( TVector *nv )
     {
     TGenBank gb ;
     vec = nv ;
-    gb.paste ( vec->sequence ) ;
+    gb.paste ( vec->sequence.c_str() ) ;
     vector <string> vs = explode ( "\n" , vec->desc ) ;
     int nol = atoi ( vs[0].c_str() ) ; // Number of lines
     int n ;

@@ -422,8 +422,8 @@ void MyFrame::OnTextImport(wxCommandEvent& WXUNUSED(event) )
     else if ( type == 2 ) // GenBank
         {
         TGenBank gb ;
-        gb.paste ( d.sequence->GetValue().c_str() ) ;
-        newGB ( gb , d.sName.c_str() ) ;
+        gb.paste ( d.sequence->GetValue() ) ;
+        newGB ( gb , d.sName ) ;
         }        
     else if ( type == 3 ) // XML
         {
@@ -494,7 +494,7 @@ void MyFrame::importFile ( string file , string path , int filter )
 
         // Trying GenBank format
         TGenBank gb ;
-        gb.load ( path ) ;
+        gb.load ( path.c_str() ) ;
         if ( gb.success )
            {
            newGB ( gb ) ;
@@ -574,14 +574,14 @@ void MyFrame::importFile ( string file , string path , int filter )
         {
         // Loading GenBank file
         TGenBank gb ;
-        gb.load ( path ) ;
+        gb.load ( path.c_str() ) ;
         newGB ( gb ) ;
         }
     else if ( filter == 2 )
         {
         // Loading results from sequencing
         TFasta seq ;
-        seq.load ( path ) ;
+        seq.load ( path.c_str() ) ;
         seq.remap ( subframe->vec ) ;
         type = TYPE_SEQUENCE ;
         }

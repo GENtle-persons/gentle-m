@@ -315,6 +315,7 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , int r1 , int r2 , float a1 , flo
     free ( wp ) ;
     
     // Name
+    if ( i->getParam ( "PREDECESSOR" ) != "" ) return ; // Only first name
     char t[1000] ;
     wxCoord dx , dy ;
     wxColor fc = dc.GetTextForeground () ;
@@ -545,6 +546,7 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
        float hh = p->vec->items[vo].a2 - p->vec->items[vo].a1 ;
        p->vec->items[vo].a1 = pp.y - hh/2 ;
        p->vec->items[vo].a2 = p->vec->items[vo].a1 + hh ;
+       updateLinkedItems ( p->vec , vo ) ;
        Refresh () ;
        }
     else if ( event.LeftIsDown() && orf != -1 )

@@ -73,6 +73,25 @@ vector <string> explode ( string sep , string s )
     return r ;
     }
 
+wxArrayString explode ( wxString sep , wxString s )
+    {
+    int a , b ;
+    wxArrayString r ;
+    wxString n ;
+    for ( a = 0 ; a + sep.Length() <= s.Length() ; a++ )
+        {
+        for ( b = 0 ; b < sep.Length() && s.GetChar(a+b) == sep.GetChar(b) ; b++ ) ;
+        if ( b == sep.Length() )
+           {
+           r.Add ( n ) ;
+           n = "" ;
+           }
+        else n += s.GetChar(a) ;
+        }
+    if ( n != "" ) r.Add ( n ) ;
+    return r ;
+    }
+
 
 // ===========================================================================
 // implementation
@@ -190,7 +209,8 @@ string MyApp::getHTMLCommand ( string command )
     regKey.SetName ( s ) ;
     wxString q = regKey ;
     regKey.Close();
-    q.Replace ( wxString("%1") , wxString((char*)command.c_str()) ) ;
+    if ( 0 == q.Replace ( wxString("%1") , wxString((char*)command.c_str()) ) )
+        q += " \"" + wxString ( command.c_str() ) + "\"" ;
     return q.c_str() ;
 #else
     return "" ;

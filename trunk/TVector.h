@@ -171,6 +171,7 @@ class TVector
     virtual int getItemLength ( int a ) ;
 
     virtual TAAProp getAAprop ( char a ) ;
+    virtual int find_item ( string s ) ;
     
     // Variables
     string sequence ;

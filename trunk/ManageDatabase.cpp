@@ -65,7 +65,7 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , char *title ,
     dc.GetTextExtent ( "X" , &bo , &th ) ;
     th = th * 3 / 2 ;
     bo = th / 4 ;
-    
+    wxBeginBusyCursor() ;
     nb = new wxNotebook ( (wxWindow*) this ,
                           -1 ,
                           wxPoint ( 0 , 0 ) ,
@@ -89,6 +89,7 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , char *title ,
     nb->SetSelection ( 1 ) ;
     
     Center () ;
+    wxEndBusyCursor() ;
     }
     
 TManageDatabaseDialog::~TManageDatabaseDialog ()
