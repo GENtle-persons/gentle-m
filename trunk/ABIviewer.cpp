@@ -49,7 +49,7 @@ TABIviewer::TABIviewer(wxWindow *parent, const wxString& title)
     {
     vec = new TVector ( this ) ;
     def = "ABIviewer" ;
-    vec->setName ( title.c_str() ) ;
+    vec->setName ( title ) ;
     from = -1 ;
     vec->undo.clear () ;
     stat = NULL ;
@@ -345,9 +345,9 @@ void TABIviewer::OnEditName(wxCommandEvent& event)
     {
     wxString nn = wxGetTextFromUser ( txt("t_edit_aa_name_txt") ,
                                       txt("t_edit_aa_name") , 
-                                      vec->getName().c_str() ) ;
+                                      vec->getName() ) ;
     if ( nn == "" ) return ;
-    if ( nn == vec->getName().c_str() ) return ;
+    if ( nn == vec->getName() ) return ;
     
     vec->undo.start ( txt("u_title_change") ) ;
     vec->setName ( nn ) ;
@@ -383,7 +383,7 @@ void TABIviewer::OnCopyToNew(wxCommandEvent& event)
     {
     TVector *nv = new TVector ;
     wxString s ;
-    if ( sc->_from == -1 ) s = vec->getWxSequence() ; // All of it
+    if ( sc->_from == -1 ) s = vec->getSequence() ; // All of it
     else s = sc->getSelection() ;
     nv->setName ( vec->getName() ) ;
     nv->setSequence ( s ) ;

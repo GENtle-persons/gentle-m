@@ -155,7 +155,7 @@ void TPrimerDesign::OnImportPrimer ( wxCommandEvent &ev )
     
     wxString *sl = new wxString[cbl.size()] ;
     for ( a = 0 ; a < cbl.size() ; a++ )
-        sl[a] = cbl[a]->getName().c_str() ;
+        sl[a] = cbl[a]->getName() ;
 
     TMyMultipleChoiceDialog scd ( this , 
                             txt("t_chose_primer_txt") , 
@@ -172,7 +172,7 @@ void TPrimerDesign::OnImportPrimer ( wxCommandEvent &ev )
     for ( a = 0 ; a < cbl.size() ; a++ )
        {
        if ( scd.IsChecked ( a ) )
-          AddPrimer ( cbl[a]->vec->getSequence().c_str() ) ;
+          AddPrimer ( cbl[a]->vec->getSequence() ) ;
        }
     guessOptNuc () ;
     }
@@ -245,7 +245,7 @@ void TPrimerDesign::OnEditMode(wxCommandEvent& event)
 void TPrimerDesign::updatePrimersFromSequence ()
     {
     int a , b ;
-    string s ;
+    wxString s ;
     for ( a = 0 ; a < primer.size() ; a++ )
         {
         if ( primer[a].upper ) s = sc->seq[show_features]->s ;
@@ -779,8 +779,8 @@ void TPrimerDesign::doShowPrimer ( int i )
 void TPrimerDesign::OnSelectPrimer ( wxListEvent& event)
     {
     lastPrimerActivated = event.GetIndex () ;
-    string x = primer[lastPrimerActivated].report() ;
-    stat->SetValue ( x.c_str() ) ;
+    wxString x = primer[lastPrimerActivated].report() ;
+    stat->SetValue ( x ) ;
     sc->SetFocus () ;
     }
     
@@ -795,7 +795,7 @@ void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
     TSilmutDialog sd ( this , txt("t_silmut") ) ;
     sd.initme ( w , sc->_from , sc->_to ) ;
     if ( wxID_OK != sd.ShowModal () ) return ;
-    wxString ns = sd.getSequence().c_str() ;
+    wxString ns = sd.getSequence() ;
     if ( ns == "" ) return ;
     
     TVector z ;

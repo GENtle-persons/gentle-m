@@ -269,18 +269,20 @@ void TClone::load ( wxString s )
 
 void TClone::save ( wxString s )
 {
+    /*
 	if ( !changed ) return ;
 	int a , b ;
 	wxString end ;
 	end += char ( 13 ) ;
 	end += char ( 10 ) ;
 	if ( s != "" ) filename = s ;
-	ofstream out ( filename , ios::out | ios::binary ) ;
-	out << name << end ;
-	out << size << end ;
-	out << enzymes.size() << end ;
+	wxFile out ( filename , wxFile::write ) ;
+	out.Write ( name + end ) ;
+	out.Write ( wxString::Format("%d",size) + end ) ;
+	out.Write ( wxString::Format("%d",enzymes.size()) + end ) ;
 	for ( a = 0 ; a < enzymes.size() ; a++ )
 	{
+	    // UNFINISHED BEYOND THIS POINT!
 		out << enzymes[a].name << end ;
 		out << enzymes[a].position << end ;
 	}
@@ -326,6 +328,7 @@ void TClone::save ( wxString s )
 	if ( sequence != "" ) out << "sequence" << end << sequence << end ;
 	if ( description != "" ) out << "description" << end << description << end ;
 	changed = false ;
+	*/
 }
 
 bool TClone_Gene::getCCW()

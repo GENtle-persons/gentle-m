@@ -152,11 +152,11 @@ void TVectorEditor::initPanProp ()
         {
         // Sticky ends
         r = (new wxStaticText(panProp,-1,"5'-",wxPoint(bo,th*8)))->GetRect() ;
-        lu = new wxTextCtrl(panProp,-1,v->getStickyEnd(true,true).c_str(),
+        lu = new wxTextCtrl(panProp,-1,v->getStickyEnd(true,true),
                                 wxPoint(r.GetRight()+bo,r.GetTop()-bo),wxSize(w/5,th));
     
         r = (new wxStaticText(panProp,-1,"-3'",wxPoint(w-r.GetRight(),r.GetTop())))->GetRect() ;
-        ru = new wxTextCtrl(panProp,-1,v->getStickyEnd(false,true).c_str(),
+        ru = new wxTextCtrl(panProp,-1,v->getStickyEnd(false,true),
                                 wxPoint(r.GetLeft()-bo-w/5,r.GetTop()-bo),wxSize(w/5,th));
         
         wxString k ;
@@ -164,11 +164,11 @@ void TVectorEditor::initPanProp ()
         new wxStaticText(panProp,-1,k,wxPoint(lu->GetRect().GetRight()+bo,r.GetTop())) ;
     
         r = (new wxStaticText(panProp,-1,"3'-",wxPoint(bo,r.GetBottom()+th)))->GetRect() ;
-        ll = new wxTextCtrl(panProp,-1,v->getStickyEnd(true,false).c_str(),
+        ll = new wxTextCtrl(panProp,-1,v->getStickyEnd(true,false),
                                 wxPoint(r.GetRight()+bo,r.GetTop()-bo),wxSize(w/5,th));
     
         r = (new wxStaticText(panProp,-1,"-5'",wxPoint(w-r.GetRight(),r.GetTop())))->GetRect() ;
-        rl = new wxTextCtrl(panProp,-1,v->getStickyEnd(false,false).c_str(),
+        rl = new wxTextCtrl(panProp,-1,v->getStickyEnd(false,false),
                                 wxPoint(r.GetLeft()-bo-w/5,r.GetTop()-bo),wxSize(w/5,th));
     
         new wxStaticText(panProp,-1,k,wxPoint(lu->GetRect().GetRight()+bo,r.GetTop())) ;
@@ -409,8 +409,8 @@ void TVectorEditor::addOkCancel ( wxPanel *p )
     }
 
 #define VCOMMIT(_p1,_p2) if(_p1!=v->_p2){v->_p2=_p1;v->setChanged();}
-#define VCOMMIT_STICKY(_p1,_p2,_p3) if(_p1.c_str()!=v->getStickyEnd(_p2,_p3))\
-                    {v->setStickyEnd(_p2,_p3,_p1.c_str());v->setChanged();}
+#define VCOMMIT_STICKY(_p1,_p2,_p3) if(_p1!=v->getStickyEnd(_p2,_p3))\
+                    {v->setStickyEnd(_p2,_p3,_p1);v->setChanged();}
     
 void TVectorEditor::commitVector ()
     {

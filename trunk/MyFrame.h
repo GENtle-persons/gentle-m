@@ -31,7 +31,6 @@ public:
 
     virtual void initme () ;
     virtual void rememberLastProject () ;
-    virtual void fixMax () ;
     virtual wxString check4update () ;
     virtual void update2version ( wxString ver ) ;
     

@@ -112,7 +112,7 @@ void TImageDisplay::ShowDir ( wxString s )
     if ( !dir.IsOpened() )
         return;
 
-    myapp()->frame->LS->setOption ( "IMGDIR" , s.c_str() ) ;
+    myapp()->frame->LS->setOption ( "IMGDIR" , s ) ;
     wxString filename;
 
     bool cont = dir.GetFirst(&filename, "*.img", wxDIR_FILES);
@@ -136,7 +136,7 @@ void TImageDisplay::OnFile ( wxCommandEvent &event )
     wxString file = lb->GetStringSelection() ;
     wxString dir = bu->GetTitle() ;
     wxString fn = dir + "/" + file ;
-    r->readFile ( fn.c_str() ) ;
+    r->readFile ( fn ) ;
     right->i = r->makeImage() ;
 
 //    i.SaveFile ( "test.bmp" , wxBITMAP_TYPE_BMP ) ;
@@ -179,7 +179,7 @@ void TMyImagePanel::OnDraw(wxDC& pdc)
         pdc.GetSize ( &w , &h ) ;
 
         int tw , th ;
-        pdc.GetTextExtent ( file.c_str() , &tw , &th ) ;
+        pdc.GetTextExtent ( file , &tw , &th ) ;
 
         iw = bmp->GetWidth() ;
         ih = bmp->GetHeight() ;
@@ -226,7 +226,7 @@ void TMyImagePanel::OnDraw(wxDC& pdc)
         tx /= (double) 2 * xs ;
         ty = y ;
         ty -= ( (double) th ) / ys ;
-        pdc.DrawText ( file.c_str() , tx , ty ) ;
+        pdc.DrawText ( file , tx , ty ) ;
 
 //        pdc.DrawLine ( 0 , 0 , tx , ty ) ;
         
@@ -297,7 +297,7 @@ void TMyImagePanel::OnPrint(wxCommandEvent &event)
     if ( r != wxID_OK ) return ;
 
     wxDC *pdc = pd.GetPrintDC () ;
-    pdc->StartDoc ( file.c_str() ) ;
+    pdc->StartDoc ( file ) ;
     pdc->StartPage () ;
     printing = true ;
     OnDraw ( *pdc ) ;

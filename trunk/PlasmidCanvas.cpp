@@ -326,7 +326,7 @@ void PlasmidCanvas::invokeVectorEditor ( wxString what , int num , bool forceUpd
     ve.cleanup () ;
     if ( forceUpdate || p->vec->isChanged() )
         {
-        myapp()->frame->mainTree->SetItemText ( p->inMainTree , p->getName().c_str() ) ;
+        myapp()->frame->mainTree->SetItemText ( p->inMainTree , p->getName() ) ;
         p->treeBox->initme() ;
         p->showName() ;
         p->treeBox->SelectItem ( p->treeBox->vroot ) ;
@@ -345,7 +345,7 @@ void PlasmidCanvas::print ()
     if ( r != wxID_OK ) return ;
 
     wxDC *pdc = pd.GetPrintDC () ;
-    pdc->StartDoc ( p->vec->getName().c_str() ) ;
+    pdc->StartDoc ( p->vec->getName() ) ;
     pdc->StartPage () ;
     printing = true ;
     OnDraw ( *pdc ) ;

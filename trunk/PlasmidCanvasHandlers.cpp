@@ -141,7 +141,7 @@ wxMenu *PlasmidCanvas::invokeRsPopup ( int rs , wxPoint pt , bool doreturn )
         cm->Append ( -1 , "" ) ;
         wxString c = txt("cocktail") ;
         c += " :" ;
-        cm->Append ( PC_DUMMY , c.c_str() ) ;
+        cm->Append ( PC_DUMMY , c ) ;
         for ( a = 0 ; a < p->vec->cocktail.GetCount() ; a++ )
             {
             c = "  " ;
@@ -475,7 +475,7 @@ void PlasmidCanvas::orfCopyDNA ( wxCommandEvent &ev )
     wxString s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf ) ;
     if (wxTheClipboard->Open())
         {
-        wxTheClipboard->SetData( new wxTextDataObject(s.c_str()) );
+        wxTheClipboard->SetData( new wxTextDataObject(s) );
         wxTheClipboard->Close();
         }    
     }
@@ -487,7 +487,7 @@ void PlasmidCanvas::orfCopyAA ( wxCommandEvent &ev )
     wxString s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf , false ) ;
     if (wxTheClipboard->Open())
         {
-        wxTheClipboard->SetData( new wxTextDataObject(s.c_str()) );
+        wxTheClipboard->SetData( new wxTextDataObject(s) );
         wxTheClipboard->Close();
         }    
     }
@@ -551,7 +551,7 @@ void PlasmidCanvas::orfBlastDNA ( wxCommandEvent &ev )
     int to = p->vec->worf[context_last_orf].to ;
     wxString s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf ) ;
     if ( s == "" ) return ;
-    myapp()->frame->blast ( s.c_str() , "blastn" ) ;
+    myapp()->frame->blast ( s , "blastn" ) ;
     }
         
 void PlasmidCanvas::orfBlastAA ( wxCommandEvent &ev )
@@ -560,7 +560,7 @@ void PlasmidCanvas::orfBlastAA ( wxCommandEvent &ev )
     int to = p->vec->worf[context_last_orf].to ;
     wxString s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf , false ) ;
     if ( s == "" ) return ;
-    myapp()->frame->blast ( s.c_str() , "blastp" ) ;
+    myapp()->frame->blast ( s , "blastp" ) ;
     }
 
 // *** More item handlers
@@ -572,7 +572,7 @@ void PlasmidCanvas::itemBlastDNA ( wxCommandEvent &ev )
     int dir = p->vec->items[context_last_item].direction ;
     wxString s = getDNAorAA ( from , to , dir ) ;
     if ( s == "" ) return ;
-    myapp()->frame->blast ( s.c_str() , "blastn" ) ;
+    myapp()->frame->blast ( s , "blastn" ) ;
     }
         
 void PlasmidCanvas::itemBlastAA ( wxCommandEvent &ev )
@@ -687,7 +687,7 @@ void PlasmidCanvas::OnFillKlenow(wxCommandEvent& event)
     if ( v->getStickyEnd(false,false) != "" )
         for ( a = 0 ; a < r.length() ; a++ )
            r[(uint)a] = v->getComplement ( r[(uint)a] ) ;
-    v->setSequence ( l + v->getWxSequence() + r ) ;
+    v->setSequence ( l + v->getSequence() + r ) ;
     for ( a = 0 ; a < v->items.size() ; a++ )
         {
         v->items[a].from += l.length() ;

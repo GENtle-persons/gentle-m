@@ -37,19 +37,19 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
         wxString rl = "- " + p->vec->getStickyEnd(false,false) ;
         wxCoord nx , ny ;
         
-        dc.GetTextExtent ( lu.c_str() , &dx , &dy ) ;
-        dc.GetTextExtent ( ll.c_str() , &nx , &ny ) ;
+        dc.GetTextExtent ( lu , &dx , &dy ) ;
+        dc.GetTextExtent ( ll , &nx , &ny ) ;
         if ( dx < nx ) { dx = nx - dx ; nx = 0 ; }
         else { nx = dx - nx ; dx = 0 ; }
         
-        dc.DrawText ( lu.c_str() , int(10 + dx) , 10 ) ;
-        dc.DrawText ( ll.c_str() , 10 + nx , 10 + dy ) ;
+        dc.DrawText ( lu , int(10 + dx) , 10 ) ;
+        dc.DrawText ( ll , 10 + nx , 10 + dy ) ;
         
-        dc.GetTextExtent ( ru.c_str() , &dx , &dy ) ;
-        dc.GetTextExtent ( rl.c_str() , &nx , &ny ) ;
+        dc.GetTextExtent ( ru , &dx , &dy ) ;
+        dc.GetTextExtent ( rl , &nx , &ny ) ;
         if ( dx > nx ) nx = dx ;
-        dc.DrawText ( (char*)ru.c_str() , w - 10 - nx , 10 ) ;
-        dc.DrawText ( (char*)rl.c_str() , w - 10 - nx , 10 + dy ) ;
+        dc.DrawText ( ru , w - 10 - nx , 10 ) ;
+        dc.DrawText ( rl , w - 10 - nx , 10 + dy ) ;
         }
     
     // Mark
@@ -432,9 +432,9 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
         {
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
         s = p->vec->rc[rs].e->name ;
-        wxLogStatus(txt("rsite_status_bar") , s.c_str() ) ;
+        wxLogStatus(txt("rsite_status_bar") , s ) ;
         char ttt[1000] ;
-        sprintf ( ttt , txt("tt_rs") , s.c_str() , p->vec->countCuts ( s.c_str() ) ) ;
+        sprintf ( ttt , txt("tt_rs") , s.c_str() , p->vec->countCuts ( s ) ) ;
         SetMyToolTip ( ttt , TT_RS ) ;
         if ( event.LeftDown() )
            {
@@ -451,7 +451,7 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
            {
            TRestrictionEditor ed ( myapp()->frame , "" , wxPoint(-1,-1) , wxSize(600,400) , 
                       wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL);
-           ed.pre = s.c_str() ;
+           ed.pre = s ;
            ed.cocktail = p->vec->cocktail ;
            ed.remoteCocktail = &p->vec->cocktail ;
            ed.initme ( p->vec ) ;
@@ -470,7 +470,7 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
         {
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
         s = p->vec->items[vo].name ;
-        wxLogStatus(txt("item_status_bar") , s.c_str() ) ;
+        wxLogStatus(txt("item_status_bar") , s ) ;
         char ttt[1000] ;
         sprintf ( ttt , "itemtype%d" , p->vec->items[vo].type ) ;
         wxString tt_type = txt(ttt) ;

@@ -30,7 +30,7 @@ void TPrimer::makeStats ()
     int a ;
     for ( a = 0 ; a < 256 ; a++ ) contents[a] = 0 ;
     for ( a = 0 ; a < sequence.length() ; a++ )
-       contents[sequence[a]]++ ;
+       contents[sequence.GetChar(a)]++ ;
     int gc = contents['C'] + contents['G'] ;
     int at = sequence.length() - gc ;
     pgc = gc * 100 / sequence.length() ;
@@ -38,9 +38,9 @@ void TPrimer::makeStats ()
     evaluation = 0 ;
     }
     
-string TPrimer::report ()
+wxString TPrimer::report ()
     {
-    string r ;
+    wxString r ;
     int a , l = sequence.length() ;
     TVector v ;
     char u[100] ;
@@ -62,7 +62,7 @@ void TPrimer::evaluate ( float tm_opt )
     {
     int a ;
     int gc = 1 ;
-    string s = getAnnealingSequence() ;
+    wxString s = getAnnealingSequence() ;
     
     // Start value
     evaluation = 500 ;
@@ -75,7 +75,7 @@ void TPrimer::evaluate ( float tm_opt )
         {
         for ( a = 0 ; a < s.length() ; a++ )
            {
-           if ( s[a] == 'G' || s[a] == 'C' ) gc *= 2 ;
+           if ( s.GetChar(a) == 'G' || s.GetChar(a) == 'C' ) gc *= 2 ;
            else gc = 1 ;
            }
         }
@@ -83,7 +83,7 @@ void TPrimer::evaluate ( float tm_opt )
         {
         for ( a = s.length()-1 ; a >= 0 ; a-- )
            {
-           if ( s[a] == 'G' || s[a] == 'C' ) gc *= 2 ;
+           if ( s.GetChar(a) == 'G' || s.GetChar(a) == 'C' ) gc *= 2 ;
            else gc = 1 ;
            }
         }
@@ -102,13 +102,13 @@ float TPrimer::evaluateTm ( double conc_nm , double Na_mm )
     double y = 50.0 / 1000000000.0 ;
     double ret ;
 
-    string s = getAnnealingSequence() ;
+    wxString s = getAnnealingSequence() ;
 
     // Salt
     tm_salt = tm_gc = 0 ;
     int a , base[256] ;
     for ( a = 0 ; a < 256 ; a++ ) base[a] = 0 ;
-    for ( a = 0 ; a < s.size() ; a++ ) base[s[a]]++ ;
+    for ( a = 0 ; a < s.size() ; a++ ) base[s.GetChar(a)]++ ;
     
     double CG = base['C'] + base['G'] ;
     double AT = base['A'] + base['T'] ;
@@ -139,23 +139,23 @@ float TPrimer::evaluateTm ( double conc_nm , double Na_mm )
     
 void TPrimer::invertSequence()
     {
-    string t ;
-    for ( int a = 0 ; a < sequence.length() ; a++ ) t = sequence[a] + t ;
+    wxString t ;
+    for ( int a = 0 ; a < sequence.length() ; a++ ) t = sequence.GetChar(a) + t ;
     sequence = t ;
     }
     
-string TPrimer::get53sequence ()
+wxString TPrimer::get53sequence ()
     {
     if ( upper ) return sequence ;
-    string t ;
-    for ( int a = 0 ; a < sequence.length() ; a++ ) t = sequence[a] + t ;
+    wxString t ;
+    for ( int a = 0 ; a < sequence.length() ; a++ ) t = sequence.GetChar(a) + t ;
     return t ;
     }
     
-string TPrimer::get35sequence ()
+wxString TPrimer::get35sequence ()
     {
-    string s , t = get53sequence () ;
-    for ( int a = 0 ; a < t.length() ; a++ ) s = t[a] + s ;
+    wxString s , t = get53sequence () ;
+    for ( int a = 0 ; a < t.length() ; a++ ) s = t.GetChar(a) + s ;
     return s ;
     }
     
@@ -163,7 +163,7 @@ double TPrimer::NeighbourTM ( bool max , double pconc , double saltconc )
     {
 	double theReturn = 0 ;
 	double RlogK = 0 ;
-	string s = getAnnealingSequence() ;
+	wxString s = getAnnealingSequence() ;
 	if ( s.length() > 7) {
 		//
 		double K = 1/(pconc/1000000000.0);  // Convert from nanomoles to moles
@@ -189,11 +189,11 @@ double TPrimer::NeighbourTM ( bool max , double pconc , double saltconc )
 	return theReturn;    
     }
     
-double TPrimer::CountNeighbors ( string s )
+double TPrimer::CountNeighbors ( wxString s )
     {
     int a ;
     double ret = 0 ;
-    string seq = getAnnealingSequence() ;
+    wxString seq = getAnnealingSequence() ;
     for ( a = 0 ; a+s.length() < seq.length() ; a++ )
         {
         if ( seq.substr ( a , s.length() ) == s ) ret += 1 ;
@@ -204,7 +204,7 @@ double TPrimer::CountNeighbors ( string s )
 void TPrimer::OligoCount ()
     {
     int i , j ;
-    string seq = getAnnealingSequence() ;
+    wxString seq = getAnnealingSequence() ;
 
 	// count Nearest Neighbors
 	aaCount = CountNeighbors("AA")+CountNeighbors("TT");
@@ -221,9 +221,9 @@ void TPrimer::OligoCount ()
     for ( j = 0 ; j < 3 ; j++ ) IUpairVals_min[j] = IUpairVals_max[j] = 0 ;
     for ( i = 1 ; i < seq.length() ; i++ ) //first base can not be IUpacbase
         {
-        string base , base0 ;
-        base0 += seq[i-1] ;
-        base += seq[i] ;
+        wxString base , base0 ;
+        base0 += seq.GetChar(i-1) ;
+        base += seq.GetChar(i) ;
         double *temp ;
 	
 		temp=CalcIUpair(base0, base, i, false );
@@ -236,7 +236,7 @@ void TPrimer::OligoCount ()
 		}
     }
     
-bool TPrimer::IsBase ( string theBase )
+bool TPrimer::IsBase ( wxString theBase )
     {
 	if ((theBase == "A") ||
 		(theBase == "G") ||
@@ -247,7 +247,7 @@ bool TPrimer::IsBase ( string theBase )
 	return false;
     }
     
-bool TPrimer::IsIUpacBase ( string theBase )
+bool TPrimer::IsIUpacBase ( wxString theBase )
     {
 	if ((theBase == "M") ||
 		(theBase == "R") ||
@@ -266,18 +266,18 @@ bool TPrimer::IsIUpacBase ( string theBase )
 	return false;
     }
     
-double *TPrimer::CalcIUpair ( string base0 , string base , int i , bool max )
+double *TPrimer::CalcIUpair ( wxString base0 , wxString base , int i , bool max )
     {
     double *reValue = new double[3] ;
     double temp1[3] , temp2[3] ;
-    string IUpacBase, pair1 , pair2 , base2 ;
-    string seq = getAnnealingSequence() ;
+    wxString IUpacBase, pair1 , pair2 , base2 ;
+    wxString seq = getAnnealingSequence() ;
     
     // Init
     int a , k ;
     for ( a = 0 ; a < 3 ; a++ )
        reValue[a] = temp1[a] = temp2[a] = 0 ;
-    if ( i+1 < seq.length() ) base2 += seq[i+1] ;
+    if ( i+1 < seq.length() ) base2 += seq.GetChar(i+1) ;
     
 
     // JavaScript dump
@@ -303,7 +303,7 @@ double *TPrimer::CalcIUpair ( string base0 , string base , int i , bool max )
         while ( j < IUpacBase.length() )
 		{
 //			base=IUpacBase.charAt(j);
-			base=IUpacBase[j];
+			base=IUpacBase.GetChar(j);
 
 			pair1=base0+base;
 
@@ -366,7 +366,7 @@ double *TPrimer::CalcIUpair ( string base0 , string base , int i , bool max )
 
 double TPrimer::DeltaG ( bool max )
 {
-    string seq = getAnnealingSequence() ;
+    wxString seq = getAnnealingSequence() ;
 	if (seq.length() > 7) {
 		double val= -5.0;
 		// Helix initiation Free Energy of 5 kcal.
@@ -393,7 +393,7 @@ double TPrimer::DeltaG ( bool max )
 
 double TPrimer::DeltaH ( bool max )
 {
-    string seq = getAnnealingSequence() ;
+    wxString seq = getAnnealingSequence() ;
 	if (seq.length() > 7) {
 		double val= 0.0;
 		val+=8.0*aaCount;
@@ -418,7 +418,7 @@ double TPrimer::DeltaH ( bool max )
 
 double TPrimer::DeltaS ( bool max )
 {
-    string seq = getAnnealingSequence() ;
+    wxString seq = getAnnealingSequence() ;
 	if (seq.length() > 7) {
 		double val=0;
 
@@ -447,27 +447,27 @@ double TPrimer::DeltaS ( bool max )
 
 void TPrimer::evaluateSelfAnnealing ()
     {
-    string s = sequence ;
-    string t ;
+    wxString s = sequence ;
+    wxString t ;
     int a , b , l = s.length() ;
     annScore = 0 ;
     ann1 = "" ;
     ann2 = "" ;
     annm = "" ;
-    for ( a = 0 ; a < l ; a++ ) t = s[a] + t ;
+    for ( a = 0 ; a < l ; a++ ) t = s.GetChar(a) + t ;
     for ( a = -(l-1) ; a < l ; a++ )
         {
         int lm = 0 ;
-        string ann_tmp ;
+        wxString ann_tmp ;
         for ( b = 0 ; b < l ; b++ )
            {
            if ( a+b >= 0 && a+b < l )
               {
               char c = '|' ;
-              if ( s[a+b] == 'A' && t[b] == 'T' ) lm += 2 ;
-              else if ( s[a+b] == 'T' && t[b] == 'A' ) lm += 2 ;
-              else if ( s[a+b] == 'G' && t[b] == 'C' ) lm += 4 ;
-              else if ( s[a+b] == 'C' && t[b] == 'G' ) lm += 4 ;
+              if ( s.GetChar(a+b) == 'A' && t.GetChar(b) == 'T' ) lm += 2 ;
+              else if ( s.GetChar(a+b) == 'T' && t.GetChar(b) == 'A' ) lm += 2 ;
+              else if ( s.GetChar(a+b) == 'G' && t.GetChar(b) == 'C' ) lm += 4 ;
+              else if ( s.GetChar(a+b) == 'C' && t.GetChar(b) == 'G' ) lm += 4 ;
               else c = ' ' ;
               ann_tmp += c ;
               }
@@ -493,13 +493,13 @@ int TPrimer::checkFit ( TVector *v , bool justCount )
     int count = 0 ;
     int match = 0 ;
     int match3 = 0 ;
-    string s = get53sequence() ;
+    wxString s = get53sequence() ;
     for ( a = 0 ; a < s.length() ; a++ )
         {
         char c ;
         if ( upper ) c = v->getNucleotide ( a + from - 1 ) ;
         else c = v->getNucleotide ( to - a - 1 , true ) ;
-        if ( c == s[a] )
+        if ( c == s.GetChar(a) )
            {
            match++ ;
            match3 += 2 ;
@@ -511,10 +511,10 @@ int TPrimer::checkFit ( TVector *v , bool justCount )
     return match + match3 ;
     }
     
-string TPrimer::getAnnealingSequence()
+wxString TPrimer::getAnnealingSequence()
     {
     if ( !annealingVector ) return get53sequence () ;
-    string s = get53sequence () ;
+    wxString s = get53sequence () ;
     return s.substr ( s.length() - checkFit ( annealingVector , true ) ) ;
     }
     

@@ -29,7 +29,7 @@ void TUndo::start ( wxString _msg )
     TVector *v = new TVector ;
     *v = *base ;
     mem.push_back ( v ) ;
-    msg.push_back ( _msg ) ;
+    msg.Add ( _msg ) ;
     }
 
 void TUndo::stop ()
@@ -50,7 +50,7 @@ void TUndo::abort ()
     if ( cnt > 0 ) return ;
     delete mem[mem.size()-1] ;
     mem.pop_back () ;
-    msg.pop_back () ;
+    msg.RemoveAt ( msg.GetCount() - 1 ) ;
     if ( base ) base->callUpdateUndoMenu() ;
     }
     
@@ -65,7 +65,7 @@ void TUndo::clear ()
     {
     IS_UNDO_OFF
     for ( int a = 0 ; a < mem.size() ; a++ ) delete mem[a] ;
-    msg.clear() ;
+    msg.Clear() ;
     mem.clear() ;
     cnt = 0 ;
     if ( base )
@@ -80,15 +80,15 @@ void TUndo::pop ()
     IS_UNDO_OFF
     TVector *v = mem[mem.size()-1] ;
     mem.pop_back () ;
-    msg.pop_back () ;
+    msg.RemoveAt ( msg.GetCount() - 1 ) ;
 
     vector <TVector*> _mem = mem ;
-    vector <wxString> _msg = msg;
+    wxArrayString _msg = msg;
     
     v->undo.mem.clear() ;
-    v->undo.msg.clear() ;
+    v->undo.msg.Clear() ;
     mem.clear() ;
-    msg.clear() ;
+    msg.Clear() ;
     
     *base = *v ;
     delete v ;
@@ -108,7 +108,7 @@ bool TUndo::canUndo ()
 wxString TUndo::getLastMessage ()
     {
     if ( !canUndo() ) return "" ;
-    return msg[msg.size()-1] ;
+    return msg[msg.GetCount()-1] ;
     }
     
 TUndo &TUndo::operator = ( TUndo &u )

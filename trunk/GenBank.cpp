@@ -444,7 +444,7 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
     // Sequence
     int q[256] ;
     for ( a = 0 ; a < 256 ; a++ ) q[a] = 0 ;
-    t = v->getSequence().c_str() ;
+    t = v->getSequence() ;
     for ( a = 0 ; a < t.length() ; a++ )
         {
         b = t.GetChar(a) ;

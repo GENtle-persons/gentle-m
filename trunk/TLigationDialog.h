@@ -3,7 +3,6 @@
 
 #include "main.h"
 #include <vector>
-#include <string>
 #include <wx/checklst.h>
 
 using namespace std ;
@@ -21,8 +20,8 @@ class TLigationDialog : public wxDialog
     void generateTargets () ;
     void curseTargets ( vector <bool> &vc , vector <bool> &used , wxArrayInt &vi ) ;
     bool doMatch ( int l , int r , bool invertSecond = false ) ;
-    string getVIName ( wxArrayInt &vi ) ;
-    void addVTname ( string name , wxArrayInt &vi , bool circular ) ;
+    wxString getVIName ( wxArrayInt &vi ) ;
+    void addVTname ( wxString name , wxArrayInt &vi , bool circular ) ;
 
     void OnToggleSources ( wxCommandEvent &ev ) ;
     void OnOK ( wxCommandEvent &ev ) ;

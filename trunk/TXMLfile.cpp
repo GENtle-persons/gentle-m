@@ -142,7 +142,7 @@ void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
         if ( name == "" ) continue ;
         i.setParam ( "/" + name , value ) ;
         if ( name == "CODON_START" ) i.setRF ( atoi ( value.c_str() ) ) ;
-        if ( name == "GENE" || name == "LABEL" ) i.name = value.c_str() ;
+        if ( name == "GENE" || name == "LABEL" ) i.name = value ;
         if ( name == "PRODUCT" || name == "NOTE" || name == "REGION_NAME" )
            {
            if ( i.desc != "" ) i.desc += "\n" ;
@@ -159,11 +159,11 @@ void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
         char u[100] ;
         sprintf ( u , "short_itemtype%d" , i.type ) ;
         i.name = txt(u) ;
-        wxString d2 = i.desc.c_str() ;
+        wxString d2 = i.desc ;
         int k = d2.find ( "\n" ) ;
         if ( k > -1 ) d2.erase ( k ) ;
         if ( i.name.length() * 2 >= d2.length() )
-           i.name = d2.c_str() ;
+           i.name = d2 ;
         }
     }
     

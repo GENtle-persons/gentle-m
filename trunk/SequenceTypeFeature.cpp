@@ -45,7 +45,7 @@ void SeqFeature::show ( wxDC& dc )
            wxArrayString _name ;
            vector <wxPoint> _point ;
            myass ( vec , "SeqFeature::show_0" ) ;
-           myass ( used.size() >= vr.size() , "SeqFeature::show_1" ) ;
+           myass ( used.GetCount() >= vr.size() , "SeqFeature::show_1" ) ;
 
            for ( i = 0 ; i < vr.size() ; i++ ) used[i] = 0 ;
            for ( i = 0 ; i < vr.size() ; i++ )
@@ -54,8 +54,8 @@ void SeqFeature::show ( wxDC& dc )
                  {
                  int l = vr[i].y ;
                  myass ( maxlayers >= l , "SeqFeature::show_2" ) ;
-                 myass ( l < used.size() , "SeqFeature::show_3" ) ;
-                 myass ( l < lx.size() , "SeqFeature::show_4" ) ;
+                 myass ( l < used.GetCount() , "SeqFeature::show_3" ) ;
+                 myass ( l < lx.GetCount() , "SeqFeature::show_4" ) ;
                  myass ( can , "SeqFeature::show_5" ) ;
                  myass ( maxlayers+1 != 0 , "SeqFeature::show_6" ) ;
                  used[l] = 1 ;
@@ -89,7 +89,7 @@ void SeqFeature::show ( wxDC& dc )
                          aaa->offsets[b-1] != -1 && 
                          aaa->offset_items[b-1] == &vec->items[vr[i].GetX()] )
                        {
-                       myass ( b-1 >= 0 && b-1 < aaa->offsets.size() , "SeqFeature::show_9" ) ;
+                       myass ( b-1 >= 0 && b-1 < aaa->offsets.GetCount() , "SeqFeature::show_9" ) ;
                        dc.SetTextForeground ( col ) ;
                        wxString pn = wxString::Format ( "%d" , aaa->offsets[b-1] ) ;
                        int u1 , u2 ;
@@ -151,7 +151,7 @@ void SeqFeature::show ( wxDC& dc )
                     if ( thisPen != wxBLACK_PEN ) delete thisPen ;
                     }
 
-                 myass ( l >= 0 && l < li.size() , "!!1" ) ;   
+                 myass ( l >= 0 && l < li.GetCount() , "!!1" ) ;   
                  if ( newline || li[l] != i ) // Start of new item on this lane
                     {
                     if ( insight )
@@ -173,8 +173,8 @@ void SeqFeature::show ( wxDC& dc )
 
            for ( i = 0 ; i < vr.size() ; i++ )
               {
-              myass ( i >= 0 && i <= used.size() , "!!4" ) ;
-              myass ( i >= 0 && i <= lx.size() , "!!5" ) ;
+              myass ( i >= 0 && i <= used.GetCount() , "!!4" ) ;
+              myass ( i >= 0 && i <= lx.GetCount() , "!!5" ) ;
               if ( !used[i] && lx[i] >= 0 )
                  lx[i] = -1 ;
               }
@@ -229,7 +229,7 @@ void SeqFeature::initFromTVector ( TVector *v )
     // item.to as height
     int a , b ;
     vec = v ;
-    s = vec->getWxSequence() ;
+    s = vec->getSequence() ;
     maxlayers = 0 ;
     for ( a = 0 ; a < s.length() ; a++ ) s.SetChar(a,' ') ;
     while ( vr.size() ) vr.pop_back () ;

@@ -38,7 +38,6 @@ typedef unsigned int uint ;
 #endif
 
 #include <math.h>
-#include <string>
 #include <vector>
 
 using namespace std ;
@@ -93,7 +92,7 @@ class MyApp : public wxApp
 
 class TUndo ;
 
-
+typedef vector <char> TVC ;
 
 #include "enums.h"
 #include "TVector.h"

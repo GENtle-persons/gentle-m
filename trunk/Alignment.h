@@ -14,8 +14,6 @@
 #define ALG_SW 1
 #define ALG_NW 2
 
-typedef vector <char> tvc ;
-
 class SeqAA ;
 
 class TAlignLine // pun intended
@@ -49,9 +47,9 @@ class TAlignment : public ChildBase
     virtual int NeedlemanWunsch ( wxString &s1 , wxString &s2 )  ;
     virtual int SmithWaterman ( wxString &s1 , wxString &s2 )  ;
     virtual int MatrixAlignment ( wxString &_s1 , wxString &_s2 , bool local ) ;
-    virtual void MatrixBacktrack ( vector <tvc> &back , 
-                                    string s1 , string s2 , 
-                                    string &t1 , string &t2 ,
+    virtual void MatrixBacktrack ( vector <TVC> &back , 
+                                    wxString s1 , wxString s2 , 
+                                    wxString &t1 , wxString &t2 ,
                                     int i , int j ) ;
     
     virtual void redoAlignments ( bool doRecalc = true ) ;
@@ -86,17 +84,11 @@ class TAlignment : public ChildBase
     SequenceCanvas *sc ;
     wxPanel *up ;
     wxSplitterWindow *hs ;
-    string gap ;
-    
     vector <TAlignLine> lines ;
-
-    int match , mismatch , gap_penalty ;
-    int algorithm ;
-    string matrix ;
-    wxString consensusSequence ;
     vector <wxColour> colDNA , colAA , *colCur ;
+    wxString gap , matrix , consensusSequence , name , database ;
+    int match , mismatch , gap_penalty , algorithm ;
     bool bold , mono , cons , invs , showIdentity ;
-    wxString name , database ;
         
     private :
     wxChoice *mmb ;

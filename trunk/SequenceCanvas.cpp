@@ -216,8 +216,8 @@ void SequenceCanvas::OnCharHook(wxKeyEvent& event)
         SeqDNA *dna = (SeqDNA*) seq[b] ;
         int from = _from ;
         wxString *the_sequence ;
-        if ( dna->whatsthis() == "AA" ) the_sequence = &getAA()->vec->getWxSequence() ;
-        else if ( dna->whatsthis() == "DNA" ) the_sequence = &dna->vec->getWxSequence() ;
+        if ( dna->whatsthis() == "AA" ) the_sequence = &getAA()->vec->getSequence() ;
+        else if ( dna->whatsthis() == "DNA" ) the_sequence = &dna->vec->getSequence() ;
         else the_sequence = &dna->s ;
         TVector *v = NULL ;
         if ( p ) v = dna->vec ;
@@ -347,7 +347,7 @@ void SequenceCanvas::OnCharHook(wxKeyEvent& event)
               if ( !forceoverwrite || from <= the_sequence->length() )
                  {
                  if ( doOverwrite() ) the_sequence->erase ( from-1 , 1 ) ;
-                 wxStringInsert ( *the_sequence , from-1 , dummy.c_str() ) ;
+                 wxStringInsert ( *the_sequence , from-1 , dummy ) ;
 //                 the_sequence->insert ( from-1 , dummy ) ;
                  if ( forceoverwrite && from == the_sequence->length() )
                     new_from = from ;
@@ -440,7 +440,7 @@ void SequenceCanvas::blastAA ( wxCommandEvent &ev )
     if ( p && p->cPlasmid ) p->cPlasmid->blastAA ( ev ) ;
     else if ( getAA() )
         {
-        wxString seq = getSelection().c_str() ;
+        wxString seq = getSelection() ;
         myapp()->frame->blast ( seq , "blastp" ) ;
         }
     }
@@ -464,7 +464,7 @@ void SequenceCanvas::OnCut ( wxCommandEvent &ev )
            if ( seq[a]->whatsthis() == "AA" )
               {
               SeqAA *x = (SeqAA*) seq[a] ;
-              x->initFromString ( getAA()->vec->getSequence().c_str() ) ;
+              x->initFromString ( getAA()->vec->getSequence() ) ;
               }
 //           else seq[a]->initFromTVector ( getAA()->vec ) ;
            }
@@ -505,7 +505,7 @@ void SequenceCanvas::OnCopyText ( wxCommandEvent &ev )
 
     if (wxTheClipboard->Open())
         {
-        wxTheClipboard->SetData( new wxTextDataObject(s.c_str()) );
+        wxTheClipboard->SetData( new wxTextDataObject(s) );
         wxTheClipboard->Close();
         }
     }
@@ -533,7 +533,7 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
     if ( p && p->vec ) name = p->vec->getName() ;
 
     print_dc = pd.GetPrintDC () ;
-    print_dc->StartDoc ( name.c_str() ) ;
+    print_dc->StartDoc ( name ) ;
     printing = true ;
     setDrawAll ( true ) ;
     
@@ -635,8 +635,8 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
        else if ( child ) s = child->getName() ;
        print_dc->SetTextBackground ( *wxWHITE ) ;
        print_dc->SetFont (* bigfont ) ;
-       print_dc->GetTextExtent ( s.c_str() , &tw , &th ) ;
-       print_dc->DrawText ( s.c_str() ,
+       print_dc->GetTextExtent ( s , &tw , &th ) ;
+       print_dc->DrawText ( s ,
                             ( w - tw ) / 2 - xoff ,
                             yoff + ( pagetop - th ) / 2 ) ;
        print_dc->SetTextBackground ( *wxWHITE ) ;
@@ -652,8 +652,8 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
 
        // Date
        print_dc->SetFont ( *medfont ) ;
-       print_dc->GetTextExtent ( printtime.c_str() , &tw , &th ) ;
-       print_dc->DrawText ( printtime.c_str() ,
+       print_dc->GetTextExtent ( printtime , &tw , &th ) ;
+       print_dc->DrawText ( printtime ,
                             0 ,
                             yoff + h - ( pagebottom + dummy + th ) / 2 ) ;
        
@@ -1441,12 +1441,12 @@ void SequenceCanvas::OnCopyResultDNA ( wxCommandEvent &ev )
     TVector *nv = getPCR_DNA_vector() ;
     if ( !nv ) return ;
     
-    wxString s = nv->getWxSequence() ;
+    wxString s = nv->getSequence() ;
     delete nv ;
 
     if (wxTheClipboard->Open())
         {
-        wxTheClipboard->SetData( new wxTextDataObject(s.c_str()) );
+        wxTheClipboard->SetData( new wxTextDataObject(s) );
         wxTheClipboard->Close();
         }    
     }
@@ -1490,7 +1490,7 @@ TVector *SequenceCanvas::getPCR_DNA_vector()
     n.setFromVector ( *getPD()->w ) ;
     char blank = '-' ;
     wxString s , t ;
-    s = n.getWxSequence() ;
+    s = n.getSequence() ;
     t = s ;
     if ( getPD()->w->isCircular() )
         {

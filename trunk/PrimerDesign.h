@@ -10,8 +10,6 @@ class TPrimerDialog ;
 class TPrimerDesign ;
 class TPrimer ;
 
-typedef vector <char> tvc ;
-
 class TPrimerDesign : public ChildBase
     {
     public :

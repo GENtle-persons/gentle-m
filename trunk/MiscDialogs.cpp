@@ -49,7 +49,7 @@ TMutationDialog::TMutationDialog (wxWindow *parent, const wxString& title , wxSt
     {
     codon = _codon ;
     v = new TVector ;
-    aa = v->dna2aa(codon.c_str()).GetChar(0) ;
+    aa = v->dna2aa(codon).GetChar(0) ;
     }
     
 TMutationDialog::~TMutationDialog ()
@@ -337,7 +337,7 @@ void TURLtext::OnURL(wxTextUrlEvent& event)
     long to = event.GetURLEnd() ;
     wxString url = GetRange ( from , to ) ;
     if ( url == "" ) return ; // No url    
-    wxExecute ( myapp()->getHTMLCommand ( url.c_str() ).c_str() ) ;
+    wxExecute ( myapp()->getHTMLCommand ( url ) ) ;
     }
 
 
@@ -503,11 +503,11 @@ void TEnzymeDialog::initme ( TRestrictionEnzyme *_e , bool ro )
     
     eb_name = new wxTextCtrl ( this , -1 , e->name , 
                 wxPoint ( x1 , bo ) , wxSize ( w-bo-x1 , lh-bo ) ) ;
-    eb_seq  = new wxTextCtrl ( this , -1 , e->sequence.c_str() , 
+    eb_seq  = new wxTextCtrl ( this , -1 , e->sequence , 
                 wxPoint ( x1 , bo+lh ) , wxSize ( w-bo-x1 , lh-bo ) ) ;
-    eb_loc  = new wxTextCtrl ( this , -1 , e->location.c_str() , 
+    eb_loc  = new wxTextCtrl ( this , -1 , e->location , 
                 wxPoint ( x1 , bo+lh*2 ) , wxSize ( w-bo-x1 , lh-bo ) ) ;
-    eb_note = new wxTextCtrl ( this , -1 , e->note.c_str() , 
+    eb_note = new wxTextCtrl ( this , -1 , e->note , 
                 wxPoint ( x1 , bo+lh*3 ) , wxSize ( w-bo-x1 , lh-bo ) ) ;
 
     sprintf ( u , "%d" , e->cut ) ;
@@ -609,7 +609,7 @@ ProgramOptionsDialog::ProgramOptionsDialog(wxWindow *parent, const wxString& tit
     useInternalHelp->SetValue ( myapp()->frame->useInternalHelp ) ;
     language->Append ( "en" ) ;
     language->Append ( "de" ) ;
-    language->SetStringSelection ( myapp()->frame->lang_string.c_str() ) ;
+    language->SetStringSelection ( myapp()->frame->lang_string ) ;
 
     Center () ;
     OK->SetDefault () ;
@@ -716,7 +716,7 @@ void FindSequenceDialog::OnSearch ( wxCommandEvent &ev )
     if ( sub == "" ) return ;
 
     // Preparing sequence    
-    wxString s = c->vec->getWxSequence() ;
+    wxString s = c->vec->getSequence() ;
     if ( c->vec->isCircular() )
         {
         wxString t ;
@@ -726,7 +726,7 @@ void FindSequenceDialog::OnSearch ( wxCommandEvent &ev )
         }
         
     // Now we search...
-    a = subsearch ( s.c_str() , sub , p ) ;
+    a = subsearch ( s , sub , p ) ;
     if ( a > -1 )
         {
         if ( c->def == "dna" )

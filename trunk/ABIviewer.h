@@ -7,8 +7,6 @@
 
 class TVector ;
 
-typedef vector <char> tvc ;
-
 class TABIviewer : public ChildBase
     {
     public :
