@@ -531,3 +531,6 @@
 "t_aa_plot_pi","AA isoelectric point","AS isoelektrischer Punkt"
 "t_pcr_spin_1","Polymerase can run for ","Polymerase kann "
 "t_pcr_spin_2"," nucleotides"," Nukleotide abarbeiten"
+"t_checking4update","Checking for new version...","Suche nach neuer Version..."
+"t_downloading_new_version","Downloading new version...","Lade neue Version..."
+

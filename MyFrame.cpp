@@ -180,6 +180,10 @@ void MyFrame::initme ()
     // so you won't be bothered with updates anymore :-)
     if ( LS->getOption ( "DEBUGGING" , "" ) == "1" ) checkUpdate = false ;
 
+//    miniFrame = new wxMiniFrame ( this , -1 , "" , wxDefaultPosition , wxSize ( 250 , 20 ) , wxTINY_CAPTION_HORIZ ) ;
+//    miniFrame->Center() ;
+//    miniFrame->Show() ;
+
 #ifdef __WXMSW__
     if ( checkUpdate )
         {
@@ -187,10 +191,15 @@ void MyFrame::initme ()
         if ( cur_update != "" )
             {
             update2version ( cur_update ) ;
+//            miniFrame->Close() ;
+//            delete miniFrame ;
             return ;
             }
         }
 #endif
+
+//    miniFrame->Close() ;
+//    delete miniFrame ;
         
     project_name = txt("project") ;
     SetTitle ( txt("gentle") ) ;
@@ -1264,6 +1273,8 @@ string MyFrame::check4update ()
         }
     delete dm ;*/
     
+//    miniFrame->SetTitle ( txt("t_checking4update") ) ;
+    
     wxString it ;
     wxFileSystem fs ;
     wxFSFile *f = fs.OpenFile ( "http://gentle.magnusmanske.de/currentversion.txt" ) ;
@@ -1310,6 +1321,7 @@ void MyFrame::update2version ( string ver )
 /*       TStandbyDialog sd ( this , "Standby" , "Downloading installer..." ) ;
        sd.Show(TRUE) ;
        sd.Refresh() ;*/
+//       miniFrame->SetTitle ( txt("t_downloading_new_version") ) ;
        unsigned char tmp[10000] ;
        wxInputStream *in = f->GetStream () ;
        vector <unsigned char> uv ;

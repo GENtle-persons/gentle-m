@@ -6,6 +6,7 @@
 #include <wx/dnd.h>
 #include <wx/docview.h>
 #include <wx/html/htmprint.h>
+#include <wx/minifram.h>
 
 class ChildBase ;
 class TStorage ;
@@ -94,6 +95,7 @@ public:
     wxSashLayoutWindow* m_leftWindow2;
     wxSashLayoutWindow* m_bottomWindow;
     vector <TStorage*> dbcache ;
+    wxMiniFrame *miniFrame ;
     
     DECLARE_EVENT_TABLE()
 };
