@@ -194,9 +194,12 @@ void MyChild::OnUpdateRefresh(wxUpdateUIEvent& event)
 
 void MyChild::OnActivate(wxActivateEvent& event)
 {
+	mylog ( "MyChild::OnActivate" , "1" ) ;
     ChildBase::Activate () ;
+	mylog ( "MyChild::OnActivate" , "2" ) ;
     if ( event.GetActive() && cSequence ) 
        cSequence->SetFocus();
+	mylog ( "MyChild::OnActivate" , "3" ) ;
 }
 
 
@@ -526,6 +529,7 @@ void MyChild::OnViewMode(wxCommandEvent& event)
     if ( cSequence->getEditMode() ) OnEditMode ( event ) ;
     if ( !viewMode )
         {
+        mylog ( "MyChild::OnViewMode" , "1a" ) ;
         sp1 = sw->GetSashPosition () ;
         sp2 = swu->GetSashPosition () ;
         sw->Unsplit ( cSequence ) ;
@@ -536,6 +540,7 @@ void MyChild::OnViewMode(wxCommandEvent& event)
         }
     else
         {
+        mylog ( "MyChild::OnViewMode" , "1b" ) ;
         cPlasmid->setMarkFrom ( -1 ) ;
         cSequence->setEditMode ( false ) ;
         cSequence->arrange () ;
@@ -551,11 +556,13 @@ void MyChild::OnViewMode(wxCommandEvent& event)
         Refresh () ;
         cSequence->SetFocus() ;
         }
+    mylog ( "MyChild::OnViewMode" , "2" ) ;
     mi->Check ( viewMode ) ;
 #ifdef __WXMSW__ // LINUX
     myass ( GetToolBar() , "MyChild::OnViewMode_3" ) ;
     GetToolBar()->ToggleTool(MDI_VIEW_MODE,viewMode);
 #endif
+    mylog ( "MyChild::OnViewMode" , "3" ) ;
     }
     
 void MyChild::OnEditMode(wxCommandEvent& event)

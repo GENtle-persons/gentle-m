@@ -98,6 +98,7 @@ public:
     virtual void activateChild ( int a ) ;
     virtual void lockDisplay ( bool lock = true ) ;
     virtual bool isLocked () ;
+    virtual bool isActivating () ;
     virtual TVirtualGel *useGel ( wxString type ) ;
 
     TMainTree *mainTree ;
@@ -124,6 +125,7 @@ public:
     ChildBase *lastChild ;
     wxMenuBar *menu_bar ;
     int locked ;
+    bool activating ;
     
     DECLARE_EVENT_TABLE()
 };

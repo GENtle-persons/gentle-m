@@ -54,6 +54,7 @@ MyFrame::MyFrame(wxWindow *parent,
        : MyFrameType(parent, id, title, pos, size, style)
 {
     dying = false ;
+    activating = false ;
     locked = 0 ;
 
     // Accelerators
@@ -1232,6 +1233,11 @@ bool MyFrame::isLocked ()
     return ( locked != 0 ) ;
     }    
         
+bool MyFrame::isActivating ()
+    {
+    return activating ;
+    }    
+        
 wxString MyFrame::check4update ()
     {
 /*  // Deactivated due to strange error message on NT without RAS
@@ -1379,6 +1385,7 @@ void MyFrame::setActiveChild ( ChildBase *c )
     lastChild = c ;
     if ( !IsShown() ) return ;
     if ( locked != 0 ) return ;
+    if ( activating ) return ;
     int a ;
     for ( a = 0 ; a < children.GetCount() ; a++ )
        {
@@ -1391,21 +1398,32 @@ void MyFrame::setActiveChild ( ChildBase *c )
        }
     if ( children.GetCount() == 0 && GetMenuBar() != menu_bar ) SetMenuBar ( menu_bar ) ;
     if ( !c ) return ;
+    activating = true ;
+    wxSafeYield() ;
+    mylog ( "setActiveChild" , "0" ) ;
     if ( !c->IsEnabled() ) c->Enable() ;
+    mylog ( "setActiveChild" , "1" ) ;
     if ( !c->IsShown() ) c->Show() ;
+    mylog ( "setActiveChild" , "2" ) ;
     if ( c->menubar && GetMenuBar() != c->menubar )
        {
        SetMenuBar ( c->menubar ) ;
        }
+    mylog ( "setActiveChild" , "3" ) ;
     wxSize s = c->GetParent()->GetClientSize() ;
     if ( c->GetSize() != s )
        {
        if ( c->vec ) c->vec->recalcvisual = true ;
        c->SetSize ( s ) ;
        }
-    if ( c->inMainTree.IsOk() && mainTree->GetSelection() != c->inMainTree )
+    mylog ( "setActiveChild" , "4" ) ;
+    if ( mainTree && c->inMainTree.IsOk() && mainTree->GetSelection() != c->inMainTree )
         mainTree->SelectItem ( c->inMainTree ) ;
+    mylog ( "setActiveChild" , "5" ) ;
     c->Refresh () ;
+    mylog ( "setActiveChild" , "6" ) ;
+    wxSafeYield () ;
+    activating = false ;
     }
 
 wxWindow *MyFrame::getCommonParent()
@@ -1489,8 +1507,11 @@ TVirtualGel *MyFrame::useGel ( wxString type )
 void MyFrame::TestMenu(wxCommandEvent& event)
     {
     srand ( time(NULL) );
+    int start = wxGetLocalTime() ;
+    int cnt = 0 ;
     while ( true )
     	{
+	    cnt++ ;
         ChildBase *ac = GetActiveChild () ;
         int r = rand() ;
         r %= 10 ;
@@ -1499,6 +1520,8 @@ void MyFrame::TestMenu(wxCommandEvent& event)
         	{
     	    wxString x ;
     	    x = ac->getName() ;
+    	    x += wxString::Format ( " [%ds, #%d]" , wxGetLocalTime()-start , cnt ) ;
+    	    if ( ac->vec ) x += wxString::Format ( ", seq : %d" , ac->vec->getSequenceLength() ) ;
     	    if ( ac->cSequence ) x += wxString::Format ( ", EditMode : %d" , ac->cSequence->getEditMode() ) ;
     	    mylog ( "Testsuite:Status" , x ) ;
         	}    
@@ -1506,10 +1529,15 @@ void MyFrame::TestMenu(wxCommandEvent& event)
         if ( r < 7 )
         	{
     	    if ( !ac->cSequence ) continue ;
-    	    wxKeyEvent ev ;
+    	    wxKeyEvent ev ( wxEVT_CHAR_HOOK ) ;
+    	    ev.m_altDown = false ;
+    	    ev.m_controlDown = false ;
+    	    ev.m_metaDown = false ;
+    	    ev.m_shiftDown = false ;
     	    r = rand () % 40 ;
-    	    if ( r > 12 ) r = 9 + r % 4 ;
+    	    if ( r > 14 ) r = 9 + r % 6 ;
     	    wxString msg ;
+    	    ev.m_keyCode = 'A' ; // Default
     	    if ( r == 0 ) { ev.m_keyCode = 'A' ; msg = "A" ; }
     	    if ( r == 1 ) { ev.m_keyCode = 'C' ; msg = "C" ; }
     	    if ( r == 2 ) { ev.m_keyCode = 'T' ; msg = "G" ; }
@@ -1523,6 +1551,8 @@ void MyFrame::TestMenu(wxCommandEvent& event)
     	    if ( r == 10 ) { ev.m_keyCode = WXK_LEFT ; msg = "LEFT" ; }
     	    if ( r == 11 ) { ev.m_keyCode = WXK_UP ; msg = "UP" ; }
     	    if ( r == 12 ) { ev.m_keyCode = WXK_DOWN ; msg = "DOWN" ; }
+    	    if ( r == 13 ) { ev.m_keyCode = WXK_PRIOR ; msg = "PRIOR" ; }
+    	    if ( r == 14 ) { ev.m_keyCode = WXK_NEXT ; msg = "NEXT" ; }
     	    mylog ( "Testsuite:Key" , wxString::Format ( "%s" , msg.c_str() ) ) ;
     	    ac->cSequence->OnCharHook(ev) ;
         	}    
@@ -1562,7 +1592,7 @@ void MyFrame::TestMenu(wxCommandEvent& event)
      		    case 12 : c->OnMarkAll ( ev ) ; break ;
      		    case 13 : c->OnCut ( ev ) ; break ;
      		    case 14 : c->OnCopy ( ev ) ; break ;
-     		    case 15 : c->OnPaste ( ev ) ; break ;
+//     		    case 15 : c->OnPaste ( ev ) ; break ; // Might paste *real* clipboard;-)
      		    case 16 : c->OnCopyToNew ( ev ) ; break ;
      		    case 17 : c->OnViewMode ( ev ) ; break ;
      		    case 18 : c->OnORFs ( ev ) ; break ;
@@ -1570,7 +1600,6 @@ void MyFrame::TestMenu(wxCommandEvent& event)
      		    case 20 : c->OnToggleRestriction ( ev ) ; break ;
      		    case 21 : c->OnToggleIDNA ( ev ) ; break ;
                 }
-   		    wxSafeYield() ;
        		}   
      	}
     }            
