@@ -81,6 +81,7 @@ Section "install" Installation info
   File "clustalw.exe"
 ;  File "sqlite.exe"
   File "sqlite.dll"
+  File "libmySQL.dll"
   File "GENtle.ico"
   File "variables.csv"
   File "blank.db"
