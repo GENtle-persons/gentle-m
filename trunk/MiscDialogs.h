@@ -88,7 +88,7 @@ class ProgramOptionsDialog : public wxDialog
     wxChoice *language ;
     wxCheckBox *enhancedDisplay , *vectorTitle , *vectorLength ,
                 *loadLastProject , *useMetafile , *showSplashScreen ,
-                *checkUpdate ;
+                *checkUpdate , *useInternalHelp ;
     
     DECLARE_EVENT_TABLE()
     } ;

@@ -328,6 +328,7 @@ class SequenceCanvas : public wxScrolledWindow
     ChildBase *child ; // Wanna-be universal com port to "parent"
     int maxendnumberlength ;
     int lastyoffset ;
+    wxString lastToolTip ;
 
     DECLARE_EVENT_TABLE()
     };

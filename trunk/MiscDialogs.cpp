@@ -320,6 +320,9 @@ ProgramOptionsDialog::ProgramOptionsDialog(wxWindow *parent, const wxString& tit
     checkUpdate = new wxCheckBox ( this , -1 , 
                         txt("t_check4update") , 
                         wxPoint ( bo , lh*9 ) ) ;
+    useInternalHelp = new wxCheckBox ( this , -1 , 
+                        txt("t_useinternalhelp") , 
+                        wxPoint ( bo , lh*10 ) ) ;
                         
     wxButton *OK = new wxButton ( this , POD_OK , txt("b_ok") ,
                                 wxPoint ( bo , h - lh - bo ) ,
@@ -335,6 +338,7 @@ ProgramOptionsDialog::ProgramOptionsDialog(wxWindow *parent, const wxString& tit
     useMetafile->SetValue ( myapp()->frame->useMetafile ) ;
     showSplashScreen->SetValue ( myapp()->frame->showSplashScreen ) ;
     checkUpdate->SetValue ( myapp()->frame->checkUpdate ) ;
+    useInternalHelp->SetValue ( myapp()->frame->useInternalHelp ) ;
     language->Append ( "en" ) ;
     language->Append ( "de" ) ;
     language->SetStringSelection ( myapp()->frame->lang_string.c_str() ) ;

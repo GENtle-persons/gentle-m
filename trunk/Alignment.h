@@ -17,6 +17,8 @@
 typedef vector <int> tvi ;
 typedef vector <char> tvc ;
 
+class SeqAA ;
+
 class TAlignment : public ChildBase
     {
     public :
@@ -58,8 +60,10 @@ class TAlignment : public ChildBase
     
     private :
     wxListBox *mmb ;
+    SeqAA *aaa ;
     void myInsert ( int line , int pos , char what ) ;
     void myDelete ( int line , int pos ) ;
+    void updateSequence () ;
         
     DECLARE_EVENT_TABLE()
     } ;

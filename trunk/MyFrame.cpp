@@ -1,6 +1,7 @@
 #include "MyFrame.h"
 #include <wx/textfile.h>
 #include <wx/dir.h>
+#include <wx/html/helpctrl.h>
 
 // ---------------------------------------------------------------------------
 // MyFrame
@@ -165,6 +166,7 @@ void MyFrame::initme ()
     checkUpdate = LS->getOption ( "CHECKUPDATE" , true ) ;
     lang_string = LS->getOption ( "LANGUAGE" , "en" ) ;
     useCoolCanvas = LS->getOption ( "USECOOLCANVAS" , false ) ; // Not saved yet
+    useInternalHelp = LS->getOption ( "USEINTERNALHELP" , false ) ; // Not saved yet
     init_txt ( lang_string ) ;
 
     // Set the DEBUGGING option in your local test database,
@@ -322,20 +324,34 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event) )
 
 void MyFrame::OnHelp(wxCommandEvent& WXUNUSED(event) )
 {
-#ifdef __WXMSW__
-    string helpfile = "\"" ;
-    helpfile += myapp()->homedir ;
-    helpfile += "\\" ;
-    helpfile += txt("f_help") ;
-    helpfile += "\"" ;
-    
-    for ( int a = 0 ; a < helpfile.length() ; a++ )
-       if ( helpfile[a] == '/' ) helpfile[a] = '\\' ;
-    
-    string command = myapp()->getHTMLCommand ( helpfile ) ;
-    wxExecute ( command.c_str() ) ;
-#else
-#endif
+    if ( useInternalHelp )
+        {
+        wxHtmlHelpController *hc = new wxHtmlHelpController ( wxHF_DEFAULT_STYLE|wxHF_OPEN_FILES ) ;
+        string helpfile ;
+        helpfile += myapp()->homedir ;
+        helpfile += "\\help\\" ;
+        helpfile += lang_string ;
+        helpfile += ".hhp" ;
+        hc->AddBook ( helpfile.c_str() ) ;
+        hc->DisplayContents () ;
+        }
+    else
+        {
+        #ifdef __WXMSW__
+            string helpfile = "\"" ;
+            helpfile += myapp()->homedir ;
+            helpfile += "\\" ;
+            helpfile += txt("f_help") ;
+            helpfile += "\"" ;
+            
+            for ( int a = 0 ; a < helpfile.length() ; a++ )
+               if ( helpfile[a] == '/' ) helpfile[a] = '\\' ;
+            
+            string command = myapp()->getHTMLCommand ( helpfile ) ;
+            wxExecute ( command.c_str() ) ;
+        #else
+        #endif
+        }
 }
 
 void MyFrame::OnEnzymeEditor(wxCommandEvent& WXUNUSED(event) )
@@ -739,6 +755,7 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     useMetafile = pod.useMetafile->GetValue() ;
     showSplashScreen = pod.showSplashScreen->GetValue() ;
     checkUpdate = pod.checkUpdate->GetValue() ;
+    useInternalHelp = pod.useInternalHelp->GetValue() ;
     string lang = pod.language->GetStringSelection().c_str() ;
     if ( lang != lang_string )
         {
@@ -755,6 +772,7 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     LS->setOption ( "LOADLASTPROJECT" , loadLastProject ) ;
     LS->setOption ( "SHOWSPLASHSCREEN" , showSplashScreen ) ;
     LS->setOption ( "CHECKUPDATE" , checkUpdate ) ;
+    LS->setOption ( "USEINTERNALHELP" , useInternalHelp ) ;
     }
 
 void MyFrame::OnProjectLoad(wxCommandEvent& event)

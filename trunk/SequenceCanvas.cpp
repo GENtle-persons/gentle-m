@@ -907,6 +907,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         return ;
         }
     
+    wxString newToolTip ;
     int pos ;
     SeqBasic *where ;
     where = findMouseTarget ( pt , pos ) ;
@@ -916,19 +917,24 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         {
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
         wxLogStatus(txt("seq_loc"), pos ) ;
+        newToolTip = wxString::Format(txt("seq_loc"),pos) ;
         }
     else if ( where && child && child->def == "alignment" )
         {
         SeqAlign *al = (SeqAlign*)where ;
         if ( al->myname == txt("t_consensus") ) {} // Do nothing
         else if ( al->whatsthis() == "FEATURE" ) {} // Do nothing
-        else if ( al->s[pos] == '-' ) wxLogStatus ( al->myname.c_str() ) ;
+        else if ( al->s[pos-1] == '-' ) wxLogStatus ( al->myname.c_str() ) ;
         else
            {
            int a , b ;
            for ( a = b = 0 ; a < pos ; a++ )
               if ( al->s[a] != '-' )
                 b++ ;
+                
+           newToolTip = al->myname.c_str() ;
+           newToolTip += ", " ;
+           newToolTip += wxString::Format(txt("seq_loc"),b) ;
            wxLogStatus(wxString::Format("%s (%d)",al->myname.c_str(),b)) ;
            }
         }
@@ -937,6 +943,12 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         wxLogStatus("") ;
         SetCursor(wxCursor(*wxSTANDARD_CURSOR)) ;
         }
+
+    if ( newToolTip != lastToolTip )
+       {
+       lastToolTip = newToolTip ;
+       SetToolTip ( newToolTip ) ;
+       }
         
     if ( event.MiddleDown() && where )
         {

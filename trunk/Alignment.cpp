@@ -30,6 +30,7 @@ TAlignment::TAlignment(MyFrame *parent, const wxString& title)
     gap = "-" ;
     algorithm = ALG_CW ;
     vec = NULL ;
+    aaa = NULL ;
     }
     
 TAlignment::~TAlignment ()
@@ -250,10 +251,11 @@ void TAlignment::redoAlignments ()
         if ( qAlign[0][a] == '-' )
            dv->insert_char ( '-' , a+1 , false ) ;
         }
-    
-    f->initFromTVector ( dv ) ;
+
+    updateSequence () ;
+/*    f->initFromTVector ( dv ) ;
     sc->arrange () ;
-    sc->Refresh () ;
+    sc->Refresh () ;*/
     }
     
 void TAlignment::myInsert ( int line , int pos , char what )
@@ -332,9 +334,26 @@ void TAlignment::callMiddleMouseButton ( string id , int pos )
             }
         else again = false ;
         }
+    updateSequence () ;
+    }
     
+void TAlignment::updateSequence ()
+    {
     SeqFeature *f = (SeqFeature*) sc->seq[0] ;
-    f->initFromTVector ( dv ) ;
+    if ( dv->type == TYPE_AMINO_ACIDS )
+        {
+        if ( aaa ) delete aaa ;
+        aaa = new SeqAA ( NULL ) ;
+        sc->seq[0] = aaa ;
+        aaa->initFromTVector ( dv ) ;
+        aaa->can = sc ;
+        sc->arrange () ;
+        sc->seq[0] = f ;
+        f->aaa = aaa ;
+        f->initFromTVector ( dv ) ;
+        f->aaa = aaa ;
+        }
+    else f->initFromTVector ( dv ) ;
     sc->arrange () ;
     sc->SilentRefresh() ;
     }
@@ -361,6 +380,8 @@ void TAlignment::OnSettings ( wxCommandEvent &ev )
     
     redoAlignments () ;
     }
+    
+// HOMEMADE ALIGNMENT ALGORITHMS
 
 int TAlignment::NeedlemanWunsch ( string &s1 , string &s2 )
     {
