@@ -763,7 +763,7 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
        {
        p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
        }
-    else if ( event.MiddleDown() || event.MiddleIsDown() )
+    else if ( event.MiddleDown() || ( event.Dragging() && event.MiddleIsDown() ) )
        {
        int bp = circular_pos ( angle ) ;
        p->cSequence->mark ( "DNA" , bp , bp ) ;
