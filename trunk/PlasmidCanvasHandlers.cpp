@@ -43,17 +43,19 @@ wxMenu *PlasmidCanvas::invokeItemPopup ( int item , wxPoint pt , bool doreturn )
     cm->Append ( POPUP_DUMMY , txt("p_dna_sequence") , dm ) ;
     dm->Append ( PC_ITEM_MARK , txt("p_item_mark") ) ;
     dm->Append ( PC_ITEM_MARK_SHOW , txt("p_item_mark_show") ) ;
+    dm->AppendSeparator () ;
     dm->Append ( PC_ITEM_COPY_DNA , txt("p_item_copy_dna") ) ;
     dm->Append ( PC_ITEM_AS_NEW_SEQUENCE , txt("p_item_as_new_entry") ) ;
     dm->Append ( PC_ITEM_BLAST_DNA , txt("p_item_blast_dna") ) ;
 
-    wxMenu *am = new wxMenu ;
-    cm->Append ( POPUP_DUMMY , txt("p_aa_sequence") , am ) ;
-    am->Append ( PC_ITEM_COPY_AA , txt("p_item_copy_aa") ) ;
-    am->Append ( PC_ITEM_AS_NEW_AA_SEQUENCE , txt("p_item_as_new_aa_entry") ) ;
     if ( rf != 0 )
+        {
+        wxMenu *am = new wxMenu ;
+        cm->Append ( POPUP_DUMMY , txt("p_aa_sequence") , am ) ;
+        am->Append ( PC_ITEM_COPY_AA , txt("p_item_copy_aa") ) ;
+        am->Append ( PC_ITEM_AS_NEW_AA_SEQUENCE , txt("p_item_as_new_aa_entry") ) ;
         am->Append ( PC_ITEM_BLAST_AA , txt("p_item_blast_aa") ) ;
-
+        }
 
     lastvectorobject = -1 ;
     if ( doreturn ) return cm ;

@@ -91,6 +91,7 @@ MyFrame::~MyFrame ()
 void MyFrame::initme ()
     {
   wxSashLayoutWindow* win ;
+  m_leftWindow2 = m_topWindow = m_bottomWindow = NULL ;
 /*      win = new wxSashLayoutWindow(this, FRAME_SASH_TOP,
                              wxDefaultPosition, wxSize(200, 30),
                              wxNO_BORDER | wxSW_3D | wxCLIP_CHILDREN);
@@ -142,7 +143,6 @@ void MyFrame::initme ()
   win->SetSashVisible(wxSASH_RIGHT, TRUE);
 
   m_leftWindow2 = win;*/
-  m_leftWindow2 = m_topWindow = m_bottomWindow = NULL ;
 
     // Database access
     LS = new TStorage ( LOCAL_STORAGE ) ;
@@ -231,7 +231,6 @@ void MyFrame::initme ()
 
     // Drag'n'drop    
     MyFrameDropTarget *dt = new MyFrameDropTarget ;
-    dt->f = this ;
     SetDropTarget ( dt ) ;
 #ifdef __WXGTK__
     // Toolbar
@@ -1250,7 +1249,7 @@ bool MyFrameDropTarget::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& f
        string path = filenames[a].c_str() ;
        for ( b = path.length() - 1 ; path[b] != '\\' && path[b] != '/' ; b-- ) ;
        string file = path.substr ( b+1 ) ;
-       f->importFile ( file , path , -1 ) ;
+       myapp()->frame->importFile ( file , path , -1 ) ;
        }
 //    wxMessageBox ( filenames[0] ) ;
     return true ;

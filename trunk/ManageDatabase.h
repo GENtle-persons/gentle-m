@@ -95,7 +95,6 @@ class TManageDatabaseDialog : public wxDialog
     void pmGetContext ( wxListCtrl *side ) ;
 
     vector <string> db_name , db_file ;
-    MyFrame *f ;
     TStorage *storage ;
     wxNotebook *nb ;
     wxPanel *pDatabases , *pCopynMove ;

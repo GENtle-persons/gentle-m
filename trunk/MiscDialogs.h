@@ -90,8 +90,6 @@ class ProgramOptionsDialog : public wxDialog
                 *loadLastProject , *useMetafile , *showSplashScreen ,
                 *checkUpdate ;
     
-    MyFrame *f ;
-
     DECLARE_EVENT_TABLE()
     } ;
 

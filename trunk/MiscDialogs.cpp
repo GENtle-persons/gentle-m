@@ -289,7 +289,6 @@ ProgramOptionsDialog::ProgramOptionsDialog(wxWindow *parent, const wxString& tit
     {
     int w , h ;
     int bo = 5 , lh = 22 ;
-    f = (MyFrame*) parent ;
     GetClientSize ( &w , &h ) ;
     
     wxStaticText *st ;
@@ -329,16 +328,16 @@ ProgramOptionsDialog::ProgramOptionsDialog(wxWindow *parent, const wxString& tit
                                 wxPoint ( w*3/4 - bo , h - lh - bo ) ,
                                 wxSize ( w/4 , lh ) ) ;
 
-    enhancedDisplay->SetValue ( f->enhancedRefresh ) ;
-    vectorTitle->SetValue ( f->showVectorTitle ) ;
-    vectorLength->SetValue ( f->showVectorLength ) ;
-    loadLastProject->SetValue ( f->loadLastProject ) ;
-    useMetafile->SetValue ( f->useMetafile ) ;
-    showSplashScreen->SetValue ( f->showSplashScreen ) ;
-    checkUpdate->SetValue ( f->checkUpdate ) ;
+    enhancedDisplay->SetValue ( myapp()->frame->enhancedRefresh ) ;
+    vectorTitle->SetValue ( myapp()->frame->showVectorTitle ) ;
+    vectorLength->SetValue ( myapp()->frame->showVectorLength ) ;
+    loadLastProject->SetValue ( myapp()->frame->loadLastProject ) ;
+    useMetafile->SetValue ( myapp()->frame->useMetafile ) ;
+    showSplashScreen->SetValue ( myapp()->frame->showSplashScreen ) ;
+    checkUpdate->SetValue ( myapp()->frame->checkUpdate ) ;
     language->Append ( "en" ) ;
     language->Append ( "de" ) ;
-    language->SetStringSelection ( f->lang_string.c_str() ) ;
+    language->SetStringSelection ( myapp()->frame->lang_string.c_str() ) ;
 
     Center () ;
     OK->SetDefault () ;

@@ -29,7 +29,6 @@ class TMainTree : public wxTreeCtrl
     void OnCloseChild ( wxCommandEvent &event ) ;
 
     // Variables
-    MyFrame *p ;
     wxTreeItemId treeroot , vectors , primers , fragments , sequences , 
                     alignments , amino_acids , misc ;
                     
