@@ -74,6 +74,7 @@ class TVectorEditor : public wxDialog
     private :
     virtual int getCurrentItem () ;
     virtual void clearItemSelection () ;
+    virtual void itemColInternal() ;
 
         
     wxListBox *listCE , *listGroups , *listGE ;

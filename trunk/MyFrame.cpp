@@ -313,8 +313,8 @@ void MyFrame::initme ()
 */
     html_ep = new wxHtmlEasyPrinting ( "" , this ) ;
     
-    wxBeginBusyCursor() ;
-
+    wxBeginBusyCursor() ;       
+       
     // Load last project?
 //    loadLastProject = false ;
     if ( loadLastProject )
@@ -335,8 +335,7 @@ void MyFrame::initme ()
            }
         }
         
-    wxEndBusyCursor() ;
-    
+
         
     // Command line parameters?
     if ( myapp()->argc > 1 )
@@ -351,12 +350,16 @@ void MyFrame::initme ()
           wxSetWorkingDirectory ( myapp()->homedir ) ;
           }
        }
+        
+    wxEndBusyCursor() ;
+    
+
        
     SetSizeHints ( 600 , 400 ) ;
     Show(TRUE);
     if ( children.GetCount() )
        {
-       children[0]->Activate () ;
+       children.Last()->Activate () ;
        }
     }
     
@@ -1023,6 +1026,17 @@ TABIviewer *MyFrame::newABI ( wxString filename , wxString title )
     
     mainTree->addChild ( subframe , TYPE_SEQUENCE ) ;
     setChild ( subframe ) ;
+
+    if ( LS->getOption ( "SHOWABIHORIZONTAL" , false ) )
+        {
+        subframe->sc->SilentRefresh () ;
+        wxCheckBox *horiz = (wxCheckBox*) subframe->FindWindowById ( ALIGN_HORIZ ) ;
+        myass ( horiz , "NULL" ) ;
+        if ( horiz ) horiz->SetValue ( true ) ;
+        wxCommandEvent event ;
+        subframe->OnHorizontal(event) ;
+        }    
+
 
     return subframe ;
     }

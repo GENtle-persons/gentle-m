@@ -348,7 +348,7 @@ void TVectorEditor::itemClr ()
 
 // Invokes "Edit feature" dialog
 // Color, sequence display type, AA offset etc.
-void TVectorEditor::itemCol ( wxListEvent &ev )
+void TVectorEditor::itemColInternal()
     {
     if ( getCurrentItem() == -1 ) return ;
     storeItemData () ;    
@@ -356,11 +356,15 @@ void TVectorEditor::itemCol ( wxListEvent &ev )
     if ( ied.ShowModal() != wxID_OK ) return ;
     *newitems[getCurrentItem()] = *ied.vi ;
     }    
+
+void TVectorEditor::itemCol ( wxListEvent &ev )
+    {
+    itemColInternal() ;
+    }    
     
 void TVectorEditor::itemCol2 ( wxCommandEvent &ev )
     {
-    wxListEvent ev2 ;
-    itemCol ( ev2 ) ;
+    itemColInternal() ;
     }    
     
 // Item choice dropdown box handler

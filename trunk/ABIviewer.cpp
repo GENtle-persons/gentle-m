@@ -62,7 +62,7 @@ TABIviewer::~TABIviewer ()
     if ( stat ) delete stat ;
     }
     
-void TABIviewer::OnHorizontal(wxScrollEvent& event)
+void TABIviewer::OnHorizontal(wxCommandEvent& event)
     {
     if ( sc->isHorizontal() )
         {
@@ -72,12 +72,13 @@ void TABIviewer::OnHorizontal(wxScrollEvent& event)
         {
         oldh = f_height->GetValue () ;
         wxSize s = sc->MyGetClientSize()  ;
-        int newh = s.GetHeight() / sc->charheight - 2 ;
+        myass ( false , wxString::Format ( "%d %d" , s.GetHeight() , sc->charheight ) ) ;
+        int newh = ( s.GetHeight() / sc->charheight - 2 ) / 2 ;
         f_height->SetValue ( newh ) ;
         }        
     sc->toggleHorizontal () ;
-    wxSpinEvent ev2 ;
-    OnSpinHeight ( ev2 ) ;
+    myapp()->frame->LS->setOption ( "SHOWABIHORIZONTAL" , sc->isHorizontal() ) ;
+    spinHeight() ;
     }    
     
 void TABIviewer::OnZoom(wxScrollEvent& event)
@@ -105,13 +106,18 @@ void TABIviewer::OnSpinWidth(wxSpinEvent& event)
     sc->SilentRefresh () ;
     }
     
-void TABIviewer::OnSpinHeight(wxSpinEvent& event)
+void TABIviewer::spinHeight()
     {
     int value = f_height->GetValue() ;
     sc->blankline = value + 1 ;
     sc->arrange () ;
     sc->SilentRefresh () ;    
     sc->SetFocus () ;
+    }    
+    
+void TABIviewer::OnSpinHeight(wxSpinEvent& event)
+    {
+    spinHeight() ;
     }
 
 void TABIviewer::initme ()
@@ -149,6 +155,7 @@ void TABIviewer::initme ()
     menu_bar->Append(help_menu, txt("m_help") );
     SetMenuBar(menu_bar);
 
+    wxCheckBox *horiz = NULL ;
 
 #ifdef __WXMSW__ // LINUX
     // Toolbar
@@ -169,7 +176,8 @@ void TABIviewer::initme ()
     toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] ) ;
 //    toolBar->AddTool( MDI_PASTE, myapp()->frame->bitmaps[6] ) ;
     toolBar->AddSeparator() ;
-    toolBar->AddControl ( new wxCheckBox ( toolBar , ALIGN_HORIZ , txt("t_horizontal") ) ) ;
+    horiz = new wxCheckBox ( toolBar , ALIGN_HORIZ , txt("t_horizontal") ) ;
+    toolBar->AddControl ( horiz ) ;
     toolBar->Realize() ;
 #endif
 
@@ -238,7 +246,7 @@ void TABIviewer::initme ()
     showSequence () ;
     showStat () ;
     sc->SetFocus() ;
-    myapp()->frame->setChild ( this ) ;
+    myapp()->frame->setChild ( this ) ;    
     }
     
 wxString TABIviewer::getName ()

@@ -32,12 +32,17 @@ class TABIviewer : public ChildBase
     virtual void OnSpinWidth(wxSpinEvent& event);
     virtual void OnSpinHeight(wxSpinEvent& event);
     virtual void OnZoom(wxScrollEvent& event);
-    virtual void OnHorizontal(wxScrollEvent& event);
+    virtual void OnHorizontal(wxCommandEvent& event);
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){};
-//    virtual void OnClose(wxCloseEvent& event) ;
-    
+
     // Variables
     SequenceCanvas *sc ;
+
+    private :
+    friend class MyFrame ;
+    virtual void spinHeight() ;
+    
+    // Variables
     wxTextCtrl *stat ;
     wxPanel *up ;
     wxSplitterWindow *hs ;
