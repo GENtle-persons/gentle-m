@@ -4,7 +4,6 @@
 #include "main.h"
 
 #include <math.h>
-//#include <io.h>
 #include <fcntl.h>
 #include <string>
 #include <vector>

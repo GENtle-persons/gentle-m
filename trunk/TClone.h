@@ -8,7 +8,6 @@
 #include "main.h"
 
 #include <math.h>
-//#include <io.h>
 #include <fcntl.h>
 #include <string>
 #include <vector>
@@ -17,14 +16,6 @@
 #include <algorithm>
 
 class TStorage ;
-/*
-class TLinear
-    {
-    public :
-	TLinear () {} ;
-	// Variables
-	} ;
-*/
 
 class TClone_Enzyme
     {
