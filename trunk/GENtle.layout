@@ -1,8 +1,8 @@
 [Editors]
 
-Focused=36
+Focused=39
 
-Order=
+Order=40,39
 
 [Editor_0]
 
@@ -468,29 +468,29 @@ LeftChar=1
 
 [Editor_39]
 
-Open=0
+Open=1
 
-Top=0
+Top=1
 
-CursorCol=5
+CursorCol=33
 
-CursorRow=153
+CursorRow=924
 
-TopLine=89
+TopLine=903
 
 LeftChar=1
 
 [Editor_40]
 
-Open=0
+Open=1
 
 Top=0
 
-CursorCol=33
+CursorCol=7
 
-CursorRow=227
+CursorRow=93
 
-TopLine=195
+TopLine=45
 
 LeftChar=1
 
@@ -554,11 +554,11 @@ Open=0
 
 Top=0
 
-CursorCol=34
+CursorCol=16
 
-CursorRow=231
+CursorRow=660
 
-TopLine=213
+TopLine=649
 
 LeftChar=1
 

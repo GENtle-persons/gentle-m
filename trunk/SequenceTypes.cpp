@@ -676,7 +676,7 @@ void SeqAA::show ( wxDC& dc )
            // Protease cuts
            for ( int q = 0 ; q < pc.size() ; q++ )
               {
-              if ( a == pc[q]->cut )
+              if ( b == pc[q]->cut )
                  {
                  int qx = pos.r[a].x - 2 ;
                  int qy = pos.r[a].y ;
