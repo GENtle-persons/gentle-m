@@ -67,6 +67,11 @@ void TVectorTree::initme ()
         }
     for ( a = 0 ; a < p->vec->items.size() ; a++ )
         {
+        if ( p->vec->items[a].name.IsEmpty() )
+           {
+           p->vec->items[a].setTreeID ( (long int) -1 ) ;
+           continue ;
+           }    
         int it = p->vec->items[a].getType() ;
         y = AppendItem ( irs[it-1] , p->vec->items[a].name , -1 , -1 , new TTreeItem ( "Test" ) ) ;
         SetItemBold ( y , p->vec->items[a].isVisible() ) ;
@@ -104,7 +109,7 @@ void TVectorTree::initme ()
     enzroot = AppendItem ( treeroot , txt("res_enzymes") ) ;
     for ( a = 0 ; a < p->vec->re.GetCount() ; a++ )
         {
-        y = AppendItem ( enzroot , p->vec->re[a]->name.c_str() ) ;
+        y = AppendItem ( enzroot , p->vec->re[a]->name ) ;
 //        p->vec->re[a]->treeid = y ;
         bool used = false , visible = true ;
         wxString out = p->vec->re[a]->name.c_str() ;

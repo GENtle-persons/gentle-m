@@ -47,10 +47,13 @@ void myass ( bool b , wxString msg )
 
 #ifdef MYLOG
 wxFile logout ( "LOG.txt" , wxFile::write ) ;
+int total_log_time = 0 ;
 
 void mylog ( wxString function , wxString msg )
     {
-    logout.Write ( function + " : " + msg + " (" + wxString::Format ( "%d ms" , wxGetElapsedTime() ) + ")\n" ) ;
+    int i = wxGetElapsedTime() ;
+    total_log_time += i ;
+    logout.Write ( function + " : " + msg + " (" + wxString::Format ( "%d ms" , i ) + ")\n" ) ;
     logout.Flush() ;
     }
 #endif    
@@ -254,6 +257,10 @@ bool MyApp::OnInit()
 
 int MyApp::OnExit ()
     {
+#ifdef MYLOG
+    logout.Write ( "Total log time : " + wxString::Format ( "%d ms" , total_log_time ) + "\n" ) ;
+    logout.Flush() ;
+#endif
     delete m_checker;
     return 0;
     }

@@ -37,11 +37,14 @@ class TGenBank
     virtual void paste ( wxString s ) ;
     virtual void remap ( TVector *v ) ;
     virtual void doExport ( TVector *v , wxArrayString &ex ) ;
-    virtual wxString trim ( const wxString &s ) ;
+    virtual wxString trim ( wxString s ) ;
+    virtual void itrim ( wxString &s ) ;
+    virtual void multitrim ( wxString &s , bool quotes = true ) ;
     virtual wxString trimQuotes ( wxString s ) ;
     virtual wxString quote ( wxString pre , wxString q ) ;
     virtual void wrapit ( wxArrayString &ex , wxString init , wxString data , int limit = 80 ) ;
     virtual wxString expand ( wxString init , int to , wxString with = " " ) ;
+    virtual int count_blanks ( wxString &s ) ;
 
     bool success ;
     
@@ -60,6 +63,8 @@ class TGenBank
     void addItem ( TVector *v , wxArrayString &va ) ;
     void iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag = 0 ) ;
     bool isValidSequence ( char a ) ;
+    
+    bool validseq[256] , isblank[256] , isblankorquote[256] ;
     } ;
 
 #endif

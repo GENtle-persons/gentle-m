@@ -66,6 +66,12 @@ class SeqPos
     virtual int getLine ( int y ) ;
     virtual int getItem ( wxPoint pt , int line ) ;
     virtual void reserve ( int n , int n2 = -1 , bool memsave = false ) ;
+    
+    virtual void mark ( int where , int value ) ;
+    virtual int getmark ( int where ) ;
+    
+    wxArrayInt mark_from , mark_to ;
+    int mark_value ;
     } ;
 
 class SeqBasic

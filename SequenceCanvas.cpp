@@ -1919,6 +1919,8 @@ void SeqPos::cleanup ()
     m.Clear () ;
     r.clear () ;
     l.clear () ;
+    mark_from.Clear () ;
+    mark_to.Clear () ;
     }
     
 void SeqPos::add ( int np , int x , int y , int w , int h , bool memsave )
@@ -1960,5 +1962,55 @@ void SeqPos::reserve ( int n , int n2 , bool memsave )
     if ( !memsave ) l.reserve ( n2 == -1 ? n / 5 : n2 ) ; // Guessing...
     if ( !memsave ) p.Alloc ( n ) ;
     if ( !memsave ) m.Alloc ( n ) ;
+    }
+        
+void SeqPos::mark ( int where , int value )
+    {
+    int a ;
+    if ( value < 1 )
+        {
+        for ( a = 0 ; a < mark_from.GetCount() ; a++ )
+           {
+           if ( where >= mark_from[a] && where <= mark_to[a] )
+              {
+              if ( where == mark_from[a] ) mark_from[a]++ ;
+              else if ( where == mark_to[a] ) mark_to[a]-- ;
+              else
+                 {
+                 mark_from.Add ( where + 1 ) ;
+                 mark_to.Add ( mark_to[a] ) ;
+                 mark_to[a] = where - 1 ;
+                 }    
+              }    
+           }    
+        for ( a = 0 ; a < mark_from.GetCount() ; a++ )
+           {
+           if ( mark_from[a] > mark_to[a] )
+              {
+              mark_from.RemoveAt ( a ) ;
+              mark_to.RemoveAt ( a ) ;
+              a-- ;
+              }    
+           }    
+        return ;
+        }    
+    mark_value = value ;
+    for ( a = 0 ; a < mark_from.GetCount() ; a++ )
+        {
+        if ( where == mark_from[a]-1 ) { mark_from[a] = where ; return ; }
+        if ( where == mark_to[a]+1 ) { mark_to[a] = where ; return ; }
+        }    
+    mark_from.Add ( where ) ;
+    mark_to.Add ( where ) ;
+    }
+        
+int SeqPos::getmark ( int where )
+    {
+    int a ;
+    for ( a = 0 ; a < mark_from.GetCount() ; a++ )
+        {
+        if ( mark_from[a] <= where && mark_to[a] >= where ) return mark_value ;
+        }    
+    return -1 ;
     }
         
