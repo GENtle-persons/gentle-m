@@ -29,6 +29,101 @@ float PlasmidCanvas::xy2r ( float x , float y )
     return f ;
 }
 
+void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc )
+    {
+    int a ;
+    int l = p->vec->sequence.length() ;
+    if ( p->vec->rc.size() == 0 ) return ;
+    
+    for ( a = 1 ; a < p->vec->rc.size() ; a++ ) // Sort by pos
+        {
+        if ( p->vec->rc[a].pos < p->vec->rc[a-1].pos )
+           {
+           TRestrictionCut dummy = p->vec->rc[a] ;
+           p->vec->rc[a] = p->vec->rc[a-1] ;
+           p->vec->rc[a-1] = dummy ;
+           a = 0 ;
+           }
+        }
+    
+    for ( a = 0 ; a < p->vec->rc.size() ; a++ ) // Init
+        {
+        TRestrictionCut *c = &p->vec->rc[a] ;
+        float angle = (float) c->pos * 360 / l ;
+        c->angle = angle ;
+        c->angle3 = angle ; //(float) (a+1) * 360 / p->vec->rc.size() ;
+        c->r1 = STANDARDRADIUS ;
+        c->r2 = STANDARDRADIUS*22/20 ;
+        c->r3 = STANDARDRADIUS*(22+zoom/50)/20 ;
+        
+        recalc_rc ( a , dc ) ;
+        }
+
+    for ( a = 1 ; a < p->vec->rc.size() ; a++ ) // Ensure different angle
+        {
+        while ( p->vec->rc[a].angle3 <= p->vec->rc[a-1].angle3 )
+           p->vec->rc[a].angle3 += 0.001 ;
+        }
+    
+    bool redo = true ;
+    int cnt = 0 ;
+    while ( redo && cnt < 200 )
+        {
+        redo = false ;    
+        for ( a = 0 ; a < p->vec->rc.size() ; a++ ) // Optimize
+           redo |= optimizeCircularRestrictionSites ( a , dc ) ;
+        }
+        
+    }
+    
+bool PlasmidCanvas::optimizeCircularRestrictionSites ( int a , wxDC &dc )
+    {
+    TRestrictionCut *c = &p->vec->rc[a] ;
+    bool ret = false ;
+    if ( a > 0 && intersects ( c->lastrect , p->vec->rc[a-1].lastrect ) )
+        {
+        push_rc_left ( a-1 , dc ) ; 
+        push_rc_right ( a , dc ) ; 
+        ret = true ; 
+        }
+    if ( a < p->vec->rc.size()-1 && intersects ( c->lastrect , p->vec->rc[a+1].lastrect ) )
+        {
+        push_rc_right ( a+1 , dc ) ; 
+        push_rc_left ( a , dc ) ; 
+        ret = true ; 
+        }
+    return ret ;
+    }
+    
+void PlasmidCanvas::push_rc_left ( int a , wxDC &dc )
+    {
+    TRestrictionCut *c = &p->vec->rc[a] ;
+    c->angle3 -= 1 ;
+    recalc_rc ( a , dc ) ;
+    if ( a == 0 ) return ;
+    TRestrictionCut *cl = &p->vec->rc[a-1] ;
+    while ( c->angle3 < cl->angle3 ) push_rc_left ( a-1 , dc ) ;
+    }
+    
+void PlasmidCanvas::push_rc_right ( int a , wxDC &dc )
+    {
+    TRestrictionCut *c = &p->vec->rc[a] ;
+    c->angle3 += 1 ;
+    recalc_rc ( a , dc ) ;
+    if ( a == p->vec->rc.size()-1 ) return ;
+    TRestrictionCut *cr = &p->vec->rc[a+1] ;
+    while ( c->angle3 > cr->angle3 ) push_rc_right ( a+1 , dc ) ;
+    }
+    
+void PlasmidCanvas::recalc_rc ( int a, wxDC &dc )
+    {
+    TRestrictionCut *c = &p->vec->rc[a] ;
+    wxPoint p2 ( deg2x ( c->angle , c->r2 )+w/2 , deg2y ( c->angle , c->r2 )+h/2 ) ;
+    wxPoint p3 ( deg2x ( c->angle3 , c->r3 )+w/2 , deg2y ( c->angle3 , c->r3 )+h/2 ) ;
+    c->p = p3 ;
+    makeLastRect ( a , dc ) ;    
+    }
+    
 void PlasmidCanvas::arrangeRestrictionSite ( int q , wxDC &dc )
     {
     TVector *v = p->vec ;
@@ -48,7 +143,6 @@ void PlasmidCanvas::arrangeRestrictionSite ( int q , wxDC &dc )
               dy = deg2y ( v->rc[q].angle , 10000 ) ;
               dx = dx > 0 ? diff : -diff ;
               dy = dy > 0 ? diff : -diff ;
-//              dy = -dy * h / w ;
 
               v->rc[q].p.x += dx ;
               v->rc[q].p.y += dy ;
@@ -256,8 +350,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
             p->vec->items[a].a2 = dt ;
             }
         // Restriction sites
-//        for ( a = 0 ; a < p->vec->rc.size() ; a++ )
-        for ( a = p->vec->rc.size() -1 ; a >= 0 ; a-- )
+/*        for ( a = p->vec->rc.size() -1 ; a >= 0 ; a-- )
             {
             TRestrictionCut *c = &p->vec->rc[a] ;
             float angle = c->pos*360/l ;
@@ -272,7 +365,8 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
             p->vec->rc[a].p = p3 ;
             makeLastRect ( a , dc ) ;
             arrangeRestrictionSite ( a , dc ) ;
-            }
+            }*/
+        arrangeRestrictionSitesCircular ( dc ) ;
 
         // ORFs
         if ( p->showORFs )
@@ -392,6 +486,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
     
            char u[100] ;
            sprintf ( u , "%s (%d)" , c.e->name.c_str() , c.pos ) ;
+//           sprintf ( u , "%s (%d) %f" , c.e->name.c_str() , c.pos , c.angle3 ) ;
            p3.x = p->vec->rc[a].lastrect.GetLeft() ;
            p3.y = p->vec->rc[a].lastrect.GetTop() ;
     
@@ -411,7 +506,8 @@ wxPoint PlasmidCanvas::makeLastRect ( int a , wxDC &dc )
     int te_x , te_y ;
     dc.GetTextExtent ( u , &te_x , &te_y ) ;
     p3.y -= te_y / 2 ;
-    if ( p3.x < w/2 ) p3.x -= te_x + 4 ;
+//    if ( p3.x < w/2 ) p3.x -= te_x + 4 ;
+    if ( p->vec->rc[a].angle3 > 180 ) p3.x -= te_x + 4 ;
     else p3.x += 4 ;
     p->vec->rc[a].lastrect = wxRect ( p3.x , p3.y , te_x , te_y ) ;
 
