@@ -106,7 +106,7 @@ int main()
 		"<Item priority=\"1\" distance=\"far\">Talk to:"
 		"<Meeting where=\"School\">"
 		"<Attendee name=\"Marple\" position=\"teacher\" />"
-		"<Attendee name=\"Vo&#x82;\" position=\"counselor\" />"
+		"<Attendee name=\"Voel\" position=\"counselor\" />"
 		"</Meeting>"
 		"<Meeting where=\"Lunch\" />"
 		"</Item>"
@@ -208,7 +208,7 @@ int main()
 	attendee1.SetAttribute( "position", "teacher" );
 
 	TiXmlElement attendee2( "Attendee" );
-	attendee2.SetAttribute( "name", "Vo&#x82;" );
+	attendee2.SetAttribute( "name", "Voel" );
 	attendee2.SetAttribute( "position", "counselor" );
 
 	// Assemble the nodes we've created:
@@ -486,6 +486,158 @@ int main()
 	}
 #endif
 
+	// --------------------------------------------------------
+	// UTF-8 testing. It is important to test:
+	//	1. Making sure name, value, and text read correctly
+	//	2. Row, Col functionality
+	//	3. Correct output
+	// --------------------------------------------------------
+	printf ("\n** UTF-8 **\n");
+	{
+		TiXmlDocument doc( "utf8test.xml" );
+		doc.LoadFile();
+
+		TiXmlHandle docH( &doc );
+		// Get the attribute "value" from the "Russian" element and check it.
+		TiXmlElement* element = docH.FirstChildElement( "document" ).FirstChildElement( "Russian" ).Element();
+		const char correctValue[] = {	(char)0xd1, (char)0x86, (char)0xd0, (char)0xb5, (char)0xd0, (char)0xbd, (char)0xd0, (char)0xbd, 
+										(char)0xd0, (char)0xbe, (char)0xd1, (char)0x81, (char)0xd1, (char)0x82, (char)0xd1, (char)0x8c, 0 };
+
+		XmlTest( "UTF-8: Russian value.", correctValue, element->Attribute( "value" ), true );
+		XmlTest( "UTF-8: Russian value row.", 4, element->Row() );
+		XmlTest( "UTF-8: Russian value column.", 5, element->Column() );
+
+		const char russianElementName[] = {	(char)0xd0, (char)0xa0, (char)0xd1, (char)0x83,
+											(char)0xd1, (char)0x81, (char)0xd1, (char)0x81,
+											(char)0xd0, (char)0xba, (char)0xd0, (char)0xb8,
+											(char)0xd0, (char)0xb9, 0 };
+		const char russianText[] = "<\xD0\xB8\xD0\xBC\xD0\xB5\xD0\xB5\xD1\x82>";
+
+		TiXmlText* text = docH.FirstChildElement( "document" ).FirstChildElement( russianElementName ).Child( 0 ).Text();
+		XmlTest( "UTF-8: Browsing russian element name.",
+				 russianText,
+				 text->Value(),
+				 true );
+		XmlTest( "UTF-8: Russian element name row.", 7, text->Row() );
+		XmlTest( "UTF-8: Russian element name column.", 47, text->Column() );
+
+		TiXmlDeclaration* dec = docH.Child( 0 ).Node()->ToDeclaration();
+		XmlTest( "UTF-8: Declaration column.", 1, dec->Column() );
+		XmlTest( "UTF-8: Document column.", 1, doc.Column() );
+
+		// Now try for a round trip.
+		doc.SaveFile( "utf8testout.xml" );
+
+		// Check the round trip.
+		char savedBuf[256];
+		char verifyBuf[256];
+		int okay = 1;
+
+		FILE* saved  = fopen( "utf8testout.xml", "r" );
+		FILE* verify = fopen( "utf8testverify.xml", "r" );
+		if ( saved && verify )
+		{
+			while ( fgets( verifyBuf, 256, verify ) )
+			{
+				fgets( savedBuf, 256, saved );
+				if ( strcmp( verifyBuf, savedBuf ) )
+				{
+					okay = 0;
+					break;
+				}
+			}
+			fclose( saved );
+			fclose( verify );
+		}
+		XmlTest( "UTF-8: Verified multi-language round trip.", 1, okay );
+
+		// On most Western machines, this is an element that contains
+		// the word "resume" with the correct accents, in a latin encoding.
+		// It will be something else comletely on non-wester machines,
+		// which is why TinyXml is switching to UTF-8.
+		const char latin[] = "<element>r\x82sum\x82</element>";
+
+		TiXmlDocument latinDoc;
+		latinDoc.Parse( latin, 0, TIXML_ENCODING_LEGACY );
+
+		text = latinDoc.FirstChildElement()->FirstChild()->ToText();
+		XmlTest( "Legacy encoding: Verify text element.", "r\x82sum\x82", text->Value() );
+	}
+	
+
+	//////////////////////
+	// Copy and assignment
+	//////////////////////
+	printf ("\n** Copy and Assignment **\n");
+	{
+		TiXmlElement element( "foo" );
+		element.Parse( "<element name='value' />", 0, TIXML_ENCODING_UNKNOWN );
+
+		TiXmlElement elementCopy( element );
+		TiXmlElement elementAssign( "foo" );
+		elementAssign.Parse( "<incorrect foo='bar'/>", 0, TIXML_ENCODING_UNKNOWN );
+		elementAssign = element;
+
+		XmlTest( "Copy/Assign: element copy #1.", "element", elementCopy.Value() );
+		XmlTest( "Copy/Assign: element copy #2.", "value", elementCopy.Attribute( "name" ) );
+		XmlTest( "Copy/Assign: element assign #1.", "element", elementAssign.Value() );
+		XmlTest( "Copy/Assign: element assign #2.", "value", elementAssign.Attribute( "name" ) );
+		XmlTest( "Copy/Assign: element assign #3.", 0, (int) elementAssign.Attribute( "foo" ) );
+
+		TiXmlComment comment;
+		comment.Parse( "<!--comment-->", 0, TIXML_ENCODING_UNKNOWN );
+		TiXmlComment commentCopy( comment );
+		TiXmlComment commentAssign;
+		commentAssign = commentCopy;
+		XmlTest( "Copy/Assign: comment copy.", "comment", commentCopy.Value() );
+		XmlTest( "Copy/Assign: comment assign.", "comment", commentAssign.Value() );
+
+		TiXmlUnknown unknown;
+		unknown.Parse( "<[unknown]>", 0, TIXML_ENCODING_UNKNOWN );
+		TiXmlUnknown unknownCopy( unknown );
+		TiXmlUnknown unknownAssign;
+		unknownAssign.Parse( "incorrect", 0, TIXML_ENCODING_UNKNOWN );
+		unknownAssign = unknownCopy;
+		XmlTest( "Copy/Assign: unknown copy.", "[unknown]", unknownCopy.Value() );
+		XmlTest( "Copy/Assign: unknown assign.", "[unknown]", unknownAssign.Value() );
+		
+		TiXmlText text( "TextNode" );
+		TiXmlText textCopy( text );
+		TiXmlText textAssign( "incorrect" );
+		textAssign = text;
+		XmlTest( "Copy/Assign: text copy.", "TextNode", textCopy.Value() );
+		XmlTest( "Copy/Assign: text assign.", "TextNode", textAssign.Value() );
+
+		TiXmlDeclaration dec;
+		dec.Parse( "<?xml version='1.0' encoding='UTF-8'?>", 0, TIXML_ENCODING_UNKNOWN );
+		TiXmlDeclaration decCopy( dec );
+		TiXmlDeclaration decAssign;
+		decAssign = dec;
+
+		XmlTest( "Copy/Assign: declaration copy.", "UTF-8", decCopy.Encoding() );
+		XmlTest( "Copy/Assign: text assign.", "UTF-8", decAssign.Encoding() );
+
+		TiXmlDocument doc;
+		elementCopy.InsertEndChild( textCopy );
+		doc.InsertEndChild( decAssign );
+		doc.InsertEndChild( elementCopy );
+		doc.InsertEndChild( unknownAssign );
+
+		TiXmlDocument docCopy( doc );
+		TiXmlDocument docAssign;
+		docAssign = docCopy;
+
+		#ifdef TIXML_USE_STL
+		std::string original, copy, assign;
+		original << doc;
+		copy << docCopy;
+		assign << docAssign;
+		XmlTest( "Copy/Assign: document copy.", original.c_str(), copy.c_str(), true );
+		XmlTest( "Copy/Assign: document assign.", original.c_str(), assign.c_str(), true );
+
+		#endif
+	}	
+
 	//////////////////////////////////////////////////////
 #ifdef TIXML_USE_STL
 	printf ("\n** Parsing, no Condense Whitespace **\n");
@@ -498,6 +650,8 @@ int main()
 	XmlTest ( "Condense white space OFF.", "This  is    \ntext",
 				text1.FirstChild()->Value(),
 				true );
+
+	TiXmlBase::SetCondenseWhiteSpace( true );
 #endif
 
 	//////////////////////////////////////////////////////
@@ -569,19 +723,16 @@ int main()
 			"<?xml version=\"1.0\" standalone=\"no\" ?>"
 			"<passages count=\"006\" formatversion=\"20020620\">"
 				"<psg context=\"Line 5 has &quot;quotation marks&quot; and &apos;apostrophe marks&apos;."
-				" It also has &lt;, &gt;, and &amp;, as well as a fake &#xA9;.\"> </psg>"
+				" It also has &lt;, &gt;, and &amp;, as well as a fake copyright &#xA9;.\"> </psg>"
 			"</passages>";
 
 		TiXmlDocument doc( "passages.xml" );
 		doc.Parse( passages );
 		TiXmlElement* psg = doc.RootElement()->FirstChildElement();
 		const char* context = psg->Attribute( "context" );
+		const char* expected = "Line 5 has \"quotation marks\" and 'apostrophe marks'. It also has <, >, and &, as well as a fake copyright \xC2\xA9.";
 
-		XmlTest( "Entity transformation: read. ",
-					"Line 5 has \"quotation marks\" and 'apostrophe marks'."
-					" It also has <, >, and &, as well as a fake \xA9.",
-					context,
-					true );
+		XmlTest( "Entity transformation: read. ", expected, context, true );
 
 		FILE* textfile = fopen( "textfile.txt", "w" );
 		if ( textfile )
@@ -597,7 +748,7 @@ int main()
 			fgets( buf, 1024, textfile );
 			XmlTest( "Entity transformation: write. ",
 					 "<psg context=\'Line 5 has &quot;quotation marks&quot; and &apos;apostrophe marks&apos;."
-					 " It also has &lt;, &gt;, and &amp;, as well as a fake &#xA9;.' />",
+					 " It also has &lt;, &gt;, and &amp;, as well as a fake copyright \xC2\xA9.' />",
 					 buf,
 					 true );
 		}
@@ -634,6 +785,143 @@ int main()
 		}
     }
 
+	{
+		// DOCTYPE not preserved (950171)
+		// 
+		const char* doctype =
+			"<?xml version=\"1.0\" ?>"
+			"<!DOCTYPE PLAY SYSTEM 'play.dtd'>"
+			"<!ELEMENT title (#PCDATA)>"
+			"<!ELEMENT books (title,authors)>"
+			"<element />";
+
+		TiXmlDocument doc;
+		doc.Parse( doctype );
+		doc.SaveFile( "test7.xml" );
+		doc.Clear();
+		doc.LoadFile( "test7.xml" );
+		
+		TiXmlHandle docH( &doc );
+		TiXmlUnknown* unknown = docH.Child( 1 ).Unknown();
+		XmlTest( "Correct value of unknown.", "!DOCTYPE PLAY SYSTEM 'play.dtd'", unknown->Value() );
+		#ifdef TIXML_USE_STL
+		TiXmlNode* node = docH.Child( 2 ).Node();
+		std::string str;
+		str << (*node);
+		XmlTest( "Correct streaming of unknown.", "<!ELEMENT title (#PCDATA)>", str.c_str() );
+		#endif
+	}
+
+	{
+		// [ 791411 ] Formatting bug
+		// Comments do not stream out correctly.
+		const char* doctype = 
+			"<!-- Somewhat<evil> -->";
+		TiXmlDocument doc;
+		doc.Parse( doctype );
+
+		TiXmlHandle docH( &doc );
+		TiXmlComment* comment = docH.Child( 0 ).Node()->ToComment();
+
+		XmlTest( "Comment formatting.", " Somewhat<evil> ", comment->Value() );
+		#ifdef TIXML_USE_STL
+		std::string str;
+		str << (*comment);
+		XmlTest( "Comment streaming.", "<!-- Somewhat<evil> -->", str.c_str() );
+		#endif
+	}
+
+	{
+		// [ 870502 ] White space issues
+		TiXmlDocument doc;
+		TiXmlText* text;
+		TiXmlHandle docH( &doc );
+	
+		const char* doctype0 = "<element> This has leading and trailing space </element>";
+		const char* doctype1 = "<element>This has  internal space</element>";
+		const char* doctype2 = "<element> This has leading, trailing, and  internal space </element>";
+
+		TiXmlBase::SetCondenseWhiteSpace( false );
+		doc.Clear();
+		doc.Parse( doctype0 );
+		text = docH.FirstChildElement( "element" ).Child( 0 ).Text();
+		XmlTest( "White space kept.", " This has leading and trailing space ", text->Value() );
+
+		doc.Clear();
+		doc.Parse( doctype1 );
+		text = docH.FirstChildElement( "element" ).Child( 0 ).Text();
+		XmlTest( "White space kept.", "This has  internal space", text->Value() );
+
+		doc.Clear();
+		doc.Parse( doctype2 );
+		text = docH.FirstChildElement( "element" ).Child( 0 ).Text();
+		XmlTest( "White space kept.", " This has leading, trailing, and  internal space ", text->Value() );
+
+		TiXmlBase::SetCondenseWhiteSpace( true );
+		doc.Clear();
+		doc.Parse( doctype0 );
+		text = docH.FirstChildElement( "element" ).Child( 0 ).Text();
+		XmlTest( "White space condensed.", "This has leading and trailing space", text->Value() );
+
+		doc.Clear();
+		doc.Parse( doctype1 );
+		text = docH.FirstChildElement( "element" ).Child( 0 ).Text();
+		XmlTest( "White space condensed.", "This has internal space", text->Value() );
+
+		doc.Clear();
+		doc.Parse( doctype2 );
+		text = docH.FirstChildElement( "element" ).Child( 0 ).Text();
+		XmlTest( "White space condensed.", "This has leading, trailing, and internal space", text->Value() );
+	}
+
+	{
+		// Double attributes
+		const char* doctype = "<element attr='red' attr='blue' />";
+
+		TiXmlDocument doc;
+		doc.Parse( doctype );
+		
+		XmlTest( "Parsing repeated attributes.", 0, (int)doc.Error() );	// not an  error to tinyxml
+		XmlTest( "Parsing repeated attributes.", "blue", doc.FirstChildElement( "element" )->Attribute( "attr" ) );
+	}
+
+	{
+		// Embedded null in stream.
+		const char* doctype = "<element att\0r='red' attr='blue' />";
+
+		TiXmlDocument doc;
+		doc.Parse( doctype );
+		XmlTest( "Embedded null throws error.", true, doc.Error() );
+
+		#ifdef TIXML_USE_STL
+		istringstream strm( doctype );
+		doc.Clear();
+		doc.ClearError();
+		strm >> doc;
+		XmlTest( "Embedded null throws error.", true, doc.Error() );
+		#endif
+	}
+
+    {
+            // Legacy mode test. (This test may only pass on a western system)
+            const char* str =
+                        "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>"
+                        "<ä>"
+                        "CöntäntßäöüÄÖÜ"
+                        "</ä>";
+
+            TiXmlDocument doc;
+            doc.Parse( str );
+
+			//doc.Print( stdout, 0 );
+
+            TiXmlHandle docHandle( &doc );
+            TiXmlHandle aHandle = docHandle.FirstChildElement( "ä" );
+            TiXmlHandle tHandle = aHandle.Child( 0 );
+            assert( aHandle.Element() );
+            assert( tHandle.Text() );
+            XmlTest( "ISO-8859-1 Parsing.", "CöntäntßäöüÄÖÜ", tHandle.Text()->Value() );
+    }
 
 	#if defined( WIN32 ) && defined( TUNE )
 	QueryPerformanceCounter( (LARGE_INTEGER*) (&end) );
@@ -644,4 +932,5 @@ int main()
 	printf ("\nPass %d, Fail %d\n", gPass, gFail);
 	return gFail;
 }
+
 
