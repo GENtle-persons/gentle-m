@@ -207,7 +207,7 @@ void MyFrame::initme ()
     lang_string = LS->getOption ( "LANGUAGE" , "en" ) ;
     useCoolCanvas = LS->getOption ( "USECOOLCANVAS" , false ) ; // Not saved yet
     useInternalHelp = LS->getOption ( "USEINTERNALHELP" , false ) ; // Not saved yet
-    init_txt ( lang_string.c_str() ) ;
+    myapp()->init_txt ( lang_string.c_str() , "variables.csv" ) ;
     global_enzyme_rules = new TEnzymeRules ;
     global_enzyme_rules->load_global_settings() ;
 
@@ -331,7 +331,7 @@ void MyFrame::initme ()
            {
            TManageDatabaseDialog mdb ( this , "dummy" , ACTION_MODE_STARTUP ) ;
            mdb.do_load_project ( n , d ) ;
-           mainTree->Refresh () ;
+//           mainTree->Refresh () ;
            }
         }
         
@@ -364,6 +364,8 @@ void MyFrame::initme ()
           	}   	
           }
        }
+
+    mainTree->Refresh () ;
         
 #ifndef MISER_MODE
     lockDisplay ( false ) ;

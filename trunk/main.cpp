@@ -121,13 +121,13 @@ wxString implode ( wxString sep , wxArrayString &r )
 
 wxHashString _text ;
 
-void init_txt ( wxString lang )
+void MyApp::init_txt ( wxString lang , wxString csv , wxHashString *target , int ln )
     {
-    wxTextFile in ( myapp()->homedir + "/variables.csv" ) ;
+    if ( !target ) target = &_text ;
+    wxTextFile in ( myapp()->homedir + "/" + csv) ;
     in.Open () ;
     unsigned char t[10000] ;
     bool firstline = true ;
-    int ln = 1 ; // English is default
     TGenBank dummy ;
     for ( int lc = 0 ; lc < in.GetLineCount() ; lc++ )
         {
@@ -163,13 +163,13 @@ void init_txt ( wxString lang )
         if ( firstline )
            {
            for ( int a = 0 ; a < v.GetCount() ; a++ )
-              if ( v[a] == lang )
+              if ( v[a].Upper() == lang.Upper() )
                  ln = a ;
            }
-        else
+        else if ( v.GetCount() > ln )
            {
            if ( v[ln].Find ( '\t' ) > -1 ) v[ln] += " " ;
-           _text[v[0].MakeUpper()] = v[ln] ;
+           (*target)[v[0].MakeUpper()] = v[ln] ;
            }
         firstline = false ;
         }

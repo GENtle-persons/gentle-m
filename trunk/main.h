@@ -94,6 +94,7 @@ using namespace std ;
 #include <wx/html/helpctrl.h>
 #include <wx/url.h>
 #include <wx/protocol/http.h>
+WX_DECLARE_STRING_HASH_MAP( wxString, wxHashString );
 
 #define wxPD_ALL (wxPD_AUTO_HIDE|wxPD_APP_MODAL|wxPD_CAN_ABORT|wxPD_ELAPSED_TIME|wxPD_ESTIMATED_TIME|wxPD_REMAINING_TIME)
 
@@ -124,6 +125,7 @@ class MyApp : public wxApp
     public:
     bool OnInit();
     int OnExit () ;
+    virtual void init_txt ( wxString lang , wxString csv , wxHashString *target = NULL , int ln = 1 ) ;
     wxString getHTMLCommand ( wxString command ) ;
     wxString getFileFormatApplication ( wxString type ) ;
     MyFrame *frame;
@@ -159,7 +161,6 @@ WX_DEFINE_ARRAY(TVector *, wxArrayTVector);
 
 #define CLEAR_DELETE(__x) { while ( !__x.IsEmpty() ) { if ( __x[0] ) { delete __x[0] ; } __x.RemoveAt ( 0 ) ; } }
 #define FILLSTRING(__x,__c,__l) { __x = wxString ( __c , __l ) ; }
-WX_DECLARE_STRING_HASH_MAP( wxString, wxHashString );
 
 
 #include "enums.h"
@@ -226,7 +227,6 @@ void wxStringInsert ( wxString &s , int from , wxString t ) ;
 void explode ( wxString sep , wxString s , wxArrayString &r ) ;
 wxString implode ( wxString sep , wxArrayString &r ) ;
 char* txt ( wxString item ) ;
-void init_txt ( wxString lang ) ;
 MyApp *myapp () ;
 int cmpint(int *first, int *second) ;
 int cmpre(TRestrictionEnzyme *first, TRestrictionEnzyme *second) ;
