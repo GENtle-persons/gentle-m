@@ -105,16 +105,17 @@ void TRestrictionEditor::initRestrictionPage ()
     
     // Available enzymes list
     el = new wxListCtrl ( this , RSE_RES_LL , wxDefaultPosition , wxDefaultSize ,
-                wxLC_REPORT|wxLC_SINGLE_SEL ) ;
+                wxLC_REPORT|wxLC_SINGLE_SEL|MYLISTBORDER ) ;
     el->InsertColumn ( 0 , txt("name") ) ;
     el->InsertColumn ( 1 , txt("cuts") ) ;
     v2a->Add ( new wxStaticText ( this , -1 , txt("t_available_enzymes") ) , 0 , wxEXPAND , 5 ) ;
     v2a->Add ( el , 1 , wxEXPAND , 5 ) ;
+
     
     // Cocktail
     el2 = new wxListCtrl ( this , RSE_COC_LL , wxPoint ( rw*2/3+bo , th*2 ) ,
                 wxSize ( rw/3-bo*2 , rh*2/3-th*2-bo ) , 
-                wxLC_REPORT|wxLC_SINGLE_SEL ) ;
+                wxLC_REPORT|wxLC_SINGLE_SEL|MYLISTBORDER ) ;
     el2->InsertColumn ( 0 , txt("name") ) ;
     el2->InsertColumn ( 1 , txt("cuts") ) ;
     v2c->Add ( new wxStaticText ( this , -1 , txt("Cocktail") ) , 0 , wxEXPAND , 5 ) ;
@@ -162,14 +163,14 @@ void TRestrictionEditor::initRestrictionPage ()
 	wxBoxSizer *v3b = new wxBoxSizer ( wxVERTICAL ) ;
 
     bb = new wxBitmapButton ( this , RSE_RES_AC ,
-             wxBitmap (myapp()->bmpdir+"\\cocktail.bmp", wxBITMAP_TYPE_BMP),
+             wxBitmap (myapp()->bmpdir+"/cocktail.bmp", wxBITMAP_TYPE_BMP),
              wxDefaultPosition ,
              wxDefaultSize ,
              wxBU_AUTODRAW ,
              wxDefaultValidator ,
              txt("add2cocktail") ) ;
     wxBitmapButton *bib = new wxBitmapButton ( this , RSE_COC_CT ,
-             wxBitmap (myapp()->bmpdir+"\\scissors.bmp", wxBITMAP_TYPE_BMP),
+             wxBitmap (myapp()->bmpdir+"/scissors.bmp", wxBITMAP_TYPE_BMP),
              wxDefaultPosition ,
              wxDefaultSize ,
              wxBU_AUTODRAW ,
@@ -215,13 +216,13 @@ void TRestrictionEditor::initRestrictionPage ()
     v2b->Add ( h1e , 1 , wxEXPAND , 5 ) ;
     v2b->Add ( h1f , 1 , wxEXPAND , 5 ) ;
 
-    h1->Add ( v2a , 1 , wxEXPAND , 5 ) ;
-    h1->Add ( v2b , 1 , wxEXPAND , 5 ) ;
-    h1->Add ( v2c , 1 , wxEXPAND , 5 ) ;
+    h1->Add ( v2a , 1 , wxEXPAND|wxALL , 5 ) ;
+    h1->Add ( v2b , 1 , wxEXPAND|wxALL , 5 ) ;
+    h1->Add ( v2c , 1 , wxEXPAND|wxALL , 5 ) ;
     
     // "This enzyme cuts" list
     rsl = new wxListCtrl ( this , -1 , wxDefaultPosition , wxDefaultSize ,
-                 wxLC_REPORT|wxLC_SINGLE_SEL ) ;
+                 wxLC_REPORT|wxLC_SINGLE_SEL|MYLISTBORDER ) ;
     rsl->InsertColumn ( 0 , "#" , wxLIST_FORMAT_LEFT , th*2 ) ;
     rsl->InsertColumn ( 1 , txt("from") ) ;
     rsl->InsertColumn ( 2 , txt("to") ) ;
@@ -229,7 +230,7 @@ void TRestrictionEditor::initRestrictionPage ()
     
     // All fragments list
     rsl2 = new wxListCtrl ( this , -1 , wxDefaultPosition , wxDefaultSize ,
-                  wxLC_REPORT|wxLC_SINGLE_SEL ) ;
+                  wxLC_REPORT|wxLC_SINGLE_SEL|MYLISTBORDER ) ;
     rsl2->InsertColumn ( 0 , "#" , wxLIST_FORMAT_LEFT , th*2 ) ;
     rsl2->InsertColumn ( 1 , txt("from") ) ;
     rsl2->InsertColumn ( 2 , txt("to") ) ;
@@ -237,8 +238,8 @@ void TRestrictionEditor::initRestrictionPage ()
 
     rsl->SetSize ( w/3 , h/3 ) ;
 
-    h2->Add ( rsl , 1 , wxEXPAND , 5 ) ;
-    h2->Add ( rsl2 , 1 , wxEXPAND , 5 ) ;
+    h2->Add ( rsl , 1 , wxEXPAND|wxALL , 5 ) ;
+    h2->Add ( rsl2 , 1 , wxEXPAND|wxALL , 5 ) ;
     
     v1->Add ( h1 , 1 , wxEXPAND , 5 ) ;
     v1->Add ( h2 , 1 , wxEXPAND , 5 ) ;
