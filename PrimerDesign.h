@@ -24,12 +24,12 @@ class TPrimerDesign : public ChildBase
     
     void initme () ;
     virtual string getName () ;
-    void AddPrimer ( string s ) ;
-    void showSequence () ;
-    void updateResultSequence () ;
-    void updatePrimersFromSequence () ;
-    void updatePrimerStats () ;
-    void doShowPrimer ( int i ) ;
+    virtual void AddPrimer ( string s ) ;
+    virtual void showSequence () ;
+    virtual void updateResultSequence () ;
+    virtual void updatePrimersFromSequence () ;
+    virtual void updatePrimerStats () ;
+    virtual void doShowPrimer ( int i ) ;
 /*    void showStat () ;
     
     void OnMarkAll(wxCommandEvent& event);
@@ -40,32 +40,34 @@ class TPrimerDesign : public ChildBase
     void OnEditMode(wxCommandEvent& event);
     void OnEditName(wxCommandEvent& event);
     */
-    void OnCopy(wxCommandEvent& event);
-    void OnClose(wxCloseEvent& event) ;
-    void OnEditMode(wxCommandEvent& event);
+    virtual void OnCopy(wxCommandEvent& event);
+    virtual void OnClose(wxCloseEvent& event) ;
+    virtual void OnEditMode(wxCommandEvent& event);
     
-    void OnSelectPrimer ( wxListEvent& event);
-    void OnActivatePrimer ( wxListEvent& event);
-    void OnPrint ( wxCommandEvent &ev ) ;
+    virtual void OnSelectPrimer ( wxListEvent& event);
+    virtual void OnActivatePrimer ( wxListEvent& event);
+    virtual void OnPrint ( wxCommandEvent &ev ) ;
 
-    void OnExportPrimer ( wxCommandEvent &ev ) ;
-    void OnImportPrimer ( wxCommandEvent &ev ) ;
+    virtual void OnExportPrimer ( wxCommandEvent &ev ) ;
+    virtual void OnImportPrimer ( wxCommandEvent &ev ) ;
 
-    void OnEditPrimer ( wxCommandEvent &ev ) ;
-    void OnDeletePrimer ( wxCommandEvent &ev ) ;
+    virtual void OnEditPrimer ( wxCommandEvent &ev ) ;
+    virtual void OnDeletePrimer ( wxCommandEvent &ev ) ;
+    virtual void OnToggleFeatures ( wxCommandEvent &ev ) ;
     
-    void OnAA_all(wxCommandEvent& event);
-    void OnAA_three(wxCommandEvent& event);
-    void OnAA_one(wxCommandEvent& event);
-    void OnAA_three_1(wxCommandEvent& event);
-    void OnAA_three_2(wxCommandEvent& event);
-    void OnAA_three_3(wxCommandEvent& event);
-    void OnAA_three_M1(wxCommandEvent& event);
-    void OnAA_three_M2(wxCommandEvent& event);
-    void OnAA_three_M3(wxCommandEvent& event);
-    void OnAA_setit(int mode);
+    virtual void OnAA_all(wxCommandEvent& event);
+    virtual void OnAA_three(wxCommandEvent& event);
+    virtual void OnAA_one(wxCommandEvent& event);
+    virtual void OnAA_three_1(wxCommandEvent& event);
+    virtual void OnAA_three_2(wxCommandEvent& event);
+    virtual void OnAA_three_3(wxCommandEvent& event);
+    virtual void OnAA_three_M1(wxCommandEvent& event);
+    virtual void OnAA_three_M2(wxCommandEvent& event);
+    virtual void OnAA_three_M3(wxCommandEvent& event);
+    virtual void OnAA_known(wxCommandEvent& event);
+    virtual void OnAA_setit(int mode);
     
-    void OnSilmut ( wxCommandEvent& event) ;
+    virtual void OnSilmut ( wxCommandEvent& event) ;
     
     // Variables
     SequenceCanvas *sc ;
@@ -79,6 +81,7 @@ class TPrimerDesign : public ChildBase
     int aa_state , aa_disp ;
     int lastPrimerActivated ;
     wxListCtrl *lc ;
+    int show_features ;
     
     DECLARE_EVENT_TABLE()
     } ;

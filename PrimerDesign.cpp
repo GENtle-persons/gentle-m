@@ -10,12 +10,13 @@ BEGIN_EVENT_TABLE(TPrimerDesign, wxMDIChildFrame)
     EVT_MENU(AA_THREE_M1, TPrimerDesign::OnAA_three_M1)
     EVT_MENU(AA_THREE_M2, TPrimerDesign::OnAA_three_M2)
     EVT_MENU(AA_THREE_M3, TPrimerDesign::OnAA_three_M3)
+    EVT_MENU(AA_KNOWN, TPrimerDesign::OnAA_known)
 
     EVT_BUTTON(PD_EDIT,TPrimerDesign::OnEditPrimer)
     EVT_BUTTON(PD_DEL,TPrimerDesign::OnDeletePrimer)
 
     EVT_MENU(PD_SILMUT,TPrimerDesign::OnSilmut)
-
+    EVT_MENU(MDI_TOGGLE_FEATURES,TPrimerDesign::OnToggleFeatures)
     EVT_MENU(PD_EXPORT,TPrimerDesign::OnExportPrimer)
     EVT_MENU(PD_IMPORT,TPrimerDesign::OnImportPrimer)
     EVT_MENU(SEQ_PRINT,TPrimerDesign::OnPrint)
@@ -46,18 +47,22 @@ TPrimerDesign::TPrimerDesign(wxMDIParentFrame *parent,
                     vector <TPrimer> pl )
     : ChildBase(parent, title)
     {
+    int a ;
+    show_features = 1 ;
     vec = new TVector ;
     vc = new TVector ;
     w = new TVector ;
     vec->setFromVector ( *_vec ) ;
-    while ( vec->items.size() ) vec->items.pop_back() ;
+//    while ( vec->items.size() ) vec->items.pop_back() ;
     *w = *vec ;
     
     aa_state = AA_ALL ;
     aa_disp = AA_ONE ;
+    for ( a = 0 ; a < vec->items.size() ; a++ )
+        if ( vec->items[a].getRF() != 0 ) aa_state = AA_KNOWN ;
     
     primer = pl ;
-    for ( int a = 0 ; a < primer.size() ; a++ )
+    for ( a = 0 ; a < primer.size() ; a++ )
         primer[a].getSequenceFromVector ( vec ) ;
         
 //    vec = new TVector ( this ) ;
@@ -203,8 +208,8 @@ void TPrimerDesign::updatePrimersFromSequence ()
     string s ;
     for ( a = 0 ; a < primer.size() ; a++ )
         {
-        if ( primer[a].upper ) s = sc->seq[0]->s ;
-        else s = sc->seq[4]->s ;
+        if ( primer[a].upper ) s = sc->seq[show_features]->s ;
+        else s = sc->seq[4+show_features]->s ;
         for ( b = primer[a].from-1 ; b < s.length() && s[b] == ' ' ; b++ ) ;
         while ( b >= 0 && s[b] != ' ' ) b-- ;
         primer[a].from = b+2 ;
@@ -313,8 +318,10 @@ void TPrimerDesign::initme ()
     
     wxMenu *mAA = new wxMenu ;
     view_menu->Append(MDI_EDIT_MODE, txt("m_edit_mode") , "" , true );
+    view_menu->Append(MDI_TOGGLE_FEATURES, txt("m_display_features") , "" );
     view_menu->Append ( AA_MAIN , txt("m_aa_main") , mAA ) ;
     mAA->Append (AA_ALL,txt("m_aa_all"), "" , true );
+    mAA->Append (AA_KNOWN,txt("m_aa_known"), "" , true );
     mAA->Append (AA_THREE_1,txt("m_aa_1"), "" , true );
     mAA->Append (AA_THREE_2,txt("m_aa_2"), "" , true );
     mAA->Append (AA_THREE_3,txt("m_aa_3"), "" , true );
@@ -373,6 +380,10 @@ void TPrimerDesign::initme ()
         wxBitmap (myapp()->bmpdir+"\\mode_edit.bmp", wxBITMAP_TYPE_BMP),
         wxBitmap (myapp()->bmpdir+"\\mode_edit.bmp", wxBITMAP_TYPE_BMP),
         TRUE, -1, -1, (wxObject *) NULL, txt("m_edit_mode") ) ;
+    toolBar->AddTool( MDI_TOGGLE_FEATURES,
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"display_features.bmp", wxBITMAP_TYPE_BMP),
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"display_features.bmp", wxBITMAP_TYPE_BMP),
+        TRUE, -1, -1, (wxObject *) NULL, txt("m_display_features") ) ;
     toolBar->Realize() ;
 #endif
 
@@ -402,6 +413,10 @@ void TPrimerDesign::initme ()
                             
     wxFont myFont ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ;
     stat->SetFont ( myFont ) ;
+
+#ifdef __WXMSW__ // LINUX
+    GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,show_features);
+#endif
 
     showSequence () ;
     updatePrimersFromSequence() ;
@@ -463,6 +478,12 @@ void TPrimerDesign::showSequence ()
     sc->blankline = 0 ;
     vc->sequence = vec->transformSequence ( true , false ) ;
     
+    SeqFeature *seqF ;
+    if ( show_features )
+       {
+       seqF = new SeqFeature ( sc ) ;
+       seqF->initFromTVector ( vec ) ;
+       }
     
     SeqPrimer *p1 = new SeqPrimer ( sc ) ;
     p1->initFromTVector ( vec ) ;
@@ -498,7 +519,7 @@ void TPrimerDesign::showSequence ()
         if ( !primer[a].upper )
            p2->addPrimer ( &primer[a] ) ;
 
-
+    if ( show_features ) sc->seq.push_back ( seqF ) ;
     sc->seq.push_back ( p1 ) ;
     sc->seq.push_back ( s1 ) ;
     sc->seq.push_back ( a1 ) ;
@@ -524,15 +545,29 @@ void TPrimerDesign::updateResultSequence()
        }
     else
        {
-       int l = w->sequence.length() ;
-       int r = 0 ;
+       int l = w->sequence.length() , r = 0 ;
+       int lp = -1 , rp = -1 ;
        for ( a = 0 ; a < primer.size() ; a++ )
           {
           if ( primer[a].upper && l > primer[a].from - 1 )
+             {
              l = primer[a].from - 1 ;
+             lp = a ;
+             }
           if ( !primer[a].upper && r < primer[a].to - 1 )
+             {
              r = primer[a].to - 1 ;
+             rp = a ;
+             }
           }
+          
+       if ( vec->isCircular() && lp > -1 && rp > -1 )
+          {
+          for ( b = primer[lp].from ; b <= primer[lp].to ; b++ )
+             if ( b >= primer[rp].from && b <= primer[rp].to )
+                { l = 0 ; r = w->sequence.length() ; }
+          }
+
        for ( a = 0 ; a < l ; a++ ) w->sequence[a] = ' ' ;
        for ( a = r ; a < w->sequence.length() ; a++ ) w->sequence[a] = ' ' ;
        }
@@ -540,10 +575,10 @@ void TPrimerDesign::updateResultSequence()
     // Overwriting result sequence with primer sequences
     for ( a = 0 ; a < w->sequence.length() ; a++ )
         {
-        char t = sc->seq[0]->s[a] ;
+        char t = sc->seq[show_features]->s[a] ;
         if ( t == ' ' )
            {
-           t = sc->seq[4]->s[a] ;
+           t = sc->seq[4+show_features]->s[a] ;
            if ( t != ' ' ) t = w->getComplement ( t ) ;
            }
         if ( t != ' ' ) w->sequence[a] = t ;
@@ -636,6 +671,9 @@ void TPrimerDesign::OnAA_setit(int mode)
         }
     }
     
+void TPrimerDesign::OnAA_known(wxCommandEvent& event)
+    {    OnAA_setit ( AA_KNOWN ) ;    }
+    
 void TPrimerDesign::OnAA_all(wxCommandEvent& event)
     {    OnAA_setit ( AA_ALL ) ;    }
     
@@ -706,13 +744,22 @@ void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
         if ( ns[a] >= 'A' && ns[a] <= 'Z' )
            {
            b = a + sc->_from - 1 ;
-           if ( sc->seq[0]->s[b] != ' ' ) sc->seq[0]->s[b] = ns[a] ;
-           if ( sc->seq[4]->s[b] != ' ' ) sc->seq[4]->s[b] = nt[a] ;
+           if ( sc->seq[show_features]->s[b] != ' ' ) sc->seq[show_features]->s[b] = ns[a] ;
+           if ( sc->seq[4+show_features]->s[b] != ' ' ) sc->seq[4+show_features]->s[b] = nt[a] ;
            }
         }
     for ( a = 0 ; a < w->re.size() && w->re[a] != e ; a++ ) ;
     if ( a == w->re.size() ) w->re.push_back ( e ) ;
     updatePrimersFromSequence () ;
     showSequence () ;
+    }
+    
+void TPrimerDesign::OnToggleFeatures ( wxCommandEvent &ev )
+    {
+    show_features = sc->findID("FEATURE")?0:1 ;
+    showSequence () ;    
+#ifdef __WXMSW__ // LINUX
+    GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,show_features);
+#endif
     }
     

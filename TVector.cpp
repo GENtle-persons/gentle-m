@@ -164,6 +164,59 @@ void TVector::removeBlanksFromSequence ()
     sequence = s ;
     }
 
+void TVector::removeBlanksFromVector ()
+    {
+    int a ;
+    for ( a = 0 ; a < sequence.size() ; a++ )
+        {
+        if ( sequence[a] == ' ' )
+           {
+           doRemoveNucleotide ( a ) ;
+           a-- ;
+           }
+        }    
+    }
+    
+void TVector::doRemoveNucleotide ( int x )
+    {
+    int a ;
+    if ( isCircular () )
+        {
+        for ( a = 0 ; a < items.size() ; a++ )
+           {
+           if ( items[a].from > items[a].to ) items[a].to += sequence.length() ;
+           }
+        }
+
+    for ( a = 0 ; a < items.size() ; a++ )
+        {
+        if ( items[a].from <= x+1 && items[a].to >= x+1 )
+           {
+           items[a].to-- ;
+           if ( items[a].to < items[a].from )
+              {
+              items.erase ( items.begin()+a ) ;
+              a-- ;
+              }
+           }
+        else if ( items[a].from > x+1 )
+           {
+           items[a].from-- ;
+           items[a].to-- ;
+           }
+        }
+        
+    sequence.erase ( sequence.begin() + x ) ;
+
+    if ( isCircular () )
+        {
+        for ( a = 0 ; a < items.size() ; a++ )
+           {
+           if ( items[a].to > sequence.length() ) items[a].to -= sequence.length() ;
+           }
+        }
+    }
+    
 bool TVector::basematch ( char b1 , char b2 ) // b1 in IUPAC, b2 in SIUPAC
    {
    return ( IUPAC[b1] & SIUPAC[b2] ) > 0 ;
