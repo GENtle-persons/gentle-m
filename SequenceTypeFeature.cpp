@@ -73,13 +73,13 @@ void SeqFeature::show ( wxDC& dc )
     
                  if ( insight )
                     {
-                    int mode = atoi((vec->items[pl.getID(i)/*vr[i].GetX()*/].getParam("SEQUENCE_STYLE")).c_str()) ;
+                    int mode = atoi((vec->items[pl.getID(i)].getParam("SEQUENCE_STYLE")).c_str()) ;
                     wxColour col = *wxBLACK ;
                     
                     if ( can->isPrinting() && !can->getPrintToColor() ) dc.SetPen ( *wxBLACK_PEN ) ;
                     else
                        {
-                       col = vec->items[pl.getID(i)/*vr[i].GetX()*/].getFontColor() ;
+                       col = vec->items[pl.getID(i)].getFontColor() ;
                        dc.SetPen ( *MYPEN ( col ) ) ;
                        }
     
@@ -92,7 +92,7 @@ void SeqFeature::show ( wxDC& dc )
                     if ( drawOffsets )
                        {
                        int o = -1 ;
-                       if ( (b-1) % 10 == 0 && !newline )
+                       if ( (b-1) % 10 == 0 && !newline && vec->items[pl.getID(i)].from != b )
                           {
                           if ( can->getAA() )
                              {

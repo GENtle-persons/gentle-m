@@ -272,7 +272,7 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
            i.name = v ;
         else
            {
-           if ( p == "product" || p == "organism" || p == "db_xref" ||
+           if ( p == "product" || p == "organism" || p == "db_xref" || p == "note" ||
                 p == "mol_type" || p == "chromosome" || p == "bound_moiety" )
               {
               if ( !i.desc.IsEmpty() ) i.desc += "\n" ;
@@ -281,7 +281,20 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
                  i.desc += p ;
                  i.desc += " : " ;
                  }
-              i.desc += v ;
+              wxString v2 = v ;
+              if ( p == "db_xref" )
+                 {
+                 v2 = v.BeforeFirst ( ':' ) . Upper () ;
+                 v2.Trim () ;
+                 if ( v2 == "GI" )
+                    {
+                    v2 = v.AfterFirst ( ':' ) ;
+                    v2 = "http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=protein&val=" + v2 ;
+                    v2 = v + " (" + v2 + ")" ;
+                    }    
+                 else v2 = v ;
+                 }    
+              i.desc += v2 ;
               }
            p = "/" + p ;
            i.setParam ( p , v ) ;

@@ -1434,7 +1434,13 @@ void TVectorItem::setType ( wxString s )
     else if ( s == "ORIT" ) type = VIT_ORI_T ;
     else if ( s == "PROTEIN" ) type = VIT_MISC ;
     else if ( s == "REGION" ) type = VIT_MISC ; 
-    if ( type != VIT_MISC && name == "" ) name = s ;
+    if ( type != VIT_MISC && name == "" )
+        {
+        wxString t = wxString::Format ( "itemtype%d" , type ) ;
+        t = txt ( t ) ;
+        name = t ;
+        desc = s + "\n" + desc ;
+        }
     }
     
 
