@@ -888,7 +888,8 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
     else if ( where && child && child->def == "alignment" )
         {
         SeqAlign *al = (SeqAlign*)where ;
-        if ( al->s[pos] == '-' ) wxLogStatus ( al->myname.c_str() ) ;
+        if ( al->myname == txt("t_consensus") ) {} // Do nothing
+        else if ( al->s[pos] == '-' ) wxLogStatus ( al->myname.c_str() ) ;
         else
            {
            int a , b ;
