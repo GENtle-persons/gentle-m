@@ -37,6 +37,7 @@ class ChildBase : public MyChildBase
     virtual void Maximize ( bool isit = true ) ;
     virtual void updateUndoMenu () ;
     virtual void OnClose(wxCloseEvent& event);
+    virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){};
 
     
     // Compatability functions

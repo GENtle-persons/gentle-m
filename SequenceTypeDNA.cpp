@@ -198,5 +198,15 @@ void SeqDNA::initFromTVector ( TVector *v )
     takesMouseActions = true ;
     showNumbers = true ;
     fontColor.Set ( 0 , 0 , 0 ) ;
+    if ( invers )
+       {
+       int a ;
+       for ( a = 0 ; a < s.length() ; a++ )
+          s[a] = vec->getComplement ( s[a] ) ;
+       takesMouseActions = false ;
+       showNumbers = false ;
+       alternateName = "" ;
+       fontColor.Set ( 100 , 100 , 100 ) ;
+       }
     }
 

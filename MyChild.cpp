@@ -43,6 +43,7 @@ BEGIN_EVENT_TABLE(MyChild, MyChildBase)
     EVT_MENU(MDI_PRINT_REPORT,MyChild::OnPrintReport)
     EVT_MENU(MDI_TOGGLE_FEATURES,MyChild::OnToggleFeatures)
     EVT_MENU(MDI_TOGGLE_RESTRICTION,MyChild::OnToggleRestriction)
+    EVT_MENU(MDI_TOGGLE_IDNA,MyChild::OnToggleIDNA)
     EVT_MENU(MDI_RUN_PCR,MyChild::OnRunPCR)
 
     EVT_CHOICE(PC_ZOOM,MyChild::OnZoom)
@@ -117,6 +118,37 @@ void MyChild::OnToggleRestriction(wxCommandEvent& event)
 #ifdef __WXMSW__ // LINUX
     GetToolBar()->ToggleTool(MDI_TOGGLE_RESTRICTION,cSequence->findID("RESTRICTION"));
 #endif
+    mm.remark () ;
+    }
+    
+void MyChild::OnToggleIDNA(wxCommandEvent& event)
+    {
+    TMarkMem mm ( cSequence ) ;
+    SeqBasic *idna = cSequence->findID ( "IDNA" ) ;
+    if ( idna )
+        {
+        int a ;
+        for ( a = 0 ; cSequence->seq[a] != idna ; a++ ) ;
+        for ( a++ ; a < cSequence->seq.size() ; a++ )
+           cSequence->seq[a-1] = cSequence->seq[a] ;
+        cSequence->seq.pop_back() ;
+        delete idna ;
+        }
+    else
+        {
+        SeqDNA *seqi = new SeqDNA ( cSequence ) ;
+        cSequence->seq.push_back ( seqi ) ;
+        int a ;
+        for ( a = cSequence->seq.size()-1 ; cSequence->seq[a-1]->whatsthis() != "DNA" ; a-- )
+           {
+           idna = cSequence->seq[a-1] ;
+           cSequence->seq[a-1] = cSequence->seq[a] ;
+           cSequence->seq[a] = idna ;
+           }
+        seqi->invers = true ;
+        seqi->initFromTVector ( vec ) ;
+        }
+    updateSequenceCanvas () ;
     mm.remark () ;
     }
 
@@ -220,6 +252,7 @@ void MyChild::initme ()
     view_menu->Append(MDI_CIRCULAR_LINEAR, txt("m_toggle_rc") );
     view_menu->Append(MDI_TOGGLE_FEATURES, txt("m_display_features") , "" );
     view_menu->Append(MDI_TOGGLE_RESTRICTION, txt("m_display_restriction") , "" );
+    view_menu->Append(MDI_TOGGLE_IDNA, txt("m_display_idna") , "" );
     view_menu->AppendSeparator();
     view_menu->Append(MDI_EDIT_MODE, txt("m_edit_mode") , "" , true );
     view_menu->Append(MDI_VIEW_MODE, txt("m_view_mode") , "" , true );
@@ -407,18 +440,23 @@ void MyChild::OnCut(wxCommandEvent& event)
         wxTheClipboard->SetData( new wxTextDataObject(s.c_str()) );
         wxTheClipboard->Close();
 
+        myass ( false , "!1" ) ;
         vec->doRemove ( cPlasmid->getMarkFrom() , cPlasmid->getMarkTo() ) ;
+        myass ( false , "!2" ) ;
         cPlasmid->setMarkFrom ( -1 ) ;
         
+        myass ( false , "!3" ) ;
         for ( int a = 0 ; a < cSequence->seq.size() ; a++ )
            cSequence->seq[a]->initFromTVector ( vec ) ;
 
+        myass ( false , "!4" ) ;
         cSequence->arrange() ;
         treeBox->initme() ;
         treeBox->Refresh() ;
         cPlasmid->Refresh() ;
         cSequence->Refresh() ;
         vec->undo.stop() ;
+        myass ( false , "!!" ) ;
         }
     }
     

@@ -540,4 +540,4 @@
 "t_loading","Loading %s","Lade %s"
 "m_sel_as_new_primer","Selection as new primer","Auswahl als neuen Primer"
 "m_hide_enzymes_limit","Limit enzymes","Enzyme limitieren"
-
+"m_display_idna","Show 3'->5'\tF8","Zeige 3'->5'\tF8"

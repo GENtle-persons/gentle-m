@@ -28,21 +28,27 @@ BEGIN_EVENT_TABLE(TPrimerDesign, MyChildBase)
 
     EVT_CHECKBOX(ALIGN_HORIZ, TPrimerDesign::OnHorizontal)
 
-
-/*    EVT_MENU(MDI_EDIT_MODE, TPrimerDesign::OnEditMode)
-    EVT_MENU(MDI_MARK_ALL, TPrimerDesign::OnMarkAll)
-    EVT_MENU(MDI_FILE_SAVE, TPrimerDesign::OnFileSave)
-    EVT_MENU(MDI_EXPORT, TPrimerDesign::OnExport)
     EVT_MENU(MDI_FIND, TPrimerDesign::OnFind)
-    EVT_MENU(MDI_CUT, TPrimerDesign::OnCut)
-    EVT_MENU(AMINOACIDS_EDIT_NAME, TPrimerDesign::OnEditName)
-
-    EVT_SET_FOCUS(ChildBase::OnFocus)*/
-
     EVT_MENU(MDI_COPY, TPrimerDesign::OnCopy)
 
     EVT_MENU(MDI_EDIT_MODE, TPrimerDesign::OnEditMode)
     EVT_CLOSE(ChildBase::OnClose)
+    
+    // Dummies
+    EVT_MENU(MDI_TOGGLE_RESTRICTION,ChildBase::OnDummy)
+    EVT_MENU(MDI_TOGGLE_IDNA,ChildBase::OnDummy)
+    EVT_MENU(MDI_VIEW_MODE,ChildBase::OnDummy)
+    EVT_MENU(MDI_ORFS,ChildBase::OnDummy)
+    EVT_MENU(MDI_CIRCULAR_LINEAR,ChildBase::OnDummy)
+    EVT_MENU(MDI_UNDO,ChildBase::OnDummy)
+    EVT_MENU(MDI_CUT,ChildBase::OnDummy)
+    EVT_MENU(MDI_EXPORT,ChildBase::OnDummy)
+    EVT_MENU(MDI_COPY,ChildBase::OnDummy)
+    EVT_MENU(MDI_PASTE,ChildBase::OnDummy)
+    EVT_MENU(MDI_EDIT_MODE,ChildBase::OnDummy)
+    EVT_MENU(MDI_MARK_ALL,ChildBase::OnDummy)
+    EVT_MENU(MDI_FILE_SAVE,ChildBase::OnDummy)
+
 END_EVENT_TABLE()
 
 TPrimerDesign::TPrimerDesign(wxWindow *parent, 
@@ -848,3 +854,9 @@ void TPrimerDesign::OnHorizontal ( wxCommandEvent& event )
     sc->SetFocus () ;
     }
     
+void TPrimerDesign::OnFind(wxCommandEvent& event)
+    {
+    FindSequenceDialog fsd ( this , txt("t_find") ) ;
+    fsd.ShowModal () ;
+    }
+

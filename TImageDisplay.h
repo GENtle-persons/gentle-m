@@ -51,6 +51,7 @@ class TMyImagePanel : public wxPanel
     virtual void OnSaveAsBitmap(wxCommandEvent &event);
     virtual void OnCopy(wxCommandEvent &event);
     virtual void OnPrint(wxCommandEvent &event);
+    virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){};
     
     wxBitmap *bmp ;
     wxImage i ;
