@@ -667,3 +667,4 @@
 "m_strand_new_35","Create new entry for 3'->5' strand","Neuer Eintrag aus 3'->5'-Strang"
 "m_strand_new_53","Create new entry for 5'->3' strand","Neuer Eintrag aus 5'->3'-Strang"
 "m_strand_new_both","Create new entry for both strands","Neue Einträge für beide Stränge"
+"t_error","An error has occured!","Es ist ein Fehler aufgetreten!"

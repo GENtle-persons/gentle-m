@@ -1,8 +1,8 @@
 /* SendHTTP.c by Jeff Heaton(heatonj@jeffheaton.com), 2000
    Source code to GET/POST using the HTTP 1.0 protocol */
    
-// Only used for GENtle to work around the wxHTTP bug in 2.5.2.
 // LGPL, as far as I (Magnus Manske) know...
+// Only used to work around the wxHTTP bug in 2.5.2.
 
 #include <stdio.h>
 #include <string.h>
@@ -10,7 +10,25 @@
 
 #define MEM_BUFFER_SIZE 10
 
+/* MemBuffer: Structure used to implement a memory buffer, which is a
+              buffer of memory that will grow to hold variable sized
+              parts of the HTTP message. */
+typedef struct
+{
+	unsigned char *buffer;
+	unsigned char *position;
+	size_t size;
+} MemBuffer;
+
+
 #include "SendHTTP.h"
+
+#include <wx/wxprec.h>
+#ifndef WX_PRECOMP
+   #include <wx/wx.h>
+#endif
+#include <wx/file.h>
+#include <wx/progdlg.h>
 
 /* MemBufferCreate: Passed a MemBuffer structure, will allocate a
                     memory buffer of MEM_BUFFER_SIZE.  This buffer
@@ -381,3 +399,219 @@ int main( int argc, char *argv[ ] )
 }
 
 */
+
+myExternal::myExternal () 
+	{
+	pd = NULL ;
+	}
+     
+wxString myExternal::getText ( wxString url )
+	{
+	if ( url.Left(7).Lower() == "http://" ) return getTextHTTP ( url ) ;
+	return getTextLocal ( url ) ; // fallback
+	}
+     
+int myExternal::copyFile ( wxString url , wxString file , int _t )
+	{
+	targetSize = _t ;
+	if ( url.Left(7).Lower() == "http://" ) return copyFileHTTP ( url , file ) ;
+	return copyFileLocal ( url , file ) ; // fallback
+	}    
+
+// ****
+
+wxString myExternal::getTextLocal ( wxString url )
+	{
+	wxFile in ( url , wxFile::read ) ;
+	if ( !in.IsOpened() ) return "" ;
+	long l = in.Length() ;
+	char *c = new char [l+5] ;
+	in.Read ( c , l ) ;
+	in.Close() ;
+	wxString ret = c ;
+	delete c ;
+	return ret ;
+	}
+     
+int myExternal::copyFileLocal ( wxString url , wxString file )
+	{
+	if ( true == wxCopyFile ( url , file , true ) ) return 0 ;
+	return 1 ;
+	}	
+
+wxString getMemSize ( long l , char unit = 'B' )
+	{
+	wxString ret , r2 ;
+	if ( unit == 'B' ) ret = wxString::Format ( "%d Byte" , l ) ;
+	if ( unit == 'K' ) ret = wxString::Format ( "%1.1f KB" , ( (float) l ) / 1024.0 ) ;
+	if ( unit == 'M' ) ret = wxString::Format ( "%1.1f MB" , ( (float) l ) / 1048576.0 ) ;
+	if ( unit == 'B' ) r2 = getMemSize ( l , 'K' ) ;
+	if ( unit == 'K' ) r2 = getMemSize ( l , 'M' ) ;
+	if ( r2 != "" && r2.length() < ret.length() ) ret = r2 ;
+	return ret ;
+	}    
+
+// ****
+
+int myExternal::copyFileHTTP ( wxString _url , wxString _file )
+	{
+	LPCSTR url = _url.c_str() ;
+	LPCSTR headers = NULL ;
+ 	BYTE *post = NULL ;
+  	DWORD postLength = 0 ;
+   	HTTPRequest *req = new HTTPRequest ;
+
+	WSADATA WsaData;
+	SOCKADDR_IN sin;
+	SOCKET sock;
+	char buffer[1024];
+	char protocol[20],host[128],request[2048];
+	int l,port,chars,err;
+	MemBuffer headersBuffer,messageBuffer;
+	BOOL done;
+	
+	/* Parse the URL */
+	ParseURL(url,protocol,sizeof(protocol)-1,host,sizeof(host)-1,request,sizeof(request)-1,&port);
+	if(strcmp(protocol,"HTTP"))
+		return 1;
+
+	/* Init Winsock */
+
+	err = WSAStartup (0x0101, &WsaData);
+	if(err!=0)
+		return 1;
+
+	sock = socket (AF_INET, SOCK_STREAM, 0);
+	if ( (unsigned int)socket == INVALID_SOCKET)
+		return 1;
+
+	/* Connect to web sever */
+
+	sin.sin_family = AF_INET;
+	sin.sin_port = htons( (unsigned short)port );
+	sin.sin_addr.s_addr = GetHostAddress(host);
+
+	if( connect (sock,(LPSOCKADDR)&sin, sizeof(SOCKADDR_IN) ) )
+		return 1;
+
+
+	/* Send request */
+
+	if( !*request )
+		lstrcpyn(request,"/",sizeof(request)-1);
+
+	if( post == NULL )
+		SendString(sock,"GET ");
+	else SendString(sock,"POST ");
+	SendString(sock,request);
+	SendString(sock," HTTP/1.0\r\n");
+	SendString(sock,"Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/vnd.ms-excel, application/msword, application/vnd.ms-powerpoint, */*\r\n");
+	SendString(sock,"Accept-Language: en-us\r\n");
+	SendString(sock,"Accept-Encoding: gzip, deflate\r\n");
+	SendString(sock,"User-Agent: Mozilla/4.0\r\n");
+	if(postLength)
+	{
+		wsprintf(buffer,"Content-Length: %ld\r\n",postLength);
+		SendString(sock,buffer);
+	}
+	SendString(sock,"Host: ");
+	SendString(sock,host);
+	SendString(sock,"\r\n");
+	if( (headers!=NULL) && *headers )
+		SendString(sock,headers);
+	/* Send a blank line to signal end of HTTP headers */
+	SendString(sock,"\r\n");
+	if( (post!=NULL) && postLength )
+		send(sock,(char*)post,postLength,0);
+	
+
+	/* Read the result */
+	/* First read HTTP headers */
+
+	MemBufferCreate(&headersBuffer );
+	chars = 0;
+	done = FALSE;
+
+	while(!done)
+	{
+		l = recv(sock,buffer,1,0);
+		if(l<0)
+			done=TRUE;
+
+		switch(*buffer)
+		{
+			case '\r':
+				break;
+			case '\n':
+				if(chars==0)
+					done = TRUE;
+				chars=0;
+				break;
+			default:
+				chars++;
+				break;
+		}
+
+		MemBufferAddByte(&headersBuffer,*buffer);
+	}
+
+	req->headers=(char*)headersBuffer.buffer;
+	*(headersBuffer.position) = 0;
+
+	/* Now read the HTTP body */
+
+	MemBufferCreate(&messageBuffer);
+
+	wxFile out ( _file , wxFile::write ) ; // Mine
+
+	long l2 = 0 ;
+	wxString lastMessage ;
+	do
+	{
+		l = recv(sock,buffer,sizeof(buffer)-1,0);
+		if(l<0)
+			break;
+		*(buffer+l)=0;
+		out.Write ( buffer , l ) ; // Mine
+		*buffer = 0 ; // Mine
+		l2 += l ;
+		if ( pd )
+  			{
+  			wxString tmp = getMemSize ( l2 ) ;
+  			if ( tmp != lastMessage )
+  				{
+      			lastMessage = tmp ;
+      			int per = 0 ;
+      			if ( targetSize != -1 ) per = 100 * l2 / targetSize ;
+             	if ( !pd->Update ( per , lastMessage ) )
+             		{
+         		    delete req ;
+         		    return 2 ;
+         		    }    
+         		}    
+         	}
+//		MemBufferAddBuffer(&messageBuffer,(BYTE*)buffer,l);
+	} while(l>0);
+	*messageBuffer.position = 0;
+	req->message = (char*)messageBuffer.buffer;
+	req->messageLength = (messageBuffer.position-messageBuffer.buffer);
+
+	/* Cleanup */
+
+	closesocket(sock);
+
+	// Mine
+	delete req ;
+	return 0 ;
+	}
+     
+wxString myExternal::getTextHTTP ( wxString url )
+	{
+	HTTPRequest req ;
+	int rtn = SendHTTP ( url.c_str() , NULL , NULL , 0 , &req ) ;
+	wxString ret ;
+	if ( !rtn ) ret = req.message ;
+	if ( req.message ) delete req.message ;
+	return ret ;    
+	}
+     

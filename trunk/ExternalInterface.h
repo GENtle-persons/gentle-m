@@ -7,7 +7,7 @@
 #include <wx/htmllbox.h>
 
 enum {
-	EI_PUBMED_NUCLEOTIDE = 1,
+	EI_PUBMED = 1,
 	} ;	
 	
 class EILB : public wxHtmlListBox
@@ -15,8 +15,12 @@ class EILB : public wxHtmlListBox
 	public :
 	EILB ( wxWindow *parent , int id = wxID_ANY ) ;
 	virtual wxString OnGetItem(size_t n) const ;
+	virtual void Clear () ;
+	virtual void Sort () ;
+	virtual void Update () ;
+	virtual void Set ( int id , wxString s , wxString t = "" ) ;
 	
-	wxArrayString was ;
+	wxArrayString was , data ;
 	} ;    
 
 class EIpanel : public wxPanel
@@ -24,17 +28,21 @@ class EIpanel : public wxPanel
 	public :
 	EIpanel ( wxWindow *parent , int _mode ) ;
 	
-	virtual void init_pubmed_nucleotide() ;
+	virtual void init_pubmed() ;
 	
-	virtual void process_pubmed_nucleotide() ;
+	virtual void process_pubmed() ;
+	virtual void execute_pubmed() ;
 
-    virtual void OnOK ( wxCommandEvent& WXUNUSED(event) ) ;
+    virtual void OnB1 ( wxCommandEvent& WXUNUSED(event) ) ;
+    virtual void OnB2 ( wxCommandEvent& WXUNUSED(event) ) ;
+    virtual void OnC1 ( wxCommandEvent& WXUNUSED(event) ) ;
 	
 	int mode ;
 	wxPanel *up ;
 	EILB *hlb ;
 	wxTextCtrl *t1 ;
-	wxButton *b1 ;
+	wxButton *b1 , *b2 ;
+	wxChoice *c1 ;
 
     DECLARE_EVENT_TABLE()
 	} ;    
