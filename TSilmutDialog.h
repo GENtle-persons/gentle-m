@@ -31,6 +31,7 @@ class TSilmutDialog : public wxDialog
     virtual void OnOK ( wxCommandEvent &ev ) ;
     virtual void OnCancel ( wxCommandEvent &ev ) ;
     virtual void OnLbDoubleClick ( wxCommandEvent &ev ) ;
+    virtual void OnCharHook(wxKeyEvent& event) ;
     virtual string getSequence () ;
     virtual TRestrictionEnzyme *getEnzyme () ;
     

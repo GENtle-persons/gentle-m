@@ -42,7 +42,20 @@ BEGIN_EVENT_TABLE(TURLtext, wxTextCtrl )
     EVT_TEXT_URL(URLTEXT_DUMMY, TURLtext::OnURL)
 END_EVENT_TABLE()
 
+// ******************************************* TMutationDialog
 
+TMutationDialog::TMutationDialog (wxWindow *parent, const wxString& title , string _codon )
+    : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 600 , 450 ) )
+    {
+    codon = _codon ;
+    v = new TVector ;
+    aa = v->dna2aa ( codon ) [0] ;
+    }
+    
+TMutationDialog::~TMutationDialog ()
+    {
+    delete v ;
+    }
 
 // ******************************************* TAlignmentDialog
 
