@@ -875,14 +875,13 @@ void MyFrame::OnSize(wxSizeEvent& event)
 {
     wxLayoutAlgorithm layout;
     layout.LayoutFrame(this);
+/*
     if ( lastChild )
     	{
 	    setActiveChild ( lastChild ) ;
-//	    if ( lastChild->vec ) lastChild->vec->updateDisplay() ;
-//        lastChild->Activate() ;
         lastChild->Refresh() ;
         }    
-    return ;
+*/
 }
 
 
@@ -940,6 +939,7 @@ TAlignment *MyFrame::runAlignment ( wxArrayString &vs , wxArrayChildBase &vc , T
     
     mainTree->addChild ( subframe , TYPE_ALIGNMENT ) ;
     mainTree->Refresh () ;
+    activateChild ( children.GetCount()-1 ) ;
     return subframe ;
     }
 
@@ -1312,6 +1312,7 @@ void MyFrame::OnExternalInterface(wxCommandEvent& event)
     
     mainTree->addChild ( subframe , TYPE_MISC ) ;
     setChild ( subframe ) ;
+    activateChild ( children.GetCount()-1 ) ;
     }
     
 /** \brief Invokes the image viewer module
@@ -1366,6 +1367,7 @@ TCalculator *MyFrame::RunCalculator ()
     
     mainTree->addChild ( subframe , TYPE_MISC ) ;
     setChild ( subframe ) ;
+    activateChild ( children.GetCount()-1 ) ;
     return subframe ;
     }
     
@@ -1796,6 +1798,7 @@ TVirtualGel *MyFrame::useGel ( wxString type )
     
     mainTree->addChild ( gel , TYPE_MISC ) ;
     setChild ( gel ) ;
+    activateChild ( children.GetCount()-1 ) ;
 	return gel ;
 	}    
 
@@ -2039,4 +2042,7 @@ TProject::TProject ()
 	{
 	enzyme_rules = NULL ;
 	}
+
+TEnzymeRules *TProject::getEnzymeRules () { return enzyme_rules ; }
+void TProject::setEnzymeRules ( TEnzymeRules *er ) { enzyme_rules = er ; }
     

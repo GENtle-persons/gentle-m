@@ -698,7 +698,7 @@
 "t_blast_hseq","Sbjct:","Ergebn.:"
 "t_clustal_running","Standby...","Bitte warten..."
 "img_show_text","Show labels","Beschriftung"
-"t_codon_catalog","Codon catalog","Codon-Katalog"
+"t_codon_catalog","Codon catalog for backtranslation","Codon-Katalog für Rückübersetzung"
 "t_codon_catalog_abstract","Abstract code","Abstrakter Code"
 "t_backtranslated","This DNA sequence was backtranslated from an amino acid sequence for ","Diese DNS-Sequenz wurde aus einer Aminosäuresequenz zurückübersetzt für "
 "t_large_warning_message","This operation might not be supported by the current database (sqlite 2.X). Convert the database to sqlite 3.X? \n(Older versions of GENtle might not be able to access the converted database anymore!)","Die gewünschte Operation ist mit dieser Datanbank-Version (sqlite 2.X) nicht möglich. Nach sqlite 3.X konvertieren? \n(Ältere GENtle-Versionen können die Datenbank dann möglicherweise nicht mehr lesen!)"
