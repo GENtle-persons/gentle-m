@@ -78,6 +78,7 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
     lastyoffset = 0 ;
     blocksize = 10 ;
     lowx = lowy = -1 ;
+    marking = false ;
 
     isMiniDisplay = false ;
     m_dirty = FALSE;
@@ -737,6 +738,23 @@ bool SequenceCanvas::inMarkRange ( int x , int f , int t , int l )
 void SequenceCanvas::mark ( string id , int from , int to , int value )
     {
     if ( seq.size() == 0 ) return ;
+    if ( marking ) return ;
+    marking = true ;
+    if ( isMiniDisplay )
+        {
+        myass ( child , "Mark1" ) ;
+        myass ( child->cSequence , "Mark2" ) ;
+        child->cSequence->mark ( "AA" , from , to , value ) ;
+//        child->cSequence->ensureVisible ( from ) ;
+//        return ;
+        }
+    else if ( aa && aa->sc2 )
+        {
+        myass ( aa->sc2->seq.size() , "Mark3" ) ;
+        aa->sc2->mark ( aa->sc2->seq[0]->whatsthis() , from , to , value ) ;        
+        }
+    marking = false ;
+    
     int a , b = -1 , cnt = 0 ;
     vpy = -1 ; 
     for ( a = 0 ; a < seq.size() && b == -1 ; a++ )
@@ -1263,6 +1281,7 @@ SeqBasic* SequenceCanvas::findMouseTarget ( wxPoint pt , int &pos )
     for ( a = 0 ; a < seq.size() && pos == 0 ; a++ )
         {
         b = seq[a]->pos.getLine ( pt.y ) ;
+
         if ( b != -1 )
            {
            ret = seq[a] ;

@@ -32,7 +32,7 @@ int SeqPlot::arrange ( int n )
         {
         if ( can->isMiniDisplay && can->aa && can->aa->miniDisplayOptions == MINI_DISPLAY_CONDENSED )
            x = ox + ( w - ox ) * a / s.length() ;
-        pos.add ( a+1 , x , y , wx-1 , wy-1 ) ;
+        pos.add ( a+1 , x , y , wx-1 , wy*lines-1 ) ;
         if ( x + wx*2 > can->lowx ) can->lowx = x + wx*2 ;
         lowy = y+wy*lines ;
         x += wx ;
@@ -41,7 +41,7 @@ int SeqPlot::arrange ( int n )
            x += wx-1 ;
            if ( x+wx*(can->blocksize+1) >= w )
               {
-              pos.addline ( lasta , pos.p.size() , y , y+wy-1 ) ;
+              pos.addline ( lasta , pos.p.size() , y , y+wy*lines-1 ) ;
               lasta = pos.p.size()+1 ;
               x = ox ;
               y += wy * ( can->seq.size() + can->blankline ) ;
@@ -51,7 +51,7 @@ int SeqPlot::arrange ( int n )
            }
         }
     if ( lasta != pos.p.size()+1 ) 
-        pos.addline ( lasta , pos.p.size() , y , y+wy-1 ) ;
+        pos.addline ( lasta , pos.p.size() , y , y+wy*lines-1 ) ;
     return lowy + bo*2 ;
     }
 
@@ -192,8 +192,13 @@ void SeqPlot::showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx )
         if ( u == 3 ) pen = &can->blue_pen ;
         int tz = ty + (u-1) * ch + 1 ;
         int tw = ( tx + cw ) - lx ;
-//        if ( can->isMiniDisplay && can->aa && can->aa->miniDisplayOptions == MINI_DISPLAY_CONDENSED )
-//                tw = 1 ;
+        
+        if ( pos.m[b+1] > 0 )
+           {
+           dc.SetPen ( *wxGREY_PEN ) ;
+           myRect ( dc , lx , tz , tw , ch*can->charheight - 2 ) ;
+           }
+
         if ( d1[u][b] == 'X' )
            {
            dc.SetPen(*pen);
@@ -214,9 +219,9 @@ void SeqPlot::showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx )
            }
         if ( startOfLine )
            {
-           if ( u == 1 ) drawSymbol ( 'a' , dc , lx-cw , ty+(u-1)*ch , lx-2 , ty+(u-1)*ch+ch ) ;
-           else if ( u == 2 ) drawSymbol ( 'b' , dc , lx-cw , ty+(u-1)*ch , lx-2 , ty+(u-1)*ch+ch ) ;
-           else drawSymbol ( 'T' , dc , lx-cw , ty+(u-1)*ch , lx-2 , ty+(u-1)*ch+ch ) ;
+           if ( u == 1 ) drawSymbol ( 'a' , dc , lx-cw , ty+(u-1)*ch , lx-2 , ty+(u-1)*ch+ch ) ; // Alpha
+           else if ( u == 2 ) drawSymbol ( 'b' , dc , lx-cw , ty+(u-1)*ch , lx-2 , ty+(u-1)*ch+ch ) ; // Beta
+           else drawSymbol ( 'T' , dc , lx-cw , ty+(u-1)*ch , lx-2 , ty+(u-1)*ch+ch ) ; // Turn
            }
         }
     
@@ -344,6 +349,7 @@ void SeqPlot::initFromTVector ( TVector *v )
     {
     vec = v ;
     s = vec->sequence ;
+    takesMouseActions = true ;
     }
 
 void SeqPlot::setLines ( int l )
@@ -493,3 +499,4 @@ void SeqPlot::scanChouFasman ( int x , int y , int t , int min ,
            }
         }
     }
+    
