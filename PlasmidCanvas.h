@@ -40,6 +40,13 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void OnPaint(wxPaintEvent& event) ;
     virtual void OnSaveImage ( wxCommandEvent &ev ) ;
     
+    virtual void OnStrandCopy35(wxCommandEvent& event);
+    virtual void OnStrandCopy53(wxCommandEvent& event);
+    virtual void OnStrandCopyBoth(wxCommandEvent& event);
+    virtual void OnStrandNew35(wxCommandEvent& event);
+    virtual void OnStrandNew53(wxCommandEvent& event);
+    virtual void OnStrandNewBoth(wxCommandEvent& event);
+
     virtual void invokeVectorEditor ( wxString what = "" , int num = 0 , bool forceUpdate = false ) ;
     virtual wxMenu *invokeItemPopup ( int item , wxPoint pt , bool doreturn = false ) ;
     virtual wxMenu *invokeRsPopup ( int rs , wxPoint pt , bool doreturn = false ) ;

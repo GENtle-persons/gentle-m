@@ -13,6 +13,7 @@ BEGIN_EVENT_TABLE(MyFrame, MyFrameType)
     EVT_MENU(MDI_ENZYME_EDITOR, MyFrame::OnEnzymeEditor)
     EVT_MENU(MDI_ALIGNMENT, MyFrame::OnAlignment)
     EVT_MENU(MDI_IMAGE_VIEWER, MyFrame::OnImageViewer)
+    EVT_MENU(MDI_EXTERNAL_INTERFACE, MyFrame::OnExternalInterface)
     EVT_MENU(MDI_CALCULATOR, MyFrame::OnCalculator)
     EVT_MENU(MDI_FILE_OPEN, MyFrame::OnFileOpen)
     EVT_MENU(MDI_FILE_IMPORT, MyFrame::OnFileImport)
@@ -1156,6 +1157,27 @@ void MyFrame::blast ( wxString seq , wxString prg )
 #endif
     }
     
+void MyFrame::OnExternalInterface(wxCommandEvent& event)
+    {
+    ExternalInterface *subframe = new ExternalInterface ( getCommonParent() , txt("m_external_interface") ) ;
+
+    // Give it an icon
+#ifdef __WXMSW__
+    subframe->SetIcon(wxIcon("chrt_icn"));
+#else
+    subframe->SetIcon(wxIcon( mondrian_xpm ));
+#endif
+
+    subframe->initme () ;
+
+    subframe->Show() ;
+    subframe->Maximize() ;
+    subframe->showName() ;
+    
+    mainTree->addChild ( subframe , TYPE_MISC ) ;
+    setChild ( subframe ) ;
+    }
+    
 void MyFrame::OnImageViewer(wxCommandEvent& event)
     {
     TImageDisplay *subframe = new TImageDisplay ( getCommonParent() , txt("t_image_viewer") ) ;
@@ -1235,6 +1257,7 @@ wxMenu *MyFrame::getToolMenu ( bool _pcr )
     if ( _pcr ) tool_menu->Append(MDI_RUN_PCR, txt("m_pcr") );
     tool_menu->Append(MDI_MANAGE_DATABASE, txt("m_manage_db") , txt("m_manage_dbtxt") ) ;
     tool_menu->Append(MDI_IMAGE_VIEWER, txt("m_image_viewer") , txt("m_image_viewer_txt") ) ;
+    tool_menu->Append(MDI_EXTERNAL_INTERFACE, txt("m_external_interface") ) ;
     tool_menu->Append(MDI_CALCULATOR, txt("m_calculator") , txt("m_calculator_txt") ) ;
     tool_menu->Append(PROGRAM_OPTIONS, txt("m_options") , txt("m_options_txt") ) ;
     return tool_menu ;

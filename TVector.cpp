@@ -26,6 +26,21 @@ void TVector::setGenomeMode ( bool gm ) { genomeMode = gm ; }
 bool TVector::getGenomeMode () { return genomeMode ; }
 wxString *TVector::getSequencePointer () { return &sequence ; }
 
+wxString TVector::getStrand53 ()
+	{
+	return _lu + sequence + _ru ;
+	}
+     
+wxString TVector::getStrand35 ()
+	{
+	wxString t1 , t2 , t3 ;
+	int a ;
+	for ( a = 0 ; a < _rl.length() ; a++ ) t1 = _rl.GetChar(a) + t1 ;
+	for ( a = 0 ; a < sequence.length() ; a++ ) t2 = getComplement ( sequence.GetChar(a) ) + t2 ;
+	for ( a = 0 ; a < _ll.length() ; a++ ) t3 = _ll.GetChar(a) + t3 ;
+	return t1 + t2 + t3 ;
+	}
+     
 int TVector::showGC () // Return 0 for "no", otherwise number of blocks
 	{
     if ( type == TYPE_AMINO_ACIDS ) return 0 ;

@@ -12,7 +12,7 @@ typedef unsigned int uint ;
 //#define MYLOG
 
 // Turn testing (log and error log) on/off
-#define MYTEST
+//#define MYTEST
 
 #ifdef MYTEST
 
@@ -176,6 +176,7 @@ WX_DEFINE_ARRAY(TVector *, wxArrayTVector);
 #include "Alignment.h"
 #include "AminoAcids.h"
 #include "ABIviewer.h"
+#include "ExternalInterface.h"
 #include "TItemEditDialog.h"
 #include "PrimerDesign.h"
 

@@ -204,6 +204,8 @@ class TVector
     virtual void doRemoveNucleotide ( int x ) ;
     virtual int getItemLength ( int a ) ;
     virtual TVector *backtranslate () ;
+    virtual wxString getStrand53 () ; // returns a 5'->3' sequence
+    virtual wxString getStrand35 () ; // returns a 5'->3' sequence, too!
 
     virtual TAAProp getAAprop ( char a ) ;
     virtual int find_item ( wxString s ) ;

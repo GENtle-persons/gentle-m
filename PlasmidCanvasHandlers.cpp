@@ -263,7 +263,20 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn )
         cm->Append(MDI_TRANSFORM_SEQUENCE, txt("t_transform_sequence") );
         if ( p->vec->type != TYPE_AMINO_ACIDS )
            cm->Append(PC_RS_HIDE_LIMIT, txt("m_hide_enzymes_limit") );
+
+        // Strands
+           {
+           wxMenu *pm = new wxMenu ;
+           cm->Append ( POPUP_DUMMY , txt ( "m_strands" ) , pm ) ;
+           pm->Append( STRAND_COPY_53 , txt("m_strand_copy_53") );
+           pm->Append( STRAND_COPY_35 , txt("m_strand_copy_35") );
+           pm->Append( STRAND_COPY_BOTH , txt("m_strand_copy_both") );
+           pm->Append( STRAND_NEW_53 , txt("m_strand_new_53") );
+           pm->Append( STRAND_NEW_35 , txt("m_strand_new_35") );
+           pm->Append( STRAND_NEW_BOTH , txt("m_strand_new_both") );
+           }    
         
+        // PCR
         if ( getMarkFrom() == -1 )
            {
            cm->Append(MDI_RUN_PCR, txt("m_pcr") );
@@ -272,7 +285,7 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn )
            {
            wxMenu *pm = new wxMenu ;
            cm->Append ( POPUP_DUMMY , txt ( "m_pcr" ) , pm ) ;
-           pm->Append(MDI_RUN_PCR, txt("m_pcr") );
+           pm->Append( MDI_RUN_PCR , txt("m_pcr") );
            pm->Append ( PRIMER_FORWARD , txt("m_primer_forward") ) ;
            pm->Append ( PRIMER_BACKWARD , txt("m_primer_backward") ) ;
            pm->Append ( PRIMER_BOTH , txt("m_primer_both") ) ;
@@ -737,3 +750,33 @@ void PlasmidCanvas::OnWhatCuts(wxCommandEvent& event)
     p->cSequence->OnWhatCuts(event) ;
     }
     
+void PlasmidCanvas::OnStrandCopy35(wxCommandEvent& event)
+	{
+ 	p->cSequence->OnStrandCopy35 ( event ) ;
+	}    
+
+void PlasmidCanvas::OnStrandCopy53(wxCommandEvent& event)
+	{
+ 	p->cSequence->OnStrandCopy53 ( event ) ;
+	}    
+
+void PlasmidCanvas::OnStrandCopyBoth(wxCommandEvent& event)
+	{
+ 	p->cSequence->OnStrandCopyBoth ( event ) ;
+	}    
+
+void PlasmidCanvas::OnStrandNew35(wxCommandEvent& event)
+	{
+ 	p->cSequence->OnStrandNew35 ( event ) ;
+	}    
+
+void PlasmidCanvas::OnStrandNew53(wxCommandEvent& event)
+	{
+ 	p->cSequence->OnStrandNew53 ( event ) ;
+	}    
+
+void PlasmidCanvas::OnStrandNewBoth(wxCommandEvent& event)
+	{
+ 	p->cSequence->OnStrandNewBoth ( event ) ;
+	}    
+

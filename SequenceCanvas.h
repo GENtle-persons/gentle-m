@@ -416,6 +416,13 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void OnInsertOtherGaps ( wxCommandEvent &ev ) ;
     virtual void OnDeleteOtherGaps ( wxCommandEvent &ev ) ;
 
+    virtual void OnStrandCopy35(wxCommandEvent& event);
+    virtual void OnStrandCopy53(wxCommandEvent& event);
+    virtual void OnStrandCopyBoth(wxCommandEvent& event);
+    virtual void OnStrandNew35(wxCommandEvent& event);
+    virtual void OnStrandNew53(wxCommandEvent& event);
+    virtual void OnStrandNewBoth(wxCommandEvent& event);
+
     virtual void OnInsertRestrictionSiteLeft ( wxCommandEvent &ev ) ;
     virtual void OnInsertRestrictionSiteRight ( wxCommandEvent &ev ) ;
 

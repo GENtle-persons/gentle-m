@@ -82,6 +82,7 @@ public:
     virtual void OnProjectLoad(wxCommandEvent& event);
     virtual void OnProjectClose(wxCommandEvent& event);
     virtual void OnImageViewer(wxCommandEvent& event);
+    virtual void OnExternalInterface(wxCommandEvent& event);
     virtual void OnCalculator(wxCommandEvent& event);
     
     virtual void RerouteMenu(wxCommandEvent& event);
