@@ -737,3 +737,5 @@
 "m_graph_swap_side","S&wap scale side","S&kala auf die andere Seite bringen"
 "t_zoom_linked","Synchronize zoom","Zoom synchronisieren"
 "m_aa_ipc","&Isotopic Pattern Calculator","&Isotopic Pattern Calculator"
+"t_aa_ipc","Isotopic Pattern Calculator (by Dirk Nolting)","Isotopic Pattern Calculator (by Dirk Nolting)"
+"t_ipc_est",""Estimate %s seconds"",""Geschätzt %s Sekunden"
