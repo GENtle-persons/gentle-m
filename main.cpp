@@ -213,12 +213,9 @@ bool MyApp::OnInit()
 
     frame = new MyFrame((wxFrame *)NULL, -1, "",
                         wxPoint(-1, -1), wxSize(500, 400),
-                        wxDEFAULT_FRAME_STYLE );//| wxHSCROLL | wxVSCROLL);
-    
+                        wxDEFAULT_FRAME_STYLE );    
     frame->initme () ;
-    
     if ( frame->dying ) return FALSE ;
-    
     SetTopWindow(frame);
 
     if ( frame->showSplashScreen )

@@ -114,7 +114,7 @@ void TVector::init ()
          "LLLLPPPPHHQQRRRR"
          "IIIMTTTTNNKKSSRR"
          "VVVVAAAADDEEGGGG" ;
-
+         
     // Static initialization
     if ( aaprop.size() > 0 ) return ;
 
