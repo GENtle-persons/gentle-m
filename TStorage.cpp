@@ -1,5 +1,6 @@
 #include "TStorage.h"
 #include <wx/textfile.h>
+#include <wx/filename.h>
 
 using namespace std ;
 
@@ -109,7 +110,7 @@ void TStorage::createDatabase ()
     sqlite_close ( db ) ;
     }
 
-TSQLresult TStorage::getObject_MySQL ( wxString query )
+TSQLresult TStorage::getObject_MySQL ( const wxString &query )
     {
     results.clean() ;
 #ifdef USEMYSQL
@@ -143,7 +144,6 @@ TSQLresult TStorage::getObject_MySQL ( wxString query )
                for(i = 0; i < num_fields; i++)
                {
                   results.content[rownum].Add ( row[i] ? row[i] : "" ) ;
-//                   show += wxString::Format ("[%.*s] ", (int) lengths[i], row[i] ? row[i] : "NULL");
                }
             }        
             
@@ -152,18 +152,30 @@ TSQLresult TStorage::getObject_MySQL ( wxString query )
             for(i = 0; i < num_fields; i++)
             {
                results.field.Add ( fields[i].name ) ;
-//               printf("Field %u is %s\n", i, fields[i].name);
             }
             
             mysql_free_result ( result ) ;
             }
         }
-//    else wxMessageBox ( wxString::Format ( "MySQL error %d" , err ) , query.c_str() ) ;
+    else
+    	{
+	    err = mysql_errno(conn) ;
+	    if ( err == 1153 )
+	    	{
+ 	    	wxMessageBox ( txt("t_mysql_error_1153" ) ) ;
+	    	}    
+        else
+        	{
+             wxMessageBox ( mysql_error(conn) , wxString::Format ( "MySQL error %d" , err ) ) ;
+             wxFile of ( "mysqlwrr.txt" , wxFile::write ) ;
+             of.Write ( query ) ;
+         }    
+        }    
 #endif
     return results ;
     }
     
-TSQLresult TStorage::getObjectSqlite3 ( wxString query )
+TSQLresult TStorage::getObjectSqlite3 ( const wxString &query )
     {
     sqlite3 *db ;
     char *e = 0 ;
@@ -204,7 +216,7 @@ TSQLresult TStorage::getObjectSqlite3 ( wxString query )
     return results ;
     }
         
-TSQLresult TStorage::getObject ( wxString query )
+TSQLresult TStorage::getObject ( const wxString &query )
     {
     if ( recording )
     	{
@@ -214,6 +226,11 @@ TSQLresult TStorage::getObject ( wxString query )
     	}    
     if ( isMySQL ) return getObject_MySQL ( query ) ;
     if ( isSqlite3 ) return getObjectSqlite3 ( query ) ;
+   	return getObjectSqlite2 ( query ) ;
+   	}   	
+
+TSQLresult TStorage::getObjectSqlite2 ( const wxString &query )
+	{    
     sqlite *db ;
     char *e = 0 ;
     int rc ;
@@ -232,6 +249,14 @@ TSQLresult TStorage::getObject ( wxString query )
           return results ;
           }
        }
+       
+    if ( query.length() > 1000000 ) // Approx. 1MB, too large for sqlite 2.X
+    	{
+	    if ( wxYES != wxMessageBox ( txt("t_large_warning_message") , txt("t_large_warning_caption") , wxYES_NO ) )
+	    	return results ; // No conversion wanted, abort
+    	convertSqlite2to3 () ; // Convert to 3.X
+    	return getObject ( query ) ;
+    	}    
     
     do {
         rc = sqlite_exec ( db , query.c_str() , callback , 0 , &e ) ;
@@ -757,12 +782,14 @@ void TStorage::optimizeDatabase ()
 
 void TStorage::startRecord ()
 	{
+ 	if ( isMySQL ) return ;
 	record = "" ;
 	recording = true ;
 	}    
 
 void TStorage::endRecord ()
 	{
+ 	if ( isMySQL ) return ;
 	recording = false ;
 	record = "BEGIN; " + record + " END;" ;
 	getObject ( record ) ;
@@ -1066,3 +1093,45 @@ void TStorage::getEnzymeCache ( wxString group , wxArrayString &enzymes )
 	explode ( "," , enzymeGroupCache[a] , enzymes ) ;
 	}
 
+// This function can convert a sqlite 2.X database into an sqlite 3.X one
+bool TStorage::convertSqlite2to3 ()
+	{
+    wxBeginBusyCursor() ;
+	wxString filename = wxFileName::CreateTempFileName ( "GENtle_" ) ;
+	wxCopyFile ( "blank.db" , filename ) ;
+	TStorage s3 ( TEMP_STORAGE , filename ) ;
+	
+	wxString sql = "SELECT name FROM sqlite_master WHERE type='table'" ;
+    TSQLresult r ;
+    r = getObjectSqlite2 ( sql ) ;
+    
+    TVS tables ;
+    int a , b , c ;
+    for ( a = 0 ; a < r.content.size() ; a++ )
+    	tables.Add ( r[a][r["name"]] ) ;
+    	
+   	for ( a = 0 ; a < tables.GetCount() ; a++ )
+   		{
+	    sql = "SELECT * FROM " + tables[a] ;
+	    r = getObjectSqlite2 ( sql ) ;
+	    s3.startRecord() ;
+	    s3.getObject ( "DELETE FROM " + tables[a] ) ;
+	    for ( b = 0 ; b < r.content.size() ; b++ )
+	    	{
+ 	    	wxString s1 , s2 ;
+ 	    	for ( c = 0 ; c < r.field.GetCount() ; c++ )
+  		    	s3.sqlAdd ( s1 , s2 , r.field[c] , r[b][c] ) ;
+			sql = "INSERT INTO " + tables[a] + " (" + s1 + ") VALUES (" + s2 + ")" ;
+            s3.getObject ( sql ) ;
+	    	}    
+  	    s3.endRecord() ;
+   		}    
+    	
+	wxCopyFile ( filename , dbname ) ;
+	isSqlite3 = true ;
+	getObjectSqlite3 ( "VACUUM;" ) ;
+    wxEndBusyCursor() ;
+    wxMessageBox ( txt("t_conversion_complete") ) ;
+    return true ; // Dummy default
+	}
+    

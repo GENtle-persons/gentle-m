@@ -75,8 +75,7 @@ class TStorage
     TStorage ( int nt , wxString fn = "" ) ;
     virtual ~TStorage () ;
     virtual void createDatabase () ;
-    virtual TSQLresult getObject ( wxString query ) ;
-    virtual TSQLresult getObject_MySQL ( wxString query ) ;
+    virtual TSQLresult getObject ( const wxString &query ) ;
 
     // Access
     virtual void sqlAdd ( wxString &s1 , wxString &s2 , wxString key , wxString value ) ;
@@ -134,6 +133,11 @@ class TStorage
     virtual void setEnzymeCache ( wxString group , wxArrayString &enzymes ) ;
     virtual void getEnzymeCache ( wxString group , wxArrayString &enzymes ) ;
     virtual bool isLocalDB () ;
+    virtual bool convertSqlite2to3 () ;
+    virtual void createDatabaseSqlite3 () ;
+    virtual TSQLresult getObjectSqlite2 ( const wxString &query ) ;
+    virtual TSQLresult getObjectSqlite3 ( const wxString &query ) ;
+    virtual TSQLresult getObject_MySQL ( const wxString &query ) ;
     
     // Variables
     wxArrayString enzymeGroupCache , enzymeGroupNameCache ;
@@ -147,9 +151,6 @@ class TStorage
 #ifdef USEMYSQL
     MYSQL *conn,*mysql;
 #endif
-
-    virtual void createDatabaseSqlite3 () ;
-    virtual TSQLresult getObjectSqlite3 ( wxString query ) ;
     } ;
  
 #endif
