@@ -428,7 +428,8 @@ void TVector::doRestriction ()
         sprintf ( t1 , "%d" , cl[a].pos ) ;
         sprintf ( t2 , "%d" , cl[a+1].pos ) ;
         TVector *nv = new TVector ;
-        *nv = *this ;
+        nv->setFromVector ( *this ) ;
+//        *nv = *this ;
         nv->reduceToFragment ( cl[a] , cl[a+1] ) ;
 //        for ( int w = 0 ; w < nv->items.size() ; w++ ) nv->items[w].dummyInfo ( "lacZ" , nv->sequence.length() ) ;
         nv->recalculateCuts () ;
@@ -548,6 +549,7 @@ void TVector::doRemove ( int from , int to , bool update )
     {
     int a , b ;
     int l = sequence.length() ;
+    undo->start ( txt("u_del_seq") ) ;
     
     // Sequence
     string s = sequence , t ;
@@ -576,12 +578,13 @@ void TVector::doRemove ( int from , int to , bool update )
        }
 
     // Finish
-    setChanged () ;
     if ( update )
         {
+        undo->stop () ;
         recalculateCuts () ;
         recalcvisual = true ;
         }
+    else undo->abort () ;
     }
     
 // Currently returns only the direct encoding (a single char) or 'X'
@@ -820,6 +823,13 @@ void TVector::callUpdateUndoMenu ()
     if ( !window ) return ;
     window->updateUndoMenu() ;
     }
+    
+void TVector::setFromVector ( TVector &v )
+    {
+    TUndo *u = undo ;
+    *this = v ;
+    undo = u ;
+    }
 
     
 // ***************************************************************************************
@@ -1033,3 +1043,4 @@ void TVectorItem::setOffset ( int o )
     setParam ( "OFFSET" , o ) ;
     }
     
+

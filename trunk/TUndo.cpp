@@ -6,11 +6,16 @@ TUndo::TUndo ( TVector *_base )
     base = _base ;
     }
     
+// Sets the vector that holds the TUndo item
 void TUndo::setbase ( TVector *_base )
     {
     base = _base ;
     }
     
+// Remembers the "before" state
+// To avoid having multiple "undos" for a (for the user) single action,
+// only the first one is stored, the other in-between steps
+// are ignored. Each undo-worthy function calls "start" and "stop"/"abort".
 void TUndo::start ( wxString _msg )
     {
     cnt++ ;
@@ -19,13 +24,41 @@ void TUndo::start ( wxString _msg )
     *v = *base ;
     mem.push_back ( v ) ;
     msg.push_back ( _msg ) ;
-    base->callUpdateUndoMenu() ;
+//    if ( base ) base->callUpdateUndoMenu() ;
     }
 
 void TUndo::stop ()
     {
     cnt-- ;
     if ( cnt > 0 ) return ;
+    if ( base ) base->setChanged() ;
+    if ( base ) base->callUpdateUndoMenu() ;
+    }
+    
+// Same as stop, but if called from the "initial" caller,
+// the undo process will be cancelled
+void TUndo::abort ()
+    {
+    cnt-- ;
+    if ( cnt > 0 ) return ;
+    mem.pop_back () ;
+    msg.pop_back () ;
+    if ( base ) base->callUpdateUndoMenu() ;
+    }
+    
+void TUndo::remember ( wxString _msg )
+    {
+    start ( _msg ) ;
+    stop () ;
+    }
+    
+void TUndo::clear ()
+    {
+    msg.clear() ;
+    mem.clear() ;
+    cnt = 0 ;
+    if ( base ) base->setChanged ( false ) ;
+    if ( base ) base->callUpdateUndoMenu() ;
     }
 
 void TUndo::pop ()
@@ -36,6 +69,8 @@ void TUndo::pop ()
     v->undo = NULL ;
     delete v ;
     msg.pop_back () ;
+    if ( canUndo() ) base->setChanged ( true ) ;
+    else base->setChanged ( false ) ;
     }
     
 bool TUndo::canUndo ()

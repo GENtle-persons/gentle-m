@@ -845,7 +845,7 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
         v->items.push_back ( i ) ;
         }
 
-    v->setChanged ( false ) ;
+    v->undo->clear() ;
     v->recalcvisual = true ;
     v->recalculateCuts () ;
     
@@ -1051,7 +1051,7 @@ void TManageDatabaseDialog::do_save_DNA ()
         sr = storage.getObject ( sql ) ;
         }     
 
-    v->setChanged ( false ) ;
+    v->undo->clear() ;
     wxFocusEvent fev ;
     MyChild *c = (MyChild*)GetParent() ;
     c->OnFocus(fev) ;

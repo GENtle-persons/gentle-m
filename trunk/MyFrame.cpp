@@ -448,7 +448,7 @@ void MyFrame::importFile ( string file , string path , int filter )
         else if ( filter == 4 )
            {
            subframe->vec->setWindow ( subframe ) ;
-           subframe->vec->setChanged ( false ) ;
+           subframe->vec->undo->clear() ;
            mainTree->addChild(subframe,type) ;
            subframe->Close() ;
            delete subframe ;
@@ -459,7 +459,7 @@ void MyFrame::importFile ( string file , string path , int filter )
     else if ( filter == 5 ) // ABI
         {
         subframe->vec->setWindow ( subframe ) ;
-        subframe->vec->setChanged ( false ) ;
+        subframe->vec->undo->clear() ;
         mainTree->addChild(subframe,type) ;
         subframe->Close() ;
         delete subframe ;
@@ -799,9 +799,11 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , string title )
     TAminoAcids *subframe = new TAminoAcids ( this , title.c_str() ) ;
     
 //    subframe->vec->sequence = aa ;
-    *subframe->vec = *nv ;
+    subframe->vec->setFromVector ( *nv ) ;
+    subframe->vec->setWindow ( subframe ) ;
     subframe->vec->type = TYPE_AMINO_ACIDS ;
     subframe->vec->name = title.c_str() ;
+    subframe->vec->undo->clear() ;
     
     for ( a = 0 ; a < nv->items.size() ; a++ )
         {

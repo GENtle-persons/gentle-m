@@ -12,9 +12,12 @@ class TUndo
     virtual void setbase ( TVector *_base ) ;
     virtual void start ( wxString _msg = "" ) ;
     virtual void stop () ;
+    virtual void abort () ;
     virtual void pop () ;
     virtual bool canUndo () ;
     virtual wxString getLastMessage () ;
+    virtual void remember ( wxString _msg ) ;
+    virtual void clear () ;
     
     private :
     vector <TVector*> mem ;

@@ -15,28 +15,31 @@ class TAminoAcids : public ChildBase
     {
     public :
     TAminoAcids(wxMDIParentFrame *parent, const wxString& title) ;
-    ~TAminoAcids () ;
+    virtual ~TAminoAcids () ;
     
-    void initme ( MyApp *_app ) ;
+    virtual void initme ( MyApp *_app ) ;
     virtual string getName () ;
-    void showSequence () ;
-    void showStat () ;
+    virtual void showSequence () ;
+    virtual void showStat () ;
     
-    void OnMarkAll(wxCommandEvent& event);
+    virtual void OnMarkAll(wxCommandEvent& event);
     virtual void OnFileSave(wxCommandEvent& WXUNUSED(event) ) ;
-    void OnExport(wxCommandEvent& event);
-    void OnFind(wxCommandEvent& event);
-    void OnCut(wxCommandEvent& event);
-    void OnCopy(wxCommandEvent& event);
-    void OnEditMode(wxCommandEvent& event);
-    void OnEditName(wxCommandEvent& event);
-    void OnPrint(wxCommandEvent& event);
-    void OnAsNewFeature(wxCommandEvent& event);
-    void OnBlastAA(wxCommandEvent& event);
-    void invokeVectorEditor ( string what = "" , int num = 0 , bool forceUpdate = false ) ;
+    virtual void OnExport(wxCommandEvent& event);
+    virtual void OnFind(wxCommandEvent& event);
+    virtual void OnCut(wxCommandEvent& event);
+    virtual void OnCopy(wxCommandEvent& event);
+    virtual void OnEditMode(wxCommandEvent& event);
+    virtual void OnEditName(wxCommandEvent& event);
+    virtual void OnPrint(wxCommandEvent& event);
+    virtual void OnAsNewFeature(wxCommandEvent& event);
+    virtual void OnBlastAA(wxCommandEvent& event);
+    virtual void invokeVectorEditor ( string what = "" , int num = 0 , bool forceUpdate = false ) ;
+    virtual void OnClose(wxCloseEvent& event) ;
     
-    void OnClose(wxCloseEvent& event) ;
-    
+    virtual void Undo(wxCommandEvent& event);
+    virtual void Redo(wxCommandEvent& event);
+    virtual void updateUndoMenu () ;
+        
     // Variables
     SequenceCanvas *sc ;
     wxTextCtrl *stat ;
