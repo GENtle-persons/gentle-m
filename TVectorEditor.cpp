@@ -919,6 +919,10 @@ void TVectorEditor::hideEm ()
         nb->DeletePage ( 0 ) ;
         panProp = NULL ;
         }
+    if ( panProp == NULL )
+        {
+        nb->SetSelection ( 0 ) ;
+        }
     }
 
 // *************************
