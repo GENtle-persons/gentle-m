@@ -28,7 +28,7 @@ extern "C" {
 /*
 ** The version of the SQLite library.
 */
-#define SQLITE_VERSION         "2.8.3"
+#define SQLITE_VERSION         "2.8.6"
 
 /*
 ** The version string is also compiled into the library so that a program
@@ -391,6 +391,7 @@ int sqlite_get_table_vprintf(
   va_list ap             /* Arguments to the format string */
 );
 char *sqlite_mprintf(const char*,...);
+char *sqlite_vmprintf(const char*, va_list);
 
 /*
 ** Windows systems should call this routine to free memory that
@@ -554,6 +555,9 @@ int sqlite_set_authorizer(
 #define SQLITE_SELECT               21   /* NULL            NULL            */
 #define SQLITE_TRANSACTION          22   /* NULL            NULL            */
 #define SQLITE_UPDATE               23   /* Table Name      Column Name     */
+#define SQLITE_ATTACH               24   /* Filename        NULL            */
+#define SQLITE_DETACH               25   /* Database Name   NULL            */
+
 
 /*
 ** The return value of the authorization function should be one of the
@@ -679,6 +683,21 @@ int sqlite_step(
 ** and the result code returned will be SQLITE_ABORT.
 */
 int sqlite_finalize(sqlite_vm*, char **pzErrMsg);
+
+/*
+** This routine deletes the virtual machine, writes any error message to
+** *pzErrMsg and returns an SQLite return code in the same way as the
+** sqlite_finalize() function.
+**
+** Additionally, if ppVm is not NULL, *ppVm is left pointing to a new virtual
+** machine loaded with the compiled version of the original query ready for
+** execution.
+**
+** If sqlite_reset() returns SQLITE_SCHEMA, then *ppVm is set to NULL.
+**
+******* THIS IS AN EXPERIMENTAL API AND IS SUBJECT TO CHANGE ******
+*/
+int sqlite_reset(sqlite_vm *, char **pzErrMsg, sqlite_vm **ppVm);
 
 #ifdef __cplusplus
 }  /* End of the 'extern "C"' block */

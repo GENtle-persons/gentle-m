@@ -252,13 +252,13 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn )
     
     if ( mark_from == -1 )
        {
-       cm->Append(MDI_RUN_PCR, txt("t_pcr") );
+       cm->Append(MDI_RUN_PCR, txt("m_pcr") );
        }
     else
        {
        wxMenu *pm = new wxMenu ;
-       cm->Append ( POPUP_DUMMY , txt ( "t_pcr" ) , pm ) ;
-       pm->Append(MDI_RUN_PCR, txt("t_pcr") );
+       cm->Append ( POPUP_DUMMY , txt ( "m_pcr" ) , pm ) ;
+       pm->Append(MDI_RUN_PCR, txt("m_pcr") );
        pm->Append ( PRIMER_FORWARD , txt("m_primer_forward") ) ;
        pm->Append ( PRIMER_BACKWARD , txt("m_primer_backward") ) ;
        pm->Append ( PRIMER_BOTH , txt("m_primer_both") ) ;
@@ -282,6 +282,7 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn )
            mm->Append ( MDI_EXTRACT_AA , txt("m_extract_aa") ) ;
            mm->Append ( PC_BLAST_AA , txt("m_blast_aa") ) ;
            }
+
         mm->Append ( PC_BLAST_DNA , txt("m_blast_dna") ) ;
         
         }

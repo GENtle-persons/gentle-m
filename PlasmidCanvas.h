@@ -52,63 +52,63 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void print () ;
     virtual void setZoom ( int factor ) ;
 
-    bool IsDirty() const { return m_dirty; }
-    string getSelection () ;
-    void SetMyToolTip ( string s , int mode ) ;
-    void OnCopyImage ( wxCommandEvent &ev ) ;
+    virtual bool IsDirty() const { return m_dirty; }
+    virtual string getSelection () ;
+    virtual void SetMyToolTip ( string s , int mode ) ;
+    virtual void OnCopyImage ( wxCommandEvent &ev ) ;
 
-    void OnEvent(wxMouseEvent& event);
-    void OnEventLinear(wxMouseEvent& event);
-    void OnEventCircular(wxMouseEvent& event);
+    virtual void OnEvent(wxMouseEvent& event);
+    virtual void OnEventLinear(wxMouseEvent& event);
+    virtual void OnEventCircular(wxMouseEvent& event);
     
-    void RunPrimerEditor ( vector <TPrimer> &pl ) ;
-    void OnPrimerForward ( wxCommandEvent &ev ) ;
-    void OnPrimerBackward ( wxCommandEvent &ev ) ;
-    void OnPrimerBoth ( wxCommandEvent &ev ) ;
-    void OnPrimerMutation ( wxCommandEvent &ev ) ;
+    virtual void RunPrimerEditor ( vector <TPrimer> &pl ) ;
+    virtual void OnPrimerForward ( wxCommandEvent &ev ) ;
+    virtual void OnPrimerBackward ( wxCommandEvent &ev ) ;
+    virtual void OnPrimerBoth ( wxCommandEvent &ev ) ;
+    virtual void OnPrimerMutation ( wxCommandEvent &ev ) ;
     
-    void invokeVectorEditor ( string what = "" , int num = 0 , bool forceUpdate = false ) ;
-    wxMenu *invokeItemPopup ( int item , wxPoint pt , bool doreturn = false ) ;
-    wxMenu *invokeRsPopup ( int rs , wxPoint pt , bool doreturn = false ) ;
-    wxMenu *invokeVectorPopup ( wxPoint pt , bool doreturn = false ) ;
-    void invokeORFpopup ( int item , wxPoint pt ) ;
+    virtual void invokeVectorEditor ( string what = "" , int num = 0 , bool forceUpdate = false ) ;
+    virtual wxMenu *invokeItemPopup ( int item , wxPoint pt , bool doreturn = false ) ;
+    virtual wxMenu *invokeRsPopup ( int rs , wxPoint pt , bool doreturn = false ) ;
+    virtual wxMenu *invokeVectorPopup ( wxPoint pt , bool doreturn = false ) ;
+    virtual void invokeORFpopup ( int item , wxPoint pt ) ;
 
     // Popup menu handlers
-    void itemMark ( wxCommandEvent &ev ) ;
-    void itemMarkShow ( wxCommandEvent &ev ) ;
-    void itemEdit ( wxCommandEvent &ev ) ;
-    void itemAsNewSequence ( wxCommandEvent &ev ) ;
-    void itemDelete ( wxCommandEvent &ev ) ;
-    void itemShowHide ( wxCommandEvent &ev ) ;
-    void itemBlastDNA ( wxCommandEvent &ev ) ;
-    void itemBlastAA ( wxCommandEvent &ev ) ;
-    void itemCopyDNA ( wxCommandEvent &ev ) ;
-    void itemCopyAA ( wxCommandEvent &ev ) ;
-    void itemAsNewAA ( wxCommandEvent &ev ) ;
-    void rsInfo ( wxCommandEvent &ev ) ;
-    void rsEdit ( wxCommandEvent &ev ) ;
-    void rsDel ( wxCommandEvent &ev ) ;
-    void rsShowHide ( wxCommandEvent &ev ) ;
-    void rsMark ( wxCommandEvent &ev ) ;
-    void rsMarkShow ( wxCommandEvent &ev ) ;
-    void rsAdd2Cocktail ( wxCommandEvent &ev ) ;
-    void rsAddAndCut ( wxCommandEvent &ev ) ;
-    void rsCutWithCocktail ( wxCommandEvent &ev ) ;
-    void vecEdit ( wxCommandEvent &ev ) ;
-    void blastDNA ( wxCommandEvent &ev ) ;
-    void blastAA ( wxCommandEvent &ev ) ;
-    void orfCopyDNA ( wxCommandEvent &ev ) ;
-    void orfCopyAA ( wxCommandEvent &ev ) ;
-    void orfAsNewItem ( wxCommandEvent &ev ) ;
-    void orfAsNewDNA ( wxCommandEvent &ev ) ;
-    void orfAsNewAA ( wxCommandEvent &ev ) ;
-    void orfBlastDNA ( wxCommandEvent &ev ) ;
-    void orfBlastAA ( wxCommandEvent &ev ) ;
-    void OnFillKlenow(wxCommandEvent& event);
-    void OnRunPCR(wxCommandEvent& event);
+    virtual void itemMark ( wxCommandEvent &ev ) ;
+    virtual void itemMarkShow ( wxCommandEvent &ev ) ;
+    virtual void itemEdit ( wxCommandEvent &ev ) ;
+    virtual void itemAsNewSequence ( wxCommandEvent &ev ) ;
+    virtual void itemDelete ( wxCommandEvent &ev ) ;
+    virtual void itemShowHide ( wxCommandEvent &ev ) ;
+    virtual void itemBlastDNA ( wxCommandEvent &ev ) ;
+    virtual void itemBlastAA ( wxCommandEvent &ev ) ;
+    virtual void itemCopyDNA ( wxCommandEvent &ev ) ;
+    virtual void itemCopyAA ( wxCommandEvent &ev ) ;
+    virtual void itemAsNewAA ( wxCommandEvent &ev ) ;
+    virtual void rsInfo ( wxCommandEvent &ev ) ;
+    virtual void rsEdit ( wxCommandEvent &ev ) ;
+    virtual void rsDel ( wxCommandEvent &ev ) ;
+    virtual void rsShowHide ( wxCommandEvent &ev ) ;
+    virtual void rsMark ( wxCommandEvent &ev ) ;
+    virtual void rsMarkShow ( wxCommandEvent &ev ) ;
+    virtual void rsAdd2Cocktail ( wxCommandEvent &ev ) ;
+    virtual void rsAddAndCut ( wxCommandEvent &ev ) ;
+    virtual void rsCutWithCocktail ( wxCommandEvent &ev ) ;
+    virtual void vecEdit ( wxCommandEvent &ev ) ;
+    virtual void blastDNA ( wxCommandEvent &ev ) ;
+    virtual void blastAA ( wxCommandEvent &ev ) ;
+    virtual void orfCopyDNA ( wxCommandEvent &ev ) ;
+    virtual void orfCopyAA ( wxCommandEvent &ev ) ;
+    virtual void orfAsNewItem ( wxCommandEvent &ev ) ;
+    virtual void orfAsNewDNA ( wxCommandEvent &ev ) ;
+    virtual void orfAsNewAA ( wxCommandEvent &ev ) ;
+    virtual void orfBlastDNA ( wxCommandEvent &ev ) ;
+    virtual void orfBlastAA ( wxCommandEvent &ev ) ;
+    virtual void OnFillKlenow(wxCommandEvent& event);
+    virtual void OnRunPCR(wxCommandEvent& event);
 
     private :
-    string getDNAorAA ( int from , int to , int dir , bool dna = true ) ;
+    virtual string getDNAorAA ( int from , int to , int dir , bool dna = true ) ;
     
     public :
 
@@ -125,6 +125,8 @@ class PlasmidCanvas : public wxScrolledWindow
 
     DECLARE_EVENT_TABLE()
     };
+    
+#include "CoolCanvas.h"
 
 
 #endif

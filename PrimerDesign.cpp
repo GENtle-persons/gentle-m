@@ -14,6 +14,8 @@ BEGIN_EVENT_TABLE(TPrimerDesign, wxMDIChildFrame)
     EVT_BUTTON(PD_EDIT,TPrimerDesign::OnEditPrimer)
     EVT_BUTTON(PD_DEL,TPrimerDesign::OnDeletePrimer)
 
+    EVT_MENU(PD_SILMUT,TPrimerDesign::OnSilmut)
+
     EVT_MENU(PD_EXPORT,TPrimerDesign::OnExportPrimer)
     EVT_MENU(PD_IMPORT,TPrimerDesign::OnImportPrimer)
     EVT_MENU(SEQ_PRINT,TPrimerDesign::OnPrint)
@@ -204,11 +206,11 @@ void TPrimerDesign::updatePrimersFromSequence ()
         {
         if ( primer[a].upper ) s = sc->seq[0]->s ;
         else s = sc->seq[4]->s ;
-        for ( b = primer[a].from-1 ; s[b] == ' ' ; b++ ) ;
-        for ( ; b >= 0 && s[b] != ' ' ; b-- ) ;
+        for ( b = primer[a].from-1 ; b < s.length() && s[b] == ' ' ; b++ ) ;
+        while ( b >= 0 && s[b] != ' ' ) b-- ;
         primer[a].from = b+2 ;
         for ( b = primer[a].to-1 ; b >= 0 && s[b] == ' ' ; b-- ) ;
-        for ( ; s[b] != ' ' ; b++ ) ;
+        while ( b < s.length() && s[b] != ' ' ) b++ ;
         primer[a].to = b ;
         primer[a].sequence = s.substr ( primer[a].from-1 , primer[a].to-primer[a].from+1 ) ;
         }
@@ -244,10 +246,10 @@ void TPrimerDesign::updatePrimerStats ()
         sprintf ( t , "%d" , len ) ;
         lc->SetItem ( l , 2 , t ) ;
         
-        sprintf ( t , "%2.1f" , primer[a].tm ) ;
+        sprintf ( t , "%2.1f" , primer[a].getTm() ) ;
         lc->SetItem ( l , 3 , t ) ;
         
-        sprintf ( t , "%2.1f" , primer[a].pgc ) ;
+        sprintf ( t , "%2.1f" , primer[a].getGCcontents() ) ;
         lc->SetItem ( l , 4 , t ) ;
         
         }
@@ -697,4 +699,29 @@ void TPrimerDesign::OnActivatePrimer ( wxListEvent& event)
     doShowPrimer ( lastPrimerActivated ) ;
     }
 
-
+void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
+    {
+    TSilmutDialog sd ( this , "SilMut" ) ;
+    sd.initme ( w , sc->_from , sc->_to ) ;
+    if ( wxID_OK != sd.ShowModal () ) return ;
+    string ns = sd.getSequence() ;
+    if ( ns == "" ) return ;
+    TRestrictionEnzyme *e = sd.getEnzyme() ;
+    
+    TVector z ;
+    z.sequence = ns ;
+    string nt = z.transformSequence ( true , false ) ;
+    int a , b ;
+    for ( a = 0 ; a < ns.length() ; a++ )
+        {
+        if ( ns[a] >= 'A' && ns[a] <= 'Z' )
+           {
+           b = a + sc->_from - 1 ;
+           if ( sc->seq[0]->s[b] != ' ' ) sc->seq[0]->s[b] = ns[a] ;
+           if ( sc->seq[4]->s[b] != ' ' ) sc->seq[4]->s[b] = nt[a] ;
+           }
+        }
+    updatePrimersFromSequence () ;
+    showSequence () ;
+    }
+    

@@ -65,6 +65,8 @@ class TPrimerDesign : public ChildBase
     void OnAA_three_M3(wxCommandEvent& event);
     void OnAA_setit(int mode);
     
+    void OnSilmut ( wxCommandEvent& event) ;
+    
     // Variables
     SequenceCanvas *sc ;
     wxTextCtrl *stat ;

@@ -921,6 +921,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         ReleaseMouse() ;
         lastpos = -1 ;
         }
+
     if ( event.RightDown() )
         {
         wxMenu *cm ;
@@ -955,6 +956,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
               cm->Append ( POPUP_DUMMY , txt("m_result_aa" ) , cra ) ;
               cra->Append ( SEQ_COPY_RESLUT_AA , txt("m_copy_result_aa") ) ;
               cra->Append ( SEQ_NEW_FROM_RESLUT_AA , txt("m_new_from_result_aa") ) ;
+              if ( _from != -1 ) cm->Append ( PD_SILMUT , txt("m_silmut") ) ;
               }
                       
            if ( _from != -1  )
@@ -1073,6 +1075,11 @@ void SequenceCanvas::OnCopyResultAA ( wxCommandEvent &ev )
         wxTheClipboard->SetData( new wxTextDataObject(s.c_str()) );
         wxTheClipboard->Close();
         }    
+    }
+    
+void SequenceCanvas::OnSilmut ( wxCommandEvent &ev )
+    {
+    pd->OnSilmut ( ev ) ;
     }
     
 void SequenceCanvas::OnNewFromResultDNA ( wxCommandEvent &ev )

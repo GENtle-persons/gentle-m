@@ -272,6 +272,7 @@ class SequenceCanvas : public wxScrolledWindow
     void OnPrimerBackward ( wxCommandEvent &ev ) ;
     void OnPrimerBoth ( wxCommandEvent &ev ) ;
     void OnPrimerMutation ( wxCommandEvent &ev ) ;
+    void OnSilmut ( wxCommandEvent &ev ) ;
     
     void OnCopyResultDNA ( wxCommandEvent &ev ) ;
     void OnCopyResultAA ( wxCommandEvent &ev ) ;

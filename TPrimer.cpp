@@ -2,6 +2,19 @@
 
 //********************************************************************** TPrimer
 
+float TPrimer::getTm ( int type )
+    {
+    switch ( type ) {
+        case TM_STANDARD : return tm ; break ;
+        case TM_SALT : return tm_salt ; break ;
+        case TM_GC : return tm_gc ; break ;
+        }
+    return 0 ;
+    }
+    
+float TPrimer::getEvaluation () { return evaluation ; }
+float TPrimer::getGCcontents () { return pgc ; }
+
 void TPrimer::getSequenceFromVector ( TVector *v )
     {
     int a ;

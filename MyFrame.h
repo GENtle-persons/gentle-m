@@ -69,7 +69,8 @@ public:
     TStorage *LS ;
     vector <ChildBase*> children ;
     bool dying , enhancedRefresh , showVectorTitle , showVectorLength , 
-            loadLastProject , useMetafile , showSplashScreen , checkUpdate ;
+            loadLastProject , useMetafile , showSplashScreen , checkUpdate ,
+            useCoolCanvas ;
     string lang_string ;
     string project_name , project_desc , project_db ;
     vector <string> lastCocktail ;
