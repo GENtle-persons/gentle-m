@@ -121,12 +121,22 @@ void ChildBase::updateToolbar ()
     
 void ChildBase::Activate ()
     {
-    updateToolbar () ;
     myapp()->frame->setActiveChild ( this ) ;
     if ( myapp()->frame->isLocked() ) return ;
+    updateToolbar () ;
     showName () ;
     SetFocus();
     if ( cSequence ) cSequence->SetFocus() ;
+
+    // Mark and status bar
+    int a ;
+    for ( a = 0 ; a < myapp()->frame->GetStatusBar()->GetFieldsCount() ; a++ )
+    	myapp()->frame->SetStatusText ( "" , a ) ;
+   	if ( cSequence && cSequence->markedFrom() != -1 )
+   		cSequence->mark ( cSequence->seq[cSequence->lastmarked]->whatsthis() , 
+     						cSequence->markedFrom() , 
+           					cSequence->markedTo() , 
+                			cSequence->getEditMode() ? 2 : 1 ) ;
     }
     
 wxToolBar *ChildBase::GetToolBar ()

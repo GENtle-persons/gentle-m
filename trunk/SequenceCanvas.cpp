@@ -746,6 +746,18 @@ wxBitmap *SequenceCanvas::getSequenceBitmap ()
 
     int vx = 0 , vy = 0 ;
     int yoff = charheight * vy ;
+    if ( isHorizontal() )
+    	{
+	    w = 0 ;
+	    for ( int a = 0 ; a < seq.GetCount() ; a++ )
+	    	{
+ 	    	for ( int b = 0 ; b < seq[a]->getRectSize()  ; b++ )
+ 	    		{
+  		    	int nw = seq[a]->getRect(b).GetRight() ;
+  		    	if ( nw > w ) w = nw ;
+ 	    		}    
+	    	}    
+    	}    
     wxBitmap *bmp = new wxBitmap ( w , h , -1 ) ;
     wxMemoryDC pdc ;
     pdc.SelectObject ( *bmp ) ;
@@ -837,6 +849,7 @@ bool SequenceCanvas::inMarkRange ( int x , int f , int t , int l )
 
 void SequenceCanvas::mark ( wxString id , int from , int to , int value )
     {
+//    mylog ( "MARK" , wxString::Format ( "%s %d-%d %d" , id.c_str() , from , to , value ) ) ;
     if ( seq.GetCount() == 0 ) return ;
     if ( marking ) return ;
     marking = true ;
