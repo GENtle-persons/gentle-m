@@ -522,8 +522,8 @@ void PlasmidCanvas::orfAsNewDNA ( wxCommandEvent &ev )
     int from = p->vec->worf[context_last_orf].from ;
     int to = p->vec->worf[context_last_orf].to ;
     nv->sequence = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf ) ;
-    nv->name = p->vec->name + " (" + string ( txt ( "t_orf_extracted" ) ) + ")" ;
-    nv->desc = p->vec->desc + "\n" + string ( txt ( "t_orf_extracted" ) ) ;
+    nv->name = p->vec->name + " (" + wxString ( txt ( "t_orf_extracted" ) ) + ")" ;
+    nv->desc = p->vec->desc + "\n" + wxString ( txt ( "t_orf_extracted" ) ) ;
     nv->setChanged () ;
     nv->setCircular ( false ) ;
     nv->recalculateCuts() ;
@@ -536,7 +536,7 @@ void PlasmidCanvas::orfAsNewAA ( wxCommandEvent &ev )
     int from = p->vec->worf[context_last_orf].from ;
     int to = p->vec->worf[context_last_orf].to ;
     string seq = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf , false ) ;
-    string n = p->vec->name + " (" ;
+    wxString n = p->vec->name + " (" ;
     n += txt ( "t_orf_extracted" ) ;
     n += ")" ;
 //    myapp()->frame->newAminoAcids ( seq , n ) ;
@@ -619,7 +619,7 @@ void PlasmidCanvas::itemAsNewAA ( wxCommandEvent &ev )
     from += dir * ( rf - 1 ) - 1 ;
     to += dir * ( rf - 1 ) - 1 ;
 //    string s = getDNAorAA ( from , to , dir , false ) ;
-    string n = p->vec->items[context_last_item].name.c_str() ;
+    wxString n = p->vec->items[context_last_item].name ;
     n += " (" + p->vec->name + ")" ;
     TVector *nv = p->vec->getAAvector ( from+1 , to+1 , dir ) ;
     TAminoAcids *aaa = myapp()->frame->newAminoAcids ( nv , n ) ;
@@ -644,7 +644,7 @@ void PlasmidCanvas::itemAsNewSequence ( wxCommandEvent &ev )
         {
         from += dir * ( rf - 1 ) - 1 ;
         to += dir * ( rf - 1 ) - 1 ;
-        string n = p->vec->items[context_last_item].name.c_str() ;
+        wxString n = p->vec->items[context_last_item].name ;
         n += " (" + p->vec->name + ")" ;
     
         TVector *nv = new TVector ;

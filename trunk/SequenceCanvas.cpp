@@ -1526,8 +1526,8 @@ void SequenceCanvas::OnNewFromResultAA ( wxCommandEvent &ev )
           }
     if ( s == "" ) return ;
 
-    string seq = s ;
-    string n = getPD()->vec->name + " (" ;
+    wxString seq = s.c_str() ;
+    wxString n = getPD()->vec->name + " (" ;
     n += txt ( "t_pcr_result" ) ;
     n += ")" ;
     myapp()->frame->newAminoAcids ( seq , n ) ;

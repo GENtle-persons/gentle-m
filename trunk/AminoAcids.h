@@ -18,7 +18,7 @@ class TAminoAcids : public ChildBase
     virtual ~TAminoAcids () ;
     
     virtual void initme () ;
-    virtual string getName () ;
+    virtual wxString getName () ;
     virtual void showSequence () ;
     virtual void showStat () ;
     

@@ -219,21 +219,21 @@ void TABIviewer::initme ()
     myapp()->frame->setChild ( this ) ;
     }
     
-string TABIviewer::getName ()
+wxString TABIviewer::getName ()
     {
     return vec->name ;
     }
 
-string TABIviewer::getStat ()
+wxString TABIviewer::getStat ()
     {
     SeqABI *abi = (SeqABI*) sc->seq[0] ;
     ABItype *at = abi->at ;
     char t[100] ;
-    string comb = at->getRecordPascalString("CMBF",1) ;
-    string pdmf = at->getRecordPascalString("PDMF",1) ;
-    string smpl = at->getRecordPascalString("SMPL",1) ;
-    string geln = at->getRecordPascalString("GELN",1) ;
-    string gelp = at->getRecordPascalString("GELP",1) ;
+    wxString comb = at->getRecordPascalString("CMBF",1) ;
+    wxString pdmf = at->getRecordPascalString("PDMF",1) ;
+    wxString smpl = at->getRecordPascalString("SMPL",1) ;
+    wxString geln = at->getRecordPascalString("GELN",1) ;
+    wxString gelp = at->getRecordPascalString("GELP",1) ;
     
     int lane = at->getRecordValue("LANE",1) >> 16 ;
     int rund1 = at->getRecordValue("RUND",1) ;
@@ -283,13 +283,13 @@ string TABIviewer::getStat ()
     r += txt("t_abi_file") + gelp + "\n" ;
     r += txt("t_abi_primer_mobility_correction") + pdmf ;
     
-    return r ;
+    return r.c_str() ;
     }
     
 void TABIviewer::showStat ()
     {
-    string r = getStat () ;
-    stat->SetValue ( r.c_str() ) ;
+    wxString r = getStat () ;
+    stat->SetValue ( r ) ;
     }
 
 void TABIviewer::showSequence ()

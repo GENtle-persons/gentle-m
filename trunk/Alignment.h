@@ -31,7 +31,7 @@ class TAlignLine // pun intended
     virtual TVector *getFeatures () ;
     virtual bool hasFeatures () ;
     
-    string name , s ;
+    wxString name , s ;
     TVector *v ;
     bool isIdentity ;
     private :
@@ -45,11 +45,11 @@ class TAlignment : public ChildBase
     virtual ~TAlignment () ;
     
     virtual void initme () ;
-    virtual string getName () ;
+    virtual wxString getName () ;
 
-    virtual int NeedlemanWunsch ( string &s1 , string &s2 )  ;
-    virtual int SmithWaterman ( string &s1 , string &s2 )  ;
-    virtual int MatrixAlignment ( string &s1 , string &s2 , bool local )  ;
+    virtual int NeedlemanWunsch ( wxString &s1 , wxString &s2 )  ;
+    virtual int SmithWaterman ( wxString &s1 , wxString &s2 )  ;
+    virtual int MatrixAlignment ( wxString &_s1 , wxString &_s2 , bool local ) ;
     virtual void MatrixBacktrack ( vector <tvc> &back , 
                                     string s1 , string s2 , 
                                     string &t1 , string &t2 ,

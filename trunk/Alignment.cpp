@@ -296,7 +296,7 @@ void TAlignment::recalcAlignments ()
               else first = false ;
               int index = atoi ( s.substr ( 0 , off-1 ) . c_str() ) ;
               if ( s[0] == ' ' ) index = lines.size()-1 ;
-              lines[index].s += s.substr ( off , s.length() ) ;
+              lines[index].s += s.substr ( off , s.length() ).c_str() ;
               }
            getline ( in , s ) ; // Blank line
            }
@@ -311,7 +311,7 @@ void TAlignment::recalcAlignments ()
 
         for ( a = 1 ; a < lines.size() ; a++ )
            {
-           string s0 = lines[0].s ;
+           wxString s0 = lines[0].s ;
 
            if ( algorithm == ALG_NW )
               NeedlemanWunsch ( s0 , lines[a].s ) ; 
@@ -328,14 +328,14 @@ void TAlignment::recalcAlignments ()
               }
            for ( b = 0 ; b < s0.length() ; b++ ) // Insert gaps
               {
-              if ( lines[0].s[b] != s0[b] ) // New gap
+              if ( lines[0].s.GetChar(b) != s0.GetChar(b) ) // New gap
                  {
                  for ( int c = 0 ; c < a ; c++ )
                     {
                     for ( int d = s0.length()-1 ; d > b && d >= 0 ; d-- )
-                       lines[c].s[d] = lines[c].s[d-1] ;
+                       lines[c].s.SetChar ( d , lines[c].s.GetChar(d-1) ) ;
                     myass ( lines[c].s.length() > b , "Alignment::recalcAlignments:internal2" ) ;
-                    lines[c].s[b] = '-' ;
+                    lines[c].s.SetChar ( b , '-' ) ;
                     }
                  }
               }
@@ -392,7 +392,7 @@ void TAlignment::redoAlignments ( bool doRecalc )
 //            lines[g].showFeatures () ;
             for ( a = 0 ; a < lines[g].s.length() ; a++ )
                 {
-                if ( lines[g].s[a] == '-' )
+                if ( lines[g].s.GetChar(a) == '-' )
                    lines[g].getFeatures()->insert_char ( '-' , a+1 , false ) ;
                 }
             }
@@ -412,7 +412,7 @@ void TAlignment::generateConsensusSequence ( bool addit )
     for ( a = 0 ; a < lines[0].s.length() ; a++ )
         {
         myass ( lines[1].s.length() > a , "0a" ) ;
-        if ( lines[0].s[a] == lines[1].s[a] ) s += "*" ;
+        if ( lines[0].s.GetChar(a) == lines[1].s.GetChar(a) ) s += "*" ;
         else s += " " ;
         }
     if ( addit ) lines.push_back ( line ) ;
@@ -423,7 +423,7 @@ void TAlignment::generateConsensusSequence ( bool addit )
         {
         int c[256] ;
         for ( b = 0 ; b < 256 ; b++ ) c[b] = 0 ;
-        for ( b = 0 ; b + 1 < lines.size() ; b++ ) c[lines[b].s[a]]++ ;
+        for ( b = 0 ; b + 1 < lines.size() ; b++ ) c[lines[b].s.GetChar(a)]++ ;
         consensusSequence[a] = ' ' ;
         for ( b = 0 ; b < 256 ; b++ )
            {
@@ -439,7 +439,7 @@ void TAlignment::myInsert ( int line , int pos , char what )
     if ( lines[line].hasFeatures() )
         {
         lines[line].getFeatures()->insert_char ( '-' , pos , false ) ;
-        lines[line].s = lines[line].getFeatures()->sequence ;
+        lines[line].s = lines[line].getFeatures()->sequence.c_str() ;
         }
     else lines[line].s.insert ( pos-1 , wxString ( what ) ) ;
     }
@@ -449,7 +449,7 @@ void TAlignment::myDelete ( int line , int pos )
     if ( lines[line].hasFeatures() )
         {
         lines[line].getFeatures()->doRemoveNucleotide ( pos - 1 ) ;
-        lines[line].s = lines[line].getFeatures()->sequence ;
+        lines[line].s = lines[line].getFeatures()->sequence.c_str() ;
         }
     else lines[line].s.erase ( pos-1 , 1 ) ;
     }
@@ -459,7 +459,7 @@ void TAlignment::callMiddleMouseButton ( int id , int pos , wxString _mode )
     wxString mode = mmb->GetStringSelection () ;
     if ( _mode != "" ) mode = txt(_mode.c_str()) ;
     int a , line = id ;
-    if ( lines[line].s[pos-1] != '-' && mode == txt("t_mmb_delete_gap") )
+    if ( lines[line].s.GetChar(pos-1) != '-' && mode == txt("t_mmb_delete_gap") )
        {
        wxBell() ;
        return ;
@@ -499,7 +499,7 @@ void TAlignment::callMiddleMouseButton ( int id , int pos , wxString _mode )
             }
         else if ( mode == txt("t_mmb_delete_gap_others") )
             {
-            if ( line != a && lines[a].s[pos-1] == '-' )
+            if ( line != a && lines[a].s.GetChar(pos-1) == '-' )
                {
                myDelete ( a , pos ) ;
                myInsert ( a , lines[a].s.length()+1 , '-' ) ;
@@ -571,7 +571,7 @@ void TAlignment::updateSequence ()
     sc->SilentRefresh() ;
     }
     
-string TAlignment::getName ()
+wxString TAlignment::getName ()
     {
     return "Alignment" ;
     }
@@ -586,7 +586,7 @@ void TAlignment::OnSettings ( wxCommandEvent &ev )
     for ( int a = 0 ; a < ad.vcn.size() ; a++ )
         {
         TAlignLine line ;
-        line.name = ad.vcn[a] ;
+        line.name = ad.vcn[a].c_str() ;
         line.v = ad.vcv[a] ;
         line.ResetSequence() ;
         lines.push_back ( line ) ;
@@ -611,7 +611,7 @@ void TAlignment::prealigned ( vector <string> &vs , vector <ChildBase*> &vc )
         line.name = vc[a]->getName() ;
         line.v = vc[a]->vec ;
         line.ResetSequence() ;
-        line.s = vs[a] ;
+        line.s = vs[a].c_str() ;
         lines.push_back ( line ) ;
         }
     
@@ -620,18 +620,20 @@ void TAlignment::prealigned ( vector <string> &vs , vector <ChildBase*> &vc )
     
 // HOMEMADE ALIGNMENT ALGORITHMS
 
-int TAlignment::NeedlemanWunsch ( string &s1 , string &s2 )
+int TAlignment::NeedlemanWunsch ( wxString &s1 , wxString &s2 )
     {
     return MatrixAlignment ( s1 , s2 , false ) ;
     }
     
-int TAlignment::SmithWaterman ( string &s1 , string &s2 )
+int TAlignment::SmithWaterman ( wxString &s1 , wxString &s2 )
     {
     return MatrixAlignment ( s1 , s2 , true ) ;
     }
     
-int TAlignment::MatrixAlignment ( string &s1 , string &s2 , bool local )
+int TAlignment::MatrixAlignment ( wxString &_s1 , wxString &_s2 , bool local )
     {
+    string s1 = _s1.c_str() ;
+    string s2 = _s2.c_str() ;
     int a , b ;
     int M = s1.length() ;
     int N = s2.length() ;
@@ -743,8 +745,8 @@ int TAlignment::MatrixAlignment ( string &s1 , string &s2 , bool local )
     t1 += k1 ;
     t2 += k2 ;
     
-    s1 = t1 ;
-    s2 = t2 ;
+    _s1 = t1.c_str() ;
+    _s2 = t2.c_str() ;
     return max ;
     }
     
@@ -1021,7 +1023,7 @@ void TAlignment::MoveUpDown ( int what , int where )
 void TAlignment::OnFileSave ( wxCommandEvent &ev )
     {
     int a , b ;
-    string s , d ;
+    wxString s , d ;
     TGenBank gb ;
     for ( a = b = 0 ; a < lines.size() ; a++ ) b += lines[a].isIdentity?0:1 ;
     d = wxString::Format("%d\n",b).c_str() ;
@@ -1029,7 +1031,7 @@ void TAlignment::OnFileSave ( wxCommandEvent &ev )
         {
         if ( !lines[a].isIdentity )
             {
-            string p = lines[a].v->getParams () ;
+            string p = lines[a].v->getParams().c_str() ;
             lines[a].v->setParams ( "" ) ;
             d += lines[a].v->name + "\n" ;
             d += lines[a].v->getDatabase() + "\n" ;
@@ -1041,7 +1043,7 @@ void TAlignment::OnFileSave ( wxCommandEvent &ev )
                s += ex[b].c_str() ;
                s += "\n" ;
                }
-            lines[a].v->setParams ( p ) ;
+            lines[a].v->setParams ( p.c_str() ) ;
             }
         }
     if ( !vec ) vec = new TVector ; // Wasting memory
@@ -1058,7 +1060,8 @@ void TAlignment::fromVector ( TVector *nv )
     TGenBank gb ;
     vec = nv ;
     gb.paste ( vec->sequence.c_str() ) ;
-    vector <string> vs = explode ( "\n" , vec->desc ) ;
+    string vdesc = vec->desc.c_str() ;
+    vector <string> vs = explode ( "\n" , vdesc ) ;
     int nol = atoi ( vs[0].c_str() ) ; // Number of lines
     int n ;
     string broken ;
@@ -1071,7 +1074,7 @@ void TAlignment::fromVector ( TVector *nv )
         string seq = vs[3+n*3] ;
 
         TAlignLine line ; 
-        line.name = name ;
+        line.name = name.c_str() ;
 
         bool success = false ;
         if ( db != "" ) success = mdb.do_load_DNA ( name , db ) ;
@@ -1094,7 +1097,7 @@ void TAlignment::fromVector ( TVector *nv )
            short type = TUReadSeq::getSeqType ( vv->sequence ) ;
            if ( type == TYPE_AMINO_ACIDS )
               {
-              TAminoAcids *p = myapp()->frame->newAminoAcids ( vv , name ) ;
+              TAminoAcids *p = myapp()->frame->newAminoAcids ( vv , name.c_str() ) ;
               delete vv ;
               vv = p->vec ;
               }
@@ -1107,7 +1110,7 @@ void TAlignment::fromVector ( TVector *nv )
               }
            line.v = vv ;
            }
-        line.s = seq ;
+        line.s = seq.c_str() ;
         lines.push_back ( line ) ;
         }
     vec = NULL ;
@@ -1148,7 +1151,7 @@ TAlignLine::~TAlignLine ()
     
 void TAlignLine::ResetSequence ()
     {
-    if ( v ) s = v->sequence ;
+    if ( v ) s = v->sequence.c_str() ;
     else s = "" ;
     }
     

@@ -193,10 +193,10 @@ string TLigationDialog::getVIName ( vector <int> &vi )
         myass ( a >= 0 && a < vi.size() , "TLigationDialog::getVIName:1" ) ;
         myass ( vi[a] >= 0 && vi[a] < vv.size() , "TLigationDialog::getVIName:2" ) ;
         myass ( vv[vi[a]] , "TLigationDialog::getVIName:3" ) ;
-        string name = vv[vi[a]]->name ;
+        wxString name = vv[vi[a]]->name ;
         if ( a < orientation.size() && orientation[a] ) name = "!" + name ;
         if ( ret != "" ) ret += "-" ;
-        ret += name ;
+        ret += name.c_str() ;
         }
     return ret ;
     }
@@ -213,7 +213,7 @@ void TLigationDialog::addVTname ( string name , vector <int> &vi , bool circular
     v.setFromVector ( *vv[vi[0]] ) ;
     d = txt("lig_of") ;
     d += v.name + " (" + v.desc + ")" ;
-    v.name = name ;
+    v.name = name.c_str() ;
     for ( a = 1 ; a < vi.size() ; a++ )
         {
         bool o = false ;
@@ -229,7 +229,7 @@ void TLigationDialog::addVTname ( string name , vector <int> &vi , bool circular
         }
     if ( circular ) v.closeCircle () ;
     v.recalculateCuts () ;
-    v.desc = d ;
+    v.desc = d.c_str() ;
     ligates.push_back ( v ) ;
     }
     

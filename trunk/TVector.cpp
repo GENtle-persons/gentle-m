@@ -10,8 +10,8 @@ char TVector::SIUPAC[256] ;
 char TVector::COMPLEMENT[256] ;
 vector <TAAProp> TVector::aaprop ;
 
-string TVector::getParams () { return params ; }
-void TVector::setParams ( string s ) { params = s ; }
+wxString TVector::getParams () { return params ; }
+void TVector::setParams ( wxString s ) { params = s ; }
 void TVector::setWindow ( ChildBase *c ) { window = c ; }
 void TVector::setCircular ( bool c ) { circular = c ; }
 bool TVector::isCircular () { return circular ; }
@@ -562,12 +562,18 @@ void TVector::doRestriction ()
         if ( cl[a].e->name == cl[a+1].e->name )
            {
            nv->desc += "." ;
-           nv->name += " (" + cl[a].e->name + ")" ;
+           nv->name += " (" ;
+           nv->name += cl[a].e->name.c_str() ;
+           nv->name += ")" ;
            }
         else
            {
            sprintf ( tx , txt("res_desc2") , cl[a+1].e->name.c_str() , t2 ) ;
-           nv->name += " (" + cl[a].e->name + "/" + cl[a+1].e->name + ")" ;
+           nv->name += " (" ;
+           nv->name += cl[a].e->name.c_str() ;
+           nv->name += "/" ;
+           nv->name += cl[a+1].e->name.c_str() ;
+           nv->name += ")" ;
            }
         nv->cocktail.clear() ; // Cleaning up cocktail
         if ( nv->sequence.length() >= action_value ) // "No fragments smaller than XX base pairs"
@@ -727,7 +733,7 @@ string TVector::dna2aa ( string codon )
             ACGT[codon[1]]*4 +
             ACGT[codon[2]] ;
     if ( i > 63 ) r = "?" ;
-    else r = aa[i] ;
+    else r = aa.GetChar(i) ;
     return r ;
     }
     
@@ -771,7 +777,7 @@ int TVector::countCuts ( string enzyme )
     return count ;
     }
         
-void TVector::setAction ( string _action , int _action_value )
+void TVector::setAction ( wxString _action , int _action_value )
     {
     action = _action ;
     action_value = _action_value ;
@@ -1126,24 +1132,25 @@ vector <string> TVectorItem::getParamKeys ()
     return pname ;
     }
 
-string TVectorItem::implodeParams ()
+wxString TVectorItem::implodeParams ()
     {
-    string s ;
+    wxString s ;
     int a , b ;
     for ( a = 0 ; a < pname.size() ; a++ )
         {
-        string t = pvalue[a] ;
+        wxString t = pvalue[a].c_str() ;
         for ( b = 0 ; b < t.length() ; b++ )
-           if ( t[b] == '\n' )
-              t[b] = 2 ;
-        s += pname[a] + "\n" ;
-        s += t + "\n" ;
+           if ( t.GetChar(b) == '\n' )
+              t.SetChar ( b , 2 ) ;
+        s += pname[a].c_str() ;
+        s += "\n" + t + "\n" ;
         }
     return s ;
     }
 
-void TVectorItem::explodeParams ( string s )
+void TVectorItem::explodeParams ( wxString _s )
     {
+    string s = _s.c_str() ;
     int a ;
     initParams () ;
     while ( s != "" )
@@ -1227,16 +1234,6 @@ void TVectorItem::doRemove ( int f , int t , int l )
     myass ( false , "IV" ) ;
     }
     
-void TVectorItem::dummyInfo ( string s , int l )
-    {
-    if ( s != name.c_str() ) return ;
-    char u[100] ;
-    int len = to - from + 1 ;
-    if ( to < from ) len += l ;
-    sprintf ( u , "%d-%d (%d)" , from , to , len ) ;
-    wxMessageBox ( u , name.c_str() ) ;
-    }
-    
 int TVectorItem::getOffset ()
     {
     return atoi ( getParam ( "OFFSET" , "-1" ).c_str() ) ;
@@ -1247,9 +1244,9 @@ void TVectorItem::setOffset ( int o )
     setParam ( "OFFSET" , o ) ;
     }
     
-void TVectorItem::setType ( string s )
+void TVectorItem::setType ( wxString s )
     {
-    s = toupper ( s ) ;
+    s = s.MakeUpper() ;
     if ( s == "CDS" ) type = VIT_CDS ;
     else if ( s == "GENE" ) type = VIT_GENE ;
     else if ( s == "PROMOTER" ) type = VIT_PROMOTER ;

@@ -17,9 +17,9 @@ class TABIviewer : public ChildBase
     virtual ~TABIviewer () ;
     
     virtual void initme () ;
-    virtual string getName () ;
+    virtual wxString getName () ;
     virtual void showSequence () ;
-    virtual string getStat () ;
+    virtual wxString getStat () ;
     virtual void showStat () ;
     
     virtual void OnMarkAll(wxCommandEvent& event);
@@ -45,7 +45,7 @@ class TABIviewer : public ChildBase
     wxPanel *up ;
     wxSplitterWindow *hs ;
     int from ;
-    string filename ;
+    wxString filename ;
     wxCheckBox *aidLines , *inv_compl ;
     wxSpinCtrl *f_height , *f_width ;
     wxSlider *slider ;

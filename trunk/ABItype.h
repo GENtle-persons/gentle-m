@@ -17,9 +17,9 @@ class TFLAG
     int pos , after ;
     unsigned char *data ;
     
-    string getPascalString () ;
+    wxString getPascalString () ;
     
-    string flag ;
+    wxString flag ;
     int instance ;
     int datatype ;
     int datasize ;
@@ -36,17 +36,17 @@ class ABItype
     ABItype () ;
     ~ABItype () ;
     
-    int getRecord ( string id , int num ) ;
-    int getRecordValue ( string id , int num ) ;
-    string getRecordPascalString ( string id , int num ) ;
-    string getSequence ( int num = 2 ) ;
+    int getRecord ( wxString id , int num ) ;
+    int getRecordValue ( wxString id , int num ) ;
+    wxString getRecordPascalString ( wxString id , int num ) ;
+    wxString getSequence ( int num = 2 ) ;
     int getMacOffset ( unsigned char *t ) ;
     
     // Parser functions
-    void parse ( string filename ) ;
+    void parse ( wxString filename ) ;
     TFLAG getFlag ( unsigned char *t , int &from ) ;
-    string getStr ( unsigned char *t , int from , int len ) ;
-    string getText ( unsigned char *t , int &from ) ;
+    wxString getStr ( unsigned char *t , int from , int len ) ;
+    wxString getText ( unsigned char *t , int &from ) ;
     int getInt1 ( unsigned char *t , int &from ) ;
     int getInt2 ( unsigned char *t , int &from ) ;
     int getInt4 ( unsigned char *t , int &from ) ;

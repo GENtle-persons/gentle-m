@@ -122,7 +122,7 @@ void TAlignmentDialog::init_what ()
              f->children[a]->def == "ABIviewer" )
            {
            vav.push_back ( ((MyChild*)f->children[a])->vec ) ;
-           van.push_back ( f->children[a]->getName() ) ;
+           van.push_back ( f->children[a]->getName().c_str() ) ;
            all->Append ( f->children[a]->getName().c_str() ) ;
            }
         }
@@ -133,7 +133,7 @@ void TAlignmentDialog::init_what ()
         if ( al->lines[a].name != txt("t_identity") )
            {
            vcv.push_back ( al->lines[a].v ) ;
-           vcn.push_back ( al->lines[a].name ) ;
+           vcn.push_back ( al->lines[a].name.c_str() ) ;
            cur->Append ( al->lines[a].name.c_str() ) ;
            }
         }

@@ -151,7 +151,7 @@ void TImageDisplay::OnFile ( wxCommandEvent &event )
     right->Refresh () ;
     }
 
-string TImageDisplay::getName ()
+wxString TImageDisplay::getName ()
     {
     return "Image Viewer" ;
     }

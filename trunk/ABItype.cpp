@@ -23,11 +23,7 @@ int ABItype::getCMBF ( unsigned char *t , int l )
           {
           if ( *(s+1) == 'M' &&
                *(s+2) == 'B' &&
-               *(s+3) == 'F' ) /*&&
-               *(s+4) == 0 &&
-               *(s+5) == 0 &&
-               *(s+6) == 0 &&
-               *(s+7) == 1 &&*/
+               *(s+3) == 'F' )
              {
              r = s ;
              break ;
@@ -38,9 +34,9 @@ int ABItype::getCMBF ( unsigned char *t , int l )
     return r - t ;
     }
     
-void ABItype::parse ( string filename )
+void ABItype::parse ( wxString filename )
     {
-	wxFile f ( filename.c_str() , wxFile::read ) ;
+	wxFile f ( filename , wxFile::read ) ;
 	long l = f.Length() ;
 	unsigned char *t = new unsigned char [l+15] ;
 	f.Read ( t , l ) ;
@@ -107,9 +103,9 @@ TFLAG ABItype::getFlag ( unsigned char *t , int &from )
     return r ;
     }
     
-string ABItype::getText ( unsigned char *t , int &from )
+wxString ABItype::getText ( unsigned char *t , int &from )
     {
-    string r ;
+    wxString r ;
     int l = t[from++] ;
     for ( int a = 0 ; a < l ; a++ ) r += t[from++] ;
     return r ;
@@ -143,16 +139,16 @@ int ABItype::getInt4 ( unsigned char *t , int &from )
     return r ;
     }
     
-string ABItype::getStr ( unsigned char *t , int from , int len )
+wxString ABItype::getStr ( unsigned char *t , int from , int len )
     {
-    string r ;
+    wxString r ;
     for ( int a = 0 ; a < len ; a++ ) r += t[from+a] ;
     return r ;
     }
 
 //--------------------------------------------
 
-int ABItype::getRecord ( string id , int num )
+int ABItype::getRecord ( wxString id , int num )
     {
     int a ;
     for ( a = 0 ; a < vf.size() && ( vf[a].flag != id || vf[a].instance != num ) ; a++ ) ;
@@ -160,23 +156,23 @@ int ABItype::getRecord ( string id , int num )
     return a ;
     }
 
-string ABItype::getSequence ( int num )
+wxString ABItype::getSequence ( int num )
     {
-    string r ;
+    wxString r ;
     int a = getRecord ( "PBAS" , num ) , b ;
     myass ( a > -1 , "ABItype::getSequence" ) ;
     for ( b = 0 ; b < vf[a].nbytes ; b++ ) r += vf[a].data[b] ;
     return r ;
     }
     
-string ABItype::getRecordPascalString ( string id , int num )
+wxString ABItype::getRecordPascalString ( wxString id , int num )
     {
     int i = getRecord ( id , num ) ;
     if ( i == -1 ) return "" ;
     return vf[i].getPascalString() ;
     }
 
-int ABItype::getRecordValue ( string id , int num )
+int ABItype::getRecordValue ( wxString id , int num )
     {
     int i = getRecord ( id , num ) ;
     if ( i == -1 ) return 0 ;
@@ -186,7 +182,7 @@ int ABItype::getRecordValue ( string id , int num )
     
 //***************************************
 
-string TFLAG::getPascalString ()
+wxString TFLAG::getPascalString ()
     {
     if ( !data )
        {
@@ -198,7 +194,7 @@ string TFLAG::getPascalString ()
        t[4] = 0 ;
        return t+1 ;
        }
-    string r ;
+    wxString r ;
     int len = (unsigned char) data[0] ;
     for ( int a = 1 ; a <= len ; a++ ) r += data[a] ;
     return r ;

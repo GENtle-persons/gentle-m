@@ -351,7 +351,7 @@ void MyFrame::initme ()
           string path = myapp()->argv[a] ;
           for ( b = path.length() - 1 ; path[b] != '\\' && path[b] != '/' ; b-- ) ;
           string file = path.substr ( b+1 ) ;
-          importFile ( file , path , -1 ) ;
+          importFile ( file.c_str() , path.c_str() , -1 ) ;
           wxSetWorkingDirectory ( myapp()->homedir ) ;
           }
        }
@@ -481,7 +481,7 @@ void MyFrame::OnTextImport(wxCommandEvent& WXUNUSED(event) )
         xml.parse ( d.sequence->GetValue().c_str() ) ;
         if ( xml.success() )
            {
-           newXML ( xml , d.sName.c_str() ) ;
+           newXML ( xml , d.sName ) ;
            return ;
            }
         }
@@ -493,7 +493,7 @@ void MyFrame::OnTextImport(wxCommandEvent& WXUNUSED(event) )
         v->type = TYPE_PRIMER ;
         v->desc = txt("manually_entered_sequence") ;
         v->desc += "\n" ;
-        v->desc += wxGetUserName().c_str() ;
+        v->desc += wxGetUserName() ;
         newFromVector ( v , TYPE_PRIMER ) ;
         }
 }
@@ -535,7 +535,7 @@ void MyFrame::OnFileImport(wxCommandEvent& WXUNUSED(event) )
        wxString msg = wxString::Format ( txt("t_loading") , files[a].c_str() ) ;
        dlg.SetTitle ( msg ) ;
        dlg.SetFocus() ;
-       importFile ( files[a].c_str() , paths[a].c_str() , filter ) ;
+       importFile ( files[a] , paths[a] , filter ) ;
        }
     Thaw () ;
     SetFocus () ;
@@ -545,13 +545,13 @@ void MyFrame::OnFileImport(wxCommandEvent& WXUNUSED(event) )
     activateChild ( getChildIndex ( lastChild ) ) ;
     }
     
-void MyFrame::importFile ( string file , string path , int filter )
+void MyFrame::importFile ( wxString file , wxString path , int filter )
     {
     // Trying ABI format
     if ( filter == 5 || filter == -1 )
        {
         ABItype dummy ;
-        dummy.parse ( path ) ;
+        dummy.parse ( path.c_str() ) ;
         if ( dummy.vf.size() > 0 ) // Success
            {
            newABI ( path , file ) ;
@@ -575,7 +575,7 @@ void MyFrame::importFile ( string file , string path , int filter )
     if ( filter == -1 )
        {
         TXMLfile xml ;
-        xml.load ( path ) ;
+        xml.load ( path.c_str() ) ;
         if ( xml.success() )
            {
            newXML ( xml ) ;
@@ -601,7 +601,7 @@ void MyFrame::importFile ( string file , string path , int filter )
        {
         TClone clone ;
         clone.LS = LS ;
-        clone.load ( path ) ;
+        clone.load ( path.c_str() ) ;
         if ( clone.success )
            {
            newCLONE ( clone ) ;
@@ -613,7 +613,7 @@ void MyFrame::importFile ( string file , string path , int filter )
     return ;
 }
 
-void MyFrame::newXML (  TXMLfile &xml , string title )
+void MyFrame::newXML (  TXMLfile &xml , wxString title )
    {
    int n ;
    for ( n = 0 ; n < xml.countVectors() ; n++ )
@@ -622,7 +622,7 @@ void MyFrame::newXML (  TXMLfile &xml , string title )
        short type = nv->type ;
        if ( title != "" ) nv->name = title ;
        nv->desc += "\n" ;
-       nv->desc += wxGetUserName().c_str() ;
+       nv->desc += wxGetUserName() ;
        if ( type == TYPE_AMINO_ACIDS )
           newAminoAcids ( nv , nv->name ) ;
        else
@@ -681,7 +681,7 @@ MyChild *MyFrame::newFASTA ( TFasta &fasta )
     subframe->Maximize() ;
     }
 
-void MyFrame::newGB ( TGenBank &gb , string title )
+void MyFrame::newGB ( TGenBank &gb , wxString title )
     {
     int n ;
     TVector *nv ;
@@ -966,19 +966,19 @@ void MyFrame::rememberLastProject ()
     LS->getObject ( t ) ;
     }
     
-TAminoAcids *MyFrame::newAminoAcids ( string aa , string title )
+TAminoAcids *MyFrame::newAminoAcids ( wxString aa , wxString title )
     {
     TVector nv ;
-    nv.sequence = aa ;
+    nv.sequence = aa.c_str() ;
     return newAminoAcids ( &nv , title ) ;
     }
 
-TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , string title )
+TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , wxString title )
     {
     int a ;
     if ( title == "" ) title = "Surprise!" ;
     
-    TAminoAcids *subframe = new TAminoAcids ( (wxWindow*) getCommonParent() , title.c_str() ) ;
+    TAminoAcids *subframe = new TAminoAcids ( (wxWindow*) getCommonParent() , title ) ;
     setChild ( subframe ) ;
 
     subframe->vec->setFromVector ( *nv ) ;
@@ -1012,14 +1012,14 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , string title )
     return subframe ;
     }
 
-TABIviewer *MyFrame::newABI ( string filename , string title )
+TABIviewer *MyFrame::newABI ( wxString filename , wxString title )
     {
     if ( title == "" ) title = "Surprise!" ;
-    TABIviewer *subframe = new TABIviewer ( getCommonParent() , title.c_str() ) ;
+    TABIviewer *subframe = new TABIviewer ( getCommonParent() , title ) ;
     subframe->filename = filename ;
     subframe->vec->type = TYPE_SEQUENCE ;
     subframe->vec->desc += "\n" ;
-    subframe->vec->desc += wxGetUserName().c_str() ;    
+    subframe->vec->desc += wxGetUserName() ;    
 
     // Give it an icon
 #ifdef __WXMSW__
@@ -1458,7 +1458,7 @@ bool MyFrameDropTarget::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& f
        string path = filenames[a].c_str() ;
        for ( b = path.length() - 1 ; path[b] != '\\' && path[b] != '/' ; b-- ) ;
        string file = path.substr ( b+1 ) ;
-       myapp()->frame->importFile ( file , path , -1 ) ;
+       myapp()->frame->importFile ( file.c_str() , path.c_str() , -1 ) ;
        }
 //    wxMessageBox ( filenames[0] ) ;
     return true ;

@@ -59,11 +59,11 @@ void TextImportDialog::OnOK ( wxCommandEvent &ev )
     {
     sName = name->GetValue () ;
     sSequence = "" ;
-    string s = sequence->GetValue().c_str() ;
+    wxString s = sequence->GetValue() ;
     for ( int a = 0 ; a < s.length() ; a++ )
         {
-        if ( s[a] >= 'a' && s[a] <= 'z' ) sSequence += s[a]-'a'+'A' ;
-        else if ( s[a] >= 'A' && s[a] <= 'Z' ) sSequence += s[a] ;
+        if ( s.GetChar(a) >= 'a' && s.GetChar(a) <= 'z' ) sSequence += s.GetChar(a)-'a'+'A' ;
+        else if ( s.GetChar(a) >= 'A' && s.GetChar(a) <= 'Z' ) sSequence += s.GetChar(a) ;
         }
     wxDialog::OnOK ( ev ) ;
     }

@@ -215,7 +215,7 @@ void SeqABI::drawTopLine ( wxDC &dc , int y )
     dc.SetPen(p);
     }
     
-void SeqABI::initFromFile ( string filename )
+void SeqABI::initFromFile ( wxString filename )
     {
     zoom = 1 ;
     showHelpLines = true ;

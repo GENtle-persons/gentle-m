@@ -6,7 +6,7 @@ TXMLfile::TXMLfile ()
     _success = false ;
     }
     
-void TXMLfile::parse ( string text )
+void TXMLfile::parse ( wxString text )
     {
     TiXmlDocument doc ;
     doc.Parse ( text.c_str() ) ;
@@ -18,7 +18,7 @@ void TXMLfile::parse ( string text )
     analyze ( doc ) ;   
     }
     
-void TXMLfile::load ( string file ) 
+void TXMLfile::load ( wxString file ) 
     {
     TiXmlDocument doc( file.c_str() );
     bool ok = doc.LoadFile();
@@ -59,12 +59,12 @@ TVector *TXMLfile::getVector ( int a )
 
 // private
 
-string TXMLfile::t ( const char *txt )
+wxString TXMLfile::t ( const char *txt )
     {
     return txt ? txt : "" ;
     }
 
-string TXMLfile::t ( TiXmlText *txt )
+wxString TXMLfile::t ( TiXmlText *txt )
     {
     return txt && txt->Value() ? txt->Value() : "" ;
     }
@@ -78,15 +78,15 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
     int a ;
     TiXmlNode *n ;
     TiXmlElement *e ;
-    string s ;
+    wxString s ;
     TiXmlHandle h ( base ) ;
-    v->name = t ( h.FirstChild("GBSeq_locus").FirstChild().Text() ) ;
-    v->sequence = toupper ( t ( h.FirstChild("GBSeq_sequence").FirstChild().Text() ) ) ;
+    v->name = t ( h.FirstChild("GBSeq_locus").FirstChild().Text() ) .c_str() ;
+    v->sequence = t ( h.FirstChild("GBSeq_sequence").FirstChild().Text() ) . MakeUpper() ;
     
     e = h.FirstChild("GBSeq_topology").Element() ;
     if ( e ) // topology
         {
-        s = toupper ( t ( e->Attribute ( "value" ) ) ) ;
+        s = t ( e->Attribute ( "value" ) ) . MakeUpper() ;
         if ( s == "CIRCULAR" ) v->setCircular ( true ) ;
         }
 
@@ -96,7 +96,7 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
         {
         TVectorItem i ;
         TiXmlHandle h2 ( n ) ;
-        s = toupper ( t ( h2.FirstChild("GBFeature_key").FirstChild().Text() ) ) ;
+        s = t ( h2.FirstChild("GBFeature_key").FirstChild().Text() ) . MakeUpper() ;
         
         // Dummy values
         i.name = "" ;
@@ -137,16 +137,16 @@ void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
     for ( n2 = n2->FirstChild("GBQualifier") ; n2 ; n2 = n2->NextSibling("GBQualifier") )
         {
         TiXmlHandle h ( n2 ) ;
-        string name = toupper ( t ( h.FirstChild("GBQualifier_name").FirstChild().Text() ) ) ;
-        string value = t ( h.FirstChild("GBQualifier_value").FirstChild().Text() ) ;
+        wxString name = t ( h.FirstChild("GBQualifier_name").FirstChild().Text() ) . MakeUpper() ;
+        wxString value = t ( h.FirstChild("GBQualifier_value").FirstChild().Text() ) ;
         if ( name == "" ) continue ;
-        i.setParam ( "/" + name , value ) ;
+        i.setParam ( "/" + string ( name.c_str() ) , value.c_str() ) ;
         if ( name == "CODON_START" ) i.setRF ( atoi ( value.c_str() ) ) ;
         if ( name == "GENE" || name == "LABEL" ) i.name = value.c_str() ;
         if ( name == "PRODUCT" || name == "NOTE" || name == "REGION_NAME" )
            {
            if ( i.desc != "" ) i.desc += "\n" ;
-           i.desc += value.c_str() ;
+           i.desc += value ;
            }
         }
     if ( i.name == "" && i.desc.length() < 10 )
@@ -159,7 +159,7 @@ void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
         char u[100] ;
         sprintf ( u , "short_itemtype%d" , i.type ) ;
         i.name = txt(u) ;
-        string d2 = i.desc.c_str() ;
+        wxString d2 = i.desc.c_str() ;
         int k = d2.find ( "\n" ) ;
         if ( k > -1 ) d2.erase ( k ) ;
         if ( i.name.length() * 2 >= d2.length() )
@@ -174,8 +174,8 @@ void TXMLfile::readGBintervals ( vector <TVectorItem> &vi , const TVectorItem &i
     for ( n2 = n2->FirstChild("GBInterval") ; n2 ; n2 = n2->NextSibling("GBInterval") )
         {
         TiXmlHandle h ( n2 ) ;
-        string from = t ( h.FirstChild("GBInterval_from").FirstChild().Text() ) ;
-        string to = t ( h.FirstChild("GBInterval_to").FirstChild().Text() ) ;
+        wxString from = t ( h.FirstChild("GBInterval_from").FirstChild().Text() ) ;
+        wxString to = t ( h.FirstChild("GBInterval_to").FirstChild().Text() ) ;
         if ( from == "" || to == "" ) continue ;
         TVectorItem j = i ;
         j.from = atoi ( from.c_str() ) ;

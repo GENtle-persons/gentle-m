@@ -429,8 +429,8 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
     ex.Add ( s ) ;
     
     // Definition
-    wrapit ( ex , "DEFINITION  " , v->desc.c_str() ) ;
-    s = v->getParams().c_str() ;
+    wrapit ( ex , "DEFINITION  " , v->desc ) ;
+    s = v->getParams() ;
     while ( s != "" && s[s.length()-1] == '\n' )
        s = s.substr ( 0 , s.length()-1 ) ;
     ex.Add ( s ) ;
@@ -447,9 +447,9 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
            sprintf ( z , "complement(%d..%d)" , v->items[a].from , v->items[a].to ) ;
         ex.Add ( s + z ) ;
         if ( v->items[a].name != "" )
-           wrapit ( ex , b21 , quote ( "/gene" , v->items[a].name.c_str() ) ) ;
+           wrapit ( ex , b21 , quote ( "/gene" , v->items[a].name ) ) ;
         if ( v->items[a].desc != "" )
-           wrapit ( ex , b21 , quote ( "/note" , v->items[a].desc.c_str() ) ) ;
+           wrapit ( ex , b21 , quote ( "/note" , v->items[a].desc ) ) ;
            
         wxArrayString vs ;
         vector <string> vss ;
