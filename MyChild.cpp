@@ -305,17 +305,6 @@ void MyChild::initme ()
 
 #ifdef __WXMSW__  // LINUX
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
-#else
-    wxToolBar *toolBar = myapp()->frame->CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
-    /*    wxToolBar *toolBar ;
-    toolBar = new wxToolBar ( myapp()->frame , -1 , wxDefaultPosition, wxDefaultSize, wxTB_HORIZONTAL | wxNO_BORDER | wxTB_FLAT );//| wxTB_DOCKABLE ) ;
-    myapp()->frame->SetToolBar ( toolBar ) ;*/
-#endif
-
-
-
-//    SetToolBar ( toolBar ) ;
-
     toolBar->AddTool( MDI_TEXT_IMPORT , 
                 wxBitmap (myapp()->bmpdir+myapp()->slash+"new.bmp", wxBITMAP_TYPE_BMP),
                 txt("m_new_sequence") ) ;  
@@ -373,6 +362,7 @@ void MyChild::initme ()
     zoom_cb->SetSelection ( 0 ) ;
     toolBar->AddControl ( zoom_cb ) ;
     toolBar->Realize() ;    
+#endif
 
     Show(TRUE);
     updateUndoMenu () ;
