@@ -292,17 +292,21 @@ TAlignmentDialog::TAlignmentDialog(wxWindow *parent, const wxString& title )
     int w , h ;
 #ifdef __WXMSW__
     GetClientSize ( &w , &h ) ;
+    h -= 30 ;
 #else
-    w = 600 ;
-    h = 450 ;
+    w = -1 ;
+    h = -1 ;
 #endif
-    nb = new wxNotebook ( this , -1 );//, wxPoint ( 0 , 0 ) , wxSize ( w , h-40 ) ) ;
+    nb = new wxNotebook ( this , -1 , wxDefaultPosition , wxSize ( w , h ) );
+
     init_what () ;
     init_how () ;
 //    init_disp () ;
+
     wxButton *b = new wxButton ( this , AL_OK , txt("b_OK") ) ;
     wxButton *c = new wxButton ( this , AL_CANCEL , txt("b_cancel") ) ;
 
+#ifdef __WXGTK__
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
 
@@ -312,6 +316,10 @@ TAlignmentDialog::TAlignmentDialog(wxWindow *parent, const wxString& title )
     v0->Add ( nb , 1 , wxEXPAND|wxALL , 5 ) ;
     v0->Add ( h0 , 0 , wxCENTRE , 5 ) ;
     SetSizer ( v0 ) ;
+#else
+	b->SetSize ( w / 5 , h + 5 , -1 , -1 ) ;
+	c->SetSize ( w / 5 * 3 , h + 5 , -1 , -1 ) ;
+#endif
     nb->SetSelection ( 0 ) ;
 
     b->SetDefault () ;
@@ -333,7 +341,6 @@ void TAlignmentDialog::init_what ()
 	wxBoxSizer *v2 = new wxBoxSizer ( wxVERTICAL ) ;
 
     pwhat = new wxPanel ( nb , -1 ) ;
-    nb->AddPage ( pwhat , txt("t_sequences") ) ;
     wxPanel *p = pwhat ;
     v0->Add ( new wxStaticText ( p , -1 , txt("al_cur") ) , 0 , wxEXPAND ) ;
     v2->Add ( new wxStaticText ( p , -1 , txt("al_all") ) , 0 , wxEXPAND ) ;
@@ -400,12 +407,12 @@ void TAlignmentDialog::init_what ()
     vx->Add ( h0 , 1 , wxEXPAND ) ;
     vx->Add ( new wxStaticText ( p , -1 , txt("t_alignment_txt") ) , 0 , wxEXPAND|wxALIGN_CENTER_HORIZONTAL ) ;    
     p->SetSizer ( vx ) ;
+    nb->AddPage ( pwhat , txt("t_sequences") ) ;
     }
     
 void TAlignmentDialog::init_how ()
     {
     phow = new wxPanel ( nb , -1 ) ;
-    nb->AddPage ( phow , txt("t_algorithm") ) ;
     wxPanel *p = phow ;
     int w = 600 , h = 400 ;
 
@@ -462,6 +469,7 @@ void TAlignmentDialog::init_how ()
     alg_matrix->Append ( txt("t_matrix_gonnet") ) ;
     alg_matrix->Append ( txt("t_matrix_id") ) ;
     alg_matrix->SetSelection ( 0 ) ;
+    nb->AddPage ( phow , txt("t_algorithm") ) ;
     }
 
 void TAlignmentDialog::init_disp ()

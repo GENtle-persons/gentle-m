@@ -74,10 +74,8 @@ void TVectorEditor::clearItemSelection ()
         
 void TVectorEditor::initPanItem ()
     {
-    nb->AddPage ( panItem , txt("t_vec_item") ) ;
     
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
-    wxFlexGridSizer *f0 = new wxFlexGridSizer ( 3 , 2 , 5 , 5 ) ;
     wxBoxSizer *h0a = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h0b = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h1a = new wxBoxSizer ( wxHORIZONTAL ) ;
@@ -89,8 +87,6 @@ void TVectorEditor::initPanItem ()
     int w , h ;
     GetMyClientSize ( &w , &h , panItem ) ;
 
-//    panItem->SetFont ( *MYFONT ( 8 , wxSWISS , wxNORMAL , wxNORMAL ) ) ;    
-    
     // Items list
     items = new wxListCtrl ( panItem , TVE_ILIST ,
 			     wxDefaultPosition , wxDefaultSize ,
@@ -183,23 +179,13 @@ void TVectorEditor::initPanItem ()
         irb->Disable () ;
         }
     
-//    addOkCancel ( panItem ) ;
-
-/*
-    f0->Add ( h0a , 1 , wxEXPAND ) ;
-    f0->Add ( h0b , 0 , 0 );
-    f0->Add ( h1a , 1 , wxEXPAND ) ;
-    f0->Add ( h1b , 0 , 0 );
-    f0->Add ( idesc , 1 , wxEXPAND ) ;
-    f0->Add ( v2 , 0 , 0 );
-*/
     h2->Add ( v1 , 1, wxEXPAND ) ;
     h2->Add ( v2 , 0 , 0 ) ;
 
     v0->Add ( items , 1 , wxEXPAND|wxALL , 5 ) ;
     v0->Add ( h2 , 1 , wxEXPAND|wxALL , 5 ) ;
-//    v0->Add ( f0 , 1 , wxEXPAND|wxALL , 5 ) ;
     panItem->SetSizer ( v0 ) ;
+    nb->AddPage ( panItem , txt("t_vec_item") ) ;
     }
 
 
