@@ -401,7 +401,7 @@ class SequenceCanvas : public wxScrolledWindow
     ChildBase *child ; // Wanna-be universal com port to "parent"
     MyChild *p ;
     int _from , _to ; // Mark
-    int blankline , charwidth , charheight ;
+    int blankline , charwidth , charheight , hardstop ;
     int lastmarked , maxendnumberlength , lastyoffset , blocksize ;
     vector <SeqBasic*> seq ;
     wxFont *font , *smallFont , *varFont;

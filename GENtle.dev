@@ -887,26 +887,6 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit92]
-FileName=TXMLfile.cpp
-CompileCpp=1
-Folder=Data structures
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit93]
-FileName=clustal\sequence.c
-CompileCpp=1
-Folder=Clustal-W
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit94]
 FileName=clustal\showpair.c
 CompileCpp=1
