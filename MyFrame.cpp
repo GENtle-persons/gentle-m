@@ -1355,7 +1355,11 @@ void MyFrame::OnCalculator(wxCommandEvent& event)
 */
 void MyFrame::OnGraph(wxCommandEvent& event)
     {
-    RunGraph () ;
+//    RunGraph () ;
+    TGraph *g = RunGraph() ;
+    g->gd->SetupDummy() ;
+   	g->gd->AutoScale () ;
+   	g->gd->UpdateDisplay () ;
     }    
 
 /** \brief Invokes the calculator module

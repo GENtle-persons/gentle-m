@@ -17,14 +17,14 @@ TGraphDisplay::TGraphDisplay ( wxWindow *parent , int id )
 	}
 	
 TGraphDisplay::~TGraphDisplay ()
-	{
+	{/*
 	int a ;
 	for ( a = 0 ; a < data.size() ; a++ )
 		delete data[a] ;
 	data.clear () ;
 	for ( a = 0 ; a < scales.size() ; a++ )
 		delete scales[a] ;
-	scales.clear () ;
+	scales.clear () ;*/
 	}    
 	
 void TGraphDisplay::init ()
@@ -57,8 +57,11 @@ void TGraphDisplay::SetZoom ( int _zx , int _zy )
 	UpdateDisplay () ;
 	}    
 
+//#define CSV1
+
 stringField TGraphDisplay::readCSVfile ( wxString filename )
 	{
+#ifdef CSV1
 	mylog ( "TGraphDisplay::readCSVfile" , "0" ) ;
  	stringField sf ;
  	wxFile file ( filename , wxFile::read ) ;
@@ -100,8 +103,8 @@ stringField TGraphDisplay::readCSVfile ( wxString filename )
  	mylog ( "TGraphDisplay::readCSVfile" , "5" ) ;
  	
  	return sf ;
- 	
-/*	mylog ( "TGraphDisplay::readCSVfile" , "0" ) ;
+#else
+	mylog ( "TGraphDisplay::readCSVfile" , "0" ) ;
 	wxTextFile file ( filename ) ;
 	mylog ( "TGraphDisplay::readCSVfile" , "1" ) ;
 	file.Open () ;
@@ -114,22 +117,53 @@ stringField TGraphDisplay::readCSVfile ( wxString filename )
 	for ( s = file.GetFirstLine(); !file.Eof(); s = file.GetNextLine() )
 		{
 		mylog ( "TGraphDisplay::readCSVfile" , wxString::Format ( "Starting line %d" , a ) ) ;
-  		wxArrayString as ;
+  		TVS as ;
   		s = s.Trim().Trim(false);
   		while ( s.First ( ',' ) != -1 )
   			{
-	    	as.Add ( s.BeforeFirst ( ',' ) ) ;
+	    	as.push_back ( s.BeforeFirst ( ',' ).c_str() ) ;
 	    	s = s.AfterFirst ( ',' ) ;
   			}    
-		as.Add ( s ) ;
+		as.push_back ( s.c_str() ) ;
 //  		explode ( "," , s , as ) ;
   		sf.push_back ( as ) ;
 		mylog ( "TGraphDisplay::readCSVfile" , wxString::Format ( "Ending line %d" , a++ ) ) ;
 		}    
 	mylog ( "TGraphDisplay::readCSVfile" , "4" ) ;
-	return sf ;*/
+	return sf ;
+#endif
 	}    
 	
+void TGraphDisplay::setupIPCfile ( wxString filename )
+	{
+	stringField sf = readCSVfile ( filename ) ;
+//	stringField sf = readCSVfile ( "C:\\Dokumente und Einstellungen\\DSP\\Desktop\\0.1 IGF-VK + 0.4 PolyGluTyr 360nm.csv" ) ;
+//	setupPhotometerGraph ( sf ) ;
+
+ 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , "m/z" , "" , *wxBLACK ) ;
+  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , "rel. Int." , "" , *wxBLACK ) ;
+ 	scales.push_back ( sx ) ;
+ 	scales.push_back ( sy ) ;
+ 	
+ 	TGraphData *ng = new TGraphData ( this ) ;
+	ng->name = "IPC" ;
+	ng->SetScales ( sx , sy ) ;
+	ng->pointStyle = "none" ;
+	ng->col = wxTheColourDatabase->Find ( "BLUE" ) ;
+	data.push_back ( ng ) ;
+
+ 	int a ;
+ 	for ( a = 0 ; a < sf.size() && sf[a].size() > 1 && sf[a][0] != "" ; a++ )
+ 		{
+    	double x , y ;
+    	wxString s0 = sf[a][0].c_str() ;
+    	wxString s1 = sf[a][1].c_str() ;
+    	s0.ToDouble ( &x ) ;
+    	s1.ToDouble ( &y ) ;
+    	ng->Add ( (float) x , (float) y ) ;
+ 		}
+	}
+    
 void TGraphDisplay::setupPhotometerGraph ( const stringField &sf )
 	{
  	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , sf[1][0].c_str() , "" , *wxBLACK ) ;
@@ -200,40 +234,6 @@ void TGraphDisplay::setupFluorimeterGraph ( const stringField &sf )
 		}    
 	}    
 
-void TGraphDisplay::setupIPCfile ( wxString filename )
-	{
-	mylog ( "TGraphDisplay::setupIPCfile" , "0" ) ;
-	stringField sf = readCSVfile ( filename ) ;
-	
-	mylog ( "TGraphDisplay::setupIPCfile" , "1" ) ;
- 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , "m/z" , "" , *wxBLACK ) ;
-  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , "rel. Int." , "" , *wxBLACK ) ;
- 	scales.push_back ( sx ) ;
- 	scales.push_back ( sy ) ;
- 	
-	mylog ( "TGraphDisplay::setupIPCfile" , "2" ) ;
- 	TGraphData *ng = new TGraphData ( this ) ;
-	ng->name = "IPC" ;
-	ng->SetScales ( sx , sy ) ;
-	ng->pointStyle = "none" ;
-	ng->col = wxTheColourDatabase->Find ( "BLUE" ) ;
-
-	mylog ( "TGraphDisplay::setupIPCfile" , "3" ) ;
- 	int a ;
- 	for ( a = 0 ; a < sf.size() && sf[a].size() > 1 && sf[a][0] != "" ; a++ )
- 		{
-    	double x , y ;
-    	wxString s0 = sf[a][0].c_str() ;
-    	wxString s1 = sf[a][1].c_str() ;
-    	s0.ToDouble ( &x ) ;
-    	s1.ToDouble ( &y ) ;
-    	ng->Add ( (float) x , (float) y ) ;
- 		}    
-	mylog ( "TGraphDisplay::setupIPCfile" , "4" ) ;
-	data.push_back ( ng ) ;
-	mylog ( "TGraphDisplay::setupIPCfile" , "5" ) ;
-	}
-    
 void TGraphDisplay::SetupDummy ()
 	{
 //	stringField sf = readCSVfile ( "C:\\Dokumente und Einstellungen\\DSP\\Desktop\\RTS Kristin.csv" ) ;
@@ -324,16 +324,11 @@ void TGraphDisplay::drawit ( wxDC &dc , int mode )
    		scales[a]->CalcInternalRect ( inner ) ;
  		
 	dc.SetPen ( *wxBLACK_PEN ) ;
-//	dc.DrawRectangle ( outer ) ;
 	dc.DrawRectangle ( inner ) ;
 	
-//	dc.DestroyClippingRegion () ;
-//	dc.SetClippingRegion ( outer ) ;
 	wxRect o2 = outer ;
 	for ( a = 0 ; a < scales.size() ; a++ )
-		{
   		scales[a]->drawit ( dc , o2 , inner ) ;
-		}    
 	
 	dc.DestroyClippingRegion () ;
 	

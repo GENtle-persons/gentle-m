@@ -4,6 +4,8 @@ Bugs :
 * Bericht drucken : lange Zeilen in Vektor-Beschreibung umbrechen
 
 Feature Requests :
+Manual : Installation
+PCR : Name/Richtung von geöffneten Primern anzeigen
 Alignment : Linke Box initial leer
 Speichern gleichzeitig in zwei Datenbanken (local?) speichern
 PCR-Sequenzen 5'/3' Richtung benennen

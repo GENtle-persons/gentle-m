@@ -52,12 +52,12 @@ TGraph::TGraph(wxWindow *parent, const wxString& title)
 	}
  
 TGraph::~TGraph()
-	{
-/*	if ( nb )
+	{/*
+	if ( nb )
 		{
   		delete nb ;
   		nb = NULL ;
-		}    */
+		} */
 	}
 
 void TGraph::initme ()

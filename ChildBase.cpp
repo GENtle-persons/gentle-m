@@ -161,7 +161,7 @@ void ChildBase::OnClose(wxCloseEvent& event)
         event.Veto() ;
         return ;
         }
-    
+
     toolbar = NULL ;
     myass ( this , "ChildBase::OnClose" ) ;
     myapp()->frame->mainTree->removeChild ( this ) ;
