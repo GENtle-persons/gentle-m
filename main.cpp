@@ -70,6 +70,12 @@ MyApp *myapp ()
    {
    return theapp ;
    }
+   
+void myass ( bool b , wxString msg )
+    {
+    if ( b ) return ;
+    wxSafeShowMessage ( msg , "Error" ) ;
+    }
 
 // Initialise this in OnInit, not statically
 bool MyApp::OnInit()

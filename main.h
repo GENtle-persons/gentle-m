@@ -130,6 +130,7 @@ vector <string> explode ( string sep , string s ) ;
 char* txt ( string item ) ;
 void init_txt ( string lang ) ;
 MyApp *myapp () ;
+void myass ( bool b , wxString msg = "" ) ;
 
 //IMPLEMENT_APP(MainApp)
 
