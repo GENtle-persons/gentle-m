@@ -675,7 +675,8 @@ string TVector::dna2aa ( string codon )
     
 void TVector::turn ( int off )
     {
-    if ( !circular || off == 0 ) return ;
+    // Allowing turn of linear fragments as a temporary measure due to a problem in getAAvector
+    //if ( !circular || off == 0 ) return ;
     int a ;
     for ( a = 0 ; a < items.size() ; a++ )
         {
