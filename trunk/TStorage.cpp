@@ -20,11 +20,15 @@ TStorage::TStorage ( int nt , string fn )
         mysql_init (conn);
         vector <string> ex ;
         ex = explode ( ":" , fn+":" ) ;
-        conn = mysql_real_connect ( conn , 
+        if ( !mysql_real_connect ( conn , 
                                 ex[1].c_str() , 
                                 ex[2].c_str() ,
                                 ex[3].c_str() , 
-                                ex[4].c_str() , 0 , NULL , CLIENT_COMPRESS ) ;
+                                ex[4].c_str() , 0 , NULL , CLIENT_COMPRESS ) )
+           {
+           wxSafeShowMessage ( wxString::Format ( txt("t_mysql_error") , dbname.c_str() ) , mysql_error ( conn ) ) ;
+           conn = NULL ;
+           }
         }
 #endif
     autoUpdateSchema() ;
@@ -33,7 +37,7 @@ TStorage::TStorage ( int nt , string fn )
 TStorage::~TStorage ()
     {
 #ifdef USEMYSQL
-    if ( isMySQL )
+    if ( isMySQL && conn )
         {
         mysql_close (conn);
         delete conn ;

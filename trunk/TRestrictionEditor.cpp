@@ -93,13 +93,40 @@ void TRestrictionEditor::initRestrictionPage ()
     th = th * 5 / 6 ;
     bo = th / 2 ;
 
-    // Restriction
+
+    wxFlexGridSizer *v1 = new wxFlexGridSizer ( 2 , 1 , 5 , 5 ) ;
+    wxBoxSizer *v2a = new wxBoxSizer ( wxVERTICAL ) ;
+    wxFlexGridSizer *v2b = new wxFlexGridSizer ( 6 , 1 , 5 , 5 ) ;
+    wxBoxSizer *v2c = new wxBoxSizer ( wxVERTICAL ) ;
+    wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
     
+    // Available enzymes list
+    el = new wxListCtrl ( this , RSE_RES_LL , wxDefaultPosition , wxDefaultSize ,
+                wxLC_REPORT|wxLC_SINGLE_SEL ) ;
+    el->InsertColumn ( 0 , txt("name") ) ;
+    el->InsertColumn ( 1 , txt("cuts") ) ;
+    v2a->Add ( new wxStaticText ( this , -1 , txt("t_available_enzymes") ) , 0 , wxEXPAND , 5 ) ;
+    v2a->Add ( el , 1 , wxEXPAND , 5 ) ;
+    
+    // Cocktail
+    el2 = new wxListCtrl ( this , RSE_COC_LL , wxPoint ( rw*2/3+bo , th*2 ) ,
+                wxSize ( rw/3-bo*2 , rh*2/3-th*2-bo ) , 
+                wxLC_REPORT|wxLC_SINGLE_SEL ) ;
+    el2->InsertColumn ( 0 , txt("name") ) ;
+    el2->InsertColumn ( 1 , txt("cuts") ) ;
+    v2c->Add ( new wxStaticText ( this , -1 , txt("Cocktail") ) , 0 , wxEXPAND , 5 ) ;
+    v2c->Add ( el2 , 1 , wxEXPAND , 5 ) ;
+
+    
+    wxFlexGridSizer *h1a = new wxFlexGridSizer ( 1 , 2 , 5 , 5 ) ;
+    wxFlexGridSizer *h1d = new wxFlexGridSizer ( 1 , 2 , 5 , 5 ) ;
+    wxBoxSizer *h1e = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *h1f = new wxBoxSizer ( wxHORIZONTAL ) ;
+
     // Enzyme groups
     wxString _gt = txt("group") ;
-    new wxStaticText ( this , -1 , _gt , wxPoint ( bo*2+rw/3 , th+2 ) ) ;
-    gl = new wxChoice ( this , RSE_RES_DD , wxPoint ( bo*2+rw/3+th*_gt.length()*2/3 , th ) ,
-                wxSize ( rw/6 , th ) ) ;
+    gl = new wxChoice ( this , RSE_RES_DD ) ;
     gl->Append ( txt("Current") ) ;
     gl->Append ( txt("All") ) ;
     vector <string> vs ;
@@ -107,103 +134,105 @@ void TRestrictionEditor::initRestrictionPage ()
     for ( int i = 0 ; i < vs.size() ; i++ )
             gl->Append ( vs[i].c_str() ) ;
     gl->SetStringSelection ( txt("Current") ) ;
-    
+    h1a->Add ( new wxStaticText ( this , -1 , _gt ) , 1 , wxEXPAND , 5 ) ;
+    h1a->Add ( gl , 1 , wxEXPAND , 5 ) ;
+
     wxString rbs[3] ;
     rbs[0] = txt("All enzymes") ;
     rbs[1] = txt("Enzymes that cut") ;
     rbs[2] = txt("Enzymes that don't cut") ;
     rb = new wxRadioBox ( this , RSE_RES_RB , txt("subsel") ,
-                          wxPoint ( bo*2+rw/3 , th*3 ) ,
+                          wxDefaultPosition ,
                           wxDefaultSize ,
                            3 , rbs , 1 , wxRA_SPECIFY_COLS ) ;
-    
-    // Available enzymes list
-    new wxStaticText ( this , -1 , txt("t_available_enzymes") , wxPoint ( bo , bo ) ) ;
-    el = new wxListCtrl ( this , RSE_RES_LL , wxPoint ( bo , th*2 ) ,
-                wxSize ( rw/3 , rh*2/3-th*2-bo ) ,
-                wxLC_REPORT|wxLC_SINGLE_SEL ) ;
-    el->InsertColumn ( 0 , txt("name") ) ;
-    el->InsertColumn ( 1 , txt("cuts") ) ;
+                           
+    nfst = new wxCheckBox ( this , RSE_COC_CB , txt("Do not create fragments below ") ) ;
 
+    nfstv = new wxSpinCtrl ( this , -1 , "20" ) ;
+    nfst->SetValue ( true ) ;
+    nfstv->SetSize ( 70 , th * 2 ) ;
+    h1d->Add ( nfstv , 0 , wxEXPAND , 5 ) ;
+    h1d->Add ( new wxStaticText ( this , -1 , txt("base pairs.") ) , 
+                1 , wxEXPAND , 5 ) ;
+
+
+    wxFlexGridSizer *v3a = new wxFlexGridSizer ( 4 , 1 , 5 , 5 ) ;
+    wxFlexGridSizer *v3b = new wxFlexGridSizer ( 4 , 1 , 5 , 5 ) ;
+
+    bb = new wxBitmapButton ( this , RSE_RES_AC ,
+             wxBitmap (myapp()->bmpdir+"\\cocktail.bmp", wxBITMAP_TYPE_BMP),
+             wxDefaultPosition ,
+             wxDefaultSize ,
+             wxBU_AUTODRAW ,
+             wxDefaultValidator ,
+             txt("add2cocktail") ) ;
+    wxBitmapButton *bib = new wxBitmapButton ( this , RSE_COC_CT ,
+             wxBitmap (myapp()->bmpdir+"\\scissors.bmp", wxBITMAP_TYPE_BMP),
+             wxDefaultPosition ,
+             wxDefaultSize ,
+             wxBU_AUTODRAW ,
+             wxDefaultValidator ,
+             txt("start_res") ) ;
+
+    v3a->Add ( bb , 1 , wxEXPAND , 5 ) ;
+    v3a->Add ( new wxStaticText ( this , -1 , txt("add2cocktail") ) ) ;
+    v3a->Add ( new wxStaticText ( this , -1 , "" ) , 0 , wxEXPAND , 5 ) ;
+    v3a->Add ( bib , 1 , wxEXPAND , 5 ) ;
+    v3a->Add ( new wxStaticText ( this , -1 , txt("start_res") ) ) ;
+
+
+    btOK = new wxButton ( this , RSE_RES_OK , txt("b_done") ) ;
+    btCC = new wxButton ( this , RSE_RES_CC , txt("b_cancel") ) ;
+    v3b->Add ( new wxButton ( this , RSE_COC_RM , txt("Remove enzyme") ) , 1 , wxEXPAND , 5 ) ;
+    v3b->Add ( new wxStaticText ( this , -1 , "" ) , 0 , wxEXPAND , 5 ) ;
+    v3b->Add ( btOK , 1 , wxEXPAND , 5 ) ;
+    v3b->Add ( btCC , 1 , wxEXPAND , 5 ) ;
+
+    h1f->Add ( v3a , 1 , wxEXPAND , 5 ) ;
+    h1f->Add ( v3b , 1 , wxEXPAND , 5 ) ;
+
+    v2b->Add ( new wxStaticText ( this , -1 , "" ) , 0 , wxEXPAND , 5 ) ;
+    v2b->Add ( h1a , 1 , wxEXPAND , 5 ) ;
+    v2b->Add ( rb , 1 , wxEXPAND , 5 ) ;
+    v2b->Add ( nfst , 1 , wxEXPAND , 5 ) ;
+    v2b->Add ( h1d , 1 , wxEXPAND , 5 ) ;
+    v2b->Add ( h1e , 1 , wxEXPAND , 5 ) ;
+    v2b->Add ( h1f , 1 , wxEXPAND , 5 ) ;
+
+    h1->Add ( v2a , 1 , wxEXPAND , 5 ) ;
+    h1->Add ( v2b , 1 , wxEXPAND , 5 ) ;
+    h1->Add ( v2c , 1 , wxEXPAND , 5 ) ;
+    
     // "This enzyme cuts" list
-    rsl = new wxListCtrl ( this , -1 , wxPoint ( bo , rh*2/3 ) ,
-                 wxSize ( rw/2 , rh/3-bo ) ,
+    rsl = new wxListCtrl ( this , -1 , wxDefaultPosition , wxDefaultSize ,
                  wxLC_REPORT|wxLC_SINGLE_SEL ) ;
     rsl->InsertColumn ( 0 , "#" , wxLIST_FORMAT_LEFT , th*2 ) ;
     rsl->InsertColumn ( 1 , txt("from") ) ;
     rsl->InsertColumn ( 2 , txt("to") ) ;
     rsl->InsertColumn ( 3 , txt("length") ) ;
-
-    // Cocktail
-    new wxStaticText ( this , -1 , txt("Cocktail") , wxPoint ( rw*2/3+bo , bo ) ) ;
-    el2 = new wxListCtrl ( this , RSE_COC_LL , wxPoint ( rw*2/3+bo , th*2 ) ,
-                wxSize ( rw/3-bo*2 , rh*2/3-th*2-bo ) , 
-                wxLC_REPORT|wxLC_SINGLE_SEL ) ;
-    el2->InsertColumn ( 0 , txt("name") ) ;
-    el2->InsertColumn ( 1 , txt("cuts") ) ;
-
+    
     // All fragments list
-    rsl2 = new wxListCtrl ( this , -1 , wxPoint ( rw/2+bo , rh*2/3 ) ,
-                  wxSize ( rw/2-bo*2 , rh/3-bo ) , 
+    rsl2 = new wxListCtrl ( this , -1 , wxDefaultPosition , wxDefaultSize ,
                   wxLC_REPORT|wxLC_SINGLE_SEL ) ;
     rsl2->InsertColumn ( 0 , "#" , wxLIST_FORMAT_LEFT , th*2 ) ;
     rsl2->InsertColumn ( 1 , txt("from") ) ;
     rsl2->InsertColumn ( 2 , txt("to") ) ;
     rsl2->InsertColumn ( 3 , txt("length") ) ;
 
-    // Fragment threshold
-    wxRect r ;
-    r = rb->GetRect() ;
-    nfst = new wxCheckBox ( this , RSE_COC_CB , txt("Do not create fragments below ") , 
-                wxPoint ( bo*2+rw/3 , r.GetBottom() + bo ) ) ;
-    r = nfst->GetRect() ;
-    nfstv = new wxSpinCtrl ( this , -1 , "20" , 
-                    wxPoint ( r.GetLeft() , r.GetBottom()+bo ) ,
-                    wxSize ( 70 , th*2 ) ) ;
-    r = nfstv->GetRect() ;
-    new wxStaticText ( this , -1 , txt("base pairs.") ,
-             wxPoint ( r.GetRight()+bo , r.GetTop()+bo ) ) ;
-    nfst->SetValue ( true ) ;
+    rsl->SetSize ( w/3 , h/3 ) ;
 
-    // Remove enzyme button
-    r = nfstv->GetRect() ;
-    new wxButton ( this , RSE_COC_RM , txt("Remove enzyme") ,
-                   wxPoint ( bo*2+rw/3 + 100 , r.GetBottom() + bo ) ) ;
-                   
-    // Image buttons
-    r = nfstv->GetRect() ;
-    bb = new wxBitmapButton ( this , RSE_RES_AC ,
-             wxBitmap (myapp()->bmpdir+"\\cocktail.bmp", wxBITMAP_TYPE_BMP),
-             wxPoint ( bo*2+rw/3 , r.GetBottom() + bo ) ,
-             wxDefaultSize ,
-             wxBU_AUTODRAW ,
-             wxDefaultValidator ,
-             txt("add2cocktail") ) ;
-    r = bb->GetRect() ;
-    new wxStaticText ( this , -1 , txt("add2cocktail") ,
-             wxPoint ( bo*2+rw/3 , r.GetBottom() + bo ) ) ;
-
-    wxBitmapButton *bib = new wxBitmapButton ( this , RSE_COC_CT ,
-             wxBitmap (myapp()->bmpdir+"\\scissors.bmp", wxBITMAP_TYPE_BMP),
-             wxPoint ( bo*2+rw/3 , r.GetBottom() + th*2 ) ,
-             wxDefaultSize ,
-             wxBU_AUTODRAW ,
-             wxDefaultValidator ,
-             txt("start_res") ) ;
-    r = bib->GetRect() ;
-    new wxStaticText ( this , -1 , txt("start_res") ,
-             wxPoint ( bo*2+rw/3 , r.GetBottom() + bo ) ) ;
-
-    // Done / Cancel buttons
-    btOK = new wxButton ( this , RSE_RES_OK , txt("b_done") , 
-                wxPoint ( bo*2+rw/3 + 100 , rh*2/3 - th*5 - bo ) ) ;
-    btCC = new wxButton ( this , RSE_RES_CC , txt("b_cancel") , 
-                wxPoint ( bo*2+rw/3 + 100 , rh*2/3 - th*2 - bo ) ) ;
+    h2->Add ( rsl , 1 , wxEXPAND , 5 ) ;
+    h2->Add ( rsl2 , 1 , wxEXPAND , 5 ) ;
+    
+    v1->Add ( h1 , 1 , wxEXPAND , 5 ) ;
+    v1->Add ( h2 , 1 , wxEXPAND , 5 ) ;
+    
+    SetSizer ( v1 ) ;
+    v1->Fit ( this ) ;
+    
     btOK->SetDefault() ;
-
     refreshCocktail () ;
 
-    SetClientSize ( w , h ) ;
     Centre() ;
     
     int i ;

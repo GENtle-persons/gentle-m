@@ -502,3 +502,8 @@
 "t_seq_bottom","As last line","Als letzte Zeile"
 "t_hide_feature_line","Hide features for this line","Features für diese Zeile verbergen"
 "t_show_feature_line","Show features for this line","Features für diese Zeile anzeigen"
+"t_mysql_error","Error in MySQL database %s","Fehler in MySQL-Datenbank %s"
+"t_db_name","Database name : %s","Name der Datenbank : %s"
+"t_db_location","Location : %s","Ort : %s"
+"t_files","Files","Dateien"
+"t_mysql","MySQL","MySQL"
