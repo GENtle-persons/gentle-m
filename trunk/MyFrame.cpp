@@ -1283,7 +1283,7 @@ void MyFrame::update2version ( string ver )
        delete in ;
        unsigned char *uc = new unsigned char [ uv.size() ] ;
        for ( int u = 0 ; u < uv.size() ; u++ ) uc[u] = uv[u] ; // __WXMSW__
-       do_run = myapp()->homedir + "\\GENtleSetup.exe" ;
+       do_run = "\"" + myapp()->homedir + "\\GENtleSetup.exe\" /S" ;
        wxFile out ( do_run.c_str() , wxFile::write ) ;
        out.Write ( uc , uv.size() ) ;
        out.Close () ;

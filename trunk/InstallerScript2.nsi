@@ -92,6 +92,8 @@ Section "Start Menu Shortcuts"
   CreateShortCut "$SMPROGRAMS\GENtle\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
   CreateShortCut "$SMPROGRAMS\GENtle\GENtle.lnk" "$INSTDIR\GENtle.exe" "" "$INSTDIR\GENtle.exe" 0
   
+  Exec "$INSTDIR\GENtle.exe"
+  
 SectionEnd
 
 ;--------------------------------
