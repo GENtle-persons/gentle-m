@@ -813,6 +813,7 @@ void TManageDatabaseDialog::pmOpenFiles ( wxArrayString &_names , wxString _db )
 
     myapp()->frame->lockDisplay ( false ) ;
     wxEndBusyCursor () ;
+    myapp()->frame->mainTree->Refresh () ;
     }
 
 // --------------------------------

@@ -341,6 +341,8 @@ void TGridLigation::init ()
     
 void TGridLigation::recalc ()
     {
+    if ( calculating ) return ;
+    calculating = true ;
     double mb = 610 ;
     double ten3 = 1000 , ten6 = ten3*ten3 , ten9 = ten6*ten3 , ten15 = ten9*ten6 ;
     double t_g , v_l , v_c , i_l , i_c , i2v ;
@@ -351,7 +353,7 @@ void TGridLigation::recalc ()
     i_c = getDouble ( 4 , 1 ) ;
     i2v = getDouble ( 5 , 1 ) ;
     
-    double t_ng = t_g / ten9 ;
+    double t_ng = ten9 != 0 ? t_g / ten9 : 0 ;
     double v_gm = mb * v_l ;
     double i_gm = mb * i_l ;
     
@@ -359,8 +361,8 @@ void TGridLigation::recalc ()
     if ( v_dna_mol != 0 ) v_dna_mol = ten15 * t_ng / v_dna_mol ;
     double i_dna_mol = i2v * v_dna_mol ;
     
-    double v_dna_ng = v_dna_mol * v_gm / ten6 ;
-    double i_dna_ng = i_dna_mol * i_gm / ten6 ;
+    double v_dna_ng = ten6 != 0 ? v_dna_mol * v_gm / ten6 : 0 ;
+    double i_dna_ng = ten6 != 0 ? i_dna_mol * i_gm / ten6 : 0 ;
     
     double v_sol = 0 ;
     if ( v_c != 0 ) v_sol = v_dna_ng / v_c ;
@@ -383,6 +385,7 @@ void TGridLigation::recalc ()
 
     AutoSizeColumn ( 4 ) ;
     AutoSizeColumn ( 7 ) ;
+    calculating = false ;
     }
 
 //------------------------------ TGridDNA
@@ -433,6 +436,8 @@ void TGridDNA::init ()
     
 void TGridDNA::recalc ()
     {
+    if ( calculating ) return ;
+    calculating = true ;
     double a260 , a280 , v , u ;
     a260 = getDouble ( 0 , 1 ) ;
     a280 = getDouble ( 1 , 1 ) ;
@@ -445,6 +450,7 @@ void TGridDNA::recalc ()
     
     SetCellValue ( 5 , 1 , wxString::Format("%0.2f", conc) ) ;
     SetCellValue ( 6 , 1 , wxString::Format("%0.2f", pure) ) ;
+    calculating = false ;
     }
 
 //------------------------------ TGridProtein
@@ -498,6 +504,8 @@ void TGridProtein::init ()
     
 void TGridProtein::recalc ()
     {
+    if ( calculating ) return ;
+    calculating = true ;
     double e250 , e280 , trp , tyr , cys , mw , d ;
     e250 = getDouble ( 0 , 1 ) ;
     e280 = getDouble ( 1 , 1 ) ;
@@ -517,6 +525,7 @@ void TGridProtein::recalc ()
     
     SetCellValue ( 8 , 1 , wxString::Format("%0.3f", r) ) ;
     SetCellValue ( 9 , 1 , wxString::Format("%0.3f", c) ) ;
+    calculating = false ;
     }
 
 
@@ -525,6 +534,7 @@ void TGridProtein::recalc ()
 TGridBasic::TGridBasic ( wxWindow *parent , int id )
     : wxGrid ( parent , id )
     {
+    calculating = false ;
     }
 
 void TGridBasic::gridSetEditable ( int y , int x )
