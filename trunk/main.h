@@ -113,6 +113,7 @@ class TUndo ;
 #define IUPAC_G 4
 #define IUPAC_T 8
 
+#include "ureadseq.h"
 
 
 // ---------------------------------------------------------------------------
