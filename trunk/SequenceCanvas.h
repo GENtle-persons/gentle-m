@@ -278,6 +278,9 @@ class SequenceCanvas : public wxScrolledWindow
     void OnCopyResultAA ( wxCommandEvent &ev ) ;
     void OnNewFromResultDNA ( wxCommandEvent &ev ) ;
     void OnNewFromResultAA ( wxCommandEvent &ev ) ;
+
+    virtual void OnFocus(wxFocusEvent& event) ;
+    virtual void OnKillFocus(wxFocusEvent& event) ;
     
     string getSelection () ;
     
@@ -300,7 +303,6 @@ class SequenceCanvas : public wxScrolledWindow
     MyChild *p ;
     TAminoAcids *aa ;
     TPrimerDesign *pd ;
-    MyApp *app ; // Only valid if p == NULL
     bool m_dirty , editMode , doHide ;
     int blankline , charwidth , charheight , lowy , lastpos , vpy ;
     vector <SeqBasic *> seq ;
@@ -316,6 +318,7 @@ class SequenceCanvas : public wxScrolledWindow
     bool printToColor ;
     ChildBase *child ; // Wanna-be universal com port to "parent"
     int maxendnumberlength ;
+    int lastyoffset ;
 
     DECLARE_EVENT_TABLE()
     };

@@ -54,7 +54,7 @@ class TCalculator : public ChildBase
     TCalculator(wxMDIParentFrame *parent, const wxString& title) ;
     ~TCalculator () ;
     
-    void initme ( MyApp *_app ) ;
+    void initme () ;
     virtual string getName () ;
 
     virtual void OnClose(wxCloseEvent& event) ;

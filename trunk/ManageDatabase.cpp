@@ -36,12 +36,11 @@ END_EVENT_TABLE()
 
 
 TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , char *title , 
-                            MyApp *_app , int mode , TVector *_v )
+                            int mode , TVector *_v )
     : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 620 , 500 ) )
     {
     actionMode = mode ;
-    app = _app ;
-    f = app->frame ;
+    f = myapp()->frame ;
     storage = NULL ;
     il = NULL ;
     thetarget = NULL ;
@@ -125,10 +124,10 @@ void TManageDatabaseDialog::initCopynMove ()
 
 
 
-    wxBitmap bmp_helix ( app->bmpdir+app->slash+"Helix.bmp" , wxBITMAP_TYPE_BMP ) ;
-    wxBitmap bmp_project ( app->bmpdir+app->slash+"project.bmp" , wxBITMAP_TYPE_BMP ) ;
-    wxBitmap bmp_protein ( app->bmpdir+app->slash+"protein.bmp" , wxBITMAP_TYPE_BMP ) ;
-    wxBitmap bmp_primer ( app->bmpdir+app->slash+"primer.bmp" , wxBITMAP_TYPE_BMP ) ;
+    wxBitmap bmp_helix ( myapp()->bmpdir+myapp()->slash+"Helix.bmp" , wxBITMAP_TYPE_BMP ) ;
+    wxBitmap bmp_project ( myapp()->bmpdir+myapp()->slash+"project.bmp" , wxBITMAP_TYPE_BMP ) ;
+    wxBitmap bmp_protein ( myapp()->bmpdir+myapp()->slash+"protein.bmp" , wxBITMAP_TYPE_BMP ) ;
+    wxBitmap bmp_primer ( myapp()->bmpdir+myapp()->slash+"primer.bmp" , wxBITMAP_TYPE_BMP ) ;
 
     il = new wxImageList ( 21 , 15 ) ;
     il->Add ( bmp_helix ) ;
@@ -158,7 +157,7 @@ void TManageDatabaseDialog::initCopynMove ()
         }
         
     string name ;
-    if ( isProject ) name = app->frame->project_name ;
+    if ( isProject ) name = myapp()->frame->project_name ;
     else name = v->name ;
     h += th ;
     int w2 = w/5 ;
@@ -197,8 +196,8 @@ void TManageDatabaseDialog::pm_init_lists ()
     if ( doSave )
         {
         string db = defdb ;
-        if ( isProject && app->frame->project_db != "" )
-           db = app->frame->project_db ;
+        if ( isProject && myapp()->frame->project_db != "" )
+           db = myapp()->frame->project_db ;
         pm_dd_save->SetStringSelection ( db.c_str() ) ;
         }
 
@@ -223,7 +222,7 @@ void TManageDatabaseDialog::pm_list_items ( int x )
         l = pm_right ;
         }
     string name = c->GetStringSelection().c_str() ;
-    TStorage st ( TEMP_STORAGE , app , getFileName ( name ) ) ;
+    TStorage st ( TEMP_STORAGE , getFileName ( name ) ) ;
     
     l->DeleteAllItems () ;
     TSQLresult r ;
@@ -368,8 +367,8 @@ void TManageDatabaseDialog::do_del  ( string name , string db )
 bool TManageDatabaseDialog::copyDNA ( string name , string sdb , string tdb )
     {
     if ( sdb == tdb ) return false ;
-    TStorage source ( TEMP_STORAGE , app , getFileName ( sdb ) ) ;
-    TStorage target ( TEMP_STORAGE , app , getFileName ( tdb ) ) ;
+    TStorage source ( TEMP_STORAGE , getFileName ( sdb ) ) ;
+    TStorage target ( TEMP_STORAGE , getFileName ( tdb ) ) ;
     string sql , s , t ;
 
     int a ;
@@ -428,7 +427,7 @@ bool TManageDatabaseDialog::moveDNA ( string name , string sdb , string tdb )
 
 void TManageDatabaseDialog::delDNA ( string name , string db )
     {
-    TStorage source ( TEMP_STORAGE , app , getFileName ( db ) ) ;
+    TStorage source ( TEMP_STORAGE , getFileName ( db ) ) ;
     name = source.fixDNAname ( name ) ;
     source.getObject ( "DELETE FROM dna WHERE dna_name=\"" + name + "\"" ) ;
     source.getObject ( "DELETE FROM dna_item WHERE di_dna=\"" + name + "\"" ) ;
@@ -502,7 +501,7 @@ void TManageDatabaseDialog::accessDB ()
     name = pd_db->GetStringSelection().c_str() ;
     for ( a = 0 ; db_name[a] != name ; a++ ) ;
     file = db_file[a] ;
-    storage = new TStorage ( TEMP_STORAGE , f->app , file ) ;
+    storage = new TStorage ( TEMP_STORAGE , file ) ;
     storage->import() ;
     pd_db_name->SetTitle ( db_name[a].c_str() ) ;
     pd_db_file->SetTitle ( db_file[a].c_str() ) ;
@@ -550,7 +549,7 @@ void TManageDatabaseDialog::pdOnNew ( wxCommandEvent &ev )
     if ( x != wxID_OK ) return ;
 
     string fn = d.GetPath().c_str() ;
-    string blank = app->homedir.c_str() ;
+    string blank = myapp()->homedir.c_str() ;
     blank += "\\blank.db" ;
     
     bool b = wxCopyFile ( blank.c_str() , fn.c_str() , true ) ;
@@ -736,22 +735,22 @@ bool TManageDatabaseDialog::do_load_project ( string name , string db )
     {
     int a ;
     string sql ;
-    TStorage tstorage ( TEMP_STORAGE , app , getFileName ( db ) ) ;
+    TStorage tstorage ( TEMP_STORAGE , getFileName ( db ) ) ;
     TSQLresult sr ;
     
     // Closing current windows
     wxCommandEvent dummy ;
-    app->frame->OnProjectClose ( dummy ) ;
+    myapp()->frame->OnProjectClose ( dummy ) ;
     
     // Setting new project name, loading desc etc.
     name = fixQuotes ( name ) ;
     sql = "SELECT pr_desc FROM project WHERE pr_name=\""+name+"\"" ;
     sr = tstorage.getObject ( sql ) ;
     if ( sr.rows() == 0 ) return false ;
-    app->frame->project_name = name ;
-    app->frame->mainTree->SetItemText ( app->frame->mainTree->treeroot , name.c_str() ) ;
-    app->frame->project_db = db ;
-    app->frame->project_desc = sr[0][0] ;
+    myapp()->frame->project_name = name ;
+    myapp()->frame->mainTree->SetItemText ( myapp()->frame->mainTree->treeroot , name.c_str() ) ;
+    myapp()->frame->project_db = db ;
+    myapp()->frame->project_desc = sr[0][0] ;
     
     
     // Load associated DNA list
@@ -780,7 +779,7 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
     {
     int a ;
     string sql ;
-    TStorage tstorage ( TEMP_STORAGE , app , getFileName ( db ) ) ;
+    TStorage tstorage ( TEMP_STORAGE , getFileName ( db ) ) ;
     TSQLresult sr ;
     v = new TVector () ;
 
@@ -876,7 +875,7 @@ string TManageDatabaseDialog::fixQuotes ( string s )
     
 bool TManageDatabaseDialog::doesNameExist ( string name , string dbname )
     {
-    TStorage storage ( TEMP_STORAGE , app , getFileName ( dbname ) ) ;
+    TStorage storage ( TEMP_STORAGE , getFileName ( dbname ) ) ;
     string sql ;
     TSQLresult sr ;
     string x = fixQuotes ( name ) ;
@@ -925,9 +924,9 @@ void TManageDatabaseDialog::do_save_project ()
     string name , dbname ;
     name = pm_name->GetValue().c_str() ;
     dbname = pm_dd_save->GetStringSelection().c_str() ;
-    if ( app->frame->project_name != name &&
+    if ( myapp()->frame->project_name != name &&
          doesNameExist ( name , dbname ) ) return ;
-    TStorage storage ( TEMP_STORAGE , app , getFileName ( dbname ) ) ;
+    TStorage storage ( TEMP_STORAGE , getFileName ( dbname ) ) ;
 
     // New name, or overwriting old one
     int a ;
@@ -935,7 +934,7 @@ void TManageDatabaseDialog::do_save_project ()
     string x = fixQuotes ( name ) ;
 
     // New default project
-    app->frame->project_db = dbname ;
+    myapp()->frame->project_db = dbname ;
 
     // Deleting old one, if any
     sql = "DELETE FROM project WHERE pr_name=\""+x+"\"" ;
@@ -950,13 +949,13 @@ void TManageDatabaseDialog::do_save_project ()
     sql = "INSERT INTO project ("+s1+") VALUES ("+s2+")" ;
     storage.getObject ( sql ) ;
     
-    for ( a = 0 ; a < app->frame->children.size() ; a++ )
+    for ( a = 0 ; a < myapp()->frame->children.size() ; a++ )
         {
-        if ( app->frame->children[a]->def == "dna" ||
-             app->frame->children[a]->def == "AminoAcids" )
+        if ( myapp()->frame->children[a]->def == "dna" ||
+             myapp()->frame->children[a]->def == "AminoAcids" )
            {
-//           MyChild *c = (MyChild*) app->frame->children[a] ;
-           ChildBase *c = app->frame->children[a] ;
+//           MyChild *c = (MyChild*) myapp()->frame->children[a] ;
+           ChildBase *c = myapp()->frame->children[a] ;
            string dna_name = c->vec->name ;
            string dna_db = c->vec->getDatabase() ;
            if ( dna_db != "" )
@@ -970,15 +969,15 @@ void TManageDatabaseDialog::do_save_project ()
               }
             else
                {
-               wxMessageDialog md ( this , "Not saved" , app->frame->children[a]->def.c_str() ) ;
+               wxMessageDialog md ( this , "Not saved" , myapp()->frame->children[a]->def.c_str() ) ;
                md.ShowModal() ;
                }
            }
         }
-    if ( app->frame->project_name != x )
+    if ( myapp()->frame->project_name != x )
         {
-        app->frame->project_name = x ;
-        app->frame->mainTree->SetItemText ( app->frame->mainTree->treeroot , x.c_str() ) ;
+        myapp()->frame->project_name = x ;
+        myapp()->frame->mainTree->SetItemText ( myapp()->frame->mainTree->treeroot , x.c_str() ) ;
         }
 
     SetReturnCode ( wxID_OK ) ;
@@ -991,7 +990,7 @@ void TManageDatabaseDialog::do_save_DNA ()
     name = pm_name->GetValue().c_str() ;
     dbname = pm_dd_save->GetStringSelection().c_str() ;
     if ( doesNameExist ( name , dbname ) ) return ;
-    TStorage storage ( TEMP_STORAGE , app , getFileName ( dbname ) ) ;
+    TStorage storage ( TEMP_STORAGE , getFileName ( dbname ) ) ;
 
     // New name, or overwriting old one
     int a ;
@@ -1062,7 +1061,7 @@ void TManageDatabaseDialog::do_save_DNA ()
         c->treeBox->SelectItem ( c->treeBox->vroot ) ;
         c->cSequence->arrange() ;
         c->cPlasmid->Refresh() ;
-        c->app->frame->mainTree->SetItemText ( c->inMainTree , c->vec->name.c_str() ) ;
+        myapp()->frame->mainTree->SetItemText ( c->inMainTree , c->vec->name.c_str() ) ;
         }
 
     SetReturnCode ( wxID_OK ) ;
@@ -1126,7 +1125,7 @@ void TManageDatabaseDialog::pmOnRename ( wxCommandEvent &ev )
     if ( isProject )
         {
         // Does the new name exist?
-        TStorage storage ( TEMP_STORAGE , app , getFileName ( context_db ) ) ;
+        TStorage storage ( TEMP_STORAGE , getFileName ( context_db ) ) ;
         TSQLresult sr ;
         string sql ;
         sql = "SELECT pr_name FROM project WHERE pr_name=\"" + newname + "\"" ;
@@ -1150,7 +1149,7 @@ void TManageDatabaseDialog::pmOnRename ( wxCommandEvent &ev )
     else
         {
         // Does the new name exist?
-        TStorage storage ( TEMP_STORAGE , app , getFileName ( context_db ) ) ;
+        TStorage storage ( TEMP_STORAGE , getFileName ( context_db ) ) ;
         TSQLresult sr ;
         string sql ;
         sql = "SELECT dna_sequence FROM dna WHERE dna_name=\"" + newname + "\"" ;
@@ -1179,7 +1178,7 @@ void TManageDatabaseDialog::pmOnRename ( wxCommandEvent &ev )
 void TManageDatabaseDialog::delProject ( string name , string db )
     {
     string sql ;
-    TStorage storage ( TEMP_STORAGE , app , getFileName ( db ) ) ;
+    TStorage storage ( TEMP_STORAGE , getFileName ( db ) ) ;
     sql = "DELETE FROM project WHERE pr_name=\""+name+"\"" ;
     storage.getObject ( sql ) ;
     sql = "DELETE FROM project_dna WHERE pd_project=\""+name+"\"" ;

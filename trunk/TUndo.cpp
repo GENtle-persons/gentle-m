@@ -1,10 +1,10 @@
 #include "TUndo.h"
 #include "TVector.h"
 
-TUndo::TUndo ( TVector *_base )
+TUndo::TUndo ()
     {
     cnt = 0 ;
-    base = _base ;
+    base = NULL ;
     }
     
 // Sets the vector that holds the TUndo item
@@ -41,6 +41,7 @@ void TUndo::abort ()
     {
     cnt-- ;
     if ( cnt > 0 ) return ;
+    delete mem[mem.size()-1] ;
     mem.pop_back () ;
     msg.pop_back () ;
     if ( base ) base->callUpdateUndoMenu() ;
@@ -54,21 +55,32 @@ void TUndo::remember ( wxString _msg )
     
 void TUndo::clear ()
     {
+    for ( int a = 0 ; a < mem.size() ; a++ ) delete mem[a] ;
     msg.clear() ;
     mem.clear() ;
     cnt = 0 ;
-    if ( base ) base->setChanged ( false ) ;
-    if ( base ) base->callUpdateUndoMenu() ;
+    if ( base )
+        {
+        base->setChanged ( false ) ;
+        base->callUpdateUndoMenu() ;
+        }
     }
 
 void TUndo::pop ()
     {
     TVector *v = mem[mem.size()-1] ;
     mem.pop_back () ;
-    *base = *v ;
-    v->undo = NULL ;
-    delete v ;
     msg.pop_back () ;
+
+    vector <TVector*> _mem = mem ;
+    vector <wxString> _msg = msg;
+    
+    *base = *v ;
+    delete v ;
+    
+    base->undo.mem = _mem ;
+    base->undo.msg = _msg ;
+    
     if ( canUndo() ) base->setChanged ( true ) ;
     else base->setChanged ( false ) ;
     }
@@ -83,3 +95,13 @@ wxString TUndo::getLastMessage ()
     if ( !canUndo() ) return "" ;
     return msg[msg.size()-1] ;
     }
+    
+TUndo &TUndo::operator = ( TUndo &u )
+    {
+    TVector *b = base ;
+    base = NULL ;
+    clear () ;
+    base = b ;
+    return *this ;
+    }
+    

@@ -27,17 +27,14 @@ TAminoAcids::TAminoAcids(wxMDIParentFrame *parent, const wxString& title)
     def = "AminoAcids" ;
     vec->name = title.c_str() ;
     from = -1 ;
-    vec->undo.clear() ;
     stat = NULL ;
     
-    app = ((MyFrame*) parent)->app ;
     }
     
 TAminoAcids::~TAminoAcids ()
     {
     if ( vec ) delete vec ;
     if ( stat ) delete stat ;
-//    if ( app ) app->my_children.DeleteObject(this);    
     }
 
 
@@ -50,28 +47,19 @@ void TAminoAcids::OnClose(wxCloseEvent& event)
     p->mainTree->removeChild ( this ) ;
     p->SetTitle ( txt("gentle") ) ;
     SetTitle ( txt("gentle") ) ;
-    
-    // Removing from frame children list
-    int a ;
-    for ( a = 0 ; a < p->children.size() && p->children[a] != this ; a++ ) ;
-    if ( a < p->children.size() )
-        {
-        p->children[a] = p->children[p->children.size()-1] ;
-        p->children.pop_back () ;
-        }
-
+    p->removeChild ( this ) ;
     event.Skip();
 }
     
-void TAminoAcids::initme ( MyApp *_app )
+void TAminoAcids::initme ()
     {
-    app = _app ;
     int bo = 5 ;
+    vec->undo.clear() ;
 
     // Menus
-    wxMenu *file_menu = app->frame->getFileMenu ( true , true ) ;
-    wxMenu *tool_menu = app->frame->getToolMenu ( true ) ;
-    wxMenu *help_menu = app->frame->getHelpMenu () ;
+    wxMenu *file_menu = myapp()->frame->getFileMenu ( true , true ) ;
+    wxMenu *tool_menu = myapp()->frame->getToolMenu ( true ) ;
+    wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
 
 
     wxMenu *edit_menu = new wxMenu;
@@ -113,7 +101,6 @@ void TAminoAcids::initme ( MyApp *_app )
     // Sequence Canvas
     sc = new SequenceCanvas ( hs , wxPoint ( 0 , 0 ) , wxSize ( 100 , 100 ) ) ;
     sc->blankline = 1 ;
-    sc->app = app ;
     sc->aa = this ;
     sc->child = this ;
     sc->edit_id = "AA" ;
@@ -141,30 +128,31 @@ void TAminoAcids::initme ( MyApp *_app )
     
                             
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
-    app->frame->InitToolBar(toolBar);
+    myapp()->frame->InitToolBar(toolBar);
     toolBar->AddTool( MDI_TEXT_IMPORT , 
-                wxBitmap (app->bmpdir+"\\new.bmp", wxBITMAP_TYPE_BMP),
+                wxBitmap (myapp()->bmpdir+"\\new.bmp", wxBITMAP_TYPE_BMP),
                 txt("m_new_sequence") ) ;
     toolBar->AddTool( MDI_FILE_OPEN, 
-            wxBitmap (app->bmpdir+"\\open.bmp", wxBITMAP_TYPE_BMP), 
+            wxBitmap (myapp()->bmpdir+"\\open.bmp", wxBITMAP_TYPE_BMP), 
             txt("m_open") , txt("m_opentxt") );
     toolBar->AddTool( MDI_FILE_SAVE, 
-                wxBitmap (app->bmpdir+"\\save.bmp", wxBITMAP_TYPE_BMP),
+                wxBitmap (myapp()->bmpdir+"\\save.bmp", wxBITMAP_TYPE_BMP),
                 txt("m_store_in_db") , 
                 txt("m_txt_store_in_db"));
     toolBar->AddSeparator() ;
     toolBar->AddTool( MDI_CUT,
-        wxBitmap (app->bmpdir+"\\cut.bmp", wxBITMAP_TYPE_BMP)) ;
+        wxBitmap (myapp()->bmpdir+"\\cut.bmp", wxBITMAP_TYPE_BMP)) ;
     toolBar->AddTool( MDI_COPY,
-        wxBitmap (app->bmpdir+"\\copy.bmp", wxBITMAP_TYPE_BMP)) ;
+        wxBitmap (myapp()->bmpdir+"\\copy.bmp", wxBITMAP_TYPE_BMP)) ;
     toolBar->AddTool( MDI_PASTE,
-        wxBitmap (app->bmpdir+"\\paste.bmp", wxBITMAP_TYPE_BMP)) ;
+        wxBitmap (myapp()->bmpdir+"\\paste.bmp", wxBITMAP_TYPE_BMP)) ;
     toolBar->Realize() ;
 
     showSequence () ;
     showStat () ;
     updateUndoMenu () ;
     sc->SetFocus() ;
+    myapp()->frame->setChild ( this ) ;
     }
     
 string TAminoAcids::getName ()
@@ -264,7 +252,7 @@ void TAminoAcids::OnEditMode(wxCommandEvent& event)
 void TAminoAcids::invokeVectorEditor ( string what , int num , bool forceUpdate )
     {
     vec->undo.start ( txt("u_vec_edit") ) ;
-    TVectorEditor ve ( this , txt("t_vector_editor") , vec , app ) ;
+    TVectorEditor ve ( this , txt("t_vector_editor") , vec ) ;
     bool changed = vec->isChanged() ;
     string on = vec->name ;
     vec->setChanged ( false ) ;
@@ -279,7 +267,7 @@ void TAminoAcids::invokeVectorEditor ( string what , int num , bool forceUpdate 
     ve.cleanup () ;
     if ( forceUpdate || vec->isChanged() )
         {
-        app->frame->mainTree->SetItemText ( inMainTree , getName().c_str() ) ;
+        myapp()->frame->mainTree->SetItemText ( inMainTree , getName().c_str() ) ;
         showName() ;
         showSequence () ;
         vec->undo.stop() ;
@@ -305,7 +293,7 @@ void TAminoAcids::OnPrint(wxCommandEvent& event)
     
 void TAminoAcids::OnFileSave(wxCommandEvent& event)
     {
-    TManageDatabaseDialog dbd ( this , txt("t_store") , app , ACTION_MODE_SAVE , vec ) ;
+    TManageDatabaseDialog dbd ( this , txt("t_store") , ACTION_MODE_SAVE , vec ) ;
     dbd.ShowModal () ;
     }
     
@@ -365,7 +353,7 @@ void TAminoAcids::OnBlastAA(wxCommandEvent& event)
         {
         for ( a = sc->_from-1 ; a < sc->_to ; a++ ) seq += vec->sequence[a] ;
         }
-    app->frame->blast ( seq , "blastp" ) ;
+    myapp()->frame->blast ( seq , "blastp" ) ;
     }
 
 void TAminoAcids::Undo(wxCommandEvent& event)

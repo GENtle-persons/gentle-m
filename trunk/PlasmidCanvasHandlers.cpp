@@ -213,7 +213,7 @@ void PlasmidCanvas::rsInfo ( wxCommandEvent &ev )
     string command = "http://rebase.neb.com/rebase/enz/" ;
     command += p->vec->rc[context_last_rs].e->name ;
     command += ".html" ;
-    command = p->app->getHTMLCommand ( command ) ;
+    command = myapp()->getHTMLCommand ( command ) ;
     wxExecute ( command.c_str() ) ;
     }
     
@@ -325,7 +325,7 @@ void PlasmidCanvas::blastDNA ( wxCommandEvent &ev )
         seq += p->vec->getNucleotide ( a-1 ) ;
         }
     if ( seq == "" ) return ;
-    p->app->frame->blast ( seq , "blastn" ) ;
+    myapp()->frame->blast ( seq , "blastn" ) ;
     }
         
 void PlasmidCanvas::blastAA ( wxCommandEvent &ev )
@@ -340,16 +340,16 @@ void PlasmidCanvas::blastAA ( wxCommandEvent &ev )
                       wxOK | wxICON_ERROR  ) ;
        return ;
        }
-    p->app->frame->blast ( seq , "blastp" ) ;
+    myapp()->frame->blast ( seq , "blastp" ) ;
     }
 
 void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl )
     {
-    TPrimerDesign *subframe = new TPrimerDesign ( p->app->frame , 
+    TPrimerDesign *subframe = new TPrimerDesign ( myapp()->frame , 
             txt("t_pcr") ,
             p->vec ,
             pl ) ;
-//    p->app->my_children.Append(subframe);
+//    myapp()->my_children.Append(subframe);
     
     // Give it an icon
 #ifdef __WXMSW__
@@ -358,13 +358,13 @@ void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl )
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
 
-    subframe->initme ( p->app ) ;
+    subframe->initme () ;
 
     subframe->Show() ;
     subframe->Maximize() ;
     
-    p->app->frame->mainTree->addChild ( subframe , TYPE_PRIMER ) ;
-    p->app->frame->children.push_back ( subframe ) ;
+    myapp()->frame->mainTree->addChild ( subframe , TYPE_PRIMER ) ;
+    myapp()->frame->children.push_back ( subframe ) ;
     }
 
 // Primer handler
@@ -500,7 +500,7 @@ void PlasmidCanvas::orfAsNewDNA ( wxCommandEvent &ev )
     nv->setCircular ( false ) ;
     nv->recalculateCuts() ;
     nv->recalcvisual = true ;
-    p->app->frame->newFromVector ( nv ) ;
+    myapp()->frame->newFromVector ( nv ) ;
     }
 
 void PlasmidCanvas::orfAsNewAA ( wxCommandEvent &ev )
@@ -511,12 +511,12 @@ void PlasmidCanvas::orfAsNewAA ( wxCommandEvent &ev )
     string n = p->vec->name + " (" ;
     n += txt ( "t_orf_extracted" ) ;
     n += ")" ;
-//    p->app->frame->newAminoAcids ( seq , n ) ;
+//    myapp()->frame->newAminoAcids ( seq , n ) ;
 //    string s = getDNAorAA ( from , to , dir , false ) ;
 //    string n = p->vec->items[context_last_item].name.c_str() ;
 //    n += " (" + p->vec->name + ")" ;
     TVector *vvv = p->vec->getAAvector ( from+1 , to+1 , p->vec->worf[context_last_orf].rf ) ;
-    TAminoAcids *aaa = p->app->frame->newAminoAcids ( vvv , n ) ;
+    TAminoAcids *aaa = myapp()->frame->newAminoAcids ( vvv , n ) ;
     aaa->vec->setChanged() ;
     }
 
@@ -526,7 +526,7 @@ void PlasmidCanvas::orfBlastDNA ( wxCommandEvent &ev )
     int to = p->vec->worf[context_last_orf].to ;
     string s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf ) ;
     if ( s == "" ) return ;
-    p->app->frame->blast ( s , "blastn" ) ;
+    myapp()->frame->blast ( s , "blastn" ) ;
     }
         
 void PlasmidCanvas::orfBlastAA ( wxCommandEvent &ev )
@@ -535,7 +535,7 @@ void PlasmidCanvas::orfBlastAA ( wxCommandEvent &ev )
     int to = p->vec->worf[context_last_orf].to ;
     string s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf , false ) ;
     if ( s == "" ) return ;
-    p->app->frame->blast ( s , "blastp" ) ;
+    myapp()->frame->blast ( s , "blastp" ) ;
     }
 
 // *** More item handlers
@@ -547,7 +547,7 @@ void PlasmidCanvas::itemBlastDNA ( wxCommandEvent &ev )
     int dir = p->vec->items[context_last_item].direction ;
     string s = getDNAorAA ( from , to , dir ) ;
     if ( s == "" ) return ;
-    p->app->frame->blast ( s , "blastn" ) ;
+    myapp()->frame->blast ( s , "blastn" ) ;
     }
         
 void PlasmidCanvas::itemBlastAA ( wxCommandEvent &ev )
@@ -561,7 +561,7 @@ void PlasmidCanvas::itemBlastAA ( wxCommandEvent &ev )
     to += dir * ( rf - 1 ) ;
     string s = getDNAorAA ( from , to , dir , false ) ;
     if ( s == "" ) return ;
-    p->app->frame->blast ( s , "blastp" ) ;
+    myapp()->frame->blast ( s , "blastp" ) ;
     }
 
 void PlasmidCanvas::itemCopyAA ( wxCommandEvent &ev )
@@ -593,7 +593,7 @@ void PlasmidCanvas::itemAsNewAA ( wxCommandEvent &ev )
 //    string s = getDNAorAA ( from , to , dir , false ) ;
     string n = p->vec->items[context_last_item].name.c_str() ;
     n += " (" + p->vec->name + ")" ;
-    TAminoAcids *aaa = p->app->frame->newAminoAcids ( p->vec->getAAvector ( from+1 , to+1 , dir ) , n ) ;
+    TAminoAcids *aaa = myapp()->frame->newAminoAcids ( p->vec->getAAvector ( from+1 , to+1 , dir ) , n ) ;
     aaa->vec->setChanged() ;
     }
     
@@ -625,7 +625,7 @@ void PlasmidCanvas::itemAsNewSequence ( wxCommandEvent &ev )
         nv->setCircular ( false ) ;
         nv->recalculateCuts() ;
         nv->recalcvisual = true ;
-        p->app->frame->newFromVector ( nv ) ;
+        myapp()->frame->newFromVector ( nv ) ;
         }
     }    
 

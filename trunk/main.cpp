@@ -109,7 +109,6 @@ bool MyApp::OnInit()
                         wxPoint(-1, -1), wxSize(500, 400),
                         wxDEFAULT_FRAME_STYLE | wxHSCROLL | wxVSCROLL);
     
-    frame->app = this ;
     frame->initme () ;
     SetTopWindow(frame);
 
@@ -184,10 +183,10 @@ wxToolBar *ChildBase::CreateToolBar ( int i )
 #ifdef __WXMSW__
   return wxMDIChildFrame::CreateToolBar ( i , -1 , "" ) ;
 #else
-  wxToolBar *bar = new wxToolBar ( app->frame , -1 ) ;
+  wxToolBar *bar = new wxToolBar ( myapp()->frame , -1 ) ;
   //  SetToolBar ( bar ) ;
   return bar ;
-  //  return app->frame->GetToolBar () ;
+  //  return myapp()->frame->GetToolBar () ;
 #endif
 }
 
@@ -204,15 +203,16 @@ void ChildBase::showName ( string x )
        x = getName() ;
        if ( vec && vec->isChanged() ) x += "*" ;
        }
-    if ( GetTitle().c_str() != x ) SetTitle ( x.c_str() ) ; 
+    if ( GetTitle().c_str() != x ) SetTitle ( x.c_str() ) ;
     }
     
 void ChildBase::OnFocus(wxFocusEvent& event)
     {
-    MyFrame *f = (MyFrame*) GetParent() ;
-    if ( f->dying ) return ;
-    showName () ;
-    f->mainTree->SelectItem ( inMainTree ) ;
+    wxASSERT_MSG ( myapp() , "Oh no! No application defined!" ) ;
+    wxASSERT_MSG ( myapp()->frame , "Oh no! No frame defined!" ) ;
+    if ( myapp()->frame->dying ) return ;
+    showName ( ) ;
+    myapp()->frame->mainTree->SelectItem ( inMainTree ) ;
     }
 
 bool ChildBase::caniclose(wxCloseEvent& event)

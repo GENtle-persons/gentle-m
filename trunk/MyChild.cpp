@@ -64,7 +64,7 @@ END_EVENT_TABLE()
 
 void MyChild::OnFileSave(wxCommandEvent& WXUNUSED(event) )
     {
-    TManageDatabaseDialog dbd ( this , txt("t_store") , app , ACTION_MODE_SAVE , vec ) ;
+    TManageDatabaseDialog dbd ( this , txt("t_store") , ACTION_MODE_SAVE , vec ) ;
     dbd.ShowModal () ;
     }
 
@@ -91,7 +91,7 @@ MyChild::~MyChild()
     delete swl ;
     delete swu ;
     delete sw ;
-//    app->my_children.DeleteObject(this);
+//    myapp()->my_children.DeleteObject(this);
 }
 
 void MyChild::OnRunPCR(wxCommandEvent& event)
@@ -172,16 +172,7 @@ void MyChild::OnClose(wxCloseEvent& event)
     p->mainTree->removeChild ( this ) ;
     p->SetTitle ( txt("gentle") ) ;
     SetTitle ( txt("gentle") ) ;
-    
-    // Removing from frame children list
-    int a ;
-    for ( a = 0 ; a < p->children.size() && p->children[a] != this ; a++ ) ;
-    if ( a < p->children.size() )
-        {
-        p->children[a] = p->children[p->children.size()-1] ;
-        p->children.pop_back () ;
-        }
-
+    p->removeChild ( this ) ;
     event.Skip();
 }
 
@@ -210,9 +201,9 @@ void MyChild::initme ()
     {
 
     // Make a menubar
-    wxMenu *file_menu = app->frame->getFileMenu ( true , true , true ) ;
-    wxMenu *tool_menu = app->frame->getToolMenu ( true ) ;
-    wxMenu *help_menu = app->frame->getHelpMenu () ;
+    wxMenu *file_menu = myapp()->frame->getFileMenu ( true , true , true ) ;
+    wxMenu *tool_menu = myapp()->frame->getToolMenu ( true ) ;
+    wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
 
     wxMenu *edit_menu = new wxMenu;
     edit_menu->Append(MDI_UNDO, txt("m_undo") );
@@ -283,7 +274,7 @@ void MyChild::initme ()
     swu = new MySplitter ( sw , SPLIT_2 , this ) ;
     swl = new MySplitter ( swu , SPLIT_3 , this ) ;
 /*
-    if ( app->frame->useCoolCanvas )
+    if ( myapp()->frame->useCoolCanvas )
        cPlasmid = (PlasmidCanvas*) new CoolCanvas(swu, wxPoint(0, 0), wxSize(width*2/3, height/2));
     else*/
        cPlasmid = new PlasmidCanvas(swu, wxPoint(0, 0), wxSize(width*2/3, height/2));
@@ -309,57 +300,60 @@ void MyChild::initme ()
     // Give it scrollbars
     cSequence->SetScrollbars(0, 20, 0, 50);
 
-//    app->frame->SetTitle ( GetTitle() ) ;
+//    myapp()->frame->SetTitle ( GetTitle() ) ;
 
 
 #ifdef __WXMSW__  // LINUX
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
-    app->frame->InitToolBar(toolBar);
+    myapp()->frame->InitToolBar(toolBar);
 
     //    if ( !toolBar ) wxMessageBox ( "No toolbar!" ) ;
 
     toolBar->AddTool( MDI_TEXT_IMPORT , 
-                wxBitmap (app->bmpdir+app->slash+"new.bmp", wxBITMAP_TYPE_BMP),
+                wxBitmap (myapp()->bmpdir+myapp()->slash+"new.bmp", wxBITMAP_TYPE_BMP),
                 txt("m_new_sequence") ) ;  
     toolBar->AddTool( MDI_FILE_OPEN, 
-            wxBitmap (app->bmpdir+app->slash+"open.bmp", wxBITMAP_TYPE_BMP), 
+            wxBitmap (myapp()->bmpdir+myapp()->slash+"open.bmp", wxBITMAP_TYPE_BMP), 
             txt("m_open") , txt("m_opentxt") );
     toolBar->AddTool( MDI_FILE_SAVE, 
-                wxBitmap (app->bmpdir+app->slash+"save.bmp", wxBITMAP_TYPE_BMP),
+                wxBitmap (myapp()->bmpdir+myapp()->slash+"save.bmp", wxBITMAP_TYPE_BMP),
                 txt("m_store_in_db") , 
                 txt("m_txt_store_in_db"));
     toolBar->AddSeparator() ;
+    toolBar->AddTool( MDI_UNDO,
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"undo.bmp", wxBITMAP_TYPE_BMP)) ;
+    toolBar->AddSeparator() ;
     toolBar->AddTool( MDI_CUT,
-        wxBitmap (app->bmpdir+app->slash+"cut.bmp", wxBITMAP_TYPE_BMP)) ;
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"cut.bmp", wxBITMAP_TYPE_BMP)) ;
     toolBar->AddTool( MDI_COPY,
-        wxBitmap (app->bmpdir+app->slash+"copy.bmp", wxBITMAP_TYPE_BMP)) ;
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"copy.bmp", wxBITMAP_TYPE_BMP)) ;
     toolBar->AddTool( MDI_PASTE,
-        wxBitmap (app->bmpdir+app->slash+"paste.bmp", wxBITMAP_TYPE_BMP)) ;
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"paste.bmp", wxBITMAP_TYPE_BMP)) ;
     toolBar->AddSeparator() ;
     toolBar->AddTool( MDI_CIRCULAR_LINEAR,
-        wxBitmap (app->bmpdir+app->slash+"plasmid_circular.bmp", wxBITMAP_TYPE_BMP),
-        wxBitmap (app->bmpdir+app->slash+"plasmid_linear.bmp", wxBITMAP_TYPE_BMP),
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"plasmid_circular.bmp", wxBITMAP_TYPE_BMP),
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"plasmid_linear.bmp", wxBITMAP_TYPE_BMP),
         TRUE, -1, -1, (wxObject *) NULL, txt("m_toggle_rc") ) ;
     toolBar->AddTool( MDI_ORFS,
-        wxBitmap (app->bmpdir+app->slash+"orfs.bmp", wxBITMAP_TYPE_BMP),
-        wxBitmap (app->bmpdir+app->slash+"orfs.bmp", wxBITMAP_TYPE_BMP),
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"orfs.bmp", wxBITMAP_TYPE_BMP),
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"orfs.bmp", wxBITMAP_TYPE_BMP),
         TRUE, -1, -1, (wxObject *) NULL, txt("m_orfs") ) ;
     toolBar->AddTool( MDI_TOGGLE_FEATURES,
-        wxBitmap (app->bmpdir+app->slash+"display_features.bmp", wxBITMAP_TYPE_BMP),
-        wxBitmap (app->bmpdir+app->slash+"display_features.bmp", wxBITMAP_TYPE_BMP),
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"display_features.bmp", wxBITMAP_TYPE_BMP),
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"display_features.bmp", wxBITMAP_TYPE_BMP),
         TRUE, -1, -1, (wxObject *) NULL, txt("m_display_features") ) ;
     toolBar->AddTool( MDI_TOGGLE_RESTRICTION,
-        wxBitmap (app->bmpdir+app->slash+"display_restriction.bmp", wxBITMAP_TYPE_BMP),
-        wxBitmap (app->bmpdir+app->slash+"display_restriction.bmp", wxBITMAP_TYPE_BMP),
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"display_restriction.bmp", wxBITMAP_TYPE_BMP),
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"display_restriction.bmp", wxBITMAP_TYPE_BMP),
         TRUE, -1, -1, (wxObject *) NULL, txt("m_display_restriction") ) ;        
     toolBar->AddSeparator() ;
     toolBar->AddTool( MDI_VIEW_MODE,
-        wxBitmap (app->bmpdir+app->slash+"mode_view.bmp", wxBITMAP_TYPE_BMP),
-        wxBitmap (app->bmpdir+app->slash+"mode_view.bmp", wxBITMAP_TYPE_BMP),
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"mode_view.bmp", wxBITMAP_TYPE_BMP),
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"mode_view.bmp", wxBITMAP_TYPE_BMP),
         TRUE, -1, -1, (wxObject *) NULL, txt("m_view_mode") ) ;
     toolBar->AddTool( MDI_EDIT_MODE,
-        wxBitmap (app->bmpdir+app->slash+"mode_edit.bmp", wxBITMAP_TYPE_BMP),
-        wxBitmap (app->bmpdir+app->slash+"mode_edit.bmp", wxBITMAP_TYPE_BMP),
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"mode_edit.bmp", wxBITMAP_TYPE_BMP),
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"mode_edit.bmp", wxBITMAP_TYPE_BMP),
         TRUE, -1, -1, (wxObject *) NULL, txt("m_edit_mode") ) ;
     toolBar->AddSeparator() ;
         
@@ -384,9 +378,9 @@ void MyChild::OnLigation(wxCommandEvent& event)
     {
     TLigationDialog ld ( this , txt("t_ligation") ) ;
     long l ;
-    for ( l = 0 ; l < app->frame->children.size() ; l++ )
+    for ( l = 0 ; l < myapp()->frame->children.size() ; l++ )
         {
-        MyChild *p = (MyChild*) app->frame->children[l] ;
+        MyChild *p = (MyChild*) myapp()->frame->children[l] ;
         if ( p->def == "dna" && !p->vec->isCircular() )
            {
            ld.vv.push_back ( p->vec ) ;
@@ -406,7 +400,7 @@ void MyChild::OnLigation(wxCommandEvent& event)
            v->setFromVector ( ld.ligates[l] ) ;
            for ( int a = 0 ; a < v->items.size() ; a++ )
               v->items[a].r1 = -1 ; // Resetting item radius to "recalc"
-           app->frame->newFromVector ( v ) ;
+           myapp()->frame->newFromVector ( v ) ;
            }
         }
     }
@@ -485,12 +479,12 @@ void MyChild::OnExport(wxCommandEvent& event)
     wxString wcGenBank = "GenBank (*.gb)|*.gb" ;
     wxString wcClone = "CLONE (*.*)|*.*" ;
     wxString wildcard = wcGenBank + "|" + wcClone ; 
-    string lastdir = app->frame->LS->getOption ( "LAST_IMPORT_DIR" , "C:" ) ;
+    string lastdir = myapp()->frame->LS->getOption ( "LAST_IMPORT_DIR" , "C:" ) ;
     wxFileDialog d ( this , txt("export_file") , lastdir.c_str() , "" , wildcard , wxSAVE ) ;
     int x = d.ShowModal() ;
     if ( x != wxID_OK ) return ;
 
-    app->frame->LS->setOption ( "LAST_IMPORT_DIR" , d.GetDirectory().c_str() ) ;
+    myapp()->frame->LS->setOption ( "LAST_IMPORT_DIR" , d.GetDirectory().c_str() ) ;
     
     int filter = d.GetFilterIndex () ;
     if ( filter == 0 ) // GeneBank
@@ -538,7 +532,7 @@ void MyChild::OnCopyToNew(wxCommandEvent& event)
     nv->setCircular ( false ) ;
     nv->recalculateCuts() ;
     nv->recalcvisual = true ;
-    app->frame->newFromVector ( nv ) ;
+    myapp()->frame->newFromVector ( nv ) ;
     }
     
 void MyChild::OnAsNewFeature(wxCommandEvent& event)
@@ -653,7 +647,7 @@ void MyChild::OnEditMode(wxCommandEvent& event)
 
 void MyChild::initPanels ()
     {
-    MyFrame *f = (MyFrame*) app->frame ;
+    MyFrame *f = (MyFrame*) myapp()->frame ;
     SeqFeature *seqF = new SeqFeature ( cSequence ) ;
     SeqDNA *seq = new SeqDNA ( cSequence ) ;
     SeqRestriction *seqR = new SeqRestriction ( cSequence ) ;
@@ -691,12 +685,12 @@ void MyChild::initPanels ()
     wxFocusEvent fev ;
     OnFocus(fev) ;
 
-    f->children.push_back ( this ) ;
+    f->setChild ( this ) ;
     }
 
 void MyChild::OnHelp(wxCommandEvent& event)
     {
-    app->frame->OnHelp ( event ) ;
+    myapp()->frame->OnHelp ( event ) ;
     }
 
 void MyChild::updateSequenceCanvas ( bool remember )
@@ -705,7 +699,7 @@ void MyChild::updateSequenceCanvas ( bool remember )
     int dummy , oldscrollpos ;
     cSequence->GetViewStart ( &dummy , &oldscrollpos ) ;
     int old_mode = aa_state ;
-
+    
     if ( cSequence->findID ( "FEATURE" ) )
        cSequence->findID("FEATURE")->initFromTVector ( vec ) ;
     if ( old_mode != AA_NONE )
@@ -911,7 +905,7 @@ void MyChild::OnExtractAA(wxCommandEvent& event)
     if ( seq == "" ) return ;
     char tt[1000] ;
     sprintf ( tt , txt("t_aa_from_vec") , vec->name.c_str() ) ;
-    app->frame->newAminoAcids ( seq , tt ) ;
+    myapp()->frame->newAminoAcids ( seq , tt ) ;
     }
         
 void MyChild::OnRestriction(wxCommandEvent& event)
@@ -919,7 +913,6 @@ void MyChild::OnRestriction(wxCommandEvent& event)
     MyFrame *f = (MyFrame*) GetParent() ;
     TRestrictionEditor ed ( f , "" , wxPoint(-1,-1) , wxSize(600,400) , 
                wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL);
-    ed.app = app ;
 //    ed.pre = s ;
     ed.cocktail = vec->cocktail ;
     ed.remoteCocktail = &vec->cocktail ;
@@ -984,7 +977,7 @@ void MyChild::OnTransformSequence(wxCommandEvent& event)
         v->name += "*" ;
         v->recalcvisual = true ;
         v->recalculateCuts() ;
-        MyChild *c = app->frame->newFromVector(v) ;
+        MyChild *c = myapp()->frame->newFromVector(v) ;
         }
     else
         {
@@ -1068,10 +1061,10 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
     int r = pd.ShowModal () ;
     if ( r != wxID_OK ) return ;
 
-    bool svt = app->frame->showVectorTitle ;
-    bool svl = app->frame->showVectorLength ;
-    app->frame->showVectorTitle = true ;
-    app->frame->showVectorLength = true ;
+    bool svt = myapp()->frame->showVectorTitle ;
+    bool svl = myapp()->frame->showVectorLength ;
+    myapp()->frame->showVectorTitle = true ;
+    myapp()->frame->showVectorLength = true ;
 
     int w , h ;
     wxDC *pdc = pd.GetPrintDC () ;
@@ -1194,8 +1187,8 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
    
     pdc->EndDoc () ;
     
-    app->frame->showVectorTitle = svt ;
-    app->frame->showVectorLength = svl ;
+    myapp()->frame->showVectorTitle = svt ;
+    myapp()->frame->showVectorLength = svl ;
     }
     
 
@@ -1220,8 +1213,10 @@ void MyChild::Undo(wxCommandEvent& event)
     
 void MyChild::updateUndoMenu ()
     {
+    if ( !vec ) return ;
     wxString lm = vec->undo.getLastMessage() ;
     wxMenuBar *mb = GetMenuBar () ;
+    if ( !mb ) return ;
     wxMenuItem *mi = mb->FindItem ( MDI_UNDO ) ;
     if ( !mi ) return ;
     if ( lm == "" )
@@ -1270,7 +1265,7 @@ void MySplitter::OnChanged ( wxSplitterEvent &ev )
     c->cPlasmid->Refresh();
     
     if ( this == c->swu ) return ;
-    
+
     c->cSequence->Refresh() ;
     }
 

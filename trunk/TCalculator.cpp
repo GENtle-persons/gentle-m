@@ -35,27 +35,16 @@ void TCalculator::OnClose(wxCloseEvent& event)
     p->mainTree->removeChild ( this ) ;
     p->SetTitle ( txt("gentle") ) ;
     SetTitle ( txt("gentle") ) ;
-    
-    // Removing from frame children list
-    int a ;
-    for ( a = 0 ; a < p->children.size() && p->children[a] != this ; a++ ) ;
-    if ( a < p->children.size() )
-        {
-        p->children[a] = p->children[p->children.size()-1] ;
-        p->children.pop_back () ;
-        }
-
+    p->removeChild ( this ) ;
     event.Skip();
 }
 
-void TCalculator::initme ( MyApp *_app )
+void TCalculator::initme ()
     {
-    app = _app ;
-
     // Menus
-    wxMenu *file_menu = app->frame->getFileMenu () ;
-    wxMenu *tool_menu = app->frame->getToolMenu () ;
-    wxMenu *help_menu = app->frame->getHelpMenu () ;
+    wxMenu *file_menu = myapp()->frame->getFileMenu () ;
+    wxMenu *tool_menu = myapp()->frame->getToolMenu () ;
+    wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
 
     wxMenuBar *menu_bar = new wxMenuBar;
 
@@ -74,6 +63,7 @@ void TCalculator::initme ( MyApp *_app )
     ligDNA = new TGridDNA ( nb , -1 ) ;
     nb->AddPage ( ligDNA , txt("t_lig_dna") ) ;
     ligDNA->init () ;
+    myapp()->frame->setChild ( this ) ;
     }
 
 string TCalculator::getName ()

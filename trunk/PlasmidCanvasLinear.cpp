@@ -433,9 +433,8 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
            p->treeBox->SelectItem ( p->treeBox->GetParent ( p->vec->rc[rs].treeid ) ) ;
         else if ( event.MiddleDown() )
            {
-           TRestrictionEditor ed ( p->app->frame , "" , wxPoint(-1,-1) , wxSize(600,400) , 
+           TRestrictionEditor ed ( myapp()->frame , "" , wxPoint(-1,-1) , wxSize(600,400) , 
                       wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL);
-           ed.app = p->app ;
            ed.pre = s ;
            ed.cocktail = p->vec->cocktail ;
            ed.remoteCocktail = &p->vec->cocktail ;

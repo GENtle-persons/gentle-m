@@ -18,7 +18,7 @@ class TImageDisplay : public ChildBase
     TImageDisplay(wxMDIParentFrame *parent, const wxString& title) ;
     ~TImageDisplay () ;
     
-    void initme ( MyApp *_app ) ;
+    void initme () ;
     virtual string getName () ;
 
     virtual void OnClose(wxCloseEvent& event) ;

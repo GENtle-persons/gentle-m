@@ -41,11 +41,10 @@ void TVectorEditor::OnCharHook(wxKeyEvent& event)
     else event.Skip() ;
     }
 
-TVectorEditor::TVectorEditor(wxWindow *parent, const wxString& title , TVector *_v , MyApp *_app )
+TVectorEditor::TVectorEditor(wxWindow *parent, const wxString& title , TVector *_v )
          : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 600 , 550 ) )
     {
     v = _v ;
-    app = _app ;
     panProp = panItem = panEnzym = NULL ;
 
     int w , h ;
@@ -117,8 +116,8 @@ void TVectorEditor::showProteases ()
     {
     int a , b ;
     vector <string> vs ;
-    for ( a = 0 ; a < app->frame->LS->pr.size() ; a++ )
-        vs.push_back ( app->frame->LS->pr[a]->name ) ;
+    for ( a = 0 ; a < myapp()->frame->LS->pr.size() ; a++ )
+        vs.push_back ( myapp()->frame->LS->pr[a]->name ) ;
     sort ( vs.begin() , vs.end() ) ;
         
     prots->Clear () ;
@@ -493,7 +492,7 @@ void TVectorEditor::commitEnzymes ()
         if ( a == v->re.size() )
            {
            changed = true ;
-           v->re.push_back ( app->frame->LS->getRestrictionEnzyme ( ce[b] ) ) ;
+           v->re.push_back ( myapp()->frame->LS->getRestrictionEnzyme ( ce[b] ) ) ;
            }
         }
         
@@ -577,7 +576,7 @@ void TVectorEditor::enzymeListDlbClick ( wxEvent &ev )
         for ( k = 0 ; k < n ; k++ )
             {
             string s = lb->GetString ( vi[k] ).c_str() ;
-            TRestrictionEnzyme *e = app->frame->LS->getRestrictionEnzyme ( s ) ;
+            TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( s ) ;
             TEnzymeDialog ed ( this , s.c_str() , wxPoint(-1,-1) , wxSize(600,400) , 
                             wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL ) ;
             ed.initme ( e ) ;
@@ -587,7 +586,7 @@ void TVectorEditor::enzymeListDlbClick ( wxEvent &ev )
                if ( e->differ ( *ed.e ) )
                   {
                   *e = *ed.e ;
-                  app->frame->LS->updateRestrictionEnzyme ( e ) ;
+                  myapp()->frame->LS->updateRestrictionEnzyme ( e ) ;
                   }*/
                wxCommandEvent ev ;
                enzymeAddEn ( ev ) ;
@@ -600,7 +599,7 @@ void TVectorEditor::enzymeListDlbClick ( wxEvent &ev )
         int n = lb->GetSelections ( vi ) ;
         if ( n != 1 ) return ;
         string s = lb->GetString ( vi[0] ).c_str() ;
-        TRestrictionEnzyme *e = app->frame->LS->getRestrictionEnzyme ( s ) ;
+        TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( s ) ;
         TEnzymeDialog ed ( this , s.c_str() , wxPoint(-1,-1) , wxSize(600,400) , 
                         wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL ) ;
         ed.initme ( e ) ;
@@ -614,7 +613,7 @@ void TVectorEditor::showEnzymeGroups ()
     listGroups->Clear() ;
     listGroups->Append ( all ) ;
     vector <string> vs ;
-    app->frame->LS->getEnzymeGroups ( vs ) ;
+    myapp()->frame->LS->getEnzymeGroups ( vs ) ;
     for ( int i = 0 ; i < vs.size() ; i++ )
         listGroups->Append ( vs[i].c_str() ) ;
     showGroupEnzymes ( all.c_str() ) ;
@@ -625,7 +624,7 @@ void TVectorEditor::showGroupEnzymes ( string gr )
     {
     vector <string> vs ;
     listGE->Clear() ;
-    app->frame->LS->getEnzymesInGroup ( gr , vs ) ;
+    myapp()->frame->LS->getEnzymesInGroup ( gr , vs ) ;
     while ( eig.size() ) eig.pop_back () ;
     for ( int i = 0 ; i < vs.size() ; i++ )
         {
@@ -685,14 +684,14 @@ void TVectorEditor::enzymeAddToGr ( wxEvent &ev )
               "\" AND leg_group=\"" +
               group +
               "\"" ;
-        app->frame->LS->getObject ( sql ) ;
+        myapp()->frame->LS->getObject ( sql ) ;
         sql = "INSERT INTO link_enzyme_group (leg_enzyme,leg_group) "
               "VALUES (\"" +
               s + 
               "\",\"" +
               group + 
               "\")" ;
-        app->frame->LS->getObject ( sql ) ;              
+        myapp()->frame->LS->getObject ( sql ) ;              
         }
     showGroupEnzymes ( group ) ;
     }
@@ -703,7 +702,7 @@ void TVectorEditor::enzymeAddToNewGr ( wxEvent &ev )
                                 txt("t_new_enzyme_group_name") ) ;
     if ( wxID_OK != ted.ShowModal () ) return ;
     string ng = ted.GetValue().c_str() ;
-    if ( !app->frame->LS->addEnzymeGroup ( ng ) ) return ;
+    if ( !myapp()->frame->LS->addEnzymeGroup ( ng ) ) return ;
     listGroups->Append ( ng.c_str() ) ;
     listGroups->SetStringSelection ( ng.c_str() ) ;
     enzymeAddToGr ( ev ) ;
@@ -744,15 +743,15 @@ void TVectorEditor::initialViewEnzyme ( string e )
     
 void TVectorEditor::importCloneEnzymes ()
     {
-    TStorage TS ( TEMP_STORAGE , app ) ;
+    TStorage TS ( TEMP_STORAGE ) ;
     TClone clone ;
     clone.loadEnzymeList ( &TS , "./CLONE.ENZ" ) ;
     int a ;
     for ( a = 0 ; a < TS.re.size() ; a++ )
        {
        listCE->Append ( TS.re[a]->name.c_str() ) ;
-       app->frame->LS->re.push_back ( TS.re[a] ) ;
-       app->frame->LS->updateRestrictionEnzyme ( TS.re[a] ) ;
+       myapp()->frame->LS->re.push_back ( TS.re[a] ) ;
+       myapp()->frame->LS->updateRestrictionEnzyme ( TS.re[a] ) ;
        TS.re[a] = NULL ; // avoid deletion
        }
     string group = listGroups->GetStringSelection().c_str() ;
@@ -937,8 +936,8 @@ void TVectorEditor::newEnzyme ( wxEvent &ev )
     ed.initme ( e ) ;
     if ( ed.ShowModal() == wxID_OK )
        {
-       app->frame->LS->re.push_back ( ed.e ) ;
-       app->frame->LS->updateRestrictionEnzyme ( ed.e ) ;
+       myapp()->frame->LS->re.push_back ( ed.e ) ;
+       myapp()->frame->LS->updateRestrictionEnzyme ( ed.e ) ;
        }
     showEnzymeGroups () ;
     }
@@ -955,8 +954,8 @@ void TVectorEditor::newProtease ( wxEvent &ev )
     if ( ed.ShowModal() == wxID_OK )
        {
        TProtease *pr = new TProtease ( ed.e->name , ed.e->sequence , ed.e->note ) ;
-       app->frame->LS->pr.push_back ( pr ) ;
-       app->frame->LS->updateProtease ( pr ) ;
+       myapp()->frame->LS->pr.push_back ( pr ) ;
+       myapp()->frame->LS->updateProtease ( pr ) ;
        }
     showProteases () ;
     }
@@ -969,7 +968,7 @@ void TVectorEditor::editProtease ( wxEvent &ev )
 void TVectorEditor::proteaseSelChange ( wxEvent &ev )
     {
     string s = prots->GetStringSelection().c_str() ;
-    TProtease *pro = app->frame->LS->getProtease ( s ) ;
+    TProtease *pro = myapp()->frame->LS->getProtease ( s ) ;
     
     string t ;
     t += s + "\n" ;

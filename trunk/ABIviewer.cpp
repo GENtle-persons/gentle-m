@@ -28,15 +28,13 @@ TABIviewer::TABIviewer(wxMDIParentFrame *parent, const wxString& title)
     from = -1 ;
     vec->undo.clear () ;
     stat = NULL ;
-    
-    app = ((MyFrame*) parent)->app ;
     }
     
 TABIviewer::~TABIviewer ()
     {
     if ( vec ) delete vec ;
     if ( stat ) delete stat ;
-//    if ( app ) app->my_children.DeleteObject(this);    
+//    myapp()->my_children.DeleteObject(this);    
     }
     
 void TABIviewer::OnZoom(wxScrollEvent& event)
@@ -77,32 +75,22 @@ void TABIviewer::OnClose(wxCloseEvent& event)
     if ( !caniclose ( event ) ) return ;
     
     // Removing the window from the main tree
-    MyFrame *p = app->frame ;
+    MyFrame *p = myapp()->frame ;
     p->mainTree->removeChild ( this ) ;
     p->SetTitle ( txt("gentle") ) ;
     SetTitle ( txt("gentle") ) ;
-    
-    // Removing from frame children list
-    int a ;
-    for ( a = 0 ; a < p->children.size() && p->children[a] != this ; a++ ) ;
-    if ( a < p->children.size() )
-        {
-        p->children[a] = p->children[p->children.size()-1] ;
-        p->children.pop_back () ;
-        }
-
+    p->removeChild ( this ) ;    
     event.Skip();
 }
     
-void TABIviewer::initme ( MyApp *_app )
+void TABIviewer::initme ()
     {
-    app = _app ;
     int bo = 5 ;
 
     // Menus
-    wxMenu *file_menu = app->frame->getFileMenu () ;
-    wxMenu *tool_menu = app->frame->getToolMenu () ;
-    wxMenu *help_menu = app->frame->getHelpMenu () ;
+    wxMenu *file_menu = myapp()->frame->getFileMenu () ;
+    wxMenu *tool_menu = myapp()->frame->getToolMenu () ;
+    wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
 
     wxMenu *edit_menu = new wxMenu;
     edit_menu->Append(MDI_MARK_ALL, txt("m_mark_all") );
@@ -137,7 +125,6 @@ void TABIviewer::initme ( MyApp *_app )
     // Sequence Canvas
     sc = new SequenceCanvas ( hs , wxPoint ( 0 , 0 ) , wxSize ( 100 , 100 ) ) ;
     sc->blankline = 0 ;
-    sc->app = app ;
 //    sc->aa = this ;
     sc->edit_id = "ABI" ;
     sc->edit_valid = "ATGCN" ;
@@ -186,24 +173,24 @@ void TABIviewer::initme ( MyApp *_app )
 #ifdef __WXMSW__ // LINUX
     // Toolbar
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
-    app->frame->InitToolBar(toolBar);
+    myapp()->frame->InitToolBar(toolBar);
     toolBar->AddTool( MDI_TEXT_IMPORT , 
-                wxBitmap (app->bmpdir+"\\new.bmp", wxBITMAP_TYPE_BMP),
+                wxBitmap (myapp()->bmpdir+"\\new.bmp", wxBITMAP_TYPE_BMP),
                 txt("m_new_sequence") ) ;
     toolBar->AddTool( MDI_FILE_OPEN, 
-            wxBitmap (app->bmpdir+"\\open.bmp", wxBITMAP_TYPE_BMP), 
+            wxBitmap (myapp()->bmpdir+"\\open.bmp", wxBITMAP_TYPE_BMP), 
             txt("m_open") , txt("m_opentxt") );
     toolBar->AddTool( MDI_FILE_SAVE, 
-                wxBitmap (app->bmpdir+"\\save.bmp", wxBITMAP_TYPE_BMP),
+                wxBitmap (myapp()->bmpdir+"\\save.bmp", wxBITMAP_TYPE_BMP),
                 txt("m_store_in_db") , 
                 txt("m_txt_store_in_db"));
     toolBar->AddSeparator() ;
 //    toolBar->AddTool( MDI_CUT,
-//        wxBitmap (app->bmpdir+"\\cut.bmp", wxBITMAP_TYPE_BMP)) ;
+//        wxBitmap (myapp()->bmpdir+"\\cut.bmp", wxBITMAP_TYPE_BMP)) ;
     toolBar->AddTool( MDI_COPY,
-        wxBitmap (app->bmpdir+"\\copy.bmp", wxBITMAP_TYPE_BMP)) ;
+        wxBitmap (myapp()->bmpdir+"\\copy.bmp", wxBITMAP_TYPE_BMP)) ;
 //    toolBar->AddTool( MDI_PASTE,
-//        wxBitmap (app->bmpdir+"\\paste.bmp", wxBITMAP_TYPE_BMP)) ;
+//        wxBitmap (myapp()->bmpdir+"\\paste.bmp", wxBITMAP_TYPE_BMP)) ;
     toolBar->Realize() ;
 #endif
 
@@ -213,6 +200,7 @@ void TABIviewer::initme ( MyApp *_app )
     showSequence () ;
     showStat () ;
     sc->SetFocus() ;
+    myapp()->frame->setChild ( this ) ;
     }
     
 string TABIviewer::getName ()
@@ -347,7 +335,7 @@ void TABIviewer::OnEditName(wxCommandEvent& event)
     
     vec->undo.start ( txt("u_title_change") ) ;
     vec->name = nn.c_str() ;
-    app->frame->mainTree->SetItemText ( inMainTree , nn ) ;
+    myapp()->frame->mainTree->SetItemText ( inMainTree , nn ) ;
     vec->undo.stop() ;
     }
     
@@ -358,7 +346,7 @@ void TABIviewer::OnMarkAll(wxCommandEvent& event)
     
 void TABIviewer::OnFileSave(wxCommandEvent& event)
     {
-    TManageDatabaseDialog dbd ( this , txt("t_store") , app , ACTION_MODE_SAVE , vec ) ;
+    TManageDatabaseDialog dbd ( this , txt("t_store") , ACTION_MODE_SAVE , vec ) ;
     dbd.ShowModal () ;
     }
     
@@ -373,8 +361,6 @@ void TABIviewer::OnFind(wxCommandEvent& event)
     FindSequenceDialog fsd ( this , txt("t_find") ) ;
     fsd.allowed_chars = sc->edit_valid ;
     fsd.ShowModal () ;
-//    wxMessageDialog md ( this , "Not implemented ... yet!" ) ;
-//    md.ShowModal() ;
     }
     
 void TABIviewer::OnCopyToNew(wxCommandEvent& event)
@@ -386,7 +372,7 @@ void TABIviewer::OnCopyToNew(wxCommandEvent& event)
     nv->name = vec->name ;
     nv->sequence = s ;
     nv->desc = txt("t_abi_original") + getStat() ;
-    app->frame->newFromVector ( nv ) ;
+    myapp()->frame->newFromVector ( nv ) ;
     }
 
 void TABIviewer::OnCopy(wxCommandEvent& event)

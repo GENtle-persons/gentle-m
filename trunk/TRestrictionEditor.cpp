@@ -79,7 +79,7 @@ void TRestrictionEditor::initRestrictionPage ()
     gl->Append ( txt("Current") ) ;
     gl->Append ( txt("All") ) ;
     vector <string> vs ;
-    app->frame->LS->getEnzymeGroups ( vs ) ;
+    myapp()->frame->LS->getEnzymeGroups ( vs ) ;
     for ( int i = 0 ; i < vs.size() ; i++ )
             gl->Append ( vs[i].c_str() ) ;
     gl->SetStringSelection ( txt("Current") ) ;
@@ -149,7 +149,7 @@ void TRestrictionEditor::initRestrictionPage ()
     // Image buttons
     r = nfstv->GetRect() ;
     bb = new wxBitmapButton ( this , RSE_RES_AC ,
-             wxBitmap (app->bmpdir+"\\cocktail.bmp", wxBITMAP_TYPE_BMP),
+             wxBitmap (myapp()->bmpdir+"\\cocktail.bmp", wxBITMAP_TYPE_BMP),
              wxPoint ( bo*2+rw/3 , r.GetBottom() + bo ) ,
              wxDefaultSize ,
              wxBU_AUTODRAW ,
@@ -160,7 +160,7 @@ void TRestrictionEditor::initRestrictionPage ()
              wxPoint ( bo*2+rw/3 , r.GetBottom() + bo ) ) ;
 
     wxBitmapButton *bib = new wxBitmapButton ( this , RSE_COC_CT ,
-             wxBitmap (app->bmpdir+"\\scissors.bmp", wxBITMAP_TYPE_BMP),
+             wxBitmap (myapp()->bmpdir+"\\scissors.bmp", wxBITMAP_TYPE_BMP),
              wxPoint ( bo*2+rw/3 , r.GetBottom() + th*2 ) ,
              wxDefaultSize ,
              wxBU_AUTODRAW ,
@@ -203,7 +203,7 @@ void TRestrictionEditor::pR_showGroupEnzymes ( string gr )
         for ( int i = 0 ; i < v->re.size() ; i++ )
             vs.push_back ( v->re[i]->name ) ;
         }
-    else app->frame->LS->getEnzymesInGroup ( gr , vs ) ;
+    else myapp()->frame->LS->getEnzymesInGroup ( gr , vs ) ;
     char t[100] ;
     int sel = rb->GetSelection() ;
     bool docut = true , donotcut = true ;
@@ -257,7 +257,7 @@ vector <int> TRestrictionEditor::getcuts ( string enzyme )
 
     if ( ret.size() == 0 ) // Determine cuts
         {
-        TRestrictionEnzyme *e = app->frame->LS->getRestrictionEnzyme ( enzyme );
+        TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( enzyme );
         vector <TRestrictionCut> x = v->getCuts ( e ) ;
         if ( x.size() == 0 ) // No cuts
             {
@@ -277,7 +277,7 @@ void TRestrictionEditor::res_ll_act ( wxListEvent &event )
     {
     int i = event.GetIndex () ;
     string s = el->GetItemText ( i ).c_str() ;
-    TRestrictionEnzyme *e = app->frame->LS->getRestrictionEnzyme ( s ) ;
+    TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( s ) ;
     TEnzymeDialog ed ( this , s.c_str() , wxPoint(-1,-1) , wxSize(600,400) , 
                     wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL ) ;
     ed.initme ( e , true ) ;

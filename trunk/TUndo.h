@@ -14,7 +14,7 @@ class TVector ;
 class TUndo
     {
     public :
-    TUndo ( TVector *_base = NULL ) ;
+    TUndo () ;
     virtual void setbase ( TVector *_base ) ;
     virtual void start ( wxString _msg = "" ) ;
     virtual void stop () ;
@@ -24,6 +24,8 @@ class TUndo
     virtual wxString getLastMessage () ;
     virtual void remember ( wxString _msg ) ;
     virtual void clear () ;
+    
+    virtual TUndo & operator = ( TUndo &u ) ;
     
     private :
     vector <TVector*> mem ;

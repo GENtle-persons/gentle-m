@@ -14,7 +14,7 @@ class TURLtext ;
 class TVectorEditor : public wxDialog
     {
     public :
-    TVectorEditor(wxWindow *parent, const wxString& title , TVector *_v , MyApp *_app ) ;
+    TVectorEditor(wxWindow *parent, const wxString& title , TVector *_v ) ;
     ~TVectorEditor () ;
     
     void initialViewItem ( int num ) ;
@@ -65,7 +65,6 @@ class TVectorEditor : public wxDialog
     void itemCol ( wxEvent &ev ) ;
 
     wxListBox *listCE , *listGroups , *listGE ;
-    MyApp *app ;
     vector <string> eig , ce ;
     
     TVector *v ;

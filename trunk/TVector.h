@@ -147,6 +147,7 @@ class TVector
     virtual string getStickyEnd ( bool left , bool upper ) ;
     virtual bool hasStickyEnds () ;
     virtual void callUpdateUndoMenu () ;
+    virtual void setFromVector ( TVector &v ) ;
     
     // Variables
     string sequence ;
@@ -161,10 +162,7 @@ class TVector
 
     vector <string> hiddenEnzymes ;
     vector <string> proteases ;
-    
     TUndo undo ;
-    
-    virtual void setFromVector ( TVector &v ) ;
     
     private :
     string invert ( string s ) ;

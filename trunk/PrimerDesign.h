@@ -22,7 +22,7 @@ class TPrimerDesign : public ChildBase
                     vector <TPrimer> pl ) ;
     ~TPrimerDesign () ;
     
-    void initme ( MyApp *_app ) ;
+    void initme () ;
     virtual string getName () ;
     void AddPrimer ( string s ) ;
     void showSequence () ;
@@ -72,7 +72,6 @@ class TPrimerDesign : public ChildBase
     wxTextCtrl *stat ;
     wxPanel *up ;
     wxSplitterWindow *hs ;
-    MyApp *app ;
     int from ;
     vector <TPrimer> primer ;
     TVector *vc , *w ;

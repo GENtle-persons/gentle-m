@@ -29,7 +29,7 @@ BEGIN_EVENT_TABLE(MyFrame, wxMDIParentFrame)
 END_EVENT_TABLE()
 
 // Define my frame constructor
-#define ACC_ENT 31
+#define ACC_ENT 32
 MyFrame::MyFrame(wxWindow *parent,
                  const wxWindowID id,
                  const wxString& title,
@@ -73,6 +73,7 @@ MyFrame::MyFrame(wxWindow *parent,
     entries[28].Set(wxACCEL_NORMAL, WXK_F7, MDI_TOGGLE_RESTRICTION);
     entries[29].Set(wxACCEL_CTRL, (int) 'O', MDI_FILE_OPEN);
     entries[30].Set(wxACCEL_CTRL, (int) 'I', MDI_FILE_IMPORT);
+    entries[31].Set(wxACCEL_CTRL, (int) 'Z', MDI_UNDO);
     
     wxAcceleratorTable accel(ACC_ENT, entries);
     SetAcceleratorTable(accel);
@@ -90,7 +91,7 @@ void MyFrame::initme ()
     mainTree = new TMainTree ( this , MAIN_TREE_DUMMY ) ;
 
     // Database access
-    LS = new TStorage ( LOCAL_STORAGE , app ) ;
+    LS = new TStorage ( LOCAL_STORAGE ) ;
     LS->createDatabase() ;
 
     // Synchronize enzymes in known databases
@@ -201,18 +202,18 @@ void MyFrame::initme ()
         if ( r.rows() > 0 ) d = r[0][0] ;
         if ( n != "" && d != "" )
            {
-           TManageDatabaseDialog mdb ( this , "dummy" , app ) ;
+           TManageDatabaseDialog mdb ( this , "dummy" ) ;
            mdb.do_load_project ( n , d ) ;
            }
         }
 
     // Command line parameters? BUGGY!!!!
-    if ( app->argc > 1 )
+    if ( myapp()->argc > 1 )
        {
        int a , b ;
-       for ( a = 1 ; a <= app->argc ; a++ )
+       for ( a = 1 ; a <= myapp()->argc ; a++ )
           {
-          string path = app->argv[a] ;
+          string path = myapp()->argv[a] ;
           for ( b = path.length() - 1 ; path[b] != '\\' && path[b] != '/' ; b-- ) ;
           string file = path.substr ( b+1 ) ;
           importFile ( file , path , -1 ) ;
@@ -241,7 +242,7 @@ void MyFrame::OnHelp(wxCommandEvent& WXUNUSED(event) )
 {
 #ifdef __WXMSW__
     string helpfile = "\"" ;
-    helpfile += app->homedir ;
+    helpfile += myapp()->homedir ;
     helpfile += "\\" ;
     helpfile += txt("f_help") ;
     helpfile += "\"" ;
@@ -249,7 +250,7 @@ void MyFrame::OnHelp(wxCommandEvent& WXUNUSED(event) )
     for ( int a = 0 ; a < helpfile.length() ; a++ )
        if ( helpfile[a] == '/' ) helpfile[a] = '\\' ;
     
-    string command = app->getHTMLCommand ( helpfile ) ;
+    string command = myapp()->getHTMLCommand ( helpfile ) ;
     wxExecute ( command.c_str() ) ;
 #else
 #endif
@@ -257,13 +258,13 @@ void MyFrame::OnHelp(wxCommandEvent& WXUNUSED(event) )
 
 void MyFrame::OnEnzymeEditor(wxCommandEvent& WXUNUSED(event) )
 {   
-    TVectorEditor ee ( this , txt("t_enzymeeditor") , NULL , app ) ;
+    TVectorEditor ee ( this , txt("t_enzymeeditor") , NULL ) ;
     ee.ShowModal () ;
 }
 
 void MyFrame::OnFileOpen(wxCommandEvent& WXUNUSED(event) )
 {
-    TManageDatabaseDialog dbd ( this , txt("t_open") , app ) ;
+    TManageDatabaseDialog dbd ( this , txt("t_open") ) ;
     dbd.actionMode = ACTION_MODE_LOAD ;
     dbd.ShowModal () ;
 }
@@ -392,11 +393,9 @@ void MyFrame::importFile ( string file , string path , int filter )
         return ;
         }
 
-    MyChild *subframe = new MyChild(app->frame, txt("imported_vector"),
+    MyChild *subframe = new MyChild(myapp()->frame, txt("imported_vector"),
                                     wxPoint(-1, -1), wxSize(-1, -1),
                                     wxDEFAULT_FRAME_STYLE);
-//    app->my_children.Append(subframe);
-    subframe->app = app ;
 
     // Give it an icon
 #ifdef __WXMSW__
@@ -477,7 +476,7 @@ void MyFrame::importFile ( string file , string path , int filter )
 
 MyChild *MyFrame::newCLONE ( TClone &clone )
     {
-    MyChild *subframe = new MyChild(app->frame, txt("imported_vector"),
+    MyChild *subframe = new MyChild(myapp()->frame, txt("imported_vector"),
                                     wxPoint(-1, -1), wxSize(-1, -1),
                                     wxDEFAULT_FRAME_STYLE);
 
@@ -488,7 +487,7 @@ MyChild *MyFrame::newCLONE ( TClone &clone )
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
 
-    subframe->app = app ;
+    
     subframe->initme() ;
     int type = TYPE_VECTOR ;
     clone.remap ( subframe->vec ) ;
@@ -500,7 +499,7 @@ MyChild *MyFrame::newCLONE ( TClone &clone )
 
 MyChild *MyFrame::newFASTA ( TFasta &fasta )
     {
-    MyChild *subframe = new MyChild(app->frame, txt("imported_vector"),
+    MyChild *subframe = new MyChild(myapp()->frame, txt("imported_vector"),
                                     wxPoint(-1, -1), wxSize(-1, -1),
                                     wxDEFAULT_FRAME_STYLE);
 
@@ -511,7 +510,7 @@ MyChild *MyFrame::newFASTA ( TFasta &fasta )
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
 
-    subframe->app = app ;
+    
     subframe->initme() ;
     int type = TYPE_VECTOR ;
     fasta.remap ( subframe->vec ) ;
@@ -523,7 +522,7 @@ MyChild *MyFrame::newFASTA ( TFasta &fasta )
 
 MyChild *MyFrame::newGB ( TGenBank &gb )
     {
-    MyChild *subframe = new MyChild(app->frame, txt("imported_vector"),
+    MyChild *subframe = new MyChild(myapp()->frame, txt("imported_vector"),
                                     wxPoint(-1, -1), wxSize(-1, -1),
                                     wxDEFAULT_FRAME_STYLE);
 
@@ -534,7 +533,7 @@ MyChild *MyFrame::newGB ( TGenBank &gb )
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
 
-    subframe->app = app ;
+    
     subframe->initme() ;
     int type = TYPE_VECTOR ;
     gb.remap ( subframe->vec ) ;
@@ -550,8 +549,8 @@ MyChild* MyFrame::newFromVector ( TVector *nv , int type )
     MyChild *subframe = new MyChild(this, "",
                                     wxPoint(-1, -1), wxSize(-1, -1),
                                     wxDEFAULT_FRAME_STYLE);
-//    app->my_children.Append(subframe);
-    subframe->app = app ;
+//    myapp()->my_children.Append(subframe);
+    
 
     // Give it an icon
 #ifdef __WXMSW__
@@ -589,7 +588,7 @@ void MyFrame::InitToolBar(wxToolBar* toolBar)
 /*
 #ifdef __WXMSW__
     toolBar->AddTool( MDI_FILE_OPEN, 
-            wxBitmap (app->bmpdir+"\\open.bmp", wxBITMAP_TYPE_BMP), 
+            wxBitmap (myapp()->bmpdir+"\\open.bmp", wxBITMAP_TYPE_BMP), 
             txt("m_open") , txt("m_opentxt") );
 #else
     wxBitmap* bitmaps[NOB];
@@ -616,9 +615,9 @@ void MyFrame::InitToolBar(wxToolBar* toolBar)
 
 void MyFrame::OnAlignment(wxCommandEvent& event)
     {
-    TAlignment *subframe = new TAlignment ( app->frame , "Alignment" ) ;
-//    app->my_children.Append(subframe);
-    subframe->app = app ;
+    TAlignment *subframe = new TAlignment ( myapp()->frame , "Alignment" ) ;
+//    myapp()->my_children.Append(subframe);
+    
     
     // Give it an icon
 #ifdef __WXMSW__
@@ -627,7 +626,7 @@ void MyFrame::OnAlignment(wxCommandEvent& event)
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
 
-    subframe->initme ( app ) ;
+    subframe->initme () ;
 
     subframe->Show() ;
     subframe->Maximize() ;
@@ -638,7 +637,7 @@ void MyFrame::OnAlignment(wxCommandEvent& event)
     
 void MyFrame::OnManageDatabase(wxCommandEvent& event)
     {
-    TManageDatabaseDialog mdd ( this , txt("m_manage_dbtxt") , app ) ;
+    TManageDatabaseDialog mdd ( this , txt("m_manage_dbtxt") ) ;
     int r = mdd.ShowModal () ;
     }
 
@@ -698,7 +697,7 @@ void MyFrame::OnProjectLoad(wxCommandEvent& event)
         }
         
     // All are stored, or loading anyway
-    TManageDatabaseDialog mdd ( this , txt("m_project_opentxt") , app , 
+    TManageDatabaseDialog mdd ( this , txt("m_project_opentxt") , 
                             ACTION_MODE_LOAD|ACTION_MODE_PROJECT ) ;
     mdd.ShowModal () ;
     }
@@ -726,7 +725,7 @@ void MyFrame::OnProjectSave(wxCommandEvent& event)
         }
         
     // All are stored, or saving anyway
-    TManageDatabaseDialog mdd ( this , txt("m_project_savetxt") , app , 
+    TManageDatabaseDialog mdd ( this , txt("m_project_savetxt") , 
                             ACTION_MODE_SAVE|ACTION_MODE_PROJECT ) ;
     mdd.ShowModal () ;
     }
@@ -771,8 +770,8 @@ TAminoAcids *MyFrame::newAminoAcids ( string aa , string title )
     subframe->vec->sequence = aa ;
     subframe->vec->type = TYPE_AMINO_ACIDS ;
 
-//    app->my_children.Append(subframe);
-    subframe->app = app ;
+//    myapp()->my_children.Append(subframe);
+    
     
     // Give it an icon
 #ifdef __WXMSW__
@@ -781,7 +780,7 @@ TAminoAcids *MyFrame::newAminoAcids ( string aa , string title )
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
 
-    subframe->initme ( app ) ;
+    subframe->initme () ;
 
     subframe->Show() ;
     subframe->Maximize() ;
@@ -812,8 +811,8 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , string title )
         nv->items[a].direction = 1 ;
         }
 
-//    app->my_children.Append(subframe);
-    subframe->app = app ;
+//    myapp()->my_children.Append(subframe);
+    
     
     // Give it an icon
 #ifdef __WXMSW__
@@ -822,7 +821,7 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , string title )
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
 
-    subframe->initme ( app ) ;
+    subframe->initme () ;
 
     subframe->Show() ;
     subframe->Maximize() ;
@@ -841,8 +840,8 @@ TABIviewer *MyFrame::newABI ( string filename , string title )
     subframe->filename = filename ;
     subframe->vec->type = TYPE_SEQUENCE ;
 
-//    app->my_children.Append(subframe);
-    subframe->app = app ;
+//    myapp()->my_children.Append(subframe);
+    
     
     // Give it an icon
 #ifdef __WXMSW__
@@ -851,7 +850,7 @@ TABIviewer *MyFrame::newABI ( string filename , string title )
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
 
-    subframe->initme ( app ) ;
+    subframe->initme () ;
 
     subframe->Show() ;
     subframe->Maximize() ;
@@ -873,7 +872,7 @@ void MyFrame::blast ( string seq , string prg )
              unique[a] == ' ' )
            unique[a] = '_' ;
            
-    string hd = app->homedir.c_str() ;
+    string hd = myapp()->homedir.c_str() ;
     string exe = hd + "\\blastcl3.exe" ; // WINDOWS-SPECIFIC!
     string ifile = hd + "\\blasts\\temp_" + unique + ".tmp" ;
     string ofile = hd + "\\blasts\\blast_results_" + unique + ".html" ;
@@ -900,7 +899,7 @@ void MyFrame::blast ( string seq , string prg )
     
     // Starting browser
     exe = "start " ;
-    exe += app->getHTMLCommand ( ofile ) ;
+    exe += myapp()->getHTMLCommand ( ofile ) ;
 //    iexplore.exe \"" + ofile + "\"" ; // WINDOWS-SPECIFIC!
     batch << exe << endl ;
 
@@ -932,8 +931,8 @@ void MyFrame::OnImageViewer(wxCommandEvent& event)
     {
     TImageDisplay *subframe = new TImageDisplay ( this , txt("t_image_viewer") ) ;
 
-//    app->my_children.Append(subframe);
-    subframe->app = app ;
+//    myapp()->my_children.Append(subframe);
+    
     
     // Give it an icon
 #ifdef __WXMSW__
@@ -942,7 +941,7 @@ void MyFrame::OnImageViewer(wxCommandEvent& event)
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
 
-    subframe->initme ( app ) ;
+    subframe->initme () ;
 
     subframe->Show() ;
     subframe->Maximize() ;
@@ -956,8 +955,8 @@ void MyFrame::OnCalculator(wxCommandEvent& event)
     {
     TCalculator *subframe = new TCalculator ( this , txt("t_calculator") ) ;
 
-//    app->my_children.Append(subframe);
-    subframe->app = app ;
+//    myapp()->my_children.Append(subframe);
+    
     
     // Give it an icon
 #ifdef __WXMSW__
@@ -966,7 +965,7 @@ void MyFrame::OnCalculator(wxCommandEvent& event)
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
 
-    subframe->initme ( app ) ;
+    subframe->initme () ;
 
     subframe->Show() ;
     subframe->Maximize() ;
@@ -1018,6 +1017,22 @@ wxMenu *MyFrame::getHelpMenu ()
     help_menu->Append(MDI_HELP, txt("m_help_content") ) ;
     help_menu->Append(MDI_ABOUT, txt("m_about") );
     return help_menu ;
+    }
+    
+void MyFrame::setChild ( ChildBase *ch )
+    {
+    int a ;
+    for ( a = 0 ; a < children.size() && children[a] != ch ; a++ ) ;
+    if ( a == children.size() ) children.push_back ( ch ) ;
+    }
+    
+void MyFrame::removeChild ( ChildBase *ch )
+    {
+    int a ;
+    for ( a = 0 ; a < children.size() && children[a] != ch ; a++ ) ;
+    if ( a == children.size() ) return ;
+    children[a] = children[children.size()-1] ;
+    children.pop_back () ;
     }
     
 string MyFrame::check4update ()
@@ -1092,7 +1107,7 @@ void MyFrame::update2version ( string ver )
        delete in ;
        unsigned char *uc = new unsigned char [ uv.size() ] ;
        for ( int u = 0 ; u < uv.size() ; u++ ) uc[u] = uv[u] ; // __WXMSW__
-       do_run = app->homedir + "\\GENtleSetup.exe" ;
+       do_run = myapp()->homedir + "\\GENtleSetup.exe" ;
        wxFile out ( do_run.c_str() , wxFile::write ) ;
        out.Write ( uc , uv.size() ) ;
        out.Close () ;

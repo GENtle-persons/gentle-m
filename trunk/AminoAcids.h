@@ -17,7 +17,7 @@ class TAminoAcids : public ChildBase
     TAminoAcids(wxMDIParentFrame *parent, const wxString& title) ;
     virtual ~TAminoAcids () ;
     
-    virtual void initme ( MyApp *_app ) ;
+    virtual void initme () ;
     virtual string getName () ;
     virtual void showSequence () ;
     virtual void showStat () ;
@@ -45,7 +45,6 @@ class TAminoAcids : public ChildBase
     wxTextCtrl *stat ;
     TURLtext *desc ;
     wxSplitterWindow *hs , *vs ;
-    MyApp *app ;
     int from ;
     
     DECLARE_EVENT_TABLE()

@@ -43,17 +43,17 @@ TVector::TVector ( ChildBase *win )
     type = TYPE_VECTOR ;
     circular = false ;
     window = win ;
+    undo.setbase ( this ) ;
     init () ;
     }
     
 TVector::~TVector ()
     {
+//    undo.clear () ;
     }
         
 void TVector::init ()
     {
-    undo.setbase ( this ) ;
-    
     int a ;
     for ( a = 0 ; a < 256 ; a++ ) IUPAC[a] = 0 ;
     setIUPAC ( 'A' , "A" ) ;
@@ -425,9 +425,7 @@ void TVector::doRestriction ()
         sprintf ( t2 , "%d" , cl[a+1].pos ) ;
         TVector *nv = new TVector ;
         nv->setFromVector ( *this ) ;
-//        *nv = *this ;
         nv->reduceToFragment ( cl[a] , cl[a+1] ) ;
-//        for ( int w = 0 ; w < nv->items.size() ; w++ ) nv->items[w].dummyInfo ( "lacZ" , nv->sequence.length() ) ;
         nv->recalculateCuts () ;
         nv->recalcvisual = true ;
         if ( nv->desc != "" ) nv->desc += "\n" ;
@@ -446,7 +444,7 @@ void TVector::doRestriction ()
            }
         while ( nv->cocktail.size() ) nv->cocktail.pop_back () ; // Cleaning up cocktail
         if ( nv->sequence.length() >= action_value ) // "No fragments smaller than XX base pairs"
-           window->app->frame->newFromVector ( nv , TYPE_FRAGMENT ) ;        
+           myapp()->frame->newFromVector ( nv , TYPE_FRAGMENT ) ;        
         else delete nv ;
         }
     while ( cocktail.size() ) cocktail.pop_back () ;
@@ -543,6 +541,7 @@ void TVector::closeCircle ()
 // This function is a plague
 void TVector::doRemove ( int from , int to , bool update )
     {
+    if ( from == to + 1 ) return ; // Nothing to remove
     int a , b ;
     int l = sequence.length() ;
     undo.start ( txt("u_del_seq") ) ;

@@ -16,7 +16,7 @@ class TABIviewer : public ChildBase
     TABIviewer(wxMDIParentFrame *parent, const wxString& title) ;
     ~TABIviewer () ;
     
-    void initme ( MyApp *_app ) ;
+    void initme () ;
     virtual string getName () ;
     void showSequence () ;
     string getStat () ;
@@ -43,7 +43,6 @@ class TABIviewer : public ChildBase
     wxTextCtrl *stat ;
     wxPanel *up ;
     wxSplitterWindow *hs ;
-    MyApp *app ;
     int from ;
     string filename ;
     wxCheckBox *aidLines ;

@@ -23,7 +23,7 @@ class TAlignment : public ChildBase
     TAlignment(wxMDIParentFrame *parent, const wxString& title) ;
     ~TAlignment () ;
     
-    void initme ( MyApp *_app ) ;
+    void initme () ;
     virtual string getName () ;
 
     int NeedlemanWunsch ( string &s1 , string &s2 )  ;
@@ -44,7 +44,6 @@ class TAlignment : public ChildBase
     SequenceCanvas *sc ;
     wxPanel *up ;
     wxSplitterWindow *hs ;
-    MyApp *app ;
     string gap ;
     
     vector <string> qAlign , qName ;
