@@ -63,7 +63,7 @@ class TGenBank
     private :
     void parseLines () ;
     void addItem ( TVector *v , wxArrayString &va ) ;
-    void iterateItem ( TVector *v , TVectorItem &i , wxString l ) ;
+    void iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag = 0 ) ;
     bool isValidSequence ( char a ) ;
     } ;
 

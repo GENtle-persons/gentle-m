@@ -235,7 +235,7 @@ void PlasmidCanvas::rsHideLimit ( wxCommandEvent &ev )
        if ( cnt > limit && b == p->vec->hiddenEnzymes.size() )
           p->treeBox->ToggleEnzymeVisibility ( p->vec->re[a] ) ;
        }
-//    p->vec->recalculateCuts() ;
+    p->vec->recalculateCuts() ;
     p->vec->recalcvisual = true ;
     Refresh () ;
     }

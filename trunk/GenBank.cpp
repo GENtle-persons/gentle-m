@@ -1,6 +1,8 @@
 #include "GenBank.h"
 #include <wx/textfile.h>
 
+#define TAG_COMPLEMENT 1
+
 char* gb_item_type[VIT_TYPES] =
     {
     "",
@@ -233,7 +235,7 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
         }
     }
     
-void TGenBank::iterateItem ( TVector *v , TVectorItem &i , wxString l )
+void TGenBank::iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag )
     {
     while ( l != "" )
         {
@@ -255,7 +257,31 @@ void TGenBank::iterateItem ( TVector *v , TVectorItem &i , wxString l )
            i.from = ll ;
            to.ToLong ( &ll ) ;
            i.to = ll ;
+           if ( ( tag & TAG_COMPLEMENT ) > 0 ) i.direction = -1 ;
            v->items.push_back ( i ) ;
+           }
+        else if ( l.Left ( 10 ) == "COMPLEMENT" )
+           {
+           l = l.AfterFirst ( '(' ) ;
+           int a , b , cnt , num = 0 ;
+           char c = ' ' ;
+           for ( a = b = cnt = 0 ; a < l.Length() && ( cnt >= 0 || c != ')' ) ; a++ )
+              {
+              c = l.GetChar ( a ) ;
+              if ( c == '(' ) cnt++ ;
+              if ( ( c == ')' ) && cnt == 0 )
+                 {
+                 num++ ;
+                 wxString sub = l.Mid ( b , a - b ) ;
+                 int tag2 = tag ;
+                 if ( ( tag & TAG_COMPLEMENT ) > 0 ) tag2 -= TAG_COMPLEMENT ;
+                 else tag2 += TAG_COMPLEMENT ;
+                 iterateItem ( v , i , sub , tag2 ) ;
+                 b = a+1 ;
+                 }
+              if ( c == ')' ) cnt-- ;
+              }
+           l = l.Mid ( a ) ;
            }
         else if ( l.Left ( 4 ) == "JOIN" )
            {

@@ -7,6 +7,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
     if ( printing ) h = h * 2 / 3 ;
     int fontfactor = 10 ;
     if ( printing ) fontfactor = (w>h?h:w)/10000 ;
+    wxFont *tinyFont = MYFONT ( fontfactor*4/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
     wxFont *smallFont = MYFONT ( fontfactor , wxSWISS , wxNORMAL , wxNORMAL ) ;
     wxFont *normalFont = MYFONT ( fontfactor*6/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
     wxFont *bigFont = MYFONT ( fontfactor*7/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
@@ -133,6 +134,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
             }
         
         // Restriction sites
+        dc.SetFont(*tinyFont);
         for ( a = 0 ; a < p->vec->rc.size() ; a++ )
             {
             TRestrictionCut *c = &p->vec->rc[a] ;
@@ -146,6 +148,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
             c->lp.x = c->p.x * STANDARDRADIUS / w ;
             c->lp.y = c->p.y * STANDARDRADIUS / h ;
             }
+        dc.SetFont(*smallFont);
         
         // ORFs
         if ( p->def == "dna" && p->showORFs )
@@ -184,7 +187,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
         }
         
     // Drawing Restriction Sites
-    dc.SetFont(*smallFont);
+    dc.SetFont(*tinyFont);
     for ( a = 0 ; a < p->vec->rc.size() ; a++ )
         {
         TRestrictionCut *c = &p->vec->rc[a] ;
@@ -198,6 +201,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
            dc.DrawText ( t , c->lastrect.x , c->lastrect.y ) ;
            }
         }
+    dc.SetFont(*smallFont);
 }
 
 void PlasmidCanvas::drawLinearORFs ( wxDC &dc )
