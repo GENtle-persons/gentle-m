@@ -587,8 +587,8 @@ void MyChild::initPanels ()
     if ( vec->getSequenceLength() > 1000000 ) // Arbitary number
         {
         vec->setGenomeMode ( true ) ;
-        vec->re.Add ( myapp()->frame->LS->getRestrictionEnzyme("BamHI") ) ; // TESTING!!!!!
-        vec->recalculateCuts() ; // TESTING!!!
+//        vec->re.Add ( myapp()->frame->LS->getRestrictionEnzyme("BamHI") ) ; // TESTING!!!!!
+//        vec->recalculateCuts() ; // TESTING!!!
         }    
 //    wxStartTimer() ;    
     SeqFeature *seqF = new SeqFeature ( cSequence ) ;

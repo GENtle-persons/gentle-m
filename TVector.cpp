@@ -1517,7 +1517,18 @@ void TVectorItem::getArrangedAA ( TVector *v , wxString &s , int disp )
           }
        }
     }
-        
+
+int TVectorItem::getOffsetAt ( int i )
+    {
+    if ( getOffset () == -1 ) return -1 ;
+    for ( int a = 0 ; a < dna2aa.size() ; a++ )
+       {
+       if ( dna2aa[a].dna[0] == i )
+       return a + getOffset() ;
+       }    
+    return -1 ;
+    }
+                
 // ******************************************************************* Tdna2aa
 
 Tdna2aa::Tdna2aa ( char _aa , int i1 , int i2 , int i3 )

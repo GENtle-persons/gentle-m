@@ -83,6 +83,7 @@ class TVectorItem
     virtual int getOffset () ;
     virtual void setOffset ( int o = -1 ) ; // -1 = no offset
     virtual void setType ( wxString s ) ;
+    virtual int getOffsetAt ( int i ) ;
     
     virtual void doRemove ( int f , int t , int l ) ;
     virtual wxString implodeParams () ;
