@@ -320,7 +320,7 @@ void SequenceCanvas::editSpecialKeyPressed ( int k , TVector *v , wxString *the_
       if ( from > the_sequence->length() ) from = the_sequence->length() ;
       mark ( id , from , from , 2 ) ;
       }
-/*
+//
     else if ( !forceoverwrite && k == WXK_DELETE && from+1 <= the_sequence->length() )
       {
       mylog ( "DEL" , wxString::Format ( "1 (%d of %d / %d)" , from , the_sequence->length() , (int)v ) ) ;
@@ -333,7 +333,7 @@ void SequenceCanvas::editSpecialKeyPressed ( int k , TVector *v , wxString *the_
       updateEdit ( v , id , from ) ;
       mylog ( "DEL" , "4" ) ;
       }
-*/
+//
     else if ( !forceoverwrite && k == WXK_BACK && from > 1 )
       {
       if ( v ) v->doRemove ( from-1 , from-1 , false ) ;

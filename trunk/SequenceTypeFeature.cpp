@@ -35,8 +35,6 @@ void SeqFeature::show ( wxDC& dc )
     bool drawOffsets = true ;
     if ( can->child && can->child->def == "alignment" ) drawOffsets = false ;
 
-    mylog ( "Feature" , "1" ) ;
-
     for ( int l = 0 ; l < pl.maxlevels ; l++ )
         {
         int pcnt = 0 ;
@@ -64,7 +62,7 @@ void SeqFeature::show ( wxDC& dc )
                for ( i = 0 ; i < pl.maxlevels ; i++ ) used[i] = 0 ;
                i = pl.here ( b-1 , l ) ;
                
-              if ( i != -1 )  
+               if ( i != -1 )  
                  {
                  myass ( l < used.GetCount() , "SeqFeature::show 1" ) ;
                  myass ( l < lx.GetCount() , "SeqFeature::show 2" ) ;
@@ -81,22 +79,28 @@ void SeqFeature::show ( wxDC& dc )
     
                  if ( insight )
                     {
-                    int mode = atoi((vec->items[pl.getID(i)].getParam("SEQUENCE_STYLE")).c_str()) ;
+                    myass ( vec , "UGH!" ) ;
+                    int myid = pl.getID(i) ;
+                    if ( myid >= vec->items.size() ) continue ; // Patchy
+                    wxString tmp = vec->items[myid].getParam("SEQUENCE_STYLE") ;
+                    long mode ;
+                    tmp.ToLong ( &mode ) ;
                     wxColour col = *wxBLACK ;
                     
                     if ( can->isPrinting() && !can->getPrintToColor() ) dc.SetPen ( *wxBLACK_PEN ) ;
                     else
                        {
-                       myass ( pl.getID(i) < vec->items.size() , "SeqFeature::show 4" ) ;
-                       col = vec->items[pl.getID(i)].getFontColor() ;
-                       dc.SetPen ( *MYPEN ( col ) ) ;
+                       col = vec->items[myid].getFontColor() ;
+                       wxPen *mypen = MYPEN ( col ) ;
+                       myass ( mypen , "Pen is NULL" ) ;
+                       dc.SetPen ( *mypen ) ;
                        }
     
 /*                    if ( aaa && !newline && 
                          b-1 < aaa->offsets.GetCount()  && 
                          aaa->offsets[b-1] != -1 && 
                          aaa->offset_items[b-1] == &vec->items[pl.getID(i)] )*/
-                         
+
                     // Offsets
                     if ( drawOffsets )
                        {
@@ -189,7 +193,6 @@ void SeqFeature::show ( wxDC& dc )
                  lx[l] = x_to ;
                  }
     
-    
                for ( i = 0 ; i < pl.maxlevels ; i++ )
                   {
                   if ( !used[i] && lx[i] >= 0 )
@@ -228,9 +231,7 @@ void SeqFeature::show ( wxDC& dc )
                      lx[i] = -2 ;
                }
             }
-            
         }    
-    mylog ( "Feature" , "Finish" ) ;
     dc.SetBackgroundMode ( bm ) ;
     dc.SetTextBackground ( tbg ) ;
     dc.SetTextForeground ( tfg ) ;

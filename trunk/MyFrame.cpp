@@ -1612,17 +1612,21 @@ void TTestSuite::aaAction ( ChildBase *ac )
 	if ( r == 0 )
 		{
 		int num = aa->inlinePlot->GetCount() ;
-		aa->inlinePlot->SetSelection ( rand() % num ) ;
+		num = rand() % num ;
+		mylog ( "TTestSuite::aaAction" , wxString::Format ( "Inline plot to %d" , num ) ) ;
+		aa->inlinePlot->SetSelection ( num ) ;
 		aa->OnIP ( ev ) ;
 		}
-	else if ( r == 1 ) aa->OnHorizontal ( ev ) ;
-	else if ( r == 2 ) aa->OnMarkAll ( ev ) ;
-	else if ( r == 3 ) aa->OnCut ( ev ) ;
-	else if ( r == 4 ) aa->OnPhotometer ( ev ) ;
+	else if ( r == 1 ) { mylog ( "TTestSuite::aaAction" , "OnHorizontal" ) ; aa->OnHorizontal ( ev ) ; }
+	else if ( r == 2 ) { mylog ( "TTestSuite::aaAction" , "MarkAll" ) ; aa->OnMarkAll ( ev ) ; }
+	else if ( r == 3 ) { mylog ( "TTestSuite::aaAction" , "Cut" ) ; aa->OnCut ( ev ) ; }
+//	else if ( r == 4 ) aa->OnPhotometer ( ev ) ; // Works, too many boring calculators ;-)
 	else
  		{    
  		int num = aa->lb->GetCount() ;
- 		aa->lb->SetSelection ( rand() % num , true ) ;
+ 		num = rand() % num ;
+ 		mylog ( "TTestSuite::aaAction" , wxString::Format ( "ListBox to %d" , num ) ) ; 
+ 		aa->lb->SetSelection ( num , true ) ;
     	aa->OnListBox ( ev ) ;
      	}   	
 	}	
