@@ -454,6 +454,7 @@
 "u_vec_edit","&Undo vector edit","Vektorbearbeitung &rückgängig machen"
 "u_del_enzyme","&Undo delete enzyme","Enzym löschen &rückgängig machen"
 "u_fill_klenow","&Undo fill Klenow","Klenow-auffüllen &rückgängig machen"
+"u_transform","&Undo transform","Transformation &rückgängig"
 "u_no","&Undo","&Rückgängig machen"
 "t_consensus","Consensus","Konsensus"
 "t_clustal_w","Clustal-W","Clustal-W"

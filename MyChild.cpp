@@ -16,7 +16,7 @@ BEGIN_EVENT_TABLE(MyChild, wxMDIChildFrame)
     EVT_MENU(AA_THREE_M3, MyChild::OnAA_three_M3)
 
     EVT_MENU(MDI_UNDO, MyChild::Undo)
-    EVT_MENU(MDI_REDO, MyChild::Redo)
+//    EVT_MENU(MDI_REDO, MyChild::Redo)
 
     EVT_MENU(MDI_CHILD_QUIT, MyChild::OnQuit)
     EVT_MENU(MDI_MARK_ALL, MyChild::OnMarkAll)
@@ -920,10 +920,15 @@ void MyChild::OnTransformSequence(wxCommandEvent& event)
     
     int a ;
     TVector *v = vec ;
-    if ( tsd.new_item->GetValue() ) // Creating new vector, if needed
+    bool inNewVector = tsd.new_item->GetValue() ;
+    if ( inNewVector ) // Creating new vector, if needed
         {
         v = new TVector ;
         *v = *vec ;
+        }
+    else // Just transform the old one
+        {
+        vec->undo.start( txt("u_transform") ) ;
         }
     
     // Transforming DNA
@@ -937,31 +942,19 @@ void MyChild::OnTransformSequence(wxCommandEvent& event)
         for ( a = 0 ; a < v->items.size() ; a++ )
            {
            v->items[a].direction *= -1 ;
-           int from , to ;
+           int from = v->items[a].from ;
+           int to = v->items[a].to ;
            
-           if ( from < to )
-              {
-              from = l - v->items[a].to + 1 ;
-              to = l - v->items[a].from + 1 ;
-              }
-           else // Don't know what to do here...
-              {
-              }
-
-           v->items[a].from = from ;
-           v->items[a].to = to ;
+           from = l - from + 1 ;
+           to = l - to + 1 ;
+           
+           v->items[a].from = to ;
+           v->items[a].to = from ;
            }
         }
-        
-// Don't know what to do here...
-/*    if ( tsd.complement->GetValue() && !tsd.invert->GetValue() )
-        {
-        for ( a = 0 ; a < v->items.size() ; a++ )
-           v->items[a].direction *= -1 ;
-        }*/
-   
+          
     // Display
-    if ( tsd.new_item->GetValue() )
+    if ( inNewVector )
         {
         v->name += "*" ;
         v->recalcvisual = true ;
@@ -972,6 +965,7 @@ void MyChild::OnTransformSequence(wxCommandEvent& event)
         {
         v->recalcvisual = true ;
         v->recalculateCuts() ;
+        vec->undo.stop() ;
         cSequence->findID("DNA")->initFromTVector ( v ) ;
         if ( aa_state != AA_NONE )
            {
@@ -1212,11 +1206,13 @@ void MyChild::updateUndoMenu ()
         {
         mi->SetText ( txt("u_no") ) ;
         mi->Enable ( false ) ;
+        GetToolBar()->EnableTool ( MDI_UNDO , false ) ;
         }
     else
         {
         mi->Enable ( true ) ;
         mi->SetText ( lm ) ;
+        GetToolBar()->EnableTool ( MDI_UNDO , true ) ;
         }
     }
     
