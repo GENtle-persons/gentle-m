@@ -128,17 +128,20 @@ class TSequencingPrimerDialog : public wxDialog
     ~TSequencingPrimerDialog () ;
     
     virtual void OnCharHook ( wxKeyEvent& event ) ;
+    virtual void OnDB ( wxCommandEvent& event ) ;
+
     virtual void getPrimerList ( wxArrayString &p_name , wxArrayString &p_seq ) ;
     virtual bool matchToVector ( TVector *v , wxString name , wxString seq ) ;
+    virtual bool getClear() { return cb_clear->GetValue() ; }
     
     private :
     virtual int findBestMatch ( wxString &s , wxString seq , int &pos , int ml ) ;
     virtual void addSequencingPrimer ( TVector *v , wxString name , wxString seq , 
     								int best_pos , int best_score , int dir ) ;
 
-    wxTextCtrl *t_ma ;
-    wxChoice *c_db ;
-    wxCheckBox *cb_db ;
+    wxSpinCtrl *t_ma ;
+    wxChoice *c_db , *c_pj ;
+    wxCheckBox *cb_db , *cb_pj , *cb_clear , *cb_35 , *cb_53 ;
     wxArrayString db_names , db_files ;
     
     DECLARE_EVENT_TABLE()

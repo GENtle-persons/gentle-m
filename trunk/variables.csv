@@ -651,3 +651,8 @@
 "t_use_this_database","Use this database","Diese Datenbank benutzen"
 "t_minimum_alignment","Minimum alignment","Minimales Alignment"
 "t_desc_sequencing_primer","Sequencing primer, %d matches","Sequenzierprimer, %d Übereinstimmungen"
+"t_clear_old_sp","Clear old sequencing primers","Alte Sequenzierungsprimer entfernen"
+"t_3_5","3'->5'","3'->5'"
+"t_5_3","5'->3'","5'->3'"
+"t_use_this_project","Use primers from project","Benutze Primer aus dem Projekt"
+"t_find_primers","Find primers","Finde Primer"

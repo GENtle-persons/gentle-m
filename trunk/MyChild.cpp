@@ -129,6 +129,8 @@ void MyChild::OnSequencingPrimer(wxCommandEvent& event)
     TSequencingPrimerDialog spd ( this , txt("t_sequencing_primers") ) ;
     if ( wxID_OK != spd.ShowModal() ) return ; // Cancel
     
+    if ( spd.getClear() )
+    	OnRemoveSequencingPrimers ( event ) ;
     wxArrayString p_name , p_seq ;
     wxBeginBusyCursor() ;
     spd.getPrimerList ( p_name , p_seq ) ;

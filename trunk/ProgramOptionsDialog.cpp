@@ -45,9 +45,9 @@ TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent , int _mode )
     
     // Min/max cutoff
     useMinCutoff = new wxCheckBox ( this , GES_USE_MINCUTOFF , txt("t_ges_use_min_cutoff") ) ;
-    minCutoff = new wxSpinCtrl ( this , -1 , "1" ) ;
+    minCutoff = new wxSpinCtrl ( this , -1 , "1"  , wxDefaultPosition , wxSize ( 20 , 30 ) ) ;
     useMaxCutoff = new wxCheckBox ( this , GES_USE_MAXCUTOFF , txt("t_ges_use_max_cutoff") ) ;
-    maxCutoff = new wxSpinCtrl ( this , -1 , "3" ) ;
+    maxCutoff = new wxSpinCtrl ( this , -1 , "3"  , wxDefaultPosition , wxSize ( 20 , 30 ) ) ;
     
     // Length of recognition sequence
     recog4 = new wxCheckBox ( this , -1 , txt("t_ges_seqlen4") ) ;
