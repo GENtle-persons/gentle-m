@@ -6,7 +6,8 @@ Feature Requests :
 
 Virtual Gel (%Agarose/SDS, min bp/mw, marker)
 Homology Plot
-Sequencing primer
+Export plot data
+Helical wheel
 
 That ligation thingy 
     
