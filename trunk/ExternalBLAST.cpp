@@ -49,13 +49,15 @@ void EIpanel::init_blast()
 
 //#define BLAST_TEST_MODE
 
-class blastThread : public wxThread
+class blastThread : public wxThreadHelper
 {
 public :
-    blastThread ( EIpanel *panel , wxString seq ) : wxThread ()
+    blastThread ( EIpanel *panel , wxString seq ) : wxThreadHelper()// ( wxTHREAD_DETACHED )
 	{
 	    p = panel ;
+    	seq.Replace ( "|" , "" ) ;
 #ifndef BLAST_TEST_MODE
+//	    wxMutexGuiEnter() ;
 	    // Put
 	    url = "http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?" ;
 	    url += "CMD=Put" ;
@@ -77,12 +79,10 @@ public :
 	    url += "CMD=Get" ;
 	    url += "&RID=" + RID ;
 	    url += "&FORMAT_TYPE=XML" ;	    
+//	wxMessageBox ( "In" , wxString::Format ( "Wait %d sec" , wait ) ) ;
+//	    wxMutexGuiLeave() ;
 #endif
 	} ;
-
-    virtual void OnExit() 
-	{
-	}
 
     virtual void *Entry ()
 	{
@@ -101,17 +101,18 @@ public :
 		    wxMutexGuiLeave() ;
 		    wxThread::Sleep ( 1000 ) ; // Wait 1 sec
 		    wait-- ;
-		    if ( TestDestroy() ) wxThread::Exit() ;
+//		    if ( TestDestroy() ) wxThread::Exit() ;
 		}
-		wxMutexGuiEnter() ;
+//		wxMutexGuiEnter() ;
 		res = ex.getText ( url ) ;
-		wxMutexGuiLeave() ;
+//		wxMutexGuiLeave() ;
 		hs = parseQblast ( res ) ;
 		if ( hs["STATUS"].Upper() == "WAITING" ) wait = 10 ; // Wait another 10 seconds
 		else wait = 0 ; // Done!
 	    } while ( wait ) ;
 	    p->blast_res = res ;
-	    wxFile out ( fn , wxFile::write ) ; out.Write ( res ) ; out.Close() ; // For testing
+	    mylog ( "thread" , "done!" ) ;
+//	    wxFile out ( fn , wxFile::write ) ; out.Write ( res ) ; out.Close() ; // For testing
 #else
 	    // Dirty hack
 	    wxMutexGuiEnter() ;
@@ -130,8 +131,11 @@ public :
 
 	    wxMutexGuiLeave() ;
 #endif
+	    mylog ( "thread" , "pre" ) ;
 	    wxCommandEvent event( wxEVT_COMMAND_BUTTON_CLICKED, ID_B1 );
 	    wxPostEvent ( p , event ) ;
+	    mylog ( "thread" , "post" ) ;
+//	    wxThread::Exit() ;
 
 	    return NULL ;
 	}
@@ -177,11 +181,14 @@ private :
 
 void EIpanel::process_blast() // This starts the thread
 {
+    mylog ( "blast1" , "1" ) ;
     if ( !blast_res.IsEmpty() || blast_thread ) // If thread is running, or results are there...
     {
+    mylog ( "blast1" , "1a" ) ;
 	process_blast2() ;
 	return ;
     }
+    mylog ( "blast1" , "2" ) ;
 
     // Start thread
     blast_res.Empty() ;
@@ -192,37 +199,50 @@ void EIpanel::process_blast() // This starts the thread
 	blast_thread = NULL ;
 	return ;
     }
+    mylog ( "blast1" , "3" ) ;
 
-    if ( wxTHREAD_NO_ERROR != blast_thread->Run() )
+//    blast_thread->SetPriority ( 10 ) ; // Quite low
+    
+    if ( wxTHREAD_NO_ERROR != blast_thread->GetThread()->Run() )
     {
 	blast_thread = NULL ;
 	return ;
     }
+    mylog ( "blast1" , "4" ) ;
 
     b1->Disable() ;
+    mylog ( "blast1" , "5" ) ;
 }
 
 void EIpanel::process_blast2() // This is called upon termination of the thread
 {
     bool initial = false ;
+    mylog ( "blast2" , "1" ) ;
     if ( blast_thread )
     {
+#ifdef __WXMSW__
+//	blast_thread->Wait() ;
+//	blast_thread->Delete() ;
+#endif
 	blast_thread = NULL ;
 	b1->Enable() ;
 	initial = true ;
 	res_count = 0 ;
 	res_start = 0 ;
     }
+    mylog ( "blast2" , "2" ) ;
 
     TiXmlDocument blast_doc ;
     blast_doc.SetCondenseWhiteSpace(false);
     blast_doc.Parse ( blast_res.c_str() ) ;
 
+    mylog ( "blast2" , "3" ) ;
     hlb->Clear () ;
     showMessage ( txt("t_blast_failed") ) ;
     TiXmlNode *x = blast_doc.FirstChild ( "BlastOutput" ) ;
     if ( !x ) return ;
     
+    mylog ( "blast2" , "4" ) ;
     int w , h ;
     hlb->GetClientSize ( &w , &h ) ;
     w /= 8 ;
@@ -233,6 +253,7 @@ void EIpanel::process_blast2() // This is called upon termination of the thread
     x = x->FirstChild ( "Iteration" ) ;
     x = x->FirstChild ( "Iteration_hits" ) ;
     
+    mylog ( "blast2" , "5" ) ;
     int a = 0 ;
     for ( x = x->FirstChild ( "Hit" ) ; x ; x = x->NextSibling ( "Hit" ) , a++ )
     {
@@ -287,7 +308,9 @@ void EIpanel::process_blast2() // This is called upon termination of the thread
 	html += "</tr></table>" ;
 	hlb->Set ( a - res_start , html , id ) ;
     }
+    mylog ( "blast2" , "6" ) ;
     hlb->Update () ;
+    mylog ( "blast2" , "7" ) ;
 //    wxMessageBox ( wxString::Format ( "%d" , res_count ) ) ;
     b_next->Enable ( res_start + RETMAX < res_count ) ;
     b_last->Enable ( res_start > 0 ) ;
@@ -295,6 +318,8 @@ void EIpanel::process_blast2() // This is called upon termination of the thread
     int max = res_start + RETMAX ;
     if ( max > res_count ) max = res_count ;
     showMessage ( wxString::Format ( txt("t_blast_results_by" ) , blast_version.c_str() , res_start+1 , max , res_count ) ) ;
+    wxWakeUpIdle();
+    mylog ( "blast2" , "8" ) ;
 }
 
 wxString EIpanel::blast_align ( wxString qseq , wxString mseq , wxString hseq , int cpl , int qoff , int hoff )

@@ -254,11 +254,15 @@ void EIpanel::OnBnext ( wxCommandEvent& event )
      
 void EIpanel::process ()
 	{
+    mylog ( "EIpanel::process" , "1" ) ;
 	wxBeginBusyCursor () ;
 	hlb->Clear () ;
+    mylog ( "EIpanel::process" , "2" ) ;
 	if ( mode == EI_NCBI ) process_ncbi() ;
 	if ( mode == EI_BLAST ) process_blast() ;
+    mylog ( "EIpanel::process" , "3" ) ;
 	hlb->Update () ;
+    mylog ( "EIpanel::process" , "4" ) ;
 	wxEndBusyCursor () ;
 	}    
 	
