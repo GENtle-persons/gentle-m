@@ -130,7 +130,7 @@ TSQLresult TStorage::getObject_MySQL ( string query )
             mysql_free_result ( result ) ;
             }
         }
-    else wxMessageBox ( wxString::Format ( "MySQL error %d" , err ) , query.c_str() ) ;
+//    else wxMessageBox ( wxString::Format ( "MySQL error %d" , err ) , query.c_str() ) ;
 #endif
     return results ;
     }
@@ -297,6 +297,7 @@ void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme *e )
     TSQLresult sr ;
     string sql ;
     char u[100] ;
+    if ( e->name == "" ) return ;
     
     // Remove old enzyme, if any
     sql = "DELETE FROM enzyme WHERE e_name=\""+e->name+"\"" ;

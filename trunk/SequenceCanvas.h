@@ -249,6 +249,7 @@ class SeqFeature : public SeqDNA
     vector <wxPen> pens ;
     int maxlayers ;
     SeqAA *aaa ;
+    int id ; // Only used by TAlignment : lines[id]
     } ;
 
 class SequenceCanvas : public wxScrolledWindow

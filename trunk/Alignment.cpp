@@ -289,13 +289,10 @@ void TAlignment::recalcAlignments ()
         generateConsensusSequence () ;
         }
         
-    for ( a = 0 ; a < 1 ; a++ ) //lines.size() ; a++ )
+    for ( a = 0 ; a < 1 ; a++ )
         {
         if ( !lines[a].isIdentity && lines[a].v->items.size() > 0 )
-           {
-           lines[a].features = new TVector ;
-           *(lines[a].features) = *(lines[a].v) ;
-           }
+           lines[a].showFeatures () ;
         }
         
     SetCursor ( *wxSTANDARD_CURSOR ) ;
@@ -316,14 +313,13 @@ void TAlignment::redoAlignments ( bool doRecalc )
     // Display
     sc->maxendnumberlength = strlen ( txt("t_identity") ) ;
 
-//    SeqFeature *f = new SeqFeature ( sc ) ;
-//    sc->seq.push_back ( f ) ;
-
     for ( a = 0 ; a < lines.size() ; a++ )
         {
-        if ( lines[a].features )
+        if ( lines[a].hasFeatures() )
            {
+           lines[a].showFeatures () ;
            SeqFeature *f = new SeqFeature ( sc ) ;
+           f->id = a ;
            sc->seq.push_back ( f ) ;
            }
         SeqAlign *d = new SeqAlign ( sc ) ;
@@ -336,16 +332,14 @@ void TAlignment::redoAlignments ( bool doRecalc )
     // Features
     for ( int g = 0 ; g < lines.size() ; g++ )
         {
-        if ( lines[g].isIdentity ) continue ;
-        if ( !lines[g].features ) continue ;
-        delete lines[g].features ;
-        lines[g].features = new TVector ;
-        *(lines[g].features) = *(lines[g].v) ;
-        
-        for ( a = 0 ; a < lines[g].s.length() ; a++ )
-            {
-            if ( lines[g].s[a] == '-' )
-               lines[g].features->insert_char ( '-' , a+1 , false ) ;
+        if ( !lines[g].isIdentity && lines[g].hasFeatures() )
+           {
+//            lines[g].showFeatures () ;
+            for ( a = 0 ; a < lines[g].s.length() ; a++ )
+                {
+                if ( lines[g].s[a] == '-' )
+                   lines[g].getFeatures()->insert_char ( '-' , a+1 , false ) ;
+                }
             }
         }
 
@@ -384,20 +378,20 @@ void TAlignment::generateConsensusSequence ( bool addit )
     
 void TAlignment::myInsert ( int line , int pos , char what )
     {
-    if ( lines[line].features )
+    if ( lines[line].hasFeatures() )
         {
-        lines[line].features->insert_char ( '-' , pos , false ) ;
-        lines[line].s = lines[line].features->sequence ;
+        lines[line].getFeatures()->insert_char ( '-' , pos , false ) ;
+        lines[line].s = lines[line].getFeatures()->sequence ;
         }
     else lines[line].s.insert ( pos-1 , wxString ( what ) ) ;
     }
 
 void TAlignment::myDelete ( int line , int pos )
     {
-    if ( lines[line].features )
+    if ( lines[line].hasFeatures() )
         {
-        lines[line].features->doRemoveNucleotide ( pos - 1 ) ;
-        lines[line].s = lines[line].features->sequence ;
+        lines[line].getFeatures()->doRemoveNucleotide ( pos - 1 ) ;
+        lines[line].s = lines[line].getFeatures()->sequence ;
         }
     else lines[line].s.erase ( pos-1 , 1 ) ;
     }
@@ -480,23 +474,23 @@ void TAlignment::updateSequence ()
     for ( int g = 0 ; g < sc->seq.size() ; g++ )
         {
         if ( sc->seq[g]->whatsthis() != "FEATURE" ) continue ;
-        int id = ((SeqAlign*)sc->seq[g+1])->id ;
         SeqFeature *f = (SeqFeature*) sc->seq[g] ;
-        if ( lines[id].features->type == TYPE_AMINO_ACIDS )
+        int id = f->id ;
+        if ( lines[id].getFeatures()->type == TYPE_AMINO_ACIDS )
             {
             colCur = &colAA ;
             if ( aaa ) delete aaa ;
             aaa = new SeqAA ( NULL ) ;
             sc->seq[g] = aaa ;
-            aaa->initFromString ( lines[id].features->sequence ) ;
-            aaa->fixOffsets ( lines[id].features ) ;
+            aaa->initFromString ( lines[id].getFeatures()->sequence ) ;
+            aaa->fixOffsets ( lines[id].getFeatures() ) ;
             aaa->can = sc ;
             sc->arrange () ;
             sc->seq[g] = f ;
-            f->initFromTVector ( lines[id].features ) ;
+            f->initFromTVector ( lines[id].getFeatures() ) ;
             f->aaa = aaa ;
             }
-        else if ( lines[id].features->type == TYPE_VECTOR )
+        else if ( lines[id].getFeatures()->type == TYPE_VECTOR )
             {
             colCur = &colDNA ;
             if ( aaa ) delete aaa ;
@@ -504,15 +498,15 @@ void TAlignment::updateSequence ()
             sc->seq[g] = aaa ;
             aaa->mode = AA_KNOWN ;
             aaa->disp = AA_ONE ;
-            aaa->initFromTVector ( lines[id].features ) ;
+            aaa->initFromTVector ( lines[id].getFeatures() ) ;
             aaa->showNumbers = false ;
             aaa->can = sc ;
             sc->arrange () ;
             sc->seq[g] = f ;
-            f->initFromTVector ( lines[id].features ) ;
+            f->initFromTVector ( lines[id].getFeatures() ) ;
             f->aaa = aaa ;
             }
-        else f->initFromTVector ( lines[id].features ) ;
+        else f->initFromTVector ( lines[id].getFeatures() ) ;
         }
     sc->arrange () ;
     sc->SilentRefresh() ;
@@ -535,7 +529,6 @@ void TAlignment::OnSettings ( wxCommandEvent &ev )
         TAlignLine line ;
         line.name = ad.vcn[a] ;
         line.v = ad.vcv[a] ;
-//        line.origin = NULL ;
         line.ResetSequence() ;
         lines.push_back ( line ) ;
         }
@@ -1001,3 +994,26 @@ ChildBase *TAlignLine::FindOrigin ()
     return NULL ;
     }
 
+void TAlignLine::showFeatures ()
+    {
+    features = new TVector ; // wasting memory each time
+    features->setFromVector ( *v ) ;
+    features->setWindow ( (ChildBase*) this ) ;
+    }
+
+void TAlignLine::hideFeatures ()
+    {
+    delete features ;
+    features = NULL ;
+    }
+
+TVector *TAlignLine::getFeatures ()
+    {
+    return features ;
+    }
+
+bool TAlignLine::hasFeatures ()
+    {
+    return features != NULL ;
+    }
+    

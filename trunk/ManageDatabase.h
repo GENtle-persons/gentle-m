@@ -23,6 +23,15 @@ class TMyDropTarget : public wxTextDropTarget
     wxListCtrl *me ;
     } ;
 
+class TMySQLDialog : public wxDialog
+    {
+    public :
+    TMySQLDialog ( wxWindow *parent , wxString title , wxString server = "" ,
+        wxString db = "" , wxString user = "root" , wxString password = "" ) ;
+
+    wxTextCtrl *s , *d , *u , *p ;
+    } ;
+    
 class TManageDatabaseDialog : public wxDialog
     {
     public :
@@ -40,6 +49,8 @@ class TManageDatabaseDialog : public wxDialog
     virtual void pdOnDel ( wxCommandEvent &ev ) ;
     virtual void pdOnDBchange ( wxCommandEvent &ev ) ;
     virtual void pdOnSetDefault ( wxCommandEvent &ev ) ;
+    virtual void pmAddSQL ( wxCommandEvent &ev ) ;
+    virtual void pmNewSQL ( wxCommandEvent &ev ) ;
     
     virtual void pmOnListEvent ( wxListEvent &ev , wxListCtrl *source , wxListCtrl *target ) ;
     virtual void pmOnLeftListEvent ( wxListEvent &ev ) ;

@@ -23,12 +23,18 @@ class TAlignLine // pun intended
     {
     public :
     TAlignLine () ;
-    ~TAlignLine () ;
-    void ResetSequence () ;
-    ChildBase *FindOrigin () ;
+    virtual ~TAlignLine () ;
+    virtual void ResetSequence () ;
+    virtual ChildBase *FindOrigin () ;
+    virtual void showFeatures () ;
+    virtual void hideFeatures () ;
+    virtual TVector *getFeatures () ;
+    virtual bool hasFeatures () ;
+    
     string name , s ;
     TVector *v ;
     bool isIdentity ;
+    private :
     TVector *features ;
     } ;
 
