@@ -791,6 +791,7 @@ void fast_nj_tree(char **tree_description, FILE *tree)
 
 	/* IMPROVEMENT 2, STEP 0 : declare  variables */
 	sint loop_limit;
+/// Part of the ClustalW package
 	typedef struct _ValidNodeID {
 	    sint n;
 	    struct _ValidNodeID *prev;

@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the ChildBase class
+*/
 #include "main.h"
 //#include "ChildBase.h"
 
