@@ -1,7 +1,7 @@
 [Project]
 FileName=GENtle.dev
 Name=GENtle
-UnitCount=77
+UnitCount=83
 Type=0
 Ver=1
 ObjFiles=
@@ -768,9 +768,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit78]
-FileName=clustal\xmenu.h
+FileName=SequenceTypeDNA.cpp
 CompileCpp=1
-Folder=Clustal-W
+Folder=Canvases
 Compile=1
 Link=1
 Priority=1000
@@ -778,9 +778,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit80]
-FileName=clustal\amenu.c
+FileName=SequenceTypeAA.cpp
 CompileCpp=1
-Folder=Clustal-W
+Folder=Canvases
 Compile=1
 Link=1
 Priority=1000
@@ -788,9 +788,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit81]
-FileName=clustal\calcgap.c
+FileName=SequenceTypeABI.cpp
 CompileCpp=1
-Folder=Clustal-W
+Folder=Canvases
 Compile=1
 Link=1
 Priority=1000
@@ -798,9 +798,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit82]
-FileName=clustal\calcprf1.c
+FileName=SequenceTypeFeature.cpp
 CompileCpp=1
-Folder=Clustal-W
+Folder=Canvases
 Compile=1
 Link=1
 Priority=1000
@@ -808,9 +808,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit83]
-FileName=clustal\calcprf2.c
+FileName=SequenceTypeAlign.cpp
 CompileCpp=1
-Folder=Clustal-W
+Folder=Canvases
 Compile=1
 Link=1
 Priority=1000
@@ -990,6 +990,16 @@ BuildCmd=
 FileName=TUReadSeq.cpp
 CompileCpp=1
 Folder=Data structures
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit79]
+FileName=SequenceTypeRestriction.cpp
+CompileCpp=1
+Folder=Canvases
 Compile=1
 Link=1
 Priority=1000
