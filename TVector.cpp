@@ -1178,6 +1178,7 @@ TVector *TVector::getAAvector ( int from , int to , int dir )
         }
     else aas.mode = AA_KNOWN ;
     aas.initFromTVector ( v ) ;
+    mylog ( "TVector::getAAvector" , "1" ) ;
     v->sequence = aas.s ;
     for ( a = to+1 ; a < v->sequence.length() ; a++ ) v->sequence.SetChar(a,UNIQUE) ;
     for ( a = 0 ; a < v->sequence.length() ; a++ )
@@ -1185,9 +1186,11 @@ TVector *TVector::getAAvector ( int from , int to , int dir )
            v->sequence.SetChar(a,UNIQUE) ;
     
     
+    mylog ( "TVector::getAAvector" , "2" ) ;
     // Cleaning restriction enzymes
     v->re.Clear() ;
     v->rc.clear() ;
+    mylog ( "TVector::getAAvector" , "3" ) ;
 
 //    wxStopWatch sw ;
 //    sw.Start() ;
@@ -1201,6 +1204,7 @@ TVector *TVector::getAAvector ( int from , int to , int dir )
            a-- ;
            }
         }
+    mylog ( "TVector::getAAvector" , "4" ) ;
         
 //    sw.Pause() ;
 
@@ -1221,6 +1225,7 @@ TVector *TVector::getAAvector ( int from , int to , int dir )
 
     v->circular = false ;
 //    wxMessageBox ( wxString::Format ( "%d ms" , sw.Time() ) ) ;
+    mylog ( "TVector::getAAvector" , "5" ) ;
     return v ;
     }
     

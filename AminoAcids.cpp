@@ -74,7 +74,10 @@ void TAminoAcids::OnBacktranslate ( wxCommandEvent& event )
 void TAminoAcids::initme ()
     {
     int bo = 5 ;
+    mylog ( "TAminoAcids::initme" , "1" ) ;
     vec->undo.clear() ;
+    mylog ( "TAminoAcids::initme" , "2" ) ;
+    
 
     // Menus
     wxMenu *file_menu = myapp()->frame->getFileMenu ( true , true ) ;
@@ -114,6 +117,7 @@ void TAminoAcids::initme ()
     menu_bar->Append(tool_menu, txt("m_tools") );
     menu_bar->Append(help_menu, txt("m_help") );
     SetMenuBar(menu_bar);
+    mylog ( "TAminoAcids::initme" , "3" ) ;
 
     // Sequence Canvas
     sc = new SequenceCanvas ( this , wxPoint ( 0 , 0 ) , wxSize ( 100 , 100 ) ) ;
@@ -122,6 +126,7 @@ void TAminoAcids::initme ()
     sc->child = this ;
     sc->edit_id = "AA" ;
     sc->edit_valid = "ACDEFGHIKLMNPQRSTVWY|" ;
+    mylog ( "TAminoAcids::initme" , "4" ) ;
 
     int w , h ;
 //    GetParent()->GetClientSize ( &w , &h ) ;
@@ -130,6 +135,7 @@ void TAminoAcids::initme ()
     
     Hide();
     
+    mylog ( "TAminoAcids::initme" , "5" ) ;
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     
     h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
@@ -147,6 +153,8 @@ void TAminoAcids::initme ()
     lb->Append ( txt("t_aa_plot_pi") ) ;
     lb->Append ( txt("t_aa_plot_hp") ) ;
     lb->Append ( txt("t_chou_fasman") ) ;
+
+    mylog ( "TAminoAcids::initme" , "6" ) ;
 
 #ifdef __WXMSW__
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
@@ -180,6 +188,7 @@ void TAminoAcids::initme ()
 #endif
 
 
+    mylog ( "TAminoAcids::initme" , "7" ) ;
     curDisplay = new wxPanel ( this , -1 ) ;
 
 
@@ -194,16 +203,23 @@ void TAminoAcids::initme ()
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;
     lb->SetStringSelection ( txt("t_data") ) ;
+    mylog ( "TAminoAcids::initme" , "8" ) ;
     
     wxCommandEvent event ;
     OnListBox ( event ) ;
+    mylog ( "TAminoAcids::initme" , "9" ) ;
 
     showSequence () ;
+    mylog ( "TAminoAcids::initme" , "9a" ) ;
     showStat () ;
+    mylog ( "TAminoAcids::initme" , "9b" ) ;
     updateUndoMenu () ;
+    mylog ( "TAminoAcids::initme" , "10" ) ;
     if ( myapp()->frame->isLocked() ) return ;
+    mylog ( "TAminoAcids::initme" , "11a" ) ;
     Activate () ;
     sc->SetFocus() ;
+    mylog ( "TAminoAcids::initme" , "11b" ) ;
     }
     
 wxString TAminoAcids::getName ()
@@ -247,13 +263,16 @@ void TAminoAcids::showStat ()
 
 void TAminoAcids::showSequence ()
     {
+    mylog ( "TAminoAcids::showSequence" , "1" ) ;
     // Cleaning up
     CLEAR_DELETE ( sc->seq ) ;
+    mylog ( "TAminoAcids::showSequence" , "2" ) ;
 
     // Display
     SeqFeature *seqF = new SeqFeature ( sc ) ;
     sc->seq.Add ( seqF ) ;
     seqF->initFromTVector ( vec ) ;
+    mylog ( "TAminoAcids::showSequence" , "3" ) ;
 
     SeqAA *d = new SeqAA ( sc ) ;
     sc->seq.Add ( d ) ;
@@ -261,6 +280,7 @@ void TAminoAcids::showSequence ()
     d->takesMouseActions = true ;
     d->initFromString ( vec->getSequence() ) ;
 //    d->fixOffsets ( vec ) ;
+    mylog ( "TAminoAcids::showSequence" , "4" ) ;
 
     // Plot demo
     if ( inlinePlot->GetStringSelection() == txt("t_chou_fasman") )
@@ -272,14 +292,19 @@ void TAminoAcids::showSequence ()
         seqP->useChouFasman() ;
         seqP->takesMouseActions = false ;
         }
+    mylog ( "TAminoAcids::showSequence" , "5" ) ;
     
     seqF->aaa = d ;
         
+    mylog ( "TAminoAcids::showSequence" , "6" ) ;
     sc->arrange () ;
+    mylog ( "TAminoAcids::showSequence" , "7" ) ;
     sc->SilentRefresh () ;    
+    mylog ( "TAminoAcids::showSequence" , "8" ) ;
 
     wxCommandEvent event ;
     OnListBox ( event ) ;
+    mylog ( "TAminoAcids::showSequence" , "9" ) ;
     }
     
 void TAminoAcids::OnEditMode(wxCommandEvent& event)

@@ -538,7 +538,7 @@ void MyFrame::OnFileImport(wxCommandEvent& WXUNUSED(event) )
     d.GetPaths ( paths ) ;
     wxBeginBusyCursor();
     wxProgressDialog pd ( txt("t_loading") , "" , files.GetCount() , NULL , wxPD_ALL ) ;
-    lockDisplay ( true ) ;
+//    lockDisplay ( true ) ;
     wxString unknown ;
     int a ;
     for ( a = 0 ; a < files.GetCount() ; a++ )
@@ -553,7 +553,7 @@ void MyFrame::OnFileImport(wxCommandEvent& WXUNUSED(event) )
     if ( a == files.GetCount() ) pd.Update ( a ) ; // Hide progress dialog
     if ( !unknown.IsEmpty() )
     	wxMessageBox ( unknown , txt("t_unable_to_detect_file_type") ) ;
-    lockDisplay ( false ) ;
+//    lockDisplay ( false ) ;
     SetFocus () ;
     wxEndBusyCursor();
     mainTree->Refresh () ;
@@ -1018,21 +1018,26 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , wxString title )
     {
     int a ;
     if ( title.IsEmpty() ) title = "Surprise!" ;
-    
+
+    mylog ( "MyFrame::newAminoAcids" , "1" ) ;    
     TAminoAcids *subframe = new TAminoAcids ( (wxWindow*) getCommonParent() , title ) ;
     setChild ( subframe ) ;
 
+    mylog ( "MyFrame::newAminoAcids" , "2" ) ;    
     subframe->vec->setFromVector ( *nv ) ;
     
+    mylog ( "MyFrame::newAminoAcids" , "3" ) ;    
     wxString seq = subframe->vec->getSequence() ;
     seq.Replace ( "|" , "" , true ) ;
     subframe->vec->setSequence ( seq ) ;
     
+    mylog ( "MyFrame::newAminoAcids" , "4" ) ;    
     subframe->vec->setWindow ( subframe ) ;
     subframe->vec->type = TYPE_AMINO_ACIDS ;
     subframe->vec->setName ( title ) ;
     subframe->vec->undo.clear() ;
     
+    mylog ( "MyFrame::newAminoAcids" , "5" ) ;    
     for ( a = 0 ; a < nv->items.size() ; a++ )
         {
         nv->items[a].setType ( VIT_MISC ) ;
@@ -1046,14 +1051,18 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , wxString title )
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
 
-    mainTree->addChild ( subframe , TYPE_AMINO_ACIDS ) ;
+    mylog ( "MyFrame::newAminoAcids" , "6" ) ;    
+    mainTree->addChild ( subframe , TYPE_AMINO_ACIDS ) ; 
+    mylog ( "MyFrame::newAminoAcids" , "6a" ) ;    
     subframe->initme () ;
+    mylog ( "MyFrame::newAminoAcids" , "7" ) ;    
     if ( locked != 0 ) return subframe ;
     subframe->Show() ;
     subframe->Maximize() ;
     subframe->showName() ;
     subframe->Activate () ;
     children.Last()->Activate () ;
+    mylog ( "MyFrame::newAminoAcids" , "8" ) ;    
     return subframe ;
     }
 

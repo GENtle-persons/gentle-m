@@ -91,7 +91,7 @@ void PlasmidCanvas::setMark ( int i1 , int i2 )
 // Define a constructor for my canvas
 PlasmidCanvas::PlasmidCanvas(wxWindow *parent, const wxPoint& pos, const wxSize& size)
         : wxScrolledWindow(parent, -1, pos, size,
-                           wxSUNKEN_BORDER|wxVSCROLL|wxHSCROLL)
+                           wxSUNKEN_BORDER|wxVSCROLL|wxHSCROLL|wxFULL_REPAINT_ON_RESIZE)
 {
     SetBackgroundColour(wxColour("WHITE"));
 
@@ -791,7 +791,7 @@ void PlasmidCanvas::showGClegend ( wxDC &dc )
     if ( tw * 11 / 10 > nw ) nw = tw ;
 	if ( p->vec->isLinear() )
 		{
-  		r = wxRect ( w/2 - nw/2 , h / 25 , nw , th*5/2 ) ;
+  		r = wxRect ( w/2 - nw/2 , h / 40 , nw , th*5/2 ) ;
 		}
   	else
    		{
