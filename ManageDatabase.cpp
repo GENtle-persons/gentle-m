@@ -793,10 +793,12 @@ void TManageDatabaseDialog::pmOpenFiles ( vector <string> &_names , string _db )
     if ( _names.size() == 0 ) return ;
     if ( doLoad || doSave )
         myapp()->frame->LS->setOption ( "TWOPANES" , f_twopanes->GetValue() ) ;
+    wxBeginBusyCursor () ;
     myapp()->frame->Freeze () ;
     for ( int a = 0 ; a < _names.size() ; a++ )
        do_load ( _names[a] , _db ) ;
     myapp()->frame->Thaw () ;
+    wxEndBusyCursor () ;
 
     SetReturnCode ( wxID_OK ) ;
     EndModal ( true ) ;
@@ -881,11 +883,7 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
     v->setStickyEnd ( true , false , sr[0][sr["dna_sticky_ll"]] ) ;
     v->setStickyEnd ( false , true , sr[0][sr["dna_sticky_ur"]] ) ;
     v->setStickyEnd ( false , false , sr[0][sr["dna_sticky_lr"]] ) ;
-/*    // To be deleted
-    v->_ll = sr[0][sr["dna_sticky_ll"]] ;
-    v->_ru = sr[0][sr["dna_sticky_ur"]] ;
-    v->_rl = sr[0][sr["dna_sticky_lr"]] ;
-*/
+
     v->setParams ( sr[0][sr["dna_params"]] ) ;
     if ( sr[0][sr["dna_circular"]] == "1" ) v->setCircular ( true ) ;
     else v->setCircular ( false ) ;

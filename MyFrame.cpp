@@ -755,6 +755,7 @@ MyChild* MyFrame::newFromVector ( TVector *nv , int type )
     MyChild *subframe = new MyChild(this, "",
                                     wxPoint(-1, -1), wxSize(-1, -1),
                                     wxDEFAULT_FRAME_STYLE);
+    myass ( subframe , "MyFrame::newFromVector" ) ;
 
     // Give it an icon
 #ifdef __WXMSW__
@@ -763,11 +764,11 @@ MyChild* MyFrame::newFromVector ( TVector *nv , int type )
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
 
-
     subframe->initme() ;
     delete subframe->vec ;
     subframe->vec = nv ;
     subframe->vec->setWindow ( subframe ) ;
+
 
     subframe->initPanels() ;
     mainTree->addChild(subframe,type) ;
@@ -1024,7 +1025,6 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , string title )
     if ( title == "" ) title = "Surprise!" ;
     TAminoAcids *subframe = new TAminoAcids ( this , title.c_str() ) ;
     
-//    subframe->vec->sequence = aa ;
     subframe->vec->setFromVector ( *nv ) ;
     subframe->vec->setWindow ( subframe ) ;
     subframe->vec->type = TYPE_AMINO_ACIDS ;

@@ -198,7 +198,6 @@ void MyChild::OnCircularLinear(wxCommandEvent& event)
 
 void MyChild::initme ()
     {
-
     // Make a menubar
     wxMenu *file_menu = myapp()->frame->getFileMenu ( true , true , true ) ;
     wxMenu *tool_menu = myapp()->frame->getToolMenu ( true ) ;
@@ -231,7 +230,6 @@ void MyChild::initme ()
     view_menu->Append(MDI_EDIT_MODE, txt("m_edit_mode") , "" , true );
     view_menu->Append(MDI_VIEW_MODE, txt("m_view_mode") , "" , true );
     
-    
     wxMenu *mAA = new wxMenu ;
     view_menu->Append ( AA_MAIN , txt("m_aa_main") , mAA ) ;
     mAA->Append (AA_NONE,txt("m_aa_none") , "" , true );
@@ -246,7 +244,7 @@ void MyChild::initme ()
     mAA->AppendSeparator();
     mAA->Append (AA_ONE,txt("m_aa_one"), "" , true );
     mAA->Append (AA_THREE,txt("m_aa_three"), "" , true );
-    
+
     wxMenuBar *menu_bar = new wxMenuBar;
 
     menu_bar->Append(file_menu, txt("m_file") );
@@ -255,7 +253,9 @@ void MyChild::initme ()
     menu_bar->Append(tool_menu, txt("m_tools") );
     menu_bar->Append(help_menu, txt("m_help") );
 
+    myass ( menu_bar->FindItem(aa_state) , "MyChild::initme_1" ) ;
     menu_bar->FindItem(aa_state)->Check ( true ) ;
+    myass ( menu_bar->FindItem(aa_disp) , "MyChild::initme_1" ) ;
     menu_bar->FindItem(aa_disp)->Check ( true ) ;
 
     // Associate the menu bar with the frame
