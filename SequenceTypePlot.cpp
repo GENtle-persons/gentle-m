@@ -18,8 +18,11 @@ int SeqPlot::arrange ( int n )
     if ( can->isMiniDisplay ) can->MyGetClientSize ( &w , &h ) ;
     else can->MyGetSize ( &w , &h ) ;
     w -= 20 ; // Scrollbar dummy
-    if ( can->isMiniDisplay && can->aa && can->aa->miniDisplayOptions != MINI_DISPLAY_ORIGINAL )
-         wx = 1 ;
+    if ( can->isMiniDisplay && can->aa )
+        {
+        if ( can->aa->miniDisplayOptions == MINI_DISPLAY_REAL ) wx = w / s.length() + 1 ;
+        if ( can->aa->miniDisplayOptions == MINI_DISPLAY_CONDENSED ) wx = w / s.length() + 1 ;
+        }
 
     itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx ) ;
     itemsperline *= can->blocksize ;

@@ -392,7 +392,7 @@ class SequenceCanvas : public wxScrolledWindow
     SeqAlign *last_al ;
     int lastclick ;
     wxPen blue_pen ;
-    bool isMiniDisplay , marking ;
+    bool isMiniDisplay , marking , drawing ;
 
     DECLARE_EVENT_TABLE()
     };

@@ -19,6 +19,7 @@ void TUndo::setbase ( TVector *_base )
 // are ignored. Each undo-worthy function calls "start" and "stop"/"abort".
 void TUndo::start ( wxString _msg )
     {
+    IS_UNDO_OFF
     cnt++ ;
     if ( cnt > 1 ) return ;
     TVector *v = new TVector ;
@@ -29,6 +30,7 @@ void TUndo::start ( wxString _msg )
 
 void TUndo::stop ()
     {
+    IS_UNDO_OFF
     cnt-- ;
     if ( cnt > 0 ) return ;
     if ( base ) base->setChanged() ;
@@ -39,6 +41,7 @@ void TUndo::stop ()
 // the undo process will be cancelled
 void TUndo::abort ()
     {
+    IS_UNDO_OFF
     cnt-- ;
     if ( cnt > 0 ) return ;
     delete mem[mem.size()-1] ;
@@ -49,12 +52,14 @@ void TUndo::abort ()
     
 void TUndo::remember ( wxString _msg )
     {
+    IS_UNDO_OFF
     start ( _msg ) ;
     stop () ;
     }
     
 void TUndo::clear ()
     {
+    IS_UNDO_OFF
     for ( int a = 0 ; a < mem.size() ; a++ ) delete mem[a] ;
     msg.clear() ;
     mem.clear() ;
@@ -68,6 +73,7 @@ void TUndo::clear ()
 
 void TUndo::pop ()
     {
+    IS_UNDO_OFF
     TVector *v = mem[mem.size()-1] ;
     mem.pop_back () ;
     msg.pop_back () ;

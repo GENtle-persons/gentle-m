@@ -768,6 +768,16 @@ void MyChild::OnAA_setit(int mode)
     seqAA->disp = aa_disp ;
     seqAA->initFromTVector ( vec ) ;
     seqAA->showNumbers = false ;
+    
+    for ( int u = 0 ; u < cSequence->seq.size() ; u++ )
+        {
+        if ( cSequence->seq[u]->whatsthis() == "FEATURE" )
+           {
+           SeqFeature *feat = (SeqFeature*) cSequence->seq[u] ;
+           feat->aaa = seqAA ;
+           }
+        }
+    
     cSequence->arrange () ;
     cSequence->Refresh ( false ) ;
     if ( !wasZero && aa_state != AA_NONE )

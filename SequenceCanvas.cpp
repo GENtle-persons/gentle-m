@@ -79,6 +79,7 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
     blocksize = 10 ;
     lowx = lowy = -1 ;
     marking = false ;
+    drawing = false ;
 
     isMiniDisplay = false ;
     m_dirty = FALSE;
@@ -931,8 +932,10 @@ void SequenceCanvas::OnSize(wxSizeEvent &event)
 // Define the repainting behaviour
 void SequenceCanvas::OnDraw(wxDC& dc)
 {
+    if ( drawing ) return ;
     if ( seq.size() == 0 ) return ;
     if ( doHide ) return ;
+    drawing = true ;
     int wx , wy ;
     dc.SetFont ( *font ) ;
     dc.GetTextExtent ( "A" , &wx , &wy ) ;
@@ -951,11 +954,16 @@ void SequenceCanvas::OnDraw(wxDC& dc)
                      print_maxx = seq[a]->pos.r[b].GetRight() ;
                   }
                }
+            drawing = false ;
             return ;
             }
         }
         
-    if ( printing ) return ;
+    if ( printing )
+        {
+        drawing = false ;
+        return ;
+        }
         
     int vx , vy ;
     GetViewStart ( &vx , &vy ) ;
@@ -980,6 +988,7 @@ void SequenceCanvas::OnDraw(wxDC& dc)
         dc.Clear() ;
         safeShow ( dc ) ;
         }
+    drawing = false ;
 }
 
 void SequenceCanvas::safeShow ( wxDC &dc )
@@ -1005,6 +1014,7 @@ void SequenceCanvas::safeShow ( wxDC &dc )
     
 void SequenceCanvas::OnEvent(wxMouseEvent& event)
 {
+    if ( drawing ) return ;
     wxClientDC dc(this);
     PrepareDC(dc);
 
