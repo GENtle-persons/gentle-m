@@ -28,6 +28,9 @@ void SeqFeature::show ( wxDC& dc )
     while ( li.GetCount() < pl.maxlevels ) li.Add ( -1 ) ;
     while ( lx.GetCount() < pl.maxlevels ) lx.Add ( -1 ) ;
     while ( used.GetCount() < pl.maxlevels ) used.Add ( 0 ) ;
+    
+    bool drawOffsets = true ;
+    if ( can->child && can->child->def == "alignment" ) drawOffsets = false ;
 
     for ( int l = 0 ; l < pl.maxlevels ; l++ )
         {
@@ -86,17 +89,20 @@ void SeqFeature::show ( wxDC& dc )
                          aaa->offset_items[b-1] == &vec->items[pl.getID(i)] )*/
                          
                     // Offsets
-                    int o = -1 ;
-                    if ( (b-1) % 10 == 0 && !newline )
-                       o = vec->items[pl.getID(i)].getOffsetAt ( b-1 ) ;
-                    if ( o != -1 )     
+                    if ( drawOffsets )
                        {
-                       dc.SetTextForeground ( col ) ;
-                       wxString pn = wxString::Format ( "%d" , o ) ;  //aaa->offsets[b-1] ) ;
-                       int u1 , u2 ;
-                       dc.GetTextExtent ( pn , &u1 , &u2 ) ;
-                       dc.DrawText ( pn , x_to - can->charwidth , level - u2 ) ;
-                       }
+                       int o = -1 ;
+                       if ( (b-1) % 10 == 0 && !newline )
+                          o = vec->items[pl.getID(i)].getOffsetAt ( b-1 ) ;
+                       if ( o != -1 )     
+                          {
+                          dc.SetTextForeground ( col ) ;
+                          wxString pn = wxString::Format ( "%d" , o ) ;  //aaa->offsets[b-1] ) ;
+                          int u1 , u2 ;
+                          dc.GetTextExtent ( pn , &u1 , &u2 ) ;
+                          dc.DrawText ( pn , x_to - can->charwidth , level - u2 ) ;
+                          }
+                       }    
     
                     if ( mode == FEAT_ALPHA ) // Alpha helix
                        {

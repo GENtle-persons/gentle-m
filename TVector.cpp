@@ -1455,6 +1455,9 @@ void TVectorItem::translate ( TVector *v , SeqAA *aa )
       complement = true ;
       }
    b += direction * (rf-1) ;
+   
+   if ( to >= from ) dna2aa.reserve ( ( to - from + 1 ) / 3 + 2 ) ;
+   else dna2aa.reserve ( ( to + v->getSequenceLength() - from + 1 ) / 3 + 2 ) ;
 
    while ( c != '|' && rf != 0 )
       {

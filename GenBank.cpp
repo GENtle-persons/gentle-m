@@ -26,13 +26,16 @@ void TGenBank::load ( wxString s )
 	vs.Clear() ;
  	wxTextFile file ;
     file.Open ( s ) ;
+    mylog ( "-GenBank import" , "file opened" ) ;
 	vs.Alloc ( file.GetLineCount() ) ;
 	wxString str ;
 	for ( str = file.GetFirstLine(); !file.Eof(); str = file.GetNextLine() )
 	   if ( !trim(str).IsEmpty() ) vs.Add ( str ) ;
     if ( !trim(str).IsEmpty() ) vs.Add ( str ) ;
+    mylog ( "-GenBank import" , "file added" ) ;
     
     parseLines () ;
+    mylog ( "-GenBank import" , "file parsed" ) ;
     }
     
 void TGenBank::paste ( wxString s )
