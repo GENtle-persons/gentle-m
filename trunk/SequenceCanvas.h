@@ -393,7 +393,7 @@ class SequenceCanvas : public wxScrolledWindow
     bool marking , drawing , printing , wantOverwrite , forceoverwrite ;
     bool editMode ;
     wxDC *print_dc ;
-    int lastclick , lowx , lowy , lastpos , print_maxx , vpy ;
+    int lastclick , lowx , lowy , lastpos , print_maxx , vpx , vpy ;
     wxString lastToolTip ;
     SeqAlign *last_al ;
     SeqBasic *lastwhere ;

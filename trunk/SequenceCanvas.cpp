@@ -226,6 +226,8 @@ void SequenceCanvas::OnCharHook(wxKeyEvent& event)
         int vx , vy , wx , wy ;
         MyGetViewStart ( &vx , &vy ) ;
         MyGetClientSize ( &wx , &wy ) ;
+        wx /= charwidth ;
+        wx -= wx % ( seq.size() + 1 ) ;
         wy /= charheight ;
         wy -= wy % ( seq.size() + 1 ) ;
         
@@ -338,10 +340,14 @@ void SequenceCanvas::OnCharHook(wxKeyEvent& event)
            }
            
         // Scrolling so the cursor is visible
-        int ny = vy ;
+        int nx = vx , ny = vy ;
+        while ( nx > 0 && nx > vpx ) nx-- ;
+        while ( nx + wx <= vpx ) nx++ ;
         while ( ny > 0 && ny > vpy ) ny-- ;
         while ( ny + wy <= vpy ) ny++ ;
-        Scroll ( -1 , ny ) ;
+        if ( isHorizontal() ) ny = -1 ;
+        else nx = -1 ;
+        Scroll ( nx , ny ) ;
         if ( p )
            wxLogStatus(txt("seq_ed_loc"), p->cPlasmid->getMarkFrom() ) ;
         }
@@ -731,11 +737,24 @@ void SequenceCanvas::ensureVisible ( int pos )
     MyGetClientSize ( &wx , &wy ) ;
     wy /= charheight ;
     wy -= wy % ( seq.size() + 1 ) ;
+    
+    wx /= charwidth ;
+    wx -= wx % ( seq.size() + 1 ) ;
 
-    int ny = pos ;
-    while ( ny > 0 && ny > vpy ) ny-- ;
-    while ( ny + wy <= vpy ) ny++ ;
-    Scroll ( -1 , ny ) ;
+    int nx = pos , ny = pos ;
+    if ( isHorizontal() )
+        {
+        ny = -1 ;
+        while ( nx > 0 && nx > vpx ) nx-- ;
+        while ( nx + wx <= vpx ) nx++ ;
+        }
+    else
+        {
+        nx = -1 ;
+        while ( ny > 0 && ny > vpy ) ny-- ;
+        while ( ny + wy <= vpy ) ny++ ;
+        }
+    Scroll ( nx , ny ) ;
     }
 
 bool SequenceCanvas::inMarkRange ( int x , int f , int t , int l )
@@ -770,6 +789,7 @@ void SequenceCanvas::mark ( string id , int from , int to , int value )
     marking = false ;
     
     int a , b = -1 , cnt = 0 ;
+    vpx = -1 ;
     vpy = -1 ; 
     for ( a = 0 ; a < seq.size() && b == -1 ; a++ )
         if ( seq[a]->whatsthis() == id )
@@ -792,8 +812,8 @@ void SequenceCanvas::mark ( string id , int from , int to , int value )
            {
            seq[b]->pos.m[a] = value ;
            cnt += value ;
-           if ( vpy == -1 )
-              vpy = seq[b]->pos.r[a].GetTop() / charheight ;
+           if ( vpx == -1 ) vpx = seq[b]->pos.r[a].GetLeft() / charwidth ;
+           if ( vpy == -1 ) vpy = seq[b]->pos.r[a].GetTop() / charheight ;
            }
         else 
            seq[b]->pos.m[a] = 0 ;
