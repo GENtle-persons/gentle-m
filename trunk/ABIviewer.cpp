@@ -389,6 +389,7 @@ void TABIviewer::OnEditName(wxCommandEvent& event)
     
 void TABIviewer::OnMarkAll(wxCommandEvent& event)
     {
+    if ( sc->getEditMode() ) return ;
     sc->mark ( "ABI" , 1 , vec->getSequenceLength() ) ;
     }
     

@@ -5,7 +5,7 @@ typedef unsigned int uint ;
 
 // This will turn the myass error logging on/off
 // Place a comment in front of the following line when compiling releases
-//#define MYDEBUG
+#define MYDEBUG
 
 // Turn logging on/off
 #define MYLOG

@@ -19,6 +19,19 @@ void SeqBasic::logsize ()
     mylog ( whatsthis() , wxString::Format ( "l %d" , pos.l.size() * sizeof ( wxRect ) ) ) ;
     mylog ( "---" , "" ) ;
     }    
+    
+void SeqBasic::editMode ( bool on )
+	{
+	if ( on )
+		{
+//		s += " " ;
+		}
+	else
+ 		{
+ 		if ( !s.IsEmpty() && s.GetChar ( s.length() - 1 ) == ' ' )
+ 			s = s.Left ( s.length() - 1 ) ;
+   		}        
+	}    
 
 SeqBasic::~SeqBasic ()
     {

@@ -82,8 +82,6 @@ class PlasmidCanvas : public wxScrolledWindow
     
     virtual int getMarkFrom () ;
     virtual int getMarkTo () ;
-    virtual void setMarkFrom ( int _i ) ;
-    virtual void setMarkTo ( int _i ) ;
     virtual void getMark ( int &i1 , int &i2 ) ;
     virtual void setMark ( int i1 , int i2 ) ;
     virtual void setRootChild ( MyChild *_p ) ;
@@ -139,7 +137,6 @@ class PlasmidCanvas : public wxScrolledWindow
     int mousediffx , mousediffy , zoom , context_last_item ;
     int r , w , h ;
     bool initialclick , painting , hasBeenPainted , printing ;
-    int mark_from , mark_to ;
     wxToolTip *tt ;
     MyChild *p ;
     

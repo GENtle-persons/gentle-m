@@ -1541,7 +1541,7 @@ void TTestSuite::editMode ( ChildBase *ac )
           
 void TTestSuite::vectorPressKey ( ChildBase *ac )
 	{
-    if ( !ac->cSequence ) return ;
+    if ( !ac->cSequence ) { mylog ("D'oh!",""); return ;}
     wxKeyEvent ev ( wxEVT_CHAR_HOOK ) ;
     ev.m_altDown = false ;
     ev.m_controlDown = rand() % 2 ;
@@ -1636,6 +1636,11 @@ void TTestSuite::Step()
     if ( !ac ) return ; // No child open
     
     cnt++ ;
+    if ( cnt > 100000 )
+    	{
+	    wxMessageBox ( "100K" ) ;
+	    wxExit() ;
+    	}    
     int r = rand() ;
     r %= 10 ;
     

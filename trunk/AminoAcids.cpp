@@ -323,6 +323,7 @@ void TAminoAcids::OnEditName(wxCommandEvent& event)
     
 void TAminoAcids::OnMarkAll(wxCommandEvent& event)
     {
+    if ( sc->getEditMode() ) return ;
     sc->mark ( "AA" , 1 , vec->getSequenceLength() ) ;
     }
     

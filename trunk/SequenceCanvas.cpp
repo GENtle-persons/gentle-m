@@ -194,186 +194,212 @@ void SequenceCanvas::updateEdit ( TVector *v , wxString id , int from )
     mark ( id , from , from , 2 ) ;
     }
 
+void SequenceCanvas::editSequence ( int k , wxKeyEvent& event )
+	{
+    int a , b = -1 ;
+    wxString id = edit_id , valid = edit_valid ;
+    for ( a = 0 ; a < seq.GetCount() && b == -1 ; a++ )
+        if ( seq[a]->whatsthis() == id )
+           b = a ;
+    if ( b == -1 )
+       {
+       event.Skip() ; // Illegal ID
+       return ;
+       }
+    SeqDNA *dna = (SeqDNA*) seq[b] ;
+    int from = _from ;
+    wxString *the_sequence ;
+    if ( dna->whatsthis() == "AA" ) the_sequence = getAA()->vec->getSequencePointer() ;
+    else if ( dna->whatsthis() == "DNA" ) the_sequence = dna->vec->getSequencePointer() ;
+    else the_sequence = &dna->s ;
+    TVector *v = NULL ;
+    if ( p ) v = dna->vec ;
+    else if ( getAA() ) v = getAA()->vec ;
+
+    // Getting the layout
+    int vx , vy , wx , wy ;
+    MyGetViewStart ( &vx , &vy ) ;
+    MyGetClientSize ( &wx , &wy ) ;
+    wx /= charwidth ;
+    wx -= wx % ( seq.GetCount() + 1 ) ;
+    wy /= charheight ;
+    wy -= wy % ( seq.GetCount() + 1 ) ;
+    
+    // Checking key validity
+    if ( k >= 'a' && k <= 'z' ) k = k - 'a' + 'A' ;
+    for ( a = 0 ; a < valid.length() && valid.GetChar(a) != k ; a++ ) ;
+    if ( a == valid.length() && k >= 'A' && k <= 'Z' )
+       {
+       if ( wxMessageBox ( txt("t_allow_all_chars") , 
+                             txt("t_question") , 
+                             wxICON_QUESTION|wxYES_NO ) == wxYES )
+          {
+          edit_valid = "ABCDEFGHIJKLMNOPQRSTUVWXYZ|-" ;
+          valid = edit_valid ;
+          for ( a = 0 ; a < valid.length() && valid.GetChar(a) != k ; a++ ) ;
+          }
+       }
+    
+    if ( a == valid.length() ) editSpecialKeyPressed ( k , v , the_sequence , wy , event ) ;
+    else editCharPressed ( k , v , the_sequence ) ;
+       
+    // Scrolling so the cursor is visible
+    int nx = vx , ny = vy ;
+    while ( nx > 0 && nx > vpx ) nx-- ;
+    while ( nx + wx <= vpx ) nx++ ;
+    while ( ny > 0 && ny > vpy ) ny-- ;
+    while ( ny + wy <= vpy ) ny++ ;
+    if ( isHorizontal() ) ny = -1 ;
+    else nx = -1 ;
+    Scroll ( nx , ny ) ;
+    if ( p )
+       wxLogStatus(txt("seq_ed_loc"), p->cPlasmid->getMarkFrom() ) ;
+	}   
+ 
+void SequenceCanvas::editSpecialKeyPressed ( int k , TVector *v , wxString *the_sequence , int wy , wxKeyEvent& event )
+    {
+    if ( NumberOfLines() == 0 )
+    	{
+	    event.Skip() ;
+	    return ;
+    	}    
+    wxString id = edit_id ;
+    int from = markedFrom () ;
+    int cpl = findID(edit_id)->itemsperline ;
+    int page = wy * cpl / NumberOfLines() ;
+
+    if ( k == WXK_RIGHT )
+      {
+      if ( event.ControlDown () )
+         {
+/*         from += blocksize - 1 ;
+         from -= from % blocksize ;
+         if ( from > the_sequence->length() ) from = the_sequence->length();
+         mark ( id , from+1 , from+1 , 2 ) ;*/
+         }
+      else if ( from < the_sequence->length() )
+         mark ( id , from+1 , from+1 , 2 ) ;
+      }
+    else if ( k == WXK_LEFT )
+      {
+      if ( event.ControlDown () )
+         {
+/*         from -= blocksize ;
+         while ( from > 1 && (from-1) % blocksize > 0 ) from++ ;
+         if ( from < 1 ) from = 1 ;
+         mark ( id , from , from , 2 ) ;*/
+         }
+      else if ( from > 1 )
+         mark ( id , from-1 , from-1 , 2 ) ;
+      }
+    else if ( k == WXK_DOWN && from+cpl <= the_sequence->length() )
+   	  {
+      mark ( id , from+cpl , from+cpl , 2 ) ;
+      }    
+    else if ( k == WXK_UP && from-cpl > 0 )
+   	  {
+      mark ( id , from-cpl , from-cpl , 2 ) ;
+      }   	
+    else if ( k == WXK_HOME )
+      {
+      mark ( id , 1 , 1 , 2 ) ;
+      }   	
+    else if ( k == WXK_END )
+      {
+      mark ( id , the_sequence->length() , the_sequence->length() , 2 ) ;
+      }   	
+    else if ( k == WXK_PRIOR )
+      {
+      from -= page ;
+      if ( from < 1 ) from = 1 ;
+      mark ( id , from , from , 2 ) ;
+      }
+    else if ( k == WXK_NEXT )
+      {
+      from += page ;
+      if ( from > the_sequence->length() ) from = the_sequence->length() ;
+      mark ( id , from , from , 2 ) ;
+      }
+/*
+    else if ( !forceoverwrite && k == WXK_DELETE && from+1 <= the_sequence->length() )
+      {
+      mylog ( "DEL" , wxString::Format ( "1 (%d of %d / %d)" , from , the_sequence->length() , (int)v ) ) ;
+      if ( v ) v->doRemove ( from , from , false ) ;
+      else the_sequence->erase ( from-1 , 1 ) ;
+      mylog ( "DEL" , "2" ) ;
+      if ( from > the_sequence->length() ) from = the_sequence->length() ;
+      if ( v ) v->recalculateCuts() ;
+      mylog ( "DEL" , "3" ) ;
+      updateEdit ( v , id , from ) ;
+      mylog ( "DEL" , "4" ) ;
+      }
+*/
+    else if ( !forceoverwrite && k == WXK_BACK && from > 1 )
+      {
+      if ( v ) v->doRemove ( from-1 , from-1 , false ) ;
+      else the_sequence->erase ( from-2 , 1 ) ;
+      if ( v ) v->recalculateCuts() ;
+      updateEdit ( v , id , from-1 ) ;
+      }
+/*
+    else if ( !forceoverwrite && k == WXK_INSERT )
+      {
+      wantOverwrite = !wantOverwrite ;
+      mark ( id , from , from , 2 ) ;
+      if ( doOverwrite() ) wxLogStatus(txt("seq_ed_ovr"),1) ;
+      else wxLogStatus(txt("seq_ed_ins"),1) ;
+      }
+*/
+    else
+      {
+      event.Skip() ; // Not a key used here
+      }
+    } 
+
+void SequenceCanvas::editCharPressed ( int k , TVector *v , wxString *the_sequence )
+	{
+    wxString id = edit_id ;
+	int from = markedFrom () ;
+    wxString dummy ;
+    int new_from = from + 1 ;
+   
+    if ( k == '.' && getPD() )
+       {
+       int u ;
+       for ( u = 0 ; u < seq.GetCount() && seq[u]->whatsthis() != edit_id ; u++ ) ;
+       if ( edit_id == "PRIMER_UP" ) k = seq[u+1]->s.GetChar(from-1) ;
+       if ( edit_id == "PRIMER_DOWN" ) k = seq[u-1]->s.GetChar(from-1) ;
+       }
+       
+    dummy = (char) k ;           
+    if ( v )
+       {
+       v->insert_char ( k , from , doOverwrite() ) ;
+       v->recalculateCuts() ;
+       }
+    else
+       {
+       if ( !forceoverwrite || from <= the_sequence->length() )
+          {
+          if ( doOverwrite() ) the_sequence->erase ( from-1 , 1 ) ;
+          wxStringInsert ( *the_sequence , from-1 , dummy ) ;
+          if ( forceoverwrite && from == the_sequence->length() )
+             new_from = from ;
+          }
+       else
+          {
+          wxBell() ;
+          return ;
+          }
+       }
+    updateEdit ( v , id , new_from ) ;
+	}    
+
 void SequenceCanvas::OnCharHook(wxKeyEvent& event)
     {
     if ( seq.GetCount() == 0 ) return ;
     int k = event.GetKeyCode () ;
-    if ( editMode )
-        {
-        int a , b = -1 ;
-        wxString id = edit_id , valid = edit_valid ;
-        for ( a = 0 ; a < seq.GetCount() && b == -1 ; a++ )
-            if ( seq[a]->whatsthis() == id )
-               b = a ;
-        if ( b == -1 )
-           {
-           event.Skip() ; // Illegal ID
-           return ;
-           }
-        SeqDNA *dna = (SeqDNA*) seq[b] ;
-        int from = _from ;
-        wxString *the_sequence ;
-        if ( dna->whatsthis() == "AA" ) the_sequence = &getAA()->vec->getSequence() ;
-        else if ( dna->whatsthis() == "DNA" ) the_sequence = dna->vec->getSequencePointer() ;
-        else the_sequence = &dna->s ;
-        TVector *v = NULL ;
-        if ( p ) v = dna->vec ;
-        else if ( getAA() ) v = getAA()->vec ;
-
-        // Getting the layout
-        int vx , vy , wx , wy ;
-        MyGetViewStart ( &vx , &vy ) ;
-        MyGetClientSize ( &wx , &wy ) ;
-        wx /= charwidth ;
-        wx -= wx % ( seq.GetCount() + 1 ) ;
-        wy /= charheight ;
-        wy -= wy % ( seq.GetCount() + 1 ) ;
-        
-        if ( k >= 'a' && k <= 'z' ) k = k - 'a' + 'A' ;
-        for ( a = 0 ; a < valid.length() && valid.GetChar(a) != k ; a++ ) ;
-        
-        if ( a == valid.length() && k >= 'A' && k <= 'Z' )
-           {
-           if ( wxMessageBox ( txt("t_allow_all_chars") , 
-                                 txt("t_question") , 
-                                 wxICON_QUESTION|wxYES_NO ) == wxYES )
-              {
-              edit_valid = "ABCDEFGHIJKLMNOPQRSTUVWXYZ|-" ;
-              valid = edit_valid ;
-              for ( a = 0 ; a < valid.length() && valid.GetChar(a) != k ; a++ ) ;
-              }
-           }
-        
-        if ( a == valid.length() )
-           {
-           int cpl = dna->itemsperline ;
-           int page = wy * cpl / ( seq.GetCount()+blankline ) ;
-           if ( k == WXK_RIGHT )
-              {
-              if ( event.ControlDown () )
-                 {
-                 from += blocksize - 1 ;
-                 from -= from % blocksize ;
-                 if ( from > the_sequence->length() ) from = the_sequence->length();
-                 mark ( id , from+1 , from+1 , 2 ) ;
-                 }
-              else if ( from < the_sequence->length() )
-                 mark ( id , from+1 , from+1 , 2 ) ;
-              }
-           else if ( k == WXK_LEFT )
-              {
-              if ( event.ControlDown () )
-                 {
-                 from -= blocksize ;
-                 while ( from > 1 && (from-1) % blocksize > 0 ) from++ ;
-                 if ( from < 1 ) from = 1 ;
-                 mark ( id , from , from , 2 ) ;
-                 }
-              else if ( from > 1 )
-                 mark ( id , from-1 , from-1 , 2 ) ;
-              }
-           else if ( k == WXK_DOWN && from+cpl <= the_sequence->length() )
-              mark ( id , from+cpl , from+cpl , 2 ) ;
-           else if ( k == WXK_UP && from-cpl > 0 )
-              mark ( id , from-cpl , from-cpl , 2 ) ;
-           else if ( k == WXK_HOME )
-              mark ( id , 1 , 1 , 2 ) ;
-           else if ( k == WXK_END )
-              mark ( id , the_sequence->length() , the_sequence->length() , 2 ) ;
-           else if ( k == WXK_PRIOR )
-              {
-              from -= page ;
-              if ( from < 1 ) from = 1 ;
-              mark ( id , from , from , 2 ) ;
-              }
-           else if ( k == WXK_NEXT )
-              {
-              from += page ;
-              if ( from > the_sequence->length() ) from = the_sequence->length() ;
-              mark ( id , from , from , 2 ) ;
-              }
-           else if ( !forceoverwrite && k == WXK_DELETE && from <= the_sequence->length()-1 )
-              {
-              mylog ( "DEL" , "1" ) ;
-              if ( v ) v->doRemove ( from , from , false ) ;
-              else the_sequence->erase ( from-1 , 1 ) ;
-              mylog ( "DEL" , "2" ) ;
-              if ( from > the_sequence->length() ) from = the_sequence->length() ;
-              if ( v ) v->recalculateCuts() ;
-              mylog ( "DEL" , "3" ) ;
-              updateEdit ( v , id , from ) ;
-              mylog ( "DEL" , "4" ) ;
-              }
-           else if ( !forceoverwrite && k == WXK_BACK && from > 1 )
-              {
-              if ( v ) v->doRemove ( from-1 , from-1 , false ) ;
-              else the_sequence->erase ( from-2 , 1 ) ;
-              if ( v ) v->recalculateCuts() ;
-              updateEdit ( v , id , from-1 ) ;
-              }
-           else if ( !forceoverwrite && k == WXK_INSERT )
-              {
-              wantOverwrite = !wantOverwrite ;
-              mark ( id , from , from , 2 ) ;
-              if ( doOverwrite() ) wxLogStatus(txt("seq_ed_ovr"),1) ;
-              else wxLogStatus(txt("seq_ed_ins"),1) ;
-              }
-           else
-              {
-              event.Skip() ; // Not a key used here
-              return ;
-              }
-           }
-        else
-           {
-           wxString dummy ;
-           int new_from = from + 1 ;
-           
-           if ( k == '.' && getPD() )
-              {
-              int u ;
-              for ( u = 0 ; u < seq.GetCount() && seq[u]->whatsthis() != edit_id ; u++ ) ;
-              if ( edit_id == "PRIMER_UP" ) k = seq[u+1]->s.GetChar(from-1) ;
-              if ( edit_id == "PRIMER_DOWN" ) k = seq[u-1]->s.GetChar(from-1) ;
-              }
-              
-           dummy = (char) k ;           
-           if ( v )
-              {
-              v->insert_char ( k , from , doOverwrite() ) ;
-              v->recalculateCuts() ;
-              }
-           else
-              {
-              if ( !forceoverwrite || from <= the_sequence->length() )
-                 {
-                 if ( doOverwrite() ) the_sequence->erase ( from-1 , 1 ) ;
-                 wxStringInsert ( *the_sequence , from-1 , dummy ) ;
-//                 the_sequence->insert ( from-1 , dummy ) ;
-                 if ( forceoverwrite && from == the_sequence->length() )
-                    new_from = from ;
-                 }
-              else
-                 {
-                 wxBell() ;
-                 return ;
-                 }
-              }
-           updateEdit ( v , id , new_from ) ;
-           }
-           
-        // Scrolling so the cursor is visible
-        int nx = vx , ny = vy ;
-        while ( nx > 0 && nx > vpx ) nx-- ;
-        while ( nx + wx <= vpx ) nx++ ;
-        while ( ny > 0 && ny > vpy ) ny-- ;
-        while ( ny + wy <= vpy ) ny++ ;
-        if ( isHorizontal() ) ny = -1 ;
-        else nx = -1 ;
-        Scroll ( nx , ny ) ;
-        if ( p )
-           wxLogStatus(txt("seq_ed_loc"), p->cPlasmid->getMarkFrom() ) ;
-        }
+    if ( editMode ) editSequence ( k , event ) ;
     else // Not edit mode
         {
         if ( k == WXK_HOME ) ensureVisible ( 0 ) ;
@@ -857,6 +883,7 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
     mylog ( "MARK" , wxString::Format ( "%s %d-%d %d" , id.c_str() , from , to , value ) ) ;
     if ( seq.GetCount() == 0 ) return ;
     if ( marking ) return ;
+    if ( getEditMode() && from != -1 && from != to ) return ;
     marking = true ;
     if ( isMiniDisplay() )
         {
@@ -870,7 +897,6 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
         getAA()->sc2->mark ( getAA()->sc2->seq[0]->whatsthis() , from , to , value ) ;        
         }
     marking = false ;
-    mylog ( "MARK" , "2" ) ;
 
     int a , b = -1 , cnt = 0 ;
     vpx = -1 ;
@@ -885,14 +911,12 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
        return ; 
        }
 
-    mylog ( "MARK" , "3" ) ;
     if ( charwidth == 0 || charheight == 0 ) SilentRefresh () ;
 
     int seqlen ;
     if ( p && p->vec ) seqlen = p->vec->getSequenceLength() ;
     else seqlen = seq[b]->s.length() ;
 
-    mylog ( "MARK" , "4" ) ;
     int l = seqlen ;
     for ( a = 0 ; a < seq[b]->getMarkSize() ; a++ )
         {
@@ -907,7 +931,6 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
            seq[b]->setMark ( a , 0 ) ;
         }
         
-    mylog ( "MARK" , "5" ) ;
     for ( int other = 0 ; other < seq.GetCount() ; other++ )
         {
         bool canbemarked = seq[other]->takesMouseActions ;
@@ -918,14 +941,12 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
             }
         }
         
-    mylog ( "MARK" , "6" ) ;
     if ( !printing )
         {
         // Refreshing sequence canvas
         SilentRefresh () ;
         }
     
-    mylog ( "MARK" , "7" ) ;
     if ( from > to ) to += l ;
     if ( cnt == 0 ) from = -1 ;
 
@@ -1053,7 +1074,7 @@ void SequenceCanvas::arrange ()
     
     if ( p && p->cPlasmid->getMarkFrom() != -1 && !editMode )
         {
-        if ( !printing ) p->cPlasmid->setMarkFrom ( -1 ) ;
+        if ( !printing ) p->cPlasmid->setMark ( -1 , -1 ) ;
         p->cPlasmid->Refresh () ;
         }
     wxEndBusyCursor() ;
@@ -1761,6 +1782,7 @@ void SequenceCanvas::startEdit ( wxString id )
     setEditMode ( true ) ;
     findID(id)->s.Append ( " " ) ;
     if ( child ) child->vec->addToSequence ( " " ) ;
+    for ( int a = 0 ; a < seq.GetCount() ; a++ ) seq[a]->editMode ( true ) ;
     arrange () ;
     if ( _from == -1 ) mark ( id , 1 , 1 , 2 ) ;
     else mark ( id , _from , _from , 2 ) ;
@@ -1772,20 +1794,22 @@ void SequenceCanvas::stopEdit ()
     {
     mylog ( "stopEdit" , "1" ) ;
     setEditMode ( false ) ;
-    if ( child ) child->vec->eraseSequence ( child->vec->getSequenceLength()-1 , 1 ) ;
-    mylog ( "stopEdit" , "3" ) ;
+    if ( child && child->vec )
+    	{
+	    if ( child->vec->getSequenceLength() < 2 ) child->vec->setSequence ( "" ) ;
+        else child->vec->eraseSequence ( child->vec->getSequenceLength()-1 , 1 ) ;
+        }    
     wxString id ;
     if ( lastmarked >= 0 && lastmarked < seq.GetCount() )
         {
         id = seq[lastmarked]->whatsthis() ;
-    mylog ( "stopEdit" , "3a" ) ;
-        seq[lastmarked]->s.erase ( seq[lastmarked]->s.length()-1 , 1 ) ;
-    mylog ( "stopEdit" , "3b" ) ;
-//        if ( child ) updateEdit ( child->vec , id , markedFrom() ) ;
-        }    
-    mylog ( "stopEdit" , "4" ) ;
+//        if ( child ) seq[lastmarked]->s = child->vec->getSequence () ;
+//        else seq[lastmarked]->s.erase ( seq[lastmarked]->s.length()-1 , 1 ) ;
+        }
+    mylog ( "stopEdit" , "2" ) ;
+    for ( int a = 0 ; a < seq.GetCount() ; a++ ) seq[a]->editMode ( false ) ;
     arrange () ;
-    mylog ( "stopEdit" , "5" ) ;
+    mylog ( "stopEdit" , "3" ) ;
     if ( id != "" ) mark ( id , -1 , -1 ) ;
     mylog ( "stopEdit" , "END" ) ;
     }
