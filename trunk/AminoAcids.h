@@ -60,7 +60,7 @@ class TAminoAcids : public ChildBase
     private :
     friend class TTestSuite ;
     wxListBox *lb ;
-    wxBoxSizer *h1 , *v1 ;
+    wxBoxSizer *h1 , *v1 , *v0 ;
     wxChoice *inlinePlot ;
     wxString lastLBsel ;
 

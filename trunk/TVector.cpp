@@ -352,6 +352,52 @@ void TVector::init ()
     aaprop['W'].set_data ( 186.2132 ,  5.89 , "Trp") ;
     aaprop['Y'].set_data ( 163.1760 ,  5.66 , "Tyr") ;
          
+    // Atoms ( carbon , hydrogen , nitrogen , oxygen , sulfur )
+    aaprop['|'].set_atoms (  0 ,  0 , 0 , 0 , 0 ) ;
+    aaprop['A'].set_atoms (  3 ,  5 , 1 , 1 , 0 ) ;
+    aaprop['C'].set_atoms (  3 ,  5 , 1 , 1 , 1 ) ;
+    aaprop['D'].set_atoms (  4 ,  5 , 1 , 3 , 0 ) ;
+    aaprop['E'].set_atoms (  5 ,  7 , 1 , 3 , 0 ) ;
+    aaprop['F'].set_atoms (  9 ,  9 , 1 , 1 , 0 ) ;
+    aaprop['G'].set_atoms (  2 ,  3 , 1 , 1 , 0 ) ;
+    aaprop['H'].set_atoms (  6 ,  7 , 3 , 1 , 0 ) ;
+    aaprop['I'].set_atoms (  6 , 11 , 1 , 1 , 0 ) ;
+    aaprop['K'].set_atoms (  6 , 12 , 2 , 1 , 0 ) ;
+    aaprop['L'].set_atoms (  6 , 11 , 1 , 1 , 0 ) ;
+    aaprop['M'].set_atoms (  5 ,  9 , 1 , 1 , 1 ) ;
+    aaprop['N'].set_atoms (  4 ,  6 , 2 , 2 , 0 ) ;
+    aaprop['P'].set_atoms (  5 ,  7 , 1 , 1 , 0 ) ;
+    aaprop['Q'].set_atoms (  5 ,  8 , 2 , 2 , 0 ) ;
+    aaprop['R'].set_atoms (  6 , 12 , 4 , 1 , 0 ) ;
+    aaprop['S'].set_atoms (  3 ,  5 , 1 , 2 , 0 ) ;
+    aaprop['T'].set_atoms (  4 ,  7 , 1 , 2 , 0 ) ;
+    aaprop['V'].set_atoms (  5 ,  9 , 1 , 1 , 0 ) ;
+    aaprop['W'].set_atoms ( 11 , 10 , 2 , 1 , 0 ) ;
+    aaprop['Y'].set_atoms (  9 ,  9 , 1 , 2 , 0 ) ;
+         
+    // Half-life (in minutes; negative values mean "greater than"; 0=unknown)
+    aaprop['|'].set_halflife ( 0 , 0 , 0 ) ;
+    aaprop['A'].set_halflife ( 264 , -1200 , -600 ) ;
+    aaprop['C'].set_halflife ( 72 , -1200 , -600 ) ;
+    aaprop['D'].set_halflife ( 660 , 3 , -600 ) ;
+    aaprop['E'].set_halflife ( 60 , 30 , -600 ) ;
+    aaprop['F'].set_halflife ( 66 , 3 , 2 ) ;
+    aaprop['G'].set_halflife ( 1800 , -1200 , -600 ) ;
+    aaprop['H'].set_halflife ( 210 , 10 , -600 ) ;
+    aaprop['I'].set_halflife ( 1200 , 30 , -600 ) ;
+    aaprop['K'].set_halflife ( 78 , 3 , 2 ) ;
+    aaprop['L'].set_halflife ( 330 , 3 , 2 ) ;
+    aaprop['M'].set_halflife ( 1800 , -1200 , -600 ) ;
+    aaprop['N'].set_halflife ( 84 , 3 , -600 ) ;
+    aaprop['P'].set_halflife ( -1200 , -1200 , 0 ) ;
+    aaprop['Q'].set_halflife ( 48 , 10 , -600 ) ;
+    aaprop['R'].set_halflife ( 60 , 2 , 2 ) ;
+    aaprop['S'].set_halflife ( 1140 , -1200 , -600 ) ;
+    aaprop['T'].set_halflife ( 432 , -1200 , -600 ) ;
+    aaprop['V'].set_halflife ( 6000 , -1200 , -600 ) ;
+    aaprop['W'].set_halflife ( 168 , 3 , 2 ) ;
+    aaprop['Y'].set_halflife ( 1680 , 10 , 2 ) ;
+         
     // Chou-Fasman algorithm data
     aaprop['A'].set_cf ( 142 ,  83 ,  66 , 0.06  , 0.076 , 0.035 , 0.058 ) ;
     aaprop['C'].set_cf (  70 , 119 , 119 , 0.149 , 0.05  , 0.117 , 0.128 ) ;
@@ -1841,6 +1887,8 @@ TAAProp::TAAProp ()
     cf_f[0] = cf_f[1] = cf_f[2] = cf_f[3] = 0 ;
     cf_pa = cf_pb = cf_pt = 0 ;
     hp_kd = hp_hw = 0 ;
+    carbon = hydrogen = nitrogen = oxygen = sulfur = 0 ;
+    hl_mammal = hl_yeast = hl_ecoli = 0 ;
     }
     
 void TAAProp::set_cf ( int pa , int pb , int pt , float f0 , float f1 , float f2 , float f3 )
@@ -1866,4 +1914,37 @@ void TAAProp::set_hp ( float _hp_kd , float _hp_hw )
     hp_kd = _hp_kd ;
     hp_hw = _hp_hw ;
     }
-    
+
+void TAAProp::set_atoms ( int C , int H , int N , int O , int S )
+	{
+	carbon = C ;
+	hydrogen = H ;
+	nitrogen = N ;
+	oxygen = O ;
+	sulfur = S ;
+ 	}
+         
+void TAAProp::set_halflife ( int mammal , int yeast , int ecoli )
+	{
+	hl_mammal = mammal ;
+	hl_yeast = yeast ;
+	hl_ecoli = ecoli ;
+	}
+     
+wxString TAAProp::get_halflife_text ( int hl )
+	{
+	wxString ret ;
+	if ( hl == 0 ) return txt("t_hl_unknown") ;
+	if ( hl < 0 )
+		{
+  		hl = -hl ;
+  		ret += ">" ;
+		}    
+	int h = hl / 60 ;
+	int m = hl % 60 ;
+	if ( h == 1 ) ret += wxString::Format ( txt("t_hl_hour") , 1 ) ;
+	else if ( h > 1 ) ret += wxString::Format ( txt("t_hl_hours") , h ) ;
+	if ( h > 0 && m > 0 ) ret += " " ;
+	if ( m > 0 ) ret += wxString::Format ( txt("t_hl_minutes") , m ) ;
+	return ret ;
+	}    
