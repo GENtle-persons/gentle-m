@@ -93,6 +93,7 @@ public:
     virtual void OnRemoveSequencingPrimers(wxCommandEvent& WXUNUSED(event));
     virtual void OnAutoAnnotate(wxCommandEvent& WXUNUSED(event));
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){};
+    virtual void EnforceRefesh () ;
     
     virtual void initme () ;
     virtual void initPanels () ;

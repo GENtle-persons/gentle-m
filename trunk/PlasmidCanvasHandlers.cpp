@@ -218,6 +218,7 @@ void PlasmidCanvas::rsInfo ( wxCommandEvent &ev )
     
 void PlasmidCanvas::rsShowHide ( wxCommandEvent &ev )
     {
+    if ( context_last_rs < 0 || context_last_rs >= p->vec->rc.size() ) return ;
     p->treeBox->ToggleEnzymeVisibility ( p->vec->rc[context_last_rs].e ) ;
     }
     

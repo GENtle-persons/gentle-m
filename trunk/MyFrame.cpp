@@ -973,6 +973,7 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
    	wxBeginBusyCursor() ;
 
     // retrieving options
+//    TEnzymeRules oo == *global_enzyme_rules ;
     global_enzyme_rules->lookup_options ( pod.globalEnzymesPanel ) ;
     enhancedRefresh = pod.enhancedDisplay->GetValue() ;
     showVectorTitle = pod.vectorTitle->GetValue() ;
@@ -1012,7 +1013,8 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
 	    children[a]->vec->recalculateCuts() ;
 	    children[a]->vec->updateDisplay() ;
     	}    
-   	if ( GetActiveChild() ) GetActiveChild()->Refresh () ;
+   	if ( GetActiveChild() ) GetActiveChild()->EnforceRefesh () ;
+//   	if ( GetActiveChild() ) GetActiveChild()->Refresh () ;
    	wxEndBusyCursor() ;
     }
 
