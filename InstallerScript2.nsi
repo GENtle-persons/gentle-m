@@ -52,7 +52,7 @@ Section "GENtle (required)"
   ; Put file there
   File "GENtle.exe"
 ;  File "blastcl3.exe"
-  File "clustalw.exe"
+;  File "clustalw.exe"
 ;  File "sqlite.exe"
   File "sqlite.dll"
   File "libmySQL.dll"
