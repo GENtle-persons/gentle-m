@@ -56,7 +56,7 @@ class EIpanel : public wxPanel
     virtual void process_blast() ;
     virtual void process_blast2() ;
     virtual void execute_blast() ;
-    virtual wxString blast_align ( wxString qseq , wxString mseq , wxString hseq , int cpl ) ;
+    virtual wxString blast_align ( wxString qseq , wxString mseq , wxString hseq , int cpl , int qoff , int hoff ) ;
     
     virtual void init_ncbi() ;
     virtual void process_ncbi() ;
@@ -100,6 +100,8 @@ class ExternalInterface : public ChildBase
     
     void initme () ;
     virtual wxString getName () ;
+
+    virtual void runBlast ( wxString seq , wxString prg ) ;
 
     wxNotebook *nb ;
 
