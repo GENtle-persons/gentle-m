@@ -656,3 +656,5 @@
 "t_5_3","5'->3'","5'->3'"
 "t_use_this_project","Use primers from project","Benutze Primer aus dem Projekt"
 "t_find_primers","Find primers","Finde Primer"
+"t_desc_sequencing_primer2","Primer length is %dbp","Primerlänge : %dbp"
+"t_desc_sequencing_primer3","Original primer sequence :","Originale Primersequenz :"

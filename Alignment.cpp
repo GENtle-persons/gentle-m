@@ -91,9 +91,13 @@ void TAlignment::readTabColors ( wxString filename )
         c = colAA ;
         c[a].Set ( 0 , 100 , 0  ) ;
         }    
+    bool initial = true ;
     while ( !in.Eof() )
         {
-        wxString s = in.GetNextLine() ;
+        wxString s ;
+        if ( initial ) s = in.GetFirstLine() ;
+        else s = in.GetNextLine() ;
+        initial = false ;
         if ( s.IsEmpty() ) ;
         else if ( s.GetChar(0) == '/' )
            {

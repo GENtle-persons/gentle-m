@@ -1039,6 +1039,7 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
 
 void SequenceCanvas::arrange ()
     {
+    mylog ( "SequenceCanvas::arrange" , "1" ) ;
     if ( seq.GetCount() == 0 ) return ;
     if ( charheight == 0 ) return ;
     int vx , vy ;
@@ -1073,6 +1074,7 @@ void SequenceCanvas::arrange ()
     for ( a = 0 ; a < seq.GetCount() ; a++ )
         seq[a]->endnumberlength = maxendnumberlength ;
             
+    mylog ( "SequenceCanvas::arrange" , "2" ) ;
 
     // Arranging
     for ( a = 0 ; a < seq.GetCount() ; a++ )
@@ -1081,6 +1083,7 @@ void SequenceCanvas::arrange ()
         if ( b > lowy ) lowy = b ;
         }
     if ( isMiniDisplay() ) lowx += charwidth*2 ;
+    mylog ( "SequenceCanvas::arrange" , "3" ) ;
     
     if ( printing ) return ;
 
@@ -1096,6 +1099,7 @@ void SequenceCanvas::arrange ()
         p->cPlasmid->Refresh () ;
         }
     wxEndBusyCursor() ;
+    mylog ( "SequenceCanvas::arrange" , "4" ) ;
     }
 
 void SequenceCanvas::OnSize(wxSizeEvent &event)
@@ -1120,12 +1124,13 @@ void SequenceCanvas::OnDraw(wxDC& dc)
     int wx , wy ;
     dc.SetFont ( *font ) ;
     dc.GetTextExtent ( "A" , &wx , &wy ) ;
-    mylog ( "SequenceCanvas::OnDraw" , wxString::Format ( "Font size %dx%d" , wx , wy ) ) ;
+	mylog ( "SequenceCanvas::OnDraw" , "2a" ) ;
     if ( wx != charwidth || wy != charheight )
         {
         charwidth = wx ;
         charheight = wy ;
         arrange () ;
+        mylog ( "SequenceCanvas::OnDraw" , "2b" ) ;
         if ( printing && print_maxx < 0 )
             {
             for ( int a = 0 ; a < seq.GetCount() ; a++ )
@@ -1846,6 +1851,7 @@ void SequenceCanvas::stopEdit ()
     mylog ( "stopEdit" , "3" ) ;
     if ( id != "" ) unmark () ; //mark ( id , -1 , -1 ) ;
     mylog ( "stopEdit" , "END" ) ;
+    SilentRefresh () ;
     }
 
 void SequenceCanvas::rsHideLimit ( wxCommandEvent &ev )
