@@ -210,7 +210,7 @@ void TVectorEditor::initPanItem ()
     // Edit fields
     icur = -1 ;
     wxRect r ;
-    wxString vs[VIT_TYPES] ;
+    wxString vs[VIT_TYPES] ; 
     char t[1000] ;
     
     r = (new wxStaticText(panItem,-1,txt("name"),wxPoint(bo,h/2+bo*2)))->GetRect() ;

@@ -1,7 +1,7 @@
 [Project]
 FileName=GENtle.dev
 Name=GENtle
-UnitCount=90
+UnitCount=92
 Type=0
 Ver=1
 ObjFiles=
@@ -888,9 +888,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit91]
-FileName=clustal\random.c
+FileName=TXMLfile.h
 CompileCpp=1
-Folder=Clustal-W
+Folder=Data structures
 Compile=1
 Link=1
 Priority=1000
@@ -898,9 +898,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit92]
-FileName=clustal\readmat.c
+FileName=TXMLfile.cpp
 CompileCpp=1
-Folder=Clustal-W
+Folder=Data structures
 Compile=1
 Link=1
 Priority=1000

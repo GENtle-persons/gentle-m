@@ -3,7 +3,7 @@
 
 // This will turn the myass error logging on/off
 // Place a comment in front of the following line when compiling releases
-#define MYDEBUG
+//#define MYDEBUG
 
 #include "wx/wxprec.h"
 
@@ -43,7 +43,8 @@
 
 using namespace std ;
 
-#define TIXML_USE_STL
+// Don't you *EVER* turn this on again!!!!
+//#define TIXML_USE_STL
 #include "tinyxml/tinyxml.h"
 
 #include <wx/wx.h>
@@ -102,6 +103,7 @@ class TUndo ;
 #include "TRestrictionEditor.h"
 #include "TClone.h"
 #include "GenBank.h"
+#include "TXMLfile.h"
 #include "TVectorTree.h"
 #include "TMainTree.h"
 #include "RestrictionEnzymes.h"

@@ -38,6 +38,7 @@ TextImportDialog::TextImportDialog(wxWindow *parent, const wxString& title )
     type->Append ( txt("dna") ) ;
     type->Append ( txt("amino_acid") ) ;
     type->Append ( txt("t_genbank_format") ) ;
+    type->Append ( txt("t_xml") ) ;
     type->Append ( txt("t_primer") ) ;
     type->SetSelection ( 0 ) ;
 

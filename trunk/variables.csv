@@ -51,6 +51,8 @@
 "itemtype4","Promoter","Promoter"
 "itemtype5","Terminator","Terminator"
 "itemtype6","Misc. Feature","Diverses"
+"itemtype7","Protein binding","Protein-Bindung"
+"itemtype8","Origin of transfer","Transfer-Ursprung"
 "current_enzymes","Current Enzymes","Aktuelle Enzyme"
 "enzyme_groups","Enzyme groups","Enzymgruppen"
 "enzymes_in_group","Enzymes in group","Enzyme in der Gruppe"
@@ -522,3 +524,4 @@
 "m_aa_view_original","&Original","&Original"
 "m_aa_view_real","&1:1","&1:1"
 "m_aa_view_condensed","&Compact","&Kompakt"
+"t_xml","XML","XML"

@@ -15,6 +15,7 @@ class TABIviewer ;
 class TClone ;
 class TGenBank ;
 class TFasta ;
+class TXMLfile ;
 
 typedef wxMDIParentFrame MyFrameType ;
 
@@ -65,6 +66,7 @@ public:
     virtual TABIviewer *newABI ( string filename , string title ) ;
     virtual MyChild *newCLONE ( TClone &clone ) ;
     virtual void newGB ( TGenBank &gb , string title = "" ) ;
+    virtual void newXML ( TXMLfile &xml , string title = "" ) ;
     virtual MyChild *newFASTA ( TFasta &fasta ) ;
     virtual void blast ( string seq , string prg ) ;
     virtual void importFile ( string file , string path , int filter = -1 ) ;

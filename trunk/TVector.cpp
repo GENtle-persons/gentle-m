@@ -56,6 +56,7 @@ TVector::TVector ( ChildBase *win )
     
 TVector::~TVector ()
     {
+    undo.setbase ( NULL ) ;
     undo.clear () ;
     }
         
@@ -547,7 +548,7 @@ void TVector::ligate_right ( TVector &v , bool inverted )
     // Is the ligand (to the right!) inverted?
     if ( inverted )
         {
-        v.items.clear () ; // Inversion will delete all features!
+        v.items.clear () ; // Inversion will delete all features (for now)!
         string ll = v._ll ;
         string lu = v._lu ;
         string rl = v._rl ;
@@ -1138,6 +1139,21 @@ int TVectorItem::getOffset ()
 void TVectorItem::setOffset ( int o )
     {
     setParam ( "OFFSET" , o ) ;
+    }
+    
+void TVectorItem::setType ( string s )
+    {
+    s = toupper ( s ) ;
+    if ( s == "CDS" ) type = VIT_CDS ;
+    else if ( s == "GENE" ) type = VIT_GENE ;
+    else if ( s == "PROMOTER" ) type = VIT_PROMOTER ;
+    else if ( s == "REP_ORIGIN" ) type = VIT_REP_ORI ;
+    else if ( s == "TERMINATOR" ) type = VIT_TERMINATOR ;
+    else if ( s == "MISC_FEATURE" ) type = VIT_MISC ;
+    else if ( s == "PROTEIN_BIND" ) type = VIT_PROT_BIND ;
+    else if ( s == "ORIT" ) type = VIT_ORI_T ;
+    else if ( s == "PROTEIN" ) type = VIT_MISC ;
+    else if ( s == "REGION" ) type = VIT_MISC ;    
     }
 
 // ******************************************************************* TAAProp
