@@ -237,8 +237,61 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
     // Basic elements
     dc.SetPen(*wxBLACK_PEN);
     if ( printing ) dc.SetBrush ( *wxWHITE_BRUSH ) ;
+    
+    // Baseline
     dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-    dc.DrawEllipse ( w/2-r , h/2-r , r*2 , r*2 ) ;
+    if ( p->vec->showGC() > 0 ) // %GC
+    	{
+        int r1 = r + r/40 ;
+        int r2 = r - r/40 ;
+//    	dc.DrawEllipse ( w/2-r - r/40 , h/2-r - r/40 , r*2 + r*2/40 , r*2 + r*2/40 ) ;
+//	    int dh = h / 80 ;
+	    int b , nob = p->vec->showGC() ;
+	    for ( a = 0 ; a < nob ; a++ )
+	    	{
+ 	    	int at = 0 , gc = 0 , other = 0 ;
+	    	for ( b = l * a / nob ; b < l * ( a + 1 ) / nob ; b++ )
+	    		{
+ 		        char c = p->vec->getSequenceChar ( b ) ;
+ 		    	if ( c == 'A' || c == 'T' ) at++ ;
+ 		    	else if ( c == 'G' || c == 'C' ) gc++ ;
+ 		    	else other++ ;
+	    		}    
+    		int sum = at + gc + other ;
+    		if ( sum == 0 ) continue ;
+    		int per = gc * 100 / sum ;
+    		wxColour col ;
+    		makeGCcolor ( per , col ) ;
+    		dc.SetPen(*MYPEN(col));
+    		dc.SetBrush(*MYBRUSH(col));
+
+            // Drawing polygon
+            vector <wxPoint> p ;
+            p.push_back ( wxPoint ( deg2x ( 360*a/nob , r1 ) , deg2y ( 360*a/nob , r1 ) ) ) ;
+            p.push_back ( wxPoint ( deg2x ( 360*(a+1)/nob , r1 ) , deg2y ( 360*(a+1)/nob , r1 ) ) ) ;
+            p.push_back ( wxPoint ( deg2x ( 360*(a+1)/nob , r2 ) , deg2y ( 360*(a+1)/nob , r2 ) ) ) ;
+            p.push_back ( wxPoint ( deg2x ( 360*a/nob , r2 ) , deg2y ( 360*a/nob , r2 ) ) ) ;
+            p.push_back ( wxPoint ( deg2x ( 360*a/nob , r1 ) , deg2y ( 360*a/nob , r1 ) ) ) ;
+            wxPoint *wp ;
+            wp = (wxPoint*) malloc ( sizeof ( wxPoint ) * (p.size()+1) ) ;
+            for ( b = 0 ; b < p.size() ; b++ ) wp[b] = p[b] ;
+            dc.DrawPolygon ( p.size() , wp , w/2 , h/2 ) ;
+            free ( wp ) ;
+
+        	dc.SetPen(*wxBLACK_PEN);
+        	dc.DrawLine ( w/2+p[0].x , h/2+p[0].y , w/2+p[1].x , h/2+p[1].y ) ;
+        	dc.DrawLine ( w/2+p[2].x , h/2+p[2].y , w/2+p[3].x , h/2+p[3].y ) ;
+	    	}
+	    showGClegend ( dc ) ;
+    	dc.SetPen(*wxBLACK_PEN);
+    	dc.SetBackgroundMode ( wxTRANSPARENT ) ;
+    	dc.SetBrush ( *wxWHITE_BRUSH ) ;
+//    	dc.DrawEllipse ( w/2-r + r/40 , h/2-r + r/40 , r*2 - r*2/40 , r*2 - r*2/40 ) ;
+    	}
+    else
+    	{    
+    	dc.DrawEllipse ( w/2-r , h/2-r , r*2 , r*2 ) ;
+     	}   	
     dc.SetBackgroundMode ( wxSOLID ) ;
     
     // Marking
@@ -256,9 +309,10 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
         dc.SetBrush ( *wxLIGHT_GREY_BRUSH ) ;
         if ( getMarkFrom() == getMarkTo() ) mf = mt - 0.1 ;
         else if ( mf > mt ) { float mm = mf ; mf = mt ; mt = mm ; }
-        dc.DrawEllipticArc ( w/2-r , h/2-r , r*2 , r*2 , mf , mt ) ;
-        dc.DrawLine ( w/2 , h/2 , deg2x(90-mf,r)+w/2 , deg2y(90-mf,r)+h/2 ) ;
-        dc.DrawLine ( w/2 , h/2 , deg2x(90-mt,r)+w/2 , deg2y(90-mt,r)+h/2 ) ;
+        int r1 = p->vec->showGC() > 0 ? r - r/40 : r ;
+        dc.DrawEllipticArc ( w/2-r1 , h/2-r1 , r1*2 , r1*2 , mf , mt ) ;
+        dc.DrawLine ( w/2 , h/2 , deg2x(90-mf,r1)+w/2 , deg2y(90-mf,r1)+h/2 ) ;
+        dc.DrawLine ( w/2 , h/2 , deg2x(90-mt,r1)+w/2 , deg2y(90-mt,r1)+h/2 ) ;
         dc.SetPen(*wxBLACK_PEN);
         dc.SetBackgroundMode ( wxTRANSPARENT ) ;
         }
@@ -763,7 +817,7 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
        {
        p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
        }
-    else if ( event.MiddleDown() || ( event.Dragging() && event.MiddleIsDown() ) )
+    else if ( p->cSequence->markedFrom() == -1 && ( event.MiddleDown() || ( event.Dragging() && event.MiddleIsDown() ) ) )
        {
        int bp = circular_pos ( angle ) ;
        p->cSequence->mark ( "DNA" , bp , bp ) ;

@@ -3,6 +3,15 @@ Bugs :
 * Optimierung Überhang-Primer?
 
 Feature Requests :
+
+Virtual Gel (%Agarose/SDS, min bp/mw, marker)
+Homology Plot
+Sequencing primer
+
+That ligation thingy 
+    
+    
+---
 * Bericht drucken : lange Zeilen in Vektor-Beschreibung umbrechen
 * AS-Sequenz Protease-schneiden
 

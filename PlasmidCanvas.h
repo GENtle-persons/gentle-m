@@ -129,7 +129,9 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual int circular_pos ( float angle ) ;
     virtual void push_rc_left ( int a , wxDC &dc ) ;
     virtual void push_rc_right ( int a , wxDC &dc ) ;
-    virtual void recalc_rc ( int a, wxDC &dc ) ;
+    virtual void recalc_rc ( int a , wxDC &dc ) ;
+    virtual void makeGCcolor ( int percent , wxColour &col ) ;
+    virtual void showGClegend ( wxDC &dc ) ;
     
     // Variables
     int context_last_rs , lasttooltip , context_last_orf ;

@@ -81,7 +81,40 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
         }
     
     // Baseline
-    dc.DrawLine ( lineOff , lineH , w - lineOff , lineH ) ;
+    if ( p->vec->showGC() > 0 ) // %GC
+    	{
+	    int dh = h / 80 ;
+	    int nob = p->vec->showGC() ;
+	    for ( a = 0 ; a < nob ; a++ )
+	    	{
+ 	    	int at = 0 , gc = 0 , other = 0 ;
+	    	for ( b = l * a / nob ; b < l * ( a + 1 ) / nob ; b++ )
+	    		{
+ 		        char c = p->vec->getSequenceChar ( b ) ;
+ 		    	if ( c == 'A' || c == 'T' ) at++ ;
+ 		    	else if ( c == 'G' || c == 'C' ) gc++ ;
+ 		    	else other++ ;
+	    		}    
+    		int sum = at + gc + other ;
+    		if ( sum == 0 ) continue ;
+    		int per = gc * 100 / sum ;
+    		wxColour col ;
+    		makeGCcolor ( per , col ) ;
+    		dc.SetPen(*MYPEN(col));
+    		dc.SetBrush(*MYBRUSH(col));
+    		int x1 = lineOff + lineLen * a / nob ;
+    		int x2 = lineOff + lineLen * (a+1) / nob ;
+    		dc.DrawRectangle ( x1 ,
+        					   lineH - dh ,
+        					   x2 - x1 ,
+        					   dh * 2 ) ;
+	    	}    
+	    showGClegend ( dc ) ;
+    	dc.SetPen(*wxBLACK_PEN);
+	    dc.DrawLine ( lineOff , lineH-dh , w - lineOff , lineH-dh ) ;
+	    dc.DrawLine ( lineOff , lineH+dh , w - lineOff , lineH+dh ) ;
+    	}
+    else dc.DrawLine ( lineOff , lineH , w - lineOff , lineH ) ;
 
     // Numbers
     dc.SetFont(*smallFont);
@@ -601,7 +634,7 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
        {
        p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
        }
-    else if ( event.MiddleDown() || ( event.Dragging() && event.MiddleIsDown() ) )
+    else if ( p->cSequence->markedFrom() == -1 && ( event.MiddleDown() || ( event.Dragging() && event.MiddleIsDown() ) ) )
        {
        p->cSequence->mark ( "DNA" , bp , bp ) ;
        p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;

@@ -26,6 +26,13 @@ void TVector::setGenomeMode ( bool gm ) { genomeMode = gm ; }
 bool TVector::getGenomeMode () { return genomeMode ; }
 wxString *TVector::getSequencePointer () { return &sequence ; }
 
+int TVector::showGC () // Return 0 for "no", otherwise number of blocks
+	{
+	int r = getEnzymeRule()->showgc ? 400 : 0 ;
+	if ( getSequenceLength() <= r ) return 0 ;
+	return r ;
+	}    
+
 wxString TVector::getParams ()
 	{
 	wxString params ;
@@ -584,6 +591,7 @@ void TVector::recalculateCuts ()
     	}    
 
     int maxcuts = sequence.length() * MAXCUTS_PER_1K / 1000 ;
+    if ( maxcuts < 50 ) maxcuts = 50 ; // Arbitary number
    	if ( rc.size() > maxcuts )
    		{
 	    wxMessageBox ( wxString::Format ( txt("t_too_many_cuts") , rc.size() , maxcuts ) ) ;

@@ -630,4 +630,5 @@
 "t_ges_met","Show methylation","Zeige Methylierung"
 "t_ges_met_dam","DAM","DAM"
 "t_ges_met_dcm","DCM","DCM"
-
+"t_ges_showgc","Show GC contents","Zeige GC-Gehalt"
+"t_gc_blocks","GC%% in %d bp blocks","GC%% in %d bp Blöcken"

@@ -356,4 +356,71 @@ void PlasmidCanvas::print ()
     pdc->EndDoc () ;
     }
     
+void PlasmidCanvas::makeGCcolor ( int percent , wxColour &col )
+	{
+	int red , green , blue ;
+	if ( percent < 50 )
+		{
+		red = 255 * ( 50 - percent ) / 50 ;
+		green = 255 * percent / 50 ;
+		blue = 0 ;
+		}
+ 	else
+  		{
+  		percent -= 50 ;
+		red = 0 ;
+		green = 255 * ( 50 - percent ) / 50 ;
+		blue = 255 * percent / 50 ;
+    	}        
+    col.Set ( red , green , blue ) ;
+	}
+    
+void PlasmidCanvas::showGClegend ( wxDC &dc )
+	{
+    int fontfactor = 10 ;
+    if ( printing ) fontfactor = (w>h?h:w)/10000 ;
+    wxFont *smallFont = MYFONT ( fontfactor*2/3 , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    wxFont *normalFont = MYFONT ( fontfactor*6/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
+	wxRect r ;
+	int nw = w / 5 ;
+    dc.SetFont(*normalFont);
+    wxString t ;
+    t = wxString::Format ( txt("t_gc_blocks") , p->vec->getSequenceLength() / p->vec->showGC() ) ;
+    int tw , th ;
+    dc.GetTextExtent ( t , &tw , &th ) ;
+	if ( p->vec->isLinear() )
+		{
+  		r = wxRect ( w/2 - nw/2 , h / 40 , nw , th*5/2 ) ;
+		}
+  	else
+   		{
+	    r = wxRect ( w/40 , h - h/40 - th*5/2 , nw , th*5/2 ) ;
+     	}  
+            
+    dc.SetPen(*wxBLACK_PEN);
+    dc.SetBrush(*wxWHITE_BRUSH);
+    dc.DrawRectangle ( r ) ;
+    dc.SetTextForeground ( *wxBLACK ) ;
+    dc.DrawText ( t ,
+    				r.GetLeft() + th/10 ,
+    				r.GetTop() + th/10 ) ;
+    dc.SetFont(*smallFont);
+    int a ;
+    for ( a = 0 ; a < 11 ; a++ )
+    	{
+	    wxColour col ;
+	    makeGCcolor ( a * 10 , col ) ;
+	    dc.SetBrush ( *MYBRUSH(col) ) ;
+	    int nw2 = nw / 11 ;
+	    dc.DrawRectangle ( r.GetLeft() + nw2 * a + nw2/5 ,
+	    				   r.GetBottom() - nw2*9/10 ,
+	    				   nw2*8/10 ,
+	    				   nw2*8/10 ) ;
+	    t = wxString::Format ( "%d" , a * 10 ) ;
+     	dc.GetTextExtent ( t , &tw , &th ) ;
+	    dc.DrawText ( t ,
+	    				r.GetLeft() + nw2 * a + nw2/2 - tw/2 ,
+	    				r.GetBottom() - nw2*9/10 - th ) ;
+    	}    
+	}    
 

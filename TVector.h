@@ -230,6 +230,7 @@ class TVector
     virtual int getMem () ;
     virtual bool getVectorCuts ( TVector *v ) ;
     virtual TEnzymeRules *getEnzymeRule () ;
+    virtual int showGC () ;
     
     // Variables
     int type ;
