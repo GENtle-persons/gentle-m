@@ -150,6 +150,7 @@ class TVector
     virtual void callUpdateUndoMenu () ;
     virtual void setFromVector ( TVector &v ) ;
     virtual void doRemoveNucleotide ( int x ) ;
+    virtual int getItemLength ( int a ) ;
     
     // Variables
     string sequence ;
@@ -159,7 +160,7 @@ class TVector
     vector <TVectorItem> items ;
     vector <TRestrictionEnzyme*> re ;
     vector <TRestrictionCut> rc ;
-    vector <wxString> cocktail ;
+    vector <string> cocktail ;
     vector <TORF> worf ;
 
     vector <string> hiddenEnzymes ;

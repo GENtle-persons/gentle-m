@@ -340,8 +340,7 @@ void MyFrame::OnEnzymeEditor(wxCommandEvent& WXUNUSED(event) )
 
 void MyFrame::OnFileOpen(wxCommandEvent& WXUNUSED(event) )
 {
-    TManageDatabaseDialog dbd ( this , txt("t_open") ) ;
-    dbd.actionMode = ACTION_MODE_LOAD ;
+    TManageDatabaseDialog dbd ( this , txt("t_open") , ACTION_MODE_LOAD ) ;
     dbd.ShowModal () ;
 }
 

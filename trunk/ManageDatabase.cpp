@@ -18,7 +18,8 @@ BEGIN_EVENT_TABLE(TManageDatabaseDialog, wxDialog )
     EVT_CHECKBOX(MD_PM_FILTER_DNA,TManageDatabaseDialog::pmOnFilterDNA)
     EVT_CHECKBOX(MD_PM_FILTER_PROTEIN,TManageDatabaseDialog::pmOnFilterProtein)
     EVT_CHECKBOX(MD_PM_FILTER_PRIMER,TManageDatabaseDialog::pmOnFilterPrimer)
-
+    EVT_CHECKBOX(MD_PM_TWOPANES,TManageDatabaseDialog::pmOnTwoPanes)
+    
     EVT_TEXT(MD_PM_FILTER,TManageDatabaseDialog::pmOnFilter)
 
     EVT_LIST_ITEM_SELECTED(MD_PM_LEFT,TManageDatabaseDialog::pmOnSelectLeft)
@@ -37,7 +38,7 @@ END_EVENT_TABLE()
 
 TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , char *title , 
                             int mode , TVector *_v )
-    : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 620 , 500 ) )
+    : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 700 , 550 ) )
     {
     actionMode = mode ;
     storage = NULL ;
@@ -71,6 +72,10 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , char *title ,
 
     initDatabases () ;
     initCopynMove () ;
+
+    if ( doLoad || doSave ) f_twopanes->SetValue ( 0 ) ;
+    else  f_twopanes->SetValue ( 1 ) ;
+    updateTwoLists () ;
     
     nb->SetSelection ( 1 ) ;
     
@@ -104,16 +109,19 @@ void TManageDatabaseDialog::initCopynMove ()
                                     wxPoint ( bo+r.GetRight() , bo ) ,
                                     wxSize ( w*2/3 , th ) ) ;
 
+    f_twopanes = new wxCheckBox ( p , MD_PM_TWOPANES , txt("t_twopanes") , 
+                                        wxPoint ( bo , bo*2 + th ) ) ;
+
     
     int lbstyle = wxLC_LIST | wxLC_AUTOARRANGE | wxLC_SORT_ASCENDING ;
-    pm_dd_l = new wxChoice ( p , MD_PM_DD_L , wxPoint ( bo , bo*2 + th ) , wxSize ( w/2-bo*2 , th ) ) ;
-    pm_dd_r = new wxChoice ( p , MD_PM_DD_R , wxPoint ( bo+w/2 , bo*2 + th ) , wxSize ( w/2-bo*2 , th ) ) ;
+    pm_dd_l = new wxChoice ( p , MD_PM_DD_L , wxPoint ( bo , bo*2 + th*2 ) , wxSize ( w/2-bo*2 , th ) ) ;
+    pm_dd_r = new wxChoice ( p , MD_PM_DD_R , wxPoint ( bo+w/2 , bo*2 + th*2 ) , wxSize ( w/2-bo*2 , th ) ) ;
     
-    pm_left = new wxListCtrl ( p , MD_PM_LEFT , wxPoint ( bo , th*2+bo*2 ) ,
-                                wxSize ( w/2-bo*2 , h-th*3-bo ) ,
+    pm_left = new wxListCtrl ( p , MD_PM_LEFT , wxPoint ( bo , th*3+bo*2 ) ,
+                                wxSize ( w/2-bo*2 , h-th*4-bo ) ,
                                 lbstyle ) ;
-    pm_right = new wxListCtrl ( p , MD_PM_RIGHT , wxPoint ( bo+w/2 , th*2+bo*2 ) ,
-                                wxSize ( w/2-bo*2 , h-th*3-bo ) ,
+    pm_right = new wxListCtrl ( p , MD_PM_RIGHT , wxPoint ( bo+w/2 , th*3+bo*2 ) ,
+                                wxSize ( w/2-bo*2 , h-th*4-bo ) ,
                                 lbstyle ) ;
     
     TMyDropTarget *rdt = new TMyDropTarget ( this , pm_right ) ;
@@ -137,7 +145,7 @@ void TManageDatabaseDialog::initCopynMove ()
     
     pm_left->SetImageList ( il , wxIMAGE_LIST_SMALL ) ;
     pm_right->SetImageList ( il , wxIMAGE_LIST_SMALL ) ;
-
+    
     if ( !isProject )
        {
        r = filter_txt->GetRect() ;
@@ -174,6 +182,31 @@ void TManageDatabaseDialog::initCopynMove ()
     sb->SetDefault () ;
     pm_name->SetSelection ( -1 , -1 ) ;
     pm_name->SetFocus() ;
+    }
+    
+void TManageDatabaseDialog::updateTwoLists ()
+    {
+    int w , h ;
+#ifdef __WXMSW__
+    pCopynMove->GetClientSize ( &w , &h ) ;
+#else // LINUX 
+    GetClientSize ( &w , &h ) ;
+    w -= 20 ;
+    h -= 40 ;
+#endif
+    if ( doSave ) h -= th ;
+    if ( f_twopanes->GetValue() ) 
+        {
+        pm_left->SetSize ( wxSize ( w/2-bo*2 , h-th*4-bo ) ) ;
+        pm_right->Show () ;
+        pm_dd_r->Show () ;
+        }
+    else
+        {
+        pm_right->Hide () ;
+        pm_dd_r->Hide () ;
+        pm_left->SetSize ( wxSize ( w - bo*2 , h-th*4-bo ) ) ;
+        }
     }
     
 void TManageDatabaseDialog::pm_init_lists ()
@@ -846,6 +879,18 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
         i.explodeParams ( sr[a][sr["di_params"]] ) ;
         v->items.push_back ( i ) ;
         }
+        
+    // Sorting by size, largest first
+    for ( a = 1 ; a < v->items.size() ; a++ )
+        {
+        if ( v->getItemLength ( a-1 ) < v->getItemLength ( a ) )
+           {
+           TVectorItem dummy = v->items[a] ;
+           v->items[a] = v->items[a-1] ;
+           v->items[a-1] = dummy ;
+           a = 0 ;
+           }
+        }
 
     v->recalcvisual = true ;
     v->undo.clear() ;
@@ -1245,6 +1290,11 @@ void TManageDatabaseDialog::pmOnFilterPrimer ( wxCommandEvent &ev )
     {
     pm_list_items ( PM_LEFT ) ;
     pm_list_items ( PM_RIGHT ) ;    
+    }
+    
+void TManageDatabaseDialog::pmOnTwoPanes ( wxCommandEvent &ev )
+    {
+    updateTwoLists () ;
     }
 
 // **************************************************************

@@ -265,6 +265,7 @@ class SequenceCanvas : public wxScrolledWindow
     void blastAA ( wxCommandEvent &ev ) ;
     void OnCopyText ( wxCommandEvent &ev ) ;
     void OnCopyImage ( wxCommandEvent &ev ) ;
+    void OnSaveImage ( wxCommandEvent &ev ) ;
     void OnPrint ( wxCommandEvent &ev ) ;
     void OnCut ( wxCommandEvent &ev ) ;
     void OnCopy ( wxCommandEvent &ev ) ;
@@ -298,6 +299,11 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void MyGetViewStart ( int *x , int *y ) ;
     virtual void SilentRefresh () ;
     virtual bool doOverwrite () ;
+    
+    private :
+    wxBitmap *getSequenceBitmap () ;
+    
+    public :
     
 //    private:
     MyChild *p ;

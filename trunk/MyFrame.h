@@ -75,7 +75,7 @@ public:
             useCoolCanvas ;
     string lang_string ;
     string project_name , project_desc , project_db ;
-    vector <wxString> lastCocktail ;
+    vector <string> lastCocktail ;
     vector <ChildBase*> children ;
 
     private :

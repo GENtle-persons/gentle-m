@@ -286,6 +286,8 @@ enum {
     FRAME_SASH_1,
     FRAME_SASH_2,
     FRAME_SASH_BOTTOM,
+    MD_PM_TWOPANES,
+    SEQ_SAVE_IMAGE,
     
     } ;
 
