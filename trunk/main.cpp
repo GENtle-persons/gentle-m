@@ -299,7 +299,30 @@ int MyApp::OnExit ()
 */
 wxString MyApp::getHTMLCommand ( wxString command )
     {
-    return getFileFormatCommand ( command , "html" ) ;
+    wxString ret ;
+    ret = getFileFormatCommand ( command , "html" ) ;
+    if ( ret.IsEmpty() ) ret = getFileFormatCommand ( command , "htm" ) ;
+    if ( !ret.IsEmpty() ) return ret ;
+
+// Fallback
+#ifdef __WXMSW__    
+    wxRegKey regKey;
+    wxString idName("HKEY_CLASSES_ROOT\\.html");
+    regKey.SetName(idName);    
+    wxString s = "" , t = regKey ;
+    s += "HKEY_CLASSES_ROOT\\" ;
+    s += t ;
+    s += "\\shell\\open\\command" ;
+    regKey.SetName ( s ) ;
+    wxString q = regKey ;
+    regKey.Close();
+    q.Replace ( "-nohome" , "" ) ;
+    if ( 0 == q.Replace ( wxString("%1") , wxString((char*)command.c_str()) ) )
+        q += " \"" + command + "\"" ;
+    return q ;
+#else
+    return "" ;
+#endif
     }
 
 /**	\fn MyApp::getHTMLCommand ( wxString command )
