@@ -287,16 +287,17 @@ void MyFrame::initme ()
            }
         }
 
-    // Command line parameters? BUGGY!!!!
+    // Command line parameters?
     if ( myapp()->argc > 1 )
        {
        int a , b ;
-       for ( a = 1 ; a <= myapp()->argc ; a++ )
+       for ( a = 1 ; a < myapp()->argc ; a++ )
           {
           string path = myapp()->argv[a] ;
           for ( b = path.length() - 1 ; path[b] != '\\' && path[b] != '/' ; b-- ) ;
           string file = path.substr ( b+1 ) ;
           importFile ( file , path , -1 ) ;
+          wxSetWorkingDirectory ( myapp()->homedir ) ;
           }
        }
 

@@ -74,13 +74,16 @@ MyApp *myapp ()
 // Initialise this in OnInit, not statically
 bool MyApp::OnInit()
 {
+    wxString s1 , s2 ;
+    wxFileName::SplitPath ( argv[0] , &homedir , &s1 , &s2 ) ;
+    
+    wxSetWorkingDirectory ( homedir ) ;
     // Is an instance already running?
     const wxString name = wxString::Format("GENtle-%s", wxGetUserId().c_str());
     m_checker = new wxSingleInstanceChecker (name);
     if ( m_checker->IsAnotherRunning() )
     {
         wxLogError(_("Another program instance is already running, aborting."));
-
         return false;
     }
     theapp = this ;
@@ -95,7 +98,6 @@ bool MyApp::OnInit()
 #else
     slash = "/" ;
 #endif
-    homedir = wxGetCwd() ;
     bmpdir = homedir + slash + "bitmaps" ;
     
     // Make sure local database exists
