@@ -10,8 +10,8 @@ class TTreeItem : public wxTreeItemData
     {
     public :
     TTreeItem () : wxTreeItemData() {} ;
-    TTreeItem ( string m , string _t = "" , void *_p = NULL ) : wxTreeItemData() { message = m ; type = _t ; p = _p ; } ;
-    string message , type ;
+    TTreeItem ( wxString m , wxString _t = "" , void *_p = NULL ) : wxTreeItemData() { message = m ; type = _t ; p = _p ; } ;
+    wxString message , type ;
     void *p ;
     } ;
 

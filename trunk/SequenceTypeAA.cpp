@@ -62,8 +62,8 @@ int SeqAA::arrange ( int n )
         pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
         
     // Marking features
-    string t = s ;
-    for ( a = 0 ; a < t.length() ; a++ ) t[a] = ' ' ;
+    wxString t = s ;
+    for ( a = 0 ; a < t.length() ; a++ ) t[(uint)a] = ' ' ;
     
     x = 2 ;
     if ( mode != AA_ALL ) x = 0 ;
@@ -74,7 +74,7 @@ int SeqAA::arrange ( int n )
         if ( y < vec->items[a].from ) y += s.length() ;
         for ( b = vec->items[a].from-1 ; b+x < y ; b++ )
            {
-           t[(b+1)%s.length()] = 'X' ;
+           t[(uint)(b+1)%s.length()] = 'X' ;
            }
         }
     
@@ -83,7 +83,7 @@ int SeqAA::arrange ( int n )
         b = pos.p[a] ;
         if ( b > 0 ) // Char
            {
-           if ( t[b] == 'X' ) pos.m[a] = 1 ;
+           if ( t.GetChar(b) == 'X' ) pos.m[a] = 1 ;
            }
         }
         
@@ -100,7 +100,7 @@ void SeqAA::show ( wxDC& dc )
     wxColour tfg = dc.GetTextForeground () ;
     int bm = dc.GetBackgroundMode () ;
     int a , b , cnt = offset+1 ;
-    string t ;
+    wxString t ;
     char u[100] ;
     wxColour bbg ( 150 , 150 , 255 ) ;
     dc.SetTextBackground ( *wxWHITE ) ;
@@ -148,14 +148,14 @@ void SeqAA::show ( wxDC& dc )
               dc.SetTextBackground ( *wxBLACK ) ;
               dc.SetBackgroundMode ( wxSOLID ) ;
               }
-           t = s[b-1] ;
+           t = s.GetChar(b-1) ;
            if ( can->isPrinting() && !can->getPrintToColor() )
               {
               dc.SetTextForeground ( *wxBLACK ) ;
               dc.SetBackgroundMode ( wxTRANSPARENT ) ;
               }
 
-           dc.DrawText ( t.c_str(), pos.r[a].x, pos.r[a].y ) ;
+           dc.DrawText ( t, pos.r[a].x, pos.r[a].y ) ;
 
            if ( pos.m[a] == 2 && !can->doOverwrite() )
               {
@@ -188,14 +188,14 @@ void SeqAA::show ( wxDC& dc )
                  dc.SetPen(*wxBLACK_PEN);
                  dc.DrawLine ( qx+1 , qy + 1 , qx+1 , qy + can->charheight - 2 ) ;
 
-                 string pn = pc[q]->protease->name.c_str() ;
+                 wxString pn = pc[q]->protease->name ;
                  for ( int w = 0 ; w+1 < pn.length() ; w++ )
-                    if ( pn[w] == ' ' && pn[w+1] == '(' )
+                    if ( pn.GetChar(w) == ' ' && pn.GetChar(w+1) == '(' )
                        pn = pn.substr ( 0 , w ) ;
                  dc.SetFont(*can->smallFont);
                  int u1 , u2 ;
-                 dc.GetTextExtent ( pn.c_str() , &u1 , &u2 ) ;
-                 dc.DrawText ( pn.c_str() , qx - u1/2 , qy - u2/2 ) ;
+                 dc.GetTextExtent ( pn , &u1 , &u2 ) ;
+                 dc.DrawText ( pn , qx - u1/2 , qy - u2/2 ) ;
                  dc.SetFont(*can->font);
                  
                  if ( primaryMode ) dc.SetTextForeground ( *wxBLACK ) ;
@@ -211,7 +211,7 @@ void SeqAA::show ( wxDC& dc )
            else sprintf ( u , "%d" , cnt/3 ) ;
            t = u ;
            while ( t.length() < endnumberlength ) t = "0" + t ;
-           dc.DrawText ( t.c_str() , pos.r[a].x, pos.r[a].y ) ;
+           dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
            }
         }
     dc.SetBackgroundMode ( bm ) ;
@@ -230,7 +230,7 @@ wxPoint SeqAA::showText ( int ystart , wxArrayString &tout )
         b = pos.p[a] ;
         if ( b > 0 ) // Character
            {
-           t = s[b-1] ;
+           t = s.GetChar(b-1) ;
            if ( pos.r[a].y != ly ) 
               {
               ly = pos.r[a].y ;
@@ -254,7 +254,7 @@ wxPoint SeqAA::showText ( int ystart , wxArrayString &tout )
     return p ;
     }
     
-void SeqAA::initFromString ( string t )
+void SeqAA::initFromString ( wxString t )
     {
     s = t ;
     vec = NULL ;
@@ -268,7 +268,7 @@ void SeqAA::initFromString ( string t )
     pa_wa.Clear() ;
     while ( pa_w != s )
        {
-       pa_w += s[pa_w.length()] ;
+       pa_w += s.GetChar(pa_w.length()) ;
        pa_wa.Add ( pa_w.length() ) ;
        analyzeProteases () ;
        }
@@ -301,7 +301,7 @@ void SeqAA::analyzeProteases ()
        TProtease *pr = proteases[q] ;
        if ( pr->len() <= pa_w.length() )
           {
-          string w2 = pa_w.substr ( pa_w.length() - pr->len() , pr->len() ) ;
+          wxString w2 = pa_w.substr ( pa_w.length() - pr->len() , pr->len() ) ;
           if ( pr->does_match ( w2.c_str() ) )
              {
              TProteaseCut *cut = new TProteaseCut ;
@@ -351,7 +351,7 @@ void SeqAA::initFromTVector ( TVector *v )
        v->getSequence().erase ( v->getSequenceLength()-1 , 1 ) ;
        truncateEditSequence = true ;
        }
-    string t = vec->getSequence() ;
+    wxString t = vec->getWxSequence() ;
     s = "" ;
     while ( s.length() < t.length() ) s += " " ;
     offsets.Clear() ;
@@ -366,7 +366,7 @@ void SeqAA::initFromTVector ( TVector *v )
     if ( mode == AA_ALL )
         {
         for ( a = 0 ; a < sl ; a++ )
-            s[a] = v->dna2aa ( t.substr(a,3) )[0] ;
+            s.SetChar(a,v->dna2aa ( t.substr(a,3).c_str() ).GetChar(0)) ;
         }
     else if ( mode == AA_KNOWN )
         {
@@ -387,14 +387,14 @@ void SeqAA::initFromTVector ( TVector *v )
         if ( mode == AA_THREE_M3 ) { mymode = AA_THREE_3 ; invert = true ; }
         for ( a = 0 ; a < sl ; a++ )
             {
-            string u = t.substr(a,3) ;
+            wxString u = t.substr(a,3) ;
             if ( invert )
                {
-               u[0] = v->getComplement ( t[a+2] ) ;
-               u[1] = v->getComplement ( t[a+1] ) ;
-               u[2] = v->getComplement ( t[a+0] ) ;
+               u.SetChar( 0 , v->getComplement ( t.GetChar(a+2) ) ) ;
+               u.SetChar( 1 , v->getComplement ( t.GetChar(a+1) ) ) ;
+               u.SetChar( 2 , v->getComplement ( t.GetChar(a+0) ) ) ;
                }
-            char c = v->dna2aa ( u )[0] ;
+            char c = v->dna2aa(u.c_str()).GetChar(0) ;
             wxString three = v->one2three((int)c) ;
 
             // Protease analysis
@@ -406,12 +406,12 @@ void SeqAA::initFromTVector ( TVector *v )
                  ( mymode == AA_THREE_2 && (a-1) % 3 == 0 ) ||
                  ( mymode == AA_THREE_3 && (a-2) % 3 == 0 ) )
                 {
-                if ( disp == AA_ONE ) s[a] = c ;
+                if ( disp == AA_ONE ) s.SetChar(a,c) ;
                 else
                    {
-                   s[a+0] = three.GetChar(0) ;
-                   s[a+1] = three.GetChar(1) ;
-                   s[a+2] = three.GetChar(2) ;
+                   s.SetChar(a+0, three.GetChar(0) ) ;
+                   s.SetChar(a+1, three.GetChar(1) ) ;
+                   s.SetChar(a+2, three.GetChar(2) ) ;
                    }
                 }
             }
@@ -419,7 +419,7 @@ void SeqAA::initFromTVector ( TVector *v )
     
     s = s.substr ( 0 , sl ) ;
     for ( a = 0 ; a < s.length() ; a++ )
-       if ( s[a] == '?' ) s[a] = unknownAA ;
+       if ( s.GetChar(a) == '?' ) s.SetChar(a, unknownAA) ;
     if ( truncateEditSequence )
        {
        v->getSequence() += " " ;

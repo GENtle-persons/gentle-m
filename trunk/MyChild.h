@@ -95,7 +95,7 @@ public:
     virtual void initPanels () ;
     virtual wxString getName () ;
     virtual void updateSequenceCanvas ( bool remember = false ) ;
-    virtual string doExtractAA ( bool coding = true ) ;
+    virtual wxString doExtractAA ( bool coding = true ) ;
     
     DECLARE_EVENT_TABLE()
 };

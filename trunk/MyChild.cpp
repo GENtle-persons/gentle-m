@@ -432,12 +432,12 @@ wxString MyChild::getName ()
     
 void MyChild::OnCut(wxCommandEvent& event)
     {
-    string s = cPlasmid->getSelection () ;
+    wxString s = cPlasmid->getSelection () ;
     if ( s == "" ) return ;
     if (wxTheClipboard->Open())
         {
         vec->undo.start ( txt("u_cut") ) ;
-        wxTheClipboard->SetData( new wxTextDataObject(s.c_str()) );
+        wxTheClipboard->SetData( new wxTextDataObject(s) );
         wxTheClipboard->Close();
 
         myass ( false , "!1" ) ;
@@ -462,11 +462,11 @@ void MyChild::OnCut(wxCommandEvent& event)
     
 void MyChild::OnCopy(wxCommandEvent& event)
     {
-    string s = cPlasmid->getSelection () ;
+    wxString s = cPlasmid->getSelection () ;
     if ( s == "" ) return ;
     if (wxTheClipboard->Open())
         {
-        wxTheClipboard->SetData( new wxTextDataObject(s.c_str()) );
+        wxTheClipboard->SetData( new wxTextDataObject(s) );
         wxTheClipboard->Close();
         }
     }
@@ -474,32 +474,6 @@ void MyChild::OnCopy(wxCommandEvent& event)
 void MyChild::OnPaste(wxCommandEvent& event)
     {
     cSequence->OnPaste ( event ) ;
-/*
-    if ( !cSequence->getEditMode() ) return ;
-    if (!wxTheClipboard->Open()) return ;
-    if (!wxTheClipboard->IsSupported( wxDF_TEXT )) return ;
-
-    vec->undo.start ( txt("u_cut") ) ;
-
-    wxTextDataObject data;
-    wxTheClipboard->GetData( data );
-    string s = data.GetText().c_str() ;
-    wxTheClipboard->Close();
-    
-    int a ;
-    cSequence->doHide ( true ) ;
-    SetCursor ( *wxHOURGLASS_CURSOR ) ;
-    for ( a = 0 ; a < s.length() ; a++ )
-        {
-        wxKeyEvent ev ;
-        ev.m_keyCode = s[a] ;
-        cSequence->OnCharHook ( ev ) ;
-        }
-    cSequence->doHide ( false ) ;
-    cSequence->Refresh () ;
-    SetCursor ( *wxSTANDARD_CURSOR ) ;
-    vec->undo.stop() ;
-*/
     }
 
 void MyChild::OnExport(wxCommandEvent& event)
@@ -807,7 +781,7 @@ void MyChild::OnAA_setit(int mode)
         cSequence->Scroll ( -1 , oldscrollpos ) ;
     if ( !wasZero && !cSequence->getEditMode() && oldmarkfrom != -1 && oldmarkwhat >= 0 )
         {
-        string s = cSequence->seq[oldmarkwhat]->whatsthis() ;
+        wxString s = cSequence->seq[oldmarkwhat]->whatsthis() ;
         cSequence->mark ( s , oldmarkfrom , oldmarkto ) ;
         }
     mm.remark () ;
@@ -860,7 +834,7 @@ void MyChild::OnMarkAll(wxCommandEvent& event)
     Refresh () ;
     }
 
-string MyChild::doExtractAA ( bool coding )
+wxString MyChild::doExtractAA ( bool coding )
     {
     if ( aa_state == AA_NONE || aa_state == AA_ALL )
         {
@@ -886,7 +860,7 @@ string MyChild::doExtractAA ( bool coding )
     aa.disp = AA_ONE ;
     aa.initFromTVector ( vec ) ;
     
-    string z = aa.s , t ;
+    wxString z = aa.s , t ;
     int a ;
     int from , to ;
     cPlasmid->getMark ( from , to ) ;
@@ -901,14 +875,14 @@ string MyChild::doExtractAA ( bool coding )
         
     for ( a = 0 ; a < z.length() ; a++ )
         {
-        if ( z[a] != ' ' && z[a] != '|' )
+        if ( z.GetChar(a) != ' ' && z.GetChar(a) != '|' )
            {
            if ( aa_state != AA_THREE_M1 &&
                 aa_state != AA_THREE_M2 &&
                 aa_state != AA_THREE_M3 )
-              t += z[a] ;
+              t += z.GetChar(a) ;
            else
-              t = z[a] + t ;
+              t = z.GetChar(a) + t ;
            }
         }
     return t ;
@@ -916,11 +890,11 @@ string MyChild::doExtractAA ( bool coding )
     
 void MyChild::OnExtractAA(wxCommandEvent& event)
     {
-    string seq = doExtractAA () ;
+    wxString seq = doExtractAA () ;
     if ( seq == "" ) return ;
     char tt[1000] ;
     sprintf ( tt , txt("t_aa_from_vec") , vec->getName().c_str() ) ;
-    myapp()->frame->newAminoAcids ( seq.c_str() , tt ) ;
+    myapp()->frame->newAminoAcids ( seq , tt ) ;
     }
         
 void MyChild::OnRestriction(wxCommandEvent& event)
@@ -1185,12 +1159,11 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
     int tw , th ;
     pdc->SetDeviceOrigin ( 0 , 0 ) ;
     wxDateTime now = wxDateTime::Now();
-    string printtime = now.Format("%c", wxDateTime::Local).c_str() ;
-    pdc->GetTextExtent ( printtime.c_str() , &tw , &th ) ;
-    pdc->DrawText ( printtime.c_str() , w - x0 - tw , 0 ) ;
+    wxString printtime = now.Format("%c", wxDateTime::Local) ;
+    pdc->GetTextExtent ( printtime , &tw , &th ) ;
+    pdc->DrawText ( printtime , w - x0 - tw , 0 ) ;
     pdc->SetFont ( *bfont ) ;
-    pdc->DrawText ( vec->getName().c_str() , x0 , 0 ) ;
-
+    pdc->DrawText ( vec->getName() , x0 , 0 ) ;
     
     pdc->EndPage () ;
    

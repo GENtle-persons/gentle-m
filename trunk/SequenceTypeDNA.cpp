@@ -67,7 +67,7 @@ wxPoint SeqDNA::showText ( int ystart , wxArrayString &tout )
         b = pos.p[a] ;
         if ( b > 0 ) // Character
            {
-           t = s[b-1] ;
+           t = s.GetChar(b-1) ;
            if ( pos.r[a].y != ly ) 
               {
               ly = pos.r[a].y ;
@@ -98,7 +98,7 @@ void SeqDNA::show ( wxDC& dc )
     wxColour tfg = dc.GetTextForeground () ;
     int bm = dc.GetBackgroundMode () ;
     int a , b , cnt = offset+1 ;
-    string t ;
+    wxString t ;
     char u[100] , valid[256] ;
     for ( a = 0 ; a < 256 ; a++ ) valid[a] = 0 ;
     valid['A'] = valid['C'] = valid['T'] = valid['G'] = valid[' '] = 1 ;
@@ -125,7 +125,7 @@ void SeqDNA::show ( wxDC& dc )
         if ( b > 0 && !insight ) cnt++ ;
         if ( b > 0 && insight ) // Character
            {
-           t = s[b-1] ;
+           t = s.GetChar(b-1) ;
            if ( pos.m[a] == 1 ) // Marked (light gray background)
               {
               dc.SetBackgroundMode ( wxSOLID ) ;
@@ -138,7 +138,7 @@ void SeqDNA::show ( wxDC& dc )
               dc.SetTextBackground ( *wxBLACK ) ;
               }
            if ( pos.m[a] == 2 && can->doOverwrite() ) dc.SetTextForeground ( *wxWHITE ) ;
-           else dc.SetTextForeground ( getBaseColor ( t[0] ) ) ;
+           else dc.SetTextForeground ( getBaseColor ( t.GetChar(0) ) ) ;
            if ( can->isPrinting() && pos.m[a] == 1 )
               {
               dc.SetBrush ( *MYBRUSH ( wxColour ( 230 , 230 , 230 ) ) ) ;
@@ -151,7 +151,7 @@ void SeqDNA::show ( wxDC& dc )
               dc.SetTextForeground ( *wxBLACK ) ;
               }
 
-           dc.DrawText ( t.c_str() , tx , ty ) ;
+           dc.DrawText ( t , tx , ty ) ;
 
            if ( pos.m[a] == 2 && !can->doOverwrite() ) // Insert cursor
               {
@@ -175,9 +175,9 @@ void SeqDNA::show ( wxDC& dc )
               t = u ;
               while ( t.length() < endnumberlength ) t = "0" + t ;
               }
-           else t = alternateName ;
+           else t = alternateName.c_str() ;
            dc.SetTextForeground ( *wxBLACK ) ;
-           dc.DrawText ( t.c_str() , pos.r[a].x, pos.r[a].y ) ;
+           dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
            }
         }
     dc.SetBackgroundMode ( bm ) ;
@@ -194,7 +194,7 @@ wxColor SeqDNA::getBaseColor ( char b )
 void SeqDNA::initFromTVector ( TVector *v )
     {
     vec = v ;
-    s = vec->getSequence() ;
+    s = vec->getWxSequence() ;
     takesMouseActions = true ;
     showNumbers = true ;
     fontColor.Set ( 0 , 0 , 0 ) ;
@@ -202,7 +202,7 @@ void SeqDNA::initFromTVector ( TVector *v )
        {
        int a ;
        for ( a = 0 ; a < s.length() ; a++ )
-          s[a] = vec->getComplement ( s[a] ) ;
+          s[(uint)a] = vec->getComplement ( s[(uint)a] ) ;
        takesMouseActions = false ;
        showNumbers = false ;
        alternateName = "" ;

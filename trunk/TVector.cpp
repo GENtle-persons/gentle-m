@@ -57,7 +57,7 @@ void TVector::setNucleotide ( int pos , char t )
     if ( isLinear() && ( pos < 0 || pos >= sl ) ) return ;
     while ( pos < 0 ) pos += sl ;
     while ( pos >= sequence.length() ) pos -= sl ;
-    sequence[pos] = t ;
+    sequence.SetChar(pos,t);
     }    
 
 bool TVector::basematch ( char b1 , char b2 ) // b1 in IUPAC, b2 in SIUPAC
@@ -65,9 +65,9 @@ bool TVector::basematch ( char b1 , char b2 ) // b1 in IUPAC, b2 in SIUPAC
    return ( IUPAC[b1] & SIUPAC[b2] ) > 0 ;
    }
    
-string TVector::vary_base ( char b )
+wxString TVector::vary_base ( char b )
     {
-    string ret ;
+    wxString ret ;
     if ( basematch ( 'A' , b ) ) ret += 'A' ;
     if ( basematch ( 'C' , b ) ) ret += 'C' ;
     if ( basematch ( 'G' , b ) ) ret += 'G' ;
@@ -89,7 +89,7 @@ void TVector::setStickyEnd ( bool left , bool upper , wxString s )
     else if ( !left && !upper ) _rl = s ;
     }
 
-string TVector::getStickyEnd ( bool left , bool upper )
+wxString TVector::getStickyEnd ( bool left , bool upper )
     {
     if ( left && upper ) return _lu ;
     else if ( left && !upper ) return _ll ;
@@ -252,12 +252,13 @@ void TVector::init ()
 
 void TVector::removeBlanksFromSequence ()
     {
-    string s ;
+    sequence.Replace ( " " , "" , true ) ;
+/*    string s ;
     int a ;
     for ( a = 0 ; a < sequence.length() ; a++ )
         if ( sequence[a] != ' ' )
            s += sequence[a] ;
-    sequence = s ;
+    sequence = s ;*/
     }
 
 void TVector::removeBlanksFromVector ()
@@ -265,7 +266,7 @@ void TVector::removeBlanksFromVector ()
     int a ;
     for ( a = 0 ; a < sequence.size() ; a++ )
         {
-        if ( sequence[a] == ' ' )
+        if ( sequence.GetChar(a) == ' ' )
            {
            doRemoveNucleotide ( a ) ;
            a-- ;
@@ -310,7 +311,8 @@ void TVector::doRemoveNucleotide ( int x )
            }
         }
         
-    sequence.erase ( sequence.begin() + x ) ;
+//    sequence.erase ( sequence.begin() + x ) ;
+    sequence.erase ( x , 1 ) ;
 
     if ( isCircular () )
         {
@@ -323,16 +325,17 @@ void TVector::doRemoveNucleotide ( int x )
 
 void TVector::insert_char ( char x , int pos , bool overwrite )
     {
-    string dummy ;
+    wxString dummy ;
     dummy = (char) x ;
     if ( overwrite && pos < sequence.length() )
        {
        myass ( pos-1 >= 0 && pos-1 < sequence.length() , "TVector::insert_char_1" ) ;
-       sequence[pos-1] = x ;
+       sequence.SetChar(pos-1,x) ;
        return ;
        }
     myass ( pos-1 >= 0 , "TVector::insert_char_2" ) ;
-    sequence.insert ( pos-1 , dummy ) ;
+    wxStringInsert ( sequence , pos-1 , dummy ) ;
+//    sequence.insert ( pos-1 , dummy ) ;
     int a ;
     for ( a = 0 ; a < items.size() ; a++ )
         {
@@ -360,12 +363,13 @@ vector <TRestrictionCut> TVector::getCuts ( TRestrictionEnzyme *e )
     {
     int b , c ;
     vector <TRestrictionCut> ret ;
-    string rs = e->sequence.c_str() ;
-    string t = sequence ;
+    wxString rs = e->sequence ;
+    wxString t = sequence ;
     if ( circular ) t += sequence ;
     for ( b = 0 ; b < sequence.length() ; b++ )
         {
-        for ( c = 0 ; b+c < t.length() && c < rs.length() && basematch ( t[b+c] , rs[c] ) ; c++ ) ;
+        for ( c = 0 ; b+c < t.length() && c < rs.length() && 
+                        basematch ( t.GetChar(b+c) , rs.GetChar(c) ) ; c++ ) ;
         if ( c == rs.length() )
            {
            int thecut = (b+e->cut)%sequence.length() ;
@@ -413,7 +417,7 @@ void TVector::recalculateCuts ()
 bool TVector::reduceToFragment ( TRestrictionCut left , TRestrictionCut right )
     {
     int a , from , to ;
-    string s ;
+    wxString s ;
 
     from = left.pos ;
     to = right.pos ;
@@ -439,8 +443,8 @@ bool TVector::reduceToFragment ( TRestrictionCut left , TRestrictionCut right )
     
     // Cutting sticky ends
     TVector dv ;
-    dv.sequence = s ;
-    string is = dv.transformSequence ( true , false ) ; // Inverse sequence
+    dv.setSequence ( s ) ;
+    wxString is = dv.transformSequence ( true , false ) ; // Inverse sequence
     _lu =  s.substr ( left.e->sequence.length() - _lu.length() , _lu.length() - lo ) ;
     _ll = is.substr ( left.e->sequence.length() - _ll.length() , _ll.length() - lo ) ;
     _ru =  s.substr ( s.length() - right.e->sequence.length() + ro , _ru.length() - ro ) ;
@@ -476,14 +480,14 @@ char TVector::getNucleotide ( int pos , bool complement )
     if ( isLinear() && ( pos < 0 || pos >= sl ) ) return ' ' ;
     while ( pos < 0 ) pos += sl ;
     while ( pos >= sl ) pos -= sl ;
-    if ( complement ) return getComplement ( sequence[pos] ) ;
-    return sequence[pos] ;
+    if ( complement ) return getComplement ( sequence.GetChar(pos) ) ;
+    return sequence.GetChar(pos) ;
     }
     
-string TVector::transformSequence ( bool inverse , bool reverse )
+wxString TVector::transformSequence ( bool inverse , bool reverse )
     {
     int a ;
-    string r = sequence ;
+    string r = sequence.c_str() ;
     if ( inverse )
         {
         for ( a = 0 ; a < r.length() ; a++ )
@@ -495,7 +499,7 @@ string TVector::transformSequence ( bool inverse , bool reverse )
         for ( a = 0 ; a < r.length() ; a++ )
            r[a] = s[s.length()-a-1] ;
         }
-    return r ;
+    return r.c_str() ;
     }
 
 void TVector::doRestriction ()
@@ -592,10 +596,10 @@ void TVector::doAction ()
     return ;
     }
     
-string TVector::invert ( string s )
+wxString TVector::invert ( wxString s )
     {
-    string t ;
-    for ( int a = 0 ; a < s.length() ; a++ ) t = s[a] + t ;
+    wxString t ;
+    for ( int a = 0 ; a < s.length() ; a++ ) t = s.GetChar(a) + t ;
     return t ;
     }
     
@@ -611,10 +615,10 @@ void TVector::ligate_right ( TVector &v , bool inverted )
     if ( inverted )
         {
         v.items.clear () ; // Inversion will delete all features (for now)!
-        string ll = v._ll ;
-        string lu = v._lu ;
-        string rl = v._rl ;
-        string ru = v._ru ;
+        wxString ll = v._ll ;
+        wxString lu = v._lu ;
+        wxString rl = v._rl ;
+        wxString ru = v._ru ;
         v._ll = invert ( ru ) ;
         v._lu = invert ( rl ) ;
         v._rl = invert ( lu ) ;
@@ -623,7 +627,7 @@ void TVector::ligate_right ( TVector &v , bool inverted )
         }
     
     // Merging sequence
-    string ol = _ru + v._lu ;
+    wxString ol = _ru + v._lu ;
     sequence += ol ;
     sequence += v.sequence ;
     _ru = v._ru ;
@@ -684,20 +688,20 @@ void TVector::doRemove ( int from , int to , bool update )
     myass ( false , "a" ) ;
         
     // Sequence
-    string s = sequence , t ;
+    wxString s = sequence , t ;
     int rt = to ;
     if ( rt < from ) rt += l ;
     for ( a = from ; a <= rt ; a++ )
        {
        b = a ;
        if ( b > l ) b -= l ;
-       t += s[b-1] ;
-       s[b-1] = ' ' ;
+       t += s.GetChar(b-1) ;
+       s.SetChar(b-1,' ') ;
        }
     myass ( false , "b" ) ;
     sequence = "" ;
     for ( a = 0 ; a < l ; a++ )
-       if ( s[a] != ' ' ) sequence += s[a] ;
+       if ( s.GetChar(a) != ' ' ) sequence += s.GetChar(a) ;
        
     myass ( false , "c" ) ;
     // Items
@@ -724,37 +728,40 @@ void TVector::doRemove ( int from , int to , bool update )
     
 // Currently returns only the direct encoding (a single char) or 'X'
 // Could return all possible AAs (see IUPAC) in the future
-string TVector::dna2aa ( string codon )
+wxString TVector::dna2aa ( wxString codon )
     {
     if ( codon.length() != 3 ) return "?" ;
-    string r ;
-    if ( codon[0] == ' ' ) return "?" ;
-    if ( codon[1] == ' ' ) return "?" ;
-    if ( codon[2] == ' ' ) return "?" ;
-    if ( (codon[0]=='A'||codon[0]=='C'||codon[0]=='G'||codon[0]=='T') &&
-         (codon[1]=='A'||codon[1]=='C'||codon[1]=='G'||codon[1]=='T') &&
-         (codon[2]=='A'||codon[2]=='C'||codon[2]=='G'||codon[2]=='T') )
+    wxString r ;
+    char c0 = codon.GetChar(0) ;
+    char c1 = codon.GetChar(1) ;
+    char c2 = codon.GetChar(2) ;
+    if ( c0 == ' ' ) return "?" ;
+    if ( c1 == ' ' ) return "?" ;
+    if ( c2 == ' ' ) return "?" ;
+    if ( (c0=='A'||c0=='C'||c0=='G'||c0=='T') &&
+         (c1=='A'||c1=='C'||c1=='G'||c1=='T') &&
+         (c2=='A'||c2=='C'||c2=='G'||c2=='T') )
        {
-       int i = ACGT[codon[0]]*16 +
-               ACGT[codon[1]]*4 +
-               ACGT[codon[2]] ;
+       int i = ACGT[c0]*16 +
+               ACGT[c1]*4 +
+               ACGT[c2] ;
        if ( i > 63 ) r = "?" ;
        else r = aa.GetChar(i) ;
        }
     else
        {
        char u = ' ' ;
-       string s0 = vary_base ( codon[0] ) ;
-       string s1 = vary_base ( codon[1] ) ;
-       string s2 = vary_base ( codon[2] ) ;
+       wxString s0 = vary_base ( c0 ) ;
+       wxString s1 = vary_base ( c1 ) ;
+       wxString s2 = vary_base ( c2 ) ;
        for ( int a0 = 0 ; a0 < s0.length() ; a0++ )
         for ( int a1 = 0 ; a1 < s1.length() ; a1++ )
          for ( int a2 = 0 ; a2 < s2.length() ; a2++ )
           {
           char v ;
-          int i = ACGT[s0[a0]]*16 +
-                  ACGT[s1[a1]]*4 +
-                  ACGT[s2[a2]] ;
+          int i = ACGT[s0.GetChar(a0)]*16 +
+                  ACGT[s1.GetChar(a1)]*4 +
+                  ACGT[s2.GetChar(a2)] ;
           if ( i > 63 ) v = '?' ;
           else v = aa.GetChar(i) ;
           if ( u != ' ' && u != v ) return "?" ;
@@ -813,7 +820,7 @@ void TVector::setAction ( wxString _action , int _action_value )
     action_value = _action_value ;
     }
         
-string TVector::getSubstring ( int mf , int mt )
+wxString TVector::getSubstring ( int mf , int mt )
     {
     int l = sequence.length() ;
     mf-- ;
@@ -824,7 +831,7 @@ string TVector::getSubstring ( int mf , int mt )
         }
     else
         {
-        string s ;
+        wxString s ;
         s += sequence.substr ( 0 , mt-l+1 ) ;
         s += sequence.substr ( mf ) ;
         return s ;
@@ -942,10 +949,10 @@ TVector *TVector::getAAvector ( int from , int to , int dir )
     else aas.mode = AA_KNOWN ;
     aas.initFromTVector ( v ) ;
     v->sequence = aas.s ;
-    for ( a = to+1 ; a < v->sequence.length() ; a++ ) v->sequence[a] = UNIQUE ;
+    for ( a = to+1 ; a < v->sequence.length() ; a++ ) v->sequence.SetChar(a,UNIQUE) ;
     for ( a = 0 ; a < v->sequence.length() ; a++ )
-        if ( v->sequence[a] == ' ' || v->sequence[a] == '|' )
-           v->sequence[a] = UNIQUE ;
+        if ( v->sequence.GetChar(a) == ' ' || v->sequence.GetChar(a) == '|' )
+           v->sequence.SetChar(a,UNIQUE) ;
     
     
     // Cleaning restriction enzymes
@@ -955,9 +962,9 @@ TVector *TVector::getAAvector ( int from , int to , int dir )
     // Removing non-AA sequence and features
     for ( a = 0 ; a < v->sequence.length() ; a++ )
         {
-        if ( v->sequence[a] == UNIQUE )
+        if ( v->sequence.GetChar(a) == UNIQUE )
            {
-           for ( b = a+1 ; b < v->sequence.length() && v->sequence[b] == UNIQUE ; b++ ) ;
+           for ( b = a+1 ; b < v->sequence.length() && v->sequence.GetChar(b) == UNIQUE ; b++ ) ;
            v->doRemove ( a+1 , b , false ) ;
            a-- ;
            }
@@ -968,8 +975,8 @@ TVector *TVector::getAAvector ( int from , int to , int dir )
     // PATCH AS PATCH CAN!!!
     if ( dir < 0 )
         {
-        string t ;
-        for ( a = 0 ; a < v->sequence.length() ; a++ ) t = v->sequence[a] + t ;
+        wxString t ;
+        for ( a = 0 ; a < v->sequence.length() ; a++ ) t = v->sequence.GetChar(a) + t ;
         v->sequence = t ;
         for ( a = 0 ; a < v->items.size() ; a++ )
            {
@@ -978,7 +985,6 @@ TVector *TVector::getAAvector ( int from , int to , int dir )
            v->items[a].from = f ;
            }
         }
-//    v->items.clear() ;
 
     v->circular = false ;
     return v ;
@@ -1087,6 +1093,11 @@ void TVector::addName ( wxString s )
     name += s ;
     }
     
+wxString TVector::getWxSequence ()
+    {
+    return sequence ;
+    }
+    
 string TVector::getSequence ()
     {
     return sequence.c_str() ;
@@ -1094,7 +1105,7 @@ string TVector::getSequence ()
     
 char TVector::getSequenceChar ( int x )
     {
-    return sequence[x] ;
+    return sequence.GetChar(x) ;
     }    
         
 void TVector::setSequence ( string ns )
@@ -1119,8 +1130,7 @@ void TVector::addToSequence ( char x )
     
 void TVector::alterSequence ( int pos , char c )
     {
-    sequence[pos] = c ;
-//    sequence.SetChar ( pos , c ) ;
+    sequence.SetChar ( pos , c ) ;
     }    
     
 int TVector::getSequenceLength()
@@ -1398,11 +1408,11 @@ void TVectorItem::translate ( TVector *v , SeqAA *aa )
 
    while ( c != '|' && rf != 0 )
       {
-      string three ;
+      wxString three ;
       three += v->getNucleotide ( b + 0 * direction , complement ) ;
       three += v->getNucleotide ( b + 1 * direction , complement ) ;
       three += v->getNucleotide ( b + 2 * direction , complement ) ;
-      c = v->dna2aa ( three )[0] ;
+      c = v->dna2aa ( three ) . GetChar ( 0 ) ;
   
       // SeqAA update
       if ( aa )
@@ -1440,18 +1450,18 @@ void TVectorItem::translate ( TVector *v , SeqAA *aa )
       }
     }
 
-void TVectorItem::getArrangedAA ( TVector *v , string &s , int disp )
+void TVectorItem::getArrangedAA ( TVector *v , wxString &s , int disp )
     {
     int a ;
     for ( a = 0 ; a < dna2aa.size() ; a++ )
        {
-       if ( disp == AA_ONE ) s[dna2aa[a].dna[0]] = dna2aa[a].aa ;
+       if ( disp == AA_ONE ) s.SetChar(dna2aa[a].dna[0],dna2aa[a].aa) ;
        else
           {
           wxString three = v->one2three((int)dna2aa[a].aa) ;
-          s[dna2aa[a].dna[0]] = three.GetChar(0) ;
-          s[dna2aa[a].dna[1]] = three.GetChar(1) ;
-          s[dna2aa[a].dna[2]] = three.GetChar(2) ;
+          s.SetChar(dna2aa[a].dna[0], three.GetChar(0) ) ;
+          s.SetChar(dna2aa[a].dna[1], three.GetChar(1) ) ;
+          s.SetChar(dna2aa[a].dna[2], three.GetChar(2) ) ;
           }
        }
     }

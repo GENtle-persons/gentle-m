@@ -146,6 +146,7 @@ void myass ( bool b , wxString msg = "" ) ;
 #define myass(a,b)
 #endif
 
+void wxStringInsert ( wxString &s , int from , wxString t ) ;
 wxArrayString explode ( wxString sep , wxString s ) ;
 char* txt ( wxString item ) ;
 void init_txt ( wxString lang ) ;

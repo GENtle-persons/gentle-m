@@ -52,6 +52,11 @@ int cmpint(int *first, int *second)
     return *first > *second ;
     }    
 
+void wxStringInsert ( wxString &s , int from , wxString t )
+    {
+    s = s.Mid ( 0 , from ) + t + s.Mid ( from ) ;
+    }    
+
 wxArrayString explode ( wxString sep , wxString s )
     {
     int a , b ;

@@ -12,7 +12,7 @@ void SeqFeature::show ( wxDC& dc )
     wxColour tfg = dc.GetTextForeground () ;
     int bm = dc.GetBackgroundMode () ;
     int a , b , cnt = offset+1 ;
-    string t ;
+    wxString t ;
     dc.SetBackgroundMode ( wxTRANSPARENT ) ;
     int xa , ya , yb ;
     dc.GetDeviceOrigin ( &xa , &ya ) ;
@@ -158,10 +158,10 @@ void SeqFeature::show ( wxDC& dc )
                        {
                        myass ( i >= 0 && i < vr.size() , "!!2" ) ;   
                        myass ( vr[i].x >= 0 && vr[i].x < vec->items.size() , "!!3" ) ;   
-                       string name = vec->items[vr[i].x].name.c_str() ;
+                       wxString name = vec->items[vr[i].x].name ;
                        if ( newline && li[l] == i ) name = "(" + name + ")" ;
                        _i.Add ( i ) ;
-                       _name.Add ( name.c_str() ) ;
+                       _name.Add ( name ) ;
                        _point.push_back ( wxPoint ( x_from , level - ch2 ) ) ;
                        }
                     li[l] = i ;
@@ -229,9 +229,9 @@ void SeqFeature::initFromTVector ( TVector *v )
     // item.to as height
     int a , b ;
     vec = v ;
-    s = vec->getSequence() ;
+    s = vec->getWxSequence() ;
     maxlayers = 0 ;
-    for ( a = 0 ; a < s.length() ; a++ ) s[a] = ' ' ;
+    for ( a = 0 ; a < s.length() ; a++ ) s.SetChar(a,' ') ;
     while ( vr.size() ) vr.pop_back () ;
     for ( a = 0 ; a < v->items.size() ; a++ )
        {

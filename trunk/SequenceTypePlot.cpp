@@ -9,7 +9,7 @@ wxString SeqPlot::getTip ( int pos )
     wxString r = wxString::Format(txt("seq_loc"),pos+1) ;
     if ( pos >= prop.size() || prop[pos].data.size() != 1 ) return r ;
     r += " : " ;
-    r += s[pos] ;
+    r += s.GetChar(pos) ;
     r += wxString::Format ( " [%2.2f]" , prop[pos].data[0] ) ;
     return r ;
     }
@@ -123,7 +123,7 @@ void SeqPlot::show ( wxDC& dc )
     wxColour tfg = dc.GetTextForeground () ;
     int bm = dc.GetBackgroundMode () ;
     int a , b , cnt = offset+1 ;
-    string t ;
+    wxString t ;
     char u[100] , valid[256] ;
     for ( a = 0 ; a < 256 ; a++ ) valid[a] = 0 ;
     valid['A'] = valid['C'] = valid['T'] = valid['G'] = valid[' '] = 1 ;
@@ -157,7 +157,7 @@ void SeqPlot::show ( wxDC& dc )
         if ( b > 0 && insight ) // Character
            {
            if ( lx == 0 ) lx = tx ;
-           t = s[b-1] ;
+           t = s.GetChar(b-1) ;
            if ( can->isPrinting() && pos.m[a] == 1 )
               {
               dc.SetBrush ( *MYBRUSH ( wxColour ( 230 , 230 , 230 ) ) ) ;
@@ -422,7 +422,7 @@ void SeqPlot::init ( SequenceCanvas *ncan )
 void SeqPlot::initFromTVector ( TVector *v )
     {
     vec = v ;
-    s = vec->getSequence() ;
+    s = vec->getWxSequence() ;
     takesMouseActions = true ;
     }
 
@@ -615,7 +615,7 @@ void SeqPlot::useMW ()
     prop.clear () ;
     for ( a = 0 ; a < s.length() ; a++ )
         {
-        prop.push_back ( vec->getAAprop ( s[a] ) ) ;
+        prop.push_back ( vec->getAAprop ( s.GetChar(a) ) ) ;
         prop[a].data.clear() ;
         prop[a].data.push_back ( prop[a].mw ) ;
 //        while ( prop[a].data.size() < 3 ) prop[a].data.push_back ( 0 ) ;
@@ -639,7 +639,7 @@ void SeqPlot::usePI ()
     prop.clear () ;
     for ( a = 0 ; a < s.length() ; a++ )
         {
-        prop.push_back ( vec->getAAprop ( s[a] ) ) ;
+        prop.push_back ( vec->getAAprop ( s.GetChar(a) ) ) ;
         prop[a].data.clear() ;
         prop[a].data.push_back ( prop[a].pi ) ;
 //        while ( prop[a].data.size() < 3 ) prop[a].data.push_back ( 0 ) ;
@@ -663,7 +663,7 @@ void SeqPlot::useHP ()
     prop.clear () ;
     for ( a = 0 ; a < s.length() ; a++ )
         {
-        prop.push_back ( vec->getAAprop ( s[a] ) ) ;
+        prop.push_back ( vec->getAAprop ( s.GetChar(a) ) ) ;
         prop[a].data.clear() ;
         }
         

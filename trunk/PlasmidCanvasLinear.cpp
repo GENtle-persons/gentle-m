@@ -31,10 +31,10 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
     // Sticky ends
     if ( p->vec->hasStickyEnds() )
         {
-        string lu = p->vec->getStickyEnd(true,true) + " -";
-        string ll = p->vec->getStickyEnd(true,false) + " -";
-        string ru = "- " + p->vec->getStickyEnd(false,true) ;
-        string rl = "- " + p->vec->getStickyEnd(false,false) ;
+        wxString lu = p->vec->getStickyEnd(true,true) + " -";
+        wxString ll = p->vec->getStickyEnd(true,false) + " -";
+        wxString ru = "- " + p->vec->getStickyEnd(false,true) ;
+        wxString rl = "- " + p->vec->getStickyEnd(false,false) ;
         wxCoord nx , ny ;
         
         dc.GetTextExtent ( lu.c_str() , &dx , &dy ) ;
@@ -364,7 +364,7 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
     int vo = -1 ;
     int rs = findRestrictionSite ( pt.x , pt.y ) ;
     int orf = findORFlinear ( pt.x , pt.y ) ;
-    string s ;
+    wxString s ;
     int lineOff = w/20 ;
 
     int a ;
@@ -473,7 +473,7 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
         wxLogStatus(txt("item_status_bar") , s.c_str() ) ;
         char ttt[1000] ;
         sprintf ( ttt , "itemtype%d" , p->vec->items[vo].type ) ;
-        string tt_type = txt(ttt) ;
+        wxString tt_type = txt(ttt) ;
         sprintf ( ttt , txt("tt_item") , tt_type.c_str() ,
                                         s.c_str() , 
                                         p->vec->items[vo].desc.c_str() ) ;
@@ -518,7 +518,7 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
         else if ( event.RightDown() ) invokeVectorPopup ( pt_abs ) ;
         }
 
-    string id = "DNA" ;
+    wxString id = "DNA" ;
     if ( p->def == "AminoAcids" ) id = "AA" ;
     
     // Dragging

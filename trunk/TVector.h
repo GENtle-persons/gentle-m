@@ -93,7 +93,7 @@ class TVectorItem
 
     // dna2aa stuff
     virtual void translate ( TVector *v , SeqAA *aa = NULL ) ;
-    virtual void getArrangedAA ( TVector *v , string &s , int disp ) ;
+    virtual void getArrangedAA ( TVector *v , wxString &s , int disp ) ;
     
     // Variables
     wxString desc , name ;
@@ -156,7 +156,7 @@ class TVector
     
     virtual float getAAmw ( char aa ) ;
     virtual float getAApi ( char aa ) ;
-    virtual string dna2aa ( string codon ) ;
+    virtual wxString dna2aa ( wxString codon ) ;
     virtual void turn ( int off ) ;
     virtual void setAction ( wxString _action , int _action_value = 0 ) ;
     virtual void setDatabase ( wxString s ) { database = s ; }
@@ -180,7 +180,7 @@ class TVector
     virtual bool isLinear () ;
     virtual wxString one2three ( int a ) ;
     virtual void setStickyEnd ( bool left , bool upper , wxString s ) ;
-    virtual string getStickyEnd ( bool left , bool upper ) ;
+    virtual wxString getStickyEnd ( bool left , bool upper ) ;
     virtual bool hasStickyEnds () ;
     virtual void callUpdateUndoMenu () ;
     virtual void setFromVector ( TVector &v ) ;
@@ -191,8 +191,9 @@ class TVector
     virtual int find_item ( wxString s ) ;
     virtual bool isEnzymeHidden ( wxString s ) ;
 
-    virtual string getSubstring ( int mf , int mt ) ;
-    virtual string transformSequence ( bool inverse , bool reverse ) ;
+    virtual wxString getSubstring ( int mf , int mt ) ;
+    virtual wxString transformSequence ( bool inverse , bool reverse ) ;
+    virtual wxString getWxSequence () ;
     virtual string getSequence () ;
     virtual char getSequenceChar ( int x ) ;
     virtual void setSequence ( string ns ) ;
@@ -222,11 +223,11 @@ class TVector
     TUndo undo ;
     
     private :
-    virtual string invert ( string s ) ;
-    virtual string vary_base ( char b ) ;
+    virtual wxString invert ( wxString s ) ;
+    virtual wxString vary_base ( char b ) ;
 
-    string sequence ;    
-    string _lu , _ll , _ru , _rl ; // Sticky ends
+    wxString sequence ;    
+    wxString _lu , _ll , _ru , _rl ; // Sticky ends
     wxString name , desc ;
     bool circular , changed ;
     ChildBase *window ;

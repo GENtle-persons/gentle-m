@@ -251,7 +251,7 @@ void TAminoAcids::showSequence ()
     sc->seq.push_back ( d ) ;
     d->primaryMode = true ;
     d->takesMouseActions = true ;
-    d->initFromString ( vec->getSequence() ) ;
+    d->initFromString ( vec->getWxSequence() ) ;
     d->fixOffsets ( vec ) ;
 
     // Plot demo
@@ -394,11 +394,11 @@ void TAminoAcids::OnPhotometer(wxCommandEvent& event)
     
 void TAminoAcids::OnBlastAA(wxCommandEvent& event)
     {
-    string seq ;
+    wxString seq ;
     int a ;
-    if ( sc->_from < 0 ) seq = vec->getSequence() ;
+    if ( sc->_from < 0 ) seq = vec->getWxSequence() ;
     else seq = sc->getSelection() ;
-    myapp()->frame->blast ( seq.c_str() , "blastp" ) ;
+    myapp()->frame->blast ( seq , "blastp" ) ;
     }
 
 void TAminoAcids::Undo(wxCommandEvent& event)

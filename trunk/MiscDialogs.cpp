@@ -44,12 +44,12 @@ END_EVENT_TABLE()
 
 // ******************************************* TMutationDialog
 
-TMutationDialog::TMutationDialog (wxWindow *parent, const wxString& title , string _codon )
+TMutationDialog::TMutationDialog (wxWindow *parent, const wxString& title , wxString _codon )
     : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 600 , 450 ) )
     {
     codon = _codon ;
     v = new TVector ;
-    aa = v->dna2aa ( codon ) [0] ;
+    aa = v->dna2aa(codon.c_str()).GetChar(0) ;
     }
     
 TMutationDialog::~TMutationDialog ()
@@ -336,11 +336,7 @@ void TURLtext::OnURL(wxTextUrlEvent& event)
     long from = event.GetURLStart() ;
     long to = event.GetURLEnd() ;
     wxString url = GetRange ( from , to ) ;
-    if ( url == "" ) return ; // No url
-    
-//    string appl = myapp()->getFileFormatApplication ( "pdb" ) ;
-//    wxMessageBox ( url , appl.c_str() ) ;
-    
+    if ( url == "" ) return ; // No url    
     wxExecute ( myapp()->getHTMLCommand ( url.c_str() ).c_str() ) ;
     }
 
@@ -682,7 +678,7 @@ bool FindSequenceDialog::doesMatch ( char a , char b )
     return false ;
     }
     
-int FindSequenceDialog::subsearch ( const string &s , const string &sub , int start )
+int FindSequenceDialog::subsearch ( const wxString &s , const wxString &sub , int start )
     {
     int a , b ;
     for ( a = start ; a < s.length() - sub.length() + 1 ; a++ )
@@ -708,29 +704,29 @@ int FindSequenceDialog::subsearch ( const string &s , const string &sub , int st
 void FindSequenceDialog::OnSearch ( wxCommandEvent &ev )
     {
     int a , b ;
-    string sub = t->GetValue().c_str() ;
-    string dummy , allow = allowed_chars + "?*" ;
+    wxString sub = t->GetValue() ;
+    wxString dummy , allow = allowed_chars + "?*" ;
     for ( a = 0 ; a < sub.length() ; a++ ) // Filtering bogus chars
         {
-        if ( sub[a] >= 'a' && sub[a] <= 'z' ) sub[a] = sub[a] - 'a' + 'A' ;
-        for ( b = 0 ; b < allow.length() && sub[a] != allow[b] ; b++ ) ;
-        if ( b < allow.length() ) dummy += sub[a] ;
+        if ( sub.GetChar(a) >= 'a' && sub.GetChar(a) <= 'z' ) sub.SetChar ( a , sub.GetChar(a) - 'a' + 'A' ) ;
+        for ( b = 0 ; b < allow.length() && sub.GetChar(a) != allow.GetChar(b) ; b++ ) ;
+        if ( b < allow.length() ) dummy += sub.GetChar(a) ;
         }
     sub = dummy ;
     if ( sub == "" ) return ;
 
     // Preparing sequence    
-    string s = c->vec->getSequence() ;
+    wxString s = c->vec->getWxSequence() ;
     if ( c->vec->isCircular() )
         {
-        string t ;
+        wxString t ;
         t = s ;
         while ( t.length() < sub.length() ) t += " " ;
         s += t.substr ( 0 , sub.length()-1 ) ;
         }
         
     // Now we search...
-    a = subsearch ( s , sub , p ) ;
+    a = subsearch ( s.c_str() , sub , p ) ;
     if ( a > -1 )
         {
         if ( c->def == "dna" )

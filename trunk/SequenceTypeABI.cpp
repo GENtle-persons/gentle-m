@@ -82,7 +82,7 @@ int SeqABI::arrange ( int n )
         
         if ( inv_compl ) bx = lastx - bx ;
         
-        char t = s[a] ;
+        char t = s.GetChar(a) ;
         x = bx * scalex - diffx ;
 
 
@@ -114,8 +114,8 @@ void SeqABI::setInvCompl ( bool x )
     if ( inv_compl != x ) // Inverting and complementing sequence
         {
         TVector v2 ;
-        string s2 ;
-        for ( int a = 0 ; a < s.length() ; a++ ) s2 = v2.getComplement( s[a] ) + s2 ;
+        wxString s2 ;
+        for ( int a = 0 ; a < s.length() ; a++ ) s2 = v2.getComplement( s.GetChar(a) ) + s2 ;
         s = s2 ;
         can->child->vec->setSequence ( s ) ;
         }

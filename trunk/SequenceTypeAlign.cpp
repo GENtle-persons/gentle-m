@@ -70,7 +70,7 @@ void SeqAlign::show ( wxDC& dc )
     wxColour tfg = dc.GetTextForeground () ;
     int bm = dc.GetBackgroundMode () ;
     int a , b , cnt = offset+1 ;
-    string t ;
+    wxString t ;
     char u[100] ;
 //    TAlignment *win = (TAlignment*) can->child ;
     
@@ -120,7 +120,7 @@ void SeqAlign::show ( wxDC& dc )
         if ( b > 0 && !insight ) cnt++ ;
         if ( b > 0 && insight ) // Character
            {
-           t = s[b-1] ;
+           t = s.GetChar(b-1) ;
            if ( pos.m[a] == 1 )
               {
               dc.SetTextBackground ( *wxLIGHT_GREY ) ;
@@ -128,8 +128,8 @@ void SeqAlign::show ( wxDC& dc )
               }
            else if ( myname != txt("t_identity") )
               {
-              fg = al->findColors ( s[b-1] , can->seq[first]->s[b-1] , true ) ;
-              bg = al->findColors ( s[b-1] , can->seq[first]->s[b-1] , false ) ;
+              fg = al->findColors ( s.GetChar(b-1) , can->seq[first]->s.GetChar(b-1) , true ) ;
+              bg = al->findColors ( s.GetChar(b-1) , can->seq[first]->s.GetChar(b-1) , false ) ;
               dc.SetTextForeground ( fg ) ;
               dc.SetTextBackground ( bg ) ;
               }
@@ -146,8 +146,8 @@ void SeqAlign::show ( wxDC& dc )
            if ( myname != txt("t_identity") && 
                 al->cons && 
                 first != me &&
-                t[0] == can->seq[first]->s[b-1] )
-                   t[0] = '.' ;
+                t.GetChar(0) == can->seq[first]->s.GetChar(b-1) )
+                   t.SetChar(0,'.') ;
 
            if ( t == "." )
               {
@@ -158,7 +158,7 @@ void SeqAlign::show ( wxDC& dc )
                               can->charheight / 8 ) ;
               dc.SetPen(*wxTRANSPARENT_PEN);
               }
-           else dc.DrawText ( t.c_str(), pos.r[a].x, pos.r[a].y ) ;
+           else dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
            
            if ( al->bold )
               {
@@ -179,7 +179,7 @@ void SeqAlign::show ( wxDC& dc )
            dc.SetTextForeground ( *wxBLACK ) ;
            dc.SetTextBackground ( nbgc ) ;
            for ( t = "" ; t.length() < endnumberlength ; t += " " ) ;
-           dc.DrawText ( t.c_str() , pos.r[a].x, pos.r[a].y ) ;
+           dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
            dc.SetFont(*can->varFont);
            t = myname ;
            t = " " + t ;
@@ -188,7 +188,7 @@ void SeqAlign::show ( wxDC& dc )
               t = t.substr ( 1 , t.length()-1 ) ;
               dc.GetTextExtent ( t.c_str() , &tw , &th ) ;
               } while ( tw > pos.r[a].width ) ;
-           dc.DrawText ( t.c_str() , pos.r[a].x, pos.r[a].y ) ;
+           dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
            dc.SetTextBackground ( *wxWHITE ) ;
            dc.SetFont(*can->font);
            }

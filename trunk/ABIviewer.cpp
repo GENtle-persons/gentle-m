@@ -261,7 +261,7 @@ wxString TABIviewer::getStat ()
     char u[256] ;
     wxString bases ;
     for ( a = 0 ; a < 256 ; a++ ) u[a] = 0 ;
-    for ( a = 0 ; a < abi->s.length() ; a++ ) u[abi->s[a]]++ ;
+    for ( a = 0 ; a < abi->s.length() ; a++ ) u[abi->s.GetChar(a)]++ ;
     for ( a = 0 ; a < 256 ; a++ )
        {
        if ( u[a] > 0 )
@@ -382,8 +382,8 @@ void TABIviewer::OnFind(wxCommandEvent& event)
 void TABIviewer::OnCopyToNew(wxCommandEvent& event)
     {
     TVector *nv = new TVector ;
-    string s ;
-    if ( sc->_from == -1 ) s = vec->getSequence() ; // All of it
+    wxString s ;
+    if ( sc->_from == -1 ) s = vec->getWxSequence() ; // All of it
     else s = sc->getSelection() ;
     nv->setName ( vec->getName() ) ;
     nv->setSequence ( s ) ;

@@ -15,11 +15,11 @@ class TIMGitem
     
     int type ;
     wxPoint p1 , p2 ;
-    string s ;
+    wxString s ;
     wxSize orig , cur ;
     wxPoint off ;
     int font_size ;
-    string font_name ;
+    wxString font_name ;
     } ;
 
 class TIMGreader
@@ -27,7 +27,7 @@ class TIMGreader
     public :
     TIMGreader () { buffer = NULL ; output = NULL ; } ;
     ~TIMGreader () ;
-    void readFile ( string fn ) ;
+    void readFile ( wxString fn ) ;
     int getInt ( int adr ) ;
     wxImage makeImage () ;
     

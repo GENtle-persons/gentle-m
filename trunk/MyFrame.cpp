@@ -348,10 +348,12 @@ void MyFrame::initme ()
        int a , b ;
        for ( a = 1 ; a < myapp()->argc ; a++ )
           {
-          string path = myapp()->argv[a] ;
-          for ( b = path.length() - 1 ; path[b] != '\\' && path[b] != '/' ; b-- ) ;
-          string file = path.substr ( b+1 ) ;
-          importFile ( file.c_str() , path.c_str() , -1 ) ;
+          wxString path = myapp()->argv[a] ;
+//          for ( b = path.length() - 1 ; path[b] != '\\' && path[b] != '/' ; b-- ) ;
+//          wxString file = path.substr ( b+1 ) ;
+          wxString file = path.AfterLast ( '/' ) ;
+          file = file.AfterLast ( '\\' ) ;
+          importFile ( file , path , -1 ) ;
           wxSetWorkingDirectory ( myapp()->homedir ) ;
           }
        }
@@ -399,19 +401,19 @@ void MyFrame::OnHelp(wxCommandEvent& WXUNUSED(event) )
     if ( useInternalHelp )
         {
         wxHtmlHelpController *hc = new wxHtmlHelpController ( wxHF_DEFAULT_STYLE|wxHF_OPEN_FILES ) ;
-        string helpfile ;
+        wxString helpfile ;
         helpfile += myapp()->homedir ;
         helpfile += "\\help\\" ;
         helpfile += lang_string ;
         helpfile += ".hhp" ;
-        hc->AddBook ( helpfile.c_str() ) ;
+        hc->AddBook ( helpfile ) ;
         hc->DisplayContents () ;
         }
     else
         {
         #ifdef __WXMSW__
             wxString helpfile = "\"" ;
-            helpfile += myapp()->homedir.c_str() ;
+            helpfile += myapp()->homedir ;
             helpfile += "\\" ;
             helpfile += txt("f_help") ;
             helpfile += "\"" ;
@@ -848,7 +850,7 @@ void MyFrame::OnProjectLoad(wxCommandEvent& event)
     {
     // Are all objects stored in a database?
     int a ;
-    string notindb ;
+    wxString notindb ;
     for ( a = 0 ; a < children.size() ; a++ )
         {
         if ( children[a]->def == "dna" )
@@ -877,7 +879,7 @@ void MyFrame::OnProjectSave(wxCommandEvent& event)
     {
     // Are all objects stored in a database?
     int a ;
-    string notindb ;
+    wxString notindb ;
     for ( a = 0 ; a < children.size() ; a++ )
         {
         if ( children[a]->def == "dna" )
@@ -1428,12 +1430,11 @@ bool MyFrameDropTarget::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& f
     int a , b ;
     for ( a = 0 ; a < filenames.GetCount() ; a++ )
        {
-       string path = filenames[a].c_str() ;
-       for ( b = path.length() - 1 ; path[b] != '\\' && path[b] != '/' ; b-- ) ;
-       string file = path.substr ( b+1 ) ;
-       myapp()->frame->importFile ( file.c_str() , path.c_str() , -1 ) ;
+       wxString path = filenames[a] ;
+       for ( b = path.length() - 1 ; path.GetChar(b) != '\\' && path.GetChar(b) != '/' ; b-- ) ;
+       wxString file = path.substr ( b+1 ) ;
+       myapp()->frame->importFile ( file , path , -1 ) ;
        }
-//    wxMessageBox ( filenames[0] ) ;
     return true ;
     }
         

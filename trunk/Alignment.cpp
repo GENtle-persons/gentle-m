@@ -542,7 +542,7 @@ void TAlignment::updateSequence ()
             if ( aaa ) delete aaa ;
             aaa = new SeqAA ( NULL ) ;
             sc->seq[g] = aaa ;
-            aaa->initFromString ( lines[id].getFeatures()->getSequence() ) ;
+            aaa->initFromString ( lines[id].getFeatures()->getWxSequence() ) ;
             aaa->fixOffsets ( lines[id].getFeatures() ) ;
             aaa->can = sc ;
             sc->arrange () ;
