@@ -120,16 +120,16 @@ void TVectorEditor::showProteases ()
     int a , b ;
     vector <string> vs ;
     for ( a = 0 ; a < myapp()->frame->LS->pr.size() ; a++ )
-        vs.push_back ( myapp()->frame->LS->pr[a]->name ) ;
+        vs.push_back ( myapp()->frame->LS->pr[a]->name.c_str() ) ;
     sort ( vs.begin() , vs.end() ) ;
         
     prots->Clear () ;
     for ( a = 0 ; a < vs.size() ; a++ )
         {
-        string n = vs[a] ;
-        prots->Append ( n.c_str() ) ;
-        for ( b = 0 ; b < v->proteases.size() && v->proteases[b] != n ; b++ ) ;
-        if ( b < v->proteases.size() ) prots->Check ( prots->FindString ( n.c_str() ) ) ;
+        wxString n = vs[a].c_str() ;
+        prots->Append ( n ) ;
+        for ( b = 0 ; b < v->proteases.GetCount() && v->proteases[b] != n ; b++ ) ;
+        if ( b < v->proteases.GetCount() ) prots->Check ( prots->FindString ( n ) ) ;
         }
     }
 
@@ -382,7 +382,7 @@ void TVectorEditor::initPanEnzym ()
     while ( ce.size() ) ce.pop_back () ;
     for ( a = 0 ; v && a < v->re.size() ; a++ )
         {
-        string s = v->re[a]->name ;
+        string s = v->re[a]->name.c_str() ;
         listCE->Append ( s.c_str() ) ;
         ce.push_back ( s ) ;
         }
@@ -411,7 +411,7 @@ void TVectorEditor::addOkCancel ( wxPanel *p )
 
 #define VCOMMIT(_p1,_p2) if(_p1!=v->_p2){v->_p2=_p1;v->setChanged();}
 #define VCOMMIT_STICKY(_p1,_p2,_p3) if(_p1!=v->getStickyEnd(_p2,_p3))\
-                    {v->setStickyEnd(_p2,_p3,_p1);v->setChanged();}
+                    {v->setStickyEnd(_p2,_p3,_p1.c_str());v->setChanged();}
     
 void TVectorEditor::commitVector ()
     {
@@ -491,7 +491,7 @@ void TVectorEditor::commitEnzymes ()
     // Removed enzymes
     for ( a = 0 ; a < v->re.size() ; a++ )
         {
-        for ( b = 0 ; b < ce.size() && ce[b] != v->re[a]->name ; b++ ) ;
+        for ( b = 0 ; b < ce.size() && ce[b] != v->re[a]->name.c_str() ; b++ ) ;
         if ( b == ce.size() )
            {
            changed = true ;
@@ -504,11 +504,11 @@ void TVectorEditor::commitEnzymes ()
     // Added enzymes
     for ( b = 0 ; b < ce.size() ; b++ )
         {
-        for ( a = 0 ; a < v->re.size() && ce[b] != v->re[a]->name ; a++ ) ;
+        for ( a = 0 ; a < v->re.size() && ce[b] != v->re[a]->name.c_str() ; a++ ) ;
         if ( a == v->re.size() )
            {
            changed = true ;
-           v->re.push_back ( myapp()->frame->LS->getRestrictionEnzyme ( ce[b] ) ) ;
+           v->re.push_back ( myapp()->frame->LS->getRestrictionEnzyme ( ce[b].c_str() )  ) ;
            }
         }
         
@@ -526,7 +526,8 @@ void TVectorEditor::commitProteases ()
     bool changed = false ;
     
     vector <string> v1 , v2 ;
-    v1 = v->proteases ;
+    for ( a = 0 ; a < v->proteases.GetCount() ; a++ )
+        v1.push_back ( v->proteases[a].c_str() ) ;
     
     for ( a = 0 ; a < prots->GetCount() ; a++ )
         if ( prots->IsChecked ( a ) )
@@ -540,7 +541,12 @@ void TVectorEditor::commitProteases ()
         if ( v1[a] != v2[a] )
            changed = true ;
     
-    if ( changed ) v->proteases = v2 ;
+    if ( changed )
+        {
+        v->proteases.Clear() ;
+        for ( a = 0 ; a < v2.size() ; a++ )
+           v->proteases.Add ( v2[a].c_str() ) ;
+        }
     
     v->setChanged ( changed | v->isChanged() ) ;
     }
@@ -591,7 +597,7 @@ void TVectorEditor::enzymeListDlbClick ( wxEvent &ev )
         int i , k , n = lb->GetSelections ( vi ) ;
         for ( k = 0 ; k < n ; k++ )
             {
-            string s = lb->GetString ( vi[k] ).c_str() ;
+            wxString s = lb->GetString ( vi[k] ) ;
             TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( s ) ;
             TEnzymeDialog ed ( this , s.c_str() , wxPoint(-1,-1) , wxSize(600,400) , 
                             wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL ) ;
@@ -614,7 +620,7 @@ void TVectorEditor::enzymeListDlbClick ( wxEvent &ev )
         wxArrayInt vi ;
         int n = lb->GetSelections ( vi ) ;
         if ( n != 1 ) return ;
-        string s = lb->GetString ( vi[0] ).c_str() ;
+        wxString s = lb->GetString ( vi[0] ) ;
         TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( s ) ;
         TEnzymeDialog ed ( this , s.c_str() , wxPoint(-1,-1) , wxSize(600,400) , 
                         wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL ) ;
@@ -638,17 +644,17 @@ void TVectorEditor::showEnzymeGroups ()
     
 void TVectorEditor::showGroupEnzymes ( string gr )
     {
-    vector <string> vs ;
+    wxArrayString vs ;
     listGE->Clear() ;
-    gr = myapp()->frame->LS->UCfirst ( gr ) ;
-    myapp()->frame->LS->getEnzymesInGroup ( gr , vs ) ;
-    while ( eig.size() ) eig.pop_back () ;
-    for ( int i = 0 ; i < vs.size() ; i++ )
+    wxString gr2 = myapp()->frame->LS->UCfirst ( gr.c_str() ) ;
+    myapp()->frame->LS->getEnzymesInGroup ( gr2 , vs ) ;
+    eig.clear () ;
+    for ( int i = 0 ; i < vs.GetCount() ; i++ )
         {
-        listGE->Append ( vs[i].c_str() ) ;
-        eig.push_back ( vs[i] ) ;
+        listGE->Append ( vs[i] ) ;
+        eig.push_back ( vs[i].c_str() ) ;
         }
-    if ( gr == txt("All") )
+    if ( gr2 == txt("All") )
         {
         b_atg->Disable() ;
         b_dg->Disable() ;
@@ -698,16 +704,16 @@ void TVectorEditor::enzymeAddGr ( wxEvent &ev )
 
 void TVectorEditor::enzymeAddToGr ( wxEvent &ev )
     {
-    string group = listGroups->GetStringSelection().c_str() ;
+    wxString group = listGroups->GetStringSelection() ;
     group = myapp()->frame->LS->UCfirst ( group ) ;
     if ( group == txt("All") ) return ;
-    string sql ;
+    wxString sql ;
     wxArrayInt vi ;
     int i , k , n = listCE->GetSelections ( vi ) ;
     for ( k = n-1 ; k >= 0 ; k-- )
         {
         i = vi[k] ;
-        string s = listCE->GetString(i).c_str() ;
+        wxString s = listCE->GetString(i) ;
         sql = "DELETE FROM link_enzyme_group WHERE "
               "leg_enzyme=\"" +
               s +
@@ -723,7 +729,7 @@ void TVectorEditor::enzymeAddToGr ( wxEvent &ev )
               "\")" ;
         myapp()->frame->LS->getObject ( sql ) ;              
         }
-    showGroupEnzymes ( group ) ;
+    showGroupEnzymes ( group.c_str() ) ;
     }
 
 void TVectorEditor::enzymeAddToNewGr ( wxEvent &ev )
@@ -731,11 +737,11 @@ void TVectorEditor::enzymeAddToNewGr ( wxEvent &ev )
     wxTextEntryDialog ted ( this , txt("b_add_as_new_group") ,
                                 txt("t_new_enzyme_group_name") ) ;
     if ( wxID_OK != ted.ShowModal () ) return ;
-    string ng = ted.GetValue().c_str() ;
+    wxString ng = ted.GetValue() ;
     ng = myapp()->frame->LS->UCfirst ( ng ) ;
     if ( !myapp()->frame->LS->addEnzymeGroup ( ng ) ) return ;
-    listGroups->Append ( ng.c_str() ) ;
-    listGroups->SetStringSelection ( ng.c_str() ) ;
+    listGroups->Append ( ng ) ;
+    listGroups->SetStringSelection ( ng ) ;
     enzymeAddToGr ( ev ) ;
     }
 
@@ -766,10 +772,10 @@ void TVectorEditor::initialViewItem ( int num )
                             wxLIST_MASK_IMAGE|wxLIST_MASK_STATE ) ;
     }
 
-void TVectorEditor::initialViewEnzyme ( string e )
+void TVectorEditor::initialViewEnzyme ( wxString e )
     {
     nb->SetSelection ( 2 ) ;
-    listCE->SetStringSelection ( e.c_str() ) ;
+    listCE->SetStringSelection ( e ) ;
     }
     
 void TVectorEditor::importCloneEnzymes ()
@@ -1000,25 +1006,25 @@ void TVectorEditor::editProtease ( wxEvent &ev )
 
 void TVectorEditor::proteaseSelChange ( wxEvent &ev )
     {
-    string s = prots->GetStringSelection().c_str() ;
+    wxString s = prots->GetStringSelection() ;
     TProtease *pro = myapp()->frame->LS->getProtease ( s ) ;
     
-    string t ;
+    wxString t ;
     t += s + "\n" ;
     t += pro->str_match ;
-    pro_txt->SetValue ( t.c_str() ) ;
+    pro_txt->SetValue ( t ) ;
     }
 
 void TVectorEditor::enzymeDelGr ( wxEvent &ev )
     {
-    string group = listGroups->GetStringSelection().c_str() ;
+    wxString group = listGroups->GetStringSelection() ;
     group = myapp()->frame->LS->UCfirst ( group ) ;
     if ( group == txt("All") ) return ;
     
-    wxString s = wxString::Format ( txt("t_del_group") , group.c_str() ) ;
+    wxString s = wxString::Format ( txt("t_del_group") , group ) ;
     if ( wxMessageBox ( s , txt("msg_box") , wxYES_NO|wxICON_QUESTION ) != wxYES ) return ;
 
-    string sql ;
+    wxString sql ;
     sql = "DELETE FROM link_enzyme_group WHERE leg_group=\"" + group + "\"" ;
     myapp()->frame->LS->getObject ( sql ) ; 
     sql = "DELETE FROM enzyme_group WHERE eg_name=\"" + group + "\"" ;
@@ -1028,17 +1034,17 @@ void TVectorEditor::enzymeDelGr ( wxEvent &ev )
 
 void TVectorEditor::enzymeDelFromGr ( wxEvent &ev )
     {
-    string group = listGroups->GetStringSelection().c_str() ;
+    wxString group = listGroups->GetStringSelection() ;
     group = myapp()->frame->LS->UCfirst ( group ) ;
     if ( group == txt("All") ) return ;
     
-    string sql ;
+    wxString sql ;
     wxArrayInt vi ;
     int i , k , n = listGE->GetSelections ( vi ) ;
     for ( k = n-1 ; k >= 0 ; k-- )
         {
         i = vi[k] ;
-        string s = listGE->GetString(i).c_str() ;
+        wxString s = listGE->GetString(i) ;
         sql = "DELETE FROM link_enzyme_group WHERE "
               "leg_enzyme=\"" +
               s +
@@ -1047,6 +1053,6 @@ void TVectorEditor::enzymeDelFromGr ( wxEvent &ev )
               "\"" ;
         myapp()->frame->LS->getObject ( sql ) ;              
         }
-    showGroupEnzymes ( group ) ;
+    showGroupEnzymes ( group.c_str() ) ;
     }
     

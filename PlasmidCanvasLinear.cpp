@@ -473,7 +473,7 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
         string tt_type = txt(ttt) ;
         sprintf ( ttt , txt("tt_item") , tt_type.c_str() ,
                                         s.c_str() , 
-                                        p->vec->items[vo].desc ) ;
+                                        p->vec->items[vo].desc.c_str() ) ;
         SetMyToolTip ( ttt , TT_ITEM ) ;
         if ( event.LeftDown() )
            {

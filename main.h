@@ -80,8 +80,8 @@ class MyApp : public wxApp
     public:
     bool OnInit();
     int OnExit () ;
-    string getHTMLCommand ( string command ) ;
-    string getFileFormatApplication ( string type ) ;
+    wxString getHTMLCommand ( wxString command ) ;
+    wxString getFileFormatApplication ( wxString type ) ;
     MyFrame *frame;
     wxString homedir , bmpdir , slash ;
     wxSingleInstanceChecker *m_checker ;
@@ -146,8 +146,8 @@ void myass ( bool b , wxString msg = "" ) ;
 
 vector <string> explode ( string sep , string s ) ;
 wxArrayString explode ( wxString sep , wxString s ) ;
-char* txt ( string item ) ;
-void init_txt ( string lang ) ;
+char* txt ( wxString item ) ;
+void init_txt ( wxString lang ) ;
 MyApp *myapp () ;
 string toupper ( string s ) ;
 

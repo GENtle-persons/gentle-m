@@ -341,7 +341,7 @@ void TAlignment::recalcAlignments ()
               }
            }
 
-        generateConsensusSequence () ;
+        generateConsensusSequence ( true ) ;
         }
         
     for ( a = 0 ; a < 1 ; a++ )
@@ -408,13 +408,14 @@ void TAlignment::generateConsensusSequence ( bool addit )
     TAlignLine line ;
     line.isIdentity = true ;
     line.name = txt("t_identity") ;
-    string s ;
+    wxString s ;
     for ( a = 0 ; a < lines[0].s.length() ; a++ )
         {
         myass ( lines[1].s.length() > a , "0a" ) ;
         if ( lines[0].s.GetChar(a) == lines[1].s.GetChar(a) ) s += "*" ;
         else s += " " ;
         }
+    line.s = s ;
     if ( addit ) lines.push_back ( line ) ;
     
     // The REAL consensus sequence
@@ -424,12 +425,12 @@ void TAlignment::generateConsensusSequence ( bool addit )
         int c[256] ;
         for ( b = 0 ; b < 256 ; b++ ) c[b] = 0 ;
         for ( b = 0 ; b + 1 < lines.size() ; b++ ) c[lines[b].s.GetChar(a)]++ ;
-        consensusSequence[a] = ' ' ;
+        consensusSequence.SetChar ( a , ' ' ) ;
         for ( b = 0 ; b < 256 ; b++ )
            {
            float f = 100 * c[b] ;
            f /= lines.size() - 1 ;
-           if ( f >= 60 ) consensusSequence[a] = b ;
+           if ( f >= 60 ) consensusSequence.SetChar ( a , b ) ;
            }
         }
     }
@@ -1077,7 +1078,7 @@ void TAlignment::fromVector ( TVector *nv )
         line.name = name.c_str() ;
 
         bool success = false ;
-        if ( db != "" ) success = mdb.do_load_DNA ( name , db ) ;
+        if ( db != "" ) success = mdb.do_load_DNA ( name.c_str() , db.c_str() ) ;
         if ( success ) line.v = mdb.v ;
         else
            {
@@ -1114,6 +1115,7 @@ void TAlignment::fromVector ( TVector *nv )
         lines.push_back ( line ) ;
         }
     vec = NULL ;
+    generateConsensusSequence ( true ) ;
     if ( broken != "" ) 
         {
         myapp()->frame->Thaw() ;

@@ -102,7 +102,7 @@ WX_DECLARE_STRING_HASH_MAP( wxString, wxHashString );
 
 wxHashString _text ;
 
-void init_txt ( string lang )
+void init_txt ( wxString lang )
     {
     ifstream in ( "variables.csv" , ios::in ) ;
     char t[10000] ;
@@ -143,7 +143,7 @@ void init_txt ( string lang )
         if ( firstline )
            {
            for ( int a = 0 ; a < v.GetCount() ; a++ )
-              if ( v[a] == lang.c_str() )
+              if ( v[a] == lang )
                  ln = a ;
            }
         else
@@ -155,10 +155,9 @@ void init_txt ( string lang )
         }
     }
 
-char * txt ( string item )
+char * txt ( wxString item )
     {
-    wxString s = item.c_str() ;
-    return (char*) _text[s.MakeUpper()].c_str() ;
+    return (char*) _text[item.MakeUpper()].c_str() ;
     }
 
 
@@ -259,7 +258,7 @@ int MyApp::OnExit ()
     return 0;
     }
     
-string MyApp::getHTMLCommand ( string command )
+wxString MyApp::getHTMLCommand ( wxString command )
     {
 #ifdef __WXMSW__    
     wxRegKey regKey;
@@ -281,7 +280,7 @@ string MyApp::getHTMLCommand ( string command )
 #endif
     }
     
-string MyApp::getFileFormatApplication ( string type )
+wxString MyApp::getFileFormatApplication ( wxString type )
     {
 #ifdef __WXMSW__    
     wxRegKey regKey;
@@ -354,15 +353,15 @@ void ChildBase::Maximize ( bool isit )
 //  showName () ;
 }
 
-void ChildBase::showName ( string x )
+void ChildBase::showName ( wxString x )
     {
     if ( x == "" )
        {
        x = getName() ;
        if ( vec && vec->isChanged() ) x += "*" ;
        }
-    if ( myapp()->frame->GetTitle().c_str() != x )
-        myapp()->frame->SetTitle ( x.c_str() ) ;
+    if ( myapp()->frame->GetTitle() != x )
+        myapp()->frame->SetTitle ( x ) ;
     }
     
 void ChildBase::OnFocus(wxFocusEvent& event)

@@ -98,8 +98,8 @@ void TImageDisplay::initme ()
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;
     
-    string s_dir = myapp()->frame->LS->getOption ( "IMGDIR" , wxGetCwd().c_str() ) ;    
-    ShowDir ( s_dir.c_str() ) ;
+    wxString s_dir = myapp()->frame->LS->getOption ( "IMGDIR" , wxGetCwd() ) ;    
+    ShowDir ( s_dir ) ;
     myapp()->frame->setChild ( this ) ;
     }
     

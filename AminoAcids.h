@@ -33,7 +33,7 @@ class TAminoAcids : public ChildBase
     virtual void OnPrint(wxCommandEvent& event);
     virtual void OnAsNewFeature(wxCommandEvent& event);
     virtual void OnBlastAA(wxCommandEvent& event);
-    virtual void invokeVectorEditor ( string what = "" , int num = 0 , bool forceUpdate = false ) ;
+    virtual void invokeVectorEditor ( wxString what = "" , int num = 0 , bool forceUpdate = false ) ;
 //    virtual void OnClose(wxCloseEvent& event) ;
     virtual void OnHorizontal ( wxCommandEvent& event ) ;
     virtual void OnListBox ( wxCommandEvent& event ) ;

@@ -54,6 +54,7 @@ BEGIN_EVENT_TABLE(SequenceCanvas, wxScrolledWindow)
     EVT_MENU(MDI_SEL_AS_NEW_PRIMER, SequenceCanvas::OnSelAsNewPrimer)
 
     EVT_MENU(PC_RS_HIDE_LIMIT, SequenceCanvas::rsHideLimit)
+    EVT_MENU(MDI_PASTE, SequenceCanvas::OnPaste)
 
     EVT_SET_FOCUS(SequenceCanvas::OnFocus)
     EVT_KILL_FOCUS(SequenceCanvas::OnKillFocus)
@@ -438,7 +439,7 @@ void SequenceCanvas::blastAA ( wxCommandEvent &ev )
     if ( p && p->cPlasmid ) p->cPlasmid->blastAA ( ev ) ;
     else if ( getAA() )
         {
-        string seq = getSelection() ;
+        wxString seq = getSelection().c_str() ;
         myapp()->frame->blast ( seq , "blastp" ) ;
         }
     }
@@ -684,8 +685,8 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
 void SequenceCanvas::OnSaveImage ( wxCommandEvent &ev )
     {
     wxString wildcard = "Bitmap (*.bmp)|*.bmp" ; 
-    string lastdir = myapp()->frame->LS->getOption ( "LAST_IMPORT_DIR" , "C:" ) ;
-    wxFileDialog d ( this , txt("t_save_image") , lastdir.c_str() , "" , wildcard , wxSAVE|wxOVERWRITE_PROMPT ) ;
+    wxString lastdir = myapp()->frame->LS->getOption ( "LAST_IMPORT_DIR" , "C:" ) ;
+    wxFileDialog d ( this , txt("t_save_image") , lastdir , "" , wildcard , wxSAVE|wxOVERWRITE_PROMPT ) ;
     if ( d.ShowModal() != wxID_OK ) return ;
     wxString filename = d.GetPath() ;
 
@@ -1207,7 +1208,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
            SeqAlign *al = (SeqAlign*)where ;
            if ( al->myname == txt("t_identity") ) {} // Do nothing
            else if ( al->whatsthis() == "FEATURE" ) {} // Do nothing
-           else if ( al->s[pos] == '-' ) wxLogStatus ( al->myname.c_str() ) ;
+           else if ( al->s[pos-1] == '-' ) wxLogStatus ( al->myname.c_str() ) ;
            else
               {
               lastToolTip = "" ;
@@ -1671,7 +1672,7 @@ void SequenceCanvas::OnSelAsNewPrimer ( wxCommandEvent &ev )
            sel2 = sel[a] + sel2 ;
         sel = sel2 ;
         }
-    getPD()->AddPrimer ( sel ) ;
+    getPD()->AddPrimer ( sel.c_str() ) ;
     }
         
 TAminoAcids *SequenceCanvas::getAA()
@@ -1732,8 +1733,8 @@ void SequenceCanvas::rsHideLimit ( wxCommandEvent &ev )
        int cnt = 0 ;
        for ( b = 0 ; b < p->vec->rc.size() ; b++ )
           if ( p->vec->rc[b].e == p->vec->re[a] ) cnt++ ;
-       for ( b = 0 ; b < p->vec->hiddenEnzymes.size() && p->vec->hiddenEnzymes[b] != p->vec->re[a]->name ; b++ ) ;
-       if ( cnt > limit && b == p->vec->hiddenEnzymes.size() )
+       for ( b = 0 ; b < p->vec->hiddenEnzymes.GetCount() && p->vec->hiddenEnzymes[b] != p->vec->re[a]->name ; b++ ) ;
+       if ( cnt > limit && b == p->vec->hiddenEnzymes.GetCount() )
           p->treeBox->ToggleEnzymeVisibility ( p->vec->re[a] ) ;
        }
     p->vec->recalculateCuts() ;
@@ -1741,6 +1742,34 @@ void SequenceCanvas::rsHideLimit ( wxCommandEvent &ev )
     if ( p && p->cPlasmid ) p->cPlasmid->Refresh () ;
     arrange () ;
     Refresh () ;
+    }
+    
+void SequenceCanvas::OnPaste ( wxCommandEvent &ev )
+    {
+    if ( !getEditMode() ) return ;
+    if (!wxTheClipboard->Open()) return ;
+    if (!wxTheClipboard->IsSupported( wxDF_TEXT )) return ;
+
+    if ( p && p->vec ) p->vec->undo.start ( txt("u_cut") ) ;
+
+    wxTextDataObject data;
+    wxTheClipboard->GetData( data );
+    wxString s = data.GetText() ;
+    wxTheClipboard->Close();
+    
+    int a ;
+    doHide ( true ) ;
+    SetCursor ( *wxHOURGLASS_CURSOR ) ;
+    for ( a = 0 ; a < s.length() ; a++ )
+        {
+        wxKeyEvent ev ;
+        ev.m_keyCode = s.GetChar(a) ;
+        OnCharHook ( ev ) ;
+        }
+    doHide ( false ) ;
+    Refresh () ;
+    SetCursor ( *wxSTANDARD_CURSOR ) ;
+    if ( p && p->vec ) p->vec->undo.stop() ;    
     }
     
 

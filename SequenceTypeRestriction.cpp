@@ -19,7 +19,7 @@ int SeqRestriction::arrange ( int n )
         if ( vec->isEnzymeHidden ( e->name ) ) continue ;
         vs.push_back ( t ) ;
         eoe.push_back ( -1 ) ;
-        ven.push_back ( e->name ) ;
+        ven.push_back ( e->name.c_str() ) ;
         
         int vsl = vs.size() - 1 ;
         

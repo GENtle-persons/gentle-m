@@ -140,7 +140,7 @@ void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
         wxString name = t ( h.FirstChild("GBQualifier_name").FirstChild().Text() ) . MakeUpper() ;
         wxString value = t ( h.FirstChild("GBQualifier_value").FirstChild().Text() ) ;
         if ( name == "" ) continue ;
-        i.setParam ( "/" + string ( name.c_str() ) , value.c_str() ) ;
+        i.setParam ( "/" + name , value ) ;
         if ( name == "CODON_START" ) i.setRF ( atoi ( value.c_str() ) ) ;
         if ( name == "GENE" || name == "LABEL" ) i.name = value.c_str() ;
         if ( name == "PRODUCT" || name == "NOTE" || name == "REGION_NAME" )

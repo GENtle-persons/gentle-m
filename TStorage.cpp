@@ -4,10 +4,10 @@ using namespace std ;
 
 bool TStorage::getWriteProtect () { return writeProtect ; }
 
-TStorage::TStorage ( int nt , string fn )
+TStorage::TStorage ( int nt , wxString fn )
     {
     if ( fn == "" ) isMySQL = false ;
-    else isMySQL = (fn[0]==':') ;
+    else isMySQL = (fn.GetChar(0)==':') ;
     rpv = 0 ;
     writeProtect = false ;
     storagetype = nt ;
@@ -18,7 +18,7 @@ TStorage::TStorage ( int nt , string fn )
         {
         conn = new MYSQL ;
         mysql_init (conn);
-        vector <string> ex ;
+        wxArrayString ex ;
         ex = explode ( ":" , fn+":" ) ;
         if ( !mysql_real_connect ( conn , 
                                 ex[1].c_str() , 
@@ -54,7 +54,7 @@ static int callback (void *NotUsed, int argc, char **argv, char **azColName)
     if ( st->results.content.size() == 0 )
         {
         for(i=0; i<argc; i++)
-                st->results.field.push_back ( azColName[i] ) ;
+           st->results.field.Add ( azColName[i] ) ;
         }
         
     nf = st->results.content.size() ;
@@ -62,8 +62,8 @@ static int callback (void *NotUsed, int argc, char **argv, char **azColName)
 
     for(i=0; i<argc; i++)
         {
-        if ( argv[i] ) st->results.content[nf].push_back( argv[i] ) ;
-        else st->results.content[nf].push_back ( "" ) ;
+        if ( argv[i] ) st->results.content[nf].Add( argv[i] ) ;
+        else st->results.content[nf].Add ( "" ) ;
         }
     return 0;
     }
@@ -81,7 +81,7 @@ void TStorage::createDatabase ()
     sqlite_close ( db ) ;
     }
 
-TSQLresult TStorage::getObject_MySQL ( string query )
+TSQLresult TStorage::getObject_MySQL ( wxString query )
     {
     results.clean() ;
 #ifdef USEMYSQL
@@ -89,7 +89,7 @@ TSQLresult TStorage::getObject_MySQL ( string query )
 
     if ( writeProtect ) // Prevent old program version breaking the DB
        {
-       string q = query.substr ( 0 , 6 ) ;
+       wxString q = query.substr ( 0 , 6 ) ;
        if ( q != "SELECT" )
           {
           mysql_close ( conn ) ;
@@ -114,7 +114,7 @@ TSQLresult TStorage::getObject_MySQL ( string query )
                results.content.push_back ( TVS() ) ;
                for(i = 0; i < num_fields; i++)
                {
-                  results.content[rownum].push_back ( row[i] ? row[i] : "" ) ;
+                  results.content[rownum].Add ( row[i] ? row[i] : "" ) ;
 //                   show += wxString::Format ("[%.*s] ", (int) lengths[i], row[i] ? row[i] : "NULL");
                }
             }        
@@ -123,7 +123,7 @@ TSQLresult TStorage::getObject_MySQL ( string query )
             fields = mysql_fetch_fields(result);
             for(i = 0; i < num_fields; i++)
             {
-               results.field.push_back ( fields[i].name ) ;
+               results.field.Add ( fields[i].name ) ;
 //               printf("Field %u is %s\n", i, fields[i].name);
             }
             
@@ -135,7 +135,7 @@ TSQLresult TStorage::getObject_MySQL ( string query )
     return results ;
     }
     
-TSQLresult TStorage::getObject ( string query )
+TSQLresult TStorage::getObject ( wxString query )
     {
     if ( isMySQL ) return getObject_MySQL ( query ) ;
     sqlite *db ;
@@ -149,7 +149,7 @@ TSQLresult TStorage::getObject ( string query )
     
     if ( writeProtect ) // Prevent old program version breaking the DB
        {
-       string q = query.substr ( 0 , 6 ) ;
+       wxString q = query.substr ( 0 , 6 ) ;
        if ( q != "SELECT" )
           {
           sqlite_close ( db ) ;
@@ -180,9 +180,9 @@ void TStorage::import ()
     sr = getObject ( "SELECT * FROM enzyme" ) ;
     for ( a = 0 ; a < sr.content.size() ; a++ )
         {
-        string name = sr[a][sr["e_name"]] ;
+        wxString name = sr[a][sr["e_name"]] ;
         if ( name == "" ) {}
-        else if ( name[0] == '*' )
+        else if ( name.GetChar(0) == '*' )
            {
            name = name.substr ( 1 , name.length() - 1 ) ;
            pr.push_back ( new TProtease ( name , 
@@ -204,7 +204,7 @@ void TStorage::import ()
         }
     }
 
-TRestrictionEnzyme* TStorage::getRestrictionEnzyme ( string s )
+TRestrictionEnzyme* TStorage::getRestrictionEnzyme ( wxString s )
     {
     TRestrictionEnzyme *ret = NULL , *ret2 ;
     if ( storagetype == TEMP_STORAGE ) 
@@ -229,12 +229,20 @@ TRestrictionEnzyme* TStorage::getRestrictionEnzyme ( string s )
     return ret ;
     }
     
-void TStorage::getEnzymesInGroup ( string gn , vector <string> &vs )
+void TStorage::getEnzymesInGroup ( wxString gn , vector <string> &vs )
+    {
+    wxArrayString nvs ;
+    getEnzymesInGroup ( gn , nvs ) ;
+    vs.clear () ;
+    for ( int a = 0 ; a < nvs.GetCount() ; a++ ) vs.push_back ( nvs[a].c_str() ) ;
+    }
+    
+void TStorage::getEnzymesInGroup ( wxString gn , wxArrayString &vs )
     {
     TSQLresult sr ;
     int a ;
-    vs.clear() ;
-    string sql ;
+    vs.Clear() ;
+    wxString sql ;
     gn = UCfirst ( gn ) ;
     if ( gn != txt("All") )
         {
@@ -242,60 +250,61 @@ void TStorage::getEnzymesInGroup ( string gn , vector <string> &vs )
         sql += " WHERE leg_group=\""+gn+"\"" ;
         sr = getObject ( sql ) ;
         for ( a = 0 ; a < sr.content.size() ; a++ )
-           if ( sr[a][sr["leg_enzyme"]][0] != '*' )
-              vs.push_back ( sr[a][sr["leg_enzyme"]] ) ;
+           if ( sr[a][sr["leg_enzyme"]].GetChar(0) != '*' )
+              vs.Add ( sr[a][sr["leg_enzyme"]] ) ;
         }
     else
         {
         sql = "SELECT e_name from enzyme" ;
         sr = getObject ( sql ) ;
         for ( a = 0 ; a < sr.content.size() ; a++ )
-           if ( sr[a][sr["e_name"]][0] != '*' )
-              vs.push_back ( sr[a][sr["e_name"]] ) ;
+           if ( sr[a][sr["e_name"]].GetChar(0) != '*' )
+              vs.Add ( sr[a][sr["e_name"]] ) ;
         }
     
-    for ( a = 0 ; a < vs.size() ; a++ )
+    for ( a = 0 ; a < vs.GetCount() ; a++ )
         {
         if ( vs[a] == "" )
            {
-           vs[a] = vs[vs.size()-1] ;
-           vs.pop_back () ;
+           vs.Remove ( a ) ;
+//           vs[a] = vs[vs.GetCount()-1] ;
+//           vs.pop_back () ;
            a-- ;
            }
         }
     }
 /*    
-void TStorage::getEnzymesInGroup ( wxString gn , vector <wxString> &vs )
+void TStorage::getEnzymesInGroup ( wxString gn , wxArrayString &vs )
     {
-    vector <string> dummy ;
+    wxArrayString dummy ;
     vs.clear() ;
     getEnzymesInGroup ( gn.c_str() , dummy ) ;
-    for ( int a = 0 ; a < dummy.size() ; a++ ) vs.push_back ( dummy[a].c_str() ) ;
+    for ( int a = 0 ; a < dummy.size() ; a++ ) vs.Add ( dummy[a].c_str() ) ;
     }
 */
-void TStorage::getEnzymeGroups ( vector <wxString> &vs )
+void TStorage::getEnzymeGroups ( wxArrayString &vs )
     {
     TSQLresult sr ;
     int a ;
-    vs.clear() ;
-    string sql = "SELECT eg_name FROM enzyme_group" ;
+    vs.Clear() ;
+    wxString sql = "SELECT eg_name FROM enzyme_group" ;
     sr = getObject ( sql ) ;
     for ( a = 0 ; a < sr.content.size() ; a++ )
-        vs.push_back ( UCfirst(sr[a][sr["eg_name"]]).c_str() ) ;
+        vs.Add ( UCfirst ( sr[a][sr["eg_name"]] ) ) ;
     }
 
 void TStorage::getEnzymeGroups ( vector <string> &vs )
     {
-    vector <wxString> dummy ;
+    wxArrayString dummy ;
     getEnzymeGroups ( dummy ) ;
     vs.clear () ;
-    for ( int a = 0 ; a < dummy.size() ; a++ ) vs.push_back ( UCfirst(dummy[a].c_str()) ) ;
+    for ( int a = 0 ; a < dummy.GetCount() ; a++ ) vs.push_back ( dummy[a].c_str() ) ;
     }
     
 void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme *e )
     {
     TSQLresult sr ;
-    string sql ;
+    wxString sql ;
     char u[100] ;
     if ( e->name == "" ) return ;
     
@@ -307,8 +316,7 @@ void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme *e )
     sql = "SELECT max(e_id) FROM enzyme" ;
     sr = getObject ( sql ) ;
     if ( ierror ) return ;
-    string eid = sr.content[0][0] ;
-    int e_id = atoi ( eid.c_str() ) ;
+    int e_id = atoi ( sr.content[0][0].c_str() ) ;
     sprintf ( u , "%d" , e_id+1 ) ;
     e->dbid = e_id ;
     
@@ -329,54 +337,49 @@ void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme *e )
     getObject ( sql ) ;
     }
 
-void TStorage::sqlAdd ( string &s1 , string &s2 , string key , string value )
+void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , wxString key , wxString value )
     {
     int a ;
     for ( a = 0 ; a < value.length() ; a++ ) // Avoiding single quotes in value
-        if ( value[a] == '"' ) value[a] = 39 ;
+        if ( value.GetChar(a) == '"' ) value.SetChar(a,39) ;
     if ( s1 != "" ) s1 += "," ;
     if ( s2 != "" ) s2 += "," ;
     s1 += key ;
     s2 += "\"" + value + "\"" ;
     }
 
-void TStorage::sqlAdd ( string &s1 , string &s2 , string key , char* value )
+void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , wxString key , char* value )
     {
-    sqlAdd ( s1 , s2 , key , string ( value ) ) ;
+    sqlAdd ( s1 , s2 , key , wxString ( value ) ) ;
     }
-    
-void TStorage::sqlAdd ( string &s1 , string &s2 , string key , wxString value )
-    {
-    sqlAdd ( s1 , s2 , key , string ( value.c_str() ) ) ;
-    }
-    
-void TStorage::sqlAdd ( string &s1 , string &s2 , string key , int value )
+
+void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , wxString key , int value )
     {
     char t[1000] ;
     sprintf ( t , "%d" , value ) ;
     if ( s1 != "" ) s1 += "," ;
     if ( s2 != "" ) s2 += "," ;
     s1 += key ;
-    s2 += "\"" + string ( t ) + "\"" ;
+    s2 += "\"" + wxString ( t ) + "\"" ;
     }
     
 // This function is *only* called for the local database! Ever!!
 // It writes the list of available databases in the name and file vectors,
 // and returns the name of the default database
-string TStorage::getDatabaseList ( vector <string> &name , vector <string> &file )
+wxString TStorage::getDatabaseList ( wxArrayString &name , wxArrayString &file )
     {
     TSQLresult r ;
-    string defdb = txt("local_db") ;
-    while ( name.size() ) name.pop_back () ;
-    while ( file.size() ) file.pop_back () ;
-    name.push_back ( defdb ) ;
-    file.push_back ( dbname ) ;
-    string sql = "SELECT * FROM stuff WHERE s_type=\"DATABASE\"" ;
+    wxString defdb = txt("local_db") ;
+    name.Clear() ;
+    file.Clear() ;
+    name.Add ( defdb ) ;
+    file.Add ( dbname ) ;
+    wxString sql = "SELECT * FROM stuff WHERE s_type=\"DATABASE\"" ;
     r = getObject ( sql ) ;
     for ( int a = 0 ; a < r.content.size() ; a++ )
         {
-        name.push_back ( r[a][r["s_name"]] ) ;
-        file.push_back ( r[a][r["s_value"]] ) ;
+        name.Add ( r[a][r["s_name"]] ) ;
+        file.Add ( r[a][r["s_value"]] ) ;
         }
 
     sql = "SELECT * FROM stuff WHERE s_type=\"DEFAULT_DATABASE\"" ;
@@ -385,7 +388,7 @@ string TStorage::getDatabaseList ( vector <string> &name , vector <string> &file
     else return r[0][r["s_name"]] ;
     }
     
-string TStorage::getSingleField ( string query , string field , string def )
+wxString TStorage::getSingleField ( wxString query , wxString field , wxString def )
     {
     TSQLresult sr ;
     sr = getObject ( query ) ;
@@ -393,15 +396,15 @@ string TStorage::getSingleField ( string query , string field , string def )
     else return def ;
     }
     
-int TStorage::getSingleField ( string query , string field , int def )
+int TStorage::getSingleField ( wxString query , wxString field , int def )
     {
     char t[100] ;
     sprintf ( t , "%d" , def ) ;
-    string r = getSingleField ( query , field , t ) ;
+    wxString r = getSingleField ( query , field , t ) ;
     return atoi ( r.c_str() ) ;
     }
     
-string TStorage::getOption ( string oname , string def )
+wxString TStorage::getOption ( wxString oname , wxString def )
     {
     return getSingleField ( "SELECT s_value FROM stuff WHERE s_name=\"" +
                             oname + 
@@ -409,7 +412,7 @@ string TStorage::getOption ( string oname , string def )
                             "s_value" , def ) ;
     }
 
-int TStorage::getOption ( string oname , int def )
+int TStorage::getOption ( wxString oname , int def )
     {
     return getSingleField ( "SELECT s_value FROM stuff WHERE s_name=\"" +
                             oname + 
@@ -417,40 +420,40 @@ int TStorage::getOption ( string oname , int def )
                             "s_value" , def ) ;
     }
     
-string TStorage::UCfirst ( string s )
+wxString TStorage::UCfirst ( wxString s )
     {
     int a ;
     for ( a = 0 ; a < s.length() ; a++ )
-        if ( s[a] >= 'A' && s[a] <= 'Z' )
-           s[a] = s[a] - 'A' + 'a' ;
-    if ( s[0] >= 'a' && s[0] <= 'z' ) s[0] = s[0] - 'a' + 'A' ;
+        if ( s.GetChar(a) >= 'A' && s.GetChar(a) <= 'Z' )
+           s.SetChar ( a , s.GetChar(a) - 'A' + 'a' ) ;
+    if ( s.GetChar(0) >= 'a' && s.GetChar(0) <= 'z' ) s.SetChar ( 0 , s.GetChar(0) - 'a' + 'A' ) ;
     return s ;
     }
     
-bool TStorage::addEnzymeGroup ( string s )
+bool TStorage::addEnzymeGroup ( wxString s )
     {
     if ( s == "" ) return false ;
     s = UCfirst ( s ) ;
     if ( s == txt("all") ) return false ;
 
     TSQLresult sr ;
-    string sql = "SELECT eg_name FROM enzyme_group WHERE eg_name=\"" + 
+    wxString sql = "SELECT eg_name FROM enzyme_group WHERE eg_name=\"" + 
                  s + "\"" ;
     sr = getObject ( sql ) ;
     if ( sr.rows() > 0 ) return false ; // Already exists
     
-    string s1 , s2 ;
+    wxString s1 , s2 ;
     sqlAdd ( s1 , s2 , "eg_name" , s ) ;
     sql = "INSERT INTO enzyme_group (" + s1 + ") VALUES (" + s2 + ")" ;    
     getObject ( sql ) ;
     return true ;
     }
     
-bool TStorage::copySQLfields ( TStorage &target , string table , string cond )
+bool TStorage::copySQLfields ( TStorage &target , wxString table , wxString cond )
     {
     int a , b ;
     TSQLresult r ;
-    string sql , s1 , s2 ;
+    wxString sql , s1 , s2 ;
     sql = "SELECT * FROM " + table + " WHERE " + cond ;
     r = getObject ( sql ) ;
     sql = "DELETE FROM " + table + " WHERE " + cond ;
@@ -469,17 +472,17 @@ bool TStorage::copySQLfields ( TStorage &target , string table , string cond )
     
     
     
-void TStorage::replaceTable ( string table , TVS &f , TVS &t )
+void TStorage::replaceTable ( wxString table , TVS &f , TVS &t )
     {
     int a , b ;
     TSQLresult r ;
-    string sql , s1 , s2 ;
+    wxString sql , s1 , s2 ;
     sql = "SELECT * FROM " + table ;
     r = getObject ( sql ) ;
     getObject ( "DROP TABLE " + table ) ;
     
-    string create ;
-    for ( a = 0 ; a < f.size() ; a++ )
+    wxString create ;
+    for ( a = 0 ; a < f.GetCount() ; a++ )
         {
         if ( create != "" ) create += ",\n" ;
         create += f[a] + " " + t[a] ;
@@ -491,7 +494,7 @@ void TStorage::replaceTable ( string table , TVS &f , TVS &t )
     for ( a = 0 ; a < r.rows() ; a++ )
         {
         s1 = s2 = "" ;
-        for ( b = 0 ; b < f.size() ; b++ )
+        for ( b = 0 ; b < f.GetCount() ; b++ )
            {
            int id = r[(char*)f[b].c_str()] ;
            if ( id > -1 ) sqlAdd ( s1 , s2 , f[b] , r[a][id] ) ;
@@ -502,14 +505,14 @@ void TStorage::replaceTable ( string table , TVS &f , TVS &t )
         }
     }
     
-void TStorage::tableInfoSet ( TVS &f , TVS &t , string nf , string nt )
+void TStorage::tableInfoSet ( TVS &f , TVS &t , wxString nf , wxString nt )
     {
     int a ;
-    for ( a = 0 ; a < f.size() && f[a] != nf ; a++ ) ;
-    if ( a == f.size() )
+    for ( a = 0 ; a < f.GetCount() && f[a] != nf ; a++ ) ;
+    if ( a == f.GetCount() )
         {
-        f.push_back ( nf ) ;
-        t.push_back ( nt ) ;
+        f.Add ( nf ) ;
+        t.Add ( nt ) ;
         }
     else
         {
@@ -517,24 +520,24 @@ void TStorage::tableInfoSet ( TVS &f , TVS &t , string nf , string nt )
         }
     }
     
-string TStorage::fixDNAname ( string s )
+wxString TStorage::fixDNAname ( wxString s )
     {
     int a ;
     for ( a = 0 ; a < s.length() ; a++ )
-        if ( s[a] == '"' ) s[a] = 39 ;
+        if ( s.GetChar(a) == '"' ) s.SetChar ( a , 39 ) ;
     return s ;
     }
     
-void TStorage::setOption ( string oname , int value )
+void TStorage::setOption ( wxString oname , int value )
     {
     char t[100] ;
     sprintf ( t , "%d" , value ) ;
-    setOption ( oname , string ( t ) ) ;
+    setOption ( oname , wxString ( t ) ) ;
     }
     
-void TStorage::setOption ( string oname , string vname )
+void TStorage::setOption ( wxString oname , wxString vname )
     {
-    string sql ;
+    wxString sql ;
     sql = "DELETE FROM stuff WHERE s_type=\"OPTION\" AND s_name=\"" ;
     sql += oname ;
     sql += "\"" ;
@@ -548,7 +551,7 @@ void TStorage::autoUpdateSchema ()
     {
     if ( isMySQL ) return ; // No updates yet
     TSQLresult r ;
-    string sql , s1 , s2 ;
+    wxString sql , s1 , s2 ;
     char t[1000] ;
     
     // Database version
@@ -567,7 +570,7 @@ void TStorage::autoUpdateSchema ()
     if ( rpv > myapp()->programVersion ) // Old program version, no write to this DB
        {
        writeProtect = true ;
-       if ( !myapp()->dbWarningIssued && txt("LOADED") == string("yes") )
+       if ( !myapp()->dbWarningIssued && txt("LOADED") == wxString("yes") )
           {
           wxMessageBox ( txt("t_pov_warning") ) ;
           myapp()->dbWarningIssued = true ;
@@ -650,18 +653,18 @@ void TStorage::synchronize ()
     // Sync only once a day
     wxDateTime d = wxDateTime::Now () ;
     wxString ds = wxString::Format ( "%4d-%3d" , d.GetYear() , d.GetDayOfYear() ) ;
-    if ( getOption ( "LASTSYNC" , "" ) == ds.c_str() ) return ;
-    setOption ( "LASTSYNC" , ds.c_str() ) ;
+    if ( getOption ( "LASTSYNC" , "" ) == ds ) return ;
+    setOption ( "LASTSYNC" , ds ) ;
     
     // Known database list
-    vector <string> files ;
+    wxArrayString files ;
     r = getObject ( "SELECT s_value FROM stuff WHERE s_type=\"DATABASE\"" ) ;
     for ( a = 0 ; a < r.rows() ; a++ )
-        files.push_back ( r[a][r["s_value"]] ) ;
+        files.Add ( r[a][r["s_value"]] ) ;
 
     do {
         changed = false ;
-        for ( a = 0 ; a < files.size() ; a++ )
+        for ( a = 0 ; a < files.GetCount() ; a++ )
            {
            TStorage t ( TEMP_STORAGE , files[a] ) ;
 
@@ -701,15 +704,15 @@ void TStorage::synchronize ()
         } while ( changed ) ;
     }
     
-string TStorage::makeInsert ( string table , TVS &field , TVS &data )
+wxString TStorage::makeInsert ( wxString table , TVS &field , TVS &data )
     {
-    string sql , s1 , s2 ;
-    for ( int a = 0 ; a < field.size() ; a++ )
+    wxString sql , s1 , s2 ;
+    for ( int a = 0 ; a < field.GetCount() ; a++ )
         sqlAdd ( s1 , s2 , field[a] , data[a] ) ;
     sql = "INSERT INTO " + table + " (" + s1 + ") VALUES (" + s2 + ")" ;
     return sql ;
     }
-TProtease *TStorage::getProtease ( string s )
+TProtease *TStorage::getProtease ( wxString s )
     {
     int a ;
     for ( a = 0 ; a < pr.size() ; a++ )
@@ -733,7 +736,7 @@ void TStorage::addRestrictionEnzyme ( TRestrictionEnzyme *r )
     re.push_back ( r ) ;
     }
     
-string TStorage::getDBname ()
+wxString TStorage::getDBname ()
     {
     return dbname ;
     }

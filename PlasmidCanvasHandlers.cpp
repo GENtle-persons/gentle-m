@@ -208,11 +208,11 @@ void PlasmidCanvas::rsEdit ( wxCommandEvent &ev )
     
 void PlasmidCanvas::rsInfo ( wxCommandEvent &ev )
     {
-    string command = "http://rebase.neb.com/rebase/enz/" ;
+    wxString command = "http://rebase.neb.com/rebase/enz/" ;
     command += p->vec->rc[context_last_rs].e->name ;
     command += ".html" ;
     command = myapp()->getHTMLCommand ( command ) ;
-    wxExecute ( command.c_str() ) ;
+    wxExecute ( command ) ;
     }
     
 void PlasmidCanvas::rsShowHide ( wxCommandEvent &ev )
@@ -338,7 +338,7 @@ void PlasmidCanvas::blastDNA ( wxCommandEvent &ev )
         seq += p->vec->getNucleotide ( a-1 ) ;
         }
     if ( seq == "" ) return ;
-    myapp()->frame->blast ( seq , "blastn" ) ;
+    myapp()->frame->blast ( seq.c_str() , "blastn" ) ;
     }
         
 void PlasmidCanvas::blastAA ( wxCommandEvent &ev )
@@ -353,7 +353,7 @@ void PlasmidCanvas::blastAA ( wxCommandEvent &ev )
                       wxOK | wxICON_ERROR  ) ;
        return ;
        }
-    myapp()->frame->blast ( seq , "blastp" ) ;
+    myapp()->frame->blast ( seq.c_str() , "blastp" ) ;
     }
 
 void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl , int mut)
@@ -554,7 +554,7 @@ void PlasmidCanvas::orfBlastDNA ( wxCommandEvent &ev )
     int to = p->vec->worf[context_last_orf].to ;
     string s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf ) ;
     if ( s == "" ) return ;
-    myapp()->frame->blast ( s , "blastn" ) ;
+    myapp()->frame->blast ( s.c_str() , "blastn" ) ;
     }
         
 void PlasmidCanvas::orfBlastAA ( wxCommandEvent &ev )
@@ -563,7 +563,7 @@ void PlasmidCanvas::orfBlastAA ( wxCommandEvent &ev )
     int to = p->vec->worf[context_last_orf].to ;
     string s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf , false ) ;
     if ( s == "" ) return ;
-    myapp()->frame->blast ( s , "blastp" ) ;
+    myapp()->frame->blast ( s.c_str() , "blastp" ) ;
     }
 
 // *** More item handlers
@@ -575,7 +575,7 @@ void PlasmidCanvas::itemBlastDNA ( wxCommandEvent &ev )
     int dir = p->vec->items[context_last_item].direction ;
     string s = getDNAorAA ( from , to , dir ) ;
     if ( s == "" ) return ;
-    myapp()->frame->blast ( s , "blastn" ) ;
+    myapp()->frame->blast ( s.c_str() , "blastn" ) ;
     }
         
 void PlasmidCanvas::itemBlastAA ( wxCommandEvent &ev )
@@ -589,7 +589,7 @@ void PlasmidCanvas::itemBlastAA ( wxCommandEvent &ev )
     to += dir * ( rf - 1 ) ;
     string s = getDNAorAA ( from , to , dir , false ) ;
     if ( s == "" ) return ;
-    myapp()->frame->blast ( s , "blastp" ) ;
+    myapp()->frame->blast ( s.c_str() , "blastp" ) ;
     }
 
 void PlasmidCanvas::itemCopyAA ( wxCommandEvent &ev )

@@ -86,10 +86,10 @@ void PlasmidCanvas::Refresh ()
     painting = false ;
     }
     
-bool PlasmidCanvas::isEnzymeVisible ( string s )
+bool PlasmidCanvas::isEnzymeVisible ( wxString s )
     {
     int a ;
-    for ( a = 0 ; a < p->vec->hiddenEnzymes.size() ; a++ )
+    for ( a = 0 ; a < p->vec->hiddenEnzymes.GetCount() ; a++ )
        if ( p->vec->hiddenEnzymes[a] == s )
           return false ;
     return true ;
@@ -209,7 +209,7 @@ void PlasmidCanvas::updateLinkedItems ( TVector *vec , int in )
     {
     TVectorItem *i , *orig = &vec->items[in] ;
     i = orig ;
-    string s ;
+    wxString s ;
     int cur ;
     s = i->getParam ( "PREDECESSOR" ) ;
     while ( s != "" )

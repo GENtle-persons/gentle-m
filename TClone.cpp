@@ -58,7 +58,7 @@ void TClone::loadEnzymeList ( TStorage *st , string filename )
 
 	for ( i = 0 ; i < vr.size() ; i++ )
 	 {
-	   if ( !st->getRestrictionEnzyme(vr[i].name) )
+	   if ( !st->getRestrictionEnzyme(vr[i].name.c_str()) )
 	       {
 	       TRestrictionEnzyme *r = new TRestrictionEnzyme ;
 	       *r = vr[i] ;
@@ -109,7 +109,7 @@ void TClone::remap ( TVector *v )
         }
     for ( a = 0 ; a < vs.size() ; a++ )
         {
-        TRestrictionEnzyme *e = LS->getRestrictionEnzyme(vs[a]) ;
+        TRestrictionEnzyme *e = LS->getRestrictionEnzyme(vs[a].c_str()) ;
         if ( e )
            v->re.push_back ( e ) ;
         }

@@ -18,7 +18,7 @@ class TVectorEditor : public wxDialog
     ~TVectorEditor () ;
     
     void initialViewItem ( int num ) ;
-    void initialViewEnzyme ( string e ) ;
+    void initialViewEnzyme ( wxString e ) ;
     virtual void GetMyClientSize ( int *w , int *h , wxPanel *pan ) ;
 
     void OnOK ( wxCommandEvent &ev ) ;

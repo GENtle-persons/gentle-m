@@ -282,7 +282,7 @@ void TAminoAcids::OnEditMode(wxCommandEvent& event)
     else vec->undo.stop () ;
     }
 
-void TAminoAcids::invokeVectorEditor ( string what , int num , bool forceUpdate )
+void TAminoAcids::invokeVectorEditor ( wxString what , int num , bool forceUpdate )
     {
     vec->undo.start ( txt("u_vec_edit") ) ;
     TVectorEditor ve ( this , txt("t_vector_editor") , vec ) ;
@@ -382,11 +382,9 @@ void TAminoAcids::OnBlastAA(wxCommandEvent& event)
     string seq ;
     int a ;
     if ( sc->_from < 0 ) seq = vec->sequence ;
-    else
-        {
-        for ( a = sc->_from-1 ; a < sc->_to ; a++ ) seq += vec->sequence[a] ;
-        }
-    myapp()->frame->blast ( seq , "blastp" ) ;
+    else seq = sc->getSelection() ;
+//        for ( a = sc->_from-1 ; a < sc->_to ; a++ ) seq += vec->sequence[a] ;
+    myapp()->frame->blast ( seq.c_str() , "blastp" ) ;
     }
 
 void TAminoAcids::Undo(wxCommandEvent& event)

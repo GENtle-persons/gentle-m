@@ -11,43 +11,43 @@ bool TRestrictionEnzyme::differ ( TRestrictionEnzyme &e )
     return false ;
     }
     
-string TRestrictionEnzyme::getEndUpperLeft ()
+wxString TRestrictionEnzyme::getEndUpperLeft ()
     {
-    string r ;
+    wxString r ;
     for ( int a = 0 ; a < cut ; a++ )
-        r += sequence[a] ;
+        r += sequence.GetChar(a) ;
     return r ;
     }
     
-string TRestrictionEnzyme::getEndLowerLeft ()
+wxString TRestrictionEnzyme::getEndLowerLeft ()
     {
-    string r , s = invertSequence () ;
+    wxString r , s = invertSequence () ;
     for ( int a = 0 ; a < cut+overlap ; a++ )
-        r += s[a] ;
+        r += s.GetChar(a) ;
     return r ;
     }
     
-string TRestrictionEnzyme::getEndUpperRight ()
+wxString TRestrictionEnzyme::getEndUpperRight ()
     {
-    string r ;
+    wxString r ;
     for ( int a = cut ; a < sequence.length() ; a++ )
-        r += sequence[a] ;
+        r += sequence.GetChar(a) ;
     return r ;
     }
     
-string TRestrictionEnzyme::getEndLowerRight ()
+wxString TRestrictionEnzyme::getEndLowerRight ()
     {
-    string r , s = invertSequence () ;
+    wxString r , s = invertSequence () ;
     for ( int a = cut+overlap ; a < s.length() ; a++ )
-        r += s[a] ;
+        r += s.GetChar(a) ;
     return r ;
     }
     
-string TRestrictionEnzyme::invertSequence ()
+wxString TRestrictionEnzyme::invertSequence ()
     {
     TVector v ;
-    v.sequence = sequence ;
-    return v.transformSequence ( true , false ) ;
+    v.sequence = sequence.c_str() ;
+    return v.transformSequence ( true , false ) . c_str() ;
     }
     
 
@@ -64,11 +64,9 @@ void TRestrictionCut::linearUpdate ( int w , int h )
                         lastrect.GetHeight() ) ;
     }
     
-string TRestrictionCut::getNameAndPosition ()
+wxString TRestrictionCut::getNameAndPosition ()
     {
-    char t[1000] ;
-    sprintf ( t , "%s:%d" , e->name.c_str() , pos ) ;
-    return t ;
+    return wxString::Format ( "%s:%d" , e->name.c_str() , pos ) ;
     }
 
 bool TRestrictionCut::isHidden ( TVector *v )
@@ -78,42 +76,43 @@ bool TRestrictionCut::isHidden ( TVector *v )
         
 //------------------------------------------------------------------------------
 
-TProtease::TProtease ( string _name , string m , string _note )
+TProtease::TProtease ( wxString _name , wxString m , wxString _note )
     {
     name = _name ;
     str_match = m ;
-    string s ;
+    wxString s ;
     int a ;
     for ( a = 0 ; a < m.length() ; a++ )
         {
-        if ( m[a] == ',' || m[a] == ' ' || m[a] == '|' )
+        char ma = m.GetChar(a) ;
+        if ( ma == ',' || ma == ' ' || ma == '|' )
            {
-           if ( s != "" ) match.push_back ( s ) ;
+           if ( s != "" ) match.Add ( s ) ;
            s = "" ;
-           if ( m[a] == '|' ) cut = match.size() - 1 ;
+           if ( ma == '|' ) cut = match.GetCount() - 1 ;
            }
-        else s += m[a] ;
+        else s += m.GetChar(a) ;
         }
-    if ( s != "" ) match.push_back ( s ) ;
+    if ( s != "" ) match.Add ( s ) ;
     use = true ;
     note = _note ;
     }
 
 
 
-bool TProtease::does_match ( string s )
+bool TProtease::does_match ( wxString s )
     {
     if ( s.length() != len() ) return false ;
     int a , b ;
     for ( a = 0 ; a < len() ; a++ )
         {
         bool yes = true , found = false ;
-        string m = match[a] ;
+        wxString m = match[a] ;
         for ( b = 0 ; b < m.length() && !found ; b++ )
            {
-           if ( m[b] == '!' ) yes = !yes ;
-           else if ( !yes && s[a] == m[b] ) return false ;
-           else if ( yes && ( s[a] == m[b] || m[b] == '*' ) ) found = true ;
+           if ( m.GetChar(b) == '!' ) yes = !yes ;
+           else if ( !yes && s.GetChar(a) == m.GetChar(b) ) return false ;
+           else if ( yes && ( s.GetChar(a) == m.GetChar(b) || m.GetChar(b) == '*' ) ) found = true ;
            }
         if ( !found && yes ) return false ;
         }

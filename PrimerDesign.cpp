@@ -30,6 +30,7 @@ BEGIN_EVENT_TABLE(TPrimerDesign, MyChildBase)
 
     EVT_MENU(MDI_FIND, TPrimerDesign::OnFind)
     EVT_MENU(MDI_COPY, TPrimerDesign::OnCopy)
+    EVT_MENU(MDI_PASTE,TPrimerDesign::OnPaste)
 
     EVT_MENU(MDI_EDIT_MODE, TPrimerDesign::OnEditMode)
     EVT_CLOSE(ChildBase::OnClose)
@@ -44,7 +45,6 @@ BEGIN_EVENT_TABLE(TPrimerDesign, MyChildBase)
     EVT_MENU(MDI_CUT,ChildBase::OnDummy)
     EVT_MENU(MDI_EXPORT,ChildBase::OnDummy)
     EVT_MENU(MDI_COPY,ChildBase::OnDummy)
-    EVT_MENU(MDI_PASTE,ChildBase::OnDummy)
     EVT_MENU(MDI_EDIT_MODE,ChildBase::OnDummy)
     EVT_MENU(MDI_MARK_ALL,ChildBase::OnDummy)
     EVT_MENU(MDI_FILE_SAVE,ChildBase::OnDummy)
@@ -172,12 +172,12 @@ void TPrimerDesign::OnImportPrimer ( wxCommandEvent &ev )
     for ( a = 0 ; a < cbl.size() ; a++ )
        {
        if ( scd.IsChecked ( a ) )
-          AddPrimer ( cbl[a]->vec->sequence ) ;
+          AddPrimer ( cbl[a]->vec->sequence.c_str() ) ;
        }
     guessOptNuc () ;
     }
     
-void TPrimerDesign::AddPrimer ( string s )
+void TPrimerDesign::AddPrimer ( wxString s )
     {
     TPrimer best ;
     int a , bestVal = 0 ;
@@ -512,14 +512,13 @@ void TPrimerDesign::OnDeletePrimer ( wxCommandEvent &ev )
 void TPrimerDesign::OnCopy(wxCommandEvent& event)
     {
     sc->OnCopy ( event ) ;
-/*    string s = cPlasmid->getSelection () ;
-    if ( s == "" ) return ;
-    if (wxTheClipboard->Open())
-        {
-        wxTheClipboard->SetData( new wxTextDataObject(s.c_str()) );
-        wxTheClipboard->Close();
-        }*/
     }
+
+void TPrimerDesign::OnPaste (wxCommandEvent& event)
+    {
+    sc->OnPaste ( event ) ;
+    }
+
 
 wxString TPrimerDesign::getName ()
     {

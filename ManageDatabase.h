@@ -78,20 +78,20 @@ class TManageDatabaseDialog : public wxDialog
     virtual void pmOnFilterSeq ( wxCommandEvent &ev ) ;
     virtual void pmOnTwoPanes ( wxCommandEvent &ev ) ;
     
-    virtual bool do_copy ( string name , string sdb , string tdb ) ;
-    virtual bool do_move ( string name , string sdb , string tdb ) ;
-    virtual void do_del  ( string name , string db ) ;
-    virtual void pmOpenFiles ( vector <string> &_names , string _db ) ;
+    virtual bool do_copy ( wxString name , wxString sdb , wxString tdb ) ;
+    virtual bool do_move ( wxString name , wxString sdb , wxString tdb ) ;
+    virtual void do_del  ( wxString name , wxString db ) ;
+    virtual void pmOpenFiles ( wxArrayString &_names , wxString _db ) ;
     
-    virtual bool copyDNA ( string name , string sdb , string tdb ) ;
-    virtual bool moveDNA ( string name , string sdb , string tdb ) ;
-    virtual void delDNA ( string name , string db ) ;
+    virtual bool copyDNA ( wxString name , wxString sdb , wxString tdb ) ;
+    virtual bool moveDNA ( wxString name , wxString sdb , wxString tdb ) ;
+    virtual void delDNA ( wxString name , wxString db ) ;
 
-    virtual void delProject ( string name , string db ) ;
+    virtual void delProject ( wxString name , wxString db ) ;
     
-    virtual bool do_load ( string name , string db ) ;
-    virtual bool do_load_DNA ( string name , string db ) ;
-    virtual bool do_load_project ( string name , string db ) ;
+    virtual bool do_load ( wxString name , wxString db ) ;
+    virtual bool do_load_DNA ( wxString name , wxString db ) ;
+    virtual bool do_load_project ( wxString name , wxString db ) ;
     virtual void do_save_DNA () ;
     virtual void do_save_project () ;
     
@@ -100,18 +100,18 @@ class TManageDatabaseDialog : public wxDialog
     virtual void pd_loadList () ;
     virtual void pm_init_lists () ;
     virtual void pm_list_items ( int x ) ;
-    virtual bool doesNameExist ( string name , string dbname ) ;
-    virtual void addDatabase ( string fn ) ;
-    virtual string fixQuotes ( string s ) ;
-    virtual string getFileName ( string dbname ) ;
+    virtual bool doesNameExist ( wxString name , wxString dbname ) ;
+    virtual void addDatabase ( wxString fn ) ;
+    virtual wxString fixQuotes ( wxString s ) ;
+    virtual wxString getFileName ( wxString dbname ) ;
     virtual vector <int> getSelectedListItems ( wxListCtrl *l ) ;
-    virtual TStorage *getTempDB ( string filename ) ;
+    virtual TStorage *getTempDB ( wxString filename ) ;
     
     virtual void initCopynMove () ;
     virtual void pmGetContext ( wxListCtrl *side ) ;
     virtual void updateTwoLists() ;
 
-    vector <string> db_name , db_file ;
+    wxArrayString db_name , db_file ;
     wxNotebook *nb ;
     wxPanel *pDatabases , *pCopynMove ;
     wxStaticText *pd_db_name , *pd_db_file ;
@@ -123,14 +123,14 @@ class TManageDatabaseDialog : public wxDialog
     wxTextCtrl *pm_name ;
     wxImageList *il ;
     int bo , th ;
-    string defdb , context_db ;
-    vector <string> context_names ;
+    wxString defdb , context_db ;
+    wxArrayString context_names ;
     int actionMode ;
     TVector *v ;
     
     private:
     bool doSave , doLoad , isProject ;
-    string filter ;
+    wxString filter ;
     wxTextCtrl *filter_txt ;
     wxCheckBox *f_dna , *f_prot , *f_primer , *f_twopanes ;
     wxCheckBox *f_desc , *f_seq ;

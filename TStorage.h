@@ -27,7 +27,7 @@ class TRestrictionEnzyme ;
 class MyApp ;
 class TProtease ;
 
-typedef vector <string> TVS ;
+typedef wxArrayString TVS ;
 
 class TSQLresult
     {
@@ -36,17 +36,17 @@ class TSQLresult
     vector <TVS> content ;
     virtual void clean()
         {
-        while ( field.size() ) field.pop_back() ;
+        field.Clear() ;
         while ( content.size() ) content.pop_back() ;
         }
-    virtual int cols () { return field.size() ; }
+    virtual int cols () { return field.GetCount() ; }
     virtual int rows () { return content.size() ; }
-    virtual string item ( char *s , int i )
+    virtual wxString item ( char *s , int i )
         {
         int a ;
         wxString s2 = s ;
-        for ( a = 0 ; a < field.size() ; a++ )
-           if ( 0 == s2.CmpNoCase ( field[a].c_str() ) )
+        for ( a = 0 ; a < field.GetCount() ; a++ )
+           if ( 0 == s2.CmpNoCase ( field[a] ) )
                return content[i][a] ;
         return "" ;
         }
@@ -58,8 +58,8 @@ class TSQLresult
         {
         int a ;
         wxString s2 = s ;
-        for ( a = 0 ; a < field.size() ; a++ )
-           if ( 0 == s2.CmpNoCase ( field[a].c_str() ) )
+        for ( a = 0 ; a < field.GetCount() ; a++ )
+           if ( 0 == s2.CmpNoCase ( field[a] ) )
                return a ;
         return -1 ;
         }
@@ -69,43 +69,43 @@ class TSQLresult
 class TStorage
     {
     public :
-    TStorage ( int nt , string fn = "" ) ;
+    TStorage ( int nt , wxString fn = "" ) ;
     virtual ~TStorage () ;
     void createDatabase () ;
-    TSQLresult getObject ( string query ) ;
-    TSQLresult getObject_MySQL ( string query ) ;
+    TSQLresult getObject ( wxString query ) ;
+    TSQLresult getObject_MySQL ( wxString query ) ;
 
     // Access
-    void sqlAdd ( string &s1 , string &s2 , string key , string value ) ;
-    void sqlAdd ( string &s1 , string &s2 , string key , wxString value ) ;
-    void sqlAdd ( string &s1 , string &s2 , string key , char* value ) ;
-    void sqlAdd ( string &s1 , string &s2 , string key , int value ) ;
+    void sqlAdd ( wxString &s1 , wxString &s2 , wxString key , wxString value ) ;
+    void sqlAdd ( wxString &s1 , wxString &s2 , wxString key , char* value ) ;
+    void sqlAdd ( wxString &s1 , wxString &s2 , wxString key , int value ) ;
     
     // Restriction enzymes
     void import () ;
-    TRestrictionEnzyme* getRestrictionEnzyme ( string s ) ;
+    TRestrictionEnzyme* getRestrictionEnzyme ( wxString s ) ;
+    void getEnzymeGroups ( wxArrayString &vs ) ;
     void getEnzymeGroups ( vector <string> &vs ) ;
-    void getEnzymesInGroup ( string gn , vector <string> &vs ) ;
-    void getEnzymeGroups ( vector <wxString> &vs ) ;
+    void getEnzymesInGroup ( wxString gn , wxArrayString &vs ) ;
+    void getEnzymesInGroup ( wxString gn , vector <string> &vs ) ;
     void updateRestrictionEnzyme ( TRestrictionEnzyme *e ) ;
     void addRestrictionEnzyme ( TRestrictionEnzyme *r ) ;
-    bool addEnzymeGroup ( string s ) ;
+    bool addEnzymeGroup ( wxString s ) ;
 
-    TProtease *getProtease ( string s ) ;
+    TProtease *getProtease ( wxString s ) ;
     void updateProtease ( TProtease *p ) ;
     
-    string getDatabaseList ( vector <string> &name , vector <string> &file ) ;
-    void setOption ( string oname , int value ) ;
-    void setOption ( string oname , string vname ) ;
-    int getOption ( string oname , int def ) ;
-    string getOption ( string oname , string def ) ;
-    bool copySQLfields ( TStorage &target , string table , string cond ) ;
+    wxString getDatabaseList ( wxArrayString &name , wxArrayString &file ) ;
+    void setOption ( wxString oname , int value ) ;
+    void setOption ( wxString oname , wxString vname ) ;
+    int getOption ( wxString oname , int def ) ;
+    wxString getOption ( wxString oname , wxString def ) ;
+    bool copySQLfields ( TStorage &target , wxString table , wxString cond ) ;
     void synchronize () ;
 
     void autoUpdateSchema () ;
-    string fixDNAname ( string s ) ;
-    string UCfirst ( string s ) ;
-    string getDBname () ;    
+    wxString fixDNAname ( wxString s ) ;
+    wxString UCfirst ( wxString s ) ;
+    wxString getDBname () ;    
     bool getWriteProtect () ;
     
     // Variables
@@ -114,14 +114,14 @@ class TStorage
     TSQLresult results ;
     
     private :
-    string getSingleField ( string query , string field , string def = "" ) ;
-    int getSingleField ( string query , string field , int def = 0 ) ;
-    string makeInsert ( string table , TVS &field , TVS &data ) ;
-    void replaceTable ( string table , TVS &f , TVS &t ) ;
-    void tableInfoSet ( TVS &f , TVS &t , string nf , string nt ) ;
+    wxString getSingleField ( wxString query , wxString field , wxString def = "" ) ;
+    int getSingleField ( wxString query , wxString field , int def = 0 ) ;
+    wxString makeInsert ( wxString table , TVS &field , TVS &data ) ;
+    void replaceTable ( wxString table , TVS &f , TVS &t ) ;
+    void tableInfoSet ( TVS &f , TVS &t , wxString nf , wxString nt ) ;
     
     // Variables
-    string dbname , error ;
+    wxString dbname , error ;
     int storagetype , ierror ;
     bool writeProtect ;
     int rpv ;
