@@ -15,6 +15,18 @@ TStorage::TStorage ( int nt , wxString fn )
     storagetype = nt ;
     if ( fn.IsEmpty() ) fn = myapp()->homedir+"/local.db" ;
     dbname = fn ;
+
+    isSqlite3 = false ;
+    if ( !isMySQL && fn != "" )
+    	{
+    	wxFile f ( fn , wxFile::read ) ;
+    	char xx[100] ;
+    	f.Read ( xx , 15 ) ;
+    	xx[15] = 0 ;
+    	if ( wxString ( xx ) == "SQLite format 3" )
+    		isSqlite3 = true ;
+    	}    
+
 #ifdef USEMYSQL
     if ( isMySQL )
         {
@@ -70,9 +82,23 @@ static int callback (void *NotUsed, int argc, char **argv, char **azColName)
     return 0;
     }
     
+void TStorage::createDatabaseSqlite3 ()
+    {
+        return;
+    sqlite3 *db ;
+    char *e = 0 ;
+    int rc ;
+    sqlite3_open ( dbname.c_str() , &db ) ;
+//    ierror = (int) e ;
+//    if ( e ) error = e ;
+//    else error = "Alles OK" ;
+    sqlite3_close ( db ) ;
+    }
+        
 void TStorage::createDatabase ()
     {
     if ( isMySQL ) return ;
+    if ( isSqlite3 ) { createDatabaseSqlite3() ; return ; }
     sqlite *db ;
     char *e = 0 ;
     int rc ;
@@ -137,6 +163,47 @@ TSQLresult TStorage::getObject_MySQL ( wxString query )
     return results ;
     }
     
+TSQLresult TStorage::getObjectSqlite3 ( wxString query )
+    {
+    sqlite3 *db ;
+    char *e = 0 ;
+    int rc ;
+    
+    sqlite3_open ( dbname.c_str() , &db ) ;
+    st = this ;
+    results.clean() ;
+    if ( db == NULL ) return results ; // Database broken or does not exist
+    
+    if ( writeProtect ) // Prevent old program version breaking the DB
+       {
+       wxString q = query.substr ( 0 , 6 ) ;
+       if ( q != "SELECT" )
+          {
+          sqlite3_close ( db ) ;
+          return results ;
+          }
+       }
+    do {
+        rc = sqlite3_exec ( db , query.c_str() , callback , 0 , &e ) ;
+        if ( rc == SQLITE_BUSY ) // If busy, wait 200 ms
+        	{
+#ifdef __WXMSW__
+			wxUsleep ( 200 ) ;
+#else
+       	    wxMilliSleep ( 200 ) ;
+#endif
+        	}    
+        } while ( rc == SQLITE_BUSY ) ;
+    
+    ierror = (int) e ;
+    if ( e ) error = e ;
+    else error = "Alles OK" ;
+
+    sqlite3_close ( db ) ;
+    
+    return results ;
+    }
+        
 TSQLresult TStorage::getObject ( wxString query )
     {
     if ( recording )
@@ -146,6 +213,7 @@ TSQLresult TStorage::getObject ( wxString query )
 	    return results ;
     	}    
     if ( isMySQL ) return getObject_MySQL ( query ) ;
+    if ( isSqlite3 ) return getObjectSqlite3 ( query ) ;
     sqlite *db ;
     char *e = 0 ;
     int rc ;
@@ -237,12 +305,13 @@ void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , wxString key , char* value
 
 void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , wxString key , int value )
     {
-    char t[1000] ;
-    sprintf ( t , "%d" , value ) ;
+    wxString t = wxString::Format ( "%d" , (unsigned int) value ) ;
+//    char t[1000] ;
+//    sprintf ( t , "%d" , value ) ;
     if ( !s1.IsEmpty() ) s1 += "," ;
     if ( !s2.IsEmpty() ) s2 += "," ;
     s1 += key ;
-    s2 += "\"" + wxString ( t ) + "\"" ;
+    s2 += "\"" + t + "\"" ;
     }
     
 // This function is *only* called for the local database! Ever!!

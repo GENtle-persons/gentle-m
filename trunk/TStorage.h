@@ -16,6 +16,7 @@
 
 #ifdef __WXMSW__
 #include "win_sqlite.h"
+#include "win_sqlite3.h"
 #include <wx/msw/winundef.h>
 #else
 #include "lin_sqlite.h"
@@ -142,10 +143,13 @@ class TStorage
     int rpv ;
     wxString record ;
     bool recording ;
-    bool isMySQL ;
+    bool isMySQL , isSqlite3;
 #ifdef USEMYSQL
     MYSQL *conn,*mysql;
 #endif
+
+    virtual void createDatabaseSqlite3 () ;
+    virtual TSQLresult getObjectSqlite3 ( wxString query ) ;
     } ;
  
 #endif

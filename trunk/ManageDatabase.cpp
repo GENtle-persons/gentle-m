@@ -889,7 +889,6 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
     v = new TVector () ;
 
     if ( name.IsEmpty() ) return false ;
-
     // Loading vector
     sql = "SELECT * FROM dna WHERE dna_name=\"" + name + "\"" ;
     sr = tstorage->getObject ( sql ) ;
@@ -946,15 +945,19 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
         }
         
     // Sorting by size, largest first
-    for ( a = 1 ; a < v->items.size() ; a++ )
-        {
-        if ( v->getItemLength ( a-1 ) < v->getItemLength ( a ) )
-           {
-           TVectorItem dummy = v->items[a] ;
-           v->items[a] = v->items[a-1] ;
-           v->items[a-1] = dummy ;
-           a = 0 ;
-           }
+    if ( v->items.size() < 100 ) // Don't do that for genoms!
+    	{
+        for ( a = 1 ; a < v->items.size() ; a++ )
+            {
+            if ( v->getItemLength ( a-1 ) < v->getItemLength ( a ) )
+               {
+               TVectorItem dummy = v->items[a] ;
+               v->items[a] = v->items[a-1] ;
+               v->items[a-1] = dummy ;
+               a -= 2 ;
+               if ( a < 0 ) a = 0 ;
+               }
+            }    
         }
 
     v->recalcvisual = true ;
@@ -1127,6 +1130,7 @@ void TManageDatabaseDialog::do_save_DNA ()
     dbname = pm_dd_save->GetStringSelection() ;
     if ( doesNameExist ( name , dbname ) ) return ;
     TStorage *storage = getTempDB ( getFileName ( dbname ) ) ;
+    wxBeginBusyCursor() ;
 
     // New name, or overwriting old one
     int a ;
@@ -1170,6 +1174,7 @@ void TManageDatabaseDialog::do_save_DNA ()
     
     // Inserting items
     wxString type = " " ;
+    storage->startRecord () ;
     for ( a = 0 ; a < v->items.size() ; a++ )
         {
         s1 = s2 = "" ;
@@ -1185,6 +1190,7 @@ void TManageDatabaseDialog::do_save_DNA ()
         sql = "INSERT INTO dna_item (" + s1 + ") VALUES (" + s2 + ")" ;
         sr = storage->getObject ( sql ) ;
         }     
+    storage->endRecord () ;
 
     v->undo.clear() ;
     wxFocusEvent fev ;
@@ -1201,6 +1207,7 @@ void TManageDatabaseDialog::do_save_DNA ()
         myapp()->frame->mainTree->SetItemText ( c->inMainTree , c->vec->getName() ) ;
         }
 
+    wxEndBusyCursor() ;
     SetReturnCode ( wxID_OK ) ;
     EndModal ( true ) ;
     }
