@@ -31,6 +31,7 @@ BEGIN_EVENT_TABLE(FindSequenceDialog, wxDialog )
     EVT_BUTTON(SH_CANCEL,FindSequenceDialog::OnCancel)
     EVT_LISTBOX(SH_LB,FindSequenceDialog::OnLB)
     EVT_LISTBOX_DCLICK(SH_LB,FindSequenceDialog::OnLBdclick)
+    EVT_TEXT(SH_TEXT,FindSequenceDialog::OnTextChange)
     EVT_CHAR_HOOK(FindSequenceDialog::OnCharHook)
 END_EVENT_TABLE()
 
@@ -648,7 +649,7 @@ FindSequenceDialog::FindSequenceDialog ( wxWindow *parent, const wxString& title
     allowed_chars = "AGCT" ; // For DNA search
     int w , h ;
     GetClientSize ( &w , &h ) ;
-    t = new wxTextCtrl ( this , -1 , "" , wxPoint ( bo , bo ) ,
+    t = new wxTextCtrl ( this , SH_TEXT , "" , wxPoint ( bo , bo ) ,
                             wxSize ( w-bo*2 , fh ) ) ;
                             
     wxButton *f = new wxButton ( this , SH_SEARCH , txt("b_find") , wxPoint ( bo , fh+bo*2 ) , 
@@ -940,6 +941,18 @@ void FindSequenceDialog::sequenceSearch ( bool invers )
             }
         }    
     }
+    
+void FindSequenceDialog::OnTextChange ( wxCommandEvent &ev )
+    {
+    if ( c->vec->getGenomeMode() ) return ;
+    if ( t->GetValue().length() < 3 )
+       {
+       lb->Clear () ;
+       vi.Clear () ;
+       return ;
+       }    
+    OnSearch ( ev ) ;
+    }    
 
 void FindSequenceDialog::OnCancel ( wxCommandEvent &ev )
     {
