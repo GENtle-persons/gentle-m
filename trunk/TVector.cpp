@@ -126,11 +126,7 @@ void TVector::init ()
          "VVVVAAAADDEEGGGG" ;
          
     // Static initialization
-    if ( aaprop.size() > 0 )
-        {
-        makeAA2DNA () ;
-        return ;
-        }    
+    if ( aaprop.size() > 0 ) return ;
 
     int a ;
     
@@ -252,13 +248,13 @@ void TVector::init ()
     aaprop['Y'].set_hp ( -1.3 , -2.3 ) ;
 
     for ( a = 'a' ; a <= 'z' ; a++ ) aaprop[a] = aaprop[a-'a'+'A'] ;
-    makeAA2DNA () ;
 }    
     
 void TVector::makeAA2DNA ()
     {
     int a , b , c , e ;
     wxString iu = "ACGT" ;
+    for ( a = 0 ; a < 256 ; a++ ) AA2DNA[a] = "" ;
     for ( a = 0 ; a < iu.length() ; a++ )
        {
        for ( b = 0 ; b < iu.length() ; b++ )
@@ -1188,6 +1184,7 @@ TVector *TVector::backtranslate ()
     nv->type = TYPE_VECTOR ;
     wxString ns ;
     int a ;
+    makeAA2DNA () ;
     for ( a = 0 ; a < sequence.length() ; a++ )
         {
         unsigned char c = sequence.GetChar ( a ) ;
@@ -1196,8 +1193,8 @@ TVector *TVector::backtranslate ()
     nv->sequence = ns ;
     for ( a = 0 ; a < nv->items.size() ; a++ )
        {
-       nv->items[a].from *= 3 ;
-       nv->items[a].to *= 3 ;
+       nv->items[a].from = ( nv->items[a].from - 1 ) * 3 + 1 ;
+       nv->items[a].to = ( nv->items[a].to - 1 ) * 3 + 1 ;
        }    
     return nv ;
     }    
