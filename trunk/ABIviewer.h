@@ -32,6 +32,7 @@ class TABIviewer : public ChildBase
     void OnEditName(wxCommandEvent& event);
     
     void OnHelplines(wxCommandEvent& event);
+    void OnInvCompl(wxCommandEvent& event);
     void OnSpinWidth(wxSpinEvent& event);
     void OnSpinHeight(wxSpinEvent& event);
     void OnZoom(wxScrollEvent& event);
@@ -45,7 +46,7 @@ class TABIviewer : public ChildBase
     wxSplitterWindow *hs ;
     int from ;
     string filename ;
-    wxCheckBox *aidLines ;
+    wxCheckBox *aidLines , *inv_compl ;
     wxSpinCtrl *f_height , *f_width ;
     wxSlider *slider ;
     

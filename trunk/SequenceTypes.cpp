@@ -1313,7 +1313,14 @@ int SeqABI::arrange ( int n )
     colors[1] = wxColour ( intensity , 0 , 0 ) ;
     colors[2] = wxColour ( 0 , intensity , 0 ) ;
     colors[3] = wxColour ( 0 , 0 , intensity ) ;
-
+    /*
+    if ( inv_compl )
+        {
+        wxColour dummy ;
+        dummy = colors[0] ; colors[0] = colors[3] ; colors[3] = dummy ;
+        dummy = colors[1] ; colors[1] = colors[2] ; colors[2] = dummy ;
+        }
+*/
     // Base order
     id = at->getRecord ( "FWO_" , 1 ) ;
     assert ( id != -1 ) ;
@@ -1329,17 +1336,27 @@ int SeqABI::arrange ( int n )
     id = at->getRecord ( "PLOC" , 2 ) ;
     assert ( id != -1 ) ;
 
-    
     pos.cleanup() ;
     x = ox ;
     y = oy ;
     pos.add ( -(++l) , bo , y , ox-wx-bo , wy-1 ) ; // Line number
     
+    int id2 = at->getRecord ( "DATA" , 9 ) ;
+    int bx1 = (char) at->vf[id2].data[(at->vf[id2].nrecords-1)*2] ;
+    int bx2 = (unsigned char) at->vf[id2].data[(at->vf[id2].nrecords-1)*2+1] ;
+    int lastx = at->vf[id2].nrecords ;
+    
+    
     for ( a = 0 ; a < s.length() ; a++ )
         {
-        int bx1 = (char) at->vf[id].data[a*2] ;
-        int bx2 = (unsigned char) at->vf[id].data[a*2+1] ;
+        int idx = a ;
+        if ( inv_compl ) idx = s.length() - a - 1 ;
+        bx1 = (char) at->vf[id].data[idx*2] ;
+        bx2 = (unsigned char) at->vf[id].data[idx*2+1] ;
         int bx = bx1 * 256 + bx2 ;
+        
+        if ( inv_compl ) bx = lastx - bx ;
+        
         char t = s[a] ;
         x = bx * scalex - diffx ;
 
@@ -1365,6 +1382,20 @@ int SeqABI::arrange ( int n )
     lowy += wy * ( can->blankline ) ; // For sequence data
     
     return lowy + bo*2 ;
+    }
+    
+void SeqABI::setInvCompl ( bool x )
+    {
+    if ( inv_compl != x ) // Inverting and complementing sequence
+        {
+        TVector v2 ;
+        string s2 ;
+        for ( int a = 0 ; a < s.length() ; a++ ) s2 = v2.getComplement( s[a] ) + s2 ;
+        s = s2 ;
+        can->child->vec->sequence = s ;
+        }
+    
+    inv_compl = x ;
     }
     
 void SeqABI::show ( wxDC& dc )
@@ -1418,8 +1449,10 @@ void SeqABI::show ( wxDC& dc )
         int x = 0 ;
         for ( a = 0 ; a < at->vf[id].nrecords ; a++ )
            {
-           int b1 = (unsigned char) at->vf[id].data[a*2] ;
-           int b2 = (unsigned char) at->vf[id].data[a*2+1] ;
+           int idx = a*2 ;
+           if ( inv_compl ) idx = ( at->vf[id].nrecords - a - 1 ) * 2 ;
+           int b1 = (unsigned char) at->vf[id].data[idx] ;
+           int b2 = (unsigned char) at->vf[id].data[idx+1] ;
            int b = b1 * 256 + b2 ;
            x += scalex ;
            while ( x > maxx )
@@ -1473,7 +1506,13 @@ void SeqABI::initFromFile ( string filename )
 wxColor SeqABI::getBaseColor ( char b )
     {
     for ( int a = 0 ; a < 4 ; a++ )
-       if ( b == base2color[a] ) return colors[3-a] ; // Don't ask...
+       {
+       if ( b == base2color[a] )
+          {
+          if ( inv_compl ) return colors[a] ;
+          else return colors[3-a] ;
+          }
+       }
     return wxColor ( "magenta" ) ;
     }
     

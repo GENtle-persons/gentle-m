@@ -11,6 +11,7 @@ BEGIN_EVENT_TABLE(TABIviewer, MyChildBase)
     EVT_MENU(MDI_COPY_TO_NEW,TABIviewer::OnCopyToNew)
 
     EVT_CHECKBOX(ABI_HELPLINES, TABIviewer::OnHelplines)
+    EVT_CHECKBOX(ABI_INV_COMP, TABIviewer::OnInvCompl)
     EVT_SPINCTRL(ABI_WIDTH, TABIviewer::OnSpinWidth)
     EVT_SPINCTRL(ABI_HEIGHT, TABIviewer::OnSpinHeight)
     EVT_COMMAND_SCROLL(ABI_SLIDER, TABIviewer::OnZoom)
@@ -142,13 +143,15 @@ void TABIviewer::initme ()
     hs->SetMinimumPaneSize ( h+bo ) ;
     
     // Toys
+    wxRect r ;
     aidLines = new wxCheckBox ( up , ABI_HELPLINES , txt("t_aid_lines") , wxPoint ( bo , bo ) ) ;
+    r = aidLines->GetRect() ;
+    inv_compl = new wxCheckBox ( up , ABI_INV_COMP , txt("t_abi_inv_comp") , wxPoint ( r.GetRight()+bo , r.GetTop() ) ) ;
     f_height = new wxSpinCtrl ( up , ABI_HEIGHT , "5" , wxPoint ( bo , bo + th * 1 ) , wxSize ( 50 , -1 ) ) ;
     f_width = new wxSpinCtrl ( up , ABI_WIDTH , "2" , wxPoint ( bo , bo + th * 2 ) , wxSize ( 50 , -1 ) ) ;
     f_height->SetRange ( 1 , 20 ) ;
     f_width->SetRange ( 1 , 9 ) ;
     aidLines->SetValue ( true ) ;
-    wxRect r ;
     r = f_height->GetRect() ;
     new wxStaticText ( up , -1 , txt("t_scale_height") , wxPoint ( r.GetRight()+bo , r.GetTop()+2 ) ) ;
     r = f_width->GetRect() ;
@@ -160,13 +163,14 @@ void TABIviewer::initme ()
                              wxSL_HORIZONTAL ) ;
     r = slider->GetRect() ;
     new wxStaticText ( up , -1 , txt("t_zoom") , wxPoint ( r.GetRight()+bo , r.GetTop()+2 ) ) ;
+    r = inv_compl->GetRect() ;
 
     // Statistics box
     stat = new wxTextCtrl ( up ,
                             -1 ,
                             "" ,
-                            wxPoint ( 150 , 0 ) ,
-                            wxSize ( w - 150 , h ) ,
+                            wxPoint ( r.GetRight()+bo , 0 ) ,
+                            wxSize ( w - (r.GetRight()+bo) , h ) ,
                             wxTE_MULTILINE | wxTE_READONLY ) ;
 
                                
@@ -380,3 +384,12 @@ void TABIviewer::OnCopy(wxCommandEvent& event)
     sc->OnCopy ( event ) ;
     }
 
+void TABIviewer::OnInvCompl(wxCommandEvent& event)
+    {
+    bool state = inv_compl->GetValue() ;
+    SeqABI *abi = (SeqABI*) sc->seq[0] ;
+    abi->setInvCompl ( state ) ;
+    sc->arrange () ;
+    sc->SilentRefresh () ;
+    }
+    
