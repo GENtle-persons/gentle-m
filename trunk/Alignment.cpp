@@ -75,7 +75,6 @@ TAlignment::TAlignment(MyFrame *parent, const wxString& title)
     
 TAlignment::~TAlignment ()
     {
-//    myapp()->my_children.DeleteObject(this);    
     }
 
 
@@ -275,7 +274,7 @@ void TAlignment::recalcAlignments ()
            getline ( in , s ) ; // Blank line
            }
 
-        generateConsensusSequene ( false ) ;
+        generateConsensusSequence ( false ) ;
         }
     else // Internal routines
         {
@@ -287,7 +286,7 @@ void TAlignment::recalcAlignments ()
         else if ( algorithm == ALG_SW )
            SmithWaterman ( lines[0].s , lines[1].s ) ; 
 
-        generateConsensusSequene () ;
+        generateConsensusSequence () ;
         }
         
     for ( a = 0 ; a < 1 ; a++ ) //lines.size() ; a++ )
@@ -353,7 +352,7 @@ void TAlignment::redoAlignments ( bool doRecalc )
     updateSequence () ;
     }
     
-void TAlignment::generateConsensusSequene ( bool addit )
+void TAlignment::generateConsensusSequence ( bool addit )
     {
     int a , b ;
     // The stars'n'stripes sequence ;-)

@@ -70,6 +70,7 @@ public:
     virtual void importFile ( string file , string path , int filter = -1 ) ;
     virtual void setChild ( ChildBase *ch ) ;
     virtual void removeChild ( ChildBase *ch ) ;
+    virtual TStorage *getTempDB ( string filename ) ;
 
 
     TMainTree *mainTree ;
@@ -89,6 +90,7 @@ public:
     wxSashLayoutWindow* m_leftWindow1;
     wxSashLayoutWindow* m_leftWindow2;
     wxSashLayoutWindow* m_bottomWindow;
+    vector <TStorage*> dbcache ;
     
     DECLARE_EVENT_TABLE()
 };

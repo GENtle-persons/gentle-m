@@ -1,25 +1,65 @@
-CREATE TABLE dna(
-dna_name tinytext,
-dna_description tinytext,
-dna_type int,
-dna_sequence mediumtext,
-dna_sticky_ul varchar(32),
-dna_sticky_ur varchar(32),
-dna_sticky_ll varchar(32),
-dna_sticky_lr varchar(32),
-dna_restriction_enzymes mediumtext,
-dna_circular bool,
-dna_params mediumtext);
+# phpMyAdmin MySQL-Dump
+# version 2.3.0
+# http://phpwizard.net/phpMyAdmin/
+# http://www.phpmyadmin.net/ (download page)
+#
+# Host: localhost
+# Erstellungszeit: 04. Februar 2004 um 12:13
+# Server Version: 3.23.52
+# PHP-Version: 4.3.2
+# Datenbank: `GENtle`
+# --------------------------------------------------------
+
+#
+# Tabellenstruktur für Tabelle `dna`
+#
+
+DROP TABLE IF EXISTS dna;
+CREATE TABLE dna (
+  dna_name varchar(255) NOT NULL default '',
+  dna_description tinytext,
+  dna_type int(11) default NULL,
+  dna_sequence mediumtext,
+  dna_sticky_ul varchar(32) default NULL,
+  dna_sticky_ur varchar(32) default NULL,
+  dna_sticky_ll varchar(32) default NULL,
+  dna_sticky_lr varchar(32) default NULL,
+  dna_restriction_enzymes mediumtext,
+  dna_circular tinyint(1) default NULL,
+  dna_params mediumtext,
+  PRIMARY KEY  (dna_name),
+  UNIQUE KEY dna_name (dna_name),
+  KEY dna_name_2 (dna_name)
+) TYPE=MyISAM;
+# --------------------------------------------------------
+
+#
+# Tabellenstruktur für Tabelle `dna_item`
+#
+
+DROP TABLE IF EXISTS dna_item;
 CREATE TABLE dna_item (
-  di_name tinytext,
-  di_dna tinytext,
+  di_name varchar(255) NOT NULL default '',
+  di_dna varchar(255) NOT NULL default '',
   di_description tinytext,
-  di_type varchar(32),
-  di_from int,
-  di_to int,
-  di_direction int,
-di_params mediumtext
-);
+  di_type varchar(32) default NULL,
+  di_from int(11) default NULL,
+  di_to int(11) default NULL,
+  di_direction int(11) default NULL,
+  di_params mediumtext,
+  KEY di_name (di_name),
+  KEY di_dna (di_dna),
+  FULLTEXT KEY di_name_2 (di_name),
+  FULLTEXT KEY di_dna_2 (di_dna),
+  KEY di_type (di_type)
+) TYPE=MyISAM;
+# --------------------------------------------------------
+
+#
+# Tabellenstruktur für Tabelle `enzyme`
+#
+
+DROP TABLE IF EXISTS enzyme;
 CREATE TABLE enzyme (
   e_id bigint(20) NOT NULL default '0',
   e_name varchar(100) NOT NULL default '',
@@ -28,25 +68,67 @@ CREATE TABLE enzyme (
   e_location varchar(255) NOT NULL default '',
   e_cut int(11) NOT NULL default '0',
   e_overlap int(11) NOT NULL default '0',
-  PRIMARY KEY  (e_id)
-);
-CREATE TABLE enzyme_group ( eg_name tinytext );
+  PRIMARY KEY  (e_id,e_name),
+  UNIQUE KEY e_name (e_name),
+  KEY e_name_2 (e_name)
+) TYPE=MyISAM;
+# --------------------------------------------------------
+
+#
+# Tabellenstruktur für Tabelle `enzyme_group`
+#
+
+DROP TABLE IF EXISTS enzyme_group;
+CREATE TABLE enzyme_group (
+  eg_name tinytext
+) TYPE=MyISAM;
+# --------------------------------------------------------
+
+#
+# Tabellenstruktur für Tabelle `link_enzyme_group`
+#
+
+DROP TABLE IF EXISTS link_enzyme_group;
 CREATE TABLE link_enzyme_group (
   leg_enzyme varchar(100) NOT NULL default '',
-  leg_group varchar(100) NOT NULL default ''
-);
+  leg_group varchar(100) NOT NULL default '',
+  KEY leg_enzyme (leg_enzyme),
+  KEY leg_group (leg_group)
+) TYPE=MyISAM;
+# --------------------------------------------------------
+
+#
+# Tabellenstruktur für Tabelle `project`
+#
+
+DROP TABLE IF EXISTS project;
 CREATE TABLE project (
   pr_name tinytext,
   pr_desc mediumtext
-);
+) TYPE=MyISAM;
+# --------------------------------------------------------
+
+#
+# Tabellenstruktur für Tabelle `project_dna`
+#
+
+DROP TABLE IF EXISTS project_dna;
 CREATE TABLE project_dna (
   pd_project tinytext,
   pd_dna tinytext,
   pd_database tinytext
-);
+) TYPE=MyISAM;
+# --------------------------------------------------------
+
+#
+# Tabellenstruktur für Tabelle `stuff`
+#
+
+DROP TABLE IF EXISTS stuff;
 CREATE TABLE stuff (
-  s_type tinytext,
-  s_name tinytext,
-  s_value mediumtext
-);
-INSERT INTO stuff VALUES("INTERNAL","DATABASE_VERSION","3");
+  s_type varchar(255) NOT NULL default '',
+  s_name varchar(255) NOT NULL default '',
+  s_value mediumtext,
+  KEY s_type (s_type),
+  KEY s_name (s_name)
+) TYPE=MyISAM;

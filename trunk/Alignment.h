@@ -94,7 +94,7 @@ class TAlignment : public ChildBase
     void myInsert ( int line , int pos , char what ) ;
     void myDelete ( int line , int pos ) ;
     void updateSequence () ;
-    void generateConsensusSequene ( bool addit = true ) ;
+    void generateConsensusSequence ( bool addit = true ) ;
     void fixMenus ( int i ) ;
     
     public :

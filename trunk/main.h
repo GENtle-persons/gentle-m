@@ -73,7 +73,6 @@ public:
     string getHTMLCommand ( string command ) ;
     string getFileFormatApplication ( string type ) ;
 MyFrame *frame;
-//wxList my_children;
 wxString homedir , bmpdir , slash ;
 wxSingleInstanceChecker *m_checker ;
 int programVersion ;
