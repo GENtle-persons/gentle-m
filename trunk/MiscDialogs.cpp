@@ -122,8 +122,8 @@ void TAlignmentDialog::init_what ()
              f->children[a]->def == "ABIviewer" )
            {
            vav.push_back ( ((MyChild*)f->children[a])->vec ) ;
-           van.push_back ( f->children[a]->getName().c_str() ) ;
-           all->Append ( f->children[a]->getName().c_str() ) ;
+           van.Add ( f->children[a]->getName() ) ;
+           all->Append ( f->children[a]->getName() ) ;
            }
         }
         
@@ -133,18 +133,18 @@ void TAlignmentDialog::init_what ()
         if ( al->lines[a].name != txt("t_identity") )
            {
            vcv.push_back ( al->lines[a].v ) ;
-           vcn.push_back ( al->lines[a].name.c_str() ) ;
-           cur->Append ( al->lines[a].name.c_str() ) ;
+           vcn.Add ( al->lines[a].name ) ;
+           cur->Append ( al->lines[a].name ) ;
            }
         }
         
-    if ( vcn.size() == 0 )
+    if ( vcn.GetCount() == 0 )
         {
-        for ( a = 0 ; a < van.size() ; a++ )
+        for ( a = 0 ; a < van.GetCount() ; a++ )
            {
-           vcn.push_back ( van[a] ) ;
+           vcn.Add ( van[a] ) ;
            vcv.push_back ( vav[a] ) ;
-           cur->Append ( van[a].c_str() ) ;
+           cur->Append ( van[a] ) ;
            }
         }
     }
@@ -246,8 +246,8 @@ void TAlignmentDialog::OnAdd ( wxCommandEvent &ev )
         if ( b == vcv.size() )
            {
            vcv.push_back ( vav[sel[a]] ) ;
-           vcn.push_back ( van[sel[a]] ) ;
-           cur->Append ( van[sel[a]].c_str() ) ;
+           vcn.Add ( van[sel[a]] ) ;
+           cur->Append ( van[sel[a]] ) ;
            }
         }
     }
@@ -267,13 +267,13 @@ void TAlignmentDialog::OnDel ( wxCommandEvent &ev )
               vcn[b-1] = vcn[b] ;
               }
            vcv.pop_back () ;
-           vcn.pop_back () ;
+           vcn.RemoveAt ( vcn.GetCount()-1 ) ;
            a-- ;
            }
         }
     cur->Clear () ;
-    for ( a = 0 ; a < vcn.size() ; a++ )
-        cur->Append ( vcn[a].c_str() ) ;
+    for ( a = 0 ; a < vcn.GetCount() ; a++ )
+        cur->Append ( vcn[a] ) ;
     }
 
 void TAlignmentDialog::OnUp ( wxCommandEvent &ev )
@@ -284,10 +284,10 @@ void TAlignmentDialog::OnUp ( wxCommandEvent &ev )
     b = sel[0] ;
     if ( b == 0 ) return ;
     TVector *d_v = vcv[b] ; vcv[b] = vcv[b-1] ; vcv[b-1] = d_v ;
-    string d_n = vcn[b] ; vcn[b] = vcn[b-1] ; vcn[b-1] = d_n ;
+    wxString d_n = vcn[b] ; vcn[b] = vcn[b-1] ; vcn[b-1] = d_n ;
     cur->Clear () ;
-    for ( a = 0 ; a < vcn.size() ; a++ )
-        cur->Append ( vcn[a].c_str() ) ;
+    for ( a = 0 ; a < vcn.GetCount() ; a++ )
+        cur->Append ( vcn[a] ) ;
     cur->SetSelection ( b-1 ) ;
     }
 
@@ -299,10 +299,10 @@ void TAlignmentDialog::OnDown ( wxCommandEvent &ev )
     b = sel[0] ;
     if ( b == vcv.size()-1 ) return ;
     TVector *d_v = vcv[b] ; vcv[b] = vcv[b+1] ; vcv[b+1] = d_v ;
-    string d_n = vcn[b] ; vcn[b] = vcn[b+1] ; vcn[b+1] = d_n ;
+    wxString d_n = vcn[b] ; vcn[b] = vcn[b+1] ; vcn[b+1] = d_n ;
     cur->Clear () ;
-    for ( a = 0 ; a < vcn.size() ; a++ )
-        cur->Append ( vcn[a].c_str() ) ;
+    for ( a = 0 ; a < vcn.GetCount() ; a++ )
+        cur->Append ( vcn[a] ) ;
     cur->SetSelection ( b+1 ) ;
     }
 

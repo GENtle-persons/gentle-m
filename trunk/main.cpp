@@ -51,26 +51,7 @@ int cmpint(int *first, int *second)
     {
     return *first > *second ;
     }    
-/*    
-vector <string> explode ( string sep , string s )
-    {
-    int a , b ;
-    vector <string> r ;
-    string n ;
-    for ( a = 0 ; a + sep.length() <= s.length() ; a++ )
-        {
-        for ( b = 0 ; b < sep.length() && s[a+b] == sep[b] ; b++ ) ;
-        if ( b == sep.length() )
-           {
-           r.push_back ( n ) ;
-           n = "" ;
-           }
-        else n += s[a] ;
-        }
-    if ( n != "" ) r.push_back ( n ) ;
-    return r ;
-    }
-*/
+
 wxArrayString explode ( wxString sep , wxString s )
     {
     int a , b ;

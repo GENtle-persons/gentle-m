@@ -44,7 +44,7 @@ void TGenBank::paste ( wxString s )
 void TGenBank::parseLines ()
     {
     success = false ;
-    vi.clear () ;
+    vi.Clear () ;
     vi_l.clear () ;
     vs_l.clear () ;
     
@@ -54,7 +54,7 @@ void TGenBank::parseLines ()
 
     int a ;
     for ( a = 0 ; a < vs.GetCount() ; a++ )
-        vi.push_back ( vs[a].Length() - trim(vs[a]).Length() ) ;
+        vi.Add ( vs[a].Length() - trim(vs[a]).Length() ) ;
 
     // Pre-processing
     for ( a = 0 ; a < vs.GetCount() ; a++ )
@@ -63,13 +63,13 @@ void TGenBank::parseLines ()
            {
            vs[a-1] += " " + trim ( vs[a] ) ;
            vs.Remove ( a ) ;
-           vi.erase ( vi.begin() + a ) ;
+           vi.RemoveAt ( a ) ;
            a-- ;
            }
         }
     
     wxArrayString t ;
-    TVI ti ;
+    wxArrayInt ti ;
     for ( a = 0 ; a < vs.GetCount() ; a++ )
         {
         if ( trim(vs[a]).Left(2) == "//" )
@@ -77,12 +77,12 @@ void TGenBank::parseLines ()
            vs_l.push_back ( t ) ;
            vi_l.push_back ( ti ) ;
            t.Clear () ;
-           ti.clear () ;
+           ti.Clear () ;
            }
         else if ( trim(vs[a]) != "" ) 
            {
            t.Add ( trim ( vs[a] ) ) ;
-           ti.push_back ( vi[a] ) ;
+           ti.Add ( vi[a] ) ;
            }
         }
     

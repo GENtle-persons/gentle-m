@@ -35,7 +35,7 @@ void SeqPrimer::show ( wxDC& dc )
     ya = -ya ;
     can->MyGetClientSize ( &xa , &yb ) ;
     yb += ya ;
-    for ( a = 0 ; a < pos.p.size() ; a++ )
+    for ( a = 0 ; a < pos.p.GetCount() ; a++ )
         {
         b = pos.p[a] ;
         int tx = pos.r[a].x , ty = pos.r[a].y ;
@@ -44,7 +44,7 @@ void SeqPrimer::show ( wxDC& dc )
         if ( tz < ya ) insight = false ;
         if ( ty > yb ) insight = false ;
         if ( can->getDrawAll() ) insight = true ;
-        if ( !insight && ty > yb ) a = pos.p.size() ;
+        if ( !insight && ty > yb ) a = pos.p.GetCount() ;
         if ( b > 0 && !insight ) cnt++ ;
         if ( b > 0 && insight ) // Character
            {
@@ -175,15 +175,15 @@ int SeqNum::arrange ( int n )
            x += wx-1 ;
            if ( x+wx*(can->blocksize+1) >= w )
               {
-              pos.addline ( lasta , pos.p.size() , y , y+wy-1 ) ;
-              lasta = pos.p.size()+1 ;
+              pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
+              lasta = pos.p.GetCount()+1 ;
               x = ox ;
               y += wy * ( can->seq.size() + can->blankline ) ;
               }
            }
         }
-    if ( lasta != pos.p.size()+1 ) 
-        pos.addline ( lasta , pos.p.size() , y , y+wy-1 ) ;
+    if ( lasta != pos.p.GetCount()+1 ) 
+        pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
     return lowy + bo*2 ;
     }
     
@@ -197,7 +197,7 @@ void SeqNum::show ( wxDC& dc )
     dc.SetTextBackground ( *wxWHITE ) ;
     dc.SetBackgroundMode ( wxSOLID ) ;
     char tt[100] ;
-    for ( a = 0 ; a < pos.p.size() ; a++ )
+    for ( a = 0 ; a < pos.p.GetCount() ; a++ )
         {
         sprintf ( tt , "%d" , pos.p[a]+offset ) ;
         dc.DrawText ( tt, pos.r[a].x, pos.r[a].y ) ;
@@ -240,8 +240,8 @@ int SeqDivider::arrange ( int n )
            x += wx-1 ;
            if ( x+wx*(can->blocksize+1) >= w )
               {
-              pos.addline ( lasta , pos.p.size() , y , y+wy-1 ) ;
-              lasta = pos.p.size()+1 ;
+              pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
+              lasta = pos.p.GetCount()+1 ;
               x = ox ;
               y += wy * ( can->seq.size() + can->blankline ) ;
               if ( a+1 < s.length() )
@@ -249,8 +249,8 @@ int SeqDivider::arrange ( int n )
               }
            }
         }
-    if ( lasta != pos.p.size()+1 ) 
-        pos.addline ( lasta , pos.p.size() , y , y+wy-1 ) ;
+    if ( lasta != pos.p.GetCount()+1 ) 
+        pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
     return lowy + bo*2 ;
     }
     
@@ -258,7 +258,7 @@ void SeqDivider::show ( wxDC& dc )
     {
     int a , w , h ;
     can->MyGetSize ( &w , &h ) ;
-    for ( a = 0 ; a < pos.p.size() ; a++ )
+    for ( a = 0 ; a < pos.p.GetCount() ; a++ )
         {
         int y = pos.r[a].y + can->charheight/2 ;
         dc.SetPen(*wxGREY_PEN);
