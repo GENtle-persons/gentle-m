@@ -21,7 +21,6 @@ class TImageDisplay : public ChildBase
     void initme () ;
     virtual wxString getName () ;
 
-//    virtual void OnClose(wxCloseEvent& event) ;
     virtual void OnDir ( wxCommandEvent &event ) ;
     virtual void OnFile ( wxCommandEvent &event ) ;
     
@@ -30,7 +29,6 @@ class TImageDisplay : public ChildBase
     TIMGreader *r ;
     
     TMyImagePanel *right ;
-    wxSplitterWindow *rl ;
     wxListBox *lb ;
     wxButton *bu ;
     

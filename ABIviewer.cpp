@@ -161,7 +161,6 @@ void TABIviewer::initme ()
 
     wxCheckBox *horiz = NULL ;
 
-#ifdef __WXMSW__ // LINUX
     // Toolbar
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
     myapp()->frame->InitToolBar(toolBar);
@@ -187,7 +186,7 @@ void TABIviewer::initme ()
     toolBar->AddControl ( horiz ) ;
     myapp()->frame->addDefaultTools ( toolBar ) ;
     toolBar->Realize() ;
-#endif
+    toolbar = toolBar ;
 
     hs = new wxSplitterWindow ( this , SPLIT_AMINOACIDS ) ;
 

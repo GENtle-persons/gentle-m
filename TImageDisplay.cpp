@@ -78,26 +78,23 @@ void TImageDisplay::initme ()
 
     SetMenuBar(menu_bar);
 
-    rl = new wxSplitterWindow ( this , -1 ) ;
-    right = new TMyImagePanel ( rl , IV_IMAGE ) ;
+    right = new TMyImagePanel ( this , IV_IMAGE ) ;
     right->imdi = this ;
     
-    wxSplitterWindow *ud ;
-    ud = new wxSplitterWindow ( rl , -1 ) ;
-
-    rl->SplitVertically ( ud , right , 300 ) ;
-    
-    lb = new wxListBox ( ud , IV_LIST , wxDefaultPosition , wxDefaultSize ,
-                            0 , NULL , wxLB_SORT ) ;
-    bu = new wxButton ( ud , IV_BUTTON , "" ) ;
-    
-    ud->SplitHorizontally ( bu , lb , 20 ) ;
-
+    wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
-//    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
-    v0->Add ( rl , 1 , wxEXPAND , 5 ) ;
-    SetSizer ( v0 ) ;
-    v0->Fit ( this ) ;
+    
+    lb = new wxListBox ( this , IV_LIST , wxDefaultPosition , wxDefaultSize ,
+                            0 , NULL , wxLB_SORT ) ;
+    bu = new wxButton ( this , IV_BUTTON , "" ) ;
+    
+    v0->Add ( bu , 0 , wxEXPAND|wxALL , 5 ) ;
+    v0->Add ( lb , 1 , wxEXPAND|wxALL , 5 ) ;
+    
+    h0->Add ( v0 , 0 , wxEXPAND , 5 ) ;
+    h0->Add ( right , 1 , wxEXPAND , 5 ) ;
+    SetSizer ( h0 ) ;
+    h0->Fit ( this ) ;
     
     wxString s_dir = myapp()->frame->LS->getOption ( "IMGDIR" , wxGetCwd() ) ;    
     ShowDir ( s_dir ) ;
@@ -109,7 +106,7 @@ void TImageDisplay::ShowDir ( wxString s )
     wxBeginBusyCursor() ;
     wxDir dir(s);
     lb->Clear() ;
-    bu->SetTitle ( s ) ;
+    bu->SetLabel ( s ) ;
 
     if ( !dir.IsOpened() )
         return;
@@ -145,8 +142,7 @@ void TImageDisplay::ShowDir ( wxString s )
    
 void TImageDisplay::OnDir ( wxCommandEvent &event )
     {
-    wxDirDialog dd ( this  , txt("t_choose_dir") , bu->GetTitle() ) ;
-//    dd.SetPath ( bu->GetTitle() ) ;
+    wxDirDialog dd ( this  , txt("t_choose_dir") , bu->GetLabel() ) ;
     if ( wxID_OK != dd.ShowModal() ) return ;
     ShowDir ( dd.GetPath() ) ;
     }
@@ -155,21 +151,21 @@ void TImageDisplay::OnFile ( wxCommandEvent &event )
     {
     wxBeginBusyCursor () ;
     wxString file = lb->GetStringSelection() ;
-    wxString dir = bu->GetTitle() ;
+    wxString dir = bu->GetLabel() ;
     wxString fn = dir + "/" + file ;
     
     if ( fn.AfterLast('.').Upper() == "IMG" )
-    	{
+    {
     	r->readFile ( fn ) ;
     	right->i = r->makeImage() ;
-     	}   	
-   	else
-   		{
-	    right->i.LoadFile ( fn , wxBITMAP_TYPE_ANY ) ;
+    }   	
+    else
+    {
+	right->i.LoadFile ( fn , wxBITMAP_TYPE_ANY ) ;
 /*	    if ( !right->i.LoadFile ( fn , wxBITMAP_TYPE_ANY ) )
-	    	wxMessageBox ( txt("t_invalid_image") , txt("msg_box") ) ;*/
-   		}    
-
+	    wxMessageBox ( txt("t_invalid_image") , txt("msg_box") ) ;*/
+    }    
+    
     wxClientDC dc ( right ) ;
     dc.Clear() ;
     
