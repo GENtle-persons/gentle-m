@@ -1,7 +1,27 @@
-FEATURE TO-DO:
-AA -> DNA
-*Plasmidring drehen
-Markierung invertieren
+FEATURE TO-DO:AA -> DNA*Plasmidring drehenMarkierung invertierenERROR TO-DO:Absturz, wenn keine DB vorhanden
 
-ERROR TO-DO:
-Absturz, wenn keine DB vorhanden
+----
+
+/*
+
+Bugs :
+
+* Absturz, wenn ABI- oder GenBank-Dateien als Kommandozeilenparameter übergeben werden
+
+* Optimierung Überhang-Primer?
+
+* Aminosäure-Statistik?
+
+
+
+Feature Requests :
+
+* Nur markierte Sequenz drucken
+
+* Kodierende Features in Sequenz numerieren
+
+* Bericht drucken : lange Zeilen in Vektor-Beschreibung umbrechen
+
+
+
+*/
