@@ -120,6 +120,7 @@ TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent , int _mode )
     vs->Fit ( this ) ;    
     this->Show () ;
     updateGlobalEnzymes () ;
+	vs->Fit ( this ) ;
 	}    
 
 void TEnzymeSettingsTab::updateGlobalEnzymes ()
@@ -211,7 +212,7 @@ ProgramOptionsDialog::ProgramOptionsDialog(wxWindow *parent, const wxString& tit
     Center () ;
     OK->SetDefault () ;
     OK->SetFocus() ;
-}
+    }
     
 void ProgramOptionsDialog::initGlobalEnzymes ()
 	{

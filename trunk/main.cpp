@@ -122,20 +122,20 @@ wxHashString _text ;
 
 void init_txt ( wxString lang )
     {
-    wxTextFile in ( myapp()->homedir + "\\variables.csv" ) ;
+    wxTextFile in ( myapp()->homedir + "/variables.csv" ) ;
     in.Open () ;
-    char t[10000] ;
+    unsigned char t[10000] ;
     bool firstline = true ;
     int ln = 1 ; // English is default
     TGenBank dummy ;
     for ( int lc = 0 ; lc < in.GetLineCount() ; lc++ )
         {
         wxArrayString v ;
-        strcpy ( t , in[lc].c_str() ) ;
+        strcpy ( (char*)t , in[lc].c_str() ) ;
         if ( *t == 0 ) break ;
-        char *c , *l ;
+        unsigned char *c , *l ;
         bool quote = false ;
-        for ( c = l = t ; *c ; c++ )
+        for ( c = l = (unsigned char*) t ; *c ; c++ )
            {
            if ( *c == '\\' )
               {
@@ -152,6 +152,8 @@ void init_txt ( wxString lang )
               v.Add ( dummy.trimQuotes(l) ) ;
               l = c+1 ;
               }
+//	   else if ( *c > 127 ) *c = 132 ;
+//{ wxMessageBox ( wxString::Format ( "%d %d\n" , (unsigned char)'Ä' , (unsigned char)*c ) ) ; *c = '_' ; }
            }
         if ( l < c )
            {

@@ -107,7 +107,8 @@ void TManageDatabaseDialog::initCopynMove ()
 #ifdef __WXMSW__
     p->GetClientSize ( &w , &h ) ;
 #else // LINUX 
-    GetClientSize ( &w , &h ) ;
+    p->GetClientSize ( &w , &h ) ;
+    w = 700 ; h = 550 ;
     w -= 20 ;
     h -= 40 ;
 #endif
