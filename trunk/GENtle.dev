@@ -1,7 +1,7 @@
 [Project]
 FileName=GENtle.dev
 Name=GENtle
-UnitCount=104
+UnitCount=106
 Type=0
 Ver=1
 ObjFiles=
@@ -1081,6 +1081,26 @@ BuildCmd=
 FileName=SendHTTP.cpp
 CompileCpp=1
 Folder=External sources
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit105]
+FileName=ExternalInterface.h
+CompileCpp=1
+Folder=Child-Types
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit106]
+FileName=ExternalInterface.cpp
+CompileCpp=1
+Folder=Child-Types
 Compile=1
 Link=1
 Priority=1000

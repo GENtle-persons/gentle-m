@@ -8,6 +8,8 @@ Virtual Gel (%Agarose/SDS, min bp/mw, marker)
 Homology Plot
 Export plot data
 Helical wheel
+Code-Sonne o.ä.
+Extract single strands
 
 That ligation thingy 
     

@@ -52,6 +52,13 @@ BEGIN_EVENT_TABLE(SequenceCanvas, wxScrolledWindow)
     EVT_MENU(PRIMER_BACKWARD, SequenceCanvas::OnPrimerBackward)
     EVT_MENU(PRIMER_BOTH, SequenceCanvas::OnPrimerBoth)
     EVT_MENU(PRIMER_MUTATION, SequenceCanvas::OnPrimerMutation)
+    
+    EVT_MENU(STRAND_COPY_35,SequenceCanvas::OnStrandCopy35)
+    EVT_MENU(STRAND_COPY_53,SequenceCanvas::OnStrandCopy53)
+    EVT_MENU(STRAND_COPY_BOTH,SequenceCanvas::OnStrandCopyBoth)
+    EVT_MENU(STRAND_NEW_35,SequenceCanvas::OnStrandNew35)
+    EVT_MENU(STRAND_NEW_53,SequenceCanvas::OnStrandNew53)
+    EVT_MENU(STRAND_NEW_BOTH,SequenceCanvas::OnStrandNewBoth)
 
     EVT_MENU(MDI_CUT, SequenceCanvas::OnCut)
     EVT_MENU(MDI_COPY, SequenceCanvas::OnCopy)
@@ -1970,6 +1977,50 @@ void SequenceCanvas::insertRestrictionSite ( bool left )
     updateEdit ( v , id , _from ) ;
     m.remark() ;
     }        
+
+
+void SequenceCanvas::OnStrandCopy53(wxCommandEvent& event)
+	{
+	if ( !p || !p->vec ) return ;
+	wxString s = p->vec->getStrand53() ;
+	s = "5'->3' : 5'-" + s + "-3'" ;
+    if (!wxTheClipboard->Open()) return ;
+    wxTheClipboard->SetData( new wxTextDataObject(s) );
+    wxTheClipboard->Close();
+	}    
+
+void SequenceCanvas::OnStrandCopy35(wxCommandEvent& event)
+	{
+	if ( !p || !p->vec ) return ;
+	wxString s = p->vec->getStrand35() ;
+	s = "3'->5' : 5'-" + s + "-3'" ;
+    if (!wxTheClipboard->Open()) return ;
+    wxTheClipboard->SetData( new wxTextDataObject(s) );
+    wxTheClipboard->Close();
+	}    
+
+void SequenceCanvas::OnStrandCopyBoth(wxCommandEvent& event)
+	{
+	if ( !p || !p->vec ) return ;
+	wxString s = p->vec->getStrand53() ;
+	s = "5'->3' : 5'-" + s + "-3'\n" ;
+	s += "3'->5' : 5'-" + p->vec->getStrand35() + "-3'" ;
+    if (!wxTheClipboard->Open()) return ;
+    wxTheClipboard->SetData( new wxTextDataObject(s) );
+    wxTheClipboard->Close();
+	}    
+
+void SequenceCanvas::OnStrandNew53(wxCommandEvent& event)
+	{
+	}    
+
+void SequenceCanvas::OnStrandNew35(wxCommandEvent& event)
+	{
+	}    
+
+void SequenceCanvas::OnStrandNewBoth(wxCommandEvent& event)
+	{
+	}    
 
 
 // -------------------------------------------------------- TMarkMem

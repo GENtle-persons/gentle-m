@@ -1379,6 +1379,8 @@ void MyChild::updateToolbar ()
     cSequence->SetFocus() ;
     }    
     
+
+    
 // *************************
 
 MySplitter::MySplitter ( wxWindow *win , int id , MyChild *child )
