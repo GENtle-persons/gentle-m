@@ -6,6 +6,7 @@
 BEGIN_EVENT_TABLE(TImageDisplay, MyChildBase)
     EVT_BUTTON(IV_BUTTON,TImageDisplay::OnDir)
     EVT_LISTBOX(IV_LIST,TImageDisplay::OnFile)
+    EVT_CHECKBOX(IV_CB, TImageDisplay::OnCB)
     EVT_CLOSE(ChildBase::OnClose)
     EVT_SET_FOCUS(ChildBase::OnFocus)
 
@@ -87,15 +88,18 @@ void TImageDisplay::initme ()
     lb = new wxListBox ( this , IV_LIST , wxDefaultPosition , wxDefaultSize ,
                             0 , NULL , wxLB_SORT ) ;
     bu = new wxButton ( this , IV_BUTTON , "" , wxDefaultPosition , wxSize ( 180 , -1 ) ) ;
+    cb = new wxCheckBox ( this , IV_CB , txt("img_show_text" ) ) ;
     
     v0->Add ( bu , 0 , wxEXPAND|wxALL , 5 ) ;
     v0->Add ( lb , 1 , wxEXPAND|wxALL , 5 ) ;
+    v0->Add ( cb , 0 , wxEXPAND|wxALL , 5 ) ;
     
     h0->Add ( v0 , 0 , wxEXPAND , 5 ) ;
     h0->Add ( right , 1 , wxEXPAND , 5 ) ;
     SetSizer ( h0 ) ;
     h0->Fit ( this ) ;
     
+    cb->SetValue ( true ) ;
     wxString s_dir = myapp()->frame->LS->getOption ( "IMGDIR" , wxGetCwd() ) ;    
     ShowDir ( s_dir ) ;
     myapp()->frame->setChild ( this ) ;
@@ -177,6 +181,13 @@ void TImageDisplay::OnFile ( wxCommandEvent &event )
     right->Refresh () ;
     wxEndBusyCursor () ;
     }
+    
+void TImageDisplay::OnCB ( wxCommandEvent &event )
+	{
+	right->show_text = cb->GetValue() ;
+	right->ClearBackground () ;
+	right->Refresh () ;
+	}    
 
 wxString TImageDisplay::getName ()
     {
@@ -190,6 +201,7 @@ TMyImagePanel::TMyImagePanel ( wxWindow *parent , int id )
     {
     bmp = NULL ;
     printing = false ;
+    show_text = true ;
     }
     
 TMyImagePanel::~TMyImagePanel ()
@@ -200,6 +212,8 @@ TMyImagePanel::~TMyImagePanel ()
 void TMyImagePanel::OnDraw(wxDC& pdc)
     {
     if ( !bmp ) return ;
+
+    pdc.SetFont ( *MYFONT ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
 //    if ( printing )
         {
         int w , h , iw , ih ;
@@ -222,7 +236,7 @@ void TMyImagePanel::OnDraw(wxDC& pdc)
            xs = ys ;
            }
         
-        double factor = 0.6 ; factor = 1.0 ;
+        double factor = 0.6 ; factor = 0.95 ;
         xs *= factor ;
         ys *= factor ;        
         pdc.SetUserScale ( xs , ys ) ;
@@ -242,21 +256,20 @@ void TMyImagePanel::OnDraw(wxDC& pdc)
         y /= ys ;
         
         pdc.DrawBitmap ( *bmp , (int)x , (int)y ) ;
-
-        for ( int i = 0 ; i < imdi->r->items.size() ; i++ )
-           {
-           imdi->r->items[i].draw ( pdc , (int)x , (int)y , (int)(x+nw) , (int)(y+nh) ) ;
-           }
         
-        double tx = w - tw ;
-        double ty = h ;
-        tx /= (double) 2 * xs ;
-        ty = y ;
-        ty -= ( (double) th ) / ys ;
-        pdc.DrawText ( file , (int)tx , (int)ty ) ;
+        if ( show_text )
+        	{
+            for ( int i = 0 ; i < imdi->r->items.size() ; i++ )
+               imdi->r->items[i].draw ( pdc , (int)x , (int)y , (int)(x+nw) , (int)(y+nh) ) ;
+            
+            double tx = w - tw ;
+            double ty = h ;
+            tx /= (double) 2 * xs ;
+            ty = y ;
+            ty -= ( (double) th ) / ys ;
+            pdc.DrawText ( file , (int)tx , (int)ty ) ;
+            }    
 
-//        pdc.DrawLine ( 0 , 0 , tx , ty ) ;
-        
         pdc.SetUserScale ( 1 , 1 ) ;
         
         }
@@ -290,6 +303,15 @@ void TMyImagePanel::OnEvent(wxMouseEvent& event)
         }
     }
     
+void TMyImagePanel::WriteIntoBitmap(wxBitmap &bmp2)
+    {
+    bmp2 = wxBitmap ( bmp->GetWidth() , bmp->GetHeight() , bmp->GetDepth() ) ;
+    wxMemoryDC memdc ;
+    memdc.SelectObject ( bmp2 ) ;
+    memdc.Clear () ;
+    OnDraw ( memdc ) ;    
+    }
+    
 void TMyImagePanel::OnSaveAsBitmap(wxCommandEvent &event)
     {
     char t[1000] , *c , *d ;
@@ -298,15 +320,23 @@ void TMyImagePanel::OnSaveAsBitmap(wxCommandEvent &event)
     for ( c = t ; *c ; c++ )
        if ( *c == '.' ) d = c ;
     if ( d ) *d = 0 ;    
-    myapp()->frame->saveImage ( bmp , t ) ;
+
+    wxBitmap bmp2 ;
+    WriteIntoBitmap ( bmp2 ) ;
+    myapp()->frame->saveImage ( &bmp2 , t ) ;
     }
     
 void TMyImagePanel::OnCopy(wxCommandEvent &event)
     {
     if (wxTheClipboard->Open())
       {
-        wxTheClipboard->SetData( new wxBitmapDataObject ( *bmp ) );
-        wxTheClipboard->Close();
+      wxBitmap bmp2 ;
+      WriteIntoBitmap ( bmp2 ) ;
+      wxMemoryDC memdc ;
+      memdc.SelectObject ( bmp2 ) ;
+      OnDraw ( memdc ) ;
+      wxTheClipboard->SetData( new wxBitmapDataObject ( bmp2 ) );
+      wxTheClipboard->Close();
       }
     }
 
