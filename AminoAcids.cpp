@@ -478,6 +478,7 @@ void TAminoAcids::OnListBox ( wxCommandEvent& event )
         stat = NULL ;
         sc2 = NULL ;
         }
+        
     if ( t == txt("desc") )
         {
         if ( update ) desc->SetValue ( vec->getDescription() )  ;

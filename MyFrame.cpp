@@ -1650,6 +1650,7 @@ void TTestSuite::Step()
     
     wxString x ;
     x = ac->getName() ;
+    x += " [" + ac->def + "] " ;
     x += wxString::Format ( " [%ds, #%d]" , wxGetLocalTime()-start , cnt ) ;
     if ( ac->vec ) x += wxString::Format ( ", seq : %d" , ac->vec->getSequenceLength() ) ;
     if ( ac->cSequence ) x += wxString::Format ( ", EditMode : %d" , ac->cSequence->getEditMode() ) ;
