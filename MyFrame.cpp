@@ -25,7 +25,7 @@ BEGIN_EVENT_TABLE(MyFrame, MyFrameType)
     EVT_MENU(MDI_MANAGE_DATABASE, MyFrame::OnManageDatabase)
     EVT_MENU(PROGRAM_OPTIONS, MyFrame::OnProgramOptions)
     
-    EVT_MENU(MDI_RESTRICTION, MyFrame::BollocksMenu)
+    EVT_MENU(MDI_RESTRICTION, MyFrame::TestMenu)
     EVT_MENU(MDI_LIGATION, MyFrame::BollocksMenu)
     EVT_MENU(MDI_PRINT_REPORT, MyFrame::BollocksMenu)
 
@@ -43,7 +43,7 @@ BEGIN_EVENT_TABLE(MyFrame, MyFrameType)
 END_EVENT_TABLE()
 
 // Define my frame constructor
-#define ACC_ENT 37
+#define ACC_ENT 38
 MyFrame::MyFrame(wxWindow *parent,
                  const wxWindowID id,
                  const wxString& title,
@@ -94,6 +94,7 @@ MyFrame::MyFrame(wxWindow *parent,
     entries[34].Set(wxACCEL_CTRL, WXK_TAB, MDI_NEXT_WINDOW);
     entries[35].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_TAB, MDI_PREV_WINDOW);
     entries[36].Set(wxACCEL_NORMAL, WXK_F8, MDI_TOGGLE_IDNA);
+    entries[37].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_F12, MDI_RESTRICTION);
     
     wxAcceleratorTable accel(ACC_ENT, entries);
     SetAcceleratorTable(accel);
@@ -1305,7 +1306,8 @@ void MyFrame::update2version ( wxString ver )
        out.Write ( uc , uv.size() ) ;
        out.Close () ;
        delete uc ;
-       do_run = "\"" + do_run + "\" /S /D=\"" ;
+       do_run = "\"" + do_run + "\" /D=\"" ;
+//       do_run = "\"" + do_run + "\" /S /D=\"" ;
        do_run += myapp()->homedir ;
        do_run += "\"" ;
 //       sd.Close () ;
@@ -1449,7 +1451,43 @@ void MyFrame::OnMDIClose(wxCommandEvent& event)
     {
     if ( lastChild ) lastChild->Close ( TRUE ) ;
     }
-        
+    
+TVirtualGel *MyFrame::useGel ( wxString type )
+	{
+	int a ;
+	TVirtualGel *gel ;
+	for ( a = 0 ; a < children.GetCount() ; a++ )
+		{
+ 		if ( children[a]->def != "GEL" ) continue ;
+ 		gel = (TVirtualGel*) children[a] ;
+ 		if ( gel->type == type ) return gel ;
+		}    
+		
+	gel = new TVirtualGel ( getCommonParent() , "GEL " + type ) ;
+	gel->type = type ;
+
+    // Give it an icon
+#ifdef __WXMSW__
+    gel->SetIcon(wxIcon("chrt_icn"));
+#else
+    gel->SetIcon(wxIcon( mondrian_xpm ));
+#endif
+
+    gel->initme () ;
+
+    gel->Show() ;
+    gel->Maximize() ;
+    gel->showName() ;
+    
+    mainTree->addChild ( gel , TYPE_MISC ) ;
+    setChild ( gel ) ;
+	return gel ;
+	}    
+
+void MyFrame::TestMenu(wxCommandEvent& event)
+    {
+    useGel ( "DNA" ) ;
+    }            
                 
 // DROP TARGET
 

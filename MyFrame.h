@@ -19,6 +19,7 @@ class TXMLfile ;
 class TCalculator ;
 class TPDB ;
 class TEnzymeRules ;
+class TVirtualGel ;
 
 typedef wxFrame MyFrameType ;
 
@@ -62,6 +63,7 @@ public:
     
     virtual void RerouteMenu(wxCommandEvent& event);
     virtual void BollocksMenu(wxCommandEvent& event);
+    virtual void TestMenu(wxCommandEvent& event);
     virtual void OnMDIClose(wxCommandEvent& event);
 
     virtual void OnEnzymeEditor(wxCommandEvent& event);
@@ -96,6 +98,7 @@ public:
     virtual void activateChild ( int a ) ;
     virtual void lockDisplay ( bool lock = true ) ;
     virtual bool isLocked () ;
+    virtual TVirtualGel *useGel ( wxString type ) ;
 
     TMainTree *mainTree ;
     TStorage *LS ;

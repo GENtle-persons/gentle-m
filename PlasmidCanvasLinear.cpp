@@ -248,6 +248,8 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
            }
         }
     dc.SetFont(*smallFont);
+    dc.SetPen ( *wxBLACK_PEN ) ;
+    dc.SetTextForeground ( *wxBLACK ) ;
 }
 
 void PlasmidCanvas::drawLinearORFs ( wxDC &dc )

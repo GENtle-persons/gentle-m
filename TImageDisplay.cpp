@@ -41,6 +41,7 @@ END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(TMyImagePanel, wxPanel)
     EVT_SIZE(TMyImagePanel::OnSize)
+    EVT_PAINT(TMyImagePanel::OnPaint)
 
     EVT_MOUSE_EVENTS(TMyImagePanel::OnEvent)
     EVT_MENU(IV_MENU_SAVE_AS_BITMAP, TMyImagePanel::OnSaveAsBitmap)
@@ -305,4 +306,10 @@ void TMyImagePanel::OnPrint(wxCommandEvent &event)
     pdc->EndPage () ;
     pdc->EndDoc () ;
     }
-    
+
+void TMyImagePanel::OnPaint(wxPaintEvent& event)
+	{
+    wxPaintDC dc(this);
+    OnDraw ( dc ) ;
+    }
+
