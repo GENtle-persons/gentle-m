@@ -148,6 +148,7 @@ class SeqPrimer : public SeqDNA
     public :
     SeqPrimer ( SequenceCanvas *ncan = NULL ) { 
         vec = NULL ; 
+        circular = false ;
         init ( ncan ) ; 
         myname = "PRIMER" ; }
     virtual void show ( wxDC& dc ) ;
@@ -157,6 +158,7 @@ class SeqPrimer : public SeqDNA
     
     // Variables
     string myname ;
+    bool circular ;
     } ;
 
 class SeqAlign : public SeqBasic

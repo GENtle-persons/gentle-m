@@ -38,7 +38,7 @@ void TPrimer::makeStats ()
     
 string TPrimer::report ()
     {
-    string r , s = sequence ;
+    string r ;
     int a , l = sequence.length() ;
     TVector v ;
     char u[100] ;

@@ -124,6 +124,7 @@ class TVector
     virtual void setIUPAC ( char b , char *s , char *pac = NULL ) ;
     virtual string transformSequence ( bool inverse , bool reverse ) ;
     virtual char getNucleotide ( int pos , bool complement = false ) ;
+    virtual void setNucleotide ( int pos , char t ) ;
     virtual char getComplement ( char c ) ;
     virtual void ligate_right ( TVector &v , bool inverted = false ) ;
     virtual void closeCircle () ;

@@ -566,6 +566,7 @@ void MyChild::OnViewMode(wxCommandEvent& event)
         swu->Unsplit ( swl ) ;
         viewMode = true ;
         cPlasmid->SetFocus() ;
+        OnZoom ( event ) ;
         }
     else
         {
@@ -580,6 +581,7 @@ void MyChild::OnViewMode(wxCommandEvent& event)
         swl->Show ( TRUE ) ;
         cSequence->Show ( TRUE ) ;
         viewMode = false ;
+        OnZoom ( event ) ;
         Refresh () ;
         cSequence->SetFocus() ;
         }

@@ -55,8 +55,8 @@ TPrimerDesign::TPrimerDesign(MyFrame *parent,
     vc = new TVector ;
     w = new TVector ;
     vec->setFromVector ( *_vec ) ;
-//    while ( vec->items.size() ) vec->items.pop_back() ;
-    *w = *vec ;
+    w->setFromVector ( *vec ) ;
+//    *w = *vec ;
     
     aa_state = AA_ALL ;
     aa_disp = AA_ONE ;
@@ -77,13 +77,10 @@ TPrimerDesign::TPrimerDesign(MyFrame *parent,
     for ( a = 0 ; a < primer.size() ; a++ )
         primer[a].getSequenceFromVector ( vec ) ;
         
-//    vec = new TVector ( this ) ;
     def = "PrimerDesign" ;
-//    vec->name = title.c_str() ;
     from = -1 ;
     stat = NULL ;
     lastPrimerActivated = -1 ;
-    
     }
     
 TPrimerDesign::~TPrimerDesign ()
@@ -599,7 +596,8 @@ void TPrimerDesign::updateResultSequence()
            t = sc->seq[4+show_features]->s[a] ;
            if ( t != ' ' ) t = w->getComplement ( t ) ;
            }
-        if ( t != ' ' ) w->sequence[a] = t ;
+        if ( t != ' ' ) w->setNucleotide ( a , t ) ;
+        //w->sequence[a] = t ;
         }
     
     w->recalculateCuts() ;
