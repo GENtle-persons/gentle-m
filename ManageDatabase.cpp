@@ -508,45 +508,38 @@ string TManageDatabaseDialog::getFileName ( string dbname )
 void TManageDatabaseDialog::initDatabases ()
     {
     wxPanel *p = pDatabases ;
-
     nb->AddPage ( p , txt("t_databases") ) ;
-    int w , h ;
-#ifdef __WXMSW__
-    p->GetClientSize ( &w , &h ) ;
-#else // LINUX
-    GetClientSize ( &w , &h ) ;
-    w -= 20 ;
-    h -= 40 ;
-#endif
 
-    new wxStaticText ( p , -1 , txt("t_databases") , wxPoint ( bo , bo ) ) ;
-    pd_db = new wxListBox ( p , MD_PD_DBLIST ,
-                                wxPoint ( bo , th ) ,
-                                wxSize ( w/3 , h - th ) ) ;
-                                
-    pd_db_name = new wxStaticText ( p , -1 , "" , 
-                                    wxPoint ( w/3+bo , th*1 ) ,
-                                    wxSize ( 500 , th ) ) ;
-                                    
-    pd_db_file = new wxStaticText ( p , -1 , "" ,
-                                    wxPoint ( w/3+bo , th*2 ) ,
-                                    wxSize ( 500 , th ) ) ;
-                                    
-    new wxButton ( p , MD_PD_ADD , txt("b_add") , 
-                        wxPoint ( w/3+bo*2 , th*3 ) ,
-                        wxSize ( w/5 , th ) ) ;
-                        
-    new wxButton ( p , MD_PD_DEL , txt("b_del") , 
-                        wxPoint ( w/3+bo*3+w/5 , th*3 ) ,
-                        wxSize ( w/5 , th ) ) ;
+    wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *v1 = new wxBoxSizer ( wxVERTICAL ) ;
+    wxFlexGridSizer *g1 = new wxFlexGridSizer ( 3 , 3 , 5 , 5 ) ;
 
-    new wxButton ( p , MD_PM_NEW , txt("b_new") , 
-                        wxPoint ( w/3+bo*2 , th*4+bo ) ,
-                        wxSize ( w/5 , th ) ) ;
+    g1->Add ( new wxStaticText ( p , -1 , "" ) , 1 , wxEXPAND , 5 ) ;
+    g1->Add ( new wxButton ( p , MD_PD_DEL , txt("b_del") ) , 1 , wxEXPAND , 5 ) ;
+    g1->Add ( new wxButton ( p , MD_PD_DEFAULT , txt("b_set_default") ) , 1 , wxEXPAND , 5 ) ;
 
-    new wxButton ( p , MD_PD_DEFAULT , txt("b_set_default") , 
-                        wxPoint ( w/3+bo*3+w/5 , th*4+bo ) ,
-                        wxSize ( w/5 , th ) ) ;
+    g1->Add ( new wxStaticText ( p , -1 , txt("t_files") ) , 1 , wxEXPAND , 5 ) ;
+    g1->Add ( new wxButton ( p , MD_PD_ADD , txt("b_add") ) , 1 , wxEXPAND , 5 ) ;
+    g1->Add ( new wxButton ( p , MD_PM_NEW , txt("b_new") ) , 1 , wxEXPAND , 5 ) ;
+
+    g1->Add ( new wxStaticText ( p , -1 , txt("t_mysql") ) , 1 , wxEXPAND , 5 ) ;
+    g1->Add ( new wxButton ( p , MD_PD_ADD_MYSQL , txt("b_add") ) , 1 , wxEXPAND , 5 ) ;
+    g1->Add ( new wxButton ( p , MD_PM_NEW_MYSQL , txt("b_new") ) , 1 , wxEXPAND , 5 ) ;
+
+    pd_db_name = new wxStaticText ( p , -1 , "" ) ;
+    pd_db_file = new wxStaticText ( p , -1 , "" ) ;
+    v1->Add ( new wxStaticText ( p , -1 , txt("t_databases") ) , 0 , wxEXPAND , 5 ) ;
+    v1->Add ( new wxStaticText ( p , -1 , "" ) , 0 , wxEXPAND , 5 ) ;
+    v1->Add ( pd_db_name , 0 , wxEXPAND , 5 ) ;
+    v1->Add ( pd_db_file , 0 , wxEXPAND , 5 ) ;
+    v1->Add ( new wxStaticText ( p , -1 , "" ) , 0 , wxEXPAND , 5 ) ;
+    v1->Add ( g1 , 1 , wxEXPAND | wxALL , 5 ) ;
+    
+    pd_db = new wxListBox ( p , MD_PD_DBLIST ) ;
+    h1->Add ( pd_db , 1 , wxEXPAND , 5 ) ;
+    h1->Add ( v1 , 1 , wxEXPAND , 5 ) ;
+    
+    SetSizer ( h1 ) ;
 
     pd_loadList () ;
     pd_db->SetStringSelection ( txt("local_db") ) ;
@@ -560,8 +553,8 @@ void TManageDatabaseDialog::accessDB ()
     name = pd_db->GetStringSelection().c_str() ;
     for ( a = 0 ; db_name[a] != name ; a++ ) ;
     file = db_file[a] ;
-    pd_db_name->SetTitle ( db_name[a].c_str() ) ;
-    pd_db_file->SetTitle ( db_file[a].c_str() ) ;
+    pd_db_name->SetTitle ( wxString::Format ( txt("t_db_name") , db_name[a].c_str() ) ) ;
+    pd_db_file->SetTitle ( wxString::Format ( txt("t_db_location") , db_file[a].c_str() ) ) ;
     }
 
 void TManageDatabaseDialog::pd_loadList ()

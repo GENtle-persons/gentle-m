@@ -317,6 +317,9 @@ enum {
     SEQ_FEAT_HIDE,
     SEQ_FEAT_SHOW,
     
+    MD_PD_ADD_MYSQL,
+    MD_PM_NEW_MYSQL,
+    
     } ;
 
 #endif
