@@ -1754,7 +1754,6 @@ TAlignment *SequenceCanvas::getAln()
 
 void SequenceCanvas::startEdit ( wxString id )
     {
-    myass ( !getEditMode() , "SequenceCanvas::startEdit" ) ;
     setEditMode ( true ) ;
     findID(id)->s.Append ( " " ) ;
     if ( child ) child->vec->addToSequence ( " " ) ;
@@ -1766,13 +1765,10 @@ void SequenceCanvas::startEdit ( wxString id )
     
 void SequenceCanvas::stopEdit ()
     {
-    myass ( getEditMode() , "SequenceCanvas::stopEdit1" ) ;
     setEditMode ( false ) ;
-    myass ( lastmarked >= 0 , "SequenceCanvas::stopEdit2" ) ;
-    myass ( seq[lastmarked] , "SequenceCanvas::stopEdit3" ) ;
     if ( child ) child->vec->eraseSequence ( child->vec->getSequenceLength()-1 , 1 ) ;
     wxString id ;
-    if ( lastmarked >= 0 )
+    if ( lastmarked >= 0 && lastmarked < seq.GetCount() )
         {
         id = seq[lastmarked]->whatsthis() ;
         seq[lastmarked]->s.erase ( seq[lastmarked]->s.length()-1 , 1 ) ;
@@ -1780,7 +1776,7 @@ void SequenceCanvas::stopEdit ()
         }    
     arrange () ;
     if ( id != "" ) mark ( id , -1 , -1 ) ;
-    }
+     }
 
 void SequenceCanvas::rsHideLimit ( wxCommandEvent &ev )
     {
