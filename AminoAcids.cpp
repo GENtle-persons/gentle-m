@@ -136,7 +136,7 @@ void TAminoAcids::initme ()
     Hide();
     
     mylog ( "TAminoAcids::initme" , "5" ) ;
-    wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+    v0 = new wxBoxSizer ( wxVERTICAL ) ;
     
     h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
     v1 = new wxBoxSizer ( wxVERTICAL ) ;
@@ -240,6 +240,8 @@ void TAminoAcids::showStat ()
     int num[256] ;
     int a , b ;
     float mW = 0 ;
+    
+    // Key values
     for ( a = 0 ; a < 256 ; a++ ) num[a] = 0 ;
     for ( a = 0 ; a < vec->getSequenceLength() ; a++ )
         {
@@ -262,6 +264,7 @@ void TAminoAcids::showStat ()
     t.Replace ( "%f" , "%9.2f" ) ;
     t = wxString::Format ( t , noaa , mW , pI , ex , abs ) ;
     
+    // Amino acid count
     wxString t2 ;
     b = 0 ;
     for ( a = 'A' ; a < 'Z' ; a++ )
@@ -277,7 +280,41 @@ void TAminoAcids::showStat ()
 	    else if ( a+1 != 'Z' ) t2 += "      " ;
     	}    
     t += "\n" + wxString::Format ( txt("aa_info2") , num['D']+num['E'] , num['R']+num['K'] ) ;
-   	t += "\n\n" + t2 ;
+   	t += "\n\n" + t2 + "\n\n" ;
+   	
+   	// Atomic composition & hydrophobicity
+   	int carbon = 0 , hydrogen = 2 , nitrogen = 0 , oxygen = 1 , sulfur = 0 ;
+   	float hydropathicity = 0 ;
+    for ( a = 0 ; a < vec->getSequenceLength() ; a++ )
+        {
+        unsigned char c = (unsigned char)vec->getSequenceChar ( a ) ;
+        TAAProp p = vec->getAAprop ( c ) ;
+        carbon += p.carbon ;
+        hydrogen += p.hydrogen ;
+        nitrogen += p.nitrogen ;
+        oxygen += p.oxygen ;
+        sulfur += p.sulfur ;
+        hydropathicity += p.hp_kd ;
+        }
+    int atom_total = carbon + hydrogen + nitrogen + oxygen + sulfur ;   	
+   	t += wxString::Format ( txt("aa_info3") , atom_total , carbon , hydrogen , nitrogen , oxygen , sulfur ) ;
+   	
+   	// Half-life
+   	if ( vec->getSequenceLength() > 0 )
+   		{
+	    unsigned char c = (unsigned char)vec->getSequenceChar ( 0 ) ;
+   		TAAProp p = vec->getAAprop ( c ) ;
+   		wxString hl_mammal = p.get_halflife_text ( p.hl_mammal ) ;
+   		wxString hl_yeast = p.get_halflife_text ( p.hl_yeast ) ;
+   		wxString hl_ecoli = p.get_halflife_text ( p.hl_ecoli ) ;
+   		t += "\n\n" + wxString::Format ( txt("aa_info4") , 
+     						hl_mammal.c_str() , 
+     						hl_yeast.c_str() ,
+     						hl_ecoli.c_str() ) ;
+
+        hydropathicity /= vec->getSequenceLength() ;
+        t += "\n" + wxString::Format ( txt("aa_info5") , hydropathicity ) ;
+   		}  		
     
     stat->SetValue ( t ) ;
     stat->SetFont ( *MYFONT ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
@@ -611,8 +648,9 @@ void TAminoAcids::OnListBox ( wxCommandEvent& event )
         }
     if ( !update )
         {
+//        GetToolBar()->Refresh () ;
         h1->Layout() ;
-        GetToolBar()->Refresh () ;
+        lb->Refresh () ;
         }
     sc->SetFocus() ;
     }

@@ -35,10 +35,15 @@ class TAAProp
     virtual void set_cf ( int pa , int pb , int pt , float f0 , float f1 , float f2 , float f3 ) ;
     virtual void set_data ( float _mw , float _pi , wxString _tla ) ;
     virtual void set_hp ( float _hp_kd , float _hp_hw ) ;
+    virtual void set_atoms ( int C , int H , int N , int O , int S ) ;
+    virtual void set_halflife ( int mammal , int yeast , int ecoli ) ;
+    virtual wxString get_halflife_text ( int hl ) ;
     wxString tla ;
     float mw , pi ;
     float cf_f[4] ;
     int cf_pa , cf_pb , cf_pt ;
+    int carbon , hydrogen , nitrogen , oxygen , sulfur ;
+    int hl_mammal , hl_yeast , hl_ecoli ;
     float hp_kd , hp_hw ;
     vector <float> data ; // For temporary data only
     } ;
