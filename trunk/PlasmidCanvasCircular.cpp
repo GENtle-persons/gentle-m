@@ -674,7 +674,8 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
            invokeVectorEditor ( "enzyme" , rs ) ;
         else if ( event.MiddleDown() )
            {
-           TRestrictionEditor ed ( myapp()->frame , "" , wxPoint(-1,-1) , 
+           p->runRestriction ( s ) ;
+/*           TRestrictionEditor ed ( myapp()->frame , "" , wxPoint(-1,-1) , 
                       wxSize(600,400) , 
                       wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL);
            ed.pre = s ;
@@ -684,7 +685,7 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
               {
               p->vec->cocktail = ed.cocktail ;
               p->vec->doAction() ;
-              }
+              }*/
            }
         }
     else if ( vo != -1 )

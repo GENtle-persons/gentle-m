@@ -14,6 +14,8 @@ class TMainTree ;
 class TMainTreeItem ;
 class MyChild ;
 class TURLtext ;
+class TRestrictionEditor ;
+class TVirtualGel ;
 
 class MySplitter : public wxSplitterWindow
     {
@@ -94,6 +96,8 @@ public:
     virtual wxString getName () ;
     virtual void updateSequenceCanvas ( bool remember = false ) ;
     virtual wxString doExtractAA ( bool coding = true ) ;
+    virtual void runRestriction ( wxString s ) ;
+    virtual void addFragmentsToGel ( wxString title , wxArrayInt &cuts , TVirtualGel *gel , TRestrictionEditor &ed ) ;
     
     protected :
     virtual void updateToolbar () ;

@@ -5,12 +5,14 @@ BEGIN_EVENT_TABLE(TRestrictionEditor, wxDialog )
     EVT_LIST_ITEM_ACTIVATED(RSE_RES_LL, TRestrictionEditor::res_ll_act)
     EVT_CHOICE(RSE_RES_DD,TRestrictionEditor::res_dd)
     EVT_CHECKBOX(RSE_COC_CB,TRestrictionEditor::res_checkbox)
+    EVT_CHECKBOX(RSE_ADD2GEL,TRestrictionEditor::res_cb_add2gel)
     EVT_RADIOBOX(RSE_RES_RB,TRestrictionEditor::res_cb)
     EVT_BUTTON(RSE_RES_AC,TRestrictionEditor::res_ac)
     EVT_BUTTON(RSE_COC_CT,TRestrictionEditor::res_ct)
     EVT_BUTTON(RSE_COC_RM,TRestrictionEditor::res_coc_rm)
     EVT_BUTTON(RSE_RES_OK,TRestrictionEditor::onOK)
     EVT_BUTTON(RSE_RES_CC,TRestrictionEditor::onCancel)
+    EVT_BUTTON(RSE_ADD_ALL,TRestrictionEditor::onAddAll)
     EVT_LIST_ITEM_SELECTED(RSE_COC_LL, TRestrictionEditor::res_coc_ll)
     EVT_LIST_COL_CLICK(RSE_RES_LL,TRestrictionEditor::res_ll_col)
     EVT_CHAR_HOOK(TRestrictionEditor::OnCharHook)
@@ -156,8 +158,8 @@ void TRestrictionEditor::initRestrictionPage ()
                 1 , wxEXPAND , 5 ) ;
 
 
-    wxFlexGridSizer *v3a = new wxFlexGridSizer ( 4 , 1 , 5 , 5 ) ;
-    wxFlexGridSizer *v3b = new wxFlexGridSizer ( 4 , 1 , 5 , 5 ) ;
+	wxBoxSizer *v3a = new wxBoxSizer ( wxVERTICAL ) ;
+	wxBoxSizer *v3b = new wxBoxSizer ( wxVERTICAL ) ;
 
     bb = new wxBitmapButton ( this , RSE_RES_AC ,
              wxBitmap (myapp()->bmpdir+"\\cocktail.bmp", wxBITMAP_TYPE_BMP),
@@ -183,13 +185,26 @@ void TRestrictionEditor::initRestrictionPage ()
 
     btOK = new wxButton ( this , RSE_RES_OK , txt("b_done") ) ;
     btCC = new wxButton ( this , RSE_RES_CC , txt("b_cancel") ) ;
-    v3b->Add ( new wxButton ( this , RSE_COC_RM , txt("Remove enzyme") ) , 1 , wxEXPAND , 5 ) ;
+    createFragments = new wxCheckBox ( this , -1 , txt("t_create_fragments") ) ;
+    add2gel = new wxCheckBox ( this , RSE_ADD2GEL , txt("t_add2gel") ) ;
+    oneLaneEach = new wxCheckBox ( this , -1 , txt("t_one_lane_each") ) ;
+    v3b->Add ( new wxButton ( this , RSE_ADD_ALL , txt("t_add_all") ) , 0 , wxEXPAND , 5 ) ;
     v3b->Add ( new wxStaticText ( this , -1 , "" ) , 0 , wxEXPAND , 5 ) ;
-    v3b->Add ( btOK , 1 , wxEXPAND , 5 ) ;
-    v3b->Add ( btCC , 1 , wxEXPAND , 5 ) ;
+    v3b->Add ( new wxButton ( this , RSE_COC_RM , txt("Remove enzyme") ) , 0 , wxEXPAND , 5 ) ;
+    v3b->Add ( new wxStaticText ( this , -1 , "" ) , 0 , wxEXPAND , 5 ) ;
+    v3b->Add ( btOK , 0 , wxEXPAND , 5 ) ;
+    v3b->Add ( btCC , 0 , wxEXPAND , 5 ) ;
+    v3b->Add ( new wxStaticText ( this , -1 , "" ) , 0 , wxEXPAND , 5 ) ;
+    v3b->Add ( createFragments , 0 , wxEXPAND , 5 ) ;
+    v3b->Add ( add2gel , 0 , wxEXPAND , 5 ) ;
+    v3b->Add ( oneLaneEach , 0 , wxEXPAND , 5 ) ;
+    createFragments->SetValue ( TRUE ) ;
+    add2gel->SetValue ( FALSE ) ;
+    oneLaneEach->SetValue ( FALSE ) ;
+    oneLaneEach->Disable() ;
 
-    h1f->Add ( v3a , 1 , wxEXPAND , 5 ) ;
-    h1f->Add ( new wxPanel ( this ) , 1 , wxEXPAND , 5 ) ;
+    h1f->Add ( v3a , 0 , wxEXPAND , 5 ) ;
+    h1f->Add ( new wxStaticText ( this , -1 , "   " ) , 0 , wxEXPAND , 5 ) ;
     h1f->Add ( v3b , 0 , wxEXPAND , 5 ) ;
 
     v2b->Add ( new wxStaticText ( this , -1 , "" ) , 0 , wxEXPAND , 5 ) ;
@@ -246,12 +261,9 @@ void TRestrictionEditor::initRestrictionPage ()
        add2cocktail ( myapp()->frame->lastCocktail[i] ) ;
     myapp()->frame->lastCocktail.Clear() ;
     }
-
-void TRestrictionEditor::pR_showGroupEnzymes ( wxString gr )
-    {
-    wxArrayString vs ;
-    el->DeleteAllItems() ;
-    rsl->DeleteAllItems() ;
+    
+void TRestrictionEditor::listEnzymesInGroup ( wxString gr , wxArrayString &vs )
+	{
     if ( gr == txt("Current") )
         {
         int i ;
@@ -261,6 +273,17 @@ void TRestrictionEditor::pR_showGroupEnzymes ( wxString gr )
             vs.Add ( v->re2[i]->name ) ;
         }
     else myapp()->frame->LS->getEnzymesInGroup ( gr , vs ) ;
+	}    
+
+void TRestrictionEditor::pR_showGroupEnzymes ( wxString gr )
+    {
+    el->DeleteAllItems() ;
+    rsl->DeleteAllItems() ;
+    
+    
+    wxArrayString vs ;
+    listEnzymesInGroup ( gr , vs ) ;
+
     char t[100] ;
     int sel = rb->GetSelection() ;
     bool docut = true , donotcut = true ;
@@ -356,6 +379,37 @@ void TRestrictionEditor::pR_showFragments ( int i )
     listFragments ( rsl , vi ) ;
     }
 
+void TRestrictionEditor::getFragmentList ( wxArrayInt &cuts , vector <TFragment> &fragments )
+	{
+	fragments.clear () ;
+    if ( cuts.GetCount() == 0 ) return ;
+    if ( !v->isCircular() ) // Adding last fragment for linear DNA
+        {
+        int from = cuts.Last() ;
+        int to = v->getSequenceLength() ;
+        if ( from != to )
+           cuts.Add ( to ) ;
+        }
+
+    int i ;
+    char u[100] ;
+    for ( i = 0 ; i < cuts.GetCount() ; i++ )
+        {
+        TFragment fr ;
+        
+        int from = 0 ;
+        if ( i > 0 ) from = cuts[i-1] ;
+        if ( i == 0 && v->isCircular() ) from = cuts.Last() ;
+        fr.from = from ;
+        fr.to = cuts[i] ;
+        
+        int len = cuts[i] - from ;
+        if ( len <= 0 ) len += v->getSequenceLength() ;
+        fr.length = len ;
+        fragments.push_back ( fr ) ;
+        }
+	}    
+
 void TRestrictionEditor::listFragments ( wxListCtrl *list , wxArrayInt &vi )
     {
     list->DeleteAllItems() ;
@@ -421,6 +475,7 @@ void TRestrictionEditor::refreshCocktail ()
         if ( vi.GetCount() == 0 || vi.Last() != vit[i] )
            vi.Add ( vit[i] ) ;
         }
+    cocktailFragments = vi ;
     listFragments ( rsl2 , vi ) ;
     }
 
@@ -432,6 +487,7 @@ void TRestrictionEditor::add2cocktail ( wxString s )
     for ( i = 0 ; i < cocktail.GetCount() && cocktail[i] != s2 ; i++ ) ;
     if ( i < cocktail.GetCount() ) return ; // Already in there
     cocktail.Add ( s2 ) ;
+    cocktail.Sort() ;
     refreshCocktail () ;
     }
 
@@ -504,4 +560,18 @@ void TRestrictionEditor::res_checkbox ( wxCommandEvent &event )
     {
     nfstv->Enable ( nfst->GetValue() ) ;
     }
+    
+void TRestrictionEditor::res_cb_add2gel ( wxCommandEvent &event )
+	{
+	oneLaneEach->Enable ( add2gel->GetValue() ) ;
+	}    
 
+void TRestrictionEditor::onAddAll ( wxCommandEvent &event )
+	{
+	wxArrayString vs ;
+    wxString s = gl->GetStringSelection() ;
+	listEnzymesInGroup ( s , vs ) ;
+	for ( int a = 0 ; a < vs.GetCount() ; a++ )
+		add2cocktail ( vs[a] ) ;
+	}
+     

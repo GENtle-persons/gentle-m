@@ -501,7 +501,8 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
            }
         else if ( event.MiddleDown() )
            {
-           TRestrictionEditor ed ( myapp()->frame , "" , wxPoint(-1,-1) , wxSize(600,400) , 
+           p->runRestriction ( s ) ;
+/*           TRestrictionEditor ed ( myapp()->frame , "" , wxPoint(-1,-1) , wxSize(600,400) , 
                       wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL);
            ed.pre = s ;
            ed.cocktail = p->vec->cocktail ;
@@ -511,7 +512,7 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
               {
               p->vec->cocktail = ed.cocktail ;
               p->vec->doAction() ;
-              }
+              }*/
            }
         else if ( event.RightDown() )
            invokeRsPopup ( rs , pt_abs ) ;
