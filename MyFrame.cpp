@@ -45,7 +45,7 @@ BEGIN_EVENT_TABLE(MyFrame, MyFrameType)
 END_EVENT_TABLE()
 
 /// \brief Number of wxAcceleratorEntry entries
-#define ACC_ENT 39
+#define ACC_ENT 40
 
 /** \brief Constructor
 
@@ -108,6 +108,8 @@ MyFrame::MyFrame(wxWindow *parent,
     entries[36].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_TAB, MDI_PREV_WINDOW);
     entries[37].Set(wxACCEL_NORMAL, WXK_F8, MDI_TOGGLE_IDNA);
     entries[38].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_F12, Y___);
+    entries[39].Set(wxACCEL_CTRL, WXK_F1, MDI_ABOUT);
+    
     
     wxAcceleratorTable accel(ACC_ENT, entries);
     SetAcceleratorTable(accel);
@@ -411,7 +413,8 @@ void MyFrame::OnQuit(wxCommandEvent& event)
 */
 void MyFrame::OnAbout(wxCommandEvent& event )
 {
-    (void)wxMessageBox(txt("t_about_txt"), txt("t_about"));
+	wxString text = txt("t_about_txt") ;
+    (void)wxMessageBox(text + "\n\nV " + myapp()->get_GENtle_version(), txt("t_about") );
 }
 
 /** \brief Invokes help

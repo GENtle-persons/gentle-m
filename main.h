@@ -149,6 +149,10 @@ WX_DECLARE_STRING_HASH_MAP( wxString, wxHashString );
 #define DCM_METHYLATION 2 /**< \brief Show DCM methylation */
 #define ALL_METHYLATION_ENZYMES ( DAM_METHYLATION + DCM_METHYLATION ) /**< \brief Show all methylations */
 
+#define GENTLE_VERSION_MAJOR 1
+#define GENTLE_VERSION_MINOR 5
+#define GENTLE_VERSION_SUB 1
+
 class MyFrame ;
 
 /** \class MyApp
@@ -157,21 +161,21 @@ class MyFrame ;
 class MyApp : public wxApp
     {
     public:
-    bool OnInit();
-    int OnExit () ;
-    
+    virtual bool OnInit();
+    virtual int OnExit () ;
     virtual void init_txt ( wxString lang , wxString csv , wxHashString *target = NULL , int ln = 1 ) ;
     virtual void do_my_ass ( bool b , wxString msg = "" ) ;
     virtual void do_my_log ( wxString function , wxString msg = "" ) ;
+    virtual wxString getHTMLCommand ( wxString command ) ; ///< Returns the command line for running a browser
+    virtual wxString getFileFormatApplication ( wxString type ) ; ///< Returns application associated with a file type
+    virtual wxString get_GENtle_version () ; ///< Returns the GENtle version string
     
-    wxString getHTMLCommand ( wxString command ) ; ///< Returns the command line for running a browser
-    wxString getFileFormatApplication ( wxString type ) ; ///< Returns application associated with a file type
     MyFrame *frame; ///< The application frame
     wxMimeTypesManager mtm ; ///< The MIME types manager
     wxString homedir ; ///< Directory of the application
     wxString bmpdir ; ///< Directory of the bitmaps
     wxString slash ; ///< The platform-dependent directory separator slash
-    int programVersion ; ///< The current program version
+    int programVersion ; ///< The database access program version
     int dbWarningIssued ; ///< Was a database warning issued?
     wxHashString _text ; ///< Contains the current GUI translation.
     

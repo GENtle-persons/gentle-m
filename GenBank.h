@@ -10,6 +10,7 @@ class TVector ;
 class TVectorItem ;
 class TVectorTree ;
 
+/// \brief Helper class for TGenBank
 class TGenBankFeature
     {
     public :
@@ -17,9 +18,9 @@ class TGenBankFeature
     TGenBankFeature ( wxString _n , wxString _v ) { name = _n ; value = _v ; } ///< Constructor
     wxString name ; ///< Feature name
     wxString value ; ///< Feature (string) value
-//    wxArrayString qname , qvalue ;
     } ;
 
+/// \brief GenBank format import/export class
 class TGenBank
     {
     public :
@@ -39,22 +40,22 @@ class TGenBank
     virtual wxString expand ( wxString init , int to , wxString with = " " ) ;
     virtual int count_blanks ( wxString &s ) ;
 
-    bool success ;
+    bool success ; ///< Did we encounter any errors while parsing?
     
     private :
     friend class TAlignment ;
     friend class MyFrame ;
-    vector <wxArrayString> vs_l ;
-    vector <wxArrayInt> vi_l ;
-    wxArrayString vs ;
-    wxArrayInt vi ;
-    bool perm[256] ;
-    wxString params ;
-    wxString title ;
-    wxString description ;
-    bool validseq[256] ;
-    bool isblank[256] ;
-    bool isblankorquote[256] ;
+    vector <wxArrayString> vs_l ; ///< All the lines, grouped by sequences
+    vector <wxArrayInt> vi_l ; ///< All the line indentations
+    wxArrayString vs ; ///< Current sequence
+    wxArrayInt vi ; ///< Current line indentations
+    wxString params ; ///< ???
+    wxString title ; ///< Sequence title
+    wxString description ; ///< Sequence description
+    bool perm[256] ; ///< Allowed chars
+    bool validseq[256] ; ///< Allowed sequence chars
+    bool isblank[256] ; ///< Blank chars
+    bool isblankorquote[256] ; ///< Blank or quote chars
     
     void parseLines () ;
     void addItem ( TVector *v , wxArrayString &va ) ;
