@@ -890,7 +890,7 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
     if ( sr[0][sr["dna_circular"]] == "1" ) v->setCircular ( true ) ;
     else v->setCircular ( false ) ;
     v->setDatabase ( db ) ;
-    v->removeBlanksFromSequence () ;
+    if ( v->type != TYPE_ALIGNMENT ) v->removeBlanksFromSequence () ;
 
     string s = sr[0][sr["dna_restriction_enzymes"]] , t = "" ;
     for ( a = 0 ; a < s.length() ; a++ )
@@ -946,10 +946,10 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
     ChildBase *n = NULL ;
     if ( v->type == TYPE_AMINO_ACIDS )
         {
-//        n = myapp()->frame->newAminoAcids ( v->sequence , v->name ) ;
         n = myapp()->frame->newAminoAcids ( v , v->name ) ;
         n->vec->setDatabase ( v->getDatabase() ) ;
         n->vec->setWindow ( n ) ;
+        v = n->vec ;
         }
     else if ( v->type == TYPE_ALIGNMENT )
         {
