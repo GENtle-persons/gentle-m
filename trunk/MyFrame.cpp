@@ -331,7 +331,7 @@ void MyFrame::initme ()
            {
            TManageDatabaseDialog mdb ( this , "dummy" , ACTION_MODE_STARTUP ) ;
            mdb.do_load_project ( n , d ) ;
-//           mainTree->Refresh () ;
+           mainTree->Refresh () ;
            }
         }
         
@@ -365,13 +365,13 @@ void MyFrame::initme ()
           }
        }
 
-    mainTree->Refresh () ;
         
 #ifndef MISER_MODE
     lockDisplay ( false ) ;
 #endif
     wxEndBusyCursor() ;
     Raise () ;
+    mainTree->Refresh () ;
     
     SetSizeHints ( 600 , 400 ) ;
     Show(TRUE);
