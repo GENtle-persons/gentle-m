@@ -1400,9 +1400,8 @@ void MyFrame::setActiveChild ( ChildBase *c )
     if ( children.GetCount() == 0 && GetMenuBar() != menu_bar ) SetMenuBar ( menu_bar ) ;
     if ( !c ) return ;
     activating = true ;
-    wxSafeYield() ;
+//    wxSafeYield() ;
     if ( !c->IsEnabled() ) c->Enable() ;
-    if ( !c->IsShown() ) c->Show() ;
     if ( c->menubar && GetMenuBar() != c->menubar )
        {
        SetMenuBar ( c->menubar ) ;
@@ -1415,8 +1414,9 @@ void MyFrame::setActiveChild ( ChildBase *c )
        }
     if ( mainTree && c->inMainTree.IsOk() && mainTree->GetSelection() != c->inMainTree )
         mainTree->SelectItem ( c->inMainTree ) ;
-    c->Refresh () ;
-    wxSafeYield () ;
+    if ( !c->IsShown() ) c->Show() ;
+//    c->Refresh () ;
+//    wxSafeYield () ;
     activating = false ;
     }
 

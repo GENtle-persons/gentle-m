@@ -477,6 +477,7 @@ int SeqAA::arrange_direct ( int n )
 
 void SeqAA::show_direct ( wxDC& dc )
     {
+    mylog ( "SeqAA::show_direct" , "1" ) ;
     can->SetFont(*can->font);
     dc.SetFont(*can->font);
     int a , b , w , h , n , bo = can->border ;
@@ -513,8 +514,10 @@ void SeqAA::show_direct ( wxDC& dc )
     b = ( ya - ch - oy ) / ( ch * csgc ) * itemsperline ;
     for ( a = 0 ; a < b && a < s.length() ; a += itemsperline ) ;
         
+    mylog ( "SeqAA::show_direct" , wxString::Format ( "2 (s.length = %d)" , s.length() ) ) ;
     for ( ; a < s.length() ; a++ )
         {
+mylog ( "SeqAA::show_direct" , "2_" ) ;
         int px = a % itemsperline , py = a / itemsperline ;
         
         bool showNumber = ( px == 0 ) ;
@@ -533,6 +536,7 @@ void SeqAA::show_direct ( wxDC& dc )
               }    
            }    
 
+mylog ( "SeqAA::show_direct" , "2a" ) ;
        int pm = getMark ( a ) ;
        if ( pm == 1 ) // Marked (light gray background)
           {
@@ -560,6 +564,7 @@ void SeqAA::show_direct ( wxDC& dc )
           }
 
        dc.DrawText ( wxString ( s.GetChar(a) ) , px , py ) ;
+mylog ( "SeqAA::show_direct" , "2b" ) ;
        
        int pz = py + ch ;
 
@@ -576,6 +581,7 @@ void SeqAA::show_direct ( wxDC& dc )
           dc.SetTextForeground ( tf ) ;
           }
 
+mylog ( "SeqAA::show_direct" , "2c" ) ;
        // Protease cuts
        for ( int q = 0 ; q < pc.GetCount() ; q++ )
           {
@@ -605,14 +611,17 @@ void SeqAA::show_direct ( wxDC& dc )
              }
           }
 
-
+mylog ( "SeqAA::show_direct" , "2d" ) ;
         if ( showNumber && primaryMode )
            {
            wxString t = wxString::Format ( "%d" , a + 1 ) ;
-           t.Pad ( endnumberlength - t.length() , '0' , false ) ;
+           while ( endnumberlength > t.length() ) t = "0" + t ;
+//           t.Pad ( endnumberlength - t.length() , '0' , false ) ;
            dc.DrawText ( t , bo , py ) ;
            }    
+mylog ( "SeqAA::show_direct" , "2e" ) ;
         }    
+mylog ( "SeqAA::show_direct" , "3" ) ;
 
 
     dc.SetBackgroundMode ( bm ) ;
