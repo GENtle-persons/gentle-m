@@ -140,7 +140,7 @@ class TUndo ;
 #ifdef MYDEBUG
 void myass ( bool b , wxString msg = "" ) ;
 #else
-#define myass(a)
+//#define myass(a)
 #define myass(a,b)
 #endif
 

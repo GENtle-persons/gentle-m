@@ -21,9 +21,11 @@ class TAlignment ;
 
 class TMutationDialog : public wxDialog
     {
+ public : 
     TMutationDialog(wxWindow *parent, const wxString& title , string _codon ) ;
     virtual ~TMutationDialog () ;
     
+     private :
     string codon , newcodon ;
     char aa , newaa ;
     TVector *v ;
