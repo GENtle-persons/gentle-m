@@ -725,3 +725,7 @@
 "t_cgview_showrestrictionsites","Show restriction sites","Zeige Restriktionsschnittstellen"
 "t_cgview_showgc","Show GC%","Zeige GC%"
 "t_cgview_backgroundcolor","Background color","Hintergrundfarbe"
+"t_autoann_use_common_database","Use common vectors database","Datenbank mit gebräuchlichen Vektoren verwenden"
+"t_autoann_use_additional_database","Use additional database","Zusätzliche Datenbank verwenden"
+"t_autoann_reduce_item_number","Reduce number of features","Feature-Anzahl reduzieren"
+"t_autoann_add_orfs","Add undetected open reading frames","Nicht erkannte open reading frames hinzufügen"
