@@ -193,15 +193,15 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
         TRestrictionCut *c = &p->vec->rc[a] ;
         if ( isEnzymeVisible ( c->e->name ) )
            {
-           wxColour *col = myapp()->frame->global_enzyme_rules->getColor ( p->vec->countCuts ( c->e->name ) ) ;
+           wxColour *col = p->vec->getEnzymeRule()->getColor ( p->vec->countCuts ( c->e->name ) ) ;
            dc.SetTextForeground ( *col ) ;
            dc.SetPen ( *MYPEN(*col) ) ;
            c->linearUpdate ( w , h ) ;
            int xx = lineOff + c->pos*lineLen/l ;
            dc.DrawLine ( c->lastrect.GetRight() , c->lastrect.GetBottom() , xx , lineH - markH ) ;
            dc.DrawLine ( xx , lineH , xx , lineH - markH - 1 ) ;
-           sprintf ( t , "%s" , c->e->name.c_str() ) ;
-           dc.DrawText ( t , c->lastrect.x , c->lastrect.y ) ;
+//           sprintf ( t , "%s" , c->e->name.c_str() ) ;
+           dc.DrawText ( c->getNameAndPosition() , c->lastrect.x , c->lastrect.y ) ;
            }
         }
     dc.SetFont(*smallFont);
@@ -259,9 +259,10 @@ void PlasmidCanvas::arrangeRestrictionSitesLinear ( int a , wxDC &dc )
     {
     TRestrictionCut *c = &p->vec->rc[a] ;
     int x1 , y1 , x2 , y2 ;
-    char t[1000] ;
     wxCoord dx , dy ;
-    sprintf ( t , "%s" , c->e->name.c_str() ) ;
+//    char t[1000] ;
+//    sprintf ( t , "%s" , c->e->name.c_str() ) ;
+	wxString t = c->getDisplayName () ;
     dc.GetTextExtent ( t , &dx , &dy ) ;
     x1 = c->p.x - dx ;
     y1 = c->p.y - dy ;

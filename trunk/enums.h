@@ -322,6 +322,7 @@ enum {
     GES_COL_1,
     GES_COL_2,
     GES_COL_3,
+    GES_USE_COLOR_CODING,
     
     Z___
     } ;

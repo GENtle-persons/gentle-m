@@ -2,12 +2,12 @@
 
 bool operator < ( const TRestrictionCut &c1 , const TRestrictionCut &c2 )
     {
-    return c1.pos > c2.pos ;
+    return ( c1.pos > c2.pos ) || ( c1.pos == c2.pos && c1.e->name < c2.e->name ) ;
     }
     
 bool operator == ( const TRestrictionCut &c1 , const TRestrictionCut &c2 )
     {
-    return c1.pos == c2.pos ;
+    return c1.pos == c2.pos && c1.e->name == c2.e->name ;
     }
     
 bool TRestrictionEnzyme::differ ( TRestrictionEnzyme &e )
@@ -76,7 +76,7 @@ void TRestrictionCut::linearUpdate ( int w , int h )
     
 wxString TRestrictionCut::getNameAndPosition ()
     {
-    return wxString::Format ( "%s:%d" , getDisplayName().c_str() , pos ) ;
+    return wxString::Format ( "%s %d" , getDisplayName().c_str() , pos ) ;
     }
 
 bool TRestrictionCut::isHidden ( TVector *v )
@@ -87,7 +87,7 @@ bool TRestrictionCut::isHidden ( TVector *v )
 wxString TRestrictionCut::getDisplayName ()
 	{
 	if ( display_name.IsEmpty() ) return e->name ;
-	return display_name + ")" ;
+	return display_name ;
 	}    
 	
 bool TRestrictionCut::join ( TRestrictionCut *c )
@@ -96,9 +96,8 @@ bool TRestrictionCut::join ( TRestrictionCut *c )
 	if ( e->sequence != c->e->sequence ) return false ;
 	if ( e->cut != c->e->cut ) return false ;
 	if ( e->overlap != c->e->overlap ) return false ;
-	if ( display_name.IsEmpty() )
-		display_name = e->name + " (" + c->e->name ;
-	else display_name += ", " + c->e->name ;
+	if ( display_name.IsEmpty() ) display_name = e->name ;
+	display_name += ", " + c->e->name ;
 	return true ;
 	}    
         

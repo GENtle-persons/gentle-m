@@ -225,7 +225,8 @@ class TVector
     virtual void setGenomeMode ( bool gm = true ) ;
     virtual bool getGenomeMode () ;
     virtual int getMem () ;
-    virtual void getVectorCuts ( TVector *v ) ;
+    virtual bool getVectorCuts ( TVector *v ) ;
+    virtual TEnzymeRules *getEnzymeRule () ;
     
     // Variables
     int type ;
@@ -233,7 +234,7 @@ class TVector
     vector <TVectorItem> items ;
     vector <TORF> worf ;
     vector <TRestrictionCut> rc ;
-    wxArrayTRestrictionEnzyme re ;
+    wxArrayTRestrictionEnzyme re , re2 ;
 
     wxArrayString hiddenEnzymes , proteases , cocktail ;
     TUndo undo ;
