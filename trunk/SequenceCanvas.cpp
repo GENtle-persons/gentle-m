@@ -26,6 +26,10 @@ BEGIN_EVENT_TABLE(SequenceCanvas, wxScrolledWindow)
     EVT_MENU(SEQ_NEW_FROM_RESLUT_AA, SequenceCanvas::OnNewFromResultAA)
     EVT_MENU(PC_WHAT_CUTS,SequenceCanvas::OnWhatCuts)
 
+    EVT_MENU(SEQ_AA_VIEW_ORIGINAL,SequenceCanvas::OnViewOriginal)
+    EVT_MENU(SEQ_AA_VIEW_REAL,SequenceCanvas::OnViewReal)
+    EVT_MENU(SEQ_AA_VIEW_CONDENSED,SequenceCanvas::OnViewCondensed)
+
     EVT_MENU(SEQ_UP,SequenceCanvas::OnSeqUp)
     EVT_MENU(SEQ_DOWN,SequenceCanvas::OnSeqDown)
     EVT_MENU(SEQ_TOP,SequenceCanvas::OnSeqTop)
@@ -73,6 +77,7 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
     maxendnumberlength = 9 ;
     lastyoffset = 0 ;
     blocksize = 10 ;
+    lowx = lowy = -1 ;
 
     isMiniDisplay = false ;
     m_dirty = FALSE;
@@ -613,6 +618,24 @@ void SequenceCanvas::OnCopyImage ( wxCommandEvent &ev )
     int w , h ;
     MyGetClientSize ( &w , &h ) ;
     h = lowy ;
+
+// Metafile support only exists for windows, so...
+#ifdef __WXMSW__
+    if ( myapp()->frame->useMetafile ) // Use metafile DC
+        {
+        GetClientSize(&w, &h);
+        wxMetafileDC dc ;
+//        dc.SetUserScale ( 10 , 10 ) ;
+        OnDraw ( dc ) ;
+        wxMetafile *mf = dc.Close();
+        if (mf)
+           {
+           bool success = mf->SetClipboard((int)(dc.MaxX() + 10), (int)(dc.MaxY() + 10));
+           delete mf;
+           return ;
+           }
+        }
+#endif
     
     if ( w * h * 3 >= 32*1024*1024 )
         {
@@ -799,7 +822,6 @@ void SequenceCanvas::mark ( string id , int from , int to , int value )
             if ( !editMode )
                 {
                 ama->pc->Refresh() ;
-                
                 char tt[1000] ;
                 if ( value == 1 )
                    {
@@ -863,14 +885,16 @@ void SequenceCanvas::arrange ()
         b = seq[a]->arrange ( a ) ;
         if ( b > lowy ) lowy = b ;
         }
+    if ( isMiniDisplay ) lowx += charwidth*2 ;
     
     if ( printing ) return ;
-    
+
     MyGetViewStart ( &vx , &vy ) ;
     if ( !isHorizontal && lowy != oldlowy )
        SetScrollbars ( 0 , charheight , vy , (lowy+charheight-1)/charheight , false ) ;
     if ( isHorizontal && lowx != oldlowx )
        SetScrollbars ( charwidth , 0 , lowx/charwidth , lowx/charwidth , false ) ;
+    
     if ( p && p->cPlasmid->mark_from != -1 && !editMode )
         {
         if ( !printing ) p->cPlasmid->mark_from = -1 ;
@@ -918,19 +942,20 @@ void SequenceCanvas::OnDraw(wxDC& dc)
     int vx , vy ;
     GetViewStart ( &vx , &vy ) ;
 
-    if ( myapp()->frame->enhancedRefresh && !printing && !isHorizontal )
+    if ( myapp()->frame->enhancedRefresh && !printing )//&& !isHorizontal )
         { // MemoryDC
         int w , h ;
         MyGetClientSize ( &w , &h ) ;
+        int xoff = wx * vx ;
         int yoff = wy * vy ;
         wxBitmap bmp ( w , h , -1 ) ;
         wxMemoryDC pdc ;
         pdc.SelectObject ( bmp ) ;
         pdc.Clear() ;
-        pdc.SetDeviceOrigin ( 0 , -yoff ) ;
+        pdc.SetDeviceOrigin ( -xoff , -yoff ) ;
         safeShow ( pdc ) ;
         pdc.SetDeviceOrigin ( 0 , 0 ) ;
-        dc.Blit ( 0 , yoff , w , h , &pdc , 0 , 0 ) ;
+        dc.Blit ( xoff , yoff , w , h , &pdc , 0 , 0 ) ;
         }
     else 
         { // Direct DC
@@ -1180,9 +1205,18 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
            {
            cm = new wxMenu ;
            }
+           
+        if ( isMiniDisplay )
+           {
+           wxMenu *ca = new wxMenu ;
+           ca->Append ( SEQ_AA_VIEW_ORIGINAL , txt("m_aa_view_original") ) ;
+           ca->Append ( SEQ_AA_VIEW_REAL , txt("m_aa_view_real") ) ;
+           ca->Append ( SEQ_AA_VIEW_CONDENSED , txt("m_aa_view_condensed") ) ;
+           cm->Append ( SEQ_AA_VIEW , txt("m_aa_view") , ca ) ;
+           }
         
         wxMenu *ca = new wxMenu ;
-        ca->Append ( SEQ_COPY_TEXT , txt("m_copy_as_text") ) ;
+        if ( !isMiniDisplay ) ca->Append ( SEQ_COPY_TEXT , txt("m_copy_as_text") ) ;
         ca->Append ( SEQ_COPY_IMAGE , txt("m_copy_as_image") ) ;
         ca->Append ( SEQ_SAVE_IMAGE , txt("m_save_as_image") ) ;
         cm->Append ( SEQ_COPY_AS , txt("m_copy_as") , ca ) ;
@@ -1350,7 +1384,7 @@ void SequenceCanvas::OnNewFromResultAA ( wxCommandEvent &ev )
 
 void SequenceCanvas::SilentRefresh ()
     {
-    if ( isHorizontal ) Clear () ;
+//    if ( isHorizontal ) Clear () ;
     wxClientDC dc(this);
     PrepareDC(dc);
     OnDraw ( dc ) ;
@@ -1447,6 +1481,24 @@ void SequenceCanvas::OnDeleteOtherGaps ( wxCommandEvent &ev )
     alg->callMiddleMouseButton ( last_al->id , lastclick , "t_mmb_delete_gap_others" ) ;
     }
     
+void SequenceCanvas::OnViewOriginal ( wxCommandEvent &ev )
+    {
+    aa->miniDisplayOptions = MINI_DISPLAY_ORIGINAL ;
+    aa->OnListBox ( ev ) ;
+    }
+
+void SequenceCanvas::OnViewReal ( wxCommandEvent &ev )
+    {
+    aa->miniDisplayOptions = MINI_DISPLAY_REAL ;
+    aa->OnListBox ( ev ) ;
+    }
+
+void SequenceCanvas::OnViewCondensed ( wxCommandEvent &ev )
+    {
+    aa->miniDisplayOptions = MINI_DISPLAY_CONDENSED ;
+    aa->OnListBox ( ev ) ;
+    }
+
 
 // -------------------------------------------------------- TMarkMem
 

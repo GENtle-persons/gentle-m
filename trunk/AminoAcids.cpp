@@ -32,6 +32,7 @@ TAminoAcids::TAminoAcids(MyFrame *parent, const wxString& title)
     from = -1 ;
     stat = NULL ;
     pc = NULL ;
+    miniDisplayOptions = MINI_DISPLAY_CONDENSED ;
     }
     
 TAminoAcids::~TAminoAcids ()
@@ -117,7 +118,7 @@ void TAminoAcids::initme ()
     lb = new wxListBox ( this ,
                             AA_LB ,
                             wxDefaultPosition ,
-                            wxSize ( 120 , 150 ) ) ;
+                            wxSize ( 120 , 160 ) ) ;
                             
     lb->Append ( txt("t_data") ) ;
     lb->Append ( txt("desc") ) ;
@@ -443,6 +444,7 @@ void TAminoAcids::OnIP ( wxCommandEvent& event )
     
 void TAminoAcids::OnListBox ( wxCommandEvent& event )
     {
+    Freeze() ;
     wxString t = lb->GetStringSelection() ;
     if ( curDisplay )
         {
@@ -494,17 +496,25 @@ void TAminoAcids::OnListBox ( wxCommandEvent& event )
         sc2->edit_valid = "ACDEFGHIKLMNPQRSTVWY|" ;
         h1->Add ( sc2 , 1 , wxEXPAND , 5 ) ;
         curDisplay = sc2 ;        
-
+/*
+        SeqAA *d = new SeqAA ( sc2 ) ;
+        sc2->seq.push_back ( d ) ;
+        d->primaryMode = true ;
+        d->takesMouseActions = true ;
+        d->initFromString ( vec->sequence ) ;
+        d->fixOffsets ( vec ) ;
+*/
         SeqPlot *seqP = new SeqPlot ( sc2 ) ;
         sc2->seq.push_back ( seqP ) ;
+//        seqP->miniDisplayOptions = miniDisplayOptions ;
         seqP->initFromTVector ( vec ) ;
         seqP->setLines ( 6 ) ;
         seqP->useChouFasman() ;
                     
         sc2->isMiniDisplay = true ;
         sc2->isHorizontal = true ;
-//        sc2->arrange () ;
         }
+    Thaw () ;
     h1->Layout() ;
     }
     

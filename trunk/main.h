@@ -113,6 +113,10 @@ class TUndo ;
 #define IUPAC_G 4
 #define IUPAC_T 8
 
+#define MINI_DISPLAY_ORIGINAL 0
+#define MINI_DISPLAY_REAL 1
+#define MINI_DISPLAY_CONDENSED 2
+
 #include "ureadseq.h"
 
 

@@ -292,6 +292,10 @@ enum {
 
     AA_LB,
     AA_IP,
+    SEQ_AA_VIEW,
+    SEQ_AA_VIEW_ORIGINAL,
+    SEQ_AA_VIEW_REAL,
+    SEQ_AA_VIEW_CONDENSED,
     
     } ;
 

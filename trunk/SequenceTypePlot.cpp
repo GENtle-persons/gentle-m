@@ -14,17 +14,12 @@ int SeqPlot::arrange ( int n )
     endnumberlength = 0 ;
     int ox = bo+wx , oy = n*wy+bo , endnumber = offset + s.length() ;
     while ( endnumber > 0 ) { endnumber /= 10 ; ox += wx ; endnumberlength++ ; }
-/*    
-    if ( whatsthis() == "FEATURE" && 
-         can->child && 
-         can->child->def == "alignment" )
-        {
-        endnumberlength = can->maxendnumberlength ;
-        ox = bo + wx + wx * endnumberlength ;
-        }
-*/    
-    can->MyGetSize ( &w , &h ) ;
+
+    if ( can->isMiniDisplay ) can->MyGetClientSize ( &w , &h ) ;
+    else can->MyGetSize ( &w , &h ) ;
     w -= 20 ; // Scrollbar dummy
+    if ( can->isMiniDisplay && can->aa && can->aa->miniDisplayOptions != MINI_DISPLAY_ORIGINAL )
+         wx = 1 ;
 
     itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx ) ;
     itemsperline *= can->blocksize ;
@@ -35,7 +30,10 @@ int SeqPlot::arrange ( int n )
     pos.add ( -(++l) , bo , y , ox-wx-bo , wy-1 ) ; // Line number
     for ( a = 0 ; a < s.length() ; a++ )
         {
+        if ( can->isMiniDisplay && can->aa && can->aa->miniDisplayOptions == MINI_DISPLAY_CONDENSED )
+           x = ox + ( w - ox ) * a / s.length() ;
         pos.add ( a+1 , x , y , wx-1 , wy-1 ) ;
+        if ( x + wx*2 > can->lowx ) can->lowx = x + wx*2 ;
         lowy = y+wy*lines ;
         x += wx ;
         if ( (a+1) % can->blocksize == 0 )
@@ -194,6 +192,8 @@ void SeqPlot::showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx )
         if ( u == 3 ) pen = &can->blue_pen ;
         int tz = ty + (u-1) * ch + 1 ;
         int tw = ( tx + cw ) - lx ;
+        if ( can->isMiniDisplay && can->aa && can->aa->miniDisplayOptions == MINI_DISPLAY_CONDENSED )
+                tw = 1 ;
         if ( d1[u][b] == 'X' )
            {
            dc.SetPen(*pen);
@@ -232,12 +232,29 @@ void SeqPlot::showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph )
     int bottom = ty + lines * can->charheight ;
     int u ;
     
+    if ( can->isMiniDisplay )
+        {
+        if ( b == 0 ) plotr = wxRect ( lx , bottom - ph , 0 , ph ) ;
+        plotr.SetWidth ( tx + cw - plotr.GetLeft() ) ;
+        }
+    
     // Dotted lines
     dc.SetPen ( *wxBLACK_PEN ) ;
     for ( float j = data_min + data_step ; j + data_step < data_max ; j += data_step )
         {
         int k = bottom - ( j - data_min ) * ph / data_h ;
         drawDottedLine ( dc , lx , k , tx + cw , k ) ;
+        }
+        
+    if ( can->isMiniDisplay && b > 0 && b % 50 == 0 )
+        {
+        drawDottedLine ( dc , lx , bottom - ph , lx , bottom + ch/2 ) ;
+        dc.SetFont ( *can->smallFont ) ;
+        int qx , qy ;
+        wxString ws ;
+        ws = wxString::Format ( "%d" , b ) ;
+        dc.GetTextExtent ( ws , &qx , &qy ) ;
+        dc.DrawText ( ws , lx - qx/2 , bottom + ch/2 ) ;
         }
     
     // Colored curves
@@ -278,6 +295,10 @@ void SeqPlot::showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph )
         dc.DrawText ( ws , tx - qx - cw/3 , bottom - qy/2 ) ;
         dc.DrawLine ( tx - cw/3 , bottom , tx , bottom ) ;
         dc.SetFont ( cf ) ;
+        }
+    if ( b + 1 == s.length () )
+        {
+        dc.DrawLine ( tx+cw , bottom - ph , tx+cw , bottom ) ;
         }
     }
     
