@@ -24,6 +24,15 @@ int SeqDNA::arrange ( int n )
     endnumberlength = 0 ;
     int ox = bo+wx , oy = n*wy+bo , endnumber = offset + s.length() ;
     while ( endnumber > 0 ) { endnumber /= 10 ; ox += wx ; endnumberlength++ ; }
+    
+    if ( whatsthis() == "FEATURE" && 
+         can->child && 
+         can->child->def == "alignment" )
+        {
+        endnumberlength = can->maxendnumberlength ;
+        ox = bo + wx + wx * endnumberlength ;
+        }
+    
     can->MyGetSize ( &w , &h ) ;
     w -= 20 ; // Scrollbar dummy
 

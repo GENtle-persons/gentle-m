@@ -920,6 +920,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         {
         SeqAlign *al = (SeqAlign*)where ;
         if ( al->myname == txt("t_consensus") ) {} // Do nothing
+        else if ( al->whatsthis() == "FEATURE" ) {} // Do nothing
         else if ( al->s[pos] == '-' ) wxLogStatus ( al->myname.c_str() ) ;
         else
            {
@@ -940,6 +941,23 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         {
         if ( p && p->cPlasmid ) p->cPlasmid->invokeVectorEditor() ;
         else if ( aa ) aa->invokeVectorEditor() ;
+        else if ( where && child && child->def == "alignment" )
+           {
+           SeqAlign *al = (SeqAlign*)where ;
+           if ( al->myname == txt("t_consensus") ) {} // Do nothing
+           else if ( al->whatsthis() == "FEATURE" ) {} // Do nothing
+           else if ( al->s[pos] == '-' ) wxLogStatus ( al->myname.c_str() ) ;
+           else
+              {
+              int a , b ;
+              for ( a = b = 0 ; a < pos ; a++ )
+                 if ( al->s[a] != '-' )
+                   b++ ;
+              TAlignment *ali = (TAlignment*) child ;
+              ali->invokeOriginal ( al->myname , b ) ;
+//              wxLogStatus(wxString::Format("%s (%d)",al->myname.c_str(),b)) ;
+              }
+           }
         }
     else if ( event.LeftDown() )
         {

@@ -111,6 +111,7 @@ class PlasmidCanvas : public wxScrolledWindow
 
     private :
     virtual string getDNAorAA ( int from , int to , int dir , bool dna = true ) ;
+    virtual int circular_pos ( float angle ) ;
     
     public :
 

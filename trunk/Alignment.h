@@ -39,6 +39,7 @@ class TAlignment : public ChildBase
 
     void OnSettings ( wxCommandEvent &ev ) ;
     void OnClose(wxCloseEvent& event) ;
+    void invokeOriginal ( string name , int pos ) ;
     
     // Variables
     SequenceCanvas *sc ;
@@ -51,6 +52,7 @@ class TAlignment : public ChildBase
     vector <TVector*> qVec ;
     int algorithm ;
     string matrix ;
+    TVector *dv ;
         
     DECLARE_EVENT_TABLE()
     } ;
