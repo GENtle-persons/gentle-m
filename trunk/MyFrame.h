@@ -71,6 +71,7 @@ public:
     virtual void setChild ( ChildBase *ch ) ;
     virtual void removeChild ( ChildBase *ch ) ;
     virtual TStorage *getTempDB ( string filename ) ;
+    virtual void runAlignment ( vector <string> &vs , vector <ChildBase*> &vc , TVector *nv = NULL ) ;
 
 
     TMainTree *mainTree ;

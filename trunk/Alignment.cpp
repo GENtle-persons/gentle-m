@@ -5,6 +5,7 @@ BEGIN_EVENT_TABLE(TAlignment, MyChildBase)
     EVT_CLOSE(TAlignment::OnClose)
     EVT_SET_FOCUS(ChildBase::OnFocus)
     EVT_CHECKBOX(ALIGN_HORIZ, TAlignment::OnHorizontal)
+    EVT_MENU(MDI_FILE_SAVE, TAlignment::OnFileSave)
     
     EVT_MENU(ALIGN_BOLD,TAlignment::OnMenuBold)
     EVT_MENU(ALIGN_MONO,TAlignment::OnMenuMono)
@@ -114,7 +115,7 @@ void TAlignment::initme ()
     int bo = 5 ;
 
     // Menus
-    wxMenu *file_menu = myapp()->frame->getFileMenu () ;
+    wxMenu *file_menu = myapp()->frame->getFileMenu ( true ) ;
     wxMenu *tool_menu = myapp()->frame->getToolMenu () ;
     wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
     wxMenu *view_menu = new wxMenu ;
@@ -168,16 +169,6 @@ void TAlignment::initme ()
             wxBU_AUTODRAW ,
             wxDefaultValidator ) ;
     new wxStaticText ( up , -1 , txt("t_settings") , wxPoint ( bo , h-20 ) );
-    wxRect r = sb->GetRect () ;
-    new wxStaticText ( up , -1 , txt("t_mmb") , wxPoint ( r.GetRight()+bo , r.GetTop() ) );
-    mmb = new wxListBox ( up , -1 , 
-                wxPoint ( r.GetRight() + bo , r.GetTop() + 15 ) ,
-                wxSize ( 200 , r.GetBottom() - r.GetTop() ) ) ;
-    mmb->Append ( txt("t_mmb_insert_gap") ) ;
-    mmb->Append ( txt("t_mmb_delete_gap") ) ;
-    mmb->Append ( txt("t_mmb_insert_gap_others") ) ;
-    mmb->Append ( txt("t_mmb_delete_gap_others") ) ;
-    mmb->SetStringSelection ( txt("t_mmb_insert_gap") ) ;
 
 
     hs->SplitHorizontally ( up , sc ,h+bo ) ;
@@ -192,15 +183,27 @@ void TAlignment::initme ()
     toolBar->AddTool( MDI_FILE_OPEN, 
                 myapp()->frame->bitmaps[1] ,
             txt("m_open") , txt("m_opentxt") );
+    toolBar->AddTool( MDI_FILE_SAVE, 
+                myapp()->frame->bitmaps[2],
+                txt("m_store_in_db") , 
+                txt("m_txt_store_in_db"));
     toolBar->AddSeparator () ;
     wxCheckBox *mycb = new wxCheckBox ( toolBar , ALIGN_HORIZ , txt("t_horizontal") ) ;
     toolBar->AddControl ( mycb ) ;
+    toolBar->AddSeparator () ;
+    mmb = new wxChoice ( toolBar , -1 ) ;
+    mmb->Append ( txt("t_mmb_insert_gap") ) ;
+    mmb->Append ( txt("t_mmb_delete_gap") ) ;
+    mmb->Append ( txt("t_mmb_insert_gap_others") ) ;
+    mmb->Append ( txt("t_mmb_delete_gap_others") ) ;
+    mmb->SetStringSelection ( txt("t_mmb_insert_gap") ) ;
+    toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_mmb") ) ) ;
+    toolBar->AddControl ( mmb ) ;
+    
     toolBar->Realize() ;
 #endif
 
     Maximize () ;
-    wxCommandEvent ev ;
-    OnSettings ( ev ) ;
     sc->SetFocus() ;
     myapp()->frame->setChild ( this ) ;
     }
@@ -396,9 +399,10 @@ void TAlignment::myDelete ( int line , int pos )
     else lines[line].s.erase ( pos-1 , 1 ) ;
     }
         
-void TAlignment::callMiddleMouseButton ( int id , int pos )
+void TAlignment::callMiddleMouseButton ( int id , int pos , wxString _mode )
     {
     wxString mode = mmb->GetStringSelection () ;
+    if ( _mode != "" ) mode = txt(_mode.c_str()) ;
     int a , line = id ;
     if ( lines[line].s[pos-1] != '-' && mode == txt("t_mmb_delete_gap") )
        {
@@ -541,6 +545,22 @@ void TAlignment::OnSettings ( wxCommandEvent &ev )
     algorithm = ad.alg->GetSelection () ;
     
     redoAlignments () ;
+    }
+
+void TAlignment::prealigned ( vector <string> &vs , vector <ChildBase*> &vc )
+    {
+    lines.clear () ;
+    for ( int a = 0 ; a < vc.size() ; a++ )
+        {
+        TAlignLine line ;
+        line.name = vc[a]->getName() ;
+        line.v = vc[a]->vec ;
+        line.ResetSequence() ;
+        line.s = vs[a] ;
+        lines.push_back ( line ) ;
+        }
+    
+    redoAlignments ( false ) ;
     }
     
 // HOMEMADE ALIGNMENT ALGORITHMS
@@ -956,6 +976,83 @@ void TAlignment::MoveUpDown ( int what , int where )
         what += a ;
         }
     redoAlignments ( false ) ;    
+    }
+    
+void TAlignment::OnFileSave ( wxCommandEvent &ev )
+    {
+    int a , b ;
+    string s , d ;
+    TGenBank gb ;
+    d = wxString::Format("%d\n",lines.size()).c_str() ;
+    for ( a = 0 ; a < lines.size() ; a++ )
+        {
+        if ( !lines[a].isIdentity )
+            {
+            d += lines[a].v->name + "\n" ;
+            d += lines[a].v->getDatabase() + "\n" ;
+            d += lines[a].s + "\n" ;
+            vector <string> ex ;
+            gb.doExport ( lines[a].v , ex ) ;
+            for ( b = 0 ; b < ex.size() ; b++ )
+               s += ex[b] + "\n" ;
+            }
+        }
+    if ( !vec ) vec = new TVector ;
+    vec->name = txt("t_alignment") ;
+    vec->desc = d ;
+    vec->sequence = s ;
+    vec->type = TYPE_ALIGNMENT ;
+    TManageDatabaseDialog dbd ( this , txt("t_store") , ACTION_MODE_SAVE , vec ) ;
+    dbd.ShowModal () ;
+    }
+    
+void TAlignment::fromVector ( TVector *nv )
+    {
+    TGenBank gb ;
+    vec = nv ;
+    gb.paste ( vec->sequence ) ;
+    vector <string> vs = explode ( "\n" , vec->desc ) ;
+    int nol = atoi ( vs[0].c_str() ) ; // Number of lines
+    int n ;
+    bool all = true ;
+    TManageDatabaseDialog mdb ( this , "dummy" , ACTION_MODE_STARTUP ) ;
+    lines.clear () ;
+    for ( n = 0 ; n < nol ; n++ )
+        {
+        string name = vs[1+n*3] ;
+        string db = vs[2+n*3] ;
+        string seq = vs[3+n*3] ;
+        
+        TAlignLine line ; 
+        line.name = name ;
+
+        bool success = mdb.do_load_DNA ( name , db ) ;
+        all &= success ;
+        if ( success )
+           {
+           line.v = mdb.v ;
+           }
+        else
+           {
+           gb.vs = gb.vs_l[n] ;
+           gb.vi = gb.vi_l[n] ;
+           TVector *vv = new TVector ;
+           gb.remap ( vv ) ;
+
+           short type = TUReadSeq::getSeqType ( vv->sequence ) ;
+           if ( type == TYPE_AMINO_ACIDS )
+              myapp()->frame->newAminoAcids ( vv , name ) ;
+           else myapp()->frame->newFromVector ( vv , type ) ;
+           
+           line.v = vv ;
+           }
+        line.ResetSequence () ;
+        line.s = seq ;
+        lines.push_back ( line ) ;
+        }
+    delete vec ;
+    vec = NULL ;
+    redoAlignments ( false ) ;
     }
 
 // *****************************************************************************

@@ -509,3 +509,5 @@
 "t_mysql","MySQL","MySQL"
 "t_possible_alignment","This appears to be an alignment. Open it as alignment?","Dies scheint ein Alignment zu sein. Als Alignment öffnen?"
 "t_tip","Tip of the day","Tip des Tages"
+"m_align_gap","Gap","Lücke"
+"t_alignment","Alignment","Alignment"

@@ -290,6 +290,11 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void OnCopyResultAA ( wxCommandEvent &ev ) ;
     virtual void OnNewFromResultDNA ( wxCommandEvent &ev ) ;
     virtual void OnNewFromResultAA ( wxCommandEvent &ev ) ;
+    
+    virtual void OnInsertGap ( wxCommandEvent &ev ) ;
+    virtual void OnDeleteGap ( wxCommandEvent &ev ) ;
+    virtual void OnInsertOtherGaps ( wxCommandEvent &ev ) ;
+    virtual void OnDeleteOtherGaps ( wxCommandEvent &ev ) ;
 
     virtual void OnFocus(wxFocusEvent& event) ;
     virtual void OnKillFocus(wxFocusEvent& event) ;
@@ -341,6 +346,7 @@ class SequenceCanvas : public wxScrolledWindow
     bool isHorizontal ;
     int lowx , blocksize ;
     SeqAlign *last_al ;
+    int lastclick ;
 
     DECLARE_EVENT_TABLE()
     };

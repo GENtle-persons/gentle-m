@@ -63,6 +63,8 @@ class TAlignment : public ChildBase
     void OnClose(wxCloseEvent& event) ;
     void invokeOriginal ( int id , int pos ) ;
 
+    void OnFileSave ( wxCommandEvent &ev ) ;
+
     void OnMenuBold ( wxCommandEvent &ev ) ;
     void OnMenuMono ( wxCommandEvent &ev ) ;
     void OnMenuNorm ( wxCommandEvent &ev ) ;
@@ -78,8 +80,10 @@ class TAlignment : public ChildBase
     
     void OnHorizontal ( wxCommandEvent& event ) ;
     
-    void callMiddleMouseButton ( int id , int pos ) ;
+    void callMiddleMouseButton ( int id , int pos , wxString _mode = "" ) ;
     void MoveUpDown ( int what , int where ) ;
+    void prealigned ( vector <string> &vs , vector <ChildBase*> &vc ) ;
+    void fromVector ( TVector *nv ) ;
     
     // Variables
     SequenceCanvas *sc ;
@@ -95,7 +99,8 @@ class TAlignment : public ChildBase
     bool bold , mono ;
     
     private :
-    wxListBox *mmb ;
+    wxChoice *mmb ;
+//    wxListBox *mmb ;
     SeqAA *aaa ;
     void myInsert ( int line , int pos , char what ) ;
     void myDelete ( int line , int pos ) ;

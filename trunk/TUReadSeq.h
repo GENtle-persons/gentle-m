@@ -3,6 +3,8 @@
 
 #include "main.h"
 
+class TGenBank ;
+
 // Wrapper class for ureadseq
 class TUReadSeq
     {

@@ -654,6 +654,8 @@ void MyFrame::newGB ( TGenBank &gb , string title )
     int n ;
     TVector *nv ;
     vector <TVector *> vv ;
+    vector <ChildBase*> vc ;
+    vector <string> vs ;
     bool alignment = false ;
     for ( n = 0 ; n < gb.vs_l.size() ; n++ )
         {
@@ -661,17 +663,31 @@ void MyFrame::newGB ( TGenBank &gb , string title )
         gb.vi = gb.vi_l[n] ;
         nv = new TVector ;
         gb.remap ( nv ) ;
+        vs.push_back ( nv->sequence ) ;
         vv.push_back ( nv ) ;
         if ( nv->sequence.length() != vv[0]->sequence.length() ) alignment = false ;
         else if ( nv->sequence.find ( '-' ) != -1 ) alignment = true ;
         }
         
+    // Removing alignment artifacts from sequences
+    for ( n = 0 ; n < vv.size() ; n++ )
+        {
+        for ( int m = 0 ; m < vv[n]->sequence.length() ; m++ )
+           {
+           if ( vv[n]->sequence[m] == '-' )
+              {
+              vv[n]->sequence.erase ( m , 1 ) ;
+              m-- ;
+              }
+           }
+        }
+        
     if ( alignment )
         {
-        if ( wxYES == wxMessageBox ( txt("t_possible_alignment") ,
+        if ( wxYES != wxMessageBox ( txt("t_possible_alignment") ,
                        txt("msg_box") , wxYES_NO|wxICON_QUESTION ) )
            {
-           return ;
+           alignment = false ;
            }        
         }
         
@@ -684,10 +700,16 @@ void MyFrame::newGB ( TGenBank &gb , string title )
         if ( gb.vs_l.size() == 1 && title != "" ) nv->name = title ;
         short type = TUReadSeq::getSeqType ( nv->sequence ) ;
         if ( type == TYPE_AMINO_ACIDS )
-           newAminoAcids ( nv , nv->name ) ;
+           vc.push_back ( newAminoAcids ( nv , nv->name ) ) ;
         else
-           newFromVector ( nv , type ) ;
+           vc.push_back ( newFromVector ( nv , type ) ) ;
         }
+        
+    if ( alignment )
+        {
+        runAlignment ( vs , vc ) ;
+        }
+        
     Thaw () ;
     SetCursor ( *wxSTANDARD_CURSOR ) ;
     }
@@ -765,7 +787,7 @@ void MyFrame::InitToolBar(wxToolBar* toolBar)
 */
 }
 
-void MyFrame::OnAlignment(wxCommandEvent& event)
+void MyFrame::runAlignment ( vector <string> &vs , vector <ChildBase*> &vc , TVector *nv )
     {
     TAlignment *subframe = new TAlignment ( myapp()->frame , "Alignment" ) ;
     
@@ -777,12 +799,32 @@ void MyFrame::OnAlignment(wxCommandEvent& event)
 #endif
 
     subframe->initme () ;
+    if ( nv )
+        {
+        subframe->fromVector ( nv ) ;
+        }
+    else if ( vs.size() == 0 )
+        {
+        wxCommandEvent ev ;
+        subframe->OnSettings ( ev ) ;
+        }
+    else
+        {
+        subframe->prealigned ( vs , vc ) ;
+        }
 
     subframe->Show() ;
     subframe->Maximize() ;
     
     mainTree->addChild ( subframe , TYPE_ALIGNMENT ) ;
     setChild ( subframe ) ;
+    }
+
+void MyFrame::OnAlignment(wxCommandEvent& event)
+    {
+    vector <string> vs ; // Dummy
+    vector <ChildBase*> vc ; // Dummy
+    runAlignment ( vs , vc ) ;
     }
     
 void MyFrame::OnManageDatabase(wxCommandEvent& event)
