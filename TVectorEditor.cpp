@@ -5,6 +5,7 @@ BEGIN_EVENT_TABLE(TVectorEditor, wxDialog )
     EVT_BUTTON(TVE_CANCEL,TVectorEditor::OnCancel)
     EVT_LIST_ITEM_SELECTED(TVE_ILIST,TVectorEditor::SelChangeItems)
     EVT_LIST_ITEM_ACTIVATED(TVE_ILIST,TVectorEditor::itemCol)
+    EVT_CHOICE(TVE_ICHOICE,TVectorEditor::itemChoice)
 
     EVT_LISTBOX(TVE_LB_CE,TVectorEditor::enzymeSelChange)
     EVT_LISTBOX(TVE_LB_GR,TVectorEditor::enzymeSelChange)
@@ -139,29 +140,35 @@ void TVectorEditor::initPanProp ()
     // Name and description
     wxRect r ;
     r = (new wxStaticText(panProp,-1,txt("name"),wxPoint(bo,bo*2)))->GetRect() ;
-    name = new wxTextCtrl(panProp,-1,v->name.c_str(),wxPoint(r.GetRight()+bo,bo),wxSize(w-r.GetRight()-bo*2,th)) ;
+    name = new wxTextCtrl(panProp,-1,v->name.c_str(),wxPoint(r.GetRight()+bo,bo),
+                                wxSize(w-r.GetRight()-bo*2,th)) ;
 
     r = (new wxStaticText(panProp,-1,txt("desc"),wxPoint(bo,bo*2+th)))->GetRect() ;
-    desc = new TURLtext(panProp,URLTEXT_DUMMY,v->desc.c_str(),wxPoint(bo,r.GetBottom()+bo),wxSize(w-bo*2,th*5),wxTE_MULTILINE);
+    desc = new TURLtext(panProp,URLTEXT_DUMMY,v->desc.c_str(),wxPoint(bo,r.GetBottom()+bo),
+                wxSize(w-bo*2,th*5),wxTE_MULTILINE);
     
     if ( v->type != TYPE_AMINO_ACIDS )
         {
         // Sticky ends
         r = (new wxStaticText(panProp,-1,"5'-",wxPoint(bo,th*8)))->GetRect() ;
-        lu = new wxTextCtrl(panProp,-1,v->getStickyEnd(true,true).c_str(),wxPoint(r.GetRight()+bo,r.GetTop()-bo),wxSize(w/5,th));
+        lu = new wxTextCtrl(panProp,-1,v->getStickyEnd(true,true).c_str(),
+                                wxPoint(r.GetRight()+bo,r.GetTop()-bo),wxSize(w/5,th));
     
         r = (new wxStaticText(panProp,-1,"-3'",wxPoint(w-r.GetRight(),r.GetTop())))->GetRect() ;
-        ru = new wxTextCtrl(panProp,-1,v->getStickyEnd(false,true).c_str(),wxPoint(r.GetLeft()-bo-w/5,r.GetTop()-bo),wxSize(w/5,th));
+        ru = new wxTextCtrl(panProp,-1,v->getStickyEnd(false,true).c_str(),
+                                wxPoint(r.GetLeft()-bo-w/5,r.GetTop()-bo),wxSize(w/5,th));
         
         string k ;
         while ( k.length() * (r.GetWidth()/3) < w/2 ) k += "-" ;
         new wxStaticText(panProp,-1,k.c_str(),wxPoint(lu->GetRect().GetRight()+bo,r.GetTop())) ;
     
         r = (new wxStaticText(panProp,-1,"3'-",wxPoint(bo,r.GetBottom()+th)))->GetRect() ;
-        ll = new wxTextCtrl(panProp,-1,v->getStickyEnd(true,false).c_str(),wxPoint(r.GetRight()+bo,r.GetTop()-bo),wxSize(w/5,th));
+        ll = new wxTextCtrl(panProp,-1,v->getStickyEnd(true,false).c_str(),
+                                wxPoint(r.GetRight()+bo,r.GetTop()-bo),wxSize(w/5,th));
     
         r = (new wxStaticText(panProp,-1,"-5'",wxPoint(w-r.GetRight(),r.GetTop())))->GetRect() ;
-        rl = new wxTextCtrl(panProp,-1,v->getStickyEnd(false,false).c_str(),wxPoint(r.GetLeft()-bo-w/5,r.GetTop()-bo),wxSize(w/5,th));
+        rl = new wxTextCtrl(panProp,-1,v->getStickyEnd(false,false).c_str(),
+                                wxPoint(r.GetLeft()-bo-w/5,r.GetTop()-bo),wxSize(w/5,th));
     
         new wxStaticText(panProp,-1,k.c_str(),wxPoint(lu->GetRect().GetRight()+bo,r.GetTop())) ;
         }    
@@ -244,7 +251,7 @@ void TVectorEditor::initPanItem ()
         vs[a] = txt(t) ;
         }
     r = ito->GetRect() ;
-    ichoice = new wxChoice(panItem,-1,
+    ichoice = new wxChoice(panItem,TVE_ICHOICE,
                 wxPoint(r.GetRight()+bo,r.GetTop()),
                 wxSize(w/4-bo*2,th),
                 VIT_TYPES,
@@ -395,7 +402,8 @@ void TVectorEditor::addOkCancel ( wxPanel *p )
     }
 
 #define VCOMMIT(_p1,_p2) if(_p1!=v->_p2){v->_p2=_p1;v->setChanged();}
-#define VCOMMIT_STICKY(_p1,_p2,_p3) if(_p1!=v->getStickyEnd(_p2,_p3)){v->setStickyEnd(_p2,_p3,_p1);v->setChanged();}
+#define VCOMMIT_STICKY(_p1,_p2,_p3) if(_p1!=v->getStickyEnd(_p2,_p3))\
+                    {v->setStickyEnd(_p2,_p3,_p1);v->setChanged();}
     
 void TVectorEditor::commitVector ()
     {
@@ -881,25 +889,27 @@ void TVectorEditor::itemClr ( wxEvent &ev )
        items->SetItemState ( num , 0 , wxLIST_MASK_IMAGE|wxLIST_MASK_STATE ) ;
     }
 
+// Invokes "Edit feature" dialog
+// Color, sequence display type, AA offset etc.
 void TVectorEditor::itemCol ( wxEvent &ev )
     {
     if ( icur == -1 ) return ;
-    storeItemData () ;
-    
+    storeItemData () ;    
     TItemEditDialog ied ( (wxWindow*)this , txt("t_edit_item") , *newitems[icur] ) ;
     if ( ied.ShowModal() != wxID_OK ) return ;
     *newitems[icur] = *ied.vi ;
-
-/*
-    // "Stable" code
-    wxColour col ;
-    wxBrush *b = newitems[icur]->getBrush() ;
-    col = b->GetColour() ;
-    col = wxGetColourFromUser ( this , col ) ;
-    if ( !col.Ok() ) return ;
-    newitems[icur]->setColor ( col ) ;
-*/
     }    
+    
+// Item choice dropdown box handler
+// Enables reading frame selection box if item type is CDS,
+// disables it if not
+void TVectorEditor::itemChoice ( wxEvent &ev )
+    {
+    int i = ichoice->GetSelection () ;
+    if ( i == -1 ) return ;
+    if ( i == VIT_CDS ) irb->Enable() ;
+    else irb->Disable() ;
+    }
     
 void TVectorEditor::hideEm ()
     {
