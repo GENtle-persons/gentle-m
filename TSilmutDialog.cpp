@@ -256,7 +256,8 @@ void TSilmutDialog::calc ()
               si.mut = y ;
               wxString old_dna = v->getSequence() ;
               v->setSequence ( new_dna ) ;
-              vector <TRestrictionCut> vc = v->getCuts(e) ;
+              vector <TRestrictionCut> vc ;
+              v->getCuts ( e , vc ) ;
               
               // Calculating the resulting fragments
               si.fragments.Alloc ( vc.size() + 5 ) ;
@@ -315,7 +316,7 @@ void TSilmutDialog::showit ()
         vector <TRestrictionCut> vc ;
         wxString e_name = vs[a].e->name ;
         while ( e_name.length() < 8 ) e_name += ' ' ;
-        vc = v->getCuts(vs[a].e) ;
+        v->getCuts ( vs[a].e , vc ) ;
         int cuts_before = vc.size() ;
 
         wxString fragments ;

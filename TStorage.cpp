@@ -524,6 +524,7 @@ void TStorage::setOption ( wxString oname , wxString vname )
 void TStorage::autoUpdateSchema ()
     {
     if ( isMySQL ) return ; // No updates yet
+    if ( dbname == "blank.db" ) return ; // No update of blank db    
     TSQLresult r ;
     wxString sql , s1 , s2 ;
     char t[1000] ;
@@ -600,6 +601,28 @@ void TStorage::autoUpdateSchema ()
            getObject ( sql ) ;
            }
         }
+
+    // Version 0.4
+    if ( version < 4 )
+        {
+        wxBeginBusyCursor() ;
+        version = 4 ;
+        TStorage *bl = myapp()->frame->getTempDB ( "blank.db" ) ;
+        r = bl->getObject ( "SELECT * FROM enzyme" ) ;
+        for ( int a = 0 ; a < r.rows() ; a++ )
+           {
+           wxString name = r[a][r["e_name"]] ;
+           wxString seq = r[a][r["e_sequence"]] ;
+           wxString cut = r[a][r["e_cut"]] ;
+           wxString ol = r[a][r["e_overlap"]] ;
+           sql = "UPDATE enzyme SET e_sequence='" + seq + 
+                      "', e_cut='" + cut +
+                      "', e_overlap='" + ol +
+                      "' WHERE e_name='" + name + "'" ;
+           getObject ( sql ) ;
+           }    
+        wxEndBusyCursor() ;
+        }    
     
     // Writing new version, if necessary
     if ( version > oversion )

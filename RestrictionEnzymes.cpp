@@ -1,5 +1,15 @@
 #include "RestrictionEnzymes.h"
 
+bool operator < ( const TRestrictionCut &c1 , const TRestrictionCut &c2 )
+    {
+    return c1.pos > c2.pos ;
+    }
+    
+bool operator == ( const TRestrictionCut &c1 , const TRestrictionCut &c2 )
+    {
+    return c1.pos == c2.pos ;
+    }
+
 bool TRestrictionEnzyme::differ ( TRestrictionEnzyme &e )
     {
     if ( name != e.name ) return true ;

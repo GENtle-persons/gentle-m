@@ -758,6 +758,7 @@ MyChild* MyFrame::newFromVector ( TVector *nv , int type )
 
     subframe->initPanels() ;
     mainTree->addChild(subframe,type) ;
+    children.Last()->Activate () ;
 
     return subframe ;
     }

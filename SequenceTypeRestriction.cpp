@@ -1,5 +1,81 @@
 #include "SequenceCanvas.h"
 
+
+int SequencePartList::getID ( int internalID ) { return vi[internalID] ; }
+int SequencePartList::getFrom ( int internalID ) { return vx[internalID] ; }
+int SequencePartList::getTo ( int internalID ) { return vy[internalID] ; }
+
+void SequencePartList::prepare ( int size )
+    {
+    vi.Clear () ;
+    vx.Clear () ;
+    vy.Clear () ;
+    vl.Clear () ;
+    vi.Alloc ( size ) ;
+    vl.Alloc ( size ) ;
+    vx.Alloc ( size ) ;
+    vy.Alloc ( size ) ;
+    }    
+    
+void SequencePartList::add ( int id , int from , int to )
+    {
+    vi.Add ( id ) ;
+    vx.Add ( from ) ;
+    vy.Add ( to ) ;
+    vl.Add ( 0 ) ;
+    }    
+    
+void SequencePartList::makeLevels ()
+    {
+    int a , b ;
+    wxString t ;
+    maxlevels = 0 ;
+    vl2.clear () ;
+    for ( a = 0 ; a < vi.GetCount() ; a++ )
+        {
+        wxString t ( ' ' , maxlevels + 2 ) ;
+        for ( b = 0 ; b < a ; b++ )
+           {
+           if ( vx[b] <= vy[a] && vy[b] >= vx[a] )
+              t.SetChar ( vl[b] , '*' ) ;
+           }    
+        vl[a] = t.First ( ' ' ) ;
+        if ( vl[a]+1 > maxlevels ) maxlevels = vl[a]+1 ;
+        while ( vl2.size() < maxlevels ) vl2.push_back ( wxArrayInt() ) ;
+        vl2[vl[a]].Add ( a ) ;
+        }    
+    }    
+    
+void SequencePartList::here ( int pos , wxArrayInt &ret )
+    {
+    ret.Clear () ;
+    for ( int a = 0 ; a < vi.GetCount() ; a++ )
+        {
+        if ( pos >= vx[a] && pos <= vy[a] ) ret.Add ( a ) ;
+        else if ( vy[a] >= slen && pos <= vy[a] - slen ) ret.Add ( a ) ;
+        }    
+    }    
+
+int SequencePartList::here ( int pos , int level )
+    {
+    for ( int a = 0 ; a < vl2[level].GetCount() ; a++ )
+        {
+        if ( pos >= vx[vl2[level][a]] && pos <= vy[vl2[level][a]] ) return vl2[level][a] ;
+        if ( vy[a] >= slen && pos <= vy[a] - slen ) return vl2[level][a] ;
+        }    
+    return -1 ;
+    }    
+    
+int SequencePartList::size ()
+    {
+    return vi.GetCount() ;
+    }    
+
+int SequencePartList::getLevel ( int i )
+    {
+    return vl[i] ;
+    }    
+
 //************************************************ SeqRestriction
 
 int SeqRestriction::arrange ( int n )
@@ -9,118 +85,51 @@ int SeqRestriction::arrange ( int n )
     int lasta = 0 , cut , thepos ;
     wxString t ;
     
-    vs.Clear() ;
-    ven.Clear() ;
-    eoe.Clear() ;
-    FILLSTRING ( t , ' ' , s.length() ) ;
-    s = t ;
-    for ( cut = 0 ; cut < vec->rc.size() ; cut++ )
+    pl.slen = vec->getSequenceLength() ;
+    pl.prepare ( vec->rc.size() ) ;    
+    for ( a = 0 ; a < vec->rc.size() ; a++ )
         {
-        TRestrictionEnzyme *e = vec->rc[cut].e ;
-        if ( vec->isEnzymeHidden ( e->name ) ) continue ;
-        vs.Add ( t ) ;
-        eoe.Add ( -1 ) ;
-        ven.Add ( e->name ) ;
-        
-        int vsl = vs.GetCount() - 1 ;
-        
-        for ( a = 0 ; a < e->sequence.length() ; a++ )
-           {
-           thepos = a + vec->rc[cut].pos - e->cut ;
-           if ( thepos >= 0 && thepos < t.length() )
-              vs[vsl][(uint)thepos] = '-' ;
-           }
-           
-        // Arranging enzyme text
-        eoe[vsl] = vec->rc[cut].pos - e->cut + e->sequence.length() ;
-           
-        thepos = vec->rc[cut].pos ;
-        if ( thepos-1 >= 0 && thepos < t.length() )
-           {
-           vs[vsl][(uint)thepos] = '|' ;
-           vs[vsl][(uint)vec->rc[cut].pos-1] = '#' ;
-           }
-        }
-    
-    // Merging all cuts
-    for ( a = 0 ; a < s.length() ; a++ )
-        {
-        s[a] = ' ' ;
-        for ( cut = 0 ; cut < vs.GetCount() ; cut++ )
-           if ( s[a] == ' ' )
-              s[a] = vs[cut][a] ;
-        }
-        
-    // Generating Y offsets
-    wxArrayString vt = vs ;
-
-    // An yoff for each vs (and each vt)
-    yoff.Clear() ;
-    while ( yoff.GetCount() < vs.GetCount() ) yoff.Add ( yoff.GetCount() ) ;
-    
-    // Trying to merge several lines together
-    for ( cut = 1 ; cut < vt.GetCount() ; cut++ )
-        {
-        x = -1 ;
-        for ( a = 0 ; x == -1 && a < vt.GetCount() ; a++ )
-           {
-           for ( b = 0 ; b < s.length() && ( vt[cut][b] == ' ' || vt[a][b] == ' ' ) ; b++ ) ;
-           if ( b == s.length() ) x = a ;
-           }
-           
-        // At this point, x is the first lane where vt[cut] would merge with
-        // If x == -1, no match was found, so it stays where it is
-        if ( x != -1 )
-           {
-           yoff[cut] = x ;
-           for ( a = 0 ; x != cut && a < s.length() ; a++ )
-              {
-              if ( vt[cut][a] != ' ' )
-                 {
-                 vt[x][a] = vt[cut][a] ;
-                 vt[cut][a] = ' ' ;
-                 }
-              }
-           }
-        else yoff[cut] = cut ;
-        }
+        int from = vec->rc[a].pos - vec->rc[a].e->cut ;
+        int to = from + vec->rc[a].e->sequence.length() - 1 ;
+        if ( !vec->isEnzymeHidden ( vec->rc[a].e->name ) )
+           pl.add ( a , from , to ) ;
+        }    
+    pl.makeLevels () ;
 
     // Setting basic values
     int wx = can->charwidth , wy = can->charheight ;
     endnumberlength = 0 ;
-    int ox = bo+wx , oy = n*wy+bo , endnumber = offset + s.length() ;
+    int ox = bo+wx , oy = n*wy+bo , endnumber = offset + vec->getSequenceLength() ;
     while ( endnumber > 0 ) { endnumber /= 10 ; ox += wx ; endnumberlength++ ; }
+    
     can->MyGetSize ( &w , &h ) ;
     w -= 20 ; // Scrollbar dummy
 
     pos.cleanup() ;
-    pos.reserve ( vec->rc.size() * 7 ) ; // ~7 chars per cut...
-    for ( int layer = 0 ; layer < vs.GetCount() ; layer++ )
+    pos.reserve ( vec->getSequenceLength() , 0 ) ;
+    x = ox ;
+    y = oy ;
+
+    for ( a = 0 ; a < vec->getSequenceLength() ; a++ )
         {
-        x = ox ;
-        y = oy ;
-        for ( a = 0 ; a < s.length() ; a++ )
-            {
-            int xoff = 0 ;
-            if ( (a+1) % can->blocksize == 0 ) xoff = wx/3 ;
-            if ( vs[layer][a] != ' ' ) pos.add ( a+1 , x , y , wx-1+xoff , wy-1 ) ;
-            if ( y+wy > lowy ) lowy = y+wy ;
-            x += wx ;
-            if ( (a+1) % can->blocksize == 0 )
-               {
-               x += wx ;
-               if ( x+wx*(can->blocksize+1) >= w )
-                  {
-                  pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
-                  lasta = pos.p.GetCount()+1 ;
-                  x = ox ;
-                  y += wy * ( can->seq.GetCount() + can->blankline ) ;
-                  }
-               }
-            }
-        if ( lasta != pos.p.GetCount()+1 ) 
-            pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
+        pos.add ( a+1 , x , y , wx-1 , wy-1 ) ;
+        lowy = y+wy ;
+        x += wx ;
+        if ( (a+1) % can->blocksize == 0 )
+           {
+           x += wx-1 ;
+           if ( x+wx*(can->blocksize+1) >= w )
+              {
+//              pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
+              lasta = pos.p.GetCount()+1 ;
+              x = ox ;
+              y += wy * ( can->seq.GetCount() + can->blankline ) ;
+              }
+           }
         }
+//    if ( lasta != pos.p.GetCount()+1 ) 
+//        pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
+
     return lowy + bo*2 ;
     }
     
@@ -134,16 +143,16 @@ void SeqRestriction::show ( wxDC& dc )
     ya = -ya ;
     can->MyGetClientSize ( &xa , &yb ) ;
     yb += ya ;
-    for ( int layer = 0 ; layer < vs.GetCount() ; layer++ )
+    for ( int level = 0 ; level < pl.maxlevels ; level++ )
         {
         int a , b , cut ;
         char u[100] ;
         char lc = ' ' ;
         int ly = -1 ;
-        int yo = yoff[layer] * 2 - 6 ;
-        if ( down ) yo = can->charheight / 2 - ( yoff[layer] * 2 ) ;
+        int yo = (level*2) * 2 - 6 ;
+        if ( down ) yo = can->charheight / 2 - ( (level*2) * 2 ) ;
         int llx = 0 ;
-        switch ( yoff[layer]%3 )
+        switch ( (level*2)%3 )
             {
             case 0 : dc.SetPen(*wxRED_PEN); 
                      dc.SetTextForeground ( wxColor ( *wxRED ) ) ;
@@ -160,14 +169,34 @@ void SeqRestriction::show ( wxDC& dc )
            dc.SetPen(*wxBLACK_PEN); 
            dc.SetTextForeground ( *wxBLACK ) ; 
            }
-        int qlx = -1 ;
+        int qlx = -1 , idx ;
         for ( a = 0 ; a < pos.p.GetCount() ; a++ )
             {
             if ( can->hardstop > -1 && a > can->hardstop ) break ;
+            char c = ' ' ;
             b = pos.p[a] ;
-            char c = vs[layer][(uint)b-1] ;
-            if ( c != ' ' )
+            int tx = pos.r[a].x , ty = pos.r[a].y ;
+            int tz = ty + can->charheight ;
+            
+            bool insight = true ; // Meaning "is this part visible"
+            if ( tz < ya ) insight = false ;
+            if ( ty > yb ) insight = false ;
+            if ( can->getDrawAll() ) insight = true ;
+            
+            if ( insight ) idx = pl.here ( b-1 , level ) ;
+            if ( idx != -1 && insight )
                {
+               c = '-' ;
+               TRestrictionCut *rc = &(vec->rc[pl.getID(idx)]) ;
+
+               if ( rc->pos == b-1 ) c = '|' ;
+               else if ( rc->pos == b ) c = '#' ;
+               
+               char c2 = ' ' ;
+               int ol = rc->pos + rc->e->overlap ;
+               if ( b-1 == ol ) c2 = '|' ; 
+               else if ( b == ol ) c2 = '#' ; 
+                              
                if ( qlx == -1 ) qlx = pos.r[a].GetLeft() ;
                int lx = pos.r[a].GetLeft() ;
                int x = ( lx + pos.r[a].GetRight() ) / 2 ;
@@ -178,27 +207,39 @@ void SeqRestriction::show ( wxDC& dc )
                
                if ( c == '-' )
                   {
-                  dc.DrawLine ( lx , y , pos.r[a].GetRight() , y ) ;
+                  if ( c2 == ' ' ) dc.DrawLine ( lx , y , pos.r[a].GetRight() , y ) ;
                   }
                else if ( c == '#' )
                   {
-                  if ( lx < x )
-                     dc.DrawLine ( lx , y , x , y ) ;
+                  if ( lx < x ) dc.DrawLine ( lx , y , x , y ) ;
                   dc.DrawLine ( x , y , pos.r[a].GetRight() , bt ) ;
                   }
                else if ( c == '|' )
                   {
-                  dc.DrawLine ( lx , bt , x , y ) ;
+                  if ( lx < x ) dc.DrawLine ( lx , bt , x , y ) ;
+                  if ( c2 != '#' ) dc.DrawLine ( x , y , pos.r[a].GetRight() , y ) ;
+                  }
+
+               if ( c2 == '#' )
+                  {
+                  if ( lx < x && lc != '#' ) dc.DrawLine ( lx , y , x , y ) ;
+                  dc.DrawLine ( x , y , pos.r[a].GetRight() , y + ( y - bt ) ) ;
+                  }
+               else if ( c2 == '|' )
+                  {
+                  if ( lx < x ) dc.DrawLine ( lx , y + ( y - bt ) , x , y ) ;
                   dc.DrawLine ( x , y , pos.r[a].GetRight() , y ) ;
                   }
+                  
+                  
                llx = pos.r[a].GetRight() ;
                ly = y ;
                qlx = x ;
-               }
-            if ( b == eoe[layer] )
-               {
-               if ( down ) dc.DrawText ( ven[layer] , llx , ly - ch2 ) ;
-               else dc.DrawText ( ven[layer] , llx , ly ) ;
+               if ( b == pl.getTo ( idx ) )
+                  {
+                  if ( down ) dc.DrawText ( rc->e->name , llx , ly - ch2 ) ;
+                  else dc.DrawText ( rc->e->name , llx , ly ) ;
+                  }
                }
             lc = c ;
             if ( !can->getDrawAll() && pos.r[a].GetTop() > yb ) a = pos.p.GetCount() ;

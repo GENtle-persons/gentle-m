@@ -1888,3 +1888,55 @@ void TMarkMem::unmark()
        }
     }
     
+// -------------------------------------------------------- SeqPos
+
+
+void SeqPos::cleanup ()
+    {
+    p.Clear () ;
+    m.Clear () ;
+    r.clear () ;
+    l.clear () ;
+    }
+    
+void SeqPos::add ( int np , int x , int y , int w , int h )
+    {
+    p.Add ( np ) ;
+    r.push_back ( wxRect ( x , y , w , h ) ) ;
+    m.Add ( 0 ) ;
+    }
+    
+void SeqPos::addline ( int from , int to , int vfrom , int vto )
+    {
+    l.push_back ( wxRect ( from , to , vfrom , vto ) ) ;
+    }
+    
+int SeqPos::getLine ( int y )
+    {
+    int ret = -1 ;
+    for ( int a = 0 ; a < l.size() && ret == -1 ; a++ )
+       {
+       if ( l[a].width <= y && l[a].height >= y )
+          ret = a ;
+       }
+    return ret ;
+    }
+    
+int SeqPos::getItem ( wxPoint pt , int line )
+    {
+    int a ;
+    for ( a = l[line].x ; a <= l[line].y ; a++ )
+       if ( pt.x >= r[a].x && pt.x <= r[a].x+r[a].width &&
+            pt.y >= r[a].y && pt.y <= r[a].y+r[a].height )
+          return a ;
+    return 0 ;
+    }
+    
+void SeqPos::reserve ( int n , int n2 )
+    {
+    r.reserve ( n ) ;
+    l.reserve ( n2 == -1 ? n / 5 : n2 ) ; // Guessing...
+    p.Alloc ( n ) ;
+    m.Alloc ( n ) ;
+    }
+        
