@@ -28,7 +28,6 @@ class TXMLfile
     bool _success ;
     wxArrayTVector _v ;
     } ;
-    
 
 #endif
 

@@ -18,6 +18,7 @@ class TGenBank ;
 class TXMLfile ;
 class TCalculator ;
 class TPDB ;
+class TEnzymeRules ;
 
 typedef wxFrame MyFrameType ;
 
@@ -93,6 +94,7 @@ public:
     bool dying , enhancedRefresh , showVectorTitle , showVectorLength , 
             loadLastProject , useMetafile , showSplashScreen , checkUpdate ,
             useCoolCanvas , useInternalHelp ;
+    TEnzymeRules *global_enzyme_rules ;
     wxString lang_string , project_name , project_desc , project_db ;
     wxArrayString lastCocktail ;
     wxArrayChildBase children ;
