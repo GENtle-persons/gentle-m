@@ -47,6 +47,7 @@ class TPrimerDesign : public ChildBase
     virtual void OnDeletePrimer ( wxCommandEvent &ev ) ;
     virtual void OnToggleFeatures ( wxCommandEvent &ev ) ;
     virtual void OnSpin(wxSpinEvent& event);
+    virtual void OnSpinText(wxCommandEvent& event);
     
     virtual void OnAA_all(wxCommandEvent& event);
     virtual void OnAA_three(wxCommandEvent& event);
@@ -81,6 +82,7 @@ class TPrimerDesign : public ChildBase
     virtual void guessOptNuc () ;
     virtual void calculateResultSequence () ;
     wxSpinCtrl *spin ;
+    bool spinTextEnabeled ;
     
     DECLARE_EVENT_TABLE()
     } ;

@@ -823,6 +823,9 @@ bool TManageDatabaseDialog::do_load_project ( string name , string db )
     string sql ;
     TStorage *tstorage = getTempDB ( getFileName ( db ) ) ;
     TSQLresult sr ;
+
+    MyFrame *f = myapp()->frame ;
+    int oc = f->children.size() ;
     
     // Closing current windows
     wxCommandEvent dummy ;
