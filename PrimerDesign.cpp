@@ -39,10 +39,10 @@ BEGIN_EVENT_TABLE(TPrimerDesign, MyChildBase)
     EVT_MENU(MDI_COPY, TPrimerDesign::OnCopy)
 
     EVT_MENU(MDI_EDIT_MODE, TPrimerDesign::OnEditMode)
-    EVT_CLOSE(TPrimerDesign::OnClose)
+    EVT_CLOSE(ChildBase::OnClose)
 END_EVENT_TABLE()
 
-TPrimerDesign::TPrimerDesign(MyFrame *parent, 
+TPrimerDesign::TPrimerDesign(wxWindow *parent, 
                     wxString title,
                     TVector *_vec,
                     vector <TPrimer> pl ,
@@ -296,20 +296,8 @@ void TPrimerDesign::updatePrimerStats ()
     stat->SetValue ( "" ) ;
     lastPrimerActivated = -1 ;
     }
-    
-void TPrimerDesign::OnClose(wxCloseEvent& event)
-{
-    if ( !caniclose ( event ) ) return ;
-    
-    // Removing the window from the main tree
-    MyFrame *p = myapp()->frame ;
-    p->mainTree->removeChild ( this ) ;
-    p->SetTitle ( txt("gentle") ) ;
-    SetTitle ( txt("gentle") ) ;
-    p->removeChild ( this ) ;
-    event.Skip();
-}
-    
+
+
 void TPrimerDesign::initme ()
     {
     int bo = 5 ;
@@ -462,6 +450,14 @@ void TPrimerDesign::initme ()
 #ifdef __WXMSW__ // LINUX
     GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,show_features);
 #endif
+
+    wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
+    v0->Add ( hs , 1 , wxEXPAND , 5 ) ;
+    SetSizer ( v0 ) ;
+    v0->Fit ( this ) ;
+
+
 
     showSequence () ;
     updatePrimersFromSequence() ;

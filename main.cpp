@@ -213,7 +213,7 @@ bool MyApp::OnInit()
 
     frame = new MyFrame((wxFrame *)NULL, -1, "",
                         wxPoint(-1, -1), wxSize(500, 400),
-                        wxDEFAULT_FRAME_STYLE | wxHSCROLL | wxVSCROLL);
+                        wxDEFAULT_FRAME_STYLE );//| wxHSCROLL | wxVSCROLL);
     
     frame->initme () ;
     SetTopWindow(frame);
@@ -304,10 +304,40 @@ string MyApp::getFileFormatApplication ( string type )
     
 // ****************************
 
+ChildBase::ChildBase ()
+    {
+    def = "" ;
+    vec = NULL ;
+    cSequence = NULL ;
+    toolbar = NULL ;
+    menubar = NULL ;
+    }
+    
+ChildBase::ChildBase(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style)
+        : MyChildBase((MyFrameType*)parent, -1, pos, size, style)
+    {
+    def = "" ;
+    vec = NULL ;
+    cSequence = NULL ;
+    toolbar = NULL ;
+    menubar = NULL ;
+    }
+        
+ChildBase::ChildBase(wxWindow *parent, const wxString& title)
+        : MyChildBase((MyFrameType*)parent, -1)
+    {
+    def = "" ;
+    vec = NULL ;
+    cSequence = NULL ;
+    toolbar = NULL ;
+    menubar = NULL ;
+    }
+
+
 wxToolBar *ChildBase::CreateToolBar ( int i )
 {
 #ifdef __WXMSW__
-  return MyChildBase::CreateToolBar ( i , -1 , "" ) ;
+  return ChildBase::CreateToolBar ( i , -1 , "" ) ;
 #else
   wxToolBar *bar = new wxToolBar ( myapp()->frame , -1 ) ;
   //  SetToolBar ( bar ) ;
@@ -318,8 +348,10 @@ wxToolBar *ChildBase::CreateToolBar ( int i )
 
 void ChildBase::Maximize ( bool isit )
 {
-  MyChildBase::Maximize ( isit ) ;
-  showName () ;
+//  MyChildBase::Maximize ( isit ) ;
+  Activate () ;
+//  SetSize ( GetParent()->GetClientSize() ) ;
+//  showName () ;
 }
 
 void ChildBase::showName ( string x )
@@ -329,7 +361,8 @@ void ChildBase::showName ( string x )
        x = getName() ;
        if ( vec && vec->isChanged() ) x += "*" ;
        }
-    if ( GetTitle().c_str() != x ) SetTitle ( x.c_str() ) ;
+    if ( myapp()->frame->GetTitle().c_str() != x )
+        myapp()->frame->SetTitle ( x.c_str() ) ;
     }
     
 void ChildBase::OnFocus(wxFocusEvent& event)
@@ -337,8 +370,12 @@ void ChildBase::OnFocus(wxFocusEvent& event)
     myass ( myapp() , "Oh no! No application defined!" ) ;
     myass ( myapp()->frame , "Oh no! No frame defined!" ) ;
     if ( myapp()->frame->dying ) return ;
+    
+    Activate () ;
     showName ( ) ;
     myapp()->frame->mainTree->SelectItem ( inMainTree ) ;
+    SetFocus () ;
+    if ( cSequence ) cSequence->SetFocus() ;
     }
 
 bool ChildBase::caniclose(wxCloseEvent& event)
@@ -370,3 +407,52 @@ void ChildBase::updateUndoMenu ()
     {
     }
     
+wxToolBar *ChildBase::CreateToolBar ( int i , int j , wxString s )
+    {
+    toolbar = new wxToolBar ( this , -1 ) ;
+    return toolbar ;
+    }
+    
+void ChildBase::SetMenuBar ( wxMenuBar *menu_bar )
+    {
+    menubar = menu_bar ;
+    }
+    
+wxMenuBar *ChildBase::GetMenuBar ()
+    {
+    return menubar ;
+    }
+    
+void ChildBase::Activate ()
+    {
+    myapp()->frame->setActiveChild ( this ) ;
+    showName () ;
+    SetFocus();
+    if ( cSequence ) cSequence->SetFocus() ;
+    }
+    
+wxToolBar *ChildBase::GetToolBar ()
+    {
+    return toolbar ;
+    }
+    
+void ChildBase::SetIcon ( wxIcon icon )
+    {
+    }
+    
+void ChildBase::OnClose(wxCloseEvent& event)
+{
+    if ( !caniclose ( event ) )
+        {
+        event.Veto() ;
+        return ;
+        }
+    
+    myass ( this , "ChildBase::OnClose" ) ;
+    myapp()->frame->mainTree->removeChild ( this ) ;
+    myapp()->frame->SetTitle ( txt("gentle") ) ;
+    SetTitle ( txt("gentle") ) ;
+    event.Skip();
+    myapp()->frame->removeChild ( this ) ;
+}
+

@@ -3,6 +3,8 @@
 BEGIN_EVENT_TABLE(TCalculator, MyChildBase)
     EVT_MENU(SEQ_PRINT, TCalculator::OnSeqPrint)
     EVT_MENU(MDI_PRINT_REPORT,TCalculator::OnPrintPreview)
+    EVT_CLOSE(ChildBase::OnClose)
+    EVT_SET_FOCUS(ChildBase::OnFocus)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(TGridLigation, wxGrid)
@@ -17,7 +19,7 @@ BEGIN_EVENT_TABLE(TGridDNA, wxGrid)
    EVT_GRID_SELECT_CELL(TGridDNA::OnSelectCell)
 END_EVENT_TABLE()
 
-TCalculator::TCalculator(MyFrame *parent, const wxString& title) 
+TCalculator::TCalculator(wxWindow *parent, const wxString& title) 
     : ChildBase(parent, title)
     {
     def = "CALCULATOR" ;
@@ -40,18 +42,7 @@ void TCalculator::OnPrintPreview(wxCommandEvent& event)
     TGridBasic *g = (TGridBasic*) nb->GetPage ( nb->GetSelection () ) ;
     g->print ( HTML_PRINT_PREVIEW ) ;
     }
-    
-    
-void TCalculator::OnClose(wxCloseEvent& event)
-{
-    // Removing the window from the main tree
-    MyFrame *p = (MyFrame*)GetParent();
-    p->mainTree->removeChild ( this ) ;
-    p->SetTitle ( txt("gentle") ) ;
-    SetTitle ( txt("gentle") ) ;
-    p->removeChild ( this ) ;
-    event.Skip();
-}
+
 
 void TCalculator::initme ()
     {
@@ -81,7 +72,16 @@ void TCalculator::initme ()
     ligDNA = new TGridDNA ( nb , -1 ) ;
     nb->AddPage ( ligDNA , txt("t_lig_dna") ) ;
     ligDNA->init () ;
+
+    wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+//    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
+    v0->Add ( nb , 1 , wxEXPAND , 5 ) ;
+    SetSizer ( v0 ) ;
+    v0->Fit ( this ) ;
+
     myapp()->frame->setChild ( this ) ;
+    Maximize () ;
+    Activate () ;
     }
 
 string TCalculator::getName ()

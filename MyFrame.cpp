@@ -21,10 +21,20 @@ BEGIN_EVENT_TABLE(MyFrame, MyFrameType)
     EVT_MENU(MDI_PROJECT_LOAD, MyFrame::OnProjectLoad)
     EVT_MENU(MDI_PROJECT_CLOSE, MyFrame::OnProjectClose)
     EVT_MENU(MDI_QUIT, MyFrame::OnQuit)
+    EVT_MENU(MDI_CLOSE, MyFrame::OnMDIClose)
     EVT_MENU(MDI_MANAGE_DATABASE, MyFrame::OnManageDatabase)
     EVT_MENU(PROGRAM_OPTIONS, MyFrame::OnProgramOptions)
+    
+    EVT_MENU(MDI_RESTRICTION, MyFrame::BollocksMenu)
+    EVT_MENU(MDI_LIGATION, MyFrame::BollocksMenu)
 
-    EVT_SASH_DRAGGED_RANGE(FRAME_SASH_TOP, FRAME_SASH_BOTTOM, MyFrame::OnSashDrag)
+    EVT_MENU(MDI_NEXT_WINDOW, MyFrame::BollocksMenu)
+    EVT_MENU(MDI_PREV_WINDOW, MyFrame::BollocksMenu)
+
+    EVT_MENU_RANGE(A___,Z___,MyFrame::RerouteMenu)
+
+
+    EVT_SASH_DRAGGED_RANGE(FRAME_SASH_1, FRAME_SASH_TOP, MyFrame::OnSashDrag)
     
     EVT_CLOSE(MyFrame::OnClose)
 
@@ -32,7 +42,7 @@ BEGIN_EVENT_TABLE(MyFrame, MyFrameType)
 END_EVENT_TABLE()
 
 // Define my frame constructor
-#define ACC_ENT 33
+#define ACC_ENT 36
 MyFrame::MyFrame(wxWindow *parent,
                  const wxWindowID id,
                  const wxString& title,
@@ -78,10 +88,14 @@ MyFrame::MyFrame(wxWindow *parent,
     entries[30].Set(wxACCEL_CTRL, (int) 'I', MDI_FILE_IMPORT);
     entries[31].Set(wxACCEL_CTRL, (int) 'Z', MDI_UNDO);
     entries[32].Set(wxACCEL_CTRL, (int) 'N', MDI_TEXT_IMPORT);
+    entries[33].Set(wxACCEL_CTRL, WXK_F4, MDI_CLOSE);
+    entries[34].Set(wxACCEL_CTRL, WXK_TAB, MDI_NEXT_WINDOW);
+    entries[35].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_TAB, MDI_PREV_WINDOW);
     
     wxAcceleratorTable accel(ACC_ENT, entries);
     SetAcceleratorTable(accel);
     html_ep = NULL ;
+    lastChild = NULL ;
 }
 
 MyFrame::~MyFrame ()
@@ -100,7 +114,8 @@ void MyFrame::initme ()
     {
   wxSashLayoutWindow* win ;
   m_leftWindow2 = m_topWindow = m_bottomWindow = NULL ;
-/*      win = new wxSashLayoutWindow(this, FRAME_SASH_TOP,
+/*  
+  win = new wxSashLayoutWindow(this, FRAME_SASH_TOP,
                              wxDefaultPosition, wxSize(200, 30),
                              wxNO_BORDER | wxSW_3D | wxCLIP_CHILDREN);
 
@@ -139,7 +154,7 @@ void MyFrame::initme ()
     
 
   m_leftWindow1 = win;
-/*
+
   // Another window to the left of the client window
   win = new wxSashLayoutWindow(this, FRAME_SASH_2,
                                wxDefaultPosition, wxSize(500, 30),
@@ -147,11 +162,10 @@ void MyFrame::initme ()
   win->SetDefaultSize(wxSize(500, 1000));
   win->SetOrientation(wxLAYOUT_VERTICAL);
   win->SetAlignment(wxLAYOUT_LEFT);
-  win->SetBackgroundColour(wxColour(0, 255, 255));
+//  win->SetBackgroundColour(wxColour(0, 255, 255));
   win->SetSashVisible(wxSASH_RIGHT, TRUE);
-
   m_leftWindow2 = win;
-*/  
+
     // Database access
     LS = new TStorage ( LOCAL_STORAGE ) ;
     LS->createDatabase() ;
@@ -228,7 +242,7 @@ void MyFrame::initme ()
     wxMenu *tool_menu = getToolMenu ( false ) ;
     wxMenu *help_menu = getHelpMenu () ;
 
-    wxMenuBar *menu_bar = new wxMenuBar;
+    menu_bar = new wxMenuBar;
 
     menu_bar->Append(file_menu, txt("m_file") );
     menu_bar->Append(tool_menu, txt("m_tools") );
@@ -274,7 +288,7 @@ void MyFrame::initme ()
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"mode_edit.bmp", wxBITMAP_TYPE_BMP) ) ; // 13
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"primer_import.bmp", wxBITMAP_TYPE_BMP) ) ; // 14
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"primer_export.bmp", wxBITMAP_TYPE_BMP) ) ; // 15
-
+/*
 #ifdef __WXGTK_______
     // Toolbar
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
@@ -298,10 +312,13 @@ void MyFrame::initme ()
     toolBar->AddSeparator() ;
     toolBar->Realize() ;    
 #endif
-
+*/
     html_ep = new wxHtmlEasyPrinting ( "" , this ) ;
     
+    wxBeginBusyCursor() ;
+
     // Load last project?
+//    loadLastProject = false ;
     if ( loadLastProject )
         {
         string sql , n , d ;
@@ -319,7 +336,10 @@ void MyFrame::initme ()
            mainTree->Refresh () ;
            }
         }
-
+        
+    wxEndBusyCursor() ;
+    
+        
     // Command line parameters?
     if ( myapp()->argc > 1 )
        {
@@ -333,10 +353,29 @@ void MyFrame::initme ()
           wxSetWorkingDirectory ( myapp()->homedir ) ;
           }
        }
-
+       
+    SetSizeHints ( 600 , 400 ) ;
     Show(TRUE);
+    if ( children.size() )
+       {
+       children[0]->Activate () ;
+//       children[0]->Refresh () ;
+       }
+    }
+    /*
+void MyFrame::SetMenuBar ( wxMenuBar *menu_bar )
+    {
     }
 
+void MyFrame::SetIcon ( wxIcon icon )
+    {
+    }
+
+void MyFrame::CreateStatusBar ()
+    {
+    }
+    */
+    
 void MyFrame::OnClose(wxCloseEvent& event)
 {
     dying = true ;
@@ -384,6 +423,11 @@ void MyFrame::OnHelp(wxCommandEvent& WXUNUSED(event) )
         #endif
         }
 }
+
+ChildBase *MyFrame::GetActiveChild() //SDI
+    {
+    return lastChild ;
+    }
 
 void MyFrame::OnEnzymeEditor(wxCommandEvent& WXUNUSED(event) )
 {   
@@ -548,9 +592,10 @@ void MyFrame::importFile ( string file , string path , int filter )
         return ;
         }
 
-    MyChild *subframe = new MyChild(myapp()->frame, txt("imported_vector"),
+    MyChild *subframe = new MyChild(getCommonParent(), txt("imported_vector"),
                                     wxPoint(-1, -1), wxSize(-1, -1),
                                     wxDEFAULT_FRAME_STYLE);
+
 
     // Give it an icon
 #ifdef __WXMSW__
@@ -574,9 +619,11 @@ void MyFrame::importFile ( string file , string path , int filter )
     else if ( filter == 1 )
         {
         // Loading GenBank file
+        delete subframe ;
         TGenBank gb ;
         gb.load ( path.c_str() ) ;
         newGB ( gb ) ;
+        return ;
         }
     else if ( filter == 2 )
         {
@@ -626,13 +673,14 @@ void MyFrame::importFile ( string file , string path , int filter )
     subframe->initPanels() ;
     mainTree->addChild(subframe,type) ;
     subframe->Maximize() ;
+    subframe->Activate () ;
 }
 
 void MyFrame::newXML (  TXMLfile &xml , string title )
    {
    int n ;
    SetCursor ( *wxHOURGLASS_CURSOR ) ;
-   Freeze () ;
+//   Freeze () ;
    for ( n = 0 ; n < xml.countVectors() ; n++ )
        {
        TVector *nv = xml.getVector ( n ) ;
@@ -643,13 +691,13 @@ void MyFrame::newXML (  TXMLfile &xml , string title )
        else
           newFromVector ( nv , type ) ;
        }
-   Thaw () ;
+//   Thaw () ;
    SetCursor ( *wxSTANDARD_CURSOR ) ;
    }
 
 MyChild *MyFrame::newCLONE ( TClone &clone )
     {
-    MyChild *subframe = new MyChild(myapp()->frame, txt("imported_vector"),
+    MyChild *subframe = new MyChild(getCommonParent(), txt("imported_vector"),
                                     wxPoint(-1, -1), wxSize(-1, -1),
                                     wxDEFAULT_FRAME_STYLE);
 
@@ -672,7 +720,7 @@ MyChild *MyFrame::newCLONE ( TClone &clone )
 
 MyChild *MyFrame::newFASTA ( TFasta &fasta )
     {
-    MyChild *subframe = new MyChild(myapp()->frame, txt("imported_vector"),
+    MyChild *subframe = new MyChild(getCommonParent(), txt("imported_vector"),
                                     wxPoint(-1, -1), wxSize(-1, -1),
                                     wxDEFAULT_FRAME_STYLE);
 
@@ -735,8 +783,8 @@ void MyFrame::newGB ( TGenBank &gb , string title )
            }        
         }
         
-    SetCursor ( *wxHOURGLASS_CURSOR ) ;
-    Freeze () ;
+    wxBeginBusyCursor() ;
+//    Freeze () ;
     for ( n = 0 ; n < gb.vs_l.size() ; n++ )
         {
         nv = vv[n] ;
@@ -754,18 +802,19 @@ void MyFrame::newGB ( TGenBank &gb , string title )
         runAlignment ( vs , vc ) ;
         }
         
-    Thaw () ;
-    SetCursor ( *wxSTANDARD_CURSOR ) ;
+//    Thaw () ;
+    wxEndBusyCursor() ;
     }
 
 
 MyChild* MyFrame::newFromVector ( TVector *nv , int type )
     {
     if ( !nv ) return NULL ;
-    MyChild *subframe = new MyChild(this, "",
+    MyChild *subframe = new MyChild(getCommonParent(), "",
                                     wxPoint(-1, -1), wxSize(-1, -1),
                                     wxDEFAULT_FRAME_STYLE);
     myass ( subframe , "MyFrame::newFromVector" ) ;
+    setChild ( subframe ) ;
 
     // Give it an icon
 #ifdef __WXMSW__
@@ -779,10 +828,10 @@ MyChild* MyFrame::newFromVector ( TVector *nv , int type )
     subframe->vec = nv ;
     subframe->vec->setWindow ( subframe ) ;
 
-
     subframe->initPanels() ;
     mainTree->addChild(subframe,type) ;
     subframe->Maximize() ;
+    subframe->Activate () ;
     return subframe ;
     }
 
@@ -790,52 +839,22 @@ MyChild* MyFrame::newFromVector ( TVector *nv , int type )
 void MyFrame::OnSize(wxSizeEvent& WXUNUSED(event))
 {
     wxLayoutAlgorithm layout;
-    layout.LayoutMDIFrame(this);
+    layout.LayoutFrame(this);
+    if ( lastChild ) lastChild->Maximize() ;
     return ;
-    int w, h;
-    GetClientSize(&w, &h);
-    
-    mainTree->SetSize(0, 0, 200, h);
-    GetClientWindow()->SetSize(200, 0, w - 200, h);
 }
 
 
 #define NOB 2
 void MyFrame::InitToolBar(wxToolBar* toolBar)
 {
-/*
-#ifdef __WXMSW__
-    toolBar->AddTool( MDI_FILE_OPEN, 
-            wxBitmap (myapp()->bmpdir+"\\open.bmp", wxBITMAP_TYPE_BMP), 
-            txt("m_open") , txt("m_opentxt") );
-#else
-    wxBitmap* bitmaps[NOB];
-    bitmaps[0] = new wxBitmap( new_xpm );
-    bitmaps[1] = new wxBitmap( open_xpm );
-    bitmaps[2] = new wxBitmap( save_xpm );
-    bitmaps[3] = new wxBitmap( copy_xpm );
-    bitmaps[4] = new wxBitmap( cut_xpm );
-    bitmaps[5] = new wxBitmap( paste_xpm );
-    bitmaps[6] = new wxBitmap( print_xpm );
-    bitmaps[7] = new wxBitmap( help_xpm );
-    int i;
-    for (i = 0; i < NOB; i++)
-        delete bitmaps[i];
-#endif
-*/
-/*
-#ifdef __WXMSW__
-    int width = 24;
-#else
-    int width = 16;
-#endif
-    int currentX = 5;
-*/
 }
 
 void MyFrame::runAlignment ( vector <string> &vs , vector <ChildBase*> &vc , TVector *nv )
     {
-    TAlignment *subframe = new TAlignment ( myapp()->frame , "Alignment" ) ;
+//    Thaw () ;
+    TAlignment *subframe = new TAlignment ( getCommonParent() , "Alignment" ) ;
+    setChild ( subframe ) ;
     
     // Give it an icon
 #ifdef __WXMSW__
@@ -845,6 +864,8 @@ void MyFrame::runAlignment ( vector <string> &vs , vector <ChildBase*> &vc , TVe
 #endif
 
     subframe->initme () ;
+    subframe->Activate () ;
+
     if ( nv )
         {
         subframe->fromVector ( nv ) ;
@@ -860,10 +881,9 @@ void MyFrame::runAlignment ( vector <string> &vs , vector <ChildBase*> &vc , TVe
         }
 
     subframe->Show() ;
-    subframe->Maximize() ;
     
     mainTree->addChild ( subframe , TYPE_ALIGNMENT ) ;
-    setChild ( subframe ) ;
+    mainTree->Refresh () ;
     }
 
 void MyFrame::OnAlignment(wxCommandEvent& event)
@@ -1005,35 +1025,19 @@ void MyFrame::rememberLastProject ()
     
 TAminoAcids *MyFrame::newAminoAcids ( string aa , string title )
     {
-    if ( title == "" ) title = "Surprise!" ;
-    TAminoAcids *subframe = new TAminoAcids ( this , title.c_str() ) ;
-    subframe->vec->sequence = aa ;
-    subframe->vec->type = TYPE_AMINO_ACIDS ;
+    TVector nv ;
+    nv.sequence = aa ;
+    return newAminoAcids ( &nv , title ) ;
 
-    // Give it an icon
-#ifdef __WXMSW__
-    subframe->SetIcon(wxIcon("chrt_icn"));
-#else
-    subframe->SetIcon(wxIcon( mondrian_xpm ));
-#endif
-
-    subframe->initme () ;
-
-    subframe->Show() ;
-    subframe->Maximize() ;
-    subframe->showName() ;
-    
-    mainTree->addChild ( subframe , TYPE_AMINO_ACIDS ) ;
-    setChild ( subframe ) ;
-
-    return subframe ;
     }
 
 TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , string title )
     {
     int a ;
     if ( title == "" ) title = "Surprise!" ;
-    TAminoAcids *subframe = new TAminoAcids ( this , title.c_str() ) ;
+    
+    TAminoAcids *subframe = new TAminoAcids ( (wxWindow*) getCommonParent() , title.c_str() ) ;
+    setChild ( subframe ) ;
     
     subframe->vec->setFromVector ( *nv ) ;
     subframe->vec->setWindow ( subframe ) ;
@@ -1046,7 +1050,6 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , string title )
         nv->items[a].type = VIT_MISC ;
         nv->items[a].direction = 1 ;
         }
-
     
     // Give it an icon
 #ifdef __WXMSW__
@@ -1060,17 +1063,15 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , string title )
     subframe->Show() ;
     subframe->Maximize() ;
     subframe->showName() ;
-    
     mainTree->addChild ( subframe , TYPE_AMINO_ACIDS ) ;
-    setChild ( subframe ) ;
-
+    subframe->Activate () ;
     return subframe ;
     }
 
 TABIviewer *MyFrame::newABI ( string filename , string title )
     {
     if ( title == "" ) title = "Surprise!" ;
-    TABIviewer *subframe = new TABIviewer ( this , title.c_str() ) ;
+    TABIviewer *subframe = new TABIviewer ( getCommonParent() , title.c_str() ) ;
     subframe->filename = filename ;
     subframe->vec->type = TYPE_SEQUENCE ;
 
@@ -1146,7 +1147,7 @@ void MyFrame::blast ( string seq , string prg )
     
 void MyFrame::fixMax ()
     {
-    int a ;
+/*    int a ;
     bool max = false ;
     for ( a = 0 ; a < children.size() ; a++ )
         {
@@ -1155,12 +1156,12 @@ void MyFrame::fixMax ()
            children[a]->Maximize() ;
            max = true ;
            }
-        }
+        }*/
     }
     
 void MyFrame::OnImageViewer(wxCommandEvent& event)
     {
-    TImageDisplay *subframe = new TImageDisplay ( this , txt("t_image_viewer") ) ;
+    TImageDisplay *subframe = new TImageDisplay ( getCommonParent() , txt("t_image_viewer") ) ;
 
     // Give it an icon
 #ifdef __WXMSW__
@@ -1181,7 +1182,7 @@ void MyFrame::OnImageViewer(wxCommandEvent& event)
     
 void MyFrame::OnCalculator(wxCommandEvent& event)
     {
-    TCalculator *subframe = new TCalculator ( this , txt("t_calculator") ) ;
+    TCalculator *subframe = new TCalculator ( getCommonParent() , txt("t_calculator") ) ;
 
     // Give it an icon
 #ifdef __WXMSW__
@@ -1256,8 +1257,18 @@ void MyFrame::removeChild ( ChildBase *ch )
     int a ;
     for ( a = 0 ; a < children.size() && children[a] != ch ; a++ ) ;
     if ( a == children.size() ) return ;
+    children[a]->Disable () ;
+    children[a]->Hide() ;
     children[a] = children[children.size()-1] ;
     children.pop_back () ;
+    lastChild = NULL ;
+    if ( children.size() )
+       {
+       children[0]->Activate () ;
+       mainTree->EnsureVisible ( children[0]->inMainTree ) ;
+       mainTree->SelectItem ( children[0]->inMainTree ) ;
+       }
+    else setActiveChild ( NULL ) ;
     }
     
 string MyFrame::check4update ()
@@ -1385,10 +1396,10 @@ void MyFrame::OnSashDrag(wxSashEvent& event)
         }
     }
     wxLayoutAlgorithm layout;
-    layout.LayoutMDIFrame(this);
+    layout.LayoutFrame(this);
 
     // Leaves bits of itself behind sometimes
-    GetClientWindow()->Refresh();    
+//    GetClientWindow()->Refresh();    
     }
 
 TStorage *MyFrame::getTempDB ( string filename )
@@ -1400,7 +1411,80 @@ TStorage *MyFrame::getTempDB ( string filename )
     return dbcache[a] ;
     }
     
+void MyFrame::setActiveChild ( ChildBase *c )
+    {
+    lastChild = c ;
+    if ( !IsShown() ) return ;
+    int a ;
+    for ( a = 0 ; a < children.size() ; a++ )
+       {
+       ChildBase *d = children[a] ;
+       if ( d != c )
+          {
+          if ( d->IsShown() ) d->Hide () ;
+          if ( d->IsEnabled() ) d->Disable () ;
+          }
+       }
+    if ( children.size() == 0 && GetMenuBar() != menu_bar ) SetMenuBar ( menu_bar ) ;
+    if ( !c ) return ;
+    if ( !c->IsEnabled() ) c->Enable() ;
+    if ( !c->IsShown() ) c->Show() ;
+    if ( c->menubar && GetMenuBar() != c->menubar )
+       {
+       SetMenuBar ( c->menubar ) ;
+       }
+    wxSize s = c->GetParent()->GetClientSize() ;
+    if ( c->GetSize() != s ) c->SetSize ( s ) ;
+    c->Refresh () ;
+    }
+
+wxWindow *MyFrame::getCommonParent()
+    {
+    return m_leftWindow2 ;
+    }
+
+void MyFrame::BollocksMenu(wxCommandEvent& event)
+    {
+    if ( !lastChild ) return ;
+    if ( event.GetId() == MDI_NEXT_WINDOW ||
+         event.GetId() == MDI_PREV_WINDOW )
+       {
+       int a = getChildIndex ( lastChild ) ;
+       if ( event.GetId() == MDI_NEXT_WINDOW ) a++ ;
+       else a-- ;
+       if ( a < 0 ) a = children.size()-1 ;
+       if ( a >= children.size() ) a = 0 ;
+       if ( a >= 0 && a <= children.size() )
+          {
+          mainTree->EnsureVisible ( children[a]->inMainTree ) ;
+          mainTree->SelectItem ( children[a]->inMainTree ) ;
+          }
+       return ;
+       }
+    if ( lastChild->def != "dna" ) return ;
+    lastChild->ProcessEvent ( event ) ;
+    }
     
+void MyFrame::RerouteMenu(wxCommandEvent& event)
+    {
+    bool b = false ;
+    if ( lastChild ) b = lastChild->ProcessEvent ( event ) ;
+//    if ( !b ) ProcessEvent ( event ) ;
+    }
+    
+int MyFrame::getChildIndex ( ChildBase *c )
+    {
+    int a ;
+    for ( a = 0 ; a < children.size() && children[a] != c ; a++ ) ;
+    return a ;
+    }
+
+void MyFrame::OnMDIClose(wxCommandEvent& event)
+    {
+    if ( lastChild ) lastChild->Close ( TRUE ) ;
+    }
+        
+                
 // DROP TARGET
 
 bool MyFrameDropTarget::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames)
@@ -1416,3 +1500,4 @@ bool MyFrameDropTarget::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& f
 //    wxMessageBox ( filenames[0] ) ;
     return true ;
     }
+        

@@ -13,7 +13,7 @@ typedef vector <char> tvc ;
 class TABIviewer : public ChildBase
     {
     public :
-    TABIviewer(MyFrame *parent, const wxString& title) ;
+    TABIviewer(wxWindow *parent, const wxString& title) ;
     virtual ~TABIviewer () ;
     
     virtual void initme () ;
@@ -36,7 +36,7 @@ class TABIviewer : public ChildBase
     virtual void OnSpinWidth(wxSpinEvent& event);
     virtual void OnSpinHeight(wxSpinEvent& event);
     virtual void OnZoom(wxScrollEvent& event);
-    virtual void OnClose(wxCloseEvent& event) ;
+//    virtual void OnClose(wxCloseEvent& event) ;
     
     // Variables
     SequenceCanvas *sc ;

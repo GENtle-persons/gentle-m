@@ -189,7 +189,8 @@ void TRestrictionEditor::initRestrictionPage ()
     v3b->Add ( btCC , 1 , wxEXPAND , 5 ) ;
 
     h1f->Add ( v3a , 1 , wxEXPAND , 5 ) ;
-    h1f->Add ( v3b , 1 , wxEXPAND , 5 ) ;
+    h1f->Add ( new wxPanel ( this ) , 1 , wxEXPAND , 5 ) ;
+    h1f->Add ( v3b , 0 , wxEXPAND , 5 ) ;
 
     v2b->Add ( new wxStaticText ( this , -1 , "" ) , 0 , wxEXPAND , 5 ) ;
     v2b->Add ( h1a , 1 , wxEXPAND , 5 ) ;

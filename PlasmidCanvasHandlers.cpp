@@ -351,7 +351,8 @@ void PlasmidCanvas::blastAA ( wxCommandEvent &ev )
 
 void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl , int mut)
     {
-    TPrimerDesign *subframe = new TPrimerDesign ( myapp()->frame , 
+    TPrimerDesign *subframe = new TPrimerDesign ( 
+            myapp()->frame->getCommonParent() , 
             txt("t_pcr") ,
             p->vec ,
             pl , mut ) ;

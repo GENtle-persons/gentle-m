@@ -20,10 +20,10 @@ BEGIN_EVENT_TABLE(TAminoAcids, MyChildBase)
     EVT_CHECKBOX(ALIGN_HORIZ, TAminoAcids::OnHorizontal)
     EVT_LISTBOX(AA_LB, TAminoAcids::OnListBox)
     EVT_SET_FOCUS(ChildBase::OnFocus)
-    EVT_CLOSE(TAminoAcids::OnClose)
+    EVT_CLOSE(ChildBase::OnClose)
 END_EVENT_TABLE()
 
-TAminoAcids::TAminoAcids(MyFrame *parent, const wxString& title)
+TAminoAcids::TAminoAcids(wxWindow *parent, const wxString& title)
     : ChildBase(parent, title)
     {
     vec = new TVector ( this ) ;
@@ -44,19 +44,6 @@ TAminoAcids::~TAminoAcids ()
     }
 
 
-void TAminoAcids::OnClose(wxCloseEvent& event)
-{
-    if ( !caniclose ( event ) ) return ;
-    
-    // Removing the window from the main tree
-    MyFrame *p = (MyFrame*)GetParent();
-    p->mainTree->removeChild ( this ) ;
-    p->SetTitle ( txt("gentle") ) ;
-    SetTitle ( txt("gentle") ) ;
-    p->removeChild ( this ) ;
-    event.Skip();
-}
-    
 void TAminoAcids::initme ()
     {
     int bo = 5 ;
@@ -64,7 +51,7 @@ void TAminoAcids::initme ()
 
     // Menus
     wxMenu *file_menu = myapp()->frame->getFileMenu ( true , true ) ;
-    wxMenu *tool_menu = myapp()->frame->getToolMenu ( true ) ;
+    wxMenu *tool_menu = myapp()->frame->getToolMenu ( false ) ;
     wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
 
 
@@ -99,7 +86,6 @@ void TAminoAcids::initme ()
     menu_bar->Append(help_menu, txt("m_help") );
     SetMenuBar(menu_bar);
 
-
     // Sequence Canvas
     sc = new SequenceCanvas ( this , wxPoint ( 0 , 0 ) , wxSize ( 100 , 100 ) ) ;
     cSequence = sc ; // For compatability with PlasmidCanvas
@@ -109,8 +95,11 @@ void TAminoAcids::initme ()
     sc->edit_valid = "ACDEFGHIKLMNPQRSTVWY|" ;
 
     int w , h ;
-    GetParent()->GetClientSize ( &w , &h ) ;
+//    GetParent()->GetClientSize ( &w , &h ) ;
+    myapp()->frame->GetClientSize ( &w , &h ) ;
     h = 100 ;
+    
+    wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     
     h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
     v1 = new wxBoxSizer ( wxVERTICAL ) ;
@@ -128,21 +117,7 @@ void TAminoAcids::initme ()
     lb->Append ( txt("t_aa_plot_hp") ) ;
     lb->Append ( txt("t_chou_fasman") ) ;
 
-    curDisplay = new wxPanel ( this , -1 ) ;
-
-    h1->Add ( lb   , 0 , wxEXPAND , 5 ) ;
-    h1->Add ( curDisplay , 1 , wxEXPAND , 5 ) ;
-    v1->Add ( h1 , 0 , wxEXPAND , 5 ) ;
-    v1->Add ( sc , 1 , wxEXPAND , 5 ) ;
-
-    SetSizer ( v1 ) ;
-    v1->Fit ( this ) ;
-    lb->SetStringSelection ( txt("t_data") ) ;
-    
-    wxCommandEvent event ;
-    OnListBox ( event ) ;
-        
-#ifdef __WXMSW__                            
+#ifdef __WXMSW__
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
     myapp()->frame->InitToolBar(toolBar);
     toolBar->AddTool( MDI_TEXT_IMPORT , 
@@ -170,11 +145,30 @@ void TAminoAcids::initme ()
     toolBar->Realize() ;
 #endif
 
+
+    curDisplay = new wxPanel ( this , -1 ) ;
+
+
+    h1->Add ( lb   , 0 , wxEXPAND , 5 ) ;
+    h1->Add ( curDisplay , 1 , wxEXPAND , 5 ) ;
+    v1->Add ( h1 , 0 , wxEXPAND , 5 ) ;
+    v1->Add ( sc , 1 , wxEXPAND , 5 ) ;
+    
+    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
+    v0->Add ( v1 , 1 , wxEXPAND , 5 ) ;
+
+    SetSizer ( v0 ) ;
+    v0->Fit ( this ) ;
+    lb->SetStringSelection ( txt("t_data") ) ;
+    
+    wxCommandEvent event ;
+    OnListBox ( event ) ;
+
+    Activate () ;
     showSequence () ;
     showStat () ;
     updateUndoMenu () ;
     sc->SetFocus() ;
-    myapp()->frame->setChild ( this ) ;
     }
     
 string TAminoAcids::getName ()

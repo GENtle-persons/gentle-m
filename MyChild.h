@@ -38,7 +38,7 @@ public:
     int sp1 , sp2 , aa_offset , ly ;
     int aa_state , aa_disp , orf_mode ;
     
-    MyChild(MyFrame *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style);
+    MyChild(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style);
     ~MyChild();
 
     virtual void OnActivate(wxActivateEvent& event);
@@ -72,7 +72,6 @@ public:
     virtual void OnPaste(wxCommandEvent& event);
     virtual void OnViewMode(wxCommandEvent& event);
     virtual void OnEditMode(wxCommandEvent& event);
-    virtual void OnClose(wxCloseEvent& event);
     virtual void OnCircularLinear(wxCommandEvent& event);
     virtual void OnLigation(wxCommandEvent& event);
     virtual void OnCopyToNew(wxCommandEvent& event);

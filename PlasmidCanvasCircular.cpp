@@ -478,7 +478,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
     
            dc.DrawText ( u , p3.x , p3.y ) ;
            }    
-        }        
+        }
 }
 
 wxPoint PlasmidCanvas::makeLastRect ( int a , wxDC &dc )
@@ -585,11 +585,13 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
         wxLogStatus(txt("rsite_status_bar") , s.c_str() ) ;
         if ( event.LeftDown() )
+           {
 #ifdef __WXMSW__
            p->treeBox->SelectItem ( p->treeBox->GetParent ( p->vec->rc[rs].treeid ) ) ;
 #else
 				   p->treeBox->SelectItem ( p->treeBox->GetParent ( ) ) ; // Frell
 #endif
+           }
         else if ( event.RightDown() )
            invokeRsPopup ( rs , pt_abs ) ;
         else if ( event.LeftDClick() )

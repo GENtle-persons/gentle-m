@@ -18,10 +18,10 @@ BEGIN_EVENT_TABLE(TABIviewer, MyChildBase)
     EVT_COMMAND_SCROLL(ABI_SLIDER, TABIviewer::OnZoom)
 
     EVT_SET_FOCUS(ChildBase::OnFocus)
-    EVT_CLOSE(TABIviewer::OnClose)
+    EVT_CLOSE(ChildBase::OnClose)
 END_EVENT_TABLE()
 
-TABIviewer::TABIviewer(MyFrame *parent, const wxString& title)
+TABIviewer::TABIviewer(wxWindow *parent, const wxString& title)
     : ChildBase(parent, title)
     {
     vec = new TVector ( this ) ;
@@ -71,19 +71,6 @@ void TABIviewer::OnSpinHeight(wxSpinEvent& event)
     sc->SilentRefresh () ;    
     }
 
-void TABIviewer::OnClose(wxCloseEvent& event)
-{
-    if ( !caniclose ( event ) ) return ;
-    
-    // Removing the window from the main tree
-    MyFrame *p = myapp()->frame ;
-    p->mainTree->removeChild ( this ) ;
-    p->SetTitle ( txt("gentle") ) ;
-    SetTitle ( txt("gentle") ) ;
-    p->removeChild ( this ) ;    
-    event.Skip();
-}
-    
 void TABIviewer::initme ()
     {
     int bo = 5 ;
@@ -119,6 +106,27 @@ void TABIviewer::initme ()
     menu_bar->Append(help_menu, txt("m_help") );
     SetMenuBar(menu_bar);
 
+
+#ifdef __WXMSW__ // LINUX
+    // Toolbar
+    wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
+    myapp()->frame->InitToolBar(toolBar);
+    toolBar->AddTool( MDI_TEXT_IMPORT , 
+                myapp()->frame->bitmaps[0] ,
+                txt("m_new_sequence") ) ;
+    toolBar->AddTool( MDI_FILE_OPEN, 
+            myapp()->frame->bitmaps[1] ,
+            txt("m_open") , txt("m_opentxt") );
+    toolBar->AddTool( MDI_FILE_SAVE, 
+                myapp()->frame->bitmaps[2] ,
+                txt("m_store_in_db") , 
+                txt("m_txt_store_in_db"));
+    toolBar->AddSeparator() ;
+//    toolBar->AddTool( MDI_CUT, myapp()->frame->bitmaps[4] ) ;
+    toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] ) ;
+//    toolBar->AddTool( MDI_PASTE, myapp()->frame->bitmaps[6] ) ;
+    toolBar->Realize() ;
+#endif
 
 
     hs = new wxSplitterWindow ( this , SPLIT_AMINOACIDS ) ;
@@ -173,28 +181,14 @@ void TABIviewer::initme ()
                             wxTE_MULTILINE | wxTE_READONLY ) ;
 
                                
-#ifdef __WXMSW__ // LINUX
-    // Toolbar
-    wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
-    myapp()->frame->InitToolBar(toolBar);
-    toolBar->AddTool( MDI_TEXT_IMPORT , 
-                myapp()->frame->bitmaps[0] ,
-                txt("m_new_sequence") ) ;
-    toolBar->AddTool( MDI_FILE_OPEN, 
-            myapp()->frame->bitmaps[1] ,
-            txt("m_open") , txt("m_opentxt") );
-    toolBar->AddTool( MDI_FILE_SAVE, 
-                myapp()->frame->bitmaps[2] ,
-                txt("m_store_in_db") , 
-                txt("m_txt_store_in_db"));
-    toolBar->AddSeparator() ;
-//    toolBar->AddTool( MDI_CUT, myapp()->frame->bitmaps[4] ) ;
-    toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] ) ;
-//    toolBar->AddTool( MDI_PASTE, myapp()->frame->bitmaps[6] ) ;
-    toolBar->Realize() ;
-#endif
 
     stat->SetFont ( *MYFONT ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
+
+    wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
+    v0->Add ( hs , 1 , wxEXPAND , 5 ) ;
+    SetSizer ( v0 ) ;
+    v0->Fit ( this ) ;
 
     showSequence () ;
     showStat () ;

@@ -9,8 +9,8 @@
 
 using namespace std ;
 
-typedef wxMDIChildFrame MyChildBase ;
-typedef wxMDIParentFrame MyFrameType ;
+typedef wxPanel MyChildBase ;
+typedef wxFrame MyFrameType ;
 
 class TVector ;
 class MyFrame ;
@@ -19,16 +19,14 @@ class SequenceCanvas ;
 class ChildBase : public MyChildBase
     {
     public :
-    ChildBase () { vec = NULL ; cSequence = NULL ; }
+    ChildBase () ;
     string def ;
     TVector *vec ;
     wxTreeItemId inMainTree ;
     SequenceCanvas *cSequence;
     
-    ChildBase(MyFrame *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style)
-        : MyChildBase((MyFrameType*)parent, -1, title, pos, size, style) {  }
-    ChildBase(MyFrame *parent, const wxString& title)
-        : MyChildBase((MyFrameType*)parent, -1, title) {  }
+    ChildBase(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style) ;
+    ChildBase(wxWindow *parent, const wxString& title);
         
     virtual string getName () { return "" ; }
     virtual void showName ( string x = "" ) ;
@@ -38,6 +36,19 @@ class ChildBase : public MyChildBase
     virtual wxToolBar *CreateToolBar ( int i ) ;
     virtual void Maximize ( bool isit = true ) ;
     virtual void updateUndoMenu () ;
+    virtual void OnClose(wxCloseEvent& event);
+
+    
+    // Compatability functions
+    virtual wxToolBar *CreateToolBar ( int i , int j , wxString s ) ;
+    virtual void SetMenuBar ( wxMenuBar *menu_bar ) ;
+    virtual wxMenuBar *GetMenuBar () ;
+    virtual wxToolBar *GetToolBar () ;
+    virtual void Activate () ;
+    virtual void SetIcon ( wxIcon icon ) ;
+    
+    wxMenuBar *menubar ;
+    wxToolBar *toolbar ;
     } ;
 
 #endif

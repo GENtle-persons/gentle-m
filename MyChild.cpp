@@ -47,8 +47,8 @@ BEGIN_EVENT_TABLE(MyChild, MyChildBase)
 
     EVT_CHOICE(PC_ZOOM,MyChild::OnZoom)
     EVT_UPDATE_UI(MDI_REFRESH, MyChild::OnUpdateRefresh)
-    EVT_SET_FOCUS(ChildBase::OnFocus)
-    EVT_CLOSE(MyChild::OnClose)
+//    EVT_SET_FOCUS(ChildBase::OnFocus)
+    EVT_CLOSE(ChildBase::OnClose)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(MySplitter, wxSplitterWindow)
@@ -68,10 +68,10 @@ void MyChild::OnFileSave(wxCommandEvent& WXUNUSED(event) )
     dbd.ShowModal () ;
     }
 
-MyChild::MyChild(MyFrame *parent, const wxString& title,
+MyChild::MyChild(wxWindow *parent, const wxString& title,
                  const wxPoint& pos, const wxSize& size,
                  const long style)
-       : ChildBase(parent, title, pos, size, style)
+       : ChildBase(parent, title)//, pos, size, style)
 {
     cPlasmid = (PlasmidCanvas *) NULL;
     cSequence = (SequenceCanvas *) NULL;
@@ -101,6 +101,7 @@ void MyChild::OnRunPCR(wxCommandEvent& event)
 
 void MyChild::OnToggleRestriction(wxCommandEvent& event)
     {
+    TMarkMem mm ( cSequence ) ;
     if ( cSequence->findID ( "RESTRICTION" ) )
        { // Turn off
        delete cSequence->seq[cSequence->seq.size()-1] ;
@@ -116,11 +117,14 @@ void MyChild::OnToggleRestriction(wxCommandEvent& event)
 #ifdef __WXMSW__ // LINUX
     GetToolBar()->ToggleTool(MDI_TOGGLE_RESTRICTION,cSequence->findID("RESTRICTION"));
 #endif
+    mm.remark () ;
     }
 
 void MyChild::OnToggleFeatures(wxCommandEvent& event)
     {
     int a ;
+    cSequence->lastmarked += cSequence->findID ( "FEATURE" ) ? -1 : 1 ;
+    TMarkMem mm ( cSequence ) ;
     if ( cSequence->findID ( "FEATURE" ) )
        { // Turn off
        aa_offset = 0 ;
@@ -143,6 +147,7 @@ void MyChild::OnToggleFeatures(wxCommandEvent& event)
 #ifdef __WXMSW__ // LINUX
     GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,cSequence->findID("FEATURE"));
 #endif
+    mm.remark () ;
     }
 
 void MyChild::OnQuit(wxCommandEvent& WXUNUSED(event))
@@ -158,22 +163,11 @@ void MyChild::OnUpdateRefresh(wxUpdateUIEvent& event)
 
 void MyChild::OnActivate(wxActivateEvent& event)
 {
+    ChildBase::Activate () ;
     if ( event.GetActive() && cSequence ) 
        cSequence->SetFocus();
 }
 
-void MyChild::OnClose(wxCloseEvent& event)
-{
-    if ( !caniclose ( event ) ) return ;
-
-    // Removing the window from the main tree
-    MyFrame *p = (MyFrame*)GetParent();
-    p->mainTree->removeChild ( this ) ;
-    p->SetTitle ( txt("gentle") ) ;
-    SetTitle ( txt("gentle") ) ;
-    p->removeChild ( this ) ;
-    event.Skip();
-}
 
 void MyChild::OnCircularLinear(wxCommandEvent& event)
     {
@@ -222,7 +216,7 @@ void MyChild::initme ()
     edit_menu->Append(MDI_EDIT_ORFS, txt("m_edit_orfs") );
 
     wxMenu *view_menu = new wxMenu;
-    view_menu->Append(MDI_REFRESH, txt("m_refresh_picture") );
+//    view_menu->Append(MDI_REFRESH, txt("m_refresh_picture") );
     view_menu->Append(MDI_CIRCULAR_LINEAR, txt("m_toggle_rc") );
     view_menu->Append(MDI_TOGGLE_FEATURES, txt("m_display_features") , "" );
     view_menu->Append(MDI_TOGGLE_RESTRICTION, txt("m_display_restriction") , "" );
@@ -359,7 +353,12 @@ void MyChild::initme ()
     toolBar->Realize() ;    
 #endif
 
-    Show(TRUE);
+    wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
+    v0->Add ( sw , 1 , wxEXPAND , 5 ) ;
+    SetSizer ( v0 ) ;
+    v0->Fit ( this ) ;
+
     updateUndoMenu () ;
     }
 
@@ -608,7 +607,6 @@ void MyChild::OnEditMode(wxCommandEvent& event)
 
 void MyChild::initPanels ()
     {
-    MyFrame *f = (MyFrame*) myapp()->frame ;
     SeqFeature *seqF = new SeqFeature ( cSequence ) ;
     SeqDNA *seq = new SeqDNA ( cSequence ) ;
     SeqRestriction *seqR = new SeqRestriction ( cSequence ) ;
@@ -646,7 +644,7 @@ void MyChild::initPanels ()
     wxFocusEvent fev ;
     OnFocus(fev) ;
 
-    f->setChild ( this ) ;
+    Activate () ;
     }
 
 void MyChild::OnHelp(wxCommandEvent& event)
@@ -656,6 +654,7 @@ void MyChild::OnHelp(wxCommandEvent& event)
 
 void MyChild::updateSequenceCanvas ( bool remember )
     {
+    myass ( cSequence , "MyChild::updateSequenceCanvas" ) ;
     TMarkMem mm ( cSequence ) ;
     int dummy , oldscrollpos ;
     cSequence->GetViewStart ( &dummy , &oldscrollpos ) ;
@@ -689,6 +688,8 @@ void MyChild::updateSequenceCanvas ( bool remember )
 void MyChild::OnAA_none(wxCommandEvent& event)
     {
     if ( aa_state == AA_NONE ) return ;
+    cSequence->lastmarked-- ;
+    TMarkMem mm ( cSequence ) ;
     wxMenuBar *mb = GetMenuBar () ;
     wxMenuItem *mi = mb->FindItem ( aa_state ) ;
     mi->Check ( false ) ;
@@ -702,6 +703,7 @@ void MyChild::OnAA_none(wxCommandEvent& event)
     cSequence->seq.pop_back () ;
     cSequence->arrange () ;
     cSequence->Refresh () ;
+    mm.remark () ;
     }
     
 void MyChild::OnAA_setit(int mode)
@@ -735,7 +737,9 @@ void MyChild::OnAA_setit(int mode)
         cSequence->seq[aa_offset] = seqAA ;
         seqAA->initFromTVector ( vec ) ;    
         seqAA->showNumbers = false ;
+        cSequence->lastmarked++ ;
         }
+    TMarkMem mm ( cSequence ) ;
     if ( mode == AA_THREE || mode == AA_ONE ) aa_disp = mode ;
     else aa_state = mode ;
     mi = mb->FindItem ( aa_state ) ;
@@ -764,6 +768,7 @@ void MyChild::OnAA_setit(int mode)
         string s = cSequence->seq[oldmarkwhat]->whatsthis() ;
         cSequence->mark ( s , oldmarkfrom , oldmarkto ) ;
         }
+    mm.remark () ;
     }
 
 void MyChild::OnAA_known(wxCommandEvent& event)
@@ -878,7 +883,7 @@ void MyChild::OnExtractAA(wxCommandEvent& event)
         
 void MyChild::OnRestriction(wxCommandEvent& event)
     {
-    MyFrame *f = (MyFrame*) GetParent() ;
+    MyFrame *f = myapp()->frame ; //(MyFrame*) GetParent() ;
     TRestrictionEditor ed ( f , "" , wxPoint(-1,-1) , wxSize(600,400) , 
                wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL);
 //    ed.pre = s ;
@@ -1216,6 +1221,7 @@ MySplitter::MySplitter ( wxWindow *win , int id , MyChild *child )
 
 void MySplitter::OnChanged ( wxSplitterEvent &ev )
     {
+    myass ( c , "MySplitter::OnChanged" ) ;
     int np = ev.GetSashPosition() ;
     if ( np < GetMinimumPaneSize() ) 
         {

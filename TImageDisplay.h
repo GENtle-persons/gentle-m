@@ -15,13 +15,13 @@ class TMyFileBox ;
 class TImageDisplay : public ChildBase
     {
     public :
-    TImageDisplay(MyFrame *parent, const wxString& title) ;
+    TImageDisplay(wxWindow *parent, const wxString& title) ;
     ~TImageDisplay () ;
     
     void initme () ;
     virtual string getName () ;
 
-    virtual void OnClose(wxCloseEvent& event) ;
+//    virtual void OnClose(wxCloseEvent& event) ;
     virtual void OnDir ( wxCommandEvent &event ) ;
     virtual void OnFile ( wxCommandEvent &event ) ;
     
