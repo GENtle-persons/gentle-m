@@ -1,0 +1,49 @@
+The easy way:
+-------------
+
+turn into root and place the sources into /usr/local/ipc-1.1
+
+$ cd ipc-1.1
+$ ./configure
+$ make all
+$ make install
+
+
+The not so easy way:
+--------------------
+
+When installing ipc there are two points to take care of:
+
+1:  The file "elemente":
+----------------------
+
+ipc expects its sources to be placed in /usr/local/ipc-1.1 and this is 
+where it exepects the file elemete too.
+
+When installing into an other directory you must give configure the 
+directory via --prefix otherwise ipc won´t find this file and therefore not 
+recognize any chemical symbol.
+After the installation all files may be removed except the file "elemente"
+
+So if you want ipc in your home directory you should do something like:
+
+$ cd ~
+$ tar -xzf ipc-1.1.tar.gz"
+$ cd ipc-1.1
+$ ./configure --prefix=/home/<your_username>
+$ make
+
+This will produce an executable ipc in the directory
+/home/<username>/ipc-1.1 which will need the file 
+/home/<your_username>/ipc-1.1/elemente 
+in order to work.
+
+2: ipc and GNUPlot
+------------------
+
+ipc can produce output which is suitable for GNUPlot. When producing gnuplot
+output GNUPlot is also called to show the data. 
+If you don´t like this or if gnuplot is not available on your system you 
+can give configure --enable-NO_GNUPLOT
+The -g optin will still work but ipc will not try to call GNUPLot afterwards.
+Try ./configure --help for details on configure

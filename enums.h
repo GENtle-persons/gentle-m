@@ -352,6 +352,7 @@ enum {
     GRAPH_ZOOM_X,
     GRAPH_ZOOM_Y,
     GRAPH_ZOOM_LINKED,
+    MDI_AA_IPC,
     
     Y___,
     Z___

@@ -222,6 +222,7 @@ WX_DEFINE_ARRAY(TProteaseCut *,wxArrayTProteaseCut);
 #include "enums.h"
 #include "TVector.h"
 #include "TUReadSeq.h"
+#include "ipc/ipc.h"
 #include "CGview.h"
 #include "AutoAnnotate.h"
 #include "ChildBase.h"

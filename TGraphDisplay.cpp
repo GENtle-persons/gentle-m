@@ -16,6 +16,17 @@ TGraphDisplay::TGraphDisplay ( wxWindow *parent , int id )
 	init () ;
 	}
 	
+TGraphDisplay::~TGraphDisplay ()
+	{
+	int a ;
+	for ( a = 0 ; a < data.size() ; a++ )
+		delete data[a] ;
+	data.clear () ;
+	for ( a = 0 ; a < scales.size() ; a++ )
+		delete scales[a] ;
+	scales.clear () ;
+	}    
+	
 void TGraphDisplay::init ()
 	{
 	while ( data.size() ) data.pop_back () ;
@@ -24,6 +35,7 @@ void TGraphDisplay::init ()
 	old_data = NULL ;
 	zx = zy = 100 ;
 	draggingRect = wxRect ( -1 , -1 , -1 , -1 ) ;
+	setupCompleted = false ;
 	}    
 	
 void TGraphDisplay::SetZoom ( int _zx , int _zy )
@@ -42,51 +54,106 @@ void TGraphDisplay::SetZoom ( int _zx , int _zy )
 		}
 	zx = _zx ;
 	zy = _zy ;
-    wxClientDC dc ( this ) ;
-        {
-        wxBufferedDC dc2 ( &dc , dc.GetSize() ) ;
-        drawit ( dc2 ) ;
-        }    
+	UpdateDisplay () ;
 	}    
 
 stringField TGraphDisplay::readCSVfile ( wxString filename )
 	{
-	wxTextFile file ( filename ) ;
-	file.Open () ;
-	wxString s ;
-	stringField sf ;
-	for ( s = file.GetFirstLine(); !file.Eof(); s = file.GetNextLine() )
+	mylog ( "TGraphDisplay::readCSVfile" , "0" ) ;
+ 	stringField sf ;
+ 	wxFile file ( filename , wxFile::read ) ;
+ 	if ( !file.IsOpened() ) return sf ; // Error
+ 	mylog ( "TGraphDisplay::readCSVfile" , "1" ) ;
+ 	long l = file.Length() ;
+ 	char *t = new char[l+5] ;
+ 	mylog ( "TGraphDisplay::readCSVfile" , "2" ) ;
+ 	file.Read ( t , l ) ;
+ 	t[l] = 0 ;
+ 	file.Close () ;
+ 	mylog ( "TGraphDisplay::readCSVfile" , "3" ) ;
+ 	
+ 	wxArrayString lines ;
+ 	char *c = t ;
+ 	int a ;
+ 	for ( a = 0 ; a <= l ; a++ )
+ 		{
+   		if ( t[a] == '\r' ) {}
+   		else if ( !t[a] || t[a] == '\n' )
+   			{
+		    lines.Add ( c ) ;
+		    c = t + a + 1 ;
+   			}    
+ 		}    
+	
+	mylog ( "TGraphDisplay::readCSVfile" , "4" ) ;
+	
+	for ( a = 0 ; a < lines.GetCount() ; a++ )
 		{
   		wxArrayString as ;
-  		explode ( "," , s , as ) ;
-  		sf.push_back ( as ) ;
+  		TVS as2 ;
+  		explode ( "," , lines[a] , as ) ;
+  		for ( int b = 0 ; b < as.GetCount() ; b++ )
+    		as2.push_back ( as[b].c_str() ) ;
+  		sf.push_back ( as2 ) ;
 		}    
-	return sf ;
+ 	
+ 	mylog ( "TGraphDisplay::readCSVfile" , "5" ) ;
+ 	
+ 	return sf ;
+ 	
+/*	mylog ( "TGraphDisplay::readCSVfile" , "0" ) ;
+	wxTextFile file ( filename ) ;
+	mylog ( "TGraphDisplay::readCSVfile" , "1" ) ;
+	file.Open () ;
+	mylog ( "TGraphDisplay::readCSVfile" , "2" ) ;
+	wxString s ;
+	stringField sf ;
+	if ( !file.IsOpened() ) return sf ;
+	mylog ( "TGraphDisplay::readCSVfile" , "3" ) ;
+	int a = 0 ;
+	for ( s = file.GetFirstLine(); !file.Eof(); s = file.GetNextLine() )
+		{
+		mylog ( "TGraphDisplay::readCSVfile" , wxString::Format ( "Starting line %d" , a ) ) ;
+  		wxArrayString as ;
+  		s = s.Trim().Trim(false);
+  		while ( s.First ( ',' ) != -1 )
+  			{
+	    	as.Add ( s.BeforeFirst ( ',' ) ) ;
+	    	s = s.AfterFirst ( ',' ) ;
+  			}    
+		as.Add ( s ) ;
+//  		explode ( "," , s , as ) ;
+  		sf.push_back ( as ) ;
+		mylog ( "TGraphDisplay::readCSVfile" , wxString::Format ( "Ending line %d" , a++ ) ) ;
+		}    
+	mylog ( "TGraphDisplay::readCSVfile" , "4" ) ;
+	return sf ;*/
 	}    
 	
 void TGraphDisplay::setupPhotometerGraph ( const stringField &sf )
 	{
- 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , sf[1][0] , "" , *wxBLACK ) ;
-  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , sf[1][1] , "" , *wxBLACK ) ;
+ 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , sf[1][0].c_str() , "" , *wxBLACK ) ;
+  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , sf[1][1].c_str() , "" , *wxBLACK ) ;
  	scales.push_back ( sx ) ;
  	scales.push_back ( sy ) ;
  	
  	TGraphData *ng = new TGraphData ( this ) ;
-	ng->name = sf[0][0] ;
+	ng->name = sf[0][0].c_str() ;
 	ng->SetScales ( sx , sy ) ;
 	ng->pointStyle = "none" ;
 	ng->col = wxTheColourDatabase->Find ( "BLUE" ) ;
 	data.push_back ( ng ) ;
 
  	int a ;
- 	for ( a = 2 ; sf[a].size() > 1 && !sf[a][0].IsEmpty() ; a++ )
+ 	for ( a = 2 ; sf.size() && sf[a].size() > 1 && sf[a][0] != "" ; a++ )
  		{
     	double x , y ;
-    	sf[a][0].ToDouble ( &x ) ;
-    	sf[a][1].ToDouble ( &y ) ;
+    	wxString s0 = sf[a][0].c_str() ;
+    	wxString s1 = sf[a][1].c_str() ;
+    	s0.ToDouble ( &x ) ;
+    	s1.ToDouble ( &y ) ;
     	ng->Add ( (float) x , (float) y ) ;
  		}    
-//    wxMessageBox ( wxString::Format ( "%d" , ng->GetCount() ) ) ;
  	} 	
 
 void TGraphDisplay::setupFluorimeterGraph ( const stringField &sf )
@@ -107,10 +174,10 @@ void TGraphDisplay::setupFluorimeterGraph ( const stringField &sf )
  	int cnt_col = 0 , cnt_sty = 0 ;
 	
 	int a , b ;
-	for ( a = 0 ; a+2 < sf[0].GetCount() ; a += 2 )
+	for ( a = 0 ; a+2 < sf[0].size() ; a += 2 )
 		{
   		TGraphData *ng = new TGraphData ( this ) ;
-  		ng->name = sf[0][a] ;
+  		ng->name = sf[0][a].c_str() ;
   		ng->SetScales ( sx , sy ) ;
   		ng->pointStyle = styles[cnt_sty] ;
   		ng->col = wxTheColourDatabase->Find ( colors[cnt_col] ) ;
@@ -120,17 +187,53 @@ void TGraphDisplay::setupFluorimeterGraph ( const stringField &sf )
 	    	if ( ++cnt_sty >= styles.GetCount() )
 	    		cnt_sty = 0 ;
          	}
-  		for ( b = 2 ; b < sf.size() && ( sf[b].GetCount() > a + 1 && sf[b][0] != "" ) ; b++ )
+  		for ( b = 2 ; b < sf.size() && ( sf[b].size() > a + 1 && sf[b][0] != "" ) ; b++ )
   			{
 	    	double x , y ;
-	    	sf[b][a].ToDouble ( &x ) ;
-	    	sf[b][a+1].ToDouble ( &y ) ;
+        	wxString s0 = sf[b][a+0].c_str() ;
+        	wxString s1 = sf[b][a+1].c_str() ;
+        	s0.ToDouble ( &x ) ;
+        	s1.ToDouble ( &y ) ;
 	    	ng->Add ( (float) x , (float) y ) ;
   			}    
   		data.push_back ( ng ) ;
 		}    
 	}    
 
+void TGraphDisplay::setupIPCfile ( wxString filename )
+	{
+	mylog ( "TGraphDisplay::setupIPCfile" , "0" ) ;
+	stringField sf = readCSVfile ( filename ) ;
+	
+	mylog ( "TGraphDisplay::setupIPCfile" , "1" ) ;
+ 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , "m/z" , "" , *wxBLACK ) ;
+  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , "rel. Int." , "" , *wxBLACK ) ;
+ 	scales.push_back ( sx ) ;
+ 	scales.push_back ( sy ) ;
+ 	
+	mylog ( "TGraphDisplay::setupIPCfile" , "2" ) ;
+ 	TGraphData *ng = new TGraphData ( this ) ;
+	ng->name = "IPC" ;
+	ng->SetScales ( sx , sy ) ;
+	ng->pointStyle = "none" ;
+	ng->col = wxTheColourDatabase->Find ( "BLUE" ) ;
+
+	mylog ( "TGraphDisplay::setupIPCfile" , "3" ) ;
+ 	int a ;
+ 	for ( a = 0 ; a < sf.size() && sf[a].size() > 1 && sf[a][0] != "" ; a++ )
+ 		{
+    	double x , y ;
+    	wxString s0 = sf[a][0].c_str() ;
+    	wxString s1 = sf[a][1].c_str() ;
+    	s0.ToDouble ( &x ) ;
+    	s1.ToDouble ( &y ) ;
+    	ng->Add ( (float) x , (float) y ) ;
+ 		}    
+	mylog ( "TGraphDisplay::setupIPCfile" , "4" ) ;
+	data.push_back ( ng ) ;
+	mylog ( "TGraphDisplay::setupIPCfile" , "5" ) ;
+	}
+    
 void TGraphDisplay::SetupDummy ()
 	{
 //	stringField sf = readCSVfile ( "C:\\Dokumente und Einstellungen\\DSP\\Desktop\\RTS Kristin.csv" ) ;
@@ -174,6 +277,7 @@ void TGraphDisplay::SetupDummy ()
 
 void TGraphDisplay::AutoScale ()
 	{
+	if ( data.size() == 0 ) return ;
  	int a ;
  	for ( a = 0 ; a < scales.size() ; a++ )
  		{
@@ -189,6 +293,7 @@ void TGraphDisplay::AutoScale ()
  		{
    		data[a]->AutoScale () ;
  		}    
+	setupCompleted = true ;
 /*	for ( a = 0 ; a < scales.size() ; a++ )
 		{
   		int sw = scales[a]->max - scales[a]->min ;
@@ -203,6 +308,7 @@ void TGraphDisplay::AutoScale ()
 void TGraphDisplay::drawit ( wxDC &dc , int mode )
 	{
  	dc.Clear () ;
+	if ( !IsSetupComplete() ) return ;
  	int a , b ;
  	wxRect outer ( 0 , 0 , 0 , 0 ) ;
  	dc.GetSize ( &outer.width , &outer.height ) ;
@@ -343,6 +449,9 @@ void TGraphDisplay::showLegend ( wxDC &dc )
 void TGraphDisplay::OnPaint(wxPaintEvent& event)
 	{
 	wxPaintDC dc(this);
+
+	if ( !IsSetupComplete() ) return ;
+	
         {
         wxBufferedDC dc2 ( &dc , dc.GetSize() ) ;
         drawit ( dc2 ) ;
@@ -351,6 +460,7 @@ void TGraphDisplay::OnPaint(wxPaintEvent& event)
 
 void TGraphDisplay::OnEvent(wxMouseEvent& event)
     {
+	if ( !IsSetupComplete() ) return ;
     wxPoint pt(event.GetPosition());
     
     // Find out where the mouse is
@@ -549,3 +659,17 @@ void TGraphDisplay::OnSwapSides(wxCommandEvent &event)
 	OnPaint ( ev ) ;
 	}
 
+void TGraphDisplay::UpdateDisplay ()
+	{
+    wxClientDC dc ( this ) ;
+        {
+        wxBufferedDC dc2 ( &dc , dc.GetSize() ) ;
+        drawit ( dc2 ) ;
+        }    
+	}
+    
+bool TGraphDisplay::IsSetupComplete()
+	{
+	return setupCompleted && scales.size()>0 && data.size()>0 ;
+	}
+    
