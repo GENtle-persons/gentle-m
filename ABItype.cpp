@@ -50,11 +50,19 @@ void ABItype::parse ( string filename )
 	int macOffset = getMacOffset ( t ) ; // Trying to compensate for MAC header
 	if ( macOffset == -1 ) return ; // No valid ABI file
     while ( vf.size() ) vf.pop_back () ;
-	int cnt = 0 , i ;
-    cnt = getCMBF ( t , l ) ;
-    if ( cnt == -1 ) return ; // No valid ABI file
-
-	while ( cnt < l )
+    
+    int pos = macOffset ;
+    pos += 4 ; // ABIF
+    pos += 2 ; // Unknown
+    pos += 4 ; // tdir
+    pos += 4 ; // Instance = 1
+    pos += 2 ; // Datatype
+    pos += 2 ; // Datasize
+    int nrecords = getInt4 ( t , pos ) ;
+    pos += 4 ; // # Bytes
+    int cnt = getInt4 ( t , pos ) + macOffset ; // Pointer
+    
+    while ( nrecords > 0 )
 	    {
         TFLAG flag = getFlag ( t , cnt ) ;
         if ( flag.nbytes > 0 )
@@ -62,11 +70,12 @@ void ABItype::parse ( string filename )
            if ( flag.nbytes > 4 )
               {
               flag.data = new unsigned char [ flag.nbytes+5 ] ;
-              for ( i = 0 ; i < flag.nbytes ; i++ )
+              for ( int i = 0 ; i < flag.nbytes ; i++ )
                  flag.data[i] = t[macOffset+flag.value+i] ;
               }
            vf.push_back ( flag ) ;
            }
+        nrecords-- ;
         }
 
 	delete t ;
