@@ -7,6 +7,9 @@ typedef unsigned int uint ;
 // Place a comment in front of the following line when compiling releases
 //#define MYDEBUG
 
+// Turn logging on/off
+#define MYLOG
+
 #include "wx/wxprec.h"
 
 #ifdef __BORLANDC__
@@ -165,8 +168,13 @@ WX_DEFINE_ARRAY(TVector *, wxArrayTVector);
 #ifdef MYDEBUG
 void myass ( bool b , wxString msg = "" ) ;
 #else
-//#define myass(a)
 #define myass(a,b)
+#endif
+
+#ifdef MYLOG
+void mylog ( wxString function , wxString msg = "" ) ;
+#else
+#define mylog(a,b)
 #endif
 
 void wxStringInsert ( wxString &s , int from , wxString t ) ;

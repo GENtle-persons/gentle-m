@@ -127,7 +127,7 @@ void SequenceCanvas::MyGetClientSize ( int *w , int *h )
     else
        {
        GetClientSize ( w , h ) ;
-//       if ( isHorizontal ) *w = 1000000 ;
+       if ( !drawing && isHorizontal() ) *w = 1000000 ;
        }
     }
     
@@ -868,12 +868,14 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
        return ; 
        }
 
+    if ( charwidth == 0 || charheight == 0 ) SilentRefresh () ;
+
     int seqlen ;
     if ( p && p->vec ) seqlen = p->vec->getSequenceLength() ;
     else seqlen = seq[b]->s.length() ;
 
     int l = seqlen ;
-    for ( a = 0 ; a < seq[b]->getMarkSize()/* && charwidth && charheight*/ ; a++ )
+    for ( a = 0 ; a < seq[b]->getMarkSize() ; a++ )
         {
         if ( inMarkRange ( seq[b]->getPos(a) , from , to , l ) ) 
            {
@@ -978,7 +980,6 @@ void SequenceCanvas::arrange ()
     {
     if ( seq.GetCount() == 0 ) return ;
     if ( charheight == 0 ) return ;
-//    wxStartTimer() ;    
     int vx , vy ;
     int oldlowy = lowy ;
     int oldlowx = lowx ;
@@ -1011,6 +1012,7 @@ void SequenceCanvas::arrange ()
     for ( a = 0 ; a < seq.GetCount() ; a++ )
         seq[a]->endnumberlength = maxendnumberlength ;
             
+
     // Arranging
     for ( a = 0 ; a < seq.GetCount() ; a++ )
         {
@@ -1033,7 +1035,6 @@ void SequenceCanvas::arrange ()
         p->cPlasmid->Refresh () ;
         }
     wxEndBusyCursor() ;
-//    wxMessageBox ( wxString::Format ( "Arrange : %d ms" , wxGetElapsedTime() ) ) ;
     }
 
 void SequenceCanvas::OnSize(wxSizeEvent &event)
@@ -1935,12 +1936,12 @@ void SeqPos::addline ( int from , int to , int vfrom , int vto )
 int SeqPos::getLine ( int y )
     {
     int ret = -1 ;
-    for ( int a = 0 ; a < l.size() && ret == -1 ; a++ )
+    for ( int a = 0 ; a < l.size() /*&& ret == -1 */; a++ )
        {
        if ( l[a].width <= y && l[a].height >= y )
-          ret = a ;
+          return a ;//ret = a ;
        }
-    return ret ;
+    return -1 ; //ret ;
     }
     
 int SeqPos::getItem ( wxPoint pt , int line )

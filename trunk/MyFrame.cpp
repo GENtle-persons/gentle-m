@@ -554,8 +554,10 @@ void MyFrame::importFile ( wxString file , wxString path , int filter )
     // Trying GenBank format
     if ( filter == 1 || filter == -1 )
        {
+       wxStartTimer () ;
        TGenBank gb ;
        gb.load ( path ) ;
+       mylog ( "GenBank import" , "loaded" ) ;
        if ( gb.success )
           {
           newGB ( gb , file ) ;
@@ -687,6 +689,7 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
         nv->setDescription ( nv->getDescription() + "\n" + wxGetUserName() ) ;
         if ( nv->getSequenceLength() != vv[0]->getSequenceLength() ) alignment = false ;
         else if ( nv->getSequence().find ( '-' ) != -1 ) alignment = true ;
+        mylog ( "GenBank import" , "added " + nv->getName() ) ;
         }
     if ( gb.vs_l.size() == 1 ) alignment = false ;
         
@@ -702,6 +705,7 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
               }
            }
         }
+    mylog ( "GenBank import" , "artifacts removed" ) ;
         
     if ( alignment )
         {
@@ -723,6 +727,7 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
            vc.Add ( newAminoAcids ( nv , nv->getName() ) ) ;
         else
            vc.Add ( newFromVector ( nv , type ) ) ;
+        mylog ( "GenBank import" , "child added" ) ;
         }
     vv.Clear () ;
         

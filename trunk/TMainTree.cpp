@@ -84,5 +84,5 @@ void TMainTree::OnCloseChild ( wxCommandEvent &event )
     {
     if ( !lastChild ) return ;
     if ( lastChild->Close ( FALSE ) ) lastChild = NULL ;
-    else wxBell();
+//    else wxBell();
     }

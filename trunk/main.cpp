@@ -45,6 +45,16 @@ void myass ( bool b , wxString msg )
     }
 #endif
 
+#ifdef MYLOG
+wxFile logout ( "LOG.txt" , wxFile::write ) ;
+
+void mylog ( wxString function , wxString msg )
+    {
+    logout.Write ( function + " : " + msg + " (" + wxString::Format ( "%d ms" , wxGetElapsedTime() ) + ")\n" ) ;
+    logout.Flush() ;
+    }
+#endif    
+
 int cmpint(int *first, int *second)
     {
     return *first > *second ;
@@ -163,6 +173,10 @@ MyApp *myapp ()
 // Initialise this in OnInit, not statically
 bool MyApp::OnInit()
 {
+#ifdef MYLOG
+    wxStartTimer() ;
+#endif
+
     wxString s1 , s2 ;
     wxFileName::SplitPath ( argv[0] , &homedir , &s1 , &s2 ) ;
     

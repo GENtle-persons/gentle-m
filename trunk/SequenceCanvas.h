@@ -200,6 +200,7 @@ class SeqAlign : public SeqBasic
     virtual int  arrange ( int n ) ;
     virtual void show ( wxDC& dc ) ;
     virtual wxString whatsthis () { return "ALIGN" ; }
+    virtual void makeEndnumberLength() ;
     
     // Variables
     wxString myname ;

@@ -361,6 +361,7 @@ void SeqAA::initFromTVector ( TVector *v )
        truncateEditSequence = true ;
        }
     wxString t = vec->getSequence() ;
+    s.Alloc ( t.length() ) ;
     FILLSTRING ( s , ' ' , t.length() ) ;
     offsets.Clear() ;
     offset_items.Clear() ;
@@ -458,6 +459,7 @@ int SeqAA::arrange_direct ( int n )
     itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx - 1 ) * can->blocksize ;
     pos.cleanup() ;
     pos.m.Alloc ( s.length() ) ;
+    if ( can->isHorizontal() ) can->setLowX ( ox + ( s.length() ) * can->charwidth ) ;
     int ret = ( s.length() + itemsperline - 1 ) / itemsperline ;
     ret = can->NumberOfLines() * ret * can->charheight + 1 ;
     return ret ;
@@ -561,7 +563,37 @@ void SeqAA::show_direct ( wxDC& dc )
           dc.SetTextForeground ( tf ) ;
           }
 
-        if ( showNumber )
+       // Protease cuts
+       for ( int q = 0 ; q < pc.GetCount() ; q++ )
+          {
+          if ( a == pc[q]->cut )
+             {
+             int qx = px ;
+             int qy = py ;
+             if ( !pc[q]->left ) qx += cw + 4 ;
+             dc.SetTextForeground ( *wxBLACK ) ;
+             dc.SetPen(*wxGREY_PEN);
+             dc.DrawLine ( qx   , qy + 1 , qx   , qy + can->charheight - 2 ) ;
+             dc.SetPen(*wxBLACK_PEN);
+             dc.DrawLine ( qx+1 , qy + 1 , qx+1 , qy + can->charheight - 2 ) ;
+
+             wxString pn = pc[q]->protease->name ;
+             for ( int w = 0 ; w+1 < pn.length() ; w++ )
+                if ( pn.GetChar(w) == ' ' && pn.GetChar(w+1) == '(' )
+                   pn = pn.substr ( 0 , w ) ;
+             dc.SetFont(*can->smallFont);
+             int u1 , u2 ;
+             dc.GetTextExtent ( pn , &u1 , &u2 ) ;
+             dc.DrawText ( pn , qx - u1/2 , qy - u2/2 ) ;
+             dc.SetFont(*can->font);
+             
+             if ( primaryMode ) dc.SetTextForeground ( *wxBLACK ) ;
+             else dc.SetTextForeground ( *wxLIGHT_GREY ) ;
+             }
+          }
+
+
+        if ( showNumber && primaryMode )
            {
            wxString t = wxString::Format ( "%d" , a + 1 ) ;
            t.Pad ( endnumberlength - t.length() , '0' , false ) ;

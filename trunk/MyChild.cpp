@@ -590,42 +590,57 @@ void MyChild::initPanels ()
 //        vec->re.Add ( myapp()->frame->LS->getRestrictionEnzyme("BamHI") ) ; // TESTING!!!!!
 //        vec->recalculateCuts() ; // TESTING!!!
         }    
-//    wxStartTimer() ;    
     SeqFeature *seqF ;
     if ( !vec->getGenomeMode() ) seqF = new SeqFeature ( cSequence ) ;
     SeqDNA *seq = new SeqDNA ( cSequence ) ;
     SeqRestriction *seqR = new SeqRestriction ( cSequence ) ;
     SeqAA *seqAA = new SeqAA ( cSequence ) ;
+
     cSequence->seq.Clear () ;
     if ( !vec->getGenomeMode() ) cSequence->seq.Add ( seqF ) ;
     cSequence->seq.Add ( seqAA ) ;
     cSequence->seq.Add ( seq ) ;
     cSequence->seq.Add ( seqR ) ;
     if ( !vec->getGenomeMode() ) seqF->aaa = seqAA ;
+    
+    mylog ( "MyChild" , "begin" ) ;
     if ( !vec->getGenomeMode() ) seqF->initFromTVector ( vec ) ;
+    mylog ( "MyChild" , "initialized feature" ) ;
     seq->initFromTVector ( vec ) ;    
+    mylog ( "MyChild" , "initialized DNA" ) ;
     seqR->initFromTVector ( vec ) ;    
-    seqAA->initFromTVector ( vec ) ;    
-    seqAA->showNumbers = false ;
+    mylog ( "MyChild" , "initialized restriction sites" ) ;
 
-//    wxMessageBox ( wxString::Format ( "2nd : %d ms" , wxGetElapsedTime() ) ) ;
-    treeBox->initme () ;
 
     int a , b = AA_ALL ;
     for ( a = 0 ; b == AA_ALL && vec && a < vec->items.size() ; a++ )
         if ( vec->items[a].getRF() != 0 )
            b = AA_KNOWN ;
+    aa_state = b ;
+    seqAA->mode = b ;
+    seqAA->disp = aa_disp ;
 
-    if ( aa_state != b ) OnAA_setit ( b ) ;
-    
+    seqAA->initFromTVector ( vec ) ;    
+    mylog ( "MyChild" , "initialized AA" ) ;
+    seqAA->showNumbers = false ;
+
+    treeBox->initme () ;
+    mylog ( "MyChild" , "initialized treebox" ) ;
+
+
 #ifdef __WXMSW__ // LINUX
     GetToolBar()->ToggleTool(MDI_CIRCULAR_LINEAR,vec->isCircular());
     if ( !vec->getGenomeMode() ) GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,cSequence->findID("FEATURE"));
+    else aa_offset = 0 ;
     GetToolBar()->ToggleTool(MDI_TOGGLE_RESTRICTION,cSequence->findID("RESTRICTION"));
 #endif
 
+//    if ( aa_state != b ) OnAA_setit ( b ) ;
+    mylog ( "MyChild" , "AA set" ) ;
+    
     if ( myapp()->frame->isLocked() ) return ;
     Show() ;
+    mylog ( "MyChild" , "shown" ) ;
     SetFocus () ;
     cSequence->SetFocus() ;
     wxFocusEvent fev ;
@@ -991,12 +1006,14 @@ void MyChild::OnORFs(wxCommandEvent& event)
     showORFs = !showORFs ;
     if ( showORFs )
        {
+       wxBeginBusyCursor() ;
        if ( ( orf_mode &  1 ) > 0 ) vec->addORFs ( 1 ) ;
        if ( ( orf_mode &  2 ) > 0 ) vec->addORFs ( 2 ) ;
        if ( ( orf_mode &  4 ) > 0 ) vec->addORFs ( 3 ) ;
        if ( ( orf_mode &  8 ) > 0 ) vec->addORFs ( -1 ) ;
        if ( ( orf_mode & 16 ) > 0 ) vec->addORFs ( -2 ) ;
        if ( ( orf_mode & 32 ) > 0 ) vec->addORFs ( -3 ) ;
+       wxEndBusyCursor() ;
        }
 #ifdef __WXMSW__ // LINUX
     GetToolBar()->ToggleTool(MDI_ORFS,showORFs);

@@ -11,8 +11,9 @@ int SeqDNA::arrange ( int n )
     // Setting basic values
     can->SetFont(*can->font);
     int wx = can->charwidth , wy = can->charheight ;
-    int ox = bo + wx + wx * endnumberlength , oy = n*wy+bo , endnumber = offset + s.length() ;
+    int ox = bo + wx + wx * endnumberlength , oy = n*wy+bo ;
 /*
+    int endnumber = offset + s.length() ;
     endnumberlength = 0 ;
     while ( endnumber > 0 ) { endnumber /= 10 ; ox += wx ; endnumberlength++ ; }
     
@@ -46,6 +47,7 @@ int SeqDNA::arrange ( int n )
         icnt++ ;
         pos.add ( a+1 , x , y , wx-1 , wy-1 , memsave ) ;
         pcnt++ ;
+        can->setLowX ( x + wx*2 ) ;
         lowy = y+wy ;
         x += wx ;
         if ( (a+1) % can->blocksize == 0 )
@@ -239,7 +241,6 @@ bool SeqDNA::useDirectRoutines ()
 int SeqDNA::arrange_direct ( int n )
     {
     int a , x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
-    int lasta = 0 ;
     
     // Setting basic values
     can->SetFont(*can->font);
@@ -249,6 +250,7 @@ int SeqDNA::arrange_direct ( int n )
     itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx - 1 ) * can->blocksize ;
     pos.cleanup() ;
     pos.m.Alloc ( s.length() ) ;
+    if ( can->isHorizontal() ) can->setLowX ( ox + ( s.length() ) * can->charwidth ) ;
     int ret = ( s.length() + itemsperline - 1 ) / itemsperline ;
     ret = can->NumberOfLines() * ret * can->charheight + 1 ;
     return ret ;
@@ -289,7 +291,7 @@ void SeqDNA::show_direct ( wxDC& dc )
     b = ( ya - ch - oy ) / ( ch * csgc ) * itemsperline ;
     for ( a = 0 ; a < b && a < s.length() ; a += itemsperline ) ;
         
-    for ( ; a < s.length() ; a++ )
+    for ( a = 0 ; a < s.length() ; a++ )
         {
         int px = a % itemsperline , py = a / itemsperline ;
         
