@@ -13,6 +13,8 @@ class AutoAnnotate
 	
 	private :
  	virtual bool MatchItem ( TVector *tv , TVectorItem &item , TVector *v , wxString &oseq ) ;
+ 	virtual bool RawMatch ( TVectorItem &item , TVector *v , wxString &oseq , wxString &s ) ;
+ 	
  	MyChild *p ;
  	wxArrayString alreadyin ;
 	} ;    
