@@ -22,6 +22,7 @@ class TImageDisplay : public ChildBase
     virtual wxString getName () ;
 
     virtual void OnCB ( wxCommandEvent &event ) ;
+    virtual void OnCBinvert ( wxCommandEvent &event ) ;
     virtual void OnDir ( wxCommandEvent &event ) ;
     virtual void OnFile ( wxCommandEvent &event ) ;
     
@@ -33,7 +34,7 @@ class TImageDisplay : public ChildBase
     TMyImagePanel *right ;
     wxListBox *lb ;
     wxButton *bu ;
-    wxCheckBox *cb ;
+    wxCheckBox *cb , *invert ;
     
     DECLARE_EVENT_TABLE()
     } ;
@@ -60,7 +61,7 @@ class TMyImagePanel : public wxPanel
     wxBitmap *bmp ;
     wxImage i ;
     wxString dir , file ;
-    bool printing , show_text ;
+    bool printing , show_text , invert ;
     TImageDisplay *imdi ;
 
     DECLARE_EVENT_TABLE()

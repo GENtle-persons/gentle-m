@@ -87,7 +87,7 @@ void TPrimerDialog::initme ( TPrimer *_p , TPrimerDesign *_pd )
     int w , h ;
     GetClientSize ( &w , &h ) ;
     
-    new wxStaticBox ( this , -1 , txt("t_limits") , wxPoint ( 5 , 5 ) , wxSize ( 270 , 135 ) ) ;
+    new wxStaticBox ( this , -1 , txt("t_limits") , wxPoint ( 5 , 5 ) , wxSize ( 290 , 135 ) ) ;
     
     int mintmp = 45 , maxtmp = 65 ;
     int minlen = 20 , maxlen = 40 ;

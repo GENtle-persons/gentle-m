@@ -2,7 +2,6 @@
 Bugs :
 * Optimierung Überhang-Primer?
 * Bericht drucken : lange Zeilen in Vektor-Beschreibung umbrechen
-* Transformieren-Dialog ESC
 
 Feature Requests :
 

@@ -1987,7 +1987,7 @@ void SequenceCanvas::insertRestrictionSite ( bool left )
     vs.Sort () ;
     wxString *as = new wxString [ vs.GetCount() ] ;
     for ( int a = 0 ; a < vs.GetCount() ; a++ ) as[a] = vs[a] ;
-    wxSingleChoiceDialog scd ( this , txt("t_vec_enzym") , "" , vs.GetCount() , as ) ;
+    wxSingleChoiceDialog scd ( this , txt("t_vec_enzym") , txt("t_insert_restriction_site") , vs.GetCount() , as ) ;
     wxEndBusyCursor() ;
     if ( wxID_OK != scd.ShowModal() )
         {

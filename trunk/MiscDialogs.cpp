@@ -31,6 +31,7 @@ END_EVENT_TABLE()
 BEGIN_EVENT_TABLE(TransformSequenceDialog, wxDialog )
     EVT_BUTTON(TSD_OK,TransformSequenceDialog::OnOK)
     EVT_BUTTON(TSD_CANCEL,TransformSequenceDialog::OnCancel)
+    EVT_CHAR_HOOK(TransformSequenceDialog::OnCharHook)
 END_EVENT_TABLE()
 
 
@@ -731,6 +732,16 @@ TransformSequenceDialog::~TransformSequenceDialog ()
     delete complement ;
     delete new_item ;
     }
+
+void TransformSequenceDialog::OnCharHook ( wxKeyEvent& event )
+    {
+    int k = event.GetKeyCode () ;
+    wxCommandEvent ev ;
+    if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    else if ( k == WXK_RETURN ) OnOK ( ev ) ;
+    else event.Skip() ;
+    }
+    
 
 
 //*************************************** TEnzymeDialog
