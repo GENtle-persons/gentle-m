@@ -201,7 +201,7 @@ void MyFrame::initme ()
 
     // Set the DEBUGGING option in your local test database,
     // so you won't be bothered with updates anymore :-)
-//    if ( LS->getOption ( "DEBUGGING" , "" ) == "1" ) checkUpdate = false ;
+    if ( LS->getOption ( "DEBUGGING" , "" ) == "1" ) checkUpdate = false ;
 
 #ifdef __WXMSW__
     if ( checkUpdate )
