@@ -1,5 +1,10 @@
 #include "ExternalInterface.h"
 
+enum {
+	ID_T1 = 6000,
+	} ;	
+   	
+
 BEGIN_EVENT_TABLE(ExternalInterface, MyChildBase)
     EVT_CLOSE(ChildBase::OnClose)
     EVT_SET_FOCUS(ChildBase::OnFocus)
@@ -31,8 +36,13 @@ BEGIN_EVENT_TABLE(ExternalInterface, MyChildBase)
     EVT_MENU(AA_THREE_M1, TABIviewer::OnDummy)
     EVT_MENU(AA_THREE_M2, TABIviewer::OnDummy)
     EVT_MENU(AA_THREE_M3, TABIviewer::OnDummy)
-
 END_EVENT_TABLE()
+
+BEGIN_EVENT_TABLE(EIpanel, wxPanel)
+	EVT_BUTTON(wxID_OK, EIpanel::OnOK)
+	EVT_TEXT_ENTER(ID_T1, EIpanel::OnOK)
+END_EVENT_TABLE()
+
 
 ExternalInterface::ExternalInterface(wxWindow *parent, const wxString& title) 
     : ChildBase(parent, title)
@@ -58,6 +68,11 @@ void ExternalInterface::initme ()
     menu_bar->Append(help_menu, txt("m_help") );
 
     SetMenuBar(menu_bar);
+
+    nb = new wxNotebook ( this , -1 ) ;
+    
+    nb->AddPage ( new EIpanel ( nb , EI_PUBMED_NUCLEOTIDE ) , "Test" ) ;
+
 /*
     rl = new wxSplitterWindow ( this , -1 ) ;
     right = new TMyImagePanel ( rl , IV_IMAGE ) ;
@@ -83,7 +98,16 @@ void ExternalInterface::initme ()
     wxString s_dir = myapp()->frame->LS->getOption ( "IMGDIR" , wxGetCwd() ) ;    
     ShowDir ( s_dir ) ;
 */
+
+    wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+//    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
+    v0->Add ( nb , 1 , wxEXPAND , 5 ) ;
+    SetSizer ( v0 ) ;
+    v0->Fit ( this ) ;
+
     myapp()->frame->setChild ( this ) ;
+    Maximize () ;
+    Activate () ;
     }
 
 wxString ExternalInterface::getName ()
@@ -91,3 +115,59 @@ wxString ExternalInterface::getName ()
     return "External Interface" ;
     }
     
+    
+// *****************************************************************************
+
+EILB::EILB ( wxWindow *parent , int id )
+	: wxHtmlListBox ( parent , id )
+	{
+	SetItemCount ( 0 ) ;
+	}    
+
+wxString EILB::OnGetItem(size_t n) const
+	{
+	return was[n] ;
+	}
+     
+// *****************************************************************************
+
+EIpanel::EIpanel ( wxWindow *parent , int _mode )
+	: wxPanel ( parent )
+	{
+	mode = _mode ;
+	
+	up = new wxPanel ( this ) ;
+	hlb = new EILB ( this ) ;
+	
+	if ( mode == EI_PUBMED_NUCLEOTIDE ) init_pubmed_nucleotide() ;
+
+    wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+    v0->Add ( up , 0 , wxEXPAND , 5 ) ;
+    v0->Add ( hlb , 1 , wxEXPAND , 5 ) ;
+    SetSizer ( v0 ) ;
+//    v0->Fit ( this ) ;
+	}
+     
+void EIpanel::init_pubmed_nucleotide()
+	{
+	t1 = new wxTextCtrl ( up , ID_T1 , "pGEX 3x" , wxDefaultPosition , wxDefaultSize , wxTE_PROCESS_ENTER ) ;
+	b1 = new wxButton ( up , wxID_OK , "OK" , wxDefaultPosition ) ;
+
+    wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    h0->Add ( t1 , 1 , wxEXPAND , 5 ) ;
+    h0->Add ( b1 , 0 , wxEXPAND , 5 ) ;
+    up->SetSizer ( h0 ) ;
+    h0->Fit ( up ) ;
+
+	t1->SetFocus() ;
+	}
+	
+void EIpanel::process_pubmed_nucleotide()
+	{
+	
+	}    
+    
+void EIpanel::OnOK ( wxCommandEvent& event )
+	{
+	if ( mode == EI_PUBMED_NUCLEOTIDE ) process_pubmed_nucleotide() ;
+ 	}    
