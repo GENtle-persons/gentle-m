@@ -34,14 +34,15 @@ IMPLEMENT_APP(MyApp)
 // Some often needed stuff...
 
 #ifdef MYDEBUG
-ofstream errout ( "C:\\ERROR.txt" , ios::out ) ;
+ofstream errout ( "ERROR.txt" , ios::out ) ;
 
 void myass ( bool b , wxString msg )
     {
     if ( b ) return ;
     errout << msg << "\n" ;
-    wxBell();
-    wxCHECK_RET ( b , msg ) ;
+    errout.flush() ;
+//    wxBell();
+//    wxCHECK_RET ( b , msg ) ;
 //    wxSafeShowMessage ( msg , "Error" ) ;
     }
 #endif
