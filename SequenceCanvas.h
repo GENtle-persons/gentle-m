@@ -257,35 +257,36 @@ class SequenceCanvas : public wxScrolledWindow
     virtual ~SequenceCanvas () { delete font ; }
     virtual void OnDraw(wxDC& dc);
     virtual void safeShow ( wxDC &dc ) ;
-    bool IsDirty() const { return m_dirty; }
-    void OnEvent(wxMouseEvent& event);
-    void OnSize(wxSizeEvent &event);
-    void OnCharHook(wxKeyEvent& event) ;
+    virtual bool IsDirty() const { return m_dirty; }
+    virtual void OnEvent(wxMouseEvent& event);
+    virtual void OnSize(wxSizeEvent &event);
+    virtual void OnCharHook(wxKeyEvent& event) ;
 
-    void vecEdit ( wxCommandEvent &ev ) ;
-    void blastDNA ( wxCommandEvent &ev ) ;
-    void blastAA ( wxCommandEvent &ev ) ;
-    void OnCopyText ( wxCommandEvent &ev ) ;
-    void OnCopyImage ( wxCommandEvent &ev ) ;
-    void OnSaveImage ( wxCommandEvent &ev ) ;
-    void OnPrint ( wxCommandEvent &ev ) ;
-    void OnCut ( wxCommandEvent &ev ) ;
-    void OnCopy ( wxCommandEvent &ev ) ;
-    void OnPrimerForward ( wxCommandEvent &ev ) ;
-    void OnPrimerBackward ( wxCommandEvent &ev ) ;
-    void OnPrimerBoth ( wxCommandEvent &ev ) ;
-    void OnPrimerMutation ( wxCommandEvent &ev ) ;
-    void OnSilmut ( wxCommandEvent &ev ) ;
+    virtual void vecEdit ( wxCommandEvent &ev ) ;
+    virtual void blastDNA ( wxCommandEvent &ev ) ;
+    virtual void blastAA ( wxCommandEvent &ev ) ;
+    virtual void OnCopyText ( wxCommandEvent &ev ) ;
+    virtual void OnCopyImage ( wxCommandEvent &ev ) ;
+    virtual void OnSaveImage ( wxCommandEvent &ev ) ;
+    virtual void OnPrint ( wxCommandEvent &ev ) ;
+    virtual void OnCut ( wxCommandEvent &ev ) ;
+    virtual void OnCopy ( wxCommandEvent &ev ) ;
+    virtual void OnPrimerForward ( wxCommandEvent &ev ) ;
+    virtual void OnPrimerBackward ( wxCommandEvent &ev ) ;
+    virtual void OnPrimerBoth ( wxCommandEvent &ev ) ;
+    virtual void OnPrimerMutation ( wxCommandEvent &ev ) ;
+    virtual void OnSilmut ( wxCommandEvent &ev ) ;
+    virtual void OnWhatCuts(wxCommandEvent& event);
     
-    void OnCopyResultDNA ( wxCommandEvent &ev ) ;
-    void OnCopyResultAA ( wxCommandEvent &ev ) ;
-    void OnNewFromResultDNA ( wxCommandEvent &ev ) ;
-    void OnNewFromResultAA ( wxCommandEvent &ev ) ;
+    virtual void OnCopyResultDNA ( wxCommandEvent &ev ) ;
+    virtual void OnCopyResultAA ( wxCommandEvent &ev ) ;
+    virtual void OnNewFromResultDNA ( wxCommandEvent &ev ) ;
+    virtual void OnNewFromResultAA ( wxCommandEvent &ev ) ;
 
     virtual void OnFocus(wxFocusEvent& event) ;
     virtual void OnKillFocus(wxFocusEvent& event) ;
     
-    string getSelection () ;
+    virtual string getSelection () ;
     
     virtual void updateEdit ( TVector *v , string id , int from ) ;
     virtual void arrange () ;

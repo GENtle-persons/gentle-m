@@ -50,6 +50,8 @@ class TVectorEditor : public wxDialog
     void enzymeAddGr ( wxEvent &ev ) ;
     void enzymeAddToGr ( wxEvent &ev ) ;
     void enzymeAddToNewGr ( wxEvent &ev ) ;
+    void enzymeDelGr ( wxEvent &ev ) ;
+    void enzymeDelFromGr ( wxEvent &ev ) ;
     void enzymeDelEn ( wxEvent &ev ) ;
     void newEnzyme ( wxEvent &ev ) ;
     void importCloneEnzymes () ;
@@ -74,7 +76,7 @@ class TVectorEditor : public wxDialog
 
     wxNotebook *nb ;
     wxPanel *panProp , *panItem , *panEnzym , *panProt ;
-    wxButton *bClear , *bAdd , *bDel , *bCol ;
+    wxButton *bClear , *bAdd , *bDel , *bCol , *b_atg , *b_dfg , *b_dg ;
     wxTextCtrl *name , *lu , *ll , *ru , *rl ;
     TURLtext *desc , *idesc , *pro_txt ;
     wxTextCtrl *iname , *ifrom , *ito ;

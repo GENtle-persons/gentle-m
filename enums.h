@@ -291,6 +291,11 @@ enum {
     MD_PM_FILTER_DESC,
     MD_PM_FILTER_SEQ,
     ABI_INV_COMP,
+    PC_WHAT_CUTS,
+    
+    TVE_EN_DEL_GR,
+    TVE_DEL_FROM_GROUP,
+    
     
     } ;
 

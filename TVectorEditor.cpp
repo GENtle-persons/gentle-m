@@ -20,6 +20,8 @@ BEGIN_EVENT_TABLE(TVectorEditor, wxDialog )
     EVT_BUTTON(TVE_EN_DEL_EN,TVectorEditor::enzymeDelEn)
     EVT_BUTTON(TVE_EN_ADD_TO_GR,TVectorEditor::enzymeAddToGr)
     EVT_BUTTON(TVE_EN_ADD_TO_NEW_GR,TVectorEditor::enzymeAddToNewGr)
+    EVT_BUTTON(TVE_EN_DEL_GR,TVectorEditor::enzymeDelGr)
+    EVT_BUTTON(TVE_DEL_FROM_GROUP,TVectorEditor::enzymeDelFromGr)
     EVT_BUTTON(TVE_IMPORT,TVectorEditor::importCloneEnzymes)
     EVT_BUTTON(TVE_NEW_ENZYME,TVectorEditor::newEnzyme)
     
@@ -346,11 +348,14 @@ void TVectorEditor::initPanEnzym ()
     new wxButton ( panEnzym , TVE_EN_ADD_GR , txt("<-- add") ,
             wxPoint ( bx1+bo , by1+bo ) , wxSize ( bx2-bx1-bo*2 , bh ) ) ;
 
-    new wxButton ( panEnzym , TVE_EN_ADD_TO_GR , txt("b_add_to_group") ,
+    b_atg = new wxButton ( panEnzym , TVE_EN_ADD_TO_GR , txt("b_add_to_group") ,
             wxPoint ( bx1+bo , by1+bo+th ) , wxSize ( bx2-bx1-bo*2 , bh ) ) ;
 
     new wxButton ( panEnzym , TVE_EN_ADD_TO_NEW_GR , txt("b_add_as_new_group") ,
             wxPoint ( bx1+bo , by1+bo+th*2 ) , wxSize ( bx2-bx1-bo*2 , bh ) ) ;
+            
+    b_dg = new wxButton ( panEnzym , TVE_EN_DEL_GR , txt("b_del_group") ,
+            wxPoint ( bx1+bo , by1+bo+th*3 ) , wxSize ( bx2-bx1-bo*2 , bh ) ) ;
             
     if ( !v )
         new wxButton ( panEnzym , TVE_IMPORT , txt("import_clone_enzymes") ,
@@ -364,6 +369,9 @@ void TVectorEditor::initPanEnzym ()
 
     new wxButton ( panEnzym , TVE_EN_DEL_EN , txt("del -->") , 
             wxPoint ( bx1+bo , by2+bo+th ) , wxSize ( bx2-bx1-bo*2 , bh ) ) ;
+
+    b_dfg = new wxButton ( panEnzym , TVE_DEL_FROM_GROUP , txt("b_del_from_group") , 
+            wxPoint ( bx1+bo , by2+bo+th*3 ) , wxSize ( bx2-bx1-bo*2 , bh ) ) ;
 
 
     listCE->Clear() ;
@@ -632,12 +640,25 @@ void TVectorEditor::showGroupEnzymes ( string gr )
     {
     vector <string> vs ;
     listGE->Clear() ;
+    gr = myapp()->frame->LS->UCfirst ( gr ) ;
     myapp()->frame->LS->getEnzymesInGroup ( gr , vs ) ;
     while ( eig.size() ) eig.pop_back () ;
     for ( int i = 0 ; i < vs.size() ; i++ )
         {
         listGE->Append ( vs[i].c_str() ) ;
         eig.push_back ( vs[i] ) ;
+        }
+    if ( gr == txt("All") )
+        {
+        b_atg->Disable() ;
+        b_dg->Disable() ;
+        b_dfg->Disable() ;
+        }
+    else
+        {
+        b_atg->Enable() ;
+        b_dg->Enable() ;
+        b_dfg->Enable() ;
         }
     }
 
@@ -678,6 +699,7 @@ void TVectorEditor::enzymeAddGr ( wxEvent &ev )
 void TVectorEditor::enzymeAddToGr ( wxEvent &ev )
     {
     string group = listGroups->GetStringSelection().c_str() ;
+    group = myapp()->frame->LS->UCfirst ( group ) ;
     if ( group == txt("All") ) return ;
     string sql ;
     wxArrayInt vi ;
@@ -710,6 +732,7 @@ void TVectorEditor::enzymeAddToNewGr ( wxEvent &ev )
                                 txt("t_new_enzyme_group_name") ) ;
     if ( wxID_OK != ted.ShowModal () ) return ;
     string ng = ted.GetValue().c_str() ;
+    ng = myapp()->frame->LS->UCfirst ( ng ) ;
     if ( !myapp()->frame->LS->addEnzymeGroup ( ng ) ) return ;
     listGroups->Append ( ng.c_str() ) ;
     listGroups->SetStringSelection ( ng.c_str() ) ;
@@ -984,5 +1007,46 @@ void TVectorEditor::proteaseSelChange ( wxEvent &ev )
     t += s + "\n" ;
     t += pro->str_match ;
     pro_txt->SetValue ( t.c_str() ) ;
+    }
+
+void TVectorEditor::enzymeDelGr ( wxEvent &ev )
+    {
+    string group = listGroups->GetStringSelection().c_str() ;
+    group = myapp()->frame->LS->UCfirst ( group ) ;
+    if ( group == txt("All") ) return ;
+    
+    wxString s = wxString::Format ( txt("t_del_group") , group.c_str() ) ;
+    if ( wxMessageBox ( s , txt("msg_box") , wxYES_NO|wxICON_QUESTION ) != wxYES ) return ;
+
+    string sql ;
+    sql = "DELETE FROM link_enzyme_group WHERE leg_group=\"" + group + "\"" ;
+    myapp()->frame->LS->getObject ( sql ) ; 
+    sql = "DELETE FROM enzyme_group WHERE eg_name=\"" + group + "\"" ;
+    myapp()->frame->LS->getObject ( sql ) ; 
+    showEnzymeGroups () ;
+    }
+
+void TVectorEditor::enzymeDelFromGr ( wxEvent &ev )
+    {
+    string group = listGroups->GetStringSelection().c_str() ;
+    group = myapp()->frame->LS->UCfirst ( group ) ;
+    if ( group == txt("All") ) return ;
+    
+    string sql ;
+    wxArrayInt vi ;
+    int i , k , n = listGE->GetSelections ( vi ) ;
+    for ( k = n-1 ; k >= 0 ; k-- )
+        {
+        i = vi[k] ;
+        string s = listGE->GetString(i).c_str() ;
+        sql = "DELETE FROM link_enzyme_group WHERE "
+              "leg_enzyme=\"" +
+              s +
+              "\" AND leg_group=\"" +
+              group +
+              "\"" ;
+        myapp()->frame->LS->getObject ( sql ) ;              
+        }
+    showGroupEnzymes ( group ) ;
     }
     

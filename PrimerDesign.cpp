@@ -754,7 +754,7 @@ void TPrimerDesign::OnActivatePrimer ( wxListEvent& event)
 
 void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
     {
-    TSilmutDialog sd ( this , "SilMut" ) ;
+    TSilmutDialog sd ( this , txt("t_silmut") ) ;
     sd.initme ( w , sc->_from , sc->_to ) ;
     if ( wxID_OK != sd.ShowModal () ) return ;
     string ns = sd.getSequence().c_str() ;

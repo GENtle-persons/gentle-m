@@ -282,6 +282,7 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn )
         mm->Append ( MDI_CUT , txt("m_cut") ) ;
         mm->Append ( MDI_COPY , txt("m_copy") ) ;
         mm->Append ( MDI_COPY_TO_NEW , txt("m_copy_to_new") ) ;
+        mm->Append ( PC_WHAT_CUTS , txt("m_what_cuts") ) ;
         mm->Append ( MDI_AS_NEW_FEATURE , txt("m_as_new_feature") ) ;
         if ( p->aa_state != AA_NONE && p->aa_state != AA_ALL )
            {
@@ -706,5 +707,10 @@ void PlasmidCanvas::setZoom ( int factor )
     SetScrollbars ( 1 , 1 , vx , vy , false ) ;
     SetVirtualSize ( vx , vy ) ;
     Refresh () ;
+    }
+    
+void PlasmidCanvas::OnWhatCuts(wxCommandEvent& event)
+    {
+    p->cSequence->OnWhatCuts(event) ;
     }
     
