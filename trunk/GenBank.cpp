@@ -168,7 +168,7 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
     if ( va[0].MakeLower() == "source" ) return ;
     for ( a = 0 ; a < VIT_TYPES ; a++ )
         {
-        if ( va[0].CmpNoCase ( gb_item_type[a] ) == 0 ) i.type = a ;
+        if ( va[0].CmpNoCase ( gb_item_type[a] ) == 0 ) i.setType ( a ) ;
         }
        
     // Properties
@@ -236,7 +236,7 @@ void TGenBank::iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag 
            i.from = ll ;
            to.ToLong ( &ll ) ;
            i.to = ll ;
-           if ( ( tag & TAG_COMPLEMENT ) > 0 ) i.direction = -1 ;
+           if ( ( tag & TAG_COMPLEMENT ) > 0 ) i.setDirection ( -1 ) ;
            v->items.push_back ( i ) ;
            }
         else if ( l.Left ( 10 ) == "COMPLEMENT" )
@@ -389,8 +389,8 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
     for ( a = 0 ; a < v->items.size() ; a++ )
         {
         s = "     " ;
-        s += expand ( gb_item_type[v->items[a].type] , 16 ) ;
-        if ( v->items[a].direction == 1 )
+        s += expand ( gb_item_type[v->items[a].getType()] , 16 ) ;
+        if ( v->items[a].getDirection() == 1 )
            sprintf ( z , "%d..%d" , v->items[a].from , v->items[a].to ) ;
         else
            sprintf ( z , "complement(%d..%d)" , v->items[a].from , v->items[a].to ) ;

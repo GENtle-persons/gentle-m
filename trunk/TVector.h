@@ -88,8 +88,17 @@ class TVectorItem
     virtual wxString implodeParams () ;
     virtual void explodeParams ( wxString _s ) ;
     virtual wxTreeItemId getTreeID () { return treeid ; } ;
+    virtual void setTreeID ( wxTreeItemId newid ) { treeid = newid ; }
+    virtual int getDirection () { return direction ; }
+    virtual void setDirection ( int newdir ) { direction = newdir ; }
+    virtual char getType () { return type ; }
+    virtual void setType ( char newtype ) { type = newtype ; }
+
+    // Parameters
     virtual wxString getParam ( wxString p , wxString def = "" ) ;
     virtual wxArrayString getParamKeys () ;
+    virtual void setParam ( wxString p , wxString v ) ;
+    virtual void setParam ( wxString p , int v ) ;
 
     // dna2aa stuff
     virtual void translate ( TVector *v , SeqAA *aa = NULL ) ;
@@ -98,34 +107,23 @@ class TVectorItem
     // Variables
     wxString desc , name ;
     int from , to ;
-    signed char direction ; // 1=clockwise, -1=counter-clockwise
-    char type ; // VIT_XXX
     
-    protected:
-    friend class TGenBank ;
-    friend class TItemEditDialog ;
-    friend class PlasmidCanvas ;
-    friend class TXMLfile ;
-    friend class TPDB ;
-    virtual void setParam ( wxString p , wxString v ) ;
-    virtual void setParam ( wxString p , int v ) ;
-
-    friend class TVectorTree ;
+    private:
+    virtual void initParams () ;
+    
+    int direction ; // 1=clockwise, -1=counter-clockwise
+    char type ; // VIT_XXX
     wxTreeItemId treeid ;
+    wxArrayString pname , pvalue ;
+    vector <Tdna2aa> dna2aa ;
 
     // Visual information
     friend class TVectorEditor ;
     friend class MyChild ;
+    friend class PlasmidCanvas ;
     int r1 , r2 ;
     int r3 , r4 ; // Only used in linar display mode
     float a1 , a2 ;
-    
-    private :
-    virtual void initParams () ;
-    wxArrayString pname , pvalue ;
-    
-    // dna2aa data
-    vector <Tdna2aa> dna2aa ;
     } ;
 
 class TVector

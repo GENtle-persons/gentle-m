@@ -93,7 +93,7 @@ void TClone::remap ( TVector *v )
                          gf ,
                          gt ,
                          ty ) ;
-        vi.direction = genes[a].getCCW()?-1:1;
+        vi.setDirection ( genes[a].getCCW()?-1:1 );
         v->items.push_back ( vi ) ;
         }
         

@@ -10,7 +10,7 @@ END_EVENT_TABLE()
 
 TItemEditDialog::TItemEditDialog ( wxWindow *parent, const wxString& title ,
                         TVectorItem &_vi )
-   : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 400 , 400 ) )
+   : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 400 , 200 ) )
    {
    vi = new TVectorItem ;
    *vi = _vi ;

@@ -4,7 +4,7 @@ BEGIN_EVENT_TABLE(TABIviewer, MyChildBase)
     EVT_MENU(MDI_EDIT_MODE, TABIviewer::OnEditMode)
     EVT_MENU(MDI_MARK_ALL, TABIviewer::OnMarkAll)
     EVT_MENU(MDI_FILE_SAVE, TABIviewer::OnFileSave)
-    EVT_MENU(MDI_EXPORT, TABIviewer::OnExport)
+    EVT_MENU(MDI_EXPORT, ChildBase::OnExport)
     EVT_MENU(MDI_FIND, TABIviewer::OnFind)
     EVT_MENU(MDI_COPY, TABIviewer::OnCopy)
     EVT_MENU(AMINOACIDS_EDIT_NAME, TABIviewer::OnEditName)
@@ -360,12 +360,6 @@ void TABIviewer::OnFileSave(wxCommandEvent& event)
     {
     TManageDatabaseDialog dbd ( this , txt("t_store") , ACTION_MODE_SAVE , vec ) ;
     dbd.ShowModal () ;
-    }
-    
-void TABIviewer::OnExport(wxCommandEvent& event)
-    {
-    wxMessageDialog md ( this , "Not implemented ... yet!" ) ;
-    md.ShowModal() ;
     }
     
 void TABIviewer::OnFind(wxCommandEvent& event)

@@ -21,7 +21,6 @@ class TAminoAcids : public ChildBase
     
     virtual void OnMarkAll(wxCommandEvent& event);
     virtual void OnFileSave(wxCommandEvent& WXUNUSED(event) ) ;
-    virtual void OnExport(wxCommandEvent& event);
     virtual void OnFind(wxCommandEvent& event);
     virtual void OnCut(wxCommandEvent& event);
     virtual void OnCopy(wxCommandEvent& event);

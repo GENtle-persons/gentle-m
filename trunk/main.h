@@ -119,6 +119,7 @@ WX_DEFINE_ARRAY(TVector *, wxArrayTVector);
 #include "enums.h"
 #include "TVector.h"
 #include "TUReadSeq.h"
+#include "ChildBase.h"
 #include "ABItype.h"
 #include "MiscDialogs.h"
 #include "TStorage.h"

@@ -4,7 +4,7 @@ BEGIN_EVENT_TABLE(TAminoAcids, MyChildBase)
     EVT_MENU(MDI_EDIT_MODE, TAminoAcids::OnEditMode)
     EVT_MENU(MDI_MARK_ALL, TAminoAcids::OnMarkAll)
     EVT_MENU(MDI_FILE_SAVE, TAminoAcids::OnFileSave)
-    EVT_MENU(MDI_EXPORT, TAminoAcids::OnExport)
+    EVT_MENU(MDI_EXPORT, ChildBase::OnExport)
     EVT_MENU(MDI_FIND, TAminoAcids::OnFind)
     EVT_MENU(MDI_CUT, TAminoAcids::OnCut)
     EVT_MENU(MDI_COPY, TAminoAcids::OnCopy)
@@ -327,12 +327,6 @@ void TAminoAcids::OnFileSave(wxCommandEvent& event)
     dbd.ShowModal () ;
     }
     
-void TAminoAcids::OnExport(wxCommandEvent& event)
-    {
-    wxMessageDialog md ( this , txt("t_not_yet_implemented") ) ;
-    md.ShowModal() ;
-    }
-    
 void TAminoAcids::OnFind(wxCommandEvent& event)
     {
     FindSequenceDialog fsd ( this , txt("t_find") ) ;
@@ -364,8 +358,8 @@ void TAminoAcids::OnAsNewFeature(wxCommandEvent& event)
     TVectorItem nvi ;
     sprintf ( t , txt("t_new_item_title") , from , to ) ;
     nvi.name = t ;
-    nvi.direction = 1 ;
-    nvi.type = VIT_MISC ;
+    nvi.setDirection ( 1 ) ;
+    nvi.setType ( VIT_MISC ) ;
     nvi.from = from ;
     nvi.to = to ;
     vec->setChanged () ;

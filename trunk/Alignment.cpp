@@ -34,7 +34,7 @@ BEGIN_EVENT_TABLE(TAlignment, MyChildBase)
     EVT_MENU(MDI_COPY,ChildBase::OnDummy)
     EVT_MENU(MDI_PASTE,ChildBase::OnDummy)
     EVT_MENU(MDI_EDIT_MODE,ChildBase::OnDummy)
-    EVT_MENU(MDI_EXPORT,ChildBase::OnDummy)
+    EVT_MENU(MDI_EXPORT,ChildBase::OnExport)
     EVT_MENU(MDI_MARK_ALL,ChildBase::OnDummy)
     EVT_MENU(MDI_FIND,ChildBase::OnDummy)
     EVT_MENU(AA_NONE,TABIviewer::OnDummy)
@@ -133,7 +133,7 @@ void TAlignment::initme ()
     int bo = 5 ;
 
     // Menus
-    wxMenu *file_menu = myapp()->frame->getFileMenu ( true ) ;
+    wxMenu *file_menu = myapp()->frame->getFileMenu ( true , true ) ;
     wxMenu *tool_menu = myapp()->frame->getToolMenu () ;
     wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
     wxMenu *view_menu = new wxMenu ;
@@ -988,6 +988,17 @@ void TAlignment::OnFileSave ( wxCommandEvent &ev )
     dbd.ShowModal () ;
     }
     
+void TAlignment::doExport ( wxString filename , int filter )
+    {
+    wxFile out ( filename , wxFile::write ) ;
+    for ( int a = 0 ; a < lines.size() ; a++ )
+        {
+        if ( lines[a].v )
+           exportVector ( lines[a].v , out , filter ) ;
+        }    
+    out.Close () ;
+    }    
+
 void TAlignment::fromVector ( TVector *nv )
     {
     TGenBank gb ;

@@ -63,7 +63,6 @@ public:
     virtual void OnMarkAll(wxCommandEvent& event);
     virtual void OnTransformSequence(wxCommandEvent& event);
     virtual void OnExtractAA(wxCommandEvent& event);
-    virtual void OnExport(wxCommandEvent& event);
     virtual void OnFind(wxCommandEvent& event);
     virtual void OnFileSave(wxCommandEvent& WXUNUSED(event) ) ;
     virtual void OnQuit(wxCommandEvent& event);
