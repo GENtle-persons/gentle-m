@@ -1,38 +1,64 @@
-# Generated automatically from Makefile.in by configure.
 #
-# File:		makefile.unx
-# Author:	Julian Smart
-# Created:	1998
+# File:		Makefile for samples
+# Author:	Robert Roebling
+# Created:	1999
 # Updated:	
-# Copyright:	(c) 1998 Julian Smart
+# Copyright:	(c) 1998 Robert Roebling
 #
-# "%W% %G%"
+# This makefile requires a Unix version of wxWindows
+# to be installed on your system. This is most often
+# done typing "make install" when using the complete
+# sources of wxWindows or by installing the two
+# RPM packages wxGTK.XXX.rpm and wxGTK-devel.XXX.rpm
+# under Linux.
+
+# this makefile may also be used as a template for simple makefiles for your
+# own programs, the comments explain which parts of it you may have to modify
+# to use it for your own programs
+
+
+# you may change WX_CONFIG value to use a specific wx-config and to pass it
+# some options, for example "--inplace" to use an uninstalled wxWindows
+# version
 #
-# Makefile for mdi example (UNIX).
+# by default, wx-config from the PATH is used
+WX_CONFIG := wx-config
 
-top_srcdir = ../..
-top_builddir = ../..
-program_dir = samples/GENtle
+# set this to the name of the main executable file
+PROGRAM = GENtle
 
-PROGRAM=main
-
-MYOBJECTS = ABItype.o \
+# if your program has more than one source file, add more .o files to the line
+# below
+OBJECTS = ABItype.o \
 	ABIviewer.o \
 	Alignment.o \
 	AminoAcids.o \
+	ChildBase.o \
 	CoolCanvas.o \
+	ExternalInterface.o \
+	FindSequenceDialog.o \
 	GenBank.o \
+	main.o \
 	ManageDatabase.o \
 	MiscDialogs.o \
 	MyChild.o \
 	MyFrame.o \
+	PlasmidCanvasCircular.o \
 	PlasmidCanvas.o \
-	PlasmidCanvasLinear.o \
-	PlasmidCanvasCircular.o  \
 	PlasmidCanvasHandlers.o \
+	PlasmidCanvasLinear.o \
 	PrimerDesign.o \
+	ProgramOptionsDialog.o \
 	RestrictionEnzymes.o \
+	SendHTTP.o \
 	SequenceCanvas.o \
+	SequenceTypeAA.o \
+	SequenceTypeABI.o \
+	SequenceTypeAlign.o \
+	SequenceTypeDNA.o \
+	SequenceTypeFeature.o \
+	SequenceTypePlot.o \
+	SequenceTypeRestriction.o \
 	SequenceTypes.o \
 	TCalculator.o \
 	TClone.o \
@@ -42,23 +68,38 @@ MYOBJECTS = ABItype.o \
 	TItemEditDialog.o \
 	TLigationDialog.o \
 	TMainTree.o \
+	todo.o \
+	TPDB.o \
 	TPrimer.o \
 	TPrimerDialog.o \
 	TRestrictionEditor.o \
 	TSilmutDialog.o \
 	TStorage.o \
 	TUndo.o \
+	TUReadSeq.o \
 	TVector.o \
 	TVectorEditor.o \
-	TVectorTree.o
+	TVectorEditorEnzymes.o \
+	TVectorEditorItems.o \
+	TVectorTree.o \
+	TVirtualGel.o \
+	TXMLfile.o \
+	tinyxml/tinystr.o \
+	tinyxml/tinyxml.o
 
-MYDEFS = $(MYOBJECTS:.o=.d)
 
-OBJECTS =$(PROGRAM).o $(MYOBJECTS)
-DEPFILES=$(PROGRAM).d $(MYDEFS)
-LIBRARIES=-L~/bld/.libs -lsqlite
-# LDLIBS=
+# you shouldn't have to edit anything below this line
+CXX = $(shell $(WX_CONFIG) --cxx)
 
-include ../../src/makeprog.env
+.SUFFIXES:	.o .cpp
 
--include $(DEPFILES)
+.cpp.o :
+	$(CXX) -c `$(WX_CONFIG) --cxxflags` -o $@ $<
+
+all:    $(PROGRAM)
+
+$(PROGRAM):	$(OBJECTS)
+	$(CXX) -o $(PROGRAM) $(OBJECTS) `$(WX_CONFIG) --libs`
+
+clean: 
+	rm -f *.o $(PROGRAM)

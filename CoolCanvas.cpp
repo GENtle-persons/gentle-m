@@ -1,5 +1,5 @@
 #include "CoolCanvas.h"
-
+/*
 CoolCanvas::CoolCanvas(wxWindow *parent, const wxPoint& pos, const wxSize& size)
     : PlasmidCanvas ( parent , pos , size )
     {
@@ -48,21 +48,6 @@ void CoolCanvas::OnDrawCircular(wxDC& dc)
            dc.DrawPoint ( xy2D ( x , 0 , y ) ) ;
            }
         
-/*        dc.DrawPoint ( x2D ( x , 0 , y ) + w/2 , 
-                        y2D ( x , 0 , y ) + h/2 ) ;*/
-        
-/*        int dist = w2 * 100 ;
-        if ( y == 0 ) dist = 0 ;
-        else dist /= y ;
-        if ( dist < 20 )
-           {
-           dc.DrawPoint ( x , y ) ;
-           }
-        else
-           {
-           wxString text ;
-           text += s[a] ;
-           dc.DrawText ( text , x + w/2 , y + h/2 ) ;
-           }*/
         }
     }
+*/

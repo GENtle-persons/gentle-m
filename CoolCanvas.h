@@ -1,6 +1,8 @@
 #ifndef _COOLCANVAS_H_
 #define _COOLCANVAS_H_
 
+/*
+// Deactivated until I can think of something *really* cool ;-)
 #include "PlasmidCanvas.h"
 //#include "main.h"
 
@@ -15,5 +17,6 @@ class CoolCanvas : public PlasmidCanvas
     } ;
 
 
+*/
 #endif
 
