@@ -501,7 +501,7 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
            TRestrictionEditor ed ( myapp()->frame , "" , wxPoint(-1,-1) , 
                       wxSize(600,400) , 
                       wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL);
-           ed.pre = s ;
+           ed.pre = s.c_str() ;
            ed.cocktail = p->vec->cocktail ;
            ed.initme ( p->vec ) ;
            if ( ed.ShowModal () == wxID_OK )

@@ -693,7 +693,7 @@ void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
     TSilmutDialog sd ( this , "SilMut" ) ;
     sd.initme ( w , sc->_from , sc->_to ) ;
     if ( wxID_OK != sd.ShowModal () ) return ;
-    string ns = sd.getSequence() ;
+    string ns = sd.getSequence().c_str() ;
     if ( ns == "" ) return ;
     
     TVector z ;

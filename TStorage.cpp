@@ -150,7 +150,7 @@ void TStorage::getEnzymesInGroup ( string gn , vector <string> &vs )
     {
     TSQLresult sr ;
     int a ;
-    while ( vs.size() ) vs.pop_back() ;
+    vs.clear() ;
     string sql ;
     if ( gn != txt("All") )
         {
@@ -181,15 +181,31 @@ void TStorage::getEnzymesInGroup ( string gn , vector <string> &vs )
         }
     }
     
-void TStorage::getEnzymeGroups ( vector <string> &vs )
+void TStorage::getEnzymesInGroup ( wxString gn , vector <wxString> &vs )
+    {
+    vector <string> dummy ;
+    vs.clear() ;
+    getEnzymesInGroup ( gn.c_str() , dummy ) ;
+    for ( int a = 0 ; a < dummy.size() ; a++ ) vs.push_back ( dummy[a].c_str() ) ;
+    }
+
+void TStorage::getEnzymeGroups ( vector <wxString> &vs )
     {
     TSQLresult sr ;
     int a ;
-    while ( vs.size() ) vs.pop_back() ;
+    vs.clear() ;
     string sql = "SELECT eg_name FROM enzyme_group" ;
     sr = getObject ( sql ) ;
     for ( a = 0 ; a < sr.content.size() ; a++ )
-        vs.push_back ( sr[a][sr["eg_name"]] ) ;
+        vs.push_back ( sr[a][sr["eg_name"]].c_str() ) ;
+    }
+    
+void TStorage::getEnzymeGroups ( vector <string> &vs )
+    {
+    vector <wxString> dummy ;
+    getEnzymeGroups ( dummy ) ;
+    vs.clear () ;
+    for ( int a = 0 ; a < dummy.size() ; a++ ) vs.push_back ( dummy[a].c_str() ) ;
     }
     
 void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme *e )

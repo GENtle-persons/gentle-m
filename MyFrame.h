@@ -74,7 +74,7 @@ public:
             useCoolCanvas ;
     string lang_string ;
     string project_name , project_desc , project_db ;
-    vector <string> lastCocktail ;
+    vector <wxString> lastCocktail ;
     vector <ChildBase*> children ;
     
     DECLARE_EVENT_TABLE()

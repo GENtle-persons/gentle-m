@@ -188,8 +188,7 @@ void MyFrame::initme ()
     MyFrameDropTarget *dt = new MyFrameDropTarget ;
     dt->f = this ;
     SetDropTarget ( dt ) ;
-
-#ifdef __WXMSW__
+#ifdef __WXGTK__
     // Toolbar
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
     InitToolBar(toolBar);
@@ -200,6 +199,21 @@ void MyFrame::initme ()
     toolBar->AddTool( MDI_FILE_OPEN, 
             wxBitmap (myapp()->bmpdir+myapp()->slash+"open.bmp", wxBITMAP_TYPE_BMP), 
             txt("m_open") , txt("m_opentxt") );
+    toolBar->AddTool( MDI_FILE_SAVE, 
+                wxBitmap (myapp()->bmpdir+myapp()->slash+"save.bmp", wxBITMAP_TYPE_BMP),
+                txt("m_store_in_db") , 
+                txt("m_txt_store_in_db"));
+    toolBar->AddSeparator() ;
+    toolBar->AddTool( MDI_UNDO,
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"undo.bmp", wxBITMAP_TYPE_BMP)) ;
+    toolBar->AddSeparator() ;
+    toolBar->AddTool( MDI_CUT,
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"cut.bmp", wxBITMAP_TYPE_BMP)) ;
+    toolBar->AddTool( MDI_COPY,
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"copy.bmp", wxBITMAP_TYPE_BMP)) ;
+    toolBar->AddTool( MDI_PASTE,
+        wxBitmap (myapp()->bmpdir+myapp()->slash+"paste.bmp", wxBITMAP_TYPE_BMP)) ;
+    toolBar->AddSeparator() ;
 
 //    toolBar->AddSeparator() ;
         

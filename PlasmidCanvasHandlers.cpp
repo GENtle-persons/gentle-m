@@ -125,7 +125,7 @@ wxMenu *PlasmidCanvas::invokeRsPopup ( int rs , wxPoint pt , bool doreturn )
     cm->Append ( -1 , "" ) ;
     
     for ( a = 0 ; a < p->vec->cocktail.size() && 
-                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->name ;
+                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->name.c_str() ;
                     a++ ) ;
     if ( a == p->vec->cocktail.size() )
         {
@@ -177,11 +177,11 @@ void PlasmidCanvas::rsAdd2Cocktail ( wxCommandEvent &ev )
     {
     int a , b ;
     for ( a = 0 ; a < p->vec->cocktail.size() && 
-                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->name ;
+                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->name.c_str() ;
                     a++ ) ;
     if ( a == p->vec->cocktail.size() ) // Add to cocktail
         {
-        p->vec->cocktail.push_back ( p->vec->rc[context_last_rs].e->name ) ;
+        p->vec->cocktail.push_back ( p->vec->rc[context_last_rs].e->name.c_str() ) ;
         }
     else // Remove from cocktail
         {
@@ -227,7 +227,7 @@ void PlasmidCanvas::rsDel ( wxCommandEvent &ev )
     p->vec->undo.start ( txt("u_del_enzyme") ) ;
     int a ;
     for ( a = 0 ; a < p->vec->cocktail.size() && 
-                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->name ;
+                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->name.c_str() ;
                     a++ ) ;
     if ( a < p->vec->cocktail.size() )
         rsAdd2Cocktail ( ev ) ; // Effectively removing enzyme from cocktail

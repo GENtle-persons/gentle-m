@@ -303,9 +303,8 @@ void MyChild::initme ()
 
 #ifdef __WXMSW__  // LINUX
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
-//    myapp()->frame->InitToolBar(toolBar);
 
-    //    if ( !toolBar ) wxMessageBox ( "No toolbar!" ) ;
+//    SetToolBar ( toolBar ) ;
 
     toolBar->AddTool( MDI_TEXT_IMPORT , 
                 wxBitmap (myapp()->bmpdir+myapp()->slash+"new.bmp", wxBITMAP_TYPE_BMP),
@@ -364,7 +363,7 @@ void MyChild::initme ()
     zoom_cb->SetSelection ( 0 ) ;
     toolBar->AddControl ( zoom_cb ) ;
     toolBar->Realize() ;    
-    myapp()->frame->SetToolBar ( toolBar ) ;
+    
 
 #endif
 

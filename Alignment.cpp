@@ -540,9 +540,12 @@ void TAlignmentDialog::init_what ()
     // Current
     for ( a = 0 ; a < al->qName.size() ; a++ )
         {
-        vcv.push_back ( al->qVec[a] ) ;
-        vcn.push_back ( al->qName[a] ) ;
-        cur->Append ( al->qName[a].c_str() ) ;
+        if ( al->qName[a] != txt("t_consensus") )
+           {
+           vcv.push_back ( al->qVec[a] ) ;
+           vcn.push_back ( al->qName[a] ) ;
+           cur->Append ( al->qName[a].c_str() ) ;
+           }
         }
         
     if ( vcn.size() == 0 )

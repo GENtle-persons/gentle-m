@@ -157,7 +157,7 @@ class TVector
     vector <TVectorItem> items ;
     vector <TRestrictionEnzyme*> re ;
     vector <TRestrictionCut> rc ;
-    vector <string> cocktail ;
+    vector <wxString> cocktail ;
     vector <TORF> worf ;
 
     vector <string> hiddenEnzymes ;
