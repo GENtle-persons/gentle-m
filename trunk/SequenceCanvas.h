@@ -20,7 +20,7 @@ class TAlignment ;
 class SequencePartList
     {
     public :
-    SequencePartList () {} ;
+    SequencePartList () { maxlevels = slen = 0 ; } ;
     virtual void prepare ( int size ) ;
     virtual void add ( int id , int from , int to ) ;
     virtual void makeLevels () ;

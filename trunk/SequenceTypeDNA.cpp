@@ -258,6 +258,8 @@ int SeqDNA::arrange_direct ( int n )
 
 void SeqDNA::show_direct ( wxDC& dc )
     {
+    myass ( itemsperline , "DNA:show_direct_ipl" ) ;
+    if ( !itemsperline ) return ;
     myass ( can , "SeqDNA::show_direct1" ) ;
     can->SetFont(*can->font);
     dc.SetFont(*can->font);

@@ -477,6 +477,8 @@ int SeqAA::arrange_direct ( int n )
 
 void SeqAA::show_direct ( wxDC& dc )
     {
+    myass ( itemsperline , "AA:show_direct_ipl" ) ;
+    if ( !itemsperline ) return ;
     mylog ( "SeqAA::show_direct" , "0" ) ;
     can->SetFont(*can->font);
     dc.SetFont(*can->font);

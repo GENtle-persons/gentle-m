@@ -152,8 +152,6 @@ void init_txt ( wxString lang )
               v.Add ( dummy.trimQuotes(l) ) ;
               l = c+1 ;
               }
-//	   else if ( *c > 127 ) *c = 132 ;
-//{ wxMessageBox ( wxString::Format ( "%d %d\n" , (unsigned char)'Ä' , (unsigned char)*c ) ) ; *c = '_' ; }
            }
         if ( l < c )
            {

@@ -46,13 +46,13 @@ wxString TPrimer::report ()
     char u[100] ;
 
     r += "5'-" + get53sequence() + "-3'\n" ;
-//    for ( a = 0 ; a < r.length() ; a++ ) if ( r[a] < 'A' || r[a] > 'Z' ) r[a] = '!' ;
-    sprintf ( u , "deltaH=%2.1fKcal/mol; deltaS=%2.1fcal/(K*mol)\n" , H , S ) ; r += u ;
-    sprintf ( u , "%d bp; %2.1f %%GC\n" , l , pgc ) ;         r += u ;
-    sprintf ( u , txt("t_melting_temperatures") , tm , tm_salt , tm_gc ) ;     r += u ;
+
+    r += wxString::Format ( "deltaH=%2.1fKcal/mol; deltaS=%2.1fcal/(K*mol)\n" , H , S ) ; 
+    r += wxString::Format ( "%d bp; %2.1f %%GC\n" , l , pgc ) ;
+    r += wxString::Format ( txt("t_melting_temperatures") , tm , tm_salt , tm_gc ) ;
    
     // Self annealing
-    sprintf ( u , "Highest self-annealing score : %d\n" , annScore ) ; r += u ;
+    r += wxString::Format ( "Highest self-annealing score : %d\n" , annScore ) ;
     r += ann1 + "\n" + annm + "\n" + ann2 + "\n\n" ;
 
     return r ;
