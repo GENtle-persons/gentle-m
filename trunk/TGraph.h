@@ -29,6 +29,8 @@ class TGraphData
  	void Add ( float x , float y ) ;
  	void SetScales ( TGraphScale *_sx , TGraphScale *_sy ) ;
  	void AutoScale () ;
+ 	unsigned long GetCount () ;
+ 	int Distance ( const wxPoint &pt ) ;
  	
  	void drawit ( wxDC &dc ) ;
  	void DrawSymbol ( wxDC &dc , wxString symbol , int x , int y , int size = 4 ) ;
@@ -83,6 +85,7 @@ class TGraphDisplay : public wxPanel
  	
  	stringField readCSVfile ( wxString filename ) ;
  	void setupPhotometerGraph ( const stringField &sf ) ;
+ 	void setupFluorimeterGraph ( const stringField &sf ) ;
  	void SetupDummy () ;
  	void SetZoom ( int _zx , int _zy ) ;
 
@@ -90,7 +93,9 @@ class TGraphDisplay : public wxPanel
  	void drawit ( wxDC &dc , int mode = GRAPH_DRAW_ALL ) ;
  	void showLegend ( wxDC &dc ) ;
  	void showMiniature ( wxDC &dc ) ;
+ 	void showDraggingRect ( wxDC &dc ) ;
  	
+ 	void OnCharHook(wxKeyEvent& event) ;
     void OnPaint(wxPaintEvent& event) ; ///< Paint event handler
     void OnEvent(wxMouseEvent& event) ;
     void OnSwapSides(wxCommandEvent &event) ;
@@ -107,6 +112,7 @@ class TGraphDisplay : public wxPanel
  	int zx , zy ;
  	wxPoint mouse_pos ;
  	static wxColour prettyColor ;
+ 	wxRect draggingRect ;
 
     DECLARE_EVENT_TABLE()
 	} ;    
@@ -128,6 +134,7 @@ class TGraph : public ChildBase
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler
 
     private :
+    friend class TGraphDisplay ;
     wxNotebook *nb ; ///< Pointer to the wxNotebook structure that holds the submodules
     TGraphDisplay *gd ;
     wxSlider *zoom_x , *zoom_y ;

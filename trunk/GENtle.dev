@@ -1,7 +1,7 @@
 [Project]
 FileName=GENtle.dev
 Name=GENtle
-UnitCount=138
+UnitCount=140
 Type=0
 Ver=1
 ObjFiles=
@@ -1419,6 +1419,26 @@ BuildCmd=
 
 [Unit138]
 FileName=TGraph.cpp
+CompileCpp=1
+Folder=Child-Types
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit139]
+FileName=TGraphScale.cpp
+CompileCpp=1
+Folder=Child-Types
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit140]
+FileName=TGraphDisplay.cpp
 CompileCpp=1
 Folder=Child-Types
 Compile=1
