@@ -17,9 +17,17 @@
 #include "element.h"
 #include <unistd.h>
 
-element *elements=NULL;
+TIPC_ELEMENT::TIPC_ELEMENT ( TIPC *i )
+	{
+ 	elements=NULL;
+	ipc = i ;
+	ELEMENTFILE = strdup ( "ipc/elemente" ) ;
+//	ELEMENTFILE = new char[1000] ;
+// 	strcpy ( ELEMENTFILE , "ipc/elemente" ) ;
+	}    
 
-FILE *open_file(char *filename)
+
+FILE *TIPC_ELEMENT::open_file(char *filename)
 {
   FILE *datenfile;
   char *pwd;
@@ -45,7 +53,7 @@ FILE *open_file(char *filename)
  return datenfile;
 }
 
-char *get_token(char *linebuffer)
+char *TIPC_ELEMENT::get_token(char *linebuffer)
 {
   static char *buffer;
   static char token[MAX_LINE];
@@ -65,7 +73,7 @@ char *get_token(char *linebuffer)
   return token;
 }
 
-void add_element(element *ce)
+void TIPC_ELEMENT::add_element(element *ce)
 {
   element *cur;
   
@@ -84,7 +92,7 @@ void add_element(element *ce)
   ce->previous=cur;
 }
 
-void add_isotope(isotope *ci,element *ce)
+void TIPC_ELEMENT::add_isotope(isotope *ci,element *ce)
 {
   isotope *cur;
 
@@ -103,7 +111,7 @@ void add_isotope(isotope *ci,element *ce)
   return;
 }
 
-int init_elements()
+int TIPC_ELEMENT::init_elements()
 {
   FILE *data;
   char linebuffer[MAX_LINE];

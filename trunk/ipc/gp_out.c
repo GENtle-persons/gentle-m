@@ -1,9 +1,15 @@
-#include "global.h"
+//#include "global.h"
+#include "ipc.h"
 #include "gp_out.h"
 #include <math.h>
 #include <string.h>
 
-void free_spectrum(spec_points *spectrum)
+GPOUT::GPOUT ( TIPC *i )
+	{
+	ipc = i ;
+	}    
+
+void GPOUT::free_spectrum(spec_points *spectrum)
 {
   while(spectrum->next)
     {
@@ -13,7 +19,7 @@ void free_spectrum(spec_points *spectrum)
   free(spectrum);
 }
 
-void print_spectrum(spec_points *spectrum, FILE *output)
+void GPOUT::print_spectrum(spec_points *spectrum, FILE *output)
 {
   while(spectrum)
     {
@@ -22,7 +28,7 @@ void print_spectrum(spec_points *spectrum, FILE *output)
     }
 }
 
-spec_points *add_new_point(spec_points *spectrum)
+spec_points *GPOUT::add_new_point(spec_points *spectrum)
 {
   spec_points *dummy;
 
@@ -37,18 +43,18 @@ spec_points *add_new_point(spec_points *spectrum)
   return dummy;
 }
 
-spec_points *calc_points()
+spec_points *GPOUT::calc_points()
 {
   isotope *reiter;
   spec_points *point, *reiter2;
   double maxp=0;
   int end;
 
-  for(reiter=peaks;reiter;reiter=reiter->next)
+  for(reiter=ipc->peaks;reiter;reiter=reiter->next)
     if(reiter->p > maxp)
       maxp=reiter->p;
 
-  reiter=peaks;
+  reiter=ipc->peaks;
   point=(spec_points*)malloc(sizeof(spec_points));
   point->previous=NULL;
   point->next=NULL;
@@ -89,14 +95,19 @@ spec_points *calc_points()
   return point;
 }
 
-int make_gnuplot_output(char *gnuplotfile)
-{
+int GPOUT::make_gnuplot_output(char *gnuplotfile)
+{ 
   char *data_file,*start_gp;
   spec_points *spectrum, *reiter;
   FILE *gp,*data;
   float xmin,xmax;
 
   data_file=(char *) strdup(gnuplotfile);
+  
+  free ( gnuplotfile ) ;
+  if(!(gnuplotfile=(char*)malloc(strlen(data_file)+4)))
+    return 0;  
+  strcpy(gnuplotfile,data_file);
   strcat(gnuplotfile,".gnu");
 
   if(!(spectrum=calc_points())){
@@ -146,11 +157,12 @@ int make_gnuplot_output(char *gnuplotfile)
       return 0;
     }
 
-
   free_spectrum(spectrum);
 
-  start_gp=(char *) strdup("gnuplot ");
-  start_gp=(char *) strcat(start_gp,gnuplotfile);
+  if(!(start_gp=(char*)malloc(strlen(gnuplotfile)+8)))
+    return 0;  
+  strcpy(start_gp,"gnuplot ");
+  strcat(start_gp,gnuplotfile);
 
 #ifdef HAVE_SYSTEM
 
