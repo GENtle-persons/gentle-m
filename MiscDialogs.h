@@ -140,20 +140,29 @@ class FindSequenceDialog : public wxDialog
     {
     public :
     FindSequenceDialog ( wxWindow *parent, const wxString& title ) ;
-    void OnCharHook(wxKeyEvent& event) ;
-    void OnSearch ( wxCommandEvent &ev ) ;
-    void OnCancel ( wxCommandEvent &ev ) ;
+    virtual void OnCharHook(wxKeyEvent& event) ;
+    virtual void OnSearch ( wxCommandEvent &ev ) ;
+    virtual void OnCancel ( wxCommandEvent &ev ) ;
+    virtual void OnLB ( wxCommandEvent &ev ) ;
+    virtual void OnLBdclick ( wxCommandEvent &ev ) ;
 
     wxString allowed_chars ;
 
     private :
-    bool doesMatch ( char a , char b ) ;
-    int subsearch ( const wxString &s , const wxString &sub , int start ) ;
+    virtual bool doesMatch ( char a , char b ) ;
+    virtual int subsearch ( const wxString &s , const wxString &sub , int start ) ;
+    virtual void sequenceSearch ( bool invers = false ) ;
+    virtual void aaSearch () ;
+    virtual void itemSearch () ;
+    virtual void restrictionSearch () ;
+    virtual void doAction ( bool doubleclick ) ;
     
     ChildBase *c ;
     wxTextCtrl *t ;
     int bo , fh ;
     int p , last ;
+    wxListBox *lb ;
+    wxArrayInt vi ;
 
     DECLARE_EVENT_TABLE()
     } ;

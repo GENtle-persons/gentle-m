@@ -262,6 +262,7 @@ enum {
     SEQ_UP,
     SH_CANCEL,
     SH_SEARCH,
+    SH_LB,
     SPLIT_1,
     SPLIT_2,
     SPLIT_3,
