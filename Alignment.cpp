@@ -278,14 +278,46 @@ void TAlignment::recalcAlignments ()
         }
     else // Internal routines
         {
-        while ( lines.size() > 2 ) lines.pop_back () ;      
-        for ( a = 0 ; a < 2 ; a++ ) lines[a].ResetSequence () ;
+//        while ( lines.size() > 2 ) lines.pop_back () ;      
+        for ( a = 0 ; a < lines.size() ; a++ ) lines[a].ResetSequence () ;
 
+        for ( a = 1 ; a < lines.size() ; a++ )
+           {
+           string s0 = lines[0].s ;
+
+           if ( algorithm == ALG_NW )
+              NeedlemanWunsch ( s0 , lines[a].s ) ; 
+           else if ( algorithm == ALG_SW )
+              SmithWaterman ( s0 , lines[a].s ) ; 
+           
+           if ( lines[0].s == s0 ) continue ; // No gaps were introduced into first sequence
+           
+           int b ;
+           for ( b = 1 ; b <= a ; b++ ) // All lines get the same length
+              {
+              while ( lines[b].s.length() < s0.length() )
+                 lines[b].s += " " ;
+              }
+           for ( b = 0 ; b < s0.length() ; b++ ) // Insert gaps
+              {
+              if ( lines[0].s[b] != s0[b] ) // New gap
+                 {
+                 for ( int c = 0 ; c < a ; c++ )
+                    {
+                    for ( int d = s0.length()-1 ; d > b ; d-- )
+                       lines[c].s[d] = lines[c].s[d-1] ;
+                    lines[c].s[b] = '-' ;
+                    }
+                 }
+              }
+           }
+
+/*
         if ( algorithm == ALG_NW )
            NeedlemanWunsch ( lines[0].s , lines[1].s ) ; 
         else if ( algorithm == ALG_SW )
            SmithWaterman ( lines[0].s , lines[1].s ) ; 
-
+*/
         generateConsensusSequence () ;
         }
         
