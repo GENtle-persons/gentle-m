@@ -176,7 +176,7 @@ class TVector
     ChildBase *window ;
     string params ;
     float aa_mw[256] , aa_pi[256] ;
-    char IUPAC[256] , SIUPAC[256] ;
+    char IUPAC[256] , SIUPAC[256] , COMPLEMENT[256] ;
     char ACGT[256] ;
     int turned ;
     string action ;

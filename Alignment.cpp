@@ -21,6 +21,7 @@ END_EVENT_TABLE()
 TAlignment::TAlignment(MyFrame *parent, const wxString& title)
     : ChildBase(parent, title)
     {
+    dv = NULL ;
     def = "alignment" ;
     match = 2 ; // Match value
     mismatch = -1 ; // Mismatch score
@@ -217,9 +218,9 @@ void TAlignment::redoAlignments ()
 
     // Display
     sc->maxendnumberlength = strlen ( txt("t_consensus") ) ;
-//    SeqNum *n = new SeqNum ( sc ) ;
-//    sc->seq.push_back ( n ) ;
-//    n->s = qAlign[0] ;
+
+    SeqFeature *f = new SeqFeature ( sc ) ;
+    sc->seq.push_back ( f ) ;
 
     for ( a = 0 ; a < qName.size() ; a++ )
         {
@@ -228,6 +229,20 @@ void TAlignment::redoAlignments ()
         d->s = qAlign[a] ;
         d->myname = qName[a] ;
         }
+
+    // Features
+    if ( dv ) delete dv ;
+    dv = new TVector ;
+    *dv = *qVec[0] ;
+    
+    for ( a = 0 ; a < qAlign[0].length() ; a++ )
+        {
+        if ( qAlign[0][a] == '-' )
+           dv->insert_char ( '-' , a , false ) ;
+        }
+    
+    f->initFromTVector ( dv ) ;
+
     sc->arrange () ;
     sc->Refresh () ;
     }
@@ -254,71 +269,6 @@ void TAlignment::OnSettings ( wxCommandEvent &ev )
     
     redoAlignments () ;
     }
-
-// Old internal code
-/*
-void TAlignment::redoAlignments ()
-    {
-    int a ;
-
-    // Cleaning up
-    while ( sc->seq.size() )
-        {
-        delete sc->seq[sc->seq.size()-1] ;
-        sc->seq.pop_back () ;
-        }
-
-    if ( qName.size() == 0 ) return ;
-
-    // Align
-    while ( qAlign.size() ) qAlign.pop_back () ;
-    for ( a = 0 ; a < qVec.size() ; a++ )
-        qAlign.push_back ( qVec[a]->sequence ) ;
-
-    if ( qName.size() > 1 )
-        {
-        SetCursor ( *wxHOURGLASS_CURSOR ) ;
-        wxStopWatch sw ;
-
-        int first , second ;
-        for ( first = 0 ; first < qAlign.size() ; first++ )
-           {
-           for ( second = first+1 ; second < qAlign.size() ; second++ )
-              {
-              sw.Start () ;
-              int rating = 0 ;
-              if ( algorithm == ALG_NW )
-                 rating = NeedlemanWunsch ( qAlign[first] , qAlign[second] ) ; 
-              else if ( algorithm == ALG_SW )
-                 rating = SmithWaterman ( qAlign[first] , qAlign[second] ) ; 
-              long time = sw.Time() ;
-              wxMessageBox ( wxString::Format ( "%d-%d: time %d ms, rating %d" , first , second , time , rating ) ) ;
-              }
-           }
-
-        SetCursor ( *wxSTANDARD_CURSOR ) ;
-        }
-    else
-        {
-        qAlign[0] = qVec[0]->sequence ;
-        }
-
-    // Display
-    SeqNum *n = new SeqNum ( sc ) ;
-    sc->seq.push_back ( n ) ;
-    n->s = qAlign[0] ;
-
-    for ( a = 0 ; a < qName.size() ; a++ )
-        {
-        SeqAlign *d = new SeqAlign ( sc ) ;
-        sc->seq.push_back ( d ) ;
-        d->s = qAlign[a] ;
-        d->myname = qName[a] ;
-        }
-    sc->arrange () ;
-    sc->Refresh () ;
-    }
-*/
 
 int TAlignment::NeedlemanWunsch ( string &s1 , string &s2 )
     {
@@ -475,7 +425,116 @@ void TAlignment::MatrixBacktrack ( vector <tvc> &back ,
         else break ;
         }
     }
+
+
+void TAlignment::invokeOriginal ( string name , int pos )
+    {
+    int a ;
+    MyFrame *f = myapp()->frame ;
+    ChildBase *c = NULL ;
     
+    for ( a = 0 ; a < f->children.size() ; a++ )
+        {
+        if ( ( f->children[a]->def == "dna" || 
+               f->children[a]->def == "AminoAcids" ||
+               f->children[a]->def == "ABIviewer" )
+                && f->children[a]->getName() == name )
+           {
+           if ( c )
+              {
+              wxMessageBox ( txt("t_ambigous_name") ) ;
+              return ;
+              }
+           else c = f->children[a] ;
+           }
+        }
+    if ( !c ) return ;
+
+    c->Activate() ;
+    if ( c->def == "dna" )
+        {
+        MyChild *c1 = ((MyChild*)c) ;
+        c1->cSequence->mark ( "DNA" , pos , pos , 1 ) ;
+        c1->cSequence->Scroll ( 0 , c1->cSequence->getBatchMark() ) ;
+        }
+    else if ( c->def == "AminoAcids" )
+        {
+        TAminoAcids *c1 = ((TAminoAcids*)c) ;
+        c1->sc->mark ( "AA" , pos , pos , 1 ) ;
+        c1->sc->Scroll ( 0 , c1->sc->getBatchMark() ) ;
+        }
+    else if ( c->def == "ABIviewer" )
+        {
+        TABIviewer *c1 = ((TABIviewer*)c) ;
+        c1->sc->mark ( "ABI" , pos , pos , 1 ) ;
+        c1->sc->Scroll ( 0 , c1->sc->getBatchMark() ) ;
+        }
+    }    
+
+// Old internal code
+/*
+void TAlignment::redoAlignments ()
+    {
+    int a ;
+
+    // Cleaning up
+    while ( sc->seq.size() )
+        {
+        delete sc->seq[sc->seq.size()-1] ;
+        sc->seq.pop_back () ;
+        }
+
+    if ( qName.size() == 0 ) return ;
+
+    // Align
+    while ( qAlign.size() ) qAlign.pop_back () ;
+    for ( a = 0 ; a < qVec.size() ; a++ )
+        qAlign.push_back ( qVec[a]->sequence ) ;
+
+    if ( qName.size() > 1 )
+        {
+        SetCursor ( *wxHOURGLASS_CURSOR ) ;
+        wxStopWatch sw ;
+
+        int first , second ;
+        for ( first = 0 ; first < qAlign.size() ; first++ )
+           {
+           for ( second = first+1 ; second < qAlign.size() ; second++ )
+              {
+              sw.Start () ;
+              int rating = 0 ;
+              if ( algorithm == ALG_NW )
+                 rating = NeedlemanWunsch ( qAlign[first] , qAlign[second] ) ; 
+              else if ( algorithm == ALG_SW )
+                 rating = SmithWaterman ( qAlign[first] , qAlign[second] ) ; 
+              long time = sw.Time() ;
+              wxMessageBox ( wxString::Format ( "%d-%d: time %d ms, rating %d" , first , second , time , rating ) ) ;
+              }
+           }
+
+        SetCursor ( *wxSTANDARD_CURSOR ) ;
+        }
+    else
+        {
+        qAlign[0] = qVec[0]->sequence ;
+        }
+
+    // Display
+    SeqNum *n = new SeqNum ( sc ) ;
+    sc->seq.push_back ( n ) ;
+    n->s = qAlign[0] ;
+
+    for ( a = 0 ; a < qName.size() ; a++ )
+        {
+        SeqAlign *d = new SeqAlign ( sc ) ;
+        sc->seq.push_back ( d ) ;
+        d->s = qAlign[a] ;
+        d->myname = qName[a] ;
+        }
+    sc->arrange () ;
+    sc->Refresh () ;
+    }
+*/
 
 // ******************************************* TAlignmentDialog
 
@@ -535,7 +594,9 @@ void TAlignmentDialog::init_what ()
     // All
     for ( a = 0 ; a < f->children.size() ; a++ )
         {
-        if ( f->children[a]->def == "dna" || f->children[a]->def == "AminoAcids" )
+        if ( f->children[a]->def == "dna" || 
+             f->children[a]->def == "AminoAcids" ||
+             f->children[a]->def == "ABIviewer" )
            {
            vav.push_back ( ((MyChild*)f->children[a])->vec ) ;
            van.push_back ( f->children[a]->getName() ) ;

@@ -466,3 +466,4 @@
 "m_save_as_image","&Save as image","Als Bild &speichern"
 "t_too_large_to_copy","The image might be too large for the clipboard. Save instead?","Das Bild ist möglicherweise zu groß für die Zwischenablage. Stattdessen speichern?"
 "t_save_image","Save image","Bild speichern"
+"t_ambigous_name","There are more than one items with this name","Mehr als ein Objekt hat diesen Namen"

@@ -251,15 +251,18 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
     // Marking
     if ( mark_from != -1 )
         {
-        float mt = mark_from * 360 ;
-        float mf = mark_to * 360 ;
+        float mt = mark_from ;
+        float mf = mark_to ;
         mt /= (float) l ;
         mf /= (float) l ;
+        mt *= 360 ;
+        mf *= 360 ;
         mt = 90 - mt ;
         mf = 90 - mf ;
         dc.SetBackgroundMode ( wxSOLID ) ;
         dc.SetBrush ( *wxLIGHT_GREY_BRUSH ) ;
-        if ( mf == mt ) mf = mt - 0.1 ;
+//        if ( mf == mt ) mf = mt - 0.1 ;
+        if ( mark_from == mark_to ) mf = mt - 0.1 ;
         else if ( mf > mt ) { float mm = mf ; mf = mt ; mt = mm ; }
         dc.DrawEllipticArc ( w/2-r , h/2-r , r*2 , r*2 , mf , mt ) ;
         dc.DrawLine ( w/2 , h/2 , deg2x(90-mf,r)+w/2 , deg2y(90-mf,r)+h/2 ) ;
@@ -513,6 +516,18 @@ wxPoint PlasmidCanvas::makeLastRect ( int a , wxDC &dc )
 
     return p3 ;
     }
+    
+int PlasmidCanvas::circular_pos ( float angle )
+    {
+    int l = p->vec->sequence.length() ;
+    float a = l ;
+    a /= 360.0 ;
+    a *= angle ;
+    int b = (int) a ;
+    if ( b < 0 ) b = 0 ;
+    if ( b >= l ) b = l - 1 ;
+    return b+1 ;
+    }
 
 // EVENTS
 
@@ -653,7 +668,7 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
         {
         SetMyToolTip ( "" , TT_NONE ) ;
         if ( !event.ControlDown() ) SetCursor(*wxSTANDARD_CURSOR) ;
-        float bp = (p->vec->sequence.length()+1)*angle/360+2 ;
+        float bp = circular_pos ( angle ) ;
         wxLogStatus(txt("bp"), int(bp) ) ;
 //        wxLogStatus("%2.2f", angle ) ;
         if ( event.LeftDClick() ) invokeVectorEditor () ;
@@ -725,7 +740,7 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
         }
     else if ( event.LeftIsDown() && rs == -1 && vo == -1 && orf == -1 )
        {
-       float bp = (p->vec->sequence.length()+1)*angle/360+2 ;
+       float bp = circular_pos ( angle ) ;
        if ( lastbp == -1 && initialclick ) lastbp = int(bp) ;
        if ( lastbp != -1 )
           {

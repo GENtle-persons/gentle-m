@@ -152,6 +152,25 @@ void TVector::init ()
     aa_pi['W'] =  5.89 ;
     aa_pi['Y'] =  5.66 ;
     aa_pi['V'] =  5.97 ;
+    
+    for ( a = 0 ; a < 256 ; a++ ) COMPLEMENT[a] = ' ' ;
+    COMPLEMENT['A'] = 'T' ;
+    COMPLEMENT['T'] = 'A' ;
+    COMPLEMENT['U'] = 'A' ;
+    COMPLEMENT['C'] = 'G' ;
+    COMPLEMENT['G'] = 'C' ;
+    COMPLEMENT['M'] = 'K' ;
+    COMPLEMENT['R'] = 'Y' ;
+    COMPLEMENT['W'] = 'W' ;
+    COMPLEMENT['S'] = 'S' ;
+    COMPLEMENT['Y'] = 'R' ;
+    COMPLEMENT['K'] = 'M' ;
+    COMPLEMENT['V'] = 'B' ;
+    COMPLEMENT['H'] = 'D' ;
+    COMPLEMENT['D'] = 'H' ;
+    COMPLEMENT['B'] = 'V' ;
+    COMPLEMENT['X'] = 'N' ;
+    COMPLEMENT['N'] = 'N' ;
     }
 
 void TVector::removeBlanksFromSequence ()
@@ -389,11 +408,13 @@ char TVector::getNucleotide ( int pos , bool complement )
     
 char TVector::getComplement ( char c )
     {
-    if ( c == 'A' ) return 'T' ;
+    return COMPLEMENT[c] ;
+/*  if ( c == 'A' ) return 'T' ;
     if ( c == 'T' ) return 'A' ;
     if ( c == 'G' ) return 'C' ;
     if ( c == 'C' ) return 'G' ;
-    return ' ' ;
+    if ( c == 'U' ) return 'A' ;
+    return ' ' ;*/
     }
     
 string TVector::transformSequence ( bool inverse , bool reverse )
