@@ -111,8 +111,8 @@ void SeqFeature::show ( wxDC& dc )
                              {
                              TVectorItem *ip = &vec->items[pl.getID(i)] ;
                              myass ( ip , "SeqFeature::show ip==NULL" ) ;
-                             if ( ip->getType() == VIT_CDS && ip->getRF() != 0 )
-                                o = b + ip->getOffset() - ip->from ;
+                             if ( ip->getOffset () != -1 )
+                             	o = b + ip->getOffset() - ip->from ;
                              }
                           else o = vec->items[pl.getID(i)].getOffsetAt ( b-1 ) ;
                           }    

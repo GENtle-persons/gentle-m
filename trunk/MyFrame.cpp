@@ -350,7 +350,7 @@ void MyFrame::initme ()
     
     SetSizeHints ( 600 , 400 ) ;
     Show(TRUE);
-    SetStatusText ( txt("t_update_warning") , 1 ) ;
+//    SetStatusText ( txt("t_update_warning") , 1 ) ;
     }
     
 void MyFrame::OnClose(wxCloseEvent& event)
