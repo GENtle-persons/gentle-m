@@ -12,7 +12,7 @@ typedef unsigned int uint ;
 //#define MYLOG
 
 // Turn testing on/off
-//#define MYTEST
+#define MYTEST
 
 #ifdef MYTEST
 
@@ -76,6 +76,7 @@ using namespace std ;
 #include <wx/snglinst.h>
 #include <wx/laywin.h>
 #include <wx/progdlg.h>
+#include <wx/mimetype.h>
 
 #define wxPD_ALL (wxPD_AUTO_HIDE|wxPD_APP_MODAL|wxPD_CAN_ABORT|wxPD_ELAPSED_TIME|wxPD_ESTIMATED_TIME|wxPD_REMAINING_TIME)
 
@@ -109,6 +110,7 @@ class MyApp : public wxApp
     wxString getHTMLCommand ( wxString command ) ;
     wxString getFileFormatApplication ( wxString type ) ;
     MyFrame *frame;
+    wxMimeTypesManager mtm ;
     wxString homedir , bmpdir , slash ;
     wxSingleInstanceChecker *m_checker ;
     int programVersion ;

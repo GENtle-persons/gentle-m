@@ -7,6 +7,9 @@
 
 #define STANDARDRADIUS 10000
 
+#define MODE_CIRCULAR 1
+#define MODE_LINEAR 2
+
 #define TT_NONE 0
 #define TT_RS 1
 #define TT_ITEM 2
@@ -92,15 +95,14 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void OnDrawLinear(wxDC& dc);
     virtual void OnDrawCircular(wxDC& dc);
     virtual void OnEvent(wxMouseEvent& event);
-    virtual void OnEventLinear(wxMouseEvent& event);
-    virtual void OnEventCircular(wxMouseEvent& event);
 
     // circular mode
     virtual int deg2x ( float deg , int r ) ;
     virtual int deg2y ( float deg , int r ) ;
     virtual float xy2deg ( float x , float y ) ;
     virtual float xy2r ( float x , float y ) ;
-    virtual int findVectorObject ( float angle , float radius ) ;
+    virtual int findVectorObjectCircular ( float angle , float radius ) ;
+    virtual int findVectorObjectLinear ( wxPoint pp ) ;
     virtual int findRestrictionSite ( int x , int y ) ;
     virtual wxPoint makeLastRect ( int a , wxDC &dc ) ;
     virtual void arrangeRestrictionSitesCircular ( wxDC &dc ) ;
