@@ -1,9 +1,16 @@
+/** \file
+	\brief Contains the ABItype class, as well as its TFLAG helper class
+*/
 #include "ABItype.h"
 
+/** \brief Constructor
+*/
 ABItype::ABItype ()
     {
     }
     
+/** \brief Destructor, deletes flags and their associated data
+*/
 ABItype::~ABItype ()
     {
     for ( int a = 0 ; a < vf.size() ; a++ )
@@ -11,6 +18,10 @@ ABItype::~ABItype ()
     vf.clear () ;
     }
 
+/** \brief Checks for a CMBF structure from the ABI data, returns its length
+	\param t Pointer to the data to parse
+	\param l Length of the data
+*/
 int ABItype::getCMBF ( unsigned char *t , int l )
     {
     unsigned char *s , *r = NULL ;
@@ -31,6 +42,14 @@ int ABItype::getCMBF ( unsigned char *t , int l )
     return r - t ;
     }
     
+/** \brief Parses an ABI format file
+	\param filename The filename. Surprise!
+	
+	The "parsing" works by
+	* - detecting and ignoring the Mac file header, if any
+	* - finding the offset for the first CMBF structure
+	* - iterating through the CMBF structures
+*/
 void ABItype::parse ( wxString filename )
     {
 	wxFile f ( filename , wxFile::read ) ;
@@ -74,6 +93,14 @@ void ABItype::parse ( wxString filename )
 	delete t ;
     }
     
+/** \brief Deterimnes the position of the "ABIF" key
+	\param t Pointer to the raw data
+	
+	This returns
+ 	* - 0 for a valid Windows file
+ 	* - 128 for a valid Mac file
+ 	* - -1 if the file is invalid
+*/
 int ABItype::getMacOffset ( unsigned char *t )
     {
     int r = 0 ;
@@ -83,6 +110,10 @@ int ABItype::getMacOffset ( unsigned char *t )
     return -1 ;
     }
     
+/** \brief Sets a TFLAG structure from the data
+	\param t Pointer to the raw data
+	\param from Offset; is changed after the structure is read
+*/    
 TFLAG ABItype::getFlag ( unsigned char *t , int &from )
     {
     TFLAG r ;

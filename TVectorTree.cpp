@@ -1,3 +1,6 @@
+/** \file
+	\brief The vector items tree component.
+*/
 #include "TVectorTree.h"
 
 BEGIN_EVENT_TABLE(TVectorTree, wxTreeCtrl)
@@ -32,6 +35,8 @@ BEGIN_EVENT_TABLE(TVectorTree, wxTreeCtrl)
 END_EVENT_TABLE()
 
 
+/** \brief Constructor
+*/
 TVectorTree::TVectorTree ( ChildBase *parent , int i )
     :wxTreeCtrl ( parent , i , wxDefaultPosition , wxSize ( 200 , 200 ) )
     {
@@ -39,6 +44,13 @@ TVectorTree::TVectorTree ( ChildBase *parent , int i )
     textWindow = NULL ;
     }
     
+/** \brief Initializes the tree
+
+	Parses the vector and creates a list of
+	* - vector information
+	* - marked regions (genes etc.)
+	* - restriction enzymes
+*/
 void TVectorTree::initme ()
     {
     int a , b ;
@@ -139,6 +151,8 @@ void TVectorTree::initme ()
     SelectItem ( vroot ) ;
     }
     
+/** \brief Handles (selection) events
+*/
 void TVectorTree::OnEvent ( wxTreeEvent &event )
     {
     wxTreeItemId id = event.GetItem () ;
@@ -174,6 +188,8 @@ void TVectorTree::OnEvent ( wxTreeEvent &event )
     textWindow->SetValue ( out ) ;
     }
 
+/** \brief Handles double-click events
+*/
 void TVectorTree::OnActivation ( wxTreeEvent &event )
     {
     wxTreeItemId id = event.GetItem () ;
@@ -201,6 +217,8 @@ void TVectorTree::OnActivation ( wxTreeEvent &event )
         }
     }
 
+/** \brief Toggles if an enzyme is displayed
+*/
 void TVectorTree::ToggleEnzymeVisibility ( TRestrictionEnzyme *e )
     {
     wxTreeItemId y ;
@@ -225,8 +243,8 @@ void TVectorTree::ToggleEnzymeVisibility ( TRestrictionEnzyme *e )
     p->cSequence->SilentRefresh() ;
     }
 
-// Popup menu handlers
-    
+/** \brief Handles right mouse button clicks (context menu)
+*/
 void TVectorTree::OnRightClick ( wxTreeEvent &event )
     {
     wxTreeItemId id = event.GetItem () ;

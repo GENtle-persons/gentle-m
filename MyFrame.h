@@ -174,6 +174,9 @@ public:
     DECLARE_EVENT_TABLE()
 };
 
+/** \class MyFrameDropTarget
+	\brief The class that handles drag'n'drop events for MyFrame
+*/
 class MyFrameDropTarget : public wxFileDropTarget
    {
    public :

@@ -129,37 +129,26 @@ MyFrame::~MyFrame ()
 //    delete LS ;
     }
 
+/** \brief Initializes the frame
+
+	* - Creates frame layout
+	* - Accesses local database and imports enzyme list
+	* - Sets options
+	* - Loads language file
+	* - Checks for updates online (Windows only)
+	* - Menus
+	* - Initialized drop target
+	* - Loads bitmaps for user interface
+	* - Loads last project
+	* - Parses command line paramaters
+*/
 void MyFrame::initme ()
     {
 #ifdef __WXGTK__
     SetFont ( *MYFONT ( 8 , wxSWISS , wxNORMAL , wxNORMAL ) ) ;    
 #endif
-  wxSashLayoutWindow* win ;
-  m_leftWindow2 = m_topWindow = m_bottomWindow = NULL ;
-/*  
-  win = new wxSashLayoutWindow(this, FRAME_SASH_TOP,
-                             wxDefaultPosition, wxSize(200, 30),
-                             wxNO_BORDER | wxSW_3D | wxCLIP_CHILDREN);
-
-  win->SetDefaultSize(wxSize(1000, 30));
-  win->SetOrientation(wxLAYOUT_HORIZONTAL);
-  win->SetAlignment(wxLAYOUT_TOP);
-  win->SetBackgroundColour(wxColour(255, 0, 0));
-  win->SetSashVisible(wxSASH_BOTTOM, TRUE);
-
-  m_topWindow = win; 
-
-  // A window like a statusbar
-  win = new wxSashLayoutWindow(this, FRAME_SASH_BOTTOM,
-                               wxDefaultPosition, wxSize(200, 30),
-                               wxNO_BORDER | wxSW_3D | wxCLIP_CHILDREN);
-  win->SetDefaultSize(wxSize(1000, 30));
-  win->SetOrientation(wxLAYOUT_HORIZONTAL);
-  win->SetAlignment(wxLAYOUT_BOTTOM);
-  win->SetBackgroundColour(wxColour(0, 0, 255));
-  win->SetSashVisible(wxSASH_TOP, TRUE);
-
-  m_bottomWindow = win;*/
+  	wxSashLayoutWindow* win ;
+  	m_leftWindow2 = m_topWindow = m_bottomWindow = NULL ;
 
     // A window to the left of the client window
     // This contains the main tree
@@ -169,24 +158,21 @@ void MyFrame::initme ()
     win->SetDefaultSize(wxSize(200, 1000));
     win->SetOrientation(wxLAYOUT_VERTICAL);
     win->SetAlignment(wxLAYOUT_LEFT);
-//    win->SetBackgroundColour(wxColour(0, 255, 0));
     win->SetSashVisible(wxSASH_RIGHT, TRUE);
-//    win->SetExtraBorderSize(10);
     mainTree = new TMainTree ( win , MAIN_TREE_DUMMY ) ;
     
 
-  m_leftWindow1 = win;
+    m_leftWindow1 = win;
 
-  // Another window to the left of the client window
-  win = new wxSashLayoutWindow(this, FRAME_SASH_2,
+    // The client window
+    win = new wxSashLayoutWindow(this, FRAME_SASH_2,
                                wxDefaultPosition, wxSize(500, 30),
                                wxNO_BORDER | wxSW_3D | wxCLIP_CHILDREN);
-  win->SetDefaultSize(wxSize(500, 1000));
-  win->SetOrientation(wxLAYOUT_VERTICAL);
-  win->SetAlignment(wxLAYOUT_LEFT);
-//  win->SetBackgroundColour(wxColour(0, 255, 255));
-  win->SetSashVisible(wxSASH_RIGHT, TRUE);
-  m_leftWindow2 = win;
+    win->SetDefaultSize(wxSize(500, 1000));
+    win->SetOrientation(wxLAYOUT_VERTICAL);
+    win->SetAlignment(wxLAYOUT_LEFT);
+    win->SetSashVisible(wxSASH_RIGHT, TRUE);
+    m_leftWindow2 = win;
 
     // Database access
     LS = new TStorage ( LOCAL_STORAGE ) ;
@@ -200,20 +186,19 @@ void MyFrame::initme ()
     // Import enzymes from local database
     LS->import() ;
 
+#ifndef MISER_MODE
+    bool default_update = false ;
+#else
+    bool default_update = true ;
+#endif
+
     // Loading program options from database
     showVectorTitle = LS->getOption ( "SHOWVECTORTITLE" , true ) ;
     showVectorLength = LS->getOption ( "SHOWVECTORLENGTH" , true ) ;
     enhancedRefresh = LS->getOption ( "ENHANCEDREFRESH" , true ) ;
     loadLastProject = LS->getOption ( "LOADLASTPROJECT" , true ) ;
     useMetafile = LS->getOption ( "USEMETAFILE" , false ) ;
-    showSplashScreen = LS->getOption ( "SHOWSPLASHSCREEN" , true ) ;
-
-#ifndef MISER_MODE
-    bool default_update = false ;
-#else
-    bool default_update = true ;
-#endif
-    
+    showSplashScreen = LS->getOption ( "SHOWSPLASHSCREEN" , true ) ;    
     checkUpdate = LS->getOption ( "CHECKUPDATE" , default_update ) ;
     lang_string = LS->getOption ( "LANGUAGE" , "en" ) ;
     useCoolCanvas = LS->getOption ( "USECOOLCANVAS" , false ) ; // Not saved yet
@@ -226,6 +211,7 @@ void MyFrame::initme ()
     // so you won't be bothered with updates anymore :-)
     if ( LS->getOption ( "DEBUGGING" , "" ) == "1" ) checkUpdate = false ;
 
+    // Check for update online
 #ifdef __WXMSW__
     if ( checkUpdate )
         {
@@ -389,6 +375,11 @@ void MyFrame::initme ()
 //    SetStatusText ( txt("t_update_warning") , 1 ) ;
     }
     
+/** \brief Handles close event
+
+	Scans through all the children; if any one is changed, ask the user the
+	darn "are you sure" question, unless in debugging mode
+*/
 void MyFrame::OnClose(wxCloseEvent& event)
 {
     bool canclose = true ;
@@ -408,17 +399,23 @@ void MyFrame::OnClose(wxCloseEvent& event)
     else event.Veto() ;
 }
 
-void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
+/** \brief Handles the Quit command, closes
+*/
+void MyFrame::OnQuit(wxCommandEvent& event)
 {
     Close();
 }
 
-void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event) )
+/** \brief Displays "About" text
+*/
+void MyFrame::OnAbout(wxCommandEvent& event )
 {
     (void)wxMessageBox(txt("t_about_txt"), txt("t_about"));
 }
 
-void MyFrame::OnHelp(wxCommandEvent& WXUNUSED(event) )
+/** \brief Invokes help
+*/
+void MyFrame::OnHelp(wxCommandEvent& event )
 {
     if ( useInternalHelp )
         {
@@ -450,18 +447,24 @@ void MyFrame::OnHelp(wxCommandEvent& WXUNUSED(event) )
         }
 }
 
+/** \brief Returns pointer to last (active) child
+*/
 ChildBase *MyFrame::GetActiveChild() //SDI
     {
     return lastChild ;
     }
 
-void MyFrame::OnEnzymeEditor(wxCommandEvent& WXUNUSED(event) )
+/** \brief Invokes the enzyme editor
+*/
+void MyFrame::OnEnzymeEditor(wxCommandEvent& event )
 {   
     TVectorEditor ee ( this , txt("t_enzymeeditor") , NULL ) ;
     ee.ShowModal () ;
 }
 
-void MyFrame::OnFileOpen(wxCommandEvent& WXUNUSED(event) )
+/** \brief Invokes the "open from database" dialog
+*/
+void MyFrame::OnFileOpen(wxCommandEvent& event )
 {
 	int i = children.GetCount() ;
     TManageDatabaseDialog dbd ( this , txt("t_open") , ACTION_MODE_LOAD ) ;
@@ -469,7 +472,9 @@ void MyFrame::OnFileOpen(wxCommandEvent& WXUNUSED(event) )
     if ( i != children.GetCount() ) setActiveChild ( children[children.GetCount()-1] ) ;
 }
 
-void MyFrame::OnTextImport(wxCommandEvent& WXUNUSED(event) )
+/** \brief Invokes the "enter sequence manually" dialog and calls the appropriate creation function
+*/
+void MyFrame::OnTextImport(wxCommandEvent& event )
 {
     TextImportDialog d ( this , txt("m_text_importtxt") ) ;
     
@@ -520,6 +525,8 @@ void MyFrame::OnTextImport(wxCommandEvent& WXUNUSED(event) )
         }
 }
 
+/** \brief Saves an image (actually, a wxBitmap) to a file, with "save as" dialog
+*/
 void MyFrame::saveImage ( wxBitmap *bmp , wxString name )
 	{
     wxString wildcard ;
@@ -547,7 +554,9 @@ void MyFrame::saveImage ( wxBitmap *bmp , wxString name )
     wxEndBusyCursor () ;
 	}    
 
-void MyFrame::OnFileImport(wxCommandEvent& WXUNUSED(event) )
+/** \brief Handles the "import from file" dialog, then calls MyFrame::importFile 
+*/
+void MyFrame::OnFileImport(wxCommandEvent& event )
 {
     wxString wcAutomatic = txt("format_filter_auto") ;
     wxString wcClone = txt("format_filter_clone") ;
@@ -601,6 +610,12 @@ void MyFrame::OnFileImport(wxCommandEvent& WXUNUSED(event) )
     activateChild ( getChildIndex ( lastChild ) ) ;
     }
     
+/** \brief Imports a file
+
+	If a "filter" number is given, only the matching file type is tried.
+	If "filter" is not given (-1), it tries to detect the type
+	by opening it with all import modules until there is a match.
+*/
 bool MyFrame::importFile ( wxString file , wxString path , int filter )
     {
     // Trying GenBank format
@@ -682,6 +697,8 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
     return false ;
 }
 
+/** \brief Creates a new entry from an XML file (GenBankXML; DNA or amino acids)
+*/
 void MyFrame::newXML (  TXMLfile &xml , wxString title )
    {
    int n ;
@@ -698,6 +715,8 @@ void MyFrame::newXML (  TXMLfile &xml , wxString title )
        }
    }
 
+/** \brief Creates a new entry from a CLONE import
+*/
 MyChild *MyFrame::newCLONE ( TClone &clone )
     {
     MyChild *subframe = new MyChild(getCommonParent(), txt("imported_vector"),
@@ -723,6 +742,8 @@ MyChild *MyFrame::newCLONE ( TClone &clone )
     subframe->Maximize() ;
     }
 
+/** \brief Creates a new entry from a PDB import
+*/
 void MyFrame::newPDB ( TPDB &pdb , wxString title )
     {
     pdb.remap () ;
@@ -733,6 +754,11 @@ void MyFrame::newPDB ( TPDB &pdb , wxString title )
         }    
     }
         
+/** \brief Creates a new entry from a GenBank import
+
+	This function can actually open multiple sequences from one and the same
+	GenBank structure. This is used, for example, when opening alignments.
+*/
 void MyFrame::newGB ( TGenBank &gb , wxString title )
     {
     int n ;
@@ -802,6 +828,12 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
     }
 
 
+/** \brief Creates a new DNA entry from a TVector structure
+
+	This is a very important function. Virtually all import/open/enter
+	functions call this one to create the actual window containing
+	that data.
+*/
 MyChild* MyFrame::newFromVector ( TVector *nv , int type )
     {
     if ( !nv ) return NULL ;
@@ -831,7 +863,9 @@ MyChild* MyFrame::newFromVector ( TVector *nv , int type )
     }
 
 
-void MyFrame::OnSize(wxSizeEvent& WXUNUSED(event))
+/** \brief Handles OnSize events
+*/
+void MyFrame::OnSize(wxSizeEvent& event)
 {
     wxLayoutAlgorithm layout;
     layout.LayoutFrame(this);
@@ -846,11 +880,14 @@ void MyFrame::OnSize(wxSizeEvent& WXUNUSED(event))
 }
 
 
-#define NOB 2
+/** \brief OBSOLETE creation of a frame toolbar
+*/
 void MyFrame::InitToolBar(wxToolBar* toolBar)
 {
 }
 
+/** \brief Adds default tools to a given toolbar
+*/
 void MyFrame::addDefaultTools(wxToolBar* toolBar)
 	{
  	toolBar->AddSeparator() ;
@@ -861,6 +898,8 @@ void MyFrame::addDefaultTools(wxToolBar* toolBar)
  	toolBar->AddTool( MDI_EXTERNAL_INTERFACE, myapp()->frame->bitmaps[19] ) ;
 	}
 
+/** \brief Creates a new alignment window
+*/
 TAlignment *MyFrame::runAlignment ( wxArrayString &vs , wxArrayChildBase &vc , TVector *nv )
     {
 //    Thaw () ;
@@ -898,6 +937,8 @@ TAlignment *MyFrame::runAlignment ( wxArrayString &vs , wxArrayChildBase &vc , T
     return subframe ;
     }
 
+/** \brief Handles the Alignment menu event, calls MyFrame::runAlignment
+*/
 void MyFrame::OnAlignment(wxCommandEvent& event)
     {
     wxArrayString vs ; // Dummy
@@ -905,12 +946,16 @@ void MyFrame::OnAlignment(wxCommandEvent& event)
     runAlignment ( vs , vc ) ;
     }
     
+/** \brief Handles the Manage Database menu event
+*/
 void MyFrame::OnManageDatabase(wxCommandEvent& event)
     {
     TManageDatabaseDialog mdd ( this , txt("m_manage_dbtxt") ) ;
     int r = mdd.ShowModal () ;
     }
 
+/** \brief Handles the Program Options menu event, and stores the options in the local database
+*/
 void MyFrame::OnProgramOptions(wxCommandEvent& event)
     {
     ProgramOptionsDialog pod ( this , txt("t_program_options" ) ) ;
@@ -960,6 +1005,8 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
    	wxEndBusyCursor() ;
     }
 
+/** \brief Handles the Load Project menu event
+*/
 void MyFrame::OnProjectLoad(wxCommandEvent& event)
     {
     // Are all objects stored in a database?
@@ -989,6 +1036,8 @@ void MyFrame::OnProjectLoad(wxCommandEvent& event)
     mdd.ShowModal () ;
     }
 
+/** \brief Handles the Save Project menu event
+*/
 void MyFrame::OnProjectSave(wxCommandEvent& event)
     {
     // Are all objects stored in a database?
@@ -1017,6 +1066,8 @@ void MyFrame::OnProjectSave(wxCommandEvent& event)
     mdd.ShowModal () ;
     }
 
+/** \brief Handles the Close Project menu event
+*/
 void MyFrame::OnProjectClose(wxCommandEvent& event)
     {
     int a ;
@@ -1040,6 +1091,8 @@ void MyFrame::OnProjectClose(wxCommandEvent& event)
     Refresh () ;
     }
         
+/** \brief Stores the last open project for reopening on program start
+*/
 void MyFrame::rememberLastProject ()
     {
     wxString sql ;
@@ -1057,6 +1110,8 @@ void MyFrame::rememberLastProject ()
     LS->getObject ( t ) ;
     }
     
+/** \brief Creates a new amino acid entry from a string
+*/
 TAminoAcids *MyFrame::newAminoAcids ( wxString aa , wxString title )
     {
     TVector nv ;
@@ -1064,6 +1119,11 @@ TAminoAcids *MyFrame::newAminoAcids ( wxString aa , wxString title )
     return newAminoAcids ( &nv , title ) ;
     }
 
+/** \brief Creates a new amino acid entry from a TVector structure
+
+	This function basically does the same as MyFrame::newFromVector,
+	but for amino acid sequences instead of DNA
+*/
 TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , wxString title )
     {
     int a ;
@@ -1116,6 +1176,8 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , wxString title )
     return subframe ;
     }
 
+/** \brief Creates a new sequencing entry from an ABI file
+*/
 TABIviewer *MyFrame::newABI ( wxString filename , wxString title )
     {
     if ( title.IsEmpty() ) title = "Surprise!" ;
@@ -1154,6 +1216,8 @@ TABIviewer *MyFrame::newABI ( wxString filename , wxString title )
     return subframe ;
     }
 
+/** \brief Runs a blast search by invoking MyFrame::OnExternalInterface
+*/
 void MyFrame::blast ( wxString seq , wxString prg )
     {
 	int a ;
@@ -1168,6 +1232,7 @@ void MyFrame::blast ( wxString seq , wxString prg )
 	ei->runBlast ( seq , prg ) ;
 	return ;
 
+/*
 // Obsolete
 #ifdef __WXMSW__
     wxString unique = wxNow() ;
@@ -1213,8 +1278,11 @@ void MyFrame::blast ( wxString seq , wxString prg )
     batch.Close() ;
     wxExecute ( bfile ) ;
 #endif
+*/
     }
     
+/** \brief Creates a new external interface for NCBI/BLAST searching
+*/
 void MyFrame::OnExternalInterface(wxCommandEvent& event)
     {
     ExternalInterface *subframe = new ExternalInterface ( getCommonParent() , txt("t_external_interface") ) ;
@@ -1236,6 +1304,8 @@ void MyFrame::OnExternalInterface(wxCommandEvent& event)
     setChild ( subframe ) ;
     }
     
+/** \brief Invokes the image viewer module
+*/
 void MyFrame::OnImageViewer(wxCommandEvent& event)
     {
     TImageDisplay *subframe = new TImageDisplay ( getCommonParent() , txt("t_image_viewer") ) ;
@@ -1258,11 +1328,15 @@ void MyFrame::OnImageViewer(wxCommandEvent& event)
     activateChild ( children.GetCount()-1 ) ;
     }
     
+/** \brief Handles the Calculator menu event by calling MyFrame::RunCalculator
+*/
 void MyFrame::OnCalculator(wxCommandEvent& event)
     {
     RunCalculator () ;
     }    
 
+/** \brief Invokes the calculator module
+*/
 TCalculator *MyFrame::RunCalculator ()
     {
     TCalculator *subframe = new TCalculator ( getCommonParent() , txt("t_calculator") ) ;
@@ -1285,6 +1359,11 @@ TCalculator *MyFrame::RunCalculator ()
     return subframe ;
     }
     
+/** \brief Returns the standard File menu, with variations
+	\param _save Include "Save" menu option
+	\param _exp Include "Export" menu option
+	\param _print Include "Print" menu option
+*/
 wxMenu *MyFrame::getFileMenu ( bool _save , bool _exp , bool _print )
     {
     wxMenu *file_menu = new wxMenu;
@@ -1306,6 +1385,9 @@ wxMenu *MyFrame::getFileMenu ( bool _save , bool _exp , bool _print )
     return file_menu ;    
     }
     
+/** \brief Returns the standard Tools menu, with variations
+	\param _pcr Include PCR menu option
+*/
 wxMenu *MyFrame::getToolMenu ( bool _pcr )
     {
     wxMenu *tool_menu = new wxMenu;
@@ -1322,6 +1404,8 @@ wxMenu *MyFrame::getToolMenu ( bool _pcr )
     return tool_menu ;
     }
     
+/** \brief Returns the standard Help menu
+*/
 wxMenu *MyFrame::getHelpMenu ()
     {
     wxMenu *help_menu = new wxMenu;
@@ -1330,6 +1414,9 @@ wxMenu *MyFrame::getHelpMenu ()
     return help_menu ;
     }
     
+/** \brief Adds a child, if it is not already in the children list
+	\param ch Pointer to child
+*/
 void MyFrame::setChild ( ChildBase *ch )
     {
     int a ;
@@ -1337,6 +1424,9 @@ void MyFrame::setChild ( ChildBase *ch )
     if ( a == children.GetCount() ) children.Add ( ch ) ;
     }
     
+/** \brief Safely removes a child from the children list
+	\param ch Pointer to child
+*/
 void MyFrame::removeChild ( ChildBase *ch )
     {
     int a ;
@@ -1351,6 +1441,9 @@ void MyFrame::removeChild ( ChildBase *ch )
     activateChild ( 0 ) ;
     }
 
+/** \brief Activates a child (brings to front, makes visible, etc.)
+	\param a Number of child in children list
+*/
 void MyFrame::activateChild ( int a )
     {
     if ( a >= children.GetCount() ) a = 0 ;
@@ -1364,6 +1457,9 @@ void MyFrame::activateChild ( int a )
     wxSafeYield () ;
     }
 
+/** \brief Locks/unlocks display, counts (un)lock requests
+	\param lock Lock if true, unlock if not
+*/
 void MyFrame::lockDisplay ( bool lock )
     {
     if ( lock )
@@ -1387,16 +1483,25 @@ void MyFrame::lockDisplay ( bool lock )
         }        
     }    
 
+/** \brief Is display locked?
+*/
 bool MyFrame::isLocked ()
     {
     return ( locked != 0 ) ;
     }    
         
+/** \brief Is a child activation sequence running?
+*/
 bool MyFrame::isActivating ()
     {
     return activating ;
     }    
         
+/** \brief Is a new version available online?
+
+	This function is currently a mess, due to bugs in wxWidgets,
+	but it basically works...
+*/
 wxString MyFrame::check4update ()
     {
 /*  // Deactivated due to strange error message on NT without RAS
@@ -1476,6 +1581,9 @@ wxString MyFrame::check4update ()
     return "" ;
     }
     
+/** \brief Download the new version of GENtle
+	\param ver New version
+*/
 void MyFrame::update2version ( wxString ver )
     {
     wxString do_run ;
@@ -1498,6 +1606,8 @@ void MyFrame::update2version ( wxString ver )
     wxExit() ; // Hard exit
     }
     
+/** \brief Handles SashDrag events (sash between the main tree and the current child
+*/
 void MyFrame::OnSashDrag(wxSashEvent& event)
     {
     if (event.GetDragStatus() == wxSASH_STATUS_OUT_OF_RANGE)
@@ -1533,6 +1643,9 @@ void MyFrame::OnSashDrag(wxSashEvent& event)
 //    GetClientWindow()->Refresh();    
     }
 
+/** \brief Creates a temporary database, or uses one from the cache
+	\param name Name of the database to use
+*/
 TStorage *MyFrame::getTempDB ( wxString name )
     {
     int a ;
@@ -1542,6 +1655,9 @@ TStorage *MyFrame::getTempDB ( wxString name )
     return dbcache[a] ;
     }
     
+/** \brief Sets the active child
+	\param c Pointer to the child
+*/
 void MyFrame::setActiveChild ( ChildBase *c )
     {
     lastChild = c ;
@@ -1581,11 +1697,15 @@ void MyFrame::setActiveChild ( ChildBase *c )
     activating = false ;
     }
 
+/** \brief Returns the base window for all children
+*/
 wxWindow *MyFrame::getCommonParent()
     {
     return m_leftWindow2 ;
     }
 
+/** \brief Bug-patch function to catch illegal events
+*/
 void MyFrame::BollocksMenu(wxCommandEvent& event)
     {
     if ( !lastChild ) return ;
@@ -1608,6 +1728,8 @@ void MyFrame::BollocksMenu(wxCommandEvent& event)
     lastChild->ProcessEvent ( event ) ;
     }
     
+/** \brief Reroutes menu events from the frame to the active child
+*/
 void MyFrame::RerouteMenu(wxCommandEvent& event) 
     {
     bool b = false ;
@@ -1615,6 +1737,9 @@ void MyFrame::RerouteMenu(wxCommandEvent& event)
 //    if ( !b ) ProcessEvent ( event ) ;
     }
     
+/** \brief Gets the number of a child in the children list
+	\param c Pointer to child
+*/
 int MyFrame::getChildIndex ( ChildBase *c )
     {
     int a ;
@@ -1622,11 +1747,15 @@ int MyFrame::getChildIndex ( ChildBase *c )
     return a ;
     }
 
+/** \brief OBSOLETE MDI close
+*/
 void MyFrame::OnMDIClose(wxCommandEvent& event)
     {
     if ( lastChild ) lastChild->Close ( TRUE ) ;
     }
     
+/** \brief Creates/reuses a virtual gel
+*/
 TVirtualGel *MyFrame::useGel ( wxString type )
 	{
 	int a ;
@@ -1659,6 +1788,8 @@ TVirtualGel *MyFrame::useGel ( wxString type )
 	return gel ;
 	}    
 
+/** \brief Handles the menu request for running the test suite
+*/
 void MyFrame::TestMenu(wxCommandEvent& event)
     {
 #ifdef MYTEST
@@ -1874,6 +2005,8 @@ void TTestSuite::Step()
                 
 // DROP TARGET
 
+/** \brief Handles dropped file name(s)
+*/
 bool MyFrameDropTarget::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames)
     {
     int a , b ;
@@ -1889,6 +2022,8 @@ bool MyFrameDropTarget::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& f
         
 // Project
 
+/** \brief Constructor
+*/
 TProject::TProject ()
 	{
 	enzyme_rules = NULL ;
