@@ -359,7 +359,7 @@ void SeqAA::initFromTVector ( TVector *v )
     if ( can && can->getEditMode() && v->getSequenceLength() &&
             v->getSequenceChar(v->getSequenceLength()-1) == ' ' )
        {
-       v->getSequence().erase ( v->getSequenceLength()-1 , 1 ) ;
+       v->eraseSequence ( v->getSequenceLength()-1 , 1 ) ;
        truncateEditSequence = true ;
        }
     wxString t = vec->getSequence() ;
@@ -382,13 +382,11 @@ void SeqAA::initFromTVector ( TVector *v )
         }
     else if ( mode == AA_KNOWN )
         {
-        if ( can->getEditMode() ) v->eraseSequence ( v->getSequenceLength()-1 , 1 ) ;
         for ( a = 0 ; a < v->items.size() ; a++ )
            {
            v->items[a].translate ( v , this ) ;
            v->items[a].getArrangedAA ( v , s , disp ) ;
            }
-        if ( can->getEditMode() ) v->addToSequence ( " " ) ;
         }
     else
         {
@@ -437,7 +435,7 @@ void SeqAA::initFromTVector ( TVector *v )
        if ( s.GetChar(a) == '?' ) s.SetChar(a, unknownAA) ;
     if ( truncateEditSequence )
        {
-       v->getSequence() += " " ;
+       v->addToSequence ( " " ) ;
        s += " " ;
        }
        

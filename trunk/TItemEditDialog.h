@@ -13,16 +13,19 @@ class TItemEditDialog : public wxDialog
     virtual ~TItemEditDialog () ;
 
     virtual void OnCharHook(wxKeyEvent& event) ;
-    void OnColor ( wxCommandEvent &ev ) ;
-    void OnOK ( wxCommandEvent &ev ) ;
-    void OnCancel ( wxCommandEvent &ev ) ;
-    void OnUseOffset ( wxCommandEvent &ev ) ;
+    virtual void OnColor ( wxCommandEvent &ev ) ;
+    virtual void OnOK ( wxCommandEvent &ev ) ;
+    virtual void OnCancel ( wxCommandEvent &ev ) ;
+    virtual void OnUseOffset ( wxCommandEvent &ev ) ;
+    virtual void OnList ( wxListEvent &ev ) ;
+    virtual void initlb () ;
                                             
     // Variables
     TVectorItem *vi ;
     wxRadioBox *rb ;
     wxCheckBox *useOffset ;
     wxTextCtrl *offset ;
+    wxListBox *lb ;
 
     DECLARE_EVENT_TABLE()
     } ;

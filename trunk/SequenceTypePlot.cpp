@@ -425,6 +425,13 @@ void SeqPlot::initFromTVector ( TVector *v )
     {
     vec = v ;
     s = vec->getSequence() ;
+
+    if ( can && can->getEditMode() && v->getSequenceLength() &&
+            v->getSequenceChar(v->getSequenceLength()-1) == ' ' )
+       {
+       s.Truncate ( s.length()-1 ) ;
+       }
+
     takesMouseActions = true ;
     }
 

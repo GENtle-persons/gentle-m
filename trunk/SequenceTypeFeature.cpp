@@ -229,7 +229,14 @@ void SeqFeature::initFromTVector ( TVector *v )
     {
     vec = v ;
     int a ;
+
     s = vec->getSequence() ;
+    if ( can && can->getEditMode() && v->getSequenceLength() &&
+            v->getSequenceChar(v->getSequenceLength()-1) == ' ' )
+       {
+       s.Truncate ( s.length()-1 ) ;
+       }
+
     pl.slen = s.length() ;
     pl.prepare ( vec->items.size() ) ;    
     for ( a = 0 ; a < vec->items.size() ; a++ )

@@ -164,7 +164,7 @@ class TVector
     
     virtual float getAAmw ( char aa ) ;
     virtual float getAApi ( char aa ) ;
-    virtual wxString dna2aa ( wxString codon ) ;
+    virtual wxString dna2aa ( wxString codon , int translation_table = -1 ) ;
     virtual void setAction ( wxString _action , int _action_value = 0 ) ;
     virtual void setDatabase ( wxString s ) { database = s ; }
     virtual wxString getDatabase () { return database ; }
@@ -203,6 +203,7 @@ class TVector
     virtual wxString getSubstring ( int mf , int mt ) ;
     virtual wxString transformSequence ( bool inverse , bool reverse ) ;
     virtual wxString getSequence () ;
+    virtual wxString *getSequencePointer () ; // Only used by SequenceCanvas::OnCharHook
     virtual char getSequenceChar ( int x ) ;
     virtual void setSequence ( wxString ns ) ;
     virtual void addToSequence ( wxString x ) ;
@@ -236,6 +237,7 @@ class TVector
     virtual wxString vary_base ( char b ) ;
     virtual void makeAA2DNA () ;
     virtual wxString mergeCodons ( wxString c1 , wxString c2 ) ;
+    virtual void setCodonTable ( int table , wxString sequence ) ;
 
     wxString sequence ;    
     wxString _lu , _ll , _ru , _rl ; // Sticky ends
@@ -249,6 +251,7 @@ class TVector
     static char IUPAC[256] , SIUPAC[256] , COMPLEMENT[256] ;
     static char ACGT[256] ;
     static vector <TAAProp> aaprop ;
+    static wxArrayString codon_tables ;
     } ;
     
 #endif
