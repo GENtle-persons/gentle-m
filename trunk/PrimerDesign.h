@@ -42,6 +42,8 @@ class TPrimerDesign : public ChildBase
 
     virtual void OnExportPrimer ( wxCommandEvent &ev ) ;
     virtual void OnImportPrimer ( wxCommandEvent &ev ) ;
+    virtual void OnFind(wxCommandEvent& event);
+    virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){};
 
     virtual void OnEditPrimer ( wxCommandEvent &ev ) ;
     virtual void OnDeletePrimer ( wxCommandEvent &ev ) ;

@@ -127,11 +127,11 @@ class SeqBlank : public SeqDivider
 class SeqDNA : public SeqBasic
     {
     public :
-    SeqDNA ( SequenceCanvas *ncan = NULL ) { vec = NULL ; init ( ncan ) ; }
+    SeqDNA ( SequenceCanvas *ncan = NULL ) { vec = NULL ; invers = false ; init ( ncan ) ; }
     virtual int  arrange ( int n ) ;
     virtual void show ( wxDC& dc ) ;
     virtual void initFromTVector ( TVector *v ) ;
-    virtual string whatsthis () { return "DNA" ; }
+    virtual string whatsthis () { return invers ? "IDNA" : "DNA" ; }
     virtual wxPoint showText ( int ystart , vector <string> &tout ) ;
     virtual wxColor getBaseColor ( char b ) ;
         
@@ -141,6 +141,7 @@ class SeqDNA : public SeqBasic
     bool showNumbers ;
     wxColour fontColor ;
     string alternateName ;
+    bool invers ;
     } ;
 
 class SeqPrimer : public SeqDNA

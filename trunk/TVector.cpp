@@ -265,6 +265,14 @@ void TVector::removeBlanksFromVector ()
     
 void TVector::doRemoveNucleotide ( int x )
     {
+    if ( sequence == "" )
+        {
+        while ( items.size() ) items.pop_back () ;
+        return ;
+        }
+    if ( x >= sequence.length() ) return ;
+    if ( x < 0 ) return ;
+    
     int a ;
     if ( isCircular () )
         {
@@ -664,7 +672,9 @@ void TVector::doRemove ( int from , int to , bool update )
     int a , b ;
     int l = sequence.length() ;
     undo.start ( txt("u_del_seq") ) ;
-    
+
+    myass ( false , "a" ) ;
+        
     // Sequence
     string s = sequence , t ;
     int rt = to ;
@@ -676,10 +686,12 @@ void TVector::doRemove ( int from , int to , bool update )
        t += s[b-1] ;
        s[b-1] = ' ' ;
        }
+    myass ( false , "b" ) ;
     sequence = "" ;
     for ( a = 0 ; a < l ; a++ )
        if ( s[a] != ' ' ) sequence += s[a] ;
        
+    myass ( false , "c" ) ;
     // Items
     for ( a = 0 ; a < items.size() ; a++ )
        {
@@ -691,6 +703,7 @@ void TVector::doRemove ( int from , int to , bool update )
           }
        }
 
+    myass ( false , "d" ) ;
     // Finish
     if ( update )
         {
@@ -1177,12 +1190,14 @@ void TVectorItem::setRF ( int x )
     
 void TVectorItem::doRemove ( int f , int t , int l )
     {
+    if ( from == -1 ) return ;
     int rt = t ;
     int rto = to ;
     if ( t < f ) rt += l ;
     if ( to < from ) rto += l ;
     int a ;
     string s = "_" ;
+    myass ( false , "I" ) ;
     while ( s.length() < l * 3 ) s += s ;
     for ( a = from ; a <= rto ; a++ ) s[a] = 'X' ;
     for ( a = f ; a <= rt ; a++ ) s[a] = ' ' ;
@@ -1200,8 +1215,16 @@ void TVectorItem::doRemove ( int f , int t , int l )
        }
     to += from ;
     l -= rt - f + 1 ;
+    if ( l == 0 ) 
+        {
+        from = -1 ;
+        return ;
+        }
+    myass ( false , "II" ) ;
     while ( to > l ) to -= l ;
+    myass ( false , "III" ) ;
     while ( from > l ) from -= l ;
+    myass ( false , "IV" ) ;
     }
     
 void TVectorItem::dummyInfo ( string s , int l )

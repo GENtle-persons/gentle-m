@@ -308,6 +308,7 @@ enum {
     MDI_PREV_WINDOW,
     MDI_SEL_AS_NEW_PRIMER,
     PC_RS_HIDE_LIMIT,
+    MDI_TOGGLE_IDNA,
     
     Z___
     } ;

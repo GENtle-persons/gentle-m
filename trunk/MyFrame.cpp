@@ -43,7 +43,7 @@ BEGIN_EVENT_TABLE(MyFrame, MyFrameType)
 END_EVENT_TABLE()
 
 // Define my frame constructor
-#define ACC_ENT 36
+#define ACC_ENT 37
 MyFrame::MyFrame(wxWindow *parent,
                  const wxWindowID id,
                  const wxString& title,
@@ -92,6 +92,7 @@ MyFrame::MyFrame(wxWindow *parent,
     entries[33].Set(wxACCEL_CTRL, WXK_F4, MDI_CLOSE);
     entries[34].Set(wxACCEL_CTRL, WXK_TAB, MDI_NEXT_WINDOW);
     entries[35].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_TAB, MDI_PREV_WINDOW);
+    entries[36].Set(wxACCEL_NORMAL, WXK_F8, MDI_TOGGLE_IDNA);
     
     wxAcceleratorTable accel(ACC_ENT, entries);
     SetAcceleratorTable(accel);

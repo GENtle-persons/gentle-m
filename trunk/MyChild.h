@@ -85,9 +85,11 @@ public:
     virtual void OnPrintReport(wxCommandEvent& event);
     virtual void OnToggleFeatures(wxCommandEvent& event);
     virtual void OnToggleRestriction(wxCommandEvent& event);
+    virtual void OnToggleIDNA(wxCommandEvent& event);
     virtual void OnRunPCR(wxCommandEvent& event);
     virtual void OnZoom ( wxCommandEvent &ev ) ;
     virtual void OnUpdateRefresh(wxUpdateUIEvent& event);
+    virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){};
     
     virtual void initme () ;
     virtual void initPanels () ;

@@ -739,13 +739,17 @@ void FindSequenceDialog::OnSearch ( wxCommandEvent &ev )
            d->cSequence->mark ( "DNA" , a+1 , last+1) ;
            d->cSequence->ensureVisible ( d->cPlasmid->getMarkFrom() ) ;
            }
+        else if ( c->def == "PrimerDesign" )
+           {
+           TPrimerDesign *d = (TPrimerDesign*) c ;
+           d->sc->mark ( "PRIMER_UP" , a+1 , last+1) ;
+           d->sc->ensureVisible ( d->sc->getBatchMark() ) ;
+           }
         else //if ( c->def == "AminoAcids" )
            {
            TAminoAcids *d = (TAminoAcids*) c ;
            d->sc->mark ( "AA" , a+1 , last+1) ;
            d->sc->ensureVisible ( d->sc->_from ) ;
-
-
            }
         p = a+1 ;
         }

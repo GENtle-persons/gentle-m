@@ -36,6 +36,7 @@ class TABIviewer : public ChildBase
     virtual void OnSpinWidth(wxSpinEvent& event);
     virtual void OnSpinHeight(wxSpinEvent& event);
     virtual void OnZoom(wxScrollEvent& event);
+    virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){};
 //    virtual void OnClose(wxCloseEvent& event) ;
     
     // Variables

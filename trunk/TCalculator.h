@@ -62,6 +62,7 @@ class TCalculator : public ChildBase
 //    virtual void OnClose(wxCloseEvent& event) ;
     virtual void OnSeqPrint(wxCommandEvent& event) ;
     virtual void OnPrintPreview(wxCommandEvent& event) ;
+    virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){};
     
     private :
     wxNotebook *nb ;
