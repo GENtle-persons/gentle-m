@@ -1092,7 +1092,7 @@ void SequenceCanvas::OnNewFromResultDNA ( wxCommandEvent &ev )
     if ( s == "" ) return ;
 
     TVector *nv = new TVector ;
-    nv->re = pd->vec->re ;
+    nv->re = pd->w->re ;
     nv->sequence = s ;
     nv->name = pd->vec->name + " (" + string ( txt ( "t_pcr_result" ) ) + ")" ;
     nv->desc = pd->vec->desc + "\n" + string ( txt ( "t_pcr_result" ) ) ;
@@ -1100,6 +1100,11 @@ void SequenceCanvas::OnNewFromResultDNA ( wxCommandEvent &ev )
     nv->setCircular ( false ) ;
     nv->recalculateCuts() ;
     nv->recalcvisual = true ;
+    nv->items.push_back ( TVectorItem ( nv->name.c_str() , 
+                                        nv->desc.c_str() , 
+                                        1 , 
+                                        s.length() , 
+                                        VIT_MISC ) ) ;
     pd->app->frame->newFromVector ( nv ) ;
     }
     
