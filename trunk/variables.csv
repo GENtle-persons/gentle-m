@@ -706,3 +706,4 @@
 "t_large_warning_caption","Convert database?","Datenbank konvertieren?"
 "t_conversion_complete","Conversion complete!","Konvertierung vollständig!"
 "t_mysql_error_1153","MySQL error 1153: Increase the max_allowed_packet setting at the server","MySQL Fehler 1153: Die Einstellung 'max_allowed_packet' an Server erhöhen"
+"t_doregisterstuff","Register protocols and extensions on startup","Protokolle und Dateitypen beim Start registrieren"

@@ -96,7 +96,7 @@ void MyApp::registerFileExtension ( wxString extension )
   
     if ( !regKey.Exists() )
         {
-        regKey.Create () ;
+        regKey.Create() ;
         regKey.SetValue ( "" , extension + "file" ) ;
         }    
   
@@ -250,19 +250,22 @@ bool MyApp::OnInit()
         delete tipProvider;
         }
         
-    registerFileExtension ( "gb" ) ;
-    registerFileExtension ( "genbank" ) ;
-    registerFileExtension ( "gbxml" ) ;
-    registerFileExtension ( "fasta" ) ;
-    registerFileExtension ( "clone" ) ;
-    registerFileExtension ( "abi" ) ;
-    registerFileExtension ( "ab1" ) ;
-    registerFileExtension ( "seq" ) ;
-    registerFileExtension ( "gcg" ) ;
-    registerFileExtension ( "codata" ) ;
-    registerFileExtension ( "NBRF_PIR" ) ;
-    registerFileExtension ( "swissprot" ) ;
-    registerProtocol ( "gentle" ) ;
+    if ( frame->doRegisterStuff )
+    	{
+        registerFileExtension ( "gb" ) ;
+        registerFileExtension ( "genbank" ) ;
+        registerFileExtension ( "gbxml" ) ;
+        registerFileExtension ( "fasta" ) ;
+        registerFileExtension ( "clone" ) ;
+        registerFileExtension ( "abi" ) ;
+        registerFileExtension ( "ab1" ) ;
+        registerFileExtension ( "seq" ) ;
+        registerFileExtension ( "gcg" ) ;
+        registerFileExtension ( "codata" ) ;
+        registerFileExtension ( "NBRF_PIR" ) ;
+        registerFileExtension ( "swissprot" ) ;
+        registerProtocol ( "gentle" ) ;
+        }    
 
     return TRUE;
 }

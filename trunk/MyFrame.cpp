@@ -201,6 +201,7 @@ void MyFrame::initme ()
     showSplashScreen = LS->getOption ( "SHOWSPLASHSCREEN" , true ) ;    
     checkUpdate = LS->getOption ( "CHECKUPDATE" , default_update ) ;
     lang_string = LS->getOption ( "LANGUAGE" , "en" ) ;
+    doRegisterStuff = LS->getOption ( "REGISTERSTUFF" , true ) ;
     useCoolCanvas = LS->getOption ( "USECOOLCANVAS" , false ) ; // Not saved yet
     useInternalHelp = LS->getOption ( "USEINTERNALHELP" , false ) ; // Not saved yet
     myapp()->init_txt ( lang_string.c_str() , "variables.csv" ) ;
@@ -975,6 +976,7 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     showSplashScreen = pod.showSplashScreen->GetValue() ;
     checkUpdate = pod.checkUpdate->GetValue() ;
     useInternalHelp = pod.useInternalHelp->GetValue() ;
+    doRegisterStuff = pod.doRegisterStuff->GetValue() ;
     wxString lang = pod.language->GetStringSelection() ;
     if ( lang != lang_string )
         {
@@ -993,6 +995,7 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     LS->setOption ( "SHOWSPLASHSCREEN" , showSplashScreen ) ;
     LS->setOption ( "CHECKUPDATE" , checkUpdate ) ;
     LS->setOption ( "USEINTERNALHELP" , useInternalHelp ) ;
+    LS->setOption ( "REGISTERSTUFF" , doRegisterStuff ) ;
     global_enzyme_rules->save_global_settings() ;
     LS->endRecord() ;
     for ( int a = 0 ; a < children.GetCount() ; a++ )

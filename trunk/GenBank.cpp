@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the GenBank class and its TGenBankFeature helper class
+*/
 #include "GenBank.h"
 #include <wx/textfile.h>
 
