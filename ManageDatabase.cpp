@@ -53,12 +53,13 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , char *title ,
 #ifdef __WXMSW__
     GetClientSize ( &w , &h ) ;
 #else // LINUX
-    w = 600 ;
-    h = 480 ;
     GetClientSize ( &w , &h ) ;
 #endif
-    bo = 5 ;
-    th = 22 ;
+
+    wxClientDC dc ( (wxWindow*) this ) ;
+    dc.GetTextExtent ( "X" , &bo , &th ) ;
+    th = th * 3 / 2 ;
+    bo = th / 4 ;
     
     nb = new wxNotebook ( (wxWindow*) this ,
                           -1 ,
