@@ -440,30 +440,30 @@ void MyChild::OnCut(wxCommandEvent& event)
     {
     wxString s = cSequence->getSelection () ;
     if ( s.IsEmpty() ) return ;
-    if (wxTheClipboard->Open())
-        {
-        vec->undo.start ( txt("u_cut") ) ;
-        wxTheClipboard->SetData( new wxTextDataObject(s) );
-        wxTheClipboard->Close();
+    if (!wxTheClipboard->Open()) return ;
 
-        myass ( false , "!1" ) ;
-        vec->doRemove ( cPlasmid->getMarkFrom() , cPlasmid->getMarkTo() ) ;
-        myass ( false , "!2" ) ;
-        cPlasmid->setMarkFrom ( -1 ) ;
-        
-        myass ( false , "!3" ) ;
-        for ( int a = 0 ; a < cSequence->seq.GetCount() ; a++ )
-           cSequence->seq[a]->initFromTVector ( vec ) ;
+    vec->undo.start ( txt("u_cut") ) ;
+    wxTheClipboard->SetData( new wxTextDataObject(s) );
+    wxTheClipboard->Close();
 
-        myass ( false , "!4" ) ;
-        cSequence->arrange() ;
-        treeBox->initme() ;
-        treeBox->Refresh() ;
-        cPlasmid->Refresh() ;
-        cSequence->Refresh() ;
-        vec->undo.stop() ;
-        myass ( false , "!!" ) ;
-        }
+    mylog ( "MyChild::OnCut" , "1" ) ;
+    vec->doRemove ( cPlasmid->getMarkFrom() , cPlasmid->getMarkTo() ) ;
+
+    mylog ( "MyChild::OnCut" , "2" ) ;
+    cPlasmid->setMark ( -1 , -1 ) ;
+    
+    mylog ( "MyChild::OnCut" , "3" ) ;
+    for ( int a = 0 ; a < cSequence->seq.GetCount() ; a++ )
+       cSequence->seq[a]->initFromTVector ( vec ) ;
+
+    mylog ( "MyChild::OnCut" , "4" ) ;
+    cSequence->arrange() ;
+    treeBox->initme() ;
+    treeBox->Refresh() ;
+    cPlasmid->Refresh() ;
+    cSequence->Refresh() ;
+    vec->undo.stop() ;
+    mylog ( "MyChild::OnCut" , "5" ) ;
     }
     
 void MyChild::OnCopy(wxCommandEvent& event)
@@ -484,9 +484,10 @@ void MyChild::OnPaste(wxCommandEvent& event)
 
 void MyChild::OnCopyToNew(wxCommandEvent& event)
     {
-    int from , to ;
     if ( cSequence->getEditMode() ) return ;
-    cPlasmid->getMark ( from , to ) ;
+    if ( cSequence->getSelection().IsEmpty() ) return ;
+    int from = cSequence->markedFrom() ;
+    int to = cSequence->markedTo() ;
     if ( from == -1 ) return ;
     myapp()->frame->newFromVector ( vec->newFromMark ( from , to ) ) ;
     }
@@ -541,7 +542,7 @@ void MyChild::OnViewMode(wxCommandEvent& event)
     else
         {
         mylog ( "MyChild::OnViewMode" , "1b" ) ;
-        cPlasmid->setMarkFrom ( -1 ) ;
+        cPlasmid->setMark ( -1 , -1 ) ;
         cSequence->setEditMode ( false ) ;
         cSequence->arrange () ;
         vec->recalcvisual = true ;
@@ -838,6 +839,7 @@ void MyChild::OnFind(wxCommandEvent& event)
     
 void MyChild::OnMarkAll(wxCommandEvent& event)
     {
+    if ( cSequence->getEditMode() ) return ;
     cSequence->mark ( "DNA" , 1 , vec->getSequenceLength() ) ;
     Refresh () ;
     }

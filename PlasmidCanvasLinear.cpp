@@ -61,20 +61,20 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
         dc.SetBrush ( *wxLIGHT_GREY_BRUSH ) ;
         if ( mt <= l )
             {
-            dc.DrawRectangle ( lineOff + lineLen * mf / l ,
+            dc.DrawRectangle ( lineOff + lineLen * mf / (l+1) ,
                                lineH ,
-                               lineLen * ( mt - mf ) / l ,
+                               lineLen * ( mt - mf ) / (l+1) ,
                                h - lineH ) ;
             }
         else
             {
-            dc.DrawRectangle ( lineOff + lineLen * mf / l ,
+            dc.DrawRectangle ( lineOff + lineLen * mf / (l+1) ,
                                lineH ,
-                               lineLen - lineLen * mf / l ,
+                               lineLen - lineLen * mf / (l+1) ,
                                h - lineH ) ;
             dc.DrawRectangle ( lineOff ,
                                lineH ,
-                               lineLen * ( mt - l ) / l ,
+                               lineLen * ( mt - l ) / (l+1) ,
                                h - lineH ) ;
             }
         dc.SetBackgroundMode ( wxTRANSPARENT ) ;
@@ -120,14 +120,14 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
     dc.SetFont(*smallFont);
     for ( a = 0 ; a < l ; a += d ) 
         {
-        dc.DrawLine ( lineOff + lineLen * a / l ,
+        dc.DrawLine ( lineOff + lineLen * a / (l+1) ,
                       lineH ,
-                      lineOff + lineLen * a / l ,
+                      lineOff + lineLen * a / (l+1) ,
                       h - markH ) ;
         sprintf ( t , "%d" , a+1 ) ;
         dc.GetTextExtent ( t , &dx , &dy ) ;
         dc.DrawText ( t ,
-                      lineOff + lineLen * a / l - dx/2 ,
+                      lineOff + lineLen * a / (l+1) - dx/2 ,
                       h - markH ) ;
         }
 
@@ -135,9 +135,9 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
     dc.SetPen(*wxRED_PEN);
     for ( a = 0 ; a < p->vec->methyl.GetCount() ; a++ )
     	{
-        dc.DrawLine ( lineOff + lineLen * p->vec->methyl[a] / l ,
+        dc.DrawLine ( lineOff + lineLen * p->vec->methyl[a] / (l+1) ,
                       lineH ,
-                      lineOff + lineLen * p->vec->methyl[a] / l ,
+                      lineOff + lineLen * p->vec->methyl[a] / (l+1) ,
                       lineH + h / 40 ) ;
     	}    
     dc.SetPen(*wxBLACK_PEN);
@@ -149,8 +149,8 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
         for ( a = 0 ; a < p->vec->items.size() ; a++ )
             {
             TVectorItem *i = &p->vec->items[a] ;
-            int r1 = lineOff + lineLen * ( i->from - 1 ) / l ;
-            int r2 = lineOff + lineLen * ( i->to - 1 ) / l ;
+            int r1 = lineOff + lineLen * ( i->from - 1 ) / (l+1) ;
+            int r2 = lineOff + lineLen * ( i->to - 1 ) / (l+1) ;
             if ( r1 <= r2 )
                 {
                 i->r1 = r1 ; // From X
@@ -183,7 +183,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
             {
             TRestrictionCut *c = &p->vec->rc[a] ;
             if ( p->vec->isEnzymeHidden ( c->e->name ) ) continue ;
-            c->p = wxPoint ( lineOff + lineLen * c->pos / l , lineH - markH ) ;
+            c->p = wxPoint ( lineOff + lineLen * c->pos / (l+1) , lineH - markH ) ;
             arrangeRestrictionSitesLinear ( a , dc ) ;
             }
         for ( a = 0 ; a < p->vec->rc.size() ; a++ )
@@ -241,7 +241,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
            dc.SetTextForeground ( *col ) ;
            dc.SetPen ( *MYPEN(*col) ) ;
            c->linearUpdate ( w , h ) ;
-           int xx = lineOff + c->pos*lineLen/l ;
+           int xx = lineOff + c->pos*lineLen/(l+1) ;
            dc.DrawLine ( c->lastrect.GetRight() , c->lastrect.GetBottom() , xx , lineH - markH ) ;
            dc.DrawLine ( xx , lineH , xx , lineH - markH - 1 ) ;
            dc.DrawText ( c->getNameAndPosition() , c->lastrect.x , c->lastrect.y ) ;

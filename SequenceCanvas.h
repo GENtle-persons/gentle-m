@@ -100,6 +100,7 @@ class SeqBasic
     virtual int getItem ( wxPoint pt , int line ) { return pos.getItem ( pt , line ) ; }
     virtual bool isDisplayOnly () { return false ; }
     virtual void logsize () ;
+    virtual void editMode ( bool on = true ) ;
     
     // Variables
     wxString s ;
@@ -480,6 +481,9 @@ class SequenceCanvas : public wxScrolledWindow
     virtual TVector *getPCR_DNA_vector() ;
     virtual void showContextMenu ( SeqBasic *where , int pos , wxPoint pt ) ;
     virtual void insertRestrictionSite ( bool left ) ;
+    virtual void editSequence ( int k , wxKeyEvent& event ) ;
+    virtual void editCharPressed ( int k , TVector *v , wxString *the_sequence ) ;
+    virtual void editSpecialKeyPressed ( int k , TVector *v , wxString *the_sequence , int wy , wxKeyEvent& event ) ;
 
     bool printToColor , drawall , horizontal , hide , miniDisplay ;
     bool marking , drawing , printing , wantOverwrite , forceoverwrite ;
