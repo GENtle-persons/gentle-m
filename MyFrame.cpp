@@ -99,6 +99,7 @@ MyFrame::MyFrame(wxWindow *parent,
     SetAcceleratorTable(accel);
     html_ep = NULL ;
     lastChild = NULL ;
+    tb_mychild = NULL ;
 }
 
 MyFrame::~MyFrame ()

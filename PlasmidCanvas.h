@@ -87,6 +87,7 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void getMark ( int &i1 , int &i2 ) { i1 = getMarkFrom() ; i2 = getMarkTo() ; }
     virtual void setMark ( int i1 , int i2 ) { setMarkFrom ( i1 ) ; setMarkTo ( i2 ) ; }
     virtual void setRootChild ( MyChild *_p ) { p = _p ; }
+    virtual int getZoom () { return zoom ; }
 
     private :
     // Event handlers

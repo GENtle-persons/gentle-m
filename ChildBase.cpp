@@ -114,8 +114,14 @@ wxMenuBar *ChildBase::GetMenuBar ()
     return menubar ;
     }
     
+    
+void ChildBase::updateToolbar ()
+    {
+    }    
+    
 void ChildBase::Activate ()
     {
+    updateToolbar () ;
     myapp()->frame->setActiveChild ( this ) ;
     if ( myapp()->frame->isLocked() ) return ;
     showName () ;
@@ -140,6 +146,7 @@ void ChildBase::OnClose(wxCloseEvent& event)
         return ;
         }
     
+    toolbar = NULL ;
     myass ( this , "ChildBase::OnClose" ) ;
     myapp()->frame->mainTree->removeChild ( this ) ;
     myapp()->frame->SetTitle ( txt("gentle") ) ;

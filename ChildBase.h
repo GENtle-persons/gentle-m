@@ -57,6 +57,7 @@ class ChildBase : public MyChildBase
     virtual void doExport ( wxString filename , int filter ) ;
     virtual void exportVector ( TVector *vec , wxFile &out , int filter ) ;
     virtual void arrangedExport ( wxFile &out , wxString n , wxString s , int l ) ;
+    virtual void updateToolbar () ;
     } ;
 
 #endif

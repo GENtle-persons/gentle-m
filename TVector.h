@@ -105,6 +105,7 @@ class TVectorItem
     // dna2aa stuff
     virtual void translate ( TVector *v , SeqAA *aa = NULL ) ;
     virtual void getArrangedAA ( TVector *v , wxString &s , int disp ) ;
+    virtual wxString getAminoAcidSequence () ;
     
     // Variables
     wxString desc , name ;

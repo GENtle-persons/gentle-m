@@ -53,6 +53,9 @@ class TAminoAcids : public ChildBase
     wxWindow *curDisplay ;
     PlasmidCanvas *pc ;
 
+    protected :
+    virtual void updateToolbar () ;
+
     private :
     wxListBox *lb ;
     wxBoxSizer *h1 , *v1 ;

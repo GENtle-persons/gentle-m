@@ -1570,10 +1570,16 @@ void TVectorItem::translate ( TVector *v , SeqAA *aa )
       }
     }
 
+wxString TVectorItem::getAminoAcidSequence ()
+    {
+    wxString s ;
+    for ( int a = 0 ; a < dna2aa.size() ; a++ ) s += dna2aa[a].aa ;
+    return s ;
+    }    
+
 void TVectorItem::getArrangedAA ( TVector *v , wxString &s , int disp )
     {
-    int a ;
-    for ( a = 0 ; a < dna2aa.size() ; a++ )
+    for ( int a = 0 ; a < dna2aa.size() ; a++ )
        {
        if ( disp == AA_ONE ) s.SetChar(dna2aa[a].dna[0],dna2aa[a].aa) ;
        else

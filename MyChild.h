@@ -31,7 +31,6 @@ public:
     TVectorTree *treeBox ;
     TURLtext *propBox ;
     PlasmidCanvas *cPlasmid;
-    wxChoice *zoom_cb ;
     MySplitter *sw , *swu , *swl ;
 
     bool showORFs , viewMode ;
@@ -95,6 +94,9 @@ public:
     virtual wxString getName () ;
     virtual void updateSequenceCanvas ( bool remember = false ) ;
     virtual wxString doExtractAA ( bool coding = true ) ;
+    
+    protected :
+    virtual void updateToolbar () ;
     
     DECLARE_EVENT_TABLE()
 };

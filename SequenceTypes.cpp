@@ -17,7 +17,7 @@ void SeqBasic::logsize ()
     mylog ( whatsthis() , wxString::Format ( "m %d" , pos.m.length() ) ) ;
     mylog ( whatsthis() , wxString::Format ( "r %d" , pos.r.size() * sizeof ( wxRect ) ) ) ;
     mylog ( whatsthis() , wxString::Format ( "l %d" , pos.l.size() * sizeof ( wxRect ) ) ) ;
-    mylog ( "---" ) ;
+    mylog ( "---" , "" ) ;
     }    
 
 SeqBasic::~SeqBasic ()
