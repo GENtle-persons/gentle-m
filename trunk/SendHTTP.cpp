@@ -4,6 +4,22 @@
 // LGPL, as far as I (Magnus Manske) know...
 // Only used to work around the wxHTTP bug in 2.5.2.
 
+#ifndef __WXMSW__
+
+#include "main.h"
+#include "SendHTTP.h"
+
+myExternal::myExternal () {} ;
+int myExternal::copyFile ( wxString url , wxString file , int _t ) { return 0 ; }
+wxString myExternal::getText ( wxString url ) { return "" ; }
+
+int myExternal::copyFileLocal ( wxString url , wxString file ) { return 0 ; }
+wxString myExternal::getTextLocal ( wxString url ) { return "" ; }
+int myExternal::copyFileHTTP ( wxString _url , wxString _file ) { return 0 ; }
+wxString myExternal::getTextHTTP ( wxString url ) { return "" ; }
+
+#else
+
 #include <stdio.h>
 #include <string.h>
 #include "winsock2.h"
@@ -636,3 +652,4 @@ wxString myExternal::getTextHTTP ( wxString url )
 	return ret ;    
 	}
      
+#endif

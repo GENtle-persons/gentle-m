@@ -1,7 +1,7 @@
 #include "MyFrame.h"
-#ifdef __WXMSW__
+
 #include "SendHTTP.h"
-#endif
+
 
 // ---------------------------------------------------------------------------
 // MyFrame
@@ -1406,7 +1406,7 @@ wxString MyFrame::check4update ()
 	    wxString td = text ;
         td = td.BeforeFirst ( '\n' ) ;
         td = td.BeforeFirst ( '\r' ) ;
-        td = td.BeforeFirst ( '\m' ) ;
+//        td = td.BeforeFirst ( '\m' ) ;
         
         wxString lu = LS->getOption ( "LAST_UPDATE" , "" ) ;
         if ( lu.IsEmpty() ) // Assuming new installation of the latest version, so no update
