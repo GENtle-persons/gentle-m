@@ -106,7 +106,9 @@ void TAminoAcids::initme ()
     sc->edit_id = "AA" ;
     sc->edit_valid = "ACDEFGHIKLMNPQRSTVWY|" ;
 
-    int h = 100 ;
+    int w , h ;
+    GetParent()->GetClientSize ( &w , &h ) ;
+    h = 100 ;
     
     stat = new wxTextCtrl ( vs ,
                             -1 ,
@@ -123,7 +125,7 @@ void TAminoAcids::initme ()
                             wxTE_MULTILINE | wxTE_READONLY ) ;
 
     hs->SplitHorizontally ( vs , sc ,h+bo ) ;
-    vs->SplitVertically ( stat , desc ) ;
+    vs->SplitVertically ( stat , desc , w/2 ) ;
     hs->SetMinimumPaneSize ( h+bo ) ;
     
                             
@@ -375,18 +377,24 @@ void TAminoAcids::updateUndoMenu ()
     if ( !mb ) return ;
     wxMenuItem *mi = mb->FindItem ( MDI_UNDO ) ;
     if ( !mi ) return ;
+    bool canUndo ;
     if ( lm == "" )
         {
         mi->SetText ( txt("u_no") ) ;
         mi->Enable ( false ) ;
-        GetToolBar()->EnableTool ( MDI_UNDO , false ) ;
+	canUndo = false ;
         }
     else
         {
         mi->Enable ( true ) ;
         mi->SetText ( lm ) ;
-        GetToolBar()->EnableTool ( MDI_UNDO , true ) ;
+	canUndo = true ;
         }
+#ifdef __WXMSW __
+    GetToolBar()->EnableTool ( MDI_UNDO , canUndo ) ;
+#else
+    // myapp()->frame->GetToolBar()->EnableTool ( MDI_UNDO , canUndo ) ;
+#endif
     }
     
 void TAminoAcids::Redo(wxCommandEvent& event)

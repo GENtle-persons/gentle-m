@@ -273,6 +273,7 @@ void MyChild::initme ()
     sw = new MySplitter ( this , SPLIT_1 , this ) ;
     swu = new MySplitter ( sw , SPLIT_2 , this ) ;
     swl = new MySplitter ( swu , SPLIT_3 , this ) ;
+
 /*
     if ( myapp()->frame->useCoolCanvas )
        cPlasmid = (PlasmidCanvas*) new CoolCanvas(swu, wxPoint(0, 0), wxSize(width*2/3, height/2));
@@ -300,9 +301,18 @@ void MyChild::initme ()
     // Give it scrollbars
     cSequence->SetScrollbars(0, 20, 0, 50);
 
+    // TOOLBAR 
 
 #ifdef __WXMSW__  // LINUX
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
+#else
+    wxToolBar *toolBar = myapp()->frame->CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
+    /*    wxToolBar *toolBar ;
+    toolBar = new wxToolBar ( myapp()->frame , -1 , wxDefaultPosition, wxDefaultSize, wxTB_HORIZONTAL | wxNO_BORDER | wxTB_FLAT );//| wxTB_DOCKABLE ) ;
+    myapp()->frame->SetToolBar ( toolBar ) ;*/
+#endif
+
+
 
 //    SetToolBar ( toolBar ) ;
 
@@ -363,9 +373,6 @@ void MyChild::initme ()
     zoom_cb->SetSelection ( 0 ) ;
     toolBar->AddControl ( zoom_cb ) ;
     toolBar->Realize() ;    
-    
-
-#endif
 
     Show(TRUE);
     updateUndoMenu () ;
@@ -1202,18 +1209,24 @@ void MyChild::updateUndoMenu ()
     if ( !mb ) return ;
     wxMenuItem *mi = mb->FindItem ( MDI_UNDO ) ;
     if ( !mi ) return ;
+    bool canUndo ;
     if ( lm == "" )
         {
         mi->SetText ( txt("u_no") ) ;
         mi->Enable ( false ) ;
-        GetToolBar()->EnableTool ( MDI_UNDO , false ) ;
+	canUndo = false ;
         }
     else
         {
         mi->Enable ( true ) ;
         mi->SetText ( lm ) ;
-        GetToolBar()->EnableTool ( MDI_UNDO , true ) ;
+	canUndo = true ;
         }
+#ifdef __WXMSW __
+    GetToolBar()->EnableTool ( MDI_UNDO , canUndo ) ;
+#else
+    //    myapp()->frame->GetToolBar()->EnableTool ( MDI_UNDO , canUndo ) ;
+#endif
     }
     
 void MyChild::Redo(wxCommandEvent& event)
