@@ -15,7 +15,7 @@ int SeqAlign::arrange ( int n )
     int ox = bo+wx , oy = n*wy+bo , endnumber = offset + s.length() ;
     
     endnumberlength = 0 ;
-    for ( a = 0 ; a < can->seq.size() ; a++ )
+    for ( a = 0 ; a < can->seq.GetCount() ; a++ )
         {
         if ( can->seq[a]->whatsthis() == "ALIGN" )
            {
@@ -52,7 +52,7 @@ int SeqAlign::arrange ( int n )
               pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
               lasta = pos.p.GetCount()+1 ;
               x = ox ;
-              y += wy * ( can->seq.size() + can->blankline ) ;
+              y += wy * ( can->seq.GetCount() + can->blankline ) ;
               if ( a+1 < s.length() )
                  pos.add ( -(++l) , bo , y , ox-wx-5 , wy-1 ) ; // Line number
               }
@@ -84,7 +84,7 @@ void SeqAlign::show ( wxDC& dc )
         }
     
     int first = -1 , me = -1 ;
-    for ( a = 0 ; a < can->seq.size() ; a++ )
+    for ( a = 0 ; a < can->seq.GetCount() ; a++ )
         {
         if ( can->seq[a]->whatsthis() == "ALIGN" && first == -1 )
            first = a ;
@@ -178,7 +178,7 @@ void SeqAlign::show ( wxDC& dc )
            {
            dc.SetTextForeground ( *wxBLACK ) ;
            dc.SetTextBackground ( nbgc ) ;
-           for ( t = "" ; t.length() < endnumberlength ; t += " " ) ;
+           FILLSTRING ( t , ' ' , endnumberlength ) ;
            dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
            dc.SetFont(*can->varFont);
            t = myname ;

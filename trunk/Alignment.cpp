@@ -357,11 +357,7 @@ void TAlignment::redoAlignments ( bool doRecalc )
     {
     int a ;
     // Cleaning up
-    while ( sc->seq.size() )
-        {
-        delete sc->seq[sc->seq.size()-1] ;
-        sc->seq.pop_back () ;
-        }
+    CLEAR_DELETE ( sc->seq ) ;
         
     if ( doRecalc ) recalcAlignments () ;
         
@@ -375,10 +371,10 @@ void TAlignment::redoAlignments ( bool doRecalc )
            lines[a].showFeatures () ;
            SeqFeature *f = new SeqFeature ( sc ) ;
            f->id = a ;
-           sc->seq.push_back ( f ) ;
+           sc->seq.Add ( f ) ;
            }
         SeqAlign *d = new SeqAlign ( sc ) ;
-        sc->seq.push_back ( d ) ;
+        sc->seq.Add ( d ) ;
         d->id = a ;
         d->s = lines[a].s ;
         d->myname = lines[a].name ;
@@ -458,7 +454,7 @@ void TAlignment::myDelete ( int line , int pos )
 void TAlignment::callMiddleMouseButton ( int id , int pos , wxString _mode )
     {
     wxString mode = mmb->GetStringSelection () ;
-    if ( !_mode.IsEmpty() ) mode = txt(_mode.c_str()) ;
+    if ( !_mode.IsEmpty() ) mode = txt(_mode) ;
     int a , line = id ;
     if ( lines[line].s.GetChar(pos-1) != '-' && mode == txt("t_mmb_delete_gap") )
        {
@@ -468,7 +464,7 @@ void TAlignment::callMiddleMouseButton ( int id , int pos , wxString _mode )
 
     wxArrayInt l2s ;
     while ( l2s.GetCount() < lines.size() ) l2s.Add ( 0 ) ;
-    for ( a = 0 ; a < sc->seq.size() ; a++ )
+    for ( a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
         if ( sc->seq[a]->whatsthis() == "ALIGN" )
            {
@@ -531,7 +527,7 @@ void TAlignment::callMiddleMouseButton ( int id , int pos , wxString _mode )
     
 void TAlignment::updateSequence ()
     {
-    for ( int g = 0 ; g < sc->seq.size() ; g++ )
+    for ( int g = 0 ; g < sc->seq.GetCount() ; g++ )
         {
         if ( sc->seq[g]->whatsthis() != "FEATURE" ) continue ;
         SeqFeature *f = (SeqFeature*) sc->seq[g] ;
@@ -641,9 +637,9 @@ int TAlignment::MatrixAlignment ( wxString &_s1 , wxString &_s2 , bool local )
 
     // Initializing backlink matrix
     
-    vector <TVC> back ;
-    TVC blank_b ;
-    while ( blank_b.size() < N+1 ) blank_b.push_back ( 0 ) ;
+    vector <wxArrayInt> back ;
+    wxArrayInt blank_b ;
+    while ( blank_b.GetCount() < N+1 ) blank_b.Add ( 0 ) ;
     while ( back.size() < M+1 ) back.push_back ( blank_b ) ;
     
     // Initializing pseudo-matrix (simulated by two altering lines)
@@ -752,7 +748,7 @@ int TAlignment::MatrixAlignment ( wxString &_s1 , wxString &_s2 , bool local )
     return max ;
     }
     
-void TAlignment::MatrixBacktrack ( vector <TVC> &back , 
+void TAlignment::MatrixBacktrack ( vector <wxArrayInt> &back , 
                                     wxString s1 , wxString s2 , 
                                     wxString &t1 , wxString &t2 , 
                                     int i , int j )
@@ -811,71 +807,6 @@ void TAlignment::invokeOriginal ( int id , int pos )
         }
     }    
 
-// Old internal code
-/*
-void TAlignment::redoAlignments ()
-    {
-    int a ;
-
-    // Cleaning up
-    while ( sc->seq.size() )
-        {
-        delete sc->seq[sc->seq.size()-1] ;
-        sc->seq.pop_back () ;
-        }
-
-    if ( lines.size() == 0 ) return ;
-
-    // Align
-    while ( lines.size() ) qAlign.pop_back () ;
-    for ( a = 0 ; a < qVec.size() ; a++ )
-        qAlign.push_back ( qVec[a]->sequence ) ;
-
-    if ( lines.size() > 1 )
-        {
-        SetCursor ( *wxHOURGLASS_CURSOR ) ;
-        wxStopWatch sw ;
-
-        int first , second ;
-        for ( first = 0 ; first < lines.size() ; first++ )
-           {
-           for ( second = first+1 ; second < lines.size() ; second++ )
-              {
-              sw.Start () ;
-              int rating = 0 ;
-              if ( algorithm == ALG_NW )
-                 rating = NeedlemanWunsch ( qAlign[first] , qAlign[second] ) ; 
-              else if ( algorithm == ALG_SW )
-                 rating = SmithWaterman ( qAlign[first] , qAlign[second] ) ; 
-              long time = sw.Time() ;
-              wxMessageBox ( wxString::Format ( "%d-%d: time %d ms, rating %d" , first , second , time , rating ) ) ;
-              }
-           }
-
-        SetCursor ( *wxSTANDARD_CURSOR ) ;
-        }
-    else
-        {
-        qAlign[0] = qVec[0]->sequence ;
-        }
-
-    // Display
-    SeqNum *n = new SeqNum ( sc ) ;
-    sc->seq.push_back ( n ) ;
-    n->s = qAlign[0] ;
-
-    for ( a = 0 ; a < lines.size() ; a++ )
-        {
-        SeqAlign *d = new SeqAlign ( sc ) ;
-        sc->seq.push_back ( d ) ;
-        d->s = qAlign[a] ;
-        d->myname = qName[a] ;
-        }
-    sc->arrange () ;
-    sc->Refresh () ;
-    }
-*/
-
 void TAlignment::fixMenus ( int i )
     {
     wxMenuBar *mb = GetMenuBar () ;
@@ -922,7 +853,7 @@ void TAlignment::OnMenuInvs ( wxCommandEvent &ev )
 void TAlignment::OnMenuSoa ( wxCommandEvent &ev )
     {
     int a ;
-    for ( a = 0 ; a < sc->seq.size() ; a++ )
+    for ( a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
         SeqAlign *x = (SeqAlign*) sc->seq[a] ;
         }
@@ -931,7 +862,7 @@ void TAlignment::OnMenuSoa ( wxCommandEvent &ev )
 void TAlignment::OnMenuSoaI ( wxCommandEvent &ev )
     {
     int a ;
-    for ( a = 0 ; a < sc->seq.size() ; a++ )
+    for ( a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
         SeqAlign *x = (SeqAlign*) sc->seq[a] ;
         }
@@ -940,7 +871,7 @@ void TAlignment::OnMenuSoaI ( wxCommandEvent &ev )
 void TAlignment::OnMenuSiml ( wxCommandEvent &ev )
     {
     int a ;
-    for ( a = 0 ; a < sc->seq.size() ; a++ )
+    for ( a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
         SeqAlign *x = (SeqAlign*) sc->seq[a] ;
         }
@@ -949,7 +880,7 @@ void TAlignment::OnMenuSiml ( wxCommandEvent &ev )
 void TAlignment::OnMenuSeq ( wxCommandEvent &ev )
     {
     int a ;
-    for ( a = 0 ; a < sc->seq.size() ; a++ )
+    for ( a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
         SeqAlign *x = (SeqAlign*) sc->seq[a] ;
         }
@@ -958,7 +889,7 @@ void TAlignment::OnMenuSeq ( wxCommandEvent &ev )
 void TAlignment::OnMenuFeat ( wxCommandEvent &ev )
     {
     int a ;
-    for ( a = 0 ; a < sc->seq.size() ; a++ )
+    for ( a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
         SeqAlign *x = (SeqAlign*) sc->seq[a] ;
         }
@@ -967,7 +898,7 @@ void TAlignment::OnMenuFeat ( wxCommandEvent &ev )
 void TAlignment::OnMenuRNA ( wxCommandEvent &ev )
     {
     int a ;
-    for ( a = 0 ; a < sc->seq.size() ; a++ )
+    for ( a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
         SeqAlign *x = (SeqAlign*) sc->seq[a] ;
         }
@@ -987,15 +918,15 @@ void TAlignment::OnMenuIdent ( wxCommandEvent &ev )
         {
         int a = lines.size()-1 ;
         SeqAlign *d = new SeqAlign ( sc ) ;
-        sc->seq.push_back ( d ) ;
+        sc->seq.Add ( d ) ;
         d->id = a ;
         d->s = lines[a].s ;
         d->myname = lines[a].name ;
         }
     else
         {
-        delete sc->seq[sc->seq.size()-1] ;
-        sc->seq.pop_back () ;
+        delete sc->seq[sc->seq.GetCount()-1] ;
+        sc->seq.RemoveAt ( sc->seq.GetCount()-1 ) ;
         }
     sc->arrange () ;
     sc->SilentRefresh() ;    

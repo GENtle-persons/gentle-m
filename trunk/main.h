@@ -45,7 +45,6 @@ using namespace std ;
 #define MYPEN(_a) (wxThePenList->FindOrCreatePen ( _a , 1 , wxSOLID ) )
 #define MYBRUSH(_a) (wxTheBrushList->FindOrCreateBrush ( _a , wxSOLID ) )
 #define MYFONT(_a,_b,_c,_d) (wxTheFontList->FindOrCreateFont(_a,_b,_c,_d) )
-#define DEL_POINTERS(_x) {while(_x.size()){if(_x[_x.size()-1])delete _x[_x.size()-1]; _x.pop_back();}}
 
 // Don't you *EVER* turn this on again!!!!
 //#define TIXML_USE_STL
@@ -94,14 +93,28 @@ class TUndo ;
 class ChildBase ;
 class TVector ;
 class TRestrictionEnzyme ;
+class TStorage ;
+class TProtease ;
+class TVectorItem ;
+class SeqBasic ;
+class TProteaseCut ;
 
 WX_DEFINE_ARRAY(ChildBase *, wxArrayChildBase);
 WX_DEFINE_ARRAY(TRestrictionEnzyme *, wxArrayTRestrictionEnzyme);
+WX_DEFINE_ARRAY(TStorage *, wxArrayTStorage);
+WX_DEFINE_ARRAY(TProtease *,wxArrayTProtease);
+WX_DEFINE_ARRAY(TVectorItem *,wxArrayTVectorItem);
+WX_DEFINE_ARRAY(SeqBasic *,wxArraySeqBasic);
+WX_DEFINE_ARRAY(TProteaseCut *,wxArrayTProteaseCut);
 
 #ifndef _wxArrayTVector
 #define _wxArrayTVector
 WX_DEFINE_ARRAY(TVector *, wxArrayTVector);
 #endif
+
+#define CLEAR_DELETE(__x) { while ( !__x.IsEmpty() ) { if ( __x[0] ) { delete __x[0] ; } __x.RemoveAt ( 0 ) ; } }
+#define FILLSTRING(__x,__c,__l) { __x = wxString ( __c , __l ) ; }
+
 
 #include "enums.h"
 #include "TVector.h"

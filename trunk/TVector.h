@@ -212,9 +212,9 @@ class TVector
     int type ;
     bool recalcvisual ;
     vector <TVectorItem> items ;
-    wxArrayTRestrictionEnzyme re ;
-    vector <TRestrictionCut> rc ;
     vector <TORF> worf ;
+    vector <TRestrictionCut> rc ;
+    wxArrayTRestrictionEnzyme re ;
 
     wxArrayString hiddenEnzymes , proteases , cocktail ;
     TUndo undo ;

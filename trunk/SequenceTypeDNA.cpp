@@ -45,7 +45,7 @@ int SeqDNA::arrange ( int n )
               pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
               lasta = pos.p.GetCount()+1 ;
               x = ox ;
-              y += wy * ( can->seq.size() + can->blankline ) ;
+              y += wy * ( can->seq.GetCount() + can->blankline ) ;
               if ( a+1 < s.length() )
                  pos.add ( -(++l) , bo , y , ox-wx-5 , wy-1 ) ; // Line number
               }
@@ -61,7 +61,7 @@ wxPoint SeqDNA::showText ( int ystart , wxArrayString &tout )
     wxPoint p ( -1 , -1 ) ;
     int a , b , c ;
     wxString t ;
-    int x = 0 , y = ystart-can->seq.size() , ly = -1 ;
+    int x = 0 , y = ystart-can->seq.GetCount() , ly = -1 ;
     for ( a = 0 ; a < pos.p.GetCount() ; a++ )
         {
         b = pos.p[a] ;
@@ -71,7 +71,7 @@ wxPoint SeqDNA::showText ( int ystart , wxArrayString &tout )
            if ( pos.r[a].y != ly ) 
               {
               ly = pos.r[a].y ;
-              y += can->seq.size() ;
+              y += can->seq.GetCount() ;
               x = 0 ;
               while ( y >= tout.GetCount() ) tout.Add ( "" ) ;
               }

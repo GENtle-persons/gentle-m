@@ -366,13 +366,10 @@ void ChildBase::OnFocus(wxFocusEvent& event)
 
 bool ChildBase::caniclose(wxCloseEvent& event)
     {
-    if ( event.CanVeto() && vec && vec->isChanged() )
+    if ( /*event.CanVeto() && */vec && vec->isChanged() )
        {
-       char t[1000] ;
-       sprintf ( t , txt("t_close_anyway") , getName().c_str() ) ;
-
-       int r = wxMessageBox ( t , txt("msg_box"),
-                          wxICON_QUESTION | wxYES | wxNO | wxCANCEL ) ;
+       int r = wxMessageBox ( wxString::Format ( txt("t_close_anyway") , getName().c_str() ) , 
+                            txt("msg_box"), wxICON_QUESTION | wxYES | wxNO | wxCANCEL ) ;
        
        if ( r == wxYES )
           {

@@ -90,7 +90,7 @@ int SeqABI::arrange ( int n )
            {
            pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
            lasta = pos.p.GetCount()+1 ;
-           y += wy * ( can->seq.size() + can->blankline ) ;
+           y += wy * ( can->seq.GetCount() + can->blankline ) ;
            if ( a+1 < s.length() )
               pos.add ( -(++l) , bo , y , ox-wx-5 , wy-1 ) ; // Line number
            diffx += maxx ;

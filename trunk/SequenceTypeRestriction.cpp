@@ -7,12 +7,12 @@ int SeqRestriction::arrange ( int n )
     unsigned int a , b ;
     int x , y , w , h , l = 0 , bo = 4 , lowy = 0 ;
     int lasta = 0 , cut , thepos ;
-    wxString t = "" ;
+    wxString t ;
     
     vs.Clear() ;
     ven.Clear() ;
     eoe.Clear() ;
-    while ( t.length() < s.length() ) t += " " ;
+    FILLSTRING ( t , ' ' , s.length() ) ;
     s = t ;
     for ( cut = 0 ; cut < vec->rc.size() ; cut++ )
         {
@@ -113,7 +113,7 @@ int SeqRestriction::arrange ( int n )
                   pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
                   lasta = pos.p.GetCount()+1 ;
                   x = ox ;
-                  y += wy * ( can->seq.size() + can->blankline ) ;
+                  y += wy * ( can->seq.GetCount() + can->blankline ) ;
                   }
                }
             }

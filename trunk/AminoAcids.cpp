@@ -236,19 +236,15 @@ void TAminoAcids::showStat ()
 void TAminoAcids::showSequence ()
     {
     // Cleaning up
-    while ( sc->seq.size() )
-        {
-        delete sc->seq[sc->seq.size()-1] ;
-        sc->seq.pop_back () ;
-        }
+    CLEAR_DELETE ( sc->seq ) ;
 
     // Display
     SeqFeature *seqF = new SeqFeature ( sc ) ;
-    sc->seq.push_back ( seqF ) ;
+    sc->seq.Add ( seqF ) ;
     seqF->initFromTVector ( vec ) ;
 
     SeqAA *d = new SeqAA ( sc ) ;
-    sc->seq.push_back ( d ) ;
+    sc->seq.Add ( d ) ;
     d->primaryMode = true ;
     d->takesMouseActions = true ;
     d->initFromString ( vec->getSequence() ) ;
@@ -258,7 +254,7 @@ void TAminoAcids::showSequence ()
     if ( inlinePlot->GetStringSelection() == txt("t_chou_fasman") )
         {
         SeqPlot *seqP = new SeqPlot ( sc ) ;
-        sc->seq.push_back ( seqP ) ;
+        sc->seq.Add ( seqP ) ;
         seqP->initFromTVector ( vec ) ;
         seqP->setLines ( 1 ) ;
         seqP->useChouFasman() ;
@@ -538,15 +534,11 @@ void TAminoAcids::OnListBox ( wxCommandEvent& event )
            }
         else
            {
-           while ( sc2->seq.size() )
-              {
-              delete sc2->seq[sc2->seq.size()-1] ;
-              sc2->seq.pop_back() ;
-              }
+           CLEAR_DELETE ( sc2->seq ) ;
            }
 
         SeqPlot *seqP = new SeqPlot ( sc2 ) ;
-        sc2->seq.push_back ( seqP ) ;
+        sc2->seq.Add ( seqP ) ;
         seqP->initFromTVector ( vec ) ;
         seqP->setLines ( 6 ) ;
         

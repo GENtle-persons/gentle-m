@@ -6,9 +6,6 @@
 #include <wx/splitter.h>
 #include <wx/spinctrl.h>
 
-//typedef wxArrayInt TVC ;
-typedef vector <char> TVC ;
-
 #define BACK_LEFT 1
 #define BACK_UP 2
 #define BACK_LU 4
@@ -50,7 +47,7 @@ class TAlignment : public ChildBase
     virtual int NeedlemanWunsch ( wxString &s1 , wxString &s2 )  ;
     virtual int SmithWaterman ( wxString &s1 , wxString &s2 )  ;
     virtual int MatrixAlignment ( wxString &_s1 , wxString &_s2 , bool local ) ;
-    virtual void MatrixBacktrack ( vector <TVC> &back , 
+    virtual void MatrixBacktrack ( vector <wxArrayInt> &back , 
                                     wxString s1 , wxString s2 , 
                                     wxString &t1 , wxString &t2 ,
                                     int i , int j ) ;

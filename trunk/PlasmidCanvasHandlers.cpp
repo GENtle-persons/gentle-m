@@ -346,8 +346,8 @@ void PlasmidCanvas::blastAA ( wxCommandEvent &ev )
     {
     wxString seq = p->doExtractAA() ;
     int a ;
-    for ( a = 0 ; a < seq.size() && seq.GetChar(a) == ' ' ; a++ ) ;
-    if ( a == seq.size() )
+    for ( a = 0 ; a < seq.length() && seq.GetChar(a) == ' ' ; a++ ) ;
+    if ( a == seq.length() )
        {
        wxMessageBox ( txt("t_no_or_empty_sequence") , 
                       txt("t_blast_failed") ,

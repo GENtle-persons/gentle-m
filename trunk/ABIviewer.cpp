@@ -295,11 +295,7 @@ void TABIviewer::showStat ()
 void TABIviewer::showSequence ()
     {
     // Cleaning up
-    while ( sc->seq.size() )
-        {
-        delete sc->seq[sc->seq.size()-1] ;
-        sc->seq.pop_back () ;
-        }
+    CLEAR_DELETE ( sc->seq ) ;
         
     sc->blankline = 6 ;
 
@@ -308,7 +304,7 @@ void TABIviewer::showSequence ()
     d->vec = vec ;
     d->initFromFile ( filename ) ;
     d->takesMouseActions = true ;
-    sc->seq.push_back ( d ) ;
+    sc->seq.Add ( d ) ;
     
     sc->arrange () ;
     sc->Refresh () ;    

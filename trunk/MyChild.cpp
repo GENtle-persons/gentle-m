@@ -105,13 +105,13 @@ void MyChild::OnToggleRestriction(wxCommandEvent& event)
     TMarkMem mm ( cSequence ) ;
     if ( cSequence->findID ( "RESTRICTION" ) )
        { // Turn off
-       delete cSequence->seq[cSequence->seq.size()-1] ;
-       cSequence->seq.pop_back() ;
+       delete cSequence->seq[cSequence->seq.GetCount()-1] ;
+       cSequence->seq.RemoveAt(cSequence->seq.GetCount()-1) ;
        }
     else
        {
        SeqRestriction *seqR = new SeqRestriction ( cSequence ) ;
-       cSequence->seq.push_back ( seqR ) ;
+       cSequence->seq.Add ( seqR ) ;
        seqR->initFromTVector ( vec ) ;    
        }
     updateSequenceCanvas () ;
@@ -129,17 +129,17 @@ void MyChild::OnToggleIDNA(wxCommandEvent& event)
         {
         int a ;
         for ( a = 0 ; cSequence->seq[a] != idna ; a++ ) ;
-        for ( a++ ; a < cSequence->seq.size() ; a++ )
+        for ( a++ ; a < cSequence->seq.GetCount() ; a++ )
            cSequence->seq[a-1] = cSequence->seq[a] ;
-        cSequence->seq.pop_back() ;
+        cSequence->seq.RemoveAt ( cSequence->seq.GetCount()-1 ) ;
         delete idna ;
         }
     else
         {
         SeqDNA *seqi = new SeqDNA ( cSequence ) ;
-        cSequence->seq.push_back ( seqi ) ;
+        cSequence->seq.Add ( seqi ) ;
         int a ;
-        for ( a = cSequence->seq.size()-1 ; cSequence->seq[a-1]->whatsthis() != "DNA" ; a-- )
+        for ( a = cSequence->seq.GetCount()-1 ; cSequence->seq[a-1]->whatsthis() != "DNA" ; a-- )
            {
            idna = cSequence->seq[a-1] ;
            cSequence->seq[a-1] = cSequence->seq[a] ;
@@ -161,15 +161,15 @@ void MyChild::OnToggleFeatures(wxCommandEvent& event)
        { // Turn off
        aa_offset = 0 ;
        delete cSequence->seq[0] ;
-       for ( a = 1 ; a < cSequence->seq.size() ; a++ )
+       for ( a = 1 ; a < cSequence->seq.GetCount() ; a++ )
           cSequence->seq[a-1] = cSequence->seq[a] ;
-       cSequence->seq.pop_back () ;
+       cSequence->seq.RemoveAt ( cSequence->seq.GetCount()-1 ) ;
        }
     else
        { // Turn on
        aa_offset = 1 ;
-       cSequence->seq.push_back ( 0 ) ;
-       for ( a = cSequence->seq.size()-1 ; a > 0 ; a-- )
+       cSequence->seq.Add ( 0 ) ;
+       for ( a = cSequence->seq.GetCount()-1 ; a > 0 ; a-- )
           cSequence->seq[a] = cSequence->seq[a-1] ;
        SeqFeature *seqF = new SeqFeature ( cSequence ) ;
        cSequence->seq[0] = seqF ;
@@ -446,7 +446,7 @@ void MyChild::OnCut(wxCommandEvent& event)
         cPlasmid->setMarkFrom ( -1 ) ;
         
         myass ( false , "!3" ) ;
-        for ( int a = 0 ; a < cSequence->seq.size() ; a++ )
+        for ( int a = 0 ; a < cSequence->seq.GetCount() ; a++ )
            cSequence->seq[a]->initFromTVector ( vec ) ;
 
         myass ( false , "!4" ) ;
@@ -625,11 +625,11 @@ void MyChild::initPanels ()
     SeqDNA *seq = new SeqDNA ( cSequence ) ;
     SeqRestriction *seqR = new SeqRestriction ( cSequence ) ;
     SeqAA *seqAA = new SeqAA ( cSequence ) ;
-    cSequence->seq.clear () ;
-    cSequence->seq.push_back ( seqF ) ;
-    cSequence->seq.push_back ( seqAA ) ;
-    cSequence->seq.push_back ( seq ) ;
-    cSequence->seq.push_back ( seqR ) ;
+    cSequence->seq.Clear () ;
+    cSequence->seq.Add ( seqF ) ;
+    cSequence->seq.Add ( seqAA ) ;
+    cSequence->seq.Add ( seq ) ;
+    cSequence->seq.Add ( seqR ) ;
     seqF->aaa = seqAA ;
     seqF->initFromTVector ( vec ) ;
     seq->initFromTVector ( vec ) ;    
@@ -710,11 +710,11 @@ void MyChild::OnAA_none(wxCommandEvent& event)
     aa_state = AA_NONE ;
     mi = mb->FindItem ( aa_state ) ;
     mi->Check () ;
-    myass ( aa_offset < cSequence->seq.size() , "MyChild::OnAA_none" ) ;
+    myass ( aa_offset < cSequence->seq.GetCount() , "MyChild::OnAA_none" ) ;
     delete cSequence->seq[aa_offset] ;
-    for ( int a = aa_offset+1 ; a < cSequence->seq.size() ; a++ )
+    for ( int a = aa_offset+1 ; a < cSequence->seq.GetCount() ; a++ )
         cSequence->seq[a-1] = cSequence->seq[a] ;
-    cSequence->seq.pop_back () ;
+    cSequence->seq.RemoveAt ( cSequence->seq.GetCount()-1 ) ;
     cSequence->arrange () ;
     cSequence->Refresh () ;
     mm.remark () ;
@@ -744,8 +744,8 @@ void MyChild::OnAA_setit(int mode)
     mi->Check ( false ) ;
     if ( aa_state == AA_NONE )
         {
-        cSequence->seq.push_back ( NULL ) ;
-        for ( int a = cSequence->seq.size()-1 ; a >= 1+aa_offset ; a-- )
+        cSequence->seq.Add ( NULL ) ;
+        for ( int a = cSequence->seq.GetCount()-1 ; a >= 1+aa_offset ; a-- )
            cSequence->seq[a] = cSequence->seq[a-1] ;
         SeqAA *seqAA = new SeqAA ( cSequence ) ;
         cSequence->seq[aa_offset] = seqAA ;
@@ -764,7 +764,7 @@ void MyChild::OnAA_setit(int mode)
     seqAA->initFromTVector ( vec ) ;
     seqAA->showNumbers = false ;
     
-    for ( int u = 0 ; u < cSequence->seq.size() ; u++ )
+    for ( int u = 0 ; u < cSequence->seq.GetCount() ; u++ )
         {
         if ( cSequence->seq[u]->whatsthis() == "FEATURE" )
            {

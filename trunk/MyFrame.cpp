@@ -104,11 +104,7 @@ MyFrame::~MyFrame ()
     {
     if ( html_ep ) delete html_ep ;
     rememberLastProject () ;
-    while ( dbcache.size() )
-        {
-        delete dbcache[dbcache.size()-1] ;
-        dbcache.pop_back () ;
-        }
+    CLEAR_DELETE ( dbcache ) ;
 //    delete LS ;
     }
 
@@ -366,8 +362,20 @@ void MyFrame::initme ()
     
 void MyFrame::OnClose(wxCloseEvent& event)
 {
-    dying = true ;
-    event.Skip();
+    bool canclose = true ;
+    for ( int a = 0 ; canclose && a < children.GetCount() ; a++ )
+        canclose = ! ( children[a]->vec && children[a]->vec->isChanged() ) ;
+    if ( !canclose )
+        {
+        if ( wxYES == wxMessageBox ( txt("t_some_changed") , txt("msg_box") , wxICON_QUESTION | wxYES | wxNO ) )
+           canclose = true ;
+        }
+    if ( canclose )
+        {    
+        dying = true ;
+        event.Skip();
+        }    
+    else event.Veto() ;
 }
 
 void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
@@ -568,7 +576,7 @@ void MyFrame::importFile ( wxString file , wxString path , int filter )
     // Trying UReadSeq package
     if ( filter == 2 || filter == 3 || filter == 4 || filter == -1 )
        {
-        TUReadSeq u ( path.c_str() ) ;
+        TUReadSeq u ( path ) ;
         if ( u.error == 0 && u.seqs.GetCount() > 0 )
            {
            TGenBank gb ;
@@ -1307,9 +1315,9 @@ void MyFrame::OnSashDrag(wxSashEvent& event)
 TStorage *MyFrame::getTempDB ( wxString filename )
     {
     int a ;
-    for ( a = 0 ; a < dbcache.size() && dbcache[a]->getDBname() != filename ; a++ ) ;
-    if ( a == dbcache.size() ) 
-        dbcache.push_back ( new TStorage ( TEMP_STORAGE , filename ) ) ;
+    for ( a = 0 ; a < dbcache.GetCount() && dbcache[a]->getDBname() != filename ; a++ ) ;
+    if ( a == dbcache.GetCount() ) 
+        dbcache.Add ( new TStorage ( TEMP_STORAGE , filename ) ) ;
     return dbcache[a] ;
     }
     

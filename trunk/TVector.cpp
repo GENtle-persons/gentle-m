@@ -651,18 +651,7 @@ void TVector::ligate_right ( TVector &v , bool inverted )
         if ( wxNOT_FOUND == re.Index ( v.re[a] ) )
            re.Add ( v.re[a] ) ;
         }    
-    /*
-    wxArrayTRestrictionEnzyme e ;
-    for ( a = 0 ; a < re.GetCount() ; a++ ) e.Add ( re[a] ) ;
-    for ( a = 0 ; a < v.re.GetCount() ; a++ ) e.Add ( v.re[a] ) ;
-    e.Sort ( cmpre ) ;
-    re.Clear() ;
-    for ( a = 0 ; a < e.GetCount() ; a++ )
-        {
-        if ( a == 0 || e[a] != e[a-1] )
-           re.Add ( e[a] ) ;
-        }
-    */
+
     }
     
 // This function can close the circle after ligation.
@@ -739,9 +728,10 @@ wxString TVector::dna2aa ( wxString codon )
     if ( c0 == ' ' ) return "?" ;
     if ( c1 == ' ' ) return "?" ;
     if ( c2 == ' ' ) return "?" ;
-    if ( (c0=='A'||c0=='C'||c0=='G'||c0=='T') &&
+    if ( ACGT[c0] != ' ' && ACGT[c1] != ' ' && ACGT[c2] != ' ' )
+/*    if ( (c0=='A'||c0=='C'||c0=='G'||c0=='T') &&
          (c1=='A'||c1=='C'||c1=='G'||c1=='T') &&
-         (c2=='A'||c2=='C'||c2=='G'||c2=='T') )
+         (c2=='A'||c2=='C'||c2=='G'||c2=='T') )*/
        {
        int i = ACGT[c0]*16 +
                ACGT[c1]*4 +
@@ -1414,7 +1404,7 @@ void TVectorItem::translate ( TVector *v , SeqAA *aa )
          if ( voff != -1 && ( b + coff ) % 10 == 0 )
             {
             while ( aa->offsets.GetCount() <= b+coff ) aa->offsets.Add ( -1 ) ;
-            while ( aa->offset_items.size() <= b+coff ) aa->offset_items.push_back ( NULL ) ;
+            while ( aa->offset_items.GetCount() <= b+coff ) aa->offset_items.Add ( NULL ) ;
             aa->offsets[b+coff] = voff + pawl - 1 ;
             aa->offset_items[b+coff] = this ;
             }
