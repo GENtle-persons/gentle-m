@@ -280,6 +280,7 @@ enum {
     MDI_REDO,
     
     AL_MATRIX,
+    TVE_ICHOICE,
     
     } ;
 

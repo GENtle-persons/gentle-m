@@ -63,6 +63,7 @@ class TVectorEditor : public wxDialog
     void itemDel ( wxEvent &ev ) ;
     void itemClr ( wxEvent &ev ) ;
     void itemCol ( wxEvent &ev ) ;
+    void itemChoice ( wxEvent &ev ) ;
 
     wxListBox *listCE , *listGroups , *listGE ;
     vector <string> eig , ce ;
