@@ -68,14 +68,19 @@ TAminoAcids::~TAminoAcids ()
     }
 
 void TAminoAcids::OnIPC ( wxCommandEvent& event )
-    {
+    {    
+    TIPCDialog ipcd ( this , txt("t_aa_ipc") , vec->getSequenceLength() ) ;
+    if ( wxID_OK != ipcd.ShowModal() ) return ;
+        
     wxString filename = wxFileName::CreateTempFileName ( "ipc" ) ;
 
    	wxBeginBusyCursor() ;
    	TIPC ipc ;
-	int r = ipc.ipc_main2 ( filename.c_str() , vec->getSequence().c_str() , 1000 ) ;
+   	wxStartTimer () ;
+	int r = ipc.ipc_main2 ( filename.c_str() , vec->getSequence().c_str() , 3000 ) ;
    	wxEndBusyCursor() ;
    	if ( r != 0 ) { return ; } // ERROR
+   	wxMessageBox ( wxString::Format ( "%d" , wxGetElapsedTime() ) ) ;
    	
    	TGraph *g = myapp()->frame->RunGraph() ;
    	g->gd->setupIPCfile ( filename ) ;

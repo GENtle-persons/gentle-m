@@ -353,6 +353,7 @@ enum {
     GRAPH_ZOOM_Y,
     GRAPH_ZOOM_LINKED,
     MDI_AA_IPC,
+    TIPC_DIA_LIMIT,
     
     Y___,
     Z___

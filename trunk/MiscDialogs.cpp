@@ -34,10 +34,81 @@ BEGIN_EVENT_TABLE(TransformSequenceDialog, wxDialog )
     EVT_CHAR_HOOK(TransformSequenceDialog::OnCharHook)
 END_EVENT_TABLE()
 
-
 BEGIN_EVENT_TABLE(TURLtext, wxTextCtrl )
     EVT_TEXT_URL(URLTEXT_DUMMY, TURLtext::OnURL)
 END_EVENT_TABLE()
+
+BEGIN_EVENT_TABLE(TIPCDialog, wxDialog )
+	EVT_TEXT(TIPC_DIA_LIMIT,TIPCDialog::OnLimit)
+    EVT_BUTTON(AL_OK,wxDialog::OnOK)
+    EVT_BUTTON(AL_CANCEL,wxDialog::OnCancel)
+END_EVENT_TABLE()
+
+
+// ******************************************* TIPCDialog
+
+#define POWER(base,exponent) exp ( exponent * log ( base ) )
+
+TIPCDialog::TIPCDialog(wxWindow *parent, const wxString& title , int _seqlen )
+    : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 600 , 450 ) )
+	{
+	seqlen = _seqlen ;
+
+    wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+    wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    
+    limit = new wxTextCtrl ( this , TIPC_DIA_LIMIT , "" ) ;
+    h0->Add ( new wxStaticText ( this , -1 , "Limit" ) , 0 , wxALL , 5 ) ;
+    h0->Add ( limit , 0 , wxALL , 5 ) ;
+    
+    est = new wxStaticText ( this , -1 , "" ) ;
+    
+    h1->Add ( new wxButton ( this , AL_OK , txt("b_ok") ) , 0 , wxALL , 5 ) ;
+    h1->Add ( new wxButton ( this , AL_CANCEL , txt("b_cancel") ) , 0 , wxALL , 5 ) ;
+    
+    v0->Add ( h0 , 0 , wxALL , 5 ) ;
+    v0->Add ( est , 0 , wxALL , 5 ) ;
+    v0->Add ( h1 , 0 , wxALL , 5 ) ;
+
+    SetSizer ( v0 ) ;
+    v0->Fit ( this ) ;    
+
+    limit->SetValue ( "1000" ) ;
+	}
+
+TIPCDialog::~TIPCDialog ()
+	{
+	}        
+
+void TIPCDialog::OnLimit ( wxCommandEvent &event )
+	{
+	wxString s = limit->GetValue() ;
+	long l ;
+	s.ToLong ( &l ) ;
+	double d = estimate_time ( l ) ;
+	s = wxString::Format ( "%3.1f" , (float) d ) ;
+	s = s.Trim ( false ) ;
+	s = wxString::Format ( txt("t_ipc_est") , s.c_str() ) ;
+	est->SetLabel ( s ) ;
+	}    
+
+double TIPCDialog::estimate_time ( int f )
+	{
+    double a , b ;
+    a = seqlen ;
+    b = seqlen ;
+    a = POWER ( a , 2.424 ) ;
+    b = POWER ( b , 3.27 ) ;
+    a = a * 0.000002 ;
+    b = b * 0.00000002 ;
+    
+    double e = f ;
+    e = e * a + b ;
+    if ( e < 0 ) e = 0 ; // Fix for very small f
+    return e ; // [ms]
+    }    
+
 
 // ******************************************* TSequencingPrimerDialog
 

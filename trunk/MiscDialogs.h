@@ -21,9 +21,29 @@ class TPrimer ;
 class TPrimerDesign ;
 class TAlignment ;
 
+class TIPCDialog : public wxDialog
+	{
+    public : 
+    TIPCDialog(wxWindow *parent, const wxString& title , int _seqlen ) ;
+    virtual ~TIPCDialog () ;
+    
+    void OnLimit ( wxCommandEvent &event ) ;
+//    void OnOK ( wxCommandEvent &ev ) ;
+//    void OnCancel ( wxCommandEvent &ev ) ;
+
+    private :
+    int seqlen ;
+    wxTextCtrl *limit ;
+    wxStaticText *est ;
+    
+    double estimate_time ( int f ) ;
+    
+    DECLARE_EVENT_TABLE()
+	} ;    
+
 class TMutationDialog : public wxDialog
     {
- public : 
+    public : 
     TMutationDialog(wxWindow *parent, const wxString& title , wxString _codon ) ;
     virtual ~TMutationDialog () ;
     
