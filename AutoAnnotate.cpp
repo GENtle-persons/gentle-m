@@ -19,10 +19,12 @@ void AutoAnnotate::ScanDatabase ( wxString database )
 	TStorage *db = mdb.getTempDB ( database ) ;
 	TSQLresult r ;
 
-	wxString dbname ;
-	for ( a = 0 ; a < mdb.db_name.GetCount() ; a++ )
-        if ( mdb.db_file[a] == database )
-        	dbname = mdb.db_name[a] ;
+	wxString dbname = db->UCfirst ( database.AfterLast('/').AfterLast('\\').BeforeLast('.') ) ;
+	if ( wxNOT_FOUND == mdb.db_file.Index ( database.c_str() ) )
+		{
+		mdb.db_name.Add ( dbname ) ;
+		mdb.db_file.Add ( database ) ;
+		}		
 
 	r = db->getObject ( "SELECT DISTINCT di_dna FROM dna_item" ) ; // Find all DNA with items
 	bool foundany = false ;
@@ -39,7 +41,7 @@ void AutoAnnotate::ScanDatabase ( wxString database )
 	    	foundany |= MatchItem ( v , v->items[b] , p->vec , oseq ) ;
   		delete v ;
 		}
-		
+
 	foundany |= addORFs ( p->vec ) ;
 
 	if ( foundany )
