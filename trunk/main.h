@@ -1,7 +1,9 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
-#define MYDEBUG
+// This will turn the myass error logging on/off
+// Place a comment in front of the following line when compiling releases
+//#define MYDEBUG
 
 #include "wx/wxprec.h"
 
@@ -139,6 +141,7 @@ MyApp *myapp () ;
 #ifdef MYDEBUG
 void myass ( bool b , wxString msg = "" ) ;
 #else
+#define myass(a)
 #define myass(a,b)
 #endif
 string toupper ( string s ) ;

@@ -44,7 +44,7 @@ int SeqABI::arrange ( int n )
 */
     // Base order
     id = at->getRecord ( "FWO_" , 1 ) ;
-    myass ( id != -1 ) ;
+    myass ( id != -1 , "SeqABI::arrange_1" ) ;
     
     // GATC
     int *ii = (int*) base2color ;
@@ -55,7 +55,7 @@ int SeqABI::arrange ( int n )
     maxx = w - ox - wx ;
     int diffx = 0 ;
     id = at->getRecord ( "PLOC" , 2 ) ;
-    myass ( id != -1 ) ;
+    myass ( id != -1 , "SeqABI::arrange_2" ) ;
 
     pos.cleanup() ;
     x = ox ;
@@ -163,7 +163,7 @@ void SeqABI::show ( wxDC& dc )
         
         int a ;
         int id = at->getRecord ( "DATA" , 9 + data ) ;
-        myass ( id > -1 ) ;
+        myass ( id > -1 , "SeqABI::show" ) ;
         int diffx = 0 ;
         int l = 0 ;
         wxPoint last ( minx , pos.l[l].GetHeight() + hy ) ;
