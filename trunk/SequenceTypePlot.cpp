@@ -192,8 +192,8 @@ void SeqPlot::showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx )
         if ( u == 3 ) pen = &can->blue_pen ;
         int tz = ty + (u-1) * ch + 1 ;
         int tw = ( tx + cw ) - lx ;
-        if ( can->isMiniDisplay && can->aa && can->aa->miniDisplayOptions == MINI_DISPLAY_CONDENSED )
-                tw = 1 ;
+//        if ( can->isMiniDisplay && can->aa && can->aa->miniDisplayOptions == MINI_DISPLAY_CONDENSED )
+//                tw = 1 ;
         if ( d1[u][b] == 'X' )
            {
            dc.SetPen(*pen);
