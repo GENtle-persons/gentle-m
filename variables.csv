@@ -156,7 +156,7 @@
 "t_algorithm","Algorithm","Algorithmus"
 "t_display","Display","Darstellung"
 "al_cur","Selected sequences","Ausgewählte Sequenzen"
-"al_all","All loaded sequences","Alle momentan geladenen Sequenzen"
+"al_all","All loaded sequences","Momentan geladene Sequenzen"
 "b_up_in_list","&Up","&Hoch"
 "b_down_in_list","&Down","&Runter"
 "t_smith_waterman","Smith-Waterman local alignment","Smith-Waterman lokales Alignment"

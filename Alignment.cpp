@@ -64,7 +64,11 @@ TAlignment::TAlignment(wxWindow *parent, const wxString& title)
     gap_penalty = -2 ; // Gap penalty
     matrix = "BLOSUM" ;
     gap = "-" ;
+#ifdef __WXMSW__
     algorithm = ALG_CW ;
+#else
+    algorithm = ALG_SW ;
+#endif
     vec = NULL ;
     aaa = NULL ;
     colCur = NULL ;
@@ -239,6 +243,7 @@ void TAlignment::initme ()
     toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_mmb") ) ) ;
     toolBar->AddControl ( mmb ) ;
     myapp()->frame->addDefaultTools ( toolBar ) ;
+    toolbar = toolBar ;
     
     toolBar->Realize() ;
 
