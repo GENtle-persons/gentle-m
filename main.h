@@ -6,7 +6,7 @@
 
 #define GENTLE_VERSION_MAJOR 1
 #define GENTLE_VERSION_MINOR 5
-#define GENTLE_VERSION_SUB 2
+#define GENTLE_VERSION_SUB 3
 
 typedef unsigned int uint ;
 
