@@ -45,7 +45,9 @@ MYOBJECTS = ABItype.o \
 	TPrimer.o \
 	TPrimerDialog.o \
 	TRestrictionEditor.o \
+	TSilmutDialog.o \
 	TStorage.o \
+	TUndo.o \
 	TVector.o \
 	TVectorEditor.o \
 	TVectorTree.o
