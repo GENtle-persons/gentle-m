@@ -37,7 +37,7 @@ class TGenBank
     virtual void paste ( wxString s ) ;
     virtual void remap ( TVector *v ) ;
     virtual void doExport ( TVector *v , wxArrayString &ex ) ;
-    virtual wxString trim ( wxString s ) ;
+    virtual wxString trim ( const wxString &s ) ;
     virtual wxString trimQuotes ( wxString s ) ;
     virtual wxString quote ( wxString pre , wxString q ) ;
     virtual void wrapit ( wxArrayString &ex , wxString init , wxString data , int limit = 80 ) ;

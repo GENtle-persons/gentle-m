@@ -1459,9 +1459,11 @@ void TVectorItem::translate ( TVector *v , SeqAA *aa )
    if ( to >= from ) dna2aa.reserve ( ( to - from + 1 ) / 3 + 2 ) ;
    else dna2aa.reserve ( ( to + v->getSequenceLength() - from + 1 ) / 3 + 2 ) ;
 
+   wxString three ;
+   three.Alloc ( 5 ) ;
    while ( c != '|' && rf != 0 )
       {
-      wxString three ;
+      three.Empty() ;
       three += v->getNucleotide ( b + 0 * direction , complement ) ;
       three += v->getNucleotide ( b + 1 * direction , complement ) ;
       three += v->getNucleotide ( b + 2 * direction , complement ) ;
@@ -1471,12 +1473,15 @@ void TVectorItem::translate ( TVector *v , SeqAA *aa )
       if ( aa )
          {
          // Protease analysis
-         aa->pa_w += c ;
-         aa->pa_wa.Add ( b+coff ) ;
-         aa->analyzeProteases () ;
+         if ( !aa->proteases.IsEmpty() )
+            {
+            aa->pa_w += c ;
+            aa->pa_wa.Add ( b+coff ) ;
+            aa->analyzeProteases () ;
+            }    
 
          // Offset?
-         int pawl = dna2aa.size() ;
+/*         int pawl = dna2aa.size() ;
          if ( voff != -1 && ( b + coff ) % 10 == 0 )
             {
             aa->offsets.Alloc ( b+coff ) ;
@@ -1485,7 +1490,7 @@ void TVectorItem::translate ( TVector *v , SeqAA *aa )
             while ( aa->offset_items.GetCount() <= b+coff ) aa->offset_items.Add ( NULL ) ;
             aa->offsets[b+coff] = voff + pawl - 1 ;
             aa->offset_items[b+coff] = this ;
-            }
+            }*/
          }
 
       // Output
