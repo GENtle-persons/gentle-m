@@ -305,6 +305,7 @@ void TAlignment::recalcAlignments ()
         }
     else // Internal routines
         {
+        myass ( lines.size() > 0 , "Alignment::recalcAlignments:internal1" ) ;
 //        while ( lines.size() > 2 ) lines.pop_back () ;      
         for ( a = 0 ; a < lines.size() ; a++ ) lines[a].ResetSequence () ;
 
@@ -316,11 +317,11 @@ void TAlignment::recalcAlignments ()
               NeedlemanWunsch ( s0 , lines[a].s ) ; 
            else if ( algorithm == ALG_SW )
               SmithWaterman ( s0 , lines[a].s ) ; 
-           
+
            if ( lines[0].s == s0 ) continue ; // No gaps were introduced into first sequence
            
            int b ;
-           for ( b = 1 ; b <= a ; b++ ) // All lines get the same length
+           for ( b = 0 ; b <= a ; b++ ) // All lines get the same length
               {
               while ( lines[b].s.length() < s0.length() )
                  lines[b].s += " " ;
@@ -331,20 +332,15 @@ void TAlignment::recalcAlignments ()
                  {
                  for ( int c = 0 ; c < a ; c++ )
                     {
-                    for ( int d = s0.length()-1 ; d > b ; d-- )
+                    for ( int d = s0.length()-1 ; d > b && d >= 0 ; d-- )
                        lines[c].s[d] = lines[c].s[d-1] ;
+                    myass ( lines[c].s.length() > b , "Alignment::recalcAlignments:internal2" ) ;
                     lines[c].s[b] = '-' ;
                     }
                  }
               }
            }
 
-/*
-        if ( algorithm == ALG_NW )
-           NeedlemanWunsch ( lines[0].s , lines[1].s ) ; 
-        else if ( algorithm == ALG_SW )
-           SmithWaterman ( lines[0].s , lines[1].s ) ; 
-*/
         generateConsensusSequence () ;
         }
         
@@ -414,8 +410,11 @@ void TAlignment::generateConsensusSequence ( bool addit )
     line.name = txt("t_identity") ;
     string s ;
     for ( a = 0 ; a < lines[0].s.length() ; a++ )
+        {
+        myass ( lines[1].s.length() > a , "0a" ) ;
         if ( lines[0].s[a] == lines[1].s[a] ) s += "*" ;
         else s += " " ;
+        }
     if ( addit ) lines.push_back ( line ) ;
     
     // The REAL consensus sequence
