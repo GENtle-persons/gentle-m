@@ -1,7 +1,7 @@
 [Project]
 FileName=GENtle.dev
 Name=GENtle
-UnitCount=106
+UnitCount=108
 Type=0
 Ver=1
 ObjFiles=
@@ -1099,6 +1099,26 @@ BuildCmd=
 
 [Unit106]
 FileName=ExternalInterface.cpp
+CompileCpp=1
+Folder=Child-Types
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit107]
+FileName=ExternalNCBI.cpp
+CompileCpp=1
+Folder=Child-Types
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit108]
+FileName=ExternalBLAST.cpp
 CompileCpp=1
 Folder=Child-Types
 Compile=1
