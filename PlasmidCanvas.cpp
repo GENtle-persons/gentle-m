@@ -268,7 +268,7 @@ bool PlasmidCanvas::pointinrect ( int x , int y , wxRect &a )
     
 void PlasmidCanvas::invokeVectorEditor ( string what , int num , bool forceUpdate )
     {
-    p->vec->undo->start ( txt("u_vec_edit") ) ;
+    p->vec->undo.start ( txt("u_vec_edit") ) ;
     TVectorEditor ve ( this , txt("t_vector_editor") , p->vec , p->app ) ;
     bool changed = p->vec->isChanged() ;
     string on = p->vec->name ;
@@ -293,9 +293,9 @@ void PlasmidCanvas::invokeVectorEditor ( string what , int num , bool forceUpdat
         p->treeBox->SelectItem ( p->treeBox->vroot ) ;
         p->updateSequenceCanvas() ;
         Refresh () ;
-        p->vec->undo->stop() ;
+        p->vec->undo.stop() ;
         }
-    else p->vec->undo->abort() ;
+    else p->vec->undo.abort() ;
     p->vec->setChanged ( changed | p->vec->isChanged() ) ;
     }
     

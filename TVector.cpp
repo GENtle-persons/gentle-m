@@ -43,20 +43,16 @@ TVector::TVector ( ChildBase *win )
     type = TYPE_VECTOR ;
     circular = false ;
     window = win ;
-    undo = NULL ;
     init () ;
     }
     
 TVector::~TVector ()
     {
-    if ( undo ) delete undo ;
     }
         
 void TVector::init ()
     {
-    if ( undo ) delete undo ;
-    undo = new TUndo ( this ) ;
-    undo->setbase ( this ) ;
+    undo.setbase ( this ) ;
     
     int a ;
     for ( a = 0 ; a < 256 ; a++ ) IUPAC[a] = 0 ;
@@ -472,7 +468,7 @@ string TVector::invert ( string s )
     
 // This function can attach a linear vector at the "right" end.
 // It does *NOT* test if the action is valid!
-void TVector::ligate_right ( TVector v , bool inverted )
+void TVector::ligate_right ( TVector &v , bool inverted )
     {
     if ( circular ) return ;
     if ( v.circular ) return ;
@@ -549,7 +545,7 @@ void TVector::doRemove ( int from , int to , bool update )
     {
     int a , b ;
     int l = sequence.length() ;
-    undo->start ( txt("u_del_seq") ) ;
+    undo.start ( txt("u_del_seq") ) ;
     
     // Sequence
     string s = sequence , t ;
@@ -580,11 +576,11 @@ void TVector::doRemove ( int from , int to , bool update )
     // Finish
     if ( update )
         {
-        undo->stop () ;
+        undo.stop () ;
         recalculateCuts () ;
         recalcvisual = true ;
         }
-    else undo->abort () ;
+    else undo.abort () ;
     }
     
 // Currently returns only the direct encoding (a single char) or 'X'
@@ -826,9 +822,10 @@ void TVector::callUpdateUndoMenu ()
     
 void TVector::setFromVector ( TVector &v )
     {
-    TUndo *u = undo ;
+//    TUndo *u = undo ;
     *this = v ;
-    undo = u ;
+    undo.clear () ;
+//    undo = u ;
     }
 
     

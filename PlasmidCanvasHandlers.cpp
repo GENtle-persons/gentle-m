@@ -87,12 +87,12 @@ void PlasmidCanvas::itemDelete ( wxCommandEvent &ev )
     sprintf ( t , txt("t_item_delete") , p->vec->items[context_last_item].name.c_str() ) ;
     wxMessageDialog md ( this , t , txt("msg_box") , wxYES|wxNO ) ;
     if ( md.ShowModal() != wxID_YES ) return ;*/
-    p->vec->undo->start ( txt("u_del_item") ) ;
+    p->vec->undo.start ( txt("u_del_item") ) ;
     for ( int a = context_last_item+1 ; a < p->vec->items.size() ; a++ )
         p->vec->items[a-1] = p->vec->items[a] ;
     p->vec->items.pop_back () ;
     p->vec->recalcvisual = true ;
-    p->vec->undo->stop() ;
+    p->vec->undo.stop() ;
     Refresh () ;
     p->updateSequenceCanvas ( true ) ;
     p->treeBox->initme() ;
@@ -224,7 +224,7 @@ void PlasmidCanvas::rsShowHide ( wxCommandEvent &ev )
     
 void PlasmidCanvas::rsDel ( wxCommandEvent &ev )
     {
-    p->vec->undo->start ( txt("u_del_enzyme") ) ;
+    p->vec->undo.start ( txt("u_del_enzyme") ) ;
     int a ;
     for ( a = 0 ; a < p->vec->cocktail.size() && 
                     p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->name ;
@@ -242,7 +242,7 @@ void PlasmidCanvas::rsDel ( wxCommandEvent &ev )
     p->treeBox->initme() ;
     p->treeBox->SelectItem ( p->treeBox->vroot ) ;
     p->cSequence->arrange() ;
-    p->vec->undo->stop () ;
+    p->vec->undo.stop () ;
     Refresh () ;
     }
 
@@ -465,7 +465,7 @@ void PlasmidCanvas::orfCopyAA ( wxCommandEvent &ev )
 
 void PlasmidCanvas::orfAsNewItem ( wxCommandEvent &ev )
     {
-    p->vec->undo->start ( txt("u_orf_new_item") ) ;
+    p->vec->undo.start ( txt("u_orf_new_item") ) ;
     char t[1000] ;
     int from = p->vec->worf[context_last_orf].from+1 ;
     int to = p->vec->worf[context_last_orf].to+1 ;
@@ -484,7 +484,7 @@ void PlasmidCanvas::orfAsNewItem ( wxCommandEvent &ev )
     p->vec->items.push_back ( nvi ) ;
     invokeVectorEditor ( "item" , p->vec->items.size()-1 , true ) ;
     p->vec->recalcvisual = true ;
-    p->vec->undo->stop() ;
+    p->vec->undo.stop() ;
     Refresh () ;
     }
 
@@ -653,7 +653,7 @@ void PlasmidCanvas::itemCopyDNA ( wxCommandEvent &ev )
 
 void PlasmidCanvas::OnFillKlenow(wxCommandEvent& event)
     {
-    p->vec->undo->start ( txt("u_fill_klenow") ) ;
+    p->vec->undo.start ( txt("u_fill_klenow") ) ;
     TVector *v = p->vec ;
     string l = v->getStickyEnd(true,true) + v->getStickyEnd(true,false) ;
     string r = v->getStickyEnd(false,true) + v->getStickyEnd(false,false) ;
@@ -681,7 +681,7 @@ void PlasmidCanvas::OnFillKlenow(wxCommandEvent& event)
     dna->initFromTVector ( v ) ;
     p->updateSequenceCanvas() ;
     p->cSequence->arrange () ;
-    p->vec->undo->stop () ;
+    p->vec->undo.stop () ;
     p->cSequence->Refresh () ;
     p->treeBox->initme() ;
     }

@@ -1,7 +1,13 @@
 #ifndef _UNDO_H_
 #define _UNDO_H_
 
-#include "main.h"
+//#include "main.h"
+
+#include <wx/wx.h>
+#include <string>
+#include <vector>
+
+using namespace std ;
 
 class TVector ;
 

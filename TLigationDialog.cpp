@@ -191,7 +191,8 @@ void TLigationDialog::addVTname ( string name , vector <int> &vi , bool circular
     int a ;
     TVector v ;
     string d ;
-    v = *vv[vi[0]] ;
+//    v = *vv[vi[0]] ;
+    v.setFromVector ( *vv[vi[0]] ) ;
     d = txt("lig_of") ;
     d += v.name + " (" + v.desc + ")" ;
     v.name = name ;
@@ -199,7 +200,9 @@ void TLigationDialog::addVTname ( string name , vector <int> &vi , bool circular
         {
         bool o = false ;
         if ( a < orientation.size() && orientation[a] ) o = true ;
-        v.ligate_right ( *vv[vi[a]] , o ) ;
+        TVector tv ;
+        tv.setFromVector ( *vv[vi[a]] ) ;
+        v.ligate_right ( tv , o ) ;
         d += ", " ;
         if ( o ) d += "!" ;
         d += vv[vi[a]]->name + " (" + vv[vi[a]]->desc + ")" ;
