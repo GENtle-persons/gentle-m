@@ -84,22 +84,29 @@ OBJECTS = ABItype.o \
 	TVectorTree.o \
 	TVirtualGel.o \
 	TXMLfile.o \
+	ureadseq.o \
 	tinyxml/tinystr.o \
-	tinyxml/tinyxml.o
+	tinyxml/tinyxml.o \
+	tinyxml/tinyxmlparser.o \
+	tinyxml/tinyxmlerror.o
 
 
 # you shouldn't have to edit anything below this line
 CXX = $(shell $(WX_CONFIG) --cxx)
 
 .SUFFIXES:	.o .cpp
+		.o .c
 
 .cpp.o :
+	$(CXX) -c `$(WX_CONFIG) --cxxflags` -o $@ $<
+
+.c.o :
 	$(CXX) -c `$(WX_CONFIG) --cxxflags` -o $@ $<
 
 all:    $(PROGRAM)
 
 $(PROGRAM):	$(OBJECTS)
-	$(CXX) -o $(PROGRAM) $(OBJECTS) `$(WX_CONFIG) --libs`
+	$(CXX) -o $(PROGRAM) $(OBJECTS) `$(WX_CONFIG) --libs` -L/usr/lib -lsqlite
 
 clean: 
 	rm -f *.o $(PROGRAM)
