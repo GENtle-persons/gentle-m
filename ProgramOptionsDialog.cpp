@@ -464,12 +464,12 @@ wxColour *TEnzymeRules::getColor ( int cuts )
 	}    
 
 void TEnzymeRules::getVectorCuts ( TVector *v )
-	{
+{
     int a , b , c ;
     for ( a = 0 ; a < v->re.GetCount() ; a++ )
-       v->getCuts ( v->re[a] , v->rc , false ) ;
+	v->getCuts ( v->re[a] , v->rc , false ) ;
     if ( !useit ) return ;
-    
+
     // Getting the default list of enzymes
     wxArrayTRestrictionEnzyme ve ;
     wxArrayString vs ;
@@ -478,46 +478,46 @@ void TEnzymeRules::getVectorCuts ( TVector *v )
     
     // Removing the ones we already did because they were manually selected
     for ( a = 0 ; a < v->re.GetCount() ; a++ )
-    	{
-	    if ( v->re[a]->name.IsEmpty() ) continue ; // Avoid endless loop
-     	int i = vs.Index ( v->re[a]->name ) ;
-     	while ( i != wxNOT_FOUND )
-     		{
- 		    vs[i] = "" ;
- 		    i = vs.Index ( v->re[a]->name ) ;
-     		}    
-    	}    
-    	
-   	// Eliminating from properties
-   	for ( a = 0 ; a < vs.GetCount() ; a++ )
-   		{
-	    if ( vs[a].IsEmpty() ) continue ; // Was removed earlier
-	    TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( vs[a] ) ;
-	    bool keep = true ;
-	    if ( keep && !pattern3 && e->overlap < 0 ) keep = false ;
-	    if ( keep && !pattern5 && e->overlap > 0 ) keep = false ;
-	    if ( keep && !pattern_blunt && e->overlap == 0 ) keep = false ;
-	    if ( keep && !recog4 && e->sequence.length() == 4 ) keep = false ;
-	    if ( keep && !recog5 && e->sequence.length() == 5 ) keep = false ;
-	    if ( keep && !recog6 && e->sequence.length() == 6 ) keep = false ;
-	    if ( keep && !recog_longer && e->sequence.length() > 6 ) keep = false ;
-	    if ( keep ) ve.Add ( e ) ;
-   		}    
-   		
-	// Add what has the correct number of cuts
-	v->re2.Clear () ; // The list of used enzymes that were *not* added manually
-	int max = 10000000 ;
-	if ( use_max_cutoff ) max = max_cutoff ;
-	for ( a = 0 ; a < ve.GetCount() ; a++ )
-		{
-  		vector <TRestrictionCut> vc ;
-  		v->getCuts ( ve[a] , vc , false , max ) ;
-  		if ( ( !use_min_cutoff || min_cutoff <= vc.size() ) &&
-  			 ( !use_max_cutoff || max_cutoff >= vc.size() ) )
-	       {
- 	       v->re2.Add ( ve[a] ) ;
-       	   for ( b = 0 ; b < vc.size() ; b++ ) v->rc.push_back ( vc[b] ) ;
-	       }    
-		}    
-	}
+    {
+	if ( v->re[a]->name.IsEmpty() ) continue ; // Avoid endless loop
+	int i = vs.Index ( v->re[a]->name ) ;
+	while ( i != wxNOT_FOUND )
+	{
+	    vs[i] = "" ;
+	    i = vs.Index ( v->re[a]->name ) ;
+	}    
+    }    
+
+    // Eliminating from properties
+    for ( a = 0 ; a < vs.GetCount() ; a++ )
+    {
+	if ( vs[a].IsEmpty() ) continue ; // Was removed earlier
+	TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( vs[a] ) ;
+	bool keep = true ;
+	if ( keep && !pattern3 && e->overlap < 0 ) keep = false ;
+	if ( keep && !pattern5 && e->overlap > 0 ) keep = false ;
+	if ( keep && !pattern_blunt && e->overlap == 0 ) keep = false ;
+	if ( keep && !recog4 && e->sequence.length() == 4 ) keep = false ;
+	if ( keep && !recog5 && e->sequence.length() == 5 ) keep = false ;
+	if ( keep && !recog6 && e->sequence.length() == 6 ) keep = false ;
+	if ( keep && !recog_longer && e->sequence.length() > 6 ) keep = false ;
+	if ( keep ) ve.Add ( e ) ;
+    }    
+    
+    // Add what has the correct number of cuts
+    v->re2.Clear () ; // The list of used enzymes that were *not* added manually
+    int max = 10000000 ; // Ridiculously high number
+    if ( use_max_cutoff ) max = max_cutoff ;
+    for ( a = 0 ; a < ve.GetCount() ; a++ )
+    {
+	vector <TRestrictionCut> vc ;
+	v->getCuts ( ve[a] , vc , false , max ) ;
+	if ( ( !use_min_cutoff || min_cutoff <= vc.size() ) &&
+	     ( !use_max_cutoff || max_cutoff >= vc.size() ) )
+	{
+	    v->re2.Add ( ve[a] ) ;
+	    for ( b = 0 ; b < vc.size() ; b++ ) v->rc.push_back ( vc[b] ) ;
+	}    
+    }    
+}
 

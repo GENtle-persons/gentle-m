@@ -627,6 +627,7 @@ void TVector::recalculateCuts ()
         truncate = true ;
         }    
     bool join = getVectorCuts ( this ) ;
+    if ( action == "RESTRICTION" ) join = false ;
     if ( truncate ) sequence += " " ;
     
     // Sorting by position
@@ -790,8 +791,10 @@ void TVector::doRestriction ()
     {
     vector <TRestrictionCut> cl ;
     int a , b , c ;
-    
+
+    mylog ( "TVector::doRestriction" , "1" ) ;
     if ( cocktail.GetCount() == 0 ) return ;
+    mylog ( "TVector::doRestriction" , "2" ) ;
     myass ( myapp() , "Oh no! No application defined!" ) ;
     myapp()->frame->lastCocktail = cocktail ;
     
@@ -802,27 +805,33 @@ void TVector::doRestriction ()
     if ( !circular )
         cl.push_back ( TRestrictionCut ( 0 , &blankEnzyme ) ) ;
 
-    bool doRecalc = false ;
+    mylog ( "TVector::doRestriction" , "3" ) ;
     for ( a = 0 ; a < cocktail.GetCount() ; a++ )
        {
        for ( b = 0 ; b < re.GetCount() && re[b]->name != cocktail[a] ; b++ ) ;
        if ( b == re.GetCount() )
           {
-          doRecalc = true ;
           recalcvisual = true ;
           re.Add ( myapp()->frame->LS->getRestrictionEnzyme ( cocktail[a] ) ) ;
           myass ( re[re.GetCount()-1] , "Oh no! Unknown enzyme!" ) ;
           }
        }
-    if ( doRecalc ) recalculateCuts() ;
+    mylog ( "TVector::doRestriction" , "4" ) ;
+    recalculateCuts() ;
+    mylog ( "TVector::doRestriction" , "5" ) ;
 
-    
+    // Collecting restriction cuts
     for ( a = 0 ; a < cocktail.GetCount() ; a++ )
-        {
+    {
         for ( b = 0 ; b < rc.size() ; b++ )
-           if ( rc[b].e->name == cocktail[a] )
-              cl.push_back ( rc[b] ) ;
-        }
+	{
+	    if ( rc[b].e->name == cocktail[a] )
+	    {
+		cl.push_back ( rc[b] ) ;
+	    }
+	}
+    }
+    mylog ( "TVector::doRestriction" , "6" ) ;
 
     // Arranging
     for ( a = 1 ; a < cl.size() ; a++ )
@@ -835,12 +844,14 @@ void TVector::doRestriction ()
            a = 0 ;
            }
         }
-    
+    mylog ( "TVector::doRestriction" , "7" ) ;
+
     if ( circular )
         cl.push_back ( cl[0] ) ;
     else
         cl.push_back ( TRestrictionCut ( sequence.length()-1 , &blankEnzyme ) ) ;
         
+    mylog ( "TVector::doRestriction" , "8" ) ;
     for ( a = 0 ; a+1 < cl.size() ; a++ )
         {
         char t1[100] , t2[100] ;
@@ -870,13 +881,16 @@ void TVector::doRestriction ()
            myapp()->frame->newFromVector ( nv , TYPE_FRAGMENT ) ;        
         else delete nv ;
         }
+    mylog ( "TVector::doRestriction" , "9" ) ;
     cocktail.Clear() ;
+    mylog ( "TVector::doRestriction" , "10" ) ;
     }
         
 void TVector::doAction ()
     {
     if ( action == "RESTRICTION" ) doRestriction () ;
     action = "" ;
+    recalculateCuts () ;
     return ;
     }
     
