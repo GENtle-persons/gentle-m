@@ -71,7 +71,7 @@ class TVectorEditor : public wxDialog
 
     private :
     wxListBox *listCE , *listGroups , *listGE ;
-    vector <string> eig , ce ;
+    wxArrayString eig , ce ;
     
     TVector *v ;
     int bo , th ;

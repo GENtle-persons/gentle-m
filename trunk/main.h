@@ -151,7 +151,6 @@ wxArrayString explode ( wxString sep , wxString s ) ;
 char* txt ( wxString item ) ;
 void init_txt ( wxString lang ) ;
 MyApp *myapp () ;
-string toupper ( string s ) ;
 int cmpint(int *first, int *second) ;
 
 #endif
