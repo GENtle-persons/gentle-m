@@ -121,6 +121,9 @@ void MyChild::OnRemoveSequencingPrimers(wxCommandEvent& event)
 	vec->recalcvisual = true ;
 	vec->setChanged () ;
 	Refresh () ;
+	treeBox->initme() ;
+	treeBox->Refresh() ;
+	cPlasmid->Refresh () ;
 	updateSequenceCanvas ( true ) ;
 	}
      
@@ -149,6 +152,9 @@ void MyChild::OnSequencingPrimer(wxCommandEvent& event)
 	    vec->undo.stop() ;
    		vec->setChanged () ;
    		Refresh () ;
+   		treeBox->initme() ;
+   		treeBox->Refresh() ;
+   		cPlasmid->Refresh () ;
    		updateSequenceCanvas ( true ) ;
    		}    
 	else vec->undo.abort() ;

@@ -15,7 +15,8 @@ class ChildBase ;
 class SeqAA ;
 class TEnzymeRules ;
 
-#define VIT_TYPES     10//number of possible types
+//number of possible types
+#define VIT_TYPES     10
 
 #define VIT_GENE       1
 #define VIT_CDS        2

@@ -537,6 +537,7 @@ void MyFrame::OnFileImport(wxCommandEvent& WXUNUSED(event) )
     d.GetFilenames ( files ) ;
     d.GetPaths ( paths ) ;
     wxBeginBusyCursor();
+    wxSafeYield() ;
     wxProgressDialog pd ( txt("t_loading") , "" , files.GetCount() , NULL , wxPD_ALL ) ;
 //    lockDisplay ( true ) ;
     wxString unknown ;
@@ -546,7 +547,7 @@ void MyFrame::OnFileImport(wxCommandEvent& WXUNUSED(event) )
        if ( !pd.Update ( a , files[a] ) ) break ;
        if ( !importFile ( files[a] , paths[a] , filter ) )
        		{
-   		    if ( !unknown.IsEmpty() ) unknown += ", " ;
+   		    if ( !unknown.IsEmpty() ) unknown += "\n " ;
             unknown += files[a] ;
             }    
        }
@@ -590,7 +591,7 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
         }
 
     // Trying PDB format
-    if ( filter == 1 || filter == -1 )
+    if ( filter == -1 )
        {
         TPDB pdb ;
         pdb.load ( path ) ;
@@ -1402,11 +1403,12 @@ void MyFrame::update2version ( wxString ver )
     if ( do_run.IsEmpty() ) return ;    
     
     LS->setOption ( "LAST_UPDATE" , ver ) ;
-    wxExecute ( do_run , wxEXEC_ASYNC ) ;
-    SetFocus () ;
+    if ( 0 == wxExecute ( do_run , wxEXEC_ASYNC ) ) return ; // 0 means the process couldn't start :-(
+    wxExit() ; // Hard exit
+/*    SetFocus () ;
     showSplashScreen = false ;
     dying = true ;
-    Close() ;
+    Close() ;*/
     }
     
 void MyFrame::OnSashDrag(wxSashEvent& event)

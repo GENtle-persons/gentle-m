@@ -228,7 +228,11 @@ void TSequencingPrimerDialog::addSequencingPrimer ( TVector *v , wxString name ,
 	i.setColor ( wxColour ( 255 , 205 + 25 * dir , 0 ) ) ; // Yellow
 	i.desc = wxString::Format ( txt("t_desc_sequencing_primer") , best_score ) ;
 	i.desc += "\n" ;
+	i.desc += wxString::Format ( txt("t_desc_sequencing_primer2") , seq.length() ) ;
+	i.desc += "\n" ;
 	i.desc += i.getDirection()==1 ? txt("cw") : txt("ccw") ;
+	i.desc += "\n" ;
+	i.desc += txt("t_desc_sequencing_primer3");
 	i.desc += "\n" ;
 	i.desc += seq ;
 	v->items.push_back ( i ) ;

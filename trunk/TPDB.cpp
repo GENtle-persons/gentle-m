@@ -11,6 +11,7 @@ void TPDB::load ( wxString s )
     vs.Clear () ;
     wxTextFile tf ;
     tf.Open ( s ) ;
+    vs.Add ( tf.GetFirstLine() ) ;
     while ( !tf.Eof() )
         vs.Add ( tf.GetNextLine() ) ;
     check4success () ;
