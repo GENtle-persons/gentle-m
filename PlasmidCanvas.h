@@ -56,6 +56,7 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void rsEdit ( wxCommandEvent &ev ) ;
     virtual void rsDel ( wxCommandEvent &ev ) ;
     virtual void rsShowHide ( wxCommandEvent &ev ) ;
+    virtual void rsHideLimit ( wxCommandEvent &ev ) ;
     virtual void rsMark ( wxCommandEvent &ev ) ;
     virtual void rsMarkShow ( wxCommandEvent &ev ) ;
     virtual void rsAdd2Cocktail ( wxCommandEvent &ev ) ;
