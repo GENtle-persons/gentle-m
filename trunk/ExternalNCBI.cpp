@@ -2,6 +2,7 @@
 
 void EIpanel::init_ncbi()
 	{
+	    RETMAX = 25 ;
 	t1 = new wxTextCtrl ( up , ID_T1 , "" , wxDefaultPosition , wxDefaultSize , wxTE_PROCESS_ENTER ) ;
 	b1 = new wxButton ( up , ID_B1 , txt("b_find") , wxDefaultPosition ) ;
 	b2 = new wxButton ( up , ID_B2 , txt("t_open") , wxDefaultPosition ) ;

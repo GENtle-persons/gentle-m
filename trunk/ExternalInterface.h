@@ -8,8 +8,6 @@
 #include "SendHTTP.h"
 #include <wx/thread.h>
 
-#define RETMAX 25
-
 enum {
 	ID_HLB = 6000,
 	ID_T1,
@@ -84,7 +82,7 @@ class EIpanel : public wxPanel
     wxStaticText *st_msg ;
     wxButton *b1 , *b2 , *b_last , *b_next ;
     wxChoice *c1 , *c2 ;
-    long res_count , res_start ;
+    long res_count , res_start , RETMAX ;
     
     // BLAST-specific
     blastThread *blast_thread ;
