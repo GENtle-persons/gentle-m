@@ -543,6 +543,8 @@ void MyChild::OnAsNewFeature(wxCommandEvent& event)
     int from = cPlasmid->mark_from ;
     int to = cPlasmid->mark_to ;
     if ( from == -1 ) return ;
+    
+    vec->undo->start ( txt("u_new_feature") ) ;
 
     if ( to > vec->sequence.length() )
         to -= vec->sequence.length() ;
@@ -560,6 +562,7 @@ void MyChild::OnAsNewFeature(wxCommandEvent& event)
     vec->recalcvisual = true ;
     cPlasmid->Refresh () ;
     updateSequenceCanvas () ;
+    vec->undo->stop () ;
 //    cSequence->arrange() ;
 //    cSequence->Refresh() ;
     }
@@ -1209,18 +1212,6 @@ void MyChild::Undo(wxCommandEvent& event)
     cPlasmid->Refresh() ;
     treeBox->Refresh() ;
     updateUndoMenu () ;
-    /*
-    vec->recalcvisual = true ;
-//    updateSequenceCanvas () ;
-//    cSequence->Refresh() ;
-    cPlasmid->Refresh() ;
-    treeBox->Refresh() ;
-
-    cSequence->arrange () ;
-//        Refresh () ;
-    updateSequenceCanvas ( false ) ;
-    cSequence->SetFocus() ;
-    */
     }
     
 void MyChild::updateUndoMenu ()

@@ -164,6 +164,8 @@ class TVector
     
     TUndo *undo ;
     
+    virtual void setFromVector ( TVector &v ) ;
+    
     private :
     string invert ( string s ) ;
     

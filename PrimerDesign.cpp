@@ -49,7 +49,7 @@ TPrimerDesign::TPrimerDesign(wxMDIParentFrame *parent,
     vec = new TVector ;
     vc = new TVector ;
     w = new TVector ;
-    *vec = *_vec ;
+    vec->setFromVector ( *_vec ) ;
     while ( vec->items.size() ) vec->items.pop_back() ;
     *w = *vec ;
     
@@ -64,7 +64,6 @@ TPrimerDesign::TPrimerDesign(wxMDIParentFrame *parent,
     def = "PrimerDesign" ;
 //    vec->name = title.c_str() ;
     from = -1 ;
-//    vec->setChanged ( false ) ;
     stat = NULL ;
     lastPrimerActivated = -1 ;
     
