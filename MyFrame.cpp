@@ -676,7 +676,8 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
     if ( filter == 2 || filter == 3 || filter == 4 || filter == -1 )
        {
         TUReadSeq u ( path ) ;
-        if ( u.error == 0 && u.seqs.GetCount() > 0 )
+//        if ( u.error == 0 && u.seqs.GetCount() > 0 )
+        if ( u.error == 0 )
            {
            TGenBank gb ;
            u.convert ( gb ) ;
