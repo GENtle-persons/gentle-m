@@ -157,6 +157,7 @@ void SeqRestriction::show ( wxDC& dc )
         int qlx = -1 ;
         for ( a = 0 ; a < pos.p.size() ; a++ )
             {
+            if ( can->hardstop > -1 && a > can->hardstop ) break ;
             b = pos.p[a] ;
             char c = vs[layer][b-1] ;
             if ( c != ' ' )

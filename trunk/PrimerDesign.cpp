@@ -374,7 +374,7 @@ void TPrimerDesign::initme ()
     sc->blankline = 1 ;
     sc->child = this ;
     sc->edit_id = "DNA" ;
-    sc->edit_valid = "ACTG" ;
+    sc->edit_valid = "ACTG " ;
     sc->forceOverwrite ( true ) ;
     
 #ifdef __WXMSW__

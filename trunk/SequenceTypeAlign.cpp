@@ -106,6 +106,7 @@ void SeqAlign::show ( wxDC& dc )
     xb += xa ;
     for ( a = 0 ; a < pos.p.size() ; a++ )
         {
+        if ( can->hardstop > -1 && a > can->hardstop ) break ;
         b = pos.p[a] ;
         int tx = pos.r[a].x , ty = pos.r[a].y ;
         int tzx = tx + can->charwidth ;

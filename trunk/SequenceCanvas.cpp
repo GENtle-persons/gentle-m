@@ -80,6 +80,7 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
     lowx = lowy = -1 ;
     marking = false ;
     drawing = false ;
+    hardstop = -1 ;
 
     setMiniDisplay ( false ) ;
     editMode = false ;
@@ -112,6 +113,7 @@ void SequenceCanvas::MyGetClientSize ( int *w , int *h )
     if ( printing )
        {
        print_dc->GetSize ( w , h ) ;
+       if ( *h > lowy ) *h = lowy ;
        }
     else
        {
@@ -379,8 +381,7 @@ void SequenceCanvas::vecEdit ( wxCommandEvent &ev )
         }
     else if ( getPD() )
         {
-        TVector *vec = getPD()->w ;
-        TVectorEditor ve ( this , txt("t_vector_editor") , vec ) ;
+        TVectorEditor ve ( this , txt("t_vector_editor") , getPD()->w ) ;
         ve.initialViewEnzyme ( "" ) ;
         ve.hideProp = true ;
         ve.hideItem = true ;
@@ -389,6 +390,7 @@ void SequenceCanvas::vecEdit ( wxCommandEvent &ev )
         ve.cleanup () ;
         if ( x == wxID_OK )
             {
+            getPD()->vec->re = getPD()->w->re ;
             for ( x = 0 ; x < 4 ; x++ ) seq.pop_back() ;
             getPD()->updateResultSequence() ;
             arrange () ;
@@ -497,12 +499,17 @@ void SequenceCanvas::OnCopyText ( wxCommandEvent &ev )
 
 void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
     {
-    wxPrintDialog pd ( this ) ;
+    wxPrintDialogData pdd ;
+    pdd.EnableSelection ( _from != -1 ) ;
+    wxPrintDialog pd ( this , &pdd ) ;
     int r = pd.ShowModal () ;
     if ( r != wxID_OK ) return ;
     
-    wxPrintDialogData pdd = pd.GetPrintDialogData() ;
+    wxBeginBusyCursor() ;
+    
+    pdd = pd.GetPrintDialogData() ;
     wxPrintData pD = pdd.GetPrintData() ;
+    bool printSelection = pdd.GetSelection() ;
     setPrintToColor ( pD.GetColour() ) ;
     bool wasHorizontal = isHorizontal() ;
     setHorizontal ( false ) ;
@@ -527,11 +534,13 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
     if ( getAA() ) fs *= 2 ;
     
     wxFont *oldfont = font ;
+    wxFont *oldvarfont = varFont ;
     wxFont *oldsmallFont = smallFont ;
     wxFont *bigfont = MYFONT ( w/30 , wxMODERN , wxNORMAL , wxNORMAL ) ;
     wxFont *medfont = MYFONT ( w/80 , wxMODERN , wxNORMAL , wxNORMAL ) ;
     font = MYFONT ( fs/10 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
     smallFont = MYFONT ( fs/15 , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    varFont = MYFONT ( fs/11 , wxROMAN  , wxNORMAL , wxNORMAL ) ;
 
     print_maxx = -w ;
 
@@ -541,12 +550,39 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
     mm.remark () ;
 
     int xoff = ( w - print_maxx ) / 2 ;
+    int dummy = vish % charheight ;
 
-    int yoff = -pagetop ;
+    int beginning = -pagetop ;
+    if ( printSelection )
+       {
+       int a , _f = -1 , _t = -1 , _fin = -1 ;
+       for ( a = 0 ; a < seq[lastmarked]->pos.m.size() ; a++ )
+          {
+          if ( seq[lastmarked]->pos.m[a] == 1 )
+             {
+             if ( _f == -1 ) _f = seq[lastmarked]->pos.r[a].y ;
+             _t = seq[lastmarked]->pos.r[a].y ;
+             }
+          if ( _t == seq[lastmarked]->pos.r[a].y ) _fin = a ;
+          }
+       if ( _f != -1 )
+          {
+          _f -= charheight * ( lastmarked ) ;
+          beginning += _f ;
+          
+          _t -= charheight * ( lastmarked ) ;
+          _t += charheight * ( seq.size() + blankline + 1 ) ;
+          lowy = _t ;
+          
+          hardstop = _fin ;
+//          mm.unmark() ;
+          }
+       }
+    
+    int yoff = beginning ;
     int page = 0 ;
     int totalpages = 0 ;
 
-    int dummy = vish % charheight ;
     int lines = ( vish - dummy ) / charheight ;
     lines %= seq.size() + blankline ;
     dummy += lines * charheight ;
@@ -560,7 +596,8 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
        yoff += vish - dummy ;
        } while ( yoff < lowy ) ;
        
-    yoff = -pagetop ;
+    yoff = beginning ;
+    
     do {
        page++ ;
        print_dc->SetDeviceOrigin ( xoff , -yoff ) ;
@@ -573,8 +610,12 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
        print_dc->DrawRectangle ( -xoff , yoff , w , pagetop ) ;
        print_dc->DrawRectangle ( -xoff , yoff + h - pagebottom - dummy , w , pagebottom + dummy ) ;
        
+       if ( printSelection && yoff + h - pagebottom - dummy > lowy )
+          print_dc->DrawRectangle ( -xoff , lowy , w , yoff + h - pagebottom - dummy - lowy ) ;
+       
        int tw , th ;
        string s ;
+       
        // Title
        if ( p ) s = p->vec->name ;
        else if ( getAA() ) s = getAA()->vec->name ;
@@ -612,23 +653,20 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
     setDrawAll ( false ) ;
     printing = false ;
     font = oldfont ;
+    varFont = oldvarfont ;
     smallFont = oldsmallFont ;
     
     print_dc->EndDoc () ;
+    hardstop = -1 ;
     delete print_dc ;
     print_dc = NULL ;
     setHorizontal ( wasHorizontal ) ;
     charwidth = 0 ; // To force re-arrange
-    Refresh () ;
-    
+    if ( child ) child->Activate () ;
+    SilentRefresh () ;
     mm.unmark () ;
     mm.remark () ;
-/*    if ( __id > -1 && __from != -1 )
-       {
-       mark ( seq[__id]->whatsthis() , -1 , -1 ) ;
-       mark ( seq[__id]->whatsthis() , __from , __to ) ;
-       }*/
-
+    wxEndBusyCursor() ;
     }
 
 void SequenceCanvas::OnSaveImage ( wxCommandEvent &ev )
@@ -822,8 +860,9 @@ void SequenceCanvas::mark ( string id , int from , int to , int value )
     if ( p && p->vec ) seqlen = p->vec->sequence.length() ;
     else seqlen = seq[b]->s.length() ;
 
+
     int l = seqlen ;
-    for ( a = 0 ; a < seq[b]->pos.m.size() ; a++ )
+    for ( a = 0 ; a < seq[b]->pos.m.size()/* && charwidth && charheight*/ ; a++ )
         {
         if ( inMarkRange ( seq[b]->pos.p[a] , from , to , l ) ) 
            {
@@ -854,7 +893,7 @@ void SequenceCanvas::mark ( string id , int from , int to , int value )
     
     if ( from > to ) to += l ;
     if ( cnt == 0 ) from = -1 ;
-    
+
     _from = from ;
     _to = to ;
     if ( p )
@@ -875,7 +914,7 @@ void SequenceCanvas::mark ( string id , int from , int to , int value )
                if ( from == -1 ) *tt = 0 ;
                }
             else *tt = 0 ;
-	    MyFrame *f = myapp()->frame ;
+            MyFrame *f = myapp()->frame ;
             f->SetStatusText ( tt , 1 ) ;
             }
         }
