@@ -39,6 +39,10 @@ class TRestrictionCut
     wxPoint p , lp ;
     wxTreeItemId treeid ;
     } ;
+
+bool operator < ( const TRestrictionCut &c1 , const TRestrictionCut &c2 ) ;
+bool operator == ( const TRestrictionCut &c1 , const TRestrictionCut &c2 ) ;
+
     
 class TProtease
     {

@@ -34,7 +34,8 @@ int SeqAA::arrange ( int n )
     itemsperline *= can->blocksize ;
     
     pos.cleanup() ;
-    pos.reserve ( s.length() * 11 / 10 , s.length() / itemsperline ) ;
+    if ( primaryMode ) pos.reserve ( s.length() * 11 / 10 , s.length() / itemsperline ) ;
+    else pos.reserve ( s.length() * 11 / 10 , 0 ) ;
     x = ox ;
     y = oy ;
     if ( showNumbers )
@@ -50,7 +51,7 @@ int SeqAA::arrange ( int n )
            x += wx-1 ;
            if ( x+wx*(can->blocksize+1) >= w )
               {
-              pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
+              if ( primaryMode ) pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
               lasta = pos.p.GetCount()+1 ;
               x = ox ;
               y += wy * ( can->seq.GetCount() + can->blankline ) ;
@@ -59,7 +60,7 @@ int SeqAA::arrange ( int n )
               }
            }
         }
-    if ( showNumbers && lasta != pos.p.GetCount()+1 ) 
+    if ( primaryMode && showNumbers && lasta != pos.p.GetCount()+1 ) 
         pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
         
     // Marking features

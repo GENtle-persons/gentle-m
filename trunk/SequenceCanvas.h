@@ -16,6 +16,30 @@ class TProteaseCut ;
 class TAAProp ;
 class TAlignment ;
 
+// This class assists in the restriction site layout
+class SequencePartList
+    {
+    public :
+    SequencePartList () {} ;
+    virtual void prepare ( int size ) ;
+    virtual void add ( int id , int from , int to ) ;
+    virtual void makeLevels () ;
+    virtual void here ( int pos , wxArrayInt &ret ) ;
+    virtual int here ( int pos , int level ) ;
+    virtual int getID ( int internalID ) ;
+    virtual int getFrom ( int internalID ) ;
+    virtual int getTo ( int internalID ) ;
+    virtual int size () ;
+    virtual int getLevel ( int i ) ;
+
+    int maxlevels , slen ;
+    
+    private :
+    wxArrayInt vi , vl , vx , vy ;
+    vector <wxArrayInt> vl2 ;
+    } ;    
+    
+    
 // SeqPos manages the positions of all items for a single "type" (e.g., DNA)
 // The vectors p, r and m are always the same size, and contain information
 //   about the same item at the same index:
@@ -35,49 +59,12 @@ class SeqPos
     wxArrayInt p , m ;
     vector <wxRect> r , l ;
     
-    virtual void cleanup ()
-        {
-        p.Clear () ;
-        m.Clear () ;
-        r.clear () ;
-        l.clear () ;
-        }
-    virtual void add ( int np , int x , int y , int w , int h )
-        {
-        p.Add ( np ) ;
-        r.push_back ( wxRect ( x , y , w , h ) ) ;
-        m.Add ( 0 ) ;
-        }
-    virtual void addline ( int from , int to , int vfrom , int vto )
-        {
-        l.push_back ( wxRect ( from , to , vfrom , vto ) ) ;
-        }
-    virtual int getLine ( int y )
-        {
-        int ret = -1 ;
-        for ( int a = 0 ; a < l.size() && ret == -1 ; a++ )
-           {
-           if ( l[a].width <= y && l[a].height >= y )
-              ret = a ;
-           }
-        return ret ;
-        }
-    virtual int getItem ( wxPoint pt , int line )
-        {
-        int a ;
-        for ( a = l[line].x ; a <= l[line].y ; a++ )
-           if ( pt.x >= r[a].x && pt.x <= r[a].x+r[a].width &&
-                pt.y >= r[a].y && pt.y <= r[a].y+r[a].height )
-              return a ;
-        return 0 ;
-        }
-    virtual void reserve ( int n , int n2 = -1 )
-        {
-        r.reserve ( n ) ;
-        l.reserve ( n2 == -1 ? n : n2 ) ;
-        p.Alloc ( n ) ;
-        m.Alloc ( n ) ;
-        }    
+    virtual void cleanup () ;
+    virtual void add ( int np , int x , int y , int w , int h ) ;
+    virtual void addline ( int from , int to , int vfrom , int vto ) ;
+    virtual int getLine ( int y ) ;
+    virtual int getItem ( wxPoint pt , int line ) ;
+    virtual void reserve ( int n , int n2 = -1 ) ;
     } ;
 
 class SeqBasic
@@ -192,10 +179,8 @@ class SeqRestriction : public SeqBasic
     
     // Variables
     TVector *vec ;
-    wxArrayString vs ;  // The different lines
-    wxArrayString ven ; // The vector name for each cut
-    wxArrayInt yoff , eoe ;
     bool down ;
+    SequencePartList pl ;
     } ;
 
 class SeqAA : public SeqBasic
@@ -272,6 +257,7 @@ class SeqFeature : public SeqDNA
     int maxlayers ;
     SeqAA *aaa ;
     int id ; // Only used by TAlignment : lines[id]
+    SequencePartList pl ;
     } ;
 
 class SeqPlot : public SeqDNA

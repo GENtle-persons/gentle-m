@@ -314,7 +314,8 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , int r1 , int r2 , float a1 , flo
     wxPoint *wp ;
     wp = (wxPoint*) malloc ( sizeof ( wxPoint ) * (pt.size()+1) ) ;
     for ( int b = 0 ; b < pt.size() ; b++ ) wp[b] = pt[b] ;
-    dc.SetPen(*wxBLACK_PEN);
+    if ( !this->p->vec->getGenomeMode() ) dc.SetPen(*wxBLACK_PEN);
+    else dc.SetPen ( *MYPEN((wxColour)i->getBrush()->GetColour()) ) ;
     dc.SetBrush ( *i->getBrush() ) ;
     dc.DrawPolygon ( pt.size() , wp , 0 , 0 ) ;
     free ( wp ) ;
@@ -327,11 +328,15 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , int r1 , int r2 , float a1 , flo
     dc.SetTextForeground ( i->getFontColor() ) ;
     if ( p->def == "dna" ) dc.SetFont(*normalFont);
     else if ( p->def == "AminoAcids" ) dc.SetFont(*smallFont);
-    sprintf ( t , "%s" , i->name.c_str() ) ;
-    dc.GetTextExtent ( t , &dx , &dy ) ;
-    dc.DrawText ( t ,
+    
+    if ( !p->vec->getGenomeMode() )
+        {
+        sprintf ( t , "%s" , i->name.c_str() ) ;
+        dc.GetTextExtent ( t , &dx , &dy ) ;
+        dc.DrawText ( t ,
                   (r2+r1)/2 - dx/2 ,
                   (int) a2 - y1 + 1 ) ;
+        }    
     dc.SetTextForeground ( fc ) ;    
     dc.SetPen(*wxBLACK_PEN);
     }

@@ -215,6 +215,8 @@ void TVectorTree::ToggleEnzymeVisibility ( TRestrictionEnzyme *e )
        }
     SetItemBold ( y , !IsBold ( y ) ) ;
     p->cPlasmid->Refresh() ;
+    p->cSequence->arrange() ;
+    p->cSequence->SilentRefresh() ;
     }
 
 // Popup menu handlers

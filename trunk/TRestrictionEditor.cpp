@@ -312,7 +312,8 @@ wxArrayInt TRestrictionEditor::getcuts ( wxString enzyme )
     if ( ret.GetCount() == 0 ) // Determine cuts
         {
         TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( enzyme );
-        vector <TRestrictionCut> x = v->getCuts ( e ) ;
+        vector <TRestrictionCut> x ;
+        v->getCuts ( e , x ) ;
         if ( x.size() == 0 ) // No cuts
             {
             nocut.Add ( enzyme ) ;

@@ -252,7 +252,6 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
         mf = 90 - mf ;
         dc.SetBackgroundMode ( wxSOLID ) ;
         dc.SetBrush ( *wxLIGHT_GREY_BRUSH ) ;
-//        if ( mf == mt ) mf = mt - 0.1 ;
         if ( getMarkFrom() == getMarkTo() ) mf = mt - 0.1 ;
         else if ( mf > mt ) { float mm = mf ; mf = mt ; mt = mm ; }
         dc.DrawEllipticArc ( w/2-r , h/2-r , r*2 , r*2 , mf , mt ) ;
@@ -409,14 +408,15 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
             wxPoint *wp ;
             wp = (wxPoint*) malloc ( sizeof ( wxPoint ) * (p.size()+1) ) ;
             for ( int b = 0 ; b < p.size() ; b++ ) wp[b] = p[b] ;
-            dc.SetPen(*wxBLACK_PEN);
+            if ( !this->p->vec->getGenomeMode() ) dc.SetPen(*wxBLACK_PEN);
+            else dc.SetPen ( *MYPEN((wxColour)i->getBrush()->GetColour()) ) ;
             dc.SetBrush ( *(i->getBrush()) ) ;
             dc.DrawPolygon ( p.size() , wp , w/2 , h/2 ) ;
             free ( wp ) ;
             }
         }
 
-    for ( a = 0 ; a < p->vec->items.size() ; a++ ) // Item titles
+    for ( a = 0 ; !p->vec->getGenomeMode() && a < p->vec->items.size() ; a++ ) // Item titles
         {
         TVectorItem *i = &p->vec->items[a] ;
         if ( i->isVisible() && i->getParam ( "PREDECESSOR" ).IsEmpty() )

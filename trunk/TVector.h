@@ -136,7 +136,8 @@ class TVector
     
     // Restriction enzymes
     virtual void recalculateCuts () ;
-    virtual vector <TRestrictionCut> getCuts ( TRestrictionEnzyme *e ) ;
+//    virtual vector <TRestrictionCut> getCuts ( TRestrictionEnzyme *e ) ;
+    virtual void getCuts ( TRestrictionEnzyme *e , vector <TRestrictionCut> &ret , bool clear_vector = true ) ;
     virtual bool reduceToFragment ( TRestrictionCut left , TRestrictionCut right ) ;
     virtual void doRestriction () ;
     virtual void sortRestrictionSites () ;
@@ -213,6 +214,8 @@ class TVector
     virtual wxString getName () ;
     virtual void setName ( wxString s ) ;
     virtual void addName ( wxString s ) ;
+    virtual void setGenomeMode ( bool gm = true ) ;
+    virtual bool getGenomeMode () ;
     
     // Variables
     int type ;
@@ -234,7 +237,7 @@ class TVector
     wxString sequence ;    
     wxString _lu , _ll , _ru , _rl ; // Sticky ends
     wxString name , desc ;
-    bool circular , changed ;
+    bool circular , changed , genomeMode ;
     ChildBase *window ;
     int turned , action_value ;
     wxString params , database , action , aa ;

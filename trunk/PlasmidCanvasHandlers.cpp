@@ -245,9 +245,10 @@ void PlasmidCanvas::rsDel ( wxCommandEvent &ev )
     p->vec->recalculateCuts() ;
     p->treeBox->initme() ;
     p->treeBox->SelectItem ( p->treeBox->vroot ) ;
-    p->cSequence->arrange() ;
     p->vec->undo.stop () ;
     Refresh () ;
+    p->cSequence->arrange() ;
+    p->cSequence->SilentRefresh() ;
     }
 
 // Vector context menu

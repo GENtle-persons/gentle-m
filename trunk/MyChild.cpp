@@ -584,24 +584,30 @@ void MyChild::OnEditMode(wxCommandEvent& event)
 
 void MyChild::initPanels ()
     {
-    wxStartTimer() ;    
+    if ( vec->getSequenceLength() > 1000000 ) // Arbitary number
+        {
+        vec->setGenomeMode ( true ) ;
+        vec->re.Add ( myapp()->frame->LS->getRestrictionEnzyme("BamHI") ) ; // TESTING!!!!!
+        vec->recalculateCuts() ; // TESTING!!!
+        }    
+//    wxStartTimer() ;    
     SeqFeature *seqF = new SeqFeature ( cSequence ) ;
     SeqDNA *seq = new SeqDNA ( cSequence ) ;
     SeqRestriction *seqR = new SeqRestriction ( cSequence ) ;
     SeqAA *seqAA = new SeqAA ( cSequence ) ;
     cSequence->seq.Clear () ;
-//    cSequence->seq.Add ( seqF ) ;
-//    cSequence->seq.Add ( seqAA ) ;
+    cSequence->seq.Add ( seqF ) ;
+    cSequence->seq.Add ( seqAA ) ;
     cSequence->seq.Add ( seq ) ;
-//    cSequence->seq.Add ( seqR ) ;
+    cSequence->seq.Add ( seqR ) ;
     seqF->aaa = seqAA ;
-//    seqF->initFromTVector ( vec ) ;
+    seqF->initFromTVector ( vec ) ;
     seq->initFromTVector ( vec ) ;    
-//    seqR->initFromTVector ( vec ) ;    
-//    seqAA->initFromTVector ( vec ) ;    
+    seqR->initFromTVector ( vec ) ;    
+    seqAA->initFromTVector ( vec ) ;    
     seqAA->showNumbers = false ;
 
-    wxMessageBox ( wxString::Format ( "2nd : %d ms" , wxGetElapsedTime() ) ) ;
+//    wxMessageBox ( wxString::Format ( "2nd : %d ms" , wxGetElapsedTime() ) ) ;
     treeBox->initme () ;
 
     int a , b = AA_ALL ;
@@ -609,7 +615,7 @@ void MyChild::initPanels ()
         if ( vec->items[a].getRF() != 0 )
            b = AA_KNOWN ;
 
-//    if ( aa_state != b ) OnAA_setit ( b ) ;
+    if ( aa_state != b ) OnAA_setit ( b ) ;
     
 #ifdef __WXMSW__ // LINUX
     GetToolBar()->ToggleTool(MDI_CIRCULAR_LINEAR,vec->isCircular());

@@ -1,5 +1,5 @@
 #include "TVector.h"
-//#include <wx/timer.h>
+
 
 // ***************************************************************************************
 // TVector
@@ -22,6 +22,8 @@ float TVector::getAAmw ( char aa ) { return aaprop[aa].mw ; }
 float TVector::getAApi ( char aa ) { return aaprop[aa].pi ; }
 char TVector::getComplement ( char c ) { return COMPLEMENT[c] ; }
 TAAProp TVector::getAAprop ( char a ) { return aaprop[a] ; }
+void TVector::setGenomeMode ( bool gm ) { genomeMode = gm ; }
+bool TVector::getGenomeMode () { return genomeMode ; }
 
 TVector *TVector::newFromMark ( int from , int to ) 
     {
@@ -105,6 +107,7 @@ TVector::TVector ( ChildBase *win )
     changed = true ;
     turned = 0 ;
     type = TYPE_VECTOR ;
+    genomeMode = false ;
     circular = false ;
     window = win ;
     undo.setbase ( this ) ;
@@ -398,10 +401,10 @@ void TVector::setIUPAC ( char b , char *s , char *pac )
     }
     
     
-vector <TRestrictionCut> TVector::getCuts ( TRestrictionEnzyme *e )
+void TVector::getCuts ( TRestrictionEnzyme *e , vector <TRestrictionCut> &ret , bool clear_vector )
     {
     int b , c ;
-    vector <TRestrictionCut> ret ;
+    if ( clear_vector ) ret.clear () ;
     wxString rs = e->sequence ;
     wxString t = sequence ;
     if ( circular ) t += sequence ;
@@ -416,7 +419,6 @@ vector <TRestrictionCut> TVector::getCuts ( TRestrictionEnzyme *e )
               ret.push_back ( TRestrictionCut ( thecut , e ) ) ;
            }
         }
-    return ret ;
     }
     
 void TVector::recalculateCuts ()
@@ -425,25 +427,10 @@ void TVector::recalculateCuts ()
     if ( type == TYPE_AMINO_ACIDS ) return ;
     int a , b , c ;
     for ( a = 0 ; a < re.GetCount() ; a++ )
-       {
-       vector <TRestrictionCut> x = getCuts ( re[a] ) ;
-       for ( c = 0 ; c < x.size() ; c++ )
-           rc.push_back ( x[c] ) ;
-       }
+       getCuts ( re[a] , rc , false ) ;
     
     // Sorting by position; might be unnecessary
-    a = 0 ;
-    while ( a+1 < rc.size() )
-        {
-        if ( rc[a].pos > rc[a+1].pos )
-           {
-           TRestrictionCut z = rc[a] ;
-           rc[a] = rc[a+1] ;
-           rc[a+1] = z ;
-           a = 0 ;
-           }
-        else a++ ;
-        }
+    sort ( rc.begin() , rc.end() ) ;
     }
     
 // ******** ACTION!
