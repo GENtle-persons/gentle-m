@@ -155,7 +155,7 @@ string ABItype::getSequence ( int num )
     {
     string r ;
     int a = getRecord ( "PBAS" , num ) , b ;
-    myass ( a > -1 ) ;
+    myass ( a > -1 , "ABItype::getSequence" ) ;
     for ( b = 0 ; b < vf[a].nbytes ; b++ ) r += vf[a].data[b] ;
     return r ;
     }
