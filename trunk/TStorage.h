@@ -42,14 +42,17 @@ class TSQLresult
     wxArrayString field ; ///< List of result fields (or column names)
     vector <wxArrayString> content ; ///< The results table ([row][column])
     
-    virtual void clean() ///< Reset internal state
+    /// \brief Reset internal state
+    virtual void clean()
         {
         field.Clear() ;
         while ( content.size() ) content.pop_back() ;
         }
     virtual int cols () { return field.GetCount() ; }  ///< Number of columns (fields) in the result table
     virtual int rows () { return content.size() ; } ///< Number of rows in the result table
-    virtual wxString item ( char *s , int i ) ///< Returns entry for field s in row i
+    
+    /// \brief Returns entry for field s in row i
+    virtual wxString item ( char *s , int i )
         {
         int a ;
         wxString s2 = s ;
@@ -58,11 +61,15 @@ class TSQLresult
                return content[i][a] ;
         return "" ;
         }
-    virtual wxArrayString & operator [] ( int i ) ///< Returns row i
+    
+    ///< \brief Returns row i
+    virtual wxArrayString & operator [] ( int i )
         {
         return content[i] ;
         }
-    virtual int operator [] ( char *s ) ///< Returns the number of field s
+        
+    /// \brief Returns the number of field s
+    virtual int operator [] ( char *s )
         {
         int a ;
         wxString s2 = s ;
@@ -77,82 +84,83 @@ class TSQLresult
 class TStorage
     {
     public :
-    TStorage ( int nt , wxString fn = "" ) ;
-    virtual ~TStorage () ;
-    virtual void createDatabase () ;
-    virtual TSQLresult getObject ( const wxString &query ) ;
+    TStorage ( int nt , wxString fn = "" ) ; ///< Constructor
+    virtual ~TStorage () ; ///< Destructor
+    virtual void createDatabase () ; ///< Creates the database, is it does not exist
+    virtual TSQLresult getObject ( const wxString &query ) ; ///< Runs a query
 
     // Access
-    virtual void sqlAdd ( wxString &s1 , wxString &s2 , wxString key , wxString value ) ;
-    virtual void sqlAdd ( wxString &s1 , wxString &s2 , wxString key , char* value ) ;
-    virtual void sqlAdd ( wxString &s1 , wxString &s2 , wxString key , int value ) ;
+    virtual void sqlAdd ( wxString &s1 , wxString &s2 , wxString key , wxString value ) ;  ///< Query construction helper method
+    virtual void sqlAdd ( wxString &s1 , wxString &s2 , wxString key , char* value ) ;  ///< Query construction helper method
+    virtual void sqlAdd ( wxString &s1 , wxString &s2 , wxString key , int value ) ;  ///< Query construction helper method
     
     // Restriction enzymes
-    virtual void import () ;
-    virtual TRestrictionEnzyme* getRestrictionEnzyme ( wxString s ) ;
-    virtual void getEnzymeGroups ( wxArrayString &vs ) ;
-    virtual void getEnzymesInGroup ( wxString gn , wxArrayString &vs ) ;
-    virtual void updateRestrictionEnzyme ( TRestrictionEnzyme *e ) ;
-    virtual void addRestrictionEnzyme ( TRestrictionEnzyme *r ) ;
-    virtual bool addEnzymeGroup ( wxString s ) ;
+    virtual void import () ; ///< Import enzymes from database
+    virtual TRestrictionEnzyme* getRestrictionEnzyme ( wxString s ) ; ///< Pointer to TRestrictionEnzyme from re
+    virtual void getEnzymeGroups ( wxArrayString &vs ) ; ///< List of enzyme groups in this database
+    virtual void getEnzymesInGroup ( wxString gn , wxArrayString &vs ) ; ///< List of enzymes in a specific group
+    virtual void updateRestrictionEnzyme ( TRestrictionEnzyme *e ) ; ///< Write enzyme information back to database
+    virtual void addRestrictionEnzyme ( TRestrictionEnzyme *r ) ; ///< Add new restriction enzyme
+    virtual bool addEnzymeGroup ( wxString s ) ; ///< Add new enzyme group
 
-    virtual TProtease *getProtease ( wxString s ) ;
-    virtual void updateProtease ( TProtease *p ) ;
+    virtual TProtease *getProtease ( wxString s ) ; ///< Pointer to a TProtease from pr
+    virtual void updateProtease ( TProtease *p ) ; ///< Write protease information back to database
     
-    virtual wxString getDatabaseList ( wxArrayString &name , wxArrayString &file ) ;
-    virtual void setOption ( wxString oname , int value ) ;
-    virtual void setOption ( wxString oname , wxString vname ) ;
-    virtual int getOption ( wxString oname , int def ) ;
-    virtual wxString getOption ( wxString oname , wxString def ) ;
-    virtual bool copySQLfields ( TStorage &target , wxString table , wxString cond ) ;
-    virtual void synchronize () ;
+    virtual wxString getDatabaseList ( wxArrayString &name , wxArrayString &file ) ; ///< List of all known databases
+    virtual void setOption ( wxString oname , int value ) ; ///< Set option in local database
+    virtual void setOption ( wxString oname , wxString vname ) ; ///< Set option in local database
+    virtual int getOption ( wxString oname , int def ) ; ///< Get option from local database
+    virtual wxString getOption ( wxString oname , wxString def ) ; ///< Get option from local database
+    virtual bool copySQLfields ( TStorage &target , wxString table , wxString cond ) ; ///< ???
+    virtual void synchronize () ; ///< Synchronize information between databases (not used)
 
-    virtual void autoUpdateSchema () ;
-    virtual wxString fixDNAname ( wxString s ) ;
-    virtual wxString UCfirst ( wxString s ) ;
-    virtual wxString getDBname () ;    
-    virtual bool getWriteProtect () ;
-    static wxString createMySQLdb ( wxString ip , wxString db , wxString name , wxString pwd ) ;
-    virtual void optimizeDatabase () ;
-    virtual wxString getDefaultDB () ;
-    virtual void addEnzymeToGroup ( wxString enzyme , wxString group ) ;
-    virtual void removeEnzymeFromGroup ( wxString enzyme , wxString group ) ;
-    virtual void removeEnzymeGroup ( wxString group ) ;
-    virtual void startRecord () ;
-    virtual void endRecord () ;
+    virtual void autoUpdateSchema () ; ///< Update database to a new schema
+    virtual wxString fixDNAname ( wxString s ) ; ///< Fix name quotes
+    virtual wxString UCfirst ( wxString s ) ; ///< Uppercase first letter in string
+    virtual wxString getDBname () ; ///< Return the database name
+    virtual bool getWriteProtect () ; ///< Is this database write protected?
+    static wxString createMySQLdb ( wxString ip , wxString db , wxString name , wxString pwd ) ;  ///< Create a MySQL database
+    virtual void optimizeDatabase () ; ///< Optimize sqlite database
+    virtual wxString getDefaultDB () ; ///< Returns the name of the default (standard) database
+    virtual void addEnzymeToGroup ( wxString enzyme , wxString group ) ; ///< Add a restriction enzyme to an enzyme group
+    virtual void removeEnzymeFromGroup ( wxString enzyme , wxString group ) ; ///< Remove an enzyme from an enzyme group
+    virtual void removeEnzymeGroup ( wxString group ) ; ///< Remove an enzyme group
+    virtual void startRecord () ; ///< Start recording queries
+    virtual void endRecord () ; ///< Stop recording, execute all recorded queries
     
     // Variables
-    wxArrayTRestrictionEnzyme re ;
-    wxArrayTProtease pr ;
-    TSQLresult results ;
+    wxArrayTRestrictionEnzyme re ; ///< List of restriction enzymes in this database
+    wxArrayTProtease pr ; ///< List of proteases in this database
+    TSQLresult results ; ///< The results of the last query
     
     private :
-    virtual wxString getSingleField ( wxString query , wxString field , wxString def = "" ) ;
-    virtual int getSingleField ( wxString query , wxString field , int def = 0 ) ;
-    virtual wxString makeInsert ( wxString table , wxArrayString &field , wxArrayString &data ) ;
-    virtual void replaceTable ( wxString table , wxArrayString &f , wxArrayString &t ) ;
-    virtual void tableInfoSet ( wxArrayString &f , wxArrayString &t , wxString nf , wxString nt ) ;
-    virtual TStorage *getDBfromEnzymeGroup ( wxString group ) ;
-    virtual wxString stripGroupName ( wxString s ) ;
-    virtual void cleanEnzymeGroupCache () ;
-    virtual void setEnzymeCache ( wxString group , wxArrayString &enzymes ) ;
-    virtual void getEnzymeCache ( wxString group , wxArrayString &enzymes ) ;
-    virtual bool isLocalDB () ;
-    virtual bool convertSqlite2to3 () ;
-    virtual void createDatabaseSqlite3 () ;
-    virtual TSQLresult getObjectSqlite2 ( const wxString &query ) ;
-    virtual TSQLresult getObjectSqlite3 ( const wxString &query ) ;
-    virtual TSQLresult getObject_MySQL ( const wxString &query ) ;
+    virtual wxString getSingleField ( wxString query , wxString field , wxString def = "" ) ; ///< Get a single field from a query, with default value
+    virtual int getSingleField ( wxString query , wxString field , int def = 0 ) ; ///< Get a single field from a query, with default value
+    virtual wxString makeInsert ( wxString table , wxArrayString &field , wxArrayString &data ) ; ///< Insert all the fields with their data into a table
+    virtual void replaceTable ( wxString table , wxArrayString &f , wxArrayString &t ) ; ///< ???
+    virtual void tableInfoSet ( wxArrayString &f , wxArrayString &t , wxString nf , wxString nt ) ; ///< ???
+    virtual TStorage *getDBfromEnzymeGroup ( wxString group ) ; ///< Returns the database of the enzyme group
+    virtual wxString stripGroupName ( wxString s ) ; ///< ???
+    virtual void cleanEnzymeGroupCache () ; ///< Clear the enzyme group cache
+    virtual void setEnzymeCache ( wxString group , wxArrayString &enzymes ) ; ///< Set cache for an enzyme group
+    virtual void getEnzymeCache ( wxString group , wxArrayString &enzymes ) ; ///< Get cached enzyme group data
+    virtual bool isLocalDB () ; ///< Is this the local database?
+    virtual bool convertSqlite2to3 () ; ///< Converts a sqlite2 database into sqlite3
+    virtual void createDatabaseSqlite3 () ; ///< Creates an sqlite3 database (NOT FUNCTIONAL)
+    virtual TSQLresult getObjectSqlite2 ( const wxString &query ) ; ///< Get object from sqlite2 database
+    virtual TSQLresult getObjectSqlite3 ( const wxString &query ) ; ///< Get object from sqlite3 database
+    virtual TSQLresult getObject_MySQL ( const wxString &query ) ; ///< Get object from MySQL database
     
     // Variables
     wxArrayString enzymeGroupCache , enzymeGroupNameCache ;
     wxString dbname , error ;
     int storagetype , ierror ;
-    bool writeProtect ;
-    int rpv ;
-    wxString record ;
-    bool recording ;
-    bool isMySQL , isSqlite3;
+    bool writeProtect ; ///< Database is write-protected, because this program version is too old
+    int rpv ; ///< Required Program Version
+    wxString record ; ///< Recorded queries
+    bool recording ; ///< Record queries?
+    bool isMySQL ; ///< This is a MySQL database
+    bool isSqlite3; ///< This is a sqlite3 database
 #ifdef USEMYSQL
     MYSQL *conn,*mysql;
 #endif

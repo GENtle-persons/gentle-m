@@ -17,7 +17,7 @@ class TStorage ;
 class TClone_Enzyme
     {
     public :
-	TClone_Enzyme () { selected = false ; } ; ///< Constructor
+	TClone_Enzyme () { /*selected = false ;*/ } ; ///< Constructor
 	
 	// Operators
 	virtual bool operator < ( const TClone_Enzyme &e ) { return position < e.position ; }
@@ -32,7 +32,7 @@ class TClone_Enzyme
 class TClone_Gene
     {
     public :
-	TClone_Gene () { selected = false ; } ; ///< Default constructor
+	TClone_Gene () { /*selected = false ;*/ } ; ///< Default constructor
 	TClone_Gene ( const TClone_Gene &g ) ; ///< Constructor
 	virtual int getRealEnd(); ///< Returns converted item end
 	virtual int getRealBegin(); ///< Returns converted item start

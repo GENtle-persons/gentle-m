@@ -1,3 +1,6 @@
+/** \file
+	\brief The TUReadSeq class
+*/
 #include "TUReadSeq.h"
 
 TUReadSeq::TUReadSeq ( wxString _filename )

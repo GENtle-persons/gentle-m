@@ -1,3 +1,6 @@
+/** \file
+	\brief The TUndo class
+*/
 #ifndef _UNDO_H_
 #define _UNDO_H_
 
@@ -12,27 +15,28 @@ class TVector ;
 WX_DEFINE_ARRAY(TVector *, wxArrayTVector);
 #endif
 
+/// This class stores TVector objects for the undo function
 class TUndo
     {
     public :
-    TUndo () ;
-    virtual void setbase ( TVector *_base ) ;
-    virtual void start ( wxString _msg = "" ) ;
-    virtual void stop () ;
-    virtual void abort () ;
-    virtual void pop () ;
-    virtual bool canUndo () ;
-    virtual wxString getLastMessage () ;
-    virtual void remember ( wxString _msg ) ;
-    virtual void clear () ;
+    TUndo () ; ///< Constructor
+    virtual void setbase ( TVector *_base ) ; ///< Set the base TVector
+    virtual void start ( wxString _msg = "" ) ; ///< Start the undo record, with action name
+    virtual void stop () ; ///< End the undo record
+    virtual void abort () ; ///< Abort the undo record
+    virtual void pop () ; ///< Remove the last undo record
+    virtual bool canUndo () ; ///< Is there undo information available?
+    virtual wxString getLastMessage () ; ///< Returns the name of the last action with undo information
+    virtual void remember ( wxString _msg ) ; ///< Remember the current state and action name
+    virtual void clear () ; ///< Remove all undo information
     
     virtual TUndo & operator = ( TUndo &u ) ;
     
     private :
-    wxArrayTVector mem ;
-    wxArrayString msg ;
-    int cnt ;
-    TVector *base ;
+    wxArrayTVector mem ; ///< The old TVector objects
+    wxArrayString msg ; ///< The action names
+    int cnt ; ///< Internam counter
+    TVector *base ; ///< Pointer to the base TVector object
     } ;
 
 

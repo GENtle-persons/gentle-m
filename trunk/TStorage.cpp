@@ -411,6 +411,10 @@ wxString TStorage::UCfirst ( wxString s )
     }
     
 
+/**	\brief Copies a whole table to another database
+
+	This is used for auto-updating sqlite databases, which do not support ALTER TABLE
+*/
 bool TStorage::copySQLfields ( TStorage &target , wxString table , wxString cond )
     {
     int a , b ;
