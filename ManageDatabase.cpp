@@ -198,6 +198,9 @@ void TManageDatabaseDialog::pm_init_lists ()
         string db = defdb ;
         if ( isProject && myapp()->frame->project_db != "" )
            db = myapp()->frame->project_db ;
+        else if ( !isProject )
+           db = v->getDatabase() ;
+        if ( db == "" ) db = defdb ;
         pm_dd_save->SetStringSelection ( db.c_str() ) ;
         }
 
@@ -859,6 +862,7 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
         {
         v->recalculateCuts () ;
         n = f->newFromVector ( v , v->type ) ;
+        n->vec->setDatabase ( v->getDatabase() ) ;
         }
 
     return true ;
