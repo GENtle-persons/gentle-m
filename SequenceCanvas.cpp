@@ -52,6 +52,7 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
     doHide = false ;
     forceoverwrite = false ;
     wantOverwrite = false ;
+    maxendnumberlength = 9 ;
 
     m_dirty = FALSE;
     editMode = false ;

@@ -1,8 +1,8 @@
 [Editors]
 
-Focused=50
+Focused=9
 
-Order=50,49,15,37
+Order=2,9,6
 
 [Editor_0]
 
@@ -26,9 +26,13 @@ Top=0
 
 [Editor_2]
 
-Open=0
+Open=1
 
 Top=0
+CursorCol=15
+CursorRow=72
+TopLine=42
+LeftChar=1
 
 [Editor_3]
 
@@ -70,13 +74,13 @@ LeftChar=1
 
 [Editor_6]
 
-Open=0
+Open=1
 
 Top=0
 
-CursorCol=14
+CursorCol=15
 
-CursorRow=280
+CursorRow=282
 
 TopLine=234
 
@@ -112,15 +116,15 @@ LeftChar=1
 
 [Editor_9]
 
-Open=0
+Open=1
 
-Top=0
+Top=1
 
-CursorCol=23
+CursorCol=39
 
-CursorRow=117
+CursorRow=190
 
-TopLine=94
+TopLine=170
 
 LeftChar=1
 
@@ -184,7 +188,7 @@ LeftChar=1
 
 [Editor_15]
 
-Open=1
+Open=0
 
 Top=0
 
@@ -216,11 +220,11 @@ Open=0
 
 Top=0
 
-CursorCol=20
+CursorCol=17
 
-CursorRow=802
+CursorRow=867
 
-TopLine=764
+TopLine=850
 
 LeftChar=1
 
@@ -244,11 +248,11 @@ Open=0
 
 Top=0
 
-CursorCol=6
+CursorCol=1
 
-CursorRow=270
+CursorRow=70
 
-TopLine=245
+TopLine=49
 
 LeftChar=1
 
@@ -258,11 +262,11 @@ Open=0
 
 Top=0
 
-CursorCol=61
+CursorCol=1
 
-CursorRow=61
+CursorRow=125
 
-TopLine=26
+TopLine=95
 
 LeftChar=1
 
@@ -292,11 +296,11 @@ Open=0
 
 Top=0
 
-CursorCol=24
+CursorCol=1
 
-CursorRow=316
+CursorRow=56
 
-TopLine=287
+TopLine=39
 
 LeftChar=1
 
@@ -306,11 +310,11 @@ Open=0
 
 Top=0
 
-CursorCol=9
+CursorCol=1
 
-CursorRow=137
+CursorRow=319
 
-TopLine=117
+TopLine=297
 
 LeftChar=1
 
@@ -448,7 +452,7 @@ LeftChar=1
 
 [Editor_37]
 
-Open=1
+Open=0
 
 Top=0
 
@@ -566,11 +570,11 @@ Open=0
 
 Top=0
 
-CursorCol=16
+CursorCol=46
 
-CursorRow=660
+CursorRow=992
 
-TopLine=649
+TopLine=964
 
 LeftChar=1
 
@@ -604,7 +608,7 @@ LeftChar=1
 
 [Editor_49]
 
-Open=1
+Open=0
 
 Top=0
 
@@ -618,9 +622,9 @@ LeftChar=1
 
 [Editor_50]
 
-Open=1
+Open=0
 
-Top=1
+Top=0
 
 CursorCol=51
 
@@ -784,7 +788,7 @@ Open=0
 Top=0
 CursorCol=25
 CursorRow=43
-TopLine=1
+TopLine=133
 LeftChar=1
 [Editor_68]
 Open=0
@@ -814,3 +818,91 @@ CursorCol=3
 CursorRow=27
 TopLine=1
 LeftChar=1
+[Editor_79]
+CursorCol=29
+CursorRow=596
+TopLine=580
+LeftChar=1
+Open=0
+Top=0
+[Editor_94]
+CursorCol=26
+CursorRow=1178
+TopLine=1155
+LeftChar=1
+Open=0
+Top=0
+[Editor_72]
+Open=0
+Top=0
+[Editor_73]
+Open=0
+Top=0
+[Editor_74]
+Open=0
+Top=0
+[Editor_75]
+Open=0
+Top=0
+[Editor_76]
+Open=0
+Top=0
+[Editor_77]
+Open=0
+Top=0
+[Editor_78]
+Open=1
+Top=1
+CursorCol=1
+CursorRow=108
+TopLine=71
+LeftChar=1
+[Editor_80]
+Open=0
+Top=0
+[Editor_81]
+Open=0
+Top=0
+[Editor_82]
+Open=0
+Top=0
+[Editor_83]
+Open=0
+Top=0
+[Editor_84]
+Open=1
+Top=0
+CursorCol=1
+CursorRow=122
+TopLine=84
+LeftChar=1
+[Editor_85]
+Open=0
+Top=0
+[Editor_86]
+Open=0
+Top=0
+[Editor_87]
+Open=0
+Top=0
+[Editor_88]
+Open=0
+Top=0
+[Editor_89]
+Open=0
+Top=0
+[Editor_90]
+Open=0
+Top=0
+[Editor_91]
+Open=0
+Top=0
+[Editor_92]
+Open=0
+Top=0
+[Editor_93]
+Open=0
+Top=0
+[Editor_95]
+Open=0
+Top=0

@@ -279,6 +279,8 @@ enum {
     MDI_UNDO,
     MDI_REDO,
     
+    AL_MATRIX,
+    
     } ;
 
 #endif

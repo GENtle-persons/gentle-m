@@ -988,7 +988,8 @@ int SeqAlign::arrange ( int n )
               endnumberlength = z->myname.length() ;
            }
         }
-    if ( endnumberlength > 7 ) endnumberlength = 7 ;
+    if ( endnumberlength > can->maxendnumberlength )
+        endnumberlength = can->maxendnumberlength ;
     
     ox += wx * endnumberlength ;
     can->MyGetSize ( &w , &h ) ;
@@ -1130,7 +1131,8 @@ int SeqNum::arrange ( int n )
               endnumberlength = z->myname.length() ;
            }
         }
-    if ( endnumberlength > 7 ) endnumberlength = 7 ;
+    if ( endnumberlength > can->maxendnumberlength )
+        endnumberlength = can->maxendnumberlength ;
     
     ox += wx * endnumberlength ;
     can->MyGetSize ( &w , &h ) ;

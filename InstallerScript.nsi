@@ -25,7 +25,7 @@
   OutFile "GENtleSetup.exe"
   ShowInstDetails "nevershow"
   ShowUninstDetails "nevershow"
-  ;SetCompressor "bzip2"
+  SetCompressor "bzip2"
  
   !define MUI_ICON "icon.ico"
   !define MUI_UNICON "icon.ico"
@@ -78,6 +78,7 @@ Section "install" Installation info
   
   File "${MUI_FILE}.exe"
   File "blastcl3.exe"
+  File "clustalw.exe"
 ;  File "sqlite.exe"
   File "sqlite.dll"
   File "GENtle.ico"
