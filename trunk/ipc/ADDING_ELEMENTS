@@ -1,0 +1,23 @@
+I was too lazy to put in all known elements, but I made it
+easy to add the missing.
+
+Every time ipc is called it reads a file called elemente which 
+contains for every element its chemical symbol its isotopes and
+their probabilities.
+
+The entries in the file have the following form:
+
+<chemical symbol>
+<mass 1st isotope> <probability of 1st isotope>
+ 	.			.
+	.			.
+	.			.
+<mass last isotope > probability last isotpe>
+
+If an element you need is not present in this file you can
+add this element by adding an entry like shown above. Next time
+you start ipc the parser will recognize the added element with the
+<chemical symbol> you put in.
+
+The chemical symbol must start with an upper case letter.
+It is highly recommended to give the isotopes in ascending order.

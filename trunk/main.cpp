@@ -28,6 +28,7 @@
 #include <wx/tipdlg.h> 
 #include <wx/splash.h>
 #include <wx/filesys.h>
+#include <wx/file.h>
 
 #ifdef __WXMSW__
 #include "wx/msw/registry.h"
@@ -286,8 +287,8 @@ wxString MyApp::get_GENtle_version ()
 int MyApp::OnExit ()
     {
 #ifdef MYLOG
-    logout.Write ( "Total log time : " + wxString::Format ( "%d ms" , total_log_time ) + "\n" ) ;
-    logout.Flush() ;
+    logout->Write ( "Total log time : " + wxString::Format ( "%d ms" , total_log_time ) + "\n" ) ;
+    logout->Flush() ;
 #endif
     delete m_checker;
     return 0;

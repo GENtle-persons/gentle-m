@@ -9,8 +9,9 @@
 #include <wx/notebook.h>
 #include <wx/grid.h>
 
+typedef vector <string> TVS ;
 typedef vector <float> floatArray ;
-typedef vector <wxArrayString> stringField ;
+typedef vector <TVS> stringField ;
 
 class TGraph ;
 class TGraphData ;
@@ -81,13 +82,16 @@ class TGraphDisplay : public wxPanel
 	{
  	public :
  	TGraphDisplay ( wxWindow *parent , int id = -1 ) ;
+ 	~TGraphDisplay () ;
  	void init () ;
  	
  	stringField readCSVfile ( wxString filename ) ;
  	void setupPhotometerGraph ( const stringField &sf ) ;
  	void setupFluorimeterGraph ( const stringField &sf ) ;
+ 	void setupIPCfile ( wxString filename ) ;
  	void SetupDummy () ;
  	void SetZoom ( int _zx , int _zy ) ;
+ 	void UpdateDisplay () ;
 
  	void AutoScale () ;
  	void drawit ( wxDC &dc , int mode = GRAPH_DRAW_ALL ) ;
@@ -113,6 +117,10 @@ class TGraphDisplay : public wxPanel
  	wxPoint mouse_pos ;
  	static wxColour prettyColor ;
  	wxRect draggingRect ;
+ 	
+ 	private :
+  	bool IsSetupComplete() ;
+  	bool setupCompleted ;
 
     DECLARE_EVENT_TABLE()
 	} ;    
@@ -133,10 +141,11 @@ class TGraph : public ChildBase
     virtual void OnZoomY(wxScrollEvent& event); ///< Zoom event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler
 
+    TGraphDisplay *gd ;
+
     private :
     friend class TGraphDisplay ;
     wxNotebook *nb ; ///< Pointer to the wxNotebook structure that holds the submodules
-    TGraphDisplay *gd ;
     wxSlider *zoom_x , *zoom_y ;
     wxCheckBox *zoom_linked ;
 

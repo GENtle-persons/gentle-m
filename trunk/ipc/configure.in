@@ -1,0 +1,29 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(element.c)
+AM_CONFIG_HEADER(config.h)
+AM_INIT_AUTOMAKE(ipc,1.2)
+
+dnl Checks for programs.
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_CC
+
+dnl Checks for libraries.
+AC_CHECK_LIB(m,rint)
+
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(math.h time.h signal.h unistd.h)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+
+dnl Checks for library functions.
+AC_TYPE_SIGNAL
+AC_CHECK_FUNCS(strdup strtol getcwd,,AC_MSG_ERROR(necessary lib function not found))
+AC_CHECK_FUNCS(system signal time)
+
+AC_ARG_ENABLE(NO_GNUPLOT,NO_GNUPLOT : IPC should not run GNU Plot when invoking -g option,AC_DEFINE(NOT_RUN_GNUPLOT),AC_DEFINE(NOT_RUN_GNUPLOT,0))
+
+
+AC_OUTPUT(Makefile)

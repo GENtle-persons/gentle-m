@@ -1,0 +1,117 @@
+IPC Isotopic Pattern Generator
+
+What is IPC?
+------------
+IPC is a program that calculates the isotopic distribution
+of a given chemical formula. It gives the rel. intensities
+and the propability of the masses belonging to a molecule 
+ion, fragment or whatever is represented by the given 
+chemical formula. Furthernmore it can use GNUPlot to 
+visualize the result. Only masses with a rel. Intensity 
+bigger then 0.009% are shown. Additionaly ipc prints the 
+overall number of peaks and the needed computation time.
+
+INVOKING IPC
+------------
+
+ipc understands two types of input: chemical sum formulas and 
+peptide sequences given in one letter notation.
+
+-c <chemical formula> passes a chemical formula to the parser.
+   The parser is a very basic one so no brackets are understood.
+
+   example: ipc -c CCl4 
+
+   This results in the isotopic distribution of Tetra.
+
+   Atoms given with -c are taken additional to those given with 
+   -a or -p (see below). Until now the parser doesn´t understand all 
+   element symbols. But adding new ones is simple, see file
+   ADDING_ELEMENTS for this.
+  
+-a As I´m working on oligopeptides ipc accepts also peptides and 
+   peptide sequences given in one letter notation. Peptides given 
+   this way are additional to atoms given via -c
+
+   example: ipc -a GW
+   
+   would give the distribution for the dipeptide Glycine-Tryptophane.
+   As -a and -c are cumulative, ipc -a GW -c H would give the distribution
+   for the protonated dipeptide Gly-Trp.
+
+
+
+OPTIONS
+-------
+
+-f <int> The -f option is a bit special. Normally ipc calculates the exact
+   distribution. As the possible permutations grow exponential with
+   the amount of atoms this is very time and memory consumpting.
+   The -f (fast) option is the only one which leads to an approximation 
+   during the calculation of the peak masses.
+
+   -f tries to calculate only the first <int> permutations resulting from
+   each element. If <int> was choosen too small some rel. Int. might be 
+   wrong or some of the more intensive peaks might be missing.
+   If <int> was choosen properly computation time is reduced dramatically
+   and the shown peaks are exact.
+
+   example for comparison : ipc -a GWW, ipc -a GWW -f 10, ipc -a GWW -f 100, 
+            ipc -a GWW -f 1000
+
+   I propose to start with small <int> and increase the value until no
+   change is observed in the result.
+   When using -f the overall number of peaks is no longer shown, as it 
+   would be <int>. Instead the sum of the probabilities of the computed
+   peaks is given in %. 
+
+-g <name> This tells ipc to prepare GNUPlot output. ipc will create two
+   files: <name> and <name>.gnu in your pwd. The file <name> contains
+   data which can be plotted as standard x,y-graph. <name>.gnu contains
+   some commands for GNUPlot for displaying the data in the file <name>.
+   Per default ipc then calls gnuplot <name>.gnu to display the calculated
+   pattern. 
+
+   If there are problems when trying to invoke GNUPlot automaticly
+   read INSTALL on details how to turn this off.
+
+-d <int> ipc calculates the masses of the peaks to the 5th place after the 
+   decimal point and displays them with all decimal places.
+   With -d the result is rounded to the <int>th position after the decimal
+   point. Peaks which end up with the same mass are combined. This has no 
+   influence on the calculation and changes only the way of displaying 
+   the results.
+
+   example for comparison: ipc -a GW, ipc -a GW -d 1
+
+-z <int> This tells ipc to calculate a mass/charge (m/z) ratio which is used
+   in mass spectrometry. Thus you can give with -z the <int> charges on your
+   ion.
+
+   example: ipc -c SO4 -z 2 
+
+   would show the m/z pattern of the double negativly charged molecule ion of
+   sulfate 
+
+-p <name> ipc reads the peptide sequence given in the file <name>. 
+   The file must only contain the peptide sequence and there must 
+   be a terminating new line at the end of each line.
+   -p is cumumlative with -a and -c
+
+-s before printig the isotopic pattern print the sum formula. When 
+   giving peptide sequences to ipc it might be informative what
+   sum formula is hidden behind it.
+
+   example: ipc -a GW -c H -s
+
+   would print the isotopic distribution of the protonated dipeptide 
+   GW and the sum formula of the dipeptide
+
+-x prevents the calculation of the isotopic distribution. Useful when
+   you just want the sum formula of a large peptide.
+
+   example:ipc -a GW -c H -s -x
+
+   This would only print the sum formula of the protonated dipeptide GW
+  
+-h shows a small help text

@@ -53,11 +53,11 @@ TGraph::TGraph(wxWindow *parent, const wxString& title)
  
 TGraph::~TGraph()
 	{
-	if ( nb )
+/*	if ( nb )
 		{
   		delete nb ;
   		nb = NULL ;
-		}    
+		}    */
 	}
 
 void TGraph::initme ()
@@ -79,7 +79,7 @@ void TGraph::initme ()
 
     gd = new TGraphDisplay ( nb , -1 ) ;
     gd->g = this ;
-    gd->SetupDummy () ;
+//    gd->SetupDummy () ;
     nb->AddPage ( gd , txt("t_graph") ) ;
 
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
