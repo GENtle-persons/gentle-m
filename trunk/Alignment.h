@@ -41,7 +41,7 @@ class TAlignLine // pun intended
 class TAlignment : public ChildBase
     {
     public :
-    TAlignment(MyFrame *parent, const wxString& title) ;
+    TAlignment(wxWindow *parent, const wxString& title) ;
     virtual ~TAlignment () ;
     
     virtual void initme () ;
@@ -60,7 +60,7 @@ class TAlignment : public ChildBase
     virtual wxColour findColors ( char c1 , char c2 , bool fg ) ;
 
     virtual void OnSettings ( wxCommandEvent &ev ) ;
-    virtual void OnClose(wxCloseEvent& event) ;
+//    virtual void OnClose(wxCloseEvent& event) ;
     virtual void OnSeqPrint(wxCommandEvent& event);
     virtual void OnFileSave ( wxCommandEvent &ev ) ;
     virtual void OnMenuBold ( wxCommandEvent &ev ) ;

@@ -14,7 +14,7 @@ typedef vector <char> tvc ;
 class TAminoAcids : public ChildBase
     {
     public :
-    TAminoAcids(MyFrame *parent, const wxString& title) ;
+    TAminoAcids(wxWindow *parent, const wxString& title) ;
     virtual ~TAminoAcids () ;
     
     virtual void initme () ;
@@ -34,7 +34,7 @@ class TAminoAcids : public ChildBase
     virtual void OnAsNewFeature(wxCommandEvent& event);
     virtual void OnBlastAA(wxCommandEvent& event);
     virtual void invokeVectorEditor ( string what = "" , int num = 0 , bool forceUpdate = false ) ;
-    virtual void OnClose(wxCloseEvent& event) ;
+//    virtual void OnClose(wxCloseEvent& event) ;
     virtual void OnHorizontal ( wxCommandEvent& event ) ;
     virtual void OnListBox ( wxCommandEvent& event ) ;
     virtual void OnIP ( wxCommandEvent& event ) ;

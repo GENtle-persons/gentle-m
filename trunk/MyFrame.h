@@ -18,7 +18,7 @@ class TGenBank ;
 class TFasta ;
 class TXMLfile ;
 
-typedef wxMDIParentFrame MyFrameType ;
+typedef wxFrame MyFrameType ;
 
 // Define a new frame
 class MyFrame : public MyFrameType
@@ -50,6 +50,10 @@ public:
     virtual void OnProjectClose(wxCommandEvent& event);
     virtual void OnImageViewer(wxCommandEvent& event);
     virtual void OnCalculator(wxCommandEvent& event);
+    
+    virtual void RerouteMenu(wxCommandEvent& event);
+    virtual void BollocksMenu(wxCommandEvent& event);
+    virtual void OnMDIClose(wxCommandEvent& event);
 
     virtual void OnEnzymeEditor(wxCommandEvent& event);
     virtual void OnAlignment(wxCommandEvent& event);
@@ -75,7 +79,10 @@ public:
     virtual void removeChild ( ChildBase *ch ) ;
     virtual TStorage *getTempDB ( string filename ) ;
     virtual void runAlignment ( vector <string> &vs , vector <ChildBase*> &vc , TVector *nv = NULL ) ;
-
+    virtual ChildBase *GetActiveChild() ;
+    virtual void setActiveChild ( ChildBase *c ) ;
+    virtual wxWindow *getCommonParent() ;
+    virtual int getChildIndex ( ChildBase *c ) ;
 
     TMainTree *mainTree ;
     TStorage *LS ;
@@ -96,6 +103,8 @@ public:
     wxSashLayoutWindow* m_bottomWindow;
     vector <TStorage*> dbcache ;
     wxMiniFrame *miniFrame ;
+    ChildBase *lastChild ;
+    wxMenuBar *menu_bar ;
     
     DECLARE_EVENT_TABLE()
 };

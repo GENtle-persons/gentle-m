@@ -6,6 +6,8 @@
 BEGIN_EVENT_TABLE(TImageDisplay, MyChildBase)
     EVT_BUTTON(IV_BUTTON,TImageDisplay::OnDir)
     EVT_LISTBOX(IV_LIST,TImageDisplay::OnFile)
+    EVT_CLOSE(ChildBase::OnClose)
+    EVT_SET_FOCUS(ChildBase::OnFocus)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(TMyImagePanel, wxPanel)
@@ -18,7 +20,7 @@ BEGIN_EVENT_TABLE(TMyImagePanel, wxPanel)
 END_EVENT_TABLE()
 
 
-TImageDisplay::TImageDisplay(MyFrame *parent, const wxString& title) 
+TImageDisplay::TImageDisplay(wxWindow *parent, const wxString& title) 
     : ChildBase(parent, title)
     {
     def = "IMAGE" ;
@@ -31,18 +33,6 @@ TImageDisplay::~TImageDisplay ()
     delete r ;
     }
     
-    
-void TImageDisplay::OnClose(wxCloseEvent& event)
-{
-    // Removing the window from the main tree
-    MyFrame *p = (MyFrame*)GetParent();
-    p->mainTree->removeChild ( this ) ;
-    p->SetTitle ( txt("gentle") ) ;
-    SetTitle ( txt("gentle") ) ;
-    p->removeChild ( this ) ;
-    event.Skip();
-}
-
 void TImageDisplay::initme ()
     {
     // Menus
@@ -72,6 +62,12 @@ void TImageDisplay::initme ()
     bu = new wxButton ( ud , IV_BUTTON , "" ) ;
     
     ud->SplitHorizontally ( bu , lb , 20 ) ;
+
+    wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+//    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
+    v0->Add ( rl , 1 , wxEXPAND , 5 ) ;
+    SetSizer ( v0 ) ;
+    v0->Fit ( this ) ;
     
     string s_dir = myapp()->frame->LS->getOption ( "IMGDIR" , wxGetCwd().c_str() ) ;    
     ShowDir ( s_dir.c_str() ) ;

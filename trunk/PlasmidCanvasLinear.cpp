@@ -197,7 +197,6 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
            dc.DrawText ( t , c->lastrect.x , c->lastrect.y ) ;
            }
         }
-
 }
 
 void PlasmidCanvas::drawLinearORFs ( wxDC &dc )
@@ -349,6 +348,7 @@ int PlasmidCanvas::findORFlinear ( int x , int y )
 
 void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
 {
+    if ( w == 0 || h == 0 ) return ;
     wxClientDC dc(this);
     PrepareDC(dc);
 
@@ -360,7 +360,7 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
     int orf = findORFlinear ( pt.x , pt.y ) ;
     string s ;
     int lineOff = w/20 ;
-    
+
     int a ;
     wxPoint pp ;
     pp.x = pt.x * STANDARDRADIUS / w ;

@@ -16,7 +16,7 @@ typedef vector <char> tvc ;
 class TPrimerDesign : public ChildBase
     {
     public :
-    TPrimerDesign(MyFrame *parent, 
+    TPrimerDesign(wxWindow *parent, 
                     wxString title,
                     TVector *_vec,
                     vector <TPrimer> pl ,
@@ -33,7 +33,7 @@ class TPrimerDesign : public ChildBase
     virtual void doShowPrimer ( int i ) ;
 
     virtual void OnCopy(wxCommandEvent& event);
-    virtual void OnClose(wxCloseEvent& event) ;
+//    virtual void OnClose(wxCloseEvent& event) ;
     virtual void OnEditMode(wxCommandEvent& event);
     
     virtual void OnSelectPrimer ( wxListEvent& event);

@@ -53,13 +53,13 @@ class TGridDNA : public TGridBasic
 class TCalculator : public ChildBase
     {
     public :
-    TCalculator(MyFrame *parent, const wxString& title) ;
+    TCalculator(wxWindow *parent, const wxString& title) ;
     ~TCalculator () ;
     
     void initme () ;
     virtual string getName () ;
 
-    virtual void OnClose(wxCloseEvent& event) ;
+//    virtual void OnClose(wxCloseEvent& event) ;
     virtual void OnSeqPrint(wxCommandEvent& event) ;
     virtual void OnPrintPreview(wxCommandEvent& event) ;
     

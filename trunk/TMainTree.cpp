@@ -15,8 +15,6 @@ TMainTree::TMainTree ( wxSashLayoutWindow *parent , int i )
     
 void TMainTree::initme()
     {
-    wxTreeItemId x , y ;
-    
     // Basic stuff
     DeleteAllItems () ;
     treeroot = AddRoot ( myapp()->frame->project_name.c_str() ) ;
@@ -30,15 +28,14 @@ void TMainTree::initme()
     misc = AppendItem ( treeroot , txt("misc_stuff") ) ;
 
     SetFont ( *MYFONT ( 8 , wxSWISS , wxNORMAL , wxNORMAL ) ) ;
-    
     EnsureVisible ( vectors ) ;
-
     }
 
 void TMainTree::OnRightClick ( wxTreeEvent &event )
     {
     wxPoint pt = event.GetPoint() ;
     wxTreeItemId id = event.GetItem () ;
+    if ( !id.IsOk() ) return ;
     TMainTreeItem *d = (TMainTreeItem*) GetItemData ( id ) ;
     if ( !d || !d->c ) return ;
     
@@ -68,19 +65,22 @@ void TMainTree::addChild ( ChildBase *c , int type )
 
 void TMainTree::removeChild ( ChildBase *c )
     {
+    if ( !c || !c->inMainTree.IsOk() ) return ;
     Delete ( c->inMainTree ) ;
     }
     
 void TMainTree::OnEvent ( wxTreeEvent &event )
     {
     wxTreeItemId id = event.GetItem () ;
+    if ( !id.IsOk() ) return ;
     TMainTreeItem *d = (TMainTreeItem*) GetItemData ( id ) ;
     if ( !d ) return ;
+    if ( !d->c ) return ;
     d->c->Activate () ;
-    d->c->Refresh () ;
     }
     
 void TMainTree::OnCloseChild ( wxCommandEvent &event )
     {
-    lastChild->Close ( TRUE ) ;
+    if ( lastChild ) lastChild->Close ( TRUE ) ;
+    lastChild = NULL ;
     }

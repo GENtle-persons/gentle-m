@@ -2,7 +2,7 @@
 
 BEGIN_EVENT_TABLE(TAlignment, MyChildBase)
     EVT_BUTTON(ALIGNMENT_SETTINGS,TAlignment::OnSettings)
-    EVT_CLOSE(TAlignment::OnClose)
+    EVT_CLOSE(ChildBase::OnClose)
     EVT_SET_FOCUS(ChildBase::OnFocus)
     EVT_CHECKBOX(ALIGN_HORIZ, TAlignment::OnHorizontal)
     EVT_MENU(MDI_FILE_SAVE, TAlignment::OnFileSave)
@@ -26,7 +26,7 @@ END_EVENT_TABLE()
 
 
 
-TAlignment::TAlignment(MyFrame *parent, const wxString& title)
+TAlignment::TAlignment(wxWindow *parent, const wxString& title)
     : ChildBase(parent, title)
     {
     invs = cons = bold = mono = false ;
@@ -99,18 +99,8 @@ wxColour TAlignment::findColors ( char c1 , char c2 , bool fg )
     
     return r ;
     }
-    
-void TAlignment::OnClose(wxCloseEvent& event)
-{
-    // Removing the window from the main tree
-    MyFrame *p = myapp()->frame ;
-    p->mainTree->removeChild ( this ) ;
-    p->SetTitle ( txt("gentle") ) ;
-    SetTitle ( txt("gentle") ) ;
-    p->removeChild ( this ) ;
-    event.Skip();
-}
-    
+
+
 void TAlignment::initme ()
     {
     int bo = 5 ;
@@ -204,7 +194,13 @@ void TAlignment::initme ()
     toolBar->Realize() ;
 #endif
 
-    Maximize () ;
+    wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
+    v0->Add ( hs , 1 , wxEXPAND , 5 ) ;
+    SetSizer ( v0 ) ;
+    v0->Fit ( this ) ;
+
+//    Maximize () ;
     sc->SetFocus() ;
     myapp()->frame->setChild ( this ) ;
     }
@@ -731,7 +727,8 @@ void TAlignment::invokeOriginal ( int id , int pos )
     c = lines[id].FindOrigin() ;
     if ( !c ) return ;
 
-    c->Activate() ;
+    myapp()->frame->mainTree->SelectItem ( c->inMainTree ) ;
+//    c->Activate() ;
     if ( c->def == "dna" )
         {
         MyChild *c1 = ((MyChild*)c) ;

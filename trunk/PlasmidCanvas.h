@@ -139,7 +139,7 @@ class PlasmidCanvas : public wxScrolledWindow
     int mark_from , mark_to ;
     wxToolTip *tt ;
     MyChild *p ;
-
+    
     DECLARE_EVENT_TABLE()
     };
     

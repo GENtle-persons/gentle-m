@@ -735,7 +735,10 @@ string SequenceCanvas::getSelection ()
     if ( getPD() && _from != -1 && lastmarked != -1 )
         return seq[lastmarked]->s.substr ( _from-1 , _to-_from+1 ) ;
     if ( child && child->def == "ABIviewer" )
+        {
+        if ( _from == -1 ) return "" ;
         return seq[lastmarked]->s.substr ( _from-1 , _to-_from+1 ) ;
+        }
     return "" ;
     }
     
@@ -1155,6 +1158,8 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
            else if ( al->s[pos] == '-' ) wxLogStatus ( al->myname.c_str() ) ;
            else
               {
+              lastToolTip = "" ;
+              SetToolTip ( "" ) ;
               int a , b ;
               for ( a = b = 0 ; a < pos ; a++ )
                  if ( al->s[a] != '-' )
@@ -1631,8 +1636,10 @@ void SequenceCanvas::startEdit ( string id )
     
 void SequenceCanvas::stopEdit ()
     {
-    myass ( getEditMode() , "SequenceCanvas::stopEdit" ) ;
+    myass ( getEditMode() , "SequenceCanvas::stopEdit1" ) ;
     setEditMode ( false ) ;
+    myass ( lastmarked >= 0 , "SequenceCanvas::stopEdit2" ) ;
+    myass ( seq[lastmarked] , "SequenceCanvas::stopEdit3" ) ;
     string id = seq[lastmarked]->whatsthis() ;
     if ( child ) child->vec->sequence.erase ( child->vec->sequence.length()-1 , 1 ) ;
     seq[lastmarked]->s.erase ( seq[lastmarked]->s.length()-1 , 1 ) ;
@@ -1660,7 +1667,7 @@ void TMarkMem::remark()
        string ls = sc->seq[l]->whatsthis() ;
        int len = sc->seq[l]->s.length() ;
        if ( t > len ) t -= len ;
-       sc->mark ( ls , f , t ) ;
+       sc->mark ( ls , f , t , sc->getEditMode() ? 2 : 1 ) ;
        }
     }
 

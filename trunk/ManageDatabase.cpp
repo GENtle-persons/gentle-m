@@ -803,6 +803,10 @@ void TManageDatabaseDialog::pmOpenFiles ( vector <string> &_names , string _db )
 
     SetReturnCode ( wxID_OK ) ;
     EndModal ( true ) ;
+    
+    wxSizeEvent se ;
+    myapp()->frame->OnSize ( se ) ;
+    myapp()->frame->mainTree->Refresh () ;
     }
 
 // --------------------------------
@@ -835,8 +839,12 @@ bool TManageDatabaseDialog::do_load_project ( string name , string db )
     myapp()->frame->project_db = db ;
     myapp()->frame->project_desc = sr[0][0] ;
 
+    wxDialog dlg ( NULL , -1 , "Test" , wxDefaultPosition , wxSize ( 300 , 20 ) ) ;
+    dlg.Show() ;
+
+    myapp()->frame->SetFocus() ;
+    wxBeginBusyCursor() ;
     myapp()->frame->Freeze () ;
-    SetCursor ( *wxHOURGLASS_CURSOR ) ;
 
     // Load associated DNA list
     sql = "SELECT * FROM project_dna WHERE pd_project=\""+name+"\"" ;
@@ -848,6 +856,9 @@ bool TManageDatabaseDialog::do_load_project ( string name , string db )
         {
         string dna_name = sr[a][sr["pd_dna"]] ;
         string dna_db = sr[a][sr["pd_database"]] ;
+        wxString msg = wxString::Format ( txt("t_prj_loading") , dna_name.c_str() ) ;
+        dlg.SetTitle ( msg ) ;
+        dlg.SetFocus() ;
         all &= do_load_DNA ( dna_name , dna_db ) ;
         }
     if ( !all )
@@ -857,8 +868,8 @@ bool TManageDatabaseDialog::do_load_project ( string name , string db )
         md.ShowModal() ;
         }
     
-    SetCursor ( *wxSTANDARD_CURSOR ) ;
     myapp()->frame->Thaw () ;
+    wxEndBusyCursor() ;
     return true ;
     }
     
@@ -945,10 +956,11 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
     ChildBase *n = NULL ;
     if ( v->type == TYPE_AMINO_ACIDS )
         {
+        string db1 = v->getDatabase() ;
         n = myapp()->frame->newAminoAcids ( v , v->name ) ;
-        n->vec->setDatabase ( v->getDatabase() ) ;
+        myass ( n , "Opening AA" ) ;
+        n->vec->setDatabase ( db1 ) ;
         n->vec->setWindow ( n ) ;
-        v = n->vec ;
         }
     else if ( v->type == TYPE_ALIGNMENT )
         {
@@ -959,8 +971,10 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
     else
         {
         v->recalculateCuts () ;
+        string db1 = v->getDatabase() ;
         n = myapp()->frame->newFromVector ( v , v->type ) ;
-        n->vec->setDatabase ( v->getDatabase() ) ;
+        myass ( n , "Opening DNA" ) ;
+        n->vec->setDatabase ( db1 ) ;
         }
 
     return true ;

@@ -13,7 +13,6 @@
 
 #ifndef WX_PRECOMP
     #include "wx/wx.h"
-    #include "wx/mdi.h"
     #include "wx/notebook.h"
 #endif
 
