@@ -64,6 +64,16 @@ bool TVector::basematch ( char b1 , char b2 ) // b1 in IUPAC, b2 in SIUPAC
    {
    return ( IUPAC[b1] & SIUPAC[b2] ) > 0 ;
    }
+   
+string TVector::vary_base ( char b )
+    {
+    string ret ;
+    if ( basematch ( 'A' , b ) ) ret += 'A' ;
+    if ( basematch ( 'C' , b ) ) ret += 'C' ;
+    if ( basematch ( 'G' , b ) ) ret += 'G' ;
+    if ( basematch ( 'T' , b ) ) ret += 'T' ;
+    return ret ;
+    }    
 
 wxString TVector::one2three ( int a )
     {
@@ -729,11 +739,39 @@ string TVector::dna2aa ( string codon )
     if ( codon[0] == ' ' ) return "?" ;
     if ( codon[1] == ' ' ) return "?" ;
     if ( codon[2] == ' ' ) return "?" ;
-    int i = ACGT[codon[0]]*16 +
-            ACGT[codon[1]]*4 +
-            ACGT[codon[2]] ;
-    if ( i > 63 ) r = "?" ;
-    else r = aa.GetChar(i) ;
+    if ( (codon[0]=='A'||codon[0]=='C'||codon[0]=='G'||codon[0]=='T') &&
+         (codon[1]=='A'||codon[1]=='C'||codon[1]=='G'||codon[1]=='T') &&
+         (codon[2]=='A'||codon[2]=='C'||codon[2]=='G'||codon[2]=='T') )
+       {
+       int i = ACGT[codon[0]]*16 +
+               ACGT[codon[1]]*4 +
+               ACGT[codon[2]] ;
+       if ( i > 63 ) r = "?" ;
+       else r = aa.GetChar(i) ;
+       }
+    else
+       {
+       char u = ' ' ;
+       string s0 = vary_base ( codon[0] ) ;
+       string s1 = vary_base ( codon[1] ) ;
+       string s2 = vary_base ( codon[2] ) ;
+       for ( int a0 = 0 ; a0 < s0.length() ; a0++ )
+        for ( int a1 = 0 ; a1 < s1.length() ; a1++ )
+         for ( int a2 = 0 ; a2 < s2.length() ; a2++ )
+          {
+          char v ;
+          int i = ACGT[s0[a0]]*16 +
+                  ACGT[s1[a1]]*4 +
+                  ACGT[s2[a2]] ;
+          if ( i > 63 ) v = '?' ;
+          else v = aa.GetChar(i) ;
+          if ( u != ' ' && u != v ) return "?" ;
+          else if ( v == '?' ) return "?" ;
+          else u = v ;
+          }
+       if ( u == ' ' ) r = "?" ;
+       else r = u ;
+       }    
     return r ;
     }
     

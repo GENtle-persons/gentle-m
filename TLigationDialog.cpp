@@ -61,14 +61,14 @@ void TLigationDialog::generateTargets ()
     int a , b ;
     int cnt = l_sources->GetCount() ;
     vector <bool> vc , used ;
-    vector <int> vi ;
+    wxArrayInt vi ;
     for ( a = 0 ; a < cnt ; a++ )
         {
         vc.push_back ( l_sources->IsChecked ( a ) ) ;
         used.push_back ( !l_sources->IsChecked ( a ) ) ;
         }
     orientation.clear () ;
-    vt.clear () ;
+    vt.Clear () ;
     ligates.clear () ;
     l_targets->Clear () ;
 
@@ -80,29 +80,29 @@ void TLigationDialog::generateTargets ()
            myass ( a < vc.size() , "TLigationDialog::generateTargets:1" ) ;
            myass ( a < used.size() , "TLigationDialog::generateTargets:2" ) ;
            used[a] = true ;
-           vi.push_back ( a ) ;
+           vi.Add ( a ) ;
            orientation.push_back ( false ) ;
            curseTargets ( vc , used , vi ) ;
            orientation.pop_back () ;
-           vi.pop_back () ;
+           vi.RemoveAt ( vi.GetCount()-1 ) ;
            used[a] = false ;
            }
         }
 
-    for ( a = 0 ; a < vt.size() ; a++ )
+    for ( a = 0 ; a < vt.GetCount() ; a++ )
         {
-        l_targets->Append ( vt[a].c_str() ) ;
+        l_targets->Append ( vt[a] ) ;
         l_targets->Check ( a , true ) ;
         }
     }
     
-void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , vector <int> &vi  )
+void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , wxArrayInt &vi  )
     {
     int a , b ;
-    int cnt = vi.size() ;
+    int cnt = vi.GetCount() ;
     string name ;
     myass ( cnt-1 >= 0 && cnt-1 < orientation.size() , "TLigationDialog::curseTargets:1" ) ;
-    myass ( cnt-1 >= 0 && cnt-1 < vi.size() , "TLigationDialog::curseTargets:2" ) ;
+    myass ( cnt-1 >= 0 && cnt-1 < vi.GetCount() , "TLigationDialog::curseTargets:2" ) ;
     bool o = orientation[cnt-1] ;
     if ( doMatch ( vi[cnt-1] , vi[0] , o ) )
         {
@@ -117,34 +117,34 @@ void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , v
         
     for ( a = 0 ; a < vc.size() ; a++ )
         {
-        myass ( cnt-1 >= 0 && cnt-1 < vi.size() , "TLigationDialog::curseTargets:3a" ) ;
+        myass ( cnt-1 >= 0 && cnt-1 < vi.GetCount() , "TLigationDialog::curseTargets:3a" ) ;
         myass ( a >= 0 && a < vc.size() , "TLigationDialog::curseTargets:3b" ) ;
         myass ( a >= 0 && a < used.size() , "TLigationDialog::curseTargets:3c" ) ;
         if ( vc[a] && !used[a] && doMatch ( vi[cnt-1] , a ) ) // Normal orientation
            {
            used[a] = true ;
-           vi.push_back ( a ) ;
+           vi.Add ( a ) ;
            orientation.push_back ( false ) ;
            curseTargets ( vc , used , vi ) ;
            orientation.pop_back () ;
-           vi.pop_back () ;
+           vi.RemoveAt ( vi.GetCount()-1 ) ;
            used[a] = false ;
            }
         }
 
     for ( a = 0 ; a < vc.size() ; a++ )
         {
-        myass ( cnt-1 >= 0 && cnt-1 < vi.size() , "TLigationDialog::curseTargets:4a" ) ;
+        myass ( cnt-1 >= 0 && cnt-1 < vi.GetCount() , "TLigationDialog::curseTargets:4a" ) ;
         myass ( a >= 0 && a < vc.size() , "TLigationDialog::curseTargets:4b" ) ;
         myass ( a >= 0 && a < used.size() , "TLigationDialog::curseTargets:4c" ) ;
         if ( vc[a] && !used[a] && doMatch ( vi[cnt-1] , a , true ) ) // Turned around
            {
            used[a] = true ;
-           vi.push_back ( a ) ;
+           vi.Add ( a ) ;
            orientation.push_back ( true ) ;
            curseTargets ( vc , used , vi ) ;
            orientation.pop_back () ;
-           vi.pop_back () ;
+           vi.RemoveAt ( vi.GetCount() - 1 ) ;
            used[a] = false ;
            }
         }
@@ -184,13 +184,13 @@ bool TLigationDialog::doMatch ( int l , int r , bool invertSecond )
     return false ;
     }
     
-string TLigationDialog::getVIName ( vector <int> &vi )
+string TLigationDialog::getVIName ( wxArrayInt &vi )
     {
     int a ;
     string ret ;
-    for ( a = 0 ; a < vi.size() ; a++ )
+    for ( a = 0 ; a < vi.GetCount() ; a++ )
         {
-        myass ( a >= 0 && a < vi.size() , "TLigationDialog::getVIName:1" ) ;
+        myass ( a >= 0 && a < vi.GetCount() , "TLigationDialog::getVIName:1" ) ;
         myass ( vi[a] >= 0 && vi[a] < vv.size() , "TLigationDialog::getVIName:2" ) ;
         myass ( vv[vi[a]] , "TLigationDialog::getVIName:3" ) ;
         wxString name = vv[vi[a]]->name ;
@@ -201,9 +201,9 @@ string TLigationDialog::getVIName ( vector <int> &vi )
     return ret ;
     }
     
-void TLigationDialog::addVTname ( string name , vector <int> &vi , bool circular )
+void TLigationDialog::addVTname ( string name , wxArrayInt &vi , bool circular )
     {
-    vt.push_back ( name ) ;
+    vt.Add ( name.c_str() ) ;
     
     int a ;
     TVector v ;
@@ -214,7 +214,7 @@ void TLigationDialog::addVTname ( string name , vector <int> &vi , bool circular
     d = txt("lig_of") ;
     d += v.name + " (" + v.desc + ")" ;
     v.name = name.c_str() ;
-    for ( a = 1 ; a < vi.size() ; a++ )
+    for ( a = 1 ; a < vi.GetCount() ; a++ )
         {
         bool o = false ;
         if ( a < orientation.size() && orientation[a] ) o = true ;

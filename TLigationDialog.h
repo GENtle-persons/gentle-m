@@ -19,10 +19,10 @@ class TLigationDialog : public wxDialog
     virtual void OnCharHook(wxKeyEvent& event) ;
     void init () ;
     void generateTargets () ;
-    void curseTargets ( vector <bool> &vc , vector <bool> &used , vector <int> &vi ) ;
+    void curseTargets ( vector <bool> &vc , vector <bool> &used , wxArrayInt &vi ) ;
     bool doMatch ( int l , int r , bool invertSecond = false ) ;
-    string getVIName ( vector <int> &vi ) ;
-    void addVTname ( string name , vector <int> &vi , bool circular ) ;
+    string getVIName ( wxArrayInt &vi ) ;
+    void addVTname ( string name , wxArrayInt &vi , bool circular ) ;
 
     void OnToggleSources ( wxCommandEvent &ev ) ;
     void OnOK ( wxCommandEvent &ev ) ;
@@ -32,7 +32,7 @@ class TLigationDialog : public wxDialog
 
     vector <TVector*> vv ;
     vector <TVector> ligates ;
-    vector <string> vt ;
+    wxArrayString vt ;
     vector <bool> orientation ;
     bool doLigate ;
     

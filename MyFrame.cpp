@@ -1102,7 +1102,12 @@ void MyFrame::OnImageViewer(wxCommandEvent& event)
     setChild ( subframe ) ;
     }
     
-TCalculator *MyFrame::OnCalculator(wxCommandEvent& event)
+void MyFrame::OnCalculator(wxCommandEvent& event)
+    {
+    RunCalculator () ;
+    }    
+
+TCalculator *MyFrame::RunCalculator ()
     {
     TCalculator *subframe = new TCalculator ( getCommonParent() , txt("t_calculator") ) ;
 

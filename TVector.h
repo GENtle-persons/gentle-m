@@ -208,7 +208,8 @@ class TVector
     TUndo undo ;
     
     private :
-    string invert ( string s ) ;
+    virtual string invert ( string s ) ;
+    virtual string vary_base ( char b ) ;
     
     string _lu , _ll , _ru , _rl ; // Sticky ends
     bool circular , changed ;

@@ -438,11 +438,14 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
         SetMyToolTip ( ttt , TT_RS ) ;
         if ( event.LeftDown() )
            {
-#ifdef __WXMSW__
-           if ( p->def == "dna" ) p->treeBox->SelectItem ( p->treeBox->GetParent ( p->vec->rc[rs].treeid ) ) ;
-#else
+/*#ifdef __WXMSW__
+           if ( p->def == "dna" )
+              {
+              p->treeBox->SelectItem ( p->treeBox->GetParent ( p->vec->rc[rs].treeid ) ) ;
+              }    
+#else*/
 				      if ( p->def == "dna" ) p->treeBox->SelectItem ( p->treeBox->GetParent ( ) ) ; // Frell
-#endif
+//#endif
            }
         else if ( event.MiddleDown() )
            {

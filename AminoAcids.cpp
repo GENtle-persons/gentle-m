@@ -381,7 +381,7 @@ void TAminoAcids::OnAsNewFeature(wxCommandEvent& event)
     
 void TAminoAcids::OnPhotometer(wxCommandEvent& event)
     {
-    TCalculator *c = myapp()->frame->OnCalculator ( event ) ;
+    TCalculator *c = myapp()->frame->RunCalculator () ;
     wxString seq = vec->sequence.c_str() ;
     float mW = 0 ;
     for ( int a = 0 ; a < vec->sequence.length() ; a++ )

@@ -12,7 +12,7 @@ ResourceIncludes=C:\Programme\Dev-Cpp\include
 MakeIncludes=
 Compiler=--pipe -D_X86_=1 -DWIN32 -D_WIN32 -DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -D__WIN32__ -mthreads -DSTRICT  -D__WXMSW__ -D__WINDOWS__ -Wall  -fno-pcc-struct-return -O2 -fno-rtti -fno-exceptions_@@_
 CppCompiler=--pipe -D_X86_=1 -DWIN32 -D_WIN32 -DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -D__WIN32__ -mthreads -DSTRICT  -D__WXMSW__ -D__WINDOWS__ -Wall -fno-pcc-struct-return -O2 -fno-rtti -fno-exceptions_@@_
-Linker=-lwxmsw -lstdc++ -lgcc -lodbc32 -lwsock32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lctl3d32 -lodbc32 -ladvapi32 -lodbc32 -lwsock32 -lopengl32 -lglu32 -lole32 -loleaut32 -luuid_@@_sqlite.dll_@@_libmysql.a_@@_
+Linker=-lwxmsw_@@_-lstdc++_@@_-lgcc_@@_-lodbc32_@@_-lwsock32_@@_-lwinspool_@@_-lwinmm_@@_-lshell32_@@_-lcomctl32_@@_-lctl3d32_@@_-lodbc32_@@_-ladvapi32 _@@_-lodbc32 _@@_-lwsock32 _@@_-lopengl32 _@@_-lglu32 _@@_-lole32 _@@_-loleaut32 _@@_-luuid_@@_sqlite.dll_@@_libmysql.a_@@_
 IsCpp=1
 Icon=GENtle.ico
 ExeOutput=

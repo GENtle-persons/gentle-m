@@ -1136,8 +1136,8 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
         
         if ( vec->items[a].desc != "" )
            {
-           vector <string> vs ;
-           string s ;
+           wxArrayString vs ;
+           wxString s ;
            strcpy ( t , vec->items[a].desc ) ;
 
            int cnt = 0 , ls = 0 ;
@@ -1157,18 +1157,18 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
               if ( t[b] > 15 ) s += t[b] ;
               else
                  {
-                 vs.push_back ( s ) ;
+                 vs.Add ( s ) ;
                  s = "" ;
                  }
               }
-           if ( s != "" ) vs.push_back ( s ) ;
+           if ( s != "" ) vs.Add ( s ) ;
            int dx , dy ;
            y += ch ;
            pdc->SetFont ( *sfont ) ;
-           for ( b = 0 ; b < vs.size() ; b++ )
+           for ( b = 0 ; b < vs.GetCount() ; b++ )
               {
-              pdc->GetTextExtent ( vs[b].c_str() , &dx , &dy ) ;
-              pdc->DrawText ( vs[b].c_str() , x0 + cw * 3 , y ) ;
+              pdc->GetTextExtent ( vs[b] , &dx , &dy ) ;
+              pdc->DrawText ( vs[b] , x0 + cw * 3 , y ) ;
               y += dy ;
               }
            y -= ch ;
