@@ -98,6 +98,7 @@ int SeqABI::arrange ( int n )
            }
 
         pos.add ( a+1 , x + minx - wx / 2 , y , wx-1 , wy-1 ) ;
+        can->setLowX ( x + minx + wx*2 ) ;
         lowy = y+wy ;
 
         }

@@ -580,7 +580,7 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
           else p->cSequence->mark ( id , lastbp , bp ) ;
           }
        } 
-    else if ( event.MiddleDown() && p->cSequence->_from != -1 )
+    else if ( event.MiddleDown() && p->cSequence->markedFrom() != -1 )
        {
        p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
        }

@@ -133,30 +133,35 @@ class TVector
     virtual ~TVector () ;
     virtual void init () ;
     virtual void clear () ;
+    
+    // Restriction enzymes
     virtual void recalculateCuts () ;
     virtual vector <TRestrictionCut> getCuts ( TRestrictionEnzyme *e ) ;
+    virtual bool reduceToFragment ( TRestrictionCut left , TRestrictionCut right ) ;
+    virtual void doRestriction () ;
+    virtual void sortRestrictionSites () ;
+    virtual int countCuts ( wxString enzyme ) ;
     
+    // Nucleotide access/conversion
     virtual bool basematch ( char b1 , char b2 ) ; // b1 in IUPAC, b2 in SIUPAC
     virtual void setIUPAC ( char b , char *s , char *pac = NULL ) ;
     virtual char getNucleotide ( int pos , bool complement = false ) ;
     virtual void setNucleotide ( int pos , char t ) ;
     virtual char getComplement ( char c ) ;
+    
+    // Vector/sequence access
     virtual void ligate_right ( TVector &v , bool inverted = false ) ;
     virtual void closeCircle () ;
+    virtual void turn ( int off ) ;
     
     virtual TVector *getAAvector ( int from , int to , int dir = 1 ) ;
-    virtual bool reduceToFragment ( TRestrictionCut left , TRestrictionCut right ) ;
-    virtual void doRestriction () ;
-    virtual void sortRestrictionSites () ;
     virtual void doAction () ;
     virtual void doRemove ( int from , int to , bool update = true ) ;
-    virtual int countCuts ( wxString enzyme ) ;
     virtual void insert_char ( char x , int pos , bool overwrite = false ) ;
     
     virtual float getAAmw ( char aa ) ;
     virtual float getAApi ( char aa ) ;
     virtual wxString dna2aa ( wxString codon ) ;
-    virtual void turn ( int off ) ;
     virtual void setAction ( wxString _action , int _action_value = 0 ) ;
     virtual void setDatabase ( wxString s ) { database = s ; }
     virtual wxString getDatabase () { return database ; }

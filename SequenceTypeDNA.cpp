@@ -79,14 +79,14 @@ wxPoint SeqDNA::showText ( int ystart , wxArrayString &tout )
            if ( (x) % (can->blocksize+1) == 0 ) x++ ;
            if ( !t.IsEmpty() )
               {
-              if ( b >= can->_from && p.x == -1 ) p.x = y ;
-              if ( b <= can->_to ) p.y = y ;
+              if ( b >= can->markedFrom() && p.x == -1 ) p.x = y ;
+              if ( b <= can->markedTo() ) p.y = y ;
               while ( tout[y].length() < x ) tout[y] += " " ;
               tout[y].SetChar ( x-1 , t.GetChar(0) ) ;
               }
            }
         }
-    if ( can->getLastWhere() != this || can->_from == -1 || can->_to < can->_from )
+    if ( can->getLastWhere() != this || can->markedFrom() == -1 || can->markedTo() < can->markedFrom() )
        p = wxPoint ( -1 , -1 ) ;
     return p ;
     }

@@ -786,24 +786,23 @@ void TAlignment::invokeOriginal ( int id , int pos )
     if ( !c ) return ;
 
     myapp()->frame->mainTree->SelectItem ( c->inMainTree ) ;
-//    c->Activate() ;
     if ( c->def == "dna" )
         {
         MyChild *c1 = ((MyChild*)c) ;
         c1->cSequence->mark ( "DNA" , pos , pos , 1 ) ;
-        c1->cSequence->Scroll ( 0 , c1->cSequence->getBatchMark() ) ;
+        c1->cSequence->ensureVisible ( pos ) ;
         }
     else if ( c->def == "AminoAcids" )
         {
         TAminoAcids *c1 = ((TAminoAcids*)c) ;
         c1->sc->mark ( "AA" , pos , pos , 1 ) ;
-        c1->sc->Scroll ( 0 , c1->sc->getBatchMark() ) ;
+        c1->sc->ensureVisible ( pos ) ;
         }
     else if ( c->def == "ABIviewer" )
         {
         TABIviewer *c1 = ((TABIviewer*)c) ;
         c1->sc->mark ( "ABI" , pos , pos , 1 ) ;
-        c1->sc->Scroll ( 0 , c1->sc->getBatchMark() ) ;
+        c1->sc->ensureVisible ( pos ) ;
         }
     }    
 

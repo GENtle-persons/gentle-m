@@ -32,6 +32,7 @@ class TABIviewer : public ChildBase
     virtual void OnSpinWidth(wxSpinEvent& event);
     virtual void OnSpinHeight(wxSpinEvent& event);
     virtual void OnZoom(wxScrollEvent& event);
+    virtual void OnHorizontal(wxScrollEvent& event);
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){};
 //    virtual void OnClose(wxCloseEvent& event) ;
     
@@ -40,7 +41,7 @@ class TABIviewer : public ChildBase
     wxTextCtrl *stat ;
     wxPanel *up ;
     wxSplitterWindow *hs ;
-    int from ;
+    int from , oldh ;
     wxString filename ;
     wxCheckBox *aidLines , *inv_compl ;
     wxSpinCtrl *f_height , *f_width ;

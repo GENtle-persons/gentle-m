@@ -336,6 +336,7 @@ void PlasmidCanvas::invokeVectorEditor ( wxString what , int num , bool forceUpd
         }
     else p->vec->undo.abort() ;
     p->vec->setChanged ( changed | p->vec->isChanged() ) ;
+    if ( p->cSequence ) p->cSequence->SetFocus() ;
     }
     
 void PlasmidCanvas::print ()
