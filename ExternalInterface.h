@@ -8,8 +8,11 @@
 
 enum {
 	EI_NCBI = 1,
+	EI_BLAST,
 	} ;	
 	
+class blastThread ;
+
 class EILB : public wxHtmlListBox
 	{
 	public :
@@ -24,19 +27,25 @@ class EILB : public wxHtmlListBox
 	} ;    
 
 class EIpanel : public wxPanel
-	{
-	public :
+{
+    public :
 	EIpanel ( wxWindow *parent , int _mode ) ;
-	
-	private :
+    
+//    private :
 	virtual void process () ;
-	virtual wxString num2html ( int num , int digits ) ;
-	void showMessage ( wxString msg ) ;
-	
-	virtual void init_ncbi() ;
-	virtual void process_ncbi() ;
-	virtual void execute_ncbi() ;
+    virtual wxString num2html ( int num , int digits ) ;
+    void showMessage ( wxString msg ) ;
 
+    virtual void init_blast() ;
+    virtual void process_blast() ;
+    virtual void process_blast2() ;
+    virtual void execute_blast() ;
+    virtual wxString blast_align ( wxString qseq , wxString mseq , wxString hseq , int cpl ) ;
+    
+    virtual void init_ncbi() ;
+    virtual void process_ncbi() ;
+    virtual void execute_ncbi() ;
+    
     virtual void OnB1 ( wxCommandEvent& WXUNUSED(event) ) ;
     virtual void OnB2 ( wxCommandEvent& WXUNUSED(event) ) ;
     virtual void OnBlast ( wxCommandEvent& WXUNUSED(event) ) ;
@@ -46,17 +55,21 @@ class EIpanel : public wxPanel
     
     virtual wxString val ( TiXmlNode *n ) ; // Safe value
     virtual wxString valFC ( TiXmlNode *n ) ; // Value of FirstChild
-	
-	int mode ;
-	wxPanel *up ;
-	EILB *hlb ;
-	wxBoxSizer *v0 , *v1 , *h0 , *h1 ;
-	wxTextCtrl *t1 , *t2 , *t3 , *t4 ;
-	wxStaticText *st_msg ;
-	wxButton *b1 , *b2 , *b_last , *b_next ;
-	wxChoice *c1 , *c2 ;
-	long res_count , res_start ;
-
+    
+    int mode ;
+    wxPanel *up ;
+    EILB *hlb ;
+    wxBoxSizer *v0 , *v1 , *h0 , *h1 ;
+    wxTextCtrl *t1 , *t2 , *t3 , *t4 ;
+    wxStaticText *st_msg ;
+    wxButton *b1 , *b2 , *b_last , *b_next ;
+    wxChoice *c1 , *c2 ;
+    long res_count , res_start ;
+    
+    // BLAST-specific
+    blastThread *blast_thread ;
+    wxString blast_res ;
+    
     DECLARE_EVENT_TABLE()
 	} ;    
 

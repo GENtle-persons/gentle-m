@@ -66,7 +66,7 @@ void SeqRestriction::show ( wxDC& dc )
     { 
 	myass ( can , "SeqRestriction::show1" ) ;
 	myass ( vec , "SeqRestriction::show2" ) ;
-	mylog ( "SeqRestriction::show1" ) ;
+	mylog ( "SeqRestriction::show" , "1" ) ;
     int cw2 , ch2 ;
     dc.SetFont(*can->smallFont);
     dc.GetTextExtent ( "A" , &ch2 , &ch2 ) ;
@@ -76,14 +76,14 @@ void SeqRestriction::show ( wxDC& dc )
     can->MyGetClientSize ( &xa , &yb ) ;
     yb += ya ;
     int n , csgc = can->NumberOfLines() , cbs = can->blocksize , bo = can->border ;
-	mylog ( "SeqRestriction::show2" ) ;
+	mylog ( "SeqRestriction::show" , "2" ) ;
     for ( n = 0 ; n < csgc && can->seq[n] != this ; n++ ) ;
-	mylog ( "SeqRestriction::show3" ) ;
+	mylog ( "SeqRestriction::show" , "3" ) ;
     int cw = can->charwidth , ch = can->charheight ;
     int ox = bo + cw + cw * endnumberlength ;
     int oy = n*ch+bo ;
     bool direct = useDirectRoutines() ;
-        mylog ( "SeqRestriction::show4" ) ;
+        mylog ( "SeqRestriction::show" , "4" ) ;
     for ( int level = 0 ; level < pl.maxlevels ; level++ )
         {
         mylog ( "SeqRestriction::show" , wxString::Format ( "Round %d of %d" , level , pl.maxlevels ) ) ;
@@ -215,7 +215,7 @@ void SeqRestriction::show ( wxDC& dc )
         mylog ( "SeqRestriction::show" , "C" ) ;
         }
     dc.SetTextForeground ( wxColor ( *wxBLACK ) ) ;
-	mylog ( "SeqRestriction::show_fin" ) ;
+	mylog ( "SeqRestriction::show" , "fin" ) ;
     }
     
 void SeqRestriction::initFromTVector ( TVector *v )

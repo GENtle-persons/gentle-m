@@ -22,6 +22,7 @@
 #include "main.h"
 #include <wx/tipdlg.h> 
 #include <wx/splash.h>
+#include <wx/filesys.h>
 
 #ifdef __WXMSW__
 #include "wx/msw/registry.h"
@@ -116,7 +117,7 @@ wxString implode ( wxString sep , wxArrayString &r )
 // ===========================================================================
 
 // Text
-WX_DECLARE_STRING_HASH_MAP( wxString, wxHashString );
+//WX_DECLARE_STRING_HASH_MAP( wxString, wxHashString );
 
 wxHashString _text ;
 
@@ -258,6 +259,7 @@ bool MyApp::OnInit()
     wxString s1 , s2 ;
     wxFileName::SplitPath ( argv[0] , &homedir , &s1 , &s2 ) ;
     wxInitAllImageHandlers() ;
+    wxFileSystem::AddHandler ( new wxInternetFSHandler ) ;
     
     wxSetWorkingDirectory ( homedir ) ;
     // Is an instance already running?

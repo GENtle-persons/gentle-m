@@ -12,7 +12,7 @@ typedef unsigned int uint ;
 //#define MYLOG
 
 // Turn testing (log and error log) on/off
-#define MYTEST
+//#define MYTEST
 
 #ifdef MYTEST
 
@@ -153,6 +153,7 @@ WX_DEFINE_ARRAY(TVector *, wxArrayTVector);
 
 #define CLEAR_DELETE(__x) { while ( !__x.IsEmpty() ) { if ( __x[0] ) { delete __x[0] ; } __x.RemoveAt ( 0 ) ; } }
 #define FILLSTRING(__x,__c,__l) { __x = wxString ( __c , __l ) ; }
+WX_DECLARE_STRING_HASH_MAP( wxString, wxHashString );
 
 
 #include "enums.h"
