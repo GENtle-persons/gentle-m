@@ -365,6 +365,7 @@ void MyFrame::OnClose(wxCloseEvent& event)
     bool canclose = true ;
     for ( int a = 0 ; canclose && a < children.GetCount() ; a++ )
         canclose = ! ( children[a]->vec && children[a]->vec->isChanged() ) ;
+    if ( LS->getOption ( "DEBUGGING" , "" ) == "1" ) canclose = true ; // For debugging
     if ( !canclose )
         {
         if ( wxYES == wxMessageBox ( txt("t_some_changed") , txt("msg_box") , wxICON_QUESTION | wxYES | wxNO ) )
