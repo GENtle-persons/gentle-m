@@ -273,7 +273,7 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
         p.MakeLower() ;
         wxString v = va[a].AfterFirst ( '=' ) ;
         multitrim ( v , true ) ;
-        if ( p == "name" || p == "standard_name" || p == "gene" || p == "protein_id" )
+        if ( p == "name" || p == "standard_name" || p == "gene" || p == "protein_id" || p == "region_name" )
            i.name = v ;
         else
            {

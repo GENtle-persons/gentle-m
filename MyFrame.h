@@ -100,6 +100,7 @@ public:
     virtual void OnClose(wxCloseEvent& event);
     virtual void OnSashDrag(wxSashEvent& event);
     
+    virtual void addDefaultTools(wxToolBar* toolBar) ;
     virtual TCalculator *RunCalculator () ;
     virtual MyChild* newFromVector ( TVector *nv , int type = TYPE_VECTOR ) ;
     virtual TAminoAcids *newAminoAcids ( wxString aa , wxString title = "" ) ;

@@ -45,7 +45,7 @@ BEGIN_EVENT_TABLE(MyFrame, MyFrameType)
 END_EVENT_TABLE()
 
 // Define my frame constructor
-#define ACC_ENT 38
+#define ACC_ENT 39
 MyFrame::MyFrame(wxWindow *parent,
                  const wxWindowID id,
                  const wxString& title,
@@ -96,11 +96,12 @@ MyFrame::MyFrame(wxWindow *parent,
     entries[30].Set(wxACCEL_CTRL, (int) 'I', MDI_FILE_IMPORT);
     entries[31].Set(wxACCEL_CTRL, (int) 'Z', MDI_UNDO);
     entries[32].Set(wxACCEL_CTRL, (int) 'N', MDI_TEXT_IMPORT);
-    entries[33].Set(wxACCEL_CTRL, WXK_F4, MDI_CLOSE);
-    entries[34].Set(wxACCEL_CTRL, WXK_TAB, MDI_NEXT_WINDOW);
-    entries[35].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_TAB, MDI_PREV_WINDOW);
-    entries[36].Set(wxACCEL_NORMAL, WXK_F8, MDI_TOGGLE_IDNA);
-    entries[37].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_F12, Y___);
+    entries[33].Set(wxACCEL_CTRL, (int) 'D', MDI_EXTERNAL_INTERFACE);
+    entries[34].Set(wxACCEL_CTRL, WXK_F4, MDI_CLOSE);
+    entries[35].Set(wxACCEL_CTRL, WXK_TAB, MDI_NEXT_WINDOW);
+    entries[36].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_TAB, MDI_PREV_WINDOW);
+    entries[37].Set(wxACCEL_NORMAL, WXK_F8, MDI_TOGGLE_IDNA);
+    entries[38].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_F12, Y___);
     
     wxAcceleratorTable accel(ACC_ENT, entries);
     SetAcceleratorTable(accel);
@@ -290,6 +291,12 @@ void MyFrame::initme ()
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"primer_import.bmp", wxBITMAP_TYPE_BMP) ) ; // 14
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"primer_export.bmp", wxBITMAP_TYPE_BMP) ) ; // 15
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"print.bmp", wxBITMAP_TYPE_BMP) ) ; // 16
+
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"align_tool.bmp", wxBITMAP_TYPE_BMP) ) ; // 17
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"image.bmp", wxBITMAP_TYPE_BMP) ) ; // 18
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"web.bmp", wxBITMAP_TYPE_BMP) ) ; // 19
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"calc_tool.bmp", wxBITMAP_TYPE_BMP) ) ; // 20
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"settings_tool.bmp", wxBITMAP_TYPE_BMP) ) ; // 21
 
     html_ep = new wxHtmlEasyPrinting ( "" , this ) ;
     
@@ -816,6 +823,16 @@ void MyFrame::InitToolBar(wxToolBar* toolBar)
 {
 }
 
+void MyFrame::addDefaultTools(wxToolBar* toolBar)
+	{
+ 	toolBar->AddSeparator() ;
+ 	toolBar->AddTool( MDI_ALIGNMENT, myapp()->frame->bitmaps[17] ) ;
+ 	toolBar->AddTool( MDI_IMAGE_VIEWER, myapp()->frame->bitmaps[18] ) ;
+ 	toolBar->AddTool( MDI_CALCULATOR, myapp()->frame->bitmaps[20] ) ;
+ 	toolBar->AddTool( PROGRAM_OPTIONS, myapp()->frame->bitmaps[21] ) ;
+ 	toolBar->AddTool( MDI_EXTERNAL_INTERFACE, myapp()->frame->bitmaps[19] ) ;
+	}
+
 TAlignment *MyFrame::runAlignment ( wxArrayString &vs , wxArrayChildBase &vc , TVector *nv )
     {
 //    Thaw () ;
@@ -1159,7 +1176,7 @@ void MyFrame::blast ( wxString seq , wxString prg )
     
 void MyFrame::OnExternalInterface(wxCommandEvent& event)
     {
-    ExternalInterface *subframe = new ExternalInterface ( getCommonParent() , txt("m_external_interface") ) ;
+    ExternalInterface *subframe = new ExternalInterface ( getCommonParent() , txt("t_external_interface") ) ;
 
     // Give it an icon
 #ifdef __WXMSW__

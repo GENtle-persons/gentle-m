@@ -181,6 +181,7 @@ void TAminoAcids::initme ()
     toolBar->AddControl ( mycb ) ;
     inlinePlot = new wxChoice ( toolBar , AA_IP ) ;
     toolBar->AddControl ( inlinePlot ) ;
+    myapp()->frame->addDefaultTools ( toolBar ) ;
     toolBar->Realize() ;
     inlinePlot->Append ( txt("t_no_plot") ) ;
     inlinePlot->Append ( txt("t_chou_fasman") ) ;

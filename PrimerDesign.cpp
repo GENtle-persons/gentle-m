@@ -452,6 +452,7 @@ void TPrimerDesign::initme ()
     toolBar->AddSeparator () ;
     wxCheckBox *mycb = new wxCheckBox ( toolBar , ALIGN_HORIZ , txt("t_horizontal") ) ;
     toolBar->AddControl ( mycb ) ;
+    myapp()->frame->addDefaultTools ( toolBar ) ;
 
     toolBar->Realize() ;
 #else
