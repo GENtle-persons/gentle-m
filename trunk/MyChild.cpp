@@ -388,7 +388,10 @@ void MyChild::OnLigation(wxCommandEvent& event)
         {
         MyChild *p = (MyChild*) app->frame->children[l] ;
         if ( p->def == "dna" && !p->vec->isCircular() )
+           {
            ld.vv.push_back ( p->vec ) ;
+//           ld.vv[ld.vv.size()-1]->setFromVector ( p->vec ) ;
+           }
         }
     
     ld.init () ;
@@ -399,7 +402,8 @@ void MyChild::OnLigation(wxCommandEvent& event)
         if ( ld.ligates[l].sequence != "" )
            {
            TVector *v = new TVector ;
-           *v = ld.ligates[l] ;
+//           *v = ld.ligates[l] ;
+           v->setFromVector ( ld.ligates[l] ) ;
            for ( int a = 0 ; a < v->items.size() ; a++ )
               v->items[a].r1 = -1 ; // Resetting item radius to "recalc"
            app->frame->newFromVector ( v ) ;
@@ -418,7 +422,7 @@ void MyChild::OnCut(wxCommandEvent& event)
     if ( s == "" ) return ;
     if (wxTheClipboard->Open())
         {
-        vec->undo->start ( txt("u_cut") ) ;
+        vec->undo.start ( txt("u_cut") ) ;
         wxTheClipboard->SetData( new wxTextDataObject(s.c_str()) );
         wxTheClipboard->Close();
 
@@ -433,7 +437,7 @@ void MyChild::OnCut(wxCommandEvent& event)
         treeBox->Refresh() ;
         cPlasmid->Refresh() ;
         cSequence->Refresh() ;
-        vec->undo->stop() ;
+        vec->undo.stop() ;
         }
     }
     
@@ -454,7 +458,7 @@ void MyChild::OnPaste(wxCommandEvent& event)
     if (!wxTheClipboard->Open()) return ;
     if (!wxTheClipboard->IsSupported( wxDF_TEXT )) return ;
 
-    vec->undo->start ( txt("u_cut") ) ;
+    vec->undo.start ( txt("u_cut") ) ;
 
     wxTextDataObject data;
     wxTheClipboard->GetData( data );
@@ -473,7 +477,7 @@ void MyChild::OnPaste(wxCommandEvent& event)
     cSequence->doHide = false ;
     cSequence->Refresh () ;
     SetCursor ( *wxSTANDARD_CURSOR ) ;
-    vec->undo->stop() ;
+    vec->undo.stop() ;
     }
 
 void MyChild::OnExport(wxCommandEvent& event)
@@ -544,7 +548,7 @@ void MyChild::OnAsNewFeature(wxCommandEvent& event)
     int to = cPlasmid->mark_to ;
     if ( from == -1 ) return ;
     
-    vec->undo->start ( txt("u_new_feature") ) ;
+    vec->undo.start ( txt("u_new_feature") ) ;
 
     if ( to > vec->sequence.length() )
         to -= vec->sequence.length() ;
@@ -562,7 +566,7 @@ void MyChild::OnAsNewFeature(wxCommandEvent& event)
     vec->recalcvisual = true ;
     cPlasmid->Refresh () ;
     updateSequenceCanvas () ;
-    vec->undo->stop () ;
+    vec->undo.stop () ;
 //    cSequence->arrange() ;
 //    cSequence->Refresh() ;
     }
@@ -640,8 +644,8 @@ void MyChild::OnEditMode(wxCommandEvent& event)
         Refresh () ;
         }
     mi->Check ( cSequence->editMode ) ;
-    if ( cSequence->editMode ) vec->undo->start ( txt("u_edit") ) ;
-    else vec->undo->stop () ;
+    if ( cSequence->editMode ) vec->undo.start ( txt("u_edit") ) ;
+    else vec->undo.stop () ;
 #ifdef __WXMSW__ // LINUX
     GetToolBar()->ToggleTool(MDI_EDIT_MODE,cSequence->editMode);
 #endif
@@ -1204,8 +1208,8 @@ void MyChild::OnZoom ( wxCommandEvent &ev )
 
 void MyChild::Undo(wxCommandEvent& event)
     {
-    if ( !vec->undo->canUndo() ) return ;
-    vec->undo->pop() ;
+    if ( !vec->undo.canUndo() ) return ;
+    vec->undo.pop() ;
     initPanels () ;
 
     updateSequenceCanvas ( false ) ;
@@ -1216,7 +1220,7 @@ void MyChild::Undo(wxCommandEvent& event)
     
 void MyChild::updateUndoMenu ()
     {
-    wxString lm = vec->undo->getLastMessage() ;
+    wxString lm = vec->undo.getLastMessage() ;
     wxMenuBar *mb = GetMenuBar () ;
     wxMenuItem *mi = mb->FindItem ( MDI_UNDO ) ;
     if ( !mi ) return ;

@@ -26,7 +26,7 @@ TABIviewer::TABIviewer(wxMDIParentFrame *parent, const wxString& title)
     def = "ABIviewer" ;
     vec->name = title.c_str() ;
     from = -1 ;
-    vec->undo->clear () ;
+    vec->undo.clear () ;
     stat = NULL ;
     
     app = ((MyFrame*) parent)->app ;
@@ -345,10 +345,10 @@ void TABIviewer::OnEditName(wxCommandEvent& event)
     if ( nn == "" ) return ;
     if ( nn == vec->name.c_str() ) return ;
     
-    vec->undo->start ( txt("u_title_change") ) ;
+    vec->undo.start ( txt("u_title_change") ) ;
     vec->name = nn.c_str() ;
     app->frame->mainTree->SetItemText ( inMainTree , nn ) ;
-    vec->undo->stop() ;
+    vec->undo.stop() ;
     }
     
 void TABIviewer::OnMarkAll(wxCommandEvent& event)

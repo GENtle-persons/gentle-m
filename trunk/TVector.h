@@ -2,6 +2,7 @@
 #define _TVECTOR_H_
 
 #include "main.h"
+#include "TUndo.h"
 
 class MyChild ;
 class TRestrictionEnzyme ;
@@ -11,7 +12,6 @@ class TVectorTree ;
 class PlasmidCanvas ;
 class TVectorEditor ;
 class ChildBase ;
-class TUndo ;
 
 #define VIT_TYPES      7 //number of possible types
 
@@ -107,7 +107,7 @@ class TVector
     virtual string transformSequence ( bool inverse , bool reverse ) ;
     virtual char getNucleotide ( int pos , bool complement = false ) ;
     virtual char getComplement ( char c ) ;
-    virtual void ligate_right ( TVector v , bool inverted = false ) ;
+    virtual void ligate_right ( TVector &v , bool inverted = false ) ;
     virtual void closeCircle () ;
     
     virtual TVector *getAAvector ( int from , int to , int dir = 1 ) ;
@@ -162,7 +162,7 @@ class TVector
     vector <string> hiddenEnzymes ;
     vector <string> proteases ;
     
-    TUndo *undo ;
+    TUndo undo ;
     
     virtual void setFromVector ( TVector &v ) ;
     

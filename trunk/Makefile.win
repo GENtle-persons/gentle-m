@@ -1,5 +1,5 @@
 # Project: GENtle
-# Makefile created by Dev-C++ 4.9.8.1
+# Makefile created by Dev-C++ 4.9.8.0
 
 CPP  = g++.exe
 CC   = gcc.exe
@@ -12,7 +12,7 @@ INCS =  -I"C:/Programme/Dev-Cpp/include"  -I"C:/Programme/Dev-Cpp/Mine/GENtle"
 CXXINCS =  -I"C:/Programme/Dev-Cpp/include/c++"  -I"C:/Programme/Dev-Cpp/include/c++/mingw32"  -I"C:/Programme/Dev-Cpp/include/c++/backward"  -I"C:/Programme/Dev-Cpp/include"  -I"C:/Programme/Dev-Cpp/Mine/GENtle" 
 BIN  = GENtle.exe
 CXXFLAGS = $(CXXINCS)--pipe -D_X86_=1 -DWIN32 -D_WIN32 -DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -D__WIN32__ -mthreads -DSTRICT  -D__WXMSW__ -D__WINDOWS__ -Wall -fno-pcc-struct-return -O2 -fno-rtti -fno-exceptions   -traditional-cpp -w -fsave-memoized -O3
-CFLAGS = $(INCS)--pipe -D_X86_=1 -DWIN32 -D_WIN32 -DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -D__WIN32__ -mthreads -DSTRICT  -D__WXMSW__ -D__WINDOWS__ -Wall -fno-pcc-struct-return -O2 -fno-rtti -fno-exceptions   -fmessage-length=0 -traditional-cpp -w -fsave-memoized -O3
+CFLAGS = $(INCS)--pipe -D_X86_=1 -DWIN32 -D_WIN32 -DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -D__WIN32__ -mthreads -DSTRICT  -D__WXMSW__ -D__WINDOWS__ -Wall -fno-pcc-struct-return -O2 -fno-rtti -fno-exceptions   -traditional-cpp -w -fsave-memoized -O3
 
 .PHONY: all all-before all-after clean clean-custom
 

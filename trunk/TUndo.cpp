@@ -1,4 +1,5 @@
 #include "TUndo.h"
+#include "TVector.h"
 
 TUndo::TUndo ( TVector *_base )
     {

@@ -27,7 +27,7 @@ TAminoAcids::TAminoAcids(wxMDIParentFrame *parent, const wxString& title)
     def = "AminoAcids" ;
     vec->name = title.c_str() ;
     from = -1 ;
-    vec->undo->clear() ;
+    vec->undo.clear() ;
     stat = NULL ;
     
     app = ((MyFrame*) parent)->app ;
@@ -257,13 +257,13 @@ void TAminoAcids::OnEditMode(wxCommandEvent& event)
         sc->arrange () ;
         Refresh () ;
         }
-    if ( sc->editMode ) vec->undo->start ( txt("u_edit") ) ;
-    else vec->undo->stop () ;
+    if ( sc->editMode ) vec->undo.start ( txt("u_edit") ) ;
+    else vec->undo.stop () ;
     }
 
 void TAminoAcids::invokeVectorEditor ( string what , int num , bool forceUpdate )
     {
-    vec->undo->start ( txt("u_vec_edit") ) ;
+    vec->undo.start ( txt("u_vec_edit") ) ;
     TVectorEditor ve ( this , txt("t_vector_editor") , vec , app ) ;
     bool changed = vec->isChanged() ;
     string on = vec->name ;
@@ -282,9 +282,9 @@ void TAminoAcids::invokeVectorEditor ( string what , int num , bool forceUpdate 
         app->frame->mainTree->SetItemText ( inMainTree , getName().c_str() ) ;
         showName() ;
         showSequence () ;
-        vec->undo->stop() ;
+        vec->undo.stop() ;
         }
-    else vec->undo->abort() ;
+    else vec->undo.abort() ;
     vec->setChanged ( changed | vec->isChanged() ) ;
     }
     
@@ -324,9 +324,9 @@ void TAminoAcids::OnFind(wxCommandEvent& event)
     
 void TAminoAcids::OnCut(wxCommandEvent& event)
     {
-    vec->undo->start ( txt("u_cut") ) ;
+    vec->undo.start ( txt("u_cut") ) ;
     sc->OnCut ( event ) ;
-    vec->undo->stop () ;
+    vec->undo.stop () ;
     }
     
 void TAminoAcids::OnCopy(wxCommandEvent& event)
@@ -341,7 +341,7 @@ void TAminoAcids::OnAsNewFeature(wxCommandEvent& event)
     int to = sc->_to ;
     if ( from == -1 ) return ;
     
-    vec->undo->start ( txt("u_new_feature") ) ;
+    vec->undo.start ( txt("u_new_feature") ) ;
 
     TVectorItem nvi ;
     sprintf ( t , txt("t_new_item_title") , from , to ) ;
@@ -353,7 +353,7 @@ void TAminoAcids::OnAsNewFeature(wxCommandEvent& event)
     vec->setChanged () ;
     vec->items.push_back ( nvi ) ;
     invokeVectorEditor ( "item" , vec->items.size()-1 , true ) ;
-    vec->undo->stop() ;
+    vec->undo.stop() ;
     }
     
 void TAminoAcids::OnBlastAA(wxCommandEvent& event)
@@ -370,8 +370,8 @@ void TAminoAcids::OnBlastAA(wxCommandEvent& event)
 
 void TAminoAcids::Undo(wxCommandEvent& event)
     {
-    if ( !vec->undo->canUndo() ) return ;
-    vec->undo->pop() ;
+    if ( !vec->undo.canUndo() ) return ;
+    vec->undo.pop() ;
 //    initPanels () ;
 
     showSequence () ;
@@ -382,7 +382,7 @@ void TAminoAcids::Undo(wxCommandEvent& event)
     
 void TAminoAcids::updateUndoMenu ()
     {
-    wxString lm = vec->undo->getLastMessage() ;
+    wxString lm = vec->undo.getLastMessage() ;
     wxMenuBar *mb = GetMenuBar () ;
     if ( !mb ) return ;
     wxMenuItem *mi = mb->FindItem ( MDI_UNDO ) ;
