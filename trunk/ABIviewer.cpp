@@ -1,0 +1,395 @@
+#include "AminoAcids.h"
+
+BEGIN_EVENT_TABLE(TABIviewer, wxMDIChildFrame)
+    EVT_MENU(MDI_EDIT_MODE, TABIviewer::OnEditMode)
+    EVT_MENU(MDI_MARK_ALL, TABIviewer::OnMarkAll)
+    EVT_MENU(MDI_FILE_SAVE, TABIviewer::OnFileSave)
+    EVT_MENU(MDI_EXPORT, TABIviewer::OnExport)
+    EVT_MENU(MDI_FIND, TABIviewer::OnFind)
+    EVT_MENU(MDI_COPY, TABIviewer::OnCopy)
+    EVT_MENU(AMINOACIDS_EDIT_NAME, TABIviewer::OnEditName)
+    EVT_MENU(MDI_COPY_TO_NEW,TABIviewer::OnCopyToNew)
+
+    EVT_CHECKBOX(ABI_HELPLINES, TABIviewer::OnHelplines)
+    EVT_SPINCTRL(ABI_WIDTH, TABIviewer::OnSpinWidth)
+    EVT_SPINCTRL(ABI_HEIGHT, TABIviewer::OnSpinHeight)
+    EVT_COMMAND_SCROLL(ABI_SLIDER, TABIviewer::OnZoom)
+
+    EVT_SET_FOCUS(ChildBase::OnFocus)
+    EVT_CLOSE(TABIviewer::OnClose)
+END_EVENT_TABLE()
+
+TABIviewer::TABIviewer(wxMDIParentFrame *parent, const wxString& title)
+    : ChildBase(parent, title)
+    {
+    vec = new TVector ( this ) ;
+    def = "ABIviewer" ;
+    vec->name = title.c_str() ;
+    from = -1 ;
+    vec->setChanged ( false ) ;
+    stat = NULL ;
+    
+    app = ((MyFrame*) parent)->app ;
+    }
+    
+TABIviewer::~TABIviewer ()
+    {
+    if ( vec ) delete vec ;
+    if ( stat ) delete stat ;
+//    if ( app ) app->my_children.DeleteObject(this);    
+    }
+    
+void TABIviewer::OnZoom(wxScrollEvent& event)
+    {
+    int i = event.GetPosition() ;
+    SeqABI *abi = (SeqABI*) sc->seq[0] ;
+    abi->zoom = i ;
+    sc->SilentRefresh() ;
+    }
+
+void TABIviewer::OnHelplines(wxCommandEvent& event)
+    {
+    bool state = aidLines->GetValue() ;
+    SeqABI *abi = (SeqABI*) sc->seq[0] ;
+    abi->showHelpLines = state ;
+    sc->SilentRefresh () ;
+    }
+    
+void TABIviewer::OnSpinWidth(wxSpinEvent& event)
+    {
+    int value = f_width->GetValue() ;
+    SeqABI *abi = (SeqABI*) sc->seq[0] ;
+    abi->screenScale = value ;
+    sc->arrange () ;
+    sc->SilentRefresh () ;
+    }
+    
+void TABIviewer::OnSpinHeight(wxSpinEvent& event)
+    {
+    int value = f_height->GetValue() ;
+    sc->blankline = value + 1 ;
+    sc->arrange () ;
+    sc->SilentRefresh () ;    
+    }
+
+void TABIviewer::OnClose(wxCloseEvent& event)
+{
+    if ( !caniclose ( event ) ) return ;
+    
+    // Removing the window from the main tree
+    MyFrame *p = app->frame ;
+    p->mainTree->removeChild ( this ) ;
+    p->SetTitle ( txt("gentle") ) ;
+    SetTitle ( txt("gentle") ) ;
+    
+    // Removing from frame children list
+    int a ;
+    for ( a = 0 ; a < p->children.size() && p->children[a] != this ; a++ ) ;
+    if ( a < p->children.size() )
+        {
+        p->children[a] = p->children[p->children.size()-1] ;
+        p->children.pop_back () ;
+        }
+
+    event.Skip();
+}
+    
+void TABIviewer::initme ( MyApp *_app )
+    {
+    app = _app ;
+    int bo = 5 ;
+
+    // Menus
+    wxMenu *file_menu = app->frame->getFileMenu () ;
+    wxMenu *tool_menu = app->frame->getToolMenu () ;
+    wxMenu *help_menu = app->frame->getHelpMenu () ;
+
+    wxMenu *edit_menu = new wxMenu;
+    edit_menu->Append(MDI_MARK_ALL, txt("m_mark_all") );
+//    edit_menu->Append(MDI_CUT, txt("m_cut") );
+    edit_menu->Append(MDI_COPY, txt("m_copy") );
+//    edit_menu->Append(MDI_PASTE, txt("m_paste") );
+//    edit_menu->AppendSeparator();
+//    edit_menu->Append(MDI_FIND, txt("m_find") );
+//    edit_menu->AppendSeparator();
+    edit_menu->Append(MDI_COPY_TO_NEW, txt("m_copy_to_new") );
+//    edit_menu->Append(MDI_AS_NEW_FEATURE, txt("m_as_new_feature") );
+//    edit_menu->Append(MDI_EXTRACT_AA, txt("m_extract_aa") );
+
+    wxMenu *view_menu = new wxMenu;
+    view_menu->Append(MDI_EDIT_MODE, txt("m_edit_mode") , "" , true );
+
+//    wxMenu *action_menu = new wxMenu;
+//    action_menu->Append(AM_SETUP, "SETUP" );
+
+    wxMenuBar *menu_bar = new wxMenuBar;
+    menu_bar->Append(file_menu, txt("m_file") );
+    menu_bar->Append(edit_menu, txt("m_edit") );
+    menu_bar->Append(view_menu, txt("m_view") );
+    menu_bar->Append(tool_menu, txt("m_tools") );
+    menu_bar->Append(help_menu, txt("m_help") );
+    SetMenuBar(menu_bar);
+
+
+
+    hs = new wxSplitterWindow ( this , SPLIT_AMINOACIDS ) ;
+
+    // Sequence Canvas
+    sc = new SequenceCanvas ( hs , wxPoint ( 0 , 0 ) , wxSize ( 100 , 100 ) ) ;
+    sc->blankline = 0 ;
+    sc->app = app ;
+//    sc->aa = this ;
+    sc->edit_id = "ABI" ;
+    sc->edit_valid = "ATGCN" ;
+    sc->forceoverwrite = true ;
+    sc->child = this ;
+
+    // Upper panel
+    Maximize ( true ) ;
+    int w , h , th = 20 ;
+    GetClientSize ( &w , &h ) ;
+    up = new wxPanel ( hs , -1 , wxDefaultPosition , wxSize ( w , 90 ) ) ;
+    up->GetClientSize ( &w , &h ) ;
+    
+    hs->SplitHorizontally ( up , sc ,h+bo ) ;
+    hs->SetMinimumPaneSize ( h+bo ) ;
+    
+    // Toys
+    aidLines = new wxCheckBox ( up , ABI_HELPLINES , txt("t_aid_lines") , wxPoint ( bo , bo ) ) ;
+    f_height = new wxSpinCtrl ( up , ABI_HEIGHT , "5" , wxPoint ( bo , bo + th * 1 ) , wxSize ( 50 , -1 ) ) ;
+    f_width = new wxSpinCtrl ( up , ABI_WIDTH , "2" , wxPoint ( bo , bo + th * 2 ) , wxSize ( 50 , -1 ) ) ;
+    f_height->SetRange ( 1 , 20 ) ;
+    f_width->SetRange ( 1 , 9 ) ;
+    aidLines->SetValue ( true ) ;
+    wxRect r ;
+    r = f_height->GetRect() ;
+    new wxStaticText ( up , -1 , txt("t_scale_height") , wxPoint ( r.GetRight()+bo , r.GetTop()+2 ) ) ;
+    r = f_width->GetRect() ;
+    new wxStaticText ( up , -1 , txt("t_scale_width") , wxPoint ( r.GetRight()+bo , r.GetTop()+2 ) ) ;
+    
+    slider = new wxSlider ( up , ABI_SLIDER , 1 , 1 , 50 , 
+                             wxPoint ( bo , r.GetBottom()+bo ) ,
+                             wxSize ( 100 , th ) ,
+                             wxSL_HORIZONTAL ) ;
+    r = slider->GetRect() ;
+    new wxStaticText ( up , -1 , txt("t_zoom") , wxPoint ( r.GetRight()+bo , r.GetTop()+2 ) ) ;
+
+    // Statistics box
+    stat = new wxTextCtrl ( up ,
+                            -1 ,
+                            "" ,
+                            wxPoint ( 150 , 0 ) ,
+                            wxSize ( w - 150 , h ) ,
+                            wxTE_MULTILINE | wxTE_READONLY ) ;
+
+                               
+#ifdef __WXMSW__ // LINUX
+    // Toolbar
+    wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
+    app->frame->InitToolBar(toolBar);
+    toolBar->AddTool( MDI_TEXT_IMPORT , 
+                wxBitmap (app->bmpdir+"\\new.bmp", wxBITMAP_TYPE_BMP),
+                txt("m_new_sequence") ) ;
+    toolBar->AddTool( MDI_FILE_OPEN, 
+            wxBitmap (app->bmpdir+"\\open.bmp", wxBITMAP_TYPE_BMP), 
+            txt("m_open") , txt("m_opentxt") );
+    toolBar->AddTool( MDI_FILE_SAVE, 
+                wxBitmap (app->bmpdir+"\\save.bmp", wxBITMAP_TYPE_BMP),
+                txt("m_store_in_db") , 
+                txt("m_txt_store_in_db"));
+    toolBar->AddSeparator() ;
+//    toolBar->AddTool( MDI_CUT,
+//        wxBitmap (app->bmpdir+"\\cut.bmp", wxBITMAP_TYPE_BMP)) ;
+    toolBar->AddTool( MDI_COPY,
+        wxBitmap (app->bmpdir+"\\copy.bmp", wxBITMAP_TYPE_BMP)) ;
+//    toolBar->AddTool( MDI_PASTE,
+//        wxBitmap (app->bmpdir+"\\paste.bmp", wxBITMAP_TYPE_BMP)) ;
+    toolBar->Realize() ;
+#endif
+
+    wxFont myFont ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ;
+    stat->SetFont ( myFont ) ;
+
+    showSequence () ;
+    showStat () ;
+    sc->SetFocus() ;
+    }
+    
+string TABIviewer::getName ()
+    {
+    return vec->name ;
+    }
+
+string TABIviewer::getStat ()
+    {
+    SeqABI *abi = (SeqABI*) sc->seq[0] ;
+    ABItype *at = abi->at ;
+    char t[100] ;
+    string comb = at->getRecordPascalString("CMBF",1) ;
+    string pdmf = at->getRecordPascalString("PDMF",1) ;
+    string smpl = at->getRecordPascalString("SMPL",1) ;
+    string geln = at->getRecordPascalString("GELN",1) ;
+    string gelp = at->getRecordPascalString("GELP",1) ;
+    
+    int lane = at->getRecordValue("LANE",1) >> 16 ;
+    int rund1 = at->getRecordValue("RUND",1) ;
+    int rund2 = at->getRecordValue("RUND",2) ;
+    int runt1 = at->getRecordValue("RUNT",1) ;
+    int runt2 = at->getRecordValue("RUNT",2) ;
+    
+    char start[100] , stop[100] ;
+    sprintf ( start , txt("t_abi_start") ,
+                        rund1 >> 16 ,
+                        ( rund1 >> 8 ) & 255 ,
+                        rund1 & 255 ,
+                        ( runt1 >> 24 ) & 255 ,
+                        ( runt1 >> 16 ) & 255 ,
+                        ( runt1 >>  8 ) & 255 ) ;
+    sprintf ( stop , txt("t_abi_stop") ,
+                        rund2 >> 16 ,
+                        ( rund2 >> 8 ) & 255 ,
+                        rund2 & 255 ,
+                        ( runt2 >> 24 ) & 255 ,
+                        ( runt2 >> 16 ) & 255 ,
+                        ( runt2 >>  8 ) & 255 ) ;
+    
+    int a ;
+    char u[256] ;
+    string bases ;
+    for ( a = 0 ; a < 256 ; a++ ) u[a] = 0 ;
+    for ( a = 0 ; a < abi->s.length() ; a++ ) u[abi->s[a]]++ ;
+    for ( a = 0 ; a < 256 ; a++ )
+       {
+       if ( u[a] > 0 )
+          {
+          if ( bases != "" ) bases += ";  " ;
+          sprintf ( t , "%c: %d" , (char) a , u[a] ) ;
+          bases += t ;
+          }
+       }
+
+    string r ;
+    r += bases + "\n" ;
+    r += txt("t_abi_sample") + smpl + "\n" ;
+    sprintf ( t , txt("t_abi_lane") , lane ) ; r += t ;
+    r += start ;
+    r += stop ;
+    if ( comb != "" ) r += txt("t_abi_comb") + comb + "\n" ;
+    r += txt("t_abi_gel") + geln + "\n" ;
+    r += txt("t_abi_file") + gelp + "\n" ;
+    r += txt("t_abi_primer_mobility_correction") + pdmf ;
+    
+    return r ;
+    }
+    
+void TABIviewer::showStat ()
+    {
+    string r = getStat () ;
+    stat->SetValue ( r.c_str() ) ;
+    }
+
+void TABIviewer::showSequence ()
+    {
+    // Cleaning up
+    while ( sc->seq.size() )
+        {
+        delete sc->seq[sc->seq.size()-1] ;
+        sc->seq.pop_back () ;
+        }
+        
+    sc->blankline = 6 ;
+
+    // Display
+    SeqABI *d = new SeqABI ( sc ) ;
+    d->vec = vec ;
+    d->initFromFile ( filename ) ;
+    d->takesMouseActions = true ;
+    sc->seq.push_back ( d ) ;
+    
+    sc->arrange () ;
+    sc->Refresh () ;    
+    showStat() ;
+    }
+    
+void TABIviewer::OnEditMode(wxCommandEvent& event)
+    {
+    wxMenuBar *mb = GetMenuBar () ;
+    wxMenuItem *mi = mb->FindItem ( MDI_EDIT_MODE ) ;
+    wxString s ;
+    if ( mi->IsChecked() )
+        {
+        sc->editMode = true ;
+        sc->findID("ABI")->s += " " ;
+        vec->sequence += " " ;
+        sc->arrange () ;
+        if ( sc->_from == -1 ) sc->mark ( "ABI" , 1 , 1 , 2 ) ;
+        else sc->mark ( "ABI" , sc->_from , sc->_from , 2 ) ;
+        sc->SetFocus() ;
+        }
+    else
+        {
+        sc->editMode = false ;
+        sc->mark ( "ABI" , -1 , -1 ) ;
+        vec->sequence.erase ( vec->sequence.length()-1 , 1 ) ;
+        sc->findID("ABI")->s.erase ( sc->findID("ABI")->s.length()-1 , 1 ) ;
+        sc->arrange () ;
+        Refresh () ;
+        }
+    }
+
+void TABIviewer::OnEditName(wxCommandEvent& event)
+    {
+    wxString nn = wxGetTextFromUser ( txt("t_edit_aa_name_txt") ,
+                                      txt("t_edit_aa_name") , 
+                                      vec->name.c_str() ) ;
+    if ( nn == "" ) return ;
+    if ( nn == vec->name.c_str() ) return ;
+    
+    vec->name = nn.c_str() ;
+    app->frame->mainTree->SetItemText ( inMainTree , nn ) ;
+    vec->setChanged() ;
+    }
+    
+void TABIviewer::OnMarkAll(wxCommandEvent& event)
+    {
+    sc->mark ( "ABI" , 1 , vec->sequence.length() ) ;
+    }
+    
+void TABIviewer::OnFileSave(wxCommandEvent& event)
+    {
+    TManageDatabaseDialog dbd ( this , txt("t_store") , app , ACTION_MODE_SAVE , vec ) ;
+    dbd.ShowModal () ;
+    }
+    
+void TABIviewer::OnExport(wxCommandEvent& event)
+    {
+    wxMessageDialog md ( this , "Not implemented ... yet!" ) ;
+    md.ShowModal() ;
+    }
+    
+void TABIviewer::OnFind(wxCommandEvent& event)
+    {
+    FindSequenceDialog fsd ( this , txt("t_find") ) ;
+    fsd.allowed_chars = sc->edit_valid ;
+    fsd.ShowModal () ;
+//    wxMessageDialog md ( this , "Not implemented ... yet!" ) ;
+//    md.ShowModal() ;
+    }
+    
+void TABIviewer::OnCopyToNew(wxCommandEvent& event)
+    {
+    TVector *nv = new TVector ;
+    string s ;
+    if ( sc->_from == -1 ) s = vec->sequence ; // All of it
+    else s = sc->getSelection() ;
+    nv->name = vec->name ;
+    nv->sequence = s ;
+    nv->desc = txt("t_abi_original") + getStat() ;
+    app->frame->newFromVector ( nv ) ;
+    }
+
+void TABIviewer::OnCopy(wxCommandEvent& event)
+    {
+    sc->OnCopy ( event ) ;
+    }
+

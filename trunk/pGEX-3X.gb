@@ -1,0 +1,194 @@
+LOCUS       XXU13852                4952 bp    DNA     circular SYN 13-DEC-1994
+DEFINITION  pGEX-3X cloning vector, complete sequence.
+ACCESSION   U13852
+VERSION     U13852.1  GI:595717
+KEYWORDS    glutathione S-transferase; beta-lactamase; lac repressor.
+SOURCE      unidentified cloning vector
+  ORGANISM  unidentified cloning vector
+            artificial sequences; vectors.
+REFERENCE   1  (bases 1 to 4952)
+  AUTHORS   Malone,J.A.
+  TITLE     pGEX-3X: A cloning vector for the inducible expression of genes as
+            glutathione S-transferase fusion proteins containing a factor Xa
+            cleavage site
+  JOURNAL   Unpublished (1994)
+REFERENCE   2  (bases 1 to 4952)
+  AUTHORS   Smith,D.B. and Johnson,K.S.
+  TITLE     Single-step purification of polypeptides expressed in Escherichia
+            coli as fusions with glutathione S-transferase
+  JOURNAL   Gene 67 (1), 31-40 (1988)
+  MEDLINE   88329742
+   PUBMED   3047011
+REFERENCE   3  (bases 264 to 911)
+  AUTHORS   Smith,D.B., Davern,K.M., Board,P.G., Tiu,W.U., Garcia,E.G. and
+            Mitchell,G.F.
+  TITLE     Mr 26,000 antigen of Schistosoma japonicum recognized by resistant
+            WEHI 129/J mice is a parasite glutathione S-transferase
+  JOURNAL   Proc. Natl. Acad. Sci. U.S.A. 83 (22), 8703-8707 (1986)
+  MEDLINE   87041520
+   PUBMED   3095841
+REFERENCE   4  (bases 881 to 911)
+  AUTHORS   Smith,D.B., Davern,K.M., Board,P.G., Tiu,W.U., Garcia,E.G. and
+            Mitchell,G.F.
+  TITLE     Correction: Mr 26,000 antigen of Schistosoma japonicum recognized
+            by resistant WEHI 129/J mice is a parasite glutathione
+            S-transferase
+  JOURNAL   Proc. Natl. Acad. Sci. U.S.A. 84, 6541-6541 (1987)
+REFERENCE   5  (bases 1 to 4952)
+  AUTHORS   Malone,J.A.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (19-AUG-1994) James A. Malone, International Technical
+            Services, Molecular Biology Reagents Division, Pharmacia Biotech
+            Inc., 2202 N. Bartlett Ave., Milwaukee, WI 53202-1009, USA
+FEATURES             Location/Qualifiers
+     source          1..4952
+                     /organism="unidentified cloning vector"
+                     /db_xref="taxon:45196"
+                     /lab_host="Escherichia coli"
+     promoter        183..211
+                     /standard_name="tac"
+                     /note="tac promoter for inducible expression of
+                     glutathione S-transferase"
+     protein_bind    217..237
+                     /bound_moiety="lac repressor protein"
+     CDS             258..956
+                     /citation=[3]
+                     /citation=[4]
+                     /codon_start=1
+                     /transl_table=11
+                     /product="glutathione S-transferase"
+                     /protein_id="AAA57095.1"
+                     /db_xref="GI:595718"
+                     /translation="MSPILGYWKIKGLVQPTRLLLEYLEEKYEEHLYERDEGDKWRNK
+                     KFELGLEFPNLPYYIDGDVKLTQSMAIIRYIADKHNMLGGCPKERAEISMLEGAVLDI
+                     RYGVSRIAYSKDFETLKVDFLSKLPEMLKMFEDRLCHKTYLNGDHVTHPDFMLYDALD
+                     VVLYMDPMCLDAFPKLVCFKKRIEAIPQIDKYLKSSKYIAWPLQGWQATFGGGDHPPK
+                     SDLIEGRGIPGNSS"
+     misc_feature    921..932
+                     /note="encodes factor Xa recognition site"
+     misc_feature    934..949
+                     /note="Multiple Cloning Site (MCS); contains the unique
+                     restriction sites BamHI, SmaI and EcoR I"
+     gene            1290..2220
+                     /gene="bla"
+     promoter        1290..1318
+                     /gene="bla"
+     CDS             1360..2220
+                     /gene="bla"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="beta-lactamase"
+                     /protein_id="AAA57096.1"
+                     /db_xref="GI:595719"
+                     /translation="MSIQHFRVALIPFFAAFCLPVFAHPETLVKVKDAEDQLGARVGY
+                     IELDLNSGKILESFRPEERFPMMSTFKVLLCGAVLSRVDAGQEQLGRRIHYSQNDLVE
+                     YSPVTEKHLTDGMTVRELCSAAITMSDNTAANLLLTTIGGPKELTAFLHNMGDHVTRL
+                     DRWEPELNEAIPNDERDTTMPAAMATTLRKLLTGELLTLASRQQLIDWMEADKVAGPL
+                     LRSALPAGWFIADKSGAGERGSRGIIAALGPDGKPSRIVVIYTTGSQATMDERNRQIA
+                     EIGASLIKHW"
+     rep_origin      2978
+                     /note="base 2978 represents the first base of the newly
+                     synthesized single strand"
+                     /direction=right
+     gene            3301..4383
+                     /gene="lacIq"
+     CDS             3301..4383
+                     /gene="lacIq"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="lac repressor"
+                     /protein_id="AAA57097.1"
+                     /db_xref="GI:595720"
+                     /translation="MKPVTLYDVAEYAGVSYQTVSRVVNQASHVSAKTREKVEAAMAE
+                     LNYIPNRVAQQLAGKQSLLIGVATSSLALHAPSQIVAAIKSRADQLGASVVVSMVERS
+                     GVEACKAAVHNLLAQRVSGLIINYPLDDQDAIAVEAACTNVPALFLDVSDQTPINSII
+                     FSHEDGTRLGVEHLVALGHQQIALLAGPLSSVSARLRLAGWHKYLTRNQIQPIAEREG
+                     DWSAMSGFQQTMQMLNEGIVPTAMLVANDQMALGAMRAITESGLRVGADISVVGYDDT
+                     EDSSCYIPPLTTIKQDFRLLGQTSVDRLLQLSQGQAVKGNQLLPVSLVKRKTTLAPNT
+                     QTASPRALADSLMQLARQVSRLESGQ"
+BASE COUNT     1226 a   1192 c   1286 g   1248 t
+ORIGIN      
+        1 agcttatcga ctgcacggtg caccaatgct tctggcgtca ggcagccatc ggaagctgtg
+       61 gtatggctgt gcaggtcgta aatcactgca taattcgtgt cgctcaaggc gcactcccgt
+      121 tctggataat gttttttgcg ccgacatcat aacggttctg gcaaatattc tgaaatgagc
+      181 tgttgacaat taatcatcgg ctcgtataat gtgtggaatt gtgagcggat aacaatttca
+      241 cacaggaaac agtattcatg tcccctatac taggttattg gaaaattaag ggccttgtgc
+      301 aacccactcg acttcttttg gaatatcttg aagaaaaata tgaagagcat ttgtatgagc
+      361 gcgatgaagg tgataaatgg cgaaacaaaa agtttgaatt gggtttggag tttcccaatc
+      421 ttccttatta tattgatggt gatgttaaat taacacagtc tatggccatc atacgttata
+      481 tagctgacaa gcacaacatg ttgggtggtt gtccaaaaga gcgtgcagag atttcaatgc
+      541 ttgaaggagc ggttttggat attagatacg gtgtttcgag aattgcatat agtaaagact
+      601 ttgaaactct caaagttgat tttcttagca agctacctga aatgctgaaa atgttcgaag
+      661 atcgtttatg tcataaaaca tatttaaatg gtgatcatgt aacccatcct gacttcatgt
+      721 tgtatgacgc tcttgatgtt gttttataca tggacccaat gtgcctggat gcgttcccaa
+      781 aattagtttg ttttaaaaaa cgtattgaag ctatcccaca aattgataag tacttgaaat
+      841 ccagcaagta tatagcatgg cctttgcagg gctggcaagc cacgtttggt ggtggcgacc
+      901 atcctccaaa atcggatctg atcgaaggtc gtgggatccc cgggaattca tcgtgactga
+      961 ctgacgatct gcctcgcgcg tttcggtgat gacggtgaaa acctctgaca catgcagctc
+     1021 ccggagacgg tcacagcttg tctgtaagcg gatgccggga gcagacaagc ccgtcagggc
+     1081 gcgtcagcgg gtgttggcgg gtgtcggggc gcagccatga cccagtcacg tagcgatagc
+     1141 ggagtgtata attcttgaag acgaaagggc ctcgtgatac gcctattttt ataggttaat
+     1201 gtcatgataa taatggtttc ttagacgtca ggtggcactt ttcggggaaa tgtgcgcgga
+     1261 acccctattt gtttattttt ctaaatacat tcaaatatgt atccgctcat gagacaataa
+     1321 ccctgataaa tgcttcaata atattgaaaa aggaagagta tgagtattca acatttccgt
+     1381 gtcgccctta ttcccttttt tgcggcattt tgccttcctg tttttgctca cccagaaacg
+     1441 ctggtgaaag taaaagatgc tgaagatcag ttgggtgcac gagtgggtta catcgaactg
+     1501 gatctcaaca gcggtaagat ccttgagagt tttcgccccg aagaacgttt tccaatgatg
+     1561 agcactttta aagttctgct atgtggcgcg gtattatccc gtgttgacgc cgggcaagag
+     1621 caactcggtc gccgcataca ctattctcag aatgacttgg ttgagtactc accagtcaca
+     1681 gaaaagcatc ttacggatgg catgacagta agagaattat gcagtgctgc cataaccatg
+     1741 agtgataaca ctgcggccaa cttacttctg acaacgatcg gaggaccgaa ggagctaacc
+     1801 gcttttttgc acaacatggg ggatcatgta actcgccttg atcgttggga accggagctg
+     1861 aatgaagcca taccaaacga cgagcgtgac accacgatgc ctgcagcaat ggcaacaacg
+     1921 ttgcgcaaac tattaactgg cgaactactt actctagctt cccggcaaca attaatagac
+     1981 tggatggagg cggataaagt tgcaggacca cttctgcgct cggcccttcc ggctggctgg
+     2041 tttattgctg ataaatctgg agccggtgag cgtgggtctc gcggtatcat tgcagcactg
+     2101 gggccagatg gtaagccctc ccgtatcgta gttatctaca cgacggggag tcaggcaact
+     2161 atggatgaac gaaatagaca gatcgctgag ataggtgcct cactgattaa gcattggtaa
+     2221 ctgtcagacc aagtttactc atatatactt tagattgatt taaaacttca tttttaattt
+     2281 aaaaggatct aggtgaagat cctttttgat aatctcatga ccaaaatccc ttaacgtgag
+     2341 ttttcgttcc actgagcgtc agaccccgta gaaaagatca aaggatcttc ttgagatcct
+     2401 ttttttctgc gcgtaatctg ctgcttgcaa acaaaaaaac caccgctacc agcggtggtt
+     2461 tgtttgccgg atcaagagct accaactctt tttccgaagg taactggctt cagcagagcg
+     2521 cagataccaa atactgtcct tctagtgtag ccgtagttag gccaccactt caagaactct
+     2581 gtagcaccgc ctacatacct cgctctgcta atcctgttac cagtggctgc tgccagtggc
+     2641 gataagtcgt gtcttaccgg gttggactca agacgatagt taccggataa ggcgcagcgg
+     2701 tcgggctgaa cggggggttc gtgcacacag cccagcttgg agcgaacgac ctacaccgaa
+     2761 ctgagatacc tacagcgtga gctatgagaa agcgccacgc ttcccgaagg gagaaaggcg
+     2821 gacaggtatc cggtaagcgg cagggtcgga acaggagagc gcacgaggga gcttccaggg
+     2881 ggaaacgcct ggtatcttta tagtcctgtc gggtttcgcc acctctgact tgagcgtcga
+     2941 tttttgtgat gctcgtcagg ggggcggagc ctatggaaaa acgccagcaa cgcggccttt
+     3001 ttacggttcc tggccttttg ctggcctttt gctcacatgt tctttcctgc gttatcccct
+     3061 gattctgtgg ataaccgtat taccgccttt gagtgagctg ataccgctcg ccgcagccga
+     3121 acgaccgagc gcagcgagtc agtgagcgag gaagcggaag agcgcctgat gcggtatttt
+     3181 ctccttacgc atctgtgcgg tatttcacac cgcataaatt ccgacaccat cgaatggtgc
+     3241 aaaacctttc gcggtatggc atgatagcgc ccggaagaga gtcaattcag ggtggtgaat
+     3301 gtgaaaccag taacgttata cgatgtcgca gagtatgccg gtgtctctta tcagaccgtt
+     3361 tcccgcgtgg tgaaccaggc cagccacgtt tctgcgaaaa cgcgggaaaa agtggaagcg
+     3421 gcgatggcgg agctgaatta cattcccaac cgcgtggcac aacaactggc gggcaaacag
+     3481 tcgttgctga ttggcgttgc cacctccagt ctggccctgc acgcgccgtc gcaaattgtc
+     3541 gcggcgatta aatctcgcgc cgatcaactg ggtgccagcg tggtggtgtc gatggtagaa
+     3601 cgaagcggcg tcgaagcctg taaagcggcg gtgcacaatc ttctcgcgca acgcgtcagt
+     3661 gggctgatca ttaactatcc gctggatgac caggatgcca ttgctgtgga agctgcctgc
+     3721 actaatgttc cggcgttatt tcttgatgtc tctgaccaga cacccatcaa cagtattatt
+     3781 ttctcccatg aagacggtac gcgactgggc gtggagcatc tggtcgcatt gggtcaccag
+     3841 caaatcgcgc tgttagcggg cccattaagt tctgtctcgg cgcgtctgcg tctggctggc
+     3901 tggcataaat atctcactcg caatcaaatt cagccgatag cggaacggga aggcgactgg
+     3961 agtgccatgt ccggttttca acaaaccatg caaatgctga atgagggcat cgttcccact
+     4021 gcgatgctgg ttgccaacga tcagatggcg ctgggcgcaa tgcgcgccat taccgagtcc
+     4081 gggctgcgcg ttggtgcgga tatctcggta gtgggatacg acgataccga agacagctca
+     4141 tgttatatcc cgccgttaac caccatcaaa caggattttc gcctgctggg gcaaaccagc
+     4201 gtggaccgct tgctgcaact ctctcagggc caggcggtga agggcaatca gctgttgccc
+     4261 gtctcactgg tgaaaagaaa aaccaccctg gcgcccaata cgcaaaccgc ctctccccgc
+     4321 gcgttggccg attcattaat gcagctggca cgacaggttt cccgactgga aagcgggcag
+     4381 tgagcgcaac gcaattaatg tgagttagct cactcattag gcaccccagg ctttacactt
+     4441 tatgcttccg gctcgtatgt tgtgtggaat tgtgagcgga taacaatttc acacaggaaa
+     4501 cagctatgac catgattacg gattcactgg ccgtcgtttt acaacgtcgt gactgggaaa
+     4561 accctggcgt tacccaactt aatcgccttg cagcacatcc ccctttcgcc agctggcgta
+     4621 atagcgaaga ggcccgcacc gatcgccctt cccaacagtt gcgcagcctg aatggcgaat
+     4681 ggcgctttgc ctggtttccg gcaccagaag cggtgccgga aagctggctg gagtgcgatc
+     4741 ttcctgaggc cgatactgtc gtcgtcccct caaactggca gatgcacggt tacgatgcgc
+     4801 ccatctacac caacgtaacc tatcccatta cggtcaatcc gccgtttgtt cccacggaga
+     4861 atccgacggg ttgttactcg ctcacattta atgttgatga aagctggcta caggaaggcc
+     4921 agacgcgaat tatttttgat ggcgttggaa tt
+//

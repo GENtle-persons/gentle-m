@@ -1,0 +1,38 @@
+body { background: #FFFFFF; font-family:verdana,arial; text-align:justify; color:black; }
+body.around { background: #BBBBFF; font-family:verdana,arial; text-align:left; color:black; }
+
+h1 { background:#AAAAEE; text-align:center; margin-bottom:4pt;}
+h2 { background:#EEEEEE; text-decoration:underline; margin:2pt; }
+h3 { background:#EEFFEE; margin:0pt; }
+th { background:#FFDEAD; }
+caption { text-decoration:underline; }
+small { font-size:60%; }
+
+table.adr { font-size:8pt; }
+
+.ub { background:#AAAAEE; text-align:center;}
+
+a { text-decoration: none; color:blue; }
+a.target { color:black; }
+a.broken { color:white; background:black; }
+a.external { background-color:#33FF33; }
+a:hover { color:red; }
+
+ul.side { margin-left:0pt; padding-left:12pt; line-height:10pt; text-align:left; }
+
+.key {/*this is a box */
+  background: #FFFFFF;
+  font-family:monospace;
+  font-size:10pt;
+  color : #000000;
+  padding : 0px;
+  margin: 2px;
+  border-color : #999999;
+  border-style : outset;
+  border-width : 2px;/* the border property in longhand*/
+  }
+
+
+.topbar { border-bottom-width: 2; border-bottom-style: ridge; text-align:center; }
+.middle { background:white }
+.sidebar { border-left-width: 2; border-left-style: ridge; line-height:8pt;}

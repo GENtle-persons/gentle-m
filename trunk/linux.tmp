@@ -1,0 +1,19 @@
+#if defined(__WXGTK__) || defined(__WXMOTIF__)
+int strcmpi ( const char *c1 , const char *c2 )
+{
+  while ( *c1 && *c2 )
+    {
+      char d1 = *c1 ;
+      char d2 = *c2 ;
+      if ( d1 >= 'a' && d1 <= 'z' ) d1 = d1 - 'a' + 'A' ;
+      if ( d2 >= 'a' && d2 <= 'z' ) d2 = d2 - 'a' + 'A' ;
+      if ( d1 < d2 ) return -1 ;
+      if ( d1 > d2 ) return 1 ;
+      c1++ ;
+      c2++ ;
+    }
+  if ( *c1 ) return 1 ;
+  if ( *c2 ) return -1 ;
+  return 0 ;
+}
+#endif

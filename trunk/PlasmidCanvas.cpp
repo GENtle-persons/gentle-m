@@ -1,0 +1,315 @@
+#include "PlasmidCanvas.h"
+#include <wx/printdlg.h>
+
+// ---------------------------------------------------------------------------
+// PlasmidCanvas
+// ---------------------------------------------------------------------------
+
+BEGIN_EVENT_TABLE(PlasmidCanvas, wxScrolledWindow)
+    EVT_MOUSE_EVENTS(PlasmidCanvas::OnEvent)
+    EVT_MENU(PC_ITEM_MARK, PlasmidCanvas::itemMark)
+    EVT_MENU(PC_ITEM_MARK_SHOW, PlasmidCanvas::itemMarkShow)
+    EVT_MENU(PC_ITEM_EDIT, PlasmidCanvas::itemEdit)
+    EVT_MENU(PC_ITEM_AS_NEW_SEQUENCE, PlasmidCanvas::itemAsNewSequence)
+    EVT_MENU(PC_ITEM_DELETE, PlasmidCanvas::itemDelete)
+    EVT_MENU(PC_ITEM_HIDE, PlasmidCanvas::itemShowHide)
+    EVT_MENU(PC_ITEM_SHOW, PlasmidCanvas::itemShowHide)
+    EVT_MENU(PC_ITEM_COPY_DNA, PlasmidCanvas::itemCopyDNA)
+    EVT_MENU(PC_ITEM_COPY_AA, PlasmidCanvas::itemCopyAA)
+    EVT_MENU(PC_ITEM_AS_NEW_AA_SEQUENCE, PlasmidCanvas::itemAsNewAA)
+    EVT_MENU(PC_RS_INFO, PlasmidCanvas::rsInfo)
+    EVT_MENU(PC_RS_EDIT, PlasmidCanvas::rsEdit)
+    EVT_MENU(PC_RS_DEL, PlasmidCanvas::rsDel)
+    EVT_MENU(PC_RS_SHOW_HIDE, PlasmidCanvas::rsShowHide)
+    EVT_MENU(PC_RS_MARK, PlasmidCanvas::rsMark)
+    EVT_MENU(PC_RS_MARK_SHOW, PlasmidCanvas::rsMarkShow)
+    EVT_MENU(PC_RS_ADD2COCKTAIL, PlasmidCanvas::rsAdd2Cocktail)
+    EVT_MENU(PC_RS_ADD_AND_CUT, PlasmidCanvas::rsAddAndCut)
+    EVT_MENU(PC_RS_CUT_WITH_COCKTAIL, PlasmidCanvas::rsCutWithCocktail)
+    EVT_MENU(PC_VECTOR_EDIT, PlasmidCanvas::vecEdit)
+    EVT_MENU(PC_BLAST_DNA, PlasmidCanvas::blastDNA)
+    EVT_MENU(PC_BLAST_AA, PlasmidCanvas::blastAA)
+    EVT_MENU(PC_COPY_IMAGE, PlasmidCanvas::OnCopyImage)
+    EVT_MENU(PC_ITEM_BLAST_DNA, PlasmidCanvas::itemBlastDNA)
+    EVT_MENU(PC_ITEM_BLAST_AA, PlasmidCanvas::itemBlastAA)
+    EVT_MENU(PRIMER_FORWARD, PlasmidCanvas::OnPrimerForward)
+    EVT_MENU(PRIMER_BACKWARD, PlasmidCanvas::OnPrimerBackward)
+    EVT_MENU(PRIMER_BOTH, PlasmidCanvas::OnPrimerBoth)
+    EVT_MENU(PRIMER_MUTATION, PlasmidCanvas::OnPrimerMutation)
+    EVT_MENU(ORF_COPY_DNA, PlasmidCanvas::orfCopyDNA)
+    EVT_MENU(ORF_COPY_AA, PlasmidCanvas::orfCopyAA)
+    EVT_MENU(ORF_AS_NEW_ITEM, PlasmidCanvas::orfAsNewItem)
+    EVT_MENU(ORF_AS_NEW_DNA, PlasmidCanvas::orfAsNewDNA)
+    EVT_MENU(ORF_AS_NEW_AA, PlasmidCanvas::orfAsNewAA)
+    EVT_MENU(ORF_BLAST_DNA, PlasmidCanvas::orfBlastDNA)
+    EVT_MENU(ORF_BLAST_AA, PlasmidCanvas::orfBlastAA)
+    EVT_MENU(MDI_FILL_KLENOW,PlasmidCanvas::OnFillKlenow)
+    EVT_MENU(MDI_RUN_PCR,PlasmidCanvas::OnRunPCR)
+END_EVENT_TABLE()
+
+
+// Define a constructor for my canvas
+PlasmidCanvas::PlasmidCanvas(wxWindow *parent, const wxPoint& pos, const wxSize& size)
+        : wxScrolledWindow(parent, -1, pos, size,
+                           wxSUNKEN_BORDER|wxVSCROLL|wxHSCROLL)
+{
+    SetBackgroundColour(wxColour("WHITE"));
+
+    m_dirty = FALSE;
+    p = NULL ;
+    zoom = 100 ;
+    lastvectorobject = -1 ;
+    lastrestrictionsite = -1 ;
+    mark_from = -1 ;
+    initialclick = false ;
+    printing = false ;
+    painting = false ;
+    lastbp = -1 ;
+    lasttooltip = -1 ;
+    hasBeenPainted = false ;
+    tt = new wxToolTip ( "" ) ;
+
+}
+
+void PlasmidCanvas::Refresh ()
+    {
+    if ( p->cSequence->editMode ) return ;
+    if ( painting ) return ;
+    painting = true ;
+    wxClientDC dc ( (wxWindow*) this ) ;
+    PrepareDC ( dc ) ;
+    OnDraw ( dc ) ;
+    painting = false ;
+    }
+    
+bool PlasmidCanvas::isEnzymeVisible ( string s )
+    {
+    int a ;
+    for ( a = 0 ; a < p->vec->hiddenEnzymes.size() ; a++ )
+       if ( p->vec->hiddenEnzymes[a] == s )
+          return false ;
+    return true ;
+    }
+    
+bool PlasmidCanvas::intersects ( wxRect &a , wxRect &b )
+    {
+    if ( a.GetRight() < b.GetLeft() ) return false ;
+    if ( a.GetLeft() > b.GetRight() ) return false ;
+    if ( a.GetTop() > b.GetBottom() ) return false ;
+    if ( a.GetBottom() < b.GetTop() ) return false ;
+    return true ;
+    }
+
+// Define the repainting behaviour
+void PlasmidCanvas::OnDraw(wxDC& pdc)
+{
+    if ( !p || !p->vec ) return ;
+    hasBeenPainted = true ;
+    if ( printing )
+        {
+        pdc.GetSize ( &w , &h ) ;
+        pdc.Clear() ;
+        if ( p->vec->isCircular() ) OnDrawCircular ( pdc ) ;
+        else OnDrawLinear ( pdc ) ;
+        }
+    else
+        {
+        int vx , vy ;
+        GetViewStart ( &vx , &vy ) ;
+        GetClientSize(&w, &h);
+        wxBitmap bmp ( w , h , -1 ) ;
+        GetVirtualSize ( &w , &h ) ;
+        wxMemoryDC dc ;
+        dc.SelectObject ( bmp ) ;
+        dc.Clear() ;
+        dc.SetDeviceOrigin ( -vx , -vy ) ;
+        if ( p->vec->isCircular() ) OnDrawCircular ( dc ) ;
+        else OnDrawLinear ( dc ) ;
+        dc.SetDeviceOrigin ( 0 , 0 ) ;
+        pdc.Blit ( vx , vy , w , h , &dc , 0 , 0 ) ;
+        }
+}
+
+void PlasmidCanvas::OnCopyImage ( wxCommandEvent &ev )
+    {
+    if ( !p || !p->vec ) return ;
+
+// Metafile support only exists for windows, so...
+#ifdef __WXMSW__
+    if ( p->app->frame->useMetafile ) // Use metafile DC
+        {
+        GetClientSize(&w, &h);
+        wxMetafileDC dc ;
+
+        if ( p->vec->isCircular() )
+           {
+           dc.SetUserScale ( (float) h/w*10 , 10 ) ;
+           OnDrawCircular ( dc ) ;
+           }
+        else
+           {
+//           dc.SetUserScale ( 0.6 , 1 ) ;
+           OnDrawLinear ( dc ) ;
+           }
+
+        wxMetafile *mf = dc.Close();
+        if (mf)
+        {
+          bool success = mf->SetClipboard((int)(dc.MaxX() + 10), (int)(dc.MaxY() + 10));
+          delete mf;
+        }
+        
+        }
+    else
+#endif
+        {
+        w = 1000 ;
+        h = 800 ;
+        wxBitmap bmp ( w , h , -1 ) ;
+        wxMemoryDC dc ;
+        dc.SelectObject ( bmp ) ;
+        dc.Clear() ;
+        if ( p->vec->isCircular() ) OnDrawCircular ( dc ) ;
+        else OnDrawLinear ( dc ) ;
+        
+        if (wxTheClipboard->Open())
+            {
+            wxTheClipboard->SetData( new wxBitmapDataObject(bmp) );
+            wxTheClipboard->Close();
+            }
+    
+        GetClientSize(&w, &h);
+        }
+    }
+
+
+string PlasmidCanvas::getSelection()
+    {
+    if ( mark_from != -1 ) return p->vec->getSubstring ( mark_from , mark_to ) ;
+    else return "" ;
+    }
+    
+
+void PlasmidCanvas::OnEvent(wxMouseEvent& event)
+{
+    if ( !p || !p->vec ) return ;
+    if ( !hasBeenPainted ) return ;
+    if ( p->vec->isCircular() ) OnEventCircular ( event ) ;
+    else OnEventLinear ( event ) ;
+}
+
+
+
+void PlasmidCanvas::SetMyToolTip ( string s , int mode )
+    {
+    if ( lasttooltip == mode && tt->GetTip() == s.c_str() ) return ;
+    lasttooltip = mode ;
+
+    SetToolTip ( NULL ) ;
+
+    tt = new wxToolTip ( "" ) ;
+    tt->Enable ( false ) ;
+    SetToolTip ( tt ) ;
+    
+    if ( mode == TT_NONE )
+        {
+        return ;
+        }
+    
+    SetToolTip ( NULL ) ;
+    tt = new wxToolTip ( s.c_str() ) ;
+    tt->Enable ( true ) ;
+    SetToolTip ( tt ) ;
+    }
+
+int PlasmidCanvas::findVectorObject ( float angle , float radius )
+    {
+    int a ;
+    radius = STANDARDRADIUS*radius/r ;
+    for ( a = p->vec->items.size() -1 ; a >= 0 ; a-- )
+        {
+        float a2 = 0 ;
+        if ( p->vec->items[a].a2 > 360 )
+           a2 = 360 ;
+        if ( p->vec->items[a].isVisible() &&
+             radius >= p->vec->items[a].r1 &&
+             radius <= p->vec->items[a].r2 )
+             {
+             if ( ( angle >= p->vec->items[a].a1 && angle <= p->vec->items[a].a2 ) || 
+                  ( angle+a2 >= p->vec->items[a].a1 && angle+a2 <= p->vec->items[a].a2 ) )
+              {
+              return a ;
+              }
+           }
+        }
+    return -1 ;
+    }
+    
+int PlasmidCanvas::findRestrictionSite ( int x , int y )
+    {
+    int a ;
+    for ( a = 0 ; a < p->vec->rc.size() ; a++ )
+        {
+        if ( pointinrect ( x , y , p->vec->rc[a].lastrect ) )
+             return a ;
+        }
+    return -1 ;
+    }
+
+bool PlasmidCanvas::pointinrect ( int x , int y , wxRect &a )
+    {
+    if ( x >= a.GetLeft() &&
+         x <= a.GetRight() &&
+         y >= a.GetTop() &&
+         y <= a.GetBottom() )
+         return true ;
+    return false ;
+    }
+    
+void PlasmidCanvas::invokeVectorEditor ( string what , int num , bool forceUpdate )
+    {
+    TVectorEditor ve ( this , txt("t_vector_editor") , p->vec , p->app ) ;
+    bool changed = p->vec->isChanged() ;
+    string on = p->vec->name ;
+    p->vec->setChanged ( false ) ;
+    
+    if ( what == "item" )
+        {
+        ve.initialViewItem ( num ) ;
+        }
+    else if ( what == "enzyme" )
+        {
+        ve.initialViewEnzyme ( p->vec->rc[num].e->name ) ;
+        }
+
+    int x = ve.ShowModal () ;
+    ve.cleanup () ;
+    if ( forceUpdate || p->vec->isChanged() )
+        {
+        p->app->frame->mainTree->SetItemText ( p->inMainTree , p->getName().c_str() ) ;
+        p->treeBox->initme() ;
+        p->showName() ;
+        p->treeBox->SelectItem ( p->treeBox->vroot ) ;
+        p->updateSequenceCanvas() ;
+        Refresh () ;
+        }
+    p->vec->setChanged ( changed | p->vec->isChanged() ) ;
+    }
+    
+void PlasmidCanvas::print ()
+    {
+    wxPrintDialog pd ( this ) ;
+    int r = pd.ShowModal () ;
+    if ( r != wxID_OK ) return ;
+
+    wxDC *pdc = pd.GetPrintDC () ;
+    pdc->StartDoc ( p->vec->name.c_str() ) ;
+    pdc->StartPage () ;
+    printing = true ;
+    OnDraw ( *pdc ) ;
+    printing = false ;
+    pdc->EndPage () ;
+    pdc->EndDoc () ;
+    }
+    
+
