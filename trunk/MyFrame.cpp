@@ -1283,11 +1283,14 @@ void MyFrame::update2version ( string ver )
        delete in ;
        unsigned char *uc = new unsigned char [ uv.size() ] ;
        for ( int u = 0 ; u < uv.size() ; u++ ) uc[u] = uv[u] ; // __WXMSW__
-       do_run = "\"" + myapp()->homedir + "\\GENtleSetup.exe\" /S" ;
+       do_run = myapp()->homedir + "\\GENtleSetup.exe" ;
        wxFile out ( do_run.c_str() , wxFile::write ) ;
        out.Write ( uc , uv.size() ) ;
        out.Close () ;
        delete uc ;
+       do_run = "\"" + do_run + "\" /S /D=\"" ;
+       do_run += myapp()->homedir.c_str() ;
+       do_run += "\"" ;
 //       sd.Close () ;
        }
     else
@@ -1301,7 +1304,9 @@ void MyFrame::update2version ( string ver )
     LS->setOption ( "LAST_UPDATE" , ver ) ;
     wxExecute ( do_run.c_str() , wxEXEC_ASYNC ) ;
     SetFocus () ;
-    Close() ;
+    showSplashScreen = false ;
+    dying = true ;
+//    Close() ;
     }
     
 void MyFrame::OnSashDrag(wxSashEvent& event)

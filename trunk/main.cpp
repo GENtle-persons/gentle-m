@@ -216,6 +216,9 @@ bool MyApp::OnInit()
                         wxDEFAULT_FRAME_STYLE );//| wxHSCROLL | wxVSCROLL);
     
     frame->initme () ;
+    
+    if ( frame->dying ) return FALSE ;
+    
     SetTopWindow(frame);
 
     if ( frame->showSplashScreen )
