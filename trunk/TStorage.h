@@ -17,6 +17,7 @@
 #ifdef __WXMSW__
 #include "win_sqlite.h"
 #include "win_sqlite3.h"
+#define USING_SQLITE_3
 #include <wx/msw/winundef.h>
 #else
 #include "lin_sqlite.h"

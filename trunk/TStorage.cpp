@@ -86,7 +86,8 @@ static int callback (void *NotUsed, int argc, char **argv, char **azColName)
 void TStorage::createDatabaseSqlite3 ()
     {
         return;
-    sqlite3 *db ;
+#ifdef USING_SQLITE_3
+	 sqlite3 *db ;
     char *e = 0 ;
     int rc ;
     sqlite3_open ( dbname.c_str() , &db ) ;
@@ -94,6 +95,7 @@ void TStorage::createDatabaseSqlite3 ()
 //    if ( e ) error = e ;
 //    else error = "Alles OK" ;
     sqlite3_close ( db ) ;
+#endif
     }
         
 void TStorage::createDatabase ()
@@ -177,6 +179,7 @@ TSQLresult TStorage::getObject_MySQL ( const wxString &query )
     
 TSQLresult TStorage::getObjectSqlite3 ( const wxString &query )
     {
+#ifdef USING_SQLITE_3
     sqlite3 *db ;
     char *e = 0 ;
     int rc ;
@@ -214,6 +217,10 @@ TSQLresult TStorage::getObjectSqlite3 ( const wxString &query )
     sqlite3_close ( db ) ;
     
     return results ;
+#else
+	 results.clean() ;
+	 return results ;
+#endif
     }
         
 TSQLresult TStorage::getObjectSqlite2 ( const wxString &query )
@@ -252,7 +259,7 @@ TSQLresult TStorage::getObjectSqlite2 ( const wxString &query )
 #ifdef __WXMSW__
 			wxUsleep ( 200 ) ;
 #else
-       	    wxMilliSleep ( 200 ) ;
+//       	    wxMilliSleep ( 200 ) ;
 #endif
         	}    
         } while ( rc == SQLITE_BUSY ) ;
