@@ -64,6 +64,9 @@ public:
     void OnAA_three_M2(wxCommandEvent& event);
     void OnAA_three_M3(wxCommandEvent& event);
     void OnAA_setit(int mode);
+
+    void Undo(wxCommandEvent& event);
+    void Redo(wxCommandEvent& event);
     
     void OnMarkAll(wxCommandEvent& event);
     void OnTransformSequence(wxCommandEvent& event);
@@ -96,6 +99,8 @@ public:
     void OnZoom ( wxCommandEvent &ev ) ;
 
     void OnUpdateRefresh(wxUpdateUIEvent& event);
+    
+    virtual void updateUndoMenu () ;
 
     DECLARE_EVENT_TABLE()
 };

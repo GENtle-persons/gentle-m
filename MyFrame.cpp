@@ -148,15 +148,17 @@ void MyFrame::initme ()
     file_menu->AppendSeparator();
     file_menu->Append(MDI_QUIT, txt("m_exit") , txt("m_exittxt") ) ;
 
-    wxMenu *tool_menu = new wxMenu;
+    wxMenu *tool_menu = getToolMenu ( false ) ;
+    wxMenu *help_menu = getHelpMenu () ;
+/*    wxMenu *tool_menu = new wxMenu;
     tool_menu->Append(MDI_ENZYME_EDITOR, txt("m_enzymeeditor") , txt("m_enzymeeditortxt") ) ;
     tool_menu->Append(MDI_ALIGNMENT, txt("m_alignment") , txt("m_alignmenttxt") ) ;
     tool_menu->Append(MDI_MANAGE_DATABASE, txt("m_manage_db") , txt("m_manage_dbtxt") ) ;
-    tool_menu->Append(PROGRAM_OPTIONS, txt("m_options") , txt("m_options_txt") ) ;
+    tool_menu->Append(PROGRAM_OPTIONS, txt("m_options") , txt("m_options_txt") ) ;*/
     
-    wxMenu *help_menu = new wxMenu;
+/*    wxMenu *help_menu = new wxMenu;
     help_menu->Append(MDI_HELP, txt("m_help_content") ) ;
-    help_menu->Append(MDI_ABOUT, txt("m_about") ) ;
+    help_menu->Append(MDI_ABOUT, txt("m_about") ) ;*/
 
     wxMenuBar *menu_bar = new wxMenuBar;
 

@@ -240,3 +240,7 @@ bool ChildBase::caniclose(wxCloseEvent& event)
     return true ;
     }
 
+void ChildBase::updateUndoMenu () 
+    {
+    }
+    
