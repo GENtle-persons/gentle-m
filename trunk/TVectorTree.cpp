@@ -82,7 +82,7 @@ void TVectorTree::initme ()
         sType = u ;
         if ( p->vec->items[a].direction == 1 ) sOritentation = txt("cw") ;
         else sOritentation = txt("ccw") ;
-        sprintf ( u , txt("s_desc") , p->vec->items[a].desc ) ;
+        sprintf ( u , txt("s_desc") , p->vec->items[a].desc.c_str() ) ;
         sDescription = u ;
         
         p->vec->items[a].treeid = y ;
@@ -119,7 +119,7 @@ void TVectorTree::initme ()
            SetItemData ( y , new TTreeItem ( out.c_str() , "RE" , p->vec->re[a] ) ) ;
 
            // Visibility check; "used" = "visible"
-           for ( b = 0 ; visible && b < p->vec->hiddenEnzymes.size() ; b++ )
+           for ( b = 0 ; visible && b < p->vec->hiddenEnzymes.GetCount() ; b++ )
               {
               if ( p->vec->hiddenEnzymes[b] == p->vec->re[a]->name )
                  visible = false ;
@@ -205,14 +205,14 @@ void TVectorTree::ToggleEnzymeVisibility ( TRestrictionEnzyme *e )
     
     if ( IsBold ( y ) )
        {
-       p->vec->hiddenEnzymes.push_back ( e->name ) ;
+       p->vec->hiddenEnzymes.Add ( e->name ) ;
        }
     else
        {
        int a ;
        for ( a = 0 ; p->vec->hiddenEnzymes[a] != e->name ; a++ ) ;
-       p->vec->hiddenEnzymes[a] = p->vec->hiddenEnzymes[p->vec->hiddenEnzymes.size()-1] ;
-       p->vec->hiddenEnzymes.pop_back () ;
+       p->vec->hiddenEnzymes[a] = p->vec->hiddenEnzymes[p->vec->hiddenEnzymes.GetCount()-1] ;
+       p->vec->hiddenEnzymes.RemoveAt ( p->vec->hiddenEnzymes.GetCount()-1 ) ;
        }
     SetItemBold ( y , !IsBold ( y ) ) ;
     p->cPlasmid->Refresh() ;

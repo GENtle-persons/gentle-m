@@ -186,9 +186,9 @@ void TSilmutDialog::calc ()
     if ( group == txt("Current") ) re = v->re ;
     else
         {
-        vector <string> z ;
-        myapp()->frame->LS->getEnzymesInGroup ( group.c_str() , z ) ;
-        for ( a = 0 ; a < z.size() ; a++ )
+        wxArrayString z ;
+        myapp()->frame->LS->getEnzymesInGroup ( group , z ) ;
+        for ( a = 0 ; a < z.GetCount() ; a++ )
            re.push_back ( myapp()->frame->LS->getRestrictionEnzyme ( z[a] ) ) ;
         }
     
@@ -202,7 +202,7 @@ void TSilmutDialog::calc ()
     for ( a = 0 ; a < re.size() ; a++ )
         {
         TRestrictionEnzyme *e = re[a] ;
-        string s = e->sequence ;
+        string s = e->sequence.c_str() ;
         int f , t ;
         f = from - s.length() + 1 ;
         t = to - 1 ;

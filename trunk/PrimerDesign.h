@@ -25,7 +25,7 @@ class TPrimerDesign : public ChildBase
     
     void initme () ;
     virtual wxString getName () ;
-    virtual void AddPrimer ( string s ) ;
+    virtual void AddPrimer ( wxString s ) ;
     virtual void showSequence () ;
     virtual void updateResultSequence () ;
     virtual void updatePrimersFromSequence () ;
@@ -65,6 +65,7 @@ class TPrimerDesign : public ChildBase
     
     virtual void OnSilmut ( wxCommandEvent& event) ;
     virtual void OnHorizontal ( wxCommandEvent& event ) ;
+    virtual void OnPaste (wxCommandEvent& WXUNUSED(event)) ;
     
     // Variables
     SequenceCanvas *sc ;

@@ -94,8 +94,11 @@ class TAlignment : public ChildBase
     int match , mismatch , gap_penalty ;
     int algorithm ;
     string matrix ;
-    bool bold , mono ;
-    
+    wxString consensusSequence ;
+    vector <wxColour> colDNA , colAA , *colCur ;
+    bool bold , mono , cons , invs , showIdentity ;
+    wxString name , database ;
+        
     private :
     wxChoice *mmb ;
     SeqAA *aaa ;
@@ -105,13 +108,6 @@ class TAlignment : public ChildBase
     void generateConsensusSequence ( bool addit = true ) ;
     void fixMenus ( int i ) ;
     
-    public :
-    string consensusSequence ;
-    vector <wxColour> colDNA , colAA , *colCur ;
-    bool cons , invs ;
-    bool showIdentity ;
-    string name , database ;
-        
     DECLARE_EVENT_TABLE()
     } ;
 

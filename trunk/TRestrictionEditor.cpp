@@ -255,9 +255,9 @@ void TRestrictionEditor::pR_showGroupEnzymes ( wxString gr )
     if ( gr == txt("Current") )
         {
         for ( int i = 0 ; i < v->re.size() ; i++ )
-            vs.push_back ( v->re[i]->name ) ;
+            vs.push_back ( v->re[i]->name.c_str() ) ;
         }
-    else myapp()->frame->LS->getEnzymesInGroup ( gr.c_str() , vs ) ;
+    else myapp()->frame->LS->getEnzymesInGroup ( gr , vs ) ;
     char t[100] ;
     int sel = rb->GetSelection() ;
     bool docut = true , donotcut = true ;

@@ -32,8 +32,8 @@ public:
     virtual void initme () ;
     virtual void rememberLastProject () ;
     virtual void fixMax () ;
-    virtual string check4update () ;
-    virtual void update2version ( string ver ) ;
+    virtual wxString check4update () ;
+    virtual void update2version ( wxString ver ) ;
     
     virtual wxMenu *getFileMenu ( bool _save = false , bool _exp = false , bool _print = false ) ;
     virtual wxMenu *getToolMenu ( bool _pcr = false ) ;
@@ -73,11 +73,11 @@ public:
     virtual void newGB ( TGenBank &gb , wxString title = "" ) ;
     virtual void newXML ( TXMLfile &xml , wxString title = "" ) ;
     virtual MyChild *newFASTA ( TFasta &fasta ) ;
-    virtual void blast ( string seq , string prg ) ;
+    virtual void blast ( wxString seq , wxString prg ) ;
     virtual void importFile ( wxString file , wxString path , int filter = -1 ) ;
     virtual void setChild ( ChildBase *ch ) ;
     virtual void removeChild ( ChildBase *ch ) ;
-    virtual TStorage *getTempDB ( string filename ) ;
+    virtual TStorage *getTempDB ( wxString filename ) ;
     virtual TAlignment *runAlignment ( vector <string> &vs , vector <ChildBase*> &vc , TVector *nv = NULL ) ;
     virtual ChildBase *GetActiveChild() ;
     virtual void setActiveChild ( ChildBase *c ) ;
@@ -90,8 +90,7 @@ public:
     bool dying , enhancedRefresh , showVectorTitle , showVectorLength , 
             loadLastProject , useMetafile , showSplashScreen , checkUpdate ,
             useCoolCanvas , useInternalHelp ;
-    string lang_string ;
-    string project_name , project_desc , project_db ;
+    wxString lang_string , project_name , project_desc , project_db ;
     vector <string> lastCocktail ;
     vector <ChildBase*> children ;
     wxHtmlEasyPrinting *html_ep ;

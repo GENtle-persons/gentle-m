@@ -452,11 +452,11 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
            wrapit ( ex , b21 , quote ( "/note" , v->items[a].desc ) ) ;
            
         wxArrayString vs ;
-        vector <string> vss ;
+        wxArrayString vss ;
         vss = v->items[a].getParamKeys() ;
-        for ( b = 0 ; b < vss.size() ; b++ )
+        for ( b = 0 ; b < vss.GetCount() ; b++ )
            {
-           vs.Add ( vss[b].c_str() ) ;
+           vs.Add ( vss[b] ) ;
            if ( vs[b].GetChar(0) == '/' )
               wrapit ( ex , b21 , quote ( vs[b] , v->items[a].getParam(vs[b].c_str()).c_str() ) ) ;
            }

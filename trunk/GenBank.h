@@ -10,7 +10,6 @@
 class TVector ;
 class TVectorItem ;
 class TVectorTree ;
-typedef vector <string> TVS ;
 typedef vector <int> TVI ;
 
 class TGenBankFeature
@@ -53,7 +52,7 @@ class TGenBank
     
     vector <wxArrayString> vs_l ;
     vector <TVI> vi_l ;
-    vector <int> vi ;
+    TVI vi ;
     vector <TGenBankKey> keys ;
     wxArrayString vs ;
     bool perm[256] ;

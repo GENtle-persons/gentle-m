@@ -8,14 +8,14 @@ class TRestrictionEnzyme
     public :
     bool differ ( TRestrictionEnzyme &e ) ;
     
-    virtual string getEndUpperLeft () ;
-    virtual string getEndLowerLeft () ;
-    virtual string getEndUpperRight () ;
-    virtual string getEndLowerRight () ;
-    virtual string invertSequence () ;
+    virtual wxString getEndUpperLeft () ;
+    virtual wxString getEndLowerLeft () ;
+    virtual wxString getEndUpperRight () ;
+    virtual wxString getEndLowerRight () ;
+    virtual wxString invertSequence () ;
     
-    string name , sequence ;
-    string location , note ;
+    wxString name , sequence ;
+    wxString location , note ;
     unsigned long dbid ;
     int cut , overlap ;
     } ;
@@ -27,7 +27,7 @@ class TRestrictionCut
         { pos = _pos ; e = _e ; }
         
     virtual void linearUpdate ( int w , int h ) ;
-    virtual string getNameAndPosition () ;
+    virtual wxString getNameAndPosition () ;
     virtual bool isHidden ( TVector *v ) ;
         
     int pos ;
@@ -43,14 +43,14 @@ class TRestrictionCut
 class TProtease
     {
     public :
-    TProtease ( string _name = "" , string m = "" , string _note = "" ) ;
-    bool does_match ( string s ) ;
-    inline int len() { return match.size() ; }
-    string name ;
-    vector <string> match ;
+    TProtease ( wxString _name = "" , wxString m = "" , wxString _note = "" ) ;
+    bool does_match ( wxString s ) ;
+    inline int len() { return match.GetCount() ; }
+    wxString name ;
+    wxArrayString match ;
     int cut ; // After this, starting at 0
     bool use ;
-    string note , str_match ;
+    wxString note , str_match ;
     } ;
 
 class TProteaseCut

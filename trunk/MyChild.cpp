@@ -473,6 +473,8 @@ void MyChild::OnCopy(wxCommandEvent& event)
     
 void MyChild::OnPaste(wxCommandEvent& event)
     {
+    cSequence->OnPaste ( event ) ;
+/*
     if ( !cSequence->getEditMode() ) return ;
     if (!wxTheClipboard->Open()) return ;
     if (!wxTheClipboard->IsSupported( wxDF_TEXT )) return ;
@@ -497,6 +499,7 @@ void MyChild::OnPaste(wxCommandEvent& event)
     cSequence->Refresh () ;
     SetCursor ( *wxSTANDARD_CURSOR ) ;
     vec->undo.stop() ;
+*/
     }
 
 void MyChild::OnExport(wxCommandEvent& event)
@@ -504,8 +507,8 @@ void MyChild::OnExport(wxCommandEvent& event)
     wxString wcGenBank = "GenBank (*.gb)|*.gb" ;
     wxString wcClone = "CLONE (*.*)|*.*" ;
     wxString wildcard = wcGenBank + "|" + wcClone ; 
-    string lastdir = myapp()->frame->LS->getOption ( "LAST_IMPORT_DIR" , "C:" ) ;
-    wxFileDialog d ( this , txt("export_file") , lastdir.c_str() , "" , wildcard , wxSAVE ) ;
+    wxString lastdir = myapp()->frame->LS->getOption ( "LAST_IMPORT_DIR" , "C:" ) ;
+    wxFileDialog d ( this , txt("export_file") , lastdir , "" , wildcard , wxSAVE ) ;
     int x = d.ShowModal() ;
     if ( x != wxID_OK ) return ;
 

@@ -188,7 +188,7 @@ void SeqAA::show ( wxDC& dc )
                  dc.SetPen(*wxBLACK_PEN);
                  dc.DrawLine ( qx+1 , qy + 1 , qx+1 , qy + can->charheight - 2 ) ;
 
-                 string pn = pc[q]->protease->name ;
+                 string pn = pc[q]->protease->name.c_str() ;
                  for ( int w = 0 ; w+1 < pn.length() ; w++ )
                     if ( pn[w] == ' ' && pn[w+1] == '(' )
                        pn = pn.substr ( 0 , w ) ;
@@ -280,15 +280,15 @@ void SeqAA::updateProteases ()
     DEL_POINTERS ( pc ) ;
     if ( !can ) return ;
 
-    vector <string> vs ;
+    wxArrayString vs ;
     if ( can->child ) vs = can->child->vec->proteases ;
     else if ( can->p ) vs = can->p->vec->proteases ;
     else if ( can->getAA() ) vs = can->getAA()->vec->proteases ;
 
     int a ;
-    for ( a = 0 ; a < vs.size() ; a++ )
+    for ( a = 0 ; a < vs.GetCount() ; a++ )
         {
-        TProtease *pro = myapp()->frame->LS->getProtease ( vs[a] ) ;
+        TProtease *pro = myapp()->frame->LS->getProtease ( vs[a].c_str() ) ;
         if ( pro ) proteases.push_back ( pro ) ;
         }
     }
@@ -302,7 +302,7 @@ void SeqAA::analyzeProteases ()
        if ( pr->len() <= pa_w.length() )
           {
           string w2 = pa_w.substr ( pa_w.length() - pr->len() , pr->len() ) ;
-          if ( pr->does_match ( w2 ) )
+          if ( pr->does_match ( w2.c_str() ) )
              {
              TProteaseCut *cut = new TProteaseCut ;
              cut->protease = pr ;
@@ -395,7 +395,7 @@ void SeqAA::initFromTVector ( TVector *v )
                u[2] = v->getComplement ( t[a+0] ) ;
                }
             char c = v->dna2aa ( u )[0] ;
-            string three = v->one2three((int)c) ;
+            wxString three = v->one2three((int)c) ;
 
             // Protease analysis
             pa_w += c ;
@@ -409,9 +409,9 @@ void SeqAA::initFromTVector ( TVector *v )
                 if ( disp == AA_ONE ) s[a] = c ;
                 else
                    {
-                   s[a+0] = three[0] ;
-                   s[a+1] = three[1] ;
-                   s[a+2] = three[2] ;
+                   s[a+0] = three.GetChar(0) ;
+                   s[a+1] = three.GetChar(1) ;
+                   s[a+2] = three.GetChar(2) ;
                    }
                 }
             }

@@ -30,9 +30,9 @@ class TAAProp
     public :
     TAAProp () ;
     virtual void set_cf ( int pa , int pb , int pt , float f0 , float f1 , float f2 , float f3 ) ;
-    virtual void set_data ( float _mw , float _pi , string _tla ) ;
+    virtual void set_data ( float _mw , float _pi , wxString _tla ) ;
     virtual void set_hp ( float _hp_kd , float _hp_hw ) ;
-    string tla ;
+    wxString tla ;
     float mw , pi ;
     float cf_f[4] ;
     int cf_pa , cf_pb , cf_pt ;
@@ -88,8 +88,8 @@ class TVectorItem
     virtual wxString implodeParams () ;
     virtual void explodeParams ( wxString _s ) ;
     virtual wxTreeItemId getTreeID () { return treeid ; } ;
-    virtual string getParam ( string p , string def = "" ) ;
-    virtual vector <string> getParamKeys () ;
+    virtual wxString getParam ( wxString p , wxString def = "" ) ;
+    virtual wxArrayString getParamKeys () ;
 
     // dna2aa stuff
     virtual void translate ( TVector *v , SeqAA *aa = NULL ) ;
@@ -106,8 +106,8 @@ class TVectorItem
     friend class TItemEditDialog ;
     friend class PlasmidCanvas ;
     friend class TXMLfile ;
-    virtual void setParam ( string p , string v ) ;
-    virtual void setParam ( string p , int v ) ;
+    virtual void setParam ( wxString p , wxString v ) ;
+    virtual void setParam ( wxString p , int v ) ;
 
     friend class TVectorTree ;
     wxTreeItemId treeid ;
@@ -121,7 +121,7 @@ class TVectorItem
     
     private :
     virtual void initParams () ;
-    vector <string> pname , pvalue ;
+    wxArrayString pname , pvalue ;
     
     // dna2aa data
     vector <Tdna2aa> dna2aa ;
@@ -181,8 +181,8 @@ class TVector
     virtual void setCircular ( bool c = true ) ;
     virtual bool isCircular () ;
     virtual bool isLinear () ;
-    virtual string one2three ( int a ) ;
-    virtual void setStickyEnd ( bool left , bool upper , string s ) ;
+    virtual wxString one2three ( int a ) ;
+    virtual void setStickyEnd ( bool left , bool upper , wxString s ) ;
     virtual string getStickyEnd ( bool left , bool upper ) ;
     virtual bool hasStickyEnds () ;
     virtual void callUpdateUndoMenu () ;
@@ -191,8 +191,8 @@ class TVector
     virtual int getItemLength ( int a ) ;
 
     virtual TAAProp getAAprop ( char a ) ;
-    virtual int find_item ( string s ) ;
-    virtual bool isEnzymeHidden ( string s ) ;
+    virtual int find_item ( wxString s ) ;
+    virtual bool isEnzymeHidden ( wxString s ) ;
     
     // Variables
     string sequence ;
@@ -205,8 +205,8 @@ class TVector
     vector <string> cocktail ;
     vector <TORF> worf ;
 
-    vector <string> hiddenEnzymes ;
-    vector <string> proteases ;
+    wxArrayString hiddenEnzymes ;
+    wxArrayString proteases ;
     TUndo undo ;
     
     private :

@@ -65,13 +65,13 @@ bool TVector::basematch ( char b1 , char b2 ) // b1 in IUPAC, b2 in SIUPAC
    return ( IUPAC[b1] & SIUPAC[b2] ) > 0 ;
    }
 
-string TVector::one2three ( int a )
+wxString TVector::one2three ( int a )
     {
     if ( a < 0 || a > 255 ) return "" ;
     return aaprop[a].tla ;
     }
     
-void TVector::setStickyEnd ( bool left , bool upper , string s )
+void TVector::setStickyEnd ( bool left , bool upper , wxString s )
     {
     if ( left && upper ) _lu = s ;
     else if ( left && !upper ) _ll = s ;
@@ -350,7 +350,7 @@ vector <TRestrictionCut> TVector::getCuts ( TRestrictionEnzyme *e )
     {
     int b , c ;
     vector <TRestrictionCut> ret ;
-    string rs = e->sequence ;
+    string rs = e->sequence.c_str() ;
     string t = sequence ;
     if ( circular ) t += sequence ;
     for ( b = 0 ; b < sequence.length() ; b++ )
@@ -772,7 +772,7 @@ int TVector::countCuts ( string enzyme )
     {
     int a , count ;
     for ( a = count = 0 ; a < rc.size() ; a++ )
-        if ( rc[a].e->name == enzyme )
+        if ( rc[a].e->name == enzyme.c_str() )
            count++ ;
     return count ;
     }
@@ -991,23 +991,23 @@ void TVector::clear ()
     rc.clear () ;
     cocktail.clear () ;
     worf.clear () ;
-    hiddenEnzymes.clear () ;
-    proteases.clear () ;
+    hiddenEnzymes.Clear () ;
+    proteases.Clear () ;
     }
     
-int TVector::find_item ( string s )
+int TVector::find_item ( wxString s )
     {
     int a ;
     for ( a = 0 ; a < items.size() ; a++ )
-       if ( items[a].name == s.c_str() )
+       if ( items[a].name == s )
           return a ;
     return -1 ; // Not found
     }
     
-bool TVector::isEnzymeHidden ( string s )
+bool TVector::isEnzymeHidden ( wxString s )
     {
     int a ;
-    for ( a = 0 ; a < hiddenEnzymes.size() ; a++ )
+    for ( a = 0 ; a < hiddenEnzymes.GetCount() ; a++ )
        if ( hiddenEnzymes[a] == s ) return true ;
     return false ;
     }
@@ -1081,7 +1081,7 @@ wxColour TVectorItem::getFontColor ()
     
 bool TVectorItem::isVisible ()
     {
-    string s = getParam ( "ISVISIBLE" ) ;
+    wxString s = getParam ( "ISVISIBLE" ) ;
     return ( s == "1" ) ;
     }
     
@@ -1100,34 +1100,40 @@ void TVectorItem::setColor ( wxColour col )
     
 //********************* PARAMS
 
-void TVectorItem::setParam ( string p , string v )
+void TVectorItem::setParam ( wxString p , wxString v )
     {
-    int a ;
+    int a = pname.Index ( p ) ;
+    if ( a == wxNOT_FOUND )
+        {
+        pname.Add ( p ) ;
+        pvalue.Add ( v ) ;
+        }
+    else pvalue[a] = v ;
+/*    int a ;
     for ( a = 0 ; a < pname.size() && p != pname[a] ; a++ ) ;
     if ( a == pname.size() )
         {
         pname.push_back ( p ) ;
         pvalue.push_back ( v ) ;
         }
-    else pvalue[a] = v ;
+    else pvalue[a] = v ;*/
     }
     
-void TVectorItem::setParam ( string p , int v )
+void TVectorItem::setParam ( wxString p , int v )
     {
-    char u[100] ;
-    sprintf ( u , "%d" , v ) ;
-    setParam ( p , string ( u ) ) ;
+    setParam ( p , wxString::Format ( "%d" , v ) ) ;
     }
     
-string TVectorItem::getParam ( string p , string def )
+wxString TVectorItem::getParam ( wxString p , wxString def )
     {
-    int a ;
-    for ( a = 0 ; a < pname.size() && p != pname[a] ; a++ ) ;
-    if ( a == pname.size() ) return def ;
-    return pvalue[a] ;
+    int a = pname.Index ( p ) ;
+    return ( a == wxNOT_FOUND ) ? def : pvalue[a] ;
+//    for ( a = 0 ; a < pname.size() && p != pname[a] ; a++ ) ;
+//    if ( a == pname.size() ) return def ;
+//    return pvalue[a] ;
     }
     
-vector <string> TVectorItem::getParamKeys ()
+wxArrayString TVectorItem::getParamKeys ()
     {
     return pname ;
     }
@@ -1136,7 +1142,7 @@ wxString TVectorItem::implodeParams ()
     {
     wxString s ;
     int a , b ;
-    for ( a = 0 ; a < pname.size() ; a++ )
+    for ( a = 0 ; a < pname.GetCount() ; a++ )
         {
         wxString t = pvalue[a].c_str() ;
         for ( b = 0 ; b < t.length() ; b++ )
@@ -1150,19 +1156,19 @@ wxString TVectorItem::implodeParams ()
 
 void TVectorItem::explodeParams ( wxString _s )
     {
-    string s = _s.c_str() ;
+    wxString s = _s ;
     int a ;
     initParams () ;
     while ( s != "" )
         {
-        for ( a = 0 ; s[a] != '\n' ; a++ ) ;
-        string n = s.substr ( 0 , a ) ;
+        for ( a = 0 ; s.GetChar(a) != '\n' ; a++ ) ;
+        wxString n = s.substr ( 0 , a ) ;
         s = s.substr ( a + 1 ) ;
-        for ( a = 0 ; s[a] != '\n' ; a++ ) ;
-        string v = s.substr ( 0 , a ) ;
+        for ( a = 0 ; s.GetChar(a) != '\n' ; a++ ) ;
+        wxString v = s.substr ( 0 , a ) ;
         for ( a = 0 ; a < v.length() ; a++ )
-           if ( v[a] == 2 )
-              v[a] = '\n' ;
+           if ( v.GetChar(a) == 2 )
+              v.SetChar ( a , '\n' ) ;
         s = s.substr ( a + 1 ) ;
         setParam ( n , v ) ;
         }
@@ -1177,8 +1183,8 @@ void TVectorItem::explodeParams ( wxString _s )
 void TVectorItem::initParams ()
     {
     r1 = r2 = -1 ;
-    pname = vector <string> () ;
-    pvalue = vector <string> () ;
+    pname.Clear() ;
+    pvalue.Clear() ;
     setParam ( "ISDEFAULTBRUSH" , true ) ;
     setVisible ( true ) ;
     }
@@ -1335,10 +1341,10 @@ void TVectorItem::getArrangedAA ( TVector *v , string &s , int disp )
        if ( disp == AA_ONE ) s[dna2aa[a].dna[0]] = dna2aa[a].aa ;
        else
           {
-          string three = v->one2three((int)dna2aa[a].aa) ;
-          s[dna2aa[a].dna[0]] = three[0] ;
-          s[dna2aa[a].dna[1]] = three[1] ;
-          s[dna2aa[a].dna[2]] = three[2] ;
+          wxString three = v->one2three((int)dna2aa[a].aa) ;
+          s[dna2aa[a].dna[0]] = three.GetChar(0) ;
+          s[dna2aa[a].dna[1]] = three.GetChar(1) ;
+          s[dna2aa[a].dna[2]] = three.GetChar(2) ;
           }
        }
     }
@@ -1375,7 +1381,7 @@ void TAAProp::set_cf ( int pa , int pb , int pt , float f0 , float f1 , float f2
     cf_f[3] = f3 ;
     }
     
-void TAAProp::set_data ( float _mw , float _pi , string _tla )
+void TAAProp::set_data ( float _mw , float _pi , wxString _tla )
     {
     mw = _mw ;
     pi = _pi ;

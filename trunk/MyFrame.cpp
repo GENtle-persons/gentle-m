@@ -190,7 +190,7 @@ void MyFrame::initme ()
     lang_string = LS->getOption ( "LANGUAGE" , "en" ) ;
     useCoolCanvas = LS->getOption ( "USECOOLCANVAS" , false ) ; // Not saved yet
     useInternalHelp = LS->getOption ( "USEINTERNALHELP" , false ) ; // Not saved yet
-    init_txt ( lang_string ) ;
+    init_txt ( lang_string.c_str() ) ;
 
     // Set the DEBUGGING option in your local test database,
     // so you won't be bothered with updates anymore :-)
@@ -203,7 +203,7 @@ void MyFrame::initme ()
 #ifdef __WXMSW__
     if ( checkUpdate )
         {
-        string cur_update = check4update () ;
+        wxString cur_update = check4update () ;
         if ( cur_update != "" )
             {
             update2version ( cur_update ) ;
@@ -323,7 +323,7 @@ void MyFrame::initme ()
 //    loadLastProject = false ;
     if ( loadLastProject )
         {
-        string sql , n , d ;
+        wxString sql , n , d ;
         TSQLresult r ;
         sql = "SELECT s_value FROM stuff WHERE s_type='LASTPROJECT' AND s_name='NAME'" ;
         r = LS->getObject ( sql ) ;
@@ -410,17 +410,17 @@ void MyFrame::OnHelp(wxCommandEvent& WXUNUSED(event) )
     else
         {
         #ifdef __WXMSW__
-            string helpfile = "\"" ;
-            helpfile += myapp()->homedir ;
+            wxString helpfile = "\"" ;
+            helpfile += myapp()->homedir.c_str() ;
             helpfile += "\\" ;
             helpfile += txt("f_help") ;
             helpfile += "\"" ;
             
             for ( int a = 0 ; a < helpfile.length() ; a++ )
-               if ( helpfile[a] == '/' ) helpfile[a] = '\\' ;
+               if ( helpfile.GetChar(a) == '/' ) helpfile.SetChar ( a , '\\' ) ;
             
-            string command = myapp()->getHTMLCommand ( helpfile ) ;
-            wxExecute ( command.c_str() ) ;
+            wxString command = myapp()->getHTMLCommand ( helpfile ) ;
+            wxExecute ( command ) ;
         #else
         #endif
         }
@@ -514,13 +514,13 @@ void MyFrame::OnFileImport(wxCommandEvent& WXUNUSED(event) )
                         "|" + wcPlainTextDNA +
                         "|" + wcPlainTextAA +
                         "|" + wcABIformat ;
-    string lastdir = LS->getOption ( "LAST_IMPORT_DIR" , "C:" ) ;
-    wxFileDialog d ( this , txt("import_file") , lastdir.c_str() , 
+    wxString lastdir = LS->getOption ( "LAST_IMPORT_DIR" , "C:" ) ;
+    wxFileDialog d ( this , txt("import_file") , lastdir , 
             "" , wildcard , wxOPEN | wxMULTIPLE ) ;
     int x = d.ShowModal() ;
     if ( x != wxID_OK ) return ;
     
-    LS->setOption ( "LAST_IMPORT_DIR" , d.GetDirectory().c_str() ) ;
+    LS->setOption ( "LAST_IMPORT_DIR" , d.GetDirectory() ) ;
 
     int filter = d.GetFilterIndex () - 1 ;
     wxArrayString files , paths ;
@@ -857,7 +857,7 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     showSplashScreen = pod.showSplashScreen->GetValue() ;
     checkUpdate = pod.checkUpdate->GetValue() ;
     useInternalHelp = pod.useInternalHelp->GetValue() ;
-    string lang = pod.language->GetStringSelection().c_str() ;
+    wxString lang = pod.language->GetStringSelection().c_str() ;
     if ( lang != lang_string )
         {
         wxMessageDialog md ( this , txt("t_effect_after_restart" ) ) ;
@@ -951,7 +951,7 @@ void MyFrame::OnProjectClose(wxCommandEvent& event)
         
 void MyFrame::rememberLastProject ()
     {
-    string sql ;
+    wxString sql ;
     char t[10000] ;
 
     sql = "DELETE FROM stuff WHERE s_type='LASTPROJECT'" ;
@@ -1040,23 +1040,21 @@ TABIviewer *MyFrame::newABI ( wxString filename , wxString title )
     return subframe ;
     }
 
-void MyFrame::blast ( string seq , string prg )
+void MyFrame::blast ( wxString seq , wxString prg )
     {
 #ifdef __WXMSW__
-    string unique = wxNow().c_str() ;
-    for ( int a = 0 ; a < unique.length() ; a++ )
-        if ( unique[a] == ':' || 
-             unique[a] == '/' ||
-             unique[a] == ' ' )
-           unique[a] = '_' ;
+    wxString unique = wxNow() ;
+    unique.Replace ( ":" , "_" ) ;
+    unique.Replace ( "/" , "_" ) ;
+    unique.Replace ( " " , "_" ) ;
            
-    string hd = myapp()->homedir.c_str() ;
-    string exe = hd + "\\blastcl3.exe" ; // WINDOWS-SPECIFIC!
-    string ifile = hd + "\\blasts\\temp_" + unique + ".tmp" ;
-    string ofile = hd + "\\blasts\\blast_results_" + unique + ".html" ;
-    string bfile = hd + "\\blasts\\batch_" + unique + ".bat" ;
+    wxString hd = myapp()->homedir.c_str() ;
+    wxString exe = hd + "\\blastcl3.exe" ; // WINDOWS-SPECIFIC!
+    wxString ifile = hd + "\\blasts\\temp_" + unique + ".tmp" ;
+    wxString ofile = hd + "\\blasts\\blast_results_" + unique + ".html" ;
+    wxString bfile = hd + "\\blasts\\batch_" + unique + ".bat" ;
     
-    wxString blast_dir = string ( hd + "\\blasts" ).c_str() ;
+    wxString blast_dir = hd + "\\blasts" ;
     if ( !wxDir::Exists ( blast_dir ) )
        wxMkdir ( blast_dir ) ;
     
@@ -1087,7 +1085,7 @@ void MyFrame::blast ( string seq , string prg )
 
     // Run it
     batch.close() ;
-    wxExecute ( bfile.c_str() ) ;
+    wxExecute ( bfile ) ;
 #endif
     }
     
@@ -1223,7 +1221,7 @@ void MyFrame::activateChild ( int a )
     else setActiveChild ( NULL ) ;
     }
     
-string MyFrame::check4update ()
+wxString MyFrame::check4update ()
     {
 /*  // Deactivated due to strange error message on NT without RAS
     wxDialUpManager *dm = wxDialUpManager::Create() ;
@@ -1253,14 +1251,14 @@ string MyFrame::check4update ()
         td = td.BeforeFirst ( '\r' ) ;
         td = td.BeforeFirst ( '\m' ) ;
         
-        string lu = LS->getOption ( "LAST_UPDATE" , "" ) ;
+        wxString lu = LS->getOption ( "LAST_UPDATE" , "" ) ;
         if ( lu == "" ) // Assuming new installation of the latest version, so no update
            {
-           lu = td.c_str() ;
+           lu = td ;
            LS->setOption ( "LAST_UPDATE" , lu ) ;
            }
         
-        if ( string ( td.c_str() ) > lu )
+        if ( td > lu )
            {
            wxString msg = it.AfterFirst ( '\n' ) ;
            wxMessageDialog md ( this , msg , txt("t_new_version" ) ,
@@ -1268,16 +1266,15 @@ string MyFrame::check4update ()
            if ( wxID_OK != md.ShowModal() )
               return "" ;
            
-           return td.c_str() ;
+           return td ;
            }
         }
     return "" ;
     }
     
-void MyFrame::update2version ( string ver )
+void MyFrame::update2version ( wxString ver )
     {
-
-    string do_run ;
+    wxString do_run ;
     wxFileSystem fs ;
     wxFSFile *f = fs.OpenFile ( "http://gentle.magnusmanske.de/GENtleSetup.exe" ) ;
     if ( f )
@@ -1299,7 +1296,7 @@ void MyFrame::update2version ( string ver )
        unsigned char *uc = new unsigned char [ uv.size() ] ;
        for ( int u = 0 ; u < uv.size() ; u++ ) uc[u] = uv[u] ; // __WXMSW__
        do_run = myapp()->homedir + "\\GENtleSetup.exe" ;
-       wxFile out ( do_run.c_str() , wxFile::write ) ;
+       wxFile out ( do_run , wxFile::write ) ;
        out.Write ( uc , uv.size() ) ;
        out.Close () ;
        delete uc ;
@@ -1316,8 +1313,8 @@ void MyFrame::update2version ( string ver )
        
     if ( do_run == "" ) return ;    
     
-    LS->setOption ( "LAST_UPDATE" , ver ) ;
-    wxExecute ( do_run.c_str() , wxEXEC_ASYNC ) ;
+    LS->setOption ( "LAST_UPDATE" , ver.c_str() ) ;
+    wxExecute ( do_run , wxEXEC_ASYNC ) ;
     SetFocus () ;
     showSplashScreen = false ;
     dying = true ;
@@ -1359,12 +1356,12 @@ void MyFrame::OnSashDrag(wxSashEvent& event)
 //    GetClientWindow()->Refresh();    
     }
 
-TStorage *MyFrame::getTempDB ( string filename )
+TStorage *MyFrame::getTempDB ( wxString filename )
     {
     int a ;
-    for ( a = 0 ; a < dbcache.size() && dbcache[a]->getDBname() != filename ; a++ ) ;
+    for ( a = 0 ; a < dbcache.size() && dbcache[a]->getDBname() != filename.c_str() ; a++ ) ;
     if ( a == dbcache.size() ) 
-        dbcache.push_back ( new TStorage ( TEMP_STORAGE , filename ) ) ;
+        dbcache.push_back ( new TStorage ( TEMP_STORAGE , filename.c_str() ) ) ;
     return dbcache[a] ;
     }
     

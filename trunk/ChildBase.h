@@ -20,7 +20,7 @@ class ChildBase : public MyChildBase
     {
     public :
     ChildBase () ;
-    string def ;
+    wxString def ;
     TVector *vec ;
     wxTreeItemId inMainTree ;
     SequenceCanvas *cSequence;
@@ -29,7 +29,7 @@ class ChildBase : public MyChildBase
     ChildBase(wxWindow *parent, const wxString& title);
         
     virtual wxString getName () { return "" ; }
-    virtual void showName ( string x = "" ) ;
+    virtual void showName ( wxString x = "" ) ;
     virtual void OnFocus(wxFocusEvent& event);
     virtual bool caniclose(wxCloseEvent& event);
     virtual void OnFileSave(wxCommandEvent& WXUNUSED(event) ) {} ;
@@ -38,6 +38,7 @@ class ChildBase : public MyChildBase
     virtual void updateUndoMenu () ;
     virtual void OnClose(wxCloseEvent& event);
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){};
+    virtual void OnPaste (wxCommandEvent& WXUNUSED(event)) {} ;
 
     
     // Compatability functions

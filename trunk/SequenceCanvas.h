@@ -356,6 +356,7 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void OnInsertOtherGaps ( wxCommandEvent &ev ) ;
     virtual void OnDeleteOtherGaps ( wxCommandEvent &ev ) ;
 
+    virtual void OnPaste ( wxCommandEvent &ev ) ;
     virtual void OnFocus(wxFocusEvent& event) ;
     virtual void OnKillFocus(wxFocusEvent& event) ;
     virtual void rsHideLimit ( wxCommandEvent &ev ) ;

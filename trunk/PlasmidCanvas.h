@@ -119,7 +119,7 @@ class PlasmidCanvas : public wxScrolledWindow
     // both modes
     virtual bool intersects ( wxRect &a , wxRect &b ) ;
     virtual bool pointinrect ( int x , int y , wxRect &a ) ;
-    virtual bool isEnzymeVisible ( string s ) ;
+    virtual bool isEnzymeVisible ( wxString s ) ;
     virtual void updateLinkedItems ( TVector *vec , int in ) ;
     
     // Misc internal methods
