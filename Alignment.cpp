@@ -204,25 +204,9 @@ void TAlignment::initme ()
     sc->child = this ;
     sc->EnableScrolling ( true , true ) ;
 
-    // Upper panel
-//    up = new wxPanel ( hs , -1 , wxDefaultPosition , wxSize ( 1000 , 100 ) ) ;
-    
-//    int w , h ;
-//    up->GetClientSize ( &w , &h ) ;
-/*    wxBitmapButton *sb = new wxBitmapButton ( up , ALIGNMENT_SETTINGS ,
-            wxBitmap (myapp()->bmpdir+"\\align.bmp", wxBITMAP_TYPE_BMP),
-            wxPoint ( bo , bo ) ,
-            wxDefaultSize ,
-            wxBU_AUTODRAW ,
-            wxDefaultValidator ) ;
-    new wxStaticText ( up , -1 , txt("t_settings") , wxPoint ( bo , h-20 ) );
-*/
-
-//    hs->SplitHorizontally ( up , sc ,h+bo ) ;
-//    hs->SetMinimumPaneSize ( h+bo ) ;
-    
-#ifdef __WXMSW__ // LINUX
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
+    toolBar->Reparent ( this ) ;
+    toolbar = toolBar ;
     myapp()->frame->InitToolBar(toolBar);
     toolBar->AddTool( MDI_TEXT_IMPORT , 
                 myapp()->frame->bitmaps[0] ,
@@ -257,7 +241,6 @@ void TAlignment::initme ()
     myapp()->frame->addDefaultTools ( toolBar ) ;
     
     toolBar->Realize() ;
-#endif
 
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;

@@ -437,7 +437,7 @@
 "t_calc_dna_8","Concentration","Konzentration"
 "t_calc_dna_9","Purity","Reinheit"
 "add_new_enzyme","&New enzyme","&Neues Restriktionenzym"
-"t_vec_prot","&Proteases","&Proteasen"
+"t_vec_prot","Proteases","Proteasen"
 "t_vec_edit_prot","&Edit protease","Protease &bearbeiten"
 "t_vec_new_prot","&New protease","&Neue Protease"
 "t_new_enzyme","New restriction enzyme","Neues Restriktionsenzym"

@@ -120,6 +120,9 @@ MyFrame::~MyFrame ()
 
 void MyFrame::initme ()
     {
+#ifdef __WXGTK__
+    SetFont ( *MYFONT ( 8 , wxSWISS , wxNORMAL , wxNORMAL ) ) ;    
+#endif
   wxSashLayoutWindow* win ;
   m_leftWindow2 = m_topWindow = m_bottomWindow = NULL ;
 /*  
