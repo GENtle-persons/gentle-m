@@ -22,7 +22,6 @@
 #include "main.h"
 #include <wx/tipdlg.h> 
 #include <wx/splash.h>
-#include <wx/mimetype.h>
 
 #ifdef __WXMSW__
 #include "wx/msw/registry.h"
@@ -357,7 +356,6 @@ int MyApp::OnExit ()
     
 wxString MyApp::getHTMLCommand ( wxString command )
     {
-    wxMimeTypesManager mtm ;
     wxFileType *ft = mtm.GetFileTypeFromExtension ( "html" ) ;
     return ft->GetOpenCommand ( command ) ;
 /*

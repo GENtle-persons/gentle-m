@@ -142,7 +142,7 @@ void PlasmidCanvas::recalc_rc ( int a, wxDC &dc )
     TRestrictionCut *c = &p->vec->rc[a] ;
     wxPoint p2 ( deg2x ( c->angle , c->r2 )+w/2 , deg2y ( c->angle , c->r2 )+h/2 ) ;
     wxPoint p3 ( deg2x ( c->angle3 , c->r3 )+w/2 , deg2y ( c->angle3 , c->r3 )+h/2 ) ;
-    c->p = p3 ;
+    c->lp = p3 ;
     makeLastRect ( a , dc ) ;    
     }
     
@@ -538,7 +538,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
            wxPoint p1 ( deg2x ( c.angle , c.r1 )+w/2 , deg2y ( c.angle , c.r1 )+h/2 ) ;
            wxPoint p2 ( deg2x ( c.angle , c.r2 )+w/2 , deg2y ( c.angle , c.r2 )+h/2 ) ;
            dc.DrawLine ( p1 , p2 ) ;
-           wxPoint p3 = p->vec->rc[a].p ;
+           wxPoint p3 = p->vec->rc[a].lp ;
             
            p3 = makeLastRect ( a , dc ) ;
            if ( p3.x < w/2 )
@@ -561,9 +561,28 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
     dc.SetTextForeground ( *wxBLACK ) ;
     }
 
+int PlasmidCanvas::findORFcircular ( float angle , float radius )
+    {
+    int a , found = -1 ;
+    for ( a = 0 ; a < p->vec->worf.size() ; a++ )
+        {
+        if ( angle >= p->vec->worf[a].deg1 &&
+             angle <= p->vec->worf[a].deg2 &&
+             radius >= p->vec->worf[a].dist1 &&
+             radius <= p->vec->worf[a].dist2 )
+             found = a ;
+        if ( p->vec->worf[a].deg2 > 360 &&
+             angle <= p->vec->worf[a].deg2-360 &&
+             radius >= p->vec->worf[a].dist1 &&
+             radius <= p->vec->worf[a].dist2 )
+             found = a ;
+        }
+    return found ;
+    }
+
 wxPoint PlasmidCanvas::makeLastRect ( int a , wxDC &dc )
     {
-    wxPoint p3 = p->vec->rc[a].p ;
+    wxPoint p3 = p->vec->rc[a].lp ;
     p3.x = p3.x * 100 * r / ( STANDARDRADIUS * 100 ) + w/2 ;
     p3.y = p3.y * 100 * r / ( STANDARDRADIUS * 100 ) + h/2 ;
 
@@ -593,269 +612,3 @@ int PlasmidCanvas::circular_pos ( float angle )
     return b+1 ;
     }
 
-// EVENTS
-
-void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
-{
-    wxClientDC dc(this);
-    PrepareDC(dc);
-
-    wxPoint pt(event.GetLogicalPosition(dc));
-    wxPoint pt_abs(event.GetPosition());
-
-    wxPoint pt2 , pto = pt ;
-    pt2.x = pt.x-w/2 ;
-    pt2.y = pt.y-h/2 ;
-    int pos = 0 ;
-    float angle  = xy2deg ( pt2.x , pt2.y ) ;
-    float radius = xy2r ( pt2.x , pt2.y ) ;
-    pt.x = deg2x ( angle , radius ) + w/2 ;
-    pt.y = deg2y ( angle , radius ) + h/2 ;
-    
-    int vo = findVectorObject ( angle , radius ) ;
-    int rs = findRestrictionSite ( pt.x , pt.y ) ;
-    int orf = findORFcircular ( angle , radius ) ;
-    wxString s = "" ;
-    
-    if ( event.LeftDown() )
-        {
-        CaptureMouse() ;
-        initialclick = true ;
-        mousediffx = mousediffy = 0 ;
-        }
-    else if ( event.LeftUp() )
-        {
-        lastbp = -1 ;
-        initialclick = false ;
-        ReleaseMouse() ;
-        }
-        
-   if ( event.ControlDown() && zoom != 100 )
-      {
-        lastrestrictionsite = rs = -1 ;
-        lastvectorobject = vo = -1 ;
-        orf = -1 ;
-        SetCursor(wxCursor(wxCURSOR_SIZING)) ;
-        if ( event.LeftIsDown() )
-           {
-            if ( initialclick )
-               {
-               mousediffx = pt.x ;
-               mousediffy = pt.y ;
-               initialclick = false ;
-               }
-           int nx , ny ;
-           GetViewStart ( &nx , &ny ) ;
-           Scroll ( nx + mousediffx - pt.x , ny + mousediffy - pt.y ) ;
-           }
-      }
-        
-    if ( lastbp != -1 )
-        {
-        lastrestrictionsite = rs = -1 ;
-        lastvectorobject = vo = -1 ;
-        }
-    
-    // Passing over
-    if ( rs != -1 )
-        {
-        s = p->vec->rc[rs].e->name ;
-        char ttt[1000] ;
-        sprintf ( ttt , txt("tt_rs") , s.c_str() , p->vec->countCuts ( s ) ) ;
-        SetMyToolTip ( ttt , TT_RS ) ;
-        SetCursor(wxCursor(wxCURSOR_HAND)) ;
-        wxLogStatus(txt("rsite_status_bar") , s.c_str() ) ;
-        if ( event.LeftDown() )
-           {
-/*#ifdef __WXMSW__
-           p->treeBox->SelectItem ( p->treeBox->GetParent ( p->vec->rc[rs].treeid ) ) ;
-#else*/
-				   p->treeBox->SelectItem ( p->treeBox->GetParent ( ) ) ; // Frell
-//#endif
-           }
-        else if ( event.RightDown() )
-           invokeRsPopup ( rs , pt_abs ) ;
-        else if ( event.LeftDClick() )
-           invokeVectorEditor ( "enzyme" , rs ) ;
-        else if ( event.MiddleDown() )
-           {
-           p->runRestriction ( s ) ;
-/*           TRestrictionEditor ed ( myapp()->frame , "" , wxPoint(-1,-1) , 
-                      wxSize(600,400) , 
-                      wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL);
-           ed.pre = s ;
-           ed.cocktail = p->vec->cocktail ;
-           ed.initme ( p->vec ) ;
-           if ( ed.ShowModal () == wxID_OK )
-              {
-              p->vec->cocktail = ed.cocktail ;
-              p->vec->doAction() ;
-              }*/
-           }
-        }
-    else if ( vo != -1 )
-        {
-        s = p->vec->items[vo].name ;
-        char ttt[1000] ;
-        sprintf ( ttt , "itemtype%d" , p->vec->items[vo].type ) ;
-        wxString tt_type = txt(ttt) ;
-        sprintf ( ttt , txt("tt_item") , tt_type.c_str() ,
-                                        s.c_str() , 
-                                        p->vec->items[vo].desc.c_str() ) ;
-        SetMyToolTip ( ttt , TT_ITEM ) ;
-        SetCursor(wxCursor(wxCURSOR_HAND)) ;
-        wxLogStatus(txt("item_status_bar") , s.c_str() ) ;
-        if ( event.LeftDown() )
-           p->treeBox->SelectItem ( p->vec->items[vo].getTreeID() ) ;
-        else if ( event.RightDown() )
-             invokeItemPopup ( vo , pt_abs ) ;
-        else if ( event.LeftDClick() )
-           invokeVectorEditor ( "item" , vo ) ;
-        else if ( event.MiddleDown() )
-           {
-           wxCommandEvent dummyEvent ;
-           context_last_item = vo ;
-           itemMarkShow ( dummyEvent ) ;
-           p->cSequence->SetFocus () ;
-           }
-        
-        }
-    else if ( orf != -1 )
-        {
-        char ttt[1000] ;
-        sprintf ( ttt ,
-                  "%d-%d, %d" , 
-                  p->vec->worf[orf].from ,
-                  p->vec->worf[orf].to ,
-                  p->vec->worf[orf].rf ) ;
-        SetMyToolTip ( ttt , TT_ORF ) ;
-        SetCursor(wxCursor(wxCURSOR_HAND)) ;
-        wxLogStatus(txt("item_status_bar") , ttt ) ;
-        if ( event.LeftDClick() )
-           p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
-        }
-    else
-        {
-        SetMyToolTip ( "" , TT_NONE ) ;
-        if ( !event.ControlDown() ) SetCursor(*wxSTANDARD_CURSOR) ;
-        float bp = circular_pos ( angle ) ;
-        wxLogStatus(txt("bp"), int(bp) ) ;
-//        wxLogStatus("%2.2f", angle ) ;
-        if ( event.LeftDClick() ) invokeVectorEditor () ;
-        else if ( event.RightDown() ) invokeVectorPopup ( pt_abs ) ;
-        }
-        
-        
-
-    if ( event.Dragging() && event.LeftIsDown() && lastrestrictionsite != -1 )
-        {
-        SetCursor(wxCursor(wxCURSOR_HAND)) ;
-        rs = lastrestrictionsite ;
-        lastvectorobject = -1 ;
-        wxRect lr = p->vec->rc[rs].lastrect ;
-        wxPoint q1 ;
-        
-        q1 = pto ;
-        q1.x -= w/2 ;
-        q1.y -= h/2 ;
-
-        q1.x = q1.x * ( STANDARDRADIUS * 100 ) / ( 100 * r ) ;
-        q1.y = q1.y * ( STANDARDRADIUS * 100 ) / ( 100 * r ) ;
-        
-        if ( initialclick )
-           {
-           mousediffx = p->vec->rc[rs].p.x - q1.x ;
-           mousediffy = p->vec->rc[rs].p.y - q1.y ;
-           initialclick = false ;
-           }
-        q1.x += mousediffx ;
-        q1.y += mousediffy ;
-
-        p->vec->rc[rs].p.x = q1.x ;
-        p->vec->rc[rs].p.y = q1.y ;
-        
-        Refresh () ;
-        }
-    else if ( event.Dragging() && event.LeftIsDown() && lastvectorobject != -1 )
-       {
-       SetCursor(wxCursor(wxCURSOR_HAND)) ;
-       vo = lastvectorobject ;
-       lastrestrictionsite = -1 ;
-       int dr = p->vec->items[vo].r2 - p->vec->items[vo].r1 ;
-       float r1 = STANDARDRADIUS * radius / r - p->vec->items[vo].r1 ;
-       p->vec->items[vo].r1 += int ( r1 ) ;
-       p->vec->items[vo].r2 = p->vec->items[vo].r1 + dr ;
-       updateLinkedItems ( p->vec , vo ) ;
-       Refresh () ;
-       }
-/*    else if ( event.LeftIsDown() && event.RightIsDown() ) // Turning disabeled
-       {
-       int f = (pto.x-w/2)/10 ;
-       p->vec->turn ( f ) ;
-       Refresh () ;
-       p->cSequence->arrange () ;
-       p->cSequence->Refresh () ;
-       }*/
-    else if ( event.LeftIsDown() && orf != -1 )
-        {
-        p->cSequence->mark ( "DNA" ,
-                                p->vec->worf[orf].from + 1 ,
-                                p->vec->worf[orf].to + 1 ) ;
-        }
-    else if ( event.RightDown() && orf != -1 )
-        {
-        p->cSequence->mark ( "DNA" ,
-                                p->vec->worf[orf].from + 1 ,
-                                p->vec->worf[orf].to + 1 ) ;
-        invokeORFpopup ( orf , pt_abs ) ;
-        }
-    else if ( event.LeftIsDown() && rs == -1 && vo == -1 && orf == -1 )
-       {
-       float bp = circular_pos ( angle ) ;
-       if ( lastbp == -1 && initialclick ) lastbp = int(bp) ;
-       if ( lastbp != -1 )
-          {
-          if ( lastbp != int(bp) )
-             p->cSequence->mark ( "DNA" , lastbp , int(bp) ) ;
-          else
-          	 p->cSequence->unmark () ;
-//             p->cSequence->mark ( "DNA" , -1 , -1 ) ;
-          }
-       }
-    else if ( event.MiddleDown() && p->cSequence->markedFrom() != -1 )
-       {
-       p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
-       }
-    else if ( p->cSequence->markedFrom() == -1 && ( event.MiddleDown() || ( event.Dragging() && event.MiddleIsDown() ) ) )
-       {
-       int bp = circular_pos ( angle ) ;
-       p->cSequence->mark ( "DNA" , bp , bp ) ;
-       p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
-       p->cSequence->unmark () ;
-//       p->cSequence->mark ( "DNA" , -1 , -1 ) ;
-       }
-    else
-       {
-       lastrestrictionsite = rs ;
-       lastvectorobject = vo ;
-       }
-}
-
-int PlasmidCanvas::findORFcircular ( float angle , float radius )
-    {
-    int a , found = -1 ;
-    for ( a = 0 ; a < p->vec->worf.size() ; a++ )
-        {
-        if ( angle >= p->vec->worf[a].deg1 &&
-             angle <= p->vec->worf[a].deg2 &&
-             radius >= p->vec->worf[a].dist1 &&
-             radius <= p->vec->worf[a].dist2 )
-             found = a ;
-        if ( p->vec->worf[a].deg2 > 360 &&
-             angle <= p->vec->worf[a].deg2-360 &&
-             radius >= p->vec->worf[a].dist1 &&
-             radius <= p->vec->worf[a].dist2 )
-             found = a ;
-        }
-    return found ;
-    }
