@@ -298,7 +298,7 @@ string TSilmutDialog::getAAresult ( string dna )
     a3->unknownAA = ' ' ;
     a3->initFromTVector ( &v2 ) ;
     a3->showNumbers = false ;
-    string ret = a3->s ;
+    string ret = a3->s.c_str() ;
     delete a3 ;
     return ret ;
     }

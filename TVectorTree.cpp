@@ -96,7 +96,7 @@ void TVectorTree::initme ()
                sType + "\n" +
                sOritentation + "\n" +
                sDescription ;
-        SetItemData ( y , new TTreeItem ( out.c_str() , "ITEM" , (void*)a ) ) ;
+        SetItemData ( y , new TTreeItem ( out , "ITEM" , (void*)a ) ) ;
         }
     
     // Enzymes
@@ -116,7 +116,7 @@ void TVectorTree::initme ()
         if ( !used ) Delete ( y ) ;
         else
            {
-           SetItemData ( y , new TTreeItem ( out.c_str() , "RE" , p->vec->re[a] ) ) ;
+           SetItemData ( y , new TTreeItem ( out , "RE" , p->vec->re[a] ) ) ;
 
            // Visibility check; "used" = "visible"
            for ( b = 0 ; visible && b < p->vec->hiddenEnzymes.GetCount() ; b++ )

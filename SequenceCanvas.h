@@ -84,11 +84,11 @@ class SeqBasic
     virtual void show ( wxDC& dc ) {} ;
     virtual wxPoint showText ( int ystart , wxArrayString &tout )
         { return wxPoint ( -1 , -1 ) ; } ;
-    virtual string whatsthis () { return "BASIC" ; }
+    virtual wxString whatsthis () { return "BASIC" ; }
     
     // Variables
     SeqPos pos ;
-    string s ;
+    wxString s ;
     int offset , endnumberlength ;
     SequenceCanvas *can ;
     bool takesMouseActions , shown ;
@@ -98,7 +98,7 @@ class SeqNum : public SeqBasic
     {
     public :
     SeqNum ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; offset = 0 ; }
-    virtual string whatsthis () { return "NUM" ; }
+    virtual wxString whatsthis () { return "NUM" ; }
     virtual int  arrange ( int n ) ;
     virtual void show ( wxDC& dc ) ;
     } ;
@@ -107,7 +107,7 @@ class SeqDivider : public SeqBasic
     {
     public :
     SeqDivider ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; offset = 0 ; }
-    virtual string whatsthis () { return "DIVIDER" ; }
+    virtual wxString whatsthis () { return "DIVIDER" ; }
     virtual void initFromTVector ( TVector *v ) ;
     virtual int  arrange ( int n ) ;
     virtual void show ( wxDC& dc ) ;
@@ -120,7 +120,7 @@ class SeqBlank : public SeqDivider
     {
     public :
     SeqBlank ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; offset = 0 ; }
-    virtual string whatsthis () { return "BLANK" ; }
+    virtual wxString whatsthis () { return "BLANK" ; }
     virtual void show ( wxDC& dc ) {} ;
     } ;
 
@@ -131,7 +131,7 @@ class SeqDNA : public SeqBasic
     virtual int  arrange ( int n ) ;
     virtual void show ( wxDC& dc ) ;
     virtual void initFromTVector ( TVector *v ) ;
-    virtual string whatsthis () { return invers ? "IDNA" : "DNA" ; }
+    virtual wxString whatsthis () { return invers ? "IDNA" : "DNA" ; }
     virtual wxPoint showText ( int ystart , wxArrayString &tout ) ;
     virtual wxColor getBaseColor ( char b ) ;
         
@@ -140,7 +140,7 @@ class SeqDNA : public SeqBasic
     int itemsperline ;
     bool showNumbers ;
     wxColour fontColor ;
-    string alternateName ;
+    wxString alternateName ;
     bool invers ;
     } ;
 
@@ -154,10 +154,10 @@ class SeqPrimer : public SeqDNA
     virtual void show ( wxDC& dc ) ;
     virtual void initFromTVector ( TVector *v ) ;
     virtual void addPrimer ( TPrimer *p ) ;
-    virtual string whatsthis () { return myname ; }
+    virtual wxString whatsthis () { return myname ; }
     
     // Variables
-    string myname ;
+    wxString myname ;
     } ;
 
 class SeqAlign : public SeqBasic
@@ -166,10 +166,10 @@ class SeqAlign : public SeqBasic
     SeqAlign ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; myname = "Align" ; id = -1 ; }
     virtual int  arrange ( int n ) ;
     virtual void show ( wxDC& dc ) ;
-    virtual string whatsthis () { return "ALIGN" ; }
+    virtual wxString whatsthis () { return "ALIGN" ; }
     
     // Variables
-    string myname ;
+    wxString myname ;
     int itemsperline ;
     int id ;
     } ;
@@ -181,7 +181,7 @@ class SeqRestriction : public SeqBasic
     virtual int  arrange ( int n ) ;
     virtual void show ( wxDC& dc ) ;
     virtual void initFromTVector ( TVector *v ) ;
-    virtual string whatsthis () { return "RESTRICTION" ; }
+    virtual wxString whatsthis () { return "RESTRICTION" ; }
     
     // Variables
     TVector *vec ;
@@ -205,11 +205,11 @@ class SeqAA : public SeqBasic
     virtual void show ( wxDC& dc ) ;
     virtual wxPoint showText ( int ystart , wxArrayString &tout ) ;
     virtual void initFromTVector ( TVector *v ) ;
-    virtual void initFromString ( string t ) ;
+    virtual void initFromString ( wxString t ) ;
     virtual void analyzeProteases () ;
     virtual void updateProteases () ;
     virtual void fixOffsets ( TVector *v ) ;
-    virtual string whatsthis () { return "AA" ; }
+    virtual wxString whatsthis () { return "AA" ; }
     
     // Variables
     TVector *vec ;
@@ -218,7 +218,7 @@ class SeqAA : public SeqBasic
     bool primaryMode , showNumbers ;
     char unknownAA ;
     vector <TProteaseCut*> pc ;
-    string pa_w ;
+    wxString pa_w ;
     vector <TProtease*> proteases ;
     wxArrayInt offsets , pa_wa ;
     vector <TVectorItem*> offset_items ;
@@ -232,7 +232,7 @@ class SeqABI : public SeqDNA
     virtual int  arrange ( int n ) ;
     virtual void show ( wxDC& dc ) ;
     virtual void initFromFile ( wxString filename ) ;
-    virtual string whatsthis () { return "ABI" ; }
+    virtual wxString whatsthis () { return "ABI" ; }
     virtual void drawTopLine ( wxDC &dc , int y ) ;
     virtual wxColor getBaseColor ( char b ) ;
     virtual void setInvCompl ( bool x ) ;
@@ -254,7 +254,7 @@ class SeqFeature : public SeqDNA
     public :
     SeqFeature ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; aaa = NULL ; }
     virtual void show ( wxDC& dc ) ;
-    virtual string whatsthis () { return "FEATURE" ; }
+    virtual wxString whatsthis () { return "FEATURE" ; }
     virtual void initFromTVector ( TVector *v ) ;
     virtual bool collide ( int a , int b ) ;
     virtual bool doesHit ( int a , int x ) ;
@@ -272,7 +272,7 @@ class SeqPlot : public SeqDNA
     public :
     SeqPlot ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; lines = 0 ; }
     virtual void show ( wxDC& dc ) ;
-    virtual string whatsthis () { return "PLOT" ; }
+    virtual wxString whatsthis () { return "PLOT" ; }
     virtual void initFromTVector ( TVector *v ) ;
     virtual int  arrange ( int n ) ;
     virtual void setLines ( int l ) ;
@@ -360,14 +360,14 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void OnKillFocus(wxFocusEvent& event) ;
     virtual void rsHideLimit ( wxCommandEvent &ev ) ;
     
-    virtual string getSelection () ;
+    virtual wxString getSelection () ;
     
-    virtual void updateEdit ( TVector *v , string id , int from ) ;
+    virtual void updateEdit ( TVector *v , wxString id , int from ) ;
     virtual void arrange () ;
     virtual SeqBasic* findMouseTarget ( wxPoint pt , int &pos ) ;
     virtual int findMouseTargetItem ( wxPoint pt ) ;
-    virtual SeqBasic* findID ( string id ) ;
-    virtual void mark ( string id , int from , int to , int value = 1 ) ;
+    virtual SeqBasic* findID ( wxString id ) ;
+    virtual void mark ( wxString id , int from , int to , int value = 1 ) ;
     virtual bool inMarkRange ( int x , int f , int t , int l ) ;
     virtual void ensureVisible ( int pos ) ;
     virtual int getBatchMark () ;
@@ -398,7 +398,7 @@ class SequenceCanvas : public wxScrolledWindow
     virtual bool getEditMode () { return editMode ; }
     virtual void setEditMode ( bool _b ) { editMode = _b ; }
     virtual void setLowX ( int _i ) { if ( lowx < _i ) lowx = _i ; }
-    virtual void startEdit ( string id ) ;
+    virtual void startEdit ( wxString id ) ;
     virtual void stopEdit () ;
 
     ChildBase *child ; // Wanna-be universal com port to "parent"
@@ -408,7 +408,7 @@ class SequenceCanvas : public wxScrolledWindow
     int lastmarked , maxendnumberlength , lastyoffset , blocksize ;
     vector <SeqBasic*> seq ;
     wxFont *font , *smallFont , *varFont;
-    string edit_id , edit_valid ;
+    wxString edit_id , edit_valid ;
     
     private :
     wxBitmap *getSequenceBitmap () ;

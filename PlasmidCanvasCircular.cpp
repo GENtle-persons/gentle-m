@@ -532,7 +532,7 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
     int vo = findVectorObject ( angle , radius ) ;
     int rs = findRestrictionSite ( pt.x , pt.y ) ;
     int orf = findORFcircular ( angle , radius ) ;
-    string s = "" ;
+    wxString s = "" ;
     
     if ( event.LeftDown() )
         {
@@ -614,7 +614,7 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
         s = p->vec->items[vo].name ;
         char ttt[1000] ;
         sprintf ( ttt , "itemtype%d" , p->vec->items[vo].type ) ;
-        string tt_type = txt(ttt) ;
+        wxString tt_type = txt(ttt) ;
         sprintf ( ttt , txt("tt_item") , tt_type.c_str() ,
                                         s.c_str() , 
                                         p->vec->items[vo].desc.c_str() ) ;

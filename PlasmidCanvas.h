@@ -26,7 +26,7 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void print () ;
     virtual void setZoom ( int factor ) ;
 
-    virtual string getSelection () ;
+    virtual wxString getSelection () ;
     virtual void OnCopyImage ( wxCommandEvent &ev ) ;
 
     virtual void RunPrimerEditor ( vector <TPrimer> &pl , int mut = -1 ) ;
@@ -35,7 +35,7 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void OnPrimerBoth ( wxCommandEvent &ev ) ;
     virtual void OnPrimerMutation ( wxCommandEvent &ev ) ;
     
-    virtual void invokeVectorEditor ( string what = "" , int num = 0 , bool forceUpdate = false ) ;
+    virtual void invokeVectorEditor ( wxString what = "" , int num = 0 , bool forceUpdate = false ) ;
     virtual wxMenu *invokeItemPopup ( int item , wxPoint pt , bool doreturn = false ) ;
     virtual wxMenu *invokeRsPopup ( int rs , wxPoint pt , bool doreturn = false ) ;
     virtual wxMenu *invokeVectorPopup ( wxPoint pt , bool doreturn = false ) ;
@@ -123,8 +123,8 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void updateLinkedItems ( TVector *vec , int in ) ;
     
     // Misc internal methods
-    virtual void SetMyToolTip ( string s , int mode ) ;
-    virtual string getDNAorAA ( int from , int to , int dir , bool dna = true ) ;
+    virtual void SetMyToolTip ( wxString s , int mode ) ;
+    virtual wxString getDNAorAA ( int from , int to , int dir , bool dna = true ) ;
     virtual int circular_pos ( float angle ) ;
     virtual void push_rc_left ( int a , wxDC &dc ) ;
     virtual void push_rc_right ( int a , wxDC &dc ) ;

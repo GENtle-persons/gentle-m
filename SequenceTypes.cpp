@@ -24,7 +24,7 @@ void SeqPrimer::show ( wxDC& dc )
     wxColour tfg = dc.GetTextForeground () ;
     int bm = dc.GetBackgroundMode () ;
     int a , b , cnt = offset+1 ;
-    string t ;
+    wxString t ;
     char u[100] ;
     dc.SetTextBackground ( *wxWHITE ) ;
     dc.SetTextForeground ( *wxBLACK ) ;
@@ -48,7 +48,7 @@ void SeqPrimer::show ( wxDC& dc )
         if ( b > 0 && !insight ) cnt++ ;
         if ( b > 0 && insight ) // Character
            {
-           t = s[b-1] ;
+           t = s.GetChar(b-1) ;
            if ( pos.m[a] == 1 )
               {
               dc.SetTextBackground ( *wxLIGHT_GREY ) ;
@@ -59,7 +59,7 @@ void SeqPrimer::show ( wxDC& dc )
               dc.SetTextBackground ( *wxBLACK ) ;
               dc.SetTextForeground ( *wxWHITE ) ;
               }
-           if ( s[b-1] == vec->getSequence()[b-1] ) dc.SetTextForeground ( *wxBLUE ) ;
+           if ( s.GetChar(b-1) == vec->getSequenceChar(b-1) ) dc.SetTextForeground ( *wxBLUE ) ;
            else dc.SetTextForeground ( *wxRED ) ;
            if ( can->isPrinting() && !can->getPrintToColor() )
               {
@@ -67,7 +67,7 @@ void SeqPrimer::show ( wxDC& dc )
               dc.SetBackgroundMode ( wxTRANSPARENT ) ;
               }
 
-           dc.DrawText ( t.c_str(), pos.r[a].x, pos.r[a].y ) ;
+           dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
 
            if ( pos.m[a] == 2 && !can->doOverwrite() )
               {
@@ -94,8 +94,8 @@ void SeqPrimer::show ( wxDC& dc )
               t = u ;
               while ( t.length() < endnumberlength ) t = "0" + t ;
               }
-           else t = alternateName ;
-           dc.DrawText ( t.c_str() , pos.r[a].x, pos.r[a].y ) ;
+           else t = alternateName.c_str() ;
+           dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
            }
         }
     dc.SetBackgroundMode ( bm ) ;
@@ -106,8 +106,8 @@ void SeqPrimer::show ( wxDC& dc )
 void SeqPrimer::initFromTVector ( TVector *v )
     {
     vec = v ;
-    s = vec->getSequence() ;
-    for ( int a = 0 ; a < s.length() ; a++ ) s[a] = ' ' ;
+    s = vec->getSequence().c_str() ;
+    for ( int a = 0 ; a < s.length() ; a++ ) s.SetChar(a,' ') ;
     takesMouseActions = true ;
     showNumbers = false ;
     }
@@ -126,7 +126,7 @@ void SeqPrimer::addPrimer ( TPrimer *p )
         myass ( a-p->from < p->getSequenceLength() , "SeqPrimer::addPrimer_3" ) ;
         d.setNucleotide ( a-1 , p->sequence[a-p->from] ) ;
         }
-    s = d.getSequence () ;
+    s = d.getSequence ().c_str() ;
     }
     
 //************************************************ SeqNum
@@ -275,6 +275,6 @@ void SeqDivider::show ( wxDC& dc )
 void SeqDivider::initFromTVector ( TVector *v )
     {
 //    vec = v ;
-    s = v->getSequence() ;
+    s = v->getSequence().c_str() ;
     }
 

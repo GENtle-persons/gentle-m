@@ -66,7 +66,7 @@ wxMenu *PlasmidCanvas::invokeItemPopup ( int item , wxPoint pt , bool doreturn )
     
 void PlasmidCanvas::itemMark ( wxCommandEvent &ev )
     {
-    string id = "DNA" ;
+    wxString id = "DNA" ;
     if ( p->def == "AminoAcids" ) id = "AA" ;
     p->cSequence->mark ( id ,
                     p->vec->items[context_last_item].from ,
@@ -332,21 +332,21 @@ void PlasmidCanvas::vecEdit ( wxCommandEvent &ev )
 void PlasmidCanvas::blastDNA ( wxCommandEvent &ev )
     {
     if ( getMarkFrom() == -1 ) return ;
-    string seq ;
+    wxString seq ;
     int a ;
     for ( a = getMarkFrom() ; a <= getMarkTo() ; a++ )
         {
         seq += p->vec->getNucleotide ( a-1 ) ;
         }
     if ( seq == "" ) return ;
-    myapp()->frame->blast ( seq.c_str() , "blastn" ) ;
+    myapp()->frame->blast ( seq , "blastn" ) ;
     }
         
 void PlasmidCanvas::blastAA ( wxCommandEvent &ev )
     {
-    string seq = p->doExtractAA() ;
+    wxString seq = p->doExtractAA() ;
     int a ;
-    for ( a = 0 ; a < seq.size() && seq[a] == ' ' ; a++ ) ;
+    for ( a = 0 ; a < seq.size() && seq.GetChar(a) == ' ' ; a++ ) ;
     if ( a == seq.size() )
        {
        wxMessageBox ( txt("t_no_or_empty_sequence") , 
@@ -354,7 +354,7 @@ void PlasmidCanvas::blastAA ( wxCommandEvent &ev )
                       wxOK | wxICON_ERROR  ) ;
        return ;
        }
-    myapp()->frame->blast ( seq.c_str() , "blastp" ) ;
+    myapp()->frame->blast ( seq , "blastp" ) ;
     }
 
 void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl , int mut)
@@ -435,10 +435,10 @@ void PlasmidCanvas::OnPrimerMutation ( wxCommandEvent &ev )
 
 // **** ORF popup menu handlers    
 
-string PlasmidCanvas::getDNAorAA ( int from , int to , int dir , bool dna )
+wxString PlasmidCanvas::getDNAorAA ( int from , int to , int dir , bool dna )
     {
     int a ;
-    string r , s ;
+    wxString r , s ;
     if ( to < from ) to += p->vec->getSequenceLength() ;
     
     for ( a = from ; a <= to ; a++ )
@@ -452,7 +452,7 @@ string PlasmidCanvas::getDNAorAA ( int from , int to , int dir , bool dna )
         {
         s = "" ;
         for ( a = 0 ; a < r.length() ; a++ )
-           s = p->vec->getComplement ( r[a] ) + s ;
+           s = p->vec->getComplement ( r.GetChar(a) ) + s ;
         r = s ;
         }
     if ( !dna )
@@ -460,7 +460,7 @@ string PlasmidCanvas::getDNAorAA ( int from , int to , int dir , bool dna )
         s = "" ;
         for ( a = 0 ; a+2 < r.length() ; a += 3 )
            {
-           string t = p->vec->dna2aa ( r.substr ( a , 3 ) ) ;
+           wxString t = p->vec->dna2aa ( r.substr ( a , 3 ) ) ;
            if ( t != "|" ) s += t ;
            }
         r = s ;
@@ -472,7 +472,7 @@ void PlasmidCanvas::orfCopyDNA ( wxCommandEvent &ev )
     {
     int from = p->vec->worf[context_last_orf].from ;
     int to = p->vec->worf[context_last_orf].to ;
-    string s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf ) ;
+    wxString s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf ) ;
     if (wxTheClipboard->Open())
         {
         wxTheClipboard->SetData( new wxTextDataObject(s.c_str()) );
@@ -484,7 +484,7 @@ void PlasmidCanvas::orfCopyAA ( wxCommandEvent &ev )
     {
     int from = p->vec->worf[context_last_orf].from ;
     int to = p->vec->worf[context_last_orf].to ;
-    string s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf , false ) ;
+    wxString s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf , false ) ;
     if (wxTheClipboard->Open())
         {
         wxTheClipboard->SetData( new wxTextDataObject(s.c_str()) );
@@ -536,14 +536,10 @@ void PlasmidCanvas::orfAsNewAA ( wxCommandEvent &ev )
     {
     int from = p->vec->worf[context_last_orf].from ;
     int to = p->vec->worf[context_last_orf].to ;
-    string seq = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf , false ) ;
+    wxString seq = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf , false ) ;
     wxString n = p->vec->getName() + " (" ;
     n += txt ( "t_orf_extracted" ) ;
     n += ")" ;
-//    myapp()->frame->newAminoAcids ( seq , n ) ;
-//    string s = getDNAorAA ( from , to , dir , false ) ;
-//    string n = p->vec->items[context_last_item].name.c_str() ;
-//    n += " (" + p->vec->name + ")" ;
     TVector *vvv = p->vec->getAAvector ( from+1 , to+1 , p->vec->worf[context_last_orf].rf ) ;
     TAminoAcids *aaa = myapp()->frame->newAminoAcids ( vvv , n ) ;
     aaa->vec->setChanged() ;
@@ -553,7 +549,7 @@ void PlasmidCanvas::orfBlastDNA ( wxCommandEvent &ev )
     {
     int from = p->vec->worf[context_last_orf].from ;
     int to = p->vec->worf[context_last_orf].to ;
-    string s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf ) ;
+    wxString s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf ) ;
     if ( s == "" ) return ;
     myapp()->frame->blast ( s.c_str() , "blastn" ) ;
     }
@@ -562,7 +558,7 @@ void PlasmidCanvas::orfBlastAA ( wxCommandEvent &ev )
     {
     int from = p->vec->worf[context_last_orf].from ;
     int to = p->vec->worf[context_last_orf].to ;
-    string s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf , false ) ;
+    wxString s = getDNAorAA ( from , to , p->vec->worf[context_last_orf].rf , false ) ;
     if ( s == "" ) return ;
     myapp()->frame->blast ( s.c_str() , "blastp" ) ;
     }
@@ -574,7 +570,7 @@ void PlasmidCanvas::itemBlastDNA ( wxCommandEvent &ev )
     int from = p->vec->items[context_last_item].from ;
     int to = p->vec->items[context_last_item].to ;
     int dir = p->vec->items[context_last_item].direction ;
-    string s = getDNAorAA ( from , to , dir ) ;
+    wxString s = getDNAorAA ( from , to , dir ) ;
     if ( s == "" ) return ;
     myapp()->frame->blast ( s.c_str() , "blastn" ) ;
     }
@@ -588,9 +584,9 @@ void PlasmidCanvas::itemBlastAA ( wxCommandEvent &ev )
     if ( rf == 0 ) return ;
     from += dir * ( rf - 1 ) ;
     to += dir * ( rf - 1 ) ;
-    string s = getDNAorAA ( from , to , dir , false ) ;
+    wxString s = getDNAorAA ( from , to , dir , false ) ;
     if ( s == "" ) return ;
-    myapp()->frame->blast ( s.c_str() , "blastp" ) ;
+    myapp()->frame->blast ( s , "blastp" ) ;
     }
 
 void PlasmidCanvas::itemCopyAA ( wxCommandEvent &ev )
@@ -602,10 +598,10 @@ void PlasmidCanvas::itemCopyAA ( wxCommandEvent &ev )
     if ( rf == 0 ) return ;
     from += dir * ( rf - 1 ) - 1 ;
     to += dir * ( rf - 1 ) - 1 ;
-    string s = getDNAorAA ( from , to , dir , false ) ;
+    wxString s = getDNAorAA ( from , to , dir , false ) ;
     if (wxTheClipboard->Open())
         {
-        wxTheClipboard->SetData( new wxTextDataObject(s.c_str()) );
+        wxTheClipboard->SetData( new wxTextDataObject(s) );
         wxTheClipboard->Close();
         }    
     }
@@ -619,7 +615,6 @@ void PlasmidCanvas::itemAsNewAA ( wxCommandEvent &ev )
     if ( rf == 0 ) return ;
     from += dir * ( rf - 1 ) - 1 ;
     to += dir * ( rf - 1 ) - 1 ;
-//    string s = getDNAorAA ( from , to , dir , false ) ;
     wxString n = p->vec->items[context_last_item].name ;
     n += " (" + p->vec->getName() + ")" ;
     TVector *nv = p->vec->getAAvector ( from+1 , to+1 , dir ) ;
@@ -629,8 +624,6 @@ void PlasmidCanvas::itemAsNewAA ( wxCommandEvent &ev )
     
 void PlasmidCanvas::itemAsNewSequence ( wxCommandEvent &ev )
     {
-//    int from = p->vec->worf[context_last_orf].from ;
-//    int to = p->vec->worf[context_last_orf].to ;
     int from = p->vec->items[context_last_item].from ;
     int to = p->vec->items[context_last_item].to ;
     int dir = p->vec->items[context_last_item].direction ;
@@ -672,11 +665,11 @@ void PlasmidCanvas::itemCopyDNA ( wxCommandEvent &ev )
         to += dir * ( rf - 1 ) - 1 ;
         }
 
-    string s = getDNAorAA ( from , to , dir ) ;
+    wxString s = getDNAorAA ( from , to , dir ) ;
 
     if (wxTheClipboard->Open())
         {
-        wxTheClipboard->SetData( new wxTextDataObject(s.c_str()) );
+        wxTheClipboard->SetData( new wxTextDataObject(s) );
         wxTheClipboard->Close();
         }    
     }
@@ -685,16 +678,16 @@ void PlasmidCanvas::OnFillKlenow(wxCommandEvent& event)
     {
     p->vec->undo.start ( txt("u_fill_klenow") ) ;
     TVector *v = p->vec ;
-    string l = v->getStickyEnd(true,true) + v->getStickyEnd(true,false) ;
-    string r = v->getStickyEnd(false,true) + v->getStickyEnd(false,false) ;
+    wxString l = v->getStickyEnd(true,true) + v->getStickyEnd(true,false) ;
+    wxString r = v->getStickyEnd(false,true) + v->getStickyEnd(false,false) ;
     int a ;
     if ( v->getStickyEnd(true,false) != "" )
         for ( a = 0 ; a < l.length() ; a++ )
-           l[a] = v->getComplement ( l[a] ) ;
+           l[(uint)a] = v->getComplement ( l[(uint)a] ) ;
     if ( v->getStickyEnd(false,false) != "" )
         for ( a = 0 ; a < r.length() ; a++ )
-           r[a] = v->getComplement ( r[a] ) ;
-    v->setSequence ( l + v->getSequence() + r ) ;
+           r[(uint)a] = v->getComplement ( r[(uint)a] ) ;
+    v->setSequence ( l + v->getWxSequence() + r ) ;
     for ( a = 0 ; a < v->items.size() ; a++ )
         {
         v->items[a].from += l.length() ;

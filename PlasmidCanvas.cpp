@@ -186,7 +186,7 @@ void PlasmidCanvas::OnCopyImage ( wxCommandEvent &ev )
     }
 
 
-string PlasmidCanvas::getSelection()
+wxString PlasmidCanvas::getSelection()
     {
     if ( getMarkFrom() != -1 ) return p->vec->getSubstring ( getMarkFrom() , getMarkTo() ) ;
     else return "" ;
@@ -234,9 +234,9 @@ void PlasmidCanvas::updateLinkedItems ( TVector *vec , int in )
         } while ( s != "" ) ;
     }
 
-void PlasmidCanvas::SetMyToolTip ( string s , int mode )
+void PlasmidCanvas::SetMyToolTip ( wxString s , int mode )
     {
-    if ( lasttooltip == mode && tt->GetTip() == s.c_str() ) return ;
+    if ( lasttooltip == mode && tt->GetTip() == s ) return ;
     lasttooltip = mode ;
 
     SetToolTip ( NULL ) ;
@@ -251,7 +251,7 @@ void PlasmidCanvas::SetMyToolTip ( string s , int mode )
         }
     
     SetToolTip ( NULL ) ;
-    tt = new wxToolTip ( s.c_str() ) ;
+    tt = new wxToolTip ( s ) ;
     tt->Enable ( true ) ;
     SetToolTip ( tt ) ;
     }
@@ -300,7 +300,7 @@ bool PlasmidCanvas::pointinrect ( int x , int y , wxRect &a )
     return false ;
     }
     
-void PlasmidCanvas::invokeVectorEditor ( string what , int num , bool forceUpdate )
+void PlasmidCanvas::invokeVectorEditor ( wxString what , int num , bool forceUpdate )
     {
     if ( p->def == "AminoAcids" )
        {

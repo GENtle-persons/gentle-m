@@ -15,7 +15,7 @@ int TIMGreader::getInt ( int adr )
    return r ;
    }
    
-void TIMGreader::readFile ( string fn )
+void TIMGreader::readFile ( wxString fn )
     {
     char filename[10000] ;
     char of[10000] , *c ;

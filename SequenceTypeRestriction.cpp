@@ -209,7 +209,7 @@ void SeqRestriction::show ( wxDC& dc )
 void SeqRestriction::initFromTVector ( TVector *v )
     {
     vec = v ;
-    s = vec->getSequence() ;
+    s = vec->getWxSequence() ;
     down = false ;
     }
     

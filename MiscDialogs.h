@@ -22,11 +22,11 @@ class TAlignment ;
 class TMutationDialog : public wxDialog
     {
  public : 
-    TMutationDialog(wxWindow *parent, const wxString& title , string _codon ) ;
+    TMutationDialog(wxWindow *parent, const wxString& title , wxString _codon ) ;
     virtual ~TMutationDialog () ;
     
-     private :
-    string codon , newcodon ;
+    private :
+    wxString codon , newcodon ;
     char aa , newaa ;
     TVector *v ;
     } ;
@@ -144,11 +144,11 @@ class FindSequenceDialog : public wxDialog
     void OnSearch ( wxCommandEvent &ev ) ;
     void OnCancel ( wxCommandEvent &ev ) ;
 
-    string allowed_chars ;
+    wxString allowed_chars ;
 
     private :
     bool doesMatch ( char a , char b ) ;
-    int subsearch ( const string &s , const string &sub , int start ) ;
+    int subsearch ( const wxString &s , const wxString &sub , int start ) ;
     
     ChildBase *c ;
     wxTextCtrl *t ;

@@ -150,17 +150,16 @@ void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , w
         }
     }
     
-string TLigationDialog::invert ( string s )
+wxString TLigationDialog::invert ( wxString s )
     {
-    string t ;
-    for ( int a = 0 ; a < s.length() ; a++ ) t = s[a] + t ;
+    wxString t ;
+    for ( int a = 0 ; a < s.length() ; a++ ) t = s.GetChar(a) + t ;
     return t ;
     }
 
 bool TLigationDialog::doMatch ( int l , int r , bool invertSecond )
     {
-    string s1 ; 
-    string s2 ; 
+    wxString s1 , s2 ; 
 
     myass ( l >= 0 && l < vv.size() , "TLigationDialog::doMatch:1" ) ;
     myass ( vv[l] , "TLigationDialog::doMatch:2" ) ;
@@ -179,7 +178,7 @@ bool TLigationDialog::doMatch ( int l , int r , bool invertSecond )
     
     TVector v ;
     v.setSequence ( s1 ) ;
-    string s3 = v.transformSequence ( true , false ) ;
+    wxString s3 = v.transformSequence ( true , false ) ;
     if ( s2 == s3 ) return true ;
     return false ;
     }

@@ -37,7 +37,7 @@ class TLigationDialog : public wxDialog
     bool doLigate ;
     
     private :
-    string invert ( string s ) ;
+    wxString invert ( wxString s ) ;
 
     DECLARE_EVENT_TABLE()
     } ;

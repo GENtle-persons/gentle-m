@@ -213,7 +213,7 @@ void TPrimerDesign::OnEditMode(wxCommandEvent& event)
     wxMenuBar *mb = GetMenuBar () ;
     wxMenuItem *mi = mb->FindItem ( MDI_EDIT_MODE ) ;
     wxString s ;
-    string item = "PRIMER_UP" ;
+    wxString item = "PRIMER_UP" ;
     if ( sc->lastmarked != -1 ) item = sc->seq[sc->lastmarked]->whatsthis() ;
     sc->edit_id = item ;
     
@@ -628,10 +628,10 @@ void TPrimerDesign::calculateResultSequence()
     // Overwriting result sequence with primer sequences
     for ( a = 0 ; a < w->getSequenceLength() ; a++ )
         {
-        char t = sc->seq[show_features]->s[a] ;
+        char t = sc->seq[show_features]->s.GetChar(a) ;
         if ( t == ' ' )
            {
-           t = sc->seq[4+show_features]->s[a] ;
+           t = sc->seq[4+show_features]->s.GetChar(a) ;
            if ( t != ' ' ) t = w->getComplement ( t ) ;
            }
         if ( t != ' ' ) w->setNucleotide ( a , t ) ;
@@ -726,7 +726,7 @@ void TPrimerDesign::OnAA_setit(int mode)
         sc->mark ( sc->seq[lastmarked]->whatsthis() , oldfrom , oldfrom , 2 ) ;
     else if ( !sc->getEditMode() && lastmarked != -1 )
         {
-        string s = sc->seq[lastmarked]->whatsthis() ;
+        wxString s = sc->seq[lastmarked]->whatsthis() ;
         sc->mark ( s , oldfrom , oldto ) ;
         }
     }
@@ -767,7 +767,7 @@ void TPrimerDesign::doShowPrimer ( int i )
     int from = primer[i].from ;
     int to = primer[i].to ;
     if ( to >= vec->getSequenceLength() ) to -= vec->getSequenceLength() ;
-    string p ;
+    wxString p ;
     if ( primer[i].upper ) p = "PRIMER_UP" ;
     else p = "PRIMER_DOWN" ;
     sc->mark ( p , from , to ) ;
@@ -795,21 +795,21 @@ void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
     TSilmutDialog sd ( this , txt("t_silmut") ) ;
     sd.initme ( w , sc->_from , sc->_to ) ;
     if ( wxID_OK != sd.ShowModal () ) return ;
-    string ns = sd.getSequence().c_str() ;
+    wxString ns = sd.getSequence().c_str() ;
     if ( ns == "" ) return ;
     
     TVector z ;
     z.setSequence ( ns ) ;
-    string nt = z.transformSequence ( true , false ) ;
+    wxString nt = z.transformSequence ( true , false ) ;
     TRestrictionEnzyme *e = sd.getEnzyme() ;
     int a , b ;
     for ( a = 0 ; a < ns.length() ; a++ )
         {
-        if ( ns[a] >= 'A' && ns[a] <= 'Z' )
+        if ( ns.GetChar(a) >= 'A' && ns.GetChar(a) <= 'Z' )
            {
            b = a + sc->_from - 1 ;
-           if ( sc->seq[show_features]->s[b] != ' ' ) sc->seq[show_features]->s[b] = ns[a] ;
-           if ( sc->seq[4+show_features]->s[b] != ' ' ) sc->seq[4+show_features]->s[b] = nt[a] ;
+           if ( sc->seq[show_features]->s.GetChar(b) != ' ' ) sc->seq[show_features]->s.SetChar(b,ns.GetChar(a)) ;
+           if ( sc->seq[4+show_features]->s.GetChar(b) != ' ' ) sc->seq[4+show_features]->s.SetChar(b,nt.GetChar(a)) ;
            }
         }
     for ( a = 0 ; a < w->re.size() && w->re[a] != e ; a++ ) ;
