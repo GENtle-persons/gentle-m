@@ -358,6 +358,7 @@ void MyFrame::initme ()
         
     lockDisplay ( false ) ;
     wxEndBusyCursor() ;
+    Raise () ;
     
     SetSizeHints ( 600 , 400 ) ;
     Show(TRUE);
