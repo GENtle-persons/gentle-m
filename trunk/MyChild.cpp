@@ -389,6 +389,7 @@ void MyChild::OnLigation(wxCommandEvent& event)
            myapp()->frame->newFromVector ( v ) ;
            }
         }
+    myapp()->frame->lastCocktail.clear () ;
     }
     
 string MyChild::getName ()
