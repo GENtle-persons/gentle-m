@@ -17,6 +17,7 @@ class TClone ;
 class TGenBank ;
 class TXMLfile ;
 class TCalculator ;
+class TPDB ;
 
 typedef wxFrame MyFrameType ;
 
@@ -71,6 +72,7 @@ public:
     virtual TABIviewer *newABI ( wxString filename , wxString title ) ;
     virtual MyChild *newCLONE ( TClone &clone ) ;
     virtual void newGB ( TGenBank &gb , wxString title = "" ) ;
+    virtual void newPDB ( TPDB &pdb , wxString title = "" ) ;
     virtual void newXML ( TXMLfile &xml , wxString title = "" ) ;
     virtual void blast ( wxString seq , wxString prg ) ;
     virtual void importFile ( wxString file , wxString path , int filter = -1 ) ;

@@ -994,7 +994,8 @@ void TAlignment::fromVector ( TVector *nv )
     vec = nv ;
     gb.paste ( vec->getSequence() ) ;
     wxString vdesc = vec->getDescription() ;
-    wxArrayString vs = explode ( "\n" , vdesc ) ;
+    wxArrayString vs ;
+    explode ( "\n" , vdesc , vs ) ;
     int nol = atoi ( vs[0].c_str() ) ; // Number of lines
     int n ;
     wxString broken ;

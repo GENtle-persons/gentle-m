@@ -581,7 +581,7 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
         sprintf ( ttt , txt("tt_rs") , s.c_str() , p->vec->countCuts ( s ) ) ;
         SetMyToolTip ( ttt , TT_RS ) ;
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
-        wxLogStatus(txt("rsite_status_bar") , s ) ;
+        wxLogStatus(txt("rsite_status_bar") , s.c_str() ) ;
         if ( event.LeftDown() )
            {
 /*#ifdef __WXMSW__
@@ -620,7 +620,7 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
                                         p->vec->items[vo].desc.c_str() ) ;
         SetMyToolTip ( ttt , TT_ITEM ) ;
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
-        wxLogStatus(txt("item_status_bar") , s ) ;
+        wxLogStatus(txt("item_status_bar") , s.c_str() ) ;
         if ( event.LeftDown() )
            p->treeBox->SelectItem ( p->vec->items[vo].getTreeID() ) ;
         else if ( event.RightDown() )

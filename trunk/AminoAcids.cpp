@@ -480,12 +480,13 @@ void TAminoAcids::OnListBox ( wxCommandEvent& event )
            {
            desc = new TURLtext ( this ,
                             URLTEXT_DUMMY ,
-                            vec->getDescription() ,
+                            "" ,
                             wxDefaultPosition,
                             wxSize ( 250 , 90 ) ,
-                            wxTE_MULTILINE | wxTE_READONLY ) ;
+                            wxTE_MULTILINE | wxSUNKEN_BORDER | wxTE_READONLY ) ;
            h1->Add ( desc , 1 , wxEXPAND , 5 ) ;
            curDisplay = desc ;
+           desc->SetValue ( vec->getDescription() ) ;
            }
         }
     else if ( t == txt("t_data") )

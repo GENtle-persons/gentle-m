@@ -1,7 +1,7 @@
 [Project]
 FileName=GENtle.dev
 Name=GENtle
-UnitCount=91
+UnitCount=93
 Type=0
 Ver=1
 ObjFiles=
@@ -981,6 +981,26 @@ BuildCmd=
 FileName=TSilmutDialog.h
 CompileCpp=1
 Folder=Dialogs
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit92]
+FileName=TPDB.h
+CompileCpp=1
+Folder=Data structures
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit93]
+FileName=TPDB.cpp
+CompileCpp=1
+Folder=Data structures
 Compile=1
 Link=1
 Priority=1000

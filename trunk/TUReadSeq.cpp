@@ -26,7 +26,7 @@ int TUReadSeq::getSequenceNames ()
     seqlist = listSeqs( filename, skiplines, format, &numseqs, &error);
     wxString s = seqlist ;
     free( seqlist);
-    seq_names = explode ( "\n" , s ) ;
+    explode ( "\n" , s , seq_names ) ;
     return seq_names.GetCount() ;
     }
     

@@ -106,6 +106,7 @@ class TVectorItem
     friend class TItemEditDialog ;
     friend class PlasmidCanvas ;
     friend class TXMLfile ;
+    friend class TPDB ;
     virtual void setParam ( wxString p , wxString v ) ;
     virtual void setParam ( wxString p , int v ) ;
 
@@ -179,6 +180,7 @@ class TVector
     virtual bool isCircular () ;
     virtual bool isLinear () ;
     virtual wxString one2three ( int a ) ;
+    virtual char three2one ( wxString s ) ;
     virtual void setStickyEnd ( bool left , bool upper , wxString s ) ;
     virtual wxString getStickyEnd ( bool left , bool upper ) ;
     virtual bool hasStickyEnds () ;

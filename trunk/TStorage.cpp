@@ -19,7 +19,7 @@ TStorage::TStorage ( int nt , wxString fn )
         conn = new MYSQL ;
         mysql_init (conn);
         wxArrayString ex ;
-        ex = explode ( ":" , fn+":" ) ;
+        explode ( ":" , fn+":" , ex ) ;
         if ( !mysql_real_connect ( conn , 
                                 ex[1].c_str() , 
                                 ex[2].c_str() ,

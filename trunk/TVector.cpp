@@ -1118,6 +1118,18 @@ void TVector::eraseSequence ( int from , int len )
     {
     sequence.erase ( from , len ) ;
     }    
+    
+char TVector::three2one ( wxString s )
+    {
+    s.MakeUpper() ;
+    int a ;
+    for ( a = 0 ; a < 255 ; a++ )
+       {
+           if ( aaprop[a].tla.Upper() == s )
+              return a ;
+       }    
+    return ' ' ;
+    }    
 
 
     
