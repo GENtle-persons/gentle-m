@@ -11,7 +11,7 @@ ChildBase::ChildBase ()
     }
     
 ChildBase::ChildBase(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style)
-        : MyChildBase((MyFrameType*)parent, -1, pos, size, style)
+        : MyChildBase((MyFrameType*)parent, -1, pos, size, style|wxFULL_REPAINT_ON_RESIZE|wxCLIP_CHILDREN)
     {
     def = "" ;
     vec = NULL ;
@@ -21,7 +21,7 @@ ChildBase::ChildBase(wxWindow *parent, const wxString& title, const wxPoint& pos
     }
         
 ChildBase::ChildBase(wxWindow *parent, const wxString& title)
-        : MyChildBase((MyFrameType*)parent, -1)
+        : MyChildBase((MyFrameType*)parent, -1,wxDefaultPosition,wxDefaultSize,wxFULL_REPAINT_ON_RESIZE|wxCLIP_CHILDREN)
     {
     def = "" ;
     vec = NULL ;

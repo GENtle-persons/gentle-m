@@ -477,6 +477,7 @@ int SeqAA::arrange_direct ( int n )
 
 void SeqAA::show_direct ( wxDC& dc )
     {
+    mylog ( "SeqAA::show_direct" , "0" ) ;
     can->SetFont(*can->font);
     dc.SetFont(*can->font);
     int a , b , w , h , n , bo = can->border ;
@@ -485,6 +486,7 @@ void SeqAA::show_direct ( wxDC& dc )
     int xa , xb , ya , yb ;
     for ( n = 0 ; n < csgc && can->seq[n] != this ; n++ ) ;
     if ( n == csgc ) return ;
+    mylog ( "SeqAA::show_direct" , "1" ) ;
     
     // Setting basic values
     int cw = can->charwidth , ch = can->charheight ;
@@ -510,7 +512,9 @@ void SeqAA::show_direct ( wxDC& dc )
     ya = -ya ;
     yb += ya ;
     
+    mylog ( "SeqAA::show_direct" , "2" ) ;
     b = ( ya - ch - oy ) / ( ch * csgc ) * itemsperline ;
+    mylog ( "SeqAA::show_direct" , "3" ) ;
     for ( a = 0 ; a < b && a < s.length() ; a += itemsperline ) ;
         
     for ( ; a < s.length() ; a++ )

@@ -66,7 +66,7 @@ END_EVENT_TABLE()
 
 // Define a constructor for my canvas
 SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSize& size)
-        : wxScrolledWindow(parent, -1, pos, size, wxSUNKEN_BORDER|wxHSCROLL)
+        : wxScrolledWindow(parent, -1, pos, size, wxSUNKEN_BORDER|wxHSCROLL|wxFULL_REPAINT_ON_RESIZE)
 {
     SetBackgroundColour(wxColour("WHITE"));
 
@@ -1109,14 +1109,18 @@ void SequenceCanvas::OnSize(wxSizeEvent &event)
 // Define the repainting behaviour
 void SequenceCanvas::OnDraw(wxDC& dc)
 {
+	mylog ( "SequenceCanvas::OnDraw" , "1" ) ;
     if ( drawing ) return ;
     if ( seq.GetCount() == 0 ) return ;
     if ( getHide() ) return ;
     if ( myapp()->frame->isLocked() ) return ;
+    if ( child && !child->IsShown() ) return ;
+	mylog ( "SequenceCanvas::OnDraw" , "2" ) ;
     drawing = true ;
     int wx , wy ;
     dc.SetFont ( *font ) ;
     dc.GetTextExtent ( "A" , &wx , &wy ) ;
+    mylog ( "SequenceCanvas::OnDraw" , wxString::Format ( "Font size %dx%d" , wx , wy ) ) ;
     if ( wx != charwidth || wy != charheight )
         {
         charwidth = wx ;
@@ -1136,12 +1140,14 @@ void SequenceCanvas::OnDraw(wxDC& dc)
             return ;
             }
         }
+	mylog ( "SequenceCanvas::OnDraw" , "3" ) ;
         
     if ( printing )
         {
         drawing = false ;
         return ;
         }
+	mylog ( "SequenceCanvas::OnDraw" , "4" ) ;
         
     int vx , vy ;
     GetViewStart ( &vx , &vy ) ;
@@ -1158,7 +1164,9 @@ void SequenceCanvas::OnDraw(wxDC& dc)
         pdc.SelectObject ( bmp ) ;
         pdc.Clear() ;
         pdc.SetDeviceOrigin ( -xoff , -yoff ) ;
+        mylog ( "SequenceCanvas::OnDraw" , "4a" ) ;
         safeShow ( pdc ) ;
+        mylog ( "SequenceCanvas::OnDraw" , "4b" ) ;
         mylog ( "!" , "2" ) ;
         pdc.SetDeviceOrigin ( 0 , 0 ) ;
         dc.Blit ( xoff , yoff , w , h , &pdc , 0 , 0 ) ;

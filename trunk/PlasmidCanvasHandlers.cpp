@@ -116,11 +116,11 @@ wxMenu *PlasmidCanvas::invokeRsPopup ( int rs , wxPoint pt , bool doreturn )
     cm->Append ( PC_RS_EDIT , txt("p_rs_edit") ) ;
     cm->Append ( PC_RS_SHOW_HIDE , txt("m_show_hide_enzyme") ) ;
     cm->Append ( PC_RS_DEL , txt("p_rs_del") ) ;
-    cm->Append ( -1 , "" ) ;
+    cm->AppendSeparator () ;
     cm->Append ( PC_RS_MARK , txt("p_rs_mark") ) ;
     cm->Append ( PC_RS_MARK_SHOW , txt("p_rs_mark_show") ) ;
     cm->Append ( PC_RS_INFO , txt("p_rs_info") ) ;
-    cm->Append ( -1 , "" ) ;
+    cm->AppendSeparator () ;
     
     for ( a = 0 ; a < p->vec->cocktail.GetCount() && 
                     p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->name ;
@@ -138,7 +138,7 @@ wxMenu *PlasmidCanvas::invokeRsPopup ( int rs , wxPoint pt , bool doreturn )
     if ( p->vec->cocktail.GetCount() > 0 )
         {
         cm->Append ( PC_RS_CUT_WITH_COCKTAIL , txt("p_cut_with_cocktail") ) ;
-        cm->Append ( -1 , "" ) ;
+        cm->AppendSeparator() ;
         wxString c = txt("cocktail") ;
         c += " :" ;
         cm->Append ( PC_DUMMY , c ) ;

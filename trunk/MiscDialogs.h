@@ -141,7 +141,7 @@ class TSequencingPrimerDialog : public wxDialog
 
     wxSpinCtrl *t_ma ;
     wxChoice *c_db , *c_pj ;
-    wxCheckBox *cb_db , *cb_pj , *cb_clear , *cb_35 , *cb_53 ;
+    wxCheckBox *cb_pj , *cb_clear , *cb_35 , *cb_53 ;
     wxArrayString db_names , db_files ;
     
     DECLARE_EVENT_TABLE()
