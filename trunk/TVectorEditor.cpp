@@ -62,6 +62,10 @@ TVectorEditor::TVectorEditor(wxWindow *parent, const wxString& title , TVector *
                           wxPoint ( 0 , 0 ) ,
                           wxSize ( w , h - th - bo*2 ) ) ;
 
+#ifdef __WXGTK__
+    //nb->SetFont ( *MYFONT ( 8 , wxSWISS , wxNORMAL , wxNORMAL ) ) ;    
+#endif
+
     hideProp = hideItem = hideEnzym = false ;
 
     if ( v ) panProp = new wxPanel ( nb , -1 ) ;

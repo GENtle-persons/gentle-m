@@ -77,6 +77,8 @@ void TVectorEditor::initPanItem ()
     nb->AddPage ( panItem , txt("t_vec_item") ) ;
     int w , h ;
     GetMyClientSize ( &w , &h , panItem ) ;
+
+//    panItem->SetFont ( *MYFONT ( 8 , wxSWISS , wxNORMAL , wxNORMAL ) ) ;    
     
     // Items list
     items = new wxListCtrl ( panItem , TVE_ILIST ,

@@ -156,37 +156,38 @@ void TAminoAcids::initme ()
 
     mylog ( "TAminoAcids::initme" , "6" ) ;
 
-#ifdef __WXMSW__
-    wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
-    myapp()->frame->InitToolBar(toolBar);
-    toolBar->AddTool( MDI_TEXT_IMPORT , 
+//#ifdef __WXMSW__
+    toolbar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
+    myapp()->frame->InitToolBar(toolbar);
+    toolbar->Reparent ( this ) ;
+    toolbar->AddTool( MDI_TEXT_IMPORT , 
                 myapp()->frame->bitmaps[0],
                 txt("m_new_sequence") ) ;
-    toolBar->AddTool( MDI_FILE_OPEN, 
+    toolbar->AddTool( MDI_FILE_OPEN, 
                 myapp()->frame->bitmaps[1],
             txt("m_open") , txt("m_opentxt") );
-    toolBar->AddTool( MDI_FILE_SAVE, 
+    toolbar->AddTool( MDI_FILE_SAVE, 
                 myapp()->frame->bitmaps[2],
                 txt("m_store_in_db") , 
                 txt("m_txt_store_in_db"));
-    toolBar->AddTool( SEQ_PRINT, 
+    toolbar->AddTool( SEQ_PRINT, 
                 myapp()->frame->bitmaps[16],
                 txt("m_print_sequence") ) ;
-    toolBar->AddSeparator() ;
-    toolBar->AddTool( MDI_CUT, myapp()->frame->bitmaps[4] ) ;
-    toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] ) ;
-    toolBar->AddTool( MDI_PASTE, myapp()->frame->bitmaps[6] ) ;
-    toolBar->AddSeparator () ;
-    wxCheckBox *mycb = new wxCheckBox ( toolBar , ALIGN_HORIZ , txt("t_horizontal") ) ;
-    toolBar->AddControl ( mycb ) ;
-    inlinePlot = new wxChoice ( toolBar , AA_IP ) ;
-    toolBar->AddControl ( inlinePlot ) ;
-    myapp()->frame->addDefaultTools ( toolBar ) ;
-    toolBar->Realize() ;
+    toolbar->AddSeparator() ;
+    toolbar->AddTool( MDI_CUT, myapp()->frame->bitmaps[4] ) ;
+    toolbar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] ) ;
+    toolbar->AddTool( MDI_PASTE, myapp()->frame->bitmaps[6] ) ;
+    toolbar->AddSeparator () ;
+    wxCheckBox *mycb = new wxCheckBox ( toolbar , ALIGN_HORIZ , txt("t_horizontal") ) ;
+    toolbar->AddControl ( mycb ) ;
+    inlinePlot = new wxChoice ( toolbar , AA_IP ) ;
+    toolbar->AddControl ( inlinePlot ) ;
+    myapp()->frame->addDefaultTools ( toolbar ) ;
+    toolbar->Realize() ;
     inlinePlot->Append ( txt("t_no_plot") ) ;
     inlinePlot->Append ( txt("t_chou_fasman") ) ;
     inlinePlot->SetStringSelection ( txt("t_no_plot") ) ;
-#endif
+//#endif
 
 
     mylog ( "TAminoAcids::initme" , "7" ) ;
@@ -201,6 +202,7 @@ void TAminoAcids::initme ()
     v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
     v0->Add ( v1 , 1 , wxEXPAND , 5 ) ;
 
+//    wxSafeYield() ;
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;
     lb->SetStringSelection ( txt("t_data") ) ;
