@@ -91,7 +91,6 @@ class MyFrameDropTarget : public wxFileDropTarget
    {
    public :
    virtual bool OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames) ;
-   MyFrame *f ;
    } ;
 
 #endif

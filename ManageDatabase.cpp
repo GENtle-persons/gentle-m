@@ -40,7 +40,6 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , char *title ,
     : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 620 , 500 ) )
     {
     actionMode = mode ;
-    f = myapp()->frame ;
     storage = NULL ;
     il = NULL ;
     thetarget = NULL ;
@@ -512,7 +511,7 @@ void TManageDatabaseDialog::accessDB ()
 
 void TManageDatabaseDialog::pd_loadList ()
     {
-    defdb = f->LS->getDatabaseList ( db_name , db_file ) ;
+    defdb = myapp()->frame->LS->getDatabaseList ( db_name , db_file ) ;
     int a ;
     pd_db->Clear () ;
     for ( a = 0 ; a < db_name.size() ; a++ )
@@ -613,7 +612,7 @@ void TManageDatabaseDialog::addDatabase ( string fn )
     TSQLresult r ;
     string sql = "INSERT INTO stuff (s_type,s_name,s_value)"
                  "VALUES (\"DATABASE\",\"" + t + "\",\"" + fn + "\")" ;
-    r = f->LS->getObject ( sql ) ;
+    r = myapp()->frame->LS->getObject ( sql ) ;
     pd_loadList () ;
     pd_db->SetStringSelection ( t.c_str() ) ;
     pm_init_lists () ;
@@ -638,7 +637,7 @@ void TManageDatabaseDialog::pdOnDel ( wxCommandEvent &ev )
                  "s_type=\"DATABASE\" AND "
                  "s_name=\"" + name + "\" AND "
                  "s_value=\"" + db_file[a] + "\"" ;
-    r = f->LS->getObject ( sql ) ;
+    r = myapp()->frame->LS->getObject ( sql ) ;
     pd_loadList () ;
     pd_db->SetStringSelection ( txt("local_db") ) ;
     pm_init_lists () ;
@@ -652,11 +651,11 @@ void TManageDatabaseDialog::pdOnSetDefault ( wxCommandEvent &ev )
     
     
     string sql = "DELETE FROM stuff WHERE s_type=\"DEFAULT_DATABASE\"" ;
-    f->LS->getObject ( sql ) ;
+    myapp()->frame->LS->getObject ( sql ) ;
     
     sql = "INSERT INTO stuff (s_type,s_name,s_value)"
                  "VALUES (\"DEFAULT_DATABASE\",\"" + defdb + "\",\"" + defdb + "\")" ;
-    f->LS->getObject ( sql ) ;                 
+    myapp()->frame->LS->getObject ( sql ) ;                 
     }
 
 void TManageDatabaseDialog::pmOnLeftChoice ( wxCommandEvent &ev )
@@ -853,15 +852,15 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
     ChildBase *n = NULL ;
     if ( v->type == TYPE_AMINO_ACIDS )
         {
-//        n = f->newAminoAcids ( v->sequence , v->name ) ;
-        n = f->newAminoAcids ( v , v->name ) ;
+//        n = myapp()->frame->newAminoAcids ( v->sequence , v->name ) ;
+        n = myapp()->frame->newAminoAcids ( v , v->name ) ;
         n->vec->setDatabase ( v->getDatabase() ) ;
         n->vec->setWindow ( n ) ;
         }
     else
         {
         v->recalculateCuts () ;
-        n = f->newFromVector ( v , v->type ) ;
+        n = myapp()->frame->newFromVector ( v , v->type ) ;
         n->vec->setDatabase ( v->getDatabase() ) ;
         }
 

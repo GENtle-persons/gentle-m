@@ -10,7 +10,6 @@ END_EVENT_TABLE()
 TMainTree::TMainTree ( wxSashLayoutWindow *parent , int i )
     :wxTreeCtrl ( parent , i )
     {
-    p = (MyFrame*) myapp()->frame ;
     lastChild = NULL ;
     }
     
@@ -20,7 +19,7 @@ void TMainTree::initme()
     
     // Basic stuff
     DeleteAllItems () ;
-    treeroot = AddRoot ( p->project_name.c_str() ) ;
+    treeroot = AddRoot ( myapp()->frame->project_name.c_str() ) ;
 
     vectors = AppendItem ( treeroot , txt("vectors") ) ;
     fragments = AppendItem ( treeroot , txt("fragments") ) ;
