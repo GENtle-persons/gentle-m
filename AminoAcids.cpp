@@ -80,7 +80,7 @@ void TAminoAcids::OnIPC ( wxCommandEvent& event )
 	int r = ipc.ipc_main2 ( filename.c_str() , vec->getSequence().c_str() , 3000 ) ;
    	wxEndBusyCursor() ;
    	if ( r != 0 ) { return ; } // ERROR
-   	wxMessageBox ( wxString::Format ( "%d" , wxGetElapsedTime() ) ) ;
+//   	wxMessageBox ( wxString::Format ( "%d" , wxGetElapsedTime() ) ) ;
    	
    	TGraph *g = myapp()->frame->RunGraph() ;
    	g->gd->setupIPCfile ( filename ) ;

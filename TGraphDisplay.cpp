@@ -233,6 +233,27 @@ void TGraphDisplay::setupFluorimeterGraph ( const stringField &sf )
   		data.push_back ( ng ) ;
 		}    
 	}    
+	
+bool TGraphDisplay::SetupFromFile ( wxString filename )
+	{
+	int a ;
+	wxArrayString as ;
+	as.Add ( txt ( "t_graph_file_type_photometer" ) ) ;
+	as.Add ( txt ( "t_graph_file_type_fluorimeter" ) ) ;
+	
+	wxString *vs = new wxString [ as.GetCount() ] ;
+	for ( a = 0 ; a < as.GetCount() ; a++ )
+		vs[a] = as[a] ;
+	
+	wxSingleChoiceDialog scd ( this , "Msg" , "Cap" , as.GetCount() , vs ) ;
+	if ( wxID_OK != scd.ShowModal() ) return false ;
+	
+	wxString s = scd.GetStringSelection() ;
+	if ( s == txt ( "t_graph_file_type_photometer" ) ) setupPhotometerGraph ( readCSVfile ( filename ) ) ;
+	if ( s == txt ( "t_graph_file_type_fluorimeter" ) ) setupFluorimeterGraph ( readCSVfile ( filename ) ) ;
+	
+	return true ;
+	}    
 
 void TGraphDisplay::SetupDummy ()
 	{

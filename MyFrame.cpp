@@ -573,13 +573,15 @@ void MyFrame::OnFileImport(wxCommandEvent& event )
     wxString wcPlainTextDNA = txt("format_filter_plain_dna") ;
     wxString wcPlainTextAA = txt("format_filter_plain_aa") ;
     wxString wcABIformat = txt("format_filter_abi") ;
+    wxString wcCSVformat = txt("format_filter_csv") ;
     wxString wildcard = wcAutomatic +
                         "|" + wcClone + 
                         "|" + wcGenBank + 
                         "|" + wcSequencing +
                         "|" + wcPlainTextDNA +
                         "|" + wcPlainTextAA +
-                        "|" + wcABIformat ;
+                        "|" + wcABIformat +
+                        "|" + wcCSVformat ;
     wxString lastdir = LS->getOption ( "LAST_IMPORT_DIR" , "C:" ) ;
     wxFileDialog d ( this , txt("import_file") , lastdir , 
             "" , wildcard , wxOPEN | wxMULTIPLE ) ;
@@ -626,6 +628,26 @@ void MyFrame::OnFileImport(wxCommandEvent& event )
 */
 bool MyFrame::importFile ( wxString file , wxString path , int filter )
     {
+    // Trying CSV by file ending
+    if ( filter == 6 || ( filter == -1 && path.AfterLast('.').Lower() == "csv" ) )
+    	{
+	    wxEndBusyCursor();
+        TGraph *g = RunGraph() ;
+        if ( g->gd->SetupFromFile ( path ) )
+        	{
+        	wxBeginBusyCursor();
+           	g->gd->AutoScale () ;
+           	g->gd->UpdateDisplay () ;
+           	return true ;
+           	}   	
+       	else
+       		{
+        	wxBeginBusyCursor();
+   		    g->Close () ;
+   		    return false ;
+       		}    
+    	}    
+        
     // Trying GenBank format
     if ( filter == 1 || filter == -1 )
        {
@@ -1355,7 +1377,6 @@ void MyFrame::OnCalculator(wxCommandEvent& event)
 */
 void MyFrame::OnGraph(wxCommandEvent& event)
     {
-//    RunGraph () ;
     TGraph *g = RunGraph() ;
     g->gd->SetupDummy() ;
    	g->gd->AutoScale () ;

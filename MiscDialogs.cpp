@@ -50,7 +50,7 @@ END_EVENT_TABLE()
 #define POWER(base,exponent) exp ( exponent * log ( base ) )
 
 TIPCDialog::TIPCDialog(wxWindow *parent, const wxString& title , int _seqlen )
-    : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 600 , 450 ) )
+    : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 300 , 100 ) )
 	{
 	seqlen = _seqlen ;
 
@@ -59,7 +59,7 @@ TIPCDialog::TIPCDialog(wxWindow *parent, const wxString& title , int _seqlen )
     wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
     
     limit = new wxTextCtrl ( this , TIPC_DIA_LIMIT , "" ) ;
-    h0->Add ( new wxStaticText ( this , -1 , "Limit" ) , 0 , wxALL , 5 ) ;
+    h0->Add ( new wxStaticText ( this , -1 , txt("t_limit") ) , 0 , wxALL , 5 ) ;
     h0->Add ( limit , 0 , wxALL , 5 ) ;
     
     est = new wxStaticText ( this , -1 , "" ) ;
@@ -67,6 +67,7 @@ TIPCDialog::TIPCDialog(wxWindow *parent, const wxString& title , int _seqlen )
     h1->Add ( new wxButton ( this , AL_OK , txt("b_ok") ) , 0 , wxALL , 5 ) ;
     h1->Add ( new wxButton ( this , AL_CANCEL , txt("b_cancel") ) , 0 , wxALL , 5 ) ;
     
+    v0->Add ( new wxStaticText ( this , -1 , title ) , 0 , wxALL , 5 ) ;
     v0->Add ( h0 , 0 , wxALL , 5 ) ;
     v0->Add ( est , 0 , wxALL , 5 ) ;
     v0->Add ( h1 , 0 , wxALL , 5 ) ;
