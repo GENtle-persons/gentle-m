@@ -296,6 +296,19 @@ enum {
     TVE_EN_DEL_GR,
     TVE_DEL_FROM_GROUP,
     
+    ALIGN_BOLD,
+    ALIGN_MONO,
+    ALIGN_NORM,
+    ALIGN_INVS,
+    ALIGN_SOA,
+    ALIGN_SOAI,
+    ALIGN_SIML,
+    ALIGN_SEQ,
+    ALIGN_FEAT,
+    ALIGN_RNA,
+    ALIGN_CONS,
+    ALIGN_IDENT,
+    ALIGN_HORIZ,
     
     } ;
 

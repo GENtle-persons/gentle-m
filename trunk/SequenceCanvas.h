@@ -84,7 +84,7 @@ class SeqBasic
     virtual string whatsthis () { return "BASIC" ; }
     SeqPos pos ;
     string s ;
-    int blocksize , offset , endnumberlength ;
+    int offset , endnumberlength ;
     SequenceCanvas *can ;
     bool takesMouseActions , shown ;
     } ;
@@ -149,7 +149,7 @@ class SeqPrimer : public SeqDNA
 class SeqAlign : public SeqBasic
     {
     public :
-    SeqAlign ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; myname = "Align" ; }
+    SeqAlign ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; myname = "Align" ; id = -1 ; }
     virtual int  arrange ( int n ) ;
     virtual void show ( wxDC& dc ) ;
     virtual string whatsthis () { return "ALIGN" ; }
@@ -157,6 +157,7 @@ class SeqAlign : public SeqBasic
     // Variables
     string myname ;
     int itemsperline ;
+    int id ;
     } ;
 
 class SeqRestriction : public SeqBasic
@@ -329,6 +330,8 @@ class SequenceCanvas : public wxScrolledWindow
     int maxendnumberlength ;
     int lastyoffset ;
     wxString lastToolTip ;
+    bool isHorizontal ;
+    int lowx , blocksize ;
 
     DECLARE_EVENT_TABLE()
     };

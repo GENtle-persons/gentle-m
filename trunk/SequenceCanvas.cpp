@@ -60,6 +60,7 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
     wantOverwrite = false ;
     maxendnumberlength = 9 ;
     lastyoffset = 0 ;
+    blocksize = 10 ;
 
     m_dirty = FALSE;
     editMode = false ;
@@ -69,7 +70,8 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
     drawall = false ;
     printing = false ;
     print_dc = NULL ;
-    child = NULL ;    
+    child = NULL ;   
+    isHorizontal = false ; 
     }
 
 SeqBasic* SequenceCanvas::findID ( string id ) 
@@ -90,6 +92,7 @@ void SequenceCanvas::MyGetClientSize ( int *w , int *h )
     else
        {
        GetClientSize ( w , h ) ;
+//       if ( isHorizontal ) *w = 1000000 ;
        }
     }
     
@@ -102,6 +105,7 @@ void SequenceCanvas::MyGetSize ( int *w , int *h )
     else
        {
        GetSize ( w , h ) ;
+       if ( isHorizontal ) *w = 1000000 ;
        }
     }
     
@@ -113,7 +117,9 @@ wxSize SequenceCanvas::MyGetClientSize ()
        }
     else
        {
-       return GetClientSize () ;
+       wxSize size = GetClientSize () ;
+       if ( isHorizontal ) size.SetWidth ( 1000000 ) ;
+       return size ;
        }
     }
     
@@ -211,8 +217,8 @@ void SequenceCanvas::OnCharHook(wxKeyEvent& event)
               {
               if ( event.ControlDown () )
                  {
-                 from += dna->blocksize - 1 ;
-                 from -= from % dna->blocksize ;
+                 from += blocksize - 1 ;
+                 from -= from % blocksize ;
                  if ( from > the_sequence->length() ) from = the_sequence->length();
                  mark ( id , from+1 , from+1 , 2 ) ;
                  }
@@ -223,8 +229,8 @@ void SequenceCanvas::OnCharHook(wxKeyEvent& event)
               {
               if ( event.ControlDown () )
                  {
-                 from -= dna->blocksize ;
-                 while ( from > 1 && (from-1) % dna->blocksize > 0 ) from++ ;
+                 from -= blocksize ;
+                 while ( from > 1 && (from-1) % blocksize > 0 ) from++ ;
                  if ( from < 1 ) from = 1 ;
                  mark ( id , from , from , 2 ) ;
                  }
@@ -441,6 +447,8 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
     wxPrintDialogData pdd = pd.GetPrintDialogData() ;
     wxPrintData pD = pdd.GetPrintData() ;
     printToColor = pD.GetColour() ;
+    bool wasHorizontal = isHorizontal ;
+    isHorizontal = false ;
 //    if ( printToColor ) wxMessageBox ( "Color!" ) ;
 
     TMarkMem mm ( this ) ; // Temporary mark for printing
@@ -555,6 +563,7 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
     print_dc->EndDoc () ;
     delete print_dc ;
     print_dc = NULL ;
+    isHorizontal = wasHorizontal ;
     charwidth = 0 ; // To force re-arrange
     Refresh () ;
     
@@ -786,9 +795,23 @@ void SequenceCanvas::arrange ()
     if ( charheight == 0 ) return ;
     int vx , vy ;
     int oldlowy = lowy ;
+    int oldlowx = lowx ;
     lowy = 0 ;
+    lowx = 0 ;
     lastmarked = -1 ;
     int a , b ;
+    
+    if ( isHorizontal )
+        {
+        blocksize = 0 ;
+        for ( a = 0 ; a < seq.size() ; a++ )
+           {
+           if ( seq[a]->s.length() + 1 > blocksize )
+              blocksize = seq[a]->s.length() + 1 ;
+           }
+        }
+    else blocksize = 10 ;
+    
     for ( a = 0 ; a < seq.size() ; a++ )
         {
         b = seq[a]->arrange ( a ) ;
@@ -798,8 +821,10 @@ void SequenceCanvas::arrange ()
     if ( printing ) return ;
     
     MyGetViewStart ( &vx , &vy ) ;
-    if ( lowy != oldlowy )
+    if ( !isHorizontal && lowy != oldlowy )
        SetScrollbars ( 0 , charheight , vy , lowy/charheight , false ) ;
+    if ( isHorizontal && lowx != oldlowx )
+       SetScrollbars ( charwidth , 0 , lowx/charwidth , lowx/charwidth , false ) ;
     if ( p && p->cPlasmid->mark_from != -1 && !editMode )
         {
         if ( !printing ) p->cPlasmid->mark_from = -1 ;
@@ -847,7 +872,7 @@ void SequenceCanvas::OnDraw(wxDC& dc)
     int vx , vy ;
     GetViewStart ( &vx , &vy ) ;
 
-    if ( myapp()->frame->enhancedRefresh && !printing )
+    if ( myapp()->frame->enhancedRefresh && !printing && !isHorizontal )
         { // MemoryDC
         int w , h ;
         MyGetClientSize ( &w , &h ) ;
@@ -922,7 +947,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
     else if ( where && child && child->def == "alignment" )
         {
         SeqAlign *al = (SeqAlign*)where ;
-        if ( al->myname == txt("t_consensus") ) {} // Do nothing
+        if ( al->myname == txt("t_identity") ) {} // Do nothing
         else if ( al->whatsthis() == "FEATURE" ) {} // Do nothing
         else if ( al->s[pos-1] == '-' ) wxLogStatus ( al->myname.c_str() ) ;
         else
@@ -956,7 +981,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
            {
            SeqAlign *al = (SeqAlign*)where ;
            TAlignment *alg = (TAlignment*) child ;
-           if ( al->myname == txt("t_consensus") ) {} // Do nothing
+           if ( al->myname == txt("t_identity") ) {} // Do nothing
            else if ( al->whatsthis() == "FEATURE" ) {} // Do nothing
            else alg->callMiddleMouseButton ( al->myname , pos ) ;
            }
@@ -969,7 +994,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         else if ( where && child && child->def == "alignment" )
            {
            SeqAlign *al = (SeqAlign*)where ;
-           if ( al->myname == txt("t_consensus") ) {} // Do nothing
+           if ( al->myname == txt("t_identity") ) {} // Do nothing
            else if ( al->whatsthis() == "FEATURE" ) {} // Do nothing
            else if ( al->s[pos] == '-' ) wxLogStatus ( al->myname.c_str() ) ;
            else
@@ -979,7 +1004,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
                  if ( al->s[a] != '-' )
                    b++ ;
               TAlignment *ali = (TAlignment*) child ;
-              ali->invokeOriginal ( al->myname , b ) ;
+              ali->invokeOriginal ( al->id , b ) ;
 //              wxLogStatus(wxString::Format("%s (%d)",al->myname.c_str(),b)) ;
               }
            }
