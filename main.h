@@ -77,6 +77,11 @@ using namespace std ;
 #include <wx/laywin.h>
 #include <wx/progdlg.h>
 #include <wx/mimetype.h>
+#include <wx/textfile.h>
+#include <wx/dir.h>
+#include <wx/html/helpctrl.h>
+#include <wx/url.h>
+#include <wx/protocol/http.h>
 
 #define wxPD_ALL (wxPD_AUTO_HIDE|wxPD_APP_MODAL|wxPD_CAN_ABORT|wxPD_ELAPSED_TIME|wxPD_ESTIMATED_TIME|wxPD_REMAINING_TIME)
 
