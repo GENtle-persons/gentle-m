@@ -12,7 +12,6 @@ PubMed Retrieval
 * http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&retmode=xml&rettype=gb&id=9750177
 
 EMBOSS:
-* Back translate a protein sequence
 * codon usage statistic
 * antigenic prediction
 * dotplot

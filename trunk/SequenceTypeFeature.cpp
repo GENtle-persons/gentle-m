@@ -267,12 +267,6 @@ void SeqFeature::initFromTVector ( TVector *v )
              }
           }
        }
-       
-/*    pens.clear() ;
-    pens.push_back ( *wxBLACK_PEN ) ;
-    pens.push_back ( *wxRED_PEN ) ;
-    pens.push_back ( *MYPEN(wxColour(0,100,0)) ) ;
-    for ( a = 0 ; pens.size() <= maxlayers ; a++ ) pens.push_back ( pens[a] ) ;*/
     }
     
 bool SeqFeature::collide ( int a , int b )

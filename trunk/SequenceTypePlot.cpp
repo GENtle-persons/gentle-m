@@ -16,6 +16,7 @@ wxString SeqPlot::getTip ( int pos )
 
 int SeqPlot::arrange ( int n )
     {
+    if ( s.IsEmpty() ) return 0 ;
     int a , x , y , w , h , l = 0 , bo = 4 , lowy = 0 ;
     int lasta = 0 ;
     
@@ -118,6 +119,7 @@ void SeqPlot::fixMinMax ( float &f )
     
 void SeqPlot::show ( wxDC& dc )
     {
+    if ( s.IsEmpty() ) return ;
     dc.SetFont(*can->font);
     wxColour tbg = dc.GetTextBackground () ;
     wxColour tfg = dc.GetTextForeground () ;
@@ -457,6 +459,7 @@ void SeqPlot::useChouFasman ()
     d1.Clear () ;
     d2.Clear () ;
     d3.Clear () ;
+    if ( s.IsEmpty() ) return ;
     l_top = 4 ;
     l_bottom = 0 ;
 //    if ( l_top + l_bottom + 1 > lines ) setLines ( l_top + l_bottom + 1 ) ;
@@ -608,6 +611,7 @@ void SeqPlot::useMW ()
     d1.Clear () ;
     d2.Clear () ;
     d3.Clear () ;
+    if ( s.IsEmpty() ) return ;
     l_top = 4 ;
     l_bottom = 0 ;
     
@@ -632,6 +636,7 @@ void SeqPlot::usePI ()
     d1.Clear () ;
     d2.Clear () ;
     d3.Clear () ;
+    if ( s.IsEmpty() ) return ;
     l_top = 4 ;
     l_bottom = 0 ;
     
@@ -656,6 +661,7 @@ void SeqPlot::useHP ()
     d1.Clear () ;
     d2.Clear () ;
     d3.Clear () ;
+    if ( s.IsEmpty() ) return ;
     l_top = 4 ;
     l_bottom = 0 ;
     
