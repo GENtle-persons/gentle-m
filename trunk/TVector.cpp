@@ -1280,14 +1280,6 @@ void TVectorItem::setParam ( wxString p , wxString v )
         pvalue.Add ( v ) ;
         }
     else pvalue[a] = v ;
-/*    int a ;
-    for ( a = 0 ; a < pname.size() && p != pname[a] ; a++ ) ;
-    if ( a == pname.size() )
-        {
-        pname.push_back ( p ) ;
-        pvalue.push_back ( v ) ;
-        }
-    else pvalue[a] = v ;*/
     }
     
 void TVectorItem::setParam ( wxString p , int v )
@@ -1299,9 +1291,6 @@ wxString TVectorItem::getParam ( wxString p , wxString def )
     {
     int a = pname.Index ( p ) ;
     return ( a == wxNOT_FOUND ) ? def : pvalue[a] ;
-//    for ( a = 0 ; a < pname.size() && p != pname[a] ; a++ ) ;
-//    if ( a == pname.size() ) return def ;
-//    return pvalue[a] ;
     }
     
 wxArrayString TVectorItem::getParamKeys ()

@@ -181,7 +181,7 @@ void ChildBase::doExport ( wxString filename , int filter )
 
 void ChildBase::exportVector ( TVector *vec , wxFile &out , int filter )
     {
-    if ( filter == 0 ) // GeneBank
+    if ( filter == 0 ) // GeneBank 
         {
         TGenBank gb ;
         wxArrayString ex ;

@@ -249,7 +249,7 @@ int SeqDNA::arrange_direct ( int n )
     can->MyGetClientSize ( &w , &h ) ;
     itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx - 1 ) * can->blocksize ;
     pos.cleanup() ;
-    pos.m.Alloc ( s.length() ) ;
+//    pos.m.Alloc ( s.length() ) ;
     if ( can->isHorizontal() ) can->setLowX ( ox + ( s.length() ) * can->charwidth ) ;
     int ret = ( s.length() + itemsperline - 1 ) / itemsperline ;
     ret = can->NumberOfLines() * ret * can->charheight + 1 ;
@@ -462,17 +462,15 @@ wxRect SeqDNA::getRect ( int i )
 int SeqDNA::getMark ( int i )
     {
     if ( !useDirectRoutines() ) return SeqBasic::getMark ( i ) ;
-    if ( i >= pos.m.length() ) return 0 ;
-    return pos.m.GetChar ( i ) - ' ' ;
+    if ( i >= s.length() ) return 0 ;
+    return pos.getmark ( i ) ;
     }
 
 void SeqDNA::setMark ( int i , int v )
     {
     if ( !useDirectRoutines() ) { SeqBasic::setMark ( i , v ) ; return ; }
-    i-- ;
-    if ( i < 0 ) return ;
-    while ( pos.m.length() <= i ) pos.m.Append ( ' ' ) ;
-    pos.m.SetChar ( i , v + ' ' ) ;
+    if ( i <= 0 ) return ;
+    pos.mark ( i-1 , v ) ;
     }
 
 int SeqDNA::getPos ( int i )

@@ -18,20 +18,51 @@ char* gb_item_type[VIT_TYPES] =
 
 TGenBank::TGenBank ()
     {
+    int a ;
+	for ( a = 0 ; a < 256 ; a++ ) validseq[a] = isValidSequence ( a ) ;
+	for ( a = 0 ; a < 256 ; a++ ) isblank[a] = false ;
+	for ( a = 0 ; a < 16 ; a++ ) isblank[a] = true ;
+	isblank[' '] = true ;
+	for ( a = 0 ; a < 256 ; a++ ) isblankorquote[a] = isblank[a] ;
+	isblankorquote['"'] = true ;
     success = false ;
     }
     
 void TGenBank::load ( wxString s )
     {
 	vs.Clear() ;
- 	wxTextFile file ;
-    file.Open ( s ) ;
+// 	wxTextFile file ;
+//    file.Open ( s ) ;
+
+    wxFile file ( s , wxFile::read ) ;
+	long l = file.Length() ;
+	char *t = new char [l+15] ;
+	file.Read ( t , l ) ;
+	file.Close() ;
+	t[l] = '\n' ;
+	t[l+1] = 0 ;
+    
+    
     mylog ( "-GenBank import" , "file opened" ) ;
-	vs.Alloc ( file.GetLineCount() ) ;
+/*	vs.Alloc ( file.GetLineCount() ) ;
 	wxString str ;
 	for ( str = file.GetFirstLine(); !file.Eof(); str = file.GetNextLine() )
 	   if ( !trim(str).IsEmpty() ) vs.Add ( str ) ;
-    if ( !trim(str).IsEmpty() ) vs.Add ( str ) ;
+    if ( !trim(str).IsEmpty() ) vs.Add ( str ) ;*/
+    
+    char *c , *d ;
+    vs.Alloc ( l / 60 ) ;
+    for ( c = d = t ; *c ; c++ )
+        {
+        if ( *c == '\n' || *c == '\r' )
+           {
+           *c = 0 ;
+           if ( *d ) vs.Add ( d ) ;
+           d = c+1 ;
+           }    
+        }    
+    delete t ;
+    
     mylog ( "-GenBank import" , "file added" ) ;
     
     parseLines () ;
@@ -55,13 +86,13 @@ void TGenBank::parseLines ()
          vs[0].Left ( 5 ) != "LOCUS" )
        return ;
 
-    int a ;
+    int a , b ;
     vi.Alloc ( vs.GetCount() ) ;
     for ( a = 0 ; a < vs.GetCount() ; a++ )
-        vi.Add ( vs[a].Length() - trim(vs[a]).Length() ) ;
+        vi.Add ( count_blanks ( vs[a] ) ) ;
 
     // Pre-processing
-    int last ;    
+    int last = -1 ;    
     wxArrayString vs2 ;
     wxArrayInt vi2 ;
     vs2.Alloc ( vs.GetCount() ) ;
@@ -74,29 +105,32 @@ void TGenBank::parseLines ()
            }
         else
            {
-           last = vs2.GetCount() ;
-           vs2.Add ( vs[a] ) ;
+           last++ ;
+           vs2.Add ( trim ( vs[a] ) ) ;
            vi2.Add ( vi[a] ) ;
            }    
         }
+    
+
+    // Checking if only one sequence, can be handeled faster
+    if ( vs2.GetCount()-1 == vs2.Index ( "//" ) )
+       {
+       success = true ;
+       vs2.Remove ( vs2.GetCount() - 1 ) ;
+       vi2.Remove ( vi2.GetCount() - 1 ) ;
+       vs_l.push_back ( vs2 ) ;
+       vi_l.push_back ( vi2 ) ;
+       vs.Clear () ;
+       vi.Clear () ;
+       vs2.Clear () ;
+       vi2.Clear () ;
+       return ;
+       }    
+    
     vs = vs2 ;
     vi = vi2 ;
     vs2.Clear() ;
     vi2.Clear() ;
-    
-
-    // Checking if only one sequence, can be handeled faster
-    if ( vs.GetCount()-1 == vs.Index ( "//" ) )
-       {
-       success = true ;
-       vs.Remove ( vs.GetCount() - 1 ) ;
-       vi.Remove ( vi.GetCount() - 1 ) ;
-       for ( a = 0 ; a < vs.GetCount() ; a++ ) vs[a] = trim ( vs[a] ) ;
-       vs_l.push_back ( vs ) ;
-       vi_l.push_back ( vi ) ;
-       return ;
-       }    
-    
     
     wxArrayString t ;
     wxArrayInt ti ;
@@ -140,11 +174,9 @@ void TGenBank::remap ( TVector *v )
 	wxString ns ;
 	
 	int a = 0 ;
-	bool validseq[256] ;
-	for ( a = 0 ; a < 256 ; a++ ) validseq[a] = isValidSequence ( a ) ;
 	
 	for ( line = 0 ; line < vs.GetCount() ; line++ ) a += (vi[line]==5) ? 1 : 0 ;
-	items.reserve ( a ) ;
+	items.reserve ( a*2 ) ;
 	
 	wxString l , l2 ;
 	for ( line = 0 ; line < vs.GetCount() ; line++ )
@@ -164,9 +196,10 @@ void TGenBank::remap ( TVector *v )
           v->setName ( l.BeforeFirst ( ' ' ) ) ;
           v->setDescription ( l.AfterFirst ( ' ' ) ) ;
           l += " " ; // For substring search
-          if ( l.MakeUpper().Contains ( " AA " ) ) v->type = TYPE_AMINO_ACIDS ;
+          l.MakeUpper() ;
+          if ( l.Contains ( " AA " ) ) v->type = TYPE_AMINO_ACIDS ;
           else v->type = TYPE_VECTOR ;
-          if ( l.MakeUpper().Contains ( " CIRCULAR" ) ) v->setCircular ( true ) ;
+          if ( l.Contains ( " CIRCULAR" ) ) v->setCircular ( true ) ;
           else v->setCircular ( false ) ;
           }
      else if ( k1 == "FEATURES" )
@@ -210,7 +243,7 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
     {
     TVectorItem i ( "" , "" , 1 , 1 , VIT_MISC ) ; // Dummy values
     int a ;
-    
+            
     // Type
     if ( va[0].MakeLower() == "source" ) return ;
     for ( a = 0 ; a < VIT_TYPES ; a++ )
@@ -223,17 +256,16 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
         }
        
     // Properties
+    i.desc.Alloc ( 1000 ) ;
     for ( a = 1 ; a < va.GetCount() ; a++ )
         {
         if ( va[a].GetChar(0) != '/' ) continue ;
-        wxString l = va[a].Mid ( 1 ) ;
-        wxString p = l.BeforeFirst ( '=' ) ;
+        wxString p = va[a].Mid ( 1 , va[a].First ( '=' ) - 1 ) ;
         if ( p.IsEmpty() ) continue ;
-        p = trim ( p.Trim ( true ) ) ;
-        p = trim ( trimQuotes ( p.Lower() ) ) ;
-        wxString v = l.AfterFirst ( '=' ) ;
-        v = trim ( v.Trim ( true ) ) ;
-        v = trim ( trimQuotes ( v ) ) ;
+        multitrim ( p , true ) ;
+        p.MakeLower() ;
+        wxString v = va[a].AfterFirst ( '=' ) ;
+        multitrim ( v , true ) ;
         if ( p == "standard_name" || p == "gene" || p == "protein_id" )
            i.name = v ;
         else
@@ -253,20 +285,19 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
            i.setParam ( p , v ) ;
            }
         }
-    
+
     // From / To
     for ( a = 1 ; a < va.GetCount() ; a++ )
         {
-        if ( va[a].GetChar(0) == '/' ) continue ;
-        wxString l = va[a] ;
-        l.Replace ( " " , "" ) ;
-        l = l.MakeUpper () ;
-        iterateItem ( v , i , l ) ;
+        if ( va[a].GetChar(0) != '/' )
+           iterateItem ( v , i , va[a].Upper() ) ;
         }
     }
     
 void TGenBank::iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag )
     {
+    l.Replace ( " " , "" ) ;
+    int a ;
     while ( !l.IsEmpty() )
         {
         char c = l.GetChar(0) ;
@@ -274,7 +305,6 @@ void TGenBank::iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag 
         else if ( c == ',' ) l = l.Mid ( 1 ) ;
         else if ( c >= '0' && c <= '9' )
            {
-           int a ;
            wxString from , to ;
            from = l.BeforeFirst ( '.' ) ;
            l = l.AfterFirst ( '.' ) ;
@@ -293,7 +323,7 @@ void TGenBank::iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag 
         else if ( l.Left ( 10 ) == "COMPLEMENT" )
            {
            l = l.AfterFirst ( '(' ) ;
-           int a , b , cnt , num = 0 ;
+           int b , cnt , num = 0 ;
            char c = ' ' ;
            for ( a = b = cnt = 0 ; a < l.Length() && ( cnt >= 0 || c != ')' ) ; a++ )
               {
@@ -316,7 +346,7 @@ void TGenBank::iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag 
         else if ( l.Left ( 4 ) == "JOIN" )
            {
            l = l.AfterFirst ( '(' ) ;
-           int a , b , cnt , num = 0 ;
+           int b , cnt , num = 0 ;
            char c = ' ' ;
            for ( a = b = cnt = 0 ; a < l.Length() && ( cnt >= 0 || c != ')' ) ; a++ )
               {
@@ -348,18 +378,48 @@ void TGenBank::iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag 
         }
     }
 
-
-wxString TGenBank::trim ( const wxString &s )
+int TGenBank::count_blanks ( wxString &s )
 	{
     int a ;
-    for ( a = 0 ; a < s.length() && ( s.GetChar(a) == ' ' || s.GetChar(a) < 15 ) ; a++ ) ;
-	return s.Mid ( a ) ;
+//    for ( a = 0 ; a < s.length() && ( s.GetChar(a) == ' ' || s.GetChar(a) < 15 ) ; a++ ) ;
+    for ( a = 0 ; a < s.length() && isblank[s.GetChar(a)] ; a++ ) ;
+    return a ;
 	}
+
+wxString TGenBank::trim ( wxString s )
+	{
+    int a ;
+//    for ( a = 0 ; a < s.length() && ( s.GetChar(a) == ' ' || s.GetChar(a) < 15 ) ; a++ ) ;
+    for ( a = 0 ; a < s.length() && isblank[s.GetChar(a)] ; a++ ) ;
+    if ( a ) return s.Mid ( a ) ;
+    else return s ;
+	}
+
+void TGenBank::itrim ( wxString &s )
+	{
+    int a ;
+    for ( a = 0 ; a < s.length() && isblank[s.GetChar(a)] ; a++ ) ;
+//    for ( a = 0 ; a < s.length() && ( s.GetChar(a) == ' ' || s.GetChar(a) < 15 ) ; a++ ) ;
+	if ( a ) s = s.Mid ( a ) ;
+	}
+	
+void TGenBank::multitrim ( wxString &s , bool quotes )
+    {
+    int a , b ;
+//    for ( a = 0 ; a < s.length() && ( s.GetChar(a) == ' ' || s.GetChar(a) < 15 ||s.GetChar(a) == '"' ) ; a++ ) ;
+//    for ( b = s.length()-1 ; b > 0 && ( s.GetChar(b) == ' ' || s.GetChar(b) < 15 ||s.GetChar(b) == '"' ) ; b-- ) ;
+
+    for ( a = 0 ; a < s.length() && isblankorquote[s.GetChar(a)] ; a++ ) ;
+    for ( b = s.length()-1 ; b > 0 && isblankorquote[s.GetChar(b)] ; b-- ) ;
+
+    if ( a == 0 && b == s.length()-1 ) return ;
+    s = s.Mid ( a , b - a + 1 ) ;
+    }    
 
 wxString TGenBank::trimQuotes ( wxString s )
 	{
     if ( s.GetChar(0) == '"' ) s = s.Mid ( 1 ) ;
-    if ( s.Right(1) == "\"" ) s = s.Mid ( 0 , s.Length()-1 ) ;
+    if ( s.GetChar(s.Length()-1) == '"' ) s = s.Mid ( 0 , s.Length()-1 ) ;
     return s ;
 	}
 
