@@ -183,11 +183,28 @@ void MyFrame::initme ()
     Show(TRUE);
     Maximize() ;
 #endif
-    
+
+    // Drag'n'drop    
     MyFrameDropTarget *dt = new MyFrameDropTarget ;
     dt->f = this ;
     SetDropTarget ( dt ) ;
 
+#ifdef __WXMSW__
+    // Toolbar
+    wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
+    InitToolBar(toolBar);
+
+    toolBar->AddTool( MDI_TEXT_IMPORT , 
+                wxBitmap (myapp()->bmpdir+myapp()->slash+"new.bmp", wxBITMAP_TYPE_BMP),
+                txt("m_new_sequence") ) ;  
+    toolBar->AddTool( MDI_FILE_OPEN, 
+            wxBitmap (myapp()->bmpdir+myapp()->slash+"open.bmp", wxBITMAP_TYPE_BMP), 
+            txt("m_open") , txt("m_opentxt") );
+
+//    toolBar->AddSeparator() ;
+        
+    toolBar->Realize() ;    
+#endif
 
     // Load last project?
     if ( loadLastProject )
@@ -605,12 +622,14 @@ void MyFrame::InitToolBar(wxToolBar* toolBar)
         delete bitmaps[i];
 #endif
 */
+/*
 #ifdef __WXMSW__
     int width = 24;
 #else
     int width = 16;
 #endif
     int currentX = 5;
+*/
 }
 
 void MyFrame::OnAlignment(wxCommandEvent& event)
