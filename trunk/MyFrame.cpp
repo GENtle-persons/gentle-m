@@ -197,10 +197,6 @@ void MyFrame::initme ()
     // so you won't be bothered with updates anymore :-)
     if ( LS->getOption ( "DEBUGGING" , "" ) == "1" ) checkUpdate = false ;
 
-//    miniFrame = new wxMiniFrame ( this , -1 , "" , wxDefaultPosition , wxSize ( 250 , 20 ) , wxTINY_CAPTION_HORIZ ) ;
-//    miniFrame->Center() ;
-//    miniFrame->Show() ;
-
 #ifdef __WXMSW__
     if ( checkUpdate )
         {
@@ -208,16 +204,11 @@ void MyFrame::initme ()
         if ( !cur_update.IsEmpty() )
             {
             update2version ( cur_update ) ;
-//            miniFrame->Close() ;
-//            delete miniFrame ;
             return ;
             }
         }
 #endif
 
-//    miniFrame->Close() ;
-//    delete miniFrame ;
-        
     project.name = txt("project") ;
     SetTitle ( txt("gentle") ) ;
     mainTree->initme() ;
@@ -1158,9 +1149,9 @@ wxMenu *MyFrame::getFileMenu ( bool _save , bool _exp , bool _print )
 wxMenu *MyFrame::getToolMenu ( bool _pcr )
     {
     wxMenu *tool_menu = new wxMenu;
-    tool_menu->Append(MDI_ENZYME_EDITOR, txt("m_enzymeeditor") , txt("m_enzymeeditortxt") ) ;
+    tool_menu->Append(MDI_ENZYME_EDITOR, txt("m_enzyme") ) ;
     tool_menu->Append(MDI_ALIGNMENT, txt("m_alignment") , txt("m_alignmenttxt") ) ;
-    tool_menu->Append(MDI_RESTRICTION, txt("m_restriction") , txt("m_restrictiontxt") ) ;
+    tool_menu->Append(MDI_RESTRICTION, txt("m_enzymeeditor") , txt("m_enzymeeditortxt") ) ;
     tool_menu->Append(MDI_LIGATION, txt("m_ligation") );
     if ( _pcr ) tool_menu->Append(MDI_RUN_PCR, txt("m_pcr") );
     tool_menu->Append(MDI_MANAGE_DATABASE, txt("m_manage_db") , txt("m_manage_dbtxt") ) ;
@@ -1296,9 +1287,6 @@ void MyFrame::update2version ( wxString ver )
     wxFSFile *f = fs.OpenFile ( "http://gentle.magnusmanske.de/GENtleSetup.exe" ) ;
     if ( f )
        {
-/*       TStandbyDialog sd ( this , "Standby" , "Downloading installer..." ) ;
-       sd.Show(TRUE) ;
-       sd.Refresh() ;*/
 //       miniFrame->SetTitle ( txt("t_downloading_new_version") ) ;
        unsigned char tmp[10000] ;
        wxInputStream *in = f->GetStream () ;
@@ -1335,7 +1323,7 @@ void MyFrame::update2version ( wxString ver )
     SetFocus () ;
     showSplashScreen = false ;
     dying = true ;
-//    Close() ;
+    Close() ;
     }
     
 void MyFrame::OnSashDrag(wxSashEvent& event)

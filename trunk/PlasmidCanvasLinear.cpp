@@ -98,6 +98,17 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
                       h - markH ) ;
         }
 
+    // Methylation sites
+    dc.SetPen(*wxRED_PEN);
+    for ( a = 0 ; a < p->vec->methyl.GetCount() ; a++ )
+    	{
+        dc.DrawLine ( lineOff + lineLen * p->vec->methyl[a] / l ,
+                      lineH ,
+                      lineOff + lineLen * p->vec->methyl[a] / l ,
+                      lineH + h / 40 ) ;
+    	}    
+    dc.SetPen(*wxBLACK_PEN);
+
     // Recalc
     if ( p->vec->recalcvisual )
         {
@@ -589,6 +600,12 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
     else if ( event.MiddleDown() && p->cSequence->markedFrom() != -1 )
        {
        p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
+       }
+    else if ( event.MiddleDown() || event.MiddleIsDown() )
+       {
+       p->cSequence->mark ( "DNA" , bp , bp ) ;
+       p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
+       p->cSequence->mark ( "DNA" , -1 , -1 ) ;
        }
     else
        {

@@ -50,6 +50,7 @@ TVectorEditor::TVectorEditor(wxWindow *parent, const wxString& title , TVector *
     lastSelection = -1 ;
     v = _v ;
     panProp = panItem = panEnzym = NULL ;
+    panEnzyme2 = NULL ;
 
     int w , h ;
     GetClientSize ( &w , &h ) ;
@@ -197,7 +198,7 @@ void TVectorEditor::initPanEnzym2 ()
 void TVectorEditor::initPanEnzym ()
     {
     nb->AddPage ( panEnzym , txt("t_vec_enzym") ) ;
-    initPanEnzym2 () ;
+    if ( v ) initPanEnzym2 () ;
     int w , h ;
     GetMyClientSize ( &w , &h , panEnzym ) ;
     

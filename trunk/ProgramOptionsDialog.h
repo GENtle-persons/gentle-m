@@ -28,6 +28,7 @@ class TEnzymeSettingsTab : public wxPanel
     wxCheckBox *use_color_coding , *join_enzymes ;
     wxCheckBox *recog4 , *recog5 , *recog6 , *recog6p ;
     wxCheckBox *pattern3 , *pattern5 , *pattern_blunt ;
+    wxCheckBox *met_dam , *met_dcm ;
     wxChoice *default_group ;
     wxButton *bcol1 , *bcol2 , *bcol3 ;
     wxColour col1 , col2 , col3 ;
@@ -87,6 +88,7 @@ class TEnzymeRules
 	wxString default_group ;
 	wxColour col1 , col2 , col3 ;
 	bool join_enzymes , use_color_coding ;
+	int methylation ;
 	
 	private :
 	virtual wxColour scan_color ( wxString s ) ;

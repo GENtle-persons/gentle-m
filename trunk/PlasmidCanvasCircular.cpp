@@ -321,6 +321,20 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
                              deg2y ( deg , r1 ) + h/2 - dy ) ;
         }
 
+    // Methylation sites
+    dc.SetPen(*wxRED_PEN);
+    for ( a = 0 ; a < p->vec->methyl.GetCount() ; a++ )
+    	{
+        float deg = p->vec->methyl[a]*360/l ;
+        int r1 = r*19/20 ;
+        int r2 = r*20/20 ;
+        dc.DrawLine ( deg2x ( deg , r1 ) + w/2 ,
+                      deg2y ( deg , r1 ) + h/2 ,
+                      deg2x ( deg , r2 ) + w/2 ,
+                      deg2y ( deg , r2 ) + h/2 ) ;	    
+    	}    
+    dc.SetPen(*wxBLACK_PEN);
+
     if ( p->vec->recalcvisual )
         {
         // Items (Genes etc.)
@@ -483,8 +497,8 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
            dc.DrawText ( u , p3.x , p3.y ) ;
            }    
         }
-    dc.SetFont(*smallFont);
-}
+    dc.SetFont(*smallFont);    
+    }
 
 wxPoint PlasmidCanvas::makeLastRect ( int a , wxDC &dc )
     {
@@ -748,6 +762,13 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
     else if ( event.MiddleDown() && p->cSequence->markedFrom() != -1 )
        {
        p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
+       }
+    else if ( event.MiddleDown() || event.MiddleIsDown() )
+       {
+       int bp = circular_pos ( angle ) ;
+       p->cSequence->mark ( "DNA" , bp , bp ) ;
+       p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
+       p->cSequence->mark ( "DNA" , -1 , -1 ) ;
        }
     else
        {

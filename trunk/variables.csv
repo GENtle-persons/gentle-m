@@ -16,6 +16,7 @@
 "m_tools","&Tools","&Werkzeuge"
 "m_export","&Export\tCtrl-E ","&Exportieren\tStrg-E "
 "m_export_txt","Export to file","In eine Datei exportieren"
+"m_enzyme","Enzyme management","Enzym-Verwaltung"
 "m_enzymeeditor","&Enzyme assistant","Restriktions-Assistent"
 "m_enzymeeditortxt","Add, modify and view restriction enzymes    ","Bearbeiten und Hinzufügen von Restriktionsenzymen"
 "m_help","&Help","&Hilfe"
@@ -625,3 +626,8 @@
 "t_ges_cut2","Double cutter","Zwei Schnitte"
 "t_ges_cut3","Triple cutter","Drei Schnitte"
 "t_enzymes_2","Restriction enzymes (2)","Restriktionsenzyme (2)"
+"t_too_many_cuts","%d restriction cuts are too many to display; only %d wil be shown.\nPlease reduce the number of restriction enzymes or change the settings.","Von den %d Restriktions-Schnittstellen werden nur %d angezeigt.\nBitte reduzieren Sie die Anzahl der Restriktionsenzyme oder ändern Sie die Einstellungen."
+"t_ges_met","Show methylation","Zeige Methylierung"
+"t_ges_met_dam","DAM","DAM"
+"t_ges_met_dcm","DCM","DCM"
+

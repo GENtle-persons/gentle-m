@@ -365,6 +365,14 @@ void SeqDNA::show_direct ( wxDC& dc )
            dc.SetTextForeground ( fontColor ) ;
            }
 
+        // Methylation
+        if ( !invers && alternateName.IsEmpty() && wxNOT_FOUND != vec->methyl.Index ( a ) )
+        	{
+            dc.SetPen(*wxRED_PEN);
+            dc.DrawLine ( px , py + ch - 2 , px + cw , py + ch - 2 ) ;
+            dc.SetPen(*wxTRANSPARENT_PEN);
+        	}    
+
         if ( showNumber )
            {
            wxString t ;

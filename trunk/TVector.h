@@ -148,6 +148,7 @@ class TVector
     virtual void doRestriction () ;
     virtual void sortRestrictionSites () ;
     virtual int countCuts ( wxString enzyme ) ;
+    virtual void methylationSites ( wxArrayInt &vi , int what = ALL_METHYLATION_ENZYMES ) ;
     
     // Nucleotide access/conversion
     virtual bool basematch ( char b1 , char b2 ) ; // b1 in IUPAC, b2 in SIUPAC
@@ -241,6 +242,7 @@ class TVector
     wxArrayString hiddenEnzymes , proteases , cocktail ;
     TUndo undo ;
     TEnzymeRules *enzyme_rules ;
+    wxArrayInt methyl ;
     
     private :
     virtual wxString invert ( wxString s ) ;

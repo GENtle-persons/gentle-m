@@ -1,5 +1,6 @@
 #include "TVector.h"
 
+#define MAXCUTS_PER_1K 30
 
 // ***************************************************************************************
 // TVector
@@ -86,6 +87,34 @@ void TVector::evaluate_key_value ( wxString key , wxString value )
 		}    
 	}    
 
+void TVector::methylationSites ( wxArrayInt &vi , int what )
+	{
+	vi.Clear () ;
+	int a ;
+	if ( what & DAM_METHYLATION )
+		{
+		for ( a = 0 ; a < sequence.length() ; a++ )
+			{
+   			if ( getNucleotide ( a ) == 'G' &&
+   				 getNucleotide ( a + 1 ) == 'A' &&
+   				 getNucleotide ( a + 2 ) == 'T' &&
+   				 getNucleotide ( a + 3 ) == 'C' )
+ 			   vi.Add ( a + 1 ) ;
+			}    
+		}    
+	if ( what & DCM_METHYLATION )
+		{
+		for ( a = 0 ; a < sequence.length() ; a++ )
+			{
+   			if ( getNucleotide ( a ) == 'C' &&
+   				 getNucleotide ( a + 1 ) == 'C' &&
+   				 getNucleotide ( a + 3 ) == 'G' &&
+   				 getNucleotide ( a + 4 ) == 'G' &&
+        		 basematch ( getNucleotide ( a + 2 ) , 'W' ) )
+ 			   vi.Add ( a + 1 ) ;
+			}    
+		}    
+	}    
 
 TVector *TVector::newFromMark ( int from , int to ) 
     {
@@ -537,20 +566,32 @@ void TVector::recalculateCuts ()
     sort ( rc.begin() , rc.end() ) ;
 
     // Join doubles
-    if ( !join ) return ;
-    int a , b ;
-    for ( a = 0 ; a < rc.size() ; a++ )
+    if ( join )
     	{
-	    for ( b = a+1 ; b < rc.size() && rc[b].pos == rc[a].pos ; b++ )
-	    	{
-	    	if ( b == rc.size() ) continue ;
-	    	if ( rc[b].pos != rc[a].pos ) continue ;
-	    	if ( !rc[a].join ( &rc[b] ) ) continue ;
-    	    rc.erase ( rc.begin() + b ) ;
-    	    a-- ;
-    	    break ;
-	    	}   	
+        int a , b ;
+        for ( a = 0 ; a < rc.size() ; a++ )
+        	{
+    	    for ( b = a+1 ; b < rc.size() && rc[b].pos == rc[a].pos ; b++ )
+    	    	{
+    	    	if ( b == rc.size() ) continue ;
+    	    	if ( rc[b].pos != rc[a].pos ) continue ;
+    	    	if ( !rc[a].join ( &rc[b] ) ) continue ;
+        	    rc.erase ( rc.begin() + b ) ;
+        	    a-- ;
+        	    break ;
+    	    	}   	
+   	    	}   	
     	}    
+
+    int maxcuts = sequence.length() * MAXCUTS_PER_1K / 1000 ;
+   	if ( rc.size() > maxcuts )
+   		{
+	    wxMessageBox ( wxString::Format ( txt("t_too_many_cuts") , rc.size() , maxcuts ) ) ;
+	    while ( rc.size() > maxcuts ) rc.pop_back () ;
+   		}    
+
+    // Methylation
+    methylationSites ( methyl , getEnzymeRule()->methylation ) ;
     }
     
 // Returns wether or not "equal" enzymes should be joined
@@ -1201,6 +1242,7 @@ void TVector::clear ()
     circular = false ;
     paramk.Clear () ;
     paramv.Clear () ;
+    methyl.Clear () ;
     if ( enzyme_rules ) { delete enzyme_rules ; enzyme_rules = NULL ; }
     turned = 0 ;
     action = "" ;
