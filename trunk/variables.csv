@@ -529,3 +529,5 @@
 "t_question","Question","Frage"
 "t_aa_plot_mw","AA weight","AS-Gewicht",
 "t_aa_plot_pi","AA isoelectric point","AS isoelektrischer Punkt"
+"t_pcr_spin_1","Polymerase can run for ","Polymerase kann "
+"t_pcr_spin_2"," nucleotides"," Nukleotide abarbeiten"

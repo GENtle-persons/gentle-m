@@ -2,6 +2,10 @@
 
 //************************************************ SeqABI
     
+SeqABI::~SeqABI ()
+    {
+    if ( at ) delete at ;
+    }
 
 int SeqABI::arrange ( int n )
     {

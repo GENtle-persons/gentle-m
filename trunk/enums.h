@@ -296,6 +296,7 @@ enum {
     SEQ_AA_VIEW_ORIGINAL,
     SEQ_AA_VIEW_REAL,
     SEQ_AA_VIEW_CONDENSED,
+    PCR_SPIN,
     
     } ;
 

@@ -14,30 +14,29 @@ class TABIviewer : public ChildBase
     {
     public :
     TABIviewer(MyFrame *parent, const wxString& title) ;
-    ~TABIviewer () ;
+    virtual ~TABIviewer () ;
     
-    void initme () ;
+    virtual void initme () ;
     virtual string getName () ;
-    void showSequence () ;
-    string getStat () ;
-    void showStat () ;
+    virtual void showSequence () ;
+    virtual string getStat () ;
+    virtual void showStat () ;
     
-    void OnMarkAll(wxCommandEvent& event);
-    void OnFileSave(wxCommandEvent& event);
-    void OnExport(wxCommandEvent& event);
-    void OnFind(wxCommandEvent& event);
-    void OnCopy(wxCommandEvent& event);
-    void OnCopyToNew(wxCommandEvent& event);
-    void OnEditMode(wxCommandEvent& event);
-    void OnEditName(wxCommandEvent& event);
-    
-    void OnHelplines(wxCommandEvent& event);
-    void OnInvCompl(wxCommandEvent& event);
-    void OnSpinWidth(wxSpinEvent& event);
-    void OnSpinHeight(wxSpinEvent& event);
-    void OnZoom(wxScrollEvent& event);
-
-    void OnClose(wxCloseEvent& event) ;
+    virtual void OnMarkAll(wxCommandEvent& event);
+    virtual void OnFileSave(wxCommandEvent& event);
+    virtual void OnExport(wxCommandEvent& event);
+    virtual void OnFind(wxCommandEvent& event);
+    virtual void OnCopy(wxCommandEvent& event);
+    virtual void OnCopyToNew(wxCommandEvent& event);
+    virtual void OnEditMode(wxCommandEvent& event);
+    virtual void OnEditName(wxCommandEvent& event);
+    virtual void OnSeqPrint(wxCommandEvent& event);
+    virtual void OnHelplines(wxCommandEvent& event);
+    virtual void OnInvCompl(wxCommandEvent& event);
+    virtual void OnSpinWidth(wxSpinEvent& event);
+    virtual void OnSpinHeight(wxSpinEvent& event);
+    virtual void OnZoom(wxScrollEvent& event);
+    virtual void OnClose(wxCloseEvent& event) ;
     
     // Variables
     SequenceCanvas *sc ;

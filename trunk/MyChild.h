@@ -31,20 +31,12 @@ public:
     TVectorTree *treeBox ;
     TURLtext *propBox ;
     PlasmidCanvas *cPlasmid;
-    
-    MySplitter *sw , *swu , *swl ;
-    int sp1 , sp2 ;
-    int aa_state , aa_disp , orf_mode ;
-    bool showORFs , viewMode ;
     wxChoice *zoom_cb ;
-    int aa_offset ;
-    
-    virtual void initme () ;
-    virtual void initPanels () ;
-    virtual string getName () ;
-    virtual void updateSequenceCanvas ( bool remember = false ) ;
-    virtual string doExtractAA ( bool coding = true ) ;
-            
+    MySplitter *sw , *swu , *swl ;
+
+    bool showORFs , viewMode ;
+    int sp1 , sp2 , aa_offset , ly ;
+    int aa_state , aa_disp , orf_mode ;
     
     MyChild(MyFrame *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style);
     ~MyChild();
@@ -98,7 +90,11 @@ public:
     virtual void OnZoom ( wxCommandEvent &ev ) ;
     virtual void OnUpdateRefresh(wxUpdateUIEvent& event);
     
-    int ly ;
+    virtual void initme () ;
+    virtual void initPanels () ;
+    virtual string getName () ;
+    virtual void updateSequenceCanvas ( bool remember = false ) ;
+    virtual string doExtractAA ( bool coding = true ) ;
     
     DECLARE_EVENT_TABLE()
 };

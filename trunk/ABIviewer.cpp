@@ -9,6 +9,7 @@ BEGIN_EVENT_TABLE(TABIviewer, MyChildBase)
     EVT_MENU(MDI_COPY, TABIviewer::OnCopy)
     EVT_MENU(AMINOACIDS_EDIT_NAME, TABIviewer::OnEditName)
     EVT_MENU(MDI_COPY_TO_NEW,TABIviewer::OnCopyToNew)
+    EVT_MENU(SEQ_PRINT, TABIviewer::OnSeqPrint)
 
     EVT_CHECKBOX(ABI_HELPLINES, TABIviewer::OnHelplines)
     EVT_CHECKBOX(ABI_INV_COMP, TABIviewer::OnInvCompl)
@@ -386,5 +387,10 @@ void TABIviewer::OnInvCompl(wxCommandEvent& event)
     abi->setInvCompl ( state ) ;
     sc->arrange () ;
     sc->SilentRefresh () ;
+    }
+    
+void TABIviewer::OnSeqPrint(wxCommandEvent& event)
+    {
+    sc->OnPrint ( event ) ;    
     }
     

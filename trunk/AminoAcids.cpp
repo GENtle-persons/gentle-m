@@ -41,7 +41,6 @@ TAminoAcids::~TAminoAcids ()
     {
     if ( curDisplay ) delete curDisplay ;
     if ( vec ) delete vec ;
-//    if ( stat ) delete stat ;
     }
 
 
@@ -119,7 +118,7 @@ void TAminoAcids::initme ()
     lb = new wxListBox ( this ,
                             AA_LB ,
                             wxDefaultPosition ,
-                            wxSize ( 120 , 160 ) ) ;
+                            wxSize ( 140 , 160 ) ) ;
                             
     lb->Append ( txt("t_data") ) ;
     lb->Append ( txt("desc") ) ;
@@ -260,26 +259,8 @@ void TAminoAcids::OnEditMode(wxCommandEvent& event)
     {
     wxMenuBar *mb = GetMenuBar () ;
     wxMenuItem *mi = mb->FindItem ( MDI_EDIT_MODE ) ;
-    wxString s ;
-    if ( mi->IsChecked() )
-        {
-        sc->setEditMode ( true ) ;
-        sc->findID("AA")->s += " " ;
-        vec->sequence += " " ;
-        sc->arrange () ;
-        if ( sc->_from == -1 ) sc->mark ( "AA" , 1 , 1 , 2 ) ;
-        else sc->mark ( "AA" , sc->_from , sc->_from , 2 ) ;
-        sc->SetFocus() ;
-        }
-    else
-        {
-        sc->setEditMode ( false ) ;
-        sc->mark ( "AA" , -1 , -1 ) ;
-        vec->sequence.erase ( vec->sequence.length()-1 , 1 ) ;
-        sc->findID("AA")->s.erase ( sc->findID("AA")->s.length()-1 , 1 ) ;
-        sc->arrange () ;
-        Refresh () ;
-        }
+    if ( mi->IsChecked() ) sc->startEdit ( "AA" ) ;
+    else sc->stopEdit() ;
     if ( sc->getEditMode() ) vec->undo.start ( txt("u_edit") ) ;
     else vec->undo.stop () ;
     }

@@ -367,6 +367,7 @@ void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl , int mut)
 
     subframe->Show() ;
     subframe->Maximize() ;
+
     
     myapp()->frame->mainTree->addChild ( subframe , TYPE_PRIMER ) ;
     myapp()->frame->setChild ( subframe ) ;
