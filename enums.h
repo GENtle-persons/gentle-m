@@ -290,6 +290,7 @@ enum {
     SEQ_SAVE_IMAGE,
     MD_PM_FILTER_DESC,
     MD_PM_FILTER_SEQ,
+    ABI_INV_COMP,
     
     } ;
 

@@ -212,13 +212,14 @@ class SeqAA : public SeqBasic
 class SeqABI : public SeqDNA
     {
     public :
-    SeqABI ( SequenceCanvas *ncan = NULL ) { at = NULL ; init ( ncan ) ; }
+    SeqABI ( SequenceCanvas *ncan = NULL ) { at = NULL ; inv_compl = false ; init ( ncan ) ; }
     virtual int  arrange ( int n ) ;
     virtual void show ( wxDC& dc ) ;
     virtual void initFromFile ( string filename ) ;
     virtual string whatsthis () { return "ABI" ; }
     virtual void drawTopLine ( wxDC &dc , int y ) ;
     virtual wxColor getBaseColor ( char b ) ;
+    virtual void setInvCompl ( bool x ) ;
     
     // Variables
     ABItype *at ;
@@ -229,6 +230,7 @@ class SeqABI : public SeqDNA
     bool showHelpLines ;
     int screenScale ;
     int zoom ;
+    bool inv_compl ;
     } ;
 
 class SeqFeature : public SeqDNA
