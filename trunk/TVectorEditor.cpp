@@ -215,10 +215,15 @@ void TVectorEditor::initPanEnzym ()
     tGE = new wxStaticText ( panEnzym , -1 , txt("enzymes_in_group") , 
             wxPoint ( bx2 , by2-bo*2 ) ) ;
     
+    // List of current enzymes
     listCE = new wxListBox ( panEnzym , TVE_LB_CE , wxPoint ( 0 , by1 ) , 
             wxSize ( bx1-bo , h-by1-th*2 ) , 0 , NULL , wxLB_EXTENDED|wxLB_SORT ) ;
+            
+    // List of Groups
     listGroups = new wxListBox ( panEnzym , TVE_LB_GR , wxPoint ( bx2 , by1 ) , 
             wxSize ( w-bx2 , by2-by1-bo*2 ) , 0 , NULL , wxLB_SINGLE|wxLB_SORT);
+            
+    // List of enzymes in group
     listGE = new wxListBox ( panEnzym , TVE_LB_GE , wxPoint ( bx2 , by2+bo ) , 
             wxSize ( w-bx2 , h-by2-bo-th*2 ) , 0 , NULL , wxLB_EXTENDED|wxLB_SORT ) ;
 
@@ -572,6 +577,15 @@ void TVectorEditor::enzymeAddToNewGr ( wxCommandEvent &ev )
     wxString ng = ted.GetValue() ;
     ng = myapp()->frame->LS->UCfirst ( ng ) ;
     if ( !myapp()->frame->LS->addEnzymeGroup ( ng ) ) return ;
+
+    wxArrayInt vi ;
+    int n = listCE->GetSelections ( vi ) ;
+    if ( n = 0 ) // Nothing selected, so select all
+    	{
+	    for ( n = 0 ; n < listCE->GetCount() ; n++ )
+	    	listCE->SetSelection ( n , TRUE ) ;
+    	}    
+
     listGroups->Append ( ng ) ;
     listGroups->SetStringSelection ( ng ) ;
     enzymeAddToGr ( ev ) ;
@@ -708,7 +722,7 @@ void TVectorEditor::enzymeDelGr ( wxCommandEvent &ev )
     group = myapp()->frame->LS->UCfirst ( group ) ;
     if ( group == txt("All") ) return ;
     
-    wxString s = wxString::Format ( txt("t_del_group") , group ) ;
+    wxString s = wxString::Format ( txt("t_del_group") , group.c_str() ) ;
     if ( wxMessageBox ( s , txt("msg_box") , wxYES_NO|wxICON_QUESTION ) != wxYES ) return ;
 
     wxString sql ;

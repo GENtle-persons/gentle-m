@@ -145,6 +145,7 @@ WX_DEFINE_ARRAY(TVector *, wxArrayTVector);
 #include "TMainTree.h"
 #include "RestrictionEnzymes.h"
 #include "TImageDisplay.h"
+#include "TVirtualGel.h"
 #include "TCalculator.h"
 #include "Alignment.h"
 #include "AminoAcids.h"

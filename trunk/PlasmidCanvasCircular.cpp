@@ -552,6 +552,8 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
            }    
         }
     dc.SetFont(*smallFont);    
+    dc.SetPen ( *wxBLACK_PEN ) ;
+    dc.SetTextForeground ( *wxBLACK ) ;
     }
 
 wxPoint PlasmidCanvas::makeLastRect ( int a , wxDC &dc )

@@ -46,6 +46,7 @@ class TMyImagePanel : public wxPanel
     virtual void OnDraw(wxDC& pdc) ;
     virtual void Refresh(bool eraseBackground = TRUE, const wxRect* rect = NULL) ;
     virtual void OnSize(wxSizeEvent &event) ;
+    virtual void OnPaint(wxPaintEvent& event) ;
 
     virtual void OnEvent(wxMouseEvent& event);
     virtual void OnSaveAsBitmap(wxCommandEvent &event);
