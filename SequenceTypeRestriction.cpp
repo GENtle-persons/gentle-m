@@ -110,15 +110,15 @@ int SeqRestriction::arrange ( int n )
                x += wx ;
                if ( x+wx*(can->blocksize+1) >= w )
                   {
-                  pos.addline ( lasta , pos.p.size() , y , y+wy-1 ) ;
-                  lasta = pos.p.size()+1 ;
+                  pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
+                  lasta = pos.p.GetCount()+1 ;
                   x = ox ;
                   y += wy * ( can->seq.size() + can->blankline ) ;
                   }
                }
             }
-        if ( lasta != pos.p.size()+1 ) 
-            pos.addline ( lasta , pos.p.size() , y , y+wy-1 ) ;
+        if ( lasta != pos.p.GetCount()+1 ) 
+            pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
         }
     return lowy + bo*2 ;
     }
@@ -160,7 +160,7 @@ void SeqRestriction::show ( wxDC& dc )
            dc.SetTextForeground ( *wxBLACK ) ; 
            }
         int qlx = -1 ;
-        for ( a = 0 ; a < pos.p.size() ; a++ )
+        for ( a = 0 ; a < pos.p.GetCount() ; a++ )
             {
             if ( can->hardstop > -1 && a > can->hardstop ) break ;
             b = pos.p[a] ;
@@ -200,7 +200,7 @@ void SeqRestriction::show ( wxDC& dc )
                else dc.DrawText ( ven[layer].c_str() , llx , ly ) ;
                }
             lc = c ;
-            if ( !can->getDrawAll() && pos.r[a].GetTop() > yb ) a = pos.p.size() ;
+            if ( !can->getDrawAll() && pos.r[a].GetTop() > yb ) a = pos.p.GetCount() ;
             }
         }
     dc.SetTextForeground ( wxColor ( *wxBLACK ) ) ;

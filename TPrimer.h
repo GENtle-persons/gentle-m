@@ -9,7 +9,6 @@ class TVector ;
 class TPrimerDialog ;
 class TPrimerDesign ;
 
-typedef vector <int> tvi ;
 typedef vector <char> tvc ;
 
 #define TM_STANDARD 0

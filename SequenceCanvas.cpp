@@ -568,7 +568,7 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
     if ( printSelection )
        {
        int a , _f = -1 , _t = -1 , _fin = -1 ;
-       for ( a = 0 ; a < seq[lastmarked]->pos.m.size() ; a++ )
+       for ( a = 0 ; a < seq[lastmarked]->pos.m.GetCount() ; a++ )
           {
           if ( seq[lastmarked]->pos.m[a] == 1 )
              {
@@ -874,7 +874,7 @@ void SequenceCanvas::mark ( string id , int from , int to , int value )
 
 
     int l = seqlen ;
-    for ( a = 0 ; a < seq[b]->pos.m.size()/* && charwidth && charheight*/ ; a++ )
+    for ( a = 0 ; a < seq[b]->pos.m.GetCount()/* && charwidth && charheight*/ ; a++ )
         {
         if ( inMarkRange ( seq[b]->pos.p[a] , from , to , l ) ) 
            {
@@ -891,7 +891,7 @@ void SequenceCanvas::mark ( string id , int from , int to , int value )
         {
         bool canbemarked = seq[other]->takesMouseActions ;
         if ( other == b ) canbemarked = false ;
-        for ( a = 0 ; canbemarked && a < seq[other]->pos.m.size() ; a++ )
+        for ( a = 0 ; canbemarked && a < seq[other]->pos.m.GetCount() ; a++ )
             {
             seq[other]->pos.m[a] = 0 ;
             }

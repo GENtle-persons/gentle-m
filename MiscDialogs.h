@@ -58,7 +58,7 @@ class TAlignmentDialog : public wxDialog
     void OnDown ( wxCommandEvent &ev ) ;
     
     vector <TVector*> vav , vcv ;
-    vector <string> van , vcn ;
+    wxArrayString van , vcn ;
 
     DECLARE_EVENT_TABLE()
     } ;

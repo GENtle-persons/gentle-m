@@ -10,7 +10,6 @@
 class TVector ;
 class TVectorItem ;
 class TVectorTree ;
-typedef vector <int> TVI ;
 
 class TGenBankFeature
     {
@@ -51,8 +50,8 @@ class TGenBank
     wxString expand ( wxString init , int to , wxString with = " " ) ;
     
     vector <wxArrayString> vs_l ;
-    vector <TVI> vi_l ;
-    TVI vi ;
+    vector <wxArrayInt> vi_l ;
+    wxArrayInt vi ;
     vector <TGenBankKey> keys ;
     wxArrayString vs ;
     bool perm[256] ;

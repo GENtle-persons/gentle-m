@@ -16,7 +16,7 @@ class TSilmutItem
     string mut ;
     int changes , cuts ;
     TRestrictionEnzyme *e ;
-    vector <int> fragments ;
+    wxArrayInt fragments ;
     } ;
 
 class TSilmutDialog : public wxDialog
@@ -50,7 +50,7 @@ class TSilmutDialog : public wxDialog
     TPrimerDesign *pd ;
     wxSpinCtrl *lim_xhg , *lim_max ;
     wxChoice *egr , *mut ;
-    vector <int> lb_retro ;
+    wxArrayInt lb_retro ;
     int last_selection ;
     int mode ;
     int mut_pos , mut_dir ;

@@ -49,8 +49,8 @@ int SeqAA::arrange ( int n )
            x += wx-1 ;
            if ( x+wx*(can->blocksize+1) >= w )
               {
-              pos.addline ( lasta , pos.p.size() , y , y+wy-1 ) ;
-              lasta = pos.p.size()+1 ;
+              pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
+              lasta = pos.p.GetCount()+1 ;
               x = ox ;
               y += wy * ( can->seq.size() + can->blankline ) ;
               if ( showNumbers && a+1 < s.length() )
@@ -58,8 +58,8 @@ int SeqAA::arrange ( int n )
               }
            }
         }
-    if ( showNumbers && lasta != pos.p.size()+1 ) 
-        pos.addline ( lasta , pos.p.size() , y , y+wy-1 ) ;
+    if ( showNumbers && lasta != pos.p.GetCount()+1 ) 
+        pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
         
     // Marking features
     string t = s ;
@@ -78,7 +78,7 @@ int SeqAA::arrange ( int n )
            }
         }
     
-    for ( a = 0 ; a < pos.p.size() ; a++ )
+    for ( a = 0 ; a < pos.p.GetCount() ; a++ )
         {
         b = pos.p[a] ;
         if ( b > 0 ) // Char
@@ -114,7 +114,7 @@ void SeqAA::show ( wxDC& dc )
     ya = -ya ;
     can->MyGetClientSize ( &xa , &yb ) ;
     yb += ya ;
-    for ( a = 0 ; a < pos.p.size() ; a++ )
+    for ( a = 0 ; a < pos.p.GetCount() ; a++ )
         {
         if ( can->hardstop > -1 && a > can->hardstop ) break ;
         b = pos.p[a] ;
@@ -124,7 +124,7 @@ void SeqAA::show ( wxDC& dc )
         if ( tz < ya ) insight = false ;
         if ( ty > yb ) insight = false ;
         if ( can->getDrawAll() ) insight = true ;
-        if ( !insight && ty > yb ) a = pos.p.size() ;
+        if ( !insight && ty > yb ) a = pos.p.GetCount() ;
         if ( b > 0 && !insight ) cnt++ ;
         if ( b > 0 && insight ) // Character
            {
@@ -225,7 +225,7 @@ wxPoint SeqAA::showText ( int ystart , wxArrayString &tout )
     int a , b , c ;
     wxString t ;
     int x = 0 , y = ystart-can->seq.size() , ly = -1 ;
-    for ( a = 0 ; a < pos.p.size() ; a++ )
+    for ( a = 0 ; a < pos.p.GetCount() ; a++ )
         {
         b = pos.p[a] ;
         if ( b > 0 ) // Character
@@ -259,17 +259,17 @@ void SeqAA::initFromString ( string t )
     s = t ;
     vec = NULL ;
     showNumbers = true ;
-    offsets.clear() ;
-    while ( offsets.size() < s.length() ) offsets.push_back ( -1 ) ;
+    offsets.Clear() ;
+    while ( offsets.GetCount() < s.length() ) offsets.Add ( -1 ) ;
     
     // Proteases
     updateProteases () ;
     pa_w = "" ;
-    pa_wa.clear() ;
+    pa_wa.Clear() ;
     while ( pa_w != s )
        {
        pa_w += s[pa_w.length()] ;
-       pa_wa.push_back ( pa_w.length() ) ;
+       pa_wa.Add ( pa_w.length() ) ;
        analyzeProteases () ;
        }
     }
@@ -328,7 +328,7 @@ void SeqAA::fixOffsets ( TVector *v )
            char x =  v->sequence[b-1] ;
            if ( ( b - 1 ) % 10 == 0 && c > 0 && x != '-' )
               {
-              while ( offsets.size() < b ) offsets.push_back ( -1 ) ;
+              while ( offsets.GetCount() < b ) offsets.Add ( -1 ) ;
               while ( offset_items.size() < b ) offset_items.push_back ( NULL ) ;
               offsets[b-1] = c + off ;
               offset_items[b-1] = &v->items[a] ;
@@ -354,9 +354,9 @@ void SeqAA::initFromTVector ( TVector *v )
     string t = vec->sequence ;
     s = "" ;
     while ( s.length() < t.length() ) s += " " ;
-    offsets.clear() ;
+    offsets.Clear() ;
     offset_items.clear() ;
-    while ( offsets.size() < s.length() ) offsets.push_back ( -1 ) ;
+    while ( offsets.GetCount() < s.length() ) offsets.Add ( -1 ) ;
     updateProteases () ;
     if ( v->isCircular() ) t += t.substr ( 0 , 2 ) ;
     else t += "  " ;
@@ -379,7 +379,7 @@ void SeqAA::initFromTVector ( TVector *v )
     else
         {
         pa_w = "" ;
-        pa_wa.clear() ;
+        pa_wa.Clear() ;
         int mymode = mode ;
         bool invert = false ;
         if ( mode == AA_THREE_M1 ) { mymode = AA_THREE_1 ; invert = true ; }
@@ -399,7 +399,7 @@ void SeqAA::initFromTVector ( TVector *v )
 
             // Protease analysis
             pa_w += c ;
-            pa_wa.push_back ( a ) ;
+            pa_wa.Add ( a ) ;
             analyzeProteases () ;
 
             if ( ( mymode == AA_THREE_1 && (a+0) % 3 == 0 ) ||

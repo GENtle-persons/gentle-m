@@ -500,8 +500,6 @@ string TVector::transformSequence ( bool inverse , bool reverse )
 
 void TVector::doRestriction ()
     {
-    vector <int> rCut ;
-    vector <string> rLU , rLL , rRU , rRL , rEnzyme , rSequence ;
     vector <TRestrictionCut> cl ;
     int a , b , c ;
     
@@ -1340,14 +1338,14 @@ void TVectorItem::translate ( TVector *v , SeqAA *aa )
          {
          // Protease analysis
          aa->pa_w += c ;
-         aa->pa_wa.push_back ( b+coff ) ;
+         aa->pa_wa.Add ( b+coff ) ;
          aa->analyzeProteases () ;
 
          // Offset?
          int pawl = dna2aa.size() ;
          if ( voff != -1 && ( b + coff ) % 10 == 0 )
             {
-            while ( aa->offsets.size() <= b+coff ) aa->offsets.push_back ( -1 ) ;
+            while ( aa->offsets.GetCount() <= b+coff ) aa->offsets.Add ( -1 ) ;
             while ( aa->offset_items.size() <= b+coff ) aa->offset_items.push_back ( NULL ) ;
             aa->offsets[b+coff] = voff + pawl - 1 ;
             aa->offset_items[b+coff] = this ;

@@ -21,12 +21,12 @@ void SeqFeature::show ( wxDC& dc )
     yb += ya ;
     bool newline = true ;
     
-    vector <int> li , lx , used ;
-    while ( li.size() < vr.size() ) li.push_back ( -1 ) ;
-    while ( lx.size() < vr.size() ) lx.push_back ( -1 ) ;
-    while ( used.size() < vr.size() ) used.push_back ( 0 ) ;
+    wxArrayInt li , lx , used ;
+    while ( li.GetCount() < vr.size() ) li.Add ( -1 ) ;
+    while ( lx.GetCount() < vr.size() ) lx.Add ( -1 ) ;
+    while ( used.GetCount() < vr.size() ) used.Add ( 0 ) ;
 
-    for ( a = 0 ; a < pos.p.size() ; a++ )
+    for ( a = 0 ; a < pos.p.GetCount() ; a++ )
         {
         if ( can->hardstop > -1 && a > can->hardstop ) break ;
         b = pos.p[a] ;
@@ -36,12 +36,12 @@ void SeqFeature::show ( wxDC& dc )
         if ( tz < ya ) insight = false ;
         if ( ty > yb ) insight = false ;
         if ( can->getDrawAll() ) insight = true ;
-        else if ( ty > yb ) a = pos.p.size() ;
+        else if ( ty > yb ) a = pos.p.GetCount() ;
         if ( b > 0 ) // Character
            {
            t = " " ;
            int i ;
-           vector <int> _i ;
+           wxArrayInt _i ;
            wxArrayString _name ;
            vector <wxPoint> _point ;
            myass ( vec , "SeqFeature::show_0" ) ;
@@ -85,7 +85,7 @@ void SeqFeature::show ( wxDC& dc )
 
                     // Offsets
                     if ( aaa && !newline && 
-                         b-1 < aaa->offsets.size() && 
+                         b-1 < aaa->offsets.GetCount() && 
                          aaa->offsets[b-1] != -1 && 
                          aaa->offset_items[b-1] == &vec->items[vr[i].GetX()] )
                        {
@@ -160,7 +160,7 @@ void SeqFeature::show ( wxDC& dc )
                        myass ( vr[i].x >= 0 && vr[i].x < vec->items.size() , "!!3" ) ;   
                        string name = vec->items[vr[i].x].name.c_str() ;
                        if ( newline && li[l] == i ) name = "(" + name + ")" ;
-                       _i.push_back ( i ) ;
+                       _i.Add ( i ) ;
                        _name.Add ( name.c_str() ) ;
                        _point.push_back ( wxPoint ( x_from , level - ch2 ) ) ;
                        }
@@ -181,7 +181,7 @@ void SeqFeature::show ( wxDC& dc )
 
               
            // Now drawing the names
-           for ( i = 0 ; i < _i.size() ; i++ )
+           for ( i = 0 ; i < _i.GetCount() ; i++ )
               {
                if ( can->isPrinting() && !can->getPrintToColor() )
                   {
@@ -189,7 +189,7 @@ void SeqFeature::show ( wxDC& dc )
                   }
                else
                   {
-                  myass ( i >= 0 && i < _i.size() , "SeqFeature::show_names_1" ) ;
+                  myass ( i >= 0 && i < _i.GetCount() , "SeqFeature::show_names_1" ) ;
                   myass ( _i[i] >= 0 && _i[i] < vr.size() , "SeqFeature::show_names_2" ) ;
                   myass ( vr[_i[i]].GetX() >= 0 && vr[_i[i]].GetX() < vec->items.size() , "SeqFeature::show_names_3" ) ;
                   wxColour col = vec->items[vr[_i[i]].GetX()].getFontColor() ;

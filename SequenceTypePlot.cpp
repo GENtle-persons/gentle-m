@@ -55,8 +55,8 @@ int SeqPlot::arrange ( int n )
            x += wx-1 ;
            if ( x+wx*(can->blocksize+1) >= w )
               {
-              pos.addline ( lasta , pos.p.size() , y , y+wy*lines-1 ) ;
-              lasta = pos.p.size()+1 ;
+              pos.addline ( lasta , pos.p.GetCount() , y , y+wy*lines-1 ) ;
+              lasta = pos.p.GetCount()+1 ;
               x = ox ;
               y += wy * ( can->seq.size() + can->blankline ) ;
               if ( a+1 < s.length() )
@@ -64,8 +64,8 @@ int SeqPlot::arrange ( int n )
               }
            }
         }
-    if ( lasta != pos.p.size()+1 ) 
-        pos.addline ( lasta , pos.p.size() , y , y+wy*lines-1 ) ;
+    if ( lasta != pos.p.GetCount()+1 ) 
+        pos.addline ( lasta , pos.p.GetCount() , y , y+wy*lines-1 ) ;
     return lowy + bo*2 ;
     }
 
@@ -140,7 +140,7 @@ void SeqPlot::show ( wxDC& dc )
     xb += xa ;
     int lx = 0 ;
     startOfLine = true ;
-    for ( a = 0 ; a < pos.p.size() ; a++ )
+    for ( a = 0 ; a < pos.p.GetCount() ; a++ )
         {
         if ( can->hardstop > -1 && a > can->hardstop ) break ;
         b = pos.p[a] ;
@@ -152,7 +152,7 @@ void SeqPlot::show ( wxDC& dc )
         if ( tx + can->charwidth < xa ) insight = false ;
         if ( tx > xb ) insight = false ;
         if ( can->getDrawAll() ) insight = true ;
-        if ( !insight && ty > yb ) a = pos.p.size() ;
+        if ( !insight && ty > yb ) a = pos.p.GetCount() ;
         if ( b > 0 && !insight ) cnt++ ;
         if ( b > 0 && insight ) // Character
            {

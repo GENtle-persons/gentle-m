@@ -88,8 +88,8 @@ int SeqABI::arrange ( int n )
 
         if ( x > maxx )
            {
-           pos.addline ( lasta , pos.p.size() , y , y+wy-1 ) ;
-           lasta = pos.p.size()+1 ;
+           pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
+           lasta = pos.p.GetCount()+1 ;
            y += wy * ( can->seq.size() + can->blankline ) ;
            if ( a+1 < s.length() )
               pos.add ( -(++l) , bo , y , ox-wx-5 , wy-1 ) ; // Line number
@@ -101,8 +101,8 @@ int SeqABI::arrange ( int n )
         lowy = y+wy ;
 
         }
-    if ( lasta != pos.p.size()+1 ) 
-        pos.addline ( lasta , pos.p.size() , y , y+wy-1 ) ;
+    if ( lasta != pos.p.GetCount()+1 ) 
+        pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
     
     lowy += wy * ( can->blankline ) ; // For sequence data
     
@@ -133,7 +133,7 @@ void SeqABI::show ( wxDC& dc )
     int wx = can->charwidth ;
     int wy = can->charheight ;
     dc.SetPen(*wxLIGHT_GREY_PEN);
-    for ( int a = 0 ; showHelpLines && a < pos.p.size() ; a++ )
+    for ( int a = 0 ; showHelpLines && a < pos.p.GetCount() ; a++ )
         {
         if ( pos.p[a] > 0 )
            {

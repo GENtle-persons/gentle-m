@@ -466,8 +466,8 @@ void TAlignment::callMiddleMouseButton ( int id , int pos , wxString _mode )
        return ;
        }
 
-    vector <int> l2s ;
-    while ( l2s.size() < lines.size() ) l2s.push_back ( 0 ) ;
+    wxArrayInt l2s ;
+    while ( l2s.GetCount() < lines.size() ) l2s.Add ( 0 ) ;
     for ( a = 0 ; a < sc->seq.size() ; a++ )
         {
         if ( sc->seq[a]->whatsthis() == "ALIGN" )
@@ -584,10 +584,10 @@ void TAlignment::OnSettings ( wxCommandEvent &ev )
     if ( r != wxID_OK ) return ;
 
     lines.clear () ;
-    for ( int a = 0 ; a < ad.vcn.size() ; a++ )
+    for ( int a = 0 ; a < ad.vcn.GetCount() ; a++ )
         {
         TAlignLine line ;
-        line.name = ad.vcn[a].c_str() ;
+        line.name = ad.vcn[a] ;
         line.v = ad.vcv[a] ;
         line.ResetSequence() ;
         lines.push_back ( line ) ;
@@ -655,7 +655,7 @@ int TAlignment::MatrixAlignment ( wxString &_s1 , wxString &_s2 , bool local )
     // Filling
     int i , j ;
     int max = -999999 ;
-    vector <int> vi , vj ;
+    wxArrayInt vi , vj ;
     int mi = M , mj = N ;
     for ( i = 0 ; i < M ; i++ )
         {
@@ -687,11 +687,11 @@ int TAlignment::MatrixAlignment ( wxString &_s1 , wxString &_s2 , bool local )
                   max = r ;
                   mi = x ;
                   mj = y ;
-                  vi = tvi () ;
-                  vj = tvi () ;
+                  vi.Clear() ;
+                  vj.Clear() ;
                   }
-              vi.push_back ( x ) ;
-              vj.push_back ( y ) ;
+              vi.Add ( x ) ;
+              vj.Add ( y ) ;
               }
            
            // The way back
@@ -707,7 +707,7 @@ int TAlignment::MatrixAlignment ( wxString &_s1 , wxString &_s2 , bool local )
     string t1 , t2 ;
     if ( local )
         {
-        for ( a = b = 0 ; a < vi.size() ; a++ )
+        for ( a = b = 0 ; a < vi.GetCount() ; a++ )
            {
            MatrixBacktrack ( back , s1 , s2 , t1 , t2 , vi[a] , vj[a] ) ;
            if ( t1.length() > b )

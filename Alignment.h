@@ -14,7 +14,6 @@
 #define ALG_SW 1
 #define ALG_NW 2
 
-typedef vector <int> tvi ;
 typedef vector <char> tvc ;
 
 class SeqAA ;

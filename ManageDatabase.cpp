@@ -357,15 +357,15 @@ void TManageDatabaseDialog::pm_list_items ( int x )
     SetCursor ( *wxSTANDARD_CURSOR ) ;
     }
     
-vector <int> TManageDatabaseDialog::getSelectedListItems ( wxListCtrl *l )
+wxArrayInt TManageDatabaseDialog::getSelectedListItems ( wxListCtrl *l )
     {
     long item = -1 ;
-    vector <int> vi ;
+    wxArrayInt vi ;
     while ( true )
         {
         item = l->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED ) ;
         if ( item == -1 ) break;
-        vi.push_back ( item ) ;
+        vi.Add ( item ) ;
         }
     return vi ;
     }
@@ -392,10 +392,10 @@ void TManageDatabaseDialog::pmOnListEvent ( wxListEvent &ev , wxListCtrl *source
         }
     
     int a ;
-    vector <int> vi ;
+    wxArrayInt vi ;
     wxArrayString vs ;
     vi = getSelectedListItems ( source ) ;
-    for ( a = 0 ; a < vi.size() ; a++ )
+    for ( a = 0 ; a < vi.GetCount() ; a++ )
         vs.Add ( source->GetItemText ( vi[a] ) ) ;
     
     wxTextDataObject my_data(GENTLE_DRAG_DATA);
@@ -771,10 +771,10 @@ void TManageDatabaseDialog::pmOnActivateRight ( wxListEvent &ev )
     
 void TManageDatabaseDialog::pmGetContext ( wxListCtrl *side )
     {
-    vector <int> vi ;
+    wxArrayInt vi ;
     context_names.Clear () ;
     vi = getSelectedListItems ( side ) ;
-    for ( int a = 0 ; a < vi.size() ; a++ )
+    for ( int a = 0 ; a < vi.GetCount() ; a++ )
         context_names.Add ( side->GetItemText ( vi[a] ) ) ;
     
     }
@@ -1213,17 +1213,8 @@ void TManageDatabaseDialog::pmOnRightClick ( wxListEvent &ev ,
                                             wxListCtrl *lc , wxChoice *cc )
     {
     wxPoint p = ev.GetPoint() ;
-    
-/*    vector <int> vi ;
-    while ( context_names.GetCount() ) context_names.pop_back() ;
-    vi = getSelectedListItems ( lc ) ;
-    for ( int a = 0 ; a < vi.GetCount() ; a++ )
-        context_names.push_back ( lc->GetItemText ( vi[a] ) ) ;
-    */
     pmGetContext ( lc ) ;
-
     context_db = cc->GetStringSelection() ;
-    
     wxMenu cm ;
     
     if ( isProject )

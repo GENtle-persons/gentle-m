@@ -134,7 +134,7 @@ int TSilmutDialog::selID ()
     {
     if ( last_selection == -1 ) return -1 ;
     int a ;
-    for ( a = 0 ; a < lb_retro.size() ; a++ )
+    for ( a = 0 ; a < lb_retro.GetCount() ; a++ )
        if ( lb_retro[a] == last_selection )
           return a ;
     return -1 ;
@@ -258,17 +258,17 @@ void TSilmutDialog::calc ()
               vector <TRestrictionCut> vc = v->getCuts(e) ;
               
               // Calculating the resulting fragments
-              for ( c = 0 ; c < vc.size() ; c++ ) si.fragments.push_back ( vc[c].pos ) ;
-              si.fragments.push_back ( v->sequence.length()-1 ) ;
-              for ( c = si.fragments.size()-1 ; c > 0 ; c-- )
+              for ( c = 0 ; c < vc.size() ; c++ ) si.fragments.Add ( vc[c].pos ) ;
+              si.fragments.Add ( v->sequence.length()-1 ) ;
+              for ( c = si.fragments.GetCount()-1 ; c > 0 ; c-- )
                  si.fragments[c] -= si.fragments[c-1] ;
               si.fragments[0]++ ;
               if ( v->isCircular() )
                  {
-                 si.fragments[0] += si.fragments[si.fragments.size()-1] ;
-                 si.fragments.pop_back () ;
+                 si.fragments[0] += si.fragments[si.fragments.GetCount()-1] ;
+                 si.fragments.RemoveAt ( si.fragments.GetCount()-1 ) ;
                  }
-              sort ( si.fragments.begin() , si.fragments.end() ) ;
+              si.fragments.Sort(cmpint) ;
 
               si.cuts = vc.size() ;
               v->sequence = old_dna ;
@@ -317,7 +317,7 @@ void TSilmutDialog::showit ()
         int cuts_before = vc.size() ;
 
         wxString fragments ;
-        for ( b = 0 ; b < vs[a].fragments.size() ; b++ )
+        for ( b = 0 ; b < vs[a].fragments.GetCount() ; b++ )
            {
            if ( b > 0 ) fragments += ", " ;
            fragments += wxString::Format ( "%d" , vs[a].fragments[b] ) ;
@@ -346,10 +346,10 @@ void TSilmutDialog::showit ()
         list.push_back ( s ) ;
         }
 
-    lb_retro.clear() ;
+    lb_retro.Clear() ;
     for ( a = 0 ; a < list.size() ; a++ )
         {
-        lb_retro.push_back ( lb->FindString ( list[a] ) ) ;
+        lb_retro.Add ( lb->FindString ( list[a] ) ) ;
         }
     }
 

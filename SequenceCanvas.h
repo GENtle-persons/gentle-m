@@ -32,21 +32,21 @@ class TAlignment ;
 class SeqPos
     {
     public :
-    vector <int> p , m ;
+    wxArrayInt p , m ;
     vector <wxRect> r , l ;
     
     virtual void cleanup ()
         {
-        while ( p.size() ) p.pop_back() ;
-        while ( r.size() ) r.pop_back() ;
-        while ( l.size() ) l.pop_back() ;
-        while ( m.size() ) m.pop_back() ;
+        p.Clear () ;
+        m.Clear () ;
+        r.clear () ;
+        l.clear () ;
         }
     virtual void add ( int np , int x , int y , int w , int h )
         {
-        p.push_back ( np ) ;
+        p.Add ( np ) ;
         r.push_back ( wxRect ( x , y , w , h ) ) ;
-        m.push_back ( 0 ) ;
+        m.Add ( 0 ) ;
         }
     virtual void addline ( int from , int to , int vfrom , int vto )
         {
@@ -219,9 +219,8 @@ class SeqAA : public SeqBasic
     char unknownAA ;
     vector <TProteaseCut*> pc ;
     string pa_w ;
-    vector <int> pa_wa ;
     vector <TProtease*> proteases ;
-    vector <int> offsets ;
+    wxArrayInt offsets , pa_wa ;
     vector <TVectorItem*> offset_items ;
     } ;
 
