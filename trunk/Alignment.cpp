@@ -959,7 +959,7 @@ void TAlignment::OnMenuIdent ( wxCommandEvent &ev )
     
 void TAlignment::OnHorizontal ( wxCommandEvent& event )
     {
-    sc->isHorizontal = !sc->isHorizontal ;
+    sc->toggleHorizontal () ;
     sc->arrange () ;
     sc->SilentRefresh() ;    
     }

@@ -255,7 +255,7 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn )
        {
         cm->Append(MDI_TRANSFORM_SEQUENCE, txt("t_transform_sequence") );
         
-        if ( mark_from == -1 )
+        if ( getMarkFrom() == -1 )
            {
            cm->Append(MDI_RUN_PCR, txt("m_pcr") );
            }
@@ -267,14 +267,14 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn )
            pm->Append ( PRIMER_FORWARD , txt("m_primer_forward") ) ;
            pm->Append ( PRIMER_BACKWARD , txt("m_primer_backward") ) ;
            pm->Append ( PRIMER_BOTH , txt("m_primer_both") ) ;
-           if ( mark_from + 2 == mark_to )
+           if ( getMarkFrom() + 2 == getMarkTo() )
               pm->Append ( PRIMER_MUTATION , txt("m_primer_mutation") ) ;
            }
         
         if ( p->vec->hasStickyEnds() && p->vec->isLinear() )
             cm->Append ( MDI_FILL_KLENOW , txt("p_fill_klenow") ) ;
     
-        if ( mark_from != -1 )
+        if ( getMarkFrom() != -1 )
             {
             wxMenu *mm = new wxMenu ;
             cm->Append ( POPUP_DUMMY , txt("p_selection") , mm ) ;
@@ -323,10 +323,10 @@ void PlasmidCanvas::vecEdit ( wxCommandEvent &ev )
     
 void PlasmidCanvas::blastDNA ( wxCommandEvent &ev )
     {
-    if ( mark_from == -1 ) return ;
+    if ( getMarkFrom() == -1 ) return ;
     string seq ;
     int a ;
-    for ( a = mark_from ; a <= mark_to ; a++ )
+    for ( a = getMarkFrom() ; a <= getMarkTo() ; a++ )
         {
         seq += p->vec->getNucleotide ( a-1 ) ;
         }
@@ -378,47 +378,47 @@ void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl , int mut)
 void PlasmidCanvas::OnPrimerForward ( wxCommandEvent &ev )
     {
     vector <TPrimer> pl ;
-    int end = mark_from + 30 ;
+    int end = getMarkFrom() + 30 ;
     if ( end >= p->vec->sequence.length() ) end = p->vec->sequence.length() ;
-    pl.push_back ( TPrimer ( mark_from , end , true ) ) ;
+    pl.push_back ( TPrimer ( getMarkFrom() , end , true ) ) ;
     RunPrimerEditor ( pl ) ;
     }
 
 void PlasmidCanvas::OnPrimerBackward ( wxCommandEvent &ev )
     {
     vector <TPrimer> pl ;
-    int start = mark_to - 30 ;
+    int start = getMarkTo() - 30 ;
     if ( start < 1 ) start = 1 ;
-    pl.push_back ( TPrimer ( start , mark_to , false ) ) ;
+    pl.push_back ( TPrimer ( start , getMarkTo() , false ) ) ;
     RunPrimerEditor ( pl ) ;
     }
 
 void PlasmidCanvas::OnPrimerBoth ( wxCommandEvent &ev )
     {
     vector <TPrimer> pl ;
-    int end = mark_from + 30 ;
+    int end = getMarkFrom() + 30 ;
     if ( end >= p->vec->sequence.length() ) end = p->vec->sequence.length() ;
-    pl.push_back ( TPrimer ( mark_from , end , true ) ) ;
-    int start = mark_to - 30 ;
+    pl.push_back ( TPrimer ( getMarkFrom() , end , true ) ) ;
+    int start = getMarkTo() - 30 ;
     if ( start < 1 ) start = 1 ;
-    pl.push_back ( TPrimer ( start , mark_to , false ) ) ;
+    pl.push_back ( TPrimer ( start , getMarkTo() , false ) ) ;
     RunPrimerEditor ( pl ) ;
     }
 
 void PlasmidCanvas::OnPrimerMutation ( wxCommandEvent &ev )
     {
     vector <TPrimer> pl ;
-    int start = mark_from - 10 ;
-    int end = mark_from + 20 ;
+    int start = getMarkFrom() - 10 ;
+    int end = getMarkFrom() + 20 ;
     if ( end >= p->vec->sequence.length() ) end = p->vec->sequence.length() ;
     if ( start < 1 ) start = 1 ;
     pl.push_back ( TPrimer ( start , end , true ) ) ;
     
-    start = mark_from - 20 ;
-    end = mark_to + 10 ;
+    start = getMarkFrom() - 20 ;
+    end = getMarkTo() + 10 ;
     if ( end >= p->vec->sequence.length() ) end = p->vec->sequence.length() ;
     if ( start < 1 ) start = 1 ;    
-    pl.push_back ( TPrimer ( start , mark_to , false ) ) ;
+    pl.push_back ( TPrimer ( start , getMarkTo() , false ) ) ;
     
     RunPrimerEditor ( pl ) ;
     }

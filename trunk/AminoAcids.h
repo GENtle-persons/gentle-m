@@ -58,6 +58,7 @@ class TAminoAcids : public ChildBase
     wxListBox *lb ;
     wxBoxSizer *h1 , *v1 ;
     wxChoice *inlinePlot ;
+    wxString lastLBsel ;
     
     DECLARE_EVENT_TABLE()
     } ;

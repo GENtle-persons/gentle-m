@@ -35,7 +35,7 @@ void SeqFeature::show ( wxDC& dc )
         bool insight = true ; // Meaning "is this part visible"
         if ( tz < ya ) insight = false ;
         if ( ty > yb ) insight = false ;
-        if ( can->drawall ) insight = true ;
+        if ( can->getDrawAll() ) insight = true ;
         else if ( ty > yb ) a = pos.p.size() ;
         if ( b > 0 ) // Character
            {
@@ -74,7 +74,7 @@ void SeqFeature::show ( wxDC& dc )
                     wxColour col = *wxBLACK ;
                     wxPen *thisPen = wxBLACK_PEN ;
                     
-                    if ( can->printing && !can->printToColor ) dc.SetPen ( *wxBLACK_PEN ) ;
+                    if ( can->isPrinting() && !can->getPrintToColor() ) dc.SetPen ( *wxBLACK_PEN ) ;
                     else
                        {
                        col = vec->items[vr[i].GetX()].getFontColor() ;
@@ -183,7 +183,7 @@ void SeqFeature::show ( wxDC& dc )
            // Now drawing the names
            for ( i = 0 ; i < _i.size() ; i++ )
               {
-               if ( can->printing && !can->printToColor )
+               if ( can->isPrinting() && !can->getPrintToColor() )
                   {
                   dc.SetTextForeground ( *wxBLACK ) ;
                   }
@@ -271,10 +271,9 @@ void SeqFeature::initFromTVector ( TVector *v )
        }
        
     pens.clear() ;
-//    while ( pens.size() ) pens.pop_back () ;
     pens.push_back ( *wxBLACK_PEN ) ;
     pens.push_back ( *wxRED_PEN ) ;
-    pens.push_back ( wxPen ( wxColour ( 0 , 100 , 0 ) , 1 , wxSOLID  ) ) ;
+    pens.push_back ( *MYPEN(wxColour(0,100,0)) ) ;
     for ( a = 0 ; pens.size() <= maxlayers ; a++ ) pens.push_back ( pens[a] ) ;
     }
     

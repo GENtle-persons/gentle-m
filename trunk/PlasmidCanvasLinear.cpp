@@ -52,10 +52,10 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
         }
     
     // Mark
-    if ( mark_from != -1 )
+    if ( getMarkFrom() != -1 )
         {
-        int mf = mark_from - 1 ;
-        int mt = mark_to - 1 ;
+        int mf = getMarkFrom() - 1 ;
+        int mt = getMarkTo() - 1 ;
         dc.SetBackgroundMode ( wxSOLID ) ;
         dc.SetBrush ( *wxLIGHT_GREY_BRUSH ) ;
         if ( mt <= l )

@@ -125,10 +125,9 @@ void TABIviewer::initme ()
     // Sequence Canvas
     sc = new SequenceCanvas ( hs , wxPoint ( 0 , 0 ) , wxSize ( 100 , 100 ) ) ;
     sc->blankline = 0 ;
-//    sc->aa = this ;
     sc->edit_id = "ABI" ;
     sc->edit_valid = "ATGCN" ;
-    sc->forceoverwrite = true ;
+    sc->forceOverwrite ( true ) ;
     sc->child = this ;
 
     // Upper panel
@@ -306,7 +305,7 @@ void TABIviewer::OnEditMode(wxCommandEvent& event)
     wxString s ;
     if ( mi->IsChecked() )
         {
-        sc->editMode = true ;
+        sc->setEditMode ( true ) ;
         sc->findID("ABI")->s += " " ;
         vec->sequence += " " ;
         sc->arrange () ;
@@ -316,7 +315,7 @@ void TABIviewer::OnEditMode(wxCommandEvent& event)
         }
     else
         {
-        sc->editMode = false ;
+        sc->setEditMode ( false ) ;
         sc->mark ( "ABI" , -1 , -1 ) ;
         vec->sequence.erase ( vec->sequence.length()-1 , 1 ) ;
         sc->findID("ABI")->s.erase ( sc->findID("ABI")->s.length()-1 , 1 ) ;

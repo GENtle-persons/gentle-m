@@ -737,7 +737,7 @@ void FindSequenceDialog::OnSearch ( wxCommandEvent &ev )
            {
            MyChild *d = (MyChild*) c ;
            d->cSequence->mark ( "DNA" , a+1 , last+1) ;
-           d->cSequence->ensureVisible ( d->cPlasmid->mark_from ) ;
+           d->cSequence->ensureVisible ( d->cPlasmid->getMarkFrom() ) ;
            }
         else //if ( c->def == "AminoAcids" )
            {

@@ -243,11 +243,11 @@ void TVector::insert_char ( char x , int pos , bool overwrite )
     dummy = (char) x ;
     if ( overwrite )
        {
-       myass ( pos-1 >= 0 && pos-1 < sequence.length() , "insert_char" ) ;
+       myass ( pos-1 >= 0 && pos-1 < sequence.length() , "TVector::insert_char_1" ) ;
        sequence[pos-1] = x ;
        return ;
        }
-    myass ( pos-1 >= 0 , "insert_char (2)" ) ;
+    myass ( pos-1 >= 0 , "TVector::insert_char_2" ) ;
     sequence.insert ( pos-1 , dummy ) ;
     int a ;
     for ( a = 0 ; a < items.size() ; a++ )

@@ -38,7 +38,7 @@ void SeqPrimer::show ( wxDC& dc )
         bool insight = true ;
         if ( tz < ya ) insight = false ;
         if ( ty > yb ) insight = false ;
-        if ( can->drawall ) insight = true ;
+        if ( can->getDrawAll() ) insight = true ;
         if ( !insight && ty > yb ) a = pos.p.size() ;
         if ( b > 0 && !insight ) cnt++ ;
         if ( b > 0 && insight ) // Character
@@ -56,7 +56,7 @@ void SeqPrimer::show ( wxDC& dc )
               }
            if ( s[b-1] == vec->sequence[b-1] ) dc.SetTextForeground ( *wxBLUE ) ;
            else dc.SetTextForeground ( *wxRED ) ;
-           if ( can->printing && !can->printToColor )
+           if ( can->isPrinting() && !can->getPrintToColor() )
               {
               dc.SetTextForeground ( *wxBLACK ) ;
               dc.SetBackgroundMode ( wxTRANSPARENT ) ;

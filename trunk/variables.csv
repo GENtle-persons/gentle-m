@@ -525,3 +525,5 @@
 "m_aa_view_real","&1:1","&1:1"
 "m_aa_view_condensed","&Compact","&Kompakt"
 "t_xml","XML","XML"
+"t_allow_all_chars","Enable editing using all letters for this session?","Für diese Sitzung Eingeben aller Zeichen erlauben?"
+"t_question","Question","Frage"
