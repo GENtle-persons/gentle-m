@@ -17,6 +17,11 @@ class TGraphData ;
 class TGraphScale ;
 class TGraphDisplay ;
 
+#define GRAPH_DRAW_SCALES 1
+#define GRAPH_DRAW_MAP 2
+#define GRAPH_DRAW_MINI 4
+#define GRAPH_DRAW_ALL (GRAPH_DRAW_SCALES|GRAPH_DRAW_MAP)
+
 class TGraphData
 	{
 	public :
@@ -53,14 +58,21 @@ class TGraphScale
 	void drawit ( wxDC &dc , wxRect &r , wxRect &inner ) ;
 	void DrawMark ( wxDC &dc , float p , wxRect &ir , wxString text , bool big = false ) ;
 	int GetRealCoord ( float f , wxRect &inner ) ;
+	float GetVirtualCoordinate ( int i , wxRect &inner ) ;
 	wxRect CalcInternalRect ( wxRect &r ) ;
+	void Drag ( int delta ) ;
+	float GetTotalWidth () { return max - min ; }
+	float GetVisibleWidth () { return top - bottom ; }
  	
  	wxRect outline ;
+ 	wxRect last_inner ;
  	float min , max ;
 	float top , bottom ;
 	bool horizontal , left , selected ;
 	wxString name , unit , type ;
 	wxColour col ;
+	int mark ;
+	bool show_mark ;
 	} ;    
 	
 class TGraphDisplay : public wxPanel
@@ -72,10 +84,12 @@ class TGraphDisplay : public wxPanel
  	stringField readCSVfile ( wxString filename ) ;
  	void setupPhotometerGraph ( const stringField &sf ) ;
  	void SetupDummy () ;
+ 	void SetZoom ( int _zx , int _zy ) ;
 
  	void AutoScale () ;
- 	void drawit ( wxDC &dc ) ;
+ 	void drawit ( wxDC &dc , int mode = GRAPH_DRAW_ALL ) ;
  	void showLegend ( wxDC &dc ) ;
+ 	void showMiniature ( wxDC &dc ) ;
  	
     void OnPaint(wxPaintEvent& event) ; ///< Paint event handler
     void OnEvent(wxMouseEvent& event) ;
@@ -90,6 +104,8 @@ class TGraphDisplay : public wxPanel
  	
  	wxRect inner ; ///< The place where the data is drawn
  	wxRect lr ; ///< The legend rectangle
+ 	int zx , zy ;
+ 	wxPoint mouse_pos ;
  	static wxColour prettyColor ;
 
     DECLARE_EVENT_TABLE()
@@ -107,11 +123,15 @@ class TGraph : public ChildBase
     void initme () ; ///< Initialization
     virtual wxString getName () ; ///< Returns the module name
 
+    virtual void OnZoomX(wxScrollEvent& event); ///< Zoom event handler
+    virtual void OnZoomY(wxScrollEvent& event); ///< Zoom event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler
 
     private :
     wxNotebook *nb ; ///< Pointer to the wxNotebook structure that holds the submodules
     TGraphDisplay *gd ;
+    wxSlider *zoom_x , *zoom_y ;
+    wxCheckBox *zoom_linked ;
 
     DECLARE_EVENT_TABLE()
     } ;

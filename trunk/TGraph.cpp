@@ -8,6 +8,8 @@ BEGIN_EVENT_TABLE(TGraph, MyChildBase)
 //    EVT_MENU(MDI_PRINT_REPORT,TCalculator::OnPrintPreview)
     EVT_CLOSE(ChildBase::OnClose)
     EVT_SET_FOCUS(ChildBase::OnFocus)
+    EVT_COMMAND_SCROLL(GRAPH_ZOOM_X, TGraph::OnZoomX)
+    EVT_COMMAND_SCROLL(GRAPH_ZOOM_Y, TGraph::OnZoomY)
 
     // Dummies
     EVT_MENU(MDI_TOGGLE_FEATURES,ChildBase::OnDummy)
@@ -85,11 +87,37 @@ void TGraph::initme ()
     gd->SetupDummy () ;
     nb->AddPage ( gd , txt("t_graph") ) ;
 
+    wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
+    toolBar->Reparent ( this ) ;
+    toolbar = toolBar ;
+    myapp()->frame->InitToolBar(toolBar);
+
+    zoom_x = new wxSlider ( toolBar , GRAPH_ZOOM_X , 1 , 1 , 91 , 
+                             wxDefaultPosition ,
+                             wxDefaultSize ,
+                             wxSL_HORIZONTAL ) ;
+    zoom_y = new wxSlider ( toolBar , GRAPH_ZOOM_Y , 1 , 1 , 91 , 
+                             wxDefaultPosition ,
+                             wxDefaultSize ,
+                             wxSL_HORIZONTAL ) ;
+    zoom_linked = new wxCheckBox ( toolBar , GRAPH_ZOOM_LINKED , txt("t_zoom_linked") ) ;
+    
+    toolBar->AddControl ( new wxStaticText ( toolBar , -1 , "Zoom (X)" ) ) ;
+    toolBar->AddControl ( zoom_x ) ;
+    toolBar->AddSeparator() ;
+    toolBar->AddControl ( new wxStaticText ( toolBar , -1 , "Zoom (Y)" ) ) ;
+    toolBar->AddControl ( zoom_y ) ;
+    toolBar->AddControl ( zoom_linked ) ;
+    myapp()->frame->addDefaultTools ( toolBar ) ;
+    toolBar->Realize() ;
+
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
-//    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
+    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
     v0->Add ( nb , 1 , wxEXPAND , 5 ) ;
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;
+    
+    zoom_linked->SetValue ( true ) ;
 
     myapp()->frame->setChild ( this ) ;
     Maximize () ;
@@ -101,6 +129,17 @@ wxString TGraph::getName ()
     return txt("t_graph") ;
 	}
 
+void TGraph::OnZoomX(wxScrollEvent& event)
+	{
+	if ( zoom_linked->GetValue() ) zoom_y->SetValue ( zoom_x->GetValue() ) ;
+	gd->SetZoom ( zoom_x->GetValue() , zoom_y->GetValue() ) ;
+	}    
+
+void TGraph::OnZoomY(wxScrollEvent& event)
+	{
+	if ( zoom_linked->GetValue() ) zoom_x->SetValue ( zoom_y->GetValue() ) ;
+	gd->SetZoom ( zoom_x->GetValue() , zoom_y->GetValue() ) ;
+	}    
 
 //******************************************************** TGraphData
 
@@ -134,10 +173,10 @@ void TGraphData::AutoScale ()
    		if ( sx->max < dx[a] ) sx->max = dx[a] ;
    		if ( sy->min > dy[a] ) sy->min = dy[a] ;
    		if ( sy->max < dy[a] ) sy->max = dy[a] ;
- 		}    
+ 		}
 	sx->top = sx->max ;
-	sy->top = sy->max ;
 	sx->bottom = sx->min ;
+	sy->top = sy->max ;
 	sy->bottom = sy->min ;
 	}
          
@@ -151,7 +190,6 @@ void TGraphData::drawit ( wxDC &dc )
 	dc.GetClippingBox ( &inner.x , &inner.y , &inner.width , &inner.height ) ;
 	dc.SetPen ( *MYPEN ( col ) ) ;
 	dc.SetBrush ( *MYBRUSH ( col ) ) ;
-//	int pointsize = 4 ;
 	for ( a = 0 ; a < dx.size() ; a++ )
 		{
   		x = sx->GetRealCoord ( dx[a] , inner ) ;
@@ -161,7 +199,9 @@ void TGraphData::drawit ( wxDC &dc )
   		if ( inner.Inside ( wxPoint ( x , y ) ) )
   			drawn.push_back ( wxPoint ( x , y ) ) ;
   		
+  		if ( selected ) dc.SetPen ( *wxBLACK_PEN ) ;
   		DrawSymbol ( dc , pointStyle , x , y ) ;
+  		if ( selected ) dc.SetPen ( *MYPEN ( col ) ) ;
   		
   		lx = x ;
     	ly = y ;
@@ -202,6 +242,7 @@ TGraphScale::TGraphScale ( float _min , float _max , bool _horizontal , bool _le
  	col = _col ;
  	outline = wxRect ( -1 , -1 , 0 , 0 ) ;
  	selected = false ;
+ 	show_mark = false ;
 	}
 	
 int TGraphScale::GetWidth ()
@@ -264,7 +305,7 @@ void TGraphScale::drawit ( wxDC &dc , wxRect &r , wxRect &inner )
 	    ir.x += border ;
      	}        
    	
-   	// Selected?
+   	// Selected? Draw nice background!
    	if ( selected )
    		{
 	    dc.SetPen ( *MYPEN ( TGraphDisplay::prettyColor ) ) ;
@@ -273,6 +314,7 @@ void TGraphScale::drawit ( wxDC &dc , wxRect &r , wxRect &inner )
 	    dc.SetBrush ( *wxTRANSPARENT_BRUSH ) ;
    		}   
    	
+   	// Calculate major and minor units
    	float factor = 1 ;
    	while ( factor <= max ) factor *= 10 ;
    	float f2 = top - bottom ;
@@ -281,6 +323,7 @@ void TGraphScale::drawit ( wxDC &dc , wxRect &r , wxRect &inner )
    	float major = factor ;
    	float minor = major / 5 ;
    	
+   	// Draw scale
    	dc.SetFont ( *MYFONT ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
    	dc.SetTextForeground ( col ) ;
    	dc.SetPen ( *MYPEN ( col ) ) ;
@@ -295,6 +338,7 @@ void TGraphScale::drawit ( wxDC &dc , wxRect &r , wxRect &inner )
 	    p += minor ;
    		}    
 	
+	// Draw "backline" and name/unit
 	wxString text = name ;
 	if ( !unit.IsEmpty() ) text += " [" + unit + "]" ;
    	int tw , th ;
@@ -311,6 +355,12 @@ void TGraphScale::drawit ( wxDC &dc , wxRect &r , wxRect &inner )
      		dc.DrawLine ( ir.x , ir.GetBottom() , ir.GetRight() , ir.GetBottom() ) ;
           	dc.DrawText ( text , ir.x , ir.GetBottom() - th ) ;
      		}  		
+  		if ( show_mark )
+  			{
+	    	int c = GetRealCoord ( GetVirtualCoordinate ( mark , inner ) , inner ) ;
+	    	dc.SetPen ( *wxRED_PEN ) ;
+	    	dc.DrawLine ( c , ir.GetTop() , c , ir.GetBottom() ) ;
+  			}    
 		}		
 	else
 		{
@@ -324,7 +374,15 @@ void TGraphScale::drawit ( wxDC &dc , wxRect &r , wxRect &inner )
     		dc.DrawLine ( ir.GetRight() , ir.y , ir.GetRight() , ir.GetBottom() ) ;
          	dc.DrawRotatedText ( text , ir.GetRight()-th , ir.GetBottom() , 90 ) ;
       		}
-		}
+  		if ( show_mark )
+  			{
+	    	int c = GetRealCoord ( GetVirtualCoordinate ( mark , inner ) , inner ) ;
+	    	dc.SetPen ( *wxRED_PEN ) ;
+	    	dc.DrawLine ( ir.GetLeft() , c , ir.GetRight() , c ) ;
+  			}    
+   		}
+	last_inner = inner ;
+	show_mark = false ;
 	}    
 
 void TGraphScale::DrawMark ( wxDC &dc , float p , wxRect &ir , wxString text , bool big )
@@ -335,12 +393,14 @@ void TGraphScale::DrawMark ( wxDC &dc , float p , wxRect &ir , wxString text , b
     	x = GetRealCoord ( p , ir ) ;
     	y = ir.y + ir.height / 2 ;
     	z = big ? 0 : ir.height / 4 ;
+    	if ( x < ir.x || x > ir.GetRight() ) return ;
  		}
  	else
   		{
     	x = ir.x + ir.width / 2 ;
     	y = GetRealCoord ( p , ir ) ;
     	z = big ? 0 : ir.width / 4 ;
+    	if ( y < ir.y || y > ir.GetBottom() ) return ;
     	}        
    	while ( text.Last() == '0' ) text = text.Left ( text.length() - 1 ) ;
    	while ( text.Last() == '.' ) text = text.Left ( text.length() - 1 ) ;
@@ -374,6 +434,36 @@ int TGraphScale::GetRealCoord ( float f , wxRect &inner )
 	else ret = (float) ( inner.GetBottom() ) - ret ;
  	return (int) ret ;
 	}    
+
+float TGraphScale::GetVirtualCoordinate ( int i , wxRect &inner )
+	{
+ 	i -= horizontal ? inner.x : inner.y ;
+ 	float i2 = i ;
+	float m2 = horizontal ? inner.width : inner.height ;
+	float f2 = top - bottom ; // The internal "width"
+	f2 = f2 * i2 / m2 ;
+	if ( horizontal ) f2 += bottom ;
+	else f2 = top - f2 ;
+	return f2 ;
+ 	}    	
+
+void TGraphScale::Drag ( int delta )
+	{
+	float df = GetVirtualCoordinate ( delta , last_inner ) ;
+	df -= GetVirtualCoordinate ( 0 , last_inner ) ;
+	top += df ;
+	bottom += df ;
+	if ( top > max )
+ 		{
+   		bottom -= top - max ;
+        top = max ;
+        }    
+    if ( bottom < min )
+    	{
+	    top += min - bottom ;
+	    bottom = min ;
+    	}    
+	}    
     
 //******************************************************** TGraphDisplay    
     
@@ -389,6 +479,30 @@ void TGraphDisplay::init ()
 	while ( scales.size() ) scales.pop_back () ;
 	old_scale = NULL ;
 	old_data = NULL ;
+	zx = zy = 100 ;
+	}    
+	
+void TGraphDisplay::SetZoom ( int _zx , int _zy )
+	{
+	int a ;
+	for ( a = 0 ; a < scales.size() ; a++ )
+		{
+  		float z = scales[a]->horizontal ? _zx : _zy ;
+  		float m = ( scales[a]->top + scales[a]->bottom ) / 2 ;
+  		float h = scales[a]->max - scales[a]->min ;
+  		float p = 10.0 * z + 90 ; // 100 - 1000
+  		h = h * 100.0 / p ;
+  		scales[a]->top = m + h/2 ;
+  		scales[a]->bottom = m - h/2 ;
+  		scales[a]->Drag ( 0 ) ;
+		}
+	zx = _zx ;
+	zy = _zy ;
+    wxClientDC dc ( this ) ;
+        {
+        wxBufferedDC dc2 ( &dc , dc.GetSize() ) ;
+        drawit ( dc2 ) ;
+        }    
 	}    
 
 stringField TGraphDisplay::readCSVfile ( wxString filename )
@@ -510,9 +624,18 @@ void TGraphDisplay::AutoScale ()
  		{
    		data[a]->AutoScale () ;
  		}    
+/*	for ( a = 0 ; a < scales.size() ; a++ )
+		{
+  		int sw = scales[a]->max - scales[a]->min ;
+  		sw = sw / 20 ;
+  		scales[a]->max += sw ;
+  		if ( scales[a]->min != 0 ) scales[a]->min -= sw ;
+  		scales[a]->top = scales[a]->max ;
+  		scales[a]->bottom = scales[a]->min ;
+		}    */
  	}
 
-void TGraphDisplay::drawit ( wxDC &dc )
+void TGraphDisplay::drawit ( wxDC &dc , int mode )
 	{
  	dc.Clear () ;
  	int a , b ;
@@ -542,15 +665,56 @@ void TGraphDisplay::drawit ( wxDC &dc )
 		}    
 	
 	dc.DestroyClippingRegion () ;
-	dc.SetClippingRegion ( inner ) ;
 	
-	for ( a = 0 ; a < data.size() ; a++ )
+	if ( mode & GRAPH_DRAW_MAP )
 		{
-  		data[a]->drawit ( dc ) ;
-		}    
-	showLegend ( dc ) ;
-	dc.DestroyClippingRegion () ;
+		dc.SetClippingRegion ( inner ) ;
+    	for ( a = 0 ; a < data.size() ; a++ )
+    		{
+      		data[a]->drawit ( dc ) ;
+    		}    
+    	showLegend ( dc ) ;
+    	dc.DestroyClippingRegion () ;
+     	}   	
+     	
+ 	if ( mode & GRAPH_DRAW_MINI )
+ 		showMiniature ( dc ) ;
 	}
+	
+void TGraphDisplay::showMiniature ( wxDC &dc )
+	{
+	dc.SetPen ( *wxBLACK_PEN ) ;
+	dc.SetBrush ( *wxWHITE_BRUSH ) ;
+	
+	int border = 20 ;
+	wxRect r = inner ;
+	r.x += border ;
+	r.y += border ;
+	r.width = 100 ;
+	r.height = r.width * inner.height / inner.width ;
+	dc.DrawRectangle ( r ) ;
+	
+	int a ;
+	bool has_x = false , has_y = false ;
+	for ( a = 0 ; a < scales.size() ; a++ )
+		{
+  		if ( scales[a]->horizontal && !has_x )
+  			{
+	    	has_x = true ;
+	    	r.x += ((float)r.width) * ( scales[a]->bottom - scales[a]->min ) / scales[a]->GetTotalWidth() ;
+	    	r.width = ((float)r.width) * scales[a]->GetVisibleWidth() / scales[a]->GetTotalWidth() ;
+  			}
+      	if ( !scales[a]->horizontal && !has_y )
+      		{
+  		    has_y = true ;
+	    	r.y += r.height - ( ((float)r.height) * ( scales[a]->bottom - scales[a]->min ) / scales[a]->GetTotalWidth() ) ;
+	    	r.height = ((float)r.height) * scales[a]->GetVisibleWidth() / scales[a]->GetTotalWidth() ;
+	    	r.y -= r.height ;
+      		}    
+		}    
+	dc.SetBrush ( *MYBRUSH ( prettyColor ) ) ;
+	dc.DrawRectangle ( r ) ;
+	}    
 	
 void TGraphDisplay::showLegend ( wxDC &dc )
 	{
@@ -617,6 +781,7 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
     
     // Find out where the mouse is
     int a , b ;
+    bool doRefresh = event.Leaving() ;
     TGraphScale *new_scale = NULL ;
     TGraphData *new_data = NULL ;
     
@@ -647,17 +812,59 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
 	    	}    
     	if ( new_data ) new_data->selected = true ;
    		}    
-   	
-   	// Redraw, if necessary
-   	if ( new_scale != old_scale || old_data != new_data )
+   		
+    // Dragging?
+    bool showMiniature = false ;
+    if ( zx*zy != 10000 && event.Dragging() && !event.RightIsDown() && !event.MiddleIsDown() ) // NEEDS ANOTHER CONDITION
+    	{
+	    showMiniature = true ;
+	    int dx = mouse_pos.x - pt.x ;
+	    int dy = mouse_pos.y - pt.y ;
+	    doRefresh = true ;
+	    for ( a = 0 ; a < scales.size() ; a++ )
+	    	{
+ 	    	if ( scales[a]->horizontal ) scales[a]->Drag ( dx ) ;
+ 	    	else scales[a]->Drag ( dy ) ;
+	    	}    
+    	}    
+    	
+   	// Mouse Wheel?
+   	if ( zx*zy != 10000 && event.GetWheelRotation() != 0 )
    		{
-	    old_scale = new_scale ;
-	    old_data = new_data ;
-        wxClientDC dc ( this ) ;
-            {
-            wxBufferedDC dc2 ( &dc , dc.GetSize() ) ;
-            drawit ( dc2 ) ;
+	    showMiniature = true ;
+	    int dx = 0 ;
+	    int dy = event.GetWheelRotation() > 0 ? -10 : 10 ;
+	    if ( event.ShiftDown() ) { int dz = dx ; dx = dy ; dy = dz ; }
+	    doRefresh = true ;
+	    for ( a = 0 ; a < scales.size() ; a++ )
+	    	{
+ 	    	if ( scales[a]->horizontal ) scales[a]->Drag ( dx ) ;
+ 	    	else scales[a]->Drag ( dy ) ;
+	    	}    
+   		}    
+
+    // Red marker lines
+    if ( inner.Inside ( pt ) )
+    	{
+       	for ( a = 0 ; a < scales.size() ; a++ )
+        	{
+            scales[a]->show_mark = true ; 
+            scales[a]->mark = scales[a]->horizontal ? pt.x : pt.y ;
             }    
+        }
+   	
+   	// Redraw
+    old_scale = new_scale ;
+    old_data = new_data ;
+    wxClientDC dc ( this ) ;
+        {
+        wxBufferedDC dc2 ( &dc , dc.GetSize() ) ;
+        int mode = GRAPH_DRAW_SCALES | GRAPH_DRAW_MAP ;
+        if ( showMiniature ) mode |= GRAPH_DRAW_MINI ;
+//        if ( doRefresh || new_scale != old_scale || old_data != new_data )
+            drawit ( dc2 , mode ) ;
+//        else
+//            drawit ( dc2 , GRAPH_DRAW_SCALES ) ;
         }    
 
     // Context menu?
@@ -671,6 +878,8 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
         PopupMenu ( cm , pt ) ;
         delete cm ;    
     	}   
+    	
+   	mouse_pos = pt ; 
     }    
 
 
@@ -681,4 +890,4 @@ void TGraphDisplay::OnSwapSides(wxCommandEvent &event)
 	wxPaintEvent ev ;
 	OnPaint ( ev ) ;
 	}
-    
+

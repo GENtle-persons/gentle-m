@@ -84,7 +84,7 @@ MyFrame::MyFrame(wxWindow *parent,
     entries[11].Set(wxACCEL_CTRL, (int) '3', AA_THREE_3);
     entries[12].Set(wxACCEL_CTRL, (int) '4', AA_THREE_M1);
     entries[13].Set(wxACCEL_CTRL, (int) '5', AA_THREE_M2);
-    entries[14].Set(wxACCEL_CTRL, (int) '6', AA_THREE_M3);
+    entries[14].Set(wxACCEL_CTRL, (int) '6', AA_THREE_M3); 
     entries[15].Set(wxACCEL_CTRL, (int) '7', AA_ALL);
     entries[16].Set(wxACCEL_CTRL, (int) '8', AA_KNOWN);
     entries[17].Set(wxACCEL_CTRL, (int) 'G', MDI_ALIGNMENT);
