@@ -254,6 +254,7 @@ void TAlignment::initme ()
     mmb->SetStringSelection ( txt("t_mmb_insert_gap") ) ;
     toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_mmb") ) ) ;
     toolBar->AddControl ( mmb ) ;
+    myapp()->frame->addDefaultTools ( toolBar ) ;
     
     toolBar->Realize() ;
 #endif

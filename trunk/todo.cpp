@@ -4,7 +4,6 @@ Bugs :
 
 Feature Requests :
 
-Virtual Gel (%Agarose/SDS, min bp/mw, marker)
 Homology Plot
 Export plot data
 Helical wheel
@@ -18,10 +17,7 @@ That ligation thingy
 * AS-Sequenz Protease-schneiden
 
 SEE: http://eutils.ncbi.nlm.nih.gov/entrez/query/static/eutils_help.html
-PubMed nucleotide search :
-* http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&retmode=xml&term=pgex+3x
-PubMed Retrieval
-* http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&retmode=xml&rettype=gb&id=9750177
+
 
 EMBOSS:
 * codon usage statistic

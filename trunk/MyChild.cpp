@@ -420,6 +420,7 @@ void MyChild::initToolbar ()
         zoom_cb->Append ( "1600%" ) ;
         zoom_cb->SetSelection ( 0 ) ;
         toolBar->AddControl ( zoom_cb ) ;
+        myapp()->frame->addDefaultTools ( toolBar ) ;
         toolBar->Realize() ;    
         
         myapp()->frame->tb_mychild = toolbar ;

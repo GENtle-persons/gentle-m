@@ -185,6 +185,7 @@ void TABIviewer::initme ()
     toolBar->AddSeparator() ;
     horiz = new wxCheckBox ( toolBar , ALIGN_HORIZ , txt("t_horizontal") ) ;
     toolBar->AddControl ( horiz ) ;
+    myapp()->frame->addDefaultTools ( toolBar ) ;
     toolBar->Realize() ;
 #endif
 
