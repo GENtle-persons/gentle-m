@@ -69,6 +69,11 @@ void TRestrictionEditor::initRestrictionPage ()
     int bo = 5 , th = 12 ;
     int rw = w , rh = h ;
 
+    wxClientDC dc ( (wxWindow*) this ) ;
+    dc.GetTextExtent ( "X" , &bo , &th ) ;
+    th = th * 5 / 6 ;
+    bo = th / 2 ;
+
     // Restriction
     
     // Enzyme groups
