@@ -118,15 +118,14 @@ void TVectorEditor::initPanProt ()
 void TVectorEditor::showProteases ()
     {
     int a , b ;
-    vector <string> vs ;
+    wxArrayString vs ;
     for ( a = 0 ; a < myapp()->frame->LS->pr.size() ; a++ )
-        vs.push_back ( myapp()->frame->LS->pr[a]->name.c_str() ) ;
-    sort ( vs.begin() , vs.end() ) ;
-        
+        vs.Add ( myapp()->frame->LS->pr[a]->name ) ;
+    vs.Sort () ;        
     prots->Clear () ;
-    for ( a = 0 ; a < vs.size() ; a++ )
+    for ( a = 0 ; a < vs.GetCount() ; a++ )
         {
-        wxString n = vs[a].c_str() ;
+        wxString n = vs[a] ;
         prots->Append ( n ) ;
         for ( b = 0 ; b < v->proteases.GetCount() && v->proteases[b] != n ; b++ ) ;
         if ( b < v->proteases.GetCount() ) prots->Check ( prots->FindString ( n ) ) ;
@@ -160,9 +159,9 @@ void TVectorEditor::initPanProp ()
         ru = new wxTextCtrl(panProp,-1,v->getStickyEnd(false,true).c_str(),
                                 wxPoint(r.GetLeft()-bo-w/5,r.GetTop()-bo),wxSize(w/5,th));
         
-        string k ;
+        wxString k ;
         while ( k.length() * (r.GetWidth()/3) < w/2 ) k += "-" ;
-        new wxStaticText(panProp,-1,k.c_str(),wxPoint(lu->GetRect().GetRight()+bo,r.GetTop())) ;
+        new wxStaticText(panProp,-1,k,wxPoint(lu->GetRect().GetRight()+bo,r.GetTop())) ;
     
         r = (new wxStaticText(panProp,-1,"3'-",wxPoint(bo,r.GetBottom()+th)))->GetRect() ;
         ll = new wxTextCtrl(panProp,-1,v->getStickyEnd(true,false).c_str(),
@@ -172,7 +171,7 @@ void TVectorEditor::initPanProp ()
         rl = new wxTextCtrl(panProp,-1,v->getStickyEnd(false,false).c_str(),
                                 wxPoint(r.GetLeft()-bo-w/5,r.GetTop()-bo),wxSize(w/5,th));
     
-        new wxStaticText(panProp,-1,k.c_str(),wxPoint(lu->GetRect().GetRight()+bo,r.GetTop())) ;
+        new wxStaticText(panProp,-1,k,wxPoint(lu->GetRect().GetRight()+bo,r.GetTop())) ;
         }    
     
     addOkCancel ( panProp ) ;
@@ -285,7 +284,7 @@ void TVectorEditor::addItem2list ( TVectorItem &i , int a )
     {
     int l ;
     char t[1000] ;
-    l = items->InsertItem ( a , i.name.c_str() ) ;
+    l = items->InsertItem ( a , i.name ) ;
     items->SetItemData ( l , a ) ;
     i.r4 = l ;
 
@@ -379,11 +378,11 @@ void TVectorEditor::initPanEnzym ()
     showEnzymeGroups () ;
     
     int a ;
-    while ( ce.size() ) ce.pop_back () ;
+    ce.Clear() ;
     for ( a = 0 ; v && a < v->re.size() ; a++ )
         {
-        string s = v->re[a]->name.c_str() ;
-        listCE->Append ( s.c_str() ) ;
+        wxString s = v->re[a]->name ;
+        listCE->Append ( s ) ;
         ce.push_back ( s ) ;
         }
     
@@ -410,7 +409,7 @@ void TVectorEditor::addOkCancel ( wxPanel *p )
     }
 
 #define VCOMMIT(_p1,_p2) if(_p1!=v->_p2){v->_p2=_p1;v->setChanged();}
-#define VCOMMIT_STICKY(_p1,_p2,_p3) if(_p1!=v->getStickyEnd(_p2,_p3))\
+#define VCOMMIT_STICKY(_p1,_p2,_p3) if(_p1.c_str()!=v->getStickyEnd(_p2,_p3))\
                     {v->setStickyEnd(_p2,_p3,_p1.c_str());v->setChanged();}
     
 void TVectorEditor::commitVector ()
@@ -422,10 +421,10 @@ void TVectorEditor::commitVector ()
 
     if ( v->type != TYPE_AMINO_ACIDS )
         {
-        string _lu = toupper ( lu->GetValue().c_str() ) ;
-        string _ll = toupper ( ll->GetValue().c_str() ) ;
-        string _ru = toupper ( ru->GetValue().c_str() ) ;
-        string _rl = toupper ( rl->GetValue().c_str() ) ;
+        wxString _lu = lu->GetValue().MakeUpper() ;
+        wxString _ll = ll->GetValue().MakeUpper() ;
+        wxString _ru = ru->GetValue().MakeUpper() ;
+        wxString _rl = rl->GetValue().MakeUpper() ;
         VCOMMIT_STICKY(_lu,true,true);
         VCOMMIT_STICKY(_ll,true,false);
         VCOMMIT_STICKY(_ru,false,true);
@@ -491,8 +490,8 @@ void TVectorEditor::commitEnzymes ()
     // Removed enzymes
     for ( a = 0 ; a < v->re.size() ; a++ )
         {
-        for ( b = 0 ; b < ce.size() && ce[b] != v->re[a]->name.c_str() ; b++ ) ;
-        if ( b == ce.size() )
+        for ( b = 0 ; b < ce.GetCount() && ce[b] != v->re[a]->name ; b++ ) ;
+        if ( b == ce.GetCount() )
            {
            changed = true ;
            v->re[a] = v->re[v->re.size()-1] ;
@@ -502,13 +501,13 @@ void TVectorEditor::commitEnzymes ()
         }
 
     // Added enzymes
-    for ( b = 0 ; b < ce.size() ; b++ )
+    for ( b = 0 ; b < ce.GetCount() ; b++ )
         {
-        for ( a = 0 ; a < v->re.size() && ce[b] != v->re[a]->name.c_str() ; a++ ) ;
+        for ( a = 0 ; a < v->re.size() && ce[b] != v->re[a]->name ; a++ ) ;
         if ( a == v->re.size() )
            {
            changed = true ;
-           v->re.push_back ( myapp()->frame->LS->getRestrictionEnzyme ( ce[b].c_str() )  ) ;
+           v->re.push_back ( myapp()->frame->LS->getRestrictionEnzyme ( ce[b] )  ) ;
            }
         }
         
@@ -525,27 +524,27 @@ void TVectorEditor::commitProteases ()
     int a , b ;
     bool changed = false ;
     
-    vector <string> v1 , v2 ;
+    wxArrayString v1 , v2 ;
     for ( a = 0 ; a < v->proteases.GetCount() ; a++ )
-        v1.push_back ( v->proteases[a].c_str() ) ;
+        v1.Add ( v->proteases[a] ) ;
     
     for ( a = 0 ; a < prots->GetCount() ; a++ )
         if ( prots->IsChecked ( a ) )
-           v2.push_back ( prots->GetString(a).c_str() ) ;
+           v2.Add ( prots->GetString(a) ) ;
     
-    sort ( v1.begin() , v1.end() ) ;
-    sort ( v2.begin() , v2.end() ) ;
+    v1.Sort () ;
+    v2.Sort () ;
     
-    if ( v1.size() != v2.size() ) changed = true ;
-    for ( a = 0 ; !changed && a < v1.size() ; a++ )
+    if ( v1.GetCount() != v2.GetCount() ) changed = true ;
+    for ( a = 0 ; !changed && a < v1.GetCount() ; a++ )
         if ( v1[a] != v2[a] )
            changed = true ;
     
     if ( changed )
         {
         v->proteases.Clear() ;
-        for ( a = 0 ; a < v2.size() ; a++ )
-           v->proteases.Add ( v2[a].c_str() ) ;
+        for ( a = 0 ; a < v2.GetCount() ; a++ )
+           v->proteases.Add ( v2[a] ) ;
         }
     
     v->setChanged ( changed | v->isChanged() ) ;
@@ -599,7 +598,7 @@ void TVectorEditor::enzymeListDlbClick ( wxEvent &ev )
             {
             wxString s = lb->GetString ( vi[k] ) ;
             TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( s ) ;
-            TEnzymeDialog ed ( this , s.c_str() , wxPoint(-1,-1) , wxSize(600,400) , 
+            TEnzymeDialog ed ( this , s , wxPoint(-1,-1) , wxSize(600,400) , 
                             wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL ) ;
             ed.initme ( e ) ;
             if ( ed.ShowModal() == wxID_OK )
@@ -622,7 +621,7 @@ void TVectorEditor::enzymeListDlbClick ( wxEvent &ev )
         if ( n != 1 ) return ;
         wxString s = lb->GetString ( vi[0] ) ;
         TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( s ) ;
-        TEnzymeDialog ed ( this , s.c_str() , wxPoint(-1,-1) , wxSize(600,400) , 
+        TEnzymeDialog ed ( this , s , wxPoint(-1,-1) , wxSize(600,400) , 
                         wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL ) ;
         ed.initme ( e ) ;
         ed.ShowModal() ;
@@ -648,11 +647,11 @@ void TVectorEditor::showGroupEnzymes ( wxString gr )
     listGE->Clear() ;
     wxString gr2 = myapp()->frame->LS->UCfirst ( gr ) ;
     myapp()->frame->LS->getEnzymesInGroup ( gr2 , vs ) ;
-    eig.clear () ;
+    eig.Clear () ;
     for ( int i = 0 ; i < vs.GetCount() ; i++ )
         {
         listGE->Append ( vs[i] ) ;
-        eig.push_back ( vs[i].c_str() ) ;
+        eig.Add ( vs[i] ) ;
         }
     if ( gr2 == txt("All") )
         {
@@ -675,13 +674,13 @@ void TVectorEditor::enzymeAddEn ( wxEvent &ev )
     for ( k = 0 ; k < n ; k++ )
         {
         i = vi[k] ;
-        string s = listGE->GetString ( i ).c_str() ;
+        wxString s = listGE->GetString ( i ) ;
         listGE->Deselect ( i ) ;
-        int p = listCE->FindString ( s.c_str() ) ;
+        int p = listCE->FindString ( s ) ;
         if ( p == wxNOT_FOUND )
             {
-            listCE->Append ( s.c_str() ) ;
-            ce.push_back ( s ) ;
+            listCE->Append ( s ) ;
+            ce.Add ( s ) ;
             }
         }
     }
@@ -689,14 +688,14 @@ void TVectorEditor::enzymeAddEn ( wxEvent &ev )
 void TVectorEditor::enzymeAddGr ( wxEvent &ev )
     {
     int a , b ;
-    string s ;
-    for ( a = 0 ; a < eig.size() ; a++ )
+    wxString s ;
+    for ( a = 0 ; a < eig.GetCount() ; a++ )
         {
         s = eig[a] ;
-        b = listCE->FindString ( s.c_str() ) ;
+        b = listCE->FindString ( s ) ;
         if ( b == wxNOT_FOUND )
            {
-           listCE->Append ( s.c_str() ) ;
+           listCE->Append ( s ) ;
            ce.push_back ( s ) ;
            }
         }
@@ -729,7 +728,7 @@ void TVectorEditor::enzymeAddToGr ( wxEvent &ev )
               "\")" ;
         myapp()->frame->LS->getObject ( sql ) ;              
         }
-    showGroupEnzymes ( group.c_str() ) ;
+    showGroupEnzymes ( group ) ;
     }
 
 void TVectorEditor::enzymeAddToNewGr ( wxEvent &ev )
@@ -752,14 +751,17 @@ void TVectorEditor::enzymeDelEn ( wxEvent &ev )
     for ( k = n-1 ; k >= 0 ; k-- )
         {
         i = vi[k] ;
-        string s = listCE->GetString ( i ).c_str() ;
+        wxString s = listCE->GetString ( i ) ;
         listCE->Delete ( i ) ;
-        for ( i = 0 ; i < ce.size() ; i++ )
+        for ( i = 0 ; i < ce.GetCount() ; i++ )
             {
             if ( ce[i] == s )
                {
+               ce.RemoveAt ( i ) ;
+               /*
                ce[i] = ce[ce.size()-1] ;
                ce.pop_back () ;
+               */
                }
             }
         }
@@ -786,7 +788,7 @@ void TVectorEditor::importCloneEnzymes ()
     int a ;
     for ( a = 0 ; a < TS.re.size() ; a++ )
        {
-       listCE->Append ( TS.re[a]->name.c_str() ) ;
+       listCE->Append ( TS.re[a]->name ) ;
        myapp()->frame->LS->re.push_back ( TS.re[a] ) ;
        myapp()->frame->LS->updateRestrictionEnzyme ( TS.re[a] ) ;
        TS.re[a] = NULL ; // avoid deletion
@@ -1053,6 +1055,6 @@ void TVectorEditor::enzymeDelFromGr ( wxEvent &ev )
               "\"" ;
         myapp()->frame->LS->getObject ( sql ) ;              
         }
-    showGroupEnzymes ( group.c_str() ) ;
+    showGroupEnzymes ( group ) ;
     }
     
