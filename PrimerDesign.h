@@ -76,6 +76,9 @@ class TPrimerDesign : public ChildBase
     int show_features ;
     int mut ;
     
+    private :
+    wxSpinCtrl *spin ;
+    
     DECLARE_EVENT_TABLE()
     } ;
 

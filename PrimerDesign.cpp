@@ -64,6 +64,16 @@ TPrimerDesign::TPrimerDesign(MyFrame *parent,
         if ( vec->items[a].getRF() != 0 ) aa_state = AA_KNOWN ;
     
     primer = pl ;
+    
+    for ( a = 0 ; a < primer.size() ; a++ )
+        {
+        if ( primer[a].from >= vec->sequence.length() )
+           {
+           primer[a].from -= vec->sequence.length() ;
+           primer[a].to -= vec->sequence.length() ;
+           }
+        }
+    
     for ( a = 0 ; a < primer.size() ; a++ )
         primer[a].getSequenceFromVector ( vec ) ;
         
@@ -379,6 +389,14 @@ void TPrimerDesign::initme ()
         myapp()->frame->bitmaps[10] ,
         myapp()->frame->bitmaps[10] ,
         TRUE, -1, -1, (wxObject *) NULL, txt("m_display_features") ) ;
+    
+    toolBar->AddSeparator() ;
+    
+    spin = new wxSpinCtrl ( toolBar , PCR_SPIN ) ;
+    spin->SetRange ( 1 , vec->sequence.length() ) ;
+    spin->SetValue ( wxString::Format("%d",vec->sequence.length()) ) ;
+//    toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_pcr_spin_1") ) ) ;
+    toolBar->AddControl ( spin ) ;
     toolBar->Realize() ;
 #else
 #endif

@@ -93,11 +93,7 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
     
 SequenceCanvas::~SequenceCanvas()
     {
-    while ( seq.size() )
-        {
-        delete seq[seq.size()-1] ;
-        seq.pop_back () ;
-        }
+    DEL_POINTERS ( seq ) ;
     delete font ;
     delete smallFont ;
     delete varFont ;
@@ -778,8 +774,6 @@ void SequenceCanvas::mark ( string id , int from , int to , int value )
         myass ( child , "Mark1" ) ;
         myass ( child->cSequence , "Mark2" ) ;
         child->cSequence->mark ( "AA" , from , to , value ) ;
-//        child->cSequence->ensureVisible ( from ) ;
-//        return ;
         }
     else if ( getAA() && getAA()->sc2 )
         {
@@ -787,7 +781,7 @@ void SequenceCanvas::mark ( string id , int from , int to , int value )
         getAA()->sc2->mark ( getAA()->sc2->seq[0]->whatsthis() , from , to , value ) ;        
         }
     marking = false ;
-    
+
     int a , b = -1 , cnt = 0 ;
     vpx = -1 ;
     vpy = -1 ; 
@@ -1585,7 +1579,30 @@ TAlignment *SequenceCanvas::getAln()
     return (TAlignment*) child ;
     }
 
+void SequenceCanvas::startEdit ( string id )
+    {
+    myass ( !getEditMode() , "SequenceCanvas::startEdit" ) ;
+    setEditMode ( true ) ;
+    findID(id)->s += " " ;
+    if ( child ) child->vec->sequence += " " ;
+    arrange () ;
+    if ( _from == -1 ) mark ( id , 1 , 1 , 2 ) ;
+    else mark ( id , _from , _from , 2 ) ;
+    SetFocus() ;
+    }
+    
+void SequenceCanvas::stopEdit ()
+    {
+    myass ( getEditMode() , "SequenceCanvas::stopEdit" ) ;
+    setEditMode ( false ) ;
+    string id = seq[lastmarked]->whatsthis() ;
+    if ( child ) child->vec->sequence.erase ( child->vec->sequence.length()-1 , 1 ) ;
+    seq[lastmarked]->s.erase ( seq[lastmarked]->s.length()-1 , 1 ) ;
+    arrange () ;
+    mark ( id , -1 , -1 ) ;
+    }
 
+ 
 // -------------------------------------------------------- TMarkMem
 
 TMarkMem::TMarkMem ( SequenceCanvas *_sc )

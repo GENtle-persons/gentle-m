@@ -42,48 +42,46 @@ class TAlignment : public ChildBase
     {
     public :
     TAlignment(MyFrame *parent, const wxString& title) ;
-    ~TAlignment () ;
+    virtual ~TAlignment () ;
     
-    void initme () ;
+    virtual void initme () ;
     virtual string getName () ;
 
-    int NeedlemanWunsch ( string &s1 , string &s2 )  ;
-    int SmithWaterman ( string &s1 , string &s2 )  ;
-    int MatrixAlignment ( string &s1 , string &s2 , bool local )  ;
-    void MatrixBacktrack ( vector <tvc> &back , 
+    virtual int NeedlemanWunsch ( string &s1 , string &s2 )  ;
+    virtual int SmithWaterman ( string &s1 , string &s2 )  ;
+    virtual int MatrixAlignment ( string &s1 , string &s2 , bool local )  ;
+    virtual void MatrixBacktrack ( vector <tvc> &back , 
                                     string s1 , string s2 , 
                                     string &t1 , string &t2 ,
                                     int i , int j ) ;
     
-    void redoAlignments ( bool doRecalc = true ) ;
-    void recalcAlignments () ;
-    wxColour findColors ( char c1 , char c2 , bool fg ) ;
+    virtual void redoAlignments ( bool doRecalc = true ) ;
+    virtual void recalcAlignments () ;
+    virtual wxColour findColors ( char c1 , char c2 , bool fg ) ;
 
-    void OnSettings ( wxCommandEvent &ev ) ;
-    void OnClose(wxCloseEvent& event) ;
-    void invokeOriginal ( int id , int pos ) ;
-
-    void OnFileSave ( wxCommandEvent &ev ) ;
-
-    void OnMenuBold ( wxCommandEvent &ev ) ;
-    void OnMenuMono ( wxCommandEvent &ev ) ;
-    void OnMenuNorm ( wxCommandEvent &ev ) ;
-    void OnMenuInvs ( wxCommandEvent &ev ) ;
-    void OnMenuSoa ( wxCommandEvent &ev ) ;
-    void OnMenuSoaI ( wxCommandEvent &ev ) ;
-    void OnMenuSiml ( wxCommandEvent &ev ) ;
-    void OnMenuSeq ( wxCommandEvent &ev ) ;
-    void OnMenuFeat ( wxCommandEvent &ev ) ;
-    void OnMenuRNA ( wxCommandEvent &ev ) ;
-    void OnMenuCons ( wxCommandEvent &ev ) ;
-    void OnMenuIdent ( wxCommandEvent &ev ) ;
+    virtual void OnSettings ( wxCommandEvent &ev ) ;
+    virtual void OnClose(wxCloseEvent& event) ;
+    virtual void OnSeqPrint(wxCommandEvent& event);
+    virtual void OnFileSave ( wxCommandEvent &ev ) ;
+    virtual void OnMenuBold ( wxCommandEvent &ev ) ;
+    virtual void OnMenuMono ( wxCommandEvent &ev ) ;
+    virtual void OnMenuNorm ( wxCommandEvent &ev ) ;
+    virtual void OnMenuInvs ( wxCommandEvent &ev ) ;
+    virtual void OnMenuSoa ( wxCommandEvent &ev ) ;
+    virtual void OnMenuSoaI ( wxCommandEvent &ev ) ;
+    virtual void OnMenuSiml ( wxCommandEvent &ev ) ;
+    virtual void OnMenuSeq ( wxCommandEvent &ev ) ;
+    virtual void OnMenuFeat ( wxCommandEvent &ev ) ;
+    virtual void OnMenuRNA ( wxCommandEvent &ev ) ;
+    virtual void OnMenuCons ( wxCommandEvent &ev ) ;
+    virtual void OnMenuIdent ( wxCommandEvent &ev ) ;
+    virtual void OnHorizontal ( wxCommandEvent& event ) ;
     
-    void OnHorizontal ( wxCommandEvent& event ) ;
-    
-    void callMiddleMouseButton ( int id , int pos , wxString _mode = "" ) ;
-    void MoveUpDown ( int what , int where ) ;
-    void prealigned ( vector <string> &vs , vector <ChildBase*> &vc ) ;
-    void fromVector ( TVector *nv ) ;
+    virtual void invokeOriginal ( int id , int pos ) ;
+    virtual void callMiddleMouseButton ( int id , int pos , wxString _mode = "" ) ;
+    virtual void MoveUpDown ( int what , int where ) ;
+    virtual void prealigned ( vector <string> &vs , vector <ChildBase*> &vc ) ;
+    virtual void fromVector ( TVector *nv ) ;
     
     // Variables
     SequenceCanvas *sc ;
@@ -100,7 +98,6 @@ class TAlignment : public ChildBase
     
     private :
     wxChoice *mmb ;
-//    wxListBox *mmb ;
     SeqAA *aaa ;
     void myInsert ( int line , int pos , char what ) ;
     void myDelete ( int line , int pos ) ;

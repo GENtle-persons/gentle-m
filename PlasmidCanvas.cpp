@@ -68,8 +68,11 @@ PlasmidCanvas::PlasmidCanvas(wxWindow *parent, const wxPoint& pos, const wxSize&
     lasttooltip = -1 ;
     hasBeenPainted = false ;
     tt = new wxToolTip ( "" ) ;
-
 }
+
+PlasmidCanvas::~PlasmidCanvas ()
+    {
+    }
 
 void PlasmidCanvas::Refresh ()
     {

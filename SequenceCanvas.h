@@ -77,6 +77,7 @@ class SeqBasic
     {
     public :
     SeqBasic ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; }
+    virtual ~SeqBasic () ;
     virtual void init ( SequenceCanvas *ncan = NULL ) ;
     virtual void initFromTVector ( TVector *v ) {} // Dummy
     virtual int  arrange ( int n ) { return 0 ; } ;
@@ -198,6 +199,7 @@ class SeqAA : public SeqBasic
         mode = AA_ALL ; 
         primaryMode = false ; 
         unknownAA = '?' ; }
+    virtual ~SeqAA () ;
     virtual int  arrange ( int n ) ;
     virtual void show ( wxDC& dc ) ;
     virtual wxPoint showText ( int ystart , vector <string> &tout ) ;
@@ -226,6 +228,7 @@ class SeqABI : public SeqDNA
     {
     public :
     SeqABI ( SequenceCanvas *ncan = NULL ) { at = NULL ; inv_compl = false ; init ( ncan ) ; }
+    virtual ~SeqABI () ;
     virtual int  arrange ( int n ) ;
     virtual void show ( wxDC& dc ) ;
     virtual void initFromFile ( string filename ) ;
@@ -386,9 +389,21 @@ class SequenceCanvas : public wxScrolledWindow
     virtual bool getEditMode () { return editMode ; }
     virtual void setEditMode ( bool _b ) { editMode = _b ; }
     virtual void setLowX ( int _i ) { if ( lowx < _i ) lowx = _i ; }
+    virtual void startEdit ( string id ) ;
+    virtual void stopEdit () ;
+
+    ChildBase *child ; // Wanna-be universal com port to "parent"
+    MyChild *p ;
+    int _from , _to ; // Mark
+    int blankline , charwidth , charheight ;
+    int lastmarked , maxendnumberlength , lastyoffset , blocksize ;
+    vector <SeqBasic*> seq ;
+    wxFont *font , *smallFont , *varFont;
+    string edit_id , edit_valid ;
     
     private :
     wxBitmap *getSequenceBitmap () ;
+
     bool printToColor , drawall , horizontal , hide , miniDisplay ;
     bool marking , drawing , printing , wantOverwrite , forceoverwrite ;
     bool editMode ;
@@ -398,16 +413,6 @@ class SequenceCanvas : public wxScrolledWindow
     SeqAlign *last_al ;
     SeqBasic *lastwhere ;
     
-    public :
-    ChildBase *child ; // Wanna-be universal com port to "parent"
-    MyChild *p ;
-    int _from , _to ; // Mark
-    int blankline , charwidth , charheight ;
-    int lastmarked , maxendnumberlength , lastyoffset , blocksize ;
-    vector <SeqBasic*> seq ;
-    wxFont *font , *smallFont , *varFont;
-    string edit_id , edit_valid ;
-
     DECLARE_EVENT_TABLE()
     };
 

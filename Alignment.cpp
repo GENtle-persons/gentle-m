@@ -19,6 +19,7 @@ BEGIN_EVENT_TABLE(TAlignment, MyChildBase)
     EVT_MENU(ALIGN_RNA,TAlignment::OnMenuRNA)
     EVT_MENU(ALIGN_CONS,TAlignment::OnMenuCons)
     EVT_MENU(ALIGN_IDENT,TAlignment::OnMenuIdent)
+    EVT_MENU(SEQ_PRINT, TAlignment::OnSeqPrint)
 
 END_EVENT_TABLE()
 
@@ -1077,6 +1078,13 @@ void TAlignment::fromVector ( TVector *nv )
     redoAlignments ( false ) ;
     }
 
+
+void TAlignment::OnSeqPrint(wxCommandEvent& event)
+    {
+    sc->OnPrint ( event ) ;    
+    }
+    
+    
 // *****************************************************************************
 
 TAlignLine::TAlignLine ()
@@ -1135,4 +1143,4 @@ bool TAlignLine::hasFeatures ()
     {
     return features != NULL ;
     }
-    
+

@@ -20,6 +20,7 @@ class PlasmidCanvas : public wxScrolledWindow
     {
     public:
     PlasmidCanvas(wxWindow *parent, const wxPoint& pos, const wxSize& size);
+    virtual ~PlasmidCanvas () ;
     virtual void OnDraw(wxDC& pdc);
     virtual void Refresh () ;
     virtual void print () ;

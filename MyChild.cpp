@@ -553,7 +553,9 @@ void MyChild::OnAsNewFeature(wxCommandEvent& event)
 void MyChild::OnViewMode(wxCommandEvent& event)
     {
     wxMenuBar *mb = GetMenuBar () ;
+    myass ( mb , "MyChild::OnViewMode_1" ) ;
     wxMenuItem *mi = mb->FindItem ( MDI_VIEW_MODE ) ;
+    myass ( mb , "MyChild::OnViewMode_2" ) ;
     wxString s ;
     if ( cSequence->getEditMode() ) OnEditMode ( event ) ;
     if ( !viewMode )
@@ -583,6 +585,7 @@ void MyChild::OnViewMode(wxCommandEvent& event)
         }
     mi->Check ( viewMode ) ;
 #ifdef __WXMSW__ // LINUX
+    myass ( GetToolBar() , "MyChild::OnViewMode_3" ) ;
     GetToolBar()->ToggleTool(MDI_VIEW_MODE,viewMode);
 #endif
     }
@@ -590,42 +593,34 @@ void MyChild::OnViewMode(wxCommandEvent& event)
 void MyChild::OnEditMode(wxCommandEvent& event)
     {
     wxMenuBar *mb = GetMenuBar () ;
+    myass ( mb , "MyChild::OnEditMode_1" ) ;
     wxMenuItem *mi = mb->FindItem ( MDI_EDIT_MODE ) ;
+    myass ( mi , "MyChild::OnEditMode_2" ) ;
     wxString s ;
     if ( viewMode ) OnViewMode ( event ) ;
+    
     if ( !cSequence->getEditMode() )
         {
-        int m = cPlasmid->getMarkFrom() ;
-        if ( m == -1 ) m = 1 ;
         sp1 = sw->GetSashPosition () ;
         sp2 = swl->GetSashPosition () ;
         sw->Unsplit ( swu ) ;
-        cSequence->setEditMode ( true ) ;
-        cSequence->findID("DNA")->s += " " ;
-        vec->sequence += " " ;
-        cSequence->arrange () ;
-        cSequence->mark ( "DNA" , m , m , 2 ) ;
-        cSequence->SetFocus() ;
-        if ( m > 1 ) cSequence->Scroll ( 0 , cSequence->getBatchMark() ) ;
+        cSequence->startEdit ( "DNA" ) ;
+        cSequence->Scroll ( 0 , cSequence->getBatchMark() ) ;
         }
     else
         {
-        cPlasmid->setMarkFrom ( -1 ) ;
-        cSequence->setEditMode ( false ) ;
-        vec->sequence.erase ( vec->sequence.length()-1 , 1 ) ;
-        cSequence->findID("DNA")->s.erase ( cSequence->findID("DNA")->s.length()-1 , 1 ) ;
-        cSequence->arrange () ;
-        vec->recalcvisual = true ;
+        vec->recalcvisual = true ;        
+        cSequence->stopEdit() ;
         sw->SplitHorizontally ( swu , cSequence ) ;
         sw->SetSashPosition ( sp1 , true ) ;
         swl->SetSashPosition ( sp2 , true ) ;
         swu->Show ( TRUE ) ;
-        Refresh () ;
         }
     mi->Check ( cSequence->getEditMode() ) ;
     if ( cSequence->getEditMode() ) vec->undo.start ( txt("u_edit") ) ;
     else vec->undo.stop () ;
 #ifdef __WXMSW__ // LINUX
+    myass ( GetToolBar() , "MyChild::OnEditMode_3" ) ;
     GetToolBar()->ToggleTool(MDI_EDIT_MODE,cSequence->getEditMode());
 #endif
     }
@@ -719,6 +714,7 @@ void MyChild::OnAA_none(wxCommandEvent& event)
     aa_state = AA_NONE ;
     mi = mb->FindItem ( aa_state ) ;
     mi->Check () ;
+    myass ( aa_offset < cSequence->seq.size() , "MyChild::OnAA_none" ) ;
     delete cSequence->seq[aa_offset] ;
     for ( int a = aa_offset+1 ; a < cSequence->seq.size() ; a++ )
         cSequence->seq[a-1] = cSequence->seq[a] ;

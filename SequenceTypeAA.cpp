@@ -2,6 +2,20 @@
 
 //************************************************ SeqAA
 
+SeqAA::~SeqAA ()
+    {
+    int a ;
+    for ( a = 0 ; can && a < can->seq.size() ; a++ )
+        {
+        if ( can->seq[a]->whatsthis() == "FEATURE" )
+           {
+           SeqFeature *f = (SeqFeature*) can->seq[a] ;
+           if ( f->aaa == this ) f->aaa = NULL ;
+           }
+        }
+    DEL_POINTERS ( pc ) ;
+    }
+
 int SeqAA::arrange ( int n )
     {
     int a , b , x , y , w , h , l = 0 , bo = 4 , lowy = 0 ;
@@ -281,6 +295,7 @@ void SeqAA::updateProteases ()
 void SeqAA::analyzeProteases ()
     {
     if ( !can ) return ;
+    DEL_POINTERS ( pc ) ;
     for ( int q = 0 ; q < proteases.size() ; q++ )
        {
        TProtease *pr = proteases[q] ;

@@ -249,7 +249,7 @@ void TVector::insert_char ( char x , int pos , bool overwrite )
     {
     string dummy ;
     dummy = (char) x ;
-    if ( overwrite )
+    if ( overwrite && pos < sequence.length() )
        {
        myass ( pos-1 >= 0 && pos-1 < sequence.length() , "TVector::insert_char_1" ) ;
        sequence[pos-1] = x ;
