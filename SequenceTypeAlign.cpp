@@ -35,6 +35,7 @@ int SeqAlign::arrange ( int n )
     itemsperline *= can->blocksize ;
     
     pos.cleanup() ;
+    pos.reserve ( s.length() * 11 / 10 , s.length() / itemsperline ) ;
     x = ox ;
     y = oy ;
     pos.add ( -(++l) , bo , y , ox-wx-bo , wy-1 ) ; // Line number

@@ -85,6 +85,8 @@ public:
     virtual wxWindow *getCommonParent() ;
     virtual int getChildIndex ( ChildBase *c ) ;
     virtual void activateChild ( int a ) ;
+    virtual void lockDisplay ( bool lock = true ) ;
+    virtual bool isLocked () ;
 
     TMainTree *mainTree ;
     TStorage *LS ;
@@ -106,6 +108,7 @@ public:
     wxMiniFrame *miniFrame ;
     ChildBase *lastChild ;
     wxMenuBar *menu_bar ;
+    int locked ;
     
     DECLARE_EVENT_TABLE()
 };

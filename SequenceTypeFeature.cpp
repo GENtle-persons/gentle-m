@@ -227,10 +227,13 @@ void SeqFeature::initFromTVector ( TVector *v )
     // item.to as height
     int a , b ;
     vec = v ;
+//    wxStartTimer() ;    
     s = vec->getSequence() ;
     maxlayers = 0 ;
+return;
     for ( a = 0 ; a < s.length() ; a++ ) s.SetChar(a,' ') ;
-    while ( vr.size() ) vr.pop_back () ;
+    vr.clear() ;
+    vr.reserve ( v->items.size() ) ;
     for ( a = 0 ; a < v->items.size() ; a++ )
        {
        if ( v->items[a].isVisible() )
@@ -250,7 +253,8 @@ void SeqFeature::initFromTVector ( TVector *v )
           wxRect r = vr[a] ;
           vr[a] = vr[b] ;
           vr[b] = r ;
-          a = 0 ;
+          a -= 2 ;
+          if ( a < -1 ) a = -1 ;
           }
        }
        
@@ -267,6 +271,7 @@ void SeqFeature::initFromTVector ( TVector *v )
              }
           }
        }
+//    wxMessageBox ( wxString::Format ( "remap : %d ms" , wxGetElapsedTime() ) ) ;
     }
     
 bool SeqFeature::collide ( int a , int b )

@@ -128,6 +128,8 @@ void TAminoAcids::initme ()
     myapp()->frame->GetClientSize ( &w , &h ) ;
     h = 100 ;
     
+    Hide();
+    
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     
     h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
@@ -193,10 +195,11 @@ void TAminoAcids::initme ()
     wxCommandEvent event ;
     OnListBox ( event ) ;
 
-    Activate () ;
     showSequence () ;
     showStat () ;
     updateUndoMenu () ;
+    if ( myapp()->frame->isLocked() ) return ;
+    Activate () ;
     sc->SetFocus() ;
     }
     
@@ -462,7 +465,6 @@ void TAminoAcids::OnListBox ( wxCommandEvent& event )
     
     if ( !update )
         {
-        Freeze() ;
         if ( curDisplay )
             {
             h1->Remove ( curDisplay ) ;
@@ -556,7 +558,6 @@ void TAminoAcids::OnListBox ( wxCommandEvent& event )
         }
     if ( !update )
         {
-        Thaw () ;
         h1->Layout() ;
         }
     sc->SetFocus() ;

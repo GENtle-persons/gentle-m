@@ -166,7 +166,9 @@ void TAlignment::initme ()
     menu_bar->FindItem(ALIGN_IDENT)->Check ( true ) ;
     cons = true ;
     showIdentity = true ;
-    
+
+    Hide () ;
+
     hs = new wxSplitterWindow ( this , SPLIT_ALIGNMENT ) ;
 
     // Sequence Canvas
@@ -463,6 +465,7 @@ void TAlignment::callMiddleMouseButton ( int id , int pos , wxString _mode )
        }
 
     wxArrayInt l2s ;
+    l2s.Alloc ( lines.size() ) ;
     while ( l2s.GetCount() < lines.size() ) l2s.Add ( 0 ) ;
     for ( a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
@@ -639,6 +642,8 @@ int TAlignment::MatrixAlignment ( wxString &_s1 , wxString &_s2 , bool local )
     
     vector <wxArrayInt> back ;
     wxArrayInt blank_b ;
+    blank_b.Alloc ( N+1 ) ;
+    back.reserve ( M+1 ) ;
     while ( blank_b.GetCount() < N+1 ) blank_b.Add ( 0 ) ;
     while ( back.size() < M+1 ) back.push_back ( blank_b ) ;
     
@@ -1048,13 +1053,12 @@ void TAlignment::fromVector ( TVector *nv )
         line.s = seq ;
         lines.push_back ( line ) ;
         }
+
     vec = NULL ;
     generateConsensusSequence ( true ) ;
     if ( !broken.IsEmpty() ) 
         {
-        myapp()->frame->Thaw() ;
         wxMessageBox ( wxString::Format(txt("t_align_not_found"),broken.c_str()) ) ;
-        myapp()->frame->Freeze() ;
         }
     redoAlignments ( false ) ;
     }

@@ -94,6 +94,7 @@ int SeqRestriction::arrange ( int n )
     w -= 20 ; // Scrollbar dummy
 
     pos.cleanup() ;
+    pos.reserve ( vec->rc.size() * 7 ) ; // ~7 chars per cut...
     for ( int layer = 0 ; layer < vs.GetCount() ; layer++ )
         {
         x = ox ;
