@@ -184,7 +184,7 @@ void MyChild::OnClose(wxCloseEvent& event)
 
 void MyChild::OnCircularLinear(wxCommandEvent& event)
     {
-    if ( !vec->hasStickyEnds() )
+    if ( vec->hasStickyEnds() )
         {
 #ifdef __WXMSW__ // LINUX
         GetToolBar()->ToggleTool(MDI_CIRCULAR_LINEAR,vec->isCircular());
