@@ -143,12 +143,14 @@ void TManageDatabaseDialog::initCopynMove ()
     wxBitmap bmp_project ( myapp()->bmpdir+myapp()->slash+"project.bmp" , wxBITMAP_TYPE_BMP ) ;
     wxBitmap bmp_protein ( myapp()->bmpdir+myapp()->slash+"protein.bmp" , wxBITMAP_TYPE_BMP ) ;
     wxBitmap bmp_primer ( myapp()->bmpdir+myapp()->slash+"primer.bmp" , wxBITMAP_TYPE_BMP ) ;
+    wxBitmap bmp_align ( myapp()->bmpdir+myapp()->slash+"alignment.bmp" , wxBITMAP_TYPE_BMP ) ;
 
     il = new wxImageList ( 21 , 15 ) ;
     il->Add ( bmp_helix ) ;
     il->Add ( bmp_project ) ;
     il->Add ( bmp_protein ) ;
     il->Add ( bmp_primer ) ;
+    il->Add ( bmp_align ) ;
     
     pm_left->SetImageList ( il , wxIMAGE_LIST_SMALL ) ;
     pm_right->SetImageList ( il , wxIMAGE_LIST_SMALL ) ;
@@ -329,6 +331,11 @@ void TManageDatabaseDialog::pm_list_items ( int x )
               if ( sql3 != "" ) sql3 += " OR " ;
               sql3 += "dna_type=3" ;
               }
+           if ( false ) // Alignment
+              {
+              if ( sql3 != "" ) sql3 += " OR " ;
+              sql3 += "dna_type=4" ;
+              }
            if ( sql3 != "" )
               {
               if ( sql2 != "" ) sql2 += " AND (" + sql3 + ")" ;
@@ -342,6 +349,7 @@ void TManageDatabaseDialog::pm_list_items ( int x )
            string s = r[a][r["dna_name"]] ;
            if ( r[a][r["dna_type"]] == "5" ) l->InsertItem ( a , s.c_str() , 2 ) ;
            else if ( r[a][r["dna_type"]] == "3" ) l->InsertItem ( a , s.c_str() , 3 ) ;
+           else if ( r[a][r["dna_type"]] == "4" ) l->InsertItem ( a , s.c_str() , 4 ) ;
            else l->InsertItem ( a , s.c_str() , 0 ) ;
            }
         }
@@ -942,6 +950,13 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
         n = myapp()->frame->newAminoAcids ( v , v->name ) ;
         n->vec->setDatabase ( v->getDatabase() ) ;
         n->vec->setWindow ( n ) ;
+        }
+    else if ( v->type == TYPE_ALIGNMENT )
+        {
+        // Alignment
+        vector <string> vs ;
+        vector <ChildBase*> vc ;
+        myapp()->frame->runAlignment ( vs , vc , v ) ;
         }
     else
         {

@@ -201,7 +201,7 @@ void TGenBank::parseLines ( char *t , long l )
         }
 	vs = vs_l[0] ;
 	vi = vi_l[0] ;
-}
+	}
 	
 void TGenBank::makeTree ()
     {
@@ -211,6 +211,17 @@ void TGenBank::makeTree ()
     string s ;
     params = "" ;
     keys.clear () ;
+    
+    for ( a = 0 ; a < vs.size() ; a++ )
+        {
+        if ( vi[a] == 21 && vs[a][22] != '/' && vs[a].find ( ".." ) != -1 )
+           {
+           vs[a] = "     " + vs[a].substr ( 21 , 255 ) ;
+           vi[a] = 5 ;
+//           wxMessageBox ( vs[a].c_str() ) ;
+           }
+        }
+    
     for ( a = 0 ; a < vs.size() ; a++ )
         {
         s = trim ( vs[a] ) ;
@@ -357,6 +368,8 @@ void TGenBank::remap ( TVector *v )
               if ( keys[k].features[f].name == "rep_origin" ) scanItem ( v , k , f , VIT_REP_ORI ) ;
               if ( keys[k].features[f].name == "terminator" ) scanItem ( v , k , f , VIT_TERMINATOR ) ;
               if ( keys[k].features[f].name == "misc_feature" ) scanItem ( v , k , f , VIT_MISC ) ;
+              if ( keys[k].features[f].name == "Protein" ) scanItem ( v , k , f , VIT_MISC ) ;
+              if ( keys[k].features[f].name == "Region" ) scanItem ( v , k , f , VIT_MISC ) ;
               }
            }
         }
@@ -410,9 +423,11 @@ void TGenBank::scanItem ( TVector *v , int k , int f , int type , bool descfirst
            {
            vi.name += trimQuotes(qv[a]).c_str() ;
            }
-        else if ( qn[a] == "product" || qn[a] == "note" ) // Desc
+        else if ( qn[a] == "product" || qn[a] == "note" || 
+                qn[a] == "region_name" ) // Desc
            {
            vi.desc += trimQuotes(qv[a]).c_str() ;
+           vi.desc += "\n" ;
            }
         else
            {
@@ -423,8 +438,15 @@ void TGenBank::scanItem ( TVector *v , int k , int f , int type , bool descfirst
     sprintf ( u , "short_itemtype%d" , type ) ;
     if ( descfirst && vi.name == "" && vi.desc.length() < 10 )
        vi.name = vi.desc ;
-    if ( vi.name == "" ) vi.name = txt(u) ;
-//    if ( type == VIT_MISC ) vi.setVisible ( false ) ;
+    if ( vi.name == "" )
+        {
+        vi.name = txt(u) ;
+        string d2 = vi.desc.c_str() ;
+        int i = d2.find ( "\n" ) ;
+        if ( i > -1 ) d2.erase ( i ) ;
+        if ( vi.name.length() * 2 >= d2.length() )
+           vi.name = d2.c_str() ;
+        }
     addItem ( v , &vi , keys[k].features[f].value ) ;
     }
 

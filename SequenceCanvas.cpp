@@ -33,6 +33,11 @@ BEGIN_EVENT_TABLE(SequenceCanvas, wxScrolledWindow)
     EVT_MENU(SEQ_FEAT_HIDE,SequenceCanvas::OnToggleFeat)
     EVT_MENU(SEQ_FEAT_SHOW,SequenceCanvas::OnToggleFeat)
 
+    EVT_MENU(SEQ_INSERT_GAP,SequenceCanvas::OnInsertGap)
+    EVT_MENU(SEQ_DELETE_GAP,SequenceCanvas::OnDeleteGap)
+    EVT_MENU(SEQ_INSERT_OTHER_GAPS,SequenceCanvas::OnInsertOtherGaps)
+    EVT_MENU(SEQ_DELETE_OTHER_GAPS,SequenceCanvas::OnDeleteOtherGaps)
+
     EVT_MENU(PRIMER_FORWARD, SequenceCanvas::OnPrimerForward)
     EVT_MENU(PRIMER_BACKWARD, SequenceCanvas::OnPrimerBackward)
     EVT_MENU(PRIMER_BOTH, SequenceCanvas::OnPrimerBoth)
@@ -1114,6 +1119,17 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
            else
               {
               last_al = al ;
+              if ( where ) 
+                 {
+                 lastclick = pos ;
+                 wxMenu *cc = new wxMenu ;
+                 cc->Append ( SEQ_INSERT_GAP , txt("t_mmb_insert_gap") ) ;
+                 cc->Append ( SEQ_DELETE_GAP , txt("t_mmb_delete_gap") ) ;
+                 cc->Append ( SEQ_INSERT_OTHER_GAPS , txt("t_mmb_insert_gap_others") ) ;
+                 cc->Append ( SEQ_DELETE_OTHER_GAPS , txt("t_mmb_delete_gap_others") ) ;
+                 cm->Append ( SEQ_COPY_AS , txt("m_align_gap") , cc ) ;
+                 } 
+
               wxMenu *cb = new wxMenu ;
               TAlignment *ali = (TAlignment*) child ;
               if ( last_al->id > 0 ) cb->Append ( SEQ_UP , txt("t_seq_up") ) ;
@@ -1370,6 +1386,31 @@ void SequenceCanvas::OnToggleFeat ( wxCommandEvent &ev )
     else all->showFeatures() ;
     al->redoAlignments ( false ) ;
     }
+    
+void SequenceCanvas::OnInsertGap ( wxCommandEvent &ev )
+    {
+    TAlignment *alg = (TAlignment*) child ;
+    alg->callMiddleMouseButton ( last_al->id , lastclick , "t_mmb_insert_gap" ) ;
+    }
+    
+void SequenceCanvas::OnDeleteGap ( wxCommandEvent &ev )
+    {
+    TAlignment *alg = (TAlignment*) child ;
+    alg->callMiddleMouseButton ( last_al->id , lastclick , "t_mmb_delete_gap" ) ;
+    }
+    
+void SequenceCanvas::OnInsertOtherGaps ( wxCommandEvent &ev )
+    {
+    TAlignment *alg = (TAlignment*) child ;
+    alg->callMiddleMouseButton ( last_al->id , lastclick , "t_mmb_insert_gap_others" ) ;
+    }
+    
+void SequenceCanvas::OnDeleteOtherGaps ( wxCommandEvent &ev )
+    {
+    TAlignment *alg = (TAlignment*) child ;
+    alg->callMiddleMouseButton ( last_al->id , lastclick , "t_mmb_delete_gap_others" ) ;
+    }
+    
 
 // -------------------------------------------------------- TMarkMem
 

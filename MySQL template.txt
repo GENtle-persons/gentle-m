@@ -17,7 +17,7 @@
 DROP TABLE IF EXISTS dna;
 CREATE TABLE dna (
   dna_name varchar(255) NOT NULL default '',
-  dna_description tinytext,
+  dna_description text,
   dna_type int(11) default NULL,
   dna_sequence mediumtext,
   dna_sticky_ul varchar(32) default NULL,

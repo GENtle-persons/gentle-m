@@ -66,18 +66,18 @@ class MyFrame ;
 
 // Define a new application
 class MyApp : public wxApp
-{
-public:
+    {
+    public:
     bool OnInit();
     int OnExit () ;
     string getHTMLCommand ( string command ) ;
     string getFileFormatApplication ( string type ) ;
-MyFrame *frame;
-wxString homedir , bmpdir , slash ;
-wxSingleInstanceChecker *m_checker ;
-int programVersion ;
-int dbWarningIssued ;
-};
+    MyFrame *frame;
+    wxString homedir , bmpdir , slash ;
+    wxSingleInstanceChecker *m_checker ;
+    int programVersion ;
+    int dbWarningIssued ;
+    };
 
 class TUndo ;
 
