@@ -15,6 +15,7 @@ BEGIN_EVENT_TABLE(MyFrame, MyFrameType)
     EVT_MENU(MDI_IMAGE_VIEWER, MyFrame::OnImageViewer)
     EVT_MENU(MDI_EXTERNAL_INTERFACE, MyFrame::OnExternalInterface)
     EVT_MENU(MDI_CALCULATOR, MyFrame::OnCalculator)
+    EVT_MENU(MDI_GRAPH, MyFrame::OnGraph)
     EVT_MENU(MDI_FILE_OPEN, MyFrame::OnFileOpen)
     EVT_MENU(MDI_FILE_IMPORT, MyFrame::OnFileImport)
     EVT_MENU(MDI_TEXT_IMPORT, MyFrame::OnTextImport)
@@ -107,7 +108,8 @@ MyFrame::MyFrame(wxWindow *parent,
     entries[35].Set(wxACCEL_CTRL, WXK_TAB, MDI_NEXT_WINDOW);
     entries[36].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_TAB, MDI_PREV_WINDOW);
     entries[37].Set(wxACCEL_NORMAL, WXK_F8, MDI_TOGGLE_IDNA);
-    entries[38].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_F12, Y___);
+//    entries[38].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_F12, Y___);
+    entries[38].Set(wxACCEL_CTRL, WXK_F12, MDI_GRAPH);
     entries[39].Set(wxACCEL_CTRL, WXK_F1, MDI_ABOUT);
     entries[40].Set(wxACCEL_NORMAL, WXK_F9, MDI_AUTO_ANNOTATE);
     
@@ -1349,11 +1351,43 @@ void MyFrame::OnCalculator(wxCommandEvent& event)
     RunCalculator () ;
     }    
 
+/** \brief Handles the Graph menu event by calling MyFrame::RunGraph
+*/
+void MyFrame::OnGraph(wxCommandEvent& event)
+    {
+    RunGraph () ;
+    }    
+
 /** \brief Invokes the calculator module
 */
 TCalculator *MyFrame::RunCalculator ()
     {
     TCalculator *subframe = new TCalculator ( getCommonParent() , txt("t_calculator") ) ;
+
+    // Give it an icon
+#ifdef __WXMSW__
+    subframe->SetIcon(wxIcon("chrt_icn"));
+#else
+    subframe->SetIcon(wxIcon( mondrian_xpm ));
+#endif
+
+    subframe->initme () ;
+
+    subframe->Show() ;
+    subframe->Maximize() ;
+    subframe->showName() ;
+    
+    mainTree->addChild ( subframe , TYPE_MISC ) ;
+    setChild ( subframe ) ;
+    activateChild ( children.GetCount()-1 ) ;
+    return subframe ;
+    }
+    
+/** \brief Invokes the graph module
+*/
+TGraph *MyFrame::RunGraph ()
+    {
+    TGraph *subframe = new TGraph ( getCommonParent() , txt("t_graph") ) ;
 
     // Give it an icon
 #ifdef __WXMSW__
@@ -1415,6 +1449,7 @@ wxMenu *MyFrame::getToolMenu ( bool _pcr )
     tool_menu->Append(MDI_IMAGE_VIEWER, txt("m_image_viewer") , txt("m_image_viewer_txt") ) ;
     tool_menu->Append(MDI_EXTERNAL_INTERFACE, txt("m_external_interface") ) ;
     tool_menu->Append(MDI_CALCULATOR, txt("m_calculator") , txt("m_calculator_txt") ) ;
+    tool_menu->Append(MDI_GRAPH, txt("m_graph") , txt("m_graph_txt") ) ;
     tool_menu->Append(PROGRAM_OPTIONS, txt("m_options") , txt("m_options_txt") ) ;
     return tool_menu ;
     }

@@ -4,6 +4,8 @@ Bugs :
 * Bericht drucken : lange Zeilen in Vektor-Beschreibung umbrechen
 
 Feature Requests :
+Alignment : Linke Box initial leer
+Speichern gleichzeitig in zwei Datenbanken (local?) speichern
 PCR-Sequenzen 5'/3' Richtung benennen
 Primer-Bearbeiten-Dialog : Spalten klicken => sortieren
 Primer an Enden von linearen Stücken matchen nicht

@@ -148,7 +148,9 @@ void TPrimerDesign::OnImportPrimer ( wxCommandEvent &ev )
     wxArrayChildBase cbl ;
     
     for ( a = 0 ; a < myapp()->frame->children.GetCount() ; a++ )
-       if ( myapp()->frame->children[a]->vec->getType() == TYPE_PRIMER )
+       if ( myapp()->frame->children[a] && 
+       		myapp()->frame->children[a]->vec &&
+         	myapp()->frame->children[a]->vec->getType() == TYPE_PRIMER )
           cbl.Add ( myapp()->frame->children[a] ) ;
     
     if ( cbl.GetCount() == 0 )
