@@ -2,7 +2,7 @@
 #include <wx/datetime.h>
 #include <wx/printdlg.h>
 
-BEGIN_EVENT_TABLE(MyChild, wxMDIChildFrame)
+BEGIN_EVENT_TABLE(MyChild, MyChildBase)
     EVT_MENU(AA_NONE, MyChild::OnAA_none)
     EVT_MENU(AA_KNOWN, MyChild::OnAA_known)
     EVT_MENU(AA_ALL, MyChild::OnAA_all)
@@ -68,7 +68,7 @@ void MyChild::OnFileSave(wxCommandEvent& WXUNUSED(event) )
     dbd.ShowModal () ;
     }
 
-MyChild::MyChild(wxMDIParentFrame *parent, const wxString& title,
+MyChild::MyChild(MyFrame *parent, const wxString& title,
                  const wxPoint& pos, const wxSize& size,
                  const long style)
        : ChildBase(parent, title, pos, size, style)
@@ -290,7 +290,7 @@ void MyChild::initme ()
                                 wxDefaultPosition, wxSize ( width/3 , 0 ) ,
                                 wxTE_MULTILINE | wxSUNKEN_BORDER | wxTE_READONLY );
                                
-    treeBox = new TVectorTree((wxMDIChildFrame*)swl, TREE_DUMMY ) ;
+    treeBox = new TVectorTree((ChildBase*)swl, TREE_DUMMY ) ;
     treeBox->textWindow = propBox ;
     treeBox->p = this ;
 

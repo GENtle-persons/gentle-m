@@ -19,7 +19,7 @@ class TREcache
 class TRestrictionEditor : public wxDialog
     {
     public :
-    TRestrictionEditor(wxMDIParentFrame *parent, const wxString& title, const wxPoint& pos, 
+    TRestrictionEditor(MyFrame *parent, const wxString& title, const wxPoint& pos, 
                        const wxSize& size, const long style);
 
     virtual void initme ( TVector *_v ) ;

@@ -16,7 +16,7 @@ typedef vector <char> tvc ;
 class TPrimerDesign : public ChildBase
     {
     public :
-    TPrimerDesign(wxMDIParentFrame *parent, 
+    TPrimerDesign(MyFrame *parent, 
                     wxString title,
                     TVector *_vec,
                     vector <TPrimer> pl ) ;

@@ -18,7 +18,7 @@ class TTreeItem : public wxTreeItemData
 class TVectorTree : public wxTreeCtrl
     {
     public :
-    TVectorTree ( wxMDIChildFrame *parent , int i ) ;
+    TVectorTree ( ChildBase *parent , int i ) ;
     
     void initme () ;
     void OnEvent ( wxTreeEvent &event ) ;

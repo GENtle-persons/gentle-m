@@ -1,6 +1,6 @@
 #include "Alignment.h"
 
-BEGIN_EVENT_TABLE(TAlignment, wxMDIChildFrame)
+BEGIN_EVENT_TABLE(TAlignment, MyChildBase)
     EVT_BUTTON(ALIGNMENT_SETTINGS,TAlignment::OnSettings)
     EVT_CLOSE(TAlignment::OnClose)
     EVT_SET_FOCUS(ChildBase::OnFocus)
@@ -18,7 +18,7 @@ END_EVENT_TABLE()
 
 
 
-TAlignment::TAlignment(wxMDIParentFrame *parent, const wxString& title)
+TAlignment::TAlignment(MyFrame *parent, const wxString& title)
     : ChildBase(parent, title)
     {
     def = "alignment" ;

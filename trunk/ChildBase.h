@@ -1,15 +1,21 @@
 #ifndef _CHILDBASE_H_
 #define _CHILDBASE_H_
 
+#include "main.h"
 #include <string.h>
 #include <wx/wx.h>
 #include <wx/treectrl.h>
+#include <wx/docview.h>
 
 using namespace std ;
 
-class TVector ;
+typedef wxMDIChildFrame MyChildBase ;
+typedef wxMDIParentFrame MyFrameType ;
 
-class ChildBase : public wxMDIChildFrame
+class TVector ;
+class MyFrame ;
+
+class ChildBase : public MyChildBase
     {
     public :
     ChildBase () { vec = NULL ; }
@@ -17,10 +23,10 @@ class ChildBase : public wxMDIChildFrame
     TVector *vec ;
     wxTreeItemId inMainTree ;
     
-    ChildBase(wxMDIParentFrame *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style)
-        : wxMDIChildFrame(parent, -1, title, pos, size, style) {  }
-    ChildBase(wxMDIParentFrame *parent, const wxString& title)
-        : wxMDIChildFrame(parent, -1, title) {  }
+    ChildBase(MyFrame *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style)
+        : MyChildBase((MyFrameType*)parent, -1, title, pos, size, style) {  }
+    ChildBase(MyFrame *parent, const wxString& title)
+        : MyChildBase((MyFrameType*)parent, -1, title) {  }
         
     virtual string getName () { return "" ; }
     virtual void showName ( string x = "" ) ;

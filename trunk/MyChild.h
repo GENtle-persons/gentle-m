@@ -47,7 +47,7 @@ public:
     virtual string doExtractAA ( bool coding = true ) ;
             
     
-    MyChild(wxMDIParentFrame *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style);
+    MyChild(MyFrame *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style);
     ~MyChild();
 
     virtual void OnActivate(wxActivateEvent& event);

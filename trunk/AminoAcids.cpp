@@ -1,6 +1,6 @@
 #include "AminoAcids.h"
 
-BEGIN_EVENT_TABLE(TAminoAcids, wxMDIChildFrame)
+BEGIN_EVENT_TABLE(TAminoAcids, MyChildBase)
     EVT_MENU(MDI_EDIT_MODE, TAminoAcids::OnEditMode)
     EVT_MENU(MDI_MARK_ALL, TAminoAcids::OnMarkAll)
     EVT_MENU(MDI_FILE_SAVE, TAminoAcids::OnFileSave)
@@ -20,7 +20,7 @@ BEGIN_EVENT_TABLE(TAminoAcids, wxMDIChildFrame)
     EVT_CLOSE(TAminoAcids::OnClose)
 END_EVENT_TABLE()
 
-TAminoAcids::TAminoAcids(wxMDIParentFrame *parent, const wxString& title)
+TAminoAcids::TAminoAcids(MyFrame *parent, const wxString& title)
     : ChildBase(parent, title)
     {
     vec = new TVector ( this ) ;
