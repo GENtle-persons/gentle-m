@@ -210,13 +210,19 @@ void TAminoAcids::showSequence ()
     sc->seq.push_back ( seqF ) ;
     seqF->initFromTVector ( vec ) ;
 
-
     SeqAA *d = new SeqAA ( sc ) ;
     sc->seq.push_back ( d ) ;
     d->primaryMode = true ;
     d->takesMouseActions = true ;
     d->initFromString ( vec->sequence ) ;
     d->fixOffsets ( vec ) ;
+
+    // Plot demo
+    SeqPlot *seqP = new SeqPlot ( sc ) ;
+    sc->seq.push_back ( seqP ) ;
+    seqP->initFromTVector ( vec ) ;
+    seqP->setLines ( 7 ) ;
+    seqP->useChouFasman() ;
     
     seqF->aaa = d ;
         

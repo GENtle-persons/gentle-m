@@ -4,6 +4,12 @@
 // TVector
 // ***************************************************************************************
 
+char TVector::ACGT[256] ;
+char TVector::IUPAC[256] ;
+char TVector::SIUPAC[256] ;
+char TVector::COMPLEMENT[256] ;
+vector <TAAProp> TVector::aaprop ;
+
 string TVector::getParams () { return params ; }
 void TVector::setParams ( string s ) { params = s ; }
 void TVector::setWindow ( ChildBase *c ) { window = c ; }
@@ -11,11 +17,12 @@ void TVector::setCircular ( bool c ) { circular = c ; }
 bool TVector::isCircular () { return circular ; }
 bool TVector::isLinear () { return !circular ; }
 bool TVector::hasStickyEnds () { return (_lu+_ll+_ru+_rl!="") ; }
+TAAProp TVector::getAAprop ( char a ) { return aaprop[a] ; }
 
 string TVector::one2three ( int a )
     {
     if ( a < 0 || a > 255 ) return "" ;
-    return _one2three[a] ;
+    return aaprop[a].tla ;
     }
     
 void TVector::setStickyEnd ( bool left , bool upper , string s )
@@ -49,11 +56,21 @@ TVector::TVector ( ChildBase *win )
     
 TVector::~TVector ()
     {
-//    undo.clear () ;
+    undo.clear () ;
     }
         
 void TVector::init ()
     {
+    // Setting DNA => AA matrix
+    // Can be adapted for other organisms
+    aa = "FFLLSSSSYY||CC|W"
+         "LLLLPPPPHHQQRRRR"
+         "IIIMTTTTNNKKSSRR"
+         "VVVVAAAADDEEGGGG" ;
+
+    // Static initialization
+    if ( aaprop.size() > 0 ) return ;
+
     int a ;
     for ( a = 0 ; a < 256 ; a++ ) IUPAC[a] = 0 ;
     setIUPAC ( 'A' , "A" ) ;
@@ -79,80 +96,7 @@ void TVector::init ()
     ACGT['c'] = ACGT['C'] = 1 ;
     ACGT['a'] = ACGT['A'] = 2 ;
     ACGT['g'] = ACGT['G'] = 3 ;
-    
-    aa = "FFLLSSSSYY||CC|W"
-         "LLLLPPPPHHQQRRRR"
-         "IIIMTTTTNNKKSSRR"
-         "VVVVAAAADDEEGGGG" ;
-         
-    for ( a = 0 ; a < 256 ; a++ ) _one2three[a] = "???" ;
-    _one2three['A'] = "Ala" ;
-    _one2three['R'] = "Arg" ;
-    _one2three['N'] = "Asn" ;
-    _one2three['D'] = "Asp" ;
-    _one2three['G'] = "Gly" ;
-    _one2three['V'] = "Val" ;
-    _one2three['L'] = "Leu" ;
-    _one2three['I'] = "Ile" ;
-    _one2three['P'] = "Pro" ;
-    _one2three['F'] = "Phe" ;
-    _one2three['Y'] = "Tyr" ;
-    _one2three['W'] = "Trp" ;
-    _one2three['C'] = "Cys" ;
-    _one2three['M'] = "Met" ;
-    _one2three['T'] = "Thr" ;
-    _one2three['S'] = "Ser" ;
-    _one2three['K'] = "Lys" ;
-    _one2three['H'] = "His" ;
-    _one2three['E'] = "Glu" ; 
-    _one2three['Q'] = "Gln" ;
-    _one2three['|'] = "STP" ;
-    
-    // Amino acid values
-    for ( a = 0 ; a < 256 ; a++ ) aa_mw[a] = 0 ;
-    aa_mw['A'] =  71.0788 ;
-    aa_mw['R'] = 156.1875 ;
-    aa_mw['N'] = 114.1038 ;
-    aa_mw['D'] = 115.0886 ;
-    aa_mw['C'] = 103.1388 ;
-    aa_mw['E'] = 129.1155 ;
-    aa_mw['Q'] = 128.1307 ;
-    aa_mw['G'] =  57.0519 ;
-    aa_mw['H'] = 137.1411 ;
-    aa_mw['I'] = 113.1594 ;
-    aa_mw['L'] = 113.1594 ;
-    aa_mw['K'] = 128.1741 ;
-    aa_mw['M'] = 131.1926 ;
-    aa_mw['F'] = 147.1766 ;
-    aa_mw['P'] =  97.1167 ;
-    aa_mw['S'] =  87.0782 ;
-    aa_mw['T'] = 101.1051 ;
-    aa_mw['W'] = 186.2132 ;
-    aa_mw['Y'] = 163.1760 ;
-    aa_mw['V'] =  99.1326 ;    
 
-    for ( a = 0 ; a < 256 ; a++ ) aa_pi[a] = 0 ;
-    aa_pi['A'] =  6.01 ;
-    aa_pi['R'] = 10.76 ;
-    aa_pi['N'] =  5.41 ;
-    aa_pi['D'] =  2.77 ;
-    aa_pi['C'] =  5.07 ;
-    aa_pi['E'] =  3.22 ;
-    aa_pi['Q'] =  5.65 ;
-    aa_pi['G'] =  5.97 ;
-    aa_pi['H'] =  7.59 ;
-    aa_pi['I'] =  6.02 ;
-    aa_pi['L'] =  5.98 ;
-    aa_pi['K'] =  9.74 ;
-    aa_pi['M'] =  5.74 ;
-    aa_pi['F'] =  5.48 ;
-    aa_pi['P'] =  6.48 ;
-    aa_pi['S'] =  5.68 ;
-    aa_pi['T'] =  5.87 ;
-    aa_pi['W'] =  5.89 ;
-    aa_pi['Y'] =  5.66 ;
-    aa_pi['V'] =  5.97 ;
-    
     for ( a = 0 ; a < 256 ; a++ ) COMPLEMENT[a] = ' ' ;
     COMPLEMENT['A'] = 'T' ;
     COMPLEMENT['T'] = 'A' ;
@@ -171,6 +115,55 @@ void TVector::init ()
     COMPLEMENT['B'] = 'V' ;
     COMPLEMENT['X'] = 'N' ;
     COMPLEMENT['N'] = 'N' ;
+
+
+    // Filling amino acid properties structure
+    while ( aaprop.size() < 256 ) aaprop.push_back ( TAAProp() ) ;
+    
+    // MW, pI, three-letter-acronym
+    aaprop['|'].set_data ( 0 , 0 , "STP") ;
+    aaprop['A'].set_data ( 71.0788 , 6.01 , "Ala") ;
+    aaprop['C'].set_data ( 103.1388 , 5.07 , "Cys") ;
+    aaprop['D'].set_data ( 115.0886 , 2.77 , "Asp") ;
+    aaprop['E'].set_data ( 129.1155 , 3.22 , "Glu") ;
+    aaprop['F'].set_data ( 147.1766 , 5.48 , "Phe") ;
+    aaprop['G'].set_data ( 57.0519 , 5.97 , "Gly") ;
+    aaprop['H'].set_data ( 137.1411 , 7.59 , "His") ;
+    aaprop['I'].set_data ( 113.1594 , 6.02 , "Ile") ;
+    aaprop['K'].set_data ( 128.1741 , 9.74 , "Lys") ;
+    aaprop['L'].set_data ( 113.1594 , 5.98 , "Leu") ;
+    aaprop['M'].set_data ( 131.1926 , 5.74 , "Met") ;
+    aaprop['N'].set_data ( 114.1038 , 5.41 , "Asn") ;
+    aaprop['P'].set_data ( 97.1167 , 6.48 , "Pro") ;
+    aaprop['Q'].set_data ( 128.1307 , 5.65 , "Gln") ;
+    aaprop['R'].set_data ( 156.1875 , 10.76 , "Arg") ;
+    aaprop['S'].set_data ( 87.0782 , 5.68 , "Ser") ;
+    aaprop['T'].set_data ( 101.1051 , 5.87 , "Thr") ;
+    aaprop['V'].set_data ( 99.1326 , 5.97 , "Val") ;
+    aaprop['W'].set_data ( 186.2132 , 5.89 , "Trp") ;
+    aaprop['Y'].set_data ( 163.176 , 5.66 , "Tyr") ;
+         
+    // Chou-Fasman algorithm data
+    aaprop['A'].set_cf ( 142 , 83 , 66 , 0.06 , 0.076 , 0.035 , 0.058 ) ;
+    aaprop['C'].set_cf ( 70 , 119 , 119 , 0.149 , 0.05 , 0.117 , 0.128 ) ;
+    aaprop['D'].set_cf ( 101 , 54 , 146 , 0.147 , 0.11 , 0.179 , 0.081 ) ;
+    aaprop['E'].set_cf ( 151 , 37 , 74 , 0.056 , 0.06 , 0.077 , 0.064 ) ;
+    aaprop['F'].set_cf ( 113 , 138 , 60 , 0.059 , 0.041 , 0.065 , 0.065 ) ;
+    aaprop['G'].set_cf ( 57 , 75 , 156 , 0.102 , 0.085 , 0.19 , 0.152 ) ;
+    aaprop['H'].set_cf ( 100 , 87 , 95 , 0.14 , 0.047 , 0.093 , 0.054 ) ;
+    aaprop['I'].set_cf ( 108 , 160 , 47 , 0.043 , 0.034 , 0.013 , 0.056 ) ;
+    aaprop['K'].set_cf ( 114 , 74 , 101 , 0.055 , 0.115 , 0.072 , 0.095 ) ;
+    aaprop['L'].set_cf ( 121 , 130 , 59 , 0.061 , 0.025 , 0.036 , 0.07 ) ;
+    aaprop['M'].set_cf ( 145 , 105 , 60 , 0.068 , 0.082 , 0.014 , 0.055 ) ;
+    aaprop['N'].set_cf ( 67 , 89 , 156 , 0.161 , 0.083 , 0.191 , 0.091 ) ;
+    aaprop['P'].set_cf ( 57 , 55 , 152 , 0.102 , 0.301 , 0.034 , 0.068 ) ;
+    aaprop['Q'].set_cf ( 111 , 110 , 98 , 0.074 , 0.098 , 0.037 , 0.098 ) ;
+    aaprop['R'].set_cf ( 98 , 93 , 95 , 0.07 , 0.106 , 0.099 , 0.085 ) ;
+    aaprop['S'].set_cf ( 77 , 75 , 143 , 0.12 , 0.139 , 0.125 , 0.106 ) ;
+    aaprop['T'].set_cf ( 83 , 119 , 96 , 0.086 , 0.108 , 0.065 , 0.079 ) ;
+    aaprop['V'].set_cf ( 106 , 170 , 50 , 0.062 , 0.048 , 0.028 , 0.053 ) ;
+    aaprop['W'].set_cf ( 108 , 137 , 96 , 0.077 , 0.013 , 0.064 , 0.167 ) ;
+    aaprop['Y'].set_cf ( 69 , 147 , 114 , 0.082 , 0.065 , 0.114 , 0.125 ) ;
     }
 
 void TVector::removeBlanksFromSequence ()
@@ -263,12 +256,12 @@ void TVector::insert_char ( char x , int pos , bool overwrite )
 
 float TVector::getAAmw ( char aa )
     {
-    return aa_mw[aa] ;
+    return aaprop[aa].mw ;
     }
     
 float TVector::getAApi ( char aa )
     {
-    return aa_pi[aa] ;
+    return aaprop[aa].pi ;
     }
     
 void TVector::setIUPAC ( char b , char *s , char *pac )
@@ -1144,3 +1137,31 @@ void TVectorItem::setOffset ( int o )
     setParam ( "OFFSET" , o ) ;
     }
 
+// ******************************************************************* TAAProp
+
+TAAProp::TAAProp ()
+    {
+    tla = "???" ;
+    mw = pi = 0 ;
+    cf_f[0] = cf_f[1] = cf_f[2] = cf_f[3] = 0 ;
+    cf_pa = cf_pb = cf_pt = 0 ;
+    }
+    
+void TAAProp::set_cf ( int pa , int pb , int pt , float f0 , float f1 , float f2 , float f3 )
+    {
+    cf_pa = pa ;
+    cf_pb = pb ;
+    cf_pt = pt ;
+    cf_f[0] = f0 ;
+    cf_f[1] = f1 ;
+    cf_f[2] = f2 ;
+    cf_f[3] = f3 ;
+    }
+    
+void TAAProp::set_data ( float _mw , float _pi , string _tla )
+    {
+    mw = _mw ;
+    pi = _pi ;
+    tla = _tla ;
+    }
+    

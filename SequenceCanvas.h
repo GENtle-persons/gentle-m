@@ -13,6 +13,7 @@ class TPrimer ;
 class ABItype ;
 class TProtease ;
 class TProteaseCut ;
+class TAAProp ;
 
 // SeqPos manages the positions of all items for a single "type" (e.g., DNA)
 // The vectors p, r and m are always the same size, and contain information
@@ -250,6 +251,27 @@ class SeqFeature : public SeqDNA
     int maxlayers ;
     SeqAA *aaa ;
     int id ; // Only used by TAlignment : lines[id]
+    } ;
+
+class SeqPlot : public SeqDNA
+    {
+    public :
+    SeqPlot ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; lines = 0 ; }
+    virtual void show ( wxDC& dc ) ;
+    virtual string whatsthis () { return "PLOT" ; }
+    virtual void initFromTVector ( TVector *v ) ;
+    virtual int  arrange ( int n ) ;
+    virtual void setLines ( int l ) ;
+    virtual void useChouFasman () ;
+    virtual void showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx ) ;
+        
+    private :
+    virtual void scanChouFasman ( int x , int y , int t , int min , 
+                                    int seek_cnt , int seek_avg , int avg ) ;
+    enum { CHOU_FASMAN } type ;
+    int lines , l_top, l_bottom ;
+    vector <string> d1 , d2 , d3 ;
+    vector <TAAProp> prop ;
     } ;
 
 class SequenceCanvas : public wxScrolledWindow
