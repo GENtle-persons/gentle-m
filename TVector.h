@@ -30,10 +30,12 @@ class TAAProp
     TAAProp () ;
     virtual void set_cf ( int pa , int pb , int pt , float f0 , float f1 , float f2 , float f3 ) ;
     virtual void set_data ( float _mw , float _pi , string _tla ) ;
+    virtual void set_hp ( float _hp_kd , float _hp_hw ) ;
     string tla ;
     float mw , pi ;
     float cf_f[4] ;
     int cf_pa , cf_pb , cf_pt ;
+    float hp_kd , hp_hw ;
     vector <float> data ; // For temporary data only
     } ;
 

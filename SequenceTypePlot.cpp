@@ -162,6 +162,7 @@ void SeqPlot::show ( wxDC& dc )
               case CHOU_FASMAN : showChouFasman ( dc , b-1 , tx , ty , lx ) ; break ;
               case M_W : showMW ( dc , b-1 , tx , ty , lx ) ; break ;
               case P_I : showPI ( dc , b-1 , tx , ty , lx ) ; break ;
+              case H_P : showHP ( dc , b-1 , tx , ty , lx ) ; break ;
               }
            lx = tx + can->charwidth ;
            cnt++ ;
@@ -176,6 +177,13 @@ void SeqPlot::show ( wxDC& dc )
            if ( type == CHOU_FASMAN ) t = "Chou-Fasman" ;
            else if ( type == M_W ) t = "MW" ;
            else if ( type == P_I ) t = "pI" ;
+           else if ( type == H_P )
+              {
+              t = "t_method_" ;
+              t += hp_method.c_str() ;
+              t = txt(t.c_str()) ;
+              t += wxString::Format(" [%d]",hp_window).c_str() ;
+              }
            dc.SetTextForeground ( *wxBLACK ) ;
            int tw , th ;
            dc.GetTextExtent ( t.c_str() , &tw , &th ) ;
@@ -213,6 +221,12 @@ void SeqPlot::showMW ( wxDC &dc , int b , int tx , int ty , int lx )
     }
     
 void SeqPlot::showPI ( wxDC &dc , int b , int tx , int ty , int lx )
+    {
+    // All the same...
+    showMW ( dc , b , tx , ty , lx ) ;
+    }
+    
+void SeqPlot::showHP ( wxDC &dc , int b , int tx , int ty , int lx )
     {
     // All the same...
     showMW ( dc , b , tx , ty , lx ) ;
@@ -386,6 +400,13 @@ void SeqPlot::drawSymbol ( char c , wxDC &dc , int x1 , int y1 , int x2 , int y2
 
 // Communication with the outside world :-)
 
+void SeqPlot::init ( SequenceCanvas *ncan )
+    {
+    SeqBasic::init ( ncan ) ;
+    hp_window = 7 ;
+    hp_method = "kyte-doolittle" ;
+    }
+
 void SeqPlot::initFromTVector ( TVector *v )
     {
     vec = v ;
@@ -515,6 +536,12 @@ void SeqPlot::scanMinMax ()
         data_max = 11.5 ;
         data_step = 2.5 ;
         }
+    else if ( type == H_P )
+        {
+        data_min = -4.5 ;
+        data_max = 4.5 ;
+        data_step = 1.5 ;
+        }
     data_h = data_max - data_min ;
     }
     
@@ -603,6 +630,46 @@ void SeqPlot::usePI ()
         prop.push_back ( vec->getAAprop ( s[a] ) ) ;
         prop[a].data.clear() ;
         prop[a].data.push_back ( prop[a].pi ) ;
+//        while ( prop[a].data.size() < 3 ) prop[a].data.push_back ( 0 ) ;
+        }
+    string x ;
+    while ( x.length() < s.length() ) x += " " ;
+    while ( d1.size() < 4 ) d1.push_back ( x ) ;
+    scanMinMax () ;
+    }
+
+void SeqPlot::useHP ()
+    {
+    type = H_P ;
+    d1.clear () ;
+    d2.clear () ;
+    d3.clear () ;
+    l_top = 4 ;
+    l_bottom = 0 ;
+    
+    int a ;
+    prop.clear () ;
+    for ( a = 0 ; a < s.length() ; a++ )
+        {
+        prop.push_back ( vec->getAAprop ( s[a] ) ) ;
+        prop[a].data.clear() ;
+        }
+        
+    for ( a = 0 ; a < s.length() ; a++ )
+        {
+        float avg = 0 ;
+        for ( int b = 0 ; b < hp_window ; b++ )
+           {
+           int c = a - hp_window / 2 + b ;
+           if ( c >= 0 && c < s.length() )
+              {
+              if ( hp_method == "kyte-doolittle" ) avg += prop[c].hp_kd ;
+              if ( hp_method == "hopp-woods" ) avg += prop[c].hp_hw ;
+              }
+           }
+        avg /= (float) hp_window ;
+        
+        prop[a].data.push_back ( avg ) ;
 //        while ( prop[a].data.size() < 3 ) prop[a].data.push_back ( 0 ) ;
         }
     string x ;

@@ -215,6 +215,28 @@ void TVector::init ()
     aaprop['W'].set_cf ( 108 , 137 ,  96 , 0.077 , 0.013 , 0.064 , 0.167 ) ;
     aaprop['Y'].set_cf (  69 , 147 , 114 , 0.082 , 0.065 , 0.114 , 0.125 ) ;
 
+    // Hydrophobicity (Kyte-Doolittle, Hopp-Woods)
+    aaprop['A'].set_hp (  1.8 , -0.5 ) ;
+    aaprop['C'].set_hp (  2.5 , -1.0 ) ;
+    aaprop['D'].set_hp ( -3.5 ,  3.0 ) ;
+    aaprop['E'].set_hp ( -3.5 ,  3.0 ) ;
+    aaprop['F'].set_hp (  2.8 , -2.5 ) ;
+    aaprop['G'].set_hp ( -0.4 ,  0.0 ) ;
+    aaprop['H'].set_hp ( -3.2 , -0.5 ) ;
+    aaprop['I'].set_hp (  4.5 , -1.8 ) ;
+    aaprop['K'].set_hp ( -3.9 ,  3.0 ) ;
+    aaprop['L'].set_hp (  3.8 , -1.8 ) ;
+    aaprop['M'].set_hp (  1.9 , -1.3 ) ;
+    aaprop['N'].set_hp ( -3.5 ,  0.2 ) ;
+    aaprop['P'].set_hp ( -1.6 ,  0.0 ) ;
+    aaprop['Q'].set_hp ( -3.5 ,  0.2 ) ;
+    aaprop['R'].set_hp ( -4.5 ,  3.0 ) ;
+    aaprop['S'].set_hp ( -0.8 ,  0.3 ) ;
+    aaprop['T'].set_hp ( -0.7 , -0.4 ) ;
+    aaprop['V'].set_hp (  4.2 , -1.5 ) ;
+    aaprop['W'].set_hp ( -0.9 , -3.4 ) ;
+    aaprop['Y'].set_hp ( -1.3 , -2.3 ) ;
+
     for ( a = 'a' ; a <= 'z' ; a++ ) aaprop[a] = aaprop[a-'a'+'A'] ;
     }
 
@@ -1201,6 +1223,7 @@ TAAProp::TAAProp ()
     mw = pi = 0 ;
     cf_f[0] = cf_f[1] = cf_f[2] = cf_f[3] = 0 ;
     cf_pa = cf_pb = cf_pt = 0 ;
+    hp_kd = hp_hw = 0 ;
     }
     
 void TAAProp::set_cf ( int pa , int pb , int pt , float f0 , float f1 , float f2 , float f3 )
@@ -1219,5 +1242,11 @@ void TAAProp::set_data ( float _mw , float _pi , string _tla )
     mw = _mw ;
     pi = _pi ;
     tla = _tla ;
+    }
+    
+void TAAProp::set_hp ( float _hp_kd , float _hp_hw )
+    {
+    hp_kd = _hp_kd ;
+    hp_hw = _hp_hw ;
     }
     

@@ -279,7 +279,9 @@ class SeqPlot : public SeqDNA
     virtual void useChouFasman () ;
     virtual void useMW () ;
     virtual void usePI () ;
+    virtual void useHP () ;
     virtual void showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph ) ;
+    virtual void init ( SequenceCanvas *ncan = NULL ) ;
 
     private :
     virtual void scanMinMax () ;
@@ -289,16 +291,19 @@ class SeqPlot : public SeqDNA
     virtual void showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx ) ;
     virtual void showMW ( wxDC &dc , int b , int tx , int ty , int lx ) ;
     virtual void showPI ( wxDC &dc , int b , int tx , int ty , int lx ) ;
+    virtual void showHP ( wxDC &dc , int b , int tx , int ty , int lx ) ;
     virtual void fixMinMax ( float &f ) ;
     virtual void drawDottedLine ( wxDC &dc , int x1 , int y1 , int x2 , int y2 ) ;
     virtual void myRect ( wxDC &dc , int x , int y , int w , int h ) ;
-    enum { CHOU_FASMAN , P_I , M_W } type ;
+    enum { CHOU_FASMAN , P_I , M_W , H_P } type ;
     int lines , l_top, l_bottom ;
     vector <string> d1 , d2 , d3 ;
     vector <TAAProp> prop ;
     bool startOfLine ;
     float data_max , data_min , data_h , data_step ;
     wxRect plotr ;
+    int hp_window ;
+    wxString hp_method ;
     } ;
 
 class SequenceCanvas : public wxScrolledWindow

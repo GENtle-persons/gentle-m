@@ -125,6 +125,7 @@ void TAminoAcids::initme ()
     lb->Append ( txt("t_schema") ) ;
     lb->Append ( txt("t_aa_plot_mw") ) ;
     lb->Append ( txt("t_aa_plot_pi") ) ;
+    lb->Append ( txt("t_aa_plot_hp") ) ;
     lb->Append ( txt("t_chou_fasman") ) ;
 
     curDisplay = new wxPanel ( this , -1 ) ;
@@ -492,7 +493,8 @@ void TAminoAcids::OnListBox ( wxCommandEvent& event )
         }
     else if ( t == txt("t_chou_fasman") ||
               t == txt("t_aa_plot_mw" ) ||
-              t == txt("t_aa_plot_pi" ) )
+              t == txt("t_aa_plot_pi" ) ||
+              t == txt("t_aa_plot_hp" ) )
         {
         if ( !update )
            {
@@ -523,6 +525,7 @@ void TAminoAcids::OnListBox ( wxCommandEvent& event )
         if ( t == txt("t_chou_fasman") ) seqP->useChouFasman() ;
         else if ( t == txt("t_aa_plot_mw") ) seqP->useMW () ;
         else if ( t == txt("t_aa_plot_pi") ) seqP->usePI () ;
+        else if ( t == txt("t_aa_plot_hp") ) seqP->useHP () ;
         
         if ( update )
            {
