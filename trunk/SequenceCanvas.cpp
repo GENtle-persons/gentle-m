@@ -1343,9 +1343,11 @@ void SequenceCanvas::OnWhatCuts(wxCommandEvent& event)
     for ( a = 0 ; a < p->vec->re.size() && p->vec->re[a] != e ; a++ ) ;
     if ( a == p->vec->re.size() )
         {
+        p->vec->undo.start ( txt("u_what_cuts") ) ;
         p->vec->re.push_back ( e ) ;
         p->vec->recalculateCuts() ;
         p->vec->recalcvisual = true ;
+        p->vec->undo.stop () ;
         p->cPlasmid->Refresh() ;
         p->updateSequenceCanvas ( true ) ;
         p->treeBox->initme() ;

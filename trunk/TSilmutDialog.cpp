@@ -7,7 +7,16 @@ BEGIN_EVENT_TABLE(TSilmutDialog, wxDialog )
     EVT_BUTTON(PD_SILMUT_OK,TSilmutDialog::OnOK)
     EVT_BUTTON(PD_SILMUT_CANCEL,TSilmutDialog::OnCancel)
     EVT_LISTBOX_DCLICK(PD_SILMUT_LB,TSilmutDialog::OnLbDoubleClick)
+    EVT_CHAR_HOOK(TSilmutDialog::OnCharHook)
 END_EVENT_TABLE()
+
+void TSilmutDialog::OnCharHook(wxKeyEvent& event)
+    {
+    int k = event.GetKeyCode () ;
+    wxCommandEvent ev ;
+    if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    else event.Skip() ;
+    }
 
 TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode )
     : wxDialog ( parent , -1 , s )

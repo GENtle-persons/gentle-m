@@ -19,6 +19,16 @@ class TPrimer ;
 class TPrimerDesign ;
 class TAlignment ;
 
+class TMutationDialog : public wxDialog
+    {
+    TMutationDialog(wxWindow *parent, const wxString& title , string _codon ) ;
+    virtual ~TMutationDialog () ;
+    
+    string codon , newcodon ;
+    char aa , newaa ;
+    TVector *v ;
+    } ;
+
 class TAlignmentDialog : public wxDialog
     {
     public :

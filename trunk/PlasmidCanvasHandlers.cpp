@@ -404,7 +404,20 @@ void PlasmidCanvas::OnPrimerBoth ( wxCommandEvent &ev )
 
 void PlasmidCanvas::OnPrimerMutation ( wxCommandEvent &ev )
     {
-    // Not yet implemented
+    vector <TPrimer> pl ;
+    int start = mark_from - 10 ;
+    int end = mark_from + 20 ;
+    if ( end >= p->vec->sequence.length() ) end = p->vec->sequence.length() ;
+    if ( start < 1 ) start = 1 ;
+    pl.push_back ( TPrimer ( start , end , true ) ) ;
+    
+    start = mark_from - 20 ;
+    end = mark_to + 10 ;
+    if ( end >= p->vec->sequence.length() ) end = p->vec->sequence.length() ;
+    if ( start < 1 ) start = 1 ;    
+    pl.push_back ( TPrimer ( start , mark_to , false ) ) ;
+    
+    RunPrimerEditor ( pl ) ;
     }
 
 // **** ORF popup menu handlers    
