@@ -20,9 +20,11 @@ class TUReadSeq
 
     static int getSeqType ( wxString t ) ; ///< Return the sequence type
     
+    short error ; // Parsing error
+    
     private :
     wxString filename ; ///< Name of source file
-    short error , format , numseqs ;
+    short format , numseqs ;
     long skiplines ;
     wxArrayString seq_names , seqs ;
     } ;

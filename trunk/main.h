@@ -1,7 +1,6 @@
-/** \file main.h
+/** \file
 	\brief Contains defines, global functions, includes, and the MyApp class
 */
-
 #ifndef _MAIN_H_
 #define _MAIN_H_
 

@@ -4,6 +4,9 @@
 // LGPL, as far as I (Magnus Manske) know...
 // Only used to work around the wxHTTP bug in 2.5.2.
 
+/** \file
+	\brief Contains the myExternal class
+*/
 #ifndef __WXMSW__ // Linux
 
 #include "main.h"

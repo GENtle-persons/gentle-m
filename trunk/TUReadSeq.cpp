@@ -10,6 +10,7 @@ TUReadSeq::TUReadSeq ( wxString _filename )
     getFormat () ;
     getSequenceNames() ;
     getSequences () ;
+    if ( seqs.GetCount() == 0 ) error = 1 ;
     }
     
 

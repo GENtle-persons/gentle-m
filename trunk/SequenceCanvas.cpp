@@ -1901,7 +1901,7 @@ void SequenceCanvas::rsHideLimit ( wxCommandEvent &ev )
 void SequenceCanvas::OnBacktranslate ( wxCommandEvent &ev )
     {
     int a ;
-    TVS cc ;
+    wxArrayString cc ;
     cc.push_back ( txt("t_codon_catalog_abstract") ) ;
     
     // Read available code catalog groups

@@ -5,7 +5,7 @@
 
 //********************************************************************** TPrimer
 
-TPrimer ( int _from = 0 , int _to = 0 , bool _upper )
+TPrimer::TPrimer ( int _from , int _to , bool _upper )
     {
     from = _from ;
     to = _to ;

@@ -1,3 +1,6 @@
+/** \file
+	\brief The TXMLfile class
+*/
 #include "TXMLfile.h"
 
 TXMLfile::TXMLfile ()
