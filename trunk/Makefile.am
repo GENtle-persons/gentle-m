@@ -1,6 +1,6 @@
 SUFFIXES=.cpp .rc
 
-bin_PROGRAMS = main
+bin_PROGRAMS = GENtle
 
 EXTRA_DIST = mondrian.xpm \
 variables.csv \
@@ -62,8 +62,8 @@ bitmaps/print.bmp \
 bitmaps/scissors.bmp
 
 
-main_LDADD = $(WX_LIBS) -L/usr/lib -lsqlite -lmysqlclient
-main_SOURCES = TXMLfile.cpp\
+GENtle_LDADD = $(WX_LIBS) -L/usr/lib -lsqlite -lmysqlclient
+GENtle_SOURCES = TXMLfile.cpp\
 TVectorTree.cpp\
 TVirtualGel.cpp\
 TVectorEditorItems.cpp\
