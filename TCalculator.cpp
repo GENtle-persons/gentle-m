@@ -198,12 +198,12 @@ void TGridLigation::recalc ()
     double mb = 610 ;
     double ten3 = 1000 , ten6 = ten3*ten3 , ten9 = ten6*ten3 , ten15 = ten9*ten6 ;
     double t_g , v_l , v_c , i_l , i_c , i2v ;
-    GetCellValue(0,1).ToDouble ( &t_g ) ;
-    GetCellValue(1,1).ToDouble ( &v_l ) ;
-    GetCellValue(2,1).ToDouble ( &v_c ) ;
-    GetCellValue(3,1).ToDouble ( &i_l ) ;
-    GetCellValue(4,1).ToDouble ( &i_c ) ;
-    GetCellValue(5,1).ToDouble ( &i2v ) ;
+    t_g = getDouble ( 0 , 1 ) ;
+    v_l = getDouble ( 1 , 1 ) ;
+    v_c = getDouble ( 2 , 1 ) ;
+    i_l = getDouble ( 3 , 1 ) ;
+    i_c = getDouble ( 4 , 1 ) ;
+    i2v = getDouble ( 5 , 1 ) ;
     
     double t_ng = t_g / ten9 ;
     double v_gm = mb * v_l ;
@@ -288,10 +288,10 @@ void TGridDNA::init ()
 void TGridDNA::recalc ()
     {
     double a260 , a280 , v , u ;
-    GetCellValue(0,1).ToDouble ( &a260 ) ;
-    GetCellValue(1,1).ToDouble ( &a280 ) ;
-    GetCellValue(2,1).ToDouble ( &v ) ;
-    GetCellValue(3,1).ToDouble ( &u ) ;
+    a260 = getDouble ( 0 , 1 ) ;
+    a280 = getDouble ( 1 , 1 ) ;
+    v = getDouble ( 2 , 1 ) ;
+    u = getDouble ( 3 , 1 ) ;
     
     double conc = a260 * v * u / 1000 ;
     double pure = 0 ;
@@ -353,14 +353,14 @@ void TGridProtein::init ()
 void TGridProtein::recalc ()
     {
     double e250 , e280 , trp , tyr , cys , mw , d ;
-    GetCellValue(0,1).ToDouble ( &e250 ) ;
-    GetCellValue(1,1).ToDouble ( &e280 ) ;
-    GetCellValue(2,1).ToDouble ( &trp ) ;
-    GetCellValue(3,1).ToDouble ( &tyr ) ;
-    GetCellValue(4,1).ToDouble ( &cys ) ;
-    GetCellValue(5,1).ToDouble ( &mw ) ;
-    GetCellValue(6,1).ToDouble ( &d ) ;
-    
+    e250 = getDouble ( 0 , 1 ) ;
+    e280 = getDouble ( 1 , 1 ) ;
+    trp = getDouble ( 2 , 1 ) ;
+    tyr = getDouble ( 3 , 1 ) ;
+    cys = getDouble ( 4 , 1 ) ;
+    mw = getDouble ( 5 , 1 ) ;
+    d = getDouble ( 6 , 1 ) ;
+   
     double a , c , e , r ;
     r = ( e250 != 0 && e280 != 0 ) ? e280 / e250 : 0 ;
     
@@ -493,3 +493,12 @@ void TGridBasic::print ( int mode )
         }
     }
     
+double TGridBasic::getDouble ( int y , int x )
+    {
+    double ret ;
+    wxString s = GetCellValue(y,x);
+    s.Replace ( "," , "." ) ;
+    s.ToDouble ( &ret ) ;
+    return ret ;
+    }
+

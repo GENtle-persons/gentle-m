@@ -338,6 +338,7 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void OnViewOriginal ( wxCommandEvent &ev ) ;
     virtual void OnViewReal ( wxCommandEvent &ev ) ;
     virtual void OnViewCondensed ( wxCommandEvent &ev ) ;
+    virtual void OnBacktranslate ( wxCommandEvent &ev ) ;
 
     virtual void OnSeqUp ( wxCommandEvent &ev ) ;
     virtual void OnSeqDown ( wxCommandEvent &ev ) ;

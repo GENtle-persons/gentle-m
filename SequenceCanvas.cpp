@@ -31,6 +31,7 @@ BEGIN_EVENT_TABLE(SequenceCanvas, wxScrolledWindow)
     EVT_MENU(SEQ_AA_VIEW_ORIGINAL,SequenceCanvas::OnViewOriginal)
     EVT_MENU(SEQ_AA_VIEW_REAL,SequenceCanvas::OnViewReal)
     EVT_MENU(SEQ_AA_VIEW_CONDENSED,SequenceCanvas::OnViewCondensed)
+    EVT_MENU(SEQ_AA_BACKTRANSLATE,SequenceCanvas::OnBacktranslate)
 
     EVT_MENU(SEQ_UP,SequenceCanvas::OnSeqUp)
     EVT_MENU(SEQ_DOWN,SequenceCanvas::OnSeqDown)
@@ -1277,6 +1278,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
            {
            cm = new wxMenu ;
            cm->Append ( AMINOACIDS_EDIT_NAME , txt("m_edit_aa") ) ;
+           cm->Append ( SEQ_AA_BACKTRANSLATE, txt("m_aa_backtranslate") ) ;
            if ( _from != -1  )
               {
                cm->Append ( MDI_CUT , txt("m_cut") ) ;
@@ -1756,6 +1758,12 @@ void SequenceCanvas::rsHideLimit ( wxCommandEvent &ev )
     arrange () ;
     Refresh () ;
     }
+    
+void SequenceCanvas::OnBacktranslate ( wxCommandEvent &ev )
+    {
+    TVector *nv = getAA()->vec->backtranslate () ;
+    myapp()->frame->newFromVector ( nv , TYPE_VECTOR ) ;
+    }    
     
 void SequenceCanvas::OnPaste ( wxCommandEvent &ev )
     {

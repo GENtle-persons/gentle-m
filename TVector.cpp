@@ -126,7 +126,11 @@ void TVector::init ()
          "VVVVAAAADDEEGGGG" ;
          
     // Static initialization
-    if ( aaprop.size() > 0 ) return ;
+    if ( aaprop.size() > 0 )
+        {
+        makeAA2DNA () ;
+        return ;
+        }    
 
     int a ;
     
@@ -248,7 +252,52 @@ void TVector::init ()
     aaprop['Y'].set_hp ( -1.3 , -2.3 ) ;
 
     for ( a = 'a' ; a <= 'z' ; a++ ) aaprop[a] = aaprop[a-'a'+'A'] ;
+    makeAA2DNA () ;
+}    
+    
+void TVector::makeAA2DNA ()
+    {
+    int a , b , c , e ;
+    wxString iu = "ACGT" ;
+    for ( a = 0 ; a < iu.length() ; a++ )
+       {
+       for ( b = 0 ; b < iu.length() ; b++ )
+          {
+          for ( c = 0 ; c < iu.length() ; c++ )
+             {
+             wxString codon ;
+             codon += iu.GetChar(a) ;
+             codon += iu.GetChar(b) ;
+             codon += iu.GetChar(c) ;
+             unsigned char z = dna2aa ( codon ) . GetChar ( 0 ) ;
+             AA2DNA[z] = mergeCodons ( codon , AA2DNA[z] ) ;
+             }    
+          }    
+       }    
+    for ( a = 0 ; a < 256 ; a++ )
+        if ( AA2DNA[a].IsEmpty() )
+           AA2DNA[a] = "NNN" ;
     }
+    
+wxString TVector::mergeCodons ( wxString c1 , wxString c2 )
+    {
+    if ( c1 == "" ) c1 = "   " ;
+    if ( c2 == "" ) c2 = "   " ;
+    int a , b ;
+    wxString ret ;
+    for ( a = 0 ; a < 3 ; a++ )
+        {
+        char a1 = c1.GetChar ( a ) ;
+        char a2 = c2.GetChar ( a ) ;
+        char r = 'N' ;
+        int u = SIUPAC[a1] | SIUPAC[a2] ;
+        for ( b = 0 ; b < 256 ; b++ )
+           if ( SIUPAC[b] == u )
+              r = b ;
+        ret += r ;
+        }
+    return ret ;
+    }    
 
 void TVector::removeBlanksFromSequence ()
     {
@@ -1129,6 +1178,28 @@ char TVector::three2one ( wxString s )
               return a ;
        }    
     return ' ' ;
+    }    
+    
+// "Back-translate" amino acid sequence to DNA
+TVector *TVector::backtranslate ()
+    {
+    TVector *nv = new TVector ;
+    nv->setFromVector ( *this ) ;
+    nv->type = TYPE_VECTOR ;
+    wxString ns ;
+    int a ;
+    for ( a = 0 ; a < sequence.length() ; a++ )
+        {
+        unsigned char c = sequence.GetChar ( a ) ;
+        ns += AA2DNA[c] ;
+        }    
+    nv->sequence = ns ;
+    for ( a = 0 ; a < nv->items.size() ; a++ )
+       {
+       nv->items[a].from *= 3 ;
+       nv->items[a].to *= 3 ;
+       }    
+    return nv ;
     }    
 
 

@@ -22,6 +22,7 @@ class TGridBasic : public wxGrid
     virtual void gridSetEntry ( int y , int x , wxString title , wxString value = "0" , wxString unit = "" ) ;
     virtual void gridSetValue ( int y , int x , wxString value , wxString unit = "" ) ;
     virtual void print ( int mode ) ;
+    virtual double getDouble ( int y , int x ) ;
     } ;
     
 class TGridLigation : public TGridBasic

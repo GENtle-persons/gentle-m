@@ -310,6 +310,7 @@ enum {
     MDI_SEL_AS_NEW_PRIMER,
     PC_RS_HIDE_LIMIT,
     MDI_TOGGLE_IDNA,
+    SEQ_AA_BACKTRANSLATE,
     
     Z___
     } ;

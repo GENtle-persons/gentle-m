@@ -186,6 +186,7 @@ class TVector
     virtual void setFromVector ( TVector &v ) ;
     virtual void doRemoveNucleotide ( int x ) ;
     virtual int getItemLength ( int a ) ;
+    virtual TVector *backtranslate () ;
 
     virtual TAAProp getAAprop ( char a ) ;
     virtual int find_item ( wxString s ) ;
@@ -222,6 +223,8 @@ class TVector
     private :
     virtual wxString invert ( wxString s ) ;
     virtual wxString vary_base ( char b ) ;
+    virtual void makeAA2DNA () ;
+    virtual wxString mergeCodons ( wxString c1 , wxString c2 ) ;
 
     wxString sequence ;    
     wxString _lu , _ll , _ru , _rl ; // Sticky ends
@@ -230,6 +233,7 @@ class TVector
     ChildBase *window ;
     int turned , action_value ;
     wxString params , database , action , aa ;
+    wxString AA2DNA[256] ;
     
     static char IUPAC[256] , SIUPAC[256] , COMPLEMENT[256] ;
     static char ACGT[256] ;
