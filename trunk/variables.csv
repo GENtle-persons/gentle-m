@@ -671,3 +671,6 @@
 "t_error","An error has occured!","Es ist ein Fehler aufgetreten!"
 "author(s)","Author(s)","Autor(en)"
 "sort","Sort by","Sortieren nach"
+"b_last","<<","<<"
+"b_next",">>",">>"
+"t_ext_show_res","Showing results %d-%d of %d","Suchergebnisse %d-%d von %d"
