@@ -591,17 +591,18 @@ void MyChild::initPanels ()
 //        vec->recalculateCuts() ; // TESTING!!!
         }    
 //    wxStartTimer() ;    
-    SeqFeature *seqF = new SeqFeature ( cSequence ) ;
+    SeqFeature *seqF ;
+    if ( !vec->getGenomeMode() ) seqF = new SeqFeature ( cSequence ) ;
     SeqDNA *seq = new SeqDNA ( cSequence ) ;
     SeqRestriction *seqR = new SeqRestriction ( cSequence ) ;
     SeqAA *seqAA = new SeqAA ( cSequence ) ;
     cSequence->seq.Clear () ;
-    cSequence->seq.Add ( seqF ) ;
+    if ( !vec->getGenomeMode() ) cSequence->seq.Add ( seqF ) ;
     cSequence->seq.Add ( seqAA ) ;
     cSequence->seq.Add ( seq ) ;
     cSequence->seq.Add ( seqR ) ;
-    seqF->aaa = seqAA ;
-    seqF->initFromTVector ( vec ) ;
+    if ( !vec->getGenomeMode() ) seqF->aaa = seqAA ;
+    if ( !vec->getGenomeMode() ) seqF->initFromTVector ( vec ) ;
     seq->initFromTVector ( vec ) ;    
     seqR->initFromTVector ( vec ) ;    
     seqAA->initFromTVector ( vec ) ;    
@@ -619,7 +620,7 @@ void MyChild::initPanels ()
     
 #ifdef __WXMSW__ // LINUX
     GetToolBar()->ToggleTool(MDI_CIRCULAR_LINEAR,vec->isCircular());
-    GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,cSequence->findID("FEATURE"));
+    if ( !vec->getGenomeMode() ) GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,cSequence->findID("FEATURE"));
     GetToolBar()->ToggleTool(MDI_TOGGLE_RESTRICTION,cSequence->findID("RESTRICTION"));
 #endif
 

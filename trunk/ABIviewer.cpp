@@ -64,6 +64,10 @@ TABIviewer::~TABIviewer ()
     
 void TABIviewer::OnHorizontal(wxCommandEvent& event)
     {
+    if ( sc->charheight == 0 )
+        {
+        return ;
+        }    
     if ( sc->isHorizontal() )
         {
         f_height->SetValue ( oldh ) ;

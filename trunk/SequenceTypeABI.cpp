@@ -9,7 +9,7 @@ SeqABI::~SeqABI ()
 
 int SeqABI::arrange ( int n )
     {
-    int a , x , y , w , h , l = 0 , bo = 4 , lowy = 0 ;
+    int a , x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
     int lasta = 0 ;
     
     // Setting basic values

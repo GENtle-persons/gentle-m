@@ -88,7 +88,7 @@ int SequencePartList::getLevel ( int i )
 int SeqRestriction::arrange ( int n )
     {
     unsigned int a , b ;
-    int x , y , w , h , l = 0 , bo = 4 , lowy = 0 ;
+    int x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
     int lasta = 0 , cut , thepos ;
     wxString t ;
     
@@ -109,33 +109,34 @@ int SeqRestriction::arrange ( int n )
     int ox = bo+wx , oy = n*wy+bo , endnumber = offset + vec->getSequenceLength() ;
     while ( endnumber > 0 ) { endnumber /= 10 ; ox += wx ; endnumberlength++ ; }
     
-    can->MyGetSize ( &w , &h ) ;
-    w -= 20 ; // Scrollbar dummy
+    can->MyGetClientSize ( &w , &h ) ;
+
+    int itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx - 1 ) * can->blocksize ;
 
     pos.cleanup() ;
-    pos.reserve ( vec->getSequenceLength() , 0 ) ;
+    pos.reserve ( vec->getSequenceLength() , 0 , true ) ;
     x = ox ;
     y = oy ;
 
+    int icnt = 0 ;
     for ( a = 0 ; a < vec->getSequenceLength() ; a++ )
         {
-        pos.add ( a+1 , x , y , wx-1 , wy-1 ) ;
+        icnt++ ;
+        pos.add ( a+1 , x , y , wx-1 , wy-1 , true ) ;
         lowy = y+wy ;
         x += wx ;
         if ( (a+1) % can->blocksize == 0 )
            {
            x += wx-1 ;
-           if ( x+wx*(can->blocksize+1) >= w )
+           if ( icnt == itemsperline )
               {
-//              pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
-              lasta = pos.p.GetCount()+1 ;
+              icnt = 0 ;
+              lasta = pos.r.size()+1 ;
               x = ox ;
               y += wy * ( can->seq.GetCount() + can->blankline ) ;
               }
            }
         }
-//    if ( lasta != pos.p.GetCount()+1 ) 
-//        pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
 
     return lowy + bo*2 ;
     }
@@ -177,11 +178,12 @@ void SeqRestriction::show ( wxDC& dc )
            dc.SetTextForeground ( *wxBLACK ) ; 
            }
         int qlx = -1 , idx ;
-        for ( a = 0 ; a < pos.p.GetCount() ; a++ )
+        for ( a = 0 ; a < vec->getSequenceLength() /*pos.p.GetCount()*/ ; a++ )
             {
             if ( can->hardstop > -1 && a > can->hardstop ) break ;
             char c = ' ' ;
-            b = pos.p[a] ;
+//            b = pos.p[a] ;
+            b = a + 1 ;
             int tx = pos.r[a].x , ty = pos.r[a].y ;
             int tz = ty + can->charheight ;
             
@@ -249,7 +251,7 @@ void SeqRestriction::show ( wxDC& dc )
                   }
                }
             lc = c ;
-            if ( !can->getDrawAll() && pos.r[a].GetTop() > yb ) a = pos.p.GetCount() ;
+            if ( !can->getDrawAll() && pos.r[a].GetTop() > yb ) a = vec->getSequenceLength() ;//pos.p.GetCount() ;
             }
         }
     dc.SetTextForeground ( wxColor ( *wxBLACK ) ) ;

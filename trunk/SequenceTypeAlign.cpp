@@ -5,7 +5,7 @@
 
 int SeqAlign::arrange ( int n )
     {
-    int a , x , y , w , h , l = 0 , bo = 4 , lowy = 0 ;
+    int a , x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
     int lasta = 0 ;
     
     // Setting basic values
@@ -122,7 +122,7 @@ void SeqAlign::show ( wxDC& dc )
         if ( b > 0 && insight ) // Character
            {
            t = s.GetChar(b-1) ;
-           if ( pos.m[a] == 1 )
+           if ( getMark ( a ) == 1 )
               {
               dc.SetTextBackground ( *wxLIGHT_GREY ) ;
               dc.SetTextForeground ( *wxBLACK ) ;
@@ -168,7 +168,7 @@ void SeqAlign::show ( wxDC& dc )
               dc.SetBackgroundMode ( wxSOLID ) ;
               }
 
-           if ( pos.m[a] > 0 )
+           if ( getMark ( a ) > 0 )
               {
               dc.SetTextForeground ( fg ) ;
               dc.SetTextBackground ( bg ) ;

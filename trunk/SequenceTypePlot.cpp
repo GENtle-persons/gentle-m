@@ -17,7 +17,7 @@ wxString SeqPlot::getTip ( int pos )
 int SeqPlot::arrange ( int n )
     {
     if ( s.IsEmpty() ) return 0 ;
-    int a , x , y , w , h , l = 0 , bo = 4 , lowy = 0 ;
+    int a , x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
     int lasta = 0 ;
     
     // Setting basic values
@@ -160,7 +160,7 @@ void SeqPlot::show ( wxDC& dc )
            {
            if ( lx == 0 ) lx = tx ;
            t = s.GetChar(b-1) ;
-           if ( can->isPrinting() && pos.m[a] == 1 )
+           if ( can->isPrinting() && getMark ( a ) == 1 )
               {
               dc.SetBrush ( *MYBRUSH ( wxColour ( 230 , 230 , 230 ) ) ) ;
               dc.SetPen(*wxTRANSPARENT_PEN);
@@ -224,7 +224,7 @@ void SeqPlot::showMW ( wxDC &dc , int b , int tx , int ty , int lx )
         int tz = ty + (u-1) * ch + 1 ;
         int tw = ( tx + cw ) - lx ;
         
-        if ( pos.m[b+1] > 0 )
+        if ( getMark ( b+1 ) > 0 )
            {
            dc.SetPen ( *wxGREY_PEN ) ;
            myRect ( dc , lx , tz , tw , ch*can->charheight - 2 ) ;
@@ -260,7 +260,7 @@ void SeqPlot::showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx )
         int tz = ty + (u-1) * ch + 1 ;
         int tw = ( tx + cw ) - lx ;
         
-        if ( pos.m[b+1] > 0 )
+        if ( getMark ( b+1 ) > 0 )
            {
            dc.SetPen ( *wxGREY_PEN ) ;
            myRect ( dc , lx , tz , tw , ch*can->charheight - 2 ) ;

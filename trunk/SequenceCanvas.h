@@ -56,15 +56,16 @@ class SequencePartList
 class SeqPos
     {
     public :
-    wxArrayInt p , m ;
+    wxArrayInt p ;
+    wxString m ;
     vector <wxRect> r , l ;
     
     virtual void cleanup () ;
-    virtual void add ( int np , int x , int y , int w , int h ) ;
+    virtual void add ( int np , int x , int y , int w , int h , bool memsave = false ) ;
     virtual void addline ( int from , int to , int vfrom , int vto ) ;
     virtual int getLine ( int y ) ;
     virtual int getItem ( wxPoint pt , int line ) ;
-    virtual void reserve ( int n , int n2 = -1 ) ;
+    virtual void reserve ( int n , int n2 = -1 , bool memsave = false ) ;
     } ;
 
 class SeqBasic
@@ -79,13 +80,31 @@ class SeqBasic
     virtual wxPoint showText ( int ystart , wxArrayString &tout )
         { return wxPoint ( -1 , -1 ) ; } ;
     virtual wxString whatsthis () { return "BASIC" ; }
+    virtual void makeEndnumberLength() { endnumberlength = 0 ; } ;
+    
+    virtual bool useDirectRoutines () { return false ; }
+    virtual int getMarkSize () { return pos.m.length() ; }
+    virtual int getRectSize () { return pos.r.size() ; }
+    virtual wxRect getRect ( int i ) { return pos.r[i] ; }
+    virtual int getMark ( int i ) { return pos.m.GetChar(i) - ' ' ; }
+    virtual void setMark ( int i , int v ) { pos.m.SetChar ( i , v + ' ' ) ; }
+    virtual int getPos ( int i ) { return pos.p[i] ; }
+    virtual void setPos ( int i , int v ) { pos.p[i] = v ; }
+    virtual int getLine ( int y ) { return pos.getLine ( y ) ; }
+    virtual int getItem ( wxPoint pt , int line ) { return pos.getItem ( pt , line ) ; }
+    virtual bool isDisplayOnly () { return false ; }
     
     // Variables
-    SeqPos pos ;
     wxString s ;
     int offset , endnumberlength ;
     SequenceCanvas *can ;
     bool takesMouseActions , shown ;
+    
+    protected :
+    virtual int arrange_direct ( int n ) { return arrange ( n ) ; }
+    virtual void show_direct ( wxDC& dc ) { show ( dc ) ; } ;
+
+    SeqPos pos ;
     } ;
 
 class SeqNum : public SeqBasic
@@ -95,6 +114,7 @@ class SeqNum : public SeqBasic
     virtual wxString whatsthis () { return "NUM" ; }
     virtual int  arrange ( int n ) ;
     virtual void show ( wxDC& dc ) ;
+    virtual bool isDisplayOnly () { return true ; }
     } ;
 
 class SeqDivider : public SeqBasic
@@ -105,6 +125,7 @@ class SeqDivider : public SeqBasic
     virtual void initFromTVector ( TVector *v ) ;
     virtual int  arrange ( int n ) ;
     virtual void show ( wxDC& dc ) ;
+    virtual bool isDisplayOnly () { return true ; }
     
     // Variables
     int itemsperline ;
@@ -116,6 +137,7 @@ class SeqBlank : public SeqDivider
     SeqBlank ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; offset = 0 ; }
     virtual wxString whatsthis () { return "BLANK" ; }
     virtual void show ( wxDC& dc ) {} ;
+    virtual bool isDisplayOnly () { return true ; }
     } ;
 
 class SeqDNA : public SeqBasic
@@ -128,6 +150,20 @@ class SeqDNA : public SeqBasic
     virtual wxString whatsthis () { return invers ? "IDNA" : "DNA" ; }
     virtual wxPoint showText ( int ystart , wxArrayString &tout ) ;
     virtual wxColor getBaseColor ( char b ) ;
+    virtual int arrange_direct ( int n ) ;
+    virtual void show_direct ( wxDC& dc ) ;
+    virtual void makeEndnumberLength() ;
+
+    virtual bool useDirectRoutines () ;
+    virtual int getMarkSize () ;
+    virtual int getRectSize () ;
+    virtual wxRect getRect ( int i ) ;
+    virtual int getMark ( int i ) ;
+    virtual void setMark ( int i , int v ) ;
+    virtual int getPos ( int i ) ;
+    virtual void setPos ( int i , int v ) ;
+    virtual int getLine ( int y ) ;
+    virtual int getItem ( wxPoint pt , int line ) ;
         
     // Variables
     TVector *vec ;
@@ -149,6 +185,9 @@ class SeqPrimer : public SeqDNA
     virtual void initFromTVector ( TVector *v ) ;
     virtual void addPrimer ( TPrimer *p ) ;
     virtual wxString whatsthis () { return myname ; }
+    virtual int arrange_direct ( int n ) { return arrange ( n ) ; }
+    virtual void show_direct ( wxDC& dc ) { show ( dc ) ; } ;
+    virtual bool useDirectRoutines () { return false ; }
     
     // Variables
     wxString myname ;
@@ -176,6 +215,7 @@ class SeqRestriction : public SeqBasic
     virtual void show ( wxDC& dc ) ;
     virtual void initFromTVector ( TVector *v ) ;
     virtual wxString whatsthis () { return "RESTRICTION" ; }
+    virtual bool isDisplayOnly () { return true ; }
     
     // Variables
     TVector *vec ;
@@ -202,6 +242,18 @@ class SeqAA : public SeqBasic
     virtual void updateProteases () ;
     virtual void fixOffsets ( TVector *v ) ;
     virtual wxString whatsthis () { return "AA" ; }
+    virtual int arrange_direct ( int n ) ;
+    virtual void show_direct ( wxDC& dc ) ;
+    virtual bool useDirectRoutines () ;
+    virtual int getMarkSize () ;
+    virtual int getRectSize () ;
+    virtual wxRect getRect ( int i ) ;
+    virtual int getMark ( int i ) ;
+    virtual void setMark ( int i , int v ) ;
+    virtual int getPos ( int i ) ;
+    virtual void setPos ( int i , int v ) ;
+    virtual int getLine ( int y ) ;
+    virtual int getItem ( wxPoint pt , int line ) ;
     
     // Variables
     TVector *vec ;
@@ -228,6 +280,9 @@ class SeqABI : public SeqDNA
     virtual void drawTopLine ( wxDC &dc , int y ) ;
     virtual wxColor getBaseColor ( char b ) ;
     virtual void setInvCompl ( bool x ) ;
+    virtual int arrange_direct ( int n ) { return arrange ( n ) ; }
+    virtual void show_direct ( wxDC& dc ) { show ( dc ) ; } ;
+    virtual bool useDirectRoutines () { return false ; }
     
     // Variables
     ABItype *at ;
@@ -250,6 +305,10 @@ class SeqFeature : public SeqDNA
     virtual void initFromTVector ( TVector *v ) ;
     virtual bool collide ( int a , int b ) ;
     virtual bool doesHit ( int a , int x ) ;
+    virtual int arrange_direct ( int n ) { return arrange ( n ) ; }
+    virtual void show_direct ( wxDC& dc ) { show ( dc ) ; } ;
+    virtual bool useDirectRoutines () { return false ; }
+    virtual bool isDisplayOnly () { return true ; }
     
     // Variables
     vector <wxRect> vr ;
@@ -276,6 +335,9 @@ class SeqPlot : public SeqDNA
     virtual void showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph ) ;
     virtual void init ( SequenceCanvas *ncan = NULL ) ;
     virtual wxString getTip ( int pos ) ;
+    virtual int arrange_direct ( int n ) { return arrange ( n ) ; }
+    virtual void show_direct ( wxDC& dc ) { show ( dc ) ; } ;
+    virtual bool useDirectRoutines () { return false ; }
 
     private :
     virtual void scanMinMax () ;
@@ -399,11 +461,12 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void stopEdit () ;
     virtual int markedFrom () { return _from ; }
     virtual int markedTo () { return _to ; }
+    virtual int NumberOfLines() { return seq.GetCount() + blankline ; }
 
     ChildBase *child ; // Wanna-be universal com port to "parent"
     MyChild *p ;
     int blankline , charwidth , charheight , hardstop ;
-    int lastmarked , maxendnumberlength , lastyoffset , blocksize ;
+    int lastmarked , maxendnumberlength , lastyoffset , blocksize , border ;
     wxArraySeqBasic seq ;
     wxFont *font , *smallFont , *varFont;
     wxString edit_id , edit_valid ;

@@ -966,7 +966,7 @@ TVector *TVector::getAAvector ( int from , int to , int dir )
            }
         }
     v->circular = false ;
-    
+
     SeqAA aas ( NULL ) ;
     aas.disp = AA_ONE ;
     if ( dir > 0 ) aas.mode = AA_THREE_1 ;
