@@ -443,7 +443,7 @@ void TVector::doRestriction ()
     int a , b , c ;
     
     if ( cocktail.size() == 0 ) return ;
-    wxASSERT_MSG ( myapp() , "Oh no! No application defined!" ) ;
+    myass ( myapp() , "Oh no! No application defined!" ) ;
     myapp()->frame->lastCocktail = cocktail ;
     
     TRestrictionEnzyme blankEnzyme ;
@@ -462,7 +462,7 @@ void TVector::doRestriction ()
           doRecalc = true ;
           recalcvisual = true ;
           re.push_back ( myapp()->frame->LS->getRestrictionEnzyme ( cocktail[a].c_str() ) ) ;
-          wxASSERT_MSG ( re[re.size()-1] , "Oh no! Unknown enzyme!" ) ;
+          myass ( re[re.size()-1] , "Oh no! Unknown enzyme!" ) ;
           }
        }
     if ( doRecalc ) recalculateCuts() ;
