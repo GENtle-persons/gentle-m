@@ -33,6 +33,7 @@ TAminoAcids::TAminoAcids(MyFrame *parent, const wxString& title)
     stat = NULL ;
     pc = NULL ;
     sc2 = NULL ;
+    lastLBsel = "" ;
     miniDisplayOptions = MINI_DISPLAY_CONDENSED ;
     }
     
@@ -104,7 +105,6 @@ void TAminoAcids::initme ()
     sc = new SequenceCanvas ( this , wxPoint ( 0 , 0 ) , wxSize ( 100 , 100 ) ) ;
     cSequence = sc ; // For compatability with PlasmidCanvas
     sc->blankline = 1 ;
-    sc->aa = this ;
     sc->child = this ;
     sc->edit_id = "AA" ;
     sc->edit_valid = "ACDEFGHIKLMNPQRSTVWY|" ;
@@ -182,6 +182,7 @@ string TAminoAcids::getName ()
 
 void TAminoAcids::showStat ()
     {
+    if ( !curDisplay ) return ;
     if ( curDisplay == desc ) desc->SetValue ( vec->desc.c_str() ) ;
     if ( curDisplay != stat ) return ;
     char t[10000] ;
@@ -211,7 +212,6 @@ void TAminoAcids::showStat ()
     if ( noaa > 0 ) abs = ex / noaa / 100 ;
     sprintf ( t , txt("aa_info") , noaa , mW , pI , ex , abs ) ;
     stat->SetValue ( t ) ;
-    
     }
 
 void TAminoAcids::showSequence ()
@@ -248,8 +248,10 @@ void TAminoAcids::showSequence ()
     seqF->aaa = d ;
         
     sc->arrange () ;
-    sc->Refresh () ;    
-    showStat() ;
+    sc->SilentRefresh () ;    
+
+    wxCommandEvent event ;
+    OnListBox ( event ) ;
     }
     
 void TAminoAcids::OnEditMode(wxCommandEvent& event)
@@ -259,7 +261,7 @@ void TAminoAcids::OnEditMode(wxCommandEvent& event)
     wxString s ;
     if ( mi->IsChecked() )
         {
-        sc->editMode = true ;
+        sc->setEditMode ( true ) ;
         sc->findID("AA")->s += " " ;
         vec->sequence += " " ;
         sc->arrange () ;
@@ -269,14 +271,14 @@ void TAminoAcids::OnEditMode(wxCommandEvent& event)
         }
     else
         {
-        sc->editMode = false ;
+        sc->setEditMode ( false ) ;
         sc->mark ( "AA" , -1 , -1 ) ;
         vec->sequence.erase ( vec->sequence.length()-1 , 1 ) ;
         sc->findID("AA")->s.erase ( sc->findID("AA")->s.length()-1 , 1 ) ;
         sc->arrange () ;
         Refresh () ;
         }
-    if ( sc->editMode ) vec->undo.start ( txt("u_edit") ) ;
+    if ( sc->getEditMode() ) vec->undo.start ( txt("u_edit") ) ;
     else vec->undo.stop () ;
     }
 
@@ -433,7 +435,7 @@ void TAminoAcids::Redo(wxCommandEvent& event)
     
 void TAminoAcids::OnHorizontal ( wxCommandEvent& event )
     {
-    sc->isHorizontal = !sc->isHorizontal ;
+    sc->toggleHorizontal () ;
     sc->arrange () ;
     sc->SilentRefresh() ;    
     }
@@ -445,77 +447,106 @@ void TAminoAcids::OnIP ( wxCommandEvent& event )
     
 void TAminoAcids::OnListBox ( wxCommandEvent& event )
     {
-    Freeze() ;
+    bool update = false ;
     wxString t = lb->GetStringSelection() ;
-    if ( curDisplay )
+    if ( t == lastLBsel ) update = true ;
+    else lastLBsel = t ;
+    
+    if ( !update )
         {
-        h1->Remove ( curDisplay ) ;
-        delete curDisplay ;
+        Freeze() ;
+        if ( curDisplay )
+            {
+            h1->Remove ( curDisplay ) ;
+            delete curDisplay ;
+            }
+        curDisplay = NULL ;
+        desc = NULL ;
+        stat = NULL ;
+        sc2 = NULL ;
         }
-    curDisplay = NULL ;
-    desc = NULL ;
-    stat = NULL ;
-    sc2 = NULL ;
     if ( t == txt("desc") )
         {
-        desc = new TURLtext ( this ,
+        if ( update ) desc->SetValue ( vec->desc.c_str() )  ;
+        else
+           {
+           desc = new TURLtext ( this ,
                             URLTEXT_DUMMY ,
                             vec->desc.c_str() ,
                             wxDefaultPosition,
                             wxSize ( 250 , 90 ) ,
                             wxTE_MULTILINE | wxTE_READONLY ) ;
-        h1->Add ( desc , 1 , wxEXPAND , 5 ) ;
-        curDisplay = desc ;
+           h1->Add ( desc , 1 , wxEXPAND , 5 ) ;
+           curDisplay = desc ;
+           }
         }
     else if ( t == txt("t_data") )
         {
-        stat = new wxTextCtrl ( this ,
+        if ( !update ) 
+           {
+           stat = new wxTextCtrl ( this ,
                             -1 ,
                             "" ,
                             wxDefaultPosition,
                             wxSize ( 200 , 90 ) ,
                             wxTE_MULTILINE | wxTE_READONLY ) ;
-        curDisplay = stat ;
-        h1->Add ( stat , 1 , wxEXPAND , 5 ) ;
+           curDisplay = stat ;
+           h1->Add ( stat , 1 , wxEXPAND , 5 ) ;
+           }
         showStat () ;
         }
     else if ( t == txt("t_schema") )
         {
-        pc = new PlasmidCanvas ( this , wxDefaultPosition , wxSize ( 250 , 90 ) ) ;
-        pc->p = (MyChild*) this ;
         vec->recalcvisual = true ;
-        h1->Add ( pc , 1 , wxEXPAND , 5 ) ;
-        curDisplay = pc ;        
+        if ( update ) pc->Refresh() ;
+        else
+           {
+           pc = new PlasmidCanvas ( this , wxDefaultPosition , wxSize ( 250 , 90 ) ) ;
+           pc->setRootChild ( (MyChild*) this ) ;
+           h1->Add ( pc , 1 , wxEXPAND , 5 ) ;
+           curDisplay = pc ;
+           }
         }
     else if ( t == txt("t_chou_fasman") )
         {
-        sc2 = new SequenceCanvas(this, wxDefaultPosition, wxSize(250, 90));
-        sc2->blankline = 1 ;
-        sc2->aa = this ;
-        sc2->child = this ;
-        sc2->edit_id = "AA" ;
-        sc2->edit_valid = "ACDEFGHIKLMNPQRSTVWY|" ;
-        h1->Add ( sc2 , 1 , wxEXPAND , 5 ) ;
-        curDisplay = sc2 ;        
-/*
-        SeqAA *d = new SeqAA ( sc2 ) ;
-        sc2->seq.push_back ( d ) ;
-        d->primaryMode = true ;
-        d->takesMouseActions = true ;
-        d->initFromString ( vec->sequence ) ;
-        d->fixOffsets ( vec ) ;
-*/
+        if ( !update )
+           {
+           sc2 = new SequenceCanvas(this, wxDefaultPosition, wxSize(250, 90));
+           sc2->blankline = 1 ;
+           sc2->child = this ;
+           sc2->edit_id = "AA" ;
+           sc2->edit_valid = "ACDEFGHIKLMNPQRSTVWY|" ;
+           h1->Add ( sc2 , 1 , wxEXPAND , 5 ) ;
+           sc2->setMiniDisplay ( true );
+           sc2->setHorizontal ( true ) ;
+           curDisplay = sc2 ;        
+           }
+        else
+           {
+           while ( sc2->seq.size() )
+              {
+              delete sc2->seq[sc2->seq.size()-1] ;
+              sc2->seq.pop_back() ;
+              }
+           }
+
         SeqPlot *seqP = new SeqPlot ( sc2 ) ;
         sc2->seq.push_back ( seqP ) ;
-//        seqP->miniDisplayOptions = miniDisplayOptions ;
         seqP->initFromTVector ( vec ) ;
         seqP->setLines ( 6 ) ;
         seqP->useChouFasman() ;
-                    
-        sc2->isMiniDisplay = true ;
-        sc2->isHorizontal = true ;
+        
+        if ( update )
+           {
+           sc2->arrange() ;
+           sc2->SilentRefresh() ;
+           }
         }
-    Thaw () ;
-    h1->Layout() ;
+    if ( !update )
+        {
+        Thaw () ;
+        h1->Layout() ;
+        }
+    sc->SetFocus() ;
     }
     

@@ -17,7 +17,7 @@ int SeqABI::arrange ( int n )
     can->MyGetSize ( &w , &h ) ;
     w -= 20 ; // Scrollbar dummy
     scalex = screenScale ;
-    if ( can->printing )
+    if ( can->isPrinting() )
        {
        scalex = w / 500 ;
        w = w * 9 / 10 ;
@@ -156,8 +156,8 @@ void SeqABI::show ( wxDC& dc )
     // Painting
     for ( data = 0 ; data < 4 ; data++ )
         {
-        if ( can->printing && !can->printToColor )
-           dc.SetPen ( wxPen ( *wxBLACK , 1 , wxSOLID ) ) ;
+        if ( can->isPrinting() && !can->getPrintToColor() )
+           dc.SetPen ( *wxBLACK_PEN ) ;
         else
            dc.SetPen ( wxPen ( colors[data] , 1 , wxSOLID ) ) ;
         

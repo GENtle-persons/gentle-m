@@ -178,9 +178,9 @@ void TPrimerDesign::OnEditMode(wxCommandEvent& event)
     if ( sc->lastmarked != -1 ) item = sc->seq[sc->lastmarked]->whatsthis() ;
     sc->edit_id = item ;
     sc->edit_valid = "AGCT " ;
-    if ( !sc->editMode )
+    if ( !sc->getEditMode() )
         {
-        sc->editMode = true ;
+        sc->setEditMode ( true ) ;
 //        sc->findID(item)->s += " " ;
 //        vec->sequence += " " ;
         sc->arrange () ;
@@ -194,13 +194,13 @@ void TPrimerDesign::OnEditMode(wxCommandEvent& event)
     else
         {
         sc->mark ( item , -1 , -1 ) ;
-        sc->editMode = false ;
+        sc->setEditMode ( false ) ;
 //        vec->sequence.erase ( vec->sequence.length()-1 , 1 ) ;
 //        sc->findID(item)->s.erase ( sc->findID(item)->s.length()-1 , 1 ) ;
         sc->arrange () ;
         Refresh () ;
         }
-    mi->Check ( sc->editMode ) ;
+    mi->Check ( sc->getEditMode() ) ;
     }
     
 void TPrimerDesign::updatePrimersFromSequence ()
@@ -355,11 +355,9 @@ void TPrimerDesign::initme ()
     sc = new SequenceCanvas ( hs , wxPoint ( 0 , 0 ) , wxSize ( 100 , 100 ) ) ;
     sc->blankline = 1 ;
     sc->child = this ;
-//    sc->aa = (MyChild*) this ;
-    sc->pd = this ;
     sc->edit_id = "DNA" ;
     sc->edit_valid = "ACTG" ;
-    sc->forceoverwrite = true ;
+    sc->forceOverwrite ( true ) ;
     
 #ifdef __WXMSW__
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
@@ -668,9 +666,9 @@ void TPrimerDesign::OnAA_setit(int mode)
     showSequence () ;
     if ( !wasZero && aa_state != AA_NONE )
         sc->Scroll ( -1 , oldscrollpos ) ;
-    if ( sc->editMode && lastmarked != -1 )
+    if ( sc->getEditMode() && lastmarked != -1 )
         sc->mark ( sc->seq[lastmarked]->whatsthis() , oldfrom , oldfrom , 2 ) ;
-    else if ( !sc->editMode && lastmarked != -1 )
+    else if ( !sc->getEditMode() && lastmarked != -1 )
         {
         string s = sc->seq[lastmarked]->whatsthis() ;
         sc->mark ( s , oldfrom , oldto ) ;

@@ -56,12 +56,11 @@ PlasmidCanvas::PlasmidCanvas(wxWindow *parent, const wxPoint& pos, const wxSize&
 {
     SetBackgroundColour(wxColour("WHITE"));
 
-    m_dirty = FALSE;
     p = NULL ;
     zoom = 100 ;
     lastvectorobject = -1 ;
     lastrestrictionsite = -1 ;
-    mark_from = -1 ;
+    setMarkFrom ( -1 ) ;
     initialclick = false ;
     printing = false ;
     painting = false ;
@@ -74,7 +73,7 @@ PlasmidCanvas::PlasmidCanvas(wxWindow *parent, const wxPoint& pos, const wxSize&
 
 void PlasmidCanvas::Refresh ()
     {
-    if ( p->cSequence->editMode ) return ;
+    if ( p->cSequence->getEditMode() && p->def == "DNA" ) return ;
     if ( painting ) return ;
     painting = true ;
     wxClientDC dc ( (wxWindow*) this ) ;
@@ -186,7 +185,7 @@ void PlasmidCanvas::OnCopyImage ( wxCommandEvent &ev )
 
 string PlasmidCanvas::getSelection()
     {
-    if ( mark_from != -1 ) return p->vec->getSubstring ( mark_from , mark_to ) ;
+    if ( getMarkFrom() != -1 ) return p->vec->getSubstring ( getMarkFrom() , getMarkTo() ) ;
     else return "" ;
     }
     

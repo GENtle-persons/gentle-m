@@ -14,6 +14,7 @@ class ABItype ;
 class TProtease ;
 class TProteaseCut ;
 class TAAProp ;
+class TAlignment ;
 
 // SeqPos manages the positions of all items for a single "type" (e.g., DNA)
 // The vectors p, r and m are always the same size, and contain information
@@ -296,10 +297,9 @@ class SequenceCanvas : public wxScrolledWindow
     {
     public:
     SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSize& size);
-    virtual ~SequenceCanvas () { delete font ; }
+    virtual ~SequenceCanvas () ;
     virtual void OnDraw(wxDC& dc);
     virtual void safeShow ( wxDC &dc ) ;
-    virtual bool IsDirty() const { return m_dirty; }
     virtual void OnEvent(wxMouseEvent& event);
     virtual void OnSize(wxSizeEvent &event);
     virtual void OnCharHook(wxKeyEvent& event) ;
@@ -360,39 +360,48 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void MyGetViewStart ( int *x , int *y ) ;
     virtual void SilentRefresh () ;
     virtual bool doOverwrite () ;
+    virtual TAminoAcids *getAA() ;
+    virtual TPrimerDesign *getPD() ;
+    virtual TAlignment *getAln() ;
+    
+    virtual bool getPrintToColor () { return printToColor ; }
+    virtual void setPrintToColor ( bool _b ) { printToColor = _b ; }
+    virtual bool getDrawAll () { return drawall ; }
+    virtual void setDrawAll ( bool _b ) { drawall = _b ; }
+    virtual bool isHorizontal () { return horizontal ; }
+    virtual void setHorizontal ( bool _b ) { horizontal = _b ; }
+    virtual void toggleHorizontal () { setHorizontal ( !isHorizontal() ) ; }
+    virtual bool getHide () { return hide ; }
+    virtual void doHide ( bool _b ) { hide = _b ; }
+    virtual bool isMiniDisplay () { return miniDisplay ; }
+    virtual void setMiniDisplay ( bool _b ) { miniDisplay = _b ; }
+    virtual SeqBasic *getLastWhere() { return lastwhere ; }
+    virtual bool isPrinting () { return printing ; }
+    virtual void forceOverwrite ( bool _b ) { forceoverwrite = _b ; }
+    virtual bool getEditMode () { return editMode ; }
+    virtual void setEditMode ( bool _b ) { editMode = _b ; }
+    virtual void setLowX ( int _i ) { if ( lowx < _i ) lowx = _i ; }
     
     private :
     wxBitmap *getSequenceBitmap () ;
+    bool printToColor , drawall , horizontal , hide , miniDisplay ;
+    bool marking , drawing , printing , wantOverwrite , forceoverwrite ;
+    bool editMode ;
+    wxDC *print_dc ;
+    int lastclick , lowx , lowy , lastpos , print_maxx , vpy ;
+    wxString lastToolTip ;
+    SeqAlign *last_al ;
+    SeqBasic *lastwhere ;
     
     public :
-    
-//    private:
-    MyChild *p ;
-    TAminoAcids *aa ;
-    TPrimerDesign *pd ;
-    bool m_dirty , editMode , doHide ;
-    int blankline , charwidth , charheight , lowy , lastpos , vpy ;
-    vector <SeqBasic *> seq ;
-    wxFont *font , *smallFont , *varFont;
-    SeqBasic *lastwhere ;
-    string edit_id , edit_valid ;
-    int lastmarked ;
-    bool forceoverwrite , drawall , printing , wantOverwrite ;
-    wxDC *print_dc ;
-    int print_maxx ;
-    
-    int _from , _to ; // Mark
-    bool printToColor ;
     ChildBase *child ; // Wanna-be universal com port to "parent"
-    int maxendnumberlength ;
-    int lastyoffset ;
-    wxString lastToolTip ;
-    bool isHorizontal ;
-    int lowx , blocksize ;
-    SeqAlign *last_al ;
-    int lastclick ;
-    wxPen blue_pen ;
-    bool isMiniDisplay , marking , drawing ;
+    MyChild *p ;
+    int _from , _to ; // Mark
+    int blankline , charwidth , charheight ;
+    int lastmarked , maxendnumberlength , lastyoffset , blocksize ;
+    vector <SeqBasic*> seq ;
+    wxFont *font , *smallFont , *varFont;
+    string edit_id , edit_valid ;
 
     DECLARE_EVENT_TABLE()
     };

@@ -27,7 +27,7 @@ int SeqAA::arrange ( int n )
     for ( a = 0 ; a < s.length() ; a++ )
         {
         pos.add ( a+1 , x , y , wx-1 , wy-1 ) ;
-        if ( x + wx*2 > can->lowx ) can->lowx = x + wx*2 ;
+        can->setLowX ( x + wx*2 ) ;
         lowy = y+wy ;
         x += wx ;
         if ( (a+1) % can->blocksize == 0 )
@@ -108,7 +108,7 @@ void SeqAA::show ( wxDC& dc )
         bool insight = true ;
         if ( tz < ya ) insight = false ;
         if ( ty > yb ) insight = false ;
-        if ( can->drawall ) insight = true ;
+        if ( can->getDrawAll() ) insight = true ;
         if ( !insight && ty > yb ) a = pos.p.size() ;
         if ( b > 0 && !insight ) cnt++ ;
         if ( b > 0 && insight ) // Character
@@ -134,7 +134,7 @@ void SeqAA::show ( wxDC& dc )
               dc.SetBackgroundMode ( wxSOLID ) ;
               }
            t = s[b-1] ;
-           if ( can->printing && !can->printToColor )
+           if ( can->isPrinting() && !can->getPrintToColor() )
               {
               dc.SetTextForeground ( *wxBLACK ) ;
               dc.SetBackgroundMode ( wxTRANSPARENT ) ;
@@ -234,7 +234,7 @@ wxPoint SeqAA::showText ( int ystart , vector <string> &tout )
               }
            }
         }
-    if ( can->lastwhere != this || can->_from == -1 || can->_to < can->_from )
+    if ( can->getLastWhere() != this || can->_from == -1 || can->_to < can->_from )
        p = wxPoint ( -1 , -1 ) ;
     return p ;
     }
@@ -268,7 +268,7 @@ void SeqAA::updateProteases ()
     vector <string> vs ;
     if ( can->child ) vs = can->child->vec->proteases ;
     else if ( can->p ) vs = can->p->vec->proteases ;
-    else if ( can->aa ) vs = can->aa->vec->proteases ;
+    else if ( can->getAA() ) vs = can->getAA()->vec->proteases ;
     
     int a ;
     for ( a = 0 ; a < vs.size() ; a++ )

@@ -175,7 +175,7 @@ void TVectorTree::OnActivation ( wxTreeEvent &event )
     if ( d->type == "ITEM" )
         {
         wxCommandEvent ev ;
-        p->cPlasmid->context_last_item = (int) d->p ;
+        p->cPlasmid->setLastContextItem ( (int) d->p ) ;
         p->cPlasmid->itemShowHide ( ev ) ;
         }
     else if ( d->type == "RE" )

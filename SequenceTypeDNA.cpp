@@ -86,7 +86,7 @@ wxPoint SeqDNA::showText ( int ystart , vector <string> &tout )
               }
            }
         }
-    if ( can->lastwhere != this || can->_from == -1 || can->_to < can->_from )
+    if ( can->getLastWhere() != this || can->_from == -1 || can->_to < can->_from )
        p = wxPoint ( -1 , -1 ) ;
     return p ;
     }
@@ -120,7 +120,7 @@ void SeqDNA::show ( wxDC& dc )
         bool insight = true ; // Meaning "is this part visible"
         if ( tz < ya ) insight = false ;
         if ( ty > yb ) insight = false ;
-        if ( can->drawall ) insight = true ;
+        if ( can->getDrawAll() ) insight = true ;
         if ( !insight && ty > yb ) a = pos.p.size() ;
         if ( b > 0 && !insight ) cnt++ ;
         if ( b > 0 && insight ) // Character
@@ -139,13 +139,13 @@ void SeqDNA::show ( wxDC& dc )
               }
            if ( pos.m[a] == 2 && can->doOverwrite() ) dc.SetTextForeground ( *wxWHITE ) ;
            else dc.SetTextForeground ( getBaseColor ( t[0] ) ) ;
-           if ( can->printing && pos.m[a] == 1 )
+           if ( can->isPrinting() && pos.m[a] == 1 )
               {
               dc.SetBrush ( theLightBrush ) ;
               dc.SetPen(*wxTRANSPARENT_PEN);
               dc.DrawRectangle ( tx , ty , can->charwidth , can->charheight ) ;
               }
-           if ( can->printing && !can->printToColor )
+           if ( can->isPrinting() && !can->getPrintToColor() )
               {
               dc.SetBackgroundMode ( wxTRANSPARENT ) ;
               dc.SetTextForeground ( *wxBLACK ) ;

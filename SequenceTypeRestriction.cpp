@@ -142,16 +142,16 @@ void SeqRestriction::show ( wxDC& dc )
             case 0 : dc.SetPen(*wxRED_PEN); 
                      dc.SetTextForeground ( wxColor ( *wxRED ) ) ;
                      break ;
-            case 1 : dc.SetPen(wxPen(wxColour(0,200,0),1,wxSOLID)); 
+            case 1 : dc.SetPen(*MYPEN(wxColour(0,200,0))); 
                      dc.SetTextForeground ( wxColour ( 0 , 200 , 0 ) ) ; 
                      break ;
-            case 2 : dc.SetPen(wxPen(wxColour(0,0,200),1,wxSOLID)); 
+            case 2 : dc.SetPen(*MYPEN(wxColour(0,0,200))); 
                      dc.SetTextForeground ( wxColour ( 0 , 0 , 200 ) ) ; 
                      break ;
             }
-        if ( can->printing && !can->printToColor )
+        if ( can->isPrinting() && !can->getPrintToColor() )
            {
-           dc.SetPen(wxPen(*wxBLACK,1,wxSOLID)); 
+           dc.SetPen(*wxBLACK_PEN); 
            dc.SetTextForeground ( *wxBLACK ) ; 
            }
         int qlx = -1 ;
@@ -194,7 +194,7 @@ void SeqRestriction::show ( wxDC& dc )
                else dc.DrawText ( ven[layer].c_str() , llx , ly ) ;
                }
             lc = c ;
-            if ( !can->drawall && pos.r[a].GetTop() > yb ) a = pos.p.size() ;
+            if ( !can->getDrawAll() && pos.r[a].GetTop() > yb ) a = pos.p.size() ;
             }
         }
     dc.SetTextForeground ( wxColor ( *wxBLACK ) ) ;

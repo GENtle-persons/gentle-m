@@ -41,7 +41,7 @@ int SeqAlign::arrange ( int n )
     for ( a = 0 ; a < s.length() ; a++ )
         {
         pos.add ( a+1 , x , y , wx-1 , wy-1 ) ;
-        if ( x + wx*2 > can->lowx ) can->lowx = x + wx*2 ;
+        can->setLowX ( x + wx*2 ) ;
         lowy = y+wy ;
         x += wx ;
         if ( (a+1) % can->blocksize == 0 )
@@ -113,7 +113,7 @@ void SeqAlign::show ( wxDC& dc )
         bool insight = true ; // Meaning "is this part visible"
         if ( tzy < ya || ty > yb ) insight = false ;
         if ( b > 0 && ( tzx < xa || tx > xb ) ) insight = false ;
-        if ( can->drawall ) insight = true ;
+        if ( can->getDrawAll() ) insight = true ;
         if ( !insight && ty > yb ) a = pos.p.size() ;
         if ( !insight && tx > xb ) a = pos.p.size() ;
         if ( b > 0 && !insight ) cnt++ ;
@@ -132,7 +132,7 @@ void SeqAlign::show ( wxDC& dc )
               dc.SetTextForeground ( fg ) ;
               dc.SetTextBackground ( bg ) ;
               }
-           if ( can->printing && !can->printToColor )
+           if ( can->isPrinting() && !can->getPrintToColor() )
               {
               dc.SetTextForeground ( *wxBLACK ) ;
               dc.SetBackgroundMode ( wxTRANSPARENT ) ;

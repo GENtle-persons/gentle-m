@@ -249,10 +249,10 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
     dc.SetBackgroundMode ( wxSOLID ) ;
     
     // Marking
-    if ( mark_from != -1 )
+    if ( getMarkFrom() != -1 )
         {
-        float mt = mark_from ;
-        float mf = mark_to ;
+        float mt = getMarkFrom() ;
+        float mf = getMarkTo() ;
         mt /= (float) l ;
         mf /= (float) l ;
         mt *= 360 ;
@@ -262,7 +262,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
         dc.SetBackgroundMode ( wxSOLID ) ;
         dc.SetBrush ( *wxLIGHT_GREY_BRUSH ) ;
 //        if ( mf == mt ) mf = mt - 0.1 ;
-        if ( mark_from == mark_to ) mf = mt - 0.1 ;
+        if ( getMarkFrom() == getMarkTo() ) mf = mt - 0.1 ;
         else if ( mf > mt ) { float mm = mf ; mf = mt ; mt = mm ; }
         dc.DrawEllipticArc ( w/2-r , h/2-r , r*2 , r*2 , mf , mt ) ;
         dc.DrawLine ( w/2 , h/2 , deg2x(90-mf,r)+w/2 , deg2y(90-mf,r)+h/2 ) ;

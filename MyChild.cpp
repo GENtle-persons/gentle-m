@@ -279,7 +279,7 @@ void MyChild::initme ()
     else*/
        cPlasmid = new PlasmidCanvas(swu, wxPoint(0, 0), wxSize(width*2/3, height/2));
        
-    cPlasmid->p = this ;
+    cPlasmid->setRootChild ( this ) ;
     
     cSequence = new SequenceCanvas(sw, wxPoint(0, 0), wxSize(width, height/2));
     cSequence->p = this ;
@@ -407,8 +407,8 @@ void MyChild::OnCut(wxCommandEvent& event)
         wxTheClipboard->SetData( new wxTextDataObject(s.c_str()) );
         wxTheClipboard->Close();
 
-        vec->doRemove ( cPlasmid->mark_from , cPlasmid->mark_to ) ;
-        cPlasmid->mark_from = -1 ;
+        vec->doRemove ( cPlasmid->getMarkFrom() , cPlasmid->getMarkTo() ) ;
+        cPlasmid->setMarkFrom ( -1 ) ;
         
         for ( int a = 0 ; a < cSequence->seq.size() ; a++ )
            cSequence->seq[a]->initFromTVector ( vec ) ;
@@ -435,7 +435,7 @@ void MyChild::OnCopy(wxCommandEvent& event)
     
 void MyChild::OnPaste(wxCommandEvent& event)
     {
-    if ( !cSequence->editMode ) return ;
+    if ( !cSequence->getEditMode() ) return ;
     if (!wxTheClipboard->Open()) return ;
     if (!wxTheClipboard->IsSupported( wxDF_TEXT )) return ;
 
@@ -447,7 +447,7 @@ void MyChild::OnPaste(wxCommandEvent& event)
     wxTheClipboard->Close();
     
     int a ;
-    cSequence->doHide = true ;
+    cSequence->doHide ( true ) ;
     SetCursor ( *wxHOURGLASS_CURSOR ) ;
     for ( a = 0 ; a < s.length() ; a++ )
         {
@@ -455,7 +455,7 @@ void MyChild::OnPaste(wxCommandEvent& event)
         ev.m_keyCode = s[a] ;
         cSequence->OnCharHook ( ev ) ;
         }
-    cSequence->doHide = false ;
+    cSequence->doHide ( false ) ;
     cSequence->Refresh () ;
     SetCursor ( *wxSTANDARD_CURSOR ) ;
     vec->undo.stop() ;
@@ -493,8 +493,8 @@ void MyChild::OnExport(wxCommandEvent& event)
 void MyChild::OnCopyToNew(wxCommandEvent& event)
     {
     char t[1000] ;
-    int from = cPlasmid->mark_from ;
-    int to = cPlasmid->mark_to ;
+    int from , to ;
+    cPlasmid->getMark ( from , to ) ;
     if ( from == -1 ) return ;
     
     TVector *nv = new TVector ;
@@ -525,8 +525,8 @@ void MyChild::OnCopyToNew(wxCommandEvent& event)
 void MyChild::OnAsNewFeature(wxCommandEvent& event)
     {
     char t[1000] ;
-    int from = cPlasmid->mark_from ;
-    int to = cPlasmid->mark_to ;
+    int from , to ;
+    cPlasmid->getMark ( from , to ) ;
     if ( from == -1 ) return ;
     
     vec->undo.start ( txt("u_new_feature") ) ;
@@ -555,7 +555,7 @@ void MyChild::OnViewMode(wxCommandEvent& event)
     wxMenuBar *mb = GetMenuBar () ;
     wxMenuItem *mi = mb->FindItem ( MDI_VIEW_MODE ) ;
     wxString s ;
-    if ( cSequence->editMode ) OnEditMode ( event ) ;
+    if ( cSequence->getEditMode() ) OnEditMode ( event ) ;
     if ( !viewMode )
         {
         sp1 = sw->GetSashPosition () ;
@@ -567,8 +567,8 @@ void MyChild::OnViewMode(wxCommandEvent& event)
         }
     else
         {
-        cPlasmid->mark_from = -1 ;
-        cSequence->editMode = false ;
+        cPlasmid->setMarkFrom ( -1 ) ;
+        cSequence->setEditMode ( false ) ;
         cSequence->arrange () ;
         vec->recalcvisual = true ;
         sw->SplitHorizontally ( swu , cSequence ) ;
@@ -593,14 +593,14 @@ void MyChild::OnEditMode(wxCommandEvent& event)
     wxMenuItem *mi = mb->FindItem ( MDI_EDIT_MODE ) ;
     wxString s ;
     if ( viewMode ) OnViewMode ( event ) ;
-    if ( !cSequence->editMode )
+    if ( !cSequence->getEditMode() )
         {
-        int m = cPlasmid->mark_from ;
+        int m = cPlasmid->getMarkFrom() ;
         if ( m == -1 ) m = 1 ;
         sp1 = sw->GetSashPosition () ;
         sp2 = swl->GetSashPosition () ;
         sw->Unsplit ( swu ) ;
-        cSequence->editMode = true ;
+        cSequence->setEditMode ( true ) ;
         cSequence->findID("DNA")->s += " " ;
         vec->sequence += " " ;
         cSequence->arrange () ;
@@ -610,8 +610,8 @@ void MyChild::OnEditMode(wxCommandEvent& event)
         }
     else
         {
-        cPlasmid->mark_from = -1 ;
-        cSequence->editMode = false ;
+        cPlasmid->setMarkFrom ( -1 ) ;
+        cSequence->setEditMode ( false ) ;
         vec->sequence.erase ( vec->sequence.length()-1 , 1 ) ;
         cSequence->findID("DNA")->s.erase ( cSequence->findID("DNA")->s.length()-1 , 1 ) ;
         cSequence->arrange () ;
@@ -622,11 +622,11 @@ void MyChild::OnEditMode(wxCommandEvent& event)
         swu->Show ( TRUE ) ;
         Refresh () ;
         }
-    mi->Check ( cSequence->editMode ) ;
-    if ( cSequence->editMode ) vec->undo.start ( txt("u_edit") ) ;
+    mi->Check ( cSequence->getEditMode() ) ;
+    if ( cSequence->getEditMode() ) vec->undo.start ( txt("u_edit") ) ;
     else vec->undo.stop () ;
 #ifdef __WXMSW__ // LINUX
-    GetToolBar()->ToggleTool(MDI_EDIT_MODE,cSequence->editMode);
+    GetToolBar()->ToggleTool(MDI_EDIT_MODE,cSequence->getEditMode());
 #endif
     }
 
@@ -782,7 +782,7 @@ void MyChild::OnAA_setit(int mode)
     cSequence->Refresh ( false ) ;
     if ( !wasZero && aa_state != AA_NONE )
         cSequence->Scroll ( -1 , oldscrollpos ) ;
-    if ( !wasZero && !cSequence->editMode && oldmarkfrom != -1 && oldmarkwhat >= 0 )
+    if ( !wasZero && !cSequence->getEditMode() && oldmarkfrom != -1 && oldmarkwhat >= 0 )
         {
         string s = cSequence->seq[oldmarkwhat]->whatsthis() ;
         cSequence->mark ( s , oldmarkfrom , oldmarkto ) ;
@@ -851,7 +851,7 @@ string MyChild::doExtractAA ( bool coding )
         md.ShowModal () ;
         }
         
-    if ( cPlasmid->mark_from == -1 ) // No selection = all
+    if ( cPlasmid->getMarkFrom() == -1 ) // No selection = all
         {
         wxCommandEvent event ;
         OnMarkAll ( event ) ;
@@ -864,8 +864,8 @@ string MyChild::doExtractAA ( bool coding )
     
     string z = aa.s , t ;
     int a ;
-    int from = cPlasmid->mark_from ;
-    int to = cPlasmid->mark_to ;
+    int from , to ;
+    cPlasmid->getMark ( from , to ) ;
     if ( to <= z.length() )
         {
         z = z.substr ( from-1 , to-from ) ;
@@ -1032,7 +1032,7 @@ void MyChild::OnORFs(wxCommandEvent& event)
 #ifdef __WXMSW__ // LINUX
     GetToolBar()->ToggleTool(MDI_ORFS,showORFs);
 #endif
-    if ( !cPlasmid->painting ) cPlasmid->Refresh() ;
+//    if ( !cPlasmid->painting ) cPlasmid->Refresh() ;
     }
     
 void MyChild::OnSeqPrint(wxCommandEvent& event)
@@ -1059,9 +1059,9 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
     
     // Plasmid canvas
     pdc->SetDeviceOrigin ( 0 , -h/4 ) ;
-    cPlasmid->printing = true ;
+    cPlasmid->setPrinting ( true ) ;
     cPlasmid->OnDraw ( *pdc ) ;
-    cPlasmid->printing = false ;
+    cPlasmid->setPrinting ( false ) ;
     
     // Feature list
     pdc->SetDeviceOrigin ( 0 , h/2 ) ;
