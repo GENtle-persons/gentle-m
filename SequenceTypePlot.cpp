@@ -58,6 +58,53 @@ int SeqPlot::arrange ( int n )
     return lowy + bo*2 ;
     }
 
+
+// Display
+
+
+void SeqPlot::drawDottedLine ( wxDC &dc , int x1 , int y1 , int x2 , int y2 )
+    {
+    if ( can->isPrinting() )
+        {
+        dc.DrawLine ( x1 , y1 , x2 , y2 ) ;
+        return ;
+        }
+    int i ;
+    if ( x1 == x2 )
+        {
+        for ( i = y1 ; i <= y2 ; i++ )
+           if ( i & 1 ) dc.DrawPoint ( x1 , i ) ;
+        }
+    else
+        {
+        for ( i = x1 ; i <= x2 ; i++ )
+           if ( i & 1 ) dc.DrawPoint ( i , y1 ) ;
+        }
+    }
+    
+void SeqPlot::myRect ( wxDC &dc , int x , int y , int w , int h )
+    {
+    if ( can->isPrinting() )
+        {
+        for ( int i = 0 ; i <= h ; i++ )
+           dc.DrawLine ( x , y+i , x+w , y+i ) ;
+        return ;
+        }
+    for ( int i = 0 ; i < w ; i++ )
+        {
+        for ( int j = 0 ; j < h ; j++ )
+           {
+           if ( ( x+i + y+j ) & 1 ) dc.DrawPoint ( x + i , y + j ) ;
+           }
+        }
+    }
+    
+void SeqPlot::fixMinMax ( float &f )
+    {
+    f = f > data_max ? data_max : f ;
+    f = f < data_min ? data_min : f ;
+    }
+    
 void SeqPlot::show ( wxDC& dc )
     {
     dc.SetFont(*can->font);
@@ -111,8 +158,12 @@ void SeqPlot::show ( wxDC& dc )
               dc.SetBackgroundMode ( wxTRANSPARENT ) ;
               dc.SetTextForeground ( *wxBLACK ) ;
               }
-           if ( type == CHOU_FASMAN )
-              showChouFasman ( dc , b-1 , tx , ty , lx ) ;
+           switch ( type )
+              {
+              case CHOU_FASMAN : showChouFasman ( dc , b-1 , tx , ty , lx ) ; break ;
+              case M_W : showMW ( dc , b-1 , tx , ty , lx ) ; break ;
+              case P_I : showPI ( dc , b-1 , tx , ty , lx ) ; break ;
+              }
            lx = tx + can->charwidth ;
            cnt++ ;
            startOfLine = false ;
@@ -124,6 +175,8 @@ void SeqPlot::show ( wxDC& dc )
            if ( !can->isMiniDisplay() ) continue ;
            dc.SetFont(*can->smallFont);
            if ( type == CHOU_FASMAN ) t = "Chou-Fasman" ;
+           else if ( type == M_W ) t = "MW" ;
+           else if ( type == P_I ) t = "pI" ;
            dc.SetTextForeground ( *wxBLACK ) ;
            int tw , th ;
            dc.GetTextExtent ( t.c_str() , &tw , &th ) ;
@@ -139,47 +192,31 @@ void SeqPlot::show ( wxDC& dc )
     dc.SetTextForeground ( tfg ) ;
     }
     
-void SeqPlot::drawDottedLine ( wxDC &dc , int x1 , int y1 , int x2 , int y2 )
+void SeqPlot::showMW ( wxDC &dc , int b , int tx , int ty , int lx )
     {
-    if ( can->isPrinting() )
+    int ch = can->charheight / 2 ;
+    int cw = can->charwidth ;
+    int bottom = ty + lines * can->charheight ;
+    int u ;
+    for ( u = 1 ; u < d1.size() ; u++ )
         {
-        dc.DrawLine ( x1 , y1 , x2 , y2 ) ;
-        return ;
-        }
-    int i ;
-    if ( x1 == x2 )
-        {
-        for ( i = y1 ; i <= y2 ; i++ )
-           if ( i & 1 ) dc.DrawPoint ( x1 , i ) ;
-        }
-    else
-        {
-        for ( i = x1 ; i <= x2 ; i++ )
-           if ( i & 1 ) dc.DrawPoint ( i , y1 ) ;
-        }
-    }
-    
-void SeqPlot::myRect ( wxDC &dc , int x , int y , int w , int h )
-    {
-    if ( can->isPrinting() )
-        {
-        for ( int i = 0 ; i <= h ; i++ )
-           dc.DrawLine ( x , y+i , x+w , y+i ) ;
-        return ;
-        }
-    for ( int i = 0 ; i < w ; i++ )
-        {
-        for ( int j = 0 ; j < h ; j++ )
+        int tz = ty + (u-1) * ch + 1 ;
+        int tw = ( tx + cw ) - lx ;
+        
+        if ( pos.m[b+1] > 0 )
            {
-           if ( ( x+i + y+j ) & 1 ) dc.DrawPoint ( x + i , y + j ) ;
+           dc.SetPen ( *wxGREY_PEN ) ;
+           myRect ( dc , lx , tz , tw , ch*can->charheight - 2 ) ;
            }
         }
+
+    showPlot ( dc , b , tx , ty , lx , bottom - ty - ch ) ;
     }
     
-void SeqPlot::fixMinMax ( float &f )
+void SeqPlot::showPI ( wxDC &dc , int b , int tx , int ty , int lx )
     {
-    f = f > data_max ? data_max : f ;
-    f = f < data_min ? data_min : f ;
+    // All the same...
+    showMW ( dc , b , tx , ty , lx ) ;
     }
     
 void SeqPlot::showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx )
@@ -266,7 +303,7 @@ void SeqPlot::showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph )
         }
     
     // Colored curves
-    for ( u = 0 ; u < 3 ; u++ )
+    for ( u = 0 ; u < prop[b].data.size() ; u++ )
         {
         wxPen *pen = wxRED_PEN ;
         if ( can->isPrinting() ) pen = wxBLACK_PEN ;
@@ -348,6 +385,8 @@ void SeqPlot::drawSymbol ( char c , wxDC &dc , int x1 , int y1 , int x2 , int y2
         }
     }
 
+// Communication with the outside world :-)
+
 void SeqPlot::initFromTVector ( TVector *v )
     {
     vec = v ;
@@ -375,6 +414,9 @@ void SeqPlot::setLines ( int l )
 
     lines = l ;    
     }
+
+
+// Calculation routines
 
 // See http://prowl.rockefeller.edu/aainfo/chou.htm for background
 void SeqPlot::useChouFasman ()
@@ -438,9 +480,15 @@ void SeqPlot::useChouFasman ()
            }
         }
         
-    // Maxima/minima
+    scanMinMax () ;
+    }
+    
+// Maxima/minima
+void SeqPlot::scanMinMax ()
+    {
+    int a ;
     data_max = data_min = prop[0].data[0] ;
-    for ( a = 0 ; a < 3 ; a++ )
+    for ( a = 0 ; a < prop[0].data.size() ; a++ )
         {
         for ( int b = 1 ; b < prop.size() ; b++ )
            {
@@ -449,11 +497,24 @@ void SeqPlot::useChouFasman ()
            if ( data_min > d ) data_min = d ;
            }
         }
+    data_step = ( data_max - data_min ) / 5 ;
     if ( type == CHOU_FASMAN )
         {
         data_min = 0 ;
         data_max = 1.5 ;
         data_step = 0.2 ;
+        }
+    else if ( type == M_W )
+        {
+        data_min = 0 ;
+        data_max = 200 ;
+        data_step = 50 ;
+        }
+    else if ( type == P_I )
+        {
+        data_min = 2.5 ;
+        data_max = 11.5 ;
+        data_step = 2.5 ;
         }
     data_h = data_max - data_min ;
     }
@@ -501,5 +562,53 @@ void SeqPlot::scanChouFasman ( int x , int y , int t , int min ,
            for ( i = from ; i <= to ; i++ ) d1[t+1][i] = 'X' ;
            }
         }
+    }
+    
+void SeqPlot::useMW ()
+    {
+    type = M_W ;
+    d1.clear () ;
+    d2.clear () ;
+    d3.clear () ;
+    l_top = 4 ;
+    l_bottom = 0 ;
+    
+    int a ;
+    prop.clear () ;
+    for ( a = 0 ; a < s.length() ; a++ )
+        {
+        prop.push_back ( vec->getAAprop ( s[a] ) ) ;
+        prop[a].data.clear() ;
+        prop[a].data.push_back ( prop[a].mw ) ;
+//        while ( prop[a].data.size() < 3 ) prop[a].data.push_back ( 0 ) ;
+        }
+    string x ;
+    while ( x.length() < s.length() ) x += " " ;
+    while ( d1.size() < 4 ) d1.push_back ( x ) ;
+    scanMinMax () ;
+    }
+
+void SeqPlot::usePI ()
+    {
+    type = P_I ;
+    d1.clear () ;
+    d2.clear () ;
+    d3.clear () ;
+    l_top = 4 ;
+    l_bottom = 0 ;
+    
+    int a ;
+    prop.clear () ;
+    for ( a = 0 ; a < s.length() ; a++ )
+        {
+        prop.push_back ( vec->getAAprop ( s[a] ) ) ;
+        prop[a].data.clear() ;
+        prop[a].data.push_back ( prop[a].pi ) ;
+//        while ( prop[a].data.size() < 3 ) prop[a].data.push_back ( 0 ) ;
+        }
+    string x ;
+    while ( x.length() < s.length() ) x += " " ;
+    while ( d1.size() < 4 ) d1.push_back ( x ) ;
+    scanMinMax () ;
     }
     

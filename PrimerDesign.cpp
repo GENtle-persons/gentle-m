@@ -177,12 +177,10 @@ void TPrimerDesign::OnEditMode(wxCommandEvent& event)
     string item = "PRIMER_UP" ;
     if ( sc->lastmarked != -1 ) item = sc->seq[sc->lastmarked]->whatsthis() ;
     sc->edit_id = item ;
-    sc->edit_valid = "AGCT " ;
+//    sc->edit_valid = "AGCT " ;
     if ( !sc->getEditMode() )
         {
         sc->setEditMode ( true ) ;
-//        sc->findID(item)->s += " " ;
-//        vec->sequence += " " ;
         sc->arrange () ;
         if ( sc->_from == -1 )
            sc->mark ( item , 1 , 1 , 2 ) ;
@@ -195,8 +193,6 @@ void TPrimerDesign::OnEditMode(wxCommandEvent& event)
         {
         sc->mark ( item , -1 , -1 ) ;
         sc->setEditMode ( false ) ;
-//        vec->sequence.erase ( vec->sequence.length()-1 , 1 ) ;
-//        sc->findID(item)->s.erase ( sc->findID(item)->s.length()-1 , 1 ) ;
         sc->arrange () ;
         Refresh () ;
         }

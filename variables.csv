@@ -527,3 +527,5 @@
 "t_xml","XML","XML"
 "t_allow_all_chars","Enable editing using all letters for this session?","Für diese Sitzung Eingeben aller Zeichen erlauben?"
 "t_question","Question","Frage"
+"t_aa_plot_mw","AA weight","AS-Gewicht",
+"t_aa_plot_pi","AA isoelectric point","AS isoelektrischer Punkt"

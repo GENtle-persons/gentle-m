@@ -31,16 +31,7 @@ class TPrimerDesign : public ChildBase
     virtual void updatePrimersFromSequence () ;
     virtual void updatePrimerStats () ;
     virtual void doShowPrimer ( int i ) ;
-/*    void showStat () ;
-    
-    void OnMarkAll(wxCommandEvent& event);
-    void OnFileSave(wxCommandEvent& event);
-    void OnExport(wxCommandEvent& event);
-    void OnFind(wxCommandEvent& event);
-    void OnCut(wxCommandEvent& event);
-    void OnEditMode(wxCommandEvent& event);
-    void OnEditName(wxCommandEvent& event);
-    */
+
     virtual void OnCopy(wxCommandEvent& event);
     virtual void OnClose(wxCloseEvent& event) ;
     virtual void OnEditMode(wxCommandEvent& event);
