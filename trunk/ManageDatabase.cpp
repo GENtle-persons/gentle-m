@@ -789,8 +789,6 @@ bool TManageDatabaseDialog::do_load ( string name , string db )
     
 bool TManageDatabaseDialog::do_load_project ( string name , string db )
     {
-    myapp()->frame->Freeze () ;
-    SetCursor ( *wxHOURGLASS_CURSOR ) ;
     int a ;
     string sql ;
     TStorage tstorage ( TEMP_STORAGE , getFileName ( db ) ) ;
@@ -804,17 +802,15 @@ bool TManageDatabaseDialog::do_load_project ( string name , string db )
     name = fixQuotes ( name ) ;
     sql = "SELECT pr_desc FROM project WHERE pr_name=\""+name+"\"" ;
     sr = tstorage.getObject ( sql ) ;
-    if ( sr.rows() == 0 )
-        {
-        SetCursor ( *wxSTANDARD_CURSOR ) ;
-        myapp()->frame->Thaw () ;
-        return false ;
-        }
+    if ( sr.rows() == 0 ) return false ;
         
     myapp()->frame->project_name = name ;
     myapp()->frame->mainTree->SetItemText ( myapp()->frame->mainTree->treeroot , name.c_str() ) ;
     myapp()->frame->project_db = db ;
     myapp()->frame->project_desc = sr[0][0] ;
+
+    myapp()->frame->Freeze () ;
+    SetCursor ( *wxHOURGLASS_CURSOR ) ;
 
     // Load associated DNA list
     sql = "SELECT * FROM project_dna WHERE pd_project=\""+name+"\"" ;

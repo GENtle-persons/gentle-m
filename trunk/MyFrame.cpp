@@ -283,6 +283,7 @@ void MyFrame::initme ()
            {
            TManageDatabaseDialog mdb ( this , "dummy" , ACTION_MODE_STARTUP ) ;
            mdb.do_load_project ( n , d ) ;
+           mainTree->Refresh () ;
            }
         }
 
