@@ -34,6 +34,7 @@ int SeqAA::arrange ( int n )
     itemsperline *= can->blocksize ;
     
     pos.cleanup() ;
+    pos.reserve ( s.length() * 11 / 10 , s.length() / itemsperline ) ;
     x = ox ;
     y = oy ;
     if ( showNumbers )
@@ -260,12 +261,14 @@ void SeqAA::initFromString ( wxString t )
     vec = NULL ;
     showNumbers = true ;
     offsets.Clear() ;
+    offsets.Alloc ( s.length() ) ;
     while ( offsets.GetCount() < s.length() ) offsets.Add ( -1 ) ;
     
     // Proteases
     updateProteases () ;
     pa_w = "" ;
     pa_wa.Clear() ;
+    pa_wa.Alloc ( s.length() ) ;
     while ( pa_w != s )
        {
        pa_w += s.GetChar(pa_w.length()) ;
@@ -286,6 +289,7 @@ void SeqAA::updateProteases ()
     else if ( can->getAA() ) vs = can->getAA()->vec->proteases ;
 
     int a ;
+    proteases.Alloc ( vs.GetCount() ) ;
     for ( a = 0 ; a < vs.GetCount() ; a++ )
         {
         TProtease *pro = myapp()->frame->LS->getProtease ( vs[a] ) ;
@@ -328,6 +332,8 @@ void SeqAA::fixOffsets ( TVector *v )
            char x =  v->getSequenceChar ( b-1 ) ;
            if ( ( b - 1 ) % 10 == 0 && c > 0 && x != '-' )
               {
+              offsets.Alloc ( b ) ;
+              offset_items.Alloc ( b ) ;
               while ( offsets.GetCount() < b ) offsets.Add ( -1 ) ;
               while ( offset_items.GetCount() < b ) offset_items.Add ( NULL ) ;
               offsets[b-1] = c + off ;
@@ -355,6 +361,7 @@ void SeqAA::initFromTVector ( TVector *v )
     FILLSTRING ( s , ' ' , t.length() ) ;
     offsets.Clear() ;
     offset_items.Clear() ;
+    offsets.Alloc ( s.length() ) ;
     while ( offsets.GetCount() < s.length() ) offsets.Add ( -1 ) ;
     updateProteases () ;
     if ( v->isCircular() ) t += t.substr ( 0 , 2 ) ;
@@ -384,6 +391,7 @@ void SeqAA::initFromTVector ( TVector *v )
         if ( mode == AA_THREE_M1 ) { mymode = AA_THREE_1 ; invert = true ; }
         if ( mode == AA_THREE_M2 ) { mymode = AA_THREE_2 ; invert = true ; }
         if ( mode == AA_THREE_M3 ) { mymode = AA_THREE_3 ; invert = true ; }
+        pa_wa.Alloc ( sl ) ;
         for ( a = 0 ; a < sl ; a++ )
             {
             wxString u = t.substr(a,3) ;

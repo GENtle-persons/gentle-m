@@ -986,6 +986,8 @@ void SequenceCanvas::arrange ()
     lastmarked = -1 ;
     int a , b ;
     
+    wxBeginBusyCursor() ;    
+
     if ( isHorizontal() )
         {
         blocksize = 0 ;
@@ -1017,6 +1019,7 @@ void SequenceCanvas::arrange ()
         if ( !printing ) p->cPlasmid->setMarkFrom ( -1 ) ;
         p->cPlasmid->Refresh () ;
         }
+    wxEndBusyCursor() ;
     }
 
 void SequenceCanvas::OnSize(wxSizeEvent &event)
@@ -1033,6 +1036,7 @@ void SequenceCanvas::OnDraw(wxDC& dc)
     if ( drawing ) return ;
     if ( seq.GetCount() == 0 ) return ;
     if ( getHide() ) return ;
+    if ( myapp()->frame->isLocked() ) return ;
     drawing = true ;
     int wx , wy ;
     dc.SetFont ( *font ) ;

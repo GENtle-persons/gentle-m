@@ -794,19 +794,28 @@ void TManageDatabaseDialog::pmOpenFiles ( wxArrayString &_names , wxString _db )
     if ( _names.GetCount() == 0 ) return ;
     if ( doLoad || doSave )
         myapp()->frame->LS->setOption ( "TWOPANES" , f_twopanes->GetValue() ) ;
-    wxBeginBusyCursor () ;
-    myapp()->frame->Freeze () ;
-    for ( int a = 0 ; a < _names.GetCount() ; a++ )
-       do_load ( _names[a] , _db ) ;
-    myapp()->frame->Thaw () ;
-    wxEndBusyCursor () ;
 
     SetReturnCode ( wxID_OK ) ;
     EndModal ( true ) ;
     
-    wxSizeEvent se ;
-    myapp()->frame->OnSize ( se ) ;
-    myapp()->frame->mainTree->Refresh () ;
+    wxBeginBusyCursor () ;
+    myapp()->frame->lockDisplay ( true ) ;
+
+//    wxStopWatch sw ;
+//    sw.Start () ;
+
+    for ( int a = 0 ; a < _names.GetCount() ; a++ )
+       do_load ( _names[a] , _db ) ;
+
+//    sw.Pause() ;
+//    wxMessageBox ( wxString::Format ( "%d ms" , sw.Time() ) ) ;
+
+    myapp()->frame->lockDisplay ( false ) ;
+    wxEndBusyCursor () ;
+
+//    wxSizeEvent se ;
+//    myapp()->frame->OnSize ( se ) ;
+//    myapp()->frame->mainTree->Refresh () ;
     }
 
 // --------------------------------
@@ -842,12 +851,9 @@ bool TManageDatabaseDialog::do_load_project ( wxString name , wxString db )
     myapp()->frame->project_db = db ;
     myapp()->frame->project_desc = sr[0][0] ;
 
-    wxDialog dlg ( NULL , -1 , "Test" , wxDefaultPosition , wxSize ( 300 , 20 ) ) ;
-    dlg.Show() ;
-
     myapp()->frame->SetFocus() ;
     wxBeginBusyCursor() ;
-    myapp()->frame->Freeze () ;
+    myapp()->frame->lockDisplay ( true ) ;
 
     // Load associated DNA list
     sql = "SELECT * FROM project_dna WHERE pd_project=\""+name+"\"" ;
@@ -856,14 +862,11 @@ bool TManageDatabaseDialog::do_load_project ( wxString name , wxString db )
     // Load DNA
     bool all = true ;
     for ( a = 0 ; a < sr.rows() ; a++ )
-        {
-        wxString dna_name = sr[a][sr["pd_dna"]] ;
-        wxString dna_db = sr[a][sr["pd_database"]] ;
-        wxString msg = wxString::Format ( txt("t_loading") , dna_name.c_str() ) ;
-        dlg.SetTitle ( msg ) ;
-        dlg.SetFocus() ;
-        all &= do_load_DNA ( dna_name , dna_db ) ;
-        }
+        all &= do_load_DNA ( sr[a][sr["pd_dna"]] , sr[a][sr["pd_database"]] ) ;
+
+    myapp()->frame->lockDisplay ( false ) ;
+    wxEndBusyCursor() ;
+
     if ( !all )
         {
         wxMessageDialog md ( this , txt("t_not_all_files_loaded") ,
@@ -871,8 +874,6 @@ bool TManageDatabaseDialog::do_load_project ( wxString name , wxString db )
         md.ShowModal() ;
         }
     
-    myapp()->frame->Thaw () ;
-    wxEndBusyCursor() ;
     return true ;
     }
     
@@ -961,7 +962,7 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
         {
         wxString db1 = v->getDatabase() ;
         n = myapp()->frame->newAminoAcids ( v , v->getName() ) ;
-        myass ( n , "Opening AA" ) ;
+        myass ( n , "Error opening AA" ) ;
         n->vec->setDatabase ( db1 ) ;
         n->vec->setWindow ( n ) ;
         }
@@ -972,13 +973,14 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
         TAlignment *ali = myapp()->frame->runAlignment ( vs , vc , v ) ;
         ali->name = name ;
         ali->database = db ;
+        myapp()->frame->setActiveChild ( (ChildBase*) ali ) ;
         }
     else
         {
         v->recalculateCuts () ;
         wxString db1 = v->getDatabase() ;
         n = myapp()->frame->newFromVector ( v , v->type ) ;
-        myass ( n , "Opening DNA" ) ;
+        myass ( n , "Error opening DNA" ) ;
         n->vec->setDatabase ( db1 ) ;
         }
 

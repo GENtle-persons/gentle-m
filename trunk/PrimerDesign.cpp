@@ -482,13 +482,11 @@ void TPrimerDesign::initme ()
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;
 
-
-
     showSequence () ;
     updatePrimersFromSequence() ;
-    sc->SetFocus() ;
     myapp()->frame->setChild ( this ) ;
     spinTextEnabeled = true ;
+    sc->SetFocus() ;
     }
     
 void TPrimerDesign::OnEditPrimer ( wxCommandEvent &ev )

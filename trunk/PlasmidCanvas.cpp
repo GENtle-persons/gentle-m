@@ -105,6 +105,7 @@ void PlasmidCanvas::OnDraw(wxDC& pdc)
 {
     if ( !p || !p->vec ) return ;
     if ( p->vec->getSequenceLength() == 0 ) return ;
+    if ( myapp()->frame->isLocked() ) return ;
     if ( printing )
         {
         hasBeenPainted = true ;

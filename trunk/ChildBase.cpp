@@ -45,10 +45,7 @@ wxToolBar *ChildBase::CreateToolBar ( int i )
 
 void ChildBase::Maximize ( bool isit )
 {
-//  MyChildBase::Maximize ( isit ) ;
   Activate () ;
-//  SetSize ( GetParent()->GetClientSize() ) ;
-//  showName () ;
 }
 
 void ChildBase::showName ( wxString x )
@@ -120,6 +117,7 @@ wxMenuBar *ChildBase::GetMenuBar ()
 void ChildBase::Activate ()
     {
     myapp()->frame->setActiveChild ( this ) ;
+    if ( myapp()->frame->isLocked() ) return ;
     showName () ;
     SetFocus();
     if ( cSequence ) cSequence->SetFocus() ;

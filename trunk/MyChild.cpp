@@ -76,7 +76,6 @@ MyChild::MyChild(wxWindow *parent, const wxString& title,
 {
     cPlasmid = (PlasmidCanvas *) NULL;
     cSequence = (SequenceCanvas *) NULL;
-//    hsizer = (wxBoxSizer *) NULL ;
     vec = (TVector *) NULL ;
     def = "dna" ;
     aa_state = AA_ALL ;
@@ -300,12 +299,7 @@ void MyChild::initme ()
     swu = new MySplitter ( sw , SPLIT_2 , this ) ;
     swl = new MySplitter ( swu , SPLIT_3 , this ) ;
 
-/*
-    if ( myapp()->frame->useCoolCanvas )
-       cPlasmid = (PlasmidCanvas*) new CoolCanvas(swu, wxPoint(0, 0), wxSize(width*2/3, height/2));
-    else*/
-       cPlasmid = new PlasmidCanvas(swu, wxPoint(0, 0), wxSize(width*2/3, height/2));
-       
+    cPlasmid = new PlasmidCanvas(swu, wxPoint(0, 0), wxSize(width*2/3, height/2));   
     cPlasmid->setRootChild ( this ) ;
     
     cSequence = new SequenceCanvas(sw, wxPoint(0, 0), wxSize(width, height/2));
@@ -329,8 +323,7 @@ void MyChild::initme ()
 
     // TOOLBAR 
 
-#ifdef __WXMSW__  // LINUX
-    wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
+    wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);    
     toolBar->AddTool( MDI_TEXT_IMPORT , 
                 myapp()->frame->bitmaps[0],
                 txt("m_new_sequence") ) ;  
@@ -374,17 +367,17 @@ void MyChild::initme ()
         myapp()->frame->bitmaps[13],
         TRUE, -1, -1, (wxObject *) NULL, txt("m_edit_mode") ) ;
     toolBar->AddSeparator() ;
-        
     toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_zoom") ) ) ;
     zoom_cb = new wxChoice ( toolBar , PC_ZOOM , wxDefaultPosition , wxSize ( 60 , -1 ) ) ;
     zoom_cb->Append ( "100%" ) ;
     zoom_cb->Append ( "200%" ) ;
     zoom_cb->Append ( "300%" ) ;
     zoom_cb->Append ( "400%" ) ;
+    zoom_cb->Append ( "800%" ) ;
+    zoom_cb->Append ( "1600%" ) ;
     zoom_cb->SetSelection ( 0 ) ;
     toolBar->AddControl ( zoom_cb ) ;
     toolBar->Realize() ;    
-#endif
 
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
@@ -591,37 +584,40 @@ void MyChild::OnEditMode(wxCommandEvent& event)
 
 void MyChild::initPanels ()
     {
+    wxStartTimer() ;    
     SeqFeature *seqF = new SeqFeature ( cSequence ) ;
     SeqDNA *seq = new SeqDNA ( cSequence ) ;
     SeqRestriction *seqR = new SeqRestriction ( cSequence ) ;
     SeqAA *seqAA = new SeqAA ( cSequence ) ;
     cSequence->seq.Clear () ;
-    cSequence->seq.Add ( seqF ) ;
-    cSequence->seq.Add ( seqAA ) ;
+//    cSequence->seq.Add ( seqF ) ;
+//    cSequence->seq.Add ( seqAA ) ;
     cSequence->seq.Add ( seq ) ;
-    cSequence->seq.Add ( seqR ) ;
+//    cSequence->seq.Add ( seqR ) ;
     seqF->aaa = seqAA ;
-    seqF->initFromTVector ( vec ) ;
+//    seqF->initFromTVector ( vec ) ;
     seq->initFromTVector ( vec ) ;    
-    seqR->initFromTVector ( vec ) ;    
-    seqAA->initFromTVector ( vec ) ;    
+//    seqR->initFromTVector ( vec ) ;    
+//    seqAA->initFromTVector ( vec ) ;    
     seqAA->showNumbers = false ;
-    
+
+    wxMessageBox ( wxString::Format ( "2nd : %d ms" , wxGetElapsedTime() ) ) ;
     treeBox->initme () ;
 
     int a , b = AA_ALL ;
-    for ( a = 0 ; vec && a < vec->items.size() ; a++ )
+    for ( a = 0 ; b == AA_ALL && vec && a < vec->items.size() ; a++ )
         if ( vec->items[a].getRF() != 0 )
            b = AA_KNOWN ;
 
-    if ( aa_state != b )
-        OnAA_setit ( b ) ;
+//    if ( aa_state != b ) OnAA_setit ( b ) ;
+    
 #ifdef __WXMSW__ // LINUX
     GetToolBar()->ToggleTool(MDI_CIRCULAR_LINEAR,vec->isCircular());
     GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,cSequence->findID("FEATURE"));
     GetToolBar()->ToggleTool(MDI_TOGGLE_RESTRICTION,cSequence->findID("RESTRICTION"));
 #endif
 
+    if ( myapp()->frame->isLocked() ) return ;
     Show() ;
     SetFocus () ;
     cSequence->SetFocus() ;

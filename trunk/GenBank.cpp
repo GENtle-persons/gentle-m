@@ -23,15 +23,15 @@ TGenBank::TGenBank ()
     
 void TGenBank::load ( wxString s )
     {
-	wxTextFile file ;
-    file.Open ( s ) ;
 	vs.Clear() ;
+ 	wxTextFile file ;
+    file.Open ( s ) ;
+	vs.Alloc ( file.GetLineCount() ) ;
 	wxString str ;
 	for ( str = file.GetFirstLine(); !file.Eof(); str = file.GetNextLine() )
-	 {
-	 if ( !trim(str).IsEmpty() ) vs.Add ( str ) ;
-	 }
+	   if ( !trim(str).IsEmpty() ) vs.Add ( str ) ;
     if ( !trim(str).IsEmpty() ) vs.Add ( str ) ;
+    
     parseLines () ;
     }
     
@@ -53,26 +53,55 @@ void TGenBank::parseLines ()
        return ;
 
     int a ;
+    vi.Alloc ( vs.GetCount() ) ;
     for ( a = 0 ; a < vs.GetCount() ; a++ )
         vi.Add ( vs[a].Length() - trim(vs[a]).Length() ) ;
 
     // Pre-processing
+    int last ;    
+    wxArrayString vs2 ;
+    wxArrayInt vi2 ;
+    vs2.Alloc ( vs.GetCount() ) ;
+    vi2.Alloc ( vi.GetCount() ) ;
     for ( a = 0 ; a < vs.GetCount() ; a++ )
         {
         if ( vi[a] == 12 || ( vi[a] == 21 && vs[a].GetChar(21) != '/' ) )
            {
-           vs[a-1] += " " + trim ( vs[a] ) ;
-           vs.Remove ( a ) ;
-           vi.RemoveAt ( a ) ;
-           a-- ;
+           vs2[last] += " " + trim ( vs[a] ) ;
            }
+        else
+           {
+           last = vs2.GetCount() ;
+           vs2.Add ( vs[a] ) ;
+           vi2.Add ( vi[a] ) ;
+           }    
         }
+    vs = vs2 ;
+    vi = vi2 ;
+    vs2.Clear() ;
+    vi2.Clear() ;
+    
+
+    // Checking if only one sequence, can be handeled faster
+    if ( vs.GetCount()-1 == vs.Index ( "//" ) )
+       {
+       success = true ;
+       vs.Remove ( vs.GetCount() - 1 ) ;
+       vi.Remove ( vi.GetCount() - 1 ) ;
+       for ( a = 0 ; a < vs.GetCount() ; a++ ) vs[a] = trim ( vs[a] ) ;
+       vs_l.push_back ( vs ) ;
+       vi_l.push_back ( vi ) ;
+       return ;
+       }    
+    
     
     wxArrayString t ;
     wxArrayInt ti ;
+    t.Alloc ( vs.GetCount() ) ;
+    ti.Alloc ( vs.GetCount() ) ;
     for ( a = 0 ; a < vs.GetCount() ; a++ )
         {
-        if ( trim(vs[a]).Left(2) == "//" )
+        if ( vs[a].GetChar(vi[a]) == '/' && vs[a].GetChar(vi[a]+1) == '/' )
            {
            vs_l.push_back ( t ) ;
            vi_l.push_back ( ti ) ;
@@ -105,6 +134,8 @@ void TGenBank::remap ( TVector *v )
 	int line ;
 	wxString k1 ;
 	vector <wxArrayString> items ;
+	wxString ns ;
+	ns.Alloc ( vs.GetCount() * 40 ) ;
 	for ( line = 0 ; line < vs.GetCount() ; line++ )
 	 {
 	 wxString l = vs[line] ;
@@ -112,7 +143,7 @@ void TGenBank::remap ( TVector *v )
 	 if ( i == 0 ) // New main level keyword
 	     {
 	     l += " " ;
-	     k1 = l.BeforeFirst ( ' ' ) . MakeUpper() ;
+	     k1 = l.BeforeFirst ( ' ' ) . Upper() ;
 	     wxString l2 = trim ( l.AfterFirst ( ' ' ) ) ;
 	     i += l.Length() - l2.Length() ;
 	     l = l2 ;
@@ -145,10 +176,10 @@ void TGenBank::remap ( TVector *v )
           l = l.MakeUpper() ;
           for ( int a = 0 ; a < l.Length() ; a++ )
              if ( isValidSequence ( l.GetChar(a) ) )
-                v->addToSequence ( l.GetChar(a) ) ;
+                ns.Append ( l.GetChar(a) ) ;
           }
 	 }
-	 
+    v->setSequence ( ns ) ;
     for ( int a = 0 ; a < items.size() ; a++ ) addItem ( v , items[a] ) ;
 	}
 
@@ -300,10 +331,10 @@ void TGenBank::iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag 
 
 wxString TGenBank::trim ( wxString s )
 	{
-	while ( !s.IsEmpty() && ( s.GetChar(0) == ' ' || s.GetChar(0) < 15 ) ) s = s.Mid ( 1 ) ;
-	return s ;
+    int a ;
+    for ( a = 0 ; a < s.length() && ( s.GetChar(a) == ' ' || s.GetChar(a) < 15 ) ; a++ ) ;
+	return s.Mid ( a ) ;
 	}
-
 
 wxString TGenBank::trimQuotes ( wxString s )
 	{

@@ -156,7 +156,7 @@ class TVector
     
     virtual TVector *getAAvector ( int from , int to , int dir = 1 ) ;
     virtual void doAction () ;
-    virtual void doRemove ( int from , int to , bool update = true ) ;
+    virtual void doRemove ( int from , int to , bool update = true , bool enableUndo = true ) ;
     virtual void insert_char ( char x , int pos , bool overwrite = false ) ;
     
     virtual float getAAmw ( char aa ) ;

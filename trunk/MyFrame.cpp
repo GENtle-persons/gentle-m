@@ -53,6 +53,7 @@ MyFrame::MyFrame(wxWindow *parent,
        : MyFrameType(parent, id, title, pos, size, style)
 {
     dying = false ;
+    locked = 0 ;
 
     // Accelerators
     wxAcceleratorEntry entries[ACC_ENT];
@@ -357,10 +358,7 @@ void MyFrame::initme ()
        
     SetSizeHints ( 600 , 400 ) ;
     Show(TRUE);
-    if ( children.GetCount() )
-       {
-       children.Last()->Activate () ;
-       }
+    if ( children.GetCount() ) children.Last()->Activate () ;
     }
     
 void MyFrame::OnClose(wxCloseEvent& event)
@@ -523,7 +521,7 @@ void MyFrame::OnFileImport(wxCommandEvent& WXUNUSED(event) )
     wxBeginBusyCursor();
     wxDialog dlg ( NULL , -1 , "Test" , wxDefaultPosition , wxSize ( 300 , 20 ) ) ;
     if ( files.GetCount() > 1 ) dlg.Show() ;
-    Freeze () ;
+    lockDisplay ( true ) ;
     for ( int a = 0 ; a < files.GetCount() ; a++ )
        {
        wxString msg = wxString::Format ( txt("t_loading") , files[a].c_str() ) ;
@@ -531,7 +529,7 @@ void MyFrame::OnFileImport(wxCommandEvent& WXUNUSED(event) )
        dlg.SetFocus() ;
        importFile ( files[a] , paths[a] , filter ) ;
        }
-    Thaw () ;
+    lockDisplay ( false ) ;
     SetFocus () ;
     wxEndBusyCursor();
     mainTree->Refresh () ;
@@ -556,13 +554,13 @@ void MyFrame::importFile ( wxString file , wxString path , int filter )
     // Trying GenBank format
     if ( filter == 1 || filter == -1 )
        {
-        TGenBank gb ;
-        gb.load ( path ) ;
-        if ( gb.success )
-           {
-           newGB ( gb , file ) ;
-           return ;
-           }
+       TGenBank gb ;
+       gb.load ( path ) ;
+       if ( gb.success )
+          {
+          newGB ( gb , file ) ;
+          return ;
+          }
        }
        
     // Trying PDB format
@@ -760,8 +758,7 @@ MyChild* MyFrame::newFromVector ( TVector *nv , int type )
 
     subframe->initPanels() ;
     mainTree->addChild(subframe,type) ;
-    subframe->Maximize() ;
-    subframe->Activate () ;
+
     return subframe ;
     }
 
@@ -794,7 +791,7 @@ TAlignment *MyFrame::runAlignment ( wxArrayString &vs , wxArrayChildBase &vc , T
 #endif
 
     subframe->initme () ;
-    subframe->Activate () ;
+    if ( locked == 0 ) subframe->Activate () ;
 
     if ( nv )
         {
@@ -810,7 +807,7 @@ TAlignment *MyFrame::runAlignment ( wxArrayString &vs , wxArrayChildBase &vc , T
         subframe->prealigned ( vs , vc ) ;
         }
 
-    subframe->Show() ;
+    if ( locked == 0 ) subframe->Show() ;
     
     mainTree->addChild ( subframe , TYPE_ALIGNMENT ) ;
     mainTree->Refresh () ;
@@ -994,11 +991,11 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , wxString title )
 #endif
 
     subframe->initme () ;
-
+    mainTree->addChild ( subframe , TYPE_AMINO_ACIDS ) ;
+    if ( locked != 0 ) return subframe ;
     subframe->Show() ;
     subframe->Maximize() ;
     subframe->showName() ;
-    mainTree->addChild ( subframe , TYPE_AMINO_ACIDS ) ;
     subframe->Activate () ;
     return subframe ;
     }
@@ -1213,7 +1210,34 @@ void MyFrame::activateChild ( int a )
        }
     else setActiveChild ( NULL ) ;
     }
-    
+
+void MyFrame::lockDisplay ( bool lock )
+    {
+    if ( lock )
+        {
+        if ( locked == 0 ) mainTree->Freeze() ;
+        locked++ ;
+        }
+    else
+        {
+        locked-- ;
+        if ( locked == 0 )
+           {
+           mainTree->Thaw() ;
+           if ( !children.IsEmpty() )
+              {
+              if ( GetActiveChild() ) GetActiveChild()->Activate() ;
+              else children.Last()->Activate () ;
+              }
+           }    
+        }        
+    }    
+
+bool MyFrame::isLocked ()
+    {
+    return ( locked != 0 ) ;
+    }    
+        
 wxString MyFrame::check4update ()
     {
 /*  // Deactivated due to strange error message on NT without RAS
@@ -1362,6 +1386,7 @@ void MyFrame::setActiveChild ( ChildBase *c )
     {
     lastChild = c ;
     if ( !IsShown() ) return ;
+    if ( locked != 0 ) return ;
     int a ;
     for ( a = 0 ; a < children.GetCount() ; a++ )
        {

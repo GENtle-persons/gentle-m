@@ -259,6 +259,7 @@ void TSilmutDialog::calc ()
               vector <TRestrictionCut> vc = v->getCuts(e) ;
               
               // Calculating the resulting fragments
+              si.fragments.Alloc ( vc.size() + 5 ) ;
               for ( c = 0 ; c < vc.size() ; c++ ) si.fragments.Add ( vc[c].pos ) ;
               si.fragments.Add ( v->getSequenceLength()-1 ) ;
               for ( c = si.fragments.GetCount()-1 ; c > 0 ; c-- )

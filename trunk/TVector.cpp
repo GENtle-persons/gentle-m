@@ -1,4 +1,5 @@
 #include "TVector.h"
+//#include <wx/timer.h>
 
 // ***************************************************************************************
 // TVector
@@ -317,7 +318,7 @@ void TVector::doRemoveNucleotide ( int x )
     {
     if ( sequence.IsEmpty() )
         {
-        while ( items.size() ) items.pop_back () ;
+        items.clear () ;
         return ;
         }
     if ( x >= sequence.length() ) return ;
@@ -331,7 +332,7 @@ void TVector::doRemoveNucleotide ( int x )
            if ( items[a].from > items[a].to ) items[a].to += sequence.length() ;
            }
         }
-
+        
     for ( a = 0 ; a < items.size() ; a++ )
         {
         if ( items[a].from <= x+1 && items[a].to >= x+1 )
@@ -350,7 +351,6 @@ void TVector::doRemoveNucleotide ( int x )
            }
         }
         
-//    sequence.erase ( sequence.begin() + x ) ;
     sequence.erase ( x , 1 ) ;
 
     if ( isCircular () )
@@ -713,16 +713,20 @@ void TVector::closeCircle ()
     }
 
 // This function is a plague
-void TVector::doRemove ( int from , int to , bool update )
+void TVector::doRemove ( int from , int to , bool update , bool enableUndo )
     {
     if ( from == to + 1 ) return ; // Nothing to remove
     int a , b ;
     int l = sequence.length() ;
-    undo.start ( txt("u_del_seq") ) ;
+    if ( enableUndo ) undo.start ( txt("u_del_seq") ) ;
 
-    myass ( false , "a" ) ;
-        
     // Sequence
+    to %= l ;
+    if ( to >= from ) sequence.Remove ( from - 1 , to - from + 1 ) ;
+    else sequence = sequence.Mid ( to , from - to - 1 ) ;
+
+/*
+    // Old code
     wxString s = sequence , t ;
     int rt = to ;
     if ( rt < from ) rt += l ;
@@ -733,12 +737,12 @@ void TVector::doRemove ( int from , int to , bool update )
        t += s.GetChar(b-1) ;
        s.SetChar(b-1,' ') ;
        }
-    myass ( false , "b" ) ;
     sequence = "" ;
     for ( a = 0 ; a < l ; a++ )
-       if ( s.GetChar(a) != ' ' ) sequence += s.GetChar(a) ;
-       
-    myass ( false , "c" ) ;
+       if ( s.GetChar(a) != ' ' ) sequence += s.GetChar(a) ;       
+*/
+
+
     // Items
     for ( a = 0 ; a < items.size() ; a++ )
        {
@@ -748,17 +752,21 @@ void TVector::doRemove ( int from , int to , bool update )
           items.erase ( items.begin() + a ) ;
           a-- ;
           }
+/*       else if ( items[a].to > sequence.length() )
+          {
+          if ( isLinear() ) items[a].to = sequence.length() ;
+          else items[a].to -= sequence.length() ;
+          }    */
        }
 
-    myass ( false , "d" ) ;
     // Finish
     if ( update )
         {
-        undo.stop () ;
+        if ( enableUndo ) undo.stop () ;
         recalculateCuts () ;
         recalcvisual = true ;
         }
-    else undo.abort () ;
+    else if ( enableUndo ) undo.abort () ;
     }
     
 // Currently returns only the direct encoding (a single char) or 'X'
@@ -950,7 +958,6 @@ TVector *TVector::getAAvector ( int from , int to , int dir )
     // Creating new vector
     TVector *v = new TVector ;
     v->setFromVector ( *this ) ;
-//    *v = *this ;
     v->type = TYPE_AMINO_ACIDS ;
 
     if ( to < from ) to += v->sequence.length() ;
@@ -995,17 +1002,20 @@ TVector *TVector::getAAvector ( int from , int to , int dir )
     v->re.Clear() ;
     v->rc.clear() ;
 
+//    wxStopWatch sw ;
+//    sw.Start() ;
     // Removing non-AA sequence and features
     for ( a = 0 ; a < v->sequence.length() ; a++ )
         {
         if ( v->sequence.GetChar(a) == UNIQUE )
            {
            for ( b = a+1 ; b < v->sequence.length() && v->sequence.GetChar(b) == UNIQUE ; b++ ) ;
-           v->doRemove ( a+1 , b , false ) ;
+           v->doRemove ( a+1 , b , false , false ) ;
            a-- ;
            }
         }
         
+//    sw.Pause() ;
 
     // Fixing features, if neccessary
     // PATCH AS PATCH CAN!!!
@@ -1023,6 +1033,7 @@ TVector *TVector::getAAvector ( int from , int to , int dir )
         }
 
     v->circular = false ;
+//    wxMessageBox ( wxString::Format ( "%d ms" , sw.Time() ) ) ;
     return v ;
     }
     
@@ -1382,11 +1393,10 @@ void TVectorItem::doRemove ( int f , int t , int l )
     if ( t < f ) rt += l ;
     if ( to < from ) rto += l ;
     int a ;
-    wxString s = "_" ;
-    myass ( false , "doRemove:1" ) ;
-    s.Pad ( l * 3 , '_' ) ;
+    wxString s ( '_' , l * 3 + 1 ) ;
     for ( a = from ; a <= rto ; a++ ) s.SetChar ( a , 'X' ) ;
     for ( a = f ; a <= rt ; a++ ) s.SetChar ( a , ' ' ) ;
+
     from = -1 ;
     to = -1 ;
     int ff = 0 ;
@@ -1399,7 +1409,6 @@ void TVectorItem::doRemove ( int f , int t , int l )
           to++ ;
           }
        }
-    myass ( false , "doRemove:1a" ) ;
     to += from ;
     l -= rt - f + 1 ;
     if ( l == 0 ) 
@@ -1407,11 +1416,8 @@ void TVectorItem::doRemove ( int f , int t , int l )
         from = -1 ;
         return ;
         }
-    myass ( false , "doRemove:2" ) ;
     while ( to > l ) to -= l ;
-    myass ( false , "doRemove:3" ) ;
     while ( from > l ) from -= l ;
-    myass ( false , "doRemove:4" ) ;
     }
     
 int TVectorItem::getOffset ()
@@ -1483,6 +1489,8 @@ void TVectorItem::translate ( TVector *v , SeqAA *aa )
          int pawl = dna2aa.size() ;
          if ( voff != -1 && ( b + coff ) % 10 == 0 )
             {
+            aa->offsets.Alloc ( b+coff ) ;
+            aa->offset_items.Alloc ( b+coff ) ;
             while ( aa->offsets.GetCount() <= b+coff ) aa->offsets.Add ( -1 ) ;
             while ( aa->offset_items.GetCount() <= b+coff ) aa->offset_items.Add ( NULL ) ;
             aa->offsets[b+coff] = voff + pawl - 1 ;

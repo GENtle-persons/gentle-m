@@ -619,6 +619,7 @@ void PlasmidCanvas::itemAsNewAA ( wxCommandEvent &ev )
     n += " (" + p->vec->getName() + ")" ;
     TVector *nv = p->vec->getAAvector ( from+1 , to+1 , dir ) ;
     TAminoAcids *aaa = myapp()->frame->newAminoAcids ( nv , n ) ;
+    delete nv ;
     aaa->vec->setChanged() ;
     }
     

@@ -71,6 +71,7 @@ void TMainTree::removeChild ( ChildBase *c )
     
 void TMainTree::OnEvent ( wxTreeEvent &event )
     {
+    if ( myapp()->frame->isLocked() ) return ;
     wxTreeItemId id = event.GetItem () ;
     if ( !id.IsOk() ) return ;
     TMainTreeItem *d = (TMainTreeItem*) GetItemData ( id ) ;

@@ -181,7 +181,6 @@ void TABIviewer::initme ()
     toolBar->Realize() ;
 #endif
 
-
     hs = new wxSplitterWindow ( this , SPLIT_AMINOACIDS ) ;
 
     // Sequence Canvas
@@ -245,8 +244,8 @@ void TABIviewer::initme ()
 
     showSequence () ;
     showStat () ;
-    sc->SetFocus() ;
     myapp()->frame->setChild ( this ) ;    
+    sc->SetFocus() ;
     }
     
 wxString TABIviewer::getName ()

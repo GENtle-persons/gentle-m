@@ -71,6 +71,13 @@ class SeqPos
               return a ;
         return 0 ;
         }
+    virtual void reserve ( int n , int n2 = -1 )
+        {
+        r.reserve ( n ) ;
+        l.reserve ( n2 == -1 ? n : n2 ) ;
+        p.Alloc ( n ) ;
+        m.Alloc ( n ) ;
+        }    
     } ;
 
 class SeqBasic
