@@ -276,7 +276,7 @@ void EIpanel::execute_ncbi_load ( wxString database )
 		    TGenBank gb ;
 		    gb.paste ( res ) ;
 //	wxMessageBox ( "GB" , wxString::Format ( "%d" , gb.success ) ) ;
-		    if ( gb.success ) myapp()->frame->newGB ( gb , "" ) ;
+		    if ( gb.success ) myapp()->frame->newGB ( gb ) ;
 		}
 		else
 		{

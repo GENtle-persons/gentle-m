@@ -12,6 +12,7 @@ class AutoAnnotate
 	virtual void ScanDatabase ( wxString database ) ;
 	
 	private :
+	virtual bool addORFs ( TVector *v ) ;
  	virtual bool MatchItem ( TVector *tv , TVectorItem &item , TVector *v , wxString &oseq ) ;
  	virtual bool RawMatch ( TVectorItem &item , TVector *v , wxString &oseq , wxString &s ) ;
  	

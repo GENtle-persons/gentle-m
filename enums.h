@@ -345,6 +345,7 @@ enum {
     
     CGVIEW_RUN_CGVIEWER ,
     CGVIEW_CHOOSE_JAR ,
+    CGVIEW_CHOOSE_BACKGROUND_COLOR ,
     
     Y___,
     Z___

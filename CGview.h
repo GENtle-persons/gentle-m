@@ -22,10 +22,15 @@ class CGview
   	virtual wxString getColorName ( TVectorItem *i ) ; ///< Returns XML item color, based on the item color used in GENtle
   	virtual bool itemOverlap ( TVectorItem &i1 , TVectorItem &i2 ) ; ///< Checks if two items overlap
   	virtual void wellform ( wxString &s ) ; ///< Fixes quotes and &amp; prior to XML generation
+  	virtual void makeGCcolor ( int percent , wxColour &col ) ;
+ 	virtual wxString RGB2string ( wxColour col ) ;
+ 	virtual wxString RGB2string ( int red , int green , int blue ) ;
   	
   	TVector *v ; ///< Pointer to the TVector structure to export
   	int width , height , radius ;
-  	bool useDefaultColors , runCGview , runimageapp ;
+  	bool useDefaultColors , runCGview , runimageapp , showrestrictionsites , showgc ;
+  	bool itemsShown ;
+  	wxColour backgroundColor ;
   	wxString cgviewapp , imageformat ;
   	vector <int> used_types ; ///< The item types used in this vector (internal use only)
 	} ;    

@@ -83,7 +83,13 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
     TiXmlElement *e ;
     wxString s ;
     TiXmlHandle h ( base ) ;
-    v->setName ( t ( h.FirstChild("GBSeq_locus").FirstChild().Text() ) ) ;
+    
+    wxString n1 = t ( h.FirstChild("GBSeq_definition").FirstChild().Text() ) ;
+    wxString n2 = t ( h.FirstChild("GBSeq_locus").FirstChild().Text() ) ;
+    if ( !n1.IsEmpty() && n1.Freq ( '\n' ) == 0 && n2.Freq ( ' ' ) == 0 )
+	    n2 = n1 + " (" + n2 + ")" ;
+    
+    v->setName ( n2 ) ;
     v->setSequence ( t ( h.FirstChild("GBSeq_sequence").FirstChild().Text() ) . MakeUpper() ) ;
     
     e = h.FirstChild("GBSeq_topology").Element() ;

@@ -722,3 +722,6 @@
 "t_you_use_version","You are using version ","Sie benutzen Version "
 "m_auto_annotate","Auto-annotate sequence\tF9","Sequenz automatisch annotieren\tF9"
 "u_autoannotate","Auto-annotate sequence","Sequenz automatisch annotieren"
+"t_cgview_showrestrictionsites","Show restriction sites","Zeige Restriktionsschnittstellen"
+"t_cgview_showgc","Show GC%","Zeige GC%"
+"t_cgview_backgroundcolor","Background color","Hintergrundfarbe"

@@ -8,9 +8,10 @@ class CGdialog : public wxDialog
     virtual void OnCharHook ( wxKeyEvent& event ) ; ///< Key event handler
     virtual void OnRunCGviewer ( wxCommandEvent &event ) ; ///< Checkbox "Run CGviewer" handler
     virtual void OnChooseJar ( wxCommandEvent &event ) ; ///< Button "Choose CGviewer JAR file" handler
+    virtual void OnChooseBackgroundColor  ( wxCommandEvent &event ) ; ///< Button "Background color" handler
     
     wxTextCtrl *width , *height , *cgviewapp ;
-    wxCheckBox *useDefaultColors , *runcgview , *runimageapp ;
+    wxCheckBox *useDefaultColors , *runcgview , *runimageapp , *showrestrictionsites , *showgc ;
     wxButton *choosejar ;
     wxChoice *imagetypes ;
     CGview *p ; ///< The calling (parent) CGview class
@@ -22,6 +23,7 @@ BEGIN_EVENT_TABLE(CGdialog, wxDialog )
     EVT_BUTTON(wxID_OK,CGdialog::OnOK)
     EVT_BUTTON(wxID_CANCEL,CGdialog::OnCancel)
     EVT_BUTTON(CGVIEW_CHOOSE_JAR,CGdialog::OnChooseJar)
+    EVT_BUTTON(CGVIEW_CHOOSE_BACKGROUND_COLOR,CGdialog::OnChooseBackgroundColor)
     EVT_CHECKBOX(CGVIEW_RUN_CGVIEWER,CGdialog::OnRunCGviewer)
     EVT_CHAR_HOOK(CGdialog::OnCharHook)
 END_EVENT_TABLE()
@@ -35,6 +37,7 @@ CGdialog::CGdialog ( wxWindow *parent, const wxString& title , CGview *_p )
     wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h3 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h4 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *h5 = new wxBoxSizer ( wxHORIZONTAL ) ;
     
     width = new wxTextCtrl ( this , -1 , wxString::Format ( "%d" , p->width ) ) ;
     height = new wxTextCtrl ( this , -1 , wxString::Format ( "%d" , p->height ) ) ;
@@ -58,12 +61,21 @@ CGdialog::CGdialog ( wxWindow *parent, const wxString& title , CGview *_p )
     h4->Add ( new wxStaticText ( this , -1 , txt("t_cgview_imagetypes") ) , 0 , wxEXPAND|wxALL , 5 ) ;
     h4->Add ( imagetypes , 0 , wxEXPAND|wxALL , 5 ) ;
     h4->Add ( runimageapp , 0 , wxEXPAND|wxALL , 5 ) ;
+
+    showrestrictionsites = new wxCheckBox ( this , -1 , txt("t_cgview_showrestrictionsites") ) ;
+    showgc = new wxCheckBox ( this , -1 , txt("t_cgview_showgc") ) ;
+    wxButton *bgc = new wxButton ( this , CGVIEW_CHOOSE_BACKGROUND_COLOR , txt("t_cgview_backgroundcolor") ) ;
+    h5->Add ( showrestrictionsites , 0 , wxEXPAND|wxALL , 5 ) ;
+    h5->Add ( showgc , 0 , wxEXPAND|wxALL , 5 ) ;
+    h5->Add ( bgc , 0 , wxEXPAND|wxALL , 5 ) ;
+
     
     h2->Add ( new wxButton ( this , wxID_OK , txt("b_ok" ) ) , 0 , wxALL , 5 ) ;
     h2->Add ( new wxButton ( this , wxID_CANCEL , txt("b_cancel" ) ) , 0 , wxALL , 5 ) ;
     
     v0->Add ( h1 , 0 , 0 ) ;
     v0->Add ( useDefaultColors , 0 , 0 ) ;
+    v0->Add ( h5 , 1 , 0 ) ;
     v0->Add ( h3 , 1 , wxEXPAND ) ;
     v0->Add ( h4 , 1 , 0 ) ;
     v0->Add ( h2 , 0 , wxALIGN_CENTER ) ;
@@ -71,6 +83,8 @@ CGdialog::CGdialog ( wxWindow *parent, const wxString& title , CGview *_p )
     useDefaultColors->SetValue ( p->useDefaultColors ) ;
     runcgview->SetValue ( p->runCGview ) ;
     runimageapp->SetValue ( p->runimageapp ) ;
+    showrestrictionsites->SetValue ( p->showrestrictionsites ) ;
+    showgc->SetValue ( p->showgc ) ;
     
     imagetypes->Append ( "PNG" ) ;
     imagetypes->Append ( "JPG" ) ;
@@ -92,6 +106,7 @@ void CGdialog::OnRunCGviewer ( wxCommandEvent &event )
 	runimageapp->Enable ( b ) ;
 	cgviewapp->Enable ( b ) ;
 	choosejar->Enable ( b ) ;
+	imagetypes->Enable ( b ) ;
 	}    
 
 void CGdialog::OnChooseJar ( wxCommandEvent &event )
@@ -100,6 +115,11 @@ void CGdialog::OnChooseJar ( wxCommandEvent &event )
     if ( wxID_OK != d.ShowModal() ) return ;
     cgviewapp->SetLabel ( d.GetPath() ) ;
 	}
+	
+void CGdialog::OnChooseBackgroundColor  ( wxCommandEvent &event )
+	{
+	p->backgroundColor = wxGetColourFromUser ( this , p->backgroundColor ) ;
+	}    
     
 void CGdialog::OnCharHook ( wxKeyEvent& event )
     {
@@ -115,6 +135,7 @@ void CGdialog::OnCharHook ( wxKeyEvent& event )
 CGview::CGview ( TVector *_v )
 	{
  	v = _v ;
+ 	itemsShown = false ;
  	width = myapp()->frame->LS->getOption ( "CGVIEW_WIDTH" , 800 ) ;
  	height = myapp()->frame->LS->getOption ( "CGVIEW_HEIGHT" , 600 ) ;
  	radius = myapp()->frame->LS->getOption ( "CGVIEW_RADIUS" , 160 ) ;
@@ -123,29 +144,102 @@ CGview::CGview ( TVector *_v )
  	runimageapp = myapp()->frame->LS->getOption ( "CGVIEW_RUNIMAGEAPP" , true ) ;
  	imageformat = myapp()->frame->LS->getOption ( "CGVIEW_IMAGEFORMAT" , "png" ) ;
  	cgviewapp = myapp()->frame->LS->getOption ( "CGVIEW_CGVIEWJAR" , "" ) ;
+ 	showrestrictionsites = myapp()->frame->LS->getOption ( "CGVIEW_SHOWRESTRICTIONSITES" , true ) ;
+ 	showgc = myapp()->frame->LS->getOption ( "CGVIEW_SHOWGC" , false ) ;
+ 	
+ 	wxString bgcol = myapp()->frame->LS->getOption ( "CGVIEW_BACKGROUNDCOLOR" , "255255255" ) ;
+ 	backgroundColor = wxColour ( atoi ( bgcol.Mid ( 0 , 3 ) . c_str() ) ,
+ 								 atoi ( bgcol.Mid ( 3 , 3 ) . c_str() ) ,
+ 								 atoi ( bgcol.Mid ( 6 , 3 ) . c_str() ) ) ;
 	}    
 	
 wxString CGview::getXML()
 	{
 	wxBeginBusyCursor() ;
+	int a ;
  	wxString ret ;
+ 	wxString bgcol = RGB2string ( backgroundColor ) ;
  	ret += "<?xml version='1.0' encoding='ISO-8859-1'?>\n" ;
- 	ret += wxString::Format ( "<cgview backboneRadius='%d' sequenceLength='%d' height='%d' width='%d'>\n\n" ,
- 						radius ,
+ 	ret += wxString::Format ( "<cgview backgroundColor='%s' sequenceLength='%d' height='%d' width='%d'>\n\n" , //backboneRadius='%d' 
+// 						radius ,
+						bgcol.c_str() ,
  						v->getSequenceLength() , 
  						height ,
  						width ) ;
+	
+	// Adding GC%
+	if ( showgc )
+		{
+  		ret += " <featureSlot strand='direct'>\n" ;
+		int l = v->getSequenceLength() ;
+	    int b , nob = v->showGC() ;
+	    for ( a = 0 ; a < nob ; a++ )
+	    	{
+ 	    	int at = 0 , gc = 0 , other = 0 ;
+	    	for ( b = l * a / nob ; b < l * ( a + 1 ) / nob ; b++ )
+	    		{
+ 		        char c = v->getSequenceChar ( b ) ;
+ 		    	if ( c == 'A' || c == 'T' ) at++ ;
+ 		    	else if ( c == 'G' || c == 'C' ) gc++ ;
+ 		    	else other++ ;
+	    		}    
+    		int sum = at + gc + other ;
+    		if ( sum == 0 ) continue ;
+    		int per = gc * 100 / sum ;
+    		wxColour col ;
+    		makeGCcolor ( per , col ) ;
+         	wxString icol = RGB2string ( col ) ;
+		    int start = l*a/nob+1 ;
+		    int stop = l*(a+1)/nob ;
+		    if ( stop > l ) stop = l ;
+	    	ret += "  <feature color='" + icol + "' decoration='arc'>" ;
+	    	ret += "   <featureRange " ;
+      		ret += wxString::Format ( "start='%d' stop='%d'/>\n" , start , stop ) ;
+	    	ret += "  </feature>\n" ;
+     		}  		
+  		ret += " </featureSlot>\n" ;
+  		
+  		// Now for the GC legend...
+    	ret += " <legend position='upper-left'>\n" ;
+    	for ( a = 0 ; a <= 100 ; a += 25 )
+    		{
+		    wxString text = wxString::Format ( "%3d%% GC" , a ) ;
+		    wxColour col ;
+		    makeGCcolor ( a , col ) ;
+     		ret += "  <legendItem text=\"" + text ;
+       		ret += "\" drawSwatch='true' swatchColor='" + RGB2string ( col ) ;
+       		ret += "'/>\n" ;
+    		}    
+    	ret += " </legend>\n\n" ;
+   		}  		
 	
 	// Adding features
 	ret += addXMLfeatureSlot ( 1 ) ; // Forward
 	ret += addXMLfeatureSlot ( 0 ) ; // Direct
 	ret += addXMLfeatureSlot ( -1 ) ; // Reverse
 	
+	// Adding restriction sites
+	if ( showrestrictionsites )
+		{
+  		ret += " <featureSlot strand='direct'>\n" ;
+  		for ( a = 0 ; a < v->rc.size() ; a++ )
+  			{
+	    	wxString label = v->rc[a].getDisplayName() ;
+	    	wellform ( label ) ;
+	    	ret += "  <feature color='black' decoration='arc' label=\"" ;
+	    	ret += label + "\">\n" ;
+	    	ret += "   <featureRange " ;
+	    	ret += wxString::Format ( "start='%d' stop='%d'/>\n" , v->rc[a].pos , v->rc[a].pos ) ;
+	    	ret += "  </feature>\n" ;
+  			}    
+  		ret += " </featureSlot>\n" ;
+		}    
+	
 	// Adding legend
-	if ( useDefaultColors ) // Only if there is a true match between type and feature
+	if ( useDefaultColors && itemsShown ) // Only if there is a true match between type and feature
 		{
     	ret += " <legend position='upper-right'>\n" ;
-    	for ( int a = 0 ; a < used_types.size() ; a++ )
+    	for ( a = 0 ; a < used_types.size() ; a++ )
     		{
      		if ( used_types[a] == 0 ) continue ; // Not used
      		wxString text = txt(wxString::Format("itemtype%d",a)) ;
@@ -232,6 +326,7 @@ wxString CGview::addXMLfeatureSlot ( int dir )
       		ret += "  </feature>\n" ;
       		while ( used_types.size() <= i->getType() ) used_types.push_back ( 0 ) ;
       		used_types[i->getType()]++ ;
+      		itemsShown = true ;
     		}    
     	
     	if ( ret != "" )
@@ -263,8 +358,7 @@ wxString CGview::getColorName ( int type )
     
 wxString CGview::getColorName ( TVectorItem *i )
 	{
-	wxColour c = i->getFontColor() ;
-	return wxString::Format ( "rgb(%d,%d,%d)" , c.Red() , c.Green() , c.Blue() ) ;
+	return RGB2string ( i->getFontColor() ) ;
 	}    
 
 bool CGview::itemOverlap ( TVectorItem &i1 , TVectorItem &i2 )
@@ -297,6 +391,8 @@ bool CGview::runSettingsDialog ()
 	cgviewapp = d.cgviewapp->GetLabel() ;
 	runimageapp = d.runimageapp->GetValue() ;
 	imageformat = d.imagetypes->GetStringSelection().Lower() ;
+	showrestrictionsites = d.showrestrictionsites->GetValue() ;
+	showgc = d.showgc->GetValue() ;
 
 
 	// Saving options
@@ -309,6 +405,10 @@ bool CGview::runSettingsDialog ()
  	myapp()->frame->LS->setOption ( "CGVIEW_RUNIMAGEAPP" , runimageapp ) ;
  	myapp()->frame->LS->setOption ( "CGVIEW_IMAGEFORMAT" , imageformat ) ;
  	myapp()->frame->LS->setOption ( "CGVIEW_CGVIEWJAR" , cgviewapp ) ;
+ 	myapp()->frame->LS->setOption ( "CGVIEW_SHOWRESTRICTIONSITES" , showrestrictionsites ) ;
+ 	myapp()->frame->LS->setOption ( "CGVIEW_SHOWGC" , showgc ) ;
+ 	myapp()->frame->LS->setOption ( "CGVIEW_BACKGROUNDCOLOR" , wxString::Format ( "%3d%3d%3d" , 
+  				backgroundColor.Red() , backgroundColor.Green() , backgroundColor.Blue() ) ) ;
 	myapp()->frame->LS->endRecord() ;
 
 	return true ;
@@ -332,3 +432,35 @@ void CGview::postProcess ( wxString filename )
     wxExecute ( command ) ;
 	}
 
+void CGview::makeGCcolor ( int percent , wxColour &col )
+	{
+	int red , green , blue ;
+	if ( percent < 50 )
+		{
+		red = 255 * ( 50 - percent ) / 50 ;
+		green = 255 * percent / 50 ;
+		blue = 0 ;
+		}
+ 	else
+  		{
+  		percent -= 50 ;
+		red = 0 ;
+		green = 255 * ( 50 - percent ) / 50 ;
+		blue = 255 * percent / 50 ;
+    	}        
+    col.Set ( red , green , blue ) ;
+	}
+
+wxString CGview::RGB2string ( wxColour col )
+	{
+	return RGB2string ( col.Red() , col.Green() , col.Blue() ) ;
+	}    
+	
+wxString CGview::RGB2string ( int red , int green , int blue )
+	{
+  	return wxString::Format ( "rgb(%d,%d,%d)" , 
+  						red , 
+  						green ,
+  						blue ) ;
+	}
+    
