@@ -183,8 +183,8 @@ void SeqRestriction::show ( wxDC& dc )
                qlx = x ;
                if ( b == pl.getTo ( idx ) )
                   {
-                  if ( down ) dc.DrawText ( rc->e->name , llx , ly - ch2 ) ;
-                  else dc.DrawText ( rc->e->name , llx , ly ) ;
+                  if ( down ) dc.DrawText ( rc->getDisplayName() , llx , ly - ch2 ) ;
+                  else dc.DrawText ( rc->getDisplayName() , llx , ly ) ;
                   }
                }
             rb = ra ;

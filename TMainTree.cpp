@@ -17,7 +17,7 @@ void TMainTree::initme()
     {
     // Basic stuff
     DeleteAllItems () ;
-    treeroot = AddRoot ( myapp()->frame->project_name ) ;
+    treeroot = AddRoot ( myapp()->frame->project.name ) ;
 
     vectors = AppendItem ( treeroot , txt("vectors") ) ;
     fragments = AppendItem ( treeroot , txt("fragments") ) ;

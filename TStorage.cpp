@@ -10,6 +10,7 @@ TStorage::TStorage ( int nt , wxString fn )
     if ( fn.IsEmpty() ) isMySQL = false ;
     else isMySQL = (fn.GetChar(0)==':') ;
     rpv = 0 ;
+    recording = false ;
     writeProtect = false ;
     storagetype = nt ;
     if ( fn.IsEmpty() ) fn = myapp()->homedir+"/local.db" ;
@@ -138,6 +139,12 @@ TSQLresult TStorage::getObject_MySQL ( wxString query )
     
 TSQLresult TStorage::getObject ( wxString query )
     {
+    if ( recording )
+    	{
+	    record += query + "; " ;
+        results.clean() ;
+	    return results ;
+    	}    
     if ( isMySQL ) return getObject_MySQL ( query ) ;
     sqlite *db ;
     char *e = 0 ;
@@ -505,9 +512,7 @@ wxString TStorage::fixDNAname ( wxString s )
     
 void TStorage::setOption ( wxString oname , int value )
     {
-    char t[100] ;
-    sprintf ( t , "%d" , value ) ;
-    setOption ( oname , wxString ( t ) ) ;
+    setOption ( oname , wxString::Format ( "%d" , value ) ) ;
     }
     
 void TStorage::setOption ( wxString oname , wxString vname )
@@ -795,4 +800,19 @@ void TStorage::optimizeDatabase ()
     if ( isMySQL ) return ;
 	getObject ( "VACUUM;" ) ;
 	}
+
+void TStorage::startRecord ()
+	{
+	record = "" ;
+	recording = true ;
+	}    
+
+void TStorage::endRecord ()
+	{
+	recording = false ;
+	record = "BEGIN; " + record + " END;" ;
+	getObject ( record ) ;
+	record = "" ;
+	}
     
+

@@ -4,20 +4,172 @@ BEGIN_EVENT_TABLE(ProgramOptionsDialog, wxDialog )
     EVT_BUTTON(POD_OK,ProgramOptionsDialog::OnOK)
     EVT_BUTTON(POD_CANCEL,ProgramOptionsDialog::OnCancel)
     EVT_CHAR_HOOK(ProgramOptionsDialog::OnCharHook)
-    EVT_CHECKBOX(GES_USE,ProgramOptionsDialog::OnEnzymeCheckbox)
-    EVT_CHECKBOX(GES_USE_MINCUTOFF,ProgramOptionsDialog::OnEnzymeCheckbox)
-    EVT_CHECKBOX(GES_USE_MAXCUTOFF,ProgramOptionsDialog::OnEnzymeCheckbox)
-    EVT_BUTTON(GES_COL_1,ProgramOptionsDialog::OnButton1)
-    EVT_BUTTON(GES_COL_2,ProgramOptionsDialog::OnButton2)
-    EVT_BUTTON(GES_COL_3,ProgramOptionsDialog::OnButton3)
+END_EVENT_TABLE()
+    
+BEGIN_EVENT_TABLE(TEnzymeSettingsTab, wxPanel )
+    EVT_CHECKBOX(GES_USE,TEnzymeSettingsTab::OnEnzymeCheckbox)
+    EVT_CHECKBOX(GES_USE_MINCUTOFF,TEnzymeSettingsTab::OnEnzymeCheckbox)
+    EVT_CHECKBOX(GES_USE_MAXCUTOFF,TEnzymeSettingsTab::OnEnzymeCheckbox)
+    EVT_CHECKBOX(GES_USE_COLOR_CODING,TEnzymeSettingsTab::OnEnzymeCheckbox)
+    EVT_BUTTON(GES_COL_1,TEnzymeSettingsTab::OnButton1)
+    EVT_BUTTON(GES_COL_2,TEnzymeSettingsTab::OnButton2)
+    EVT_BUTTON(GES_COL_3,TEnzymeSettingsTab::OnButton3)
 END_EVENT_TABLE()
 
+
+TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent )
+	: wxPanel ( parent )
+	{
+    bo = 5 ;
+    lh = 22 ;
+	    
+	int w , h ;
+    GetClientSize ( &w , &h ) ;
+    
+    wxBoxSizer *vs = new wxBoxSizer ( wxVERTICAL ) ;
+    wxFlexGridSizer *topSizer = new wxFlexGridSizer ( 2 , 15 , 5 ) ;
+    optionsSizer = new wxFlexGridSizer ( 4 , 15 , 5 ) ;
+    
+    // Top
+    useSettings = new wxCheckBox ( this , GES_USE , txt("t_use_global_enzyme_settings") ) ; 
+    join_enzymes = new wxCheckBox ( this , -1 , txt("t_ges_join_enzymes") ) ;    
+    topSizer->Add ( useSettings , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    topSizer->Add ( join_enzymes , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    
+    vs->Add ( topSizer , 0 , wxEXPAND , 5 ) ;
+    vs->Add ( new wxStaticText ( this , -1 , " " ) , 0 , wxEXPAND , 5 ) ;
+    vs->Add ( optionsSizer , 1 , wxEXPAND , 5 ) ;
+    
+    // Min/max cutoff
+    useMinCutoff = new wxCheckBox ( this , GES_USE_MINCUTOFF , txt("t_ges_use_min_cutoff") ) ;
+    minCutoff = new wxSpinCtrl ( this , -1 , "1" ) ;
+    useMaxCutoff = new wxCheckBox ( this , GES_USE_MAXCUTOFF , txt("t_ges_use_min_cutoff") ) ;
+    maxCutoff = new wxSpinCtrl ( this , -1 , "3" ) ;
+    
+    // Length of recognition sequence
+    recog4 = new wxCheckBox ( this , -1 , txt("t_ges_seqlen4") ) ;
+    recog5 = new wxCheckBox ( this , -1 , txt("t_ges_seqlen4") ) ;
+    recog6 = new wxCheckBox ( this , -1 , txt("t_ges_seqlen5") ) ;
+    recog6p = new wxCheckBox ( this , -1 , txt("t_ges_seqlen6p") ) ;
+
+    // Overlaps
+    pattern3 = new wxCheckBox ( this , -1 , txt("t_ges_overlap3") ) ;
+    pattern5 = new wxCheckBox ( this , -1 , txt("t_ges_overlap5") ) ;
+    pattern_blunt = new wxCheckBox ( this , -1 , txt("t_ges_overlap_blunt") ) ;
+    
+    // Group list
+    default_group = new wxChoice ( this , -1 ) ;
+    default_group->Append ( txt("All") ) ;
+    wxArrayString vs2 ;
+    myapp()->frame->LS->getEnzymeGroups ( vs2 ) ;
+    for ( int i = 0 ; i < vs2.GetCount() ; i++ )
+        default_group->Append ( vs2[i] ) ;
+    default_group->SetStringSelection ( txt("All") ) ;
+    
+    // Colors
+    use_color_coding = new wxCheckBox ( this , GES_USE_COLOR_CODING , txt("t_ges_use_color_coding") ) ;
+    bcol1 = new wxButton ( this , GES_COL_1 , txt("t_ges_cut1") ) ;
+    bcol2 = new wxButton ( this , GES_COL_2 , txt("t_ges_cut2") ) ;
+    bcol3 = new wxButton ( this , GES_COL_3 , txt("t_ges_cut3") ) ;
+    
+    // Adding elements to gridsizer
+    optionsSizer->Add ( use_color_coding , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    optionsSizer->Add ( bcol1 , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    optionsSizer->Add ( bcol2 , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    optionsSizer->Add ( bcol3 , 1 , wxALIGN_CENTER_VERTICAL ) ;
+
+    optionsSizer->Add ( useMinCutoff , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    optionsSizer->Add ( minCutoff , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    optionsSizer->Add ( useMaxCutoff , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    optionsSizer->Add ( maxCutoff , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    
+    optionsSizer->Add ( new wxStaticText ( this , -1 , txt("t_ges_overlaps") ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    optionsSizer->Add ( pattern3 , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    optionsSizer->Add ( pattern5 , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    optionsSizer->Add ( pattern_blunt , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    
+    optionsSizer->Add ( recog4 , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    optionsSizer->Add ( recog5 , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    optionsSizer->Add ( recog6 , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    optionsSizer->Add ( recog6p , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    
+    optionsSizer->Add ( new wxStaticText ( this , -1 , txt("t_ges_enzyme_group") ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    optionsSizer->Add ( default_group , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    optionsSizer->Add ( new wxStaticText ( this , -1 , "" ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    optionsSizer->Add ( new wxStaticText ( this , -1 , "" ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    
+    // Do it!
+    this->SetSizer ( vs ) ;
+    vs->Fit ( this ) ;    
+    this->Show () ;
+    updateGlobalEnzymes () ;
+	}    
+
+void TEnzymeSettingsTab::updateGlobalEnzymes ()
+	{
+	bool use = useSettings->GetValue() ;
+	useMinCutoff->Enable ( use ) ;
+	useMaxCutoff->Enable ( use ) ;
+	minCutoff->Enable ( useMinCutoff->GetValue() && use ) ;
+	maxCutoff->Enable ( useMaxCutoff->GetValue() && use ) ;
+	recog4->Enable ( use ) ;
+	recog5->Enable ( use ) ;
+	recog6->Enable ( use ) ;
+	recog6p->Enable ( use ) ;
+	pattern3->Enable ( use ) ;
+	pattern5->Enable ( use ) ;
+	pattern_blunt->Enable ( use ) ;
+	default_group->Enable ( use ) ;
+	updateColorButton ( bcol1 , col1 ) ;
+	updateColorButton ( bcol2 , col2 ) ;
+	updateColorButton ( bcol3 , col3 ) ;
+	}
+
+void TEnzymeSettingsTab::updateColorButton ( wxButton *b , wxColour &c )
+	{
+	b->SetForegroundColour ( c ) ;
+	if ( ( c.Red() + c.Green() + c.Blue() ) / 3 < 100 ) b->SetBackgroundColour ( *wxWHITE ) ;
+	else b->SetBackgroundColour ( *wxBLACK ) ;
+	b->Enable ( use_color_coding->GetValue() ) ;
+	}    
+	
+void TEnzymeSettingsTab::OnEnzymeCheckbox ( wxCommandEvent &event )
+	{
+	updateGlobalEnzymes () ;
+	}    
+
+void TEnzymeSettingsTab::OnButton1 ( wxCommandEvent &event )
+	{
+	updateColor ( col1 ) ;
+	}    
+
+void TEnzymeSettingsTab::OnButton2 ( wxCommandEvent &event )
+	{
+	updateColor ( col2 ) ;
+	}    
+
+void TEnzymeSettingsTab::OnButton3 ( wxCommandEvent &event )
+	{
+	updateColor ( col3 ) ;
+	}    
+
+void TEnzymeSettingsTab::updateColor ( wxColour &c )
+	{
+	wxColour c2 = wxGetColourFromUser ( this , c ) ;
+	if ( !c2.Ok() ) return ;
+	c = c2 ;
+	updateGlobalEnzymes () ;
+	}    
+    
+
+// ****************************************
 
 ProgramOptionsDialog::ProgramOptionsDialog(wxWindow *parent, const wxString& title )
          : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 600 , 450 ) )
     {
     int w , h ;
-    bo = 5 , lh = 22 ;
+    bo = 5 ;
+    lh = 22 ;
     GetClientSize ( &w , &h ) ;
     globalSettingsPanel = NULL ;
     nb = new wxNotebook ( (wxWindow*) this , -1 ,
@@ -40,114 +192,9 @@ ProgramOptionsDialog::ProgramOptionsDialog(wxWindow *parent, const wxString& tit
     
 void ProgramOptionsDialog::initGlobalEnzymes ()
 	{
-	int w , h ;
-    globalEnzymesPanel = new wxPanel ( nb , -1 ) ;
+    globalEnzymesPanel = new TEnzymeSettingsTab ( nb ) ;
     nb->AddPage ( globalEnzymesPanel , txt("t_global_enzymes") ) ;    
-    globalEnzymesPanel->GetClientSize ( &w , &h ) ;
-    
-    wxBoxSizer *vs = new wxBoxSizer ( wxVERTICAL ) ;
-    optionsSizer = new wxFlexGridSizer ( 4 , 15 , 5 ) ;
-    useSettings = new wxCheckBox ( globalEnzymesPanel , GES_USE , txt("t_use_global_enzyme_settings") ) ; 
-    vs->Add ( useSettings , 0 , wxEXPAND , 5 ) ;
-    vs->Add ( new wxStaticText ( globalEnzymesPanel , -1 , " " ) , 0 , wxEXPAND , 5 ) ;
-    vs->Add ( optionsSizer , 1 , wxEXPAND , 5 ) ;
-    
-    // Min/max cutoff
-    useMinCutoff = new wxCheckBox ( globalEnzymesPanel , GES_USE_MINCUTOFF , "Use min cutoff" ) ;
-    minCutoff = new wxSpinCtrl ( globalEnzymesPanel , -1 , "1" ) ;
-    useMaxCutoff = new wxCheckBox ( globalEnzymesPanel , GES_USE_MAXCUTOFF , "Use max cutoff" ) ;
-    maxCutoff = new wxSpinCtrl ( globalEnzymesPanel , -1 , "3" ) ;
-    
-    // Length of recognition sequence
-    recog4 = new wxCheckBox ( globalEnzymesPanel , -1 , "Sequence length 4" ) ;
-    recog5 = new wxCheckBox ( globalEnzymesPanel , -1 , "Sequence length 5" ) ;
-    recog6 = new wxCheckBox ( globalEnzymesPanel , -1 , "Sequence length 6" ) ;
-    recog6p = new wxCheckBox ( globalEnzymesPanel , -1 , "Sequence length >6" ) ;
-
-    // Overlaps
-    pattern3 = new wxCheckBox ( globalEnzymesPanel , -1 , "3' overlap" ) ;
-    pattern5 = new wxCheckBox ( globalEnzymesPanel , -1 , "5' overlap" ) ;
-    pattern_blunt = new wxCheckBox ( globalEnzymesPanel , -1 , "blunt end" ) ;
-    
-    // Gropu list
-    default_group = new wxChoice ( globalEnzymesPanel , -1 ) ;
-    default_group->Append ( txt("All") ) ;
-    wxArrayString vs2 ;
-    myapp()->frame->LS->getEnzymeGroups ( vs2 ) ;
-    for ( int i = 0 ; i < vs2.GetCount() ; i++ )
-        default_group->Append ( vs2[i] ) ;
-    default_group->SetStringSelection ( txt("All") ) ;
-    
-    // Colors
-    bcol1 = new wxButton ( globalEnzymesPanel , GES_COL_1 , "Single cutter" ) ;
-    bcol2 = new wxButton ( globalEnzymesPanel , GES_COL_2 , "Double cutter" ) ;
-    bcol3 = new wxButton ( globalEnzymesPanel , GES_COL_3 , "Triple cutter" ) ;
-    
-    // Adding elements to gridsizer
-    optionsSizer->Add ( useMinCutoff , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    optionsSizer->Add ( minCutoff , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    optionsSizer->Add ( useMaxCutoff , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    optionsSizer->Add ( maxCutoff , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    
-    optionsSizer->Add ( new wxStaticText ( globalEnzymesPanel , -1 , "Use enzymes that cause" ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    optionsSizer->Add ( pattern3 , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    optionsSizer->Add ( pattern5 , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    optionsSizer->Add ( pattern_blunt , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    
-    optionsSizer->Add ( recog4 , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    optionsSizer->Add ( recog5 , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    optionsSizer->Add ( recog6 , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    optionsSizer->Add ( recog6p , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    
-    optionsSizer->Add ( new wxStaticText ( globalEnzymesPanel , -1 , "Enzymes colors" ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    optionsSizer->Add ( bcol1 , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    optionsSizer->Add ( bcol2 , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    optionsSizer->Add ( bcol3 , 1 , wxALIGN_CENTER_VERTICAL ) ;
-
-    optionsSizer->Add ( new wxStaticText ( globalEnzymesPanel , -1 , "Default enzyme group" ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    optionsSizer->Add ( default_group , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    optionsSizer->Add ( new wxStaticText ( globalEnzymesPanel , -1 , "" ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    optionsSizer->Add ( new wxStaticText ( globalEnzymesPanel , -1 , "" ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    
-    // Do it!
-    globalEnzymesPanel->SetSizer ( vs ) ;
-    vs->Fit ( globalEnzymesPanel ) ;    
-    globalEnzymesPanel->Show () ;
-    updateGlobalEnzymes () ;
     }    
-    
-void ProgramOptionsDialog::updateGlobalEnzymes ()
-	{
-	bool use = useSettings->GetValue() ;
-	useMinCutoff->Enable ( use ) ;
-	useMaxCutoff->Enable ( use ) ;
-	minCutoff->Enable ( useMinCutoff->GetValue() && use ) ;
-	maxCutoff->Enable ( useMaxCutoff->GetValue() && use ) ;
-	recog4->Enable ( use ) ;
-	recog5->Enable ( use ) ;
-	recog6->Enable ( use ) ;
-	recog6p->Enable ( use ) ;
-	pattern3->Enable ( use ) ;
-	pattern5->Enable ( use ) ;
-	pattern_blunt->Enable ( use ) ;
-	default_group->Enable ( use ) ;
-	updateColorButton ( bcol1 , col1 ) ;
-	updateColorButton ( bcol2 , col2 ) ;
-	updateColorButton ( bcol3 , col3 ) ;
-	}
-
-void ProgramOptionsDialog::updateColorButton ( wxButton *b , wxColour &c )
-	{
-	b->SetForegroundColour ( c ) ;
-	if ( ( c.Red() + c.Green() + c.Blue() ) / 3 < 100 ) b->SetBackgroundColour ( *wxWHITE ) ;
-	else b->SetBackgroundColour ( *wxBLACK ) ;
-	b->Enable ( useSettings->GetValue() ) ;
-	}    
-	
-void ProgramOptionsDialog::OnEnzymeCheckbox ( wxCommandEvent &event )
-	{
-	updateGlobalEnzymes () ;
-	}    
     
 void ProgramOptionsDialog::initGlobalSettings ()
 	{
@@ -221,51 +268,28 @@ void ProgramOptionsDialog::OnCancel ( wxCommandEvent &ev )
     }
 
 
-void ProgramOptionsDialog::OnButton1 ( wxCommandEvent &event )
-	{
-	updateColor ( col1 ) ;
-	}    
-
-void ProgramOptionsDialog::OnButton2 ( wxCommandEvent &event )
-	{
-	updateColor ( col2 ) ;
-	}    
-
-void ProgramOptionsDialog::OnButton3 ( wxCommandEvent &event )
-	{
-	updateColor ( col3 ) ;
-	}    
-
-void ProgramOptionsDialog::updateColor ( wxColour &c )
-	{
-	wxColour c2 = wxGetColourFromUser ( this , c ) ;
-	if ( !c2.Ok() ) return ;
-	c = c2 ;
-	updateGlobalEnzymes () ;
-	}    
-
 //************************************************************************
 
-void TEnzymeRules::init ()
+void TEnzymeRules::init () // Default settings
 	{
 	useit = false ;
 	min_cutoff = 1 ;
  	max_cutoff = 3 ;
 	use_min_cutoff = true ;
  	use_max_cutoff = true ;
-	use_display_cutoff = false ; // Unsupported
-	use_recognition_sequence = true ; // Unsupported
-	recog4 = true ;
-	recog5 = true ;
+	recog4 = false ;
+	recog5 = false ;
 	recog6 = true ;
- 	recog_longer = true ;
-	pattern3 = true ;
-	pattern5  = false ;
+ 	recog_longer = false ;
+	pattern3 = false ;
+	pattern5  = true ;
 	pattern_blunt = false ;
 	default_group = txt("All") ;
-	col1 = *wxRED ;
-	col2 = *wxGREEN ;
-	col3 = *wxBLUE ;
+	col1.Set ( 200 , 0 , 0 ) ;
+	col2.Set ( 0 , 200 , 0 ) ;
+	col3.Set ( 0 , 0 , 200 ) ;
+	join_enzymes = true ;
+	use_color_coding = false ;
 	}    
 
 void TEnzymeRules::load_global_settings ()
@@ -279,68 +303,72 @@ void TEnzymeRules::save_global_settings ()
     myapp()->frame->LS->setOption ( "GLOBALENZYMESETTINGS" , to_string() ) ;
 	}    
 
-void TEnzymeRules::setup_options ( ProgramOptionsDialog *pod )
+void TEnzymeRules::setup_options ( TEnzymeSettingsTab *est )
 	{
-	pod->useSettings->SetValue ( useit ) ;
-	pod->minCutoff->SetValue ( min_cutoff ) ;
-	pod->maxCutoff->SetValue ( max_cutoff ) ;
-	pod->useMinCutoff->SetValue ( use_min_cutoff ) ;
-	pod->useMaxCutoff->SetValue ( use_max_cutoff ) ;
-	pod->recog4->SetValue ( recog4 ) ;
-	pod->recog5->SetValue ( recog5 ) ;
-	pod->recog6->SetValue ( recog6 ) ;
-	pod->recog6p->SetValue ( recog_longer ) ;
-	pod->pattern3->SetValue ( pattern3 ) ;
-	pod->pattern5->SetValue ( pattern5 ) ;
-	pod->pattern_blunt->SetValue ( pattern_blunt ) ;
-	if ( default_group != "" ) pod->default_group->SetStringSelection ( default_group ) ;
-	pod->col1 = col1 ;
-	pod->col2 = col2 ;
-	pod->col3 = col3 ;
-	pod->updateGlobalEnzymes () ;
+	est->useSettings->SetValue ( useit ) ;
+	est->minCutoff->SetValue ( min_cutoff ) ;
+	est->maxCutoff->SetValue ( max_cutoff ) ;
+	est->useMinCutoff->SetValue ( use_min_cutoff ) ;
+	est->useMaxCutoff->SetValue ( use_max_cutoff ) ;
+	est->recog4->SetValue ( recog4 ) ;
+	est->recog5->SetValue ( recog5 ) ;
+	est->recog6->SetValue ( recog6 ) ;
+	est->recog6p->SetValue ( recog_longer ) ;
+	est->pattern3->SetValue ( pattern3 ) ;
+	est->pattern5->SetValue ( pattern5 ) ;
+	est->pattern_blunt->SetValue ( pattern_blunt ) ;
+	if ( default_group != "" ) est->default_group->SetStringSelection ( default_group ) ;
+	est->col1 = col1 ;
+	est->col2 = col2 ;
+	est->col3 = col3 ;
+	est->join_enzymes->SetValue ( join_enzymes ) ;
+	est->use_color_coding->SetValue ( use_color_coding ) ;
+	est->updateGlobalEnzymes () ;
 	}    
 
-void TEnzymeRules::lookup_options ( ProgramOptionsDialog *pod )
+void TEnzymeRules::lookup_options ( TEnzymeSettingsTab *est )
 	{
-	useit = pod->useSettings->GetValue() ;
-	min_cutoff = pod->minCutoff->GetValue() ;
-	max_cutoff = pod->maxCutoff->GetValue() ;
-	use_min_cutoff = pod->useMinCutoff->GetValue() ;
-	use_max_cutoff = pod->useMaxCutoff->GetValue() ;
-	recog4 = pod->recog4->GetValue() ;
-	recog5 = pod->recog5->GetValue() ;
-	recog6 = pod->recog6->GetValue() ;
-	recog_longer = pod->recog6p->GetValue() ;
-	pattern3 = pod->pattern3->GetValue() ;
-	pattern5 = pod->pattern5->GetValue() ;
-	pattern_blunt = pod->pattern_blunt->GetValue() ;
-	default_group = pod->default_group->GetStringSelection() ;
-	col1 = pod->col1 ;
-	col2 = pod->col2 ;
-	col3 = pod->col3 ;
+	useit = est->useSettings->GetValue() ;
+	min_cutoff = est->minCutoff->GetValue() ;
+	max_cutoff = est->maxCutoff->GetValue() ;
+	use_min_cutoff = est->useMinCutoff->GetValue() ;
+	use_max_cutoff = est->useMaxCutoff->GetValue() ;
+	recog4 = est->recog4->GetValue() ;
+	recog5 = est->recog5->GetValue() ;
+	recog6 = est->recog6->GetValue() ;
+	recog_longer = est->recog6p->GetValue() ;
+	pattern3 = est->pattern3->GetValue() ;
+	pattern5 = est->pattern5->GetValue() ;
+	pattern_blunt = est->pattern_blunt->GetValue() ;
+	default_group = est->default_group->GetStringSelection() ;
+	col1 = est->col1 ;
+	col2 = est->col2 ;
+	col3 = est->col3 ;
+	join_enzymes = est->join_enzymes->GetValue() ;
+	use_color_coding = est->use_color_coding->GetValue() ;
 	}
      
 wxString TEnzymeRules::to_string ()
 	{
 	wxString ret ;
-	ret += wxString::Format ( "useit=%d\n" , useit ) ;
-	ret += wxString::Format ( "min_cutoff=%d\n" , min_cutoff ) ;
-	ret += wxString::Format ( "max_cutoff=%d\n" , max_cutoff ) ;
-	ret += wxString::Format ( "use_min_cutoff=%d\n" , use_min_cutoff ) ;
-	ret += wxString::Format ( "use_max_cutoff=%d\n" , use_max_cutoff ) ;
-	ret += wxString::Format ( "use_display_cutoff=%d\n" , use_display_cutoff ) ;
-	ret += wxString::Format ( "use_recognition_sequence=%d\n" , use_recognition_sequence ) ;
-	ret += wxString::Format ( "recog4=%d\n" , recog4 ) ;
-	ret += wxString::Format ( "recog5=%d\n" , recog5 ) ;
-	ret += wxString::Format ( "recog6=%d\n" , recog6 ) ;
-	ret += wxString::Format ( "recog_longer=%d\n" , recog_longer ) ;
-	ret += wxString::Format ( "pattern3=%d\n" , pattern3 ) ;
-	ret += wxString::Format ( "pattern5=%d\n" , pattern5 ) ;
-	ret += wxString::Format ( "pattern_blunt=%d\n" , pattern_blunt ) ;
-	ret += wxString::Format ( "default_group=%s\n" , default_group.c_str() ) ;
-	ret += wxString::Format ( "col1=%d,%d,%d\n" , col1.Red() , col1.Green() , col1.Blue() ) ;
-	ret += wxString::Format ( "col2=%d,%d,%d\n" , col2.Red() , col2.Green() , col2.Blue() ) ;
-	ret += wxString::Format ( "col3=%d,%d,%d\n" , col3.Red() , col3.Green() , col3.Blue() ) ;
+	ret += wxString::Format ( "useit=%d\r" , useit ) ;
+	ret += wxString::Format ( "min_cutoff=%d\r" , min_cutoff ) ;
+	ret += wxString::Format ( "max_cutoff=%d\r" , max_cutoff ) ;
+	ret += wxString::Format ( "use_min_cutoff=%d\r" , use_min_cutoff ) ;
+	ret += wxString::Format ( "use_max_cutoff=%d\r" , use_max_cutoff ) ;
+	ret += wxString::Format ( "recog4=%d\r" , recog4 ) ;
+	ret += wxString::Format ( "recog5=%d\r" , recog5 ) ;
+	ret += wxString::Format ( "recog6=%d\r" , recog6 ) ;
+	ret += wxString::Format ( "recog_longer=%d\r" , recog_longer ) ;
+	ret += wxString::Format ( "pattern3=%d\r" , pattern3 ) ;
+	ret += wxString::Format ( "pattern5=%d\r" , pattern5 ) ;
+	ret += wxString::Format ( "pattern_blunt=%d\r" , pattern_blunt ) ;
+	ret += wxString::Format ( "default_group=%s\r" , default_group.c_str() ) ;
+	ret += wxString::Format ( "col1=%d,%d,%d\r" , col1.Red() , col1.Green() , col1.Blue() ) ;
+	ret += wxString::Format ( "col2=%d,%d,%d\r" , col2.Red() , col2.Green() , col2.Blue() ) ;
+	ret += wxString::Format ( "col3=%d,%d,%d\r" , col3.Red() , col3.Green() , col3.Blue() ) ;
+	ret += wxString::Format ( "join_enzymes=%d\r" , join_enzymes ) ;
+	ret += wxString::Format ( "use_color_coding=%d\r" , use_color_coding ) ;
 	return ret ;
 	}    
 
@@ -348,7 +376,7 @@ void TEnzymeRules::from_string ( wxString &s )
 	{
 	init () ;
 	wxArrayString as ;
-	explode ( "\n" , s , as ) ;
+	explode ( "\r" , s , as ) ;
 	for ( int a = 0 ; a < as.GetCount() ; a++ )
 		{
 		if ( as[a] == "" ) continue ;
@@ -372,6 +400,8 @@ void TEnzymeRules::from_string ( wxString &s )
 		else if ( key == "col1" ) col1 = scan_color ( val ) ;
 		else if ( key == "col2" ) col2 = scan_color ( val ) ;
 		else if ( key == "col3" ) col3 = scan_color ( val ) ;
+		else if ( key == "join_enzymes" ) join_enzymes = l ;
+		else if ( key == "use_color_coding" ) use_color_coding = l ;
 		}    
 	}    
 
@@ -388,7 +418,7 @@ wxColour TEnzymeRules::scan_color ( wxString s )
 
 wxColour *TEnzymeRules::getColor ( int cuts )
 	{
-	if ( !useit || cuts == 0 || cuts > 3 ) return wxBLACK ;
+	if ( !use_color_coding || cuts == 0 || cuts > 3 ) return wxBLACK ;
 	if ( cuts == 1 ) return &col1 ;
 	if ( cuts == 2 ) return &col2 ;
 	if ( cuts == 3 ) return &col3 ;
@@ -425,8 +455,8 @@ void TEnzymeRules::getVectorCuts ( TVector *v )
 	    if ( vs[a].IsEmpty() ) continue ; // Was removed earlier
 	    TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( vs[a] ) ;
 	    bool keep = true ;
-	    if ( keep && !pattern3 && e->overlap < 0 ) keep = false ; // ???
-	    if ( keep && !pattern5 && e->overlap > 0 ) keep = false ; // ???
+	    if ( keep && !pattern3 && e->overlap < 0 ) keep = false ;
+	    if ( keep && !pattern5 && e->overlap > 0 ) keep = false ;
 	    if ( keep && !pattern_blunt && e->overlap == 0 ) keep = false ;
 	    if ( keep && !recog4 && e->sequence.length() == 4 ) keep = false ;
 	    if ( keep && !recog5 && e->sequence.length() == 5 ) keep = false ;
@@ -436,6 +466,7 @@ void TEnzymeRules::getVectorCuts ( TVector *v )
    		}    
    		
 	// Add what has the correct number of cuts
+	v->re2.Clear () ; // The list of used enzymes that were *not* added manually
 	int max = 10000000 ;
 	if ( use_max_cutoff ) max = max_cutoff ;
 	for ( a = 0 ; a < ve.GetCount() ; a++ )
@@ -445,6 +476,7 @@ void TEnzymeRules::getVectorCuts ( TVector *v )
   		if ( ( !use_min_cutoff || min_cutoff <= vc.size() ) &&
   			 ( !use_max_cutoff || max_cutoff >= vc.size() ) )
 	       {
+ 	       v->re2.Add ( ve[a] ) ;
        	   for ( b = 0 ; b < vc.size() ; b++ ) v->rc.push_back ( vc[b] ) ;
 	       }    
 		}    

@@ -22,6 +22,14 @@ class TEnzymeRules ;
 
 typedef wxFrame MyFrameType ;
 
+class TProject
+	{
+	public :
+ 	TProject () ;
+	TEnzymeRules *enzyme_rules ;
+    wxString name , desc , db ;
+	} ;    
+
 // Define a new frame
 class MyFrame : public MyFrameType
 {
@@ -94,8 +102,9 @@ public:
     bool dying , enhancedRefresh , showVectorTitle , showVectorLength , 
             loadLastProject , useMetafile , showSplashScreen , checkUpdate ,
             useCoolCanvas , useInternalHelp ;
-    TEnzymeRules *global_enzyme_rules , *project_enzyme_rules ;
-    wxString lang_string , project_name , project_desc , project_db ;
+    TProject project ;
+    TEnzymeRules *global_enzyme_rules ;
+    wxString lang_string ;
     wxArrayString lastCocktail ;
     wxArrayChildBase children ;
     wxHtmlEasyPrinting *html_ep ;

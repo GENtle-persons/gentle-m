@@ -54,7 +54,6 @@ MyFrame::MyFrame(wxWindow *parent,
 {
     dying = false ;
     locked = 0 ;
-    project_enzyme_rules = NULL ;
 
     // Accelerators
     wxAcceleratorEntry entries[ACC_ENT];
@@ -219,7 +218,7 @@ void MyFrame::initme ()
 //    miniFrame->Close() ;
 //    delete miniFrame ;
         
-    project_name = txt("project") ;
+    project.name = txt("project") ;
     SetTitle ( txt("gentle") ) ;
     mainTree->initme() ;
     
@@ -839,14 +838,14 @@ void MyFrame::OnManageDatabase(wxCommandEvent& event)
 void MyFrame::OnProgramOptions(wxCommandEvent& event)
     {
     ProgramOptionsDialog pod ( this , txt("t_program_options" ) ) ;
-    global_enzyme_rules->setup_options ( &pod ) ;
+    global_enzyme_rules->setup_options ( pod.globalEnzymesPanel ) ;
     int r = pod.ShowModal() ;
     if ( r != wxID_OK ) return ;
 
    	wxBeginBusyCursor() ;
 
     // retrieving options
-    global_enzyme_rules->lookup_options ( &pod ) ;
+    global_enzyme_rules->lookup_options ( pod.globalEnzymesPanel ) ;
     enhancedRefresh = pod.enhancedDisplay->GetValue() ;
     showVectorTitle = pod.vectorTitle->GetValue() ;
     showVectorLength = pod.vectorLength->GetValue() ;
@@ -863,6 +862,7 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
         }
     
     // Storing options
+    LS->startRecord() ;
     LS->setOption ( "USEMETAFILE" , useMetafile ) ;
     LS->setOption ( "ENHANCEDREFRESH" , enhancedRefresh ) ;
     LS->setOption ( "LANGUAGE" , lang ) ;
@@ -873,6 +873,7 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     LS->setOption ( "CHECKUPDATE" , checkUpdate ) ;
     LS->setOption ( "USEINTERNALHELP" , useInternalHelp ) ;
     global_enzyme_rules->save_global_settings() ;
+    LS->endRecord() ;
     for ( int a = 0 ; a < children.GetCount() ; a++ )
     	{
 	    if ( !children[a]->vec ) continue ;
@@ -949,9 +950,9 @@ void MyFrame::OnProjectClose(wxCommandEvent& event)
         delete children[a] ;
         }
     children.Clear() ;
-    project_name = txt("project") ;
-    project_desc = "" ;
-    project_db = "" ;
+    project.name = txt("project") ;
+    project.desc = "" ;
+    project.db = "" ;
     mainTree->initme() ;
     Refresh () ;
     }
@@ -965,11 +966,11 @@ void MyFrame::rememberLastProject ()
     LS->getObject ( sql ) ;
 
     sprintf ( t , "INSERT INTO stuff (s_type,s_name,s_value) VALUES "
-                    "('LASTPROJECT','NAME','%s')" , project_name.c_str() ) ;
+                    "('LASTPROJECT','NAME','%s')" , project.name.c_str() ) ;
     LS->getObject ( t ) ;
 
     sprintf ( t , "INSERT INTO stuff (s_type,s_name,s_value) VALUES "
-                    "('LASTPROJECT','DATABASE','%s')" , project_db.c_str() ) ;
+                    "('LASTPROJECT','DATABASE','%s')" , project.db.c_str() ) ;
     LS->getObject ( t ) ;
     }
     
@@ -1501,3 +1502,10 @@ bool MyFrameDropTarget::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& f
     return true ;
     }
         
+// Project
+
+TProject::TProject ()
+	{
+	enzyme_rules = NULL ;
+	}
+    

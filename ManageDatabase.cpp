@@ -180,7 +180,7 @@ void TManageDatabaseDialog::initCopynMove ()
         }
         
     wxString name ;
-    if ( isProject ) name = myapp()->frame->project_name ;
+    if ( isProject ) name = myapp()->frame->project.name ;
     else name = v->getName() ;
     h += th ;
     int w2 = w/5 ;
@@ -245,8 +245,8 @@ void TManageDatabaseDialog::pm_init_lists ()
     if ( doSave )
         {
         wxString db = defdb ;
-        if ( isProject && !myapp()->frame->project_db.IsEmpty() )
-           db = myapp()->frame->project_db ;
+        if ( isProject && !myapp()->frame->project.db.IsEmpty() )
+           db = myapp()->frame->project.db ;
         else if ( !isProject )
            db = v->getDatabase() ;
         if ( db.IsEmpty() ) db = defdb ;
@@ -848,10 +848,10 @@ bool TManageDatabaseDialog::do_load_project ( wxString name , wxString db )
     sr = tstorage->getObject ( sql ) ;
     if ( sr.rows() == 0 ) return false ;
         
-    myapp()->frame->project_name = name ;
+    myapp()->frame->project.name = name ;
     myapp()->frame->mainTree->SetItemText ( myapp()->frame->mainTree->treeroot , name ) ;
-    myapp()->frame->project_db = db ;
-    myapp()->frame->project_desc = sr[0][0] ;
+    myapp()->frame->project.db = db ;
+    myapp()->frame->project.desc = sr[0][0] ;
 
     myapp()->frame->SetFocus() ;
     wxBeginBusyCursor() ;
@@ -1049,7 +1049,7 @@ void TManageDatabaseDialog::do_save_project ()
     wxString name , dbname ;
     name = pm_name->GetValue() ;
     dbname = pm_dd_save->GetStringSelection() ;
-    if ( myapp()->frame->project_name != name &&
+    if ( myapp()->frame->project.name != name &&
          doesNameExist ( name , dbname ) ) return ;
     TStorage *storage = getTempDB ( getFileName ( dbname ) ) ;
 
@@ -1059,7 +1059,7 @@ void TManageDatabaseDialog::do_save_project ()
     wxString x = fixQuotes ( name ) ;
 
     // New default project
-    myapp()->frame->project_db = dbname ;
+    myapp()->frame->project.db = dbname ;
 
     // Deleting old one, if any
     sql = "DELETE FROM project WHERE pr_name=\""+x+"\"" ;
@@ -1109,9 +1109,9 @@ void TManageDatabaseDialog::do_save_project ()
                }
            }
         }
-    if ( myapp()->frame->project_name != x )
+    if ( myapp()->frame->project.name != x )
         {
-        myapp()->frame->project_name = x ;
+        myapp()->frame->project.name = x ;
         myapp()->frame->mainTree->SetItemText ( myapp()->frame->mainTree->treeroot , x ) ;
         }
 

@@ -470,31 +470,46 @@ void TVector::recalculateCuts ()
         eraseSequence ( getSequenceLength()-1 , 1 ) ;
         truncate = true ;
         }    
-    getVectorCuts ( this ) ;
+    bool join = getVectorCuts ( this ) ;
     if ( truncate ) sequence += " " ;
     
     // Sorting by position
     sort ( rc.begin() , rc.end() ) ;
-    return ;
+
     // Join doubles
+    if ( !join ) return ;
     int a , b ;
     for ( a = 0 ; a < rc.size() ; a++ )
     	{
-	    for ( b = a+1 ; b < rc.size() && rc[b].pos == rc[a].pos ; b++ ) ;
-	    if ( b == rc.size() ) continue ;
-	    if ( rc[b].pos != rc[a].pos ) continue ;
-	    if ( !rc[a].join ( &rc[b] ) ) continue ;
-	    rc.erase ( rc.begin() + b ) ;
-	    a-- ;
+	    for ( b = a+1 ; b < rc.size() && rc[b].pos == rc[a].pos ; b++ )
+	    	{
+	    	if ( b == rc.size() ) continue ;
+	    	if ( rc[b].pos != rc[a].pos ) continue ;
+	    	if ( !rc[a].join ( &rc[b] ) ) continue ;
+    	    rc.erase ( rc.begin() + b ) ;
+    	    a-- ;
+    	    break ;
+	    	}   	
     	}    
     }
     
-void TVector::getVectorCuts ( TVector *v )
+// Returns wether or not "equal" enzymes should be joined
+bool TVector::getVectorCuts ( TVector *v )
 	{
-	if ( enzyme_rules ) enzyme_rules->getVectorCuts ( this ) ; // Vector settings
-	else if ( myapp()->frame->project_enzyme_rules ) // Project settings
- 		myapp()->frame->project_enzyme_rules->getVectorCuts ( this ) ;
-	else myapp()->frame->global_enzyme_rules->getVectorCuts ( this ) ; // Global settings
+	TEnzymeRules *er = getEnzymeRule () ;
+	er->getVectorCuts ( this ) ;
+	return er->join_enzymes ;
+	}    
+	
+// Gets the enzyme rules to follow
+TEnzymeRules *TVector::getEnzymeRule ()
+	{
+	TEnzymeRules *er ;
+	if ( enzyme_rules ) er = enzyme_rules ; // Vector settings
+	else if ( myapp()->frame->project.enzyme_rules ) // Project settings
+ 		er = myapp()->frame->project.enzyme_rules ;
+	else er = myapp()->frame->global_enzyme_rules ; // Global settings
+	return er ;
 	}    
     
 // ******** ACTION!

@@ -254,8 +254,11 @@ void TRestrictionEditor::pR_showGroupEnzymes ( wxString gr )
     rsl->DeleteAllItems() ;
     if ( gr == txt("Current") )
         {
-        for ( int i = 0 ; i < v->re.GetCount() ; i++ )
+        int i ;
+        for ( i = 0 ; i < v->re.GetCount() ; i++ )
             vs.Add ( v->re[i]->name ) ;
+        for ( i = 0 ; i < v->re2.GetCount() ; i++ )
+            vs.Add ( v->re2[i]->name ) ;
         }
     else myapp()->frame->LS->getEnzymesInGroup ( gr , vs ) ;
     char t[100] ;

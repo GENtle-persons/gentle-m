@@ -456,7 +456,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
         TRestrictionCut c = p->vec->rc[a] ;
         if ( isEnzymeVisible ( c.e->name ) )
            {
-           wxColour *col = myapp()->frame->global_enzyme_rules->getColor ( p->vec->countCuts ( c.e->name ) ) ;
+           wxColour *col = p->vec->getEnzymeRule()->getColor ( p->vec->countCuts ( c.e->name ) ) ;
            dc.SetTextForeground ( *col ) ;
            dc.SetPen ( *MYPEN(*col) ) ;
            c.r1 = c.r1 * 100 * r / ( STANDARDRADIUS * 100 ) ;
@@ -474,12 +474,12 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
                     
            dc.DrawLine ( p2 , p3 ) ;
     
-           char u[100] ;
-           sprintf ( u , "%s (%d)" , c.e->name.c_str() , c.pos ) ;
-//           sprintf ( u , "%s (%d) %f" , c.e->name.c_str() , c.pos , c.angle3 ) ;
+           wxString u = c.getNameAndPosition () ;
+//           char u[100] ;
+//           sprintf ( u , "%s (%d)" , c.e->name.c_str() , c.pos ) ;
            p3.x = p->vec->rc[a].lastrect.GetLeft() ;
            p3.y = p->vec->rc[a].lastrect.GetTop() ;
-    
+
            dc.DrawText ( u , p3.x , p3.y ) ;
            }    
         }
@@ -492,8 +492,9 @@ wxPoint PlasmidCanvas::makeLastRect ( int a , wxDC &dc )
     p3.x = p3.x * 100 * r / ( STANDARDRADIUS * 100 ) + w/2 ;
     p3.y = p3.y * 100 * r / ( STANDARDRADIUS * 100 ) + h/2 ;
 
-    char u[100] ;
-    sprintf ( u , "%s (%d)" , p->vec->rc[a].e->name.c_str() , p->vec->rc[a].pos ) ;
+//    char u[100] ;
+//    sprintf ( u , "%s (%d)" , p->vec->rc[a].e->name.c_str() , p->vec->rc[a].pos ) ;
+	wxString u = p->vec->rc[a].getNameAndPosition () ;
     int te_x , te_y ;
     dc.GetTextExtent ( u , &te_x , &te_y ) ;
     p3.y -= te_y / 2 ;

@@ -107,6 +107,8 @@ class TStorage
     virtual bool getWriteProtect () ;
     static wxString createMySQLdb ( wxString ip , wxString db , wxString name , wxString pwd ) ;
     virtual void optimizeDatabase () ;
+    virtual void startRecord () ;
+    virtual void endRecord () ;
     
     // Variables
     wxArrayTRestrictionEnzyme re ;
@@ -125,6 +127,8 @@ class TStorage
     int storagetype , ierror ;
     bool writeProtect ;
     int rpv ;
+    wxString record ;
+    bool recording ;
     bool isMySQL ;
 #ifdef USEMYSQL
     MYSQL *conn,*mysql;
