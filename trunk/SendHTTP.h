@@ -4,17 +4,6 @@
 class wxString ;
 class wxProgressDialog ;
 
-/* HTTPRequest: Structure that returns the HTTP headers and message
-                from the request*/
-//typedef struct
-//{ 
-//	LPSTR headers;/* Pointer to HTTP headers */
-//	LPSTR message;/* Pointer to the HTTP message */
-//	long messageLength;/* Length of the message */
-//} HTTPRequest;
-
-//int SendHTTP(LPCSTR url,LPCSTR headers,BYTE *post,DWORD postLength,HTTPRequest *req) ;
-
 class myExternal
 	{
 	public :

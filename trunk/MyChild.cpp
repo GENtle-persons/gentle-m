@@ -740,8 +740,10 @@ void MyChild::initPanels ()
     for ( int a = 0 ; a < cSequence->seq.GetCount() ; a++ )
        cSequence->seq[a]->logsize();
 
+#ifdef __WXGTK__
     swl->SetSashPosition ( 200 ) ;
     swu->SetSashPosition ( 200 ) ;
+#endif
 
     if ( myapp()->frame->isLocked() ) return ;
     Show() ;
