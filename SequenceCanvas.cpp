@@ -341,7 +341,7 @@ void SequenceCanvas::editSpecialKeyPressed ( int k , TVector *v , wxString *the_
       if ( v ) v->recalculateCuts() ;
       updateEdit ( v , id , from-1 ) ;
       }
-/*
+
     else if ( !forceoverwrite && k == WXK_INSERT )
       {
       wantOverwrite = !wantOverwrite ;
@@ -349,7 +349,7 @@ void SequenceCanvas::editSpecialKeyPressed ( int k , TVector *v , wxString *the_
       if ( doOverwrite() ) wxLogStatus(txt("seq_ed_ovr"),1) ;
       else wxLogStatus(txt("seq_ed_ins"),1) ;
       }
-*/
+
     else
       {
       event.Skip() ; // Not a key used here
@@ -363,7 +363,11 @@ void SequenceCanvas::editCharPressed ( int k , TVector *v , wxString *the_sequen
     wxString dummy ;
     int new_from = from + 1 ;
     
-    if ( from == -1 ) return ;
+    if ( from == -1 )
+    	{
+	    mylog ( "SequenceCanvas::editCharPressed" , "No mark" ) ;
+        return ;
+        }    
    
     if ( k == '.' && getPD() )
        {
@@ -821,6 +825,8 @@ void SequenceCanvas::OnCopy ( wxCommandEvent &ev )
     
 wxString SequenceCanvas::getSelection ()
     {
+    if ( getEditMode() ) return "" ;
+    if ( markedFrom() == -1 ) return "" ;
     if ( p ) return p->vec->getSubstring ( _from , _to ) ;
     if ( getAA() && _from != -1 ) return getAA()->vec->getSubstring ( _from , _to ) ;
     if ( getPD() && _from != -1 && lastmarked != -1 )
@@ -887,13 +893,13 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
     if ( marking ) return ;
     if ( getEditMode() && from != -1 && from != to ) return ;
     marking = true ;
-    if ( isMiniDisplay() )
+    if ( child && child->cSequence && isMiniDisplay() )
         {
         myass ( child , "Mark1" ) ;
         myass ( child->cSequence , "Mark2" ) ;
         child->cSequence->mark ( "AA" , from , to , value ) ;
         }
-    else if ( getAA() && getAA()->sc2 )
+    else if ( !isMiniDisplay() && getAA() && getAA()->sc2 )
         {
         myass ( getAA()->sc2->seq.GetCount() , "Mark3" ) ;
         getAA()->sc2->mark ( getAA()->sc2->seq[0]->whatsthis() , from , to , value ) ;        
@@ -932,7 +938,8 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
         else 
            seq[b]->setMark ( a , 0 ) ;
         }
-        
+
+//        
     for ( int other = 0 ; other < seq.GetCount() ; other++ )
         {
         bool canbemarked = seq[other]->takesMouseActions ;
@@ -951,6 +958,8 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
     
     if ( from > to ) to += l ;
     if ( cnt == 0 ) from = -1 ;
+
+//
 
     _from = from ;
     _to = to ;
@@ -1132,6 +1141,7 @@ void SequenceCanvas::OnDraw(wxDC& dc)
 
     if ( myapp()->frame->enhancedRefresh && !printing )
         { // MemoryDC
+        mylog ( "!" , "1" ) ;
         int w , h ;
         MyGetClientSize ( &w , &h ) ;
         int xoff = wx * vx ;
@@ -1142,16 +1152,21 @@ void SequenceCanvas::OnDraw(wxDC& dc)
         pdc.Clear() ;
         pdc.SetDeviceOrigin ( -xoff , -yoff ) ;
         safeShow ( pdc ) ;
+        mylog ( "!" , "2" ) ;
         pdc.SetDeviceOrigin ( 0 , 0 ) ;
         dc.Blit ( xoff , yoff , w , h , &pdc , 0 , 0 ) ;
+        mylog ( "!" , "3" ) ;
         }
     else 
         { // Direct DC
+        mylog ( "!" , "1a" ) ;
         dc.Clear() ;
         safeShow ( dc ) ;
+        mylog ( "!" , "2a" ) ;
         }
     drawing = false ;
     dc.SetFont ( *wxNORMAL_FONT ) ; //!!!
+    mylog ( "SequenceCanvas::OnDraw" , "Done" ) ;
 }
 
 void SequenceCanvas::safeShow ( wxDC &dc )
@@ -1163,7 +1178,7 @@ void SequenceCanvas::safeShow ( wxDC &dc )
        if ( seq[a]->whatsthis() != "RESTRICTION" &&
             seq[a]->whatsthis() != "FEATURE" )
           {
-//          mylog ( "SequenceCanvas::safeShow" , wxString::Format ( "Trying %d (%s)" , a , seq[a]->whatsthis().c_str() ) ) ;
+          mylog ( "SequenceCanvas::safeShow" , wxString::Format ( "Trying %d (%s)" , a , seq[a]->whatsthis().c_str() ) ) ;
           seq[a]->show ( dc ) ;
           seq[a]->shown = true ;
           }
@@ -1173,10 +1188,11 @@ void SequenceCanvas::safeShow ( wxDC &dc )
        {
        if ( !seq[a]->shown )
           {
-//          mylog ( "SequenceCanvas::safeShow" , wxString::Format ( "Finalizing %d (%s)" , a , seq[a]->whatsthis().c_str() ) ) ;
+          mylog ( "SequenceCanvas::safeShow" , wxString::Format ( "Finalizing %d (%s)" , a , seq[a]->whatsthis().c_str() ) ) ;
           seq[a]->show ( dc ) ;
           }    
        }
+    mylog ( "SequenceCanvas::safeShow" , "Done" ) ;
     }
     
 void SequenceCanvas::OnEvent(wxMouseEvent& event)
@@ -1622,6 +1638,7 @@ void SequenceCanvas::SilentRefresh ()
     wxClientDC dc(this);
     PrepareDC(dc);
     OnDraw ( dc ) ;
+    mylog ( "SequenceCanvas::SilentRefresh" , "Done" ) ;
     }
     
 void SequenceCanvas::OnFocus(wxFocusEvent& event)

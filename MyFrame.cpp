@@ -1636,9 +1636,9 @@ void TTestSuite::Step()
     if ( !ac ) return ; // No child open
     
     cnt++ ;
-    if ( cnt > 100000 )
+    if ( cnt > 1000000 )
     	{
-	    wxMessageBox ( "100K" ) ;
+	    wxMessageBox ( "1000K" ) ;
 	    wxExit() ;
     	}    
     int r = rand() ;
@@ -1649,6 +1649,7 @@ void TTestSuite::Step()
     x += wxString::Format ( " [%ds, #%d]" , wxGetLocalTime()-start , cnt ) ;
     if ( ac->vec ) x += wxString::Format ( ", seq : %d" , ac->vec->getSequenceLength() ) ;
     if ( ac->cSequence ) x += wxString::Format ( ", EditMode : %d" , ac->cSequence->getEditMode() ) ;
+    if ( ac->cSequence ) x += wxString::Format ( ", Mark %d-%d" , ac->cSequence->markedFrom() , ac->cSequence->markedTo() ) ;
     mylog ( "Testsuite:Status" , x ) ;
     
     if ( r < 7 ) pressKey ( ac ) ;

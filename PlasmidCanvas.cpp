@@ -71,9 +71,10 @@ void PlasmidCanvas::setMark ( int i1 , int i2 )
 	{
 	if ( getMarkFrom() == i1 && getMarkTo() == i2 ) return ;
 	if ( !p || !p->cSequence ) return ;
-	int lm = p->cSequence->lastmarked ;
-	if ( lm < 0 || lm >= p->cSequence->seq.GetCount() ) return ;
-	p->cSequence->mark ( p->cSequence->seq[lm]->whatsthis() , i1 , i2 ) ;
+	SeqBasic *seq = NULL ;
+	if ( p->def == "dna" ) seq = p->cSequence->findID ( "DNA" ) ;
+	else if ( p->def == "AminoAcids" ) seq = p->cSequence->findID ( "AA" ) ;
+	if ( seq ) p->cSequence->mark ( seq->whatsthis() , i1 , i2 ) ;
 	}
 	
 
