@@ -1,81 +1,85 @@
-bin_PROGRAMS = GENtle
-GENtle_sources = ABItype.cpp \
-	ABIviewer.cpp \
-	Alignment.cpp \
-	AminoAcids.cpp \
-	ChildBase.cpp \
-	CoolCanvas.cpp \
-	ExternalInterface.cpp \
-	ExternalNCBI.cpp \
-	ExternalBLAST.cpp \
-	FindSequenceDialog.cpp \
-	GenBank.cpp \
-	main.cpp \
-	ManageDatabase.cpp \
-	MiscDialogs.cpp \
-	MyChild.cpp \
-	MyFrame.cpp \
-	PlasmidCanvasCircular.cpp \
-	PlasmidCanvas.cpp \
-	PlasmidCanvasHandlers.cpp \
-	PlasmidCanvasLinear.cpp \
-	PrimerDesign.cpp \
-	ProgramOptionsDialog.cpp \
-	RestrictionEnzymes.cpp \
-	SendHTTP.cpp \
-	SequenceCanvas.cpp \
-	SequenceTypeAA.cpp \
-	SequenceTypeABI.cpp \
-	SequenceTypeAlign.cpp \
-	SequenceTypeDNA.cpp \
-	SequenceTypeFeature.cpp \
-	SequenceTypePlot.cpp \
-	SequenceTypeRestriction.cpp \
-	SequenceTypes.cpp \
-	TCalculator.cpp \
-	TClone.cpp \
-	TextImportDialog.cpp \
-	TImageDisplay.cpp \
-	TIMGreader.cpp \
-	TItemEditDialog.cpp \
-	TLigationDialog.cpp \
-	TMainTree.cpp \
-	todo.cpp \
-	TPDB.cpp \
-	TPrimer.cpp \
-	TPrimerDialog.cpp \
-	TRestrictionEditor.cpp \
-	TSilmutDialog.cpp \
-	TStorage.cpp \
-	TUndo.cpp \
-	TUReadSeq.cpp \
-	TVector.cpp \
-	TVectorEditor.cpp \
-	TVectorEditorEnzymes.cpp \
-	TVectorEditorItems.cpp \
-	TVectorTree.cpp \
-	TVirtualGel.cpp \
-	TXMLfile.cpp \
-	ureadseq.c \
-	tinyxml/tinystr.c \
-	tinyxml/tinyxml.c \
-	tinyxml/tinyxmlparser.c \
-	tinyxml/tinyxmlerror.c \
-	clustalw/alnscore.c \
-	clustalw/amenu.c \
-	clustalw/calcgap.c \
-	clustalw/calcprf1.c \
-	clustalw/calcprf2.c \
-	clustalw/calctree.c \
-	clustalw/clustalw.c \
-	clustalw/gcgcheck.c \
-	clustalw/interfac.c \
-	clustalw/malign.c \
-	clustalw/palign.c \
-	clustalw/prfalign.c \
-	clustalw/random.c \
-	clustalw/readmat.c \
-	clustalw/sequence.c \
-	clustalw/showpair.c \
-	clustalw/trees.c \
-	clustalw/util.c
+SUFFIXES=.cpp .rc
+
+bin_PROGRAMS = main
+
+main_LDADD = $(WX_LIBS) -L/usr/lib -lsqlite -lmysqlclient
+main_SOURCES = TXMLfile.cpp\
+TVectorTree.cpp\
+TVirtualGel.cpp\
+TVectorEditorItems.cpp\
+TVectorEditorEnzymes.cpp\
+TVectorEditor.cpp\
+TVector.cpp\
+TUndo.cpp\
+TUReadSeq.cpp\
+TStorage.cpp\
+TSilmutDialog.cpp\
+TRestrictionEditor.cpp\
+TPrimer.cpp\
+TPrimerDialog.cpp\
+TPDB.cpp\
+TLigationDialog.cpp\
+TMainTree.cpp\
+todo.cpp\
+TItemEditDialog.cpp\
+TImageDisplay.cpp\
+TIMGreader.cpp\
+TextImportDialog.cpp\
+TClone.cpp\
+SequenceTypes.cpp\
+TCalculator.cpp\
+SequenceTypeRestriction.cpp\
+SequenceTypePlot.cpp\
+SequenceTypeFeature.cpp\
+SequenceTypeDNA.cpp\
+SequenceTypeAlign.cpp\
+SequenceTypeABI.cpp\
+SequenceTypeAA.cpp\
+SequenceCanvas.cpp\
+SendHTTP.cpp\
+RestrictionEnzymes.cpp\
+ProgramOptionsDialog.cpp\
+PlasmidCanvasLinear.cpp\
+PrimerDesign.cpp\
+PlasmidCanvasHandlers.cpp\
+PlasmidCanvasCircular.cpp\
+PlasmidCanvas.cpp\
+MyFrame.cpp\
+MyChild.cpp\
+MiscDialogs.cpp\
+ManageDatabase.cpp\
+main.cpp\
+GenBank.cpp\
+FindSequenceDialog.cpp\
+ExternalNCBI.cpp\
+ExternalInterface.cpp\
+ExternalBLAST.cpp\
+ChildBase.cpp\
+CoolCanvas.cpp\
+AminoAcids.cpp\
+Alignment.cpp\
+ABIviewer.cpp\
+ABItype.cpp\
+ureadseq.c\
+tinyxml/tinyxmlparser.cpp\
+tinyxml/tinyxmlerror.cpp\
+tinyxml/tinyxml.cpp\
+tinyxml/tinystr.cpp\
+clustalw/alnscore.cpp\
+clustalw/amenu.cpp\
+clustalw/calcgap.cpp\
+clustalw/calcprf1.cpp\
+clustalw/calcprf2.cpp\
+clustalw/calctree.cpp\
+clustalw/clustalw.cpp\
+clustalw/gcgcheck.cpp\
+clustalw/interfac.cpp\
+clustalw/malign.cpp\
+clustalw/palign.cpp\
+clustalw/prfalign.cpp\
+clustalw/random.cpp\
+clustalw/readmat.cpp\
+clustalw/sequence.cpp\
+clustalw/showpair.cpp\
+clustalw/trees.cpp\
+clustalw/util.cpp
