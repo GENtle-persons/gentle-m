@@ -495,3 +495,8 @@
 "m_align_cons","Conserved","Konserviert"
 "m_align_ident","&Identity","&Identität"
 "t_horizontal","Horizontal","Horizontal"
+"t_seq_move","Move line","Zeile verschieben"
+"t_seq_up","Move line up","Eine Zeile nach oben"
+"t_seq_down","Move line down","Eine Zeile nach unten"
+"t_seq_top","As first line","Als erste Zeile"
+"t_seq_bottom","As last line","Als letzte Zeile"

@@ -278,6 +278,11 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void OnPrimerMutation ( wxCommandEvent &ev ) ;
     virtual void OnSilmut ( wxCommandEvent &ev ) ;
     virtual void OnWhatCuts(wxCommandEvent& event);
+
+    virtual void OnSeqUp ( wxCommandEvent &ev ) ;
+    virtual void OnSeqDown ( wxCommandEvent &ev ) ;
+    virtual void OnSeqTop ( wxCommandEvent &ev ) ;
+    virtual void OnSeqBottom ( wxCommandEvent &ev ) ;
     
     virtual void OnCopyResultDNA ( wxCommandEvent &ev ) ;
     virtual void OnCopyResultAA ( wxCommandEvent &ev ) ;
@@ -292,6 +297,7 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void updateEdit ( TVector *v , string id , int from ) ;
     virtual void arrange () ;
     virtual SeqBasic* findMouseTarget ( wxPoint pt , int &pos ) ;
+    virtual int findMouseTargetItem ( wxPoint pt ) ;
     virtual SeqBasic* findID ( string id ) ;
     virtual void mark ( string id , int from , int to , int value = 1 ) ;
     virtual bool inMarkRange ( int x , int f , int t , int l ) ;
@@ -332,6 +338,7 @@ class SequenceCanvas : public wxScrolledWindow
     wxString lastToolTip ;
     bool isHorizontal ;
     int lowx , blocksize ;
+    SeqAlign *last_al ;
 
     DECLARE_EVENT_TABLE()
     };

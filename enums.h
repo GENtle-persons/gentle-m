@@ -310,6 +310,11 @@ enum {
     ALIGN_IDENT,
     ALIGN_HORIZ,
     
+    SEQ_UP,
+    SEQ_DOWN,
+    SEQ_TOP,
+    SEQ_BOTTOM,
+    
     } ;
 
 #endif

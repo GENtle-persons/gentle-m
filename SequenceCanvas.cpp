@@ -26,6 +26,11 @@ BEGIN_EVENT_TABLE(SequenceCanvas, wxScrolledWindow)
     EVT_MENU(SEQ_NEW_FROM_RESLUT_AA, SequenceCanvas::OnNewFromResultAA)
     EVT_MENU(PC_WHAT_CUTS,SequenceCanvas::OnWhatCuts)
 
+    EVT_MENU(SEQ_UP,SequenceCanvas::OnSeqUp)
+    EVT_MENU(SEQ_DOWN,SequenceCanvas::OnSeqDown)
+    EVT_MENU(SEQ_TOP,SequenceCanvas::OnSeqTop)
+    EVT_MENU(SEQ_BOTTOM,SequenceCanvas::OnSeqBottom)
+
     EVT_MENU(PRIMER_FORWARD, SequenceCanvas::OnPrimerForward)
     EVT_MENU(PRIMER_BACKWARD, SequenceCanvas::OnPrimerBackward)
     EVT_MENU(PRIMER_BOTH, SequenceCanvas::OnPrimerBoth)
@@ -928,7 +933,8 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         {
         int vx , vy ;
         MyGetViewStart ( &vx , &vy ) ;
-        Scroll ( -1 , vy-wr ) ;
+        if ( isHorizontal ) Scroll ( vx-wr , -1 ) ;
+        else Scroll ( -1 , vy-wr ) ;
         return ;
         }
     
@@ -1094,6 +1100,27 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
               }
            cm->AppendSeparator () ;
            }
+        else if ( child && child->def == "alignment" && ( where || ( findMouseTargetItem ( pt ) != -1 ) ) )
+           {
+           int item = findMouseTargetItem ( pt ) ;
+           cm = new wxMenu ;
+           SeqAlign *al ;
+           if ( item != -1 ) al = (SeqAlign*)seq[item] ;
+           else al = (SeqAlign*) where ;
+           if ( al->myname == txt("t_identity") ) {} // Do nothing
+           else if ( al->whatsthis() == "FEATURE" ) {} // Do nothing
+           else
+              {
+              last_al = al ;
+              wxMenu *cb = new wxMenu ;
+              TAlignment *ali = (TAlignment*) child ;
+              if ( last_al->id > 0 ) cb->Append ( SEQ_UP , txt("t_seq_up") ) ;
+              if ( last_al->id + 2 < ali->lines.size() ) cb->Append ( SEQ_DOWN , txt("t_seq_down") ) ;
+              if ( last_al->id > 0 ) cb->Append ( SEQ_TOP , txt("t_seq_top") ) ;
+              if ( last_al->id + 2 < ali->lines.size() ) cb->Append ( SEQ_BOTTOM , txt("t_seq_bottom") ) ;
+              if ( cb->GetMenuItemCount() > 0 ) cm->Append ( SEQ_COPY_AS , txt("t_seq_move") , cb ) ;
+              }
+           }
         else
            {
            cm = new wxMenu ;
@@ -1155,6 +1182,17 @@ SeqBasic* SequenceCanvas::findMouseTarget ( wxPoint pt , int &pos )
            }
         }
     return ret ;
+    }
+
+int SequenceCanvas::findMouseTargetItem ( wxPoint pt )
+    {
+    int a , b ;
+    for ( a = 0 ; a < seq.size() ; a++ )
+        {
+        b = seq[a]->pos.getLine ( pt.y ) ;
+        if ( b != -1 ) return a ;
+        }
+    return -1 ;
     }
 
 
@@ -1292,6 +1330,32 @@ void SequenceCanvas::OnWhatCuts(wxCommandEvent& event)
         p->Refresh () ;
         }
     }
+    
+
+void SequenceCanvas::OnSeqUp ( wxCommandEvent &ev )
+    {
+    TAlignment *al = (TAlignment*) child ;
+    al->MoveUpDown ( last_al->id , last_al->id - 1 ) ;
+    }
+
+void SequenceCanvas::OnSeqDown ( wxCommandEvent &ev )
+    {
+    TAlignment *al = (TAlignment*) child ;
+    al->MoveUpDown ( last_al->id , last_al->id + 1 ) ;
+    }
+
+void SequenceCanvas::OnSeqTop ( wxCommandEvent &ev )
+    {
+    TAlignment *al = (TAlignment*) child ;
+    al->MoveUpDown ( last_al->id , 0 ) ;
+    }
+
+void SequenceCanvas::OnSeqBottom ( wxCommandEvent &ev )
+    {
+    TAlignment *al = (TAlignment*) child ;
+    al->MoveUpDown ( last_al->id , al->lines.size()-1 ) ;
+    }
+
 
 // -------------------------------------------------------- TMarkMem
 

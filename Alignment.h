@@ -47,7 +47,8 @@ class TAlignment : public ChildBase
                                     string &t1 , string &t2 ,
                                     int i , int j ) ;
     
-    void redoAlignments () ;
+    void redoAlignments ( bool doRecalc = true ) ;
+    void recalcAlignments () ;
     wxColour findColors ( char c1 , char c2 , bool fg ) ;
 
     void OnSettings ( wxCommandEvent &ev ) ;
@@ -70,6 +71,7 @@ class TAlignment : public ChildBase
     void OnHorizontal ( wxCommandEvent& event ) ;
     
     void callMiddleMouseButton ( string id , int pos ) ;
+    void MoveUpDown ( int what , int where ) ;
     
     // Variables
     SequenceCanvas *sc ;
