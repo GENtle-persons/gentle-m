@@ -45,7 +45,7 @@ void TVectorEditor::OnCharHook(wxKeyEvent& event)
     }
 
 TVectorEditor::TVectorEditor(wxWindow *parent, const wxString& title , TVector *_v )
-         : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 600 , 550 ) )
+         : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 620 , 550 ) )
     {
     lastSelection = -1 ;
     v = _v ;

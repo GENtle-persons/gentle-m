@@ -25,6 +25,7 @@ class TAminoAcids : public ChildBase
     virtual void OnFind(wxCommandEvent& event);
     virtual void OnCut(wxCommandEvent& event);
     virtual void OnCopy(wxCommandEvent& event);
+    virtual void OnPaste(wxCommandEvent& event);
     virtual void OnEditMode(wxCommandEvent& event);
     virtual void OnEditName(wxCommandEvent& event);
     virtual void OnPrint(wxCommandEvent& event);
@@ -42,6 +43,7 @@ class TAminoAcids : public ChildBase
     virtual void Undo(wxCommandEvent& event);
     virtual void Redo(wxCommandEvent& event);
     virtual void updateUndoMenu () ;
+    virtual void handleListBox ( wxString t ) ;
         
     // Variables
     SequenceCanvas *sc , *sc2 ;
@@ -53,6 +55,7 @@ class TAminoAcids : public ChildBase
     
     wxWindow *curDisplay ;
     PlasmidCanvas *pc ;
+    wxBoxSizer *v0 ;
 
     protected :
     virtual void updateToolbar () ;
@@ -60,7 +63,7 @@ class TAminoAcids : public ChildBase
     private :
     friend class TTestSuite ;
     wxListBox *lb ;
-    wxBoxSizer *h1 , *v1 , *v0 ;
+    wxBoxSizer *h1 , *v1 ;
     wxChoice *inlinePlot ;
     wxString lastLBsel ;
 

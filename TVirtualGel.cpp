@@ -243,7 +243,7 @@ void TMyGelControl::drawBand ( wxDC &dc , TGelLane &lane , int band )
 	
 	for ( int b = 0 ; b < w ; b++ )
 		{
-		int i = b * 255 / ( w + 1 ) ;// b * 30 ;
+		int i = (int) (b * 255 / ( w + 1 )) ;// b * 30 ;
 		if ( i > 255 ) continue ;
 		int c = 5 + b * b ;
 		dc.SetPen ( *MYPEN ( wxColour ( i , i , i ) ) ) ;

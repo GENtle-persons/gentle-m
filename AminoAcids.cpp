@@ -8,6 +8,7 @@ BEGIN_EVENT_TABLE(TAminoAcids, MyChildBase)
     EVT_MENU(MDI_FIND, TAminoAcids::OnFind)
     EVT_MENU(MDI_CUT, TAminoAcids::OnCut)
     EVT_MENU(MDI_COPY, TAminoAcids::OnCopy)
+    EVT_MENU(MDI_PASTE,TAminoAcids::OnPaste)
     EVT_MENU(AMINOACIDS_EDIT_NAME, TAminoAcids::OnEditName)
     EVT_MENU(SEQ_PRINT, TAminoAcids::OnPrint)
     EVT_MENU(MDI_AS_NEW_FEATURE, TAminoAcids::OnAsNewFeature)
@@ -31,7 +32,6 @@ BEGIN_EVENT_TABLE(TAminoAcids, MyChildBase)
     EVT_MENU(MDI_VIEW_MODE,ChildBase::OnDummy)
     EVT_MENU(MDI_ORFS,ChildBase::OnDummy)
     EVT_MENU(MDI_CIRCULAR_LINEAR,ChildBase::OnDummy)
-    EVT_MENU(MDI_PASTE,ChildBase::OnDummy)
     EVT_MENU(AA_NONE,TABIviewer::OnDummy)
     EVT_MENU(AA_KNOWN, TABIviewer::OnDummy)
     EVT_MENU(AA_ALL, TABIviewer::OnDummy)
@@ -92,7 +92,7 @@ void TAminoAcids::initme ()
     edit_menu->Append(MDI_MARK_ALL, txt("m_mark_all") );
     edit_menu->Append(MDI_CUT, txt("m_cut") );
     edit_menu->Append(MDI_COPY, txt("m_copy") );
-//    edit_menu->Append(MDI_PASTE, txt("m_paste") );
+    edit_menu->Append(MDI_PASTE, txt("m_paste") );
     edit_menu->AppendSeparator();
     edit_menu->Append(MDI_FIND, txt("m_find") );
 //    edit_menu->AppendSeparator();
@@ -156,7 +156,6 @@ void TAminoAcids::initme ()
 
     mylog ( "TAminoAcids::initme" , "6" ) ;
 
-//#ifdef __WXMSW__
     toolbar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
     myapp()->frame->InitToolBar(toolbar);
     toolbar->Reparent ( this ) ;
@@ -187,7 +186,6 @@ void TAminoAcids::initme ()
     inlinePlot->Append ( txt("t_no_plot") ) ;
     inlinePlot->Append ( txt("t_chou_fasman") ) ;
     inlinePlot->SetStringSelection ( txt("t_no_plot") ) ;
-//#endif
 
 
     mylog ( "TAminoAcids::initme" , "7" ) ;
@@ -202,14 +200,11 @@ void TAminoAcids::initme ()
     v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
     v0->Add ( v1 , 1 , wxEXPAND , 5 ) ;
 
-//    wxSafeYield() ;
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;
     lb->SetStringSelection ( txt("t_data") ) ;
     mylog ( "TAminoAcids::initme" , "8" ) ;
     
-    wxCommandEvent event ;
-    OnListBox ( event ) ;
     mylog ( "TAminoAcids::initme" , "9" ) ;
 
     showSequence () ;
@@ -218,6 +213,7 @@ void TAminoAcids::initme ()
     mylog ( "TAminoAcids::initme" , "9b" ) ;
     updateUndoMenu () ;
     mylog ( "TAminoAcids::initme" , "10" ) ;
+    handleListBox ( txt("t_data") ) ;
     if ( myapp()->frame->isLocked() ) return ;
     mylog ( "TAminoAcids::initme" , "11a" ) ;
     Activate () ;
@@ -363,8 +359,8 @@ void TAminoAcids::showSequence ()
     sc->SilentRefresh () ;    
     mylog ( "TAminoAcids::showSequence" , "8" ) ;
 
-    wxCommandEvent event ;
-    OnListBox ( event ) ;
+//    wxCommandEvent event ;
+//    OnListBox ( event ) ;
     mylog ( "TAminoAcids::showSequence" , "9" ) ;
     }
     
@@ -441,6 +437,11 @@ void TAminoAcids::OnCut(wxCommandEvent& event)
 void TAminoAcids::OnCopy(wxCommandEvent& event)
     {
     sc->OnCopy ( event ) ;
+    }
+
+void TAminoAcids::OnPaste(wxCommandEvent& event)
+    {
+    sc->OnPaste ( event ) ;
     }
 
 void TAminoAcids::OnAsNewFeature(wxCommandEvent& event)
@@ -549,8 +550,12 @@ void TAminoAcids::OnIP ( wxCommandEvent& event )
 void TAminoAcids::OnListBox ( wxCommandEvent& event )
     {
 //    if ( sc->getEditMode() ) sc->stopEdit() ;
+    handleListBox ( lb->GetStringSelection() ) ;
+    }
+
+void TAminoAcids::handleListBox ( wxString t )
+    {
     bool update = false ;
-    wxString t = lb->GetStringSelection() ;
     if ( t == lastLBsel ) update = true ;
     else lastLBsel = t ;
     
