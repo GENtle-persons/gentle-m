@@ -15,25 +15,29 @@ int SeqRestriction::arrange ( int n )
     s = t ;
     for ( cut = 0 ; cut < vec->rc.size() ; cut++ )
         {
+        TRestrictionEnzyme *e = vec->rc[cut].e ;
+        if ( vec->isEnzymeHidden ( e->name ) ) continue ;
         vs.push_back ( t ) ;
         eoe.push_back ( -1 ) ;
-        TRestrictionEnzyme *e = vec->rc[cut].e ;
         ven.push_back ( e->name ) ;
+        
+        int vsl = vs.size() - 1 ;
+        
         for ( a = 0 ; a < e->sequence.length() ; a++ )
            {
-           thepos = a+vec->rc[cut].pos-e->cut ;
+           thepos = a + vec->rc[cut].pos - e->cut ;
            if ( thepos >= 0 && thepos < t.length() )
-              vs[cut][thepos] = '-' ;
+              vs[vsl][thepos] = '-' ;
            }
            
         // Arranging enzyme text
-        eoe[cut] = vec->rc[cut].pos - e->cut + e->sequence.length() ;
+        eoe[vsl] = vec->rc[cut].pos - e->cut + e->sequence.length() ;
            
         thepos = vec->rc[cut].pos ;
         if ( thepos-1 >= 0 && thepos < t.length() )
            {
-           vs[cut][thepos] = '|' ;
-           vs[cut][vec->rc[cut].pos-1] = '#' ;
+           vs[vsl][thepos] = '|' ;
+           vs[vsl][vec->rc[cut].pos-1] = '#' ;
            }
         }
     

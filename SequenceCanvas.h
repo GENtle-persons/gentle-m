@@ -357,6 +357,7 @@ class SequenceCanvas : public wxScrolledWindow
 
     virtual void OnFocus(wxFocusEvent& event) ;
     virtual void OnKillFocus(wxFocusEvent& event) ;
+    virtual void rsHideLimit ( wxCommandEvent &ev ) ;
     
     virtual string getSelection () ;
     

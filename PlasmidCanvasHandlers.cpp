@@ -222,22 +222,7 @@ void PlasmidCanvas::rsShowHide ( wxCommandEvent &ev )
     
 void PlasmidCanvas::rsHideLimit ( wxCommandEvent &ev )
     {
-    wxTextEntryDialog ted ( this , txt("m_hide_enzymes_limit") , "" , "2" ) ;
-    if ( wxID_OK != ted.ShowModal() ) return ;
-    int limit = atoi ( ted.GetValue().c_str() ) ;
-    int a , b ;
-    for ( a = 0 ; a < p->vec->re.size() ; a++ )
-       {
-       int cnt = 0 ;
-       for ( b = 0 ; b < p->vec->rc.size() ; b++ )
-          if ( p->vec->rc[b].e == p->vec->re[a] ) cnt++ ;
-       for ( b = 0 ; b < p->vec->hiddenEnzymes.size() && p->vec->hiddenEnzymes[b] != p->vec->re[a]->name ; b++ ) ;
-       if ( cnt > limit && b == p->vec->hiddenEnzymes.size() )
-          p->treeBox->ToggleEnzymeVisibility ( p->vec->re[a] ) ;
-       }
-    p->vec->recalculateCuts() ;
-    p->vec->recalcvisual = true ;
-    Refresh () ;
+    p->cSequence->rsHideLimit ( ev ) ;
     }
     
 void PlasmidCanvas::rsDel ( wxCommandEvent &ev )

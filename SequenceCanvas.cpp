@@ -53,6 +53,8 @@ BEGIN_EVENT_TABLE(SequenceCanvas, wxScrolledWindow)
     EVT_MENU(MDI_COPY, SequenceCanvas::OnCopy)
     EVT_MENU(MDI_SEL_AS_NEW_PRIMER, SequenceCanvas::OnSelAsNewPrimer)
 
+    EVT_MENU(PC_RS_HIDE_LIMIT, SequenceCanvas::rsHideLimit)
+
     EVT_SET_FOCUS(SequenceCanvas::OnFocus)
     EVT_KILL_FOCUS(SequenceCanvas::OnKillFocus)
 END_EVENT_TABLE()
@@ -1718,7 +1720,31 @@ void SequenceCanvas::stopEdit ()
     mark ( id , -1 , -1 ) ;
     }
 
- 
+void SequenceCanvas::rsHideLimit ( wxCommandEvent &ev )
+    {
+    if ( !p ) return ;
+    wxTextEntryDialog ted ( this , txt("m_hide_enzymes_limit") , "" , "2" ) ;
+    if ( wxID_OK != ted.ShowModal() ) return ;
+    int limit = atoi ( ted.GetValue().c_str() ) ;
+    int a , b ;
+    for ( a = 0 ; a < p->vec->re.size() ; a++ )
+       {
+       int cnt = 0 ;
+       for ( b = 0 ; b < p->vec->rc.size() ; b++ )
+          if ( p->vec->rc[b].e == p->vec->re[a] ) cnt++ ;
+       for ( b = 0 ; b < p->vec->hiddenEnzymes.size() && p->vec->hiddenEnzymes[b] != p->vec->re[a]->name ; b++ ) ;
+       if ( cnt > limit && b == p->vec->hiddenEnzymes.size() )
+          p->treeBox->ToggleEnzymeVisibility ( p->vec->re[a] ) ;
+       }
+    p->vec->recalculateCuts() ;
+    p->vec->recalcvisual = true ;
+    if ( p && p->cPlasmid ) p->cPlasmid->Refresh () ;
+    arrange () ;
+    Refresh () ;
+    }
+    
+
+
 // -------------------------------------------------------- TMarkMem
 
 TMarkMem::TMarkMem ( SequenceCanvas *_sc )
