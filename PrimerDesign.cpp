@@ -528,11 +528,7 @@ wxString TPrimerDesign::getName ()
 void TPrimerDesign::showSequence ()
     {
     // Cleaning up
-    while ( sc->seq.size() )
-        {
-        delete sc->seq[sc->seq.size()-1] ;
-        sc->seq.pop_back () ;
-        }
+    CLEAR_DELETE ( sc->seq ) ;
 
     // Display
     int a , b ;
@@ -581,12 +577,12 @@ void TPrimerDesign::showSequence ()
         if ( !primer[a].upper )
            p2->addPrimer ( &primer[a] ) ;
 
-    if ( show_features ) sc->seq.push_back ( seqF ) ;
-    sc->seq.push_back ( p1 ) ;
-    sc->seq.push_back ( s1 ) ;
-    sc->seq.push_back ( a1 ) ;
-    sc->seq.push_back ( s2 ) ;
-    sc->seq.push_back ( p2 ) ;
+    if ( show_features ) sc->seq.Add ( seqF ) ;
+    sc->seq.Add ( p1 ) ;
+    sc->seq.Add ( s1 ) ;
+    sc->seq.Add ( a1 ) ;
+    sc->seq.Add ( s2 ) ;
+    sc->seq.Add ( p2 ) ;
     updateResultSequence() ;
         
     sc->arrange () ;
@@ -664,15 +660,15 @@ void TPrimerDesign::updateResultSequence()
     a3->takesMouseActions = false ;
     a3->showNumbers = false ;
 
-    sc->seq.push_back ( r3 ) ;
-    sc->seq.push_back ( s3 ) ;
-    sc->seq.push_back ( a3 ) ;
+    sc->seq.Add ( r3 ) ;
+    sc->seq.Add ( s3 ) ;
+    sc->seq.Add ( a3 ) ;
 
     if ( !sc->isHorizontal() )
         {
         SeqDivider *div = new SeqDivider ( sc ) ;
         div->initFromTVector ( vec ) ;    
-        sc->seq.push_back ( div ) ;
+        sc->seq.Add ( div ) ;
         }
     }
 
@@ -700,8 +696,8 @@ void TPrimerDesign::OnAA_setit(int mode)
     mi->Check ( false ) ;
     if ( aa_state == AA_NONE )
         {
-        sc->seq.push_back ( NULL ) ;
-        for ( int a = sc->seq.size()-1 ; a >= 1 ; a-- )
+        sc->seq.Add ( NULL ) ;
+        for ( int a = sc->seq.GetCount()-1 ; a >= 1 ; a-- )
            sc->seq[a] = sc->seq[a-1] ;
         SeqAA *seqAA = new SeqAA ( sc ) ;
         sc->seq[0] = seqAA ;
@@ -842,14 +838,14 @@ void TPrimerDesign::OnHorizontal ( wxCommandEvent& event )
     sc->toggleHorizontal () ;
     if ( sc->isHorizontal() )
        {
-       delete sc->seq[sc->seq.size()-1] ;
-       sc->seq.pop_back () ;
+       delete sc->seq[sc->seq.GetCount()-1] ;
+       sc->seq.RemoveAt ( sc->seq.GetCount()-1 ) ;
        }
     else
        {
        SeqDivider *div = new SeqDivider ( sc ) ;
        div->initFromTVector ( vec ) ;    
-       sc->seq.push_back ( div ) ;
+       sc->seq.Add ( div ) ;
        }
     sc->arrange () ;
     sc->SilentRefresh() ;    

@@ -100,7 +100,7 @@ public:
     wxSashLayoutWindow* m_leftWindow1;
     wxSashLayoutWindow* m_leftWindow2;
     wxSashLayoutWindow* m_bottomWindow;
-    vector <TStorage*> dbcache ;
+    wxArrayTStorage dbcache ;
     wxMiniFrame *miniFrame ;
     ChildBase *lastChild ;
     wxMenuBar *menu_bar ;

@@ -108,7 +108,7 @@ class TStorage
     
     // Variables
     wxArrayTRestrictionEnzyme re ;
-    vector <TProtease*> pr ;
+    wxArrayTProtease pr ;
     TSQLresult results ;
     
     private :

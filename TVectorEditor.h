@@ -90,7 +90,7 @@ class TVectorEditor : public wxDialog
     wxCheckBox *icb , *icv ;
     wxCheckListBox *prots ;
     
-    vector <TVectorItem*> newitems ;
+    wxArrayTVectorItem newitems ;
     
     DECLARE_EVENT_TABLE()
     } ;

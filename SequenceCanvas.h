@@ -217,11 +217,11 @@ class SeqAA : public SeqBasic
     int mode , disp ;
     bool primaryMode , showNumbers ;
     char unknownAA ;
-    vector <TProteaseCut*> pc ;
+    wxArrayTProteaseCut pc ;
     wxString pa_w ;
-    vector <TProtease*> proteases ;
+    wxArrayTProtease proteases ;
     wxArrayInt offsets , pa_wa ;
-    vector <TVectorItem*> offset_items ;
+    wxArrayTVectorItem offset_items ;
     } ;
 
 class SeqABI : public SeqDNA
@@ -406,7 +406,7 @@ class SequenceCanvas : public wxScrolledWindow
     int _from , _to ; // Mark
     int blankline , charwidth , charheight , hardstop ;
     int lastmarked , maxendnumberlength , lastyoffset , blocksize ;
-    vector <SeqBasic*> seq ;
+    wxArraySeqBasic seq ;
     wxFont *font , *smallFont , *varFont;
     wxString edit_id , edit_valid ;
     

@@ -143,7 +143,7 @@ int SeqNum::arrange ( int n )
     int ox = bo+wx , oy = n*wy+bo , endnumber = offset + s.length() ;
     
     endnumberlength = 0 ;
-    for ( a = 0 ; a < can->seq.size() ; a++ )
+    for ( a = 0 ; a < can->seq.GetCount() ; a++ )
         {
         if ( can->seq[a]->whatsthis() == "ALIGN" )
            {
@@ -178,7 +178,7 @@ int SeqNum::arrange ( int n )
               pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
               lasta = pos.p.GetCount()+1 ;
               x = ox ;
-              y += wy * ( can->seq.size() + can->blankline ) ;
+              y += wy * ( can->seq.GetCount() + can->blankline ) ;
               }
            }
         }
@@ -243,7 +243,7 @@ int SeqDivider::arrange ( int n )
               pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
               lasta = pos.p.GetCount()+1 ;
               x = ox ;
-              y += wy * ( can->seq.size() + can->blankline ) ;
+              y += wy * ( can->seq.GetCount() + can->blankline ) ;
               if ( a+1 < s.length() )
                  pos.add ( -(++l) , bo , y , ox-wx-5 , wy-1 ) ; // Line number
               }

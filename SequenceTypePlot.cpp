@@ -58,7 +58,7 @@ int SeqPlot::arrange ( int n )
               pos.addline ( lasta , pos.p.GetCount() , y , y+wy*lines-1 ) ;
               lasta = pos.p.GetCount()+1 ;
               x = ox ;
-              y += wy * ( can->seq.size() + can->blankline ) ;
+              y += wy * ( can->seq.GetCount() + can->blankline ) ;
               if ( a+1 < s.length() )
                  pos.add ( -(++l) , bo , y , ox-wx-5 , wy-1 ) ; // Line number
               }
@@ -193,7 +193,7 @@ void SeqPlot::show ( wxDC& dc )
               {
               t = "t_method_" ;
               t += hp_method ;
-              t = txt(t.c_str()) ;
+              t = txt(t) ;
               t += wxString::Format(" [%d]",hp_window) ;
               }
            dc.SetTextForeground ( *wxBLACK ) ;
@@ -429,19 +429,19 @@ void SeqPlot::initFromTVector ( TVector *v )
 void SeqPlot::setLines ( int l )
     {
     int a ;
-    vector <SeqBasic*> v2 ;
-    while ( can->seq[can->seq.size()-1] != this )
+    wxArraySeqBasic v2 ;
+    while ( can->seq[can->seq.GetCount()-1] != this )
         {
-        v2.push_back ( can->seq[can->seq.size()-1] ) ;
-        can->seq.pop_back () ;
+        v2.Add ( can->seq[can->seq.GetCount()-1] ) ;
+        can->seq.RemoveAt ( can->seq.GetCount()-1 ) ;
         }
     for ( a = 0 ; a < l ; a++ )
         {
         SeqBlank *bl = new SeqBlank ( can ) ;
         bl->initFromTVector ( vec ) ;
-        can->seq.push_back ( bl ) ;
+        can->seq.Add ( bl ) ;
         }
-    for ( a = lines ; a < v2.size() ; a++ ) can->seq.push_back ( v2[a] ) ;
+    for ( a = lines ; a < v2.GetCount() ; a++ ) can->seq.Add ( v2[a] ) ;
     for ( a = 0 ; a < lines ; a++ ) delete v2[a] ;
 
     lines = l ;    
@@ -470,7 +470,7 @@ void SeqPlot::useChouFasman ()
         while ( prop[a].data.size() < 3 ) prop[a].data.push_back ( 0 ) ;
         }
     wxString x ;
-    while ( x.length() < s.length() ) x += " " ;
+    FILLSTRING ( x , ' ' , s.length() ) ;
     while ( d1.GetCount() < 4 ) d1.Add ( x ) ;
     scanChouFasman ( 4 , 6 , 0 , 100 , 4 , 100 , 5 ) ; // Alpha helices
     scanChouFasman ( 3 , 5 , 1 , 100 , 4 , 100 , 105 ) ; // Beta sheets
@@ -621,7 +621,7 @@ void SeqPlot::useMW ()
 //        while ( prop[a].data.size() < 3 ) prop[a].data.push_back ( 0 ) ;
         }
     wxString x ;
-    while ( x.length() < s.length() ) x += " " ;
+    FILLSTRING ( x , ' ' , s.length() ) ;
     while ( d1.GetCount() < 4 ) d1.Add ( x ) ;
     scanMinMax () ;
     }
@@ -645,7 +645,7 @@ void SeqPlot::usePI ()
 //        while ( prop[a].data.size() < 3 ) prop[a].data.push_back ( 0 ) ;
         }
     wxString x ;
-    while ( x.length() < s.length() ) x += " " ;
+    FILLSTRING ( x , ' ' , s.length() ) ;
     while ( d1.GetCount() < 4 ) d1.Add ( x ) ;
     scanMinMax () ;
     }
@@ -685,7 +685,7 @@ void SeqPlot::useHP ()
 //        while ( prop[a].data.size() < 3 ) prop[a].data.push_back ( 0 ) ;
         }
     wxString x ;
-    while ( x.length() < s.length() ) x += " " ;
+    FILLSTRING ( x , ' ' , s.length() ) ;
     while ( d1.GetCount() < 4 ) d1.Add ( x ) ;
     scanMinMax () ;
     }

@@ -5,7 +5,7 @@
 SeqAA::~SeqAA ()
     {
     int a ;
-    for ( a = 0 ; can && a < can->seq.size() ; a++ )
+    for ( a = 0 ; can && a < can->seq.GetCount() ; a++ )
         {
         if ( can->seq[a]->whatsthis() == "FEATURE" )
            {
@@ -13,7 +13,7 @@ SeqAA::~SeqAA ()
            if ( f->aaa == this ) f->aaa = NULL ;
            }
         }
-    DEL_POINTERS ( pc ) ;
+    CLEAR_DELETE ( pc ) ;
     }
 
 int SeqAA::arrange ( int n )
@@ -52,7 +52,7 @@ int SeqAA::arrange ( int n )
               pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
               lasta = pos.p.GetCount()+1 ;
               x = ox ;
-              y += wy * ( can->seq.size() + can->blankline ) ;
+              y += wy * ( can->seq.GetCount() + can->blankline ) ;
               if ( showNumbers && a+1 < s.length() )
                  pos.add ( -(++l) , bo , y , ox-wx-5 , wy-1 ) ; // Line number
               }
@@ -175,7 +175,7 @@ void SeqAA::show ( wxDC& dc )
               }
 
            // Protease cuts
-           for ( int q = 0 ; q < pc.size() ; q++ )
+           for ( int q = 0 ; q < pc.GetCount() ; q++ )
               {
               if ( b == pc[q]->cut )
                  {
@@ -224,7 +224,7 @@ wxPoint SeqAA::showText ( int ystart , wxArrayString &tout )
     wxPoint p ( -1 , -1 ) ;
     int a , b , c ;
     wxString t ;
-    int x = 0 , y = ystart-can->seq.size() , ly = -1 ;
+    int x = 0 , y = ystart-can->seq.GetCount() , ly = -1 ;
     for ( a = 0 ; a < pos.p.GetCount() ; a++ )
         {
         b = pos.p[a] ;
@@ -234,7 +234,7 @@ wxPoint SeqAA::showText ( int ystart , wxArrayString &tout )
            if ( pos.r[a].y != ly ) 
               {
               ly = pos.r[a].y ;
-              y += can->seq.size() ;
+              y += can->seq.GetCount() ;
               x = 0 ;
               while ( y >= tout.GetCount() ) tout.Add ( "" ) ;
               }
@@ -276,8 +276,8 @@ void SeqAA::initFromString ( wxString t )
 
 void SeqAA::updateProteases ()
     {
-    proteases.clear () ;
-    DEL_POINTERS ( pc ) ;
+    proteases.Clear () ;
+    CLEAR_DELETE ( pc ) ;
     if ( !can ) return ;
 
     wxArrayString vs ;
@@ -289,14 +289,14 @@ void SeqAA::updateProteases ()
     for ( a = 0 ; a < vs.GetCount() ; a++ )
         {
         TProtease *pro = myapp()->frame->LS->getProtease ( vs[a] ) ;
-        if ( pro ) proteases.push_back ( pro ) ;
+        if ( pro ) proteases.Add ( pro ) ;
         }
     }
     
 void SeqAA::analyzeProteases ()
     {
     if ( !can ) return ; 
-    for ( int q = 0 ; q < proteases.size() ; q++ )
+    for ( int q = 0 ; q < proteases.GetCount() ; q++ )
        {
        TProtease *pr = proteases[q] ;
        if ( pr->len() <= pa_w.length() )
@@ -308,7 +308,7 @@ void SeqAA::analyzeProteases ()
              cut->protease = pr ;
              cut->cut = pa_wa[pa_w.length()-pr->len()+pr->cut+1] ;
              cut->left = true ;
-             pc.push_back ( cut ) ;
+             pc.Add ( cut ) ;
              }
           }
        }
@@ -316,7 +316,7 @@ void SeqAA::analyzeProteases ()
 
 void SeqAA::fixOffsets ( TVector *v )
     {
-    offset_items.clear() ;
+    offset_items.Clear() ;
     int a , b ;
     for ( a = 0 ; a < v->items.size() ; a++ )
         {
@@ -329,7 +329,7 @@ void SeqAA::fixOffsets ( TVector *v )
            if ( ( b - 1 ) % 10 == 0 && c > 0 && x != '-' )
               {
               while ( offsets.GetCount() < b ) offsets.Add ( -1 ) ;
-              while ( offset_items.size() < b ) offset_items.push_back ( NULL ) ;
+              while ( offset_items.GetCount() < b ) offset_items.Add ( NULL ) ;
               offsets[b-1] = c + off ;
               offset_items[b-1] = &v->items[a] ;
               }
@@ -352,10 +352,9 @@ void SeqAA::initFromTVector ( TVector *v )
        truncateEditSequence = true ;
        }
     wxString t = vec->getSequence() ;
-    s = "" ;
-    while ( s.length() < t.length() ) s += " " ;
+    FILLSTRING ( s , ' ' , t.length() ) ;
     offsets.Clear() ;
-    offset_items.clear() ;
+    offset_items.Clear() ;
     while ( offsets.GetCount() < s.length() ) offsets.Add ( -1 ) ;
     updateProteases () ;
     if ( v->isCircular() ) t += t.substr ( 0 , 2 ) ;

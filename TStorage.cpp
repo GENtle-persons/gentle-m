@@ -185,7 +185,7 @@ void TStorage::import ()
         else if ( name.GetChar(0) == '*' )
            {
            name = name.substr ( 1 , name.length() - 1 ) ;
-           pr.push_back ( new TProtease ( name , 
+           pr.Add ( new TProtease ( name , 
                                             sr[a][sr["e_sequence"]] , 
                                             sr[a][sr["e_note"]] ) ) ;
            }
@@ -689,7 +689,7 @@ wxString TStorage::makeInsert ( wxString table , TVS &field , TVS &data )
 TProtease *TStorage::getProtease ( wxString s )
     {
     int a ;
-    for ( a = 0 ; a < pr.size() ; a++ )
+    for ( a = 0 ; a < pr.GetCount() ; a++ )
         if ( pr[a]->name == s )
            return pr[a] ;
     return NULL ;

@@ -558,4 +558,4 @@
 "t_calc_prot","Protein","Protein"
 "t_calc_g_mol","g/mol","g/mol"
 "m_aa_photometer","Photometer analysis","Photometer-Analyse"
-
+"t_some_changed","At least one object was changed. Close anyway (changes will be lost)?","Mindestens ein Objekt wurde geändert. Trotzdem schließen (Änderungen gehen verloren)?"

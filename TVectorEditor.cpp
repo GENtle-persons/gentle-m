@@ -119,7 +119,7 @@ void TVectorEditor::showProteases ()
     {
     int a , b ;
     wxArrayString vs ;
-    for ( a = 0 ; a < myapp()->frame->LS->pr.size() ; a++ )
+    for ( a = 0 ; a < myapp()->frame->LS->pr.GetCount() ; a++ )
         vs.Add ( myapp()->frame->LS->pr[a]->name ) ;
     vs.Sort () ;        
     prots->Clear () ;
@@ -202,7 +202,7 @@ void TVectorEditor::initPanItem ()
         *nvi = v->items[a] ;
         nvi->r2 = a ;
         nvi->setParam ( "CHANGED" , "" ) ;
-        newitems.push_back ( nvi ) ;
+        newitems.Add ( nvi ) ;
         }
     makeItemsList () ;
     
@@ -313,7 +313,7 @@ void TVectorEditor::addItem2list ( TVectorItem &i , int a )
 void TVectorEditor::makeItemsList ()
     {
     items->DeleteAllItems() ;
-    for ( int a = 0 ; a < newitems.size() ; a++ )
+    for ( int a = 0 ; a < newitems.GetCount() ; a++ )
         addItem2list ( *newitems[a] , a ) ;
     }
     
@@ -438,7 +438,7 @@ void TVectorEditor::commitItems ()
     int a , b ;
     vector <bool> found ;
     while ( found.size() < v->items.size() ) found.push_back ( false ) ;
-    for ( a = 0 ; a < newitems.size() ; a++ )
+    for ( a = 0 ; a < newitems.GetCount() ; a++ )
         {
         TVectorItem c = *newitems[a] ;
         if ( c.r2 != -1 )
@@ -568,11 +568,7 @@ void TVectorEditor::OnCancel ( wxCommandEvent &ev )
     
 void TVectorEditor::cleanup ()
     {
-    while ( newitems.size() )
-        {
-        delete newitems[newitems.size()-1] ;
-        newitems.pop_back () ;
-        }
+    CLEAR_DELETE ( newitems ) ;
     }
     
 // Handlers "enzyme"
@@ -873,7 +869,7 @@ void TVectorEditor::storeItemData ()
 void TVectorEditor::itemAdd ( wxCommandEvent &ev )
     {
     storeItemData () ;
-    int num = newitems.size() ;
+    int num = newitems.GetCount() ;
     TVectorItem *nvi = new TVectorItem ;
     nvi->name = txt("t_new_item") ;
     nvi->from = 1 ;
@@ -885,7 +881,7 @@ void TVectorEditor::itemAdd ( wxCommandEvent &ev )
         nvi->setRF ( 0 ) ;
         nvi->type = VIT_MISC ;
         }
-    newitems.push_back ( nvi ) ;
+    newitems.Add ( nvi ) ;
     addItem2list ( *nvi , num ) ;
     items->SetItemState ( num , wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED ,
                             wxLIST_MASK_IMAGE|wxLIST_MASK_STATE ) ;
@@ -896,11 +892,11 @@ void TVectorEditor::itemDel ( wxCommandEvent &ev )
     int i = icur , num ;
     if ( icur == -1 ) return ;
     storeItemData () ;
-    for ( num = 0 ; num < newitems.size() ; num++ )
+    for ( num = 0 ; num < newitems.GetCount() ; num++ )
        items->SetItemState ( num , 0 , wxLIST_MASK_IMAGE|wxLIST_MASK_STATE ) ;
     for ( num = 0 ; newitems[num]->r4 != i ; num++ ) ;
-    for ( num++ ; num < newitems.size() ; num++ ) newitems[num-1] = newitems[num] ;
-    newitems.pop_back () ;
+    for ( num++ ; num < newitems.GetCount() ; num++ ) newitems[num-1] = newitems[num] ;
+    newitems.RemoveAt ( newitems.GetCount()-1 ) ;
     items->DeleteItem ( i ) ;
     icur = -1 ;
     }
@@ -915,7 +911,7 @@ void TVectorEditor::itemClr ( wxCommandEvent &ev )
     ichoice->SetSelection ( 0 ) ;
     irb->Disable() ;
     icb->SetValue ( true ) ;
-    for ( int num = 0 ; num < newitems.size() ; num++ )
+    for ( int num = 0 ; num < newitems.GetCount() ; num++ )
        items->SetItemState ( num , 0 , wxLIST_MASK_IMAGE|wxLIST_MASK_STATE ) ;
     }
 
@@ -1000,7 +996,7 @@ void TVectorEditor::newProtease ( wxCommandEvent &ev )
     if ( ed.ShowModal() == wxID_OK )
        {
        TProtease *pr = new TProtease ( ed.e->name , ed.e->sequence , ed.e->note ) ;
-       myapp()->frame->LS->pr.push_back ( pr ) ;
+       myapp()->frame->LS->pr.Add ( pr ) ;
        myapp()->frame->LS->updateProtease ( pr ) ;
        }
     showProteases () ;
