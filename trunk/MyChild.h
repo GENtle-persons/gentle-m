@@ -100,6 +100,7 @@ public:
     virtual wxString doExtractAA ( bool coding = true ) ;
     virtual void runRestriction ( wxString s ) ;
     virtual void addFragmentsToGel ( wxString title , wxArrayInt &cuts , TVirtualGel *gel , TRestrictionEditor &ed ) ;
+    virtual MyChild *doTransformSequence ( bool inNewVector , bool complement , bool invers ) ;
     
     protected :
     virtual void updateToolbar () ;

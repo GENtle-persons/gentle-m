@@ -2012,14 +2012,54 @@ void SequenceCanvas::OnStrandCopyBoth(wxCommandEvent& event)
 
 void SequenceCanvas::OnStrandNew53(wxCommandEvent& event)
 	{
+	if ( !p || !p->vec ) return ;
+	int a ;
+	wxString vname = p->vec->getName() ;
+	p->vec->setName ( vname + " (5'->3')" ) ;
+	MyChild *c = p->doTransformSequence ( true , false , false ) ;
+	p->vec->setName ( vname ) ;
+
+	wxString lu = p->vec->getStickyEnd ( true , true ) ;
+	for ( a = 0 ; a < lu.length() ; a++ )
+		c->vec->insert_char ( lu.GetChar(a) , a+1 , false ) ;
+	c->vec->addToSequence ( p->vec->getStickyEnd ( false , true ) ) ;
+
+	c->vec->setStickyEnd ( true , true , "" ) ;
+	c->vec->setStickyEnd ( false , true , "" ) ;
+	c->vec->setStickyEnd ( true , false , "" ) ;
+	c->vec->setStickyEnd ( false , false , "" ) ;
+	c->cSequence->findID("DNA")->initFromTVector ( c->vec ) ;
+	c->updateSequenceCanvas ( false ) ;
 	}    
 
 void SequenceCanvas::OnStrandNew35(wxCommandEvent& event)
 	{
+	if ( !p || !p->vec ) return ;
+	int a ;
+	wxString vname = p->vec->getName() ;
+	p->vec->setName ( vname + " (3'->5')" ) ;
+	MyChild *c = p->doTransformSequence ( true , false , true ) ;
+	p->vec->setName ( vname ) ;
+
+	wxString rl = p->vec->getStickyEnd ( false , false ) ;
+	for ( a = 0 ; a < rl.length() ; a++ )
+		c->vec->insert_char ( rl.GetChar(rl.length()-a-1) , a+1 , false ) ;
+	wxString ll = p->vec->getStickyEnd ( true , false ) ;
+	for ( a = 0 ; a < rl.length() ; a++ )
+		c->vec->insert_char ( ll.GetChar(ll.length()-a-1) , c->vec->getSequenceLength()+1 , false ) ;
+
+	c->vec->setStickyEnd ( true , true , "" ) ;
+	c->vec->setStickyEnd ( false , true , "" ) ;
+	c->vec->setStickyEnd ( true , false , "" ) ;
+	c->vec->setStickyEnd ( false , false , "" ) ;
+	c->cSequence->findID("DNA")->initFromTVector ( c->vec ) ;
+	c->updateSequenceCanvas ( false ) ;
 	}    
 
 void SequenceCanvas::OnStrandNewBoth(wxCommandEvent& event)
 	{
+	OnStrandNew53 ( event ) ;
+	OnStrandNew35 ( event ) ;
 	}    
 
 
