@@ -1375,13 +1375,9 @@ wxString MyFrame::check4update ()
   wxString text ;
   
 #ifdef __WXMSW__
-	HTTPRequest req;
-	int rtn = SendHTTP("http://gentle.magnusmanske.de/currentversion.txt",NULL,NULL,0,&req);
-	if ( !rtn )
-		{
-		text = req.message ;
-		error = false ;
-		}
+	myExternal ex ;
+	text = ex.getText ( "http://gentle.magnusmanske.de/currentversion.txt" ) ;
+	if ( text != "" ) error = false ;
 
 #endif
     
@@ -1441,66 +1437,19 @@ wxString MyFrame::check4update ()
 void MyFrame::update2version ( wxString ver )
     {
     wxString do_run ;
-	HTTPRequest req;
-    wxProgressDialog pd ( "Updating..." , "Downloading installer..." , 2 , NULL , wxPD_ALL ) ;
-	int rtn = SendHTTP("http://gentle.magnusmanske.de/GENtleSetup.exe",NULL,NULL,0,&req);
-	if ( !rtn )
-	   {
-	   pd.Update ( 2 , "" ) ;
-//       unsigned char *uc = new unsigned char [ uv.size() ] ;
-//       for ( int u = 0 ; u < uv.size() ; u++ ) uc[u] = uv[u] ; // __WXMSW__
-       do_run = myapp()->homedir + "\\GENtleSetup.exe" ;
-       wxFile out ( do_run , wxFile::write ) ;
-       out.Write ( req.message , req.messageLength ) ;
-       out.Close () ;
-//       do_run = "\"" + do_run + "\" /D=\"" ;
-       do_run = "\"" + do_run + "\" /S /D=\"" ;
-       do_run += myapp()->homedir ;
-       do_run += "\"" ;
-       }
-    else
-       {
-       wxMessageBox ( "Couldn't read setup file" ) ;
-       return ;
-       }
-    
-        
-/*  // Deactivating wx update system while wxHTTP bug persists
-    wxString do_run ;
-    wxFileSystem fs ;
-    wxFSFile *f = fs.OpenFile ( "http://gentle.magnusmanske.de/GENtleSetup.exe" ) ;
-    if ( f )
-       {
-       unsigned char tmp[10000] ;
-       wxInputStream *in = f->GetStream () ;
-       vector <unsigned char> uv ;
-       while ( !in->Eof() )
-          {
-          in->Read ( tmp , 10000 ) ;
-          int max = in->LastRead() ;
-          for ( int w = 0 ; w < max ; w++ ) uv.push_back ( tmp[w] ) ;
-          }
-       delete in ;
-       unsigned char *uc = new unsigned char [ uv.size() ] ;
-       for ( int u = 0 ; u < uv.size() ; u++ ) uc[u] = uv[u] ; // __WXMSW__
-       do_run = myapp()->homedir + "\\GENtleSetup.exe" ;
-       wxFile out ( do_run , wxFile::write ) ;
-       out.Write ( uc , uv.size() ) ;
-       out.Close () ;
-       delete uc ;
-//       do_run = "\"" + do_run + "\" /D=\"" ;
-       do_run = "\"" + do_run + "\" /S /D=\"" ;
-       do_run += myapp()->homedir ;
-       do_run += "\"" ;
-       }
-    else
-       {
-       wxMessageBox ( "Couldn't read setup file" ) ;
-       return ;
-       }
-*/       
-    if ( do_run.IsEmpty() ) return ;    
-    
+    wxProgressDialog pd ( "Updating..." , "Downloading installer..." , 2 , NULL , 0 ) ;
+    myExternal ex ;
+    ex.pd = &pd ;
+    do_run = myapp()->homedir + "\\GENtleSetup.exe" ;
+    if ( ex.copyFile ( "http://gentle.magnusmanske.de/GENtleSetup.exe" , do_run ) > 0 )
+    	{
+        wxMessageBox ( "Couldn't read setup file" ) ;
+        return ;
+    	}    
+
+    do_run = "\"" + do_run + "\" /S /D=\"" ;
+    do_run += myapp()->homedir ;
+    do_run += "\"" ;
     LS->setOption ( "LAST_UPDATE" , ver ) ;
 	dying = true ;
     if ( 0 == wxExecute ( do_run , wxEXEC_ASYNC ) ) return ; // 0 means the process couldn't start :-(
