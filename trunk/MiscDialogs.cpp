@@ -564,7 +564,7 @@ ProgramOptionsDialog::ProgramOptionsDialog(wxWindow *parent, const wxString& tit
     GetClientSize ( &w , &h ) ;
     
     wxStaticText *st ;
-    st = new wxStaticText ( this , -1 , "Language" , wxPoint ( bo , lh ) ) ;
+    st = new wxStaticText ( this , -1 , txt("t_language") , wxPoint ( bo , lh ) ) ;
     wxRect r1 = st->GetRect() ;
     
     int mw = r1.GetRight() ;
