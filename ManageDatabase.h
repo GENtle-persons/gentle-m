@@ -62,6 +62,8 @@ class TManageDatabaseDialog : public wxDialog
     virtual void pmOnFilterDNA ( wxCommandEvent &ev ) ;
     virtual void pmOnFilterProtein ( wxCommandEvent &ev ) ;
     virtual void pmOnFilterPrimer ( wxCommandEvent &ev ) ;
+    virtual void pmOnFilterDesc ( wxCommandEvent &ev ) ;
+    virtual void pmOnFilterSeq ( wxCommandEvent &ev ) ;
     virtual void pmOnTwoPanes ( wxCommandEvent &ev ) ;
     
     virtual bool do_copy ( string name , string sdb , string tdb ) ;
@@ -119,6 +121,7 @@ class TManageDatabaseDialog : public wxDialog
     string filter ;
     wxTextCtrl *filter_txt ;
     wxCheckBox *f_dna , *f_prot , *f_primer , *f_twopanes ;
+    wxCheckBox *f_desc , *f_seq ;
     
     DECLARE_EVENT_TABLE()
     } ;

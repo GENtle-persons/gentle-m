@@ -19,6 +19,8 @@ BEGIN_EVENT_TABLE(TManageDatabaseDialog, wxDialog )
     EVT_CHECKBOX(MD_PM_FILTER_PROTEIN,TManageDatabaseDialog::pmOnFilterProtein)
     EVT_CHECKBOX(MD_PM_FILTER_PRIMER,TManageDatabaseDialog::pmOnFilterPrimer)
     EVT_CHECKBOX(MD_PM_TWOPANES,TManageDatabaseDialog::pmOnTwoPanes)
+    EVT_CHECKBOX(MD_PM_FILTER_DESC,TManageDatabaseDialog::pmOnFilterDesc)
+    EVT_CHECKBOX(MD_PM_FILTER_SEQ,TManageDatabaseDialog::pmOnFilterSeq)
     
     EVT_TEXT(MD_PM_FILTER,TManageDatabaseDialog::pmOnFilter)
 
@@ -154,6 +156,11 @@ void TManageDatabaseDialog::initCopynMove ()
        f_prot = new wxCheckBox ( p , MD_PM_FILTER_PROTEIN , txt("protein") , wxPoint ( r.GetRight() + bo , bo*2 ) ) ;
        r = f_prot->GetRect() ;
        f_primer = new wxCheckBox ( p , MD_PM_FILTER_PRIMER , txt("primers") , wxPoint ( r.GetRight() + bo , bo*2 ) ) ;
+       r = f_dna->GetRect() ;
+       f_desc = new wxCheckBox ( p , MD_PM_FILTER_DESC , txt("desc") , wxPoint ( r.GetLeft() , bo*2 + th ) ) ;
+       r = f_desc->GetRect() ;
+       f_seq = new wxCheckBox ( p , MD_PM_FILTER_SEQ , txt("sequences") , wxPoint ( r.GetRight() + bo , bo*2 + th ) ) ;
+       f_desc->SetValue ( 1 ) ;
        }
     
 
@@ -200,6 +207,7 @@ void TManageDatabaseDialog::updateTwoLists ()
         pm_left->SetSize ( wxSize ( w/2-bo*2 , h-th*4-bo ) ) ;
         pm_right->Show () ;
         pm_dd_r->Show () ;
+        pm_list_items ( PM_RIGHT ) ;
         }
     else
         {
@@ -257,6 +265,7 @@ void TManageDatabaseDialog::pm_list_items ( int x )
         c = pm_dd_r ;
         l = pm_right ;
         }
+    if ( !l->IsShown() ) return ; // No need to load data for a list that isn't visible
     string name = c->GetStringSelection().c_str() ;
     TStorage st ( TEMP_STORAGE , getFileName ( name ) ) ;
     
@@ -286,7 +295,12 @@ void TManageDatabaseDialog::pm_list_items ( int x )
               if ( vf[a] != "" )
                  {
                  if ( sql2 != "" ) sql2 += " AND" ;
-                 sql2 += " dna_name LIKE \"%" + vf[a] + "%\"" ;
+                 sql2 += " (dna_name LIKE \"%" + vf[a] + "%\"" ;
+                 if ( f_desc->GetValue() )
+                    sql2 += " OR dna_description LIKE \"%" + vf[a] + "%\"" ;
+                 if ( f_seq->GetValue() )
+                    sql2 += " OR dna_sequence LIKE \"%" + vf[a] + "%\"" ;
+                 sql2 += ")" ;
                  }
               }
            if ( f_dna->GetValue() )
@@ -1287,6 +1301,18 @@ void TManageDatabaseDialog::pmOnFilterProtein ( wxCommandEvent &ev )
     }
 
 void TManageDatabaseDialog::pmOnFilterPrimer ( wxCommandEvent &ev )
+    {
+    pm_list_items ( PM_LEFT ) ;
+    pm_list_items ( PM_RIGHT ) ;    
+    }
+    
+void TManageDatabaseDialog::pmOnFilterDesc ( wxCommandEvent &ev )
+    {
+    pm_list_items ( PM_LEFT ) ;
+    pm_list_items ( PM_RIGHT ) ;    
+    }
+    
+void TManageDatabaseDialog::pmOnFilterSeq ( wxCommandEvent &ev )
     {
     pm_list_items ( PM_LEFT ) ;
     pm_list_items ( PM_RIGHT ) ;    
