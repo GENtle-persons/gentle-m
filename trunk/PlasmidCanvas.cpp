@@ -222,7 +222,7 @@ void PlasmidCanvas::OnCopyImage ( wxCommandEvent &ev )
 
 wxString PlasmidCanvas::getSelection()
     {
-    if ( !p || !p->cSequence || p->cSequence->getEditMode() || p->def != "DNA" ) return "" ;
+    if ( !p || !p->cSequence || p->cSequence->getEditMode() || p->def != "dna" ) return "" ;
     return p->cSequence->getSelection() ;
 //    if ( getMarkFrom() == -1 ) return "" ;
 //    return p->vec->getSubstring ( getMarkFrom() , getMarkTo() ) ;
