@@ -39,7 +39,7 @@ void SeqFeature::show ( wxDC& dc )
             {
             if ( can->hardstop > -1 && a > can->hardstop ) break ;
             b = pcnt+1 ;//pos.p[a] ;
-            if ( a == 0 || ( a > 0 && pos.r[a].GetTop() != pos.r[a-1].GetTop() ) ) b = -1 ;
+            if ( a == 0 || ( a > 0 && pos.r[a].y != pos.r[a-1].y ) ) b = -1 ;
             else pcnt++ ;
             int tx = pos.r[a].x , ty = pos.r[a].y ;
             int tz = ty + can->charheight ;

@@ -111,18 +111,20 @@ int SeqRestriction::arrange ( int n )
     
     can->MyGetClientSize ( &w , &h ) ;
 
-    int itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx - 1 ) * can->blocksize ;
+    itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx - 1 ) * can->blocksize ;
 
     pos.cleanup() ;
-    pos.reserve ( vec->getSequenceLength() , 0 , true ) ;
+    bool direct = useDirectRoutines() ;
+    if ( !direct ) pos.reserve ( vec->getSequenceLength() , 0 , true ) ;
     x = ox ;
     y = oy ;
 
-    int icnt = 0 ;
+    int icnt = 0 , rcnt = 0 ;
     for ( a = 0 ; a < vec->getSequenceLength() ; a++ )
         {
         icnt++ ;
-        pos.add ( a+1 , x , y , wx-1 , wy-1 , true ) ;
+        rcnt++ ;
+        if ( !direct ) pos.add ( a+1 , x , y , wx-1 , wy-1 , true ) ;
         lowy = y+wy ;
         x += wx ;
         if ( (a+1) % can->blocksize == 0 )
@@ -131,7 +133,7 @@ int SeqRestriction::arrange ( int n )
            if ( icnt == itemsperline )
               {
               icnt = 0 ;
-              lasta = pos.r.size()+1 ;
+              lasta = rcnt + 1 ; //pos.r.size()+1 ;
               x = ox ;
               y += wy * ( can->seq.GetCount() + can->blankline ) ;
               }
@@ -151,6 +153,12 @@ void SeqRestriction::show ( wxDC& dc )
     ya = -ya ;
     can->MyGetClientSize ( &xa , &yb ) ;
     yb += ya ;
+    int n , csgc = can->NumberOfLines() , cbs = can->blocksize , bo = can->border ;
+    for ( n = 0 ; n < csgc && can->seq[n] != this ; n++ ) ;
+    int cw = can->charwidth , ch = can->charheight ;
+    int ox = bo + cw + cw * endnumberlength ;
+    int oy = n*ch+bo ;
+    bool direct = useDirectRoutines() ;
     for ( int level = 0 ; level < pl.maxlevels ; level++ )
         {
         int a , b , cut ;
@@ -178,13 +186,24 @@ void SeqRestriction::show ( wxDC& dc )
            dc.SetTextForeground ( *wxBLACK ) ; 
            }
         int qlx = -1 , idx ;
+        wxRect ra , rb ;
         for ( a = 0 ; a < vec->getSequenceLength() /*pos.p.GetCount()*/ ; a++ )
             {
             if ( can->hardstop > -1 && a > can->hardstop ) break ;
             char c = ' ' ;
-//            b = pos.p[a] ;
             b = a + 1 ;
-            int tx = pos.r[a].x , ty = pos.r[a].y ;
+            
+            if ( direct )
+               {
+               int px = a % itemsperline , py = a / itemsperline ;
+               px = px * cw + ( px / cbs ) * ( cw - 1 ) + ox ;
+               py = py * ch * csgc + oy ;
+               ra = wxRect ( px , py , cw , ch ) ;
+               }    
+            else ra = getRect ( a ) ;
+                    
+            
+            int tx = ra.x , ty = ra.y ;
             int tz = ty + can->charheight ;
             
             bool insight = true ; // Meaning "is this part visible"
@@ -206,42 +225,42 @@ void SeqRestriction::show ( wxDC& dc )
                if ( b-1 == ol ) c2 = '|' ; 
                else if ( b == ol ) c2 = '#' ; 
                               
-               if ( qlx == -1 ) qlx = pos.r[a].GetLeft() ;
-               int lx = pos.r[a].GetLeft() ;
-               int x = ( lx + pos.r[a].GetRight() ) / 2 ;
-               int bt = pos.r[a].GetTop() + yo ;
-               if ( down ) bt = pos.r[a].GetBottom() + yo ;
-               int y = ( pos.r[a].GetTop() + pos.r[a].GetBottom() ) / 2 + yo ;
-               if ( lc != ' ' && ly == y ) lx = pos.r[a-1].GetRight() ;
+               if ( qlx == -1 ) qlx = ra.x ;
+               int lx = ra.x ;
+               int x = ( lx + ra.GetRight() ) / 2 ;
+               int bt = ra.y + yo ;
+               if ( down ) bt = ( ra.y + ra.height ) + yo ;
+               int y = ( ra.y + ( ra.y + ra.height ) ) / 2 + yo ;
+               if ( lc != ' ' && ly == y ) lx = rb.GetRight() ;
                
                if ( c == '-' )
                   {
-                  if ( c2 == ' ' ) dc.DrawLine ( lx , y , pos.r[a].GetRight() , y ) ;
+                  if ( c2 == ' ' ) dc.DrawLine ( lx , y , ra.GetRight() , y ) ;
                   }
                else if ( c == '#' )
                   {
                   if ( lx < x ) dc.DrawLine ( lx , y , x , y ) ;
-                  dc.DrawLine ( x , y , pos.r[a].GetRight() , bt ) ;
+                  dc.DrawLine ( x , y , ra.GetRight() , bt ) ;
                   }
                else if ( c == '|' )
                   {
                   if ( lx < x ) dc.DrawLine ( lx , bt , x , y ) ;
-                  if ( c2 != '#' ) dc.DrawLine ( x , y , pos.r[a].GetRight() , y ) ;
+                  if ( c2 != '#' ) dc.DrawLine ( x , y , ra.GetRight() , y ) ;
                   }
 
                if ( c2 == '#' )
                   {
                   if ( lx < x && lc != '#' ) dc.DrawLine ( lx , y , x , y ) ;
-                  dc.DrawLine ( x , y , pos.r[a].GetRight() , y + ( y - bt ) ) ;
+                  dc.DrawLine ( x , y , ra.GetRight() , y + ( y - bt ) ) ;
                   }
                else if ( c2 == '|' )
                   {
                   if ( lx < x ) dc.DrawLine ( lx , y + ( y - bt ) , x , y ) ;
-                  dc.DrawLine ( x , y , pos.r[a].GetRight() , y ) ;
+                  dc.DrawLine ( x , y , ra.GetRight() , y ) ;
                   }
                   
                   
-               llx = pos.r[a].GetRight() ;
+               llx = ra.GetRight() ;
                ly = y ;
                qlx = x ;
                if ( b == pl.getTo ( idx ) )
@@ -250,8 +269,9 @@ void SeqRestriction::show ( wxDC& dc )
                   else dc.DrawText ( rc->e->name , llx , ly ) ;
                   }
                }
+            rb = ra ;
             lc = c ;
-            if ( !can->getDrawAll() && pos.r[a].GetTop() > yb ) a = vec->getSequenceLength() ;//pos.p.GetCount() ;
+            if ( !can->getDrawAll() && ra.y > yb ) a = vec->getSequenceLength() ;//pos.p.GetCount() ;
             }
         }
     dc.SetTextForeground ( wxColor ( *wxBLACK ) ) ;
@@ -260,7 +280,12 @@ void SeqRestriction::show ( wxDC& dc )
 void SeqRestriction::initFromTVector ( TVector *v )
     {
     vec = v ;
-    s = vec->getSequence() ;
+//    s = vec->getSequence() ;
     down = false ;
     }
-    
+
+bool SeqRestriction::useDirectRoutines ()
+    {
+    return true ;
+    }
+        

@@ -39,7 +39,6 @@ class SequencePartList
     vector <wxArrayInt> vl2 ;
     } ;    
     
-    
 // SeqPos manages the positions of all items for a single "type" (e.g., DNA)
 // The vectors p, r and m are always the same size, and contain information
 //   about the same item at the same index:
@@ -58,7 +57,8 @@ class SeqPos
     public :
     wxArrayInt p ;
     wxString m ;
-    vector <wxRect> r , l ;
+    vector <wxRect> r ;
+    vector <wxRect> l ;
     
     virtual void cleanup () ;
     virtual void add ( int np , int x , int y , int w , int h , bool memsave = false ) ;
@@ -70,6 +70,7 @@ class SeqPos
     virtual void mark ( int where , int value ) ;
     virtual int getmark ( int where ) ;
     
+    private :
     wxArrayInt mark_from , mark_to ;
     int mark_value ;
     } ;
@@ -99,10 +100,11 @@ class SeqBasic
     virtual int getLine ( int y ) { return pos.getLine ( y ) ; }
     virtual int getItem ( wxPoint pt , int line ) { return pos.getItem ( pt , line ) ; }
     virtual bool isDisplayOnly () { return false ; }
+    virtual void logsize () ;
     
     // Variables
     wxString s ;
-    int offset , endnumberlength ;
+    int offset , endnumberlength , itemsperline ;
     SequenceCanvas *can ;
     bool takesMouseActions , shown ;
     
@@ -132,9 +134,6 @@ class SeqDivider : public SeqBasic
     virtual int  arrange ( int n ) ;
     virtual void show ( wxDC& dc ) ;
     virtual bool isDisplayOnly () { return true ; }
-    
-    // Variables
-    int itemsperline ;
     } ;
     
 class SeqBlank : public SeqDivider
@@ -173,7 +172,6 @@ class SeqDNA : public SeqBasic
         
     // Variables
     TVector *vec ;
-    int itemsperline ;
     bool showNumbers ;
     wxColour fontColor ;
     wxString alternateName ;
@@ -210,7 +208,6 @@ class SeqAlign : public SeqBasic
     
     // Variables
     wxString myname ;
-    int itemsperline ;
     int id ;
     } ;
 
@@ -223,6 +220,7 @@ class SeqRestriction : public SeqBasic
     virtual void initFromTVector ( TVector *v ) ;
     virtual wxString whatsthis () { return "RESTRICTION" ; }
     virtual bool isDisplayOnly () { return true ; }
+    virtual bool useDirectRoutines () ;
     
     // Variables
     TVector *vec ;
@@ -264,7 +262,6 @@ class SeqAA : public SeqBasic
     
     // Variables
     TVector *vec ;
-    int itemsperline ;
     int mode , disp ;
     bool primaryMode , showNumbers ;
     char unknownAA ;
