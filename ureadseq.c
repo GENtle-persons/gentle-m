@@ -89,6 +89,7 @@ const char nonummask[11] = "~!@#$%^&*(";
 
 
                           /* Local variables for readSeq: */
+/// Part of the ClustalW package
 struct ReadSeqVars {
   short choice, err, nseq;
   long  seqlen, maxseq, seqlencount;

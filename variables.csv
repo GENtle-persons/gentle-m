@@ -321,7 +321,7 @@
 "t_orf_extracted","Extracted via ORF","Extracted via ORF"
 "p_dna_sequence","DNA sequence","DNS-Sequenz"
 "p_aa_sequence","Amino acid sequence","Aminosäuresequenz"
-"p_selection","Selection","Auswahl"
+"p_selection","Selection","Markierung"
 "p_item_blast_dna","BLAST DNA","BLAST DNS"
 "p_item_blast_aa","BLAST aminio acids","BLAST Aminosäuren"
 "p_item_as_new_aa_entry","As new entry","Als neuen Eintrag"

@@ -80,6 +80,7 @@ typedef char  boolean;
 #define kPhylipSequential 62
 
 
+/// Part of the ClustalW package
 typedef struct  {
   boolean isactive, baseonlynum;
   boolean numright, numleft, numtop, numbot;

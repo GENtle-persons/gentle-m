@@ -2,9 +2,13 @@
 Bugs :
 * Optimierung Überhang-Primer?
 * Bericht drucken : lange Zeilen in Vektor-Beschreibung umbrechen
-* ABSTURZ Ausblenden Restriktionsenzym
 
 Feature Requests :
+PCR-Sequenzen 5'/3' Richtung benennen
+Primer-Bearbeiten-Dialog : Spalten klicken => sortieren
+Primer an Enden von linearen Stücken matchen nicht
+Primer-Statistik-Daten im DNA-Modul anzeigen lassen
+
 
 Homology Plot
 Export plot data

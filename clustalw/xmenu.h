@@ -34,11 +34,14 @@
 #define LANDSCAPE 0
 
 #define MAXFINDSTR 20
+
+/// Part of the ClustalW package
 typedef struct aln_pos {
 	int seq;
 	int res;
 } aln_pos;
 
+/// Part of the ClustalW package
 typedef struct menu_item {
 	int num;
 	IteM i[MAXMENU];
@@ -46,6 +49,7 @@ typedef struct menu_item {
 	char ptr[MAXMENU];
 } menu_item;
 
+/// Part of the ClustalW package
 typedef struct color {
 	char name[20];
 	Uint4 val;
@@ -56,6 +60,7 @@ typedef struct color {
 #define NAMES 0
 #define SEQS 1
 
+/// Part of the ClustalW package
 typedef struct panel_data {
 	int type;                  /* = NAMES or SEQS */
 	PaneL index;
@@ -91,12 +96,14 @@ typedef struct panel_data {
 	short **segment_exception;
 } panel_data;
 
+/// Part of the ClustalW package
 typedef struct spanel {
         PaneL names;
         PaneL seqs;
 	Boolean modified;
 } spanel;
 
+/// Part of the ClustalW package
 typedef struct range {
         int first;
         int last;

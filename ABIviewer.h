@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the TABIviewer class
+*/
 #ifndef _ABI_VIEWER_H_
 #define _ABI_VIEWER_H_
 
@@ -7,50 +10,53 @@
 
 class TVector ;
 
+/**	\class TGridBasic
+	\brief The ABI (sequencer data) viewer module class
+*/
 class TABIviewer : public ChildBase
     {
     public :
-    TABIviewer(wxWindow *parent, const wxString& title) ;
-    virtual ~TABIviewer () ;
+    TABIviewer(wxWindow *parent, const wxString& title) ; ///< Constructor
+    virtual ~TABIviewer () ; ///< Destructor
     
-    virtual void initme () ;
-    virtual wxString getName () ;
-    virtual void showSequence () ;
-    virtual wxString getStat () ;
-    virtual void showStat () ;
+    virtual void initme () ; ///< Initialization
+    virtual wxString getName () ; ///< Returns the module name
+    virtual void showSequence () ; ///< Show/refresh the sequence
+    virtual wxString getStat () ; ///< Get statistics as a wxString
+    virtual void showStat () ; ///< Show the statistics
     
-    virtual void OnMarkAll(wxCommandEvent& event);
-    virtual void OnFileSave(wxCommandEvent& event);
-    virtual void OnFind(wxCommandEvent& event);
-    virtual void OnCopy(wxCommandEvent& event);
-    virtual void OnCopyToNew(wxCommandEvent& event);
-    virtual void OnEditMode(wxCommandEvent& event);
-    virtual void OnEditName(wxCommandEvent& event);
-    virtual void OnSeqPrint(wxCommandEvent& event);
-    virtual void OnHelplines(wxCommandEvent& event);
-    virtual void OnInvCompl(wxCommandEvent& event);
-    virtual void OnSpinWidth(wxSpinEvent& event);
-    virtual void OnSpinHeight(wxSpinEvent& event);
-    virtual void OnZoom(wxScrollEvent& event);
-    virtual void OnHorizontal(wxCommandEvent& event);
-    virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){};
+    virtual void OnMarkAll(wxCommandEvent& event); ///< Ctrl-A event handler
+    virtual void OnFileSave(wxCommandEvent& event); ///< Save-as event handler
+    virtual void OnFind(wxCommandEvent& event); ///< Find event handler
+    virtual void OnCopy(wxCommandEvent& event); ///< Copy event handler
+    virtual void OnCopyToNew(wxCommandEvent& event); ///< Copy-to-new event handler
+    virtual void OnEditMode(wxCommandEvent& event); ///< Edit mode event handler
+    virtual void OnEditName(wxCommandEvent& event);// Edit name event handler
+    virtual void OnSeqPrint(wxCommandEvent& event); ///< Print sequence event handler
+    virtual void OnHelplines(wxCommandEvent& event); ///< Grey helper lines event handler
+    virtual void OnInvCompl(wxCommandEvent& event); ///< Invers/complement event handler
+    virtual void OnSpinWidth(wxSpinEvent& event); ///< Peak width event handler
+    virtual void OnSpinHeight(wxSpinEvent& event); ///< Peak height event handler
+    virtual void OnZoom(wxScrollEvent& event); ///< Zoom event handler
+    virtual void OnHorizontal(wxCommandEvent& event); ///< Horizontal mode event handler
+    virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler
 
     // Variables
-    SequenceCanvas *sc ;
+    SequenceCanvas *sc ; ///< Pointer to the sequence canvas structure
 
     private :
     friend class MyFrame ;
-    virtual void spinHeight() ;
+    virtual void spinHeight() ; ///< Sets the height spin box
     
     // Variables
-    wxTextCtrl *stat ;
-    wxPanel *up ;
-    wxSplitterWindow *hs ;
+    wxTextCtrl *stat ; ///< Pointer to statistics text box
+    wxPanel *up ; ///< Pointer to the upper panel
+    wxSplitterWindow *hs ; ///< Pointer to the split window
     int from , oldh ;
-    wxString filename ;
+    wxString filename ; ///< The name of the imported file
     wxCheckBox *aidLines , *inv_compl ;
     wxSpinCtrl *f_height , *f_width ;
-    wxSlider *slider ;
+    wxSlider *slider ; ///< Pointer to the slider structure
     
     DECLARE_EVENT_TABLE()
     } ;

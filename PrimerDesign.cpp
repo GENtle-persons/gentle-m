@@ -138,6 +138,7 @@ void TPrimerDesign::OnExportPrimer ( wxCommandEvent &ev )
     if ( primer[lastPrimerActivated].upper ) v->addName ( "-5'" ) ;
     else v->addName ( "-3'" ) ;
     v->setType ( TYPE_PRIMER ) ;
+    v->setDescription ( primer[lastPrimerActivated].report() ) ;
     myapp()->frame->newFromVector ( v , TYPE_PRIMER ) ;
     }
 

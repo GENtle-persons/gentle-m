@@ -91,6 +91,7 @@
 #define GAPCOL 32		/* position of gap open penalty in profile */
 #define LENCOL 33		/* position of gap extension penalty in profile */
 
+/// Part of the ClustalW package
 typedef struct node {		/* phylogenetic tree structure */
         struct node *left;
         struct node *right;
@@ -101,11 +102,13 @@ typedef struct node {		/* phylogenetic tree structure */
         char name[64];
 } stree, *treeptr;
 
+/// Part of the ClustalW package
 typedef struct {
 	char title[30];
 	char string[30];
 } MatMenuEntry;
 
+/// Part of the ClustalW package
 typedef struct {
 	int noptions;
 	MatMenuEntry opt[10];
@@ -113,6 +116,7 @@ typedef struct {
 
 #define MAXMAT 10
 
+/// Part of the ClustalW package
 typedef struct {
 	int llimit;	
 	int ulimit;
@@ -120,6 +124,7 @@ typedef struct {
 	short *aa_xref;
 } SeriesMat;
 
+/// Part of the ClustalW package
 typedef struct {
 	int nmat;
 	SeriesMat mat[MAXMAT];
