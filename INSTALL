@@ -1,0 +1,15 @@
+GENtle install hints
+
+COMMON:
+
+Good luck! You'll need it...
+
+WINDOWS:
+
+You can use Dev-C++ as development environment. ".dev" files are
+included in the source. You'll need the latest wxWindows package (look
+on the wxWindows site rather than the Dev-C++ site).
+
+LINUX:
+Install wxGTK. Within there, create a subdirectory (e.g, "Mine"). In
+there, you checkout the cvs (e.g., in "GENtle").
