@@ -246,6 +246,7 @@ enum {
     RSE_RES_LL,
     RSE_RES_OK,
     RSE_RES_RB,
+    SPD_DB,
     SEQ_BOTTOM,
     SEQ_COPY_AS,
     SEQ_COPY_IMAGE,

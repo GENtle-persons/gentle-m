@@ -24,6 +24,7 @@ END_EVENT_TABLE()
 BEGIN_EVENT_TABLE(TSequencingPrimerDialog, wxDialog )
     EVT_BUTTON(ED_OK,wxDialog::OnOK)
     EVT_BUTTON(ED_CANCEL,wxDialog::OnCancel)
+    EVT_CHOICE(SPD_DB,TSequencingPrimerDialog::OnDB)
     EVT_CHAR_HOOK(TSequencingPrimerDialog::OnCharHook)
 END_EVENT_TABLE()
 
@@ -45,18 +46,23 @@ TSequencingPrimerDialog::TSequencingPrimerDialog (wxWindow *parent, const wxStri
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *h1a = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *h2a = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *h3 = new wxBoxSizer ( wxHORIZONTAL ) ;
     
     wxString defdb = myapp()->frame->LS->getOption ( "SEQUENCINGPRIMER_DB" , myapp()->frame->LS->getDefaultDB() ) ;
+    wxString defpj = myapp()->frame->LS->getOption ( "SEQUENCINGPRIMER_PJ" , "" ) ;
     bool usedb = myapp()->frame->LS->getOption ( "SEQUENCINGPRIMER_USE_DB" , true ) ;
+    bool usepj = myapp()->frame->LS->getOption ( "SEQUENCINGPRIMER_USE_PJ" , false ) ;
     int ml = myapp()->frame->LS->getOption ( "SEQUENCINGPRIMER_MIN_ALIGNMENT" , 20 ) ;
     
-    t_ma = new wxTextCtrl ( this , -1 , wxString::Format ( "%d" , ml ) ) ;
-    h0->Add ( new wxStaticText ( this , -1 , txt("t_minimum_alignment") ) , 0 , wxEXPAND ) ;    
-    h0->Add ( t_ma , 0 , wxEXPAND ) ;
-    h0->Add ( new wxStaticText ( this , -1 , "bp" ) , 0 , wxEXPAND ) ;
+    t_ma = new wxSpinCtrl ( this , -1 , wxString::Format ( "%d" , ml ) , wxDefaultPosition , wxSize ( 30 , 20 ) ) ;
+    h0->Add ( new wxStaticText ( this , -1 , txt("t_minimum_alignment") ) , 0 , wxALIGN_CENTER_VERTICAL ) ;    
+    h0->Add ( t_ma , 0 , wxALL|wxALIGN_CENTER_VERTICAL , 5 ) ;
+    h0->Add ( new wxStaticText ( this , -1 , "bp" ) , 0 , wxALIGN_CENTER_VERTICAL ) ;
     
-    c_db = new wxChoice ( this , -1 ) ;
+    c_db = new wxChoice ( this , SPD_DB ) ;
     cb_db = new wxCheckBox ( this , -1 , txt("t_use_this_database") ) ;
     h1->Add ( cb_db , 0 , wxEXPAND ) ;
     h1->Add ( c_db , 0 , wxEXPAND ) ;
@@ -67,18 +73,56 @@ TSequencingPrimerDialog::TSequencingPrimerDialog (wxWindow *parent, const wxStri
     cb_db->SetValue ( usedb ) ;
     c_db->SetStringSelection ( defdb ) ;
     
-    h2->Add ( new wxButton ( this , ED_OK , txt("b_ok") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-    h2->Add ( new wxButton ( this , ED_CANCEL , txt("b_cancel") ) , 0 , wxEXPAND|wxALL , 5 ) ;
+    c_pj = new wxChoice ( this , -1 ) ;
+    cb_pj = new wxCheckBox ( this , -1 , txt("t_use_this_project") ) ;
+    h1a->Add ( cb_pj , 0 , wxEXPAND ) ;
+    h1a->Add ( c_pj , 0 , wxEXPAND ) ;
     
-    v0->Add ( h0 , 0 , wxEXPAND|wxALL , 5 ) ;
+    wxCommandEvent ev ;
+    OnDB ( ev ) ;
+    c_pj->SetStringSelection ( defpj ) ;
+    cb_pj->SetValue ( usepj ) ;
+    
+    cb_clear = new wxCheckBox ( this , -1 , txt("t_clear_old_sp") ) ;
+    h2->Add ( cb_clear , 0 , wxEXPAND ) ;
+    
+    cb_35 = new wxCheckBox ( this , -1 , txt("t_3_5") ) ;
+    cb_53 = new wxCheckBox ( this , -1 , txt("t_5_3") ) ;
+    h2a->Add ( new wxStaticText ( this , -1 , txt("t_find_primers") ) , 0 , wxRIGHT , 5 ) ;
+    h2a->Add ( cb_53 , 0 , wxEXPAND ) ; // -->
+    h2a->Add ( cb_35 , 0 , wxEXPAND ) ; // <--
+    
+    cb_clear->SetValue ( TRUE ) ;
+    cb_35->SetValue ( TRUE ) ;
+    cb_53->SetValue ( TRUE ) ;
+    
+    h3->Add ( new wxButton ( this , ED_OK , txt("b_ok") ) , 0 , wxEXPAND|wxALL , 5 ) ;
+    h3->Add ( new wxButton ( this , ED_CANCEL , txt("b_cancel") ) , 0 , wxEXPAND|wxALL , 5 ) ;
+    
+    v0->Add ( h0 , 0 , wxALL , 5 ) ;
     v0->Add ( h1 , 0 , wxEXPAND|wxALL , 5 ) ;
-    v0->Add ( h2 , 0 , wxEXPAND|wxALL|wxALIGN_CENTER_VERTICAL , 5 ) ;
+    v0->Add ( h1a , 0 , wxEXPAND|wxALL , 5 ) ;
+    v0->Add ( h2a , 0 , wxEXPAND|wxALL , 5 ) ;
+    v0->Add ( h2 , 0 , wxEXPAND|wxALL , 5 ) ;
+    v0->Add ( h3 , 0 , wxEXPAND|wxALL|wxALIGN_CENTER_VERTICAL , 5 ) ;
     
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;    
     
     Center () ;
     }
+    
+void TSequencingPrimerDialog::OnDB ( wxCommandEvent& event )
+	{
+	c_pj->Clear() ;
+	if ( !cb_db->GetValue() ) return ;
+//	if ( !cb_pj->GetValue() ) return ;
+	TStorage *db = myapp()->frame->getTempDB ( db_files[c_db->GetSelection()] ) ;
+	wxString sql = "SELECT pr_name FROM project" ;
+	TSQLresult r = db->getObject ( sql ) ;
+	for ( int a = 0 ; a < r.rows() ; a++ )
+		c_pj->Append ( r[a][r["pr_name"]] ) ;
+	}    
 
 void TSequencingPrimerDialog::OnCharHook ( wxKeyEvent& event )
     {
@@ -95,34 +139,61 @@ void TSequencingPrimerDialog::getPrimerList ( wxArrayString &p_name , wxArrayStr
 	p_seq.Clear () ;
 	if ( cb_db->GetValue() )
 		{
+		int a ;
 		TStorage *db = myapp()->frame->getTempDB ( db_files[c_db->GetSelection()] ) ;
 		TSQLresult r ;
-		wxString sql = "SELECT dna_name,dna_sequence FROM dna WHERE dna_type=" + wxString::Format ( "%d" , TYPE_PRIMER ) ;
-		r = db->getObject ( sql ) ;
-		for ( int a = 0 ; a < r.rows() ; a++ )
+		wxString sql ;
+		wxString pj = c_pj->GetStringSelection() ;
+		if ( cb_pj->GetValue() && pj != "" )
 			{
-			p_name.Add ( r[a][r["dna_name"]] ) ;
-			p_seq.Add ( r[a][r["dna_sequence"]] ) ;
-			}    
+			sql = "SELECT * FROM project_dna WHERE pd_project=\"" + pj + "\"" ;
+    		r = db->getObject ( sql ) ;
+    		for ( a = 0 ; a < r.rows() ; a++ )
+    			{
+			    int i = db_names.Index ( r[a][r["pd_database"]] ) ;
+			    if ( i == wxNOT_FOUND ) continue ; // Illegal db
+			    TStorage *db2 = myapp()->frame->getTempDB ( db_files[i] ) ;
+			    if ( !db2 ) continue ; // Strange
+			    sql = "SELECT dna_name,dna_sequence FROM dna WHERE dna_type=" + 
+   						wxString::Format ( "%d" , TYPE_PRIMER ) + " AND dna_name=\"" +
+         				r[a][r["pd_dna"]]  + "\"" ;
+			    TSQLresult r2 = db2->getObject ( sql ) ;
+			    if ( r2.rows() != 1 ) continue ; // Illegal dna query		    
+			    p_name.Add ( r2[0][r2["dna_name"]] ) ;
+			    p_seq.Add ( r2[0][r2["dna_sequence"]] ) ;
+    			}    
+			}
+   		else
+     		{
+ 		    sql = "SELECT dna_name,dna_sequence FROM dna WHERE dna_type=" + 
+       				wxString::Format ( "%d" , TYPE_PRIMER ) ;
+    		r = db->getObject ( sql ) ;
+    		for ( a = 0 ; a < r.rows() ; a++ )
+    			{
+    			p_name.Add ( r[a][r["dna_name"]] ) ;
+    			p_seq.Add ( r[a][r["dna_sequence"]] ) ;
+    			}    
+       		}        
 		}    
-    long ml ;
-    t_ma->GetValue().ToLong ( &ml ) ;
+    long ml = t_ma->GetValue() ;
     myapp()->frame->LS->setOption ( "SEQUENCINGPRIMER_MIN_ALIGNMENT" , ml ) ;
     myapp()->frame->LS->setOption ( "SEQUENCINGPRIMER_DB" , c_db->GetStringSelection() ) ;
+    myapp()->frame->LS->setOption ( "SEQUENCINGPRIMER_PJ" , c_pj->GetStringSelection() ) ;
     myapp()->frame->LS->setOption ( "SEQUENCINGPRIMER_USE_DB" , cb_db->GetValue() ) ;
+    myapp()->frame->LS->setOption ( "SEQUENCINGPRIMER_USE_PJ" , cb_pj->GetValue() ) ;
 	}    
 	
 bool TSequencingPrimerDialog::matchToVector ( TVector *v , wxString name , wxString seq )
 	{
 	bool ret = false ;
-	long ml ; // Minimum length
-    t_ma->GetValue().ToLong ( &ml ) ;
+	long ml = t_ma->GetValue() ; // Minimum length
 	wxString s ;
 	
  	s = v->getSequence() ;
 	if ( v->isCircular() ) s += s.Left ( seq.length() - 1 ) ;
-	int best_pos , best_score ;	
-	best_score = findBestMatch ( s , seq , best_pos , ml ) ;
+	int best_pos , best_score = 0 ;	
+	if ( cb_53->GetValue() )
+		best_score = findBestMatch ( s , seq , best_pos , ml ) ;
 	if ( best_score > 0 )
  		{
  		addSequencingPrimer ( v , name , seq , best_pos , best_score , 1 ) ;
@@ -132,7 +203,9 @@ bool TSequencingPrimerDialog::matchToVector ( TVector *v , wxString name , wxStr
 	// opposite direction
 	s = v->transformSequence ( true , true ) ;
 	if ( v->isCircular() ) s += s.Left ( seq.length() - 1 ) ; // ???
-	best_score = findBestMatch ( s , seq , best_pos , ml ) ;
+	best_score = 0 ;
+	if ( cb_35->GetValue() )
+		best_score = findBestMatch ( s , seq , best_pos , ml ) ;
 	if ( best_score > 0 )
  		{
  		addSequencingPrimer ( v , name , seq , v->getSequenceLength() - best_pos , best_score , -1 ) ;

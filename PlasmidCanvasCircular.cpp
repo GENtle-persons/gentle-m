@@ -455,6 +455,10 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
             
             // Calculating polygon
             vector <wxPoint> p ;
+            
+            if ( i->getParam ( "AUTOMATIC" ) == "SEQUENCING PRIMER" )
+            	dd = ( dt - df ) / 2 ;
+            
             if ( i->direction ==  1 && abs ( dt - df ) > 3 ) 
                 {
                 dt -= dd ;
@@ -473,7 +477,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
                     p.push_back ( wxPoint ( deg2x ( b , r1 ) , deg2y ( b , r1 ) ) ) ;
                     
                     
-            if ( i->direction > 0 || ( i->direction < 0 && abs ( dt - df ) > 3 ) )
+            if ( i->direction != 0 )
             	p.push_back ( wxPoint ( deg2x ( dt+dd*i->direction , (r1+r2)/2 ) , 
              							deg2y ( dt+dd*i->direction , (r1+r2)/2 ) ) ) ;
 

@@ -441,7 +441,7 @@ void TPrimerDesign::initme ()
     
     toolBar->AddSeparator() ;
     
-    spin = new wxSpinCtrl ( toolBar , PCR_SPIN ) ;
+    spin = new wxSpinCtrl ( toolBar , PCR_SPIN , "" , wxDefaultPosition , wxSize ( 20 , 30 ) ) ;
     spin->SetRange ( 1 , vec->getSequenceLength() ) ;
     spin->SetValue ( wxString::Format("%d",vec->getSequenceLength()) ) ;
     toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_pcr_spin_1") ) ) ;

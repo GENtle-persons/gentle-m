@@ -418,7 +418,18 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
            {
            wxCommandEvent dummyEvent ;
            context_last_item = vo ;
+           int o_from = p->cSequence->markedFrom() ;
+           int o_to = p->cSequence->markedTo() ;
            itemMarkShow ( dummyEvent ) ;
+           if ( o_from != -1 && event.ShiftDown() && !p->cSequence->getEditMode() )
+              {
+              if ( p->cSequence->markedFrom() < o_from )
+          	     o_from = p->cSequence->markedFrom() ;
+              if ( p->cSequence->markedTo() > o_to )
+          	     o_to = p->cSequence->markedTo() ;
+     	      wxString id = p->cSequence->seq[p->cSequence->lastmarked]->whatsthis() ;
+     	      p->cSequence->mark ( id , o_from , o_to ) ;
+              }    
            p->cSequence->SetFocus () ;
            }
         }
