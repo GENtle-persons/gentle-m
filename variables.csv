@@ -636,4 +636,4 @@
 "t_add2gel","Add to gel","Zum Gel hinzufügen"
 "t_one_lane_each","One lane each","Eins pro Lane"
 "t_add_all","Add all","Alle hinzufügen"
-"t_gelname_DNA","DNA Agarose gel, %2.0f%%","DNA-Agarose-Gel, %2.0f%%"
+"t_gelname_DNA","DNA Agarose gel, %2.1f%%","DNA-Agarose-Gel, %2.1f%%"

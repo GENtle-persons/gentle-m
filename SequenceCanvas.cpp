@@ -127,7 +127,21 @@ void SequenceCanvas::MyGetClientSize ( int *w , int *h )
     else
        {
        GetClientSize ( w , h ) ;
-       if ( !drawing && isHorizontal() ) *w = 1000000 ;
+       if ( !drawing && isHorizontal() && !isMiniDisplay() ) *w = 1000000 ;
+       }
+    }
+    
+wxSize SequenceCanvas::MyGetClientSize ()
+    {
+    if ( printing )
+       {
+       return print_dc->GetSize () ;
+       }
+    else
+       {
+       wxSize size = GetClientSize () ;
+       if ( isHorizontal() && !isMiniDisplay() ) size.SetWidth ( 1000000 ) ;
+       return size ;
        }
     }
     
@@ -141,20 +155,6 @@ void SequenceCanvas::MyGetSize ( int *w , int *h )
        {
        GetSize ( w , h ) ;
        if ( isHorizontal() ) *w = 1000000 ;
-       }
-    }
-    
-wxSize SequenceCanvas::MyGetClientSize ()
-    {
-    if ( printing )
-       {
-       return print_dc->GetSize () ;
-       }
-    else
-       {
-       wxSize size = GetClientSize () ;
-       if ( isHorizontal() ) size.SetWidth ( 1000000 ) ;
-       return size ;
        }
     }
     
@@ -381,8 +381,11 @@ void SequenceCanvas::editCharPressed ( int k , TVector *v , wxString *the_sequen
     dummy = (char) k ;           
     if ( v )
        {
+       mylog ( "SequenceCanvas::editCharPressed" , "1" ) ;
        v->insert_char ( k , from , doOverwrite() ) ;
+       mylog ( "SequenceCanvas::editCharPressed" , "2" ) ;
        v->recalculateCuts() ;
+       mylog ( "SequenceCanvas::editCharPressed" , "3" ) ;
        }
     else
        {

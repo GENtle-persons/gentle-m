@@ -201,9 +201,11 @@ void TABIviewer::initme ()
     // Upper panel
     Maximize ( true ) ;
     int w , h , th = 20 ;
-    GetClientSize ( &w , &h ) ;
-    up = new wxPanel ( hs , -1 , wxDefaultPosition , wxSize ( w , 90 ) ) ;
-    up->GetClientSize ( &w , &h ) ;
+//    GetClientSize ( &w , &h ) ;
+	myapp()->frame->GetClientSize(&w,&h) ;
+    h = 90 ;
+    up = new wxPanel ( hs , -1 , wxDefaultPosition , wxSize ( w , h ) ) ;
+//    up->GetClientSize ( &w , &h ) ;
     
     hs->SplitHorizontally ( up , sc ,h+bo ) ;
     hs->SetMinimumPaneSize ( h+bo ) ;
@@ -231,10 +233,15 @@ void TABIviewer::initme ()
     new wxStaticText ( up , -1 , txt("t_zoom") , wxPoint ( r.GetRight()+bo , r.GetTop()+2 ) ) ;
     r = inv_compl->GetRect() ;
 
+//    r.x = 0 ;
+//    r.width = 200 ;
+//    h = 100 ;
+//    w = 600 ;
+
     // Statistics box
     stat = new wxTextCtrl ( up ,
                             -1 ,
-                            "" ,
+                            "Test" ,
                             wxPoint ( r.GetRight()+bo , 0 ) ,
                             wxSize ( w - (r.GetRight()+bo) , h ) ,
                             wxTE_MULTILINE | wxTE_READONLY ) ;

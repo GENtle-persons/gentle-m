@@ -143,7 +143,7 @@ void TMyGelControl::OnDraw(wxDC& dc)
     
     // Initialize
     vg->ch_percent->GetStringSelection().ToDouble ( &vg->percent ) ;
-    vg->percent /= 10.0 ;
+//    vg->percent /= 10.0 ;
     
     int a , b ;
     int w , h ;
