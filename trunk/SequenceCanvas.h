@@ -466,6 +466,7 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void stopEdit () ;
     virtual int markedFrom () { return _from ; }
     virtual int markedTo () { return _to ; }
+    virtual void unmark () ;
     virtual int NumberOfLines() { return seq.GetCount() + blankline ; }
 
     ChildBase *child ; // Wanna-be universal com port to "parent"

@@ -405,6 +405,8 @@ void TAminoAcids::OnBlastAA(wxCommandEvent& event)
 void TAminoAcids::Undo(wxCommandEvent& event)
     {
     if ( !vec->undo.canUndo() ) return ;
+    if ( sc->getEditMode() ) return ;
+    sc->unmark() ;
     vec->undo.pop() ;
 //    initPanels () ;
 

@@ -1234,6 +1234,8 @@ void MyChild::OnZoom ( wxCommandEvent &ev )
 void MyChild::Undo(wxCommandEvent& event)
     {
     if ( !vec->undo.canUndo() ) return ;
+    if ( cSequence->getEditMode() ) return ;
+    cSequence->unmark () ;
     vec->undo.pop() ;
     initPanels () ;
 

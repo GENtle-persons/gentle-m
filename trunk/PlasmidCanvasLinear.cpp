@@ -641,7 +641,8 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
        {
        p->cSequence->mark ( "DNA" , bp , bp ) ;
        p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
-       p->cSequence->mark ( "DNA" , -1 , -1 ) ;
+       p->cSequence->unmark () ;
+//       p->cSequence->mark ( "DNA" , -1 , -1 ) ;
        }
     else
        {

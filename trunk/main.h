@@ -10,6 +10,21 @@ typedef unsigned int uint ;
 // Turn logging on/off
 //#define MYLOG
 
+// Turn testing on/off
+//#define MYTEST
+
+#ifdef MYTEST
+
+#ifndef MYLOG
+#define MYLOG
+#endif
+
+#ifndef MYDEBUG
+#define MYDEBUG
+#endif
+
+#endif
+
 #include "wx/wxprec.h"
 
 #ifdef __BORLANDC__

@@ -23,6 +23,7 @@ class TVirtualGel ;
 
 typedef wxFrame MyFrameType ;
 
+#ifdef MYTEST
 class TTestSuite
 	{
 	public :
@@ -36,11 +37,14 @@ class TTestSuite
 
 	virtual void vectorPressKey ( ChildBase *ac ) ;
 	virtual void vectorAction ( ChildBase *ac ) ;
+
+	virtual void mouseEvent ( ChildBase *ac ) ;
 	
 	virtual void aaAction ( ChildBase *ac ) ;
     int start ;
     int cnt ;
 	} ;    
+#endif
 
 class TProject
 	{
@@ -145,7 +149,9 @@ public:
     wxMenuBar *menu_bar ;
     int locked ;
     bool activating ;
+#ifdef MYTEST
     TTestSuite *test_suite ;
+#endif
     
     DECLARE_EVENT_TABLE()
 };
