@@ -6,16 +6,35 @@ bool TStorage::getWriteProtect () { return writeProtect ; }
 
 TStorage::TStorage ( int nt , string fn )
     {
+    if ( fn == "" ) isMySQL = false ;
+    else isMySQL = (fn[0]==':') ;
     rpv = 0 ;
     writeProtect = false ;
     storagetype = nt ;
     if ( fn == "" ) fn = myapp()->homedir+"/local.db" ;
     dbname = fn ;
+    if ( isMySQL )
+        {
+        conn = new MYSQL ;
+        mysql_init (conn);
+        vector <string> ex ;
+        ex = explode ( ":" , fn+":" ) ;
+        conn = mysql_real_connect ( conn , 
+                                ex[1].c_str() , 
+                                ex[2].c_str() ,
+                                ex[3].c_str() , 
+                                ex[4].c_str() , 0 , NULL , CLIENT_COMPRESS ) ;
+        }
     autoUpdateSchema() ;
     }
 
 TStorage::~TStorage ()
     {
+    if ( isMySQL )
+        {
+        mysql_close (conn);
+        delete conn ;
+        }
     for ( int a = 0 ; a < re.size() ; a++ ) // Cleaning up enzymes
         delete re[a] ;
     }    
@@ -43,6 +62,7 @@ static int callback (void *NotUsed, int argc, char **argv, char **azColName)
     
 void TStorage::createDatabase ()
     {
+    if ( isMySQL ) return ;
     sqlite *db ;
     char *e = 0 ;
     int rc ;
@@ -53,8 +73,61 @@ void TStorage::createDatabase ()
     sqlite_close ( db ) ;
     }
 
+TSQLresult TStorage::getObject_MySQL ( string query )
+    {
+    results.clean() ;
+    if ( conn == NULL ) return results ;
+
+    if ( writeProtect ) // Prevent old program version breaking the DB
+       {
+       string q = query.substr ( 0 , 6 ) ;
+       if ( q != "SELECT" )
+          {
+          mysql_close ( conn ) ;
+          return results ;
+          }
+       }
+
+    int err = mysql_query ( conn , query.c_str() ) ;
+    if ( err == 0 )
+        {
+        MYSQL_RES *result ;
+        result = mysql_store_result ( conn ) ;
+        if ( result != NULL ) 
+            {
+            MYSQL_ROW row;
+            unsigned int i , num_fields = mysql_num_fields(result) ;
+            while ((row = mysql_fetch_row(result)))
+            {
+               unsigned long *lengths;
+               lengths = mysql_fetch_lengths(result);
+               int rownum = results.content.size() ;
+               results.content.push_back ( TVS() ) ;
+               for(i = 0; i < num_fields; i++)
+               {
+                  results.content[rownum].push_back ( row[i] ? row[i] : "" ) ;
+//                   show += wxString::Format ("[%.*s] ", (int) lengths[i], row[i] ? row[i] : "NULL");
+               }
+            }        
+            
+            MYSQL_FIELD *fields;            
+            fields = mysql_fetch_fields(result);
+            for(i = 0; i < num_fields; i++)
+            {
+               results.field.push_back ( fields[i].name ) ;
+//               printf("Field %u is %s\n", i, fields[i].name);
+            }
+            
+            mysql_free_result ( result ) ;
+            }
+        }
+    else wxMessageBox ( wxString::Format ( "MySQL error %d" , err ) , query.c_str() ) ;
+    return results ;
+    }
+    
 TSQLresult TStorage::getObject ( string query )
     {
+    if ( isMySQL ) return getObject_MySQL ( query ) ;
     sqlite *db ;
     char *e = 0 ;
     int rc ;

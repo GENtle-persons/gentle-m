@@ -30,6 +30,8 @@ BEGIN_EVENT_TABLE(SequenceCanvas, wxScrolledWindow)
     EVT_MENU(SEQ_DOWN,SequenceCanvas::OnSeqDown)
     EVT_MENU(SEQ_TOP,SequenceCanvas::OnSeqTop)
     EVT_MENU(SEQ_BOTTOM,SequenceCanvas::OnSeqBottom)
+    EVT_MENU(SEQ_FEAT_HIDE,SequenceCanvas::OnToggleFeat)
+    EVT_MENU(SEQ_FEAT_SHOW,SequenceCanvas::OnToggleFeat)
 
     EVT_MENU(PRIMER_FORWARD, SequenceCanvas::OnPrimerForward)
     EVT_MENU(PRIMER_BACKWARD, SequenceCanvas::OnPrimerBackward)
@@ -989,7 +991,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
            TAlignment *alg = (TAlignment*) child ;
            if ( al->myname == txt("t_identity") ) {} // Do nothing
            else if ( al->whatsthis() == "FEATURE" ) {} // Do nothing
-           else alg->callMiddleMouseButton ( al->myname , pos ) ;
+           else alg->callMiddleMouseButton ( al->id , pos ) ;
            }
         }
     
@@ -1119,6 +1121,9 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
               if ( last_al->id > 0 ) cb->Append ( SEQ_TOP , txt("t_seq_top") ) ;
               if ( last_al->id + 2 < ali->lines.size() ) cb->Append ( SEQ_BOTTOM , txt("t_seq_bottom") ) ;
               if ( cb->GetMenuItemCount() > 0 ) cm->Append ( SEQ_COPY_AS , txt("t_seq_move") , cb ) ;
+              if ( ali->lines[last_al->id].features ) cm->Append ( SEQ_FEAT_HIDE , txt("t_hide_feature_line") ) ;
+              else cm->Append ( SEQ_FEAT_SHOW , txt("t_show_feature_line") ) ;
+              cm->AppendSeparator () ;
               }
            }
         else
@@ -1356,6 +1361,21 @@ void SequenceCanvas::OnSeqBottom ( wxCommandEvent &ev )
     al->MoveUpDown ( last_al->id , al->lines.size()-1 ) ;
     }
 
+void SequenceCanvas::OnToggleFeat ( wxCommandEvent &ev )
+    {
+    TAlignment *al = (TAlignment*) child ;
+    if ( al->lines[last_al->id].features )
+        {
+        delete al->lines[last_al->id].features ;
+        al->lines[last_al->id].features = NULL ;
+        }
+    else
+        {
+        al->lines[last_al->id].features = new TVector ;
+        *(al->lines[last_al->id].features) = *(al->lines[last_al->id].v) ;
+        }
+    al->redoAlignments ( false ) ;
+    }
 
 // -------------------------------------------------------- TMarkMem
 

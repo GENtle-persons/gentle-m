@@ -314,6 +314,8 @@ enum {
     SEQ_DOWN,
     SEQ_TOP,
     SEQ_BOTTOM,
+    SEQ_FEAT_HIDE,
+    SEQ_FEAT_SHOW,
     
     } ;
 

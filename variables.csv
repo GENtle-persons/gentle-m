@@ -500,3 +500,5 @@
 "t_seq_down","Move line down","Eine Zeile nach unten"
 "t_seq_top","As first line","Als erste Zeile"
 "t_seq_bottom","As last line","Als letzte Zeile"
+"t_hide_feature_line","Hide features for this line","Features für diese Zeile verbergen"
+"t_show_feature_line","Show features for this line","Features für diese Zeile anzeigen"

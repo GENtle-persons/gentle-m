@@ -2,8 +2,8 @@
 #define _TSTORAGE_H_
 
 #include <stdio.h>
-
 #include "main.h"
+#include <mysql.h>
 
 #ifdef __WXMSW__
 #include "win_sqlite.h"
@@ -66,6 +66,7 @@ class TStorage
     virtual ~TStorage () ;
     void createDatabase () ;
     TSQLresult getObject ( string query ) ;
+    TSQLresult getObject_MySQL ( string query ) ;
     
     // Restriction enzymes
     void import () ;
@@ -113,6 +114,8 @@ class TStorage
     int storagetype , ierror ;
     bool writeProtect ;
     int rpv ;
+    bool isMySQL ;
+    MYSQL *conn,*mysql;
     } ;
  
 #endif
