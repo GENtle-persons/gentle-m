@@ -3,6 +3,8 @@
 BEGIN_EVENT_TABLE(TSilmutDialog, wxDialog )
     EVT_SPINCTRL(PD_SILMUT_MAX_XHG,TSilmutDialog::OnSpin)
     EVT_SPINCTRL(PD_SILMUT_MAX_CUT,TSilmutDialog::OnSpin)
+    EVT_TEXT(PD_SILMUT_MAX_XHG,TSilmutDialog::OnSpin)
+    EVT_TEXT(PD_SILMUT_MAX_CUT,TSilmutDialog::OnSpin)
     EVT_CHOICE(PD_SILMUT_EGR,TSilmutDialog::OnChoose)
     EVT_BUTTON(PD_SILMUT_OK,TSilmutDialog::OnOK)
     EVT_BUTTON(PD_SILMUT_CANCEL,TSilmutDialog::OnCancel)
@@ -21,6 +23,7 @@ void TSilmutDialog::OnCharHook(wxKeyEvent& event)
 TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode , int _mut_pos , int _mut_dir )
     : wxDialog ( parent , -1 , s )
     {
+    running = false ;
     mut_pos = _mut_pos ;
     mut_dir = _mut_dir ;
     SetSize ( 600 , 400 ) ;
@@ -92,9 +95,9 @@ TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode 
         mut = new wxChoice ( this , PD_SILMUT_EGR , wxPoint ( r.GetRight() + bo , r.GetTop() ) ) ;
         }
 
-    wxFont myFont ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ;
-    lb->SetFont ( myFont ) ;
-    pd = (TPrimerDesign*) parent ;
+    lb->SetFont ( *MYFONT ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
+    if ( mode == M_WHATCUTS ) pd = NULL ;
+    else pd = (TPrimerDesign*) parent ;
     last_selection = -1 ;
     }
 
@@ -105,6 +108,7 @@ void TSilmutDialog::initme ( TVector *vec , int _from , int _to )
     to = _to ;
     calc () ;
     showit () ;
+    running = true ;
     }
     
 void TSilmutDialog::OnLbDoubleClick ( wxCommandEvent &ev )
@@ -149,6 +153,7 @@ void TSilmutDialog::OnCancel ( wxCommandEvent &ev )
     
 void TSilmutDialog::OnSpin ( wxSpinEvent &event )
     {
+    if ( !running ) return ;
     calc () ;
     showit () ;
     }
@@ -271,9 +276,17 @@ void TSilmutDialog::calc ()
     
 string TSilmutDialog::getAAresult ( string dna )
     {
-    TVector v2 = *v ;
+    if ( !pd )
+        {
+        string s = dna ;
+        for ( int a = 0 ; a < s.length() ; a++ ) s[a] = ' ' ;
+        return s ;
+        }
+    TVector v2 ;
+    v2.setFromVector ( *v ) ;
     v2.sequence = dna ;
-    SeqAA *a3 = new SeqAA ( pd->sc ) ;
+    SeqAA *a3 ;
+    a3 = new SeqAA ( pd->sc ) ;
     a3->mode = pd->aa_state ;
     a3->disp = pd->aa_disp ;
     a3->unknownAA = ' ' ;

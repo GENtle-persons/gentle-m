@@ -3,7 +3,7 @@
 
 // This will turn the myass error logging on/off
 // Place a comment in front of the following line when compiling releases
-#define MYDEBUG
+//#define MYDEBUG
 
 #include "wx/wxprec.h"
 
@@ -44,6 +44,8 @@
 using namespace std ;
 
 #define MYPEN(_a) (wxThePenList->FindOrCreatePen ( _a , 1 , wxSOLID ) )
+#define MYBRUSH(_a) (wxTheBrushList->FindOrCreateBrush ( _a , wxSOLID ) )
+#define MYFONT(_a,_b,_c,_d) (wxTheFontList->FindOrCreateFont(_a,_b,_c,_d) )
 #define DEL_POINTERS(_x) {while(_x.size()){if(_x[_x.size()-1])delete _x[_x.size()-1]; _x.pop_back();}}
 
 // Don't you *EVER* turn this on again!!!!

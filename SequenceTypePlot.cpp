@@ -108,7 +108,6 @@ void SeqPlot::fixMinMax ( float &f )
 void SeqPlot::show ( wxDC& dc )
     {
     dc.SetFont(*can->font);
-    wxBrush theLightBrush ( wxColour ( 230 , 230 , 230 ) , wxSOLID ) ;
     wxColour tbg = dc.GetTextBackground () ;
     wxColour tfg = dc.GetTextForeground () ;
     int bm = dc.GetBackgroundMode () ;
@@ -149,7 +148,7 @@ void SeqPlot::show ( wxDC& dc )
            t = s[b-1] ;
            if ( can->isPrinting() && pos.m[a] == 1 )
               {
-              dc.SetBrush ( theLightBrush ) ;
+              dc.SetBrush ( *MYBRUSH ( wxColour ( 230 , 230 , 230 ) ) ) ;
               dc.SetPen(*wxTRANSPARENT_PEN);
               dc.DrawRectangle ( tx , ty , can->charwidth , can->charheight ) ;
               }

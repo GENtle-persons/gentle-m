@@ -94,7 +94,6 @@ wxPoint SeqDNA::showText ( int ystart , vector <string> &tout )
 void SeqDNA::show ( wxDC& dc )
     {
     dc.SetFont(*can->font);
-    wxBrush theLightBrush ( wxColour ( 230 , 230 , 230 ) , wxSOLID ) ;
     wxColour tbg = dc.GetTextBackground () ;
     wxColour tfg = dc.GetTextForeground () ;
     int bm = dc.GetBackgroundMode () ;
@@ -141,7 +140,7 @@ void SeqDNA::show ( wxDC& dc )
            else dc.SetTextForeground ( getBaseColor ( t[0] ) ) ;
            if ( can->isPrinting() && pos.m[a] == 1 )
               {
-              dc.SetBrush ( theLightBrush ) ;
+              dc.SetBrush ( *MYBRUSH ( wxColour ( 230 , 230 , 230 ) ) ) ;
               dc.SetPen(*wxTRANSPARENT_PEN);
               dc.DrawRectangle ( tx , ty , can->charwidth , can->charheight ) ;
               }

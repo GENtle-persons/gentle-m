@@ -2,6 +2,8 @@
 #include <wx/printdlg.h>
 #include <wx/datetime.h>
 
+#define SCROLL_TO_END (-100)
+
 // ---------------------------------------------------------------------------
 // SequenceCanvas
 // ---------------------------------------------------------------------------
@@ -60,9 +62,9 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
 {
     SetBackgroundColour(wxColour("WHITE"));
 
-    font = new wxFont ( 12 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
-    smallFont = new wxFont ( 8 , wxSWISS , wxNORMAL , wxNORMAL ) ;
-    varFont = new wxFont ( 11 , wxROMAN  , wxNORMAL , wxNORMAL ) ;
+    font = MYFONT ( 12 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
+    smallFont = MYFONT ( 8 , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    varFont = MYFONT ( 11 , wxROMAN  , wxNORMAL , wxNORMAL ) ;
     charwidth = 0 ;
     charheight = 0 ;
     blankline = 0 ;
@@ -94,9 +96,6 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
 SequenceCanvas::~SequenceCanvas()
     {
     DEL_POINTERS ( seq ) ;
-    delete font ;
-    delete smallFont ;
-    delete varFont ;
     }
 
 SeqBasic* SequenceCanvas::findID ( string id ) 
@@ -322,6 +321,7 @@ void SequenceCanvas::OnCharHook(wxKeyEvent& event)
            {
            string dummy ;
            dummy = (char) k ;
+           int new_from = from + 1 ;
            if ( v )
               {
               v->insert_char ( k , from , doOverwrite() ) ;
@@ -329,10 +329,20 @@ void SequenceCanvas::OnCharHook(wxKeyEvent& event)
               }
            else
               {
-              if ( doOverwrite() ) the_sequence->erase ( from-1 , 1 ) ;
-              the_sequence->insert ( from-1 , dummy ) ;
+              if ( !forceoverwrite || from <= the_sequence->length() )
+                 {
+                 if ( doOverwrite() ) the_sequence->erase ( from-1 , 1 ) ;
+                 the_sequence->insert ( from-1 , dummy ) ;
+                 if ( forceoverwrite && from == the_sequence->length() )
+                    new_from = from ;
+                 }
+              else
+                 {
+                 wxBell() ;
+                 return ;
+                 }
               }
-           updateEdit ( v , id , from + 1 ) ;
+           updateEdit ( v , id , new_from ) ;
            }
            
         // Scrolling so the cursor is visible
@@ -347,7 +357,12 @@ void SequenceCanvas::OnCharHook(wxKeyEvent& event)
         if ( p )
            wxLogStatus(txt("seq_ed_loc"), p->cPlasmid->getMarkFrom() ) ;
         }
-    else event.Skip() ;
+    else // Not edit mode
+        {
+        if ( k == WXK_HOME ) ensureVisible ( 0 ) ;
+        else if ( k == WXK_END ) ensureVisible ( SCROLL_TO_END ) ;
+        else event.Skip() ;
+        }
     }
     
 bool SequenceCanvas::doOverwrite ()
@@ -513,10 +528,10 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
     
     wxFont *oldfont = font ;
     wxFont *oldsmallFont = smallFont ;
-    wxFont bigfont ( w/30 , wxMODERN , wxNORMAL , wxNORMAL ) ;
-    wxFont medfont ( w/80 , wxMODERN , wxNORMAL , wxNORMAL ) ;
-    font = new wxFont ( fs/10 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
-    smallFont = new wxFont ( fs/15 , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    wxFont *bigfont = MYFONT ( w/30 , wxMODERN , wxNORMAL , wxNORMAL ) ;
+    wxFont *medfont = MYFONT ( w/80 , wxMODERN , wxNORMAL , wxNORMAL ) ;
+    font = MYFONT ( fs/10 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
+    smallFont = MYFONT ( fs/15 , wxSWISS , wxNORMAL , wxNORMAL ) ;
 
     print_maxx = -w ;
 
@@ -565,7 +580,7 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
        else if ( getAA() ) s = getAA()->vec->name ;
        else if ( child ) s = child->getName() ;
        print_dc->SetTextBackground ( *wxWHITE ) ;
-       print_dc->SetFont ( bigfont ) ;
+       print_dc->SetFont (* bigfont ) ;
        print_dc->GetTextExtent ( s.c_str() , &tw , &th ) ;
        print_dc->DrawText ( s.c_str() ,
                             ( w - tw ) / 2 - xoff ,
@@ -575,14 +590,14 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
        // Page number
        char t[100] ;
        sprintf ( t , txt("t_page_of") , page , totalpages ) ;
-       print_dc->SetFont ( medfont ) ;
+       print_dc->SetFont ( *medfont ) ;
        print_dc->GetTextExtent ( t , &tw , &th ) ;
        print_dc->DrawText ( t ,
                             w - tw - xoff * 2 ,
                             yoff + h - ( pagebottom + dummy + th ) / 2 ) ;
 
        // Date
-       print_dc->SetFont ( medfont ) ;
+       print_dc->SetFont ( *medfont ) ;
        print_dc->GetTextExtent ( printtime.c_str() , &tw , &th ) ;
        print_dc->DrawText ( printtime.c_str() ,
                             0 ,
@@ -596,8 +611,6 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
 
     setDrawAll ( false ) ;
     printing = false ;
-    delete font ;
-    delete smallFont ;
     font = oldfont ;
     smallFont = oldsmallFont ;
     
@@ -736,6 +749,13 @@ void SequenceCanvas::ensureVisible ( int pos )
     
     wx /= charwidth ;
     wx -= wx % ( seq.size() + 1 ) ;
+
+    if ( pos == SCROLL_TO_END ) 
+        {
+        if ( isHorizontal() ) Scroll ( lowx , -1 ) ;
+        else Scroll ( -1 , lowy ) ;
+        return ;
+        }
 
     int nx = pos , ny = pos ;
     if ( isHorizontal() )
@@ -1269,11 +1289,11 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
            cm->Append ( SEQ_AA_VIEW , txt("m_aa_view") , ca ) ;
            }
         
-        wxMenu *ca = new wxMenu ;
-        if ( !isMiniDisplay() ) ca->Append ( SEQ_COPY_TEXT , txt("m_copy_as_text") ) ;
-        ca->Append ( SEQ_COPY_IMAGE , txt("m_copy_as_image") ) ;
-        ca->Append ( SEQ_SAVE_IMAGE , txt("m_save_as_image") ) ;
-        cm->Append ( SEQ_COPY_AS , txt("m_copy_as") , ca ) ;
+//        wxMenu *ca = new wxMenu ;
+//        if ( !isMiniDisplay() ) ca->Append ( SEQ_COPY_TEXT , txt("m_copy_as_text") ) ;
+        cm->Append ( SEQ_COPY_IMAGE , txt("m_copy_as_image") ) ;
+        cm->Append ( SEQ_SAVE_IMAGE , txt("m_save_as_image") ) ;
+//        cm->Append ( SEQ_COPY_AS , txt("m_copy_as") , ca ) ;
         cm->Append ( SEQ_PRINT , txt("m_print_sequence") ) ;
         PopupMenu ( cm , event.GetPosition() ) ;
         delete cm ;
@@ -1345,12 +1365,12 @@ int SequenceCanvas::findMouseTargetItem ( wxPoint pt )
 
 void SequenceCanvas::OnCopyResultDNA ( wxCommandEvent &ev )
     {
-    SeqDNA *rd = (SeqDNA*) seq[seq.size()-3] ;
-    string s ;
-    for ( int a = 0 ; a < rd->s.length() ; a++ )
-       if ( rd->s[a] != ' ' )
-          s += rd->s[a] ;
-    if ( s == "" ) return ;
+    TVector *nv = getPCR_DNA_vector() ;
+    if ( !nv ) return ;
+    
+    string s = nv->sequence ;
+    delete nv ;
+
     if (wxTheClipboard->Open())
         {
         wxTheClipboard->SetData( new wxTextDataObject(s.c_str()) );
@@ -1385,35 +1405,37 @@ void SequenceCanvas::OnSilmut ( wxCommandEvent &ev )
     getPD()->OnSilmut ( ev ) ;
     }
     
+TVector *SequenceCanvas::getPCR_DNA_vector()
+    {
+    myass ( getPD() , "SequenceCanvas::OnNewFromResultDNA_0" ) ;
+    myass ( getPD()->w , "SequenceCanvas::OnNewFromResultDNA_1" ) ;
+    int a , b , c ;
+    TVector n ;
+    n.setFromVector ( *getPD()->w ) ;
+    char blank = '-' ;
+    string s , t ;
+    s = n.sequence ;
+    t = s ;
+    if ( getPD()->w->isCircular() )
+        {
+        t += t ;
+        for ( a = 0 ; a < t.length() && t[a] != ' ' ; a++ ) t[a] = ' ' ;
+        if ( a == t.length() ) t = s ; // Whole circular vector
+        }
+    
+    for ( a = 0 ; a < t.length() && t[a] == ' ' ; a++ ) ;
+    if ( a == t.length() ) return NULL ; // Nothing here
+
+    for ( b = a ; b < t.length() && t[b] != ' ' ; b++ ) ;
+    b-- ;
+
+    for ( c = 0 ; c < n.sequence.length() ; c++ ) n.sequence[c] = n.sequence[c]==' '?'-':n.sequence[c] ;
+    return n.newFromMark ( a+1 , b+1 ) ;
+    }
+    
 void SequenceCanvas::OnNewFromResultDNA ( wxCommandEvent &ev )
     {
-    SeqDNA *rd = (SeqDNA*) seq[seq.size()-3] ;
-    string s ;
-    int a ;
-    for ( a = 0 ; a < rd->s.length() ; a++ )
-       if ( rd->s[a] != ' ' )
-          s += rd->s[a] ;
-    if ( s == "" ) return ;
-
-    TVector *nv = new TVector ;
-    *nv = *getPD()->w ;
-    nv->removeBlanksFromVector () ;
-    if ( nv->sequence.length() != getPD()->w->sequence.length() ) nv->setCircular ( false ) ;
-//    nv->re = getPD()->w->re ;
-//    nv->sequence = s ;
-    nv->name = getPD()->vec->name + " (" + string ( txt ( "t_pcr_result" ) ) + ")" ;
-    nv->desc = getPD()->vec->desc + "\n" + string ( txt ( "t_pcr_result" ) ) ;
-    nv->setChanged () ;
-//    nv->setCircular ( false ) ;
-    nv->recalculateCuts() ;
-    nv->recalcvisual = true ;
-    nv->items.push_back ( TVectorItem ( nv->name.c_str() , 
-                                        nv->desc.c_str() , 
-                                        1 , 
-                                        s.length() , 
-                                        VIT_MISC ) ) ;
-    if ( nv->isCircular() ) nv->items[nv->items.size()-1].setVisible ( false ) ;
-    myapp()->frame->newFromVector ( nv ) ;
+    myapp()->frame->newFromVector ( getPCR_DNA_vector() ) ;
     }
     
 void SequenceCanvas::OnNewFromResultAA ( wxCommandEvent &ev )
@@ -1458,6 +1480,7 @@ void SequenceCanvas::OnKillFocus(wxFocusEvent& event)
 
 void SequenceCanvas::OnWhatCuts(wxCommandEvent& event)
     {
+    myass ( p , "SequenceCanvas::OnWhatCuts_1" ) ;
     TSilmutDialog sd ( p , txt("t_what_cuts") , M_WHATCUTS ) ;
     sd.initme ( p->vec , _from , _to ) ;
     if ( wxID_OK != sd.ShowModal () ) return ;    

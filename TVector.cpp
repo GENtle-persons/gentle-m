@@ -22,6 +22,35 @@ float TVector::getAApi ( char aa ) { return aaprop[aa].pi ; }
 char TVector::getComplement ( char c ) { return COMPLEMENT[c] ; }
 TAAProp TVector::getAAprop ( char a ) { return aaprop[a] ; }
 
+TVector *TVector::newFromMark ( int from , int to ) 
+    {
+    char t[1000] ;
+    TVector *nv = new TVector ;
+    nv->setFromVector ( *this ) ;
+    if ( from == 1 && to == sequence.length() ) return nv ; // The whole vector
+    if ( to > nv->sequence.length() ) // Marking includes "0" point
+        {
+        nv->doRemove ( to+1-nv->sequence.length() , from-1 , false ) ;
+        }
+    else
+        {
+        nv->doRemove ( to+1 , nv->sequence.length() , false ) ;
+        nv->doRemove ( 1 , from-1 , false ) ;
+        }
+    
+    if ( to > sequence.length() )
+            nv->turn ( sequence.length() - from + 1 ) ;
+    if ( nv->desc != "" ) nv->desc += "\n" ;
+    sprintf ( t , txt("t_cropped_fragment") , nv->name.c_str() , from , to ) ;
+    nv->desc += t ;
+    nv->name += "*" ;
+    nv->setChanged () ;
+    nv->setCircular ( false ) ;
+    nv->recalculateCuts() ;
+    nv->recalcvisual = true ;
+    return nv ;
+    }
+    
 void TVector::setNucleotide ( int pos , char t )
     {
     int sl = sequence.length() ;
@@ -931,13 +960,11 @@ void TVector::clear ()
 
 TVectorItem::TVectorItem()
     {
-    brush = *wxBLUE_BRUSH;
     initParams () ;
     }
 
 TVectorItem::TVectorItem ( wxString sn , wxString n , int f , int t , char ty = VIT_MISC )
     {
-    brush = *wxBLUE_BRUSH;
     initParams () ;
     name = sn ;
     desc = n ;
@@ -952,14 +979,21 @@ wxBrush *TVectorItem::getBrush ()
     {
     if ( getParam ( "ISDEFAULTBRUSH" ) == "1" )
         {
-        if ( type == VIT_GENE ) brush = *wxBLUE_BRUSH ;
-        if ( type == VIT_CDS  ) brush = *wxRED_BRUSH ;
-        if ( type == VIT_REP_ORI ) brush = *wxBLACK_BRUSH ;
-        if ( type == VIT_PROMOTER ) brush = *wxGREY_BRUSH ;
-        if ( type == VIT_TERMINATOR ) brush = *wxMEDIUM_GREY_BRUSH ;
-        if ( type == VIT_MISC ) brush = *wxBLACK_BRUSH ;
+        if ( type == VIT_GENE ) return wxBLUE_BRUSH ;
+        else if ( type == VIT_CDS  ) return wxRED_BRUSH ;
+        else if ( type == VIT_REP_ORI ) return wxBLACK_BRUSH ;
+        else if ( type == VIT_PROMOTER ) return wxGREY_BRUSH ;
+        else if ( type == VIT_TERMINATOR ) return wxMEDIUM_GREY_BRUSH ;
+        else if ( type == VIT_MISC ) return wxBLACK_BRUSH ;
+        return wxBLUE_BRUSH ;
         }
-    return &brush ;
+    else
+        {
+        int c1 = atoi ( getParam ( "COLOR_RED" ) .c_str() ) ;
+        int c2 = atoi ( getParam ( "COLOR_GREEN" ) .c_str() ) ;
+        int c3 = atoi ( getParam ( "COLOR_BLUE" ) .c_str() ) ;
+        return MYBRUSH ( wxColour ( c1 , c2 , c3 ) ) ;
+        }
     }
 
 wxColour TVectorItem::getFontColor ()
@@ -988,7 +1022,6 @@ void TVectorItem::setColor ( wxColour col )
     setParam ( "COLOR_RED" , col.Red() ) ;
     setParam ( "COLOR_GREEN" , col.Green() ) ;
     setParam ( "COLOR_BLUE" , col.Blue() ) ;
-    brush.SetColour ( col ) ;
     }
     
 //********************* PARAMS

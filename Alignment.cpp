@@ -729,22 +729,6 @@ void TAlignment::invokeOriginal ( int id , int pos )
     MyFrame *f = myapp()->frame ;
     ChildBase *c = NULL ;
     c = lines[id].FindOrigin() ;
-    /*
-    for ( a = 0 ; a < f->children.size() ; a++ )
-        {
-        if ( ( f->children[a]->def == "dna" || 
-               f->children[a]->def == "AminoAcids" ||
-               f->children[a]->def == "ABIviewer" )
-                && f->children[a]->getName() == name )
-           {
-           if ( c )
-              {
-              wxMessageBox ( txt("t_ambigous_name") ) ;
-              return ;
-              }
-           else c = f->children[a] ;
-           }
-        }*/
     if ( !c ) return ;
 
     c->Activate() ;

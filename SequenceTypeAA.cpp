@@ -399,7 +399,7 @@ void SeqAA::initFromTVector ( TVector *v )
               
               // Offset?
               int pawl = pa_w.length() ;
-              if ( voff != -1 && ( b + coff ) % 10 == 0 ) //&& ( pawl == 1 || (pawl+voff-1) % 10 == 0 ) )
+              if ( voff != -1 && ( b + coff ) % 10 == 0 )
                  {
                  while ( offsets.size() <= b+coff ) offsets.push_back ( -1 ) ;
                  while ( offset_items.size() <= b+coff ) offset_items.push_back ( NULL ) ;
@@ -425,8 +425,7 @@ void SeqAA::initFromTVector ( TVector *v )
                  else b -= v->sequence.length() ;
                  roundOnce = true ;
                  }
-//              if ( v->isCircular() && b < 0 ) b += v->sequence.length() ;
-//              if ( v->isCircular() && b >= v->sequence.length() ) b -= v->sequence.length() ;
+              if ( /*can->getPD() &&*/ c == '?' ) c = '|' ;
               }
            }
         }

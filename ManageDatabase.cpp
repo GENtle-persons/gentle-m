@@ -942,7 +942,7 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
 
     v->recalcvisual = true ;
     v->undo.clear() ;
-
+    
     ChildBase *n = NULL ;
     if ( v->type == TYPE_AMINO_ACIDS )
         {
@@ -953,7 +953,6 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
         }
     else if ( v->type == TYPE_ALIGNMENT )
         {
-        // Alignment
         vector <string> vs ;
         vector <ChildBase*> vc ;
         myapp()->frame->runAlignment ( vs , vc , v ) ;

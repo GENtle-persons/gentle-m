@@ -8,7 +8,6 @@ void SeqFeature::show ( wxDC& dc )
     dc.SetFont(*can->smallFont);
     dc.GetTextExtent ( "A" , &cw2 , &ch2 ) ;
 //    dc.SetFont(*can->font);
-    wxBrush theLightBrush ( wxColour ( 230 , 230 , 230 ) , wxSOLID ) ;
     wxColour tbg = dc.GetTextBackground () ;
     wxColour tfg = dc.GetTextForeground () ;
     int bm = dc.GetBackgroundMode () ;

@@ -751,6 +751,7 @@ void MyFrame::newGB ( TGenBank &gb , string title )
 
 MyChild* MyFrame::newFromVector ( TVector *nv , int type )
     {
+    if ( !nv ) return NULL ;
     MyChild *subframe = new MyChild(this, "",
                                     wxPoint(-1, -1), wxSize(-1, -1),
                                     wxDEFAULT_FRAME_STYLE);

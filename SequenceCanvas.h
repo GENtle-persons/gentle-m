@@ -148,7 +148,6 @@ class SeqPrimer : public SeqDNA
     public :
     SeqPrimer ( SequenceCanvas *ncan = NULL ) { 
         vec = NULL ; 
-        circular = false ;
         init ( ncan ) ; 
         myname = "PRIMER" ; }
     virtual void show ( wxDC& dc ) ;
@@ -158,7 +157,6 @@ class SeqPrimer : public SeqDNA
     
     // Variables
     string myname ;
-    bool circular ;
     } ;
 
 class SeqAlign : public SeqBasic
@@ -405,6 +403,7 @@ class SequenceCanvas : public wxScrolledWindow
     
     private :
     wxBitmap *getSequenceBitmap () ;
+    TVector *getPCR_DNA_vector() ;
 
     bool printToColor , drawall , horizontal , hide , miniDisplay ;
     bool marking , drawing , printing , wantOverwrite , forceoverwrite ;
