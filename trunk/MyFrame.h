@@ -78,7 +78,7 @@ public:
     virtual void setChild ( ChildBase *ch ) ;
     virtual void removeChild ( ChildBase *ch ) ;
     virtual TStorage *getTempDB ( string filename ) ;
-    virtual void runAlignment ( vector <string> &vs , vector <ChildBase*> &vc , TVector *nv = NULL ) ;
+    virtual TAlignment *runAlignment ( vector <string> &vs , vector <ChildBase*> &vc , TVector *nv = NULL ) ;
     virtual ChildBase *GetActiveChild() ;
     virtual void setActiveChild ( ChildBase *c ) ;
     virtual wxWindow *getCommonParent() ;

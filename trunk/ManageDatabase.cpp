@@ -966,7 +966,9 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
         {
         vector <string> vs ;
         vector <ChildBase*> vc ;
-        myapp()->frame->runAlignment ( vs , vc , v ) ;
+        TAlignment *ali = myapp()->frame->runAlignment ( vs , vc , v ) ;
+        ali->name = name ;
+        ali->database = db ;
         }
     else
         {
@@ -1068,12 +1070,22 @@ void TManageDatabaseDialog::do_save_project ()
     for ( a = 0 ; a < myapp()->frame->children.size() ; a++ )
         {
         if ( myapp()->frame->children[a]->def == "dna" ||
-             myapp()->frame->children[a]->def == "AminoAcids" )
+             myapp()->frame->children[a]->def == "AminoAcids" ||
+             myapp()->frame->children[a]->def == "alignment" )
            {
-//           MyChild *c = (MyChild*) myapp()->frame->children[a] ;
            ChildBase *c = myapp()->frame->children[a] ;
-           string dna_name = c->vec->name ;
-           string dna_db = c->vec->getDatabase() ;
+           string dna_name , dna_db ;
+           if ( c->def == "alignment" )
+              {
+              TAlignment *ali = (TAlignment*) c ;
+              dna_name = ali->name ;
+              dna_db = ali->database ;
+              }
+           else
+              {
+              dna_name = c->vec->name ;
+              dna_db = c->vec->getDatabase() ;
+              }
            if ( dna_db != "" )
               {
               s1 = s2 = "" ;
@@ -1085,8 +1097,8 @@ void TManageDatabaseDialog::do_save_project ()
               }
             else
                {
-               wxMessageDialog md ( this , "Not saved" , myapp()->frame->children[a]->def.c_str() ) ;
-               md.ShowModal() ;
+//               wxMessageDialog md ( this , "Not saved" , myapp()->frame->children[a]->def.c_str() ) ;
+//               md.ShowModal() ;
                }
            }
         }
