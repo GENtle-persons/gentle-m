@@ -10,6 +10,8 @@
 class TVector ;
 class TVectorItem ;
 class TVectorTree ;
+typedef vector <string> TVS ;
+typedef vector <int> TVI ;
 
 class TGenBankFeature
     {
@@ -49,12 +51,15 @@ class TGenBank
     void wrapit ( vector <string> &ex , string init , string data , int limit = 80 ) ;
     string expand ( string init , int to , string with = " " ) ;
     
+    vector <TVS> vs_l ;
+    vector <TVI> vi_l ;
     vector <string> vs ;
     vector <int> vi ;
     vector <TGenBankKey> keys ;
     bool perm[256] ;
     string params ;
     bool success ;
+    string title , description ;
     } ;
 
 // **************************************************** TFasta

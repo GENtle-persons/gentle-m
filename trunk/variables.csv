@@ -507,3 +507,5 @@
 "t_db_location","Location : %s","Ort : %s"
 "t_files","Files","Dateien"
 "t_mysql","MySQL","MySQL"
+"t_possible_alignment","This appears to be an alignment. Open it as alignment?","Dies scheint ein Alignment zu sein. Als Alignment öffnen?"
+"t_tip","Tip of the day","Tip des Tages"

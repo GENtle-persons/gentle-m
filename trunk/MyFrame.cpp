@@ -412,12 +412,13 @@ void MyFrame::OnTextImport(wxCommandEvent& WXUNUSED(event) )
         }
     else if ( type == 2 ) // GenBank
         {
-        TVector *v = new TVector ;
+//        TVector *v = new TVector ;
         TGenBank gb ;
         gb.paste ( d.sequence->GetValue().c_str() ) ;
-        gb.remap ( v ) ;
-        if ( d.sName != "" ) v->name = d.sName ;
-        newFromVector ( v ) ;
+        newGB ( gb , d.sName.c_str() ) ;
+//        gb.remap ( v ) ;
+//        if ( d.sName != "" ) v->name = d.sName ;
+//        newFromVector ( v ) ;
         }        
     else if ( type == 3 ) // Primer
         {
@@ -484,6 +485,16 @@ void MyFrame::importFile ( string file , string path , int filter )
            return ;
            }
 
+        // Trying UReadSeq package
+        TUReadSeq u ( path.c_str() ) ;
+        if ( u.error == 0 && u.seqs.size() > 0 )
+           {
+           TGenBank gb ;
+           u.convert ( gb ) ;
+           newGB ( gb ) ;
+           return ;
+           }
+
         // Trying CLONE format
         TClone clone ;
         clone.LS = LS ;
@@ -493,7 +504,7 @@ void MyFrame::importFile ( string file , string path , int filter )
            newCLONE ( clone ) ;
            return ;
            }
-
+/*
         // Trying FASTA format
         TFasta seq ;
         seq.load (path ) ;
@@ -504,7 +515,7 @@ void MyFrame::importFile ( string file , string path , int filter )
 //           type = TYPE_SEQUENCE ;
            return ;
            }
-
+*/
 
         wxMessageBox ( txt("t_unable_to_detect_file_type") ) ;
                          
@@ -539,7 +550,7 @@ void MyFrame::importFile ( string file , string path , int filter )
         // Loading GenBank file
         TGenBank gb ;
         gb.load ( path ) ;
-        gb.remap ( subframe->vec ) ;
+        newGB ( gb ) ;
         }
     else if ( filter == 2 )
         {
@@ -638,27 +649,47 @@ MyChild *MyFrame::newFASTA ( TFasta &fasta )
     subframe->Maximize() ;
     }
 
-MyChild *MyFrame::newGB ( TGenBank &gb )
+void MyFrame::newGB ( TGenBank &gb , string title )
     {
-    MyChild *subframe = new MyChild(myapp()->frame, txt("imported_vector"),
-                                    wxPoint(-1, -1), wxSize(-1, -1),
-                                    wxDEFAULT_FRAME_STYLE);
-
-    // Give it an icon
-#ifdef __WXMSW__
-    subframe->SetIcon(wxIcon("chrt_icn"));
-#else
-    subframe->SetIcon(wxIcon( mondrian_xpm ));
-#endif
-
-    
-    subframe->initme() ;
-    int type = TYPE_VECTOR ;
-    gb.remap ( subframe->vec ) ;
-    subframe->vec->setWindow ( subframe ) ;
-    subframe->initPanels() ;
-    mainTree->addChild(subframe,type) ;
-    subframe->Maximize() ;
+    int n ;
+    TVector *nv ;
+    vector <TVector *> vv ;
+    bool alignment = false ;
+    for ( n = 0 ; n < gb.vs_l.size() ; n++ )
+        {
+        gb.vs = gb.vs_l[n] ;
+        gb.vi = gb.vi_l[n] ;
+        nv = new TVector ;
+        gb.remap ( nv ) ;
+        vv.push_back ( nv ) ;
+        if ( nv->sequence.length() != vv[0]->sequence.length() ) alignment = false ;
+        else if ( nv->sequence.find ( '-' ) != -1 ) alignment = true ;
+        }
+        
+    if ( alignment )
+        {
+        if ( wxYES == wxMessageBox ( txt("t_possible_alignment") ,
+                       txt("msg_box") , wxYES_NO|wxICON_QUESTION ) )
+           {
+           return ;
+           }        
+        }
+        
+    SetCursor ( *wxHOURGLASS_CURSOR ) ;
+    Freeze () ;
+    for ( n = 0 ; n < gb.vs_l.size() ; n++ )
+        {
+        nv = vv[vv.size()-1] ;
+        vv.pop_back () ;
+        if ( gb.vs_l.size() == 1 && title != "" ) nv->name = title ;
+        short type = TUReadSeq::getSeqType ( nv->sequence ) ;
+        if ( type == TYPE_AMINO_ACIDS )
+           newAminoAcids ( nv , nv->name ) ;
+        else
+           newFromVector ( nv , type ) ;
+        }
+    Thaw () ;
+    SetCursor ( *wxSTANDARD_CURSOR ) ;
     }
 
 
