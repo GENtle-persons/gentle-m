@@ -91,7 +91,6 @@ MyChild::~MyChild()
     delete swl ;
     delete swu ;
     delete sw ;
-//    myapp()->my_children.DeleteObject(this);
 }
 
 void MyChild::OnRunPCR(wxCommandEvent& event)

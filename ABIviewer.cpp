@@ -35,7 +35,6 @@ TABIviewer::~TABIviewer ()
     {
     if ( vec ) delete vec ;
     if ( stat ) delete stat ;
-//    myapp()->my_children.DeleteObject(this);    
     }
     
 void TABIviewer::OnZoom(wxScrollEvent& event)

@@ -13,6 +13,7 @@ TStorage::TStorage ( int nt , string fn )
     storagetype = nt ;
     if ( fn == "" ) fn = myapp()->homedir+"/local.db" ;
     dbname = fn ;
+#ifdef USEMYSQL
     if ( isMySQL )
         {
         conn = new MYSQL ;
@@ -25,16 +26,19 @@ TStorage::TStorage ( int nt , string fn )
                                 ex[3].c_str() , 
                                 ex[4].c_str() , 0 , NULL , CLIENT_COMPRESS ) ;
         }
+#endif
     autoUpdateSchema() ;
     }
 
 TStorage::~TStorage ()
     {
+#ifdef USEMYSQL
     if ( isMySQL )
         {
         mysql_close (conn);
         delete conn ;
         }
+#endif
     for ( int a = 0 ; a < re.size() ; a++ ) // Cleaning up enzymes
         delete re[a] ;
     }    
@@ -76,6 +80,7 @@ void TStorage::createDatabase ()
 TSQLresult TStorage::getObject_MySQL ( string query )
     {
     results.clean() ;
+#ifdef USEMYSQL
     if ( conn == NULL ) return results ;
 
     if ( writeProtect ) // Prevent old program version breaking the DB
@@ -122,6 +127,7 @@ TSQLresult TStorage::getObject_MySQL ( string query )
             }
         }
     else wxMessageBox ( wxString::Format ( "MySQL error %d" , err ) , query.c_str() ) ;
+#endif
     return results ;
     }
     
@@ -323,10 +329,6 @@ void TStorage::sqlAdd ( string &s1 , string &s2 , string key , string value )
     int a ;
     for ( a = 0 ; a < value.length() ; a++ ) // Avoiding single quotes in value
         if ( value[a] == '"' ) value[a] = 39 ;
-
-//    for ( a = 0 ; a < value.length() ; a++ ) // Avoiding single quotes in value
-//        if ( value[a] == 39 ) value[a] = '"' ;
-    
     if ( s1 != "" ) s1 += "," ;
     if ( s2 != "" ) s2 += "," ;
     s1 += key ;
@@ -539,6 +541,7 @@ void TStorage::setOption ( string oname , string vname )
     
 void TStorage::autoUpdateSchema ()
     {
+    if ( isMySQL ) return ; // No updates yet
     TSQLresult r ;
     string sql , s1 , s2 ;
     char t[1000] ;
@@ -723,5 +726,10 @@ void TStorage::updateProtease ( TProtease *p )
 void TStorage::addRestrictionEnzyme ( TRestrictionEnzyme *r )
     {
     re.push_back ( r ) ;
+    }
+    
+string TStorage::getDBname ()
+    {
+    return dbname ;
     }
     

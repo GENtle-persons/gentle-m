@@ -77,7 +77,6 @@ TPrimerDesign::TPrimerDesign(MyFrame *parent,
 TPrimerDesign::~TPrimerDesign ()
     {
     if ( stat ) delete stat ;
-//    myapp()->my_children.DeleteObject(this);    
     delete vc ;
     delete w ;
     }

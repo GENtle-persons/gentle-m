@@ -82,6 +82,7 @@ Section "install" Installation info
 ;  File "sqlite.exe"
   File "sqlite.dll"
   File "libmySQL.dll"
+  File "default.tab"
   File "GENtle.ico"
   File "variables.csv"
   File "blank.db"

@@ -352,7 +352,6 @@ void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl )
             txt("t_pcr") ,
             p->vec ,
             pl ) ;
-//    myapp()->my_children.Append(subframe);
     
     // Give it an icon
 #ifdef __WXMSW__

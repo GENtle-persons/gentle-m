@@ -88,6 +88,11 @@ MyFrame::~MyFrame ()
     {
     if ( html_ep ) delete html_ep ;
     rememberLastProject () ;
+    while ( dbcache.size() )
+        {
+        delete dbcache[dbcache.size()-1] ;
+        dbcache.pop_back () ;
+        }
 //    delete LS ;
     }
 
@@ -661,8 +666,6 @@ MyChild* MyFrame::newFromVector ( TVector *nv , int type )
     MyChild *subframe = new MyChild(this, "",
                                     wxPoint(-1, -1), wxSize(-1, -1),
                                     wxDEFAULT_FRAME_STYLE);
-//    myapp()->my_children.Append(subframe);
-    
 
     // Give it an icon
 #ifdef __WXMSW__
@@ -925,8 +928,6 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , string title )
         nv->items[a].direction = 1 ;
         }
 
-//    myapp()->my_children.Append(subframe);
-    
     
     // Give it an icon
 #ifdef __WXMSW__
@@ -954,9 +955,6 @@ TABIviewer *MyFrame::newABI ( string filename , string title )
     subframe->filename = filename ;
     subframe->vec->type = TYPE_SEQUENCE ;
 
-//    myapp()->my_children.Append(subframe);
-    
-    
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon("chrt_icn"));
@@ -1045,9 +1043,6 @@ void MyFrame::OnImageViewer(wxCommandEvent& event)
     {
     TImageDisplay *subframe = new TImageDisplay ( this , txt("t_image_viewer") ) ;
 
-//    myapp()->my_children.Append(subframe);
-    
-    
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon("chrt_icn"));
@@ -1069,9 +1064,6 @@ void MyFrame::OnCalculator(wxCommandEvent& event)
     {
     TCalculator *subframe = new TCalculator ( this , txt("t_calculator") ) ;
 
-//    myapp()->my_children.Append(subframe);
-    
-    
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon("chrt_icn"));
@@ -1276,6 +1268,16 @@ void MyFrame::OnSashDrag(wxSashEvent& event)
     // Leaves bits of itself behind sometimes
     GetClientWindow()->Refresh();    
     }
+
+TStorage *MyFrame::getTempDB ( string filename )
+    {
+    int a ;
+    for ( a = 0 ; a < dbcache.size() && dbcache[a]->getDBname() != filename ; a++ ) ;
+    if ( a == dbcache.size() ) 
+        dbcache.push_back ( new TStorage ( TEMP_STORAGE , filename ) ) ;
+    return dbcache[a] ;
+    }
+    
     
 // DROP TARGET
 

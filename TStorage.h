@@ -3,7 +3,12 @@
 
 #include <stdio.h>
 #include "main.h"
+
+#define USEMYSQL
+
+#ifdef USEMYSQL
 #include <mysql.h>
+#endif
 
 #ifdef __WXMSW__
 #include "win_sqlite.h"
@@ -99,6 +104,7 @@ class TStorage
     void tableInfoSet ( TVS &f , TVS &t , string nf , string nt ) ;
     string fixDNAname ( string s ) ;
     string UCfirst ( string s ) ;
+    string getDBname () ;
     
     bool getWriteProtect () ;
     void addRestrictionEnzyme ( TRestrictionEnzyme *r ) ;
@@ -115,7 +121,9 @@ class TStorage
     bool writeProtect ;
     int rpv ;
     bool isMySQL ;
+#ifdef USEMYSQL
     MYSQL *conn,*mysql;
+#endif
     } ;
  
 #endif

@@ -94,6 +94,7 @@ class TManageDatabaseDialog : public wxDialog
     virtual string fixQuotes ( string s ) ;
     virtual string getFileName ( string dbname ) ;
     virtual vector <int> getSelectedListItems ( wxListCtrl *l ) ;
+    virtual TStorage *getTempDB ( string filename ) ;
     
     virtual void initCopynMove () ;
     virtual void pmGetContext ( wxListCtrl *side ) ;

@@ -253,6 +253,11 @@ void TManageDatabaseDialog::pm_init_lists ()
     pm_left->SetFocus() ;
     }
     
+TStorage *TManageDatabaseDialog::getTempDB ( string filename )
+    {
+    return myapp()->frame->getTempDB ( filename ) ;
+    }
+    
 void TManageDatabaseDialog::pm_list_items ( int x )
     {
     int a ;
@@ -271,14 +276,14 @@ void TManageDatabaseDialog::pm_list_items ( int x )
     if ( !l->IsShown() ) return ; // No need to load data for a list that isn't visible
     SetCursor ( *wxHOURGLASS_CURSOR ) ;
     string name = c->GetStringSelection().c_str() ;
-    TStorage st ( TEMP_STORAGE , getFileName ( name ) ) ;
+    TStorage *st = getTempDB ( getFileName ( name ) ) ;
     
     l->DeleteAllItems () ;
     TSQLresult r ;
     if ( isProject )
         {
         string sql = "SELECT pr_name FROM project" ;
-        r = st.getObject ( sql ) ;        
+        r = st->getObject ( sql ) ;        
         for ( a = 0 ; a < r.rows() ; a++ )
            {
            string s = r[a][r["pr_name"]] ;
@@ -329,7 +334,7 @@ void TManageDatabaseDialog::pm_list_items ( int x )
               }
            if ( sql2 != "" ) sql += " WHERE" + sql2 ;
            }
-        r = st.getObject ( sql ) ;        
+        r = st->getObject ( sql ) ;        
         for ( a = 0 ; a < r.rows() ; a++ )
            {
            string s = r[a][r["dna_name"]] ;
@@ -482,10 +487,10 @@ bool TManageDatabaseDialog::moveDNA ( string name , string sdb , string tdb )
 
 void TManageDatabaseDialog::delDNA ( string name , string db )
     {
-    TStorage source ( TEMP_STORAGE , getFileName ( db ) ) ;
-    name = source.fixDNAname ( name ) ;
-    source.getObject ( "DELETE FROM dna WHERE dna_name=\"" + name + "\"" ) ;
-    source.getObject ( "DELETE FROM dna_item WHERE di_dna=\"" + name + "\"" ) ;
+    TStorage *source = getTempDB ( getFileName ( db ) ) ;
+    name = source->fixDNAname ( name ) ;
+    source->getObject ( "DELETE FROM dna WHERE dna_name=\"" + name + "\"" ) ;
+    source->getObject ( "DELETE FROM dna_item WHERE di_dna=\"" + name + "\"" ) ;
     }
 
 string TManageDatabaseDialog::getFileName ( string dbname )
@@ -791,7 +796,7 @@ bool TManageDatabaseDialog::do_load_project ( string name , string db )
     {
     int a ;
     string sql ;
-    TStorage tstorage ( TEMP_STORAGE , getFileName ( db ) ) ;
+    TStorage *tstorage = getTempDB ( getFileName ( db ) ) ;
     TSQLresult sr ;
     
     // Closing current windows
@@ -801,7 +806,7 @@ bool TManageDatabaseDialog::do_load_project ( string name , string db )
     // Setting new project name, loading desc etc.
     name = fixQuotes ( name ) ;
     sql = "SELECT pr_desc FROM project WHERE pr_name=\""+name+"\"" ;
-    sr = tstorage.getObject ( sql ) ;
+    sr = tstorage->getObject ( sql ) ;
     if ( sr.rows() == 0 ) return false ;
         
     myapp()->frame->project_name = name ;
@@ -814,7 +819,7 @@ bool TManageDatabaseDialog::do_load_project ( string name , string db )
 
     // Load associated DNA list
     sql = "SELECT * FROM project_dna WHERE pd_project=\""+name+"\"" ;
-    sr = tstorage.getObject ( sql ) ;
+    sr = tstorage->getObject ( sql ) ;
 
     // Load DNA
     bool all = true ;
@@ -840,7 +845,7 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
     {
     int a ;
     string sql ;
-    TStorage tstorage ( TEMP_STORAGE , getFileName ( db ) ) ;
+    TStorage *tstorage = getTempDB ( getFileName ( db ) ) ;
     TSQLresult sr ;
     v = new TVector () ;
 
@@ -848,7 +853,7 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
 
     // Loading vector
     sql = "SELECT * FROM dna WHERE dna_name=\"" + name + "\"" ;
-    sr = tstorage.getObject ( sql ) ;
+    sr = tstorage->getObject ( sql ) ;
     if( sr.rows() == 0 ) return false ;
     v->name = sr[0][sr["dna_name"]] ;
     v->desc = sr[0][sr["dna_description"]] ;
@@ -877,7 +882,7 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
            if ( t != "" )
               {
               if ( t[0] == '*' ) v->proteases.push_back ( t.substr ( 1 ) ) ;
-              else v->re.push_back ( tstorage.getRestrictionEnzyme ( t ) ) ;
+              else v->re.push_back ( tstorage->getRestrictionEnzyme ( t ) ) ;
               }
            t = "" ;
            }
@@ -886,12 +891,12 @@ bool TManageDatabaseDialog::do_load_DNA ( string name , string db )
     if ( t != "" )
         {
         if ( t[0] == '*' ) v->proteases.push_back ( t.substr ( 1 ) ) ;
-        else v->re.push_back ( tstorage.getRestrictionEnzyme ( t ) ) ;
+        else v->re.push_back ( tstorage->getRestrictionEnzyme ( t ) ) ;
         }
 
     // Loading items
     sql = "SELECT * FROM dna_item WHERE di_dna=\"" + name + "\"" ;
-    sr = tstorage.getObject ( sql ) ;
+    sr = tstorage->getObject ( sql ) ;
     for ( a = 0 ; a < sr.rows() ; a++ )
         {
         TVectorItem i ;
@@ -949,7 +954,7 @@ string TManageDatabaseDialog::fixQuotes ( string s )
     
 bool TManageDatabaseDialog::doesNameExist ( string name , string dbname )
     {
-    TStorage storage ( TEMP_STORAGE , getFileName ( dbname ) ) ;
+    TStorage *storage = getTempDB ( getFileName ( dbname ) ) ;
     string sql ;
     TSQLresult sr ;
     string x = fixQuotes ( name ) ;
@@ -957,7 +962,7 @@ bool TManageDatabaseDialog::doesNameExist ( string name , string dbname )
         sql = "SELECT pr_name FROM project WHERE pr_name=\"" + x + "\"" ;
     else
         sql = "SELECT dna_sequence FROM dna WHERE dna_name=\"" + x + "\"" ;
-    sr = storage.getObject ( sql ) ;
+    sr = storage->getObject ( sql ) ;
     if ( sr.content.size() == 0 ) return false ;
     
     string s , sc ;
@@ -1000,7 +1005,7 @@ void TManageDatabaseDialog::do_save_project ()
     dbname = pm_dd_save->GetStringSelection().c_str() ;
     if ( myapp()->frame->project_name != name &&
          doesNameExist ( name , dbname ) ) return ;
-    TStorage storage ( TEMP_STORAGE , getFileName ( dbname ) ) ;
+    TStorage *storage = getTempDB ( getFileName ( dbname ) ) ;
 
     // New name, or overwriting old one
     int a ;
@@ -1012,16 +1017,16 @@ void TManageDatabaseDialog::do_save_project ()
 
     // Deleting old one, if any
     sql = "DELETE FROM project WHERE pr_name=\""+x+"\"" ;
-    storage.getObject ( sql ) ;
+    storage->getObject ( sql ) ;
     sql = "DELETE FROM project_dna WHERE pd_project=\""+x+"\"" ;
-    storage.getObject ( sql ) ;
+    storage->getObject ( sql ) ;
     
     // Storing new one
     s1 = s2 = "" ;
-    storage.sqlAdd ( s1 , s2 , "pr_name" , x ) ;
-    storage.sqlAdd ( s1 , s2 , "pr_desc" , "No description" ) ;
+    storage->sqlAdd ( s1 , s2 , "pr_name" , x ) ;
+    storage->sqlAdd ( s1 , s2 , "pr_desc" , "No description" ) ;
     sql = "INSERT INTO project ("+s1+") VALUES ("+s2+")" ;
-    storage.getObject ( sql ) ;
+    storage->getObject ( sql ) ;
     
     for ( a = 0 ; a < myapp()->frame->children.size() ; a++ )
         {
@@ -1035,11 +1040,11 @@ void TManageDatabaseDialog::do_save_project ()
            if ( dna_db != "" )
               {
               s1 = s2 = "" ;
-              storage.sqlAdd ( s1 , s2 , "pd_project" , x ) ;
-              storage.sqlAdd ( s1 , s2 , "pd_dna" , dna_name ) ;
-              storage.sqlAdd ( s1 , s2 , "pd_database" , dna_db ) ;
+              storage->sqlAdd ( s1 , s2 , "pd_project" , x ) ;
+              storage->sqlAdd ( s1 , s2 , "pd_dna" , dna_name ) ;
+              storage->sqlAdd ( s1 , s2 , "pd_database" , dna_db ) ;
               sql = "INSERT INTO project_dna ("+s1+") VALUES ("+s2+")" ;
-              storage.getObject ( sql ) ;
+              storage->getObject ( sql ) ;
               }
             else
                {
@@ -1064,7 +1069,7 @@ void TManageDatabaseDialog::do_save_DNA ()
     name = pm_name->GetValue().c_str() ;
     dbname = pm_dd_save->GetStringSelection().c_str() ;
     if ( doesNameExist ( name , dbname ) ) return ;
-    TStorage storage ( TEMP_STORAGE , getFileName ( dbname ) ) ;
+    TStorage *storage = getTempDB ( getFileName ( dbname ) ) ;
 
     // New name, or overwriting old one
     int a ;
@@ -1075,9 +1080,9 @@ void TManageDatabaseDialog::do_save_DNA ()
     
     // Deleting old one, if any
     sql = "DELETE FROM dna WHERE dna_name=\""+x+"\"" ;
-    sr = storage.getObject ( sql ) ;
+    sr = storage->getObject ( sql ) ;
     sql = "DELETE FROM dna_item WHERE di_dna=\""+x+"\"" ;
-    sr = storage.getObject ( sql ) ;
+    sr = storage->getObject ( sql ) ;
     
     // Storing new one
     string enzymes = "," ;
@@ -1091,19 +1096,19 @@ void TManageDatabaseDialog::do_save_DNA ()
         enzymes += "*" + v->proteases[a] + "," ;
         
     s1 = s2 = "" ;
-    storage.sqlAdd ( s1 , s2 , "dna_name" , x ) ;
-    storage.sqlAdd ( s1 , s2 , "dna_description" , v->desc ) ;
-    storage.sqlAdd ( s1 , s2 , "dna_type" , v->type ) ;
-    storage.sqlAdd ( s1 , s2 , "dna_sequence" , v->sequence ) ;
-    storage.sqlAdd ( s1 , s2 , "dna_sticky_ul" , v->getStickyEnd(true,true) ) ;
-    storage.sqlAdd ( s1 , s2 , "dna_sticky_ll" , v->getStickyEnd(true,false) ) ;
-    storage.sqlAdd ( s1 , s2 , "dna_sticky_ur" , v->getStickyEnd(false,true) ) ;
-    storage.sqlAdd ( s1 , s2 , "dna_sticky_lr" , v->getStickyEnd(false,false) ) ;
-    storage.sqlAdd ( s1 , s2 , "dna_circular" , v->isCircular() ) ;
-    storage.sqlAdd ( s1 , s2 , "dna_restriction_enzymes" , enzymes ) ;
-    storage.sqlAdd ( s1 , s2 , "dna_params" , fixQuotes ( v->getParams() ) ) ;
+    storage->sqlAdd ( s1 , s2 , "dna_name" , x ) ;
+    storage->sqlAdd ( s1 , s2 , "dna_description" , v->desc ) ;
+    storage->sqlAdd ( s1 , s2 , "dna_type" , v->type ) ;
+    storage->sqlAdd ( s1 , s2 , "dna_sequence" , v->sequence ) ;
+    storage->sqlAdd ( s1 , s2 , "dna_sticky_ul" , v->getStickyEnd(true,true) ) ;
+    storage->sqlAdd ( s1 , s2 , "dna_sticky_ll" , v->getStickyEnd(true,false) ) ;
+    storage->sqlAdd ( s1 , s2 , "dna_sticky_ur" , v->getStickyEnd(false,true) ) ;
+    storage->sqlAdd ( s1 , s2 , "dna_sticky_lr" , v->getStickyEnd(false,false) ) ;
+    storage->sqlAdd ( s1 , s2 , "dna_circular" , v->isCircular() ) ;
+    storage->sqlAdd ( s1 , s2 , "dna_restriction_enzymes" , enzymes ) ;
+    storage->sqlAdd ( s1 , s2 , "dna_params" , fixQuotes ( v->getParams() ) ) ;
     sql = "INSERT INTO dna (" + s1 + ") VALUES (" + s2 + ")" ;
-    sr = storage.getObject ( sql ) ;
+    sr = storage->getObject ( sql ) ;
     v->name = x ;
     
     // Inserting items
@@ -1112,16 +1117,16 @@ void TManageDatabaseDialog::do_save_DNA ()
         {
         s1 = s2 = "" ;
         type[0] = v->items[a].type ;
-        storage.sqlAdd ( s1 , s2 , "di_name" , v->items[a].name ) ;
-        storage.sqlAdd ( s1 , s2 , "di_dna" , x ) ;
-        storage.sqlAdd ( s1 , s2 , "di_description" , v->items[a].desc ) ;
-        storage.sqlAdd ( s1 , s2 , "di_type" , type ) ;
-        storage.sqlAdd ( s1 , s2 , "di_from" , v->items[a].from ) ;
-        storage.sqlAdd ( s1 , s2 , "di_to" , v->items[a].to ) ;
-        storage.sqlAdd ( s1 , s2 , "di_direction" , v->items[a].direction ) ;
-        storage.sqlAdd ( s1 , s2 , "di_params" , v->items[a].implodeParams() ) ;
+        storage->sqlAdd ( s1 , s2 , "di_name" , v->items[a].name ) ;
+        storage->sqlAdd ( s1 , s2 , "di_dna" , x ) ;
+        storage->sqlAdd ( s1 , s2 , "di_description" , v->items[a].desc ) ;
+        storage->sqlAdd ( s1 , s2 , "di_type" , type ) ;
+        storage->sqlAdd ( s1 , s2 , "di_from" , v->items[a].from ) ;
+        storage->sqlAdd ( s1 , s2 , "di_to" , v->items[a].to ) ;
+        storage->sqlAdd ( s1 , s2 , "di_direction" , v->items[a].direction ) ;
+        storage->sqlAdd ( s1 , s2 , "di_params" , v->items[a].implodeParams() ) ;
         sql = "INSERT INTO dna_item (" + s1 + ") VALUES (" + s2 + ")" ;
-        sr = storage.getObject ( sql ) ;
+        sr = storage->getObject ( sql ) ;
         }     
 
     v->undo.clear() ;
@@ -1199,11 +1204,11 @@ void TManageDatabaseDialog::pmOnRename ( wxCommandEvent &ev )
     if ( isProject )
         {
         // Does the new name exist?
-        TStorage storage ( TEMP_STORAGE , getFileName ( context_db ) ) ;
+        TStorage *storage = getTempDB ( getFileName ( context_db ) ) ;
         TSQLresult sr ;
         string sql ;
         sql = "SELECT pr_name FROM project WHERE pr_name=\"" + newname + "\"" ;
-        sr = storage.getObject ( sql ) ;
+        sr = storage->getObject ( sql ) ;
     
         if ( sr.rows() > 0 )
             {
@@ -1216,18 +1221,18 @@ void TManageDatabaseDialog::pmOnRename ( wxCommandEvent &ev )
         
         // Renaming
         sql = "UPDATE project SET pr_name=\"" + newname + "\" WHERE pr_name=\"" + name + "\"" ;
-        storage.getObject ( sql ) ;
+        storage->getObject ( sql ) ;
         sql = "UPDATE project_dna SET pd_project=\"" + newname + "\" WHERE pd_project=\"" + name + "\"" ;
-        storage.getObject ( sql ) ;
+        storage->getObject ( sql ) ;
         }
     else
         {
         // Does the new name exist?
-        TStorage storage ( TEMP_STORAGE , getFileName ( context_db ) ) ;
+        TStorage *storage = getTempDB ( getFileName ( context_db ) ) ;
         TSQLresult sr ;
         string sql ;
         sql = "SELECT dna_sequence FROM dna WHERE dna_name=\"" + newname + "\"" ;
-        sr = storage.getObject ( sql ) ;
+        sr = storage->getObject ( sql ) ;
     
         if ( sr.rows() > 0 )
             {
@@ -1240,9 +1245,9 @@ void TManageDatabaseDialog::pmOnRename ( wxCommandEvent &ev )
         
         // Renaming
         sql = "UPDATE dna SET dna_name=\"" + newname + "\" WHERE dna_name=\"" + name + "\"" ;
-        storage.getObject ( sql ) ;
+        storage->getObject ( sql ) ;
         sql = "UPDATE dna_item SET di_dna=\"" + newname + "\" WHERE di_dna=\"" + name + "\"" ;
-        storage.getObject ( sql ) ;
+        storage->getObject ( sql ) ;
         }
         
     pm_list_items ( PM_LEFT ) ;
@@ -1252,11 +1257,11 @@ void TManageDatabaseDialog::pmOnRename ( wxCommandEvent &ev )
 void TManageDatabaseDialog::delProject ( string name , string db )
     {
     string sql ;
-    TStorage storage ( TEMP_STORAGE , getFileName ( db ) ) ;
+    TStorage *storage = getTempDB ( getFileName ( db ) ) ;
     sql = "DELETE FROM project WHERE pr_name=\""+name+"\"" ;
-    storage.getObject ( sql ) ;
+    storage->getObject ( sql ) ;
     sql = "DELETE FROM project_dna WHERE pd_project=\""+name+"\"" ;
-    storage.getObject ( sql ) ;    
+    storage->getObject ( sql ) ;    
     }
     
 void TManageDatabaseDialog::pmOnOpen ( wxCommandEvent &ev )
