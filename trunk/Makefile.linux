@@ -36,6 +36,8 @@ OBJECTS = ABItype.o \
 	ChildBase.o \
 	CoolCanvas.o \
 	ExternalInterface.o \
+	ExternalNCBI.o \
+	ExternalBLAST.o \
 	FindSequenceDialog.o \
 	GenBank.o \
 	main.o \
@@ -88,7 +90,26 @@ OBJECTS = ABItype.o \
 	tinyxml/tinystr.o \
 	tinyxml/tinyxml.o \
 	tinyxml/tinyxmlparser.o \
-	tinyxml/tinyxmlerror.o
+	tinyxml/tinyxmlerror.o \
+	clustalw/alnscore.o \
+	clustalw/amenu.o \
+	clustalw/calcgap.o \
+	clustalw/calcprf1.o \
+	clustalw/calcprf2.o \
+	clustalw/calctree.o \
+	clustalw/clustalw.o \
+	clustalw/gcgcheck.o \
+	clustalw/interfac.o \
+	clustalw/malign.o \
+	clustalw/palign.o \
+	clustalw/prfalign.o \
+	clustalw/random.o \
+	clustalw/readmat.o \
+	clustalw/sequence.o \
+	clustalw/showpair.o \
+	clustalw/trees.o \
+	clustalw/util.o
+
 
 
 # you shouldn't have to edit anything below this line
@@ -106,7 +127,9 @@ CXX = $(shell $(WX_CONFIG) --cxx)
 all:    $(PROGRAM)
 
 $(PROGRAM):	$(OBJECTS)
-	$(CXX) -o $(PROGRAM) $(OBJECTS) `$(WX_CONFIG) --libs` -L/usr/lib -lsqlite
+	$(CXX) -o $(PROGRAM) $(OBJECTS) `$(WX_CONFIG) --libs` -L/usr/lib -lsqlite -lmysqlclient
 
 clean: 
 	rm -f *.o $(PROGRAM)
+	rm -f tinyxml/*.o
+	rm -f clustalw/*.o
