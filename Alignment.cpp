@@ -322,9 +322,9 @@ void* TAlignment::Entry()
 	}
 	if ( !in.Eof() ) s = in.GetNextLine() ; // Blank line
     }
-    wxMutexGuiEnter() ;
+//    wxMutexGuiEnter() ;
     redoAlignments ( true ) ;
-    wxMutexGuiLeave() ;
+//    wxMutexGuiLeave() ;
 }
 
 
@@ -349,10 +349,11 @@ void TAlignment::recalcAlignments ()
 	    {
 		generateConsensusSequence ( false ) ;
 		threadRunning = false ;
-		SetCursor ( *wxSTANDARD_CURSOR ) ;
+//		SetCursor ( *wxSTANDARD_CURSOR ) ;
 	    }
 	    else
 	    {
+		SetCursor ( *wxSTANDARD_CURSOR ) ;
 		threadRunning = true ;
 		sc->SilentRefresh() ;
 		wxThreadHelper::Create () ;
