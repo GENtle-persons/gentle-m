@@ -8,7 +8,7 @@ typedef unsigned int uint ;
 //#define MYDEBUG
 
 // Turn logging on/off
-#define MYLOG
+//#define MYLOG
 
 #include "wx/wxprec.h"
 
@@ -74,6 +74,10 @@ using namespace std ;
 #define FEAT_MUT 3
 #define FEAT_NOLINE 4
 #define FEAT_VLINE 5
+
+#define DAM_METHYLATION 1
+#define DCM_METHYLATION 2
+#define ALL_METHYLATION_ENZYMES ( DAM_METHYLATION + DCM_METHYLATION )
 
 class MyFrame ;
 

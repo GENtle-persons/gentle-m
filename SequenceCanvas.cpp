@@ -796,10 +796,10 @@ void SequenceCanvas::ensureVisible ( int pos )
     MyGetViewStart ( &vx , &vy ) ;
     MyGetClientSize ( &wx , &wy ) ;
     wy /= charheight ;
-    wy -= wy % ( seq.GetCount() + 1 ) ;
+    wy -= wy % NumberOfLines() ;
     
     wx /= charwidth ;
-    wx -= wx % ( seq.GetCount() + 1 ) ;
+    wx -= wx % NumberOfLines() ;
 
     if ( pos == SCROLL_TO_END ) 
         {
