@@ -1028,8 +1028,8 @@ void MyChild::runRestriction ( wxString s )
     	{
 	    addFragmentsToGel ( "Cuts" , ed.cocktailFragments , gel , ed ) ;
     	}    
-   	gel->Refresh() ;
-   	gel->Activate () ;
+   	myapp()->frame->activateChild ( myapp()->frame->getChildIndex ( this ) ) ;
+   	myapp()->frame->activateChild ( myapp()->frame->getChildIndex ( gel ) ) ;
 	}    
 	
 void MyChild::addFragmentsToGel ( wxString title , wxArrayInt &cuts , TVirtualGel *gel , TRestrictionEditor &ed )

@@ -184,14 +184,14 @@ void TVectorEditor::initPanEnzym2 ()
     {
     oldEnzymeRules = v->getEnzymeRule() ;
     e_diduseit = oldEnzymeRules->useit ;
-    if ( !v->enzyme_rules )
+    if ( !v->getEnzymeRules() )
     	{
-	    v->enzyme_rules = new TEnzymeRules ;
-	    *v->enzyme_rules = *oldEnzymeRules ;
-	    v->enzyme_rules->useit = false ;
+	    v->setEnzymeRules ( new TEnzymeRules ) ;
+	    *(v->getEnzymeRules()) = *oldEnzymeRules ;
+	    v->getEnzymeRules()->useit = false ;
     	}    
     panEnzyme2 = new TEnzymeSettingsTab ( nb , EST_SINGLE ) ;
-    v->enzyme_rules->setup_options ( panEnzyme2 ) ;
+    v->getEnzymeRules()->setup_options ( panEnzyme2 ) ;
     nb->AddPage ( panEnzyme2 , txt("t_enzymes_2") ) ;    
 //    addOkCancel ( panEnzyme2 ) ;
     }    
@@ -269,12 +269,12 @@ void TVectorEditor::commitEnzymes ()
            }
         }
         
-    v->enzyme_rules->lookup_options ( panEnzyme2 ) ;
-    if ( v->enzyme_rules != oldEnzymeRules || 
-    	( v->enzyme_rules->useit != e_diduseit ) )
+    v->getEnzymeRules()->lookup_options ( panEnzyme2 ) ;
+    if ( v->getEnzymeRules() != oldEnzymeRules || 
+    	( v->getEnzymeRules()->useit != e_diduseit ) )
     	{
     	changed = true ;
-    	v->setParam ( "enzymerule" , v->enzyme_rules->to_string() ) ;
+    	v->setParam ( "enzymerule" , v->getEnzymeRules()->to_string() ) ;
      	}   	
         
     if ( changed )

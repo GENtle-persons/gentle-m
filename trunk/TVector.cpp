@@ -34,6 +34,9 @@ int TVector::getType () { return type ; }
 int TVector::getMethylationSiteIndex ( int pos ) { return methyl.Index ( pos ) ; }
 int TVector::getMethylationSite ( int index ) { return methyl[index] ; }
 int TVector::countMethylationSites () { return methyl.GetCount() ; }
+TEnzymeRules *TVector::getEnzymeRules () { return enzyme_rules ; }
+void TVector::setEnzymeRules ( TEnzymeRules *er ) { enzyme_rules = er ; }
+
 
 void TVector::prepareFeatureEdit ( int pos , bool overwrite )
 	{
@@ -768,9 +771,9 @@ TEnzymeRules *TVector::getEnzymeRule ()
  		if ( er->useit ) return er ;
  		}
 	
-	if ( myapp()->frame->project.enzyme_rules ) // Project settings
+	if ( myapp()->frame->project.getEnzymeRules() ) // Project settings
 		{
- 		er = myapp()->frame->project.enzyme_rules ;
+ 		er = myapp()->frame->project.getEnzymeRules() ;
  		if ( er->useit ) return er ;
  		} 		
  		

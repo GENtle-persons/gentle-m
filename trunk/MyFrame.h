@@ -59,10 +59,16 @@ class TProject
 	{
 	public :
  	TProject () ; ///< \brief Constructor
-	TEnzymeRules *enzyme_rules ; ///< \brief The enzyme rules of the project
+
+    virtual TEnzymeRules *getEnzymeRules () ; ///< Returns the restriction enzyme display rules for the project
+    virtual void setEnzymeRules ( TEnzymeRules *er ) ; ///< Sets the restriction enzyme display rules for the project
+
     wxString name ;  ///< \brief The project name
     wxString desc ;  ///< \brief The project description
     wxString db ;    ///< \brief The name of the database the project is stored in
+    
+    private :
+	TEnzymeRules *enzyme_rules ; ///< \brief The enzyme rules of the project
 	} ;    
 
 /** \class MyFrame

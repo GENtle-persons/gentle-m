@@ -268,6 +268,8 @@ class TVector
     virtual int getMethylationSite ( int index ) ; ///< Returns the position of a methylation site
     virtual int countMethylationSites () ; ///< Returns the number of found methylation sites
     virtual void prepareFeatureEdit ( int pos , bool overwrite ) ; ///< Changes feature names or cuts features that are about to be edited
+    virtual TEnzymeRules *getEnzymeRules () ; ///< Returns the restriction enzyme display rules for this vector
+    virtual void setEnzymeRules ( TEnzymeRules *er ) ; ///< Sets the restriction enzyme display rules for this vector
     
     // Variables
     vector <TVectorItem> items ; ///< Items/features/annotations
@@ -279,7 +281,6 @@ class TVector
     wxArrayString proteases ,  ///< Proteases used
      	cocktail ; ///< Enzymes from the last restriction
     TUndo undo ; ///< Undo information
-    TEnzymeRules *enzyme_rules ; ///< Pointer to the restriction enzyme rules
     
     private :
     virtual wxString invert ( wxString s ) ; ///< Inverts a string
@@ -290,6 +291,7 @@ class TVector
     virtual void evaluate_key_value ( wxString key , wxString value ) ; ///< Used in setParam() and setParams()
 
     int type ; ///< The sequence type
+    TEnzymeRules *enzyme_rules ; ///< Pointer to the restriction enzyme display rules
     bool recalcvisual ; ///< Recalculate the layout of the sequence?
     vector <TORF> worf ; ///< Open Reading Frames
     wxArrayInt methyl ; ///< Methylation sites
