@@ -186,6 +186,8 @@ void MyFrame::initme ()
     showSplashScreen = LS->getOption ( "SHOWSPLASHSCREEN" , true ) ;
     checkUpdate = LS->getOption ( "CHECKUPDATE" , true ) ;
     lang_string = LS->getOption ( "LANGUAGE" , "en" ) ;
+    global_enzyme_rules = new TEnzymeRules ;
+    global_enzyme_rules->load_global_settings() ;
     useCoolCanvas = LS->getOption ( "USECOOLCANVAS" , false ) ; // Not saved yet
     useInternalHelp = LS->getOption ( "USEINTERNALHELP" , false ) ; // Not saved yet
     init_txt ( lang_string.c_str() ) ;
@@ -835,10 +837,12 @@ void MyFrame::OnManageDatabase(wxCommandEvent& event)
 void MyFrame::OnProgramOptions(wxCommandEvent& event)
     {
     ProgramOptionsDialog pod ( this , txt("t_program_options" ) ) ;
+    global_enzyme_rules->setup_options ( &pod ) ;
     int r = pod.ShowModal() ;
     if ( r != wxID_OK ) return ;
 
     // retrieving options
+    global_enzyme_rules->lookup_options ( &pod ) ;
     enhancedRefresh = pod.enhancedDisplay->GetValue() ;
     showVectorTitle = pod.vectorTitle->GetValue() ;
     showVectorLength = pod.vectorLength->GetValue() ;
@@ -864,6 +868,7 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     LS->setOption ( "SHOWSPLASHSCREEN" , showSplashScreen ) ;
     LS->setOption ( "CHECKUPDATE" , checkUpdate ) ;
     LS->setOption ( "USEINTERNALHELP" , useInternalHelp ) ;
+    global_enzyme_rules->save_global_settings() ;
     }
 
 void MyFrame::OnProjectLoad(wxCommandEvent& event)

@@ -603,4 +603,6 @@
 "PDB_LINK","Link to","Verbindung zu"
 "t_add_sql","Add MySQL database","MySQL-Datenbank hinzufügen"
 "t_new_sql","New MySQL database","Neue MySQL-Datenbank"
-
+"t_global_settings","Global settings","Globale Einstellungen"
+"t_global_enzymes","Enzyme settings","Enzym-Einstellungen"
+"t_use_global_enzyme_settings","Use global enzyme settings","Globale Enzym-Einstellungen verwenden"

@@ -910,7 +910,7 @@ BuildCmd=
 [Unit96]
 FileName=ProgramOptionsDialog.h
 CompileCpp=1
-Folder=
+Folder=Dialogs
 Compile=1
 Link=1
 Priority=1000
@@ -1010,7 +1010,7 @@ BuildCmd=
 [Unit97]
 FileName=ProgramOptionsDialog.cpp
 CompileCpp=1
-Folder=
+Folder=Dialogs
 Compile=1
 Link=1
 Priority=1000
@@ -1020,7 +1020,7 @@ BuildCmd=
 [Unit99]
 FileName=FindSequenceDialog.cpp
 CompileCpp=1
-Folder=
+Folder=Dialogs
 Compile=1
 Link=1
 Priority=1000
@@ -1030,7 +1030,7 @@ BuildCmd=
 [Unit98]
 FileName=FindSequenceDialog.h
 CompileCpp=1
-Folder=
+Folder=Dialogs
 Compile=1
 Link=1
 Priority=1000
