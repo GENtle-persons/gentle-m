@@ -288,6 +288,8 @@ enum {
     FRAME_SASH_BOTTOM,
     MD_PM_TWOPANES,
     SEQ_SAVE_IMAGE,
+    MD_PM_FILTER_DESC,
+    MD_PM_FILTER_SEQ,
     
     } ;
 
