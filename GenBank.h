@@ -1,7 +1,6 @@
-// This file includes import (and later, export) filters for
-// - GenBank
-// - Sequencing data
-
+/** \file
+	\brief Contains the GenBank class and its TGenBankFeature helper class
+*/
 #ifndef _GENBANK_H_
 #define _GENBANK_H_
 
@@ -14,10 +13,11 @@ class TVectorTree ;
 class TGenBankFeature
     {
     public :
-    TGenBankFeature () {} ;
-    TGenBankFeature ( wxString _n , wxString _v ) { name = _n ; value = _v ; }
-    wxString name , value ;
-    wxArrayString qname , qvalue ;
+    TGenBankFeature () {} ; ///< Empty constructor
+    TGenBankFeature ( wxString _n , wxString _v ) { name = _n ; value = _v ; } ///< Constructor
+    wxString name ; ///< Feature name
+    wxString value ; ///< Feature (string) value
+//    wxArrayString qname , qvalue ;
     } ;
 
 class TGenBank
@@ -49,14 +49,17 @@ class TGenBank
     wxArrayString vs ;
     wxArrayInt vi ;
     bool perm[256] ;
-    wxString params , title , description ;
+    wxString params ;
+    wxString title ;
+    wxString description ;
+    bool validseq[256] ;
+    bool isblank[256] ;
+    bool isblankorquote[256] ;
     
     void parseLines () ;
     void addItem ( TVector *v , wxArrayString &va ) ;
     void iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag = 0 ) ;
-    bool isValidSequence ( char a ) ;
-    
-    bool validseq[256] , isblank[256] , isblankorquote[256] ;
+    bool isValidSequence ( char a ) ;    
     } ;
 
 #endif

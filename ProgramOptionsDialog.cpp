@@ -259,6 +259,9 @@ void ProgramOptionsDialog::initGlobalSettings ()
     useInternalHelp = new wxCheckBox ( globalSettingsPanel , -1 , 
                         txt("t_useinternalhelp") , 
                         wxPoint ( bo , lh*10 ) ) ;
+    doRegisterStuff = new wxCheckBox ( globalSettingsPanel , -1 , 
+                        txt("t_doregisterstuff") , 
+                        wxPoint ( bo , lh*11 ) ) ;
                         
     enhancedDisplay->SetValue ( myapp()->frame->enhancedRefresh ) ;
     vectorTitle->SetValue ( myapp()->frame->showVectorTitle ) ;
@@ -268,6 +271,7 @@ void ProgramOptionsDialog::initGlobalSettings ()
     showSplashScreen->SetValue ( myapp()->frame->showSplashScreen ) ;
     checkUpdate->SetValue ( myapp()->frame->checkUpdate ) ;
     useInternalHelp->SetValue ( myapp()->frame->useInternalHelp ) ;
+    doRegisterStuff->SetValue ( myapp()->frame->doRegisterStuff ) ;
     language->Append ( "en" ) ;
     language->Append ( "de" ) ;
     language->SetStringSelection ( myapp()->frame->lang_string ) ;

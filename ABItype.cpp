@@ -176,6 +176,11 @@ wxString ABItype::getStr ( unsigned char *t , int from , int len )
 
 //--------------------------------------------
 
+
+/** \brief Finds a specific record in the parsed data
+	\param id The flag (type) of the record
+	\param num The number of the record
+*/    
 int ABItype::getRecord ( wxString id , int num )
     {
     int a ;
@@ -184,6 +189,9 @@ int ABItype::getRecord ( wxString id , int num )
     return a ;
     }
 
+/** \brief Finds a specific sequence record
+	\param num The number of the sequence record
+*/    
 wxString ABItype::getSequence ( int num )
     {
     wxString r ;
@@ -193,6 +201,10 @@ wxString ABItype::getSequence ( int num )
     return r ;
     }
     
+/** \brief Returns the string value of a specific record in the parsed data
+	\param id The flag (type) of the record
+	\param num The number of the record
+*/    
 wxString ABItype::getRecordPascalString ( wxString id , int num )
     {
     int i = getRecord ( id , num ) ;
@@ -200,6 +212,10 @@ wxString ABItype::getRecordPascalString ( wxString id , int num )
     return vf[i].getPascalString() ;
     }
 
+/** \brief Returns the (integer) value of a specific record in the parsed data
+	\param id The flag (type) of the record
+	\param num The number of the record
+*/    
 int ABItype::getRecordValue ( wxString id , int num )
     {
     int i = getRecord ( id , num ) ;
@@ -210,14 +226,17 @@ int ABItype::getRecordValue ( wxString id , int num )
     
 //***************************************
 
+/// Constructor
 TFLAG::TFLAG ()
     {
     }
 
+/// Destructor
 TFLAG::~TFLAG ()
     {
     }    
 
+/// \brief Reads a Pascal-like string from the data   
 wxString TFLAG::getPascalString ()
     {
     if ( !data )
