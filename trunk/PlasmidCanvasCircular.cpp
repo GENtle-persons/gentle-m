@@ -140,8 +140,8 @@ void PlasmidCanvas::push_rc_right ( int a , wxDC &dc )
 void PlasmidCanvas::recalc_rc ( int a, wxDC &dc )
     {
     TRestrictionCut *c = &p->vec->rc[a] ;
-    wxPoint p2 ( deg2x ( c->angle , c->r2 )+w/2 , deg2y ( c->angle , c->r2 )+h/2 ) ;
-    wxPoint p3 ( deg2x ( c->angle3 , c->r3 )+w/2 , deg2y ( c->angle3 , c->r3 )+h/2 ) ;
+    wxPoint p2 ( deg2x ( c->angle , (int)c->r2 )+w/2 , deg2y ( c->angle , (int)c->r2 )+h/2 ) ;
+    wxPoint p3 ( deg2x ( c->angle3 , (int)c->r3 )+w/2 , deg2y ( c->angle3 , (int)c->r3 )+h/2 ) ;
     c->lp = p3 ;
     makeLastRect ( a , dc ) ;    
     }
@@ -186,21 +186,21 @@ void PlasmidCanvas::drawCircularORFs ( wxDC &dc )
            mm = mt ;
            mn = mf ;
            }
-        dc.DrawCircle ( deg2x ( mn , r+ro/2 ) + w/2 ,
-                        deg2y ( mn , r+ro/2 ) + h/2 ,
+        dc.DrawCircle ( deg2x ( mn , (int)(r+ro/2) ) + w/2 ,
+                        deg2y ( mn , (int)(r+ro/2) ) + h/2 ,
                         4 ) ;
-        dc.DrawLine ( deg2x ( mm , r+ro/2 ) + w/2 ,
-                      deg2y ( mm , r+ro/2 ) + h/2 ,
-                      deg2x ( mm - dir*2 , r+ro/2-roi/4 ) + w/2 ,
-                      deg2y ( mm - dir*2 , r+ro/2-roi/4 ) + h/2 ) ;
-        dc.DrawLine ( deg2x ( mm , r+ro/2 ) + w/2 ,
-                      deg2y ( mm , r+ro/2 ) + h/2 ,
-                      deg2x ( mm - dir*2 , r+ro/2+roi/4 ) + w/2 ,
-                      deg2y ( mm - dir*2 , r+ro/2+roi/4 ) + h/2 ) ;
+        dc.DrawLine ( deg2x ( mm , (int)(r+ro/2) ) + w/2 ,
+                      deg2y ( mm , (int)(r+ro/2) ) + h/2 ,
+                      deg2x ( mm - dir*2 , (int)(r+ro/2-roi/4) ) + w/2 ,
+                      deg2y ( mm - dir*2 , (int)(r+ro/2-roi/4) ) + h/2 ) ;
+        dc.DrawLine ( deg2x ( mm , (int)(r+ro/2) ) + w/2 ,
+                      deg2y ( mm , (int)(r+ro/2) ) + h/2 ,
+                      deg2x ( mm - dir*2 , (int)(r+ro/2+roi/4) ) + w/2 ,
+                      deg2y ( mm - dir*2 , (int)(r+ro/2+roi/4) ) + h/2 ) ;
                       
         dc.SetBackgroundMode ( wxTRANSPARENT ) ;    
         dc.SetBrush ( *wxTRANSPARENT_BRUSH ) ;    
-        dc.DrawEllipticArc ( w/2-r-ro/2 , h/2-r-ro/2 , r*2+ro , r*2+ro , 90-mt , 90-mf ) ;
+        dc.DrawEllipticArc ( (int)(w/2-r-ro/2) , (int)(h/2-r-ro/2) , (int)(r*2+ro) , (int)(r*2+ro) , 90-mt , 90-mf ) ;
 
         p->vec->worf[a].dist1 = r+ro/2-roi/4 ;
         p->vec->worf[a].dist2 = r+ro/2+roi/4 ;
@@ -472,7 +472,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
                                         deg2y ( df-dd , (r1+r2)/2 ) ) ) ;
                 }
 
-            p.reserve ( ( dt - df ) / ds * 2 + 10 ) ;
+            p.reserve ( (int)(( dt - df ) / ds * 2 + 10) ) ;
             for ( float b = df ; b < dt ; b += ds )
                     p.push_back ( wxPoint ( deg2x ( b , r1 ) , deg2y ( b , r1 ) ) ) ;
                     
@@ -538,8 +538,8 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
            c.r1 = c.r1 * 100 * r / ( STANDARDRADIUS * 100 ) ;
            c.r2 = c.r2 * 100 * r / ( STANDARDRADIUS * 100 ) ;
            c.r3 = c.r3 * 100 * r / ( STANDARDRADIUS * 100 ) ;
-           wxPoint p1 ( deg2x ( c.angle , c.r1 )+w/2 , deg2y ( c.angle , c.r1 )+h/2 ) ;
-           wxPoint p2 ( deg2x ( c.angle , c.r2 )+w/2 , deg2y ( c.angle , c.r2 )+h/2 ) ;
+           wxPoint p1 ( deg2x ( c.angle , (int)c.r1 )+w/2 , deg2y ( c.angle , (int)c.r1 )+h/2 ) ;
+           wxPoint p2 ( deg2x ( c.angle , (int)c.r2 )+w/2 , deg2y ( c.angle , (int)c.r2 )+h/2 ) ;
            dc.DrawLine ( p1 , p2 ) ;
            wxPoint p3 = p->vec->rc[a].lp ;
             

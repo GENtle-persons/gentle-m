@@ -245,11 +245,11 @@ void TMyImagePanel::OnDraw(wxDC& pdc)
         x /= xs ;
         y /= ys ;
         
-        pdc.DrawBitmap ( *bmp , x , y ) ;
+        pdc.DrawBitmap ( *bmp , (int)x , (int)y ) ;
 
         for ( int i = 0 ; i < imdi->r->items.size() ; i++ )
            {
-           imdi->r->items[i].draw ( pdc , x , y , x+nw , y+nh ) ;
+           imdi->r->items[i].draw ( pdc , (int)x , (int)y , (int)(x+nw) , (int)(y+nh) ) ;
            }
         
         double tx = w - tw ;
@@ -257,7 +257,7 @@ void TMyImagePanel::OnDraw(wxDC& pdc)
         tx /= (double) 2 * xs ;
         ty = y ;
         ty -= ( (double) th ) / ys ;
-        pdc.DrawText ( file , tx , ty ) ;
+        pdc.DrawText ( file , (int)tx , (int)ty ) ;
 
 //        pdc.DrawLine ( 0 , 0 , tx , ty ) ;
         

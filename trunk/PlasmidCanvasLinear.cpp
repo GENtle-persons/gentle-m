@@ -289,10 +289,10 @@ void PlasmidCanvas::drawLinearORFs ( wxDC &dc )
            mt = mm ;
            dir = -1 ;
            }
-        dc.DrawLine ( mf , mh , mt , mh ) ;
-        dc.DrawLine ( mt , mh , mt - dir*w/100 , mh - ah/4 ) ;
-        dc.DrawLine ( mt , mh , mt - dir*w/100 , mh + ah/4 ) ;
-        dc.DrawCircle ( mf , mh , ah/4 ) ;
+        dc.DrawLine ( (int)mf , (int)mh , (int)mt , (int)mh ) ;
+        dc.DrawLine ( (int)mt , (int)mh , (int)(mt - dir*w/100) , (int)(mh - ah/4) ) ;
+        dc.DrawLine ( (int)mt , (int)mh , (int)(mt - dir*w/100) , (int)(mh + ah/4) ) ;
+        dc.DrawCircle ( (int)mf , (int)mh , (int)(ah/4) ) ;
 
         dc.SetBackgroundMode ( wxTRANSPARENT ) ;    
         dc.SetBrush ( *wxTRANSPARENT_BRUSH ) ;    

@@ -106,7 +106,8 @@ CXX = $(shell $(WX_CONFIG) --cxx)
 all:    $(PROGRAM)
 
 $(PROGRAM):	$(OBJECTS)
-	$(CXX) -o $(PROGRAM) $(OBJECTS) `$(WX_CONFIG) --libs` -L/usr/lib -lsqlite
+	$(CXX) -o $(PROGRAM) $(OBJECTS) `$(WX_CONFIG) --libs` -L/usr/lib -lsqlite -lmysqlclient
 
 clean: 
 	rm -f *.o $(PROGRAM)
+	rm -f tinyxml/*.o
