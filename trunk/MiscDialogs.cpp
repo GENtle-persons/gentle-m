@@ -770,6 +770,7 @@ bool FindSequenceDialog::doesMatch ( char a , char b )
 int FindSequenceDialog::subsearch ( const wxString &s , const wxString &sub , int start )
     {
     int a , b ;
+    if ( s.length() < sub.length() ) return -1 ;
     for ( a = start ; a < s.length() - sub.length() + 1 ; a++ )
         {
         for ( b = 0 ; b < sub.length() ; b++ )
