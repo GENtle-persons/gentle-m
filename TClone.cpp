@@ -265,7 +265,8 @@ void TClone::load ( string s )
 	}
 	
 //	sort ( enzymes.begin() , enzymes.end() ) ;
-changed = false ;
+    changed = false ;
+    if ( sequence == "" ) success = false ;
 }
 
 void TClone::save ( string s )

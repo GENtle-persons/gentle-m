@@ -856,7 +856,7 @@ bool TManageDatabaseDialog::do_load_project ( string name , string db )
         {
         string dna_name = sr[a][sr["pd_dna"]] ;
         string dna_db = sr[a][sr["pd_database"]] ;
-        wxString msg = wxString::Format ( txt("t_prj_loading") , dna_name.c_str() ) ;
+        wxString msg = wxString::Format ( txt("t_loading") , dna_name.c_str() ) ;
         dlg.SetTitle ( msg ) ;
         dlg.SetFocus() ;
         all &= do_load_DNA ( dna_name , dna_db ) ;

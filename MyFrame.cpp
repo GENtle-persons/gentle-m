@@ -510,25 +510,40 @@ void MyFrame::OnFileImport(wxCommandEvent& WXUNUSED(event) )
                         "|" + wcABIformat ;
     string lastdir = LS->getOption ( "LAST_IMPORT_DIR" , "C:" ) ;
     wxFileDialog d ( this , txt("import_file") , lastdir.c_str() , 
-            "" , wildcard , wxOPEN ) ;
+            "" , wildcard , wxOPEN | wxMULTIPLE ) ;
     int x = d.ShowModal() ;
     if ( x != wxID_OK ) return ;
     
     LS->setOption ( "LAST_IMPORT_DIR" , d.GetDirectory().c_str() ) ;
 
     int filter = d.GetFilterIndex () - 1 ;
-    importFile ( d.GetFilename().c_str() ,
-                 d.GetPath().c_str() ,
-                 filter ) ;
+    wxArrayString files , paths ;
+    d.GetFilenames ( files ) ;
+    d.GetPaths ( paths ) ;
+    wxBeginBusyCursor();
+    wxDialog dlg ( NULL , -1 , "Test" , wxDefaultPosition , wxSize ( 300 , 20 ) ) ;
+    if ( files.GetCount() > 1 ) dlg.Show() ;
+    Freeze () ;
+    for ( int a = 0 ; a < files.GetCount() ; a++ )
+       {
+       wxString msg = wxString::Format ( txt("t_loading") , files[a].c_str() ) ;
+       dlg.SetTitle ( msg ) ;
+       dlg.SetFocus() ;
+       importFile ( files[a].c_str() , paths[a].c_str() , filter ) ;
+       }
+    Thaw () ;
+    SetFocus () ;
+    wxEndBusyCursor();
+    mainTree->Refresh () ;
+    Refresh () ;
+    activateChild ( getChildIndex ( lastChild ) ) ;
     }
     
 void MyFrame::importFile ( string file , string path , int filter )
     {
-
-    if ( filter == -1 ) // Automatic detection
-        {
-        
-        // Trying ABI format
+    // Trying ABI format
+    if ( filter == 5 || filter == -1 )
+       {
         ABItype dummy ;
         dummy.parse ( path ) ;
         if ( dummy.vf.size() > 0 ) // Success
@@ -536,17 +551,23 @@ void MyFrame::importFile ( string file , string path , int filter )
            newABI ( path , file ) ;
            return ;
            }
+        }
 
-        // Trying GenBank format
+    // Trying GenBank format
+    if ( filter == 1 || filter == -1 )
+       {
         TGenBank gb ;
         gb.load ( path.c_str() ) ;
         if ( gb.success )
            {
-           newGB ( gb ) ;
+           newGB ( gb , file ) ;
            return ;
            }
-           
-        // Trying XML formats
+       }
+       
+    // Trying XML formats
+    if ( filter == -1 )
+       {
         TXMLfile xml ;
         xml.load ( path ) ;
         if ( xml.success() )
@@ -554,8 +575,11 @@ void MyFrame::importFile ( string file , string path , int filter )
            newXML ( xml ) ;
            return ;
            }
+       }
 
-        // Trying UReadSeq package
+    // Trying UReadSeq package
+    if ( filter == 2 || filter == 3 || filter == 4 || filter == -1 )
+       {
         TUReadSeq u ( path.c_str() ) ;
         if ( u.error == 0 && u.seqs.size() > 0 )
            {
@@ -564,8 +588,11 @@ void MyFrame::importFile ( string file , string path , int filter )
            newGB ( gb ) ;
            return ;
            }
+        }
 
-        // Trying CLONE format
+    // Trying CLONE format
+    if ( filter == 0 || filter == -1 )
+       {
         TClone clone ;
         clone.LS = LS ;
         clone.load ( path ) ;
@@ -574,113 +601,15 @@ void MyFrame::importFile ( string file , string path , int filter )
            newCLONE ( clone ) ;
            return ;
            }
-/*
-        // Trying FASTA format
-        TFasta seq ;
-        seq.load (path ) ;
-        if ( seq.success )
-           {
-           newFASTA ( seq ) ;
-//           seq.remap ( subframe->vec ) ;
-//           type = TYPE_SEQUENCE ;
-           return ;
-           }
-*/
+       }
 
-        wxMessageBox ( txt("t_unable_to_detect_file_type") ) ;
-                         
-        return ;
-        }
-
-    MyChild *subframe = new MyChild(getCommonParent(), txt("imported_vector"),
-                                    wxPoint(-1, -1), wxSize(-1, -1),
-                                    wxDEFAULT_FRAME_STYLE);
-
-
-    // Give it an icon
-#ifdef __WXMSW__
-    subframe->SetIcon(wxIcon("chrt_icn"));
-#else
-    subframe->SetIcon(wxIcon( mondrian_xpm ));
-#endif
-
-    subframe->initme() ;
-
-    int type = TYPE_VECTOR ;
-    
-    if ( filter == 0 )
-        {
-        // Loading Clone file    
-        TClone clone ;
-        clone.LS = LS ;
-        clone.load ( path ) ;
-        clone.remap ( subframe->vec ) ;
-        }
-    else if ( filter == 1 )
-        {
-        // Loading GenBank file
-        delete subframe ;
-        TGenBank gb ;
-        gb.load ( path.c_str() ) ;
-        newGB ( gb ) ;
-        return ;
-        }
-    else if ( filter == 2 )
-        {
-        // Loading results from sequencing
-        TFasta seq ;
-        seq.load ( path.c_str() ) ;
-        seq.remap ( subframe->vec ) ;
-        type = TYPE_SEQUENCE ;
-        }
-    else if ( filter == 3 || filter == 4 ) // Plain text DNA/AA
-        {
-        string sequence ;
-        wxTextFile tf ( path.c_str() ) ;
-        tf.Open () ;
-        for ( sequence = tf.GetFirstLine() ; !tf.Eof() ; sequence += tf.GetNextLine() ) ;
-        tf.Close () ;
-        
-        if ( filter == 3 )
-           {
-           subframe->vec->name = file ;
-           subframe->vec->sequence = sequence ;
-           subframe->vec->desc = txt("manually_entered_sequence") ;
-           }
-        else if ( filter == 4 )
-           {
-           subframe->vec->setWindow ( subframe ) ;
-           subframe->vec->undo.clear() ;
-           mainTree->addChild(subframe,type) ;
-           subframe->Close() ;
-           delete subframe ;
-           newAminoAcids ( sequence , file ) ;
-           return ;
-           }
-        }
-    else if ( filter == 5 ) // ABI
-        {
-        subframe->vec->setWindow ( subframe ) ;
-        subframe->vec->undo.clear() ;
-        mainTree->addChild(subframe,type) ;
-        subframe->Close() ;
-        delete subframe ;
-        newABI ( path , file ) ;
-        return ;
-        }
-
-    subframe->vec->setWindow ( subframe ) ;
-    subframe->initPanels() ;
-    mainTree->addChild(subframe,type) ;
-    subframe->Maximize() ;
-    subframe->Activate () ;
+    wxMessageBox ( txt("t_unable_to_detect_file_type") , file.c_str() ) ;
+    return ;
 }
 
 void MyFrame::newXML (  TXMLfile &xml , string title )
    {
    int n ;
-   SetCursor ( *wxHOURGLASS_CURSOR ) ;
-//   Freeze () ;
    for ( n = 0 ; n < xml.countVectors() ; n++ )
        {
        TVector *nv = xml.getVector ( n ) ;
@@ -691,8 +620,6 @@ void MyFrame::newXML (  TXMLfile &xml , string title )
        else
           newFromVector ( nv , type ) ;
        }
-//   Thaw () ;
-   SetCursor ( *wxSTANDARD_CURSOR ) ;
    }
 
 MyChild *MyFrame::newCLONE ( TClone &clone )
@@ -700,6 +627,7 @@ MyChild *MyFrame::newCLONE ( TClone &clone )
     MyChild *subframe = new MyChild(getCommonParent(), txt("imported_vector"),
                                     wxPoint(-1, -1), wxSize(-1, -1),
                                     wxDEFAULT_FRAME_STYLE);
+    setChild ( subframe ) ;
 
     // Give it an icon
 #ifdef __WXMSW__
@@ -760,6 +688,7 @@ void MyFrame::newGB ( TGenBank &gb , string title )
         if ( nv->sequence.length() != vv[0]->sequence.length() ) alignment = false ;
         else if ( nv->sequence.find ( '-' ) != -1 ) alignment = true ;
         }
+    if ( gb.vs_l.size() == 1 ) alignment = false ;
         
     // Removing alignment artifacts from sequences
     for ( n = 0 ; n < vv.size() ; n++ )
@@ -777,14 +706,13 @@ void MyFrame::newGB ( TGenBank &gb , string title )
     if ( alignment )
         {
         if ( wxYES != wxMessageBox ( txt("t_possible_alignment") ,
-                       txt("msg_box") , wxYES_NO|wxICON_QUESTION ) )
+                       title.c_str() , wxYES_NO|wxICON_QUESTION ) )
            {
            alignment = false ;
            }        
         }
         
     wxBeginBusyCursor() ;
-//    Freeze () ;
     for ( n = 0 ; n < gb.vs_l.size() ; n++ )
         {
         nv = vv[n] ;
@@ -802,7 +730,6 @@ void MyFrame::newGB ( TGenBank &gb , string title )
         runAlignment ( vs , vc ) ;
         }
         
-//    Thaw () ;
     wxEndBusyCursor() ;
     }
 
@@ -1262,11 +1189,17 @@ void MyFrame::removeChild ( ChildBase *ch )
     children[a] = children[children.size()-1] ;
     children.pop_back () ;
     lastChild = NULL ;
+    activateChild ( 0 ) ;
+    }
+
+void MyFrame::activateChild ( int a )
+    {
+    if ( a >= children.size() ) a = 0 ;
     if ( children.size() )
        {
-       children[0]->Activate () ;
-       mainTree->EnsureVisible ( children[0]->inMainTree ) ;
-       mainTree->SelectItem ( children[0]->inMainTree ) ;
+       children[a]->Activate () ;
+       mainTree->EnsureVisible ( children[a]->inMainTree ) ;
+       mainTree->SelectItem ( children[a]->inMainTree ) ;
        }
     else setActiveChild ( NULL ) ;
     }
@@ -1434,7 +1367,11 @@ void MyFrame::setActiveChild ( ChildBase *c )
        SetMenuBar ( c->menubar ) ;
        }
     wxSize s = c->GetParent()->GetClientSize() ;
-    if ( c->GetSize() != s ) c->SetSize ( s ) ;
+    if ( c->GetSize() != s )
+       {
+       if ( c->vec ) c->vec->recalcvisual = true ;
+       c->SetSize ( s ) ;
+       }
     c->Refresh () ;
     }
 

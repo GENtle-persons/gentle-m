@@ -332,25 +332,25 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
         // Items (Genes etc.)
         for ( a = 0 ; a < p->vec->items.size() ; a++ )
             {
-            TVectorItem i = p->vec->items[a] ;
-            float df = i.from*360/l ;
-            float dt = i.to*360/l ;
-            if ( dt < df ) dt += 360 ;
-            float dd = (dt-df)*5/100 ; // Arrow length in degrees
+            TVectorItem *i = &p->vec->items[a] ;
+            float df = i->from*360.0/((float)l) ;
+            float dt = i->to*360.0/((float)l) ;
+            if ( dt < df ) dt += 360.0 ;
+            float dd = (dt-df)*5.0/100.0 ; // Arrow length in degrees
             float ds = 1 ; // Paint steps for genes, in degrees
             int tf = 19 ;
-            tf += ( i.type % 3 ) * 2 - 2 ;
+            tf += ( i->type % 3 ) * 2 - 2 ;
             int r1 = STANDARDRADIUS*tf/20 ;
             int r2 = STANDARDRADIUS*(tf+2)/20 ;
-            if ( p->vec->items[a].r1 == -1 || p->vec->items[a].r2 == -1 )
+            if ( i->r1 == -1 || i->r2 == -1 )
                {
-               p->vec->items[a].r1 = r1 ;
-               p->vec->items[a].r2 = r2 ;
+               i->r1 = r1 ;
+               i->r2 = r2 ;
                }
-            p->vec->items[a].a1 = df ;
-            p->vec->items[a].a2 = dt ;
+            i->a1 = df ;
+            i->a2 = dt ;
             }
-            
+
         // Restriction sites
         arrangeRestrictionSitesCircular ( dc ) ;
 
@@ -364,83 +364,85 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
 
         p->vec->recalcvisual = false ;
         }
-        
+
     // ORFs
     drawCircularORFs ( dc ) ;
          
     // Drawing items
     for ( a = 0 ; a < p->vec->items.size() ; a++ )
         {
-        TVectorItem i = p->vec->items[a] ;
-        if ( i.isVisible() )
+        TVectorItem *i = &p->vec->items[a] ;
+        if ( i->isVisible() )
             {
             int r1 , r2 ;
             float df , dt ;
-            r1 = p->vec->items[a].r1 * 100 * r / ( STANDARDRADIUS * 100 ) ;
-            r2 = p->vec->items[a].r2 * 100 * r / ( STANDARDRADIUS * 100 ) ;
-            df = p->vec->items[a].a1 ;
-            dt = p->vec->items[a].a2 ;
+            r1 = i->r1 * 100 * r / ( STANDARDRADIUS * 100 ) ;
+            r2 = i->r2 * 100 * r / ( STANDARDRADIUS * 100 ) ;
+            df = i->a1 ;
+            dt = i->a2 ;
             
             float dd = (dt-df)*5/100 ; // Arrow length in degrees
             float ds = 1 ; // Paint steps for genes, in degrees
             
             // Calculating polygon
             vector <wxPoint> p ;
-            if ( i.direction ==  1 ) 
+            if ( i->direction ==  1 ) 
                 {
                 dt -= dd ;
                 p.push_back ( wxPoint ( deg2x ( df+dd , (r1+r2)/2 ) , 
                                         deg2y ( df+dd , (r1+r2)/2 ) ) ) ;
                 }
-            if ( i.direction == -1 ) 
+            if ( i->direction == -1 ) 
                 {
                 df += dd ;
                 p.push_back ( wxPoint ( deg2x ( df-dd , (r1+r2)/2 ) , 
                                         deg2y ( df-dd , (r1+r2)/2 ) ) ) ;
                 }
+
             for ( float b = df ; b < dt ; b += ds )
                     p.push_back ( wxPoint ( deg2x ( b , r1 ) , deg2y ( b , r1 ) ) ) ;
-            if ( i.direction ==  1 )
+            if ( i->direction ==  1 )
                         p.push_back ( wxPoint ( deg2x ( dt+dd , (r1+r2)/2 ) , 
                                                 deg2y ( dt+dd , (r1+r2)/2 ) ) ) ;
-            if ( i.direction == -1 )
+            if ( i->direction == -1 )
                         p.push_back ( wxPoint ( deg2x ( dt-dd , (r1+r2)/2 ) , 
                                                 deg2y ( dt-dd , (r1+r2)/2 ) ) ) ;
             for ( float b = dt ; b > df ; b -= ds )
                     p.push_back ( wxPoint ( deg2x ( b , r2 ) , deg2y ( b , r2 ) ) ) ;
-                    
+
             // Drawing polygon
             wxPoint *wp ;
             wp = (wxPoint*) malloc ( sizeof ( wxPoint ) * (p.size()+1) ) ;
             for ( int b = 0 ; b < p.size() ; b++ ) wp[b] = p[b] ;
             dc.SetPen(*wxBLACK_PEN);
-            dc.SetBrush ( *i.getBrush() ) ;
+            dc.SetBrush ( *(i->getBrush()) ) ;
             dc.DrawPolygon ( p.size() , wp , w/2 , h/2 ) ;
             free ( wp ) ;
             }
         }
+
     for ( a = 0 ; a < p->vec->items.size() ; a++ ) // Item titles
         {
-        TVectorItem i = p->vec->items[a] ;
-        if ( i.isVisible() && i.getParam ( "PREDECESSOR" ) == "" )
+        TVectorItem *i = &p->vec->items[a] ;
+        if ( i->isVisible() && i->getParam ( "PREDECESSOR" ) == "" )
             {
-            int r1 = p->vec->items[a].r1 * 100 * r / ( STANDARDRADIUS * 100 ) ;
-            int r2 = p->vec->items[a].r2 * 100 * r / ( STANDARDRADIUS * 100 ) ;
-            float df = p->vec->items[a].a1 ;
-            float dt = p->vec->items[a].a2 ;
+            int r1 = i->r1 * 100 * r / ( STANDARDRADIUS * 100 ) ;
+            int r2 = i->r2 * 100 * r / ( STANDARDRADIUS * 100 ) ;
+            float df = i->a1 ;
+            float dt = i->a2 ;
             
             float dd = (dt-df)*5/100 ; // Arrow length in degrees
             float ds = 1 ; // Paint steps for genes, in degrees
             // Drawing name
             wxColor fc = dc.GetTextForeground () ;
-            dc.SetTextForeground ( i.getFontColor() ) ;
+            dc.SetTextForeground ( i->getFontColor() ) ;
             dc.SetFont(*normalFont);
-            dc.GetTextExtent ( i.name , &dx , &dy ) ;
+            dc.GetTextExtent ( i->name , &dx , &dy ) ;
             dd = (df+(dt-df)/2) ;
             while ( dd >= 360 ) dd -= 360 ;
             if ( dd > 180 ) dx = 0 ;
             if ( dd < 90 || dd > 270 ) dy = 0 ;
-            dc.DrawText ( i.name ,
+            dc.DrawText ( i->name ,
                           w/2+deg2x(dd,r1-2)-dx ,
                           h/2+deg2y(dd,r1-2)-dy ) ;
             dc.SetTextForeground ( fc ) ;

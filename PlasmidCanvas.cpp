@@ -107,9 +107,10 @@ bool PlasmidCanvas::intersects ( wxRect &a , wxRect &b )
 void PlasmidCanvas::OnDraw(wxDC& pdc)
 {
     if ( !p || !p->vec ) return ;
-    hasBeenPainted = true ;
+    if ( p->vec->sequence.length() == 0 ) return ;
     if ( printing )
         {
+        hasBeenPainted = true ;
         pdc.GetSize ( &w , &h ) ;
         pdc.Clear() ;
         if ( p->vec->isCircular() ) OnDrawCircular ( pdc ) ;
@@ -120,6 +121,8 @@ void PlasmidCanvas::OnDraw(wxDC& pdc)
         int vx , vy ;
         GetViewStart ( &vx , &vy ) ;
         GetClientSize(&w, &h);
+        if ( w == 0 || h == 0 ) return ;
+        hasBeenPainted = true ;
         wxBitmap bmp ( w , h , -1 ) ;
         GetVirtualSize ( &w , &h ) ;
         wxMemoryDC dc ;
