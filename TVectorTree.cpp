@@ -33,7 +33,7 @@ END_EVENT_TABLE()
 
 
 TVectorTree::TVectorTree ( ChildBase *parent , int i )
-    :wxTreeCtrl ( parent , i )
+    :wxTreeCtrl ( parent , i , wxDefaultPosition , wxSize ( 200 , 200 ) )
     {
     p = (MyChild*) parent ;
     textWindow = NULL ;

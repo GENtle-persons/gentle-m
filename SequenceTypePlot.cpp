@@ -314,7 +314,7 @@ void SeqPlot::showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph )
     dc.SetPen ( *wxBLACK_PEN ) ;
     for ( float j = data_min + data_step ; j + data_step <= data_max ; j += data_step )
         {
-        int k = bottom - ( j - data_min ) * ph / data_h ;
+        int k = bottom - ( (int)(j - data_min) ) * ph / ((int)data_h) ;
         drawDottedLine ( dc , lx , k , tx + cw , k ) ;
         }
         
@@ -344,7 +344,7 @@ void SeqPlot::showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph )
            
         ny = bottom - ( ny - data_min ) * ph / data_h ;
         oy = bottom - ( oy - data_min )  * ph / data_h ;
-        dc.DrawLine ( lx , oy , tx + cw , ny ) ;
+        dc.DrawLine ( lx , (int)oy , tx + cw , (int)ny ) ;
         }
         
     // Border lines
@@ -588,14 +588,16 @@ void SeqPlot::scanChouFasman ( int x , int y , int t , int min ,
         int sum = 255 ;
         for ( from = p ; from > 0 && sum >= seek_avg ; from-- )
            {
-           for ( int j , sum = 0 ; j < seek_cnt ; j++ )
+	   sum = 0 ;
+           for ( int j = 0 ; j < seek_cnt ; j++ )
               sum += (t==0?prop[from+j].cf_pa:prop[from+j].cf_pb) ;
            sum /= seek_cnt ;
            }
         sum = 255 ;
         for ( to = p+y-1 ; to+seek_cnt < s.length() && sum >= seek_avg ; to++ )
            {
-           for ( int j , sum = 0 ; j < seek_cnt ; j++ )
+	   sum = 0 ;
+           for ( int j = 0 ; j < seek_cnt ; j++ )
               sum += (t==0?prop[to+j].cf_pa:prop[to+j].cf_pb) ;
            sum /= seek_cnt ;
            }

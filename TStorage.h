@@ -4,12 +4,16 @@
 #include <stdio.h>
 #include "main.h"
 
-#ifdef __WXMSW__ // Linux
+//#ifdef __WXMSW__ // Linux
 #define USEMYSQL
-#endif
+//#endif
 
 #ifdef USEMYSQL
+#ifdef __WXMSW__
 #include <mysql.h>
+#else
+#include "/usr/include/mysql/mysql.h"
+#endif
 #endif
 
 #ifdef __WXMSW__

@@ -366,7 +366,7 @@ void MyChild::initToolbar ()
     if ( myapp()->frame->tb_mychild == NULL )
         {
             
-        wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);    
+	    wxToolBar *toolBar = CreateToolBar(wxTB_HORIZONTAL);//(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);    
         toolBar->AddTool( MDI_TEXT_IMPORT , 
                     myapp()->frame->bitmaps[0],
                     txt("m_new_sequence") ) ;  
@@ -423,7 +423,7 @@ void MyChild::initToolbar ()
         myapp()->frame->addDefaultTools ( toolBar ) ;
         toolBar->Realize() ;    
         
-        myapp()->frame->tb_mychild = toolbar ;
+        myapp()->frame->tb_mychild = toolBar ;
         
         }    
 
@@ -459,9 +459,10 @@ void MyChild::initme ()
                                 wxDefaultPosition, wxSize ( width/3 , 0 ) ,
                                 wxTE_MULTILINE | wxSUNKEN_BORDER | wxTE_READONLY );
                                
-    treeBox = new TVectorTree((ChildBase*)swl, TREE_DUMMY ) ;
+    treeBox = new TVectorTree( (ChildBase*)swl , TREE_DUMMY ) ;
     treeBox->textWindow = propBox ;
     treeBox->p = this ;
+//    treeBox->Reparent ( swl ) ;
     
     sw->SplitHorizontally ( swu , cSequence , height/2 ) ;
     swu->SplitVertically ( swl , cPlasmid , width/4 ) ;
@@ -469,7 +470,7 @@ void MyChild::initme ()
     
     cSequence->SetScrollbars(0, 20, 0, 50);
 
-    
+    wxSafeYield() ;
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
     v0->Add ( sw , 1 , wxEXPAND , 5 ) ;
@@ -719,16 +720,16 @@ void MyChild::initPanels ()
     mylog ( "MyChild" , "initialized AA" ) ;
     seqAA->showNumbers = false ;
 
+
     treeBox->initme () ;
     mylog ( "MyChild" , "initialized treebox" ) ;
 
-
-#ifdef __WXMSW__ // LINUX
+//#ifdef __WXMSW__ // LINUX
     GetToolBar()->ToggleTool(MDI_CIRCULAR_LINEAR,vec->isCircular());
     if ( !vec->getGenomeMode() ) GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,cSequence->findID("FEATURE"));
     else aa_offset = 0 ;
     GetToolBar()->ToggleTool(MDI_TOGGLE_RESTRICTION,cSequence->findID("RESTRICTION"));
-#endif
+//#endif
 
 //    if ( aa_state != b ) OnAA_setit ( b ) ;
     mylog ( "MyChild" , "AA set" ) ;
@@ -737,7 +738,10 @@ void MyChild::initPanels ()
     
     for ( int a = 0 ; a < cSequence->seq.GetCount() ; a++ )
        cSequence->seq[a]->logsize();
-    
+
+    swl->SetSashPosition ( 200 ) ;
+    swu->SetSashPosition ( 200 ) ;
+
     if ( myapp()->frame->isLocked() ) return ;
     Show() ;
     mylog ( "MyChild" , "shown" ) ;

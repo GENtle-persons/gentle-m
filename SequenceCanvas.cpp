@@ -1127,7 +1127,6 @@ void SequenceCanvas::OnDraw(wxDC& dc)
     if ( getHide() ) return ;
     if ( myapp()->frame->isLocked() ) return ;
     if ( child && !child->IsShown() ) return ;
-	mylog ( "SequenceCanvas::OnDraw" , "2" ) ;
     drawing = true ;
     int wx , wy ;
     dc.SetFont ( *font ) ;

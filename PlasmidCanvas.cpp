@@ -306,8 +306,8 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
     	pt2.y = pt.y-h/2 ;
     	angle  = xy2deg ( pt2.x , pt2.y ) ;
     	radius = xy2r ( pt2.x , pt2.y ) ;
-    	pt.x = deg2x ( angle , radius ) + w/2 ;
-    	pt.y = deg2y ( angle , radius ) + h/2 ;
+    	pt.x = deg2x ( angle , (int)radius ) + w/2 ;
+    	pt.y = deg2y ( angle , (int)radius ) + h/2 ;
     	vo = findVectorObjectCircular ( angle , radius ) ;
     	rs = findRestrictionSite ( pt.x , pt.y ) ;
     	orf = findORFcircular ( angle , radius ) ;
@@ -652,8 +652,8 @@ int PlasmidCanvas::findVectorObjectLinear ( wxPoint pp )
     for ( a = 0 ; a < p->vec->items.size() ; a++ )
         {
         TVectorItem i = p->vec->items[a] ;
-        wxRect rra ( i.r1 , (int)i.a1 , i.r2-i.r1 , (int)i.a2-i.a1 ) ;
-        wxRect rrb ( i.r3 , (int)i.a1 , i.r4-i.r3 , (int)i.a2-i.a1 ) ;
+        wxRect rra ( (int)i.r1 , (int)i.a1 , (int)(i.r2-i.r1) , (int)(i.a2-i.a1) ) ;
+        wxRect rrb ( (int)i.r3 , (int)i.a1 , (int)(i.r4-i.r3) , (int)(i.a2-i.a1) ) ;
         if ( pointinrect ( pp.x , pp.y , rra ) &&
                 p->vec->items[a].isVisible() ) vo = a ;
         if ( i.r3 != -1 && pointinrect ( pp.x , pp.y , rrb ) ) vo = a ;
