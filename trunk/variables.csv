@@ -529,8 +529,10 @@
 "t_question","Question","Frage"
 "t_aa_plot_mw","AA weight","AS-Gewicht",
 "t_aa_plot_pi","AA isoelectric point","AS isoelektrischer Punkt"
+"t_aa_plot_hp","Hydrophobicity","Hydrophobizität",
 "t_pcr_spin_1","Polymerase can run for ","Polymerase kann "
 "t_pcr_spin_2"," nucleotides"," Nukleotide abarbeiten"
 "t_checking4update","Checking for new version...","Suche nach neuer Version..."
 "t_downloading_new_version","Downloading new version...","Lade neue Version..."
-
+"t_method_kyte-doolittle","Kyte-Doolittle","Kyte-Doolittle"
+"t_method_hopp-woods","Hopp-Woods","Hopp-Woods"
