@@ -50,6 +50,7 @@ int SeqAlign::arrange ( int n )
     
 void SeqAlign::show ( wxDC& dc )
     {
+    can->SetFont(*can->font);
     dc.SetFont(*can->font);
     wxColour tbg = dc.GetTextBackground () ;
     wxColour tfg = dc.GetTextForeground () ;
@@ -97,6 +98,7 @@ void SeqAlign::show ( wxDC& dc )
     int cnol = can->NumberOfLines() ;
     int ppgc = pos.p.GetCount() ;
     bool thisisidentity = ( myname == txt("t_identity") ) ;
+
     for ( a = 0 ; a < ppgc ; a++ )
         {
         if ( can->hardstop > -1 && a > can->hardstop ) break ;
@@ -111,6 +113,8 @@ void SeqAlign::show ( wxDC& dc )
            rax += x2 * wx ;
            rax += ( x2 / can->blocksize ) * ( wx - 1 ) ;
            }    
+        if ( can->isPrinting() ) rax += xa ; // PATCH AS PATCH CAN!!!
+
         int tx = rax , ty = ray ;
         int tzx = tx + wx ;
         int tzy = ty + wy ;
@@ -124,7 +128,8 @@ void SeqAlign::show ( wxDC& dc )
         if ( b > 0 && insight ) // Character
            {
            t = s.GetChar(b-1) ;
-           
+
+           // Get color for this char
            if ( !thisisidentity )
               {
               fg = al->findColors ( s.GetChar(b-1) , can->seq[first]->s.GetChar(b-1) , true ) ;
@@ -132,23 +137,30 @@ void SeqAlign::show ( wxDC& dc )
               dc.SetTextForeground ( fg ) ;
               dc.SetTextBackground ( bg ) ;
               }
+              
+           // Printing to B&W printer?
            if ( can->isPrinting() && !can->getPrintToColor() )
               {
               dc.SetTextForeground ( *wxBLACK ) ;
               dc.SetBackgroundMode ( wxTRANSPARENT ) ;
               }
+              
+           // Monochrome display?
            if ( al->mono )
               {
               dc.SetTextForeground ( *wxBLACK ) ;
               dc.SetBackgroundMode ( wxTRANSPARENT ) ;
               }
+              
+           // Same as char in first sequence?
            if ( (!thisisidentity) && 
                 al->cons && 
                 first != me &&
+                t.GetChar(0) != '-' &&
                 t.GetChar(0) == can->seq[first]->s.GetChar(b-1) )
                    t.SetChar(0,'.') ;
 
-           if ( t == "." )
+           if ( t == "." ) // Display round dot to show conservation
               {
               dc.SetPen(*wxTRANSPARENT_PEN);
               if ( al->invs )
@@ -161,7 +173,7 @@ void SeqAlign::show ( wxDC& dc )
                               ray + wy / 2 ,
                               wy / (al->bold?6:8) ) ;
               }
-           else
+           else // Display character
               {
               dc.DrawText ( t , rax, ray ) ;       
               if ( al->bold )

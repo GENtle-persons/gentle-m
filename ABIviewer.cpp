@@ -175,6 +175,9 @@ void TABIviewer::initme ()
                 myapp()->frame->bitmaps[2] ,
                 txt("m_store_in_db") , 
                 txt("m_txt_store_in_db"));
+    toolBar->AddTool( SEQ_PRINT, 
+                myapp()->frame->bitmaps[16],
+                txt("m_print_sequence") ) ;
     toolBar->AddSeparator() ;
 //    toolBar->AddTool( MDI_CUT, myapp()->frame->bitmaps[4] ) ;
     toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] ) ;
