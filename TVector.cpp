@@ -25,6 +25,71 @@ TAAProp TVector::getAAprop ( char a ) { return aaprop[a] ; }
 void TVector::setGenomeMode ( bool gm ) { genomeMode = gm ; }
 bool TVector::getGenomeMode () { return genomeMode ; }
 wxString *TVector::getSequencePointer () { return &sequence ; }
+TORF TVector::getORF ( int a ) { return worf[a] ; }
+int TVector::countORFs () { return worf.size() ; }
+void TVector::updateDisplay ( bool update ) { recalcvisual = update ; }
+bool TVector::displayUpdate () { return recalcvisual ; }
+void TVector::setType ( int newtype ) { type = newtype ; }
+int TVector::getType () { return type ; }
+int TVector::getMethylationSiteIndex ( int pos ) { return methyl.Index ( pos ) ; }
+int TVector::getMethylationSite ( int index ) { return methyl[index] ; }
+int TVector::countMethylationSites () { return methyl.GetCount() ; }
+
+void TVector::prepareFeatureEdit ( int pos , bool overwrite )
+	{
+	int mode = myapp()->frame->editFeatureMode ;
+	if ( mode == 0 ) return ; // Keep as is
+	
+	int a ;
+	for ( a = 0 ; a < items.size() ; a++ )
+		{
+		int from = items[a].from ;
+		int to = items[a].to ;
+		if ( to < from )
+  			{
+	    	if ( pos > to && pos+overwrite <= from ) continue ; // Change doesn't concern this feature
+         	}
+    	else
+    		{
+		    if ( pos+overwrite <= from || pos > to ) continue ; // Change doesn't concern this feature
+    		}    
+		
+		if ( mode == 1 ) // Change name
+			{
+   			if ( items[a].name.Right ( 1 ) != "*" )
+   				{
+   				items[a].name += "*" ;
+   				updateDisplay () ;
+   				}				
+			}
+		else if ( mode == 2 ) // Cut off feature
+  			{
+	    	if ( to < from )
+	    		{
+ 		    	to += sequence.length() ;
+ 		    	if ( pos <= from ) pos += sequence.length() ;
+	    		}
+
+    		if ( items[a].getDirection() < 0 ) // <---
+    			{
+			    from = pos + overwrite ;
+    			}
+          	else // --->
+           		{
+       		    to = pos - 1 ;
+       		    if ( to == sequence.length() && from < to ) to-- ; // Bug fix
+             	}        
+          	while ( from <= 0 ) from += sequence.length() ;
+          	while ( to <= 0 ) to += sequence.length() ;
+          	while ( from > sequence.length() ) from -= sequence.length() ;
+          	while ( to > sequence.length() ) to -= sequence.length() ;
+          	items[a].from = from ;
+          	items[a].to = to ;
+   			if ( items[a].name.Right ( 1 ) != "*" ) items[a].name += "*" ;
+          	updateDisplay () ;
+     		}        
+		}    
+	}    
 
 wxString TVector::getStrand53 ()
 	{
@@ -173,7 +238,8 @@ void TVector::setNucleotide ( int pos , char t )
     if ( isLinear() && ( pos < 0 || pos >= sl ) ) return ;
     while ( pos < 0 ) pos += sl ;
     while ( pos >= sequence.length() ) pos -= sl ;
-    sequence.SetChar(pos,t);
+    insert_char ( t , pos+1 , true ) ;
+//    sequence.SetChar(pos,t);
     }    
 
 bool TVector::basematch ( char b1 , char b2 ) // b1 in IUPAC, b2 in SIUPAC
@@ -580,6 +646,7 @@ void TVector::insert_char ( char x , int pos , bool overwrite )
     {
     wxString dummy ;
     dummy = (char) x ;
+	if ( !overwrite || sequence.GetChar(pos-1) != x ) prepareFeatureEdit ( pos , overwrite ) ;
     if ( overwrite && pos < sequence.length() )
        {
        myass ( pos-1 >= 0 && pos-1 < sequence.length() , "TVector::insert_char_1" ) ;
@@ -587,7 +654,7 @@ void TVector::insert_char ( char x , int pos , bool overwrite )
        return ;
        }
     wxStringInsert ( sequence , pos-1 , dummy ) ;
-//    sequence.insert ( pos-1 , dummy ) ;
+
     int a ;
     for ( a = 0 ; a < items.size() ; a++ )
         {
@@ -1240,7 +1307,7 @@ TVector *TVector::getAAvector ( int from , int to , int dir )
     // Creating new vector
     TVector *v = new TVector ;
     v->setFromVector ( *this ) ;
-    v->type = TYPE_AMINO_ACIDS ;
+    v->setType ( TYPE_AMINO_ACIDS ) ;
 
     if ( to < from ) to += v->sequence.length() ;
     v->turn ( -from+1 ) ;
@@ -1385,6 +1452,19 @@ bool TVector::isEnzymeHidden ( wxString s )
        if ( hiddenEnzymes[a] == s ) return true ;
     return false ;
     }
+
+void TVector::hideEnzyme ( wxString s , bool hideit )
+	{
+	bool isHidden = isEnzymeHidden ( s ) ;
+	if ( hideit && !isHidden ) // Add enzymes to hidden enzyme list
+ 		{
+       	hiddenEnzymes.Add ( s ) ;
+       	}   	
+	else if ( !hideit && isHidden ) // Remove enzyme from hidden enzyme list
+		{
+  		hiddenEnzymes.Remove ( s ) ;
+		}    
+	}    
     
 void TVector::sortRestrictionSites ()
     {
@@ -1981,4 +2061,26 @@ wxString TAAProp::get_halflife_text ( int hl )
 	if ( h > 0 && m > 0 ) ret += " " ;
 	if ( m > 0 ) ret += wxString::Format ( txt("t_hl_minutes") , m ) ;
 	return ret ;
+	}    
+	
+// ***************************************************************************************
+// TORF
+// ***************************************************************************************
+
+TORF::TORF ()
+	{
+	rf = 0 ;
+ 	} ;
+
+
+TORF::TORF ( int _f , int _t , int _r )
+	{
+	from = _f ;
+	to = _t ;
+	rf = _r ;
+	} ;
+
+wxString TORF::getText ()
+	{
+	return wxString::Format ( "%d-%d, %d" , from , to , rf ) ;
 	}    

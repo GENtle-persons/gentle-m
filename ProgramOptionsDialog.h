@@ -55,7 +55,7 @@ class ProgramOptionsDialog : public wxDialog
                 *loadLastProject , *useMetafile , *showSplashScreen ,
                 *checkUpdate , *useInternalHelp , *doRegisterStuff ;
                 
-    
+    wxRadioBox *editFeatureMode ;
                 
     private :
     virtual void initGlobalSettings () ;

@@ -137,17 +137,17 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
 
     // Methylation sites
     dc.SetPen(*wxRED_PEN);
-    for ( a = 0 ; a < p->vec->methyl.GetCount() ; a++ )
+    for ( a = 0 ; a < p->vec->countMethylationSites() ; a++ )
     	{
-        dc.DrawLine ( lineOff + lineLen * p->vec->methyl[a] / (l+1) ,
+        dc.DrawLine ( lineOff + lineLen * p->vec->getMethylationSite(a) / (l+1) ,
                       lineH ,
-                      lineOff + lineLen * p->vec->methyl[a] / (l+1) ,
+                      lineOff + lineLen * p->vec->getMethylationSite(a) / (l+1) ,
                       lineH + h / 40 ) ;
     	}    
     dc.SetPen(*wxBLACK_PEN);
 
     // Recalc
-    if ( p->vec->recalcvisual )
+    if ( p->vec->displayUpdate() )
         {
         // Genes, items, etc.
         for ( a = 0 ; a < p->vec->items.size() ; a++ )
@@ -206,7 +206,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
            p->OnORFs ( event ) ;
            }
         
-        p->vec->recalcvisual = false ;
+        p->vec->updateDisplay ( false ) ;
         }
 
     // ORFs
@@ -260,11 +260,11 @@ void PlasmidCanvas::drawLinearORFs ( wxDC &dc )
     {
     int a ;
     int l = p->vec->getSequenceLength() ;
-    for ( a = 0 ; a < p->vec->worf.size() ; a++ )
+    for ( a = 0 ; a < p->vec->countORFs() ; a++ )
         {
-        float mf = p->vec->worf[a].from ;
-        float mt = p->vec->worf[a].to ;
-        int rf = p->vec->worf[a].rf ;
+        float mf = p->vec->getORF(a).from ;
+        float mt = p->vec->getORF(a).to ;
+        int rf = p->vec->getORF(a).rf ;
         int lineOff = w / 20 ;
         int mh = h/2 ;
         int ah = h/20 ;
@@ -280,10 +280,10 @@ void PlasmidCanvas::drawLinearORFs ( wxDC &dc )
         dc.SetBrush ( *MYBRUSH(col) ) ;
         dc.SetPen ( *MYPEN(col) ) ;
 
-        p->vec->worf[a].dist1 = mh - ah/4 ;
-        p->vec->worf[a].dist2 = mh + ah/4 ;
-        p->vec->worf[a].deg1 = mf ;
-        p->vec->worf[a].deg2 = mt ;
+        p->vec->getORF(a).dist1 = mh - ah/4 ;
+        p->vec->getORF(a).dist2 = mh + ah/4 ;
+        p->vec->getORF(a).deg1 = mf ;
+        p->vec->getORF(a).deg2 = mt ;
         
         int dir = 1 ;
         if ( rf < 0 )
@@ -397,12 +397,12 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , int r1 , int r2 , float a1 , flo
 int PlasmidCanvas::findORFlinear ( int x , int y )
     {
     int a , found = -1 ;
-    for ( a = 0 ; a < p->vec->worf.size() ; a++ )
+    for ( a = 0 ; a < p->vec->countORFs() ; a++ )
         {
-        if ( x >= p->vec->worf[a].deg1 &&
-             x <= p->vec->worf[a].deg2 &&
-             y >= p->vec->worf[a].dist1 &&
-             y <= p->vec->worf[a].dist2 )
+        if ( x >= p->vec->getORF(a).deg1 &&
+             x <= p->vec->getORF(a).deg2 &&
+             y >= p->vec->getORF(a).dist1 &&
+             y <= p->vec->getORF(a).dist2 )
              found = a ;
         }
     return found ;

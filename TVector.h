@@ -56,15 +56,10 @@ class TAAProp
 class TORF
     {
     public :
-    TORF () { rf = 0 ; } ; ///< Default constructor, empty
+    TORF () ; ///< Default constructor, empty
+    TORF ( int _f , int _t , int _r ) ; ///< Constructor
     
-    /// \brief Constructor
-    TORF ( int _f , int _t , int _r )
-        {
-        from = _f ;
-        to = _t ;
-        rf = _r ;
-        } ;
+    virtual wxString getText () ;
     
     /// \brief Start of ORF
     int from , to ; ///< End of ORF
@@ -130,8 +125,8 @@ class TVectorItem
     /// \brief Item description
     wxString desc , name ; ///< Item name
     
-    /// \brief Item start
-    int from , to ; ///< Item end
+    int from , ///< Item start
+    	to ; ///< Item end
     
     private:
     virtual void initParams () ; ///< Reset parameters
@@ -231,12 +226,13 @@ class TVector
     virtual void doRemoveNucleotide ( int x ) ; ///< Removes single base at position x
     virtual int getItemLength ( int a ) ; ///< Return the length of item a
     virtual TVector *backtranslate ( wxString mode = "" ) ; ///< Generate a new DNA sequence from this amino acid sequence
-    virtual wxString getStrand53 () ; ///< returns the 5'->3' strand of the sequence
-    virtual wxString getStrand35 () ; ///< returns the 3'->5' strand of the sequence, as 5'->3'
+    virtual wxString getStrand53 () ; ///< Returns the 5'->3' strand of the sequence
+    virtual wxString getStrand35 () ; ///< Returns the 3'->5' strand of the sequence, as 5'->3'
 
     virtual TAAProp getAAprop ( char a ) ; ///< Returns the properties of the one-letter code amino acid
     virtual int find_item ( wxString s ) ; ///< Finds an item with that name
     virtual bool isEnzymeHidden ( wxString s ) ; ///< Is enzyme "s" hidden?
+    virtual void hideEnzyme ( wxString s , bool hideit = true ) ; ///< Set enzyme hidden state
 
     virtual wxString getSubstring ( int mf , int mt ) ; ///< Returns a sequence substring
     virtual wxString transformSequence ( bool inverse , bool reverse ) ; ///< Transforms the sequence
@@ -262,46 +258,68 @@ class TVector
     virtual bool getVectorCuts ( TVector *v ) ; ///< Returns wether or not isoenzymes should be joined
     virtual TEnzymeRules *getEnzymeRule () ; ///< Gets the enzyme rules to follow
     virtual int showGC () ; ///< Returns 0 for "no", otherwise the number of blocks
+    virtual TORF getORF ( int a ) ; ///< Returns an open reading frame
+    virtual int countORFs () ; ///< Returns the number of found open reading frames
+    virtual void updateDisplay ( bool update = true ) ; ///< Recalc visual information on next draw
+    virtual bool displayUpdate () ; ///< Update the display?
+    virtual void setType ( int newtype ) ; ///< Set the sequence type
+    virtual int getType () ; ///< Returns the sequence type
+    virtual int getMethylationSiteIndex ( int pos ) ; ///< Returns the index of a potential methylation site
+    virtual int getMethylationSite ( int index ) ; ///< Returns the position of a methylation site
+    virtual int countMethylationSites () ; ///< Returns the number of found methylation sites
+    virtual void prepareFeatureEdit ( int pos , bool overwrite ) ; ///< Changes feature names or cuts features that are about to be edited
     
     // Variables
-    int type ; ///< The sequence type
-    bool recalcvisual ; ///< Recalculate the layout of the sequence?
     vector <TVectorItem> items ; ///< Items/features/annotations
-    vector <TORF> worf ; ///< Open Reading Frames
     vector <TRestrictionCut> rc ; ///< Restriction enzyme cuts
     
-    /// Manually specified restriction enzymes
-    wxArrayTRestrictionEnzyme re , re2 ; ///< Automatically added restriction enzymes
+    wxArrayTRestrictionEnzyme re , ///< Manually specified restriction enzymes
+    						  re2 ; ///< Automatically added restriction enzymes
 
-    wxArrayString hiddenEnzymes ,  ///< Enzymes that are not shown
-    	proteases ,  ///< Proteases used
+    wxArrayString proteases ,  ///< Proteases used
      	cocktail ; ///< Enzymes from the last restriction
     TUndo undo ; ///< Undo information
     TEnzymeRules *enzyme_rules ; ///< Pointer to the restriction enzyme rules
-    wxArrayInt methyl ; ///< Methylation sites
     
     private :
-    virtual wxString invert ( wxString s ) ;
-    virtual wxString vary_base ( char b ) ;
-    virtual void makeAA2DNA ( wxString mode = "" ) ;
-    virtual wxString mergeCodons ( wxString c1 , wxString c2 ) ;
-    virtual void setCodonTable ( int table , wxString sequence ) ;
-    virtual void evaluate_key_value ( wxString key , wxString value ) ;
+    virtual wxString invert ( wxString s ) ; ///< Inverts a string
+    virtual wxString vary_base ( char b ) ; ///< Turns a SIUPAC into a string of A, C, G, T
+    virtual void makeAA2DNA ( wxString mode = "" ) ; ///< "Translate" amino acid sequence into DNA; can sp specified fo an organism
+    virtual wxString mergeCodons ( wxString c1 , wxString c2 ) ; ///< Used by makeAA2DNA for generating "abstract" (SIUPAC) DNA
+    virtual void setCodonTable ( int table , wxString sequence ) ; ///< Sets up the codon_tables variable
+    virtual void evaluate_key_value ( wxString key , wxString value ) ; ///< Used in setParam() and setParams()
 
-    wxString sequence ;    
-    wxString _lu , _ll , _ru , _rl ; // Sticky ends
-    wxString name , desc ;
-    bool circular , changed , genomeMode ;
-    ChildBase *window ;
-    int turned , action_value ;
-    wxString database , action , aa ;
-    wxString AA2DNA[256] ;
-    wxArrayString paramk , paramv ;
+    int type ; ///< The sequence type
+    bool recalcvisual ; ///< Recalculate the layout of the sequence?
+    vector <TORF> worf ; ///< Open Reading Frames
+    wxArrayInt methyl ; ///< Methylation sites
+    wxArrayString hiddenEnzymes ; ///< Enzymes that are not shown
+    wxString sequence ; ///< The sequence that all this fuss is about
+    wxString _lu ,  ///< Left upper sticky end
+    		 _ll , ///< Left lower sticky end
+       		 _ru , ///< Right upper sticky end
+          	 _rl ; ///< Right lower sticky end
+    wxString name , ///< The name of the sequence
+    		 desc ; ///< The sequence description
+    bool circular , ///< Is this sequence circular?
+    	 changed , ///< Was this sequence changed?
+         genomeMode ; ///< Is this a genome (using different display routines)?
+    ChildBase *window ; ///< The window this TVector belongs to (might be NULL for most methods)
+    int turned , ///< A circular sequence can be turned; this is the number of bases (negative for "left")
+    	action_value ; ///< Used by doAction()
+    wxString database , ///< The database this vector was loaded from
+    		 action , ///< Used by doAction()
+ 			 aa ; ///< Hell if I remember what this is for
+    wxString AA2DNA[256] ; ///< AA-to-DNA "translation" table; used by makeAA2DNA()
+    wxArrayString paramk , ///< Parameter keys
+    			  paramv ; ///< Parameter values
     
-    static char IUPAC[256] , SIUPAC[256] , COMPLEMENT[256] ;
-    static char ACGT[256] ;
-    static vector <TAAProp> aaprop ;
-    static wxArrayString codon_tables ;
+    static char IUPAC[256] , ///< The ACTG chars in binary encoding (IUPAC_A, IUPAC_C, IUPAC_T, IUPAC_G)
+    			SIUPAC[256] , ///< The extended IUPAC codes in binary encoding
+       			COMPLEMENT[256] ; ///< The complement to each SIUPAC base
+    static char ACGT[256] ; ///< Different values for A, C, G, T; used in dna2aa()
+    static vector <TAAProp> aaprop ; ///< The 20 amino acids and their properties
+    static wxArrayString codon_tables ; ///< The codon tables for different organisms
     } ;
     
 #endif

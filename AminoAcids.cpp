@@ -365,17 +365,21 @@ void TAminoAcids::showSequence ()
     sc->SilentRefresh () ;    
     mylog ( "TAminoAcids::showSequence" , "8" ) ;
 
-//    wxCommandEvent event ;
-//    OnListBox ( event ) ;
     mylog ( "TAminoAcids::showSequence" , "9" ) ;
     }
     
 void TAminoAcids::OnEditMode(wxCommandEvent& event)
     {
-	if ( sc->getEditMode() ) sc->stopEdit() ;
-	else sc->startEdit ( "AA" ) ;
-    if ( sc->getEditMode() ) vec->undo.start ( txt("u_edit") ) ;
-    else vec->undo.stop () ;
+	if ( sc->getEditMode() )
+ 		{
+        sc->stopEdit() ;
+        vec->undo.stop () ;
+        }    
+	else
+ 		{
+   		vec->undo.start ( txt("u_edit") ) ;
+        sc->startEdit ( "AA" ) ;
+        }    
     }
 
 void TAminoAcids::invokeVectorEditor ( wxString what , int num , bool forceUpdate )
@@ -611,7 +615,7 @@ void TAminoAcids::handleListBox ( wxString t )
         }
     else if ( t == txt("t_schema") )
         {
-        vec->recalcvisual = true ;
+        vec->updateDisplay() ;
         if ( update ) pc->Refresh() ;
         else
            {

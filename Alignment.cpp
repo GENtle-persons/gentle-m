@@ -593,7 +593,7 @@ void TAlignment::updateSequence ()
         if ( sc->seq[g]->whatsthis() != "FEATURE" ) continue ;
         SeqFeature *f = (SeqFeature*) sc->seq[g] ;
         int id = f->id ;
-        if ( lines[id].getFeatures()->type == TYPE_AMINO_ACIDS )
+        if ( lines[id].getFeatures()->getType() == TYPE_AMINO_ACIDS )
             {
             colCur = colAA ;
             if ( aaa ) delete aaa ;
@@ -607,7 +607,7 @@ void TAlignment::updateSequence ()
             f->initFromTVector ( lines[id].getFeatures() ) ;
             f->aaa = aaa ;
             }
-        else if ( lines[id].getFeatures()->type == TYPE_VECTOR )
+        else if ( lines[id].getFeatures()->getType() == TYPE_VECTOR )
             {
             colCur = colDNA ;
             if ( aaa ) delete aaa ;
@@ -1053,7 +1053,7 @@ void TAlignment::OnFileSave ( wxCommandEvent &ev )
     vec->setName ( txt("t_alignment") ) ;
     vec->setDescription ( d ) ;
     vec->setSequence ( s ) ;
-    vec->type = TYPE_ALIGNMENT ;
+    vec->setType ( TYPE_ALIGNMENT ) ;
     TManageDatabaseDialog dbd ( this , txt("t_store") , ACTION_MODE_SAVE , vec ) ;
     dbd.ShowModal () ;
     }

@@ -76,7 +76,7 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
     {
     myass ( base , "TXMLfile::readGBSeq" ) ;
     TVector *v = new TVector ;
-    v->type = TYPE_VECTOR ; // Dummy
+    v->setType ( TYPE_VECTOR ) ; // Dummy
     
     int a ;
     TiXmlNode *n ;
@@ -128,7 +128,7 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
            }
         }
         
-    v->recalcvisual = true ;
+    v->updateDisplay() ;
     v->recalculateCuts () ;
     _v.Add ( v ) ;
     }

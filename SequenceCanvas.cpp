@@ -189,12 +189,14 @@ void SequenceCanvas::updateEdit ( TVector *v , wxString id , int from )
     {
     if ( getAA() )
         {
+//        getAA()->vec->prepareFeatureEdit ( from ) ;
         getAA()->vec->setChanged () ;
         getAA()->showStat();
         getAA()->showSequence () ;
         }
     else if ( v )
         {
+//        v->prepareFeatureEdit ( from ) ;
         v->setChanged () ;
         for ( int a = 0 ; a < seq.GetCount() ; a++ )
            {
@@ -1707,7 +1709,7 @@ void SequenceCanvas::OnWhatCuts(wxCommandEvent& event)
         p->vec->undo.start ( txt("u_what_cuts") ) ;
         p->vec->re.Add ( e ) ;
         p->vec->recalculateCuts() ;
-        p->vec->recalcvisual = true ;
+        p->vec->updateDisplay() ;
         p->vec->undo.stop () ;
         p->cPlasmid->Refresh() ;
         p->updateSequenceCanvas ( true ) ;
@@ -1887,12 +1889,11 @@ void SequenceCanvas::rsHideLimit ( wxCommandEvent &ev )
        int cnt = 0 ;
        for ( b = 0 ; b < p->vec->rc.size() ; b++ )
           if ( p->vec->rc[b].e == p->vec->re[a] ) cnt++ ;
-       for ( b = 0 ; b < p->vec->hiddenEnzymes.GetCount() && p->vec->hiddenEnzymes[b] != p->vec->re[a]->name ; b++ ) ;
-       if ( cnt > limit && b == p->vec->hiddenEnzymes.GetCount() )
+       if ( cnt > limit && !p->vec->isEnzymeHidden ( p->vec->re[a]->name ) )
           p->treeBox->ToggleEnzymeVisibility ( p->vec->re[a] ) ;
        }
     p->vec->recalculateCuts() ;
-    p->vec->recalcvisual = true ;
+    p->vec->updateDisplay() ;
     if ( p && p->cPlasmid ) p->cPlasmid->Refresh () ;
     arrange () ;
     Refresh () ;
