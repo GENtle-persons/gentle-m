@@ -47,17 +47,15 @@ void EIpanel::init_blast()
     #error "This requires thread support!"
 #endif // wxUSE_THREADS
 
-//#define BLAST_TEST_MODE
 
 class blastThread : public wxThreadHelper
 {
 public :
-    blastThread ( EIpanel *panel , wxString seq ) : wxThreadHelper()// ( wxTHREAD_DETACHED )
+    blastThread ( EIpanel *panel , wxString seq ) : wxThreadHelper()
 	{
 	    p = panel ;
-    	seq.Replace ( "|" , "" ) ;
-#ifndef BLAST_TEST_MODE
-//	    wxMutexGuiEnter() ;
+	    seq.Replace ( "|" , "" ) ; // Amino acid search fix
+
 	    // Put
 	    url = "http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?" ;
 	    url += "CMD=Put" ;
@@ -73,26 +71,17 @@ public :
 	    RID = hs["RID"] ;
 	    RTOE = hs["RTOE"] ;
 	    
-	    // Get & wait
+	    // Prepare URL
 	    RTOE.ToLong ( &wait ) ;
 	    url = "http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?" ;
 	    url += "CMD=Get" ;
 	    url += "&RID=" + RID ;
 	    url += "&FORMAT_TYPE=XML" ;	    
-//	wxMessageBox ( "In" , wxString::Format ( "Wait %d sec" , wait ) ) ;
-//	    wxMutexGuiLeave() ;
-#endif
 	} ;
 
     virtual void *Entry ()
 	{
-#ifdef __WXMSW__
-    wxString fn = "C:\\blast.html" ;
-#else
-    wxString fn = "/home/manske/blast.html" ;
-#endif
-	    
-#ifndef BLAST_TEST_MODE
+	    // Get & wait
 	    do {
 		while ( wait )
 		{
@@ -101,42 +90,22 @@ public :
 		    wxMutexGuiLeave() ;
 		    wxThread::Sleep ( 1000 ) ; // Wait 1 sec
 		    wait-- ;
-//		    if ( TestDestroy() ) wxThread::Exit() ;
+		    if ( GetThread()->TestDestroy() ) // Currently, there's no way to interrupt this!
+			{
+			    // MISSING : Set search button to "on" again
+			    return NULL ;
+			}
 		}
-//		wxMutexGuiEnter() ;
 		res = ex.getText ( url ) ;
-//		wxMutexGuiLeave() ;
 		hs = parseQblast ( res ) ;
-		if ( hs["STATUS"].Upper() == "WAITING" ) wait = 10 ; // Wait another 10 seconds
+		if ( hs["STATUS"].Upper() == "WAITING" ) wait = 5 ; // Wait another 5 seconds
 		else wait = 0 ; // Done!
 	    } while ( wait ) ;
-	    p->blast_res = res ;
-	    mylog ( "thread" , "done!" ) ;
-//	    wxFile out ( fn , wxFile::write ) ; out.Write ( res ) ; out.Close() ; // For testing
-#else
-	    // Dirty hack
-	    wxMutexGuiEnter() ;
-	    wxFile in ( fn , wxFile::read ) ; 
-	    p->blast_res = "" ;
-	    char c[10005] ;
-	    while ( !in.Eof() )
-	    {
-		int l = in.Read ( c , 10000 ) ;
-		if ( l >= 0 ) c[l] = 0 ;
-		else *c = 0 ;
-		p->blast_res += c ;
-	    }
-	    in.Close () ;
-	    // End dirty hack
 
-	    wxMutexGuiLeave() ;
-#endif
-	    mylog ( "thread" , "pre" ) ;
+	    // Set result and display
+	    p->blast_res = res ;
 	    wxCommandEvent event( wxEVT_COMMAND_BUTTON_CLICKED, ID_B1 );
 	    wxPostEvent ( p , event ) ;
-	    mylog ( "thread" , "post" ) ;
-//	    wxThread::Exit() ;
-
 	    return NULL ;
 	}
 private :
