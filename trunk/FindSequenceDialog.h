@@ -24,6 +24,7 @@ class FindSequenceDialog : public wxDialog
     virtual void itemSearch () ;
     virtual void restrictionSearch () ;
     virtual void doAction ( bool doubleclick ) ;
+    virtual void aaSubSearch ( const wxString &s , int start , int dir , wxString rf ) ;
     
     ChildBase *c ;
     wxTextCtrl *t ;

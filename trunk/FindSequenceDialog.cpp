@@ -11,7 +11,7 @@ END_EVENT_TABLE()
 
 
 FindSequenceDialog::FindSequenceDialog ( wxWindow *parent, const wxString& title )
-         : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 300 , 400 ) )
+         : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 350 , 400 ) )
     {
     p = 0 ;
     c = (ChildBase*) parent ;
@@ -177,12 +177,17 @@ void FindSequenceDialog::OnSearch ( wxCommandEvent &ev )
         lb->SetSelection ( 0 ) ;
         OnLB ( ev ) ;
         }    
-    }    
+    }
     
 void FindSequenceDialog::aaSearch ()
     {
     int a , b ;
     TVector *v = c->vec ;
+    if ( v->type != TYPE_VECTOR && 
+    	 v->type != TYPE_SEQUENCE && 
+    	 v->type != TYPE_PRIMER )
+    	 return ;
+    	 
     wxString s = t->GetValue().Upper() ;
     for ( a = 0 ; a < v->items.size() ; a++ )
         {
@@ -213,8 +218,60 @@ void FindSequenceDialog::aaSearch ()
            p = b + 1 ;
            b = subsearch ( ls , s , p ) ;
            }
-        }        
+        }   
+        
+    // Fixed reading frames
+    wxString ss ;
+    ss = v->getSequence() ;
+    if ( v->isCircular() ) ss += ss.Left ( 2 ) ;
+    else ss += "  " ;
+    aaSubSearch ( ss , 0 , 1 , txt("m_aa_1") ) ; // Reading frame +1     
+    aaSubSearch ( ss , 1 , 1 , txt("m_aa_2") ) ; // Reading frame +2     
+    aaSubSearch ( ss , 2 , 1 , txt("m_aa_3") ) ; // Reading frame +3
+    ss = v->transformSequence ( true , false ) ;
+    if ( v->isCircular() ) ss = ss.Right ( 2 ) + ss ;
+    else ss = "  " + ss ;
+    aaSubSearch ( ss , -1 , -1 , txt("m_aa_m1") ) ; // Reading frame -1     
+    aaSubSearch ( ss , -2 , -1 , txt("m_aa_m2") ) ; // Reading frame -2     
+    aaSubSearch ( ss , -3 , -1 , txt("m_aa_m3") ) ; // Reading frame -3    
     }    
+    
+void FindSequenceDialog::aaSubSearch ( const wxString &s , int start , int dir , wxString rf )
+	{
+	int a ;
+	wxString codon , res ;
+	wxArrayInt ai ;
+    TVector *v = c->vec ;
+    wxString sub = t->GetValue().Upper() ;
+    int ostart = start < 0 ? 2 : 0 ;
+    if ( start < 0 )
+    	{
+	    for ( start = -start ; start + 3 < s.length() ; start += 3 ) ;
+    	}    
+	for ( a = start ; a + dir * 2 >= 0 && a + dir * 2 < s.length() ; a += dir * 3 )
+		{
+		codon.Empty() ;
+		codon += s.GetChar ( a + dir * 0 ) ;
+		codon += s.GetChar ( a + dir * 1 ) ;
+		codon += s.GetChar ( a + dir * 2 ) ;
+		res += v->dna2aa ( codon ) . GetChar ( 0 ) ;
+		ai.Add ( a ) ;
+		}    
+	a = res.Find ( sub ) ;
+	while ( a != -1 )
+		{
+		int from = ai[a] + 1 - ostart ;
+		int to = ai[a+sub.length()-1] + dir * 2 + 1 - ostart ;
+		if ( from > to ) { int z = from ; from = to ; to = z ; }
+		wxString msg = rf.BeforeFirst ( '\t' ) ;
+        lb->Append ( wxString::Format ( "%s: %s (%d-%d)" , 
+                             txt("amino_acid") ,
+                             msg.c_str() ,
+                             from , to ) ) ;
+		res.SetChar ( a , '_' ) ; // Invalidating
+		a = res.Find ( sub ) ;
+		}    
+	}    
     
 void FindSequenceDialog::itemSearch ()
     {

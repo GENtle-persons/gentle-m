@@ -601,7 +601,7 @@ void PlasmidCanvas::OnEventLinear(wxMouseEvent& event)
        {
        p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
        }
-    else if ( event.MiddleDown() || event.MiddleIsDown() )
+    else if ( event.MiddleDown() || ( event.Dragging() && event.MiddleIsDown() ) )
        {
        p->cSequence->mark ( "DNA" , bp , bp ) ;
        p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
