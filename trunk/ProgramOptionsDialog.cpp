@@ -17,12 +17,10 @@ BEGIN_EVENT_TABLE(TEnzymeSettingsTab, wxPanel )
 END_EVENT_TABLE()
 
 
-TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent )
+TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent , int _mode )
 	: wxPanel ( parent )
 	{
-    bo = 5 ;
-    lh = 22 ;
-	    
+	mode = _mode ;
 	int w , h ;
     GetClientSize ( &w , &h ) ;
     
@@ -31,8 +29,13 @@ TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent )
     optionsSizer = new wxFlexGridSizer ( 4 , 15 , 5 ) ;
     
     // Top
-    useSettings = new wxCheckBox ( this , GES_USE , txt("t_use_global_enzyme_settings") ) ; 
+    wxString t = txt("t_use_global_enzyme_settings") ; // EST_GLOBAL
+    if ( mode == EST_PROJECT ) t = txt("t_use_project_enzyme_settings") ;
+    if ( mode == EST_SINGLE ) t = txt("t_use_single_enzyme_settings") ;
+    useSettings = new wxCheckBox ( this , GES_USE , t ) ; 
     join_enzymes = new wxCheckBox ( this , -1 , txt("t_ges_join_enzymes") ) ;    
+    topSizer->Add ( new wxStaticText ( this , -1 , "" ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    topSizer->Add ( new wxStaticText ( this , -1 , "" ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
     topSizer->Add ( useSettings , 1 , wxALIGN_CENTER_VERTICAL ) ;
     topSizer->Add ( join_enzymes , 1 , wxALIGN_CENTER_VERTICAL ) ;
     
@@ -43,13 +46,13 @@ TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent )
     // Min/max cutoff
     useMinCutoff = new wxCheckBox ( this , GES_USE_MINCUTOFF , txt("t_ges_use_min_cutoff") ) ;
     minCutoff = new wxSpinCtrl ( this , -1 , "1" ) ;
-    useMaxCutoff = new wxCheckBox ( this , GES_USE_MAXCUTOFF , txt("t_ges_use_min_cutoff") ) ;
+    useMaxCutoff = new wxCheckBox ( this , GES_USE_MAXCUTOFF , txt("t_ges_use_max_cutoff") ) ;
     maxCutoff = new wxSpinCtrl ( this , -1 , "3" ) ;
     
     // Length of recognition sequence
     recog4 = new wxCheckBox ( this , -1 , txt("t_ges_seqlen4") ) ;
-    recog5 = new wxCheckBox ( this , -1 , txt("t_ges_seqlen4") ) ;
-    recog6 = new wxCheckBox ( this , -1 , txt("t_ges_seqlen5") ) ;
+    recog5 = new wxCheckBox ( this , -1 , txt("t_ges_seqlen5") ) ;
+    recog6 = new wxCheckBox ( this , -1 , txt("t_ges_seqlen6") ) ;
     recog6p = new wxCheckBox ( this , -1 , txt("t_ges_seqlen6p") ) ;
 
     // Overlaps
@@ -120,6 +123,11 @@ void TEnzymeSettingsTab::updateGlobalEnzymes ()
 	pattern5->Enable ( use ) ;
 	pattern_blunt->Enable ( use ) ;
 	default_group->Enable ( use ) ;
+	if ( mode != EST_GLOBAL )
+		{
+		join_enzymes->Enable ( use ) ;
+		use_color_coding->Enable ( use ) ;
+		}    
 	updateColorButton ( bcol1 , col1 ) ;
 	updateColorButton ( bcol2 , col2 ) ;
 	updateColorButton ( bcol3 , col3 ) ;
@@ -128,9 +136,10 @@ void TEnzymeSettingsTab::updateGlobalEnzymes ()
 void TEnzymeSettingsTab::updateColorButton ( wxButton *b , wxColour &c )
 	{
 	b->SetForegroundColour ( c ) ;
-	if ( ( c.Red() + c.Green() + c.Blue() ) / 3 < 100 ) b->SetBackgroundColour ( *wxWHITE ) ;
+	if ( ( c.Red() + c.Green() + c.Blue() ) / 3 < 230 ) b->SetBackgroundColour ( *wxWHITE ) ;
 	else b->SetBackgroundColour ( *wxBLACK ) ;
-	b->Enable ( use_color_coding->GetValue() ) ;
+	if ( mode == EST_GLOBAL ) b->Enable ( use_color_coding->GetValue() ) ;
+ 	else b->Enable ( use_color_coding->GetValue() && useSettings->GetValue() ) ;
 	}    
 	
 void TEnzymeSettingsTab::OnEnzymeCheckbox ( wxCommandEvent &event )
@@ -175,8 +184,8 @@ ProgramOptionsDialog::ProgramOptionsDialog(wxWindow *parent, const wxString& tit
     nb = new wxNotebook ( (wxWindow*) this , -1 ,
                           wxPoint ( 0 , 0 ) ,
                           wxSize ( w , h - lh * 2 ) ) ;
-    initGlobalEnzymes () ;
     initGlobalSettings () ;
+    initGlobalEnzymes () ;
 
     wxButton *OK = new wxButton ( this , POD_OK , txt("b_ok") ,
                                 wxPoint ( bo , h - lh - bo ) ,
@@ -272,7 +281,7 @@ void ProgramOptionsDialog::OnCancel ( wxCommandEvent &ev )
 
 void TEnzymeRules::init () // Default settings
 	{
-	useit = false ;
+	useit = true ;
 	min_cutoff = 1 ;
  	max_cutoff = 3 ;
 	use_min_cutoff = true ;
@@ -289,11 +298,12 @@ void TEnzymeRules::init () // Default settings
 	col2.Set ( 0 , 200 , 0 ) ;
 	col3.Set ( 0 , 0 , 200 ) ;
 	join_enzymes = true ;
-	use_color_coding = false ;
+	use_color_coding = true ;
 	}    
 
 void TEnzymeRules::load_global_settings ()
 	{
+	init () ;
     wxString s = myapp()->frame->LS->getOption ( "GLOBALENZYMESETTINGS" , "" ) ;
     from_string ( s ) ;
 	}    

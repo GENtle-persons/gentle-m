@@ -10,6 +10,8 @@ class TVector ;
 class TVectorItem ;
 class TEnzymeDialog ;
 class TURLtext ;
+class TEnzymeSettingsTab ;
+class TEnzymeRules ;
 
 class TVectorEditor : public wxDialog
     {
@@ -32,6 +34,7 @@ class TVectorEditor : public wxDialog
     virtual void initPanProp () ;
     virtual void initPanItem () ;
     virtual void initPanEnzym () ;
+    virtual void initPanEnzym2 () ;
     virtual void initPanProt () ;
     virtual void addOkCancel ( wxPanel *p ) ;
     virtual void makeItemsList () ;
@@ -85,6 +88,7 @@ class TVectorEditor : public wxDialog
 
     wxNotebook *nb ;
     wxPanel *panProp , *panItem , *panEnzym , *panProt ;
+    TEnzymeSettingsTab *panEnzyme2 ;
     wxButton *bAdd , *bDel , *bCol , *b_atg , *b_dfg , *b_dg ;
     wxTextCtrl *name , *lu , *ll , *ru , *rl ;
     TURLtext *desc , *idesc , *pro_txt ;
@@ -94,9 +98,11 @@ class TVectorEditor : public wxDialog
     wxChoice *ichoice ;
     wxCheckBox *icb , *icv ;
     wxCheckListBox *prots ;
+    TEnzymeRules *oldEnzymeRules ;
     
     wxArrayTVectorItem newitems ;
     int lastSelection ;
+    bool e_diduseit ;
     
     virtual void loadItemData ( int i ) ;
     virtual void updateItem ( TVectorItem &i ) ;

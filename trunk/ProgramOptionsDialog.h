@@ -5,10 +5,14 @@
 
 class TVector ;
 
+#define EST_GLOBAL 0
+#define EST_PROJECT 1
+#define EST_SINGLE 2
+
 class TEnzymeSettingsTab : public wxPanel
 	{
 	public :
-	TEnzymeSettingsTab ( wxWindow *parent = NULL ) ;
+	TEnzymeSettingsTab ( wxWindow *parent = NULL , int _mode = EST_GLOBAL ) ;
     virtual void updateColorButton ( wxButton *b , wxColour &c ) ;
     virtual void updateGlobalEnzymes () ;
     virtual void OnEnzymeCheckbox ( wxCommandEvent &event ) ;
@@ -26,8 +30,8 @@ class TEnzymeSettingsTab : public wxPanel
     wxCheckBox *pattern3 , *pattern5 , *pattern_blunt ;
     wxChoice *default_group ;
     wxButton *bcol1 , *bcol2 , *bcol3 ;
-    wxColour col1 , col2 , col3 ;	
-    int bo , lh ;
+    wxColour col1 , col2 , col3 ;
+    int mode ;
 
     DECLARE_EVENT_TABLE()
 	} ;    
@@ -69,6 +73,9 @@ class TEnzymeRules
 	virtual void setup_options ( TEnzymeSettingsTab *est ) ;
 	virtual void lookup_options ( TEnzymeSettingsTab *est ) ;
 	
+	virtual wxString to_string () ;
+	virtual void from_string ( wxString &s ) ;
+
 	virtual void getVectorCuts ( TVector *v ) ;
 	virtual wxColour *getColor ( int cuts ) ;
 	
@@ -82,8 +89,6 @@ class TEnzymeRules
 	bool join_enzymes , use_color_coding ;
 	
 	private :
-	virtual wxString to_string () ;
-	virtual void from_string ( wxString &s ) ;
 	virtual wxColour scan_color ( wxString s ) ;
 	} ;    
 
