@@ -46,7 +46,7 @@ TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode 
     r = st->GetRect() ;
     lim_xhg = new wxSpinCtrl ( this , PD_SILMUT_MAX_XHG , "2" ,
                             wxPoint ( r.GetRight() + bo , bo ) ,
-                            wxSize ( th * 2 , th ) ,
+			       wxSize ( MYSPINBOXSIZE /*th*2*/ , th ) ,
                             wxSP_ARROW_KEYS ,
                             0 , 9 , 2 ) ;
 
@@ -62,7 +62,7 @@ TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode 
     r = st->GetRect() ;
     lim_max = new wxSpinCtrl ( this , PD_SILMUT_MAX_CUT , "5" ,
                             wxPoint ( r.GetRight() + bo , bo ) ,
-                            wxSize ( th * 2 , th ) ,
+			       wxSize ( MYSPINBOXSIZE /*th*2*/ , th ) ,
                             wxSP_ARROW_KEYS ,
                             0 , 99 , 5 ) ;
     r = lim_max->GetRect() ;

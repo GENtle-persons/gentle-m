@@ -410,7 +410,6 @@ void TPrimerDesign::initme ()
     sc->edit_valid = "ACTG ." ;
     sc->forceOverwrite ( true ) ;
     
-#ifdef __WXMSW__
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
     myapp()->frame->InitToolBar(toolBar);
     toolBar->AddTool( MDI_TEXT_IMPORT , 
@@ -441,7 +440,7 @@ void TPrimerDesign::initme ()
     
     toolBar->AddSeparator() ;
     
-    spin = new wxSpinCtrl ( toolBar , PCR_SPIN , "" , wxDefaultPosition , wxSize ( 20 , 30 ) ) ;
+    spin = new wxSpinCtrl ( toolBar , PCR_SPIN , "" , wxDefaultPosition , wxSize ( MYSPINBOXSIZE , 30 ) ) ;
     spin->SetRange ( 1 , vec->getSequenceLength() ) ;
     spin->SetValue ( wxString::Format("%d",vec->getSequenceLength()) ) ;
     toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_pcr_spin_1") ) ) ;
@@ -455,18 +454,13 @@ void TPrimerDesign::initme ()
     myapp()->frame->addDefaultTools ( toolBar ) ;
 
     toolBar->Realize() ;
-#else
-#endif
+    toolbar = toolBar ;
 
     guessOptNuc () ;
 
     int w , h ;
     Maximize () ;
-#ifdef __WXMSW__
     GetClientSize ( &w , &h ) ;
-#else
-    GetParent()->GetClientSize( &w , &h ) ;
-#endif
 
     // Upper panel
     up = new wxPanel ( hs , -1 , wxDefaultPosition , wxSize ( w , 100 ) ) ;
@@ -490,9 +484,7 @@ void TPrimerDesign::initme ()
                             
     stat->SetFont ( *MYFONT ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
 
-#ifdef __WXMSW__ // LINUX
     GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,show_features);
-#endif
 
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
@@ -846,9 +838,7 @@ void TPrimerDesign::OnToggleFeatures ( wxCommandEvent &ev )
     {
     show_features = sc->findID("FEATURE")?0:1 ;
     showSequence () ;    
-#ifdef __WXMSW__ // LINUX
     GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,show_features);
-#endif
     }
     
 void TPrimerDesign::OnSpin(wxSpinEvent& event)

@@ -150,7 +150,7 @@ void TRestrictionEditor::initRestrictionPage ()
                            
     nfst = new wxCheckBox ( this , RSE_COC_CB , txt("Do not create fragments below ") ) ;
 
-    nfstv = new wxSpinCtrl ( this , -1 , "20" , wxDefaultPosition , wxSize ( 20 , 30 ) ) ;
+    nfstv = new wxSpinCtrl ( this , -1 , "20" , wxDefaultPosition , wxSize ( MYSPINBOXSIZE , 30 ) ) ;
     nfst->SetValue ( true ) ;
     nfstv->SetSize ( 70 , th * 2 ) ;
     h1d->Add ( nfstv , 0 , wxALL|wxALIGN_CENTER_VERTICAL , 5 ) ;

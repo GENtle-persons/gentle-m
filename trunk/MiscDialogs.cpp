@@ -56,7 +56,7 @@ TSequencingPrimerDialog::TSequencingPrimerDialog (wxWindow *parent, const wxStri
     bool usepj = myapp()->frame->LS->getOption ( "SEQUENCINGPRIMER_USE_PJ" , false ) ;
     int ml = myapp()->frame->LS->getOption ( "SEQUENCINGPRIMER_MIN_ALIGNMENT" , 20 ) ;
 
-    t_ma = new wxSpinCtrl ( this , -1 , wxString::Format ( "%d" , ml ) , wxDefaultPosition , wxSize ( 30 , 20 ) ) ;
+    t_ma = new wxSpinCtrl ( this , -1 , wxString::Format ( "%d" , ml ) , wxDefaultPosition , wxSize ( MYSPINBOXSIZE , 20 ) ) ;
     h0->Add ( new wxStaticText ( this , -1 , txt("t_minimum_alignment") ) , 0 , wxALIGN_CENTER_VERTICAL ) ;    
     h0->Add ( t_ma , 0 , wxALL|wxALIGN_CENTER_VERTICAL , 5 ) ;
     h0->Add ( new wxStaticText ( this , -1 , "bp" ) , 0 , wxALIGN_CENTER_VERTICAL ) ;
@@ -408,19 +408,19 @@ void TAlignmentDialog::init_how ()
     
     alg_match = new wxSpinCtrl ( p , AL_MATCH , "" ,
                                     wxPoint ( xo , th*2 ) ,
-                                    wxSize ( w/5 , th*3/2 ) ) ;
+				 wxSize ( MYSPINBOXSIZE /*w/5*/ , th*3/2 ) ) ;
     alg_match->SetRange ( -100 , 100 ) ;
     alg_match->SetValue ( al->match ) ;
 
     alg_mismatch = new wxSpinCtrl ( p , AL_MISMATCH , "" ,
                                     wxPoint ( xo , th*4 ) ,
-                                    wxSize ( w/5 , th*3/2 ) ) ;
+                                    wxSize ( MYSPINBOXSIZE /*w/5*/ , th*3/2 ) ) ;
     alg_mismatch->SetRange ( -100 , 100 ) ;
     alg_mismatch->SetValue ( al->mismatch ) ;
 
     alg_penalty = new wxSpinCtrl ( p , AL_PENALTY , "" ,
                                     wxPoint ( xo , th*6 ) ,
-                                    wxSize ( w/5 , th*3/2 ) ) ;
+				   wxSize ( MYSPINBOXSIZE /*w/5*/ , th*3/2 ) ) ;
     alg_penalty->SetRange ( -100 , 100 ) ;
     alg_penalty->SetValue ( al->gap_penalty ) ;
     

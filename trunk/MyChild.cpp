@@ -363,7 +363,9 @@ void MyChild::initMenus ()
 
 void MyChild::initToolbar ()
 	{
+#ifdef __WXMSW__
     if ( myapp()->frame->tb_mychild == NULL )
+#endif
         {
             
 	    wxToolBar *toolBar = CreateToolBar(wxTB_HORIZONTAL);//(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);    
@@ -424,11 +426,14 @@ void MyChild::initToolbar ()
         toolBar->Realize() ;    
         
         myapp()->frame->tb_mychild = toolBar ;
+	toolbar = toolBar ;
         
         }    
 
+#ifdef __WXMSW__
     toolbar = myapp()->frame->tb_mychild ;
     toolbar->Reparent ( this ) ;
+#endif
 	}    
 
 void MyChild::initme ()
@@ -1373,12 +1378,16 @@ void MyChild::Redo(wxCommandEvent& event)
     
 void MyChild::updateToolbar ()
     {
+#ifdef __WXMSW__
     toolbar = myapp()->frame->tb_mychild ;
     if ( !toolbar ) return ;
     if ( myapp()->frame->isLocked() ) toolbar->Freeze() ;
     toolbar->Reparent ( this ) ;
     if ( !myapp()->frame->isLocked() ) toolbar->Thaw() ;
     toolbar->Enable () ;
+#else
+    if ( !toolbar ) return ;
+#endif
 
     // Zoom
     if ( !cPlasmid ) return ;

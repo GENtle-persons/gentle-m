@@ -33,14 +33,12 @@ ChildBase::ChildBase(wxWindow *parent, const wxString& title)
 
 wxToolBar *ChildBase::CreateToolBar ( int i )
 {
-#ifdef __WXMSW__
+//#ifdef __WXMSW__
   return ChildBase::CreateToolBar ( i , -1 , "" ) ;
-#else
+/*#else
   wxToolBar *bar = new wxToolBar ( myapp()->frame , -1 ) ;
-  //  SetToolBar ( bar ) ;
   return bar ;
-  //  return myapp()->frame->GetToolBar () ;
-#endif
+  #endif*/
 }
 
 void ChildBase::Maximize ( bool isit )

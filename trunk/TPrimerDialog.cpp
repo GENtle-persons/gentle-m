@@ -70,7 +70,7 @@ wxSpinCtrl *TPrimerDialog::addSpinCtrl ( int id , wxString title , int x , int y
     new wxStaticText ( this , -1 , title , wxPoint ( x , y ) ) ;
     x += w - 80 ;
     y -= 3 ;
-    n = new wxSpinCtrl ( this , id , "0" , wxPoint ( x, y ) , wxSize ( 50 , 20 ) ) ;
+    n = new wxSpinCtrl ( this , id , "0" , wxPoint ( x, y ) , wxSize ( MYSPINBOXSIZE , 20 ) ) ;
     char s[100] ;
     sprintf ( s , "%d" , def ) ;
     n->SetValue ( s ) ;

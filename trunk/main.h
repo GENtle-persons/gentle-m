@@ -26,6 +26,12 @@ typedef unsigned int uint ;
 
 #endif // MYTEST
 
+#ifdef __WXMSW__
+#define MYSPINBOXSIZE 50
+#else
+#define MYSPINBOXSIZE -1
+#endif
+
 #include "wx/wxprec.h"
 
 #ifdef __BORLANDC__

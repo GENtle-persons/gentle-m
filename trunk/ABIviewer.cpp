@@ -216,8 +216,8 @@ void TABIviewer::initme ()
     aidLines = new wxCheckBox ( up , ABI_HELPLINES , txt("t_aid_lines") , wxPoint ( bo , bo ) ) ;
     r = aidLines->GetRect() ;
     inv_compl = new wxCheckBox ( up , ABI_INV_COMP , txt("t_abi_inv_comp") , wxPoint ( r.GetRight()+bo , r.GetTop() ) ) ;
-    f_height = new wxSpinCtrl ( up , ABI_HEIGHT , "5" , wxPoint ( bo , bo + th * 1 ) , wxSize ( 50 , -1 ) ) ;
-    f_width = new wxSpinCtrl ( up , ABI_WIDTH , "2" , wxPoint ( bo , bo + th * 2 ) , wxSize ( 50 , -1 ) ) ;
+    f_height = new wxSpinCtrl ( up , ABI_HEIGHT , "5" , wxPoint ( bo , bo + th * 1 ) , wxSize ( MYSPINBOXSIZE , -1 ) ) ;
+    f_width = new wxSpinCtrl ( up , ABI_WIDTH , "2" , wxPoint ( bo , bo + th * 2 ) , wxSize ( MYSPINBOXSIZE , -1 ) ) ;
     f_height->SetRange ( 1 , 50 ) ;
     f_width->SetRange ( 1 , 9 ) ;
     aidLines->SetValue ( true ) ;
