@@ -42,7 +42,7 @@ void SeqFeature::show ( wxDC& dc )
            t = " " ;
            int i ;
            vector <int> _i ;
-           vector <string> _name ;
+           wxArrayString _name ;
            vector <wxPoint> _point ;
            myass ( vec , "SeqFeature::show_0" ) ;
            myass ( used.size() >= vr.size() , "SeqFeature::show_1" ) ;
@@ -161,7 +161,7 @@ void SeqFeature::show ( wxDC& dc )
                        string name = vec->items[vr[i].x].name.c_str() ;
                        if ( newline && li[l] == i ) name = "(" + name + ")" ;
                        _i.push_back ( i ) ;
-                       _name.push_back ( name ) ;
+                       _name.Add ( name.c_str() ) ;
                        _point.push_back ( wxPoint ( x_from , level - ch2 ) ) ;
                        }
                     li[l] = i ;
@@ -196,10 +196,10 @@ void SeqFeature::show ( wxDC& dc )
                   dc.SetTextForeground ( col ) ;
 //                  dc.SetTextForeground ( pens[vr[_i[i]].y].GetColour() ) ;
                   }
-               myass ( i >= 0 && i < _name.size() , "SeqFeature::show_names_4" ) ;
+               myass ( i >= 0 && i < _name.GetCount() , "SeqFeature::show_names_4" ) ;
                myass ( i >= 0 && i < _point.size() , "SeqFeature::show_names_5" ) ;
                if ( _name[i] != "()" )
-                  dc.DrawText ( _name[i].c_str() , _point[i] ) ;
+                  dc.DrawText ( _name[i] , _point[i] ) ;
               }
 
 

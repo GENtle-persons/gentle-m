@@ -68,17 +68,17 @@ TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode 
     r = lim_max->GetRect() ;
     new wxStaticText ( this , -1 , txt("t_silmut_max_cut2") , wxPoint ( r.GetRight()+bo , bo*2 ) ) ;
     
-    vector <string> z ;
+    wxArrayString z ;
     myapp()->frame->LS->getEnzymeGroups ( z ) ;
-    z.push_back ( txt("Current") ) ;
-    z.push_back ( txt("All") ) ;
-    sort ( z.begin() , z.end() ) ;
+    z.Add ( txt("Current") ) ;
+    z.Add ( txt("All") ) ;
+    z.Sort () ;
     
     r = lim_xhg->GetRect() ;
     egr = new wxChoice ( this , PD_SILMUT_EGR , wxPoint ( bo , r.GetBottom() + bo ) ,
                             wxSize ( r.GetRight() - bo , th ) ) ;
-    for ( int a = 0 ; a < z.size() ; a++ )
-        egr->Append ( z[a].c_str() ) ;
+    for ( int a = 0 ; a < z.GetCount() ; a++ )
+        egr->Append ( z[a] ) ;
         
     if ( mode == M_WHATCUTS ) egr->SetStringSelection ( txt("All") ) ;
     else if ( mode == M_SILMUT ) egr->SetStringSelection ( txt("Current") ) ;

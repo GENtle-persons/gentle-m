@@ -603,7 +603,7 @@ void TAlignment::OnSettings ( wxCommandEvent &ev )
     redoAlignments () ;
     }
 
-void TAlignment::prealigned ( vector <string> &vs , vector <ChildBase*> &vc )
+void TAlignment::prealigned ( wxArrayString &vs , vector <ChildBase*> &vc )
     {
     lines.clear () ;
     for ( int a = 0 ; a < vc.size() ; a++ )
@@ -612,7 +612,7 @@ void TAlignment::prealigned ( vector <string> &vs , vector <ChildBase*> &vc )
         line.name = vc[a]->getName() ;
         line.v = vc[a]->vec ;
         line.ResetSequence() ;
-        line.s = vs[a].c_str() ;
+        line.s = vs[a] ;
         lines.push_back ( line ) ;
         }
     
@@ -1095,7 +1095,7 @@ void TAlignment::fromVector ( TVector *nv )
               wxMessageBox ( u.c_str() , name.c_str() ) ;
               }*/
 
-           short type = TUReadSeq::getSeqType ( vv->sequence ) ;
+           short type = TUReadSeq::getSeqType ( vv->sequence.c_str() ) ;
            if ( type == TYPE_AMINO_ACIDS )
               {
               TAminoAcids *p = myapp()->frame->newAminoAcids ( vv , name.c_str() ) ;

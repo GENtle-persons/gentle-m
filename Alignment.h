@@ -80,7 +80,7 @@ class TAlignment : public ChildBase
     virtual void invokeOriginal ( int id , int pos ) ;
     virtual void callMiddleMouseButton ( int id , int pos , wxString _mode = "" ) ;
     virtual void MoveUpDown ( int what , int where ) ;
-    virtual void prealigned ( vector <string> &vs , vector <ChildBase*> &vc ) ;
+    virtual void prealigned ( wxArrayString &vs , vector <ChildBase*> &vc ) ;
     virtual void fromVector ( TVector *nv ) ;
     
     // Variables

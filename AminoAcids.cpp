@@ -12,6 +12,7 @@ BEGIN_EVENT_TABLE(TAminoAcids, MyChildBase)
     EVT_MENU(SEQ_PRINT, TAminoAcids::OnPrint)
     EVT_MENU(MDI_AS_NEW_FEATURE, TAminoAcids::OnAsNewFeature)
     EVT_MENU(AMINOACIDS_BLAST_AA, TAminoAcids::OnBlastAA)
+    EVT_MENU(AMINOACIDS_PHOTOMETER, TAminoAcids::OnPhotometer)
 
     EVT_MENU(MDI_UNDO, TAminoAcids::Undo)
     EVT_MENU(MDI_REDO, TAminoAcids::Redo)
@@ -91,6 +92,7 @@ void TAminoAcids::initme ()
 //    edit_menu->Append(MDI_AS_NEW_FEATURE, txt("m_as_new_feature") );
 //    edit_menu->Append(MDI_EXTRACT_AA, txt("m_extract_aa") );
     edit_menu->Append(AMINOACIDS_BLAST_AA, txt("m_blast_aa") ) ;
+    edit_menu->Append(AMINOACIDS_PHOTOMETER, txt("m_aa_photometer") ) ;
 
     wxMenu *view_menu = new wxMenu;
     view_menu->Append(MDI_EDIT_MODE, txt("m_edit_mode") , "" , true );
@@ -205,10 +207,10 @@ void TAminoAcids::showStat ()
     char t[10000] ;
     int noaa = 0 , piaa = 0 ;
     float pI = 0 ;
-    float mW = 0 ;
     float ex = 0 , abs = 0 ;
     int num[256] ;
     int a ;
+    float mW = 0 ;
     for ( a = 0 ; a < 256 ; a++ ) num[a] = 0 ;
     for ( a = 0 ; a < vec->sequence.length() ; a++ )
         {
@@ -377,13 +379,26 @@ void TAminoAcids::OnAsNewFeature(wxCommandEvent& event)
     vec->undo.stop() ;
     }
     
+void TAminoAcids::OnPhotometer(wxCommandEvent& event)
+    {
+    TCalculator *c = myapp()->frame->OnCalculator ( event ) ;
+    wxString seq = vec->sequence.c_str() ;
+    float mW = 0 ;
+    for ( int a = 0 ; a < vec->sequence.length() ; a++ )
+        mW += vec->getAAmw ( c ) ;
+    c->prot->SetCellValue ( 2 , 1 , wxString::Format("%d", seq.Replace("W","",true)) ) ;
+    c->prot->SetCellValue ( 3 , 1 , wxString::Format("%d", seq.Replace("Y","",true)) ) ;
+    c->prot->SetCellValue ( 4 , 1 , wxString::Format("%d", seq.Replace("C","",true)) ) ;
+    c->prot->SetCellValue ( 5 , 1 , wxString::Format("%0.2f", mW) ) ;
+    c->nb->SetSelection ( 2 ) ;
+    }
+    
 void TAminoAcids::OnBlastAA(wxCommandEvent& event)
     {
     string seq ;
     int a ;
     if ( sc->_from < 0 ) seq = vec->sequence ;
     else seq = sc->getSelection() ;
-//        for ( a = sc->_from-1 ; a < sc->_to ; a++ ) seq += vec->sequence[a] ;
     myapp()->frame->blast ( seq.c_str() , "blastp" ) ;
     }
 

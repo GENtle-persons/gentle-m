@@ -56,11 +56,11 @@ int SeqDNA::arrange ( int n )
     return lowy + bo*2 ;
     }
     
-wxPoint SeqDNA::showText ( int ystart , vector <string> &tout )
+wxPoint SeqDNA::showText ( int ystart , wxArrayString &tout )
     {
     wxPoint p ( -1 , -1 ) ;
     int a , b , c ;
-    string t ;
+    wxString t ;
     int x = 0 , y = ystart-can->seq.size() , ly = -1 ;
     for ( a = 0 ; a < pos.p.size() ; a++ )
         {
@@ -73,7 +73,7 @@ wxPoint SeqDNA::showText ( int ystart , vector <string> &tout )
               ly = pos.r[a].y ;
               y += can->seq.size() ;
               x = 0 ;
-              while ( y >= tout.size() ) tout.push_back ( "" ) ;
+              while ( y >= tout.GetCount() ) tout.Add ( "" ) ;
               }
            else x++ ;
            if ( (x) % (can->blocksize+1) == 0 ) x++ ;
@@ -82,7 +82,7 @@ wxPoint SeqDNA::showText ( int ystart , vector <string> &tout )
               if ( b >= can->_from && p.x == -1 ) p.x = y ;
               if ( b <= can->_to ) p.y = y ;
               while ( tout[y].length() < x ) tout[y] += " " ;
-              tout[y][x-1] = t[0] ;
+              tout[y].SetChar ( x-1 , t.GetChar(0) ) ;
               }
            }
         }

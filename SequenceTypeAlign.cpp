@@ -149,15 +149,16 @@ void SeqAlign::show ( wxDC& dc )
                 t[0] == can->seq[first]->s[b-1] )
                    t[0] = '.' ;
 
-/*           if ( t == "." )
+           if ( t == "." )
               {
-              dc.DrawText ( " ", pos.r[a].x, pos.r[a].y - can->charheight ) ;
-              int i = dc.GetBackgroundMode () ;
-              dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-              dc.DrawText ( t.c_str(), pos.r[a].x, pos.r[a].y - can->charheight / 3 ) ;
-              dc.SetBackgroundMode ( i ) ;
+//              dc.DrawText ( " ", pos.r[a].x, pos.r[a].y - can->charheight ) ;
+              dc.SetBrush ( *MYBRUSH ( dc.GetTextForeground() ) ) ;
+              dc.DrawCircle ( pos.r[a].x + can->charwidth / 2 ,
+                              pos.r[a].y + can->charheight / 2 ,
+                              can->charheight / 8 ) ;
+              dc.SetPen(*wxTRANSPARENT_PEN);
               }
-           else */dc.DrawText ( t.c_str(), pos.r[a].x, pos.r[a].y ) ;
+           else dc.DrawText ( t.c_str(), pos.r[a].x, pos.r[a].y ) ;
            
            if ( al->bold )
               {

@@ -15,13 +15,13 @@ class TUReadSeq
     virtual void getSequences () ;
     virtual void convert ( TGenBank &gb ) ;
 
-    static int getSeqType ( string t ) ;
+    static int getSeqType ( wxString t ) ;
     
 //    private :
     wxString filename ;
     short error , format , numseqs ;
     long skiplines ;
-    vector <string> seq_names , seqs ;
+    wxArrayString seq_names , seqs ;
     } ;
 
 

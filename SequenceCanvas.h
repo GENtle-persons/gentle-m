@@ -82,7 +82,7 @@ class SeqBasic
     virtual void initFromTVector ( TVector *v ) {} // Dummy
     virtual int  arrange ( int n ) { return 0 ; } ;
     virtual void show ( wxDC& dc ) {} ;
-    virtual wxPoint showText ( int ystart , vector <string> &tout )
+    virtual wxPoint showText ( int ystart , wxArrayString &tout )
         { return wxPoint ( -1 , -1 ) ; } ;
     virtual string whatsthis () { return "BASIC" ; }
     
@@ -132,7 +132,7 @@ class SeqDNA : public SeqBasic
     virtual void show ( wxDC& dc ) ;
     virtual void initFromTVector ( TVector *v ) ;
     virtual string whatsthis () { return invers ? "IDNA" : "DNA" ; }
-    virtual wxPoint showText ( int ystart , vector <string> &tout ) ;
+    virtual wxPoint showText ( int ystart , wxArrayString &tout ) ;
     virtual wxColor getBaseColor ( char b ) ;
         
     // Variables
@@ -203,7 +203,7 @@ class SeqAA : public SeqBasic
     virtual ~SeqAA () ;
     virtual int  arrange ( int n ) ;
     virtual void show ( wxDC& dc ) ;
-    virtual wxPoint showText ( int ystart , vector <string> &tout ) ;
+    virtual wxPoint showText ( int ystart , wxArrayString &tout ) ;
     virtual void initFromTVector ( TVector *v ) ;
     virtual void initFromString ( string t ) ;
     virtual void analyzeProteases () ;

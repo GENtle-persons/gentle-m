@@ -477,7 +477,7 @@ void SequenceCanvas::OnCopyText ( wxCommandEvent &ev )
     {
     int a ;
     string s , t ;
-    vector <string> out ;
+    wxArrayString out ;
     int minline = -1 , maxline = -1 ;
     for ( a = 0 ; a < seq.size() ; a++ )
         {
@@ -492,15 +492,14 @@ void SequenceCanvas::OnCopyText ( wxCommandEvent &ev )
         if ( p.y > maxline && p.y >= 0 ) maxline = p.y ;
         }
 
-    while ( out.size() && out[out.size()-1] == "" )
-        out.pop_back() ;
+    while ( out.GetCount() && out[out.GetCount()-1] == "" )
+        out.Remove ( out.GetCount()-1 ) ;
 
     if ( minline < 0 ) minline = 0 ;
-    if ( maxline < 0 ) maxline = out.size()-1 ;
+    if ( maxline < 0 ) maxline = out.GetCount()-1 ;
 
     s = "" ;
     for ( a = minline ; a <= maxline ; a++ )
-//    for ( a = 0 ; a < out.size() ; a++ )
         s += out[a] + "\n" ;
 
     if (wxTheClipboard->Open())
