@@ -26,7 +26,7 @@ TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent , int _mode )
     
     wxBoxSizer *vs = new wxBoxSizer ( wxVERTICAL ) ;
     wxFlexGridSizer *topSizer = new wxFlexGridSizer ( 2 , 15 , 5 ) ;
-    optionsSizer = new wxFlexGridSizer ( 4 , 15 , 5 ) ;
+    optionsSizer = new wxFlexGridSizer ( 4 , 15 , 5 ) ;    
     
     // Top
     wxString t = txt("t_use_global_enzyme_settings") ; // EST_GLOBAL
@@ -79,6 +79,9 @@ TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent , int _mode )
     met_dam = new wxCheckBox ( this , -1 , txt("t_ges_met_dam") ) ;
     met_dcm = new wxCheckBox ( this , -1 , txt("t_ges_met_dcm") ) ;
     
+    // GC%
+    showgc = new wxCheckBox ( this , -1 , txt("t_ges_showgc") ) ;
+    
     // Adding elements to gridsizer
     optionsSizer->Add ( use_color_coding , 1 , wxALIGN_CENTER_VERTICAL ) ;
     optionsSizer->Add ( bcol1 , 1 , wxALIGN_CENTER_VERTICAL ) ;
@@ -109,6 +112,8 @@ TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent , int _mode )
     optionsSizer->Add ( met_dam , 1 , wxALIGN_CENTER_VERTICAL ) ;
     optionsSizer->Add ( met_dcm , 1 , wxALIGN_CENTER_VERTICAL ) ;
     optionsSizer->Add ( new wxStaticText ( this , -1 , "" ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
+
+    optionsSizer->Add ( showgc , 1 , wxALIGN_CENTER_VERTICAL ) ;
     
     // Do it!
     this->SetSizer ( vs ) ;
@@ -309,6 +314,7 @@ void TEnzymeRules::init () // Default settings
 	join_enzymes = true ;
 	use_color_coding = true ;
 	methylation = 0 ;
+	showgc = false ;
 	}    
 
 void TEnzymeRules::load_global_settings ()
@@ -345,6 +351,7 @@ void TEnzymeRules::setup_options ( TEnzymeSettingsTab *est )
 	est->use_color_coding->SetValue ( use_color_coding ) ;
 	est->met_dam->SetValue ( ( methylation & DAM_METHYLATION ) > 0 ) ;
 	est->met_dcm->SetValue ( ( methylation & DCM_METHYLATION ) > 0 ) ;
+	est->showgc->SetValue ( showgc ) ;
 	est->updateGlobalEnzymes () ;
 	}    
 
@@ -368,6 +375,7 @@ void TEnzymeRules::lookup_options ( TEnzymeSettingsTab *est )
 	col3 = est->col3 ;
 	join_enzymes = est->join_enzymes->GetValue() ;
 	use_color_coding = est->use_color_coding->GetValue() ;
+	showgc = est->showgc->GetValue() ;
 	
 	methylation = 0 ;
 	if ( est->met_dam->GetValue() ) methylation += DAM_METHYLATION ;
@@ -396,6 +404,7 @@ wxString TEnzymeRules::to_string ()
 	ret += wxString::Format ( "join_enzymes=%d\r" , join_enzymes ) ;
 	ret += wxString::Format ( "use_color_coding=%d\r" , use_color_coding ) ;
 	ret += wxString::Format ( "methylation=%d\r" , methylation ) ;
+	ret += wxString::Format ( "showgc=%d\r" , showgc ) ;
 	return ret ;
 	}    
 
@@ -430,6 +439,7 @@ void TEnzymeRules::from_string ( wxString &s )
 		else if ( key == "join_enzymes" ) join_enzymes = l ;
 		else if ( key == "use_color_coding" ) use_color_coding = l ;
 		else if ( key == "methylation" ) methylation = l ;
+		else if ( key == "showgc" ) showgc = l ;
 		}    
 	}    
 

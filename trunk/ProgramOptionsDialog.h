@@ -29,6 +29,7 @@ class TEnzymeSettingsTab : public wxPanel
     wxCheckBox *recog4 , *recog5 , *recog6 , *recog6p ;
     wxCheckBox *pattern3 , *pattern5 , *pattern_blunt ;
     wxCheckBox *met_dam , *met_dcm ;
+    wxCheckBox *showgc ;
     wxChoice *default_group ;
     wxButton *bcol1 , *bcol2 , *bcol3 ;
     wxColour col1 , col2 , col3 ;
@@ -85,6 +86,7 @@ class TEnzymeRules
 	bool use_min_cutoff , use_max_cutoff ;
 	bool recog4 , recog5 , recog6 , recog_longer ;
 	bool pattern3 , pattern5 , pattern_blunt ;
+	bool showgc ;
 	wxString default_group ;
 	wxColour col1 , col2 , col3 ;
 	bool join_enzymes , use_color_coding ;
