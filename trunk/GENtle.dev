@@ -1390,7 +1390,7 @@ BuildCmd=
 [Unit135]
 FileName=AutoAnnotate.h
 CompileCpp=1
-Folder=
+Folder=Data structures
 Compile=1
 Link=1
 Priority=1000
@@ -1400,7 +1400,7 @@ BuildCmd=
 [Unit136]
 FileName=AutoAnnotate.cpp
 CompileCpp=1
-Folder=
+Folder=Data structures
 Compile=1
 Link=1
 Priority=1000

@@ -946,6 +946,8 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
         v->items.push_back ( i ) ;
         }
         
+    if ( justload ) return true ;
+
     // Sorting by size, largest first
     if ( v->items.size() < 100 ) // Don't do that for genoms!
     	{
@@ -961,11 +963,9 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
                }
             }    
         }
-
+    
     v->updateDisplay() ;
     v->undo.clear() ;
-    
-    if ( justload ) return true ;
     
     ChildBase *n = NULL ;
     if ( v->getType() == TYPE_AMINO_ACIDS )

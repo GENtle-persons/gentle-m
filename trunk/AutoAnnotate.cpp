@@ -7,22 +7,29 @@ AutoAnnotate::AutoAnnotate ( MyChild *_p )
 
 void AutoAnnotate::ScanDatabase ( wxString database )
 	{
+//	wxStartTimer () ;
+	wxBeginBusyCursor() ;
+	int a , b ;
 	wxString oseq = p->vec->getSequence() ;
 	if ( p->vec->isCircular() ) oseq += oseq ;
 	p->vec->undo.start ( txt("u_autoannotate") ) ;
 	
 	// Load all sequences from database
-	TStorage db ( TEMP_STORAGE , database ) ;
+	TManageDatabaseDialog mdb ( myapp()->frame , "dummy" , ACTION_MODE_STARTUP ) ;
+	TStorage *db = mdb.getTempDB ( database ) ;
 	TSQLresult r ;
-	wxString dbname = myapp()->frame->LS->UCfirst ( database.AfterLast(':').AfterLast('/').AfterLast('\\').BeforeLast('.') ) ;
-	r = db.getObject ( "SELECT dna_name FROM dna" ) ;
-	int a , b ;
+
+	wxString dbname ;
+	for ( a = 0 ; a < mdb.db_name.GetCount() ; a++ )
+        if ( mdb.db_file[a] == database )
+        	dbname = mdb.db_name[a] ;
+
+	r = db->getObject ( "SELECT DISTINCT di_dna FROM dna_item" ) ; // Find all DNA with items
 	bool foundany = false ;
 	for ( a = 0 ; a < r.content.size() ; a++ )
 		{
   		wxString name = r[a][0] ;
   		if ( name.Trim().IsEmpty() ) continue ; // Blank name - not good...
-		TManageDatabaseDialog mdb ( myapp()->frame , "dummy" , ACTION_MODE_STARTUP ) ;
 		mdb.justload = true ;
 		bool success = mdb.do_load_DNA ( name , dbname ) ;
 		if ( !success ) continue ; // Not loaded, ignore
@@ -32,6 +39,8 @@ void AutoAnnotate::ScanDatabase ( wxString database )
 	    	foundany |= MatchItem ( v , v->items[b] , p->vec , oseq ) ;
   		delete v ;
 		}
+		
+	foundany |= addORFs ( p->vec ) ;
 
 	if ( foundany )
 		{
@@ -45,6 +54,8 @@ void AutoAnnotate::ScanDatabase ( wxString database )
         p->vec->undo.stop() ;
 		}    
 	else p->vec->undo.abort () ;
+	wxEndBusyCursor() ;
+//	wxMessageBox ( wxString::Format ( "Took %d ms" , wxGetElapsedTime() ) ) ;
 	}    
 	
 bool AutoAnnotate::RawMatch ( TVectorItem &item , TVector *v , wxString &oseq , wxString &s )
@@ -77,14 +88,15 @@ bool AutoAnnotate::MatchItem ( TVector *tv , TVectorItem &item , TVector *v , wx
     s += s ;
     s = s.Mid ( from - 1 , to - from + 1 ) ;
     
-    if ( s.length() < 5 ) return false ; // Too short a sequence for a match to have any meaning
+    if ( s.length() < 10 ) return false ; // Too short a sequence for a match to have any meaning
     
     // Did we already try this?
-    wxString key = item.name + wxString::Format ( ":%d:" , item.getType() ) + s ; // Fingerprint string
+    wxString key = wxString::Format ( ":%d:" , item.getType() ) + s ; // Fingerprint string
     if ( wxNOT_FOUND != alreadyin.Index ( key.c_str() , false ) ) return false ; // Already have this one
     alreadyin.Add ( key ) ; // Remember it
 
     bool ret = false ;
+    item.desc += "\n[" + tv->getName() + "]" ;
 
     // Raw search
     ret |= RawMatch ( item , v , oseq , s ) ;
@@ -102,7 +114,41 @@ bool AutoAnnotate::MatchItem ( TVector *tv , TVectorItem &item , TVector *v , wx
 	return ret ;
 	}    
 
-
+bool AutoAnnotate::addORFs ( TVector *v )
+	{
+	v->ClearORFs () ;
+	v->addORFs ( 1 ) ;
+	v->addORFs ( 2 ) ;
+	v->addORFs ( 3 ) ;
+	v->addORFs ( -1 ) ;
+	v->addORFs ( -2 ) ;
+	v->addORFs ( -3 ) ;
+	
+	bool found = false ;
+	int a , b ;
+	for ( a = 0 ; a < v->countORFs() ; a++ )
+		{
+  		TORF *o = v->getORF ( a ) ;
+ 		o->from++ ;
+ 		o->to++ ;
+  		for ( b = 0 ; b < v->items.size() ; b++ )
+  			{
+	    	if ( v->items[b].getType() != VIT_CDS ) continue ;
+	    	if ( v->items[b].from == o->from ) break ;
+	    	if ( v->items[b].from == o->to ) break ;
+	    	if ( v->items[b].to == o->from ) break ;
+	    	if ( v->items[b].to == o->to ) break ;
+  			}    
+		if ( b < v->items.size() ) continue ; // Already a CDS item
+		TVectorItem i ( "???" , "Unknown open reading frame" , o->from , o->to , VIT_CDS ) ;
+		i.setRF ( 1 ) ;
+		i.setDirection ( o->rf > 0 ? 1 : -1 ) ;
+		v->items.push_back ( i ) ;
+		found |= true ;
+		}    
+	v->ClearORFs () ;
+	return found ;
+	}    
 
 
 // *********************
