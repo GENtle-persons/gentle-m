@@ -4,7 +4,7 @@
 // LGPL, as far as I (Magnus Manske) know...
 // Only used to work around the wxHTTP bug in 2.5.2.
 
-#ifndef __WXMSW__
+#ifndef __WXMSW__ // Linux
 
 #include "main.h"
 #include "SendHTTP.h"
@@ -18,13 +18,23 @@ wxString myExternal::getTextLocal ( wxString url ) { return "" ; }
 int myExternal::copyFileHTTP ( wxString _url , wxString _file ) { return 0 ; }
 wxString myExternal::getTextHTTP ( wxString url ) { return "" ; }
 
-#else
+#else // Windows
 
 #include <stdio.h>
 #include <string.h>
 #include "winsock2.h"
 
 #include "main.h"
+#include "SendHTTP.h"
+
+/* HTTPRequest: Structure that returns the HTTP headers and message
+                from the request*/
+typedef struct
+{ 
+	LPSTR headers;/* Pointer to HTTP headers */
+	LPSTR message;/* Pointer to the HTTP message */
+	long messageLength;/* Length of the message */
+} HTTPRequest;
 
 #define MEM_BUFFER_SIZE 10
 

@@ -167,7 +167,14 @@ TSQLresult TStorage::getObject ( wxString query )
     
     do {
         rc = sqlite_exec ( db , query.c_str() , callback , 0 , &e ) ;
-        if ( rc == SQLITE_BUSY ) wxMilliSleep ( 200 ) ; // If busy, wait 200 ms
+        if ( rc == SQLITE_BUSY ) // If busy, wait 200 ms
+        	{
+#ifdef __WXMSW__
+			wxUsleep ( 200 ) ;
+#else
+       	    wxMilliSleep ( 200 ) ;
+#endif
+        	}    
         } while ( rc == SQLITE_BUSY ) ;
     
     ierror = (int) e ;
