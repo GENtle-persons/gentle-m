@@ -652,7 +652,7 @@ void TPrimerDesign::calculateResultSequence()
 void TPrimerDesign::updateResultSequence()
     {
     calculateResultSequence() ;
-   
+
     while ( sc && sc->seq.GetCount() > 5 + show_features )
         {
         delete sc->seq[sc->seq.GetCount()-1] ;
@@ -886,6 +886,10 @@ void TPrimerDesign::OnFind(wxCommandEvent& event)
 void TPrimerDesign::OnInsertRestrictionSiteLeft(wxCommandEvent& event)
     {
     sc->OnInsertRestrictionSiteLeft ( event ) ;
+    updatePrimersFromSequence () ;
+    guessOptNuc () ;
+    updateResultSequence () ;
+    showSequence () ;
     }
 
 void TPrimerDesign::OnInsertRestrictionSiteRight(wxCommandEvent& event)

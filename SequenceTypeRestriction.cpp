@@ -63,7 +63,10 @@ int SeqRestriction::arrange ( int n )
     }
     
 void SeqRestriction::show ( wxDC& dc )
-    {
+    { 
+	myass ( can , "SeqRestriction::show1" ) ;
+	myass ( vec , "SeqRestriction::show2" ) ;
+	mylog ( "SeqRestriction::show1" ) ;
     int cw2 , ch2 ;
     dc.SetFont(*can->smallFont);
     dc.GetTextExtent ( "A" , &ch2 , &ch2 ) ;
@@ -73,13 +76,17 @@ void SeqRestriction::show ( wxDC& dc )
     can->MyGetClientSize ( &xa , &yb ) ;
     yb += ya ;
     int n , csgc = can->NumberOfLines() , cbs = can->blocksize , bo = can->border ;
+	mylog ( "SeqRestriction::show2" ) ;
     for ( n = 0 ; n < csgc && can->seq[n] != this ; n++ ) ;
+	mylog ( "SeqRestriction::show3" ) ;
     int cw = can->charwidth , ch = can->charheight ;
     int ox = bo + cw + cw * endnumberlength ;
     int oy = n*ch+bo ;
     bool direct = useDirectRoutines() ;
+        mylog ( "SeqRestriction::show4" ) ;
     for ( int level = 0 ; level < pl.maxlevels ; level++ )
         {
+        mylog ( "SeqRestriction::show" , wxString::Format ( "Round %d of %d" , level , pl.maxlevels ) ) ;
         int a , b , cut ;
         char u[100] ;
         char lc = ' ' ;
@@ -102,6 +109,7 @@ void SeqRestriction::show ( wxDC& dc )
                          break ;
                 }    
             }
+        mylog ( "SeqRestriction::show" , "A" ) ;
         if ( can->isPrinting() && !can->getPrintToColor() )
            {
            dc.SetPen(*wxBLACK_PEN); 
@@ -109,6 +117,7 @@ void SeqRestriction::show ( wxDC& dc )
            }
         int qlx = -1 , idx ;
         wxRect ra , rb ;
+        mylog ( "SeqRestriction::show" , "B" ) ;
         for ( a = 0 ; a < vec->getSequenceLength() ; a++ )
             {
             if ( can->hardstop > -1 && a > can->hardstop ) break ;
@@ -203,8 +212,10 @@ void SeqRestriction::show ( wxDC& dc )
             lc = c ;
             if ( !can->getDrawAll() && ra.y > yb ) a = vec->getSequenceLength() ;
             }
+        mylog ( "SeqRestriction::show" , "C" ) ;
         }
     dc.SetTextForeground ( wxColor ( *wxBLACK ) ) ;
+	mylog ( "SeqRestriction::show_fin" ) ;
     }
     
 void SeqRestriction::initFromTVector ( TVector *v )
