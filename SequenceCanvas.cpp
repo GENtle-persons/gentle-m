@@ -2025,12 +2025,13 @@ void SequencePartList::prepare ( int size )
     vx.Clear () ;
     vy.Clear () ;
     vl.Clear () ;
+    vl2.clear () ;
     vi.Alloc ( size ) ;
     vl.Alloc ( size ) ;
     vx.Alloc ( size ) ;
     vy.Alloc ( size ) ;
     }    
-    
+
 void SequencePartList::add ( int id , int from , int to )
     {
     vi.Add ( id ) ;

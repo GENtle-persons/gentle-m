@@ -606,6 +606,8 @@
 "t_global_settings","Global settings","Globale Einstellungen"
 "t_global_enzymes","Enzyme settings","Enzym-Einstellungen"
 "t_use_global_enzyme_settings","Use global enzyme settings","Globale Enzym-Einstellungen verwenden"
+"t_use_project_enzyme_settings","Use project enzyme settings","Projekt-Enzym-Einstellungen verwenden"
+"t_use_single_enzyme_settings","Use these enzyme settings","Diese Enzym-Einstellungen verwenden"
 "t_ges_join_enzymes","Join enzymes","Enzyme zusammenfassen"
 "t_ges_use_min_cutoff","Use min cutoff","Schnitt-Minimum"
 "t_ges_use_max_cutoff","Use max cutoff","Schnitt-Maximum"
@@ -622,4 +624,4 @@
 "t_ges_cut1","Single cutter","Ein Schnitt"
 "t_ges_cut2","Double cutter","Zwei Schnitte"
 "t_ges_cut3","Triple cutter","Drei Schnitte"
-
+"t_enzymes_2","Restriction enzymes (2)","Restriktionsenzyme (2)"

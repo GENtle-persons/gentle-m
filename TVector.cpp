@@ -12,8 +12,6 @@ char TVector::COMPLEMENT[256] ;
 vector <TAAProp> TVector::aaprop ;
 wxArrayString TVector::codon_tables ;
 
-wxString TVector::getParams () { return params ; }
-void TVector::setParams ( const wxString &s ) { params = s ; }
 void TVector::setWindow ( ChildBase *c ) { window = c ; }
 void TVector::setCircular ( bool c ) { circular = c ; }
 bool TVector::isCircular () { return circular ; }
@@ -26,6 +24,68 @@ TAAProp TVector::getAAprop ( char a ) { return aaprop[a] ; }
 void TVector::setGenomeMode ( bool gm ) { genomeMode = gm ; }
 bool TVector::getGenomeMode () { return genomeMode ; }
 wxString *TVector::getSequencePointer () { return &sequence ; }
+
+wxString TVector::getParams ()
+	{
+	wxString params ;
+	for ( int a = 0 ; a < paramk.GetCount() ; a++ )
+		params += "#" + paramk[a] + "\n" + paramv[a] ;
+    return params ;
+    }
+    
+wxString TVector::getParam ( wxString key )
+	{
+	int a ;
+	for ( a = 0 ; a < paramk.GetCount() && paramk[a] != key ; a++ ) ;
+	if ( a == paramk.GetCount() ) return "" ;
+	else return paramv[a] ;
+	}
+     
+void TVector::setParam ( wxString key , wxString value )
+	{
+	int a ;
+	for ( a = 0 ; a < paramk.GetCount() && paramk[a] != key ; a++ ) ;
+	if ( a == paramk.GetCount() )
+		{
+ 		paramk.Add ( key ) ;
+ 		paramv.Add ( value ) ;
+		}    
+	else paramv[a] = value ;
+	evaluate_key_value ( key , value ) ;
+	}    
+
+void TVector::setParams ( wxString t )
+	{
+	paramk.Clear () ;
+	paramv.Clear () ;
+	if ( t.IsEmpty() || t.GetChar(0) != '#' ) t = "#genbank\n" + t ; // Backwards compatability
+	wxArrayString vs ;
+	explode ( "\n" , t , vs ) ;
+	int a ;
+	for ( a = 0 ; a < vs.GetCount() ; a++ )
+		{
+		if ( vs[a].Left ( 1 ) == "#" )
+			{
+			paramk.Add ( vs[a].Mid ( 1 ) ) ;
+			paramv.Add ( "" ) ;
+			}    
+		else paramv[paramv.GetCount()-1] += vs[a] + "\n" ;
+		}
+	for ( a = 0 ; a < paramk.GetCount() ; a++ )
+		evaluate_key_value ( paramk[a] , paramv[a] ) ;
+    }
+    
+void TVector::evaluate_key_value ( wxString key , wxString value )
+	{
+	if ( key == "enzymerule" )
+		{
+		if ( !enzyme_rules ) enzyme_rules = new TEnzymeRules ;
+		enzyme_rules->from_string ( value ) ;
+		recalculateCuts () ;
+		recalcvisual = true ;
+		}    
+	}    
+
 
 TVector *TVector::newFromMark ( int from , int to ) 
     {
@@ -505,10 +565,20 @@ bool TVector::getVectorCuts ( TVector *v )
 TEnzymeRules *TVector::getEnzymeRule ()
 	{
 	TEnzymeRules *er ;
-	if ( enzyme_rules ) er = enzyme_rules ; // Vector settings
-	else if ( myapp()->frame->project.enzyme_rules ) // Project settings
+	if ( enzyme_rules ) // Vector settings
+ 		{
+ 		er = enzyme_rules ;
+ 		if ( er->useit ) return er ;
+ 		}
+	
+	if ( myapp()->frame->project.enzyme_rules ) // Project settings
+		{
  		er = myapp()->frame->project.enzyme_rules ;
-	else er = myapp()->frame->global_enzyme_rules ; // Global settings
+ 		if ( er->useit ) return er ;
+ 		} 		
+ 		
+ 		
+	er = myapp()->frame->global_enzyme_rules ; // Global settings
 	return er ;
 	}    
     
@@ -1129,7 +1199,9 @@ void TVector::clear ()
     {
     _lu = _ll = _ru = _rl = "" ;
     circular = false ;
-    params = "" ;
+    paramk.Clear () ;
+    paramv.Clear () ;
+    if ( enzyme_rules ) { delete enzyme_rules ; enzyme_rules = NULL ; }
     turned = 0 ;
     action = "" ;
     action_value = 0 ;
@@ -1298,7 +1370,7 @@ int TVector::getMem ()
     for ( a = 0 ; a < hiddenEnzymes.GetCount() ; a++ ) r += hiddenEnzymes[a].length() ;
     for ( a = 0 ; a < proteases.GetCount() ; a++ ) r += proteases[a].length() ;
     for ( a = 0 ; a < cocktail.GetCount() ; a++ ) r += cocktail[a].length() ;
-    r += sequence.length() + name.length() + desc.length() + params.length() ;
+    r += sequence.length() + name.length() + desc.length() ;
     // Some minor ones not listed
     return r ;
     }    

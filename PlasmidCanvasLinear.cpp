@@ -200,7 +200,6 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
            int xx = lineOff + c->pos*lineLen/l ;
            dc.DrawLine ( c->lastrect.GetRight() , c->lastrect.GetBottom() , xx , lineH - markH ) ;
            dc.DrawLine ( xx , lineH , xx , lineH - markH - 1 ) ;
-//           sprintf ( t , "%s" , c->e->name.c_str() ) ;
            dc.DrawText ( c->getNameAndPosition() , c->lastrect.x , c->lastrect.y ) ;
            }
         }
@@ -260,9 +259,7 @@ void PlasmidCanvas::arrangeRestrictionSitesLinear ( int a , wxDC &dc )
     TRestrictionCut *c = &p->vec->rc[a] ;
     int x1 , y1 , x2 , y2 ;
     wxCoord dx , dy ;
-//    char t[1000] ;
-//    sprintf ( t , "%s" , c->e->name.c_str() ) ;
-	wxString t = c->getDisplayName () ;
+	wxString t = c->getNameAndPosition () ;
     dc.GetTextExtent ( t , &dx , &dy ) ;
     x1 = c->p.x - dx ;
     y1 = c->p.y - dy ;

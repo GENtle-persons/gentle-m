@@ -184,7 +184,9 @@ class TVector
     virtual void removeBlanksFromVector () ;
     
     virtual wxString getParams () ;
-    virtual void setParams ( const wxString &s ) ;
+    virtual void setParams ( wxString t ) ;
+    virtual wxString getParam ( wxString key ) ;
+    virtual void setParam ( wxString key , wxString value ) ;
     virtual void setWindow ( ChildBase *c ) ;
     virtual void setCircular ( bool c = true ) ;
     virtual bool isCircular () ;
@@ -238,6 +240,7 @@ class TVector
 
     wxArrayString hiddenEnzymes , proteases , cocktail ;
     TUndo undo ;
+    TEnzymeRules *enzyme_rules ;
     
     private :
     virtual wxString invert ( wxString s ) ;
@@ -245,6 +248,7 @@ class TVector
     virtual void makeAA2DNA () ;
     virtual wxString mergeCodons ( wxString c1 , wxString c2 ) ;
     virtual void setCodonTable ( int table , wxString sequence ) ;
+    virtual void evaluate_key_value ( wxString key , wxString value ) ;
 
     wxString sequence ;    
     wxString _lu , _ll , _ru , _rl ; // Sticky ends
@@ -252,9 +256,9 @@ class TVector
     bool circular , changed , genomeMode ;
     ChildBase *window ;
     int turned , action_value ;
-    wxString params , database , action , aa ;
+    wxString database , action , aa ;
     wxString AA2DNA[256] ;
-    TEnzymeRules *enzyme_rules ;
+    wxArrayString paramk , paramv ;
     
     static char IUPAC[256] , SIUPAC[256] , COMPLEMENT[256] ;
     static char ACGT[256] ;

@@ -47,7 +47,6 @@ void TVectorEditor::OnCharHook(wxKeyEvent& event)
 TVectorEditor::TVectorEditor(wxWindow *parent, const wxString& title , TVector *_v )
          : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 600 , 550 ) )
     {
-    wxString fn = myapp()->homedir + "\\vedia.txt" ;
     lastSelection = -1 ;
     v = _v ;
     panProp = panItem = panEnzym = NULL ;
@@ -179,9 +178,26 @@ void TVectorEditor::initPanProp ()
     addOkCancel ( panProp ) ;
     }
     
+void TVectorEditor::initPanEnzym2 ()
+    {
+    oldEnzymeRules = v->getEnzymeRule() ;
+    e_diduseit = oldEnzymeRules->useit ;
+    if ( !v->enzyme_rules )
+    	{
+	    v->enzyme_rules = new TEnzymeRules ;
+	    *v->enzyme_rules = *oldEnzymeRules ;
+	    v->enzyme_rules->useit = false ;
+    	}    
+    panEnzyme2 = new TEnzymeSettingsTab ( nb , EST_SINGLE ) ;
+    v->enzyme_rules->setup_options ( panEnzyme2 ) ;
+    nb->AddPage ( panEnzyme2 , txt("t_enzymes_2") ) ;    
+    addOkCancel ( panEnzyme2 ) ;
+    }    
+    
 void TVectorEditor::initPanEnzym ()
     {
     nb->AddPage ( panEnzym , txt("t_vec_enzym") ) ;
+    initPanEnzym2 () ;
     int w , h ;
     GetMyClientSize ( &w , &h , panEnzym ) ;
     
@@ -322,6 +338,14 @@ void TVectorEditor::commitEnzymes ()
            v->re.Add ( myapp()->frame->LS->getRestrictionEnzyme ( ce[b] )  ) ;
            }
         }
+        
+    v->enzyme_rules->lookup_options ( panEnzyme2 ) ;
+    if ( v->enzyme_rules != oldEnzymeRules || 
+    	( v->enzyme_rules->useit != e_diduseit ) )
+    	{
+    	changed = true ;
+    	v->setParam ( "enzymerule" , v->enzyme_rules->to_string() ) ;
+     	}   	
         
     if ( changed )
         {
@@ -603,8 +627,10 @@ void TVectorEditor::hideEm ()
     {
     if ( hideEnzym ) 
         {
+        nb->DeletePage ( 3 ) ;
         nb->DeletePage ( 2 ) ;
         panEnzym = NULL ;
+        panEnzyme2 = NULL ;
         }
     if ( hideItem ) 
         {
@@ -618,6 +644,7 @@ void TVectorEditor::hideEm ()
         }
     if ( panProp == NULL )
         {
+        nb->SetSelection ( 1 ) ;
         nb->SetSelection ( 0 ) ;
         }
     }

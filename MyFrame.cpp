@@ -187,11 +187,11 @@ void MyFrame::initme ()
     showSplashScreen = LS->getOption ( "SHOWSPLASHSCREEN" , true ) ;
     checkUpdate = LS->getOption ( "CHECKUPDATE" , true ) ;
     lang_string = LS->getOption ( "LANGUAGE" , "en" ) ;
-    global_enzyme_rules = new TEnzymeRules ;
-    global_enzyme_rules->load_global_settings() ;
     useCoolCanvas = LS->getOption ( "USECOOLCANVAS" , false ) ; // Not saved yet
     useInternalHelp = LS->getOption ( "USEINTERNALHELP" , false ) ; // Not saved yet
     init_txt ( lang_string.c_str() ) ;
+    global_enzyme_rules = new TEnzymeRules ;
+    global_enzyme_rules->load_global_settings() ;
 
     // Set the DEBUGGING option in your local test database,
     // so you won't be bothered with updates anymore :-)
@@ -292,31 +292,7 @@ void MyFrame::initme ()
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"primer_import.bmp", wxBITMAP_TYPE_BMP) ) ; // 14
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"primer_export.bmp", wxBITMAP_TYPE_BMP) ) ; // 15
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+"print.bmp", wxBITMAP_TYPE_BMP) ) ; // 16
-/*
-#ifdef __WXGTK_______
-    // Toolbar
-    wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
-    InitToolBar(toolBar);
-    toolBar->AddTool( MDI_TEXT_IMPORT , 
-                bitmaps[0] ,
-                txt("m_new_sequence") ) ;  
-    toolBar->AddTool( MDI_FILE_OPEN, 
-                bitmaps[1] ,
-                txt("m_open") , txt("m_opentxt") );
-    toolBar->AddTool( MDI_FILE_SAVE, 
-                bitmaps[2] ,
-                txt("m_store_in_db") , 
-                txt("m_txt_store_in_db"));
-    toolBar->AddSeparator() ;
-    toolBar->AddTool( MDI_UNDO, bitmaps[3] ) ;
-    toolBar->AddSeparator() ;
-    toolBar->AddTool( MDI_CUT, bitmaps[4] ) ;
-    toolBar->AddTool( MDI_COPY, bitmaps[5] ) ;
-    toolBar->AddTool( MDI_PASTE, bitmaps[6] ) ;
-    toolBar->AddSeparator() ;
-    toolBar->Realize() ;    
-#endif
-*/
+
     html_ep = new wxHtmlEasyPrinting ( "" , this ) ;
     
     wxBeginBusyCursor() ;       

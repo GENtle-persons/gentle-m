@@ -511,7 +511,7 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
     
     // Definition
     wrapit ( ex , "DEFINITION  " , v->getDescription() ) ;
-    s = v->getParams() ;
+    s = v->getParam ( "genbank" ) ;
     while ( !s.IsEmpty() && s[s.length()-1] == '\n' )
        s.RemoveLast() ;
     ex.Add ( s ) ;

@@ -11,6 +11,7 @@ int SeqRestriction::arrange ( int n )
     wxString t ;
 
     pl.slen = vec->getSequenceLength() + ( ( can && can->getEditMode() ) ? -1 : 0 ) ;
+    vec->sortRestrictionSites() ;
     pl.prepare ( vec->rc.size() ) ;    
     for ( a = 0 ; a < vec->rc.size() ; a++ )
         {
@@ -86,17 +87,20 @@ void SeqRestriction::show ( wxDC& dc )
         int yo = (level*2) * 2 - 6 ;
         if ( down ) yo = can->charheight / 2 - ( (level*2) * 2 ) ;
         int llx = 0 ;
-        switch ( (level*2)%3 )
-            {
-            case 0 : dc.SetPen(*wxRED_PEN); 
-                     dc.SetTextForeground ( wxColor ( *wxRED ) ) ;
-                     break ;
-            case 1 : dc.SetPen(*MYPEN(wxColour(0,200,0))); 
-                     dc.SetTextForeground ( wxColour ( 0 , 200 , 0 ) ) ; 
-                     break ;
-            case 2 : dc.SetPen(*MYPEN(wxColour(0,0,200))); 
-                     dc.SetTextForeground ( wxColour ( 0 , 0 , 200 ) ) ; 
-                     break ;
+        if ( !vec->getEnzymeRule()->use_color_coding )
+        	{    
+            switch ( (level*2)%3 )
+                {
+                case 0 : dc.SetPen(*wxRED_PEN); 
+                         dc.SetTextForeground ( wxColor ( *wxRED ) ) ;
+                         break ;
+                case 1 : dc.SetPen(*MYPEN(wxColour(0,200,0))); 
+                         dc.SetTextForeground ( wxColour ( 0 , 200 , 0 ) ) ; 
+                         break ;
+                case 2 : dc.SetPen(*MYPEN(wxColour(0,0,200))); 
+                         dc.SetTextForeground ( wxColour ( 0 , 0 , 200 ) ) ; 
+                         break ;
+                }    
             }
         if ( can->isPrinting() && !can->getPrintToColor() )
            {
@@ -105,7 +109,7 @@ void SeqRestriction::show ( wxDC& dc )
            }
         int qlx = -1 , idx ;
         wxRect ra , rb ;
-        for ( a = 0 ; a < vec->getSequenceLength() /*pos.p.GetCount()*/ ; a++ )
+        for ( a = 0 ; a < vec->getSequenceLength() ; a++ )
             {
             if ( can->hardstop > -1 && a > can->hardstop ) break ;
             char c = ' ' ;
@@ -128,12 +132,20 @@ void SeqRestriction::show ( wxDC& dc )
             if ( tz < ya ) insight = false ;
             if ( ty > yb ) insight = false ;
             if ( can->getDrawAll() ) insight = true ;
-            
+
             if ( insight ) idx = pl.here ( b-1 , level ) ;
             if ( idx != -1 && insight )
                {
                c = '-' ;
+               if ( pl.getID(idx) >= vec->rc.size() ) continue ;
                TRestrictionCut *rc = &(vec->rc[pl.getID(idx)]) ;
+
+               if ( vec->getEnzymeRule()->use_color_coding && !(can->isPrinting() && !can->getPrintToColor()) )
+                  {
+            	  wxColour *col = vec->getEnzymeRule()->getColor ( vec->countCuts ( rc->e->name ) ) ;
+            	  dc.SetPen(*MYPEN(*col)); 
+            	  dc.SetTextForeground ( *col ) ;
+              	  }
 
                if ( rc->pos == b-1 ) c = '|' ;
                else if ( rc->pos == b ) c = '#' ;
@@ -142,7 +154,7 @@ void SeqRestriction::show ( wxDC& dc )
                int ol = rc->pos + rc->e->overlap ;
                if ( b-1 == ol ) c2 = '|' ; 
                else if ( b == ol ) c2 = '#' ; 
-                              
+
                if ( qlx == -1 ) qlx = ra.x ;
                int lx = ra.x ;
                int x = ( lx + ra.GetRight() ) / 2 ;
@@ -177,19 +189,19 @@ void SeqRestriction::show ( wxDC& dc )
                   dc.DrawLine ( x , y , ra.GetRight() , y ) ;
                   }
                   
-                  
                llx = ra.GetRight() ;
                ly = y ;
                qlx = x ;
                if ( b == pl.getTo ( idx ) )
                   {
-                  if ( down ) dc.DrawText ( rc->getDisplayName() , llx , ly - ch2 ) ;
-                  else dc.DrawText ( rc->getDisplayName() , llx , ly ) ;
+                  wxString t = rc->getDisplayName() ;
+                  if ( down ) dc.DrawText ( t , llx , ly - ch2 ) ;
+                  else dc.DrawText ( t , llx , ly ) ;
                   }
                }
             rb = ra ;
             lc = c ;
-            if ( !can->getDrawAll() && ra.y > yb ) a = vec->getSequenceLength() ;//pos.p.GetCount() ;
+            if ( !can->getDrawAll() && ra.y > yb ) a = vec->getSequenceLength() ;
             }
         }
     dc.SetTextForeground ( wxColor ( *wxBLACK ) ) ;
