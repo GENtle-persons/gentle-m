@@ -23,6 +23,8 @@ BEGIN_EVENT_TABLE(MyFrame, wxMDIParentFrame)
     EVT_MENU(MDI_MANAGE_DATABASE, MyFrame::OnManageDatabase)
     EVT_MENU(PROGRAM_OPTIONS, MyFrame::OnProgramOptions)
 
+    EVT_SASH_DRAGGED_RANGE(FRAME_SASH_TOP, FRAME_SASH_BOTTOM, MyFrame::OnSashDrag)
+    
     EVT_CLOSE(MyFrame::OnClose)
 
     EVT_SIZE(MyFrame::OnSize)
@@ -88,7 +90,59 @@ MyFrame::~MyFrame ()
 
 void MyFrame::initme ()
     {
-    mainTree = new TMainTree ( this , MAIN_TREE_DUMMY ) ;
+  wxSashLayoutWindow* win ;
+/*      win = new wxSashLayoutWindow(this, FRAME_SASH_TOP,
+                             wxDefaultPosition, wxSize(200, 30),
+                             wxNO_BORDER | wxSW_3D | wxCLIP_CHILDREN);
+
+  win->SetDefaultSize(wxSize(1000, 30));
+  win->SetOrientation(wxLAYOUT_HORIZONTAL);
+  win->SetAlignment(wxLAYOUT_TOP);
+  win->SetBackgroundColour(wxColour(255, 0, 0));
+  win->SetSashVisible(wxSASH_BOTTOM, TRUE);
+
+  m_topWindow = win; 
+
+  // A window like a statusbar
+  win = new wxSashLayoutWindow(this, FRAME_SASH_BOTTOM,
+                               wxDefaultPosition, wxSize(200, 30),
+                               wxNO_BORDER | wxSW_3D | wxCLIP_CHILDREN);
+  win->SetDefaultSize(wxSize(1000, 30));
+  win->SetOrientation(wxLAYOUT_HORIZONTAL);
+  win->SetAlignment(wxLAYOUT_BOTTOM);
+  win->SetBackgroundColour(wxColour(0, 0, 255));
+  win->SetSashVisible(wxSASH_TOP, TRUE);
+
+  m_bottomWindow = win;*/
+
+    // A window to the left of the client window
+    // This contains the main tree
+    win = new wxSashLayoutWindow(this, FRAME_SASH_1,
+                               wxDefaultPosition, wxSize(200, 30),
+                               wxNO_BORDER | wxSW_3D | wxCLIP_CHILDREN);
+    win->SetDefaultSize(wxSize(200, 1000));
+    win->SetOrientation(wxLAYOUT_VERTICAL);
+    win->SetAlignment(wxLAYOUT_LEFT);
+//    win->SetBackgroundColour(wxColour(0, 255, 0));
+    win->SetSashVisible(wxSASH_RIGHT, TRUE);
+//    win->SetExtraBorderSize(10);
+    mainTree = new TMainTree ( win , MAIN_TREE_DUMMY ) ;
+
+
+  m_leftWindow1 = win;
+
+  // Another window to the left of the client window
+/*  win = new wxSashLayoutWindow(this, FRAME_SASH_2,
+                               wxDefaultPosition, wxSize(200, 30),
+                               wxNO_BORDER | wxSW_3D | wxCLIP_CHILDREN);
+  win->SetDefaultSize(wxSize(120, 1000));
+  win->SetOrientation(wxLAYOUT_VERTICAL);
+  win->SetAlignment(wxLAYOUT_LEFT);
+  win->SetBackgroundColour(wxColour(0, 255, 255));
+  win->SetSashVisible(wxSASH_RIGHT, TRUE);
+
+  m_leftWindow2 = win;*/
+  m_leftWindow2 = m_topWindow = m_bottomWindow = NULL ;
 
     // Database access
     LS = new TStorage ( LOCAL_STORAGE ) ;
@@ -152,15 +206,6 @@ void MyFrame::initme ()
 
     wxMenu *tool_menu = getToolMenu ( false ) ;
     wxMenu *help_menu = getHelpMenu () ;
-/*    wxMenu *tool_menu = new wxMenu;
-    tool_menu->Append(MDI_ENZYME_EDITOR, txt("m_enzymeeditor") , txt("m_enzymeeditortxt") ) ;
-    tool_menu->Append(MDI_ALIGNMENT, txt("m_alignment") , txt("m_alignmenttxt") ) ;
-    tool_menu->Append(MDI_MANAGE_DATABASE, txt("m_manage_db") , txt("m_manage_dbtxt") ) ;
-    tool_menu->Append(PROGRAM_OPTIONS, txt("m_options") , txt("m_options_txt") ) ;*/
-    
-/*    wxMenu *help_menu = new wxMenu;
-    help_menu->Append(MDI_HELP, txt("m_help_content") ) ;
-    help_menu->Append(MDI_ABOUT, txt("m_about") ) ;*/
 
     wxMenuBar *menu_bar = new wxMenuBar;
 
@@ -251,6 +296,7 @@ void MyFrame::initme ()
           }
        }
 
+    Show(TRUE);
     }
 
 void MyFrame::OnClose(wxCloseEvent& event)
@@ -605,6 +651,9 @@ MyChild* MyFrame::newFromVector ( TVector *nv , int type )
 
 void MyFrame::OnSize(wxSizeEvent& WXUNUSED(event))
 {
+    wxLayoutAlgorithm layout;
+    layout.LayoutMDIFrame(this);
+    return ;
     int w, h;
     GetClientSize(&w, &h);
     
@@ -1154,6 +1203,41 @@ void MyFrame::update2version ( string ver )
     wxExecute ( do_run.c_str() , wxEXEC_ASYNC ) ;
     SetFocus () ;
     Close() ;
+    }
+    
+void MyFrame::OnSashDrag(wxSashEvent& event)
+    {
+    if (event.GetDragStatus() == wxSASH_STATUS_OUT_OF_RANGE)
+        return;
+
+    switch (event.GetId())
+    {
+        case FRAME_SASH_TOP:
+        {
+            m_topWindow->SetDefaultSize(wxSize(1000, event.GetDragRect().height));
+            break;
+        }
+        case FRAME_SASH_1:
+        {
+            m_leftWindow1->SetDefaultSize(wxSize(event.GetDragRect().width, 1000));
+            break;
+        }
+        case FRAME_SASH_2:
+        {
+            m_leftWindow2->SetDefaultSize(wxSize(event.GetDragRect().width, 1000));
+            break;
+        }
+        case FRAME_SASH_BOTTOM:
+        {
+            m_bottomWindow->SetDefaultSize(wxSize(1000, event.GetDragRect().height));
+            break;
+        }
+    }
+    wxLayoutAlgorithm layout;
+    layout.LayoutMDIFrame(this);
+
+    // Leaves bits of itself behind sometimes
+    GetClientWindow()->Refresh();    
     }
     
 // DROP TARGET

@@ -17,7 +17,7 @@ class TMainTreeItem : public wxTreeItemData
 class TMainTree : public wxTreeCtrl
     {
     public :
-    TMainTree ( MyFrame *parent , int i ) ;
+    TMainTree ( wxSashLayoutWindow *parent , int i ) ;
 
     void initme () ;
     void addChild ( ChildBase *c , int type = TYPE_VECTOR ) ;

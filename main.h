@@ -45,6 +45,7 @@ using namespace std ;
 #include <wx/treectrl.h>
 #include <wx/listctrl.h>
 #include <wx/snglinst.h>
+#include <wx/laywin.h>
 
 #define TYPE_VECTOR 0
 #define TYPE_FRAGMENT 1
