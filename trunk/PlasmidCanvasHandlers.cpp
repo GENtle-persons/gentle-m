@@ -346,12 +346,12 @@ void PlasmidCanvas::blastAA ( wxCommandEvent &ev )
     myapp()->frame->blast ( seq , "blastp" ) ;
     }
 
-void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl )
+void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl , int mut)
     {
     TPrimerDesign *subframe = new TPrimerDesign ( myapp()->frame , 
             txt("t_pcr") ,
             p->vec ,
-            pl ) ;
+            pl , mut ) ;
     
     // Give it an icon
 #ifdef __WXMSW__

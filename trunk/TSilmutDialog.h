@@ -22,7 +22,9 @@ class TSilmutItem
 class TSilmutDialog : public wxDialog
     {
     public :
-    TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode = M_SILMUT ) ;
+    TSilmutDialog ( wxWindow *parent , const wxString &s , 
+                    int _mode = M_SILMUT , 
+                    int _mut_pos = -1 , int _mut_dir = 1 ) ;
     virtual void initme ( TVector *vec , int _from , int _to ) ;
     virtual void calc () ;
     virtual void showit () ;
@@ -46,10 +48,11 @@ class TSilmutDialog : public wxDialog
     wxListBox *lb ;
     TPrimerDesign *pd ;
     wxSpinCtrl *lim_xhg , *lim_max ;
-    wxChoice *egr ;
+    wxChoice *egr , *mut ;
     vector <int> lb_retro ;
     int last_selection ;
     int mode ;
+    int mut_pos , mut_dir ;
 
     DECLARE_EVENT_TABLE()
     } ;

@@ -131,6 +131,7 @@ char* txt ( string item ) ;
 void init_txt ( string lang ) ;
 MyApp *myapp () ;
 void myass ( bool b , wxString msg = "" ) ;
+string toupper ( string s ) ;
 
 //IMPLEMENT_APP(MainApp)
 
