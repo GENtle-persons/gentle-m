@@ -266,8 +266,8 @@ void SeqAA::initFromString ( wxString t )
     vec = NULL ;
     showNumbers = true ;
     offsets.Clear() ;
-    offsets.Alloc ( s.length() ) ;
-    while ( offsets.GetCount() < s.length() ) offsets.Add ( -1 ) ;
+//    offsets.Alloc ( s.length() ) ;
+//    while ( offsets.GetCount() < s.length() ) offsets.Add ( -1 ) ;
     
     // Proteases
     updateProteases () ;
@@ -323,6 +323,7 @@ void SeqAA::analyzeProteases ()
        }
     }
 
+// Seems to be obsolete
 void SeqAA::fixOffsets ( TVector *v )
     {
     offset_items.Clear() ;
@@ -365,10 +366,10 @@ void SeqAA::initFromTVector ( TVector *v )
     wxString t = vec->getSequence() ;
     s.Alloc ( t.length() ) ;
     FILLSTRING ( s , ' ' , t.length() ) ;
-    offsets.Clear() ;
+//    offsets.Clear() ;
     offset_items.Clear() ;
-    offsets.Alloc ( s.length() ) ;
-    while ( offsets.GetCount() < s.length() ) offsets.Add ( -1 ) ;
+//    offsets.Alloc ( s.length() ) ;
+//    while ( offsets.GetCount() < s.length() ) offsets.Add ( -1 ) ;
     updateProteases () ;
     if ( v->isCircular() ) t += t.substr ( 0 , 2 ) ;
     else t += "  " ;
@@ -384,8 +385,8 @@ void SeqAA::initFromTVector ( TVector *v )
         {
         for ( a = 0 ; a < v->items.size() ; a++ )
            {
-           v->items[a].translate ( v , this ) ;
-           v->items[a].getArrangedAA ( v , s , disp ) ;
+//           v->items[a].translate ( v , this ) ; // TESTING!!!
+           v->items[a].getArrangedAA ( v , s , disp , this ) ;
            }
         }
     else
@@ -444,7 +445,7 @@ void SeqAA::initFromTVector ( TVector *v )
     mem += offsets.GetCount() * sizeof ( int ) ;
 //    mem += pa_wa.GetCount() * sizeof ( int ) ;
 //    mem += sizeof ( wxArrayTProteaseCut ) + sizeof ( wxArrayTProtease ) + sizeof ( wxArrayTVectorItem ) ;
-    mylog ( "AA" , wxString::Format ( "%d" , mem ) ) ;
+    mylog ( "AA_mem" , wxString::Format ( "%d" , mem ) ) ;
     }
     
 // direct
@@ -719,5 +720,15 @@ int SeqAA::getPos ( int i )
 void SeqAA::setPos ( int i , int v )
     {
     if ( !useDirectRoutines() ) pos.p[i] = v ;
+    }
+
+void SeqAA::logsize ()
+    {
+    SeqBasic::logsize() ;
+    mylog ( whatsthis() , wxString::Format ( "pa_w %d" , pa_w.length() ) ) ;
+    mylog ( whatsthis() , wxString::Format ( "!proteases %d" , proteases.GetCount() ) ) ;
+    mylog ( whatsthis() , wxString::Format ( "offsets %d" , sizeof(int)*offsets.GetCount() ) ) ;
+    mylog ( whatsthis() , wxString::Format ( "pa_wa %d" , sizeof(int)*pa_wa.GetCount() ) ) ;
+    mylog ( whatsthis() , wxString::Format ( "!offset_items %d" , offset_items.GetCount() ) ) ;
     }
 

@@ -597,8 +597,6 @@ void MyChild::initPanels ()
     if ( vec->getSequenceLength() > 100000 ) // Arbitary number, 100K
         {
         vec->setGenomeMode ( true ) ;
-//        vec->re.Add ( myapp()->frame->LS->getRestrictionEnzyme("BamHI") ) ; // TESTING!!!!!
-//        vec->recalculateCuts() ; // TESTING!!!
         }    
     SeqFeature *seqF ;
     if ( !vec->getGenomeMode() ) seqF = new SeqFeature ( cSequence ) ;
@@ -649,6 +647,10 @@ void MyChild::initPanels ()
     mylog ( "MyChild" , "AA set" ) ;
     
     mylog ( "MyChild::initPanels" , wxString::Format ( "Vector %d bytes" , vec->getMem() ) ) ;
+    
+    for ( int a = 0 ; a < cSequence->seq.GetCount() ; a++ )
+       cSequence->seq[a]->logsize();
+    
     if ( myapp()->frame->isLocked() ) return ;
     Show() ;
     mylog ( "MyChild" , "shown" ) ;

@@ -1,19 +1,16 @@
 #include "ABItype.h"
 
-ABItype::~ABItype ()
-    {
-    while ( vf.size() )
-        {
-        if ( vf[vf.size()-1].data != NULL )
-                delete vf[vf.size()-1].data ;
-        vf.pop_back () ;
-        }
-    }
-
 ABItype::ABItype ()
     {
     }
     
+ABItype::~ABItype ()
+    {
+    for ( int a = 0 ; a < vf.size() ; a++ )
+        if ( vf[a].data ) delete vf[a].data ;
+    vf.clear () ;
+    }
+
 int ABItype::getCMBF ( unsigned char *t , int l )
     {
     unsigned char *s , *r = NULL ;
@@ -45,7 +42,7 @@ void ABItype::parse ( wxString filename )
 	// Parsing "t"
 	int macOffset = getMacOffset ( t ) ; // Trying to compensate for MAC header
 	if ( macOffset == -1 ) return ; // No valid ABI file
-    while ( vf.size() ) vf.pop_back () ;
+	vf.clear () ;
     
     int pos = macOffset ;
     pos += 4 ; // ABIF
@@ -181,6 +178,14 @@ int ABItype::getRecordValue ( wxString id , int num )
     
     
 //***************************************
+
+TFLAG::TFLAG ()
+    {
+    }
+
+TFLAG::~TFLAG ()
+    {
+    }    
 
 wxString TFLAG::getPascalString ()
     {

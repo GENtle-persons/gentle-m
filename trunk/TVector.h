@@ -103,9 +103,10 @@ class TVectorItem
     virtual void setParam ( wxString p , int v ) ;
 
     // dna2aa stuff
-    virtual void translate ( TVector *v , SeqAA *aa = NULL ) ;
-    virtual void getArrangedAA ( TVector *v , wxString &s , int disp ) ;
+    virtual void translate ( TVector *v , SeqAA *aa , vector <Tdna2aa> &dna2aa ) ;
+    virtual void getArrangedAA ( TVector *v , wxString &s , int disp , SeqAA *aa = NULL ) ;
     virtual wxString getAminoAcidSequence () ;
+    virtual void setLastVector ( TVector *v ) ;
     
     // Variables
     wxString desc , name ;
@@ -114,11 +115,12 @@ class TVectorItem
     private:
     virtual void initParams () ;
     
-    int direction ; // 1=clockwise, -1=counter-clockwise
+    signed char direction ; // 1=clockwise, -1=counter-clockwise
     char type ; // VIT_XXX
     wxTreeItemId treeid ;
     wxArrayString pname , pvalue ;
-    vector <Tdna2aa> dna2aa ;
+    vector <Tdna2aa> dna2aa_item ;
+    TVector *lastVector ;
 
     // Visual information
     friend class TVectorEditor ;
@@ -211,6 +213,7 @@ class TVector
     virtual void alterSequence ( int pos , char c ) ;
     virtual int getSequenceLength() ;
     virtual void eraseSequence ( int from , int len ) ;
+    virtual void removeAlignmentArtifacts ( char what = '-' ) ;
     
     virtual wxString getDescription () ;
     virtual void setDescription ( wxString s ) ;

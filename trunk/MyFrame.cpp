@@ -540,18 +540,6 @@ void MyFrame::OnFileImport(wxCommandEvent& WXUNUSED(event) )
     
 void MyFrame::importFile ( wxString file , wxString path , int filter )
     {
-    // Trying ABI format
-    if ( filter == 5 || filter == -1 )
-       {
-        ABItype dummy ;
-        dummy.parse ( path ) ;
-        if ( dummy.vf.size() > 0 ) // Success
-           {
-           newABI ( path , file ) ;
-           return ;
-           }
-        }
-
     // Trying GenBank format
     if ( filter == 1 || filter == -1 )
        {
@@ -566,6 +554,18 @@ void MyFrame::importFile ( wxString file , wxString path , int filter )
           }
        }
        
+    // Trying ABI format
+    if ( filter == 5 || filter == -1 )
+       {
+        ABItype dummy ;
+        dummy.parse ( path ) ;
+        if ( dummy.vf.size() > 0 ) // Success
+           {
+           newABI ( path , file ) ;
+           return ;
+           }
+        }
+
     // Trying PDB format
     if ( filter == 1 || filter == -1 )
        {
@@ -679,12 +679,17 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
     wxArrayChildBase vc ;
     wxArrayString vs ;
     bool alignment = false ;
+    
+    gb.vs.Clear () ;
+    gb.vi.Clear () ;
+
     for ( n = 0 ; n < gb.vs_l.size() ; n++ )
         {
-        gb.vs = gb.vs_l[n] ;
-        gb.vi = gb.vi_l[n] ;
         nv = new TVector ;
-        gb.remap ( nv ) ;
+        gb.remap ( nv , gb.vs_l[n] , gb.vi_l[n] ) ;
+        gb.vs_l[n].Clear () ;
+        gb.vi_l[n].Clear () ;
+
         mylog ( "GenBank import" , "remapped " + nv->getName() ) ;
         vs.Add ( nv->getSequence() ) ;
         vv.Add ( nv ) ;
@@ -694,19 +699,10 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
         mylog ( "GenBank import" , "added " + nv->getName() ) ;
         }
     if ( gb.vs_l.size() == 1 ) alignment = false ;
-        
+    
     // Removing alignment artifacts from sequences
     for ( n = 0 ; n < vv.GetCount() ; n++ )
-        {
-        for ( int m = 0 ; m < vv[n]->getSequenceLength() ; m++ )
-           {
-           if ( vv[n]->getSequenceChar(m) == '-' )
-              {
-              vv[n]->eraseSequence ( m , 1 ) ;
-              m-- ;
-              }
-           }
-        }
+        vv[n]->removeAlignmentArtifacts () ;
     mylog ( "GenBank import" , "artifacts removed" ) ;
         
     if ( alignment )

@@ -258,6 +258,7 @@ class SeqAA : public SeqBasic
     virtual void setPos ( int i , int v ) ;
     virtual int getLine ( int y ) ;
     virtual int getItem ( wxPoint pt , int line ) ;
+    virtual void logsize () ;
     
     // Variables
     TVector *vec ;

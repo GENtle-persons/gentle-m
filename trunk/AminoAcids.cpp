@@ -257,7 +257,7 @@ void TAminoAcids::showSequence ()
     d->primaryMode = true ;
     d->takesMouseActions = true ;
     d->initFromString ( vec->getSequence() ) ;
-    d->fixOffsets ( vec ) ;
+//    d->fixOffsets ( vec ) ;
 
     // Plot demo
     if ( inlinePlot->GetStringSelection() == txt("t_chou_fasman") )

@@ -167,6 +167,11 @@ void TGenBank::parseLines ()
     }
 
 void TGenBank::remap ( TVector *v )
+    {
+    remap ( v , vs , vi ) ;
+    }    
+
+void TGenBank::remap ( TVector *v , const wxArrayString &vs , const wxArrayInt &vi )
 	{
 	int line ;
 	wxString k1 ;
@@ -574,3 +579,7 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
     ex.Add ( "//" ) ;
     }
 
+TGenBank::~TGenBank ()
+    {
+    }
+        

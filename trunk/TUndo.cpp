@@ -64,7 +64,11 @@ void TUndo::remember ( wxString _msg )
 void TUndo::clear ()
     {
     IS_UNDO_OFF
-    for ( int a = 0 ; a < mem.GetCount() ; a++ ) delete mem[a] ;
+    for ( int a = 0 ; a < mem.GetCount() ; a++ )
+        {
+        mem[a]->undo.clear () ;
+        delete mem[a] ;
+        }    
     msg.Clear() ;
     mem.Clear() ;
     cnt = 0 ;
