@@ -180,7 +180,7 @@ void TStorage::getEnzymesInGroup ( string gn , vector <string> &vs )
            }
         }
     }
-    
+/*    
 void TStorage::getEnzymesInGroup ( wxString gn , vector <wxString> &vs )
     {
     vector <string> dummy ;
@@ -188,7 +188,7 @@ void TStorage::getEnzymesInGroup ( wxString gn , vector <wxString> &vs )
     getEnzymesInGroup ( gn.c_str() , dummy ) ;
     for ( int a = 0 ; a < dummy.size() ; a++ ) vs.push_back ( dummy[a].c_str() ) ;
     }
-
+*/
 void TStorage::getEnzymeGroups ( vector <wxString> &vs )
     {
     TSQLresult sr ;
@@ -199,7 +199,7 @@ void TStorage::getEnzymeGroups ( vector <wxString> &vs )
     for ( a = 0 ; a < sr.content.size() ; a++ )
         vs.push_back ( sr[a][sr["eg_name"]].c_str() ) ;
     }
-    
+
 void TStorage::getEnzymeGroups ( vector <string> &vs )
     {
     vector <wxString> dummy ;

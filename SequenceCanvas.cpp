@@ -17,6 +17,7 @@ BEGIN_EVENT_TABLE(SequenceCanvas, wxScrolledWindow)
 
     EVT_MENU(SEQ_COPY_TEXT, SequenceCanvas::OnCopyText)
     EVT_MENU(SEQ_COPY_IMAGE, SequenceCanvas::OnCopyImage)
+    EVT_MENU(SEQ_SAVE_IMAGE, SequenceCanvas::OnSaveImage)
     EVT_MENU(SEQ_PRINT, SequenceCanvas::OnPrint)
 
     EVT_MENU(SEQ_COPY_RESLUT_DNA, SequenceCanvas::OnCopyResultDNA)
@@ -565,7 +566,18 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
        }*/
 
     }
-    
+
+void SequenceCanvas::OnSaveImage ( wxCommandEvent &ev )
+    {
+    wxString wildcard = "Bitmap (*.bmp)|*.bmp" ; 
+    string lastdir = myapp()->frame->LS->getOption ( "LAST_IMPORT_DIR" , "C:" ) ;
+    wxFileDialog d ( this , txt("t_save_image") , lastdir.c_str() , "" , wildcard , wxSAVE|wxOVERWRITE_PROMPT ) ;
+    if ( d.ShowModal() != wxID_OK ) return ;
+    wxString filename = d.GetPath() ;
+
+    wxBitmap *bmp = getSequenceBitmap () ;
+    bmp->SaveFile ( filename , wxBITMAP_TYPE_BMP ) ;
+    }    
     
 void SequenceCanvas::OnCopyImage ( wxCommandEvent &ev )
     {
@@ -573,27 +585,45 @@ void SequenceCanvas::OnCopyImage ( wxCommandEvent &ev )
     MyGetClientSize ( &w , &h ) ;
     h = lowy ;
     
-    int vx = 0 , vy = 0 ;
-//        MyGetViewStart ( &vx , &vy ) ;
-    int yoff = charheight * vy ;
-    wxBitmap bmp ( w , h , -1 ) ;
-    wxMemoryDC pdc ;
-    pdc.SelectObject ( bmp ) ;
-    pdc.Clear() ;
-//    pdc.SetDeviceOrigin ( 0 , -yoff ) ;
-    drawall = true ;
-    safeShow ( pdc ) ;
-    drawall = false ;
-//    pdc.SetDeviceOrigin ( 0 , 0 ) ;
+    if ( w * h * 3 >= 32*1024*1024 )
+        {
+        wxMessageDialog md ( this , txt("t_too_large_to_copy") ,
+                                txt("msg_box") , wxYES|wxNO|wxICON_QUESTION ) ;
+        if ( md.ShowModal() == wxID_YES )
+           {
+           OnSaveImage ( ev ) ;
+           return ;
+           }
+        }
+    
+    wxBitmap *bmp = getSequenceBitmap () ;
     
     // Copy to clipboard
     if (wxTheClipboard->Open())
         {
-        wxBitmapDataObject *bdo = new wxBitmapDataObject ( bmp ) ;
-        wxTheClipboard->SetData( bdo );
+        wxBitmapDataObject *bdo = new wxBitmapDataObject ( *bmp ) ;
+        wxTheClipboard->SetData( bdo ) ; 
         wxTheClipboard->Close();
         }
     
+    }
+    
+wxBitmap *SequenceCanvas::getSequenceBitmap ()
+    {
+    int w , h ;
+    MyGetClientSize ( &w , &h ) ;
+    h = lowy ;
+
+    int vx = 0 , vy = 0 ;
+    int yoff = charheight * vy ;
+    wxBitmap *bmp = new wxBitmap ( w , h , -1 ) ;
+    wxMemoryDC pdc ;
+    pdc.SelectObject ( *bmp ) ;
+    pdc.Clear() ;
+    drawall = true ;
+    safeShow ( pdc ) ;
+    drawall = false ;
+    return bmp ;
     }
 
 int SequenceCanvas::getBatchMark ()
@@ -1003,6 +1033,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         wxMenu *ca = new wxMenu ;
         ca->Append ( SEQ_COPY_TEXT , txt("m_copy_as_text") ) ;
         ca->Append ( SEQ_COPY_IMAGE , txt("m_copy_as_image") ) ;
+        ca->Append ( SEQ_SAVE_IMAGE , txt("m_save_as_image") ) ;
         cm->Append ( SEQ_COPY_AS , txt("m_copy_as") , ca ) ;
         cm->Append ( SEQ_PRINT , txt("m_print_sequence") ) ;
         PopupMenu ( cm , pt ) ;

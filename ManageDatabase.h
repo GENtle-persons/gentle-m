@@ -30,69 +30,71 @@ class TManageDatabaseDialog : public wxDialog
     virtual ~TManageDatabaseDialog () ;
 
 //    private :
-    void OnOK ( wxCommandEvent &ev ) ;
-    void OnCancel ( wxCommandEvent &ev ) ;
-    void OnCharHook(wxKeyEvent& event) ;
+    virtual void OnOK ( wxCommandEvent &ev ) ;
+    virtual void OnCancel ( wxCommandEvent &ev ) ;
+    virtual void OnCharHook(wxKeyEvent& event) ;
 
-    void pdOnNew ( wxCommandEvent &ev ) ;
-    void pdOnAdd ( wxCommandEvent &ev ) ;
-    void pdOnDel ( wxCommandEvent &ev ) ;
-    void pdOnDBchange ( wxCommandEvent &ev ) ;
-    void pdOnSetDefault ( wxCommandEvent &ev ) ;
+    virtual void pdOnNew ( wxCommandEvent &ev ) ;
+    virtual void pdOnAdd ( wxCommandEvent &ev ) ;
+    virtual void pdOnDel ( wxCommandEvent &ev ) ;
+    virtual void pdOnDBchange ( wxCommandEvent &ev ) ;
+    virtual void pdOnSetDefault ( wxCommandEvent &ev ) ;
     
-    void pmOnListEvent ( wxListEvent &ev , wxListCtrl *source , wxListCtrl *target ) ;
-    void pmOnLeftListEvent ( wxListEvent &ev ) ;
-    void pmOnRightListEvent ( wxListEvent &ev ) ;
-    void pmOnLeftChoice ( wxCommandEvent &ev ) ;
-    void pmOnRightChoice ( wxCommandEvent &ev ) ;
-    void pmOnSave ( wxCommandEvent &ev ) ;
-    void pmOnSelectLeft ( wxListEvent &ev ) ;
-    void pmOnSelectRight ( wxListEvent &ev ) ;
-    void pmOnSelect ( wxListEvent &ev , wxListCtrl *side ) ;
-    void pmOnActivateLeft ( wxListEvent &ev ) ;
-    void pmOnActivateRight ( wxListEvent &ev ) ;
-    void pmOnRightClickLeft ( wxListEvent &ev ) ;
-    void pmOnRightClickRight ( wxListEvent &ev ) ;
-    void pmOnRightClick ( wxListEvent &ev , wxListCtrl *lc , wxChoice *cc ) ;
-    void pmOnActivate ( wxListEvent &ev , wxListCtrl *side ) ;
-    void pmOnOpen ( wxCommandEvent &ev ) ;
-    void pmOnDelete ( wxCommandEvent &ev ) ;
-    void pmOnRename ( wxCommandEvent &ev ) ;
-    void pmOnFilter ( wxCommandEvent &ev ) ;
-    void pmOnFilterDNA ( wxCommandEvent &ev ) ;
-    void pmOnFilterProtein ( wxCommandEvent &ev ) ;
-    void pmOnFilterPrimer ( wxCommandEvent &ev ) ;
+    virtual void pmOnListEvent ( wxListEvent &ev , wxListCtrl *source , wxListCtrl *target ) ;
+    virtual void pmOnLeftListEvent ( wxListEvent &ev ) ;
+    virtual void pmOnRightListEvent ( wxListEvent &ev ) ;
+    virtual void pmOnLeftChoice ( wxCommandEvent &ev ) ;
+    virtual void pmOnRightChoice ( wxCommandEvent &ev ) ;
+    virtual void pmOnSave ( wxCommandEvent &ev ) ;
+    virtual void pmOnSelectLeft ( wxListEvent &ev ) ;
+    virtual void pmOnSelectRight ( wxListEvent &ev ) ;
+    virtual void pmOnSelect ( wxListEvent &ev , wxListCtrl *side ) ;
+    virtual void pmOnActivateLeft ( wxListEvent &ev ) ;
+    virtual void pmOnActivateRight ( wxListEvent &ev ) ;
+    virtual void pmOnRightClickLeft ( wxListEvent &ev ) ;
+    virtual void pmOnRightClickRight ( wxListEvent &ev ) ;
+    virtual void pmOnRightClick ( wxListEvent &ev , wxListCtrl *lc , wxChoice *cc ) ;
+    virtual void pmOnActivate ( wxListEvent &ev , wxListCtrl *side ) ;
+    virtual void pmOnOpen ( wxCommandEvent &ev ) ;
+    virtual void pmOnDelete ( wxCommandEvent &ev ) ;
+    virtual void pmOnRename ( wxCommandEvent &ev ) ;
+    virtual void pmOnFilter ( wxCommandEvent &ev ) ;
+    virtual void pmOnFilterDNA ( wxCommandEvent &ev ) ;
+    virtual void pmOnFilterProtein ( wxCommandEvent &ev ) ;
+    virtual void pmOnFilterPrimer ( wxCommandEvent &ev ) ;
+    virtual void pmOnTwoPanes ( wxCommandEvent &ev ) ;
     
-    bool do_copy ( string name , string sdb , string tdb ) ;
-    bool do_move ( string name , string sdb , string tdb ) ;
-    void do_del  ( string name , string db ) ;
-    void pmOpenFiles ( vector <string> &_names , string _db ) ;
+    virtual bool do_copy ( string name , string sdb , string tdb ) ;
+    virtual bool do_move ( string name , string sdb , string tdb ) ;
+    virtual void do_del  ( string name , string db ) ;
+    virtual void pmOpenFiles ( vector <string> &_names , string _db ) ;
     
-    bool copyDNA ( string name , string sdb , string tdb ) ;
-    bool moveDNA ( string name , string sdb , string tdb ) ;
-    void delDNA ( string name , string db ) ;
+    virtual bool copyDNA ( string name , string sdb , string tdb ) ;
+    virtual bool moveDNA ( string name , string sdb , string tdb ) ;
+    virtual void delDNA ( string name , string db ) ;
 
-    void delProject ( string name , string db ) ;
+    virtual void delProject ( string name , string db ) ;
     
-    bool do_load ( string name , string db ) ;
-    bool do_load_DNA ( string name , string db ) ;
-    bool do_load_project ( string name , string db ) ;
-    void do_save_DNA () ;
-    void do_save_project () ;
+    virtual bool do_load ( string name , string db ) ;
+    virtual bool do_load_DNA ( string name , string db ) ;
+    virtual bool do_load_project ( string name , string db ) ;
+    virtual void do_save_DNA () ;
+    virtual void do_save_project () ;
     
-    void initDatabases () ;
-    void accessDB () ;
-    void pd_loadList () ;
-    void pm_init_lists () ;
-    void pm_list_items ( int x ) ;
-    bool doesNameExist ( string name , string dbname ) ;
-    void addDatabase ( string fn ) ;
-    string fixQuotes ( string s ) ;
-    string getFileName ( string dbname ) ;
-    vector <int> getSelectedListItems ( wxListCtrl *l ) ;
+    virtual void initDatabases () ;
+    virtual void accessDB () ;
+    virtual void pd_loadList () ;
+    virtual void pm_init_lists () ;
+    virtual void pm_list_items ( int x ) ;
+    virtual bool doesNameExist ( string name , string dbname ) ;
+    virtual void addDatabase ( string fn ) ;
+    virtual string fixQuotes ( string s ) ;
+    virtual string getFileName ( string dbname ) ;
+    virtual vector <int> getSelectedListItems ( wxListCtrl *l ) ;
     
-    void initCopynMove () ;
-    void pmGetContext ( wxListCtrl *side ) ;
+    virtual void initCopynMove () ;
+    virtual void pmGetContext ( wxListCtrl *side ) ;
+    virtual void updateTwoLists() ;
 
     vector <string> db_name , db_file ;
     TStorage *storage ;
@@ -116,7 +118,7 @@ class TManageDatabaseDialog : public wxDialog
     bool doSave , doLoad , isProject ;
     string filter ;
     wxTextCtrl *filter_txt ;
-    wxCheckBox *f_dna , *f_prot , *f_primer ;
+    wxCheckBox *f_dna , *f_prot , *f_primer , *f_twopanes ;
     
     DECLARE_EVENT_TABLE()
     } ;

@@ -878,6 +878,12 @@ void TVector::setFromVector ( TVector &v )
     undo.clear () ;
     }
 
+int TVector::getItemLength ( int a )
+    {
+    if ( items[a].to >= items[a].from ) return items[a].to - items[a].from + 1 ;
+    return items[a].to + sequence.length() - items[a].from + 1 ;
+    }
+
     
 // ***************************************************************************************
 // TVectorItem
@@ -1089,5 +1095,4 @@ void TVectorItem::setOffset ( int o )
     {
     setParam ( "OFFSET" , o ) ;
     }
-    
 
