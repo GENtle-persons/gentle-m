@@ -13,7 +13,7 @@ class TPrimerDesign ;
 class TSilmutItem
     {
     public :
-    string mut ;
+    wxString mut ;
     int changes , cuts ;
     TRestrictionEnzyme *e ;
     wxArrayInt fragments ;
@@ -35,11 +35,11 @@ class TSilmutDialog : public wxDialog
     virtual void OnCancel ( wxCommandEvent &ev ) ;
     virtual void OnLbDoubleClick ( wxCommandEvent &ev ) ;
     virtual void OnCharHook(wxKeyEvent& event) ;
-    virtual string getSequence () ;
+    virtual wxString getSequence () ;
     virtual TRestrictionEnzyme *getEnzyme () ;
     
     private :
-    string getAAresult ( string dna ) ;
+    wxString getAAresult ( wxString dna ) ;
     int selID () ;
     
     // Variables

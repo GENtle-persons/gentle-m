@@ -193,13 +193,10 @@ class TVector
 
     virtual wxString getSubstring ( int mf , int mt ) ;
     virtual wxString transformSequence ( bool inverse , bool reverse ) ;
-    virtual wxString getWxSequence () ;
-    virtual string getSequence () ;
+    virtual wxString getSequence () ;
     virtual char getSequenceChar ( int x ) ;
-    virtual void setSequence ( string ns ) ;
     virtual void setSequence ( wxString ns ) ;
-    virtual void addToSequence ( string x ) ;
-    virtual void addToSequence ( char x ) ;
+    virtual void addToSequence ( wxString x ) ;
     virtual void alterSequence ( int pos , char c ) ;
     virtual int getSequenceLength() ;
     virtual void eraseSequence ( int from , int len ) ;

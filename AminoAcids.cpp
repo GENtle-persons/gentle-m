@@ -214,7 +214,7 @@ void TAminoAcids::showStat ()
     for ( a = 0 ; a < 256 ; a++ ) num[a] = 0 ;
     for ( a = 0 ; a < vec->getSequenceLength() ; a++ )
         {
-        unsigned char c = (unsigned char)vec->getSequence()[a] ;
+        unsigned char c = (unsigned char)vec->getSequenceChar ( a ) ;
         if ( c != '|' && c != ' ' ) noaa++ ;
         float ppi = vec->getAApi ( c ) ;
         if ( ppi != 0 )
@@ -251,7 +251,7 @@ void TAminoAcids::showSequence ()
     sc->seq.push_back ( d ) ;
     d->primaryMode = true ;
     d->takesMouseActions = true ;
-    d->initFromString ( vec->getWxSequence() ) ;
+    d->initFromString ( vec->getSequence() ) ;
     d->fixOffsets ( vec ) ;
 
     // Plot demo
@@ -381,10 +381,10 @@ void TAminoAcids::OnAsNewFeature(wxCommandEvent& event)
 void TAminoAcids::OnPhotometer(wxCommandEvent& event)
     {
     TCalculator *c = myapp()->frame->RunCalculator () ;
-    wxString seq = vec->getSequence().c_str() ;
+    wxString seq = vec->getSequence() ;
     float mW = 0 ;
     for ( int a = 0 ; a < vec->getSequenceLength() ; a++ )
-        mW += vec->getAAmw ( vec->getSequence()[a] ) ;
+        mW += vec->getAAmw ( vec->getSequenceChar ( a ) ) ;
     c->prot->SetCellValue ( 2 , 1 , wxString::Format("%d", seq.Replace("W","",true)) ) ;
     c->prot->SetCellValue ( 3 , 1 , wxString::Format("%d", seq.Replace("Y","",true)) ) ;
     c->prot->SetCellValue ( 4 , 1 , wxString::Format("%d", seq.Replace("C","",true)) ) ;
@@ -396,7 +396,7 @@ void TAminoAcids::OnBlastAA(wxCommandEvent& event)
     {
     wxString seq ;
     int a ;
-    if ( sc->_from < 0 ) seq = vec->getWxSequence() ;
+    if ( sc->_from < 0 ) seq = vec->getSequence() ;
     else seq = sc->getSelection() ;
     myapp()->frame->blast ( seq , "blastp" ) ;
     }

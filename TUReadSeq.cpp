@@ -13,7 +13,7 @@ TUReadSeq::TUReadSeq ( wxString _filename )
 void TUReadSeq::getFormat ()
     {
     if ( error != 0 ) return ;
-    format = seqFileFormat ( filename.c_str() , &skiplines , &error ) ;
+    format = seqFileFormat ( filename , &skiplines , &error ) ;
     if ( format < kMinFormat || format > kMaxFormat ) error = 1 ;
     }
     
@@ -41,7 +41,7 @@ void TUReadSeq::getSequences ()
         char  seqid[256]; /* sequence name */
         char  *seq;       /* sequence, 0 terminated, free when done */
         seqid[0] = 0 ;
-        seq = readSeq( seqIndex, filename.c_str(), skiplines, format,
+        seq = readSeq( seqIndex, filename, skiplines, format,
                       &seqlen, &numseqs, &error, seqid);
         for ( char *c = seq ; *c ; c++ )
            {

@@ -94,7 +94,7 @@ void SeqPrimer::show ( wxDC& dc )
               t = u ;
               while ( t.length() < endnumberlength ) t = "0" + t ;
               }
-           else t = alternateName.c_str() ;
+           else t = alternateName ;
            dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
            }
         }
@@ -106,7 +106,7 @@ void SeqPrimer::show ( wxDC& dc )
 void SeqPrimer::initFromTVector ( TVector *v )
     {
     vec = v ;
-    s = vec->getSequence().c_str() ;
+    s = vec->getSequence() ;
     for ( int a = 0 ; a < s.length() ; a++ ) s.SetChar(a,' ') ;
     takesMouseActions = true ;
     showNumbers = false ;
@@ -123,10 +123,10 @@ void SeqPrimer::addPrimer ( TPrimer *p )
     for ( a = p->from ; a <= p->to ; a++ )
         {
         myass ( a-p->from >= 0 , "SeqPrimer::addPrimer_2" ) ;
-        myass ( a-p->from < p->getSequenceLength() , "SeqPrimer::addPrimer_3" ) ;
-        d.setNucleotide ( a-1 , p->sequence[a-p->from] ) ;
+        myass ( a-p->from < p->sequence.length() , "SeqPrimer::addPrimer_3" ) ;
+        d.setNucleotide ( a-1 , p->sequence.GetChar(a-p->from) ) ;
         }
-    s = d.getSequence ().c_str() ;
+    s = d.getSequence () ;
     }
     
 //************************************************ SeqNum
@@ -275,6 +275,6 @@ void SeqDivider::show ( wxDC& dc )
 void SeqDivider::initFromTVector ( TVector *v )
     {
 //    vec = v ;
-    s = v->getSequence().c_str() ;
+    s = v->getSequence() ;
     }
 

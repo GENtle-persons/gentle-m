@@ -288,7 +288,7 @@ void SeqAA::updateProteases ()
     int a ;
     for ( a = 0 ; a < vs.GetCount() ; a++ )
         {
-        TProtease *pro = myapp()->frame->LS->getProtease ( vs[a].c_str() ) ;
+        TProtease *pro = myapp()->frame->LS->getProtease ( vs[a] ) ;
         if ( pro ) proteases.push_back ( pro ) ;
         }
     }
@@ -302,7 +302,7 @@ void SeqAA::analyzeProteases ()
        if ( pr->len() <= pa_w.length() )
           {
           wxString w2 = pa_w.substr ( pa_w.length() - pr->len() , pr->len() ) ;
-          if ( pr->does_match ( w2.c_str() ) )
+          if ( pr->does_match ( w2 ) )
              {
              TProteaseCut *cut = new TProteaseCut ;
              cut->protease = pr ;
@@ -325,7 +325,7 @@ void SeqAA::fixOffsets ( TVector *v )
         for ( b = v->items[a].from ; off != -1 && b < v->items[a].to ; b++ )
            {
 //           int c = b - v->items[a].from ;
-           char x =  v->getSequence()[b-1] ;
+           char x =  v->getSequenceChar ( b-1 ) ;
            if ( ( b - 1 ) % 10 == 0 && c > 0 && x != '-' )
               {
               while ( offsets.GetCount() < b ) offsets.Add ( -1 ) ;
@@ -346,12 +346,12 @@ void SeqAA::initFromTVector ( TVector *v )
     vec = v ;
     bool truncateEditSequence = false ;
     if ( can && can->getEditMode() && v->getSequenceLength() &&
-            v->getSequence()[v->getSequenceLength()-1] == ' ' )
+            v->getSequenceChar(v->getSequenceLength()-1) == ' ' )
        {
        v->getSequence().erase ( v->getSequenceLength()-1 , 1 ) ;
        truncateEditSequence = true ;
        }
-    wxString t = vec->getWxSequence() ;
+    wxString t = vec->getSequence() ;
     s = "" ;
     while ( s.length() < t.length() ) s += " " ;
     offsets.Clear() ;
@@ -366,7 +366,7 @@ void SeqAA::initFromTVector ( TVector *v )
     if ( mode == AA_ALL )
         {
         for ( a = 0 ; a < sl ; a++ )
-            s.SetChar(a,v->dna2aa ( t.substr(a,3).c_str() ).GetChar(0)) ;
+            s.SetChar(a,v->dna2aa ( t.substr(a,3) ).GetChar(0)) ;
         }
     else if ( mode == AA_KNOWN )
         {
@@ -394,7 +394,7 @@ void SeqAA::initFromTVector ( TVector *v )
                u.SetChar( 1 , v->getComplement ( t.GetChar(a+1) ) ) ;
                u.SetChar( 2 , v->getComplement ( t.GetChar(a+0) ) ) ;
                }
-            char c = v->dna2aa(u.c_str()).GetChar(0) ;
+            char c = v->dna2aa(u).GetChar(0) ;
             wxString three = v->one2three((int)c) ;
 
             // Protease analysis

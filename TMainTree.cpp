@@ -57,7 +57,7 @@ void TMainTree::addChild ( ChildBase *c , int type )
     else if ( type == TYPE_ALIGNMENT ) theroot = alignments ;
     else if ( type == TYPE_AMINO_ACIDS ) theroot = amino_acids ;
     else if ( type == TYPE_MISC ) theroot = misc ;
-    c->inMainTree = AppendItem ( theroot , c->getName().c_str() , -1 ) ;
+    c->inMainTree = AppendItem ( theroot , c->getName() , -1 ) ;
     SetItemData ( c->inMainTree , new TMainTreeItem ( c ) ) ;
     EnsureVisible ( c->inMainTree ) ;
     SelectItem ( c->inMainTree ) ;

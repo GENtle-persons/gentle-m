@@ -578,10 +578,10 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
         {
         s = p->vec->rc[rs].e->name ;
         char ttt[1000] ;
-        sprintf ( ttt , txt("tt_rs") , s.c_str() , p->vec->countCuts ( s.c_str() ) ) ;
+        sprintf ( ttt , txt("tt_rs") , s.c_str() , p->vec->countCuts ( s ) ) ;
         SetMyToolTip ( ttt , TT_RS ) ;
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
-        wxLogStatus(txt("rsite_status_bar") , s.c_str() ) ;
+        wxLogStatus(txt("rsite_status_bar") , s ) ;
         if ( event.LeftDown() )
            {
 /*#ifdef __WXMSW__
@@ -599,7 +599,7 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
            TRestrictionEditor ed ( myapp()->frame , "" , wxPoint(-1,-1) , 
                       wxSize(600,400) , 
                       wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL);
-           ed.pre = s.c_str() ;
+           ed.pre = s ;
            ed.cocktail = p->vec->cocktail ;
            ed.initme ( p->vec ) ;
            if ( ed.ShowModal () == wxID_OK )
@@ -620,7 +620,7 @@ void PlasmidCanvas::OnEventCircular(wxMouseEvent& event)
                                         p->vec->items[vo].desc.c_str() ) ;
         SetMyToolTip ( ttt , TT_ITEM ) ;
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
-        wxLogStatus(txt("item_status_bar") , s.c_str() ) ;
+        wxLogStatus(txt("item_status_bar") , s ) ;
         if ( event.LeftDown() )
            p->treeBox->SelectItem ( p->vec->items[vo].getTreeID() ) ;
         else if ( event.RightDown() )

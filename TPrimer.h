@@ -9,8 +9,6 @@ class TVector ;
 class TPrimerDialog ;
 class TPrimerDesign ;
 
-typedef vector <char> tvc ;
-
 #define TM_STANDARD 0
 #define TM_SALT 1
 #define TM_GC 2
@@ -28,9 +26,9 @@ class TPrimer
     void getSequenceFromVector ( TVector *v , bool from3 = false ) ;
     void makeStats () ;
     void evaluate ( float tm_opt = 0 ) ;
-    string report () ;
-    string get53sequence () ;
-    string get35sequence () ;
+    wxString report () ;
+    wxString get53sequence () ;
+    wxString get35sequence () ;
     int checkFit ( TVector *v , bool justCount = false ) ;
     bool overlap ( TPrimer &op ) ;
 
@@ -40,7 +38,7 @@ class TPrimer
     
     // Variables
     int from , to ;
-    string sequence ;
+    wxString sequence ;
     bool upper ;
     TVector *annealingVector ;
     
@@ -50,22 +48,22 @@ class TPrimer
 
     void OligoCount () ;
     double NeighbourTM ( bool max , double pconc , double saltconc ) ;
-    bool IsBase ( string theBase ) ;
-    bool IsIUpacBase ( string theBase ) ;
-    double *CalcIUpair ( string base0 , string base , int i , bool max ) ;
+    bool IsBase ( wxString theBase ) ;
+    bool IsIUpacBase ( wxString theBase ) ;
+    double *CalcIUpair ( wxString base0 , wxString base , int i , bool max ) ;
     double DeltaG ( bool max ) ;
     double DeltaH ( bool max ) ;
     double DeltaS ( bool max ) ;
-    double CountNeighbors ( string s ) ;
+    double CountNeighbors ( wxString s ) ;
     void invertSequence() ;
-    string getAnnealingSequence() ;
+    wxString getAnnealingSequence() ;
     
     // Variables
     int contents[256] ;
     float pgc ;
     float evaluation ;
     float tm , tm_salt , tm_gc ;
-    string ann1 , ann2 , annm ;
+    wxString ann1 , ann2 , annm ;
     int annScore ;
     double S , H ;
 

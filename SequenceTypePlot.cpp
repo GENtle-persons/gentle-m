@@ -192,17 +192,17 @@ void SeqPlot::show ( wxDC& dc )
            else if ( type == H_P )
               {
               t = "t_method_" ;
-              t += hp_method.c_str() ;
+              t += hp_method ;
               t = txt(t.c_str()) ;
-              t += wxString::Format(" [%d]",hp_window).c_str() ;
+              t += wxString::Format(" [%d]",hp_window) ;
               }
            dc.SetTextForeground ( *wxBLACK ) ;
            int tw , th ;
-           dc.GetTextExtent ( t.c_str() , &tw , &th ) ;
+           dc.GetTextExtent ( t , &tw , &th ) ;
            int ty = pos.r[a].y ;
            ty += lines * can->charheight ;
            ty -= ( lines * can->charheight - tw ) / 2 ;
-           dc.DrawRotatedText ( t.c_str() , pos.r[a].x, ty , 90 ) ;
+           dc.DrawRotatedText ( t , pos.r[a].x, ty , 90 ) ;
            dc.SetFont(*can->font);
            }
         }
@@ -422,7 +422,7 @@ void SeqPlot::init ( SequenceCanvas *ncan )
 void SeqPlot::initFromTVector ( TVector *v )
     {
     vec = v ;
-    s = vec->getWxSequence() ;
+    s = vec->getSequence() ;
     takesMouseActions = true ;
     }
 

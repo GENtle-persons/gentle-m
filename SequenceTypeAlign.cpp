@@ -163,7 +163,7 @@ void SeqAlign::show ( wxDC& dc )
            if ( al->bold )
               {
               dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-              dc.DrawText ( t.c_str(), pos.r[a].x-1, pos.r[a].y ) ;
+              dc.DrawText ( t, pos.r[a].x-1, pos.r[a].y ) ;
               dc.SetBackgroundMode ( wxSOLID ) ;
               }
 
@@ -186,7 +186,7 @@ void SeqAlign::show ( wxDC& dc )
            int tw , th ;
            do {
               t = t.substr ( 1 , t.length()-1 ) ;
-              dc.GetTextExtent ( t.c_str() , &tw , &th ) ;
+              dc.GetTextExtent ( t , &tw , &th ) ;
               } while ( tw > pos.r[a].width ) ;
            dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
            dc.SetTextBackground ( *wxWHITE ) ;

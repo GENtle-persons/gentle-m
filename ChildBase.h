@@ -2,7 +2,6 @@
 #define _CHILDBASE_H_
 
 #include "main.h"
-#include <string.h>
 #include <wx/wx.h>
 #include <wx/treectrl.h>
 #include <wx/docview.h>

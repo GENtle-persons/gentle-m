@@ -21,6 +21,7 @@
 
 #include "main.h"
 #include <wx/tipdlg.h> 
+#include <wx/splash.h>
 
 #ifdef __WXMSW__
 #include "wx/msw/registry.h"
@@ -34,16 +35,13 @@ IMPLEMENT_APP(MyApp)
 // Some often needed stuff...
 
 #ifdef MYDEBUG
-ofstream errout ( "ERROR.txt" , ios::out ) ;
+wxFile errout ( "ERROR.txt" , wxFile::write ) ;
 
 void myass ( bool b , wxString msg )
     {
     if ( b ) return ;
-    errout << msg << "\n" ;
-    errout.flush() ;
-//    wxBell();
-//    wxCHECK_RET ( b , msg ) ;
-//    wxSafeShowMessage ( msg , "Error" ) ;
+    errout.Write ( msg + "\n" ) ;
+    errout.Flush() ;
     }
 #endif
 
@@ -88,15 +86,16 @@ wxHashString _text ;
 
 void init_txt ( wxString lang )
     {
-    ifstream in ( "variables.csv" , ios::in ) ;
+    wxTextFile in ( myapp()->homedir + "\\variables.csv" ) ;
+    in.Open () ;
     char t[10000] ;
     bool firstline = true ;
     int ln = 1 ; // English is default
     TGenBank dummy ;
-    while ( !in.eof() )
+    for ( int lc = 0 ; lc < in.GetLineCount() ; lc++ )
         {
         wxArrayString v ;
-        in.getline ( t , sizeof ( t ) ) ;
+        strcpy ( t , in[lc].c_str() ) ;
         if ( *t == 0 ) break ;
         char *c , *l ;
         bool quote = false ;
@@ -149,7 +148,6 @@ char * txt ( wxString item )
 // ---------------------------------------------------------------------------
 // MyApp
 // ---------------------------------------------------------------------------
-#include <wx/splash.h>
 
 MyApp *theapp ;
 
@@ -188,7 +186,7 @@ bool MyApp::OnInit()
     bmpdir = homedir + slash + "bitmaps" ;
     
     // Make sure local database exists
-    wxString localdb , blankdb , hd = homedir.c_str() ;
+    wxString localdb , blankdb , hd = homedir ;
     localdb = hd + slash + "local.db" ;
     blankdb = hd + slash + "blank.db" ;
     if ( !wxFileExists ( localdb ) && wxFileExists ( blankdb ) )
@@ -222,7 +220,7 @@ bool MyApp::OnInit()
         {
         int tip = frame->LS->getOption ( "NEXTTIP" , 0 ) ;
         wxString tipfile = "tips_" ;
-        tipfile += frame->lang_string.c_str() ;
+        tipfile += frame->lang_string ;
         tipfile += ".txt" ;
         wxTipProvider *tipProvider = wxCreateFileTipProvider(tipfile, tip);
         wxShowTip(frame, tipProvider);
@@ -257,8 +255,8 @@ wxString MyApp::getHTMLCommand ( wxString command )
     regKey.Close();
     q.Replace ( "-nohome" , "" ) ;
     if ( 0 == q.Replace ( wxString("%1") , wxString((char*)command.c_str()) ) )
-        q += " \"" + wxString ( command.c_str() ) + "\"" ;
-    return q.c_str() ;
+        q += " \"" + command + "\"" ;
+    return q ;
 #else
     return "" ;
 #endif
@@ -269,7 +267,7 @@ wxString MyApp::getFileFormatApplication ( wxString type )
 #ifdef __WXMSW__    
     wxRegKey regKey;
     wxString idName("HKEY_CLASSES_ROOT\\.");
-    idName += type.c_str() ;
+    idName += type ;
     regKey.SetName(idName);    
     wxString s = "" , t = regKey ;
     s += "HKEY_CLASSES_ROOT\\" ;
@@ -279,7 +277,7 @@ wxString MyApp::getFileFormatApplication ( wxString type )
     wxString q = regKey ;
     regKey.Close();
     q.Replace ( wxString("%1") , "" ) ;
-    return q.c_str() ;
+    return q ;
 #else
     return "" ;
 #endif

@@ -427,7 +427,7 @@ void MyChild::OnLigation(wxCommandEvent& event)
     
 wxString MyChild::getName ()
     {
-    return vec->getName().c_str() ;
+    return vec->getName() ;
     }
     
 void MyChild::OnCut(wxCommandEvent& event)
@@ -486,7 +486,7 @@ void MyChild::OnExport(wxCommandEvent& event)
     int x = d.ShowModal() ;
     if ( x != wxID_OK ) return ;
 
-    myapp()->frame->LS->setOption ( "LAST_IMPORT_DIR" , d.GetDirectory().c_str() ) ;
+    myapp()->frame->LS->setOption ( "LAST_IMPORT_DIR" , d.GetDirectory() ) ;
     
     int filter = d.GetFilterIndex () ;
     if ( filter == 0 ) // GeneBank
@@ -494,12 +494,10 @@ void MyChild::OnExport(wxCommandEvent& event)
         TGenBank gb ;
         wxArrayString ex ;
         gb.doExport ( vec , ex ) ;
-        ofstream out ( d.GetPath().c_str() , ios::out ) ;
+        wxFile out ( d.GetPath() , wxFile::write ) ;
         for ( int a = 0 ; a < ex.GetCount() ; a++ )
-           {
-           out << ex[a].c_str() ;
-           out << endl ;
-           }
+           out.Write ( ex[a] + "\n" ) ;
+        out.Close () ;
         }
     else if ( filter == 1 ) // CLONE
         {
@@ -1052,7 +1050,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
     int w , h ;
     wxDC *pdc = pd.GetPrintDC () ;
     pdc->GetSize ( &w , &h ) ;
-    pdc->StartDoc ( vec->getName().c_str() ) ;
+    pdc->StartDoc ( vec->getName() ) ;
     pdc->StartPage () ;
     
     // Plasmid canvas
@@ -1094,7 +1092,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
     for ( a = 0 ; a < vec->items.size() ; a++ )
         {
         y += ch ;
-        pdc->DrawText ( vec->items[a].name.c_str() , x0 , y ) ;
+        pdc->DrawText ( vec->items[a].name , x0 , y ) ;
         sprintf ( t , "%d" , vec->items[a].from ) ; pdc->DrawText ( t , x1 , y ) ;
         sprintf ( t , "%d" , vec->items[a].to ) ; pdc->DrawText ( t , x2 , y ) ;
         

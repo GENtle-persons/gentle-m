@@ -175,7 +175,7 @@ void SeqDNA::show ( wxDC& dc )
               t = u ;
               while ( t.length() < endnumberlength ) t = "0" + t ;
               }
-           else t = alternateName.c_str() ;
+           else t = alternateName ;
            dc.SetTextForeground ( *wxBLACK ) ;
            dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
            }
@@ -194,7 +194,7 @@ wxColor SeqDNA::getBaseColor ( char b )
 void SeqDNA::initFromTVector ( TVector *v )
     {
     vec = v ;
-    s = vec->getWxSequence() ;
+    s = vec->getSequence() ;
     takesMouseActions = true ;
     showNumbers = true ;
     fontColor.Set ( 0 , 0 , 0 ) ;

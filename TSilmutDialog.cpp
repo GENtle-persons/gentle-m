@@ -116,7 +116,7 @@ void TSilmutDialog::OnLbDoubleClick ( wxCommandEvent &ev )
     OnOK ( ev ) ;
     }
     
-string TSilmutDialog::getSequence ()
+wxString TSilmutDialog::getSequence ()
     {
     int i = selID() ;
     if ( i == -1 ) return "" ;
@@ -173,7 +173,7 @@ void TSilmutDialog::OnChoose ( wxCommandEvent &event )
 void TSilmutDialog::calc ()
     {
     SetCursor ( *wxHOURGLASS_CURSOR ) ;
-    string orig_aa = getAAresult ( v->getSequence() ) ;
+    wxString orig_aa = getAAresult ( v->getSequence() ) ;
     int limit ; // Maximum number of exchanges
     limit = lim_xhg->GetValue() ;
     int limit_cuts = lim_max->GetValue() ;
@@ -192,17 +192,17 @@ void TSilmutDialog::calc ()
            re.push_back ( myapp()->frame->LS->getRestrictionEnzyme ( z[a] ) ) ;
         }
     
-    string vseq = v->getSequence() ;
-    string vseq_l = vseq ;
+    wxString vseq = v->getSequence() ;
+    wxString vseq_l = vseq ;
     for ( a = 0 ; a < vseq.length() ; a++ )
         {
-        if ( vseq[a] >= 'A' && vseq[a] <= 'Z' )
-           vseq_l[a] = vseq[a] - 'A' + 'a' ;
+        if ( vseq.GetChar(a) >= 'A' && vseq.GetChar(a) <= 'Z' )
+           vseq_l.SetChar ( a , vseq.GetChar(a) - 'A' + 'a' ) ;
         }
     for ( a = 0 ; a < re.size() ; a++ )
         {
         TRestrictionEnzyme *e = re[a] ;
-        string s = e->sequence.c_str() ;
+        wxString s = e->sequence ;
         int f , t ;
         f = from - s.length() + 1 ;
         t = to - 1 ;
@@ -211,49 +211,50 @@ void TSilmutDialog::calc ()
         for ( b = f ; b <= t ; b++ )
            {
            match = mismatch = 0 ;
-           string x ;
+           wxString x ;
            for ( c = 0 ; c < s.length() && mismatch <= limit ; c++ )
               {
-              if ( v->basematch ( vseq[b+c] , s[c] ) )
+              if ( v->basematch ( vseq.GetChar(b+c) , s.GetChar(c) ) )
                  {
                  match++ ;
-                 x += vseq_l[b+c] ;
+                 x += vseq_l.GetChar(b+c) ;
                  }
               else if ( b+c < from-1 || b+c >= to ) mismatch = limit + 1 ; // Needs mutation outside specified region
               else
                  {
                  mismatch++ ;
-                 x += s[c] ;
+                 x += s.GetChar(c) ;
                  }
               }
               
-           string new_dna = v->getSequence() ;
+           wxString new_dna = v->getSequence() ;
            bool useit = false ;
            if ( mismatch <= limit )
               {
               for ( c = 0 ; c < new_dna.length() ; c++ )
                  if ( c >= b && c < b + s.length() && 
                                   c-b >= 0 && c-b <= x.length() &&
-                                  x[c-b] >= 'A' && x[c-b] <= 'Z' ) 
-                    new_dna[c] = x[c-b] ;
-              string new_aa = getAAresult ( new_dna ) ;
+                                  x.GetChar(c-b) >= 'A' &&
+                                  x.GetChar(c-b) <= 'Z' ) 
+                    new_dna.SetChar ( c ,  x.GetChar(c-b) ) ;
+              wxString new_aa = getAAresult ( new_dna ) ;
               if ( new_aa == orig_aa ) useit = true ;
               }
            else useit = false ;
            
            if ( useit )
               {
-              string y ;
+              wxString y ;
               for ( c = from-1 ; c < to ; c++ )
                  {
-                 if ( c >= b && c < b + s.length() ) y += x[c-b] ;
-                 else y += vseq_l[c] ; 
+                 if ( c >= b && c < b + s.length() ) y += x.GetChar(c-b) ;
+                 else y += vseq_l.GetChar(c) ; 
                  }
               TSilmutItem si ;
               si.e = e ;
               si.changes = mismatch ;
               si.mut = y ;
-              string old_dna = v->getSequence() ;
+              wxString old_dna = v->getSequence() ;
               v->setSequence ( new_dna ) ;
               vector <TRestrictionCut> vc = v->getCuts(e) ;
               
@@ -280,12 +281,12 @@ void TSilmutDialog::calc ()
     SetCursor ( *wxSTANDARD_CURSOR ) ;
     }
     
-string TSilmutDialog::getAAresult ( string dna )
+wxString TSilmutDialog::getAAresult ( wxString dna )
     {
     if ( !pd )
         {
-        string s = dna ;
-        for ( int a = 0 ; a < s.length() ; a++ ) s[a] = ' ' ;
+        wxString s = dna ;
+        for ( int a = 0 ; a < s.length() ; a++ ) s.SetChar ( a , ' ' ) ;
         return s ;
         }
     TVector v2 ;
@@ -298,7 +299,7 @@ string TSilmutDialog::getAAresult ( string dna )
     a3->unknownAA = ' ' ;
     a3->initFromTVector ( &v2 ) ;
     a3->showNumbers = false ;
-    string ret = a3->s.c_str() ;
+    wxString ret = a3->s ;
     delete a3 ;
     return ret ;
     }
@@ -307,11 +308,11 @@ void TSilmutDialog::showit ()
     {
     int a , b ;
     lb->Clear() ;
-    vector <wxString> list ;
+    wxArrayString list ;
     for ( a = 0 ; a < vs.size() ; a++ )
         {
         vector <TRestrictionCut> vc ;
-        wxString e_name = vs[a].e->name.c_str() ;
+        wxString e_name = vs[a].e->name ;
         while ( e_name.length() < 8 ) e_name += ' ' ;
         vc = v->getCuts(vs[a].e) ;
         int cuts_before = vc.size() ;
@@ -343,11 +344,11 @@ void TSilmutDialog::showit ()
            }
            
         lb->Append ( s ) ;
-        list.push_back ( s ) ;
+        list.Add ( s ) ;
         }
 
     lb_retro.Clear() ;
-    for ( a = 0 ; a < list.size() ; a++ )
+    for ( a = 0 ; a < list.GetCount() ; a++ )
         {
         lb_retro.Add ( lb->FindString ( list[a] ) ) ;
         }

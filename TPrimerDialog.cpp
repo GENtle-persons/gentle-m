@@ -82,7 +82,7 @@ void TPrimerDialog::initme ( TPrimer *_p , TPrimerDesign *_pd )
     p = _p ;
     pd = _pd ;
     cp = new TPrimer ;
-    SetTitle ( p->sequence.c_str() ) ;
+    SetTitle ( p->sequence ) ;
     
     int w , h ;
     GetClientSize ( &w , &h ) ;
@@ -173,7 +173,7 @@ void TPrimerDialog::updateList ()
     {
     while ( pl.size() ) pl.pop_back () ;
     
-    string s , t ;
+    wxString s , t ;
     int a , b ;
     int l1 , l2 , r1 , r2 ;
     int minlen = lmin->GetValue() ;
@@ -185,7 +185,7 @@ void TPrimerDialog::updateList ()
         t = pd->vec->getSequence() ;
         s = t ;
         for ( a = 0 ; a < p->sequence.length() ; a++ )
-           s[a+p->from-1] = p->sequence[a] ;
+           s.SetChar( a+p->from-1 , p->sequence.GetChar(a) ) ;
         l1 = p->from - 1 - l5->GetValue() ;
         l2 = p->from - 1 + r5->GetValue() ;
         r1 = p->to - 1 - l3->GetValue() ;
@@ -196,7 +196,7 @@ void TPrimerDialog::updateList ()
         t = pd->vc->getSequence() ;
         s = t ; 
         for ( a = 0 ; a < p->sequence.length() ; a++ )
-           s[a+p->from-1] = p->sequence[a] ;
+           s.SetChar ( a+p->from-1 , p->sequence.GetChar(a) ) ;
         l1 = p->from - 1 - l3->GetValue() ;
         l2 = p->from - 1 + r3->GetValue() ;
         r1 = p->to - 1 - l5->GetValue() ;
@@ -229,10 +229,10 @@ void TPrimerDialog::updateList ()
 
 void TPrimerDialog::ShowCur ()
     {
-    wxString cur = cp->sequence.c_str() ;
+    wxString cur = cp->sequence ;
     if ( p->upper ) seq->SetValue ( "5'-" + cur + "-3'" ) ;
     else seq->SetValue ( "3'-" + cur + "-5'" ) ;
-    rep->SetValue ( cp->report().c_str() ) ;
+    rep->SetValue ( cp->report() ) ;
     }
     
 void TPrimerDialog::ShowLC ()
@@ -265,7 +265,7 @@ void TPrimerDialog::ShowLC ()
         sprintf ( t , "%2.1f" , pl[a].getEvaluation() ) ;
         lc->SetItem ( l , 3 , t ) ;
 
-        lc->SetItem ( l , 4 , pl[a].sequence.c_str() ) ;
+        lc->SetItem ( l , 4 , pl[a].sequence ) ;
         }
         
     lc->SetColumnWidth ( 0 , wxLIST_AUTOSIZE ) ;

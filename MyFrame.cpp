@@ -549,7 +549,7 @@ void MyFrame::importFile ( wxString file , wxString path , int filter )
     if ( filter == 5 || filter == -1 )
        {
         ABItype dummy ;
-        dummy.parse ( path.c_str() ) ;
+        dummy.parse ( path ) ;
         if ( dummy.vf.size() > 0 ) // Success
            {
            newABI ( path , file ) ;
@@ -561,7 +561,7 @@ void MyFrame::importFile ( wxString file , wxString path , int filter )
     if ( filter == 1 || filter == -1 )
        {
         TGenBank gb ;
-        gb.load ( path.c_str() ) ;
+        gb.load ( path ) ;
         if ( gb.success )
            {
            newGB ( gb , file ) ;
@@ -573,7 +573,7 @@ void MyFrame::importFile ( wxString file , wxString path , int filter )
     if ( filter == -1 )
        {
         TXMLfile xml ;
-        xml.load ( path.c_str() ) ;
+        xml.load ( path ) ;
         if ( xml.success() )
            {
            newXML ( xml ) ;
@@ -599,7 +599,7 @@ void MyFrame::importFile ( wxString file , wxString path , int filter )
        {
         TClone clone ;
         clone.LS = LS ;
-        clone.load ( path.c_str() ) ;
+        clone.load ( path ) ;
         if ( clone.success )
            {
            newCLONE ( clone ) ;
@@ -607,7 +607,7 @@ void MyFrame::importFile ( wxString file , wxString path , int filter )
            }
        }
 
-    wxMessageBox ( txt("t_unable_to_detect_file_type") , file.c_str() ) ;
+    wxMessageBox ( txt("t_unable_to_detect_file_type") , file ) ;
     return ;
 }
 
@@ -666,7 +666,7 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
         gb.vi = gb.vi_l[n] ;
         nv = new TVector ;
         gb.remap ( nv ) ;
-        vs.Add ( nv->getSequence().c_str() ) ;
+        vs.Add ( nv->getSequence() ) ;
         vv.push_back ( nv ) ;
         nv->setDescription ( nv->getDescription() + "\n" + wxGetUserName() ) ;
         if ( nv->getSequenceLength() != vv[0]->getSequenceLength() ) alignment = false ;
@@ -690,7 +690,7 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
     if ( alignment )
         {
         if ( wxYES != wxMessageBox ( txt("t_possible_alignment") ,
-                       title.c_str() , wxYES_NO|wxICON_QUESTION ) )
+                       title , wxYES_NO|wxICON_QUESTION ) )
            {
            alignment = false ;
            }        
@@ -702,7 +702,7 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
         nv = vv[n] ;
         if ( gb.vs_l.size() == 1 && title != "" && nv->getName() == "" )
            nv->setName ( title ) ;
-        short type = TUReadSeq::getSeqType ( nv->getSequence().c_str() ) ;
+        short type = TUReadSeq::getSeqType ( nv->getSequence() ) ;
         if ( type == TYPE_AMINO_ACIDS )
            vc.push_back ( newAminoAcids ( nv , nv->getName() ) ) ;
         else
@@ -827,7 +827,7 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     showSplashScreen = pod.showSplashScreen->GetValue() ;
     checkUpdate = pod.checkUpdate->GetValue() ;
     useInternalHelp = pod.useInternalHelp->GetValue() ;
-    wxString lang = pod.language->GetStringSelection().c_str() ;
+    wxString lang = pod.language->GetStringSelection() ;
     if ( lang != lang_string )
         {
         wxMessageDialog md ( this , txt("t_effect_after_restart" ) ) ;
@@ -864,7 +864,7 @@ void MyFrame::OnProjectLoad(wxCommandEvent& event)
         {
         notindb = txt("t_following_not_in_db_open") + 
                         notindb + txt("t_following_end_open") ;
-        wxMessageDialog md ( this , notindb.c_str() ,
+        wxMessageDialog md ( this , notindb ,
                                 txt("msg_box") , wxICON_EXCLAMATION|wxYES|wxNO ) ;
         if ( md.ShowModal() != wxID_YES ) return ;
         }
@@ -892,7 +892,7 @@ void MyFrame::OnProjectSave(wxCommandEvent& event)
     if ( notindb != "" )
         {
         notindb = txt("t_following_not_in_db") + notindb + txt("t_following_end") ;
-        wxMessageDialog md ( this , notindb.c_str() ,
+        wxMessageDialog md ( this , notindb ,
                                 txt("msg_box") , wxICON_EXCLAMATION|wxYES|wxNO ) ;
         if ( md.ShowModal() != wxID_YES ) return ;
         }
@@ -953,7 +953,7 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , wxString title )
 
     subframe->vec->setFromVector ( *nv ) ;
     
-    wxString seq = subframe->vec->getSequence().c_str() ;
+    wxString seq = subframe->vec->getSequence() ;
     seq.Replace ( "|" , "" , true ) ;
     subframe->vec->setSequence ( seq ) ;
     
@@ -1020,7 +1020,7 @@ void MyFrame::blast ( wxString seq , wxString prg )
     unique.Replace ( "/" , "_" ) ;
     unique.Replace ( " " , "_" ) ;
            
-    wxString hd = myapp()->homedir.c_str() ;
+    wxString hd = myapp()->homedir ;
     wxString exe = hd + "\\blastcl3.exe" ; // WINDOWS-SPECIFIC!
     wxString ifile = hd + "\\blasts\\temp_" + unique + ".tmp" ;
     wxString ofile = hd + "\\blasts\\blast_results_" + unique + ".html" ;
@@ -1031,48 +1031,33 @@ void MyFrame::blast ( wxString seq , wxString prg )
        wxMkdir ( blast_dir ) ;
     
     // Writing temporary blast file
-    ofstream out ( ifile.c_str() , ios::out ) ;
-    out << seq ;
-    out.close() ;
+    wxFile out ( ifile , wxFile::write ) ;
+    out.Write ( seq ) ;
+    out.Close () ;
     
-    ofstream batch ( bfile.c_str() , ios::out ) ;
-    batch << "@echo off" << endl ;
+    wxFile batch ( bfile , wxFile::write ) ;
+    batch.Write ( "@echo off\n" ) ;
     
     // Creating blast command line
     exe += " -p \"" + prg + "\"" ;
     exe += " -i \"" + ifile + "\"" ;
     exe += " -o \"" + ofile + "\"" ;
     exe += " -Tt" ; // Create HTML
-    batch << exe << endl ;
+    batch.Write ( exe + "\n" ) ;
     
     // Starting browser
     exe = "start " ;
     exe += myapp()->getHTMLCommand ( ofile ) ;
-//    iexplore.exe \"" + ofile + "\"" ; // WINDOWS-SPECIFIC!
-    batch << exe << endl ;
+    batch.Write ( exe + "\n" ) ;
 
     // Delete temporary files
-    batch << "del \"" << ifile << "\"" << endl ;
-    batch << "del \"" << bfile << "\"" << endl ;
+    batch.Write ( "del \"" + ifile + "\"\n" ) ;
+    batch.Write ( "del \"" + bfile + "\"\n" ) ;
 
     // Run it
-    batch.close() ;
+    batch.Close() ;
     wxExecute ( bfile ) ;
 #endif
-    }
-    
-void MyFrame::fixMax ()
-    {
-/*    int a ;
-    bool max = false ;
-    for ( a = 0 ; a < children.size() ; a++ )
-        {
-        if ( !children[a]->IsMaximized() )
-           {
-           children[a]->Maximize() ;
-           max = true ;
-           }
-        }*/
     }
     
 void MyFrame::OnImageViewer(wxCommandEvent& event)
@@ -1279,7 +1264,7 @@ void MyFrame::update2version ( wxString ver )
        out.Close () ;
        delete uc ;
        do_run = "\"" + do_run + "\" /S /D=\"" ;
-       do_run += myapp()->homedir.c_str() ;
+       do_run += myapp()->homedir ;
        do_run += "\"" ;
 //       sd.Close () ;
        }
@@ -1291,7 +1276,7 @@ void MyFrame::update2version ( wxString ver )
        
     if ( do_run == "" ) return ;    
     
-    LS->setOption ( "LAST_UPDATE" , ver.c_str() ) ;
+    LS->setOption ( "LAST_UPDATE" , ver ) ;
     wxExecute ( do_run , wxEXEC_ASYNC ) ;
     SetFocus () ;
     showSplashScreen = false ;
@@ -1337,9 +1322,9 @@ void MyFrame::OnSashDrag(wxSashEvent& event)
 TStorage *MyFrame::getTempDB ( wxString filename )
     {
     int a ;
-    for ( a = 0 ; a < dbcache.size() && dbcache[a]->getDBname() != filename.c_str() ; a++ ) ;
+    for ( a = 0 ; a < dbcache.size() && dbcache[a]->getDBname() != filename ; a++ ) ;
     if ( a == dbcache.size() ) 
-        dbcache.push_back ( new TStorage ( TEMP_STORAGE , filename.c_str() ) ) ;
+        dbcache.push_back ( new TStorage ( TEMP_STORAGE , filename ) ) ;
     return dbcache[a] ;
     }
     

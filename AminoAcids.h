@@ -8,8 +8,6 @@
 class TVector ;
 class TURLtext ;
 
-typedef vector <char> tvc ;
-
 class TAminoAcids : public ChildBase
     {
     public :

@@ -2,7 +2,6 @@
 #define _UNDO_H_
 
 #include <wx/wx.h>
-#include <string>
 #include <vector>
 
 using namespace std ;
@@ -27,7 +26,7 @@ class TUndo
     
     private :
     vector <TVector*> mem ;
-    vector <wxString> msg ;
+    wxArrayString msg ;
     int cnt ;
     TVector *base ;
     } ;

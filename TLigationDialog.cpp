@@ -48,7 +48,7 @@ void TLigationDialog::init ()
         bool state = true ;
         if ( !vv[a]->hasStickyEnds() )
            state = false ; // blunt ends are not ligated by default...
-        l_sources->Append ( vv[a]->getName().c_str() ) ;
+        l_sources->Append ( vv[a]->getName() ) ;
         l_sources->Check ( a , state ) ;
         }
         
@@ -100,7 +100,7 @@ void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , w
     {
     int a , b ;
     int cnt = vi.GetCount() ;
-    string name ;
+    wxString name ;
     myass ( cnt-1 >= 0 && cnt-1 < orientation.size() , "TLigationDialog::curseTargets:1" ) ;
     myass ( cnt-1 >= 0 && cnt-1 < vi.GetCount() , "TLigationDialog::curseTargets:2" ) ;
     bool o = orientation[cnt-1] ;
@@ -183,10 +183,10 @@ bool TLigationDialog::doMatch ( int l , int r , bool invertSecond )
     return false ;
     }
     
-string TLigationDialog::getVIName ( wxArrayInt &vi )
+wxString TLigationDialog::getVIName ( wxArrayInt &vi )
     {
     int a ;
-    string ret ;
+    wxString ret ;
     for ( a = 0 ; a < vi.GetCount() ; a++ )
         {
         myass ( a >= 0 && a < vi.GetCount() , "TLigationDialog::getVIName:1" ) ;
@@ -195,14 +195,14 @@ string TLigationDialog::getVIName ( wxArrayInt &vi )
         wxString name = vv[vi[a]]->getName() ;
         if ( a < orientation.size() && orientation[a] ) name = "!" + name ;
         if ( ret != "" ) ret += "-" ;
-        ret += name.c_str() ;
+        ret += name ;
         }
     return ret ;
     }
     
-void TLigationDialog::addVTname ( string name , wxArrayInt &vi , bool circular )
+void TLigationDialog::addVTname ( wxString name , wxArrayInt &vi , bool circular )
     {
-    vt.Add ( name.c_str() ) ;
+    vt.Add ( name ) ;
     
     int a ;
     TVector v ;
@@ -212,7 +212,7 @@ void TLigationDialog::addVTname ( string name , wxArrayInt &vi , bool circular )
     v.setFromVector ( *vv[vi[0]] ) ;
     d = txt("lig_of") ;
     d += v.getName() + " (" + v.getDescription() + ")" ;
-    v.setName ( name.c_str() ) ;
+    v.setName ( name ) ;
     for ( a = 1 ; a < vi.GetCount() ; a++ )
         {
         bool o = false ;

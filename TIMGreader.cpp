@@ -17,20 +17,11 @@ int TIMGreader::getInt ( int adr )
    
 void TIMGreader::readFile ( wxString fn )
     {
-    char filename[10000] ;
-    char of[10000] , *c ;
-    strcpy ( filename , fn.c_str() ) ;
-    strcpy ( of , filename ) ;
-    for ( c = of ; *c ; c++ ) ;
-    for ( c-- ; *c != '.' ; c-- ) ;
-    strcpy ( c , ".BMP" ) ;
-      
-    ifstream file (filename, ios::in|ios::binary|ios::ate);
-    size = file.tellg();
-    file.seekg (0, ios::beg);
+    wxFile file ( fn ) ;
+    size = file.Length() ;
     buffer = new unsigned char [size+5];
-    file.read ((char*)buffer, size);
-    file.close();
+    file.Read ( (char*)buffer, size );
+    file.Close() ;
     }
     
 wxImage TIMGreader::makeImage()
@@ -124,7 +115,7 @@ void TIMGitem::draw ( wxDC &dc , int x1 , int y1 , int x2 , int y2 )
                                 p1.x , p1.y , 
                                 px , py ) ;
 
-        t = s.c_str() ; // Back to the roots ;-)
+        t = s ; // Back to the roots ;-)
         
         dc.DrawText ( t , px , py ) ;
         dc.SetFont ( oldfont ) ;

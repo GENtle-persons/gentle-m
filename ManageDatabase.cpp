@@ -246,7 +246,7 @@ void TManageDatabaseDialog::pm_init_lists ()
         {
         wxString db = defdb ;
         if ( isProject && myapp()->frame->project_db != "" )
-           db = myapp()->frame->project_db.c_str() ;
+           db = myapp()->frame->project_db ;
         else if ( !isProject )
            db = v->getDatabase() ;
         if ( db == "" ) db = defdb ;
@@ -1015,7 +1015,7 @@ bool TManageDatabaseDialog::doesNameExist ( wxString name , wxString dbname )
     else
         {
         s = sr[0][sr["dna_sequence"]] ;
-        sc = v->getSequence().c_str() ;
+        sc = v->getSequence() ;
         }
     if ( s == sc )
         {
@@ -1150,11 +1150,11 @@ void TManageDatabaseDialog::do_save_DNA ()
     storage->sqlAdd ( s1 , s2 , "dna_name" , x ) ;
     storage->sqlAdd ( s1 , s2 , "dna_description" , v->getDescription() ) ;
     storage->sqlAdd ( s1 , s2 , "dna_type" , v->type ) ;
-    storage->sqlAdd ( s1 , s2 , "dna_sequence" , v->getSequence().c_str() ) ;
-    storage->sqlAdd ( s1 , s2 , "dna_sticky_ul" , v->getStickyEnd(true,true).c_str() ) ;
-    storage->sqlAdd ( s1 , s2 , "dna_sticky_ll" , v->getStickyEnd(true,false).c_str() ) ;
-    storage->sqlAdd ( s1 , s2 , "dna_sticky_ur" , v->getStickyEnd(false,true).c_str() ) ;
-    storage->sqlAdd ( s1 , s2 , "dna_sticky_lr" , v->getStickyEnd(false,false).c_str() ) ;
+    storage->sqlAdd ( s1 , s2 , "dna_sequence" , v->getSequence() ) ;
+    storage->sqlAdd ( s1 , s2 , "dna_sticky_ul" , v->getStickyEnd(true,true) ) ;
+    storage->sqlAdd ( s1 , s2 , "dna_sticky_ll" , v->getStickyEnd(true,false) ) ;
+    storage->sqlAdd ( s1 , s2 , "dna_sticky_ur" , v->getStickyEnd(false,true) ) ;
+    storage->sqlAdd ( s1 , s2 , "dna_sticky_lr" , v->getStickyEnd(false,false) ) ;
     storage->sqlAdd ( s1 , s2 , "dna_circular" , v->isCircular() ) ;
     storage->sqlAdd ( s1 , s2 , "dna_restriction_enzymes" , enzymes ) ;
     storage->sqlAdd ( s1 , s2 , "dna_params" , fixQuotes ( v->getParams() ) ) ;
@@ -1240,7 +1240,7 @@ void TManageDatabaseDialog::pmOnRename ( wxCommandEvent &ev )
     wxString name = context_names[0] ;
     char t[1000] ;
     sprintf ( t , txt("t_rename_db_entry") , name.c_str() ) ;
-    wxTextEntryDialog ted ( this , t , txt("t_rename") , name.c_str() ) ;
+    wxTextEntryDialog ted ( this , t , txt("t_rename") , name ) ;
     if ( ted.ShowModal() != wxID_OK ) return ;
     wxString newname = fixQuotes ( ted.GetValue() ) ;
 

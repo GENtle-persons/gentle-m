@@ -253,12 +253,6 @@ void TVector::init ()
 void TVector::removeBlanksFromSequence ()
     {
     sequence.Replace ( " " , "" , true ) ;
-/*    string s ;
-    int a ;
-    for ( a = 0 ; a < sequence.length() ; a++ )
-        if ( sequence[a] != ' ' )
-           s += sequence[a] ;
-    sequence = s ;*/
     }
 
 void TVector::removeBlanksFromVector ()
@@ -487,19 +481,19 @@ char TVector::getNucleotide ( int pos , bool complement )
 wxString TVector::transformSequence ( bool inverse , bool reverse )
     {
     int a ;
-    string r = sequence.c_str() ;
+    wxString r = sequence ;
     if ( inverse )
         {
         for ( a = 0 ; a < r.length() ; a++ )
-           r[a] = getComplement ( r[a] ) ;
+           r.SetChar ( a , getComplement ( r.GetChar(a) ) ) ;
         }
     if ( reverse )
         {
-        string s = r ;
+        wxString s = r ;
         for ( a = 0 ; a < r.length() ; a++ )
-           r[a] = s[s.length()-a-1] ;
+           r.SetChar ( a , s.GetChar(s.length()-a-1) ) ;
         }
-    return r.c_str() ;
+    return r ;
     }
 
 void TVector::doRestriction ()
@@ -870,7 +864,7 @@ void TVector::addORFs ( int off )
         }
     for ( a = b ; a+dir*3 > 0 && a+dir*3 < sequence.length() ; a += dir * 3 )
         {
-        string codon ;
+        wxString codon ;
         codon += getNucleotide ( a + dir * 0 , complement ) ;
         codon += getNucleotide ( a + dir * 1 , complement ) ;
         codon += getNucleotide ( a + dir * 2 , complement ) ;
@@ -1093,14 +1087,9 @@ void TVector::addName ( wxString s )
     name += s ;
     }
     
-wxString TVector::getWxSequence ()
+wxString TVector::getSequence ()
     {
     return sequence ;
-    }
-    
-string TVector::getSequence ()
-    {
-    return sequence.c_str() ;
     }
     
 char TVector::getSequenceChar ( int x )
@@ -1108,22 +1097,12 @@ char TVector::getSequenceChar ( int x )
     return sequence.GetChar(x) ;
     }    
         
-void TVector::setSequence ( string ns )
-    {
-    sequence = ns.c_str() ;
-    }    
-    
 void TVector::setSequence ( wxString ns )
     {
-    sequence = ns.c_str() ;
+    sequence = ns ;
     }    
     
-void TVector::addToSequence ( string x )
-    {
-    sequence += x.c_str() ;
-    }    
-    
-void TVector::addToSequence ( char x )
+void TVector::addToSequence ( wxString x )
     {
     sequence += x ;
     }    
@@ -1261,11 +1240,11 @@ wxString TVectorItem::implodeParams ()
     int a , b ;
     for ( a = 0 ; a < pname.GetCount() ; a++ )
         {
-        wxString t = pvalue[a].c_str() ;
+        wxString t = pvalue[a] ;
         for ( b = 0 ; b < t.length() ; b++ )
            if ( t.GetChar(b) == '\n' )
               t.SetChar ( b , 2 ) ;
-        s += pname[a].c_str() ;
+        s += pname[a] ;
         s += "\n" + t + "\n" ;
         }
     return s ;
@@ -1326,23 +1305,24 @@ void TVectorItem::doRemove ( int f , int t , int l )
     if ( t < f ) rt += l ;
     if ( to < from ) rto += l ;
     int a ;
-    string s = "_" ;
-    myass ( false , "I" ) ;
-    while ( s.length() < l * 3 ) s += s ;
-    for ( a = from ; a <= rto ; a++ ) s[a] = 'X' ;
-    for ( a = f ; a <= rt ; a++ ) s[a] = ' ' ;
+    wxString s = "_" ;
+    myass ( false , "doRemove:1" ) ;
+    s.Pad ( l * 3 , '_' ) ;
+    for ( a = from ; a <= rto ; a++ ) s.SetChar ( a , 'X' ) ;
+    for ( a = f ; a <= rt ; a++ ) s.SetChar ( a , ' ' ) ;
     from = -1 ;
     to = -1 ;
     int ff = 0 ;
     for ( a = 1 ; a < s.length() ; a++ )
        {
-       if ( s[a] == ' ' ) ff++ ;
-       else if ( s[a] == 'X' )
+       if ( s.GetChar(a) == ' ' ) ff++ ;
+       else if ( s.GetChar(a) == 'X' )
           {
           if ( from == -1 ) from = a - ff ;
           to++ ;
           }
        }
+    myass ( false , "doRemove:1a" ) ;
     to += from ;
     l -= rt - f + 1 ;
     if ( l == 0 ) 
@@ -1350,11 +1330,11 @@ void TVectorItem::doRemove ( int f , int t , int l )
         from = -1 ;
         return ;
         }
-    myass ( false , "II" ) ;
+    myass ( false , "doRemove:2" ) ;
     while ( to > l ) to -= l ;
-    myass ( false , "III" ) ;
+    myass ( false , "doRemove:3" ) ;
     while ( from > l ) from -= l ;
-    myass ( false , "IV" ) ;
+    myass ( false , "doRemove:4" ) ;
     }
     
 int TVectorItem::getOffset ()

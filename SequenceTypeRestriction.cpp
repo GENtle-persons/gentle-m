@@ -196,8 +196,8 @@ void SeqRestriction::show ( wxDC& dc )
                }
             if ( b == eoe[layer] )
                {
-               if ( down ) dc.DrawText ( ven[layer].c_str() , llx , ly - ch2 ) ;
-               else dc.DrawText ( ven[layer].c_str() , llx , ly ) ;
+               if ( down ) dc.DrawText ( ven[layer] , llx , ly - ch2 ) ;
+               else dc.DrawText ( ven[layer] , llx , ly ) ;
                }
             lc = c ;
             if ( !can->getDrawAll() && pos.r[a].GetTop() > yb ) a = pos.p.GetCount() ;
@@ -209,7 +209,7 @@ void SeqRestriction::show ( wxDC& dc )
 void SeqRestriction::initFromTVector ( TVector *v )
     {
     vec = v ;
-    s = vec->getWxSequence() ;
+    s = vec->getSequence() ;
     down = false ;
     }
     
