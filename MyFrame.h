@@ -75,7 +75,7 @@ public:
     TStorage *LS ;
     bool dying , enhancedRefresh , showVectorTitle , showVectorLength , 
             loadLastProject , useMetafile , showSplashScreen , checkUpdate ,
-            useCoolCanvas ;
+            useCoolCanvas , useInternalHelp ;
     string lang_string ;
     string project_name , project_desc , project_db ;
     vector <string> lastCocktail ;
