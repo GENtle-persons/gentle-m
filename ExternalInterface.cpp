@@ -1,7 +1,7 @@
 #include "ExternalInterface.h"
 #include "SendHTTP.h"
 
-#define RETMAX 500
+#define RETMAX 25
 
 enum {
 	ID_HLB = 6000,
@@ -11,6 +11,8 @@ enum {
 	ID_T4,
 	ID_B1,
 	ID_B2,
+	ID_B_LAST,
+	ID_B_NEXT,
 	ID_C1,
 	ID_C2,
 	} ;	
@@ -52,6 +54,8 @@ END_EVENT_TABLE()
 BEGIN_EVENT_TABLE(EIpanel, wxPanel)
 	EVT_BUTTON(ID_B1, EIpanel::OnB1)
 	EVT_BUTTON(ID_B2, EIpanel::OnB2)
+	EVT_BUTTON(ID_B_LAST, EIpanel::OnBlast)
+	EVT_BUTTON(ID_B_NEXT, EIpanel::OnBnext)
 	EVT_TEXT_ENTER(ID_T1, EIpanel::OnB1)
 	EVT_TEXT_ENTER(ID_T2, EIpanel::OnB1)
 	EVT_TEXT_ENTER(ID_T3, EIpanel::OnB1)
@@ -190,6 +194,11 @@ void EIpanel::init_ncbi()
 	c1->Append ( "Nucleotide" ) ;
 	c1->Append ( "Protein" ) ;
 	c1->Append ( "PubMed" ) ;
+
+	b_last = new wxButton ( up , ID_B_LAST , txt("b_last") , wxDefaultPosition ) ;
+	b_next = new wxButton ( up , ID_B_NEXT , txt("b_next") , wxDefaultPosition ) ;
+	b_last->Disable () ;
+	b_next->Disable () ;
 	
 	
 /*
@@ -203,6 +212,8 @@ void EIpanel::init_ncbi()
     h0->Add ( t1 , 1 , wxEXPAND , 5 ) ;
     h0->Add ( b1 , 0 , wxEXPAND , 5 ) ;
     h0->Add ( b2 , 0 , wxEXPAND , 5 ) ;
+    h0->Add ( b_last , 0 , wxEXPAND , 5 ) ;
+    h0->Add ( b_next , 0 , wxEXPAND , 5 ) ;
 
 	// PubMed-specific
 	wxString off = "   " ;
@@ -224,12 +235,15 @@ void EIpanel::init_ncbi()
 	h1->Add ( new wxStaticText ( up , -1 , off + txt("sort") ) , 0 , wxEXPAND , 5 ) ;
     h1->Add ( c2 , 1 , wxEXPAND , 5 ) ;
 	
+    st_msg = new wxStaticText ( up , -1 , "" ) ;
     
     v1->Add ( h0 , 0 , wxEXPAND , 0 ) ;
     v1->Add ( h1 , 0 , wxEXPAND|wxTOP|wxBOTTOM , 3 ) ;
+    v1->Add ( st_msg , 0 , wxEXPAND|wxTOP|wxBOTTOM , 3 ) ;
     up->SetSizer ( v1 ) ;
     v1->Fit ( up ) ;
     v1->Show ( h1 , false ) ; // Hide PubMed specifics
+    v1->Show ( st_msg , false ) ; // Hide message
 
     c1->SetSelection ( 0 ) ;
     c2->SetSelection ( 2 ) ;
@@ -259,8 +273,10 @@ void EIpanel::process_ncbi()
 		}    
 	search.Replace ( " " , "+" ) ;
 	
+	// Invoking ESearch
 	wxString query = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?" ;
  	query += "db=" + database ;
+	query += "&retstart=" + wxString::Format ( "%d" , res_start ) ;
 	query += "&retmax=" + wxString::Format ( "%d" , RETMAX ) ;
     query += "&tool=GENtle" ;
     query += "&retmode=xml" ;
@@ -279,14 +295,21 @@ void EIpanel::process_ncbi()
     doc.Parse ( res.c_str() ) ;
     if ( res == "" || doc.Error() )
     	{
-	    hlb->Set ( 0 , txt("t_error") ) ;
+	    showMessage ( txt("t_error") ) ;
 	    return ;
     	}    
 	
+	// Extracting items from XML
+	res_count = 0 ;
 	wxArrayString ids ;
 	TiXmlNode *x = doc.FirstChild ( "eSearchResult" ) ;
 	if ( x ) 
 		{
+		TiXmlNode *y ;
+		y = x->FirstChild ( "Count" ) ;
+		if ( y ) wxString(y->FirstChild()->Value()).ToLong ( &res_count ) ;
+		y = x->FirstChild ( "ResStart" ) ;
+		if ( y ) wxString(y->FirstChild()->Value()).ToLong ( &res_start ) ;
 		x = x->FirstChild ( "IdList" ) ;
 		if ( x )
 			{
@@ -294,10 +317,11 @@ void EIpanel::process_ncbi()
    				ids.Add ( x->FirstChild()->Value() ) ;
 			}    
 		}    
+//	wxMessageBox ( wxString::Format ( "%d of %d" , res_count , res_start ) ) ;
 	
 	if ( ids.IsEmpty() )
 		{
- 		hlb->Set ( 0 , "The search returned no results." ) ;
+ 		showMessage ( "The search returned no results." ) ;
  		return ;
 		}    
 	
@@ -308,7 +332,8 @@ void EIpanel::process_ncbi()
   		if ( !res.IsEmpty() ) res += "," ;
 		res += ids[a] ;
 		}		
-
+		
+	// Invoking ESummary
 	query = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?" ;
  	query += "db=" + database ;
  	query += "&tool=GENtle&" ;
@@ -323,15 +348,16 @@ void EIpanel::process_ncbi()
 	x = doc.FirstChild ( "eSummaryResult" ) ;
     if ( res == "" || doc.Error() || !x )
     	{
-	    hlb->Set ( 0 , txt("t_error") ) ;
+	    showMessage ( txt("t_error") ) ;
 	    return ;
     	}    
 	
+	// Parsing ESummary XML
 	a = 0 ;
 	for ( x = x->FirstChild ( "DocSum" ) ; x ; x = x->NextSibling ( "DocSum" ) )
 		{
 		TiXmlNode *y = x ;
-		wxString title , authors , source , pubdate , id ;
+		wxString title , authors , source , pubdate , id , caption ;
 		id = x->FirstChild ( "Id" ) -> FirstChild() -> Value() ;
 		for ( y = x->FirstChild ( "Item" ) ; y ; y = y->NextSibling ( "Item" ) )
 			{
@@ -340,6 +366,7 @@ void EIpanel::process_ncbi()
    			if ( at == "TITLE" ) title = y->FirstChild()->Value() ;
    			else if ( at == "PUBDATE" ) pubdate = y->FirstChild()->Value() ;
    			else if ( at == "SOURCE" ) source = y->FirstChild()->Value() ;
+   			else if ( at == "CAPTION" ) caption = y->FirstChild()->Value() ;
    			else if ( at == "AUTHORLIST" ) 
    				{
 			    TiXmlNode *z ;
@@ -352,11 +379,22 @@ void EIpanel::process_ncbi()
    				}    
 			}    
 		wxString s ;
-		if ( database == "nucleotide" ) s = title ;
-		else if ( database == "protein" ) s = title ;
+		if ( database == "nucleotide" || database == "protein" )
+  			{
+ 			s = "<table width='100%'><tr>" ;
+ 			s += "<td align=right valign=center width='50px'>" ;
+ 			s += wxString::Format ( "%d" , a + res_start + 1 ) ;
+ 			s += "</td>" ;
+ 			s += "<td width='10%'>" + caption + "</td>" ;
+ 			s += "<td>" + title + "</td>" ;
+ 			s += "</tr></table>" ;
+          	}
 		else if ( database == "pubmed" )
 			{
  			s = "<table width='100%'><tr>" ;
+ 			s += "<td rowspan=2 align=right valign=top width='50px'>" ;
+ 			s += wxString::Format ( "%d" , a + res_start + 1 ) ;
+ 			s += "</td>" ;
  			s += "<td colspan=3><b>" + title + "</b></td>" ;
  			s += "</tr><tr>" ;
  			s += "<td valign=top width='10%'>" + pubdate + "</td>" ;
@@ -366,6 +404,12 @@ void EIpanel::process_ncbi()
 			}    
 		hlb->Set ( a++ , s , id ) ;
 		}    
+		
+	int res_to = res_start + RETMAX ;
+	if ( res_to > res_count ) res_to = res_count ;
+	showMessage ( wxString::Format ( txt("t_ext_show_res") , res_start + 1 , res_to , res_count ) ) ;
+	b_next->Enable ( res_start + RETMAX <= res_count ) ;
+	b_last->Enable ( res_start > 0 ) ;
 	t1->SetFocus() ;
 	}    
 
@@ -450,12 +494,10 @@ void EIpanel::OnC1 ( wxCommandEvent& event )
      
 void EIpanel::OnB1 ( wxCommandEvent& event )
 	{
-	wxBeginBusyCursor () ;
-	hlb->Clear () ;
-	if ( mode == EI_NCBI ) process_ncbi() ;
-//	hlb->Sort () ;
-	hlb->Update () ;
-	wxEndBusyCursor () ;
+	res_start = 0 ;
+	b_next->Disable () ;
+	b_last->Disable () ;
+	process () ;
  	}    
 
 void EIpanel::OnB2 ( wxCommandEvent& event )
@@ -463,5 +505,46 @@ void EIpanel::OnB2 ( wxCommandEvent& event )
 	wxBeginBusyCursor () ;
 	if ( mode == EI_NCBI ) execute_ncbi() ;
 	wxEndBusyCursor () ;
+	}
+
+void EIpanel::OnBlast ( wxCommandEvent& event )
+	{
+	if ( res_start == 0 ) return ;
+	res_start -= RETMAX ;
+	process () ;
+	}
+     
+void EIpanel::OnBnext ( wxCommandEvent& event )
+	{
+	if ( res_start + RETMAX > res_count ) return ;
+	res_start += RETMAX ;
+	process () ;
+	}
+     
+void EIpanel::process ()
+	{
+	wxBeginBusyCursor () ;
+	hlb->Clear () ;
+	if ( mode == EI_NCBI ) process_ncbi() ;
+	hlb->Update () ;
+	wxEndBusyCursor () ;
+	}    
+	
+wxString EIpanel::num2html ( int num , int digits )
+	{
+	wxString s = wxString::Format ( "%d" , num ) ;
+	while ( s.length() < digits ) s = " " + s ;
+	s.Replace ( " " , "&nbsp;" ) ;
+	return s ;
+	}    
+	
+void EIpanel::showMessage ( wxString msg )
+	{
+	if ( !st_msg->IsShown() )
+		{
+		v1->Show ( st_msg , true ) ;
+		v0->Layout () ;
+		}		
+	st_msg->SetLabel ( msg ) ;
 	}
      

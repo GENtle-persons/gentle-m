@@ -28,13 +28,19 @@ class EIpanel : public wxPanel
 	public :
 	EIpanel ( wxWindow *parent , int _mode ) ;
 	
-	virtual void init_ncbi() ;
+	private :
+	virtual void process () ;
+	virtual wxString num2html ( int num , int digits ) ;
+	void showMessage ( wxString msg ) ;
 	
+	virtual void init_ncbi() ;
 	virtual void process_ncbi() ;
 	virtual void execute_ncbi() ;
 
     virtual void OnB1 ( wxCommandEvent& WXUNUSED(event) ) ;
     virtual void OnB2 ( wxCommandEvent& WXUNUSED(event) ) ;
+    virtual void OnBlast ( wxCommandEvent& WXUNUSED(event) ) ;
+    virtual void OnBnext ( wxCommandEvent& WXUNUSED(event) ) ;
     virtual void OnC1 ( wxCommandEvent& WXUNUSED(event) ) ;
     virtual void OnLboxDClick ( wxCommandEvent& WXUNUSED(event) ) ;
 	
@@ -43,8 +49,10 @@ class EIpanel : public wxPanel
 	EILB *hlb ;
 	wxBoxSizer *v0 , *v1 , *h0 , *h1 ;
 	wxTextCtrl *t1 , *t2 , *t3 , *t4 ;
-	wxButton *b1 , *b2 ;
+	wxStaticText *st_msg ;
+	wxButton *b1 , *b2 , *b_last , *b_next ;
 	wxChoice *c1 , *c2 ;
+	long res_count , res_start ;
 
     DECLARE_EVENT_TABLE()
 	} ;    
