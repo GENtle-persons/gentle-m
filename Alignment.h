@@ -110,6 +110,7 @@ class TAlignment : public ChildBase
     vector <wxColour> colDNA , colAA , *colCur ;
     bool cons , invs ;
     bool showIdentity ;
+    string name , database ;
         
     DECLARE_EVENT_TABLE()
     } ;

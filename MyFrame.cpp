@@ -777,7 +777,7 @@ void MyFrame::InitToolBar(wxToolBar* toolBar)
 {
 }
 
-void MyFrame::runAlignment ( vector <string> &vs , vector <ChildBase*> &vc , TVector *nv )
+TAlignment *MyFrame::runAlignment ( vector <string> &vs , vector <ChildBase*> &vc , TVector *nv )
     {
 //    Thaw () ;
     TAlignment *subframe = new TAlignment ( getCommonParent() , "Alignment" ) ;
@@ -811,6 +811,7 @@ void MyFrame::runAlignment ( vector <string> &vs , vector <ChildBase*> &vc , TVe
     
     mainTree->addChild ( subframe , TYPE_ALIGNMENT ) ;
     mainTree->Refresh () ;
+    return subframe ;
     }
 
 void MyFrame::OnAlignment(wxCommandEvent& event)
