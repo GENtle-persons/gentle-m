@@ -34,7 +34,10 @@ void TVectorEditor::initPanEnzym ()
     b_atg = new wxButton ( panEnzym , TVE_EN_ADD_TO_GR , txt("b_add_to_group") ) ;
     b_asng = new wxButton ( panEnzym , TVE_EN_ADD_TO_NEW_GR , txt("b_add_as_new_group") ) ;            
     b_dg = new wxButton ( panEnzym , TVE_EN_DEL_GR , txt("b_del_group") ) ;
-    if ( !v ) b1 = new wxButton ( panEnzym , TVE_IMPORT , txt("import_clone_enzymes") ) ;
+    
+// The button to import CLONE enzymes should stay deactivated permanently
+//    if ( !v ) b1 = new wxButton ( panEnzym , TVE_IMPORT , txt("import_clone_enzymes") ) ;
+
     b2 = new wxButton ( panEnzym , TVE_NEW_ENZYME , txt("add_new_enzyme") ) ;
     b3 = new wxButton ( panEnzym , TVE_EN_ADD_EN , txt("<-- add") ) ;
     b4 = new wxButton ( panEnzym , TVE_EN_DEL_EN , txt("del -->") ) ;
