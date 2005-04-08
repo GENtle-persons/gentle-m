@@ -2,6 +2,7 @@
 Bugs :
 * Optimierung Überhang-Primer?
 * Bericht drucken : lange Zeilen in Vektor-Beschreibung umbrechen
+Absturz bei Doppelklick auf Web-Modul:Nukleotide Eintrag
 
 Feature Requests :
 Manual : Installation
