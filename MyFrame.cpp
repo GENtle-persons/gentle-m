@@ -874,6 +874,7 @@ MyChild* MyFrame::newFromVector ( TVector *nv , int type )
     myass ( subframe , "MyFrame::newFromVector" ) ;
     setChild ( subframe ) ;
 
+
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon("chrt_icn"));

@@ -737,8 +737,8 @@ void MyChild::initPanels ()
     mylog ( "MyChild" , "initialized AA" ) ;
     seqAA->showNumbers = false ;
 
-
     treeBox->initme () ;
+
     mylog ( "MyChild" , "initialized treebox" ) ;
 
 //#ifdef __WXMSW__ // LINUX

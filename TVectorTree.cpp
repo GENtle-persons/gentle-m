@@ -77,6 +77,7 @@ void TVectorTree::initme ()
         sprintf ( u , "itemtype%d" , a ) ;
         irs.push_back ( AppendItem ( treeroot , txt(u) ) ) ;
         }
+    
     for ( a = 0 ; a < p->vec->items.size() ; a++ )
         {
         if ( p->vec->items[a].name.IsEmpty() )
@@ -89,19 +90,19 @@ void TVectorTree::initme ()
         SetItemBold ( y , p->vec->items[a].isVisible() ) ;
         
         wxString sFrom , sTo , sLength , sType , sOritentation , sDescription ;
-        sprintf ( u , txt("s_from") , p->vec->items[a].from ) ;
-        sFrom = u ;
-        sprintf ( u , txt("s_to") , p->vec->items[a].to ) ;
-        sTo = u ;
-        sprintf ( u , txt("s_length") , abs ( p->vec->items[a].to - p->vec->items[a].from ) ) ;
-        sLength = u ;
+//        sprintf ( u , txt("s_from") , p->vec->items[a].from ) ;
+        sFrom = wxString::Format ( txt("s_from") , p->vec->items[a].from ) ;
+//        sprintf ( u , txt("s_to") , p->vec->items[a].to ) ;
+        sTo = wxString::Format ( txt("s_to") , p->vec->items[a].to ) ;
+//        sprintf ( u , txt("s_length") , abs ( p->vec->items[a].to - p->vec->items[a].from ) ) ;
+        sLength = wxString::Format ( txt("s_length") , abs ( p->vec->items[a].to - p->vec->items[a].from ) ) ;
         sprintf ( u , "itemtype%d" , p->vec->items[a].getType() ) ;
-        sprintf ( u , txt("s_type") , txt(u) ) ;
-        sType = u ;
+//        sprintf ( u , txt("s_type") , txt(u) ) ;
+        sType = wxString::Format ( txt("s_type") , txt(u) ) ;
         if ( p->vec->items[a].getDirection() == 1 ) sOritentation = txt("cw") ;
         else sOritentation = txt("ccw") ;
-        sprintf ( u , txt("s_desc") , p->vec->items[a].desc.c_str() ) ;
-        sDescription = u ;
+//        sprintf ( u , txt("s_desc") , p->vec->items[a].desc.c_str() ) ;
+        sDescription = wxString::Format ( txt("s_desc") , p->vec->items[a].desc.c_str() ) ;
         
         p->vec->items[a].setTreeID ( y ) ;
         

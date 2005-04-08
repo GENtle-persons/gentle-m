@@ -254,8 +254,8 @@ void EIpanel::execute_ncbi_load ( wxString database )
 		
 	database = database.Lower() ;
 	
-	if ( database == "nucleotide" || database == "protein" )
-	{
+	if ( database == "nucleotide" || database == "protein" ) // Requesting sequence
+		{
 	    wxString query = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?" ;
 	    query += "db=" + database ;
 	    query += "&tool=GENtle" ;
@@ -267,33 +267,33 @@ void EIpanel::execute_ncbi_load ( wxString database )
 	    myExternal ex ;
 	    wxString res = ex.getText ( query ) ;
 	    
-//    wxTheClipboard->Open(); wxTheClipboard->SetData( new wxTextDataObject(res) );    wxTheClipboard->Close();    	
+	    //    wxTheClipboard->Open(); wxTheClipboard->SetData( new wxTextDataObject(res) );    wxTheClipboard->Close();    	
 
 	    if ( database == "nucleotide" )
-	    {
-		if ( res.Left ( 5 ) == "LOCUS" )
-		{
-		    TGenBank gb ;
-		    gb.paste ( res ) ;
-//	wxMessageBox ( "GB" , wxString::Format ( "%d" , gb.success ) ) ;
-		    if ( gb.success ) myapp()->frame->newGB ( gb ) ;
-		}
-		else
-		{
-		    TXMLfile xml ;
-		    xml.parse ( res ) ;
-//	wxMessageBox ( res , wxString::Format ( "%d" , xml.success() ) ) ;
-		    if ( xml.success() ) myapp()->frame->newXML ( xml ) ;
-		}
-	    }
+    	    {
+    		if ( res.Left ( 5 ) == "LOCUS" )
+    			{
+    		    TGenBank gb ;
+    		    gb.paste ( res ) ;
+    		    //	wxMessageBox ( "GB" , wxString::Format ( "%d" , gb.success ) ) ;
+    		    if ( gb.success ) myapp()->frame->newGB ( gb ) ;
+    		    }
+    		else
+    			{
+    		    TXMLfile xml ;
+    		    xml.parse ( res ) ;
+    		    //	wxMessageBox ( res , wxString::Format ( "%d" , xml.success() ) ) ;
+    		    if ( xml.success() ) myapp()->frame->newXML ( xml ) ;
+    		    }
+    	    }
 	    else
-	    {
-		TGenBank gb ;
-		gb.paste ( res ) ;
-		if ( gb.success ) myapp()->frame->newGB ( gb , "" ) ;
-	    }
+    	    {
+    		TGenBank gb ;
+    		gb.paste ( res ) ;
+    		if ( gb.success ) myapp()->frame->newGB ( gb , "" ) ;
+    	    }
         }    
-	else if ( database == "pubmed" )
+	else if ( database == "pubmed" ) // Requesting paper
     	{
 	    wxString query = "http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?" ;
 	    query += "db=" + database ;

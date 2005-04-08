@@ -378,9 +378,9 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
         s = p->vec->rc[rs].e->name ;
         wxLogStatus(txt("rsite_status_bar") , s.c_str() ) ;
-        char ttt[1000] ;
-        sprintf ( ttt , txt("tt_rs") , s.c_str() , p->vec->countCuts ( s ) ) ;
-        SetMyToolTip ( ttt , TT_RS ) ;
+//        char ttt[1000] ;
+//        sprintf ( ttt , txt("tt_rs") , s.c_str() , p->vec->countCuts ( s ) ) ;
+        SetMyToolTip ( wxString::Format ( txt("tt_rs") , s.c_str() , p->vec->countCuts ( s ) ) , TT_RS ) ;
         if ( event.LeftDown() )
            {
 #ifdef __WXMSW__
@@ -404,7 +404,14 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
         char ttt[1000] ;
         sprintf ( ttt , "itemtype%d" , p->vec->items[vo].type ) ;
         wxString tt_type = txt(ttt) ;
-        sprintf ( ttt , txt("tt_item") , tt_type.c_str() ,
+        wxString ttt2 = wxString::Format ( txt("tt_item") , tt_type.c_str() ,
+                                        	s.c_str() , 
+                                        	p->vec->items[vo].desc.c_str() ) ;
+       	while ( ttt2.Replace ( "\n" , "," ) ) ;
+       	while ( ttt2.Replace ( "\r" , " " ) ) ;
+       	SetMyToolTip ( ttt2 , TT_ITEM ) ;
+        
+/*        sprintf ( ttt , txt("tt_item") , tt_type.c_str() ,
                                         s.c_str() , 
                                         p->vec->items[vo].desc.c_str() ) ;
         for ( a = 0 ; ttt[a] ; a++ ) // Fixing multiline tooltip into single line
@@ -412,7 +419,8 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
             if ( ttt[a] == '\n' ) ttt[a] = ',' ;
             if ( ttt[a] == '\r' ) ttt[a] = ' ' ;
             }    
-        SetMyToolTip ( ttt , TT_ITEM ) ;
+        SetMyToolTip ( ttt , TT_ITEM ) ;*/
+                
         if ( event.LeftDown() )
            {
            if ( p->def == "dna" )
