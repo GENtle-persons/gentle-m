@@ -1003,9 +1003,7 @@ void MyChild::OnExtractAA(wxCommandEvent& event)
     {
     wxString seq = doExtractAA () ;
     if ( seq.IsEmpty() ) return ;
-    char tt[1000] ;
-    sprintf ( tt , txt("t_aa_from_vec") , vec->getName().c_str() ) ;
-    myapp()->frame->newAminoAcids ( seq , tt ) ;
+    myapp()->frame->newAminoAcids ( seq , wxString::Format ( txt("t_aa_from_vec") , vec->getName().c_str() ) ) ;
     }
         
 void MyChild::runRestriction ( wxString s )
