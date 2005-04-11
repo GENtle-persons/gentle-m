@@ -22,7 +22,7 @@ class TPrimerDesign : public ChildBase
     
     void initme () ;
     virtual wxString getName () ;
-    virtual void AddPrimer ( wxString s ) ;
+    virtual void AddPrimer ( wxString s , wxString pname = "" ) ;
     virtual void showSequence () ;
     virtual void updateResultSequence () ;
     virtual void updatePrimersFromSequence () ;

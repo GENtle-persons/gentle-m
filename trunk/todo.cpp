@@ -2,17 +2,10 @@
 Bugs :
 * Optimierung Überhang-Primer?
 * Bericht drucken : lange Zeilen in Vektor-Beschreibung umbrechen
-Absturz bei Doppelklick auf Web-Modul:Nukleotide Eintrag
+* Primer an Enden von linearen Stücken matchen nicht
 
 Feature Requests :
-Manual : Installation
-PCR : Name/Richtung von geöffneten Primern anzeigen
-Alignment : Linke Box initial leer
-Speichern gleichzeitig in zwei Datenbanken (local?) speichern
-PCR-Sequenzen 5'/3' Richtung benennen
 Primer-Bearbeiten-Dialog : Spalten klicken => sortieren
-Primer an Enden von linearen Stücken matchen nicht
-Primer-Statistik-Daten im DNA-Modul anzeigen lassen
 
 
 Homology Plot
