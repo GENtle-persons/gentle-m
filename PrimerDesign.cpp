@@ -178,12 +178,13 @@ void TPrimerDesign::OnImportPrimer ( wxCommandEvent &ev )
     for ( a = 0 ; a < cbl.GetCount() ; a++ )
        {
        if ( scd.IsChecked ( a ) )
-          AddPrimer ( cbl[a]->vec->getSequence() ) ;
+          AddPrimer ( cbl[a]->vec->getSequence() , cbl[a]->vec->getName() ) ;
        }
+    lc->SetColumnWidth ( 5 , wxLIST_AUTOSIZE_USEHEADER ) ;
     guessOptNuc () ;
     }
-    
-void TPrimerDesign::AddPrimer ( wxString s )
+
+void TPrimerDesign::AddPrimer ( wxString s , wxString pname )
     {
     TPrimer best ;
     int a , bestVal = 0 ;
@@ -207,7 +208,8 @@ void TPrimerDesign::AddPrimer ( wxString s )
            }
 
         }
-        
+
+    best.setName ( pname ) ;
     primer.push_back ( best ) ;
     showSequence () ;
     updatePrimersFromSequence () ;
@@ -290,43 +292,35 @@ void TPrimerDesign::updatePrimerStats ()
     {
     char t[1000] ;
     int a ;
-//    lb->Clear () ;
     lc->ClearAll () ;
     lc->InsertColumn ( 0 , txt("#") ) ;
     lc->InsertColumn ( 1 , txt("h_direction") ) ;
     lc->InsertColumn ( 2 , txt("length") ) ;
     lc->InsertColumn ( 3 , txt("h_tm") ) ;
     lc->InsertColumn ( 4 , txt("%GC") ) ;
+    lc->InsertColumn ( 5 , txt("name") ) ;
+    lc->InsertColumn ( 6 , txt("h_position") ) ;
     for ( a = 0 ; a < primer.size() ; a++ )
         {
         primer[a].annealingVector = vec ;
         primer[a].makeStats () ;
         primer[a].evaluate () ;
-        char u[5] ;
-        if ( primer[a].upper ) strcpy ( u , "-->" ) ;
-        else strcpy ( u , "<--" ) ;
+		wxString u ;
+        if ( primer[a].upper ) u = "5'->3'" ; //strcpy ( u , "-->" ) ;
+        else u = "3'->5'" ; //strcpy ( u , "<--" ) ;
         int len = primer[a].to - primer[a].from + 1 ;
         
-        sprintf ( t , "%d" , a+1 ) ;
-        long l = lc->InsertItem ( a , t ) ;
+        long l = lc->InsertItem ( a , wxString::Format ( "%d" , a+1 ) ) ;
         
         lc->SetItem ( l , 1 , u ) ;
-        
-        sprintf ( t , "%d" , len ) ;
-        lc->SetItem ( l , 2 , t ) ;
-        
-        sprintf ( t , "%2.1f" , primer[a].getTm() ) ;
-        lc->SetItem ( l , 3 , t ) ;
-        
-        sprintf ( t , "%2.1f" , primer[a].getGCcontents() ) ;
-        lc->SetItem ( l , 4 , t ) ;
-        
+        lc->SetItem ( l , 2 , wxString::Format ( "%d" , len ) ) ;
+        lc->SetItem ( l , 3 , wxString::Format ( "%2.1f" , primer[a].getTm() ) ) ;
+        lc->SetItem ( l , 4 , wxString::Format ( "%2.1f" , primer[a].getGCcontents() ) ) ;
+        lc->SetItem ( l , 5 , primer[a].getName() ) ;
+        lc->SetItem ( l , 6 , wxString::Format ( "%d" , primer[a].from ) ) ;
         }
-    lc->SetColumnWidth ( 0 , wxLIST_AUTOSIZE_USEHEADER ) ;
-    lc->SetColumnWidth ( 1 , wxLIST_AUTOSIZE_USEHEADER ) ;
-    lc->SetColumnWidth ( 2 , wxLIST_AUTOSIZE_USEHEADER ) ;
-    lc->SetColumnWidth ( 3 , wxLIST_AUTOSIZE_USEHEADER ) ;
-    lc->SetColumnWidth ( 4 , wxLIST_AUTOSIZE_USEHEADER ) ;
+    for ( a = 0 ; a <= 6 ; a++ )
+    	lc->SetColumnWidth ( a , wxLIST_AUTOSIZE_USEHEADER ) ;
     stat->SetValue ( "" ) ;
     lastPrimerActivated = -1 ;
     }
@@ -507,7 +501,7 @@ void TPrimerDesign::initme ()
     spinTextEnabeled = true ;
     sc->SetFocus() ;
     for ( int a = 0 ; a < lc->GetColumnCount() ; a++ )
-	lc->SetColumnWidth ( a , wxLIST_AUTOSIZE_USEHEADER ) ;
+	    lc->SetColumnWidth ( a , wxLIST_AUTOSIZE_USEHEADER ) ;
     }
     
 void TPrimerDesign::OnEditPrimer ( wxCommandEvent &ev )
@@ -571,7 +565,7 @@ void TPrimerDesign::showSequence ()
     p1->initFromTVector ( vec ) ;
     p1->takesMouseActions = true ;
     p1->myname = "PRIMER_UP" ;
-    p1->alternateName = "5'P" ;
+    p1->alternateName = txt("t_primer_up") ;
     for ( a = 0 ; a < primer.size() ; a++ )
         if ( primer[a].upper )
            p1->addPrimer ( &primer[a] ) ;
@@ -596,7 +590,7 @@ void TPrimerDesign::showSequence ()
     p2->initFromTVector ( vc ) ;
     p2->takesMouseActions = true ;
     p2->myname = "PRIMER_DOWN" ;
-    p2->alternateName = "3'P" ;
+    p2->alternateName = txt("t_primer_down") ;
     for ( a = 0 ; a < primer.size() ; a++ )
         if ( !primer[a].upper )
            p2->addPrimer ( &primer[a] ) ;

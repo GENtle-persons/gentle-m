@@ -29,18 +29,22 @@ class TPrimer
     {
     public :
     TPrimer ( int _from = 0 , int _to = 0 , bool _upper = true ) ; ///< Constructor
-    void getSequenceFromVector ( TVector *v , bool from3 = false ) ; ///< Reads primer sequence from vectors
-    void makeStats () ; ///< Generates key values about the primer
-    void evaluate ( float tm_opt = 0 ) ; ///< Evaluates primer
-    wxString report () ; ///< Generates a human-readable report
-    wxString get53sequence () ; ///< Returns the 5'->3' primer sequence
-    wxString get35sequence () ; ///< Returns the 3'->5' primer sequence
-    int checkFit ( TVector *v , bool justCount = false ) ; ///< Tries to fit the primer to a sequence
-    bool overlap ( TPrimer &op ) ; ///< Does this primer overlap with another?
+    virtual void getSequenceFromVector ( TVector *v , bool from3 = false ) ; ///< Reads primer sequence from vectors
+    virtual void makeStats () ; ///< Generates key values about the primer
+    virtual void evaluate ( float tm_opt = 0 ) ; ///< Evaluates primer
+    virtual wxString report () ; ///< Generates a human-readable report
+    virtual wxString get53sequence () ; ///< Returns the 5'->3' primer sequence
+    virtual wxString get35sequence () ; ///< Returns the 3'->5' primer sequence
+    virtual int checkFit ( TVector *v , bool justCount = false ) ; ///< Tries to fit the primer to a sequence
+    virtual bool overlap ( TPrimer &op ) ; ///< Does this primer overlap with another?
 
-    float getTm ( int type = TM_STANDARD ) ; ///< Get melting temperature
-    float getEvaluation () ; ///< Get quality evaluation (for annealing)
-    float getGCcontents () ; ///< Get GC contents
+    virtual float getTm ( int type = TM_STANDARD ) ; ///< Get melting temperature
+    virtual float getEvaluation () ; ///< Get quality evaluation (for annealing)
+    virtual float getGCcontents () ; ///< Get GC contents
+    
+    virtual wxString getName () ;
+    virtual void setName ( wxString nn ) ;
+    
     
     // Variables
     /// The beginning of the primer in a sequence
@@ -67,6 +71,7 @@ class TPrimer
     wxString getAnnealingSequence() ; ///< Returns annealing sequence
     
     // Variables
+    wxString name ;
     int contents[256] ;
     float pgc ; ///< GC%
     float evaluation ; ///< The last quality evaluation
