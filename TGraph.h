@@ -85,10 +85,14 @@ class TGraphDisplay : public wxPanel
  	~TGraphDisplay () ;
  	void init () ;
  	
- 	stringField readCSVfile ( wxString filename ) ;
+ 	stringField readTextfile ( wxString filename ) ;
+ 	unsigned char *readRawData ( wxString filename , long &l ) ;
  	void setupPhotometerGraph ( const stringField &sf ) ;
  	void setupFluorimeterGraph ( const stringField &sf ) ;
+ 	void setupXYpair ( const stringField &sf ) ;
  	void setupIPCfile ( wxString filename ) ;
+ 	void setupRawFPLC ( wxString filenamebase ) ;
+ 	wxString tryall ( wxString filename ) ;
  	void SetupDummy () ;
  	bool SetupFromFile ( wxString filename ) ;
  	void SetZoom ( int _zx , int _zy ) ;

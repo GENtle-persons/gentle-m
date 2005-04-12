@@ -57,87 +57,48 @@ void TGraphDisplay::SetZoom ( int _zx , int _zy )
 	UpdateDisplay () ;
 	}    
 
-//#define CSV1
-
-stringField TGraphDisplay::readCSVfile ( wxString filename )
+stringField TGraphDisplay::readTextfile ( wxString filename )
 	{
-#ifdef CSV1
-	mylog ( "TGraphDisplay::readCSVfile" , "0" ) ;
- 	stringField sf ;
- 	wxFile file ( filename , wxFile::read ) ;
- 	if ( !file.IsOpened() ) return sf ; // Error
- 	mylog ( "TGraphDisplay::readCSVfile" , "1" ) ;
- 	long l = file.Length() ;
- 	char *t = new char[l+5] ;
- 	mylog ( "TGraphDisplay::readCSVfile" , "2" ) ;
- 	file.Read ( t , l ) ;
- 	t[l] = 0 ;
- 	file.Close () ;
- 	mylog ( "TGraphDisplay::readCSVfile" , "3" ) ;
- 	
- 	wxArrayString lines ;
- 	char *c = t ;
- 	int a ;
- 	for ( a = 0 ; a <= l ; a++ )
- 		{
-   		if ( t[a] == '\r' ) {}
-   		else if ( !t[a] || t[a] == '\n' )
-   			{
-		    lines.Add ( c ) ;
-		    c = t + a + 1 ;
-   			}    
- 		}    
-	
-	mylog ( "TGraphDisplay::readCSVfile" , "4" ) ;
-	
-	for ( a = 0 ; a < lines.GetCount() ; a++ )
-		{
-  		wxArrayString as ;
-  		TVS as2 ;
-  		explode ( "," , lines[a] , as ) ;
-  		for ( int b = 0 ; b < as.GetCount() ; b++ )
-    		as2.push_back ( as[b].c_str() ) ;
-  		sf.push_back ( as2 ) ;
-		}    
- 	
- 	mylog ( "TGraphDisplay::readCSVfile" , "5" ) ;
- 	
- 	return sf ;
-#else
-	mylog ( "TGraphDisplay::readCSVfile" , "0" ) ;
 	wxTextFile file ( filename ) ;
-	mylog ( "TGraphDisplay::readCSVfile" , "1" ) ;
 	file.Open () ;
-	mylog ( "TGraphDisplay::readCSVfile" , "2" ) ;
 	wxString s ;
 	stringField sf ;
 	if ( !file.IsOpened() ) return sf ;
-	mylog ( "TGraphDisplay::readCSVfile" , "3" ) ;
 	int a = 0 ;
 	for ( s = file.GetFirstLine(); !file.Eof(); s = file.GetNextLine() )
 		{
-		mylog ( "TGraphDisplay::readCSVfile" , wxString::Format ( "Starting line %d" , a ) ) ;
   		TVS as ;
   		s = s.Trim().Trim(false);
-  		while ( s.First ( ',' ) != -1 )
+  		
+  		if ( s.Find ( '\t' ) > -1 )
   			{
-	    	as.push_back ( s.BeforeFirst ( ',' ).c_str() ) ;
-	    	s = s.AfterFirst ( ',' ) ;
-  			}    
-		as.push_back ( s.c_str() ) ;
-//  		explode ( "," , s , as ) ;
-  		sf.push_back ( as ) ;
-		mylog ( "TGraphDisplay::readCSVfile" , wxString::Format ( "Ending line %d" , a++ ) ) ;
+	    	s.Replace ( "," , "." ) ;
+      		while ( s.First ( '\t' ) != -1 )
+      			{
+    	    	as.push_back ( s.BeforeFirst ( '\t' ).c_str() ) ;
+    	    	s = s.AfterFirst ( '\t' ) ;
+      			}    
+    		as.push_back ( s.c_str() ) ;
+      		sf.push_back ( as ) ;
+  			}
+      	else
+       		{
+      		while ( s.First ( ',' ) != -1 )
+      			{
+    	    	as.push_back ( s.BeforeFirst ( ',' ).c_str() ) ;
+    	    	s = s.AfterFirst ( ',' ) ;
+      			}    
+    		as.push_back ( s.c_str() ) ;
+      		sf.push_back ( as ) ;
+      		}  		
 		}    
-	mylog ( "TGraphDisplay::readCSVfile" , "4" ) ;
 	return sf ;
-#endif
 	}    
 	
 void TGraphDisplay::setupIPCfile ( wxString filename )
 	{
-	stringField sf = readCSVfile ( filename ) ;
-//	stringField sf = readCSVfile ( "C:\\Dokumente und Einstellungen\\DSP\\Desktop\\0.1 IGF-VK + 0.4 PolyGluTyr 360nm.csv" ) ;
+	stringField sf = readTextfile ( filename ) ;
+//	stringField sf = readTextfile ( "C:\\Dokumente und Einstellungen\\DSP\\Desktop\\0.1 IGF-VK + 0.4 PolyGluTyr 360nm.csv" ) ;
 //	setupPhotometerGraph ( sf ) ;
 
  	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , "m/z" , "" , *wxBLACK ) ;
@@ -164,8 +125,37 @@ void TGraphDisplay::setupIPCfile ( wxString filename )
  		}
 	}
     
+void TGraphDisplay::setupXYpair ( const stringField &sf )
+	{
+ 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , "X" , "" , *wxBLACK ) ;
+  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , "Y" , "" , *wxBLACK ) ;
+ 	scales.push_back ( sx ) ;
+ 	scales.push_back ( sy ) ;
+ 	
+ 	TGraphData *ng = new TGraphData ( this ) ;
+	ng->name = txt("t_data") ;
+	ng->SetScales ( sx , sy ) ;
+	ng->pointStyle = "none" ;
+	ng->col = wxTheColourDatabase->Find ( "BLUE" ) ;
+	data.push_back ( ng ) ;
+
+ 	int a ;
+ 	for ( a = 0 ; a < sf.size() && sf[a].size() > 1 && sf[a][0] != "" ; a++ )
+ 		{
+    	double x , y ;
+    	wxString s0 = sf[a][0].c_str() ;
+    	wxString s1 = sf[a][1].c_str() ;
+    	s0.ToDouble ( &x ) ;
+    	s1.ToDouble ( &y ) ;
+    	ng->Add ( (float) x , (float) y ) ;
+ 		}    
+ 	} 	
+
 void TGraphDisplay::setupPhotometerGraph ( const stringField &sf )
 	{
+	if ( sf.size() < 3 ) return ;
+	if ( sf[0].size() < 2 ) return ;
+	if ( sf[1].size() < 2 ) return ;
  	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , sf[1][0].c_str() , "" , *wxBLACK ) ;
   	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , sf[1][1].c_str() , "" , *wxBLACK ) ;
  	scales.push_back ( sx ) ;
@@ -179,7 +169,7 @@ void TGraphDisplay::setupPhotometerGraph ( const stringField &sf )
 	data.push_back ( ng ) ;
 
  	int a ;
- 	for ( a = 2 ; sf.size() && sf[a].size() > 1 && sf[a][0] != "" ; a++ )
+ 	for ( a = 2 ; a < sf.size() && sf[a].size() > 1 && sf[a][0] != "" ; a++ )
  		{
     	double x , y ;
     	wxString s0 = sf[a][0].c_str() ;
@@ -240,28 +230,115 @@ bool TGraphDisplay::SetupFromFile ( wxString filename )
 	wxArrayString as ;
 	as.Add ( txt ( "t_graph_file_type_photometer" ) ) ;
 	as.Add ( txt ( "t_graph_file_type_fluorimeter" ) ) ;
+	as.Add ( txt ( "t_graph_file_type_xypair" ) ) ;
 	
 	wxString *vs = new wxString [ as.GetCount() ] ;
 	for ( a = 0 ; a < as.GetCount() ; a++ )
 		vs[a] = as[a] ;
 	
 	wxSingleChoiceDialog scd ( this , "Msg" , "Cap" , as.GetCount() , vs ) ;
+	wxString guess = tryall ( filename ) ;
+	if ( guess != "" )
+		{
+  		for ( a = 0 ; a < as.GetCount() ; a++ )
+  			{
+	    	if ( as[a] == txt(guess) )
+	    		scd.SetSelection ( a ) ;
+  			}    
+		}    
 	if ( wxID_OK != scd.ShowModal() ) return false ;
 	
 	wxString s = scd.GetStringSelection() ;
-	if ( s == txt ( "t_graph_file_type_photometer" ) ) setupPhotometerGraph ( readCSVfile ( filename ) ) ;
-	if ( s == txt ( "t_graph_file_type_fluorimeter" ) ) setupFluorimeterGraph ( readCSVfile ( filename ) ) ;
+	if ( s == txt ( "t_graph_file_type_photometer" ) ) setupPhotometerGraph ( readTextfile ( filename ) ) ;
+	if ( s == txt ( "t_graph_file_type_fluorimeter" ) ) setupFluorimeterGraph ( readTextfile ( filename ) ) ;
+	if ( s == txt ( "t_graph_file_type_xypair" ) ) setupXYpair ( readTextfile ( filename ) ) ;
 	
 	return true ;
+	}
+
+unsigned char *TGraphDisplay::readRawData ( wxString filename , long &l )
+	{
+ 	wxFile f ( filename , wxFile::read ) ;
+ 	l = f.Length() ;
+ 	unsigned char *r = new unsigned char[f.Length()] ;
+ 	f.Read ( r , l ) ;
+ 	return r ;
+	}
+    
+void TGraphDisplay::setupRawFPLC ( wxString filenamebase )
+	{
+	wxString f1 = filenamebase + "_1.DAT" ;
+	
+	long l1 ;
+	unsigned char *d1 = readRawData ( f1 , l1 ) ;
+	
+	stringField sf ;
+	TVS b ;
+	b.push_back ( "1" ) ;
+	b.push_back ( "2" ) ;
+	b.push_back ( "" ) ;
+	sf.push_back ( b ) ; // Dummy line
+	sf.push_back ( b ) ; // Dummy line
+	
+	long a , sum = 0 , integrate = 10 , cnt = 0 ;
+	for ( a = 2000+1 ; a+30 < l1 ; a += 4 )
+		{
+  		long x = 0 ;
+  		x += (long) d1[a+0] ; x <<= 8 ;
+  		x += (long) d1[a+1] ; x <<= 8 ;
+  		x += (long) d1[a+2] ; x <<= 8 ;
+  		x += (long) d1[a+3] ;
+  		sum += x / integrate;
+  		if ( cnt >= integrate )
+  			{
+  			b[0] = wxString::Format ( "%d" , a );
+  			b[1] = wxString::Format ( "%d" , sum ) ;
+  			sf.push_back ( b ) ;
+  			sum = 0 ;
+  			cnt = 0 ;
+   			} 	
+        cnt++ ;		
+		}    
+	
+	delete d1 ;
+	setupPhotometerGraph ( sf ) ;
+	}    
+
+wxString TGraphDisplay::tryall ( wxString filename )
+	{
+	wxString r ;
+	int best = 0 ;
+	int a , cnt ;
+	stringField sf = readTextfile ( filename ) ;
+	init () ;
+
+	setupPhotometerGraph ( sf ) ;
+	for ( a = cnt = 0; a < data.size() ; a++ ) cnt += data[a]->dx.size() ;
+	if ( cnt > best ) { r = "t_graph_file_type_photometer" ; best = cnt ; }
+	init () ;
+	
+	setupFluorimeterGraph ( sf ) ;
+	for ( a = cnt = 0; a < data.size() ; a++ ) cnt += data[a]->dx.size() ;
+	if ( cnt > best ) { r = "t_graph_file_type_fluorimeter" ; best = cnt ; }
+	init () ;
+	
+	setupXYpair ( sf ) ;
+	for ( a = cnt = 0; a < data.size() ; a++ ) cnt += data[a]->dx.size() ;
+	if ( cnt > best ) { r = "t_graph_file_type_xypair" ; best = cnt ; }
+	init () ;
+	
+	return r ;
 	}    
 
 void TGraphDisplay::SetupDummy ()
 	{
-//	stringField sf = readCSVfile ( "C:\\Dokumente und Einstellungen\\DSP\\Desktop\\RTS Kristin.csv" ) ;
+//	stringField sf = readTextfile ( "C:\\Dokumente und Einstellungen\\DSP\\Desktop\\RTS Kristin.csv" ) ;
 //	setupFluorimeterGraph ( sf ) ;
 
-	stringField sf = readCSVfile ( "C:\\Dokumente und Einstellungen\\DSP\\Desktop\\0.1 IGF-VK + 0.4 PolyGluTyr 360nm.csv" ) ;
-	setupPhotometerGraph ( sf ) ;
+	setupRawFPLC ( "C:\\Dokumente und Einstellungen\\DSP\\Desktop\\HADI\\G6" ) ;
+
+//	stringField sf = readTextfile ( "C:\\Dokumente und Einstellungen\\DSP\\Desktop\\0.1 IGF-VK + 0.4 PolyGluTyr 360nm.csv" ) ;
+//	setupPhotometerGraph ( sf ) ;
 
 
 /*
@@ -549,6 +626,8 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
 	    int x2 = draggingRect.GetRight() ;
 	    int y1 = draggingRect.GetTop() ;
 	    int y2 = draggingRect.GetBottom() ;
+	    if ( x1 > x2 ) { int temp = x1 ; x1 = x2 ; x2 = temp ; }
+	    if ( y1 > y2 ) { int temp = y1 ; y1 = y2 ; y2 = temp ; }
 	    int nx , ny ;
 	    for ( a = 0 ; a < scales.size() ; a++ )
 	    	{
