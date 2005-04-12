@@ -628,26 +628,6 @@ void MyFrame::OnFileImport(wxCommandEvent& event )
 */
 bool MyFrame::importFile ( wxString file , wxString path , int filter )
     {
-    // Trying CSV by file ending
-    if ( filter == 6 || ( filter == -1 && path.AfterLast('.').Lower() == "csv" ) )
-    	{
-	    wxEndBusyCursor();
-        TGraph *g = RunGraph() ;
-        if ( g->gd->SetupFromFile ( path ) )
-        	{
-        	wxBeginBusyCursor();
-           	g->gd->AutoScale () ;
-           	g->gd->UpdateDisplay () ;
-           	return true ;
-           	}   	
-       	else
-       		{
-        	wxBeginBusyCursor();
-   		    g->Close () ;
-   		    return false ;
-       		}    
-    	}    
-        
     // Trying GenBank format
     if ( filter == 1 || filter == -1 )
        {
@@ -698,6 +678,33 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
            }
        }
 
+    // Trying spectra
+    if ( filter == 6 || filter == -1 )
+    	{
+	    wxEndBusyCursor();
+        TGraph *g = RunGraph() ;
+        if ( filter == -1 && g->gd->tryall ( path ) == "" )
+        	{
+        	wxBeginBusyCursor();
+   		    g->Close () ;
+        	}    
+        else if ( g->gd->SetupFromFile ( path ) )
+        	{
+        	wxBeginBusyCursor();
+           	g->gd->AutoScale () ;
+           	g->gd->UpdateDisplay () ;
+           	wxEndBusyCursor();
+           	if ( filter == 6 ) return true ;
+           	}   	
+       	else
+       		{
+        	wxBeginBusyCursor();
+   		    g->Close () ;
+   		    wxEndBusyCursor();
+   		    if ( filter == 6 ) return false ;
+       		}    
+    	}    
+        
     // Trying UReadSeq package
     if ( filter == 2 || filter == 3 || filter == 4 || filter == -1 )
        {
