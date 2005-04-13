@@ -92,6 +92,8 @@ class TGraphDisplay : public wxPanel
  	void setupXYpair ( const stringField &sf ) ;
  	void setupIPCfile ( wxString filename ) ;
  	void setupRawFPLC ( wxString filenamebase ) ;
+ 	void addNewGraph ( const stringField &sf , wxString title , TGraphScale *sx , TGraphScale*sy , int startrow = 0 ) ;
+ 	void addRawData ( unsigned char *d , long l , wxString title ) ;
  	wxString tryall ( wxString filename ) ;
  	void SetupDummy () ;
  	bool SetupFromFile ( wxString filename ) ;
@@ -121,6 +123,7 @@ class TGraphDisplay : public wxPanel
  	TGraphScale *old_scale ;
  	TGraphData *old_data ;
  	
+ 	wxArrayString colors , styles ;
  	wxRect inner ; ///< The place where the data is drawn
  	wxRect lr ; ///< The legend rectangle
  	int zx , zy ;

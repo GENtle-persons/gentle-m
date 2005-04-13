@@ -13,6 +13,13 @@ END_EVENT_TABLE()
 TGraphDisplay::TGraphDisplay ( wxWindow *parent , int id )
 	: wxPanel ( parent , id )
 	{
+ 	colors.Add ( "BLUE" ) ;
+ 	colors.Add ( "RED" ) ;
+ 	colors.Add ( "GREEN" ) ;
+ 	colors.Add ( "MAGENTA" ) ;
+ 	styles.Add ( "rect" ) ;
+ 	styles.Add ( "circle" ) ;
+ 	styles.Add ( "triangle" ) ;
 	init () ;
 	}
 	
@@ -131,24 +138,7 @@ void TGraphDisplay::setupXYpair ( const stringField &sf )
   	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , "Y" , "" , *wxBLACK ) ;
  	scales.push_back ( sx ) ;
  	scales.push_back ( sy ) ;
- 	
- 	TGraphData *ng = new TGraphData ( this ) ;
-	ng->name = txt("t_data") ;
-	ng->SetScales ( sx , sy ) ;
-	ng->pointStyle = "none" ;
-	ng->col = wxTheColourDatabase->Find ( "BLUE" ) ;
-	data.push_back ( ng ) ;
-
- 	int a ;
- 	for ( a = 0 ; a < sf.size() && sf[a].size() > 1 && sf[a][0] != "" ; a++ )
- 		{
-    	double x , y ;
-    	wxString s0 = sf[a][0].c_str() ;
-    	wxString s1 = sf[a][1].c_str() ;
-    	s0.ToDouble ( &x ) ;
-    	s1.ToDouble ( &y ) ;
-    	ng->Add ( (float) x , (float) y ) ;
- 		}    
+	addNewGraph ( sf , txt("t_data") , sx , sy , 0 ) ; 	
  	} 	
 
 void TGraphDisplay::setupPhotometerGraph ( const stringField &sf )
@@ -187,14 +177,6 @@ void TGraphDisplay::setupFluorimeterGraph ( const stringField &sf )
  	scales.push_back ( sx ) ;
  	scales.push_back ( sy ) ;
  	
- 	wxArrayString colors , styles ;
- 	colors.Add ( "RED" ) ;
- 	colors.Add ( "GREEN" ) ;
- 	colors.Add ( "BLUE" ) ;
- 	colors.Add ( "MAGENTA" ) ;
- 	styles.Add ( "rect" ) ;
- 	styles.Add ( "circle" ) ;
- 	styles.Add ( "triangle" ) ;
  	int cnt_col = 0 , cnt_sty = 0 ;
 	
 	int a , b ;
@@ -265,29 +247,21 @@ unsigned char *TGraphDisplay::readRawData ( wxString filename , long &l )
  	return r ;
 	}
     
-void TGraphDisplay::setupRawFPLC ( wxString filenamebase )
+void TGraphDisplay::addRawData ( unsigned char *d , long l , wxString title )
 	{
-	wxString f1 = filenamebase + "_1.DAT" ;
-	
-	long l1 ;
-	unsigned char *d1 = readRawData ( f1 , l1 ) ;
-	
 	stringField sf ;
 	TVS b ;
-	b.push_back ( "1" ) ;
-	b.push_back ( "2" ) ;
 	b.push_back ( "" ) ;
-	sf.push_back ( b ) ; // Dummy line
-	sf.push_back ( b ) ; // Dummy line
+	b.push_back ( "" ) ;
 	
 	long a , sum = 0 , integrate = 10 , cnt = 0 ;
-	for ( a = 2000+1 ; a+30 < l1 ; a += 4 )
+	for ( a = 2000+1 ; a+30 < l ; a += 4 )
 		{
-  		long x = 0 ;
-  		x += (long) d1[a+0] ; x <<= 8 ;
-  		x += (long) d1[a+1] ; x <<= 8 ;
-  		x += (long) d1[a+2] ; x <<= 8 ;
-  		x += (long) d1[a+3] ;
+  		unsigned long x = 0 ;
+  		x += (unsigned long) d[a+0] ; x <<= 8 ;
+  		x += (unsigned long) d[a+1] ; x <<= 8 ;
+//  		x += (unsigned long) d[a+2] ; x <<= 8 ;
+//  		x += (unsigned long) d[a+3] ;
   		sum += x / integrate;
   		if ( cnt >= integrate )
   			{
@@ -300,8 +274,45 @@ void TGraphDisplay::setupRawFPLC ( wxString filenamebase )
         cnt++ ;		
 		}    
 	
-	delete d1 ;
-	setupPhotometerGraph ( sf ) ;
+	delete d ;
+	addNewGraph ( sf , title , scales[0] , scales[1] , 0 ) ;
+	}	
+
+void TGraphDisplay::addNewGraph ( const stringField &sf , wxString title , TGraphScale *sx , TGraphScale*sy , int startrow )
+	{
+ 	TGraphData *ng = new TGraphData ( this ) ;
+	ng->name = title ;
+	ng->SetScales ( sx , sy ) ;
+	ng->pointStyle = "none" ;
+	ng->col = wxTheColourDatabase->Find ( colors[data.size()%colors.size()] ) ;
+	data.push_back ( ng ) ;
+
+ 	for ( int a = startrow ; a < sf.size() && sf[a].size() > 1 && sf[a][0] != "" ; a++ )
+ 		{
+    	double x , y ;
+    	wxString s0 = sf[a][0].c_str() ;
+    	wxString s1 = sf[a][1].c_str() ;
+    	s0.ToDouble ( &x ) ;
+    	s1.ToDouble ( &y ) ;
+    	ng->Add ( (float) x , (float) y ) ;
+ 		}    
+	}
+    
+void TGraphDisplay::setupRawFPLC ( wxString filenamebase )
+	{
+ 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , "X" , "" , *wxBLACK ) ;
+  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , "Y" , "" , *wxBLACK ) ;
+ 	scales.push_back ( sx ) ;
+ 	scales.push_back ( sy ) ;
+
+	long l ;
+	unsigned char *d ;
+
+	d = readRawData ( filenamebase + "_1.DAT" , l ) ;
+	addRawData ( d , l , "1" ) ;
+
+	d = readRawData ( filenamebase + "_2.DAT" , l ) ;
+	addRawData ( d , l , "2" ) ;
 	}    
 
 wxString TGraphDisplay::tryall ( wxString filename )
@@ -332,44 +343,7 @@ wxString TGraphDisplay::tryall ( wxString filename )
 
 void TGraphDisplay::SetupDummy ()
 	{
-//	stringField sf = readTextfile ( "C:\\Dokumente und Einstellungen\\DSP\\Desktop\\RTS Kristin.csv" ) ;
-//	setupFluorimeterGraph ( sf ) ;
-
-	setupRawFPLC ( "C:\\Dokumente und Einstellungen\\DSP\\Desktop\\HADI\\G6" ) ;
-
-//	stringField sf = readTextfile ( "C:\\Dokumente und Einstellungen\\DSP\\Desktop\\0.1 IGF-VK + 0.4 PolyGluTyr 360nm.csv" ) ;
-//	setupPhotometerGraph ( sf ) ;
-
-
-/*
- 	scales.push_back ( new TGraphScale ( 0 , 0 , true , false , "x" , "min" , *wxBLUE ) ) ;
- 	scales.push_back ( new TGraphScale ( 0 , 0 , false , true , "y" , "cm" , *wxRED ) ) ;
- 	data.push_back ( new TGraphData ( this ) ) ;
- 	data[0]->SetScales ( scales[0] , scales[1] ) ;
-
- 	wxString file = "C:\\Dokumente und Einstellungen\\DSP\\Desktop\\HADI\\G6_" ;
- 	wxString file1 = file + "1.DAT" ;
- 	wxFile f1 ( file1 , wxFile::read ) ;
- 	long l = f1.Length() ;
- 	wxMessageBox ( wxString::Format ( "%d" , l ) ) ;
- 	
- 	unsigned char *c = new unsigned char ( l + 5 ) ;
- 	f1.Read ( c , l ) ;
- 	f1.Close () ;
- 	
- 	int a ;
- 	for ( a = 0 ; a+4 < l ; a++ )
- 		{
-   		unsigned long ul = c[a++] ;
-   		ul <<= 8 ; ul += c[a++] ;
-   		ul <<= 8 ; ul += c[a++] ;
-//   		ul <<= 8 ; ul += c[a] ;
-   		data[0]->Add ( (float) a , (float) ul ) ;
- 		}
-
-    delete c ;
-*/
-
+	setupRawFPLC ( "C:\\Dokumente und Einstellungen\\DSP\\Desktop\\NORBERT\\G23" ) ;
 	AutoScale () ;
 	}
 
