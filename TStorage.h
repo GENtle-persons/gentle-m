@@ -21,11 +21,13 @@
 #ifdef __WXMSW__
  #include "win_sqlite.h"
  #include "win_sqlite3.h"
- #define USING_SQLITE_3
  #include <wx/msw/winundef.h>
 #else
  #include "lin_sqlite.h"
+ #include "lin_sqlite3.h"
 #endif
+
+#define USING_SQLITE_3
 
 #define LOCAL_STORAGE 1
 #define SHARED_STORAGE 2
