@@ -645,7 +645,11 @@ void TGridBasic::print ( int mode )
         }
     else if ( mode == HTML_PRINT )
         {
+#ifdef __WXMSW__
         myapp()->frame->html_ep->PrinterSetup () ;
+#else
+        myapp()->frame->html_ep->PageSetup () ;
+#endif
         }
     }
     
