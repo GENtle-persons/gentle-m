@@ -63,6 +63,7 @@ bitmaps/scissors.bmp
 
 
 GENtle_LDADD = $(WX_LIBS) -L/usr/lib -lsqlite -lmysqlclient
+GENtle_LDFLAGS = -s
 GENtle_SOURCES = TXMLfile.cpp\
 TVectorTree.cpp\
 TVirtualGel.cpp\
@@ -120,6 +121,12 @@ AminoAcids.cpp\
 Alignment.cpp\
 ABIviewer.cpp\
 ABItype.cpp\
+TAlignmentDialog.cpp\
+AutoAnnotate.cpp\
+TGraph.cpp\
+TGraphDisplay.cpp\
+TGraphScale.cpp\
+CGview.cpp\
 ureadseq.c\
 tinyxml/tinyxmlparser.cpp\
 tinyxml/tinyxmlerror.cpp\
@@ -143,9 +150,17 @@ clustalw/sequence.cpp\
 clustalw/showpair.cpp\
 clustalw/trees.cpp\
 clustalw/util.cpp\
+ipc/element.cpp\
+ipc/gp_out.cpp\
+ipc/ipc.cpp\
+ipc/pars.cpp\
 enums.h \
 lin_sqlite.h \
 TXMLfile.h\
+AutoAnnotate.h\
+CGview.h\
+TAlignmentDialog.h\
+TGraph.h\
 TVectorTree.h\
 TVirtualGel.h\
 TVectorEditor.h\
@@ -194,4 +209,9 @@ clustalw/dayhoff.h \
 clustalw/general.h \
 clustalw/matrices.h \
 clustalw/param.h \
-clustalw/xmenu.h
+clustalw/xmenu.h\
+ipc/element.h\
+ipc/global.h\
+ipc/gp_out.h\
+ipc/ipc.h\
+ipc/parse.h
