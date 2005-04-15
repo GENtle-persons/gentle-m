@@ -387,7 +387,7 @@ int TIPC::ipc_main(int argc,char **argv){
 
 void TIPC::usage()
 {
-  printf("\nThis is IPC v %s\nCopyright Dirk Nolting 2001-2004\n\n",VERSION);
+  printf("\nThis is IPC v %s\nCopyright Dirk Nolting 2001-2004\n\n",IPC_VERSION);
   printf("\nSynopsis:\n ipc -d <int> -z <int> -f <int> <-a <amino acid> -c <chemical formula> -p <File> -g <name> -s -x -h\n\n");
 
   printf("-c <chemical formula> calculates the isotopic pattern of the \n");

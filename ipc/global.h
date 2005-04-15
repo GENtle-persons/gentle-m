@@ -17,7 +17,7 @@
 #define _GLOBAL_H_
 
 #define PREFIX "."
-#define _VERSION "1.2"
+#define IPC_VERSION "1.2"
 //#include "config.h"
 #include <stdio.h>
 #include <stdlib.h>

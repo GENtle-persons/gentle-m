@@ -1458,16 +1458,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit142]
-FileName=ipc\element.c
-CompileCpp=1
-Folder=IPC
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit143]
 FileName=ipc\element.h
 CompileCpp=1
 Folder=IPC
@@ -1477,7 +1467,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit144]
+[Unit143]
 FileName=ipc\global.h
 CompileCpp=1
 Folder=IPC
@@ -1487,17 +1477,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit145]
-FileName=ipc\gp_out.c
-CompileCpp=1
-Folder=IPC
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit146]
+[Unit144]
 FileName=ipc\gp_out.h
 CompileCpp=1
 Folder=IPC
@@ -1507,17 +1487,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit147]
-FileName=ipc\ipc.c
-CompileCpp=1
-Folder=IPC
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit148]
+[Unit145]
 FileName=ipc\ipc.h
 CompileCpp=1
 Folder=IPC
@@ -1527,17 +1497,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit149]
-FileName=ipc\pars.c
-CompileCpp=1
-Folder=IPC
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit150]
+[Unit146]
 FileName=ipc\pars.h
 CompileCpp=1
 Folder=IPC
@@ -1547,7 +1507,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit151]
+[Unit147]
 FileName=TAlignmentDialog.h
 CompileCpp=1
 Folder=Dialogs
@@ -1557,10 +1517,50 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit152]
+[Unit148]
 FileName=TAlignmentDialog.cpp
 CompileCpp=1
 Folder=Dialogs
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit149]
+FileName=ipc\element.cpp
+CompileCpp=1
+Folder=IPC
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit150]
+FileName=ipc\gp_out.cpp
+CompileCpp=1
+Folder=IPC
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit151]
+FileName=ipc\ipc.cpp
+CompileCpp=1
+Folder=IPC
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit152]
+FileName=ipc\pars.cpp
+CompileCpp=1
+Folder=IPC
 Compile=1
 Link=1
 Priority=1000
