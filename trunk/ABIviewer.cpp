@@ -418,8 +418,14 @@ void TABIviewer::OnCopyToNew(wxCommandEvent& event)
     {
     TVector *nv = new TVector ;
     wxString s ;
-    if ( sc->markedFrom() == -1 ) s = vec->getSequence() ; // All of it
-    else s = sc->getSelection() ;
+    bool unmark = false ;
+    if ( sc->markedFrom() == -1 ) // All of it
+    	{
+	    OnMarkAll ( event ) ;
+	    unmark = true ;
+    	}    
+    s = sc->getSelection() ;
+    if ( unmark ) sc->unmark() ;
     nv->setName ( vec->getName() ) ;
     nv->setSequence ( s ) ;
     nv->setDescription ( txt("t_abi_original") + getStat() ) ;
