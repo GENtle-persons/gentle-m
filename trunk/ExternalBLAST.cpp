@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the EIpanel methods and the blastThread helper class
+*/
 #include "ExternalInterface.h"
 
 void EIpanel::init_blast()
@@ -47,10 +50,12 @@ void EIpanel::init_blast()
     #error "This requires thread support!"
 #endif // wxUSE_THREADS
 
-
+/**	\brief A wxThreadHelper class to run BLAST queries in the background
+*/
 class blastThread : public wxThreadHelper
 {
 public :
+    /// Constructor
     blastThread ( EIpanel *panel , wxString seq ) : wxThreadHelper()
 	{
 	    p = panel ;
@@ -79,6 +84,7 @@ public :
 	    url += "&FORMAT_TYPE=XML" ;	    
 	} ;
 
+	/// This display the time left, and (re-)checks online if the query is done
     virtual void *Entry ()
 	{
 	    // Get & wait
@@ -113,6 +119,7 @@ public :
 	}
 private :
 
+	/// I'll be damned if I remember what this is for!
     wxHashString parseQblast ( wxString res )
 	{
 	    wxHashString ret ;
@@ -151,7 +158,8 @@ private :
     EIpanel *p ;
 } ;
 
-void EIpanel::process_blast() // This starts the thread
+/// This starts the thread
+void EIpanel::process_blast()
 {
     mylog ( "blast1" , "1" ) ;
     if ( !blast_res.IsEmpty() || blast_thread ) // If thread is running, or results are there...
@@ -186,7 +194,8 @@ void EIpanel::process_blast() // This starts the thread
     mylog ( "blast1" , "5" ) ;
 }
 
-void EIpanel::process_blast2() // This is called upon termination of the thread
+/// This is called upon termination of the thread
+void EIpanel::process_blast2()
 {
     bool initial = false ;
     mylog ( "blast2" , "1" ) ;

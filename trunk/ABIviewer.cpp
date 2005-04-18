@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the TABIviewer class members
+*/
 #include "AminoAcids.h"
 
 BEGIN_EVENT_TABLE(TABIviewer, MyChildBase)

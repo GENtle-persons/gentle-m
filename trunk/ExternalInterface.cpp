@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the ExternalInterface, EIpanel and EILB class members
+*/
 #include "ExternalInterface.h"
    	
 

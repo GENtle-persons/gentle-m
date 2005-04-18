@@ -18,11 +18,13 @@
 
 class TIPC ;
 
+/// Part of the IPC package
 typedef struct spec_points {
   struct spec_points *next, *previous;
   float x,y;
 } spec_points;
 
+/// Part of the IPC package
 class GPOUT
 	{
 	public :

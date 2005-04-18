@@ -22,6 +22,7 @@ class TIPC_PARS ;
 class GPOUT ;
 class TIPC_ELEMENT ;
 
+/// Part of the IPC package
 class TIPC
 	{
  	public :

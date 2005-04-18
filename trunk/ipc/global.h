@@ -24,18 +24,21 @@
 
 #define USE_DIGITS 5
 
+/// Part of the IPC package
 typedef struct isotope{
   struct isotope *next,*previous;
   double p;
   double mass;
 } isotope;
 
+/// Part of the IPC package
 typedef struct compound {
   struct compound *next,*previous;
   int amount;
   struct isotope *isotopes;
 } compound;
 
+/// Part of the IPC package
 typedef struct element {
   struct element *next,*previous;
   char *symbol;

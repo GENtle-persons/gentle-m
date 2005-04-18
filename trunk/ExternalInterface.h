@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the ExternalInterface and its helper classes
+*/
 #ifndef _EXTERNAL_INTERFACE_H_
 #define _EXTERNAL_INTERFACE_H_
 
@@ -29,50 +32,52 @@ enum {
 	
 class blastThread ;
 
+/// The External Interface List Box class, a specialized wxHtmlListBox
 class EILB : public wxHtmlListBox
 	{
 	public :
-	EILB ( wxWindow *parent , int id = wxID_ANY ) ;
-	virtual wxString OnGetItem(size_t n) const ;
-	virtual void Clear () ;
-	virtual void Sort () ;
-	virtual void Update () ;
-	virtual void Set ( int id , wxString s , wxString t = "" ) ;
+	EILB ( wxWindow *parent , int id = wxID_ANY ) ; ///< Constructor
+	virtual wxString OnGetItem(size_t n) const ; ///< Get the item string
+	virtual void Clear () ; ///< Clear the list box
+	virtual void Sort () ; ///< Sort the list box
+	virtual void Update () ; ///< Update the list box
+	virtual void Set ( int id , wxString s , wxString t = "" ) ; ///< Set an entry
 	
 	wxArrayString was , data ;
 	} ;    
 
+/// The External Interface panel class
 class EIpanel : public wxPanel
 {
     public :
-	EIpanel ( wxWindow *parent , int _mode ) ;
+	EIpanel ( wxWindow *parent , int _mode ) ; ///< Constructor
     
 //    private :
-	virtual void process () ;
-    virtual wxString num2html ( int num , int digits ) ;
-    void showMessage ( wxString msg ) ;
+	virtual void process () ; ///< Runs the query, as process_blast or process_ncbi
+    virtual wxString num2html ( int num , int digits ) ; ///< Returns a HTML-formatted number
+    void showMessage ( wxString msg ) ; ///< Displays a message beneath the search controls
 
-    virtual void init_blast() ;
-    virtual void process_blast() ;
-    virtual void process_blast2() ;
-    virtual void execute_blast() ;
+    virtual void init_blast() ; ///< Initialized BLAST interface
+    virtual void process_blast() ; ///< Processes BLAST command, starts thread
+    virtual void process_blast2() ; ///< Processes thread results
+    virtual void execute_blast() ; ///< Opens returned BLAST entry
     virtual wxString blast_align ( wxString qseq , wxString mseq , wxString hseq , int cpl , int qoff , int hoff ) ;
     
-    virtual void init_ncbi() ;
-    virtual void process_ncbi() ;
-    virtual void execute_ncbi() ;
+    virtual void init_ncbi() ; ///< Initializes NCBI interface
+    virtual void process_ncbi() ; ///< Processes NCBI request
+    virtual void execute_ncbi() ; ///< Opens returned sequence entry
 
-    virtual void execute_ncbi_load ( wxString database ) ;
+    virtual void execute_ncbi_load ( wxString database ) ; ///< Load a sequence from NCBI
     
-    virtual void OnB1 ( wxCommandEvent& WXUNUSED(event) ) ;
-    virtual void OnB2 ( wxCommandEvent& WXUNUSED(event) ) ;
-    virtual void OnBlast ( wxCommandEvent& WXUNUSED(event) ) ;
-    virtual void OnBnext ( wxCommandEvent& WXUNUSED(event) ) ;
-    virtual void OnC1 ( wxCommandEvent& WXUNUSED(event) ) ;
-    virtual void OnLboxDClick ( wxCommandEvent& WXUNUSED(event) ) ;
+    virtual void OnB1 ( wxCommandEvent& WXUNUSED(event) ) ; ///< Button 1 handler
+    virtual void OnB2 ( wxCommandEvent& WXUNUSED(event) ) ; ///< Button 2 handler
+    virtual void OnBlast ( wxCommandEvent& WXUNUSED(event) ) ; ///< "Run BLAST" event handler
+    virtual void OnBnext ( wxCommandEvent& WXUNUSED(event) ) ; ///< "Next" event handler
+    virtual void OnC1 ( wxCommandEvent& WXUNUSED(event) ) ; ///< Choice box 1 event handler
+    virtual void OnLboxDClick ( wxCommandEvent& WXUNUSED(event) ) ; ///< List box double click event handler
     
-    virtual wxString val ( TiXmlNode *n ) ; // Safe value
-    virtual wxString valFC ( TiXmlNode *n ) ; // Value of FirstChild
+    virtual wxString val ( TiXmlNode *n ) ; ///< Return safe value
+    virtual wxString valFC ( TiXmlNode *n ) ; ///< Return value of FirstChild
     
     int mode ;
     wxPanel *up ;
@@ -92,18 +97,20 @@ class EIpanel : public wxPanel
     DECLARE_EVENT_TABLE()
 	} ;    
 
+/**	\brief The External Interface ChildBase class
+*/
 class ExternalInterface : public ChildBase
     {
     public :
-    ExternalInterface(wxWindow *parent, const wxString& title) ;
-    ~ExternalInterface () ;
+    ExternalInterface(wxWindow *parent, const wxString& title) ; ///< Constructor
+    ~ExternalInterface () ; ///< Destructor
     
-    void initme () ;
-    virtual wxString getName () ;
+    void initme () ; ///< Initialization
+    virtual wxString getName () ; ///< Returns the class name
 
-    virtual void runBlast ( wxString seq , wxString prg ) ;
+    virtual void runBlast ( wxString seq , wxString prg ) ; ///< Directly runs a BLAST query
 
-    wxNotebook *nb ;
+    wxNotebook *nb ; ///< Pointer to the wxNotebook class containing one or more EIpanel
 
     DECLARE_EVENT_TABLE()
     } ;

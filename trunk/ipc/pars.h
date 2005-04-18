@@ -18,6 +18,7 @@
 
 class TIPC ;
 
+/// Part of the IPC package
 class TIPC_PARS
 	{
 	public :
