@@ -24,6 +24,7 @@
 class TIPC ;
 class TIPC_PARS ;
 
+/// Part of the IPC package
 class TIPC_ELEMENT
 	{
 	public :

@@ -1,4 +1,10 @@
+/** \file
+	\brief Contains the AutoAnnotate class members, as well as the complete TAutoAnnotateDialog class
+*/
 #include "AutoAnnotate.h"
+
+/**	\brief The dialog class for the AutoAnnotate class/function
+*/
 
 class TAutoAnnotateDialog : public wxDialog
 	{
@@ -7,10 +13,10 @@ class TAutoAnnotateDialog : public wxDialog
     virtual void OnCharHook ( wxKeyEvent& event ) ; ///< Key event handler
     
     wxCheckBox *useCommonDatabase , *useAdditionalDatabase , *useMachete , *doAddORFs ;
-    wxChoice *additionalDatabase ;
+    wxChoice *additionalDatabase ; ///< Dropdown box with available databases
     
     private :
-	AutoAnnotate *aa ;
+	AutoAnnotate *aa ; ///< Pointer to the calling AutoAnnotate class
 
     DECLARE_EVENT_TABLE()
 	} ;    
@@ -21,7 +27,6 @@ BEGIN_EVENT_TABLE(TAutoAnnotateDialog, wxDialog )
     EVT_CHAR_HOOK(TAutoAnnotateDialog::OnCharHook)
 END_EVENT_TABLE()
 
-	
 TAutoAnnotateDialog::TAutoAnnotateDialog ( wxWindow *parent, const wxString& title , AutoAnnotate *_aa )
     : wxDialog ( parent , TSD , title , wxDefaultPosition , wxSize ( 400 , 200 ) )
 	{
@@ -30,6 +35,7 @@ TAutoAnnotateDialog::TAutoAnnotateDialog ( wxWindow *parent, const wxString& tit
 	aa->dbfile.Clear () ;
     myapp()->frame->LS->getDatabaseList ( aa->dbname , aa->dbfile ) ;
 
+    // Sizer creation orgy
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     wxBoxSizer *h_last = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
@@ -37,31 +43,30 @@ TAutoAnnotateDialog::TAutoAnnotateDialog ( wxWindow *parent, const wxString& tit
     wxBoxSizer *h3 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h4 = new wxBoxSizer ( wxHORIZONTAL ) ;
     
+    // Controls creation
     useCommonDatabase = new wxCheckBox ( this , -1 , txt("t_autoann_use_common_database") ) ;
     useAdditionalDatabase = new wxCheckBox ( this , -1 , txt("t_autoann_use_additional_database") ) ;
     useMachete = new wxCheckBox ( this , -1 , txt("t_autoann_reduce_item_number") ) ;
-    doAddORFs = new wxCheckBox ( this , -1 , txt("t_autoann_add_orfs") ) ;
-    
+    doAddORFs = new wxCheckBox ( this , -1 , txt("t_autoann_add_orfs") ) ;    
     additionalDatabase = new wxChoice ( this , -1 ) ;
 
+    // Adding controls to the sizers
     h1->Add ( useCommonDatabase , 0 , wxALL , 5 ) ;
-    
     h2->Add ( useAdditionalDatabase , 0 , wxALL , 5 ) ;
     h2->Add ( additionalDatabase , 0 , wxALL , 5 ) ;
-    
     h3->Add ( useMachete , 0 , wxALL , 5 ) ;
-
     h4->Add ( doAddORFs , 0 , wxALL , 5 ) ;
-    
     h_last->Add ( new wxButton ( this , wxID_OK , txt("b_ok" ) ) , 0 , wxALL , 5 ) ;
     h_last->Add ( new wxButton ( this , wxID_CANCEL , txt("b_cancel" ) ) , 0 , wxALL , 5 ) ;
     
+    // Arranging sizers in the dialog
     v0->Add ( h1 , 0 , 0 ) ;    
     v0->Add ( h2 , 0 , 0 ) ;    
     v0->Add ( h3 , 0 , 0 ) ;    
     v0->Add ( h4 , 0 , 0 ) ;
     v0->Add ( h_last , 0 , 0 ) ;    
     
+    // Setting initial values in controls
     useCommonDatabase->SetValue ( aa->useCommonDatabase ) ;
     useAdditionalDatabase->SetValue ( aa->useAdditionalDatabase ) ;
     useMachete->SetValue ( aa->useMachete ) ;
@@ -72,7 +77,7 @@ TAutoAnnotateDialog::TAutoAnnotateDialog ( wxWindow *parent, const wxString& tit
     if ( additionalDatabase->GetStringSelection() == "" )
     	additionalDatabase->SetSelection ( 0 ) ;
     
-    
+    // Give the sizer control of the layout
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;
     Center () ;    

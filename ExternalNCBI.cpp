@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the EIpanel functions for NCBI
+*/
 #include "ExternalInterface.h"
 
 void EIpanel::init_ncbi()

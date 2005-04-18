@@ -1,5 +1,6 @@
 #define MAXARGS 100
 
+/// Part of the ClustalW package
 typedef struct {
 	char *str;
 	sint *flag;

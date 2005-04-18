@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the FindSequenceDialog class members
+*/
 #include "FindSequenceDialog.h"
 
 BEGIN_EVENT_TABLE(FindSequenceDialog, wxDialog )
