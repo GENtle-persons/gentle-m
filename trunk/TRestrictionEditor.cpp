@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the TRestrictionEditor class members
+*/
 #include "TRestrictionEditor.h"
 
 BEGIN_EVENT_TABLE(TRestrictionEditor, wxDialog )

@@ -382,7 +382,9 @@ void SeqDNA::show_direct ( wxDC& dc )
 
         if ( showNumber )
            {
-              mylog ( "SeqDNA::show_direct" , "A" ) ;
+           dc.SetTextBackground ( tbg ) ;
+           dc.SetTextForeground ( tfg ) ;
+           mylog ( "SeqDNA::show_direct" , "A" ) ;
            wxString t ;
            if ( showNumbers )
               {
@@ -403,7 +405,7 @@ void SeqDNA::show_direct ( wxDC& dc )
               mylog ( "SeqDNA::show_direct" , "D2" ) ;
               }    
            dc.DrawText ( t , bo , py ) ;
-              mylog ( "SeqDNA::show_direct" , "E" ) ;
+           mylog ( "SeqDNA::show_direct" , "E" ) ;
            }    
         }    
 

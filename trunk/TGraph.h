@@ -23,29 +23,33 @@ class TGraphDisplay ;
 #define GRAPH_DRAW_MINI 4
 #define GRAPH_DRAW_ALL (GRAPH_DRAW_SCALES|GRAPH_DRAW_MAP)
 
+/**	\brief The class containing xy-data for graph drawing
+*/
 class TGraphData
 	{
 	public :
- 	TGraphData ( TGraphDisplay *d = NULL ) ;
- 	void Add ( float x , float y ) ;
- 	void SetScales ( TGraphScale *_sx , TGraphScale *_sy ) ;
- 	void AutoScale () ;
- 	unsigned long GetCount () ;
- 	int Distance ( const wxPoint &pt ) ;
+ 	TGraphData ( TGraphDisplay *d = NULL ) ; ///< Constructor
+ 	void Add ( float x , float y ) ; ///< Add a XY pair
+ 	void SetScales ( TGraphScale *_sx , TGraphScale *_sy ) ; ///< Assign scales to this gprah
+ 	void AutoScale () ; ///< Size scales to (at least) fit the data in this graph
+ 	unsigned long GetCount () ; ///< Returns the number of XY pairs
+ 	int Distance ( const wxPoint &pt ) ; ///< Returns the minimum distance of the given point to the graph curve
  	
- 	void drawit ( wxDC &dc ) ;
- 	void DrawSymbol ( wxDC &dc , wxString symbol , int x , int y , int size = 4 ) ;
+ 	void drawit ( wxDC &dc ) ; ///< Draws the graph in the given drawing context
+ 	void DrawSymbol ( wxDC &dc , wxString symbol , int x , int y , int size = 4 ) ; ///< Draws a point symbol (if any)
 
- 	wxString name ;
- 	wxString pointStyle ;
+ 	wxString name ; ///< Name of the graph
+ 	wxString pointStyle ; ///< Style of the point (used in DrawSymbol)
  	floatArray dx , dy ;
 	TGraphDisplay *display ;
 	TGraphScale *sx , *sy ;
-	wxColour col ;
-	vector <wxPoint> drawn ;
-	bool selected ;
+	wxColour col ; ///< The color of this graph
+	vector <wxPoint> drawn ; ///< Cache of last drawn points in pixels
+	bool selected ; ///< Is this graph selected (by mouse)?
 	} ;    
 	
+/**	\brief The class containing a scale used in the graph
+*/
 class TGraphScale
 	{
 	public :
@@ -56,16 +60,16 @@ class TGraphScale
             		wxString _name = "" , 
               		wxString _unit = "" , 
               		wxColour _col = *wxBLACK ,
-              		wxString _type = "linear" ) ;
-	int GetWidth () ;
-	void drawit ( wxDC &dc , wxRect &r , wxRect &inner ) ;
-	void DrawMark ( wxDC &dc , float p , wxRect &ir , wxString text , bool big = false ) ;
-	int GetRealCoord ( float f , wxRect &inner ) ;
-	float GetVirtualCoordinate ( int i , wxRect &inner ) ;
-	wxRect CalcInternalRect ( wxRect &r ) ;
-	void Drag ( int delta ) ;
-	float GetTotalWidth () { return max - min ; }
-	float GetVisibleWidth () { return top - bottom ; }
+              		wxString _type = "linear" ) ; ///< Constructor
+	int GetWidth () ; ///< Returns height/width in pixels
+	void drawit ( wxDC &dc , wxRect &r , wxRect &inner ) ; ///< Draws the scale, adjusts the inner rectangle
+	void DrawMark ( wxDC &dc , float p , wxRect &ir , wxString text , bool big = false ) ; ///< Draws the red marker for cursor position
+	int GetRealCoord ( float f , wxRect &inner ) ; ///< Converts float value to pixel
+	float GetVirtualCoordinate ( int i , wxRect &inner ) ; ///< Converts pixel to float
+	wxRect CalcInternalRect ( wxRect &r ) ; ///< Returns the internal rectangle
+	void Drag ( int delta ) ; ///< Drags the scale into a direction (pixel)
+	float GetTotalWidth () { return max - min ; } ///< Returns the height/width in arb. units
+	float GetVisibleWidth () { return top - bottom ; } ///< Returns the visible height/width in arb. units
  	
  	wxRect outline ;
  	wxRect last_inner ;
@@ -78,50 +82,52 @@ class TGraphScale
 	bool show_mark ;
 	} ;    
 	
+/** \brief The display class, containing graphs and scales; essentially, a "tab"
+*/
 class TGraphDisplay : public wxPanel
 	{
  	public :
- 	TGraphDisplay ( wxWindow *parent , int id = -1 ) ;
- 	~TGraphDisplay () ;
- 	void init () ;
+ 	TGraphDisplay ( wxWindow *parent , int id = -1 ) ; ///< Constructor
+ 	~TGraphDisplay () ; ///< Destructor
+ 	void init () ; ///< Initialization
  	
- 	stringField readTextfile ( wxString filename ) ;
- 	unsigned char *readRawData ( wxString filename , long &l ) ;
- 	void setupPhotometerGraph ( const stringField &sf ) ;
- 	void setupFluorimeterGraph ( const stringField &sf ) ;
- 	void setupXYpair ( const stringField &sf ) ;
- 	void setupIPCfile ( wxString filename ) ;
- 	void setupRawFPLC ( wxString filenamebase ) ;
- 	void addNewGraph ( const stringField &sf , wxString title , TGraphScale *sx , TGraphScale*sy , int startrow = 0 ) ;
+ 	stringField readTextfile ( wxString filename ) ; ///< Converts a CSV file into s stringField
+ 	unsigned char *readRawData ( wxString filename , long &l ) ; ///< Reads raw binary data
+ 	void setupPhotometerGraph ( const stringField &sf ) ; ///< Reads CSV-based photometer data
+ 	void setupFluorimeterGraph ( const stringField &sf ) ; ///< Reads CSV-based fluorimeter data
+ 	void setupXYpair ( const stringField &sf ) ; ///< Reads plain XY-pair CSV data
+ 	void setupIPCfile ( wxString filename ) ; ///< Reads IPC data
+ 	void setupRawFPLC ( wxString filenamebase ) ; ///< EXPERIMENTAL Reads raw BioRad FPLC data
+ 	void addNewGraph ( const stringField &sf , wxString title , TGraphScale *sx , TGraphScale*sy , int startrow = 0 ) ; ///< Adds a TGraphData
  	void addRawData ( unsigned char *d , long l , wxString title ) ;
- 	wxString tryall ( wxString filename ) ;
- 	void SetupDummy () ;
- 	bool SetupFromFile ( wxString filename ) ;
- 	void SetZoom ( int _zx , int _zy ) ;
- 	void UpdateDisplay () ;
+ 	wxString tryall ( wxString filename ) ; ///< Tries all formats, pre-selects the "best fit"
+ 	void SetupDummy () ; ///< For testing only
+ 	bool SetupFromFile ( wxString filename ) ; ///< Calls tryall, display dialog, eventually opens file
+ 	void SetZoom ( int _zx , int _zy ) ; ///< Sets the zoom factor
+ 	void UpdateDisplay () ; ///< Refresh
 
- 	void AutoScale () ;
- 	void drawit ( wxDC &dc , int mode = GRAPH_DRAW_ALL ) ;
- 	void showLegend ( wxDC &dc ) ;
- 	void showMiniature ( wxDC &dc ) ;
+ 	void AutoScale () ; ///< Adjusts the scales to fit the graphs
+ 	void drawit ( wxDC &dc , int mode = GRAPH_DRAW_ALL ) ; ///< Draws the graphs and scales in the device context
+ 	void showLegend ( wxDC &dc ) ; ///< Draws the legend
+ 	void showMiniature ( wxDC &dc ) ; ///< Draws the miniature preview (in zoomed mode)
  	void showDraggingRect ( wxDC &dc ) ;
  	
- 	void OnCharHook(wxKeyEvent& event) ;
+ 	void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
     void OnPaint(wxPaintEvent& event) ; ///< Paint event handler
-    void OnEvent(wxMouseEvent& event) ;
-    void OnSwapSides(wxCommandEvent &event) ;
+    void OnEvent(wxMouseEvent& event) ; ///< Mouse event handler
+    void OnSwapSides(wxCommandEvent &event) ; ///< To switch scales left/right or top/bottom
  	
- 	vector <TGraphScale*> scales ;
- 	vector <TGraphData*> data ;
- 	TGraph *g ;
- 	static wxColour prettyColor ;
+ 	vector <TGraphScale*> scales ; ///< The scales
+ 	vector <TGraphData*> data ; ///< The graphs (data)
+ 	TGraph *g ; ///< The calling TGraph
+ 	static wxColour prettyColor ; ///< A pretty blue
  	
  	private :
-  	bool IsSetupComplete() ;
+  	bool IsSetupComplete() ; ///< Don't draw before setup is complete (divsion by zero and other ugliness)
 
-  	bool setupCompleted ;
- 	TGraphScale *old_scale ;
- 	TGraphData *old_data ;
+  	bool setupCompleted ; ///< Is setup complete?
+ 	TGraphScale *old_scale ; ///< The last scale
+ 	TGraphData *old_data ; ///< The last graph
  	
  	wxArrayString colors , styles ;
  	wxRect inner ; ///< The place where the data is drawn
@@ -134,7 +140,7 @@ class TGraphDisplay : public wxPanel
 	} ;    
 
 /**	\class TGraph
-	\brief The calculator module
+	\brief The graph drawing module
 */
 class TGraph : public ChildBase
     {
@@ -149,7 +155,7 @@ class TGraph : public ChildBase
     virtual void OnZoomY(wxScrollEvent& event); ///< Zoom event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler
 
-    TGraphDisplay *gd ;
+    TGraphDisplay *gd ; ///< Pointer to the display class (a tab)
 
     private :
     friend class TGraphDisplay ;

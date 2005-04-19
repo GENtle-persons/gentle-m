@@ -7,6 +7,7 @@ Bugs :
 Feature Requests :
 Primer-Bearbeiten-Dialog : Spalten klicken => sortieren
 
+Primer secondary structure prediction
 
 Homology Plot
 Export plot data
