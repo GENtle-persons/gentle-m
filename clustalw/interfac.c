@@ -2848,7 +2848,8 @@ profiles - used to set parameters for the final alignment */
 
 
 
-
+/** \brief Part of the ClustalW package
+*/
  typedef struct rangeNum {
    int start;
    int end;

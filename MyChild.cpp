@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the MyChild class, as well as the MySplitter helper class
+*/
 #include "MyChild.h"
 #include <wx/datetime.h>
 #include <wx/printdlg.h>
