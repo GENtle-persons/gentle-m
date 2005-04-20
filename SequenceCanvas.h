@@ -389,9 +389,9 @@ class SeqPlot : public SeqDNA
     virtual void showMW ( wxDC &dc , int b , int tx , int ty , int lx ) ; ///< Display molecular weight
     virtual void showPI ( wxDC &dc , int b , int tx , int ty , int lx ) ; ///< Display isoelectric point
     virtual void showHP ( wxDC &dc , int b , int tx , int ty , int lx ) ; ///< Display hydrophobicity
-    virtual void fixMinMax ( float &f ) ;
+    virtual void fixMinMax ( float &f ) ; ///< What the hell does this do??
     virtual void drawDottedLine ( wxDC &dc , int x1 , int y1 , int x2 , int y2 ) ; ///< Draws a horizontal/vertical helper line
-    virtual void myRect ( wxDC &dc , int x , int y , int w , int h ) ;
+    virtual void myRect ( wxDC &dc , int x , int y , int w , int h ) ; ///< Draws a "special" rectangle
     enum { CHOU_FASMAN , P_I , M_W , H_P } type ;
     int lines , l_top, l_bottom ;
     wxArrayString d1 , d2 , d3 ;
@@ -412,125 +412,125 @@ class SeqPlot : public SeqDNA
 class SequenceCanvas : public wxScrolledWindow
     {
     public:
-    SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSize& size);
-    virtual ~SequenceCanvas () ;
-    virtual void OnDraw(wxDC& dc);
-    virtual void safeShow ( wxDC &dc ) ;
-    virtual void OnEvent(wxMouseEvent& event);
-    virtual void OnSize(wxSizeEvent &event);
-    virtual void OnCharHook(wxKeyEvent& event) ;
+    SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSize& size); ///< Constructor
+    virtual ~SequenceCanvas () ; ///< Destructor
+    virtual void OnDraw(wxDC& dc); ///< Draws the sequence
+    virtual void safeShow ( wxDC &dc ) ; ///< Draws the sequence in a memory device context, then blits it over to the "real" one
+    virtual void OnEvent(wxMouseEvent& event); ///< Mouse event handler
+    virtual void OnSize(wxSizeEvent &event); ///< Resize event handler
+    virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
 
-    virtual void vecEdit ( wxCommandEvent &ev ) ;
-    virtual void blastDNA ( wxCommandEvent &ev ) ;
-    virtual void blastAA ( wxCommandEvent &ev ) ;
-    virtual void OnCopyText ( wxCommandEvent &ev ) ;
-    virtual void OnCopyImage ( wxCommandEvent &ev ) ;
-    virtual void OnSaveImage ( wxCommandEvent &ev ) ;
-    virtual void OnPrint ( wxCommandEvent &ev ) ;
-    virtual void OnCut ( wxCommandEvent &ev ) ;
-    virtual void OnCopy ( wxCommandEvent &ev ) ;
-    virtual void OnPrimerForward ( wxCommandEvent &ev ) ;
-    virtual void OnPrimerBackward ( wxCommandEvent &ev ) ;
-    virtual void OnPrimerBoth ( wxCommandEvent &ev ) ;
-    virtual void OnPrimerMutation ( wxCommandEvent &ev ) ;
-    virtual void OnSilmut ( wxCommandEvent &ev ) ;
-    virtual void OnWhatCuts(wxCommandEvent& event);
-    virtual void OnSelAsNewPrimer( wxCommandEvent &ev ) ;
+    virtual void vecEdit ( wxCommandEvent &ev ) ; ///<  Edit event handler
+    virtual void blastDNA ( wxCommandEvent &ev ) ; ///<  "BLAST DNA" event handler
+    virtual void blastAA ( wxCommandEvent &ev ) ; ///<  "BLAST amino acids" event handler
+    virtual void OnCopyText ( wxCommandEvent &ev ) ; ///<  "Copy as text" event handler
+    virtual void OnCopyImage ( wxCommandEvent &ev ) ; ///<  "Copy as image" event handler
+    virtual void OnSaveImage ( wxCommandEvent &ev ) ; ///<  "Save as image" event handler
+    virtual void OnPrint ( wxCommandEvent &ev ) ; ///<  Printing event handler
+    virtual void OnCut ( wxCommandEvent &ev ) ; ///<  Cut event handler
+    virtual void OnCopy ( wxCommandEvent &ev ) ; ///<  Copy event handler
+    virtual void OnPrimerForward ( wxCommandEvent &ev ) ; ///<  "Run PCR with forward primer" event handler
+    virtual void OnPrimerBackward ( wxCommandEvent &ev ) ; ///<  "Run PCR with backward primer" event handler
+    virtual void OnPrimerBoth ( wxCommandEvent &ev ) ; ///<  "Run PCR with both primers" event handler
+    virtual void OnPrimerMutation ( wxCommandEvent &ev ) ; ///<  "Run PCR with mutation primers" event handler
+    virtual void OnSilmut ( wxCommandEvent &ev ) ; ///<  "Silent mutation" event handler
+    virtual void OnWhatCuts(wxCommandEvent& event); ///<  "Find restriction enzymes that cut" event handler
+    virtual void OnSelAsNewPrimer( wxCommandEvent &ev ) ; ///<  "Selection as new primer" event handler
 
-    virtual void OnViewOriginal ( wxCommandEvent &ev ) ;
-    virtual void OnViewReal ( wxCommandEvent &ev ) ;
-    virtual void OnViewCondensed ( wxCommandEvent &ev ) ;
-    virtual void OnBacktranslate ( wxCommandEvent &ev ) ;
+    virtual void OnViewOriginal ( wxCommandEvent &ev ) ; ///<  "View original" mini-display event handler
+    virtual void OnViewReal ( wxCommandEvent &ev ) ; ///<  View 1:1" mini-display event handler
+    virtual void OnViewCondensed ( wxCommandEvent &ev ) ; ///<  View condensed" mini-display event handler
+    virtual void OnBacktranslate ( wxCommandEvent &ev ) ; ///<  "Backtranslate amino acids into DNA" event handler
 
-    virtual void OnSeqUp ( wxCommandEvent &ev ) ;
-    virtual void OnSeqDown ( wxCommandEvent &ev ) ;
-    virtual void OnSeqTop ( wxCommandEvent &ev ) ;
-    virtual void OnSeqBottom ( wxCommandEvent &ev ) ;
-    virtual void OnToggleFeat ( wxCommandEvent &ev ) ;
+    virtual void OnSeqUp ( wxCommandEvent &ev ) ; ///<  "Move alignment sequence up" event handler
+    virtual void OnSeqDown ( wxCommandEvent &ev ) ; ///<  "Move alignment sequence down" event handler
+    virtual void OnSeqTop ( wxCommandEvent &ev ) ; ///<  "Move alignment sequence to top" event handler
+    virtual void OnSeqBottom ( wxCommandEvent &ev ) ; ///<  "Move alignment sequence to bottom" event handler
+    virtual void OnToggleFeat ( wxCommandEvent &ev ) ; ///<  "Toggle feature display for this alignment sequence" event handler
     
-    virtual void OnCopyResultDNA ( wxCommandEvent &ev ) ;
-    virtual void OnCopyResultAA ( wxCommandEvent &ev ) ;
-    virtual void OnNewFromResultDNA ( wxCommandEvent &ev ) ;
-    virtual void OnNewFromResultAA ( wxCommandEvent &ev ) ;
+    virtual void OnCopyResultDNA ( wxCommandEvent &ev ) ; ///<  "Copy DNA resulting from PCR" event handler
+    virtual void OnCopyResultAA ( wxCommandEvent &ev ) ; ///<  "Copy amino acids for DNA resulting from PCR" event handler
+    virtual void OnNewFromResultDNA ( wxCommandEvent &ev ) ; ///<  "New DNA module resulting from PCR" event handler
+    virtual void OnNewFromResultAA ( wxCommandEvent &ev ) ; ///<  "New amino acids module for DNA resulting from PCR" event handler
     
-    virtual void OnInsertGap ( wxCommandEvent &ev ) ;
-    virtual void OnDeleteGap ( wxCommandEvent &ev ) ;
-    virtual void OnInsertOtherGaps ( wxCommandEvent &ev ) ;
-    virtual void OnDeleteOtherGaps ( wxCommandEvent &ev ) ;
+    virtual void OnInsertGap ( wxCommandEvent &ev ) ; ///<  "Insert gap into alignment sequence" event handler
+    virtual void OnDeleteGap ( wxCommandEvent &ev ) ; ///<  "Delete gap from alignment sequence" event handler
+    virtual void OnInsertOtherGaps ( wxCommandEvent &ev ) ; ///<  "Insert gap into all other alignment sequences" event handler
+    virtual void OnDeleteOtherGaps ( wxCommandEvent &ev ) ; ///<  "Delete gap from all other alignment sequences" event handler
 
-    virtual void OnStrandCopy35(wxCommandEvent& event);
-    virtual void OnStrandCopy53(wxCommandEvent& event);
-    virtual void OnStrandCopyBoth(wxCommandEvent& event);
-    virtual void OnStrandNew35(wxCommandEvent& event);
-    virtual void OnStrandNew53(wxCommandEvent& event);
-    virtual void OnStrandNewBoth(wxCommandEvent& event);
+    virtual void OnStrandCopy35(wxCommandEvent& event); ///<  "Copy the 3'->5' strand" event handler
+    virtual void OnStrandCopy53(wxCommandEvent& event); ///<  "Copy the 5'->3' strand" event handler
+    virtual void OnStrandCopyBoth(wxCommandEvent& event); ///<  "Copy both strands as a text" event handler
+    virtual void OnStrandNew35(wxCommandEvent& event); ///<  "Generate new DNA module from 3'->5' strand" event handler
+    virtual void OnStrandNew53(wxCommandEvent& event); ///<  "Generate new DNA module from 5'->3' strand" event handler
+    virtual void OnStrandNewBoth(wxCommandEvent& event); ///<  "Generate new DNA modules from both strands" event handler
 
-    virtual void OnInsertRestrictionSiteLeft ( wxCommandEvent &ev ) ;
-    virtual void OnInsertRestrictionSiteRight ( wxCommandEvent &ev ) ;
+    virtual void OnInsertRestrictionSiteLeft ( wxCommandEvent &ev ) ; ///<  "Insert restriction site left of the marking" event handler
+    virtual void OnInsertRestrictionSiteRight ( wxCommandEvent &ev ) ; ///<  "Insert restriction site right of the marking" event handler
 
-    virtual void OnPaste ( wxCommandEvent &ev ) ;
-    virtual void OnFocus(wxFocusEvent& event) ;
-    virtual void OnKillFocus(wxFocusEvent& event) ;
-    virtual void rsHideLimit ( wxCommandEvent &ev ) ;
+    virtual void OnPaste ( wxCommandEvent &ev ) ; ///<  Paste event handler
+    virtual void OnFocus(wxFocusEvent& event) ; ///<  "Display gets focus" event handler
+    virtual void OnKillFocus(wxFocusEvent& event) ; ///<  "Display loses focus" event handler
+    virtual void rsHideLimit ( wxCommandEvent &ev ) ; ///<  "Limit restriction enzymes" event handler
     
-    virtual wxString getSelection () ;
+    virtual wxString getSelection () ; ///< Returns the current selection as a wxString
     
-    virtual void updateEdit ( TVector *v , wxString id , int from ) ;
-    virtual void arrange () ;
-    virtual SeqBasic* findMouseTarget ( wxPoint pt , int &pos ) ;
-    virtual int findMouseTargetItem ( wxPoint pt ) ;
-    virtual SeqBasic* findID ( wxString id ) ;
-    virtual void mark ( wxString id , int from , int to , int value = 1 ) ;
-    virtual bool inMarkRange ( int x , int f , int t , int l ) ;
-    virtual void ensureVisible ( int pos ) ;
-    virtual int getBatchMark () ;
-    virtual void MyGetClientSize ( int *w , int *h ) ;
-    virtual void MyGetSize ( int *w , int *h ) ;
-    virtual wxSize MyGetClientSize () ;
-    virtual void MyGetViewStart ( int *x , int *y ) ;
-    virtual void SilentRefresh () ;
-    virtual bool doOverwrite () ;
-    virtual TAminoAcids *getAA() ;
-    virtual TPrimerDesign *getPD() ;
-    virtual TAlignment *getAln() ;
+    virtual void updateEdit ( TVector *v , wxString id , int from ) ; ///< Updates the sequences and display once a key was pressed and, thus, the sequence altered
+    virtual void arrange () ; ///< Arranges tghe layout for all the seq structures
+    virtual SeqBasic* findMouseTarget ( wxPoint pt , int &pos ) ; ///< Returns a pointer to the seq structure (and the position inside) the given point is within
+    virtual int findMouseTargetItem ( wxPoint pt ) ; ///< Returns the ID of the seq structure the given point is within
+    virtual SeqBasic* findID ( wxString id ) ; ///< Returns the pointer to the seq structure with the given ID string
+    virtual void mark ( wxString id , int from , int to , int value = 1 ) ; ///< Marks part of a sequence
+    virtual bool inMarkRange ( int x , int f , int t , int l ) ; ///< Is this span withing the marked range?
+    virtual void ensureVisible ( int pos ) ; ///< Make sure the position is in the visible part of the display; scroll if necessary
+    virtual int getBatchMark () ; ///< I forgot what this does
+    virtual void MyGetClientSize ( int *w , int *h ) ; ///< Wrapper function; will compensate for printing device context
+    virtual void MyGetSize ( int *w , int *h ) ; ///< Wrapper function; will compensate for printing device context
+    virtual wxSize MyGetClientSize () ; ///< Wrapper function; will compensate for printing device context
+    virtual void MyGetViewStart ( int *x , int *y ) ; ///< Wrapper function; will compensate for printing device context
+    virtual void SilentRefresh () ; ///< Refresh without cleaning background first (no flicker)
+    virtual bool doOverwrite () ; ///< Are we in edit overwrite mode?
+    virtual TAminoAcids *getAA() ; ///< Returns pointer to amino acid module, or NULL
+    virtual TPrimerDesign *getPD() ; ///< Returns pointer to primer design module, or NULL
+    virtual TAlignment *getAln() ; ///< Returns pointer to alignment module, or NULL
     
-    virtual bool getPrintToColor () { return printToColor ; }
-    virtual void setPrintToColor ( bool _b ) { printToColor = _b ; }
-    virtual bool getDrawAll () { return drawall ; }
-    virtual void setDrawAll ( bool _b ) { drawall = _b ; }
-    virtual bool isHorizontal () { return horizontal ; }
-    virtual void setHorizontal ( bool _b ) { horizontal = _b ; }
-    virtual void toggleHorizontal () { setHorizontal ( !isHorizontal() ) ; }
-    virtual bool getHide () { return hide ; }
-    virtual void doHide ( bool _b ) { hide = _b ; }
-    virtual bool isMiniDisplay () { return miniDisplay ; }
-    virtual void setMiniDisplay ( bool _b ) { miniDisplay = _b ; }
-    virtual SeqBasic *getLastWhere() { return lastwhere ; }
-    virtual bool isPrinting () { return printing ; }
-    virtual void forceOverwrite ( bool _b ) { forceoverwrite = _b ; }
-    virtual bool getEditMode () { return editMode ; }
-    virtual void setEditMode ( bool _b ) { editMode = _b ; }
-    virtual void setLowX ( int _i ) { if ( lowx < _i ) lowx = _i ; }
-    virtual void startEdit ( wxString id ) ;
-    virtual void stopEdit () ;
-    virtual int markedFrom () { return _from ; }
-    virtual int markedTo () { return _to ; }
-    virtual void unmark () ;
-    virtual int NumberOfLines() { return seq.GetCount() + blankline ; }
+    virtual bool getPrintToColor () { return printToColor ; } ///< Are we printing to a color printer?
+    virtual void setPrintToColor ( bool _b ) { printToColor = _b ; } ///< We are printing to a color printer!
+    virtual bool getDrawAll () { return drawall ; } ///< Are we drawing everything ( not just the visible part)?
+    virtual void setDrawAll ( bool _b ) { drawall = _b ; } ///< We are drawing everything ( not just the visible part)
+    virtual bool isHorizontal () { return horizontal ; } ///< Is the display set to horizontal mode?
+    virtual void setHorizontal ( bool _b ) { horizontal = _b ; } ///< Set the display to horizontal mode
+    virtual void toggleHorizontal () { setHorizontal ( !isHorizontal() ) ; } ///< Toggle horizontal/vertical mode
+    virtual bool getHide () { return hide ; } ///< Is the display hidden (so we don't have to draw anything)?
+    virtual void doHide ( bool _b ) { hide = _b ; } ///< Hide the display
+    virtual bool isMiniDisplay () { return miniDisplay ; } ///< Is this a mini display in the amino acid module?
+    virtual void setMiniDisplay ( bool _b ) { miniDisplay = _b ; } ///< This is a mini display in the amino acid module
+    virtual SeqBasic *getLastWhere() { return lastwhere ; } ///< Returns a pointer to the last marked seq structure
+    virtual bool isPrinting () { return printing ; } ///< Are we printing (or drawing on the screen)?
+    virtual void forceOverwrite ( bool _b ) { forceoverwrite = _b ; } ///< Ensure overwrite mode (for example, ABI and PCR mode)
+    virtual bool getEditMode () { return editMode ; } ///< Are we editing?
+    virtual void setEditMode ( bool _b ) { editMode = _b ; } ///< Sets wether we're editing
+    virtual void setLowX ( int _i ) { if ( lowx < _i ) lowx = _i ; } ///< Minimum X coodrinate to draw
+    virtual void startEdit ( wxString id ) ; ///< Initiate editing mode
+    virtual void stopEdit () ; ///< Terminate editing mode
+    virtual int markedFrom () { return _from ; } ///< Return first marked position, or -1
+    virtual int markedTo () { return _to ; } ///< Return last marked position, or -1
+    virtual void unmark () ; ///< Removes any marking
+    virtual int NumberOfLines() { return seq.GetCount() + blankline ; } ///< Returns the number of seq struntures AND blank lines
 
-    ChildBase *child ; // Wanna-be universal com port to "parent"
-    MyChild *p ;
+    ChildBase *child ; ///< Wanna-be universal pointer to the containing module
+    MyChild *p ; ///< Pointer to the containing MyChild; if this is not within the DNA module, NULL
     int blankline , charwidth , charheight , hardstop ;
     int lastmarked , maxendnumberlength , lastyoffset , blocksize , border ;
-    wxArraySeqBasic seq ;
+    wxArraySeqBasic seq ; ///< The list of SeqBasic structures
     wxFont *font , *smallFont , *varFont;
     wxString edit_id , edit_valid ;
     
     private :
-    virtual wxBitmap *getSequenceBitmap () ;
-    virtual TVector *getPCR_DNA_vector() ;
-    virtual void showContextMenu ( SeqBasic *where , int pos , wxPoint pt ) ;
-    virtual void insertRestrictionSite ( bool left ) ;
+    virtual wxBitmap *getSequenceBitmap () ; ///< Returns the sequences display as a bitmap
+    virtual TVector *getPCR_DNA_vector() ; ///< Returns a pointer to the DNA vector in PCR mode; otherwise, NULL
+    virtual void showContextMenu ( SeqBasic *where , int pos , wxPoint pt ) ; ///< Generates the context menu
+    virtual void insertRestrictionSite ( bool left ) ; ///< Creates a new restriction site via simulated editing, left or right of the current mark
     virtual void editSequence ( int k , wxKeyEvent& event ) ;
     virtual void editCharPressed ( int k , TVector *v , wxString *the_sequence ) ;
     virtual void editSpecialKeyPressed ( int k , TVector *v , wxString *the_sequence , int wy , wxKeyEvent& event ) ;

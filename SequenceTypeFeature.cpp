@@ -1,6 +1,7 @@
+/** \file
+	\brief Contains the SeqFeature class members
+*/
 #include "SequenceCanvas.h"
-
-//************************************************ SeqFeature
 
 void SeqFeature::show ( wxDC& dc )
     {

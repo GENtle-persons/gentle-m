@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the SeqBasic, SeqPrimer, SeqNum, and SeqDivider class members
+*/
 #include "SequenceCanvas.h"
 
 //************************************************ SeqBasic

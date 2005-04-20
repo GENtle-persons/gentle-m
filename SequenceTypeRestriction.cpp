@@ -1,7 +1,7 @@
+/** \file
+	\brief Contains the SeqRestriction class members
+*/
 #include "SequenceCanvas.h"
-
-
-//************************************************ SeqRestriction
 
 int SeqRestriction::arrange ( int n )
     {

@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the class members for various dialogs
+*/
 #include "MiscDialogs.h"
 
 BEGIN_EVENT_TABLE(TMyMultipleChoiceDialog, wxDialog )
@@ -328,7 +331,7 @@ TSequencingPrimerDialog::~TSequencingPrimerDialog ()
     }
 
 // ******************************************* TMutationDialog
-
+/*
 TMutationDialog::TMutationDialog (wxWindow *parent, const wxString& title , wxString _codon )
     : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 600 , 450 ) )
     {
@@ -341,8 +344,9 @@ TMutationDialog::~TMutationDialog ()
     {
     delete v ;
     }
+*/
 
-
+/*
 // TStandbyDialog
 
 TStandbyDialog::TStandbyDialog ( wxWindow *parent , 
@@ -353,10 +357,10 @@ TStandbyDialog::TStandbyDialog ( wxWindow *parent ,
     Center () ;
     
     }
+*/
 
 
-
-//**
+//************************************
 
 TURLtext::TURLtext ( wxWindow *parent , int id , wxString title ,
                     wxPoint pos , wxSize size , int style )

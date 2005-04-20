@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the SequenceCanvas, SequencePartList, and SeqPos class members
+*/
 #include "SequenceCanvas.h"
 #include <wx/printdlg.h>
 #include <wx/datetime.h>
