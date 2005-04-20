@@ -32,7 +32,7 @@ class MySplitter : public wxSplitterWindow
     DECLARE_EVENT_TABLE()
     } ;
 
-/** \brief The very, very, *very* important class to handle DNA in all its beauty!
+/** \brief The very, very, *very* important module to handle DNA in all its beauty!
 */
 class MyChild: public ChildBase
 {

@@ -1,6 +1,7 @@
+/** \file
+	\brief Contains the SeqPlot class members
+*/
 #include "SequenceCanvas.h"
-
-//************************************************ SeqPlot
 
 wxString SeqPlot::getTip ( int pos )
     {

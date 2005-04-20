@@ -1,7 +1,7 @@
+/** \file
+	\brief Contains the SeqAlign class members
+*/
 #include "SequenceCanvas.h"
-
-
-//************************************************ SeqAlign
 
 int SeqAlign::arrange ( int n )
     {

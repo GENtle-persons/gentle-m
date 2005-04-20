@@ -1,6 +1,7 @@
+/** \file
+	\brief Contains the SeqAA class members
+*/
 #include "SequenceCanvas.h"
-
-//************************************************ SeqAA
 
 SeqAA::~SeqAA ()
     {

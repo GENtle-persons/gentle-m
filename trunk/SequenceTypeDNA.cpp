@@ -1,6 +1,7 @@
+/** \file
+	\brief Contains the SeqDNA class members
+*/
 #include "SequenceCanvas.h"
-
-//************************************************ SeqDNA
 
 int SeqDNA::arrange ( int n )
     {

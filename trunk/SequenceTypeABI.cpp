@@ -1,7 +1,8 @@
+/** \file
+	\brief Contains the SeqABI class members
+*/
 #include "SequenceCanvas.h"
 
-//************************************************ SeqABI
-    
 SeqABI::~SeqABI ()
     {
     if ( at ) delete at ;
