@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the members of the ProgramOptionsDialog class and its helper classes, TEnzymeSettingsTab (which is also used in TVectorEditor) and TEnzymeRules
+*/
 #include "ProgramOptionsDialog.h"
 
 BEGIN_EVENT_TABLE(ProgramOptionsDialog, wxDialog )

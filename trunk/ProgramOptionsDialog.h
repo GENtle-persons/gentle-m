@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the ProgramOptionsDialog class and its helper classes, TEnzymeSettingsTab (which is also used in TVectorEditor) and TEnzymeRules
+*/
 #ifndef _ProgramOptionsDialog_h_
 #define _ProgramOptionsDialog_h_
 
@@ -9,17 +12,20 @@ class TVector ;
 #define EST_PROJECT 1
 #define EST_SINGLE 2
 
+/**	\brief The "tab" for global and per-sequence enzyme/methylation/etc. settings
+*/
 class TEnzymeSettingsTab : public wxPanel
 	{
 	public :
-	TEnzymeSettingsTab ( wxWindow *parent = NULL , int _mode = EST_GLOBAL ) ;
-    virtual void updateColorButton ( wxButton *b , wxColour &c ) ;
-    virtual void updateGlobalEnzymes () ;
-    virtual void OnEnzymeCheckbox ( wxCommandEvent &event ) ;
-    virtual void OnButton1 ( wxCommandEvent &event ) ;
-    virtual void OnButton2 ( wxCommandEvent &event ) ;
-    virtual void OnButton3 ( wxCommandEvent &event ) ;
-    virtual void updateColor ( wxColour &c ) ;
+	TEnzymeSettingsTab ( wxWindow *parent = NULL , int _mode = EST_GLOBAL ) ; ///< Constructor
+    virtual void updateColorButton ( wxButton *b , wxColour &c ) ; ///< Updates the color of one of the color choice buttons
+    virtual void updateGlobalEnzymes () ; ///< Update the global enzymes list
+    virtual void updateColor ( wxColour &c ) ; ///< ???
+    
+    virtual void OnEnzymeCheckbox ( wxCommandEvent &event ) ; ///< Enyzme checkbox event handler
+    virtual void OnButton1 ( wxCommandEvent &event ) ; ///< Button 1 (single cutter) event handler
+    virtual void OnButton2 ( wxCommandEvent &event ) ; ///< Button 2 (double cutter) event handler
+    virtual void OnButton3 ( wxCommandEvent &event ) ; ///< Button 3 (triple cutter) event handler
 
     wxCheckBox *useSettings ;
     wxFlexGridSizer *optionsSizer ;
@@ -38,49 +44,53 @@ class TEnzymeSettingsTab : public wxPanel
     DECLARE_EVENT_TABLE()
 	} ;    
 
+/**	\brief The dialog containing program end enzyme global settings
+*/
 class ProgramOptionsDialog : public wxDialog
     {
     public :
-    ProgramOptionsDialog(wxWindow *parent, const wxString& title ) ;
+    ProgramOptionsDialog(wxWindow *parent, const wxString& title ) ; ///< Constructor
 
-    virtual void OnOK ( wxCommandEvent &ev ) ;
-    virtual void OnCancel ( wxCommandEvent &ev ) ;
-    virtual void OnCharHook(wxKeyEvent& event) ;    
+    virtual void OnOK ( wxCommandEvent &ev ) ; ///< OK button event handler
+    virtual void OnCancel ( wxCommandEvent &ev ) ; ///< Cancel button event handler
+    virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
 
-    wxNotebook *nb ;
+    wxNotebook *nb ; ///< Pointer to the wxNotebook structure containing the tabs
     TEnzymeSettingsTab *globalEnzymesPanel ;
     wxPanel *globalSettingsPanel ;
-    wxChoice *language ;
+    wxChoice *language ; ///< Pointer to the dropdown language list
     wxCheckBox *enhancedDisplay , *vectorTitle , *vectorLength ,
                 *loadLastProject , *useMetafile , *showSplashScreen ,
                 *checkUpdate , *useInternalHelp , *doRegisterStuff ;
                 
-    wxRadioBox *editFeatureMode ;
+    wxRadioBox *editFeatureMode ; ///< Pointer to the list of choices of how to treat edited items
                 
     private :
-    virtual void initGlobalSettings () ;
-    virtual void initGlobalEnzymes () ;
+    virtual void initGlobalSettings () ; ///< Initialize "Global settings" tab
+    virtual void initGlobalEnzymes () ; ///< Initialize "Global enzyme settings" tab
     int bo , lh ;
     
     DECLARE_EVENT_TABLE()
     } ;
 
+/** \brief Stores, loads, stores, and compares enzyme settings
+*/
 class TEnzymeRules
 	{
 	public :
-	TEnzymeRules () { init () ; }
-	virtual void init () ;
-	virtual void load_global_settings () ;
-	virtual void save_global_settings () ;
-	virtual void setup_options ( TEnzymeSettingsTab *est ) ;
-	virtual void lookup_options ( TEnzymeSettingsTab *est ) ;
-	virtual bool isEqual ( TEnzymeRules &r ) ;
+	TEnzymeRules () { init () ; } ///< Constructor
+	virtual void init () ; ///< Initialization
+	virtual void load_global_settings () ; ///< Loads global settings from the database
+	virtual void save_global_settings () ; ///< Save global settings to the database
+	virtual void setup_options ( TEnzymeSettingsTab *est ) ; ///< Set options in the tab
+	virtual void lookup_options ( TEnzymeSettingsTab *est ) ; ///< Look up options from the tab
+	virtual bool isEqual ( TEnzymeRules &r ) ; ///< Compare with another set of settings
 	
-	virtual wxString to_string () ;
-	virtual void from_string ( wxString &s ) ;
+	virtual wxString to_string () ; ///< "Compress" to storable string
+	virtual void from_string ( wxString &s ) ; ///< "Decompress" from storage string
 
 	virtual void getVectorCuts ( TVector *v ) ;
-	virtual wxColour *getColor ( int cuts ) ;
+	virtual wxColour *getColor ( int cuts ) ; ///< Returns a pointer to a wxColour structure with the correct color for the given number of cuts
 	
 	bool useit ;
 	int min_cutoff , max_cutoff ;
@@ -94,7 +104,7 @@ class TEnzymeRules
 	int methylation ;
 	
 	private :
-	virtual wxColour scan_color ( wxString s ) ;
+	virtual wxColour scan_color ( wxString s ) ; ///< Make color from string
 	} ;    
 
 #endif
