@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the members of the TextImportDialog class
+*/
 #include "TextImportDialog.h"
 
 BEGIN_EVENT_TABLE(TextImportDialog, wxDialog )
