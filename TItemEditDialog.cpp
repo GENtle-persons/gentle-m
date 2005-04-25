@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the methods of the TItemEditDialog class
+*/
 #include "TItemEditDialog.h"
 
 BEGIN_EVENT_TABLE(TItemEditDialog, wxDialog )

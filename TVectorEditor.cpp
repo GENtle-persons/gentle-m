@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the TVectorEditor class methods
+*/
 #include "TVectorEditor.h"
 
 BEGIN_EVENT_TABLE(TVectorEditor, wxDialog )

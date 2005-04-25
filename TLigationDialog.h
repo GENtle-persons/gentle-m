@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the TLigationDialog class
+*/
 #ifndef _TLIGATIONDIALOG_H_
 #define _TLIGATIONDIALOG_H_
 
@@ -11,21 +14,23 @@ class TVector ;
 class MyFrame ;
 class TStorage ;
 
+/**	\brief The ligation dialog class
+*/
 class TLigationDialog : public wxDialog
     {
     public :
-    TLigationDialog(wxWindow *parent, const wxString& title ) ;
-    virtual void OnCharHook(wxKeyEvent& event) ;
-    void init () ;
-    void generateTargets () ;
-    void curseTargets ( vector <bool> &vc , vector <bool> &used , wxArrayInt &vi ) ;
-    bool doMatch ( int l , int r , bool invertSecond = false ) ;
-    wxString getVIName ( wxArrayInt &vi ) ;
-    void addVTname ( wxString name , wxArrayInt &vi , bool circular ) ;
+    TLigationDialog(wxWindow *parent, const wxString& title ) ; ///< Constructor
+    virtual void init () ; ///< Initialize
+    virtual void generateTargets () ; ///< Generate the target list
+    virtual void curseTargets ( vector <bool> &vc , vector <bool> &used , wxArrayInt &vi ) ; ///< Recurse through targets
+    virtual bool doMatch ( int l , int r , bool invertSecond = false ) ; ///< Do these match?
+    virtual wxString getVIName ( wxArrayInt &vi ) ; ///< Generate a name
+    virtual void addVTname ( wxString name , wxArrayInt &vi , bool circular ) ; ///< Add this one
 
-    void OnToggleSources ( wxCommandEvent &ev ) ;
-    void OnOK ( wxCommandEvent &ev ) ;
-    void OnCancel ( wxCommandEvent &ev ) ;
+    virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
+    virtual void OnToggleSources ( wxCommandEvent &ev ) ; ///< Toggle source list event handler
+    virtual void OnOK ( wxCommandEvent &ev ) ; ///< OK button event handler
+    virtual void OnCancel ( wxCommandEvent &ev ) ; ///< Cancel button event handler
 
     wxCheckListBox *l_sources , *l_targets ;
 
@@ -36,7 +41,7 @@ class TLigationDialog : public wxDialog
     bool doLigate ;
     
     private :
-    wxString invert ( wxString s ) ;
+    virtual wxString invert ( wxString s ) ; ///< Invert the string
 
     DECLARE_EVENT_TABLE()
     } ;

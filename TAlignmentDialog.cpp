@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the methods of the TAlignmentDialog class
+*/
 #include "TAlignmentDialog.h"
 
 BEGIN_EVENT_TABLE(TAlignmentDialog, wxDialog)

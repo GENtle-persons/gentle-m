@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the methods of the TLigationDialog class
+*/
 #include "TLigationDialog.h"
 
 BEGIN_EVENT_TABLE(TLigationDialog, wxDialog )

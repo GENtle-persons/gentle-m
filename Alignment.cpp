@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the methods of the TAlignment class and its helper class, TAlignLine
+*/
 #include "Alignment.h"
 #include <wx/textfile.h>
 #include "clustalw/clustalw.h"
@@ -466,8 +469,11 @@ void TAlignment::generateConsensusSequence ( bool addit )
     wxString s ;
     for ( a = 0 ; a < lines[0].s.length() ; a++ )
         {
-        myass ( lines[1].s.length() > a , "0a" ) ;
-        if ( lines[0].s.GetChar(a) == lines[1].s.GetChar(a) ) s += "*" ;
+        if ( lines[0].s.GetChar(a) == lines[1].s.GetChar(a) )
+        	{
+    	    if ( lines[0].s.GetChar(a) == '-' ) s += " " ;
+            else s += "*" ;
+            }    
         else s += " " ;
         }
     line.s = s ;

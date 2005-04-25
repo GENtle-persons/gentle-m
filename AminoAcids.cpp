@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the TAminoAcids module class methods
+*/
 #include "AminoAcids.h"
 
 BEGIN_EVENT_TABLE(TAminoAcids, MyChildBase)

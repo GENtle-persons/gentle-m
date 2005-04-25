@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the methods of the TPrimerDesign module class
+*/
 #include "PrimerDesign.h"
 
 BEGIN_EVENT_TABLE(TPrimerDesign, MyChildBase)

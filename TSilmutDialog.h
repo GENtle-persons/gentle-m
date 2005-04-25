@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the TSilmutDialog class, and its helper class TSilmutItem
+*/
 #ifndef _TSILMUTDIALOG_H_
 #define _TSILMUTDIALOG_H_
 
@@ -10,37 +13,41 @@
 class TRestrictionEnzyme ;
 class TPrimerDesign ;
 
+/**	\brief Helper class for TSilmutDialog
+*/
 class TSilmutItem
     {
     public :
-    wxString mut ;
+    wxString mut ; ///< Mutated sequence
     int changes , cuts ;
-    TRestrictionEnzyme *e ;
+    TRestrictionEnzyme *e ; ///< Pointer to the restriction enzyme
     wxArrayInt fragments ;
     } ;
 
+/** \brief Silent mutation dialog
+*/
 class TSilmutDialog : public wxDialog
     {
     public :
     TSilmutDialog ( wxWindow *parent , const wxString &s , 
                     int _mode = M_SILMUT , 
-                    int _mut_pos = -1 , int _mut_dir = 1 ) ;
-    virtual void initme ( TVector *vec , int _from , int _to ) ;
-    virtual void calc () ;
-    virtual void showit () ;
-    virtual void OnSpin ( wxSpinEvent &event ) ;
-    virtual void OnSpin2 ( wxCommandEvent &event ) ;
-    virtual void OnChoose ( wxCommandEvent &event ) ;
-    virtual void OnOK ( wxCommandEvent &ev ) ;
-    virtual void OnCancel ( wxCommandEvent &ev ) ;
-    virtual void OnLbDoubleClick ( wxCommandEvent &ev ) ;
-    virtual void OnCharHook(wxKeyEvent& event) ;
-    virtual wxString getSequence () ;
-    virtual TRestrictionEnzyme *getEnzyme () ;
+                    int _mut_pos = -1 , int _mut_dir = 1 ) ; ///< Constructor
+    virtual void initme ( TVector *vec , int _from , int _to ) ; ///< Initialization
+    virtual void calc () ; ///< Calculate
+    virtual void showit () ; ///< Show results
+    virtual void OnSpin ( wxSpinEvent &event ) ; ///< Spin control (changes) event handler
+    virtual void OnSpin2 ( wxCommandEvent &event ) ; ///< Spin control (max) event handler
+    virtual void OnChoose ( wxCommandEvent &event ) ; ///< Choice event handler
+    virtual void OnOK ( wxCommandEvent &ev ) ; ///< OK button event handler
+    virtual void OnCancel ( wxCommandEvent &ev ) ; ///< Cancel button event handler
+    virtual void OnLbDoubleClick ( wxCommandEvent &ev ) ; ///< Listbox double-click event handler
+    virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
+    virtual wxString getSequence () ; ///< Returns the sequence
+    virtual TRestrictionEnzyme *getEnzyme () ; ///< Returns a pointer to the enzyme
     
     private :
-    wxString getAAresult ( wxString dna ) ;
-    int selID () ;
+    wxString getAAresult ( wxString dna ) ; ///< Returns resulting amino acid sequence
+    int selID () ; ///< Returns selected ID
     
     // Variables
     TVector *v ;

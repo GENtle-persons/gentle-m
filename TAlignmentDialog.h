@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the TAlignmentDialog class
+*/
 #ifndef _T_ALIGNMENT_DIALOG_
 #define _T_ALIGNMENT_DIALOG_
 
@@ -5,32 +8,34 @@
 
 class TAlignment ;
 
+/** \brief The alignment settings dialog
+*/
 class TAlignmentDialog : public wxDialog
     {
     public :
-    TAlignmentDialog(wxWindow *parent, const wxString& title ) ;
-    ~TAlignmentDialog();
-    void init_what () ;
-    void init_how () ;
-    void init_disp () ;
+    TAlignmentDialog(wxWindow *parent, const wxString& title ) ; ///< Constructor
+    ~TAlignmentDialog(); ///< Destructor
+    virtual void init_what () ; ///< Tab for sequences to align
+    virtual void init_how () ; ///< Tab for algorithm settings
+    virtual void init_disp () ; ///< Tab for display settings (unused)
+       
+    virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
+    virtual void OnOK ( wxCommandEvent &ev ) ; ///< OK button event handler
+    virtual void OnCancel ( wxCommandEvent &ev ) ; ///< Cancel button event handler
+    virtual void OnAdd ( wxCommandEvent &ev ) ; ///< "Add sequence to the list" event handler
+    virtual void OnDel ( wxCommandEvent &ev ) ; ///< "Remove sequence from the list" event handler
+    virtual void OnUp ( wxCommandEvent &ev ) ; ///< "Move sequence up in list" event handler
+    virtual void OnDown ( wxCommandEvent &ev ) ; ///< "Move sequence down in list" event handler
     
-    wxNotebook *nb ;
+    wxNotebook *nb ; ///< Pointer to the wxNotebook structure holding the tabs
     wxPanel *pwhat , *phow , *pdisp ;
     wxListBox *cur , *all , *alg ;
     wxSpinCtrl *alg_match , *alg_mismatch , *alg_penalty ;
     wxChoice *alg_matrix ;
     
     int bo , th ;
-    TAlignment *al ;
-    
-    virtual void OnCharHook(wxKeyEvent& event) ;
-    void OnOK ( wxCommandEvent &ev ) ;
-    void OnCancel ( wxCommandEvent &ev ) ;
-    void OnAdd ( wxCommandEvent &ev ) ;
-    void OnDel ( wxCommandEvent &ev ) ;
-    void OnUp ( wxCommandEvent &ev ) ;
-    void OnDown ( wxCommandEvent &ev ) ;
-    
+    TAlignment *al ; ///< Pointer to the calling TAlignment module
+
     wxArrayTVector vav , vcv ;
     wxArrayString van , vcn ;
 
