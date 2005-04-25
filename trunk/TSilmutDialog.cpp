@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the methods of the TSilmutDialog class, and its helper class TSilmutItem
+*/
 #include "TSilmutDialog.h"
 
 BEGIN_EVENT_TABLE(TSilmutDialog, wxDialog )

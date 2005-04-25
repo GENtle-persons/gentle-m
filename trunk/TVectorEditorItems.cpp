@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the TVectorEditor class methods concerning items
+*/
 #include "TVectorEditor.h"
 
 void TVectorEditor::commitItems ()

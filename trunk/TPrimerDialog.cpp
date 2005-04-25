@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the methods of the TPrimerDialog class
+*/
 #include "TPrimerDialog.h"
 
 BEGIN_EVENT_TABLE(TPrimerDialog, wxDialog )
@@ -19,9 +22,6 @@ BEGIN_EVENT_TABLE(TPrimerDialog, wxDialog )
 
     EVT_CHAR_HOOK(TPrimerDialog::OnCharHook)
 END_EVENT_TABLE()
-
-
-//*************************************** TPrimerDialog
 
 bool operator < ( const TPrimer &p1 , const TPrimer &p2 )
     {

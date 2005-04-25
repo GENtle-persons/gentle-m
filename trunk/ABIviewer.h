@@ -10,8 +10,7 @@
 
 class TVector ;
 
-/**	\class TGridBasic
-	\brief The ABI (sequencer data) viewer module class
+/**	\brief The ABI (sequencer data) viewer module class
 */
 class TABIviewer : public ChildBase
     {

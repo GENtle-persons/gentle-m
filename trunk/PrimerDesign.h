@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the TPrimerDesign module class
+*/
 #ifndef _PRIMER_DSEGIN_H_
 #define _PRIMER_DSEGIN_H_
 
@@ -10,6 +13,8 @@ class TPrimerDialog ;
 class TPrimerDesign ;
 class TPrimer ;
 
+/**	\brief The virtual PCR/primer design module
+*/
 class TPrimerDesign : public ChildBase
     {
     public :
@@ -17,20 +22,19 @@ class TPrimerDesign : public ChildBase
                     wxString title,
                     TVector *_vec,
                     vector <TPrimer> pl ,
-                    int _mut = -1 ) ;
-    ~TPrimerDesign () ;
+                    int _mut = -1 ) ; ///< Constructor
+    ~TPrimerDesign () ; ///< Destructor
     
-    void initme () ;
-    virtual wxString getName () ;
-    virtual void AddPrimer ( wxString s , wxString pname = "" ) ;
-    virtual void showSequence () ;
-    virtual void updateResultSequence () ;
-    virtual void updatePrimersFromSequence () ;
-    virtual void updatePrimerStats () ;
-    virtual void doShowPrimer ( int i ) ;
+    void initme () ; ///< Initialize
+    virtual wxString getName () ; ///< Returns the name of the vector
+    virtual void AddPrimer ( wxString s , wxString pname = "" ) ; ///< Add a primer to the module
+    virtual void showSequence () ; ///< Refresh the sequence map
+    virtual void updateResultSequence () ; ///< Generates the resulting DNA and amino acid sequences from the template sequence and the primers
+    virtual void updatePrimersFromSequence () ; ///< Updates the primers from the primer sequences in the map (after editing)
+    virtual void updatePrimerStats () ; ///< Update primer detail display
+    virtual void doShowPrimer ( int i ) ; ///< Mark and scroll to a primer in the sequence map
 
     virtual void OnCopy(wxCommandEvent& event);
-//    virtual void OnClose(wxCloseEvent& event) ;
     virtual void OnEditMode(wxCommandEvent& event);
     
     virtual void OnSelectPrimer ( wxListEvent& event);

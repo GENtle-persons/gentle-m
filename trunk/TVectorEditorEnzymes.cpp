@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the TVectorEditor class methods concerning enzymes
+*/
 #include "TVectorEditor.h"
 
 void TVectorEditor::initPanEnzym ()
