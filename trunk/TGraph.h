@@ -112,10 +112,12 @@ class TGraphDisplay : public wxPanel
  	void showMiniature ( wxDC &dc ) ; ///< Draws the miniature preview (in zoomed mode)
  	void showDraggingRect ( wxDC &dc ) ;
  	
- 	void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
-    void OnPaint(wxPaintEvent& event) ; ///< Paint event handler
-    void OnEvent(wxMouseEvent& event) ; ///< Mouse event handler
-    void OnSwapSides(wxCommandEvent &event) ; ///< To switch scales left/right or top/bottom
+ 	virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
+    virtual void OnPaint(wxPaintEvent& event) ; ///< Paint event handler
+    virtual void OnEvent(wxMouseEvent& event) ; ///< Mouse event handler
+    virtual void OnSwapSides(wxCommandEvent &event) ; ///< "Switch scales left/right or top/bottom" event handler
+    virtual void OnCopyAsImage(wxCommandEvent &event) ; ///< "Copy as image" event handler
+    virtual void OnSaveAsImage(wxCommandEvent &event) ; ///< "Save as image" event handler
  	
  	vector <TGraphScale*> scales ; ///< The scales
  	vector <TGraphData*> data ; ///< The graphs (data)
@@ -124,6 +126,7 @@ class TGraphDisplay : public wxPanel
  	
  	private :
   	bool IsSetupComplete() ; ///< Don't draw before setup is complete (divsion by zero and other ugliness)
+  	void DrawIntoBitmap ( wxBitmap &bmp ) ; ///< Draws the current display into a wxBitmap instead of the display (for copying and saving)
 
   	bool setupCompleted ; ///< Is setup complete?
  	TGraphScale *old_scale ; ///< The last scale
@@ -154,6 +157,7 @@ class TGraph : public ChildBase
     virtual void OnZoomX(wxScrollEvent& event); ///< Zoom event handler
     virtual void OnZoomY(wxScrollEvent& event); ///< Zoom event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler
+ 	virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
 
     TGraphDisplay *gd ; ///< Pointer to the display class (a tab)
 

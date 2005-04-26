@@ -4,6 +4,7 @@
 wxColour TGraphDisplay::prettyColor = wxColour ( 0x99 , 0xCC , 0xFF ) ;
 
 BEGIN_EVENT_TABLE(TGraph, MyChildBase)
+    EVT_CHAR_HOOK(TGraph::OnCharHook)
 //    EVT_MENU(SEQ_PRINT, TCalculator::OnSeqPrint)
 //    EVT_MENU(MDI_PRINT_REPORT,TCalculator::OnPrintPreview)
     EVT_CLOSE(ChildBase::OnClose)
@@ -59,6 +60,12 @@ TGraph::~TGraph()
   		nb = NULL ;
 		} */
 	}
+
+void TGraph::OnCharHook ( wxKeyEvent& event )
+	{
+	wxMessageBox ( "!" ) ;
+	if ( gd ) gd->OnCharHook ( event ) ;
+	}    
 
 void TGraph::initme ()
 	{
@@ -117,6 +124,7 @@ void TGraph::initme ()
     myapp()->frame->setChild ( this ) ;
     Maximize () ;
     Activate () ;
+    gd->SetFocus() ;
 	}
 
 wxString TGraph::getName ()
