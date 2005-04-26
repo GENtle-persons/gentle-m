@@ -747,3 +747,5 @@
 "t_graph_file_type_xypair","XY pairs","XY-Paare"
 "t_primer_up","5'","5'"
 "t_primer_down","3'","3'"
+"m_graph_save_as_image","Save as image","Als Bild speichern"
+"m_graph_copy_as_image","Copy as image","Als Bild kopieren"

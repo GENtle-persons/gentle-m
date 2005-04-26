@@ -2,10 +2,14 @@
 #include <wx/dcbuffer.h>
 
 BEGIN_EVENT_TABLE(TGraphDisplay, wxPanel)
+    EVT_KEY_DOWN(TGraphDisplay::OnCharHook)
+    EVT_KEY_UP(TGraphDisplay::OnCharHook)
+    EVT_CHAR(TGraphDisplay::OnCharHook)
     EVT_PAINT(TGraphDisplay::OnPaint)
     EVT_MOUSE_EVENTS(TGraphDisplay::OnEvent)
     EVT_MENU(GRAPH_SWAP_SIDE,TGraphDisplay::OnSwapSides)
-    EVT_CHAR_HOOK(TGraphDisplay::OnCharHook)
+    EVT_MENU(GRAPH_COPY_AS_IMAGE,TGraphDisplay::OnCopyAsImage)
+    EVT_MENU(GRAPH_SAVE_AS_IMAGE,TGraphDisplay::OnSaveAsImage)
 END_EVENT_TABLE()
 
 //******************************************************** TGraphDisplay    
@@ -593,7 +597,7 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
     	}
 
    	// End of dragging (box)?
-   	else if ( inner.Inside ( pt ) && event.LeftUp() && draggingRect.x != -1 )
+   	else if ( inner.Inside ( pt ) && event.LeftUp() && draggingRect.x != -1  )
    		{
    		SetCursor(*wxSTANDARD_CURSOR) ;
 	    int x1 = draggingRect.GetLeft() ;
@@ -654,7 +658,7 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
  		    	}    
        		}
     	}    
-   	else
+   	else if ( !event.ControlDown() )
     	{
      	draggingRect.x = -1 ;
      	if ( inner.Inside ( pt ) ) SetCursor(wxCursor(wxCURSOR_HAND)) ;
@@ -704,7 +708,12 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
 	    if ( new_scale )
 	    	{
 	    	cm->Append ( GRAPH_SWAP_SIDE , txt("m_graph_swap_side") ) ;
-	    	}   
+	    	}
+    	else
+    		{
+		    cm->Append ( GRAPH_COPY_AS_IMAGE , txt("m_graph_copy_as_image") ) ;
+		    cm->Append ( GRAPH_SAVE_AS_IMAGE , txt("m_graph_save_as_image") ) ;
+    		}    
         PopupMenu ( cm , pt ) ;
         delete cm ;    
     	}   
@@ -713,11 +722,10 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
     }    
 
 void TGraphDisplay::OnCharHook ( wxKeyEvent& event )
-	{/*
+	{
  	if ( event.ControlDown() ) SetCursor ( *wxCROSS_CURSOR ) ;
 // 	else if ( event.ShiftDown() ) 
  	else SetCursor(wxCursor(wxCURSOR_HAND)) ;
- 	wxMessageBox ( "!" ) ;*/
 	}    
 
 void TGraphDisplay::OnSwapSides(wxCommandEvent &event)
@@ -727,7 +735,37 @@ void TGraphDisplay::OnSwapSides(wxCommandEvent &event)
 	wxPaintEvent ev ;
 	OnPaint ( ev ) ;
 	}
+	
+void TGraphDisplay::DrawIntoBitmap ( wxBitmap &bmp )
+	{
+	int w , h ;
+	g->GetClientSize ( &w , &h ) ;
+	wxBitmap bmp2 ( w , h , 24 ) ;
+	wxMemoryDC memdc ;
+	memdc.SelectObject ( bmp2 ) ;
+	drawit ( memdc ) ;
+	bmp = bmp2 ;
+	}    
 
+void TGraphDisplay::OnCopyAsImage(wxCommandEvent &event)
+	{
+    if (wxTheClipboard->Open())
+      {
+      wxBitmap bmp ;
+      DrawIntoBitmap ( bmp ) ;
+      wxTheClipboard->SetData( new wxBitmapDataObject ( bmp ) );
+      wxTheClipboard->Close();
+      }
+	}
+	
+void TGraphDisplay::OnSaveAsImage(wxCommandEvent &event)
+	{
+ 	wxString filename = "Graph" ;
+ 	wxBitmap bmp ;
+ 	DrawIntoBitmap ( bmp ) ;
+	myapp()->frame->saveImage ( &bmp , filename ) ;
+	}
+	
 void TGraphDisplay::UpdateDisplay ()
 	{
     wxClientDC dc ( this ) ;

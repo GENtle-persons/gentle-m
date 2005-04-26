@@ -355,12 +355,9 @@ void TMyImagePanel::OnCopy(wxCommandEvent &event)
     {
     if (wxTheClipboard->Open())
       {
-      wxBitmap bmp2 ;
-      WriteIntoBitmap ( bmp2 ) ;
-      wxMemoryDC memdc ;
-      memdc.SelectObject ( bmp2 ) ;
-      OnDraw ( memdc ) ;
-      wxTheClipboard->SetData( new wxBitmapDataObject ( bmp2 ) );
+      wxBitmap bmp ;
+      WriteIntoBitmap ( bmp ) ;
+      wxTheClipboard->SetData( new wxBitmapDataObject ( bmp ) );
       wxTheClipboard->Close();
       }
     }
