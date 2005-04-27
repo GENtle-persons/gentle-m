@@ -141,8 +141,8 @@ void ChildBase::Activate ()
      						cSequence->markedFrom() , 
            					cSequence->markedTo() , 
                 			cSequence->getEditMode() ? 2 : 1 ) ;
- 		} 			
-    Refresh () ;
+ 		}
+//    Refresh () ;
     }
     
 wxToolBar *ChildBase::GetToolBar ()
