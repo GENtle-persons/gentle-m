@@ -459,7 +459,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
             if ( i->getParam ( "AUTOMATIC" ) == "SEQUENCING PRIMER" )
             	dd = ( dt - df ) / 2 ;
             
-            if ( i->direction ==  1 && abs ( dt - df ) > 3 ) 
+            if ( i->direction ==  1 && abs ( (int) ( dt - df ) ) > 3 ) 
                 {
                 dt -= dd ;
                 p.push_back ( wxPoint ( deg2x ( df+dd , (r1+r2)/2 ) , 

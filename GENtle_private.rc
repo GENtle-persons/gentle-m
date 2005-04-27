@@ -1,6 +1,7 @@
-// THIS FILE WILL BE OVERWRITTEN BY DEV-C++!
-// DO NOT EDIT!
+/* THIS FILE WILL BE OVERWRITTEN BY DEV-C++ */
+/* DO NOT EDIT! */
 
 #include "../../include/wx/msw/wx.rc"
 
 A ICON MOVEABLE PURE LOADONCALL DISCARDABLE "GENtle.ico"
+
