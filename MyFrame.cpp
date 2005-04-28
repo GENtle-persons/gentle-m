@@ -805,7 +805,7 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
     wxArrayChildBase vc ;
     wxArrayString vs ;
     bool alignment = false ;
-    
+//    wxStartTimer () ;
     gb.vs.Clear () ;
     gb.vi.Clear () ;
 
@@ -861,7 +861,7 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
         {
         runAlignment ( vs , vc ) ;
         }
-        
+//    wxMessageBox ( wxString::Format ( "%dms" , wxGetElapsedTime() ) ) ;
     wxEndBusyCursor() ;
     }
 
