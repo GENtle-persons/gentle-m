@@ -749,3 +749,5 @@
 "t_primer_down","3'","3'"
 "m_graph_save_as_image","Save as image","Als Bild speichern"
 "m_graph_copy_as_image","Copy as image","Als Bild kopieren"
+"t_graph_open_title","Import graph","Graph importieren"
+"t_graph_open_text","Choose a source type :","Datentyp auswählen :"

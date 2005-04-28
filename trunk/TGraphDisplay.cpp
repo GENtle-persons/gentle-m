@@ -222,7 +222,7 @@ bool TGraphDisplay::SetupFromFile ( wxString filename )
 	for ( a = 0 ; a < as.GetCount() ; a++ )
 		vs[a] = as[a] ;
 	
-	wxSingleChoiceDialog scd ( this , "Msg" , "Cap" , as.GetCount() , vs ) ;
+	wxSingleChoiceDialog scd ( this , txt("t_graph_open_text") , txt("t_graph_open_title") , as.GetCount() , vs ) ;
 	wxString guess = tryall ( filename ) ;
 	if ( guess != "" )
 		{
@@ -231,7 +231,8 @@ bool TGraphDisplay::SetupFromFile ( wxString filename )
 	    	if ( as[a] == txt(guess) )
 	    		scd.SetSelection ( a ) ;
   			}    
-		}    
+		}
+	else return false ;
 	if ( wxID_OK != scd.ShowModal() ) return false ;
 	
 	wxString s = scd.GetStringSelection() ;
@@ -341,6 +342,8 @@ wxString TGraphDisplay::tryall ( wxString filename )
 	for ( a = cnt = 0; a < data.size() ; a++ ) cnt += data[a]->dx.size() ;
 	if ( cnt > best ) { r = "t_graph_file_type_xypair" ; best = cnt ; }
 	init () ;
+	
+	if ( best < 5 ) r = "" ; // A graph with less points is useless
 	
 	return r ;
 	}    
