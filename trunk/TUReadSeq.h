@@ -24,9 +24,11 @@ class TUReadSeq
     
     private :
     wxString filename ; ///< Name of source file
-    short format , numseqs ;
+    short format ;
+	 short numseqs ;
     long skiplines ;
-    wxArrayString seq_names , seqs ;
+    wxArrayString seq_names ;
+	 wxArrayString seqs ;
     } ;
 
 
