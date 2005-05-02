@@ -110,7 +110,7 @@ class TVectorItem
     virtual int getMem () ; ///< Estimates the memory usage of this item (debugging use only)
 
     // Parameters
-    virtual wxString getParam ( wxString p , wxString def = "" ) ; ///< Returns the value of a parameter; optional default value
+    virtual wxString getParam ( wxString p , wxString def = _T("") ) ; ///< Returns the value of a parameter; optional default value
     virtual wxArrayString getParamKeys () ; ///< Get a list of all parameter keys
     virtual void setParam ( wxString p , wxString v ) ; ///< Set a parameter key/value pair
     virtual void setParam ( wxString p , int v ) ; ///< Set a parameter key/value pair
@@ -223,9 +223,9 @@ class TVector
     virtual bool hasStickyEnds () ; ///< Does this sequence have sticky ends?
     virtual void callUpdateUndoMenu () ; ///< Refreshes the Undo menu
     virtual void setFromVector ( TVector &v ) ; ///< Makes this sequence a copy of another one (v)
-    virtual void doRemoveNucleotide ( int x ) ; ///< Removes single base at position x
+    virtual void doRemoveNucleotide ( int x ) ; ///<Removes single base at position x
     virtual int getItemLength ( int a ) ; ///< Return the length of item a
-    virtual TVector *backtranslate ( wxString mode = "" ) ; ///< Generate a new DNA sequence from this amino acid sequence
+    virtual TVector *backtranslate ( wxString mode = _T("") ) ; ///< Generate a new DNA sequence from this amino acid sequence
     virtual wxString getStrand53 () ; ///< Returns the 5'->3' strand of the sequence
     virtual wxString getStrand35 () ; ///< Returns the 3'->5' strand of the sequence, as 5'->3'
 
@@ -285,7 +285,7 @@ class TVector
     private :
     virtual wxString invert ( wxString s ) ; ///< Inverts a string
     virtual wxString vary_base ( char b ) ; ///< Turns a SIUPAC into a string of A, C, G, T
-    virtual void makeAA2DNA ( wxString mode = "" ) ; ///< "Translate" amino acid sequence into DNA; can sp specified fo an organism
+    virtual void makeAA2DNA ( wxString mode = _T("" ) ; ///< "Translate" amino acid sequence into DNA; can sp specified fo an organism
     virtual wxString mergeCodons ( wxString c1 , wxString c2 ) ; ///< Used by makeAA2DNA for generating "abstract" (SIUPAC) DNA
     virtual void setCodonTable ( int table , wxString sequence ) ; ///< Sets up the codon_tables variable
     virtual void evaluate_key_value ( wxString key , wxString value ) ; ///< Used in setParam() and setParams()

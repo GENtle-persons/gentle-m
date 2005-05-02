@@ -12,7 +12,7 @@ class TGenBank ;
 class TUReadSeq
     {
     public :
-    TUReadSeq ( wxString _filename = "" ) ; ///< Constructor
+    TUReadSeq ( wxString _filename = _T("") ) ; ///< Constructor
     virtual void getFormat () ; ///< Try to determine format
     virtual int getSequenceNames () ; ///< Get the names of the sequences
     virtual void getSequences () ; ///< Get the sequences

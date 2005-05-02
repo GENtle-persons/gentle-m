@@ -37,7 +37,7 @@ class TGenBank
     virtual wxString trimQuotes ( wxString s ) ;
     virtual wxString quote ( wxString pre , wxString q ) ;
     virtual void wrapit ( wxArrayString &ex , wxString init , wxString data , int limit = 80 ) ;
-    virtual wxString expand ( wxString init , int to , wxString with = " " ) ;
+    virtual wxString expand ( wxString init , int to , wxString with = _T(" ") ) ;
     virtual int count_blanks ( wxString &s ) ;
 
     bool success ; ///< Did we encounter any errors while parsing?

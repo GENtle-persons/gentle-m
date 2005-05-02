@@ -33,8 +33,8 @@ class TMyDropTarget : public wxTextDropTarget
 class TMySQLDialog : public wxDialog
     {
     public :
-    TMySQLDialog ( wxWindow *parent , wxString title , wxString server = "" ,
-        wxString db = "" , wxString user = "root" , wxString password = "" ) ; ///< Constructor
+    TMySQLDialog ( wxWindow *parent , wxString title , wxString server = _T("") ,
+        wxString db = _T("") , wxString user = _T("root") , wxString password = _T("") ) ; ///< Constructor
 
     wxTextCtrl *s , *d , *u , *p ;
     } ;

@@ -35,7 +35,7 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void setZoom ( int factor ) ; ///< Sets the display zoom factor
     virtual wxString getSelection () ; ///< Returns the current sequence selection
     virtual void RunPrimerEditor ( vector <TPrimer> &pl , int mut = -1 ) ; ///< Invokes the PCR/primer design module
-    virtual void invokeVectorEditor ( wxString what = "" , int num = 0 , bool forceUpdate = false ) ; ///< Invokes the vector editor dialog
+    virtual void invokeVectorEditor ( wxString what = _T("") , int num = 0 , bool forceUpdate = false ) ; ///< Invokes the vector editor dialog
     virtual wxMenu *invokeItemPopup ( int item , wxPoint pt , bool doreturn = false ) ; ///< Generates the item/feature context menu
     virtual wxMenu *invokeRsPopup ( int rs , wxPoint pt , bool doreturn = false ) ; ///< Generates the restriction enzyme context menu
     virtual wxMenu *invokeVectorPopup ( wxPoint pt , bool doreturn = false ) ; ///< Generates the vector context menu

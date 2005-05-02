@@ -163,8 +163,8 @@ class MyApp : public wxApp
     virtual bool OnInit();
     virtual int OnExit () ;
     virtual void init_txt ( wxString lang , wxString csv , wxHashString *target = NULL , int ln = 1 ) ;
-    virtual void do_my_ass ( bool b , wxString msg = "" ) ;
-    virtual void do_my_log ( wxString function , wxString msg = "" ) ;
+    virtual void do_my_ass ( bool b , wxString msg = _T("") ) ;
+    virtual void do_my_log ( wxString function , wxString msg = _T("") ) ;
     virtual wxString getHTMLCommand ( wxString command ) ; ///< Returns the command line for running a browser
     virtual wxString getFileFormatApplication ( wxString type ) ; ///< Returns application associated with a file type
     virtual wxString getFileFormatCommand ( wxString type , wxString file ) ; ///< Returns the command line for running this file

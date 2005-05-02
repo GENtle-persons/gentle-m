@@ -83,7 +83,7 @@ class TAlignment : public ChildBase,wxThreadHelper
     virtual void OnHorizontal ( wxCommandEvent& event ) ; ///< "Display horizontal" event handler
     
     virtual void invokeOriginal ( int id , int pos ) ; ///< Open the original sequence at the given position
-    virtual void callMiddleMouseButton ( int id , int pos , wxString _mode = "" ) ; ///< Perform the middle mouse button function (the gap orgy)
+    virtual void callMiddleMouseButton ( int id , int pos , wxString _mode = _T("") ) ; ///< Perform the middle mouse button function (the gap orgy)
     virtual void MoveUpDown ( int what , int where ) ; ///< Move a line into the given direction
     virtual void prealigned ( wxArrayString &vs , wxArrayChildBase &vc ) ; ///< Initialize with a prealigned list of sequences (for example, from a multi-sequence genbank file)
     virtual void fromVector ( TVector *nv ) ; ///< Initialize from a single vector (???)

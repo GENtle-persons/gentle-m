@@ -24,8 +24,8 @@ class TGridBasic : public wxGrid
     virtual void OnCellChanged(wxGridEvent& event) ; ///< Cell-has-changed event
     virtual void cleanup () ; ///< Reset the submodule
     virtual void gridSetEditable ( int y , int x ) ; ///< Makes a cell editable
-    virtual void gridSetEntry ( int y , int x , wxString title , wxString value = "0" , wxString unit = "" ) ; ///< Sets a cell group
-    virtual void gridSetValue ( int y , int x , wxString value , wxString unit = "" ) ; ///< Sets a cell group
+    virtual void gridSetEntry ( int y , int x , wxString title , wxString value = _T("0") , wxString unit = _T("") ) ; ///< Sets a cell group
+    virtual void gridSetValue ( int y , int x , wxString value , wxString unit = _T("") ) ; ///< Sets a cell group
     virtual void print ( int mode ) ; ///< Prints the submodule
     virtual double getDouble ( int y , int x ) ; ///< Returns the value of a cell as a floating-point number
     

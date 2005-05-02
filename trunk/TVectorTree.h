@@ -16,7 +16,7 @@ class TTreeItem : public wxTreeItemData
     {
     public :
     TTreeItem () : wxTreeItemData() {} ; ///< Empty constructor
-    TTreeItem ( wxString m , wxString _t = "" , void *_p = NULL )  ///< Constructor
+    TTreeItem ( wxString m , wxString _t = _T("") , void *_p = NULL )  ///< Constructor
     	: wxTreeItemData()
     	{ message = m ; type = _t ; p = _p ; } ;
     wxString message ; ///< The message to display
