@@ -285,7 +285,7 @@ class TVector
     private :
     virtual wxString invert ( wxString s ) ; ///< Inverts a string
     virtual wxString vary_base ( char b ) ; ///< Turns a SIUPAC into a string of A, C, G, T
-    virtual void makeAA2DNA ( wxString mode = _T("" ) ; ///< "Translate" amino acid sequence into DNA; can sp specified fo an organism
+    virtual void makeAA2DNA ( wxString mode = _T("") ) ; ///< "Translate" amino acid sequence into DNA; can sp specified fo an organism
     virtual wxString mergeCodons ( wxString c1 , wxString c2 ) ; ///< Used by makeAA2DNA for generating "abstract" (SIUPAC) DNA
     virtual void setCodonTable ( int table , wxString sequence ) ; ///< Sets up the codon_tables variable
     virtual void evaluate_key_value ( wxString key , wxString value ) ; ///< Used in setParam() and setParams()
@@ -297,28 +297,28 @@ class TVector
     wxArrayInt methyl ; ///< Methylation sites
     wxArrayString hiddenEnzymes ; ///< Enzymes that are not shown
     wxString sequence ; ///< The sequence that all this fuss is about
-    wxString _lu ,  ///< Left upper sticky end
-    		 _ll , ///< Left lower sticky end
-       		 _ru , ///< Right upper sticky end
-          	 _rl ; ///< Right lower sticky end
-    wxString name , ///< The name of the sequence
-    		 desc ; ///< The sequence description
-    bool circular , ///< Is this sequence circular?
-    	 changed , ///< Was this sequence changed?
-         genomeMode ; ///< Is this a genome (using different display routines)?
+    wxString _lu ;  ///< Left upper sticky end
+    wxString _ll ; ///< Left lower sticky end
+    wxString _ru ; ///< Right upper sticky end
+    wxString _rl ; ///< Right lower sticky end
+    wxString name ; ///< The name of the sequence
+    wxString desc ; ///< The sequence description
+    bool circular ; ///< Is this sequence circular?
+    bool changed ; ///< Was this sequence changed?
+    bool genomeMode ; ///< Is this a genome (using different display routines)?
     ChildBase *window ; ///< The window this TVector belongs to (might be NULL for most methods)
-    int turned , ///< A circular sequence can be turned; this is the number of bases (negative for "left")
-    	action_value ; ///< Used by doAction()
-    wxString database , ///< The database this vector was loaded from
-    		 action , ///< Used by doAction()
- 			 aa ; ///< Hell if I remember what this is for
+    int turned ; ///< A circular sequence can be turned; this is the number of bases (negative for "left")
+    int action_value ; ///< Used by doAction()
+    wxString database ; ///< The database this vector was loaded from
+    wxString action ; ///< Used by doAction()
+	 wxString aa ; ///< Hell if I remember what this is for
     wxString AA2DNA[256] ; ///< AA-to-DNA "translation" table; used by makeAA2DNA()
-    wxArrayString paramk , ///< Parameter keys
-    			  paramv ; ///< Parameter values
+    wxArrayString paramk ; ///< Parameter keys
+    wxArrayString paramv ; ///< Parameter values
     
-    static char IUPAC[256] , ///< The ACTG chars in binary encoding (IUPAC_A, IUPAC_C, IUPAC_T, IUPAC_G)
-    			SIUPAC[256] , ///< The extended IUPAC codes in binary encoding
-       			COMPLEMENT[256] ; ///< The complement to each SIUPAC base
+    static char IUPAC[256] ; ///< The ACTG chars in binary encoding (IUPAC_A, IUPAC_C, IUPAC_T, IUPAC_G)
+    static char SIUPAC[256] ; ///< The extended IUPAC codes in binary encoding
+    static char COMPLEMENT[256] ; ///< The complement to each SIUPAC base
     static char ACGT[256] ; ///< Different values for A, C, G, T; used in dna2aa()
     static vector <TAAProp> aaprop ; ///< The 20 amino acids and their properties
     static wxArrayString codon_tables ; ///< The codon tables for different organisms

@@ -102,10 +102,16 @@ wxString implode ( wxString sep , wxArrayString &r )
 	return ret ;
 	}
 	
+char * txt ( char *item )
+    {
+    return (char*) myapp()->_text[item.MakeUpper()].c_str() ;
+    }
+
 char * txt ( wxString item )
     {
     return (char*) myapp()->_text[item.MakeUpper()].c_str() ;
     }
+
 // END GLOBAL FUNCTIONS
 
 
@@ -254,7 +260,7 @@ bool MyApp::OnInit()
         }
         
     // Tips turned off until I can figure out how the hell
-    // to get the state of the !"§$%& show-again-checkbox
+    // to get the state of the !"$%& show-again-checkbox
     bool showTip = frame->LS->getOption ( "SHOWTIP" , false ) ;
     if ( showTip )
         {

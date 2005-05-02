@@ -41,7 +41,7 @@ void TXMLfile::analyze ( const TiXmlDocument &doc )
         }
     else if ( doc.FirstChild ( "GBSet" ) )
         {
-        TiXmlNode *x = doc.RootElement() ;// ( "GBSet" ) ;
+        TiXmlNode *x = doc.RootElement() ;// ( _T("GBSet") ) ;
         for ( x = x->FirstChild ( "GBSeq" ) ; x ; x = x->NextSibling ( "GBSeq" ) )
            readGBSeq ( x ) ;
         }
@@ -64,17 +64,17 @@ TVector *TXMLfile::getVector ( int a )
 
 wxString TXMLfile::t ( const char *txt )
     {
-    return txt ? txt : "" ;
+    return txt ? _T(txt) : _T("") ;
     }
 
 wxString TXMLfile::t ( TiXmlText *txt )
     {
-    return txt && txt->Value() ? txt->Value() : "" ;
+    return txt && txt->Value() ? txt->Value() : _T("") ;
     }
 
 void TXMLfile::readGBSeq ( TiXmlNode *base )
     {
-    myass ( base , "TXMLfile::readGBSeq" ) ;
+    myass ( base , _T("TXMLfile::readGBSeq") ) ;
     TVector *v = new TVector ;
     v->setType ( TYPE_VECTOR ) ; // Dummy
     
@@ -87,7 +87,7 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
     wxString n1 = t ( h.FirstChild("GBSeq_definition").FirstChild().Text() ) ;
     wxString n2 = t ( h.FirstChild("GBSeq_locus").FirstChild().Text() ) ;
     if ( !n1.IsEmpty() && n1.Freq ( '\n' ) == 0 && n2.Freq ( ' ' ) == 0 )
-	    n2 = n1 + " (" + n2 + ")" ;
+	    n2 = n1 + _T(") (_T(") + n2 + _T("))") ;
     
     v->setName ( n2 ) ;
     v->setSequence ( t ( h.FirstChild("GBSeq_sequence").FirstChild().Text() ) . MakeUpper() ) ;
@@ -96,11 +96,11 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
     if ( e ) // topology
         {
         s = t ( e->Attribute ( "value" ) ) . MakeUpper() ;
-        if ( s == "CIRCULAR" ) v->setCircular ( true ) ;
+        if ( s == _T("CIRCULAR") ) v->setCircular ( true ) ;
         }
 
     // Features
-    for ( n = h.FirstChild("GBSeq_feature-table").FirstChild("GBFeature").Node() ; n ; 
+    for ( n = h.FirstChild("GBSeq_feature-table").FirstChild("GBFeature").Node() ; n ;
             n = n->NextSibling("GBFeature") )
         {
         TVectorItem i ;
@@ -108,7 +108,7 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
         s = t ( h2.FirstChild("GBFeature_key").FirstChild().Text() ) . MakeUpper() ;
         
         // Dummy values
-        i.name = "" ;
+        i.name = _T("") ;
         i.from = 1 ;
         i.to = 1 ;
         i.setType ( 0 ) ;
@@ -149,34 +149,34 @@ void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
         wxString name = t ( h.FirstChild("GBQualifier_name").FirstChild().Text() ) . MakeUpper() ;
         wxString value = t ( h.FirstChild("GBQualifier_value").FirstChild().Text() ) ;
         if ( name.IsEmpty() ) continue ;
-        i.setParam ( "/" + name , value ) ;
-        if ( name == "CODON_START" ) i.setRF ( atoi ( value.c_str() ) ) ;
-        if ( name == "GENE" || name == "LABEL" ) i.name = value ;
-        if ( name == "PRODUCT" || name == "NOTE" || name == "REGION_NAME" )
+        i.setParam ( _T("/") + name , value ) ;
+        if ( name == _T("CODON_START") ) i.setRF ( atoi ( value.c_str() ) ) ;
+        if ( name == _T("GENE") || name == _T("LABEL") ) i.name = value ;
+        if ( name == _T("PRODUCT") || name == _T("NOTE") || name == _T("REGION_NAME") )
            {
-           if ( !i.desc.IsEmpty() ) i.desc += "\n" ;
+           if ( !i.desc.IsEmpty() ) i.desc += _T("\n") ;
            i.desc += value ;
            }
         }
     if ( i.name.IsEmpty() && i.desc.length() < 10 )
         {
         i.name = i.desc ;
-        i.desc = "" ;
+        i.desc = _T("") ;
         }
     if ( i.name.IsEmpty() )
     	{
 	    wxString try2 = i.desc ; 
-	    while ( try2.Right ( 1 ) == "\n" ) try2 = try2.Left ( try2.length() - 1 ) ;
+	    while ( try2.Right ( 1 ) == _T("\n") ) try2 = try2.Left ( try2.length() - 1 ) ;
      	try2 = try2.AfterLast('\n').AfterLast('\r') ;
 	if ( !try2.IsEmpty() && try2.length() < 20 ) i.name = try2 ;
     	}    
     if ( i.name.IsEmpty() )
         {
         char u[100] ;
-        sprintf ( u , "short_itemtype%d" , i.getType() ) ;
+        sprintf ( u , _T("short_itemtype%d") , i.getType() ) ;
         i.name = txt(u) ;
         wxString d2 = i.desc ;
-        int k = d2.find ( "\n" ) ;
+        int k = d2.find ( _T("\n") ) ;
         if ( k > -1 ) d2.erase ( k ) ;
         if ( i.name.length() * 2 >= d2.length() )
            i.name = d2 ;

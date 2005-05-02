@@ -4,6 +4,8 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
+#define wxUSE_UNICODE 1
+
 #define GENTLE_VERSION_MAJOR 1
 #define GENTLE_VERSION_MINOR 6
 #define GENTLE_VERSION_SUB 1
@@ -294,6 +296,9 @@ wxString implode ( wxString sep , wxArrayString &r ) ;
 
 /** \brief Returns the current language version of the "item" */
 char* txt ( wxString item ) ;
+
+/** \brief Returns the current language version of the "item" */
+char* txt ( char *item ) ;
 
 /** \brief Returns a pointer to the application */
 MyApp *myapp () ;

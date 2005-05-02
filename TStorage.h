@@ -57,11 +57,11 @@ class TSQLresult
     virtual wxString item ( char *s , int i )
         {
         int a ;
-        wxString s2 = s ;
+        wxString s2 ( s , *wxConvCurrent ) ;
         for ( a = 0 ; a < field.GetCount() ; a++ )
            if ( 0 == s2.CmpNoCase ( field[a] ) )
                return content[i][a] ;
-        return "" ;
+        return _T("") ;
         }
     
     ///< \brief Returns row i
@@ -74,7 +74,7 @@ class TSQLresult
     virtual int operator [] ( char *s )
         {
         int a ;
-        wxString s2 = s ;
+        wxString s2 ( s , *wxConvCurrent ) ;
         for ( a = 0 ; a < field.GetCount() ; a++ )
            if ( 0 == s2.CmpNoCase ( field[a] ) )
                return a ;
