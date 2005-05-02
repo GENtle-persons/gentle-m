@@ -57,10 +57,10 @@ class TGraphScale
  					float _max = 0 , 
   		  			bool _horizontal = false , 
       	  			bool _left = true , 
-            		wxString _name = "" , 
-              		wxString _unit = "" , 
+            		wxString _name = _T("") , 
+              		wxString _unit = _T("") , 
               		wxColour _col = *wxBLACK ,
-              		wxString _type = "linear" ) ; ///< Constructor
+              		wxString _type = _T("linear") ) ; ///< Constructor
 	int GetWidth () ; ///< Returns height/width in pixels
 	void drawit ( wxDC &dc , wxRect &r , wxRect &inner ) ; ///< Draws the scale, adjusts the inner rectangle
 	void DrawMark ( wxDC &dc , float p , wxRect &ir , wxString text , bool big = false ) ; ///< Draws the red marker for cursor position

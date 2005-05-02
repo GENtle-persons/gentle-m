@@ -86,7 +86,7 @@ class TSQLresult
 class TStorage
     {
     public :
-    TStorage ( int nt , wxString fn = "" ) ; ///< Constructor
+    TStorage ( int nt , wxString fn = _T("") ) ; ///< Constructor
     virtual ~TStorage () ; ///< Destructor
     virtual void createDatabase () ; ///< Creates the database, is it does not exist
     virtual TSQLresult getObject ( const wxString &query ) ; ///< Runs a query
@@ -136,7 +136,7 @@ class TStorage
     TSQLresult results ; ///< The results of the last query
     
     private :
-    virtual wxString getSingleField ( wxString query , wxString field , wxString def = "" ) ; ///< Get a single field from a query, with default value
+    virtual wxString getSingleField ( wxString query , wxString field , wxString def = _T("") ) ; ///< Get a single field from a query, with default value
     virtual int getSingleField ( wxString query , wxString field , int def = 0 ) ; ///< Get a single field from a query, with default value
     virtual wxString makeInsert ( wxString table , wxArrayString &field , wxArrayString &data ) ; ///< Insert all the fields with their data into a table
     virtual void replaceTable ( wxString table , wxArrayString &f , wxArrayString &t ) ; ///< ???

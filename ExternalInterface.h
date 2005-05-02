@@ -41,7 +41,7 @@ class EILB : public wxHtmlListBox
 	virtual void Clear () ; ///< Clear the list box
 	virtual void Sort () ; ///< Sort the list box
 	virtual void Update () ; ///< Update the list box
-	virtual void Set ( int id , wxString s , wxString t = "" ) ; ///< Set an entry
+	virtual void Set ( int id , wxString s , wxString t = _T("") ) ; ///< Set an entry
 	
 	wxArrayString was , data ;
 	} ;    

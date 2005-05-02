@@ -77,7 +77,7 @@ class TURLtext : public wxTextCtrl
 class TStandbyDialog : public wxDialog
     {
     public :
-    TStandbyDialog ( wxWindow *parent , const wxString &s , const wxString &t = "" ) ;
+    TStandbyDialog ( wxWindow *parent , const wxString &s , const wxString &t = _T("") ) ;
     } ;
 */
 

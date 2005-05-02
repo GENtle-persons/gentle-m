@@ -37,7 +37,7 @@ class TAminoAcids : public ChildBase
     virtual void OnAsNewFeature(wxCommandEvent& event); ///< "Selection as new feature" event handler
     virtual void OnBlastAA(wxCommandEvent& event); ///< "Blast sequence" event handler
     virtual void OnPhotometer(wxCommandEvent& event); ///< "Start photometer calculator" event handler
-    virtual void invokeVectorEditor ( wxString what = "" , int num = 0 , bool forceUpdate = false ) ; ///< "Edit sequence dialog" event handler
+    virtual void invokeVectorEditor ( wxString what = _T("") , int num = 0 , bool forceUpdate = false ) ; ///< "Edit sequence dialog" event handler
     virtual void OnHorizontal ( wxCommandEvent& event ) ; ///< "Toggle horizontal/vertical" event handler
     virtual void OnListBox ( wxCommandEvent& event ) ; ///< "List box choice" event handler
     virtual void OnIP ( wxCommandEvent& event ) ; ///< "Inline plot dropdown box" event handler

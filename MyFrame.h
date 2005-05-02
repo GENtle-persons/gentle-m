@@ -128,13 +128,13 @@ public:
     virtual TCalculator *RunCalculator () ;
     virtual TGraph *RunGraph () ;
     virtual MyChild* newFromVector ( TVector *nv , int type = TYPE_VECTOR ) ;
-    virtual TAminoAcids *newAminoAcids ( wxString aa , wxString title = "" ) ;
-    virtual TAminoAcids *newAminoAcids ( TVector *nv , wxString title = "" ) ;
+    virtual TAminoAcids *newAminoAcids ( wxString aa , wxString title = _T("") ) ;
+    virtual TAminoAcids *newAminoAcids ( TVector *nv , wxString title = _T("") ) ;
     virtual TABIviewer *newABI ( wxString filename , wxString title ) ;
     virtual MyChild *newCLONE ( TClone &clone ) ;
-    virtual void newGB ( TGenBank &gb , wxString title = "" ) ;
-    virtual void newPDB ( TPDB &pdb , wxString title = "" ) ;
-    virtual void newXML ( TXMLfile &xml , wxString title = "" ) ;
+    virtual void newGB ( TGenBank &gb , wxString title = _T("") ) ;
+    virtual void newPDB ( TPDB &pdb , wxString title = _T("") ) ;
+    virtual void newXML ( TXMLfile &xml , wxString title = _T("") ) ;
     virtual void blast ( wxString seq , wxString prg ) ;
     virtual bool importFile ( wxString file , wxString path , int filter = -1 ) ;
     virtual void setChild ( ChildBase *ch ) ;
@@ -150,7 +150,7 @@ public:
     virtual bool isLocked () ;
     virtual bool isActivating () ;
     virtual TVirtualGel *useGel ( wxString type ) ;
-    virtual void saveImage ( wxBitmap *bmp , wxString name = "" ) ;
+    virtual void saveImage ( wxBitmap *bmp , wxString name = _T("") ) ;
 
     TMainTree *mainTree ; ///< \brief The main tree (for sequences etc.)
     TStorage *LS ; ///< \brief Pointer to the local TStorage database structure

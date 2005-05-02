@@ -208,7 +208,7 @@ class SeqPrimer : public SeqDNA
     SeqPrimer ( SequenceCanvas *ncan = NULL ) { 
         vec = NULL ; 
         init ( ncan ) ; 
-        myname = "PRIMER" ; } ///< Constructor
+        myname = _T("PRIMER") ; } ///< Constructor
     virtual void show ( wxDC& dc ) ; ///< Show
     virtual void initFromTVector ( TVector *v ) ; ///< Set from a TVector class
     virtual void addPrimer ( TPrimer *p ) ; ///< Adds a primer to the sequence
@@ -226,7 +226,7 @@ class SeqPrimer : public SeqDNA
 class SeqAlign : public SeqBasic
     {
     public :
-    SeqAlign ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; myname = "Align" ; id = -1 ; } ///< Constructor
+    SeqAlign ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; myname = _T("Align") ; id = -1 ; } ///< Constructor
     virtual int  arrange ( int n ) ; ///< Arrange "chars" as line n
     virtual void show ( wxDC& dc ) ; ///< Show
     virtual wxString whatsthis () { return "ALIGN" ; } ///< Returns the linetype

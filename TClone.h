@@ -53,7 +53,7 @@ class TClone
 	virtual ~TClone(); ///< Destructor
     virtual void remap ( TVector *v ) ; ///< Convert parsed information to TVector
 	virtual void load ( wxString s ) ; ///< Load CLONE format file
-	virtual void save ( wxString s = "" ) ; ///< Save CLONE format file (currently deactivated)
+	virtual void save ( wxString s = _T("") ) ; ///< Save CLONE format file (currently deactivated)
     virtual void loadEnzymeList ( TStorage *st , wxString filename ) ; ///< Load the CLONE format enzyme list
     TStorage *LS ; ///< Pointer to the local database
 	bool success ; ///< Errors during parsing?

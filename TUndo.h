@@ -21,7 +21,7 @@ class TUndo
     public :
     TUndo () ; ///< Constructor
     virtual void setbase ( TVector *_base ) ; ///< Set the base TVector
-    virtual void start ( wxString _msg = "" ) ; ///< Start the undo record, with action name
+    virtual void start ( wxString _msg = _T("") ) ; ///< Start the undo record, with action name
     virtual void stop () ; ///< End the undo record
     virtual void abort () ; ///< Abort the undo record
     virtual void pop () ; ///< Remove the last undo record

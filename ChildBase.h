@@ -33,8 +33,8 @@ class ChildBase : public MyChildBase
     ChildBase(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style) ; ///< Constructor
     ChildBase(wxWindow *parent, const wxString& title); ///< Constructor
         
-    virtual wxString getName () { return "" ; } ///< Returns the name of the module (e.g., the vector name)
-    virtual void showName ( wxString x = "" ) ; ///< Shows the module name in the window title
+    virtual wxString getName () { return _T("") ; } ///< Returns the name of the module (e.g., the vector name)
+    virtual void showName ( wxString x = _T("") ) ; ///< Shows the module name in the window title
     virtual void OnFocus(wxFocusEvent& event); ///< Event handler for focus event
     virtual bool caniclose(wxCloseEvent& event); ///< Checks for unsaved edits
     virtual void OnFileSave(wxCommandEvent& WXUNUSED(event) ) {} ; ///< Event handler for save command
@@ -62,7 +62,7 @@ class ChildBase : public MyChildBase
     wxToolBar *toolbar ; ///< Pointer to the window too bar
     
     virtual void doExport ( wxString filename , int filter ) ; ///< Export data, depending on filename and export type
-    virtual void exportVector ( TVector *vec , wxFile &out , int filter , wxString filename = "" ) ; ///< Exports a TVector
+    virtual void exportVector ( TVector *vec , wxFile &out , int filter , wxString filename = _T("") ) ; ///< Exports a TVector
     virtual void arrangedExport ( wxFile &out , wxString n , wxString s , int l ) ;
     virtual void updateToolbar () ; ///< Sets the tool bar
     } ;
