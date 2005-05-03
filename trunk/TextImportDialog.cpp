@@ -20,13 +20,13 @@ TextImportDialog::TextImportDialog(wxWindow *parent, const wxString& title )
     wxStaticText *s1 = new wxStaticText ( this , -1 , txt("title") , wxPoint ( bo , bo+2 ) ) ;
     wxRect r = s1->GetRect() ;
     
-    name = new wxTextCtrl ( this , -1 , "" ,
+    name = new wxTextCtrl ( this , -1 , _T("") ,
                                 wxPoint ( r.GetRight() + bo , bo ) , 
                                 wxSize ( w * 2 / 3 - r.GetRight() - bo , lh ) ) ;
     type = new wxChoice ( this , -1 ,
                                 wxPoint ( w * 2 / 3 + bo , bo ) ,
                                 wxSize ( w / 4 , lh ) ) ;
-    sequence = new wxTextCtrl ( this , -1 , "" ,
+    sequence = new wxTextCtrl ( this , -1 , _T("") ,
                                 wxPoint ( bo , bo*2 + lh ) , 
                                 wxSize ( w - bo*2 , h - bo*4 - lh*2 ) ,
                                 wxTE_MULTILINE | wxTE_RICH | wxTE_RICH2 ) ;
@@ -63,7 +63,7 @@ void TextImportDialog::OnCharHook(wxKeyEvent& event)
 void TextImportDialog::OnOK ( wxCommandEvent &ev )
     {
     sName = name->GetValue () ;
-    sSequence = "" ;
+    sSequence = _T("") ;
     wxString s = sequence->GetValue() ;
     for ( int a = 0 ; a < s.length() ; a++ )
         {

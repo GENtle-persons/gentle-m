@@ -22,7 +22,7 @@ void TVectorEditor::commitItems ()
                  o.from != c.from ||
                  o.to != c.to ||
                  o.direction != c.direction ||
-                 !c.getParam("CHANGED").IsEmpty() ||
+                 !c.getParam(_T("CHANGED")).IsEmpty() ||
                  o.getRF() != c.getRF() ||
                  o.isVisible() != c.isVisible() ||
                  o.getFontColor() != c.getFontColor() )
@@ -123,7 +123,7 @@ void TVectorEditor::initPanItem ()
         TVectorItem *nvi = new TVectorItem ;
         *nvi = v->items[a] ;
         nvi->r2 = a ;
-        nvi->setParam ( "CHANGED" , "" ) ;
+        nvi->setParam ( _T("CHANGED") , _T("") ) ;
         newitems.Add ( nvi ) ;
         }
     makeItemsList () ;
@@ -134,7 +134,7 @@ void TVectorEditor::initPanItem ()
     wxString vs[VIT_TYPES] ; 
     char t[1000] ;
     
-    iname = new wxTextCtrl(panItem,-1,"");
+    iname = new wxTextCtrl(panItem,-1,_T(""));
     h0a->Add ( new wxStaticText(panItem,-1,txt("name")),0,wxALIGN_CENTER_VERTICAL);
     h0a->Add ( iname , 1 , wxEXPAND ) ;
 
@@ -143,8 +143,8 @@ void TVectorEditor::initPanItem ()
     h0b->Add ( icb ) ;
     h0b->Add ( icv ) ;
 
-    ifrom = new wxTextCtrl(panItem,-1,"");
-    ito = new wxTextCtrl(panItem,-1,"");
+    ifrom = new wxTextCtrl(panItem,-1,_T(""));
+    ito = new wxTextCtrl(panItem,-1,_T(""));
     h1a->Add (new wxStaticText(panItem,-1,txt("desc"),wxPoint(bo,h/2+th+bo*2)) , 1 , wxALIGN_BOTTOM ) ;
     h1a->Add (new wxStaticText(panItem,-1,txt("from"),wxPoint(w/4+bo,h/2+th+bo*2)),0,wxALIGN_CENTER_VERTICAL);
     h1a->Add ( ifrom , 0 , wxRIGHT , 5 ) ;
@@ -163,7 +163,7 @@ void TVectorEditor::initPanItem ()
 			   vs) ;
     h1b->Add ( ichoice ) ;
 
-    idesc = new TURLtext(panItem,URLTEXT_DUMMY,"",
+    idesc = new TURLtext(panItem,URLTEXT_DUMMY,_T(""),
 			 wxDefaultPosition , wxDefaultSize ,
 			 wxTE_PROCESS_ENTER|wxTE_MULTILINE );
 
@@ -172,10 +172,10 @@ void TVectorEditor::initPanItem ()
     bCol = new wxButton ( panItem ,TVE_I_COL , txt("t_edit_item") ) ;
 
     wxString vt[4] ;
-    vt[0] = "-" ;
-    vt[1] = "1" ;
-    vt[2] = "2" ;
-    vt[3] = "3" ;
+    vt[0] = _T("-") ;
+    vt[1] = _T("1") ;
+    vt[2] = _T("2") ;
+    vt[3] = _T("3") ;
     irb = new wxRadioBox ( panItem , -1 , txt("t_reading_frame") ,
 			   wxDefaultPosition , wxDefaultSize ,
 			   4 , vt , wxRA_SPECIFY_COLS ) ;
@@ -215,24 +215,27 @@ void TVectorEditor::initPanItem ()
 void TVectorEditor::updateItem ( TVectorItem &i )
     {
     int l = i.r4 ;
-    char t[1000] ;
-    sprintf ( t , "itemtype%d" , i.type ) ;
+	 wxString t ;
+//    char t[1000] ;
+	 t = wxString::Format ( _T("itemtype%d") , i.type ) ;
+//    sprintf ( t , "itemtype%d" , i.type ) ;
     items->SetItemText ( l , i.name ) ;
     items->SetItem ( l , 1 , txt(t) ) ;
 
-    items->SetItem ( l , 2 , wxString::Format ( "%d" , i.from ) ) ;
-    items->SetItem ( l , 3 , wxString::Format ( "%d" , i.to ) ) ;
+    items->SetItem ( l , 2 , wxString::Format ( _T("%d") , i.from ) ) ;
+    items->SetItem ( l , 3 , wxString::Format ( _T("%d") , i.to ) ) ;
 
     if ( i.direction == 1 )
        items->SetItem ( l , 4 , txt("cw") ) ;
     else if ( i.direction == -1 )
        items->SetItem ( l , 4 , txt("ccw") ) ;
     else
-       items->SetItem ( l , 4 , "---" ) ;
+       items->SetItem ( l , 4 , _T("---") ) ;
 
     int len = i.to - i.from + 1 ;
     if ( i.to < i.from ) len += v->getSequenceLength() ;
-    sprintf ( t , "%d" , len ) ;
+	 t = wxString::Format ( _T("%d") , len ) ;
+//    sprintf ( t , "%d" , len ) ;
     items->SetItem ( l , 5 , t ) ;    
     }    
 
@@ -292,8 +295,8 @@ void TVectorEditor::loadItemData ( int i )
         }
 
     
-    ifrom->SetValue ( wxString::Format ( "%d" , newitems[i]->from ) ) ;
-    ito->SetValue ( wxString::Format ( "%d" , newitems[i]->to ) ) ;
+    ifrom->SetValue ( wxString::Format ( _T("%d") , newitems[i]->from ) ) ;
+    ito->SetValue ( wxString::Format ( _T("%d") , newitems[i]->to ) ) ;
     
     if ( newitems[i]->direction == 1 ) icb->SetValue ( true ) ;
     else icb->SetValue ( false ) ;
@@ -313,8 +316,8 @@ void TVectorEditor::storeItemData ( int i )
     c.name = iname->GetValue () ;
     c.desc = idesc->GetValue () ;
     c.type = ichoice->GetSelection () ;
-    c.from = atoi ( ifrom->GetValue().c_str() ) ;
-    c.to = atoi ( ito->GetValue().c_str() ) ;
+    c.from = atoi ( ifrom->GetValue().mb_str() ) ;
+    c.to = atoi ( ito->GetValue().mb_str() ) ;
     c.setRF ( irb->GetSelection() ) ;
     c.setVisible ( icv->GetValue() ) ;
     
@@ -373,10 +376,10 @@ void TVectorEditor::itemDel ( wxCommandEvent &ev )
     
 void TVectorEditor::itemClr ()
     {
-    iname->SetValue ( "" ) ;
-    idesc->SetValue ( "" ) ;
-    ifrom->SetValue ( "" ) ;
-    ito->SetValue ( "" ) ;
+    iname->SetValue ( _T("") ) ;
+    idesc->SetValue ( _T("") ) ;
+    ifrom->SetValue ( _T("") ) ;
+    ito->SetValue ( _T("") ) ;
     ichoice->SetSelection ( 0 ) ;
     irb->Disable() ;
     icb->SetValue ( true ) ;

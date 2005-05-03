@@ -38,10 +38,10 @@ TItemEditDialog::TItemEditDialog ( wxWindow *parent, const wxString& title ,
                            rb_ch ,
                            wxRA_SPECIFY_COLS
                            ) ;
-   rb->SetSelection ( atoi ( vi->getParam ( "SEQUENCE_STYLE" ).c_str() ) ) ;
+   rb->SetSelection ( atoi ( vi->getParam ( _T("SEQUENCE_STYLE") ).mb_str() ) ) ;
 
    int off = vi->getOffset() ;
-   wxString off_t = (off==-1) ? "" : wxString::Format("%d",off) ;
+   wxString off_t = (off==-1) ? _T("") : wxString::Format(_T("%d"),off) ;
    wxRect r = rb->GetRect() ;
    useOffset = new wxCheckBox ( this , IED_USEOFFSET , txt("t_use_item_offset") ,
                                  wxPoint ( r.GetLeft() , r.GetBottom() + bo ) ) ;
@@ -83,9 +83,9 @@ void TItemEditDialog::OnCharHook(wxKeyEvent& event)
 
 void TItemEditDialog::OnOK ( wxCommandEvent &ev )
     {
-    vi->setParam ( "SEQUENCE_STYLE" , rb->GetSelection() ) ;
-    vi->setParam ( "CHANGED" , "YES" ) ;
-    if ( useOffset->IsChecked() ) vi->setOffset ( atoi(offset->GetValue().c_str()) ) ;
+    vi->setParam ( _T("SEQUENCE_STYLE") , rb->GetSelection() ) ;
+    vi->setParam ( _T("CHANGED") , _T("YES") ) ;
+    if ( useOffset->IsChecked() ) vi->setOffset ( atoi(offset->GetValue().mb_str()) ) ;
     else vi->setOffset ( -1 ) ;
     wxDialog::OnOK(ev) ;
     }
@@ -117,8 +117,8 @@ void TItemEditDialog::initlb ()
     wxArrayString vs = vi->getParamKeys () ;
     for ( int a = 0 ; a < vs.GetCount() ; a++ )
         {
-        wxString line = vs[a] + " : " + vi->getParam ( vs[a] ) ;
-        if ( line.Left ( 1 ) == "/" )
+        wxString line = vs[a] + _T(" : ") + vi->getParam ( vs[a] ) ;
+        if ( line.Left ( 1 ) == _T("/") )
            lb->Append ( line.Mid ( 1 ) ) ;
         }    
     }    
@@ -130,9 +130,9 @@ void TItemEditDialog::OnList ( wxCommandEvent &ev )
     wxString val = sel.AfterFirst ( ':' ) ;
     key = key . Trim() . Trim ( false ) ;
     val = val . Trim() . Trim ( false ) ;
-    wxTextEntryDialog ted ( this , "1" , key , val ) ;
+    wxTextEntryDialog ted ( this , _T("1") , key , val ) ;
     if ( ted.ShowModal () != wxID_OK ) return ;
-    vi->setParam ( "/" + key , ted.GetValue() ) ;
+    vi->setParam ( _T("/") + key , ted.GetValue() ) ;
     initlb () ;
     }
     

@@ -22,7 +22,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
     int lineOff = w / 20 ;
     int lineLen = w - 2 * lineOff ;
     int lineH = h * 3 / 4 ;
-    if ( p->def == "AminoAcids" ) lineH = h / 2 ;
+    if ( p->def == _T("AminoAcids") ) lineH = h / 2 ;
     int markH = 20 ;
     wxCoord dx , dy ;
     
@@ -31,10 +31,10 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
     // Sticky ends
     if ( p->vec->hasStickyEnds() )
         {
-        wxString lu = p->vec->getStickyEnd(true,true) + " -";
-        wxString ll = p->vec->getStickyEnd(true,false) + " -";
-        wxString ru = "- " + p->vec->getStickyEnd(false,true) ;
-        wxString rl = "- " + p->vec->getStickyEnd(false,false) ;
+        wxString lu = p->vec->getStickyEnd(true,true) + _T(" -") ;
+        wxString ll = p->vec->getStickyEnd(true,false) + _T(" -") ;
+        wxString ru = _T("- ") + p->vec->getStickyEnd(false,true) ;
+        wxString rl = _T("- ") + p->vec->getStickyEnd(false,false) ;
         wxCoord nx , ny ;
         
         dc.GetTextExtent ( lu , &dx , &dy ) ;
@@ -128,9 +128,10 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
                       lineH ,
                       lineOff + lineLen * a / (l+1) ,
                       h - markH ) ;
-        sprintf ( t , "%d" , a+1 ) ;
-        dc.GetTextExtent ( t , &dx , &dy ) ;
-        dc.DrawText ( t ,
+		  wxString t2 = wxString::Format ( _T("%d") , a+1 ) ;
+//        sprintf ( t , "%d" , a+1 ) ;
+        dc.GetTextExtent ( t2 , &dx , &dy ) ;
+        dc.DrawText ( t2 ,
                       lineOff + lineLen * a / (l+1) - dx/2 ,
                       h - markH ) ;
         }
@@ -199,7 +200,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
         dc.SetFont(*smallFont);
         
         // ORFs
-        if ( p->def == "dna" && p->showORFs )
+        if ( p->def == _T("dna") && p->showORFs )
            {
            p->showORFs = false ;
            wxCommandEvent event ;
@@ -372,19 +373,20 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , int r1 , int r2 , float a1 , flo
     free ( wp ) ;
     
     // Name
-    if ( !i->getParam("PREDECESSOR").IsEmpty() ) return ; // Only first name
+    if ( !i->getParam ( _T("PREDECESSOR") ).IsEmpty() ) return ; // Only first name
     char t[1000] ;
     wxCoord dx , dy ;
     wxColor fc = dc.GetTextForeground () ;
     dc.SetTextForeground ( i->getFontColor() ) ;
-    if ( p->def == "dna" ) dc.SetFont(*normalFont);
-    else if ( p->def == "AminoAcids" ) dc.SetFont(*smallFont);
+    if ( p->def == _T("dna") ) dc.SetFont(*normalFont);
+    else if ( p->def == _T("AminoAcids") ) dc.SetFont(*smallFont);
     
     if ( !p->vec->getGenomeMode() )
         {
-        sprintf ( t , "%s" , i->name.c_str() ) ;
-        dc.GetTextExtent ( t , &dx , &dy ) ;
-        dc.DrawText ( t ,
+		  wxString t2 = wxString::Format ( _T("%s") , i->name.c_str() ) ;
+//        sprintf ( t , "%s" , i->name.c_str() ) ;
+        dc.GetTextExtent ( t2 , &dx , &dy ) ;
+        dc.DrawText ( t2 ,
                   (r2+r1)/2 - dx/2 ,
                   (int) a2 - y1 + 1 ) ;
         }    

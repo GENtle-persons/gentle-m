@@ -52,7 +52,7 @@ TABIviewer::TABIviewer(wxWindow *parent, const wxString& title)
     : ChildBase(parent, title)
     {
     vec = new TVector ( this ) ;
-    def = "ABIviewer" ;
+    def = _T("ABIviewer") ;
     vec->setName ( title ) ;
     from = -1 ;
     vec->undo.clear () ;
@@ -79,12 +79,12 @@ void TABIviewer::OnHorizontal(wxCommandEvent& event)
         {
         oldh = f_height->GetValue () ;
         wxSize s = sc->MyGetClientSize()  ;
-        myass ( false , wxString::Format ( "%d %d" , s.GetHeight() , sc->charheight ) ) ;
+        myass ( false , wxString::Format ( _T("%d %d") , s.GetHeight() , sc->charheight ) ) ;
         int newh = ( s.GetHeight() / sc->charheight - 2 ) / 2 ;
         f_height->SetValue ( newh ) ;
         }        
     sc->toggleHorizontal () ;
-    myapp()->frame->LS->setOption ( "SHOWABIHORIZONTAL" , sc->isHorizontal() ) ;
+    myapp()->frame->LS->setOption ( _T("SHOWABIHORIZONTAL") , sc->isHorizontal() ) ;
     spinHeight() ;
     }    
     
@@ -149,7 +149,7 @@ void TABIviewer::initme ()
 //    edit_menu->Append(MDI_EXTRACT_AA, txt("m_extract_aa") );
 
     wxMenu *view_menu = new wxMenu;
-    view_menu->Append(MDI_EDIT_MODE, txt("m_edit_mode") , "" , true );
+    view_menu->Append(MDI_EDIT_MODE, txt("m_edit_mode") , _T("") , true );
 
 //    wxMenu *action_menu = new wxMenu;
 //    action_menu->Append(AM_SETUP, "SETUP" );
@@ -196,8 +196,8 @@ void TABIviewer::initme ()
     // Sequence Canvas
     sc = new SequenceCanvas ( hs , wxPoint ( 0 , 0 ) , wxSize ( 100 , 100 ) ) ;
     sc->blankline = 0 ;
-    sc->edit_id = "ABI" ;
-    sc->edit_valid = "ATGCN" ;
+    sc->edit_id = _T("ABI") ;
+    sc->edit_valid = _T("ATGCN") ;
     sc->forceOverwrite ( true ) ;
     sc->child = this ;
 
@@ -218,8 +218,8 @@ void TABIviewer::initme ()
     aidLines = new wxCheckBox ( up , ABI_HELPLINES , txt("t_aid_lines") , wxPoint ( bo , bo ) ) ;
     r = aidLines->GetRect() ;
     inv_compl = new wxCheckBox ( up , ABI_INV_COMP , txt("t_abi_inv_comp") , wxPoint ( r.GetRight()+bo , r.GetTop() ) ) ;
-    f_height = new wxSpinCtrl ( up , ABI_HEIGHT , "5" , wxPoint ( bo , bo + th * 1 ) , wxSize ( MYSPINBOXSIZE , -1 ) ) ;
-    f_width = new wxSpinCtrl ( up , ABI_WIDTH , "2" , wxPoint ( bo , bo + th * 2 ) , wxSize ( MYSPINBOXSIZE , -1 ) ) ;
+    f_height = new wxSpinCtrl ( up , ABI_HEIGHT , _T("5") , wxPoint ( bo , bo + th * 1 ) , wxSize ( MYSPINBOXSIZE , -1 ) ) ;
+    f_width = new wxSpinCtrl ( up , ABI_WIDTH , _T("2") , wxPoint ( bo , bo + th * 2 ) , wxSize ( MYSPINBOXSIZE , -1 ) ) ;
     f_height->SetRange ( 1 , 50 ) ;
     f_width->SetRange ( 1 , 9 ) ;
     aidLines->SetValue ( true ) ;
@@ -244,7 +244,7 @@ void TABIviewer::initme ()
     // Statistics box
     stat = new wxTextCtrl ( up ,
                             -1 ,
-                            "Test" ,
+                            _T("Test") ,
                             wxPoint ( r.GetRight()+bo , 0 ) ,
                             wxSize ( w - (r.GetRight()+bo) , h ) ,
                             wxTE_MULTILINE | wxTE_READONLY ) ;
@@ -313,20 +313,20 @@ wxString TABIviewer::getStat ()
        {
        if ( u[a] > 0 )
           {
-          if ( !bases.IsEmpty() ) bases += ";  " ;
-          bases += wxString::Format ( "%c: %d" , (char) a , u[a] ) ;
+          if ( !bases.IsEmpty() ) bases += _T(";  ") ;
+          bases += wxString::Format ( _T("%c: %d") , (char) a , u[a] ) ;
           }
        }
 
     wxString r ;
-    r += bases + "\n" ;
-    r += txt("t_abi_sample") + smpl + "\n" ;
+    r += bases + _T("\n") ;
+    r += txt("t_abi_sample") + smpl + _T("\n") ;
     r += wxString::Format ( txt("t_abi_lane") , lane ) ;
     r += start ;
     r += stop ;
-    if ( !comb.IsEmpty() ) r += txt("t_abi_comb") + comb + "\n" ;
-    r += txt("t_abi_gel") + geln + "\n" ;
-    r += txt("t_abi_file") + gelp + "\n" ;
+    if ( !comb.IsEmpty() ) r += txt("t_abi_comb") + comb + _T("\n") ;
+    r += txt("t_abi_gel") + geln + _T("\n") ;
+    r += txt("t_abi_file") + gelp + _T("\n") ;
     r += txt("t_abi_primer_mobility_correction") + pdmf ;
     
     return r ;
@@ -365,11 +365,11 @@ void TABIviewer::OnEditMode(wxCommandEvent& event)
     if ( mi->IsChecked() )
         {
         sc->setEditMode ( true ) ;
-        sc->findID("ABI")->s += " " ;
-        vec->addToSequence ( " " ) ;
+        sc->findID("ABI")->s += _T(" ") ;
+        vec->addToSequence ( _T(" ") ) ;
         sc->arrange () ;
-        if ( sc->markedFrom() == -1 ) sc->mark ( "ABI" , 1 , 1 , 2 ) ;
-        else sc->mark ( "ABI" , sc->markedFrom() , sc->markedFrom() , 2 ) ;
+        if ( sc->markedFrom() == -1 ) sc->mark ( _T("ABI") , 1 , 1 , 2 ) ;
+        else sc->mark ( _T("ABI") , sc->markedFrom() , sc->markedFrom() , 2 ) ;
         sc->SetFocus() ;
         }
     else
@@ -378,7 +378,7 @@ void TABIviewer::OnEditMode(wxCommandEvent& event)
         sc->unmark() ;
 //        sc->mark ( "ABI" , -1 , -1 ) ;
         vec->eraseSequence ( vec->getSequenceLength()-1 , 1 ) ;
-        sc->findID("ABI")->s.erase ( sc->findID("ABI")->s.length()-1 , 1 ) ;
+        sc->findID ( _T("ABI") )->s.erase ( sc->findID ( _T("ABI") )->s.length()-1 , 1 ) ;
         sc->arrange () ;
         Refresh () ;
         }
@@ -401,7 +401,7 @@ void TABIviewer::OnEditName(wxCommandEvent& event)
 void TABIviewer::OnMarkAll(wxCommandEvent& event)
     {
     if ( sc->getEditMode() ) return ;
-    sc->mark ( "ABI" , 1 , vec->getSequenceLength() ) ;
+    sc->mark ( _T("ABI") , 1 , vec->getSequenceLength() ) ;
     }
     
 void TABIviewer::OnFileSave(wxCommandEvent& event)

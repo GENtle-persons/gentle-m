@@ -54,27 +54,30 @@ TVectorTree::TVectorTree ( ChildBase *parent , int i )
 void TVectorTree::initme ()
     {
     int a , b ;
-    char u[1000] ;
+//    char u[1000] ;
+	 wxString u ;
     wxTreeItemId x , y ;
     
     // Basic stuff
     Freeze () ;
     DeleteAllItems () ;
     treeroot = AddRoot ( p->vec->getName() ) ;
-    sprintf ( u , txt("#bp") , p->vec->getSequenceLength() ) ;
+	 u = wxString::Format ( txt("#bp") , p->vec->getSequenceLength() ) ;
+//    sprintf ( u , txt("#bp").mb_str() , p->vec->getSequenceLength() ) ;
     
     // Vector information
-    wxString dp = " : " ;
+    wxString dp = _T(" : ") ;
     vroot = AppendItem ( treeroot , txt("vector") ) ;
-    SetItemData ( vroot , new TTreeItem ( "" , "VECTOR" , p->vec ) ) ;
+    SetItemData ( vroot , new TTreeItem ( _T("") , _T("VECTOR") , p->vec ) ) ;
     x = AppendItem ( vroot , txt("name") + dp + p->vec->getName() ) ;
-    AppendItem ( vroot , txt("size") + dp + wxString ( u ) ) ;
+    AppendItem ( vroot , txt("size") + dp + u ) ;
     
     // Genes
     vector <wxTreeItemId> irs ;
     for ( a = 1 ; a < VIT_TYPES ; a++ )
         {
-        sprintf ( u , "itemtype%d" , a ) ;
+		  u = wxString::Format ( _T("itemtype%d") , a ) ;
+//        sprintf ( u , "itemtype%d" , a ) ;
         irs.push_back ( AppendItem ( treeroot , txt(u) ) ) ;
         }
     
@@ -86,7 +89,7 @@ void TVectorTree::initme ()
            continue ;
            }    
         int it = p->vec->items[a].getType() ;
-        y = AppendItem ( irs[it-1] , p->vec->items[a].name , -1 , -1 , new TTreeItem ( "Test" ) ) ;
+        y = AppendItem ( irs[it-1] , p->vec->items[a].name , -1 , -1 , new TTreeItem ( _T("Test" )) ) ;
         SetItemBold ( y , p->vec->items[a].isVisible() ) ;
         
         wxString sFrom , sTo , sLength , sType , sOritentation , sDescription ;
@@ -96,9 +99,10 @@ void TVectorTree::initme ()
         sTo = wxString::Format ( txt("s_to") , p->vec->items[a].to ) ;
 //        sprintf ( u , txt("s_length") , abs ( p->vec->items[a].to - p->vec->items[a].from ) ) ;
         sLength = wxString::Format ( txt("s_length") , abs ( p->vec->items[a].to - p->vec->items[a].from ) ) ;
-        sprintf ( u , "itemtype%d" , p->vec->items[a].getType() ) ;
+		  u = wxString::Format ( _T("itemtype%d") , p->vec->items[a].getType() ) ;
+//        sprintf ( u , "itemtype%d" , p->vec->items[a].getType() ) ;
 //        sprintf ( u , txt("s_type") , txt(u) ) ;
-        sType = wxString::Format ( txt("s_type") , txt(u) ) ;
+        sType = wxString::Format ( txt("s_type").c_str() , txt(u).c_str() ) ;
         if ( p->vec->items[a].getDirection() == 1 ) sOritentation = txt("cw") ;
         else sOritentation = txt("ccw") ;
 //        sprintf ( u , txt("s_desc") , p->vec->items[a].desc.c_str() ) ;
@@ -108,14 +112,14 @@ void TVectorTree::initme ()
         
         // Item data
         wxString out = p->vec->items[a].name ;
-        out += "\n" ;
-        out += sFrom + "\n" +
-               sTo + "\n" +
-               sLength + "\n" +
-               sType + "\n" +
-               sOritentation + "\n" +
+        out += _T("\n") ;
+        out += sFrom + _T("\n") +
+               sTo + _T("\n") +
+               sLength + _T("\n") +
+               sType + _T("\n") +
+               sOritentation + _T("\n") +
                sDescription ;
-        SetItemData ( y , new TTreeItem ( out , "ITEM" , (void*)a ) ) ;
+        SetItemData ( y , new TTreeItem ( out , _T("ITEM") , (void*)a ) ) ;
         }
     
     // Enzymes
@@ -126,7 +130,7 @@ void TVectorTree::initme ()
 //        p->vec->re[a]->treeid = y ;
         bool used = false , visible = true ;
         wxString out = p->vec->re[a]->name.c_str() ;
-        out += "\n" ;
+        out += _T("\n") ;
         for ( b = 0 ; !used && b < p->vec->rc.size() ; b++ )
            {
            if ( p->vec->rc[b].e == p->vec->re[a] )
@@ -135,7 +139,7 @@ void TVectorTree::initme ()
         if ( !used ) Delete ( y ) ;
         else
            {
-           SetItemData ( y , new TTreeItem ( out , "RE" , p->vec->re[a] ) ) ;
+           SetItemData ( y , new TTreeItem ( out , _T("RE") , p->vec->re[a] ) ) ;
            visible = !p->vec->isEnzymeHidden ( p->vec->re[a]->name ) ;
            SetItemBold ( y , visible ) ;
            }
@@ -155,30 +159,30 @@ void TVectorTree::OnEvent ( wxTreeEvent &event )
     if ( !textWindow ) return ;
     if ( !d ) 
         {
-        textWindow->SetValue ( "" ) ;
+        textWindow->SetValue ( _T("") ) ;
         return ;
         }
     wxString out ;
     out = d->message.c_str() ;
-    if ( d->type == "RE" )
+    if ( d->type == _T("RE") )
         {
         TRestrictionEnzyme *e = (TRestrictionEnzyme*) d->p ;
         out += txt("res_seq") ;
         out += e->sequence.c_str() ;
-        out += "\n" ;
+        out += _T("\n") ;
         out += txt("res_loc") ;
         out += e->location.c_str() ;
-        out += "\n" ;
+        out += _T("\n") ;
         out += txt("res_note") ;
         out += e->note.c_str() ;
-        out += "\n" ;
+        out += _T("\n") ;
         }
-    else if ( d->type == "VECTOR" )
+    else if ( d->type == _T("VECTOR") )
         {
-        wxString dp = " : " ;
+        wxString dp = _T(" : ") ;
         TVector *v = (TVector*) d->p ;
-        out += txt("name") + dp + v->getName() + "\n\n" ;
-        out += txt("desc") + dp + "\n" + v->getDescription() ;
+        out += txt("name") + dp + v->getName() + _T("\n\n") ;
+        out += txt("desc") + dp + _T("\n") + v->getDescription() ;
         }
     textWindow->SetValue ( out ) ;
     }
@@ -192,16 +196,16 @@ void TVectorTree::OnActivation ( wxTreeEvent &event )
     if ( !textWindow ) return ;
     if ( !d ) 
         {
-        textWindow->SetValue ( "" ) ;
+        textWindow->SetValue ( _T("") ) ;
         return ;
         }
-    if ( d->type == "ITEM" )
+    if ( d->type == _T("ITEM") )
         {
         wxCommandEvent ev ;
         p->cPlasmid->setLastContextItem ( (int) d->p ) ;
         p->cPlasmid->itemShowHide ( ev ) ;
         }
-    else if ( d->type == "RE" )
+    else if ( d->type == _T("RE") )
         {
         TRestrictionEnzyme *e = (TRestrictionEnzyme*) d->p ;
         ToggleEnzymeVisibility ( e ) ;
@@ -220,7 +224,7 @@ void TVectorTree::ToggleEnzymeVisibility ( TRestrictionEnzyme *e )
     wxTreeItemId y ;
     long l ;
     y = GetFirstChild ( enzroot , l ) ;
-    while ( y.IsOk() && GetItemText ( y ) != e->name.c_str() )
+    while ( y.IsOk() && GetItemText ( y ) != e->name )
        y = GetNextChild ( enzroot , l ) ;
     if ( !y.IsOk() ) // Automatically added enzyme
     	{
@@ -245,14 +249,14 @@ void TVectorTree::OnRightClick ( wxTreeEvent &event )
     TTreeItem *d = (TTreeItem*) GetItemData ( id ) ;
     if ( !d ) return ;
     wxPoint pt = event.GetPoint() ;
-    if ( d->type == "ITEM" )
+    if ( d->type == _T("ITEM") )
         {
         int item = (int) d->p ;
         wxMenu *cm = p->cPlasmid->invokeItemPopup ( item , pt , true ) ;
         PopupMenu ( cm , pt ) ;
         delete cm ;
         }
-    else if ( d->type == "RE" )
+    else if ( d->type == _T("RE") )
         {
         TRestrictionEnzyme *e = (TRestrictionEnzyme*) d->p ;
         int a ;
@@ -262,7 +266,7 @@ void TVectorTree::OnRightClick ( wxTreeEvent &event )
         PopupMenu ( cm , pt ) ;
         delete cm ;        
         }
-    else if ( d->type == "VECTOR" )
+    else if ( d->type == _T("VECTOR") )
         {
         wxMenu *cm = p->cPlasmid->invokeVectorPopup ( pt , true ) ;
         PopupMenu ( cm , pt ) ;

@@ -69,7 +69,7 @@ void SeqRestriction::show ( wxDC& dc )
 	mylog ( "SeqRestriction::show" , "1" ) ;
     int cw2 , ch2 ;
     dc.SetFont(*can->smallFont);
-    dc.GetTextExtent ( "A" , &ch2 , &ch2 ) ;
+    dc.GetTextExtent ( _T("A") , &ch2 , &ch2 ) ;
     int xa , ya , yb ;
     dc.GetDeviceOrigin ( &xa , &ya ) ;
     ya = -ya ;

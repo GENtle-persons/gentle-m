@@ -70,10 +70,10 @@ wxSpinCtrl *TPrimerDialog::addSpinCtrl ( int id , wxString title , int x , int y
     new wxStaticText ( this , -1 , title , wxPoint ( x , y ) ) ;
     x += w - 80 ;
     y -= 3 ;
-    n = new wxSpinCtrl ( this , id , "0" , wxPoint ( x, y ) , wxSize ( MYSPINBOXSIZE , 20 ) ) ;
-    char s[100] ;
-    sprintf ( s , "%d" , def ) ;
-    n->SetValue ( s ) ;
+    n = new wxSpinCtrl ( this , id , _T("0") , wxPoint ( x, y ) , wxSize ( MYSPINBOXSIZE , 20 ) ) ;
+//    char s[100] ;
+//    sprintf ( s , "%d" , def ) ;
+    n->SetValue ( wxString::Format ( _T("%d") , def ) ) ;
     return n ;
     }
     
@@ -110,12 +110,12 @@ void TPrimerDialog::initme ( TPrimer *_p , TPrimerDesign *_pd )
     wxButton *bo = new wxButton ( this , PD_OK , txt("b_ok") , wxPoint ( 105 , 150 ) ) ;
     wxButton *bc = new wxButton ( this , PD_CANCEL , txt("b_cancel") , wxPoint ( 205 , 150 ) ) ;
     
-    seq = new wxTextCtrl ( this , -1 , "" , 
+    seq = new wxTextCtrl ( this , -1 , _T("") , 
                         wxPoint ( 0 , 180 ) ,
                         wxSize ( w , 20 ) ,
                         wxTE_READONLY|wxTE_CENTRE ) ;
                         
-    rep = new wxTextCtrl ( this , -1 , "" , 
+    rep = new wxTextCtrl ( this , -1 , _T("") , 
                         wxPoint ( 300 , 10 ) ,
                         wxSize ( w-300 , 160 ) ,
                         wxTE_READONLY|wxTE_MULTILINE|wxTE_DONTWRAP ) ;
@@ -230,8 +230,8 @@ void TPrimerDialog::updateList ()
 void TPrimerDialog::ShowCur ()
     {
     wxString cur = cp->sequence ;
-    if ( p->upper ) seq->SetValue ( "5'-" + cur + "-3'" ) ;
-    else seq->SetValue ( "3'-" + cur + "-5'" ) ;
+    if ( p->upper ) seq->SetValue ( _T("5'-") + cur + _T("-3'") ) ;
+    else seq->SetValue ( _T("3'-") + cur + _T("-5'") ) ;
     rep->SetValue ( cp->report() ) ;
     }
     
@@ -248,22 +248,22 @@ void TPrimerDialog::ShowLC ()
 
     if ( pl.size() == 0 ) return ;
 
-    char t[100] ;
+//    char t[100] ;
     for ( int a = 0 ; a < pl.size() ; a++ )
         {
         int len = pl[a].to - pl[a].from + 1 ;
         
-        sprintf ( t , "%d" , a+1 ) ;
-        long l = lc->InsertItem ( a , t ) ;
+        //sprintf ( t , "%d" , a+1 ) ;
+        long l = lc->InsertItem ( a , wxString::Format ( _T("%d") , a+1 ) ) ;
         
-        sprintf ( t , "%d" , len ) ;
-        lc->SetItem ( l , 1 , t ) ;
+        //sprintf ( t , "%d" , len ) ;
+        lc->SetItem ( l , 1 , wxString::Format ( _T("%d") , len ) ) ;
         
-        sprintf ( t , "%2.1f" , pl[a].getTm() ) ;
-        lc->SetItem ( l , 2 , t ) ;
+        //sprintf ( t , "%2.1f" , pl[a].getTm() ) ;
+        lc->SetItem ( l , 2 , wxString::Format ( _T("%2.1f") , pl[a].getTm() ) ) ;
         
-        sprintf ( t , "%2.1f" , pl[a].getEvaluation() ) ;
-        lc->SetItem ( l , 3 , t ) ;
+        //sprintf ( t , "%2.1f" , pl[a].getEvaluation() ) ;
+        lc->SetItem ( l , 3 , wxString::Format ( _T("%2.1f") , pl[a].getEvaluation() ) ) ;
 
         lc->SetItem ( l , 4 , pl[a].sequence ) ;
         }

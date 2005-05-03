@@ -55,7 +55,7 @@ END_EVENT_TABLE()
 TImageDisplay::TImageDisplay(wxWindow *parent, const wxString& title) 
     : ChildBase(parent, title)
     {
-    def = "IMAGE" ;
+    def = _T("IMAGE") ;
     vec = NULL ;
     r = new TIMGreader ;
     }
@@ -89,7 +89,7 @@ void TImageDisplay::initme ()
     
     lb = new wxListBox ( this , IV_LIST , wxDefaultPosition , wxDefaultSize ,
                             0 , NULL , wxLB_SORT ) ;
-    bu = new wxButton ( this , IV_BUTTON , "" , wxDefaultPosition , wxSize ( 180 , -1 ) ) ;
+    bu = new wxButton ( this , IV_BUTTON , _T("") , wxDefaultPosition , wxSize ( 180 , -1 ) ) ;
     cb = new wxCheckBox ( this , IV_CB , txt("img_show_text" ) ) ;
     invert = new wxCheckBox ( this , IV_CB_INVERT , txt("t_invert" ) ) ;
     
@@ -106,7 +106,7 @@ void TImageDisplay::initme ()
     h0->Fit ( this ) ;
     
     cb->SetValue ( true ) ;
-    wxString s_dir = myapp()->frame->LS->getOption ( "IMGDIR" , wxGetCwd() ) ;    
+    wxString s_dir = myapp()->frame->LS->getOption ( _T("IMGDIR") , wxGetCwd() ) ;
     ShowDir ( s_dir ) ;
     myapp()->frame->setChild ( this ) ;
     }
@@ -121,11 +121,11 @@ void TImageDisplay::ShowDir ( wxString s )
     if ( !dir.IsOpened() )
         return;
 
-    myapp()->frame->LS->setOption ( "IMGDIR" , s ) ;
+    myapp()->frame->LS->setOption ( _T("IMGDIR") , s ) ;
     wxString filename;
     
     wxArrayString vs ;
-    dir.GetAllFiles ( s , &vs , "" , wxDIR_FILES ) ; // To save listing all types...
+    dir.GetAllFiles ( s , &vs , _T("") , wxDIR_FILES ) ; // To save listing all types...
 /*    dir.GetAllFiles ( s , &vs , "*.img" ) ;
     dir.GetAllFiles ( s , &vs , "*.tif" ) ;
     dir.GetAllFiles ( s , &vs , "*.tiff" ) ;
@@ -162,9 +162,9 @@ void TImageDisplay::OnFile ( wxCommandEvent &event )
     wxBeginBusyCursor () ;
     wxString file = lb->GetStringSelection() ;
     wxString dir = bu->GetLabel() ;
-    wxString fn = dir + "/" + file ;
+    wxString fn = dir + _T("/") + file ;
     
-    if ( fn.AfterLast('.').Upper() == "IMG" )
+    if ( fn.AfterLast('.').Upper() == _T("IMG") )
     {
     	r->readFile ( fn ) ;
     	right->i = r->makeImage() ;
@@ -204,7 +204,7 @@ void TImageDisplay::OnCBinvert ( wxCommandEvent &event )
 
 wxString TImageDisplay::getName ()
     {
-    return "Image Viewer" ;
+    return _T("Image Viewer") ;
     }
     
 // ****************************************************************
@@ -340,7 +340,7 @@ void TMyImagePanel::WriteIntoBitmap(wxBitmap &bmp2)
 void TMyImagePanel::OnSaveAsBitmap(wxCommandEvent &event)
     {
     char t[1000] , *c , *d ;
-    strcpy ( t , file.c_str() ) ;
+    strcpy ( t , file.mb_str() ) ;
     d = NULL ;
     for ( c = t ; *c ; c++ )
        if ( *c == '.' ) d = c ;
@@ -348,7 +348,7 @@ void TMyImagePanel::OnSaveAsBitmap(wxCommandEvent &event)
 
     wxBitmap bmp2 ;
     WriteIntoBitmap ( bmp2 ) ;
-    myapp()->frame->saveImage ( &bmp2 , t ) ;
+    myapp()->frame->saveImage ( &bmp2 , wxString ( t , *wxConvCurrent ) ) ;
     }
     
 void TMyImagePanel::OnCopy(wxCommandEvent &event)

@@ -54,13 +54,13 @@ TAminoAcids::TAminoAcids(wxWindow *parent, const wxString& title)
     : ChildBase(parent, title)
     {
     vec = new TVector ( this ) ;
-    def = "AminoAcids" ;
+    def = _T("AminoAcids") ;
     vec->setName ( title ) ;
     from = -1 ;
     stat = NULL ;
     pc = NULL ;
     sc2 = NULL ;
-    lastLBsel = "" ;
+    lastLBsel = _T("") ;
     miniDisplayOptions = MINI_DISPLAY_CONDENSED ;
     }
     
@@ -75,7 +75,7 @@ void TAminoAcids::OnIPC ( wxCommandEvent& event )
     TIPCDialog ipcd ( this , txt("t_aa_ipc") , vec->getSequenceLength() ) ;
     if ( wxID_OK != ipcd.ShowModal() ) return ;
         
-    wxString filename = wxFileName::CreateTempFileName ( "ipc" ) ;
+    wxString filename = wxFileName::CreateTempFileName ( _T("ipc") ) ;
 
    	wxBeginBusyCursor() ;
    	TIPC ipc ;
@@ -91,7 +91,7 @@ void TAminoAcids::OnIPC ( wxCommandEvent& event )
    	g->gd->UpdateDisplay () ;
    	
    	wxRemoveFile ( filename ) ;
-   	wxRemoveFile ( filename + ".gnu" ) ;
+   	wxRemoveFile ( filename + _T(".gnu") ) ;
     }
     
 void TAminoAcids::OnBacktranslate ( wxCommandEvent& event )
@@ -133,7 +133,7 @@ void TAminoAcids::initme ()
     edit_menu->Append(MDI_AA_IPC, txt("m_aa_ipc") ) ;
 
     wxMenu *view_menu = new wxMenu;
-    view_menu->Append(MDI_EDIT_MODE, txt("m_edit_mode") , "" , true );
+    view_menu->Append(MDI_EDIT_MODE, txt("m_edit_mode") , _T("") , true );
 
 
 //    wxMenu *action_menu = new wxMenu;
@@ -153,8 +153,8 @@ void TAminoAcids::initme ()
     cSequence = sc ; // For compatability with PlasmidCanvas
     sc->blankline = 1 ;
     sc->child = this ;
-    sc->edit_id = "AA" ;
-    sc->edit_valid = "ACDEFGHIKLMNPQRSTVWY|" ;
+    sc->edit_id = _T("AA") ;
+    sc->edit_valid = _T("ACDEFGHIKLMNPQRSTVWY|") ;
     mylog ( "TAminoAcids::initme" , "4" ) ;
 
     int w , h ;
@@ -294,7 +294,7 @@ void TAminoAcids::showStat ()
     ex = num['W']*5500 + num['Y']*1490 + num['C']*125 ;
     if ( noaa > 0 ) abs = ex / noaa / 100 ;
     t = txt("aa_info") ;
-    t.Replace ( "%f" , "%9.2f" ) ;
+    t.Replace ( _T("%f") , _T("%9.2f") ) ;
     t = wxString::Format ( t , noaa , mW , pI , ex , abs ) ;
     
     // Amino acid count
@@ -306,14 +306,15 @@ void TAminoAcids::showStat ()
 	    b++ ;
 	    TAAProp p = vec->getAAprop ( a ) ;
 	    t2 += a ;
-	    t2 += "/" ;
+	    t2 += _T("/") ;
 	    t2 += p.tla ;
-	    t2 += wxString::Format ( "%4d" , num[a] ) ;
-	    if ( b % 4 == 0 && a+1 != 'Z' ) t2 += "\n" ;
-	    else if ( a+1 != 'Z' ) t2 += "      " ;
-    	}    
-    t += "\n" + wxString::Format ( txt("aa_info2") , num['D']+num['E'] , num['R']+num['K'] ) ;
-   	t += "\n\n" + t2 + "\n\n" ;
+	    t2 += wxString::Format ( _T("%4d") , num[a] ) ;
+	    if ( b % 4 == 0 && a+1 != 'Z' ) t2 += _T("\n") ;
+	    else if ( a+1 != 'Z' ) t2 += _T("      ") ;
+    	}
+		
+		t += _T("\n") + wxString::Format ( txt("aa_info2") , num['D']+num['E'] , num['R']+num['K'] ) ;
+   	t += _T("\n\n") + t2 + _T("\n\n") ;
    	
    	// Atomic composition & hydrophobicity
    	int carbon = 0 , hydrogen = 2 , nitrogen = 0 , oxygen = 1 , sulfur = 0 ;
@@ -340,13 +341,13 @@ void TAminoAcids::showStat ()
    		wxString hl_mammal = p.get_halflife_text ( p.hl_mammal ) ;
    		wxString hl_yeast = p.get_halflife_text ( p.hl_yeast ) ;
    		wxString hl_ecoli = p.get_halflife_text ( p.hl_ecoli ) ;
-   		t += "\n\n" + wxString::Format ( txt("aa_info4") , 
+   		t += _T("\n\n") + wxString::Format ( txt("aa_info4") ,
      						hl_mammal.c_str() , 
      						hl_yeast.c_str() ,
      						hl_ecoli.c_str() ) ;
 
         hydropathicity /= vec->getSequenceLength() ;
-        t += "\n" + wxString::Format ( txt("aa_info5") , hydropathicity ) ;
+        t += _T("\n") + wxString::Format ( txt("aa_info5") , hydropathicity ) ;
    		}  		
     
     stat->SetValue ( t ) ;
@@ -407,7 +408,7 @@ void TAminoAcids::OnEditMode(wxCommandEvent& event)
 	else
  		{
    		vec->undo.start ( txt("u_edit") ) ;
-        sc->startEdit ( "AA" ) ;
+        sc->startEdit ( _T("AA") ) ;
         }    
     }
 
@@ -421,7 +422,7 @@ void TAminoAcids::invokeVectorEditor ( wxString what , int num , bool forceUpdat
     ve.hideEnzym = true ;
     ve.hideEm () ;
     
-    if ( what == "item" )
+    if ( what == _T("item") )
         ve.initialViewItem ( num ) ;
 
     int x = ve.ShowModal () ;
@@ -445,7 +446,7 @@ void TAminoAcids::OnEditName(wxCommandEvent& event)
 void TAminoAcids::OnMarkAll(wxCommandEvent& event)
     {
     if ( sc->getEditMode() ) return ;
-    sc->mark ( "AA" , 1 , vec->getSequenceLength() ) ;
+    sc->mark ( _T("AA") , 1 , vec->getSequenceLength() ) ;
     }
     
 void TAminoAcids::OnPrint(wxCommandEvent& event)
@@ -501,7 +502,7 @@ void TAminoAcids::OnAsNewFeature(wxCommandEvent& event)
     nvi.to = to ;
     vec->setChanged () ;
     vec->items.push_back ( nvi ) ;
-    invokeVectorEditor ( "item" , vec->items.size()-1 , true ) ;
+    invokeVectorEditor ( _T("item") , vec->items.size()-1 , true ) ;
     vec->undo.stop() ;
     }
     
@@ -525,7 +526,7 @@ void TAminoAcids::OnBlastAA(wxCommandEvent& event)
     int a ;
     if ( sc->markedFrom() < 0 ) seq = vec->getSequence() ;
     else seq = sc->getSelection() ;
-    myapp()->frame->blast ( seq , "blastp" ) ;
+    myapp()->frame->blast ( seq , _T("blastp") ) ;
     }
 
 void TAminoAcids::Undo(wxCommandEvent& event)
@@ -618,7 +619,7 @@ void TAminoAcids::handleListBox ( wxString t )
            {
            desc = new TURLtext ( this ,
                             URLTEXT_DUMMY ,
-                            "" ,
+                            _T("") ,
                             wxDefaultPosition,
                             wxSize ( 250 , 90 ) ,
                             wxTE_MULTILINE | wxSUNKEN_BORDER | wxTE_READONLY ) ;
@@ -633,7 +634,7 @@ void TAminoAcids::handleListBox ( wxString t )
            {
            stat = new wxTextCtrl ( this ,
                             -1 ,
-                            "" ,
+                            _T("") ,
                             wxDefaultPosition,
                             wxSize ( 200 , 90 ) ,
                             wxTE_MULTILINE | wxTE_READONLY ) ;

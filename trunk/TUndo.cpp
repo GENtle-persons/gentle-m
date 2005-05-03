@@ -113,7 +113,7 @@ bool TUndo::canUndo ()
     
 wxString TUndo::getLastMessage ()
     {
-    if ( !canUndo() ) return "" ;
+    if ( !canUndo() ) return _T("") ;
     return msg.Last() ;
     }
     

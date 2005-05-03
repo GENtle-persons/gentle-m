@@ -17,7 +17,7 @@ void TVector::setWindow ( ChildBase *c ) { window = c ; }
 void TVector::setCircular ( bool c ) { circular = c ; }
 bool TVector::isCircular () { return circular ; }
 bool TVector::isLinear () { return !circular ; }
-bool TVector::hasStickyEnds () { return (_lu+_ll+_ru+_rl!="") ; }
+bool TVector::hasStickyEnds () { return (_lu+_ll+_ru+_rl!=_T("")) ; }
 float TVector::getAAmw ( char aa ) { return aaprop[aa].mw ; }
 float TVector::getAApi ( char aa ) { return aaprop[aa].pi ; }
 char TVector::getComplement ( char c ) { return COMPLEMENT[c] ; }
@@ -59,9 +59,9 @@ void TVector::prepareFeatureEdit ( int pos , bool overwrite )
 		
 		if ( mode == 1 ) // Change name
 			{
-   			if ( items[a].name.Right ( 1 ) != "*" )
+   			if ( items[a].name.Right ( 1 ) != _T("*") )
    				{
-   				items[a].name += "*" ;
+   				items[a].name += _T("*") ;
    				updateDisplay () ;
    				}				
 			}
@@ -88,7 +88,7 @@ void TVector::prepareFeatureEdit ( int pos , bool overwrite )
           	while ( to > sequence.length() ) to -= sequence.length() ;
           	items[a].from = from ;
           	items[a].to = to ;
-   			if ( items[a].name.Right ( 1 ) != "*" ) items[a].name += "*" ;
+   			if ( items[a].name.Right ( 1 ) != _T("*") ) items[a].name += _T("*") ;
           	updateDisplay () ;
      		}        
 		}    
@@ -104,7 +104,7 @@ wxString TVector::getStrand35 ()
 	wxString t1 , t2 , t3 ;
 	int a ;
 	for ( a = 0 ; a < _rl.length() ; a++ ) t1 = _rl.GetChar(a) + t1 ;
-	for ( a = 0 ; a < sequence.length() ; a++ ) t2 = getComplement ( sequence.GetChar(a) ) + t2 ;
+	for ( a = 0 ; a < sequence.length() ; a++ ) t2 = ((wxChar) getComplement ( sequence.GetChar(a) )) + t2 ;
 	for ( a = 0 ; a < _ll.length() ; a++ ) t3 = _ll.GetChar(a) + t3 ;
 	return t1 + t2 + t3 ;
 	}
@@ -120,7 +120,7 @@ wxString TVector::getParams ()
 	{
 	wxString params ;
 	for ( int a = 0 ; a < paramk.GetCount() ; a++ )
-		params += "#" + paramk[a] + "\n" + paramv[a] + "\n" ;
+		params += _T("#") + paramk[a] + _T("\n") + paramv[a] + _T("\n") ;
     return params ;
     }
     
@@ -128,7 +128,7 @@ wxString TVector::getParam ( wxString key )
 	{
 	int a ;
 	for ( a = 0 ; a < paramk.GetCount() && paramk[a] != key ; a++ ) ;
-	if ( a == paramk.GetCount() ) return "" ;
+	if ( a == paramk.GetCount() ) return _T("") ;
 	else return paramv[a] ;
 	}
      
@@ -149,18 +149,18 @@ void TVector::setParams ( wxString t )
 	{
 	paramk.Clear () ;
 	paramv.Clear () ;
-	if ( t.IsEmpty() || t.GetChar(0) != '#' ) t = "#genbank\n" + t ; // Backwards compatability
+	if ( t.IsEmpty() || t.GetChar(0) != '#' ) t = _T("#genbank\n") + t ; // Backwards compatability
 	wxArrayString vs ;
-	explode ( "\n" , t , vs ) ;
+	explode ( _T("\n") , t , vs ) ;
 	int a ;
 	for ( a = 0 ; a < vs.GetCount() ; a++ )
 		{
-		if ( vs[a].Left ( 1 ) == "#" )
+		if ( vs[a].Left ( 1 ) == _T("#") )
 			{
 			paramk.Add ( vs[a].Mid ( 1 ) ) ;
-			paramv.Add ( "" ) ;
+			paramv.Add ( _T("") ) ;
 			}    
-		else paramv[paramv.GetCount()-1] += vs[a] + "\n" ;
+		else paramv[paramv.GetCount()-1] += vs[a] + _T("\n") ;
 		}
 	for ( a = 0 ; a < paramk.GetCount() ; a++ )
 		evaluate_key_value ( paramk[a] , paramv[a] ) ;
@@ -168,7 +168,7 @@ void TVector::setParams ( wxString t )
     
 void TVector::evaluate_key_value ( wxString key , wxString value )
 	{
-	if ( key == "enzymerule" )
+	if ( key == _T("enzymerule") )
 		{
 		if ( !enzyme_rules ) enzyme_rules = new TEnzymeRules ;
 		enzyme_rules->from_string ( value ) ;
@@ -208,7 +208,7 @@ void TVector::methylationSites ( wxArrayInt &vi , int what )
 
 TVector *TVector::newFromMark ( int from , int to ) 
     {
-    char t[1000] ;
+//    char t[1000] ;
     TVector *nv = new TVector ;
     nv->setFromVector ( *this ) ;
     if ( from == 1 && to == sequence.length() ) return nv ; // The whole vector
@@ -224,10 +224,11 @@ TVector *TVector::newFromMark ( int from , int to )
     
     if ( to > sequence.length() )
             nv->turn ( sequence.length() - from + 1 ) ;
-    if ( !nv->getDescription().IsEmpty() ) nv->addDescription ( "\n" ) ;
-    sprintf ( t , txt("t_cropped_fragment") , nv->getName().c_str() , from , to ) ;
+    if ( !nv->getDescription().IsEmpty() ) nv->addDescription ( _T("\n") ) ;
+	 wxString t = wxString::Format ( txt("t_cropped_fragment") , nv->getName().c_str() , from , to ) ;
+//    sprintf ( t , txt("t_cropped_fragment") , nv->getName().c_str() , from , to ) ;
     nv->addDescription ( t ) ;
-    nv->addName ( "*" ) ;
+    nv->addName ( _T("*") ) ;
     nv->setChanged () ;
     nv->setCircular ( false ) ;
     nv->recalculateCuts() ;
@@ -262,7 +263,7 @@ wxString TVector::vary_base ( char b )
 
 wxString TVector::one2three ( int a )
     {
-    if ( a < 0 || a > 255 ) return "" ;
+    if ( a < 0 || a > 255 ) return _T("") ;
     return aaprop[a].tla ;
     }
     
@@ -305,7 +306,7 @@ TVector::~TVector ()
     
 void TVector::setCodonTable ( int table , wxString sequence )
     {
-    while ( codon_tables.GetCount() <= table ) codon_tables.Add ( "" ) ;
+    while ( codon_tables.GetCount() <= table ) codon_tables.Add ( _T("") ) ;
     codon_tables[table] = sequence ;
     }    
         
@@ -325,47 +326,47 @@ void TVector::init ()
     
     int a ;
     
-    setCodonTable (  1 , "FFLLSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
-    setCodonTable (  2 , "FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSS||VVVVAAAADDEEGGGG" ) ;
-    setCodonTable (  3 , "FFLLSSSSYY||CCWWTTTTPPPPHHQQRRRRIIMMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
-    setCodonTable (  4 , "FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
-    setCodonTable (  5 , "FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSSSVVVVAAAADDEEGGGG" ) ;
-    setCodonTable (  6 , "FFLLSSSSYYQQCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
-    setCodonTable (  9 , "FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG" ) ;
-    setCodonTable ( 10 , "FFLLSSSSYY||CCCWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
-    setCodonTable ( 11 , "FFLLSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
-    setCodonTable ( 12 , "FFLLSSSSYY||CC|WLLLSPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
-    setCodonTable ( 13 , "FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSGGVVVVAAAADDEEGGGG" ) ;
-    setCodonTable ( 14 , "FFLLSSSSYYY|CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG" ) ;
-    setCodonTable ( 15 , "FFLLSSSSYY|QCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
-    setCodonTable ( 16 , "FFLLSSSSYY|LCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
-    setCodonTable ( 21 , "FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNNKSSSSVVVVAAAADDEEGGGG" ) ;
-    setCodonTable ( 22 , "FFLLSS|SYY|LCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
-    setCodonTable ( 23 , "FF|LSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG" ) ;
+    setCodonTable (  1 , _T("FFLLSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
+    setCodonTable (  2 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSS||VVVVAAAADDEEGGGG") ) ;
+    setCodonTable (  3 , _T("FFLLSSSSYY||CCWWTTTTPPPPHHQQRRRRIIMMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
+    setCodonTable (  4 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
+    setCodonTable (  5 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSSSVVVVAAAADDEEGGGG") ) ;
+    setCodonTable (  6 , _T("FFLLSSSSYYQQCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
+    setCodonTable (  9 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG") ) ;
+    setCodonTable ( 10 , _T("FFLLSSSSYY||CCCWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
+    setCodonTable ( 11 , _T("FFLLSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
+    setCodonTable ( 12 , _T("FFLLSSSSYY||CC|WLLLSPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
+    setCodonTable ( 13 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSGGVVVVAAAADDEEGGGG") ) ;
+    setCodonTable ( 14 , _T("FFLLSSSSYYY|CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG") ) ;
+    setCodonTable ( 15 , _T("FFLLSSSSYY|QCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
+    setCodonTable ( 16 , _T("FFLLSSSSYY|LCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
+    setCodonTable ( 21 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNNKSSSSVVVVAAAADDEEGGGG") ) ;
+    setCodonTable ( 22 , _T("FFLLSS|SYY|LCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
+    setCodonTable ( 23 , _T("FF|LSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
     for ( a = 0 ; a < codon_tables.GetCount() ; a++ ) // Setting all empty tables to standard one
         {
-        if ( codon_tables[a] == "" ) codon_tables[a] = codon_tables[1] ;
+        if ( codon_tables[a] == _T("") ) codon_tables[a] = codon_tables[1] ;
         }    
     aa = codon_tables[1] ;
 
     // IUPAC DNA
     for ( a = 0 ; a < 256 ; a++ ) IUPAC[a] = 0 ;
-    setIUPAC ( 'A' , "A" ) ;
-    setIUPAC ( 'C' , "C" ) ;
-    setIUPAC ( 'T' , "T" ) ;
-    setIUPAC ( 'G' , "G" ) ;
+    setIUPAC ( 'A' , _T("A") ) ;
+    setIUPAC ( 'C' , _T("C") ) ;
+    setIUPAC ( 'T' , _T("T") ) ;
+    setIUPAC ( 'G' , _T("G") ) ;
     for ( a = 0 ; a < 256 ; a++ ) SIUPAC[a] = IUPAC[a] ;
-    setIUPAC ( 'R' , "AG" , SIUPAC ) ;
-    setIUPAC ( 'Y' , "TC" , SIUPAC ) ;
-    setIUPAC ( 'M' , "AC" , SIUPAC ) ;
-    setIUPAC ( 'K' , "GT" , SIUPAC ) ;
-    setIUPAC ( 'S' , "GC" , SIUPAC ) ;
-    setIUPAC ( 'W' , "AT" , SIUPAC ) ;
-    setIUPAC ( 'H' , "ACT" , SIUPAC ) ;
-    setIUPAC ( 'B' , "GTC" , SIUPAC ) ;
-    setIUPAC ( 'V' , "GCA" , SIUPAC ) ;
-    setIUPAC ( 'D' , "GAT" , SIUPAC ) ;
-    setIUPAC ( 'N' , "AGCT" , SIUPAC ) ;
+    setIUPAC ( 'R' , _T("AG") , SIUPAC ) ;
+    setIUPAC ( 'Y' , _T("TC") , SIUPAC ) ;
+    setIUPAC ( 'M' , _T("AC") , SIUPAC ) ;
+    setIUPAC ( 'K' , _T("GT") , SIUPAC ) ;
+    setIUPAC ( 'S' , _T("GC") , SIUPAC ) ;
+    setIUPAC ( 'W' , _T("AT") , SIUPAC ) ;
+    setIUPAC ( 'H' , _T("ACT") , SIUPAC ) ;
+    setIUPAC ( 'B' , _T("GTC") , SIUPAC ) ;
+    setIUPAC ( 'V' , _T("GCA") , SIUPAC ) ;
+    setIUPAC ( 'D' , _T("GAT") , SIUPAC ) ;
+    setIUPAC ( 'N' , _T("AGCT") , SIUPAC ) ;
     
     for ( a = 0 ; a < 256 ; a++ ) ACGT[a] = ' ' ;
     ACGT['t'] = ACGT['T'] = 0 ;
@@ -399,27 +400,27 @@ void TVector::init ()
     while ( aaprop.size() < 256 ) aaprop.push_back ( TAAProp() ) ;
     
     // MW, pI, three-letter-acronym
-    aaprop['|'].set_data (   0      ,  0    , "STP") ;
-    aaprop['A'].set_data (  71.0788 ,  6.01 , "Ala") ;
-    aaprop['C'].set_data ( 103.1388 ,  5.07 , "Cys") ;
-    aaprop['D'].set_data ( 115.0886 ,  2.77 , "Asp") ;
-    aaprop['E'].set_data ( 129.1155 ,  3.22 , "Glu") ;
-    aaprop['F'].set_data ( 147.1766 ,  5.48 , "Phe") ;
-    aaprop['G'].set_data (  57.0519 ,  5.97 , "Gly") ;
-    aaprop['H'].set_data ( 137.1411 ,  7.59 , "His") ;
-    aaprop['I'].set_data ( 113.1594 ,  6.02 , "Ile") ;
-    aaprop['K'].set_data ( 128.1741 ,  9.74 , "Lys") ;
-    aaprop['L'].set_data ( 113.1594 ,  5.98 , "Leu") ;
-    aaprop['M'].set_data ( 131.1926 ,  5.74 , "Met") ;
-    aaprop['N'].set_data ( 114.1038 ,  5.41 , "Asn") ;
-    aaprop['P'].set_data (  97.1167 ,  6.48 , "Pro") ;
-    aaprop['Q'].set_data ( 128.1307 ,  5.65 , "Gln") ;
-    aaprop['R'].set_data ( 156.1875 , 10.76 , "Arg") ;
-    aaprop['S'].set_data (  87.0782 ,  5.68 , "Ser") ;
-    aaprop['T'].set_data ( 101.1051 ,  5.87 , "Thr") ;
-    aaprop['V'].set_data (  99.1326 ,  5.97 , "Val") ;
-    aaprop['W'].set_data ( 186.2132 ,  5.89 , "Trp") ;
-    aaprop['Y'].set_data ( 163.1760 ,  5.66 , "Tyr") ;
+    aaprop['|'].set_data (   0      ,  0    , _T("STP")) ;
+    aaprop['A'].set_data (  71.0788 ,  6.01 , _T("Ala")) ;
+    aaprop['C'].set_data ( 103.1388 ,  5.07 , _T("Cys")) ;
+    aaprop['D'].set_data ( 115.0886 ,  2.77 , _T("Asp")) ;
+    aaprop['E'].set_data ( 129.1155 ,  3.22 , _T("Glu")) ;
+    aaprop['F'].set_data ( 147.1766 ,  5.48 , _T("Phe")) ;
+    aaprop['G'].set_data (  57.0519 ,  5.97 , _T("Gly")) ;
+    aaprop['H'].set_data ( 137.1411 ,  7.59 , _T("His")) ;
+    aaprop['I'].set_data ( 113.1594 ,  6.02 , _T("Ile")) ;
+    aaprop['K'].set_data ( 128.1741 ,  9.74 , _T("Lys")) ;
+    aaprop['L'].set_data ( 113.1594 ,  5.98 , _T("Leu")) ;
+    aaprop['M'].set_data ( 131.1926 ,  5.74 , _T("Met")) ;
+    aaprop['N'].set_data ( 114.1038 ,  5.41 , _T("Asn")) ;
+    aaprop['P'].set_data (  97.1167 ,  6.48 , _T("Pro")) ;
+    aaprop['Q'].set_data ( 128.1307 ,  5.65 , _T("Gln")) ;
+    aaprop['R'].set_data ( 156.1875 , 10.76 , _T("Arg")) ;
+    aaprop['S'].set_data (  87.0782 ,  5.68 , _T("Ser")) ;
+    aaprop['T'].set_data ( 101.1051 ,  5.87 , _T("Thr")) ;
+    aaprop['V'].set_data (  99.1326 ,  5.97 , _T("Val")) ;
+    aaprop['W'].set_data ( 186.2132 ,  5.89 , _T("Trp")) ;
+    aaprop['Y'].set_data ( 163.1760 ,  5.66 , _T("Tyr")) ;
          
     // Atoms ( carbon , hydrogen , nitrogen , oxygen , sulfur )
     aaprop['|'].set_atoms (  0 ,  0 , 0 , 0 , 0 ) ;
@@ -517,10 +518,10 @@ void TVector::init ()
 void TVector::makeAA2DNA ( wxString mode )
     {
     int a , b , c , e ;
-    wxString iu = "ACGT" ;
-    for ( a = 0 ; a < 256 ; a++ ) AA2DNA[a] = "" ;
+    wxString iu = _T("ACGT") ;
+    for ( a = 0 ; a < 256 ; a++ ) AA2DNA[a] = _T("") ;
     
-    if ( mode == "" ) // Default, abstract code
+    if ( mode == _T("") ) // Default, abstract code
     	{
         for ( a = 0 ; a < iu.length() ; a++ )
            {
@@ -540,11 +541,11 @@ void TVector::makeAA2DNA ( wxString mode )
         }
     else // Species-specific
     	{
-	    wxString aas = "ACDEFGHIKLMNPQRSTVWY" ;
+	    wxString aas = _T("ACDEFGHIKLMNPQRSTVWY") ;
 	    
 	    wxHashString cc , cc_spec ;
-	    myapp()->init_txt ( "Default" , "codon_catalog.csv" , &cc , 2 ) ;
-	    myapp()->init_txt ( mode , "codon_catalog.csv" , &cc_spec , 2 ) ;
+	    myapp()->init_txt ( _T("Default") , _T("codon_catalog.csv") , &cc , 2 ) ;
+	    myapp()->init_txt ( mode , _T("codon_catalog.csv") , &cc_spec , 2 ) ;
 	    
 	    for ( a = 0 ; a < aas.length() ; a++ )
 	    	{
@@ -556,13 +557,13 @@ void TVector::makeAA2DNA ( wxString mode )
     	}    
     for ( a = 0 ; a < 256 ; a++ )
         if ( AA2DNA[a].IsEmpty() )
-           AA2DNA[a] = "NNN" ;
+           AA2DNA[a] = _T("NNN") ;
     }
     
 wxString TVector::mergeCodons ( wxString c1 , wxString c2 )
     {
-    if ( c1 == "" ) c1 = "   " ;
-    if ( c2 == "" ) c2 = "   " ;
+    if ( c1 == _T("") ) c1 = _T("   ") ;
+    if ( c2 == _T("") ) c2 = _T("   ") ;
     int a , b ;
     wxString ret ;
     for ( a = 0 ; a < 3 ; a++ )
@@ -581,7 +582,7 @@ wxString TVector::mergeCodons ( wxString c1 , wxString c2 )
 
 void TVector::removeBlanksFromSequence ()
     {
-    sequence.Replace ( " " , "" , true ) ;
+    sequence.Replace ( _T(" ") , _T("") , true ) ;
     }
 
 void TVector::removeBlanksFromVector ()
@@ -648,7 +649,7 @@ void TVector::doRemoveNucleotide ( int x )
 void TVector::insert_char ( char x , int pos , bool overwrite )
     {
     wxString dummy ;
-    dummy = (char) x ;
+    dummy = (wxChar) x ;
 	if ( !overwrite || sequence.GetChar(pos-1) != x ) prepareFeatureEdit ( pos , overwrite ) ;
     if ( overwrite && pos < sequence.length() )
        {
@@ -666,15 +667,16 @@ void TVector::insert_char ( char x , int pos , bool overwrite )
         }
     }
     
-void TVector::setIUPAC ( char b , char *s , char *pac )
+void TVector::setIUPAC ( char b , wxString s , char *pac )
     {
     int x = 0 ;
-    for ( unsigned char *c = (unsigned char*) s ; *c ; c++ )
+    for ( int y = 0 ; y < s.Length() ; y++ )
         {
-        if ( *c == 'A' || *c == 'a' ) x += IUPAC_A ;
-        if ( *c == 'C' || *c == 'c' ) x += IUPAC_C ;
-        if ( *c == 'G' || *c == 'g' ) x += IUPAC_G ;
-        if ( *c == 'T' || *c == 't' ) x += IUPAC_T ;
+		  char c = s.GetChar(y) ;
+        if ( c == 'A' || c == 'a' ) x += IUPAC_A ;
+        if ( c == 'C' || c == 'c' ) x += IUPAC_C ;
+        if ( c == 'G' || c == 'g' ) x += IUPAC_G ;
+        if ( c == 'T' || c == 't' ) x += IUPAC_T ;
         }
     if ( !pac ) pac = IUPAC ;
     pac[(unsigned char)b] = x ;
@@ -709,7 +711,7 @@ void TVector::recalculateCuts ()
     {
     rc.clear () ;
     if ( type == TYPE_AMINO_ACIDS ) return ;
-    if ( sequence == "" ) return ;
+    if ( sequence == _T("") ) return ;
     bool truncate = false ;
     if ( sequence.GetChar(sequence.length()-1) == ' ' )
         {
@@ -717,8 +719,8 @@ void TVector::recalculateCuts ()
         truncate = true ;
         }    
     bool join = getVectorCuts ( this ) ;
-    if ( action == "RESTRICTION" ) join = false ;
-    if ( truncate ) sequence += " " ;
+    if ( action == _T("RESTRICTION") ) join = false ;
+    if ( truncate ) sequence += _T(" ") ;
     
     // Sorting by position
     sort ( rc.begin() , rc.end() ) ;
@@ -890,7 +892,7 @@ void TVector::doRestriction ()
     
     TRestrictionEnzyme blankEnzyme ;
     blankEnzyme.cut = 0 ;
-    blankEnzyme.sequence = "" ;
+    blankEnzyme.sequence = _T("") ;
     blankEnzyme.overlap = 0 ;
     if ( !circular )
         cl.push_back ( TRestrictionCut ( 0 , &blankEnzyme ) ) ;
@@ -952,19 +954,21 @@ void TVector::doRestriction ()
         nv->reduceToFragment ( cl[a] , cl[a+1] ) ;
         nv->recalculateCuts () ;
         nv->recalcvisual = true ;
-        if ( !nv->getDescription().IsEmpty() ) nv->addDescription ( "\n" ) ;
-        char tx[1000] ;
-        sprintf ( tx , txt("res_desc") , nv->getName().c_str() , cl[a].e->name.c_str() , t1 ) ;
+        if ( !nv->getDescription().IsEmpty() ) nv->addDescription ( _T("\n") ) ;
+        //char tx[1000] ;
+		  wxString tx = wxString::Format ( txt("res_desc").c_str() , nv->getName().c_str() , cl[a].e->name.c_str() , t1 ) ;
+        //sprintf ( tx , txt("res_desc").mb_str() , nv->getName().mb_str() , cl[a].e->name.mb_str() , t1 ) ;
         nv->addDescription ( tx ) ;
         if ( cl[a].e->name == cl[a+1].e->name )
            {
-           nv->addDescription ( "." ) ;
-           nv->addName ( " (" + cl[a].e->name + ")" ) ;
+           nv->addDescription ( _T(".") ) ;
+           nv->addName ( _T(" (") + cl[a].e->name + _T(")") ) ;
            }
         else
            {
-           sprintf ( tx , txt("res_desc2") , cl[a+1].e->name.c_str() , t2 ) ;
-           nv->addName ( " (" + cl[a].e->name + "/" + cl[a+1].e->name + ")" ) ;
+			  tx = wxString::Format ( txt("res_desc2").c_str() , cl[a+1].e->name.c_str() , t2 ) ;
+           //sprintf ( tx , txt("res_desc2").c_str() , cl[a+1].e->name.c_str() , t2 ) ;
+           nv->addName ( _T(" (") + cl[a].e->name + _T("/") + cl[a+1].e->name +_T(")") ) ;
            }
         nv->cocktail.Clear() ; // Cleaning up cocktail
         if ( nv->sequence.length() >= action_value ) // "No fragments smaller than XX base pairs"
@@ -978,8 +982,8 @@ void TVector::doRestriction ()
         
 void TVector::doAction ()
     {
-    if ( action == "RESTRICTION" ) doRestriction () ;
-    action = "" ;
+    if ( action == _T("RESTRICTION") ) doRestriction () ;
+    action = _T("") ;
     recalculateCuts () ;
     return ;
     }
@@ -1033,7 +1037,7 @@ void TVector::ligate_right ( TVector &v , bool inverted )
            if ( items[b].name == i.name && items[b].getType() == i.getType() )
               {
               b = -1 ;
-              i.name += "*" ;
+              i.name += _T("*") ;
               }
            }
         items.push_back ( i ) ;
@@ -1055,7 +1059,7 @@ void TVector::closeCircle ()
     if ( circular ) return ;
     sequence += _ru ;
     sequence += _lu ;
-    _ru = _lu = _rl = _ll = "" ;
+    _ru = _lu = _rl = _ll = _T("") ;
     circular = true ;
     recalcvisual = true ;
     if ( turned != 0 ) turn ( -turned ) ;
@@ -1086,7 +1090,7 @@ void TVector::doRemove ( int from , int to , bool update , bool enableUndo )
        t += s.GetChar(b-1) ;
        s.SetChar(b-1,' ') ;
        }
-    sequence = "" ;
+    sequence = _T("") ;
     for ( a = 0 ; a < l ; a++ )
        if ( s.GetChar(a) != ' ' ) sequence += s.GetChar(a) ;       
 */
@@ -1122,7 +1126,7 @@ void TVector::doRemove ( int from , int to , bool update , bool enableUndo )
 // Could return all possible AAs (see IUPAC) in the future
 wxString TVector::dna2aa ( wxString codon , int translation_table )
     {
-    if ( codon.length() != 3 ) return "?" ;
+    if ( codon.length() != 3 ) return _T("?") ;
     wxString aa ; // Replacing object variable
     if ( translation_table == -1 ) aa = this->aa ;
     else aa = codon_tables[translation_table] ;
@@ -1130,9 +1134,9 @@ wxString TVector::dna2aa ( wxString codon , int translation_table )
     char c0 = codon.GetChar(0) ;
     char c1 = codon.GetChar(1) ;
     char c2 = codon.GetChar(2) ;
-    if ( c0 == ' ' ) return "?" ;
-    if ( c1 == ' ' ) return "?" ;
-    if ( c2 == ' ' ) return "?" ;
+    if ( c0 == ' ' ) return _T("?") ;
+    if ( c1 == ' ' ) return _T("?") ;
+    if ( c2 == ' ' ) return _T("?") ;
     if ( ACGT[c0] != ' ' && ACGT[c1] != ' ' && ACGT[c2] != ' ' )
 /*    if ( (c0=='A'||c0=='C'||c0=='G'||c0=='T') &&
          (c1=='A'||c1=='C'||c1=='G'||c1=='T') &&
@@ -1141,7 +1145,7 @@ wxString TVector::dna2aa ( wxString codon , int translation_table )
        int i = ACGT[c0]*16 +
                ACGT[c1]*4 +
                ACGT[c2] ;
-       if ( i > 63 ) r = "?" ;
+       if ( i > 63 ) r = _T("?") ;
        else r = aa.GetChar(i) ;
        }
     else
@@ -1160,12 +1164,12 @@ wxString TVector::dna2aa ( wxString codon , int translation_table )
                   ACGT[s2.GetChar(a2)] ;
           if ( i > 63 ) v = '?' ;
           else v = aa.GetChar(i) ;
-          if ( u != ' ' && u != v ) return "?" ;
-          else if ( v == '?' ) return "?" ;
+          if ( u != ' ' && u != v ) return _T("?") ;
+          else if ( v == '?' ) return _T("?") ;
           else u = v ;
           }
-       if ( u == ' ' ) r = "?" ;
-       else r = u ;
+       if ( u == ' ' ) r = _T("?") ;
+       else r = (wxChar) u ;
        }    
     return r ;
     }
@@ -1270,7 +1274,7 @@ void TVector::addORFs ( int off )
         codon += getNucleotide ( a + dir * 0 , complement ) ;
         codon += getNucleotide ( a + dir * 1 , complement ) ;
         codon += getNucleotide ( a + dir * 2 , complement ) ;
-        if ( codon == "ATG" )
+        if ( codon == _T("ATG") )
            {
            int cnt = (sequence.length()+2)/3 ;
            int aa = 0 ;
@@ -1280,13 +1284,13 @@ void TVector::addORFs ( int off )
               aa++ ;
               if ( b < 0 ) b = sequence.length() - b ;
               if ( b >= sequence.length() ) b -= sequence.length() ;
-              codon = "" ;
+              codon = _T("") ;
               codon += getNucleotide ( b + dir * 0 , complement ) ;
               codon += getNucleotide ( b + dir * 1 , complement ) ;
               codon += getNucleotide ( b + dir * 2 , complement ) ;
-              if ( codon == "TAA" ||
-                   codon == "TAG" ||
-                   codon == "TGA" )
+              if ( codon == _T("TAA") ||
+                   codon == _T("TAG") ||
+                   codon == _T("TGA") )
                  {
                  if ( aa > 100 )
                     {
@@ -1415,19 +1419,19 @@ int TVector::getItemLength ( int a )
     
 void TVector::clear ()
     {
-    _lu = _ll = _ru = _rl = "" ;
+    _lu = _ll = _ru = _rl = _T("") ;
     circular = false ;
     paramk.Clear () ;
     paramv.Clear () ;
     methyl.Clear () ;
     if ( enzyme_rules ) { delete enzyme_rules ; enzyme_rules = NULL ; }
     turned = 0 ;
-    action = "" ;
+    action = _T("") ;
     action_value = 0 ;
-    aa = database = "" ;
+    aa = database = _T("") ;
     changed = false ;
     undo.clear() ;
-    sequence = name = desc = "" ;
+    sequence = name = desc = _T("") ;
     type = TYPE_VECTOR ;
     recalcvisual = false ;
     items.clear () ;
@@ -1521,8 +1525,8 @@ wxString TVector::getSequence ()
     
 void TVector::removeAlignmentArtifacts ( char what )
     {
-    wxString what2 ( what ) ;
-    sequence.Replace ( what2 , "" ) ;
+    wxString what2 ( (wxChar) what ) ;
+    sequence.Replace ( what2 , _T("") ) ;
     }    
     
 char TVector::getSequenceChar ( int x )
@@ -1631,7 +1635,7 @@ TVectorItem::TVectorItem ( wxString sn , wxString n , int f , int t , char ty = 
 
 wxBrush *TVectorItem::getBrush ()
     {
-    if ( getParam ( "ISDEFAULTBRUSH" ) == "1" )
+    if ( getParam ( _T("ISDEFAULTBRUSH") ) == _T("1") )
         {
         if ( type == VIT_GENE ) return wxBLUE_BRUSH ;
         else if ( type == VIT_CDS  ) return wxRED_BRUSH ;
@@ -1643,9 +1647,9 @@ wxBrush *TVectorItem::getBrush ()
         }
     else
         {
-        int c1 = atoi ( getParam ( "COLOR_RED" ) .c_str() ) ;
-        int c2 = atoi ( getParam ( "COLOR_GREEN" ) .c_str() ) ;
-        int c3 = atoi ( getParam ( "COLOR_BLUE" ) .c_str() ) ;
+        int c1 = atoi ( getParam ( _T("COLOR_RED") ) .mb_str() ) ;
+        int c2 = atoi ( getParam ( _T("COLOR_GREEN") ) .mb_str() ) ;
+        int c3 = atoi ( getParam ( _T("COLOR_BLUE") ) .mb_str() ) ;
         return MYBRUSH ( wxColour ( c1 , c2 , c3 ) ) ;
         }
     }
@@ -1662,21 +1666,21 @@ wxColour TVectorItem::getFontColor ()
     
 bool TVectorItem::isVisible ()
     {
-    wxString s = getParam ( "ISVISIBLE" ) ;
-    return ( s == "1" ) ;
+    wxString s = getParam ( _T("ISVISIBLE") ) ;
+    return ( s == _T("1") ) ;
     }
     
 void TVectorItem::setVisible ( bool b )
     {
-    setParam ( "ISVISIBLE" , b ) ;
+    setParam ( _T("ISVISIBLE") , b ) ;
     }
     
 void TVectorItem::setColor ( wxColour col )
     {
-    setParam ( "ISDEFAULTBRUSH" , false ) ;
-    setParam ( "COLOR_RED" , col.Red() ) ;
-    setParam ( "COLOR_GREEN" , col.Green() ) ;
-    setParam ( "COLOR_BLUE" , col.Blue() ) ;
+    setParam ( _T("ISDEFAULTBRUSH") , false ) ;
+    setParam ( _T("COLOR_RED") , col.Red() ) ;
+    setParam ( _T("COLOR_GREEN") , col.Green() ) ;
+    setParam ( _T("COLOR_BLUE") , col.Blue() ) ;
     }
     
 //********************* PARAMS
@@ -1694,7 +1698,7 @@ void TVectorItem::setParam ( wxString p , wxString v )
     
 void TVectorItem::setParam ( wxString p , int v )
     {
-    setParam ( p , wxString::Format ( "%d" , v ) ) ;
+    setParam ( p , wxString::Format ( _T("%d") , v ) ) ;
     }
     
 wxString TVectorItem::getParam ( wxString p , wxString def )
@@ -1719,7 +1723,7 @@ wxString TVectorItem::implodeParams ()
            if ( t.GetChar(b) == '\n' )
               t.SetChar ( b , 2 ) ;
         s += pname[a] ;
-        s += "\n" + t + "\n" ;
+        s += _T("\n") + t + _T("\n") ;
         }
     return s ;
     }
@@ -1742,11 +1746,11 @@ void TVectorItem::explodeParams ( wxString _s )
         s = s.substr ( a + 1 ) ;
         setParam ( n , v ) ;
         }
-    if ( getParam ( "ISDEFAULTBRUSH" ) != "1" )
+    if ( getParam ( _T("ISDEFAULTBRUSH") ) != _T("1") )
         {
-        setColor ( wxColour ( atoi ( getParam("COLOR_RED").c_str() ) ,
-                              atoi ( getParam("COLOR_GREEN").c_str() ) ,
-                              atoi ( getParam("COLOR_BLUE").c_str() ) ) ) ;
+        setColor ( wxColour ( atoi ( getParam(_T("COLOR_RED")).mb_str() ) ,
+                              atoi ( getParam(_T("COLOR_GREEN")).mb_str() ) ,
+                              atoi ( getParam(_T("COLOR_BLUE")).mb_str() ) ) ) ;
         }
     }
 
@@ -1755,7 +1759,7 @@ void TVectorItem::initParams ()
     r1 = r2 = -1 ;
     pname.Clear() ;
     pvalue.Clear() ;
-    setParam ( "ISDEFAULTBRUSH" , true ) ;
+    setParam ( _T("ISDEFAULTBRUSH") , true ) ;
     setVisible ( true ) ;
     lastVector = NULL ;
     }
@@ -1763,13 +1767,13 @@ void TVectorItem::initParams ()
 int TVectorItem::getRF ()
     {
     if ( type != VIT_CDS ) return 0 ;
-    return atoi ( (char*) getParam("/codon_start").c_str() ) ;
+    return atoi ( (char*) getParam ( _T("/codon_start") ).c_str() ) ;
     }
     
 void TVectorItem::setRF ( int x )
     {
     if ( type != VIT_CDS ) return ;
-    setParam ( "/codon_start" , x ) ;
+    setParam ( _T("/codon_start") , x ) ;
     }
     
 void TVectorItem::doRemove ( int f , int t , int l )
@@ -1780,7 +1784,7 @@ void TVectorItem::doRemove ( int f , int t , int l )
     if ( t < f ) rt += l ;
     if ( to < from ) rto += l ;
     int a ;
-    wxString s ( '_' , l * 3 + 1 ) ;
+    wxString s ( (wxChar) '_' , l * 3 + 1 ) ;
     for ( a = from ; a <= rto ; a++ ) s.SetChar ( a , 'X' ) ;
     for ( a = f ; a <= rt ; a++ ) s.SetChar ( a , ' ' ) ;
 
@@ -1809,33 +1813,33 @@ void TVectorItem::doRemove ( int f , int t , int l )
     
 int TVectorItem::getOffset ()
     {
-    return atoi ( getParam ( "OFFSET" , "-1" ).c_str() ) ;
+    return atoi ( getParam ( _T("OFFSET") , _T("-1") ).mb_str() ) ;
     }
     
 void TVectorItem::setOffset ( int o )
     {
-    setParam ( "OFFSET" , o ) ;
+    setParam ( _T("OFFSET") , o ) ;
     }
     
 void TVectorItem::setType ( wxString s )
     {
     s = s.MakeUpper() ;
-    if ( s == "CDS" ) type = VIT_CDS ;
-    else if ( s == "GENE" ) type = VIT_GENE ;
-    else if ( s == "PROMOTER" ) type = VIT_PROMOTER ;
-    else if ( s == "REP_ORIGIN" ) type = VIT_REP_ORI ;
-    else if ( s == "TERMINATOR" ) type = VIT_TERMINATOR ;
-    else if ( s == "MISC_FEATURE" ) type = VIT_MISC ;
-    else if ( s == "PROTEIN_BIND" ) type = VIT_PROT_BIND ;
-    else if ( s == "ORIT" ) type = VIT_ORI_T ;
-    else if ( s == "PROTEIN" ) type = VIT_MISC ;
-    else if ( s == "REGION" ) type = VIT_MISC ; 
-    if ( type != VIT_MISC && name == "" )
+    if ( s == _T("CDS") ) type = VIT_CDS ;
+    else if ( s == _T("GENE") ) type = VIT_GENE ;
+    else if ( s == _T("PROMOTER") ) type = VIT_PROMOTER ;
+    else if ( s == _T("REP_ORIGIN") ) type = VIT_REP_ORI ;
+    else if ( s == _T("TERMINATOR") ) type = VIT_TERMINATOR ;
+    else if ( s == _T("MISC_FEATURE") ) type = VIT_MISC ;
+    else if ( s == _T("PROTEIN_BIND") ) type = VIT_PROT_BIND ;
+    else if ( s == _T("ORIT") ) type = VIT_ORI_T ;
+    else if ( s == _T("PROTEIN") ) type = VIT_MISC ;
+    else if ( s == _T("REGION") ) type = VIT_MISC ; 
+    if ( type != VIT_MISC && name == _T("") )
         {
-        wxString t = wxString::Format ( "itemtype%d" , type ) ;
+        wxString t = wxString::Format ( _T("itemtype%d") , type ) ;
         t = txt ( t ) ;
         name = t ;
-        desc = s + "\n" + desc ;
+        desc = s + _T("\n") + desc ;
         }
     }
     
@@ -1869,7 +1873,7 @@ void TVectorItem::translate ( TVector *v , SeqAA *aa , vector <Tdna2aa> &dna2aa 
    else dna2aa.reserve ( ( to + v->getSequenceLength() - from + 1 ) / 3 + 5 ) ;
    
    long translation_table = -1 ;
-   getParam("/transl_table","-1").ToLong ( &translation_table ) ;
+   getParam( _T("/transl_table") , _T("-1") ).ToLong ( &translation_table ) ;
 
    wxString three ;
    while ( c != '|' && rf != 0 )
@@ -1999,7 +2003,7 @@ Tdna2aa::Tdna2aa ( char _aa , int i1 , int i2 , int i3 )
 
 TAAProp::TAAProp ()
     {
-    tla = "???" ;
+    tla = _T("???") ;
     mw = pi = 0 ;
     cf_f[0] = cf_f[1] = cf_f[2] = cf_f[3] = 0 ;
     cf_pa = cf_pb = cf_pt = 0 ;
@@ -2055,13 +2059,13 @@ wxString TAAProp::get_halflife_text ( int hl )
 	if ( hl < 0 )
 		{
   		hl = -hl ;
-  		ret += ">" ;
+  		ret += _T(">") ;
 		}    
 	int h = hl / 60 ;
 	int m = hl % 60 ;
 	if ( h == 1 ) ret += wxString::Format ( txt("t_hl_hour") , 1 ) ;
 	else if ( h > 1 ) ret += wxString::Format ( txt("t_hl_hours") , h ) ;
-	if ( h > 0 && m > 0 ) ret += " " ;
+	if ( h > 0 && m > 0 ) ret += _T(" ") ;
 	if ( m > 0 ) ret += wxString::Format ( txt("t_hl_minutes") , m ) ;
 	return ret ;
 	}    
@@ -2085,5 +2089,5 @@ TORF::TORF ( int _f , int _t , int _r )
 
 wxString TORF::getText ()
 	{
-	return wxString::Format ( "%d-%d, %d" , from , to , rf ) ;
+	return wxString::Format ( _T("%d-%d, %d") , from , to , rf ) ;
 	}    

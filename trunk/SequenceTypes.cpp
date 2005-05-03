@@ -15,11 +15,11 @@ void SeqBasic::init ( SequenceCanvas *ncan )
 
 void SeqBasic::logsize ()
     {
-    mylog ( whatsthis() , wxString::Format ( "s %d" , s.length() ) ) ;
-    mylog ( whatsthis() , wxString::Format ( "p %d" , pos.p.GetCount() * sizeof ( int ) ) ) ;
-    mylog ( whatsthis() , wxString::Format ( "m %d" , pos.m.length() ) ) ;
-    mylog ( whatsthis() , wxString::Format ( "r %d" , pos.r.size() * sizeof ( wxRect ) ) ) ;
-    mylog ( whatsthis() , wxString::Format ( "l %d" , pos.l.size() * sizeof ( wxRect ) ) ) ;
+    mylog ( whatsthis() , wxString::Format ( _T("s %d") , s.length() ) ) ;
+    mylog ( whatsthis() , wxString::Format ( _T("p %d") , pos.p.GetCount() * sizeof ( int ) ) ) ;
+    mylog ( whatsthis() , wxString::Format ( _T("m %d") , pos.m.length() ) ) ;
+    mylog ( whatsthis() , wxString::Format ( _T("r %d") , pos.r.size() * sizeof ( wxRect ) ) ) ;
+    mylog ( whatsthis() , wxString::Format ( _T("l %d") , pos.l.size() * sizeof ( wxRect ) ) ) ;
     mylog ( "---" , "" ) ;
     }    
     
@@ -66,7 +66,7 @@ void SeqPrimer::show ( wxDC& dc )
     int bm = dc.GetBackgroundMode () ;
     int a , b , cnt = offset+1 ;
     wxString t ;
-    char u[100] ;
+//    char u[100] ;
     dc.SetTextBackground ( *wxWHITE ) ;
     dc.SetTextForeground ( *wxBLACK ) ;
     dc.SetBackgroundMode ( wxSOLID ) ;
@@ -132,9 +132,10 @@ void SeqPrimer::show ( wxDC& dc )
            dc.SetTextForeground ( *wxBLUE ) ;
            if ( showNumbers )
               {
-              sprintf ( u , "%d" , cnt ) ;
-              t = u ;
-              while ( t.length() < endnumberlength ) t = "0" + t ;
+              //sprintf ( u , "%d" , cnt ) ;
+              //t = u ;
+				  t = wxString::Format ( _T("%d") , cnt ) ;
+              while ( t.length() < endnumberlength ) t = _T("0") + t ;
               }
            else t = alternateName ;
            dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
@@ -187,7 +188,7 @@ int SeqNum::arrange ( int n )
     endnumberlength = 0 ;
     for ( a = 0 ; a < can->seq.GetCount() ; a++ )
         {
-        if ( can->seq[a]->whatsthis() == "ALIGN" )
+        if ( can->seq[a]->whatsthis() == _T("ALIGN") )
            {
            SeqAlign *z = (SeqAlign*) can->seq[a] ;
            if ( z->myname.length() > endnumberlength )
@@ -238,11 +239,11 @@ void SeqNum::show ( wxDC& dc )
     dc.SetTextForeground ( *wxBLACK ) ;
     dc.SetTextBackground ( *wxWHITE ) ;
     dc.SetBackgroundMode ( wxSOLID ) ;
-    char tt[100] ;
+    //char tt[100] ;
     for ( a = 0 ; a < pos.p.GetCount() ; a++ )
         {
-        sprintf ( tt , "%d" , pos.p[a]+offset ) ;
-        dc.DrawText ( tt, pos.r[a].x, pos.r[a].y ) ;
+        //sprintf ( tt , "%d" , pos.p[a]+offset ) ;
+        dc.DrawText ( wxString::Format ( _T("%d") , pos.p[a]+offset ) , pos.r[a].x, pos.r[a].y ) ;
         }
     dc.SetBackgroundMode ( bm ) ;
     dc.SetTextBackground ( tbg ) ;

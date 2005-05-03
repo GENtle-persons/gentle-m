@@ -48,7 +48,7 @@ int SeqABI::arrange ( int n )
         }
 */
     // Base order
-    id = at->getRecord ( "FWO_" , 1 ) ;
+    id = at->getRecord ( _T("FWO_") , 1 ) ;
     myass ( id != -1 , "SeqABI::arrange_1" ) ;
     
     // GATC
@@ -59,7 +59,7 @@ int SeqABI::arrange ( int n )
     minx = ox ;
     maxx = w - ox - wx ;
     int diffx = 0 ;
-    id = at->getRecord ( "PLOC" , 2 ) ;
+    id = at->getRecord ( _T("PLOC") , 2 ) ;
     myass ( id != -1 , "SeqABI::arrange_2" ) ;
 
     pos.cleanup() ;
@@ -67,7 +67,7 @@ int SeqABI::arrange ( int n )
     y = oy ;
     pos.add ( -(++l) , bo , y , ox-wx-bo , wy-1 ) ; // Line number
     
-    int id2 = at->getRecord ( "DATA" , 9 ) ;
+    int id2 = at->getRecord ( _T("DATA") , 9 ) ;
     int bx1 = (char) at->vf[id2].data[(at->vf[id2].nrecords-1)*2] ;
     int bx2 = (unsigned char) at->vf[id2].data[(at->vf[id2].nrecords-1)*2+1] ;
     int lastx = at->vf[id2].nrecords ;
@@ -117,7 +117,7 @@ void SeqABI::setInvCompl ( bool x )
         {
         TVector v2 ;
         wxString s2 ;
-        for ( int a = 0 ; a < s.length() ; a++ ) s2 = v2.getComplement( s.GetChar(a) ) + s2 ;
+        for ( int a = 0 ; a < s.length() ; a++ ) s2 = ((wxChar)v2.getComplement( s.GetChar(a) ) ) + s2 ;
         s = s2 ;
         can->child->vec->setSequence ( s ) ;
         }
@@ -149,7 +149,7 @@ void SeqABI::show ( wxDC& dc )
     int high = 0 ;
     for ( data = 0 ; data < 4 ; data++ )
         {
-        int id = at->getRecord ( "DATA" , 9 + data ) ;
+        int id = at->getRecord ( _T("DATA") , 9 + data ) ;
         for ( int a = 0 ; a < at->vf[id].nrecords ; a++ )
            {
            int b1 = (char) at->vf[id].data[a*2] ;
@@ -168,7 +168,7 @@ void SeqABI::show ( wxDC& dc )
            dc.SetPen ( *MYPEN ( colors[data] ) ) ;
         
         int a ;
-        int id = at->getRecord ( "DATA" , 9 + data ) ;
+        int id = at->getRecord ( _T("DATA") , 9 + data ) ;
         myass ( id > -1 , "SeqABI::show" ) ;
         int diffx = 0 ;
         int l = 0 ;
@@ -240,6 +240,6 @@ wxColor SeqABI::getBaseColor ( char b )
           else return colors[3-a] ;
           }
        }
-    return wxColor ( "magenta" ) ;
+    return wxColor ( _T("magenta") ) ;
     }
     

@@ -44,7 +44,7 @@ class TMySQLDialog : public wxDialog
 class TManageDatabaseDialog : public wxDialog
     {
     public :
-    TManageDatabaseDialog ( wxWindow *parent , char *title ,  
+    TManageDatabaseDialog ( wxWindow *parent , wxString title ,
                         int mode = ACTION_MODE_MANAGE , TVector *_v = NULL ) ; ///< Constructor
     virtual ~TManageDatabaseDialog () ; ///< Destructor
 

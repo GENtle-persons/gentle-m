@@ -63,7 +63,7 @@ END_EVENT_TABLE()
 TCalculator::TCalculator(wxWindow *parent, const wxString& title) 
     : ChildBase(parent, title)
     {
-    def = "CALCULATOR" ;
+    def = _T("CALCULATOR") ;
     vec = NULL ;
     }
 
@@ -177,7 +177,7 @@ void TGridData::init ()
      	}   	
     
     int b , c ;
-    wxString iu = "TCAG" ;
+    wxString iu = _T("TCAG") ;
     wxString codons[256] ;
     for ( a = 0 ; a < iu.length() ; a++ )
        {
@@ -190,7 +190,7 @@ void TGridData::init ()
              codon += iu.GetChar(b) ;
              codon += iu.GetChar(c) ;
              unsigned char z = d.dna2aa ( codon ) . GetChar ( 0 ) ;
-             if ( codons[z] != "" ) codons[z] += ", " ;
+             if ( codons[z] != _T("") ) codons[z] += _T(", ") ;
              codons[z] += codon ;
              }    
           }    
@@ -200,15 +200,15 @@ void TGridData::init ()
     for ( a = 'A' ; a < 'Z' ; a++ )
     	{
 	    TAAProp p = d.getAAprop ( a ) ;
-	    if ( p.tla == "" ) continue ;
-	    if ( p.tla == "???" ) continue ;
-	    s = "t_aa_ " ;
+	    if ( p.tla == _T("") ) continue ;
+	    if ( p.tla == _T("???") ) continue ;
+	    s = _T("t_aa_ ") ;
 	    s.SetChar ( 5 , a ) ;
-	    SetCellValue ( row , 0 , wxString ( (char) a ) ) ;
+	    SetCellValue ( row , 0 , wxString ( (wxChar) a ) ) ;
 	    SetCellValue ( row , 1 , p.tla ) ;
 	    SetCellValue ( row , 2 , txt(s) ) ;
-	    SetCellValue ( row , 3 , wxString::Format ( "%4.4f" , p.mw ) ) ;
-	    SetCellValue ( row , 4 , wxString::Format ( "%4.2f" , p.pi ) ) ;
+	    SetCellValue ( row , 3 , wxString::Format ( _T("%4.4f") , p.mw ) ) ;
+	    SetCellValue ( row , 4 , wxString::Format ( _T("%4.2f") , p.pi ) ) ;
 	    SetCellValue ( row , 5 , codons[a] ) ;
 	    SetCellAlignment ( row , 3 , wxALIGN_RIGHT , wxALIGN_CENTRE ) ;
 	    SetCellAlignment ( row , 4 , wxALIGN_RIGHT , wxALIGN_CENTRE ) ;
@@ -222,8 +222,8 @@ void TGridData::init ()
     SetCellTextColour ( row , 0 , *wxRED ) ;
     row++ ;
     
-    SetCellValue ( row , 0 , "1. \\ 2." ) ;
-    SetCellValue ( row , 5 , "3." ) ;
+    SetCellValue ( row , 0 , _T("1. \\ 2.") ) ;
+    SetCellValue ( row , 5 , _T("3.") ) ;
     SetCellTextColour ( row , 0 , *wxBLUE ) ;
     SetCellTextColour ( row , 5 , *wxBLUE ) ;
     SetCellAlignment ( row , 0 , wxALIGN_RIGHT , wxALIGN_CENTRE ) ;
@@ -245,14 +245,14 @@ void TGridData::init ()
    			{
 		    for ( c = 0 ; c < 4 ; c++ )
 		    	{
-  	    		s = "" ;
+  	    		s = _T("") ;
   	    		s += iu.GetChar(a) ;
   	    		s += iu.GetChar(b) ;
   	    		s += iu.GetChar(c) ;
   	    		s = d.dna2aa ( s ) . GetChar ( 0 ) ;
   	    		TAAProp p = d.getAAprop ( s.GetChar(0) ) ;
-  	    		s = wxString ( txt("t_aa_"+s) ) + " (" + p.tla + "; " + s + ")" ;
-  	    		if ( p.tla == "STP" ) s = "STOP" + s ;
+  	    		s = wxString ( txt(_T("t_aa_")+s) ) + _T(" (") + p.tla + _T("; ") + s + _T(")") ;
+  	    		if ( p.tla == _T("STP") ) s = _T("STOP") + s ;
 		    	SetCellValue ( row+1+a*4+c , 1+b , s ) ;
 		    	SetCellAlignment ( row+1+a*4+c , 1+b , wxALIGN_CENTRE , wxALIGN_CENTRE ) ;
 		    	}   	
@@ -299,36 +299,36 @@ void TGridLigation::init ()
     
     cleanup () ;
         
-    gridSetEntry ( 0 , 0 , txt("t_calc_lig_1") , "0" , "ng" ) ;
-    gridSetEntry ( 1 , 0 , txt("t_calc_lig_2") , "0" , "bp" ) ;
-    gridSetEntry ( 2 , 0 , txt("t_calc_lig_3") , "0" , "ng/µl" ) ;
-    gridSetEntry ( 3 , 0 , txt("t_calc_lig_4") , "0" , "bp" ) ;
-    gridSetEntry ( 4 , 0 , txt("t_calc_lig_5") , "0" , "ng/µl" ) ;
-    gridSetEntry ( 5 , 0 , txt("t_calc_lig_6") , "0" , " : 1" ) ;
+    gridSetEntry ( 0 , 0 , txt("t_calc_lig_1") , _T("0") , _T("ng") ) ;
+    gridSetEntry ( 1 , 0 , txt("t_calc_lig_2") , _T("0") , _T("bp") ) ;
+    gridSetEntry ( 2 , 0 , txt("t_calc_lig_3") , _T("0") , _T("ng/l") ) ;
+    gridSetEntry ( 3 , 0 , txt("t_calc_lig_4") , _T("0") , _T("bp") ) ;
+    gridSetEntry ( 4 , 0 , txt("t_calc_lig_5") , _T("0") , _T("ng/l") ) ;
+    gridSetEntry ( 5 , 0 , txt("t_calc_lig_6") , _T("0") , _T(" : 1") ) ;
 
-    SetCellValue ( 0 , 3 , "<=>" ) ;
-    SetCellValue ( 1 , 3 , "<=>" ) ;
-    SetCellValue ( 3 , 3 , "<=>" ) ;
-    SetCellValue ( 8 , 3 , "<=>" ) ;
-    SetCellValue ( 9 , 3 , "<=>" ) ;
-    SetCellValue ( 8 , 6 , "<=>" ) ;
-    SetCellValue ( 9 , 6 , "<=>" ) ;
+    SetCellValue ( 0 , 3 , _T("<=>") ) ;
+    SetCellValue ( 1 , 3 , _T("<=>") ) ;
+    SetCellValue ( 3 , 3 , _T("<=>") ) ;
+    SetCellValue ( 8 , 3 , _T("<=>") ) ;
+    SetCellValue ( 9 , 3 , _T("<=>") ) ;
+    SetCellValue ( 8 , 6 , _T("<=>") ) ;
+    SetCellValue ( 9 , 6 , _T("<=>") ) ;
     
-    gridSetValue ( 0 , 4 , "0" , txt("t_calc_lig_7") ) ;
-    gridSetValue ( 1 , 4 , "0" , txt("t_calc_lig_8") ) ;
-    gridSetValue ( 3 , 4 , "0" , txt("t_calc_lig_8") ) ;
+    gridSetValue ( 0 , 4 , _T("0") , txt("t_calc_lig_7") ) ;
+    gridSetValue ( 1 , 4 , _T("0") , txt("t_calc_lig_8") ) ;
+    gridSetValue ( 3 , 4 , _T("0") , txt("t_calc_lig_8") ) ;
     
     SetCellValue ( 7 , 0 , txt("t_calc_lig_9") ) ;
     SetCellValue ( 8 , 0 , txt("t_calc_lig_10") ) ;
     SetCellValue ( 9 , 0 , txt("t_calc_lig_11") ) ;
-    gridSetValue ( 8 , 1 , "0" , txt("t_calc_lig_12") ) ;
-    gridSetValue ( 9 , 1 , "0" , txt("t_calc_lig_12") ) ;
-    gridSetValue ( 8 , 4 , "0" , txt("t_calc_lig_13") ) ;
-    gridSetValue ( 9 , 4 , "0" , txt("t_calc_lig_13") ) ;
+    gridSetValue ( 8 , 1 , _T("0") , txt("t_calc_lig_12") ) ;
+    gridSetValue ( 9 , 1 , _T("0") , txt("t_calc_lig_12") ) ;
+    gridSetValue ( 8 , 4 , _T("0") , txt("t_calc_lig_13") ) ;
+    gridSetValue ( 9 , 4 , _T("0") , txt("t_calc_lig_13") ) ;
 
     SetCellValue ( 7 , 7 , txt("t_calc_lig_14") ) ;
-    gridSetValue ( 8 , 7 , "0" , txt("t_calc_lig_15") ) ;
-    gridSetValue ( 9 , 7 , "0" , txt("t_calc_lig_15") ) ;
+    gridSetValue ( 8 , 7 , _T("0") , txt("t_calc_lig_15") ) ;
+    gridSetValue ( 9 , 7 , _T("0") , txt("t_calc_lig_15") ) ;
     SetCellTextColour ( 8 , 7 , *wxRED ) ;
     SetCellTextColour ( 9 , 7 , *wxRED ) ;
         
@@ -370,18 +370,18 @@ void TGridLigation::recalc ()
     double i_sol = 0 ;
     if ( i_c != 0 ) i_sol = i_dna_ng / i_c ;
     
-    SetCellValue ( 0 , 4 , wxString::Format("%0.8f", t_ng) ) ;
-    SetCellValue ( 1 , 4 , wxString::Format("%0.0f", v_gm) ) ;
-    SetCellValue ( 3 , 4 , wxString::Format("%0.0f", i_gm) ) ;
+    SetCellValue ( 0 , 4 , wxString::Format(_T("%0.8f"), t_ng) ) ;
+    SetCellValue ( 1 , 4 , wxString::Format(_T("%0.0f"), v_gm) ) ;
+    SetCellValue ( 3 , 4 , wxString::Format(_T("%0.0f"), i_gm) ) ;
     
-    SetCellValue ( 8 , 1 , wxString::Format("%0.2f", v_dna_mol) ) ;
-    SetCellValue ( 9 , 1 , wxString::Format("%0.2f", i_dna_mol) ) ;
+    SetCellValue ( 8 , 1 , wxString::Format(_T("%0.2f"), v_dna_mol) ) ;
+    SetCellValue ( 9 , 1 , wxString::Format(_T("%0.2f"), i_dna_mol) ) ;
 
-    SetCellValue ( 8 , 4 , wxString::Format("%0.2f", v_dna_ng) ) ;
-    SetCellValue ( 9 , 4 , wxString::Format("%0.2f", i_dna_ng) ) ;
+    SetCellValue ( 8 , 4 , wxString::Format(_T("%0.2f"), v_dna_ng) ) ;
+    SetCellValue ( 9 , 4 , wxString::Format(_T("%0.2f"), i_dna_ng) ) ;
 
-    SetCellValue ( 8 , 7 , wxString::Format("%0.2f", v_sol) ) ;
-    SetCellValue ( 9 , 7 , wxString::Format("%0.2f", i_sol) ) ;
+    SetCellValue ( 8 , 7 , wxString::Format(_T("%0.2f"), v_sol) ) ;
+    SetCellValue ( 9 , 7 , wxString::Format(_T("%0.2f"), i_sol) ) ;
 
     AutoSizeColumn ( 4 ) ;
     AutoSizeColumn ( 7 ) ;
@@ -413,13 +413,13 @@ void TGridDNA::init ()
     
     cleanup () ;
         
-    gridSetEntry ( 0 , 0 , txt("t_calc_dna_1") , "0" ) ;
-    gridSetEntry ( 1 , 0 , txt("t_calc_dna_2") , "0" ) ;
-    gridSetEntry ( 2 , 0 , txt("t_calc_dna_3") , "0" , "(1:X)" ) ;
-    gridSetEntry ( 3 , 0 , txt("t_calc_dna_4") , "50" , txt("t_calc_dna_5") ) ;
+    gridSetEntry ( 0 , 0 , txt("t_calc_dna_1") , _T("0") ) ;
+    gridSetEntry ( 1 , 0 , txt("t_calc_dna_2") , _T("0") ) ;
+    gridSetEntry ( 2 , 0 , txt("t_calc_dna_3") , _T("0") , _T("(1:X)") ) ;
+    gridSetEntry ( 3 , 0 , txt("t_calc_dna_4") , _T("50") , txt("t_calc_dna_5") ) ;
 
-    gridSetValue ( 5 , 1 , "0" , txt("t_calc_dna_6") ) ;
-    gridSetValue ( 6 , 1 , "0" , txt("t_calc_dna_7") ) ;
+    gridSetValue ( 5 , 1 , _T("0") , txt("t_calc_dna_6") ) ;
+    gridSetValue ( 6 , 1 , _T("0") , txt("t_calc_dna_7") ) ;
     
     SetCellValue ( 5 , 0 , txt("t_calc_dna_8") ) ;
     SetCellValue ( 6 , 0 , txt("t_calc_dna_9") ) ;
@@ -448,8 +448,8 @@ void TGridDNA::recalc ()
     double pure = 0 ;
     if ( a280 != 0 ) pure = a260 / a280 ;
     
-    SetCellValue ( 5 , 1 , wxString::Format("%0.2f", conc) ) ;
-    SetCellValue ( 6 , 1 , wxString::Format("%0.2f", pure) ) ;
+    SetCellValue ( 5 , 1 , wxString::Format(_T("%0.2f"), conc) ) ;
+    SetCellValue ( 6 , 1 , wxString::Format(_T("%0.2f"), pure) ) ;
     calculating = false ;
     }
 
@@ -478,19 +478,19 @@ void TGridProtein::init ()
     
     cleanup () ;
         
-    gridSetEntry ( 0 , 0 , txt("t_calc_prot_1") , "0" ) ;
-    gridSetEntry ( 1 , 0 , txt("t_calc_prot_2") , "0" ) ;
-    gridSetEntry ( 2 , 0 , txt("t_calc_prot_3") , "0" ) ;
-    gridSetEntry ( 3 , 0 , txt("t_calc_prot_4") , "0" ) ;
-    gridSetEntry ( 4 , 0 , txt("t_calc_prot_5") , "0" ) ;
-    gridSetEntry ( 5 , 0 , txt("t_calc_prot_6") , "0" , txt("t_calc_g_mol") ) ;
-    gridSetEntry ( 6 , 0 , txt("t_calc_prot_7") , "1" , txt("t_calc_cm") ) ;
+    gridSetEntry ( 0 , 0 , txt("t_calc_prot_1") , _T("0") ) ;
+    gridSetEntry ( 1 , 0 , txt("t_calc_prot_2") , _T("0") ) ;
+    gridSetEntry ( 2 , 0 , txt("t_calc_prot_3") , _T("0") ) ;
+    gridSetEntry ( 3 , 0 , txt("t_calc_prot_4") , _T("0") ) ;
+    gridSetEntry ( 4 , 0 , txt("t_calc_prot_5") , _T("0") ) ;
+    gridSetEntry ( 5 , 0 , txt("t_calc_prot_6") , _T("0") , txt("t_calc_g_mol") ) ;
+    gridSetEntry ( 6 , 0 , txt("t_calc_prot_7") , _T("1") , txt("t_calc_cm") ) ;
     
     SetCellValue ( 8 , 0 , txt("t_calc_prot_8") ) ;
     SetCellValue ( 9 , 0 , txt("t_calc_prot_9") ) ;
     
-    gridSetValue (  8 , 1 , "0" , txt("t_calc_prot_10") ) ;
-    gridSetValue (  9 , 1 , "0" , txt("t_calc_mg_ml") ) ;
+    gridSetValue (  8 , 1 , _T("0") , txt("t_calc_prot_10") ) ;
+    gridSetValue (  9 , 1 , _T("0") , txt("t_calc_mg_ml") ) ;
     
     SetCellTextColour ( 8 , 1 , *wxRED ) ;
     SetCellTextColour ( 9 , 1 , *wxRED ) ;
@@ -523,8 +523,8 @@ void TGridProtein::recalc ()
     c = a * d ;
     c = ( c != 0 ) ? e280 / c : 0 ;
     
-    SetCellValue ( 8 , 1 , wxString::Format("%0.3f", r) ) ;
-    SetCellValue ( 9 , 1 , wxString::Format("%0.3f", c) ) ;
+    SetCellValue ( 8 , 1 , wxString::Format(_T("%0.3f"), r) ) ;
+    SetCellValue ( 9 , 1 , wxString::Format(_T("%0.3f"), c) ) ;
     calculating = false ;
     }
 
@@ -574,12 +574,12 @@ void TGridBasic::cleanup ()
     int x , y ;
     for ( x = 0 ; x < GetNumberCols() ; x++ )
         {
-        SetColLabelValue ( x , "" ) ;
+        SetColLabelValue ( x , _T("") ) ;
         for ( y = 0 ; y < GetNumberRows() ; y++ )
            SetReadOnly ( y , x , true ) ;
         }
     for ( y = 0 ; y < GetNumberRows() ; y++ )
-        SetRowLabelValue ( y , "" ) ;
+        SetRowLabelValue ( y , _T("") ) ;
         
     SetRowLabelSize ( 0 ) ;
     SetColLabelSize ( 0 ) ;
@@ -591,7 +591,7 @@ void TGridBasic::print ( int mode )
     int rows = GetNumberRows() ;
     int col , row ;
     wxString html ;
-    html = "<HTML><BODY><TABLE border=0>" ;
+    html = _T("<HTML><BODY><TABLE border=0>") ;
 
     int colwidth = 0 ;
     for ( col = 0 ; col < cols ; col++ )
@@ -599,7 +599,7 @@ void TGridBasic::print ( int mode )
 
     for ( row = 0 ; row < rows ; row++ )
         {
-        html += "<tr>" ;
+        html += _T("<tr>") ;
         for ( col = 0 ; col < cols ; col++ )
            {
            int w = GetColSize ( col ) ;
@@ -607,37 +607,37 @@ void TGridBasic::print ( int mode )
            wxColour tc = GetCellTextColour ( row , col ) ;
            int ha , va ;
            GetCellAlignment ( row , col , &ha , &va ) ;
-           wxString align = (ha==wxALIGN_CENTRE)?"center":((ha==wxALIGN_RIGHT)?"right":"") ;
-           wxString valign = (va==wxALIGN_CENTRE)?"center":((ha==wxALIGN_BOTTOM)?"bottom":"top") ;
-           if ( !align.IsEmpty() ) align = " align=" + align ;
-           if ( !valign.IsEmpty() ) valign = " valign=" + valign ;
-           wxString tct = wxString::Format ( "color='#%2x%2x%2x'" , 
+           wxString align = (ha==wxALIGN_CENTRE)? _T("center") : ((ha==wxALIGN_RIGHT)? _T("right") : _T("")) ;
+           wxString valign = (va==wxALIGN_CENTRE)? _T("center") : ((ha==wxALIGN_BOTTOM)? _T("bottom") : _T("top")) ;
+           if ( !align.IsEmpty() ) align = _T(" align=") + align ;
+           if ( !valign.IsEmpty() ) valign = _T(" valign=") + valign ;
+           wxString tct = wxString::Format ( _T("color='#%2x%2x%2x'") ,
                                             tc.Red() , 
                                             tc.Green() , 
                                             tc.Blue() ) ;       
-           tct.Replace ( " " , "0" ) ;                                 
-           tct = "<font " + tct + ">" ;    
-           wxString bgct = wxString::Format ( "#%2x%2x%2x" ,
+           tct.Replace ( _T(" ") , _T("0") ) ;
+           tct = _T("<font ") + tct + _T(">") ;
+           wxString bgct = wxString::Format ( _T("#%2x%2x%2x") ,
                                             bgc.Red() , 
                                             bgc.Green() , 
                                             bgc.Blue() ) ;
-           bgct.Replace ( " " , "0" ) ;                                 
-           html += wxString::Format ( "<td width='%d%%' bgcolor='%s'%s%s>" , 
+           bgct.Replace ( _T(" ") , _T("0") ) ;
+           html += wxString::Format ( _T("<td width='%d%%' bgcolor='%s'%s%s>") ,
                                             w * 100 / colwidth , 
                                             bgct.c_str() ,
                                             align.c_str() ,
                                             valign.c_str() ) ;
            html += tct ;
            html += GetCellValue ( row , col ) ;
-           html += "</font></td>" ;
+           html += _T("</font></td>") ;
            }
-        html += "</tr>" ;
+        html += _T("</tr>") ;
         }
-    html += "</TABLE></BODY></HTML>" ;
+    html += _T("</TABLE></BODY></HTML>") ;
 
     wxDateTime now = wxDateTime::Now() ;
-    myapp()->frame->html_ep->SetHeader ( "<p align=right><u>" + now.Format() + "</u></p>" ) ;
-    myapp()->frame->html_ep->SetFooter ( "<p align=right>@PAGENUM@/@PAGESCNT@</p>" ) ;
+    myapp()->frame->html_ep->SetHeader ( _T("<p align=right><u>") + now.Format() + _T("</u></p>") ) ;
+    myapp()->frame->html_ep->SetFooter ( _T("<p align=right>@PAGENUM@/@PAGESCNT@</p>") ) ;
 
     if ( mode == HTML_PRINT_PREVIEW )
         {
@@ -654,7 +654,7 @@ double TGridBasic::getDouble ( int y , int x )
     {
     double ret ;
     wxString s = GetCellValue(y,x);
-    s.Replace ( "," , "." ) ;
+    s.Replace ( _T(",") , _T(".") ) ;
     s.ToDouble ( &ret ) ;
     return ret ;
     }

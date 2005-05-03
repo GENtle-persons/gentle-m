@@ -50,14 +50,14 @@ void TVectorEditor::initPanEnzym ()
     v1->Add ( tCE , 0 , wxEXPAND , 5 ) ;
     v1->Add ( listCE , 1 , wxEXPAND , 5 ) ;
 
-    v2->Add ( new wxStaticText ( panEnzym , -1 , "" ) , 0 , wxEXPAND , 5 ) ;
+    v2->Add ( new wxStaticText ( panEnzym , -1 , _T("") ) , 0 , wxEXPAND , 5 ) ;
     v2->Add ( b_addgr , 0 , wxEXPAND|wxALL , 5 ) ;
     v2->Add ( b_atg , 0 , wxEXPAND|wxALL , 5 ) ;
     v2->Add ( b_asng , 0 , wxEXPAND|wxALL , 5 ) ;
     v2->Add ( b_dg , 0 , wxEXPAND|wxALL , 5 ) ;
     if ( b1 ) v2->Add ( b1 , 0 , wxEXPAND|wxALL , 5 ) ;
     v2->Add ( b2 , 0 , wxEXPAND|wxALL , 5 ) ;
-    v2->Add ( new wxStaticText ( panEnzym , -1 , "" ) , 0 , wxEXPAND , 5 ) ;
+    v2->Add ( new wxStaticText ( panEnzym , -1 , _T("") ) , 0 , wxEXPAND , 5 ) ;
     v2->Add ( b3 , 0 , wxEXPAND|wxALL , 5 ) ;
     v2->Add ( b4 , 0 , wxEXPAND|wxALL , 5 ) ;
     v2->Add ( b_dfg , 0 , wxEXPAND|wxALL , 5 ) ;
@@ -292,7 +292,7 @@ void TVectorEditor::importCloneEnzymes ( wxCommandEvent &ev )
     {
     TStorage TS ( TEMP_STORAGE ) ;
     TClone clone ;
-    clone.loadEnzymeList ( &TS , "./CLONE.ENZ" ) ;
+    clone.loadEnzymeList ( &TS , _T("./CLONE.ENZ") ) ;
     int a ;
     for ( a = 0 ; a < TS.re.GetCount() ; a++ )
        {

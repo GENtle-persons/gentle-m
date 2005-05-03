@@ -82,8 +82,8 @@ void TLigationDialog::generateTargets ()
         {
         if ( vc[a] )
            {
-           myass ( a < vc.size() , "TLigationDialog::generateTargets:1" ) ;
-           myass ( a < used.size() , "TLigationDialog::generateTargets:2" ) ;
+           myass ( a < vc.size() , _T("TLigationDialog::generateTargets:1") ) ;
+           myass ( a < used.size() , _T("TLigationDialog::generateTargets:2") ) ;
            used[a] = true ;
            vi.Add ( a ) ;
            orientation.push_back ( false ) ;
@@ -111,8 +111,8 @@ void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , w
     int a , b ;
     int cnt = vi.GetCount() ;
     wxString name ;
-    myass ( cnt-1 >= 0 && cnt-1 < orientation.size() , "TLigationDialog::curseTargets:1" ) ;
-    myass ( cnt-1 >= 0 && cnt-1 < vi.GetCount() , "TLigationDialog::curseTargets:2" ) ;
+    myass ( cnt-1 >= 0 && cnt-1 < orientation.size() , _T("TLigationDialog::curseTargets:1") ) ;
+    myass ( cnt-1 >= 0 && cnt-1 < vi.GetCount() , _T("TLigationDialog::curseTargets:2") ) ;
     bool o = orientation[cnt-1] ;
     if ( doMatch ( vi[cnt-1] , vi[0] , o ) )
         {
@@ -205,8 +205,8 @@ wxString TLigationDialog::getVIName ( wxArrayInt &vi )
         myass ( vi[a] >= 0 && vi[a] < vv.GetCount() , "TLigationDialog::getVIName:2" ) ;
         myass ( vv[vi[a]] , "TLigationDialog::getVIName:3" ) ;
         wxString name = vv[vi[a]]->getName() ;
-        if ( a < orientation.size() && orientation[a] ) name = "!" + name ;
-        if ( !ret.IsEmpty() ) ret += "-" ;
+        if ( a < orientation.size() && orientation[a] ) name = _T("!") + name ;
+        if ( !ret.IsEmpty() ) ret += _T("-") ;
         ret += name ;
         }
     return ret ;
@@ -223,7 +223,7 @@ void TLigationDialog::addVTname ( wxString name , wxArrayInt &vi , bool circular
     myass ( vv[vi[0]] , "TLigationDialog::addVTname:2" ) ;
     v.setFromVector ( *vv[vi[0]] ) ;
     d = txt("lig_of") ;
-    d += v.getName() + " (" + v.getDescription() + ")" ;
+    d += v.getName() + _T(" (") + v.getDescription() + _T(")") ;
     v.setName ( name ) ;
     for ( a = 1 ; a < vi.GetCount() ; a++ )
         {
@@ -234,9 +234,9 @@ void TLigationDialog::addVTname ( wxString name , wxArrayInt &vi , bool circular
         myass ( vv[vi[a]] , "TLigationDialog::addVTname:4" ) ;
         tv.setFromVector ( *vv[vi[a]] ) ;
         v.ligate_right ( tv , o ) ;
-        d += ", " ;
-        if ( o ) d += "!" ;
-        d += vv[vi[a]]->getName() + " (" + vv[vi[a]]->getDescription() + ")" ;
+        d += _T(", ") ;
+        if ( o ) d += _T("!") ;
+        d += vv[vi[a]]->getName() + _T(" (") + vv[vi[a]]->getDescription() + _T(")") ;
         }
     if ( circular ) v.closeCircle () ;
     v.recalculateCuts () ;
@@ -262,7 +262,7 @@ void TLigationDialog::OnOK ( wxCommandEvent &ev )
     for ( a = 0 ; a < ligates.size() ; a++ )
         {
         if ( !l_targets->IsChecked ( a ) )
-           ligates[a].setSequence ( wxString("") ) ; // Yes, it's brutal ;-)
+           ligates[a].setSequence ( wxString() ) ; // Yes, it's brutal ;-)
         }
     SetReturnCode ( wxID_OK ) ;
     EndModal ( true ) ;    

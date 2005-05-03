@@ -12,7 +12,7 @@ TXMLfile::TXMLfile ()
 void TXMLfile::parse ( wxString text )
     {
     TiXmlDocument doc ;
-    doc.Parse ( text.c_str() ) ;
+    doc.Parse ( text.mb_str() ) ;
     if ( doc.Error() )
         {
         _success = false ;
@@ -23,7 +23,7 @@ void TXMLfile::parse ( wxString text )
     
 void TXMLfile::load ( wxString file ) 
     {
-    TiXmlDocument doc( file.c_str() );
+    TiXmlDocument doc( file.mb_str() );
     bool ok = doc.LoadFile();
     if ( !ok || doc.Error() )
         {
@@ -64,12 +64,12 @@ TVector *TXMLfile::getVector ( int a )
 
 wxString TXMLfile::t ( const char *txt )
     {
-    return txt ? _T(txt) : _T("") ;
+    return txt ? wxString ( txt , *wxConvCurrent ) : _T("") ;
     }
 
 wxString TXMLfile::t ( TiXmlText *txt )
     {
-    return txt && txt->Value() ? txt->Value() : _T("") ;
+    return txt && txt->Value() ? wxString ( txt->Value() , *wxConvCurrent ) : wxString() ;
     }
 
 void TXMLfile::readGBSeq ( TiXmlNode *base )
@@ -150,7 +150,7 @@ void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
         wxString value = t ( h.FirstChild("GBQualifier_value").FirstChild().Text() ) ;
         if ( name.IsEmpty() ) continue ;
         i.setParam ( _T("/") + name , value ) ;
-        if ( name == _T("CODON_START") ) i.setRF ( atoi ( value.c_str() ) ) ;
+        if ( name == _T("CODON_START") ) i.setRF ( atoi ( value.mb_str() ) ) ;
         if ( name == _T("GENE") || name == _T("LABEL") ) i.name = value ;
         if ( name == _T("PRODUCT") || name == _T("NOTE") || name == _T("REGION_NAME") )
            {
@@ -173,8 +173,8 @@ void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
     if ( i.name.IsEmpty() )
         {
         char u[100] ;
-        sprintf ( u , _T("short_itemtype%d") , i.getType() ) ;
-        i.name = txt(u) ;
+        sprintf ( u , "short_itemtype%d" , i.getType() ) ;
+        i.name = wxString ( txt(u) , *wxConvCurrent ) ;
         wxString d2 = i.desc ;
         int k = d2.find ( _T("\n") ) ;
         if ( k > -1 ) d2.erase ( k ) ;
@@ -194,8 +194,8 @@ void TXMLfile::readGBintervals ( vector <TVectorItem> &vi , const TVectorItem &i
         wxString to = t ( h.FirstChild("GBInterval_to").FirstChild().Text() ) ;
         if ( from.IsEmpty() || to.IsEmpty() ) continue ;
         TVectorItem j = i ;
-        j.from = atoi ( from.c_str() ) ;
-        j.to = atoi ( to.c_str() ) ;
+        j.from = atoi ( from.mb_str() ) ;
+        j.to = atoi ( to.mb_str() ) ;
         if ( j.from > j.to )
            {
            int o = j.from ;

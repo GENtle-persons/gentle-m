@@ -5,13 +5,13 @@
 
 wxString SeqPlot::getTip ( int pos )
     {
-    if ( pos < 0 ) return "" ;
-    if ( pos >= s.length() ) return "" ;
+    if ( pos < 0 ) return _T("") ;
+    if ( pos >= s.length() ) return _T("") ;
     wxString r = wxString::Format(txt("seq_loc"),pos+1) ;
     if ( pos >= prop.size() || prop[pos].data.size() != 1 ) return r ;
-    r += " : " ;
+    r += _T(" : ") ;
     r += s.GetChar(pos) ;
-    r += wxString::Format ( " [%2.2f]" , prop[pos].data[0] ) ;
+    r += wxString::Format ( _T(" [%2.2f]") , prop[pos].data[0] ) ;
     return r ;
     }
 
@@ -192,15 +192,15 @@ void SeqPlot::show ( wxDC& dc )
            startOfLine = true ;
            if ( !can->isMiniDisplay() ) continue ;
            dc.SetFont(*can->smallFont);
-           if ( type == CHOU_FASMAN ) t = "Chou-Fasman" ;
-           else if ( type == M_W ) t = "MW" ;
-           else if ( type == P_I ) t = "pI" ;
+           if ( type == CHOU_FASMAN ) t = _T("Chou-Fasman") ;
+           else if ( type == M_W ) t = _T("MW") ;
+           else if ( type == P_I ) t = _T("pI") ;
            else if ( type == H_P )
               {
-              t = "t_method_" ;
+              t = _T("t_method_") ;
               t += hp_method ;
               t = txt(t) ;
-              t += wxString::Format(" [%d]",hp_window) ;
+              t += wxString::Format( _T(" [%d]") , hp_window ) ;
               }
            dc.SetTextForeground ( *wxBLACK ) ;
            int tw , th ;
@@ -333,7 +333,7 @@ void SeqPlot::showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph )
         dc.SetFont ( *can->smallFont ) ;
         int qx , qy ;
         wxString ws ;
-        ws = wxString::Format ( "%d" , b ) ;
+        ws = wxString::Format ( _T("%d") , b ) ;
         dc.GetTextExtent ( ws , &qx , &qy ) ;
         dc.DrawText ( ws , lx - qx/2 , bottom + ch/2 ) ;
         }
@@ -367,11 +367,11 @@ void SeqPlot::showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph )
         dc.DrawLine ( tx , bottom - ph , tx , bottom ) ;
         int qx , qy ;
         wxString ws ;
-        ws = wxString::Format ( "%.1f" , data_max ) ;
+        ws = wxString::Format ( _T("%.1f") , data_max ) ;
         dc.GetTextExtent ( ws , &qx , &qy ) ;
         dc.DrawText ( ws , tx - qx - cw/3 , bottom - ph - qy/2 ) ;
         dc.DrawLine ( tx - cw/3 , bottom - ph , tx , bottom - ph ) ;
-        ws = wxString::Format ( "%.1f" , data_min ) ;
+        ws = wxString::Format ( _T("%.1f") , data_min ) ;
         dc.GetTextExtent ( ws , &qx , &qy ) ;
         dc.DrawText ( ws , tx - qx - cw/3 , bottom - qy/2 ) ;
         dc.DrawLine ( tx - cw/3 , bottom , tx , bottom ) ;
@@ -427,7 +427,7 @@ void SeqPlot::init ( SequenceCanvas *ncan )
     {
     SeqBasic::init ( ncan ) ;
     hp_window = 7 ;
-    hp_method = "kyte-doolittle" ;
+    hp_method = _T("kyte-doolittle") ;
     }
 
 void SeqPlot::initFromTVector ( TVector *v )
@@ -699,8 +699,8 @@ void SeqPlot::useHP ()
            int c = a - hp_window / 2 + b ;
            if ( c >= 0 && c < s.length() )
               {
-              if ( hp_method == "kyte-doolittle" ) avg += prop[c].hp_kd ;
-              if ( hp_method == "hopp-woods" ) avg += prop[c].hp_hw ;
+              if ( hp_method == _T("kyte-doolittle") ) avg += prop[c].hp_kd ;
+              if ( hp_method == _T("hopp-woods") ) avg += prop[c].hp_hw ;
               }
            }
         avg /= (float) hp_window ;

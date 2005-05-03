@@ -35,7 +35,7 @@ int SeqDNA::arrange ( int n )
     can->MyGetClientSize ( &w , &h ) ;
 
     itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx - 1 ) * can->blocksize ;
-    bool memsave = ( whatsthis() == "FEATURE" ) ;
+    bool memsave = ( whatsthis() == _T("FEATURE") ) ;
     
     pos.cleanup() ;
     pos.reserve ( s.length() * 11 / 10 , s.length() / itemsperline , memsave ) ;
@@ -91,7 +91,7 @@ wxPoint SeqDNA::showText ( int ystart , wxArrayString &tout )
               ly = pos.r[a].y ;
               y += can->seq.GetCount() ;
               x = 0 ;
-              while ( y >= tout.GetCount() ) tout.Add ( "" ) ;
+              while ( y >= tout.GetCount() ) tout.Add ( _T("") ) ;
               }
            else x++ ;
            if ( (x) % (can->blocksize+1) == 0 ) x++ ;
@@ -99,7 +99,7 @@ wxPoint SeqDNA::showText ( int ystart , wxArrayString &tout )
               {
               if ( b >= can->markedFrom() && p.x == -1 ) p.x = y ;
               if ( b <= can->markedTo() ) p.y = y ;
-              while ( tout[y].length() < x ) tout[y] += " " ;
+              while ( tout[y].length() < x ) tout[y] += _T(" ") ;
               tout[y].SetChar ( x-1 , t.GetChar(0) ) ;
               }
            }
@@ -191,9 +191,10 @@ void SeqDNA::show ( wxDC& dc )
            {
            if ( showNumbers )
               {
-              sprintf ( u , "%d" , cnt ) ;
-              t = u ;
-              while ( t.length() < endnumberlength ) t = "0" + t ;
+              //sprintf ( u , "%d" , cnt ) ;
+              //t = u ;
+				  t = wxString::Format ( _T("%d") , cnt ) ;
+              while ( t.length() < endnumberlength ) t = _T("0") + t ;
               }
            else t = alternateName ;
            dc.SetTextForeground ( *wxBLACK ) ;
@@ -225,7 +226,7 @@ void SeqDNA::initFromTVector ( TVector *v )
           s.SetChar ( a , vec->getComplement ( s.GetChar(a) ) ) ;
        takesMouseActions = false ;
        showNumbers = false ;
-       alternateName = "" ;
+       alternateName = _T("") ;
        fontColor.Set ( 100 , 100 , 100 ) ;
        }
     }
@@ -276,7 +277,7 @@ void SeqDNA::show_direct ( wxDC& dc )
     int ox = bo + cw + cw * endnumberlength ;
     int oy = n*ch+bo ;
     bool isPrimer = false ;
-    if ( whatsthis().StartsWith ( "PRIMER" ) ) isPrimer = true ;
+    if ( whatsthis().StartsWith ( _T("PRIMER") ) ) isPrimer = true ;
     
     can->MyGetClientSize ( &w , &h ) ;
     xb = w ;
@@ -356,7 +357,7 @@ void SeqDNA::show_direct ( wxDC& dc )
            dc.SetTextForeground ( *wxBLACK ) ;
            }
 
-        dc.DrawText ( wxString ( ac ) , px , py ) ;
+        dc.DrawText ( wxString ( (wxChar) ac ) , px , py ) ;
         
         int pz = py + ch ; 
 
@@ -390,7 +391,7 @@ void SeqDNA::show_direct ( wxDC& dc )
            if ( showNumbers )
               {
               mylog ( "SeqDNA::show_direct" , "B" ) ;
-              t = wxString::Format ( "%d" , a + 1 ) ;
+              t = wxString::Format ( _T("%d") , a + 1 ) ;
               int padd = endnumberlength - t.length() ;
               mylog ( "SeqDNA::show_direct" , wxString::Format ( "C: %d, %d" , endnumberlength , padd ) ) ;
               if ( padd > 0 && padd < 20 ) t.Pad ( padd , '0' , false ) ;
@@ -424,9 +425,9 @@ void SeqDNA::makeEndnumberLength()
     endnumberlength = 0 ;
     while ( endnumber > 0 ) { endnumber /= 10 ; ox += wx ; endnumberlength++ ; }
     
-    if ( whatsthis() == "FEATURE" && 
+    if ( whatsthis() == _T("FEATURE") &&
          can->child && 
-         can->child->def == "alignment" )
+         can->child->def == _T("alignment") )
         {
         endnumberlength = can->maxendnumberlength ;
         }        
