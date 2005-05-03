@@ -55,6 +55,7 @@
 #include "wx/msw/registry.h"
 #endif
 
+
 using namespace std ;
 
 IMPLEMENT_APP(MyApp)
@@ -114,7 +115,7 @@ char * txt ( wxString item )
 */
 wxString txt ( char *item )
     {
-    return myapp()->_text[wxString(item,*wxConvCurrent).MakeUpper()] ;
+    return myapp()->_text[wxString(item,wxConvUTF8).MakeUpper()] ;
     }
 
 wxString txt ( wxString item )
@@ -204,6 +205,7 @@ MyApp *myapp ()
 */
 bool MyApp::OnInit()
 {
+	 isoconv = new wxCSConv ( _T("ISO 8859-1") ) ;
     errout = NULL ;
     total_log_time = 0 ;
     total_log_counter = 0 ;
@@ -456,7 +458,7 @@ void MyApp::init_txt ( wxString lang , wxString csv , wxHashString *target , int
     {
     if ( !target ) target = &_text ;
     wxTextFile in ( myapp()->homedir + _T("/") + csv) ;
-    in.Open () ;
+    in.Open ( *isoconv ) ;
     unsigned char t[10000] ;
     bool firstline = true ;
     TGenBank dummy ;
@@ -481,14 +483,16 @@ void MyApp::init_txt ( wxString lang , wxString csv , wxHashString *target , int
            else if ( *c == ',' && !quote )
               {
               *c = 0 ;
-              v.Add ( dummy.trimQuotes(wxString((char*)l,*wxConvCurrent)) ) ;
+              v.Add ( dummy.trimQuotes(wxString((char*)l,wxConvUTF8)) ) ;
+//              v.Add ( dummy.trimQuotes(CHAR2WX(l)));
               l = c+1 ;
               }
            }
         if ( l < c )
            {
            *(c-1) = 0 ;
-           v.Add ( dummy.trimQuotes(wxString((char*)l,*wxConvCurrent)) ) ;
+           v.Add ( dummy.trimQuotes(wxString((char*)l,wxConvUTF8)) ) ;
+//           v.Add ( dummy.trimQuotes(CHAR2WX(l)));
            }
         
         if ( firstline )
@@ -505,4 +509,3 @@ void MyApp::init_txt ( wxString lang , wxString csv , wxHashString *target , int
         firstline = false ;
         }
     }
-

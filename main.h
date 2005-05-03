@@ -4,8 +4,6 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
-#define wxUSE_UNICODE 1
-
 #define GENTLE_VERSION_MAJOR 1
 #define GENTLE_VERSION_MINOR 6
 #define GENTLE_VERSION_SUB 1
@@ -180,6 +178,7 @@ class MyApp : public wxApp
     int programVersion ; ///< The database access program version
     int dbWarningIssued ; ///< Was a database warning issued?
     wxHashString _text ; ///< Contains the current GUI translation.
+	 wxCSConv *isoconv ; ///< UTF-8 conversion helper
     
     private :
     virtual void registerFileExtension ( wxString extension ) ; ///< Registers a file extension to GENtle (windows only).
@@ -284,6 +283,8 @@ WX_DEFINE_ARRAY(TProteaseCut *,wxArrayTProteaseCut);
 #else
 	#define mylog(a,b)
 #endif
+
+#define CHAR2WX(__c) wxString((char*)l,wxConvUTF8)
 
 /** \brief Insert wxString "t" into wxString "s" at position "from" */
 void wxStringInsert ( wxString &s , int from , wxString t ) ;

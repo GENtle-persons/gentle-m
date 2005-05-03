@@ -1915,7 +1915,7 @@ void SequenceCanvas::OnBacktranslate ( wxCommandEvent &ev )
     
     // Read available code catalog groups
     wxTextFile in ( myapp()->homedir + _T("/codon_catalog.csv") ) ;
-    in.Open () ;
+    in.Open ( *(myapp()->isoconv) ) ;
     wxString s = in[0] ;
     in.Close () ;
     wxArrayString as ;

@@ -181,7 +181,7 @@ void EIpanel::process_ncbi()
 		id = valFC ( x->FirstChild ( "Id" ) ) ;
 		for ( y = x->FirstChild ( "Item" ) ; y ; y = y->NextSibling ( "Item" ) )
 			{
-   			wxString at ( y->ToElement()->Attribute ( "Name" ) , *wxConvCurrent ) ;
+   			wxString at ( y->ToElement()->Attribute ( "Name" ) , wxConvUTF8 ) ;
    			at = at.Upper() ;
    			if ( at == _T("TITLE") ) title = valFC ( y ) ;
    			else if ( at == _T("PUBDATE") ) pubdate = valFC ( y ) ;
@@ -192,7 +192,7 @@ void EIpanel::process_ncbi()
 			    TiXmlNode *z ;
 			    for ( z = y->FirstChild ( "Item" ) ; z ; z = z->NextSibling ( "Item" ) )
 			    	{
-   	    			if ( wxString(z->ToElement()->Attribute ( "Name" ),*wxConvCurrent).Upper() != _T("AUTHOR") ) continue ;
+   	    			if ( wxString(z->ToElement()->Attribute ( "Name" ),wxConvUTF8).Upper() != _T("AUTHOR") ) continue ;
    	    			if ( !authors.IsEmpty() ) authors += _T(", ") ;
    	    			authors += valFC ( z ) ;
 			    	}    

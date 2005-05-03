@@ -88,7 +88,7 @@ void TAlignment::readTabColors ( wxString filename )
     // Now we read a color scheme in BioEdit format
     wxString fn = filename ;
     wxTextFile in ( fn ) ;
-    in.Open () ;
+    in.Open ( *(myapp()->isoconv) ) ;
     int a ;
     wxColour *c = NULL ;
     for ( a = 0 ; a < 256 ; a++ )
@@ -301,7 +301,7 @@ void* TAlignment::Entry()
     
     wxString aln = hd + _T("/clustalw.aln") ;
     wxTextFile in ( aln ) ;
-    in.Open () ;
+    in.Open ( *(myapp()->isoconv) ) ;
     wxString s = in.GetFirstLine() ;
     do {
 	s = in.GetNextLine() ;

@@ -27,7 +27,7 @@ TStorage::TStorage ( int nt , wxString fn )
     	char xx[100] ;
     	f.Read ( xx , 15 ) ;
     	xx[15] = 0 ;
-    	if ( wxString ( xx , *wxConvCurrent ) == _T("SQLite format 3") )
+    	if ( wxString ( xx , wxConvUTF8 ) == _T("SQLite format 3") )
     		isSqlite3 = true ;
     	}    
 
@@ -72,7 +72,7 @@ static int callback (void *NotUsed, int argc, char **argv, char **azColName)
     if ( st->results.content.size() == 0 )
         {
         for(i=0; i<argc; i++)
-           st->results.field.Add ( wxString ( azColName[i] , *wxConvCurrent ) ) ;
+           st->results.field.Add ( wxString ( azColName[i] , wxConvUTF8 ) ) ;
         }
         
     nf = st->results.content.size() ;
@@ -81,7 +81,7 @@ static int callback (void *NotUsed, int argc, char **argv, char **azColName)
     for(i=0; i<argc; i++)
         {
         wxString tmp ;
-        if ( argv[i] ) { tmp = wxString ( argv[i] , *wxConvCurrent ) ; tmp.Replace ( _T("\013") , _T("\n") ) ; }
+        if ( argv[i] ) { tmp = wxString ( argv[i] , wxConvUTF8 ) ; tmp.Replace ( _T("\013") , _T("\n") ) ; }
         st->results.content[nf].Add ( tmp ) ;
 //        if ( argv[i] ) st->results.content[nf].Add( argv[i] ) ;
 //        else st->results.content[nf].Add ( "" ) ;
@@ -113,7 +113,7 @@ void TStorage::createDatabase ()
     int rc ;
     db = sqlite_open ( dbname.mb_str() , 0 , &e ) ;
     ierror = (int) e ;
-    if ( e ) error = wxString ( e , *wxConvCurrent ) ;
+    if ( e ) error = wxString ( e , wxConvUTF8 ) ;
     else error = _T("Alles OK") ;
     sqlite_close ( db ) ;
     }
@@ -151,7 +151,7 @@ TSQLresult TStorage::getObject_MySQL ( const wxString &query )
                results.content.push_back ( wxArrayString() ) ;
                for(i = 0; i < num_fields; i++)
                {
-               	  wxString tmp = row[i] ? wxString ( row[i] , *wxConvCurrent ) : _T("") ;
+               	  wxString tmp = row[i] ? wxString ( row[i] , wxConvUTF8 ) : _T("") ;
                	  tmp.Replace ( _T("\013") , _T("\n") ) ;
                   results.content[rownum].Add ( tmp ) ;
                }
@@ -161,7 +161,7 @@ TSQLresult TStorage::getObject_MySQL ( const wxString &query )
             fields = mysql_fetch_fields(result);
             for(i = 0; i < num_fields; i++)
             {
-               results.field.Add ( wxString ( fields[i].name , *wxConvCurrent ) ) ;
+               results.field.Add ( wxString ( fields[i].name , wxConvUTF8 ) ) ;
             }
             
             mysql_free_result ( result ) ;
@@ -176,7 +176,7 @@ TSQLresult TStorage::getObject_MySQL ( const wxString &query )
 	    	}    
         else
         	{
-             wxMessageBox ( wxString ( mysql_error(conn) , *wxConvCurrent ) , wxString::Format ( _T("MySQL error %d") , err ) ) ;
+             wxMessageBox ( wxString ( mysql_error(conn) , wxConvUTF8 ) , wxString::Format ( _T("MySQL error %d") , err ) ) ;
              wxFile of ( _T("mysqlerr.txt") , wxFile::write ) ;
              of.Write ( query ) ;
          }    
@@ -219,7 +219,7 @@ TSQLresult TStorage::getObjectSqlite3 ( const wxString &query )
         } while ( rc == SQLITE_BUSY ) ;
     
     ierror = (int) e ;
-    if ( e ) error = wxString ( e , *wxConvCurrent ) ;
+    if ( e ) error = wxString ( e , wxConvUTF8 ) ;
     else error = _T("Alles OK") ;
 
     sqlite3_close ( db ) ;
@@ -273,7 +273,7 @@ TSQLresult TStorage::getObjectSqlite2 ( const wxString &query )
         } while ( rc == SQLITE_BUSY ) ;
     
     ierror = (int) e ;
-    if ( e ) error = wxString ( e , *wxConvCurrent ) ;
+    if ( e ) error = wxString ( e , wxConvUTF8 ) ;
     else error = _T("Alles OK") ;
 
     sqlite_close ( db ) ;
@@ -328,7 +328,7 @@ void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , wxString key , wxString va
 
 void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , wxString key , char* value )
     {
-    sqlAdd ( s1 , s2 , key , wxString ( value , *wxConvCurrent ) ) ;
+    sqlAdd ( s1 , s2 , key , wxString ( value , wxConvUTF8 ) ) ;
     }
 
 void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , wxString key , int value )
@@ -758,7 +758,7 @@ wxString TStorage::createMySQLdb ( wxString ip , wxString db , wxString name , w
 
     wxString t , fn = myapp()->homedir + myapp()->slash + _T("MySQL template.txt") ;
     wxTextFile tf ( fn ) ;
-    tf.Open () ;
+    tf.Open ( *(myapp()->isoconv) ) ;
     for ( int lc = 0 ; lc < tf.GetLineCount() ; lc++ )
         {
         wxString s = tf[lc].Trim().Trim(true) ;
@@ -987,7 +987,7 @@ void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme *e )
     
     // Insert new enzyme
     sql = _T("INSERT INTO enzyme (e_id,e_name,e_sequence,e_location,e_note,e_cut,e_overlap) VALUES (\"") ;
-    sql += wxString ( u , *wxConvCurrent ) ;
+    sql += wxString ( u , wxConvUTF8 ) ;
     sql += _T("\",\"") ;
     sql += e->name + _T("\",\"") ;
     sql += e->sequence + _T("\",\"") ;

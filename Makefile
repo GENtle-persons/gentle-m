@@ -130,10 +130,10 @@ AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
-CPPFLAGS =  -I/usr/local/lib/wx/include/gtk2-unicode-release-static-2.6 -I/usr/local/include/wx-2.6 -DGTK_NO_CHECK_CASTS -D__WXGTK__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D_LARGEFILE_SOURCE=1
+CPPFLAGS =  -I/usr/local/lib/wx/include/gtk2-unicode-release-static-2.6 -I/usr/local/include/wx-2.6 -DGTK_NO_CHECK_CASTS -D__WXGTK__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D_LARGEFILE_SOURCE=1 -DwxUSE_UNICODE=1
 CXX = g++
 CXXDEPMODE = depmode=gcc3
-CXXFLAGS = -g -O2 -I/usr/local/lib/wx/include/gtk2-unicode-release-static-2.6 -I/usr/local/include/wx-2.6 -DGTK_NO_CHECK_CASTS -D__WXGTK__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D_LARGEFILE_SOURCE=1
+CXXFLAGS = -g -O2 -I/usr/local/lib/wx/include/gtk2-unicode-release-static-2.6 -I/usr/local/include/wx-2.6 -DGTK_NO_CHECK_CASTS -D__WXGTK__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D_LARGEFILE_SOURCE=1 -DwxUSE_UNICODE=1
 CYGPATH_W = echo
 DEFS = -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE=\"GENtle\" -DVERSION=\"1.5\" 
 DEPDIR = .deps
