@@ -13,7 +13,7 @@ void TPDB::load ( wxString s )
     {
     vs.Clear () ;
     wxTextFile tf ;
-    tf.Open ( s ) ;
+    tf.Open ( s , *(myapp()->isoconv) ) ;
     vs.Add ( tf.GetFirstLine() ) ;
     while ( !tf.Eof() )
         vs.Add ( tf.GetNextLine() ) ;

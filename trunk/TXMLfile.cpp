@@ -64,12 +64,12 @@ TVector *TXMLfile::getVector ( int a )
 
 wxString TXMLfile::t ( const char *txt )
     {
-    return txt ? wxString ( txt , *wxConvCurrent ) : _T("") ;
+    return txt ? wxString ( txt , wxConvUTF8 ) : _T("") ;
     }
 
 wxString TXMLfile::t ( TiXmlText *txt )
     {
-    return txt && txt->Value() ? wxString ( txt->Value() , *wxConvCurrent ) : wxString() ;
+    return txt && txt->Value() ? wxString ( txt->Value() , wxConvUTF8 ) : wxString() ;
     }
 
 void TXMLfile::readGBSeq ( TiXmlNode *base )
@@ -174,7 +174,7 @@ void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
         {
         char u[100] ;
         sprintf ( u , "short_itemtype%d" , i.getType() ) ;
-        i.name = wxString ( txt(u) , *wxConvCurrent ) ;
+        i.name = wxString ( txt(u) , wxConvUTF8 ) ;
         wxString d2 = i.desc ;
         int k = d2.find ( _T("\n") ) ;
         if ( k > -1 ) d2.erase ( k ) ;

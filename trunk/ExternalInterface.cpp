@@ -198,7 +198,7 @@ wxString EIpanel::val ( TiXmlNode *n )
 	{
 	if ( !n ) return _T("") ;
 	if ( !n->Value() ) return _T("") ;
-	return wxString ( n->Value() , *wxConvCurrent ) ;
+	return wxString ( n->Value() , wxConvUTF8 ) ;
 	}    
 	
 	

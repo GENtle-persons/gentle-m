@@ -71,7 +71,7 @@ void TGraphDisplay::SetZoom ( int _zx , int _zy )
 stringField TGraphDisplay::readTextfile ( wxString filename )
 	{
 	wxTextFile file ( filename ) ;
-	file.Open () ;
+	file.Open ( *(myapp()->isoconv) ) ;
 	wxString s ;
 	stringField sf ;
 	if ( !file.IsOpened() ) return sf ;
@@ -129,8 +129,8 @@ void TGraphDisplay::setupIPCfile ( wxString filename )
  	for ( a = 0 ; a < sf.size() && sf[a].size() > 1 && sf[a][0] != "" ; a++ )
  		{
     	double x , y ;
-    	wxString s0 = wxString ( sf[a][0].c_str() , *wxConvCurrent ) ;
-    	wxString s1 = wxString ( sf[a][1].c_str() , *wxConvCurrent ) ;
+    	wxString s0 = wxString ( sf[a][0].c_str() , wxConvUTF8 ) ;
+    	wxString s1 = wxString ( sf[a][1].c_str() , wxConvUTF8 ) ;
     	s0.ToDouble ( &x ) ;
     	s1.ToDouble ( &y ) ;
     	ng->Add ( (float) x , (float) y ) ;
@@ -151,13 +151,13 @@ void TGraphDisplay::setupPhotometerGraph ( const stringField &sf )
 	if ( sf.size() < 3 ) return ;
 	if ( sf[0].size() < 2 ) return ;
 	if ( sf[1].size() < 2 ) return ;
- 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , wxString ( sf[1][0].c_str() , *wxConvCurrent ) , _T("") , *wxBLACK ) ;
-  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , wxString ( sf[1][1].c_str() , *wxConvCurrent ) , _T("") , *wxBLACK ) ;
+ 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , wxString ( sf[1][0].c_str() , wxConvUTF8 ) , _T("") , *wxBLACK ) ;
+  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , wxString ( sf[1][1].c_str() , wxConvUTF8 ) , _T("") , *wxBLACK ) ;
  	scales.push_back ( sx ) ;
  	scales.push_back ( sy ) ;
  	
  	TGraphData *ng = new TGraphData ( this ) ;
-	ng->name = wxString ( sf[0][0].c_str() , *wxConvCurrent ) ;
+	ng->name = wxString ( sf[0][0].c_str() , wxConvUTF8 ) ;
 	ng->SetScales ( sx , sy ) ;
 	ng->pointStyle = _T("none") ;
 	ng->col = wxTheColourDatabase->Find ( _T("BLUE") ) ;
@@ -167,8 +167,8 @@ void TGraphDisplay::setupPhotometerGraph ( const stringField &sf )
  	for ( a = 2 ; a < sf.size() && sf[a].size() > 1 && sf[a][0] != "" ; a++ )
  		{
     	double x , y ;
-    	wxString s0 ( sf[a][0].c_str() , *wxConvCurrent ) ;
-    	wxString s1 ( sf[a][1].c_str() , *wxConvCurrent ) ;
+    	wxString s0 ( sf[a][0].c_str() , wxConvUTF8 ) ;
+    	wxString s1 ( sf[a][1].c_str() , wxConvUTF8 ) ;
     	s0.ToDouble ( &x ) ;
     	s1.ToDouble ( &y ) ;
     	ng->Add ( (float) x , (float) y ) ;
@@ -188,7 +188,7 @@ void TGraphDisplay::setupFluorimeterGraph ( const stringField &sf )
 	for ( a = 0 ; a+2 < sf[0].size() ; a += 2 )
 		{
   		TGraphData *ng = new TGraphData ( this ) ;
-  		ng->name = wxString ( sf[0][a].c_str() , *wxConvCurrent ) ;
+  		ng->name = wxString ( sf[0][a].c_str() , wxConvUTF8 ) ;
   		ng->SetScales ( sx , sy ) ;
   		ng->pointStyle = styles[cnt_sty] ;
   		ng->col = wxTheColourDatabase->Find ( colors[cnt_col] ) ;
@@ -201,8 +201,8 @@ void TGraphDisplay::setupFluorimeterGraph ( const stringField &sf )
   		for ( b = 2 ; b < sf.size() && ( sf[b].size() > a + 1 && sf[b][0] != "" ) ; b++ )
   			{
 	    	double x , y ;
-        	wxString s0 ( sf[b][a+0].c_str() , *wxConvCurrent ) ;
-        	wxString s1 ( sf[b][a+1].c_str() , *wxConvCurrent ) ;
+        	wxString s0 ( sf[b][a+0].c_str() , wxConvUTF8 ) ;
+        	wxString s1 ( sf[b][a+1].c_str() , wxConvUTF8 ) ;
         	s0.ToDouble ( &x ) ;
         	s1.ToDouble ( &y ) ;
 	    	ng->Add ( (float) x , (float) y ) ;
@@ -296,8 +296,8 @@ void TGraphDisplay::addNewGraph ( const stringField &sf , wxString title , TGrap
  	for ( int a = startrow ; a < sf.size() && sf[a].size() > 1 && sf[a][0] != "" ; a++ )
  		{
     	double x , y ;
-    	wxString s0 ( sf[a][0].c_str() , *wxConvCurrent ) ;
-    	wxString s1 ( sf[a][1].c_str() , *wxConvCurrent ) ;
+    	wxString s0 ( sf[a][0].c_str() , wxConvUTF8 ) ;
+    	wxString s1 ( sf[a][1].c_str() , wxConvUTF8 ) ;
     	s0.ToDouble ( &x ) ;
     	s1.ToDouble ( &y ) ;
     	ng->Add ( (float) x , (float) y ) ;
