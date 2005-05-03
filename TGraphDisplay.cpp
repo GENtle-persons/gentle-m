@@ -17,13 +17,13 @@ END_EVENT_TABLE()
 TGraphDisplay::TGraphDisplay ( wxWindow *parent , int id )
 	: wxPanel ( parent , id )
 	{
- 	colors.Add ( "BLUE" ) ;
- 	colors.Add ( "RED" ) ;
- 	colors.Add ( "GREEN" ) ;
- 	colors.Add ( "MAGENTA" ) ;
- 	styles.Add ( "rect" ) ;
- 	styles.Add ( "circle" ) ;
- 	styles.Add ( "triangle" ) ;
+ 	colors.Add ( _T("BLUE") ) ;
+ 	colors.Add ( _T("RED") ) ;
+ 	colors.Add ( _T("GREEN") ) ;
+ 	colors.Add ( _T("MAGENTA") ) ;
+ 	styles.Add ( _T("rect") ) ;
+ 	styles.Add ( _T("circle") ) ;
+ 	styles.Add ( _T("triangle") ) ;
 	init () ;
 	}
 	
@@ -83,23 +83,24 @@ stringField TGraphDisplay::readTextfile ( wxString filename )
   		
   		if ( s.Find ( '\t' ) > -1 )
   			{
-	    	s.Replace ( "," , "." ) ;
+	    	s.Replace ( _T(",") , _T(".") ) ;
       		while ( s.First ( '\t' ) != -1 )
       			{
-    	    	as.push_back ( s.BeforeFirst ( '\t' ).c_str() ) ;
-    	    	s = s.AfterFirst ( '\t' ) ;
+					wxString xyz = s.BeforeFirst ( '\t' ) ;
+	    	    	as.push_back ( string ( xyz.mb_str() ) ) ;
+   	 	    	s = s.AfterFirst ( '\t' ) ;
       			}    
-    		as.push_back ( s.c_str() ) ;
+	    		as.push_back ( string ( s.mb_str() ) ) ;
       		sf.push_back ( as ) ;
   			}
       	else
        		{
       		while ( s.First ( ',' ) != -1 )
       			{
-    	    	as.push_back ( s.BeforeFirst ( ',' ).c_str() ) ;
+    	    	as.push_back ( string (s.BeforeFirst ( ',' ).mb_str()) ) ;
     	    	s = s.AfterFirst ( ',' ) ;
       			}    
-    		as.push_back ( s.c_str() ) ;
+    			as.push_back ( string ( s.mb_str() ) ) ;
       		sf.push_back ( as ) ;
       		}  		
 		}    
@@ -112,24 +113,24 @@ void TGraphDisplay::setupIPCfile ( wxString filename )
 //	stringField sf = readTextfile ( "C:\\Dokumente und Einstellungen\\DSP\\Desktop\\0.1 IGF-VK + 0.4 PolyGluTyr 360nm.csv" ) ;
 //	setupPhotometerGraph ( sf ) ;
 
- 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , "m/z" , "" , *wxBLACK ) ;
-  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , "rel. Int." , "" , *wxBLACK ) ;
+ 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , _T("m/z") , _T("") , *wxBLACK ) ;
+  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , _T("rel. Int.") , _T("") , *wxBLACK ) ;
  	scales.push_back ( sx ) ;
  	scales.push_back ( sy ) ;
  	
  	TGraphData *ng = new TGraphData ( this ) ;
-	ng->name = "IPC" ;
+	ng->name = _T("IPC") ;
 	ng->SetScales ( sx , sy ) ;
-	ng->pointStyle = "none" ;
-	ng->col = wxTheColourDatabase->Find ( "BLUE" ) ;
+	ng->pointStyle = _T("none") ;
+	ng->col = wxTheColourDatabase->Find ( _T("BLUE") ) ;
 	data.push_back ( ng ) ;
 
  	int a ;
  	for ( a = 0 ; a < sf.size() && sf[a].size() > 1 && sf[a][0] != "" ; a++ )
  		{
     	double x , y ;
-    	wxString s0 = sf[a][0].c_str() ;
-    	wxString s1 = sf[a][1].c_str() ;
+    	wxString s0 = wxString ( sf[a][0].c_str() , *wxConvCurrent ) ;
+    	wxString s1 = wxString ( sf[a][1].c_str() , *wxConvCurrent ) ;
     	s0.ToDouble ( &x ) ;
     	s1.ToDouble ( &y ) ;
     	ng->Add ( (float) x , (float) y ) ;
@@ -138,8 +139,8 @@ void TGraphDisplay::setupIPCfile ( wxString filename )
     
 void TGraphDisplay::setupXYpair ( const stringField &sf )
 	{
- 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , "X" , "" , *wxBLACK ) ;
-  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , "Y" , "" , *wxBLACK ) ;
+ 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , _T("X") , _T("") , *wxBLACK ) ;
+  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , _T("Y") , _T("") , *wxBLACK ) ;
  	scales.push_back ( sx ) ;
  	scales.push_back ( sy ) ;
 	addNewGraph ( sf , txt("t_data") , sx , sy , 0 ) ; 	
@@ -150,24 +151,24 @@ void TGraphDisplay::setupPhotometerGraph ( const stringField &sf )
 	if ( sf.size() < 3 ) return ;
 	if ( sf[0].size() < 2 ) return ;
 	if ( sf[1].size() < 2 ) return ;
- 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , sf[1][0].c_str() , "" , *wxBLACK ) ;
-  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , sf[1][1].c_str() , "" , *wxBLACK ) ;
+ 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , wxString ( sf[1][0].c_str() , *wxConvCurrent ) , _T("") , *wxBLACK ) ;
+  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , wxString ( sf[1][1].c_str() , *wxConvCurrent ) , _T("") , *wxBLACK ) ;
  	scales.push_back ( sx ) ;
  	scales.push_back ( sy ) ;
  	
  	TGraphData *ng = new TGraphData ( this ) ;
-	ng->name = sf[0][0].c_str() ;
+	ng->name = wxString ( sf[0][0].c_str() , *wxConvCurrent ) ;
 	ng->SetScales ( sx , sy ) ;
-	ng->pointStyle = "none" ;
-	ng->col = wxTheColourDatabase->Find ( "BLUE" ) ;
+	ng->pointStyle = _T("none") ;
+	ng->col = wxTheColourDatabase->Find ( _T("BLUE") ) ;
 	data.push_back ( ng ) ;
 
  	int a ;
  	for ( a = 2 ; a < sf.size() && sf[a].size() > 1 && sf[a][0] != "" ; a++ )
  		{
     	double x , y ;
-    	wxString s0 = sf[a][0].c_str() ;
-    	wxString s1 = sf[a][1].c_str() ;
+    	wxString s0 ( sf[a][0].c_str() , *wxConvCurrent ) ;
+    	wxString s1 ( sf[a][1].c_str() , *wxConvCurrent ) ;
     	s0.ToDouble ( &x ) ;
     	s1.ToDouble ( &y ) ;
     	ng->Add ( (float) x , (float) y ) ;
@@ -176,8 +177,8 @@ void TGraphDisplay::setupPhotometerGraph ( const stringField &sf )
 
 void TGraphDisplay::setupFluorimeterGraph ( const stringField &sf )
 	{
- 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , txt("t_wavelength") , "nm" , *wxBLACK ) ;
-  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , txt("t_intensity") , "au" , *wxBLACK ) ;
+ 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , txt("t_wavelength") , _T("nm") , *wxBLACK ) ;
+  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , txt("t_intensity") , _T("au") , *wxBLACK ) ;
  	scales.push_back ( sx ) ;
  	scales.push_back ( sy ) ;
  	
@@ -187,7 +188,7 @@ void TGraphDisplay::setupFluorimeterGraph ( const stringField &sf )
 	for ( a = 0 ; a+2 < sf[0].size() ; a += 2 )
 		{
   		TGraphData *ng = new TGraphData ( this ) ;
-  		ng->name = sf[0][a].c_str() ;
+  		ng->name = wxString ( sf[0][a].c_str() , *wxConvCurrent ) ;
   		ng->SetScales ( sx , sy ) ;
   		ng->pointStyle = styles[cnt_sty] ;
   		ng->col = wxTheColourDatabase->Find ( colors[cnt_col] ) ;
@@ -200,8 +201,8 @@ void TGraphDisplay::setupFluorimeterGraph ( const stringField &sf )
   		for ( b = 2 ; b < sf.size() && ( sf[b].size() > a + 1 && sf[b][0] != "" ) ; b++ )
   			{
 	    	double x , y ;
-        	wxString s0 = sf[b][a+0].c_str() ;
-        	wxString s1 = sf[b][a+1].c_str() ;
+        	wxString s0 ( sf[b][a+0].c_str() , *wxConvCurrent ) ;
+        	wxString s1 ( sf[b][a+1].c_str() , *wxConvCurrent ) ;
         	s0.ToDouble ( &x ) ;
         	s1.ToDouble ( &y ) ;
 	    	ng->Add ( (float) x , (float) y ) ;
@@ -214,9 +215,9 @@ bool TGraphDisplay::SetupFromFile ( wxString filename )
 	{
 	int a ;
 	wxArrayString as ;
-	as.Add ( txt ( "t_graph_file_type_photometer" ) ) ;
-	as.Add ( txt ( "t_graph_file_type_fluorimeter" ) ) ;
-	as.Add ( txt ( "t_graph_file_type_xypair" ) ) ;
+	as.Add ( txt("t_graph_file_type_photometer") ) ;
+	as.Add ( txt("t_graph_file_type_fluorimeter") ) ;
+	as.Add ( txt("t_graph_file_type_xypair") ) ;
 	
 	wxString *vs = new wxString [ as.GetCount() ] ;
 	for ( a = 0 ; a < as.GetCount() ; a++ )
@@ -224,7 +225,7 @@ bool TGraphDisplay::SetupFromFile ( wxString filename )
 	
 	wxSingleChoiceDialog scd ( this , txt("t_graph_open_text") , txt("t_graph_open_title") , as.GetCount() , vs ) ;
 	wxString guess = tryall ( filename ) ;
-	if ( guess != "" )
+	if ( guess != _T("") )
 		{
   		for ( a = 0 ; a < as.GetCount() ; a++ )
   			{
@@ -236,9 +237,9 @@ bool TGraphDisplay::SetupFromFile ( wxString filename )
 	if ( wxID_OK != scd.ShowModal() ) return false ;
 	
 	wxString s = scd.GetStringSelection() ;
-	if ( s == txt ( "t_graph_file_type_photometer" ) ) setupPhotometerGraph ( readTextfile ( filename ) ) ;
-	if ( s == txt ( "t_graph_file_type_fluorimeter" ) ) setupFluorimeterGraph ( readTextfile ( filename ) ) ;
-	if ( s == txt ( "t_graph_file_type_xypair" ) ) setupXYpair ( readTextfile ( filename ) ) ;
+	if ( s == txt("t_graph_file_type_photometer") ) setupPhotometerGraph ( readTextfile ( filename ) ) ;
+	if ( s == txt("t_graph_file_type_fluorimeter") ) setupFluorimeterGraph ( readTextfile ( filename ) ) ;
+	if ( s == txt("t_graph_file_type_xypair") ) setupXYpair ( readTextfile ( filename ) ) ;
 	
 	return true ;
 	}
@@ -270,8 +271,8 @@ void TGraphDisplay::addRawData ( unsigned char *d , long l , wxString title )
   		sum += x / integrate;
   		if ( cnt >= integrate )
   			{
-  			b[0] = wxString::Format ( "%d" , a );
-  			b[1] = wxString::Format ( "%d" , sum ) ;
+  			b[0] = wxString::Format ( _T("%d") , a ) . mb_str() ;
+  			b[1] = wxString::Format ( _T("%d") , sum ) . mb_str() ;
   			sf.push_back ( b ) ;
   			sum = 0 ;
   			cnt = 0 ;
@@ -288,15 +289,15 @@ void TGraphDisplay::addNewGraph ( const stringField &sf , wxString title , TGrap
  	TGraphData *ng = new TGraphData ( this ) ;
 	ng->name = title ;
 	ng->SetScales ( sx , sy ) ;
-	ng->pointStyle = "none" ;
+	ng->pointStyle = _T("none") ;
 	ng->col = wxTheColourDatabase->Find ( colors[data.size()%colors.size()] ) ;
 	data.push_back ( ng ) ;
 
  	for ( int a = startrow ; a < sf.size() && sf[a].size() > 1 && sf[a][0] != "" ; a++ )
  		{
     	double x , y ;
-    	wxString s0 = sf[a][0].c_str() ;
-    	wxString s1 = sf[a][1].c_str() ;
+    	wxString s0 ( sf[a][0].c_str() , *wxConvCurrent ) ;
+    	wxString s1 ( sf[a][1].c_str() , *wxConvCurrent ) ;
     	s0.ToDouble ( &x ) ;
     	s1.ToDouble ( &y ) ;
     	ng->Add ( (float) x , (float) y ) ;
@@ -305,19 +306,19 @@ void TGraphDisplay::addNewGraph ( const stringField &sf , wxString title , TGrap
     
 void TGraphDisplay::setupRawFPLC ( wxString filenamebase )
 	{
- 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , "X" , "" , *wxBLACK ) ;
-  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , "Y" , "" , *wxBLACK ) ;
+ 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , _T("X") , _T("") , *wxBLACK ) ;
+  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , _T("Y") , _T("") , *wxBLACK ) ;
  	scales.push_back ( sx ) ;
  	scales.push_back ( sy ) ;
 
 	long l ;
 	unsigned char *d ;
 
-	d = readRawData ( filenamebase + "_1.DAT" , l ) ;
-	addRawData ( d , l , "1" ) ;
+	d = readRawData ( filenamebase + _T("_1.DAT") , l ) ;
+	addRawData ( d , l , _T("1") ) ;
 
-	d = readRawData ( filenamebase + "_2.DAT" , l ) ;
-	addRawData ( d , l , "2" ) ;
+	d = readRawData ( filenamebase + _T("_2.DAT") , l ) ;
+	addRawData ( d , l , _T("2") ) ;
 	}    
 
 wxString TGraphDisplay::tryall ( wxString filename )
@@ -330,27 +331,27 @@ wxString TGraphDisplay::tryall ( wxString filename )
 
 	setupPhotometerGraph ( sf ) ;
 	for ( a = cnt = 0; a < data.size() ; a++ ) cnt += data[a]->dx.size() ;
-	if ( cnt > best ) { r = "t_graph_file_type_photometer" ; best = cnt ; }
+	if ( cnt > best ) { r = _T("t_graph_file_type_photometer") ; best = cnt ; }
 	init () ;
 	
 	setupFluorimeterGraph ( sf ) ;
 	for ( a = cnt = 0; a < data.size() ; a++ ) cnt += data[a]->dx.size() ;
-	if ( cnt > best ) { r = "t_graph_file_type_fluorimeter" ; best = cnt ; }
+	if ( cnt > best ) { r = _T("t_graph_file_type_fluorimeter") ; best = cnt ; }
 	init () ;
 	
 	setupXYpair ( sf ) ;
 	for ( a = cnt = 0; a < data.size() ; a++ ) cnt += data[a]->dx.size() ;
-	if ( cnt > best ) { r = "t_graph_file_type_xypair" ; best = cnt ; }
+	if ( cnt > best ) { r = _T("t_graph_file_type_xypair") ; best = cnt ; }
 	init () ;
 	
-	if ( best < 5 ) r = "" ; // A graph with less points is useless
+	if ( best < 5 ) r = _T("") ; // A graph with less points is useless
 	
 	return r ;
 	}    
 
 void TGraphDisplay::SetupDummy ()
 	{
-	setupRawFPLC ( "C:\\Dokumente und Einstellungen\\DSP\\Desktop\\NORBERT\\G23" ) ;
+	setupRawFPLC ( _T("C:\\Dokumente und Einstellungen\\DSP\\Desktop\\NORBERT\\G23") ) ;
 	AutoScale () ;
 	}
 
@@ -558,11 +559,11 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
 	    wxString c1 ;
 	    for ( a = 0 ; a < scales.size() ; a++ )
 	    	{
- 	    	if ( !c1.IsEmpty() ) c1 += "; " ;
+ 	    	if ( !c1.IsEmpty() ) c1 += _T("; ") ;
  	    	c1 += scales[a]->name ;
- 	    	c1 += ":" ;
+ 	    	c1 += _T(":") ;
 	    	int v = scales[a]->horizontal ? pt.x : pt.y ;
- 	    	c1 += wxString::Format ( "%f" , scales[a]->GetVirtualCoordinate ( v , inner ) ) ;
+ 	    	c1 += wxString::Format ( _T("%f") , scales[a]->GetVirtualCoordinate ( v , inner ) ) ;
 	    	}    
     	myapp()->frame->SetStatusText ( c1.c_str() , 0 ) ;
     	
@@ -763,7 +764,7 @@ void TGraphDisplay::OnCopyAsImage(wxCommandEvent &event)
 	
 void TGraphDisplay::OnSaveAsImage(wxCommandEvent &event)
 	{
- 	wxString filename = "Graph" ;
+ 	wxString filename = _T("Graph") ;
  	wxBitmap bmp ;
  	DrawIntoBitmap ( bmp ) ;
 	myapp()->frame->saveImage ( &bmp , filename ) ;

@@ -47,7 +47,7 @@ END_EVENT_TABLE()
 TGraph::TGraph(wxWindow *parent, const wxString& title)
     : ChildBase(parent, title)
 	{
-    def = "GRAPH" ;
+    def = _T("GRAPH") ;
     vec = NULL ;
     nb = NULL ;
 	}
@@ -63,7 +63,7 @@ TGraph::~TGraph()
 
 void TGraph::OnCharHook ( wxKeyEvent& event )
 	{
-	wxMessageBox ( "!" ) ;
+	wxMessageBox ( _T("!") ) ;
 	if ( gd ) gd->OnCharHook ( event ) ;
 	}    
 
@@ -104,10 +104,10 @@ void TGraph::initme ()
                              wxSL_HORIZONTAL ) ;
     zoom_linked = new wxCheckBox ( toolBar , GRAPH_ZOOM_LINKED , txt("t_zoom_linked") ) ;
     
-    toolBar->AddControl ( new wxStaticText ( toolBar , -1 , "Zoom (X)" ) ) ;
+    toolBar->AddControl ( new wxStaticText ( toolBar , -1 , _T("Zoom (X)") ) ) ;
     toolBar->AddControl ( zoom_x ) ;
     toolBar->AddSeparator() ;
-    toolBar->AddControl ( new wxStaticText ( toolBar , -1 , "Zoom (Y)" ) ) ;
+    toolBar->AddControl ( new wxStaticText ( toolBar , -1 , _T("Zoom (Y)") ) ) ;
     toolBar->AddControl ( zoom_y ) ;
     toolBar->AddControl ( zoom_linked ) ;
     myapp()->frame->addDefaultTools ( toolBar ) ;
@@ -150,7 +150,7 @@ TGraphData::TGraphData ( TGraphDisplay *d )
 	{
  	display = d ;
  	sx = sy = NULL ;
- 	pointStyle = "rect" ;
+ 	pointStyle = _T("rect") ;
  	col = *wxBLACK ;
  	selected = false ;
 	}
@@ -222,9 +222,9 @@ void TGraphData::drawit ( wxDC &dc )
 	
 void TGraphData::DrawSymbol ( wxDC &dc , wxString symbol , int x , int y , int size )
 	{
-	if ( symbol == "rect" ) dc.DrawRectangle ( x-size*2/3 , y-size*2/3 , size*4/3+1 , size*4/3+1 ) ;
-	else if ( symbol == "circle" ) dc.DrawCircle ( x , y , size ) ;
-	else if ( symbol == "triangle" )
+	if ( symbol == _T("rect") ) dc.DrawRectangle ( x-size*2/3 , y-size*2/3 , size*4/3+1 , size*4/3+1 ) ;
+	else if ( symbol == _T("circle") ) dc.DrawCircle ( x , y , size ) ;
+	else if ( symbol == _T("triangle") )
 		{
   		wxPoint points[3] ;
   		int ns = size ;
