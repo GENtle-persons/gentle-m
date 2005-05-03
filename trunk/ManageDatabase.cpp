@@ -63,7 +63,7 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , wxString title
 #endif
 
     wxClientDC dc ( (wxWindow*) this ) ;
-    dc.GetTextExtent ( "X" , &bo , &th ) ;
+    dc.GetTextExtent ( _T("X") , &bo , &th ) ;
     th = th * 3 / 2 ;
     bo = th / 4 ;
     wxBeginBusyCursor() ;
@@ -81,7 +81,7 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , wxString title
     if ( startup ) f_twopanes->SetValue ( 0 ) ;
     else if ( doLoad || doSave )
         {
-        int tp = myapp()->frame->LS->getOption ( "TWOPANES" , 0 ) ;
+        int tp = myapp()->frame->LS->getOption ( _T("TWOPANES") , 0 ) ;
         f_twopanes->SetValue ( tp ) ;
         }
     else  f_twopanes->SetValue ( 1 ) ;
@@ -116,7 +116,7 @@ void TManageDatabaseDialog::initCopynMove ()
     if ( doSave ) h -= th ;
 
     wxRect r = ( new wxStaticText ( p , -1 , txt("t_filter") , wxPoint ( bo , bo ) ) ) -> GetRect() ;
-    filter_txt = new wxTextCtrl ( p , MD_PM_FILTER , "" , 
+    filter_txt = new wxTextCtrl ( p , MD_PM_FILTER , _T("") , 
                                     wxPoint ( bo+r.GetRight() , bo ) ,
                                     wxSize ( w*2/3 , th ) ) ;
 
@@ -142,11 +142,11 @@ void TManageDatabaseDialog::initCopynMove ()
     pm_left->SetDropTarget ( (wxDropTarget*) ldt ) ;
 
 
-    wxBitmap bmp_helix ( myapp()->bmpdir+myapp()->slash+"Helix.bmp" , wxBITMAP_TYPE_BMP ) ;
-    wxBitmap bmp_project ( myapp()->bmpdir+myapp()->slash+"project.bmp" , wxBITMAP_TYPE_BMP ) ;
-    wxBitmap bmp_protein ( myapp()->bmpdir+myapp()->slash+"protein.bmp" , wxBITMAP_TYPE_BMP ) ;
-    wxBitmap bmp_primer ( myapp()->bmpdir+myapp()->slash+"primer.bmp" , wxBITMAP_TYPE_BMP ) ;
-    wxBitmap bmp_align ( myapp()->bmpdir+myapp()->slash+"alignment.bmp" , wxBITMAP_TYPE_BMP ) ;
+    wxBitmap bmp_helix ( myapp()->bmpdir+myapp()->slash + _T("Helix.bmp") , wxBITMAP_TYPE_BMP ) ;
+    wxBitmap bmp_project ( myapp()->bmpdir+myapp()->slash + _T("project.bmp") , wxBITMAP_TYPE_BMP ) ;
+    wxBitmap bmp_protein ( myapp()->bmpdir+myapp()->slash + _T("protein.bmp") , wxBITMAP_TYPE_BMP ) ;
+    wxBitmap bmp_primer ( myapp()->bmpdir+myapp()->slash + _T("primer.bmp") , wxBITMAP_TYPE_BMP ) ;
+    wxBitmap bmp_align ( myapp()->bmpdir+myapp()->slash + _T("alignment.bmp") , wxBITMAP_TYPE_BMP ) ;
 
     il = new wxImageList ( 21 , 15 ) ;
     il->Add ( bmp_helix ) ;
@@ -289,7 +289,7 @@ void TManageDatabaseDialog::pm_list_items ( int x )
     TSQLresult r ;
     if ( isProject )
         {
-        wxString sql = "SELECT pr_name FROM project" ;
+        wxString sql = _T("SELECT pr_name FROM project") ;
         r = st->getObject ( sql ) ;
         for ( a = 0 ; a < r.rows() ; a++ )
            {
@@ -299,61 +299,61 @@ void TManageDatabaseDialog::pm_list_items ( int x )
         }
     else
         {
-        wxString sql = "SELECT dna_name,dna_type FROM dna" ;
+        wxString sql = _T("SELECT dna_name,dna_type FROM dna") ;
 //        if ( !filter.IsEmpty() )
            {
            for ( a = 0 ; a < filter.length() ; a++ )
               if ( filter.GetChar(a) == '\"' ) filter.SetChar ( a , '\'' ) ;
            wxArrayString vf ;
-           explode ( " " , filter , vf ) ;
+           explode ( _T(" ") , filter , vf ) ;
            wxString sql2 , sql3 ;
            for ( a = 0 ; a < vf.GetCount() ; a++ )
               {
               if ( !vf[a].IsEmpty() )
                  {
-                 if ( !sql2.IsEmpty() ) sql2 += " AND" ;
-                 sql2 += " (dna_name LIKE \"%" + vf[a] + "%\"" ;
+                 if ( !sql2.IsEmpty() ) sql2 += _T(" AND") ;
+                 sql2 += _T(" (dna_name LIKE \"%") + vf[a] + _T("%\"") ;
                  if ( f_desc->GetValue() )
-                    sql2 += " OR dna_description LIKE \"%" + vf[a] + "%\"" ;
+                    sql2 += _T(" OR dna_description LIKE \"%") + vf[a] + _T("%\"") ;
                  if ( f_seq->GetValue() )
-                    sql2 += " OR dna_sequence LIKE \"%" + vf[a] + "%\"" ;
-                 sql2 += ")" ;
+                    sql2 += _T(" OR dna_sequence LIKE \"%") + vf[a] + _T("%\"") ;
+                 sql2 += _T(")") ;
                  }
               }
            if ( f_dna->GetValue() )
               {
-              if ( !sql3.IsEmpty() ) sql3 += " OR " ;
-              sql3 += "dna_type=0 OR dna_type=1 OR dna_type=2" ;
+              if ( !sql3.IsEmpty() ) sql3 += _T(" OR ") ;
+              sql3 += _T("dna_type=0 OR dna_type=1 OR dna_type=2") ;
               }
            if ( f_prot->GetValue() )
               {
-              if ( !sql3.IsEmpty() ) sql3 += " OR " ;
-              sql3 += "dna_type=5" ;
+              if ( !sql3.IsEmpty() ) sql3 += _T(" OR ") ;
+              sql3 += _T("dna_type=5") ;
               }
            if ( f_primer->GetValue() )
               {
-              if ( !sql3.IsEmpty() ) sql3 += " OR " ;
-              sql3 += "dna_type=3" ;
+              if ( !sql3.IsEmpty() ) sql3 += _T(" OR ") ;
+              sql3 += _T("dna_type=3") ;
               }
            if ( false ) // Alignment
               {
-              if ( !sql3.IsEmpty() ) sql3 += " OR " ;
-              sql3 += "dna_type=4" ;
+              if ( !sql3.IsEmpty() ) sql3 += _T(" OR ") ;
+              sql3 += _T("dna_type=4") ;
               }
            if ( !sql3.IsEmpty() )
               {
-              if ( !sql2.IsEmpty() ) sql2 += " AND (" + sql3 + ")" ;
-              else sql2 = " " + sql3 ;
+              if ( !sql2.IsEmpty() ) sql2 += _T(" AND (") + sql3 + _T(")") ;
+              else sql2 = _T(" ") + sql3 ;
               }
-           if ( !sql2.IsEmpty() ) sql += " WHERE" + sql2 ;
+           if ( !sql2.IsEmpty() ) sql += _T(" WHERE") + sql2 ;
            }
         r = st->getObject ( sql ) ;        
         for ( a = 0 ; a < r.rows() ; a++ )
            {
            wxString s = r[a][r["dna_name"]] ;
-           if ( r[a][r["dna_type"]] == "5" ) l->InsertItem ( a , s , 2 ) ;
-           else if ( r[a][r["dna_type"]] == "3" ) l->InsertItem ( a , s , 3 ) ;
-           else if ( r[a][r["dna_type"]] == "4" ) l->InsertItem ( a , s , 4 ) ;
+           if ( r[a][r["dna_type"]] == _T("5") ) l->InsertItem ( a , s , 2 ) ;
+           else if ( r[a][r["dna_type"]] == _T("3") ) l->InsertItem ( a , s , 3 ) ;
+           else if ( r[a][r["dna_type"]] == _T("4") ) l->InsertItem ( a , s , 4 ) ;
            else l->InsertItem ( a , s , 0 ) ;
            }
         }
@@ -451,7 +451,7 @@ bool TManageDatabaseDialog::copyDNA ( wxString name , wxString sdb , wxString td
     name = source->fixDNAname ( name ) ;
         
     // Already there?
-    sql = "SELECT dna_name FROM dna WHERE dna_name=\""+name+"\"" ;
+    sql = _T("SELECT dna_name FROM dna WHERE dna_name=\"") + name + _T("\"") ;
     r = target->getObject ( sql ) ;
     if ( r.rows() > 0 )
         {
@@ -461,22 +461,22 @@ bool TManageDatabaseDialog::copyDNA ( wxString name , wxString sdb , wxString td
         }
         
     // Copy DNA and items
-    source->copySQLfields ( *target , "dna" , "dna_name=\""+name+"\"" ) ;
-    source->copySQLfields ( *target , "dna_item" , "di_dna=\""+name+"\"" ) ;
+    source->copySQLfields ( *target , _T("dna") , _T("dna_name=\"") + name + _T("\"") ) ;
+    source->copySQLfields ( *target , _T("dna_item") , _T("di_dna=\"") + name + _T("\"") ) ;
     
     // Enzymes
-    sql = "SELECT dna_restriction_enzymes FROM dna WHERE dna_name=\"" + name + "\"" ;
+    sql = _T("SELECT dna_restriction_enzymes FROM dna WHERE dna_name=\"") + name + _T("\"") ;
     r = source->getObject ( sql ) ;
     if ( r.rows() == 0 ) return false ;
     s = r[0][0] ;
-    t = "" ;
+    t = _T("") ;
     wxArrayString ve ;
     for ( a = 0 ; a < s.length() ; a++ )
         {
         if ( s.GetChar(a) == ',' )
            {
            if ( !t.IsEmpty() ) ve.Add ( t ) ;
-           t = "" ;
+           t = _T("") ;
            }
         else t += s.GetChar(a) ;
         }
@@ -484,10 +484,10 @@ bool TManageDatabaseDialog::copyDNA ( wxString name , wxString sdb , wxString td
 
     for ( a = 0 ; a < ve.GetCount() ; a++ )
         {
-        sql = "SELECT e_name FROM enzyme WHERE e_name=\"" + ve[a] + "\"" ;
+        sql = _T("SELECT e_name FROM enzyme WHERE e_name=\"") + ve[a] + _T("\"") ;
         r = target->getObject ( sql ) ;
         if ( r.rows() == 0 )
-           source->copySQLfields ( *target , "enzyme" , "e_name=\"" + ve[a] + "\"" ) ;
+           source->copySQLfields ( *target , _T("enzyme") , _T("e_name=\"") + ve[a] + _T("\"") ) ;
         }
         
     SetCursor ( *wxSTANDARD_CURSOR ) ;
@@ -505,8 +505,8 @@ void TManageDatabaseDialog::delDNA ( wxString name , wxString db )
     {
     TStorage *source = getTempDB ( getFileName ( db ) ) ;
     name = source->fixDNAname ( name ) ;
-    source->getObject ( "DELETE FROM dna WHERE dna_name=\"" + name + "\"" ) ;
-    source->getObject ( "DELETE FROM dna_item WHERE di_dna=\"" + name + "\"" ) ;
+    source->getObject ( _T("DELETE FROM dna WHERE dna_name=\"") + name + _T("\"") ) ;
+    source->getObject ( _T("DELETE FROM dna_item WHERE di_dna=\"") + name + _T("\"") ) ;
     }
 
 wxString TManageDatabaseDialog::getFileName ( wxString dbname )
@@ -515,7 +515,7 @@ wxString TManageDatabaseDialog::getFileName ( wxString dbname )
     for ( a = 0 ; a < db_name.GetCount() ; a++ )
         if ( db_name[a] == dbname )
            return db_file[a] ;
-    return "" ;
+    return _T("") ;
     }
     
     
@@ -530,7 +530,7 @@ void TManageDatabaseDialog::initDatabases ()
     wxBoxSizer *v1 = new wxBoxSizer ( wxVERTICAL ) ;
     wxFlexGridSizer *g1 = new wxFlexGridSizer ( 3 , 3 , 5 , 5 ) ;
 
-    g1->Add ( new wxStaticText ( p , -1 , "" ) , 1 , wxEXPAND , 5 ) ;
+    g1->Add ( new wxStaticText ( p , -1 , _T("") ) , 1 , wxEXPAND , 5 ) ;
     g1->Add ( new wxButton ( p , MD_PD_DEL , txt("b_del") ) , 1 , wxEXPAND , 5 ) ;
     g1->Add ( new wxButton ( p , MD_PD_DEFAULT , txt("b_set_default") ) , 1 , wxEXPAND , 5 ) ;
 
@@ -544,13 +544,13 @@ void TManageDatabaseDialog::initDatabases ()
     g1->Add ( new wxButton ( p , MD_PM_NEW_MYSQL , txt("b_new") ) , 1 , wxEXPAND , 5 ) ;
 #endif
 
-    pd_db_name = new wxStaticText ( p , -1 , "" ) ;
-    pd_db_file = new wxStaticText ( p , -1 , "" ) ;
+    pd_db_name = new wxStaticText ( p , -1 , _T("") ) ;
+    pd_db_file = new wxStaticText ( p , -1 , _T("") ) ;
     v1->Add ( new wxStaticText ( p , -1 , txt("t_databases") ) , 0 , wxEXPAND , 5 ) ;
-    v1->Add ( new wxStaticText ( p , -1 , "" ) , 0 , wxEXPAND , 5 ) ;
+    v1->Add ( new wxStaticText ( p , -1 , _T("") ) , 0 , wxEXPAND , 5 ) ;
     v1->Add ( pd_db_name , 0 , wxEXPAND , 5 ) ;
     v1->Add ( pd_db_file , 0 , wxEXPAND , 5 ) ;
-    v1->Add ( new wxStaticText ( p , -1 , "" ) , 0 , wxEXPAND , 5 ) ;
+    v1->Add ( new wxStaticText ( p , -1 , _T("") ) , 0 , wxEXPAND , 5 ) ;
     v1->Add ( g1 , 1 , wxEXPAND | wxALL , 5 ) ;
     
     pd_db = new wxListBox ( p , MD_PD_DBLIST ) ;
@@ -611,14 +611,14 @@ void TManageDatabaseDialog::pdOnDBchange ( wxCommandEvent &ev )
     
 void TManageDatabaseDialog::pdOnNew ( wxCommandEvent &ev )
     {
-    wxString wildcard = "GENtle database (*.db)|*.db" ;
-    wxFileDialog d ( this , txt("t_add_new_db") , "" , "" , wildcard , wxSAVE|wxOVERWRITE_PROMPT ) ;
+    wxString wildcard = _T("GENtle database (*.db)|*.db") ;
+    wxFileDialog d ( this , txt("t_add_new_db") , _T("") , _T("") , wildcard , wxSAVE|wxOVERWRITE_PROMPT ) ;
     int x = d.ShowModal() ;
     if ( x != wxID_OK ) return ;
 
     wxString fn = d.GetPath() ;
     wxString blank = myapp()->homedir ;
-    blank += "/blank.db" ;
+    blank += _T("/blank.db") ;
     
     bool b = wxCopyFile ( blank , fn , true ) ;
     if ( !b )
@@ -632,8 +632,8 @@ void TManageDatabaseDialog::pdOnNew ( wxCommandEvent &ev )
     
 void TManageDatabaseDialog::pdOnAdd ( wxCommandEvent &ev )
     {
-    wxString wildcard = "GENtle database (*.db)|*.db" ;
-    wxFileDialog d ( this , txt("t_choose_db") , "" , "" , wildcard , wxOPEN ) ;
+    wxString wildcard = _T("GENtle database (*.db)|*.db") ;
+    wxFileDialog d ( this , txt("t_choose_db") , _T("") , _T("") , wildcard , wxOPEN ) ;
     int x = d.ShowModal() ;
     if ( x != wxID_OK ) return ;
     
@@ -657,7 +657,7 @@ void TManageDatabaseDialog::addDatabase ( wxString fn )
     if ( fn.GetChar(0) == ':' )
         {
         wxArrayString vv ;
-        explode ( ":" , fn + ":" , vv ) ;
+        explode ( _T(":") , fn + _T(":") , vv ) ;
         t = vv[4] ;
         }
     else
@@ -676,21 +676,20 @@ void TManageDatabaseDialog::addDatabase ( wxString fn )
     if ( t.GetChar(0) >= 'a' && t.GetChar(0) <= 'z' )
         t.SetChar ( 0 , t.GetChar(0) - 'a' + 'A' ) ; // Uppercase
     wxString s ;
-    char z[100] ;
+//    char z[100] ;
     b = 0 ;
-    *z = 0 ;
+//    *z = 0 ;
     do {
-        s = t + z ;
+        s = t + wxString::Format ( _T("%d") , b ) ;
         b++ ;
-        sprintf ( z , " %d" , b ) ;
+  //      sprintf ( z , " %d" , b ) ;
         for ( a = 0 ; a < db_name.GetCount() && db_name[a] != s ; a++ ) ;
         } while ( a < db_name.GetCount() ) ;
     t = s ;
     
     // Saving in database
     TSQLresult r ;
-    wxString sql = "INSERT INTO stuff (s_type,s_name,s_value)"
-                 "VALUES (\"DATABASE\",\"" + t + "\",\"" + fn + "\")" ;
+    wxString sql = _T("INSERT INTO stuff (s_type,s_name,s_value) VALUES (\"DATABASE\",\"") + t + _T("\",\"") + fn + _T("\")") ;
     r = myapp()->frame->LS->getObject ( sql ) ;
     pd_loadList () ;
     pd_db->SetStringSelection ( t ) ;
@@ -712,10 +711,8 @@ void TManageDatabaseDialog::pdOnDel ( wxCommandEvent &ev )
     
     // Removing from database
     TSQLresult r ;
-    wxString sql = "DELETE FROM stuff WHERE "
-                 "s_type=\"DATABASE\" AND "
-                 "s_name=\"" + name + "\" AND "
-                 "s_value=\"" + db_file[a] + "\"" ;
+    wxString sql = _T("DELETE FROM stuff WHERE s_type=\"DATABASE\" AND s_name=\"") +
+	 					name + _T("\" AND s_value=\"") + db_file[a] + _T("\"") ;
     r = myapp()->frame->LS->getObject ( sql ) ;
     pd_loadList () ;
     pd_db->SetStringSelection ( txt("local_db") ) ;
@@ -729,11 +726,11 @@ void TManageDatabaseDialog::pdOnSetDefault ( wxCommandEvent &ev )
     defdb = name ;
     
     
-    wxString sql = "DELETE FROM stuff WHERE s_type=\"DEFAULT_DATABASE\"" ;
+    wxString sql = _T("DELETE FROM stuff WHERE s_type=\"DEFAULT_DATABASE\"") ;
     myapp()->frame->LS->getObject ( sql ) ;
     
-    sql = "INSERT INTO stuff (s_type,s_name,s_value)"
-                 "VALUES (\"DEFAULT_DATABASE\",\"" + defdb + "\",\"" + defdb + "\")" ;
+    sql = _T("INSERT INTO stuff (s_type,s_name,s_value) VALUES (\"DEFAULT_DATABASE\",\"") +
+	 			defdb + _T("\",\"") + defdb + _T("\")") ;
     myapp()->frame->LS->getObject ( sql ) ;                 
     }
 
@@ -798,7 +795,7 @@ void TManageDatabaseDialog::pmOpenFiles ( wxArrayString &_names , wxString _db )
     {
     if ( _names.GetCount() == 0 ) return ;
     if ( doLoad || doSave )
-        myapp()->frame->LS->setOption ( "TWOPANES" , f_twopanes->GetValue() ) ;
+        myapp()->frame->LS->setOption ( _T("TWOPANES") , f_twopanes->GetValue() ) ;
 
     SetReturnCode ( wxID_OK ) ;
     EndModal ( true ) ;
@@ -806,7 +803,7 @@ void TManageDatabaseDialog::pmOpenFiles ( wxArrayString &_names , wxString _db )
     wxBeginBusyCursor () ;
     myapp()->frame->lockDisplay ( true ) ;
 
-    wxProgressDialog pd ( txt("t_loading") , "" , _names.GetCount() , NULL , wxPD_ALL ) ;
+    wxProgressDialog pd ( txt("t_loading") , _T("") , _names.GetCount() , NULL , wxPD_ALL ) ;
     for ( int a = 0 ; a < _names.GetCount() ; a++ )
     	{
 	    if ( !pd.Update ( a , _names[a] ) ) break ;
@@ -842,7 +839,7 @@ bool TManageDatabaseDialog::do_load_project ( wxString name , wxString db )
     
     // Setting new project name, loading desc etc.
     name = fixQuotes ( name ) ;
-    sql = "SELECT pr_desc FROM project WHERE pr_name=\""+name+"\"" ;
+    sql = _T("SELECT pr_desc FROM project WHERE pr_name=\"") + name + _T("\"") ;
     sr = tstorage->getObject ( sql ) ;
     if ( sr.rows() == 0 ) return false ;
         
@@ -856,12 +853,12 @@ bool TManageDatabaseDialog::do_load_project ( wxString name , wxString db )
     myapp()->frame->lockDisplay ( true ) ;
 
     // Load associated DNA list
-    sql = "SELECT * FROM project_dna WHERE pd_project=\""+name+"\"" ;
+    sql = _T("SELECT * FROM project_dna WHERE pd_project=\"") + name + _T("\"") ;
     sr = tstorage->getObject ( sql ) ;
 
     // Load DNA
     bool all = true ;
-    wxProgressDialog pd ( txt("t_loading") , "" , sr.rows() , NULL , wxPD_ALL ) ;
+    wxProgressDialog pd ( txt("t_loading") , _T("") , sr.rows() , NULL , wxPD_ALL ) ;
     for ( a = 0 ; a < sr.rows() ; a++ )
     	{
 	    if ( !pd.Update ( a , sr[a][sr["pd_dna"]] ) ) break ;
@@ -892,25 +889,25 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
 
     if ( name.IsEmpty() ) return false ;
     // Loading vector
-    sql = "SELECT * FROM dna WHERE dna_name=\"" + name + "\"" ;
+    sql = _T("SELECT * FROM dna WHERE dna_name=\"") + name + _T("\"") ;
     sr = tstorage->getObject ( sql ) ;
     if( sr.rows() == 0 ) return false ;
     v->setName ( sr[0][sr["dna_name"]] ) ;
     v->setDescription ( sr[0][sr["dna_description"]] ) ;
     v->setSequence ( sr[0][sr["dna_sequence"]] ) ;
-    v->setType ( atoi ( sr[0][sr["dna_type"]].c_str() ) ) ;
+    v->setType ( atoi ( sr[0][sr["dna_type"]].mb_str() ) ) ;
     v->setStickyEnd ( true , true , sr[0][sr["dna_sticky_ul"]] ) ;
     v->setStickyEnd ( true , false , sr[0][sr["dna_sticky_ll"]] ) ;
     v->setStickyEnd ( false , true , sr[0][sr["dna_sticky_ur"]] ) ;
     v->setStickyEnd ( false , false , sr[0][sr["dna_sticky_lr"]] ) ;
 
     v->setParams ( sr[0][sr["dna_params"]] ) ;
-    if ( sr[0][sr["dna_circular"]] == "1" ) v->setCircular ( true ) ;
+    if ( sr[0][sr["dna_circular"]] == _T("1") ) v->setCircular ( true ) ;
     else v->setCircular ( false ) ;
     v->setDatabase ( db ) ;
     if ( v->getType() != TYPE_ALIGNMENT ) v->removeBlanksFromSequence () ;
 
-    wxString s = sr[0][sr["dna_restriction_enzymes"]] , t = "" ;
+    wxString s = sr[0][sr["dna_restriction_enzymes"]] , t = _T("") ;
     for ( a = 0 ; a < s.length() ; a++ )
         {
         if ( s.GetChar(a) == ',' )
@@ -920,7 +917,7 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
               if ( t.GetChar(0) == '*' ) v->proteases.Add ( t.substr ( 1 ) ) ;
               else v->re.Add ( tstorage->getRestrictionEnzyme ( t ) ) ;
               }
-           t = "" ;
+           t = _T("") ;
            }
         else t += s.GetChar(a) ;
         }
@@ -931,7 +928,7 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
         }
 
     // Loading items
-    sql = "SELECT * FROM dna_item WHERE di_dna=\"" + name + "\"" ;
+    sql = _T("SELECT * FROM dna_item WHERE di_dna=\"") + name + _T("\"") ;
     sr = tstorage->getObject ( sql ) ;
     for ( a = 0 ; a < sr.rows() ; a++ )
         {
@@ -939,9 +936,9 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
         i.name = sr[a][sr["di_name"]] ;
         i.desc = sr[a][sr["di_description"]] ;
         i.setType ( sr[a][sr["di_type"]].GetChar(0) ) ;
-        i.from = atoi ( sr[a][sr["di_from"]].c_str() ) ;
-        i.to = atoi ( sr[a][sr["di_to"]].c_str() ) ;
-        i.setDirection ( atoi ( sr[a][sr["di_direction"]].c_str() ) ) ;
+        i.from = atoi ( sr[a][sr["di_from"]].mb_str() ) ;
+        i.to = atoi ( sr[a][sr["di_to"]].mb_str() ) ;
+        i.setDirection ( atoi ( sr[a][sr["di_direction"]].mb_str() ) ) ;
         i.explodeParams ( sr[a][sr["di_params"]] ) ;
         v->items.push_back ( i ) ;
         }
@@ -1013,9 +1010,9 @@ bool TManageDatabaseDialog::doesNameExist ( wxString name , wxString dbname )
     TSQLresult sr ;
     wxString x = fixQuotes ( name ) ;
     if ( isProject )
-        sql = "SELECT pr_name FROM project WHERE pr_name=\"" + x + "\"" ;
+        sql = _T("SELECT pr_name FROM project WHERE pr_name=\"") + x + _T("\"") ;
     else
-        sql = "SELECT dna_sequence FROM dna WHERE dna_name=\"" + x + "\"" ;
+        sql = _T("SELECT dna_sequence FROM dna WHERE dna_name=\"") + x + _T("\"") ;
     sr = storage->getObject ( sql ) ;
     if ( sr.content.size() == 0 ) return false ;
     
@@ -1070,27 +1067,27 @@ void TManageDatabaseDialog::do_save_project ()
     myapp()->frame->project.db = dbname ;
 
     // Deleting old one, if any
-    sql = "DELETE FROM project WHERE pr_name=\""+x+"\"" ;
+    sql = _T("DELETE FROM project WHERE pr_name=\"") + x + _T("\"") ;
     storage->getObject ( sql ) ;
-    sql = "DELETE FROM project_dna WHERE pd_project=\""+x+"\"" ;
+    sql = _T("DELETE FROM project_dna WHERE pd_project=\"") + x + _T("\"") ;
     storage->getObject ( sql ) ;
     
     // Storing new one
-    s1 = s2 = "" ;
-    storage->sqlAdd ( s1 , s2 , "pr_name" , x ) ;
-    storage->sqlAdd ( s1 , s2 , "pr_desc" , "No description" ) ;
-    sql = "INSERT INTO project ("+s1+") VALUES ("+s2+")" ;
+    s1 = s2 = _T("") ;
+    storage->sqlAdd ( s1 , s2 , _T("pr_name") , x ) ;
+    storage->sqlAdd ( s1 , s2 , _T("pr_desc") , _T("No description") ) ;
+    sql = _T("INSERT INTO project (") + s1 + _T(") VALUES (") + s2 + _T(")") ;
     storage->getObject ( sql ) ;
     
     for ( a = 0 ; a < myapp()->frame->children.GetCount() ; a++ )
         {
-        if ( myapp()->frame->children[a]->def == "dna" ||
-             myapp()->frame->children[a]->def == "AminoAcids" ||
-             myapp()->frame->children[a]->def == "alignment" )
+        if ( myapp()->frame->children[a]->def == _T("dna") ||
+             myapp()->frame->children[a]->def == _T("AminoAcids") ||
+             myapp()->frame->children[a]->def == _T("alignment") )
            {
            ChildBase *c = myapp()->frame->children[a] ;
            wxString dna_name , dna_db ;
-           if ( c->def == "alignment" )
+           if ( c->def == _T("alignment") )
               {
               TAlignment *ali = (TAlignment*) c ;
               dna_name = ali->name ;
@@ -1103,11 +1100,11 @@ void TManageDatabaseDialog::do_save_project ()
               }
            if ( !dna_db.IsEmpty() )
               {
-              s1 = s2 = "" ;
-              storage->sqlAdd ( s1 , s2 , "pd_project" , x ) ;
-              storage->sqlAdd ( s1 , s2 , "pd_dna" , dna_name ) ;
-              storage->sqlAdd ( s1 , s2 , "pd_database" , dna_db ) ;
-              sql = "INSERT INTO project_dna ("+s1+") VALUES ("+s2+")" ;
+              s1 = s2 = _T("") ;
+              storage->sqlAdd ( s1 , s2 , _T("pd_project") , x ) ;
+              storage->sqlAdd ( s1 , s2 , _T("pd_dna") , dna_name ) ;
+              storage->sqlAdd ( s1 , s2 , _T("pd_database") , dna_db ) ;
+              sql = _T("INSERT INTO project_dna (") + s1 + _T(") VALUES (") + s2 + _T(")") ;
               storage->getObject ( sql ) ;
               }
             else
@@ -1144,54 +1141,54 @@ void TManageDatabaseDialog::do_save_DNA ()
     v->setDatabase ( dbname ) ; // Now in that database
     
     // Deleting old one, if any
-    sql = "DELETE FROM dna WHERE dna_name=\""+x+"\"" ;
+    sql = _T("DELETE FROM dna WHERE dna_name=\"") + x + _T("\"") ;
     sr = storage->getObject ( sql ) ;
-    sql = "DELETE FROM dna_item WHERE di_dna=\""+x+"\"" ;
+    sql = _T("DELETE FROM dna_item WHERE di_dna=\"") + x + _T("\"") ;
     sr = storage->getObject ( sql ) ;
     
     // Storing new one
-    wxString enzymes = "," ;
+    wxString enzymes = _T(",") ;
     
     // Restriction enzymes
     for ( a = 0 ; a < v->re.GetCount() ; a++ )
-        enzymes += v->re[a]->name + "," ;
+        enzymes += v->re[a]->name + _T(",") ;
         
     // Proteases
     for ( a = 0 ; a < v->proteases.GetCount() ; a++ )
-        enzymes += "*" + wxString ( v->proteases[a] ) + "," ;
+        enzymes += _T("*") + wxString ( v->proteases[a] ) + _T(",") ;
         
-    s1 = s2 = "" ;
-    storage->sqlAdd ( s1 , s2 , "dna_name" , x ) ;
-    storage->sqlAdd ( s1 , s2 , "dna_description" , v->getDescription() ) ;
-    storage->sqlAdd ( s1 , s2 , "dna_type" , v->getType() ) ;
-    storage->sqlAdd ( s1 , s2 , "dna_sequence" , v->getSequence() ) ;
-    storage->sqlAdd ( s1 , s2 , "dna_sticky_ul" , v->getStickyEnd(true,true) ) ;
-    storage->sqlAdd ( s1 , s2 , "dna_sticky_ll" , v->getStickyEnd(true,false) ) ;
-    storage->sqlAdd ( s1 , s2 , "dna_sticky_ur" , v->getStickyEnd(false,true) ) ;
-    storage->sqlAdd ( s1 , s2 , "dna_sticky_lr" , v->getStickyEnd(false,false) ) ;
-    storage->sqlAdd ( s1 , s2 , "dna_circular" , v->isCircular() ) ;
-    storage->sqlAdd ( s1 , s2 , "dna_restriction_enzymes" , enzymes ) ;
-    storage->sqlAdd ( s1 , s2 , "dna_params" , fixQuotes ( v->getParams() ) ) ;
-    sql = "INSERT INTO dna (" + s1 + ") VALUES (" + s2 + ")" ;
+    s1 = s2 = _T("") ;
+    storage->sqlAdd ( s1 , s2 , _T("dna_name") , x ) ;
+    storage->sqlAdd ( s1 , s2 , _T("dna_description") , v->getDescription() ) ;
+    storage->sqlAdd ( s1 , s2 , _T("dna_type") , v->getType() ) ;
+    storage->sqlAdd ( s1 , s2 , _T("dna_sequence") , v->getSequence() ) ;
+    storage->sqlAdd ( s1 , s2 , _T("dna_sticky_ul") , v->getStickyEnd(true,true) ) ;
+    storage->sqlAdd ( s1 , s2 , _T("dna_sticky_ll") , v->getStickyEnd(true,false) ) ;
+    storage->sqlAdd ( s1 , s2 , _T("dna_sticky_ur") , v->getStickyEnd(false,true) ) ;
+    storage->sqlAdd ( s1 , s2 , _T("dna_sticky_lr") , v->getStickyEnd(false,false) ) ;
+    storage->sqlAdd ( s1 , s2 , _T("dna_circular") , v->isCircular() ) ;
+    storage->sqlAdd ( s1 , s2 , _T("dna_restriction_enzymes") , enzymes ) ;
+    storage->sqlAdd ( s1 , s2 , _T("dna_params") , fixQuotes ( v->getParams() ) ) ;
+    sql = _T("INSERT INTO dna (") + s1 + _T(") VALUES (") + s2 + _T(")") ;
     sr = storage->getObject ( sql ) ;
     v->setName ( x ) ;
     
     // Inserting items
-    wxString type = " " ;
+    wxString type = _T(" ") ;
     storage->startRecord () ;
     for ( a = 0 ; a < v->items.size() ; a++ )
         {
-        s1 = s2 = "" ;
+        s1 = s2 = _T("") ;
         type.SetChar ( 0 , v->items[a].getType() ) ;
-        storage->sqlAdd ( s1 , s2 , "di_name" , v->items[a].name ) ;
-        storage->sqlAdd ( s1 , s2 , "di_dna" , x ) ;
-        storage->sqlAdd ( s1 , s2 , "di_description" , v->items[a].desc ) ;
-        storage->sqlAdd ( s1 , s2 , "di_type" , type ) ;
-        storage->sqlAdd ( s1 , s2 , "di_from" , v->items[a].from ) ;
-        storage->sqlAdd ( s1 , s2 , "di_to" , v->items[a].to ) ;
-        storage->sqlAdd ( s1 , s2 , "di_direction" , v->items[a].getDirection() ) ;
-        storage->sqlAdd ( s1 , s2 , "di_params" , v->items[a].implodeParams() ) ;
-        sql = "INSERT INTO dna_item (" + s1 + ") VALUES (" + s2 + ")" ;
+        storage->sqlAdd ( s1 , s2 , _T("di_name") , v->items[a].name ) ;
+        storage->sqlAdd ( s1 , s2 , _T("di_dna") , x ) ;
+        storage->sqlAdd ( s1 , s2 , _T("di_description") , v->items[a].desc ) ;
+        storage->sqlAdd ( s1 , s2 , _T("di_type") , type ) ;
+        storage->sqlAdd ( s1 , s2 , _T("di_from") , v->items[a].from ) ;
+        storage->sqlAdd ( s1 , s2 , _T("di_to") , v->items[a].to ) ;
+        storage->sqlAdd ( s1 , s2 , _T("di_direction") , v->items[a].getDirection() ) ;
+        storage->sqlAdd ( s1 , s2 , _T("di_params") , v->items[a].implodeParams() ) ;
+        sql = _T("INSERT INTO dna_item (") + s1 + _T(") VALUES (") + s2 + _T(")") ;
         sr = storage->getObject ( sql ) ;
         }     
     storage->endRecord () ;
@@ -1202,7 +1199,7 @@ void TManageDatabaseDialog::do_save_DNA ()
     myass ( c , "Storage dialog has no parent" ) ;
     c->OnFocus(fev) ;
 //    c->SetTitle ( c->vec->name ) ;
-    if ( c->def == "dna" )
+    if ( c->def == _T("dna") )
         {
         c->treeBox->initme() ;
         c->treeBox->SelectItem ( c->treeBox->vroot ) ;
@@ -1255,9 +1252,9 @@ void TManageDatabaseDialog::pmOnRename ( wxCommandEvent &ev )
     {
     if ( context_names.GetCount() != 1 ) return ;
     wxString name = context_names[0] ;
-    char t[1000] ;
-    sprintf ( t , txt("t_rename_db_entry") , name.c_str() ) ;
-    wxTextEntryDialog ted ( this , t , txt("t_rename") , name ) ;
+//    char t[1000] ;
+//    sprintf ( t , txt("t_rename_db_entry") , name.c_str() ) ;
+    wxTextEntryDialog ted ( this , wxString::Format ( txt("t_rename_db_entry") , name.c_str() ) , txt("t_rename") , name ) ;
     if ( ted.ShowModal() != wxID_OK ) return ;
     wxString newname = fixQuotes ( ted.GetValue() ) ;
 
@@ -1267,7 +1264,7 @@ void TManageDatabaseDialog::pmOnRename ( wxCommandEvent &ev )
         TStorage *storage = getTempDB ( getFileName ( context_db ) ) ;
         TSQLresult sr ;
         wxString sql ;
-        sql = "SELECT pr_name FROM project WHERE pr_name=\"" + newname + "\"" ;
+        sql = _T("SELECT pr_name FROM project WHERE pr_name=\"") + newname + _T("\"") ;
         sr = storage->getObject ( sql ) ;
     
         if ( sr.rows() > 0 )
@@ -1280,9 +1277,9 @@ void TManageDatabaseDialog::pmOnRename ( wxCommandEvent &ev )
             }
         
         // Renaming
-        sql = "UPDATE project SET pr_name=\"" + newname + "\" WHERE pr_name=\"" + name + "\"" ;
+        sql = _T("UPDATE project SET pr_name=\"") + newname + _T("\" WHERE pr_name=\"") + name + _T("\"") ;
         storage->getObject ( sql ) ;
-        sql = "UPDATE project_dna SET pd_project=\"" + newname + "\" WHERE pd_project=\"" + name + "\"" ;
+        sql = _T("UPDATE project_dna SET pd_project=\"") + newname + _T("\" WHERE pd_project=\"") + name + _T("\"") ;
         storage->getObject ( sql ) ;
         }
     else
@@ -1291,7 +1288,7 @@ void TManageDatabaseDialog::pmOnRename ( wxCommandEvent &ev )
         TStorage *storage = getTempDB ( getFileName ( context_db ) ) ;
         TSQLresult sr ;
         wxString sql ;
-        sql = "SELECT dna_sequence FROM dna WHERE dna_name=\"" + newname + "\"" ;
+        sql = _T("SELECT dna_sequence FROM dna WHERE dna_name=\"") + newname + _T("\"") ;
         sr = storage->getObject ( sql ) ;
     
         if ( sr.rows() > 0 )
@@ -1304,9 +1301,9 @@ void TManageDatabaseDialog::pmOnRename ( wxCommandEvent &ev )
             }
         
         // Renaming
-        sql = "UPDATE dna SET dna_name=\"" + newname + "\" WHERE dna_name=\"" + name + "\"" ;
+        sql = _T("UPDATE dna SET dna_name=\"") + newname + _T("\" WHERE dna_name=\"") + name + _T("\"") ;
         storage->getObject ( sql ) ;
-        sql = "UPDATE dna_item SET di_dna=\"" + newname + "\" WHERE di_dna=\"" + name + "\"" ;
+        sql = _T("UPDATE dna_item SET di_dna=\"") + newname + _T("\" WHERE di_dna=\"") + name + _T("\"") ;
         storage->getObject ( sql ) ;
         }
         
@@ -1318,9 +1315,9 @@ void TManageDatabaseDialog::delProject ( wxString name , wxString db )
     {
     wxString sql ;
     TStorage *storage = getTempDB ( getFileName ( db ) ) ;
-    sql = "DELETE FROM project WHERE pr_name=\""+name+"\"" ;
+    sql = _T("DELETE FROM project WHERE pr_name=\"") + name + _T("\"") ;
     storage->getObject ( sql ) ;
-    sql = "DELETE FROM project_dna WHERE pd_project=\""+name+"\"" ;
+    sql = _T("DELETE FROM project_dna WHERE pd_project=\"") + name + _T("\"") ;
     storage->getObject ( sql ) ;    
     }
     
@@ -1404,10 +1401,10 @@ void TManageDatabaseDialog::pmAddSQL ( wxCommandEvent &ev )
     TMySQLDialog m ( this , txt("t_add_sql") ) ;
     if ( wxID_OK != m.ShowModal() ) return ;
     wxString fn ;
-    fn = ":" + m.s->GetValue () ;
-    fn += ":" + m.u->GetValue () ;
-    fn += ":" + m.p->GetValue () ;
-    fn += ":" + m.d->GetValue () ;
+    fn = _T(":") + m.s->GetValue () ;
+    fn += _T(":") + m.u->GetValue () ;
+    fn += _T(":") + m.p->GetValue () ;
+    fn += _T(":") + m.d->GetValue () ;
     addDatabase ( fn ) ;
     }
 
@@ -1452,13 +1449,13 @@ TMySQLDialog::TMySQLDialog ( wxWindow *parent , wxString title , wxString server
    d = new wxTextCtrl ( this , -1 , db ) ;
    u = new wxTextCtrl ( this , -1 , user ) ;
    p = new wxTextCtrl ( this , -1 , password ) ;
-   g->Add ( new wxStaticText ( this , -1 , "IP" ) , 1 , wxEXPAND , 5 ) ;
+   g->Add ( new wxStaticText ( this , -1 , _T("IP") ) , 1 , wxEXPAND , 5 ) ;
    g->Add ( s , 1 , wxEXPAND , 5 ) ;
-   g->Add ( new wxStaticText ( this , -1 , "DB" ) , 1 , wxEXPAND , 5 ) ;
+   g->Add ( new wxStaticText ( this , -1 , _T("DB") ) , 1 , wxEXPAND , 5 ) ;
    g->Add ( d , 1 , wxEXPAND , 5 ) ;
-   g->Add ( new wxStaticText ( this , -1 , "Name" ) , 1 , wxEXPAND , 5 ) ;
+   g->Add ( new wxStaticText ( this , -1 , _T("Name") ) , 1 , wxEXPAND , 5 ) ;
    g->Add ( u , 1 , wxEXPAND , 5 ) ;
-   g->Add ( new wxStaticText ( this , -1 , "PWD" ) , 1 , wxEXPAND , 5 ) ;
+   g->Add ( new wxStaticText ( this , -1 , _T("PWD") ) , 1 , wxEXPAND , 5 ) ;
    g->Add ( p , 1 , wxEXPAND , 5 ) ;
    
    v->Add ( g , 1 , wxEXPAND , 5 ) ;

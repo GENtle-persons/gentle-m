@@ -6,7 +6,7 @@
 
 ChildBase::ChildBase ()
     {
-    def = "" ;
+    def = _T("") ;
     vec = NULL ;
     cSequence = NULL ;
     toolbar = NULL ;
@@ -16,7 +16,7 @@ ChildBase::ChildBase ()
 ChildBase::ChildBase(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style)
         : MyChildBase((MyFrameType*)parent, -1, pos, size, style|wxFULL_REPAINT_ON_RESIZE|wxCLIP_CHILDREN)
     {
-    def = "" ;
+    def = _T("") ;
     vec = NULL ;
     cSequence = NULL ;
     toolbar = NULL ;
@@ -26,7 +26,7 @@ ChildBase::ChildBase(wxWindow *parent, const wxString& title, const wxPoint& pos
 ChildBase::ChildBase(wxWindow *parent, const wxString& title)
         : MyChildBase((MyFrameType*)parent, -1,wxDefaultPosition,wxDefaultSize,wxFULL_REPAINT_ON_RESIZE|wxCLIP_CHILDREN)
     {
-    def = "" ;
+    def = _T("") ;
     vec = NULL ;
     cSequence = NULL ;
     toolbar = NULL ;
@@ -37,7 +37,7 @@ ChildBase::ChildBase(wxWindow *parent, const wxString& title)
 wxToolBar *ChildBase::CreateToolBar ( int i )
 {
 //#ifdef __WXMSW__
-  return ChildBase::CreateToolBar ( i , -1 , "" ) ;
+  return ChildBase::CreateToolBar ( i , -1 , _T("") ) ;
 /*#else
   wxToolBar *bar = new wxToolBar ( myapp()->frame , -1 ) ;
   return bar ;
@@ -54,7 +54,7 @@ void ChildBase::showName ( wxString x )
     if ( x.IsEmpty() )
        {
        x = getName() ;
-       if ( vec && vec->isChanged() ) x += "*" ;
+       if ( vec && vec->isChanged() ) x += _T("*") ;
        }
     if ( myapp()->frame->GetTitle() != x )
         myapp()->frame->SetTitle ( x ) ;
@@ -132,7 +132,7 @@ void ChildBase::Activate ()
     // Mark and status bar
     int a ;
     for ( a = 0 ; a < myapp()->frame->GetStatusBar()->GetFieldsCount() ; a++ )
-    	myapp()->frame->SetStatusText ( "" , a ) ;
+    	myapp()->frame->SetStatusText ( _T("") , a ) ;
    	if ( cSequence && 
     	 cSequence->markedFrom() != -1 && 
   		 cSequence->lastmarked < cSequence->seq.GetCount() )
@@ -173,29 +173,29 @@ void ChildBase::OnClose(wxCloseEvent& event)
 
 void ChildBase::OnExport (wxCommandEvent& event)
     {
-    if ( !vec && def != "alignment" ) return ;
+    if ( !vec && def != _T("alignment") ) return ;
 
-    wxString wcGenBank = "GenBank (*.gb)|*.gb" ;
-    wxString wcFasta = "Fasta|*.*" ;
-    wxString wcEMBL = "EMBL|*.*" ;
-    wxString wcPlain = "Plain text|*.*" ;
-    wxString wcIG = "IntelliGenetics format (*.ig)|*.ig" ;
-    wxString wcClone = "CLONE|*.*" ;
-    wxString wcGCviewXML = "CGview (XML)|*.xml" ;
-    wxString wildcard = wcGenBank + "|" +
-                        wcPlain + "|" +
-                        wcFasta + "|" + 
-                        wcEMBL + "|" + 
-                        wcIG + "|" +
+    wxString wcGenBank = _T("GenBank (*.gb)|*.gb") ;
+    wxString wcFasta = _T("Fasta|*.*") ;
+    wxString wcEMBL = _T("EMBL|*.*") ;
+    wxString wcPlain = _T("Plain text|*.*") ;
+    wxString wcIG = _T("IntelliGenetics format (*.ig)|*.ig") ;
+    wxString wcClone = _T("CLONE|*.*") ;
+    wxString wcGCviewXML = _T("CGview (XML)|*.xml") ;
+    wxString wildcard = wcGenBank + _T("|") +
+                        wcPlain + _T("|") +
+                        wcFasta + _T("|") +
+                        wcEMBL + _T("|") +
+                        wcIG + _T("|") +
                         wcGCviewXML ; 
-    wxString lastdir = myapp()->frame->LS->getOption ( "LAST_IMPORT_DIR" , "C:" ) ;
-    wxFileDialog d ( this , txt("export_file") , lastdir , "" , wildcard , wxSAVE/*|wxOVERWRITE_PROMPT*/ ) ;
-    d.SetFilterIndex ( myapp()->frame->LS->getOption ( "LAST_EXPORT_FILTER" , 0 ) ) ;
+    wxString lastdir = myapp()->frame->LS->getOption ( _T("LAST_IMPORT_DIR") , _T("C:") ) ;
+    wxFileDialog d ( this , txt("export_file") , lastdir , _T("") , wildcard , wxSAVE/*|wxOVERWRITE_PROMPT*/ ) ;
+    d.SetFilterIndex ( myapp()->frame->LS->getOption ( _T("LAST_EXPORT_FILTER") , 0 ) ) ;
     int x = d.ShowModal() ;
     if ( x != wxID_OK ) return ;
 
-    myapp()->frame->LS->setOption ( "LAST_EXPORT_FILTER" , d.GetFilterIndex() ) ;
-    myapp()->frame->LS->setOption ( "LAST_IMPORT_DIR" , d.GetDirectory() ) ;
+    myapp()->frame->LS->setOption ( _T("LAST_EXPORT_FILTER") , d.GetFilterIndex() ) ;
+    myapp()->frame->LS->setOption ( _T("LAST_IMPORT_DIR") , d.GetDirectory() ) ;
     doExport ( d.GetPath() , d.GetFilterIndex() ) ;    
     }   
     
@@ -214,41 +214,41 @@ void ChildBase::exportVector ( TVector *vec , wxFile &out , int filter , wxStrin
         wxArrayString ex ;
         gb.doExport ( vec , ex ) ;
         for ( int a = 0 ; a < ex.GetCount() ; a++ )
-           out.Write ( ex[a] + "\n" ) ;
+           out.Write ( ex[a] + _T("\n") ) ;
         }
     else if ( filter == 1 ) // Plain text
         {
-        out.Write ( vec->getSequence() + "\n" ) ;
+        out.Write ( vec->getSequence() + _T("\n") ) ;
         }
     else if ( filter == 2 ) // FASTA
         {
-        out.Write ( ">" + vec->getName() + "\n" ) ;
+        out.Write ( _T(">") + vec->getName() + _T("\n") ) ;
         wxString s = vec->getSequence() ;
         while ( !s.IsEmpty() )
            {
-           out.Write ( s.Left ( 80 ) + "\n" ) ;
+           out.Write ( s.Left ( 80 ) + _T("\n") ) ;
            s = s.Mid ( 80 ) ;
            }    
         }
     else if ( filter == 3 ) // EMBL
         {
-        arrangedExport ( out , "ID   " , vec->getName() , 70 ) ;
-        arrangedExport ( out , "NM   " , vec->getDescription() , 70 ) ;
-        out.Write ( "SQ   Sequence\n" ) ;
-        arrangedExport ( out , "     " , vec->getSequence().Lower() , 70 ) ;
-        out.Write ( "//\n" ) ;
+        arrangedExport ( out , _T("ID   ") , vec->getName() , 70 ) ;
+        arrangedExport ( out , _T("NM   ") , vec->getDescription() , 70 ) ;
+        out.Write ( _T("SQ   Sequence\n") ) ;
+        arrangedExport ( out , _T("     ") , vec->getSequence().Lower() , 70 ) ;
+        out.Write ( _T("//\n") ) ;
         }
     else if ( filter == 4 ) // IG
         {
         wxString n = vec->getName() ;
-        n.Replace ( " " , "_" ) ;
-        out.Write ( n + "\n" ) ;
+        n.Replace ( _T(" ") , _T("_") ) ;
+        out.Write ( n + _T("\n") ) ;
         wxString s = vec->getSequence() ;
-        if ( vec->isCircular() ) s += "2" ;
-        else s += "1" ;
+        if ( vec->isCircular() ) s += _T("2") ;
+        else s += _T("1") ;
         while ( !s.IsEmpty() )
            {
-           out.Write ( s.Left ( 79 ) + "\n" ) ;
+           out.Write ( s.Left ( 79 ) + _T("\n") ) ;
            s = s.Mid ( 80 ) ;
            }    
         }
@@ -267,7 +267,7 @@ void ChildBase::arrangedExport ( wxFile &out , wxString n , wxString s , int l )
     wxString blank ( ' ' , n.length() ) ;
     while ( !s.IsEmpty() )
        {
-       out.Write ( n + s.Left ( sl ) + "\n" ) ;
+       out.Write ( n + s.Left ( sl ) + _T("\n") ) ;
        s = s.Mid ( sl ) ;
        n = blank ;
        }    

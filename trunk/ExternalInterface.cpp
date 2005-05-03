@@ -54,7 +54,7 @@ END_EVENT_TABLE()
 ExternalInterface::ExternalInterface(wxWindow *parent, const wxString& title) 
     : ChildBase(parent, title)
     {
-    def = "EXTERNAL" ;
+    def = _T("EXTERNAL") ;
     }
 
 ExternalInterface::~ExternalInterface ()
@@ -78,7 +78,7 @@ void ExternalInterface::initme ()
 
     nb = new wxNotebook ( this , -1 ) ;
     
-    nb->AddPage ( new EIpanel ( nb , EI_NCBI ) , "NCBI" ) ; // Default panel
+    nb->AddPage ( new EIpanel ( nb , EI_NCBI ) , _T("NCBI") ) ; // Default panel
 
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
 //    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
@@ -93,7 +93,7 @@ void ExternalInterface::initme ()
 
 wxString ExternalInterface::getName ()
     {
-    return "External Interface" ;
+    return _T("External Interface") ;
     }
 
 void ExternalInterface::runBlast ( wxString seq , wxString prg ) 
@@ -101,8 +101,8 @@ void ExternalInterface::runBlast ( wxString seq , wxString prg )
     EIpanel *bl = new EIpanel ( nb , EI_BLAST ) ;    
     prg.MakeUpper() ;
     nb->AddPage ( bl , prg ) ;    
-    if ( prg == "BLASTP" ) bl->c1->SetSelection ( 0 ) ;
-    if ( prg == "BLASTN" ) bl->c1->SetSelection ( 1 ) ;
+    if ( prg == _T("BLASTP") ) bl->c1->SetSelection ( 0 ) ;
+    if ( prg == _T("BLASTN") ) bl->c1->SetSelection ( 1 ) ;
     bl->t1->SetValue ( seq ) ;
     nb->SetSelection ( nb->GetPageCount()-1 ) ;
     wxCommandEvent event( wxEVT_COMMAND_BUTTON_CLICKED, ID_B1 );
@@ -119,13 +119,13 @@ EILB::EILB ( wxWindow *parent , int id )
 
 wxString EILB::OnGetItem(size_t n) const
 	{
-	    if ( n >= was.GetCount() ) return "" ;
+	    if ( n >= was.GetCount() ) return _T("") ;
 	wxString ret = was[n] ;
 	wxString bgcolor ;
-	if ( n % 3 == 0 ) bgcolor = "#FFFFFF" ;
-	if ( n % 3 == 1 ) bgcolor = "#EEEEEE" ;
-	if ( n % 3 == 2 ) bgcolor = "#DDDDDD" ;
-	ret = "<table bgcolor='" + bgcolor + "' width='100%' cellspacing=0 cellpadding=0><tr><td>" + ret + "</td></tr></table>" ;
+	if ( n % 3 == 0 ) bgcolor = _T("#FFFFFF") ;
+	if ( n % 3 == 1 ) bgcolor = _T("#EEEEEE") ;
+	if ( n % 3 == 2 ) bgcolor = _T("#DDDDDD") ;
+	ret = _T("<table bgcolor='") + bgcolor + _T("' width='100%' cellspacing=0 cellpadding=0><tr><td>") + ret + _T("</td></tr></table>") ;
 	return ret ;
 	}
 	
@@ -140,8 +140,8 @@ void EILB::Clear ()
      
 void EILB::Set ( int id , wxString s , wxString t )
 	{
-	while ( was.GetCount() <= id ) was.Add ( "" ) ;
-	while ( data.GetCount() <= id ) data.Add ( "" ) ;
+	while ( was.GetCount() <= id ) was.Add ( _T("") ) ;
+	while ( data.GetCount() <= id ) data.Add ( _T("") ) ;
 	was[id] = s ;
 	data[id] = t ;
 	}
@@ -189,16 +189,16 @@ EIpanel::EIpanel ( wxWindow *parent , int _mode )
 
 wxString EIpanel::valFC ( TiXmlNode *n )
 	{
-	if ( !n ) return "" ;
-	if ( !n->FirstChild() ) return "" ;
+	if ( !n ) return _T("") ;
+	if ( !n->FirstChild() ) return _T("") ;
 	return val ( n->FirstChild() ) ;
 	}
      
 wxString EIpanel::val ( TiXmlNode *n )
 	{
-	if ( !n ) return "" ;
-	if ( !n->Value() ) return "" ;
-	return wxString ( n->Value() ) ;
+	if ( !n ) return _T("") ;
+	if ( !n->Value() ) return _T("") ;
+	return wxString ( n->Value() , *wxConvCurrent ) ;
 	}    
 	
 	
@@ -213,7 +213,7 @@ void EIpanel::OnC1 ( wxCommandEvent& event )
 		{
 		wxString database = c1->GetStringSelection() ;
 		database = database.Lower() ;
-		if ( database == "pubmed" ) 
+		if ( database == _T("pubmed") )
 			{
             v1->Show ( h1 , true ) ;
 			}
@@ -271,9 +271,9 @@ void EIpanel::process ()
 	
 wxString EIpanel::num2html ( int num , int digits )
 	{
-	wxString s = wxString::Format ( "%d" , num ) ;
-	while ( s.length() < digits ) s = " " + s ;
-	s.Replace ( " " , "&nbsp;" ) ;
+	wxString s = wxString::Format ( _T("%d") , num ) ;
+	while ( s.length() < digits ) s = _T(" ") + s ;
+	s.Replace ( _T(" ") , _T("&nbsp;") ) ;
 	return s ;
 	}    
 	

@@ -1,5 +1,4 @@
 #include "MyFrame.h"
-
 #include "SendHTTP.h"
 
 
@@ -333,7 +332,7 @@ void MyFrame::initme ()
         if ( r.rows() > 0 ) d = r[0][0] ;
         if ( !n.IsEmpty() && !d.IsEmpty() )
            {
-           TManageDatabaseDialog mdb ( this , "dummy" , ACTION_MODE_STARTUP ) ;
+           TManageDatabaseDialog mdb ( this , _T("dummy") , ACTION_MODE_STARTUP ) ;
            mdb.do_load_project ( n , d ) ;
            mainTree->Refresh () ;
            }
@@ -355,7 +354,7 @@ void MyFrame::initme ()
       	    	path = path.Mid ( 0 , path.length() - 1 ) ;
  	    	wxString db = path.BeforeFirst ( ':' ) ;
  	    	wxString name = path.AfterFirst ( ':' ) ;
-      	    TManageDatabaseDialog mdb ( this , "dummy" , ACTION_MODE_STARTUP ) ;
+      	    TManageDatabaseDialog mdb ( this , _T("dummy") , ACTION_MODE_STARTUP ) ;
       	    if ( !mdb.do_load_DNA ( name , db ) ) wxMessageBox ( txt("t_not_all_files_imported") ) ;
             mainTree->Refresh () ;
           	}

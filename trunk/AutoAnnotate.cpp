@@ -74,7 +74,7 @@ TAutoAnnotateDialog::TAutoAnnotateDialog ( wxWindow *parent, const wxString& tit
     
     additionalDatabase->Append ( aa->dbname ) ;
     additionalDatabase->SetStringSelection ( aa->additionalDatabase ) ;
-    if ( additionalDatabase->GetStringSelection() == "" )
+    if ( additionalDatabase->GetStringSelection() == _T("") )
     	additionalDatabase->SetSelection ( 0 ) ;
     
     // Give the sizer control of the layout
@@ -108,11 +108,11 @@ bool AutoAnnotate::SettingsDialog ()
 	additionalDatabase = dbfile[dbname.Index(s)] ;
 
 	myapp()->frame->LS->startRecord() ;
-  	myapp()->frame->LS->setOption ( "AUTOANN_ADDITIONALDB" , s ) ;
- 	myapp()->frame->LS->setOption ( "AUTOANN_USECOMMON" , useCommonDatabase ) ;
- 	myapp()->frame->LS->setOption ( "AUTOANN_USEADDITIONAL" , useAdditionalDatabase ) ;
-  	myapp()->frame->LS->setOption ( "AUTOANN_USEMACHETE" , useMachete ) ;
-  	myapp()->frame->LS->setOption ( "AUTOANN_DOORFS" , doAddORFs ) ;
+  	myapp()->frame->LS->setOption ( _T("AUTOANN_ADDITIONALDB") , s ) ;
+ 	myapp()->frame->LS->setOption ( _T("AUTOANN_USECOMMON") , useCommonDatabase ) ;
+ 	myapp()->frame->LS->setOption ( _T("AUTOANN_USEADDITIONAL") , useAdditionalDatabase ) ;
+  	myapp()->frame->LS->setOption ( _T("AUTOANN_USEMACHETE") , useMachete ) ;
+  	myapp()->frame->LS->setOption ( _T("AUTOANN_DOORFS") , doAddORFs ) ;
 	myapp()->frame->LS->endRecord() ;
 	
 	return true ;
@@ -148,12 +148,12 @@ void AutoAnnotate::Run ()
 AutoAnnotate::AutoAnnotate ( MyChild *_p )
 	{
 	p = _p ;
- 	commonVectorsDatabase = myapp()->homedir + myapp()->slash + "commonvectors.db" ;
-  	additionalDatabase =  myapp()->frame->LS->getOption ( "AUTOANN_ADDITIONALDB" , "" ) ;
- 	useCommonDatabase = myapp()->frame->LS->getOption ( "AUTOANN_USECOMMON" , true ) ;
- 	useAdditionalDatabase = myapp()->frame->LS->getOption ( "AUTOANN_USEADDITIONAL" , true ) ;
-  	useMachete = myapp()->frame->LS->getOption ( "AUTOANN_USEMACHETE" , true ) ;
-  	doAddORFs = myapp()->frame->LS->getOption ( "AUTOANN_DOORFS" , true ) ;
+ 	commonVectorsDatabase = myapp()->homedir + myapp()->slash + _T("commonvectors.db") ;
+  	additionalDatabase =  myapp()->frame->LS->getOption ( _T("AUTOANN_ADDITIONALDB") , _T("") ) ;
+ 	useCommonDatabase = myapp()->frame->LS->getOption ( _T("AUTOANN_USECOMMON") , true ) ;
+ 	useAdditionalDatabase = myapp()->frame->LS->getOption ( _T("AUTOANN_USEADDITIONAL") , true ) ;
+  	useMachete = myapp()->frame->LS->getOption ( _T("AUTOANN_USEMACHETE") , true ) ;
+  	doAddORFs = myapp()->frame->LS->getOption ( _T("AUTOANN_DOORFS") , true ) ;
 	}
 
 bool AutoAnnotate::ScanDatabase ( wxString database )
@@ -164,7 +164,7 @@ bool AutoAnnotate::ScanDatabase ( wxString database )
 	p->vec->undo.start ( txt("u_autoannotate") ) ;
 	
 	// Load all sequences from database
-	TManageDatabaseDialog mdb ( myapp()->frame , "dummy" , ACTION_MODE_STARTUP ) ;
+	TManageDatabaseDialog mdb ( myapp()->frame , _T("dummy") , ACTION_MODE_STARTUP ) ;
 	TStorage *db = mdb.getTempDB ( database ) ;
 	TSQLresult r ;
 
@@ -175,7 +175,7 @@ bool AutoAnnotate::ScanDatabase ( wxString database )
 		mdb.db_file.Add ( database ) ;
 		}		
 
-	r = db->getObject ( "SELECT DISTINCT di_dna FROM dna_item" ) ; // Find all DNA with items
+	r = db->getObject ( _T("SELECT DISTINCT di_dna FROM dna_item") ) ; // Find all DNA with items
 	bool foundany = false ;
 	for ( a = 0 ; a < r.content.size() ; a++ )
 		{
@@ -227,12 +227,12 @@ bool AutoAnnotate::MatchItem ( TVector *tv , TVectorItem &item , TVector *v , wx
     if ( s.length() < 10 ) return false ; // Too short a sequence for a match to have any meaning
     
     // Did we already try this?
-    wxString key = wxString::Format ( ":%d:" , item.getType() ) + s ; // Fingerprint string
+    wxString key = wxString::Format ( _T(":%d:") , item.getType() ) + s ; // Fingerprint string
     if ( wxNOT_FOUND != alreadyin.Index ( key.c_str() , false ) ) return false ; // Already have this one
     alreadyin.Add ( key ) ; // Remember it
 
     bool ret = false ;
-    item.desc += "\n[" + tv->getName() + "]" ;
+    item.desc += _T("\n[") + tv->getName() + _T("]") ;
 
     // Raw search
     ret |= RawMatch ( item , v , oseq , s ) ;
@@ -276,7 +276,7 @@ bool AutoAnnotate::addORFs ( TVector *v )
 	    	if ( v->items[b].to == o->to ) break ;
   			}    
 		if ( b < v->items.size() ) continue ; // Already a CDS item
-		TVectorItem i ( "???" , "Unknown open reading frame" , o->from , o->to , VIT_CDS ) ;
+		TVectorItem i ( _T("???") , _T("Unknown open reading frame") , o->from , o->to , VIT_CDS ) ;
 		i.setRF ( 1 ) ;
 		i.setDirection ( o->rf > 0 ? 1 : -1 ) ;
 		v->items.push_back ( i ) ;

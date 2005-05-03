@@ -115,7 +115,7 @@ void TAlignment::readTabColors ( wxString filename )
         else if ( c )
            {
            wxString t = in.GetNextLine () ; // s in int, t is list of chars
-           int x = atoi ( s.c_str() ) ;
+           int x = atoi ( s.mb_str() ) ;
            for ( int b = 0 ; b < t.length() ; b++ )
               {
               unsigned char ch = (unsigned char)t.GetChar(b) ;
@@ -230,7 +230,7 @@ void TAlignment::initme ()
                 txt("m_print_sequence") ) ;
     toolBar->AddSeparator () ;
     toolBar->AddTool( ALIGNMENT_SETTINGS, 
-                wxBitmap (myapp()->bmpdir+"\\alignment.bmp", wxBITMAP_TYPE_BMP),
+                wxBitmap (myapp()->bmpdir + _T("\\alignment.bmp") , wxBITMAP_TYPE_BMP),
                 txt("t_settings") ) ;
     toolBar->AddSeparator () ;
 
@@ -292,10 +292,10 @@ void* TAlignment::Entry()
     wxString a1 = wxString::Format ( _T("/gapopen=%d") , gap_penalty ) ;
     wxString a2 = wxString::Format ( _T("/gapext=%d") , mismatch ) ;
     char *av[4] ;
-    av[0] = new char[100] ; strcpy ( av[0] , _T("clustalw.exe") ) ;
-    av[1] = new char[100] ; strcpy ( av[1] , _T("clustalw.txt") ) ;
-    av[2] = new char[100] ; strcpy ( av[2] , a1.c_str() ) ;
-    av[3] = new char[100] ; strcpy ( av[3] , a2.c_str() ) ;
+    av[0] = new char[100] ; strcpy ( av[0] , "clustalw.exe" ) ;
+    av[1] = new char[100] ; strcpy ( av[1] , "clustalw.txt" ) ;
+    av[2] = new char[100] ; strcpy ( av[2] , a1.mb_str() ) ;
+    av[3] = new char[100] ; strcpy ( av[3] , a2.mb_str() ) ;
     clustalw_main ( 4 , av ) ;
 #endif
     
@@ -319,7 +319,10 @@ void* TAlignment::Entry()
 	{
 	    if ( !first ) s = in.GetNextLine() ;
 	    else first = false ;
-	    int index = atoi ( s.substr ( 0 , off-1 ) . c_str() ) ;
+//	    int index = atoi ( s.substr ( 0 , off-1 ) . mb_str() ) ;
+		 long index ;
+		 wxString i = s.substr ( 0 , off-1 ) ;
+		 i.ToLong ( &index ) ;
 	    if ( s.GetChar(0) == ' ' ) index = lines.size()-1 ;
 	    lines[index].s += s.substr ( off , s.length() ) ;
 	}
@@ -424,7 +427,7 @@ void TAlignment::redoAlignments ( bool doRecalc )
     if ( threadRunning ) return ;
         
     // Display
-    sc->maxendnumberlength = strlen ( txt("t_identity") ) ;
+    sc->maxendnumberlength = txt("t_identity").length() ;
 
     for ( a = 0 ; a < lines.size() ; a++ )
         {
@@ -503,7 +506,7 @@ void TAlignment::myInsert ( int line , int pos , char what )
         lines[line].getFeatures()->insert_char ( '-' , pos , false ) ;
         lines[line].s = lines[line].getFeatures()->getSequence() ;
         }
-    else lines[line].s.insert ( pos-1 , wxString ( what ) ) ;
+    else lines[line].s.insert ( pos-1 , wxString ( (wxChar) what ) ) ;
     }
 
 void TAlignment::myDelete ( int line , int pos )
@@ -1035,7 +1038,7 @@ void TAlignment::OnFileSave ( wxCommandEvent &ev )
     wxString s , d ;
     TGenBank gb ;
     for ( a = b = 0 ; a < lines.size() ; a++ ) b += lines[a].isIdentity?0:1 ;
-    d = wxString::Format("%d\n",b) ;
+    d = wxString::Format ( _T("%d\n") , b ) ;
     for ( a = 0 ; a < lines.size() ; a++ )
         {
         if ( !lines[a].isIdentity )
@@ -1083,7 +1086,7 @@ void TAlignment::fromVector ( TVector *nv )
     wxString vdesc = vec->getDescription() ;
     wxArrayString vs ;
     explode ( _T("\n") , vdesc , vs ) ;
-    int nol = atoi ( vs[0].c_str() ) ; // Number of lines
+    int nol = atoi ( vs[0].mb_str() ) ; // Number of lines
     int n ;
     wxString broken ;
     TManageDatabaseDialog mdb ( this , _T("dummy") , ACTION_MODE_STARTUP ) ;

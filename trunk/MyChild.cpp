@@ -83,7 +83,7 @@ MyChild::MyChild(wxWindow *parent, const wxString& title,
     cPlasmid = (PlasmidCanvas *) NULL;
     cSequence = (SequenceCanvas *) NULL;
     vec = (TVector *) NULL ;
-    def = "dna" ;
+    def = _T("dna") ;
     aa_state = AA_ALL ;
     aa_disp = AA_ONE ;
     showORFs = false ;
@@ -103,10 +103,10 @@ void MyChild::OnRemoveSequencingPrimers(wxCommandEvent& event)
 	{
 	bool found = false ;
 	int a , b ;
-	vec->undo.start ( txt("m_undo") + wxString ( " " ) + txt("m_remove_sequencing_primers") ) ;
+	vec->undo.start ( txt("m_undo") + wxString ( _T(" ") ) + txt("m_remove_sequencing_primers") ) ;
 	for ( a = 0 ; a < vec->items.size() ; a++ )
 		{
-		if ( vec->items[a].getParam ( "AUTOMATIC" ) == "SEQUENCING PRIMER" )
+		if ( vec->items[a].getParam ( _T("AUTOMATIC") ) == _T("SEQUENCING PRIMER") )
 			{
 			for ( b = a + 1 ; b < vec->items.size() ; b++ )
 				vec->items[b-1] = vec->items[b] ;
@@ -142,7 +142,7 @@ void MyChild::OnSequencingPrimer(wxCommandEvent& event)
     wxBeginBusyCursor() ;
     spd.getPrimerList ( p_name , p_seq ) ;
     bool found = false ;
-	vec->undo.remember ( txt("m_undo") + wxString ( " " ) + txt("m_show_sequencing_primers") ) ;
+	vec->undo.remember ( txt("m_undo") + wxString ( _T(" ") ) + txt("m_show_sequencing_primers") ) ;
     for ( int a = 0 ; a < p_name.GetCount() ; a++ )
     	{
 	    if ( spd.matchToVector ( vec , p_name[a] , p_seq[a] ) )
@@ -174,7 +174,7 @@ void MyChild::OnRunPCR(wxCommandEvent& event)
 void MyChild::OnToggleRestriction(wxCommandEvent& event)
     {
     TMarkMem mm ( cSequence ) ;
-    if ( cSequence->findID ( "RESTRICTION" ) )
+    if ( cSequence->findID ( _T("RESTRICTION") ) )
        { // Turn off
        delete cSequence->seq[cSequence->seq.GetCount()-1] ;
        cSequence->seq.RemoveAt(cSequence->seq.GetCount()-1) ;
@@ -187,7 +187,7 @@ void MyChild::OnToggleRestriction(wxCommandEvent& event)
        }
     updateSequenceCanvas () ;
 #ifdef __WXMSW__ // LINUX
-    GetToolBar()->ToggleTool(MDI_TOGGLE_RESTRICTION,cSequence->findID("RESTRICTION"));
+    GetToolBar()->ToggleTool(MDI_TOGGLE_RESTRICTION,cSequence->findID ( _T("RESTRICTION" ) ) ) ;
 #endif
     mm.remark () ;
     }
@@ -195,7 +195,7 @@ void MyChild::OnToggleRestriction(wxCommandEvent& event)
 void MyChild::OnToggleIDNA(wxCommandEvent& event)
     {
     TMarkMem mm ( cSequence ) ;
-    SeqBasic *idna = cSequence->findID ( "IDNA" ) ;
+    SeqBasic *idna = cSequence->findID ( _T("IDNA") ) ;
     if ( idna )
         {
         int a ;
@@ -210,7 +210,7 @@ void MyChild::OnToggleIDNA(wxCommandEvent& event)
         SeqDNA *seqi = new SeqDNA ( cSequence ) ;
         cSequence->seq.Add ( seqi ) ;
         int a ;
-        for ( a = cSequence->seq.GetCount()-1 ; cSequence->seq[a-1]->whatsthis() != "DNA" ; a-- )
+        for ( a = cSequence->seq.GetCount()-1 ; cSequence->seq[a-1]->whatsthis() != _T("DNA") ; a-- )
            {
            idna = cSequence->seq[a-1] ;
            cSequence->seq[a-1] = cSequence->seq[a] ;
@@ -226,9 +226,9 @@ void MyChild::OnToggleIDNA(wxCommandEvent& event)
 void MyChild::OnToggleFeatures(wxCommandEvent& event)
     {
     int a ;
-    cSequence->lastmarked += cSequence->findID ( "FEATURE" ) ? -1 : 1 ;
+    cSequence->lastmarked += cSequence->findID ( _T("FEATURE") ) ? -1 : 1 ;
     TMarkMem mm ( cSequence ) ;
-    if ( cSequence->findID ( "FEATURE" ) )
+    if ( cSequence->findID ( _T("FEATURE") ) )
        { // Turn off
        aa_offset = 0 ;
        delete cSequence->seq[0] ;
@@ -248,7 +248,7 @@ void MyChild::OnToggleFeatures(wxCommandEvent& event)
        }
     updateSequenceCanvas () ;
 #ifdef __WXMSW__ // LINUX
-    GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,cSequence->findID("FEATURE"));
+    GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,cSequence->findID ( _T("FEATURE" ) ) ) ;
 #endif
     mm.remark () ;
     }
@@ -327,27 +327,27 @@ void MyChild::initMenus ()
     wxMenu *view_menu = new wxMenu;
 //    view_menu->Append(MDI_REFRESH, txt("m_refresh_picture") );
     view_menu->Append(MDI_CIRCULAR_LINEAR, txt("m_toggle_rc") );
-    view_menu->Append(MDI_TOGGLE_FEATURES, txt("m_display_features") , "" );
-    view_menu->Append(MDI_TOGGLE_RESTRICTION, txt("m_display_restriction") , "" );
-    view_menu->Append(MDI_TOGGLE_IDNA, txt("m_display_idna") , "" );
+    view_menu->Append(MDI_TOGGLE_FEATURES, txt("m_display_features") , _T("") );
+    view_menu->Append(MDI_TOGGLE_RESTRICTION, txt("m_display_restriction") , _T("") );
+    view_menu->Append(MDI_TOGGLE_IDNA, txt("m_display_idna") , _T("") );
     view_menu->AppendSeparator();
-    view_menu->Append(MDI_EDIT_MODE, txt("m_edit_mode") , "" , true );
-    view_menu->Append(MDI_VIEW_MODE, txt("m_view_mode") , "" , true );
+    view_menu->Append(MDI_EDIT_MODE, txt("m_edit_mode") , _T("") , true );
+    view_menu->Append(MDI_VIEW_MODE, txt("m_view_mode") , _T("") , true );
     
     wxMenu *mAA = new wxMenu ;
     view_menu->Append ( AA_MAIN , txt("m_aa_main") , mAA ) ;
-    mAA->Append (AA_NONE,txt("m_aa_none") , "" , true );
-    mAA->Append (AA_KNOWN,txt("m_aa_known"), "" , true );
-    mAA->Append (AA_ALL,txt("m_aa_all"), "" , true );
-    mAA->Append (AA_THREE_1,txt("m_aa_1"), "" , true );
-    mAA->Append (AA_THREE_2,txt("m_aa_2"), "" , true );
-    mAA->Append (AA_THREE_3,txt("m_aa_3"), "" , true );
-    mAA->Append (AA_THREE_M1,txt("m_aa_m1"), "" , true );
-    mAA->Append (AA_THREE_M2,txt("m_aa_m2"), "" , true );
-    mAA->Append (AA_THREE_M3,txt("m_aa_m3"), "" , true );
+    mAA->Append (AA_NONE,txt("m_aa_none") , _T("") , true );
+    mAA->Append (AA_KNOWN,txt("m_aa_known"), _T("") , true );
+    mAA->Append (AA_ALL,txt("m_aa_all"), _T("") , true );
+    mAA->Append (AA_THREE_1,txt("m_aa_1"), _T("") , true );
+    mAA->Append (AA_THREE_2,txt("m_aa_2"), _T("") , true );
+    mAA->Append (AA_THREE_3,txt("m_aa_3"), _T("") , true );
+    mAA->Append (AA_THREE_M1,txt("m_aa_m1"), _T("") , true );
+    mAA->Append (AA_THREE_M2,txt("m_aa_m2"), _T("") , true );
+    mAA->Append (AA_THREE_M3,txt("m_aa_m3"), _T("") , true );
     mAA->AppendSeparator();
-    mAA->Append (AA_ONE,txt("m_aa_one"), "" , true );
-    mAA->Append (AA_THREE,txt("m_aa_three"), "" , true );
+    mAA->Append (AA_ONE,txt("m_aa_one"), _T("") , true );
+    mAA->Append (AA_THREE,txt("m_aa_three"), _T("") , true );
 
     wxMenuBar *menu_bar = new wxMenuBar;
 
@@ -419,12 +419,12 @@ void MyChild::initToolbar ()
         toolBar->AddSeparator() ;
         toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_zoom") ) ) ;
         wxChoice *zoom_cb = new wxChoice ( toolBar , PC_ZOOM , wxDefaultPosition , wxSize ( 60 , -1 ) ) ;
-        zoom_cb->Append ( "100%" ) ;
-        zoom_cb->Append ( "200%" ) ;
-        zoom_cb->Append ( "300%" ) ;
-        zoom_cb->Append ( "400%" ) ;
-        zoom_cb->Append ( "800%" ) ;
-        zoom_cb->Append ( "1600%" ) ;
+        zoom_cb->Append ( _T("100%") ) ;
+        zoom_cb->Append ( _T("200%") ) ;
+        zoom_cb->Append ( _T("300%") ) ;
+        zoom_cb->Append ( _T("400%") ) ;
+        zoom_cb->Append ( _T("800%") ) ;
+        zoom_cb->Append ( _T("1600%") ) ;
         zoom_cb->SetSelection ( 0 ) ;
         toolBar->AddControl ( zoom_cb ) ;
         myapp()->frame->addDefaultTools ( toolBar ) ;
@@ -465,7 +465,7 @@ void MyChild::initme ()
     cSequence->p = this ;
     cSequence->child = this ;
 
-    propBox = new TURLtext(swl, URLTEXT_DUMMY, "",
+    propBox = new TURLtext(swl, URLTEXT_DUMMY, _T(""),
                                 wxDefaultPosition, wxSize ( width/3 , 0 ) ,
                                 wxTE_MULTILINE | wxSUNKEN_BORDER | wxTE_READONLY );
 
@@ -498,7 +498,7 @@ void MyChild::OnLigation(wxCommandEvent& event)
     for ( l = 0 ; l < myapp()->frame->children.GetCount() ; l++ )
         {
         MyChild *p = (MyChild*) myapp()->frame->children[l] ;
-        if ( p->def == "dna" && !p->vec->isCircular() )
+        if ( p->def == _T("dna") && !p->vec->isCircular() )
            {
            ld.vv.Add ( p->vec ) ;
            }
@@ -592,7 +592,7 @@ void MyChild::OnCopyToNew(wxCommandEvent& event)
     
 void MyChild::OnAsNewFeature(wxCommandEvent& event)
     {
-    char t[1000] ;
+//    char t[1000] ;
     int from , to ;
     cPlasmid->getMark ( from , to ) ;
     if ( from == -1 ) return ;
@@ -603,15 +603,15 @@ void MyChild::OnAsNewFeature(wxCommandEvent& event)
         to -= vec->getSequenceLength() ;
 
     TVectorItem nvi ;
-    sprintf ( t , txt("t_new_item_title") , from , to ) ;
-    nvi.name = t ;
+//    sprintf ( t , txt("t_new_item_title") , from , to ) ;
+    nvi.name = wxString::Format ( txt("t_new_item_title") , from , to ) ;
     nvi.direction = 1 ;
     nvi.type = VIT_GENE ;
     nvi.from = from ;
     nvi.to = to ;
     vec->setChanged () ;
     vec->items.push_back ( nvi ) ;
-    cPlasmid->invokeVectorEditor ( "item" , vec->items.size()-1 , true ) ;
+    cPlasmid->invokeVectorEditor ( _T("item") , vec->items.size()-1 , true ) ;
     vec->updateDisplay() ;
     cPlasmid->Refresh () ;
     updateSequenceCanvas () ;
@@ -679,7 +679,7 @@ void MyChild::OnEditMode(wxCommandEvent& event)
         sp1 = sw->GetSashPosition () ;
         sp2 = swl->GetSashPosition () ;
         sw->Unsplit ( swu ) ;
-        cSequence->startEdit ( "DNA" ) ;
+        cSequence->startEdit ( _T("DNA") ) ;
         cSequence->Scroll ( 0 , cSequence->getBatchMark() ) ;
         }
     else
@@ -746,9 +746,9 @@ void MyChild::initPanels ()
 
 //#ifdef __WXMSW__ // LINUX
     GetToolBar()->ToggleTool(MDI_CIRCULAR_LINEAR,vec->isCircular());
-    if ( !vec->getGenomeMode() ) GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,cSequence->findID("FEATURE"));
+    if ( !vec->getGenomeMode() ) GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,cSequence->findID ( _T("FEATURE" ) ) ) ;
     else aa_offset = 0 ;
-    GetToolBar()->ToggleTool(MDI_TOGGLE_RESTRICTION,cSequence->findID("RESTRICTION"));
+    GetToolBar()->ToggleTool(MDI_TOGGLE_RESTRICTION,cSequence->findID ( _T("RESTRICTION" ) ) ) ;
 //#endif
 
 //    if ( aa_state != b ) OnAA_setit ( b ) ;
@@ -788,8 +788,8 @@ void MyChild::updateSequenceCanvas ( bool remember )
     cSequence->GetViewStart ( &dummy , &oldscrollpos ) ;
     int old_mode = aa_state ;
     
-    if ( cSequence->findID ( "FEATURE" ) )
-       cSequence->findID("FEATURE")->initFromTVector ( vec ) ;
+    if ( cSequence->findID ( _T("FEATURE") ) )
+       cSequence->findID ( _T("FEATURE") )->initFromTVector ( vec ) ;
 
     if ( old_mode != AA_NONE )
         {
@@ -881,7 +881,7 @@ void MyChild::OnAA_setit(int mode)
     
     for ( int u = 0 ; u < cSequence->seq.GetCount() ; u++ )
         {
-        if ( cSequence->seq[u]->whatsthis() == "FEATURE" )
+        if ( cSequence->seq[u]->whatsthis() == _T("FEATURE") )
            {
            SeqFeature *feat = (SeqFeature*) cSequence->seq[u] ;
            feat->aaa = seqAA ;
@@ -944,7 +944,7 @@ void MyChild::OnFind(wxCommandEvent& event)
 void MyChild::OnMarkAll(wxCommandEvent& event)
     {
     if ( cSequence->getEditMode() ) return ;
-    cSequence->mark ( "DNA" , 1 , vec->getSequenceLength() ) ;
+    cSequence->mark ( _T("DNA") , 1 , vec->getSequenceLength() ) ;
     Refresh () ;
     }
 
@@ -954,7 +954,7 @@ wxString MyChild::doExtractAA ( bool coding )
         {
         wxMessageDialog md ( this , txt("t_decide_aa_schema") , txt("msg_box") ) ;
         md.ShowModal () ;
-        return "" ;
+        return _T("") ;
         }
         
     if ( aa_state == AA_KNOWN )
@@ -1012,7 +1012,7 @@ void MyChild::OnExtractAA(wxCommandEvent& event)
 void MyChild::runRestriction ( wxString s )
 	{
     MyFrame *f = myapp()->frame ; //(MyFrame*) GetParent() ;
-    TRestrictionEditor ed ( f , "" , wxPoint(-1,-1) , wxSize(600,400) , 
+    TRestrictionEditor ed ( f , _T("") , wxPoint(-1,-1) , wxSize(600,400) ,
                wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL);
     ed.pre = s ;
     ed.cocktail = vec->cocktail ;
@@ -1024,7 +1024,7 @@ void MyChild::runRestriction ( wxString s )
     if ( ed.createFragments->GetValue() ) vec->doAction() ; // Cut it!
     if ( FALSE == ed.add2gel->GetValue() ) return ; // No add to gel
     
-    TVirtualGel *gel = myapp()->frame->useGel ( "DNA" ) ;
+    TVirtualGel *gel = myapp()->frame->useGel ( _T("DNA") ) ;
     if ( ed.oneLaneEach->GetValue() )
     	{
 	    int c ;
@@ -1037,7 +1037,7 @@ void MyChild::runRestriction ( wxString s )
     	}
     else
     	{
-	    addFragmentsToGel ( "Cuts" , ed.cocktailFragments , gel , ed ) ;
+	    addFragmentsToGel ( _T("Cuts") , ed.cocktailFragments , gel , ed ) ;
     	}    
    	myapp()->frame->activateChild ( myapp()->frame->getChildIndex ( this ) ) ;
    	myapp()->frame->activateChild ( myapp()->frame->getChildIndex ( gel ) ) ;
@@ -1051,7 +1051,7 @@ void MyChild::addFragmentsToGel ( wxString title , wxArrayInt &cuts , TVirtualGe
     ed.getFragmentList ( cuts , fragments ) ;
     for ( int a = 0 ; a < fragments.size() ; a++ )
     	{
-    	wxString text = wxString::Format ( "%d [%d-%d]" , fragments[a].length , fragments[a].from+1 , fragments[a].to+1 ) ;
+    	wxString text = wxString::Format ( _T("%d [%d-%d]") , fragments[a].length , fragments[a].from+1 , fragments[a].to+1 ) ;
     	lane.add ( fragments[a].length , text ) ;
     	}   	
 	gel->lanes.push_back ( lane ) ;
@@ -1059,7 +1059,7 @@ void MyChild::addFragmentsToGel ( wxString title , wxArrayInt &cuts , TVirtualGe
         
 void MyChild::OnRestriction(wxCommandEvent& event)
     {
-    runRestriction ( "" ) ;
+    runRestriction ( _T("") ) ;
     }
     
 void MyChild::OnTransformSequence(wxCommandEvent& event)
@@ -1114,7 +1114,7 @@ MyChild *MyChild::doTransformSequence ( bool inNewVector , bool complement , boo
     // Display
     if ( inNewVector )
         {
-        v->addName ( "*" ) ;
+        v->addName ( _T("*") ) ;
         v->updateDisplay() ;
         v->recalculateCuts() ;
         MyChild *c = myapp()->frame->newFromVector(v) ;
@@ -1125,7 +1125,7 @@ MyChild *MyChild::doTransformSequence ( bool inNewVector , bool complement , boo
         v->updateDisplay() ;
         v->recalculateCuts() ;
         vec->undo.stop() ;
-        cSequence->findID("DNA")->initFromTVector ( v ) ;
+        cSequence->findID ( _T("DNA") )->initFromTVector ( v ) ;
         if ( aa_state != AA_NONE )
            {
            int old_mode = aa_state ;
@@ -1230,7 +1230,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
     wxFont *sfont = MYFONT ( w/120 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
     wxFont *bfont = MYFONT ( w/40 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
     pdc->SetFont ( *font ) ;
-    pdc->GetTextExtent ( "A" , &cw , &ch ) ;
+    pdc->GetTextExtent ( _T("A") , &cw , &ch ) ;
     
     int a , b ;
     int x , y ;
@@ -1257,16 +1257,20 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
         {
         y += ch ;
         pdc->DrawText ( vec->items[a].name , x0 , y ) ;
-        sprintf ( t , "%d" , vec->items[a].from ) ; pdc->DrawText ( t , x1 , y ) ;
-        sprintf ( t , "%d" , vec->items[a].to ) ; pdc->DrawText ( t , x2 , y ) ;
-        
+//        sprintf ( t , "%d" , vec->items[a].from ) ; pdc->DrawText ( t , x1 , y ) ;
+//        sprintf ( t , "%d" , vec->items[a].to ) ; pdc->DrawText ( t , x2 , y ) ;
+
+		  pdc->DrawText ( wxString::Format ( _T("%d") , vec->items[a].from ) , x1 , y ) ;
+		  pdc->DrawText ( wxString::Format ( _T("%d") , vec->items[a].to ) , x2 , y ) ;
+
         int len = vec->items[a].to - vec->items[a].from + 1 ;
         if ( vec->items[a].to < vec->items[a].from )
            len += vec->getSequenceLength() ;
-        sprintf ( t , "%d" , len ) ; pdc->DrawText ( t , x3 , y ) ;
-        
-        sprintf ( t , "itemtype%d" , vec->items[a].type ) ;
-        pdc->DrawText ( txt(t) , x4 , y ) ;
+//        sprintf ( t , "%d" , len ) ; pdc->DrawText ( t , x3 , y ) ;
+        pdc->DrawText ( wxString::Format ( _T("%d") , len ) , x3 , y ) ;
+		  
+//        sprintf ( t , "itemtype%d" , vec->items[a].type ) ;
+        pdc->DrawText ( txt(wxString::Format( _T("itemtype%d") , vec->items[a].type)) , x4 , y ) ;
         if ( vec->items[a].direction > 0 ) pdc->DrawText ( txt("cw") , x5 , y ) ;
         else pdc->DrawText ( txt("ccw") , x5 , y ) ;
         
@@ -1274,7 +1278,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
            {
            wxArrayString vs ;
            wxString s ;
-           strcpy ( t , vec->items[a].desc ) ;
+           strcpy ( t , vec->items[a].desc.mb_str() ) ;
 
            int cnt = 0 , ls = 0 ;
            for ( b = 0 ; t[b] ; b++ )
@@ -1294,7 +1298,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
               else
                  {
                  vs.Add ( s ) ;
-                 s = "" ;
+                 s = _T("") ;
                  }
               }
            if ( !s.IsEmpty() ) vs.Add ( s ) ;
@@ -1321,7 +1325,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
     int tw , th ;
     pdc->SetDeviceOrigin ( 0 , 0 ) ;
     wxDateTime now = wxDateTime::Now();
-    wxString printtime = now.Format("%c", wxDateTime::Local) ;
+    wxString printtime = now.Format ( _T("%c") , wxDateTime::Local ) ;
     pdc->GetTextExtent ( printtime , &tw , &th ) ;
     pdc->DrawText ( printtime , w - x0 - tw , 0 ) ;
     pdc->SetFont ( *bfont ) ;
@@ -1340,7 +1344,7 @@ void MyChild::OnZoom ( wxCommandEvent &ev )
     {
     wxChoice *zoom_cb = (wxChoice*) GetToolBar()->FindControl ( PC_ZOOM ) ;
     wxString s = zoom_cb->GetStringSelection() ;
-    int i = atoi ( s.c_str() ) ;
+    int i = atoi ( s.mb_str() ) ;
     cPlasmid->setZoom ( i ) ;
     }
 
@@ -1407,15 +1411,15 @@ void MyChild::updateToolbar ()
     if ( !cPlasmid ) return ;
     int zoom = cPlasmid->getZoom() ;
     wxChoice *zoom_cb = (wxChoice*) GetToolBar()->FindControl ( PC_ZOOM ) ;
-    zoom_cb->SetStringSelection ( wxString::Format ( "%d%%" , zoom ) ) ;
+    zoom_cb->SetStringSelection ( wxString::Format ( _T("%d%%") , zoom ) ) ;
     
     // Toggle tools
     toolbar->ToggleTool ( MDI_ORFS , showORFs ) ;
     toolbar->ToggleTool ( MDI_EDIT_MODE , GetMenuBar()->FindItem(MDI_EDIT_MODE)->IsChecked() ) ;
     toolbar->ToggleTool ( MDI_VIEW_MODE , viewMode ) ;
     if ( !cSequence ) return ;
-    toolbar->ToggleTool ( MDI_TOGGLE_FEATURES , cSequence->findID("FEATURE") ) ;
-    toolbar->ToggleTool ( MDI_TOGGLE_RESTRICTION , cSequence->findID("RESTRICTION") ) ;
+    toolbar->ToggleTool ( MDI_TOGGLE_FEATURES , cSequence->findID ( _T("FEATURE") ) ) ;
+    toolbar->ToggleTool ( MDI_TOGGLE_RESTRICTION , cSequence->findID ( _T("RESTRICTION") ) ) ;
     cSequence->SetFocus() ;
 #ifdef __WXGTK__
 	swl->SetSashPosition ( swl->GetSashPosition() , true ) ;

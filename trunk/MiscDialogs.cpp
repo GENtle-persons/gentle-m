@@ -50,11 +50,11 @@ TIPCDialog::TIPCDialog(wxWindow *parent, const wxString& title , int _seqlen )
     wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
     
-    limit = new wxTextCtrl ( this , TIPC_DIA_LIMIT , "" ) ;
+    limit = new wxTextCtrl ( this , TIPC_DIA_LIMIT , _T("") ) ;
     h0->Add ( new wxStaticText ( this , -1 , txt("t_limit") ) , 0 , wxALL , 5 ) ;
     h0->Add ( limit , 0 , wxALL , 5 ) ;
     
-    est = new wxStaticText ( this , -1 , "" ) ;
+    est = new wxStaticText ( this , -1 , _T("") ) ;
     
     h1->Add ( new wxButton ( this , AL_OK , txt("b_ok") ) , 0 , wxALL , 5 ) ;
     h1->Add ( new wxButton ( this , AL_CANCEL , txt("b_cancel") ) , 0 , wxALL , 5 ) ;
@@ -67,7 +67,7 @@ TIPCDialog::TIPCDialog(wxWindow *parent, const wxString& title , int _seqlen )
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;    
 
-    limit->SetValue ( "1000" ) ;
+    limit->SetValue ( _T("1000") ) ;
 	}
 
 TIPCDialog::~TIPCDialog ()
@@ -80,7 +80,7 @@ void TIPCDialog::OnLimit ( wxCommandEvent &event )
 	long l ;
 	s.ToLong ( &l ) ;
 	double d = estimate_time ( l ) ;
-	s = wxString::Format ( "%3.1f" , (float) d ) ;
+	s = wxString::Format ( _T("%3.1f") , (float) d ) ;
 	s = s.Trim ( false ) ;
 	s = wxString::Format ( txt("t_ipc_est") , s.c_str() ) ;
 	est->SetLabel ( s ) ;
@@ -116,15 +116,15 @@ TSequencingPrimerDialog::TSequencingPrimerDialog (wxWindow *parent, const wxStri
     wxBoxSizer *h2a = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h3 = new wxBoxSizer ( wxHORIZONTAL ) ;
     
-    wxString defdb = myapp()->frame->LS->getOption ( "SEQUENCINGPRIMER_DB" , myapp()->frame->LS->getDefaultDB() ) ;
-    wxString defpj = myapp()->frame->LS->getOption ( "SEQUENCINGPRIMER_PJ" , "" ) ;
-    bool usepj = myapp()->frame->LS->getOption ( "SEQUENCINGPRIMER_USE_PJ" , false ) ;
-    int ml = myapp()->frame->LS->getOption ( "SEQUENCINGPRIMER_MIN_ALIGNMENT" , 20 ) ;
+    wxString defdb = myapp()->frame->LS->getOption ( _T("SEQUENCINGPRIMER_DB") , myapp()->frame->LS->getDefaultDB() ) ;
+    wxString defpj = myapp()->frame->LS->getOption ( _T("SEQUENCINGPRIMER_PJ") , _T("") ) ;
+    bool usepj = myapp()->frame->LS->getOption ( _T("SEQUENCINGPRIMER_USE_PJ") , false ) ;
+    int ml = myapp()->frame->LS->getOption ( _T("SEQUENCINGPRIMER_MIN_ALIGNMENT") , 20 ) ;
 
-    t_ma = new wxSpinCtrl ( this , -1 , wxString::Format ( "%d" , ml ) , wxDefaultPosition , wxSize ( MYSPINBOXSIZE , 20 ) ) ;
+    t_ma = new wxSpinCtrl ( this , -1 , wxString::Format ( _T("%d") , ml ) , wxDefaultPosition , wxSize ( MYSPINBOXSIZE , 20 ) ) ;
     h0->Add ( new wxStaticText ( this , -1 , txt("t_minimum_alignment") ) , 0 , wxALIGN_CENTER_VERTICAL ) ;    
     h0->Add ( t_ma , 0 , wxALL|wxALIGN_CENTER_VERTICAL , 5 ) ;
-    h0->Add ( new wxStaticText ( this , -1 , "bp" ) , 0 , wxALIGN_CENTER_VERTICAL ) ;
+    h0->Add ( new wxStaticText ( this , -1 , _T("bp") ) , 0 , wxALIGN_CENTER_VERTICAL ) ;
     
     c_db = new wxChoice ( this , SPD_DB ) ;
     h1->Add ( new wxStaticText ( this , -1 , txt("t_use_this_database") ) , 0 , wxEXPAND ) ;
@@ -181,7 +181,7 @@ void TSequencingPrimerDialog::OnDB ( wxCommandEvent& event )
 	int i = c_db->GetSelection() ;
 	if ( i == wxNOT_FOUND ) return ;
 	TStorage *db = myapp()->frame->getTempDB ( db_files[i] ) ;
-	wxString sql = "SELECT pr_name FROM project" ;
+	wxString sql = _T("SELECT pr_name FROM project") ;
 	TSQLresult r = db->getObject ( sql ) ;
 	for ( int a = 0 ; a < r.rows() ; a++ )
 		c_pj->Append ( r[a][r["pr_name"]] ) ;
@@ -205,9 +205,9 @@ void TSequencingPrimerDialog::getPrimerList ( wxArrayString &p_name , wxArrayStr
 	TSQLresult r ;
 	wxString sql ;
 	wxString pj = c_pj->GetStringSelection() ;
-	if ( cb_pj->GetValue() && pj != "" ) // Use project
+	if ( cb_pj->GetValue() && pj != _T("") ) // Use project
 		{
-		sql = "SELECT * FROM project_dna WHERE pd_project=\"" + pj + "\"" ;
+		sql = _T("SELECT * FROM project_dna WHERE pd_project=\"") + pj + _T("\"") ;
 		r = db->getObject ( sql ) ;
 		for ( a = 0 ; a < r.rows() ; a++ )
 			{
@@ -215,9 +215,9 @@ void TSequencingPrimerDialog::getPrimerList ( wxArrayString &p_name , wxArrayStr
 		    if ( i == wxNOT_FOUND ) continue ; // Illegal db
 		    TStorage *db2 = myapp()->frame->getTempDB ( db_files[i] ) ;
 		    if ( !db2 ) continue ; // Strange
-		    sql = "SELECT dna_name,dna_sequence FROM dna WHERE dna_type=" + 
-					wxString::Format ( "%d" , TYPE_PRIMER ) + " AND dna_name=\"" +
-     				r[a][r["pd_dna"]]  + "\"" ;
+		    sql = _T("SELECT dna_name,dna_sequence FROM dna WHERE dna_type=") +
+					wxString::Format ( _T("%d") , TYPE_PRIMER ) + _T(" AND dna_name=\"") +
+     				r[a][r["pd_dna"]]  + _T("\"") ;
 		    TSQLresult r2 = db2->getObject ( sql ) ;
 		    if ( r2.rows() != 1 ) continue ; // Illegal dna query		    
 		    p_name.Add ( r2[0][r2["dna_name"]] ) ;
@@ -226,8 +226,8 @@ void TSequencingPrimerDialog::getPrimerList ( wxArrayString &p_name , wxArrayStr
 		}
 	else
  		{
-		    sql = "SELECT dna_name,dna_sequence FROM dna WHERE dna_type=" + 
-   				wxString::Format ( "%d" , TYPE_PRIMER ) ;
+		    sql = _T("SELECT dna_name,dna_sequence FROM dna WHERE dna_type=") +
+   				wxString::Format ( _T("%d") , TYPE_PRIMER ) ;
 		r = db->getObject ( sql ) ;
 		for ( a = 0 ; a < r.rows() ; a++ )
 			{
@@ -236,10 +236,10 @@ void TSequencingPrimerDialog::getPrimerList ( wxArrayString &p_name , wxArrayStr
 			}    
    		}        
     long ml = t_ma->GetValue() ;
-    myapp()->frame->LS->setOption ( "SEQUENCINGPRIMER_MIN_ALIGNMENT" , ml ) ;
-    myapp()->frame->LS->setOption ( "SEQUENCINGPRIMER_DB" , c_db->GetStringSelection() ) ;
-    myapp()->frame->LS->setOption ( "SEQUENCINGPRIMER_PJ" , c_pj->GetStringSelection() ) ;
-    myapp()->frame->LS->setOption ( "SEQUENCINGPRIMER_USE_PJ" , cb_pj->GetValue() ) ;
+    myapp()->frame->LS->setOption ( _T("SEQUENCINGPRIMER_MIN_ALIGNMENT") , ml ) ;
+    myapp()->frame->LS->setOption ( _T("SEQUENCINGPRIMER_DB") , c_db->GetStringSelection() ) ;
+    myapp()->frame->LS->setOption ( _T("SEQUENCINGPRIMER_PJ") , c_pj->GetStringSelection() ) ;
+    myapp()->frame->LS->setOption ( _T("SEQUENCINGPRIMER_USE_PJ") , cb_pj->GetValue() ) ;
 	}    
 	
 bool TSequencingPrimerDialog::matchToVector ( TVector *v , wxString name , wxString seq )
@@ -288,17 +288,17 @@ void TSequencingPrimerDialog::addSequencingPrimer ( TVector *v , wxString name ,
 		to -= seq.length() - best_score ;
 		}    
 	TVectorItem i ( name , name , from , to , VIT_SEQUENCING ) ;
-	i.setParam ( "AUTOMATIC", "SEQUENCING PRIMER" ) ;
+	i.setParam ( _T("AUTOMATIC") , _T("SEQUENCING PRIMER") ) ;
 	i.setDirection ( dir ) ;
 	i.setColor ( wxColour ( 255 , 205 + 25 * dir , 0 ) ) ; // Yellow
 	i.desc = wxString::Format ( txt("t_desc_sequencing_primer") , best_score ) ;
-	i.desc += "\n" ;
+	i.desc += _T("\n") ;
 	i.desc += wxString::Format ( txt("t_desc_sequencing_primer2") , seq.length() ) ;
-	i.desc += "\n" ;
+	i.desc += _T("\n") ;
 	i.desc += i.getDirection()==1 ? txt("cw") : txt("ccw") ;
-	i.desc += "\n" ;
+	i.desc += _T("\n") ;
 	i.desc += txt("t_desc_sequencing_primer3");
-	i.desc += "\n" ;
+	i.desc += _T("\n") ;
 	i.desc += seq ;
 	v->items.push_back ( i ) ;
 	}    
@@ -541,15 +541,15 @@ void TEnzymeDialog::initme ( TRestrictionEnzyme *_e , bool ro )
     int w = 300 , h = 190 , bo = 5 ;
     int x1 = 70 , x2 = w/2 , x2a = x2+x1 ;
     int lh = bo*6 ;
-    char u[100] ;
+//    char u[100] ;
     
-    new wxStaticText ( this , -1 , "Name" , wxPoint ( bo , bo+lh/3 ) ) ;
-    new wxStaticText ( this , -1 , "Sequence" , wxPoint ( bo , bo+lh+lh/3 ) ) ;
-    new wxStaticText ( this , -1 , "Location" , wxPoint ( bo , bo+lh*2+lh/3 ) );
-    new wxStaticText ( this , -1 , "Note" , wxPoint ( bo , bo+lh*3+lh/3 ) ) ;
+    new wxStaticText ( this , -1 , _T("Name") , wxPoint ( bo , bo+lh/3 ) ) ;
+    new wxStaticText ( this , -1 , _T("Sequence") , wxPoint ( bo , bo+lh+lh/3 ) ) ;
+    new wxStaticText ( this , -1 , _T("Location") , wxPoint ( bo , bo+lh*2+lh/3 ) );
+    new wxStaticText ( this , -1 , _T("Note") , wxPoint ( bo , bo+lh*3+lh/3 ) ) ;
     
-    new wxStaticText ( this , -1 , "Cuts at" , wxPoint ( bo , bo+lh*4+lh/3 ) ) ;
-    new wxStaticText ( this , -1 , "Overlap" , wxPoint ( bo , bo+lh*5+lh/3 ) ) ;
+    new wxStaticText ( this , -1 , _T("Cuts at") , wxPoint ( bo , bo+lh*4+lh/3 ) ) ;
+    new wxStaticText ( this , -1 , _T("Overlap") , wxPoint ( bo , bo+lh*5+lh/3 ) ) ;
     
     eb_name = new wxTextCtrl ( this , -1 , e->name , 
                 wxPoint ( x1 , bo ) , wxSize ( w-bo-x1 , lh-bo ) ) ;
@@ -560,20 +560,20 @@ void TEnzymeDialog::initme ( TRestrictionEnzyme *_e , bool ro )
     eb_note = new wxTextCtrl ( this , -1 , e->note , 
                 wxPoint ( x1 , bo+lh*3 ) , wxSize ( w-bo-x1 , lh-bo ) ) ;
 
-    sprintf ( u , "%d" , e->cut ) ;
-    eb_from = new wxTextCtrl ( this , -1 , u , wxPoint ( x1 , bo+lh*4 ) , 
+//    sprintf ( u , "%d" , e->cut ) ;
+    eb_from = new wxTextCtrl ( this , -1 , wxString::Format ( _T("%d") , e->cut) , wxPoint ( x1 , bo+lh*4 ) ,
                     wxSize ( w-bo-x2 , lh-bo ) ) ;
-    sprintf ( u , "%d" , e->overlap ) ;
-    eb_to   = new wxTextCtrl ( this , -1 , u , wxPoint ( x1 , bo+lh*5 ) , 
+//    sprintf ( u , "%d" , e->overlap ) ;
+    eb_to   = new wxTextCtrl ( this , -1 , wxString::Format ( _T("%d") , e->overlap ) , wxPoint ( x1 , bo+lh*5 ) ,
                     wxSize ( w-bo-x2 , lh-bo ) ) ;
     
     if ( !readonly )
         {
-        wxButton *b = new wxButton ( this , ED_OK , "OK" ,
+        wxButton *b = new wxButton ( this , ED_OK , _T("OK") ,
                 wxPoint ( x2a , bo+lh*4 ) , wxSize ( w-bo-x2a , lh-bo ) ) ;
         b->SetDefault() ;
         }
-    new wxButton ( this , ED_CANCEL , "Cancel" , wxPoint ( x2a , bo+lh*5 ) , 
+    new wxButton ( this , ED_CANCEL , _T("Cancel") , wxPoint ( x2a , bo+lh*5 ) ,
                 wxSize ( w-bo-x2a , lh-bo ) ) ;
 
     SetClientSize ( w , h ) ;
@@ -594,8 +594,8 @@ void TEnzymeDialog::OnOK ( wxCommandEvent &ev )
     e->sequence = eb_seq->GetValue() ;
     e->location = eb_loc->GetValue() ;
     e->note = eb_note->GetValue() ;
-    e->cut = atoi ( eb_from->GetValue().c_str() ) ;
-    e->overlap = atoi ( eb_to->GetValue().c_str() ) ;
+    e->cut = atoi ( eb_from->GetValue().mb_str() ) ;
+    e->overlap = atoi ( eb_to->GetValue().mb_str() ) ;
     wxDialog::OnOK ( ev ) ;
     }
 

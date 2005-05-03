@@ -275,17 +275,17 @@ wxString TABIviewer::getStat ()
     SeqABI *abi = (SeqABI*) sc->seq[0] ;
     ABItype *at = abi->at ;
     char t[100] ;
-    wxString comb = at->getRecordPascalString("CMBF",1) ;
-    wxString pdmf = at->getRecordPascalString("PDMF",1) ;
-    wxString smpl = at->getRecordPascalString("SMPL",1) ;
-    wxString geln = at->getRecordPascalString("GELN",1) ;
-    wxString gelp = at->getRecordPascalString("GELP",1) ;
+    wxString comb = at->getRecordPascalString ( _T("CMBF") , 1 ) ;
+    wxString pdmf = at->getRecordPascalString ( _T("PDMF") , 1 ) ;
+    wxString smpl = at->getRecordPascalString ( _T("SMPL") , 1 ) ;
+    wxString geln = at->getRecordPascalString ( _T("GELN") , 1 ) ;
+    wxString gelp = at->getRecordPascalString ( _T("GELP") , 1 ) ;
     
-    int lane = at->getRecordValue("LANE",1) >> 16 ;
-    int rund1 = at->getRecordValue("RUND",1) ;
-    int rund2 = at->getRecordValue("RUND",2) ;
-    int runt1 = at->getRecordValue("RUNT",1) ;
-    int runt2 = at->getRecordValue("RUNT",2) ;
+    int lane  = at->getRecordValue ( _T("LANE") , 1 ) >> 16 ;
+    int rund1 = at->getRecordValue ( _T("RUND") , 1 ) ;
+    int rund2 = at->getRecordValue ( _T("RUND") , 2 ) ;
+    int runt1 = at->getRecordValue ( _T("RUNT") , 1 ) ;
+    int runt2 = at->getRecordValue ( _T("RUNT") , 2 ) ;
     
 //    char start[100] , stop[100] ;
     wxString start , stop ;
@@ -365,7 +365,7 @@ void TABIviewer::OnEditMode(wxCommandEvent& event)
     if ( mi->IsChecked() )
         {
         sc->setEditMode ( true ) ;
-        sc->findID("ABI")->s += _T(" ") ;
+        sc->findID ( _T("ABI") )->s += _T(" ") ;
         vec->addToSequence ( _T(" ") ) ;
         sc->arrange () ;
         if ( sc->markedFrom() == -1 ) sc->mark ( _T("ABI") , 1 , 1 , 2 ) ;
