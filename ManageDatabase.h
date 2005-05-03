@@ -10,7 +10,7 @@
 class TStorage ;
 class TManageDatabaseDialog ;
 
-#define GENTLE_DRAG_DATA "GENTLE_DRAG_DATA"
+#define GENTLE_DRAG_DATA _T("GENTLE_DRAG_DATA")
 #define ACTION_MODE_MANAGE 0
 #define ACTION_MODE_SAVE 1
 #define ACTION_MODE_LOAD 2

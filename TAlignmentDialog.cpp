@@ -91,10 +91,10 @@ void TAlignmentDialog::init_what ()
     v0->Add ( cur , 1 , wxEXPAND ) ;
     v2->Add ( all , 1 , wxEXPAND ) ;
 
-    v1->Add ( new wxStaticText ( p , -1 , " " ) , 0 , wxALIGN_CENTER_HORIZONTAL ) ;
+    v1->Add ( new wxStaticText ( p , -1 , _T(" ") ) , 0 , wxALIGN_CENTER_HORIZONTAL ) ;
     v1->Add ( new wxButton ( p , AL_ADD , txt("<-- add") ) , 0 , wxALIGN_CENTER_HORIZONTAL ) ;
     v1->Add ( new wxButton ( p , AL_DEL , txt("del -->") ) , 0 , wxALIGN_CENTER_HORIZONTAL ) ;
-    v1->Add ( new wxStaticText ( p , -1 , " " ) , 0 , wxALIGN_CENTER_HORIZONTAL ) ;
+    v1->Add ( new wxStaticText ( p , -1 , _T(" ") ) , 0 , wxALIGN_CENTER_HORIZONTAL ) ;
     v1->Add ( new wxButton ( p , AL_UP , txt("b_up_in_list") ) , 0 , wxALIGN_LEFT ) ;
     v1->Add ( new wxButton ( p , AL_DOWN , txt("b_down_in_list") ) , 0 , wxALIGN_LEFT ) ;
 				  
@@ -103,9 +103,9 @@ void TAlignmentDialog::init_what ()
     // All
     for ( a = 0 ; a < f->children.GetCount() ; a++ )
         {
-        if ( f->children[a]->def == "dna" || 
-             f->children[a]->def == "AminoAcids" ||
-             f->children[a]->def == "ABIviewer" )
+        if ( f->children[a]->def == _T("dna") ||
+             f->children[a]->def == _T("AminoAcids") ||
+             f->children[a]->def == _T("ABIviewer") )
            {
            vav.Add ( ((MyChild*)f->children[a])->vec ) ;
            van.Add ( f->children[a]->getName() ) ;
@@ -178,19 +178,19 @@ void TAlignmentDialog::init_how ()
     if ( xo < r.GetRight() ) xo = r.GetRight() ;
     xo += bo ;
     
-    alg_match = new wxSpinCtrl ( p , AL_MATCH , "" ,
+    alg_match = new wxSpinCtrl ( p , AL_MATCH , _T("") ,
                                     wxPoint ( xo , th*2 ) ,
 				 wxSize ( MYSPINBOXSIZE /*w/5*/ , th*3/2 ) ) ;
     alg_match->SetRange ( -100 , 100 ) ;
     alg_match->SetValue ( al->match ) ;
 
-    alg_mismatch = new wxSpinCtrl ( p , AL_MISMATCH , "" ,
+    alg_mismatch = new wxSpinCtrl ( p , AL_MISMATCH , _T("") ,
                                     wxPoint ( xo , th*4 ) ,
                                     wxSize ( MYSPINBOXSIZE /*w/5*/ , th*3/2 ) ) ;
     alg_mismatch->SetRange ( -100 , 100 ) ;
     alg_mismatch->SetValue ( al->mismatch ) ;
 
-    alg_penalty = new wxSpinCtrl ( p , AL_PENALTY , "" ,
+    alg_penalty = new wxSpinCtrl ( p , AL_PENALTY , _T("") ,
                                     wxPoint ( xo , th*6 ) ,
 				   wxSize ( MYSPINBOXSIZE /*w/5*/ , th*3/2 ) ) ;
     alg_penalty->SetRange ( -100 , 100 ) ;

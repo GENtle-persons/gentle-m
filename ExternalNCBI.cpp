@@ -6,13 +6,13 @@
 void EIpanel::init_ncbi()
 	{
 	    RETMAX = 25 ;
-	t1 = new wxTextCtrl ( up , ID_T1 , "" , wxDefaultPosition , wxDefaultSize , wxTE_PROCESS_ENTER ) ;
+	t1 = new wxTextCtrl ( up , ID_T1 , _T("") , wxDefaultPosition , wxDefaultSize , wxTE_PROCESS_ENTER ) ;
 	b1 = new wxButton ( up , ID_B1 , txt("b_find") , wxDefaultPosition ) ;
 	b2 = new wxButton ( up , ID_B2 , txt("t_open") , wxDefaultPosition ) ;
 	c1 = new wxChoice ( up , ID_C1 ) ;
-	c1->Append ( "Nucleotide" ) ;
-	c1->Append ( "Protein" ) ;
-	c1->Append ( "PubMed" ) ;
+	c1->Append ( _T("Nucleotide") ) ;
+	c1->Append ( _T("Protein") ) ;
+	c1->Append ( _T("PubMed") ) ;
 
 	b_last = new wxButton ( up , ID_B_LAST , txt("b_last") , wxDefaultPosition ) ;
 	b_next = new wxButton ( up , ID_B_NEXT , txt("b_next") , wxDefaultPosition ) ;
@@ -35,15 +35,15 @@ void EIpanel::init_ncbi()
     h0->Add ( b_next , 0 , wxEXPAND , 5 ) ;
 
 	// PubMed-specific
-	wxString off = "   " ;
+	wxString off = _T("   ") ;
     h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
-	t2 = new wxTextCtrl ( up , ID_T2 , "" , wxDefaultPosition , wxDefaultSize , wxTE_PROCESS_ENTER ) ;
-	t3 = new wxTextCtrl ( up , ID_T3 , "" , wxDefaultPosition , wxDefaultSize , wxTE_PROCESS_ENTER ) ;
-	t4 = new wxTextCtrl ( up , ID_T4 , "" , wxDefaultPosition , wxDefaultSize , wxTE_PROCESS_ENTER ) ;
+	t2 = new wxTextCtrl ( up , ID_T2 , _T("") , wxDefaultPosition , wxDefaultSize , wxTE_PROCESS_ENTER ) ;
+	t3 = new wxTextCtrl ( up , ID_T3 , _T("") , wxDefaultPosition , wxDefaultSize , wxTE_PROCESS_ENTER ) ;
+	t4 = new wxTextCtrl ( up , ID_T4 , _T("") , wxDefaultPosition , wxDefaultSize , wxTE_PROCESS_ENTER ) ;
 	c2 = new wxChoice ( up , ID_C2 ) ;
-	c2->Append ( "Author" ) ;
-	c2->Append ( "Journal" ) ;
-	c2->Append ( "Pub date" ) ;
+	c2->Append ( _T("Author") ) ;
+	c2->Append ( _T("Journal") ) ;
+	c2->Append ( _T("Pub date") ) ;
 	
 	h1->Add ( new wxStaticText ( up , -1 , txt("author(s)") ) , 0 , wxEXPAND , 5 ) ;
     h1->Add ( t2 , 1 , wxEXPAND , 5 ) ;
@@ -54,7 +54,7 @@ void EIpanel::init_ncbi()
 	h1->Add ( new wxStaticText ( up , -1 , off + txt("sort") ) , 0 , wxEXPAND , 5 ) ;
     h1->Add ( c2 , 1 , wxEXPAND , 5 ) ;
 	
-    st_msg = new wxStaticText ( up , -1 , "" ) ;
+    st_msg = new wxStaticText ( up , -1 , _T("") ) ;
     
     v1->Add ( h0 , 0 , wxEXPAND , 0 ) ;
     v1->Add ( h1 , 0 , wxEXPAND|wxTOP|wxBOTTOM , 3 ) ;
@@ -82,38 +82,38 @@ void EIpanel::process_ncbi()
 	wxString from = t3->GetValue() ;
 	wxString to = t4->GetValue() ;
 	wxString sort = c2->GetStringSelection().Lower() ;
-	sort.Replace ( " " , "+" ) ;
-	if ( database == "pubmed" && !authors.IsEmpty() )
+	sort.Replace ( _T(" ") , _T("+") ) ;
+	if ( database == _T("pubmed") && !authors.IsEmpty() )
 		{
   		while ( !authors.IsEmpty() )
   			{
-  			search = authors.BeforeFirst ( ',' ) + " [au] " + search ;
+  			search = authors.BeforeFirst ( ',' ) + _T(" [au] ") + search ;
   			authors = authors.AfterFirst ( ',' ) ;
   			} 			
 		}    
-	search.Replace ( " " , "+" ) ;
+	search.Replace ( _T(" ") , _T("+") ) ;
 	
 	// Invoking ESearch
-	wxString query = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?" ;
- 	query += "db=" + database ;
-	query += "&retstart=" + wxString::Format ( "%d" , res_start ) ;
-	query += "&retmax=" + wxString::Format ( "%d" , RETMAX ) ;
-    query += "&tool=GENtle" ;
-    query += "&retmode=xml" ;
-    if ( database == "pubmed" )
+	wxString query = _T("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?") ;
+ 	query += _T("db=") + database ;
+	query += _T("&retstart=") + wxString::Format ( _T("%d") , res_start ) ;
+	query += _T("&retmax=") + wxString::Format ( _T("%d") , RETMAX ) ;
+    query += _T("&tool=GENtle") ;
+    query += _T("&retmode=xml") ;
+    if ( database == _T("pubmed") )
     	{
-    	if ( !from.IsEmpty() ) query += "&mindate=" + from ;
-    	if ( !to.IsEmpty() ) query += "&maxdate=" + to ;
-    	query += "&sort=" + sort ;
+    	if ( !from.IsEmpty() ) query += _T("&mindate=") + from ;
+    	if ( !to.IsEmpty() ) query += _T("&maxdate=") + to ;
+    	query += _T("&sort=") + sort ;
     	}
-    query += "&term=" + search ;
+    query += _T("&term=") + search ;
 	query = wxURL::ConvertToValidURI ( query ) ;
 	wxString res ;
 	res = ex.getText ( query ) ; // The XML is now in res
 
     TiXmlDocument doc ;
-    doc.Parse ( res.c_str() ) ;
-    if ( res == "" || doc.Error() )
+    doc.Parse ( res.mb_str() ) ;
+    if ( res == _T("") || doc.Error() )
     	{
 	    showMessage ( txt("t_error") ) ;
 	    return ;
@@ -141,32 +141,32 @@ void EIpanel::process_ncbi()
 	
 	if ( ids.IsEmpty() )
 		{
- 		showMessage ( "The search returned no results." ) ;
+ 		showMessage ( _T("The search returned no results.") ) ;
  		return ;
 		}    
 	
 	int a ;
-	res = "" ;
+	res = _T("") ;
 	for ( a = 0 ; a < ids.GetCount() ; a++ )
 		{
-  		if ( !res.IsEmpty() ) res += "," ;
+  		if ( !res.IsEmpty() ) res += _T(",") ;
 		res += ids[a] ;
 		}		
 		
 	// Invoking ESummary
-	query = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?" ;
- 	query += "db=" + database ;
- 	query += "&tool=GENtle&" ;
-  	query += "id=" + res ;
-  	query += "&retmode=xml" ;
-	query += "&retmax=" + wxString::Format ( "%d" , RETMAX ) ;
+	query = _T("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?") ;
+ 	query += _T("db=") + database ;
+ 	query += _T("&tool=GENtle&") ;
+  	query += _T("id=") + res ;
+  	query += _T("&retmode=xml") ;
+	query += _T("&retmax=") + wxString::Format ( _T("%d") , RETMAX ) ;
 
 	res = ex.getText ( query ) ; // The XML is now in res
 //    wxTheClipboard->Open(); wxTheClipboard->SetData( new wxTextDataObject(res) );    wxTheClipboard->Close();
 
-    if ( res != "" ) doc.Parse ( res.c_str() ) ;
+    if ( res != _T("") ) doc.Parse ( res.mb_str() ) ;
 	x = doc.FirstChild ( "eSummaryResult" ) ;
-    if ( res == "" || doc.Error() || !x )
+    if ( res == _T("") || doc.Error() || !x )
     	{
 	    showMessage ( txt("t_error") ) ;
 	    return ;
@@ -181,46 +181,46 @@ void EIpanel::process_ncbi()
 		id = valFC ( x->FirstChild ( "Id" ) ) ;
 		for ( y = x->FirstChild ( "Item" ) ; y ; y = y->NextSibling ( "Item" ) )
 			{
-   			wxString at = y->ToElement()->Attribute ( "Name" ) ;
+   			wxString at ( y->ToElement()->Attribute ( "Name" ) , *wxConvCurrent ) ;
    			at = at.Upper() ;
-   			if ( at == "TITLE" ) title = valFC ( y ) ;
-   			else if ( at == "PUBDATE" ) pubdate = valFC ( y ) ;
-   			else if ( at == "SOURCE" ) source = valFC ( y ) ;
-   			else if ( at == "CAPTION" ) caption = valFC ( y ) ;
-   			else if ( at == "AUTHORLIST" ) 
+   			if ( at == _T("TITLE") ) title = valFC ( y ) ;
+   			else if ( at == _T("PUBDATE") ) pubdate = valFC ( y ) ;
+   			else if ( at == _T("SOURCE") ) source = valFC ( y ) ;
+   			else if ( at == _T("CAPTION") ) caption = valFC ( y ) ;
+   			else if ( at == _T("AUTHORLIST") )
    				{
 			    TiXmlNode *z ;
 			    for ( z = y->FirstChild ( "Item" ) ; z ; z = z->NextSibling ( "Item" ) )
 			    	{
-   	    			if ( wxString(z->ToElement()->Attribute("Name")).Upper() != "AUTHOR" ) continue ;
-   	    			if ( !authors.IsEmpty() ) authors += ", " ;
+   	    			if ( wxString(z->ToElement()->Attribute ( "Name" ),*wxConvCurrent).Upper() != _T("AUTHOR") ) continue ;
+   	    			if ( !authors.IsEmpty() ) authors += _T(", ") ;
    	    			authors += valFC ( z ) ;
 			    	}    
    				}    
 			}    
 		wxString s ;
-		if ( database == "nucleotide" || database == "protein" )
+		if ( database == _T("nucleotide") || database == _T("protein") )
   			{
- 			s = "<table width='100%'><tr>" ;
- 			s += "<td align=right valign=center width='50px'>" ;
- 			s += wxString::Format ( "%d" , a + res_start + 1 ) ;
- 			s += "</td>" ;
- 			s += "<td width='10%'>" + caption + "</td>" ;
- 			s += "<td>" + title + "</td>" ;
- 			s += "</tr></table>" ;
+ 			s = _T("<table width='100%'><tr>") ;
+ 			s += _T("<td align=right valign=center width='50px'>") ;
+ 			s += wxString::Format ( _T("%d") , a + res_start + 1 ) ;
+ 			s += _T("</td>") ;
+ 			s += _T("<td width='10%'>") + caption + _T("</td>") ;
+ 			s += _T("<td>") + title + _T("</td>") ;
+ 			s += _T("</tr></table>") ;
           	}
-		else if ( database == "pubmed" )
+		else if ( database == _T("pubmed") )
 			{
- 			s = "<table width='100%'><tr>" ;
- 			s += "<td rowspan=2 align=right valign=top width='50px'>" ;
- 			s += wxString::Format ( "%d" , a + res_start + 1 ) ;
- 			s += "</td>" ;
- 			s += "<td colspan=3><b>" + title + "</b></td>" ;
- 			s += "</tr><tr>" ;
- 			s += "<td valign=top width='10%'>" + pubdate + "</td>" ;
- 			s += "<td valign=top width='10%'>" + source + "</td>" ;
- 			s += "<td valign=top>" + authors + "</td>" ;
- 			s += "</tr></table>" ;
+ 			s = _T("<table width='100%'><tr>") ;
+ 			s += _T("<td rowspan=2 align=right valign=top width='50px'>") ;
+ 			s += wxString::Format ( _T("%d") , a + res_start + 1 ) ;
+ 			s += _T("</td>") ;
+ 			s += _T("<td colspan=3><b>") + title + _T("</b></td>") ; // !!!!!!!!!!!!!!!!!!!!
+ 			s += _T("</tr><tr>") ;
+ 			s += _T("<td valign=top width='10%'>") + pubdate + _T("</td>") ;
+ 			s += _T("<td valign=top width='10%'>") + source + _T("</td>") ;
+ 			s += _T("<td valign=top>") + authors + _T("</td>") ;
+ 			s += _T("</tr></table>") ;
 			}    
 		hlb->Set ( a++ , s , id ) ;
 		}    
@@ -228,7 +228,7 @@ void EIpanel::process_ncbi()
 	int res_to = res_start + RETMAX ;
 	if ( res_to > res_count ) res_to = res_count ;
 	wxString msg = wxString::Format ( txt("t_ext_show_res") , res_start + 1 , res_to , res_count ) ;
-	msg += " (" + wxString ( txt("t_data_by_ncbi") ) + ")" ;
+	msg += _T(" (") + wxString ( txt("t_data_by_ncbi") ) + _T(")") ;
 	showMessage ( msg  ) ;
 	b_next->Enable ( res_start + RETMAX <= res_count ) ;
 	b_last->Enable ( res_start > 0 ) ;
@@ -249,32 +249,32 @@ void EIpanel::execute_ncbi_load ( wxString database )
 	for ( a = 0 ; a < hlb->was.GetCount() ; a++ )
 		{
 		if ( !hlb->IsSelected ( a ) ) continue ;
-		if ( hlb->data[a] == "" ) continue ;
+		if ( hlb->data[a] == _T("") ) continue ;
 		
-		if ( !ids.IsEmpty() ) ids += "," ;
+		if ( !ids.IsEmpty() ) ids += _T(",") ;
 		ids += hlb->data[a] ;
 		}		
 		
 	database = database.Lower() ;
 	
-	if ( database == "nucleotide" || database == "protein" ) // Requesting sequence
+	if ( database == _T("nucleotide") || database == _T("protein") ) // Requesting sequence
 		{
-	    wxString query = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?" ;
-	    query += "db=" + database ;
-	    query += "&tool=GENtle" ;
+	    wxString query = _T("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?") ;
+	    query += _T("db=") + database ;
+	    query += _T("&tool=GENtle") ;
 //	    query += "&retmax=" + wxString::Format ( "%d" , RETMAX ) ;
-	    query += "&id=" + ids ;
-	    if ( database == "nucleotide" ) query += "&retmode=xml&rettype=gb" ;
-	    else query += "&retmode=text&rettype=gp" ;
+	    query += _T("&id=") + ids ;
+	    if ( database == _T("nucleotide") ) query += _T("&retmode=xml&rettype=gb") ;
+	    else query += _T("&retmode=text&rettype=gp") ;
 	    
 	    myExternal ex ;
 	    wxString res = ex.getText ( query ) ;
 	    
 	    //    wxTheClipboard->Open(); wxTheClipboard->SetData( new wxTextDataObject(res) );    wxTheClipboard->Close();    	
 
-	    if ( database == "nucleotide" )
+	    if ( database == _T("nucleotide") )
     	    {
-    		if ( res.Left ( 5 ) == "LOCUS" )
+    		if ( res.Left ( 5 ) == _T("LOCUS") )
     			{
     		    TGenBank gb ;
     		    gb.paste ( res ) ;
@@ -293,16 +293,16 @@ void EIpanel::execute_ncbi_load ( wxString database )
     	    {
     		TGenBank gb ;
     		gb.paste ( res ) ;
-    		if ( gb.success ) myapp()->frame->newGB ( gb , "" ) ;
+    		if ( gb.success ) myapp()->frame->newGB ( gb , _T("") ) ;
     	    }
         }    
-	else if ( database == "pubmed" ) // Requesting paper
+	else if ( database == _T("pubmed") ) // Requesting paper
     	{
-	    wxString query = "http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?" ;
-	    query += "db=" + database ;
-	    query += "&cmd=retrieve" ;
-	    query += "&list_uids=" + ids ;
-	    query += "&dopt=abstract" ;
+	    wxString query = _T("http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?") ;
+	    query += _T("db=") + database ;
+	    query += _T("&cmd=retrieve") ;
+	    query += _T("&list_uids=") + ids ;
+	    query += _T("&dopt=abstract") ;
 	    wxExecute ( myapp()->getHTMLCommand ( query ) ) ;
     	}    
 	}	    

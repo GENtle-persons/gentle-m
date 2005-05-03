@@ -247,7 +247,7 @@ wxString TFLAG::getPascalString ()
        t[2] = ( value >>  8 ) & 255 ;
        t[3] = ( value >>  0 ) & 255 ;
        t[4] = 0 ;
-       return t+1 ;
+       return wxString ( t+1 , *wxConvCurrent ) ;
        }
     wxString r ;
     int len = (unsigned char) data[0] ;

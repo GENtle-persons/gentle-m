@@ -57,7 +57,7 @@ void TGenBank::load ( wxString s )
         if ( *c == '\n' || *c == '\r' )
            {
            *c = 0 ;
-           if ( *d ) vs.Add ( d ) ;
+           if ( *d ) vs.Add ( wxString ( d , *wxConvCurrent ) ) ;
            d = c+1 ;
            }    
         }    
@@ -73,7 +73,7 @@ void TGenBank::load ( wxString s )
 */
 void TGenBank::paste ( wxString s )
     {
-    explode ( "\n" , s , vs ) ; // Separate into an array of lines
+    explode ( _T("\n") , s , vs ) ; // Separate into an array of lines
     parseLines () ; // Calling parser
     }
 
@@ -86,7 +86,7 @@ void TGenBank::parseLines ()
     vs_l.clear () ;
     
     if ( vs.IsEmpty () ||
-         vs[0].Left ( 5 ) != "LOCUS" )
+         vs[0].Left ( 5 ) != _T("LOCUS") )
        return ;
 
     int a , b ;
@@ -104,7 +104,7 @@ void TGenBank::parseLines ()
         {
         if ( vi[a] == 12 || ( vi[a] == 21 && vs[a].GetChar(21) != '/' ) )
            {
-           vs2[last] += " " + trim ( vs[a] ) ;
+           vs2[last] += _T(" ") + trim ( vs[a] ) ;
            }
         else
            {
@@ -116,7 +116,7 @@ void TGenBank::parseLines ()
     
 
     // Checking if only one sequence, can be handeled faster
-    if ( vs2.GetCount()-1 == vs2.Index ( "//" ) )
+    if ( vs2.GetCount()-1 == vs2.Index ( _T("//") ) )
        {
        success = true ;
        vs2.Remove ( vs2.GetCount() - 1 ) ;
@@ -199,24 +199,24 @@ void TGenBank::remap ( TVector *v , const wxArrayString &vs , const wxArrayInt &
 	 int i = vi[line] ;
 	 if ( i == 0 ) // New main level keyword
 	     {
-	     l += " " ;
+	     l += _T(" ") ;
 	     k1 = l.BeforeFirst ( ' ' ) . Upper() ;
 	     l2 = trim ( l.AfterFirst ( ' ' ) ) ;
 	     i += l.Length() - l2.Length() ;
 	     l = l2 ;
 	     }
-     if ( k1 == "LOCUS" )
+     if ( k1 == _T("LOCUS") )
           {
           v->setName ( l.BeforeFirst ( ' ' ) ) ;
           v->setDescription ( l.AfterFirst ( ' ' ) ) ;
-          l += " " ; // For substring search
+          l += _T(" ") ; // For substring search
           l.MakeUpper() ;
-          if ( l.Contains ( " AA " ) ) v->setType ( TYPE_AMINO_ACIDS ) ;
+          if ( l.Contains ( _T(" AA ") ) ) v->setType ( TYPE_AMINO_ACIDS ) ;
           else v->setType ( TYPE_VECTOR ) ;
-          if ( l.Contains ( " CIRCULAR" ) ) v->setCircular ( true ) ;
+          if ( l.Contains ( _T(" CIRCULAR") ) ) v->setCircular ( true ) ;
           else v->setCircular ( false ) ;
           }
-     else if ( k1 == "FEATURES" )
+     else if ( k1 == _T("FEATURES") )
           {
           if ( i == 5 )
              {
@@ -228,14 +228,14 @@ void TGenBank::remap ( TVector *v , const wxArrayString &vs , const wxArrayInt &
              }
           if ( items.size() ) items[items.size()-1].Add ( l ) ;
           }
-     else if ( k1 == "ORIGIN" )
+     else if ( k1 == _T("ORIGIN") )
           {
           if ( ns.IsEmpty() ) ns.Alloc ( ( vs.GetCount() - line ) * 60 ) ;
           for ( a = 0 ; a < l.length() && !validseq[l.GetChar(a)] ; a++ ) ;
           if ( a < l.length() )
              {
              l2 = l.Mid ( a ) ;
-             l2.Replace ( " " , "" ) ;
+             l2.Replace ( _T(" ") , _T("") ) ;
              ns += l2 ;
              }    
           }
@@ -263,11 +263,11 @@ bool TGenBank::isValidSequence ( char a )
 */
 void TGenBank::addItem ( TVector *v , wxArrayString &va )
     {
-    TVectorItem i ( "" , "" , 1 , 1 , VIT_MISC ) ; // Dummy values
+    TVectorItem i ( _T("") , _T("") , 1 , 1 , VIT_MISC ) ; // Dummy values
     int a ;
             
     // Type
-    if ( va[0].MakeLower() == "source" ) return ;
+    if ( va[0].MakeLower() == _T("source") ) return ;
 /*    for ( a = 0 ; a < VIT_TYPES ; a++ )
         {
         if ( va[0].CmpNoCase ( gb_item_type[a] ) == 0 )
@@ -289,35 +289,35 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
         p.MakeLower() ;
         wxString v = va[a].AfterFirst ( '=' ) ;
         multitrim ( v , true ) ;
-        if ( p == "name" || p == "standard_name" || p == "gene" || p == "protein_id" || p == "region_name" )
+        if ( p == _T("name") || p == _T("standard_name") || p == _T("gene") || p == _T("protein_id") || p == _T("region_name") )
            i.name = v ;
         else
            {
-           if ( p == "product" || p == "organism" || p == "db_xref" || p == "note" ||
-                p == "mol_type" || p == "chromosome" || p == "bound_moiety" )
+           if ( p == _T("product") || p == _T("organism") || p == _T("db_xref") || p == _T("note") ||
+                p == _T("mol_type") || p == _T("chromosome") || p == _T("bound_moiety") )
               {
-              if ( !i.desc.IsEmpty() ) i.desc += "\n" ;
-              if ( p == "chromosome" || p == "db_xref" )
+              if ( !i.desc.IsEmpty() ) i.desc += _T("\n") ;
+              if ( p == _T("chromosome") || p == _T("db_xref") )
                  {
                  i.desc += p ;
-                 i.desc += " : " ;
+                 i.desc += _T(" : ") ;
                  }
               wxString v2 = v ;
-              if ( p == "db_xref" )
+              if ( p == _T("db_xref") )
                  {
                  v2 = v.BeforeFirst ( ':' ) . Upper () ;
                  v2.Trim () ;
-                 if ( v2 == "GI" )
+                 if ( v2 == _T("GI") )
                     {
                     v2 = v.AfterFirst ( ':' ) ;
-                    v2 = "http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=protein&val=" + v2 ;
-                    v2 = v + " (" + v2 + ")" ;
+                    v2 = _T("http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=protein&val=") + v2 ;
+                    v2 = v + _T(" (") + v2 + _T(")") ;
                     }    
                  else v2 = v ;
                  }    
               i.desc += v2 ;
               }
-           p = "/" + p ;
+           p = _T("/") + p ;
            i.setParam ( p , v ) ;
            }
         }
@@ -338,7 +338,7 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
 */
 void TGenBank::iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag )
     {
-    l.Replace ( " " , "" ) ;
+    l.Replace ( _T(" ") , _T("") ) ;
     int a ;
     while ( !l.IsEmpty() )
         {
@@ -363,7 +363,7 @@ void TGenBank::iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag 
            if ( ( tag & TAG_COMPLEMENT ) > 0 ) i.setDirection ( -1 ) ;
            v->items.push_back ( i ) ;
            }
-        else if ( l.Left ( 10 ) == "COMPLEMENT" )
+        else if ( l.Left ( 10 ) == _T("COMPLEMENT") )
            {
            l = l.AfterFirst ( '(' ) ;
            int b , cnt , num = 0 ;
@@ -386,7 +386,7 @@ void TGenBank::iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag 
               }
            l = l.Mid ( a ) ;
            }
-        else if ( l.Left ( 4 ) == "JOIN" )
+        else if ( l.Left ( 4 ) == _T("JOIN") )
            {
            l = l.AfterFirst ( '(' ) ;
            int b , cnt , num = 0 ;
@@ -399,16 +399,16 @@ void TGenBank::iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag 
                  {
                  num++ ;
                  wxString name = i.name ;
-                 wxString newname = name + wxString::Format ( " (%d)" , num ) ;
+                 wxString newname = name + wxString::Format ( _T(" (%d)") , num ) ;
                  wxString sub = l.Mid ( b , a - b ) ;
-                 if ( num > 1 ) i.setParam ( "PREDECESSOR" , (name + wxString::Format ( " (%d)" , num-1 )) ) ;
-                 if ( c != ')' ) i.setParam ( "SUCCESSOR" , (name + wxString::Format ( " (%d)" , num+1 )) ) ;
+                 if ( num > 1 ) i.setParam ( _T("PREDECESSOR") , (name + wxString::Format ( _T(" (%d)") , num-1 )) ) ;
+                 if ( c != ')' ) i.setParam ( _T("SUCCESSOR") , (name + wxString::Format ( _T(" (%d)") , num+1 )) ) ;
                  i.name = newname ;
                  iterateItem ( v , i , sub ) ;
                  b = a+1 ;
                  i.name = name ;
-                 i.setParam ( "PREDECESSOR" , "" ) ;
-                 i.setParam ( "SUCCESSOR" , "" ) ;
+                 i.setParam ( _T("PREDECESSOR") , _T("") ) ;
+                 i.setParam ( _T("SUCCESSOR") , _T("") ) ;
                  }
               if ( c == ')' ) cnt-- ;
               }
@@ -489,7 +489,7 @@ wxString TGenBank::trimQuotes ( wxString s )
 */
 void TGenBank::wrapit ( wxArrayString &ex , wxString init , wxString data , int limit )
     {
-    wxString blanks = expand ( "" , init.Length() ) ;
+    wxString blanks = expand ( _T("") , init.Length() ) ;
     int allow = limit - blanks.length() ;
     wxString first = init ;
     while ( !data.IsEmpty() )
@@ -536,7 +536,7 @@ wxString TGenBank::quote ( wxString pre , wxString q )
           a-- ;
           }
        }
-    return pre + "=\"" + q + "\"" ;
+    return pre + _T("=\"") + q + _T("\"") ;
     }
 
 /** \brief Create a GenBank-format list of lines from a TVector
@@ -548,45 +548,49 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
     ex.Clear () ;
     int a , b ;
     wxString s , t , u ;
-    char z[1000] ;
+//    char z[1000] ;
     
-    wxString b21 = expand ( "" , 21 ) ;
+    wxString b21 = expand ( _T("") , 21 ) ;
     
     // Vector
     t = expand ( v->getName() , 24 ) ;
-    sprintf ( z , "%d bp" , v->getSequenceLength() ) ;
+//    sprintf ( z , _T("%d bp") , v->getSequenceLength() ) ;
+	 wxString z = wxString::Format ( _T("%d bp") , v->getSequenceLength() ) ;
     u = expand ( z , 11 ) ;
-    s = "LOCUS       " ;
+    s = _T("LOCUS       ") ;
     s += t ;
     s += u ;
-    if ( v->getType() == TYPE_AMINO_ACIDS ) s += "AA      " ;
-    else s += "DNA     " ;
-    if ( v->isCircular() ) s += "circular " ;
-    else s += "linear " ;
+    if ( v->getType() == TYPE_AMINO_ACIDS ) s += _T("AA      ") ;
+    else s += _T("DNA     ") ;
+    if ( v->isCircular() ) s += _T("circular ") ;
+    else s += _T("linear ") ;
     ex.Add ( s ) ;
     
     // Definition
-    wrapit ( ex , "DEFINITION  " , v->getDescription() ) ;
-    s = v->getParam ( "genbank" ) ;
+    wrapit ( ex , _T("DEFINITION  ") , v->getDescription() ) ;
+    s = v->getParam ( _T("genbank") ) ;
     while ( !s.IsEmpty() && s[s.length()-1] == '\n' )
        s.RemoveLast() ;
     ex.Add ( s ) ;
     
     // Features
-    ex.Add ( "FEATURES             Location/Qualifiers" ) ;
+    ex.Add ( _T("FEATURES             Location/Qualifiers") ) ;
     for ( a = 0 ; a < v->items.size() ; a++ )
         {
-        s = "     " ;
-        s += expand ( gb_item_type[v->items[a].getType()] , 16 ) ;
+        s = _T("     ") ;
+		  wxString s2 = wxString ( gb_item_type[v->items[a].getType()] , *wxConvCurrent ) ;
+        s += expand ( s2 , 16 ) ;
         if ( v->items[a].getDirection() == 1 )
-           sprintf ( z , "%d..%d" , v->items[a].from , v->items[a].to ) ;
+		  		z = wxString::Format ( _T("%d..%d") , v->items[a].from , v->items[a].to ) ;
+//           sprintf ( z , "%d..%d" , v->items[a].from , v->items[a].to ) ;
         else
-           sprintf ( z , "complement(%d..%d)" , v->items[a].from , v->items[a].to ) ;
+		  		z = wxString::Format ( _T("complement(%d..%d)") , v->items[a].from , v->items[a].to ) ;
+//           sprintf ( z , "complement(%d..%d)" , v->items[a].from , v->items[a].to ) ;
         ex.Add ( s + z ) ;
         if ( !v->items[a].name.IsEmpty() )
-           wrapit ( ex , b21 , quote ( "/gene" , v->items[a].name ) ) ;
+           wrapit ( ex , b21 , quote ( _T("/gene") , v->items[a].name ) ) ;
         if ( !v->items[a].desc.IsEmpty() )
-           wrapit ( ex , b21 , quote ( "/note" , v->items[a].desc ) ) ;
+           wrapit ( ex , b21 , quote ( _T("/note") , v->items[a].desc ) ) ;
            
         wxArrayString vs ;
         wxArrayString vss ;
@@ -613,26 +617,27 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
         
     if ( v->getType() != TYPE_AMINO_ACIDS )
        {
-       s = "BASE COUNT   " ;
-       sprintf ( z , "%6d a %6d c %6d g %6d t" , q['a'] , q['c'] , q['g'] , q['t'] ) ;
+       s = _T("BASE COUNT   ") ;
+		 z = wxString::Format ( _T("%6d a %6d c %6d g %6d t") , q['a'] , q['c'] , q['g'] , q['t'] ) ;
+//       sprintf ( z , "%6d a %6d c %6d g %6d t" , q['a'] , q['c'] , q['g'] , q['t'] ) ;
        ex.Add ( s + z ) ;
        }
-    while ( t.length() % 60 != 0 ) t += " " ;
-    ex.Add ( "ORIGIN" ) ;
+    while ( t.length() % 60 != 0 ) t += _T(" ") ;
+    ex.Add ( _T("ORIGIN") ) ;
     for ( a = 0 ; a < t.length() ; a += 60 )
         {
-        sprintf ( z , "%9d" , a+1 ) ;
-        s = z ;
+//        sprintf ( z , "%9d" , a+1 ) ;
+        s = wxString::Format ( _T("%9d") , a+1 ) ;
         for ( b = 0 ; b < 6 ; b++ )
            {
-           s += " " ;
+           s += _T(" ") ;
            s += t.substr ( a + b*10 , 10 ) ;
            }
         ex.Add ( s ) ;
         }
     
     // Finally
-    ex.Add ( "//" ) ;
+    ex.Add ( _T("//") ) ;
     }
 
 /// Destructor, empty

@@ -80,7 +80,7 @@ void TAminoAcids::OnIPC ( wxCommandEvent& event )
    	wxBeginBusyCursor() ;
    	TIPC ipc ;
    	wxStartTimer () ;
-	int r = ipc.ipc_main2 ( filename.c_str() , vec->getSequence().c_str() , 3000 ) ;
+		int r = ipc.ipc_main2 ( filename.mb_str() , vec->getSequence().mb_str() , 3000 ) ;
    	wxEndBusyCursor() ;
    	if ( r != 0 ) { return ; } // ERROR
 //   	wxMessageBox ( wxString::Format ( "%d" , wxGetElapsedTime() ) ) ;
@@ -486,7 +486,7 @@ void TAminoAcids::OnPaste(wxCommandEvent& event)
 
 void TAminoAcids::OnAsNewFeature(wxCommandEvent& event)
     {
-    char t[1000] ;
+//    char t[1000] ;
     int from = sc->markedFrom() ;
     int to = sc->markedTo() ;
     if ( from == -1 ) return ;
@@ -494,8 +494,8 @@ void TAminoAcids::OnAsNewFeature(wxCommandEvent& event)
     vec->undo.start ( txt("u_new_feature") ) ;
 
     TVectorItem nvi ;
-    sprintf ( t , txt("t_new_item_title") , from , to ) ;
-    nvi.name = t ;
+//    sprintf ( t , txt("t_new_item_title") , from , to ) ;
+    nvi.name = wxString::Format ( txt("t_new_item_title") , from , to ) ;
     nvi.setDirection ( 1 ) ;
     nvi.setType ( VIT_MISC ) ;
     nvi.from = from ;
@@ -513,10 +513,10 @@ void TAminoAcids::OnPhotometer(wxCommandEvent& event)
     float mW = 0 ;
     for ( int a = 0 ; a < vec->getSequenceLength() ; a++ )
         mW += vec->getAAmw ( vec->getSequenceChar ( a ) ) ;
-    c->prot->SetCellValue ( 2 , 1 , wxString::Format("%d", seq.Replace("W","",true)) ) ;
-    c->prot->SetCellValue ( 3 , 1 , wxString::Format("%d", seq.Replace("Y","",true)) ) ;
-    c->prot->SetCellValue ( 4 , 1 , wxString::Format("%d", seq.Replace("C","",true)) ) ;
-    c->prot->SetCellValue ( 5 , 1 , wxString::Format("%0.2f", mW) ) ;
+    c->prot->SetCellValue ( 2 , 1 , wxString::Format ( _T("%d") , seq.Replace ( _T("W") , _T("") , true ) ) ) ;
+    c->prot->SetCellValue ( 3 , 1 , wxString::Format ( _T("%d") , seq.Replace ( _T("Y") , _T("") , true ) ) ) ;
+    c->prot->SetCellValue ( 4 , 1 , wxString::Format ( _T("%d") , seq.Replace ( _T("C") , _T("") , true ) ) ) ;
+    c->prot->SetCellValue ( 5 , 1 , wxString::Format ( _T("%0.2f") , mW) ) ;
     c->nb->SetSelection ( 2 ) ;
     }
     
