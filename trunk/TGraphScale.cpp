@@ -110,13 +110,13 @@ void TGraphScale::drawit ( wxDC &dc , wxRect &r , wxRect &inner )
    	if ( p != bottom ) p -= minor ;
    	while ( p <= top )
    		{
-	    DrawMark ( dc , p , ir , wxString::Format ( "%f" , p ) , ( p - ((int)(p/major))*major ) == 0 ) ;
+	    DrawMark ( dc , p , ir , wxString::Format ( _T("%f") , p ) , ( p - ((int)(p/major))*major ) == 0 ) ;
 	    p += minor ;
    		}    
 	
 	// Draw "backline" and name/unit
 	wxString text = name ;
-	if ( !unit.IsEmpty() ) text += " [" + unit + "]" ;
+	if ( !unit.IsEmpty() ) text += _T(" [") + unit + _T("]") ;
    	int tw , th ;
    	dc.GetTextExtent ( text , &tw , &th ) ;
 	if ( horizontal )
