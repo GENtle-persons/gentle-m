@@ -31,7 +31,7 @@ float TPrimer::getGCcontents () { return pgc ; }
 void TPrimer::getSequenceFromVector ( TVector *v , bool from3 )
     {
     int a ;
-    sequence = "" ;
+    sequence = _T("") ;
     bool invert = !upper ;
     if ( from3 ) invert = !invert ;
     for ( a = from ; a <= to ; a++ )
@@ -58,15 +58,15 @@ wxString TPrimer::report ()
     TVector v ;
     char u[100] ;
 
-    r += "5'-" + get53sequence() + "-3'\n" ;
+    r += _T("5'-") + get53sequence() + _T("-3'\n") ;
 
-    r += wxString::Format ( "deltaH=%2.1fKcal/mol; deltaS=%2.1fcal/(K*mol)\n" , H , S ) ; 
-    r += wxString::Format ( "%d bp; %2.1f %%GC\n" , l , pgc ) ;
+    r += wxString::Format ( _T("deltaH=%2.1fKcal/mol; deltaS=%2.1fcal/(K*mol)\n") , H , S ) ;
+    r += wxString::Format ( _T("%d bp; %2.1f %%GC\n") , l , pgc ) ;
     r += wxString::Format ( txt("t_melting_temperatures") , tm , tm_salt , tm_gc ) ;
    
     // Self annealing
-    r += wxString::Format ( "Highest self-annealing score : %d\n" , annScore ) ;
-    r += ann1 + "\n" + annm + "\n" + ann2 + "\n\n" ;
+    r += wxString::Format ( _T("Highest self-annealing score : %d\n") , annScore ) ;
+    r += ann1 + _T("\n") + annm + _T("\n") + ann2 + _T("\n\n") ;
 
     return r ;
     }
@@ -109,8 +109,8 @@ void TPrimer::evaluate ( float tm_opt )
     
 float TPrimer::evaluateTm ( double conc_nm , double Na_mm )
     {
-    double tx = -21.6 ; // °C
-    double T0 = -237.15 ; // °C
+    double tx = -21.6 ; // C
+    double T0 = -237.15 ; // C
     double R = 1.987 ; // Molar gas constant
     double y = 50.0 / 1000000000.0 ;
     double ret ;
@@ -220,16 +220,16 @@ void TPrimer::OligoCount ()
     wxString seq = getAnnealingSequence() ;
 
 	// count Nearest Neighbors
-	aaCount = CountNeighbors("AA")+CountNeighbors("TT");
-	atCount = CountNeighbors("AT");
-	taCount = CountNeighbors("TA");
-	caCount = CountNeighbors("CA")+CountNeighbors("TG");
-	gtCount = CountNeighbors("GT")+CountNeighbors("AC");
-	ctCount = CountNeighbors("CT")+CountNeighbors("AG");
-	gaCount = CountNeighbors("GA")+CountNeighbors("TC");
-	cgCount = CountNeighbors("CG");
-	gcCount = CountNeighbors("GC");
-	ggCount = CountNeighbors("GG")+CountNeighbors("CC");
+	aaCount = CountNeighbors(_T("AA"))+CountNeighbors(_T("TT"));
+	atCount = CountNeighbors(_T("AT"));
+	taCount = CountNeighbors(_T("TA"));
+	caCount = CountNeighbors(_T("CA"))+CountNeighbors(_T("TG"));
+	gtCount = CountNeighbors(_T("GT"))+CountNeighbors(_T("AC"));
+	ctCount = CountNeighbors(_T("CT"))+CountNeighbors(_T("AG"));
+	gaCount = CountNeighbors(_T("GA"))+CountNeighbors(_T("TC"));
+	cgCount = CountNeighbors(_T("CG"));
+	gcCount = CountNeighbors(_T("GC"));
+	ggCount = CountNeighbors(_T("GG"))+CountNeighbors(_T("CC"));
 
     for ( j = 0 ; j < 3 ; j++ ) IUpairVals_min[j] = IUpairVals_max[j] = 0 ;
     for ( i = 1 ; i < seq.length() ; i++ ) //first base can not be IUpacbase
@@ -251,10 +251,10 @@ void TPrimer::OligoCount ()
     
 bool TPrimer::IsBase ( wxString theBase )
     {
-	if ((theBase == "A") ||
-		(theBase == "G") ||
-		(theBase == "C") ||
-		(theBase == "T")) {
+	if ((theBase == _T("A")) ||
+		(theBase == _T("G")) ||
+		(theBase == _T("C")) ||
+		(theBase == _T("T"))) {
 			return true;
 	}
 	return false;
@@ -262,17 +262,17 @@ bool TPrimer::IsBase ( wxString theBase )
     
 bool TPrimer::IsIUpacBase ( wxString theBase )
     {
-	if ((theBase == "M") ||
-		(theBase == "R") ||
-		(theBase == "W") ||
-		(theBase == "S") ||
-		(theBase == "Y") ||
-		(theBase == "K") ||
-		(theBase == "V") ||
-		(theBase == "H") ||
-		(theBase == "D") ||
-		(theBase == "B") ||
-		(theBase == "N")) 
+	if ((theBase == _T("M")) ||
+		(theBase == _T("R")) ||
+		(theBase == _T("W")) ||
+		(theBase == _T("S")) ||
+		(theBase == _T("Y")) ||
+		(theBase == _T("K")) ||
+		(theBase == _T("V")) ||
+		(theBase == _T("H")) ||
+		(theBase == _T("D")) ||
+		(theBase == _T("B")) ||
+		(theBase == _T("N")))
 	{
 			return true;
 	}
@@ -299,17 +299,17 @@ double *TPrimer::CalcIUpair ( wxString base0 , wxString base , int i , bool max 
 	
 	if(IsIUpacBase(base) )
 	{
-		if(base=="M"){IUpacBase="AC";}
-		else if(base=="R"){IUpacBase="AG";}
-		else if(base=="W"){IUpacBase="AT";}
-		else if(base=="S"){IUpacBase="CG";}
-		else if(base=="Y"){IUpacBase="CT";}
-		else if(base=="K"){IUpacBase="GT";}
-		else if(base=="V"){IUpacBase="ACG";}
-		else if(base=="H"){IUpacBase="ACT";}
-		else if(base=="D"){IUpacBase="AGT";}
-		else if(base=="B"){IUpacBase="CGT";}
-		else if(base=="N"){IUpacBase="ACGT";}
+		if(base==_T("M")){IUpacBase=_T("AC");}
+		else if(base==_T("R")){IUpacBase=_T("AG");}
+		else if(base==_T("W")){IUpacBase=_T("AT");}
+		else if(base==_T("S")){IUpacBase=_T("CG");}
+		else if(base==_T("Y")){IUpacBase=_T("CT");}
+		else if(base==_T("K")){IUpacBase=_T("GT");}
+		else if(base==_T("V")){IUpacBase=_T("ACG");}
+		else if(base==_T("H")){IUpacBase=_T("ACT");}
+		else if(base==_T("D")){IUpacBase=_T("AGT");}
+		else if(base==_T("B")){IUpacBase=_T("CGT");}
+		else if(base==_T("N")){IUpacBase=_T("ACGT");}
 		
 		int j=0;
 //		while(IUpacBase.charAt(j)!="")
@@ -320,16 +320,16 @@ double *TPrimer::CalcIUpair ( wxString base0 , wxString base , int i , bool max 
 
 			pair1=base0+base;
 
-			if(pair1=="AA"){temp1[0]= 1.2 ;temp1[1]=8.0; temp1[2]=21.9 ;}
-			else if(pair1=="AT"){temp1[0]= 0.9 ;temp1[1]=5.6; temp1[2]=15.2  ;}
-			else if(pair1=="TA"){temp1[0]=0.9  ;temp1[1]=6.6; temp1[2]= 18.4 ;}
-			else if(pair1=="CA"){temp1[0]=1.7  ;temp1[1]=8.2; temp1[2]=21.0  ;}
-			else if(pair1=="GT"){temp1[0]= 1.5 ;temp1[1]=9.4; temp1[2]=25.5  ;}
-			else if(pair1=="CT"){temp1[0]= 1.5 ;temp1[1]=6.6; temp1[2]=16.4  ;}
-			else if(pair1=="GA"){temp1[0]=1.5  ;temp1[1]=8.8; temp1[2]=23.5  ;}
-			else if(pair1=="CG"){temp1[0]= 2.8 ;temp1[1]=11.8; temp1[2]=29.0  ;}
-			else if(pair1=="GC"){temp1[0]=2.3  ;temp1[1]=10.5; temp1[2]=26.4  ;}
-			else if(pair1=="GG"){temp1[0]=2.1  ;temp1[1]=10.9; temp1[2]=28.4  ;}
+			if(pair1==_T("AA")){temp1[0]= 1.2 ;temp1[1]=8.0; temp1[2]=21.9 ;}
+			else if(pair1==_T("AT")){temp1[0]= 0.9 ;temp1[1]=5.6; temp1[2]=15.2  ;}
+			else if(pair1==_T("TA")){temp1[0]=0.9  ;temp1[1]=6.6; temp1[2]= 18.4 ;}
+			else if(pair1==_T("CA")){temp1[0]=1.7  ;temp1[1]=8.2; temp1[2]=21.0  ;}
+			else if(pair1==_T("GT")){temp1[0]= 1.5 ;temp1[1]=9.4; temp1[2]=25.5  ;}
+			else if(pair1==_T("CT")){temp1[0]= 1.5 ;temp1[1]=6.6; temp1[2]=16.4  ;}
+			else if(pair1==_T("GA")){temp1[0]=1.5  ;temp1[1]=8.8; temp1[2]=23.5  ;}
+			else if(pair1==_T("CG")){temp1[0]= 2.8 ;temp1[1]=11.8; temp1[2]=29.0  ;}
+			else if(pair1==_T("GC")){temp1[0]=2.3  ;temp1[1]=10.5; temp1[2]=26.4  ;}
+			else if(pair1==_T("GG")){temp1[0]=2.1  ;temp1[1]=10.9; temp1[2]=28.4  ;}
 			
 			if(base2.IsEmpty()){
 				for(k=0; k<2; k++)
@@ -337,16 +337,16 @@ double *TPrimer::CalcIUpair ( wxString base0 , wxString base , int i , bool max 
 			
 			}else if(!IsIUpacBase(base2)){
 				pair2=base+base2;
-				if(pair2=="AA"){temp2[0]= 1.2 ;temp2[1]=8.0; temp2[2]=21.9 ;}
-				else if(pair2=="AT"){temp2[0]= 0.9 ;temp2[1]=5.6; temp2[2]=15.2  ;}
-				else if(pair2=="TA"){temp2[0]=0.9  ;temp2[1]=6.6; temp2[2]= 18.4 ;}
-				else if(pair2=="CA"){temp2[0]=1.7  ;temp2[1]=8.2; temp2[2]=21.0  ;}
-				else if(pair2=="GT"){temp2[0]= 1.5 ;temp2[1]=9.4; temp2[2]=25.5  ;}
-				else if(pair2=="CT"){temp2[0]= 1.5 ;temp2[1]=6.6; temp2[2]=16.4  ;}
-				else if(pair2=="GA"){temp2[0]=1.5  ;temp2[1]=8.8; temp2[2]=23.5  ;}
-				else if(pair2=="CG"){temp2[0]= 2.8 ;temp2[1]=11.8; temp2[2]=29.0  ;}
-				else if(pair2=="GC"){temp2[0]=2.3  ;temp2[1]=10.5; temp2[2]=26.4  ;}
-				else if(pair2=="GG"){temp2[0]=2.1  ;temp2[1]=10.9; temp2[2]=28.4  ;}
+				if(pair2==_T("AA")){temp2[0]= 1.2 ;temp2[1]=8.0; temp2[2]=21.9 ;}
+				else if(pair2==_T("AT")){temp2[0]= 0.9 ;temp2[1]=5.6; temp2[2]=15.2  ;}
+				else if(pair2==_T("TA")){temp2[0]=0.9  ;temp2[1]=6.6; temp2[2]= 18.4 ;}
+				else if(pair2==_T("CA")){temp2[0]=1.7  ;temp2[1]=8.2; temp2[2]=21.0  ;}
+				else if(pair2==_T("GT")){temp2[0]= 1.5 ;temp2[1]=9.4; temp2[2]=25.5  ;}
+				else if(pair2==_T("CT")){temp2[0]= 1.5 ;temp2[1]=6.6; temp2[2]=16.4  ;}
+				else if(pair2==_T("GA")){temp2[0]=1.5  ;temp2[1]=8.8; temp2[2]=23.5  ;}
+				else if(pair2==_T("CG")){temp2[0]= 2.8 ;temp2[1]=11.8; temp2[2]=29.0  ;}
+				else if(pair2==_T("GC")){temp2[0]=2.3  ;temp2[1]=10.5; temp2[2]=26.4  ;}
+				else if(pair2==_T("GG")){temp2[0]=2.1  ;temp2[1]=10.9; temp2[2]=28.4  ;}
 			}else if(IsIUpacBase(base2)){
 				base0=base;
                 base=base2;
@@ -464,9 +464,9 @@ void TPrimer::evaluateSelfAnnealing ()
     wxString t ;
     int a , b , l = s.length() ;
     annScore = 0 ;
-    ann1 = "" ;
-    ann2 = "" ;
-    annm = "" ;
+    ann1 = _T("") ;
+    ann2 = _T("") ;
+    annm = _T("") ;
     for ( a = 0 ; a < l ; a++ ) t = s.GetChar(a) + t ;
     for ( a = -(l-1) ; a < l ; a++ )
         {
@@ -492,10 +492,10 @@ void TPrimer::evaluateSelfAnnealing ()
            ann2 = t ;
            annm = ann_tmp ;
            if ( a < 0 )
-              for ( b = a ; b < 0 ; b++ ) ann1 = " " + ann1 ;
+              for ( b = a ; b < 0 ; b++ ) ann1 = _T(" ") + ann1 ;
            if ( a > 0 )
-              for ( b = a ; b < 0 ; b++ ) ann2 = " " + ann2 ;
-           for ( b = 0 ; b < abs(a) ; b++ ) annm = " " + annm ;
+              for ( b = a ; b < 0 ; b++ ) ann2 = _T(" ") + ann2 ;
+           for ( b = 0 ; b < abs(a) ; b++ ) annm = _T(" ") + annm ;
            }
         }
     }

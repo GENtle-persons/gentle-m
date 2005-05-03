@@ -47,7 +47,7 @@ TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode 
     wxStaticText *st ;
     st = new wxStaticText ( this , -1 , txt("t_silmut_max_xhg") , wxPoint ( bo , bo*2 ) ) ;
     r = st->GetRect() ;
-    lim_xhg = new wxSpinCtrl ( this , PD_SILMUT_MAX_XHG , "2" ,
+    lim_xhg = new wxSpinCtrl ( this , PD_SILMUT_MAX_XHG , _T("2") ,
                             wxPoint ( r.GetRight() + bo , bo ) ,
 			       wxSize ( MYSPINBOXSIZE /*th*2*/ , th ) ,
                             wxSP_ARROW_KEYS ,
@@ -63,7 +63,7 @@ TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode 
     r = lim_xhg->GetRect() ;
     st = new wxStaticText ( this , -1 , txt("t_silmut_max_cut1") , wxPoint ( r.GetRight()+th , bo*2 ) ) ;
     r = st->GetRect() ;
-    lim_max = new wxSpinCtrl ( this , PD_SILMUT_MAX_CUT , "5" ,
+    lim_max = new wxSpinCtrl ( this , PD_SILMUT_MAX_CUT , _T("5") ,
                             wxPoint ( r.GetRight() + bo , bo ) ,
 			       wxSize ( MYSPINBOXSIZE /*th*2*/ , th ) ,
                             wxSP_ARROW_KEYS ,
@@ -122,7 +122,7 @@ void TSilmutDialog::OnLbDoubleClick ( wxCommandEvent &ev )
 wxString TSilmutDialog::getSequence ()
     {
     int i = selID() ;
-    if ( i == -1 ) return "" ;
+    if ( i == -1 ) return _T("") ;
     return vs[i].mut ;
     }
     
@@ -325,14 +325,14 @@ void TSilmutDialog::showit ()
         wxString fragments ;
         for ( b = 0 ; b < vs[a].fragments.GetCount() ; b++ )
            {
-           if ( b > 0 ) fragments += ", " ;
-           fragments += wxString::Format ( "%d" , vs[a].fragments[b] ) ;
+           if ( b > 0 ) fragments += _T(", ") ;
+           fragments += wxString::Format ( _T("%d") , vs[a].fragments[b] ) ;
            }
         
         wxString s ;
         if ( mode == M_SILMUT )
            {
-           s = wxString::Format ( "%2d %s %s (%2d=>%2d) [%s]" , 
+           s = wxString::Format ( _T("%2d %s %s (%2d=>%2d) [%s]") ,
                         vs[a].changes , 
                         e_name.c_str() ,
                         vs[a].mut.c_str() ,

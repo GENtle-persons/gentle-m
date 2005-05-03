@@ -195,7 +195,7 @@ int ABItype::getRecord ( wxString id , int num )
 wxString ABItype::getSequence ( int num )
     {
     wxString r ;
-    int a = getRecord ( "PBAS" , num ) , b ;
+    int a = getRecord ( _T("PBAS") , num ) , b ;
     myass ( a > -1 , "ABItype::getSequence" ) ;
     for ( b = 0 ; b < vf[a].nbytes ; b++ ) r += vf[a].data[b] ;
     return r ;
@@ -208,7 +208,7 @@ wxString ABItype::getSequence ( int num )
 wxString ABItype::getRecordPascalString ( wxString id , int num )
     {
     int i = getRecord ( id , num ) ;
-    if ( i == -1 ) return "" ;
+    if ( i == -1 ) return _T("") ;
     return vf[i].getPascalString() ;
     }
 

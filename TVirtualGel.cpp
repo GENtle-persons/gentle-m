@@ -56,7 +56,7 @@ END_EVENT_TABLE()
 TVirtualGel::TVirtualGel(wxWindow *parent, const wxString& title) 
     : ChildBase(parent, title)
     {
-    def = "GEL" ;
+    def = _T("GEL") ;
     vec = NULL ;
     percent = 1 ;
     cb_label = NULL ;
@@ -84,11 +84,11 @@ void TVirtualGel::initme ()
     int a ;
     wxBoxSizer *hs = new wxBoxSizer ( wxHORIZONTAL ) ;
     ch_percent = new wxChoice ( this , VG_PERCENT , wxDefaultPosition , wxSize ( 50 , -1 ) ) ;
-    cb_label = new wxCheckBox ( this , VG_LABEL , "Show label" ) ;
+    cb_label = new wxCheckBox ( this , VG_LABEL , _T("Show label") ) ;
     cb_label->SetValue ( true ) ;
    	
    	hs->Add ( cb_label , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
-   	hs->Add ( new wxStaticText ( this , -1 , "   Gel concentration" ) , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
+   	hs->Add ( new wxStaticText ( this , -1 , _T("   Gel concentration") ) , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
    	hs->Add ( ch_percent , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
 
     wxBoxSizer *vs = new wxBoxSizer ( wxVERTICAL ) ;
@@ -97,14 +97,14 @@ void TVirtualGel::initme ()
 
     myapp()->frame->setChild ( this ) ;
 
-    if ( type == "DNA" )
+    if ( type == _T("DNA") )
     	{
         for ( a = 3 ; a <= 30 ; a++ )
-        	ch_percent->Append ( wxString::Format ( "%1.1f %%" , ((float)a)/10.0 ) ) ;
-       	ch_percent->SetStringSelection ( "1.0 %" ) ;
+        	ch_percent->Append ( wxString::Format ( _T("%1.1f %%") , ((float)a)/10.0 ) ) ;
+       	ch_percent->SetStringSelection ( _T("1.0 %") ) ;
        	
         lanes.push_back ( TGelLane() ) ;
-        lanes[0].setMarker ( "Mass Ruler" ) ;
+        lanes[0].setMarker ( _T("Mass Ruler") ) ;
     	}    
 
     this->SetSizer ( vs ) ;
@@ -114,7 +114,7 @@ void TVirtualGel::initme ()
 
 wxString TVirtualGel::getName ()
     {
-    return "Virtual Gel" ;
+    return _T("Virtual Gel") ;
     }
     
 void TVirtualGel::OnPercent ( wxCommandEvent &ev )
@@ -197,7 +197,7 @@ void TMyGelControl::OnDraw(wxDC& dc)
     wxFont *bigFont = MYFONT ( fontfactor * 14 / 10 , wxSWISS , wxNORMAL , wxNORMAL ) ;
 
     int tw , th ;
-    wxString title = "t_gelname_" + vg->type ;
+    wxString title = _T("t_gelname_") + vg->type ;
     title = wxString::Format ( txt(title.c_str()) , vg->percent ) ;
     dc.SetTextForeground ( *wxBLACK ) ;
     dc.SetFont ( *bigFont ) ;
@@ -255,8 +255,8 @@ void TMyGelControl::drawBand ( wxDC &dc , TGelLane &lane , int band )
         
     // Label
     if ( !vg->cb_label->GetValue() ) return ; // Don't show labels
-    wxString title = wxString::Format ( "%d" , lane.vi[band] ) ;
-    if ( lane.vs[band] != "" ) title = lane.vs[band] ;
+    wxString title = wxString::Format ( _T("%d") , lane.vi[band] ) ;
+    if ( lane.vs[band] != _T("") ) title = lane.vs[band] ;
     /*
     int i = y ;
     i -= getLanePos ( lane.vi[0] , h ) + lane.pos.GetTop() ;
@@ -364,20 +364,20 @@ void TMyGelControl::OnPrint(wxCommandEvent &event)
 
 void TGelLane::clear ()
 	{
-	name = type = "" ;
+	name = type = _T("") ;
 	vi.Clear () ;
 	vw.Clear () ;
 	vs.Clear () ;
-	unit_volume = 1 ; // µl
+	unit_volume = 1 ; // l
 	}    
 
 void TGelLane::setMarker ( wxString _name )
 	{
 	clear () ;
 	name = _name ;
-	if ( name == "Mass Ruler" )	
+	if ( name == _T("Mass Ruler") )	
 		{
-		type = "DNA" ;
+		type = _T("DNA") ;
   		unit_volume = 20 ;
   		add ( 10000 , 200 ) ;
   		add (  8000 , 160 ) ;
@@ -411,7 +411,7 @@ void TGelLane::add ( int size , int weight , wxString title )
 
 void TGelLane::add ( int size , int weight )
 	{
-	add ( size , weight , "" ) ;
+	add ( size , weight , _T("") ) ;
 	}
 
 void TGelLane::add ( int size , wxString title )

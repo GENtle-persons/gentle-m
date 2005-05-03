@@ -87,8 +87,8 @@ void PlasmidCanvas::setMark ( int i1 , int i2 )
 	if ( getMarkFrom() == i1 && getMarkTo() == i2 ) return ;
 	if ( !p || !p->cSequence ) return ;
 	SeqBasic *seq = NULL ;
-	if ( p->def == "dna" ) seq = p->cSequence->findID ( "DNA" ) ;
-	else if ( p->def == "AminoAcids" ) seq = p->cSequence->findID ( "AA" ) ;
+	if ( p->def == _T("dna") ) seq = p->cSequence->findID ( _T("DNA") ) ;
+	else if ( p->def == _T("AminoAcids") ) seq = p->cSequence->findID ( _T("AA") ) ;
 	if ( seq ) p->cSequence->mark ( seq->whatsthis() , i1 , i2 ) ;
 	}
 	
@@ -112,7 +112,7 @@ PlasmidCanvas::PlasmidCanvas(wxWindow *parent, const wxPoint& pos, const wxSize&
     lastbp = -1 ;
     lasttooltip = -1 ;
     hasBeenPainted = false ;
-    tt = new wxToolTip ( "" ) ;
+    tt = new wxToolTip ( _T("") ) ;
 }
 
 PlasmidCanvas::~PlasmidCanvas ()
@@ -121,7 +121,7 @@ PlasmidCanvas::~PlasmidCanvas ()
 
 void PlasmidCanvas::Refresh ()
     {
-    if ( p && p->cSequence->getEditMode() && p->def == "DNA" ) return ;
+    if ( p && p->cSequence->getEditMode() && p->def == _T("DNA") ) return ;
 //    if ( painting ) return ;
 //    painting = true ;
     wxClientDC dc ( (wxWindow*) this ) ;
@@ -270,7 +270,7 @@ void PlasmidCanvas::OnSaveImage ( wxCommandEvent &ev )
 
 wxString PlasmidCanvas::getSelection()
     {
-    if ( !p || !p->cSequence || p->cSequence->getEditMode() || p->def != "dna" ) return "" ;
+    if ( !p || !p->cSequence || p->cSequence->getEditMode() || p->def != _T("dna") ) return _T("") ;
     return p->cSequence->getSelection() ;
 //    if ( getMarkFrom() == -1 ) return "" ;
 //    return p->vec->getSubstring ( getMarkFrom() , getMarkTo() ) ;
@@ -296,8 +296,8 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
     wxPoint pt2 , pto = pt ;
     int a , vo , rs , orf , pos = 0 , lineOff = w/20 ;
     float angle , radius ;
-    wxString s , id = "DNA" ;
-    if ( p->def == "AminoAcids" ) id = "AA" ;
+    wxString s , id = _T("DNA") ;
+    if ( p->def == _T("AminoAcids") ) id = _T("AA") ;
     
     // Preparations
     if ( mode == MODE_CIRCULAR )
@@ -384,7 +384,7 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
         if ( event.LeftDown() )
            {
 #ifdef __WXMSW__
-           if ( p->def == "dna" ) p->treeBox->SelectItem ( p->treeBox->GetParent ( ) ) ; // Frell
+           if ( p->def == _T("dna") ) p->treeBox->SelectItem ( p->treeBox->GetParent ( ) ) ; // Frell
 #endif
            }
         else if ( event.MiddleDown() )
@@ -394,21 +394,21 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
         else if ( event.RightDown() )
            invokeRsPopup ( rs , pt_abs ) ;
         else if ( event.LeftDClick() )
-           invokeVectorEditor ( "enzyme" , rs ) ;
+           invokeVectorEditor ( _T("enzyme") , rs ) ;
         }
     else if ( vo != -1 ) // Passing over feature
         {
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
         s = p->vec->items[vo].name ;
         wxLogStatus(txt("item_status_bar") , s.c_str() ) ;
-        char ttt[1000] ;
-        sprintf ( ttt , "itemtype%d" , p->vec->items[vo].type ) ;
-        wxString tt_type = txt(ttt) ;
+//        char ttt[1000] ;
+//        sprintf ( ttt , _T("itemtype%d") , p->vec->items[vo].type ) ;
+        wxString tt_type = txt(wxString::Format(_T("itemtype%d") , p->vec->items[vo].type)) ; //txt(ttt) ;
         wxString ttt2 = wxString::Format ( txt("tt_item") , tt_type.c_str() ,
                                         	s.c_str() , 
                                         	p->vec->items[vo].desc.c_str() ) ;
-       	while ( ttt2.Replace ( "\n" , "," ) ) ;
-       	while ( ttt2.Replace ( "\r" , " " ) ) ;
+       	while ( ttt2.Replace ( _T("\n") , _T(",") ) ) ;
+       	while ( ttt2.Replace ( _T("\r") , _T(" ") ) ) ;
        	SetMyToolTip ( ttt2 , TT_ITEM ) ;
         
 /*        sprintf ( ttt , txt("tt_item") , tt_type.c_str() ,
@@ -423,13 +423,13 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
                 
         if ( event.LeftDown() )
            {
-           if ( p->def == "dna" )
+           if ( p->def == _T("dna") )
               p->treeBox->SelectItem ( p->vec->items[vo].getTreeID() ) ;
            }
         else if ( event.RightDown() )
              invokeItemPopup ( vo , pt_abs ) ;
         else if ( event.LeftDClick() )
-           invokeVectorEditor ( "item" , vo ) ;
+           invokeVectorEditor ( _T("item") , vo ) ;
         else if ( event.MiddleDown() )
            {
            wxCommandEvent dummyEvent ;
@@ -460,7 +460,7 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
         }
     else
         {
-        SetMyToolTip ( "" , TT_NONE ) ;
+        SetMyToolTip ( _T("") , TT_NONE ) ;
         if ( !event.ControlDown() ) SetCursor(*wxSTANDARD_CURSOR) ;
         if ( mode == MODE_CIRCULAR )
         	{
@@ -602,17 +602,17 @@ void PlasmidCanvas::updateLinkedItems ( TVector *vec , int in )
     i = orig ;
     wxString s ;
     int cur ;
-    s = i->getParam ( "PREDECESSOR" ) ;
+    s = i->getParam ( _T("PREDECESSOR") ) ;
     while ( !s.IsEmpty() )
         {
         cur = vec->find_item( s ) ;
         if ( cur == -1 ) return ; // Not found
         i = &vec->items[cur] ;
-        s = i->getParam ( "PREDECESSOR" ) ;
+        s = i->getParam ( _T("PREDECESSOR") ) ;
         }
-    if ( i->getParam ("SUCCESSOR" ).IsEmpty() ) return ;
+    if ( i->getParam ( _T("SUCCESSOR") ).IsEmpty() ) return ;
     do {
-        s = i->getParam ("SUCCESSOR" ) ;
+        s = i->getParam ( _T("SUCCESSOR") ) ;
         if ( vec->isLinear() )
            {
            i->a1 = orig->a1 ;
@@ -636,7 +636,7 @@ void PlasmidCanvas::SetMyToolTip ( wxString s , int mode )
 
     SetToolTip ( NULL ) ;
 
-    tt = new wxToolTip ( "" ) ;
+    tt = new wxToolTip ( _T("") ) ;
     tt->Enable ( false ) ;
     SetToolTip ( tt ) ;
     
@@ -714,7 +714,7 @@ bool PlasmidCanvas::pointinrect ( int x , int y , wxRect &a )
     
 void PlasmidCanvas::invokeVectorEditor ( wxString what , int num , bool forceUpdate )
     {
-    if ( p->def == "AminoAcids" )
+    if ( p->def == _T("AminoAcids") )
        {
        wxCommandEvent ce ;
        p->cSequence->vecEdit ( ce ) ;
@@ -725,11 +725,11 @@ void PlasmidCanvas::invokeVectorEditor ( wxString what , int num , bool forceUpd
     bool changed = p->vec->isChanged() ;
     p->vec->setChanged ( false ) ;
     
-    if ( what == "item" )
+    if ( what == _T("item") )
         {
         ve.initialViewItem ( num ) ;
         }
-    else if ( what == "enzyme" )
+    else if ( what == _T("enzyme") )
         {
         ve.initialViewEnzyme ( p->vec->rc[num].e->name ) ;
         }
@@ -828,7 +828,7 @@ void PlasmidCanvas::showGClegend ( wxDC &dc )
 	    				   r.GetBottom() - nw2*9/10 ,
 	    				   nw2*8/10 ,
 	    				   nw2*8/10 ) ;
-	    t = wxString::Format ( "%d" , a * 10 ) ;
+	    t = wxString::Format ( _T("%d") , a * 10 ) ;
      	dc.GetTextExtent ( t , &tw , &th ) ;
 	    dc.DrawText ( t ,
 	    				r.GetLeft() + nw2 * a + nw2/2 - tw/2 ,

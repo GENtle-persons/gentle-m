@@ -10,7 +10,7 @@ void SeqFeature::show ( wxDC& dc )
     myass ( can->smallFont , "SeqFeature::show can->smallFont==NULL" ) ;
     int cw2 , ch2 ;
     dc.SetFont(*can->smallFont);
-    dc.GetTextExtent ( "A" , &cw2 , &ch2 ) ;
+    dc.GetTextExtent ( _T("A") , &cw2 , &ch2 ) ;
 //    dc.SetFont(*can->font);
     wxColour tbg = dc.GetTextBackground () ;
     wxColour tfg = dc.GetTextForeground () ;
@@ -34,7 +34,7 @@ void SeqFeature::show ( wxDC& dc )
     while ( used.GetCount() < pl.maxlevels ) used.Add ( 0 ) ;
     
     bool drawOffsets = true ;
-    if ( can->child && can->child->def == "alignment" ) drawOffsets = false ;
+    if ( can->child && can->child->def == _T("alignment") ) drawOffsets = false ;
 
     for ( int l = 0 ; l < pl.maxlevels ; l++ )
         {
@@ -54,7 +54,7 @@ void SeqFeature::show ( wxDC& dc )
             else if ( ty > yb ) a = pos.r.size() ;
             if ( b > 0 ) // Character
                {
-               t = " " ;
+               t = _T(" ") ;
                int i ;
                wxArrayInt _i ;
                wxArrayString _name ;
@@ -83,7 +83,7 @@ void SeqFeature::show ( wxDC& dc )
                     myass ( vec , "UGH!" ) ;
                     int myid = pl.getID(i) ;
                     if ( myid >= vec->items.size() ) continue ; // Patchy
-                    wxString tmp = vec->items[myid].getParam("SEQUENCE_STYLE") ;
+                    wxString tmp = vec->items[myid].getParam ( _T("SEQUENCE_STYLE") ) ;
                     long mode ;
                     tmp.ToLong ( &mode ) ;
                     wxColour col = *wxBLACK ;
@@ -123,7 +123,7 @@ void SeqFeature::show ( wxDC& dc )
                        if ( o != -1 )     
                           {
                           dc.SetTextForeground ( col ) ;
-                          wxString pn = wxString::Format ( "%d" , o ) ;
+                          wxString pn = wxString::Format ( _T("%d") , o ) ;
                           int u1 , u2 ;
                           dc.GetTextExtent ( pn , &u1 , &u2 ) ;
                           dc.DrawText ( pn , x_to - can->charwidth , level - u2 ) ;
@@ -187,7 +187,7 @@ void SeqFeature::show ( wxDC& dc )
                     if ( insight )
                        {
                        wxString name = vec->items[pl.getID(i)].name ;
-                       if ( newline && li[l] == i ) name = "(" + name + ")" ;
+                       if ( newline && li[l] == i ) name = _T("(") + name + _T(")") ;
                        _i.Add ( i ) ;
                        _name.Add ( name ) ;
                        _point.push_back ( wxPoint ( x_from , level - ch2 ) ) ;
@@ -216,7 +216,7 @@ void SeqFeature::show ( wxDC& dc )
                       wxColour col = vec->items[pl.getID(_i[i])/*vr[_i[i]].GetX()*/].getFontColor() ;
                       dc.SetTextForeground ( col ) ;
                       }
-                   if ( _name[i] != "()" )
+                   if ( _name[i] != _T("()") )
                       {
                       dc.DrawText ( _name[i] , _point[i] ) ;
                       }

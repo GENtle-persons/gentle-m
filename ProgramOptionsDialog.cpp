@@ -37,20 +37,20 @@ TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent , int _mode )
     if ( mode == EST_SINGLE ) t = txt("t_use_single_enzyme_settings") ;
     useSettings = new wxCheckBox ( this , GES_USE , t ) ; 
     join_enzymes = new wxCheckBox ( this , -1 , txt("t_ges_join_enzymes") ) ;    
-    topSizer->Add ( new wxStaticText ( this , -1 , "" ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    topSizer->Add ( new wxStaticText ( this , -1 , "" ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    topSizer->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    topSizer->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
     topSizer->Add ( useSettings , 1 , wxALIGN_CENTER_VERTICAL ) ;
     topSizer->Add ( join_enzymes , 1 , wxALIGN_CENTER_VERTICAL ) ;
     
     vs->Add ( topSizer , 0 , wxEXPAND , 5 ) ;
-    vs->Add ( new wxStaticText ( this , -1 , " " ) , 0 , wxEXPAND , 5 ) ;
+    vs->Add ( new wxStaticText ( this , -1 , _T(" ") ) , 0 , wxEXPAND , 5 ) ;
     vs->Add ( optionsSizer , 1 , wxEXPAND , 5 ) ;
     
     // Min/max cutoff
     useMinCutoff = new wxCheckBox ( this , GES_USE_MINCUTOFF , txt("t_ges_use_min_cutoff") ) ;
-    minCutoff = new wxSpinCtrl ( this , -1 , "1"  , wxDefaultPosition , wxSize ( MYSPINBOXSIZE , 30 ) ) ;
+    minCutoff = new wxSpinCtrl ( this , -1 , _T("1")  , wxDefaultPosition , wxSize ( MYSPINBOXSIZE , 30 ) ) ;
     useMaxCutoff = new wxCheckBox ( this , GES_USE_MAXCUTOFF , txt("t_ges_use_max_cutoff") ) ;
-    maxCutoff = new wxSpinCtrl ( this , -1 , "3"  , wxDefaultPosition , wxSize ( MYSPINBOXSIZE , 30 ) ) ;
+    maxCutoff = new wxSpinCtrl ( this , -1 , _T("3")  , wxDefaultPosition , wxSize ( MYSPINBOXSIZE , 30 ) ) ;
     
     // Length of recognition sequence
     recog4 = new wxCheckBox ( this , -1 , txt("t_ges_seqlen4") ) ;
@@ -108,13 +108,13 @@ TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent , int _mode )
     
     optionsSizer->Add ( new wxStaticText ( this , -1 , txt("t_ges_enzyme_group") ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
     optionsSizer->Add ( default_group , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    optionsSizer->Add ( new wxStaticText ( this , -1 , "" ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    optionsSizer->Add ( new wxStaticText ( this , -1 , "" ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    optionsSizer->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    optionsSizer->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
 
     optionsSizer->Add ( new wxStaticText ( this , -1 , txt("t_ges_met") ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
     optionsSizer->Add ( met_dam , 1 , wxALIGN_CENTER_VERTICAL ) ;
     optionsSizer->Add ( met_dcm , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    optionsSizer->Add ( new wxStaticText ( this , -1 , "" ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
+    optionsSizer->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
 
     optionsSizer->Add ( showgc , 1 , wxALIGN_CENTER_VERTICAL ) ;
     
@@ -287,8 +287,8 @@ void ProgramOptionsDialog::initGlobalSettings ()
     checkUpdate->SetValue ( myapp()->frame->checkUpdate ) ;
     useInternalHelp->SetValue ( myapp()->frame->useInternalHelp ) ;
     doRegisterStuff->SetValue ( myapp()->frame->doRegisterStuff ) ;
-    language->Append ( "en" ) ;
-    language->Append ( "de" ) ;
+    language->Append ( _T("en") ) ;
+    language->Append ( _T("de") ) ;
     language->SetStringSelection ( myapp()->frame->lang_string ) ;
     }
 
@@ -340,13 +340,13 @@ void TEnzymeRules::init () // Default settings
 void TEnzymeRules::load_global_settings ()
 	{
 	init () ;
-    wxString s = myapp()->frame->LS->getOption ( "GLOBALENZYMESETTINGS" , "" ) ;
+    wxString s = myapp()->frame->LS->getOption ( _T("GLOBALENZYMESETTINGS") , _T("") ) ;
     from_string ( s ) ;
 	}    
 
 void TEnzymeRules::save_global_settings ()
 	{
-    myapp()->frame->LS->setOption ( "GLOBALENZYMESETTINGS" , to_string() ) ;
+    myapp()->frame->LS->setOption ( _T("GLOBALENZYMESETTINGS") , to_string() ) ;
 	}    
 
 void TEnzymeRules::setup_options ( TEnzymeSettingsTab *est )
@@ -363,7 +363,7 @@ void TEnzymeRules::setup_options ( TEnzymeSettingsTab *est )
 	est->pattern3->SetValue ( pattern3 ) ;
 	est->pattern5->SetValue ( pattern5 ) ;
 	est->pattern_blunt->SetValue ( pattern_blunt ) ;
-	if ( default_group != "" ) est->default_group->SetStringSelection ( default_group ) ;
+	if ( default_group != _T("") ) est->default_group->SetStringSelection ( default_group ) ;
 	est->col1 = col1 ;
 	est->col2 = col2 ;
 	est->col3 = col3 ;
@@ -410,26 +410,26 @@ bool TEnzymeRules::isEqual ( TEnzymeRules &r )
 wxString TEnzymeRules::to_string ()
 	{
 	wxString ret ;
-	ret += wxString::Format ( "useit=%d\r" , useit ) ;
-	ret += wxString::Format ( "min_cutoff=%d\r" , min_cutoff ) ;
-	ret += wxString::Format ( "max_cutoff=%d\r" , max_cutoff ) ;
-	ret += wxString::Format ( "use_min_cutoff=%d\r" , use_min_cutoff ) ;
-	ret += wxString::Format ( "use_max_cutoff=%d\r" , use_max_cutoff ) ;
-	ret += wxString::Format ( "recog4=%d\r" , recog4 ) ;
-	ret += wxString::Format ( "recog5=%d\r" , recog5 ) ;
-	ret += wxString::Format ( "recog6=%d\r" , recog6 ) ;
-	ret += wxString::Format ( "recog_longer=%d\r" , recog_longer ) ;
-	ret += wxString::Format ( "pattern3=%d\r" , pattern3 ) ;
-	ret += wxString::Format ( "pattern5=%d\r" , pattern5 ) ;
-	ret += wxString::Format ( "pattern_blunt=%d\r" , pattern_blunt ) ;
-	ret += wxString::Format ( "default_group=%s\r" , default_group.c_str() ) ;
-	ret += wxString::Format ( "col1=%d,%d,%d\r" , col1.Red() , col1.Green() , col1.Blue() ) ;
-	ret += wxString::Format ( "col2=%d,%d,%d\r" , col2.Red() , col2.Green() , col2.Blue() ) ;
-	ret += wxString::Format ( "col3=%d,%d,%d\r" , col3.Red() , col3.Green() , col3.Blue() ) ;
-	ret += wxString::Format ( "join_enzymes=%d\r" , join_enzymes ) ;
-	ret += wxString::Format ( "use_color_coding=%d\r" , use_color_coding ) ;
-	ret += wxString::Format ( "methylation=%d\r" , methylation ) ;
-	ret += wxString::Format ( "showgc=%d\r" , showgc ) ;
+	ret += wxString::Format ( _T("useit=%d\r") , useit ) ;
+	ret += wxString::Format ( _T("min_cutoff=%d\r") , min_cutoff ) ;
+	ret += wxString::Format ( _T("max_cutoff=%d\r") , max_cutoff ) ;
+	ret += wxString::Format ( _T("use_min_cutoff=%d\r") , use_min_cutoff ) ;
+	ret += wxString::Format ( _T("use_max_cutoff=%d\r") , use_max_cutoff ) ;
+	ret += wxString::Format ( _T("recog4=%d\r") , recog4 ) ;
+	ret += wxString::Format ( _T("recog5=%d\r") , recog5 ) ;
+	ret += wxString::Format ( _T("recog6=%d\r") , recog6 ) ;
+	ret += wxString::Format ( _T("recog_longer=%d\r") , recog_longer ) ;
+	ret += wxString::Format ( _T("pattern3=%d\r") , pattern3 ) ;
+	ret += wxString::Format ( _T("pattern5=%d\r") , pattern5 ) ;
+	ret += wxString::Format ( _T("pattern_blunt=%d\r") , pattern_blunt ) ;
+	ret += wxString::Format ( _T("default_group=%s\r") , default_group.c_str() ) ;
+	ret += wxString::Format ( _T("col1=%d,%d,%d\r") , col1.Red() , col1.Green() , col1.Blue() ) ;
+	ret += wxString::Format ( _T("col2=%d,%d,%d\r") , col2.Red() , col2.Green() , col2.Blue() ) ;
+	ret += wxString::Format ( _T("col3=%d,%d,%d\r") , col3.Red() , col3.Green() , col3.Blue() ) ;
+	ret += wxString::Format ( _T("join_enzymes=%d\r") , join_enzymes ) ;
+	ret += wxString::Format ( _T("use_color_coding=%d\r") , use_color_coding ) ;
+	ret += wxString::Format ( _T("methylation=%d\r") , methylation ) ;
+	ret += wxString::Format ( _T("showgc=%d\r") , showgc ) ;
 	return ret ;
 	}    
 
@@ -437,34 +437,34 @@ void TEnzymeRules::from_string ( wxString &s )
 	{
 	init () ;
 	wxArrayString as ;
-	explode ( "\r" , s , as ) ;
+	explode ( _T("\r") , s , as ) ;
 	for ( int a = 0 ; a < as.GetCount() ; a++ )
 		{
-		if ( as[a] == "" ) continue ;
+		if ( as[a] == _T("") ) continue ;
 		wxString key = as[a].BeforeFirst ( '=' ) ;
 		wxString val = as[a].AfterFirst ( '=' ) ;
 		long l ;
 		val.ToLong ( &l ) ;
-		if ( key == "useit" ) useit = l ;
-		else if ( key == "min_cutoff" ) min_cutoff = l ;
-		else if ( key == "max_cutoff" ) max_cutoff = l ;
-		else if ( key == "use_min_cutoff" ) use_min_cutoff = l ;
-		else if ( key == "use_max_cutoff" ) use_max_cutoff = l ;
-		else if ( key == "recog4" ) recog4 = l ;
-		else if ( key == "recog5" ) recog5 = l ;
-		else if ( key == "recog6" ) recog6 = l ;
-		else if ( key == "recog_longer" ) recog_longer = l ;
-		else if ( key == "pattern3" ) pattern3 = l ;
-		else if ( key == "pattern5" ) pattern5 = l ;
-		else if ( key == "pattern_blunt" ) pattern_blunt = l ;
-		else if ( key == "default_group" ) default_group = val ;
-		else if ( key == "col1" ) col1 = scan_color ( val ) ;
-		else if ( key == "col2" ) col2 = scan_color ( val ) ;
-		else if ( key == "col3" ) col3 = scan_color ( val ) ;
-		else if ( key == "join_enzymes" ) join_enzymes = l ;
-		else if ( key == "use_color_coding" ) use_color_coding = l ;
-		else if ( key == "methylation" ) methylation = l ;
-		else if ( key == "showgc" ) showgc = l ;
+		if ( key == _T("useit") ) useit = l ;
+		else if ( key == _T("min_cutoff") ) min_cutoff = l ;
+		else if ( key == _T("max_cutoff") ) max_cutoff = l ;
+		else if ( key == _T("use_min_cutoff") ) use_min_cutoff = l ;
+		else if ( key == _T("use_max_cutoff") ) use_max_cutoff = l ;
+		else if ( key == _T("recog4") ) recog4 = l ;
+		else if ( key == _T("recog5") ) recog5 = l ;
+		else if ( key == _T("recog6") ) recog6 = l ;
+		else if ( key == _T("recog_longer") ) recog_longer = l ;
+		else if ( key == _T("pattern3") ) pattern3 = l ;
+		else if ( key == _T("pattern5") ) pattern5 = l ;
+		else if ( key == _T("pattern_blunt") ) pattern_blunt = l ;
+		else if ( key == _T("default_group") ) default_group = val ;
+		else if ( key == _T("col1") ) col1 = scan_color ( val ) ;
+		else if ( key == _T("col2") ) col2 = scan_color ( val ) ;
+		else if ( key == _T("col3") ) col3 = scan_color ( val ) ;
+		else if ( key == _T("join_enzymes") ) join_enzymes = l ;
+		else if ( key == _T("use_color_coding") ) use_color_coding = l ;
+		else if ( key == _T("methylation") ) methylation = l ;
+		else if ( key == _T("showgc") ) showgc = l ;
 		}    
 	}    
 
@@ -474,7 +474,7 @@ wxColour TEnzymeRules::scan_color ( wxString s )
 	s = s.AfterFirst ( ',' ) ;
 	wxString c2 = s.BeforeFirst ( ',' ) ;
 	wxString c3 = s.AfterFirst ( ',' ) ;
-	return wxColour ( atoi(c1.c_str()) , atoi(c2.c_str()) , atoi(c3.c_str()) ) ;
+	return wxColour ( atoi(c1.mb_str()) , atoi(c2.mb_str()) , atoi(c3.mb_str()) ) ;
 	}
 
 // Here we go...
@@ -507,7 +507,7 @@ void TEnzymeRules::getVectorCuts ( TVector *v )
 	int i = vs.Index ( v->re[a]->name ) ;
 	while ( i != wxNOT_FOUND )
 	{
-	    vs[i] = "" ;
+	    vs[i] = _T("") ;
 	    i = vs.Index ( v->re[a]->name ) ;
 	}    
     }    

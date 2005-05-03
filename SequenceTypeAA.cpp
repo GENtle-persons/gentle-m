@@ -8,7 +8,7 @@ SeqAA::~SeqAA ()
     int a ;
     for ( a = 0 ; can && a < can->seq.GetCount() ; a++ )
         {
-        if ( can->seq[a]->whatsthis() == "FEATURE" )
+        if ( can->seq[a]->whatsthis() == _T("FEATURE") )
            {
            SeqFeature *f = (SeqFeature*) can->seq[a] ;
            if ( f->aaa == this ) f->aaa = NULL ;
@@ -20,7 +20,7 @@ SeqAA::~SeqAA ()
 int SeqAA::arrange ( int n )
     {
     if ( useDirectRoutines() ) return arrange_direct ( n ) ;
-    wxMessageBox ( "One has to wonder...1" ) ;
+    wxMessageBox ( _T("One has to wonder...1") ) ;
     int a , b , x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
     int lasta = 0 ;
     
@@ -98,10 +98,10 @@ int SeqAA::arrange ( int n )
 void SeqAA::show ( wxDC& dc )
     {
     if ( useDirectRoutines() ) { show_direct ( dc ) ; return ; }
-    wxMessageBox ( "One has to wonder...2" ) ;
+    wxMessageBox ( _T("One has to wonder...2") ) ;
     int cw2 , ch2 ;
     dc.SetFont(*can->smallFont);
-    dc.GetTextExtent ( "A" , &cw2 , &ch2 ) ;
+    dc.GetTextExtent ( _T("A") , &cw2 , &ch2 ) ;
     dc.SetFont(*can->font);
     wxColour tbg = dc.GetTextBackground () ;
     wxColour tfg = dc.GetTextForeground () ;
@@ -214,10 +214,12 @@ void SeqAA::show ( wxDC& dc )
            }
         else if ( insight ) // Front number
            {
-           if ( primaryMode ) sprintf ( u , "%d" , cnt ) ;
-           else sprintf ( u , "%d" , cnt/3 ) ;
-           t = u ;
-           while ( t.length() < endnumberlength ) t = "0" + t ;
+//           if ( primaryMode ) sprintf ( u , "%d" , cnt ) ;
+//           else sprintf ( u , "%d" , cnt/3 ) ;
+//           t = u ;
+			  if ( primaryMode ) t = wxString::Format ( _T("%d") , cnt ) ;
+			  else t = wxString::Format ( _T("%d") , cnt/3 ) ;
+           while ( t.length() < endnumberlength ) t = _T("0") + t ;
            dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
            }
         }
@@ -243,7 +245,7 @@ wxPoint SeqAA::showText ( int ystart , wxArrayString &tout )
               ly = pos.r[a].y ;
               y += can->seq.GetCount() ;
               x = 0 ;
-              while ( y >= tout.GetCount() ) tout.Add ( "" ) ;
+              while ( y >= tout.GetCount() ) tout.Add ( _T("") ) ;
               }
            else x++ ;
            if ( (x) % (can->blocksize+1) == 0 ) x++ ;
@@ -251,7 +253,7 @@ wxPoint SeqAA::showText ( int ystart , wxArrayString &tout )
               {
               if ( b >= can->markedFrom() && p.x == -1 ) p.x = y ;
               if ( b <= can->markedTo() ) p.y = y ;
-              while ( tout[y].length() < x ) tout[y] += " " ;
+              while ( tout[y].length() < x ) tout[y] += _T(" ") ;
               tout[y].SetChar ( x-1 , t.GetChar(0) ) ;
               }
            }
@@ -272,7 +274,7 @@ void SeqAA::initFromString ( wxString t )
     
     // Proteases
     updateProteases () ;
-    pa_w = "" ;
+    pa_w = _T("") ;
     pa_wa.Clear() ;
     pa_wa.Alloc ( s.length() ) ;
     while ( pa_w != s )
@@ -373,9 +375,9 @@ void SeqAA::initFromTVector ( TVector *v )
 //    while ( offsets.GetCount() < s.length() ) offsets.Add ( -1 ) ;
     updateProteases () ;
     if ( v->isCircular() ) t += t.substr ( 0 , 2 ) ;
-    else t += "  " ;
+    else t += _T("  ") ;
     int a , b , sl = s.length() ;
-    s += "  " ;
+    s += _T("  ") ;
 
     if ( mode == AA_ALL )
         {
@@ -392,7 +394,7 @@ void SeqAA::initFromTVector ( TVector *v )
         }
     else
         {
-        pa_w = "" ;
+        pa_w = _T("") ;
         pa_wa.Clear() ;
         int mymode = mode ;
         bool invert = false ;
@@ -437,8 +439,8 @@ void SeqAA::initFromTVector ( TVector *v )
        if ( s.GetChar(a) == '?' ) s.SetChar(a, unknownAA) ;
     if ( truncateEditSequence )
        {
-       v->addToSequence ( " " ) ;
-       s += " " ;
+       v->addToSequence ( _T(" ") ) ;
+       s += _T(" ") ;
        }
        
     int mem = 0 ;
@@ -614,8 +616,8 @@ void SeqAA::show_direct ( wxDC& dc )
 
         if ( showNumber && primaryMode )
            {
-           wxString t = wxString::Format ( "%d" , a + 1 ) ;
-           while ( endnumberlength > t.length() ) t = "0" + t ;
+           wxString t = wxString::Format ( _T("%d") , a + 1 ) ;
+           while ( endnumberlength > t.length() ) t = _T("0") + t ;
 //           t.Pad ( endnumberlength - t.length() , '0' , false ) ;
            dc.DrawText ( t , bo , py ) ;
            }    

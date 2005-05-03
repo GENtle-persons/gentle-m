@@ -40,7 +40,7 @@ BEGIN_EVENT_TABLE(TManageDatabaseDialog, wxDialog )
 END_EVENT_TABLE()
 
 
-TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , char *title , 
+TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , wxString title ,
                             int mode , TVector *_v )
     : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 700 , 550 ) )
     {

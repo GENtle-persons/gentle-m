@@ -17,7 +17,7 @@ TUReadSeq::TUReadSeq ( wxString _filename )
 void TUReadSeq::getFormat ()
     {
     if ( error != 0 ) return ;
-    format = seqFileFormat ( filename , &skiplines , &error ) ;
+    format = seqFileFormat ( filename.mb_str() , &skiplines , &error ) ;
     if ( format < kMinFormat || format > kMaxFormat ) error = 1 ;
     }
     
@@ -27,10 +27,10 @@ int TUReadSeq::getSequenceNames ()
     if ( error != 0 ) return 0 ;
     char  *seqlist;   /* list of sequence names, newline separated, 0 terminated */
 
-    seqlist = listSeqs( filename, skiplines, format, &numseqs, &error);
-    wxString s = seqlist ;
+    seqlist = listSeqs( filename.mb_str(), skiplines, format, &numseqs, &error);
+    wxString s ( seqlist , *wxConvCurrent ) ;
     free( seqlist);
-    explode ( "\n" , s , seq_names ) ;
+    explode ( _T("\n") , s , seq_names ) ;
     return seq_names.GetCount() ;
     }
     
@@ -45,21 +45,21 @@ void TUReadSeq::getSequences ()
         char  seqid[256]; /* sequence name */
         char  *seq;       /* sequence, 0 terminated, free when done */
         seqid[0] = 0 ;
-        seq = readSeq( seqIndex, filename, skiplines, format,
+        seq = readSeq( seqIndex, filename.mb_str(), skiplines, format,
                       &seqlen, &numseqs, &error, seqid);
         for ( char *c = seq ; *c ; c++ )
            {
            if ( *c >= 'a' && *c <= 'z' ) *c = *c - 'a' + 'A' ;
            }
-        seq_names[seqIndex-1] = seqid ;
-        seqs.Add ( seq ) ;
+        seq_names[seqIndex-1] = wxString ( seqid , *wxConvCurrent ) ;
+        seqs.Add ( wxString ( seq , *wxConvCurrent) ) ;
         free(seq);
         }
     }
     
 int TUReadSeq::getSeqType ( wxString t )
     {
-    short i = getseqtype ( t , t.length() ) ;
+    short i = getseqtype ( t.mb_str() , t.length() ) ;
     if ( i == kAmino ) return TYPE_AMINO_ACIDS ;
     return TYPE_VECTOR ;
     }
@@ -69,11 +69,11 @@ void TUReadSeq::convert ( TGenBank &gb )
     wxString s ;
     for ( int a = 0 ; a < seqs.GetCount() ; a++ )
         {
-        s += "LOCUS       " + seq_names[a] + "\n" ;
-        s += "TITLE       " + seq_names[a] + "\n" ;
-        s += "ORIGIN\n" ;
-        s += " " + seqs[a] + "\n" ;
-        s += "//\n" ;
+        s += _T("LOCUS       ") + seq_names[a] + _T("\n") ;
+        s += _T("TITLE       ") + seq_names[a] + _T("\n") ;
+        s += _T("ORIGIN\n") ;
+        s += _T(" ") + seqs[a] + _T("\n") ;
+        s += _T("//\n") ;
         }
     gb.paste ( s ) ;
     }

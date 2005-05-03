@@ -22,7 +22,7 @@ void TPDB::load ( wxString s )
 
 void TPDB::paste ( wxString s )
     {
-    explode ( "\n" , s , vs ) ;
+    explode ( _T("\n") , s , vs ) ;
     check4success () ;
     }
     
@@ -48,16 +48,16 @@ void TPDB::remap ()
         right = right.Trim () ;
         right = right.Trim ( false ) ;
         six = six.Trim () ;
-        if ( six == "TITLE" )
+        if ( six == _T("TITLE") )
            {
            _name = right ;
            }    
-        else if ( six == "REMARK" )
+        else if ( six == _T("REMARK") )
            {
            right = right.AfterFirst ( ' ' ) ;
-           _desc += right + "\n" ;
+           _desc += right + _T("\n") ;
            }    
-        else if ( six == "SEQRES" )
+        else if ( six == _T("SEQRES") )
            {
            char chain = vs[a].GetChar ( 11 ) ;
            wxArrayString v2 ;
@@ -76,82 +76,83 @@ void TPDB::remap ()
               if ( c != ' ' ) seqres[seq(chain)].sequence += c ;
               }
            }
-        else if ( six == "DBREF" )
+        else if ( six == _T("DBREF") )
            {
            wxString name = vs[a].Mid(7,4).Trim(false).Trim() ;
            wxString ncbi = vs[a].Mid(33,8).Trim(false).Trim() ;
            wxString gb = vs[a].Mid(42,12).Trim(false).Trim() ;
            char chain = vs[a].GetChar ( 12 ) ;
-           seqres[seq(chain)].v->addDescription ( "PDB : http://www.rcsb.org/pdb/cgi/explore.cgi?pdbId=" + name + "\n" ) ;
-           seqres[seq(chain)].v->addDescription ( "GenBank : http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=protein&val=" + ncbi + "\n" ) ;
-           seqres[seq(chain)].v->addDescription ( "NiceProt : http://expasy.org/cgi-bin/niceprot.pl?" + gb + "\n" ) ;
-           seqres[seq(chain)].v->addDescription ( "SwissProt : http://expasy.org/cgi-bin/get-sprot-entry?" + ncbi + "\n" ) ;
+           seqres[seq(chain)].v->addDescription ( _T("PDB : http://www.rcsb.org/pdb/cgi/explore.cgi?pdbId=") + name + _T("\n") ) ;
+           seqres[seq(chain)].v->addDescription ( _T("GenBank : http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=protein&val=") + ncbi + _T("\n") ) ;
+           seqres[seq(chain)].v->addDescription ( _T("NiceProt : http://expasy.org/cgi-bin/niceprot.pl?") + gb + _T("\n") ) ;
+           seqres[seq(chain)].v->addDescription ( _T("SwissProt : http://expasy.org/cgi-bin/get-sprot-entry?") + ncbi + _T("\n") ) ;
            }    
-        else if ( six == "HELIX" )
+        else if ( six == _T("HELIX") )
            {
-           wxString name = "alpha-" + vs[a].Mid(11,4).Trim(false).Trim() ;
+           wxString name = _T("alpha-") + vs[a].Mid(11,4).Trim(false).Trim() ;
            wxString desc = vs[a].Mid ( 40 , 30 ) ;
-           int from = atoi ( vs[a].Mid(21,4).c_str() ) ;
-           int to = atoi ( vs[a].Mid(33,4).c_str() ) ;
+           int from = atoi ( vs[a].Mid(21,4).mb_str() ) ;
+           int to = atoi ( vs[a].Mid(33,4).mb_str() ) ;
            char chain = vs[a].GetChar ( 19 ) ;
-           desc = "\n" + desc.Trim(false).Trim() ;
+           desc = _T("\n") + desc.Trim(false).Trim() ;
            desc = txt("t_seq_style_alpha") + desc ;
            TVectorItem vi ( name , desc , from , to , VIT_MISC ) ;
-           vi.setParam ( "SEQUENCE_STYLE" , "1" ) ;
+           vi.setParam ( _T("SEQUENCE_STYLE") , _T("1") ) ;
            seqres[seq(chain)].v->items.push_back ( vi ) ;
            }    
-        else if ( six == "SHEET" )
+        else if ( six == _T("SHEET") )
            {
-           wxString name = "beta-" + vs[a].Mid(11,4).Trim(false).Trim() ;
+           wxString name = _T("beta-") + vs[a].Mid(11,4).Trim(false).Trim() ;
            wxString desc = txt("t_seq_style_beta") ;
-           int from = atoi ( vs[a].Mid(22,4).c_str() ) ;
-           int to = atoi ( vs[a].Mid(33,4).c_str() ) ;
+           int from = atoi ( vs[a].Mid(22,4).mb_str() ) ;
+           int to = atoi ( vs[a].Mid(33,4).mb_str() ) ;
            char chain = vs[a].GetChar ( 21 ) ;
            TVectorItem vi ( name , desc , from , to , VIT_MISC ) ;
-           vi.setParam ( "SEQUENCE_STYLE" , "2" ) ;
+           vi.setParam ( _T("SEQUENCE_STYLE") , _T("2") ) ;
            seqres[seq(chain)].v->items.push_back ( vi ) ;
            }    
-        else if ( six == "TURN" )
+        else if ( six == _T("TURN") )
            {
-           wxString name = "turn-" + vs[a].Mid(11,4).Trim(false).Trim() ;
+           wxString name = _T("turn-") + vs[a].Mid(11,4).Trim(false).Trim() ;
            wxString desc = vs[a].Mid ( 40 , 30 ) ;
-           int from = atoi ( vs[a].Mid(20,4).c_str() ) ;
-           int to = atoi ( vs[a].Mid(31,4).c_str() ) ;
+           int from = atoi ( vs[a].Mid(20,4).mb_str() ) ;
+           int to = atoi ( vs[a].Mid(31,4).mb_str() ) ;
            char chain = vs[a].GetChar ( 19 ) ;
            TVectorItem vi ( name , desc , from , to , VIT_MISC ) ;
-           vi.setParam ( "SEQUENCE_STYLE" , "0" ) ;
+           vi.setParam ( _T("SEQUENCE_STYLE") , _T("0") ) ;
            seqres[seq(chain)].v->items.push_back ( vi ) ;
            }
-        else if ( six == "SSBOND" )
+        else if ( six == _T("SSBOND") )
            {
-           wxString name = "SS" ;
+           wxString name = _T("SS") ;
            wxString desc = vs[a].Mid(11,4).Trim(false).Trim() ;
-           int from = atoi ( vs[a].Mid(20,4).c_str() ) ;
+           int from = atoi ( vs[a].Mid(20,4).mb_str() ) ;
            int to = from ;
            char chain = vs[a].GetChar ( 15 ) ;
            TVectorItem vi ( name , desc , from , to , VIT_MISC ) ;
-           vi.setParam ( "SEQUENCE_STYLE" , "5" ) ;
+           vi.setParam ( _T("SEQUENCE_STYLE") , _T("5") ) ;
            seqres[seq(chain)].v->items.push_back ( vi ) ;
            chain = vs[a].GetChar ( 29 ) ;
            desc = vs[a].Mid(25,4).Trim(false).Trim() ;
-           from = atoi ( vs[a].Mid(31,4).c_str() ) ;
+           from = atoi ( vs[a].Mid(31,4).mb_str() ) ;
            to = from ;
            TVectorItem vi2 ( name , desc , from , to , VIT_MISC ) ;
-           vi2.setParam ( "SEQUENCE_STYLE" , "5" ) ;
+           vi2.setParam ( _T("SEQUENCE_STYLE") , _T("5") ) ;
            seqres[seq(chain)].v->items.push_back ( vi2 ) ;
            }
-        else if ( six == "SLTBRG" || six == "LINK" )
+        else if ( six == _T("SLTBRG") || six == _T("LINK") )
            {
-           wxString name = txt("PDB_"+six);
+			  wxString name = _T("PDB_") + six ;
+           name = txt(name);
            wxString desc = vs[a] ;
-           int id1 = atoi ( vs[a].Mid(22,4).c_str() ) ;
-           int id2 = atoi ( vs[a].Mid(52,4).c_str() ) ;
+           int id1 = atoi ( vs[a].Mid(22,4).mb_str() ) ;
+           int id2 = atoi ( vs[a].Mid(52,4).mb_str() ) ;
            wxString name2 = vs[a].Mid(47,3) ;
-           char chain1 = vs[a].GetChar ( 21 ) ;
-           char chain2 = vs[a].GetChar ( 51 ) ;
-           name += wxString::Format ( " %s%d %c" , name2.c_str() , id2 , chain2 ) ;
+           char chain1 = (char) vs[a].GetChar ( 21 ) ;
+           char chain2 = (char) vs[a].GetChar ( 51 ) ;
+           name += wxString::Format ( _T(" %s%d %c") , name2.c_str() , id2 , chain2 ) ;
            TVectorItem vi1 ( name , desc , id1 , id1 , VIT_MISC ) ;
-           vi1.setParam ( "SEQUENCE_STYLE" , "5" ) ;
+           vi1.setParam ( _T("SEQUENCE_STYLE") , _T("5") ) ;
            seqres[seq(chain1)].v->items.push_back ( vi1 ) ;
            }    
         }
@@ -159,7 +160,8 @@ void TPDB::remap ()
     for ( a = 0 ; a < seqres.size() ; a++ )
         {
         seqres[a].v->setSequence ( seqres[a].sequence ) ;
-        seqres[a].v->setName ( _name + " (" + wxString ( seqres[a].chain ) + ")" ) ;
+        seqres[a].v->setName ( _name + _T(" (") + wxString::Format ( _T("%d") , seqres[a].chain ) + _T(")") ) ;
+//        seqres[a].v->setName ( _name + _T(" (") + wxString ( (char*)seqres[a].chain , *wxConvCurrent ) + _T(")") ) ;
         seqres[a].v->addDescription ( _desc ) ;
         }    
     }
@@ -169,7 +171,7 @@ void TPDB::check4success ()
     {
     success = false ;
     if ( vs.GetCount() == 0 ) return ;
-    if ( vs[0].Left ( 6 ) != "HEADER" ) return ;
+    if ( vs[0].Left ( 6 ) != _T("HEADER") ) return ;
     success = true ;
     }
         

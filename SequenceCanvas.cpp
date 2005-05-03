@@ -103,8 +103,8 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
 
     setMiniDisplay ( false ) ;
     editMode = false ;
-    edit_id = "DNA" ;
-    edit_valid = "ACTG" ;
+    edit_id = _T("DNA") ;
+    edit_valid = _T("ACTG") ;
     _from = -1 ;
     setDrawAll ( false ) ;
     printing = false ;
@@ -229,8 +229,8 @@ void SequenceCanvas::editSequence ( int k , wxKeyEvent& event )
     SeqDNA *dna = (SeqDNA*) seq[b] ;
     int from = _from ;
     wxString *the_sequence ;
-    if ( dna->whatsthis() == "AA" ) the_sequence = getAA()->vec->getSequencePointer() ;
-    else if ( dna->whatsthis() == "DNA" ) the_sequence = dna->vec->getSequencePointer() ;
+    if ( dna->whatsthis() == _T("AA") ) the_sequence = getAA()->vec->getSequencePointer() ;
+    else if ( dna->whatsthis() == _T("DNA") ) the_sequence = dna->vec->getSequencePointer() ;
     else the_sequence = &dna->s ;
     TVector *v = NULL ;
     if ( p ) v = dna->vec ;
@@ -254,7 +254,7 @@ void SequenceCanvas::editSequence ( int k , wxKeyEvent& event )
                              txt("t_question") , 
                              wxICON_QUESTION|wxYES_NO ) == wxYES )
           {
-          edit_valid = "ABCDEFGHIJKLMNOPQRSTUVWXYZ|-" ;
+          edit_valid = _T("ABCDEFGHIJKLMNOPQRSTUVWXYZ|-") ;
           valid = edit_valid ;
           for ( a = 0 ; a < valid.length() && valid.GetChar(a) != k ; a++ ) ;
           }
@@ -394,11 +394,11 @@ void SequenceCanvas::editCharPressed ( int k , TVector *v , wxString *the_sequen
        {
        int u ;
        for ( u = 0 ; u < seq.GetCount() && seq[u]->whatsthis() != edit_id ; u++ ) ;
-       if ( edit_id == "PRIMER_UP" ) k = seq[u+1]->s.GetChar(from-1) ;
-       if ( edit_id == "PRIMER_DOWN" ) k = seq[u-1]->s.GetChar(from-1) ;
+       if ( edit_id == _T("PRIMER_UP") ) k = seq[u+1]->s.GetChar(from-1) ;
+       if ( edit_id == _T("PRIMER_DOWN") ) k = seq[u-1]->s.GetChar(from-1) ;
        }
        
-    dummy = (char) k ;           
+    dummy = (wxChar) k ;
     if ( v )
        {
        mylog ( "SequenceCanvas::editCharPressed" , "1" ) ;
@@ -453,7 +453,7 @@ void SequenceCanvas::vecEdit ( wxCommandEvent &ev )
     else if ( getPD() )
         {
         TVectorEditor ve ( this , txt("t_vector_editor") , getPD()->w ) ;
-        ve.initialViewEnzyme ( "" ) ;
+        ve.initialViewEnzyme ( _T("") ) ;
         ve.hideProp = true ;
         ve.hideItem = true ;
         ve.hideEm () ;
@@ -468,7 +468,7 @@ void SequenceCanvas::vecEdit ( wxCommandEvent &ev )
             Refresh () ;
             }
         }
-    else if ( child && child->def == "AminoAcids" )
+    else if ( child && child->def == _T("AminoAcids") )
         {
         TAminoAcids *ama = (TAminoAcids*) child ;
         ama->OnEditName ( ev ) ;
@@ -499,7 +499,7 @@ void SequenceCanvas::blastAA ( wxCommandEvent &ev )
     else if ( getAA() )
         {
         wxString seq = getSelection() ;
-        myapp()->frame->blast ( seq , "blastp" ) ;
+        myapp()->frame->blast ( seq , _T("blastp") ) ;
         }
     }
 
@@ -519,7 +519,7 @@ void SequenceCanvas::OnCut ( wxCommandEvent &ev )
     
     for ( int a = 0 ; a < seq.GetCount() ; a++ )
        {
-       if ( seq[a]->whatsthis() == "AA" )
+       if ( seq[a]->whatsthis() == _T("AA") )
           {
           SeqAA *x = (SeqAA*) seq[a] ;
           x->initFromString ( getAA()->vec->getSequence() ) ;
@@ -557,9 +557,9 @@ void SequenceCanvas::OnCopyText ( wxCommandEvent &ev )
     if ( minline < 0 ) minline = 0 ;
     if ( maxline < 0 ) maxline = out.GetCount()-1 ;
 
-    s = "" ;
+    s = _T("") ;
     for ( a = minline ; a <= maxline ; a++ )
-        s += out[a] + "\n" ;
+        s += out[a] + _T("\n") ;
 
     if (wxTheClipboard->Open())
         {
@@ -587,7 +587,7 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
 
     TMarkMem mm ( this ) ; // Temporary mark for printing
 
-    wxString name = "GENtle" ;
+    wxString name = _T("GENtle") ;
     if ( p && p->vec ) name = p->vec->getName() ;
 
     print_dc = pd.GetPrintDC () ;
@@ -659,7 +659,7 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
     dummy += lines * charheight ;
     
     wxDateTime now = wxDateTime::Now();
-    wxString printtime = now.Format("%c", wxDateTime::Local) ;
+    wxString printtime = now.Format( _T("%c") , wxDateTime::Local) ;
 
     
     do {
@@ -742,7 +742,7 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
 void SequenceCanvas::OnSaveImage ( wxCommandEvent &ev )
     {
     wxBitmap *bmp = getSequenceBitmap () ;
-    myapp()->frame->saveImage ( bmp , child ? child->getName() : "" ) ;
+    myapp()->frame->saveImage ( bmp , child ? child->getName() : _T("") ) ;
 //    delete bmp ;
     }    
     
@@ -845,18 +845,18 @@ void SequenceCanvas::OnCopy ( wxCommandEvent &ev )
     
 wxString SequenceCanvas::getSelection ()
     {
-    if ( getEditMode() ) return "" ;
-    if ( markedFrom() == -1 ) return "" ;
+    if ( getEditMode() ) return _T("") ;
+    if ( markedFrom() == -1 ) return _T("") ;
     if ( p ) return p->vec->getSubstring ( _from , _to ) ;
     if ( getAA() && _from != -1 ) return getAA()->vec->getSubstring ( _from , _to ) ;
     if ( getPD() && _from != -1 && lastmarked != -1 )
         return seq[lastmarked]->s.substr ( _from-1 , _to-_from+1 ) ;
-    if ( child && child->def == "ABIviewer" )
+    if ( child && child->def == _T("ABIviewer") )
         {
-        if ( _from == -1 ) return "" ;
+        if ( _from == -1 ) return _T("") ;
         return seq[lastmarked]->s.substr ( _from-1 , _to-_from+1 ) ;
         }
-    return "" ;
+    return _T("") ;
     }
     
 void SequenceCanvas::ensureVisible ( int pos )
@@ -917,7 +917,7 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
         {
         myass ( child , "Mark1" ) ;
         myass ( child->cSequence , "Mark2" ) ;
-        child->cSequence->mark ( "AA" , from , to , value ) ;
+        child->cSequence->mark ( _T("AA") , from , to , value ) ;
         }
     else if ( !isMiniDisplay() && getAA() && getAA()->sc2 )
         {
@@ -990,22 +990,23 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
         if ( !editMode )
             {
             p->cPlasmid->Refresh() ;
-            
-            char tt[1000] ;
+            wxString tt ;
+//            char tt[1000] ;
             if ( value == 1 && seqlen > 0 )
                {
                int to2 = to ;
                while ( to2 > seqlen )
                   to2 -= seqlen ;
-               sprintf ( tt , txt("X-Y (# bp)") , from , to2 , to-from+1 ) ;
-               if ( from == -1 ) *tt = 0 ;
+					if ( from != -1 ) tt = wxString::Format ( txt("X-Y (# bp)") , from , to2 , to-from+1 ) ;
+//               sprintf ( tt , txt("X-Y (# bp)") , from , to2 , to-from+1 ) ;
+//               if ( from == -1 ) *tt = 0 ;
                }
-            else *tt = 0 ;
+//            else *tt = 0 ;
             MyFrame *f = myapp()->frame ;
             f->SetStatusText ( tt , 1 ) ;
             }
         }
-    else if ( child && child->def == "AminoAcids" )
+    else if ( child && child->def == _T("AminoAcids") )
         {
         TAminoAcids *ama = (TAminoAcids*) child ;
         if ( ama->curDisplay == ama->pc )
@@ -1014,17 +1015,19 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
             ama->pc->setMark ( from , to ) ;
             if ( !editMode )
                 {
-                char tt[1000] ;
+//					 char tt[1000] ;
+					 wxString tt ;
                 ama->pc->Refresh() ;
                 if ( value == 1 )
                    {
                    int to2 = to ;
                    while ( to2 > seqlen )
                       to2 -= seqlen ;
-                   sprintf ( tt , txt("X-Y (# aa)") , from , to2 , to-from+1 ) ;
-                   if ( from == -1 ) *tt = 0 ;
+//                   sprintf ( tt , txt("X-Y (# aa)") , from , to2 , to-from+1 ) ;
+//                   if ( from == -1 ) *tt = 0 ;
+						 if ( from != -1 ) tt = wxString::Format ( txt("X-Y (# aa)") , from , to2 , to-from+1 ) ;
                    }
-                else *tt = 0 ;
+//                else *tt = 0 ;
                 MyFrame *f = myapp()->frame ;
                 f->SetStatusText ( tt , 1 ) ;
                 }
@@ -1034,16 +1037,18 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
         {
         if ( !editMode )
            {
-            char tt[1000] ;
+//            char tt[1000] ;
+			   wxString tt ;
             if ( value == 1 )
                {
                int to2 = to ;
                while ( to2 > seqlen )
                   to2 -= seqlen ;
-               sprintf ( tt , txt("X-Y (# bp)") , from , to2 , to-from+1 ) ;
-               if ( from == -1 ) *tt = 0 ;
+					if ( from != -1 ) tt = wxString::Format ( txt("X-Y (# bp)") , from , to2 , to-from+1 ) ;
+//               sprintf ( tt , txt("X-Y (# bp)") , from , to2 , to-from+1 ) ;
+//               if ( from == -1 ) *tt = 0 ;
                }
-            else *tt = 0 ;
+//            else *tt = 0 ;
             MyFrame *f = (MyFrame*) myapp()->frame ;
             f->SetStatusText ( tt , 1 ) ;
            }
@@ -1148,7 +1153,7 @@ void SequenceCanvas::OnDraw(wxDC& dc)
     drawing = true ;
     dc.SetFont ( *font ) ;
     int wx , wy ;
-    dc.GetTextExtent ( "A" , &wx , &wy ) ;
+    dc.GetTextExtent ( _T("A") , &wx , &wy ) ;
     mylog ( "SequenceCanvas::OnDraw" , "2a" ) ;
     if ( wx != charwidth || wy != charheight )
         {
@@ -1220,8 +1225,8 @@ void SequenceCanvas::safeShow ( wxDC &dc )
     for ( a = 0 ; a < seq.GetCount() ; a++ ) seq[a]->shown = false ;
     for ( a = 0 ; a < seq.GetCount() ; a++ )
        {
-       if ( seq[a]->whatsthis() != "RESTRICTION" &&
-            seq[a]->whatsthis() != "FEATURE" )
+       if ( seq[a]->whatsthis() != _T("RESTRICTION") &&
+            seq[a]->whatsthis() != _T("FEATURE") )
           {
           mylog ( "SequenceCanvas::safeShow" , wxString::Format ( "Trying %d (%s)" , a , seq[a]->whatsthis().c_str() ) ) ;
           seq[a]->show ( dc ) ;
@@ -1270,7 +1275,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
     if ( pos != -1 && where && where->takesMouseActions )
         {
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
-        if ( where->whatsthis() == "PLOT" && isMiniDisplay() )
+        if ( where->whatsthis() == _T("PLOT") && isMiniDisplay() )
            {
            SeqPlot *plot = (SeqPlot*) where ;
            wxString q = plot->getTip ( pos-1 ) ;
@@ -1280,22 +1285,22 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         else
            {
            wxString q = wxString::Format(txt("seq_loc"),pos) ;
-           if ( where->whatsthis() == "AA" && getAA() )
+           if ( where->whatsthis() == _T("AA") && getAA() )
               {
-              char c = where->s.GetChar ( pos - 1 ) ;
-              wxString qx = getAA()->vec->one2three ( c ) ;
-              wxString qy = txt(wxString::Format("t_aa_%c",c).c_str()) ;
-              q += " [" + wxString ( c ) + "; " + qx + "; " + qy + "]" ;
+              wxChar c = where->s.GetChar ( pos - 1 ) ;
+              wxString qx = getAA()->vec->one2three ( (char) c ) ;
+              wxString qy = txt(wxString::Format ( _T("t_aa_%c") , c ) ) ;
+              q += _T(" [") + wxString ( (wxChar)c ) + _T("; ") + qx + _T("; ") + qy + _T("]") ;
               }
            wxLogStatus ( q ) ;
            newToolTip = q ;
            }
         }
-    else if ( where && child && child->def == "alignment" )
+    else if ( where && child && child->def == _T("alignment") )
         {
         SeqAlign *al = (SeqAlign*)where ;
         if ( al->myname == txt("t_identity") ) {} // Do nothing
-        else if ( al->whatsthis() == "FEATURE" ) {} // Do nothing
+        else if ( al->whatsthis() == _T("FEATURE") ) {} // Do nothing
         else if ( al->s.GetChar(pos-1) == '-' ) wxLogStatus ( al->myname ) ;
         else
            {
@@ -1305,14 +1310,14 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
                 b++ ;
                 
            newToolTip = al->myname ;
-           newToolTip += ", " ;
+           newToolTip += _T(", ") ;
            newToolTip += wxString::Format(txt("seq_loc"),b) ;
-           wxLogStatus(wxString::Format("%s (%d)",al->myname.c_str(),b)) ;
+           wxLogStatus(wxString::Format ( _T("%s (%d)") , al->myname.c_str() , b ) ) ;
            }
         }
     else
         {
-        wxLogStatus("") ;
+        wxLogStatus ( _T("") ) ;
         SetCursor(wxCursor(*wxSTANDARD_CURSOR)) ;
         }
 
@@ -1324,12 +1329,12 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         
     if ( event.MiddleDown() && where )
         {
-        if ( child && child->def == "alignment" )
+        if ( child && child->def == _T("alignment") )
            {
            SeqAlign *al = (SeqAlign*)where ;
            TAlignment *alg = (TAlignment*) child ;
            if ( al->myname == txt("t_identity") ) {} // Do nothing
-           else if ( al->whatsthis() == "FEATURE" ) {} // Do nothing
+           else if ( al->whatsthis() == _T("FEATURE") ) {} // Do nothing
            else alg->callMiddleMouseButton ( al->id , pos ) ;
            }
         }
@@ -1339,16 +1344,16 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         if ( p && p->cPlasmid ) p->cPlasmid->invokeVectorEditor() ;
         else if ( getAA() ) getAA()->invokeVectorEditor() ;
         else if ( getPD() ) { wxCommandEvent ev ; vecEdit ( ev ) ; }
-        else if ( where && child && child->def == "alignment" )
+        else if ( where && child && child->def == _T("alignment") )
            {
            SeqAlign *al = (SeqAlign*)where ;
            if ( al->myname == txt("t_identity") ) {} // Do nothing
-           else if ( al->whatsthis() == "FEATURE" ) {} // Do nothing
+           else if ( al->whatsthis() == _T("FEATURE") ) {} // Do nothing
            else if ( al->s.GetChar(pos-1) == '-' ) wxLogStatus ( al->myname ) ;
            else
               {
-              lastToolTip = "" ;
-              SetToolTip ( "" ) ;
+              lastToolTip = _T("") ;
+              SetToolTip ( _T("") ) ;
               int a , b ;
               for ( a = b = 0 ; a < pos ; a++ )
                  if ( al->s.GetChar(a) != '-' )
@@ -1449,7 +1454,7 @@ void SequenceCanvas::showContextMenu ( SeqBasic *where , int pos , wxPoint pt )
        {
        cm = new wxMenu ;
        wxMenu *crd = new wxMenu ;
-       cm->Append ( PC_VECTOR_EDIT , txt ( "t_vector_editor" ) ) ;
+       cm->Append ( PC_VECTOR_EDIT , txt("t_vector_editor") ) ;
        cm->Append ( POPUP_DUMMY , txt("m_result_dna" ) , crd ) ;
        crd->Append ( SEQ_COPY_RESLUT_DNA , txt("m_copy_result_dna") ) ;
        crd->Append ( SEQ_NEW_FROM_RESLUT_DNA , txt("m_new_from_result_dna") ) ;
@@ -1472,7 +1477,7 @@ void SequenceCanvas::showContextMenu ( SeqBasic *where , int pos , wxPoint pt )
           cm->Append ( SEQ_INSERT_RESTRICTION_SITE_RIGHT , txt("m_insert_restiction_site_right") ) ;
           }
        }
-    else if ( child && child->def == "ABIviewer" ) // Sequencer data
+    else if ( child && child->def == _T("ABIviewer") ) // Sequencer data
        {
        cm = new wxMenu ;
        cm->Append ( MDI_COPY_TO_NEW , txt("m_copy_to_new") ) ;
@@ -1482,7 +1487,7 @@ void SequenceCanvas::showContextMenu ( SeqBasic *where , int pos , wxPoint pt )
           }
        cm->AppendSeparator () ;
        }
-    else if ( child && child->def == "alignment" && ( where || ( findMouseTargetItem ( pt ) != -1 ) ) ) // Alignment
+    else if ( child && child->def == _T("alignment") && ( where || ( findMouseTargetItem ( pt ) != -1 ) ) ) // Alignment
        {
        int item = findMouseTargetItem ( pt ) ;
        cm = new wxMenu ;
@@ -1490,7 +1495,7 @@ void SequenceCanvas::showContextMenu ( SeqBasic *where , int pos , wxPoint pt )
        if ( item != -1 ) al = (SeqAlign*)seq[item] ;
        else al = (SeqAlign*) where ;
        if ( al->myname == txt("t_identity") ) {} // Do nothing
-       else if ( al->whatsthis() == "FEATURE" ) {} // Do nothing
+       else if ( al->whatsthis() == _T("FEATURE") ) {} // Do nothing
        else
           {
           last_al = al ;
@@ -1595,7 +1600,7 @@ void SequenceCanvas::OnCopyResultAA ( wxCommandEvent &ev )
     wxString s ;
     for ( int a = 0 ; a < rd->s.length() ; a++ )
        { 
-       char sa = rd->s.GetChar(a) ;
+       wxChar sa = rd->s.GetChar(a) ;
        if ( sa != ' ' )
           {
           if ( getPD()->aa_state == AA_THREE_1 ||
@@ -1659,22 +1664,22 @@ void SequenceCanvas::OnNewFromResultAA ( wxCommandEvent &ev )
     wxString s ;
     for ( int a = 0 ; a < rd->s.length() ; a++ )
        {
-       char sa = rd->s.GetChar(a) ; 
+       wxChar sa = rd->s.GetChar(a) ;
        if ( sa != ' ' )
           {
           if ( getPD()->aa_state == AA_THREE_1 ||
                getPD()->aa_state == AA_THREE_2 ||
                getPD()->aa_state == AA_THREE_3 )
-          s += sa ;
-          else s = sa + s ;
+          			s += sa ;
+          else s = wxString ( sa ) + s ;
           }
        }    
     if ( s.IsEmpty() ) return ;
 
     wxString seq = s ;
-    wxString n = getPD()->vec->getName() + " (" ;
-    n += txt ( "t_pcr_result" ) ;
-    n += ")" ;
+    wxString n = getPD()->vec->getName() + _T(" (") ;
+    n += txt ("t_pcr_result") ;
+    n += _T(")") ;
     myapp()->frame->newAminoAcids ( seq , n ) ;
     }
 
@@ -1758,25 +1763,25 @@ void SequenceCanvas::OnToggleFeat ( wxCommandEvent &ev )
 void SequenceCanvas::OnInsertGap ( wxCommandEvent &ev )
     {
     myass ( getAln() , "SequenceCanvas::OnInsertGap" ) ;
-    getAln()->callMiddleMouseButton ( last_al->id , lastclick , "t_mmb_insert_gap" ) ;
+    getAln()->callMiddleMouseButton ( last_al->id , lastclick , _T("t_mmb_insert_gap") ) ;
     }
     
 void SequenceCanvas::OnDeleteGap ( wxCommandEvent &ev )
     {
     myass ( getAln() , "SequenceCanvas::OnDeleteGap" ) ;
-    getAln()->callMiddleMouseButton ( last_al->id , lastclick , "t_mmb_delete_gap" ) ;
+    getAln()->callMiddleMouseButton ( last_al->id , lastclick , _T("t_mmb_delete_gap") ) ;
     }
     
 void SequenceCanvas::OnInsertOtherGaps ( wxCommandEvent &ev )
     {
     myass ( getAln() , "SequenceCanvas::OnInsertOtherGaps" ) ;
-    getAln()->callMiddleMouseButton ( last_al->id , lastclick , "t_mmb_insert_gap_others" ) ;
+    getAln()->callMiddleMouseButton ( last_al->id , lastclick , _T("t_mmb_insert_gap_others") ) ;
     }
     
 void SequenceCanvas::OnDeleteOtherGaps ( wxCommandEvent &ev )
     {
     myass ( getAln() , "SequenceCanvas::OnDeleteOtherGaps" ) ;
-    getAln()->callMiddleMouseButton ( last_al->id , lastclick , "t_mmb_delete_gap_others" ) ;
+    getAln()->callMiddleMouseButton ( last_al->id , lastclick , _T("t_mmb_delete_gap_others") ) ;
     }
     
 void SequenceCanvas::OnViewOriginal ( wxCommandEvent &ev )
@@ -1805,11 +1810,11 @@ void SequenceCanvas::OnSelAsNewPrimer ( wxCommandEvent &ev )
     if ( _from < 0 ) return ;
     if ( !getPD() ) return ;
     int id = -1 ;
-    if ( seq[lastmarked]->whatsthis() == "PRIMER_UP" ) id = lastmarked + 1 ;
-    if ( seq[lastmarked]->whatsthis() == "PRIMER_DOWN" ) id = lastmarked - 1 ;
+    if ( seq[lastmarked]->whatsthis() == _T("PRIMER_UP") ) id = lastmarked + 1 ;
+    if ( seq[lastmarked]->whatsthis() == _T("PRIMER_DOWN") ) id = lastmarked - 1 ;
     if ( id == -1 ) return ;
     wxString sel = seq[id]->s.substr ( _from-1 , _to-_from+1 ) ;
-    if ( seq[lastmarked]->whatsthis() == "PRIMER_DOWN" )
+    if ( seq[lastmarked]->whatsthis() == _T("PRIMER_DOWN") )
         {
         int a ;
         wxString sel2 ;
@@ -1823,21 +1828,21 @@ void SequenceCanvas::OnSelAsNewPrimer ( wxCommandEvent &ev )
 TAminoAcids *SequenceCanvas::getAA()
     {
     if ( !child ) return NULL ;
-    if ( child->def != "AminoAcids" ) return NULL ;
+    if ( child->def != _T("AminoAcids") ) return NULL ;
     return (TAminoAcids*) child ;
     }
     
 TPrimerDesign *SequenceCanvas::getPD()
     {
     if ( !child ) return NULL ;
-    if ( child->def != "PrimerDesign" ) return NULL ;
+    if ( child->def != _T("PrimerDesign") ) return NULL ;
     return (TPrimerDesign*) child ;
     }
 
 TAlignment *SequenceCanvas::getAln()
     {
     if ( !child ) return NULL ;
-    if ( child->def != "alignment" ) return NULL ;
+    if ( child->def != _T("alignment") ) return NULL ;
     return (TAlignment*) child ;
     }
 
@@ -1845,8 +1850,8 @@ void SequenceCanvas::startEdit ( wxString id )
     {
     mylog ( "startEdit" , "1" ) ;
     setEditMode ( true ) ;
-    findID(id)->s.Append ( " " ) ;
-    if ( child ) child->vec->addToSequence ( " " ) ;
+    findID(id)->s.Append ( _T(" ") ) ;
+    if ( child ) child->vec->addToSequence ( _T(" ") ) ;
     for ( int a = 0 ; a < seq.GetCount() ; a++ ) seq[a]->editMode ( true ) ;
     arrange () ;
     if ( _from == -1 ) mark ( id , 1 , 1 , 2 ) ;
@@ -1861,7 +1866,7 @@ void SequenceCanvas::stopEdit ()
     setEditMode ( false ) ;
     if ( child && child->vec )
     	{
-	    if ( child->vec->getSequenceLength() < 2 ) child->vec->setSequence ( "" ) ;
+	    if ( child->vec->getSequenceLength() < 2 ) child->vec->setSequence ( _T("") ) ;
         else child->vec->eraseSequence ( child->vec->getSequenceLength()-1 , 1 ) ;
         }    
     wxString id ;
@@ -1875,7 +1880,7 @@ void SequenceCanvas::stopEdit ()
     for ( int a = 0 ; a < seq.GetCount() ; a++ ) seq[a]->editMode ( false ) ;
     arrange () ;
     mylog ( "stopEdit" , "3" ) ;
-    if ( id != "" ) unmark () ; //mark ( id , -1 , -1 ) ;
+    if ( id != _T("") ) unmark () ; //mark ( id , -1 , -1 ) ;
     mylog ( "stopEdit" , "END" ) ;
     SilentRefresh () ;
     }
@@ -1883,9 +1888,9 @@ void SequenceCanvas::stopEdit ()
 void SequenceCanvas::rsHideLimit ( wxCommandEvent &ev )
     {
     if ( !p ) return ;
-    wxTextEntryDialog ted ( this , txt("m_hide_enzymes_limit") , "" , "2" ) ;
+    wxTextEntryDialog ted ( this , txt("m_hide_enzymes_limit") , _T("") , _T("2") ) ;
     if ( wxID_OK != ted.ShowModal() ) return ;
-    int limit = atoi ( ted.GetValue().c_str() ) ;
+    int limit = atoi ( ted.GetValue().mb_str() ) ;
     int a , b ;
     for ( a = 0 ; a < p->vec->re.GetCount() ; a++ )
        {
@@ -1909,23 +1914,23 @@ void SequenceCanvas::OnBacktranslate ( wxCommandEvent &ev )
     cc.push_back ( txt("t_codon_catalog_abstract") ) ;
     
     // Read available code catalog groups
-    wxTextFile in ( myapp()->homedir + "/codon_catalog.csv" ) ;
+    wxTextFile in ( myapp()->homedir + _T("/codon_catalog.csv") ) ;
     in.Open () ;
     wxString s = in[0] ;
     in.Close () ;
     wxArrayString as ;
-    explode ( "," , s , as ) ;
+    explode ( _T(",") , s , as ) ;
     for ( a = 2 ; a < as.GetCount() ; a++ )
     	{
 	    s = as[a] ;
-	    s.Replace ( "\"" , "" ) ;
+	    s.Replace ( _T("\"") , _T("") ) ;
     	cc.push_back ( s ) ;
      	}   	
     
     // Ask to specify code catalog group
     wxString *list = new wxString[cc.size()] ;
     for ( a = 0 ; a < cc.size() ; a++ ) list[a] = cc[a] ;
-    wxSingleChoiceDialog scd ( (wxWindow*)this , "" , txt("t_codon_catalog") , cc.size() , list ) ;
+    wxSingleChoiceDialog scd ( (wxWindow*)this , _T("") , txt("t_codon_catalog") , cc.size() , list ) ;
     if ( scd.ShowModal() != wxID_OK ) return ;
     
     // Set up code catalog group
@@ -1935,7 +1940,7 @@ void SequenceCanvas::OnBacktranslate ( wxCommandEvent &ev )
    	
    	// Run the damn thing!
     TVector *nv = getAA()->vec->backtranslate ( mode ) ;
-    nv->setDescription ( txt("t_backtranslated") + mode + "\n" + nv->getDescription() ) ;
+    nv->setDescription ( txt("t_backtranslated") + mode + _T("\n") + nv->getDescription() ) ;
     myapp()->frame->newFromVector ( nv , TYPE_VECTOR ) ;
     }    
     
@@ -2011,7 +2016,7 @@ void SequenceCanvas::insertRestrictionSite ( bool left )
     for ( a = 0 ; a < se.length() ; a++ )
         {
         char c = se.GetChar(a) ;
-        if ( seq[lastmarked]->whatsthis() == "PRIMER_DOWN" )
+        if ( seq[lastmarked]->whatsthis() == _T("PRIMER_DOWN") )
            c = tv.getComplement ( c ) ;
         tv.setNucleotide ( p1+a , c ) ;
         }    
@@ -2037,7 +2042,7 @@ void SequenceCanvas::OnStrandCopy53(wxCommandEvent& event)
 	{
 	if ( !p || !p->vec ) return ;
 	wxString s = p->vec->getStrand53() ;
-	s = "5'->3' : 5'-" + s + "-3'" ;
+	s = _T("5'->3' : 5'-") + s + _T("-3'") ;
     if (!wxTheClipboard->Open()) return ;
     wxTheClipboard->SetData( new wxTextDataObject(s) );
     wxTheClipboard->Close();
@@ -2047,7 +2052,7 @@ void SequenceCanvas::OnStrandCopy35(wxCommandEvent& event)
 	{
 	if ( !p || !p->vec ) return ;
 	wxString s = p->vec->getStrand35() ;
-	s = "3'->5' : 5'-" + s + "-3'" ;
+	s = _T("3'->5' : 5'-") + s + _T("-3'") ;
     if (!wxTheClipboard->Open()) return ;
     wxTheClipboard->SetData( new wxTextDataObject(s) );
     wxTheClipboard->Close();
@@ -2057,8 +2062,8 @@ void SequenceCanvas::OnStrandCopyBoth(wxCommandEvent& event)
 	{
 	if ( !p || !p->vec ) return ;
 	wxString s = p->vec->getStrand53() ;
-	s = "5'->3' : 5'-" + s + "-3'\n" ;
-	s += "3'->5' : 5'-" + p->vec->getStrand35() + "-3'" ;
+	s = _T("5'->3' : 5'-") + s + _T("-3'\n") ;
+	s += _T("3'->5' : 5'-") + p->vec->getStrand35() + _T("-3'") ;
     if (!wxTheClipboard->Open()) return ;
     wxTheClipboard->SetData( new wxTextDataObject(s) );
     wxTheClipboard->Close();
@@ -2069,7 +2074,7 @@ void SequenceCanvas::OnStrandNew53(wxCommandEvent& event)
 	if ( !p || !p->vec ) return ;
 	int a ;
 	wxString vname = p->vec->getName() ;
-	p->vec->setName ( vname + " (5'->3')" ) ;
+	p->vec->setName ( vname + _T(" (5'->3')") ) ;
 	MyChild *c = p->doTransformSequence ( true , false , false ) ;
 	p->vec->setName ( vname ) ;
 
@@ -2078,11 +2083,11 @@ void SequenceCanvas::OnStrandNew53(wxCommandEvent& event)
 		c->vec->insert_char ( lu.GetChar(a) , a+1 , false ) ;
 	c->vec->addToSequence ( p->vec->getStickyEnd ( false , true ) ) ;
 
-	c->vec->setStickyEnd ( true , true , "" ) ;
-	c->vec->setStickyEnd ( false , true , "" ) ;
-	c->vec->setStickyEnd ( true , false , "" ) ;
-	c->vec->setStickyEnd ( false , false , "" ) ;
-	c->cSequence->findID("DNA")->initFromTVector ( c->vec ) ;
+	c->vec->setStickyEnd ( true , true , _T("") ) ;
+	c->vec->setStickyEnd ( false , true , _T("") ) ;
+	c->vec->setStickyEnd ( true , false , _T("") ) ;
+	c->vec->setStickyEnd ( false , false , _T("") ) ;
+	c->cSequence->findID ( _T("DNA") )->initFromTVector ( c->vec ) ;
 	c->updateSequenceCanvas ( false ) ;
 	}    
 
@@ -2091,7 +2096,7 @@ void SequenceCanvas::OnStrandNew35(wxCommandEvent& event)
 	if ( !p || !p->vec ) return ;
 	int a ;
 	wxString vname = p->vec->getName() ;
-	p->vec->setName ( vname + " (3'->5')" ) ;
+	p->vec->setName ( vname + _T(" (3'->5')") ) ;
 	MyChild *c = p->doTransformSequence ( true , false , true ) ;
 	p->vec->setName ( vname ) ;
 
@@ -2102,11 +2107,11 @@ void SequenceCanvas::OnStrandNew35(wxCommandEvent& event)
 	for ( a = 0 ; a < rl.length() ; a++ )
 		c->vec->insert_char ( ll.GetChar(ll.length()-a-1) , c->vec->getSequenceLength()+1 , false ) ;
 
-	c->vec->setStickyEnd ( true , true , "" ) ;
-	c->vec->setStickyEnd ( false , true , "" ) ;
-	c->vec->setStickyEnd ( true , false , "" ) ;
-	c->vec->setStickyEnd ( false , false , "" ) ;
-	c->cSequence->findID("DNA")->initFromTVector ( c->vec ) ;
+	c->vec->setStickyEnd ( true , true , _T("") ) ;
+	c->vec->setStickyEnd ( false , true , _T("") ) ;
+	c->vec->setStickyEnd ( true , false , _T("") ) ;
+	c->vec->setStickyEnd ( false , false , _T("") ) ;
+	c->cSequence->findID( _T("DNA") )->initFromTVector ( c->vec ) ;
 	c->updateSequenceCanvas ( false ) ;
 	}    
 
@@ -2290,7 +2295,7 @@ void SequencePartList::makeLevels ()
     vl2.clear () ;
     for ( a = 0 ; a < vi.GetCount() ; a++ )
         {
-        wxString t ( ' ' , maxlevels + 5 ) ;
+        wxString t ( (wxChar) ' ' , maxlevels + 5 ) ;
         for ( b = 0 ; b < a ; b++ )
            {
            if ( vx[b] <= vy[a] && vy[b] >= vx[a] )

@@ -326,11 +326,11 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
     if ( myapp()->frame->showVectorTitle )
         {
         char *c1 , *c2 ;
-        strcpy ( t , p->vec->getName().c_str() ) ;
+        strcpy ( t , p->vec->getName().mb_str() ) ;
         strcat ( t , " " ) ;
         a = 0 ;
         dc.SetFont ( *bigFont ) ;
-        dc.GetTextExtent ( t , &dx , &dy ) ;
+        dc.GetTextExtent ( wxString ( t , *wxConvCurrent ) , &dx , &dy ) ;
         for ( c1 = t ; *c1 ; c1++ )
            if ( *c1 == ' ' ) a -= dy ;
         for ( c1 = c2 = t ; *c1 ; c1++ )
@@ -338,27 +338,32 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
            if ( *c1 == ' ' )
               {
               *c1 = 0 ;
-              dc.GetTextExtent ( c2 , &dx , &dy ) ;
-              dc.DrawText ( c2 , w/2-dx/2 , h/2-dy/2+a ) ;
+				  wxString t2 ( c2 , *wxConvCurrent ) ;
+              dc.GetTextExtent ( t2 , &dx , &dy ) ;
+              dc.DrawText ( t2 , w/2-dx/2 , h/2-dy/2+a ) ;
               c2 = c1+1 ;
               a += dy ;
               }
            }
         }
-    
+
+	 wxString t2 ;
+	 
     // Show length
     if ( myapp()->frame->showVectorLength )
         {
-        sprintf ( t , txt("#bp") , p->vec->getSequenceLength() ) ;
+		  t2 = wxString::Format ( txt("#bp") , p->vec->getSequenceLength() ) ;
+//        sprintf ( t , txt("#bp") , p->vec->getSequenceLength() ) ;
         dc.SetFont ( *normalFont ) ;
-        dc.GetTextExtent ( t , &dx , &dy ) ;
-        dc.DrawText ( t , w/2-dx/2 , h/2-dy/2 ) ;
+        dc.GetTextExtent ( t2 , &dx , &dy ) ;
+        dc.DrawText ( t2 , w/2-dx/2 , h/2-dy/2 ) ;
         }
     
     // Numbers
     dc.SetFont(*smallFont);
     dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-    for ( a = 0 ; a <= l ; a += d )
+    
+	 for ( a = 0 ; a <= l ; a += d )
         {
             float deg = a*360/l ;
             int r1 = r*17/20 ;
@@ -369,13 +374,14 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
                           deg2y ( deg , r2 ) + h/2 ) ;
                           
             // Numbers
-            sprintf ( t , "%d" , a ) ;
-            dc.GetTextExtent ( t , &dx , &dy ) ;
+				t2 = wxString::Format ( _T("%d") , a ) ;
+//				sprintf ( t , "%d" , a ) ;
+            dc.GetTextExtent ( t2 , &dx , &dy ) ;
             if ( deg > 180 && deg < 350 ) dx = 0 ;
             if ( deg < 15 ) dx = 0 ;
             if ( deg < 90 || deg > 270 ) dy = 0 ;
             if ( a > 0 )
-               dc.DrawText ( t ,
+               dc.DrawText ( t2 ,
                              deg2x ( deg , r1 ) + w/2 - dx ,
                              deg2y ( deg , r1 ) + h/2 - dy ) ;
         }
@@ -456,7 +462,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
             // Calculating polygon
             vector <wxPoint> p ;
             
-            if ( i->getParam ( "AUTOMATIC" ) == "SEQUENCING PRIMER" )
+            if ( i->getParam ( _T("AUTOMATIC") ) == _T("SEQUENCING PRIMER") )
             	dd = ( dt - df ) / 2 ;
             
             if ( i->direction ==  1 && abs ( (int) ( dt - df ) ) > 3 ) 
@@ -499,7 +505,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
     for ( a = 0 ; !p->vec->getGenomeMode() && a < p->vec->items.size() ; a++ ) // Item titles
         {
         TVectorItem *i = &p->vec->items[a] ;
-        if ( i->isVisible() && i->getParam ( "PREDECESSOR" ).IsEmpty() )
+        if ( i->isVisible() && i->getParam ( _T("PREDECESSOR") ).IsEmpty() )
             {
             int r1 = i->r1 * 100 * r / ( STANDARDRADIUS * 100 ) ;
             int r2 = i->r2 * 100 * r / ( STANDARDRADIUS * 100 ) ;

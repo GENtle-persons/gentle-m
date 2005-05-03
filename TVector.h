@@ -176,7 +176,7 @@ class TVector
     
     // Nucleotide access/conversion
     virtual bool basematch ( char b1 , char b2 ) ; ///< matches DNA bases; b1 in IUPAC, b2 in SIUPAC. This is superior to the "=" operator :-)
-    virtual void setIUPAC ( char b , char *s , char *pac = NULL ) ;
+    virtual void setIUPAC ( char b , wxString s , char *pac = NULL ) ;
     virtual char getNucleotide ( int pos , bool complement = false ) ; ///< Returns the base at a certain position, or its complement
     virtual void setNucleotide ( int pos , char t ) ; ///< Sets a base at a certain position
     virtual char getComplement ( char c ) ; ///< Returns the complement of a given base

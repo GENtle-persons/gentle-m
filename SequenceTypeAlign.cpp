@@ -72,7 +72,7 @@ void SeqAlign::show ( wxDC& dc )
     int first = -1 , me = -1 ;
     for ( a = 0 ; a < can->seq.GetCount() ; a++ )
         {
-        if ( can->seq[a]->whatsthis() == "ALIGN" && first == -1 )
+        if ( can->seq[a]->whatsthis() == _T("ALIGN") && first == -1 )
            first = a ;
         if ( can->seq[a] == this )
            me = a ;
@@ -160,7 +160,7 @@ void SeqAlign::show ( wxDC& dc )
                 t.GetChar(0) == can->seq[first]->s.GetChar(b-1) )
                    t.SetChar(0,'.') ;
 
-           if ( t == "." ) // Display round dot to show conservation
+           if ( t == _T(".") ) // Display round dot to show conservation
               {
               dc.SetPen(*wxTRANSPARENT_PEN);
               if ( al->invs )
@@ -190,11 +190,11 @@ void SeqAlign::show ( wxDC& dc )
            {
            dc.SetTextForeground ( *wxBLACK ) ;
            dc.SetTextBackground ( nbgc ) ;
-           FILLSTRING ( t , ' ' , endnumberlength ) ;
+           FILLSTRING ( t , (wxChar)' ' , endnumberlength ) ;
            dc.DrawText ( t , rax, ray ) ;
            dc.SetFont(*can->varFont);
            t = myname ;
-           t = " " + t ;
+           t = _T(" ") + t ;
            int tw , th ;
            do {
               t = t.substr ( 1 , t.length()-1 ) ;

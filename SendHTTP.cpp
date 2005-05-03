@@ -50,12 +50,12 @@ wxString myExternal::getTextHTTP ( wxString url )
     wxString ret ;
     wxFileSystem fs ;
     wxFSFile *file = fs.OpenFile ( url ) ;
-    if ( !file ) return "" ; // Error
+    if ( !file ) return _T("") ; // Error
     wxInputStream *in_stream = file->GetStream () ;
     if ( !in_stream ) // Error
     {
 	delete file ;
-	return "" ;
+	return _T("") ;
     }
     while ( !in_stream->Eof() ) ret += in_stream->GetC() ;
     delete file ;
@@ -493,12 +493,12 @@ myExternal::myExternal ()
 wxString getMemSize ( long l , char unit = 'B' )
 	{
 	wxString ret , r2 ;
-	if ( unit == 'B' ) ret = wxString::Format ( "%d Byte" , l ) ;
-	if ( unit == 'K' ) ret = wxString::Format ( "%1.1f KB" , ( (float) l ) / 1024.0 ) ;
-	if ( unit == 'M' ) ret = wxString::Format ( "%1.1f MB" , ( (float) l ) / 1048576.0 ) ;
+	if ( unit == 'B' ) ret = wxString::Format ( _T("%d Byte") , l ) ;
+	if ( unit == 'K' ) ret = wxString::Format ( _T("%1.1f KB") , ( (float) l ) / 1024.0 ) ;
+	if ( unit == 'M' ) ret = wxString::Format ( _T("%1.1f MB") , ( (float) l ) / 1048576.0 ) ;
 	if ( unit == 'B' ) r2 = getMemSize ( l , 'K' ) ;
 	if ( unit == 'K' ) r2 = getMemSize ( l , 'M' ) ;
-	if ( r2 != "" && r2.length() < ret.length() ) ret = r2 ;
+	if ( r2 != _T("") && r2.length() < ret.length() ) ret = r2 ;
 	return ret ;
 	}    
 
@@ -676,14 +676,14 @@ wxString myExternal::getTextHTTP ( wxString url )
 
 wxString myExternal::getText ( wxString url )
 	{
-	if ( url.Left(7).Lower() == "http://" ) return getTextHTTP ( url ) ;
+	if ( url.Left(7).Lower() == _T("http://") ) return getTextHTTP ( url ) ;
 	return getTextLocal ( url ) ; // fallback
 	}
      
 int myExternal::copyFile ( wxString url , wxString file , int _t )
 	{
 	targetSize = _t ;
-	if ( url.Left(7).Lower() == "http://" ) return copyFileHTTP ( url , file ) ;
+	if ( url.Left(7).Lower() == _T("http://") ) return copyFileHTTP ( url , file ) ;
 	return copyFileLocal ( url , file ) ; // fallback
 	}    
 
@@ -692,12 +692,12 @@ int myExternal::copyFile ( wxString url , wxString file , int _t )
 wxString myExternal::getTextLocal ( wxString url )
 	{
 	wxFile in ( url , wxFile::read ) ;
-	if ( !in.IsOpened() ) return "" ;
+	if ( !in.IsOpened() ) return _T("") ;
 	long l = in.Length() ;
 	char *c = new char [l+5] ;
 	in.Read ( c , l ) ;
 	in.Close() ;
-	wxString ret = c ;
+	wxString ret = wxString ( (wxChar) c ) ;
 	delete c ;
 	return ret ;
 	}

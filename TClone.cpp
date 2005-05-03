@@ -80,7 +80,7 @@ void TClone::remap ( TVector *v )
         {
         wxString t = genes[a].type ;
         int ty = VIT_MISC;
-        if ( t == "GENE" ) ty = VIT_GENE ;
+        if ( t == _T("GENE") ) ty = VIT_GENE ;
         long gf = genes[a].begin ;
         long gt = genes[a].end ;
         
@@ -126,13 +126,13 @@ TClone::~TClone()
 
 void TClone::cleanup ()
 {
-	filename = "" ;
-	name = "" ;
-	sequence = "" ;
-	description = "" ;
+	filename = _T("") ;
+	name = _T("") ;
+	sequence = _T("") ;
+	description = _T("") ;
 	size = -1 ;
 	isLinear = false ;
-	linear_e1 = linear_e2 = linear_s1 = linear_s2 = "" ;
+	linear_e1 = linear_e2 = linear_s1 = linear_s2 = _T("") ;
 	genes.clear () ;
 	enzymes.clear () ;
 }
@@ -146,7 +146,7 @@ void TClone::parseLines ( wxArrayString &v , char *t , long l )
 		if ( *c == 10 || *c == 13 )
 		{
 			*c = 0 ;
-			v.Add ( d ) ;
+			v.Add ( wxString ( d , *wxConvCurrent ) ) ;
 			c += 2 ;
 			d = c ;
 			c-- ;
@@ -158,14 +158,14 @@ void TClone::separateNames ( wxString &s1 , wxString &s2 )
 {
 	char *t , *c ;
 	t = new char [ s1.length() + 5 ] ;
-	strcpy ( t , s1.c_str() ) ;
+	strcpy ( t , s1.mb_str() ) ;
 
 	for ( c = t ; *c && *c != 1 ; c++ ) ;
 	if ( *c )
 	{
 		*c = 0 ;
-		s1 = c+1 ;
-		s2 = t ;
+		s1 = wxString ( c+1 , *wxConvCurrent ) ;
+		s2 = wxString ( t , *wxConvCurrent ) ;
 	}
 
 	delete t ;
@@ -220,7 +220,7 @@ void TClone::load ( wxString s )
 		genes[a].end = a2i ( v[cnt++] ) ;
 		genes[a].direction = v[cnt++] ;
 		genes[a].five = v[cnt++] ;
-		genes[a].type = "GENE" ;
+		genes[a].type = _T("GENE") ;
 		separateNames ( genes[a].fullname , genes[a].shortname ) ;
 	}
 
@@ -233,8 +233,8 @@ void TClone::load ( wxString s )
 		genes[genes.size()-1].begin = a2i ( v[cnt++] ) ;
 		genes[genes.size()-1].end = 0 ;
 		genes[genes.size()-1].direction = v[cnt++] ;
-		genes[genes.size()-1].five = "" ;
-		genes[genes.size()-1].type = "MARK" ;
+		genes[genes.size()-1].five = _T("") ;
+		genes[genes.size()-1].type = _T("MARK") ;
 		separateNames ( genes[genes.size()-1].fullname , genes[genes.size()-1].shortname ) ;
 	}
 
@@ -243,15 +243,15 @@ void TClone::load ( wxString s )
 	while ( cnt < v.GetCount() )
 	{
 		st = v[cnt++] ;
-		if ( !cmp ( st , "sequence" ) )
+		if ( !cmp ( st , _T("sequence") ) )
 		{
 			sequence = v[cnt++] ;
 		}
-		else if ( !cmp ( st , "description" ) )
+		else if ( !cmp ( st , _T("description") ) )
 		{
 			description = v[cnt++] ;
 		}
-		else if ( !cmp ( st , "linear" ) )
+		else if ( !cmp ( st , _T("linear") ) )
 		{
 			isLinear = true ;
 			linear_e1 = v[cnt++] ;
@@ -331,17 +331,17 @@ void TClone::save ( wxString s )
 
 bool TClone_Gene::getCCW()
 {
-	if ( !cmp ( direction , "L" ) ) return true ;
-	else if ( !cmp ( direction , "CCW" ) ) return true ;
+	if ( !cmp ( direction , _T("L") ) ) return true ;
+	else if ( !cmp ( direction , _T("CCW") ) ) return true ;
 	return false ;
 }
 
 void TClone_Gene::setCCW(bool x)
 {
-	if ( !cmp ( type , "MARK" ) && x ) direction = "L" ;
-	else if ( !cmp ( type , "MARK" ) && !x ) direction = "R" ;
-	else if ( !cmp ( type , "GENE" ) && x ) direction = "CCW" ;
-	else if ( !cmp ( type , "GENE" ) && !x ) direction = "CW" ;
+	if ( !cmp ( type , _T("MARK") ) && x ) direction = _T("L") ;
+	else if ( !cmp ( type , _T("MARK") ) && !x ) direction = _T("R") ;
+	else if ( !cmp ( type , _T("GENE") ) && x ) direction = _T("CCW") ;
+	else if ( !cmp ( type , _T("GENE") ) && !x ) direction = _T("CW") ;
 }
 /*
 wxString TClone::getGeneSequence(int i)

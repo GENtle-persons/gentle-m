@@ -114,7 +114,7 @@ void TVectorEditor::initPanProt ()
     new wxButton ( panProt , TVE_NEW_PROTEASE , txt("t_vec_new_prot") , wxPoint ( th , h * 2 / 3 + th * 4 ) ) ;
 
     wxRect r = b->GetRect() ;
-    pro_txt = new TURLtext ( panProt , URLTEXT_DUMMY , "" , wxPoint ( r.GetRight() + bo , r.GetTop() ) ,
+    pro_txt = new TURLtext ( panProt , URLTEXT_DUMMY , _T("") , wxPoint ( r.GetRight() + bo , r.GetTop() ) ,
                                 wxSize ( w - th - bo - r.GetRight() , h - th*2 - r.GetTop() ) ,
                                 wxTE_MULTILINE|wxTE_READONLY ) ;
     pro_txt->SetBackgroundColour ( wxSystemSettings::GetColour ( wxSYS_COLOUR_BTNFACE ) ) ;
@@ -158,23 +158,23 @@ void TVectorEditor::initPanProp ()
     if ( v->getType() != TYPE_AMINO_ACIDS )
         {
         // Sticky ends
-        r = (new wxStaticText(panProp,-1,"5'-",wxPoint(bo,th*8)))->GetRect() ;
+        r = (new wxStaticText(panProp,-1,_T("5'-"),wxPoint(bo,th*8)))->GetRect() ;
         lu = new wxTextCtrl(panProp,-1,v->getStickyEnd(true,true),
                                 wxPoint(r.GetRight()+bo,r.GetTop()-bo),wxSize(w/5,th));
     
-        r = (new wxStaticText(panProp,-1,"-3'",wxPoint(w-r.GetRight(),r.GetTop())))->GetRect() ;
+        r = (new wxStaticText(panProp,-1,_T("-3'"),wxPoint(w-r.GetRight(),r.GetTop())))->GetRect() ;
         ru = new wxTextCtrl(panProp,-1,v->getStickyEnd(false,true),
                                 wxPoint(r.GetLeft()-bo-w/5,r.GetTop()-bo),wxSize(w/5,th));
         
         wxString k ;
-        while ( k.length() * (r.GetWidth()/3) < w/2 ) k += "-" ;
+        while ( k.length() * (r.GetWidth()/3) < w/2 ) k += _T("-") ;
         new wxStaticText(panProp,-1,k,wxPoint(lu->GetRect().GetRight()+bo,r.GetTop())) ;
     
-        r = (new wxStaticText(panProp,-1,"3'-",wxPoint(bo,r.GetBottom()+th)))->GetRect() ;
+        r = (new wxStaticText(panProp,-1,_T("3'-"),wxPoint(bo,r.GetBottom()+th)))->GetRect() ;
         ll = new wxTextCtrl(panProp,-1,v->getStickyEnd(true,false),
                                 wxPoint(r.GetRight()+bo,r.GetTop()-bo),wxSize(w/5,th));
     
-        r = (new wxStaticText(panProp,-1,"-5'",wxPoint(w-r.GetRight(),r.GetTop())))->GetRect() ;
+        r = (new wxStaticText(panProp,-1,_T("-5'"),wxPoint(w-r.GetRight(),r.GetTop())))->GetRect() ;
         rl = new wxTextCtrl(panProp,-1,v->getStickyEnd(false,false),
                                 wxPoint(r.GetLeft()-bo-w/5,r.GetTop()-bo),wxSize(w/5,th));
     
@@ -278,7 +278,7 @@ void TVectorEditor::commitEnzymes ()
 	if ( !v->getEnzymeRules()->isEqual ( *oldEnzymeRules ) || v->getEnzymeRules()->useit != e_diduseit )
     	{
     	changed = true ;
-    	v->setParam ( "enzymerule" , v->getEnzymeRules()->to_string() ) ;
+    	v->setParam ( _T("enzymerule") , v->getEnzymeRules()->to_string() ) ;
      	}   	
         
     if ( changed )
@@ -396,7 +396,7 @@ void TVectorEditor::newProtease ( wxCommandEvent &ev )
 
 void TVectorEditor::editProtease ( wxCommandEvent &ev )
     {
-    wxMessageBox ( "Not implemented yet!" ) ;
+    wxMessageBox ( _T("Not implemented yet!") ) ;
     }
 
 void TVectorEditor::proteaseSelChange ( wxCommandEvent &ev )
@@ -405,7 +405,7 @@ void TVectorEditor::proteaseSelChange ( wxCommandEvent &ev )
     TProtease *pro = myapp()->frame->LS->getProtease ( s ) ;
     
     wxString t ;
-    t += s + "\n" ;
+    t += s + _T("\n") ;
     t += pro->str_match ;
     pro_txt->SetValue ( t ) ;
     }

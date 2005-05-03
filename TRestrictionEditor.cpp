@@ -94,7 +94,7 @@ void TRestrictionEditor::initRestrictionPage ()
     int rw = w , rh = h ;
 
     wxClientDC dc ( (wxWindow*) this ) ;
-    dc.GetTextExtent ( "X" , &bo , &th ) ;
+    dc.GetTextExtent ( _T("X") , &bo , &th ) ;
     th = th * 5 / 6 ;
     bo = th / 2 ;
 
@@ -154,7 +154,7 @@ void TRestrictionEditor::initRestrictionPage ()
                            
     nfst = new wxCheckBox ( this , RSE_COC_CB , txt("Do not create fragments below ") ) ;
 
-    nfstv = new wxSpinCtrl ( this , -1 , "20" , wxDefaultPosition , wxSize ( MYSPINBOXSIZE , 30 ) ) ;
+    nfstv = new wxSpinCtrl ( this , -1 , _T("20") , wxDefaultPosition , wxSize ( MYSPINBOXSIZE , 30 ) ) ;
     nfst->SetValue ( true ) ;
     nfstv->SetSize ( 70 , th * 2 ) ;
     h1d->Add ( nfstv , 0 , wxALL|wxALIGN_CENTER_VERTICAL , 5 ) ;
@@ -166,14 +166,14 @@ void TRestrictionEditor::initRestrictionPage ()
 	wxBoxSizer *v3b = new wxBoxSizer ( wxVERTICAL ) ;
 
     bb = new wxBitmapButton ( this , RSE_RES_AC ,
-             wxBitmap (myapp()->bmpdir+"/cocktail.bmp", wxBITMAP_TYPE_BMP),
+             wxBitmap (myapp()->bmpdir+_T("/cocktail.bmp"), wxBITMAP_TYPE_BMP),
              wxDefaultPosition ,
              wxDefaultSize ,
              wxBU_AUTODRAW ,
              wxDefaultValidator ,
              txt("add2cocktail") ) ;
     wxBitmapButton *bib = new wxBitmapButton ( this , RSE_COC_CT ,
-             wxBitmap (myapp()->bmpdir+"/scissors.bmp", wxBITMAP_TYPE_BMP),
+             wxBitmap (myapp()->bmpdir+_T("/scissors.bmp"), wxBITMAP_TYPE_BMP),
              wxDefaultPosition ,
              wxDefaultSize ,
              wxBU_AUTODRAW ,
@@ -182,7 +182,7 @@ void TRestrictionEditor::initRestrictionPage ()
 
     v3a->Add ( bb , 1 , wxEXPAND , 5 ) ;
     v3a->Add ( new wxStaticText ( this , -1 , txt("add2cocktail") ) ) ;
-    v3a->Add ( new wxStaticText ( this , -1 , "" ) , 0 , wxEXPAND , 5 ) ;
+    v3a->Add ( new wxStaticText ( this , -1 , _T("") ) , 0 , wxEXPAND , 5 ) ;
     v3a->Add ( bib , 1 , wxEXPAND , 5 ) ;
     v3a->Add ( new wxStaticText ( this , -1 , txt("start_res") ) ) ;
 
@@ -193,12 +193,12 @@ void TRestrictionEditor::initRestrictionPage ()
     add2gel = new wxCheckBox ( this , RSE_ADD2GEL , txt("t_add2gel") ) ;
     oneLaneEach = new wxCheckBox ( this , -1 , txt("t_one_lane_each") ) ;
     v3b->Add ( new wxButton ( this , RSE_ADD_ALL , txt("t_add_all") ) , 0 , wxEXPAND , 5 ) ;
-    v3b->Add ( new wxStaticText ( this , -1 , "" ) , 0 , wxEXPAND , 5 ) ;
+    v3b->Add ( new wxStaticText ( this , -1 , _T("") ) , 0 , wxEXPAND , 5 ) ;
     v3b->Add ( new wxButton ( this , RSE_COC_RM , txt("Remove enzyme") ) , 0 , wxEXPAND , 5 ) ;
-    v3b->Add ( new wxStaticText ( this , -1 , "" ) , 0 , wxEXPAND , 5 ) ;
+    v3b->Add ( new wxStaticText ( this , -1 , _T("") ) , 0 , wxEXPAND , 5 ) ;
     v3b->Add ( btOK , 0 , wxEXPAND , 5 ) ;
     v3b->Add ( btCC , 0 , wxEXPAND , 5 ) ;
-    v3b->Add ( new wxStaticText ( this , -1 , "" ) , 0 , wxEXPAND , 5 ) ;
+    v3b->Add ( new wxStaticText ( this , -1 , _T("") ) , 0 , wxEXPAND , 5 ) ;
     v3b->Add ( createFragments , 0 , wxEXPAND , 5 ) ;
     v3b->Add ( add2gel , 0 , wxEXPAND , 5 ) ;
     v3b->Add ( oneLaneEach , 0 , wxEXPAND , 5 ) ;
@@ -208,10 +208,10 @@ void TRestrictionEditor::initRestrictionPage ()
     oneLaneEach->Disable() ;
 
     h1f->Add ( v3a , 0 , wxEXPAND , 5 ) ;
-    h1f->Add ( new wxStaticText ( this , -1 , "   " ) , 0 , wxEXPAND , 5 ) ;
+    h1f->Add ( new wxStaticText ( this , -1 , _T("   ") ) , 0 , wxEXPAND , 5 ) ;
     h1f->Add ( v3b , 0 , wxEXPAND , 5 ) ;
 
-    v2b->Add ( new wxStaticText ( this , -1 , "" ) , 0 , wxEXPAND , 5 ) ;
+    v2b->Add ( new wxStaticText ( this , -1 , _T("") ) , 0 , wxEXPAND , 5 ) ;
     v2b->Add ( h1a , 1 , wxEXPAND , 5 ) ;
     v2b->Add ( rb , 1 , wxEXPAND , 5 ) ;
     v2b->Add ( nfst , 1 , wxEXPAND , 5 ) ;
@@ -226,7 +226,7 @@ void TRestrictionEditor::initRestrictionPage ()
     // "This enzyme cuts" list
     rsl = new wxListCtrl ( this , -1 , wxDefaultPosition , wxDefaultSize ,
                  wxLC_REPORT|wxLC_SINGLE_SEL|MYLISTBORDER ) ;
-    rsl->InsertColumn ( 0 , "#" , wxLIST_FORMAT_LEFT , th*2 ) ;
+    rsl->InsertColumn ( 0 , _T("#") , wxLIST_FORMAT_LEFT , th*2 ) ;
     rsl->InsertColumn ( 1 , txt("from") ) ;
     rsl->InsertColumn ( 2 , txt("to") ) ;
     rsl->InsertColumn ( 3 , txt("length") ) ;
@@ -234,7 +234,7 @@ void TRestrictionEditor::initRestrictionPage ()
     // All fragments list
     rsl2 = new wxListCtrl ( this , -1 , wxDefaultPosition , wxDefaultSize ,
                   wxLC_REPORT|wxLC_SINGLE_SEL|MYLISTBORDER ) ;
-    rsl2->InsertColumn ( 0 , "#" , wxLIST_FORMAT_LEFT , th*2 ) ;
+    rsl2->InsertColumn ( 0 , _T("#") , wxLIST_FORMAT_LEFT , th*2 ) ;
     rsl2->InsertColumn ( 1 , txt("from") ) ;
     rsl2->InsertColumn ( 2 , txt("to") ) ;
     rsl2->InsertColumn ( 3 , txt("length") ) ;
@@ -288,7 +288,7 @@ void TRestrictionEditor::pR_showGroupEnzymes ( wxString gr )
     wxArrayString vs ;
     listEnzymesInGroup ( gr , vs ) ;
 
-    char t[100] ;
+//    char t[100] ;
     int sel = rb->GetSelection() ;
     bool docut = true , donotcut = true ;
     if ( sel == 1 ) donotcut = false ;
@@ -310,9 +310,9 @@ void TRestrictionEditor::pR_showGroupEnzymes ( wxString gr )
         
     for ( i = 0 ; i < list.size() ; i++ )
         {
-        sprintf ( t , "%d" , list[i].cut ) ;
+//        sprintf ( t , "%d" , list[i].cut ) ;
         int z = el->InsertItem ( cnt , list[i].enzyme ) ;
-        el->SetItem ( z , 1 , t ) ;
+        el->SetItem ( z , 1 , wxString::Format ( _T("%d") , list[i].cut ) ) ;
         cnt++ ;
         }
         
@@ -323,7 +323,7 @@ void TRestrictionEditor::pR_showGroupEnzymes ( wxString gr )
         el->SetItemState ( pre_id , wxLIST_STATE_SELECTED , wxLIST_STATE_SELECTED );
         el->EnsureVisible ( pre_id ) ;
         el->SetFocus() ;
-        pre = "" ;
+        pre = _T("") ;
         }
     }
     
@@ -428,25 +428,25 @@ void TRestrictionEditor::listFragments ( wxListCtrl *list , wxArrayInt &vi )
     numberoffragments = vi.GetCount() ;
         
     int i ;
-    char u[100] ;
+//    char u[100] ;
     for ( i = 0 ; i < vi.GetCount() ; i++ )
         {
-        sprintf ( u , "%d" , i+1 ) ; // Number
-        int k = list->InsertItem ( i , u ) ;
+        //sprintf ( u , "%d" , i+1 ) ; // Number
+        int k = list->InsertItem ( i , wxString::Format ( _T("%d") , i+1 ) ) ;
         
         int from = 0 ;
         if ( i > 0 ) from = vi[i-1] ;
         if ( i == 0 && v->isCircular() ) from = vi.Last() ;
-        sprintf ( u , "%d" , from ) ; // From
-        list->SetItem ( k , 1 , u ) ;
+        //sprintf ( u , "%d" , from ) ; // From
+        list->SetItem ( k , 1 , wxString::Format ( _T("%d") , from ) ) ;
         
-        sprintf ( u , "%d" , vi[i] ) ; // To
-        list->SetItem ( k , 2 , u ) ;
+        //sprintf ( u , "%d" , vi[i] ) ; // To
+        list->SetItem ( k , 2 , wxString::Format ( _T("%d") , vi[i] ) ) ;
         
         int len = vi[i] - from ;
         if ( len <= 0 ) len += v->getSequenceLength() ;
-        sprintf ( u , "%d" , len ) ; // Length
-        list->SetItem ( k , 3 , u ) ;
+        //sprintf ( u , "%d" , len ) ; // Length
+        list->SetItem ( k , 3 , wxString::Format ( _T("%d") , len ) ) ;
         }
     }
     
@@ -454,14 +454,14 @@ void TRestrictionEditor::refreshCocktail ()
     {
     wxArrayString vs = cocktail ;
     el2->DeleteAllItems() ;
-    char t[100] ;
+//    char t[100] ;
     int i , j ;
     for ( i = 0 ; i < vs.GetCount() ; i++ )
         {
         int k = getcuts(vs[i]).GetCount() ;
-        sprintf ( t , "%d" , k ) ;
+        //sprintf ( t , "%d" , k ) ;
         int z = el2->InsertItem ( i , vs[i] ) ;
-        el2->SetItem ( z , 1 , t ) ;
+        el2->SetItem ( z , 1 , wxString::Format ( _T("%d") , k ) ) ;
         }
         
     wxArrayInt vi , vit ;
@@ -559,8 +559,8 @@ void TRestrictionEditor::res_ct ( wxCommandEvent &event )
     myass ( v , "TRestrictionEditor::res_ct:2" ) ;
     myass ( remoteCocktail , "TRestrictionEditor::res_ct:3" ) ;
 
-    if ( nfst->GetValue() ) v->setAction ( "RESTRICTION" , nfstv->GetValue() ) ;
-    else v->setAction ( "RESTRICTION" , 0 ) ;
+    if ( nfst->GetValue() ) v->setAction ( _T("RESTRICTION") , nfstv->GetValue() ) ;
+    else v->setAction ( _T("RESTRICTION") , 0 ) ;
     
     EndModal ( wxID_OK ) ;
     }

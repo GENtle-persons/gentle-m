@@ -89,7 +89,7 @@ void TRestrictionCut::linearUpdate ( int w , int h )
     
 wxString TRestrictionCut::getNameAndPosition ()
     {
-    return wxString::Format ( "%s %d" , getDisplayName().c_str() , pos ) ;
+    return wxString::Format ( _T("%s %d") , getDisplayName().c_str() , pos ) ;
     }
 
 bool TRestrictionCut::isHidden ( TVector *v )
@@ -113,7 +113,7 @@ bool TRestrictionCut::join ( TRestrictionCut *c )
 	if ( e->cut != c->e->cut ) return false ;
 	if ( e->overlap != c->e->overlap ) return false ;
 	if ( display_name.IsEmpty() ) display_name = e->name ;
-	display_name += ", " + c->e->name ;
+	display_name += _T(", ") + c->e->name ;
 	return true ;
 	}    
         
@@ -131,7 +131,7 @@ TProtease::TProtease ( wxString _name , wxString m , wxString _note )
         if ( ma == ',' || ma == ' ' || ma == '|' )
            {
            if ( !s.IsEmpty() ) match.Add ( s ) ;
-           s = "" ;
+           s = _T("") ;
            if ( ma == '|' ) cut = match.GetCount() - 1 ;
            }
         else s += m.GetChar(a) ;

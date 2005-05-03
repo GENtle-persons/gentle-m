@@ -84,7 +84,7 @@ wxImage TIMGreader::makeImage()
              it.s += buffer[y+x] ;
              
           it.font_size = ( 243 - buffer[y-61] ) / 3 + 10 ;
-          it.font_name = (char*) buffer + y - 43 ;
+          it.font_name = wxString ( (char*) buffer + y - 43 , *wxConvCurrent ) ;
              
           items.push_back ( it ) ;
           }
@@ -112,7 +112,7 @@ void TIMGitem::draw ( wxDC &dc , int x1 , int y1 , int x2 , int y2 )
         int px = xx ( p1.x ) ;
         int py = yy ( p1.y ) ;
         
-        wxString t = wxString::Format ( "%s {%s:%d} (%d:%d) [%d:%d]" , 
+        wxString t = wxString::Format ( _T("%s {%s:%d} (%d:%d) [%d:%d]") , 
                                 s.c_str() , 
                                 font_name.c_str() , font_size ,
                                 p1.x , p1.y , 
