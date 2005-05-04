@@ -115,8 +115,6 @@ void EIpanel::process_ncbi()
 	wxString res ;
 	res = ex.getText ( query ) ; // The XML is now in res
 
-cout << ">" << res.mb_str() << endl ;
-
     TiXmlDocument doc ;
     doc.Parse ( res.mb_str() ) ;
     if ( res == _T("") || doc.Error() )
