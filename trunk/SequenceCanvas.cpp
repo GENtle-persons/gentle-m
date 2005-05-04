@@ -552,7 +552,7 @@ void SequenceCanvas::OnCopyText ( wxCommandEvent &ev )
         }
 
     while ( out.GetCount() && out.Last().IsEmpty() )
-        out.Remove ( out.GetCount()-1 ) ;
+        out.RemoveAt ( out.GetCount()-1 ) ;
 
     if ( minline < 0 ) minline = 0 ;
     if ( maxline < 0 ) maxline = out.GetCount()-1 ;
