@@ -71,7 +71,17 @@ class TSQLresult
         }
         
     /// \brief Returns the number of field s
-    virtual int operator [] ( char *s )
+    virtual int operator [] ( wxString &s2 )
+        {
+        int a ;
+        for ( a = 0 ; a < field.GetCount() ; a++ )
+           if ( 0 == s2.CmpNoCase ( field[a] ) )
+               return a ;
+        return -1 ;
+        }
+    
+     /// \brief Returns the number of field s
+    virtual int operator [] ( const char *s )
         {
         int a ;
         wxString s2 ( s , *wxConvCurrent ) ;
@@ -80,7 +90,7 @@ class TSQLresult
                return a ;
         return -1 ;
         }
-    } ;
+} ;
 
 /// This is the famous storage class. It manages all MySQL and sqlite traffic
 class TStorage

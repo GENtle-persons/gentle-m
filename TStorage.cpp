@@ -81,7 +81,11 @@ static int callback (void *NotUsed, int argc, char **argv, char **azColName)
     for(i=0; i<argc; i++)
         {
         wxString tmp ;
-        if ( argv[i] ) { tmp = wxString ( argv[i] , wxConvUTF8 ) ; tmp.Replace ( _T("\013") , _T("\n") ) ; }
+        if ( argv[i] )
+		  	{
+			tmp = wxString ( argv[i] , wxConvUTF8 ) ;
+			tmp.Replace ( _T("\013") , _T("\n") ) ;
+			}
         st->results.content[nf].Add ( tmp ) ;
 //        if ( argv[i] ) st->results.content[nf].Add( argv[i] ) ;
 //        else st->results.content[nf].Add ( "" ) ;
@@ -376,7 +380,11 @@ wxString TStorage::getSingleField ( wxString query , wxString field , wxString d
     {
     TSQLresult sr ;
     sr = getObject ( query ) ;
-    if ( sr.content.size() > 0 ) return sr[0][sr[(char*)field.c_str()]] ;
+    if ( sr.content.size() > 0 )
+	 	{
+		int p = sr[field.mb_str()] ;
+		return sr[0][p] ;
+		}
     else return def ;
     }
     
@@ -921,7 +929,7 @@ void TStorage::getEnzymesInGroup ( wxString gn , wxArrayString &vs )
         {
         if ( vs[a].IsEmpty() )
            {
-           vs.Remove ( a ) ;
+           vs.RemoveAt ( a ) ;
            a-- ;
            }
         }

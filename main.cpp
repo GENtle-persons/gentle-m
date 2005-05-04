@@ -205,8 +205,9 @@ MyApp *myapp ()
 */
 bool MyApp::OnInit()
 {
-	 isoconv = new wxCSConv ( _T("ISO 8859-1") ) ;
-    errout = NULL ;
+	 isoconv = new wxCSConv ( _T("iso-8859-1") ) ;
+    wxConvCurrent = isoconv ;
+	 errout = NULL ;
     total_log_time = 0 ;
     total_log_counter = 0 ;
 #ifdef MYLOG
@@ -219,19 +220,19 @@ bool MyApp::OnInit()
     wxFileSystem::AddHandler ( new wxInternetFSHandler ) ;
     
     wxSetWorkingDirectory ( homedir ) ;
-    
+
     // Is an instance already running?
     const wxString name = wxString::Format ( _T("GENtle-%s") , wxGetUserId().c_str());
     m_checker = new wxSingleInstanceChecker (name);
     if ( m_checker->IsAnotherRunning() )
     {
-        wxLogError(_("Another program instance is already running, aborting."));
+        wxLogError(_T("Another program instance is already running, aborting."));
         return false;
     }
     theapp = this ;
     dbWarningIssued = false ;
     programVersion = 0 ; // This ensures that no old program version messes with a new database scheme
-    
+
     wxFileSystem::AddHandler(new wxInternetFSHandler);
     
     // Create the main frame window
@@ -241,8 +242,8 @@ bool MyApp::OnInit()
     slash = _T("/") ;
 #endif
     bmpdir = homedir + slash + _T("bitmaps") ;
-    
-    // Make sure local database exists
+     
+	 // Make sure local database exists
     wxString localdb , blankdb , hd = homedir ;
     localdb = hd + slash + _T("local.db") ;
     blankdb = hd + slash + _T("blank.db") ;

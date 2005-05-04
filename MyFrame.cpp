@@ -209,7 +209,7 @@ void MyFrame::initme ()
     editFeatureMode = LS->getOption ( _T("EDITFEATUREMODE") , 0 ) ;
     useCoolCanvas = LS->getOption ( _T("USECOOLCANVAS") , false ) ; // Not saved yet
     useInternalHelp = LS->getOption ( _T("USEINTERNALHELP") , false ) ; // Not saved yet
-    myapp()->init_txt ( lang_string.c_str() , _T("variables.csv") ) ;
+	 myapp()->init_txt ( lang_string.c_str() , _T("variables.csv") ) ;
     global_enzyme_rules = new TEnzymeRules ;
     global_enzyme_rules->load_global_settings() ;
 
@@ -313,7 +313,7 @@ void MyFrame::initme ()
 
     html_ep = new wxHtmlEasyPrinting ( _T("") , this ) ;
     
-    wxBeginBusyCursor() ;      
+    wxBeginBusyCursor() ;
 #ifndef MISER_MODE
     lockDisplay ( true ) ;
 #endif
@@ -1036,7 +1036,7 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     LS->setOption ( _T("USEINTERNALHELP") , useInternalHelp ) ;
     LS->setOption ( _T("REGISTERSTUFF") , doRegisterStuff ) ;
     LS->setOption ( _T("EDITFEATUREMODE") , editFeatureMode ) ;
-    global_enzyme_rules->save_global_settings() ;
+    global_enzyme_rules->save_global_settings() ; //!!!!!!! fix this!
     LS->endRecord() ;
     for ( int a = 0 ; a < children.GetCount() ; a++ )
     	{

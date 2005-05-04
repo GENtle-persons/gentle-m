@@ -119,8 +119,8 @@ void TGenBank::parseLines ()
     if ( vs2.GetCount()-1 == vs2.Index ( _T("//") ) )
        {
        success = true ;
-       vs2.Remove ( vs2.GetCount() - 1 ) ;
-       vi2.Remove ( vi2.GetCount() - 1 ) ;
+       vs2.RemoveAt ( vs2.GetCount() - 1 ) ;
+       vi2.RemoveAt ( vi2.GetCount() - 1 ) ;
        vs_l.push_back ( vs2 ) ;
        vi_l.push_back ( vi2 ) ;
        vs.Clear () ;
