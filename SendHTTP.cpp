@@ -53,11 +53,21 @@ wxString myExternal::getTextHTTP ( wxString url )
     if ( !file ) return _T("") ; // Error
     wxInputStream *in_stream = file->GetStream () ;
     if ( !in_stream ) // Error
-    {
-	delete file ;
-	return _T("") ;
-    }
-    while ( !in_stream->Eof() ) ret += in_stream->GetC() ;
+    	{
+		delete file ;
+		return _T("") ;
+    	}
+
+	 char n[1005] ;
+	 while ( !in_stream->Eof() )
+	 	{
+		in_stream->Read ( n , 1000 ) ;
+		n[in_stream->LastRead()] = 0 ;
+		ret += wxString ( n , wxConvUTF8 ) ;
+		}
+
+		
+//    while ( !in_stream->Eof() ) ret += (wxChar) in_stream->GetC() ;
     delete file ;
     return ret ; 
 }

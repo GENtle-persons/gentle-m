@@ -107,9 +107,15 @@ void EIpanel::process_ncbi()
     	query += _T("&sort=") + sort ;
     	}
     query += _T("&term=") + search ;
-	query = wxURL::ConvertToValidURI ( query ) ;
+//	query = wxURL::ConvertToValidURI ( query ) ;//!!!!!!!!!!!!!
+
+//	wxURI uri ( query ) ;
+//	query = uri.BuildUnescapedURI () ;
+
 	wxString res ;
 	res = ex.getText ( query ) ; // The XML is now in res
+
+cout << ">" << res.mb_str() << endl ;
 
     TiXmlDocument doc ;
     doc.Parse ( res.mb_str() ) ;
@@ -137,7 +143,7 @@ void EIpanel::process_ncbi()
    				ids.Add ( valFC ( x ) ) ;
 			}    
 		}    
-//	wxMessageBox ( wxString::Format ( "%d of %d" , res_count , res_start ) ) ;
+//	wxMessageBox ( wxString::Format ( _T("%d of %d") , res_count , res_start ) ) ;
 	
 	if ( ids.IsEmpty() )
 		{
@@ -162,6 +168,7 @@ void EIpanel::process_ncbi()
 	query += _T("&retmax=") + wxString::Format ( _T("%d") , RETMAX ) ;
 
 	res = ex.getText ( query ) ; // The XML is now in res
+//cout << res.mb_str() << endl ;
 //    wxTheClipboard->Open(); wxTheClipboard->SetData( new wxTextDataObject(res) );    wxTheClipboard->Close();
 
     if ( res != _T("") ) doc.Parse ( res.mb_str() ) ;
