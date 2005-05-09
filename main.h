@@ -78,6 +78,10 @@ typedef unsigned int uint ;
 #include <wx/dialup.h>
 #include <wx/utils.h>
 
+#ifdef _UNICODE
+	#define wxUSE_UNICODE 1
+#endif
+
 #if defined(__WXGTK__) || defined(__WXMOTIF__)
     #include "mondrian.xpm"
     #include "bitmaps/new.xpm"
