@@ -3,9 +3,13 @@
 */
 #include "Alignment.h"
 #include <wx/textfile.h>
-#include "clustalw/clustalw.h"
 
-int clustalw_main(int argc,char **argv) ;
+//#define USE_EXTERNAL_CLUSTALW
+
+#ifndef USE_EXTERNAL_CLUSTALW
+ #include "clustalw/clustalw.h"
+ int clustalw_main(int argc,char **argv) ;
+#endif
 
 BEGIN_EVENT_TABLE(TAlignment, MyChildBase)
     EVT_CLOSE(ChildBase::OnClose)
@@ -278,8 +282,12 @@ void* TAlignment::Entry()
     }
     out.Close() ;
     
-#ifdef USE_EXTERNAL_BLAST
-    wxString bn = hd + _T("\\clustalw.bat") ;
+#ifdef USE_EXTERNAL_CLUSTALW // Use external ClustalW
+    wxString bn ;
+    
+#ifdef __WXMSW__
+	// This is not used anymore under Windows
+    bn = hd + _T("\\clustalw.bat") ;
     wxFile bat ( bn , wxFile::write ) ;
     bat.Write ( _T("@echo off\n") ) ;
     bat.Write ( _T("cd ") + hd + _T("\n") ) ;
@@ -287,8 +295,16 @@ void* TAlignment::Entry()
 		wxString::Format ( _T(" /gapopen=%d") , gap_penalty ) +
 		wxString::Format ( _T(" /gapext=%d") , mismatch ) + _T("\n") ) ;
     bat.Close() ;
+#else
+	// External call to be used by Debian
+	 bn = _T("clustalw clustalw.txt") +
+			wxString::Format ( _T(" /gapopen=%d") , gap_penalty ) +
+			wxString::Format ( _T(" /gapext=%d") , mismatch ) + _T("\n") ;
+//	cout << "Executing " << bn.mb_str() << endl ;
+#endif
+
     wxExecute ( bn , wxEXEC_SYNC ) ;
-#else // Using internal BLAST - cool!
+#else // Using internal ClustalW - cool!
     wxString a1 = wxString::Format ( _T("/gapopen=%d") , gap_penalty ) ;
     wxString a2 = wxString::Format ( _T("/gapext=%d") , mismatch ) ;
     char *av[4] ;
@@ -304,7 +320,7 @@ void* TAlignment::Entry()
     in.Open ( *(myapp()->isoconv) ) ;
     wxString s = in.GetFirstLine() ;
     do {
-	s = in.GetNextLine() ;
+		s = in.GetNextLine() ;
     } while ( s.IsEmpty() ) ;
     int off ;
     for ( off = s.length()-1 ; s.GetChar(off-1) != ' ' ; off-- ) ;
@@ -315,8 +331,8 @@ void* TAlignment::Entry()
     for ( a = 0 ; a < lines.size() ; a++ ) lines[a].s = _T("") ;
     while ( !in.Eof() )
     {
-	for ( a = 0 ; a < lines.size() ; a++ )
-	{
+		for ( a = 0 ; a < lines.size() ; a++ )
+		 {
 	    if ( !first ) s = in.GetNextLine() ;
 	    else first = false ;
 //	    int index = atoi ( s.substr ( 0 , off-1 ) . mb_str() ) ;
@@ -325,12 +341,19 @@ void* TAlignment::Entry()
 		 i.ToLong ( &index ) ;
 	    if ( s.GetChar(0) == ' ' ) index = lines.size()-1 ;
 	    lines[index].s += s.substr ( off , s.length() ) ;
-	}
-	if ( !in.Eof() ) s = in.GetNextLine() ; // Blank line
+		 }
+		if ( !in.Eof() ) s = in.GetNextLine() ; // Blank line
     }
-//    wxMutexGuiEnter() ;
+
+#ifndef __WXMSW__
+    wxMutexGuiEnter() ;
+#endif
+
     redoAlignments ( true ) ;
-//    wxMutexGuiLeave() ;
+
+#ifndef __WXMSW__
+    wxMutexGuiLeave() ;
+#endif
 }
 
 
@@ -458,7 +481,7 @@ void TAlignment::redoAlignments ( bool doRecalc )
                 }
             }
         }
-
+    
     updateSequence () ;
     }
     
@@ -597,6 +620,7 @@ void TAlignment::callMiddleMouseButton ( int id , int pos , wxString _mode )
 void TAlignment::updateSequence ()
     {
     if ( threadRunning ) return ;
+//    wxMessageBox ( wxString::Format ( _T("%d") , sc->seq.size() ) ) ;
     for ( int g = 0 ; g < sc->seq.GetCount() ; g++ )
         {
         if ( sc->seq[g]->whatsthis() != _T("FEATURE") ) continue ;

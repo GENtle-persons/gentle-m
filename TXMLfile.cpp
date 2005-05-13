@@ -87,7 +87,7 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
     wxString n1 = t ( h.FirstChild("GBSeq_definition").FirstChild().Text() ) ;
     wxString n2 = t ( h.FirstChild("GBSeq_locus").FirstChild().Text() ) ;
     if ( !n1.IsEmpty() && n1.Freq ( '\n' ) == 0 && n2.Freq ( ' ' ) == 0 )
-	    n2 = n1 + _T(") (_T(") + n2 + _T("))") ;
+	    n2 = n1 + _T("(") + n2 + _T("))") ;
     
     v->setName ( n2 ) ;
     v->setSequence ( t ( h.FirstChild("GBSeq_sequence").FirstChild().Text() ) . MakeUpper() ) ;
