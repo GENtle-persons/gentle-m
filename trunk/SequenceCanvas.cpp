@@ -1685,8 +1685,6 @@ void SequenceCanvas::OnNewFromResultAA ( wxCommandEvent &ev )
 
 void SequenceCanvas::SilentRefresh ()
     {
-//    if ( isHorizontal() ) Clear () ;
-if ( !seq.size() ) return ; // !!!!!!!!
     wxClientDC dc(this);
     PrepareDC(dc);
     OnDraw ( dc ) ;

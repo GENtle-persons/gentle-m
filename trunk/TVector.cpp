@@ -809,8 +809,22 @@ bool TVector::reduceToFragment ( TRestrictionCut left , TRestrictionCut right )
     for ( a = from ; a <= to ; a++ )
         s += getNucleotide ( a ) ;
     
-    _lu = left.e->getEndUpperRight () ;
-    _ll = left.e->getEndLowerRight () ;
+    wxString mlu , mll , mru , mrl ;
+    
+    if ( left.e->sequence.IsEmpty() ) // Blank enzyme
+    	{
+    	mlu = getStickyEnd ( true , true ) ;
+    	mll = getStickyEnd ( true , false ) ;
+    	}
+    
+    if ( right.e->sequence.IsEmpty() ) // Blank enzyme
+    	{
+    	mru = getStickyEnd ( false , true ) ;
+    	mrl = getStickyEnd ( false , false ) ;
+    	}
+    	
+	 _lu = left.e->getEndUpperRight () ;
+	 _ll = left.e->getEndLowerRight () ;
     _ru = right.e->getEndUpperLeft () ;
     _rl = right.e->getEndLowerLeft () ;
     
@@ -847,6 +861,18 @@ bool TVector::reduceToFragment ( TRestrictionCut left , TRestrictionCut right )
         doRemove ( 1 , from2 , false ) ;
         }
     circular = false ;
+    
+    // Fix old sticky ends, which otherwise get deleted
+    if ( mlu + mll != _T("") )
+    	{
+    	setStickyEnd ( true , true , mlu ) ;
+    	setStickyEnd ( true , false , mll ) ;
+    	}
+    if ( mru + mrl != _T("") )
+    	{
+    	setStickyEnd ( false , true , mru ) ;
+    	setStickyEnd ( false , false , mrl ) ;
+    	}
 
     return true ; // Success; actually, no "return false" yet.
     }
