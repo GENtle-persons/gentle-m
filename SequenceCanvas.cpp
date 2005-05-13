@@ -78,7 +78,7 @@ END_EVENT_TABLE()
 SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSize& size)
         : wxScrolledWindow(parent, -1, pos, size, wxSUNKEN_BORDER|wxHSCROLL|wxFULL_REPAINT_ON_RESIZE)
 {
-    SetBackgroundColour(wxColour("WHITE"));
+    SetBackgroundColour(wxColour(_T("WHITE")));
 
     font = MYFONT ( 12 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
     smallFont = MYFONT ( 8 , wxSWISS , wxNORMAL , wxNORMAL ) ;

@@ -265,7 +265,7 @@ void SeqPlot::showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx )
         {
         wxPen *pen = wxRED_PEN ;
         if ( u == 2 ) pen = wxGREEN_PEN ;
-        if ( u == 3 ) pen = MYPEN("BLUE") ;
+        if ( u == 3 ) pen = MYPEN(_T("BLUE")) ;
         int tz = ty + (u-1) * ch + 1 ;
         int tw = ( tx + cw ) - lx ;
         
@@ -344,7 +344,7 @@ void SeqPlot::showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph )
         wxPen *pen = wxRED_PEN ;
         if ( can->isPrinting() ) pen = wxBLACK_PEN ;
         else if ( u == 1 ) pen = wxGREEN_PEN ;
-        else if ( u == 2 ) pen = MYPEN("BLUE") ;
+        else if ( u == 2 ) pen = MYPEN(_T("BLUE")) ;
         dc.SetPen(*pen);
         float ny = prop[b].data[u] ;
         float oy = b==0?ny:prop[b-1].data[u] ;
