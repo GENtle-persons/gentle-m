@@ -99,7 +99,7 @@ PlasmidCanvas::PlasmidCanvas(wxWindow *parent, const wxPoint& pos, const wxSize&
         : wxScrolledWindow(parent, -1, pos, size,
                            wxSUNKEN_BORDER|wxVSCROLL|wxHSCROLL|wxFULL_REPAINT_ON_RESIZE)
 {
-    SetBackgroundColour(wxColour("WHITE"));
+    SetBackgroundColour(wxColour(_T("WHITE")));
 
     p = NULL ;
     zoom = 100 ;
