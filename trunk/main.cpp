@@ -205,6 +205,9 @@ MyApp *myapp ()
 */
 bool MyApp::OnInit()
 {
+#ifdef _UNICODE
+//	cout << "Uses unicode\n" ;
+#endif
 	 isoconv = new wxCSConv ( _T("iso-8859-1") ) ;
     wxConvCurrent = isoconv ;
 	 errout = NULL ;

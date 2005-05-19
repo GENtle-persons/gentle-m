@@ -627,6 +627,18 @@ void MyFrame::OnFileImport(wxCommandEvent& event )
 */
 bool MyFrame::importFile ( wxString file , wxString path , int filter )
     {
+    // Trying XML formats
+    if ( filter == -1 )
+       {
+        TXMLfile xml ;
+        xml.load ( path ) ;
+        if ( xml.success() )
+           {
+           newXML ( xml ) ;
+           return true ;
+           }
+       }
+
     // Trying GenBank format
     if ( filter == 1 || filter == -1 )
        {
@@ -661,18 +673,6 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
         if ( pdb.success )
            {
            newPDB ( pdb , file ) ;
-           return true ;
-           }
-       }
-       
-    // Trying XML formats
-    if ( filter == -1 )
-       {
-        TXMLfile xml ;
-        xml.load ( path ) ;
-        if ( xml.success() )
-           {
-           newXML ( xml ) ;
            return true ;
            }
        }
@@ -840,7 +840,7 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
            alignment = false ;
            }        
         }*/
-        
+
     wxBeginBusyCursor() ;
     for ( n = 0 ; n < gb.vs_l.size() ; n++ )
         {
@@ -855,7 +855,7 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
         mylog ( "GenBank import" , "child added" ) ;
         }
     vv.Clear () ;
-        
+
     if ( alignment )
         {
         runAlignment ( vs , vc ) ;
@@ -879,7 +879,6 @@ MyChild* MyFrame::newFromVector ( TVector *nv , int type )
                                     wxDEFAULT_FRAME_STYLE);
     myass ( subframe , "MyFrame::newFromVector" ) ;
     setChild ( subframe ) ;
-
 
     // Give it an icon
 #ifdef __WXMSW__

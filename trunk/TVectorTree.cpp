@@ -77,35 +77,31 @@ void TVectorTree::initme ()
     for ( a = 1 ; a < VIT_TYPES ; a++ )
         {
 		  u = wxString::Format ( _T("itemtype%d") , a ) ;
-//        sprintf ( u , "itemtype%d" , a ) ;
         irs.push_back ( AppendItem ( treeroot , txt(u) ) ) ;
         }
-    
+
     for ( a = 0 ; a < p->vec->items.size() ; a++ )
         {
         if ( p->vec->items[a].name.IsEmpty() )
            {
            p->vec->items[a].setTreeID ( (long int) -1 ) ;
            continue ;
-           }    
+           }
         int it = p->vec->items[a].getType() ;
-        y = AppendItem ( irs[it-1] , p->vec->items[a].name , -1 , -1 , new TTreeItem ( _T("Test" )) ) ;
+        wxTreeItemId iti = irs[VIT_MISC-1] ;
+        if ( it >= 1 && it-1 < VIT_TYPES ) iti = irs[it-1] ;
+        y = AppendItem ( iti , p->vec->items[a].name , -1 , -1 , new TTreeItem ( _T("Test" )) ) ;
+
         SetItemBold ( y , p->vec->items[a].isVisible() ) ;
-        
+
         wxString sFrom , sTo , sLength , sType , sOritentation , sDescription ;
-//        sprintf ( u , txt("s_from") , p->vec->items[a].from ) ;
         sFrom = wxString::Format ( txt("s_from") , p->vec->items[a].from ) ;
-//        sprintf ( u , txt("s_to") , p->vec->items[a].to ) ;
         sTo = wxString::Format ( txt("s_to") , p->vec->items[a].to ) ;
-//        sprintf ( u , txt("s_length") , abs ( p->vec->items[a].to - p->vec->items[a].from ) ) ;
         sLength = wxString::Format ( txt("s_length") , abs ( p->vec->items[a].to - p->vec->items[a].from ) ) ;
 		  u = wxString::Format ( _T("itemtype%d") , p->vec->items[a].getType() ) ;
-//        sprintf ( u , "itemtype%d" , p->vec->items[a].getType() ) ;
-//        sprintf ( u , txt("s_type") , txt(u) ) ;
         sType = wxString::Format ( txt("s_type").c_str() , txt(u).c_str() ) ;
         if ( p->vec->items[a].getDirection() == 1 ) sOritentation = txt("cw") ;
         else sOritentation = txt("ccw") ;
-//        sprintf ( u , txt("s_desc") , p->vec->items[a].desc.c_str() ) ;
         sDescription = wxString::Format ( txt("s_desc") , p->vec->items[a].desc.c_str() ) ;
         
         p->vec->items[a].setTreeID ( y ) ;
@@ -121,7 +117,7 @@ void TVectorTree::initme ()
                sDescription ;
         SetItemData ( y , new TTreeItem ( out , _T("ITEM") , (void*)a ) ) ;
         }
-    
+
     // Enzymes
     enzroot = AppendItem ( treeroot , txt("res_enzymes") ) ;
     for ( a = 0 ; a < p->vec->re.GetCount() ; a++ )
