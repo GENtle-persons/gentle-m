@@ -707,7 +707,8 @@ void MyChild::initPanels ()
         }    
 //    cSequence->seq.Clear () ;
 	CLEAR_DELETE ( cSequence->seq ) ;
-    SeqFeature *seqF ;
+    
+	 SeqFeature *seqF ;
     if ( !vec->getGenomeMode() ) seqF = new SeqFeature ( cSequence ) ;
     SeqDNA *seq = new SeqDNA ( cSequence ) ;
     SeqRestriction *seqR = new SeqRestriction ( cSequence ) ;

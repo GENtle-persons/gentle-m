@@ -20,17 +20,34 @@ void TXMLfile::parse ( wxString text )
         }
     analyze ( doc ) ;   
     }
-    
+
 void TXMLfile::load ( wxString file ) 
     {
-    TiXmlDocument doc( file.mb_str() );
+//	 wxStartTimer() ;
+    TiXmlDocument doc ( file.mb_str() );
     bool ok = doc.LoadFile();
+/*
+	 // Alternative (faster?) opening method
+	 char *x ;
+	 wxFile f ( file ) ;
+	 if ( !f.IsOpened() ) { _success = false ; return ; }
+	 x = new char [ f.Length() + 5 ] ;
+	 f.Read ( x , f.Length() ) ;
+	 x[f.Length()] = 0 ;
+	 if ( *x != '<' ) { delete x ; _success = false ; return ; }
+	 TiXmlDocument doc ( "" );
+	 doc.Parse ( (const char*) x ) ;
+	 bool ok = !doc.Error() ;
+	 delete x ;
+*/
+//	 cout << "Done in " << wxGetElapsedTime() << " ms\n" ;
     if ( !ok || doc.Error() )
         {
         _success = false ;
         return ;
         }
-    analyze ( doc ) ;   
+
+    analyze ( doc ) ;
     }
 
 void TXMLfile::analyze ( const TiXmlDocument &doc )
@@ -45,7 +62,6 @@ void TXMLfile::analyze ( const TiXmlDocument &doc )
         for ( x = x->FirstChild ( "GBSeq" ) ; x ; x = x->NextSibling ( "GBSeq" ) )
            readGBSeq ( x ) ;
         }
-    
     _success = _v.GetCount() > 0 ;
     }
     
@@ -98,6 +114,7 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
         s = t ( e->Attribute ( "value" ) ) . MakeUpper() ;
         if ( s == _T("CIRCULAR") ) v->setCircular ( true ) ;
         }
+//	 cout << "Up to features took " << wxGetElapsedTime() << " ms\n" ;
 
     // Features
     for ( n = h.FirstChild("GBSeq_feature-table").FirstChild("GBFeature").Node() ; n ;
@@ -121,9 +138,11 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
         for ( a = 0 ; a < vi.size() ; a++ )
            v->items.push_back ( vi[a] ) ;
         }
+//	 cout << "Features took " << wxGetElapsedTime() << " ms\n" ;
         
     // Sorting by size, just for fun
-    for ( a = 1 ; a < v->items.size() ; a++ )
+    // Only for less than 100 items
+    for ( a = 1 ; v->items.size() < 100 && a < v->items.size() ; a++ )
         {
         if ( v->getItemLength(a-1) < v->getItemLength(a) )
            {
@@ -137,6 +156,7 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
     v->updateDisplay() ;
     v->recalculateCuts () ;
     _v.Add ( v ) ;
+//	 cout << "The rest took " << wxGetElapsedTime() << " ms\n" ;
     }
     
 void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
