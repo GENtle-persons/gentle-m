@@ -3,6 +3,7 @@ Bugs :
 * Optimierung Überhang-Primer?
 * Bericht drucken : lange Zeilen in Vektor-Beschreibung umbrechen
 * Primer an Enden von linearen Stücken matchen nicht
+* Suchfunktion in der Sequenzierung sucht nicht komplementären Strang
 
 Feature Requests :
 Primer-Bearbeiten-Dialog : Spalten klicken => sortieren

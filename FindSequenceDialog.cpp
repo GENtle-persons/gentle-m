@@ -180,7 +180,7 @@ void FindSequenceDialog::OnSearch ( wxCommandEvent &ev )
     lb->Clear () ;
     vi.Clear () ;
     sequenceSearch() ;
-    if ( c->def == _T("dna") || c->def == _T("PrimerDesign") ) sequenceSearch ( true ) ;
+    if ( c->def == _T("dna") || c->def == _T("ABIviewer") || c->def == _T("PrimerDesign") ) sequenceSearch ( true ) ;
     if ( c->def == _T("dna") || c->def == _T("PrimerDesign") ) aaSearch () ;
     itemSearch() ;
     restrictionSearch() ;

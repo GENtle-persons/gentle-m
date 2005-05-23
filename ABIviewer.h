@@ -49,8 +49,6 @@ class TABIviewer : public ChildBase
     
     // Variables
     wxTextCtrl *stat ; ///< Pointer to statistics text box
-    wxPanel *up ; ///< Pointer to the upper panel
-    wxSplitterWindow *hs ; ///< Pointer to the split window
     int from , oldh ;
     wxString filename ; ///< The name of the imported file
     wxCheckBox *aidLines , *inv_compl ;
