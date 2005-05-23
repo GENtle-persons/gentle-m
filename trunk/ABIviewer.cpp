@@ -129,7 +129,6 @@ void TABIviewer::OnSpinHeight(wxSpinEvent& event)
 
 void TABIviewer::initme ()
     {
-    int bo = 5 ;
 
     // Menus
     wxMenu *file_menu = myapp()->frame->getFileMenu () ;
@@ -142,7 +141,7 @@ void TABIviewer::initme ()
     edit_menu->Append(MDI_COPY, txt("m_copy") );
 //    edit_menu->Append(MDI_PASTE, txt("m_paste") );
 //    edit_menu->AppendSeparator();
-//    edit_menu->Append(MDI_FIND, txt("m_find") );
+    edit_menu->Append(MDI_FIND, txt("m_find") );
 //    edit_menu->AppendSeparator();
     edit_menu->Append(MDI_COPY_TO_NEW, txt("m_copy_to_new") );
 //    edit_menu->Append(MDI_AS_NEW_FEATURE, txt("m_as_new_feature") );
@@ -191,73 +190,72 @@ void TABIviewer::initme ()
     toolBar->Realize() ;
     toolbar = toolBar ;
 
-    hs = new wxSplitterWindow ( this , SPLIT_AMINOACIDS ) ;
-
     // Sequence Canvas
-    sc = new SequenceCanvas ( hs , wxPoint ( 0 , 0 ) , wxSize ( 100 , 100 ) ) ;
+    sc = new SequenceCanvas ( this , wxDefaultPosition , wxDefaultSize ) ;
     sc->blankline = 0 ;
     sc->edit_id = _T("ABI") ;
     sc->edit_valid = _T("ATGCN") ;
     sc->forceOverwrite ( true ) ;
     sc->child = this ;
 
-    // Upper panel
     Maximize ( true ) ;
-    int w , h , th = 20 ;
-//    GetClientSize ( &w , &h ) ;
-	myapp()->frame->GetClientSize(&w,&h) ;
-    h = 90 ;
-    up = new wxPanel ( hs , -1 , wxDefaultPosition , wxSize ( w , h ) ) ;
-//    up->GetClientSize ( &w , &h ) ;
-    
-    hs->SplitHorizontally ( up , sc ,h+bo ) ;
-    hs->SetMinimumPaneSize ( h+bo ) ;
-    
+
     // Toys
-    wxRect r ;
-    aidLines = new wxCheckBox ( up , ABI_HELPLINES , txt("t_aid_lines") , wxPoint ( bo , bo ) ) ;
-    r = aidLines->GetRect() ;
-    inv_compl = new wxCheckBox ( up , ABI_INV_COMP , txt("t_abi_inv_comp") , wxPoint ( r.GetRight()+bo , r.GetTop() ) ) ;
-    f_height = new wxSpinCtrl ( up , ABI_HEIGHT , _T("5") , wxPoint ( bo , bo + th * 1 ) , wxSize ( MYSPINBOXSIZE , -1 ) ) ;
-    f_width = new wxSpinCtrl ( up , ABI_WIDTH , _T("2") , wxPoint ( bo , bo + th * 2 ) , wxSize ( MYSPINBOXSIZE , -1 ) ) ;
+    aidLines = new wxCheckBox ( this , ABI_HELPLINES , txt("t_aid_lines") );
+    inv_compl = new wxCheckBox ( this , ABI_INV_COMP , txt("t_abi_inv_comp") );
+    f_height = new wxSpinCtrl ( this , ABI_HEIGHT , _T("5") );
+    f_width = new wxSpinCtrl ( this , ABI_WIDTH , _T("2") );
     f_height->SetRange ( 1 , 50 ) ;
     f_width->SetRange ( 1 , 9 ) ;
     aidLines->SetValue ( true ) ;
-    r = f_height->GetRect() ;
-    new wxStaticText ( up , -1 , txt("t_scale_height") , wxPoint ( r.GetRight()+bo , r.GetTop()+2 ) ) ;
-    r = f_width->GetRect() ;
-    new wxStaticText ( up , -1 , txt("t_scale_width") , wxPoint ( r.GetRight()+bo , r.GetTop()+2 ) ) ;
-    
-    slider = new wxSlider ( up , ABI_SLIDER , 1 , 1 , 50 , 
-                             wxPoint ( bo , r.GetBottom()+bo ) ,
-                             wxSize ( 100 , th ) ,
-                             wxSL_HORIZONTAL ) ;
-    r = slider->GetRect() ;
-    new wxStaticText ( up , -1 , txt("t_zoom") , wxPoint ( r.GetRight()+bo , r.GetTop()+2 ) ) ;
-    r = inv_compl->GetRect() ;
 
-//    r.x = 0 ;
-//    r.width = 200 ;
-//    h = 100 ;
-//    w = 600 ;
+    
+    slider = new wxSlider ( this , ABI_SLIDER , 1 , 1 , 50 , 
+                             wxDefaultPosition ,
+                             wxDefaultSize ,
+                             wxSL_HORIZONTAL ) ;
 
     // Statistics box
-    stat = new wxTextCtrl ( up ,
+    stat = new wxTextCtrl ( this ,
                             -1 ,
                             _T("Test") ,
-                            wxPoint ( r.GetRight()+bo , 0 ) ,
-                            wxSize ( w - (r.GetRight()+bo) , h ) ,
+                            wxDefaultPosition ,
+                            wxDefaultSize ,
                             wxTE_MULTILINE | wxTE_READONLY ) ;
-
-                               
-
     stat->SetFont ( *MYFONT ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
 
+    wxBoxSizer *v1 = new wxBoxSizer ( wxVERTICAL ) ;
+    wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *h3 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *h4 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    
+    h1->Add ( aidLines , 0 , wxEXPAND|wxLEFT|wxRIGHT , 5 ) ;
+    h1->Add ( inv_compl , 0 , wxEXPAND|wxLEFT|wxRIGHT , 5 ) ;
+    h2->Add ( f_height , 0 , wxEXPAND|wxLEFT|wxRIGHT , 5 ) ;
+    h2->Add ( new wxStaticText ( this , -1 , txt("t_scale_height") ) , 0 , wxEXPAND|wxLEFT|wxRIGHT , 5 ) ;
+    h3->Add ( f_width , 0 , wxEXPAND|wxLEFT|wxRIGHT , 5 ) ;
+    h3->Add ( new wxStaticText ( this , -1 , txt("t_scale_width") ) , 0 , wxEXPAND|wxLEFT|wxRIGHT , 5 ) ;    
+    h4->Add ( slider , 0 , wxEXPAND|wxLEFT|wxRIGHT , 5 ) ;
+    h4->Add ( new wxStaticText ( this , -1 , txt("t_zoom") ) , 0 , wxEXPAND|wxLEFT|wxRIGHT , 5 ) ;
+
+	v1->Add ( h1 , 1 ) ;
+	v1->Add ( h2 , 1 ) ;
+	v1->Add ( h3 , 1 ) ;
+	v1->Add ( h4 , 1 ) ;
+	v1->Add ( slider , 1 ) ;
+
+    wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	h0->Add ( v1 , 1 , wxTOP|wxBOTTOM|wxEXPAND , 5 ) ;
+	h0->Add ( stat , 4 , wxEXPAND ) ;
+
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
-    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
-    v0->Add ( hs , 1 , wxEXPAND , 5 ) ;
+    v0->Add ( toolbar , 0 , wxBOTTOM , 5 ) ;
+    v0->Add ( h0 , 0 , wxBOTTOM|wxEXPAND , 5 ) ;
+    v0->Add ( sc , 1 , wxEXPAND ) ;
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;
+
 
     showSequence () ;
     showStat () ;
