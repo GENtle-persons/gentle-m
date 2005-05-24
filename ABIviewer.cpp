@@ -212,7 +212,11 @@ void TABIviewer::initme ()
     
     slider = new wxSlider ( this , ABI_SLIDER , 1 , 1 , 50 , 
                              wxDefaultPosition ,
-                             wxDefaultSize ,
+#ifdef __WXMSW
+									  wxDefaultSize,
+#else
+                             wxSize ( 100 , 20 ) ,
+#endif
                              wxSL_HORIZONTAL ) ;
 
     // Statistics box
@@ -243,7 +247,6 @@ void TABIviewer::initme ()
 	v1->Add ( h2 , 1 ) ;
 	v1->Add ( h3 , 1 ) ;
 	v1->Add ( h4 , 1 ) ;
-	v1->Add ( slider , 1 ) ;
 
     wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
 	h0->Add ( v1 , 1 , wxTOP|wxBOTTOM|wxEXPAND , 5 ) ;

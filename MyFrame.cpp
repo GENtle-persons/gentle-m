@@ -378,6 +378,7 @@ void MyFrame::initme ()
     
     SetSizeHints ( 600 , 400 ) ;
     Show(TRUE);
+    m_leftWindow2->SetFocus () ;
 //    SetStatusText ( txt("t_update_warning") , 1 ) ;
     }
     
