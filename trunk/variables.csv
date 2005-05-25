@@ -751,3 +751,8 @@
 "m_graph_copy_as_image","Copy as image","Als Bild kopieren"
 "t_graph_open_title","Import graph","Graph importieren"
 "t_graph_open_text","Choose a source type :","Datentyp auswählen :"
+"m_speak","Read sequence aloud","Sequenz vorlesen"
+"b_speak_play","&Play","&Play"
+"b_speak_stop","&Stop","&Stop"
+"t_speak_do_pause","Pause after ","Pause nach "
+"t_speak_pause"," characters"," Zeichen"

@@ -89,6 +89,7 @@ public:
     virtual void OnSequencingPrimer(wxCommandEvent& WXUNUSED(event)); ///< "Find sequencing primers" event handler
     virtual void OnRemoveSequencingPrimers(wxCommandEvent& WXUNUSED(event)); ///< "Remove sequencing primers" event handler
     virtual void OnAutoAnnotate(wxCommandEvent& WXUNUSED(event)); ///< Automatic annotation event handler
+    virtual void OnSpeak(wxCommandEvent& WXUNUSED(event)); ///< Speak sequence event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler (to catch weird messages)
 
     virtual void initme () ; ///< Initializes the module

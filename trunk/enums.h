@@ -167,6 +167,7 @@ enum {
     MDI_REMOVE_SEQUENCING_PRIMERS,
     MDI_AUTO_ANNOTATE,
     MDI_GRAPH,
+    MDI_SPEAK,
     
     MT_CLOSE,
     ORF_AS_NEW_AA,
@@ -356,6 +357,10 @@ enum {
     GRAPH_COPY_AS_IMAGE,
     MDI_AA_IPC,
     TIPC_DIA_LIMIT,
+    
+    SPEAK_PLAY,
+    SPEAK_STOP,
+    SPEAK_PAUSE,
     
     Y___,
     Z___
