@@ -322,13 +322,3 @@ void AutoAnnotate::machete ( TVector *v )
 	v->items = i2 ;
 	}    
 
-// *********************
-
-void MyChild::OnAutoAnnotate(wxCommandEvent& event)
-	{
-	AutoAnnotate auan ( this ) ;
-	if ( auan.SettingsDialog () )
-		auan.Run () ;
-	}    
-
-

@@ -51,6 +51,7 @@ BEGIN_EVENT_TABLE(MyChild, MyChildBase)
     EVT_MENU(MDI_SEQUENCING_PRIMER,MyChild::OnSequencingPrimer)
     EVT_MENU(MDI_REMOVE_SEQUENCING_PRIMERS,MyChild::OnRemoveSequencingPrimers)
     EVT_MENU(MDI_AUTO_ANNOTATE,MyChild::OnAutoAnnotate)
+    EVT_MENU(MDI_SPEAK,MyChild::OnSpeak)
 
     EVT_CHOICE(PC_ZOOM,MyChild::OnZoom)
     EVT_UPDATE_UI(MDI_REFRESH, MyChild::OnUpdateRefresh)
@@ -333,6 +334,7 @@ void MyChild::initMenus ()
     view_menu->AppendSeparator();
     view_menu->Append(MDI_EDIT_MODE, txt("m_edit_mode") , _T("") , true );
     view_menu->Append(MDI_VIEW_MODE, txt("m_view_mode") , _T("") , true );
+    view_menu->Append(MDI_SPEAK, txt("m_speak") , _T("") );
     
     wxMenu *mAA = new wxMenu ;
     view_menu->Append ( AA_MAIN , txt("m_aa_main") , mAA ) ;
@@ -1427,6 +1429,12 @@ void MyChild::updateToolbar ()
 #endif
     }    
     
+void MyChild::OnAutoAnnotate(wxCommandEvent& event)
+	{
+	AutoAnnotate auan ( this ) ;
+	if ( auan.SettingsDialog () )
+		auan.Run () ;
+	}    
 
     
 // *************************

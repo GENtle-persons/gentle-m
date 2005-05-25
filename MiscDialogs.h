@@ -25,6 +25,26 @@ class TPrimer ;
 class TPrimerDesign ;
 class TAlignment ;
 
+class TSpeakDialog : public wxDialog
+	{
+    public : 
+    TSpeakDialog(wxWindow *parent, const wxString& title , wxString _seq ) ; ///< Constructor
+
+    virtual void OnCharHook(wxKeyEvent& event) ; ///< Cancel button event handler
+    virtual void OnPlay ( wxCommandEvent &ev ) ;
+    virtual void OnStop ( wxCommandEvent &ev ) ;
+    
+    private :
+	virtual void speakLetter ( wxString c ) ;
+	wxTextCtrl *seq ;
+	wxCheckBox *doPause ;
+	wxSpinCtrl *pause ;
+	bool doPlay ;
+	wxString sequence ;
+
+    DECLARE_EVENT_TABLE()
+	} ;
+
 /**	\brief The dialog handling the TIPC settings
 */
 class TIPCDialog : public wxDialog
@@ -47,22 +67,6 @@ class TIPCDialog : public wxDialog
     DECLARE_EVENT_TABLE()
 	} ;    
 
-/*	\brief Apparently unused
-*/
-/*
-class TMutationDialog : public wxDialog
-    {
-    public : 
-    TMutationDialog(wxWindow *parent, const wxString& title , wxString _codon ) ;
-    virtual ~TMutationDialog () ;
-    
-    private :
-    wxString codon , newcodon ;
-    char aa , newaa ;
-    TVector *v ;
-    } ;
-*/
-
 /** \brief A text control highlighting URLs
 */
 class TURLtext : public wxTextCtrl
@@ -73,13 +77,6 @@ class TURLtext : public wxTextCtrl
     virtual void OnURL(wxTextUrlEvent& event) ; ///< URL event handler
     DECLARE_EVENT_TABLE()
     } ;
-/*
-class TStandbyDialog : public wxDialog
-    {
-    public :
-    TStandbyDialog ( wxWindow *parent , const wxString &s , const wxString &t = _T("") ) ;
-    } ;
-*/
 
 /** \brief A dialog for multiple choices
 */

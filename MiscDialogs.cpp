@@ -2,6 +2,7 @@
 	\brief Contains the class members for various dialogs
 */
 #include "MiscDialogs.h"
+#include <wx/sound.h>
 
 BEGIN_EVENT_TABLE(TMyMultipleChoiceDialog, wxDialog )
     EVT_BUTTON(MCD_OK,TMyMultipleChoiceDialog::OnOK)
@@ -36,6 +37,114 @@ BEGIN_EVENT_TABLE(TIPCDialog, wxDialog )
     EVT_BUTTON(AL_CANCEL,wxDialog::OnCancel)
 END_EVENT_TABLE()
 
+BEGIN_EVENT_TABLE(TSpeakDialog, wxDialog )
+    EVT_BUTTON(SPEAK_PLAY,TSpeakDialog::OnPlay)
+    EVT_BUTTON(SPEAK_STOP,TSpeakDialog::OnStop)
+    EVT_CHAR_HOOK(TSpeakDialog::OnCharHook)
+END_EVENT_TABLE()
+
+// ******************************************* TSpeakDialog
+
+void MyChild::OnSpeak(wxCommandEvent& event)
+	{
+    wxString s = cPlasmid->getSelection () ;
+    if ( s.IsEmpty() ) s = vec->getSequence() ; // Nothing selected, read whole sequence
+	TSpeakDialog sd ( this , txt("t_speak") , s ) ;
+	sd.ShowModal() ;
+	}
+
+TSpeakDialog::TSpeakDialog(wxWindow *parent, const wxString& title , wxString _seq )
+    : wxDialog ( parent , -1 , title )
+    {
+	sequence = _seq ;
+	doPlay = false ;
+	
+	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+	wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	
+	seq = new wxTextCtrl ( this , -1 , sequence , 
+			   		wxDefaultPosition , wxDefaultSize ,
+			   		wxTE_READONLY|wxTE_NOHIDESEL ) ;
+	
+	wxButton *b1 = new wxButton ( this , SPEAK_PLAY , txt("b_speak_play") ) ;
+	wxButton *b2 = new wxButton ( this , SPEAK_STOP , txt("b_speak_stop") ) ;
+	
+	h0->Add ( b1 , 1 , wxEXPAND|wxALL , 5 ) ;
+	h0->Add ( b2 , 1 , wxEXPAND|wxALL , 5 ) ;
+	
+	doPause = new wxCheckBox ( this , -1 , txt("t_speak_do_pause") ) ;
+	pause = new wxSpinCtrl ( this , -1 ) ;
+	doPause->SetValue ( true ) ;
+	pause->SetRange ( 1 , 10 ) ;
+	pause->SetValue ( _T("3") ) ;
+
+	h1->Add ( doPause , 0 , wxEXPAND|wxALL , 5 ) ;
+	h1->Add ( pause , 0 , wxEXPAND|wxALL , 5 ) ;
+	h1->Add ( new wxStaticText ( this , -1 , txt("t_speak_pause") ) , 0 , wxEXPAND|wxALL , 5 ) ;
+	
+	v0->Add ( seq , 0 , wxEXPAND|wxALL , 5 ) ;
+	v0->Add ( h1 , 0 , wxEXPAND|wxALL , 5 ) ;
+	v0->Add ( h0 , 0 , wxEXPAND|wxALL , 5 ) ;
+
+	
+	
+	SetSizer ( v0 ) ;
+	v0->Fit ( this ) ;
+	
+	seq->SetSelection ( -1 , -1 ) ;
+	}
+	
+void TSpeakDialog::OnPlay ( wxCommandEvent &ev )
+	 {
+	 long from , to ;
+	 wxString s ;
+	 int cnt = 0 ;
+	 doPlay = true ;
+	 
+	 while ( doPlay )
+	    {
+		seq->GetSelection ( &from , &to ) ;
+		s = seq->GetStringSelection () ;
+		
+		if ( s == "" )
+		   {
+ 	   	   doPlay = false ;
+		   seq->SetSelection ( -1 , -1 ) ;
+		   break ;
+		   }
+		
+		speakLetter ( s.Left ( 1 ) ) ;
+		seq->SetSelection ( from+1 , to ) ;
+		myapp()->Yield() ;
+		if ( doPause->IsChecked() && ++cnt >= pause->GetValue() )
+		   {
+ 	   	   cnt = 0 ;
+ 	   	   wxSleep ( 1 ) ;
+ 	   	   }
+		}
+	 }
+
+void TSpeakDialog::OnStop ( wxCommandEvent &ev )
+	 {
+	 doPlay = false ;
+	 }
+
+void TSpeakDialog::OnCharHook ( wxKeyEvent& event )
+    {
+    int k = event.GetKeyCode () ;
+    wxCommandEvent ev ;
+    if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    else event.Skip() ;
+    }
+
+void TSpeakDialog::speakLetter ( wxString c )
+	{
+	wxString file = myapp()->homedir + _T("/wav/") + c.Left(1).Upper() + _T(".wav") ;
+	wxSound sound ( file ) ;
+	if ( !sound.IsOk() ) { wxMessageBox ( txt("t_error") ) ; return ; }
+	sound.Play ( wxSOUND_SYNC ) ;
+  	}
 
 // ******************************************* TIPCDialog
 
