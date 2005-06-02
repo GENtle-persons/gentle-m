@@ -45,14 +45,6 @@ END_EVENT_TABLE()
 
 // ******************************************* TSpeakDialog
 
-void MyChild::OnSpeak(wxCommandEvent& event)
-	{
-    wxString s = cPlasmid->getSelection () ;
-    if ( s.IsEmpty() ) s = vec->getSequence() ; // Nothing selected, read whole sequence
-	TSpeakDialog sd ( this , txt("t_speak") , s ) ;
-	sd.ShowModal() ;
-	}
-
 TSpeakDialog::TSpeakDialog(wxWindow *parent, const wxString& title , wxString _seq )
     : wxDialog ( parent , -1 , title )
     {
@@ -93,6 +85,7 @@ TSpeakDialog::TSpeakDialog(wxWindow *parent, const wxString& title , wxString _s
 	v0->Fit ( this ) ;
 	
 	seq->SetSelection ( -1 , -1 ) ;
+//	seq->ShowPosition ( 0 ) ;
 	}
 	
 void TSpeakDialog::OnPlay ( wxCommandEvent &ev )

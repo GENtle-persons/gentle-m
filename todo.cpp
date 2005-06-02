@@ -1,20 +1,19 @@
 /*
 Bugs :
-* Optimierung Überhang-Primer?
 * Bericht drucken : lange Zeilen in Vektor-Beschreibung umbrechen
 * Primer an Enden von linearen Stücken matchen nicht
-* Suchfunktion in der Sequenzierung sucht nicht komplementären Strang
+* Features in Alignment-Ausdruck verschoben
 
 Feature Requests :
-Primer-Bearbeiten-Dialog : Spalten klicken => sortieren
-
-Primer secondary structure prediction
-
-Homology Plot
-Export plot data
-Helical wheel
-AS-Sequenz Protease-schneiden
-That ligation thingy 
+* Optimierung Überhang-Primer
+* Primer-Bearbeiten-Dialog : Spalten klicken => sortieren
+* Primer secondary structure prediction
+* Homology Plot
+* Export plot data
+* Helical wheel
+* AS-Sequenz Protease-schneiden
+* Find proteases that cut n times
+* That ligation thingy 
 
 SEE: http://eutils.ncbi.nlm.nih.gov/entrez/query/static/eutils_help.html
 

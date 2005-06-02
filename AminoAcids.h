@@ -43,6 +43,7 @@ class TAminoAcids : public ChildBase
     virtual void OnIP ( wxCommandEvent& event ) ; ///< "Inline plot dropdown box" event handler
     virtual void OnBacktranslate ( wxCommandEvent& event ) ; ///< "Backtranslate to DNA" event handler
     virtual void OnIPC ( wxCommandEvent& event ) ; ///< "IPC prediction" event handler
+    virtual void OnSpeak(wxCommandEvent& WXUNUSED(event)); ///< Speak sequence event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler
     
     virtual void Undo(wxCommandEvent& event); ///< "Undo" event handler

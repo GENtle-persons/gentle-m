@@ -108,6 +108,8 @@ class TAlignment : public ChildBase,wxThreadHelper
     void generateConsensusSequence ( bool addit = true ) ;
     void fixMenus ( int i ) ;
     
+    bool keepIdentity ;
+    
     protected :
     virtual void doExport ( wxString filename , int filter ) ;
     virtual void readTabColors ( wxString filename ) ;
