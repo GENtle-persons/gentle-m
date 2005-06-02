@@ -98,8 +98,10 @@ class TGraphDisplay : public wxPanel
  	void setupXYpair ( const stringField &sf ) ; ///< Reads plain XY-pair CSV data
  	void setupIPCfile ( wxString filename ) ; ///< Reads IPC data
  	void setupRawFPLC ( wxString filenamebase ) ; ///< EXPERIMENTAL Reads raw BioRad FPLC data
+ 	void setupBioFormat ( wxString filenamebase ) ; ///< EXPERIMENTAL Reads BIO FPLC format
  	void addNewGraph ( const stringField &sf , wxString title , TGraphScale *sx , TGraphScale*sy , int startrow = 0 ) ; ///< Adds a TGraphData
  	void addRawData ( unsigned char *d , long l , wxString title ) ;
+ 	void addRawData2 ( unsigned char *d , long l , wxString title ) ;
  	wxString tryall ( wxString filename ) ; ///< Tries all formats, pre-selects the "best fit"
  	void SetupDummy () ; ///< For testing only
  	bool SetupFromFile ( wxString filename ) ; ///< Calls tryall, display dialog, eventually opens file

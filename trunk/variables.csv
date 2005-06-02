@@ -745,6 +745,7 @@
 "t_graph_file_type_photometer","Photometer type ???","Photometer Typ ???"
 "t_graph_file_type_fluorimeter","Fluorimeter type ???","Fluorimeter Typ ???"
 "t_graph_file_type_xypair","XY pairs","XY-Paare"
+"t_graph_file_type_bio","BIO format","BIO-Format"
 "t_primer_up","5'","5'"
 "t_primer_down","3'","3'"
 "m_graph_save_as_image","Save as image","Als Bild speichern"

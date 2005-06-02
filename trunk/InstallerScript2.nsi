@@ -66,12 +66,18 @@ Section "GENtle (required)"
   File "gpl.txt"
   File "MySQL template.txt"
 
+  SetOutPath "$INSTDIR\wav"
+  File "help\*.wav"
+  File "help\*.txt"
+
   SetOutPath "$INSTDIR\help"
   File "help\*.htm"
   File "help\*.png"
   File "help\*.css"
+  
   SetOutPath "$INSTDIR\bitmaps"
   File "bitmaps\*.bmp"
+  
   SetOutPath "$INSTDIR"
 
 ;create desktop shortcut

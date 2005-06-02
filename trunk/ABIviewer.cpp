@@ -13,6 +13,7 @@ BEGIN_EVENT_TABLE(TABIviewer, MyChildBase)
     EVT_MENU(AMINOACIDS_EDIT_NAME, TABIviewer::OnEditName)
     EVT_MENU(MDI_COPY_TO_NEW,TABIviewer::OnCopyToNew)
     EVT_MENU(SEQ_PRINT, TABIviewer::OnSeqPrint)
+    EVT_MENU(MDI_SPEAK, TABIviewer::OnSpeak)
 
     EVT_CHECKBOX(ABI_HELPLINES, TABIviewer::OnHelplines)
     EVT_CHECKBOX(ABI_INV_COMP, TABIviewer::OnInvCompl)
@@ -149,6 +150,7 @@ void TABIviewer::initme ()
 
     wxMenu *view_menu = new wxMenu;
     view_menu->Append(MDI_EDIT_MODE, txt("m_edit_mode") , _T("") , true );
+    view_menu->Append(MDI_SPEAK, txt("m_speak") , _T("") );
 
 //    wxMenu *action_menu = new wxMenu;
 //    action_menu->Append(AM_SETUP, "SETUP" );
@@ -455,3 +457,10 @@ void TABIviewer::OnSeqPrint(wxCommandEvent& event)
     sc->OnPrint ( event ) ;    
     }
     
+void TABIviewer::OnSpeak(wxCommandEvent& event)
+	{
+    wxString s = sc->getSelection() ;
+    if ( s.IsEmpty() ) s = vec->getSequence() ; // Nothing selected, read whole sequence
+	TSpeakDialog sd ( this , txt("t_speak") , s ) ;
+	sd.ShowModal() ;
+	}

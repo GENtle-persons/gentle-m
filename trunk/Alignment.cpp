@@ -67,6 +67,7 @@ END_EVENT_TABLE()
 TAlignment::TAlignment(wxWindow *parent, const wxString& title)
     : ChildBase(parent, title)
     {
+	keepIdentity = false ;
     threadRunning = false ;
     invs = cons = bold = mono = false ;
     def = _T("alignment") ;
@@ -335,7 +336,6 @@ void* TAlignment::Entry()
 		 {
 	    if ( !first ) s = in.GetNextLine() ;
 	    else first = false ;
-//	    int index = atoi ( s.substr ( 0 , off-1 ) . mb_str() ) ;
 		 long index ;
 		 wxString i = s.substr ( 0 , off-1 ) ;
 		 i.ToLong ( &index ) ;
@@ -349,7 +349,9 @@ void* TAlignment::Entry()
     wxMutexGuiEnter() ;
 #endif
 
+    keepIdentity = true ;
     redoAlignments ( true ) ;
+    keepIdentity = false ;
 
 #ifndef __WXMSW__
     wxMutexGuiLeave() ;
@@ -360,8 +362,11 @@ void* TAlignment::Entry()
 // Calculating alignments; all changes are lost!
 void TAlignment::recalcAlignments ()
     {
-    while ( lines.size() && lines[lines.size()-1].isIdentity )
-        lines.pop_back () ;
+	if ( !keepIdentity )
+	   {
+	   while ( lines.size() && lines[lines.size()-1].isIdentity )
+ 		 lines.pop_back () ;
+	   }
     if ( lines.size() == 0 ) return ;
 
     // Align
@@ -384,7 +389,9 @@ void TAlignment::recalcAlignments ()
 	    {
 		SetCursor ( *wxSTANDARD_CURSOR ) ;
 		threadRunning = true ;
-		sc->SilentRefresh() ;
+		sc->Refresh () ;
+//		sc->SilentRefresh() ;
+//		wxSafeYield() ;
 		wxThreadHelper::Create () ;
 		GetThread()->Run() ;
 		return ;
@@ -445,7 +452,7 @@ void TAlignment::redoAlignments ( bool doRecalc )
     int a ;
     // Cleaning up
     CLEAR_DELETE ( sc->seq ) ;
-        
+
     if ( doRecalc ) recalcAlignments () ;
     if ( threadRunning ) return ;
         
@@ -495,12 +502,14 @@ void TAlignment::generateConsensusSequence ( bool addit )
     wxString s ;
     for ( a = 0 ; a < lines[0].s.length() ; a++ )
         {
-        if ( lines[0].s.GetChar(a) == lines[1].s.GetChar(a) )
-        	{
-    	    if ( lines[0].s.GetChar(a) == '-' ) s += _T(" ") ;
-            else s += _T("*") ;
-            }    
-        else s += _T(" ") ;
+	  	char c = '*' ;
+	  	for ( b = 1 ; b < lines.size() && c == '*' ; b++ )
+	  		{
+		  	if ( lines[0].s.GetChar(a) != lines[b].s.GetChar(a) /*&& 
+			   	 lines[0].s.GetChar(a) != '-' &&
+				 lines[b].s.GetChar(a) != '-' */) c = ' ' ;
+			}
+        s += (wxChar) c ; 
         }
     line.s = s ;
     if ( addit ) lines.push_back ( line ) ;

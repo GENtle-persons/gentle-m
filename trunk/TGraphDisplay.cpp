@@ -218,6 +218,7 @@ bool TGraphDisplay::SetupFromFile ( wxString filename )
 	as.Add ( txt("t_graph_file_type_photometer") ) ;
 	as.Add ( txt("t_graph_file_type_fluorimeter") ) ;
 	as.Add ( txt("t_graph_file_type_xypair") ) ;
+	as.Add ( txt("t_graph_file_type_bio") ) ;
 	
 	wxString *vs = new wxString [ as.GetCount() ] ;
 	for ( a = 0 ; a < as.GetCount() ; a++ )
@@ -240,6 +241,7 @@ bool TGraphDisplay::SetupFromFile ( wxString filename )
 	if ( s == txt("t_graph_file_type_photometer") ) setupPhotometerGraph ( readTextfile ( filename ) ) ;
 	if ( s == txt("t_graph_file_type_fluorimeter") ) setupFluorimeterGraph ( readTextfile ( filename ) ) ;
 	if ( s == txt("t_graph_file_type_xypair") ) setupXYpair ( readTextfile ( filename ) ) ;
+	if ( s == txt("t_graph_file_type_bio") ) setupBioFormat ( filename ) ;
 	
 	return true ;
 	}
@@ -281,6 +283,40 @@ void TGraphDisplay::addRawData ( unsigned char *d , long l , wxString title )
 		}    
 	
 	delete d ;
+	addNewGraph ( sf , title , scales[0] , scales[1] , 0 ) ;
+	}	
+
+void TGraphDisplay::addRawData2 ( unsigned char *d , long l , wxString title )
+	{
+	stringField sf ;
+	TVS b ;
+	b.push_back ( "" ) ;
+	b.push_back ( "" ) ;
+	
+	long a , sum = 0 , integrate = 10 , cnt = 0 ;
+	for ( a = 2000+1 ; a+30 < l ; a += 4 )
+		{
+  		unsigned long x = 0 ;
+  		x |= (unsigned long) d[a+0] ; x <<= 8 ;
+  		x |= (unsigned long) d[a+1] ; x <<= 8 ;
+  		x |= (unsigned long) d[a+2] ; x <<= 8 ;
+  		x |= (unsigned long) d[a+3] ;
+  		
+  		signed long y = (signed long) x ;
+  		y /= 10 ;
+  		
+//  		sum += x / integrate;
+//  		if ( cnt >= integrate )
+  			{
+  			b[0] = wxString::Format ( _T("%d") , a ) . mb_str() ;
+  			b[1] = wxString::Format ( _T("%l") , &y ) . mb_str() ;
+  			sf.push_back ( b ) ;
+  			sum = 0 ;
+  			cnt = 0 ;
+   			} 	
+        cnt++ ;		
+		}    
+	
 	addNewGraph ( sf , title , scales[0] , scales[1] , 0 ) ;
 	}	
 
@@ -344,14 +380,36 @@ wxString TGraphDisplay::tryall ( wxString filename )
 	if ( cnt > best ) { r = _T("t_graph_file_type_xypair") ; best = cnt ; }
 	init () ;
 	
+	setupBioFormat ( filename ) ;
+	for ( a = cnt = 0; a < data.size() ; a++ ) cnt += data[a]->dx.size() ;
+	if ( cnt > best ) { r = _T("t_graph_file_type_bio") ; best = cnt ; }
+	init () ;
+	
 	if ( best < 5 ) r = _T("") ; // A graph with less points is useless
 	
 	return r ;
 	}    
 
+void TGraphDisplay::setupBioFormat ( wxString filenamebase )
+	{
+	if ( filenamebase.Right(4).Upper() != ".BIO" ) return ;
+ 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , _T("X") , _T("") , *wxBLACK ) ;
+  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , _T("Y") , _T("") , *wxBLACK ) ;
+ 	scales.push_back ( sx ) ;
+ 	scales.push_back ( sy ) ;
+
+	long l ;
+	unsigned char *d ;
+
+	d = readRawData ( filenamebase , l ) ;
+	addRawData2 ( d , l , _T("1") ) ;
+	delete d ;
+	}
+
 void TGraphDisplay::SetupDummy ()
 	{
-	setupRawFPLC ( _T("C:\\Dokumente und Einstellungen\\DSP\\Desktop\\NORBERT\\G23") ) ;
+//	setupRawFPLC ( _T("C:\\Dokumente und Einstellungen\\DSP\\Desktop\\NORBERT\\G23") ) ;
+	setupBioFormat ( _T("C:\\Dokumente und Einstellungen\\DSP\\Desktop\\Sterner FPLC\\e.BIO") ) ;
 	AutoScale () ;
 	}
 

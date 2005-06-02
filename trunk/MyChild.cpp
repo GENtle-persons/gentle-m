@@ -1436,6 +1436,13 @@ void MyChild::OnAutoAnnotate(wxCommandEvent& event)
 		auan.Run () ;
 	}    
 
+void MyChild::OnSpeak(wxCommandEvent& event)
+	{
+    wxString s = cPlasmid->getSelection () ;
+    if ( s.IsEmpty() ) s = vec->getSequence() ; // Nothing selected, read whole sequence
+	TSpeakDialog sd ( this , txt("t_speak") , s ) ;
+	sd.ShowModal() ;
+	}
     
 // *************************
 

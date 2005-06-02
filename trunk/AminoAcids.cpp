@@ -22,6 +22,7 @@ BEGIN_EVENT_TABLE(TAminoAcids, MyChildBase)
 
     EVT_MENU(MDI_UNDO, TAminoAcids::Undo)
     EVT_MENU(MDI_REDO, TAminoAcids::Redo)
+    EVT_MENU(MDI_SPEAK, TAminoAcids::OnSpeak)
 
     EVT_CHOICE(AA_IP, TAminoAcids::OnIP)
     EVT_CHECKBOX(ALIGN_HORIZ, TAminoAcids::OnHorizontal)
@@ -134,6 +135,7 @@ void TAminoAcids::initme ()
 
     wxMenu *view_menu = new wxMenu;
     view_menu->Append(MDI_EDIT_MODE, txt("m_edit_mode") , _T("") , true );
+    view_menu->Append(MDI_SPEAK, txt("m_speak") , _T("") );
 
 
 //    wxMenu *action_menu = new wxMenu;
@@ -706,3 +708,10 @@ void TAminoAcids::updateToolbar ()
     {
     }    
     
+void TAminoAcids::OnSpeak(wxCommandEvent& event)
+	{
+    wxString s = sc->getSelection() ;
+    if ( s.IsEmpty() ) s = vec->getSequence() ; // Nothing selected, read whole sequence
+	TSpeakDialog sd ( this , txt("t_speak") , s ) ;
+	sd.ShowModal() ;
+	}

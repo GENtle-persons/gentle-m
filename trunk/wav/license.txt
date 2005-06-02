@@ -1,1 +1,4 @@
-These files are under the LGPL, from some XML project...
+These files are under the LGPL, from Voxeo
+
+http://community.voxeo.com/library/audio/prompts/home.jsp 
+

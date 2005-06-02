@@ -38,6 +38,7 @@ class TABIviewer : public ChildBase
     virtual void OnSpinHeight(wxSpinEvent& event); ///< Peak height event handler
     virtual void OnZoom(wxScrollEvent& event); ///< Zoom event handler
     virtual void OnHorizontal(wxCommandEvent& event); ///< Horizontal mode event handler
+    virtual void OnSpeak(wxCommandEvent& WXUNUSED(event)); ///< Speak sequence event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler
 
     // Variables
