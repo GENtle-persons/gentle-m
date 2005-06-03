@@ -1386,10 +1386,18 @@ void MyFrame::OnCalculator(wxCommandEvent& event)
 */
 void MyFrame::OnGraph(wxCommandEvent& event)
     {
-    TGraph *g = RunGraph() ;
+	wxString seq = "MSPILGYWKIKGLVQPTRLLLEYLEEKYEEHLYERDEGDKWRNKKFELGLEFPNLPYYIDGDVKLTQSMAIIRYIADKHNMLGGCPKERAEISMLEGAVLDIRYGVSRIAYSKDFETLKVDFLSKLPEMLKMFEDRLCHKTYLNGDHVTHPDFMLYDALDVVLYMDPMCLDAFPKLVCFKKRIEAIPQIDKYLKSSKYIAWPLQGWQATFGGGDHPPKSDLIEGRGIPGNSS" ; // GST
+	char *s2 = new char[seq.length()+5] ;
+	strcpy ( s2 , seq.mb_str() ) ;
+
+	wxString ret = ncoils_function ( s2 ) . c_str() ;
+	wxMessageBox ( ret ) ;
+	
+	
+/*    TGraph *g = RunGraph() ;
     g->gd->SetupDummy() ;
    	g->gd->AutoScale () ;
-   	g->gd->UpdateDisplay () ;
+   	g->gd->UpdateDisplay () ;*/
     }    
 
 /** \brief Invokes the calculator module
@@ -1483,7 +1491,7 @@ wxMenu *MyFrame::getToolMenu ( bool _pcr )
     tool_menu->Append(MDI_IMAGE_VIEWER, txt("m_image_viewer") , txt("m_image_viewer_txt") ) ;
     tool_menu->Append(MDI_EXTERNAL_INTERFACE, txt("m_external_interface") ) ;
     tool_menu->Append(MDI_CALCULATOR, txt("m_calculator") , txt("m_calculator_txt") ) ;
-    tool_menu->Append(MDI_GRAPH, txt("m_graph") , txt("m_graph_txt") ) ; // Deactivated in release
+//    tool_menu->Append(MDI_GRAPH, txt("m_graph") , txt("m_graph_txt") ) ; // Deactivated in release
     tool_menu->Append(PROGRAM_OPTIONS, txt("m_options") , txt("m_options_txt") ) ;
     return tool_menu ;
     }
