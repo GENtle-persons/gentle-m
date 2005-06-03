@@ -222,6 +222,7 @@ void TAminoAcids::initme ()
     toolbar->Realize() ;
     inlinePlot->Append ( txt("t_no_plot") ) ;
     inlinePlot->Append ( txt("t_chou_fasman") ) ;
+    inlinePlot->Append ( txt("t_ncoils") ) ;
     inlinePlot->SetStringSelection ( txt("t_no_plot") ) ;
 
 
@@ -385,6 +386,15 @@ void TAminoAcids::showSequence ()
         seqP->initFromTVector ( vec ) ;
         seqP->setLines ( 1 ) ;
         seqP->useChouFasman() ;
+        seqP->takesMouseActions = false ;
+        }
+    else if ( inlinePlot->GetStringSelection() == txt("t_ncoils") )
+        {
+        SeqPlot *seqP = new SeqPlot ( sc ) ;
+        sc->seq.Add ( seqP ) ;
+        seqP->initFromTVector ( vec ) ;
+        seqP->setLines ( 1 ) ;
+        seqP->useNcoils() ;
         seqP->takesMouseActions = false ;
         }
     mylog ( "TAminoAcids::showSequence" , "5" ) ;
@@ -658,6 +668,7 @@ void TAminoAcids::handleListBox ( wxString t )
            }
         }
     else if ( t == txt("t_chou_fasman") ||
+//              t == txt("t_ncoils" ) ||
               t == txt("t_aa_plot_mw" ) ||
               t == txt("t_aa_plot_pi" ) ||
               t == txt("t_aa_plot_hp" ) )
@@ -685,6 +696,7 @@ void TAminoAcids::handleListBox ( wxString t )
         seqP->setLines ( 6 ) ;
         
         if ( t == txt("t_chou_fasman") ) seqP->useChouFasman() ;
+//        else if ( t == txt("t_ncoils") ) seqP->useNcoils () ;
         else if ( t == txt("t_aa_plot_mw") ) seqP->useMW () ;
         else if ( t == txt("t_aa_plot_pi") ) seqP->usePI () ;
         else if ( t == txt("t_aa_plot_hp") ) seqP->useHP () ;

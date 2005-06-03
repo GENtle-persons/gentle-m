@@ -254,6 +254,10 @@ void SeqPlot::showHP ( wxDC &dc , int b , int tx , int ty , int lx )
     // All the same...
     showMW ( dc , b , tx , ty , lx ) ;
     }
+
+void SeqPlot::showNcoils ( wxDC &dc , int b , int tx , int ty , int lx )
+    {
+	}
     
 void SeqPlot::showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx )
     {
@@ -467,6 +471,71 @@ void SeqPlot::setLines ( int l )
 
 
 // Calculation routines
+
+void SeqPlot::useNcoils ()
+    {
+    type = COILED_COIL ;
+    d1.Clear () ;
+    d2.Clear () ;
+    d3.Clear () ;
+    if ( s.IsEmpty() ) return ;
+    l_top = 4 ;
+    l_bottom = 0 ;
+//    if ( l_top + l_bottom + 1 > lines ) setLines ( l_top + l_bottom + 1 ) ;
+/*    
+    unsigned int a ;
+    prop.clear () ;
+    for ( a = 0 ; a < s.length() ; a++ )
+        {
+        prop.push_back ( vec->getAAprop ( s[a] ) ) ;
+        prop[a].data.clear() ;
+        while ( prop[a].data.size() < 3 ) prop[a].data.push_back ( 0 ) ;
+        }
+    wxString x ;
+    FILLSTRING ( x , ' ' , s.length() ) ;
+    while ( d1.GetCount() < 4 ) d1.Add ( x ) ;
+    scanChouFasman ( 4 , 6 , 0 , 100 , 4 , 100 , 5 ) ; // Alpha helices
+    scanChouFasman ( 3 , 5 , 1 , 100 , 4 , 100 , 105 ) ; // Beta sheets
+    
+    // Deciding on overlapping regions
+    for ( a = 0 ; a < s.length() ; a++ )
+        {
+        if ( d1[1][a] != 'X' || d1[2][a] != 'X' ) continue ;
+        unsigned int b ;
+        float avg0 = 0 , avg1 = 0 ;
+        for ( b = a ; b < s.length() && d1[1][b] == 'X' && d1[2][b] == 'X' ; b++ )
+           {
+           avg0 += prop[b].data[0] ;//prop[b].cf_pa ;
+           avg1 += prop[b].data[1] ;//prop[b].cf_pb ;
+           }
+        int kill = 1 ; // delete alpha helix
+        if ( avg1 < avg0 ) kill = 2 ; // delete beta sheet
+        for ( uint c = a ; c < b ; c++ ) d1[kill][c] = ' ' ;
+        }
+        
+    // Turns
+    for ( a = 0 ; a + 3 < s.length() ; a++ )
+        {
+        
+        float p = 1 , avg = 0 , avg2 = 0 ;
+        for ( int b = 0 ; b < 4 ; b++ )
+           {
+           p *= prop[a+b].cf_f[b] ;
+           avg += prop[a+b].cf_pt ;
+           avg2 += prop[a].cf_f[b] ;
+           }
+        prop[a].data[2] = avg2 ;
+        avg /= 4.0 ;
+        if ( p > 0.000075 && avg > 1 && 
+                prop[a].cf_pa < prop[a].cf_pt &&
+                prop[a].cf_pb < prop[a].cf_pt )
+           {
+           d1[3][a] = 'X' ;
+           }
+        }
+        
+    scanMinMax () ;*/
+	}
 
 // See http://prowl.rockefeller.edu/aainfo/chou.htm for background
 void SeqPlot::useChouFasman ()

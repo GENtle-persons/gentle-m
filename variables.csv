@@ -528,6 +528,7 @@
 "t_schema","Scheme","Schema"
 "X-Y (# aa)","%d - %d (%d amino acids)","%d - %d (%d Aminosäuren)"
 "t_chou_fasman","Chou-Fasman plot","Chou-Fasman-Plot"
+"t_ncoils","Coiled-coil","Coiled-Coil"
 "t_data","Data","Daten"
 "t_no_plot","No plot","Kein Plot"
 "m_aa_view","&View","&Ansicht"

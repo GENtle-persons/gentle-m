@@ -31,13 +31,14 @@ string pred_coils(char *seq,char *ident,char *title,struct hept_pref *h,int win,
 
 /* Rob Russell's attempt to make a COILS program */
 
-string ncoils_function( char *_sequence ) {
+string ncoils_function( const char *_sequence , int window ) {
 	
 	string ret ;
 
 	int i,j,k,l;
 	int verb;
-	int window,pt;
+//	int window;
+	int pt;
 	int which,weighted;
 	int nseq;
 	int t,tc;
@@ -58,7 +59,7 @@ string ncoils_function( char *_sequence ) {
 
 
 	/* defaults */
-	window = 21;
+//	window = 21;
 	weighted = 0;
 	verb = 0;
 	mode = 0; /* 0 = column mode, 1 = fasta, 2 = concise */
@@ -382,6 +383,8 @@ string pred_coils(char *seq,char *ident,char *title,struct hept_pref *h,int win,
 	float *score;
 	float *P;
 
+	char tmp[10000] ;
+	
 	char *hept_seq;
 	
 	len=strlen(seq);
@@ -459,7 +462,6 @@ string pred_coils(char *seq,char *ident,char *title,struct hept_pref *h,int win,
 			else ret += seq[i] ;//{ printf("%c",seq[i]); }
 			if(((i+1)%60)==0) ret += "\n" ; //{ printf("\n"); }
 		} else if(mode==0) {
-		    char tmp[1000] ;
 			sprintf(tmp,"%4d %c %c %7.3f %7.3f (%7.3f %7.3f)\n",i+1,seq[i],hept_seq[i],score[i],P[i],Gcc,Gg);
 			ret += tmp ;
 		}
@@ -467,15 +469,17 @@ string pred_coils(char *seq,char *ident,char *title,struct hept_pref *h,int win,
 	if(mode==1) { printf("\n"); } 
         if((mode==2) && (are_there_coils==1) && (total_coil_segments>=min_seg)) {
 		if(total_coil_segments==1) {
-			printf("Pred %4d coil segment  : %s %s\n",total_coil_segments,ident,title);
+			sprintf(tmp,"Pred %4d coil segment  : %s %s\n",total_coil_segments,ident,title);
+//			ret += tmp ;
 		} else {
-			printf("Pred %4d coil segments : %s %s\n",total_coil_segments,ident,title);
+			sprintf(tmp,"Pred %4d coil segments : %s %s\n",total_coil_segments,ident,title);
+//			ret += tmp ;
 		}
 	}
 
 	free(P); free(score); free(hept_seq);
 	
-	return ret + "123" ;
+	return ret ;
 }
 
 
