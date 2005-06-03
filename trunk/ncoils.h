@@ -12,7 +12,7 @@
 
 using namespace std ;
 
-string ncoils_function( char *_sequence ) ;
+string ncoils_function( const char *_sequence , int window = 21 ) ;
 
 
 #endif

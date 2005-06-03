@@ -60,6 +60,9 @@ using namespace std ;
 
 IMPLEMENT_APP(MyApp)
 
+#include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
+WX_DEFINE_OBJARRAY(wxArrayFloat);
+
 // GLOBAL FUNCTIONS
 int cmpint(int *first, int *second)
     {

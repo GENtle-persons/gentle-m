@@ -211,6 +211,7 @@ WX_DEFINE_ARRAY(TProtease *,wxArrayTProtease);
 WX_DEFINE_ARRAY(TVectorItem *,wxArrayTVectorItem);
 WX_DEFINE_ARRAY(SeqBasic *,wxArraySeqBasic);
 WX_DEFINE_ARRAY(TProteaseCut *,wxArrayTProteaseCut);
+WX_DECLARE_OBJARRAY(float, wxArrayFloat);
 
 #ifndef _wxArrayTVector
 	#define _wxArrayTVector

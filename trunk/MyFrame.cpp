@@ -1387,12 +1387,30 @@ void MyFrame::OnCalculator(wxCommandEvent& event)
 void MyFrame::OnGraph(wxCommandEvent& event)
     {
 	wxString seq = "MSPILGYWKIKGLVQPTRLLLEYLEEKYEEHLYERDEGDKWRNKKFELGLEFPNLPYYIDGDVKLTQSMAIIRYIADKHNMLGGCPKERAEISMLEGAVLDIRYGVSRIAYSKDFETLKVDFLSKLPEMLKMFEDRLCHKTYLNGDHVTHPDFMLYDALDVVLYMDPMCLDAFPKLVCFKKRIEAIPQIDKYLKSSKYIAWPLQGWQATFGGGDHPPKSDLIEGRGIPGNSS" ; // GST
-	char *s2 = new char[seq.length()+5] ;
-	strcpy ( s2 , seq.mb_str() ) ;
+//	char *s2 = new char[seq.length()+5] ;
+//	strcpy ( s2 , seq.mb_str() ) ;
 
-	wxString ret = ncoils_function ( s2 ) . c_str() ;
-	wxMessageBox ( ret ) ;
-	
+	wxString ret ;
+	wxArrayFloat af[3] ;
+	for ( int a = 0 ; a < 3 ; a++ )
+		{
+ 		int b = a==0?14:(a==1?21:28) ;
+		string s = ncoils_function ( seq.mb_str() , b ) ;
+		wxString t = s.c_str() ;
+		wxArrayString ta ;
+		explode ( "\n" , t , ta ) ;
+		for ( b = 0 ; b < seq.length() ; b++ )
+			{
+  			if ( b >= ta.GetCount() ) break ;
+  			t = ta[b].Mid ( 18 ) ;
+  			double prob ;
+  			t.ToDouble ( &prob ) ;
+  			af[a].Add ( (float) prob ) ;
+  			ret += wxString::Format ( "%1.4f, " , (float) prob ) ;
+			}
+        ret += "\n" ;
+		}	
+     wxMessageBox ( ret ) ;
 	
 /*    TGraph *g = RunGraph() ;
     g->gd->SetupDummy() ;

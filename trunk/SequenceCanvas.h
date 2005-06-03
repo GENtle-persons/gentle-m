@@ -370,6 +370,7 @@ class SeqPlot : public SeqDNA
     virtual int  arrange ( int n ) ; ///< Arrange "chars" as line n
     virtual void setLines ( int l ) ; ///< What line(s) this spans
     virtual void useChouFasman () ; ///< Chou-Fasman-Plot
+    virtual void useNcoils () ; ///< Coiled-coil-Plot
     virtual void useMW () ; ///< Molecular weight plot
     virtual void usePI () ; ///< Isoelectric point plot
     virtual void useHP () ; ///< Hydrophobicity plot
@@ -386,13 +387,14 @@ class SeqPlot : public SeqDNA
                                     int seek_cnt , int seek_avg , int avg ) ;
     virtual void drawSymbol ( char c , wxDC &dc , int x1 , int y1 , int x2 , int y2 ) ;
     virtual void showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx ) ; ///< Display Chou-Fasman
+    virtual void showNcoils ( wxDC &dc , int b , int tx , int ty , int lx ) ; ///< Display Coiled-coil
     virtual void showMW ( wxDC &dc , int b , int tx , int ty , int lx ) ; ///< Display molecular weight
     virtual void showPI ( wxDC &dc , int b , int tx , int ty , int lx ) ; ///< Display isoelectric point
     virtual void showHP ( wxDC &dc , int b , int tx , int ty , int lx ) ; ///< Display hydrophobicity
     virtual void fixMinMax ( float &f ) ; ///< What the hell does this do??
     virtual void drawDottedLine ( wxDC &dc , int x1 , int y1 , int x2 , int y2 ) ; ///< Draws a horizontal/vertical helper line
     virtual void myRect ( wxDC &dc , int x , int y , int w , int h ) ; ///< Draws a "special" rectangle
-    enum { CHOU_FASMAN , P_I , M_W , H_P } type ;
+    enum { CHOU_FASMAN , P_I , M_W , H_P , COILED_COIL } type ;
     int lines , l_top, l_bottom ;
     wxArrayString d1 , d2 , d3 ;
     vector <TAAProp> prop ;
