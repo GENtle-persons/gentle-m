@@ -205,12 +205,9 @@ MyApp *myapp ()
 */
 bool MyApp::OnInit()
 {
-#ifdef _UNICODE
-//	cout << "Uses unicode\n" ;
-#endif
-	 isoconv = new wxCSConv ( _T("iso-8859-1") ) ;
+	isoconv = new wxCSConv ( _T("iso-8859-1") ) ;
     wxConvCurrent = isoconv ;
-	 errout = NULL ;
+	errout = NULL ;
     total_log_time = 0 ;
     total_log_counter = 0 ;
 #ifdef MYLOG
@@ -222,7 +219,13 @@ bool MyApp::OnInit()
     wxInitAllImageHandlers() ;
     wxFileSystem::AddHandler ( new wxInternetFSHandler ) ;
     
-    wxSetWorkingDirectory ( homedir ) ;
+    wxSetWorkingDirectory ( homedir ) ; // Setting home directory as working dir
+
+	// Setting ncoils dir as environment variable
+    wxString ncoilsdir ;
+    ncoilsdir = _T("COILSDIR=") ;
+    ncoilsdir += homedir ;
+ 	putenv ( ncoilsdir.mb_str() ) ; 
 
     // Is an instance already running?
     const wxString name = wxString::Format ( _T("GENtle-%s") , wxGetUserId().c_str());

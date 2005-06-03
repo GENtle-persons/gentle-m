@@ -1,11 +1,11 @@
 [Project]
 FileName=GENtle.dev
 Name=GENtle
-UnitCount=152
+UnitCount=156
 Type=0
 Ver=1
 ObjFiles=
-Includes=C:\Programme\Dev-Cpp\Mine\GENtle;C:\Programme\Dev-Cpp\Mine\GENtle\clustal;C:\Programme\Dev-Cpp\include\MySQL;"C:\Program Files\Dev-Cpp\include\MySQL"
+Includes=C:\Programme\Dev-Cpp\Mine\GENtle;C:\Programme\Dev-Cpp\Mine\GENtle\clustal;C:\Programme\Dev-Cpp\include\MySQL;"C:\Program Files\Dev-Cpp\include\MySQL";C:\Programme\Dev-Cpp\Mine\GENtle\coils
 Libs=C:\Programme\Dev-Cpp\Mine\GENtle;C:\Programme\Dev-Cpp\Mine\GENtle\tinyxml;C:\Programme\Dev-Cpp\Mine\GENtle\ipc
 PrivateResource=GENtle_private.rc
 ResourceIncludes=C:\Programme\Dev-Cpp\include;"C:\Program Files\Dev-Cpp\include"
@@ -20,7 +20,7 @@ ObjectOutput=
 OverrideOutput=0
 OverrideOutputName=GENtle.exe
 HostApplication=
-Folders=Canvases,Child-Types,ClustalW,Components,"Data structures",Dialogs,"External sources",IPC
+Folders=Canvases,Child-Types,Components,"Data structures",Dialogs,"External sources","External sources/ClustalW","External sources/IPC","External sources/ncoils","External sources/tinyxml"
 CommandLine=
 IncludeVersionInfo=0
 SupportXPThemes=0
@@ -810,7 +810,7 @@ BuildCmd=
 [Unit84]
 FileName=tinyxml\tinystr.cpp
 CompileCpp=1
-Folder=External sources
+Folder=External sources/tinyxml
 Compile=1
 Link=1
 Priority=1000
@@ -820,7 +820,7 @@ BuildCmd=
 [Unit85]
 FileName=tinyxml\tinystr.h
 CompileCpp=1
-Folder=External sources
+Folder=External sources/tinyxml
 Compile=1
 Link=1
 Priority=1000
@@ -830,7 +830,7 @@ BuildCmd=
 [Unit86]
 FileName=tinyxml\tinyxml.cpp
 CompileCpp=1
-Folder=External sources
+Folder=External sources/tinyxml
 Compile=1
 Link=1
 Priority=1000
@@ -840,7 +840,7 @@ BuildCmd=
 [Unit87]
 FileName=tinyxml\tinyxml.h
 CompileCpp=1
-Folder=External sources
+Folder=External sources/tinyxml
 Compile=1
 Link=1
 Priority=1000
@@ -850,7 +850,7 @@ BuildCmd=
 [Unit88]
 FileName=tinyxml\tinyxmlerror.cpp
 CompileCpp=1
-Folder=External sources
+Folder=External sources/tinyxml
 Compile=1
 Link=1
 Priority=1000
@@ -860,7 +860,7 @@ BuildCmd=
 [Unit89]
 FileName=tinyxml\tinyxmlparser.cpp
 CompileCpp=1
-Folder=External sources
+Folder=External sources/tinyxml
 Compile=1
 Link=1
 Priority=1000
@@ -1130,7 +1130,7 @@ BuildCmd=
 [Unit109]
 FileName=clustalw\xmenu.h
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1140,7 +1140,7 @@ BuildCmd=
 [Unit110]
 FileName=clustalw\alnscore.c
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1150,7 +1150,7 @@ BuildCmd=
 [Unit111]
 FileName=clustalw\amenu.c
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1160,7 +1160,7 @@ BuildCmd=
 [Unit112]
 FileName=clustalw\calcgap.c
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1170,7 +1170,7 @@ BuildCmd=
 [Unit113]
 FileName=clustalw\calcprf1.c
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1180,7 +1180,7 @@ BuildCmd=
 [Unit114]
 FileName=clustalw\calcprf2.c
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1190,7 +1190,7 @@ BuildCmd=
 [Unit115]
 FileName=clustalw\calctree.c
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1200,7 +1200,7 @@ BuildCmd=
 [Unit116]
 FileName=clustalw\clustalw.c
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1210,7 +1210,7 @@ BuildCmd=
 [Unit117]
 FileName=clustalw\clustalw.h
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1220,7 +1220,7 @@ BuildCmd=
 [Unit118]
 FileName=clustalw\dayhoff.h
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1230,7 +1230,7 @@ BuildCmd=
 [Unit119]
 FileName=clustalw\gcgcheck.c
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1240,7 +1240,7 @@ BuildCmd=
 [Unit120]
 FileName=clustalw\general.h
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1250,7 +1250,7 @@ BuildCmd=
 [Unit121]
 FileName=clustalw\interfac.c
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1260,7 +1260,7 @@ BuildCmd=
 [Unit122]
 FileName=clustalw\malign.c
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1270,7 +1270,7 @@ BuildCmd=
 [Unit123]
 FileName=clustalw\matrices.h
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1280,7 +1280,7 @@ BuildCmd=
 [Unit124]
 FileName=clustalw\palign.c
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1290,7 +1290,7 @@ BuildCmd=
 [Unit125]
 FileName=clustalw\param.h
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1300,7 +1300,7 @@ BuildCmd=
 [Unit126]
 FileName=clustalw\prfalign.c
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1310,7 +1310,7 @@ BuildCmd=
 [Unit127]
 FileName=clustalw\random.c
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1320,7 +1320,7 @@ BuildCmd=
 [Unit128]
 FileName=clustalw\readmat.c
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1330,7 +1330,7 @@ BuildCmd=
 [Unit129]
 FileName=clustalw\sequence.c
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1340,7 +1340,7 @@ BuildCmd=
 [Unit130]
 FileName=clustalw\showpair.c
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1350,7 +1350,7 @@ BuildCmd=
 [Unit131]
 FileName=clustalw\trees.c
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1360,7 +1360,7 @@ BuildCmd=
 [Unit132]
 FileName=clustalw\util.c
 CompileCpp=1
-Folder=ClustalW
+Folder=External sources/ClustalW
 Compile=1
 Link=1
 Priority=1000
@@ -1450,7 +1450,7 @@ BuildCmd=
 [Unit141]
 FileName=ipc\acconfig.h
 CompileCpp=1
-Folder=IPC
+Folder=External sources/IPC
 Compile=1
 Link=1
 Priority=1000
@@ -1460,7 +1460,7 @@ BuildCmd=
 [Unit142]
 FileName=ipc\element.h
 CompileCpp=1
-Folder=IPC
+Folder=External sources/IPC
 Compile=1
 Link=1
 Priority=1000
@@ -1470,7 +1470,7 @@ BuildCmd=
 [Unit143]
 FileName=ipc\global.h
 CompileCpp=1
-Folder=IPC
+Folder=External sources/IPC
 Compile=1
 Link=1
 Priority=1000
@@ -1480,7 +1480,7 @@ BuildCmd=
 [Unit144]
 FileName=ipc\gp_out.h
 CompileCpp=1
-Folder=IPC
+Folder=External sources/IPC
 Compile=1
 Link=1
 Priority=1000
@@ -1490,7 +1490,7 @@ BuildCmd=
 [Unit145]
 FileName=ipc\ipc.h
 CompileCpp=1
-Folder=IPC
+Folder=External sources/IPC
 Compile=1
 Link=1
 Priority=1000
@@ -1500,7 +1500,7 @@ BuildCmd=
 [Unit146]
 FileName=ipc\pars.h
 CompileCpp=1
-Folder=IPC
+Folder=External sources/IPC
 Compile=1
 Link=1
 Priority=1000
@@ -1530,7 +1530,7 @@ BuildCmd=
 [Unit149]
 FileName=ipc\element.cpp
 CompileCpp=1
-Folder=IPC
+Folder=External sources/IPC
 Compile=1
 Link=1
 Priority=1000
@@ -1540,7 +1540,7 @@ BuildCmd=
 [Unit150]
 FileName=ipc\gp_out.cpp
 CompileCpp=1
-Folder=IPC
+Folder=External sources/IPC
 Compile=1
 Link=1
 Priority=1000
@@ -1550,7 +1550,7 @@ BuildCmd=
 [Unit151]
 FileName=ipc\ipc.cpp
 CompileCpp=1
-Folder=IPC
+Folder=External sources/IPC
 Compile=1
 Link=1
 Priority=1000
@@ -1560,7 +1560,67 @@ BuildCmd=
 [Unit152]
 FileName=ipc\pars.cpp
 CompileCpp=1
-Folder=IPC
+Folder=External sources/IPC
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit155]
+FileName=coils\ncoils.h
+CompileCpp=1
+Folder=External sources/ncoils
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit156]
+FileName=coils\read_matrix.c
+CompileCpp=1
+Folder=External sources/ncoils
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit157]
+FileName=coils\ncoils.h
+CompileCpp=1
+Folder=External sources/ncoils
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit158]
+FileName=coils\read_matrix.c
+CompileCpp=1
+Folder=External sources/ncoils
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit153]
+FileName=coils\main.h
+CompileCpp=1
+Folder=External sources/ncoils
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit154]
+FileName=coils\ncoils.c
+CompileCpp=1
+Folder=External sources/ncoils
 Compile=1
 Link=1
 Priority=1000
