@@ -1,7 +1,7 @@
 [Project]
 FileName=GENtle.dev
 Name=GENtle
-UnitCount=156
+UnitCount=154
 Type=0
 Ver=1
 ObjFiles=
@@ -20,7 +20,7 @@ ObjectOutput=
 OverrideOutput=0
 OverrideOutputName=GENtle.exe
 HostApplication=
-Folders=Canvases,Child-Types,Components,"Data structures",Dialogs,"External sources","External sources/ClustalW","External sources/IPC","External sources/ncoils","External sources/tinyxml"
+Folders=Canvases,Child-Types,Components,"Data structures",Dialogs,"External sources","External sources/ClustalW","External sources/IPC","External sources/tinyxml"
 CommandLine=
 IncludeVersionInfo=0
 SupportXPThemes=0
@@ -1578,17 +1578,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit156]
-FileName=coils\read_matrix.c
-CompileCpp=1
-Folder=External sources/ncoils
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit157]
-FileName=coils\ncoils.h
+FileName=ncoils.cpp
 CompileCpp=1
 Folder=External sources/ncoils
 Compile=1
@@ -1608,9 +1598,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit153]
-FileName=coils\main.h
+FileName=ncoils.h
 CompileCpp=1
-Folder=External sources/ncoils
+Folder=External sources
 Compile=1
 Link=1
 Priority=1000
@@ -1618,9 +1608,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit154]
-FileName=coils\ncoils.c
+FileName=ncoils.cpp
 CompileCpp=1
-Folder=External sources/ncoils
+Folder=External sources
 Compile=1
 Link=1
 Priority=1000
