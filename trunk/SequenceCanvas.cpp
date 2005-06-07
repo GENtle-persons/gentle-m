@@ -1335,8 +1335,12 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
            TAlignment *alg = (TAlignment*) child ;
            if ( al->myname == txt("t_identity") ) {} // Do nothing
            else if ( al->whatsthis() == _T("FEATURE") ) {} // Do nothing
-           else alg->callMiddleMouseButton ( al->id , pos ) ;
+           else alg->callMiddleMouseButton ( al->id , pos ) ; // Call alignment module to handle middle mouse button click
            }
+        else if ( isMiniDisplay () && markedFrom() != -1 ) // Show marked sequence in primary sequence display
+   	       {
+ 	 	   getAA()->sc->ensureVisible ( markedFrom() ) ;
+   		   }
         }
     
     if ( event.LeftDClick() )
