@@ -240,7 +240,7 @@ void FindSequenceDialog::aaSearch ()
     ss = v->getSequence() ;
     if ( v->isCircular() ) ss += ss.Left ( 2 ) ;
     else ss += _T("  ") ;
-    aaSubSearch ( ss , 0 , 1 , txt("m_aa_1") ) ; // Reading frame +1     
+    aaSubSearch ( ss , 0 , 1 , txt("m_aa_1") ) ; // Reading frame +1
     aaSubSearch ( ss , 1 , 1 , txt("m_aa_2") ) ; // Reading frame +2     
     aaSubSearch ( ss , 2 , 1 , txt("m_aa_3") ) ; // Reading frame +3
     ss = v->transformSequence ( true , false ) ;
@@ -253,23 +253,33 @@ void FindSequenceDialog::aaSearch ()
     
 void FindSequenceDialog::aaSubSearch ( const wxString &s , int start , int dir , wxString rf )
 	{
-	int a ;
-	wxString codon , res ;
+	int a , b ;
+	wxChar codon[4] ;
+	codon[3] = 0 ;
+	wxString res ;
 	wxArrayInt ai ;
     TVector *v = c->vec ;
     wxString sub = t->GetValue().Upper() ;
     int ostart = start < 0 ? 2 : 0 ;
+    
+    res.Alloc ( s.length() / 3 + 10 ) ;
+    ai.Alloc ( s.length() / 3 + 10 ) ;
+    
     if ( start < 0 )
     	{
 	    for ( start = -start ; start + 3 < s.length() ; start += 3 ) ;
-    	}    
+    	}
+   	
 	for ( a = start ; a + dir * 2 >= 0 && a + dir * 2 < s.length() ; a += dir * 3 )
 		{
-		codon.Empty() ;
-		codon += s.GetChar ( a + dir * 0 ) ;
-		codon += s.GetChar ( a + dir * 1 ) ;
-		codon += s.GetChar ( a + dir * 2 ) ;
-		res += v->dna2aa ( codon ) . GetChar ( 0 ) ;
+ 		codon[0] = s.GetChar ( a ) ;
+ 		codon[1] = s.GetChar ( a + dir ) ;
+ 		codon[2] = s.GetChar ( a + dir * 2 ) ;
+
+        wxChar c2 = codonhash[codon] ;
+        if ( c2 < 'A' ) c2 = codonhash[codon] = v->dna2aa ( codon ) . GetChar ( 0 ) ;
+        res += c2 ;
+
 		ai.Add ( a ) ;
 		}    
 	a = res.Find ( sub ) ;

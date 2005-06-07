@@ -178,6 +178,7 @@ void SeqPlot::show ( wxDC& dc )
            switch ( type )
               {
               case CHOU_FASMAN : showChouFasman ( dc , b-1 , tx , ty , lx ) ; break ;
+              case COILED_COIL : showChouFasman ( dc , b-1 , tx , ty , lx ) ; break ;
               case M_W : showMW ( dc , b-1 , tx , ty , lx ) ; break ;
               case P_I : showPI ( dc , b-1 , tx , ty , lx ) ; break ;
               case H_P : showHP ( dc , b-1 , tx , ty , lx ) ; break ;
@@ -193,6 +194,7 @@ void SeqPlot::show ( wxDC& dc )
            if ( !can->isMiniDisplay() ) continue ;
            dc.SetFont(*can->smallFont);
            if ( type == CHOU_FASMAN ) t = _T("Chou-Fasman") ;
+           if ( type == COILED_COIL ) t = _T("Coiled-coil") ;
            else if ( type == M_W ) t = _T("MW") ;
            else if ( type == P_I ) t = _T("pI") ;
            else if ( type == H_P )
@@ -299,9 +301,18 @@ void SeqPlot::showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx )
            }
         if ( startOfLine )
            {
-           if ( u == 1 ) drawSymbol ( 'a' , dc , lx-cw , ty+(u-1)*ch , lx-2 , ty+(u-1)*ch+ch ) ; // Alpha
-           else if ( u == 2 ) drawSymbol ( 'b' , dc , lx-cw , ty+(u-1)*ch , lx-2 , ty+(u-1)*ch+ch ) ; // Beta
-           else drawSymbol ( 'T' , dc , lx-cw , ty+(u-1)*ch , lx-2 , ty+(u-1)*ch+ch ) ; // Turn
+		   if ( type == CHOU_FASMAN )
+		   	  {
+			  if ( u == 1 ) drawSymbol ( 'a' , dc , lx-cw , ty+(u-1)*ch , lx-2 , ty+(u-1)*ch+ch ) ; // Alpha
+			  else if ( u == 2 ) drawSymbol ( 'b' , dc , lx-cw , ty+(u-1)*ch , lx-2 , ty+(u-1)*ch+ch ) ; // Beta
+			  else drawSymbol ( 'T' , dc , lx-cw , ty+(u-1)*ch , lx-2 , ty+(u-1)*ch+ch ) ; // Turn
+			  }
+		   else if ( type == COILED_COIL )
+		   	  {
+	   	   	  if ( u == 1 ) dc.DrawText ( "14" , lx-cw*2 , ty+(u-1)*ch-ch/2 ) ;
+	   	   	  else if ( u == 2 ) dc.DrawText ( "21" , lx-cw*2 , ty+(u-1)*ch-ch/2 ) ;
+	   	   	  else if ( u == 3 ) dc.DrawText ( "28" , lx-cw*2 , ty+(u-1)*ch-ch/2 ) ;
+			  }
            }
         }
     
@@ -482,59 +493,44 @@ void SeqPlot::useNcoils ()
     l_top = 4 ;
     l_bottom = 0 ;
 //    if ( l_top + l_bottom + 1 > lines ) setLines ( l_top + l_bottom + 1 ) ;
-/*    
-    unsigned int a ;
-    prop.clear () ;
-    for ( a = 0 ; a < s.length() ; a++ )
-        {
-        prop.push_back ( vec->getAAprop ( s[a] ) ) ;
-        prop[a].data.clear() ;
-        while ( prop[a].data.size() < 3 ) prop[a].data.push_back ( 0 ) ;
-        }
+
+    int a , b ;
+	wxArrayFloat af[3] ;
+	for ( a = 0 ; a < 3 ; a++ )
+		{
+ 		b = a==0?14:(a==1?21:28) ;
+		string x = ncoils_function ( s.mb_str() , b ) ;
+		wxString t = x.c_str() ;
+		wxArrayString ta ;
+		explode ( "\n" , t , ta ) ;
+		for ( b = 0 ; b < s.length() ; b++ )
+			{
+  			if ( b >= ta.GetCount() ) break ;
+  			t = ta[b].Mid ( 18 ) ;
+  			double prob ;
+  			t.ToDouble ( &prob ) ;
+  			af[a].Add ( (float) prob ) ;
+			}
+		}	
+	
     wxString x ;
     FILLSTRING ( x , ' ' , s.length() ) ;
     while ( d1.GetCount() < 4 ) d1.Add ( x ) ;
-    scanChouFasman ( 4 , 6 , 0 , 100 , 4 , 100 , 5 ) ; // Alpha helices
-    scanChouFasman ( 3 , 5 , 1 , 100 , 4 , 100 , 105 ) ; // Beta sheets
-    
-    // Deciding on overlapping regions
-    for ( a = 0 ; a < s.length() ; a++ )
-        {
-        if ( d1[1][a] != 'X' || d1[2][a] != 'X' ) continue ;
-        unsigned int b ;
-        float avg0 = 0 , avg1 = 0 ;
-        for ( b = a ; b < s.length() && d1[1][b] == 'X' && d1[2][b] == 'X' ; b++ )
-           {
-           avg0 += prop[b].data[0] ;//prop[b].cf_pa ;
-           avg1 += prop[b].data[1] ;//prop[b].cf_pb ;
-           }
-        int kill = 1 ; // delete alpha helix
-        if ( avg1 < avg0 ) kill = 2 ; // delete beta sheet
-        for ( uint c = a ; c < b ; c++ ) d1[kill][c] = ' ' ;
-        }
-        
-    // Turns
-    for ( a = 0 ; a + 3 < s.length() ; a++ )
-        {
-        
-        float p = 1 , avg = 0 , avg2 = 0 ;
-        for ( int b = 0 ; b < 4 ; b++ )
-           {
-           p *= prop[a+b].cf_f[b] ;
-           avg += prop[a+b].cf_pt ;
-           avg2 += prop[a].cf_f[b] ;
-           }
-        prop[a].data[2] = avg2 ;
-        avg /= 4.0 ;
-        if ( p > 0.000075 && avg > 1 && 
-                prop[a].cf_pa < prop[a].cf_pt &&
-                prop[a].cf_pb < prop[a].cf_pt )
-           {
-           d1[3][a] = 'X' ;
-           }
-        }
-        
-    scanMinMax () ;*/
+
+    prop.clear () ;
+	for ( a = 0 ; a < s.length() ; a++ )
+		{
+        prop.push_back ( vec->getAAprop ( s[a] ) ) ;
+        prop[a].data.clear() ;
+        prop[a].data.push_back ( af[0][a] ) ;
+        prop[a].data.push_back ( af[1][a] ) ;
+        prop[a].data.push_back ( af[2][a] ) ;
+        d1[1][a] = af[0][a] >= 0.5 ? 'X' : ' ' ;
+        d1[2][a] = af[1][a] >= 0.5 ? 'X' : ' ' ;
+        d1[3][a] = af[2][a] >= 0.5 ? 'X' : ' ' ;
+		}
+
+    scanMinMax () ;
 	}
 
 // See http://prowl.rockefeller.edu/aainfo/chou.htm for background
@@ -623,6 +619,14 @@ void SeqPlot::scanMinMax ()
         data_min = 0 ;
         data_max = 1.5 ;
         data_step = 0.2 ;
+        }
+    else if ( type == COILED_COIL )
+        {
+        data_min = 0 ;
+        data_max = data_max * 11 / 10 ;
+        if ( data_max > 1 ) data_max = 1 ;
+        if ( data_max < 0.1 ) data_max = 0.1 ;
+        data_step = 0.1 ;
         }
     else if ( type == M_W )
         {
