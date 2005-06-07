@@ -6,6 +6,8 @@
 
 #include "main.h"
 
+WX_DECLARE_STRING_HASH_MAP ( wxChar , wxHashChar ) ;
+
 /**	\brief The class implementing the "Find" dialog in various ChildBase modules
 */
 class FindSequenceDialog : public wxDialog
@@ -37,6 +39,7 @@ class FindSequenceDialog : public wxDialog
     int p , last ;
     wxListBox *lb ; ///< The results list box control
     wxArrayInt vi ;
+    wxHashChar codonhash ;
 
     DECLARE_EVENT_TABLE()
     } ;
