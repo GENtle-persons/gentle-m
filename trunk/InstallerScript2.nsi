@@ -67,8 +67,8 @@ Section "GENtle (required)"
   File "MySQL template.txt"
 
   SetOutPath "$INSTDIR\wav"
-  File "help\*.wav"
-  File "help\*.txt"
+  File "wav\*.wav"
+  File "wav\*.txt"
 
   SetOutPath "$INSTDIR\help"
   File "help\*.htm"
