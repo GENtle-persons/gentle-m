@@ -81,7 +81,7 @@ void TVectorEditor::initialViewItem ( int num )
 int TVectorEditor::getCurrentItem ()
     {
     for ( int a = 0 ; a < items->GetItemCount() ; a++ )
-        if ( items->GetItemState ( a , wxLIST_STATE_DONTCARE ) != 0 )
+        if ( items->GetItemState ( a , wxLIST_STATE_SELECTED/*wxLIST_STATE_DONTCARE*/ ) != 0 )
            return items->GetItemData ( a ) ;
     return -1 ;
     }

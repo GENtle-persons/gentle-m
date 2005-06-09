@@ -3,6 +3,7 @@ Bugs :
 * Bericht drucken : lange Zeilen in Vektor-Beschreibung umbrechen
 * Primer an Enden von linearen Stücken matchen nicht
 * Features in Alignment-Ausdruck verschoben
+* Absturz bei Inline-Plot-Änderung
 
 Feature Requests :
 * Optimierung Überhang-Primer
@@ -16,6 +17,9 @@ Feature Requests :
 * That ligation thingy 
 
 SEE: http://eutils.ncbi.nlm.nih.gov/entrez/query/static/eutils_help.html
+
+----
+http://www.atgc.org/GenomePixelizer/Examples/GenoPixExamples.html
 
 ----
 
