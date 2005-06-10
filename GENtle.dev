@@ -1,7 +1,7 @@
 [Project]
 FileName=GENtle.dev
 Name=GENtle
-UnitCount=154
+UnitCount=156
 Type=0
 Ver=1
 ObjFiles=
@@ -1568,9 +1568,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit155]
-FileName=coils\ncoils.h
+FileName=TPhylip.h
 CompileCpp=1
-Folder=External sources/ncoils
+Folder=Data structures
 Compile=1
 Link=1
 Priority=1000
@@ -1578,9 +1578,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit156]
-FileName=ncoils.cpp
+FileName=TPhylip.cpp
 CompileCpp=1
-Folder=External sources/ncoils
+Folder=Data structures
 Compile=1
 Link=1
 Priority=1000

@@ -87,6 +87,8 @@ class TAlignment : public ChildBase,wxThreadHelper
     virtual void MoveUpDown ( int what , int where ) ; ///< Move a line into the given direction
     virtual void prealigned ( wxArrayString &vs , wxArrayChildBase &vc ) ; ///< Initialize with a prealigned list of sequences (for example, from a multi-sequence genbank file)
     virtual void fromVector ( TVector *nv ) ; ///< Initialize from a single vector (???)
+    
+    virtual void RunPhylip ( int cmd ) ; ///< Takes Phylip commands (invoked from SequenceCanvas)
 
     virtual bool isThreadRunning() { return threadRunning ; } ///< Is a thread (alignment calculation) currently running?
     

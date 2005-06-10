@@ -444,6 +444,8 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void OnViewCondensed ( wxCommandEvent &ev ) ; ///<  View condensed" mini-display event handler
     virtual void OnBacktranslate ( wxCommandEvent &ev ) ; ///<  "Backtranslate amino acids into DNA" event handler
 
+    virtual void OnPhylip ( wxCommandEvent &ev ) ; ///<  "Phylip" event handler (all in one)
+
     virtual void OnSeqUp ( wxCommandEvent &ev ) ; ///<  "Move alignment sequence up" event handler
     virtual void OnSeqDown ( wxCommandEvent &ev ) ; ///<  "Move alignment sequence down" event handler
     virtual void OnSeqTop ( wxCommandEvent &ev ) ; ///<  "Move alignment sequence to top" event handler

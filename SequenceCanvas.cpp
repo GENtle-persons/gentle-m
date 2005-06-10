@@ -70,6 +70,43 @@ BEGIN_EVENT_TABLE(SequenceCanvas, wxScrolledWindow)
     EVT_MENU(PC_RS_HIDE_LIMIT, SequenceCanvas::rsHideLimit)
     EVT_MENU(MDI_PASTE, SequenceCanvas::OnPaste)
 
+	EVT_MENU_RANGE(PHYLIP_CMD_PROTPARS,PHYLIP_CMD_RETREE,SequenceCanvas::OnPhylip)
+/*	EVT_MENU(PHYLIP_CMD_PROTPARS, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_DNAPARS, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_DNAMOVE, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_DNAPENNY, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_DNACOMP, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_DNAINVAR, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_DNAML, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_DNAMLK, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_PROML, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_PROMLK, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_DNADIST, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_PROTDIST, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_RESTDIST, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_RESTML, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_SEQBOOT, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_FITCH, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_KITSCH, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_NEIGHBOR, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_CONTML, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_GENDIST, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_CONTRAST, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_PARS, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_MIX, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_MOVE, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_PENNY, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_DOLLOP, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_DOLMOVE, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_DOLPENNY, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_CLIQUE, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_FACTOR, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_DRAWGRAM, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_DRAWTREE, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_TREEDIST, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_CONSENSE, SequenceCanvas::OnPhylip)
+	EVT_MENU(PHYLIP_CMD_RETREE, SequenceCanvas::OnPhylip)*/
+
     EVT_SET_FOCUS(SequenceCanvas::OnFocus)
     EVT_KILL_FOCUS(SequenceCanvas::OnKillFocus)
 END_EVENT_TABLE()
@@ -1525,6 +1562,12 @@ void SequenceCanvas::showContextMenu ( SeqBasic *where , int pos , wxPoint pt )
           else cm->Append ( SEQ_FEAT_SHOW , txt("t_show_feature_line") ) ;
           cm->AppendSeparator () ;
           }
+   	 if ( true ) // Phylip
+   	 	{
+			wxMenu *cc = new wxMenu ;
+			cc->Append ( PHYLIP_CMD_PROTPARS , txt("m_phylip_protpars") ) ;
+			cm->Append ( POPUP_DUMMY , txt("m_phylip") , cc ) ;			
+			}
        }
     else
        {
@@ -2123,6 +2166,12 @@ void SequenceCanvas::OnStrandNewBoth(wxCommandEvent& event)
 	OnStrandNew53 ( event ) ;
 	OnStrandNew35 ( event ) ;
 	}    
+	
+void SequenceCanvas::OnPhylip ( wxCommandEvent &ev )
+	{
+	if ( !getAln() ) return ; // Not an alignment
+	getAln()->RunPhylip ( ev.GetId() ) ;
+	}
 
 
 // -------------------------------------------------------- TMarkMem
