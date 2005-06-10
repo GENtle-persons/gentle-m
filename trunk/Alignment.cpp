@@ -1176,6 +1176,36 @@ void TAlignment::OnSeqPrint(wxCommandEvent& event)
     {
     sc->OnPrint ( event ) ;    
     }
+
+void TAlignment::RunPhylip ( int cmd )
+	{
+	TPhylip phylip ;
+	wxString data ;
+	
+	int a , b ;
+	int seqlen = 0 ;
+	wxArrayString vs ;
+	for ( a = b = 0 ; a < lines.size() ; a++ )
+		{
+		if ( lines[a].isIdentity ) continue ;
+		wxString t ;
+		t = wxString::Format ( _T("%d ") , ++b ) ;
+//		t += lines[a].name ;
+		while ( t.length() < 20 ) t += " " ;
+		t = t.Mid ( 0 , 20 ) ;
+		t += lines[a].s ;
+		seqlen = lines[a].s.length() ;
+		vs.Add ( t ) ;
+		}
+	
+	data += wxString::Format ( _T("%3d%7d\n") , vs.GetCount() , seqlen ) ;
+	for ( a = 0 ; a < vs.GetCount() ; a++ )
+		data += vs[a] + _T("\n") ;
+	
+	wxString out ;
+	if ( cmd == PHYLIP_CMD_PROTPARS ) out = phylip.protpars ( data );
+//	wxMessageBox ( out ) ;
+	}
     
     
 // *****************************************************************************

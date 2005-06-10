@@ -228,6 +228,7 @@ WX_DECLARE_OBJARRAY(float, wxArrayFloat);
 #include "enums.h"
 #include "TVector.h"
 #include "TUReadSeq.h"
+#include "TPhylip.h"
 #include "ipc/ipc.h"
 #include "ncoils.h"
 #include "CGview.h"
