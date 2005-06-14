@@ -735,6 +735,28 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
     return false ;
 }
 
+/** \brief Creates a new module with a phylogenetic tree
+*/
+TPhyloTree *MyFrame::newPhyloTree ( wxString title )
+	{
+	TPhyloTree *subframe = new TPhyloTree(getCommonParent(), txt("t_phylogenetic_tree")) ;
+	
+	setChild ( subframe ) ;
+	
+	// Give it an icon
+#ifdef __WXMSW__
+	subframe->SetIcon(wxIcon("chrt_icn"));
+#else
+	subframe->SetIcon(wxIcon( mondrian_xpm ));
+#endif
+	
+	
+	subframe->initme() ;
+	mainTree->addChild(subframe,TYPE_MISC) ;
+	subframe->Maximize() ;
+	return subframe ;
+	}
+
 /** \brief Creates a new entry from an XML file (GenBankXML; DNA or amino acids)
 */
 void MyFrame::newXML (  TXMLfile &xml , wxString title )
@@ -1509,7 +1531,7 @@ wxMenu *MyFrame::getToolMenu ( bool _pcr )
     tool_menu->Append(MDI_IMAGE_VIEWER, txt("m_image_viewer") , txt("m_image_viewer_txt") ) ;
     tool_menu->Append(MDI_EXTERNAL_INTERFACE, txt("m_external_interface") ) ;
     tool_menu->Append(MDI_CALCULATOR, txt("m_calculator") , txt("m_calculator_txt") ) ;
-//    tool_menu->Append(MDI_GRAPH, txt("m_graph") , txt("m_graph_txt") ) ; // Deactivated in release
+//    tool_menu->Append(MDI_GRAPH, txt("m_graph") , txt("m_graph_txt") ) ; // TESTING, Deactivated in release
     tool_menu->Append(PROGRAM_OPTIONS, txt("m_options") , txt("m_options_txt") ) ;
     return tool_menu ;
     }

@@ -64,53 +64,53 @@ TVirtualGel::TVirtualGel(wxWindow *parent, const wxString& title)
     }
 
 void TVirtualGel::initme ()
-    {
-    // Menus
-    wxMenu *file_menu = myapp()->frame->getFileMenu () ;
-    wxMenu *tool_menu = myapp()->frame->getToolMenu () ;
-    wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
-
-    wxMenuBar *menu_bar = new wxMenuBar;
-
-    menu_bar->Append(file_menu, txt("m_file") );
-    menu_bar->Append(tool_menu, txt("m_tools") );
-    menu_bar->Append(help_menu, txt("m_help") );
-
-    SetMenuBar(menu_bar);
-
-    right = new TMyGelControl ( this , IV_IMAGE ) ;
-    right->vg = this ;
-
-    int a ;
-    wxBoxSizer *hs = new wxBoxSizer ( wxHORIZONTAL ) ;
-    ch_percent = new wxChoice ( this , VG_PERCENT , wxDefaultPosition , wxSize ( 50 , -1 ) ) ;
-    cb_label = new wxCheckBox ( this , VG_LABEL , _T("Show label") ) ;
-    cb_label->SetValue ( true ) ;
-   	
-   	hs->Add ( cb_label , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
-   	hs->Add ( new wxStaticText ( this , -1 , _T("   Gel concentration") ) , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
-   	hs->Add ( ch_percent , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
-
-    wxBoxSizer *vs = new wxBoxSizer ( wxVERTICAL ) ;
-    vs->Add ( hs , 0 , wxEXPAND , 5 ) ;
-    vs->Add ( right , 1 , wxEXPAND , 5 ) ;
-
-    myapp()->frame->setChild ( this ) ;
-
-    if ( type == _T("DNA") )
-    	{
-        for ( a = 3 ; a <= 30 ; a++ )
-        	ch_percent->Append ( wxString::Format ( _T("%1.1f %%") , ((float)a)/10.0 ) ) ;
-       	ch_percent->SetStringSelection ( _T("1.0 %") ) ;
-       	
-        lanes.push_back ( TGelLane() ) ;
-        lanes[0].setMarker ( _T("Mass Ruler") ) ;
-    	}    
-
-    this->SetSizer ( vs ) ;
-    vs->Fit ( this ) ;    
-    this->Show () ;
-    }
+	{
+	// Menus
+	wxMenu *file_menu = myapp()->frame->getFileMenu () ;
+	wxMenu *tool_menu = myapp()->frame->getToolMenu () ;
+	wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
+	
+	wxMenuBar *menu_bar = new wxMenuBar;
+	
+	menu_bar->Append(file_menu, txt("m_file") );
+	menu_bar->Append(tool_menu, txt("m_tools") );
+	menu_bar->Append(help_menu, txt("m_help") );
+	
+	SetMenuBar(menu_bar);
+	
+	right = new TMyGelControl ( this , IV_IMAGE ) ;
+	right->vg = this ;
+	
+	int a ;
+	wxBoxSizer *hs = new wxBoxSizer ( wxHORIZONTAL ) ;
+	ch_percent = new wxChoice ( this , VG_PERCENT , wxDefaultPosition , wxSize ( 50 , -1 ) ) ;
+	cb_label = new wxCheckBox ( this , VG_LABEL , _T("Show label") ) ;
+	cb_label->SetValue ( true ) ;
+	
+	hs->Add ( cb_label , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
+	hs->Add ( new wxStaticText ( this , -1 , _T("   Gel concentration") ) , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
+	hs->Add ( ch_percent , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
+	
+	wxBoxSizer *vs = new wxBoxSizer ( wxVERTICAL ) ;
+	vs->Add ( hs , 0 , wxEXPAND , 5 ) ;
+	vs->Add ( right , 1 , wxEXPAND , 5 ) ;
+	
+	myapp()->frame->setChild ( this ) ;
+	
+	if ( type == _T("DNA") )
+		{
+		for ( a = 3 ; a <= 30 ; a++ )
+		ch_percent->Append ( wxString::Format ( _T("%1.1f %%") , ((float)a)/10.0 ) ) ;
+		ch_percent->SetStringSelection ( _T("1.0 %") ) ;
+		
+		lanes.push_back ( TGelLane() ) ;
+		lanes[0].setMarker ( _T("Mass Ruler") ) ;
+		}    
+	
+	this->SetSizer ( vs ) ;
+	vs->Fit ( this ) ;    
+	this->Show () ;
+	}
 
 wxString TVirtualGel::getName ()
     {

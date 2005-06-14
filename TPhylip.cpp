@@ -264,6 +264,15 @@ wxString TPhylip::runapp ( const wxString app , const wxString s )
 	wxRemoveFile ( batchfile ) ;
 	wxRemoveFile ( cmdfile ) ;
 //	wxRemoveFile ( datafile ) ;
-	
-	return "EMPTY" ;
+
+	wxFile outtree ( tmpdir + _T("/outtree") ) ;
+	long l = outtree.Length () ;
+	char *n = new char[l+5] ;
+	outtree.Read ( n , l ) ;
+	outtree.Close () ;
+	n[l] = 0 ;
+	wxString result = n ;
+	delete n ;
+//	result = "(B:6.0,(A:5.0,C:3.0,E:4.0):5.0,D:11.0);" ;
+	return result.BeforeFirst ( ';' ) ;
 	}

@@ -36,6 +36,8 @@ class TAlignLine // pun intended
     wxString name , s ;
     TVector *v ;
     bool isIdentity ; ///< Is this line an identity display (or a "real" sequence)?
+    wxString phylip_id ;
+    
     private :
     TVector *features ;
     } ;
