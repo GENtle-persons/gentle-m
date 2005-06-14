@@ -1190,7 +1190,7 @@ void TAlignment::RunPhylip ( int cmd )
 		if ( lines[a].isIdentity ) continue ;
 		wxString t ;
 		t = wxString::Format ( _T("%d ") , ++b ) ;
-//		t += lines[a].name ;
+		lines[a].phylip_id = t.Trim().Trim(false) ;
 		while ( t.length() < 20 ) t += " " ;
 		t = t.Mid ( 0 , 20 ) ;
 		t += lines[a].s ;
@@ -1204,7 +1204,11 @@ void TAlignment::RunPhylip ( int cmd )
 	
 	wxString out ;
 	if ( cmd == PHYLIP_CMD_PROTPARS ) out = phylip.protpars ( data );
-//	wxMessageBox ( out ) ;
+	
+	TPhyloTree *tree = myapp()->frame->newPhyloTree () ;
+	tree->setNewickTree ( out ) ;
+	tree->setRealNames ( this ) ;
+	tree->setModeDrawgram () ;
 	}
     
     

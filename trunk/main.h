@@ -255,6 +255,7 @@ WX_DECLARE_OBJARRAY(float, wxArrayFloat);
 #include "TVirtualGel.h"
 #include "TCalculator.h"
 #include "TGraph.h"
+#include "TPhyloTree.h"
 #include "Alignment.h"
 #include "AminoAcids.h"
 #include "ABIviewer.h"

@@ -24,6 +24,7 @@ class TPDB ;
 class TEnzymeRules ;
 class TVirtualGel ;
 class TGraph ;
+class TPhyloTree ;
 
 typedef wxFrame MyFrameType ;
 
@@ -135,6 +136,7 @@ public:
     virtual void newGB ( TGenBank &gb , wxString title = _T("") ) ;
     virtual void newPDB ( TPDB &pdb , wxString title = _T("") ) ;
     virtual void newXML ( TXMLfile &xml , wxString title = _T("") ) ;
+    virtual TPhyloTree *newPhyloTree ( wxString title = _T("") ) ;
     virtual void blast ( wxString seq , wxString prg ) ;
     virtual bool importFile ( wxString file , wxString path , int filter = -1 ) ;
     virtual void setChild ( ChildBase *ch ) ;
