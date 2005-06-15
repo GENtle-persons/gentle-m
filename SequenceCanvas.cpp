@@ -1562,7 +1562,7 @@ void SequenceCanvas::showContextMenu ( SeqBasic *where , int pos , wxPoint pt )
           else cm->Append ( SEQ_FEAT_SHOW , txt("t_show_feature_line") ) ;
           cm->AppendSeparator () ;
           }
-   	 if ( false ) // Phylip // TESTING
+   	 if ( true ) // Phylip // TESTING
    	 	{
 			wxMenu *cc = new wxMenu ;
 			cc->Append ( PHYLIP_CMD_PROTPARS , txt("m_phylip_protpars") ) ;
