@@ -169,8 +169,9 @@ void TPhyloTree::setModeStrange ()
 void TPhyloTree::setModeDrawgram ()
 	{
 	wxClientDC dc ( box ) ;
-	wxRect r ( 0 , 0 , 0 , 0 ) ;
-	dc.GetSize ( &r.width , &r.height ) ;
+//	wxRect r ( 0 , 0 , 0 , 0 ) ;
+//	dc.GetSize ( &r.width , &r.height ) ;
+	wxRect r = box->GetClientSize() ;
 
 	int md = tree->getMaxDepth() ;
 	int mw = tree->getMaxWeight() ;
@@ -225,8 +226,9 @@ TPhyloTreeBox::TPhyloTreeBox ( wxWindow *parent , int id )
 void TPhyloTreeBox::OnDraw(wxDC& dc)
 	{
 	if ( !_parent->tree ) return ;
-	wxRect r ( 0 , 0 , 0 , 0 ) ;
-	dc.GetSize ( &r.width , &r.height ) ;
+//	wxRect r ( 0 , 0 , 0 , 0 ) ;
+//	dc.GetSize ( &r.width , &r.height ) ;
+	wxRect r = GetClientSize() ;
 	dc.DrawRectangle ( r ) ;
 	_parent->tree->drawRecursive ( dc , _parent->mode ) ;
 	}
