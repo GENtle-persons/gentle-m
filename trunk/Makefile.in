@@ -80,7 +80,8 @@ am_GENtle_OBJECTS = TXMLfile.$(OBJEXT) TVectorTree.$(OBJEXT) \
 	Alignment.$(OBJEXT) ABIviewer.$(OBJEXT) ABItype.$(OBJEXT) \
 	TAlignmentDialog.$(OBJEXT) AutoAnnotate.$(OBJEXT) \
 	TGraph.$(OBJEXT) TGraphDisplay.$(OBJEXT) TGraphScale.$(OBJEXT) \
-	CGview.$(OBJEXT) ureadseq.$(OBJEXT) tinyxmlparser.$(OBJEXT) \
+	CGview.$(OBJEXT) ureadseq.$(OBJEXT) ncoils.$(OBJEXT) \
+	TPhylip.$(OBJEXT) TPhyloTree.$(OBJEXT) tinyxmlparser.$(OBJEXT) \
 	tinyxmlerror.$(OBJEXT) tinyxml.$(OBJEXT) tinystr.$(OBJEXT) \
 	alnscore.$(OBJEXT) amenu.$(OBJEXT) calcgap.$(OBJEXT) \
 	calcprf1.$(OBJEXT) calcprf2.$(OBJEXT) calctree.$(OBJEXT) \
@@ -322,6 +323,9 @@ TGraphDisplay.cpp\
 TGraphScale.cpp\
 CGview.cpp\
 ureadseq.c\
+ncoils.cpp\
+TPhylip.cpp\
+TPhyloTree.cpp\
 tinyxml/tinyxmlparser.cpp\
 tinyxml/tinyxmlerror.cpp\
 tinyxml/tinyxml.cpp\
@@ -397,6 +401,9 @@ Alignment.h\
 ABIviewer.h\
 ABItype.h\
 ureadseq.h\
+TPhylip.h\
+TPhyloTree.h\
+ncoils.h\
 tinyxml/tinyxml.h\
 tinyxml/tinystr.h\
 clustalw/clustalw.h\
@@ -527,6 +534,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TLigationDialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TMainTree.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TPDB.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TPhylip.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TPhyloTree.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TPrimer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TPrimerDialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TRestrictionEditor.Po@am__quote@
@@ -556,6 +565,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ipc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/malign.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ncoils.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/palign.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pars.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prfalign.Po@am__quote@

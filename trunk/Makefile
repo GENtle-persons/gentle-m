@@ -80,7 +80,8 @@ am_GENtle_OBJECTS = TXMLfile.$(OBJEXT) TVectorTree.$(OBJEXT) \
 	Alignment.$(OBJEXT) ABIviewer.$(OBJEXT) ABItype.$(OBJEXT) \
 	TAlignmentDialog.$(OBJEXT) AutoAnnotate.$(OBJEXT) \
 	TGraph.$(OBJEXT) TGraphDisplay.$(OBJEXT) TGraphScale.$(OBJEXT) \
-	CGview.$(OBJEXT) ureadseq.$(OBJEXT) tinyxmlparser.$(OBJEXT) \
+	CGview.$(OBJEXT) ureadseq.$(OBJEXT) ncoils.$(OBJEXT) \
+	TPhylip.$(OBJEXT) TPhyloTree.$(OBJEXT) tinyxmlparser.$(OBJEXT) \
 	tinyxmlerror.$(OBJEXT) tinyxml.$(OBJEXT) tinystr.$(OBJEXT) \
 	alnscore.$(OBJEXT) amenu.$(OBJEXT) calcgap.$(OBJEXT) \
 	calcprf1.$(OBJEXT) calcprf2.$(OBJEXT) calctree.$(OBJEXT) \
@@ -322,6 +323,9 @@ TGraphDisplay.cpp\
 TGraphScale.cpp\
 CGview.cpp\
 ureadseq.c\
+ncoils.cpp\
+TPhylip.cpp\
+TPhyloTree.cpp\
 tinyxml/tinyxmlparser.cpp\
 tinyxml/tinyxmlerror.cpp\
 tinyxml/tinyxml.cpp\
@@ -397,6 +401,9 @@ Alignment.h\
 ABIviewer.h\
 ABItype.h\
 ureadseq.h\
+TPhylip.h\
+TPhyloTree.h\
+ncoils.h\
 tinyxml/tinyxml.h\
 tinyxml/tinystr.h\
 clustalw/clustalw.h\
@@ -527,6 +534,8 @@ include ./$(DEPDIR)/TItemEditDialog.Po
 include ./$(DEPDIR)/TLigationDialog.Po
 include ./$(DEPDIR)/TMainTree.Po
 include ./$(DEPDIR)/TPDB.Po
+include ./$(DEPDIR)/TPhylip.Po
+include ./$(DEPDIR)/TPhyloTree.Po
 include ./$(DEPDIR)/TPrimer.Po
 include ./$(DEPDIR)/TPrimerDialog.Po
 include ./$(DEPDIR)/TRestrictionEditor.Po
@@ -556,6 +565,7 @@ include ./$(DEPDIR)/interfac.Po
 include ./$(DEPDIR)/ipc.Po
 include ./$(DEPDIR)/main.Po
 include ./$(DEPDIR)/malign.Po
+include ./$(DEPDIR)/ncoils.Po
 include ./$(DEPDIR)/palign.Po
 include ./$(DEPDIR)/pars.Po
 include ./$(DEPDIR)/prfalign.Po

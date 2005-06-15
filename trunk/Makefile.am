@@ -128,6 +128,9 @@ TGraphDisplay.cpp\
 TGraphScale.cpp\
 CGview.cpp\
 ureadseq.c\
+ncoils.cpp\
+TPhylip.cpp\
+TPhyloTree.cpp\
 tinyxml/tinyxmlparser.cpp\
 tinyxml/tinyxmlerror.cpp\
 tinyxml/tinyxml.cpp\
@@ -203,6 +206,9 @@ Alignment.h\
 ABIviewer.h\
 ABItype.h\
 ureadseq.h\
+TPhylip.h\
+TPhyloTree.h\
+ncoils.h\
 tinyxml/tinyxml.h\
 tinyxml/tinystr.h\
 clustalw/clustalw.h\

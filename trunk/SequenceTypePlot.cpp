@@ -499,7 +499,7 @@ void SeqPlot::useNcoils ()
 	for ( a = 0 ; a < 3 ; a++ )
 		{
  		b = a==0?14:(a==1?21:28) ;
-		string x = ncoils_function ( s.mb_str() , b ) ;
+		string x = ncoils_function ( (const char*) s.mb_str() , b ) . c_str() ;
 		wxString t = x.c_str() ;
 		wxArrayString ta ;
 		explode ( "\n" , t , ta ) ;
