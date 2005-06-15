@@ -1164,7 +1164,7 @@ void TAlignment::fromVector ( TVector *nv )
 
     vec = NULL ;
     generateConsensusSequence ( true ) ;
-    if ( !broken.IsEmpty() ) 
+    if ( !broken.IsEmpty() )
         {
         wxMessageBox ( wxString::Format(txt("t_align_not_found"),broken.c_str()) ) ;
         }
@@ -1174,7 +1174,7 @@ void TAlignment::fromVector ( TVector *nv )
 
 void TAlignment::OnSeqPrint(wxCommandEvent& event)
     {
-    sc->OnPrint ( event ) ;    
+    sc->OnPrint ( event ) ;
     }
 
 void TAlignment::RunPhylip ( int cmd )
