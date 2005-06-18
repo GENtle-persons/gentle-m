@@ -192,6 +192,7 @@ void MyFrame::initme ()
 
 #ifndef MISER_MODE
     bool default_update = false ;
+#elif __WXMAC__
 #else
     bool default_update = true ;
 #endif
@@ -237,6 +238,7 @@ void MyFrame::initme ()
     // Give it an icon
 #ifdef __WXMSW__
     SetIcon(wxIcon("GENtle.ico",wxBITMAP_TYPE_ICO));
+#elif __WXMAC__
 #else
     SetIcon(wxIcon( mondrian_xpm ));
 #endif
@@ -746,6 +748,7 @@ TPhyloTree *MyFrame::newPhyloTree ( wxString title )
 	// Give it an icon
 #ifdef __WXMSW__
 	subframe->SetIcon(wxIcon("chrt_icn"));
+#elif __WXMAC__
 #else
 	subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
@@ -787,6 +790,7 @@ MyChild *MyFrame::newCLONE ( TClone &clone )
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon("chrt_icn"));
+#elif __WXMAC__
 #else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
@@ -906,6 +910,7 @@ MyChild* MyFrame::newFromVector ( TVector *nv , int type )
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon("chrt_icn"));
+#elif __WXMAC__
 #else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
@@ -968,6 +973,7 @@ TAlignment *MyFrame::runAlignment ( wxArrayString &vs , wxArrayChildBase &vc , T
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon("chrt_icn"));
+#elif __WXMAC__
 #else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
@@ -1225,6 +1231,7 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , wxString title )
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon("chrt_icn"));
+#elif __WXMAC__
 #else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
@@ -1257,6 +1264,7 @@ TABIviewer *MyFrame::newABI ( wxString filename , wxString title )
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon("chrt_icn"));
+#elif __WXMAC__
 #else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
@@ -1358,6 +1366,7 @@ void MyFrame::OnExternalInterface(wxCommandEvent& event)
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon("chrt_icn"));
+#elif __WXMAC__
 #else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
@@ -1382,6 +1391,7 @@ void MyFrame::OnImageViewer(wxCommandEvent& event)
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon("chrt_icn"));
+#elif __WXMAC__
 #else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
@@ -1408,7 +1418,7 @@ void MyFrame::OnCalculator(wxCommandEvent& event)
 */
 void MyFrame::OnGraph(wxCommandEvent& event)
     {
-	wxString seq = "MSPILGYWKIKGLVQPTRLLLEYLEEKYEEHLYERDEGDKWRNKKFELGLEFPNLPYYIDGDVKLTQSMAIIRYIADKHNMLGGCPKERAEISMLEGAVLDIRYGVSRIAYSKDFETLKVDFLSKLPEMLKMFEDRLCHKTYLNGDHVTHPDFMLYDALDVVLYMDPMCLDAFPKLVCFKKRIEAIPQIDKYLKSSKYIAWPLQGWQATFGGGDHPPKSDLIEGRGIPGNSS" ; // GST
+	wxString seq = _T("MSPILGYWKIKGLVQPTRLLLEYLEEKYEEHLYERDEGDKWRNKKFELGLEFPNLPYYIDGDVKLTQSMAIIRYIADKHNMLGGCPKERAEISMLEGAVLDIRYGVSRIAYSKDFETLKVDFLSKLPEMLKMFEDRLCHKTYLNGDHVTHPDFMLYDALDVVLYMDPMCLDAFPKLVCFKKRIEAIPQIDKYLKSSKYIAWPLQGWQATFGGGDHPPKSDLIEGRGIPGNSS") ; // GST
 //	char *s2 = new char[seq.length()+5] ;
 //	strcpy ( s2 , seq.mb_str() ) ;
 
@@ -1418,9 +1428,9 @@ void MyFrame::OnGraph(wxCommandEvent& event)
 		{
  		int b = a==0?14:(a==1?21:28) ;
 		string s = ncoils_function ( seq.mb_str() , b ) ;
-		wxString t = s.c_str() ;
+		wxString t ( s.c_str() , wxConvUTF8 ) ;
 		wxArrayString ta ;
-		explode ( "\n" , t , ta ) ;
+		explode ( _T("\n") , t , ta ) ;
 		for ( b = 0 ; b < seq.length() ; b++ )
 			{
   			if ( b >= ta.GetCount() ) break ;
@@ -1428,9 +1438,9 @@ void MyFrame::OnGraph(wxCommandEvent& event)
   			double prob ;
   			t.ToDouble ( &prob ) ;
   			af[a].Add ( (float) prob ) ;
-  			ret += wxString::Format ( "%1.4f, " , (float) prob ) ;
+  			ret += wxString::Format ( _T("%1.4f, ") , (float) prob ) ;
 			}
-        ret += "\n" ;
+        ret += _T("\n") ;
 		}	
      wxMessageBox ( ret ) ;
 	
@@ -1449,6 +1459,7 @@ TCalculator *MyFrame::RunCalculator ()
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon("chrt_icn"));
+#elif __WXMAC__
 #else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
@@ -1474,6 +1485,7 @@ TGraph *MyFrame::RunGraph ()
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon("chrt_icn"));
+#elif __WXMAC__
 #else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
@@ -1907,6 +1919,7 @@ TVirtualGel *MyFrame::useGel ( wxString type )
     // Give it an icon
 #ifdef __WXMSW__
     gel->SetIcon(wxIcon("chrt_icn"));
+#elif __WXMAC__
 #else
     gel->SetIcon(wxIcon( mondrian_xpm ));
 #endif

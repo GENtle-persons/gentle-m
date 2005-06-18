@@ -125,7 +125,7 @@ void TPhyloTree::setRealNames ( TAlignment *ali )
 	for ( a = 0 ; a < vt.size() ; a++ )
 		{
 		wxString vn = vt[a]->getName().Trim().Trim(true) ;
-		if ( vn == "" ) continue ;
+		if ( vn == _T("") ) continue ;
 		for ( b = 0 ; b < ali->lines.size() ; b++ )
 			{
 			if ( ali->lines[b].phylip_id == vn )
@@ -141,7 +141,8 @@ void TPhyloTree::setRealNames ( TAlignment *ali )
 void TPhyloTree::setModeStrange ()
 	{
 	wxClientDC dc ( box ) ;
-	wxRect r = box->GetClientSize () ;
+	wxSize si = box->GetClientSize () ;
+	wxRect r ( 0 , 0 , si.GetWidth() , si.GetHeight() ) ;
 
 	int md = tree->getMaxDepth() ;
 	int a , b ;
@@ -161,7 +162,7 @@ void TPhyloTree::setModeStrange ()
 			}
 		}
 
-	mode = "STRANGE" ;
+	mode = _T("STRANGE") ;
 	dc.DrawRectangle ( r ) ;
 	tree->drawRecursive ( dc , mode ) ;
 	}
@@ -169,9 +170,8 @@ void TPhyloTree::setModeStrange ()
 void TPhyloTree::setModeDrawgram ()
 	{
 	wxClientDC dc ( box ) ;
-//	wxRect r ( 0 , 0 , 0 , 0 ) ;
-//	dc.GetSize ( &r.width , &r.height ) ;
-	wxRect r = box->GetClientSize() ;
+	wxSize si = box->GetClientSize () ;
+	wxRect r ( 0 , 0 , si.GetWidth() , si.GetHeight() ) ;
 
 	int md = tree->getMaxDepth() ;
 	int mw = tree->getMaxWeight() ;
@@ -208,7 +208,7 @@ void TPhyloTree::setModeDrawgram ()
 		vt[a]->rect.SetX ( r.GetLeft() + vt[a]->getCurrentWeight() * ( r.GetWidth() - maxw ) / mw ) ;
 		}
 
-	mode = "DRAWGRAM" ;
+	mode = _T("DRAWGRAM") ;
 	dc.DrawRectangle ( r ) ;
 	tree->drawRecursive ( dc , mode ) ;
 	}
@@ -228,7 +228,8 @@ void TPhyloTreeBox::OnDraw(wxDC& dc)
 	if ( !_parent->tree ) return ;
 //	wxRect r ( 0 , 0 , 0 , 0 ) ;
 //	dc.GetSize ( &r.width , &r.height ) ;
-	wxRect r = GetClientSize() ;
+	wxSize si = GetClientSize () ;
+	wxRect r ( 0 , 0 , si.GetWidth() , si.GetHeight() ) ;
 	dc.DrawRectangle ( r ) ;
 	_parent->tree->drawRecursive ( dc , _parent->mode ) ;
 	}
@@ -273,10 +274,10 @@ TPTree::~TPTree ()
 
 wxString TPTree::scanNewick ( wxString s )
 	{
-	if ( s.Left ( 1 ) == "(" )
+	if ( s.Left ( 1 ) ==_T("(") )
 		{
 		s = s.Mid ( 1 ) ;
-		while ( s.Left ( 1 ) != ")" )
+		while ( s.Left ( 1 ) != _T(")") )
 			{
 			TPTree *t = new TPTree ;
 			s = t->scanNewick ( s ) ;
@@ -284,34 +285,34 @@ wxString TPTree::scanNewick ( wxString s )
 			children.push_back ( t ) ;
 			}
 		s = s.Mid ( 1 ) ;
-		if ( s.Left ( 1 ) == ":" )
+		if ( s.Left ( 1 ) == _T(":") )
 			{
 			s = s.Mid ( 1 ) ;
 			wxString w ;
-			while ( s.Left ( 1 ) != ")" && s.Left ( 1 ) != "," )
+			while ( s.Left ( 1 ) != _T(")") && s.Left ( 1 ) != _T(",") )
 				{
 				w += s.Left ( 1 ) ;
 				s = s.Mid ( 1 ) ;
 				}
 			w.ToDouble ( &weight ) ;
 			}
-		if ( s.Left ( 1 ) == "," ) s = s.Mid ( 1 ) ;
+		if ( s.Left ( 1 ) == _T(",") ) s = s.Mid ( 1 ) ;
 		return s ;
 		}
 	else
 		{
 		wxString n , w ;
-		while ( !s.IsEmpty() && s.Left(1) != "," && s.Left(1) != ")" )
+		while ( !s.IsEmpty() && s.Left(1) != _T(",") && s.Left(1) != _T(")") )
 			{
 			n += s.Left ( 1 ) ;
 			s = s.Mid ( 1 ) ;
 			}
 		w = n.AfterFirst ( ':' ) ;
 		n = n.BeforeFirst ( ':' ) ;
-		if ( w.IsEmpty() ) w = "1" ;
+		if ( w.IsEmpty() ) w = _T("1") ;
 		name = n.Trim().Trim(false) ;
 		w.ToDouble ( &weight ) ;
-		if ( s.Left ( 1 ) == "," ) s = s.Mid ( 1 ) ;
+		if ( s.Left ( 1 ) == _T(",") ) s = s.Mid ( 1 ) ;
 		return s ;
 		}
 	}
@@ -380,7 +381,7 @@ void TPTree::drawRecursive ( wxDC &dc , wxString mode )
 		{
 		wxPoint p1 ( rect.GetRight() , ( rect.GetTop() + rect.GetBottom() ) / 2 ) ;
 		wxPoint p2 ( children[a]->rect.GetLeft() , ( children[a]->rect.GetTop() + children[a]->rect.GetBottom() ) / 2 ) ;
-		if ( mode.Find ( "[DIRECTLINE]" ) != -1 ) dc.DrawLine ( p1 , p2 ) ;
+		if ( mode.Find ( _T("[DIRECTLINE]") ) != -1 ) dc.DrawLine ( p1 , p2 ) ;
 		else
 			{
 			wxPoint p1a ( p1.x * 11 / 10 , p1.y ) ;

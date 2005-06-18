@@ -271,7 +271,7 @@ wxString TPhylip::runapp ( const wxString app , const wxString s )
 	outtree.Read ( n , l ) ;
 	outtree.Close () ;
 	n[l] = 0 ;
-	wxString result = n ;
+	wxString result ( n , wxConvUTF8 ) ;
 	delete n ;
 //	result = "(B:6.0,(A:5.0,C:3.0,E:4.0):5.0,D:11.0);" ;
 	return result.BeforeFirst ( ';' ) ;

@@ -1191,7 +1191,7 @@ void TAlignment::RunPhylip ( int cmd )
 		wxString t ;
 		t = wxString::Format ( _T("%d ") , ++b ) ;
 		lines[a].phylip_id = t.Trim().Trim(false) ;
-		while ( t.length() < 20 ) t += " " ;
+		while ( t.length() < 20 ) t += _T(" ") ;
 		t = t.Mid ( 0 , 20 ) ;
 		t += lines[a].s ;
 		seqlen = lines[a].s.length() ;
