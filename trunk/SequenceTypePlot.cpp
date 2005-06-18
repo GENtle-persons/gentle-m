@@ -309,9 +309,9 @@ void SeqPlot::showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx )
 			  }
 		   else if ( type == COILED_COIL )
 		   	  {
-	   	   	  if ( u == 1 ) dc.DrawText ( "14" , lx-cw*2 , ty+(u-1)*ch-ch/2 ) ;
-	   	   	  else if ( u == 2 ) dc.DrawText ( "21" , lx-cw*2 , ty+(u-1)*ch-ch/2 ) ;
-	   	   	  else if ( u == 3 ) dc.DrawText ( "28" , lx-cw*2 , ty+(u-1)*ch-ch/2 ) ;
+	   	   	  if ( u == 1 ) dc.DrawText ( _T("14") , lx-cw*2 , ty+(u-1)*ch-ch/2 ) ;
+	   	   	  else if ( u == 2 ) dc.DrawText ( _T("21") , lx-cw*2 , ty+(u-1)*ch-ch/2 ) ;
+	   	   	  else if ( u == 3 ) dc.DrawText ( _T("28") , lx-cw*2 , ty+(u-1)*ch-ch/2 ) ;
 			  }
            }
         }
@@ -500,9 +500,9 @@ void SeqPlot::useNcoils ()
 		{
  		b = a==0?14:(a==1?21:28) ;
 		string x = ncoils_function ( (const char*) s.mb_str() , b ) . c_str() ;
-		wxString t = x.c_str() ;
+		wxString t ( (char*) x.c_str() , wxConvUTF8 ) ;
 		wxArrayString ta ;
-		explode ( "\n" , t , ta ) ;
+		explode ( _T("\n") , t , ta ) ;
 		for ( b = 0 ; b < s.length() ; b++ )
 			{
   			if ( b >= ta.GetCount() ) break ;
@@ -520,14 +520,14 @@ void SeqPlot::useNcoils ()
     prop.clear () ;
 	for ( a = 0 ; a < s.length() ; a++ )
 		{
-        prop.push_back ( vec->getAAprop ( s[a] ) ) ;
+        prop.push_back ( vec->getAAprop ( (char) s.GetChar(a) ) ) ;
         prop[a].data.clear() ;
         prop[a].data.push_back ( af[0][a] ) ;
         prop[a].data.push_back ( af[1][a] ) ;
         prop[a].data.push_back ( af[2][a] ) ;
-        d1[1][a] = af[0][a] >= 0.5 ? 'X' : ' ' ;
-        d1[2][a] = af[1][a] >= 0.5 ? 'X' : ' ' ;
-        d1[3][a] = af[2][a] >= 0.5 ? 'X' : ' ' ;
+        d1[1].SetChar ( a , af[0][a] >= 0.5 ? 'X' : ' ' ) ;
+        d1[2].SetChar ( a , af[1][a] >= 0.5 ? 'X' : ' ' ) ;
+        d1[3].SetChar ( a , af[2][a] >= 0.5 ? 'X' : ' ' ) ;
 		}
 
     scanMinMax () ;

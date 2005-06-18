@@ -385,7 +385,10 @@ void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl , int mut )
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon("chrt_icn"));
 #else
+	#ifdef __WXMAC__
+	#else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
+	#endif
 #endif
 
     subframe->initme () ;

@@ -392,7 +392,7 @@ wxString TGraphDisplay::tryall ( wxString filename )
 
 void TGraphDisplay::setupBioFormat ( wxString filenamebase )
 	{
-	if ( filenamebase.Right(4).Upper() != ".BIO" ) return ;
+	if ( filenamebase.Right(4).Upper() != _T(".BIO") ) return ;
  	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , _T("X") , _T("") , *wxBLACK ) ;
   	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , _T("Y") , _T("") , *wxBLACK ) ;
  	scales.push_back ( sx ) ;

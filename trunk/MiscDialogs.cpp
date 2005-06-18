@@ -100,7 +100,7 @@ void TSpeakDialog::OnPlay ( wxCommandEvent &ev )
 		seq->GetSelection ( &from , &to ) ;
 		s = seq->GetStringSelection () ;
 		
-		if ( s == "" )
+		if ( s == _T("") )
 		   {
  	   	   doPlay = false ;
 		   seq->SetSelection ( -1 , -1 ) ;
