@@ -45,7 +45,7 @@ class TIPC
     
     double MIN_DIF , MIN_INT ;
     int fast_calc;
-    compound *verbindung;
+    ipc_compound *verbindung;
     isotope *peaks;
     
     TIPC_PARS *pars ;

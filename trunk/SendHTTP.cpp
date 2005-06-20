@@ -707,7 +707,7 @@ wxString myExternal::getTextLocal ( wxString url )
 	char *c = new char [l+5] ;
 	in.Read ( c , l ) ;
 	in.Close() ;
-	wxString ret = wxString ( (wxChar) c ) ;
+	wxString ret = wxString ( c , wxConvUTF8 ) ;
 	delete c ;
 	return ret ;
 	}

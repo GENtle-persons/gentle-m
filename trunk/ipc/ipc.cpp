@@ -120,7 +120,7 @@ isotope *TIPC::add_peak(isotope *base,isotope *peak)
 }
 
 int TIPC::calculate_peaks(){
-  compound *c;
+  ipc_compound *c;
   isotope *npeaks,*p,*i,*np1;
   int anzahl;
 

@@ -42,14 +42,14 @@ int TIPC_PARS::is_symbol(char *probe)
 int TIPC_PARS::add_component(char *symbol,int number)
 {
   element *el;
-  compound *newco=NULL,*co;
+  ipc_compound *newco=NULL,*co;
 
   el=ipc->element->elements;
   while(el)
     {
       if(!strcmp(symbol,el->symbol))
 	{
-	  newco=(compound *)malloc(sizeof(compound));
+	  newco=(ipc_compound *)malloc(sizeof(ipc_compound));
 	  newco->isotopes=el->isotopes;
 	  newco->amount=number;
 	  newco->next=NULL;
@@ -310,7 +310,7 @@ int TIPC_PARS::pars_peptid(char *formel)
 int TIPC_PARS::print_sum()
 {
   element *el;
-  compound *co;
+  ipc_compound *co;
 
   printf("\nChemical formula: ");
   co=ipc->verbindung;

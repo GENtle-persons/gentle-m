@@ -14,6 +14,7 @@
  ***************************************************************************/
 
 #include "global.h"
+#include "ipc.h"
 #include "element.h"
 #include <unistd.h>
 

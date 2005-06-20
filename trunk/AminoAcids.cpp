@@ -64,7 +64,7 @@ TAminoAcids::TAminoAcids(wxWindow *parent, const wxString& title)
     lastLBsel = _T("") ;
     miniDisplayOptions = MINI_DISPLAY_CONDENSED ;
     }
-    
+
 TAminoAcids::~TAminoAcids ()
     {
     if ( curDisplay ) delete curDisplay ;
