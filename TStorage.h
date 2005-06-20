@@ -25,6 +25,9 @@
  #include "win_sqlite.h"
  #include "win_sqlite3.h"
  #include <wx/msw/winundef.h>
+#elif __WXMAC__
+ #include "mac_sqlite2.h"
+ #include "mac_sqlite3.h" 
 #else
  #include "lin_sqlite.h"
  #include "lin_sqlite3.h"

@@ -32,11 +32,11 @@ typedef struct isotope{
 } isotope;
 
 /// Part of the IPC package
-typedef struct compound {
-  struct compound *next,*previous;
+typedef struct ipc_compound {
+  struct ipc_compound *next,*previous;
   int amount;
   struct isotope *isotopes;
-} compound;
+} ipc_compound ;
 
 /// Part of the IPC package
 typedef struct element {
@@ -46,7 +46,7 @@ typedef struct element {
 } element;
 
 //extern element *elements;
-//extern compound *verbindung;
+//extern ipc_compound *verbindung;
 //extern isotope *peaks;
 
 //extern int fast_calc;
