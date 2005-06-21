@@ -182,6 +182,7 @@ class MyApp : public wxApp
     virtual wxString getFileFormatApplication ( wxString type ) ; ///< Returns application associated with a file type
     virtual wxString getFileFormatCommand ( wxString type , wxString file ) ; ///< Returns the command line for running this file
     virtual wxString get_GENtle_version () ; ///< Returns the GENtle version string
+	virtual wxString getLocalDBname () ; ///< Returns the filename of the default local database
     
     MyFrame *frame; ///< The application frame
     wxMimeTypesManager mtm ; ///< The MIME types manager
@@ -335,4 +336,3 @@ int cmpre(TRestrictionEnzyme *first, TRestrictionEnzyme *second) ;
 
 #endif
 // _MAIN_H__
-
