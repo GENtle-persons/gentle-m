@@ -53,6 +53,15 @@ typedef unsigned int uint ;
 
 #include "wx/wxprec.h"
 
+/**	\def MYFONTSIZE
+	\brief Main tree font size
+*/
+#ifdef __WXMAC__
+	#define MYFONTSIZE 10
+#else
+	#define MYFONTSIZE 8
+#endif
+
 /**	\def MYSPINBOXSIZE
 	\brief List box style, for GTK only
 */

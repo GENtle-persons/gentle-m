@@ -222,7 +222,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
 
     if ( printing ) mwh -= mwh / 5 ;
 
-    int fontfactor = 10 ;
+    int fontfactor = MYFONTSIZE * 10 / 8 ;
     if ( printing ) fontfactor = mwh/80;
     wxFont *tinyFont = MYFONT ( fontfactor*4/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
     wxFont *smallFont = MYFONT ( fontfactor , wxSWISS , wxNORMAL , wxNORMAL ) ;
