@@ -102,7 +102,6 @@ void TAminoAcids::OnBacktranslate ( wxCommandEvent& event )
 
 void TAminoAcids::initme ()
     {
-    int bo = 5 ;
     mylog ( "TAminoAcids::initme" , "1" ) ;
     vec->undo.clear() ;
     mylog ( "TAminoAcids::initme" , "2" ) ;
@@ -295,7 +294,7 @@ void TAminoAcids::showStat ()
         mW += vec->getAAmw ( c ) ;
         }
     if ( piaa > 0 ) pI /= piaa ;
-    ex = num['W']*5500 + num['Y']*1490 + num['C']*125 ;
+    ex = num[(unsigned int)'W']*5500 + num[(unsigned int)'Y']*1490 + num[(unsigned int)'C']*125 ;
     if ( noaa > 0 ) abs = ex / noaa / 100 ;
     t = txt("aa_info") ;
     t.Replace ( _T("%f") , _T("%9.2f") ) ;
@@ -317,7 +316,7 @@ void TAminoAcids::showStat ()
 	    else if ( a+1 != 'Z' ) t2 += _T("      ") ;
     	}
 		
-		t += _T("\n") + wxString::Format ( txt("aa_info2") , num['D']+num['E'] , num['R']+num['K'] ) ;
+	t += _T("\n") + wxString::Format ( txt("aa_info2") , num[(unsigned int)'D']+num[(unsigned int)'E'] , num[(unsigned int)'R']+num[(unsigned int)'K'] ) ;
    	t += _T("\n\n") + t2 + _T("\n\n") ;
    	
    	// Atomic composition & hydrophobicity
@@ -438,7 +437,7 @@ void TAminoAcids::invokeVectorEditor ( wxString what , int num , bool forceUpdat
     if ( what == _T("item") )
         ve.initialViewItem ( num ) ;
 
-    int x = ve.ShowModal () ;
+	ve.ShowModal () ;
     ve.cleanup () ;
     if ( forceUpdate || vec->isChanged() )
         {
@@ -526,9 +525,9 @@ void TAminoAcids::OnPhotometer(wxCommandEvent& event)
     float mW = 0 ;
     for ( int a = 0 ; a < vec->getSequenceLength() ; a++ )
         mW += vec->getAAmw ( vec->getSequenceChar ( a ) ) ;
-    c->prot->SetCellValue ( 2 , 1 , wxString::Format ( _T("%d") , seq.Replace ( _T("W") , _T("") , true ) ) ) ;
-    c->prot->SetCellValue ( 3 , 1 , wxString::Format ( _T("%d") , seq.Replace ( _T("Y") , _T("") , true ) ) ) ;
-    c->prot->SetCellValue ( 4 , 1 , wxString::Format ( _T("%d") , seq.Replace ( _T("C") , _T("") , true ) ) ) ;
+    c->prot->SetCellValue ( 2 , 1 , wxString::Format ( _T("%d") , (int)seq.Replace ( _T("W") , _T("") , true ) ) ) ;
+    c->prot->SetCellValue ( 3 , 1 , wxString::Format ( _T("%d") , (int)seq.Replace ( _T("Y") , _T("") , true ) ) ) ;
+    c->prot->SetCellValue ( 4 , 1 , wxString::Format ( _T("%d") , (int)seq.Replace ( _T("C") , _T("") , true ) ) ) ;
     c->prot->SetCellValue ( 5 , 1 , wxString::Format ( _T("%0.2f") , mW) ) ;
     c->nb->SetSelection ( 2 ) ;
     }
@@ -536,7 +535,6 @@ void TAminoAcids::OnPhotometer(wxCommandEvent& event)
 void TAminoAcids::OnBlastAA(wxCommandEvent& event)
     {
     wxString seq ;
-    int a ;
     if ( sc->markedFrom() < 0 ) seq = vec->getSequence() ;
     else seq = sc->getSelection() ;
     myapp()->frame->blast ( seq , _T("blastp") ) ;

@@ -13,7 +13,7 @@ ABItype::ABItype ()
 */
 ABItype::~ABItype ()
     {
-    for ( int a = 0 ; a < vf.size() ; a++ )
+    for ( unsigned int a = 0 ; a < vf.size() ; a++ )
         if ( vf[a].data ) delete vf[a].data ;
     vf.clear () ;
     }
@@ -138,10 +138,12 @@ wxString ABItype::getText ( unsigned char *t , int &from )
     for ( int a = 0 ; a < l ; a++ ) r += t[from++] ;
     return r ;
     }
-    
+
+// This function does not appear to be used anywhere...
 int ABItype::getInt10 ( unsigned char *t , int &from )
     {
     from += 10 ; // Essentially ignoring
+	return 0 ;
     }
     
 int ABItype::getInt1 ( unsigned char *t , int &from )
@@ -183,7 +185,7 @@ wxString ABItype::getStr ( unsigned char *t , int from , int len )
 */    
 int ABItype::getRecord ( wxString id , int num )
     {
-    int a ;
+    unsigned int a ;
     for ( a = 0 ; a < vf.size() && ( vf[a].flag != id || vf[a].instance != num ) ; a++ ) ;
     if ( a == vf.size() ) return -1 ; // Not found
     return a ;
