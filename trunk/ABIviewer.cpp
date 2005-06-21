@@ -277,7 +277,6 @@ wxString TABIviewer::getStat ()
     {
     SeqABI *abi = (SeqABI*) sc->seq[0] ;
     ABItype *at = abi->at ;
-    char t[100] ;
     wxString comb = at->getRecordPascalString ( _T("CMBF") , 1 ) ;
     wxString pdmf = at->getRecordPascalString ( _T("PDMF") , 1 ) ;
     wxString smpl = at->getRecordPascalString ( _T("SMPL") , 1 ) ;
@@ -290,7 +289,6 @@ wxString TABIviewer::getStat ()
     int runt1 = at->getRecordValue ( _T("RUNT") , 1 ) ;
     int runt2 = at->getRecordValue ( _T("RUNT") , 2 ) ;
     
-//    char start[100] , stop[100] ;
     wxString start , stop ;
     start = wxString::Format ( txt("t_abi_start") ,
                         rund1 >> 16 ,
@@ -307,7 +305,7 @@ wxString TABIviewer::getStat ()
                         ( runt2 >> 16 ) & 255 ,
                         ( runt2 >>  8 ) & 255 ) ;
     
-    int a ;
+    unsigned int a ;
     char u[256] ;
     wxString bases ;
     for ( a = 0 ; a < 256 ; a++ ) u[a] = 0 ;

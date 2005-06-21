@@ -121,7 +121,7 @@ void TAlignment::readTabColors ( wxString filename )
            {
            wxString t = in.GetNextLine () ; // s in int, t is list of chars
            int x = atoi ( s.mb_str() ) ;
-           for ( int b = 0 ; b < t.length() ; b++ )
+           for ( unsigned int b = 0 ; b < t.length() ; b++ )
               {
               unsigned char ch = (unsigned char)t.GetChar(b) ;
               int red = ( x >> 16 ) & 255 ;
@@ -137,7 +137,6 @@ void TAlignment::readTabColors ( wxString filename )
 
 wxColour TAlignment::findColors ( char c1 , char c2 , bool fg )
     {
-    int a ;
     wxColour r ;
     if ( invs && c1 != '-' ) fg = !fg ;
     if ( fg )
@@ -158,8 +157,6 @@ wxColour TAlignment::findColors ( char c1 , char c2 , bool fg )
 
 void TAlignment::initme ()
     {
-    int bo = 5 ;
-
     // Menus
     wxMenu *file_menu = myapp()->frame->getFileMenu ( true , true ) ;
     wxMenu *tool_menu = myapp()->frame->getToolMenu () ;
@@ -269,7 +266,7 @@ void TAlignment::initme ()
 
 void* TAlignment::Entry()
 {
-    int a ;
+	int a ;
     TAlignLine line ;
     wxString cwt = _T("clustalw.txt") ;
     wxString hd = myapp()->homedir ;
