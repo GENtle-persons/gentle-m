@@ -219,16 +219,16 @@ bool MyApp::OnInit()
 
     wxString s1 , s2 ;
     wxFileName::SplitPath ( argv[0] , &homedir , &s1 , &s2 ) ;
+
+#ifdef __WXMAC__
+	homedir = homedir.BeforeLast ( '/' ) ;
+	homedir += _T("/Resources") ;
+#endif
+
     wxInitAllImageHandlers() ;
     wxFileSystem::AddHandler ( new wxInternetFSHandler ) ;
     
     wxSetWorkingDirectory ( homedir ) ; // Setting home directory as working dir
-
-	// Setting ncoils dir as environment variable
-/*    wxString ncoilsdir ;
-    ncoilsdir = _T("COILSDIR=") ;
-    ncoilsdir += homedir ;
- 	putenv ( ncoilsdir.mb_str() ) ; */
 
     // Is an instance already running?
     const wxString name = wxString::Format ( _T("GENtle-%s") , wxGetUserId().c_str());
@@ -250,12 +250,17 @@ bool MyApp::OnInit()
 #else
     slash = _T("/") ;
 #endif
+
+#ifdef __WXMAC__
+	bmpdir = homedir ;
+#else
     bmpdir = homedir + slash + _T("bitmaps") ;
+#endif
      
 	 // Make sure local database exists
-    wxString localdb , blankdb , hd = homedir ;
-    localdb = hd + slash + _T("local.db") ;
-    blankdb = hd + slash + _T("blank.db") ;
+    wxString localdb , blankdb ;
+    localdb = getLocalDBname() ;
+    blankdb = homedir + slash + _T("blank.db") ;
     if ( !wxFileExists ( localdb ) && wxFileExists ( blankdb ) )
         wxCopyFile ( blankdb , localdb ) ;
 
@@ -272,7 +277,8 @@ bool MyApp::OnInit()
         wxString bmpfile = bmpdir + slash + _T("splash.bmp") ;
         if (bitmap.LoadFile(bmpfile, wxBITMAP_TYPE_BMP))
             {
-            wxSplashScreen* splash = new wxSplashScreen(bitmap,
+            //wxSplashScreen* splash = 
+			new wxSplashScreen(bitmap,
             wxSPLASH_CENTRE_ON_SCREEN|wxSPLASH_TIMEOUT,
             2500, NULL, -1, wxDefaultPosition, wxDefaultSize,
             wxSIMPLE_BORDER|wxSTAY_ON_TOP);
@@ -318,6 +324,15 @@ bool MyApp::OnInit()
 
     return TRUE;
 }
+
+wxString MyApp::getLocalDBname ()
+	{
+#ifdef _-WXMAC__
+	return wxGetHomeDir() + myapp()->slash + _T("local.db") ;
+#else
+	return myapp()->homedir + myapp()->slash + _T("local.db") ;
+#endif
+	}
 
 wxString MyApp::get_GENtle_version ()
 	{

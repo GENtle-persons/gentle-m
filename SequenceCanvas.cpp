@@ -118,7 +118,7 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
     SetBackgroundColour(wxColour(_T("WHITE")));
 
     font = MYFONT ( 12 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
-    smallFont = MYFONT ( 8 , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    smallFont = MYFONT ( MYFONTSIZE , wxSWISS , wxNORMAL , wxNORMAL ) ;
     varFont = MYFONT ( 11 , wxROMAN  , wxNORMAL , wxNORMAL ) ;
     charwidth = 0 ;
     charheight = 0 ;

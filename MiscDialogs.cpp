@@ -133,7 +133,11 @@ void TSpeakDialog::OnCharHook ( wxKeyEvent& event )
 
 void TSpeakDialog::speakLetter ( wxString c )
 	{
-	wxString file = myapp()->homedir + _T("/wav/") + c.Left(1).Upper() + _T(".wav") ;
+	wxString file = myapp()->homedir ;
+#ifndef __WXMAC__
+	file += _T("/wav/") ;
+#endif
+	file += c.Left(1).Upper() + _T(".wav") ;
 	wxSound sound ( file ) ;
 	if ( !sound.IsOk() ) { wxMessageBox ( txt("t_error") ) ; return ; }
 	sound.Play ( wxSOUND_SYNC ) ;
