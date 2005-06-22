@@ -99,13 +99,15 @@ bool AutoAnnotate::SettingsDialog ()
 	{
 	TAutoAnnotateDialog aad ( p , txt("u_autoannotate") , this ) ;
 	if ( wxID_OK != aad.ShowModal () ) return false ;
+	
 	useCommonDatabase = aad.useCommonDatabase->GetValue() ;
 	useAdditionalDatabase = aad.useAdditionalDatabase->GetValue() ;
 	useMachete = aad.useMachete->GetValue() ;
 	doAddORFs = aad.doAddORFs->GetValue() ;
 	
 	wxString s = aad.additionalDatabase->GetLabel() ;
-	additionalDatabase = dbfile[dbname.Index(s)] ;
+	int idx = dbname.Index(s) ;
+	if ( idx != wxNOT_FOUND ) additionalDatabase = dbfile[idx] ;
 
 	myapp()->frame->LS->startRecord() ;
   	myapp()->frame->LS->setOption ( _T("AUTOANN_ADDITIONALDB") , s ) ;

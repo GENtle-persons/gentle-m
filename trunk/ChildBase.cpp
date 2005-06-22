@@ -69,6 +69,7 @@ void ChildBase::OnFocus(wxFocusEvent& event)
     Activate () ;
     showName ( ) ;
     myapp()->frame->mainTree->SelectItem ( inMainTree ) ;
+wxMessageBox("!");
     SetFocus () ;
     if ( cSequence ) cSequence->SetFocus() ;
     }

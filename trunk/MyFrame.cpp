@@ -392,7 +392,7 @@ void MyFrame::initme ()
 void MyFrame::OnClose(wxCloseEvent& event)
 {
     bool canclose = true ;
-    for ( int a = 0 ; canclose && a < children.GetCount() ; a++ )
+    for ( unsigned int a = 0 ; canclose && a < children.GetCount() ; a++ )
         canclose = ! ( children[a]->vec && children[a]->vec->isChanged() ) ;
     if ( LS->getOption ( _T("DEBUGGING") , _T("") ) == _T("1") ) canclose = true ; // For debugging
     if ( !canclose )
@@ -476,7 +476,7 @@ void MyFrame::OnEnzymeEditor(wxCommandEvent& event )
 */
 void MyFrame::OnFileOpen(wxCommandEvent& event )
 {
-	int i = children.GetCount() ;
+	unsigned int i = children.GetCount() ;
     TManageDatabaseDialog dbd ( this , txt("t_open") , ACTION_MODE_LOAD ) ;
     dbd.ShowModal () ;
     if ( i != children.GetCount() ) setActiveChild ( children[children.GetCount()-1] ) ;
@@ -601,7 +601,7 @@ void MyFrame::OnFileImport(wxCommandEvent& event )
     wxProgressDialog pd ( txt("t_loading") , _T("") , files.GetCount() , NULL , wxPD_ALL ) ;
 //    lockDisplay ( true ) ;
     wxString unknown ;
-    int a ;
+    unsigned int a ;
     for ( a = 0 ; a < files.GetCount() ; a++ )
        {
        if ( !pd.Update ( a , files[a] ) ) break ;
@@ -1573,7 +1573,7 @@ void MyFrame::setChild ( ChildBase *ch )
 */
 void MyFrame::removeChild ( ChildBase *ch )
     {
-    int a ;
+    unsigned int a ;
     for ( a = 0 ; a < children.GetCount() && children[a] != ch ; a++ ) ;
     if ( a == children.GetCount() ) return ;
     children[a]->Disable () ;

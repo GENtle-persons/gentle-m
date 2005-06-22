@@ -354,7 +354,7 @@ void TAminoAcids::showStat ()
    		}  		
     
     stat->SetValue ( t ) ;
-    stat->SetFont ( *MYFONT ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
+    stat->SetFont ( *MYFONT ( MYFONTSIZE , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
     }
 
 void TAminoAcids::showSequence ()

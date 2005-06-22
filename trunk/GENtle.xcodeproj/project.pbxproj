@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		911E4C4B08695B31006FD9C0 /* mac_icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 911E4C4A08695B31006FD9C0 /* mac_icon.icns */; };
 		9141597F086818D9001E63F9 /* variables.csv in Resources */ = {isa = PBXBuildFile; fileRef = 9141597E086818D9001E63F9 /* variables.csv */; };
 		9141598208681904001E63F9 /* codon_catalog.csv in Resources */ = {isa = PBXBuildFile; fileRef = 9141598008681904001E63F9 /* codon_catalog.csv */; };
 		9141598308681904001E63F9 /* commonvectors.db in Resources */ = {isa = PBXBuildFile; fileRef = 9141598108681904001E63F9 /* commonvectors.db */; };
@@ -195,6 +196,7 @@
 		91B024DF086727CD007ABD07 /* libwxjpeg-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91B024DC086727CD007ABD07 /* libwxjpeg-2.6.a */; };
 		91B024E0086727CD007ABD07 /* libwxpng-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91B024DD086727CD007ABD07 /* libwxpng-2.6.a */; };
 		91B024E1086727CD007ABD07 /* libwxtiff-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91B024DE086727CD007ABD07 /* libwxtiff-2.6.a */; };
+		91C98C56086946DC003ED5D9 /* default.tab in Resources */ = {isa = PBXBuildFile; fileRef = 91C98C55086946DC003ED5D9 /* default.tab */; };
 		91C9EAB30867299100AE735B /* libwxexpat-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91C9EAB20867299100AE735B /* libwxexpat-2.6.a */; };
 /* End PBXBuildFile section */
 
@@ -216,6 +218,8 @@
 /* End PBXBuildStyle section */
 
 /* Begin PBXFileReference section */
+		911E4C440869582C006FD9C0 /* icon */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = icon; sourceTree = "<group>"; };
+		911E4C4A08695B31006FD9C0 /* mac_icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = mac_icon.icns; sourceTree = "<group>"; };
 		9141597E086818D9001E63F9 /* variables.csv */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = variables.csv; sourceTree = "<group>"; };
 		9141598008681904001E63F9 /* codon_catalog.csv */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = codon_catalog.csv; sourceTree = "<group>"; };
 		9141598108681904001E63F9 /* commonvectors.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = commonvectors.db; sourceTree = "<group>"; };
@@ -412,6 +416,7 @@
 		91B024DC086727CD007ABD07 /* libwxjpeg-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxjpeg-2.6.a"; path = "../wx/wxWidgets/build-release/lib/libwxjpeg-2.6.a"; sourceTree = SOURCE_ROOT; };
 		91B024DD086727CD007ABD07 /* libwxpng-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxpng-2.6.a"; path = "../wx/wxWidgets/build-release/lib/libwxpng-2.6.a"; sourceTree = SOURCE_ROOT; };
 		91B024DE086727CD007ABD07 /* libwxtiff-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxtiff-2.6.a"; path = "../wx/wxWidgets/build-release/lib/libwxtiff-2.6.a"; sourceTree = SOURCE_ROOT; };
+		91C98C55086946DC003ED5D9 /* default.tab */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = default.tab; sourceTree = "<group>"; };
 		91C9EAB20867299100AE735B /* libwxexpat-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxexpat-2.6.a"; path = "../wx/wxWidgets/build-release/lib/libwxexpat-2.6.a"; sourceTree = SOURCE_ROOT; };
 		91C9EABF0867351700AE735B /* variables.csv */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = variables.csv; path = ../../variables.csv; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -437,6 +442,9 @@
 		9180A6490866FCF9000C7D5E = {
 			isa = PBXGroup;
 			children = (
+				911E4C4A08695B31006FD9C0 /* mac_icon.icns */,
+				911E4C440869582C006FD9C0 /* icon */,
+				91C98C55086946DC003ED5D9 /* default.tab */,
 				914159AD0868342B001E63F9 /* ncoils.matrix */,
 				914159AB086833EA001E63F9 /* gpl.txt */,
 				914159A708683387001E63F9 /* MySQL enzymes.txt */,
@@ -842,6 +850,8 @@
 				914159AA08683388001E63F9 /* MySQL template.txt in Resources */,
 				914159AC086833EA001E63F9 /* gpl.txt in Resources */,
 				914159AE0868342B001E63F9 /* ncoils.matrix in Resources */,
+				91C98C56086946DC003ED5D9 /* default.tab in Resources */,
+				911E4C4B08695B31006FD9C0 /* mac_icon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
