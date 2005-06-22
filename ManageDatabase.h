@@ -144,6 +144,7 @@ class TManageDatabaseDialog : public wxDialog
     wxTextCtrl *filter_txt ;
     wxCheckBox *f_dna , *f_prot , *f_primer , *f_twopanes ;
     wxCheckBox *f_desc , *f_seq ;
+	wxBoxSizer *v0 , *v2 ; // Sizers needed for second (right) list
     
     DECLARE_EVENT_TABLE()
     } ;

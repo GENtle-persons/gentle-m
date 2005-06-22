@@ -223,6 +223,12 @@ bool MyApp::OnInit()
 #ifdef __WXMAC__
 	homedir = homedir.BeforeLast ( '/' ) ;
 	homedir += _T("/Resources") ;
+	
+	wxApp::s_macAboutMenuItemId = MDI_ABOUT;
+	wxApp::s_macPreferencesMenuItemId = PROGRAM_OPTIONS;
+	wxApp::s_macExitMenuItemId = MDI_QUIT;
+//	wxApp::s_macHelpMenuTitleName = "Help";
+	
 #endif
 
     wxInitAllImageHandlers() ;
