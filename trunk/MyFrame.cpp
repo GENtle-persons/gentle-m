@@ -804,6 +804,7 @@ MyChild *MyFrame::newCLONE ( TClone &clone )
     subframe->initPanels() ;
     mainTree->addChild(subframe,type) ;
     subframe->Maximize() ;
+	return subframe ;
     }
 
 /** \brief Creates a new entry from a PDB import
@@ -1793,7 +1794,7 @@ void MyFrame::OnSashDrag(wxSashEvent& event)
 */
 TStorage *MyFrame::getTempDB ( wxString name )
     {
-    int a ;
+    unsigned int a ;
     for ( a = 0 ; a < dbcache.GetCount() && dbcache[a]->getDBname() != name ; a++ ) ;
     if ( a == dbcache.GetCount() ) 
         dbcache.Add ( new TStorage ( TEMP_STORAGE , name ) ) ;
@@ -1809,7 +1810,7 @@ void MyFrame::setActiveChild ( ChildBase *c )
     if ( !IsShown() ) return ;
     if ( locked != 0 ) return ;
     if ( activating ) return ;
-    int a ;
+    unsigned int a ;
     for ( a = 0 ; a < children.GetCount() ; a++ )
        {
        ChildBase *d = children[a] ;
@@ -1824,10 +1825,9 @@ void MyFrame::setActiveChild ( ChildBase *c )
     activating = true ;
 //    wxSafeYield() ;
     if ( !c->IsEnabled() ) c->Enable() ;
-    if ( c->menubar && GetMenuBar() != c->menubar )
-       {
-       SetMenuBar ( c->menubar ) ;
-       }
+	if ( c->menubar && GetMenuBar() != c->menubar )
+		c->SetMyMenuBar () ;
+       //SetMenuBar ( c->menubar ) ;
     wxSize s = c->GetParent()->GetClientSize() ;
     if ( c->GetSize() != s )
        {

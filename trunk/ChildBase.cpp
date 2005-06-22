@@ -69,7 +69,6 @@ void ChildBase::OnFocus(wxFocusEvent& event)
     Activate () ;
     showName ( ) ;
     myapp()->frame->mainTree->SelectItem ( inMainTree ) ;
-wxMessageBox("!");
     SetFocus () ;
     if ( cSequence ) cSequence->SetFocus() ;
     }
@@ -120,10 +119,26 @@ wxMenuBar *ChildBase::GetMenuBar ()
 void ChildBase::updateToolbar ()
     {
     }    
-    
+
+void ChildBase::SetMyMenuBar ()
+	{
+    if ( menubar && myapp()->frame->GetMenuBar() != menubar )
+		{
+		myapp()->frame->SetMenuBar ( menubar ) ;
+#ifdef __WXMAC__
+		// The following is a butt-ugly patch
+		// to get wxMac to refresh the menu bar
+		wxDialog d ( (wxWindow*)this , -1 , txt("") , wxPoint ( 0 , 0 ) , wxSize ( 1 , 1 ) ) ;
+		d.Show() ;
+		d.Destroy() ;
+#endif
+		}
+	}
+
 void ChildBase::Activate ()
     {
     myapp()->frame->setActiveChild ( this ) ;
+	SetMyMenuBar () ;
     if ( myapp()->frame->isLocked() ) return ;
     updateToolbar () ;
     showName () ;
@@ -214,7 +229,7 @@ void ChildBase::exportVector ( TVector *vec , wxFile &out , int filter , wxStrin
         TGenBank gb ;
         wxArrayString ex ;
         gb.doExport ( vec , ex ) ;
-        for ( int a = 0 ; a < ex.GetCount() ; a++ )
+        for ( unsigned int a = 0 ; a < ex.GetCount() ; a++ )
            out.Write ( ex[a] + _T("\n") ) ;
         }
     else if ( filter == 1 ) // Plain text

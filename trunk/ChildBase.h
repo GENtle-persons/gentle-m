@@ -55,6 +55,7 @@ class ChildBase : public MyChildBase
     virtual wxToolBar *GetToolBar () ; ///< Returns a pointer to the tool bar
     virtual void Activate () ; ///< Activates the module (in foreground etc.)
     virtual void SetIcon ( wxIcon icon ) ; ///< Sets the module icon (unused)
+    virtual void SetMyMenuBar () ; ///< Sets the menu bar (used for mac version primarily)
     
     protected :
     friend class MyFrame ;
