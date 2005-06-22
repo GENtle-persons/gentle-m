@@ -98,41 +98,34 @@ TManageDatabaseDialog::~TManageDatabaseDialog ()
     nb->DeleteAllPages() ;
     if ( il ) delete il ;
     }
-    
+
 void TManageDatabaseDialog::initCopynMove ()
     {
+	v0 = new wxBoxSizer ( wxVERTICAL ) ;
+	wxBoxSizer *v1 = new wxBoxSizer ( wxVERTICAL ) ;
+	v2 = new wxBoxSizer ( wxVERTICAL ) ;
+	wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	wxBoxSizer *h3 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	wxBoxSizer *h4 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	
     wxPanel *p = pCopynMove ;
 
     nb->AddPage ( p , txt("t_management") ) ;
-    int w , h ;
-#ifdef __WXMSW__
-    p->GetClientSize ( &w , &h ) ;
-#else // LINUX 
-    p->GetClientSize ( &w , &h ) ;
-    w = 700 ; h = 550 ;
-    w -= 20 ;
-    h -= 40 ;
-#endif
-    if ( doSave ) h -= th ;
 
-    wxRect r = ( new wxStaticText ( p , -1 , txt("t_filter") , wxPoint ( bo , bo ) ) ) -> GetRect() ;
-    filter_txt = new wxTextCtrl ( p , MD_PM_FILTER , _T("") , 
-                                    wxPoint ( bo+r.GetRight() , bo ) ,
-                                    wxSize ( w*2/3 , th ) ) ;
+    filter_txt = new wxTextCtrl ( p , MD_PM_FILTER , _T("") ) ;
 
-    f_twopanes = new wxCheckBox ( p , MD_PM_TWOPANES , txt("t_twopanes") , 
-                                        wxPoint ( bo , bo*2 + th ) ) ;
-
+    f_twopanes = new wxCheckBox ( p , MD_PM_TWOPANES , txt("t_twopanes") ) ;
     
     int lbstyle = wxLC_LIST | wxLC_AUTOARRANGE | wxLC_SORT_ASCENDING ;
-    pm_dd_l = new wxChoice ( p , MD_PM_DD_L , wxPoint ( bo , bo*2 + th*2 ) , wxSize ( w/2-bo*2 , th ) ) ;
-    pm_dd_r = new wxChoice ( p , MD_PM_DD_R , wxPoint ( bo+w/2 , bo*2 + th*2 ) , wxSize ( w/2-bo*2 , th ) ) ;
+    pm_dd_l = new wxChoice ( p , MD_PM_DD_L ) ;
+    pm_dd_r = new wxChoice ( p , MD_PM_DD_R ) ;
     
-    pm_left = new wxListCtrl ( p , MD_PM_LEFT , wxPoint ( bo , th*3+bo*2 ) ,
-                                wxSize ( w/2-bo*2 , h-th*4-bo ) ,
+    pm_left = new wxListCtrl ( p , MD_PM_LEFT , wxDefaultPosition ,
+                                wxDefaultSize ,
                                 lbstyle ) ;
-    pm_right = new wxListCtrl ( p , MD_PM_RIGHT , wxPoint ( bo+w/2 , th*3+bo*2 ) ,
-                                wxSize ( w/2-bo*2 , h-th*4-bo ) ,
+    pm_right = new wxListCtrl ( p , MD_PM_RIGHT , wxDefaultPosition ,
+                                wxDefaultSize ,
                                 lbstyle ) ;
     
     TMyDropTarget *rdt = new TMyDropTarget ( this , pm_right ) ;
@@ -158,47 +151,64 @@ void TManageDatabaseDialog::initCopynMove ()
     pm_left->SetImageList ( il , wxIMAGE_LIST_SMALL ) ;
     pm_right->SetImageList ( il , wxIMAGE_LIST_SMALL ) ;
     
+	h1->Add (  new wxStaticText ( p , -1 , txt("t_filter") ) , 0 , wxEXPAND|wxALL , 2 ) ;
+	h1->Add ( filter_txt , 1 , wxEXPAND|wxALL , 2 ) ;
+
+	h2->Add ( f_twopanes , 0 , wxEXPAND|wxALL , 2 ) ;
+
     if ( !isProject )
        {
-       r = filter_txt->GetRect() ;
-       f_dna = new wxCheckBox ( p , MD_PM_FILTER_DNA , txt("dna") , wxPoint ( r.GetRight() + bo , bo*2 ) ) ;
-       r = f_dna->GetRect() ;
-       f_prot = new wxCheckBox ( p , MD_PM_FILTER_PROTEIN , txt("protein") , wxPoint ( r.GetRight() + bo , bo*2 ) ) ;
-       r = f_prot->GetRect() ;
-       f_primer = new wxCheckBox ( p , MD_PM_FILTER_PRIMER , txt("primers") , wxPoint ( r.GetRight() + bo , bo*2 ) ) ;
-       r = f_dna->GetRect() ;
-       f_desc = new wxCheckBox ( p , MD_PM_FILTER_DESC , txt("desc") , wxPoint ( r.GetLeft() , bo*2 + th ) ) ;
-       r = f_desc->GetRect() ;
-       f_seq = new wxCheckBox ( p , MD_PM_FILTER_SEQ , txt("sequences") , wxPoint ( r.GetRight() + bo , bo*2 + th ) ) ;
+       f_dna = new wxCheckBox ( p , MD_PM_FILTER_DNA , txt("dna") ) ;
+       f_prot = new wxCheckBox ( p , MD_PM_FILTER_PROTEIN , txt("protein") ) ;
+       f_primer = new wxCheckBox ( p , MD_PM_FILTER_PRIMER , txt("primers") ) ;
+       f_desc = new wxCheckBox ( p , MD_PM_FILTER_DESC , txt("desc") ) ;
+       f_seq = new wxCheckBox ( p , MD_PM_FILTER_SEQ , txt("sequences") ) ;
        f_desc->SetValue ( 1 ) ;
-       }
-    
+
+	   h2->Add ( new wxStaticText ( p , -1 , "" ) , 1 , wxEXPAND|wxALL , 2 ) ; // Dummy to shove the rest to the right
+	   h2->Add ( f_dna , 0 , wxEXPAND|wxALL , 2 ) ;
+	   h2->Add ( f_prot , 0 , wxEXPAND|wxALL , 2 ) ;
+	   h2->Add ( f_primer , 0 , wxEXPAND|wxALL , 2 ) ;
+	   h2->Add ( f_desc , 0 , wxEXPAND|wxALL , 2 ) ;
+	   h2->Add ( f_seq , 0 , wxEXPAND|wxALL , 2 ) ;
+	   }
+
+	v1->Add ( pm_dd_l , 0 , wxEXPAND|wxALL , 2 ) ;
+	v1->Add ( pm_left , 1 , wxEXPAND|wxALL , 2 ) ;
+	v2->Add ( pm_dd_r , 0 , wxEXPAND|wxALL , 2 ) ;
+	v2->Add ( pm_right , 1 , wxEXPAND|wxALL , 2 ) ;
+	h3->Add ( v1 , 1 , wxEXPAND|wxALL , 2 ) ;
+	h3->Add ( v2 , 1 , wxEXPAND|wxALL , 2 ) ;
+
+	v0->Add ( h1 , 0 , wxEXPAND|wxALL , 2 ) ;
+	v0->Add ( h2 , 0 , wxEXPAND|wxALL , 2 ) ;
+	v0->Add ( h3 , 1 , wxEXPAND|wxALL , 2 ) ;
 
     if ( !doSave )
         {
         pm_init_lists () ;
         filter_txt->SetFocus() ;
-        return ;
         }
-        
-    wxString name ;
-    if ( isProject ) name = myapp()->frame->project.name ;
-    else name = v->getName() ;
-    h += th ;
-    int w2 = w/5 ;
-    pm_dd_save = new wxChoice ( p , MD_PM_SAVE_DB ,
-                                    wxPoint ( bo , h - th*2 + bo*2 ) ,
-                                    wxSize ( w2 , th ) ) ;
-    pm_name = new wxTextCtrl ( p , MD_PM_EDIT , name , 
-                                    wxPoint ( bo*2+w2 , h - th*2 + bo*2 ) ,
-                                    wxSize ( w-w2*2 - bo*3 , th ) ) ;
-    wxButton *sb = new wxButton ( p , MD_PM_SAVE , txt("b_store") , 
-                    wxPoint ( w-w2 , h - th*2 + bo*2 ) ,
-                    wxSize ( w2 - bo , th ) ) ;
-    pm_init_lists () ;
-    sb->SetDefault () ;
-    pm_name->SetSelection ( -1 , -1 ) ;
-    pm_name->SetFocus() ;
+	else
+		{
+		wxString name ;
+		if ( isProject ) name = myapp()->frame->project.name ;
+		else name = v->getName() ;
+		pm_dd_save = new wxChoice ( p , MD_PM_SAVE_DB ) ;
+		pm_name = new wxTextCtrl ( p , MD_PM_EDIT , name ) ;
+		wxButton *sb = new wxButton ( p , MD_PM_SAVE , txt("b_store") ) ;
+		pm_init_lists () ;
+		sb->SetDefault () ;
+		pm_name->SetSelection ( -1 , -1 ) ;
+		pm_name->SetFocus() ;
+		h4->Add ( pm_dd_save , 0 , wxEXPAND|wxALL , 2 ) ;
+		h4->Add ( pm_name , 1 , wxEXPAND|wxALL , 2 ) ;
+		h4->Add ( sb , 0 , wxEXPAND|wxALL , 2 ) ;
+		v0->Add ( h4 , 0 , wxEXPAND|wxALL , 2 ) ;
+		}
+	
+	p->SetSizer ( v0 ) ;
+	p->Layout () ;
     }
     
 void TManageDatabaseDialog::updateTwoLists ()
@@ -214,16 +224,14 @@ void TManageDatabaseDialog::updateTwoLists ()
     if ( doSave ) h -= th ;
     if ( f_twopanes->GetValue() ) 
         {
-        pm_left->SetSize ( wxSize ( w/2-bo*2 , h-th*4-bo ) ) ;
-        pm_right->Show () ;
-        pm_dd_r->Show () ;
+		v0->Show ( v2 , true , true ) ;
+		v0->Layout () ;
         pm_list_items ( PM_RIGHT ) ;
         }
     else
         {
-        pm_right->Hide () ;
-        pm_dd_r->Hide () ;
-        pm_left->SetSize ( wxSize ( w - bo*2 , h-th*4-bo ) ) ;
+		v0->Show ( v2 , false , true ) ;
+		v0->Layout () ;
         }
     }
     

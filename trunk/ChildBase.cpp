@@ -128,9 +128,13 @@ void ChildBase::SetMyMenuBar ()
 #ifdef __WXMAC__
 		// The following is a butt-ugly patch
 		// to get wxMac to refresh the menu bar
+		// The freeze/thaw stuff is there in the hopes of speeding it up
+		myapp()->frame->Freeze() ;
 		wxDialog d ( (wxWindow*)this , -1 , txt("") , wxPoint ( 0 , 0 ) , wxSize ( 1 , 1 ) ) ;
+		d.Freeze() ;
 		d.Show() ;
 		d.Destroy() ;
+		myapp()->frame->Thaw() ;
 #endif
 		}
 	}
