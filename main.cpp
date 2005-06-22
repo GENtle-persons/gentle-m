@@ -285,7 +285,7 @@ bool MyApp::OnInit()
             }
         wxYield();
         }
-        
+
     // Tips turned off until I can figure out how the hell
     // to get the state of the !"$%& show-again-checkbox
     bool showTip = frame->LS->getOption ( _T("SHOWTIP") , false ) ;
