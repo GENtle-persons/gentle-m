@@ -230,6 +230,12 @@ bool MyApp::OnInit()
     
     wxSetWorkingDirectory ( homedir ) ; // Setting home directory as working dir
 
+	// Setting ncoils dir as an environment variable
+	wxString ncoilsdir ;
+	ncoilsdir = _T("COILSDIR=") ;
+	ncoilsdir += homedir ;
+	putenv ( (char*) ncoilsdir.mb_str() ) ;
+
     // Is an instance already running?
     const wxString name = wxString::Format ( _T("GENtle-%s") , wxGetUserId().c_str());
     m_checker = new wxSingleInstanceChecker (name);

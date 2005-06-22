@@ -57,7 +57,10 @@ TSpeakDialog::TSpeakDialog(wxWindow *parent, const wxString& title , wxString _s
 	
 	seq = new wxTextCtrl ( this , -1 , sequence , 
 			   		wxDefaultPosition , wxDefaultSize ,
-			   		wxTE_READONLY|wxTE_NOHIDESEL ) ;
+#ifndef __WXMAC__
+					wxTE_READONLY|
+#endif
+			   		wxTE_NOHIDESEL ) ;
 	
 	wxButton *b1 = new wxButton ( this , SPEAK_PLAY , txt("b_speak_play") ) ;
 	wxButton *b2 = new wxButton ( this , SPEAK_STOP , txt("b_speak_stop") ) ;
@@ -94,7 +97,7 @@ void TSpeakDialog::OnPlay ( wxCommandEvent &ev )
 	 wxString s ;
 	 int cnt = 0 ;
 	 doPlay = true ;
-	 
+
 	 while ( doPlay )
 	    {
 		seq->GetSelection ( &from , &to ) ;
@@ -133,11 +136,12 @@ void TSpeakDialog::OnCharHook ( wxKeyEvent& event )
 
 void TSpeakDialog::speakLetter ( wxString c )
 	{
-	wxString file = myapp()->homedir ;
+	wxString file = myapp()->homedir + myapp()->slash ;
 #ifndef __WXMAC__
-	file += _T("/wav/") ;
+	file += _T("wav/") ;
 #endif
 	file += c.Left(1).Upper() + _T(".wav") ;
+//	wxMessageBox ( file ) ;
 	wxSound sound ( file ) ;
 	if ( !sound.IsOk() ) { wxMessageBox ( txt("t_error") ) ; return ; }
 	sound.Play ( wxSOUND_SYNC ) ;
