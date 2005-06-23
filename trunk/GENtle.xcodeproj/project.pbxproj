@@ -994,7 +994,7 @@
 				HEADER_SEARCH_PATHS = (
 					"../mysql-4.0.24/include",
 					"../wx/wxWidgets/build-release/lib/wx/include/mac-ansi-release-static-2.6",
-					./wx/wxWidgets/include,
+					../wx/wxWidgets/include,
 				);
 				INFOPLIST_FILE = "GENtle-Info.plist";
 				INSTALL_PATH = "$(USER_APPS_DIR)";
@@ -1053,7 +1053,7 @@
 				HEADER_SEARCH_PATHS = (
 					"../mysql-4.0.24/include",
 					"../wx/wxWidgets/build-release/lib/wx/include/mac-ansi-release-static-2.6",
-					./wx/wxWidgets/include,
+					../wx/wxWidgets/include,
 				);
 				INFOPLIST_FILE = "GENtle-Info.plist";
 				INSTALL_PATH = "$(USER_APPS_DIR)";

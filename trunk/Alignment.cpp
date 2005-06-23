@@ -552,7 +552,7 @@ void TAlignment::callMiddleMouseButton ( int id , int pos , wxString _mode )
     {
     wxString mode = mmb->GetStringSelection () ;
     if ( !_mode.IsEmpty() ) mode = txt(_mode) ;
-    int a , line = id ;
+    unsigned int a , line = id ;
     if ( lines[line].s.GetChar(pos-1) != '-' && mode == txt("t_mmb_delete_gap") )
        {
        wxBell() ;
@@ -626,8 +626,7 @@ void TAlignment::callMiddleMouseButton ( int id , int pos , wxString _mode )
 void TAlignment::updateSequence ()
     {
     if ( threadRunning ) return ;
-//    wxMessageBox ( wxString::Format ( _T("%d") , sc->seq.size() ) ) ;
-    for ( int g = 0 ; g < sc->seq.GetCount() ; g++ )
+    for ( unsigned int g = 0 ; g < sc->seq.GetCount() ; g++ )
         {
         if ( sc->seq[g]->whatsthis() != _T("FEATURE") ) continue ;
         SeqFeature *f = (SeqFeature*) sc->seq[g] ;
@@ -676,13 +675,11 @@ wxString TAlignment::getName ()
 void TAlignment::OnSettings ( wxCommandEvent &ev )
     {
     TAlignmentDialog ad ( this , txt("t_settings") ) ;
-wxMessageBox ( "!" ) ;
     int r = ad.ShowModal () ;
-wxMessageBox ( "!" ) ;
     if ( r != wxID_OK ) return ;
 
     lines.clear () ;
-    for ( int a = 0 ; a < ad.vcn.GetCount() ; a++ )
+    for ( unsigned int a = 0 ; a < ad.vcn.GetCount() ; a++ )
         {
         TAlignLine line ;
         line.name = ad.vcn[a] ;
@@ -704,7 +701,7 @@ wxMessageBox ( "!" ) ;
 void TAlignment::prealigned ( wxArrayString &vs , wxArrayChildBase &vc )
     {
     lines.clear () ;
-    for ( int a = 0 ; a < vc.GetCount() ; a++ )
+    for ( unsigned int a = 0 ; a < vc.GetCount() ; a++ )
         {
         TAlignLine line ;
         line.name = vc[a]->getName() ;
@@ -883,8 +880,6 @@ void TAlignment::MatrixBacktrack ( vector <wxArrayInt> &back ,
 
 void TAlignment::invokeOriginal ( int id , int pos )
     {
-    int a ;
-    MyFrame *f = myapp()->frame ;
     ChildBase *c = NULL ;
     c = lines[id].FindOrigin() ;
     if ( !c ) return ;
@@ -960,8 +955,7 @@ void TAlignment::OnMenuInvs ( wxCommandEvent &ev )
 
 void TAlignment::OnMenuSoa ( wxCommandEvent &ev )
     {
-    int a ;
-    for ( a = 0 ; a < sc->seq.GetCount() ; a++ )
+    for ( unsigned int a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
         SeqAlign *x = (SeqAlign*) sc->seq[a] ;
         }
@@ -969,8 +963,7 @@ void TAlignment::OnMenuSoa ( wxCommandEvent &ev )
 
 void TAlignment::OnMenuSoaI ( wxCommandEvent &ev )
     {
-    int a ;
-    for ( a = 0 ; a < sc->seq.GetCount() ; a++ )
+    for ( unsigned int a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
         SeqAlign *x = (SeqAlign*) sc->seq[a] ;
         }
@@ -978,8 +971,7 @@ void TAlignment::OnMenuSoaI ( wxCommandEvent &ev )
 
 void TAlignment::OnMenuSiml ( wxCommandEvent &ev )
     {
-    int a ;
-    for ( a = 0 ; a < sc->seq.GetCount() ; a++ )
+    for ( unsigned int a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
         SeqAlign *x = (SeqAlign*) sc->seq[a] ;
         }
@@ -987,8 +979,7 @@ void TAlignment::OnMenuSiml ( wxCommandEvent &ev )
 
 void TAlignment::OnMenuSeq ( wxCommandEvent &ev )
     {
-    int a ;
-    for ( a = 0 ; a < sc->seq.GetCount() ; a++ )
+    for ( unsigned int a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
         SeqAlign *x = (SeqAlign*) sc->seq[a] ;
         }
@@ -996,8 +987,7 @@ void TAlignment::OnMenuSeq ( wxCommandEvent &ev )
 
 void TAlignment::OnMenuFeat ( wxCommandEvent &ev )
     {
-    int a ;
-    for ( a = 0 ; a < sc->seq.GetCount() ; a++ )
+    for ( unsigned int a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
         SeqAlign *x = (SeqAlign*) sc->seq[a] ;
         }
@@ -1005,8 +995,7 @@ void TAlignment::OnMenuFeat ( wxCommandEvent &ev )
 
 void TAlignment::OnMenuRNA ( wxCommandEvent &ev )
     {
-    int a ;
-    for ( a = 0 ; a < sc->seq.GetCount() ; a++ )
+    for ( unsigned int a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
         SeqAlign *x = (SeqAlign*) sc->seq[a] ;
         }
@@ -1066,7 +1055,7 @@ void TAlignment::MoveUpDown ( int what , int where )
     
 void TAlignment::OnFileSave ( wxCommandEvent &ev )
     {
-    int a , b ;
+    unsigned int a , b ;
     wxString s , d ;
     TGenBank gb ;
     for ( a = b = 0 ; a < lines.size() ; a++ ) b += lines[a].isIdentity?0:1 ;
@@ -1102,7 +1091,7 @@ void TAlignment::OnFileSave ( wxCommandEvent &ev )
 void TAlignment::doExport ( wxString filename , int filter )
     {
     wxFile out ( filename , wxFile::write ) ;
-    for ( int a = 0 ; a < lines.size() ; a++ )
+    for ( unsigned int a = 0 ; a < lines.size() ; a++ )
         {
         if ( lines[a].v )
            exportVector ( lines[a].v , out , filter ) ;
@@ -1181,7 +1170,7 @@ void TAlignment::RunPhylip ( int cmd )
 	TPhylip phylip ;
 	wxString data ;
 	
-	int a , b ;
+	unsigned int a , b ;
 	int seqlen = 0 ;
 	wxArrayString vs ;
 	for ( a = b = 0 ; a < lines.size() ; a++ )
@@ -1197,7 +1186,7 @@ void TAlignment::RunPhylip ( int cmd )
 		vs.Add ( t ) ;
 		}
 	
-	data += wxString::Format ( _T("%3d%7d\n") , vs.GetCount() , seqlen ) ;
+	data += wxString::Format ( _T("%3d%7d\n") , (int) vs.GetCount() , seqlen ) ;
 	for ( a = 0 ; a < vs.GetCount() ; a++ )
 		data += vs[a] + _T("\n") ;
 	
@@ -1238,7 +1227,7 @@ void TAlignLine::ResetSequence ()
     
 ChildBase *TAlignLine::FindOrigin ()
     {
-    int a ;
+    unsigned int a ;
     for ( a = 0 ; a < myapp()->frame->children.GetCount() ; a++ )
         {
         if ( myapp()->frame->children[a]->vec == v )
