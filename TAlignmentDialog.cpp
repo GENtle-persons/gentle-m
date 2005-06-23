@@ -22,7 +22,9 @@ TAlignmentDialog::TAlignmentDialog(wxWindow *parent, const wxString& title )
     bo = 5 ;
     th = 15 ;
     al = (TAlignment*) parent ;
+#ifndef __WXMAC__
     Show ( TRUE ) ;
+#endif
     int w , h ;
 #ifdef __WXMSW__
     GetClientSize ( &w , &h ) ;
@@ -40,7 +42,7 @@ TAlignmentDialog::TAlignmentDialog(wxWindow *parent, const wxString& title )
     wxButton *b = new wxButton ( this , AL_OK , txt("b_OK") ) ;
     wxButton *c = new wxButton ( this , AL_CANCEL , txt("b_cancel") ) ;
 
-#ifdef __WXGTK__
+#ifndef __WXMSW__
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
 
@@ -98,7 +100,7 @@ void TAlignmentDialog::init_what ()
     v1->Add ( new wxButton ( p , AL_UP , txt("b_up_in_list") ) , 0 , wxALIGN_LEFT ) ;
     v1->Add ( new wxButton ( p , AL_DOWN , txt("b_down_in_list") ) , 0 , wxALIGN_LEFT ) ;
 				  
-    int a ;
+    unsigned int a ;
     MyFrame *f = myapp()->frame ;
     // All
     for ( a = 0 ; a < f->children.GetCount() ; a++ )
@@ -235,7 +237,7 @@ void TAlignmentDialog::OnCharHook ( wxKeyEvent& event )
 void TAlignmentDialog::OnAdd ( wxCommandEvent &ev )
     {
     wxArrayInt sel ;
-    int a , b , n = all->GetSelections ( sel ) ;
+    unsigned int a , b , n = all->GetSelections ( sel ) ;
     for ( a = 0 ; a < n ; a++ )
         {
         for ( b = 0 ; b < vcv.GetCount() && vcv[b] != vav[sel[a]] ; b++ ) ;
@@ -251,7 +253,7 @@ void TAlignmentDialog::OnAdd ( wxCommandEvent &ev )
 void TAlignmentDialog::OnDel ( wxCommandEvent &ev )
     {
     wxArrayInt sel ;
-    int a , b , n = cur->GetSelections ( sel ) ;
+    unsigned int a , b , n = cur->GetSelections ( sel ) ;
     for ( a = 0 ; a < n ; a++ ) vcv[sel[a]] = NULL ;
     for ( a = 0 ; a < vcv.GetCount() ; a++ )
         {
@@ -275,7 +277,7 @@ void TAlignmentDialog::OnDel ( wxCommandEvent &ev )
 void TAlignmentDialog::OnUp ( wxCommandEvent &ev )
     {
     wxArrayInt sel ;
-    int a , b , n = cur->GetSelections ( sel ) ;
+    unsigned int a , b , n = cur->GetSelections ( sel ) ;
     if ( n != 1 ) return ;
     b = sel[0] ;
     if ( b == 0 ) return ;
@@ -290,7 +292,7 @@ void TAlignmentDialog::OnUp ( wxCommandEvent &ev )
 void TAlignmentDialog::OnDown ( wxCommandEvent &ev )
     {
     wxArrayInt sel ;
-    int a , b , n = cur->GetSelections ( sel ) ;
+    unsigned int a , b , n = cur->GetSelections ( sel ) ;
     if ( n != 1 ) return ;
     b = sel[0] ;
     if ( b == vcv.GetCount()-1 ) return ;
