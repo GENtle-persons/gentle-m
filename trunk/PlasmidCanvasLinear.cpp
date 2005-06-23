@@ -5,16 +5,12 @@
 void PlasmidCanvas::OnDrawLinear(wxDC& dc)
 {
     if ( printing ) h = h * 2 / 3 ;
-    int fontfactor = 10 ;
+    int fontfactor = MYFONTSIZE * 10 / 8 ;
     if ( printing ) fontfactor = (w>h?h:w)/10000 ;
     wxFont *tinyFont = MYFONT ( fontfactor*4/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
     wxFont *smallFont = MYFONT ( fontfactor , wxSWISS , wxNORMAL , wxNORMAL ) ;
-    wxFont *normalFont = MYFONT ( fontfactor*6/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
-    wxFont *bigFont = MYFONT ( fontfactor*7/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
-    wxFont *hugeFont = MYFONT ( fontfactor*9/5 , wxSWISS , wxNORMAL , wxBOLD ) ;
 
     // Initial calculations    
-    char t[100] ;
     int a , b ;
     int d , l = p->vec->getSequenceLength() - 1 ;
     for ( d = 1 ; d*10 < l ; d *= 10 ) ;
@@ -365,7 +361,7 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , int r1 , int r2 , float a1 , flo
     // Drawing polygon
     wxPoint *wp ;
     wp = (wxPoint*) malloc ( sizeof ( wxPoint ) * (pt.size()+1) ) ;
-    for ( int b = 0 ; b < pt.size() ; b++ ) wp[b] = pt[b] ;
+    for ( unsigned int b = 0 ; b < pt.size() ; b++ ) wp[b] = pt[b] ;
     if ( !this->p->vec->getGenomeMode() ) dc.SetPen(*wxBLACK_PEN);
     else dc.SetPen ( *MYPEN((wxColour)i->getBrush()->GetColour()) ) ;
     dc.SetBrush ( *i->getBrush() ) ;
@@ -374,7 +370,6 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , int r1 , int r2 , float a1 , flo
     
     // Name
     if ( !i->getParam ( _T("PREDECESSOR") ).IsEmpty() ) return ; // Only first name
-    char t[1000] ;
     wxCoord dx , dy ;
     wxColor fc = dc.GetTextForeground () ;
     dc.SetTextForeground ( i->getFontColor() ) ;

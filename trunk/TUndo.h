@@ -20,6 +20,7 @@ class TUndo
     {
     public :
     TUndo () ; ///< Constructor
+	~TUndo () {} ; ///< Destructor (empty)
     virtual void setbase ( TVector *_base ) ; ///< Set the base TVector
     virtual void start ( wxString _msg = _T("") ) ; ///< Start the undo record, with action name
     virtual void stop () ; ///< End the undo record

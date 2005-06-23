@@ -79,6 +79,8 @@ class TEnzymeRules
 	{
 	public :
 	TEnzymeRules () { init () ; } ///< Constructor
+	~TEnzymeRules () {} ; ///< Destructor (empty)
+
 	virtual void init () ; ///< Initialization
 	virtual void load_global_settings () ; ///< Loads global settings from the database
 	virtual void save_global_settings () ; ///< Save global settings to the database
