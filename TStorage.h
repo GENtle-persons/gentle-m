@@ -8,13 +8,12 @@
 #include "main.h"
 
 /// Additionally, use MySQL (instead of sqlite only)
-/// Turned off for Mac, currently
-#ifndef __WXMAC__
 #define USEMYSQL
-#endif
 
 #ifdef USEMYSQL
  #ifdef __WXMSW__
+  #include <mysql.h>
+ #elif __WXMAC__
   #include <mysql.h>
  #else
   #include "/usr/include/mysql/mysql.h"

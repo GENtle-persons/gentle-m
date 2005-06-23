@@ -232,7 +232,7 @@ void TAlignment::initme ()
                 txt("m_print_sequence") ) ;
     toolBar->AddSeparator () ;
     toolBar->AddTool( ALIGNMENT_SETTINGS, 
-                wxBitmap (myapp()->bmpdir + _T("\\alignment.bmp") , wxBITMAP_TYPE_BMP),
+                wxBitmap (myapp()->bmpdir + myapp()->slash + _T("alignment.bmp") , wxBITMAP_TYPE_BMP),
                 txt("t_settings") ) ;
     toolBar->AddSeparator () ;
 
@@ -676,7 +676,9 @@ wxString TAlignment::getName ()
 void TAlignment::OnSettings ( wxCommandEvent &ev )
     {
     TAlignmentDialog ad ( this , txt("t_settings") ) ;
+wxMessageBox ( "!" ) ;
     int r = ad.ShowModal () ;
+wxMessageBox ( "!" ) ;
     if ( r != wxID_OK ) return ;
 
     lines.clear () ;
