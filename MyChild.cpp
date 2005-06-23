@@ -474,8 +474,11 @@ void MyChild::initme ()
     treeBox = new TVectorTree( (ChildBase*)swl , TREE_DUMMY ) ;
     treeBox->textWindow = propBox ;
     treeBox->p = this ;
-//    treeBox->Reparent ( swl ) ;
-    
+	
+#ifdef __WXMAC__
+	treeBox->SetFont ( *MYFONT ( MYFONTSIZE , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
+	propBox->SetFont ( *MYFONT ( MYFONTSIZE , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
+#endif
                                
     sw->SplitHorizontally ( swu , cSequence , height/2 ) ;
     swu->SplitVertically ( swl , cPlasmid , width/4 ) ;

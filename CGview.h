@@ -11,6 +11,8 @@ class CGview
 	{
 	public :
  	CGview ( TVector *_v = NULL ) ; ///< Constructor
+	~CGview () {} ; ///< Destructor (empty)
+
  	virtual wxString getXML () ; ///< Generates the XML for the vector v and returns it as a wxString
  	virtual bool runSettingsDialog () ; ///< Runs the settings dialog prior to the actual XML generation
  	virtual void postProcess ( wxString filename ) ; ///< Runs CGview and the image viewer, if requested
