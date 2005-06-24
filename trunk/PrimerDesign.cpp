@@ -446,7 +446,7 @@ void TPrimerDesign::initme ()
     toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_pcr_spin_1") ) ) ;
     toolBar->AddControl ( spin ) ;
     toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_pcr_spin_2") ) ) ;
-#ifdef __WXGTK
+#ifndef __WXMSW__
     spin->SetSize ( -1 , -1 , 50 , -1 , wxSIZE_USE_EXISTING ) ;
 #endif
 
@@ -474,8 +474,8 @@ void TPrimerDesign::initme ()
     lc = new wxListCtrl ( this , PD_LC , wxDefaultPosition , wxDefaultSize , wxLC_REPORT|wxLC_SINGLE_SEL ) ;
 //wxPoint ( 0 , 0 ) , wxSize ( w/3 , h ) , 
 
-    v1->Add ( new wxButton ( this , PD_EDIT , txt("m_edit") , wxPoint ( w/3 + 5 , 20 ) ) , 0 , 0 , 5 ) ;
-    v1->Add ( new wxButton ( this , PD_DEL , txt("b_del") , wxPoint ( w/3 + 5 , 50 ) ) , 0 , 0 , 5 ) ;
+    v1->Add ( new wxButton ( this , PD_EDIT , txt("m_edit") , wxPoint ( w/3 + 5 , 20 ) ) , 0 , wxALL , 2 ) ;
+    v1->Add ( new wxButton ( this , PD_DEL , txt("b_del") , wxPoint ( w/3 + 5 , 50 ) ) , 0 , wxALL , 2 ) ;
 
     stat = new wxTextCtrl ( this ,
                             -1 ,
@@ -484,17 +484,17 @@ void TPrimerDesign::initme ()
                             wxDefaultSize,//wxSize ( w*2/3 - 70 , h ) ,
                             wxTE_MULTILINE | wxTE_READONLY ) ;
                             
-    stat->SetFont ( *MYFONT ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
+    stat->SetFont ( *MYFONT ( MYFONTSIZE , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
 
     GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,show_features);
 
-    h0->Add ( lc , 1 , wxALL , 5 ) ;
-    h0->Add ( v1 , 0 , wxEXPAND|wxALL , 5 ) ;
-    h0->Add ( stat , 2 , wxEXPAND|wxALL , 5 ) ;
+    h0->Add ( lc , 1 , wxALL , 2 ) ;
+    h0->Add ( v1 , 0 , wxEXPAND|wxALL , 2 ) ;
+    h0->Add ( stat , 1 , wxEXPAND|wxALL , 2 ) ;
 
-    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
-    v0->Add ( h0 , 0 , wxEXPAND , 5 ) ;
-    v0->Add ( sc , 1 , wxEXPAND , 5 ) ;
+    v0->Add ( toolbar , 0 , wxEXPAND , 2 ) ;
+    v0->Add ( h0 , 0 , wxEXPAND , 2 ) ;
+    v0->Add ( sc , 1 , wxEXPAND , 2 ) ;
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;
 

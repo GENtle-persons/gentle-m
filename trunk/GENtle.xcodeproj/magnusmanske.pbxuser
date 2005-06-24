@@ -1,11 +1,18 @@
 // !$*UTF8*$!
 {
-	9147AB7F086AAAFC007A7836 /* mac_mysql.h */ = {
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1070, 6398}}";
-			sepNavSelRange = "{1470, 23}";
-			sepNavVisRect = "{{0, 698}, {459, 186}}";
-		};
+	917AF87E086C27D400781D82 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 9180A6850866FD46000C7D5E /* PrimerDesign.cpp */;
+	};
+	917AF885086C293100781D82 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9180A6850866FD46000C7D5E /* PrimerDesign.cpp */;
+		name = "PrimerDesign.cpp: 491";
+		rLen = 0;
+		rLoc = 17168;
+		rType = 0;
+		vrLen = 1579;
+		vrLoc = 16124;
 	};
 	9180A64B0866FCF9000C7D5E /* Project object */ = {
 		activeBuildConfigurationName = Release;
@@ -64,8 +71,12 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 141289984;
-			PBXWorkspaceStateSaveDate = 141289984;
+			PBXPerProjectTemplateStateSaveDate = 141303659;
+			PBXWorkspaceStateSaveDate = 141303659;
+		};
+		perUserProjectItems = {
+			917AF87E086C27D400781D82 /* PBXBookmark */ = 917AF87E086C27D400781D82 /* PBXBookmark */;
+			917AF885086C293100781D82 /* PBXTextBookmark */ = 917AF885086C293100781D82 /* PBXTextBookmark */;
 		};
 		sourceControlManager = 9180A64F0866FCF9000C7D5E /* Source Control */;
 		userBuildSettings = {
@@ -262,9 +273,9 @@
 	};
 	9180A67A0866FD46000C7D5E /* MiscDialogs.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {925, 10024}}";
-			sepNavSelRange = "{2992, 0}";
-			sepNavVisRect = "{{0, 1165}, {925, 543}}";
+			sepNavIntBoundsRect = "{{0, 0}, {800, 10500}}";
+			sepNavSelRange = "{18136, 0}";
+			sepNavVisRect = "{{0, 7922}, {459, 186}}";
 			sepNavWindowFrame = "{{38, 48}, {964, 672}}";
 		};
 	};
@@ -316,6 +327,14 @@
 			sepNavWindowFrame = "{{38, 48}, {964, 672}}";
 		};
 	};
+	9180A6850866FD46000C7D5E /* PrimerDesign.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {925, 12656}}";
+			sepNavSelRange = "{17168, 0}";
+			sepNavVisRect = "{{0, 6563}, {925, 543}}";
+			sepNavWindowFrame = "{{38, 48}, {964, 672}}";
+		};
+	};
 	9180A6860866FD46000C7D5E /* ProgramOptionsDialog.cpp */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {998, 7686}}";
@@ -334,8 +353,8 @@
 	9180A68C0866FD46000C7D5E /* SequenceCanvas.cpp */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {925, 33474}}";
-			sepNavSelRange = "{25316, 6}";
-			sepNavVisRect = "{{0, 11090}, {925, 543}}";
+			sepNavSelRange = "{39606, 0}";
+			sepNavVisRect = "{{0, 17911}, {925, 543}}";
 			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
 		};
 	};
