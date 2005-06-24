@@ -339,7 +339,7 @@ bool MyApp::OnInit()
 
 wxString MyApp::getLocalDBname ()
 	{
-#ifdef _-WXMAC__
+#ifdef __WXMAC__
 	return wxGetHomeDir() + myapp()->slash + _T("local.db") ;
 #else
 	return myapp()->homedir + myapp()->slash + _T("local.db") ;
