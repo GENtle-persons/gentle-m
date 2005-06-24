@@ -25,6 +25,7 @@ class SequencePartList
     {
     public :
     SequencePartList () { maxlevels = slen = 0 ; } ; ///< Constructor
+	virtual ~SequencePartList () {} ; ///< Dummy destructor
     virtual void prepare ( int size ) ; ///< Prepares memory for storage (improves speed on huge sequences)
     virtual void add ( int id , int from , int to ) ; ///< Adds an item
     virtual void makeLevels () ; ///< Generates the number of necessary levels to show items non-overlapping
@@ -66,6 +67,9 @@ class SequencePartList
 class SeqPos
     {
     public :
+	SeqPos () {} ; ///< Constructor (empty)
+	virtual ~SeqPos () {} ; ///< Dummy destructor
+	
     virtual void cleanup () ; ///< Empty the class
     virtual void add ( int np , int x , int y , int w , int h , bool memsave = false ) ; ///< Add a "char"
     virtual void addline ( int from , int to , int vfrom , int vto ) ; ///< Add a "virtual" line (for faster seeking where the mouse cursor is over)
@@ -557,9 +561,10 @@ class SequenceCanvas : public wxScrolledWindow
 class TMarkMem
     {
     public :
-    TMarkMem ( SequenceCanvas *_sc = NULL ) ;
-    virtual void unmark () ;
-    virtual void remark () ;
+    TMarkMem ( SequenceCanvas *_sc = NULL ) ; ///< Constructor
+	virtual ~TMarkMem () {} ; ///< Dummy destructor
+    virtual void unmark () ; ///< Resets the marking
+    virtual void remark () ; ///< Reapplies the stored marking
     
     private :
     SequenceCanvas *sc ;

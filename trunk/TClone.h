@@ -18,6 +18,7 @@ class TClone_Enzyme
     {
     public :
 	TClone_Enzyme () { /*selected = false ;*/ } ; ///< Constructor
+	virtual ~TClone_Enzyme () {} ; ///< Dummy destructor
 	
 	// Operators
 	virtual bool operator < ( const TClone_Enzyme &e ) { return position < e.position ; }
@@ -34,6 +35,8 @@ class TClone_Gene
     public :
 	TClone_Gene () { /*selected = false ;*/ } ; ///< Default constructor
 	TClone_Gene ( const TClone_Gene &g ) ; ///< Constructor
+	virtual ~TClone_Gene () {} ; ///< Dummy destructor
+	
 	virtual int getRealEnd(); ///< Returns converted item end
 	virtual int getRealBegin(); ///< Returns converted item start
 	virtual void setCCW ( bool x ); ///< Sets orientation (Clockwise or Counter-Clockwise)

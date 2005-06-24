@@ -15,6 +15,9 @@ class TMyGelControl ;
 class TGelLane
 	{
 	public :
+	TGelLane () {} ; ///< Empty Constructor
+	virtual ~TGelLane () {} ///< Dummy destructor
+	
 	virtual void clear () ; ///< Clears the lane data
 	virtual void setMarker ( wxString _name ) ; ///< Sets a default marker
 	virtual void add ( int size , int weight = 1 ) ; ///< Adds a weightenend band

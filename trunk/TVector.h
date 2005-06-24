@@ -36,7 +36,7 @@ class TAAProp
     {
     public :
     TAAProp () ; ///< Constructor
-	~TAAProp () {} ; ///< Destructor (empty)
+	virtual ~TAAProp () {} ; ///< Destructor (empty)
     virtual void set_cf ( int pa , int pb , int pt , float f0 , float f1 , float f2 , float f3 ) ; ///< Some data
     virtual void set_data ( float _mw , float _pi , wxString _tla ) ; ///< Molecular weight, isoelectric point, three-letter acronym
     virtual void set_hp ( float _hp_kd , float _hp_hw ) ; ///< More data
@@ -59,7 +59,7 @@ class TORF
     public :
     TORF () ; ///< Default constructor, empty
     TORF ( int _f , int _t , int _r ) ; ///< Constructor
-	~TORF () {} ; ///< Destructor (empty)
+	virtual ~TORF () {} ; ///< Destructor (empty)
     
     virtual wxString getText () ;
     
@@ -87,7 +87,7 @@ class TVectorItem
     public :
     TVectorItem () ; ///< Default constructor
     TVectorItem ( wxString sn , wxString n , int f , int t , char ty ) ; ///< Constructor
-	~TVectorItem () {} ; ///< Destructor (empty)
+	virtual ~TVectorItem () {} ; ///< Destructor (empty)
     
     virtual wxBrush *getBrush () ; ///< Returns a pointer to the brush used to draw the item
     virtual wxColour getFontColor () ; ///< Returns the font color

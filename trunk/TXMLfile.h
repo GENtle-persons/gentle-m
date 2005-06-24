@@ -16,6 +16,8 @@ class TXMLfile
     {
     public :
     TXMLfile () ; ///< Constructor
+	virtual ~TXMLfile () {} ; ///< Dummy destructor
+	
     virtual void load ( wxString file ) ; ///< Load XML from file
     virtual void parse ( wxString text ) ; ///< Pass XML as string
     virtual bool success () { return _success ; } ///< Errors during parsing?

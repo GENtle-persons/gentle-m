@@ -29,6 +29,7 @@ class TPrimer
     {
     public :
     TPrimer ( int _from = 0 , int _to = 0 , bool _upper = true ) ; ///< Constructor
+	virtual ~TPrimer () {} ; ///< Dummy Destructor
     virtual void getSequenceFromVector ( TVector *v , bool from3 = false ) ; ///< Reads primer sequence from vectors
     virtual void makeStats () ; ///< Generates key values about the primer
     virtual void evaluate ( float tm_opt = 0 ) ; ///< Evaluates primer

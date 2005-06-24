@@ -17,7 +17,7 @@ class AutoAnnotate
 	{
 	public :
 	AutoAnnotate ( MyChild *_p = NULL ) ; ///< Constructor
-	~AutoAnnotate () {} ; ///< Destructor (empty)
+	virtual ~AutoAnnotate () {} ; ///< Destructor (empty)
 
 	virtual bool SettingsDialog () ; ///< Runs the dialog; returns wether to Run or not
 	virtual void Run () ; ///< Runs the search

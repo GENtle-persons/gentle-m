@@ -280,7 +280,7 @@ wxString TVector::getStickyEnd ( bool left , bool upper )
     if ( left && upper ) return _lu ;
     else if ( left && !upper ) return _ll ;
     else if ( !left && upper ) return _ru ;
-    else if ( !left && !upper ) return _rl ;
+    else /*if ( !left && !upper ) */ return _rl ;
     }
 
 
@@ -517,8 +517,8 @@ void TVector::init ()
     
 void TVector::makeAA2DNA ( wxString mode )
     {
-    int a , b , c , e ;
-    wxString iu = _T("ACGT") ;
+    int a , b , c ;
+	wxString iu = _T("ACGT") ;
     for ( a = 0 ; a < 256 ; a++ ) AA2DNA[a] = _T("") ;
     
     if ( mode == _T("") ) // Default, abstract code
@@ -908,7 +908,7 @@ wxString TVector::transformSequence ( bool inverse , bool reverse )
 void TVector::doRestriction ()
     {
     vector <TRestrictionCut> cl ;
-    int a , b , c ;
+    int a , b ;
 
     mylog ( "TVector::doRestriction" , "1" ) ;
     if ( cocktail.GetCount() == 0 ) return ;
@@ -1095,7 +1095,7 @@ void TVector::closeCircle ()
 void TVector::doRemove ( int from , int to , bool update , bool enableUndo )
     {
     if ( from == to + 1 ) return ; // Nothing to remove
-    int a , b ;
+    int a ;
     int l = sequence.length() ;
     if ( enableUndo ) undo.start ( txt("u_del_seq") ) ;
 
@@ -1879,7 +1879,7 @@ void TVectorItem::translate ( TVector *v , SeqAA *aa , vector <Tdna2aa> &dna2aa 
 
    char c = ' ' ;
    bool complement , roundOnce = false ;
-   int b , coff , rf = getRF () , voff = getOffset() ;
+   int b , coff , rf = getRF () ;//, voff = getOffset() ;
 
    if ( direction == 1 )
       {
