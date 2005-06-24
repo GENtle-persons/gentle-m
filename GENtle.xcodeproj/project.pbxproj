@@ -219,7 +219,6 @@
 /* End PBXBuildStyle section */
 
 /* Begin PBXFileReference section */
-		911E4C440869582C006FD9C0 /* icon */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = icon; sourceTree = "<group>"; };
 		911E4C4A08695B31006FD9C0 /* mac_icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = mac_icon.icns; sourceTree = "<group>"; };
 		9141597E086818D9001E63F9 /* variables.csv */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = variables.csv; sourceTree = "<group>"; };
 		9141598008681904001E63F9 /* codon_catalog.csv */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = codon_catalog.csv; sourceTree = "<group>"; };
@@ -228,7 +227,6 @@
 		914159A808683387001E63F9 /* MySQL template.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = "MySQL template.txt"; sourceTree = "<group>"; };
 		914159AB086833EA001E63F9 /* gpl.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = gpl.txt; sourceTree = "<group>"; };
 		914159AD0868342B001E63F9 /* ncoils.matrix */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = ncoils.matrix; sourceTree = "<group>"; };
-		9147AB7F086AAAFC007A7836 /* mac_mysql.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = mac_mysql.h; sourceTree = "<group>"; };
 		9147AB80086AAB21007A7836 /* libmysqlclient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmysqlclient.a; path = /usr/local/lib/mysql/libmysqlclient.a; sourceTree = "<absolute>"; };
 		9180A6570866FD0A000C7D5E /* GENtle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GENtle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9180A65A0866FD0A000C7D5E /* GENtle-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "GENtle-Info.plist"; sourceTree = "<group>"; };
@@ -447,9 +445,7 @@
 			isa = PBXGroup;
 			children = (
 				9147AB80086AAB21007A7836 /* libmysqlclient.a */,
-				9147AB7F086AAAFC007A7836 /* mac_mysql.h */,
 				911E4C4A08695B31006FD9C0 /* mac_icon.icns */,
-				911E4C440869582C006FD9C0 /* icon */,
 				91C98C55086946DC003ED5D9 /* default.tab */,
 				914159AD0868342B001E63F9 /* ncoils.matrix */,
 				914159AB086833EA001E63F9 /* gpl.txt */,

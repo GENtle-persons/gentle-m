@@ -46,6 +46,8 @@ class TProtease ;
 class TSQLresult
     {
     public:
+	TSQLresult () {} ; ///< Empty constructor
+	virtual ~TSQLresult () {} ; ///< Dummy destructor
     wxArrayString field ; ///< List of result fields (or column names)
     vector <wxArrayString> content ; ///< The results table ([row][column])
     

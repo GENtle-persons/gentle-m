@@ -513,7 +513,10 @@ TMyMultipleChoiceDialog::TMyMultipleChoiceDialog ( wxWindow *parent ,
    wxSize size ( 400 , 300 ) ;
    SetSize ( size ) ;
    
-   wxCoord w , h , bo = 5 ; // bo is border width
+   wxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+   wxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
+   
+/*   wxCoord w , h , bo = 5 ; // bo is border width
    GetClientSize ( &w , &h ) ;
            
    wxRect q ( 0 , 0 , w , 0 ) ;
@@ -560,6 +563,37 @@ TMyMultipleChoiceDialog::TMyMultipleChoiceDialog ( wxWindow *parent ,
                                  choices ) ;
    if ( buttonOK || buttonCancel )
       clb->SetSize ( w - bo * 2 , h - r.GetBottom() - q.GetHeight() - bo * 3 ) ;
+   */
+   
+   if ( options & wxCANCEL > 0 )
+		{
+		wxButton *b = new wxButton ( this , wxID_CANCEL , txt("b_cancel") ) ;
+		h0->Add ( b , wxEXPAND|wxALL , 2 ) ;
+		}
+	else h0->Add ( new wxStaticText ( this , -1 , _T("") ) , wxEXPAND|wxALL , 2 ) ;
+
+   if ( options & wxOK > 0 )
+		{
+		wxButton *b = new wxButton ( this , MCD_OK , txt("b_ok") ) ;
+		h0->Add ( b , wxEXPAND|wxALL , 2 ) ;
+		b->SetDefault() ;
+		}
+	else h0->Add ( new wxStaticText ( this , -1 , _T("") ) , wxEXPAND|wxALL , 2 ) ;
+
+	clb = new wxCheckListBox ( this , 
+                                 -1 , 
+                                 wxDefaultPosition ,
+                                 wxDefaultSize ,
+                                 n ,
+                                 choices ) ;
+
+   if ( !message.IsEmpty() )
+		v0->Add ( new wxStaticText ( this , -1 , message ) , 0 , wxEXPAND|wxALL , 2 ) ;
+	v0->Add ( clb , 1 , wxEXPAND|wxALL , 2 ) ;
+	v0->Add ( h0 , 0 , wxEXPAND|wxALL , 2 ) ;
+   
+   SetSizer ( v0 ) ;
+   v0->Layout () ;
    
    if ( options & wxCENTRE > 0 ) Center () ;
    }
