@@ -60,7 +60,8 @@ class TTestSuite
 class TProject
 	{
 	public :
- 	TProject () ; ///< \brief Constructor
+ 	TProject () ; ///< Constructor
+	virtual ~TProject () {} ; ///< Dummy destructor
 
     virtual TEnzymeRules *getEnzymeRules () ; ///< Returns the restriction enzyme display rules for the project
     virtual void setEnzymeRules ( TEnzymeRules *er ) ; ///< Sets the restriction enzyme display rules for the project

@@ -10,6 +10,9 @@
 class TRestrictionEnzyme
     {
     public :
+	TRestrictionEnzyme () {} ; ///< Empty constructor
+	virtual ~TRestrictionEnzyme () {} ; ///< Dummy destructor
+	
     bool differ ( TRestrictionEnzyme &e ) ;
     
     virtual wxString getEndUpperLeft () ; ///< The "upper left" sequence after the cut
@@ -35,6 +38,7 @@ class TRestrictionCut
     public :
     TRestrictionCut ( int _pos , TRestrictionEnzyme *_e ) ///< Constructor
         { pos = _pos ; e = _e ; }
+	virtual ~TRestrictionCut () {} ; ///< Dummy destructor
         
     virtual void linearUpdate ( int w , int h ) ;
     virtual wxString getNameAndPosition () ; ///< Returns the enzyme name and cut pusition

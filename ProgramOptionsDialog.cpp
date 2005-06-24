@@ -485,11 +485,12 @@ wxColour *TEnzymeRules::getColor ( int cuts )
 	if ( cuts == 1 ) return &col1 ;
 	if ( cuts == 2 ) return &col2 ;
 	if ( cuts == 3 ) return &col3 ;
+	return &col1 ; // Dummy
 	}    
 
 void TEnzymeRules::getVectorCuts ( TVector *v )
 {
-    int a , b , c ;
+    int a , b ;
     for ( a = 0 ; a < v->re.GetCount() ; a++ )
 	v->getCuts ( v->re[a] , v->rc , false ) ;
     if ( !useit ) return ;

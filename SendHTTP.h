@@ -12,6 +12,8 @@ class myExternal
 	{
 	public :
 	myExternal () ; ///< Constructor
+	virtual ~myExternal () {} ; ///< Destructor
+	
 	virtual int copyFile ( wxString url , wxString file , int _t = -1 ) ; ///< Copy a file from URL to local
 	virtual wxString getText ( wxString url ) ; ///< Get the text at an URL
 //	virtual wxString getPostText

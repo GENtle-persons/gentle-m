@@ -13,7 +13,7 @@ class TUReadSeq
     {
     public :
     TUReadSeq ( wxString _filename = _T("") ) ; ///< Constructor
-	~TUReadSeq () {} ; ///< Destructor (empty)
+	virtual ~TUReadSeq () {} ; ///< Destructor (empty)
 
     virtual void getFormat () ; ///< Try to determine format
     virtual int getSequenceNames () ; ///< Get the names of the sequences

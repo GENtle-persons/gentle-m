@@ -22,6 +22,8 @@ class TPDB
     {
     public :
     TPDB () ; ///< Constructor
+	virtual ~TPDB () {} ; ///< Dummy destructor
+	
     virtual void load ( wxString s ) ; ///< Load file
     virtual void paste ( wxString s ) ; ///< Take pasted text
     virtual void remap () ; ///< Parse and generate sequences
