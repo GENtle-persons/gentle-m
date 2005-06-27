@@ -35,7 +35,6 @@ class FindSequenceDialog : public wxDialog
     
     ChildBase *c ; ///< Pointer to calling ChildBase class
     wxTextCtrl *t ; ///< The text control
-    int bo , fh ;
     int p , last ;
     wxListBox *lb ; ///< The results list box control
     wxArrayInt vi ;

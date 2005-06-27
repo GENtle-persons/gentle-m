@@ -1,5 +1,13 @@
 // !$*UTF8*$!
 {
+	9141598008681904001E63F9 /* codon_catalog.csv */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1400, 543}}";
+			sepNavSelRange = "{307, 0}";
+			sepNavVisRect = "{{0, 0}, {925, 543}}";
+			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
+		};
+	};
 	917AF87E086C27D400781D82 /* PBXBookmark */ = {
 		isa = PBXBookmark;
 		fRef = 9180A6850866FD46000C7D5E /* PrimerDesign.cpp */;
@@ -71,12 +79,17 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 141303659;
-			PBXWorkspaceStateSaveDate = 141303659;
+			PBXPerProjectTemplateStateSaveDate = 141549354;
+			PBXWorkspaceStateSaveDate = 141549354;
 		};
 		perUserProjectItems = {
-			917AF87E086C27D400781D82 /* PBXBookmark */ = 917AF87E086C27D400781D82 /* PBXBookmark */;
-			917AF885086C293100781D82 /* PBXTextBookmark */ = 917AF885086C293100781D82 /* PBXTextBookmark */;
+			917AF87E086C27D400781D82 = 917AF87E086C27D400781D82 /* PBXBookmark */;
+			917AF885086C293100781D82 = 917AF885086C293100781D82 /* PBXTextBookmark */;
+			91E7A677086FDF3900223203 /* PBXTextBookmark */ = 91E7A677086FDF3900223203 /* PBXTextBookmark */;
+			91E7A6970870225400223203 /* PBXTextBookmark */ = 91E7A6970870225400223203 /* PBXTextBookmark */;
+			91E7A6980870225400223203 /* PBXTextBookmark */ = 91E7A6980870225400223203 /* PBXTextBookmark */;
+			91E7A69B087022CB00223203 /* PBXTextBookmark */ = 91E7A69B087022CB00223203 /* PBXTextBookmark */;
+			91E7A69C0870260F00223203 /* PBXTextBookmark */ = 91E7A69C0870260F00223203 /* PBXTextBookmark */;
 		};
 		sourceControlManager = 9180A64F0866FCF9000C7D5E /* Source Control */;
 		userBuildSettings = {
@@ -239,6 +252,14 @@
 			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
 		};
 	};
+	9180A6710866FD45000C7D5E /* FindSequenceDialog.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {734, 5866}}";
+			sepNavSelRange = "{1644, 44}";
+			sepNavVisRect = "{{0, 657}, {459, 186}}";
+			sepNavWindowFrame = "{{38, 48}, {964, 672}}";
+		};
+	};
 	9180A6740866FD45000C7D5E /* gp_out.cpp */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {925, 2464}}";
@@ -331,7 +352,7 @@
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {925, 12656}}";
 			sepNavSelRange = "{17168, 0}";
-			sepNavVisRect = "{{0, 6563}, {925, 543}}";
+			sepNavVisRect = "{{0, 6569}, {925, 543}}";
 			sepNavWindowFrame = "{{38, 48}, {964, 672}}";
 		};
 	};
@@ -466,5 +487,53 @@
 			sepNavVisRect = "{{0, 0}, {925, 543}}";
 			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
 		};
+	};
+	91E7A677086FDF3900223203 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9180A6850866FD46000C7D5E /* PrimerDesign.cpp */;
+		name = "PrimerDesign.cpp: 491";
+		rLen = 0;
+		rLoc = 17168;
+		rType = 0;
+		vrLen = 1524;
+		vrLoc = 16179;
+	};
+	91E7A6970870225400223203 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "error: no matching function for call to 'MyFrame::GetPosition(int*, double (*)(double))'";
+		fRef = 9180A6710866FD45000C7D5E /* FindSequenceDialog.cpp */;
+		rLen = 1;
+		rLoc = 51;
+		rType = 1;
+	};
+	91E7A6980870225400223203 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9180A6710866FD45000C7D5E /* FindSequenceDialog.cpp */;
+		name = "myapp()->frame->GetPosition ( &x1, &y1 ) ;";
+		rLen = 44;
+		rLoc = 1644;
+		rType = 0;
+		vrLen = 334;
+		vrLoc = 1531;
+	};
+	91E7A69B087022CB00223203 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9180A6710866FD45000C7D5E /* FindSequenceDialog.cpp */;
+		name = "myapp()->frame->GetPosition ( &x1, &y1 ) ;";
+		rLen = 44;
+		rLoc = 1644;
+		rType = 0;
+		vrLen = 334;
+		vrLoc = 1531;
+	};
+	91E7A69C0870260F00223203 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9180A6710866FD45000C7D5E /* FindSequenceDialog.cpp */;
+		name = "myapp()->frame->GetPosition ( &x1, &y1 ) ;";
+		rLen = 44;
+		rLoc = 1644;
+		rType = 0;
+		vrLen = 334;
+		vrLoc = 1531;
 	};
 }
