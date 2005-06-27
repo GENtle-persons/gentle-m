@@ -18,34 +18,44 @@ END_EVENT_TABLE()
 FindSequenceDialog::FindSequenceDialog ( wxWindow *parent, const wxString& title )
          : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 350 , 400 ) )
     {
+	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+	wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
     p = 0 ;
     c = (ChildBase*) parent ;
-    bo = 5 ;
-    fh = 20 ;
-    allowed_chars = _T("AGCT") ; // For DNA search
-    int w , h ;
-    GetClientSize ( &w , &h ) ;
-    t = new wxTextCtrl ( this , SH_TEXT , _T("") , wxPoint ( bo , bo ) ,
-                            wxSize ( w-bo*2 , fh ) ) ;
-                            
-    wxButton *f = new wxButton ( this , SH_SEARCH , txt("b_find") , wxPoint ( bo , fh+bo*2 ) , 
-                            wxSize ( w/3 , fh ) ) ;
+    allowed_chars = _T("AGCT") ; // For DNA search; currently ignored
 
-    new wxButton ( this , SH_CANCEL , txt("b_cancel") , wxPoint ( w*2/3-bo , fh+bo*2 ) , 
-                            wxSize ( w/3 , fh ) ) ;
+    t = new wxTextCtrl ( this , SH_TEXT , _T("") ) ;
+
+    wxButton *f = new wxButton ( this , SH_SEARCH , txt("b_find") ) ;
+
+	h0->Add ( f , 1 , wxALL|wxEXPAND , 2 ) ;
+	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxALL|wxEXPAND , 2 ) ;
+	h0->Add ( new wxButton ( this , SH_CANCEL , txt("b_cancel") ) , 1 , wxALL|wxEXPAND , 2 ) ;
                             
-    lb = new wxListBox ( this , SH_LB , wxPoint ( bo , fh*2+bo*3 ) , wxSize ( w - bo*2 , h - fh*2 - bo*4 ) ) ;
-    
+    lb = new wxListBox ( this , SH_LB ) ;
+	
+	v0->Add ( t , 0 , wxALL|wxEXPAND , 2 ) ;
+	v0->Add ( h0 , 0 , wxALL|wxEXPAND , 2 ) ;
+	v0->Add ( lb , 1 , wxALL|wxEXPAND , 2 ) ;
+	
     f->SetDefault () ;
     t->SetFocus () ;
+
+	SetSizer ( v0 ) ;
+	v0->Layout () ;
+
     Center () ;
-    int x , y ;
+
+    int x , y , w , h , x1 , y1 ;
+    GetClientSize ( &w , &h ) ;
     GetPosition ( &x , &y ) ;
+	myapp()->frame->GetPosition ( &x1, &y1 ) ;
     x -= w ;
     y -= h/2 ;
-    if ( x < bo ) x = bo ;
-    if ( y < bo ) y = bo ;
+    if ( x < x1+5 ) x = x1+5 ;
+    if ( y < y1+5 ) y = y1+5 ;
     Move ( x , y ) ;
+	
     }
     
 void FindSequenceDialog::OnLB ( wxCommandEvent &ev )
@@ -253,7 +263,7 @@ void FindSequenceDialog::aaSearch ()
     
 void FindSequenceDialog::aaSubSearch ( const wxString &s , int start , int dir , wxString rf )
 	{
-	int a , b ;
+	int a ;
 	wxChar codon[4] ;
 	codon[3] = 0 ;
 	wxString res ;
@@ -301,8 +311,8 @@ void FindSequenceDialog::aaSubSearch ( const wxString &s , int start , int dir ,
     
 void FindSequenceDialog::itemSearch ()
     {
-    int a , b ;
-    TVector *v = c->vec ;
+    int a ;
+	TVector *v = c->vec ;
     wxString s = t->GetValue().Upper() ;
     for ( a = 0 ; a < v->items.size() ; a++ )
         {
@@ -322,7 +332,7 @@ void FindSequenceDialog::itemSearch ()
     
 void FindSequenceDialog::restrictionSearch ()
     {
-    int a , b ;
+    int a ;
     TVector *v = c->vec ;
     wxString s = t->GetValue().Upper() ;
     for ( a = 0 ; a < v->rc.size() ; a++ )
@@ -342,7 +352,7 @@ void FindSequenceDialog::restrictionSearch ()
 void FindSequenceDialog::sequenceSearch ( bool invers )
     {
     bool cont = true ;
-    int a , b ;
+    int a ;
     wxString sub = t->GetValue().Upper() ;
     p = 0 ;
     if ( sub.IsEmpty() ) return ;
