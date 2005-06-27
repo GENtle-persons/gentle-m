@@ -1168,6 +1168,7 @@ void TAlignment::OnSeqPrint(wxCommandEvent& event)
 void TAlignment::RunPhylip ( int cmd )
 	{
 	TPhylip phylip ;
+	if ( !phylip.IsOK() ) return ; // Something's wrong
 	wxString data ;
 	
 	unsigned int a , b ;

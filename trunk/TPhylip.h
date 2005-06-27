@@ -45,10 +45,12 @@ class TPhylip
 	virtual wxString consense ( wxString s ) ;
 	virtual wxString retree ( wxString s ) ;
 	
-	private :
-	virtual wxString runapp ( const wxString app , const wxString s ) ;
+	virtual bool IsOK () ;
 	
-	wxString pylip_dir ;
+	private :
+	virtual wxString runapp ( wxString app , const wxString s ) ;
+	
+	wxString phylip_dir ;
 	} ;
 
 

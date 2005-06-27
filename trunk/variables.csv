@@ -796,4 +796,4 @@
 "m_phylip_consense","",""
 "m_phylip_retree","",""
 "t_phylogenetic_tree","Phylogenetic tree","Phylogenetischer Baum"
-
+"t_select_phlip_dir","Select PHYLIP executable directory","Das lokale Verzeichnis mit den PHYLIP-Programmen auswählen"

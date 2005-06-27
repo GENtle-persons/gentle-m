@@ -1,14 +1,32 @@
 #include "TPhylip.h"
 
+#include "main.h"
 #include <wx/file.h>
 
 TPhylip::TPhylip ()
 	{
-	pylip_dir = _T("C:\\Downloads\\phylip-3.63\\exe") ; // TESTING!!!
+	phylip_dir = myapp()->frame->LS->getOption ( _T("PHYLIP_DIR") , "" ) ;
+	if ( phylip_dir.IsEmpty() )
+		{
+		phylip_dir = wxDirSelector ( txt("t_select_phlip_dir") ) ;
+		if ( !phylip_dir.IsEmpty() ) myapp()->frame->LS->setOption ( _T("PHYLIP_DIR") , phylip_dir ) ;
+		}
+//	phylip_dir = _T("C:\\Downloads\\phylip-3.63\\exe") ; // TESTING!!!
 	}
 
 TPhylip::~TPhylip ()
 	{
+	}
+
+bool TPhylip::IsOK ()
+	{
+#ifdef __WXMAC__
+	// Mac version is broken due to strange pipe problem with the "open -a" command
+	wxMessageBox ( "Mac version is broken due to strange pipe problem with the 'open -a' command" ) ;
+	return false ;
+#endif
+	if ( phylip_dir.IsEmpty() ) return false ;
+	return true ;
 	}
 
 //*************************** Interface methods
@@ -225,15 +243,21 @@ wxString TPhylip::retree ( wxString s )
 
 //***************************
 
-wxString TPhylip::runapp ( const wxString app , const wxString s )
+wxString TPhylip::runapp ( wxString app , const wxString s )
 	{
 	wxString cmd ;
-	wxString tmpdir = pylip_dir ;
+	wxString tmpdir = phylip_dir ;
 	wxString datafile = tmpdir + _T("/data.txt") ;
 	wxString cmdfile = tmpdir + _T("/cmd.txt") ;
 	wxString dummy = tmpdir + _T("/dummy.txt") ;
-	cmd += pylip_dir + _T("/") + app + _T(" < ") + cmdfile + _T(" > ") + dummy ;
-	
+
+#ifdef __WXMAC__
+	// Mac version is broken due to strange pipe problem with the "open -a" command
+	cmd += _T("open ") + phylip_dir + _T("/") + app + _T(".app < ") + cmdfile + _T(" > ") + dummy ;
+#else
+	cmd += phylip_dir + _T("/") + app + _T(" < ") + cmdfile + _T(" > ") + dummy ;
+#endif
+
 	// Write data file
 	wxFile data ( datafile , wxFile::write ) ;
 	data.Write ( s ) ;
@@ -245,6 +269,13 @@ wxString TPhylip::runapp ( const wxString app , const wxString s )
 	command.Write ( _T("Y\n") ) ;
 	command.Close () ;	
 	
+#ifdef __WXMAC__
+	wxMessageBox ( cmd ) ;
+	wxString owd = wxGetWorkingDirectory () ;
+	wxSetWorkingDirectory ( tmpdir ) ;
+	wxExecute ( cmd , wxEXEC_SYNC ) ;
+	wxSetWorkingDirectory ( owd ) ;
+#else	
 	// Write batch file
 	wxString batchfile = tmpdir + _T("/run.bat") ;
 	wxFile bat ( batchfile , wxFile::write ) ;
@@ -264,6 +295,7 @@ wxString TPhylip::runapp ( const wxString app , const wxString s )
 	wxRemoveFile ( batchfile ) ;
 	wxRemoveFile ( cmdfile ) ;
 //	wxRemoveFile ( datafile ) ;
+#endif
 
 	wxFile outtree ( tmpdir + _T("/outtree") ) ;
 	long l = outtree.Length () ;
