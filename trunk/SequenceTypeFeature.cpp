@@ -8,6 +8,7 @@ void SeqFeature::show ( wxDC& dc )
     myass ( can , "SeqFeature::show can==NULL" ) ;
     myass ( vec , "SeqFeature::show vec==NULL" ) ;
     myass ( can->smallFont , "SeqFeature::show can->smallFont==NULL" ) ;
+    mylog ( "SeqFeature::show" , "BEGIN" ) ;
     int cw2 , ch2 ;
     dc.SetFont(*can->smallFont);
     dc.GetTextExtent ( _T("A") , &cw2 , &ch2 ) ;
@@ -36,9 +37,11 @@ void SeqFeature::show ( wxDC& dc )
     bool drawOffsets = true ;
     if ( can->child && can->child->def == _T("alignment") ) drawOffsets = false ;
 
+    mylog ( "SeqFeature::show" , "ENTERING OUTER LOOP" ) ;
     for ( int l = 0 ; l < pl.maxlevels ; l++ )
         {
         int pcnt = 0 ;
+	     mylog ( "SeqFeature::show" , wxString::Format ( _T("Outer loop (%d of %d)") , l , pl.maxlevels ) ) ;
         for ( a = 0 ; a < pos.r.size() ; a++ )
             {
             if ( can->hardstop > -1 && a > can->hardstop ) break ;
@@ -239,6 +242,7 @@ void SeqFeature::show ( wxDC& dc )
     dc.SetBackgroundMode ( bm ) ;
     dc.SetTextBackground ( tbg ) ;
     dc.SetTextForeground ( tfg ) ;
+    mylog ( "SeqFeature::show" , "END" ) ;
     }
     
 void SeqFeature::initFromTVector ( TVector *v )

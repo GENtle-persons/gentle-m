@@ -1239,17 +1239,17 @@ void SequenceCanvas::OnDraw(wxDC& dc)
         mylog ( "SequenceCanvas::OnDraw" , "4a" ) ;
         safeShow ( pdc ) ;
         mylog ( "SequenceCanvas::OnDraw" , "4b" ) ;
-        mylog ( "!" , "2" ) ;
+        mylog ( "SequenceCanvas::OnDraw" , "4c" ) ;
         pdc.SetDeviceOrigin ( 0 , 0 ) ;
         dc.Blit ( xoff , yoff , w , h , &pdc , 0 , 0 ) ;
-        mylog ( "!" , "3" ) ;
+        mylog ( "SequenceCanvas::OnDraw" , "4d" ) ;
         }
     else 
         { // Direct DC
-        mylog ( "!" , "1a" ) ;
+        mylog ( "SequenceCanvas::OnDraw" , "5a" ) ;
         dc.Clear() ;
         safeShow ( dc ) ;
-        mylog ( "!" , "2a" ) ;
+        mylog ( "SequenceCanvas::OnDraw" , "5b" ) ;
         }
     drawing = false ;
     dc.SetFont ( *wxNORMAL_FONT ) ; //!!!
@@ -1896,9 +1896,12 @@ void SequenceCanvas::startEdit ( wxString id )
     {
     mylog ( "startEdit" , "1" ) ;
     setEditMode ( true ) ;
-    findID(id)->s.Append ( _T(" ") ) ;
-    if ( child ) child->vec->addToSequence ( _T(" ") ) ;
-    for ( int a = 0 ; a < seq.GetCount() ; a++ ) seq[a]->editMode ( true ) ;
+    if ( !forceoverwrite ) 
+	 	{
+		findID(id)->s.Append ( _T(" ") ) ;
+		if ( child ) child->vec->addToSequence ( _T(" ") ) ;
+		}
+    for ( unsigned int a = 0 ; a < seq.GetCount() ; a++ ) seq[a]->editMode ( true ) ;
     arrange () ;
     if ( _from == -1 ) mark ( id , 1 , 1 , 2 ) ;
     else mark ( id , _from , _from , 2 ) ;
@@ -1910,7 +1913,7 @@ void SequenceCanvas::stopEdit ()
     {
     mylog ( "stopEdit" , "1" ) ;
     setEditMode ( false ) ;
-    if ( child && child->vec )
+    if ( child && child->vec && !forceoverwrite )
     	{
 	    if ( child->vec->getSequenceLength() < 2 ) child->vec->setSequence ( _T("") ) ;
         else child->vec->eraseSequence ( child->vec->getSequenceLength()-1 , 1 ) ;

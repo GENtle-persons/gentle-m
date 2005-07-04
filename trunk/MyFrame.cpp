@@ -107,8 +107,8 @@ MyFrame::MyFrame(wxWindow *parent,
     entries[35].Set(wxACCEL_CTRL, WXK_TAB, MDI_NEXT_WINDOW);
     entries[36].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_TAB, MDI_PREV_WINDOW);
     entries[37].Set(wxACCEL_NORMAL, WXK_F8, MDI_TOGGLE_IDNA);
-//    entries[38].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_F12, Y___);
-    entries[38].Set(wxACCEL_CTRL, WXK_F12, MDI_GRAPH);
+    entries[38].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_F12, Y___);
+//    entries[38].Set(wxACCEL_CTRL, WXK_F12, MDI_GRAPH);
     entries[39].Set(wxACCEL_CTRL, WXK_F1, MDI_ABOUT);
     entries[40].Set(wxACCEL_NORMAL, WXK_F9, MDI_AUTO_ANNOTATE);
     
