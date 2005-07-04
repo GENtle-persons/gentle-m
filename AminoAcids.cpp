@@ -381,21 +381,35 @@ void TAminoAcids::showSequence ()
     // Plot demo
     if ( inlinePlot->GetStringSelection() == txt("t_chou_fasman") )
         {
+		  mylog ( "TAminoAcids::showSequence" , "CHOU_FASMAN 1" ) ;
         SeqPlot *seqP = new SeqPlot ( sc ) ;
+		  mylog ( "TAminoAcids::showSequence" , "CHOU_FASMAN 2" ) ;
         sc->seq.Add ( seqP ) ;
+		  mylog ( "TAminoAcids::showSequence" , "CHOU_FASMAN 3" ) ;
         seqP->initFromTVector ( vec ) ;
+		  mylog ( "TAminoAcids::showSequence" , "CHOU_FASMAN 4" ) ;
         seqP->setLines ( 1 ) ;
+		  mylog ( "TAminoAcids::showSequence" , "CHOU_FASMAN 5" ) ;
         seqP->useChouFasman() ;
+		  mylog ( "TAminoAcids::showSequence" , "CHOU_FASMAN 6" ) ;
         seqP->takesMouseActions = false ;
+		  mylog ( "TAminoAcids::showSequence" , "CHOU_FASMAN 7" ) ;
         }
     else if ( inlinePlot->GetStringSelection() == txt("t_ncoils") )
         {
+		  mylog ( "TAminoAcids::showSequence" , "NCOILS 1" ) ;
         SeqPlot *seqP = new SeqPlot ( sc ) ;
+		  mylog ( "TAminoAcids::showSequence" , "NCOILS 2" ) ;
         sc->seq.Add ( seqP ) ;
+		  mylog ( "TAminoAcids::showSequence" , "NCOILS 3" ) ;
         seqP->initFromTVector ( vec ) ;
+		  mylog ( "TAminoAcids::showSequence" , "NCOILS 4" ) ;
         seqP->setLines ( 1 ) ;
+		  mylog ( "TAminoAcids::showSequence" , "NCOILS 5" ) ;
         seqP->useNcoils() ;
+		  mylog ( "TAminoAcids::showSequence" , "NCOILS 6" ) ;
         seqP->takesMouseActions = false ;
+		  mylog ( "TAminoAcids::showSequence" , "NCOILS 7" ) ;
         }
     mylog ( "TAminoAcids::showSequence" , "5" ) ;
     
@@ -588,24 +602,27 @@ void TAminoAcids::Redo(wxCommandEvent& event)
     
 void TAminoAcids::OnHorizontal ( wxCommandEvent& event )
     {
+	 mylog ( "TAminoAcids::OnHorizontal" , "BEGIN" ) ;
     sc->toggleHorizontal () ;
     sc->arrange () ;
     sc->SilentRefresh() ;    
+	 mylog ( "TAminoAcids::OnHorizontal" , "END" ) ;
     }
     
 void TAminoAcids::OnIP ( wxCommandEvent& event )
     {
+    if ( sc->getEditMode() ) sc->stopEdit() ;
     showSequence () ;
     }
     
 void TAminoAcids::OnListBox ( wxCommandEvent& event )
     {
-//    if ( sc->getEditMode() ) sc->stopEdit() ;
     handleListBox ( lb->GetStringSelection() ) ;
     }
 
 void TAminoAcids::handleListBox ( wxString t )
     {
+	 mylog ( "TAminoAcids::handleListBox" , "1" ) ;
     bool update = false ;
     if ( t == lastLBsel ) update = true ;
     else lastLBsel = t ;
@@ -623,6 +640,7 @@ void TAminoAcids::handleListBox ( wxString t )
         sc2 = NULL ;
         }
         
+	 mylog ( "TAminoAcids::handleListBox" , wxString::Format ( _T("2 : %s") , t.mb_str() ) ) ;
     if ( t == txt("desc") )
         {
         if ( update ) desc->SetValue ( vec->getDescription() )  ;
@@ -672,8 +690,10 @@ void TAminoAcids::handleListBox ( wxString t )
               t == txt("t_aa_plot_pi" ) ||
               t == txt("t_aa_plot_hp" ) )
         {
+			mylog ( "TAminoAcids::handleListBox" , "2a" ) ;
         if ( !update )
            {
+			mylog ( "TAminoAcids::handleListBox" , "2a1" ) ;
            sc2 = new SequenceCanvas(this, wxDefaultPosition, wxSize(250, 90));
            sc2->blankline = 1 ;
            sc2->child = this ;
@@ -686,13 +706,19 @@ void TAminoAcids::handleListBox ( wxString t )
            }
         else
            {
+			mylog ( "TAminoAcids::handleListBox" , "2a2" ) ;
            CLEAR_DELETE ( sc2->seq ) ;
            }
 
+			mylog ( "TAminoAcids::handleListBox" , "2b" ) ;
         SeqPlot *seqP = new SeqPlot ( sc2 ) ;
+			mylog ( "TAminoAcids::handleListBox" , "2c" ) ;
         sc2->seq.Add ( seqP ) ;
+			mylog ( "TAminoAcids::handleListBox" , "2d" ) ;
         seqP->initFromTVector ( vec ) ;
+			mylog ( "TAminoAcids::handleListBox" , "2e" ) ;
         seqP->setLines ( 6 ) ;
+			mylog ( "TAminoAcids::handleListBox" , "2f" ) ;
         
         if ( t == txt("t_chou_fasman") ) seqP->useChouFasman() ;
         else if ( t == txt("t_ncoils") ) seqP->useNcoils () ;
@@ -700,12 +726,17 @@ void TAminoAcids::handleListBox ( wxString t )
         else if ( t == txt("t_aa_plot_pi") ) seqP->usePI () ;
         else if ( t == txt("t_aa_plot_hp") ) seqP->useHP () ;
         
+			mylog ( "TAminoAcids::handleListBox" , "2g" ) ;
         if ( update )
            {
+			mylog ( "TAminoAcids::handleListBox" , "2g1" ) ;
            sc2->arrange() ;
+			mylog ( "TAminoAcids::handleListBox" , "2g2" ) ;
            sc2->SilentRefresh() ;
            }
+			mylog ( "TAminoAcids::handleListBox" , "2h" ) ;
         }
+	 mylog ( "TAminoAcids::handleListBox" , "3" ) ;
     if ( !update )
         {
 //        GetToolBar()->Refresh () ;
@@ -713,6 +744,7 @@ void TAminoAcids::handleListBox ( wxString t )
         lb->Refresh () ;
         }
     sc->SetFocus() ;
+	 mylog ( "TAminoAcids::handleListBox" , "4" ) ;
     }
     
 void TAminoAcids::updateToolbar ()

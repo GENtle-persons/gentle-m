@@ -56,11 +56,7 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , wxString title
     justload = false ;
     
     int w , h ;
-#ifdef __WXMSW__
     GetClientSize ( &w , &h ) ;
-#else // LINUX
-    GetClientSize ( &w , &h ) ;
-#endif
 
     wxClientDC dc ( (wxWindow*) this ) ;
     dc.GetTextExtent ( _T("X") , &bo , &th ) ;

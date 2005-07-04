@@ -31,7 +31,8 @@ void SeqBasic::editMode ( bool on )
 		}
 	else
  		{
- 		if ( !s.IsEmpty() && s.GetChar ( s.length() - 1 ) == ' ' )
+		if ( !whatsthis().StartsWith ( _T("PRIMER") ) &&
+ 				!s.IsEmpty() && s.GetChar ( s.length() - 1 ) == ' ' )
  			s = s.Left ( s.length() - 1 ) ;
    		}        
 	}    

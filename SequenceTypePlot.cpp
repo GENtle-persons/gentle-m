@@ -121,6 +121,7 @@ void SeqPlot::fixMinMax ( float &f )
 void SeqPlot::show ( wxDC& dc )
     {
     if ( s.IsEmpty() ) return ;
+    mylog ( "SeqPlot::show" , "1" ) ;
     dc.SetFont(*can->font);
     wxColour tbg = dc.GetTextBackground () ;
     wxColour tfg = dc.GetTextForeground () ;
@@ -143,9 +144,12 @@ void SeqPlot::show ( wxDC& dc )
     xb += xa ;
     int lx = 0 ;
     startOfLine = true ;
+    mylog ( "SeqPlot::show" , "2" ) ;
     for ( a = 0 ; a < pos.p.GetCount() ; a++ )
         {
+			mylog ( "SeqPlot::show" , "2a" ) ;
         if ( can->hardstop > -1 && a > can->hardstop ) break ;
+			mylog ( "SeqPlot::show" , "2b" ) ;
         b = pos.p[a] ;
         int tx = pos.r[a].x , ty = pos.r[a].y ;
         int tz = ty + can->charheight * lines ;
@@ -157,6 +161,7 @@ void SeqPlot::show ( wxDC& dc )
         if ( can->getDrawAll() ) insight = true ;
         if ( !insight && ty > yb ) a = pos.p.GetCount() ;
         if ( b > 0 && !insight ) cnt++ ;
+			mylog ( "SeqPlot::show" , "2c" ) ;
         if ( b > 0 && insight ) // Character
            {
            if ( lx == 0 ) lx = tx ;
@@ -164,17 +169,20 @@ void SeqPlot::show ( wxDC& dc )
            if ( can->isPrinting() )
 	       {
 		   if (getMark ( a ) == 1 )
-		   {
+			   {
 		       dc.SetBrush ( *MYBRUSH ( wxColour ( 230 , 230 , 230 ) ) ) ;
 		       dc.SetPen(*wxTRANSPARENT_PEN);
 		       dc.DrawRectangle ( tx , ty , can->charwidth , can->charheight ) ;
-		   }
+			   }
+			mylog ( "SeqPlot::show" , "2c1" ) ;
 		   if ( !can->getPrintToColor() )
-		   {
+			   {
 		       dc.SetBackgroundMode ( wxTRANSPARENT ) ;
 		       dc.SetTextForeground ( *wxBLACK ) ;
-		   }
+			   }
 	       }
+
+			mylog ( "SeqPlot::show" , wxString::Format ( _T("2c2 (type %d)") , type ) ) ;
            switch ( type )
               {
               case CHOU_FASMAN : showChouFasman ( dc , b-1 , tx , ty , lx ) ; break ;
@@ -186,12 +194,15 @@ void SeqPlot::show ( wxDC& dc )
            lx = tx + can->charwidth ;
            cnt++ ;
            startOfLine = false ;
+			mylog ( "SeqPlot::show" , "2c3" ) ;
            }
         else if ( insight ) // Front
            {           
+			mylog ( "SeqPlot::show" , "2d1" ) ;
            lx = 0 ;
            startOfLine = true ;
            if ( !can->isMiniDisplay() ) continue ;
+			mylog ( "SeqPlot::show" , "2d2" ) ;
            dc.SetFont(*can->smallFont);
            if ( type == CHOU_FASMAN ) t = _T("Chou-Fasman") ;
            if ( type == COILED_COIL ) t = _T("Coiled-coil") ;
@@ -204,11 +215,13 @@ void SeqPlot::show ( wxDC& dc )
               t = txt(t) ;
               t += wxString::Format( _T(" [%d]") , hp_window ) ;
               }
+			mylog ( "SeqPlot::show" , "2d3" ) ;
            dc.SetTextForeground ( *wxBLACK ) ;
            int tw , th ;
            dc.GetTextExtent ( t , &tw , &th ) ;
            int ty = pos.r[a].y ;
            ty += lines * can->charheight ;
+			mylog ( "SeqPlot::show" , "2d4" ) ;
 #ifdef __WXGTK__
 	   ty += th / 2 ;
 	   dc.DrawText ( t , pos.r[a].x , ty ) ;
@@ -218,7 +231,9 @@ void SeqPlot::show ( wxDC& dc )
 #endif
            dc.SetFont(*can->font);
            }
+			mylog ( "SeqPlot::show" , "2e" ) ;
         }
+    mylog ( "SeqPlot::show" , "3" ) ;
     dc.SetBackgroundMode ( bm ) ;
     dc.SetTextBackground ( tbg ) ;
     dc.SetTextForeground ( tfg ) ;
@@ -263,10 +278,12 @@ void SeqPlot::showNcoils ( wxDC &dc , int b , int tx , int ty , int lx )
     
 void SeqPlot::showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx )
     {
+//	 mylog ( "SeqPlot::showChouFasman" , "1" ) ;
     int bottom = ty + lines * can->charheight ;
     int ch = can->charheight / 2 ;
     int cw = can->charwidth ;
     int u ;
+//	 mylog ( "SeqPlot::showChouFasman" , "2" ) ;
     for ( u = 1 ; u < d1.GetCount() ; u++ )
         {
         wxPen *pen = wxRED_PEN ;
@@ -303,12 +320,14 @@ void SeqPlot::showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx )
            {
 		   if ( type == CHOU_FASMAN )
 		   	  {
+//	 mylog ( "SeqPlot::showChouFasman" , "2a" ) ;
 			  if ( u == 1 ) drawSymbol ( 'a' , dc , lx-cw , ty+(u-1)*ch , lx-2 , ty+(u-1)*ch+ch ) ; // Alpha
 			  else if ( u == 2 ) drawSymbol ( 'b' , dc , lx-cw , ty+(u-1)*ch , lx-2 , ty+(u-1)*ch+ch ) ; // Beta
 			  else drawSymbol ( 'T' , dc , lx-cw , ty+(u-1)*ch , lx-2 , ty+(u-1)*ch+ch ) ; // Turn
 			  }
 		   else if ( type == COILED_COIL )
 		   	  {
+//	 mylog ( "SeqPlot::showChouFasman" , "2b" ) ;
 	   	   	  if ( u == 1 ) dc.DrawText ( _T("14") , lx-cw*2 , ty+(u-1)*ch-ch/2 ) ;
 	   	   	  else if ( u == 2 ) dc.DrawText ( _T("21") , lx-cw*2 , ty+(u-1)*ch-ch/2 ) ;
 	   	   	  else if ( u == 3 ) dc.DrawText ( _T("28") , lx-cw*2 , ty+(u-1)*ch-ch/2 ) ;
@@ -316,13 +335,18 @@ void SeqPlot::showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx )
            }
         }
     
+//	 mylog ( "SeqPlot::showChouFasman" , "3" ) ;
     showPlot ( dc , b , tx , ty , lx , bottom - d1.GetCount() * ch - ty ) ;
+//	 mylog ( "SeqPlot::showChouFasman" , "4" ) ;
     }
         
     
 void SeqPlot::showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph )
     {    
+	mylog ( "SeqPlot::showPlot" , "1" ) ;
     if ( !can->isMiniDisplay() ) return ;
+    if ( ((int)data_h) == 0 ) data_h = 1 ;//return ; // Flat data or something...
+	mylog ( "SeqPlot::showPlot" , "2" ) ;
     int ch = can->charheight ;
     int cw = can->charwidth ;
     int bottom = ty + lines * can->charheight ;
@@ -330,18 +354,22 @@ void SeqPlot::showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph )
     
     if ( can->isMiniDisplay() )
         {
+	mylog ( "SeqPlot::showPlot" , "2a" ) ;
         if ( b == 0 ) plotr = wxRect ( lx , bottom - ph , 0 , ph ) ;
         plotr.SetWidth ( tx + cw - plotr.GetLeft() ) ;
         }
     
+	mylog ( "SeqPlot::showPlot" , "3" ) ;
     // Dotted lines
     dc.SetPen ( *wxBLACK_PEN ) ;
     for ( float j = data_min + data_step ; j + data_step <= data_max ; j += data_step )
         {
+			myass ( ((int)data_h) != 0 , "SeqPlot::showPlot divides by 0!" ) ;
         int k = bottom - ( (int)(j - data_min) ) * ph / ((int)data_h) ;
         drawDottedLine ( dc , lx , k , tx + cw , k ) ;
         }
         
+	mylog ( "SeqPlot::showPlot" , "4" ) ;
     if ( can->isMiniDisplay() && b > 0 && b % 50 == 0 )
         {
         drawDottedLine ( dc , lx , bottom - ph , lx , bottom + ch/2 ) ;
@@ -354,6 +382,7 @@ void SeqPlot::showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph )
         }
     
     // Colored curves
+	mylog ( "SeqPlot::showPlot" , "5" ) ;
     for ( u = 0 ; u < prop[b].data.size() ; u++ )
         {
         wxPen *pen = wxRED_PEN ;
@@ -372,6 +401,7 @@ void SeqPlot::showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph )
         }
         
     // Border lines
+	mylog ( "SeqPlot::showPlot" , "6" ) ;
     dc.SetPen ( *wxBLACK_PEN ) ;
     dc.DrawLine ( lx , bottom , tx + cw , bottom ) ;
     dc.DrawLine ( lx , bottom - ph , tx + cw , bottom - ph ) ;
@@ -392,10 +422,13 @@ void SeqPlot::showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph )
         dc.DrawLine ( tx - cw/3 , bottom , tx , bottom ) ;
         dc.SetFont ( cf ) ;
         }
+
+	mylog ( "SeqPlot::showPlot" , "7" ) ;
     if ( b + 1 == s.length () )
         {
         dc.DrawLine ( tx+cw , bottom - ph , tx+cw , bottom ) ;
         }
+	mylog ( "SeqPlot::showPlot" , "8" ) ;
     }
     
 void SeqPlot::drawSymbol ( char c , wxDC &dc , int x1 , int y1 , int x2 , int y2 )
@@ -485,21 +518,26 @@ void SeqPlot::setLines ( int l )
 
 void SeqPlot::useNcoils ()
     {
+	 mylog ( "SeqPlot::useNcoils" , "BEGIN" ) ;
     type = COILED_COIL ;
     d1.Clear () ;
     d2.Clear () ;
     d3.Clear () ;
     if ( s.IsEmpty() ) return ;
+	 mylog ( "SeqPlot::useNcoils" , "1" ) ;
     l_top = 4 ;
     l_bottom = 0 ;
 //    if ( l_top + l_bottom + 1 > lines ) setLines ( l_top + l_bottom + 1 ) ;
 
     int a , b ;
 	wxArrayFloat af[3] ;
-	for ( a = 0 ; a < 3 ; a++ )
+	for ( a = 0 ; s.length() > 0 && a < 3 ; a++ )
 		{
  		b = a==0?14:(a==1?21:28) ;
-		string x = ncoils_function ( (const char*) s.mb_str() , b ) . c_str() ;
+		string x ;
+		mylog ( "SeqPlot::useNcoils" , wxString::Format ( _T("BEGIN ncoils_function (%d): ") , b ) + s ) ;
+		x = ncoils_function ( (const char*) s.mb_str() , b ) . c_str() ;
+		mylog ( "SeqPlot::useNcoils" , "END ncoils_function" ) ;
 		wxString t ( (char*) x.c_str() , wxConvUTF8 ) ;
 		wxArrayString ta ;
 		explode ( _T("\n") , t , ta ) ;
@@ -512,12 +550,15 @@ void SeqPlot::useNcoils ()
   			af[a].Add ( (float) prob ) ;
 			}
 		}	
+	 mylog ( "SeqPlot::useNcoils" , "2" ) ;
 	
     wxString x ;
     FILLSTRING ( x , ' ' , s.length() ) ;
     while ( d1.GetCount() < 4 ) d1.Add ( x ) ;
+	 mylog ( "SeqPlot::useNcoils" , "3" ) ;
 
     prop.clear () ;
+	 mylog ( "SeqPlot::useNcoils" , "4" ) ;
 	for ( a = 0 ; a < s.length() ; a++ )
 		{
         prop.push_back ( vec->getAAprop ( (char) s.GetChar(a) ) ) ;
@@ -530,12 +571,15 @@ void SeqPlot::useNcoils ()
         d1[3].SetChar ( a , af[2][a] >= 0.5 ? 'X' : ' ' ) ;
 		}
 
+	 mylog ( "SeqPlot::useNcoils" , "5" ) ;
     scanMinMax () ;
+	 mylog ( "SeqPlot::useNcoils" , "END" ) ;
 	}
 
 // See http://prowl.rockefeller.edu/aainfo/chou.htm for background
 void SeqPlot::useChouFasman ()
     {
+	 mylog ( "SeqPlot::useChouFasman" , "1" ) ;
     type = CHOU_FASMAN ;
     d1.Clear () ;
     d2.Clear () ;
@@ -545,6 +589,7 @@ void SeqPlot::useChouFasman ()
     l_bottom = 0 ;
 //    if ( l_top + l_bottom + 1 > lines ) setLines ( l_top + l_bottom + 1 ) ;
     
+	 mylog ( "SeqPlot::useChouFasman" , "2" ) ;
     unsigned int a ;
     prop.clear () ;
     for ( a = 0 ; a < s.length() ; a++ )
@@ -556,8 +601,10 @@ void SeqPlot::useChouFasman ()
     wxString x ;
     FILLSTRING ( x , ' ' , s.length() ) ;
     while ( d1.GetCount() < 4 ) d1.Add ( x ) ;
+	 mylog ( "SeqPlot::useChouFasman" , "3" ) ;
     scanChouFasman ( 4 , 6 , 0 , 100 , 4 , 100 , 5 ) ; // Alpha helices
     scanChouFasman ( 3 , 5 , 1 , 100 , 4 , 100 , 105 ) ; // Beta sheets
+	 mylog ( "SeqPlot::useChouFasman" , "4" ) ;
     
     // Deciding on overlapping regions
     for ( a = 0 ; a < s.length() ; a++ )
@@ -576,6 +623,7 @@ void SeqPlot::useChouFasman ()
         }
         
     // Turns
+	 mylog ( "SeqPlot::useChouFasman" , "5" ) ;
     for ( a = 0 ; a + 3 < s.length() ; a++ )
         {
         
@@ -596,7 +644,9 @@ void SeqPlot::useChouFasman ()
            }
         }
         
+	 mylog ( "SeqPlot::useChouFasman" , "6" ) ;
     scanMinMax () ;
+	 mylog ( "SeqPlot::useChouFasman" , "FIN" ) ;
     }
     
 // Maxima/minima
