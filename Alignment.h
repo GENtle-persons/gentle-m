@@ -89,6 +89,8 @@ class TAlignment : public ChildBase,wxThreadHelper
     virtual void MoveUpDown ( int what , int where ) ; ///< Move a line into the given direction
     virtual void prealigned ( wxArrayString &vs , wxArrayChildBase &vc ) ; ///< Initialize with a prealigned list of sequences (for example, from a multi-sequence genbank file)
     virtual void fromVector ( TVector *nv ) ; ///< Initialize from a single vector (???)
+    virtual bool isDNA () ; ///< Tries to determine wether this is a DNA or an amino acid alignment
+    virtual bool isAA () ; ///< Tries to determine wether this is a DNA or an amino acid alignment
     
     virtual void RunPhylip ( int cmd ) ; ///< Takes Phylip commands (invoked from SequenceCanvas)
 

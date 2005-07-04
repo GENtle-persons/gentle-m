@@ -174,7 +174,7 @@ void TPhyloTree::setModeDrawgram ()
 	wxRect r ( 0 , 0 , si.GetWidth() , si.GetHeight() ) ;
 
 	int md = tree->getMaxDepth() ;
-	int mw = tree->getMaxWeight() ;
+	double mw = tree->getMaxWeight() ;
 	int mc = tree->countLeafs () ;
 	int border = 5 ;
 	
@@ -189,7 +189,10 @@ void TPhyloTree::setModeDrawgram ()
 			if ( !vt[a]->isLeaf() ) continue ;
 			int tw , th ;
 			dc.GetTextExtent ( vt[a]->getName() , &tw , &th ) ;
-			wxRect r2 ( r.GetLeft() + vt[a]->getCurrentWeight() * ( r.GetWidth() - n * maxw ) / mw ,
+			double xf = (double) r.GetWidth() - n * maxw ;
+			xf *= vt[a]->getCurrentWeight() ;
+			xf /= mw ;
+			wxRect r2 ( r.GetLeft() + xf ,
 							r.GetTop() + r.GetHeight() * b / mc ,
 							tw + border ,
 							th + border ) ;
@@ -205,7 +208,10 @@ void TPhyloTree::setModeDrawgram ()
 		if ( vt[a]->isLeaf() ) continue ;
 		vt[a]->rect.SetHeight ( 0 ) ;
 		vt[a]->rect.SetWidth ( 0 ) ;
-		vt[a]->rect.SetX ( r.GetLeft() + vt[a]->getCurrentWeight() * ( r.GetWidth() - maxw ) / mw ) ;
+		double xf = r.GetWidth() - maxw ;
+		xf *= vt[a]->getCurrentWeight() ;
+		xf /= mw ;
+		vt[a]->rect.SetX ( r.GetLeft() + xf ) ;
 		}
 
 	mode = _T("DRAWGRAM") ;
@@ -312,6 +318,7 @@ wxString TPTree::scanNewick ( wxString s )
 		if ( w.IsEmpty() ) w = _T("1") ;
 		name = n.Trim().Trim(false) ;
 		w.ToDouble ( &weight ) ;
+
 		if ( s.Left ( 1 ) == _T(",") ) s = s.Mid ( 1 ) ;
 		return s ;
 		}
@@ -353,7 +360,8 @@ int TPTree::getCurrentDepth ()
 int TPTree::countLeafs ()
 	{
 	if ( isLeaf () ) return 1 ;
-	int cnt = 0 ;
+	int 
+	cnt = 0 ;
 	for ( int a = 0 ; a < children.size() ; a++ )
 		cnt += children[a]->countLeafs() ;
 	return cnt ;
@@ -377,33 +385,49 @@ int TPTree::numberLeafs ( int i )
 
 void TPTree::drawRecursive ( wxDC &dc , wxString mode )
 	{	
-	for ( int a = 0 ; a < children.size() ; a++ )
+	int nw , nh ;
+	dc.GetSize ( &nw , &nh ) ;
+	int fix = nw ;
+	int a ;
+	
+	for ( a = 0 ; a < children.size() ; a++ )
+		{
+		int d = children[a]->rect.GetLeft() - rect.GetRight() ;
+		d /= 10 ;
+		if ( d < fix ) fix = d ;
+		}
+	
+	for ( a = 0 ; a < children.size() ; a++ )
 		{
 		wxPoint p1 ( rect.GetRight() , ( rect.GetTop() + rect.GetBottom() ) / 2 ) ;
 		wxPoint p2 ( children[a]->rect.GetLeft() , ( children[a]->rect.GetTop() + children[a]->rect.GetBottom() ) / 2 ) ;
 		if ( mode.Find ( _T("[DIRECTLINE]") ) != -1 ) dc.DrawLine ( p1 , p2 ) ;
 		else
 			{
-			wxPoint p1a ( p1.x * 11 / 10 , p1.y ) ;
-			wxPoint p1b ( p1.x * 11 / 10 , ( p1.y + p2.y ) / 2 ) ;
-			wxPoint p1c ( p2.x * 9 / 10 , ( p1.y + p2.y ) / 2 ) ;
-			wxPoint p1d ( p2.x * 9 / 10 , p2.y ) ;
+			wxPoint p1a ( p1.x + fix , p1.y ) ;
+			wxPoint p1b ( p1.x + fix , p2.y ) ;
 			dc.DrawLine ( p1 , p1a ) ;
 			dc.DrawLine ( p1a , p1b ) ;
-			dc.DrawLine ( p1b , p1c ) ;
-			dc.DrawLine ( p1c , p1d ) ;
-			dc.DrawLine ( p1d , p2 ) ;
+			dc.DrawLine ( p1b , p2 ) ;
 			}
 		
 		wxString s = wxString::Format ( _T("%1.5f") , children[a]->getWeight() ) ;
 		dedigitize ( s ) ;
-		dc.DrawText ( s , ( p1.x + p2.x ) / 2 , ( p1.y + p2.y ) / 2 ) ;
+		dc.DrawText ( s , p1.x + fix , ( p1.y + p2.y ) / 2 ) ;
 		
 		children[a]->drawRecursive ( dc , mode ) ;
 		}
 
-	if ( isLeaf() ) dc.DrawRectangle ( rect ) ;
-	dc.DrawText ( name , rect.GetLeft() + 2 , rect.GetTop() + 2 ) ;
+	if ( isLeaf() )
+		{
+		dc.DrawRectangle ( rect ) ;
+		dc.DrawText ( name , rect.GetLeft() + 2 , rect.GetTop() + 2 ) ;
+		}
+	else
+		{
+		int cir = 20 ;
+		dc.DrawEllipse ( rect.GetLeft() - cir/4 , rect.GetTop() - cir/4 , cir/2 , cir/2 ) ;
+		}
 	}
 
 void TPTree::filterDepth ( int depth , vector <TPTree*> &vt )

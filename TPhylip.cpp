@@ -22,7 +22,7 @@ bool TPhylip::IsOK ()
 	{
 #ifdef __WXMAC__
 	// Mac version is broken due to strange pipe problem with the "open -a" command
-	wxMessageBox ( "Mac version is broken due to strange pipe problem with the 'open -a' command" ) ;
+	wxMessageBox ( "Mac version is broken due to strange pipe problem with the 'open' command" ) ;
 	return false ;
 #endif
 	if ( phylip_dir.IsEmpty() ) return false ;
@@ -305,6 +305,8 @@ wxString TPhylip::runapp ( wxString app , const wxString s )
 	n[l] = 0 ;
 	wxString result ( n , wxConvUTF8 ) ;
 	delete n ;
-//	result = "(B:6.0,(A:5.0,C:3.0,E:4.0):5.0,D:11.0);" ;
+	
+//	result = "(3:0.23647,(4:0.12270,2:0.00296):0.29673,1:0.65529);" ;
+	
 	return result.BeforeFirst ( ';' ) ;
 	}
