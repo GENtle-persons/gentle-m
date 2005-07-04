@@ -1565,7 +1565,15 @@ void SequenceCanvas::showContextMenu ( SeqBasic *where , int pos , wxPoint pt )
    	 if ( true ) // Phylip // TESTING
    	 	{
 			wxMenu *cc = new wxMenu ;
-			cc->Append ( PHYLIP_CMD_PROTPARS , txt("m_phylip_protpars") ) ;
+			TAlignment *ali = (TAlignment*) child ;
+			if ( ali->isDNA() )
+				{
+				cc->Append ( PHYLIP_CMD_DNAPARS , txt("m_phylip_dnapars") ) ;
+				}
+			else
+				{
+				cc->Append ( PHYLIP_CMD_PROTPARS , txt("m_phylip_protpars") ) ;
+				}
 			cm->Append ( POPUP_DUMMY , txt("m_phylip") , cc ) ;			
 			}
        }

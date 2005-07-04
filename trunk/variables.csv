@@ -761,7 +761,7 @@
 "t_speak_pause"," characters"," Zeichen"
 "m_phylip","Phylip","Phylip"
 "m_phylip_protpars","protpars","protpars"
-"m_phylip_dnapars","",""
+"m_phylip_dnapars","dnapars","dnapars"
 "m_phylip_dnamove","",""
 "m_phylip_dnapenny","",""
 "m_phylip_dnacomp","",""

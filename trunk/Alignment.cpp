@@ -87,6 +87,32 @@ TAlignment::~TAlignment ()
     {
     }
 
+bool TAlignment::isDNA ()
+	{
+	wxString s ;
+	int a , b = 0 ;
+	for ( a = 0 ; a < lines.size() ; a++ )
+		{
+		if ( !lines[a].isIdentity ) s += lines[a].s ;
+		}
+	
+	for ( a = 0 ; a < s.length() ; a++ )
+		{
+		wxChar c = s.GetChar ( a ) ;
+		if ( c == 'N' || c == ' ' || c == '-' ) continue ;
+		if ( c == 'A' || c == 'C' || c == 'G' || c == 'T' ) continue ;
+		b++ ;
+		}
+	
+	// Guess : if more than 1/4 of the sequence are not ACTGN, it's an amino acid sequence
+	if ( b >= s.length() / 4 ) return false ;
+	return true ;
+	}
+
+bool TAlignment::isAA ()
+	{
+	return !isDNA() ;
+	}
     
 void TAlignment::readTabColors ( wxString filename )
     {
@@ -1193,7 +1219,8 @@ void TAlignment::RunPhylip ( int cmd )
 	
 	wxString out ;
 	if ( cmd == PHYLIP_CMD_PROTPARS ) out = phylip.protpars ( data );
-	
+	if ( cmd == PHYLIP_CMD_DNAPARS ) out = phylip.dnapars ( data );
+
 	TPhyloTree *tree = myapp()->frame->newPhyloTree () ;
 	tree->setNewickTree ( out ) ;
 	tree->setRealNames ( this ) ;
