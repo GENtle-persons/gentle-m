@@ -57,11 +57,15 @@ class TPhyloTree : public ChildBase
     virtual void setModeDrawgram () ;
     virtual void setRealNames ( TAlignment *ali ) ;
     
+    virtual void OnDirectLines(wxCommandEvent& event); ///< Toggle direct lines
+    
     private :
 	 friend class TPhyloTreeBox ;
 	 TPhyloTreeBox *box ;
 	 TPTree *tree ;
 	 wxString mode ;
+	 bool directlines ;
+	 wxCheckBox *cb_directlines ;
     
     DECLARE_EVENT_TABLE()
     } ;
