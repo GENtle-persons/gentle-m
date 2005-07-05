@@ -771,7 +771,7 @@
 "m_phylip_proml","",""
 "m_phylip_promlk","",""
 "m_phylip_dnadist","",""
-"m_phylip_protdist","",""
+"m_phylip_protdist","protdist","protdist"
 "m_phylip_restdist","",""
 "m_phylip_restml","",""
 "m_phylip_seqboot","",""

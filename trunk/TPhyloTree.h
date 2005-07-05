@@ -52,20 +52,29 @@ class TPhyloTree : public ChildBase
     virtual void initme () ; ///< Initialization
     virtual wxString getName () ; ///< Returns the gel module name
     
-    virtual void setNewickTree ( wxString s ) ;
+    virtual void setNewickTrees ( wxString s , TAlignment *_ali = NULL ) ;
     virtual void setModeStrange () ;
     virtual void setModeDrawgram () ;
     virtual void setRealNames ( TAlignment *ali ) ;
     
     virtual void OnDirectLines(wxCommandEvent& event); ///< Toggle direct lines
+    virtual void OnTreeList(wxCommandEvent& event); ///< Tree list event
     
     private :
 	 friend class TPhyloTreeBox ;
+
+    virtual void setNewickTree ( wxString s ) ;
+    virtual void updateTreeList () ;
+    virtual void updateDisplay () ;
+
 	 TPhyloTreeBox *box ;
 	 TPTree *tree ;
+	 wxListBox *treelist ;
+	 vector <TPTree *> trees ;
 	 wxString mode ;
 	 bool directlines ;
 	 wxCheckBox *cb_directlines ;
+	 TAlignment *ali ;
     
     DECLARE_EVENT_TABLE()
     } ;

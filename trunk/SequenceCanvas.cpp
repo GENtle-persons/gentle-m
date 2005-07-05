@@ -1528,54 +1528,59 @@ void SequenceCanvas::showContextMenu ( SeqBasic *where , int pos , wxPoint pt )
           }
        cm->AppendSeparator () ;
        }
-    else if ( child && child->def == _T("alignment") && ( where || ( findMouseTargetItem ( pt ) != -1 ) ) ) // Alignment
+    else if ( child && child->def == _T("alignment") ) // Alignment
        {
-       int item = findMouseTargetItem ( pt ) ;
        cm = new wxMenu ;
-       SeqAlign *al ;
-       if ( item != -1 ) al = (SeqAlign*)seq[item] ;
-       else al = (SeqAlign*) where ;
-       if ( al->myname == txt("t_identity") ) {} // Do nothing
-       else if ( al->whatsthis() == _T("FEATURE") ) {} // Do nothing
-       else
-          {
-          last_al = al ;
-          if ( where ) 
-             {
-             lastclick = pos ;
-             wxMenu *cc = new wxMenu ;
-             cc->Append ( SEQ_INSERT_GAP , txt("t_mmb_insert_gap") ) ;
-             cc->Append ( SEQ_DELETE_GAP , txt("t_mmb_delete_gap") ) ;
-             cc->Append ( SEQ_INSERT_OTHER_GAPS , txt("t_mmb_insert_gap_others") ) ;
-             cc->Append ( SEQ_DELETE_OTHER_GAPS , txt("t_mmb_delete_gap_others") ) ;
-             cm->Append ( SEQ_COPY_AS , txt("m_align_gap") , cc ) ;
-             } 
 
-          wxMenu *cb = new wxMenu ;
-          TAlignment *ali = (TAlignment*) child ;
-          if ( last_al->id > 0 ) cb->Append ( SEQ_UP , txt("t_seq_up") ) ;
-          if ( last_al->id + 2 < ali->lines.size() ) cb->Append ( SEQ_DOWN , txt("t_seq_down") ) ;
-          if ( last_al->id > 0 ) cb->Append ( SEQ_TOP , txt("t_seq_top") ) ;
-          if ( last_al->id + 2 < ali->lines.size() ) cb->Append ( SEQ_BOTTOM , txt("t_seq_bottom") ) ;
-          if ( cb->GetMenuItemCount() > 0 ) cm->Append ( SEQ_COPY_AS , txt("t_seq_move") , cb ) ;
-          if ( ali->lines[last_al->id].hasFeatures() ) cm->Append ( SEQ_FEAT_HIDE , txt("t_hide_feature_line") ) ;
-          else cm->Append ( SEQ_FEAT_SHOW , txt("t_show_feature_line") ) ;
-          cm->AppendSeparator () ;
-          }
-   	 if ( true ) // Phylip // TESTING
-   	 	{
-			wxMenu *cc = new wxMenu ;
-			TAlignment *ali = (TAlignment*) child ;
-			if ( ali->isDNA() )
-				{
-				cc->Append ( PHYLIP_CMD_DNAPARS , txt("m_phylip_dnapars") ) ;
-				}
-			else
-				{
-				cc->Append ( PHYLIP_CMD_PROTPARS , txt("m_phylip_protpars") ) ;
-				}
-			cm->Append ( POPUP_DUMMY , txt("m_phylip") , cc ) ;			
+		 if ( ( where || ( findMouseTargetItem ( pt ) != -1 ) ) )
+		 	{
+	       int item = findMouseTargetItem ( pt ) ;
+	       SeqAlign *al ;
+	       if ( item != -1 ) al = (SeqAlign*)seq[item] ;
+	       else al = (SeqAlign*) where ;
+	       if ( al->myname == txt("t_identity") ) {} // Do nothing
+	       else if ( al->whatsthis() == _T("FEATURE") ) {} // Do nothing
+	       else
+	          {
+	          last_al = al ;
+	          if ( where ) 
+	             {
+	             lastclick = pos ;
+	             wxMenu *cc = new wxMenu ;
+	             cc->Append ( SEQ_INSERT_GAP , txt("t_mmb_insert_gap") ) ;
+	             cc->Append ( SEQ_DELETE_GAP , txt("t_mmb_delete_gap") ) ;
+	             cc->Append ( SEQ_INSERT_OTHER_GAPS , txt("t_mmb_insert_gap_others") ) ;
+	             cc->Append ( SEQ_DELETE_OTHER_GAPS , txt("t_mmb_delete_gap_others") ) ;
+	             cm->Append ( SEQ_COPY_AS , txt("m_align_gap") , cc ) ;
+	             } 
+	
+	          wxMenu *cb = new wxMenu ;
+	          TAlignment *ali = (TAlignment*) child ;
+	          if ( last_al->id > 0 ) cb->Append ( SEQ_UP , txt("t_seq_up") ) ;
+	          if ( last_al->id + 2 < ali->lines.size() ) cb->Append ( SEQ_DOWN , txt("t_seq_down") ) ;
+	          if ( last_al->id > 0 ) cb->Append ( SEQ_TOP , txt("t_seq_top") ) ;
+	          if ( last_al->id + 2 < ali->lines.size() ) cb->Append ( SEQ_BOTTOM , txt("t_seq_bottom") ) ;
+	          if ( cb->GetMenuItemCount() > 0 ) cm->Append ( SEQ_COPY_AS , txt("t_seq_move") , cb ) ;
+	          if ( ali->lines[last_al->id].hasFeatures() ) cm->Append ( SEQ_FEAT_HIDE , txt("t_hide_feature_line") ) ;
+	          else cm->Append ( SEQ_FEAT_SHOW , txt("t_show_feature_line") ) ;
+	          cm->AppendSeparator () ;
+	          }
 			}
+   	 
+		 // Phylip
+		 wxMenu *cc = new wxMenu ;
+		 TAlignment *ali = (TAlignment*) child ;
+		 if ( ali->isDNA() )
+			{
+			cc->Append ( PHYLIP_CMD_DNAPARS , txt("m_phylip_dnapars") ) ;
+			}
+		 else
+			{
+			cc->Append ( PHYLIP_CMD_PROTPARS , txt("m_phylip_protpars") ) ;
+			cc->Append ( PHYLIP_CMD_PROTPARS , txt("m_phylip_protdist") ) ;
+			}
+		 cm->Append ( POPUP_DUMMY , txt("m_phylip") , cc ) ;			
+
        }
     else
        {

@@ -1218,12 +1218,16 @@ void TAlignment::RunPhylip ( int cmd )
 		data += vs[a] + _T("\n") ;
 	
 	wxString out ;
-	if ( cmd == PHYLIP_CMD_PROTPARS ) out = phylip.protpars ( data );
-	if ( cmd == PHYLIP_CMD_DNAPARS ) out = phylip.dnapars ( data );
+	switch ( cmd )
+		{
+		case PHYLIP_CMD_PROTPARS : out = phylip.protpars ( data ) ; break ;
+		case PHYLIP_CMD_PROTDIST : out = phylip.protdist ( data ) ; break ;
+		case PHYLIP_CMD_DNAPARS : out = phylip.dnapars ( data ) ; break ;
+		}
 
 	TPhyloTree *tree = myapp()->frame->newPhyloTree () ;
-	tree->setNewickTree ( out ) ;
-	tree->setRealNames ( this ) ;
+	tree->setNewickTrees ( out , this ) ;
+//	tree->setRealNames ( this ) ;
 	tree->setModeDrawgram () ;
 	}
     
