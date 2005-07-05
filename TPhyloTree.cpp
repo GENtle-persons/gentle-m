@@ -5,6 +5,7 @@ BEGIN_EVENT_TABLE(TPhyloTree, MyChildBase)
     EVT_SET_FOCUS(ChildBase::OnFocus)
     EVT_SIZE(ChildBase::OnSize)
     EVT_CHECKBOX(PHYLIP_DIRECT_LINES,TPhyloTree::OnDirectLines)
+    EVT_LISTBOX(PHYLIP_TREE_LIST,TPhyloTree::OnTreeList)
     
 
     // Dummies
@@ -53,6 +54,7 @@ TPhyloTree::TPhyloTree (wxWindow *parent, const wxString& title)
 	vec = NULL ;
 	tree = NULL ;
 	directlines = false ;
+	ali = NULL ;
 	}
 	
 void TPhyloTree::initme ()
@@ -100,15 +102,23 @@ void TPhyloTree::initme ()
 
 	// Phylo-Box
 	box = new TPhyloTreeBox ( this , PHYLOBOX ) ;
+	
+	treelist = new wxListBox ( this , PHYLIP_TREE_LIST ) ;
 
 	wxBoxSizer *vs = new wxBoxSizer ( wxVERTICAL ) ;
+	wxBoxSizer *hs = new wxBoxSizer ( wxHORIZONTAL ) ;
+
+	hs->Add ( treelist , 0 , wxEXPAND , 0 ) ;
+	hs->Add ( box , 1 , wxEXPAND , 0 ) ;
+
 	vs->Add ( toolBar , 0 , wxBOTTOM , 5 ) ;
-	vs->Add ( box , 1 , wxEXPAND , 0 ) ;
+	vs->Add ( hs , 1 , wxEXPAND , 0 ) ;
 
 	myapp()->frame->setChild ( this ) ;
 	this->SetSizer ( vs ) ;
-	vs->Fit ( this ) ;    
-	this->Show () ;
+	vs->Layout () ;
+//	vs->Fit ( this ) ;    
+	Show () ;
 	}
 
 wxString TPhyloTree::getName()
@@ -116,6 +126,47 @@ wxString TPhyloTree::getName()
 	return _T("Phylogenetic tree") ;
 	}
 	
+void TPhyloTree::setNewickTrees ( wxString s , TAlignment *_ali )
+	{
+	int a ;
+	wxArrayString vs ;
+	ali = _ali ;
+	explode ( _T(";") , s , vs ) ;
+	
+	// Clear old trees
+	for ( a = 0 ; a < trees.size() ; a++ )
+		delete trees[a] ;
+	while ( trees.size() ) trees.pop_back() ;
+	
+	// Generate new tree list
+	for ( a = 0 ; a < vs.GetCount() ; a++ )
+		{
+		tree = NULL ;
+		wxString t = vs[a].Trim().Trim(FALSE) ;
+		if ( t.IsEmpty() ) continue ;
+		setNewickTree ( t ) ;
+		setRealNames ( ali ) ;
+		trees.push_back ( tree ) ;
+		}
+	
+	if ( trees.size() > 0 ) tree = trees[0] ;
+	else tree = NULL ;
+	updateTreeList () ;
+	}
+
+void TPhyloTree::updateTreeList ()
+	{
+	treelist->Clear () ;
+	int a , b = -1 ;
+	for ( a = 0 ; a < trees.size() ; a++ )
+		{
+		wxString name = wxString::Format ( _T("%d") , a+1 ) ;
+		treelist->Append ( name ) ;
+		if ( trees[a] == tree ) b = a ;
+		}
+	treelist->SetSelection ( b ) ;
+	}
+
 void TPhyloTree::setNewickTree ( wxString s )
 	{
 	tree = new TPTree ;
@@ -147,8 +198,20 @@ void TPhyloTree::setRealNames ( TAlignment *ali )
 void TPhyloTree::OnDirectLines(wxCommandEvent& event)
 	{
 	directlines = cb_directlines->GetValue() ;
+	updateDisplay () ;
+	}
+
+void TPhyloTree::updateDisplay ()
+	{
 	if ( mode.Find ( _T("STRANGE") ) ) setModeStrange () ;
 	if ( mode.Find ( _T("DRAWGRAM") ) ) setModeDrawgram () ;
+	}
+
+void TPhyloTree::OnTreeList(wxCommandEvent& event)
+	{
+	int n = treelist->GetSelection () ;
+	tree = trees[n] ;
+	updateDisplay () ;
 	}
 
 void TPhyloTree::setModeStrange ()
