@@ -4,6 +4,7 @@ BEGIN_EVENT_TABLE(TPhyloTree, MyChildBase)
     EVT_CLOSE(ChildBase::OnClose)
     EVT_SET_FOCUS(ChildBase::OnFocus)
     EVT_SIZE(ChildBase::OnSize)
+    EVT_CHECKBOX(PHYLIP_DIRECT_LINES,TPhyloTree::OnDirectLines)
     
 
     // Dummies
@@ -51,6 +52,7 @@ TPhyloTree::TPhyloTree (wxWindow *parent, const wxString& title)
 	def = _T("PHYLOTREE") ;
 	vec = NULL ;
 	tree = NULL ;
+	directlines = false ;
 	}
 	
 void TPhyloTree::initme ()
@@ -88,6 +90,11 @@ void TPhyloTree::initme ()
 	toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] ) ;
 	toolBar->AddSeparator() ;
 	myapp()->frame->addDefaultTools ( toolBar ) ;
+	
+	toolBar->AddSeparator() ;
+	cb_directlines = new wxCheckBox ( toolBar , PHYLIP_DIRECT_LINES , txt("t_phylip_directlines") ) ;
+	toolBar->AddControl ( cb_directlines ) ;
+	
 	toolBar->Realize() ;
 	toolbar = toolBar ;
 
@@ -137,12 +144,19 @@ void TPhyloTree::setRealNames ( TAlignment *ali )
 		}	
 	}
 
+void TPhyloTree::OnDirectLines(wxCommandEvent& event)
+	{
+	directlines = cb_directlines->GetValue() ;
+	if ( mode.Find ( _T("STRANGE") ) ) setModeStrange () ;
+	if ( mode.Find ( _T("DRAWGRAM") ) ) setModeDrawgram () ;
+	}
 
 void TPhyloTree::setModeStrange ()
 	{
 	wxClientDC dc ( box ) ;
 	wxSize si = box->GetClientSize () ;
 	wxRect r ( 0 , 0 , si.GetWidth() , si.GetHeight() ) ;
+	r.Deflate ( 10 , 10 ) ;
 
 	int md = tree->getMaxDepth() ;
 	int a , b ;
@@ -162,8 +176,9 @@ void TPhyloTree::setModeStrange ()
 			}
 		}
 
+	dc.DrawRectangle ( wxRect ( 0 , 0 , si.GetWidth() , si.GetHeight() ) ) ;
 	mode = _T("STRANGE") ;
-	dc.DrawRectangle ( r ) ;
+	if ( directlines ) mode += _T("[DIRECTLINE]") ;
 	tree->drawRecursive ( dc , mode ) ;
 	}
 
@@ -172,6 +187,7 @@ void TPhyloTree::setModeDrawgram ()
 	wxClientDC dc ( box ) ;
 	wxSize si = box->GetClientSize () ;
 	wxRect r ( 0 , 0 , si.GetWidth() , si.GetHeight() ) ;
+	r.Deflate ( 10 , 10 ) ;
 
 	int md = tree->getMaxDepth() ;
 	double mw = tree->getMaxWeight() ;
@@ -214,8 +230,9 @@ void TPhyloTree::setModeDrawgram ()
 		vt[a]->rect.SetX ( r.GetLeft() + xf ) ;
 		}
 
+	dc.DrawRectangle ( wxRect ( 0 , 0 , si.GetWidth() , si.GetHeight() ) ) ;
 	mode = _T("DRAWGRAM") ;
-	dc.DrawRectangle ( r ) ;
+	if ( directlines ) mode += _T("[DIRECTLINE]") ;
 	tree->drawRecursive ( dc , mode ) ;
 	}
 
@@ -397,11 +414,13 @@ void TPTree::drawRecursive ( wxDC &dc , wxString mode )
 		if ( d < fix ) fix = d ;
 		}
 	
+	bool directline = mode.Find ( _T("[DIRECTLINE]") ) != -1 ;
+	
 	for ( a = 0 ; a < children.size() ; a++ )
 		{
 		wxPoint p1 ( rect.GetRight() , ( rect.GetTop() + rect.GetBottom() ) / 2 ) ;
 		wxPoint p2 ( children[a]->rect.GetLeft() , ( children[a]->rect.GetTop() + children[a]->rect.GetBottom() ) / 2 ) ;
-		if ( mode.Find ( _T("[DIRECTLINE]") ) != -1 ) dc.DrawLine ( p1 , p2 ) ;
+		if ( directline ) dc.DrawLine ( p1 , p2 ) ;
 		else
 			{
 			wxPoint p1a ( p1.x + fix , p1.y ) ;
@@ -413,7 +432,8 @@ void TPTree::drawRecursive ( wxDC &dc , wxString mode )
 		
 		wxString s = wxString::Format ( _T("%1.5f") , children[a]->getWeight() ) ;
 		dedigitize ( s ) ;
-		dc.DrawText ( s , p1.x + fix , ( p1.y + p2.y ) / 2 ) ;
+		if ( directline ) dc.DrawText ( s , ( p1.x + p2.x ) / 2 , ( p1.y + p2.y ) / 2 ) ;
+		else dc.DrawText ( s , p1.x + fix , ( p1.y + p2.y ) / 2 ) ;
 		
 		children[a]->drawRecursive ( dc , mode ) ;
 		}
