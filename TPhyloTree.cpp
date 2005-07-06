@@ -6,7 +6,6 @@ BEGIN_EVENT_TABLE(TPhyloTree, MyChildBase)
     EVT_SIZE(ChildBase::OnSize)
     EVT_CHECKBOX(PHYLIP_DIRECT_LINES,TPhyloTree::OnDirectLines)
     EVT_LISTBOX(PHYLIP_TREE_LIST,TPhyloTree::OnTreeList)
-    
 
     // Dummies
     EVT_MENU(MDI_TOGGLE_FEATURES,ChildBase::OnDummy)
@@ -39,10 +38,10 @@ END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(TPhyloTreeBox, wxControl)
     EVT_PAINT(TPhyloTreeBox::OnPaint)
+    EVT_MENU(SEQ_COPY_IMAGE,TPhyloTreeBox::OnCopy)
+    EVT_MENU(SEQ_SAVE_IMAGE,TPhyloTreeBox::OnSaveAsBitmap)
 
     EVT_MOUSE_EVENTS(TPhyloTreeBox::OnEvent)
-    EVT_MENU(IV_MENU_SAVE_AS_BITMAP, TPhyloTreeBox::OnSaveAsBitmap)
-    EVT_MENU(IV_MENU_COPY, TPhyloTreeBox::OnCopy)
     EVT_MENU(IV_MENU_PRINT, TPhyloTreeBox::OnPrint)
 END_EVENT_TABLE()
 
@@ -145,6 +144,7 @@ void TPhyloTree::setNewickTrees ( wxString s , TAlignment *_ali )
 		wxString t = vs[a].Trim().Trim(FALSE) ;
 		if ( t.IsEmpty() ) continue ;
 		setNewickTree ( t ) ;
+		if ( !tree ) continue ;
 		setRealNames ( ali ) ;
 		trees.push_back ( tree ) ;
 		}
@@ -203,6 +203,7 @@ void TPhyloTree::OnDirectLines(wxCommandEvent& event)
 
 void TPhyloTree::updateDisplay ()
 	{
+	if ( !tree ) return ;
 	if ( mode.Find ( _T("STRANGE") ) ) setModeStrange () ;
 	if ( mode.Find ( _T("DRAWGRAM") ) ) setModeDrawgram () ;
 	}
@@ -312,8 +313,6 @@ TPhyloTreeBox::TPhyloTreeBox ( wxWindow *parent , int id )
 void TPhyloTreeBox::OnDraw(wxDC& dc)
 	{
 	if ( !_parent->tree ) return ;
-//	wxRect r ( 0 , 0 , 0 , 0 ) ;
-//	dc.GetSize ( &r.width , &r.height ) ;
 	wxSize si = GetClientSize () ;
 	wxRect r ( 0 , 0 , si.GetWidth() , si.GetHeight() ) ;
 	dc.DrawRectangle ( r ) ;
@@ -328,14 +327,47 @@ void TPhyloTreeBox::OnPaint(wxPaintEvent& event)
 	
 void TPhyloTreeBox::OnEvent(wxMouseEvent& event)
 	{
+	wxPoint pt = event.GetPosition() ;
+	
+	if ( event.RightDown() )
+		{
+		wxMenu *cm = new wxMenu ;
+		
+		cm->Append ( SEQ_COPY_IMAGE , txt("m_copy_as_image") ) ;
+		cm->Append ( SEQ_SAVE_IMAGE , txt("m_save_as_image") ) ;
+		
+		PopupMenu ( cm , pt ) ;
+		delete cm ;
+		}
 	}
+
+void TPhyloTreeBox::WriteIntoBitmap(wxBitmap &bmp)
+    {
+	 int w , h ;
+	 GetClientSize ( &w , &h ) ;
+    bmp = wxBitmap ( w , h , wxDisplayDepth() ) ;
+    wxMemoryDC memdc ;
+    memdc.SelectObject ( bmp ) ;
+    memdc.Clear () ;
+    OnDraw ( memdc ) ;    
+    }
 
 void TPhyloTreeBox::OnSaveAsBitmap(wxCommandEvent &event)
 	{
+	wxBitmap bmp ;
+	WriteIntoBitmap ( bmp ) ;
+	myapp()->frame->saveImage ( &bmp ) ;
 	}
 
 void TPhyloTreeBox::OnCopy(wxCommandEvent &event)
 	{
+    if (wxTheClipboard->Open())
+      {
+      wxBitmap bmp ;
+      WriteIntoBitmap ( bmp ) ;
+      wxTheClipboard->SetData( new wxBitmapDataObject ( bmp ) );
+      wxTheClipboard->Close();
+      }
 	}
 
 void TPhyloTreeBox::OnPrint(wxCommandEvent &event)
