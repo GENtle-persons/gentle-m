@@ -94,6 +94,9 @@ class TPhyloTreeBox : public wxControl
 	virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler
 	
 	private :
+	
+	virtual void WriteIntoBitmap(wxBitmap &bmp) ;
+	
 	TPhyloTree *_parent ;
 	
 	DECLARE_EVENT_TABLE()

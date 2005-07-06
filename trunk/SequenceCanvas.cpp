@@ -70,7 +70,7 @@ BEGIN_EVENT_TABLE(SequenceCanvas, wxScrolledWindow)
     EVT_MENU(PC_RS_HIDE_LIMIT, SequenceCanvas::rsHideLimit)
     EVT_MENU(MDI_PASTE, SequenceCanvas::OnPaste)
 
-	EVT_MENU_RANGE(PHYLIP_CMD_PROTPARS,PHYLIP_CMD_RETREE,SequenceCanvas::OnPhylip)
+	EVT_MENU_RANGE(PHYLIP_CMD_PROTPARS,PHYLIP_CMD_SETUP,SequenceCanvas::OnPhylip)
 /*	EVT_MENU(PHYLIP_CMD_PROTPARS, SequenceCanvas::OnPhylip)
 	EVT_MENU(PHYLIP_CMD_DNAPARS, SequenceCanvas::OnPhylip)
 	EVT_MENU(PHYLIP_CMD_DNAMOVE, SequenceCanvas::OnPhylip)
@@ -1573,12 +1573,28 @@ void SequenceCanvas::showContextMenu ( SeqBasic *where , int pos , wxPoint pt )
 		 if ( ali->isDNA() )
 			{
 			cc->Append ( PHYLIP_CMD_DNAPARS , txt("m_phylip_dnapars") ) ;
+//			cc->Append ( PHYLIP_CMD_DNAMOVE , txt("m_phylip_dnamove") ) ;
+			cc->Append ( PHYLIP_CMD_DNAPENNY , txt("m_phylip_dnapenny") ) ;
+			cc->Append ( PHYLIP_CMD_DNACOMP , txt("m_phylip_dnacomp") ) ;
+//			cc->Append ( PHYLIP_CMD_DNAINVAR , txt("m_phylip_dnainvar") ) ;
+			cc->Append ( PHYLIP_CMD_DNAML , txt("m_phylip_dnaml") ) ;
+			cc->Append ( PHYLIP_CMD_DNAMLK , txt("m_phylip_dnamlk") ) ;
+//			cc->Append ( PHYLIP_CMD_RESTML , txt("m_phylip_restml") ) ;
+//			cc->Append ( PHYLIP_CMD_DNADIST , txt("m_phylip_dnadist") ) ;
+//			cc->Append ( PHYLIP_CMD_SEQBOOT , txt("m_phylip_seqboot") ) ;
+//			cc->Append ( PHYLIP_CMD_CONSENSE , txt("m_phylip_consense") ) ;
 			}
 		 else
 			{
 			cc->Append ( PHYLIP_CMD_PROTPARS , txt("m_phylip_protpars") ) ;
-			cc->Append ( PHYLIP_CMD_PROTPARS , txt("m_phylip_protdist") ) ;
+//			cc->Append ( PHYLIP_CMD_PROTDIST , txt("m_phylip_protdist") ) ;
+			cc->Append ( PHYLIP_CMD_PROML , txt("m_phylip_proml") ) ;
+			cc->Append ( PHYLIP_CMD_PROMLK , txt("m_phylip_promlk") ) ;
+//			cc->Append ( PHYLIP_CMD_SEQBOOT , txt("m_phylip_seqboot") ) ;
+//			cc->Append ( PHYLIP_CMD_CONSENSE , txt("m_phylip_consense") ) ;
 			}
+		 cc->AppendSeparator () ;
+		 cc->Append ( PHYLIP_CMD_SETUP , txt("m_phylip_setup") ) ;
 		 cm->Append ( POPUP_DUMMY , txt("m_phylip") , cc ) ;			
 
        }

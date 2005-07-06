@@ -6,16 +6,19 @@
 TPhylip::TPhylip ()
 	{
 	phylip_dir = myapp()->frame->LS->getOption ( _T("PHYLIP_DIR") , "" ) ;
-	if ( phylip_dir.IsEmpty() )
-		{
-		phylip_dir = wxDirSelector ( txt("t_select_phlip_dir") ) ;
-		if ( !phylip_dir.IsEmpty() ) myapp()->frame->LS->setOption ( _T("PHYLIP_DIR") , phylip_dir ) ;
-		}
-//	phylip_dir = _T("C:\\Downloads\\phylip-3.63\\exe") ; // TESTING!!!
+	if ( phylip_dir.IsEmpty() ) query_phylip_dir () ;
 	}
 
 TPhylip::~TPhylip ()
 	{
+	}
+
+void TPhylip::query_phylip_dir ( bool setit )
+	{
+	wxString h = wxDirSelector ( txt("t_select_phylip_dir") , phylip_dir ) ;
+	if ( !setit && h.IsEmpty() ) return ;
+	phylip_dir = h ;
+	if ( !phylip_dir.IsEmpty() ) myapp()->frame->LS->setOption ( _T("PHYLIP_DIR") , phylip_dir ) ;
 	}
 
 bool TPhylip::IsOK ()

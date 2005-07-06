@@ -45,6 +45,7 @@ class TPhylip
 	virtual wxString consense ( wxString s ) ;
 	virtual wxString retree ( wxString s ) ;
 	
+	virtual void query_phylip_dir ( bool setit = true ) ;
 	virtual bool IsOK () ;
 	
 	private :

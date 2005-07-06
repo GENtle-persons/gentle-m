@@ -1195,6 +1195,13 @@ void TAlignment::RunPhylip ( int cmd )
 	{
 	TPhylip phylip ;
 	if ( !phylip.IsOK() ) return ; // Something's wrong
+	
+	if ( cmd == PHYLIP_CMD_SETUP )
+		{
+		phylip.query_phylip_dir ( false ) ;
+		return ;
+		}
+	
 	wxString data ;
 	
 	unsigned int a , b ;
@@ -1223,11 +1230,25 @@ void TAlignment::RunPhylip ( int cmd )
 		case PHYLIP_CMD_PROTPARS : out = phylip.protpars ( data ) ; break ;
 		case PHYLIP_CMD_PROTDIST : out = phylip.protdist ( data ) ; break ;
 		case PHYLIP_CMD_DNAPARS : out = phylip.dnapars ( data ) ; break ;
+		case PHYLIP_CMD_PROML : out = phylip.proml ( data ) ; break ;
+		case PHYLIP_CMD_PROMLK : out = phylip.promlk ( data ) ; break ;
+		case PHYLIP_CMD_SEQBOOT : out = phylip.seqboot ( data ) ; break ;
+		case PHYLIP_CMD_CONSENSE : out = phylip.consense ( data ) ; break ;
+
+		case PHYLIP_CMD_DNAMOVE : out = phylip.dnamove ( data ) ; break ;
+		case PHYLIP_CMD_DNAPENNY : out = phylip.dnapenny ( data ) ; break ;
+		case PHYLIP_CMD_DNACOMP : out = phylip.dnacomp ( data ) ; break ;
+		case PHYLIP_CMD_DNAINVAR : out = phylip.dnainvar ( data ) ; break ;
+		case PHYLIP_CMD_DNAML : out = phylip.dnaml ( data ) ; break ;
+		case PHYLIP_CMD_DNAMLK : out = phylip.dnamlk ( data ) ; break ;
+		case PHYLIP_CMD_DNADIST : out = phylip.dnadist ( data ) ; break ;
+		
+		case PHYLIP_CMD_RESTML : out = phylip.restml ( data ) ; break ;
+		
 		}
 
 	TPhyloTree *tree = myapp()->frame->newPhyloTree () ;
 	tree->setNewickTrees ( out , this ) ;
-//	tree->setRealNames ( this ) ;
 	tree->setModeDrawgram () ;
 	}
     
