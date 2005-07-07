@@ -404,6 +404,10 @@ enum {
 	
 	PHYLOBOX,
 	
+	TGD_LB_SCALES,
+	TGD_LB_DATA,
+	TGD_BT_SCALES,
+	
 	Y___,
 	Z___
 	} ;

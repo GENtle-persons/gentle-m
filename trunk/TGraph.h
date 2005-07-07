@@ -70,7 +70,7 @@ class TGraphScale
 	void Drag ( int delta ) ; ///< Drags the scale into a direction (pixel)
 	float GetTotalWidth () { return max - min ; } ///< Returns the height/width in arb. units
 	float GetVisibleWidth () { return top - bottom ; } ///< Returns the visible height/width in arb. units
- 	
+	
  	wxRect outline ;
  	wxRect last_inner ;
  	float min , max ;
@@ -99,6 +99,7 @@ class TGraphDisplay : public wxPanel
  	void setupIPCfile ( wxString filename ) ; ///< Reads IPC data
  	void setupRawFPLC ( wxString filenamebase ) ; ///< EXPERIMENTAL Reads raw BioRad FPLC data
  	void setupBioFormat ( wxString filenamebase ) ; ///< EXPERIMENTAL Reads BIO FPLC format
+ 	void setupBioCSVFormat ( const stringField &sf ) ; ///< EXPERIMENTAL Reads BIO CSV FPLC format
  	void addNewGraph ( const stringField &sf , wxString title , TGraphScale *sx , TGraphScale*sy , int startrow = 0 ) ; ///< Adds a TGraphData
  	void addRawData ( unsigned char *d , long l , wxString title ) ;
  	void addRawData2 ( unsigned char *d , long l , wxString title ) ;
@@ -125,6 +126,8 @@ class TGraphDisplay : public wxPanel
  	vector <TGraphData*> data ; ///< The graphs (data)
  	TGraph *g ; ///< The calling TGraph
  	static wxColour prettyColor ; ///< A pretty blue
+ 	wxArrayString scaleTypes ;
+ 	wxArrayString colors , styles ;
  	
  	private :
   	bool IsSetupComplete() ; ///< Don't draw before setup is complete (divsion by zero and other ugliness)
@@ -134,7 +137,6 @@ class TGraphDisplay : public wxPanel
  	TGraphScale *old_scale ; ///< The last scale
  	TGraphData *old_data ; ///< The last graph
  	
- 	wxArrayString colors , styles ;
  	wxRect inner ; ///< The place where the data is drawn
  	wxRect lr ; ///< The legend rectangle
  	int zx , zy ;

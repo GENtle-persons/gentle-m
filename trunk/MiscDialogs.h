@@ -24,6 +24,48 @@ class ChildBase ;
 class TPrimer ;
 class TPrimerDesign ;
 class TAlignment ;
+class TGraph ;
+class TGraphScale ;
+class TGraphData ;
+
+class TGraphDialog : public wxDialog
+	{
+   public : 
+   TGraphDialog ( wxWindow *_parent , const wxString& title ) ; ///< Constructor
+   virtual ~TGraphDialog() ;
+   
+   virtual void ShowScale ( TGraphScale *s ) ;
+   virtual void ShowData ( TGraphData *d ) ;
+
+   virtual void OnScalesList ( wxCommandEvent &ev ) ;
+   virtual void OnDataList ( wxCommandEvent &ev ) ;
+
+	private :
+	virtual void add_nb_graph () ;
+	virtual void add_nb_data () ;
+	virtual void add_nb_scales () ;
+	
+	virtual void save_settings () ;
+	
+	TGraph *parent ;
+	wxNotebook *nb ;
+	wxPanel *nb_graph , *nb_data , *nb_scales ;
+	
+	wxListBox *lb_scales , *lb_data ;
+	wxTextCtrl *scales_name , *scales_min , *scales_max , *scales_unit ;
+	wxChoice *ch_scales_type ;
+	
+	wxTextCtrl *data_name ;
+	wxChoice *ch_data_pointstyle , *ch_data_pointcolor , *ch_data_scalex , *ch_data_scaley ;
+	
+	int last_scale , last_data ;
+	bool set_up ;
+	
+	vector <TGraphScale*> scales ;
+	vector <TGraphData*> data ;
+	
+	DECLARE_EVENT_TABLE()
+	} ;
 
 class TSpeakDialog : public wxDialog
 	{
