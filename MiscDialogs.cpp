@@ -43,6 +43,253 @@ BEGIN_EVENT_TABLE(TSpeakDialog, wxDialog )
     EVT_CHAR_HOOK(TSpeakDialog::OnCharHook)
 END_EVENT_TABLE()
 
+BEGIN_EVENT_TABLE(TGraphDialog, wxDialog )
+	EVT_LISTBOX(TGD_LB_SCALES,TGraphDialog::OnScalesList)
+	EVT_LISTBOX(TGD_LB_DATA,TGraphDialog::OnDataList)
+    EVT_BUTTON(wxID_OK,wxDialog::OnOK)
+    EVT_BUTTON(wxID_CANCEL,wxDialog::OnCancel)
+END_EVENT_TABLE()
+
+// ******************************************* TGraphDialog
+
+TGraphDialog::TGraphDialog ( wxWindow *_parent , const wxString& title )
+    : wxDialog ( _parent , -1 , title )
+	{
+	parent = (TGraph*) _parent ;
+	set_up = false ;
+
+	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+	wxBoxSizer *h_buttons = new wxBoxSizer ( wxHORIZONTAL ) ;
+	
+	nb = new wxNotebook ( this , -1 ) ;
+	wxNotebookSizer *ns = new wxNotebookSizer ( nb ) ;
+	
+	add_nb_graph () ;
+	add_nb_data () ;
+	add_nb_scales () ;
+	
+	h_buttons->Add ( new wxButton ( this , wxID_OK , txt("b_ok") ) , 1 , 0 ) ;
+	h_buttons->Add ( new wxStaticText ( this , -1 , _T(" ") ) , 1 , wxEXPAND ) ;
+	h_buttons->Add ( new wxButton ( this , wxID_CANCEL , txt("b_cancel") ) , 1 , 0 ) ;
+	
+	v0->Add ( ns , 1 , wxEXPAND , 0 ) ;
+	v0->Add ( h_buttons , 0 , wxALL|wxALIGN_CENTER_HORIZONTAL , 5 ) ;
+	
+	SetSizer ( v0 ) ;
+	v0->Fit ( this ) ;
+	set_up = true ;
+	}
+
+TGraphDialog::~TGraphDialog()
+	{
+	}
+
+void TGraphDialog::add_nb_graph ()
+	{
+	nb_graph = new wxPanel ( nb , -1 ) ;
+	nb->AddPage ( nb_graph , txt("t_gd_graph") ) ;
+	}
+
+void TGraphDialog::add_nb_data ()
+	{
+	nb_data = new wxPanel ( nb , -1 ) ;
+	nb->AddPage ( nb_data , txt("t_gd_data") ) ;
+	
+	int a ;
+	last_data = -1 ;
+	
+	wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	
+	lb_data = new wxListBox ( nb_data , TGD_LB_DATA ) ;
+	for ( a = 0 ; a < parent->gd->data.size() ; a++ )
+		{
+		lb_data->Append ( parent->gd->data[a]->name ) ;
+		TGraphData *d = new TGraphData ;
+		*d = *(parent->gd->data[a]) ;
+		data.push_back ( d ) ;
+		}
+
+	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+
+	wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	wxBoxSizer *h3 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	
+	data_name = new wxTextCtrl ( nb_data , -1 ) ;
+	h1->Add ( new wxStaticText ( nb_data , -1 , txt("name") ) , 0 , wxEXPAND|wxALL , 2 ) ;
+	h1->Add ( data_name , 1 , wxEXPAND|wxALL , 2 ) ;
+	
+	ch_data_scalex = new wxChoice ( nb_data , -1 ) ;
+	ch_data_scaley = new wxChoice ( nb_data , -1 ) ;
+	for ( a = 0 ; a < parent->gd->scales.size() ; a++ )
+		{
+		ch_data_scalex->Append ( parent->gd->scales[a]->name ) ;
+		ch_data_scaley->Append ( parent->gd->scales[a]->name ) ;
+		}
+	h2->Add ( new wxStaticText ( nb_data , -1 , _T("Scale X") ) , 0 , wxEXPAND|wxALL , 2 ) ;
+	h2->Add ( ch_data_scalex , 1 , wxEXPAND|wxALL , 2 ) ;
+	h2->Add ( new wxStaticText ( nb_data , -1 , _T("Scale Y") ) , 0 , wxEXPAND|wxALL , 2 ) ;
+	h2->Add ( ch_data_scaley , 1 , wxEXPAND|wxALL , 2 ) ;
+	
+	ch_data_pointstyle = new wxChoice ( nb_data , -1 ) ;
+	ch_data_pointcolor = new wxChoice ( nb_data , -1 ) ;
+	for ( a = 0 ; a < parent->gd->styles.GetCount() ; a++ )
+		ch_data_pointstyle->Append ( parent->gd->styles[a] ) ;
+	for ( a = 0 ; a < parent->gd->colors.GetCount() ; a++ )
+		ch_data_pointcolor->Append ( parent->gd->colors[a] ) ;
+	h3->Add ( new wxStaticText ( nb_data , -1 , _T("Point style") ) , 0 , wxEXPAND|wxALL , 2 ) ;
+	h3->Add ( ch_data_pointstyle , 0 , wxEXPAND|wxALL , 2 ) ;
+	h3->Add ( new wxStaticText ( nb_data , -1 , _T("Point color") ) , 0 , wxEXPAND|wxALL , 2 ) ;
+	h3->Add ( ch_data_pointcolor , 0 , wxEXPAND|wxALL , 2 ) ;
+	
+	v0->Add ( h1 , 0 , wxEXPAND|wxALL , 5 ) ;
+	v0->Add ( h2 , 0 , wxEXPAND|wxALL , 5 ) ;
+	v0->Add ( h3 , 0 , wxEXPAND|wxALL , 5 ) ;	
+		
+	h0->Add ( lb_data , 0 , wxEXPAND|wxALL , 5 ) ;
+	h0->Add ( v0 , 0 , wxEXPAND|wxALL , 5 ) ;
+	
+	nb_data->SetSizer ( h0 ) ;
+	h0->Fit ( nb_data ) ;
+
+	lb_data->SetSelection ( 0 ) ;
+	wxCommandEvent ev ;
+	OnDataList ( ev ) ;
+	}
+
+void TGraphDialog::add_nb_scales ()
+	{
+	nb_scales = new wxPanel ( nb , -1 ) ;
+	nb->AddPage ( nb_scales , txt("t_gd_scales") ) ;
+	
+	int a ;
+	last_scale = -1 ;
+	
+	wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	
+	lb_scales = new wxListBox ( nb_scales , TGD_LB_SCALES ) ;
+	for ( a = 0 ; a < parent->gd->scales.size() ; a++ )
+		{
+		lb_scales->Append ( parent->gd->scales[a]->name ) ;
+		TGraphScale *ns = new TGraphScale ;
+		*ns = *(parent->gd->scales[a]) ;
+		scales.push_back ( ns ) ;
+		}
+	
+	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+
+	wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	wxBoxSizer *h3 = new wxBoxSizer ( wxHORIZONTAL ) ;
+
+	scales_name = new wxTextCtrl ( nb_scales , -1 ) ;
+	h1->Add ( new wxStaticText ( nb_scales , -1 , txt("name") ) , 0 , wxEXPAND|wxALL , 2 ) ;
+	h1->Add ( scales_name , 1 , wxEXPAND|wxALL , 2 ) ;
+
+	scales_min = new wxTextCtrl ( nb_scales , -1 ) ;
+	scales_max = new wxTextCtrl ( nb_scales , -1 ) ;
+	h2->Add ( new wxStaticText ( nb_scales , -1 , _T("Min") ) , 0 , wxEXPAND|wxALL , 2 ) ;
+	h2->Add ( scales_min , 1 , wxEXPAND|wxALL , 2 ) ;
+	h2->Add ( new wxStaticText ( nb_scales , -1 , _T("Max") ) , 0 , wxEXPAND|wxALL , 2 ) ;
+	h2->Add ( scales_max , 1 , wxEXPAND|wxALL , 2 ) ;
+
+	scales_unit = new wxTextCtrl ( nb_scales , -1 ) ;
+	ch_scales_type = new wxChoice ( nb_scales , -1 ) ;
+	for ( a = 0 ; a < parent->gd->scaleTypes.GetCount() ; a++ )
+		ch_scales_type->Append ( parent->gd->scaleTypes[a] ) ;
+	h3->Add ( new wxStaticText ( nb_scales , -1 , _T("Unit") ) , 0 , wxEXPAND|wxALL , 2 ) ;
+	h3->Add ( scales_unit , 0 , wxEXPAND|wxALL , 2 ) ;
+	h3->Add ( new wxStaticText ( nb_scales , -1 , _T("Type") ) , 0 , wxEXPAND|wxALL , 2 ) ;
+	h3->Add ( ch_scales_type , 0 , wxEXPAND|wxALL , 2 ) ;
+	h3->Add ( new wxButton ( nb_scales , TGD_BT_SCALES , txt("color") ) , 0 , wxEXPAND|wxALL , 2 ) ;
+
+	v0->Add ( h1 , 0 , wxEXPAND|wxALL , 5 ) ;
+	v0->Add ( h2 , 0 , wxEXPAND|wxALL , 5 ) ;
+	v0->Add ( h3 , 0 , wxEXPAND|wxALL , 5 ) ;
+	
+	h0->Add ( lb_scales , 0 , wxEXPAND|wxALL , 5 ) ;
+	h0->Add ( v0 , 0 , wxEXPAND|wxALL , 5 ) ;
+	
+	nb_scales->SetSizer ( h0 ) ;
+	h0->Fit ( nb_scales ) ;
+	
+	lb_scales->SetSelection ( 0 ) ;
+	wxCommandEvent ev ;
+	OnScalesList ( ev ) ;
+	}
+
+void TGraphDialog::save_settings ()
+	{
+	if ( !set_up ) return ;
+	if ( last_scale != -1 )
+		{
+		scales[last_scale]->name = scales_name->GetLabel() ;
+		scales[last_scale]->unit = scales_unit->GetLabel() ;
+		scales[last_scale]->type = ch_scales_type->GetStringSelection() ;
+		double d ;
+		scales_min->GetLabel().ToDouble ( &d ) ; scales[last_scale]->min = d ;
+		scales_max->GetLabel().ToDouble ( &d ) ; scales[last_scale]->max = d ;
+		lb_scales->Delete ( last_scale ) ;
+		lb_scales->Insert ( scales[last_scale]->name , last_scale ) ;
+		}
+	}
+
+void TGraphDialog::OnScalesList ( wxCommandEvent &ev )
+	{
+	int i = lb_scales->GetSelection () ;
+	save_settings () ;
+	scales_name->SetLabel ( scales[i]->name ) ;
+	scales_unit->SetLabel ( scales[i]->unit ) ;
+	ch_scales_type->SetStringSelection ( scales[i]->type ) ;
+	scales_min->SetLabel ( wxString::Format ( _T("%f") , scales[i]->min ) ) ;
+	scales_max->SetLabel ( wxString::Format ( _T("%f") , scales[i]->max ) ) ;
+	last_scale = i ;
+	}
+
+void TGraphDialog::OnDataList ( wxCommandEvent &ev )
+	{
+	int i = lb_data->GetSelection () ;
+	save_settings () ;
+
+	data_name->SetLabel ( data[i]->name ) ;
+	ch_data_pointstyle->SetStringSelection ( data[i]->pointStyle ) ;
+	
+	int a ;
+	for ( a = 0 ; a < parent->gd->scales.size() ; a++ )
+		{
+		if ( data[i]->sx == parent->gd->scales[a] )
+			ch_data_scalex->SetSelection ( a ) ;
+		if ( data[i]->sy == parent->gd->scales[a] )
+			ch_data_scaley->SetSelection ( a ) ;
+		}
+	
+/*
+ch_data_pointstyle , *ch_data_pointcolor , *ch_data_scalex , *ch_data_scaley ;
+	ch_scales_type->SetStringSelection ( scales[i]->type ) ;
+	scales_min->SetLabel ( wxString::Format ( _T("%f") , scales[i]->min ) ) ;
+	scales_max->SetLabel ( wxString::Format ( _T("%f") , scales[i]->max ) ) ;
+*/
+
+	last_data = i ;
+	}
+
+void TGraphDialog::ShowScale ( TGraphScale *s )
+	{
+	nb->SetSelection ( 2 ) ;
+	int a ;
+	for ( a = 0 ; a < parent->gd->scales.size() ; a++ )
+		{
+		if ( parent->gd->scales[a] == s )
+			lb_scales->SetSelection ( a ) ;
+		}
+	wxCommandEvent ev ;
+	OnScalesList ( ev ) ;
+	}
+
+void TGraphDialog::ShowData ( TGraphData *d )
+	{
+	}
+
 // ******************************************* TSpeakDialog
 
 TSpeakDialog::TSpeakDialog(wxWindow *parent, const wxString& title , wxString _seq )

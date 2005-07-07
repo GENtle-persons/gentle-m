@@ -24,6 +24,9 @@ TGraphDisplay::TGraphDisplay ( wxWindow *parent , int id )
  	styles.Add ( _T("rect") ) ;
  	styles.Add ( _T("circle") ) ;
  	styles.Add ( _T("triangle") ) ;
+ 	
+ 	scaleTypes.Add ( _T("linear") ) ;
+ 	
 	init () ;
 	}
 	
@@ -219,6 +222,7 @@ bool TGraphDisplay::SetupFromFile ( wxString filename )
 	as.Add ( txt("t_graph_file_type_fluorimeter") ) ;
 	as.Add ( txt("t_graph_file_type_xypair") ) ;
 	as.Add ( txt("t_graph_file_type_bio") ) ;
+	as.Add ( txt("t_graph_file_type_bio_csv") ) ;
 	
 	wxString *vs = new wxString [ as.GetCount() ] ;
 	for ( a = 0 ; a < as.GetCount() ; a++ )
@@ -242,6 +246,7 @@ bool TGraphDisplay::SetupFromFile ( wxString filename )
 	if ( s == txt("t_graph_file_type_fluorimeter") ) setupFluorimeterGraph ( readTextfile ( filename ) ) ;
 	if ( s == txt("t_graph_file_type_xypair") ) setupXYpair ( readTextfile ( filename ) ) ;
 	if ( s == txt("t_graph_file_type_bio") ) setupBioFormat ( filename ) ;
+	if ( s == txt("t_graph_file_type_bio_csv") ) setupBioCSVFormat ( readTextfile ( filename ) ) ;
 	
 	return true ;
 	}
@@ -385,10 +390,78 @@ wxString TGraphDisplay::tryall ( wxString filename )
 	if ( cnt > best ) { r = _T("t_graph_file_type_bio") ; best = cnt ; }
 	init () ;
 	
+	setupBioCSVFormat ( sf ) ;
+	for ( a = cnt = 0; a < data.size() ; a++ ) cnt += data[a]->dx.size() ;
+	if ( cnt > best ) { r = _T("t_graph_file_type_bio_csv") ; best = cnt ; }
+	init () ;
+	
 	if ( best < 5 ) r = _T("") ; // A graph with less points is useless
 	
 	return r ;
 	}    
+
+void TGraphDisplay::setupBioCSVFormat ( const stringField &sf )
+	{
+	int a ;
+	for ( a = 0 ; a < sf.size() ; a++ )
+		{
+		if ( sf[a].size() != 3 ) continue ;
+		if ( sf[a][0] != _T("Time") ) continue ;
+		if ( sf[a][1] != _T("UV") ) continue ;
+		if ( sf[a][2] != _T("Conductivity") ) continue ;
+		break ;
+		}
+	
+	if ( a >= sf.size() ) return ; // Wrong file type, no need to bother any more
+
+ 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , txt("t_biorad_csv_time") , _T("s") , *wxBLACK ) ;
+  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , txt("t_biorad_csv_UV") , _T("") , *wxBLACK ) ;
+  	TGraphScale *sz = new TGraphScale ( 0 , 0 , false , false , txt("t_biorad_csv_conductivity") , _T("mS/cm") , *wxBLACK ) ;
+ 	scales.push_back ( sx ) ;
+ 	scales.push_back ( sy ) ;
+ 	scales.push_back ( sz ) ;
+ 	
+ 	TGraphData *ng1 = new TGraphData ( this ) ;
+	ng1->name = wxString ( "UV" , wxConvUTF8 ) ;
+	ng1->SetScales ( sx , sy ) ;
+	ng1->pointStyle = _T("none") ;
+	ng1->col = wxTheColourDatabase->Find ( _T("BLUE") ) ;
+	
+ 	TGraphData *ng2 = new TGraphData ( this ) ;
+	ng2->name = wxString ( "Conductivity" , wxConvUTF8 ) ;
+	ng2->SetScales ( sx , sz ) ;
+	ng2->pointStyle = _T("none") ;
+	ng2->col = wxTheColourDatabase->Find ( _T("RED") ) ;
+	
+	data.push_back ( ng1 ) ;
+	data.push_back ( ng2 ) ;
+/*
+ 	int a ;
+ 	for ( a = 2 ; a < sf.size() && sf[a].size() > 1 && sf[a][0] != "" ; a++ )
+ 		{
+    	double x , y ;
+    	wxString s0 ( sf[a][0].c_str() , wxConvUTF8 ) ;
+    	wxString s1 ( sf[a][1].c_str() , wxConvUTF8 ) ;
+    	s0.ToDouble ( &x ) ;
+    	s1.ToDouble ( &y ) ;
+    	ng->Add ( (float) x , (float) y ) ;
+ 		}    
+*/
+	
+	for ( a++ ; a < sf.size() ; a++ )
+		{
+		if ( sf[a].size() != 3 ) break ;
+    	double x , y , z ;
+    	wxString s0 ( sf[a][0].c_str() , wxConvUTF8 ) ;
+    	wxString s1 ( sf[a][1].c_str() , wxConvUTF8 ) ;
+    	wxString s2 ( sf[a][2].c_str() , wxConvUTF8 ) ;
+    	s0.ToDouble ( &x ) ;
+    	s1.ToDouble ( &y ) ;
+    	s2.ToDouble ( &z ) ;
+    	ng1->Add ( (float) x , (float) y ) ;		
+    	ng2->Add ( (float) x , (float) z ) ;		
+		}
+	}
 
 void TGraphDisplay::setupBioFormat ( wxString filenamebase )
 	{
@@ -608,7 +681,17 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
     	scales[a]->selected = false ;
     	if ( scales[a]->outline.Inside ( pt ) ) new_scale = scales[a] ;
      	}
-   	if ( new_scale ) new_scale->selected = true ;
+   	if ( new_scale )
+			{
+			new_scale->selected = true ;
+   		if ( event.LeftDClick() )
+   			{
+				TGraphDialog gd ( g , txt("t_graph_dialog") ) ;
+				gd.ShowScale ( new_scale ) ;
+				if ( wxID_OK == gd.ShowModal() ) UpdateDisplay () ;
+				return ;
+				}
+			}
    	
    	// Inside the graph?
    	if ( inner.Inside ( pt ) )
@@ -639,6 +722,15 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
     		if ( best >= 4 ) new_data = NULL ; // Not good enough!
 	    	}    
     	if ( new_data ) new_data->selected = true ;
+
+   		if ( event.LeftDClick() )
+   			{
+				TGraphDialog gd ( g , txt("t_graph_dialog") ) ;
+				if ( new_data ) gd.ShowData ( new_data ) ;
+				if ( wxID_OK == gd.ShowModal() ) UpdateDisplay () ;
+				return ;
+				}
+
    		}    
    		
     // Dragging (CTRL)?
