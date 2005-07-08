@@ -4,6 +4,7 @@ Bugs :
 * Primer an Enden von linearen Stücken matchen nicht
 * Features in Alignment-Ausdruck verschoben
 * Absturz bei Inline-Plot-Änderung
+* In-Sequenz-Suche: Space/Sonderzeichen ignorieren
 
 Feature Requests :
 * Optimierung Überhang-Primer

@@ -39,6 +39,8 @@ class TGraphDialog : public wxDialog
 
    virtual void OnScalesList ( wxCommandEvent &ev ) ;
    virtual void OnDataList ( wxCommandEvent &ev ) ;
+   virtual void OnButtonData ( wxCommandEvent &ev ) ;
+   virtual void OnButtonScales ( wxCommandEvent &ev ) ;
 
 	private :
 	virtual void add_nb_graph () ;
@@ -52,11 +54,11 @@ class TGraphDialog : public wxDialog
 	wxPanel *nb_graph , *nb_data , *nb_scales ;
 	
 	wxListBox *lb_scales , *lb_data ;
-	wxTextCtrl *scales_name , *scales_min , *scales_max , *scales_unit ;
+	wxTextCtrl *scales_name , *scales_min , *scales_max , *scales_unit , *scales_color ;
 	wxChoice *ch_scales_type ;
 	
-	wxTextCtrl *data_name ;
-	wxChoice *ch_data_pointstyle , *ch_data_pointcolor , *ch_data_scalex , *ch_data_scaley ;
+	wxTextCtrl *data_name , *data_color ;
+	wxChoice *ch_data_pointstyle , *ch_data_scalex , *ch_data_scaley ;
 	
 	int last_scale , last_data ;
 	bool set_up ;
