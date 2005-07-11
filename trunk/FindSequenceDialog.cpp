@@ -54,10 +54,22 @@ FindSequenceDialog::FindSequenceDialog ( wxWindow *parent, const wxString& title
     y -= h/2 ;
     if ( x < x1+5 ) x = x1+5 ;
     if ( y < y1+5 ) y = y1+5 ;
-    Move ( x , y ) ;
-	
+    Move ( x , y ) ;	
     }
     
+wxString FindSequenceDialog::getQuery ()
+	{
+	wxString s = t->GetValue().Upper() ;
+	wxString t ;
+	for ( int a = 0 ; a < s.length() ; a++ )
+		{
+		if ( ( s.GetChar(a) >= 'A' && s.GetChar(a) <= 'Z' ) ||
+			  ( s.GetChar(a) >= '0' && s.GetChar(a) <= '9' ) )
+		    t += s.GetChar ( a ) ;
+		}
+	return t ;
+	}
+
 void FindSequenceDialog::OnLB ( wxCommandEvent &ev )
     {
     doAction ( false ) ;
@@ -212,7 +224,7 @@ void FindSequenceDialog::aaSearch ()
     	 v->getType() != TYPE_PRIMER )
     	 return ;
     	 
-    wxString s = t->GetValue().Upper() ;
+    wxString s = getQuery() ;
     for ( a = 0 ; a < v->items.size() ; a++ )
         {
         wxString ls = v->items[a].getAminoAcidSequence() ;
@@ -269,7 +281,7 @@ void FindSequenceDialog::aaSubSearch ( const wxString &s , int start , int dir ,
 	wxString res ;
 	wxArrayInt ai ;
     TVector *v = c->vec ;
-    wxString sub = t->GetValue().Upper() ;
+    wxString sub = getQuery() ;
     int ostart = start < 0 ? 2 : 0 ;
     
     res.Alloc ( s.length() / 3 + 10 ) ;
@@ -312,8 +324,8 @@ void FindSequenceDialog::aaSubSearch ( const wxString &s , int start , int dir ,
 void FindSequenceDialog::itemSearch ()
     {
     int a ;
-	TVector *v = c->vec ;
-    wxString s = t->GetValue().Upper() ;
+	 TVector *v = c->vec ;
+    wxString s = t->GetValue().Upper() ; // Using original input instead of filtered query
     for ( a = 0 ; a < v->items.size() ; a++ )
         {
         if ( lb->GetCount() > FIND_MAX ) return ;
@@ -334,7 +346,7 @@ void FindSequenceDialog::restrictionSearch ()
     {
     int a ;
     TVector *v = c->vec ;
-    wxString s = t->GetValue().Upper() ;
+    wxString s = getQuery() ;
     for ( a = 0 ; a < v->rc.size() ; a++ )
         {
         if ( lb->GetCount() > FIND_MAX ) return ;
@@ -353,7 +365,7 @@ void FindSequenceDialog::sequenceSearch ( bool invers )
     {
     bool cont = true ;
     int a ;
-    wxString sub = t->GetValue().Upper() ;
+    wxString sub = getQuery() ;
     p = 0 ;
     if ( sub.IsEmpty() ) return ;
 
@@ -402,7 +414,7 @@ void FindSequenceDialog::sequenceSearch ( bool invers )
 void FindSequenceDialog::OnTextChange ( wxCommandEvent &ev )
     {
     if ( c->vec->getGenomeMode() ) return ;
-    if ( t->GetValue().length() < 3 )
+    if ( getQuery().length() < 3 )
        {
        lb->Clear () ;
        vi.Clear () ;

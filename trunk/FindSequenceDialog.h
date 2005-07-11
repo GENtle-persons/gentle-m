@@ -24,6 +24,7 @@ class FindSequenceDialog : public wxDialog
     wxString allowed_chars ; ///< Chars one can search for
 
     private :
+	 virtual wxString getQuery () ;
     virtual bool doesMatch ( char a , char b ) ; ///< Returns if a matches b ( more than "is equal"!)
     virtual int subsearch ( const wxString &s , const wxString &sub , int start ) ; ///< Compares a string and a substring
     virtual void sequenceSearch ( bool invers = false ) ; ///< Search in sequence
