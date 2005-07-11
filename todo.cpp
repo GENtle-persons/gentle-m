@@ -3,8 +3,9 @@ Bugs :
 * Bericht drucken : lange Zeilen in Vektor-Beschreibung umbrechen
 * Primer an Enden von linearen Stücken matchen nicht
 * Features in Alignment-Ausdruck verschoben
-* Absturz bei Inline-Plot-Änderung
-* In-Sequenz-Suche: Space/Sonderzeichen ignorieren
+
+WONTFIX:
+* Absturz bei Inline-Plot-Änderung : Ncoils-bug
 
 Feature Requests :
 * Optimierung Überhang-Primer
