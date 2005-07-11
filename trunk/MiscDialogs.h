@@ -41,6 +41,7 @@ class TGraphDialog : public wxDialog
    virtual void OnDataList ( wxCommandEvent &ev ) ;
    virtual void OnButtonData ( wxCommandEvent &ev ) ;
    virtual void OnButtonScales ( wxCommandEvent &ev ) ;
+   virtual void OnOK ( wxCommandEvent &ev ) ;
 
 	private :
 	virtual void add_nb_graph () ;
