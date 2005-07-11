@@ -48,7 +48,7 @@ BEGIN_EVENT_TABLE(TGraphDialog, wxDialog )
 	EVT_LISTBOX(TGD_LB_DATA,TGraphDialog::OnDataList)
    EVT_BUTTON(TGD_BT_DATA,TGraphDialog::OnButtonData)
    EVT_BUTTON(TGD_BT_SCALES,TGraphDialog::OnButtonScales)
-   EVT_BUTTON(wxID_OK,wxDialog::OnOK)
+   EVT_BUTTON(TGD_OK,TGraphDialog::OnOK)
    EVT_BUTTON(wxID_CANCEL,wxDialog::OnCancel)
 END_EVENT_TABLE()
 
@@ -70,7 +70,7 @@ TGraphDialog::TGraphDialog ( wxWindow *_parent , const wxString& title )
 	add_nb_data () ;
 	add_nb_scales () ;
 	
-	h_buttons->Add ( new wxButton ( this , wxID_OK , txt("b_ok") ) , 1 , 0 ) ;
+	h_buttons->Add ( new wxButton ( this , TGD_OK , txt("b_ok") ) , 1 , 0 ) ;
 	h_buttons->Add ( new wxStaticText ( this , -1 , _T(" ") ) , 1 , wxEXPAND ) ;
 	h_buttons->Add ( new wxButton ( this , wxID_CANCEL , txt("b_cancel") ) , 1 , 0 ) ;
 	
@@ -84,6 +84,24 @@ TGraphDialog::TGraphDialog ( wxWindow *_parent , const wxString& title )
 
 TGraphDialog::~TGraphDialog()
 	{
+	}
+
+void TGraphDialog::OnOK ( wxCommandEvent &ev )
+	{
+	int a ;
+	for ( a = 0 ; a < scales.size() ; a++ )
+		{
+		*(parent->gd->scales[a]) = *(scales[a]) ;
+		delete scales[a] ;
+		}
+	for ( a = 0 ; a < data.size() ; a++ )
+		{
+		*(parent->gd->data[a]) = *(data[a]) ;
+		delete data[a] ;
+		}
+	parent->Refresh ( TRUE ) ;
+//	parent->gd->UpdateDisplay () ;
+	wxDialog::OnOK ( ev ) ;
 	}
 
 void TGraphDialog::add_nb_graph ()
@@ -133,7 +151,7 @@ void TGraphDialog::add_nb_data ()
 	h2->Add ( new wxStaticText ( nb_data , -1 , _T("Scale Y") ) , 0 , wxEXPAND|wxALL , 2 ) ;
 	h2->Add ( ch_data_scaley , 1 , wxEXPAND|wxALL , 2 ) ;
 	
-	data_color = new wxTextCtrl ( nb_scales , -1 , _T("  ") ) ;
+	data_color = new wxTextCtrl ( nb_data , -1 , _T("  ") ) ;
 	ch_data_pointstyle = new wxChoice ( nb_data , -1 ) ;
 	ch_data_pointstyle->Append ( _T("none") ) ;
 	for ( a = 0 ; a < parent->gd->styles.GetCount() ; a++ )
@@ -258,6 +276,7 @@ void TGraphDialog::OnScalesList ( wxCommandEvent &ev )
 	scales_min->SetLabel ( wxString::Format ( _T("%f") , scales[i]->min ) ) ;
 	scales_max->SetLabel ( wxString::Format ( _T("%f") , scales[i]->max ) ) ;
 	scales_color->SetBackgroundColour ( scales[i]->col ) ;
+	scales_color->Refresh ( TRUE ) ;
 	last_scale = i ;
 	}
 
@@ -280,6 +299,7 @@ void TGraphDialog::OnDataList ( wxCommandEvent &ev )
 			ch_data_scaley->SetSelection ( a ) ;
 		}
 	data_color->SetBackgroundColour ( data[i]->col ) ;
+	data_color->Refresh ( TRUE ) ;
 	last_data = i ;
 	}
 
@@ -316,6 +336,7 @@ void TGraphDialog::OnButtonData ( wxCommandEvent &ev )
 	if ( !c.Ok() ) return ; // Cancelled
 	data[last_data]->col = c ;
 	data_color->SetBackgroundColour ( data[last_data]->col ) ;
+	data_color->Refresh ( TRUE ) ;
 	}
 
 void TGraphDialog::OnButtonScales ( wxCommandEvent &ev )
@@ -325,6 +346,7 @@ void TGraphDialog::OnButtonScales ( wxCommandEvent &ev )
 	if ( !c.Ok() ) return ; // Cancelled
 	scales[last_scale]->col = c ;	
 	scales_color->SetBackgroundColour ( scales[last_scale]->col ) ;
+	scales_color->Refresh ( TRUE ) ;
 	}
 
 // ******************************************* TSpeakDialog

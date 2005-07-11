@@ -408,6 +408,7 @@ enum {
 	TGD_LB_DATA,
 	TGD_BT_DATA,
 	TGD_BT_SCALES,
+	TGD_OK,
 	
 	Y___,
 	Z___
