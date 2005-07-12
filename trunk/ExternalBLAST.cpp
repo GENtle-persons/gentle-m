@@ -91,9 +91,11 @@ public :
 	    do {
 		while ( wait )
 		{
+#ifndef __WXMAC__
 		    wxMutexGuiEnter() ;
 		    p->showMessage ( wxString::Format ( txt("t_blast_time") , wait ) ) ;
 		    wxMutexGuiLeave() ;
+#endif
 		    wxThread::Sleep ( 1000 ) ; // Wait 1 sec
 		    wait-- ;
 		    if ( GetThread()->TestDestroy() ) // Currently, there's no way to interrupt this!

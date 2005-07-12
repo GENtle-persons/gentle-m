@@ -65,12 +65,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 141549354;
-			PBXWorkspaceStateSaveDate = 141549354;
-		};
-		perUserProjectItems = {
-			91E7A6C108702C8800223203 /* PBXTextBookmark */ = 91E7A6C108702C8800223203 /* PBXTextBookmark */;
-			91E7A6E00870459700223203 /* PBXTextBookmark */ = 91E7A6E00870459700223203 /* PBXTextBookmark */;
+			PBXPerProjectTemplateStateSaveDate = 142844479;
+			PBXWorkspaceStateSaveDate = 142844479;
 		};
 		sourceControlManager = 9180A64F0866FCF9000C7D5E /* Source Control */;
 		userBuildSettings = {
@@ -225,11 +221,19 @@
 			sepNavWindowFrame = "{{38, 48}, {964, 672}}";
 		};
 	};
+	9180A66E0866FD45000C7D5E /* ExternalBLAST.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {925, 4984}}";
+			sepNavSelRange = "{3027, 0}";
+			sepNavVisRect = "{{0, 1080}, {925, 543}}";
+			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
+		};
+	};
 	9180A66F0866FD45000C7D5E /* ExternalInterface.cpp */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {925, 4060}}";
 			sepNavSelRange = "{0, 0}";
-			sepNavVisRect = "{{0, 579}, {925, 543}}";
+			sepNavVisRect = "{{0, 0}, {925, 543}}";
 			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
 		};
 	};
@@ -412,7 +416,7 @@
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {925, 4354}}";
 			sepNavSelRange = "{4408, 0}";
-			sepNavVisRect = "{{0, 3403}, {925, 543}}";
+			sepNavVisRect = "{{0, 3500}, {925, 543}}";
 			sepNavWindowFrame = "{{32, 54}, {964, 672}}";
 		};
 	};
@@ -476,23 +480,5 @@
 			sepNavVisRect = "{{0, 10643}, {925, 543}}";
 			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
 		};
-	};
-	91E7A6C108702C8800223203 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		comments = "error: 'myapp' was not declared in this scope";
-		fRef = 9180A6A80866FD46000C7D5E /* TPhylip.cpp */;
-		rLen = 1;
-		rLoc = 7;
-		rType = 1;
-	};
-	91E7A6E00870459700223203 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 9180A6A80866FD46000C7D5E /* TPhylip.cpp */;
-		name = "TPhylip.cpp: 255";
-		rLen = 0;
-		rLoc = 4408;
-		rType = 0;
-		vrLen = 1205;
-		vrLoc = 4086;
 	};
 }
