@@ -2,6 +2,7 @@
 	\brief Contains the methods of the TPrimerDesign module class
 */
 #include "PrimerDesign.h"
+#include "PCR_Troubleshoot.h"
 
 BEGIN_EVENT_TABLE(TPrimerDesign, MyChildBase)
     EVT_MENU(AA_ALL, TPrimerDesign::OnAA_all)
@@ -27,6 +28,7 @@ BEGIN_EVENT_TABLE(TPrimerDesign, MyChildBase)
     EVT_MENU(SEQ_PRINT,TPrimerDesign::OnPrint)
     EVT_MENU(SEQ_INSERT_RESTRICTION_SITE_LEFT,TPrimerDesign::OnInsertRestrictionSiteLeft)
     EVT_MENU(SEQ_INSERT_RESTRICTION_SITE_RIGHT,TPrimerDesign::OnInsertRestrictionSiteRight)
+    EVT_MENU(PD_TROUBLESHOOT,TPrimerDesign::OnTroubleshoot)
     
     EVT_LIST_ITEM_ACTIVATED(PD_LC,TPrimerDesign::OnActivatePrimer)
     EVT_LIST_ITEM_SELECTED(PD_LC,TPrimerDesign::OnSelectPrimer)
@@ -361,7 +363,7 @@ void TPrimerDesign::initme ()
     edit_menu->Append(MDI_COPY, txt("m_copy") );
     edit_menu->Append ( SEQ_INSERT_RESTRICTION_SITE_LEFT , txt("m_insert_restiction_site_left") ) ;
     edit_menu->Append ( SEQ_INSERT_RESTRICTION_SITE_RIGHT , txt("m_insert_restiction_site_right") ) ;
-
+    edit_menu->Append ( PD_TROUBLESHOOT , txt("m_troubleshoot") ) ;
 
     wxMenu *view_menu = new wxMenu;
 /*    view_menu->Append(MDI_REFRESH, txt("m_refresh_picture") );
@@ -900,4 +902,4 @@ void TPrimerDesign::OnInsertRestrictionSiteRight(wxCommandEvent& event)
     {
     sc->OnInsertRestrictionSiteRight ( event ) ;
     }
-        
+

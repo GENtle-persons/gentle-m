@@ -408,7 +408,7 @@ void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl , int mut )
 void PlasmidCanvas::OnPrimerForward ( wxCommandEvent &ev )
     {
     vector <TPrimer> pl ;
-    int end = getMarkFrom() + 30 ;
+    int end = getMarkFrom() + 20 ;
     if ( end >= p->vec->getSequenceLength() ) end = p->vec->getSequenceLength() ;
     pl.push_back ( TPrimer ( getMarkFrom() , end , true ) ) ;
     RunPrimerEditor ( pl ) ;
@@ -417,7 +417,7 @@ void PlasmidCanvas::OnPrimerForward ( wxCommandEvent &ev )
 void PlasmidCanvas::OnPrimerBackward ( wxCommandEvent &ev )
     {
     vector <TPrimer> pl ;
-    int start = getMarkTo() - 30 ;
+    int start = getMarkTo() - 20 ;
     if ( start < 1 ) start = 1 ;
     pl.push_back ( TPrimer ( start , getMarkTo() , false ) ) ;
     RunPrimerEditor ( pl ) ;
@@ -426,10 +426,10 @@ void PlasmidCanvas::OnPrimerBackward ( wxCommandEvent &ev )
 void PlasmidCanvas::OnPrimerBoth ( wxCommandEvent &ev )
     {
     vector <TPrimer> pl ;
-    int end = getMarkFrom() + 30 ;
+    int end = getMarkFrom() + 20 ;
     if ( end >= p->vec->getSequenceLength() ) end = p->vec->getSequenceLength() ;
     pl.push_back ( TPrimer ( getMarkFrom() , end , true ) ) ;
-    int start = getMarkTo() - 30 ;
+    int start = getMarkTo() - 20 ;
     if ( start < 1 ) start = 1 ;
     pl.push_back ( TPrimer ( start , getMarkTo() , false ) ) ;
     RunPrimerEditor ( pl ) ;
