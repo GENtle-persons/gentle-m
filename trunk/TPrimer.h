@@ -43,8 +43,8 @@ class TPrimer
     virtual float getEvaluation () ; ///< Get quality evaluation (for annealing)
     virtual float getGCcontents () ; ///< Get GC contents
     
-    virtual wxString getName () ;
-    virtual void setName ( wxString nn ) ;
+    virtual wxString getName () ; ///< Returns the name of the primer, if any was given
+    virtual void setName ( wxString nn ) ; ///< Sets the name of the primer
     
     
     // Variables

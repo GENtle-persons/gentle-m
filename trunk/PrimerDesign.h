@@ -65,6 +65,7 @@ class TPrimerDesign : public ChildBase
     virtual void OnAA_setit(int mode);
     virtual void OnInsertRestrictionSiteLeft ( wxCommandEvent &ev ) ;
     virtual void OnInsertRestrictionSiteRight ( wxCommandEvent &ev ) ;
+    virtual void OnTroubleshoot ( wxCommandEvent &ev ) ;
     
     virtual void OnSilmut ( wxCommandEvent& event) ;
     virtual void OnHorizontal ( wxCommandEvent& event ) ;
