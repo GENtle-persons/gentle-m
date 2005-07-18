@@ -21,6 +21,20 @@
 			9180A6590866FD0A000C7D5E /* GENtle */,
 		);
 		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXExecutablesDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXExecutablesDataSource_NameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					22,
+					300,
+					131,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXExecutablesDataSource_ActiveFlagID,
+					PBXExecutablesDataSource_NameID,
+					PBXExecutablesDataSource_CommentsID,
+				);
+			};
 			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
 				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
@@ -65,8 +79,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 142844479;
-			PBXWorkspaceStateSaveDate = 142844479;
+			PBXPerProjectTemplateStateSaveDate = 143363706;
+			PBXWorkspaceStateSaveDate = 143363706;
 		};
 		sourceControlManager = 9180A64F0866FCF9000C7D5E /* Source Control */;
 		userBuildSettings = {
@@ -264,7 +278,7 @@
 	9180A6770866FD46000C7D5E /* main.cpp */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {925, 7686}}";
-			sepNavSelRange = "{5975, 0}";
+			sepNavSelRange = "{5660, 0}";
 			sepNavVisRect = "{{0, 2817}, {925, 543}}";
 			sepNavWindowFrame = "{{38, 48}, {964, 672}}";
 		};

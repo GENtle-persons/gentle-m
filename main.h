@@ -31,7 +31,7 @@ typedef unsigned int uint ;
 
 //#define MYDEBUG
 //#define MYLOG
-//#define MYTEST
+#define MYTEST
 
 #ifdef MYTEST
 	#ifndef MYLOG
