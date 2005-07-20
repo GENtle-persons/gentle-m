@@ -159,7 +159,7 @@ public:
     TStorage *LS ; ///< \brief Pointer to the local TStorage database structure
     bool dying , enhancedRefresh , showVectorTitle , showVectorLength , 
             loadLastProject , useMetafile , showSplashScreen , checkUpdate ,
-            useCoolCanvas , useInternalHelp , doRegisterStuff ;
+            useCoolCanvas , useInternalHelp , doRegisterStuff , showEnzymePos ;
     int editFeatureMode ;
     TProject project ; ///< \brief The current project
     TEnzymeRules *global_enzyme_rules ; ///< \brief The global rules for which enzymes to use/display

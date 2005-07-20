@@ -39,12 +39,15 @@ class PCR_troubleshoot_dialog : public wxDialog
 	virtual void scan_length ( TPrimer &p , int nr ) ;
 	virtual void scan_GCcontent ( TPrimer &p , int nr ) ;
 	virtual void scan_GCclamp ( TPrimer &p , int nr ) ;
+	virtual void scan_end_stability ( TPrimer &p , int nr ) ;
 	virtual void scan_Runs ( TPrimer &p , int nr , int length ) ;
+	virtual void scan_specificity ( TPrimer &p , int nr ) ;
 	
 	virtual void add_warning ( TPrimer &p , int nr , wxString head , wxString tail ) ;
 	virtual void add_error ( TPrimer &p , int nr , wxString head , wxString tail ) ;
 	virtual void show_item ( int n ) ;
 	virtual wxString invert ( wxString s ) ;
+	virtual wxString trim_both ( wxString s1 , wxString s2 , wxString s3 ) ;
 	virtual wxArrayString get_matrix ( wxString s1 , wxString s2 ) ;
 	virtual wxArrayString get_matches ( wxArrayString &m , int min , int allowed_gaps = 0 ) ;
 	virtual void fillSantaLucia () ;

@@ -61,7 +61,8 @@ class ProgramOptionsDialog : public wxDialog
     wxChoice *language ; ///< Pointer to the dropdown language list
     wxCheckBox *enhancedDisplay , *vectorTitle , *vectorLength ,
                 *loadLastProject , *useMetafile , *showSplashScreen ,
-                *checkUpdate , *useInternalHelp , *doRegisterStuff ;
+                *checkUpdate , *useInternalHelp , *doRegisterStuff ,
+					 *showEnzymePos ;
                 
     wxRadioBox *editFeatureMode ; ///< Pointer to the list of choices of how to treat edited items
                 

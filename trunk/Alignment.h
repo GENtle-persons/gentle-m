@@ -108,16 +108,16 @@ class TAlignment : public ChildBase,wxThreadHelper
     wxChoice *mmb ;
     SeqAA *aaa ;
     bool threadRunning ;
-    void myInsert ( int line , int pos , char what ) ;
-    void myDelete ( int line , int pos ) ;
-    void updateSequence () ;
-    void generateConsensusSequence ( bool addit = true ) ;
-    void fixMenus ( int i ) ;
-    
     bool keepIdentity ;
     
+    virtual void myInsert ( int line , int pos , char what ) ;
+    virtual void myDelete ( int line , int pos ) ;
+    virtual void updateSequence () ;
+    virtual void generateConsensusSequence ( bool addit = true ) ;
+    virtual void fixMenus ( int i ) ;
+    
     protected :
-    virtual void doExport ( wxString filename , int filter ) ;
+    virtual void doExport ( wxString filename , int filter ) ; ///< Export data, depending on filename and export type
     virtual void readTabColors ( wxString filename ) ;
     
     DECLARE_EVENT_TABLE()

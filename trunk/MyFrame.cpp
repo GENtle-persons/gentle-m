@@ -210,6 +210,7 @@ void MyFrame::initme ()
     editFeatureMode = LS->getOption ( _T("EDITFEATUREMODE") , 0 ) ;
     useCoolCanvas = LS->getOption ( _T("USECOOLCANVAS") , false ) ; // Not saved yet
     useInternalHelp = LS->getOption ( _T("USEINTERNALHELP") , false ) ; // Not saved yet
+    showEnzymePos = LS->getOption ( _T("SHOWENZYMEPOS") , true ) ;
 	 myapp()->init_txt ( lang_string.c_str() , _T("variables.csv") ) ;
     global_enzyme_rules = new TEnzymeRules ;
     global_enzyme_rules->load_global_settings() ;
@@ -1045,6 +1046,7 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     useInternalHelp = pod.useInternalHelp->GetValue() ;
     doRegisterStuff = pod.doRegisterStuff->GetValue() ;
     editFeatureMode = pod.editFeatureMode->GetSelection() ;
+    showEnzymePos = pod.showEnzymePos->GetValue() ;
     wxString lang = pod.language->GetStringSelection() ;
     if ( lang != lang_string )
         {
@@ -1065,6 +1067,7 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     LS->setOption ( _T("USEINTERNALHELP") , useInternalHelp ) ;
     LS->setOption ( _T("REGISTERSTUFF") , doRegisterStuff ) ;
     LS->setOption ( _T("EDITFEATUREMODE") , editFeatureMode ) ;
+    LS->setOption ( _T("SHOWENZYMEPOS") , showEnzymePos ) ;
     global_enzyme_rules->save_global_settings() ; //!!!!!!! fix this!
     LS->endRecord() ;
     for ( int a = 0 ; a < children.GetCount() ; a++ )
