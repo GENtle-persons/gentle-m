@@ -89,6 +89,7 @@ void TRestrictionCut::linearUpdate ( int w , int h )
     
 wxString TRestrictionCut::getNameAndPosition ()
     {
+	 if ( !myapp()->frame->showEnzymePos ) return getDisplayName() ;
     return wxString::Format ( _T("%s %d") , getDisplayName().c_str() , pos ) ;
     }
 

@@ -3,6 +3,7 @@ Bugs :
 * Bericht drucken : lange Zeilen in Vektor-Beschreibung umbrechen
 * Primer an Enden von linearen Stücken matchen nicht
 * Features in Alignment-Ausdruck verschoben
+* Restriktion mit überlappenden Restriktionssites
 
 WONTFIX:
 * Absturz bei Inline-Plot-Änderung : Ncoils-bug
@@ -18,6 +19,10 @@ Feature Requests :
 * AS-Sequenz Protease-schneiden
 * Find proteases that cut n times
 * That ligation thingy 
+
+* Export alignments as CSV / TXT
+* Save all
+* Feature names movable / keep position with changes
 
 SEE: http://eutils.ncbi.nlm.nih.gov/entrez/query/static/eutils_help.html
 

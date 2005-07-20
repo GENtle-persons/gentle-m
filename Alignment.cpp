@@ -1113,17 +1113,37 @@ void TAlignment::OnFileSave ( wxCommandEvent &ev )
     TManageDatabaseDialog dbd ( this , txt("t_store") , ACTION_MODE_SAVE , vec ) ;
     dbd.ShowModal () ;
     }
-    
+
 void TAlignment::doExport ( wxString filename , int filter )
     {
     wxFile out ( filename , wxFile::write ) ;
-    for ( unsigned int a = 0 ; a < lines.size() ; a++ )
-        {
-        if ( lines[a].v )
-           exportVector ( lines[a].v , out , filter ) ;
-        }    
+    
+    int a ;
+    if ( filter == 1 ) // Plain text
+    	{
+		for ( a = 0 ; a < lines.size() ; a++ )
+			{
+        if ( !lines[a].v ) continue ;
+//			if ( lines[a].isIdentity ) continue ;
+			exportVector ( lines[a].v , out , filter , filename ) ;
+			}
+		}
+    else if ( filter == 6 ) // CSV
+    	{
+		for ( a = 0 ; a < lines.size() ; a++ )
+			{
+			if ( !lines[a].v ) continue ;
+			for ( int b = 0 ; b < lines[a].s.length() ; b++ )
+				{
+				if ( b > 0 ) out.Write ( _T(";") ) ;
+				out.Write ( _T("\"") + wxString ( lines[a].s.GetChar ( b ) ) + _T("\"") ) ;
+				}
+			out.Write ( _T("\n") ) ;
+			}
+		}
     out.Close () ;
     }    
+
 
 void TAlignment::fromVector ( TVector *nv )
     {

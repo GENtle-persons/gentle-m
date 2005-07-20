@@ -3,7 +3,7 @@
 // WHILE DEVELOPING
 void TPrimerDesign::OnTroubleshoot ( wxCommandEvent &ev )
 	{
-	PCR_troubleshoot_dialog td ( this , "TEST" ) ;
+	PCR_troubleshoot_dialog td ( this , txt("t_pcr_ts_title") ) ;
 	td.ShowModal () ;
 	}
 // WHILE DEVELOPING
@@ -27,7 +27,7 @@ PCR_troubleshoot_dialog::PCR_troubleshoot_dialog(TPrimerDesign *_parent, const w
 	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
 	
 	list = new wxListBox ( this , PCR_TROUBLESHOOT_LIST ) ;
-	text = new wxTextCtrl ( this , -1 , _T("") , wxDefaultPosition , wxDefaultSize , wxTE_MULTILINE|wxTE_READONLY|wxHSCROLL ) ;
+	text = new wxTextCtrl ( this , -1 , _T("") , wxDefaultPosition , wxDefaultSize , wxTE_MULTILINE|wxTE_READONLY ) ;
 	text->SetFont ( *MYFONT ( MYFONTSIZE , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
 	
 	v0->Add ( list , 0 , wxEXPAND|wxALL , 5 ) ;
@@ -61,6 +61,9 @@ void PCR_troubleshoot_dialog::fillSantaLucia ()
 	santa_lucia.push_back ( TSantaLucia ( "CC/GG" , -1.84 , - 8.0 , -19.9 ) ) ; // CC
 	santa_lucia.push_back ( TSantaLucia ( "TG/AC" , -1.44 , - 8.4 , -22.4 ) ) ; // TG
 	santa_lucia.push_back ( TSantaLucia ( "TC/AG" , -1.28 , - 7.8 , -21.0 ) ) ; // TC
+
+	santa_lucia.push_back ( TSantaLucia ( "AC/TG" , -1.44 , - 8.4 , -22.4 ) ) ; // AC
+	santa_lucia.push_back ( TSantaLucia ( "AG/TC" , -1.28 , - 7.8 , -21.0 ) ) ; // AG
 	}
 
 double PCR_troubleshoot_dialog::deltaG0 ( TPrimer &p )
@@ -145,16 +148,26 @@ void PCR_troubleshoot_dialog::scan ()
 	double x = deltaG0 ( p ) ;
 	wxMessageBox ( wxString::Format ( "%2.2f" , x ) ) ;
 */	
-	int a ;
+	int a , b ;
 	for ( a = 0 ; a < parent->primer.size() ; a++ )
 		{
-//		scan_hairpin ( parent->primer[a] , a ) ;
 		scan_length ( parent->primer[a] , a ) ;
 		scan_GCcontent ( parent->primer[a] , a ) ;
 		scan_GCclamp ( parent->primer[a] , a ) ;
 		scan_Runs ( parent->primer[a] , a , 1 ) ; // Runs
 		scan_Runs ( parent->primer[a] , a , 2 ) ; // Repeats
+//		scan_hairpin ( parent->primer[a] , a ) ;
 		scan_dimer ( parent->primer[a] , parent->primer[a] , a , a ) ;
+//		scan_end_stability ( parent->primer[a] , a ) ;
+		scan_specificity ( parent->primer[a] , a ) ;
+		}
+
+	for ( a = 0 ; a < parent->primer.size() ; a++ )
+		{
+		for ( b = 0 ; b < a ; b++ )
+			{
+			scan_dimer ( parent->primer[a] , parent->primer[b] , a , b ) ;
+			}
 		}
 	}
 
@@ -187,8 +200,8 @@ double PCR_troubleshoot_dialog::deltaG0_dimer ( wxString s1 , wxString s2 )
 	double ret = 0 ;
 	for ( a = 0 ; a+1 < s1.length() ; a++ )
 		{
-//		if ( s1.GetChar ( a ) != opp ( s2.GetChar ( a ) ) ) continue ; // Mismatch
-//		if ( s1.GetChar ( a+1 ) != opp ( s2.GetChar ( a+1 ) ) ) continue ; // Mismatch
+		if ( s1.GetChar ( a ) != opp ( s2.GetChar ( a ) ) ) continue ; // Mismatch
+		if ( s1.GetChar ( a+1 ) != opp ( s2.GetChar ( a+1 ) ) ) continue ; // Mismatch
 //		wxMessageBox ( s1.Mid ( a , 2 ) , s2.Mid ( a , 2 ) ) ;
 		int i = getSLindex ( s1.Mid ( a , 2 ) ) ;
 		if ( i >= santa_lucia.size() ) continue ; // Ignore this one
@@ -214,33 +227,107 @@ void PCR_troubleshoot_dialog::scan_dimer ( TPrimer &p1 , TPrimer &p2 , int nr1 ,
 	while ( s2.length() < s1.length() ) s2.Pad ( 1 ) ;
 	
 	int a ;
-	double best = 10000 ;
+	double best = 10000 ; // Just to be on the safe side :-)
 	wxString best_text ;
 	for ( a = 0 ; a < sl ; a++ )
 		{
 		double g0 = deltaG0_dimer ( s1 , s2 ) ;
-//		wxMessageBox ( wxString::Format ( _T("DeltaG0=%2.2f\r\n") , g0 ) ) ;
 		if ( g0 < best )
 			{
 			best = g0 ;
-			best_text = wxString::Format ( _T("DeltaG0=%2.2f\r\n") , g0 ) ;
-			best_text += s1.Trim() + "\r\n" ;
-			best_text += get_dimer_connections ( s1 , s2 ) . Trim() + "\r\n" ;
-			best_text += s2.Trim() + "\r\n" ;
-			best_text.Replace ( " " , "." ) ;
+			best_text = wxString::Format ( txt("t_pcr_ts_deltag0") , best ) ;
+			best_text += trim_both ( s1 , get_dimer_connections ( s1 , s2 ) , s2 ) ;
 			}
-		s2 = _T(" ") + s2.Mid ( 1 , s2.length() - 1 ) ; // Move
+		s2 = _T(" ") + s2 ; // Move
 		}
 	
-//	if ( best > 5 ) return ; // Seems OK
-	add_warning ( p1 , nr1 , "Dimer formation" , best_text ) ;
+	if ( best > -5 ) return ; // Seems OK
+	
+	wxString msg = txt("t_pcr_ts_warning_dimer_formation") ;
+	if ( nr1 == nr2 ) msg += txt("t_pcr_ts_warning_self_dimer") ;
+	else msg += wxString::Format ( txt("t_pcr_ts_warning_crossdimer") , nr2+1 ) ;
+	
+	add_warning ( p1 , nr1 , msg , best_text ) ;
+	}
+
+wxString PCR_troubleshoot_dialog::trim_both ( wxString s1 , wxString s2 , wxString s3 )
+	{
+	s1 = s1.Trim () ;
+	s3 = s3.Trim () ;
+	wxString nl = _T("\r\n") ;
+	while ( s1.Left(1) + s2.Left(1) + s3.Left(1) == _T("   ") )
+		{
+		s1 = s1.Mid ( 1 ) ;
+		s2 = s2.Mid ( 1 ) ;
+		s3 = s3.Mid ( 1 ) ;
+		}
+	return nl + nl + s1 + nl + s2 + nl + s3 + nl ;
+	}
+
+void PCR_troubleshoot_dialog::scan_specificity ( TPrimer &p , int nr )
+	{
+	int a , psl = p.sequence.length() ;
+	wxString s1 = parent->vec->getStrand53() ;
+	wxString s3 = parent->vec->getStrand35() ;
+	wxString s2 ;
+	for ( a = 0 ; a < s3.length() ; a++ )
+		s2 += s3.GetChar ( s3.length() - a - 1 ) ;
+	if ( parent->vec->isCircular() )
+		{
+		s1 += s1.Left ( psl ) ;
+		s2 += s2.Left ( psl ) ;
+		}
+	wxString s = s2 + _T(" ") + s1 ;
+	
+	wxArrayString vs ;
+	for ( a = 0 ; a + psl < s.length() ; a++ )
+		{
+		wxString su = s.Mid ( a , psl ) ;
+		double d = deltaG0_dimer ( p.sequence , su ) ;
+		
+		wxString x = wxString::Format ( _T("%6.2f : %5d") , d , a ) ;
+
+		x += "\r\n" ;
+		x += p.sequence ;
+		x += "\r\n" ;
+		x += get_dimer_connections ( p.sequence , su ) ;
+		x += "\r\n" ;
+		x += su ;
+		x += "\r\n" ;
+		x += "\r\n" ;
+		
+		vs.Add ( x ) ;
+		if ( vs.GetCount() <= 5 ) continue ;
+		vs.Sort ( true ) ;
+		vs.RemoveAt ( vs.GetCount() - 1 ) ;
+		}
+	vs.Sort ( true ) ;
+	
+	double d0 , d1 ;
+	vs[0].ToDouble ( &d0 ) ;
+	vs[1].ToDouble ( &d1 ) ;
+	if ( d1 * 2 > d0 ) return ; // The second best is less than half as good as the first fit, so everything's OK...
+	
+	wxString text ;
+	for ( a = 0 ; a < vs.size() ; a++ )
+		text += wxString::Format ( _T("%s\r\n") , vs[a].mb_str() ) ;
+	add_warning ( p , nr , txt("t_pcr_ts_warning_specificity") , text ) ;		
+	}
+
+void PCR_troubleshoot_dialog::scan_end_stability ( TPrimer &p , int nr )
+	{ // DON'T USE THIS!
+	TPrimer p2 = p ;
+	p2.sequence = p.get53sequence().Right(5) ;
+	double d = deltaG0 ( p2 ) ;
+	add_warning ( p , nr , txt("t_pcr_ts_warning_end_stability") , 
+	wxString::Format ( txt("t_pcr_ts_warning_end_stability_text") , d ) ) ;
 	}
 
 void PCR_troubleshoot_dialog::scan_length ( TPrimer &p , int nr )
 	{
 	if ( p.sequence.length() >= 18 && p.sequence.length() <= 22 ) return ; // OK
-	add_warning ( p , nr , "Primer length" , 
-	wxString::Format ( _T("This primer is %d bases long. Optimal length is 18-22 bases.") , p.sequence.length() ) ) ;
+	add_warning ( p , nr , txt("t_pcr_ts_warning_primer_length") , 
+	wxString::Format ( txt("t_pcr_ts_warning_primer_length_text") , p.sequence.length() ) ) ;
 	}
 
 void PCR_troubleshoot_dialog::scan_GCcontent ( TPrimer &p , int nr )
@@ -248,8 +335,8 @@ void PCR_troubleshoot_dialog::scan_GCcontent ( TPrimer &p , int nr )
 	int gc = p.getGCcontents () ;
 	if ( gc >= 40 && gc <= 60 ) return ; // Everthing's OK
 	
-	add_warning ( p , nr , "GC Contents" , 
-	wxString::Format ( _T("The %%GC content of the primer should be between 40%% and 60%%; it is currently %d%%") , gc ) ) ;
+	add_warning ( p , nr , txt("t_pcr_ts_warning_GC") , 
+	wxString::Format ( txt("t_pcr_ts_warning_GC_text") , gc ) ) ;
 	}
 
 void PCR_troubleshoot_dialog::scan_GCclamp ( TPrimer &p , int nr )
@@ -258,13 +345,13 @@ void PCR_troubleshoot_dialog::scan_GCclamp ( TPrimer &p , int nr )
 	int gc = s.Freq ( 'C' ) + s.Freq ( 'G' ) ;
 	if ( gc == 0 )
 		{
-		add_warning ( p , nr , "GC Clamp" , 
-		"The last five bases of the 3' end of the primer should contain at least one G or C" ) ;
+		add_warning ( p , nr , txt("t_pcr_ts_warning_gc_clamp") , 
+		txt("t_pcr_ts_warning_gc_clamp_t1") ) ;
 		}
 	else if ( gc > 3 )
 		{
-		add_warning ( p , nr , "GC Clamp" , 
-		"The last five bases of the 3' end of the primer should not contain more than three Gs or Cs" ) ;
+		add_warning ( p , nr , txt("t_pcr_ts_warning_gc_clamp") , 
+		txt("t_pcr_ts_warning_gc_clamp_t2") ) ;
 		}
 	}
 
@@ -273,21 +360,21 @@ void PCR_troubleshoot_dialog::scan_Runs ( TPrimer &p , int nr , int length )
 	wxString s = p.get53sequence() ;
 	
 	int a , b ;
-	wxString msg = "Runs" ;
-	if ( length > 1 ) msg = "Repeats" ;
+	wxString msg = txt("t_pcr_ts_warning_runs") ;
+	if ( length > 1 ) msg = txt("t_pcr_ts_warning_repeats") ;
 	for ( a = 0 ; a < s.length() ; a++ )
 		{
 		for ( b = a ; b < s.length() && s.Mid(a,length) == s.Mid(b,length) ; b += length ) ;
 		if ( ( b - a ) / length > 4 )
 			{
 			add_error ( p , nr , msg ,
-			"There are more than four repeats of '" + s.Mid(a,length) + "' in a row. This will likely lead to mispriming." ) ;
+			wxString::Format ( txt("t_pcr_ts_warning_runs_text") , s.Mid(a,length).mb_str() ) ) ;
 			a = b - length ;
 			}
 		else if ( ( b - a ) / length  == 4 )
 			{
 			add_warning ( p , nr , msg ,
-			"There are four repeats of '" + s.Mid(a,length) + "' in a row. This might lead to mispriming." ) ;
+			wxString::Format ( txt("t_pcr_ts_warning_runs_text2") , s.Mid(a,length).mb_str() ) ) ;
 			a = b - length ;
 			}
 		}

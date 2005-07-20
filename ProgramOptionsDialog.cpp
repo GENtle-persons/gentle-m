@@ -198,10 +198,12 @@ ProgramOptionsDialog::ProgramOptionsDialog(wxWindow *parent, const wxString& tit
     bo = 5 ;
     lh = 22 ;
     GetClientSize ( &w , &h ) ;
+    
     globalSettingsPanel = NULL ;
     nb = new wxNotebook ( (wxWindow*) this , -1 ,
                           wxPoint ( 0 , 0 ) ,
                           wxSize ( w , h - lh * 2 ) ) ;
+
     initGlobalSettings () ;
     initGlobalEnzymes () ;
 
@@ -225,46 +227,47 @@ void ProgramOptionsDialog::initGlobalEnzymes ()
     
 void ProgramOptionsDialog::initGlobalSettings ()
 	{
-	int w , h ;
     globalSettingsPanel = new wxPanel ( nb , -1 ) ;
     nb->AddPage ( globalSettingsPanel , txt("t_global_settings") ) ;    
-    globalSettingsPanel->GetClientSize ( &w , &h ) ;
-    
+/*
     wxStaticText *st ;
     st = new wxStaticText ( globalSettingsPanel , -1 , txt("t_language") , wxPoint ( bo , lh ) ) ;
     wxRect r1 = st->GetRect() ;
     
     int mw = r1.GetRight() ;
     mw += bo ;
-    
-    language = new wxChoice ( globalSettingsPanel , -1 , wxPoint ( mw , lh - bo ) ) ;
+*/
+    language = new wxChoice ( globalSettingsPanel , -1 ) ; //, wxPoint ( mw , lh - bo ) ) ;
     enhancedDisplay = new wxCheckBox ( globalSettingsPanel , -1 , 
-                        txt("t_enhanced_display") , 
-                        wxPoint ( bo , lh*3 ) ) ;
+                        txt("t_enhanced_display") ) ; 
+//                        wxPoint ( bo , lh*3 ) ) ;
     vectorTitle = new wxCheckBox ( globalSettingsPanel , -1 , 
-                        txt("t_vector_title") , 
-                        wxPoint ( bo , lh*4 ) ) ;
+                        txt("t_vector_title") ) ;
+//                        wxPoint ( bo , lh*4 ) ) ;
     vectorLength = new wxCheckBox ( globalSettingsPanel , -1 , 
-                        txt("t_vector_length") , 
-                        wxPoint ( bo , lh*5 ) ) ;
+                        txt("t_vector_length") ) ;
+//                        wxPoint ( bo , lh*5 ) ) ;
     loadLastProject = new wxCheckBox ( globalSettingsPanel , -1 , 
-                        txt("t_load_last_project") , 
-                        wxPoint ( bo , lh*6 ) ) ;
+                        txt("t_load_last_project") ) ;
+//                        wxPoint ( bo , lh*6 ) ) ;
     useMetafile = new wxCheckBox ( globalSettingsPanel , -1 , 
-                        txt("t_use_metafile") , 
-                        wxPoint ( bo , lh*7 ) ) ;
+                        txt("t_use_metafile") ) ;
+//                        wxPoint ( bo , lh*7 ) ) ;
     showSplashScreen = new wxCheckBox ( globalSettingsPanel , -1 , 
-                        txt("t_show_splashscreen") , 
-                        wxPoint ( bo , lh*8 ) ) ;
+                        txt("t_show_splashscreen") ) ;
+//                        wxPoint ( bo , lh*8 ) ) ;
     checkUpdate = new wxCheckBox ( globalSettingsPanel , -1 , 
-                        txt("t_check4update") , 
-                        wxPoint ( bo , lh*9 ) ) ;
+                        txt("t_check4update") ) ;
+//                        wxPoint ( bo , lh*9 ) ) ;
     useInternalHelp = new wxCheckBox ( globalSettingsPanel , -1 , 
-                        txt("t_useinternalhelp") , 
-                        wxPoint ( bo , lh*10 ) ) ;
+                        txt("t_useinternalhelp") ) ; 
+//                        wxPoint ( bo , lh*10 ) ) ;
     doRegisterStuff = new wxCheckBox ( globalSettingsPanel , -1 , 
-                        txt("t_doregisterstuff") , 
-                        wxPoint ( bo , lh*11 ) ) ;
+                        txt("t_doregisterstuff") ) ; 
+//                        wxPoint ( bo , lh*11 ) ) ;
+    showEnzymePos = new wxCheckBox ( globalSettingsPanel , -1 , 
+                        txt("t_showenzymepos") ) ; 
+//                        wxPoint ( bo , lh*12 ) ) ;
                         
                         
     wxString efm[3] ;
@@ -273,7 +276,7 @@ void ProgramOptionsDialog::initGlobalSettings ()
     efm[2] = txt("t_editfeaturemode_3") ;
     editFeatureMode = new wxRadioBox ( globalSettingsPanel , -1 , 
                         txt("t_editfeaturemode") , 
-                        wxPoint ( bo , lh*12 ) , 
+                        wxDefaultPosition , 
                         wxDefaultSize ,
                         3 , efm , 1 , wxRA_SPECIFY_ROWS ) ;
     editFeatureMode->SetSelection ( myapp()->frame->editFeatureMode ) ;
@@ -287,9 +290,31 @@ void ProgramOptionsDialog::initGlobalSettings ()
     checkUpdate->SetValue ( myapp()->frame->checkUpdate ) ;
     useInternalHelp->SetValue ( myapp()->frame->useInternalHelp ) ;
     doRegisterStuff->SetValue ( myapp()->frame->doRegisterStuff ) ;
+    showEnzymePos->SetValue ( myapp()->frame->showEnzymePos ) ;
     language->Append ( _T("en") ) ;
     language->Append ( _T("de") ) ;
     language->SetStringSelection ( myapp()->frame->lang_string ) ;
+
+    wxBoxSizer *v = new wxBoxSizer ( wxVERTICAL ) ;
+    wxBoxSizer *h = new wxBoxSizer ( wxHORIZONTAL ) ;
+    h->Add ( new wxStaticText ( globalSettingsPanel , -1 , txt("t_language") ) , 0 , wxEXPAND|wxALL , 5 ) ;
+    h->Add ( language , 0 , wxEXPAND|wxALL , 5 ) ;
+    
+    v->Add ( h , 0 , wxEXPAND|wxALL , 5 ) ;
+    v->Add ( enhancedDisplay , 0 , wxEXPAND|wxALL , 5 ) ;
+    v->Add ( vectorTitle , 0 , wxEXPAND|wxALL , 5 ) ;
+    v->Add ( vectorLength , 0 , wxEXPAND|wxALL , 5 ) ;
+    v->Add ( loadLastProject , 0 , wxEXPAND|wxALL , 5 ) ;
+    v->Add ( useMetafile , 0 , wxEXPAND|wxALL , 5 ) ;
+    v->Add ( showSplashScreen , 0 , wxEXPAND|wxALL , 5 ) ;
+    v->Add ( checkUpdate , 0 , wxEXPAND|wxALL , 5 ) ;
+    v->Add ( useInternalHelp , 0 , wxEXPAND|wxALL , 5 ) ;
+    v->Add ( doRegisterStuff , 0 , wxEXPAND|wxALL , 5 ) ;
+    v->Add ( showEnzymePos , 0 , wxEXPAND|wxALL , 5 ) ;
+    v->Add ( editFeatureMode , 0 , wxEXPAND|wxALL , 5 ) ;
+
+	 globalSettingsPanel->SetSizer ( v ) ;
+	 v->Fit ( globalSettingsPanel ) ;
     }
 
 void ProgramOptionsDialog::OnCharHook(wxKeyEvent& event)
