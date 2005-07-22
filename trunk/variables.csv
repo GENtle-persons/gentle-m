@@ -831,3 +831,4 @@
 "t_pcr_ts_warning_specificity","Specificity","Spezifität"
 "t_pcr_ts_warning_","",""
 "t_showenzymepos","Show enzyme position in map","Zeige Enzymposition in der Karte"
+"t_number_csv_columns","Please enter the number of columns for the CSV file","Bitte die Spaltenanzahl der CSV-Datei angeben"

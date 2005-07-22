@@ -117,6 +117,7 @@ class TAlignment : public ChildBase,wxThreadHelper
     virtual void fixMenus ( int i ) ;
     
     protected :
+    virtual wxString getExportFilters () ;
     virtual void doExport ( wxString filename , int filter ) ; ///< Export data, depending on filename and export type
     virtual void readTabColors ( wxString filename ) ;
     

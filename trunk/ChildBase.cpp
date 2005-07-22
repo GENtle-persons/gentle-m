@@ -195,6 +195,20 @@ void ChildBase::OnExport (wxCommandEvent& event)
     {
     if ( !vec && def != _T("alignment") ) return ;
 
+	 wxString wildcard = getExportFilters () ;
+    wxString lastdir = myapp()->frame->LS->getOption ( _T("LAST_IMPORT_DIR") , _T("C:") ) ;
+    wxFileDialog d ( this , txt("export_file") , lastdir , _T("") , wildcard , wxSAVE|wxOVERWRITE_PROMPT ) ;
+    d.SetFilterIndex ( myapp()->frame->LS->getOption ( _T("LAST_EXPORT_FILTER") , 0 ) ) ;
+    int x = d.ShowModal() ;
+    if ( x != wxID_OK ) return ;
+
+    myapp()->frame->LS->setOption ( _T("LAST_EXPORT_FILTER") , d.GetFilterIndex() ) ;
+    myapp()->frame->LS->setOption ( _T("LAST_IMPORT_DIR") , d.GetDirectory() ) ;
+    doExport ( d.GetPath() , d.GetFilterIndex() ) ;    
+    }   
+    
+wxString ChildBase::getExportFilters ()
+	{
     wxString wcGenBank = _T("GenBank (*.gb)|*.gb") ;
     wxString wcFasta = _T("Fasta|*.*") ;
     wxString wcEMBL = _T("EMBL|*.*") ;
@@ -210,16 +224,8 @@ void ChildBase::OnExport (wxCommandEvent& event)
                         wcIG + _T("|") +
                         wcGCviewXML + _T("|") +
 								wcCSV ;
-    wxString lastdir = myapp()->frame->LS->getOption ( _T("LAST_IMPORT_DIR") , _T("C:") ) ;
-    wxFileDialog d ( this , txt("export_file") , lastdir , _T("") , wildcard , wxSAVE|wxOVERWRITE_PROMPT ) ;
-    d.SetFilterIndex ( myapp()->frame->LS->getOption ( _T("LAST_EXPORT_FILTER") , 0 ) ) ;
-    int x = d.ShowModal() ;
-    if ( x != wxID_OK ) return ;
-
-    myapp()->frame->LS->setOption ( _T("LAST_EXPORT_FILTER") , d.GetFilterIndex() ) ;
-    myapp()->frame->LS->setOption ( _T("LAST_IMPORT_DIR") , d.GetDirectory() ) ;
-    doExport ( d.GetPath() , d.GetFilterIndex() ) ;    
-    }   
+	return wildcard ;
+	}
     
 void ChildBase::doExport ( wxString filename , int filter )
     {

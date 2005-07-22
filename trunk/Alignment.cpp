@@ -1118,25 +1118,58 @@ void TAlignment::doExport ( wxString filename , int filter )
     {
     wxFile out ( filename , wxFile::write ) ;
     
-    int a ;
-    if ( filter == 1 ) // Plain text
+    int a , b ;
+    if ( filter == 0 ) // GenBank
     	{
-		for ( a = 0 ; a < lines.size() ; a++ )
-			{
-        if ( !lines[a].v ) continue ;
-//			if ( lines[a].isIdentity ) continue ;
-			exportVector ( lines[a].v , out , filter , filename ) ;
-			}
-		}
-    else if ( filter == 6 ) // CSV
-    	{
+		TGenBank gb ;
+/*		wxArrayString ex ;
+		gb.doExport ( vec , ex ) ;
+		for ( unsigned int a = 0 ; a < ex.GetCount() ; a++ )
+			out.Write ( ex[a] + _T("\n") ) ;		
+*/
 		for ( a = 0 ; a < lines.size() ; a++ )
 			{
 			if ( !lines[a].v ) continue ;
-			for ( int b = 0 ; b < lines[a].s.length() ; b++ )
+			wxArrayString ex ;
+			TVector tmpvec ;
+			tmpvec.setFromVector ( *lines[a].v ) ;
+			tmpvec.setSequence ( lines[a].s ) ;
+			gb.doExport ( &tmpvec , ex ) ;
+			for ( b = 0 ; b < ex.GetCount() ; b++ )
+				out.Write ( ex[b] + _T("\n") ) ;					
+			}
+
+		}
+    else if ( filter == 1 ) // Plain text
+    	{
+		for ( a = b = 0 ; a < lines.size() ; a++ )
+			if ( lines[a].name.length() > b )
+				b = lines[a].name.length() ;
+		for ( a = 0 ; a < lines.size() ; a++ )
+			{
+			wxString name = lines[a].name ;
+			name.Pad ( b - name.length() , ' ' , false ) ;
+			out.Write ( name ) ;
+			out.Write ( _T(" ") ) ;
+			out.Write ( lines[a].s ) ;
+			out.Write ( _T("\n") ) ;
+			}
+		}
+    else if ( filter == 2 ) // CSV
+    	{
+		int offset ;
+		int inc = wxGetNumberFromUser ( txt("t_number_csv_columns") , _T("") , _T("") , 100 , 10 , 200 ) ;
+		for ( offset = 0 ; offset < lines[0].s.length() ; offset += inc )
+			{
+			for ( a = 0 ; a < lines.size() ; a++ )
 				{
-				if ( b > 0 ) out.Write ( _T(";") ) ;
-				out.Write ( _T("\"") + wxString ( lines[a].s.GetChar ( b ) ) + _T("\"") ) ;
+				out.Write ( _T("\"") + lines[a].name + _T("\"") ) ;
+				for ( b = 0 ; b < inc && b + offset < lines[a].s.length() ; b++ )
+					{
+					out.Write ( _T(";") ) ;
+					out.Write ( _T("\"") + wxString ( lines[a].s.GetChar ( b+offset ) ) + _T("\"") ) ;
+					}
+				out.Write ( _T("\n") ) ;
 				}
 			out.Write ( _T("\n") ) ;
 			}
@@ -1144,6 +1177,17 @@ void TAlignment::doExport ( wxString filename , int filter )
     out.Close () ;
     }    
 
+wxString TAlignment::getExportFilters ()
+	{
+    wxString wcGenBank = _T("GenBank (*.gb)|*.gb") ;
+    wxString wcPlain = _T("Plain text|*.*") ;
+    wxString wcCSV = _T("Comma-separated values (CSV)|*.csv") ;
+    wxString wildcard = wcGenBank + _T("|") +
+                        wcPlain + _T("|") +
+								wcCSV ;
+	return wildcard ;
+	}
+    
 
 void TAlignment::fromVector ( TVector *nv )
     {

@@ -62,6 +62,7 @@ class ChildBase : public MyChildBase
     wxMenuBar *menubar ; ///< Pointer to the window menu bar
     wxToolBar *toolbar ; ///< Pointer to the window too bar
     
+    virtual wxString getExportFilters () ;
     virtual void doExport ( wxString filename , int filter ) ; ///< Export data, depending on filename and export type
     virtual void exportVector ( TVector *vec , wxFile &out , int filter , wxString filename = _T("") ) ; ///< Exports a TVector
     virtual void arrangedExport ( wxFile &out , wxString n , wxString s , int l ) ;
