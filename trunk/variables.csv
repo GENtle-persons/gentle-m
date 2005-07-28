@@ -818,7 +818,7 @@
 "t_pcr_ts_warning_primer_length","Primer length","Primerlänge"
 "t_pcr_ts_warning_primer_length_text","This primer is %d bases long. Optimal length is 18-22 bases.","Dieser Primer ist %d Basen lang. Optimal sind 18-22 Basen."
 "t_pcr_ts_warning_end_stability","End stability","Stabilität"
-"t_pcr_ts_warning_end_stability_text","The end stability of the primer is %2.2f.","Die Stabilität des Primers ist %2.2f."
+"t_pcr_ts_warning_end_stability_text","The end stability of the primer is %2.2f; the less negative, the better.","Die Stabilität des Primers ist %2.2f; je weniger negativ, desto besser."
 "t_pcr_ts_warning_GC","GC Contents","GC-Gehalt"
 "t_pcr_ts_warning_GC_text","The %%GC content of the primer should be between 40%% and 60%%; it is currently %d%%","Der %%GC-Gehalt des Primers sollte zwischen 40%% und 60%% liegen; momentan liegt er bei %d%%"
 "t_pcr_ts_warning_gc_clamp","GC Clamp","GC-Klammer"
