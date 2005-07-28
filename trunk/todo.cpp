@@ -20,7 +20,6 @@ Feature Requests :
 * Find proteases that cut n times
 * That ligation thingy 
 
-* Export alignments as CSV / TXT
 * Save all
 * Feature names movable / keep position with changes
 

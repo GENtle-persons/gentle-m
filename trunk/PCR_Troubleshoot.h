@@ -42,6 +42,7 @@ class PCR_troubleshoot_dialog : public wxDialog
 	virtual void scan_end_stability ( TPrimer &p , int nr ) ;
 	virtual void scan_Runs ( TPrimer &p , int nr , int length ) ;
 	virtual void scan_specificity ( TPrimer &p , int nr ) ;
+	virtual void scan_melting_temperature ( TPrimer &p , int nr ) ;
 	
 	virtual void add_warning ( TPrimer &p , int nr , wxString head , wxString tail ) ;
 	virtual void add_error ( TPrimer &p , int nr , wxString head , wxString tail ) ;
