@@ -22,16 +22,29 @@ PCR_troubleshoot_dialog::PCR_troubleshoot_dialog(TPrimerDesign *_parent, const w
 	: wxDialog ( (wxWindow*) _parent , -1 , title , wxDefaultPosition , wxSize ( 600 , 500 ) )
 	{
 	parent = _parent ;
+#ifdef __WXMSW__
+	nl = _T("\r\n") ;
+#else
+	nl = _T("\n") ;
+#endif
 	fillSantaLucia () ;
 	
 	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+	wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
 	
 	list = new wxListBox ( this , PCR_TROUBLESHOOT_LIST ) ;
-	text = new wxTextCtrl ( this , -1 , _T("") , wxDefaultPosition , wxDefaultSize , wxTE_MULTILINE|wxTE_READONLY ) ;
+	text = new wxTextCtrl ( this , -1 , _T("") , wxDefaultPosition , wxDefaultSize , wxTE_MULTILINE ) ;
 	text->SetFont ( *MYFONT ( MYFONTSIZE , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
 	
-	v0->Add ( list , 0 , wxEXPAND|wxALL , 5 ) ;
-	v0->Add ( text , 1 , wxEXPAND|wxALL , 5 ) ;
+	h0->Add ( new wxStaticText ( this , -1 , "") , 1 , wxEXPAND|wxALL , 5 ) ;
+	h0->Add ( new wxButton ( this , POD_OK , txt("b_ok") ) , 1 , wxEXPAND|wxALL , 5 ) ;
+	h0->Add ( new wxStaticText ( this , -1 , "") , 1 , wxEXPAND|wxALL , 5 ) ;
+	h0->Add ( new wxButton ( this , POD_CANCEL , txt("b_cancel") ) , 1 , wxEXPAND|wxALL , 5 ) ;
+	h0->Add ( new wxStaticText ( this , -1 , "") , 1 , wxEXPAND|wxALL , 5 ) ;
+	
+	v0->Add ( list , 1 , wxEXPAND|wxALL , 5 ) ;
+	v0->Add ( text , 2 , wxEXPAND|wxALL , 5 ) ;
+	v0->Add ( h0 , 0 , wxEXPAND|wxALL , 5 ) ;
 	
 	scan () ;
 	for ( int a = 0 ; a < l_title.GetCount() ; a++ )
@@ -138,7 +151,7 @@ int PCR_troubleshoot_dialog::getSLindex ( wxString s )
 void PCR_troubleshoot_dialog::show_item ( int n )
 	{
 	list->SetSelection ( n ) ;
-	text->SetLabel ( l_text[n] ) ;
+	text->SetValue ( l_text[n] ) ;
 	}
 
 void PCR_troubleshoot_dialog::scan ()
@@ -160,7 +173,7 @@ void PCR_troubleshoot_dialog::scan ()
 		scan_dimer ( parent->primer[a] , parent->primer[a] , a , a ) ;
 //		scan_end_stability ( parent->primer[a] , a ) ;
 		scan_specificity ( parent->primer[a] , a ) ;
-		scan_melting_temperature ( parent->primer[a] , a ) ;
+//		scan_melting_temperature ( parent->primer[a] , a ) ;
 		}
 
 	for ( a = 0 ; a < parent->primer.size() ; a++ )
@@ -255,7 +268,6 @@ wxString PCR_troubleshoot_dialog::trim_both ( wxString s1 , wxString s2 , wxStri
 	{
 	s1 = s1.Trim () ;
 	s3 = s3.Trim () ;
-	wxString nl = _T("\r\n") ;
 	while ( s1.Left(1) + s2.Left(1) + s3.Left(1) == _T("   ") )
 		{
 		s1 = s1.Mid ( 1 ) ;
@@ -307,14 +319,13 @@ void PCR_troubleshoot_dialog::scan_specificity ( TPrimer &p , int nr )
 		
 		wxString x = wxString::Format ( _T("%6.2f : %5d") , d , a ) ;
 
-		x += "\r\n" ;
+		x += nl ;
 		x += p.sequence ;
-		x += "\r\n" ;
+		x += nl ;
 		x += get_dimer_connections ( p.sequence , su ) ;
-		x += "\r\n" ;
+		x += nl ;
 		x += su ;
-		x += "\r\n" ;
-		x += "\r\n" ;
+		x += nl + nl ;
 		
 		vs.Add ( x ) ;
 		if ( vs.GetCount() <= 5 ) continue ;
@@ -330,7 +341,7 @@ void PCR_troubleshoot_dialog::scan_specificity ( TPrimer &p , int nr )
 	
 	wxString text ;
 	for ( a = 0 ; a < vs.size() ; a++ )
-		text += wxString::Format ( _T("%s\r\n") , vs[a].mb_str() ) ;
+		text += wxString::Format ( _T("%s") , vs[a].mb_str() ) + nl ;
 	add_warning ( p , nr , txt("t_pcr_ts_warning_specificity") , text ) ;		
 	}
 
@@ -406,9 +417,9 @@ void PCR_troubleshoot_dialog::scan_hairpin ( TPrimer &p , int nr )
 	wxArrayString n = get_matches ( m , 4 , 1 ) ;
 	
 	wxString s ;
-	int a ;
+//	int a ;
 //	for ( a = 0 ; a < m.GetCount() ; a++ )
-//		s += m[a] + "\r\n" ;
+//		s += m[a] + nl ;
 	
 	l_title.Add ( wxString::Format ( _T("%d: ") , nr ) + p.getName() ) ;
 	l_text.Add ( s ) ;
@@ -481,16 +492,19 @@ wxString PCR_troubleshoot_dialog::invert ( wxString s )
 
 void PCR_troubleshoot_dialog::OnOK ( wxCommandEvent &ev )
 	{
+    wxDialog::OnOK ( ev ) ;
 	}
 
 void PCR_troubleshoot_dialog::OnCancel ( wxCommandEvent &ev )
 	{
+    wxDialog::OnCancel ( ev ) ;
 	}
 
 void PCR_troubleshoot_dialog::OnList ( wxCommandEvent &ev )
 	{
 	show_item ( list->GetSelection() ) ;
 	}
+	
 void PCR_troubleshoot_dialog::OnCharHook(wxKeyEvent& event)
 	{
 	int k = event.GetKeyCode () ;
