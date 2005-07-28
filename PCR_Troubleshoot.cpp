@@ -160,6 +160,7 @@ void PCR_troubleshoot_dialog::scan ()
 		scan_dimer ( parent->primer[a] , parent->primer[a] , a , a ) ;
 //		scan_end_stability ( parent->primer[a] , a ) ;
 		scan_specificity ( parent->primer[a] , a ) ;
+		scan_melting_temperature ( parent->primer[a] , a ) ;
 		}
 
 	for ( a = 0 ; a < parent->primer.size() ; a++ )
@@ -262,6 +263,25 @@ wxString PCR_troubleshoot_dialog::trim_both ( wxString s1 , wxString s2 , wxStri
 		s3 = s3.Mid ( 1 ) ;
 		}
 	return nl + nl + s1 + nl + s2 + nl + s3 + nl ;
+	}
+
+void PCR_troubleshoot_dialog::scan_melting_temperature ( TPrimer &p , int nr )
+	{
+	double K , H , R , S , c ;
+	double tm ;
+	
+	K = 0.050 ; // 50 mM
+	H = deltaH0 ( p ) * 1 ;
+	R = 8.314472 ;
+	S = deltaS0 ( p ) ;
+	c = 2.5E-2 ; // 250 pM
+		
+//	tm = H / ( S + R * log ( c / 4.0 ) - 237.15 + 16.6 * log ( K ) / log ( 10.0 ) ) ;
+
+
+	tm = ( (-H) - 5 ) / ( (-S) + R * log ( 1 / c ) ) + 16.6 * log ( K ) / log ( 10.0 ) ;
+
+	add_warning ( p , nr , wxString::Format ( _T("Melting temperature %f; dS=%f; dH=%f; X=%f") , tm , S , H , R*log ( 1/c ) ) , "" ) ;		
 	}
 
 void PCR_troubleshoot_dialog::scan_specificity ( TPrimer &p , int nr )
