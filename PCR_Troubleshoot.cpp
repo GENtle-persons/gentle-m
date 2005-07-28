@@ -53,6 +53,7 @@ PCR_troubleshoot_dialog::PCR_troubleshoot_dialog(TPrimerDesign *_parent, const w
 
 	SetSizer ( v0 ) ;
 	v0->Layout () ;
+	Center () ;
 	}
 	
 void PCR_troubleshoot_dialog::fillSantaLucia ()
@@ -171,7 +172,7 @@ void PCR_troubleshoot_dialog::scan ()
 		scan_Runs ( parent->primer[a] , a , 2 ) ; // Repeats
 //		scan_hairpin ( parent->primer[a] , a ) ;
 		scan_dimer ( parent->primer[a] , parent->primer[a] , a , a ) ;
-//		scan_end_stability ( parent->primer[a] , a ) ;
+		scan_end_stability ( parent->primer[a] , a ) ;
 		scan_specificity ( parent->primer[a] , a ) ;
 //		scan_melting_temperature ( parent->primer[a] , a ) ;
 		}
@@ -346,12 +347,19 @@ void PCR_troubleshoot_dialog::scan_specificity ( TPrimer &p , int nr )
 	}
 
 void PCR_troubleshoot_dialog::scan_end_stability ( TPrimer &p , int nr )
-	{ // DON'T USE THIS!
-	TPrimer p2 = p ;
-	p2.sequence = p.get53sequence().Right(5) ;
-	double d = deltaG0 ( p2 ) ;
+	{
+	wxString s = p.get53sequence().Right(5) ;
+	int a ;
+	double best = -100000 ;
+	for ( a = 0 ; a+1 < s.length() ; a++ )
+		{
+		int i = getSLindex ( s.Mid ( a , 2 ) ) ;
+		if ( i >= santa_lucia.size() ) continue ; // Ignore this one
+		double j = santa_lucia[i].unifiedFE ;
+		if ( j > best ) best = j ;
+		}
 	add_warning ( p , nr , txt("t_pcr_ts_warning_end_stability") , 
-	wxString::Format ( txt("t_pcr_ts_warning_end_stability_text") , d ) ) ;
+	wxString::Format ( txt("t_pcr_ts_warning_end_stability_text") , best ) ) ;
 	}
 
 void PCR_troubleshoot_dialog::scan_length ( TPrimer &p , int nr )
