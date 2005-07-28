@@ -66,6 +66,7 @@ class PCR_troubleshoot_dialog : public wxDialog
 	wxTextCtrl *text ;
 	wxListBox *list ;
 	wxArrayString l_title , l_text ;
+	wxString nl ; // New line in display text
 	
 	DECLARE_EVENT_TABLE()
 	} ;
