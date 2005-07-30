@@ -154,7 +154,7 @@ void FindSequenceDialog::doAction ( bool doubleclick )
            {
            Hide () ;
            ( (MyChild*) c ) -> cPlasmid -> invokeVectorEditor ( _T("enzyme") , a ) ;
-           }    
+           }
         }    
     }    
     
@@ -312,10 +312,11 @@ void FindSequenceDialog::aaSubSearch ( const wxString &s , int start , int dir ,
 		int to = ai[a+sub.length()-1] + dir * 2 + 1 - ostart ;
 		if ( from > to ) { int z = from ; from = to ; to = z ; }
 		wxString msg = rf.BeforeFirst ( '\t' ) ;
-        lb->Append ( wxString::Format ( _T("%s: %s (%d-%d)") ,
-                             txt("amino_acid").c_str() ,
-                             msg.c_str() ,
-                             from , to ) ) ;
+      lb->Append ( wxString::Format ( _T("%s: %s (%d-%d)") ,
+                          txt("amino_acid").c_str() ,
+                          msg.c_str() ,
+                          from , to ) ) ;
+      vi.Add ( -1 ) ;
 		res.SetChar ( a , '_' ) ; // Invalidating
 		a = res.Find ( sub ) ;
 		}    
