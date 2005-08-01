@@ -1,5 +1,19 @@
 // !$*UTF8*$!
 {
+	9106DB3B089E092D004C97DA /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 9180A6770866FD46000C7D5E /* main.cpp */;
+	};
+	9106DB52089E14B0004C97DA /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9180A6770866FD46000C7D5E /* main.cpp */;
+		name = "main.cpp: 301";
+		rLen = 0;
+		rLoc = 8194;
+		rType = 0;
+		vrLen = 1292;
+		vrLoc = 7113;
+	};
 	9141598008681904001E63F9 /* codon_catalog.csv */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1400, 543}}";
@@ -62,12 +76,14 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					200,
-					63,
+					176,
+					39,
 					20,
 					48,
 					43,
 					43,
+					20,
+					20,
 				);
 				PBXFileTableDataSourceColumnsKey = (
 					PBXFileDataSource_FiletypeID,
@@ -77,10 +93,16 @@
 					PBXFileDataSource_ObjectSize_ColumnID,
 					PBXFileDataSource_Errors_ColumnID,
 					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+					PBXFileDataSource_SCM_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 144227329;
-			PBXWorkspaceStateSaveDate = 144227329;
+			PBXPerProjectTemplateStateSaveDate = 144572133;
+			PBXWorkspaceStateSaveDate = 144572133;
+		};
+		perUserProjectItems = {
+			9106DB3B089E092D004C97DA /* PBXBookmark */ = 9106DB3B089E092D004C97DA /* PBXBookmark */;
+			9106DB52089E14B0004C97DA /* PBXTextBookmark */ = 9106DB52089E14B0004C97DA /* PBXTextBookmark */;
 		};
 		sourceControlManager = 9180A64F0866FCF9000C7D5E /* Source Control */;
 		userBuildSettings = {
@@ -277,9 +299,9 @@
 	};
 	9180A6770866FD46000C7D5E /* main.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {925, 7686}}";
-			sepNavSelRange = "{5660, 0}";
-			sepNavVisRect = "{{0, 2817}, {925, 543}}";
+			sepNavIntBoundsRect = "{{0, 0}, {925, 7728}}";
+			sepNavSelRange = "{8194, 0}";
+			sepNavVisRect = "{{0, 3740}, {925, 543}}";
 			sepNavWindowFrame = "{{38, 48}, {964, 672}}";
 		};
 	};
@@ -309,9 +331,9 @@
 	};
 	9180A67C0866FD46000C7D5E /* MyFrame.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1616, 30562}}";
-			sepNavSelRange = "{7285, 48}";
-			sepNavVisRect = "{{0, 2615}, {925, 543}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1616, 30604}}";
+			sepNavSelRange = "{5145, 0}";
+			sepNavVisRect = "{{0, 1569}, {925, 543}}";
 			sepNavWindowFrame = "{{38, 48}, {964, 672}}";
 		};
 	};
