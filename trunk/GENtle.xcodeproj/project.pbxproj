@@ -192,14 +192,15 @@
 		9191756E086807F200FD900E /* write.xbm in Resources */ = {isa = PBXBuildFile; fileRef = 91917538086807F200FD900E /* write.xbm */; };
 		919175750868179400FD900E /* blank.db in Resources */ = {isa = PBXBuildFile; fileRef = 919175740868179400FD900E /* blank.db */; };
 		91B024D808672723007ABD07 /* libsqlite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91B024D608672723007ABD07 /* libsqlite.a */; };
-		91B024D908672723007ABD07 /* libsqlite3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91B024D708672723007ABD07 /* libsqlite3.a */; };
 		91B024DB08672754007ABD07 /* ureadseq.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B024DA08672754007ABD07 /* ureadseq.c */; };
 		91B024DF086727CD007ABD07 /* libwxjpeg-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91B024DC086727CD007ABD07 /* libwxjpeg-2.6.a */; };
-		91B024E0086727CD007ABD07 /* libwxpng-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91B024DD086727CD007ABD07 /* libwxpng-2.6.a */; };
 		91B024E1086727CD007ABD07 /* libwxtiff-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91B024DE086727CD007ABD07 /* libwxtiff-2.6.a */; };
 		91C98C56086946DC003ED5D9 /* default.tab in Resources */ = {isa = PBXBuildFile; fileRef = 91C98C55086946DC003ED5D9 /* default.tab */; };
 		91C9EAB30867299100AE735B /* libwxexpat-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91C9EAB20867299100AE735B /* libwxexpat-2.6.a */; };
 		91CC568C088B961300567E40 /* PCR_Troubleshoot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91CC568B088B961300567E40 /* PCR_Troubleshoot.cpp */; };
+		91D83CA0089D07790000CDA6 /* libwxexpat-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91B024D4086726DD007ABD07 /* libwxexpat-2.6.a */; };
+		91D83CA2089D07800000CDA6 /* libwxpng-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91B024DD086727CD007ABD07 /* libwxpng-2.6.a */; };
+		91D83CA3089D07D10000CDA6 /* libsqlite3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91B024D708672723007ABD07 /* libsqlite3.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildStyle section */
@@ -218,6 +219,18 @@
 			name = Deployment;
 		};
 /* End PBXBuildStyle section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		91390463089C1CBC00DC8DB1 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		91023BCC0893BBA600BD8757 /* libmysqlclient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmysqlclient.a; path = /usr/local/lib/mysql/libmysqlclient.a; sourceTree = "<absolute>"; };
@@ -410,7 +423,6 @@
 		919175740868179400FD900E /* blank.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = blank.db; sourceTree = "<group>"; };
 		91B024C908672308007ABD07 /* libsqlite.la */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = libsqlite.la; path = "../sqlite-2.8.16/libsqlite.la"; sourceTree = SOURCE_ROOT; };
 		91B024CB0867231A007ABD07 /* libsqlite3.la */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = libsqlite3.la; path = "../sqlite-3.2.2/libsqlite3.la"; sourceTree = SOURCE_ROOT; };
-		91B024CD08672381007ABD07 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o"; name = libsqlite3.0.dylib; path = /Developer/SDKs/MacOSX10.4.0.sdk/usr/lib/libsqlite3.0.dylib; sourceTree = "<absolute>"; };
 		91B024D4086726DD007ABD07 /* libwxexpat-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxexpat-2.6.a"; path = "../wx/wxWidgets/build-release/lib/libwxexpat-2.6.a"; sourceTree = SOURCE_ROOT; };
 		91B024D608672723007ABD07 /* libsqlite.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsqlite.a; path = /usr/local/lib/libsqlite.a; sourceTree = "<absolute>"; };
 		91B024D708672723007ABD07 /* libsqlite3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsqlite3.a; path = /usr/local/lib/libsqlite3.a; sourceTree = "<absolute>"; };
@@ -431,12 +443,13 @@
 			files = (
 				9180A7190866FD70000C7D5E /* libwx_mac-2.6.a in Frameworks */,
 				91B024D808672723007ABD07 /* libsqlite.a in Frameworks */,
-				91B024D908672723007ABD07 /* libsqlite3.a in Frameworks */,
 				91B024DF086727CD007ABD07 /* libwxjpeg-2.6.a in Frameworks */,
-				91B024E0086727CD007ABD07 /* libwxpng-2.6.a in Frameworks */,
 				91B024E1086727CD007ABD07 /* libwxtiff-2.6.a in Frameworks */,
 				91C9EAB30867299100AE735B /* libwxexpat-2.6.a in Frameworks */,
 				91023BCD0893BBA600BD8757 /* libmysqlclient.a in Frameworks */,
+				91D83CA0089D07790000CDA6 /* libwxexpat-2.6.a in Frameworks */,
+				91D83CA2089D07800000CDA6 /* libwxpng-2.6.a in Frameworks */,
+				91D83CA3089D07D10000CDA6 /* libsqlite3.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -468,7 +481,6 @@
 				91B024D608672723007ABD07 /* libsqlite.a */,
 				91B024D708672723007ABD07 /* libsqlite3.a */,
 				91B024D4086726DD007ABD07 /* libwxexpat-2.6.a */,
-				91B024CD08672381007ABD07 /* libsqlite3.0.dylib */,
 				91B024CB0867231A007ABD07 /* libsqlite3.la */,
 				91B024C908672308007ABD07 /* libsqlite.la */,
 				9180A7180866FD70000C7D5E /* libwx_mac-2.6.a */,
@@ -685,6 +697,7 @@
 				9180A6530866FD0A000C7D5E /* Resources */,
 				9180A6540866FD0A000C7D5E /* Sources */,
 				9180A6550866FD0A000C7D5E /* Frameworks */,
+				91390463089C1CBC00DC8DB1 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -1016,7 +1029,7 @@
 					/usr/local/lib/mysql,
 				);
 				LIBRARY_STYLE = STATIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.1;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = (
 					"-D__WXMAC__",
@@ -1033,18 +1046,14 @@
 					"-framework",
 					Carbon,
 					"-framework",
-					Cocoa,
-					"-framework",
 					System,
 					"/Users/magnusmanske/wx/wxWidgets/build-release/lib/libwx_mac-2.6.a",
-					"-framework",
-					WebKit,
 					"-lz",
 					"-lpthread",
 					"-liconv",
 				);
 				OTHER_REZFLAGS = "";
-				PREBINDING = NO;
+				PREBINDING = YES;
 				PRODUCT_NAME = GENtle;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "";
@@ -1086,7 +1095,7 @@
 					/usr/local/lib/mysql,
 				);
 				LIBRARY_STYLE = STATIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.1;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = (
 					"-D__WXMAC__",
@@ -1103,18 +1112,14 @@
 					"-framework",
 					Carbon,
 					"-framework",
-					Cocoa,
-					"-framework",
 					System,
 					"/Users/magnusmanske/wx/wxWidgets/build-release/lib/libwx_mac-2.6.a",
-					"-framework",
-					WebKit,
 					"-lz",
 					"-lpthread",
 					"-liconv",
 				);
 				OTHER_REZFLAGS = "";
-				PREBINDING = NO;
+				PREBINDING = YES;
 				PRODUCT_NAME = GENtle;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "";

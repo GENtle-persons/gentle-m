@@ -283,6 +283,7 @@ bool MyApp::OnInit()
     if ( frame->dying ) return FALSE ;
     SetTopWindow(frame);
 
+//#ifndef __WXMAC__
     if ( frame->showSplashScreen )
         {
         wxBitmap bitmap;
@@ -297,6 +298,7 @@ bool MyApp::OnInit()
             }
         wxYield();
         }
+//#endif
 
     // Tips turned off until I can figure out how the hell
     // to get the state of the !"$%& show-again-checkbox
@@ -366,7 +368,8 @@ int MyApp::OnExit ()
     logout->Flush() ;
 #endif
     delete m_checker;
-    return 0;
+	return wxApp::OnExit () ;
+//    return 0;
     }
     
 /**	\fn MyApp::getHTMLCommand ( wxString command )
