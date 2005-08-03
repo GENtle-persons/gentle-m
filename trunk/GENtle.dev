@@ -1,7 +1,7 @@
 [Project]
 FileName=GENtle.dev
 Name=GENtle
-UnitCount=160
+UnitCount=162
 Type=0
 Ver=1
 ObjFiles=
@@ -1639,6 +1639,26 @@ BuildCmd=
 
 [Unit159]
 FileName=PCR_Troubleshoot.h
+CompileCpp=1
+Folder=Dialogs
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit161]
+FileName=TProteolysis.h
+CompileCpp=1
+Folder=Dialogs
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit162]
+FileName=TProteolysis.cpp
 CompileCpp=1
 Folder=Dialogs
 Compile=1

@@ -588,7 +588,7 @@ void SeqAA::show_direct ( wxDC& dc )
        // Protease cuts
        for ( int q = 0 ; q < pc.GetCount() ; q++ )
           {
-          if ( a == pc[q]->cut )
+          if ( a == pc[q]->cut - pc[q]->left )
              {
              int qx = px ;
              int qy = py ;

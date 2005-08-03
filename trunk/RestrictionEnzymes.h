@@ -64,7 +64,7 @@ bool operator == ( const TRestrictionCut &c1 , const TRestrictionCut &c2 ) ;
 class TProtease
     {
     public :
-    TProtease ( wxString _name = _T("") , wxString m = _T("") , wxString _note = _T("") ) ; ///< Constructir
+    TProtease ( wxString _name = _T("") , wxString m = _T("") , wxString _note = _T("") ) ; ///< Constructor
     bool does_match ( wxString s ) ; ///< Does this protease recognize this sequence?
     inline int len() { return match.GetCount() ; } ///< Returns the number of different recognition sequences
     wxString name ; ///< The name of the protease
