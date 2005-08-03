@@ -14,7 +14,7 @@ END_EVENT_TABLE()
 //END_EVENT_TABLE()
 
 TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
-	: wxDialog ( (wxWindow*) _parent , -1 , title , wxDefaultPosition , wxSize ( 700 , 500 ) )
+	: wxDialog ( (wxWindow*) _parent , -1 , title , wxDefaultPosition , wxSize ( 710 , 550 ) )
 	{
 	parent = _parent ;
 	v = parent->vec ;
@@ -24,9 +24,15 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 	cuts = new wxCheckListBox ( this , PRO_CUTS ) ;
 	results = new wxCheckListBox ( this , -1 ) ;
 	gel = new TProteolysisGel ( this , -1 ) ;
+		
+	create_fragments = new wxCheckBox ( this , -1 , txt("t_proteolysis_create_fragments") ) ;
+	create_labels = new wxCheckBox ( this , -1 , txt("t_proteolysis_annotate") ) ;
+	use_proteases = new wxCheckBox ( this , -1 , txt("t_proteolysis_keep_proteases") ) ;
 	show_uncut = new wxCheckBox ( this , PRO_SHOW_UNCUT , txt("t_proteolysis_show_uncut") ) ;
 	
 	wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
 	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
 	wxBoxSizer *vl = new wxBoxSizer ( wxVERTICAL ) ;
 	wxBoxSizer *vm = new wxBoxSizer ( wxVERTICAL ) ;
@@ -51,9 +57,21 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 	h0->Add ( vm , 2 , wxEXPAND ) ;
 	h0->Add ( vr , 2 , wxEXPAND ) ;
 	h0->Add ( vg , 1 , wxEXPAND ) ;
+
+	h1->Add ( create_fragments , 0 , wxALL|wxEXPAND , 2 ) ;
+	h1->Add ( create_labels , 0 , wxALL|wxEXPAND , 2 ) ;
+	h1->Add ( use_proteases , 0 , wxALL|wxEXPAND , 2 ) ;
+	h1->Add ( show_uncut , 0 , wxALL|wxALIGN_RIGHT , 2 ) ;
+
+	h2->Add ( new wxStaticText ( this , -1 , txt("") ) , 2 , wxEXPAND|wxALL , 2 ) ;
+	h2->Add ( new wxButton ( this , POD_OK , txt("b_ok") ) , 1 , wxALL|wxEXPAND , 2 ) ;
+	h2->Add ( new wxStaticText ( this , -1 , txt("") ) , 1 , wxEXPAND|wxALL , 2 ) ;
+	h2->Add ( new wxButton ( this , POD_CANCEL , txt("b_cancel") ) , 1 , wxALL|wxEXPAND , 2 ) ;
+	h2->Add ( new wxStaticText ( this , -1 , txt("") ) , 2 , wxEXPAND|wxALL , 2 ) ;
 	
 	v0->Add ( h0 , 1 , wxEXPAND ) ;
-	v0->Add ( show_uncut , 0 , wxALL|wxALIGN_RIGHT , 5 ) ;
+	v0->Add ( h1 , 0 , wxEXPAND ) ;
+	v0->Add ( h2 , 0 , wxEXPAND ) ;
 	
 	SetSizer ( v0 ) ;
 	v0->Layout () ;
