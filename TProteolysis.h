@@ -41,7 +41,7 @@ class TProteolysis : public wxDialog
 	TVector *v ;
 	TStorage *ls ;
 	wxCheckListBox *proteases , *ignore , *cuts , *results ;
-	wxCheckBox *show_uncut ;
+	wxCheckBox *show_uncut , *create_fragments, *create_labels , *use_proteases ;
 	TProteolysisGel *gel ;
 	wxArrayTProteaseCut pc ;
 	vector <TFragment> fragments ;
