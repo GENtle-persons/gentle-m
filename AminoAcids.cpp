@@ -23,6 +23,7 @@ BEGIN_EVENT_TABLE(TAminoAcids, MyChildBase)
     EVT_MENU(MDI_UNDO, TAminoAcids::Undo)
     EVT_MENU(MDI_REDO, TAminoAcids::Redo)
     EVT_MENU(MDI_SPEAK, TAminoAcids::OnSpeak)
+    EVT_MENU(AA_PROTEOLYSIS, TAminoAcids::OnProteolysis)
 
     EVT_CHOICE(AA_IP, TAminoAcids::OnIP)
     EVT_CHECKBOX(ALIGN_HORIZ, TAminoAcids::OnHorizontal)
@@ -131,6 +132,7 @@ void TAminoAcids::initme ()
     edit_menu->Append(AMINOACIDS_PHOTOMETER, txt("m_aa_photometer") ) ;
     edit_menu->Append(SEQ_AA_BACKTRANSLATE, txt("m_aa_backtranslate") ) ;
     edit_menu->Append(MDI_AA_IPC, txt("m_aa_ipc") ) ;
+    edit_menu->Append(AA_PROTEOLYSIS, txt("m_aa_proteolysis") ) ;
 
     wxMenu *view_menu = new wxMenu;
     view_menu->Append(MDI_EDIT_MODE, txt("m_edit_mode") , _T("") , true );
