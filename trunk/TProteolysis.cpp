@@ -2,7 +2,9 @@
 
 BEGIN_EVENT_TABLE(TProteolysis, wxDialog)
 	EVT_BUTTON(POD_OK,TProteolysis::OnOK)
-	EVT_BUTTON(POD_CANCEL,TProteolysis::OnCancel)
+	EVT_BUTTON(POD_CANCEL, TProteolysis::OnCancel)
+	EVT_BUTTON(PRO_FRAGMENTS_ALL, TProteolysis::OnAll)
+	EVT_BUTTON(PRO_FRAGMENTS_NONE, TProteolysis::OnNone)
 	EVT_CHAR_HOOK(TProteolysis::OnCharHook)
 	EVT_CHECKLISTBOX(PRO_PROTEASES, TProteolysis::OnProtease)
 	EVT_CHECKLISTBOX(PRO_IGNORE, TProteolysis::OnIgnore)
@@ -33,6 +35,7 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 	wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
 	wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
 	wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	wxBoxSizer *h3 = new wxBoxSizer ( wxHORIZONTAL ) ;
 	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
 	wxBoxSizer *vl = new wxBoxSizer ( wxVERTICAL ) ;
 	wxBoxSizer *vm = new wxBoxSizer ( wxVERTICAL ) ;
@@ -47,11 +50,16 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 	vm->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_cuts") ) , 0 , wxEXPAND|wxALL , 5 ) ;
 	vm->Add ( cuts , 1 , wxEXPAND|wxALL , 5 ) ;
 
+	h3->Add ( new wxButton ( this , PRO_FRAGMENTS_ALL , txt("b_all") ) , 0 , wxALL|wxEXPAND , 2 ) ;
+	h3->Add ( new wxButton ( this , PRO_FRAGMENTS_NONE , txt("b_none") ) , 0 , wxALL|wxEXPAND , 2 ) ;
+
 	vr->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_results") ) , 0 , wxEXPAND|wxALL , 5 ) ;
 	vr->Add ( results , 1 , wxEXPAND|wxALL , 5 ) ;
+	vr->Add ( h3 , 0 , wxEXPAND|wxALL , 5 ) ;
 	
 	vg->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_gel") ) , 0 , wxEXPAND|wxALL , 5 ) ;
 	vg->Add ( gel , 1 , wxEXPAND|wxALL , 5 ) ;
+
 	
 	h0->Add ( vl , 2 , wxEXPAND ) ;
 	h0->Add ( vm , 2 , wxEXPAND ) ;
@@ -332,12 +340,57 @@ double TProteolysis::get_weight ( int from , int to )
 
 void TProteolysis::OnOK ( wxCommandEvent &ev )
 	{
-    wxDialog::OnOK ( ev ) ;
+	int a ;
+	wxString s ;
+	
+	// Use proteases
+	if ( use_proteases->IsChecked() )
+		{
+		v->proteases.Clear () ;
+		for ( a = 0 ; a < proteases->GetCount() ; a++ )
+			{
+			if ( !proteases->IsChecked ( a ) ) continue ;
+			s = proteases->GetString ( a ) ;
+			v->proteases.Add ( s ) ;
+			}
+		v->setChanged() ;
+      parent->showSequence () ;
+		}
+	
+	// Annotate
+	if ( create_labels->IsChecked() )
+		{
+		int cnt = 0 ;
+		for ( a = 0 ; a < fragments.size() ; a++ )
+			{
+			if ( !results->IsChecked ( a ) ) continue ;
+			cnt++ ;
+			TVectorItem i ( wxString::Format ( txt("t_proteolysis_fragment") , cnt ) , 
+								 wxString::Format ( txt("t_proteolysis_fragment_long") , cnt ) , 
+								 fragments[a].from , 
+								 fragments[a].to ,
+								 VIT_MISC ) ;
+			v->items.push_back ( i ) ;
+			}
+		v->setChanged() ;
+      parent->showSequence () ;
+		}
+	
+   wxDialog::OnOK ( ev ) ;
 	}
+
+void TProteolysis::OnAll ( wxCommandEvent &ev )
+	{
+	}
+	
+void TProteolysis::OnNone ( wxCommandEvent &ev )
+	{
+	}
+	
 
 void TProteolysis::OnCancel ( wxCommandEvent &ev )
 	{
-    wxDialog::OnCancel ( ev ) ;
+   wxDialog::OnCancel ( ev ) ;
 	}
 	
 void TProteolysis::OnProtease ( wxCommandEvent &ev )

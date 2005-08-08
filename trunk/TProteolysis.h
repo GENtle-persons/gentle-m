@@ -21,6 +21,8 @@ class TProteolysis : public wxDialog
 
 	virtual void OnOK ( wxCommandEvent &ev ) ; ///< OK button event handler
 	virtual void OnCancel ( wxCommandEvent &ev ) ; ///< Cancel button event handler
+	virtual void OnAll ( wxCommandEvent &ev ) ; ///< "All" button event handler
+	virtual void OnNone ( wxCommandEvent &ev ) ; ///< "None" button event handler
 	virtual void OnProtease ( wxCommandEvent &ev ) ; ///< Protease list event handler
 	virtual void OnIgnore ( wxCommandEvent &ev ) ; ///< Ignore list event handler
 	virtual void OnCuts ( wxCommandEvent &ev ) ; ///< Cut list event handler
