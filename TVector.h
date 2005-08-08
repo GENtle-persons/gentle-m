@@ -87,7 +87,7 @@ class TVectorItem
     public :
     TVectorItem () ; ///< Default constructor
     TVectorItem ( wxString sn , wxString n , int f , int t , char ty ) ; ///< Constructor
-	virtual ~TVectorItem () {} ; ///< Destructor (empty)
+	 virtual ~TVectorItem () {} ; ///< Destructor (empty)
     
     virtual wxBrush *getBrush () ; ///< Returns a pointer to the brush used to draw the item
     virtual wxColour getFontColor () ; ///< Returns the font color

@@ -844,3 +844,7 @@
 "t_proteolysis_create_fragments","Create selected fragments","Gewählte Fragmente erzeugen"
 "t_proteolysis_annotate","Annotate selected fragments","Gewählte Fragmente annotieren"
 "t_proteolysis_keep_proteases","Keep proteases","Proteasen übernehmen"
+"t_proteolysis_fragment","Fragment %d","Fragment %d"
+"t_proteolysis_fragment_long","Proteolysis fragment %d","Proteolyse-Fragment %d"
+"b_all","&All","&Alle"
+"b_none","&None","Kei&ns"
