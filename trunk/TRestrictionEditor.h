@@ -26,6 +26,7 @@ class TFragment
 	{
 	public :
 	int from , to , length ;
+	double weight ; ///< Used in TProteolysis
 	} ;    
 
 /** \brief The restriction editor dialog class

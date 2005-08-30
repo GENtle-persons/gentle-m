@@ -848,3 +848,7 @@
 "t_proteolysis_fragment_long","Proteolysis fragment %d","Proteolyse-Fragment %d"
 "b_all","&All","&Alle"
 "b_none","&None","Kei&ns"
+"t_pro_sort_results","Sort fragments by","Fragmente sortieren nach"
+"t_pro_sort_results_1","Position","Position"
+"t_pro_sort_results_2","Length","Länge"
+"t_pro_sort_results_3","Size","Größe"
