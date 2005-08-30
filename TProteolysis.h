@@ -28,6 +28,7 @@ class TProteolysis : public wxDialog
 	virtual void OnCuts ( wxCommandEvent &ev ) ; ///< Cut list event handler
 	virtual void OnShowGel ( wxCommandEvent &ev ) ; // Show/refresh gel
 	virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
+	virtual void OnSortResults(wxCommandEvent& event) ; ///< Sort results event handler
 	
 	virtual void draw_gel ( wxDC &dc ) ;
 
@@ -36,6 +37,7 @@ class TProteolysis : public wxDialog
 	virtual void calc_cut_list () ;
 	virtual void calc_fragment_list () ;
 	virtual void show_gel () ;
+	virtual void show_fragment_list () ;
 	virtual double get_weight ( int from , int to ) ;
 	virtual int get_y ( double y , int h , double min , double max ) ;
 	
@@ -47,6 +49,7 @@ class TProteolysis : public wxDialog
 	TProteolysisGel *gel ;
 	wxArrayTProteaseCut pc ;
 	vector <TFragment> fragments ;
+	wxRadioBox *sortresults ;
 	
 	DECLARE_EVENT_TABLE()
 	} ;

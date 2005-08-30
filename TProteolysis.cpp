@@ -5,6 +5,7 @@ BEGIN_EVENT_TABLE(TProteolysis, wxDialog)
 	EVT_BUTTON(POD_CANCEL, TProteolysis::OnCancel)
 	EVT_BUTTON(PRO_FRAGMENTS_ALL, TProteolysis::OnAll)
 	EVT_BUTTON(PRO_FRAGMENTS_NONE, TProteolysis::OnNone)
+	EVT_RADIOBOX(PRO_SORT_RESULTS, TProteolysis::OnSortResults)
 	EVT_CHAR_HOOK(TProteolysis::OnCharHook)
 	EVT_CHECKLISTBOX(PRO_PROTEASES, TProteolysis::OnProtease)
 	EVT_CHECKLISTBOX(PRO_IGNORE, TProteolysis::OnIgnore)
@@ -32,6 +33,19 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 	use_proteases = new wxCheckBox ( this , -1 , txt("t_proteolysis_keep_proteases") ) ;
 	show_uncut = new wxCheckBox ( this , PRO_SHOW_UNCUT , txt("t_proteolysis_show_uncut") ) ;
 	
+   wxString rb_sr[3] ;
+   rb_sr[0] = txt("t_pro_sort_results_1" ) ;
+   rb_sr[1] = txt("t_pro_sort_results_2" ) ;
+   rb_sr[2] = txt("t_pro_sort_results_3" ) ;
+	sortresults = new wxRadioBox ( this , PRO_SORT_RESULTS , txt("t_pro_sort_results") ,
+                           wxDefaultPosition ,
+                           wxDefaultSize ,
+                           3 ,
+                           rb_sr ,
+                           wxRA_SPECIFY_COLS
+                           ) ;
+	
+	
 	wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
 	wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
 	wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
@@ -55,6 +69,7 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 
 	vr->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_results") ) , 0 , wxEXPAND|wxALL , 5 ) ;
 	vr->Add ( results , 1 , wxEXPAND|wxALL , 5 ) ;
+	vr->Add ( sortresults , 0 , wxEXPAND|wxALL , 5 ) ;
 	vr->Add ( h3 , 0 , wxEXPAND|wxALL , 5 ) ;
 	
 	vg->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_gel") ) , 0 , wxEXPAND|wxALL , 5 ) ;
@@ -226,11 +241,18 @@ void TProteolysis::calc_fragment_list ()
 		f.from = last ;
 		f.to = pc[a]->cut ;
 		f.length = pc[a]->cut - last + 1 ;
+		f.weight = get_weight ( f.from , f.to ) ;
 		fragments.push_back ( f ) ;
 		last = pc[a]->cut + 1 ;
-		}
+		}	
+	show_fragment_list () ;
+	show_gel () ;
+	}
 	
+void TProteolysis::show_fragment_list ()
+	{
 	// Display list
+	int a ;
 	results->Clear () ;
 	for ( a = 0 ; a < fragments.size() ; a++ )
 		{
@@ -239,11 +261,9 @@ void TProteolysis::calc_fragment_list ()
 				fragments[a].from , 
 				fragments[a].to , 
 				fragments[a].length ,
-				get_weight ( fragments[a].from , fragments[a].to ) ) ;
+				fragments[a].weight ) ;
 		results->Append ( s ) ;
 		}
-	
-	show_gel () ;
 	}
 
 void TProteolysis::show_gel ()
@@ -276,9 +296,8 @@ void TProteolysis::draw_gel ( wxDC &dc )
 		max = 0 ;
 		for ( a = 0 ; a < fragments.size() ; a++ )
 			{
-			double d = get_weight ( fragments[a].from , fragments[a].to ) ;
-			if ( d > max ) 
-				max = d ;
+			if ( fragments[a].weight > max ) 
+				max = fragments[a].weight ;
 			}
 		}
 	max = ( ((int)max/10) + 1 ) * 10 ; // Just a little larger...
@@ -304,7 +323,7 @@ void TProteolysis::draw_gel ( wxDC &dc )
 	// Draw fragments
 	for ( a = 0 ; a < fragments.size() ; a++ )
 		{
-		y = get_y ( get_weight ( fragments[a].from , fragments[a].to ) , h , min , max ) ;
+		y = get_y ( fragments[a].weight , h , min , max ) ;
 		dc.DrawLine ( w/2 , y , w*9/10 , y ) ;
 		}
 
@@ -381,10 +400,16 @@ void TProteolysis::OnOK ( wxCommandEvent &ev )
 
 void TProteolysis::OnAll ( wxCommandEvent &ev )
 	{
+	int a ;
+	for ( a = 0 ; a < results->GetCount() ; a++ )
+		results->Check ( a , true ) ;
 	}
 	
 void TProteolysis::OnNone ( wxCommandEvent &ev )
 	{
+	int a ;
+	for ( a = 0 ; a < results->GetCount() ; a++ )
+		results->Check ( a , false ) ;
 	}
 	
 
@@ -411,6 +436,35 @@ void TProteolysis::OnCuts ( wxCommandEvent &ev )
 void TProteolysis::OnShowGel ( wxCommandEvent &ev )
 	{
 	show_gel () ;
+	}
+
+void TProteolysis::OnSortResults ( wxCommandEvent &ev )
+	{
+	int a , mode = sortresults->GetSelection() ;
+	for ( a = 1 ; a < fragments.size() ; a++ )
+		{
+		bool flip = false ;
+		if ( mode == 0 ) // By position
+			{
+			if ( fragments[a-1].from > fragments[a].from ) flip = true ;
+			}
+		else if ( mode == 1 ) // By length
+			{
+			if ( fragments[a-1].length < fragments[a].length ) flip = true ;
+			}
+		else if ( mode == 2 ) // By size
+			{
+			if ( fragments[a-1].weight < fragments[a].weight ) flip = true ;
+			}
+		if ( flip )
+			{
+			TFragment f = fragments[a-1] ;
+			fragments[a-1] = fragments[a] ;
+			fragments[a] = f ;
+			a = 0 ;
+			}
+		}
+	show_fragment_list () ;
 	}
 	
 void TProteolysis::OnCharHook(wxKeyEvent& event)
