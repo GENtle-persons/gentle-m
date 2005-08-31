@@ -202,11 +202,11 @@ void TProteolysis::calc_cut_list ()
 			{
 			TProteaseCut *temp = pc[a] ;
 			pc[a] = pc[a+1] ;
-			pc[a] = temp ;
+			pc[a+1] = temp ;
 			a = -1 ;
 			}
 		}
-	
+
 	// Add final piece
 	if ( pc.GetCount() && pc[pc.GetCount()-1]->cut != v->getSequenceLength() )
 		{
@@ -393,6 +393,23 @@ void TProteolysis::OnOK ( wxCommandEvent &ev )
 			}
 		v->setChanged() ;
       parent->showSequence () ;
+		}
+	
+	// Create fragments
+	if ( create_fragments->IsChecked() )
+		{
+		for ( a = 0 ; a < fragments.size() ; a++ )
+			{
+			if ( !results->IsChecked ( a ) ) continue ;
+			
+			TVector *nv = new TVector ;
+			nv->setFromVector ( *v ) ;
+			nv->eraseSequence ( fragments[a].to , v->getSequenceLength() ) ;
+			nv->eraseSequence ( 0 , fragments[a].from-1 ) ;
+			nv->addName ( wxString::Format ( _T(" [%d-%d]") , fragments[a].from , fragments[a].to ) ) ;
+
+			myapp()->frame->newAminoAcids ( nv , nv->getName() ) ;
+			}
 		}
 	
    wxDialog::OnOK ( ev ) ;
