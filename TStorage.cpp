@@ -1152,7 +1152,7 @@ bool TStorage::convertSqlite2to3 ()
  	    	for ( c = 0 ; c < r.field.GetCount() ; c++ )
   		    	s3.sqlAdd ( s1 , s2 , r.field[c] , r[b][c] ) ;
 			sql = _T("INSERT INTO ") + tables[a] + _T(" (") + s1 + _T(") VALUES (") + s2 + _T(")") ;
-            s3.getObject ( sql ) ;
+         s3.getObject ( sql ) ;
 	    	}    
   	    s3.endRecord() ;
    		}    
@@ -1165,3 +1165,41 @@ bool TStorage::convertSqlite2to3 ()
     return true ; // Dummy default
 	}
     
+void TStorage::syncEnzymes ( TStorage *to )
+	{
+	bool useBlank = false ;
+	if ( to == NULL )
+		{
+		to = new TStorage ( TEMP_STORAGE , myapp()->homedir + myapp()->slash + _T("blank.db") ) ;
+		useBlank = true ;
+		}
+	
+	TSQLresult r1 , r2 ;
+	r1 = getObject ( "SELECT * FROM enzyme" ) ;
+	r2 = to->getObject ( "SELECT * FROM enzyme" ) ;
+	
+	int a ;
+	wxArrayString s1 , s2 ;
+	for ( a = 0 ; a < r1.rows() ; a++ ) s1.Add ( r1[a][r1["e_name"]] ) ;
+	for ( a = 0 ; a < r2.rows() ; a++ ) s2.Add ( r2[a][r2["e_name"]] ) ;
+	
+	startRecord() ;
+	for ( a = 0 ; a < s2.GetCount() ; a++ )
+		{
+		if ( wxNOT_FOUND != s1.Index ( s2[a] ) ) continue ; // It's there
+		wxString sql , k , v  ;
+		sqlAdd ( k , v , "e_name" , s2[a] ) ;
+		sqlAdd ( k , v , "e_sequence" , r2[a][r2["e_sequence"]] ) ;
+		sqlAdd ( k , v , "e_note" , _T("") ) ;
+		sqlAdd ( k , v , "e_location" , _T("") ) ;
+		sqlAdd ( k , v , "e_cut" , _T("0") ) ;
+		sqlAdd ( k , v , "e_overlap" , _T("0") ) ;
+		k.Replace ( "\"" , "'" ) ;
+		v.Replace ( "\"" , "'" ) ;
+		sql = _T("INSERT INTO enzyme (e_id,") + k + _T(") VALUES ((SELECT max(e_id) FROM enzyme)+1,") + v + _T(")") ;
+		getObject ( sql ) ;
+		}
+	endRecord() ;
+	
+	if ( useBlank ) delete to ;
+	}

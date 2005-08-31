@@ -144,6 +144,7 @@ class TStorage
     virtual void addEnzymeToGroup ( wxString enzyme , wxString group ) ; ///< Add a restriction enzyme to an enzyme group
     virtual void removeEnzymeFromGroup ( wxString enzyme , wxString group ) ; ///< Remove an enzyme from an enzyme group
     virtual void removeEnzymeGroup ( wxString group ) ; ///< Remove an enzyme group
+    virtual void syncEnzymes ( TStorage *to = NULL ) ; ///< Get new enzymes from (basic) database
     virtual void startRecord () ; ///< Start recording queries
     virtual void endRecord () ; ///< Stop recording, execute all recorded queries
     
