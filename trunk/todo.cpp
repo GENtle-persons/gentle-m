@@ -20,6 +20,7 @@ Feature Requests :
 * Find proteases that cut n times
 * That ligation thingy 
 
+* Alignment-Farben wie bei ABI
 * Save all
 * Feature names movable / keep position with changes
 
