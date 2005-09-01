@@ -124,7 +124,9 @@ wxString txt ( char *item )
 
 wxString txt ( wxString item )
     {
-	if ( item.MakeUpper().Left(2) == _T("M_") ) return myapp()->_text[item.MakeUpper()].Trim() ;
+#ifdef __WXMAC__
+	 if ( item.MakeUpper().Left(2) == _T("M_") ) return myapp()->_text[item.MakeUpper()].Trim() ;
+#endif
     return myapp()->_text[item.MakeUpper()] ;
     }
 
