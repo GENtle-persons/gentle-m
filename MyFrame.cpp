@@ -214,7 +214,11 @@ void MyFrame::initme ()
     useCoolCanvas = LS->getOption ( _T("USECOOLCANVAS") , false ) ; // Not saved yet
     useInternalHelp = LS->getOption ( _T("USEINTERNALHELP") , false ) ; // Not saved yet
     showEnzymePos = LS->getOption ( _T("SHOWENZYMEPOS") , true ) ;
-	 myapp()->init_txt ( lang_string.c_str() , _T("variables.csv") ) ;
+	
+	myapp()->init_txt ( lang_string.c_str() , _T("variables.csv") ) ;
+	
+	
+	
     global_enzyme_rules = new TEnzymeRules ;
     global_enzyme_rules->load_global_settings() ;
 
@@ -1508,7 +1512,7 @@ TGraph *MyFrame::RunGraph ()
     activateChild ( children.GetCount()-1 ) ;
     return subframe ;
     }
-    
+	
 /** \brief Returns the standard File menu, with variations
 	\param _save Include "Save" menu option
 	\param _exp Include "Export" menu option

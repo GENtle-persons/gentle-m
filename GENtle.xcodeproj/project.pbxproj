@@ -434,7 +434,7 @@
 		91B024DE086727CD007ABD07 /* libwxtiff-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxtiff-2.6.a"; path = "../wx/wxWidgets/build-release/lib/libwxtiff-2.6.a"; sourceTree = SOURCE_ROOT; };
 		91C98C55086946DC003ED5D9 /* default.tab */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = default.tab; sourceTree = "<group>"; };
 		91C9EAB20867299100AE735B /* libwxexpat-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxexpat-2.6.a"; path = "../wx/wxWidgets/build-release/lib/libwxexpat-2.6.a"; sourceTree = SOURCE_ROOT; };
-		91C9EABF0867351700AE735B /* variables.csv */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = variables.csv; path = ../../variables.csv; sourceTree = BUILT_PRODUCTS_DIR; };
+		91C9EABF0867351700AE735B /* variables.csv */ = {isa = PBXFileReference; fileEncoding = "-2147482624"; lastKnownFileType = text; name = variables.csv; path = ../../variables.csv; sourceTree = BUILT_PRODUCTS_DIR; };
 		91CC568B088B961300567E40 /* PCR_Troubleshoot.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = PCR_Troubleshoot.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
