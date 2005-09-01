@@ -118,11 +118,13 @@ char * txt ( wxString item )
 */
 wxString txt ( char *item )
     {
-    return myapp()->_text[wxString(item,wxConvUTF8).MakeUpper()] ;
+	return txt ( wxString(item,wxConvUTF8) ) ;
+//    return myapp()->_text[wxString(item,wxConvUTF8).MakeUpper()] ;
     }
 
 wxString txt ( wxString item )
     {
+	if ( item.MakeUpper().Left(2) == _T("M_") ) return myapp()->_text[item.MakeUpper()].Trim() ;
     return myapp()->_text[item.MakeUpper()] ;
     }
 
@@ -524,7 +526,6 @@ void MyApp::init_txt ( wxString lang , wxString csv , wxHashString *target , int
               {
               *c = 0 ;
               v.Add ( dummy.trimQuotes(wxString((char*)l,wxConvUTF8)) ) ;
-//              v.Add ( dummy.trimQuotes(CHAR2WX(l)));
               l = c+1 ;
               }
            }
@@ -532,7 +533,6 @@ void MyApp::init_txt ( wxString lang , wxString csv , wxHashString *target , int
            {
            *(c-1) = 0 ;
            v.Add ( dummy.trimQuotes(wxString((char*)l,wxConvUTF8)) ) ;
-//           v.Add ( dummy.trimQuotes(CHAR2WX(l)));
            }
         
         if ( firstline )
