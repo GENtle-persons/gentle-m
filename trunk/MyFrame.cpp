@@ -90,7 +90,7 @@ MyFrame::MyFrame(wxWindow *parent,
     entries[17].Set(wxACCEL_CTRL, (int) 'G', MDI_ALIGNMENT);
     entries[18].Set(wxACCEL_CTRL, (int) 'F', MDI_FIND);
     entries[19].Set(wxACCEL_NORMAL, WXK_F1, MDI_HELP);
-    entries[20].Set(wxACCEL_CTRL, (int) 'Q', AA_ONE);
+    entries[20].Set(wxACCEL_CTRL, (int) 'Y', AA_ONE);
     entries[21].Set(wxACCEL_CTRL, (int) 'W', AA_THREE);
     entries[22].Set(wxACCEL_NORMAL, WXK_F11, MDI_PROJECT_LOAD);
     entries[23].Set(wxACCEL_NORMAL, WXK_F12, MDI_PROJECT_SAVE);
