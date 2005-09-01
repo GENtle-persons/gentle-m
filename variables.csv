@@ -4,7 +4,7 @@
 "m_newwin","&New\tCtrl-N","&Neu\tStrg-N"
 "m_newwintxt","Open new window","Neues Fenster öffnen"
 "m_file","&File","&Datei"
-"m_open","&Open file\tCtrl-O ","Ö&ffnen\tStrg-O "
+"m_open","&Open file\tCtrl+O ","Ö&ffnen\tStrg-O "
 "m_opentxt","Open a file from the database","Eine Datei aus der Datenbank öffnen"
 "m_import","&Import\tCtrl-I ","&Importieren\tStrg-I "
 "m_importtxt","Import a CLONE file","Eine CLONE-Datei importieren"
