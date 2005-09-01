@@ -67,6 +67,7 @@ MyFrame::MyFrame(wxWindow *parent,
     test_suite = NULL ;
 #endif
 
+#ifndef __WXMAC__
     // Accelerators
     wxAcceleratorEntry entries[ACC_ENT];
     entries[ 0].Set(wxACCEL_CTRL, (int) 'X', MDI_CUT);
@@ -115,6 +116,7 @@ MyFrame::MyFrame(wxWindow *parent,
     
     wxAcceleratorTable accel(ACC_ENT, entries);
     SetAcceleratorTable(accel);
+#endif
     html_ep = NULL ;
     lastChild = NULL ;
     tb_mychild = NULL ;

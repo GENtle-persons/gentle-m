@@ -194,25 +194,30 @@ void TEnzymeSettingsTab::updateColor ( wxColour &c )
 ProgramOptionsDialog::ProgramOptionsDialog(wxWindow *parent, const wxString& title )
          : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 620 , 450 ) )
     {
-    int w , h ;
-    bo = 5 ;
-    lh = 22 ;
-    GetClientSize ( &w , &h ) ;
-    
+    wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+    wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	
     globalSettingsPanel = NULL ;
-    nb = new wxNotebook ( (wxWindow*) this , -1 ,
-                          wxPoint ( 0 , 0 ) ,
-                          wxSize ( w , h - lh * 2 ) ) ;
+    nb = new wxNotebook ( (wxWindow*) this , -1 ) ;
+	wxNotebookSizer *nbs = new wxNotebookSizer ( nb ) ;
 
     initGlobalSettings () ;
     initGlobalEnzymes () ;
 
-    wxButton *OK = new wxButton ( this , POD_OK , txt("b_ok") ,
-                                wxPoint ( bo , h - lh - bo ) ,
-                                wxSize ( w/4 , lh ) ) ;
-    new wxButton ( this , POD_CANCEL , txt("b_cancel") ,
-                                wxPoint ( w*3/4 - bo , h - lh - bo ) ,
-                                wxSize ( w/4 , lh ) ) ;
+    wxButton *OK = new wxButton ( this , POD_OK , txt("b_ok") ) ;
+    wxButton *CANCEL = new wxButton ( this , POD_CANCEL , txt("b_cancel") ) ;
+
+	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , 0 ) ;
+	h0->Add ( OK , 1 , 0 ) ;
+	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , 0 ) ;
+	h0->Add ( CANCEL , 1 , 0 ) ;
+	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , 0 ) ;
+
+	v0->Add ( nbs , 1 , wxALL|wxEXPAND , 5 ) ;
+	v0->Add ( h0 , 0 , wxALL|wxEXPAND , 5 ) ;
+
+	SetSizer ( v0 ) ;
+	v0->Fit ( this ) ;
 
     Center () ;
     OK->SetDefault () ;

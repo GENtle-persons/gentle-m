@@ -16,6 +16,7 @@
 		914159AA08683388001E63F9 /* MySQL template.txt in Resources */ = {isa = PBXBuildFile; fileRef = 914159A808683387001E63F9 /* MySQL template.txt */; };
 		914159AC086833EA001E63F9 /* gpl.txt in Resources */ = {isa = PBXBuildFile; fileRef = 914159AB086833EA001E63F9 /* gpl.txt */; };
 		914159AE0868342B001E63F9 /* ncoils.matrix in Resources */ = {isa = PBXBuildFile; fileRef = 914159AD0868342B001E63F9 /* ncoils.matrix */; };
+		9157CB6308A78B6A0053C2D6 /* TProteolysis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9157CB6208A78B690053C2D6 /* TProteolysis.cpp */; };
 		9180A6BB0866FD46000C7D5E /* ABItype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9180A65E0866FD45000C7D5E /* ABItype.cpp */; };
 		9180A6BC0866FD46000C7D5E /* ABIviewer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9180A65F0866FD45000C7D5E /* ABIviewer.cpp */; };
 		9180A6BD0866FD46000C7D5E /* Alignment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9180A6600866FD45000C7D5E /* Alignment.cpp */; };
@@ -242,6 +243,7 @@
 		914159A808683387001E63F9 /* MySQL template.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = "MySQL template.txt"; sourceTree = "<group>"; };
 		914159AB086833EA001E63F9 /* gpl.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = gpl.txt; sourceTree = "<group>"; };
 		914159AD0868342B001E63F9 /* ncoils.matrix */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = ncoils.matrix; sourceTree = "<group>"; };
+		9157CB6208A78B690053C2D6 /* TProteolysis.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = TProteolysis.cpp; sourceTree = "<group>"; };
 		9180A6570866FD0A000C7D5E /* GENtle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GENtle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9180A65A0866FD0A000C7D5E /* GENtle-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "GENtle-Info.plist"; sourceTree = "<group>"; };
 		9180A65E0866FD45000C7D5E /* ABItype.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ABItype.cpp; sourceTree = "<group>"; };
@@ -459,6 +461,7 @@
 		9180A6490866FCF9000C7D5E = {
 			isa = PBXGroup;
 			children = (
+				9157CB6208A78B690053C2D6 /* TProteolysis.cpp */,
 				91023BCC0893BBA600BD8757 /* libmysqlclient.a */,
 				91CC568B088B961300567E40 /* PCR_Troubleshoot.cpp */,
 				911E4C4A08695B31006FD9C0 /* mac_icon.icns */,
@@ -974,6 +977,7 @@
 				9180A7160866FD46000C7D5E /* util.cpp in Sources */,
 				91B024DB08672754007ABD07 /* ureadseq.c in Sources */,
 				91CC568C088B961300567E40 /* PCR_Troubleshoot.cpp in Sources */,
+				9157CB6308A78B6A0053C2D6 /* TProteolysis.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

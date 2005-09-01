@@ -1,19 +1,5 @@
 // !$*UTF8*$!
 {
-	9106DB3B089E092D004C97DA /* PBXBookmark */ = {
-		isa = PBXBookmark;
-		fRef = 9180A6770866FD46000C7D5E /* main.cpp */;
-	};
-	9106DB52089E14B0004C97DA /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 9180A6770866FD46000C7D5E /* main.cpp */;
-		name = "main.cpp: 301";
-		rLen = 0;
-		rLoc = 8194;
-		rType = 0;
-		vrLen = 1292;
-		vrLoc = 7113;
-	};
 	9141598008681904001E63F9 /* codon_catalog.csv */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1400, 543}}";
@@ -21,6 +7,20 @@
 			sepNavVisRect = "{{0, 0}, {925, 543}}";
 			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
 		};
+	};
+	915D9F5F08C6E2A6003A689B /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 9180A67C0866FD46000C7D5E /* MyFrame.cpp */;
+	};
+	915D9F6808C6E302003A689B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9180A67C0866FD46000C7D5E /* MyFrame.cpp */;
+		name = "MyFrame.cpp: 119";
+		rLen = 0;
+		rLoc = 4943;
+		rType = 0;
+		vrLen = 1880;
+		vrLoc = 3261;
 	};
 	9180A64B0866FCF9000C7D5E /* Project object */ = {
 		activeBuildConfigurationName = Release;
@@ -97,12 +97,12 @@
 					PBXFileDataSource_SCM_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 144572133;
-			PBXWorkspaceStateSaveDate = 144572133;
+			PBXPerProjectTemplateStateSaveDate = 147187027;
+			PBXWorkspaceStateSaveDate = 147187027;
 		};
 		perUserProjectItems = {
-			9106DB3B089E092D004C97DA /* PBXBookmark */ = 9106DB3B089E092D004C97DA /* PBXBookmark */;
-			9106DB52089E14B0004C97DA /* PBXTextBookmark */ = 9106DB52089E14B0004C97DA /* PBXTextBookmark */;
+			915D9F5F08C6E2A6003A689B /* PBXBookmark */ = 915D9F5F08C6E2A6003A689B /* PBXBookmark */;
+			915D9F6808C6E302003A689B /* PBXTextBookmark */ = 915D9F6808C6E302003A689B /* PBXTextBookmark */;
 		};
 		sourceControlManager = 9180A64F0866FCF9000C7D5E /* Source Control */;
 		userBuildSettings = {
@@ -300,8 +300,8 @@
 	9180A6770866FD46000C7D5E /* main.cpp */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {925, 7728}}";
-			sepNavSelRange = "{8194, 0}";
-			sepNavVisRect = "{{0, 3740}, {925, 543}}";
+			sepNavSelRange = "{5888, 5}";
+			sepNavVisRect = "{{0, 2900}, {925, 543}}";
 			sepNavWindowFrame = "{{38, 48}, {964, 672}}";
 		};
 	};
@@ -331,9 +331,9 @@
 	};
 	9180A67C0866FD46000C7D5E /* MyFrame.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1616, 30604}}";
-			sepNavSelRange = "{5145, 0}";
-			sepNavVisRect = "{{0, 1569}, {925, 543}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1616, 30646}}";
+			sepNavSelRange = "{4943, 0}";
+			sepNavVisRect = "{{0, 1238}, {925, 543}}";
 			sepNavWindowFrame = "{{38, 48}, {964, 672}}";
 		};
 	};
@@ -379,9 +379,9 @@
 	};
 	9180A6860866FD46000C7D5E /* ProgramOptionsDialog.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {998, 8036}}";
-			sepNavSelRange = "{13886, 28}";
-			sepNavVisRect = "{{0, 4314}, {925, 543}}";
+			sepNavIntBoundsRect = "{{0, 0}, {998, 8106}}";
+			sepNavSelRange = "{8565, 0}";
+			sepNavVisRect = "{{0, 2760}, {925, 543}}";
 			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
 		};
 	};
@@ -520,10 +520,10 @@
 	};
 	91C9EABF0867351700AE735B /* variables.csv */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {2618, 11690}}";
-			sepNavSelRange = "{1514, 4}";
+			sepNavIntBoundsRect = "{{0, 0}, {2618, 11970}}";
+			sepNavSelRange = "{221, 0}";
 			sepNavVisRect = "{{0, 0}, {925, 543}}";
-			sepNavWindowFrame = "{{38, 48}, {964, 672}}";
+			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
 		};
 	};
 	91CC568B088B961300567E40 /* PCR_Troubleshoot.cpp */ = {
