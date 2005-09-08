@@ -382,6 +382,9 @@ int MyApp::OnExit ()
 */
 wxString MyApp::getHTMLCommand ( wxString command )
     {
+#ifdef __WXMAC__
+	return _T("open ") + command ;
+#endif
     wxString ret ;
     ret = getFileFormatCommand ( command , _T("html") ) ;
     if ( ret.IsEmpty() ) ret = getFileFormatCommand ( command , _T("htm") ) ;

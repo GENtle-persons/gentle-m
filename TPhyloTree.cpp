@@ -253,7 +253,7 @@ void TPhyloTree::setModeDrawgram ()
 	wxRect r ( 0 , 0 , si.GetWidth() , si.GetHeight() ) ;
 	r.Deflate ( 10 , 10 ) ;
 
-	int md = tree->getMaxDepth() ;
+//	int md = tree->getMaxDepth() ;
 	double mw = tree->getMaxWeight() ;
 	int mc = tree->countLeafs () ;
 	int border = 5 ;
@@ -291,7 +291,7 @@ void TPhyloTree::setModeDrawgram ()
 		double xf = r.GetWidth() - maxw ;
 		xf *= vt[a]->getCurrentWeight() ;
 		xf /= mw ;
-		vt[a]->rect.SetX ( r.GetLeft() + xf ) ;
+		vt[a]->rect.SetX ( r.GetLeft() + (int) xf ) ;
 		}
 
 	dc.DrawRectangle ( wxRect ( 0 , 0 , si.GetWidth() , si.GetHeight() ) ) ;
@@ -489,7 +489,7 @@ int TPTree::numberLeafs ( int i )
 	
 	// Not a leaf
 	leafNumber = 0 ;
-	int cnt = 0 ;
+//	int cnt = 0 ;
 	for ( int a = 0 ; a < children.size() ; a++ )
 		i = children[a]->numberLeafs ( i ) ;
 	return i ;

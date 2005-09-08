@@ -448,6 +448,17 @@ void MyFrame::OnHelp(wxCommandEvent& event )
         }
     else
         {
+		#ifdef __WXMAC__
+            wxString helpfile = _T("\"") ;
+            helpfile += myapp()->homedir ;
+            helpfile += _T("/") ;
+            helpfile += txt("f_help").AfterFirst ( '/' ) ;
+            helpfile += _T("\"") ;
+
+            wxString command = myapp()->getHTMLCommand ( helpfile ) ;
+            wxExecute ( command ) ;
+		#endif
+
         #ifdef __WXMSW__
             wxString helpfile = _T("\"") ;
             helpfile += myapp()->homedir ;
@@ -460,7 +471,6 @@ void MyFrame::OnHelp(wxCommandEvent& event )
             
             wxString command = myapp()->getHTMLCommand ( helpfile ) ;
             wxExecute ( command ) ;
-        #else
         #endif
         }
 }
