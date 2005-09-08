@@ -9,6 +9,49 @@
 /* Begin PBXBuildFile section */
 		91023BCD0893BBA600BD8757 /* libmysqlclient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91023BCC0893BBA600BD8757 /* libmysqlclient.a */; };
 		911E4C4B08695B31006FD9C0 /* mac_icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 911E4C4A08695B31006FD9C0 /* mac_icon.icns */; };
+		91410FC008D04FFA00776D65 /* .cvsignore in Resources */ = {isa = PBXBuildFile; fileRef = 91410F9508D04FF900776D65 /* .cvsignore */; };
+		91410FC108D04FFA00776D65 /* Bugs & Co.txt in Resources */ = {isa = PBXBuildFile; fileRef = 91410F9608D04FF900776D65 /* Bugs & Co.txt */; };
+		91410FC208D04FFA00776D65 /* de_alignment.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410F9708D04FFA00776D65 /* de_alignment.htm */; };
+		91410FC308D04FFA00776D65 /* de_alignment.png in Resources */ = {isa = PBXBuildFile; fileRef = 91410F9808D04FFA00776D65 /* de_alignment.png */; };
+		91410FC408D04FFA00776D65 /* de_amino_acids.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410F9908D04FFA00776D65 /* de_amino_acids.htm */; };
+		91410FC508D04FFA00776D65 /* de_enter_sequence.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410F9A08D04FFA00776D65 /* de_enter_sequence.htm */; };
+		91410FC608D04FFA00776D65 /* de_enter_sequence.png in Resources */ = {isa = PBXBuildFile; fileRef = 91410F9B08D04FFA00776D65 /* de_enter_sequence.png */; };
+		91410FC708D04FFA00776D65 /* de_enzyme_editor.png in Resources */ = {isa = PBXBuildFile; fileRef = 91410F9C08D04FFA00776D65 /* de_enzyme_editor.png */; };
+		91410FC808D04FFA00776D65 /* de_feature_editor.png in Resources */ = {isa = PBXBuildFile; fileRef = 91410F9D08D04FFA00776D65 /* de_feature_editor.png */; };
+		91410FC908D04FFA00776D65 /* de_import.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410F9E08D04FFA00776D65 /* de_import.htm */; };
+		91410FCA08D04FFA00776D65 /* de_import.png in Resources */ = {isa = PBXBuildFile; fileRef = 91410F9F08D04FFA00776D65 /* de_import.png */; };
+		91410FCB08D04FFA00776D65 /* de_ligation.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410FA008D04FFA00776D65 /* de_ligation.htm */; };
+		91410FCC08D04FFA00776D65 /* de_ligation.png in Resources */ = {isa = PBXBuildFile; fileRef = 91410FA108D04FFA00776D65 /* de_ligation.png */; };
+		91410FCD08D04FFA00776D65 /* de_main.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410FA208D04FFA00776D65 /* de_main.htm */; };
+		91410FCE08D04FFA00776D65 /* de_manage_db.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410FA308D04FFA00776D65 /* de_manage_db.htm */; };
+		91410FCF08D04FFA00776D65 /* de_manage_db_database.png in Resources */ = {isa = PBXBuildFile; fileRef = 91410FA408D04FFA00776D65 /* de_manage_db_database.png */; };
+		91410FD008D04FFA00776D65 /* de_manage_db_manage.png in Resources */ = {isa = PBXBuildFile; fileRef = 91410FA508D04FFA00776D65 /* de_manage_db_manage.png */; };
+		91410FD108D04FFA00776D65 /* de_manage_db_store.png in Resources */ = {isa = PBXBuildFile; fileRef = 91410FA608D04FFA00776D65 /* de_manage_db_store.png */; };
+		91410FD208D04FFA00776D65 /* de_pcr.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410FA708D04FFA00776D65 /* de_pcr.htm */; };
+		91410FD308D04FFA00776D65 /* de_pcr.png in Resources */ = {isa = PBXBuildFile; fileRef = 91410FA808D04FFA00776D65 /* de_pcr.png */; };
+		91410FD408D04FFA00776D65 /* de_plasmid.png in Resources */ = {isa = PBXBuildFile; fileRef = 91410FA908D04FFA00776D65 /* de_plasmid.png */; };
+		91410FD508D04FFA00776D65 /* de_restriction.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410FAA08D04FFA00776D65 /* de_restriction.htm */; };
+		91410FD608D04FFA00776D65 /* de_restriction_assistant.png in Resources */ = {isa = PBXBuildFile; fileRef = 91410FAB08D04FFA00776D65 /* de_restriction_assistant.png */; };
+		91410FD708D04FFA00776D65 /* de_restriction_editor.png in Resources */ = {isa = PBXBuildFile; fileRef = 91410FAC08D04FFA00776D65 /* de_restriction_editor.png */; };
+		91410FD808D04FFA00776D65 /* de_sequence.png in Resources */ = {isa = PBXBuildFile; fileRef = 91410FAD08D04FFA00776D65 /* de_sequence.png */; };
+		91410FD908D04FFA00776D65 /* de_sequence_dna.png in Resources */ = {isa = PBXBuildFile; fileRef = 91410FAE08D04FFA00776D65 /* de_sequence_dna.png */; };
+		91410FDA08D04FFA00776D65 /* de_shortcuts.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410FAF08D04FFA00776D65 /* de_shortcuts.htm */; };
+		91410FDB08D04FFA00776D65 /* de_storage.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410FB008D04FFA00776D65 /* de_storage.htm */; };
+		91410FDC08D04FFA00776D65 /* de_vector.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410FB108D04FFA00776D65 /* de_vector.htm */; };
+		91410FDD08D04FFA00776D65 /* de_vector_editor.png in Resources */ = {isa = PBXBuildFile; fileRef = 91410FB208D04FFA00776D65 /* de_vector_editor.png */; };
+		91410FDE08D04FFA00776D65 /* de_vector_properties.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410FB308D04FFA00776D65 /* de_vector_properties.htm */; };
+		91410FDF08D04FFA00776D65 /* en_alignment.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410FB408D04FFA00776D65 /* en_alignment.htm */; };
+		91410FE008D04FFA00776D65 /* en_amino_acids.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410FB508D04FFA00776D65 /* en_amino_acids.htm */; };
+		91410FE108D04FFA00776D65 /* en_enter_sequence.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410FB608D04FFA00776D65 /* en_enter_sequence.htm */; };
+		91410FE208D04FFA00776D65 /* en_import.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410FB708D04FFA00776D65 /* en_import.htm */; };
+		91410FE308D04FFA00776D65 /* en_ligation.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410FB808D04FFA00776D65 /* en_ligation.htm */; };
+		91410FE408D04FFA00776D65 /* en_main.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410FB908D04FFA00776D65 /* en_main.htm */; };
+		91410FE508D04FFA00776D65 /* en_pcr.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410FBA08D04FFA00776D65 /* en_pcr.htm */; };
+		91410FE608D04FFA00776D65 /* en_restriction.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410FBB08D04FFA00776D65 /* en_restriction.htm */; };
+		91410FE708D04FFA00776D65 /* en_shortcuts.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410FBC08D04FFA00776D65 /* en_shortcuts.htm */; };
+		91410FE808D04FFA00776D65 /* jstest.html in Resources */ = {isa = PBXBuildFile; fileRef = 91410FBD08D04FFA00776D65 /* jstest.html */; };
+		91410FE908D04FFA00776D65 /* stylesheet.css in Resources */ = {isa = PBXBuildFile; fileRef = 91410FBE08D04FFA00776D65 /* stylesheet.css */; };
+		91410FEA08D04FFA00776D65 /* todo.txt in Resources */ = {isa = PBXBuildFile; fileRef = 91410FBF08D04FFA00776D65 /* todo.txt */; };
 		9141597F086818D9001E63F9 /* variables.csv in Resources */ = {isa = PBXBuildFile; fileRef = 9141597E086818D9001E63F9 /* variables.csv */; };
 		9141598208681904001E63F9 /* codon_catalog.csv in Resources */ = {isa = PBXBuildFile; fileRef = 9141598008681904001E63F9 /* codon_catalog.csv */; };
 		9141598308681904001E63F9 /* commonvectors.db in Resources */ = {isa = PBXBuildFile; fileRef = 9141598108681904001E63F9 /* commonvectors.db */; };
@@ -236,6 +279,49 @@
 /* Begin PBXFileReference section */
 		91023BCC0893BBA600BD8757 /* libmysqlclient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmysqlclient.a; path = /usr/local/lib/mysql/libmysqlclient.a; sourceTree = "<absolute>"; };
 		911E4C4A08695B31006FD9C0 /* mac_icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = mac_icon.icns; sourceTree = "<group>"; };
+		91410F9508D04FF900776D65 /* .cvsignore */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = .cvsignore; sourceTree = "<group>"; };
+		91410F9608D04FF900776D65 /* Bugs & Co.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = "Bugs & Co.txt"; sourceTree = "<group>"; };
+		91410F9708D04FFA00776D65 /* de_alignment.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = de_alignment.htm; sourceTree = "<group>"; };
+		91410F9808D04FFA00776D65 /* de_alignment.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = de_alignment.png; sourceTree = "<group>"; };
+		91410F9908D04FFA00776D65 /* de_amino_acids.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = de_amino_acids.htm; sourceTree = "<group>"; };
+		91410F9A08D04FFA00776D65 /* de_enter_sequence.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = de_enter_sequence.htm; sourceTree = "<group>"; };
+		91410F9B08D04FFA00776D65 /* de_enter_sequence.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = de_enter_sequence.png; sourceTree = "<group>"; };
+		91410F9C08D04FFA00776D65 /* de_enzyme_editor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = de_enzyme_editor.png; sourceTree = "<group>"; };
+		91410F9D08D04FFA00776D65 /* de_feature_editor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = de_feature_editor.png; sourceTree = "<group>"; };
+		91410F9E08D04FFA00776D65 /* de_import.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = de_import.htm; sourceTree = "<group>"; };
+		91410F9F08D04FFA00776D65 /* de_import.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = de_import.png; sourceTree = "<group>"; };
+		91410FA008D04FFA00776D65 /* de_ligation.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = de_ligation.htm; sourceTree = "<group>"; };
+		91410FA108D04FFA00776D65 /* de_ligation.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = de_ligation.png; sourceTree = "<group>"; };
+		91410FA208D04FFA00776D65 /* de_main.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = de_main.htm; sourceTree = "<group>"; };
+		91410FA308D04FFA00776D65 /* de_manage_db.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = de_manage_db.htm; sourceTree = "<group>"; };
+		91410FA408D04FFA00776D65 /* de_manage_db_database.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = de_manage_db_database.png; sourceTree = "<group>"; };
+		91410FA508D04FFA00776D65 /* de_manage_db_manage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = de_manage_db_manage.png; sourceTree = "<group>"; };
+		91410FA608D04FFA00776D65 /* de_manage_db_store.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = de_manage_db_store.png; sourceTree = "<group>"; };
+		91410FA708D04FFA00776D65 /* de_pcr.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = de_pcr.htm; sourceTree = "<group>"; };
+		91410FA808D04FFA00776D65 /* de_pcr.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = de_pcr.png; sourceTree = "<group>"; };
+		91410FA908D04FFA00776D65 /* de_plasmid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = de_plasmid.png; sourceTree = "<group>"; };
+		91410FAA08D04FFA00776D65 /* de_restriction.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = de_restriction.htm; sourceTree = "<group>"; };
+		91410FAB08D04FFA00776D65 /* de_restriction_assistant.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = de_restriction_assistant.png; sourceTree = "<group>"; };
+		91410FAC08D04FFA00776D65 /* de_restriction_editor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = de_restriction_editor.png; sourceTree = "<group>"; };
+		91410FAD08D04FFA00776D65 /* de_sequence.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = de_sequence.png; sourceTree = "<group>"; };
+		91410FAE08D04FFA00776D65 /* de_sequence_dna.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = de_sequence_dna.png; sourceTree = "<group>"; };
+		91410FAF08D04FFA00776D65 /* de_shortcuts.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = de_shortcuts.htm; sourceTree = "<group>"; };
+		91410FB008D04FFA00776D65 /* de_storage.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = de_storage.htm; sourceTree = "<group>"; };
+		91410FB108D04FFA00776D65 /* de_vector.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = de_vector.htm; sourceTree = "<group>"; };
+		91410FB208D04FFA00776D65 /* de_vector_editor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = de_vector_editor.png; sourceTree = "<group>"; };
+		91410FB308D04FFA00776D65 /* de_vector_properties.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = de_vector_properties.htm; sourceTree = "<group>"; };
+		91410FB408D04FFA00776D65 /* en_alignment.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = en_alignment.htm; sourceTree = "<group>"; };
+		91410FB508D04FFA00776D65 /* en_amino_acids.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = en_amino_acids.htm; sourceTree = "<group>"; };
+		91410FB608D04FFA00776D65 /* en_enter_sequence.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = en_enter_sequence.htm; sourceTree = "<group>"; };
+		91410FB708D04FFA00776D65 /* en_import.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = en_import.htm; sourceTree = "<group>"; };
+		91410FB808D04FFA00776D65 /* en_ligation.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = en_ligation.htm; sourceTree = "<group>"; };
+		91410FB908D04FFA00776D65 /* en_main.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = en_main.htm; sourceTree = "<group>"; };
+		91410FBA08D04FFA00776D65 /* en_pcr.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = en_pcr.htm; sourceTree = "<group>"; };
+		91410FBB08D04FFA00776D65 /* en_restriction.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = en_restriction.htm; sourceTree = "<group>"; };
+		91410FBC08D04FFA00776D65 /* en_shortcuts.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = en_shortcuts.htm; sourceTree = "<group>"; };
+		91410FBD08D04FFA00776D65 /* jstest.html */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = jstest.html; sourceTree = "<group>"; };
+		91410FBE08D04FFA00776D65 /* stylesheet.css */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = stylesheet.css; sourceTree = "<group>"; };
+		91410FBF08D04FFA00776D65 /* todo.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = todo.txt; sourceTree = "<group>"; };
 		9141597E086818D9001E63F9 /* variables.csv */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = variables.csv; sourceTree = "<group>"; };
 		9141598008681904001E63F9 /* codon_catalog.csv */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = codon_catalog.csv; sourceTree = "<group>"; };
 		9141598108681904001E63F9 /* commonvectors.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = commonvectors.db; sourceTree = "<group>"; };
@@ -458,9 +544,60 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		91410F9408D04FF900776D65 /* help */ = {
+			isa = PBXGroup;
+			children = (
+				91410F9508D04FF900776D65 /* .cvsignore */,
+				91410F9608D04FF900776D65 /* Bugs & Co.txt */,
+				91410F9708D04FFA00776D65 /* de_alignment.htm */,
+				91410F9808D04FFA00776D65 /* de_alignment.png */,
+				91410F9908D04FFA00776D65 /* de_amino_acids.htm */,
+				91410F9A08D04FFA00776D65 /* de_enter_sequence.htm */,
+				91410F9B08D04FFA00776D65 /* de_enter_sequence.png */,
+				91410F9C08D04FFA00776D65 /* de_enzyme_editor.png */,
+				91410F9D08D04FFA00776D65 /* de_feature_editor.png */,
+				91410F9E08D04FFA00776D65 /* de_import.htm */,
+				91410F9F08D04FFA00776D65 /* de_import.png */,
+				91410FA008D04FFA00776D65 /* de_ligation.htm */,
+				91410FA108D04FFA00776D65 /* de_ligation.png */,
+				91410FA208D04FFA00776D65 /* de_main.htm */,
+				91410FA308D04FFA00776D65 /* de_manage_db.htm */,
+				91410FA408D04FFA00776D65 /* de_manage_db_database.png */,
+				91410FA508D04FFA00776D65 /* de_manage_db_manage.png */,
+				91410FA608D04FFA00776D65 /* de_manage_db_store.png */,
+				91410FA708D04FFA00776D65 /* de_pcr.htm */,
+				91410FA808D04FFA00776D65 /* de_pcr.png */,
+				91410FA908D04FFA00776D65 /* de_plasmid.png */,
+				91410FAA08D04FFA00776D65 /* de_restriction.htm */,
+				91410FAB08D04FFA00776D65 /* de_restriction_assistant.png */,
+				91410FAC08D04FFA00776D65 /* de_restriction_editor.png */,
+				91410FAD08D04FFA00776D65 /* de_sequence.png */,
+				91410FAE08D04FFA00776D65 /* de_sequence_dna.png */,
+				91410FAF08D04FFA00776D65 /* de_shortcuts.htm */,
+				91410FB008D04FFA00776D65 /* de_storage.htm */,
+				91410FB108D04FFA00776D65 /* de_vector.htm */,
+				91410FB208D04FFA00776D65 /* de_vector_editor.png */,
+				91410FB308D04FFA00776D65 /* de_vector_properties.htm */,
+				91410FB408D04FFA00776D65 /* en_alignment.htm */,
+				91410FB508D04FFA00776D65 /* en_amino_acids.htm */,
+				91410FB608D04FFA00776D65 /* en_enter_sequence.htm */,
+				91410FB708D04FFA00776D65 /* en_import.htm */,
+				91410FB808D04FFA00776D65 /* en_ligation.htm */,
+				91410FB908D04FFA00776D65 /* en_main.htm */,
+				91410FBA08D04FFA00776D65 /* en_pcr.htm */,
+				91410FBB08D04FFA00776D65 /* en_restriction.htm */,
+				91410FBC08D04FFA00776D65 /* en_shortcuts.htm */,
+				91410FBD08D04FFA00776D65 /* jstest.html */,
+				91410FBE08D04FFA00776D65 /* stylesheet.css */,
+				91410FBF08D04FFA00776D65 /* todo.txt */,
+			);
+			path = help;
+			sourceTree = "<group>";
+		};
 		9180A6490866FCF9000C7D5E = {
 			isa = PBXGroup;
 			children = (
+				91410F9408D04FF900776D65 /* help */,
 				9157CB6208A78B690053C2D6 /* TProteolysis.cpp */,
 				91023BCC0893BBA600BD8757 /* libmysqlclient.a */,
 				91CC568B088B961300567E40 /* PCR_Troubleshoot.cpp */,
@@ -873,6 +1010,49 @@
 				914159AE0868342B001E63F9 /* ncoils.matrix in Resources */,
 				91C98C56086946DC003ED5D9 /* default.tab in Resources */,
 				911E4C4B08695B31006FD9C0 /* mac_icon.icns in Resources */,
+				91410FC008D04FFA00776D65 /* .cvsignore in Resources */,
+				91410FC108D04FFA00776D65 /* Bugs & Co.txt in Resources */,
+				91410FC208D04FFA00776D65 /* de_alignment.htm in Resources */,
+				91410FC308D04FFA00776D65 /* de_alignment.png in Resources */,
+				91410FC408D04FFA00776D65 /* de_amino_acids.htm in Resources */,
+				91410FC508D04FFA00776D65 /* de_enter_sequence.htm in Resources */,
+				91410FC608D04FFA00776D65 /* de_enter_sequence.png in Resources */,
+				91410FC708D04FFA00776D65 /* de_enzyme_editor.png in Resources */,
+				91410FC808D04FFA00776D65 /* de_feature_editor.png in Resources */,
+				91410FC908D04FFA00776D65 /* de_import.htm in Resources */,
+				91410FCA08D04FFA00776D65 /* de_import.png in Resources */,
+				91410FCB08D04FFA00776D65 /* de_ligation.htm in Resources */,
+				91410FCC08D04FFA00776D65 /* de_ligation.png in Resources */,
+				91410FCD08D04FFA00776D65 /* de_main.htm in Resources */,
+				91410FCE08D04FFA00776D65 /* de_manage_db.htm in Resources */,
+				91410FCF08D04FFA00776D65 /* de_manage_db_database.png in Resources */,
+				91410FD008D04FFA00776D65 /* de_manage_db_manage.png in Resources */,
+				91410FD108D04FFA00776D65 /* de_manage_db_store.png in Resources */,
+				91410FD208D04FFA00776D65 /* de_pcr.htm in Resources */,
+				91410FD308D04FFA00776D65 /* de_pcr.png in Resources */,
+				91410FD408D04FFA00776D65 /* de_plasmid.png in Resources */,
+				91410FD508D04FFA00776D65 /* de_restriction.htm in Resources */,
+				91410FD608D04FFA00776D65 /* de_restriction_assistant.png in Resources */,
+				91410FD708D04FFA00776D65 /* de_restriction_editor.png in Resources */,
+				91410FD808D04FFA00776D65 /* de_sequence.png in Resources */,
+				91410FD908D04FFA00776D65 /* de_sequence_dna.png in Resources */,
+				91410FDA08D04FFA00776D65 /* de_shortcuts.htm in Resources */,
+				91410FDB08D04FFA00776D65 /* de_storage.htm in Resources */,
+				91410FDC08D04FFA00776D65 /* de_vector.htm in Resources */,
+				91410FDD08D04FFA00776D65 /* de_vector_editor.png in Resources */,
+				91410FDE08D04FFA00776D65 /* de_vector_properties.htm in Resources */,
+				91410FDF08D04FFA00776D65 /* en_alignment.htm in Resources */,
+				91410FE008D04FFA00776D65 /* en_amino_acids.htm in Resources */,
+				91410FE108D04FFA00776D65 /* en_enter_sequence.htm in Resources */,
+				91410FE208D04FFA00776D65 /* en_import.htm in Resources */,
+				91410FE308D04FFA00776D65 /* en_ligation.htm in Resources */,
+				91410FE408D04FFA00776D65 /* en_main.htm in Resources */,
+				91410FE508D04FFA00776D65 /* en_pcr.htm in Resources */,
+				91410FE608D04FFA00776D65 /* en_restriction.htm in Resources */,
+				91410FE708D04FFA00776D65 /* en_shortcuts.htm in Resources */,
+				91410FE808D04FFA00776D65 /* jstest.html in Resources */,
+				91410FE908D04FFA00776D65 /* stylesheet.css in Resources */,
+				91410FEA08D04FFA00776D65 /* todo.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
