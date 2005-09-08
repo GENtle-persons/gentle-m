@@ -112,7 +112,7 @@ void SeqAA::show ( wxDC& dc )
     wxColour bbg ( 150 , 150 , 255 ) ;
     dc.SetTextBackground ( *wxWHITE ) ;
     if ( primaryMode ) dc.SetTextForeground ( *wxBLACK ) ;
-    else dc.SetTextForeground ( *wxLIGHT_GREY ) ;
+    else dc.SetTextForeground ( myapp()->frame->aa_color /* *wxLIGHT_GREY */ ) ;
 //    dc.SetBackgroundMode ( wxSOLID ) ;
     dc.SetBackgroundMode ( wxTRANSPARENT ) ;
 
@@ -155,7 +155,10 @@ void SeqAA::show ( wxDC& dc )
               dc.SetTextBackground ( *wxBLACK ) ;
               dc.SetBackgroundMode ( wxSOLID ) ;
               }
-           t = s.GetChar(b-1) ;
+
+	 		  wxChar ch = s.GetChar(b-1) ;
+		 	  if ( ch == '|' ) ch = myapp()->frame->stopcodon ;
+           t = ch ;
            if ( can->isPrinting() && !can->getPrintToColor() )
               {
               dc.SetTextForeground ( *wxBLACK ) ;
@@ -177,7 +180,7 @@ void SeqAA::show ( wxDC& dc )
               {
               dc.SetTextBackground ( *wxWHITE ) ;
               if ( primaryMode ) dc.SetTextForeground ( *wxBLACK ) ;
-              else dc.SetTextForeground ( *wxLIGHT_GREY ) ;
+              else dc.SetTextForeground ( myapp()->frame->aa_color /* *wxLIGHT_GREY */ ) ;
               dc.SetBackgroundMode ( wxTRANSPARENT ) ;
               }
 
@@ -206,7 +209,7 @@ void SeqAA::show ( wxDC& dc )
                  dc.SetFont(*can->font);
                  
                  if ( primaryMode ) dc.SetTextForeground ( *wxBLACK ) ;
-                 else dc.SetTextForeground ( *wxLIGHT_GREY ) ;
+                 else dc.SetTextForeground ( myapp()->frame->aa_color /* *wxLIGHT_GREY */ ) ;
                  }
               }
               
@@ -507,7 +510,7 @@ void SeqAA::show_direct ( wxDC& dc )
     int bm = dc.GetBackgroundMode () ;
     wxColour tf ;
     if ( primaryMode ) tf = *wxBLACK ;
-    else tf = wxColour ( 130 , 130 , 130 ) ;//*wxLIGHT_GREY ;
+    else tf = myapp()->frame->aa_color ;; // wxColour ( 130 , 130 , 130 ) ;//*wxLIGHT_GREY ;
     dc.SetTextForeground ( tf ) ;
     dc.SetBackgroundMode ( wxTRANSPARENT ) ;
 
@@ -568,7 +571,10 @@ void SeqAA::show_direct ( wxDC& dc )
           dc.SetTextForeground ( *wxBLACK ) ;
           }
 
-       dc.DrawText ( wxString ( s.GetChar(a) ) , px , py ) ;
+		 // Show the char
+		 wxChar ch = s.GetChar(a) ;
+		 if ( ch == '|' ) ch = myapp()->frame->stopcodon ;
+       dc.DrawText ( wxString ( ch ) , px , py ) ;
        
        int pz = py + ch ;
 
@@ -610,7 +616,7 @@ void SeqAA::show_direct ( wxDC& dc )
              dc.SetFont(*can->font);
              
              if ( primaryMode ) dc.SetTextForeground ( *wxBLACK ) ;
-             else dc.SetTextForeground ( *wxLIGHT_GREY ) ;
+             else dc.SetTextForeground ( myapp()->frame->aa_color /* *wxLIGHT_GREY */ ) ;
              }
           }
 

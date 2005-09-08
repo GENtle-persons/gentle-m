@@ -211,9 +211,17 @@ void MyFrame::initme ()
     lang_string = LS->getOption ( _T("LANGUAGE") , _T("en") ) ;
     doRegisterStuff = LS->getOption ( _T("REGISTERSTUFF") , true ) ;
     editFeatureMode = LS->getOption ( _T("EDITFEATUREMODE") , 0 ) ;
+    showStopCodon = LS->getOption ( _T("SHOWSTOPCODON") , 0 ) ;
     useCoolCanvas = LS->getOption ( _T("USECOOLCANVAS") , false ) ; // Not saved yet
     useInternalHelp = LS->getOption ( _T("USEINTERNALHELP") , false ) ; // Not saved yet
     showEnzymePos = LS->getOption ( _T("SHOWENZYMEPOS") , true ) ;
+    
+    int aa_red = LS->getOption ( _T("AA_RED") , wxLIGHT_GREY->Red() ) ;
+    int aa_green = LS->getOption ( _T("AA_GREEN") , wxLIGHT_GREY->Green() ) ;
+    int aa_blue = LS->getOption ( _T("AA_BLUE") , wxLIGHT_GREY->Blue() ) ;
+    aa_color.Set ( aa_red , aa_green , aa_blue ) ;
+
+    stopcodon = showStopCodon == 0 ? '|' : '*' ;
 	
 	myapp()->init_txt ( lang_string.c_str() , _T("variables.csv") ) ;
 	
@@ -1063,7 +1071,10 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     useInternalHelp = pod.useInternalHelp->GetValue() ;
     doRegisterStuff = pod.doRegisterStuff->GetValue() ;
     editFeatureMode = pod.editFeatureMode->GetSelection() ;
+    showStopCodon = pod.showStopCodon->GetSelection() ;    
     showEnzymePos = pod.showEnzymePos->GetValue() ;
+    aa_color = pod.aacol ;
+    stopcodon = showStopCodon == 0 ? '|' : '*' ;
     wxString lang = pod.language->GetStringSelection() ;
     if ( lang != lang_string )
         {
@@ -1084,7 +1095,11 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     LS->setOption ( _T("USEINTERNALHELP") , useInternalHelp ) ;
     LS->setOption ( _T("REGISTERSTUFF") , doRegisterStuff ) ;
     LS->setOption ( _T("EDITFEATUREMODE") , editFeatureMode ) ;
+    LS->setOption ( _T("SHOWSTOPCODON") , showStopCodon ) ;
     LS->setOption ( _T("SHOWENZYMEPOS") , showEnzymePos ) ;
+    LS->setOption ( _T("AA_RED") , aa_color.Red() ) ;
+    LS->setOption ( _T("AA_GREEN") , aa_color.Green() ) ;
+    LS->setOption ( _T("AA_BLUE") , aa_color.Blue() ) ;
     global_enzyme_rules->save_global_settings() ; //!!!!!!! fix this!
     LS->endRecord() ;
     for ( int a = 0 ; a < children.GetCount() ; a++ )

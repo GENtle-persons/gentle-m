@@ -420,6 +420,8 @@ enum {
 	PRO_FRAGMENTS_NONE,
 	PRO_SORT_RESULTS,
 	
+	POD_AA_COL,
+	
 	
 	Y___,
 	Z___
