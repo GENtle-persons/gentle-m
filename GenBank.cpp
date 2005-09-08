@@ -239,6 +239,10 @@ void TGenBank::remap ( TVector *v , const wxArrayString &vs , const wxArrayInt &
              ns += l2 ;
              }    
           }
+      else
+      	{
+			v->addDescription ( l + _T("\n") ) ;
+			}
 	 }
 	 
     v->setSequence ( ns.MakeUpper() ) ;

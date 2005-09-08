@@ -40,6 +40,7 @@ END_EVENT_TABLE()
 BEGIN_EVENT_TABLE(EIpanel, wxPanel)
     EVT_BUTTON(ID_B1, EIpanel::OnB1)
     EVT_BUTTON(ID_B2, EIpanel::OnB2)
+    EVT_BUTTON(ID_B3, EIpanel::OnB3)
     EVT_BUTTON(ID_B_LAST, EIpanel::OnBlast)
     EVT_BUTTON(ID_B_NEXT, EIpanel::OnBnext)
     EVT_TEXT_ENTER(ID_T1, EIpanel::OnB1)
@@ -238,6 +239,14 @@ void EIpanel::OnB2 ( wxCommandEvent& event )
 	wxBeginBusyCursor () ;
 	if ( mode == EI_NCBI ) execute_ncbi() ;
 	if ( mode == EI_BLAST ) execute_blast() ;
+	wxEndBusyCursor () ;
+	}
+
+void EIpanel::OnB3 ( wxCommandEvent& event )
+	{
+	wxBeginBusyCursor () ;
+	if ( mode == EI_NCBI ) execute_ncbi_b3() ;
+	if ( mode == EI_BLAST ) execute_blast_b3() ;
 	wxEndBusyCursor () ;
 	}
 

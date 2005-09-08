@@ -9,6 +9,7 @@ void EIpanel::init_blast()
     t1 = new wxTextCtrl ( up , ID_T1 , _T("") , wxDefaultPosition , wxDefaultSize , wxTE_PROCESS_ENTER ) ;
     b1 = new wxButton ( up , ID_B1 , txt("b_find") , wxDefaultPosition ) ;
     b2 = new wxButton ( up , ID_B2 , txt("t_open") , wxDefaultPosition ) ;
+    b3 = new wxButton ( up , ID_B3 , txt("b_open_link") , wxDefaultPosition ) ;
     c1 = new wxChoice ( up , ID_C1 ) ;
     c1->Append ( _T("Protein") ) ;
     c1->Append ( _T("Nucleotide") ) ;
@@ -22,6 +23,7 @@ void EIpanel::init_blast()
     b_next = new wxButton ( up , ID_B_NEXT , txt("b_next") , wxDefaultPosition ) ;
     b_last->Disable () ;
     b_next->Disable () ;
+    b3->Disable () ;
 
     v1 = new wxBoxSizer ( wxVERTICAL ) ;
     h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
@@ -29,6 +31,7 @@ void EIpanel::init_blast()
     h0->Add ( t1 , 1 , wxEXPAND , 5 ) ;
     h0->Add ( b1 , 0 , wxEXPAND , 5 ) ;
     h0->Add ( b2 , 0 , wxEXPAND , 5 ) ;
+    h0->Add ( b3 , 0 , wxEXPAND , 5 ) ;
     h0->Add ( c2 , 0 , wxEXPAND , 5 ) ;
     h0->Add ( b_last , 0 , wxEXPAND , 5 ) ;
     h0->Add ( b_next , 0 , wxEXPAND , 5 ) ;
@@ -108,6 +111,7 @@ public :
 		wxMutexGuiEnter() ;
 		res = ex.getText ( url ) ;
 		wxMutexGuiLeave() ;
+		
 		hs = parseQblast ( res ) ;
 		if ( hs[_T("STATUS")].Upper() == _T("WAITING") ) wait = 5 ; // Wait another 5 seconds
 		else wait = 0 ; // Done!
@@ -239,64 +243,65 @@ void EIpanel::process_blast2()
     mylog ( "blast2" , "5" ) ;
     int a = 0 ;
     for ( x = x->FirstChild ( "Hit" ) ; x ; x = x->NextSibling ( "Hit" ) , a++ )
-    {
+	    {
+		if ( initial )
+			{
+			res_count++ ;
+			if ( a >= RETMAX ) continue ;
+			}
+		else
+			{
+	   	if ( a < res_start ) continue ;
+	   	if ( a >= res_start + RETMAX ) break ;
+			}
 
-	if ( initial )
-	{
-	    res_count++ ;
-	    if ( a >= RETMAX ) continue ;
-	}
-	else
-	{
-	    if ( a < res_start ) continue ;
-	    if ( a >= res_start + RETMAX ) break ;
-	}
-
-	wxString html ;
-	wxString name = valFC ( x->FirstChild ( "Hit_def" ) ) ;
-	wxString id = valFC ( x->FirstChild ( "Hit_id" ) ) ;
-
-	name = name.BeforeFirst ( '>' ) ;
-
-	TiXmlNode *h = x->FirstChild ( "Hit_hsps" ) ;
-	h = h->FirstChild ( "Hsp" ) ;
-	wxString evalue = valFC ( h->FirstChild ( "Hsp_evalue" ) ) ;
-	if ( evalue.Find ( 'e' ) > -1 )
-	{
-	    wxString base = evalue.BeforeFirst ( 'e' ) + _T("&times;10") ;
-	    wxString exp = _T("<font size=2>") + evalue.AfterFirst ( 'e' )  + _T("</font>") ;
-	    
-	    evalue = _T("<table border=0 cellpadding=0 cellspacing=0><tr><td rowspan=2 valign=bottom>E-Value=</td>") ;
-	    evalue += _T("<td align=left valign=bottom><br>") + base + _T("</td>") ;
-	    evalue += _T("<td align=right valign=top>") + exp + _T("</td>") ;
-	    evalue += _T("</tr></table>") ;
-	}
-	else evalue = _T("E-Value=") + evalue ;
+		wxString html ;
+		wxString name = valFC ( x->FirstChild ( "Hit_def" ) ) ;
+		wxString id = valFC ( x->FirstChild ( "Hit_id" ) ) ;
 	
-	wxString qseq = valFC ( h->FirstChild ( "Hsp_qseq" ) ) ;
-	wxString mseq = valFC ( h->FirstChild ( "Hsp_midline" ) ) ;
-	wxString hseq = valFC ( h->FirstChild ( "Hsp_hseq" ) ) ;
-	long qoff , hoff ;
-	valFC ( h->FirstChild ( "Hsp_query-from" ) ) . ToLong ( &qoff ) ;
-	valFC ( h->FirstChild ( "Hsp_hit-from" ) ) . ToLong ( &hoff ) ;
-
-	html = _T("<table width=100%><tr>") ;
-	html += _T("<td rowspan=2>") + wxString::Format ( _T("%d") , a+1 ) + _T("</td>") ;
-	html += _T("<td valign=top width=100%>") + name + _T("</td>") ;
-	html += _T("<td align=right valign=top>") + evalue + _T("</td>") ;
-	html += _T("</tr><tr>") ;
-	html += _T("<td colspan=2><tt><font size=2>\n") ;
-	html += blast_align ( qseq , mseq , hseq , w , qoff , hoff ) ;
-	html += _T("</font></tt></td>") ;
-	html += _T("</tr></table>") ;
-	hlb->Set ( a - res_start , html , id ) ;
-    }
+		name = name.BeforeFirst ( '>' ) ;
+	
+		TiXmlNode *h = x->FirstChild ( "Hit_hsps" ) ;
+		h = h->FirstChild ( "Hsp" ) ;
+		wxString evalue = valFC ( h->FirstChild ( "Hsp_evalue" ) ) ;
+		if ( evalue.Find ( 'e' ) > -1 )
+			{
+		   wxString base = evalue.BeforeFirst ( 'e' ) + _T("&times;10") ;
+		   wxString exp = _T("<font size=2>") + evalue.AfterFirst ( 'e' )  + _T("</font>") ;
+		    
+		   evalue = _T("<table border=0 cellpadding=0 cellspacing=0><tr><td rowspan=2 valign=bottom>E-Value=</td>") ;
+		   evalue += _T("<td align=left valign=bottom><br>") + base + _T("</td>") ;
+		   evalue += _T("<td align=right valign=top>") + exp + _T("</td>") ;
+		   evalue += _T("</tr></table>") ;
+			}
+		else evalue = _T("E-Value=") + evalue ;
+		
+		wxString qseq = valFC ( h->FirstChild ( "Hsp_qseq" ) ) ;
+		wxString mseq = valFC ( h->FirstChild ( "Hsp_midline" ) ) ;
+		wxString hseq = valFC ( h->FirstChild ( "Hsp_hseq" ) ) ;
+		long qoff , hoff ;
+		valFC ( h->FirstChild ( "Hsp_query-from" ) ) . ToLong ( &qoff ) ;
+		valFC ( h->FirstChild ( "Hsp_hit-from" ) ) . ToLong ( &hoff ) ;
+	
+		html = _T("<table width=100%><tr>") ;
+		html += _T("<td rowspan=2>") + wxString::Format ( _T("%d") , a+1 ) + _T("</td>") ;
+		html += _T("<td valign=top width=100%>") + name + _T("</td>") ;
+		html += _T("<td align=right valign=top>") + evalue + _T("</td>") ;
+		html += _T("</tr><tr>") ;
+		html += _T("<td colspan=2><tt><font size=2>\n") ;
+		html += blast_align ( qseq , mseq , hseq , w , qoff , hoff ) ;
+		html += _T("</font></tt></td>") ;
+		html += _T("</tr></table>") ;
+		hlb->Set ( a - res_start , html , id ) ;
+	   }
+	
     mylog ( "blast2" , "6" ) ;
     hlb->Update () ;
     mylog ( "blast2" , "7" ) ;
 //    wxMessageBox ( wxString::Format ( "%d" , res_count ) ) ;
     b_next->Enable ( res_start + RETMAX < res_count ) ;
     b_last->Enable ( res_start > 0 ) ;
+    b3->Enable ( true ) ;
 
     int max = res_start + RETMAX ;
     if ( max > res_count ) max = res_count ;
@@ -353,3 +358,21 @@ void EIpanel::execute_blast()
     wxString database = c1->GetStringSelection() ;
     execute_ncbi_load ( database ) ; // Dummy
 }
+
+void EIpanel::execute_blast_b3()
+	{
+	wxString database = c1->GetStringSelection().Lower() ;
+	for ( int i = 0 ; i < hlb->data.GetCount() ; i++ )
+		{
+		if ( !hlb->IsSelected ( i ) ) continue ;
+		wxString s = hlb->data[i] ;
+		
+		int a = s.Find ( _T("gi|") ) ;
+		if ( a == -1 ) return ;
+		s = s.Mid ( a + 3 ) ;
+		s = s.BeforeFirst ( '|' ) ;
+		s = _T("http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?cmd=Retrieve&db=") + database + _T("&list_uids=") + s + _T("&dopt=GenPept") ;
+		s = myapp()->getHTMLCommand ( s ) ;
+		wxExecute ( s ) ;
+		}
+	}

@@ -31,6 +31,7 @@ class TXMLfile
     virtual wxString t ( const char *txt ) ; ///< Safe text conversion
     virtual void readGBqualifiers ( TVectorItem &i , TiXmlNode *n ) ; ///< Part of the parser
     virtual void readGBintervals ( vector <TVectorItem> &vi , const TVectorItem &i , TiXmlNode *n ) ; ///< Part of the parser
+    virtual wxString get_sub_desc ( TiXmlNode *base , int depth = 0 ) ;
     bool _success ; ///< Internal success marker
     wxArrayTVector _v ; ///< The generated vectors
     } ;
