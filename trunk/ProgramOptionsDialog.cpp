@@ -6,6 +6,7 @@
 BEGIN_EVENT_TABLE(ProgramOptionsDialog, wxDialog )
     EVT_BUTTON(POD_OK,ProgramOptionsDialog::OnOK)
     EVT_BUTTON(POD_CANCEL,ProgramOptionsDialog::OnCancel)
+    EVT_BUTTON(POD_AA_COL,ProgramOptionsDialog::OnAACol)
     EVT_CHAR_HOOK(ProgramOptionsDialog::OnCharHook)
 END_EVENT_TABLE()
     
@@ -234,45 +235,28 @@ void ProgramOptionsDialog::initGlobalSettings ()
 	{
     globalSettingsPanel = new wxPanel ( nb , -1 ) ;
     nb->AddPage ( globalSettingsPanel , txt("t_global_settings") ) ;    
-/*
-    wxStaticText *st ;
-    st = new wxStaticText ( globalSettingsPanel , -1 , txt("t_language") , wxPoint ( bo , lh ) ) ;
-    wxRect r1 = st->GetRect() ;
-    
-    int mw = r1.GetRight() ;
-    mw += bo ;
-*/
+
     language = new wxChoice ( globalSettingsPanel , -1 ) ; //, wxPoint ( mw , lh - bo ) ) ;
     enhancedDisplay = new wxCheckBox ( globalSettingsPanel , -1 , 
                         txt("t_enhanced_display") ) ; 
-//                        wxPoint ( bo , lh*3 ) ) ;
     vectorTitle = new wxCheckBox ( globalSettingsPanel , -1 , 
                         txt("t_vector_title") ) ;
-//                        wxPoint ( bo , lh*4 ) ) ;
     vectorLength = new wxCheckBox ( globalSettingsPanel , -1 , 
                         txt("t_vector_length") ) ;
-//                        wxPoint ( bo , lh*5 ) ) ;
     loadLastProject = new wxCheckBox ( globalSettingsPanel , -1 , 
                         txt("t_load_last_project") ) ;
-//                        wxPoint ( bo , lh*6 ) ) ;
     useMetafile = new wxCheckBox ( globalSettingsPanel , -1 , 
                         txt("t_use_metafile") ) ;
-//                        wxPoint ( bo , lh*7 ) ) ;
     showSplashScreen = new wxCheckBox ( globalSettingsPanel , -1 , 
                         txt("t_show_splashscreen") ) ;
-//                        wxPoint ( bo , lh*8 ) ) ;
     checkUpdate = new wxCheckBox ( globalSettingsPanel , -1 , 
                         txt("t_check4update") ) ;
-//                        wxPoint ( bo , lh*9 ) ) ;
     useInternalHelp = new wxCheckBox ( globalSettingsPanel , -1 , 
                         txt("t_useinternalhelp") ) ; 
-//                        wxPoint ( bo , lh*10 ) ) ;
     doRegisterStuff = new wxCheckBox ( globalSettingsPanel , -1 , 
                         txt("t_doregisterstuff") ) ; 
-//                        wxPoint ( bo , lh*11 ) ) ;
     showEnzymePos = new wxCheckBox ( globalSettingsPanel , -1 , 
                         txt("t_showenzymepos") ) ; 
-//                        wxPoint ( bo , lh*12 ) ) ;
                         
                         
     wxString efm[3] ;
@@ -285,6 +269,17 @@ void ProgramOptionsDialog::initGlobalSettings ()
                         wxDefaultSize ,
                         3 , efm , 1 , wxRA_SPECIFY_ROWS ) ;
     editFeatureMode->SetSelection ( myapp()->frame->editFeatureMode ) ;
+
+    wxString ssc[2] ;
+    ssc[0] = _T("|") ;
+    ssc[1] = _T("*") ;
+    showStopCodon = new wxRadioBox ( globalSettingsPanel , -1 , 
+                        txt("t_show_stop_codon") , 
+                        wxDefaultPosition , 
+                        wxDefaultSize ,
+                        2 , ssc , 1 , wxRA_SPECIFY_ROWS ) ;
+    showStopCodon->SetSelection ( myapp()->frame->showStopCodon ) ;
+    wxButton *b_aacol = new wxButton ( globalSettingsPanel , POD_AA_COL , txt("t_aa_col") ) ;
                         
     enhancedDisplay->SetValue ( myapp()->frame->enhancedRefresh ) ;
     vectorTitle->SetValue ( myapp()->frame->showVectorTitle ) ;
@@ -299,11 +294,16 @@ void ProgramOptionsDialog::initGlobalSettings ()
     language->Append ( _T("en") ) ;
     language->Append ( _T("de") ) ;
     language->SetStringSelection ( myapp()->frame->lang_string ) ;
+    aacol = myapp()->frame->aa_color ;
 
     wxBoxSizer *v = new wxBoxSizer ( wxVERTICAL ) ;
     wxBoxSizer *h = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
     h->Add ( new wxStaticText ( globalSettingsPanel , -1 , txt("t_language") ) , 0 , wxEXPAND|wxALL , 5 ) ;
     h->Add ( language , 0 , wxEXPAND|wxALL , 5 ) ;
+    
+    h1->Add ( showStopCodon , 1 , wxEXPAND|wxALL , 5 ) ;
+    h1->Add ( b_aacol, 0 , wxEXPAND|wxALL , 5 ) ;
     
     v->Add ( h , 0 , wxEXPAND|wxALL , 5 ) ;
     v->Add ( enhancedDisplay , 0 , wxEXPAND|wxALL , 5 ) ;
@@ -317,6 +317,7 @@ void ProgramOptionsDialog::initGlobalSettings ()
     v->Add ( doRegisterStuff , 0 , wxEXPAND|wxALL , 5 ) ;
     v->Add ( showEnzymePos , 0 , wxEXPAND|wxALL , 5 ) ;
     v->Add ( editFeatureMode , 0 , wxEXPAND|wxALL , 5 ) ;
+    v->Add ( h1 , 0 , wxEXPAND|wxALL , 5 ) ;
 
 	 globalSettingsPanel->SetSizer ( v ) ;
 	 v->Fit ( globalSettingsPanel ) ;
@@ -329,6 +330,13 @@ void ProgramOptionsDialog::OnCharHook(wxKeyEvent& event)
     if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
     else event.Skip() ;
     }
+
+void ProgramOptionsDialog::OnAACol ( wxCommandEvent &ev )
+	{
+	wxColour n = wxGetColourFromUser ( this , aacol ) ;
+	if ( !n.Ok() ) return ; // Not OK
+	aacol = n ;
+	}
 
 void ProgramOptionsDialog::OnOK ( wxCommandEvent &ev )
     {

@@ -853,3 +853,5 @@
 "t_pro_sort_results_2","Length","Länge"
 "t_pro_sort_results_3","Size","Größe"
 "b_open_link","NCB&I","NCB&I"
+"t_show_stop_codon","Display stop codon","Darstellung des Stopcodons"
+"t_aa_col","Amino acid color in DNA modul","Aminosäurenfarbe im DNS-Modul"

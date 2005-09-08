@@ -53,6 +53,7 @@ class ProgramOptionsDialog : public wxDialog
 
     virtual void OnOK ( wxCommandEvent &ev ) ; ///< OK button event handler
     virtual void OnCancel ( wxCommandEvent &ev ) ; ///< Cancel button event handler
+    virtual void OnAACol ( wxCommandEvent &ev ) ; ///< Amino acid color event handler
     virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
 
     wxNotebook *nb ; ///< Pointer to the wxNotebook structure containing the tabs
@@ -65,6 +66,8 @@ class ProgramOptionsDialog : public wxDialog
 					 *showEnzymePos ;
                 
     wxRadioBox *editFeatureMode ; ///< Pointer to the list of choices of how to treat edited items
+    wxRadioBox *showStopCodon ; ///< Pointer to the list of choices of how to display stop codons
+    wxColour aacol ; ///< The color in which to draw the amino acids in DNA mode
                 
     private :
     virtual void initGlobalSettings () ; ///< Initialize "Global settings" tab

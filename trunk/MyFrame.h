@@ -160,7 +160,8 @@ public:
     bool dying , enhancedRefresh , showVectorTitle , showVectorLength , 
             loadLastProject , useMetafile , showSplashScreen , checkUpdate ,
             useCoolCanvas , useInternalHelp , doRegisterStuff , showEnzymePos ;
-    int editFeatureMode ;
+    wxColour aa_color ;
+    int editFeatureMode , showStopCodon ;
     TProject project ; ///< \brief The current project
     TEnzymeRules *global_enzyme_rules ; ///< \brief The global rules for which enzymes to use/display
     wxString lang_string ; ///< \brief The user interface language name
@@ -169,6 +170,7 @@ public:
     wxHtmlEasyPrinting *html_ep ; ///< \brief HTML printer wrapper for TCalculator
     vector <wxBitmap> bitmaps ; ///< \brief The bitmaps in the user interface
     wxToolBar *tb_mychild ; ///< \brief The shared toolbar (?)
+    char stopcodon ;
 
     private :
     wxSashLayoutWindow* m_topWindow; ///< \brief Frame layout, top window (unused)
