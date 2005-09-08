@@ -9,6 +9,7 @@ void EIpanel::init_ncbi()
 	t1 = new wxTextCtrl ( up , ID_T1 , _T("") , wxDefaultPosition , wxDefaultSize , wxTE_PROCESS_ENTER ) ;
 	b1 = new wxButton ( up , ID_B1 , txt("b_find") , wxDefaultPosition ) ;
 	b2 = new wxButton ( up , ID_B2 , txt("t_open") , wxDefaultPosition ) ;
+   b3 = new wxButton ( up , ID_B3 , txt("b_open_link") , wxDefaultPosition ) ;
 	c1 = new wxChoice ( up , ID_C1 ) ;
 	c1->Append ( _T("Nucleotide") ) ;
 	c1->Append ( _T("Protein") ) ;
@@ -18,6 +19,7 @@ void EIpanel::init_ncbi()
 	b_next = new wxButton ( up , ID_B_NEXT , txt("b_next") , wxDefaultPosition ) ;
 	b_last->Disable () ;
 	b_next->Disable () ;
+	b3->Disable () ;
 	
 	
 /*
@@ -31,6 +33,7 @@ void EIpanel::init_ncbi()
     h0->Add ( t1 , 1 , wxEXPAND , 5 ) ;
     h0->Add ( b1 , 0 , wxEXPAND , 5 ) ;
     h0->Add ( b2 , 0 , wxEXPAND , 5 ) ;
+    h0->Add ( b3 , 0 , wxEXPAND , 5 ) ;
     h0->Add ( b_last , 0 , wxEXPAND , 5 ) ;
     h0->Add ( b_next , 0 , wxEXPAND , 5 ) ;
 
@@ -237,6 +240,7 @@ void EIpanel::process_ncbi()
 	showMessage ( msg  ) ;
 	b_next->Enable ( res_start + RETMAX <= res_count ) ;
 	b_last->Enable ( res_start > 0 ) ;
+   b3->Enable ( true ) ;
 	t1->SetFocus() ;
 	}    
 
@@ -259,55 +263,77 @@ void EIpanel::execute_ncbi_load ( wxString database )
 		if ( !ids.IsEmpty() ) ids += _T(",") ;
 		ids += hlb->data[a] ;
 		}		
-		
+	
 	database = database.Lower() ;
 	
 	if ( database == _T("nucleotide") || database == _T("protein") ) // Requesting sequence
 		{
-	    wxString query = _T("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?") ;
-	    query += _T("db=") + database ;
-	    query += _T("&tool=GENtle") ;
-//	    query += "&retmax=" + wxString::Format ( "%d" , RETMAX ) ;
-	    query += _T("&id=") + ids ;
-	    if ( database == _T("nucleotide") ) query += _T("&retmode=xml&rettype=gb") ;
-	    else query += _T("&retmode=text&rettype=gp") ;
-	    
-	    myExternal ex ;
-	    wxString res = ex.getText ( query ) ;
-	    
-	    //    wxTheClipboard->Open(); wxTheClipboard->SetData( new wxTextDataObject(res) );    wxTheClipboard->Close();    	
-
-	    if ( database == _T("nucleotide") )
-    	    {
-    		if ( res.Left ( 5 ) == _T("LOCUS") )
-    			{
-    		    TGenBank gb ;
-    		    gb.paste ( res ) ;
-    		    //	wxMessageBox ( "GB" , wxString::Format ( "%d" , gb.success ) ) ;
-    		    if ( gb.success ) myapp()->frame->newGB ( gb ) ;
-    		    }
-    		else
-    			{
-    		    TXMLfile xml ;
-    		    xml.parse ( res ) ;
-    		    //	wxMessageBox ( res , wxString::Format ( "%d" , xml.success() ) ) ;
-    		    if ( xml.success() ) myapp()->frame->newXML ( xml ) ;
-    		    }
-    	    }
-	    else
-    	    {
-    		TGenBank gb ;
-    		gb.paste ( res ) ;
-    		if ( gb.success ) myapp()->frame->newGB ( gb , _T("") ) ;
-    	    }
-        }    
+		wxString query = _T("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?") ;
+		query += _T("db=") + database ;
+		query += _T("&tool=GENtle") ;
+		//	    query += "&retmax=" + wxString::Format ( "%d" , RETMAX ) ;
+		query += _T("&id=") + ids ;
+		if ( database == _T("nucleotide") ) query += _T("&retmode=xml&rettype=gb") ;
+		else query += _T("&retmode=text&rettype=gp") ;
+		
+		myExternal ex ;
+		wxString res = ex.getText ( query ) ;
+		
+		//    wxTheClipboard->Open(); wxTheClipboard->SetData( new wxTextDataObject(res) );    wxTheClipboard->Close();    	
+		
+		if ( database == _T("nucleotide") )
+			{
+			if ( res.Left ( 5 ) == _T("LOCUS") )
+				{
+				TGenBank gb ;
+				gb.paste ( res ) ;
+				//	wxMessageBox ( "GB" , wxString::Format ( "%d" , gb.success ) ) ;
+				if ( gb.success ) myapp()->frame->newGB ( gb ) ;
+				}
+			else
+				{
+				TXMLfile xml ;
+				xml.parse ( res ) ;
+				//	wxMessageBox ( res , wxString::Format ( "%d" , xml.success() ) ) ;
+				if ( xml.success() ) myapp()->frame->newXML ( xml ) ;
+				}
+			}
+		else
+			{
+			TGenBank gb ;
+			gb.paste ( res ) ;
+			if ( gb.success ) 
+				myapp()->frame->newGB ( gb , _T("") ) ;
+			}
+		}    
 	else if ( database == _T("pubmed") ) // Requesting paper
-    	{
-	    wxString query = _T("http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?") ;
-	    query += _T("db=") + database ;
-	    query += _T("&cmd=retrieve") ;
-	    query += _T("&list_uids=") + ids ;
-	    query += _T("&dopt=abstract") ;
-	    wxExecute ( myapp()->getHTMLCommand ( query ) ) ;
-    	}    
+		{
+		wxString query = _T("http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?") ;
+		query += _T("db=") + database ;
+		query += _T("&cmd=retrieve") ;
+		query += _T("&list_uids=") + ids ;
+		query += _T("&dopt=abstract") ;
+		wxExecute ( myapp()->getHTMLCommand ( query ) ) ;
+		}    
 	}	    
+
+void EIpanel::execute_ncbi_b3()
+	{
+	wxString script , database = c1->GetStringSelection().Lower() ;
+	if ( database == _T("pubmed") )
+		{
+		database += _T("&dopt=Abstract&cmd=Retrieve") ;
+		script = "query" ;
+		}
+	else script = "viewer" ;
+	for ( int i = 0 ; i < hlb->data.GetCount() ; i++ )
+		{
+		if ( !hlb->IsSelected ( i ) ) continue ;
+		wxString s = hlb->data[i] ;
+		
+		s = s.BeforeFirst ( '|' ) ;
+		s = _T("http://www.ncbi.nlm.nih.gov/entrez/") + script + _T(".fcgi?db=") + database + _T("&list_uids=") + s ;
+		s = myapp()->getHTMLCommand ( s ) ;
+		wxExecute ( s ) ;
+		}
+	}

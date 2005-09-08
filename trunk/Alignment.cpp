@@ -1174,6 +1174,76 @@ void TAlignment::doExport ( wxString filename , int filter )
 			out.Write ( _T("\n") ) ;
 			}
 		}
+    else if ( filter == 3 || filter == 4 ) // FASTA
+    	{
+		for ( a = 0 ; a < lines.size() ; a++ )
+			{
+			if ( !lines[a].v ) continue ;
+			wxString name = lines[a].name.Upper() ;
+			name.Replace ( _T(" ") , _T("_") ) ;
+			name = _T(">") + name.Left ( 59 ) ;
+			out.Write ( name + _T("\n") ) ;
+			wxString s = lines[a].s ;
+			if ( filter == 4 )
+				s.Replace ( _T("-") , _T("") ) ;
+			while ( !s.IsEmpty() )
+				{
+				wxString t = s.Left ( 60 ) ;
+				s = s.Mid ( 60 ) ;
+				out.Write ( t + _T("\n") ) ;
+				}
+			}
+		}
+    else if ( filter == 5 ) // MSF
+    	{
+		int namelimit = 50 ;
+		int a , firstseq ;
+		for ( firstseq = 0 ; firstseq < lines.size() && !lines[firstseq].v ; firstseq++ ) ;
+		int maxlen = lines[firstseq].s.length() ;
+		int type = lines[firstseq].v->getType() == TYPE_AMINO_ACIDS ? 'P' : 'N' ;
+		int maxname = 0 ;
+		for ( a = 0 ; a < lines.size() ; a++ )
+			{
+			if ( !lines[a].v ) continue ;
+			maxname = lines[a].name.length() > maxname ? lines[a].name.length() : maxname ;
+			}
+		if ( maxname > namelimit ) maxname = namelimit ;
+
+		out.Write ( wxString::Format ( _T("MSF:%d  Type:%c Check:0 ..\n\n") , maxlen , type ) ) ;
+		for ( a = 0 ; a < lines.size() ; a++ )
+			{
+			if ( !lines[a].v ) continue ;
+			wxString name = lines[a].name ;
+			name.Replace ( _T(" ") , _T("_") ) ;
+			name = name.Left ( namelimit ) ;
+			name += wxString ( ' ' , maxname - name.length() + 2 ) ;
+			wxString x = _T(" Name: ") + name ;
+			x += wxString::Format ( _T(" Len: %5d Weight: 1.0 Check: 0\n") , lines[a].s.length() ) ;
+			out.Write ( x ) ;
+			}
+		out.Write ( _T("\n//\n") ) ;
+		
+		int perline = ( 80 - maxname - 1 ) / 11 ;
+		for ( int pos = 1 ; pos <= maxlen ; pos += perline * 10 )
+			{
+			for ( a = 0 ; a < lines.size() ; a++ )
+				{
+				if ( !lines[a].v ) continue ;
+				wxString x = lines[a].name ;
+				x.Replace ( _T(" ") , _T("_") ) ;
+				x = x.Left ( namelimit ) ;
+				x += wxString ( ' ' , maxname - x.length() + 1 ) ;
+				for ( int b = 0 ; b < perline ; b++ )
+					{
+					wxString y = lines[a].s.Mid ( pos-1+b*10 , 10 ) ;
+					y.Replace ( _T("-") , _T(".") ) ;
+					x += y + _T(" ") ;
+					}
+				out.Write ( x + _T("\n") ) ;
+				}
+			out.Write ( _T("\n\n") ) ;
+			}
+		}
     out.Close () ;
     }    
 
@@ -1182,9 +1252,15 @@ wxString TAlignment::getExportFilters ()
     wxString wcGenBank = _T("GenBank (*.gb)|*.gb") ;
     wxString wcPlain = _T("Plain text|*.*") ;
     wxString wcCSV = _T("Comma-separated values (CSV)|*.csv") ;
+    wxString wcFasta1 = _T("FASTA (with gaps)|*.fasta") ;
+    wxString wcFasta2 = _T("FASTA (without gaps)|*.fasta") ;
+    wxString wcMsf = _T("GCG alignment format (MSF)|*.msf") ;
     wxString wildcard = wcGenBank + _T("|") +
                         wcPlain + _T("|") +
-								wcCSV ;
+								wcCSV + _T("|") +
+								wcFasta1 + _T("|") +
+								wcFasta2 + + _T("|") +
+								wcMsf ;
 	return wildcard ;
 	}
     

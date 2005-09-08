@@ -9,20 +9,19 @@ WONTFIX:
 * Absturz bei Inline-Plot-Änderung : Ncoils-bug
 
 Feature Requests :
-* PCR troubleshooter
 * Optimierung Überhang-Primer
 * Primer-Bearbeiten-Dialog : Spalten klicken => sortieren
 * Primer secondary structure prediction
 * Homology Plot
 * Export plot data
 * Helical wheel
-* AS-Sequenz Protease-schneiden
 * Find proteases that cut n times
 * That ligation thingy 
 
 * Alignment-Farben wie bei ABI
 * Save all
 * Feature names movable / keep position with changes
+* Keep/show additional information from BLAST
 
 SEE: http://eutils.ncbi.nlm.nih.gov/entrez/query/static/eutils_help.html
 

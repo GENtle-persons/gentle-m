@@ -139,6 +139,18 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
            v->items.push_back ( vi[a] ) ;
         }
 //	 cout << "Features took " << wxGetElapsedTime() << " ms\n" ;
+
+	// The rest
+	for ( n = h.Node()->FirstChild() ; n ; n = n->NextSibling() )
+		{
+		wxString x = t ( n->Value() ) ;
+		if ( x == "GBSeq_definition" ) continue ;
+		if ( x == "GBSeq_locus" ) continue ;
+		if ( x == "GBSeq_sequence" ) continue ;
+		if ( x == "GBSeq_feature-table" ) continue ;
+		x = get_sub_desc ( n ) ;
+		v->addDescription ( x ) ;
+		}
         
     // Sorting by size, just for fun
     // Only for less than 100 items
@@ -158,6 +170,21 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
     _v.Add ( v ) ;
 //	 cout << "The rest took " << wxGetElapsedTime() << " ms\n" ;
     }
+
+wxString TXMLfile::get_sub_desc ( TiXmlNode *base , int depth )
+	{
+	if ( !base ) return _T("") ; // Just fore safety...
+	wxString name = t ( base->Value() ) ;
+	if ( name.Left ( 6 ) == _T("GBSeq_") ) name = name.Mid(6,1).Upper() + name.Mid ( 7 ) ;
+	wxString ret ;
+	ret = wxString ( ' ' , depth * 2 ) ;
+	ret += name ;
+	ret += _T("\n") ;
+	TiXmlNode *n ;
+	for ( n = base->FirstChild() ; n ; n = n->NextSibling() )
+		ret += get_sub_desc ( n , depth + 1 ) ;
+	return ret ;
+	}
     
 void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
     {

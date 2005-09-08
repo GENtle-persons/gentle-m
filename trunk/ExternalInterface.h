@@ -19,6 +19,7 @@ enum {
 	ID_T4,
 	ID_B1,
 	ID_B2,
+	ID_B3,
 	ID_B_LAST,
 	ID_B_NEXT,
 	ID_C1,
@@ -60,17 +61,20 @@ class EIpanel : public wxPanel
     virtual void init_blast() ; ///< Initialized BLAST interface
     virtual void process_blast() ; ///< Processes BLAST command, starts thread
     virtual void process_blast2() ; ///< Processes thread results
+    virtual void execute_blast_b3() ; ///< Opens the associated link
     virtual void execute_blast() ; ///< Opens returned BLAST entry
     virtual wxString blast_align ( wxString qseq , wxString mseq , wxString hseq , int cpl , int qoff , int hoff ) ;
     
     virtual void init_ncbi() ; ///< Initializes NCBI interface
     virtual void process_ncbi() ; ///< Processes NCBI request
     virtual void execute_ncbi() ; ///< Opens returned sequence entry
+    virtual void execute_ncbi_b3() ; ///< Opens the associated link
 
     virtual void execute_ncbi_load ( wxString database ) ; ///< Load a sequence from NCBI
     
     virtual void OnB1 ( wxCommandEvent& WXUNUSED(event) ) ; ///< Button 1 handler
     virtual void OnB2 ( wxCommandEvent& WXUNUSED(event) ) ; ///< Button 2 handler
+    virtual void OnB3 ( wxCommandEvent& WXUNUSED(event) ) ; ///< Button 3 handler
     virtual void OnBlast ( wxCommandEvent& WXUNUSED(event) ) ; ///< "Run BLAST" event handler
     virtual void OnBnext ( wxCommandEvent& WXUNUSED(event) ) ; ///< "Next" event handler
     virtual void OnC1 ( wxCommandEvent& WXUNUSED(event) ) ; ///< Choice box 1 event handler
@@ -85,7 +89,7 @@ class EIpanel : public wxPanel
     wxBoxSizer *v0 , *v1 , *h0 , *h1 ;
     wxTextCtrl *t1 , *t2 , *t3 , *t4 ;
     wxStaticText *st_msg ;
-    wxButton *b1 , *b2 , *b_last , *b_next ;
+    wxButton *b1 , *b2 , *b3 , *b_last , *b_next ;
     wxChoice *c1 , *c2 ;
     long res_count , res_start , RETMAX ;
     
