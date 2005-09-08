@@ -661,7 +661,8 @@ static float calc_mean(treeptr nptr, float *maxdist, sint nseqs)
 /*
    determine all nodes between the selected node and the root;
 */
-   depth = (*maxdist) = dist = 0;
+   depth = (*maxdist) = 0 ;
+   dist = 0;
    nl = nr = 0;
    p = nptr;
    while (p != NULL)
@@ -876,7 +877,8 @@ sint calc_similarities(sint nseqs)
 */
       for (i = 0;i<nseqs; i++)
        { 
-          depth = dist = 0;
+          depth = 0 ;
+		  dist = 0;
           p = olptr[i];
           while (p != NULL)
             {

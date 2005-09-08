@@ -10,8 +10,10 @@
 
 typedef char  boolean;
 #define NEWLINE         '\n'
-#define false 0
-#define true  1
+#ifndef false
+	#define false 0
+	#define true  1
+#endif
 #define min(a,b)      (a<b)?a:b
 #define max(a,b)      (a>b)?a:b
 #define skipwhitespace(string)  {while (*string <= ' ' && *string != 0) string++;}
