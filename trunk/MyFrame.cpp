@@ -195,9 +195,12 @@ void MyFrame::initme ()
 
 #ifndef MISER_MODE
     bool default_update = false ;
-#elif __WXMAC__
 #else
     bool default_update = true ;
+#endif
+
+#ifdef __WXMAC__
+    default_update = true ;
 #endif
 
     // Loading program options from database
@@ -234,8 +237,14 @@ void MyFrame::initme ()
     // so you won't be bothered with updates anymore :-)
     if ( LS->getOption ( _T("DEBUGGING") , _T("") ) == _T("1") ) checkUpdate = false ;
 
+#ifndef __WXMSW__
+	#ifndef __WXMAC__
+		checkUpdate = false ;
+	#endif
+#endif
+
     // Check for update online
-#ifdef __WXMSW__
+//#ifdef __WXMSW__
     if ( checkUpdate )
         {
         wxString cur_update = check4update () ;
@@ -245,7 +254,7 @@ void MyFrame::initme ()
             return ;
             }
         }
-#endif
+//#endif
 
     project.name = txt("project") ;
     SetTitle ( txt("gentle") ) ;
@@ -1684,49 +1693,21 @@ bool MyFrame::isActivating ()
 */
 wxString MyFrame::check4update ()
     {
-/*  // Deactivated due to strange error message on NT without RAS
-    wxDialUpManager *dm = wxDialUpManager::Create() ;
-    if ( dm && dm->IsOk() )
-        {
-        if ( !dm->IsOnline() && !dm->IsAlwaysOnline() )
-           {
-           delete dm ;
-           return "" ; // Don't force the poor thing to dial for update
-           }
-        }
-    delete dm ;*/
-    
-//    miniFrame->SetTitle ( txt("t_checking4update") ) ;
-  
   bool error = true ;
   wxString text ;
   
-#ifdef __WXMSW__
 	myExternal ex ;
+	
+#ifdef __WXMSW__
 	text = ex.getText ( _T("http://gentle.magnusmanske.de/currentversion.txt") ) ;
+#endif
+
+#ifdef __WXMAC__
+	text = ex.getText ( _T("http://gentle.magnusmanske.de/mac_currentversion.txt") ) ;
+#endif
+
 	if ( text != _T("") ) error = false ;
 
-#endif
-    
-    
-/*    wxURL url ( "http://gentle-m.sf.net/currentversion.txt" );    
-    wxInputStream *in_stream;
-    in_stream = url.GetInputStream();
-    wxString it , td ;
-    while ( !in_stream->Eof() ) it += in_stream->GetC() ;
-    if ( in_stream ) delete in_stream ;*/
-
-/*
-    wxHTTP http ;
-    wxInputStream *in = http.GetInputStream ( "http://gentle.magnusmanske.de/currentversion.txt" );    
-    wxString it ;
-    if ( wxPROTO_NOERR == http.GetError() )
-       {
-        while ( !in->Eof() ) it += in->GetC() ;
-        delete in ;
-        wxString td = it ;
-	    */
-	    
     if ( !error )
     	{
 	    wxString it = text ;
@@ -1771,20 +1752,46 @@ void MyFrame::update2version ( wxString ver )
     wxProgressDialog pd ( _T("Updating...") , _T("Downloading installer...") , 2 , NULL , 0 ) ;
     myExternal ex ;
     ex.pd = &pd ;
-    do_run = myapp()->homedir + _T("\\GENtleSetup.exe") ;
-    if ( ex.copyFile ( _T("http://gentle.magnusmanske.de/GENtleSetup.exe") , do_run ) > 0 )
+
+	wxString sourcefile , localfile ;
+
+#ifdef __WXMSW__
+    localfile = myapp()->homedir + _T("\\GENtleSetup.exe") ;
+	sourcefile = _T("http://gentle.magnusmanske.de/GENtleSetup.exe") ;
+#endif
+
+#ifdef __WXMAC__
+	localfile = wxString(wxGetUserHome()) + _T("/Desktop/GENtle.pkg.zip") ;
+	sourcefile = _T("http://gentle.magnusmanske.de/GENtle.pkg.zip") ;
+#endif
+
+    if ( ex.copyFile ( sourcefile , localfile ) > 0 )
     	{
         wxMessageBox ( _T("Couldn't read setup file") ) ;
         return ;
     	}    
 
-    do_run = _T("\"") + do_run + _T("\" /S /D=\"") ;
+#ifdef __WXMSW__
+    do_run = _T("\"") + localfile + _T("\" /S /D=\"") ;
     do_run += myapp()->homedir ;
     do_run += _T("\"") ;
     LS->setOption ( _T("LAST_UPDATE") , ver ) ;
 	dying = true ;
     if ( 0 == wxExecute ( do_run , wxEXEC_ASYNC ) ) return ; // 0 means the process couldn't start :-(
     wxExit() ; // Hard exit
+#endif
+
+#ifdef __WXMAC__
+	do_run = _T("unzip -o ") + localfile + _T(" -d ") + wxGetUserHome() + _T("/Desktop") ;
+	wxExecute ( do_run , wxEXEC_SYNC ) ;
+	wxRemoveFile ( localfile ) ;
+	localfile = wxString(wxGetUserHome()) + _T("/Desktop/GENtle_package.pkg") ;
+	do_run = _T("open ") + localfile ;
+    LS->setOption ( _T("LAST_UPDATE") , ver ) ;
+	dying = true ;
+	wxExecute ( do_run , wxEXEC_ASYNC ) ;
+    Destroy() ;
+#endif
     }
     
 /** \brief Handles SashDrag events (sash between the main tree and the current child

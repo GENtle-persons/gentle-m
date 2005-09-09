@@ -12,7 +12,7 @@ typedef unsigned int uint ;
 
 /**	\fn myass ( bool b , wxString msg )
 	\brief "My assertion" - little inside joke...
-	\param b The condition given in the call. No assertion then b is FALSE.
+	\param b The condition given in the call. No assertion when b is FALSE.
 	\param msg The message string to write into errout.
 */
 
