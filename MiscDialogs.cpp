@@ -257,7 +257,7 @@ void TGraphDialog::save_settings ()
 		{
 		data[last_data]->name = data_name->GetLabel() ;
 		data[last_data]->pointStyle = ch_data_pointstyle->GetStringSelection() ;
-		if ( data[last_data]->pointStyle == _T("none") ) data[last_data]->pointStyle = "" ;
+		if ( data[last_data]->pointStyle == _T("none") ) data[last_data]->pointStyle = _T("") ;
 		data[last_data]->sx = parent->gd->scales[ch_data_scalex->GetSelection()] ;
 		data[last_data]->sy = parent->gd->scales[ch_data_scaley->GetSelection()] ;
 

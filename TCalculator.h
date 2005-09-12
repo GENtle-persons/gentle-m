@@ -21,7 +21,7 @@ class TGridBasic : public wxGrid
     TGridBasic ( wxWindow *parent , int id = -1 ) ; ///< Constructor
 
     virtual void recalc () ; ///< Recalculates the submodule
-    virtual void OnCellChanged(wxGridEvent& event) ; ///< Cell-has-changed event
+	virtual void OnCellChanged(wxGridEvent& event) ; ///< Cell-has-changed event
     virtual void cleanup () ; ///< Reset the submodule
     virtual void gridSetEditable ( int y , int x ) ; ///< Makes a cell editable
     virtual void gridSetEntry ( int y , int x , wxString title , wxString value = _T("0") , wxString unit = _T("") ) ; ///< Sets a cell group

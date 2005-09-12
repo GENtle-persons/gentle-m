@@ -406,9 +406,9 @@ void TGraphDisplay::setupBioCSVFormat ( const stringField &sf )
 	for ( a = 0 ; a < sf.size() ; a++ )
 		{
 		if ( sf[a].size() != 3 ) continue ;
-		if ( sf[a][0] != _T("Time") ) continue ;
-		if ( sf[a][1] != _T("UV") ) continue ;
-		if ( sf[a][2] != _T("Conductivity") ) continue ;
+		if ( sf[a][0] != "Time" ) continue ;
+		if ( sf[a][1] != "UV" ) continue ;
+		if ( sf[a][2] != "Conductivity" ) continue ;
 		break ;
 		}
 	
