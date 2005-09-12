@@ -323,9 +323,9 @@ void EIpanel::execute_ncbi_b3()
 	if ( database == _T("pubmed") )
 		{
 		database += _T("&dopt=Abstract&cmd=Retrieve") ;
-		script = "query" ;
+		script = _T("query") ;
 		}
-	else script = "viewer" ;
+	else script = _T("viewer") ;
 	for ( int i = 0 ; i < hlb->data.GetCount() ; i++ )
 		{
 		if ( !hlb->IsSelected ( i ) ) continue ;

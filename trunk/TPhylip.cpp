@@ -5,7 +5,7 @@
 
 TPhylip::TPhylip ()
 	{
-	phylip_dir = myapp()->frame->LS->getOption ( _T("PHYLIP_DIR") , "" ) ;
+	phylip_dir = myapp()->frame->LS->getOption ( _T("PHYLIP_DIR") , _T("") ) ;
 	if ( phylip_dir.IsEmpty() ) query_phylip_dir () ;
 	}
 
@@ -25,7 +25,7 @@ bool TPhylip::IsOK ()
 	{
 #ifdef __WXMAC__
 	// Mac version is broken due to strange pipe problem with the "open -a" command
-	wxMessageBox ( "Mac version of phylip is broken due to strange pipe problem with the 'open' command" ) ;
+	wxMessageBox ( _T("Mac version of phylip is broken due to strange pipe problem with the 'open' command") ) ;
 	return false ;
 #endif
 	if ( phylip_dir.IsEmpty() ) return false ;

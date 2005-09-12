@@ -243,8 +243,12 @@ bool MyApp::OnInit()
 	// Setting ncoils dir as an environment variable
 	wxString ncoilsdir ;
 	ncoilsdir = _T("COILSDIR=") ;
+	
+	wxUnsetEnv ( _T("COILSDIR") ) ;
+	wxSetEnv ( _T("COILSDIR") , homedir ) ;
+	
 	ncoilsdir += homedir ;
-	putenv ( (char*) ncoilsdir.mb_str() ) ;
+//	putenv ( ncoilsdir.mb_str() ) ;
 
     // Is an instance already running?
     const wxString name = wxString::Format ( _T("GENtle-%s") , wxGetUserId().c_str());

@@ -36,11 +36,11 @@ PCR_troubleshoot_dialog::PCR_troubleshoot_dialog(TPrimerDesign *_parent, const w
 	text = new wxTextCtrl ( this , -1 , _T("") , wxDefaultPosition , wxDefaultSize , wxTE_MULTILINE ) ;
 	text->SetFont ( *MYFONT ( MYFONTSIZE , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
 	
-	h0->Add ( new wxStaticText ( this , -1 , "") , 1 , wxEXPAND|wxALL , 5 ) ;
+	h0->Add ( new wxStaticText ( this , -1 , _T("")) , 1 , wxEXPAND|wxALL , 5 ) ;
 	h0->Add ( new wxButton ( this , POD_OK , txt("b_ok") ) , 1 , wxEXPAND|wxALL , 5 ) ;
-	h0->Add ( new wxStaticText ( this , -1 , "") , 1 , wxEXPAND|wxALL , 5 ) ;
+	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxEXPAND|wxALL , 5 ) ;
 	h0->Add ( new wxButton ( this , POD_CANCEL , txt("b_cancel") ) , 1 , wxEXPAND|wxALL , 5 ) ;
-	h0->Add ( new wxStaticText ( this , -1 , "") , 1 , wxEXPAND|wxALL , 5 ) ;
+	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxEXPAND|wxALL , 5 ) ;
 	
 	v0->Add ( list , 1 , wxEXPAND|wxALL , 5 ) ;
 	v0->Add ( text , 2 , wxEXPAND|wxALL , 5 ) ;
@@ -59,25 +59,25 @@ PCR_troubleshoot_dialog::PCR_troubleshoot_dialog(TPrimerDesign *_parent, const w
 void PCR_troubleshoot_dialog::fillSantaLucia ()
 	{
 	if ( santa_lucia.size() > 0 ) return ; // Already done ;
-	santa_lucia.push_back ( TSantaLucia ( "AA/TT" , -1.00 , - 7.9 , -22.2 ) ) ; // AA
-	santa_lucia.push_back ( TSantaLucia ( "AT/TA" , -0.88 , - 7.2 , -20.4 ) ) ; // AT
-	santa_lucia.push_back ( TSantaLucia ( "TA/AT" , -0.58 , - 7.2 , -21.3 ) ) ; // TA
-	santa_lucia.push_back ( TSantaLucia ( "CA/GT" , -1.45 , - 8.5 , -22.7 ) ) ; // CA
-	santa_lucia.push_back ( TSantaLucia ( "GT/CA" , -1.44 , - 8.4 , -22.4 ) ) ; // GT
-	santa_lucia.push_back ( TSantaLucia ( "CT/GA" , -1.28 , - 7.8 , -21.0 ) ) ; // CT
-	santa_lucia.push_back ( TSantaLucia ( "GA/CT" , -1.30 , - 8.2 , -22.2 ) ) ; // GA
-	santa_lucia.push_back ( TSantaLucia ( "CG/GC" , -2.17 , -10.6 , -27.2 ) ) ; // CG
-	santa_lucia.push_back ( TSantaLucia ( "GC/CG" , -2.24 , - 9.8 , -24.4 ) ) ; // GC
-	santa_lucia.push_back ( TSantaLucia ( "GG/CC" , -1.84 , - 8.0 , -19.9 ) ) ; // GG
+	santa_lucia.push_back ( TSantaLucia ( _T("AA/TT") , -1.00 , - 7.9 , -22.2 ) ) ; // AA
+	santa_lucia.push_back ( TSantaLucia ( _T("AT/TA") , -0.88 , - 7.2 , -20.4 ) ) ; // AT
+	santa_lucia.push_back ( TSantaLucia ( _T("TA/AT") , -0.58 , - 7.2 , -21.3 ) ) ; // TA
+	santa_lucia.push_back ( TSantaLucia ( _T("CA/GT") , -1.45 , - 8.5 , -22.7 ) ) ; // CA
+	santa_lucia.push_back ( TSantaLucia ( _T("GT/CA") , -1.44 , - 8.4 , -22.4 ) ) ; // GT
+	santa_lucia.push_back ( TSantaLucia ( _T("CT/GA") , -1.28 , - 7.8 , -21.0 ) ) ; // CT
+	santa_lucia.push_back ( TSantaLucia ( _T("GA/CT") , -1.30 , - 8.2 , -22.2 ) ) ; // GA
+	santa_lucia.push_back ( TSantaLucia ( _T("CG/GC") , -2.17 , -10.6 , -27.2 ) ) ; // CG
+	santa_lucia.push_back ( TSantaLucia ( _T("GC/CG") , -2.24 , - 9.8 , -24.4 ) ) ; // GC
+	santa_lucia.push_back ( TSantaLucia ( _T("GG/CC") , -1.84 , - 8.0 , -19.9 ) ) ; // GG
 	
 	// I guess...
-	santa_lucia.push_back ( TSantaLucia ( "TT/AA" , -1.00 , - 7.9 , -22.2 ) ) ; // TT
-	santa_lucia.push_back ( TSantaLucia ( "CC/GG" , -1.84 , - 8.0 , -19.9 ) ) ; // CC
-	santa_lucia.push_back ( TSantaLucia ( "TG/AC" , -1.44 , - 8.4 , -22.4 ) ) ; // TG
-	santa_lucia.push_back ( TSantaLucia ( "TC/AG" , -1.28 , - 7.8 , -21.0 ) ) ; // TC
+	santa_lucia.push_back ( TSantaLucia ( _T("TT/AA") , -1.00 , - 7.9 , -22.2 ) ) ; // TT
+	santa_lucia.push_back ( TSantaLucia ( _T("CC/GG") , -1.84 , - 8.0 , -19.9 ) ) ; // CC
+	santa_lucia.push_back ( TSantaLucia ( _T("TG/AC") , -1.44 , - 8.4 , -22.4 ) ) ; // TG
+	santa_lucia.push_back ( TSantaLucia ( _T("TC/AG") , -1.28 , - 7.8 , -21.0 ) ) ; // TC
 
-	santa_lucia.push_back ( TSantaLucia ( "AC/TG" , -1.44 , - 8.4 , -22.4 ) ) ; // AC
-	santa_lucia.push_back ( TSantaLucia ( "AG/TC" , -1.28 , - 7.8 , -21.0 ) ) ; // AG
+	santa_lucia.push_back ( TSantaLucia ( _T("AC/TG") , -1.44 , - 8.4 , -22.4 ) ) ; // AC
+	santa_lucia.push_back ( TSantaLucia ( _T("AG/TC") , -1.28 , - 7.8 , -21.0 ) ) ; // AG
 	}
 
 double PCR_troubleshoot_dialog::deltaG0 ( TPrimer &p )
@@ -93,10 +93,10 @@ double PCR_troubleshoot_dialog::deltaG0 ( TPrimer &p )
 		}
 	
 	s = s.Right ( 2 ) ; // This is the end, my friend
-	if ( s.Left ( 1 ) == "C" || s.Left ( 1 ) == "G" ) ret += 0.98 ;
-	if ( s.Right ( 1 ) == "C" || s.Right ( 1 ) == "G" ) ret += 0.98 ;
-	if ( s.Left ( 1 ) == "A" || s.Left ( 1 ) == "T" ) ret += 1.03 ;
-	if ( s.Right ( 1 ) == "A" || s.Right ( 1 ) == "T" ) ret += 1.03 ;
+	if ( s.Left ( 1 ) == _T("C") || s.Left ( 1 ) == _T("G") ) ret += 0.98 ;
+	if ( s.Right ( 1 ) == _T("C") || s.Right ( 1 ) == _T("G") ) ret += 0.98 ;
+	if ( s.Left ( 1 ) == _T("A") || s.Left ( 1 ) == _T("T") ) ret += 1.03 ;
+	if ( s.Right ( 1 ) == _T("A") || s.Right ( 1 ) == _T("T") ) ret += 1.03 ;
 	
 	return ret ;
 	}
@@ -113,10 +113,10 @@ double PCR_troubleshoot_dialog::deltaH0 ( TPrimer &p )
 		}
 	
 	s = s.Right ( 2 ) ; // This is the end, my friend
-	if ( s.Left ( 1 ) == "C" || s.Left ( 1 ) == "G" ) ret += 0.1 ;
-	if ( s.Right ( 1 ) == "C" || s.Right ( 1 ) == "G" ) ret += 0.1 ;
-	if ( s.Left ( 1 ) == "A" || s.Left ( 1 ) == "T" ) ret += 2.3 ;
-	if ( s.Right ( 1 ) == "A" || s.Right ( 1 ) == "T" ) ret += 2.3 ;
+	if ( s.Left ( 1 ) == _T("C") || s.Left ( 1 ) == _T("G") ) ret += 0.1 ;
+	if ( s.Right ( 1 ) == _T("C") || s.Right ( 1 ) == _T("G") ) ret += 0.1 ;
+	if ( s.Left ( 1 ) == _T("A") || s.Left ( 1 ) == _T("T") ) ret += 2.3 ;
+	if ( s.Right ( 1 ) == _T("A") || s.Right ( 1 ) == _T("T") ) ret += 2.3 ;
 	
 	return ret ;
 	}
@@ -133,10 +133,10 @@ double PCR_troubleshoot_dialog::deltaS0 ( TPrimer &p )
 		}
 	
 	s = s.Right ( 2 ) ; // This is the end, my friend
-	if ( s.Left ( 1 ) == "C" || s.Left ( 1 ) == "G" ) ret -= 2.8 ;
-	if ( s.Right ( 1 ) == "C" || s.Right ( 1 ) == "G" ) ret -= 2.8 ;
-	if ( s.Left ( 1 ) == "A" || s.Left ( 1 ) == "T" ) ret += 4.1 ;
-	if ( s.Right ( 1 ) == "A" || s.Right ( 1 ) == "T" ) ret += 4.1 ;
+	if ( s.Left ( 1 ) == _T("C") || s.Left ( 1 ) == _T("G") ) ret -= 2.8 ;
+	if ( s.Right ( 1 ) == _T("C") || s.Right ( 1 ) == _T("G") ) ret -= 2.8 ;
+	if ( s.Left ( 1 ) == _T("A") || s.Left ( 1 ) == _T("T") ) ret += 4.1 ;
+	if ( s.Right ( 1 ) == _T("A") || s.Right ( 1 ) == _T("T") ) ret += 4.1 ;
 	
 	return ret - 1.4 ;
 	}
@@ -294,7 +294,7 @@ void PCR_troubleshoot_dialog::scan_melting_temperature ( TPrimer &p , int nr )
 
 	tm = ( (-H) - 5 ) / ( (-S) + R * log ( 1 / c ) ) + 16.6 * log ( K ) / log ( 10.0 ) ;
 
-	add_warning ( p , nr , wxString::Format ( _T("Melting temperature %f; dS=%f; dH=%f; X=%f") , tm , S , H , R*log ( 1/c ) ) , "" ) ;		
+	add_warning ( p , nr , wxString::Format ( _T("Melting temperature %f; dS=%f; dH=%f; X=%f") , tm , S , H , R*log ( 1/c ) ) , _T("") ) ;		
 	}
 
 void PCR_troubleshoot_dialog::scan_specificity ( TPrimer &p , int nr )
@@ -441,8 +441,8 @@ void PCR_troubleshoot_dialog::add_error ( TPrimer &p , int nr , wxString head , 
 void PCR_troubleshoot_dialog::add_warning ( TPrimer &p , int nr , wxString head , wxString tail )
 	{
 	wxString s = wxString::Format ( _T("%d ") , nr+1 ) ;
-	if ( !p.getName().IsEmpty() ) s += "(" + p.getName() + ") " ;
-	s += ": " + head ;
+	if ( !p.getName().IsEmpty() ) s += _T("(") + p.getName() + _T(") ") ;
+	s += _T(": ") + head ;
 	l_title.Add ( s ) ;
 	l_text.Add ( tail ) ;
 	}

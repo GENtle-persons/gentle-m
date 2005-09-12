@@ -346,6 +346,7 @@ void TGridLigation::recalc ()
     double mb = 610 ;
     double ten3 = 1000 , ten6 = ten3*ten3 , ten9 = ten6*ten3 , ten15 = ten9*ten6 ;
     double t_g , v_l , v_c , i_l , i_c , i2v ;
+
     t_g = getDouble ( 0 , 1 ) ;
     v_l = getDouble ( 1 , 1 ) ;
     v_c = getDouble ( 2 , 1 ) ;

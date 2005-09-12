@@ -161,7 +161,7 @@ void TManageDatabaseDialog::initCopynMove ()
        f_seq = new wxCheckBox ( p , MD_PM_FILTER_SEQ , txt("sequences") ) ;
        f_desc->SetValue ( 1 ) ;
 
-	   h2->Add ( new wxStaticText ( p , -1 , "" ) , 1 , wxEXPAND|wxALL , 2 ) ; // Dummy to shove the rest to the right
+	   h2->Add ( new wxStaticText ( p , -1 , _T("") ) , 1 , wxEXPAND|wxALL , 2 ) ; // Dummy to shove the rest to the right
 	   h2->Add ( f_dna , 0 , wxEXPAND|wxALL , 2 ) ;
 	   h2->Add ( f_prot , 0 , wxEXPAND|wxALL , 2 ) ;
 	   h2->Add ( f_primer , 0 , wxEXPAND|wxALL , 2 ) ;

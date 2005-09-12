@@ -1175,8 +1175,8 @@ void TStorage::syncEnzymes ( TStorage *to )
 		}
 	
 	TSQLresult r1 , r2 ;
-	r1 = getObject ( "SELECT * FROM enzyme" ) ;
-	r2 = to->getObject ( "SELECT * FROM enzyme" ) ;
+	r1 = getObject ( _T("SELECT * FROM enzyme") ) ;
+	r2 = to->getObject ( _T("SELECT * FROM enzyme") ) ;
 	
 	int a ;
 	wxArrayString s1 , s2 ;
@@ -1188,14 +1188,14 @@ void TStorage::syncEnzymes ( TStorage *to )
 		{
 		if ( wxNOT_FOUND != s1.Index ( s2[a] ) ) continue ; // It's there
 		wxString sql , k , v  ;
-		sqlAdd ( k , v , "e_name" , s2[a] ) ;
-		sqlAdd ( k , v , "e_sequence" , r2[a][r2["e_sequence"]] ) ;
-		sqlAdd ( k , v , "e_note" , _T("") ) ;
-		sqlAdd ( k , v , "e_location" , _T("") ) ;
-		sqlAdd ( k , v , "e_cut" , _T("0") ) ;
-		sqlAdd ( k , v , "e_overlap" , _T("0") ) ;
-		k.Replace ( "\"" , "'" ) ;
-		v.Replace ( "\"" , "'" ) ;
+		sqlAdd ( k , v , _T("e_name") , s2[a] ) ;
+		sqlAdd ( k , v , _T("e_sequence") , r2[a][r2["e_sequence"]] ) ;
+		sqlAdd ( k , v , _T("e_note") , _T("") ) ;
+		sqlAdd ( k , v , _T("e_location") , _T("") ) ;
+		sqlAdd ( k , v , _T("e_cut") , _T("0") ) ;
+		sqlAdd ( k , v , _T("e_overlap") , _T("0") ) ;
+		k.Replace ( _T("\"") , _T("'") ) ;
+		v.Replace ( _T("\"") , _T("'") ) ;
 		sql = _T("INSERT INTO enzyme (e_id,") + k + _T(") VALUES ((SELECT max(e_id) FROM enzyme)+1,") + v + _T(")") ;
 		getObject ( sql ) ;
 		}

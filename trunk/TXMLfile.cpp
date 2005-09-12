@@ -144,10 +144,10 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
 	for ( n = h.Node()->FirstChild() ; n ; n = n->NextSibling() )
 		{
 		wxString x = t ( n->Value() ) ;
-		if ( x == "GBSeq_definition" ) continue ;
-		if ( x == "GBSeq_locus" ) continue ;
-		if ( x == "GBSeq_sequence" ) continue ;
-		if ( x == "GBSeq_feature-table" ) continue ;
+		if ( x == _T("GBSeq_definition") ) continue ;
+		if ( x == _T("GBSeq_locus") ) continue ;
+		if ( x == _T("GBSeq_sequence") ) continue ;
+		if ( x == _T("GBSeq_feature-table") ) continue ;
 		x = get_sub_desc ( n ) ;
 		v->addDescription ( x ) ;
 		}
@@ -177,7 +177,7 @@ wxString TXMLfile::get_sub_desc ( TiXmlNode *base , int depth )
 	wxString name = t ( base->Value() ) ;
 	if ( name.Left ( 6 ) == _T("GBSeq_") ) name = name.Mid(6,1).Upper() + name.Mid ( 7 ) ;
 	wxString ret ;
-	ret = wxString ( ' ' , depth * 2 ) ;
+	ret = wxString ( (wxChar)' ' , depth * 2 ) ;
 	ret += name ;
 	ret += _T("\n") ;
 	TiXmlNode *n ;
