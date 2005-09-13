@@ -131,6 +131,8 @@ ureadseq.c\
 ncoils.cpp\
 TPhylip.cpp\
 TPhyloTree.cpp\
+PCR_Troubleshoot.cpp\
+TProteolysis.cpp\
 tinyxml/tinyxmlparser.cpp\
 tinyxml/tinyxmlerror.cpp\
 tinyxml/tinyxml.cpp\
@@ -199,6 +201,8 @@ main.h\
 GenBank.h\
 FindSequenceDialog.h\
 ExternalInterface.h\
+TProteolysis.h\
+PCR_Troubleshoot.h\
 ChildBase.h\
 CoolCanvas.h\
 AminoAcids.h\
