@@ -16,46 +16,50 @@ END_EVENT_TABLE()
 
 
 FindSequenceDialog::FindSequenceDialog ( wxWindow *parent, const wxString& title )
-         : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 350 , 400 ) )
-    {
+	: wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 350 , 400 ) )
+	{
 	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
 	wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
-    p = 0 ;
-    c = (ChildBase*) parent ;
-    allowed_chars = _T("AGCT") ; // For DNA search; currently ignored
-
-    t = new wxTextCtrl ( this , SH_TEXT , _T("") ) ;
-
-    wxButton *f = new wxButton ( this , SH_SEARCH , txt("b_find") ) ;
-
-	h0->Add ( f , 1 , wxALL|wxEXPAND , 2 ) ;
+	p = 0 ;
+	c = (ChildBase*) parent ;
+	allowed_chars = _T("AGCT") ; // For DNA search; currently ignored
+	
+	t = new wxTextCtrl ( this , SH_TEXT , _T("") ) ;
+	status = new wxTextCtrl ( this , -1 , _T("") , 
+		wxDefaultPosition , wxDefaultSize , wxTE_READONLY|wxSTATIC_BORDER ) ;
+	status->SetBackgroundColour ( GetBackgroundColour() ) ;
+	
+	find_button = new wxButton ( this , SH_SEARCH , txt("b_find") ) ;
+	
+	h0->Add ( find_button , 1 , wxALL|wxEXPAND , 2 ) ;
 	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxALL|wxEXPAND , 2 ) ;
 	h0->Add ( new wxButton ( this , SH_CANCEL , txt("b_cancel") ) , 1 , wxALL|wxEXPAND , 2 ) ;
-                            
-    lb = new wxListBox ( this , SH_LB ) ;
+	             
+	lb = new wxListBox ( this , SH_LB ) ;
 	
 	v0->Add ( t , 0 , wxALL|wxEXPAND , 2 ) ;
 	v0->Add ( h0 , 0 , wxALL|wxEXPAND , 2 ) ;
+	v0->Add ( status , 0 , wxALL|wxEXPAND , 2 ) ;
 	v0->Add ( lb , 1 , wxALL|wxEXPAND , 2 ) ;
 	
-    f->SetDefault () ;
-    t->SetFocus () ;
-
+	find_button->SetDefault () ;
+	t->SetFocus () ;
+	
 	SetSizer ( v0 ) ;
 	v0->Layout () ;
-
-    Center () ;
-
-    int x , y , w , h , x1 , y1 ;
-    GetClientSize ( &w , &h ) ;
-    GetPosition ( &x , &y ) ;
+	Center () ;
+	
+	// Move the dialog so it won't hide the sequence
+	int x , y , w , h , x1 , y1 ;
+	GetClientSize ( &w , &h ) ;
+	GetPosition ( &x , &y ) ;
 	myapp()->frame->GetPosition ( &x1, &y1 ) ;
-    x -= w ;
-    y -= h/2 ;
-    if ( x < x1+5 ) x = x1+5 ;
-    if ( y < y1+5 ) y = y1+5 ;
-    Move ( x , y ) ;	
-    }
+	x -= w ;
+	y -= h/2 ;
+	if ( x < x1+5 ) x = x1+5 ;
+	if ( y < y1+5 ) y = y1+5 ;
+	Move ( x , y ) ;	
+	}
     
 wxString FindSequenceDialog::getQuery ()
 	{
@@ -199,23 +203,34 @@ int FindSequenceDialog::subsearch ( const wxString &s , const wxString &sub , in
     }
 
 void FindSequenceDialog::OnSearch ( wxCommandEvent &ev )
-    {
-    lb->Clear () ;
-    vi.Clear () ;
-    sequenceSearch() ;
-    if ( c->def == _T("dna") || c->def == _T("ABIviewer") || c->def == _T("PrimerDesign") ) sequenceSearch ( true ) ;
-    if ( c->def == _T("dna") || c->def == _T("PrimerDesign") ) aaSearch () ;
-    itemSearch() ;
-    restrictionSearch() ;
-    if ( !vi.IsEmpty() )
-        {
-        lb->SetSelection ( 0 ) ;
-        OnLB ( ev ) ;
-        }
-    if ( lb->GetCount() > FIND_MAX )
-    	wxMessageBox ( txt("t_too_many_search_results") ) ;
-    }
-    
+	{
+	status->SetLabel ( txt("t_searching") ) ;
+	wxSafeYield() ;
+	Freeze () ;
+	lb->Clear () ;
+	vi.Clear () ;
+	sequenceSearch() ;
+	if ( c->def == _T("dna") || c->def == _T("ABIviewer") || c->def == _T("PrimerDesign") ) sequenceSearch ( true ) ;
+	if ( c->def == _T("dna") || c->def == _T("PrimerDesign") ) aaSearch () ;
+	itemSearch() ;
+	restrictionSearch() ;
+	if ( !vi.IsEmpty() )
+		{
+		lb->SetSelection ( 0 ) ;
+		OnLB ( ev ) ;
+		}
+
+	// Status text
+	if ( lb->GetCount() > FIND_MAX )
+		status->SetLabel ( wxString::Format ( txt("t_too_many_search_results") , FIND_MAX ) ) ;
+	else if ( lb->GetCount() == 0 )
+		status->SetLabel ( txt("t_no_matches_found") ) ;
+	else
+		status->SetLabel ( wxString::Format ( txt("t_matches_found") , lb->GetCount() ) ) ;
+	
+	Thaw () ;
+	}
+
 void FindSequenceDialog::aaSearch ()
     {
     int a , b ;
@@ -418,6 +433,7 @@ void FindSequenceDialog::sequenceSearch ( bool invers )
     
 void FindSequenceDialog::OnTextChange ( wxCommandEvent &ev )
     {
+	 find_button->Enable() ;
     if ( c->vec->getGenomeMode() ) return ;
     if ( getQuery().length() < 3 )
        {
@@ -425,6 +441,7 @@ void FindSequenceDialog::OnTextChange ( wxCommandEvent &ev )
        vi.Clear () ;
        return ;
        }    
+    find_button->Disable () ;
     OnSearch ( ev ) ;
     }    
 

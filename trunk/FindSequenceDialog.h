@@ -38,6 +38,8 @@ class FindSequenceDialog : public wxDialog
     wxTextCtrl *t ; ///< The text control
     int p , last ;
     wxListBox *lb ; ///< The results list box control
+    wxButton *find_button ; ///< The "Find" button
+    wxTextCtrl *status ; ///< The status text
     wxArrayInt vi ;
     wxHashChar codonhash ;
 

@@ -421,6 +421,7 @@ enum {
 	PRO_SORT_RESULTS,
 	
 	POD_AA_COL,
+	CM_OPEN_FEATURE,
 	
 	
 	Y___,
