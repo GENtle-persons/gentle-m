@@ -64,7 +64,8 @@ wxString FindSequenceDialog::getQuery ()
 	for ( int a = 0 ; a < s.length() ; a++ )
 		{
 		if ( ( s.GetChar(a) >= 'A' && s.GetChar(a) <= 'Z' ) ||
-			  ( s.GetChar(a) >= '0' && s.GetChar(a) <= '9' ) )
+			  ( s.GetChar(a) >= '0' && s.GetChar(a) <= '9' ) || 
+			  s.GetChar(a) == '?' || s.GetChar(a) == '*' )
 		    t += s.GetChar ( a ) ;
 		}
 	return t ;
@@ -304,7 +305,9 @@ void FindSequenceDialog::aaSubSearch ( const wxString &s , int start , int dir ,
 
 		ai.Add ( a ) ;
 		}    
-	a = res.Find ( sub ) ;
+		
+	a = subsearch ( res , sub , 0 ) ;
+	//a = res.Find ( sub ) ;
 	while ( a != -1 )
 		{
   		if ( lb->GetCount() > FIND_MAX ) return ;
@@ -318,7 +321,8 @@ void FindSequenceDialog::aaSubSearch ( const wxString &s , int start , int dir ,
                           from , to ) ) ;
       vi.Add ( -1 ) ;
 		res.SetChar ( a , '_' ) ; // Invalidating
-		a = res.Find ( sub ) ;
+		a = subsearch ( res , sub , a+1 ) ;
+//		a = res.Find ( sub ) ;
 		}    
 	}    
     
