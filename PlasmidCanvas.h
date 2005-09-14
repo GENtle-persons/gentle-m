@@ -38,7 +38,7 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void invokeVectorEditor ( wxString what = _T("") , int num = 0 , bool forceUpdate = false ) ; ///< Invokes the vector editor dialog
     virtual wxMenu *invokeItemPopup ( int item , wxPoint pt , bool doreturn = false ) ; ///< Generates the item/feature context menu
     virtual wxMenu *invokeRsPopup ( int rs , wxPoint pt , bool doreturn = false ) ; ///< Generates the restriction enzyme context menu
-    virtual wxMenu *invokeVectorPopup ( wxPoint pt , bool doreturn = false ) ; ///< Generates the vector context menu
+    virtual wxMenu *invokeVectorPopup ( wxPoint pt , bool doreturn = false , int pos = -1 ) ; ///< Generates the vector context menu
     virtual void invokeORFpopup ( int item , wxPoint pt ) ; ///< Generates the open reading frame context menu
 
 
@@ -54,7 +54,8 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void OnStrandCopyBoth(wxCommandEvent& event); ///< "Copy both strands" event handler
     virtual void OnStrandNew35(wxCommandEvent& event); ///< "New DNA module from 3'->5' strand" event handler
     virtual void OnStrandNew53(wxCommandEvent& event); ///< "New DNA module from 5'->3' strand" event handler
-    virtual void OnStrandNewBoth(wxCommandEvent& event); ///< New DNA modules from both strands" event handler
+    virtual void OnStrandNewBoth(wxCommandEvent& event); ///< "New DNA modules from both strands" event handler
+    virtual void OnOpenFeature(wxCommandEvent& event); ///< "Open feature" event handler
 
     // Popup menu handlers
     virtual void OnCopyImage ( wxCommandEvent &ev ) ; ///< "Copy as image" event handler

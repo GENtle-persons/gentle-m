@@ -254,7 +254,7 @@ void PlasmidCanvas::rsDel ( wxCommandEvent &ev )
 
 // Vector context menu
 
-wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn )
+wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn , int pos )
     {
     wxMenu *cm = new wxMenu ;
     cm->Append ( PC_VECTOR_EDIT , txt("p_vector_edit") ) ;
@@ -276,8 +276,19 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn )
            pm->Append( STRAND_NEW_35 , txt("m_strand_new_35") );
            pm->Append( STRAND_NEW_BOTH , txt("m_strand_new_both") );
            }    
+         
+        // Features at this position
+        if ( pos != -1 )
+        		{
+				wxArrayInt vi ;
+				p->vec->getItemsAtPosition ( pos , vi ) ;
+				if ( vi.size() )
+					{
+					cm->Append ( CM_OPEN_FEATURE , txt("m_open_feature") ) ;
+					}
+				}
         
-        // PCR
+        // PCR context menu
         if ( getMarkFrom() == -1 )
            {
            cm->Append(MDI_RUN_PCR, txt("m_pcr") );
@@ -785,3 +796,8 @@ void PlasmidCanvas::OnStrandNewBoth(wxCommandEvent& event)
  	p->cSequence->OnStrandNewBoth ( event ) ;
 	}    
 
+
+void PlasmidCanvas::OnOpenFeature(wxCommandEvent& event)
+	{
+	p->cSequence->OnOpenFeature ( event ) ;
+	}

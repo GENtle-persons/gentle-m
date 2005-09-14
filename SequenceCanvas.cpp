@@ -71,6 +71,7 @@ BEGIN_EVENT_TABLE(SequenceCanvas, wxScrolledWindow)
     EVT_MENU(MDI_PASTE, SequenceCanvas::OnPaste)
 
 	EVT_MENU_RANGE(PHYLIP_CMD_PROTPARS,PHYLIP_CMD_SETUP,SequenceCanvas::OnPhylip)
+    EVT_MENU(CM_OPEN_FEATURE,SequenceCanvas::OnOpenFeature)
 /*	EVT_MENU(PHYLIP_CMD_PROTPARS, SequenceCanvas::OnPhylip)
 	EVT_MENU(PHYLIP_CMD_DNAPARS, SequenceCanvas::OnPhylip)
 	EVT_MENU(PHYLIP_CMD_DNAMOVE, SequenceCanvas::OnPhylip)
@@ -1474,15 +1475,28 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
 void SequenceCanvas::showContextMenu ( SeqBasic *where , int pos , wxPoint pt )
     {
     wxMenu *cm ;
+    contextMenuPosition = pos ;
     if ( p && p->cPlasmid ) // DNA
        {
-       cm = p->cPlasmid->invokeVectorPopup ( pt , true ) ;
+       cm = p->cPlasmid->invokeVectorPopup ( pt , true , pos ) ;
        }
     else if ( getAA() ) // Amino acids
        {
        cm = new wxMenu ;
        cm->Append ( AMINOACIDS_EDIT_NAME , txt("m_edit_aa") ) ;
        cm->Append ( SEQ_AA_BACKTRANSLATE, txt("m_aa_backtranslate") ) ;
+
+       // Features at this position
+       if ( pos != -1 )
+			{
+			wxArrayInt vi ;
+			getAA()->vec->getItemsAtPosition ( pos , vi ) ;
+			if ( vi.size() )
+				{
+				cm->Append ( CM_OPEN_FEATURE , txt("m_open_feature") ) ;
+				}
+			}
+
        if ( _from != -1  )
           {
            cm->Append ( MDI_CUT , txt("m_cut") ) ;
@@ -2204,6 +2218,28 @@ void SequenceCanvas::OnPhylip ( wxCommandEvent &ev )
 	if ( !getAln() ) return ; // Not an alignment
 	getAln()->RunPhylip ( ev.GetId() ) ;
 	}
+
+void SequenceCanvas::OnOpenFeature(wxCommandEvent& event)
+	{
+	wxArrayInt vi ;
+	p->vec->getItemsAtPosition ( contextMenuPosition , vi ) ;
+	wxString *vs = new wxString [ vi.size() ] ;
+	for ( int a = 0 ; a < vi.size() ; a++ )
+		{
+		wxString s ;
+		s += p->vec->items[vi[a]].name ;
+		if ( s.IsEmpty() ) s = p->vec->items[vi[a]].desc.BeforeFirst ( '\n' ) ;
+		s += wxString::Format ( _T(" (%d-%d)") , p->vec->items[vi[a]].from , p->vec->items[vi[a]].to ) ;
+		vs[a] = s ;
+		}
+	wxSingleChoiceDialog scd ( this , "M" , "C" , vi.size() , vs ) ;
+	if ( scd.ShowModal() != wxID_OK ) return ;
+	
+	int itemnumber = vi[scd.GetSelection()] ;
+	if ( p && p->cPlasmid ) p->cPlasmid->invokeVectorEditor ( _T("item") , itemnumber ) ;
+	else if ( getAA() ) getAA()->invokeVectorEditor ( _T("item") , itemnumber ) ;
+	}
+
 
 
 // -------------------------------------------------------- TMarkMem

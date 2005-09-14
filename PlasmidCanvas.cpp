@@ -55,6 +55,7 @@ BEGIN_EVENT_TABLE(PlasmidCanvas, wxScrolledWindow)
     EVT_MENU(STRAND_NEW_35,PlasmidCanvas::OnStrandNew35)
     EVT_MENU(STRAND_NEW_53,PlasmidCanvas::OnStrandNew53)
     EVT_MENU(STRAND_NEW_BOTH,PlasmidCanvas::OnStrandNewBoth)
+    EVT_MENU(CM_OPEN_FEATURE,PlasmidCanvas::OnOpenFeature)
 //    EVT_PAINT(PlasmidCanvas::OnPaint)
 END_EVENT_TABLE()
 

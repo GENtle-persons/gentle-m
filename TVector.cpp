@@ -94,6 +94,24 @@ void TVector::prepareFeatureEdit ( int pos , bool overwrite )
 		}    
 	}    
 
+void TVector::getItemsAtPosition ( int pos , wxArrayInt &vi )
+	{
+	vi.clear () ;
+	int a ;
+	for ( a = 0 ; a < items.size() ; a++ )
+		{
+		if ( items[a].from <= items[a].to ) // "Normal"
+			{
+			if ( pos < items[a].from-1 || pos > items[a].to-1 ) continue ;
+			}
+		else // Goes round the "0" point
+			{
+			if ( pos > items[a].to-1 && pos < items[a].from-1 ) continue ;
+			}
+		vi.Add ( a ) ;
+		}
+	}
+
 wxString TVector::getStrand53 ()
 	{
 	return _lu + sequence + _ru ;

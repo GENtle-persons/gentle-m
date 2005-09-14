@@ -449,6 +449,7 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void OnBacktranslate ( wxCommandEvent &ev ) ; ///<  "Backtranslate amino acids into DNA" event handler
 
     virtual void OnPhylip ( wxCommandEvent &ev ) ; ///<  "Phylip" event handler (all in one)
+    virtual void OnOpenFeature(wxCommandEvent& event); ///< "Open feature" event handler
 
     virtual void OnSeqUp ( wxCommandEvent &ev ) ; ///<  "Move alignment sequence up" event handler
     virtual void OnSeqDown ( wxCommandEvent &ev ) ; ///<  "Move alignment sequence down" event handler
@@ -552,6 +553,7 @@ class SequenceCanvas : public wxScrolledWindow
     wxString lastToolTip ;
     SeqAlign *last_al ;
     SeqBasic *lastwhere ;
+    int contextMenuPosition ;
     
     DECLARE_EVENT_TABLE()
     };
