@@ -623,131 +623,132 @@ void TAminoAcids::OnListBox ( wxCommandEvent& event )
     }
 
 void TAminoAcids::handleListBox ( wxString t )
-    {
-	 mylog ( "TAminoAcids::handleListBox" , "1" ) ;
-    bool update = false ;
-    if ( t == lastLBsel ) update = true ;
-    else lastLBsel = t ;
-    
-    if ( !update )
-        {
-        if ( curDisplay )
-            {
-            h1->Remove ( curDisplay ) ;
-            delete curDisplay ;
-            }
-        curDisplay = NULL ;
-        desc = NULL ;
-        stat = NULL ;
-        sc2 = NULL ;
-        }
-        
-	 mylog ( "TAminoAcids::handleListBox" , wxString::Format ( _T("2 : %s") , t.mb_str() ) ) ;
-    if ( t == txt("desc") )
-        {
-        if ( update ) desc->SetValue ( vec->getDescription() )  ;
-        else
-           {
-           desc = new TURLtext ( this ,
-                            URLTEXT_DUMMY ,
-                            _T("") ,
-                            wxDefaultPosition,
-                            wxSize ( 250 , 90 ) ,
-                            wxTE_MULTILINE | wxSUNKEN_BORDER | wxTE_READONLY ) ;
-           h1->Add ( desc , 1 , wxEXPAND , 5 ) ;
-           curDisplay = desc ;
-           desc->SetValue ( vec->getDescription() ) ;
-           }
-        }
-    else if ( t == txt("t_data") )
-        {
-        if ( !update ) 
-           {
-           stat = new wxTextCtrl ( this ,
-                            -1 ,
-                            _T("") ,
-                            wxDefaultPosition,
-                            wxSize ( 200 , 90 ) ,
-                            wxTE_MULTILINE | wxTE_READONLY ) ;
-           curDisplay = stat ;
-           h1->Add ( stat , 1 , wxEXPAND , 5 ) ;
-           }
-        showStat () ;
-        }
-    else if ( t == txt("t_schema") )
-        {
-        vec->updateDisplay() ;
-        if ( update ) pc->Refresh() ;
-        else
-           {
-           pc = new PlasmidCanvas ( this , wxDefaultPosition , wxSize ( 250 , 90 ) ) ;
-           pc->setRootChild ( (MyChild*) this ) ;
-           h1->Add ( pc , 1 , wxEXPAND , 5 ) ;
-           curDisplay = pc ;
-           }
-        }
-    else if ( t == txt("t_chou_fasman") ||
-              t == txt("t_ncoils" ) ||
-              t == txt("t_aa_plot_mw" ) ||
-              t == txt("t_aa_plot_pi" ) ||
-              t == txt("t_aa_plot_hp" ) )
-        {
-			mylog ( "TAminoAcids::handleListBox" , "2a" ) ;
-        if ( !update )
-           {
+	{
+	mylog ( "TAminoAcids::handleListBox" , "1" ) ;
+	bool update = false ;
+	if ( t == lastLBsel ) update = true ;
+	else lastLBsel = t ;
+	
+	if ( !update )
+		{
+		if ( curDisplay )
+			{
+			h1->Remove ( curDisplay ) ;
+			delete curDisplay ;
+			}
+		curDisplay = NULL ;
+		desc = NULL ;
+		stat = NULL ;
+		sc2 = NULL ;
+		}
+	
+	mylog ( "TAminoAcids::handleListBox" , wxString::Format ( _T("2 : %s") , t.mb_str() ) ) ;
+	if ( t == txt("desc") )
+		{
+		if ( update ) desc->SetValue ( vec->getDescription() )  ;
+		else
+			{
+			desc = new TURLtext ( this ,
+			URLTEXT_DUMMY ,
+			_T("") ,
+			wxDefaultPosition,
+			wxSize ( 250 , 90 ) ,
+			wxTE_MULTILINE | wxSUNKEN_BORDER | wxTE_READONLY ) ;
+			h1->Add ( desc , 1 , wxEXPAND , 5 ) ;
+			curDisplay = desc ;
+			desc->SetValue ( vec->getDescription() ) ;
+			}
+		}
+	else if ( t == txt("t_data") )
+		{
+		if ( !update ) 
+			{
+			stat = new wxTextCtrl ( this ,
+			-1 ,
+			_T("") ,
+			wxDefaultPosition,
+			wxSize ( 200 , 90 ) ,
+			wxTE_MULTILINE | wxTE_READONLY ) ;
+			curDisplay = stat ;
+			h1->Add ( stat , 1 , wxEXPAND , 5 ) ;
+			}
+		showStat () ;
+		}
+	else if ( t == txt("t_schema") )
+		{
+		vec->updateDisplay() ;
+		if ( update ) pc->Refresh() ;
+		else
+			{
+			pc = new PlasmidCanvas ( this , wxDefaultPosition , wxSize ( 250 , 90 ) ) ;
+			pc->setRootChild ( (MyChild*) this ) ;
+			h1->Add ( pc , 1 , wxEXPAND , 5 ) ;
+			curDisplay = pc ;
+			}
+		}
+	else if ( t == txt("t_chou_fasman") ||
+	t == txt("t_ncoils" ) ||
+	t == txt("t_aa_plot_mw" ) ||
+	t == txt("t_aa_plot_pi" ) ||
+	t == txt("t_aa_plot_hp" ) )
+		{
+		mylog ( "TAminoAcids::handleListBox" , "2a" ) ;
+		if ( !update )
+			{
 			mylog ( "TAminoAcids::handleListBox" , "2a1" ) ;
-           sc2 = new SequenceCanvas(this, wxDefaultPosition, wxSize(250, 90));
-           sc2->blankline = 1 ;
-           sc2->child = this ;
+			sc2 = new SequenceCanvas(this, wxDefaultPosition, wxSize(250, 90));
+			sc2->blankline = 1 ;
+			sc2->child = this ;
 //           sc2->edit_id = "AA" ;
 //           sc2->edit_valid = "ACDEFGHIKLMNPQRSTVWY|" ;
-           h1->Add ( sc2 , 1 , wxEXPAND , 5 ) ;
-           sc2->setMiniDisplay ( true );
-           sc2->setHorizontal ( true ) ;
-           curDisplay = sc2 ;        
-           }
-        else
-           {
+			h1->Add ( sc2 , 1 , wxEXPAND , 5 ) ;
+			sc2->setMiniDisplay ( true );
+			sc2->setHorizontal ( true ) ;
+			curDisplay = sc2 ;        
+			}
+		else
+			{
 			mylog ( "TAminoAcids::handleListBox" , "2a2" ) ;
-           CLEAR_DELETE ( sc2->seq ) ;
-           }
-
-			mylog ( "TAminoAcids::handleListBox" , "2b" ) ;
-        SeqPlot *seqP = new SeqPlot ( sc2 ) ;
-			mylog ( "TAminoAcids::handleListBox" , "2c" ) ;
-        sc2->seq.Add ( seqP ) ;
-			mylog ( "TAminoAcids::handleListBox" , "2d" ) ;
-        seqP->initFromTVector ( vec ) ;
-			mylog ( "TAminoAcids::handleListBox" , "2e" ) ;
-        seqP->setLines ( 6 ) ;
-			mylog ( "TAminoAcids::handleListBox" , "2f" ) ;
-        
-        if ( t == txt("t_chou_fasman") ) seqP->useChouFasman() ;
-        else if ( t == txt("t_ncoils") ) seqP->useNcoils () ;
-        else if ( t == txt("t_aa_plot_mw") ) seqP->useMW () ;
-        else if ( t == txt("t_aa_plot_pi") ) seqP->usePI () ;
-        else if ( t == txt("t_aa_plot_hp") ) seqP->useHP () ;
-        
-			mylog ( "TAminoAcids::handleListBox" , "2g" ) ;
-        if ( update )
-           {
+			CLEAR_DELETE ( sc2->seq ) ;
+			}
+		
+		mylog ( "TAminoAcids::handleListBox" , "2b" ) ;
+		SeqPlot *seqP = new SeqPlot ( sc2 ) ;
+		mylog ( "TAminoAcids::handleListBox" , "2c" ) ;
+		sc2->seq.Add ( seqP ) ;
+		mylog ( "TAminoAcids::handleListBox" , "2d" ) ;
+		seqP->initFromTVector ( vec ) ;
+		mylog ( "TAminoAcids::handleListBox" , "2e" ) ;
+		seqP->setLines ( 6 ) ;
+		mylog ( "TAminoAcids::handleListBox" , "2f" ) ;
+		
+		if ( t == txt("t_chou_fasman") ) seqP->useChouFasman() ;
+		else if ( t == txt("t_ncoils") ) seqP->useNcoils () ;
+		else if ( t == txt("t_aa_plot_mw") ) seqP->useMW () ;
+		else if ( t == txt("t_aa_plot_pi") ) seqP->usePI () ;
+		else if ( t == txt("t_aa_plot_hp") ) seqP->useHP () ;
+		
+		mylog ( "TAminoAcids::handleListBox" , "2g" ) ;
+		if ( update )
+			{
 			mylog ( "TAminoAcids::handleListBox" , "2g1" ) ;
-           sc2->arrange() ;
+			sc2->arrange() ;
 			mylog ( "TAminoAcids::handleListBox" , "2g2" ) ;
-           sc2->SilentRefresh() ;
-           }
-			mylog ( "TAminoAcids::handleListBox" , "2h" ) ;
-        }
-	 mylog ( "TAminoAcids::handleListBox" , "3" ) ;
-    if ( !update )
-        {
+			sc2->SilentRefresh() ;
+			}
+		mylog ( "TAminoAcids::handleListBox" , "2h" ) ;
+		}
+	mylog ( "TAminoAcids::handleListBox" , "3" ) ;
+
+	if ( !update )
+		{
 //        GetToolBar()->Refresh () ;
-        h1->Layout() ;
-        lb->Refresh () ;
-        }
-    sc->SetFocus() ;
-	 mylog ( "TAminoAcids::handleListBox" , "4" ) ;
-    }
+		h1->Layout() ;
+		lb->Refresh () ;
+		}
+	sc->SetFocus() ;
+	mylog ( "TAminoAcids::handleListBox" , "4" ) ;
+	}
     
 void TAminoAcids::updateToolbar ()
     {

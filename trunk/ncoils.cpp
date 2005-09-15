@@ -141,6 +141,7 @@ string ncoils_function( const char *_sequence , int window ) {
 		}
 	}
 
+
 	/* Read in a sequence from the standard input */
 	nseq = 0;
 	ident = (char*) malloc(100*sizeof(char));
