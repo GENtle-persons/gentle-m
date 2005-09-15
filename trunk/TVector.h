@@ -273,7 +273,8 @@ class TVector
     virtual void prepareFeatureEdit ( int pos , bool overwrite ) ; ///< Changes feature names or cuts features that are about to be edited
     virtual TEnzymeRules *getEnzymeRules () ; ///< Returns the restriction enzyme display rules for this vector
     virtual void setEnzymeRules ( TEnzymeRules *er ) ; ///< Sets the restriction enzyme display rules for this vector
-    virtual void getItemsAtPosition ( int pos , wxArrayInt &vi ) ; ///< Retrieves a list of items at that position (pos is 0-based)
+    virtual void getItemsAtPosition ( int pos , wxArrayInt &vi , bool limit = false ) ; ///< Retrieves a list of items at that position (pos is 0-based)
+    virtual bool hasItemsAtPosition ( int pos ) ; /// Returns wether there are items at that position (pos is 0-based)
     
     // Variables
     vector <TVectorItem> items ; ///< Items/features/annotations

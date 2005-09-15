@@ -138,6 +138,7 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
     drawing = false ;
     hardstop = -1 ;
     border = 4 ;
+    contextMenuPosition = -1 ;
 
     setMiniDisplay ( false ) ;
     editMode = false ;
@@ -1366,20 +1367,31 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
        }
         
     if ( event.MiddleDown() && where )
-        {
-        if ( child && child->def == _T("alignment") )
-           {
-           SeqAlign *al = (SeqAlign*)where ;
-           TAlignment *alg = (TAlignment*) child ;
-           if ( al->myname == txt("t_identity") ) {} // Do nothing
-           else if ( al->whatsthis() == _T("FEATURE") ) {} // Do nothing
-           else alg->callMiddleMouseButton ( al->id , pos ) ; // Call alignment module to handle middle mouse button click
-           }
-        else if ( isMiniDisplay () && markedFrom() != -1 ) // Show marked sequence in primary sequence display
-   	       {
- 	 	   getAA()->sc->ensureVisible ( markedFrom() ) ;
-   		   }
-        }
+		{
+		if ( child && child->def == _T("alignment") )
+			{
+			SeqAlign *al = (SeqAlign*)where ;
+			TAlignment *alg = (TAlignment*) child ;
+			if ( al->myname == txt("t_identity") ) {} // Do nothing
+			else if ( al->whatsthis() == _T("FEATURE") ) {} // Do nothing
+			else alg->callMiddleMouseButton ( al->id , pos ) ; // Call alignment module to handle middle mouse button click
+			}
+		else if ( isMiniDisplay () && markedFrom() != -1 ) // Show marked sequence in primary sequence display
+			{
+			getAA()->sc->ensureVisible ( markedFrom() ) ;
+			}
+		else if ( p || getAA() )
+			{
+			// Features at this position
+			TVector *vv = p ? p->vec : getAA()->vec ;
+			if ( pos != -1 && vv && vv->hasItemsAtPosition ( pos-1 ) )
+				{
+				wxCommandEvent event ;
+				contextMenuPosition = pos ;
+				OnOpenFeature ( event ) ;
+				}
+			}
+		}
     
     if ( event.LeftDClick() )
         {
@@ -1475,9 +1487,10 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
 void SequenceCanvas::showContextMenu ( SeqBasic *where , int pos , wxPoint pt )
     {
     wxMenu *cm ;
-    contextMenuPosition = pos ;
+    contextMenuPosition = -1 ;
     if ( p && p->cPlasmid ) // DNA
        {
+		 contextMenuPosition = pos ;
        cm = p->cPlasmid->invokeVectorPopup ( pt , true , pos ) ;
        }
     else if ( getAA() ) // Amino acids
@@ -1487,14 +1500,10 @@ void SequenceCanvas::showContextMenu ( SeqBasic *where , int pos , wxPoint pt )
        cm->Append ( SEQ_AA_BACKTRANSLATE, txt("m_aa_backtranslate") ) ;
 
        // Features at this position
-       if ( pos != -1 )
+       if ( pos != -1 && getAA()->vec->hasItemsAtPosition ( pos-1 ) )
 			{
-			wxArrayInt vi ;
-			getAA()->vec->getItemsAtPosition ( pos , vi ) ;
-			if ( vi.size() )
-				{
-				cm->Append ( CM_OPEN_FEATURE , txt("m_open_feature") ) ;
-				}
+			contextMenuPosition = pos ;
+			cm->Append ( CM_OPEN_FEATURE , txt("m_open_feature") ) ;
 			}
 
        if ( _from != -1  )
@@ -2221,21 +2230,39 @@ void SequenceCanvas::OnPhylip ( wxCommandEvent &ev )
 
 void SequenceCanvas::OnOpenFeature(wxCommandEvent& event)
 	{
-	wxArrayInt vi ;
-	p->vec->getItemsAtPosition ( contextMenuPosition , vi ) ;
-	wxString *vs = new wxString [ vi.size() ] ;
-	for ( int a = 0 ; a < vi.size() ; a++ )
-		{
-		wxString s ;
-		s += p->vec->items[vi[a]].name ;
-		if ( s.IsEmpty() ) s = p->vec->items[vi[a]].desc.BeforeFirst ( '\n' ) ;
-		s += wxString::Format ( _T(" (%d-%d)") , p->vec->items[vi[a]].from , p->vec->items[vi[a]].to ) ;
-		vs[a] = s ;
-		}
-	wxSingleChoiceDialog scd ( this , "M" , "C" , vi.size() , vs ) ;
-	if ( scd.ShowModal() != wxID_OK ) return ;
+	// Prepare and check for sanity
+	TVector *vv ;
+	if ( p ) vv = p->vec ;
+	else if ( getAA() ) vv = getAA()->vec ;
+	else return ;
+	if ( !vv ) return ;
 	
-	int itemnumber = vi[scd.GetSelection()] ;
+	// Retrieve feature list; check for shortcut actions
+	wxArrayInt vi ;
+	vv->getItemsAtPosition ( contextMenuPosition-1 , vi ) ;
+	if ( vi.size() == 0 ) return ;
+
+	int itemnumber = vi[0] ; // Default, if there is only one item
+	if ( vi.size() > 1 ) 
+		{
+		wxString *vs = new wxString [ vi.size() ] ;
+		for ( int a = 0 ; a < vi.size() ; a++ )
+			{
+			wxString s ;
+			s += vv->items[vi[a]].name ;
+			if ( s.IsEmpty() ) s = vv->items[vi[a]].desc.BeforeFirst ( '\n' ) ;
+			s += wxString::Format ( _T(" (%d-%d)") , vv->items[vi[a]].from , vv->items[vi[a]].to ) ;
+			s += _T(" ") + txt(wxString::Format(_T("itemtype%d"),vv->items[vi[a]].getType())) ;
+			vs[a] = s ;
+			}
+		wxSingleChoiceDialog scd ( this , 
+			wxString::Format ( txt("t_feature_list_at") , contextMenuPosition ) ,
+			txt("t_feature_list") , 
+			vi.size() , vs ) ;
+		if ( scd.ShowModal() != wxID_OK ) return ;
+		itemnumber = vi[scd.GetSelection()] ;
+		}
+	
 	if ( p && p->cPlasmid ) p->cPlasmid->invokeVectorEditor ( _T("item") , itemnumber ) ;
 	else if ( getAA() ) getAA()->invokeVectorEditor ( _T("item") , itemnumber ) ;
 	}
