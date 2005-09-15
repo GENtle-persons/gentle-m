@@ -94,11 +94,11 @@ void TVector::prepareFeatureEdit ( int pos , bool overwrite )
 		}    
 	}    
 
-void TVector::getItemsAtPosition ( int pos , wxArrayInt &vi )
+void TVector::getItemsAtPosition ( int pos , wxArrayInt &vi , bool limit )
 	{
 	vi.clear () ;
 	int a ;
-	for ( a = 0 ; a < items.size() ; a++ )
+	for ( a = 0 ; ( vi.size() == 0 || !limit ) && a < items.size() ; a++ )
 		{
 		if ( items[a].from <= items[a].to ) // "Normal"
 			{
@@ -110,6 +110,13 @@ void TVector::getItemsAtPosition ( int pos , wxArrayInt &vi )
 			}
 		vi.Add ( a ) ;
 		}
+	}
+
+bool TVector::hasItemsAtPosition ( int pos )
+	{
+	wxArrayInt vi ;
+	getItemsAtPosition ( pos , vi , true ) ;
+	return vi.size() > 0 ;
 	}
 
 wxString TVector::getStrand53 ()

@@ -16,7 +16,7 @@ END_EVENT_TABLE()
 
 
 FindSequenceDialog::FindSequenceDialog ( wxWindow *parent, const wxString& title )
-	: wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 350 , 400 ) )
+	: wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 380 , 400 ) )
 	{
 	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
 	wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
@@ -25,7 +25,7 @@ FindSequenceDialog::FindSequenceDialog ( wxWindow *parent, const wxString& title
 	allowed_chars = _T("AGCT") ; // For DNA search; currently ignored
 	
 	t = new wxTextCtrl ( this , SH_TEXT , _T("") ) ;
-	status = new wxTextCtrl ( this , -1 , _T("") , 
+	status = new wxTextCtrl ( this , -1 , txt("t_find_hint") , 
 		wxDefaultPosition , wxDefaultSize , wxTE_READONLY|wxSTATIC_BORDER ) ;
 	status->SetBackgroundColour ( GetBackgroundColour() ) ;
 	
@@ -205,6 +205,7 @@ int FindSequenceDialog::subsearch ( const wxString &s , const wxString &sub , in
 void FindSequenceDialog::OnSearch ( wxCommandEvent &ev )
 	{
 	status->SetLabel ( txt("t_searching") ) ;
+	wxBeginBusyCursor() ;
 	wxSafeYield() ;
 	Freeze () ;
 	lb->Clear () ;
@@ -229,6 +230,7 @@ void FindSequenceDialog::OnSearch ( wxCommandEvent &ev )
 		status->SetLabel ( wxString::Format ( txt("t_matches_found") , lb->GetCount() ) ) ;
 	
 	Thaw () ;
+	wxEndBusyCursor() ;
 	}
 
 void FindSequenceDialog::aaSearch ()

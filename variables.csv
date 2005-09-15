@@ -859,3 +859,6 @@
 "t_aa_col","Amino acid color in DNA modul","Aminosäurenfarbe im DNS-Modul"
 "t_searching","Searching...","Suchen..."
 "m_open_feature","Features at this position","Features an dieser Stelle"
+"t_feature_list","Feature list","Feature-Liste"
+"t_feature_list_at","Features at position %d","Features an Position %d"
+"t_find_hint","You can use '?' for one and '*' for multiple unknown characters","Sie können '?' für ein und '*' für mehrere unbekannte Zeichen verwenden."
