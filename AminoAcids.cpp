@@ -38,17 +38,18 @@ BEGIN_EVENT_TABLE(TAminoAcids, MyChildBase)
     EVT_MENU(MDI_VIEW_MODE,ChildBase::OnDummy)
     EVT_MENU(MDI_ORFS,ChildBase::OnDummy)
     EVT_MENU(MDI_CIRCULAR_LINEAR,ChildBase::OnDummy)
-    EVT_MENU(AA_NONE,TABIviewer::OnDummy)
-    EVT_MENU(AA_KNOWN, TABIviewer::OnDummy)
-    EVT_MENU(AA_ALL, TABIviewer::OnDummy)
-    EVT_MENU(AA_THREE, TABIviewer::OnDummy)
-    EVT_MENU(AA_ONE, TABIviewer::OnDummy)
-    EVT_MENU(AA_THREE_1, TABIviewer::OnDummy)
-    EVT_MENU(AA_THREE_2, TABIviewer::OnDummy)
-    EVT_MENU(AA_THREE_3, TABIviewer::OnDummy)
-    EVT_MENU(AA_THREE_M1, TABIviewer::OnDummy)
-    EVT_MENU(AA_THREE_M2, TABIviewer::OnDummy)
-    EVT_MENU(AA_THREE_M3, TABIviewer::OnDummy)
+    EVT_MENU(AA_NONE,ChildBase::OnDummy)
+    EVT_MENU(AA_KNOWN, ChildBase::OnDummy)
+    EVT_MENU(AA_ALL, ChildBase::OnDummy)
+    EVT_MENU(AA_THREE, ChildBase::OnDummy)
+    EVT_MENU(AA_ONE, ChildBase::OnDummy)
+    EVT_MENU(MDI_AUTO_ANNOTATE, ChildBase::OnDummy)
+    EVT_MENU(AA_THREE_1, ChildBase::OnDummy)
+    EVT_MENU(AA_THREE_2, ChildBase::OnDummy)
+    EVT_MENU(AA_THREE_3, ChildBase::OnDummy)
+    EVT_MENU(AA_THREE_M1, ChildBase::OnDummy)
+    EVT_MENU(AA_THREE_M2, ChildBase::OnDummy)
+    EVT_MENU(AA_THREE_M3, ChildBase::OnDummy)
     
 END_EVENT_TABLE()
 
@@ -441,30 +442,30 @@ void TAminoAcids::OnEditMode(wxCommandEvent& event)
     }
 
 void TAminoAcids::invokeVectorEditor ( wxString what , int num , bool forceUpdate )
-    {
-    vec->undo.start ( txt("u_vec_edit") ) ;
-    TVectorEditor ve ( this , txt("t_vector_editor") , vec ) ;
-    bool changed = vec->isChanged() ;
-    vec->setChanged ( false ) ;
-
-    ve.hideEnzym = true ;
-    ve.hideEm () ;
-    
-    if ( what == _T("item") )
-        ve.initialViewItem ( num ) ;
-
+	{
+	vec->undo.start ( txt("u_vec_edit") ) ;
+	TVectorEditor ve ( this , txt("t_vector_editor") , vec ) ;
+	bool changed = vec->isChanged() ;
+	vec->setChanged ( false ) ;
+	
+	ve.hideEnzym = true ;
+	ve.hideEm () ;
+	
+	if ( what == _T("item") )
+		ve.initialViewItem ( num ) ;
+	
 	ve.ShowModal () ;
-    ve.cleanup () ;
-    if ( forceUpdate || vec->isChanged() )
-        {
-        myapp()->frame->mainTree->SetItemText ( inMainTree , getName() ) ;
-        showName() ;
-        showSequence () ;
-        vec->undo.stop() ;
-        }
-    else vec->undo.abort() ;
-    vec->setChanged ( changed | vec->isChanged() ) ;
-    }
+	ve.cleanup () ;
+	if ( forceUpdate || vec->isChanged() )
+		{
+		myapp()->frame->mainTree->SetItemText ( inMainTree , getName() ) ;
+		showName() ;
+		showSequence () ;
+		vec->undo.stop() ;
+		}
+	else vec->undo.abort() ;
+	vec->setChanged ( changed | vec->isChanged() ) ;
+	}
     
 void TAminoAcids::OnEditName(wxCommandEvent& event)
     {

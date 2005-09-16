@@ -6,15 +6,30 @@ BEGIN_EVENT_TABLE(TProteolysis, wxDialog)
 	EVT_BUTTON(PRO_FRAGMENTS_ALL, TProteolysis::OnAll)
 	EVT_BUTTON(PRO_FRAGMENTS_NONE, TProteolysis::OnNone)
 	EVT_RADIOBOX(PRO_SORT_RESULTS, TProteolysis::OnSortResults)
+	EVT_RADIOBOX(PRO_SEP_NUM_PROT, TProteolysis::OnNumProts)
 	EVT_CHAR_HOOK(TProteolysis::OnCharHook)
 	EVT_CHECKLISTBOX(PRO_PROTEASES, TProteolysis::OnProtease)
 	EVT_CHECKLISTBOX(PRO_IGNORE, TProteolysis::OnIgnore)
 	EVT_CHECKLISTBOX(PRO_CUTS, TProteolysis::OnCuts)
+	EVT_CHECKLISTBOX(PRO_SEP_FRAGMENTS, TProteolysis::OnSepFragments)
+	EVT_LISTBOX(PRO_SEP_RES, TProteolysis::OnSepResults)
 	EVT_CHECKBOX(PRO_SHOW_UNCUT, TProteolysis::OnShowGel)
 END_EVENT_TABLE()
 
 //BEGIN_EVENT_TABLE(TProteolysisGel, wxScrolledWindow)
 //END_EVENT_TABLE()
+
+bool operator < ( const TProteolysisSuggestion &c1 , const TProteolysisSuggestion &c2 )
+    {
+    return c1.grade < c2.grade ;
+    }
+    
+bool operator == ( const TProteolysisSuggestion &c1 , const TProteolysisSuggestion &c2 )
+    {
+    return c1.grade == c2.grade ;
+    }
+
+
 
 TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 	: wxDialog ( (wxWindow*) _parent , -1 , title , wxDefaultPosition , wxSize ( 710 , 550 ) )
@@ -22,6 +37,7 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 	parent = _parent ;
 	v = parent->vec ;
 		
+	sep_fragments = new wxCheckListBox ( this , PRO_SEP_FRAGMENTS ) ;
 	proteases = new wxCheckListBox ( this , PRO_PROTEASES ) ;
 	ignore = new wxCheckListBox ( this , PRO_IGNORE ) ;
 	cuts = new wxCheckListBox ( this , PRO_CUTS ) ;
@@ -32,6 +48,23 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 	create_labels = new wxCheckBox ( this , -1 , txt("t_proteolysis_annotate") ) ;
 	use_proteases = new wxCheckBox ( this , -1 , txt("t_proteolysis_keep_proteases") ) ;
 	show_uncut = new wxCheckBox ( this , PRO_SHOW_UNCUT , txt("t_proteolysis_show_uncut") ) ;
+	
+	sep_results = new wxListBox ( this , PRO_SEP_RES ) ;
+	
+   wxString rb_np[3] ;
+   rb_np[0] = _T("1") ;
+   rb_np[1] = _T("2") ;
+   rb_np[2] = _T("3") ;
+	sep_num_prot = new wxRadioBox ( this , PRO_SEP_NUM_PROT , 
+								txt("t_proteolysis_auto_num_prot") ,
+								wxDefaultPosition , wxDefaultSize ,
+								3 , rb_np , wxRA_SPECIFY_COLS ) ;
+	sep_num_prot->SetSelection ( 0 ) ;
+	
+	sep_desc = new wxTextCtrl ( this , -1 , _T("") , wxDefaultPosition , 
+							wxDefaultSize , wxTE_MULTILINE|wxTE_READONLY ) ;
+	sep_desc->SetBackgroundColour ( GetBackgroundColour() ) ;
+	sep_desc->SetFont ( *MYFONT ( 8 , wxSWISS , wxNORMAL , wxNORMAL ) ) ;
 	
    wxString rb_sr[3] ;
    rb_sr[0] = txt("t_pro_sort_results_1" ) ;
@@ -51,18 +84,25 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 	wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
 	wxBoxSizer *h3 = new wxBoxSizer ( wxHORIZONTAL ) ;
 	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+	wxBoxSizer *va = new wxBoxSizer ( wxVERTICAL ) ;
 	wxBoxSizer *vl = new wxBoxSizer ( wxVERTICAL ) ;
-	wxBoxSizer *vm = new wxBoxSizer ( wxVERTICAL ) ;
 	wxBoxSizer *vr = new wxBoxSizer ( wxVERTICAL ) ;
 	wxBoxSizer *vg = new wxBoxSizer ( wxVERTICAL ) ;
 	
+	va->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_separate") ) , 0 , wxEXPAND|wxALL , 5 ) ;
+	va->Add ( sep_fragments , 2 , wxEXPAND|wxALL , 5 ) ;
+	va->Add ( sep_num_prot , 0 , wxEXPAND|wxALL , 5 ) ;
+	va->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_auto_results") ) , 0 , wxEXPAND|wxALL , 5 ) ;
+	va->Add ( sep_results , 2 , wxEXPAND|wxALL , 5 ) ;
+	va->Add ( sep_desc , 1 , wxEXPAND|wxALL , 5 ) ;
+
 	vl->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_proteases") ) , 0 , wxEXPAND|wxALL , 5 ) ;
 	vl->Add ( proteases , 1 , wxEXPAND|wxALL , 5 ) ;
 	vl->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_skip") ) , 0 , wxEXPAND|wxALL , 5 ) ;
 	vl->Add ( ignore , 1 , wxEXPAND|wxALL , 5 ) ;
 
-	vm->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_cuts") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-	vm->Add ( cuts , 1 , wxEXPAND|wxALL , 5 ) ;
+	vr->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_cuts") ) , 0 , wxEXPAND|wxALL , 5 ) ;
+	vr->Add ( cuts , 1 , wxEXPAND|wxALL , 5 ) ;
 
 	h3->Add ( new wxButton ( this , PRO_FRAGMENTS_ALL , txt("b_all") ) , 0 , wxALL|wxEXPAND , 2 ) ;
 	h3->Add ( new wxButton ( this , PRO_FRAGMENTS_NONE , txt("b_none") ) , 0 , wxALL|wxEXPAND , 2 ) ;
@@ -76,8 +116,8 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 	vg->Add ( gel , 1 , wxEXPAND|wxALL , 5 ) ;
 
 	
+	h0->Add ( va , 2 , wxEXPAND ) ;
 	h0->Add ( vl , 2 , wxEXPAND ) ;
-	h0->Add ( vm , 2 , wxEXPAND ) ;
 	h0->Add ( vr , 2 , wxEXPAND ) ;
 	h0->Add ( vg , 1 , wxEXPAND ) ;
 
@@ -116,7 +156,8 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 		wxString s ;
 		s += v->items[a].name ;
 		s += wxString::Format ( _T(" (%d-%d)") , v->items[a].from , v->items[a].to ) ;
-		ignore->Append ( s ) ;
+		ignore->Append ( s ) ; // The "do not cut in this feature" list
+		sep_fragments->Append ( s ) ; // The "separate fragments" list
 		}
 	
 	// Initialize used proteases
@@ -136,6 +177,199 @@ void TProteolysis::recalc ()
 	{
 	calc_cut_list () ;
 	calc_fragment_list () ;
+	}
+
+void TProteolysis::calc_spearation ()
+	{
+	suggestions.clear () ;
+	sep_results->Clear () ;
+	sep_desc->Clear () ;
+
+	int a ;
+	vector <TFragment> tobe ; // To-be parts
+	for ( a = 0 ; a < v->items.size() ; a++ )
+		{
+		if ( !sep_fragments->IsChecked ( a ) ) continue ;
+		TFragment f ;
+		f.from = v->items[a].from ;
+		f.to = v->items[a].to ;
+		f.length = a ; // Abusing length element as index
+		tobe.push_back ( f ) ;
+		}
+	sort ( tobe.begin() , tobe.end() ) ;
+	
+	if ( tobe.size() < 2 ) return ; // No need to run all this
+	
+	wxBeginBusyCursor () ;
+	wxArrayTProtease prop ;
+	for ( a = 0 ; a < sep_num_prot->GetSelection() + 1 ; a++ )
+		calc_spearation_sub ( a + 1 , prop , tobe ) ;
+	sort ( suggestions.begin() , suggestions.end() ) ;
+	for ( a = 0 ; a < 20 && a < suggestions.size() ; a++ ) // Show only the best 20
+		{
+		sep_results->Append ( suggestions[a].name ) ;
+		}
+	wxEndBusyCursor () ;
+	}
+
+void TProteolysis::calc_spearation_sub ( int depth , wxArrayTProtease &prop , vector <TFragment> &tobe , int start )
+	{
+	int a , b , c , cur = prop.size() ;
+	prop.Add ( NULL ) ;
+	for ( a = start ; a < ls->pr.GetCount() ; a++ )
+		{
+		// Are we already cutting with this one?
+		bool in = false ;
+		for ( b = 0 ; !in && b < prop.size()-1 ; b++ )
+			{
+			if ( ls->pr[a] == prop[b] ) in = true ;
+			}
+		if ( in ) continue ;
+		
+		// Add this protease to the cocktail and try
+		prop[cur] = ls->pr[a] ;
+		if ( depth > 1 ) // Invoke next sub?
+			{
+			calc_spearation_sub ( depth - 1 , prop , tobe , a+1 ) ;
+			continue ;
+			}
+		
+		// Do the cutting!
+		wxString name , desc ;
+		wxArrayTProteaseCut apc ;
+		determine_cuts ( prop , apc ) ;
+		remove_ignored_cuts ( apc ) ;
+		sort_cuts ( apc ) ;
+//		add_final_piece ( apc ) ; // Unnecessary for this
+
+//		if ( apc.size() > 200 ) continue ; // HARD LIMIT for number of cuts
+
+		// Start description
+		desc += _T("* ") + wxString::Format ( txt("t_proteolysis_auto_fragments") , apc.size() ) + _T("\r\n") ;
+		for ( b = 0 ; b < prop.size() ; b++ )
+			{
+			if ( name != _T("") ) name += _T(", ") ;
+			name += prop[b]->name ;
+			desc += _T("* ") + prop[b]->name + _T("\r\n") ;
+			}
+		
+		// Rate this cocktail
+		int grade = depth - 1 ; // larger value = worse
+		
+		for ( b = 1 ; b < tobe.size() ; b++ )
+			{
+			bool sep = false ;
+			for ( c = 0 ; !sep && c < apc.size() ; c++ )
+				{
+				if ( apc[c]->cut >= tobe[b-1].to && apc[c]->cut < tobe[b].from )
+					sep = true ;
+				}
+			if ( sep ) // Does separate
+				{
+				desc += txt("t_proteolysis_auto_desc_1") ;
+				desc += v->items[tobe[b-1].length].name ;
+				desc += txt("t_proteolysis_auto_desc_2") ;
+				desc += v->items[tobe[b].length].name ;
+				}
+			else
+				{
+				desc += txt("t_proteolysis_auto_desc_n1") ;
+				desc += v->items[tobe[b-1].length].name ;
+				desc += txt("t_proteolysis_auto_desc_n2") ;
+				desc += v->items[tobe[b].length].name ;
+				grade++ ; // Does not cut! Bad enzyme!
+				}
+			desc += _T("\r\n") ;
+			}
+		
+		grade *= 100 ; // Number of not separated parts is really bad!
+		grade += apc.size() ; // Many created fragments are bad too
+		
+		// Add this setup to the suggestion list
+		TProteolysisSuggestion s ;
+		s.proteases = prop ;
+		s.grade = grade ;
+		s.desc = desc ;
+		s.name = name + _T(" (" ) + wxString::Format ( txt("t_proteolysis_auto_fragments") , apc.size() ) + _T(")") ;
+		suggestions.push_back ( s ) ;
+
+		while ( apc.GetCount() )
+			{
+			delete apc[0] ;
+			apc.RemoveAt ( 0 ) ;
+			}
+		}
+	prop.RemoveAt ( cur ) ;
+	}
+
+void TProteolysis::determine_cuts ( wxArrayTProtease &prop , wxArrayTProteaseCut &apc )
+	{
+	// Determine cuts
+	for ( int a = 0 ; a < v->getSequenceLength() ; a++ )
+		{
+		wxString s = v->getSequence().Left(a) ;
+		for ( int q = 0 ; q < prop.GetCount() ; q++ )
+			{
+			TProtease *pr = prop[q] ;
+			if ( pr->len() <= s.length() )
+				{
+				wxString w2 = s.substr ( s.length() - pr->len() , pr->len() ) ;
+				if ( pr->does_match ( w2 ) )
+					{
+					TProteaseCut *cut = new TProteaseCut ;
+					cut->protease = pr ;
+					cut->cut = s.length()-pr->len()+pr->cut+1 ;
+					cut->left = false ; // Unused
+					apc.Add ( cut ) ;
+					}
+				}
+			}
+		}
+	}
+	
+void TProteolysis::remove_ignored_cuts ( wxArrayTProteaseCut &apc )
+	{
+	// Remove ignored cuts
+	for ( int a = 0 ; a < v->items.size() ; a++ )
+		{
+		if ( !ignore->IsChecked ( a ) ) continue ; // Not checked
+		for ( int q = 0 ; q < apc.GetCount() ; q++ )
+			{
+			if ( apc[q]->cut < v->items[a].from ) continue ; // Cuts before item
+			if ( apc[q]->cut >= v->items[a].to ) continue ; // Cuts after item
+			delete apc[q] ;
+			apc.RemoveAt ( q ) ;
+			q-- ;
+			}
+		}
+	}
+
+void TProteolysis::sort_cuts ( wxArrayTProteaseCut &apc )
+	{
+	// Sort cuts
+	for ( int a = 0 ; a+1 < pc.GetCount() ; a++ )
+		{
+		if ( pc[a]->cut > pc[a+1]->cut )
+			{
+			TProteaseCut *temp = pc[a] ;
+			pc[a] = pc[a+1] ;
+			pc[a+1] = temp ;
+			a = -1 ;
+			}
+		}
+	}
+
+void TProteolysis::add_final_piece ( wxArrayTProteaseCut &apc )
+	{
+	// Add final piece
+	if ( apc.GetCount() && apc[apc.GetCount()-1]->cut != v->getSequenceLength() )
+		{
+		TProteaseCut *cut = new TProteaseCut ;
+		cut->protease = NULL ;
+		cut->cut = v->getSequenceLength() ;
+		cut->left = false ; // Unused
+		apc.Add ( cut ) ;
+		}
 	}
 
 void TProteolysis::calc_cut_list ()
@@ -159,63 +393,11 @@ void TProteolysis::calc_cut_list ()
 		pc.RemoveAt ( 0 ) ;
 		}
 	
-	// Determine cuts
-	for ( a = 0 ; a < v->getSequenceLength() ; a++ )
-		{
-		wxString s = v->getSequence().Left(a) ;
-		for ( q = 0 ; q < prop.GetCount() ; q++ )
-			{
-			TProtease *pr = prop[q] ;
-			if ( pr->len() <= s.length() )
-				{
-				wxString w2 = s.substr ( s.length() - pr->len() , pr->len() ) ;
-				if ( pr->does_match ( w2 ) )
-					{
-					TProteaseCut *cut = new TProteaseCut ;
-					cut->protease = pr ;
-					cut->cut = s.length()-pr->len()+pr->cut+1 ;
-					cut->left = false ; // Unused
-					pc.Add ( cut ) ;
-					}
-				}
-			}
-		}
-	
-	// Remove ignored cuts
-	for ( a = 0 ; a < v->items.size() ; a++ )
-		{
-		if ( !ignore->IsChecked ( a ) ) continue ; // Not checked
-		for ( q = 0 ; q < pc.GetCount() ; q++ )
-			{
-			if ( pc[q]->cut < v->items[a].from ) continue ; // Cuts before item
-			if ( pc[q]->cut >= v->items[a].to ) continue ; // Cuts after item
-			delete pc[q] ;
-			pc.RemoveAt ( q ) ;
-			q-- ;
-			}
-		}
-	
-	// Sort cuts
-	for ( a = 0 ; a+1 < pc.GetCount() ; a++ )
-		{
-		if ( pc[a]->cut > pc[a+1]->cut )
-			{
-			TProteaseCut *temp = pc[a] ;
-			pc[a] = pc[a+1] ;
-			pc[a+1] = temp ;
-			a = -1 ;
-			}
-		}
+	determine_cuts ( prop , pc ) ;
+	remove_ignored_cuts ( pc ) ;
+	sort_cuts ( pc ) ;
+	add_final_piece ( pc ) ;
 
-	// Add final piece
-	if ( pc.GetCount() && pc[pc.GetCount()-1]->cut != v->getSequenceLength() )
-		{
-		TProteaseCut *cut = new TProteaseCut ;
-		cut->protease = NULL ;
-		cut->cut = v->getSequenceLength() ;
-		cut->left = false ; // Unused
-		pc.Add ( cut ) ;
-		}
 	
 	// Display list
 	cuts->Clear () ;
@@ -483,7 +665,38 @@ void TProteolysis::OnSortResults ( wxCommandEvent &ev )
 		}
 	show_fragment_list () ;
 	}
-	
+
+
+void TProteolysis::OnSepFragments ( wxCommandEvent &ev )
+	{
+	calc_spearation () ;
+	}
+
+void TProteolysis::OnSepResults ( wxCommandEvent &ev )
+	{
+	int a , b , i = sep_results->GetSelection () ;
+	sep_desc->SetValue ( suggestions[i].desc ) ;
+
+	for ( a = 0 ; a < ls->pr.GetCount() ; a++ )
+		{
+		int c = proteases->FindString ( ls->pr[a]->name ) ;
+		if ( c == wxNOT_FOUND ) continue ; // Strange...
+		bool check = false ;
+		for ( b = 0 ; !check && b < suggestions[i].proteases.size() ; b++ )
+			{
+			if ( ls->pr[a] == suggestions[i].proteases[b] )
+				check = true ;
+			}
+		proteases->Check ( c , check ) ;
+		}
+	recalc () ;
+	}
+
+void TProteolysis::OnNumProts(wxCommandEvent& event)
+	{
+	OnSepFragments ( event ) ;
+	}
+
 void TProteolysis::OnCharHook(wxKeyEvent& event)
 	{
 	int k = event.GetKeyCode () ;
