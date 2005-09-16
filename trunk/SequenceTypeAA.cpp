@@ -156,9 +156,9 @@ void SeqAA::show ( wxDC& dc )
               dc.SetBackgroundMode ( wxSOLID ) ;
               }
 
-	 		  wxChar ch = s.GetChar(b-1) ;
-		 	  if ( ch == '|' ) ch = myapp()->frame->stopcodon ;
-           t = ch ;
+	 		  wxChar ch2 = s.GetChar(b-1) ;
+		 	  if ( ch2 == '|' ) ch2 = myapp()->frame->stopcodon ;
+           t = ch2 ;
            if ( can->isPrinting() && !can->getPrintToColor() )
               {
               dc.SetTextForeground ( *wxBLACK ) ;
@@ -572,9 +572,9 @@ void SeqAA::show_direct ( wxDC& dc )
           }
 
 		 // Show the char
-		 wxChar ch = s.GetChar(a) ;
-		 if ( ch == '|' ) ch = myapp()->frame->stopcodon ;
-       dc.DrawText ( wxString ( ch ) , px , py ) ;
+		 wxChar ch2 = s.GetChar(a) ;
+		 if ( ch2 == '|' ) ch2 = myapp()->frame->stopcodon ;
+       dc.DrawText ( wxString ( ch2 ) , px , py ) ;
        
        int pz = py + ch ;
 

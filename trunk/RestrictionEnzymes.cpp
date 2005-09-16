@@ -13,6 +13,19 @@ bool operator == ( const TRestrictionCut &c1 , const TRestrictionCut &c2 )
     return c1.pos == c2.pos && c1.e->name == c2.e->name ;
     }
 
+bool operator < ( const TFragment &f1 , const TFragment &f2 )
+    {
+	 if ( f1.from < f2.from ) return true ;
+	 if ( f1.from > f2.from ) return false ;
+	 if ( f1.to < f2.to ) return true ;
+	 return false ;
+    }
+    
+bool operator == ( const TFragment &f1 , const TFragment &f2 )
+    {
+    return ( f1.from == f2.from ) && ( f1.to == f2.to ) ;
+    }
+
 /** \brief Compares two restriction enzymes
 	\param e The enzyme to compare this one to
 	

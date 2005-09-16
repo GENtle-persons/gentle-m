@@ -29,6 +29,9 @@ class TFragment
 	double weight ; ///< Used in TProteolysis
 	} ;    
 
+bool operator < ( const TFragment &f1 , const TFragment &f2 ) ;
+bool operator == ( const TFragment &f1 , const TFragment &f2 ) ;
+
 /** \brief The restriction editor dialog class
 */
 class TRestrictionEditor : public wxDialog
