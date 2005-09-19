@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		91023BCD0893BBA600BD8757 /* libmysqlclient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91023BCC0893BBA600BD8757 /* libmysqlclient.a */; };
 		911E4C4B08695B31006FD9C0 /* mac_icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 911E4C4A08695B31006FD9C0 /* mac_icon.icns */; };
+		911ECB3B08DEF872006A2654 /* libwx_mac-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911ECB3A08DEF872006A2654 /* libwx_mac-2.6.a */; };
+		911ECB3F08DEF8E4006A2654 /* libwxjpeg-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911ECB3C08DEF8E4006A2654 /* libwxjpeg-2.6.a */; };
+		911ECB4008DEF8E4006A2654 /* libwxpng-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911ECB3D08DEF8E4006A2654 /* libwxpng-2.6.a */; };
+		911ECB4308DEFB6D006A2654 /* libsqlite3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911ECB4208DEFB6D006A2654 /* libsqlite3.a */; };
+		911ECB4408DF0026006A2654 /* libwxtiff-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911ECB3E08DEF8E4006A2654 /* libwxtiff-2.6.a */; };
 		91410FC008D04FFA00776D65 /* .cvsignore in Resources */ = {isa = PBXBuildFile; fileRef = 91410F9508D04FF900776D65 /* .cvsignore */; };
 		91410FC108D04FFA00776D65 /* Bugs & Co.txt in Resources */ = {isa = PBXBuildFile; fileRef = 91410F9608D04FF900776D65 /* Bugs & Co.txt */; };
 		91410FC208D04FFA00776D65 /* de_alignment.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410F9708D04FFA00776D65 /* de_alignment.htm */; };
@@ -238,13 +243,6 @@
 		91B024DB08672754007ABD07 /* ureadseq.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B024DA08672754007ABD07 /* ureadseq.c */; };
 		91C98C56086946DC003ED5D9 /* default.tab in Resources */ = {isa = PBXBuildFile; fileRef = 91C98C55086946DC003ED5D9 /* default.tab */; };
 		91CC568C088B961300567E40 /* PCR_Troubleshoot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91CC568B088B961300567E40 /* PCR_Troubleshoot.cpp */; };
-		91D83CA3089D07D10000CDA6 /* libsqlite3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91B024D708672723007ABD07 /* libsqlite3.a */; };
-		91EC199008D5CC76007F5468 /* libwx_mac-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91EC198808D5CC76007F5468 /* libwx_mac-2.6.a */; };
-		91EC199408D5CC77007F5468 /* libwxjpeg-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91EC198C08D5CC76007F5468 /* libwxjpeg-2.6.a */; };
-		91EC199508D5CC77007F5468 /* libwxpng-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91EC198D08D5CC76007F5468 /* libwxpng-2.6.a */; };
-		91EC199608D5CC77007F5468 /* libwxregexu-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91EC198E08D5CC76007F5468 /* libwxregexu-2.6.a */; };
-		91EC199708D5CC77007F5468 /* libwxtiff-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91EC198F08D5CC76007F5468 /* libwxtiff-2.6.a */; };
-		91EC199908D5CD02007F5468 /* libwxexpat-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91EC198B08D5CC76007F5468 /* libwxexpat-2.6.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildStyle section */
@@ -279,6 +277,11 @@
 /* Begin PBXFileReference section */
 		91023BCC0893BBA600BD8757 /* libmysqlclient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmysqlclient.a; path = /usr/local/lib/mysql/libmysqlclient.a; sourceTree = "<absolute>"; };
 		911E4C4A08695B31006FD9C0 /* mac_icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = mac_icon.icns; sourceTree = "<group>"; };
+		911ECB3A08DEF872006A2654 /* libwx_mac-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwx_mac-2.6.a"; path = "../wx/wxWidgets/build-release/lib/libwx_mac-2.6.a"; sourceTree = SOURCE_ROOT; };
+		911ECB3C08DEF8E4006A2654 /* libwxjpeg-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxjpeg-2.6.a"; path = "../wx/wxWidgets/build-release/lib/libwxjpeg-2.6.a"; sourceTree = SOURCE_ROOT; };
+		911ECB3D08DEF8E4006A2654 /* libwxpng-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxpng-2.6.a"; path = "../wx/wxWidgets/build-release/lib/libwxpng-2.6.a"; sourceTree = SOURCE_ROOT; };
+		911ECB3E08DEF8E4006A2654 /* libwxtiff-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxtiff-2.6.a"; path = "../wx/wxWidgets/build-release/lib/libwxtiff-2.6.a"; sourceTree = SOURCE_ROOT; };
+		911ECB4208DEFB6D006A2654 /* libsqlite3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsqlite3.a; path = /usr/local/lib/libsqlite3.a; sourceTree = "<absolute>"; };
 		91410F9508D04FF900776D65 /* .cvsignore */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = .cvsignore; sourceTree = "<group>"; };
 		91410F9608D04FF900776D65 /* Bugs & Co.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = "Bugs & Co.txt"; sourceTree = "<group>"; };
 		91410F9708D04FFA00776D65 /* de_alignment.htm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = de_alignment.htm; sourceTree = "<group>"; };
@@ -508,20 +511,11 @@
 		91917537086807F200FD900E /* web.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = web.bmp; sourceTree = "<group>"; };
 		91917538086807F200FD900E /* write.xbm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = write.xbm; sourceTree = "<group>"; };
 		919175740868179400FD900E /* blank.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = blank.db; sourceTree = "<group>"; };
-		91B024C908672308007ABD07 /* libsqlite.la */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = libsqlite.la; path = "../sqlite-2.8.16/libsqlite.la"; sourceTree = SOURCE_ROOT; };
-		91B024CB0867231A007ABD07 /* libsqlite3.la */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = libsqlite3.la; path = "../sqlite-3.2.2/libsqlite3.la"; sourceTree = SOURCE_ROOT; };
 		91B024D608672723007ABD07 /* libsqlite.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsqlite.a; path = /usr/local/lib/libsqlite.a; sourceTree = "<absolute>"; };
-		91B024D708672723007ABD07 /* libsqlite3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsqlite3.a; path = /usr/local/lib/libsqlite3.a; sourceTree = "<absolute>"; };
 		91B024DA08672754007ABD07 /* ureadseq.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = ureadseq.c; sourceTree = "<group>"; };
 		91C98C55086946DC003ED5D9 /* default.tab */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = default.tab; sourceTree = "<group>"; };
 		91C9EABF0867351700AE735B /* variables.csv */ = {isa = PBXFileReference; fileEncoding = "-2147482624"; lastKnownFileType = text; name = variables.csv; path = ../../variables.csv; sourceTree = BUILT_PRODUCTS_DIR; };
 		91CC568B088B961300567E40 /* PCR_Troubleshoot.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = PCR_Troubleshoot.cpp; sourceTree = "<group>"; };
-		91EC198808D5CC76007F5468 /* libwx_mac-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwx_mac-2.6.a"; path = "../wx/wxWidgets/lib/libwx_mac-2.6.a"; sourceTree = SOURCE_ROOT; };
-		91EC198B08D5CC76007F5468 /* libwxexpat-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxexpat-2.6.a"; path = "../wx/wxWidgets/lib/libwxexpat-2.6.a"; sourceTree = SOURCE_ROOT; };
-		91EC198C08D5CC76007F5468 /* libwxjpeg-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxjpeg-2.6.a"; path = "../wx/wxWidgets/lib/libwxjpeg-2.6.a"; sourceTree = SOURCE_ROOT; };
-		91EC198D08D5CC76007F5468 /* libwxpng-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxpng-2.6.a"; path = "../wx/wxWidgets/lib/libwxpng-2.6.a"; sourceTree = SOURCE_ROOT; };
-		91EC198E08D5CC76007F5468 /* libwxregexu-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxregexu-2.6.a"; path = "../wx/wxWidgets/lib/libwxregexu-2.6.a"; sourceTree = SOURCE_ROOT; };
-		91EC198F08D5CC76007F5468 /* libwxtiff-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxtiff-2.6.a"; path = "../wx/wxWidgets/lib/libwxtiff-2.6.a"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -531,13 +525,11 @@
 			files = (
 				91B024D808672723007ABD07 /* libsqlite.a in Frameworks */,
 				91023BCD0893BBA600BD8757 /* libmysqlclient.a in Frameworks */,
-				91D83CA3089D07D10000CDA6 /* libsqlite3.a in Frameworks */,
-				91EC199008D5CC76007F5468 /* libwx_mac-2.6.a in Frameworks */,
-				91EC199408D5CC77007F5468 /* libwxjpeg-2.6.a in Frameworks */,
-				91EC199508D5CC77007F5468 /* libwxpng-2.6.a in Frameworks */,
-				91EC199608D5CC77007F5468 /* libwxregexu-2.6.a in Frameworks */,
-				91EC199708D5CC77007F5468 /* libwxtiff-2.6.a in Frameworks */,
-				91EC199908D5CD02007F5468 /* libwxexpat-2.6.a in Frameworks */,
+				911ECB3B08DEF872006A2654 /* libwx_mac-2.6.a in Frameworks */,
+				911ECB3F08DEF8E4006A2654 /* libwxjpeg-2.6.a in Frameworks */,
+				911ECB4008DEF8E4006A2654 /* libwxpng-2.6.a in Frameworks */,
+				911ECB4308DEFB6D006A2654 /* libsqlite3.a in Frameworks */,
+				911ECB4408DF0026006A2654 /* libwxtiff-2.6.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -597,12 +589,11 @@
 		9180A6490866FCF9000C7D5E = {
 			isa = PBXGroup;
 			children = (
-				91EC198808D5CC76007F5468 /* libwx_mac-2.6.a */,
-				91EC198B08D5CC76007F5468 /* libwxexpat-2.6.a */,
-				91EC198C08D5CC76007F5468 /* libwxjpeg-2.6.a */,
-				91EC198D08D5CC76007F5468 /* libwxpng-2.6.a */,
-				91EC198E08D5CC76007F5468 /* libwxregexu-2.6.a */,
-				91EC198F08D5CC76007F5468 /* libwxtiff-2.6.a */,
+				911ECB4208DEFB6D006A2654 /* libsqlite3.a */,
+				911ECB3C08DEF8E4006A2654 /* libwxjpeg-2.6.a */,
+				911ECB3D08DEF8E4006A2654 /* libwxpng-2.6.a */,
+				911ECB3E08DEF8E4006A2654 /* libwxtiff-2.6.a */,
+				911ECB3A08DEF872006A2654 /* libwx_mac-2.6.a */,
 				91410F9408D04FF900776D65 /* help */,
 				9157CB6208A78B690053C2D6 /* TProteolysis.cpp */,
 				91023BCC0893BBA600BD8757 /* libmysqlclient.a */,
@@ -621,9 +612,6 @@
 				9141598108681904001E63F9 /* commonvectors.db */,
 				91B024DA08672754007ABD07 /* ureadseq.c */,
 				91B024D608672723007ABD07 /* libsqlite.a */,
-				91B024D708672723007ABD07 /* libsqlite3.a */,
-				91B024CB0867231A007ABD07 /* libsqlite3.la */,
-				91B024C908672308007ABD07 /* libsqlite.la */,
 				9180A65E0866FD45000C7D5E /* ABItype.cpp */,
 				9180A65F0866FD45000C7D5E /* ABIviewer.cpp */,
 				9180A6600866FD45000C7D5E /* Alignment.cpp */,
@@ -1212,6 +1200,7 @@
 					../wx/wxWidgets/lib,
 					/usr/local/lib/mysql,
 					"$(SRCROOT)/../wx/wxWidgets/lib",
+					"$(SRCROOT)/../wx/wxWidgets/build-release/lib",
 				);
 				LIBRARY_STYLE = STATIC;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
@@ -1279,6 +1268,7 @@
 					../wx/wxWidgets/lib,
 					/usr/local/lib/mysql,
 					"$(SRCROOT)/../wx/wxWidgets/lib",
+					"$(SRCROOT)/../wx/wxWidgets/build-release/lib",
 				);
 				LIBRARY_STYLE = STATIC;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
