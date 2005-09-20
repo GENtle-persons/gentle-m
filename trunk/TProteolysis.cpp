@@ -60,7 +60,7 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 								txt("t_proteolysis_auto_num_prot") ,
 								wxDefaultPosition , wxDefaultSize ,
 								4 , rb_np , wxRA_SPECIFY_COLS ) ;
-	sep_num_prot->SetSelection ( 0 ) ;
+	sep_num_prot->SetSelection ( 1 ) ;
 	
 	sep_desc = new wxTextCtrl ( this , -1 , _T("") , wxDefaultPosition , 
 							wxDefaultSize , wxTE_MULTILINE|wxTE_READONLY ) ;
@@ -173,6 +173,7 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 	show_uncut->SetValue ( true ) ;
 	
 	recalc () ;
+	Centre () ;
 	}
 
 TProteolysis::~TProteolysis ()
@@ -227,7 +228,6 @@ void TProteolysis::calc_spearation ()
 	
 	pc.clear () ;
 	wxBeginBusyCursor () ;
-//	wxStartTimer() ;
 	TProteaseArray prop ;
 	for ( max_dep = 0 ; max_dep < sep_num_prot->GetSelection() + 1 ; max_dep++ )
 		calc_spearation_sub ( max_dep + 1 , prop , tobe ) ;
@@ -237,7 +237,6 @@ void TProteolysis::calc_spearation ()
 		sep_results->Append ( suggestions[a].name ) ;
 		}
 	wxEndBusyCursor () ;
-//	wxMessageBox ( wxString::Format ( "%d ms" , wxGetElapsedTime() ) ) ;
 	}
 
 void TProteolysis::calc_spearation_sub ( int depth , TProteaseArray &prop , vector <TFragment> &tobe , int start )
@@ -259,10 +258,6 @@ void TProteolysis::calc_spearation_sub ( int depth , TProteaseArray &prop , vect
 		TProteaseCutArray apc ;
 		determine_cuts ( prop , apc ) ;
 		remove_ignored_cuts ( apc ) ;
-//		sort_cuts ( apc ) ;
-//		add_final_piece ( apc ) ; // Unnecessary for this
-
-//		if ( apc.size() > 200 ) continue ; // HARD LIMIT for number of cuts
 
 		// Start description
 		desc += _T("* ") + wxString::Format ( txt("t_proteolysis_auto_fragments") , apc.size() ) + _T("\r\n") ;
@@ -304,8 +299,6 @@ void TProteolysis::calc_spearation_sub ( int depth , TProteaseArray &prop , vect
 		
 		grade *= 100 ; // Number of not separated parts is really bad!
 		grade += apc.size() ; // Many created fragments are bad too
-
-//		desc = wxString::Format ( "%d" , grade ) + _T("\r\n") + desc ;
 		
 		// Add this setup to the suggestion list
 		TProteolysisSuggestion s ;
@@ -375,10 +368,8 @@ void TProteolysis::remove_ignored_cuts ( TProteaseCutArray &apc )
 			{
 			if ( apc[q]->cut < v->items[a].from ) continue ; // Cuts before item
 			if ( apc[q]->cut >= v->items[a].to ) continue ; // Cuts after item
-//			delete apc[q] ;
 			apc[q] = apc[apc.size()-1] ;
 			apc.pop_back () ;
-//			apc.RemoveAt ( q ) ;
 			q-- ;
 			}
 		}
@@ -396,7 +387,6 @@ void TProteolysis::sort_cuts ( TProteaseCutArray &apc )
 			pc[a+1] = temp ;
 			a -= 2 ;
 			if ( a < -1 ) a = -1 ;
-//			a = -1 ;
 			}
 		}
 	}
@@ -430,12 +420,6 @@ void TProteolysis::calc_cut_list ()
 
 	// Clear old list
 	pc.clear () ;
-/*	while ( pc.GetCount() )
-		{
-		delete pc[0] ;
-		pc.RemoveAt ( 0 ) ;
-		}
-	*/
 	determine_cuts ( prop , pc ) ;
 	remove_ignored_cuts ( pc ) ;
 	sort_cuts ( pc ) ;
