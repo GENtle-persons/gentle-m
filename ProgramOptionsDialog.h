@@ -56,14 +56,16 @@ class ProgramOptionsDialog : public wxDialog
     virtual void OnAACol ( wxCommandEvent &ev ) ; ///< Amino acid color event handler
     virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
 
+	 vector <int> translation_tables ;
     wxNotebook *nb ; ///< Pointer to the wxNotebook structure containing the tabs
     TEnzymeSettingsTab *globalEnzymesPanel ;
     wxPanel *globalSettingsPanel ;
     wxChoice *language ; ///< Pointer to the dropdown language list
+    wxChoice *nonstandard_translation_table ;
     wxCheckBox *enhancedDisplay , *vectorTitle , *vectorLength ,
                 *loadLastProject , *useMetafile , *showSplashScreen ,
                 *checkUpdate , *useInternalHelp , *doRegisterStuff ,
-					 *showEnzymePos ;
+					 *showEnzymePos , *use_nonstandard_translation_table ;
                 
     wxRadioBox *editFeatureMode ; ///< Pointer to the list of choices of how to treat edited items
     wxRadioBox *showStopCodon ; ///< Pointer to the list of choices of how to display stop codons

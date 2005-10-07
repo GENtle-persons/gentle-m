@@ -218,6 +218,7 @@ void MyFrame::initme ()
     useCoolCanvas = LS->getOption ( _T("USECOOLCANVAS") , false ) ; // Not saved yet
     useInternalHelp = LS->getOption ( _T("USEINTERNALHELP") , false ) ; // Not saved yet
     showEnzymePos = LS->getOption ( _T("SHOWENZYMEPOS") , true ) ;
+    nonstandard_translation_table = LS->getOption ( _T("nonstandard_translation_table") , -1 ) ;
     
     int aa_red = LS->getOption ( _T("AA_RED") , wxLIGHT_GREY->Red() ) ;
     int aa_green = LS->getOption ( _T("AA_GREEN") , wxLIGHT_GREY->Green() ) ;
@@ -1082,6 +1083,9 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     editFeatureMode = pod.editFeatureMode->GetSelection() ;
     showStopCodon = pod.showStopCodon->GetSelection() ;    
     showEnzymePos = pod.showEnzymePos->GetValue() ;
+    if ( pod.use_nonstandard_translation_table->GetValue() )
+    	nonstandard_translation_table = pod.translation_tables[pod.nonstandard_translation_table->GetSelection()] ;
+    else nonstandard_translation_table = -1 ;
     aa_color = pod.aacol ;
     stopcodon = showStopCodon == 0 ? '|' : '*' ;
     wxString lang = pod.language->GetStringSelection() ;
@@ -1109,6 +1113,7 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     LS->setOption ( _T("AA_RED") , aa_color.Red() ) ;
     LS->setOption ( _T("AA_GREEN") , aa_color.Green() ) ;
     LS->setOption ( _T("AA_BLUE") , aa_color.Blue() ) ;
+    LS->setOption ( _T("nonstandard_translation_table") , nonstandard_translation_table ) ;
     global_enzyme_rules->save_global_settings() ; //!!!!!!! fix this!
     LS->endRecord() ;
     for ( int a = 0 ; a < children.GetCount() ; a++ )

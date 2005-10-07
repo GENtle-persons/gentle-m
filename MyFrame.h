@@ -171,6 +171,7 @@ public:
     vector <wxBitmap> bitmaps ; ///< \brief The bitmaps in the user interface
     wxToolBar *tb_mychild ; ///< \brief The shared toolbar (?)
     char stopcodon ;
+    int nonstandard_translation_table ;
 
     private :
     wxSashLayoutWindow* m_topWindow; ///< \brief Frame layout, top window (unused)

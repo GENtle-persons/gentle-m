@@ -12,6 +12,7 @@ char TVector::SIUPAC[256] ;
 char TVector::COMPLEMENT[256] ;
 vector <TAAProp> TVector::aaprop ;
 wxArrayString TVector::codon_tables ;
+wxArrayString TVector::codon_table_names ;
 
 void TVector::setWindow ( ChildBase *c ) { window = c ; }
 void TVector::setCircular ( bool c ) { circular = c ; }
@@ -36,6 +37,8 @@ int TVector::getMethylationSite ( int index ) { return methyl[index] ; }
 int TVector::countMethylationSites () { return methyl.GetCount() ; }
 TEnzymeRules *TVector::getEnzymeRules () { return enzyme_rules ; }
 void TVector::setEnzymeRules ( TEnzymeRules *er ) { enzyme_rules = er ; }
+int TVector::countCodonTables () { return codon_table_names.size() ; }
+wxString TVector::getCodonTableName ( int x ) { return codon_table_names[x] ; }
 
 
 void TVector::prepareFeatureEdit ( int pos , bool overwrite )
@@ -329,10 +332,12 @@ TVector::~TVector ()
     undo.clear () ;
     }
     
-void TVector::setCodonTable ( int table , wxString sequence )
+void TVector::setCodonTable ( int table , wxString sequence , wxString name )
     {
     while ( codon_tables.GetCount() <= table ) codon_tables.Add ( _T("") ) ;
+    while ( codon_table_names.GetCount() <= table ) codon_table_names.Add ( _T("") ) ;
     codon_tables[table] = sequence ;
+    codon_table_names[table] = name ;
     }    
         
 void TVector::init ()
@@ -351,26 +356,31 @@ void TVector::init ()
     
     int a ;
     
-    setCodonTable (  1 , _T("FFLLSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
-    setCodonTable (  2 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSS||VVVVAAAADDEEGGGG") ) ;
-    setCodonTable (  3 , _T("FFLLSSSSYY||CCWWTTTTPPPPHHQQRRRRIIMMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
-    setCodonTable (  4 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
-    setCodonTable (  5 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSSSVVVVAAAADDEEGGGG") ) ;
-    setCodonTable (  6 , _T("FFLLSSSSYYQQCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
-    setCodonTable (  9 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG") ) ;
-    setCodonTable ( 10 , _T("FFLLSSSSYY||CCCWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
-    setCodonTable ( 11 , _T("FFLLSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
-    setCodonTable ( 12 , _T("FFLLSSSSYY||CC|WLLLSPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
-    setCodonTable ( 13 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSGGVVVVAAAADDEEGGGG") ) ;
-    setCodonTable ( 14 , _T("FFLLSSSSYYY|CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG") ) ;
-    setCodonTable ( 15 , _T("FFLLSSSSYY|QCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
-    setCodonTable ( 16 , _T("FFLLSSSSYY|LCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
-    setCodonTable ( 21 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNNKSSSSVVVVAAAADDEEGGGG") ) ;
-    setCodonTable ( 22 , _T("FFLLSS|SYY|LCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
-    setCodonTable ( 23 , _T("FF|LSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") ) ;
+    // See http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=c
+    setCodonTable (  1 , _T("FFLLSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Standard" ) ;
+    setCodonTable (  2 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSS||VVVVAAAADDEEGGGG") , "Vertebrate mitochondrial" ) ;
+    setCodonTable (  3 , _T("FFLLSSSSYY||CCWWTTTTPPPPHHQQRRRRIIMMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Yeast mitochondrial" ) ;
+    setCodonTable (  4 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Mold, Protozoan, and Coelenterate mitochondrial, Mycoplasma/Spiroplasma" ) ;
+    setCodonTable (  5 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSSSVVVVAAAADDEEGGGG") , "Invertebrate mitochondrial" ) ;
+    setCodonTable (  6 , _T("FFLLSSSSYYQQCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Ciliate, Dasycladacean and Hexamita nuclear" ) ;
+    setCodonTable (  9 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG") , "Echinoderm mitochondrial" ) ;
+    setCodonTable ( 10 , _T("FFLLSSSSYY||CCCWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Euplotid nuclear" ) ;
+    setCodonTable ( 11 , _T("FFLLSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Bacterial" ) ;
+    setCodonTable ( 12 , _T("FFLLSSSSYY||CC|WLLLSPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Alternative Yeast nuclear" ) ;
+    setCodonTable ( 13 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSGGVVVVAAAADDEEGGGG") , "Ascidian mitochondrial" ) ;
+    setCodonTable ( 14 , _T("FFLLSSSSYYY|CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG") , "Flatworm mitochondrial" ) ;
+    setCodonTable ( 15 , _T("FFLLSSSSYY|QCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Blepharisma nuclear" ) ;
+    setCodonTable ( 16 , _T("FFLLSSSSYY|LCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Chlorophycean mitochondrial" ) ;
+    setCodonTable ( 21 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNNKSSSSVVVVAAAADDEEGGGG") , "Trematode mitochondrial" ) ;
+    setCodonTable ( 22 , _T("FFLLSS|SYY|LCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Scenedesmus obliquus mitochondrial" ) ;
+    setCodonTable ( 23 , _T("FF|LSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Thraustochytrium mitochondrial" ) ;
     for ( a = 0 ; a < codon_tables.GetCount() ; a++ ) // Setting all empty tables to standard one
         {
-        if ( codon_tables[a] == _T("") ) codon_tables[a] = codon_tables[1] ;
+        if ( codon_tables[a] == _T("") )
+		  	{
+			codon_tables[a] = codon_tables[1] ;
+			codon_table_names[a] = codon_table_names[1] ;
+			}
         }    
     aa = codon_tables[1] ;
 
@@ -1172,16 +1182,23 @@ void TVector::doRemove ( int from , int to , bool update , bool enableUndo )
         }
     else if ( enableUndo ) undo.abort () ;
     }
+
+wxString TVector::get_translation_table ( int translation_table )
+	{
+	wxString ret ;
+	if ( myapp()->frame->nonstandard_translation_table != -1 ) // Forced translation table
+		ret = codon_tables[myapp()->frame->nonstandard_translation_table] ;
+	else if ( translation_table == -1 ) ret = aa ;
+	else ret = codon_tables[translation_table] ;
+	return ret ;
+	}
     
 // Currently returns only the direct encoding (a single char) or 'X'
 // Could return all possible AAs (see IUPAC) in the future
 wxString TVector::dna2aa ( wxString codon , int translation_table )
     {
     if ( codon.length() != 3 ) return _T("?") ;
-    wxString aa ; // Replacing object variable
-    if ( translation_table == -1 ) aa = this->aa ;
-    else aa = codon_tables[translation_table] ;
-    wxString r ;
+    wxString r , aa = get_translation_table ( translation_table ) ;
     char c0 = codon.GetChar(0) ;
     char c1 = codon.GetChar(1) ;
     char c2 = codon.GetChar(2) ;
@@ -1189,9 +1206,6 @@ wxString TVector::dna2aa ( wxString codon , int translation_table )
     if ( c1 == ' ' ) return _T("?") ;
     if ( c2 == ' ' ) return _T("?") ;
     if ( ACGT[c0] != ' ' && ACGT[c1] != ' ' && ACGT[c2] != ' ' )
-/*    if ( (c0=='A'||c0=='C'||c0=='G'||c0=='T') &&
-         (c1=='A'||c1=='C'||c1=='G'||c1=='T') &&
-         (c2=='A'||c2=='C'||c2=='G'||c2=='T') )*/
        {
        int i = ACGT[c0]*16 +
                ACGT[c1]*4 +

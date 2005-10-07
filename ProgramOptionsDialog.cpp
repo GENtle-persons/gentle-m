@@ -236,7 +236,7 @@ void ProgramOptionsDialog::initGlobalSettings ()
     globalSettingsPanel = new wxPanel ( nb , -1 ) ;
     nb->AddPage ( globalSettingsPanel , txt("t_global_settings") ) ;    
 
-    language = new wxChoice ( globalSettingsPanel , -1 ) ; //, wxPoint ( mw , lh - bo ) ) ;
+    language = new wxChoice ( globalSettingsPanel , -1 ) ;
     enhancedDisplay = new wxCheckBox ( globalSettingsPanel , -1 , 
                         txt("t_enhanced_display") ) ; 
     vectorTitle = new wxCheckBox ( globalSettingsPanel , -1 , 
@@ -257,6 +257,9 @@ void ProgramOptionsDialog::initGlobalSettings ()
                         txt("t_doregisterstuff") ) ; 
     showEnzymePos = new wxCheckBox ( globalSettingsPanel , -1 , 
                         txt("t_showenzymepos") ) ; 
+    use_nonstandard_translation_table = new wxCheckBox ( globalSettingsPanel , -1 , 
+                        txt("t_use_nonstandard_translation_table") ) ;
+    nonstandard_translation_table = new wxChoice ( globalSettingsPanel , -1 ) ;
                         
                         
     wxString efm[3] ;
@@ -291,20 +294,39 @@ void ProgramOptionsDialog::initGlobalSettings ()
     useInternalHelp->SetValue ( myapp()->frame->useInternalHelp ) ;
     doRegisterStuff->SetValue ( myapp()->frame->doRegisterStuff ) ;
     showEnzymePos->SetValue ( myapp()->frame->showEnzymePos ) ;
+    use_nonstandard_translation_table->SetValue ( myapp()->frame->nonstandard_translation_table != -1 ) ;
     language->Append ( _T("en") ) ;
     language->Append ( _T("de") ) ;
     language->SetStringSelection ( myapp()->frame->lang_string ) ;
     aacol = myapp()->frame->aa_color ;
+    
+    TVector dummy ;
+    int tt_mark = 0 ;
+    for ( int a = 0 ; a < dummy.countCodonTables() ; a++ )
+    	{
+		if ( a != 1 && dummy.getCodonTableName(a) == dummy.getCodonTableName(1) ) continue ;
+		translation_tables.push_back ( a ) ;
+    	nonstandard_translation_table->Append ( dummy.getCodonTableName(a) ) ;
+    	if ( myapp()->frame->nonstandard_translation_table == a )
+    		tt_mark = translation_tables.size()-1 ;
+		}
+    if ( myapp()->frame->nonstandard_translation_table != -1 )
+    	nonstandard_translation_table->SetSelection ( tt_mark ) ;
+    else nonstandard_translation_table->SetSelection ( 0 ) ;
 
     wxBoxSizer *v = new wxBoxSizer ( wxVERTICAL ) ;
     wxBoxSizer *h = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
     h->Add ( new wxStaticText ( globalSettingsPanel , -1 , txt("t_language") ) , 0 , wxEXPAND|wxALL , 5 ) ;
     h->Add ( language , 0 , wxEXPAND|wxALL , 5 ) ;
-    
+
     h1->Add ( showStopCodon , 1 , wxEXPAND|wxALL , 5 ) ;
     h1->Add ( b_aacol, 0 , wxEXPAND|wxALL , 5 ) ;
-    
+
+	 h2->Add ( use_nonstandard_translation_table , 0 , wxEXPAND|wxALL , 5 ) ; 
+	 h2->Add ( nonstandard_translation_table , 0 , wxEXPAND|wxALL , 5 ) ; 
+	 
     v->Add ( h , 0 , wxEXPAND|wxALL , 5 ) ;
     v->Add ( enhancedDisplay , 0 , wxEXPAND|wxALL , 5 ) ;
     v->Add ( vectorTitle , 0 , wxEXPAND|wxALL , 5 ) ;
@@ -318,6 +340,7 @@ void ProgramOptionsDialog::initGlobalSettings ()
     v->Add ( showEnzymePos , 0 , wxEXPAND|wxALL , 5 ) ;
     v->Add ( editFeatureMode , 0 , wxEXPAND|wxALL , 5 ) ;
     v->Add ( h1 , 0 , wxEXPAND|wxALL , 5 ) ;
+    v->Add ( h2 , 0 , wxEXPAND|wxALL , 5 ) ;
 
 	 globalSettingsPanel->SetSizer ( v ) ;
 	 v->Fit ( globalSettingsPanel ) ;
