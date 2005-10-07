@@ -275,6 +275,8 @@ class TVector
     virtual void setEnzymeRules ( TEnzymeRules *er ) ; ///< Sets the restriction enzyme display rules for this vector
     virtual void getItemsAtPosition ( int pos , wxArrayInt &vi , bool limit = false ) ; ///< Retrieves a list of items at that position (pos is 0-based)
     virtual bool hasItemsAtPosition ( int pos ) ; /// Returns wether there are items at that position (pos is 0-based)
+    virtual int countCodonTables () ;
+    virtual wxString getCodonTableName ( int x ) ;
     
     // Variables
     vector <TVectorItem> items ; ///< Items/features/annotations
@@ -288,12 +290,13 @@ class TVector
     TUndo undo ; ///< Undo information
     
     private :
-    virtual wxString invert ( wxString s ) ; ///< Inverts a string
-    virtual wxString vary_base ( char b ) ; ///< Turns a SIUPAC into a string of A, C, G, T
-    virtual void makeAA2DNA ( wxString mode = _T("") ) ; ///< "Translate" amino acid sequence into DNA; can sp specified fo an organism
-    virtual wxString mergeCodons ( wxString c1 , wxString c2 ) ; ///< Used by makeAA2DNA for generating "abstract" (SIUPAC) DNA
-    virtual void setCodonTable ( int table , wxString sequence ) ; ///< Sets up the codon_tables variable
-    virtual void evaluate_key_value ( wxString key , wxString value ) ; ///< Used in setParam() and setParams()
+    wxString invert ( wxString s ) ; ///< Inverts a string
+    wxString vary_base ( char b ) ; ///< Turns a SIUPAC into a string of A, C, G, T
+    void makeAA2DNA ( wxString mode = _T("") ) ; ///< "Translate" amino acid sequence into DNA; can sp specified fo an organism
+    wxString mergeCodons ( wxString c1 , wxString c2 ) ; ///< Used by makeAA2DNA for generating "abstract" (SIUPAC) DNA
+    void setCodonTable ( int table , wxString sequence , wxString name ) ; ///< Sets up the codon_tables variable
+    void evaluate_key_value ( wxString key , wxString value ) ; ///< Used in setParam() and setParams()
+    wxString get_translation_table ( int translation_table ) ;
 
     int type ; ///< The sequence type
     TEnzymeRules *enzyme_rules ; ///< Pointer to the restriction enzyme display rules
@@ -327,6 +330,7 @@ class TVector
     static char ACGT[256] ; ///< Different values for A, C, G, T; used in dna2aa()
     static vector <TAAProp> aaprop ; ///< The 20 amino acids and their properties
     static wxArrayString codon_tables ; ///< The codon tables for different organisms
+    static wxArrayString codon_table_names ; ///< The names of these codon tables
     } ;
     
 #endif
