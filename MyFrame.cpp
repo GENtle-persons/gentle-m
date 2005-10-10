@@ -1120,10 +1120,10 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     	{
 	    if ( !children[a]->vec ) continue ;
 	    children[a]->vec->recalculateCuts() ;
-	    children[a]->vec->updateDisplay() ;
+//	    children[a]->vec->updateDisplay() ;
+		 children[a]->EnforceRefesh () ;
     	}    
-   	if ( GetActiveChild() ) GetActiveChild()->EnforceRefesh () ;
-//   	if ( GetActiveChild() ) GetActiveChild()->Refresh () ;
+//   	if ( GetActiveChild() ) GetActiveChild()->EnforceRefesh () ;
    	wxEndBusyCursor() ;
     }
 

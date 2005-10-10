@@ -563,10 +563,13 @@ void MyChild::OnCut(wxCommandEvent& event)
     
 void MyChild::EnforceRefesh ()
 	{
+    vec->updateDisplay() ;
     treeBox->initme() ;
     treeBox->Refresh() ;
     cPlasmid->Refresh() ;
-    cSequence->Refresh() ;
+//    cSequence->Refresh() ;
+//    Refresh () ;
+    updateSequenceCanvas ( true ) ;
 	}    
     
 void MyChild::OnCopy(wxCommandEvent& event)
