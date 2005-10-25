@@ -249,7 +249,7 @@ bool MyApp::OnInit()
 	wxUnsetEnv ( _T("COILSDIR") ) ;
 	wxSetEnv ( _T("COILSDIR") , homedir ) ;
 #else
-	putenv ( ncoilsdir.mb_str() ) ;
+	putenv ( (char*) ncoilsdir.c_str() ) ;
 #endif
 
     // Is an instance already running?
