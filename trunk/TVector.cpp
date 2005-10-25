@@ -357,23 +357,23 @@ void TVector::init ()
     int a ;
     
     // See http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=c
-    setCodonTable (  1 , _T("FFLLSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Standard" ) ;
-    setCodonTable (  2 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSS||VVVVAAAADDEEGGGG") , "Vertebrate mitochondrial" ) ;
-    setCodonTable (  3 , _T("FFLLSSSSYY||CCWWTTTTPPPPHHQQRRRRIIMMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Yeast mitochondrial" ) ;
-    setCodonTable (  4 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Mold, Protozoan, and Coelenterate mitochondrial, Mycoplasma/Spiroplasma" ) ;
-    setCodonTable (  5 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSSSVVVVAAAADDEEGGGG") , "Invertebrate mitochondrial" ) ;
-    setCodonTable (  6 , _T("FFLLSSSSYYQQCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Ciliate, Dasycladacean and Hexamita nuclear" ) ;
-    setCodonTable (  9 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG") , "Echinoderm mitochondrial" ) ;
-    setCodonTable ( 10 , _T("FFLLSSSSYY||CCCWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Euplotid nuclear" ) ;
-    setCodonTable ( 11 , _T("FFLLSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Bacterial" ) ;
-    setCodonTable ( 12 , _T("FFLLSSSSYY||CC|WLLLSPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Alternative Yeast nuclear" ) ;
-    setCodonTable ( 13 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSGGVVVVAAAADDEEGGGG") , "Ascidian mitochondrial" ) ;
-    setCodonTable ( 14 , _T("FFLLSSSSYYY|CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG") , "Flatworm mitochondrial" ) ;
-    setCodonTable ( 15 , _T("FFLLSSSSYY|QCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Blepharisma nuclear" ) ;
-    setCodonTable ( 16 , _T("FFLLSSSSYY|LCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Chlorophycean mitochondrial" ) ;
-    setCodonTable ( 21 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNNKSSSSVVVVAAAADDEEGGGG") , "Trematode mitochondrial" ) ;
-    setCodonTable ( 22 , _T("FFLLSS|SYY|LCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Scenedesmus obliquus mitochondrial" ) ;
-    setCodonTable ( 23 , _T("FF|LSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , "Thraustochytrium mitochondrial" ) ;
+    setCodonTable (  1 , _T("FFLLSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , _T("Standard") ) ;
+    setCodonTable (  2 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSS||VVVVAAAADDEEGGGG") , _T("Vertebrate mitochondrial") ) ;
+    setCodonTable (  3 , _T("FFLLSSSSYY||CCWWTTTTPPPPHHQQRRRRIIMMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , _T("Yeast mitochondrial") ) ;
+    setCodonTable (  4 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , _T("Mold, Protozoan, and Coelenterate mitochondrial, Mycoplasma/Spiroplasma") ) ;
+    setCodonTable (  5 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSSSVVVVAAAADDEEGGGG") , _T("Invertebrate mitochondrial") ) ;
+    setCodonTable (  6 , _T("FFLLSSSSYYQQCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , _T("Ciliate, Dasycladacean and Hexamita nuclear") ) ;
+    setCodonTable (  9 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG") , _T("Echinoderm mitochondrial") ) ;
+    setCodonTable ( 10 , _T("FFLLSSSSYY||CCCWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , _T("Euplotid nuclear") ) ;
+    setCodonTable ( 11 , _T("FFLLSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , _T("Bacterial") ) ;
+    setCodonTable ( 12 , _T("FFLLSSSSYY||CC|WLLLSPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , _T("Alternative Yeast nuclear") ) ;
+    setCodonTable ( 13 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSGGVVVVAAAADDEEGGGG") , _T("Ascidian mitochondrial") ) ;
+    setCodonTable ( 14 , _T("FFLLSSSSYYY|CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG") , _T("Flatworm mitochondrial") ) ;
+    setCodonTable ( 15 , _T("FFLLSSSSYY|QCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , _T("Blepharisma nuclear") ) ;
+    setCodonTable ( 16 , _T("FFLLSSSSYY|LCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , _T("Chlorophycean mitochondrial") ) ;
+    setCodonTable ( 21 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNNKSSSSVVVVAAAADDEEGGGG") , _T("Trematode mitochondrial") ) ;
+    setCodonTable ( 22 , _T("FFLLSS|SYY|LCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , _T("Scenedesmus obliquus mitochondrial") ) ;
+    setCodonTable ( 23 , _T("FF|LSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , _T("Thraustochytrium mitochondrial") ) ;
     for ( a = 0 ; a < codon_tables.GetCount() ; a++ ) // Setting all empty tables to standard one
         {
         if ( codon_tables[a] == _T("") )
