@@ -172,6 +172,7 @@ public:
     wxToolBar *tb_mychild ; ///< \brief The shared toolbar (?)
     char stopcodon ;
     int nonstandard_translation_table ;
+    wxArrayString dna_marker ;
 
     private :
     wxSashLayoutWindow* m_topWindow; ///< \brief Frame layout, top window (unused)

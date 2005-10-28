@@ -39,6 +39,7 @@ TEnzymeRules *TVector::getEnzymeRules () { return enzyme_rules ; }
 void TVector::setEnzymeRules ( TEnzymeRules *er ) { enzyme_rules = er ; }
 int TVector::countCodonTables () { return codon_table_names.size() ; }
 wxString TVector::getCodonTableName ( int x ) { return codon_table_names[x] ; }
+void TVector::resetTurn () { turned = 0 ; }
 
 
 void TVector::prepareFeatureEdit ( int pos , bool overwrite )
@@ -1240,35 +1241,41 @@ wxString TVector::dna2aa ( wxString codon , int translation_table )
     }
     
 void TVector::turn ( int off )
-    {
-    // Allowing turn of linear fragments as a temporary measure due to a problem in getAAvector
-    //if ( !circular ) return ;
-    if ( off == 0 ) return ;
-    int a ;
-    for ( a = 0 ; a < items.size() ; a++ )
-        {
-        items[a].from += off ;
-        items[a].to += off ;
-
-        while ( items[a].from < 1 ) items[a].from += sequence.length() ;
-        while ( items[a].from > sequence.length() ) items[a].from -= sequence.length() ;
-
-        while ( items[a].to < 1 ) items[a].to += sequence.length() ;
-        while ( items[a].to > sequence.length() ) items[a].to -= sequence.length() ;
-        }
-    if ( off > 0 )
-        {
-        off = sequence.length() - off ;
-        sequence = sequence.substr ( off ) + sequence.substr ( 0 , off ) ;
-        }
-    else
-        {
-        sequence = sequence.substr ( -off ) + sequence.substr ( 0 , -off ) ;
-        }
-    recalculateCuts () ;
-    recalcvisual = true ;
-    turned += off ;
-    }
+	{
+	// Allowing turn of linear fragments as a temporary measure due to a problem in getAAvector
+	//if ( !circular ) return ;
+	if ( off == 0 ) return ;
+	int a ;
+	
+	// Items
+	for ( a = 0 ; a < items.size() ; a++ )
+		{
+		items[a].from += off ;
+		items[a].to += off ;
+		
+		while ( items[a].from < 1 ) items[a].from += sequence.length() ;
+		while ( items[a].from > sequence.length() ) items[a].from -= sequence.length() ;
+		
+		while ( items[a].to < 1 ) items[a].to += sequence.length() ;
+		while ( items[a].to > sequence.length() ) items[a].to -= sequence.length() ;
+		}
+	
+	// Sequence
+	if ( off > 0 )
+		{
+		off = sequence.length() - off ;
+		sequence = sequence.substr ( off ) + sequence.substr ( 0 , off ) ;
+		}
+	else
+		{
+		sequence = sequence.substr ( -off ) + sequence.substr ( 0 , -off ) ;
+		}
+	
+	// Cleanup
+	recalculateCuts () ;
+	recalcvisual = true ;
+	turned += off ;
+	}
     
 int TVector::countCuts ( wxString enzyme )
     {

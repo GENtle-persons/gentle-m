@@ -11,6 +11,7 @@ BEGIN_EVENT_TABLE(TVirtualGel, MyChildBase)
     EVT_SIZE(TVirtualGel::OnSize)
     
     EVT_CHOICE(VG_PERCENT,TVirtualGel::OnPercent)
+    EVT_CHOICE(VG_MARKER,TVirtualGel::OnMarker)
     EVT_CHECKBOX(VG_LABEL,TVirtualGel::OnLabel)
 
     // Dummies
@@ -84,12 +85,16 @@ void TVirtualGel::initme ()
 	int a ;
 	wxBoxSizer *hs = new wxBoxSizer ( wxHORIZONTAL ) ;
 	ch_percent = new wxChoice ( this , VG_PERCENT , wxDefaultPosition , wxSize ( 50 , -1 ) ) ;
-	cb_label = new wxCheckBox ( this , VG_LABEL , _T("Show label") ) ;
+	ch_marker = new wxChoice ( this , VG_MARKER , wxDefaultPosition , wxSize ( 250 , -1 ) ) ;
+	cb_label = new wxCheckBox ( this , VG_LABEL , txt("t_vg_show_label") ) ;
 	cb_label->SetValue ( true ) ;
 	
 	hs->Add ( cb_label , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
-	hs->Add ( new wxStaticText ( this , -1 , _T("   Gel concentration") ) , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
+	hs->Add ( new wxStaticText ( this , -1 , txt("t_vg_concentration") ) , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
 	hs->Add ( ch_percent , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
+	hs->Add ( new wxStaticText ( this , -1 , txt("t_vg_marker") ) , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
+	hs->Add ( ch_marker , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
+	
 	
 	wxBoxSizer *vs = new wxBoxSizer ( wxVERTICAL ) ;
 	vs->Add ( hs , 0 , wxEXPAND , 5 ) ;
@@ -103,8 +108,13 @@ void TVirtualGel::initme ()
 		ch_percent->Append ( wxString::Format ( _T("%1.1f %%") , ((float)a)/10.0 ) ) ;
 		ch_percent->SetStringSelection ( _T("1.0 %") ) ;
 		
+		for ( a = 0 ; a < myapp()->frame->dna_marker.GetCount() ; a++ )
+			ch_marker->Append ( myapp()->frame->dna_marker[a].BeforeFirst(':') ) ;
+		ch_marker->SetStringSelection ( myapp()->frame->LS->getOption ( _T("LASTDNAMARKER") , 
+				myapp()->frame->dna_marker[0].BeforeFirst(':') ) ) ;
+
 		lanes.push_back ( TGelLane() ) ;
-		lanes[0].setMarker ( _T("Mass Ruler") ) ;
+		lanes[0].setMarker ( ch_marker->GetStringSelection() ) ;
 		}    
 	
 	this->SetSizer ( vs ) ;
@@ -119,6 +129,13 @@ wxString TVirtualGel::getName ()
     
 void TVirtualGel::OnPercent ( wxCommandEvent &ev )
 	{
+	Refresh () ;
+	}    
+
+void TVirtualGel::OnMarker ( wxCommandEvent &ev )
+	{
+	lanes[0].setMarker ( ch_marker->GetStringSelection() ) ;
+	myapp()->frame->LS->setOption ( _T("LASTDNAMARKER") , ch_marker->GetStringSelection() ) ;
 	Refresh () ;
 	}    
 
@@ -217,10 +234,28 @@ void TMyGelControl::OnDraw(wxDC& dc)
 	    title = vg->lanes[a].name ;
 	    dc.SetTextForeground ( *wxBLACK ) ;
 	    dc.SetFont ( *normalFont ) ;
-	    dc.GetTextExtent ( title , &tw , &th ) ;
-	    dc.DrawText ( title ,
-	    				( vg->lanes[a].pos.GetLeft() + vg->lanes[a].pos.GetRight() - tw ) / 2 ,
-	    				vg->lanes[a].pos.GetTop() - th * 3 / 2 ) ;
+
+		 int n = title.Freq ( ' ' ) + 1 ;
+		 if ( n > 3 ) n = 3 ; // Three lines max
+	    if ( n > 2 )
+	    	{
+			for ( int m = 0 ; m < n ; m++ )
+				{
+				wxString t = title.BeforeFirst ( ' ' ) ;
+				title = title.AfterFirst ( ' ' ) ;
+			   dc.GetTextExtent ( t , &tw , &th ) ;
+			   dc.DrawText ( t ,
+			   				( vg->lanes[a].pos.GetLeft() + vg->lanes[a].pos.GetRight() - tw ) / 2 ,
+			   				vg->lanes[a].pos.GetTop() - ( n - m ) * th ) ;
+				}
+			}
+	    else
+	    	{
+		   dc.GetTextExtent ( title , &tw , &th ) ;
+		   dc.DrawText ( title ,
+		   				( vg->lanes[a].pos.GetLeft() + vg->lanes[a].pos.GetRight() - tw ) / 2 ,
+		   				vg->lanes[a].pos.GetTop() - th * 3 / 2 ) ;
+			}
 
 //	    dc.SetFont ( *smallFont ) ;
 	    for ( b = 0 ; b < vg->lanes[a].vi.GetCount() ; b++ )
@@ -237,7 +272,7 @@ void TMyGelControl::drawBand ( wxDC &dc , TGelLane &lane , int band )
 	int y = getLanePos ( lane.vi[band] , h ) + lane.pos.GetTop() ;
 	
 	double w = lane.vw[band] ;
-	w /= (double) lane.unit_volume ;
+	w /= lane.unit_volume ;	
 	w /= 2 ;
 	if ( w < 1 ) w = 1 ;
 	
@@ -362,44 +397,50 @@ void TMyGelControl::OnPrint(wxCommandEvent &event)
     
 // *************************************************
 
+TGelLane::TGelLane ()
+	{
+	unit_volume = 20.0 ;
+	}
+
 void TGelLane::clear ()
 	{
 	name = type = _T("") ;
 	vi.Clear () ;
 	vw.Clear () ;
 	vs.Clear () ;
-	unit_volume = 1 ; // l
+	unit_volume = 20.0 ; // l
 	}    
 
 void TGelLane::setMarker ( wxString _name )
 	{
+	int a ;
+	for ( a = 0 ; a < myapp()->frame->dna_marker.GetCount() ; a++ )
+		{
+		if ( myapp()->frame->dna_marker[a].BeforeFirst(':') == _name )
+			break ;
+		}
+	if ( a == myapp()->frame->dna_marker.GetCount() ) return ; // Invalid marker name
+
 	clear () ;
 	name = _name ;
-	if ( name == _T("Mass Ruler") )	
+	wxString s = myapp()->frame->dna_marker[a] ;
+	a = 0 ;
+	while ( !s.IsEmpty() )
 		{
-		type = _T("DNA") ;
-  		unit_volume = 20 ;
-  		add ( 10000 , 200 ) ;
-  		add (  8000 , 160 ) ;
-  		add (  6000 , 120 ) ;
-  		add (  5000 , 100 ) ;
-  		add (  4000 ,  80 ) ;
-  		add (  3000 ,  60 ) ;
-  		add (  2500 ,  50 ) ;
-  		add (  2000 ,  40 ) ;
-  		add (  1500 ,  32 ) ;
-  		add (  1031 , 200 ) ;
-  		add (   900 , 180 ) ;
-  		add (   800 , 160 ) ;
-  		add (   700 , 140 ) ;
-  		add (   600 , 120 ) ;
-  		add (   500 , 200 ) ;
-  		add (   400 ,  80 ) ;
-  		add (   300 ,  60 ) ;
-  		add (   200 ,  40 ) ;
-  		add (   100 ,  20 ) ;
-  		add (    80 ,  16 ) ;
-		}    
+		wxString t = s.BeforeFirst ( ',' ) ;
+		s = s.AfterFirst ( ',' ) ;
+		long l1 , l2 ;
+		double d1 ;
+		t.BeforeFirst(':').ToLong ( &l1 );
+		t.AfterFirst(':').ToLong ( &l2 ) ;
+		if ( a++ == 0 )
+			{
+			t.BeforeFirst(':').ToDouble ( &d1 );
+			unit_volume = 20 ;
+//			unit_volume = d1 ;
+			}
+		else add ( l1 , l2 ) ;
+		}
 	}
      
 void TGelLane::add ( int size , int weight , wxString title )
