@@ -15,7 +15,7 @@ class TMyGelControl ;
 class TGelLane
 	{
 	public :
-	TGelLane () {} ; ///< Empty Constructor
+	TGelLane () ; ///< Constructor
 	virtual ~TGelLane () {} ///< Dummy destructor
 	
 	virtual void clear () ; ///< Clears the lane data
@@ -26,8 +26,8 @@ class TGelLane
 	wxString name , type ;
 	wxArrayInt vi , vw ;
 	wxArrayString vs ;
-	int unit_volume ;
-    wxRect pos ; ///< The outer border of the lane
+	double unit_volume ;
+   wxRect pos ; ///< The outer border of the lane
 	} ;    
 
 /**	\class TVirtualGel
@@ -43,9 +43,10 @@ class TVirtualGel : public ChildBase
 
     virtual void OnPercent ( wxCommandEvent &ev ) ; ///< Gel percent setting change event handler
     virtual void OnLabel ( wxCommandEvent &ev ) ; ///< Show labels event handler
+    virtual void OnMarker ( wxCommandEvent &ev ) ; ///< Show labels event handler
 
     TMyGelControl *right ; ///< Pointer to the actual gel
-    wxChoice *ch_percent ; ///< Gel concentration choice box
+    wxChoice *ch_percent , *ch_marker ; ///< Gel concentration choice box
     wxCheckBox *cb_label ; ///< Show labels check box
     vector <TGelLane> lanes ; ///< The lanes on the gel
     wxString type ; ///< Gel type (unused yet)

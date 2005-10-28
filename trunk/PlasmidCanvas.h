@@ -93,6 +93,7 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void blastDNA ( wxCommandEvent &ev ) ; ///< "BLAST DNA sequence" event handler
     virtual void blastAA ( wxCommandEvent &ev ) ; ///< "BLAST amino acid sequence" event handler
     virtual void itemShowHide ( wxCommandEvent &ev ) ; ///< "Toggle item visibility" event handler
+    virtual void OnTurningPoint ( wxCommandEvent &ev ) ; ///< "Turning point (12 o'clock)" event handler
 
     virtual void setPrinting ( bool _b ) ; ///< Sets the printing mode on/off
     virtual void setLastContextItem ( int _i ) ; ///< Sets the last item the mouse was over
@@ -150,7 +151,7 @@ class PlasmidCanvas : public wxScrolledWindow
     // Variables
     int context_last_rs , lasttooltip , context_last_orf ;
     int lastvectorobject , lastrestrictionsite , lastbp ;
-    int mousediffx , mousediffy , zoom , context_last_item ;
+    int mousediffx , mousediffy , zoom , context_last_item , last_rightclick_base ;
     int r , w , h ;
     bool initialclick , painting , hasBeenPainted , printing ;
     wxToolTip *tt ; ///< The current/last tooptip

@@ -15,12 +15,14 @@ Feature Requests :
 * Homology Plot
 * Export plot data
 * Helical wheel
-* Find proteases that cut n times
 * That ligation thingy 
 
 * Alignment-Farben wie bei ABI
 * Save all
 * Feature names movable / keep position with changes
+
+* Restriktionsliste drucken
+* Agarosegel: Mehrere Marker
 
 SEE: http://eutils.ncbi.nlm.nih.gov/entrez/query/static/eutils_help.html
 

@@ -56,6 +56,7 @@ BEGIN_EVENT_TABLE(PlasmidCanvas, wxScrolledWindow)
     EVT_MENU(STRAND_NEW_53,PlasmidCanvas::OnStrandNew53)
     EVT_MENU(STRAND_NEW_BOTH,PlasmidCanvas::OnStrandNewBoth)
     EVT_MENU(CM_OPEN_FEATURE,PlasmidCanvas::OnOpenFeature)
+    EVT_MENU(PC_TURNING_POINT,PlasmidCanvas::OnTurningPoint)
 //    EVT_PAINT(PlasmidCanvas::OnPaint)
 END_EVENT_TABLE()
 
@@ -301,27 +302,27 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
     if ( p->def == _T("AminoAcids") ) id = _T("AA") ;
     
     // Preparations
-    if ( mode == MODE_CIRCULAR )
-    	{
-    	pt2.x = pt.x-w/2 ;
-    	pt2.y = pt.y-h/2 ;
-    	angle  = xy2deg ( pt2.x , pt2.y ) ;
-    	radius = xy2r ( pt2.x , pt2.y ) ;
-    	pt.x = deg2x ( angle , (int)radius ) + w/2 ;
-    	pt.y = deg2y ( angle , (int)radius ) + h/2 ;
-    	vo = findVectorObjectCircular ( angle , radius ) ;
-    	rs = findRestrictionSite ( pt.x , pt.y ) ;
-    	orf = findORFcircular ( angle , radius ) ;
-     	}   	
-   	else if ( mode == MODE_LINEAR )
-     	{
-     	vo = -1 ;
-     	rs = findRestrictionSite ( pt.x , pt.y ) ;
-     	orf = findORFlinear ( pt.x , pt.y ) ;
-        pt2.x = pt.x * STANDARDRADIUS / w ;
-        pt2.y = pt.y * STANDARDRADIUS / h ;
-        vo = findVectorObjectLinear ( pt2 ) ;
-     	}   	
+	if ( mode == MODE_CIRCULAR )
+		{
+		pt2.x = pt.x-w/2 ;
+		pt2.y = pt.y-h/2 ;
+		angle  = xy2deg ( pt2.x , pt2.y ) ;
+		radius = xy2r ( pt2.x , pt2.y ) ;
+		pt.x = deg2x ( angle , (int)radius ) + w/2 ;
+		pt.y = deg2y ( angle , (int)radius ) + h/2 ;
+		vo = findVectorObjectCircular ( angle , radius ) ;
+		rs = findRestrictionSite ( pt.x , pt.y ) ;
+		orf = findORFcircular ( angle , radius ) ;
+		}   	
+	else if ( mode == MODE_LINEAR )
+		{
+		vo = -1 ;
+		rs = findRestrictionSite ( pt.x , pt.y ) ;
+		orf = findORFlinear ( pt.x , pt.y ) ;
+		pt2.x = pt.x * STANDARDRADIUS / w ;
+		pt2.y = pt.y * STANDARDRADIUS / h ;
+		vo = findVectorObjectLinear ( pt2 ) ;
+		}   	
 
     // Capturing/releasing mouse for left click
     if ( event.LeftDown() )

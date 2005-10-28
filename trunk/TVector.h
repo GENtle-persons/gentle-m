@@ -274,9 +274,10 @@ class TVector
     virtual TEnzymeRules *getEnzymeRules () ; ///< Returns the restriction enzyme display rules for this vector
     virtual void setEnzymeRules ( TEnzymeRules *er ) ; ///< Sets the restriction enzyme display rules for this vector
     virtual void getItemsAtPosition ( int pos , wxArrayInt &vi , bool limit = false ) ; ///< Retrieves a list of items at that position (pos is 0-based)
-    virtual bool hasItemsAtPosition ( int pos ) ; /// Returns wether there are items at that position (pos is 0-based)
+    virtual bool hasItemsAtPosition ( int pos ) ; ///< Returns wether there are items at that position (pos is 0-based)
     virtual int countCodonTables () ;
     virtual wxString getCodonTableName ( int x ) ;
+    virtual void resetTurn () ; ///< Sets the turned variable to zero
     
     // Variables
     vector <TVectorItem> items ; ///< Items/features/annotations

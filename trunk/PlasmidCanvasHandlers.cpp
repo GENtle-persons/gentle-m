@@ -323,7 +323,15 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn , int pos 
             {
             cm->Append ( PC_RS_CUT_WITH_COCKTAIL , txt("p_cut_with_cocktail") ) ;
             }
-            
+        
+        if ( p->vec->isCircular() )
+        		{
+				double angle ;
+				angle  = xy2deg ( pt.x-w/2 , pt.y-h/2 ) ;
+				last_rightclick_base = circular_pos ( angle ) ;
+				cm->Append ( PC_TURNING_POINT , txt("p_turn_this_zero") ) ;
+				}
+         
         if ( doreturn ) return cm ;
         cm->AppendSeparator();
         }
@@ -343,6 +351,16 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn , int pos 
     PopupMenu ( cm , pt ) ;
     delete cm ;
     }
+
+void PlasmidCanvas::OnTurningPoint ( wxCommandEvent &ev )
+	{
+	p->vec->undo.start ( txt("u_turn") ) ;
+	p->vec->turn ( -last_rightclick_base ) ;
+	setMark ( -1 , -1 ) ;
+	p->vec->resetTurn () ;
+	p->vec->undo.stop() ;
+	p->EnforceRefesh () ;
+	}
 
 void PlasmidCanvas::vecEdit ( wxCommandEvent &ev )
     {
