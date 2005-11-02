@@ -202,6 +202,7 @@ class MyApp : public wxApp
     int total_log_time ; ///< The log timer for do_my_log
     int total_log_counter ; ///< The log counter for do_my_log
     wxSingleInstanceChecker *m_checker ; ///< Checks if another instance is running
+    wxString theRealLocalDb ;
     };
 
 class TUndo ;

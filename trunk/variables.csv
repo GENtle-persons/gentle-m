@@ -881,3 +881,4 @@
 "t_res_list_1","Restriction cuts by position","Restriktionsschnitte (Position)"
 "t_res_list_2","Restriction cuts by enzyme","Restriktionsschnitte (Enzym)"
 "t_res_list_3","Restriction cuts by cuts per enzyme","Restriktionsschnitte (Schnitte pro Enzym)"
+"t_local_db_warning","Your local.db has been created in your user directory, rather than centrally in the GENtle program directory, due to lack of user permissions.","Ihre lokale Datenbank (local.db) wurde in Ihrem Benutzerverzeichnis angelegt."

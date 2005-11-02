@@ -341,10 +341,10 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn , int pos 
     pm->Append ( PC_SAVE_IMAGE , txt("m_save_image") ) ;
     pm->Append ( PC_COPY_IMAGE , txt("m_copy_image") ) ;
     pm->Append ( MDI_PRINT_IMAGE , txt("m_print_image") ) ;
+	 pm->Append(MDI_PRINT_RESTRICTION_LIST, txt("m_print_restrictions") , txt("m_print_restrictions_txt") );
     
     if ( p->def == _T("dna") )
        {
-		 pm->Append (MDI_PRINT_RESTRICTION_LIST, txt("m_print_restrictions") , txt("m_print_restrictions_txt") );
        cm->Append(MDI_ORFS, txt("m_orfs") );
        cm->Append(MDI_EDIT_ORFS, txt("m_edit_orfs") );
        }
