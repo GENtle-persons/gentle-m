@@ -110,7 +110,7 @@ void TAminoAcids::initme ()
     
 
     // Menus
-    wxMenu *file_menu = myapp()->frame->getFileMenu ( true , true ) ;
+    wxMenu *file_menu = myapp()->frame->getFileMenu ( FILE_MENU_SAVE|FILE_MENU_EXPORT ) ;
     wxMenu *tool_menu = myapp()->frame->getToolMenu ( false ) ;
     wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
 

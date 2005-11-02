@@ -38,6 +38,7 @@ BEGIN_EVENT_TABLE(MyChild, MyChildBase)
     EVT_MENU(MDI_AS_NEW_FEATURE, MyChild::OnAsNewFeature)
     EVT_MENU(MDI_TRANSFORM_SEQUENCE, MyChild::OnTransformSequence)
     EVT_MENU(MDI_PRINT_IMAGE, MyChild::OnPrintImage)
+    EVT_MENU(MDI_PRINT_RESTRICTION_LIST, MyChild::OnPrintRestrictionList)
     EVT_MENU(MDI_RESTRICTION,MyChild::OnRestriction)
     EVT_MENU(MDI_HELP, MyChild::OnHelp)
     EVT_MENU(MDI_ORFS, MyChild::OnORFs)
@@ -300,7 +301,7 @@ void MyChild::OnCircularLinear(wxCommandEvent& event)
 void MyChild::initMenus ()
 	{
     // Make a menubar
-    wxMenu *file_menu = myapp()->frame->getFileMenu ( true , true , true ) ;
+    wxMenu *file_menu = myapp()->frame->getFileMenu ( FILE_MENU_SAVE|FILE_MENU_EXPORT|FILE_MENU_PRINT|FILE_MENU_PRINT_RESTRICTIONS ) ;
     wxMenu *tool_menu = myapp()->frame->getToolMenu ( true ) ;
     wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
 
@@ -942,7 +943,107 @@ void MyChild::OnAA_one(wxCommandEvent& event)
 void MyChild::OnPrintImage(wxCommandEvent& event)
     {
     cPlasmid->print() ;
-    }
+	}
+
+void MyChild::OnPrintRestrictionList(wxCommandEvent& event)
+	{
+	wxString html ;
+	wxString h_open = "<p><font size='+1'><b><u>" ;
+	wxString h_close = "</u></b></font></p>" ;
+	int a , b ;
+	
+	// Forcing restruction cuts non-joined
+	vec->setAction ( _T("RESTRICTION") ) ;
+	vec->recalculateCuts () ;
+	
+	// Restriction cuts by position
+	html += h_open + txt("t_res_list_1") + h_close ;
+	for ( a = 0 ; a < vec->rc.size() ; a++ )
+		{
+		b = vec->rc.size() - a - 1 ;
+		if ( a == 0 ) html += "<table border='1' width='100%'><tr>" ;
+		else if ( a % 6 == 0 ) html += "</tr><tr>" ;
+		html += _T("<td>") + wxString::Format ( _T("%d") , vec->rc[b].pos ) + _T(" : ") + vec->rc[b].e->name + _T("</td>") ;
+		}
+	if ( a > 0 ) html += "</tr></table>" ;
+
+	// Restriction cuts by enzyme and count (prep)
+	vector <int> c_count ;
+	vector <wxString> c_name , c_pos ;
+	for ( a = 0 ; a < vec->rc.size() ; a++ )
+		{
+		for ( b = 0 ; b < c_name.size() && c_name[b] != vec->rc[a].e->name ; b++ ) ;
+		if ( b == c_name.size() )
+			{
+			c_name.push_back ( vec->rc[a].e->name ) ;
+			c_pos.push_back ( wxString::Format ( "%d" , vec->rc[a].pos ) ) ;
+			c_count.push_back ( 1 ) ;
+			}
+		else
+			{
+			c_pos[b] += wxString::Format ( ", %d" , vec->rc[a].pos ) ;
+			c_count[b]++ ;
+			}
+		}
+
+	// Restriction cuts by enzyme
+	for ( a = 1 ; a < c_name.size() ; a++ ) // Sort by name
+		{
+		if ( c_name[a-1] < c_name[a] ) continue ; // OK
+		wxString s ;
+		s = c_name[a-1] ; c_name[a-1] = c_name[a] ; c_name[a] = s ;
+		s = c_pos[a-1] ; c_pos[a-1] = c_pos[a] ; c_pos[a] = s ;
+		b = c_count[a-1] ; c_count[a-1] = c_count[a] ; c_count[a] = b ;
+		a = 0 ;
+		}
+	html += h_open + txt("t_res_list_2") + h_close ;
+	for ( a = 0 ; a < c_name.size() ; a++ )
+		{
+		if ( a == 0 ) html += "<table border='1' width='100%'><tr>" ;
+		else if ( a % 3 == 0 ) html += "</tr><tr>" ;
+		html += _T("<td width='33%' valign='top'><b>") + c_name[a] + _T("</b>") ;
+		html += wxString::Format ( _T(" (%d&times;) : ") , c_count[a] ) ;
+		html += c_pos[a] + _T("</td>") ;
+		}
+	if ( a > 0 ) html += "</tr></table>" ;
+
+	// Restriction cuts by number of cuts
+	for ( a = 1 ; a < c_name.size() ; a++ ) // Sort by name
+		{
+		if ( c_count[a-1] <= c_count[a] ) continue ; // OK
+		wxString s ;
+		s = c_name[a-1] ; c_name[a-1] = c_name[a] ; c_name[a] = s ;
+		s = c_pos[a-1] ; c_pos[a-1] = c_pos[a] ; c_pos[a] = s ;
+		b = c_count[a-1] ; c_count[a-1] = c_count[a] ; c_count[a] = b ;
+		a = 0 ;
+		}
+	html += h_open + txt("t_res_list_3") + h_close ;
+	for ( a = 0 ; a < c_name.size() ; a++ )
+		{
+		if ( a == 0 ) html += "<table border='1' width='100%'><tr>" ;
+		else if ( a % 3 == 0 ) html += "</tr><tr>" ;
+		html += _T("<td width='33%' valign='top'><b>") + c_name[a] + _T("</b>") ;
+		html += wxString::Format ( _T(" %d&times; (") , c_count[a] ) ;
+		html += c_pos[a] + _T(")</td>") ;
+		}
+	if ( a > 0 ) html += "</tr></table>" ;
+
+	// Back to normal
+	vec->setAction ( _T("") ) ;
+	vec->recalculateCuts () ;
+	
+	
+	html = _T("<html><body>") + html + _T("</body></html>") ;
+	wxDateTime now = wxDateTime::Now() ;
+	myapp()->frame->html_ep->SetHeader ( _T("<table width='100%'><tr><td width='100%'>") + vec->getName() + _T("</td><td nowrap align='right'>") + now.Format() + _T("</td></tr></table>") ) ;
+	myapp()->frame->html_ep->SetFooter ( _T("<p align=right>@PAGENUM@/@PAGESCNT@</p>") ) ;
+	
+	int mode = HTML_PRINT_PREVIEW ;
+	if ( mode == HTML_PRINT_PREVIEW )
+		myapp()->frame->html_ep->PreviewText ( html ) ;
+	else if ( mode == HTML_PRINT )
+		myapp()->frame->html_ep->PageSetup () ;
+	}
     
 void MyChild::OnFind(wxCommandEvent& event)
     {

@@ -21,9 +21,6 @@ Feature Requests :
 * Save all
 * Feature names movable / keep position with changes
 
-* Restriktionsliste drucken
-* Agarosegel: Mehrere Marker
-
 SEE: http://eutils.ncbi.nlm.nih.gov/entrez/query/static/eutils_help.html
 
 ----

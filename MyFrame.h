@@ -28,6 +28,12 @@ class TPhyloTree ;
 
 typedef wxFrame MyFrameType ;
 
+#define FILE_MENU_SAVE 1
+#define FILE_MENU_EXPORT 2
+#define FILE_MENU_PRINT 4
+#define FILE_MENU_PRINT_RESTRICTIONS 8
+
+
 #ifdef MYTEST
 /** \class TTestSuite
 	\brief Test suite class
@@ -93,7 +99,7 @@ public:
     virtual wxString check4update () ;
     virtual void update2version ( wxString ver ) ;
     
-    virtual wxMenu *getFileMenu ( bool _save = false , bool _exp = false , bool _print = false ) ;
+    virtual wxMenu *getFileMenu ( int options = 0 ) ;
     virtual wxMenu *getToolMenu ( bool _pcr = false ) ;
     virtual wxMenu *getHelpMenu () ;
     

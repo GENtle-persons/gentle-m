@@ -344,6 +344,7 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn , int pos 
     
     if ( p->def == _T("dna") )
        {
+		 pm->Append (MDI_PRINT_RESTRICTION_LIST, txt("m_print_restrictions") , txt("m_print_restrictions_txt") );
        cm->Append(MDI_ORFS, txt("m_orfs") );
        cm->Append(MDI_EDIT_ORFS, txt("m_edit_orfs") );
        }
