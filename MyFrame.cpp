@@ -1785,7 +1785,7 @@ void MyFrame::update2version ( wxString ver )
     	}    
 
 #ifdef __WXMSW__
-    do_run = _T("\"") + localfile + _T("\" /S /D=\"") ;
+    do_run = _T("\"") + localfile + _T("\" /D=\"") ;
     do_run += myapp()->homedir ;
     do_run += _T("\"") ;
     LS->setOption ( _T("LAST_UPDATE") , ver ) ;

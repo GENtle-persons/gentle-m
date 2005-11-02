@@ -283,8 +283,30 @@ bool MyApp::OnInit()
     wxString localdb , blankdb ;
     localdb = getLocalDBname() ;
     blankdb = homedir + slash + _T("blank.db") ;
+    wxLogNull logNo; // Suppress error message
     if ( !wxFileExists ( localdb ) && wxFileExists ( blankdb ) )
-        wxCopyFile ( blankdb , localdb ) ;
+    	{
+		wxCopyFile ( blankdb , localdb ) ;
+		}
+	
+	// Check is local.db exists and is writable
+	bool local_ok = true ;
+	if ( !wxFileExists ( localdb ) ) local_ok = false ;
+	else
+		{
+		wxFile test ( localdb , wxFile::write_append ) ;
+		if ( !test.IsOpened() ) local_ok = false ;
+		}
+	if ( !local_ok )
+		{
+		theRealLocalDb = wxGetHomeDir() + myapp()->slash + _T("local.db") ;
+		localdb = theRealLocalDb ;
+		if ( !wxFileExists ( localdb ) )
+			{
+			wxCopyFile ( blankdb , localdb ) ;
+			}
+		else local_ok = true ;
+		}
 
     frame = new MyFrame((wxFrame *)NULL, -1, _T(""),
                         wxPoint(-1, -1), wxSize(500, 400),
@@ -292,6 +314,9 @@ bool MyApp::OnInit()
     frame->initme () ;
     if ( frame->dying ) return FALSE ;
     SetTopWindow(frame);
+
+	if ( !local_ok )
+		wxMessageBox ( txt("t_local_db_warning") ) ;
 
 //#ifndef __WXMAC__
     if ( frame->showSplashScreen )
@@ -351,11 +376,13 @@ bool MyApp::OnInit()
 
 wxString MyApp::getLocalDBname ()
 	{
+	if ( !theRealLocalDb.IsEmpty() ) return theRealLocalDb ;
 #ifdef __WXMAC__
-	return wxGetHomeDir() + myapp()->slash + _T("local.db") ;
+	theRealLocalDb = wxGetHomeDir() + myapp()->slash + _T("local.db") ;
 #else
-	return myapp()->homedir + myapp()->slash + _T("local.db") ;
+	theRealLocalDb = myapp()->homedir + myapp()->slash + _T("local.db") ;
 #endif
+	return theRealLocalDb ;
 	}
 
 wxString MyApp::get_GENtle_version ()
