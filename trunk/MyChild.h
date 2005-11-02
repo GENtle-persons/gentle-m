@@ -74,6 +74,7 @@ public:
     virtual void OnCopyToNew(wxCommandEvent& event); ///< "Copy as new sequence" event handler
     virtual void OnAsNewFeature(wxCommandEvent& event); ///< "Selection as new feature" event handler
     virtual void OnPrintImage(wxCommandEvent& event); ///< Print image event handler
+    virtual void OnPrintRestrictionList(wxCommandEvent& event); ///< Print restriction list event handler
     virtual void OnRestriction(wxCommandEvent& event); ///< Restriction event handler
     virtual void OnHelp(wxCommandEvent& event); ///< Help event handler
     virtual void OnORFs(wxCommandEvent& event); ///< "Show/hide open reading frames" event handler

@@ -1564,20 +1564,21 @@ TGraph *MyFrame::RunGraph ()
 	\param _exp Include "Export" menu option
 	\param _print Include "Print" menu option
 */
-wxMenu *MyFrame::getFileMenu ( bool _save , bool _exp , bool _print )
+wxMenu *MyFrame::getFileMenu ( int options )
     {
     wxMenu *file_menu = new wxMenu;
     file_menu->Append(MDI_FILE_OPEN, txt("m_open") , txt("m_opentxt") );
-    if ( _save ) file_menu->Append(MDI_FILE_SAVE, txt("m_store_in_db") , txt("m_txt_store_in_db") ) ;
+    if ( 0 < ( options & FILE_MENU_SAVE )  ) file_menu->Append(MDI_FILE_SAVE, txt("m_store_in_db") , txt("m_txt_store_in_db") ) ;
     file_menu->Append(MDI_FILE_IMPORT, txt("m_import") , txt("m_importtxt") );
     file_menu->Append(MDI_TEXT_IMPORT, txt("m_text_import") , txt("m_text_importtxt") );
-    if ( _exp ) file_menu->Append(MDI_EXPORT, txt("m_export") , txt("m_export_txt") );
+    if ( 0 < ( options & FILE_MENU_EXPORT ) ) file_menu->Append(MDI_EXPORT, txt("m_export") , txt("m_export_txt") );
     file_menu->AppendSeparator();
     file_menu->Append(MDI_PROJECT_LOAD, txt("m_project_open") , txt("m_project_opentxt") );    
     file_menu->Append(MDI_PROJECT_SAVE, txt("m_project_save") , txt("m_project_savetxt") );    
     file_menu->Append(MDI_PROJECT_CLOSE, txt("m_project_close") , txt("m_project_closetxt") );    
     file_menu->AppendSeparator();
-    if ( _print ) file_menu->Append(MDI_PRINT_IMAGE, txt("m_print_image") , txt("m_print_image_txt") );
+    if ( 0 < ( options & FILE_MENU_PRINT ) ) file_menu->Append(MDI_PRINT_IMAGE, txt("m_print_image") , txt("m_print_image_txt") );
+    if ( 0 < ( options & FILE_MENU_PRINT_RESTRICTIONS ) ) file_menu->Append(MDI_PRINT_RESTRICTION_LIST, txt("m_print_restrictions") , txt("m_print_restrictions_txt") );
     file_menu->Append(SEQ_PRINT, txt("m_print_sequence") ) ;
     file_menu->Append(MDI_PRINT_REPORT, txt("m_print_report") , txt("m_print_report_txt") );
     file_menu->AppendSeparator();

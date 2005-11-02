@@ -184,7 +184,7 @@ wxColour TAlignment::findColors ( char c1 , char c2 , bool fg )
 void TAlignment::initme ()
     {
     // Menus
-    wxMenu *file_menu = myapp()->frame->getFileMenu ( true , true ) ;
+    wxMenu *file_menu = myapp()->frame->getFileMenu ( FILE_MENU_SAVE|FILE_MENU_EXPORT ) ;
     wxMenu *tool_menu = myapp()->frame->getToolMenu () ;
     wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
     wxMenu *view_menu = new wxMenu ;
