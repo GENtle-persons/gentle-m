@@ -32,7 +32,6 @@ EMBOSS:
 * codon usage statistic
 * antigenic prediction
 * dotplot
-* protease cleavage
 * PEST motif prediction
 * transmembrane region prediction
 

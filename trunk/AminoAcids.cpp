@@ -275,10 +275,11 @@ void TAminoAcids::showStat ()
     wxString t ;
     int noaa = 0 , piaa = 0 ;
     float pI = 0 ;
-    float ex = 0 , abs = 0 ;
+    float ext = 0 , abs = 0 ;
+    float ext2 = 0 , abs2 = 0 ;
     int num[256] ;
     int a , b ;
-    float mW = 0 ;
+    float mW = 18 ; // OH and H at the ends
     
     // Key values
     for ( a = 0 ; a < 256 ; a++ ) num[a] = 0 ;
@@ -297,11 +298,17 @@ void TAminoAcids::showStat ()
         mW += vec->getAAmw ( c ) ;
         }
     if ( piaa > 0 ) pI /= piaa ;
-    ex = num[(unsigned int)'W']*5500 + num[(unsigned int)'Y']*1490 + num[(unsigned int)'C']*125 ;
-    if ( noaa > 0 ) abs = ex / noaa / 100 ;
+    ext = num[(unsigned int)'W']*5500 + num[(unsigned int)'Y']*1490 + (num[(unsigned int)'C']*125)/2 ;
+    ext2 = num[(unsigned int)'W']*5500 + num[(unsigned int)'Y']*1490  ;
+    if ( mW > 0 )
+       {
+       abs = ext / mW ;
+       abs2 = ext2 / mW ;
+       }
     t = txt("aa_info") ;
+    t += txt("aa_info1a") + txt("aa_info2a") + _T("\n") + txt("aa_info1a") + txt("aa_info2b") ;
     t.Replace ( _T("%f") , _T("%9.2f") ) ;
-    t = wxString::Format ( t , noaa , mW , pI , ex , abs ) ;
+    t = wxString::Format ( t , noaa , mW , pI , ext , abs , ext2 , abs2 ) ;
     
     // Amino acid count
     wxString t2 ;
@@ -318,13 +325,13 @@ void TAminoAcids::showStat ()
 	    if ( b % 4 == 0 && a+1 != 'Z' ) t2 += _T("\n") ;
 	    else if ( a+1 != 'Z' ) t2 += _T("      ") ;
     	}
-		
-	t += _T("\n") + wxString::Format ( txt("aa_info2") , num[(unsigned int)'D']+num[(unsigned int)'E'] , num[(unsigned int)'R']+num[(unsigned int)'K'] ) ;
-   	t += _T("\n\n") + t2 + _T("\n\n") ;
+	
+    t += _T("\n") + wxString::Format ( txt("aa_info2") , num[(unsigned int)'D']+num[(unsigned int)'E'] , num[(unsigned int)'R']+num[(unsigned int)'K'] ) ;
+    t += _T("\n\n") + t2 + _T("\n\n") ;
    	
-   	// Atomic composition & hydrophobicity
-   	int carbon = 0 , hydrogen = 2 , nitrogen = 0 , oxygen = 1 , sulfur = 0 ;
-   	float hydropathicity = 0 ;
+    // Atomic composition & hydrophobicity
+    int carbon = 0 , hydrogen = 2 , nitrogen = 0 , oxygen = 1 , sulfur = 0 ;
+    float hydropathicity = 0 ;
     for ( a = 0 ; a < vec->getSequenceLength() ; a++ )
         {
         unsigned char c = (unsigned char)vec->getSequenceChar ( a ) ;
