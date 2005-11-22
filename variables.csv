@@ -885,3 +885,7 @@
 "t_local_db_warning","Your local.db has been created in your user directory, rather than centrally in the GENtle program directory, due to lack of user permissions.","Ihre lokale Datenbank (local.db) wurde in Ihrem Benutzerverzeichnis angelegt."
 "aa_info2a",", assuming ALL Cys residues appear as half cystines",", wenn ALLE Cysteine als Halb-Cysteine erscheinen"
 "aa_info2b",", assuming NO Cys residues appear as half cystines",", wenn KEINE Cysteine als Halb-Cysteine erscheinen"
+"m_siRNA","Detect siRNA duplexes","siRNA-Duplexes finden"
+"t_siRNA","siRNA","siRNA"
+"t_siRNA_l","possible siRNA duplex (score : %d)","Möglicher siRNA-Duplex (Wert : %d)"
+"m_sirna_duplexes","Detect siRNA duplexes","siRNA-Duplexes finden"

@@ -37,6 +37,8 @@ EMBOSS:
 
 
 ----
+________________________________________________________________________________
+DONE:
 ALGORITHM for finding siRNA duplexes in mRNA:
 for each input sequence:
 
@@ -62,6 +64,9 @@ for each input sequence:
 		%GC 65% (13 bases): score + 2
 		%GC 70% (14 bases): score + 0
 		%GC >= 75% (>= 15 bases): ignore this window
+
+
+
 	if the window starts with a 'AA': score + 3
 	if the window does not start 'AA' and it is required: ignore this window
 	if the window ends with a 'TT': score + 1

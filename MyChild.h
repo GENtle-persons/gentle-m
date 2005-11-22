@@ -91,6 +91,7 @@ public:
     virtual void OnRemoveSequencingPrimers(wxCommandEvent& WXUNUSED(event)); ///< "Remove sequencing primers" event handler
     virtual void OnAutoAnnotate(wxCommandEvent& WXUNUSED(event)); ///< Automatic annotation event handler
     virtual void OnSpeak(wxCommandEvent& WXUNUSED(event)); ///< Speak sequence event handler
+    virtual void OnSiRNA(wxCommandEvent& WXUNUSED(event)); ///< siRNA event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler (to catch weird messages)
 
     virtual void initme () ; ///< Initializes the module
@@ -116,6 +117,9 @@ public:
     virtual void updateToolbar () ; ///< Set the toolbar of this module
     virtual void initToolbar () ; ///< Setup the toolbar for this module
     virtual void initMenus () ; ///< Initialize the menus
+    
+    void add_siRNA ( int item ) ;
+    int add_siRNA_sub ( wxString s , int pos ) ;
     
     DECLARE_EVENT_TABLE()
 };
