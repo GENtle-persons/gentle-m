@@ -1587,7 +1587,7 @@ bool operator==(const TsiRNA& x, const TsiRNA& y)
 
 bool operator<(const TsiRNA& x, const TsiRNA& y)
 {
-    return x.score < y.score;
+    return x.score > y.score;
 }
 
 void MyChild::add_siRNA ( int item )
