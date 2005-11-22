@@ -53,6 +53,7 @@ BEGIN_EVENT_TABLE(MyChild, MyChildBase)
     EVT_MENU(MDI_REMOVE_SEQUENCING_PRIMERS,MyChild::OnRemoveSequencingPrimers)
     EVT_MENU(MDI_AUTO_ANNOTATE,MyChild::OnAutoAnnotate)
     EVT_MENU(MDI_SPEAK,MyChild::OnSpeak)
+    EVT_MENU(MDI_SIRNA,MyChild::OnSiRNA)
 
     EVT_CHOICE(PC_ZOOM,MyChild::OnZoom)
     EVT_UPDATE_UI(MDI_REFRESH, MyChild::OnUpdateRefresh)
@@ -325,6 +326,7 @@ void MyChild::initMenus ()
     edit_menu->Append(MDI_SEQUENCING_PRIMER, txt("m_show_sequencing_primers") );
     edit_menu->Append(MDI_REMOVE_SEQUENCING_PRIMERS, txt("m_remove_sequencing_primers") );
     edit_menu->Append(MDI_AUTO_ANNOTATE, txt("m_auto_annotate") );
+    edit_menu->Append(MDI_SIRNA, txt("m_siRNA") );
 
     wxMenu *view_menu = new wxMenu;
 //    view_menu->Append(MDI_REFRESH, txt("m_refresh_picture") );
@@ -1545,12 +1547,125 @@ void MyChild::OnAutoAnnotate(wxCommandEvent& event)
 
 void MyChild::OnSpeak(wxCommandEvent& event)
 	{
-    wxString s = cPlasmid->getSelection () ;
-    if ( s.IsEmpty() ) s = vec->getSequence() ; // Nothing selected, read whole sequence
-	TSpeakDialog sd ( this , txt("t_speak") , s ) ;
-	sd.ShowModal() ;
+   wxString s = cPlasmid->getSelection () ;
+   if ( s.IsEmpty() ) s = vec->getSequence() ; // Nothing selected, read whole sequence
+   TSpeakDialog sd ( this , txt("t_speak") , s ) ;
+   sd.ShowModal() ;
 	}
-    
+
+void MyChild::OnSiRNA(wxCommandEvent& event)
+   {
+   int a ;
+   bool ref = false ;
+	vec->undo.start ( txt("m_undo") + wxString ( _T(" ") ) + txt("m_sirna_duplexes") ) ;
+   for ( a = 0 ; a < vec->items.size() ; a++ )
+       {
+       if ( vec->items[a].getRF() == 0 ) continue ; // No CDS
+       add_siRNA ( a ) ;
+       ref = true ;
+       }
+   if ( ref )
+      {
+      vec->undo.stop () ;
+      EnforceRefesh () ;
+      }
+   else vec->undo.abort () ;
+   }
+
+class TsiRNA
+   {
+   public :
+   TsiRNA ( int _score , int _from , int _to )
+          { score = _score ; from = _from ; to = _to ; }
+   int score , from , to ;
+   } ;
+
+bool operator==(const TsiRNA& x, const TsiRNA& y)
+{
+    return x.score == y.score ;
+}
+
+bool operator<(const TsiRNA& x, const TsiRNA& y)
+{
+    return x.score < y.score;
+}
+
+void MyChild::add_siRNA ( int item )
+   {
+   int a , b , dir = 1 ;
+   int from = vec->items[item].from ;
+   int to = vec->items[item].to ;
+   int l = vec->getSequenceLength() ;
+   if ( to < from ) to += l ;
+   if ( vec->items[item].getRF() < 0 )
+      {
+      dir = -1 ;
+      }
+   b = 0 ;
+   wxString sub ;
+   vector <TsiRNA> rna ;
+   for ( a = from ; a != to ; a += dir )
+       {
+       if ( a < 0 ) a = l - 1 ;
+       else if ( a >= l ) a = 0 ;
+       sub += vec->getSequenceChar ( a ) ;
+       if ( sub.length() < 23 ) { b++ ; continue ; }
+       if ( b < 27 ) { b++ ; continue ; }
+       while ( sub.length() > 23 ) sub = sub.SubString ( 1 , sub.length()-1 ) ;
+       int res = add_siRNA_sub ( sub , b ) ;
+       if ( res > 0 )
+          {
+          rna.push_back ( TsiRNA ( res , a , a + 23 * dir ) ) ;
+          }
+       b++ ;
+       }
+   sort ( rna.begin() , rna.end() ) ;
+   a = rna.size() >= 10 ? 9 : rna.size()-1 ;
+   while ( a+1 < rna.size() && rna[a+1].score == rna[a].score ) a++ ;
+   while ( rna.size() > a ) rna.pop_back () ;
+   for ( a = 0 ; a < rna.size() ; a++ )
+       {
+       TVectorItem i ( txt("t_siRNA") ,
+                       wxString::Format ( txt("t_siRNA_l") , rna[a].score ) ,
+                       rna[a].from , rna[a].to , VIT_MISC ) ;
+       i.setParam ( _T("AUTOMATIC") ,  _T("siRNA") ) ;
+       vec->items.push_back ( i ) ;
+       }
+   vec->updateDisplay () ;
+   }
+
+int MyChild::add_siRNA_sub ( wxString s , int pos )
+   {
+   int score = 0 ;
+   if ( s.GetChar ( 2 ) != 'A' ) return 0 ;
+   if ( pos < 100 - s.length() ) score -= 2 ;
+   
+   // GC%
+   int gc = 0 ;
+   int a ;
+   for ( a = 0 ; a < s.length() ; a++ )
+       gc += s.GetChar(a)=='G' || s.GetChar(a)=='C' ? 1 : 0 ;
+   gc = gc * 100 / s.length() ;
+   if ( gc < 25 ) return 0 ;
+   else if ( gc < 35 ) score += 2 ;
+   else if ( gc < 40 ) score += 4 ;
+   else if ( gc < 45 ) score += 5 ;
+   else if ( gc < 50 ) score += 6 ;
+   else if ( gc < 55 ) score += 5 ;
+   else if ( gc < 60 ) score += 4 ;
+   else if ( gc < 65 ) score += 2 ;
+   else return 0 ;
+
+   if ( s.SubString ( 0 , 2 ) == _T("AA") ) score += 3 ;
+   if ( s.SubString ( s.length()-2 , 2 ) == _T("TT") ) score += 1 ;
+   if ( s.Find ( _T("GGGG") ) != -1 ) return 0 ;
+   if ( s.Find ( _T("AAAA") ) != -1 ) return 0 ;
+   if ( s.Find ( _T("CCCC") ) != -1 ) return 0 ;
+   if ( s.Find ( _T("TTTT") ) != -1 ) return 0 ;
+
+   return score ;
+   }
+
 // *************************
 
 MySplitter::MySplitter ( wxWindow *win , int id , MyChild *child )

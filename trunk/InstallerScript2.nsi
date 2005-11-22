@@ -13,6 +13,9 @@ Name "GENtle"
 ; The file to write
 OutFile "GENtleSetup.exe"
 
+;Section
+;SectionEnd
+
 ; The default installation directory
 InstallDir $PROGRAMFILES\GENtle
 
@@ -45,6 +48,19 @@ UninstPage instfiles
 Section "GENtle (required)"
 
   SectionIn RO
+
+
+
+  MessageBox MB_YESNO "Install or update GENtle?" IDYES yeslabel IDNO nolabel
+  yeslabel:
+;  MessageBox MB_OK "You pressed yes"
+  Goto done
+  nolabel:
+;  MessageBox MB_OK "You pressed no"
+  Quit ;
+  done:
+
+
   
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
