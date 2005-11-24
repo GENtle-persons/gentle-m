@@ -950,8 +950,8 @@ void MyChild::OnPrintImage(wxCommandEvent& event)
 void MyChild::OnPrintRestrictionList(wxCommandEvent& event)
 	{
 	wxString html ;
-	wxString h_open = "<p><font size='+1'><b><u>" ;
-	wxString h_close = "</u></b></font></p>" ;
+	wxString h_open = _T("<p><font size='+1'><b><u>") ;
+	wxString h_close = _T("</u></b></font></p>") ;
 	int a , b ;
 	
 	// Forcing restruction cuts non-joined
@@ -963,11 +963,11 @@ void MyChild::OnPrintRestrictionList(wxCommandEvent& event)
 	for ( a = 0 ; a < vec->rc.size() ; a++ )
 		{
 		b = vec->rc.size() - a - 1 ;
-		if ( a == 0 ) html += "<table border='1' width='100%'><tr>" ;
-		else if ( a % 6 == 0 ) html += "</tr><tr>" ;
+		if ( a == 0 ) html += _T("<table border='1' width='100%'><tr>") ;
+		else if ( a % 6 == 0 ) html += _T("</tr><tr>") ;
 		html += _T("<td>") + wxString::Format ( _T("%d") , vec->rc[b].pos ) + _T(" : ") + vec->rc[b].e->name + _T("</td>") ;
 		}
-	if ( a > 0 ) html += "</tr></table>" ;
+	if ( a > 0 ) html += _T("</tr></table>") ;
 
 	// Restriction cuts by enzyme and count (prep)
 	vector <int> c_count ;
@@ -978,12 +978,12 @@ void MyChild::OnPrintRestrictionList(wxCommandEvent& event)
 		if ( b == c_name.size() )
 			{
 			c_name.push_back ( vec->rc[a].e->name ) ;
-			c_pos.push_back ( wxString::Format ( "%d" , vec->rc[a].pos ) ) ;
+			c_pos.push_back ( wxString::Format ( _T("%d") , vec->rc[a].pos ) ) ;
 			c_count.push_back ( 1 ) ;
 			}
 		else
 			{
-			c_pos[b] += wxString::Format ( ", %d" , vec->rc[a].pos ) ;
+			c_pos[b] += wxString::Format ( _T(", %d") , vec->rc[a].pos ) ;
 			c_count[b]++ ;
 			}
 		}
@@ -1001,13 +1001,13 @@ void MyChild::OnPrintRestrictionList(wxCommandEvent& event)
 	html += h_open + txt("t_res_list_2") + h_close ;
 	for ( a = 0 ; a < c_name.size() ; a++ )
 		{
-		if ( a == 0 ) html += "<table border='1' width='100%'><tr>" ;
-		else if ( a % 3 == 0 ) html += "</tr><tr>" ;
+		if ( a == 0 ) html += _T("<table border='1' width='100%'><tr>") ;
+		else if ( a % 3 == 0 ) html += _T("</tr><tr>") ;
 		html += _T("<td width='33%' valign='top'><b>") + c_name[a] + _T("</b>") ;
 		html += wxString::Format ( _T(" (%d&times;) : ") , c_count[a] ) ;
 		html += c_pos[a] + _T("</td>") ;
 		}
-	if ( a > 0 ) html += "</tr></table>" ;
+	if ( a > 0 ) html += _T("</tr></table>") ;
 
 	// Restriction cuts by number of cuts
 	for ( a = 1 ; a < c_name.size() ; a++ ) // Sort by name
@@ -1022,13 +1022,13 @@ void MyChild::OnPrintRestrictionList(wxCommandEvent& event)
 	html += h_open + txt("t_res_list_3") + h_close ;
 	for ( a = 0 ; a < c_name.size() ; a++ )
 		{
-		if ( a == 0 ) html += "<table border='1' width='100%'><tr>" ;
-		else if ( a % 3 == 0 ) html += "</tr><tr>" ;
+		if ( a == 0 ) html += _T("<table border='1' width='100%'><tr>") ;
+		else if ( a % 3 == 0 ) html += _T("</tr><tr>") ;
 		html += _T("<td width='33%' valign='top'><b>") + c_name[a] + _T("</b>") ;
 		html += wxString::Format ( _T(" %d&times; (") , c_count[a] ) ;
 		html += c_pos[a] + _T(")</td>") ;
 		}
-	if ( a > 0 ) html += "</tr></table>" ;
+	if ( a > 0 ) html += _T("</tr></table>") ;
 
 	// Back to normal
 	vec->setAction ( _T("") ) ;

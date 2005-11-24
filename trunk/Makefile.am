@@ -62,7 +62,7 @@ bitmaps/print.bmp \
 bitmaps/scissors.bmp
 
 
-GENtle_LDADD = $(WX_LIBS) -L/usr/lib -lsqlite -lsqlite3 -lmysqlclient
+GENtle_LDADD = $(WX_LIBS) -L/usr/lib -L/usr/local/lib -lsqlite -lsqlite3 -lmysqlclient
 GENtle_LDFLAGS = -s
 GENtle_SOURCES = TXMLfile.cpp\
 TVectorTree.cpp\
