@@ -469,6 +469,7 @@ void TAminoAcids::invokeVectorEditor ( wxString what , int num , bool forceUpdat
 		showName() ;
 		showSequence () ;
 		vec->undo.stop() ;
+		if ( pc ) pc->Refresh () ;
 		}
 	else vec->undo.abort() ;
 	vec->setChanged ( changed | vec->isChanged() ) ;

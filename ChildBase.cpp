@@ -120,6 +120,10 @@ void ChildBase::updateToolbar ()
     {
     }    
 
+void ChildBase::updateSequenceCanvas ( bool remember ) // Dummy
+    {
+    }    
+
 void ChildBase::SetMyMenuBar ()
 	{
     if ( menubar && myapp()->frame->GetMenuBar() != menubar )
