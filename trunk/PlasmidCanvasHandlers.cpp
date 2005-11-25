@@ -94,7 +94,7 @@ void PlasmidCanvas::itemDelete ( wxCommandEvent &ev )
     p->vec->undo.stop() ;
     Refresh () ;
     p->updateSequenceCanvas ( true ) ;
-    p->treeBox->initme() ;
+    if ( p->def == _T("dna") ) p->treeBox->initme() ;
     }
 
 void PlasmidCanvas::itemShowHide ( wxCommandEvent &ev )
@@ -103,7 +103,7 @@ void PlasmidCanvas::itemShowHide ( wxCommandEvent &ev )
     p->vec->items[context_last_item].setVisible ( newstate ) ;
     Refresh () ;
     p->updateSequenceCanvas ( true ) ;
-    p->treeBox->SetItemBold ( p->vec->items[context_last_item].treeid , newstate ) ;
+    if ( p->def == _T("dna") ) p->treeBox->SetItemBold ( p->vec->items[context_last_item].treeid , newstate ) ;
     }
 
 // Restriction enzyme context menu
@@ -219,7 +219,7 @@ void PlasmidCanvas::rsInfo ( wxCommandEvent &ev )
 void PlasmidCanvas::rsShowHide ( wxCommandEvent &ev )
     {
     if ( context_last_rs < 0 || context_last_rs >= p->vec->rc.size() ) return ;
-    p->treeBox->ToggleEnzymeVisibility ( p->vec->rc[context_last_rs].e ) ;
+    if ( p->def == _T("dna") ) p->treeBox->ToggleEnzymeVisibility ( p->vec->rc[context_last_rs].e ) ;
     }
     
 void PlasmidCanvas::rsHideLimit ( wxCommandEvent &ev )

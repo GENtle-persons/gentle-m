@@ -41,6 +41,7 @@ class ChildBase : public MyChildBase
     virtual wxToolBar *CreateToolBar ( int i ) ; ///< Tool bar creation
     virtual void Maximize ( bool isit = true ) ; ///< Maximize the window
     virtual void updateUndoMenu () ; ///< Updates the "undo" menu entry
+    virtual void updateSequenceCanvas ( bool remember = false ) ; ///< Refresh the sequence display
     virtual void OnClose(wxCloseEvent& event); ///< Close event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler
     virtual void OnPaste (wxCommandEvent& WXUNUSED(event)) {} ; ///< Paste event handler
