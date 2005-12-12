@@ -15,6 +15,9 @@ BEGIN_EVENT_TABLE(TVectorTree, wxTreeCtrl)
     EVT_MENU(PC_ITEM_DELETE, TVectorTree::itemDelete)
     EVT_MENU(PC_ITEM_HIDE, TVectorTree::itemShowHide)
     EVT_MENU(PC_ITEM_SHOW, TVectorTree::itemShowHide)
+    EVT_MENU(PC_ITEM_COPY_DNA, TVectorTree::itemCopyDNA)
+    EVT_MENU(PC_ITEM_BLAST_DNA, TVectorTree::blastDNA)
+    EVT_MENU(PC_ITEM_BLAST_AA, TVectorTree::blastAA)
     
     EVT_MENU(PRIMER_FORWARD, TVectorTree::OnPrimerForward)
     EVT_MENU(PRIMER_BACKWARD, TVectorTree::OnPrimerBackward)
@@ -30,8 +33,6 @@ BEGIN_EVENT_TABLE(TVectorTree, wxTreeCtrl)
     EVT_MENU(PC_RS_ADD_AND_CUT, TVectorTree::rsAddAndCut)
     EVT_MENU(PC_RS_CUT_WITH_COCKTAIL, TVectorTree::rsCutWithCocktail)
     EVT_MENU(PC_VECTOR_EDIT, TVectorTree::vecEdit)
-    EVT_MENU(PC_BLAST_DNA, TVectorTree::blastDNA)
-    EVT_MENU(PC_BLAST_AA, TVectorTree::blastAA)
 END_EVENT_TABLE()
 
 
@@ -336,4 +337,5 @@ void TVectorTree::OnPrimerBoth ( wxCommandEvent &ev )
 void TVectorTree::OnPrimerMutation ( wxCommandEvent &ev )
     { p->cPlasmid->OnPrimerMutation ( ev ) ; }
 
-
+void TVectorTree::itemCopyDNA ( wxCommandEvent &ev )
+    { p->cPlasmid->itemCopyDNA ( ev ) ; }

@@ -58,6 +58,7 @@ class TVectorTree : public wxTreeCtrl
     void rsAddAndCut ( wxCommandEvent &ev ) ; ///< Event redirect to parent child
     void rsCutWithCocktail ( wxCommandEvent &ev ) ; ///< Event redirect to parent child
     void vecEdit ( wxCommandEvent &ev ) ; ///< Event redirect to parent child
+    void itemCopyDNA ( wxCommandEvent &ev ) ; ///< Event redirect to parent child
     void blastDNA ( wxCommandEvent &ev ) ; ///< Event redirect to parent child
     void blastAA ( wxCommandEvent &ev ) ; ///< Event redirect to parent child
     

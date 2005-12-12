@@ -1839,6 +1839,7 @@ void MyFrame::OnSashDrag(wxSashEvent& event)
     }
     wxLayoutAlgorithm layout;
     layout.LayoutFrame(this);
+	Refresh () ;
 
     // Leaves bits of itself behind sometimes
 //    GetClientWindow()->Refresh();    

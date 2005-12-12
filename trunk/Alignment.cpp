@@ -4,7 +4,9 @@
 #include "Alignment.h"
 #include <wx/textfile.h>
 
-//#define USE_EXTERNAL_CLUSTALW
+#ifdef __DEBIAN__
+	#define USE_EXTERNAL_CLUSTALW
+#endif
 
 #ifndef USE_EXTERNAL_CLUSTALW
  #include "clustalw/clustalw.h"
