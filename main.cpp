@@ -235,6 +235,10 @@ bool MyApp::OnInit()
 	
 #endif
 
+#ifdef __DEBIAN__
+	homedir = _T("/usr/share/gentle") ;
+#endif
+
     wxInitAllImageHandlers() ;
     wxFileSystem::AddHandler ( new wxInternetFSHandler ) ;
     

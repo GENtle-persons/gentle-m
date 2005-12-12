@@ -4,6 +4,8 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
+//#define __DEBIAN__
+
 #define GENTLE_VERSION_MAJOR 1
 #define GENTLE_VERSION_MINOR 8
 #define GENTLE_VERSION_SUB 0
