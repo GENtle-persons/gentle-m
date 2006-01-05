@@ -105,26 +105,15 @@ wxString implode ( wxString sep , wxArrayString &r )
 		ret += sep + r[a] ;
 	return ret ;
 	}
-/*
-char * txt ( char *item )
-    {
-    return (char*) myapp()->_text[item.MakeUpper()].c_str() ;
-    }
 
-char * txt ( wxString item )
-    {
-    return (char*) myapp()->_text[item.MakeUpper()].c_str() ;
-    }
-*/
 wxString txt ( char *item )
-    {
+	{
 	return txt ( wxString(item,wxConvUTF8) ) ;
-//    return myapp()->_text[wxString(item,wxConvUTF8).MakeUpper()] ;
-    }
+	}
 
 wxString txt ( wxString item )
     {
-#ifdef __WXMAC__
+#ifndef __WXMSW__
 	 if ( item.MakeUpper().Left(2) == _T("M_") ) return myapp()->_text[item.MakeUpper()].Trim() ;
 #endif
     return myapp()->_text[item.MakeUpper()] ;

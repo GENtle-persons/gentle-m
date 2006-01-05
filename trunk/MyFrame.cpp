@@ -113,7 +113,6 @@ MyFrame::MyFrame(wxWindow *parent,
     entries[39].Set(wxACCEL_CTRL, WXK_F1, MDI_ABOUT);
     entries[40].Set(wxACCEL_NORMAL, WXK_F9, MDI_AUTO_ANNOTATE);
     
-    
     wxAcceleratorTable accel(ACC_ENT, entries);
     SetAcceleratorTable(accel);
 #endif
