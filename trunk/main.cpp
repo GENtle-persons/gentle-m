@@ -50,6 +50,7 @@
 #include <wx/splash.h>
 #include <wx/filesys.h>
 #include <wx/file.h>
+//#include <wx/sysopt.h>
 
 #ifdef __WXMSW__
 #include "wx/msw/registry.h"
@@ -201,25 +202,26 @@ MyApp *myapp ()
 */
 bool MyApp::OnInit()
 {
-	isoconv = new wxCSConv ( _T("iso-8859-1") ) ;
-    wxConvCurrent = isoconv ;
-	errout = NULL ;
-    total_log_time = 0 ;
-    total_log_counter = 0 ;
+   isoconv = new wxCSConv ( _T("iso-8859-1") ) ;
+   wxConvCurrent = isoconv ;
+//   wxSystemOptions::SetOption(wxT("msw.remap"), 0);
+   errout = NULL ;
+   total_log_time = 0 ;
+   total_log_counter = 0 ;
 #ifdef MYLOG
     wxStartTimer() ;
 #endif
 
-    wxString s1 , s2 ;
-    wxFileName::SplitPath ( argv[0] , &homedir , &s1 , &s2 ) ;
+   wxString s1 , s2 ;
+   wxFileName::SplitPath ( argv[0] , &homedir , &s1 , &s2 ) ;
 
 #ifdef __WXMAC__
-	homedir = homedir.BeforeLast ( '/' ) ;
-	homedir += _T("/Resources") ;
-	
-	wxApp::s_macAboutMenuItemId = MDI_ABOUT;
-	wxApp::s_macPreferencesMenuItemId = PROGRAM_OPTIONS;
-	wxApp::s_macExitMenuItemId = MDI_QUIT;
+   homedir = homedir.BeforeLast ( '/' ) ;
+   homedir += _T("/Resources") ;
+
+   wxApp::s_macAboutMenuItemId = MDI_ABOUT;
+   wxApp::s_macPreferencesMenuItemId = PROGRAM_OPTIONS;
+   wxApp::s_macExitMenuItemId = MDI_QUIT;
 //	wxApp::s_macHelpMenuTitleName = "Help";
 	
 #endif
@@ -228,15 +230,15 @@ bool MyApp::OnInit()
 	homedir = _T("/usr/share/gentle") ;
 #endif
 
-    wxInitAllImageHandlers() ;
-    wxFileSystem::AddHandler ( new wxInternetFSHandler ) ;
-    
-    wxSetWorkingDirectory ( homedir ) ; // Setting home directory as working dir
+   wxInitAllImageHandlers() ;
+   wxFileSystem::AddHandler ( new wxInternetFSHandler ) ;
 
-	// Setting ncoils dir as an environment variable
-	wxString ncoilsdir ;
-	ncoilsdir = _T("COILSDIR=") ;
-	ncoilsdir += homedir ;
+   wxSetWorkingDirectory ( homedir ) ; // Setting home directory as working dir
+
+   // Setting ncoils dir as an environment variable
+   wxString ncoilsdir ;
+   ncoilsdir = _T("COILSDIR=") ;
+   ncoilsdir += homedir ;
 
 #ifdef __WXMAC__	
 	wxUnsetEnv ( _T("COILSDIR") ) ;

@@ -378,8 +378,9 @@ void MyChild::initToolbar ()
 #endif
         {
             
-	    wxToolBar *toolBar = CreateToolBar(wxTB_HORIZONTAL);//(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);    
-        toolBar->AddTool( MDI_TEXT_IMPORT , 
+	    wxToolBar *toolBar = CreateToolBar(wxTB_HORIZONTAL);//(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
+       myapp()->frame->InitToolBar(toolBar);
+       toolBar->AddTool( MDI_TEXT_IMPORT ,
                     myapp()->frame->bitmaps[0],
                     txt("m_new_sequence") ) ;  
         toolBar->AddTool( MDI_FILE_OPEN, 
@@ -390,12 +391,8 @@ void MyChild::initToolbar ()
                     txt("m_store_in_db") , 
                     txt("m_txt_store_in_db"));
         toolBar->AddSeparator() ;
-        toolBar->AddTool( MDI_UNDO, myapp()->frame->bitmaps[3] ) ;
-        toolBar->AddSeparator() ;
-        toolBar->AddTool( MDI_CUT, myapp()->frame->bitmaps[4] ) ;
-        toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] ) ;
-        toolBar->AddTool( MDI_PASTE, myapp()->frame->bitmaps[6] ) ;
-        toolBar->AddSeparator() ;
+        toolBar->AddTool( MDI_UNDO, myapp()->frame->bitmaps[3] , txt("m_undo_text") ) ;
+        myapp()->frame->addCCPFTools ( toolBar , true ) ;
         toolBar->AddTool( MDI_CIRCULAR_LINEAR,
             myapp()->frame->bitmaps[7],
             myapp()->frame->bitmaps[8],

@@ -18,6 +18,7 @@ typedef unsigned int uint ;
 	\param msg The message string to write into errout.
 */
 
+#define USE_22_ICONS
 
 /**	\def MYDEBUG
 	\brief Turns on output of the myass function; should not be used for releases

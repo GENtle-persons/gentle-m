@@ -36,12 +36,8 @@ ChildBase::ChildBase(wxWindow *parent, const wxString& title)
 
 wxToolBar *ChildBase::CreateToolBar ( int i )
 {
-//#ifdef __WXMSW__
+  i = wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL | wxTB_DOCKABLE ; // Override
   return ChildBase::CreateToolBar ( i , -1 , _T("") ) ;
-/*#else
-  wxToolBar *bar = new wxToolBar ( myapp()->frame , -1 ) ;
-  return bar ;
-  #endif*/
 }
 
 void ChildBase::Maximize ( bool isit )

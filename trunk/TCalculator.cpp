@@ -123,7 +123,8 @@ void TCalculator::initme ()
     data->init () ;
 
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
-//    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
+    myapp()->frame->setDummyToolbar ( this ) ;
+    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
     v0->Add ( nb , 1 , wxEXPAND , 5 ) ;
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;
@@ -197,8 +198,9 @@ void TGridData::init ()
        }    
 
     row = 2 ;
-    for ( a = 'A' ; a < 'Z' ; a++ )
+    for ( a = 'A' ; a <= 'Z' && a != '|'+1 ; a++ )
     	{
+       if ( a == 'Z' ) a = '|' ;
 	    TAAProp p = d.getAAprop ( a ) ;
 	    if ( p.tla == _T("") ) continue ;
 	    if ( p.tla == _T("???") ) continue ;
@@ -206,9 +208,12 @@ void TGridData::init ()
 	    s.SetChar ( 5 , a ) ;
 	    SetCellValue ( row , 0 , wxString ( (wxChar) a ) ) ;
 	    SetCellValue ( row , 1 , p.tla ) ;
-	    SetCellValue ( row , 2 , txt(s) ) ;
-	    SetCellValue ( row , 3 , wxString::Format ( _T("%4.4f") , p.mw ) ) ;
-	    SetCellValue ( row , 4 , wxString::Format ( _T("%4.2f") , p.pi ) ) ;
+	    if ( a != '|' )
+          {
+   	    SetCellValue ( row , 2 , txt(s) ) ;
+   	    SetCellValue ( row , 3 , wxString::Format ( _T("%4.4f") , p.mw ) ) ;
+   	    SetCellValue ( row , 4 , wxString::Format ( _T("%4.2f") , p.pi ) ) ;
+          }
 	    SetCellValue ( row , 5 , codons[a] ) ;
 	    SetCellAlignment ( row , 3 , wxALIGN_RIGHT , wxALIGN_CENTRE ) ;
 	    SetCellAlignment ( row , 4 , wxALIGN_RIGHT , wxALIGN_CENTRE ) ;
