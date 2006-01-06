@@ -50,7 +50,6 @@
 #include <wx/splash.h>
 #include <wx/filesys.h>
 #include <wx/file.h>
-//#include <wx/sysopt.h>
 
 #ifdef __WXMSW__
 #include "wx/msw/registry.h"
@@ -204,7 +203,6 @@ bool MyApp::OnInit()
 {
    isoconv = new wxCSConv ( _T("iso-8859-1") ) ;
    wxConvCurrent = isoconv ;
-//   wxSystemOptions::SetOption(wxT("msw.remap"), 0);
    errout = NULL ;
    total_log_time = 0 ;
    total_log_counter = 0 ;

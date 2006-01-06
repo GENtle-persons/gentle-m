@@ -91,8 +91,8 @@
 					PBXFileDataSource_SCM_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 148825693;
-			PBXWorkspaceStateSaveDate = 148825693;
+			PBXPerProjectTemplateStateSaveDate = 158250142;
+			PBXWorkspaceStateSaveDate = 158250142;
 		};
 		sourceControlManager = 9180A64F0866FCF9000C7D5E /* Source Control */;
 		userBuildSettings = {
@@ -123,6 +123,7 @@
 		);
 		argumentStrings = (
 		);
+		autoAttachOnCrash = 1;
 		configStateDict = {
 			"PBXLSLaunchAction-0" = {
 				PBXLSLaunchAction = 0;
@@ -136,8 +137,6 @@
 				startActionInfo = "";
 			};
 		};
-		cppStopOnCatchEnabled = 0;
-		cppStopOnThrowEnabled = 0;
 		customDataFormattersEnabled = 1;
 		debuggerPlugin = GDBDebugging;
 		disassemblyDisplayState = 0;
@@ -234,7 +233,7 @@
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {925, 4256}}";
 			sepNavSelRange = "{1795, 0}";
-			sepNavVisRect = "{{0, 691}, {925, 543}}";
+			sepNavVisRect = "{{0, 2188}, {925, 543}}";
 			sepNavWindowFrame = "{{17, 45}, {964, 672}}";
 		};
 	};
@@ -311,9 +310,9 @@
 	};
 	9180A6770866FD46000C7D5E /* main.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {925, 7882}}";
-			sepNavSelRange = "{5955, 278}";
-			sepNavVisRect = "{{0, 2866}, {925, 543}}";
+			sepNavIntBoundsRect = "{{0, 0}, {925, 8162}}";
+			sepNavSelRange = "{5898, 0}";
+			sepNavVisRect = "{{0, 2746}, {925, 543}}";
 			sepNavWindowFrame = "{{38, 48}, {964, 672}}";
 		};
 	};
@@ -689,9 +688,9 @@
 	};
 	91C9EABF0867351700AE735B /* variables.csv */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {2618, 12110}}";
-			sepNavSelRange = "{12631, 0}";
-			sepNavVisRect = "{{0, 0}, {925, 543}}";
+			sepNavIntBoundsRect = "{{0, 0}, {2618, 12488}}";
+			sepNavSelRange = "{7628, 8}";
+			sepNavVisRect = "{{0, 1864}, {925, 543}}";
 			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
 		};
 	};
