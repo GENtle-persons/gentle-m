@@ -7,12 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		91023BCD0893BBA600BD8757 /* libmysqlclient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91023BCC0893BBA600BD8757 /* libmysqlclient.a */; };
+		9118009908DFFB2F004F6B8F /* libsqlite3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911ECB4208DEFB6D006A2654 /* libsqlite3.a */; };
 		911E4C4B08695B31006FD9C0 /* mac_icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 911E4C4A08695B31006FD9C0 /* mac_icon.icns */; };
 		911ECB3B08DEF872006A2654 /* libwx_mac-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911ECB3A08DEF872006A2654 /* libwx_mac-2.6.a */; };
 		911ECB3F08DEF8E4006A2654 /* libwxjpeg-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911ECB3C08DEF8E4006A2654 /* libwxjpeg-2.6.a */; };
 		911ECB4008DEF8E4006A2654 /* libwxpng-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911ECB3D08DEF8E4006A2654 /* libwxpng-2.6.a */; };
-		911ECB4308DEFB6D006A2654 /* libsqlite3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911ECB4208DEFB6D006A2654 /* libsqlite3.a */; };
 		911ECB4408DF0026006A2654 /* libwxtiff-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911ECB3E08DEF8E4006A2654 /* libwxtiff-2.6.a */; };
 		91410FC008D04FFA00776D65 /* .cvsignore in Resources */ = {isa = PBXBuildFile; fileRef = 91410F9508D04FF900776D65 /* .cvsignore */; };
 		91410FC108D04FFA00776D65 /* Bugs & Co.txt in Resources */ = {isa = PBXBuildFile; fileRef = 91410F9608D04FF900776D65 /* Bugs & Co.txt */; };
@@ -157,6 +156,8 @@
 		9180A7140866FD46000C7D5E /* TVirtualGel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9180A6B70866FD46000C7D5E /* TVirtualGel.cpp */; };
 		9180A7150866FD46000C7D5E /* TXMLfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9180A6B80866FD46000C7D5E /* TXMLfile.cpp */; };
 		9180A7160866FD46000C7D5E /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9180A6B90866FD46000C7D5E /* util.cpp */; };
+		9184744F08EA8C7000D49700 /* libmysqlclient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91023BCC0893BBA600BD8757 /* libmysqlclient.a */; };
+		9184745008EA8C7100D49700 /* libsqlite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91B024D608672723007ABD07 /* libsqlite.a */; };
 		919174E7086807DD00FD900E /* A.wav in Resources */ = {isa = PBXBuildFile; fileRef = 919174CC086807DD00FD900E /* A.wav */; };
 		919174E8086807DD00FD900E /* B.wav in Resources */ = {isa = PBXBuildFile; fileRef = 919174CD086807DD00FD900E /* B.wav */; };
 		919174E9086807DD00FD900E /* C.wav in Resources */ = {isa = PBXBuildFile; fileRef = 919174CE086807DD00FD900E /* C.wav */; };
@@ -239,7 +240,6 @@
 		9191756D086807F200FD900E /* web.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 91917537086807F200FD900E /* web.bmp */; };
 		9191756E086807F200FD900E /* write.xbm in Resources */ = {isa = PBXBuildFile; fileRef = 91917538086807F200FD900E /* write.xbm */; };
 		919175750868179400FD900E /* blank.db in Resources */ = {isa = PBXBuildFile; fileRef = 919175740868179400FD900E /* blank.db */; };
-		91B024D808672723007ABD07 /* libsqlite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91B024D608672723007ABD07 /* libsqlite.a */; };
 		91B024DB08672754007ABD07 /* ureadseq.c in Sources */ = {isa = PBXBuildFile; fileRef = 91B024DA08672754007ABD07 /* ureadseq.c */; };
 		91C98C56086946DC003ED5D9 /* default.tab in Resources */ = {isa = PBXBuildFile; fileRef = 91C98C55086946DC003ED5D9 /* default.tab */; };
 		91CC568C088B961300567E40 /* PCR_Troubleshoot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91CC568B088B961300567E40 /* PCR_Troubleshoot.cpp */; };
@@ -523,13 +523,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				91B024D808672723007ABD07 /* libsqlite.a in Frameworks */,
-				91023BCD0893BBA600BD8757 /* libmysqlclient.a in Frameworks */,
 				911ECB3B08DEF872006A2654 /* libwx_mac-2.6.a in Frameworks */,
 				911ECB3F08DEF8E4006A2654 /* libwxjpeg-2.6.a in Frameworks */,
 				911ECB4008DEF8E4006A2654 /* libwxpng-2.6.a in Frameworks */,
-				911ECB4308DEFB6D006A2654 /* libsqlite3.a in Frameworks */,
 				911ECB4408DF0026006A2654 /* libwxtiff-2.6.a in Frameworks */,
+				9118009908DFFB2F004F6B8F /* libsqlite3.a in Frameworks */,
+				9184744F08EA8C7000D49700 /* libmysqlclient.a in Frameworks */,
+				9184745008EA8C7100D49700 /* libsqlite.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1170,6 +1170,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G4;
@@ -1204,7 +1205,7 @@
 				);
 				LIBRARY_STYLE = STATIC;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				OPTIMIZATION_CFLAGS = "-O2";
+				OPTIMIZATION_CFLAGS = "-O3";
 				OTHER_CFLAGS = (
 					"-D__WXMAC__",
 					"-D_FILE_OFFSET_BITS=64",
@@ -1228,6 +1229,7 @@
 				);
 				OTHER_REZFLAGS = "";
 				PREBINDING = YES;
+				PRESERVE_DEAD_CODE_INITS_AND_TERMS = NO;
 				PRODUCT_NAME = GENtle;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "";
@@ -1238,6 +1240,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = YES;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G4;
@@ -1272,7 +1275,7 @@
 				);
 				LIBRARY_STYLE = STATIC;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				OPTIMIZATION_CFLAGS = "-O2";
+				OPTIMIZATION_CFLAGS = "-O3";
 				OTHER_CFLAGS = (
 					"-D__WXMAC__",
 					"-D_FILE_OFFSET_BITS=64",
@@ -1296,6 +1299,7 @@
 				);
 				OTHER_REZFLAGS = "";
 				PREBINDING = YES;
+				PRESERVE_DEAD_CODE_INITS_AND_TERMS = NO;
 				PRODUCT_NAME = GENtle;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "";
@@ -1312,6 +1316,7 @@
 				9180A64E0866FCF9000C7D5E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9180A65B0866FD0B000C7D5E /* Build configuration list for PBXNativeTarget "GENtle" */ = {
 			isa = XCConfigurationList;
@@ -1320,6 +1325,7 @@
 				9180A65D0866FD0B000C7D5E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
