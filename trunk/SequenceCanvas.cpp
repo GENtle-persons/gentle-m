@@ -1290,6 +1290,14 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
     if ( getAln() && getAln()->isThreadRunning() ) return ;
     wxClientDC dc(this);
     PrepareDC(dc);
+    
+    bool middledown = event.MiddleDown() ;
+    if ( event.AltDown() && event.LeftDown() )
+       {
+       event.m_leftDown = false ;
+       event.m_middleDown = true ;
+       middledown = true ;
+       }
 
     wxPoint pt(event.GetLogicalPosition(dc));
     int my = dc.LogicalToDeviceY ( pt.y ) ;
@@ -1366,7 +1374,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
        SetToolTip ( newToolTip ) ;
        }
         
-    if ( event.MiddleDown() && where )
+    if ( middledown && where )
 		{
 		if ( child && child->def == _T("alignment") )
 			{

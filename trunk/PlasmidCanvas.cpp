@@ -285,6 +285,14 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
     if ( !hasBeenPainted ) return ;
     if ( w == 0 || h == 0 ) return ;
 
+    bool middledown = event.MiddleDown() ;
+    if ( event.AltDown() && event.LeftDown() )
+       {
+       event.m_leftDown = false ;
+       event.m_middleDown = true ;
+       middledown = true ;
+       }
+
     int mode ;
     if ( p->vec->isCircular() ) mode = MODE_CIRCULAR ;
     else mode = MODE_LINEAR ;
@@ -389,7 +397,7 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
            if ( p->def == _T("dna") ) p->treeBox->SelectItem ( p->treeBox->GetParent ( ) ) ; // Frell
 #endif
            }
-        else if ( event.MiddleDown() )
+        else if ( middledown )
            {
            p->runRestriction ( s ) ;
            }
@@ -432,7 +440,7 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
              invokeItemPopup ( vo , pt_abs ) ;
         else if ( event.LeftDClick() )
            invokeVectorEditor ( _T("item") , vo ) ;
-        else if ( event.MiddleDown() )
+        else if ( middledown )
            {
            wxCommandEvent dummyEvent ;
            context_last_item = vo ;
@@ -580,11 +588,11 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
               }
         	}
         }
-    else if ( event.MiddleDown() && p->cSequence->markedFrom() != -1 )
+    else if ( middledown && p->cSequence->markedFrom() != -1 )
        {
        p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
        }
-    else if ( p->cSequence->markedFrom() == -1 && ( event.MiddleDown() || ( event.Dragging() && event.MiddleIsDown() ) ) )
+    else if ( p->cSequence->markedFrom() == -1 && ( middledown || ( event.Dragging() && middledown ) ) )
        {
        if ( mode == MODE_CIRCULAR ) bp = circular_pos ( angle ) ;
        p->cSequence->mark ( id , bp , bp ) ;
