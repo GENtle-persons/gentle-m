@@ -93,6 +93,7 @@ Section "GENtle (required)"
   
   SetOutPath "$INSTDIR\bitmaps"
   File "bitmaps\*.bmp"
+  File "bitmaps\*.png"
   
   SetOutPath "$INSTDIR"
 
