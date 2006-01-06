@@ -82,7 +82,9 @@ void ExternalInterface::initme ()
     nb->AddPage ( new EIpanel ( nb , EI_NCBI ) , _T("NCBI") ) ; // Default panel
 
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
-//    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
+
+    myapp()->frame->setDummyToolbar ( this ) ;
+    v0->Add ( toolbar , 0 , wxEXPAND|wxBOTTOM , 2 ) ;
     v0->Add ( nb , 1 , wxEXPAND , 5 ) ;
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;

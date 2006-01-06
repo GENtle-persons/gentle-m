@@ -182,9 +182,7 @@ void TABIviewer::initme ()
                 myapp()->frame->bitmaps[16],
                 txt("m_print_sequence") ) ;
     toolBar->AddSeparator() ;
-//    toolBar->AddTool( MDI_CUT, myapp()->frame->bitmaps[4] ) ;
-    toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] ) ;
-//    toolBar->AddTool( MDI_PASTE, myapp()->frame->bitmaps[6] ) ;
+    toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] , txt("m_copy_text") ) ;
     toolBar->AddSeparator() ;
     horiz = new wxCheckBox ( toolBar , ALIGN_HORIZ , txt("t_horizontal") ) ;
     toolBar->AddControl ( horiz ) ;

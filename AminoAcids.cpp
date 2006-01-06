@@ -212,11 +212,8 @@ void TAminoAcids::initme ()
     toolbar->AddTool( SEQ_PRINT, 
                 myapp()->frame->bitmaps[16],
                 txt("m_print_sequence") ) ;
-    toolbar->AddSeparator() ;
-    toolbar->AddTool( MDI_CUT, myapp()->frame->bitmaps[4] ) ;
-    toolbar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] ) ;
-    toolbar->AddTool( MDI_PASTE, myapp()->frame->bitmaps[6] ) ;
-    toolbar->AddSeparator () ;
+
+    myapp()->frame->addCCPFTools ( toolbar , true ) ;
     wxCheckBox *mycb = new wxCheckBox ( toolbar , ALIGN_HORIZ , txt("t_horizontal") ) ;
     toolbar->AddControl ( mycb ) ;
     inlinePlot = new wxChoice ( toolbar , AA_IP ) ;

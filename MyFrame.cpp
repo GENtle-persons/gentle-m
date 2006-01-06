@@ -318,18 +318,40 @@ void MyFrame::initme ()
     SetDropTarget ( dt ) ;
 
     // Bitmap library
+#ifdef USE_22_ICONS
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("document-new.png") , wxBITMAP_TYPE_PNG) ) ;  // 0
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("document-open.png") , wxBITMAP_TYPE_PNG) ) ; // 1
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("document-save.png") , wxBITMAP_TYPE_PNG) ) ; // 2
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("edit-undo.png") , wxBITMAP_TYPE_PNG) ) ; // 3
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("edit-cut.png") , wxBITMAP_TYPE_PNG) ) ;  // 4
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("edit-copy.png") , wxBITMAP_TYPE_PNG) ) ; // 5
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("edit-paste.png") , wxBITMAP_TYPE_PNG) ) ;// 6
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("display_circular_linear.png") , wxBITMAP_TYPE_PNG) ) ; // 7
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("display_circular_linear.png") , wxBITMAP_TYPE_PNG) ) ;   // 8
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("display_orfs.png") , wxBITMAP_TYPE_PNG) ) ; // 9
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("display_features.png") , wxBITMAP_TYPE_PNG) ) ; // 10
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("restriction_new.png") , wxBITMAP_TYPE_PNG) ) ; // 11
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("view_new.png") , wxBITMAP_TYPE_PNG) ) ; // 12
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("accessories-text-editor.png") , wxBITMAP_TYPE_PNG) ) ; // 13
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("go-down.png") , wxBITMAP_TYPE_PNG) ) ; // 14
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("go-up.png") , wxBITMAP_TYPE_PNG) ) ; // 15
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("document-print.png") , wxBITMAP_TYPE_PNG) ) ; // 16
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("alignments.png") , wxBITMAP_TYPE_PNG) ) ; // 17
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("image_viewer.png") , wxBITMAP_TYPE_PNG) ) ; // 18
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("applications-internet.png") , wxBITMAP_TYPE_PNG) ) ; // 19
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("accessories-calculator.png") , wxBITMAP_TYPE_PNG) ) ; // 20
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("preferences-desktop.png") , wxBITMAP_TYPE_PNG) ) ; // 21
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("edit-find.png") , wxBITMAP_TYPE_PNG) ) ; // 22
+#else
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("new.bmp") , wxBITMAP_TYPE_BMP) ) ;  // 0
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("open.bmp") , wxBITMAP_TYPE_BMP) ) ; // 1
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("save.bmp") , wxBITMAP_TYPE_BMP) ) ; // 2
-
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("undo.bmp") , wxBITMAP_TYPE_BMP) ) ; // 3
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("cut.bmp") , wxBITMAP_TYPE_BMP) ) ;  // 4
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("copy.bmp") , wxBITMAP_TYPE_BMP) ) ; // 5
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("paste.bmp") , wxBITMAP_TYPE_BMP) ) ;// 6
-
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("plasmid_circular.bmp") , wxBITMAP_TYPE_BMP) ) ; // 7
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("plasmid_linear.bmp") , wxBITMAP_TYPE_BMP) ) ;   // 8
-
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("orfs.bmp") , wxBITMAP_TYPE_BMP) ) ; // 9
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("display_features.bmp") , wxBITMAP_TYPE_BMP) ) ; // 10
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("display_restriction.bmp") , wxBITMAP_TYPE_BMP) ) ; // 11
@@ -337,13 +359,15 @@ void MyFrame::initme ()
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("mode_edit.bmp") , wxBITMAP_TYPE_BMP) ) ; // 13
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("primer_import.bmp") , wxBITMAP_TYPE_BMP) ) ; // 14
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("primer_export.bmp") , wxBITMAP_TYPE_BMP) ) ; // 15
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("print.bmp") , wxBITMAP_TYPE_BMP) ) ; // 16
-
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("print.png") , wxBITMAP_TYPE_BMP) ) ; // 16
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("align_tool.bmp") , wxBITMAP_TYPE_BMP) ) ; // 17
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("image.bmp") , wxBITMAP_TYPE_BMP) ) ; // 18
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("web.bmp") , wxBITMAP_TYPE_BMP) ) ; // 19
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("calc_tool.bmp") , wxBITMAP_TYPE_BMP) ) ; // 20
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("settings_tool.bmp") , wxBITMAP_TYPE_BMP) ) ; // 21
+    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("help.bmp") , wxBITMAP_TYPE_BMP) ) ; // 22
+#endif
+
 
     html_ep = new wxHtmlEasyPrinting ( _T("") , this ) ;
     
@@ -415,7 +439,7 @@ void MyFrame::initme ()
     m_leftWindow2->SetFocus () ;
 //    SetStatusText ( txt("t_update_warning") , 1 ) ;
     }
-    
+
 /** \brief Handles close event
 
 	Scans through all the children; if any one is changed, ask the user the
@@ -991,6 +1015,10 @@ void MyFrame::OnSize(wxSizeEvent& event)
 */
 void MyFrame::InitToolBar(wxToolBar* toolBar)
 {
+#ifdef USE_22_ICONS
+     wxSize ns ( 22 , 22 ) ;
+     toolBar->SetToolBitmapSize ( ns ) ;
+#endif
 }
 
 /** \brief Adds default tools to a given toolbar
@@ -998,12 +1026,44 @@ void MyFrame::InitToolBar(wxToolBar* toolBar)
 void MyFrame::addDefaultTools(wxToolBar* toolBar)
 	{
  	toolBar->AddSeparator() ;
- 	toolBar->AddTool( MDI_ALIGNMENT, myapp()->frame->bitmaps[17] ) ;
- 	toolBar->AddTool( MDI_IMAGE_VIEWER, myapp()->frame->bitmaps[18] ) ;
- 	toolBar->AddTool( MDI_CALCULATOR, myapp()->frame->bitmaps[20] ) ;
- 	toolBar->AddTool( PROGRAM_OPTIONS, myapp()->frame->bitmaps[21] ) ;
- 	toolBar->AddTool( MDI_EXTERNAL_INTERFACE, myapp()->frame->bitmaps[19] ) ;
-	}
+ 	toolBar->AddTool( MDI_ALIGNMENT, myapp()->frame->bitmaps[17] , txt("m_alignment_text") ) ;
+ 	toolBar->AddTool( MDI_IMAGE_VIEWER, myapp()->frame->bitmaps[18] , txt("m_imageviewer_text") ) ;
+ 	toolBar->AddTool( MDI_CALCULATOR, myapp()->frame->bitmaps[20] , txt("m_calculator_text") ) ;
+ 	toolBar->AddTool( PROGRAM_OPTIONS, myapp()->frame->bitmaps[21] , txt("m_options_text") ) ;
+ 	toolBar->AddTool( MDI_EXTERNAL_INTERFACE, myapp()->frame->bitmaps[19] , txt("m_external_text") ) ;
+   }
+
+/** \brief Adds cut,copy,paste (and find) tools to a given toolbar
+*/
+void MyFrame::addCCPFTools(wxToolBar* toolBar, bool findbutton )
+	{
+    toolBar->AddSeparator() ;
+    toolBar->AddTool( MDI_CUT, myapp()->frame->bitmaps[4] , txt("m_cut_text") ) ;
+    toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] , txt("m_copy_text") ) ;
+    toolBar->AddTool( MDI_PASTE, myapp()->frame->bitmaps[6] , txt("m_paste_text") ) ;
+    if ( findbutton )
+       toolBar->AddTool( MDI_FIND, myapp()->frame->bitmaps[22] , txt("m_find_text") ) ;
+    toolBar->AddSeparator () ;
+   }
+
+/** \brief Generates a basic tooblar
+*/
+void MyFrame::setDummyToolbar ( ChildBase *c )
+	{
+    wxToolBar *toolBar = c->CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
+    toolBar->Reparent ( c ) ;
+    c->toolbar = toolBar ;
+    myapp()->frame->InitToolBar(toolBar);
+    toolBar->AddTool( MDI_TEXT_IMPORT ,
+                myapp()->frame->bitmaps[0] ,
+                txt("m_new_sequence") ) ;
+    toolBar->AddTool( MDI_FILE_OPEN,
+                myapp()->frame->bitmaps[1] ,
+            txt("m_open") , txt("m_opentxt") );
+    addDefaultTools ( toolBar ) ;
+    c->toolbar = toolBar ;
+    toolBar->Realize() ;
+   }
 
 /** \brief Creates a new alignment window
 */

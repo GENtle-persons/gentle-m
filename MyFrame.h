@@ -133,6 +133,8 @@ public:
     virtual void OnSashDrag(wxSashEvent& event);
     
     virtual void addDefaultTools(wxToolBar* toolBar) ;
+    virtual void addCCPFTools(wxToolBar* toolBar, bool findbutton = false ) ;
+    virtual void setDummyToolbar ( ChildBase *c ) ;
     virtual TCalculator *RunCalculator () ;
     virtual TGraph *RunGraph () ;
     virtual MyChild* newFromVector ( TVector *nv , int type = TYPE_VECTOR ) ;

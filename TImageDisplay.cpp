@@ -86,7 +86,8 @@ void TImageDisplay::initme ()
     wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
-    
+    wxBoxSizer *vx = new wxBoxSizer ( wxVERTICAL ) ;
+
     lb = new wxListBox ( this , IV_LIST , wxDefaultPosition , wxDefaultSize ,
                             0 , NULL , wxLB_SORT ) ;
     bu = new wxButton ( this , IV_BUTTON , _T("") , wxDefaultPosition , wxSize ( 180 , -1 ) ) ;
@@ -102,8 +103,13 @@ void TImageDisplay::initme ()
     
     h0->Add ( v0 , 0 , wxEXPAND , 5 ) ;
     h0->Add ( right , 1 , wxEXPAND , 5 ) ;
-    SetSizer ( h0 ) ;
-    h0->Fit ( this ) ;
+
+    myapp()->frame->setDummyToolbar ( this ) ;
+    vx->Add ( toolbar , 0 , wxEXPAND|wxBOTTOM , 2 ) ;
+    vx->Add ( h0 , 1 , wxEXPAND , 5 ) ;
+
+    SetSizer ( vx ) ;
+    vx->Fit ( this ) ;
     
     cb->SetValue ( true ) ;
     wxString s_dir = myapp()->frame->LS->getOption ( _T("IMGDIR") , wxGetCwd() ) ;
