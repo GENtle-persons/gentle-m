@@ -1,0 +1,20 @@
+1.8.1
+Additions
+Bugfixes
+* New sequences with more than 64KB text can now be entered again
+* "OK" in Silmut/WhatCutsHere dialog with no entry selected doesn't crash anymore
+* DNA markers can now be added and edited via "marker.txt"
+* siRNA duplexes fix for features that cross the "zero" point
+
+__________________________________________
+1.8.0
+Additions
+* new icons for Windows
+* multiple DNA markers for virtual gel
+* find siRNA duplexes
+* turn plasmid map
+* enforcing global (alternative) translation table
+Bugfixes
+* better Mac/Linux integration
+* Miscellanous
+

@@ -886,7 +886,7 @@
 "t_feature_list_at","Features at position %d","Features an Position %d"
 "t_find_hint","You can use '?' for one and '*' for multiple unknown characters","Sie können '?' für ein und '*' für mehrere unbekannte Zeichen verwenden."
 "t_use_nonstandard_translation_table","Force this translation table","Diese Translationstabelle erzwingen"
-"p_turn_this_zero","Turn this to 12 o'clock","Dies in 12-Uhr-Position drehen"
+"p_turn_this_zero","Turn this to start coordinate","Dies auf Startkoordinate drehen"
 "u_turn","&Undo turning","Drehen &rückgängig machen"
 "t_vg_show_label","Show label","Zeige Beschriftung"
 "t_vg_concentration","   Gel concentration","   Gelkonzentration"

@@ -1,0 +1,14 @@
+# This file contains DNA markers for virtual gels
+# You can add your own in the following form:
+# Name:bp:conc,bp:conc,bp:conc,bp:conc,bp:conc ...
+# *Name is the name of the marker
+# *bp is the number of base pairs in that band
+# *conc is the concentration of that DNA in the marker (ng/µl)
+# ":conc" can be omitted. The default concentration (20) is then used
+
+MassRuler Mix:20,10000:200,8000:160,6000:120,5000:100,4000:80,3000:60,2500:50,2000:40,1500:32,1031:200,900:180,800:160,700:140,600:120,500:200,400:80,300:60,200:40,100:20,80:16
+MassRuler High Range:20,10000:200,8000:160,6000:120,5000:100,4000:80,3000:60,2500:52,2000:40,1500:32
+MassRuler Low Range:20,1031:200,900:180,800:160,700:140,600:120,500:200,400:80,300:60,200:40,100:20,80:16
+Lambda EcoRI+HindIII Mix:0.5,21226:219,5148:53,4973:51,4268:44,3530:36,2027:21,1904:19,1584:16,1375:14,947:10,831:8,564:6
+GeneRuler Mix:0.5,10000:11,8000:13,6000:16,5000:16,4000:22,3500:27,3000:69,2500:18,2000:46,1500:24,1200:16,1031:30,900:21,800:19,700:16,600:14,500:42,400:20,300:20,200:20,100:20
+GeneRuler 50bp:0.5,1031:73,900:64,800:57,700:50,600:43,500:71,400:28,300:21,250:18,200:28,150:11,100:21,50:14

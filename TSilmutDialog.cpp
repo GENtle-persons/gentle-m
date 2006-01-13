@@ -146,7 +146,10 @@ int TSilmutDialog::selID ()
 void TSilmutDialog::OnOK ( wxCommandEvent &ev )
     {
     last_selection = lb->GetSelection () ;
-    wxDialog::OnOK ( ev ) ;
+    if ( last_selection < 0 )
+        wxDialog::OnCancel ( ev ) ;
+    else
+        wxDialog::OnOK ( ev ) ;
     }
     
 void TSilmutDialog::OnCancel ( wxCommandEvent &ev )

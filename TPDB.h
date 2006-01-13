@@ -22,18 +22,18 @@ class TPDB
     {
     public :
     TPDB () ; ///< Constructor
-	virtual ~TPDB () {} ; ///< Dummy destructor
+    ~TPDB () {} ; ///< Dummy destructor
 	
-    virtual void load ( wxString s ) ; ///< Load file
-    virtual void paste ( wxString s ) ; ///< Take pasted text
-    virtual void remap () ; ///< Parse and generate sequences
+    void load ( wxString s ) ; ///< Load file
+    void paste ( wxString s ) ; ///< Take pasted text
+    void remap () ; ///< Parse and generate sequences
 
     bool success ; ///< Errors during parsing?
     vector <tseqres> seqres ; ///< The resulting sequences
     
     private :
-    virtual void check4success () ; ///< Valid PDB?
-    virtual int seq ( char c ) ; ///< Access (or create) a certain chain
+    void check4success () ; ///< Valid PDB?
+    int seq ( char c ) ; ///< Access (or create) a certain chain
     wxArrayString vs ; ///< The text lines
     
     /// The PDB name

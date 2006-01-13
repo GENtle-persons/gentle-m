@@ -17,18 +17,18 @@ class AutoAnnotate
 	{
 	public :
 	AutoAnnotate ( MyChild *_p = NULL ) ; ///< Constructor
-	virtual ~AutoAnnotate () {} ; ///< Destructor (empty)
+	~AutoAnnotate () {} ; ///< Destructor (empty)
 
-	virtual bool SettingsDialog () ; ///< Runs the dialog; returns wether to Run or not
-	virtual void Run () ; ///< Runs the search
+	bool SettingsDialog () ; ///< Runs the dialog; returns wether to Run or not
+	void Run () ; ///< Runs the search
 	
 	private :
-	virtual bool ScanDatabase ( wxString database ) ; ///< Scans a database for matching features
-	virtual bool addORFs ( TVector *v ) ; ///< Adds open reading frames as features (that could not be identified)
- 	virtual bool MatchItem ( TVector *tv , TVectorItem &item , TVector *v , wxString &oseq ) ; ///< Compares two items to prevent double entries
- 	virtual bool RawMatch ( TVectorItem &item , TVector *v , wxString &oseq , wxString &s ) ; ///< Tries to match the full item sequence against the current sequence
- 	virtual void machete ( TVector *v ) ; ///< Reduces the number of identified items, so that one can actually read something in the map again :-)
- 	virtual bool within ( TVectorItem &i1 , TVectorItem &i2 , TVector *v ) ; ///< Checks if TVectorItem i2 lies within i1 (no need to add it then)
+	bool ScanDatabase ( wxString database ) ; ///< Scans a database for matching features
+	bool addORFs ( TVector *v ) ; ///< Adds open reading frames as features (that could not be identified)
+ 	bool MatchItem ( TVector *tv , TVectorItem &item , TVector *v , wxString &oseq ) ; ///< Compares two items to prevent double entries
+ 	bool RawMatch ( TVectorItem &item , TVector *v , wxString &oseq , wxString &s ) ; ///< Tries to match the full item sequence against the current sequence
+ 	void machete ( TVector *v ) ; ///< Reduces the number of identified items, so that one can actually read something in the map again :-)
+ 	bool within ( TVectorItem &i1 , TVectorItem &i2 , TVector *v ) ; ///< Checks if TVectorItem i2 lies within i1 (no need to add it then)
 
  	friend class TAutoAnnotateDialog ;
  	

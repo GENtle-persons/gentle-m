@@ -11,22 +11,22 @@ class CGview
 	{
 	public :
  	CGview ( TVector *_v = NULL ) ; ///< Constructor
-	virtual ~CGview () {} ; ///< Destructor (empty)
+	~CGview () {} ; ///< Destructor (empty)
 
- 	virtual wxString getXML () ; ///< Generates the XML for the vector v and returns it as a wxString
- 	virtual bool runSettingsDialog () ; ///< Runs the settings dialog prior to the actual XML generation
- 	virtual void postProcess ( wxString filename ) ; ///< Runs CGview and the image viewer, if requested
+ 	wxString getXML () ; ///< Generates the XML for the vector v and returns it as a wxString
+ 	bool runSettingsDialog () ; ///< Runs the settings dialog prior to the actual XML generation
+ 	void postProcess ( wxString filename ) ; ///< Runs CGview and the image viewer, if requested
  	
  	private :
   	friend class CGdialog ;
-  	virtual wxString addXMLfeatureSlot ( int dir ) ; ///< Adds the features for the given direction to the XML
-  	virtual wxString getColorName ( int type ) ; ///< Returns XML item comor, based on the item type
-  	virtual wxString getColorName ( TVectorItem *i ) ; ///< Returns XML item color, based on the item color used in GENtle
-  	virtual bool itemOverlap ( TVectorItem &i1 , TVectorItem &i2 ) ; ///< Checks if two items overlap
-  	virtual void wellform ( wxString &s ) ; ///< Fixes quotes and &amp; prior to XML generation
-  	virtual void makeGCcolor ( int percent , wxColour &col ) ;
- 	virtual wxString RGB2string ( wxColour col ) ;
- 	virtual wxString RGB2string ( int red , int green , int blue ) ;
+  	wxString addXMLfeatureSlot ( int dir ) ; ///< Adds the features for the given direction to the XML
+  	wxString getColorName ( int type ) ; ///< Returns XML item comor, based on the item type
+  	wxString getColorName ( TVectorItem *i ) ; ///< Returns XML item color, based on the item color used in GENtle
+  	bool itemOverlap ( TVectorItem &i1 , TVectorItem &i2 ) ; ///< Checks if two items overlap
+  	void wellform ( wxString &s ) ; ///< Fixes quotes and &amp; prior to XML generation
+  	void makeGCcolor ( int percent , wxColour &col ) ;
+ 	wxString RGB2string ( wxColour col ) ;
+ 	wxString RGB2string ( int red , int green , int blue ) ;
   	
   	TVector *v ; ///< Pointer to the TVector structure to export
   	int width , height , radius ;

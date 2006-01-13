@@ -36,13 +36,13 @@ class TAAProp
     {
     public :
     TAAProp () ; ///< Constructor
-	virtual ~TAAProp () {} ; ///< Destructor (empty)
-    virtual void set_cf ( int pa , int pb , int pt , float f0 , float f1 , float f2 , float f3 ) ; ///< Some data
-    virtual void set_data ( float _mw , float _pi , wxString _tla ) ; ///< Molecular weight, isoelectric point, three-letter acronym
-    virtual void set_hp ( float _hp_kd , float _hp_hw ) ; ///< More data
-    virtual void set_atoms ( int C , int H , int N , int O , int S ) ; ///< Atoms in this amino acid
-    virtual void set_halflife ( int mammal , int yeast , int ecoli ) ; ///< Half-life (not the game!)
-    virtual wxString get_halflife_text ( int hl ) ; ///< Returns half-life estimation
+    ~TAAProp () {} ; ///< Destructor (empty)
+    void set_cf ( int pa , int pb , int pt , float f0 , float f1 , float f2 , float f3 ) ; ///< Some data
+    void set_data ( float _mw , float _pi , wxString _tla ) ; ///< Molecular weight, isoelectric point, three-letter acronym
+    void set_hp ( float _hp_kd , float _hp_hw ) ; ///< More data
+    void set_atoms ( int C , int H , int N , int O , int S ) ; ///< Atoms in this amino acid
+    void set_halflife ( int mammal , int yeast , int ecoli ) ; ///< Half-life (not the game!)
+    wxString get_halflife_text ( int hl ) ; ///< Returns half-life estimation
     wxString tla ; ///< Three-letter acronym
     float mw , pi ;
     float cf_f[4] ; ///< Some data
@@ -59,9 +59,9 @@ class TORF
     public :
     TORF () ; ///< Default constructor, empty
     TORF ( int _f , int _t , int _r ) ; ///< Constructor
-	virtual ~TORF () {} ; ///< Destructor (empty)
+	~TORF () {} ; ///< Destructor (empty)
     
-    virtual wxString getText () ;
+    wxString getText () ;
     
     /// \brief Start of ORF
     int from , to ; ///< End of ORF
@@ -87,42 +87,42 @@ class TVectorItem
     public :
     TVectorItem () ; ///< Default constructor
     TVectorItem ( wxString sn , wxString n , int f , int t , char ty ) ; ///< Constructor
-	 virtual ~TVectorItem () {} ; ///< Destructor (empty)
+	 ~TVectorItem () {} ; ///< Destructor (empty)
     
-    virtual wxBrush *getBrush () ; ///< Returns a pointer to the brush used to draw the item
-    virtual wxColour getFontColor () ; ///< Returns the font color
-    virtual void setColor ( wxColour col ) ; ///< Sets the font color
-    virtual bool isVisible () ; ///< Is this item visible?
-    virtual void setVisible ( bool b ) ; ///< Set visibility
-    virtual int getRF () ; ///< Returns the reading frame
-    virtual void setRF ( int x ) ; ///< Sets the reading frame
-    virtual int getOffset () ; ///< returns the offset; -1 = no offset
-    virtual void setOffset ( int o = -1 ) ; ///< Sets the offset; -1 = no offset
-    virtual void setType ( wxString s ) ; ///< Sets the item type
-    virtual int getOffsetAt ( int i ) ; ///< Returns the offset of the item at a specific position
+    wxBrush *getBrush () ; ///< Returns a pointer to the brush used to draw the item
+    wxColour getFontColor () ; ///< Returns the font color
+    void setColor ( wxColour col ) ; ///< Sets the font color
+    bool isVisible () ; ///< Is this item visible?
+    void setVisible ( bool b ) ; ///< Set visibility
+    int getRF () ; ///< Returns the reading frame
+    void setRF ( int x ) ; ///< Sets the reading frame
+    int getOffset () ; ///< returns the offset; -1 = no offset
+    void setOffset ( int o = -1 ) ; ///< Sets the offset; -1 = no offset
+    void setType ( wxString s ) ; ///< Sets the item type
+    int getOffsetAt ( int i ) ; ///< Returns the offset of the item at a specific position
     
-    virtual void doRemove ( int f , int t , int l ) ; ///< Remove a part of the item
-    virtual wxString implodeParams () ; ///< Join item parameters for storage
-    virtual void explodeParams ( wxString _s ) ; ///< Extract item parameters from stored form
-    virtual wxTreeItemId getTreeID () { return treeid ; } ; ///< The current ID of the item in TVectorTree
-    virtual void setTreeID ( wxTreeItemId newid ) { treeid = newid ; } ///< Set new item ID in TVectorTree
-    virtual int getDirection () { return direction ; } ///< Return the direction
-    virtual void setDirection ( int newdir ) { direction = newdir ; } ///< Set the direction
-    virtual char getType () { return type ; } ///< Returns the item type
-    virtual void setType ( char newtype ) { type = newtype ; } ///< Sets the item type
-    virtual int getMem () ; ///< Estimates the memory usage of this item (debugging use only)
+    void doRemove ( int f , int t , int l ) ; ///< Remove a part of the item
+    wxString implodeParams () ; ///< Join item parameters for storage
+    void explodeParams ( wxString _s ) ; ///< Extract item parameters from stored form
+    wxTreeItemId getTreeID () { return treeid ; } ; ///< The current ID of the item in TVectorTree
+    void setTreeID ( wxTreeItemId newid ) { treeid = newid ; } ///< Set new item ID in TVectorTree
+    int getDirection () { return direction ; } ///< Return the direction
+    void setDirection ( int newdir ) { direction = newdir ; } ///< Set the direction
+    char getType () { return type ; } ///< Returns the item type
+    void setType ( char newtype ) { type = newtype ; } ///< Sets the item type
+    int getMem () ; ///< Estimates the memory usage of this item (debugging use only)
 
     // Parameters
-    virtual wxString getParam ( wxString p , wxString def = _T("") ) ; ///< Returns the value of a parameter; optional default value
-    virtual wxArrayString getParamKeys () ; ///< Get a list of all parameter keys
-    virtual void setParam ( wxString p , wxString v ) ; ///< Set a parameter key/value pair
-    virtual void setParam ( wxString p , int v ) ; ///< Set a parameter key/value pair
+    wxString getParam ( wxString p , wxString def = _T("") ) ; ///< Returns the value of a parameter; optional default value
+    wxArrayString getParamKeys () ; ///< Get a list of all parameter keys
+    void setParam ( wxString p , wxString v ) ; ///< Set a parameter key/value pair
+    void setParam ( wxString p , int v ) ; ///< Set a parameter key/value pair
 
     // dna2aa stuff
-    virtual void translate ( TVector *v , SeqAA *aa , vector <Tdna2aa> &dna2aa ) ; ///< Translate DNA to amino acids
-    virtual void getArrangedAA ( TVector *v , wxString &s , int disp , SeqAA *aa = NULL ) ; ///< Generate the amino acid sequence in place
-    virtual wxString getAminoAcidSequence () ; ///< Return the amino acid sequence
-    virtual void setLastVector ( TVector *v ) ; ///< Set the last TVector to own this item
+    void translate ( TVector *v , SeqAA *aa , vector <Tdna2aa> &dna2aa ) ; ///< Translate DNA to amino acids
+    void getArrangedAA ( TVector *v , wxString &s , int disp , SeqAA *aa = NULL ) ; ///< Generate the amino acid sequence in place
+    wxString getAminoAcidSequence () ; ///< Return the amino acid sequence
+    void setLastVector ( TVector *v ) ; ///< Set the last TVector to own this item
     
     // Variables
     /// \brief Item description
@@ -132,7 +132,7 @@ class TVectorItem
     	to ; ///< Item end
     
     private:
-    virtual void initParams () ; ///< Reset parameters
+    void initParams () ; ///< Reset parameters
     
     signed char direction ; ///< The item direction; 1=clockwise, -1=counter-clockwise
     char type ; ///< The type of the item in VIT_XXX form
@@ -163,121 +163,121 @@ class TVector
     {
     public :
     TVector ( ChildBase *win = NULL ) ; ///< Constructor
-    virtual ~TVector () ; ///< Destructor
-    virtual void init () ; ///< Set up basic values
-    virtual void clear () ; ///< Reset internal state
+    ~TVector () ; ///< Destructor
+    void init () ; ///< Set up basic values
+    void clear () ; ///< Reset internal state
     
     // Restriction enzymes
-    virtual void recalculateCuts () ; ///< Recalculate restriction enzyme cuts
-    virtual void getCuts ( TRestrictionEnzyme *e , vector <TRestrictionCut> &ret , 
+    void recalculateCuts () ; ///< Recalculate restriction enzyme cuts
+    void getCuts ( TRestrictionEnzyme *e , vector <TRestrictionCut> &ret , 
     						bool clear_vector = true , int max = 10000000 ) ; ///< Gets the cuts of restriction enzyme in this sequence
-    virtual bool reduceToFragment ( TRestrictionCut left , TRestrictionCut right ) ; ///< Cuts off everything except what is betreen these two cuts
-    virtual void doRestriction () ; ///< Performs restriction. See TRestrictionEditor
-    virtual void sortRestrictionSites () ; ///< Sorts the restriction sites by point of cut
-    virtual int countCuts ( wxString enzyme ) ; ///< Counts the number of cuts for an enzyme in this sequence
-    virtual void methylationSites ( wxArrayInt &vi , int what = ALL_METHYLATION_ENZYMES ) ; ///< Finds methylation sites
+    bool reduceToFragment ( TRestrictionCut left , TRestrictionCut right ) ; ///< Cuts off everything except what is betreen these two cuts
+    void doRestriction () ; ///< Performs restriction. See TRestrictionEditor
+    void sortRestrictionSites () ; ///< Sorts the restriction sites by point of cut
+    int countCuts ( wxString enzyme ) ; ///< Counts the number of cuts for an enzyme in this sequence
+    void methylationSites ( wxArrayInt &vi , int what = ALL_METHYLATION_ENZYMES ) ; ///< Finds methylation sites
     
     // Nucleotide access/conversion
-    virtual bool basematch ( char b1 , char b2 ) ; ///< matches DNA bases; b1 in IUPAC, b2 in SIUPAC. This is superior to the "=" operator :-)
-    virtual void setIUPAC ( char b , wxString s , char *pac = NULL ) ;
-    virtual char getNucleotide ( int pos , bool complement = false ) ; ///< Returns the base at a certain position, or its complement
-    virtual void setNucleotide ( int pos , char t ) ; ///< Sets a base at a certain position
-    virtual char getComplement ( char c ) ; ///< Returns the complement of a given base
+    bool basematch ( char b1 , char b2 ) ; ///< matches DNA bases; b1 in IUPAC, b2 in SIUPAC. This is superior to the "=" operator :-)
+    void setIUPAC ( char b , wxString s , char *pac = NULL ) ;
+    char getNucleotide ( int pos , bool complement = false ) ; ///< Returns the base at a certain position, or its complement
+    void setNucleotide ( int pos , char t ) ; ///< Sets a base at a certain position
+    char getComplement ( char c ) ; ///< Returns the complement of a given base
     
     // Vector/sequence access
-    virtual void ligate_right ( TVector &v , bool inverted = false ) ; ///< Adds another TVector to the right of this one
-    virtual void closeCircle () ; ///< Closes a linear sequence into a circular (intramolecular ligation)
-    virtual void turn ( int off ) ; ///< Turns a circular sequence "off" bases
+    void ligate_right ( TVector &v , bool inverted = false ) ; ///< Adds another TVector to the right of this one
+    void closeCircle () ; ///< Closes a linear sequence into a circular (intramolecular ligation)
+    void turn ( int off ) ; ///< Turns a circular sequence "off" bases
     
-    virtual TVector *getAAvector ( int from , int to , int dir = 1 ) ; ///< Returns part of the sequence translated into amino acids
-    virtual void doAction () ; ///< Perform an action (restriction, usually). Internal use
-    virtual void doRemove ( int from , int to , bool update = true , bool enableUndo = true ) ; ///< Removes part of the sequence
-    virtual void insert_char ( char x , int pos , bool overwrite = false ) ; ///< Inserts a character into the sequence
+    TVector *getAAvector ( int from , int to , int dir = 1 ) ; ///< Returns part of the sequence translated into amino acids
+    void doAction () ; ///< Perform an action (restriction, usually). Internal use
+    void doRemove ( int from , int to , bool update = true , bool enableUndo = true ) ; ///< Removes part of the sequence
+    void insert_char ( char x , int pos , bool overwrite = false ) ; ///< Inserts a character into the sequence
     
-    virtual float getAAmw ( char aa ) ; ///< Returns the molecular weight of an amino acid
-    virtual float getAApi ( char aa ) ; ///< Returns the isoelectric point of an amino acid
-    virtual wxString dna2aa ( wxString codon , int translation_table = -1 ) ; ///< Translates a codon into an amino acid
-    virtual void setAction ( wxString _action , int _action_value = 0 ) ; ///< Sets the action for doAction()
-    virtual void setDatabase ( wxString s ) { database = s ; } ///< Sets the database in which the sequence is stored
-    virtual wxString getDatabase () { return database ; } ///< Returns the database name in which the sequence is stored
-    virtual TVector *newFromMark ( int from , int to ) ; ///< Generates a new sequence based on a part of this one
+    float getAAmw ( char aa ) ; ///< Returns the molecular weight of an amino acid
+    float getAApi ( char aa ) ; ///< Returns the isoelectric point of an amino acid
+    wxString dna2aa ( wxString codon , int translation_table = -1 ) ; ///< Translates a codon into an amino acid
+    void setAction ( wxString _action , int _action_value = 0 ) ; ///< Sets the action for doAction()
+    void setDatabase ( wxString s ) { database = s ; } ///< Sets the database in which the sequence is stored
+    wxString getDatabase () { return database ; } ///< Returns the database name in which the sequence is stored
+    TVector *newFromMark ( int from , int to ) ; ///< Generates a new sequence based on a part of this one
     
-    virtual void setChanged ( bool c = true ) ; ///< The sequence has been changed.
-    virtual bool isChanged () { return changed ; } ///< Was the sequence changed?
+    void setChanged ( bool c = true ) ; ///< The sequence has been changed.
+    bool isChanged () { return changed ; } ///< Was the sequence changed?
     
-    virtual void ClearORFs () ; ///< Clear the found open reading frames
-    virtual void addORFs ( int off ) ; ///< Add open reading frames for a specific reading frame
+    void ClearORFs () ; ///< Clear the found open reading frames
+    void addORFs ( int off ) ; ///< Add open reading frames for a specific reading frame
 
-    virtual void removeBlanksFromSequence () ; ///< Removes blank chars (spaces etc.) from the sequence
-    virtual void removeBlanksFromVector () ; ///< Removes blank chars (spaces etc.) from the sequence, altering items if necessary
+    void removeBlanksFromSequence () ; ///< Removes blank chars (spaces etc.) from the sequence
+    void removeBlanksFromVector () ; ///< Removes blank chars (spaces etc.) from the sequence, altering items if necessary
     
-    virtual wxString getParams () ; ///< Return sequence parameters
-    virtual void setParams ( wxString t ) ; ///< Set sequence parameters
-    virtual wxString getParam ( wxString key ) ; ///< Return the value of a parameter
-    virtual void setParam ( wxString key , wxString value ) ; ///< Set a parameter key/value pair
-    virtual void setWindow ( ChildBase *c ) ; ///< Set the window which owns this sequence
-    virtual void setCircular ( bool c = true ) ; ///< This is a circular sequence (or linear, if c == false)
-    virtual bool isCircular () ; ///< Is this a circular sequence?
-    virtual bool isLinear () ; ///< Is this a linear sequence?
-    virtual wxString one2three ( int a ) ; ///< Converts one letter amino acid code to three-letter acronym
-    virtual char three2one ( wxString s ) ; ///< Converts three-letter acronym to one letter amino acid code
-    virtual void setStickyEnd ( bool left , bool upper , wxString s ) ; ///< Sets one of the four possible sticky ends
-    virtual wxString getStickyEnd ( bool left , bool upper ) ; ///< Returns one of the possible sticky ends
-    virtual bool hasStickyEnds () ; ///< Does this sequence have sticky ends?
-    virtual void callUpdateUndoMenu () ; ///< Refreshes the Undo menu
-    virtual void setFromVector ( TVector &v ) ; ///< Makes this sequence a copy of another one (v)
-    virtual void doRemoveNucleotide ( int x ) ; ///<Removes single base at position x
-    virtual int getItemLength ( int a ) ; ///< Return the length of item a
-    virtual TVector *backtranslate ( wxString mode = _T("") ) ; ///< Generate a new DNA sequence from this amino acid sequence
-    virtual wxString getStrand53 () ; ///< Returns the 5'->3' strand of the sequence
-    virtual wxString getStrand35 () ; ///< Returns the 3'->5' strand of the sequence, as 5'->3'
+    wxString getParams () ; ///< Return sequence parameters
+    void setParams ( wxString t ) ; ///< Set sequence parameters
+    wxString getParam ( wxString key ) ; ///< Return the value of a parameter
+    void setParam ( wxString key , wxString value ) ; ///< Set a parameter key/value pair
+    void setWindow ( ChildBase *c ) ; ///< Set the window which owns this sequence
+    void setCircular ( bool c = true ) ; ///< This is a circular sequence (or linear, if c == false)
+    bool isCircular () ; ///< Is this a circular sequence?
+    bool isLinear () ; ///< Is this a linear sequence?
+    wxString one2three ( int a ) ; ///< Converts one letter amino acid code to three-letter acronym
+    char three2one ( wxString s ) ; ///< Converts three-letter acronym to one letter amino acid code
+    void setStickyEnd ( bool left , bool upper , wxString s ) ; ///< Sets one of the four possible sticky ends
+    wxString getStickyEnd ( bool left , bool upper ) ; ///< Returns one of the possible sticky ends
+    bool hasStickyEnds () ; ///< Does this sequence have sticky ends?
+    void callUpdateUndoMenu () ; ///< Refreshes the Undo menu
+    void setFromVector ( TVector &v ) ; ///< Makes this sequence a copy of another one (v)
+    void doRemoveNucleotide ( int x ) ; ///<Removes single base at position x
+    int getItemLength ( int a ) ; ///< Return the length of item a
+    TVector *backtranslate ( wxString mode = _T("") ) ; ///< Generate a new DNA sequence from this amino acid sequence
+    wxString getStrand53 () ; ///< Returns the 5'->3' strand of the sequence
+    wxString getStrand35 () ; ///< Returns the 3'->5' strand of the sequence, as 5'->3'
 
-    virtual TAAProp getAAprop ( char a ) ; ///< Returns the properties of the one-letter code amino acid
-    virtual int find_item ( wxString s ) ; ///< Finds an item with that name
-    virtual bool isEnzymeHidden ( wxString s ) ; ///< Is enzyme "s" hidden?
-    virtual void hideEnzyme ( wxString s , bool hideit = true ) ; ///< Set enzyme hidden state
+    TAAProp getAAprop ( char a ) ; ///< Returns the properties of the one-letter code amino acid
+    int find_item ( wxString s ) ; ///< Finds an item with that name
+    bool isEnzymeHidden ( wxString s ) ; ///< Is enzyme "s" hidden?
+    void hideEnzyme ( wxString s , bool hideit = true ) ; ///< Set enzyme hidden state
 
-    virtual wxString getSubstring ( int mf , int mt ) ; ///< Returns a sequence substring
-    virtual wxString transformSequence ( bool inverse , bool reverse ) ; ///< Transforms the sequence
-    virtual wxString getSequence () ; ///< Returns the sequence
-    virtual wxString *getSequencePointer () ; ///< Internal use; only used by SequenceCanvas::OnCharHook
-    virtual char getSequenceChar ( int x ) ; ///< Gets base at position x
-    virtual void setSequence ( wxString ns ) ; ///< Sets the sequence
-    virtual void addToSequence ( wxString x ) ; ///< Appends to the sequence
-    virtual void alterSequence ( int pos , char c ) ; ///< Changes the base at position pos into c
-    virtual int getSequenceLength() ; ///< Returns the sequence length
-    virtual void eraseSequence ( int from , int len ) ; ///< Removes part of the sequence
-    virtual void removeAlignmentArtifacts ( char what = '-' ) ; ///< Removes alignment artifacts from the sequence
+    wxString getSubstring ( int mf , int mt ) ; ///< Returns a sequence substring
+    wxString transformSequence ( bool inverse , bool reverse ) ; ///< Transforms the sequence
+    wxString getSequence () ; ///< Returns the sequence
+    wxString *getSequencePointer () ; ///< Internal use; only used by SequenceCanvas::OnCharHook
+    char getSequenceChar ( int x ) ; ///< Gets base at position x
+    void setSequence ( wxString ns ) ; ///< Sets the sequence
+    void addToSequence ( wxString x ) ; ///< Appends to the sequence
+    void alterSequence ( int pos , char c ) ; ///< Changes the base at position pos into c
+    int getSequenceLength() ; ///< Returns the sequence length
+    void eraseSequence ( int from , int len ) ; ///< Removes part of the sequence
+    void removeAlignmentArtifacts ( char what = '-' ) ; ///< Removes alignment artifacts from the sequence
     
-    virtual wxString getDescription () ; ///< Returns the sequence description
-    virtual void setDescription ( wxString s ) ; ///< Sets the sequence description
-    virtual void addDescription ( wxString s ) ; ///< Appends to the sequence description
-    virtual wxString getName () ; ///< Returns the sequence name
-    virtual void setName ( wxString s ) ; ///< Sets the sequence name
-    virtual void addName ( wxString s ) ; ///< Appends to the sequence name
-    virtual void setGenomeMode ( bool gm = true ) ; ///< Turns genome mode on/off
-    virtual bool getGenomeMode () ; ///< Returns the genome mode
-    virtual int getMem () ; ///< Returns memory usage estimate for this sequence. Debugging use only
-    virtual bool getVectorCuts ( TVector *v ) ; ///< Returns wether or not isoenzymes should be joined
-    virtual TEnzymeRules *getEnzymeRule () ; ///< Gets the enzyme rules to follow
-    virtual int showGC () ; ///< Returns 0 for "no", otherwise the number of blocks
-    virtual TORF *getORF ( int a ) ; ///< Returns an open reading frame
-    virtual int countORFs () ; ///< Returns the number of found open reading frames
-    virtual void updateDisplay ( bool update = true ) ; ///< Recalc visual information on next draw
-    virtual bool displayUpdate () ; ///< Update the display?
-    virtual void setType ( int newtype ) ; ///< Set the sequence type
-    virtual int getType () ; ///< Returns the sequence type
-    virtual int getMethylationSiteIndex ( int pos ) ; ///< Returns the index of a potential methylation site
-    virtual int getMethylationSite ( int index ) ; ///< Returns the position of a methylation site
-    virtual int countMethylationSites () ; ///< Returns the number of found methylation sites
-    virtual void prepareFeatureEdit ( int pos , bool overwrite ) ; ///< Changes feature names or cuts features that are about to be edited
-    virtual TEnzymeRules *getEnzymeRules () ; ///< Returns the restriction enzyme display rules for this vector
-    virtual void setEnzymeRules ( TEnzymeRules *er ) ; ///< Sets the restriction enzyme display rules for this vector
-    virtual void getItemsAtPosition ( int pos , wxArrayInt &vi , bool limit = false ) ; ///< Retrieves a list of items at that position (pos is 0-based)
-    virtual bool hasItemsAtPosition ( int pos ) ; ///< Returns wether there are items at that position (pos is 0-based)
-    virtual int countCodonTables () ;
-    virtual wxString getCodonTableName ( int x ) ;
-    virtual void resetTurn () ; ///< Sets the turned variable to zero
+    wxString getDescription () ; ///< Returns the sequence description
+    void setDescription ( wxString s ) ; ///< Sets the sequence description
+    void addDescription ( wxString s ) ; ///< Appends to the sequence description
+    wxString getName () ; ///< Returns the sequence name
+    void setName ( wxString s ) ; ///< Sets the sequence name
+    void addName ( wxString s ) ; ///< Appends to the sequence name
+    void setGenomeMode ( bool gm = true ) ; ///< Turns genome mode on/off
+    bool getGenomeMode () ; ///< Returns the genome mode
+    int getMem () ; ///< Returns memory usage estimate for this sequence. Debugging use only
+    bool getVectorCuts ( TVector *v ) ; ///< Returns wether or not isoenzymes should be joined
+    TEnzymeRules *getEnzymeRule () ; ///< Gets the enzyme rules to follow
+    int showGC () ; ///< Returns 0 for "no", otherwise the number of blocks
+    TORF *getORF ( int a ) ; ///< Returns an open reading frame
+    int countORFs () ; ///< Returns the number of found open reading frames
+    void updateDisplay ( bool update = true ) ; ///< Recalc visual information on next draw
+    bool displayUpdate () ; ///< Update the display?
+    void setType ( int newtype ) ; ///< Set the sequence type
+    int getType () ; ///< Returns the sequence type
+    int getMethylationSiteIndex ( int pos ) ; ///< Returns the index of a potential methylation site
+    int getMethylationSite ( int index ) ; ///< Returns the position of a methylation site
+    int countMethylationSites () ; ///< Returns the number of found methylation sites
+    void prepareFeatureEdit ( int pos , bool overwrite ) ; ///< Changes feature names or cuts features that are about to be edited
+    TEnzymeRules *getEnzymeRules () ; ///< Returns the restriction enzyme display rules for this vector
+    void setEnzymeRules ( TEnzymeRules *er ) ; ///< Sets the restriction enzyme display rules for this vector
+    void getItemsAtPosition ( int pos , wxArrayInt &vi , bool limit = false ) ; ///< Retrieves a list of items at that position (pos is 0-based)
+    bool hasItemsAtPosition ( int pos ) ; ///< Returns wether there are items at that position (pos is 0-based)
+    int countCodonTables () ;
+    wxString getCodonTableName ( int x ) ;
+    void resetTurn () ; ///< Sets the turned variable to zero
     
     // Variables
     vector <TVectorItem> items ; ///< Items/features/annotations
