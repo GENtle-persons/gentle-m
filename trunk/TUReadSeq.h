@@ -13,12 +13,12 @@ class TUReadSeq
     {
     public :
     TUReadSeq ( wxString _filename = _T("") ) ; ///< Constructor
-	virtual ~TUReadSeq () {} ; ///< Destructor (empty)
+	~TUReadSeq () {} ; ///< Destructor (empty)
 
-    virtual void getFormat () ; ///< Try to determine format
-    virtual int getSequenceNames () ; ///< Get the names of the sequences
-    virtual void getSequences () ; ///< Get the sequences
-    virtual void convert ( TGenBank &gb ) ; ///< Convert the sequences to GenBank format
+    void getFormat () ; ///< Try to determine format
+    int getSequenceNames () ; ///< Get the names of the sequences
+    void getSequences () ; ///< Get the sequences
+    void convert ( TGenBank &gb ) ; ///< Convert the sequences to GenBank format
 
     static int getSeqType ( wxString t ) ; ///< Return the sequence type
     

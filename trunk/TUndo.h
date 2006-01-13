@@ -20,18 +20,18 @@ class TUndo
     {
     public :
     TUndo () ; ///< Constructor
-	virtual ~TUndo () {} ; ///< Destructor (empty)
-    virtual void setbase ( TVector *_base ) ; ///< Set the base TVector
-    virtual void start ( wxString _msg = _T("") ) ; ///< Start the undo record, with action name
-    virtual void stop () ; ///< End the undo record
-    virtual void abort () ; ///< Abort the undo record
-    virtual void pop () ; ///< Remove the last undo record
-    virtual bool canUndo () ; ///< Is there undo information available?
-    virtual wxString getLastMessage () ; ///< Returns the name of the last action with undo information
-    virtual void remember ( wxString _msg ) ; ///< Remember the current state and action name
-    virtual void clear () ; ///< Remove all undo information
+	~TUndo () {} ; ///< Destructor (empty)
+    void setbase ( TVector *_base ) ; ///< Set the base TVector
+    void start ( wxString _msg = _T("") ) ; ///< Start the undo record, with action name
+    void stop () ; ///< End the undo record
+    void abort () ; ///< Abort the undo record
+    void pop () ; ///< Remove the last undo record
+    bool canUndo () ; ///< Is there undo information available?
+    wxString getLastMessage () ; ///< Returns the name of the last action with undo information
+    void remember ( wxString _msg ) ; ///< Remember the current state and action name
+    void clear () ; ///< Remove all undo information
     
-    virtual TUndo & operator = ( TUndo &u ) ;
+    TUndo & operator = ( TUndo &u ) ;
     
     private :
     wxArrayTVector mem ; ///< The old TVector objects

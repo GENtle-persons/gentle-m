@@ -11,15 +11,15 @@ class TRestrictionEnzyme
     {
     public :
 	TRestrictionEnzyme () {} ; ///< Empty constructor
-	virtual ~TRestrictionEnzyme () {} ; ///< Dummy destructor
+	~TRestrictionEnzyme () {} ; ///< Dummy destructor
 	
     bool differ ( TRestrictionEnzyme &e ) ;
     
-    virtual wxString getEndUpperLeft () ; ///< The "upper left" sequence after the cut
-    virtual wxString getEndLowerLeft () ; ///< The "lower left" sequence after the cut
-    virtual wxString getEndUpperRight () ; ///< The "upper right" sequence after the cut
-    virtual wxString getEndLowerRight () ; ///< The "lower right" sequence after the cut
-    virtual wxString invertSequence () ; ///< The recognition sequence, inverted
+    wxString getEndUpperLeft () ; ///< The "upper left" sequence after the cut
+    wxString getEndLowerLeft () ; ///< The "lower left" sequence after the cut
+    wxString getEndUpperRight () ; ///< The "upper right" sequence after the cut
+    wxString getEndLowerRight () ; ///< The "lower right" sequence after the cut
+    wxString invertSequence () ; ///< The recognition sequence, inverted
     
     /// The enzyme name
     wxString name , sequence ; ///< The recognition sequence
@@ -38,13 +38,13 @@ class TRestrictionCut
     public :
     TRestrictionCut ( int _pos , TRestrictionEnzyme *_e ) ///< Constructor
         { pos = _pos ; e = _e ; }
-	virtual ~TRestrictionCut () {} ; ///< Dummy destructor
+	~TRestrictionCut () {} ; ///< Dummy destructor
         
-    virtual void linearUpdate ( int w , int h ) ;
-    virtual wxString getNameAndPosition () ; ///< Returns the enzyme name and cut pusition
-    virtual bool isHidden ( TVector *v ) ; ///< Is this enzyme in this TVector hidden?
-    virtual wxString getDisplayName () ; ///< Returns the enzyme name (or the joined names)
-    virtual bool join ( TRestrictionCut *c ) ;
+    void linearUpdate ( int w , int h ) ;
+    wxString getNameAndPosition () ; ///< Returns the enzyme name and cut pusition
+    bool isHidden ( TVector *v ) ; ///< Is this enzyme in this TVector hidden?
+    wxString getDisplayName () ; ///< Returns the enzyme name (or the joined names)
+    bool join ( TRestrictionCut *c ) ;
         
     int pos ; ///< Position of the cut
     TRestrictionEnzyme *e ; ///< Cutting enzyme

@@ -29,22 +29,22 @@ class TPrimer
     {
     public :
     TPrimer ( int _from = 0 , int _to = 0 , bool _upper = true ) ; ///< Constructor
-	virtual ~TPrimer () {} ; ///< Dummy Destructor
-    virtual void getSequenceFromVector ( TVector *v , bool from3 = false ) ; ///< Reads primer sequence from vectors
-    virtual void makeStats () ; ///< Generates key values about the primer
-    virtual void evaluate ( float tm_opt = 0 ) ; ///< Evaluates primer
-    virtual wxString report () ; ///< Generates a human-readable report
-    virtual wxString get53sequence () ; ///< Returns the 5'->3' primer sequence
-    virtual wxString get35sequence () ; ///< Returns the 3'->5' primer sequence
-    virtual int checkFit ( TVector *v , bool justCount = false ) ; ///< Tries to fit the primer to a sequence
-    virtual bool overlap ( TPrimer &op ) ; ///< Does this primer overlap with another?
+    ~TPrimer () {} ; ///< Dummy Destructor
+    void getSequenceFromVector ( TVector *v , bool from3 = false ) ; ///< Reads primer sequence from vectors
+    void makeStats () ; ///< Generates key values about the primer
+    void evaluate ( float tm_opt = 0 ) ; ///< Evaluates primer
+    wxString report () ; ///< Generates a human-readable report
+    wxString get53sequence () ; ///< Returns the 5'->3' primer sequence
+    wxString get35sequence () ; ///< Returns the 3'->5' primer sequence
+    int checkFit ( TVector *v , bool justCount = false ) ; ///< Tries to fit the primer to a sequence
+    bool overlap ( TPrimer &op ) ; ///< Does this primer overlap with another?
 
-    virtual float getTm ( int type = TM_STANDARD ) ; ///< Get melting temperature
-    virtual float getEvaluation () ; ///< Get quality evaluation (for annealing)
-    virtual float getGCcontents () ; ///< Get GC contents
+    float getTm ( int type = TM_STANDARD ) ; ///< Get melting temperature
+    float getEvaluation () ; ///< Get quality evaluation (for annealing)
+    float getGCcontents () ; ///< Get GC contents
     
-    virtual wxString getName () ; ///< Returns the name of the primer, if any was given
-    virtual void setName ( wxString nn ) ; ///< Sets the name of the primer
+    wxString getName () ; ///< Returns the name of the primer, if any was given
+    void setName ( wxString nn ) ; ///< Sets the name of the primer
     
     
     // Variables

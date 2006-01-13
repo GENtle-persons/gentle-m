@@ -7,49 +7,49 @@ class TPhylip
 	{
 	public :
 	TPhylip () ;
-	virtual ~TPhylip () ;
+	~TPhylip () ;
 	
-	virtual wxString protpars ( wxString s ) ;
-	virtual wxString dnapars ( wxString s ) ;
-	virtual wxString dnamove ( wxString s ) ;
-	virtual wxString dnapenny ( wxString s ) ;
-	virtual wxString dnacomp ( wxString s ) ;
-	virtual wxString dnainvar ( wxString s ) ;
-	virtual wxString dnaml ( wxString s ) ;
-	virtual wxString dnamlk ( wxString s ) ;
-	virtual wxString proml ( wxString s ) ;
-	virtual wxString promlk ( wxString s ) ;
-	virtual wxString dnadist ( wxString s ) ;
-	virtual wxString protdist ( wxString s ) ;
-	virtual wxString restdist ( wxString s ) ;
-	virtual wxString restml ( wxString s ) ;
-	virtual wxString seqboot ( wxString s ) ;
-	virtual wxString fitch ( wxString s ) ;
-	virtual wxString kitsch ( wxString s ) ;
-	virtual wxString neighbor ( wxString s ) ;
-	virtual wxString contml ( wxString s ) ;
-	virtual wxString gendist ( wxString s ) ;
-	virtual wxString contrast ( wxString s ) ;
-	virtual wxString pars ( wxString s ) ;
-	virtual wxString mix ( wxString s ) ;
-	virtual wxString move ( wxString s ) ;
-	virtual wxString penny ( wxString s ) ;
-	virtual wxString dollop ( wxString s ) ;
-	virtual wxString dolmove ( wxString s ) ;
-	virtual wxString dolpenny ( wxString s ) ;
-	virtual wxString clique ( wxString s ) ;
-	virtual wxString factor ( wxString s ) ;
-	virtual wxString drawgram ( wxString s ) ;
-	virtual wxString drawtree ( wxString s ) ;
-	virtual wxString treedist ( wxString s ) ;
-	virtual wxString consense ( wxString s ) ;
-	virtual wxString retree ( wxString s ) ;
+	wxString protpars ( wxString s ) ;
+	wxString dnapars ( wxString s ) ;
+	wxString dnamove ( wxString s ) ;
+	wxString dnapenny ( wxString s ) ;
+	wxString dnacomp ( wxString s ) ;
+	wxString dnainvar ( wxString s ) ;
+	wxString dnaml ( wxString s ) ;
+	wxString dnamlk ( wxString s ) ;
+	wxString proml ( wxString s ) ;
+	wxString promlk ( wxString s ) ;
+	wxString dnadist ( wxString s ) ;
+	wxString protdist ( wxString s ) ;
+	wxString restdist ( wxString s ) ;
+	wxString restml ( wxString s ) ;
+	wxString seqboot ( wxString s ) ;
+	wxString fitch ( wxString s ) ;
+	wxString kitsch ( wxString s ) ;
+	wxString neighbor ( wxString s ) ;
+	wxString contml ( wxString s ) ;
+	wxString gendist ( wxString s ) ;
+	wxString contrast ( wxString s ) ;
+	wxString pars ( wxString s ) ;
+	wxString mix ( wxString s ) ;
+	wxString move ( wxString s ) ;
+	wxString penny ( wxString s ) ;
+	wxString dollop ( wxString s ) ;
+	wxString dolmove ( wxString s ) ;
+	wxString dolpenny ( wxString s ) ;
+	wxString clique ( wxString s ) ;
+	wxString factor ( wxString s ) ;
+	wxString drawgram ( wxString s ) ;
+	wxString drawtree ( wxString s ) ;
+	wxString treedist ( wxString s ) ;
+	wxString consense ( wxString s ) ;
+	wxString retree ( wxString s ) ;
 	
-	virtual void query_phylip_dir ( bool setit = true ) ;
-	virtual bool IsOK () ;
+	void query_phylip_dir ( bool setit = true ) ;
+	bool IsOK () ;
 	
 	private :
-	virtual wxString runapp ( wxString app , const wxString s ) ;
+	wxString runapp ( wxString app , const wxString s ) ;
 	
 	wxString phylip_dir ;
 	} ;

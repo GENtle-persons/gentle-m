@@ -19,14 +19,14 @@ class TFLAG
     {
     public :
     TFLAG () ;
-    virtual ~TFLAG () ;
+    ~TFLAG () ;
     /// \var pos ???
     /// \var after ????
     /// \var data Carries the associated data
     int pos , after ;
     unsigned char *data ;
     
-    virtual wxString getPascalString () ;
+    wxString getPascalString () ;
     
     wxString flag ; ///< The flag name
     int instance ; ///< Flag data item

@@ -25,20 +25,20 @@ class TGenBank
     {
     public :
     TGenBank () ;
-    virtual ~TGenBank () ;
-    virtual void load ( wxString s ) ;
-    virtual void paste ( wxString s ) ;
-    virtual void remap ( TVector *v ) ;
-    virtual void remap ( TVector *v , const wxArrayString &vs , const wxArrayInt &vi ) ;
-    virtual void doExport ( TVector *v , wxArrayString &ex ) ;
-    virtual wxString trim ( wxString s ) ;
-    virtual void itrim ( wxString &s ) ;
-    virtual void multitrim ( wxString &s , bool quotes = true ) ;
-    virtual wxString trimQuotes ( wxString s ) ;
-    virtual wxString quote ( wxString pre , wxString q ) ;
-    virtual void wrapit ( wxArrayString &ex , wxString init , wxString data , int limit = 80 ) ;
-    virtual wxString expand ( wxString init , int to , wxString with = _T(" ") ) ;
-    virtual int count_blanks ( wxString &s ) ;
+    ~TGenBank () ;
+    void load ( wxString s ) ;
+    void paste ( wxString s ) ;
+    void remap ( TVector *v ) ;
+    void remap ( TVector *v , const wxArrayString &vs , const wxArrayInt &vi ) ;
+    void doExport ( TVector *v , wxArrayString &ex ) ;
+    wxString trim ( wxString s ) ;
+    void itrim ( wxString &s ) ;
+    void multitrim ( wxString &s , bool quotes = true ) ;
+    wxString trimQuotes ( wxString s ) ;
+    wxString quote ( wxString pre , wxString q ) ;
+    void wrapit ( wxArrayString &ex , wxString init , wxString data , int limit = 80 ) ;
+    wxString expand ( wxString init , int to , wxString with = _T(" ") ) ;
+    int count_blanks ( wxString &s ) ;
 
     bool success ; ///< Did we encounter any errors while parsing?
     
