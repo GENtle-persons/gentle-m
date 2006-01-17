@@ -121,7 +121,7 @@ MyFrame::MyFrame(wxWindow *parent,
     tb_mychild = NULL ;
 
     // Load DNA markers
-    wxTextFile tf ( "marker.txt" ) ;
+    wxTextFile tf ( _T("marker.txt") ) ;
     tf.Open () ;
     for ( unsigned int a = 0 ; a < tf.GetLineCount() ; a++ )
     {
