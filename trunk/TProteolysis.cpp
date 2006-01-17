@@ -431,7 +431,7 @@ void TProteolysis::calc_cut_list ()
 	for ( a = 0 ; a+1 < pc.size() ; a++ )
 		{
 		wxString s ;
-		s = wxString::Format ( txt("t_proteolysis_cut_after") , pc[a]->cut , pc[a]->protease->name.mb_str() ) ;
+		s = wxString::Format ( txt("t_proteolysis_cut_after") , pc[a]->cut , pc[a]->protease->name.c_str() ) ;
 		cuts->Append ( s ) ;
 		cuts->Check ( a ) ;
 		}
