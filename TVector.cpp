@@ -149,7 +149,10 @@ wxString TVector::getParams ()
 	{
 	wxString params ;
 	for ( int a = 0 ; a < paramk.GetCount() ; a++ )
+	{
+		if ( paramk[a].StartsWith ( _T("toomanycuts") ) ) continue ; // No need to save this
 		params += _T("#") + paramk[a] + _T("\n") + paramv[a] + _T("\n") ;
+	}
     return params ;
     }
     
@@ -781,11 +784,14 @@ void TVector::recalculateCuts ()
 
     int maxcuts = sequence.length() * MAXCUTS_PER_1K / 1000 ;
     if ( maxcuts < 50 ) maxcuts = 50 ; // Arbitary number
-   	if ( rc.size() > maxcuts )
-   		{
-	    wxMessageBox ( wxString::Format ( txt("t_too_many_cuts") , rc.size() , maxcuts ) ) ;
-	    while ( rc.size() > maxcuts ) rc.pop_back () ;
-   		}    
+	if ( rc.size() > maxcuts )
+	{
+		setParam ( _T("toomanycuts") , _T("1") ) ;
+		if ( getParam ( _T("toomanycuts_warning") ) == _T("") )
+			wxMessageBox ( wxString::Format ( txt("t_too_many_cuts") , rc.size() , maxcuts ) ) ;
+		setParam ( _T("toomanycuts_warning") , _T("1") ) ;
+//		while ( rc.size() > maxcuts ) rc.pop_back () ;
+	}    
 
     // Methylation
     methylationSites ( methyl , getEnzymeRule()->methylation ) ;

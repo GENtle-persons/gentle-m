@@ -293,7 +293,7 @@ class TVector
     private :
     wxString invert ( wxString s ) ; ///< Inverts a string
     wxString vary_base ( char b ) ; ///< Turns a SIUPAC into a string of A, C, G, T
-    void makeAA2DNA ( wxString mode = _T("") ) ; ///< "Translate" amino acid sequence into DNA; can sp specified fo an organism
+    void makeAA2DNA ( wxString mode = _T("") ) ; ///< "Translate" amino acid sequence into DNA; can be specified for an organism
     wxString mergeCodons ( wxString c1 , wxString c2 ) ; ///< Used by makeAA2DNA for generating "abstract" (SIUPAC) DNA
     void setCodonTable ( int table , wxString sequence , wxString name ) ; ///< Sets up the codon_tables variable
     void evaluate_key_value ( wxString key , wxString value ) ; ///< Used in setParam() and setParams()

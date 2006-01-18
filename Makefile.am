@@ -6,6 +6,7 @@ EXTRA_DIST = mondrian.xpm \
 variables.csv \
 blank.db \
 default.tab \
+marker.txt \
 bitmaps/align.bmp \
 bitmaps/cocktail.bmp \
 bitmaps/display_features.bmp \
