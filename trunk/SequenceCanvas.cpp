@@ -2206,7 +2206,7 @@ void SequenceCanvas::OnStrandNew35(wxCommandEvent& event)
 	int a ;
 	wxString vname = p->vec->getName() ;
 	p->vec->setName ( vname + _T(" (3'->5')") ) ;
-	MyChild *c = p->doTransformSequence ( true , false , true ) ;
+	MyChild *c = p->doTransformSequence ( true , true , true ) ;
 	p->vec->setName ( vname ) ;
 
 	wxString rl = p->vec->getStickyEnd ( false , false ) ;
