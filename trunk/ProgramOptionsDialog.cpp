@@ -255,9 +255,11 @@ void ProgramOptionsDialog::initGlobalSettings ()
                         txt("t_useinternalhelp") ) ; 
     doRegisterStuff = new wxCheckBox ( globalSettingsPanel , -1 , 
                         txt("t_doregisterstuff") ) ; 
-    showEnzymePos = new wxCheckBox ( globalSettingsPanel , -1 , 
-                        txt("t_showenzymepos") ) ; 
-    use_nonstandard_translation_table = new wxCheckBox ( globalSettingsPanel , -1 , 
+    showEnzymePos = new wxCheckBox ( globalSettingsPanel , -1 ,
+                        txt("t_showenzymepos") ) ;
+    showTips = new wxCheckBox ( globalSettingsPanel , -1 ,
+                        txt("t_show_tips") ) ;
+    use_nonstandard_translation_table = new wxCheckBox ( globalSettingsPanel , -1 ,
                         txt("t_use_nonstandard_translation_table") ) ;
     nonstandard_translation_table = new wxChoice ( globalSettingsPanel , -1 ) ;
                         
@@ -294,6 +296,7 @@ void ProgramOptionsDialog::initGlobalSettings ()
     useInternalHelp->SetValue ( myapp()->frame->useInternalHelp ) ;
     doRegisterStuff->SetValue ( myapp()->frame->doRegisterStuff ) ;
     showEnzymePos->SetValue ( myapp()->frame->showEnzymePos ) ;
+    showTips->SetValue ( myapp()->frame->LS->getOption ( _T("SHOWTIP") , true ) ) ;
     use_nonstandard_translation_table->SetValue ( myapp()->frame->nonstandard_translation_table != -1 ) ;
     language->Append ( _T("en") ) ;
     language->Append ( _T("de") ) ;
@@ -338,6 +341,7 @@ void ProgramOptionsDialog::initGlobalSettings ()
     v->Add ( useInternalHelp , 0 , wxEXPAND|wxALL , 5 ) ;
     v->Add ( doRegisterStuff , 0 , wxEXPAND|wxALL , 5 ) ;
     v->Add ( showEnzymePos , 0 , wxEXPAND|wxALL , 5 ) ;
+    v->Add ( showTips , 0 , wxEXPAND|wxALL , 5 ) ;
     v->Add ( editFeatureMode , 0 , wxEXPAND|wxALL , 5 ) ;
     v->Add ( h1 , 0 , wxEXPAND|wxALL , 5 ) ;
     v->Add ( h2 , 0 , wxEXPAND|wxALL , 5 ) ;

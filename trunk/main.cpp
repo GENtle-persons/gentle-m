@@ -330,7 +330,7 @@ bool MyApp::OnInit()
 
     // Tips turned off until I can figure out how the hell
     // to get the state of the !"$%& show-again-checkbox
-    bool showTip = frame->LS->getOption ( _T("SHOWTIP") , false ) ;
+    bool showTip = frame->LS->getOption ( _T("SHOWTIP") , true ) ;
     if ( showTip )
         {
         int tip = frame->LS->getOption ( _T("NEXTTIP") , 0 ) ;

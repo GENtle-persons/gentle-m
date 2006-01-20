@@ -1,2 +1,7 @@
-Ein Klick mit der rechten Maustaste auf ein Objekt oder eine Sequenz zeigt so gut wie alle möglichen Aktionen zu diesem Objekt.
-Mehr Tips gibt's nicht!
+...dass Sie über Werkzeuge/Einstellungen eine andere Sprache wählen können?
+...dass viele Funtionen in GENtle über die rechte Maustaste erreicht werden können?
+...dass Sequenzen einfach über "F2" bearbeitet werden können?
+...dass GENtle auch die mittlere Maustaste unterstützt, die auch über "Alt+linke Maustaste" simuliert werden kann?
+...dass Sie unter en.wikibooks.org/wiki/GENtle_manual mithelfen können, die GENtle-Anleitung zu verbessern?
+...dass GENtle nicht nur Bilder exportieren, sondern auch anzeigen kann (Werkzeuge/Bildbetrachter)?
+...dass dies der letzte Tip ist, und jetzt alles wieder von vorne beginnt?
