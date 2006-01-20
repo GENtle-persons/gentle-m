@@ -1593,11 +1593,8 @@ void MyChild::add_siRNA ( int item )
    int from = vec->items[item].from ;
    int to = vec->items[item].to ;
    int l = vec->getSequenceLength() ;
-//   if ( to < from ) to += l ;
    if ( vec->items[item].getRF() < 0 )
-      {
       dir = -1 ;
-      }
    b = 0 ;
    wxString sub ;
    vector <TsiRNA> rna ;

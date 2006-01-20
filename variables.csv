@@ -901,3 +901,4 @@
 "t_siRNA","siRNA","siRNA"
 "t_siRNA_l","possible siRNA duplex (score : %d)","Möglicher siRNA-Duplex (Wert : %d)"
 "m_sirna_duplexes","Detect siRNA duplexes","siRNA-Duplexes finden"
+"t_show_tips","Show tips at startup","Tips beim Start anzeigen"

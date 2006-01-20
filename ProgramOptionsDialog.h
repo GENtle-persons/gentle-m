@@ -65,7 +65,8 @@ class ProgramOptionsDialog : public wxDialog
     wxCheckBox *enhancedDisplay , *vectorTitle , *vectorLength ,
                 *loadLastProject , *useMetafile , *showSplashScreen ,
                 *checkUpdate , *useInternalHelp , *doRegisterStuff ,
-					 *showEnzymePos , *use_nonstandard_translation_table ;
+					 *showEnzymePos , *use_nonstandard_translation_table ,
+                *showTips ;
                 
     wxRadioBox *editFeatureMode ; ///< Pointer to the list of choices of how to treat edited items
     wxRadioBox *showStopCodon ; ///< Pointer to the list of choices of how to display stop codons

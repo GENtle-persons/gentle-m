@@ -1,10 +1,14 @@
 1.8.1
+Notes
+* TIFF export deactivated due to patent enforcement
 Additions
+* Startup tips (re-)enabled
 Bugfixes
 * New sequences with more than 64KB text can now be entered again
 * "OK" in Silmut/WhatCutsHere dialog with no entry selected doesn't crash anymore
 * DNA markers can now be added and edited via "marker.txt"
 * siRNA duplexes fix for features that cross the "zero" point
+* fixed protease display in DNA module
 
 __________________________________________
 1.8.0
