@@ -156,6 +156,11 @@ void PlasmidCanvas::drawCircularORFs ( wxDC &dc )
         float mt = p->vec->getORF(a)->to ;
         int rf = p->vec->getORF(a)->rf ;
         
+        if ( mf > mt )
+        {
+        mt += l ;
+        }
+        
         float ro , roi = r / 10 ;
         ro = roi * 7 + roi * rf ;
         
