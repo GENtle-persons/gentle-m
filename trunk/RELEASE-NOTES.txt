@@ -9,6 +9,7 @@ Bugfixes
 * DNA markers can now be added and edited via "marker.txt"
 * siRNA duplexes fix for features that cross the "zero" point
 * fixed protease display in DNA module
+* fixed 3'->5' strand extraction
 
 __________________________________________
 1.8.0

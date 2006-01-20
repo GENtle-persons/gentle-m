@@ -406,7 +406,8 @@ void TVectorEditor::proteaseSelChange ( wxCommandEvent &ev )
     
     wxString t ;
     t += s + _T("\n") ;
-    t += pro->str_match ;
+    t += pro->str_match + _T("\n") ;
+    t += pro->note ;
     pro_txt->SetValue ( t ) ;
     }
 

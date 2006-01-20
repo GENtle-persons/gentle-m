@@ -1190,10 +1190,10 @@ void TStorage::syncEnzymes ( TStorage *to )
 		wxString sql , k , v  ;
 		sqlAdd ( k , v , _T("e_name") , s2[a] ) ;
 		sqlAdd ( k , v , _T("e_sequence") , r2[a][r2["e_sequence"]] ) ;
-		sqlAdd ( k , v , _T("e_note") , _T("") ) ;
+		sqlAdd ( k , v , _T("e_note") , r2[a][r2["e_note"]] ) ;
 		sqlAdd ( k , v , _T("e_location") , _T("") ) ;
-		sqlAdd ( k , v , _T("e_cut") , _T("0") ) ;
-		sqlAdd ( k , v , _T("e_overlap") , _T("0") ) ;
+		sqlAdd ( k , v , _T("e_cut") , r2[a][r2["e_cut"]] ) ;
+		sqlAdd ( k , v , _T("e_overlap") , r2[a][r2["e_overlap"]] ) ;
 		k.Replace ( _T("\"") , _T("'") ) ;
 		v.Replace ( _T("\"") , _T("'") ) ;
 		sql = _T("INSERT INTO enzyme (e_id,") + k + _T(") VALUES ((SELECT max(e_id) FROM enzyme)+1,") + v + _T(")") ;
