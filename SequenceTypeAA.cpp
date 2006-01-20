@@ -21,6 +21,7 @@ int SeqAA::arrange ( int n )
     {
     if ( useDirectRoutines() ) return arrange_direct ( n ) ;
     wxMessageBox ( _T("One has to wonder...1") ) ;
+/*	Obsolete code
     int a , b , x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
     int lasta = 0 ;
     
@@ -92,7 +93,7 @@ int SeqAA::arrange ( int n )
            }
         }
         
-    return lowy + bo*2 ;
+    return lowy + bo*2 ;*/
     }
     
 void SeqAA::show ( wxDC& dc )
@@ -310,7 +311,8 @@ void SeqAA::updateProteases ()
     
 void SeqAA::analyzeProteases ()
     {
-    if ( !can ) return ; 
+    if ( !can ) return ;
+    int compensator = primaryMode ? 0 : 1 ;
     for ( int q = 0 ; q < proteases.GetCount() ; q++ )
        {
        TProtease *pr = proteases[q] ;
@@ -321,7 +323,7 @@ void SeqAA::analyzeProteases ()
              {
              TProteaseCut *cut = new TProteaseCut ;
              cut->protease = pr ;
-             cut->cut = pa_wa[pa_w.length()-pr->len()+pr->cut+1] ;
+             cut->cut = pa_wa[pa_w.length()-pr->len()+pr->cut+1] + compensator ;
              cut->left = true ;
              pc.Add ( cut ) ;
              }
