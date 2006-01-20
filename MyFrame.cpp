@@ -226,8 +226,8 @@ void MyFrame::initme ()
     doRegisterStuff = LS->getOption ( _T("REGISTERSTUFF") , true ) ;
     editFeatureMode = LS->getOption ( _T("EDITFEATUREMODE") , 0 ) ;
     showStopCodon = LS->getOption ( _T("SHOWSTOPCODON") , 0 ) ;
-    useCoolCanvas = LS->getOption ( _T("USECOOLCANVAS") , false ) ; // Not saved yet
-    useInternalHelp = LS->getOption ( _T("USEINTERNALHELP") , false ) ; // Not saved yet
+    useCoolCanvas = LS->getOption ( _T("USECOOLCANVAS") , false ) ; // Ignored
+    useInternalHelp = LS->getOption ( _T("USEINTERNALHELP") , false ) ;
     showEnzymePos = LS->getOption ( _T("SHOWENZYMEPOS") , true ) ;
     nonstandard_translation_table = LS->getOption ( _T("nonstandard_translation_table") , -1 ) ;
     
@@ -612,7 +612,7 @@ void MyFrame::saveImage ( wxBitmap *bmp , wxString name )
 	{
     wxString wildcard ;
     wildcard += _T("PNG (*.png)|*.png") ;
-    wildcard += _T("|TIF (*.tif)|*.tif") ;
+//    wildcard += _T("|TIF (*.tif)|*.tif") ;
     wildcard += _T("|Bitmap (*.bmp)|*.bmp") ;
     wildcard += _T("|JPEG (*.jpg)|*.jpg") ;
     
@@ -1185,6 +1185,7 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     LS->setOption ( _T("AA_GREEN") , aa_color.Green() ) ;
     LS->setOption ( _T("AA_BLUE") , aa_color.Blue() ) ;
     LS->setOption ( _T("nonstandard_translation_table") , nonstandard_translation_table ) ;
+    LS->setOption ( _T("SHOWTIP") , pod.showTips->GetValue() ) ;
     global_enzyme_rules->save_global_settings() ; //!!!!!!! fix this!
     LS->endRecord() ;
     for ( int a = 0 ; a < children.GetCount() ; a++ )
