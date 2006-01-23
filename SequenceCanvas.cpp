@@ -139,6 +139,7 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
     hardstop = -1 ;
     border = 4 ;
     contextMenuPosition = -1 ;
+    preventUpdate = false ;
 
     setMiniDisplay ( false ) ;
     editMode = false ;
@@ -945,7 +946,46 @@ bool SequenceCanvas::inMarkRange ( int x , int f , int t , int l )
     return false ;
     }
 
-void SequenceCanvas::mark ( wxString id , int from , int to , int value )
+void SequenceCanvas::mark ( SeqBasic *where , int from , int to , int value )
+    {
+    int a ;
+    for ( a = 0 ; a < seq.size() ; a++ )
+        {
+        if ( seq[a] != where ) continue ;
+        if ( !getAln() )
+           {
+             mark ( seq[a]->whatsthis() , from , to , value , a ) ;
+             return ;
+           }
+        int b , c , last = -1 ;
+        preventUpdate = true ;
+        for ( c = 0 ; c < seq.size() ; c++ )
+            {
+            for ( b = 0 ; b < seq[c]->s.length() ; b++ )
+                seq[c]->setMark ( b , 0 ) ;
+            }
+        preventUpdate = false ;
+        for ( b = 0 ; b < seq.size() && seq[b] != getLastWhere() ; b++ ) ;
+        if ( b == seq.size() ) b = a ;
+        if ( b < a ) { c = a ; a = b ; b = c ; }
+        preventUpdate = true ;
+        for ( c = 0 ; c < seq.size() ; c++ )
+            {
+            if ( !seq[c]->takesMouseActions ) continue ;
+            if ( c < a || c > b ) continue ;
+            last = c ;
+            mark ( seq[c]->whatsthis() , from , to , value , c ) ;
+            }
+        preventUpdate = false ;
+        if ( last > -1 )
+           mark ( seq[last]->whatsthis() , from , to , value , last ) ;
+        return ;
+        }
+    // Fallback
+    mark ( _T("THERE IS NO SUCH ID") , from , to , value ) ;
+    }
+
+void SequenceCanvas::mark ( wxString id , int from , int to , int value , int force_row )
     {
     mylog ( "MARK" , wxString::Format ( "%s %d-%d %d" , id.c_str() , from , to , value ) ) ;
     if ( seq.GetCount() == 0 ) return ;
@@ -967,10 +1007,20 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
 
     int a , b = -1 , cnt = 0 ;
     vpx = -1 ;
-    vpy = -1 ; 
-    for ( a = 0 ; a < seq.GetCount() && b == -1 ; a++ )
-        if ( seq[a]->whatsthis() == id )
-           b = a ;
+    vpy = -1 ;
+    
+    // Find the row to mark
+    if ( force_row != -1 )
+       {
+       b = force_row ;
+       id = seq[b]->whatsthis() ; // Just for safety
+       }
+    else
+       {
+       for ( a = 0 ; a < seq.GetCount() && b == -1 ; a++ )
+           if ( seq[a]->whatsthis() == id )
+              b = a ;
+       }
     lastmarked = b ;
     if ( b == -1 ) // Illegal ID
        {
@@ -998,18 +1048,21 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
            seq[b]->setMark ( a , 0 ) ;
         }
 
-//        
-    for ( int other = 0 ; other < seq.GetCount() ; other++ )
-        {
-        bool canbemarked = seq[other]->takesMouseActions ;
-        if ( other == b ) canbemarked = false ;
-        for ( a = 0 ; canbemarked && a < seq[other]->getMarkSize() ; a++ )
-            {
-            seq[other]->setMark ( a , 0 ) ;
-            }
-        }
-        
-    if ( !printing )
+    // Unmark all other lines
+    if ( force_row < 0 || !getAln() )
+       {
+       for ( int other = 0 ; other < seq.GetCount() ; other++ )
+           {
+           bool canbemarked = seq[other]->takesMouseActions ;
+           if ( other == b ) canbemarked = false ;
+           for ( a = 0 ; canbemarked && a < seq[other]->getMarkSize() ; a++ )
+               {
+               seq[other]->setMark ( a , 0 ) ;
+               }
+           }
+       }
+
+    if ( !printing && !preventUpdate )
         {
         // Refreshing sequence canvas
         SilentRefresh () ;
@@ -1022,6 +1075,9 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value )
 
     _from = from ;
     _to = to ;
+
+    if ( preventUpdate ) return ;
+
     if ( p )
         {
         // Refreshing plasmid canvas
@@ -1440,7 +1496,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
                lastpos = -1 ;
                for ( int a = 0 ; a < seq.GetCount() ; a++ )
                   if ( seq[a]->takesMouseActions )
-                     mark ( seq[a]->whatsthis() , 0 , 0 , 0 ) ;
+                     unmark () ; //mark ( seq[a]->whatsthis() , 0 , 0 , 0 ) ;
                }
             }
         else if ( !editMode )
@@ -1450,7 +1506,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
                {
                if ( seq[a]->takesMouseActions )
                   {
-                  mark ( seq[a]->whatsthis() , 0 , 0 , 0 ) ;
+                  unmark () ;//mark ( seq[a]->whatsthis() , 0 , 0 , 0 ) ;
 //                  break ;
                   }
                }
@@ -1474,7 +1530,8 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         if ( my > cs.y ) Scroll ( 0 , qy+nol ) ;
         else if ( my < 0 ) Scroll ( 0 , qy-nol ) ;
     
-        if ( pos != -1 && lastpos != -1 && getLastWhere() == where )
+        if ( pos != -1 && lastpos != -1 &&
+                 ( getLastWhere() == where || getAln() ) )
             {
             if ( editMode )
                {
@@ -1484,9 +1541,9 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
             else
                {
                if ( pos >= lastpos )
-                  mark ( where->whatsthis() , lastpos , pos , 1 ) ;
+                  mark ( where , lastpos , pos , 1 ) ;
                else
-                  mark ( where->whatsthis() , pos , lastpos , 1 ) ;
+                  mark ( where , pos , lastpos , 1 ) ;
                }
             }
         }

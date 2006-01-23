@@ -137,7 +137,15 @@ void SeqAlign::show ( wxDC& dc )
               dc.SetTextForeground ( fg ) ;
               dc.SetTextBackground ( bg ) ;
               }
-              
+
+           // Mark?
+          int pm = getMark ( a ) ;
+          if ( pm == 1 ) // Marked (light gray background)
+             {
+             dc.SetBackgroundMode ( wxSOLID ) ;
+             dc.SetTextBackground ( *wxLIGHT_GREY ) ;
+             }
+
            // Printing to B&W printer?
            if ( can->isPrinting() && !can->getPrintToColor() )
               {
@@ -167,7 +175,12 @@ void SeqAlign::show ( wxDC& dc )
                  {
                  dc.SetBrush ( *MYBRUSH ( dc.GetTextBackground() ) ) ;
                  dc.DrawRectangle ( rax-1 , ray , wx+2 , wy ) ;
-                 }    
+                 }
+              else if ( pm == 1 )
+                 {
+                 dc.SetBrush ( *MYBRUSH ( *wxLIGHT_GREY ) ) ;
+                 dc.DrawRectangle ( rax-1 , ray , wx+3 , wy ) ;
+                 }
               dc.SetBrush ( *MYBRUSH ( dc.GetTextForeground() ) ) ;
               dc.DrawCircle ( rax + wx / 2 ,
                               ray + wy / 2 ,

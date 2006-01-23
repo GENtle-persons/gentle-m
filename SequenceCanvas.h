@@ -230,7 +230,7 @@ class SeqPrimer : public SeqDNA
 class SeqAlign : public SeqBasic
     {
     public :
-    SeqAlign ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; myname = _T("Align") ; id = -1 ; } ///< Constructor
+    SeqAlign ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; takesMouseActions = true ; myname = _T("Align") ; id = -1 ; } ///< Constructor
     virtual int  arrange ( int n ) ; ///< Arrange "chars" as line n
     virtual void show ( wxDC& dc ) ; ///< Show
     virtual wxString whatsthis () { return _T("ALIGN") ; } ///< Returns the linetype
@@ -489,7 +489,8 @@ class SequenceCanvas : public wxScrolledWindow
     virtual SeqBasic* findMouseTarget ( wxPoint pt , int &pos ) ; ///< Returns a pointer to the seq structure (and the position inside) the given point is within
     virtual int findMouseTargetItem ( wxPoint pt ) ; ///< Returns the ID of the seq structure the given point is within
     virtual SeqBasic* findID ( wxString id ) ; ///< Returns the pointer to the seq structure with the given ID string
-    virtual void mark ( wxString id , int from , int to , int value = 1 ) ; ///< Marks part of a sequence
+    virtual void mark ( SeqBasic *where , int from , int to , int value = 1 ) ; ///< Marks part of a sequence
+    virtual void mark ( wxString id , int from , int to , int value = 1 , int force_row = -1 ) ; ///< Marks part of a sequence
     virtual bool inMarkRange ( int x , int f , int t , int l ) ; ///< Is this span withing the marked range?
     virtual void ensureVisible ( int pos ) ; ///< Make sure the position is in the visible part of the display; scroll if necessary
     virtual int getBatchMark () ; ///< I forgot what this does
@@ -544,7 +545,7 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void editCharPressed ( int k , TVector *v , wxString *the_sequence ) ;
     virtual void editSpecialKeyPressed ( int k , TVector *v , wxString *the_sequence , int wy , wxKeyEvent& event ) ;
 
-    bool printToColor , drawall , horizontal , hide , miniDisplay ;
+    bool printToColor , drawall , horizontal , hide , miniDisplay , preventUpdate ;
     bool marking , drawing , printing , wantOverwrite , forceoverwrite ;
     bool editMode ;
     wxDC *print_dc ;

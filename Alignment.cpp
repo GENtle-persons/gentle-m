@@ -501,6 +501,8 @@ void TAlignment::redoAlignments ( bool doRecalc )
            }
         SeqAlign *d = new SeqAlign ( sc ) ;
         sc->seq.Add ( d ) ;
+        if ( lines[a].isIdentity )
+           d->takesMouseActions = false ;
         d->id = a ;
         d->s = lines[a].s ;
         d->myname = lines[a].name ;
@@ -1052,6 +1054,7 @@ void TAlignment::OnMenuIdent ( wxCommandEvent &ev )
         int a = lines.size()-1 ;
         SeqAlign *d = new SeqAlign ( sc ) ;
         sc->seq.Add ( d ) ;
+        d->takesMouseActions = false ;
         d->id = a ;
         d->s = lines[a].s ;
         d->myname = lines[a].name ;
