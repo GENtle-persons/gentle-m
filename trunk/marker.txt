@@ -5,6 +5,10 @@
 # *bp is the number of base pairs in that band
 # *conc is the concentration of that DNA in the marker (ng/µl)
 # ":conc" can be omitted. The default concentration (20) is then used
+#
+# NOTE: If you enter new data here, it will probably be replaced on the next GENtle update.
+#       To prevent this, either mark this file read-only, or enter the new marker at
+#       
 
 MassRuler Mix:20,10000:200,8000:160,6000:120,5000:100,4000:80,3000:60,2500:50,2000:40,1500:32,1031:200,900:180,800:160,700:140,600:120,500:200,400:80,300:60,200:40,100:20,80:16
 MassRuler High Range:20,10000:200,8000:160,6000:120,5000:100,4000:80,3000:60,2500:52,2000:40,1500:32

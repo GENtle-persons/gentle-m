@@ -20,6 +20,7 @@ Feature Requests :
 * Alignment-Farben wie bei ABI
 * Save all
 * Feature names movable / keep position with changes
+* Change start number for alignments
 
 SEE: http://eutils.ncbi.nlm.nih.gov/entrez/query/static/eutils_help.html
 
