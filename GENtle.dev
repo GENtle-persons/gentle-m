@@ -10,8 +10,8 @@ Libs=C:\Programme\Dev-Cpp\Mine\GENtle;C:\Programme\Dev-Cpp\Mine\GENtle\tinyxml;C
 PrivateResource=GENtle_private.rc
 ResourceIncludes=C:\Programme\Dev-Cpp\include;"C:\Program Files\Dev-Cpp\include"
 MakeIncludes=
-Compiler=--pipe -D_X86_=1 -DWIN32 -D_WIN32 -DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -D__WIN32__ -mthreads -DSTRICT  -D__WXMSW__ -D__WINDOWS__ -Wall  -fno-pcc-struct-return -O2 -fno-rtti -fno-exceptions -O3_@@_
-CppCompiler=--pipe -D_X86_=1 -DWIN32 -D_WIN32 -DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -D__WIN32__ -mthreads -DSTRICT  -D__WXMSW__ -D__WINDOWS__ -Wall -fno-pcc-struct-return -O2 -fno-rtti -fno-exceptions -finline-functions -O3_@@_
+Compiler=--pipe -D_X86_=1 -DWIN32 -D_WIN32 -DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -D__WIN32__ -mthreads -DSTRICT  -D__WXMSW__ -D__WINDOWS__ -Wall  -fno-pcc-struct-return -fno-rtti -fno-exceptions -O3_@@_
+CppCompiler=--pipe -D_X86_=1 -DWIN32 -D_WIN32 -DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -D__WIN32__ -mthreads -DSTRICT  -D__WXMSW__ -D__WINDOWS__ -Wall -fno-pcc-struct-return -fno-rtti -fno-exceptions -finline-functions -O3_@@_
 Linker=-lwxmsw26_@@_-lwxmsw26_gl_@@_-lwxtiff_@@_-lwxjpeg_@@_-lwxpng_@@_-lwxzlib_@@_-lwxregex_@@_-lwxexpat_@@_-lstdc++_@@_-lgcc_@@_-lodbc32_@@_-lwsock32_@@_-lwinspool_@@_-lwinmm_@@_-lshell32_@@_-lcomctl32_@@_-lctl3d32_@@_-lodbc32_@@_-ladvapi32 _@@_-lodbc32 _@@_-lwsock32 _@@_-lopengl32 _@@_-lglu32 _@@_-lole32 _@@_-loleaut32 _@@_-luuid_@@_sqlite.dll_@@_libmySQL.a_@@_libmySQL.dll_@@_sqlite3.dll_@@_-s_@@_
 IsCpp=1
 Icon=GENtle.ico

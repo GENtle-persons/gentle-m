@@ -18,6 +18,8 @@
 #define ALG_NW 2
 
 class SeqAA ;
+class SequenceCharMarkup ;
+class SeqAlign ;
 
 /**	\brief Helper class for TAlignment; represents a line (a sequence) in the alignment
 */
@@ -25,18 +27,19 @@ class TAlignLine // pun intended
     {
     public :
     TAlignLine () ; ///< Constructor
-    virtual ~TAlignLine () ; ///< Destructor
-    virtual void ResetSequence () ; ///< Resets the settings to default
-    virtual ChildBase *FindOrigin () ; ///< Returns a pointer to the ChildBase structure containing the original sequence, or NULL
-    virtual void showFeatures () ; ///< Display the features of this sequence
-    virtual void hideFeatures () ; ///< Hide the features of this sequence
-    virtual TVector *getFeatures () ; ///< Returns a pointer to the TVector structure, so the features can be accessed
-    virtual bool hasFeatures () ; ///< Does this sequence have annotated items/features
+    ~TAlignLine () ; ///< Destructor
+    void ResetSequence () ; ///< Resets the settings to default
+    ChildBase *FindOrigin () ; ///< Returns a pointer to the ChildBase structure containing the original sequence, or NULL
+    void showFeatures () ; ///< Display the features of this sequence
+    void hideFeatures () ; ///< Hide the features of this sequence
+    TVector *getFeatures () ; ///< Returns a pointer to the TVector structure, so the features can be accessed
+    bool hasFeatures () ; ///< Does this sequence have annotated items/features
     
     wxString name , s ;
     TVector *v ;
     bool isIdentity ; ///< Is this line an identity display (or a "real" sequence)?
     wxString phylip_id ;
+    vector <SequenceCharMarkup> markup ;
     
     private :
     TVector *features ;
@@ -93,8 +96,9 @@ class TAlignment : public ChildBase,wxThreadHelper
     virtual bool isAA () ; ///< Tries to determine wether this is a DNA or an amino acid alignment
     
     virtual void RunPhylip ( int cmd ) ; ///< Takes Phylip commands (invoked from SequenceCanvas)
-
     virtual bool isThreadRunning() { return threadRunning ; } ///< Is a thread (alignment calculation) currently running?
+    void getCharMarkup ( SequenceCharMarkup &scm , int vline , int pos , int vfirst ) ;
+    void editAppearance ( int from , int to , int firstline , int lastline ) ;
     
     // Variables
     SequenceCanvas *sc ; ///< Pointer to the sequence canvas

@@ -72,6 +72,8 @@ BEGIN_EVENT_TABLE(SequenceCanvas, wxScrolledWindow)
 
 	EVT_MENU_RANGE(PHYLIP_CMD_PROTPARS,PHYLIP_CMD_SETUP,SequenceCanvas::OnPhylip)
     EVT_MENU(CM_OPEN_FEATURE,SequenceCanvas::OnOpenFeature)
+    EVT_MENU(ALIGN_APPEARANCE,SequenceCanvas::OnAppearance)
+    
 /*	EVT_MENU(PHYLIP_CMD_PROTPARS, SequenceCanvas::OnPhylip)
 	EVT_MENU(PHYLIP_CMD_DNAPARS, SequenceCanvas::OnPhylip)
 	EVT_MENU(PHYLIP_CMD_DNAMOVE, SequenceCanvas::OnPhylip)
@@ -121,6 +123,7 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
     font = MYFONT ( 12 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
     smallFont = MYFONT ( MYFONTSIZE , wxSWISS , wxNORMAL , wxNORMAL ) ;
     varFont = MYFONT ( 11 , wxROMAN  , wxNORMAL , wxNORMAL ) ;
+    mark_firstrow = mark_lastrow = -1 ;
     charwidth = 0 ;
     charheight = 0 ;
     blankline = 0 ;
@@ -160,6 +163,7 @@ SequenceCanvas::~SequenceCanvas()
     
 void SequenceCanvas::unmark ()
 	{
+    mark_firstrow = mark_lastrow = -1 ;
 	if ( lastmarked < 0 || lastmarked >= seq.GetCount() ) return ;
 	if ( markedFrom() == -1 ) return ;
 	mark ( seq[lastmarked]->whatsthis() , -1 , -1 ) ;
@@ -541,6 +545,20 @@ void SequenceCanvas::blastAA ( wxCommandEvent &ev )
         wxString seq = getSelection() ;
         myapp()->frame->blast ( seq , _T("blastp") ) ;
         }
+    }
+
+void SequenceCanvas::OnAppearance ( wxCommandEvent &ev )
+    {
+    int a , r1 = -1 , r2 = -1 ;
+    for ( a = mark_firstrow ; a <= mark_lastrow ; a++ )
+        {
+        if ( seq[a]->whatsthis() != _T("ALIGN") ) continue ;
+        int id = ((SeqAlign*)seq[a])->id ;
+        if ( id < 0 ) continue ;
+        if ( r1 == -1 ) r1 =id ;
+        r2 = id ;
+        }
+    getAln()->editAppearance ( _from-1 , _to-1 , r1 , r2 ) ;
     }
 
 void SequenceCanvas::OnCut ( wxCommandEvent &ev )
@@ -962,18 +980,24 @@ void SequenceCanvas::mark ( SeqBasic *where , int from , int to , int value )
         for ( c = 0 ; c < seq.size() ; c++ )
             {
             for ( b = 0 ; b < seq[c]->s.length() ; b++ )
-                seq[c]->setMark ( b , 0 ) ;
+                {
+                if ( seq[c]->takesMouseActions )
+                   seq[c]->setMark ( b , 0 ) ;
+                }
             }
         preventUpdate = false ;
         for ( b = 0 ; b < seq.size() && seq[b] != getLastWhere() ; b++ ) ;
         if ( b == seq.size() ) b = a ;
         if ( b < a ) { c = a ; a = b ; b = c ; }
         preventUpdate = true ;
+        mark_firstrow = mark_lastrow = -1 ;
         for ( c = 0 ; c < seq.size() ; c++ )
             {
             if ( !seq[c]->takesMouseActions ) continue ;
             if ( c < a || c > b ) continue ;
             last = c ;
+            if ( mark_firstrow == -1 ) mark_firstrow = c ;
+            mark_lastrow = c ;
             mark ( seq[c]->whatsthis() , from , to , value , c ) ;
             }
         preventUpdate = false ;
@@ -1494,9 +1518,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
             else
                {
                lastpos = -1 ;
-               for ( int a = 0 ; a < seq.GetCount() ; a++ )
-                  if ( seq[a]->takesMouseActions )
-                     unmark () ; //mark ( seq[a]->whatsthis() , 0 , 0 , 0 ) ;
+               unmark () ;
                }
             }
         else if ( !editMode )
@@ -1506,7 +1528,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
                {
                if ( seq[a]->takesMouseActions )
                   {
-                  unmark () ;//mark ( seq[a]->whatsthis() , 0 , 0 , 0 ) ;
+                  unmark () ;
 //                  break ;
                   }
                }
@@ -1531,7 +1553,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         else if ( my < 0 ) Scroll ( 0 , qy-nol ) ;
     
         if ( pos != -1 && lastpos != -1 &&
-                 ( getLastWhere() == where || getAln() ) )
+                 ( getLastWhere() == where || getAln() /*where->whatsthis() == "ALIGN"*/ ) )
             {
             if ( editMode )
                {
@@ -1631,7 +1653,7 @@ void SequenceCanvas::showContextMenu ( SeqBasic *where , int pos , wxPoint pt )
 	       else
 	          {
 	          last_al = al ;
-	          if ( where ) 
+	          if ( where && where == getLastWhere() && _from == -1 ) 
 	             {
 	             lastclick = pos ;
 	             wxMenu *cc = new wxMenu ;
@@ -1641,7 +1663,11 @@ void SequenceCanvas::showContextMenu ( SeqBasic *where , int pos , wxPoint pt )
 	             cc->Append ( SEQ_DELETE_OTHER_GAPS , txt("t_mmb_delete_gap_others") ) ;
 	             cm->Append ( SEQ_COPY_AS , txt("m_align_gap") , cc ) ;
 	             } 
-	
+
+              // Marked
+              if ( _from >= 0 )
+                 cm->Append ( ALIGN_APPEARANCE , txt("m_align_appearance") ) ;
+
 	          wxMenu *cb = new wxMenu ;
 	          TAlignment *ali = (TAlignment*) child ;
 	          if ( last_al->id > 0 ) cb->Append ( SEQ_UP , txt("t_seq_up") ) ;
@@ -2472,7 +2498,7 @@ int SeqPos::getmark ( int where )
     return -1 ;
     }
 
-//------------------------------------------------------------- SequencePartList
+//_____________________________________________________________ SequencePartList
 
 int SequencePartList::getID ( int internalID ) { return vi[internalID] ; }
 int SequencePartList::getFrom ( int internalID ) { return vx[internalID] ; }
@@ -2548,3 +2574,63 @@ int SequencePartList::getLevel ( int i )
     return vl[i] ;
     }    
     
+//___________________________________________________________ SequenceCharMarkup
+
+
+SequenceCharMarkup::SequenceCharMarkup()
+    {
+    ignore = true ;
+    borders = 0 ;
+    textcolor = *wxBLACK ;
+    backcolor = *wxWHITE ;
+    }
+
+void SequenceCharMarkup::draw ( wxDC &dc , const wxRect &rect , wxString s , int mode , int lastx )
+    {
+    bool mark = ( mode & SEQUENCECHARMARKUP_MARK ) > 0 ;
+    bool mono = ( mode & SEQUENCECHARMARKUP_MONO ) > 0 ;
+    bool bold = ( mode & SEQUENCECHARMARKUP_BOLD ) > 0 ;
+    bool invert = ( mode & SEQUENCECHARMARKUP_INVERT ) > 0 ;
+
+    wxColour bg ;
+
+    if ( mono )
+       {
+         dc.SetTextForeground ( *wxBLACK ) ;
+         bg = mark ? *wxLIGHT_GREY : *wxWHITE ;
+       }
+    else
+       {
+         dc.SetTextForeground ( invert ? backcolor : textcolor ) ;
+         if ( mark ) bg = *wxLIGHT_GREY ;
+         else bg = invert ? textcolor : backcolor ;
+       }
+       
+    wxRect r = rect ;
+    if ( lastx != -1 )
+       {
+       r.width += r.x - lastx ;
+       r.x = lastx ;
+       }
+    
+    dc.SetPen ( *wxTRANSPARENT_PEN ) ;
+//    if ( bg != *wxWHITE )
+       {
+       dc.SetBrush ( *MYBRUSH(bg) ) ;
+       dc.DrawRectangle ( r ) ;
+       }
+
+    int x = rect.GetLeft() ;
+    int y = rect.GetTop() ;
+    dc.SetBackgroundMode ( wxTRANSPARENT ) ;
+    dc.DrawText ( s , x , y ) ;
+    if ( bold )
+       dc.DrawText ( s , x+1 , y ) ;
+    
+    if ( ( borders & wxTOP ) > 0 ) { dc.SetPen ( borderTop ) ; dc.DrawLine ( r.GetLeft() , r.GetTop() , r.GetRight()+1 , r.GetTop() ) ; }
+    if ( ( borders & wxBOTTOM ) > 0 ) { dc.SetPen ( borderBottom ) ; dc.DrawLine ( r.GetLeft() , r.GetBottom() , r.GetRight()+1 , r.GetBottom() ) ; }
+    if ( ( borders & wxLEFT ) > 0 ) { dc.SetPen ( borderLeft ) ; dc.DrawLine ( r.GetLeft() , r.GetTop() , r.GetLeft() , r.GetBottom()+1 ) ; }
+    if ( ( borders & wxRIGHT ) > 0 ) { dc.SetPen ( borderRight ) ; dc.DrawLine ( r.GetRight() , r.GetTop() , r.GetRight() , r.GetBottom()+1 ) ; }    
+
+    dc.SetBackgroundMode ( wxSOLID ) ;
+    }
