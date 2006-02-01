@@ -679,14 +679,12 @@ void TManageDatabaseDialog::addDatabase ( wxString fn )
     // Avoiding double names
     if ( t.GetChar(0) >= 'a' && t.GetChar(0) <= 'z' )
         t.SetChar ( 0 , t.GetChar(0) - 'a' + 'A' ) ; // Uppercase
-    wxString s ;
-//    char z[100] ;
-    b = 0 ;
-//    *z = 0 ;
+    wxString s = t ;
+    b = 1 ;
     do {
-        s = t + wxString::Format ( _T("%d") , b ) ;
+        if ( b > 1 )
+           s = t + wxString::Format ( _T(" (%d)") , b ) ;
         b++ ;
-  //      sprintf ( z , " %d" , b ) ;
         for ( a = 0 ; a < db_name.GetCount() && db_name[a] != s ; a++ ) ;
         } while ( a < db_name.GetCount() ) ;
     t = s ;
@@ -1467,6 +1465,7 @@ TMySQLDialog::TMySQLDialog ( wxWindow *parent , wxString title , wxString server
    
    SetSizer( v );
    Center () ;
+   s->SetFocus() ;
    }
 
 

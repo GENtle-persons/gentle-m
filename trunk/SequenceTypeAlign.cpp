@@ -98,6 +98,7 @@ void SeqAlign::show ( wxDC& dc )
     int cnol = can->NumberOfLines() ;
     int ppgc = pos.p.GetCount() ;
     bool thisisidentity = ( myname == txt("t_identity") ) ;
+    int last_wx = -1 ;
 
     for ( a = 0 ; a < ppgc ; a++ )
         {
@@ -129,6 +130,29 @@ void SeqAlign::show ( wxDC& dc )
            {
            t = s.GetChar(b-1) ;
 
+           // Same as char in first sequence?
+           if ( (!thisisidentity) &&
+                al->cons &&
+                first != me &&
+                t.GetChar(0) != '-' &&
+                t.GetChar(0) == can->seq[first]->s.GetChar(b-1) )
+                   t.SetChar(0,'.') ;
+
+           SequenceCharMarkup scm ;
+           int mode = 0 ;
+           if ( !thisisidentity )
+              {
+              al->getCharMarkup ( scm , id , b-1 , first ) ;
+              if ( getMark ( a ) ) mode |= SEQUENCECHARMARKUP_MARK ;
+              if ( al->mono ) mode |= SEQUENCECHARMARKUP_MONO ;
+              if ( can->isPrinting() && !can->getPrintToColor() ) mode |= SEQUENCECHARMARKUP_MONO ;
+              if ( al->bold ) mode |= SEQUENCECHARMARKUP_BOLD ;
+              }
+
+           scm.draw ( dc , wxRect ( rax , ray , wx , wy ) , t , mode , last_wx ) ;
+           last_wx = rax + wx ;
+
+/*
            // Get color for this char
            if ( !thisisidentity )
               {
@@ -152,14 +176,14 @@ void SeqAlign::show ( wxDC& dc )
               dc.SetTextForeground ( *wxBLACK ) ;
               dc.SetBackgroundMode ( wxTRANSPARENT ) ;
               }
-              
+
            // Monochrome display?
            if ( al->mono )
               {
               dc.SetTextForeground ( *wxBLACK ) ;
-              dc.SetBackgroundMode ( wxTRANSPARENT ) ;
+              if ( pm != 1 ) dc.SetBackgroundMode ( wxTRANSPARENT ) ;
               }
-              
+
            // Same as char in first sequence?
            if ( (!thisisidentity) && 
                 al->cons && 
@@ -176,10 +200,10 @@ void SeqAlign::show ( wxDC& dc )
                  dc.SetBrush ( *MYBRUSH ( dc.GetTextBackground() ) ) ;
                  dc.DrawRectangle ( rax-1 , ray , wx+2 , wy ) ;
                  }
-              else if ( pm == 1 )
+              else if ( pm == 1 ) // Marked
                  {
                  dc.SetBrush ( *MYBRUSH ( *wxLIGHT_GREY ) ) ;
-                 dc.DrawRectangle ( rax-1 , ray , wx+3 , wy ) ;
+                 dc.DrawRectangle ( rax-1 , ray , wx+2 , wy ) ;
                  }
               dc.SetBrush ( *MYBRUSH ( dc.GetTextForeground() ) ) ;
               dc.DrawCircle ( rax + wx / 2 ,
@@ -196,11 +220,12 @@ void SeqAlign::show ( wxDC& dc )
                  dc.SetBackgroundMode ( wxSOLID ) ;
                  }
               }    
-
+*/
            cnt++ ;
            }
         else if ( b < 0 && insight ) // Front number
            {
+           last_wx = -1 ;
            dc.SetTextForeground ( *wxBLACK ) ;
            dc.SetTextBackground ( nbgc ) ;
            FILLSTRING ( t , (wxChar)' ' , endnumberlength ) ;

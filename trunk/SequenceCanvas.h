@@ -19,6 +19,25 @@ class TProteaseCut ;
 class TAAProp ;
 class TAlignment ;
 
+#define SEQUENCECHARMARKUP_MARK 1
+#define SEQUENCECHARMARKUP_MONO 2
+#define SEQUENCECHARMARKUP_BOLD 4
+#define SEQUENCECHARMARKUP_INVERT 8
+
+/** \brief This class contains the markup of a single character (borders, fore- and background)
+*/
+class SequenceCharMarkup
+    {
+    public :
+    SequenceCharMarkup () ;
+    void draw ( wxDC &dc , const wxRect &rect , wxString s , int mode , int lastx = -1 ) ;
+    
+    bool ignore ;
+    wxColour textcolor , backcolor ;
+    int borders ; ///< wxTOP|wxBOTTOM|wxLEFT|wxRIGHT
+    wxPen borderTop , borderBottom , borderLeft , borderRight ;
+    } ;
+
 /** \brief This class assists in the restriction site layout
 */
 class SequencePartList
@@ -480,6 +499,7 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void OnPaste ( wxCommandEvent &ev ) ; ///<  Paste event handler
     virtual void OnFocus(wxFocusEvent& event) ; ///<  "Display gets focus" event handler
     virtual void OnKillFocus(wxFocusEvent& event) ; ///<  "Display loses focus" event handler
+    virtual void OnAppearance(wxCommandEvent& event) ; ///<  Change the apperance of the sequence
     virtual void rsHideLimit ( wxCommandEvent &ev ) ; ///<  "Limit restriction enzymes" event handler
     
     virtual wxString getSelection () ; ///< Returns the current selection as a wxString
@@ -550,6 +570,7 @@ class SequenceCanvas : public wxScrolledWindow
     bool editMode ;
     wxDC *print_dc ;
     int _from , _to ; // Mark
+    int mark_firstrow , mark_lastrow ;
     int lastclick , lowx , lowy , lastpos , print_maxx , vpx , vpy ;
     wxString lastToolTip ;
     SeqAlign *last_al ;
