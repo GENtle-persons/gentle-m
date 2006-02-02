@@ -2583,13 +2583,15 @@ SequenceCharMarkup::SequenceCharMarkup()
     borders = 0 ;
     textcolor = *wxBLACK ;
     backcolor = *wxWHITE ;
+    bold = false ;
+    italics = false ;
     }
 
 void SequenceCharMarkup::draw ( wxDC &dc , const wxRect &rect , wxString s , int mode , int lastx )
     {
     bool mark = ( mode & SEQUENCECHARMARKUP_MARK ) > 0 ;
     bool mono = ( mode & SEQUENCECHARMARKUP_MONO ) > 0 ;
-    bool bold = ( mode & SEQUENCECHARMARKUP_BOLD ) > 0 ;
+    bool bold = ( mode & SEQUENCECHARMARKUP_BOLD ) > 0 | this->bold ;
     bool invert = ( mode & SEQUENCECHARMARKUP_INVERT ) > 0 ;
 
     wxColour bg ;
@@ -2614,11 +2616,13 @@ void SequenceCharMarkup::draw ( wxDC &dc , const wxRect &rect , wxString s , int
        }
     
     dc.SetPen ( *wxTRANSPARENT_PEN ) ;
-//    if ( bg != *wxWHITE )
-       {
-       dc.SetBrush ( *MYBRUSH(bg) ) ;
-       dc.DrawRectangle ( r ) ;
-       }
+    dc.SetBrush ( *MYBRUSH(bg) ) ;
+    dc.DrawRectangle ( r ) ;
+
+    r.x-- ;
+    r.y-- ;
+    r.width++ ;
+    r.height++ ;
 
     int x = rect.GetLeft() ;
     int y = rect.GetTop() ;
@@ -2627,10 +2631,57 @@ void SequenceCharMarkup::draw ( wxDC &dc , const wxRect &rect , wxString s , int
     if ( bold )
        dc.DrawText ( s , x+1 , y ) ;
     
-    if ( ( borders & wxTOP ) > 0 ) { dc.SetPen ( borderTop ) ; dc.DrawLine ( r.GetLeft() , r.GetTop() , r.GetRight()+1 , r.GetTop() ) ; }
-    if ( ( borders & wxBOTTOM ) > 0 ) { dc.SetPen ( borderBottom ) ; dc.DrawLine ( r.GetLeft() , r.GetBottom() , r.GetRight()+1 , r.GetBottom() ) ; }
-    if ( ( borders & wxLEFT ) > 0 ) { dc.SetPen ( borderLeft ) ; dc.DrawLine ( r.GetLeft() , r.GetTop() , r.GetLeft() , r.GetBottom()+1 ) ; }
-    if ( ( borders & wxRIGHT ) > 0 ) { dc.SetPen ( borderRight ) ; dc.DrawLine ( r.GetRight() , r.GetTop() , r.GetRight() , r.GetBottom()+1 ) ; }    
+    if ( ( borders & wxTOP ) > 0 ) { dc.SetPen ( borderTop ) ; dc.DrawLine ( r.GetLeft() , r.GetTop() , r.GetRight() , r.GetTop() ) ; }
+    if ( ( borders & wxBOTTOM ) > 0 ) { dc.SetPen ( borderBottom ) ; dc.DrawLine ( r.GetLeft() , r.GetBottom() , r.GetRight() , r.GetBottom() ) ; }
+    if ( ( borders & wxLEFT ) > 0 ) { dc.SetPen ( borderLeft ) ; dc.DrawLine ( r.GetLeft() , r.GetTop() , r.GetLeft() , r.GetBottom() ) ; }
+    if ( ( borders & wxRIGHT ) > 0 ) { dc.SetPen ( borderRight ) ; dc.DrawLine ( r.GetRight() , r.GetTop() , r.GetRight() , r.GetBottom() ) ; }    
 
     dc.SetBackgroundMode ( wxSOLID ) ;
+    }
+
+wxString SequenceCharMarkup::getXML ()
+    {
+    wxString ret ;
+    ret += _T("<scm") ;
+    ret += wxString::Format ( _T(" ignore='%d'") , ignore ) ;
+    if ( ignore )
+       {
+       ret += _T(" />") ;
+       return ret ;
+       }
+    ret += getColorXML ( _T("textcolor") , textcolor ) ;
+    ret += getColorXML ( _T("backcolor") , backcolor ) ;
+    ret += wxString::Format ( _T(" borders='%d'") , borders ) ;
+    ret += wxString::Format ( _T(" bold='%d'") , bold ) ;
+    ret += wxString::Format ( _T(" italics='%d'") , italics ) ;
+    ret += _T(">") ;
+    ret += getPenXML ( borderTop ) ;
+    ret += getPenXML ( borderBottom ) ;
+    ret += getPenXML ( borderLeft ) ;
+    ret += getPenXML ( borderRight ) ;
+    ret += _T("</scm>") ;
+    return ret ;
+    }
+
+wxString SequenceCharMarkup::getColorXML ( wxString name , wxColour c )
+    {
+    wxString ret ;
+    if ( !c.Ok() ) return ret ;
+    ret = _T(" ") + name + wxString::Format ( _T("='%3d%3d%3d'") , c.Red() , c.Green() , c.Blue() ) ;
+    return ret ;
+    }
+
+wxString SequenceCharMarkup::getPenXML ( wxPen &pen )
+    {
+    wxString ret ;
+    ret += _T("<pen") ;
+    ret += getColorXML ( _T("color") , pen.GetColour() ) ;
+    ret += wxString::Format ( _T(" width='%d'") , pen.GetWidth() ) ;
+    ret += wxString::Format ( _T(" style='%d'") , pen.GetStyle() ) ;
+    ret += _T(" />") ;
+    return ret ;
+    }
+
+void SequenceCharMarkup::setFromXML ( wxString s )
+    {
     }

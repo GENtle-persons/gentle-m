@@ -502,7 +502,7 @@ void TAlignment::redoAlignments ( bool doRecalc )
         SeqAlign *d = new SeqAlign ( sc ) ;
         sc->seq.Add ( d ) ;
         if ( lines[a].isIdentity )
-           d->takesMouseActions = false ;
+           d->takesMouseActions = true ;
         d->id = a ;
         d->s = lines[a].s ;
         d->myname = lines[a].name ;
@@ -1054,7 +1054,7 @@ void TAlignment::OnMenuIdent ( wxCommandEvent &ev )
         int a = lines.size()-1 ;
         SeqAlign *d = new SeqAlign ( sc ) ;
         sc->seq.Add ( d ) ;
-        d->takesMouseActions = false ;
+        d->takesMouseActions = true ;
         d->id = a ;
         d->s = lines[a].s ;
         d->myname = lines[a].name ;
@@ -1099,23 +1099,35 @@ void TAlignment::OnFileSave ( wxCommandEvent &ev )
     d = wxString::Format ( _T("%d\n") , b ) ;
     for ( a = 0 ; a < lines.size() ; a++ )
         {
-        if ( !lines[a].isIdentity )
+        if ( lines[a].isIdentity ) continue ;
+
+        wxString p = lines[a].v->getParams() ;
+        lines[a].v->setParams ( _T("") ) ;
+        d += lines[a].v->getName() + _T("\n") ;
+        d += lines[a].v->getDatabase() + _T("\n") ;
+        d += lines[a].s + _T("\n") ;
+        wxArrayString ex ;
+        gb.doExport ( lines[a].v , ex ) ;
+        for ( b = 0 ; b < ex.GetCount() ; b++ )
             {
-            wxString p = lines[a].v->getParams() ;
-            lines[a].v->setParams ( _T("") ) ;
-            d += lines[a].v->getName() + _T("\n") ;
-            d += lines[a].v->getDatabase() + _T("\n") ;
-            d += lines[a].s + _T("\n") ;
-            wxArrayString ex ;
-            gb.doExport ( lines[a].v , ex ) ;
-            for ( b = 0 ; b < ex.GetCount() ; b++ )
-               {
-               s += ex[b] ;
-               s += _T("\n") ;
-               }
-            lines[a].v->setParams ( p ) ;
+            s += ex[b] ;
+            s += _T("\n") ;
             }
+        lines[a].v->setParams ( p ) ;
         }
+    
+    // Add layout
+    d += wxString::Format ( _T("%d\n") , lines.size() ) ;
+    for ( a = 0 ; a < lines.size() ; a++ )
+        {
+        wxString layout ;
+        layout += _T("<layout>") ;
+        for ( b = 0 ; b < lines[a].markup.size() ; b++ )
+            layout += lines[a].markup[b].getXML() ;
+        layout += _T("</layout>\n") ;
+        d += layout ;
+        }
+    
     if ( !vec ) vec = new TVector ; // Wasting memory
     vec->setName ( txt("t_alignment") ) ;
     vec->setDescription ( d ) ;
@@ -1429,14 +1441,14 @@ class AlignmentAppearanceDialog : public wxDialog
     virtual void OnCancel ( wxCommandEvent &event ) ;
     
     private :
-    void set_pen ( SequenceCharMarkup &scm , int id ) ;
+    void set_pen ( SequenceCharMarkup &scm , int id , int border ) ;
     void addLine ( wxString name , wxArrayString &as , wxFlexGridSizer *sizer ) ;
     
     vector <wxRadioBox*> radioboxes ;
     vector <wxSpinCtrl*> thickness ;
     vector <wxColour> colors ;
     int line_color_buttons ;
-    wxCheckBox *use_foreground , *use_background ;
+    wxCheckBox *use_foreground , *use_background , *bold , *italics ;
     wxColour color_foreground , color_background ;
     int from , to , firstline , lastline ;
     TAlignment *ali ;
@@ -1510,11 +1522,15 @@ AlignmentAppearanceDialog::AlignmentAppearanceDialog ( wxWindow *_parent , const
     use_background = new wxCheckBox ( this , -1 , _T("") ) ;
     wxButton *foreground = new wxButton ( this , ALIGN_APPEARANCE_TEXT_FOREGROUND , txt("t_alignment_appearance_foreground") ) ;
     wxButton *background = new wxButton ( this , ALIGN_APPEARANCE_TEXT_BACKGROUND , txt("t_alignment_appearance_background") ) ;
+    bold = new wxCheckBox ( this , -1 , txt("m_align_bold") ) ;
+    italics = NULL ; //new wxCheckBox ( this , -1 , txt("m_align_italics") ) ;
     
     line->Add ( use_foreground , 0 , wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL ) ;
     line->Add ( foreground , 0 , wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL ) ;
     line->Add ( use_background , 0 , wxLEFT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL , 25 ) ;
     line->Add ( background , 0 , wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL ) ;
+    line->Add ( bold , 0 , wxLEFT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL , 5 ) ;
+//    line->Add ( italics , 0 , wxLEFT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL , 5 ) ;
 
     fgs->Add ( new wxStaticText ( this , -1 , txt("t_alignment_appearance_text") ) , 0 , wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL ) ;
     fgs->Add ( line , 0 , wxALIGN_LEFT ) ;
@@ -1557,17 +1573,19 @@ void AlignmentAppearanceDialog::OnLineColorButton ( wxCommandEvent &event )
     colors[id] = c ;
     }
 
-void AlignmentAppearanceDialog::set_pen ( SequenceCharMarkup &scm , int id )
+void AlignmentAppearanceDialog::set_pen ( SequenceCharMarkup &scm , int id , int border )
     {
     int b = radioboxes[id]->GetSelection() ;
     int t = thickness[id]->GetValue() ;
     if ( b == 0 ) return ;
     
     wxPen *p ;
-    if ( id == 0 || id == 4 ) { scm.borders |= wxTOP ; p = &scm.borderTop ; }
-    if ( id == 1 || id == 4 ) { scm.borders |= wxBOTTOM ; p = &scm.borderBottom ; }
-    if ( id == 2 || id == 5 ) { scm.borders |= wxLEFT ; p = &scm.borderLeft ; }
-    if ( id == 3 || id == 5 ) { scm.borders |= wxRIGHT ; p = &scm.borderRight ; }
+    scm.borders |= border ;
+    
+    if ( border == wxTOP ) p = &scm.borderTop ;
+    if ( border == wxBOTTOM ) p = &scm.borderBottom ;
+    if ( border == wxLEFT ) p = &scm.borderLeft ;
+    if ( border == wxRIGHT ) p = &scm.borderRight ;
     
     switch ( b )
        {
@@ -1590,18 +1608,19 @@ void AlignmentAppearanceDialog::OnOK ( wxCommandEvent &event )
             
             if ( use_foreground->GetValue() ) scm.textcolor = color_foreground ;
             if ( use_background->GetValue() ) scm.backcolor = color_background ;
+            scm.bold = bold->GetValue() ;
+            if ( italics ) scm.italics = italics->GetValue() ;
             
-            set_pen ( scm , l==firstline ? 0 : 4 ) ;
-            set_pen ( scm , l==lastline ? 1 : 4 ) ;
-            set_pen ( scm , x==from ? 2 : 5 ) ;
-            set_pen ( scm , x==to ? 3 : 5 ) ;
+            set_pen ( scm , l==firstline ? 0 : 4 , wxTOP ) ;
+            set_pen ( scm , l==lastline ? 1 : 4 , wxBOTTOM ) ;
+            set_pen ( scm , x==from ? 2 : 5 , wxLEFT ) ;
+            set_pen ( scm , x==to ? 3 : 5 , wxRIGHT ) ;
             
             while ( ali->lines[l].markup.size() <= x )
                   ali->lines[l].markup.push_back ( SequenceCharMarkup() ) ;
             ali->lines[l].markup[x] = scm ;
             }
         }
-    
     wxDialog::OnOK(event);
     }
 
