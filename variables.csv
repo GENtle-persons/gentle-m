@@ -510,6 +510,7 @@
 "t_useinternalhelp","Use &internal help (if F1 doesn't work otherwise)","&Interne Hilfe benutzen (falls F1 sonst nicht funktioniert)"
 "m_print_preview","Print preview","Druck&vorschau"
 "m_align_bold","Bold","Fett"
+"m_align_italics","Italics","Kursiv"
 "m_align_mono","Mono","Mono"
 "m_align_norm","Normal","Normal"
 "m_align_invs","Inverted","Invertiert"

@@ -31,11 +31,18 @@ class SequenceCharMarkup
     public :
     SequenceCharMarkup () ;
     void draw ( wxDC &dc , const wxRect &rect , wxString s , int mode , int lastx = -1 ) ;
+    wxString getXML () ;
+    void setFromXML ( wxString s ) ;
     
     bool ignore ;
     wxColour textcolor , backcolor ;
     int borders ; ///< wxTOP|wxBOTTOM|wxLEFT|wxRIGHT
     wxPen borderTop , borderBottom , borderLeft , borderRight ;
+    bool bold , italics ;
+    
+    private :
+    wxString getColorXML ( wxString name , wxColour c ) ;
+    wxString getPenXML ( wxPen &pen ) ;
     } ;
 
 /** \brief This class assists in the restriction site layout
