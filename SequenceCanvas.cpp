@@ -2637,7 +2637,7 @@ void SequenceCharMarkup::draw ( wxDC &dc , const wxRect &rect , wxString s , int
     if ( ( borders & wxTOP ) > 0 ) { dc.SetPen ( borderTop ) ; dc.DrawLine ( r.GetLeft() , r.GetTop() , r.GetRight() , r.GetTop() ) ; }
     if ( ( borders & wxBOTTOM ) > 0 ) { dc.SetPen ( borderBottom ) ; dc.DrawLine ( r.GetLeft() , r.GetBottom() , r.GetRight() , r.GetBottom() ) ; }
     if ( ( borders & wxLEFT ) > 0 ) { dc.SetPen ( borderLeft ) ; dc.DrawLine ( r.GetLeft() , r.GetTop() , r.GetLeft() , r.GetBottom() ) ; }
-    if ( ( borders & wxRIGHT ) > 0 ) { dc.SetPen ( borderRight ) ; dc.DrawLine ( r.GetRight() , r.GetTop() , r.GetRight() , r.GetBottom() ) ; }    
+    if ( ( borders & wxRIGHT ) > 0 ) { dc.SetPen ( borderRight ) ; dc.DrawLine ( r.GetRight() , r.GetTop() , r.GetRight() , r.GetBottom()+1 ) ; }    
 
     dc.SetBackgroundMode ( wxSOLID ) ;
     }

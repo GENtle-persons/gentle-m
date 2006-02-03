@@ -2,6 +2,7 @@
 Notes
 * TIFF export deactivated due to patent enforcement
 Additions
+* Alignments can now be edited markup-wise
 * Startup tips (re-)enabled
 Bugfixes
 * New sequences with more than 64KB text can now be entered again

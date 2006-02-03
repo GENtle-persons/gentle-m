@@ -71,6 +71,7 @@ class TAlignment : public ChildBase,wxThreadHelper
     virtual wxColour findColors ( char c1 , char c2 , bool fg ) ; ///< Generate the appropriate foreground/background color, using current settings
 
     virtual void OnSettings ( wxCommandEvent &ev ) ; ///< Settings button event handler
+    virtual void OnMarkAll ( wxCommandEvent &ev ) ; ///< "Mark all" event handler
     virtual void OnSeqPrint(wxCommandEvent& event); ///< "Print sequence" event handler
     virtual void OnFileSave ( wxCommandEvent &ev ) ; ///< Save event handler
     virtual void OnMenuBold ( wxCommandEvent &ev ) ; ///< "Display bold" event handler
