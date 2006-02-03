@@ -150,7 +150,7 @@ void SeqAlign::show ( wxDC& dc )
               }
            
            scm.draw ( dc , wxRect ( rax , ray , wx , wy ) , t , mode , last_wx ) ;
-           if ( scm.ignore ) last_wx = -1 ;
+           if ( scm.ignore || getMark ( a ) ) last_wx = -1 ;
            else last_wx = rax + wx ;
 
            cnt++ ;

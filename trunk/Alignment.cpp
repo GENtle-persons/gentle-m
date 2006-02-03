@@ -18,6 +18,7 @@ BEGIN_EVENT_TABLE(TAlignment, MyChildBase)
     EVT_SET_FOCUS(ChildBase::OnFocus)
     EVT_CHECKBOX(ALIGN_HORIZ, TAlignment::OnHorizontal)
     EVT_MENU(MDI_FILE_SAVE, TAlignment::OnFileSave)
+    EVT_MENU(MDI_MARK_ALL,TAlignment::OnMarkAll)
     
     EVT_MENU(ALIGNMENT_SETTINGS,TAlignment::OnSettings)
     EVT_MENU(ALIGN_BOLD,TAlignment::OnMenuBold)
@@ -47,7 +48,6 @@ BEGIN_EVENT_TABLE(TAlignment, MyChildBase)
     EVT_MENU(MDI_PASTE,ChildBase::OnDummy)
     EVT_MENU(MDI_EDIT_MODE,ChildBase::OnDummy)
     EVT_MENU(MDI_EXPORT,ChildBase::OnExport)
-    EVT_MENU(MDI_MARK_ALL,ChildBase::OnDummy)
     EVT_MENU(MDI_FIND,ChildBase::OnDummy)
     EVT_MENU(AA_NONE,TABIviewer::OnDummy)
     EVT_MENU(AA_KNOWN, TABIviewer::OnDummy)
@@ -69,6 +69,8 @@ END_EVENT_TABLE()
 TAlignment::TAlignment(wxWindow *parent, const wxString& title)
     : ChildBase(parent, title)
     {
+    name = "" ;
+    database = "" ;
 	keepIdentity = false ;
     threadRunning = false ;
     invs = cons = bold = mono = false ;
@@ -502,7 +504,7 @@ void TAlignment::redoAlignments ( bool doRecalc )
         SeqAlign *d = new SeqAlign ( sc ) ;
         sc->seq.Add ( d ) ;
         if ( lines[a].isIdentity )
-           d->takesMouseActions = true ;
+           d->takesMouseActions = false ;
         d->id = a ;
         d->s = lines[a].s ;
         d->myname = lines[a].name ;
@@ -705,7 +707,24 @@ void TAlignment::updateSequence ()
     
 wxString TAlignment::getName ()
     {
-    return _T("Alignment") ;
+    return name.IsEmpty() ? _T("Alignment") : name ;
+    }
+
+void TAlignment::OnMarkAll ( wxCommandEvent &ev )
+    {
+    int a ;
+    myapp()->frame->lockDisplay ( true ) ;
+    sc->unmark () ;
+    sc->setLastWhere ( NULL ) ;
+    for ( a = 0 ; a < sc->seq.size() ; a++ )
+        {
+        if ( sc->seq[a]->whatsthis() != _T("ALIGN") ) continue ;
+        if ( !sc->seq[a]->takesMouseActions ) continue ;
+        if ( !sc->getLastWhere() ) sc->setLastWhere ( sc->seq[a] ) ;
+        sc->mark ( sc->seq[a] , 1 , sc->seq[a]->s.length() , 1 ) ;
+        }
+    myapp()->frame->lockDisplay ( false ) ;
+    sc->SilentRefresh () ;
     }
 
 void TAlignment::OnSettings ( wxCommandEvent &ev )
@@ -1054,7 +1073,7 @@ void TAlignment::OnMenuIdent ( wxCommandEvent &ev )
         int a = lines.size()-1 ;
         SeqAlign *d = new SeqAlign ( sc ) ;
         sc->seq.Add ( d ) ;
-        d->takesMouseActions = true ;
+        d->takesMouseActions = false ;
         d->id = a ;
         d->s = lines[a].s ;
         d->myname = lines[a].name ;
@@ -1129,7 +1148,8 @@ void TAlignment::OnFileSave ( wxCommandEvent &ev )
         }
     
     if ( !vec ) vec = new TVector ; // Wasting memory
-    vec->setName ( txt("t_alignment") ) ;
+    vec->setName ( name.IsEmpty() ? txt("t_alignment") : name ) ;
+    vec->setDatabase ( database ) ;
     vec->setDescription ( d ) ;
     vec->setSequence ( s ) ;
     vec->setType ( TYPE_ALIGNMENT ) ;
@@ -1467,6 +1487,7 @@ class AlignmentAppearanceDialog : public wxDialog
     virtual void OnBackgroundButton ( wxCommandEvent &event ) ;
     virtual void OnOK ( wxCommandEvent &event ) ;
     virtual void OnCancel ( wxCommandEvent &event ) ;
+    virtual void OnReset ( wxCommandEvent &event ) ;
     
     private :
     void set_pen ( SequenceCharMarkup &scm , int id , int border ) ;
@@ -1495,6 +1516,7 @@ BEGIN_EVENT_TABLE(AlignmentAppearanceDialog, wxDialog)
     EVT_BUTTON(ALIGN_APPEARANCE_TEXT_BACKGROUND,AlignmentAppearanceDialog::OnBackgroundButton)
     EVT_BUTTON(wxID_OK,AlignmentAppearanceDialog::OnOK)
     EVT_BUTTON(wxID_CANCEL,AlignmentAppearanceDialog::OnCancel)
+    EVT_BUTTON(ALIGN_APPEARANCE_RESET,AlignmentAppearanceDialog::OnReset)
 END_EVENT_TABLE()
 
 void AlignmentAppearanceDialog::addLine ( wxString name , wxArrayString &as , wxFlexGridSizer *sizer )
@@ -1566,10 +1588,14 @@ AlignmentAppearanceDialog::AlignmentAppearanceDialog ( wxWindow *_parent , const
     wxBoxSizer *line2 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxButton *b_ok = new wxButton ( this , wxID_OK , txt("b_ok") ) ;
     wxButton *b_cancel = new wxButton ( this , wxID_CANCEL , txt("b_cancel") ) ;
+    wxButton *b_reset = new wxButton ( this , ALIGN_APPEARANCE_RESET , txt("b_alignment_appearance_reset") ) ;
 
     line2->Add ( b_ok , 0 , wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL ) ;
     line2->Add ( new wxStaticText ( this , -1 , _T("") ) , 0 , wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT , 60 ) ;
+    line2->Add ( b_reset , 0 , wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL ) ;
+    line2->Add ( new wxStaticText ( this , -1 , _T("") ) , 0 , wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT , 60 ) ;
     line2->Add ( b_cancel , 0 , wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL ) ;
+
     fgs->Add ( new wxStaticText ( this , -1 , _T("") ) , 0 , wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL ) ;
     fgs->Add ( line2 , 0 , wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL ) ;
     
@@ -1621,6 +1647,22 @@ void AlignmentAppearanceDialog::set_pen ( SequenceCharMarkup &scm , int id , int
        case 2 : *p = wxPen ( colors[id] , t , wxSHORT_DASH ) ; break ;
        case 3 : *p = wxPen ( colors[id] , t , wxDOT ) ; break ;
        }
+    }
+
+void AlignmentAppearanceDialog::OnReset ( wxCommandEvent &event )
+    {
+    int l , x ;
+    for ( l = firstline ; l <= lastline ; l++ )
+        {
+        while ( ali->lines[l].markup.size() <= to )
+              ali->lines[l].markup.push_back ( SequenceCharMarkup() ) ;
+        for ( x = from ; x <= to ; x++ )
+            ali->lines[l].markup[x] = SequenceCharMarkup () ;
+        while ( ali->lines[l].markup.size() > 0 && 
+                ali->lines[l].markup[ali->lines[l].markup.size()-1].ignore )
+              ali->lines[l].markup.pop_back() ;
+        }
+    wxDialog::OnOK(event);
     }
 
 void AlignmentAppearanceDialog::OnOK ( wxCommandEvent &event )

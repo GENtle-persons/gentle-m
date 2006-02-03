@@ -546,6 +546,7 @@ class SequenceCanvas : public wxScrolledWindow
     virtual bool isMiniDisplay () { return miniDisplay ; } ///< Is this a mini display in the amino acid module?
     virtual void setMiniDisplay ( bool _b ) { miniDisplay = _b ; } ///< This is a mini display in the amino acid module
     virtual SeqBasic *getLastWhere() { return lastwhere ; } ///< Returns a pointer to the last marked seq structure
+    virtual void setLastWhere ( SeqBasic *where ) { lastwhere = where ; }
     virtual bool isPrinting () { return printing ; } ///< Are we printing (or drawing on the screen)?
     virtual void forceOverwrite ( bool _b ) { forceoverwrite = _b ; } ///< Ensure overwrite mode (for example, ABI and PCR mode)
     virtual bool getEditMode () { return editMode ; } ///< Are we editing?
