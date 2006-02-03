@@ -2595,6 +2595,8 @@ void SequenceCharMarkup::draw ( wxDC &dc , const wxRect &rect , wxString s , int
     bool invert = ( mode & SEQUENCECHARMARKUP_INVERT ) > 0 ;
 
     wxColour bg ;
+    wxColour rfg = invert ? backcolor : textcolor ;
+    wxColour rbg = invert ? textcolor : backcolor ;
 
     if ( mono )
        {
@@ -2603,9 +2605,10 @@ void SequenceCharMarkup::draw ( wxDC &dc , const wxRect &rect , wxString s , int
        }
     else
        {
-         dc.SetTextForeground ( invert ? backcolor : textcolor ) ;
+         if ( rfg.Ok() ) dc.SetTextForeground ( rfg ) ;
+         else dc.SetTextForeground ( *wxBLACK ) ;
          if ( mark ) bg = *wxLIGHT_GREY ;
-         else bg = invert ? textcolor : backcolor ;
+         else if ( rbg.Ok() ) bg = rbg ;
        }
        
     wxRect r = rect ;
@@ -2682,6 +2685,60 @@ wxString SequenceCharMarkup::getPenXML ( wxPen &pen )
     return ret ;
     }
 
-void SequenceCharMarkup::setFromXML ( wxString s )
+wxString SequenceCharMarkup::getSafeXML ( const char *x )
     {
+    if ( !x ) return _T("") ;
+    return wxString(x,wxConvUTF8) ;
+    }
+
+wxColour SequenceCharMarkup::getColorFromXML ( wxString s )
+    {
+    if ( s.Trim().IsEmpty() ) return wxColour() ;
+    long r , g , b ;
+    s.Left(3).ToLong ( &r ) ;
+    s.Mid(3,3).ToLong ( &g ) ;
+    s.Right(3).ToLong ( &b ) ;
+    return wxColour ( r , g , b ) ;
+    }
+
+wxPen SequenceCharMarkup::getPenFromXML ( TiXmlElement *e )
+    {
+    wxColour c = getColorFromXML ( getSafeXML ( e->Attribute ( "color" ) ) ) ;
+    long width , style ;
+    getSafeXML ( e->Attribute ( "width" ) ) . ToLong ( &width ) ;
+    getSafeXML ( e->Attribute ( "style" ) ) . ToLong ( &style ) ;
+    return * wxThePenList->FindOrCreatePen ( c , width , style ) ;
+    }
+
+void SequenceCharMarkup::setFromXML ( TiXmlNode *base )
+    {
+    TiXmlElement *e = base->ToElement() ;
+    ignore = getSafeXML ( e->Attribute ( "value" ) ) == _T("1") ;
+    if ( ignore ) return ;
+
+    bold = getSafeXML ( e->Attribute ( "bold" ) ) == _T("1") ;
+    italics = getSafeXML ( e->Attribute ( "italics" ) ) == _T("1") ;
+    
+    wxColour c ;
+    c = getColorFromXML ( getSafeXML ( e->Attribute ( "textcolor" ) ) ) ;
+    if ( c.Ok() ) textcolor = c ;
+    c = getColorFromXML ( getSafeXML ( e->Attribute ( "backcolor" ) ) ) ;
+    if ( c.Ok() ) backcolor = c ;
+
+    long l ;
+    getSafeXML ( e->Attribute ( "borders" ) ) . ToLong ( &l ) ;
+    borders = l ;
+    
+    int p = 0 ;
+    for ( e = base->FirstChildElement("pen") ; e ; e = e->NextSiblingElement("pen") )
+        {
+        switch ( p )
+           {
+           case 0 : borderTop = getPenFromXML ( e ) ; break ;
+           case 1 : borderBottom = getPenFromXML ( e ) ; break ;
+           case 2 : borderLeft = getPenFromXML ( e ) ; break ;
+           case 3 : borderRight = getPenFromXML ( e ) ; break ;
+           }
+        p++ ;
+        }
     }

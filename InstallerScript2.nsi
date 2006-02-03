@@ -82,6 +82,8 @@ Section "GENtle (required)"
   File "gpl.txt"
   File "MySQL template.txt"
   File "marker.txt"
+  File "tips_de.txt"
+  File "tips_en.txt"
 
   SetOutPath "$INSTDIR\wav"
   File "wav\*.wav"

@@ -1339,6 +1339,8 @@ void TAlignment::fromVector ( TVector *nv )
         lines.push_back ( line ) ;
         }
 
+    name = vec->getName() ;
+    database = vec->getDatabase() ;
     vec = NULL ;
     generateConsensusSequence ( true ) ;
     if ( !broken.IsEmpty() )
@@ -1346,6 +1348,32 @@ void TAlignment::fromVector ( TVector *nv )
         wxMessageBox ( wxString::Format(txt("t_align_not_found"),broken.c_str()) ) ;
         }
     redoAlignments ( false ) ;
+
+    // Read markup XML
+    int l = 0 ;
+    for ( n = nol*3+2 ; n < vs.size() ; n++ )
+        {
+        wxString t = vs[n].Lower() ;
+        if ( t.Left ( 8 ) != _T("<layout>") ) continue ;
+        
+        TiXmlDocument doc ;
+        doc.Parse ( t.mb_str() ) ;
+        if ( doc.Error() ) continue ;
+        if ( !doc.FirstChild ( "layout" ) ) continue ;
+
+        TiXmlNode *n ;
+        TiXmlHandle h ( doc.FirstChild ( "layout" ) ) ;
+        for ( n = h.FirstChild("scm").Node() ; n ;
+            n = n->NextSibling("scm") )
+            {
+            SequenceCharMarkup scm ;
+            getCharMarkup ( scm , l , lines[l].markup.size() , 0 ) ;
+            scm.setFromXML ( n ) ;
+            lines[l].markup.push_back ( scm ) ;            
+            }
+        l++ ;
+        }
+    if ( l > 0 ) sc->SilentRefresh () ;
     }
 
 
