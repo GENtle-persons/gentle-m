@@ -148,79 +148,11 @@ void SeqAlign::show ( wxDC& dc )
               if ( can->isPrinting() && !can->getPrintToColor() ) mode |= SEQUENCECHARMARKUP_MONO ;
               if ( al->bold ) mode |= SEQUENCECHARMARKUP_BOLD ;
               }
-
+           
            scm.draw ( dc , wxRect ( rax , ray , wx , wy ) , t , mode , last_wx ) ;
-           last_wx = rax + wx ;
+           if ( scm.ignore ) last_wx = -1 ;
+           else last_wx = rax + wx ;
 
-/*
-           // Get color for this char
-           if ( !thisisidentity )
-              {
-              fg = al->findColors ( s.GetChar(b-1) , can->seq[first]->s.GetChar(b-1) , true ) ;
-              bg = al->findColors ( s.GetChar(b-1) , can->seq[first]->s.GetChar(b-1) , false ) ;
-              dc.SetTextForeground ( fg ) ;
-              dc.SetTextBackground ( bg ) ;
-              }
-
-           // Mark?
-          int pm = getMark ( a ) ;
-          if ( pm == 1 ) // Marked (light gray background)
-             {
-             dc.SetBackgroundMode ( wxSOLID ) ;
-             dc.SetTextBackground ( *wxLIGHT_GREY ) ;
-             }
-
-           // Printing to B&W printer?
-           if ( can->isPrinting() && !can->getPrintToColor() )
-              {
-              dc.SetTextForeground ( *wxBLACK ) ;
-              dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-              }
-
-           // Monochrome display?
-           if ( al->mono )
-              {
-              dc.SetTextForeground ( *wxBLACK ) ;
-              if ( pm != 1 ) dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-              }
-
-           // Same as char in first sequence?
-           if ( (!thisisidentity) && 
-                al->cons && 
-                first != me &&
-                t.GetChar(0) != '-' &&
-                t.GetChar(0) == can->seq[first]->s.GetChar(b-1) )
-                   t.SetChar(0,'.') ;
-
-           if ( t == _T(".") ) // Display round dot to show conservation
-              {
-              dc.SetPen(*wxTRANSPARENT_PEN);
-              if ( al->invs )
-                 {
-                 dc.SetBrush ( *MYBRUSH ( dc.GetTextBackground() ) ) ;
-                 dc.DrawRectangle ( rax-1 , ray , wx+2 , wy ) ;
-                 }
-              else if ( pm == 1 ) // Marked
-                 {
-                 dc.SetBrush ( *MYBRUSH ( *wxLIGHT_GREY ) ) ;
-                 dc.DrawRectangle ( rax-1 , ray , wx+2 , wy ) ;
-                 }
-              dc.SetBrush ( *MYBRUSH ( dc.GetTextForeground() ) ) ;
-              dc.DrawCircle ( rax + wx / 2 ,
-                              ray + wy / 2 ,
-                              wy / (al->bold?6:8) ) ;
-              }
-           else // Display character
-              {
-              dc.DrawText ( t , rax, ray ) ;       
-              if ( al->bold )
-                 {
-                 dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-                 dc.DrawText ( t, rax-1, ray ) ;
-                 dc.SetBackgroundMode ( wxSOLID ) ;
-                 }
-              }    
-*/
            cnt++ ;
            }
         else if ( b < 0 && insight ) // Front number

@@ -32,7 +32,7 @@ class SequenceCharMarkup
     SequenceCharMarkup () ;
     void draw ( wxDC &dc , const wxRect &rect , wxString s , int mode , int lastx = -1 ) ;
     wxString getXML () ;
-    void setFromXML ( wxString s ) ;
+    void setFromXML ( TiXmlNode *base ) ;
     
     bool ignore ;
     wxColour textcolor , backcolor ;
@@ -43,6 +43,9 @@ class SequenceCharMarkup
     private :
     wxString getColorXML ( wxString name , wxColour c ) ;
     wxString getPenXML ( wxPen &pen ) ;
+    wxString getSafeXML ( const char *x ) ;
+    wxColour getColorFromXML ( wxString s ) ;
+    wxPen getPenFromXML ( TiXmlElement *e ) ;
     } ;
 
 /** \brief This class assists in the restriction site layout
