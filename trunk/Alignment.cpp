@@ -69,8 +69,8 @@ END_EVENT_TABLE()
 TAlignment::TAlignment(wxWindow *parent, const wxString& title)
     : ChildBase(parent, title)
     {
-    name = "" ;
-    database = "" ;
+    name = _T("") ;
+    database = _T("") ;
 	keepIdentity = false ;
     threadRunning = false ;
     invs = cons = bold = mono = false ;
