@@ -355,7 +355,7 @@ void TManageDatabaseDialog::pm_list_items ( int x )
         for ( a = 0 ; a < r.rows() ; a++ )
            {
            wxString s = r[a][r["dna_name"]] ;
-           if ( r[a][r["dna_type"]] == _T("5") ) l->InsertItem ( a , s , 2 ) ;
+          if ( r[a][r["dna_type"]] == _T("5") ) l->InsertItem ( a , s , 2 ) ;
            else if ( r[a][r["dna_type"]] == _T("3") ) l->InsertItem ( a , s , 3 ) ;
            else if ( r[a][r["dna_type"]] == _T("4") ) l->InsertItem ( a , s , 4 ) ;
            else l->InsertItem ( a , s , 0 ) ;
@@ -891,7 +891,9 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
 
     if ( name.IsEmpty() ) return false ;
     // Loading vector
-    sql = _T("SELECT * FROM dna WHERE dna_name=\"") + name + _T("\"") ;
+    sql = _T("SELECT * FROM dna WHERE dna_name=\"") ;
+    sql += name ;
+    sql += _T("\"") ;
     sr = tstorage->getObject ( sql ) ;
     if( sr.rows() == 0 ) return false ;
     v->setName ( sr[0][sr["dna_name"]] ) ;

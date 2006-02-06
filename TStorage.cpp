@@ -155,7 +155,11 @@ TSQLresult TStorage::getObject_MySQL ( const wxString &query )
                results.content.push_back ( wxArrayString() ) ;
                for(i = 0; i < num_fields; i++)
                {
+#ifdef __WXGTK__
+               	  wxString tmp = row[i] ? wxString ( row[i] , *wxConvCurrent ) : _T("") ;
+#else
                	  wxString tmp = row[i] ? wxString ( row[i] , wxConvUTF8 ) : _T("") ;
+#endif
                	  tmp.Replace ( _T("\013") , _T("\n") ) ;
                   results.content[rownum].Add ( tmp ) ;
                }
