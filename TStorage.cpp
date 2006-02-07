@@ -72,7 +72,7 @@ static int callback (void *NotUsed, int argc, char **argv, char **azColName)
     if ( st->results.content.size() == 0 )
         {
         for(i=0; i<argc; i++)
-           st->results.field.Add ( wxString ( azColName[i] , wxConvUTF8 ) ) ;
+			st->results.field.Add ( wxString ( azColName[i] , wxConvUTF8 ) ) ;
         }
         
     nf = st->results.content.size() ;
@@ -83,7 +83,11 @@ static int callback (void *NotUsed, int argc, char **argv, char **azColName)
         wxString tmp ;
         if ( argv[i] )
 		  	{
+#ifdef __WXMAC__
+			tmp = wxString ( argv[i] , *(myapp()->isoconv) ) ;
+#else
 			tmp = wxString ( argv[i] , wxConvUTF8 ) ;
+#endif
 			tmp.Replace ( _T("\013") , _T("\n") ) ;
 			}
         st->results.content[nf].Add ( tmp ) ;
@@ -98,8 +102,6 @@ void TStorage::createDatabaseSqlite3 ()
         return;
 #ifdef USING_SQLITE_3
 	 sqlite3 *db ;
-    char *e = 0 ;
-    int rc ;
     sqlite3_open ( dbname.mb_str() , &db ) ;
 //    ierror = (int) e ;
 //    if ( e ) error = e ;
@@ -114,7 +116,6 @@ void TStorage::createDatabase ()
     if ( isSqlite3 ) { createDatabaseSqlite3() ; return ; }
     sqlite *db ;
     char *e = 0 ;
-    int rc ;
     db = sqlite_open ( dbname.mb_str() , 0 , &e ) ;
     ierror = (int) e ;
     if ( e ) error = wxString ( e , wxConvUTF8 ) ;
@@ -155,10 +156,10 @@ TSQLresult TStorage::getObject_MySQL ( const wxString &query )
                results.content.push_back ( wxArrayString() ) ;
                for(i = 0; i < num_fields; i++)
                {
-#ifdef __WXGTK__
-               	  wxString tmp = row[i] ? wxString ( row[i] , *wxConvCurrent ) : _T("") ;
-#else
+#ifdef __WXMSW__
                	  wxString tmp = row[i] ? wxString ( row[i] , wxConvUTF8 ) : _T("") ;
+#else
+               	  wxString tmp = row[i] ? wxString ( row[i] , *wxConvCurrent ) : _T("") ;
 #endif
                	  tmp.Replace ( _T("\013") , _T("\n") ) ;
                   results.content[rownum].Add ( tmp ) ;

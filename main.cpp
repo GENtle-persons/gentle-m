@@ -114,7 +114,14 @@ wxString txt ( char *item )
 wxString txt ( wxString item )
     {
 #ifndef __WXMSW__
-	 if ( item.MakeUpper().Left(2) == _T("M_") ) return myapp()->_text[item.MakeUpper()].Trim() ;
+	 if ( item.MakeUpper().Left(2) == _T("M_") )
+	 {
+		wxString s = myapp()->_text[item.MakeUpper()].Trim() ;
+#ifdef __WXMAC__
+		s.Replace ( _T("\tStrg-") , _T("\tCtrl-") ) ; // DE fix
+#endif
+		return s ;
+	 }
 #endif
     return myapp()->_text[item.MakeUpper()] ;
     }
@@ -535,6 +542,11 @@ void MyApp::init_txt ( wxString lang , wxString csv , wxHashString *target , int
     unsigned char t[10000] ;
     bool firstline = true ;
     TGenBank dummy ;
+#ifdef __WXMAC__
+	wxMBConv *conv = isoconv ;
+#else
+	wxMBConv *conv = wxConvUTF8 ;
+#endif
     for ( int lc = 0 ; lc < in.GetLineCount() ; lc++ )
         {
         wxArrayString v ;
@@ -556,14 +568,14 @@ void MyApp::init_txt ( wxString lang , wxString csv , wxHashString *target , int
            else if ( *c == ',' && !quote )
               {
               *c = 0 ;
-              v.Add ( dummy.trimQuotes(wxString((char*)l,wxConvUTF8)) ) ;
+              v.Add ( dummy.trimQuotes(wxString((char*)l,*conv)) ) ;
               l = c+1 ;
               }
            }
         if ( l < c )
            {
            *(c-1) = 0 ;
-           v.Add ( dummy.trimQuotes(wxString((char*)l,wxConvUTF8)) ) ;
+           v.Add ( dummy.trimQuotes(wxString((char*)l,*conv)) ) ;
            }
         
         if ( firstline )
