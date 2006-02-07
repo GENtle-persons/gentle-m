@@ -7,12 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		91179DF20998C74D004741E8 /* libwxtiff-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91179DF10998C74C004741E8 /* libwxtiff-2.6.a */; };
+		91179DF60998C781004741E8 /* libwx_macu-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91179DF30998C781004741E8 /* libwx_macu-2.6.a */; };
+		91179DF70998C781004741E8 /* libwxjpeg-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91179DF40998C781004741E8 /* libwxjpeg-2.6.a */; };
+		91179DF80998C781004741E8 /* libwxpng-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91179DF50998C781004741E8 /* libwxpng-2.6.a */; };
+		91179E2B0998CCA3004741E8 /* marker.txt in Resources */ = {isa = PBXBuildFile; fileRef = 91179E2A0998CCA3004741E8 /* marker.txt */; };
+		91179E2E0998CCB8004741E8 /* tips_de.txt in Resources */ = {isa = PBXBuildFile; fileRef = 91179E2C0998CCB8004741E8 /* tips_de.txt */; };
+		91179E2F0998CCB8004741E8 /* tips_en.txt in Resources */ = {isa = PBXBuildFile; fileRef = 91179E2D0998CCB8004741E8 /* tips_en.txt */; };
 		9118009908DFFB2F004F6B8F /* libsqlite3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911ECB4208DEFB6D006A2654 /* libsqlite3.a */; };
 		911E4C4B08695B31006FD9C0 /* mac_icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 911E4C4A08695B31006FD9C0 /* mac_icon.icns */; };
-		911ECB3B08DEF872006A2654 /* libwx_mac-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911ECB3A08DEF872006A2654 /* libwx_mac-2.6.a */; };
-		911ECB3F08DEF8E4006A2654 /* libwxjpeg-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911ECB3C08DEF8E4006A2654 /* libwxjpeg-2.6.a */; };
-		911ECB4008DEF8E4006A2654 /* libwxpng-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911ECB3D08DEF8E4006A2654 /* libwxpng-2.6.a */; };
-		911ECB4408DF0026006A2654 /* libwxtiff-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 911ECB3E08DEF8E4006A2654 /* libwxtiff-2.6.a */; };
 		91410FC008D04FFA00776D65 /* .cvsignore in Resources */ = {isa = PBXBuildFile; fileRef = 91410F9508D04FF900776D65 /* .cvsignore */; };
 		91410FC108D04FFA00776D65 /* Bugs & Co.txt in Resources */ = {isa = PBXBuildFile; fileRef = 91410F9608D04FF900776D65 /* Bugs & Co.txt */; };
 		91410FC208D04FFA00776D65 /* de_alignment.htm in Resources */ = {isa = PBXBuildFile; fileRef = 91410F9708D04FFA00776D65 /* de_alignment.htm */; };
@@ -276,11 +279,14 @@
 
 /* Begin PBXFileReference section */
 		91023BCC0893BBA600BD8757 /* libmysqlclient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmysqlclient.a; path = /usr/local/lib/mysql/libmysqlclient.a; sourceTree = "<absolute>"; };
+		91179DF10998C74C004741E8 /* libwxtiff-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxtiff-2.6.a"; path = "../wxMac-2.6.2/lib/libwxtiff-2.6.a"; sourceTree = SOURCE_ROOT; };
+		91179DF30998C781004741E8 /* libwx_macu-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwx_macu-2.6.a"; path = "../wxMac-2.6.2/lib/libwx_macu-2.6.a"; sourceTree = SOURCE_ROOT; };
+		91179DF40998C781004741E8 /* libwxjpeg-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxjpeg-2.6.a"; path = "../wxMac-2.6.2/lib/libwxjpeg-2.6.a"; sourceTree = SOURCE_ROOT; };
+		91179DF50998C781004741E8 /* libwxpng-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxpng-2.6.a"; path = "../wxMac-2.6.2/lib/libwxpng-2.6.a"; sourceTree = SOURCE_ROOT; };
+		91179E2A0998CCA3004741E8 /* marker.txt */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; path = marker.txt; sourceTree = "<group>"; };
+		91179E2C0998CCB8004741E8 /* tips_de.txt */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; path = tips_de.txt; sourceTree = "<group>"; };
+		91179E2D0998CCB8004741E8 /* tips_en.txt */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; path = tips_en.txt; sourceTree = "<group>"; };
 		911E4C4A08695B31006FD9C0 /* mac_icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = mac_icon.icns; sourceTree = "<group>"; };
-		911ECB3A08DEF872006A2654 /* libwx_mac-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwx_mac-2.6.a"; path = "../wx/wxWidgets/build-release/lib/libwx_mac-2.6.a"; sourceTree = SOURCE_ROOT; };
-		911ECB3C08DEF8E4006A2654 /* libwxjpeg-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxjpeg-2.6.a"; path = "../wx/wxWidgets/build-release/lib/libwxjpeg-2.6.a"; sourceTree = SOURCE_ROOT; };
-		911ECB3D08DEF8E4006A2654 /* libwxpng-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxpng-2.6.a"; path = "../wx/wxWidgets/build-release/lib/libwxpng-2.6.a"; sourceTree = SOURCE_ROOT; };
-		911ECB3E08DEF8E4006A2654 /* libwxtiff-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxtiff-2.6.a"; path = "../wx/wxWidgets/build-release/lib/libwxtiff-2.6.a"; sourceTree = SOURCE_ROOT; };
 		911ECB4208DEFB6D006A2654 /* libsqlite3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsqlite3.a; path = /usr/local/lib/libsqlite3.a; sourceTree = "<absolute>"; };
 		91410F9508D04FF900776D65 /* .cvsignore */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = .cvsignore; sourceTree = "<group>"; };
 		91410F9608D04FF900776D65 /* Bugs & Co.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = "Bugs & Co.txt"; sourceTree = "<group>"; };
@@ -514,7 +520,7 @@
 		91B024D608672723007ABD07 /* libsqlite.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsqlite.a; path = /usr/local/lib/libsqlite.a; sourceTree = "<absolute>"; };
 		91B024DA08672754007ABD07 /* ureadseq.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = ureadseq.c; sourceTree = "<group>"; };
 		91C98C55086946DC003ED5D9 /* default.tab */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = default.tab; sourceTree = "<group>"; };
-		91C9EABF0867351700AE735B /* variables.csv */ = {isa = PBXFileReference; fileEncoding = "-2147482624"; lastKnownFileType = text; name = variables.csv; path = ../../variables.csv; sourceTree = BUILT_PRODUCTS_DIR; };
+		91C9EABF0867351700AE735B /* variables.csv */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = variables.csv; path = ../../variables.csv; sourceTree = BUILT_PRODUCTS_DIR; };
 		91CC568B088B961300567E40 /* PCR_Troubleshoot.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = PCR_Troubleshoot.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -523,13 +529,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				911ECB3B08DEF872006A2654 /* libwx_mac-2.6.a in Frameworks */,
-				911ECB3F08DEF8E4006A2654 /* libwxjpeg-2.6.a in Frameworks */,
-				911ECB4008DEF8E4006A2654 /* libwxpng-2.6.a in Frameworks */,
-				911ECB4408DF0026006A2654 /* libwxtiff-2.6.a in Frameworks */,
 				9118009908DFFB2F004F6B8F /* libsqlite3.a in Frameworks */,
 				9184744F08EA8C7000D49700 /* libmysqlclient.a in Frameworks */,
 				9184745008EA8C7100D49700 /* libsqlite.a in Frameworks */,
+				91179DF20998C74D004741E8 /* libwxtiff-2.6.a in Frameworks */,
+				91179DF60998C781004741E8 /* libwx_macu-2.6.a in Frameworks */,
+				91179DF70998C781004741E8 /* libwxjpeg-2.6.a in Frameworks */,
+				91179DF80998C781004741E8 /* libwxpng-2.6.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -589,11 +595,14 @@
 		9180A6490866FCF9000C7D5E = {
 			isa = PBXGroup;
 			children = (
+				91179E2C0998CCB8004741E8 /* tips_de.txt */,
+				91179E2D0998CCB8004741E8 /* tips_en.txt */,
+				91179E2A0998CCA3004741E8 /* marker.txt */,
 				911ECB4208DEFB6D006A2654 /* libsqlite3.a */,
-				911ECB3C08DEF8E4006A2654 /* libwxjpeg-2.6.a */,
-				911ECB3D08DEF8E4006A2654 /* libwxpng-2.6.a */,
-				911ECB3E08DEF8E4006A2654 /* libwxtiff-2.6.a */,
-				911ECB3A08DEF872006A2654 /* libwx_mac-2.6.a */,
+				91179DF10998C74C004741E8 /* libwxtiff-2.6.a */,
+				91179DF30998C781004741E8 /* libwx_macu-2.6.a */,
+				91179DF40998C781004741E8 /* libwxjpeg-2.6.a */,
+				91179DF50998C781004741E8 /* libwxpng-2.6.a */,
 				91410F9408D04FF900776D65 /* help */,
 				9157CB6208A78B690053C2D6 /* TProteolysis.cpp */,
 				91023BCC0893BBA600BD8757 /* libmysqlclient.a */,
@@ -1041,6 +1050,9 @@
 				91410FE808D04FFA00776D65 /* jstest.html in Resources */,
 				91410FE908D04FFA00776D65 /* stylesheet.css in Resources */,
 				91410FEA08D04FFA00776D65 /* todo.txt in Resources */,
+				91179E2B0998CCA3004741E8 /* marker.txt in Resources */,
+				91179E2E0998CCB8004741E8 /* tips_de.txt in Resources */,
+				91179E2F0998CCB8004741E8 /* tips_en.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1191,17 +1203,20 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"../wx/wxWidgets/lib/wx/include/mac-ansi-release-2.6",
+					"/Users/magnusmanske/wxMac-2.6.2/lib/wx/include/mac-unicode-release-static-2.6",
+					"/Users/magnusmanske/wxMac-2.6.2/include",
+					"/Users/magnusmanske/wxMac-2.6.2/contrib/include",
+					"/Users/magnusmanske/wxMac-2.6.2/lib/wx/include/mac-unicode-release-static-2.6",
 					"../mysql-4.0.24/include",
-					../wx/wxWidgets/include,
 				);
 				INFOPLIST_FILE = "GENtle-Info.plist";
 				INSTALL_PATH = "$(USER_APPS_DIR)";
 				LIBRARY_SEARCH_PATHS = (
-					../wx/wxWidgets/lib,
+					"../wxMac-2.6.2/lib",
 					/usr/local/lib/mysql,
 					"$(SRCROOT)/../wx/wxWidgets/lib",
 					"$(SRCROOT)/../wx/wxWidgets/build-release/lib",
+					"$(SRCROOT)/../wxMac-2.6.2/lib",
 				);
 				LIBRARY_STYLE = STATIC;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
@@ -1213,7 +1228,7 @@
 					"-DNO_GCC_PRAGMA",
 				);
 				OTHER_LDFLAGS = (
-					"-L/Users/magnusmanske/wx/wxWidgets/build-release/lib",
+					"-L/Users/magnusmanske/wxMac-2.6.2/lib",
 					"-framework",
 					QuickTime,
 					"-framework",
@@ -1222,7 +1237,7 @@
 					Carbon,
 					"-framework",
 					System,
-					"/Users/magnusmanske/wx/wxWidgets/build-release/lib/libwx_mac-2.6.a",
+					"/Users/magnusmanske/wxMac-2.6.2/lib/libwx_macu-2.6.a",
 					"-lz",
 					"-lpthread",
 					"-liconv",
@@ -1261,17 +1276,20 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"../wx/wxWidgets/lib/wx/include/mac-ansi-release-2.6",
+					"/Users/magnusmanske/wxMac-2.6.2/lib/wx/include/mac-unicode-release-static-2.6",
+					"/Users/magnusmanske/wxMac-2.6.2/include",
+					"/Users/magnusmanske/wxMac-2.6.2/contrib/include",
+					"/Users/magnusmanske/wxMac-2.6.2/lib/wx/include/mac-unicode-release-static-2.6",
 					"../mysql-4.0.24/include",
-					../wx/wxWidgets/include,
 				);
 				INFOPLIST_FILE = "GENtle-Info.plist";
 				INSTALL_PATH = "$(USER_APPS_DIR)";
 				LIBRARY_SEARCH_PATHS = (
-					../wx/wxWidgets/lib,
+					"../wxMac-2.6.2/lib",
 					/usr/local/lib/mysql,
 					"$(SRCROOT)/../wx/wxWidgets/lib",
 					"$(SRCROOT)/../wx/wxWidgets/build-release/lib",
+					"$(SRCROOT)/../wxMac-2.6.2/lib",
 				);
 				LIBRARY_STYLE = STATIC;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
@@ -1283,7 +1301,7 @@
 					"-DNO_GCC_PRAGMA",
 				);
 				OTHER_LDFLAGS = (
-					"-L/Users/magnusmanske/wx/wxWidgets/build-release/lib",
+					"-L/Users/magnusmanske/wxMac-2.6.2/lib",
 					"-framework",
 					QuickTime,
 					"-framework",
@@ -1292,7 +1310,7 @@
 					Carbon,
 					"-framework",
 					System,
-					"/Users/magnusmanske/wx/wxWidgets/build-release/lib/libwx_mac-2.6.a",
+					"/Users/magnusmanske/wxMac-2.6.2/lib/libwx_macu-2.6.a",
 					"-lz",
 					"-lpthread",
 					"-liconv",
