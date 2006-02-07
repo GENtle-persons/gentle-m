@@ -404,7 +404,7 @@ void MyFrame::initme ()
     // Command line parameters?
     if ( myapp()->argc > 1 )
        {
-       int a , b ;
+       int a ;
        wxProgressDialog pd ( txt("t_loading") , _T("") , myapp()->argc-1 , NULL , wxPD_ALL ) ;
        for ( a = 1 ; a < myapp()->argc ; a++ )
           {
@@ -1125,7 +1125,7 @@ void MyFrame::OnAlignment(wxCommandEvent& event)
 void MyFrame::OnManageDatabase(wxCommandEvent& event)
     {
     TManageDatabaseDialog mdd ( this , txt("m_manage_dbtxt") ) ;
-    int r = mdd.ShowModal () ;
+	mdd.ShowModal () ;
     }
 
 /** \brief Handles the Program Options menu event, and stores the options in the local database
@@ -1290,20 +1290,11 @@ void MyFrame::OnProjectClose(wxCommandEvent& event)
 void MyFrame::rememberLastProject ()
     {
     wxString sql ;
-    char t[10000] ;
 
     sql = _T("DELETE FROM stuff WHERE s_type='LASTPROJECT'") ;
     LS->getObject ( sql ) ;
 	 LS->getObject ( wxString::Format ( _T("INSERT INTO stuff (s_type,s_name,s_value) VALUES ('LASTPROJECT','NAME','%s')") , project.name.c_str() ) ) ;
 	 LS->getObject ( wxString::Format ( _T("INSERT INTO stuff (s_type,s_name,s_value) VALUES ('LASTPROJECT','DATABASE','%s')") , project.db.c_str() ) ) ;
-	 
-/*
-    sprintf ( t , "INSERT INTO stuff (s_type,s_name,s_value) VALUES ('LASTPROJECT','NAME','%s')" , project.name.c_str() ) ;
-    LS->getObject ( t ) ;
-
-    sprintf ( t , "INSERT INTO stuff (s_type,s_name,s_value) VALUES ('LASTPROJECT','DATABASE','%s')" , project.db.c_str() ) ;
-    LS->getObject ( t ) ;
-*/
     }
     
 /** \brief Creates a new amino acid entry from a string
