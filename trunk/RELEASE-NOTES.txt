@@ -12,6 +12,7 @@ Bugfixes
 * fixed protease display in DNA module
 * fixed 3'->5' strand extraction
 * fixed enumeration bug when adding databases
+* fixed restriction enzyme recognition/display bug
 
 __________________________________________
 1.8.0
