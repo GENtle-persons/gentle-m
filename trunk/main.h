@@ -19,9 +19,9 @@ typedef unsigned int uint ;
 */
 
 // Use 22 pixel icons?
-#ifndef __WXMAC__
+//#ifndef __WXMAC__
 	#define USE_22_ICONS
-#endif
+//#endif
 
 /**	\def MYDEBUG
 	\brief Turns on output of the myass function; should not be used for releases

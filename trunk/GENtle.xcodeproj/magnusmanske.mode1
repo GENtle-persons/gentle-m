@@ -255,17 +255,20 @@
 							<array>
 								<string>9180A6490866FCF9000C7D5E</string>
 								<string>1C37FBAC04509CD000000102</string>
+								<string>9118B18A0998EDB300FB4DB8</string>
 								<string>1C37FAAC04509CD000000102</string>
 								<string>1C37FABC05509CD000000102</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>124</integer>
+									<integer>148</integer>
+									<integer>147</integer>
+									<integer>146</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 1835}, {186, 338}}</string>
+							<string>{{0, 1913}, {186, 338}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -503,9 +506,10 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
+		<string>1C530D57069F1CE1000CFCEE</string>
 		<string>9180A7220866FE4F000C7D5E</string>
-		<string>/Users/magnusmanske/GENtle/GENtle.xcodeproj</string>
 		<string>1C0AD2B3069F1EA900FABCE6</string>
+		<string>/Users/magnusmanske/GENtle/GENtle.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
 	<string>207 340 690 397 0 0 1024 746 </string>
@@ -732,7 +736,7 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CDD528C0622207200134675</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>main.cpp</string>
+										<string>Alignment.cpp</string>
 										<key>StatusBarVisibility</key>
 										<true/>
 									</dict>
@@ -790,8 +794,8 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C530D57069F1CE1000CFCEE</string>
-				<string>91A87D2008D9C03300148A7F</string>
-				<string>91A87D2108D9C03300148A7F</string>
+				<string>9118B1460998DC1200FB4DB8</string>
+				<string>9118B1470998DC1200FB4DB8</string>
 				<string>1CDD528C0622207200134675</string>
 				<string>1CD0528E0623707200166675</string>
 			</array>
