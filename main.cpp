@@ -545,7 +545,7 @@ void MyApp::init_txt ( wxString lang , wxString csv , wxHashString *target , int
 #ifdef __WXMAC__
 	wxMBConv *conv = isoconv ;
 #else
-	wxMBConv *conv = wxConvUTF8 ;
+	wxMBConv *conv = &wxConvUTF8 ;
 #endif
     for ( int lc = 0 ; lc < in.GetLineCount() ; lc++ )
         {
