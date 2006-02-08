@@ -255,20 +255,17 @@
 							<array>
 								<string>9180A6490866FCF9000C7D5E</string>
 								<string>1C37FBAC04509CD000000102</string>
-								<string>9118B18A0998EDB300FB4DB8</string>
 								<string>1C37FAAC04509CD000000102</string>
 								<string>1C37FABC05509CD000000102</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>148</integer>
-									<integer>147</integer>
-									<integer>146</integer>
+									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 1913}, {186, 338}}</string>
+							<string>{{0, 0}, {186, 338}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -370,9 +367,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>9118B1060998D37300FB4DB8</string>
+				<string>9188D1D9099A17D50097E21A</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>9118B1070998D37300FB4DB8</string>
+				<string>9188D1DA099A17D50097E21A</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -508,8 +505,8 @@
 	<array>
 		<string>1C530D57069F1CE1000CFCEE</string>
 		<string>9180A7220866FE4F000C7D5E</string>
-		<string>1C0AD2B3069F1EA900FABCE6</string>
 		<string>/Users/magnusmanske/GENtle/GENtle.xcodeproj</string>
+		<string>1C0AD2B3069F1EA900FABCE6</string>
 	</array>
 	<key>WindowString</key>
 	<string>207 340 690 397 0 0 1024 746 </string>
@@ -591,7 +588,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>9180A7220866FE4F000C7D5E</string>
-				<string>9118B1030998D36B00FB4DB8</string>
+				<string>9188D1DB099A17D50097E21A</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
@@ -736,7 +733,7 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CDD528C0622207200134675</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>Alignment.cpp</string>
+										<string>TImageDisplay.cpp</string>
 										<key>StatusBarVisibility</key>
 										<true/>
 									</dict>
@@ -794,8 +791,8 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C530D57069F1CE1000CFCEE</string>
-				<string>9118B1460998DC1200FB4DB8</string>
-				<string>9118B1470998DC1200FB4DB8</string>
+				<string>9188D1E7099A2C540097E21A</string>
+				<string>9188D1E8099A2C540097E21A</string>
 				<string>1CDD528C0622207200134675</string>
 				<string>1CD0528E0623707200166675</string>
 			</array>
@@ -955,9 +952,9 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C0AD2B3069F1EA900FABCE6</string>
-				<string>9118B1040998D36B00FB4DB8</string>
+				<string>9188D1DC099A17D50097E21A</string>
 				<string>1CD0528B0623707200166675</string>
-				<string>9118B1050998D36B00FB4DB8</string>
+				<string>9188D1DD099A17D50097E21A</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.run</string>
