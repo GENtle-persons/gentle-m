@@ -139,7 +139,11 @@ TSQLresult TStorage::getObject_MySQL ( const wxString &query )
           }
        }
 
+#ifdef __WXGTK__
+    int err = mysql_query ( conn , (const char*) query.mb_str(*(myapp()->isoconv)) ) ;
+#else
     int err = mysql_query ( conn , query.mb_str() ) ;
+#endif
     if ( err == 0 )
         {
         MYSQL_RES *result ;

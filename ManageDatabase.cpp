@@ -895,7 +895,7 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
     sql += name ;
     sql += _T("\"") ;
     sr = tstorage->getObject ( sql ) ;
-    if( sr.rows() == 0 ) return false ;
+    if( sr.rows() == 0 ) { wxMessageBox ( name , txt("t_could_not_load") ) ; return false ; }
     v->setName ( sr[0][sr["dna_name"]] ) ;
     v->setDescription ( sr[0][sr["dna_description"]] ) ;
     v->setSequence ( sr[0][sr["dna_sequence"]] ) ;
