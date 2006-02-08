@@ -551,6 +551,7 @@ void MyFrame::OnFileOpen(wxCommandEvent& event )
     TManageDatabaseDialog dbd ( this , txt("t_open") , ACTION_MODE_LOAD ) ;
     dbd.ShowModal () ;
     if ( i != children.GetCount() ) setActiveChild ( children[children.GetCount()-1] ) ;
+    if ( GetActiveChild() ) GetActiveChild()->SetFocus() ;
 }
 
 /** \brief Invokes the "enter sequence manually" dialog and calls the appropriate creation function
