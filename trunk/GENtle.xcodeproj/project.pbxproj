@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		91179DF20998C74D004741E8 /* libwxtiff-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91179DF10998C74C004741E8 /* libwxtiff-2.6.a */; };
 		91179DF60998C781004741E8 /* libwx_macu-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91179DF30998C781004741E8 /* libwx_macu-2.6.a */; };
 		91179DF70998C781004741E8 /* libwxjpeg-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91179DF40998C781004741E8 /* libwxjpeg-2.6.a */; };
 		91179DF80998C781004741E8 /* libwxpng-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91179DF50998C781004741E8 /* libwxpng-2.6.a */; };
@@ -183,6 +182,7 @@
 		9180A7160866FD46000C7D5E /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9180A6B90866FD46000C7D5E /* util.cpp */; };
 		9184744F08EA8C7000D49700 /* libmysqlclient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91023BCC0893BBA600BD8757 /* libmysqlclient.a */; };
 		9184745008EA8C7100D49700 /* libsqlite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91B024D608672723007ABD07 /* libsqlite.a */; };
+		9188D1ED099A33020097E21A /* libwxtiff-2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9188D1EC099A33020097E21A /* libwxtiff-2.6.a */; };
 		919174E7086807DD00FD900E /* A.wav in Resources */ = {isa = PBXBuildFile; fileRef = 919174CC086807DD00FD900E /* A.wav */; };
 		919174E8086807DD00FD900E /* B.wav in Resources */ = {isa = PBXBuildFile; fileRef = 919174CD086807DD00FD900E /* B.wav */; };
 		919174E9086807DD00FD900E /* C.wav in Resources */ = {isa = PBXBuildFile; fileRef = 919174CE086807DD00FD900E /* C.wav */; };
@@ -301,7 +301,6 @@
 
 /* Begin PBXFileReference section */
 		91023BCC0893BBA600BD8757 /* libmysqlclient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmysqlclient.a; path = /usr/local/lib/mysql/libmysqlclient.a; sourceTree = "<absolute>"; };
-		91179DF10998C74C004741E8 /* libwxtiff-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxtiff-2.6.a"; path = "../wxMac-2.6.2/lib/libwxtiff-2.6.a"; sourceTree = SOURCE_ROOT; };
 		91179DF30998C781004741E8 /* libwx_macu-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwx_macu-2.6.a"; path = "../wxMac-2.6.2/lib/libwx_macu-2.6.a"; sourceTree = SOURCE_ROOT; };
 		91179DF40998C781004741E8 /* libwxjpeg-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxjpeg-2.6.a"; path = "../wxMac-2.6.2/lib/libwxjpeg-2.6.a"; sourceTree = SOURCE_ROOT; };
 		91179DF50998C781004741E8 /* libwxpng-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxpng-2.6.a"; path = "../wxMac-2.6.2/lib/libwxpng-2.6.a"; sourceTree = SOURCE_ROOT; };
@@ -478,6 +477,7 @@
 		9180A6B80866FD46000C7D5E /* TXMLfile.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = TXMLfile.cpp; sourceTree = "<group>"; };
 		9180A6B90866FD46000C7D5E /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = clustalw/util.cpp; sourceTree = "<group>"; };
 		9180A6BA0866FD46000C7D5E /* xmltest.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = xmltest.cpp; path = tinyxml/xmltest.cpp; sourceTree = "<group>"; };
+		9188D1EC099A33020097E21A /* libwxtiff-2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwxtiff-2.6.a"; path = "../wxMac-2.6.2/lib/libwxtiff-2.6.a"; sourceTree = SOURCE_ROOT; };
 		919174980867F03700FD900E /* GENtle-Info copy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "GENtle-Info copy.plist"; path = "/Users/magnusmanske/GENtle/GENtle-Info copy.plist"; sourceTree = "<absolute>"; };
 		919174CC086807DD00FD900E /* A.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = A.wav; sourceTree = "<group>"; };
 		919174CD086807DD00FD900E /* B.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = B.wav; sourceTree = "<group>"; };
@@ -576,10 +576,10 @@
 				9118009908DFFB2F004F6B8F /* libsqlite3.a in Frameworks */,
 				9184744F08EA8C7000D49700 /* libmysqlclient.a in Frameworks */,
 				9184745008EA8C7100D49700 /* libsqlite.a in Frameworks */,
-				91179DF20998C74D004741E8 /* libwxtiff-2.6.a in Frameworks */,
 				91179DF60998C781004741E8 /* libwx_macu-2.6.a in Frameworks */,
 				91179DF70998C781004741E8 /* libwxjpeg-2.6.a in Frameworks */,
 				91179DF80998C781004741E8 /* libwxpng-2.6.a in Frameworks */,
+				9188D1ED099A33020097E21A /* libwxtiff-2.6.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -639,6 +639,7 @@
 		9180A6490866FCF9000C7D5E = {
 			isa = PBXGroup;
 			children = (
+				9188D1EC099A33020097E21A /* libwxtiff-2.6.a */,
 				9118B1590998ED5200FB4DB8 /* accessories-calculator.png */,
 				9118B15A0998ED5200FB4DB8 /* accessories-text-editor.png */,
 				9118B15B0998ED5200FB4DB8 /* alignments.png */,
@@ -665,7 +666,6 @@
 				91179E2D0998CCB8004741E8 /* tips_en.txt */,
 				91179E2A0998CCA3004741E8 /* marker.txt */,
 				911ECB4208DEFB6D006A2654 /* libsqlite3.a */,
-				91179DF10998C74C004741E8 /* libwxtiff-2.6.a */,
 				91179DF30998C781004741E8 /* libwx_macu-2.6.a */,
 				91179DF40998C781004741E8 /* libwxjpeg-2.6.a */,
 				91179DF50998C781004741E8 /* libwxpng-2.6.a */,
@@ -1294,7 +1294,6 @@
 					"/Users/magnusmanske/wxMac-2.6.2/lib/wx/include/mac-unicode-release-static-2.6",
 					"/Users/magnusmanske/wxMac-2.6.2/include",
 					"/Users/magnusmanske/wxMac-2.6.2/contrib/include",
-					"/Users/magnusmanske/wxMac-2.6.2/lib/wx/include/mac-unicode-release-static-2.6",
 					"../mysql-4.0.24/include",
 				);
 				INFOPLIST_FILE = "GENtle-Info.plist";
@@ -1367,7 +1366,6 @@
 					"/Users/magnusmanske/wxMac-2.6.2/lib/wx/include/mac-unicode-release-static-2.6",
 					"/Users/magnusmanske/wxMac-2.6.2/include",
 					"/Users/magnusmanske/wxMac-2.6.2/contrib/include",
-					"/Users/magnusmanske/wxMac-2.6.2/lib/wx/include/mac-unicode-release-static-2.6",
 					"../mysql-4.0.24/include",
 				);
 				INFOPLIST_FILE = "GENtle-Info.plist";
