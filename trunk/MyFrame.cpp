@@ -367,8 +367,10 @@ void MyFrame::initme ()
 	InitToolBar ( mainToolBar ) ;
 	addTool ( mainToolBar , MDI_TEXT_IMPORT ) ;
 	addTool ( mainToolBar , MDI_FILE_OPEN ) ;
+	addCCPFTools ( mainToolBar , true ) ;
 	addDefaultTools ( mainToolBar ) ;
 	mainToolBar->Realize() ;
+	updateCCP ( NULL ) ;
 #else
 	mainToolBar = NULL ;
 #endif
@@ -1078,14 +1080,26 @@ void MyFrame::addDefaultTools(wxToolBar* toolBar)
 */
 void MyFrame::addCCPFTools(wxToolBar* toolBar, bool findbutton )
 	{
+	if ( mainToolBar && toolBar != mainToolBar ) return ;
     toolBar->AddSeparator() ;
     toolBar->AddTool( MDI_CUT, myapp()->frame->bitmaps[4] , txt("m_cut_text") ) ;
     toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] , txt("m_copy_text") ) ;
     toolBar->AddTool( MDI_PASTE, myapp()->frame->bitmaps[6] , txt("m_paste_text") ) ;
     if ( findbutton )
        toolBar->AddTool( MDI_FIND, myapp()->frame->bitmaps[22] , txt("m_find_text") ) ;
-    toolBar->AddSeparator () ;
+    if ( !mainToolBar ) toolBar->AddSeparator () ;
    }
+
+/**	\brief Updates cut, copy, paste, find icons on Mac
+*/
+void MyFrame::updateCCP ( ChildBase *c )
+	{
+	if ( !mainToolBar ) return ;
+	mainToolBar->EnableTool ( MDI_CUT , c ? c->allow_cut : false ) ;
+	mainToolBar->EnableTool ( MDI_COPY , c ? c->allow_copy : false ) ;
+	mainToolBar->EnableTool ( MDI_PASTE , c ? c->allow_paste : false ) ;
+	mainToolBar->EnableTool ( MDI_FIND , c ? c->allow_find : false ) ;
+	}
 
 /** \brief Generates a basic tooblar
 */

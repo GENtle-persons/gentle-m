@@ -84,8 +84,8 @@ void TPhyloTree::initme ()
 	          myapp()->frame->bitmaps[16],
 	          txt("m_print_sequence") ) ;
 	toolBar->AddSeparator() ;
-	toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] ) ;
-	toolBar->AddSeparator() ;
+//	toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] ) ;
+//	toolBar->AddSeparator() ;
 	myapp()->frame->addDefaultTools ( toolBar ) ;
 	
 	toolBar->AddSeparator() ;

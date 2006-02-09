@@ -62,6 +62,7 @@ class ChildBase : public MyChildBase
     friend class MyFrame ;
     wxMenuBar *menubar ; ///< Pointer to the window menu bar
     wxToolBar *toolbar ; ///< Pointer to the window too bar
+	bool allow_cut , allow_copy , allow_paste , allow_find ;
     
     virtual wxString getExportFilters () ;
     virtual void doExport ( wxString filename , int filter ) ; ///< Export data, depending on filename and export type

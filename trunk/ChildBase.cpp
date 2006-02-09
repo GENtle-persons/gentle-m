@@ -11,6 +11,7 @@ ChildBase::ChildBase ()
     cSequence = NULL ;
     toolbar = NULL ;
     menubar = NULL ;
+	allow_cut = allow_copy = allow_paste = allow_find = false ;
     }
     
 ChildBase::ChildBase(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style)
@@ -21,6 +22,7 @@ ChildBase::ChildBase(wxWindow *parent, const wxString& title, const wxPoint& pos
     cSequence = NULL ;
     toolbar = NULL ;
     menubar = NULL ;
+	allow_cut = allow_copy = allow_paste = allow_find = false ;
     }
         
 ChildBase::ChildBase(wxWindow *parent, const wxString& title)
@@ -31,6 +33,7 @@ ChildBase::ChildBase(wxWindow *parent, const wxString& title)
     cSequence = NULL ;
     toolbar = NULL ;
     menubar = NULL ;
+	allow_cut = allow_copy = allow_paste = allow_find = false ;
     }
 
 
@@ -145,6 +148,7 @@ void ChildBase::Activate ()
 	SetMyMenuBar () ;
     if ( myapp()->frame->isLocked() ) return ;
     updateToolbar () ;
+	myapp()->frame->updateCCP ( this ) ;
     showName () ;
     SetFocus();
     if ( cSequence ) cSequence->SetFocus() ;
