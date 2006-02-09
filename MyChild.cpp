@@ -93,6 +93,7 @@ MyChild::MyChild(wxWindow *parent, const wxString& title,
     orf_mode = 63 ;
     viewMode = false ;
     aa_offset = 1 ;
+	allow_cut = allow_copy = allow_paste = allow_find = true ;
 }
 
 MyChild::~MyChild()

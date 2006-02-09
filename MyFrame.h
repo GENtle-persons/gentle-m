@@ -132,6 +132,7 @@ public:
     virtual void OnClose(wxCloseEvent& event);
     virtual void OnSashDrag(wxSashEvent& event);
     
+	virtual void updateCCP ( ChildBase *c ) ;
     virtual void addTool ( wxToolBar* toolBar , int id ) ;
     virtual void addDefaultTools ( wxToolBar* toolBar ) ;
     virtual void addCCPFTools(wxToolBar* toolBar, bool findbutton = false ) ;

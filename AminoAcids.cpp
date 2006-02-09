@@ -65,6 +65,7 @@ TAminoAcids::TAminoAcids(wxWindow *parent, const wxString& title)
     sc2 = NULL ;
     lastLBsel = _T("") ;
     miniDisplayOptions = MINI_DISPLAY_CONDENSED ;
+	allow_cut = allow_copy = allow_paste = allow_find = true ;
     }
 
 TAminoAcids::~TAminoAcids ()

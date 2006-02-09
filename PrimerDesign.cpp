@@ -51,7 +51,7 @@ BEGIN_EVENT_TABLE(TPrimerDesign, MyChildBase)
     EVT_MENU(MDI_UNDO,ChildBase::OnDummy)
     EVT_MENU(MDI_CUT,ChildBase::OnDummy)
     EVT_MENU(MDI_EXPORT,ChildBase::OnDummy)
-    EVT_MENU(MDI_COPY,ChildBase::OnDummy)
+//    EVT_MENU(MDI_COPY,ChildBase::OnDummy)
     EVT_MENU(MDI_EDIT_MODE,ChildBase::OnDummy)
     EVT_MENU(MDI_MARK_ALL,ChildBase::OnDummy)
     EVT_MENU(MDI_FILE_SAVE,ChildBase::OnDummy)
@@ -99,6 +99,7 @@ TPrimerDesign::TPrimerDesign(wxWindow *parent,
     from = -1 ;
     stat = NULL ;
     lastPrimerActivated = -1 ;
+	allow_copy = true ;
     }
     
 TPrimerDesign::~TPrimerDesign ()
