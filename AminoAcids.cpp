@@ -199,12 +199,8 @@ void TAminoAcids::initme ()
     toolbar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
     myapp()->frame->InitToolBar(toolbar);
     toolbar->Reparent ( this ) ;
-    toolbar->AddTool( MDI_TEXT_IMPORT , 
-                myapp()->frame->bitmaps[0],
-                txt("m_new_sequence") ) ;
-    toolbar->AddTool( MDI_FILE_OPEN, 
-                myapp()->frame->bitmaps[1],
-            txt("m_open") , txt("m_opentxt") );
+	myapp()->frame->addTool ( toolbar , MDI_TEXT_IMPORT ) ;
+	myapp()->frame->addTool ( toolbar , MDI_FILE_OPEN ) ;
     toolbar->AddTool( MDI_FILE_SAVE, 
                 myapp()->frame->bitmaps[2],
                 txt("m_store_in_db") , 

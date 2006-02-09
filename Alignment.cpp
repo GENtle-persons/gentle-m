@@ -247,12 +247,8 @@ void TAlignment::initme ()
     toolBar->Reparent ( this ) ;
     toolbar = toolBar ;
     myapp()->frame->InitToolBar(toolBar);
-    toolBar->AddTool( MDI_TEXT_IMPORT , 
-                myapp()->frame->bitmaps[0] ,
-                txt("m_new_sequence") ) ;
-    toolBar->AddTool( MDI_FILE_OPEN, 
-                myapp()->frame->bitmaps[1] ,
-            txt("m_open") , txt("m_opentxt") );
+	myapp()->frame->addTool ( toolBar , MDI_TEXT_IMPORT ) ;
+	myapp()->frame->addTool ( toolBar , MDI_FILE_OPEN ) ;
     toolBar->AddTool( MDI_FILE_SAVE, 
                 myapp()->frame->bitmaps[2],
                 txt("m_store_in_db") , 

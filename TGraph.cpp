@@ -104,12 +104,8 @@ void TGraph::initme ()
                              wxSL_HORIZONTAL ) ;
     zoom_linked = new wxCheckBox ( toolBar , GRAPH_ZOOM_LINKED , txt("t_zoom_linked") ) ;
     
-    toolBar->AddTool( MDI_TEXT_IMPORT ,
-            myapp()->frame->bitmaps[0] ,
-            txt("m_new_primer") ) ;
-    toolBar->AddTool( MDI_FILE_OPEN,
-            myapp()->frame->bitmaps[1] ,
-            txt("m_open") , txt("m_opentxt") );
+	myapp()->frame->addTool ( toolBar , MDI_TEXT_IMPORT ) ;
+	myapp()->frame->addTool ( toolBar , MDI_FILE_OPEN ) ;
     toolBar->AddControl ( new wxStaticText ( toolBar , -1 , _T("Zoom (X)") ) ) ;
     toolBar->AddControl ( zoom_x ) ;
     toolBar->AddSeparator() ;
