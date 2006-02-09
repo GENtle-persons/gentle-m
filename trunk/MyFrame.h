@@ -132,7 +132,8 @@ public:
     virtual void OnClose(wxCloseEvent& event);
     virtual void OnSashDrag(wxSashEvent& event);
     
-    virtual void addDefaultTools(wxToolBar* toolBar) ;
+    virtual void addTool ( wxToolBar* toolBar , int id ) ;
+    virtual void addDefaultTools ( wxToolBar* toolBar ) ;
     virtual void addCCPFTools(wxToolBar* toolBar, bool findbutton = false ) ;
     virtual void setDummyToolbar ( ChildBase *c ) ;
     virtual TCalculator *RunCalculator () ;
@@ -190,6 +191,7 @@ public:
     wxArrayTStorage dbcache ; ///< \brief Cache of databases for faster access
     ChildBase *lastChild ; ///< \brief Last child shown
     wxMenuBar *menu_bar ; ///< \brief The current menu bar
+	wxToolBar *mainToolBar ; ///< The main toolbar
     int locked ; ///< \brief State of display locking
     bool activating ; ///< \brief In child activation?
 #ifdef MYTEST

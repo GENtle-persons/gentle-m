@@ -190,7 +190,7 @@ void MyFrame::initme ()
     win->SetAlignment(wxLAYOUT_LEFT);
     win->SetSashVisible(wxSASH_RIGHT, TRUE);
     m_leftWindow2 = win;
-
+	
     // Database access
     LS = new TStorage ( LOCAL_STORAGE ) ;
     LS->createDatabase() ;
@@ -307,17 +307,6 @@ void MyFrame::initme ()
     CreateStatusBar();
     GetStatusBar()->SetFieldsCount ( 2 ) ;
 
-#ifdef __WXGTK__
-    Show(TRUE);
-    int sw , sh ;
-    wxDisplaySize ( &sw , &sh ) ;
-    // SetSize ( sw/10 , sh/10 , sw*8/10 , sh*7/10 ) ;
-    SetSize ( 0 , 0 , sw , sh*9/10 ) ;
-#else
-    Show(TRUE);
-    Maximize() ;
-#endif
-
     // Drag'n'drop    
     MyFrameDropTarget *dt = new MyFrameDropTarget ;
     SetDropTarget ( dt ) ;
@@ -371,6 +360,29 @@ void MyFrame::initme ()
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("calc_tool.bmp") , wxBITMAP_TYPE_BMP) ) ; // 20
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("settings_tool.bmp") , wxBITMAP_TYPE_BMP) ) ; // 21
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("help.bmp") , wxBITMAP_TYPE_BMP) ) ; // 22
+#endif
+
+#ifdef __WXMAC__
+	mainToolBar = CreateToolBar ( wxTB_HORIZONTAL ) ;
+	InitToolBar ( mainToolBar ) ;
+	addTool ( mainToolBar , MDI_TEXT_IMPORT ) ;
+	addTool ( mainToolBar , MDI_FILE_OPEN ) ;
+	addDefaultTools ( mainToolBar ) ;
+	mainToolBar->Realize() ;
+#else
+	mainToolBar = NULL ;
+#endif
+
+
+#ifdef __WXGTK__
+    Show(TRUE);
+    int sw , sh ;
+    wxDisplaySize ( &sw , &sh ) ;
+    // SetSize ( sw/10 , sh/10 , sw*8/10 , sh*7/10 ) ;
+    SetSize ( 0 , 0 , sw , sh*9/10 ) ;
+#else
+    Show(TRUE);
+    Maximize() ;
 #endif
 
 
@@ -443,6 +455,7 @@ void MyFrame::initme ()
     Show(TRUE);
     m_leftWindow2->SetFocus () ;
 //    SetStatusText ( txt("t_update_warning") , 1 ) ;
+
     }
 
 /** \brief Handles close event
@@ -1017,20 +1030,42 @@ void MyFrame::OnSize(wxSizeEvent& event)
 }
 
 
-/** \brief OBSOLETE creation of a frame toolbar
+/** \brief Sets the icon size for the toolbar
 */
 void MyFrame::InitToolBar(wxToolBar* toolBar)
 {
 #ifdef USE_22_ICONS
+#ifdef __WXMAC__
+     wxSize ns ( 40 , 40 ) ;
+#else
      wxSize ns ( 22 , 22 ) ;
+#endif
      toolBar->SetToolBitmapSize ( ns ) ;
 #endif
 }
+
+
+/** \brief Adds a tool to a given toolbar
+*/
+void MyFrame::addTool ( wxToolBar* toolBar , int id )
+	{
+	if ( mainToolBar && toolBar != mainToolBar ) return ;
+
+	if ( id == MDI_TEXT_IMPORT )
+		toolBar->AddTool( MDI_TEXT_IMPORT ,
+                    bitmaps[0],
+                    txt("m_new_sequence") ) ;  
+	else if ( id == MDI_FILE_OPEN )
+		toolBar->AddTool( MDI_FILE_OPEN, 
+                    bitmaps[1],
+                txt("m_open") , txt("m_opentxt") );
+	}
 
 /** \brief Adds default tools to a given toolbar
 */
 void MyFrame::addDefaultTools(wxToolBar* toolBar)
 	{
+	if ( mainToolBar && toolBar != mainToolBar ) return ;
  	toolBar->AddSeparator() ;
  	toolBar->AddTool( MDI_ALIGNMENT, myapp()->frame->bitmaps[17] , txt("m_alignment_text") ) ;
  	toolBar->AddTool( MDI_IMAGE_VIEWER, myapp()->frame->bitmaps[18] , txt("m_imageviewer_text") ) ;
@@ -1060,13 +1095,8 @@ void MyFrame::setDummyToolbar ( ChildBase *c )
     toolBar->Reparent ( c ) ;
     c->toolbar = toolBar ;
     myapp()->frame->InitToolBar(toolBar);
-    toolBar->AddTool( MDI_TEXT_IMPORT ,
-                myapp()->frame->bitmaps[0] ,
-                txt("m_new_sequence") ) ;
-    toolBar->AddTool( MDI_FILE_OPEN,
-                myapp()->frame->bitmaps[1] ,
-            txt("m_open") , txt("m_opentxt") );
-    addDefaultTools ( toolBar ) ;
+	addTool ( toolBar , MDI_TEXT_IMPORT ) ;
+	addTool ( toolBar , MDI_FILE_OPEN ) ;
     c->toolbar = toolBar ;
     toolBar->Realize() ;
    }
