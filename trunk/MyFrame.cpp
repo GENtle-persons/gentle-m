@@ -1,6 +1,6 @@
 #include "MyFrame.h"
 #include "SendHTTP.h"
-
+#include <wx/sysopt.h>
 
 // ---------------------------------------------------------------------------
 // MyFrame
@@ -165,11 +165,7 @@ void MyFrame::initme ()
     SetFont ( *MYFONT ( 8 , wxSWISS , wxNORMAL , wxNORMAL ) ) ;    
 #endif
 
-#ifdef __WXMAC__
 	int borders = wxNO_BORDER ;
-#else
-	int borders = wxSUNKEN_BORDER ;
-#endif
 
   	wxSashLayoutWindow* win ;
   	m_leftWindow2 = m_topWindow = m_bottomWindow = NULL ;
@@ -237,11 +233,11 @@ void MyFrame::initme ()
     useInternalHelp = LS->getOption ( _T("USEINTERNALHELP") , false ) ;
     showEnzymePos = LS->getOption ( _T("SHOWENZYMEPOS") , true ) ;
     nonstandard_translation_table = LS->getOption ( _T("nonstandard_translation_table") , -1 ) ;
-#ifdef __WXMAC__
+//#ifdef __WXMAC__
 	useTwoToolbars = LS->getOption ( _T("use_two_toolbars") , true ) ;
-#else
+/*#else
 	useTwoToolbars = LS->getOption ( _T("use_two_toolbars") , false ) ;
-#endif
+#endif*/
     
     int aa_red = LS->getOption ( _T("AA_RED") , wxLIGHT_GREY->Red() ) ;
     int aa_green = LS->getOption ( _T("AA_GREEN") , wxLIGHT_GREY->Green() ) ;
@@ -324,29 +320,39 @@ void MyFrame::initme ()
     SetDropTarget ( dt ) ;
 
     // Bitmap library
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("document-new.png") , wxBITMAP_TYPE_PNG) ) ;  // 0
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("document-open.png") , wxBITMAP_TYPE_PNG) ) ; // 1
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("document-save.png") , wxBITMAP_TYPE_PNG) ) ; // 2
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("edit-undo.png") , wxBITMAP_TYPE_PNG) ) ; // 3
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("edit-cut.png") , wxBITMAP_TYPE_PNG) ) ;  // 4
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("edit-copy.png") , wxBITMAP_TYPE_PNG) ) ; // 5
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("edit-paste.png") , wxBITMAP_TYPE_PNG) ) ;// 6
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("display_circular_linear.png") , wxBITMAP_TYPE_PNG) ) ; // 7
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("display_circular_linear.png") , wxBITMAP_TYPE_PNG) ) ;   // 8
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("display_orfs.png") , wxBITMAP_TYPE_PNG) ) ; // 9
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("display_features.png") , wxBITMAP_TYPE_PNG) ) ; // 10
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("restriction_new.png") , wxBITMAP_TYPE_PNG) ) ; // 11
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("view_new.png") , wxBITMAP_TYPE_PNG) ) ; // 12
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("accessories-text-editor.png") , wxBITMAP_TYPE_PNG) ) ; // 13
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("go-down.png") , wxBITMAP_TYPE_PNG) ) ; // 14
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("go-up.png") , wxBITMAP_TYPE_PNG) ) ; // 15
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("document-print.png") , wxBITMAP_TYPE_PNG) ) ; // 16
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("alignments.png") , wxBITMAP_TYPE_PNG) ) ; // 17
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("image_viewer.png") , wxBITMAP_TYPE_PNG) ) ; // 18
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("applications-internet.png") , wxBITMAP_TYPE_PNG) ) ; // 19
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("accessories-calculator.png") , wxBITMAP_TYPE_PNG) ) ; // 20
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("preferences-desktop.png") , wxBITMAP_TYPE_PNG) ) ; // 21
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("edit-find.png") , wxBITMAP_TYPE_PNG) ) ; // 22
+    wxString icondir = myapp()->bmpdir + myapp()->slash ;
+    bitmaps.push_back ( wxBitmap (icondir + _T("document-new.png") , wxBITMAP_TYPE_PNG) ) ;  // 0
+    bitmaps.push_back ( wxBitmap (icondir + _T("document-open.png") , wxBITMAP_TYPE_PNG) ) ; // 1
+    bitmaps.push_back ( wxBitmap (icondir + _T("document-save.png") , wxBITMAP_TYPE_PNG) ) ; // 2
+    bitmaps.push_back ( wxBitmap (icondir + _T("edit-undo.png") , wxBITMAP_TYPE_PNG) ) ; // 3
+    bitmaps.push_back ( wxBitmap (icondir + _T("edit-cut.png") , wxBITMAP_TYPE_PNG) ) ;  // 4
+    bitmaps.push_back ( wxBitmap (icondir + _T("edit-copy.png") , wxBITMAP_TYPE_PNG) ) ; // 5
+    bitmaps.push_back ( wxBitmap (icondir + _T("edit-paste.png") , wxBITMAP_TYPE_PNG) ) ;// 6
+    bitmaps.push_back ( wxBitmap (icondir + _T("display_circular_linear.png") , wxBITMAP_TYPE_PNG) ) ; // 7
+    bitmaps.push_back ( wxBitmap (icondir + _T("display_circular_linear.png") , wxBITMAP_TYPE_PNG) ) ;   // 8
+    bitmaps.push_back ( wxBitmap (icondir + _T("display_orfs.png") , wxBITMAP_TYPE_PNG) ) ; // 9
+    bitmaps.push_back ( wxBitmap (icondir + _T("display_features.png") , wxBITMAP_TYPE_PNG) ) ; // 10
+    bitmaps.push_back ( wxBitmap (icondir + _T("restriction_new.png") , wxBITMAP_TYPE_PNG) ) ; // 11
+    bitmaps.push_back ( wxBitmap (icondir + _T("view_new.png") , wxBITMAP_TYPE_PNG) ) ; // 12
+    bitmaps.push_back ( wxBitmap (icondir + _T("accessories-text-editor.png") , wxBITMAP_TYPE_PNG) ) ; // 13
+    bitmaps.push_back ( wxBitmap (icondir + _T("go-down.png") , wxBITMAP_TYPE_PNG) ) ; // 14
+    bitmaps.push_back ( wxBitmap (icondir + _T("go-up.png") , wxBITMAP_TYPE_PNG) ) ; // 15
+    bitmaps.push_back ( wxBitmap (icondir + _T("document-print.png") , wxBITMAP_TYPE_PNG) ) ; // 16
+    bitmaps.push_back ( wxBitmap (icondir + _T("alignments.png") , wxBITMAP_TYPE_PNG) ) ; // 17
+    bitmaps.push_back ( wxBitmap (icondir + _T("image_viewer.png") , wxBITMAP_TYPE_PNG) ) ; // 18
+    bitmaps.push_back ( wxBitmap (icondir + _T("applications-internet.png") , wxBITMAP_TYPE_PNG) ) ; // 19
+    bitmaps.push_back ( wxBitmap (icondir + _T("accessories-calculator.png") , wxBITMAP_TYPE_PNG) ) ; // 20
+    bitmaps.push_back ( wxBitmap (icondir + _T("preferences-desktop.png") , wxBITMAP_TYPE_PNG) ) ; // 21
+    bitmaps.push_back ( wxBitmap (icondir + _T("edit-find.png") , wxBITMAP_TYPE_PNG) ) ; // 22
+
+    bitmaps.push_back ( to_grey ( bitmaps[ 4] ) ) ; // 23 - GREY Cut
+    bitmaps.push_back ( to_grey ( bitmaps[ 5] ) ) ; // 24 - GREY Copy
+    bitmaps.push_back ( to_grey ( bitmaps[ 6] ) ) ; // 25 - GREY Paste
+    bitmaps.push_back ( to_grey ( bitmaps[22] ) ) ; // 26 - GREY Find
+    bitmaps.push_back ( to_grey ( bitmaps[ 2] ) ) ; // 27 - GREY Save
+    bitmaps.push_back ( to_grey ( bitmaps[ 3] ) ) ; // 28 - GREY Undo
+    bitmaps.push_back ( to_grey ( bitmaps[16] ) ) ; // 29 - GREY Print sequence
+
 
 	if ( useTwoToolbars )
 		{
@@ -355,6 +361,9 @@ void MyFrame::initme ()
 		addTool ( mainToolBar , MDI_TEXT_IMPORT ) ;
 		addTool ( mainToolBar , MDI_FILE_IMPORT ) ;
 		addTool ( mainToolBar , MDI_FILE_OPEN ) ;
+		addTool ( mainToolBar , MDI_FILE_SAVE ) ;
+		addTool ( mainToolBar , SEQ_PRINT ) ;
+		addTool ( mainToolBar , MDI_UNDO ) ;
 		addCCPFTools ( mainToolBar , true ) ;
 		addDefaultTools ( mainToolBar ) ;
 		mainToolBar->Realize() ;
@@ -448,6 +457,26 @@ void MyFrame::initme ()
 //    SetStatusText ( txt("t_update_warning") , 1 ) ;
 
     }
+
+wxBitmap MyFrame::to_grey ( wxBitmap &bmp1 )
+     {
+#ifndef __WXMSW__
+     return wxNullBitmap ;
+#endif
+     wxImage i = bmp1.ConvertToImage () ;
+     for ( int x = 0 ; x < i.GetWidth() ; x++ )
+         {
+         for ( int y = 0 ; y < i.GetHeight() ; y++ )
+             {
+             //if ( i.GetAplha ( x , y ) < 255 ) continue ;
+             int z = ( i.GetRed(x,y) + i.GetGreen(x,y) + i.GetBlue(x,y) ) / 3 ;
+             z /= 2 ;
+             i.SetRGB ( x , y , z , z , z ) ;
+             }
+         }
+     return wxBitmap ( i ) ;
+     }
+
 
 /** \brief Handles close event
 
@@ -1066,6 +1095,27 @@ void MyFrame::addTool ( wxToolBar* toolBar , int id )
 		toolBar->AddTool( MDI_FILE_OPEN, 
                     bitmaps[1],
                 txt("m_opentxt") );
+	else if ( id == MDI_FILE_OPEN )
+		toolBar->AddTool( MDI_FILE_OPEN, 
+                    bitmaps[1],
+                txt("m_opentxt") );
+	else if ( id == MDI_FILE_SAVE )
+        toolBar->AddTool( MDI_FILE_SAVE, 
+                    txt("m_txt_store_in_db"),
+                    myapp()->frame->bitmaps[2],
+                    myapp()->frame->bitmaps[27] ) ;
+	else if ( id == SEQ_PRINT )
+        toolBar->AddTool( SEQ_PRINT, 
+                    txt("m_print_sequence"),
+                    myapp()->frame->bitmaps[16],
+                    myapp()->frame->bitmaps[29] ) ;
+	else if ( id == MDI_UNDO )
+	    {
+        toolBar->AddSeparator() ;
+        toolBar->AddTool( MDI_UNDO, txt("m_undo_text"),
+                          myapp()->frame->bitmaps[3],
+                          myapp()->frame->bitmaps[28] ) ;
+        }
 	}
 
 /** \brief Adds default tools to a given toolbar
@@ -1087,23 +1137,27 @@ void MyFrame::addCCPFTools(wxToolBar* toolBar, bool findbutton )
 	{
 	if ( mainToolBar && toolBar != mainToolBar ) return ;
     toolBar->AddSeparator() ;
-    toolBar->AddTool( MDI_CUT, myapp()->frame->bitmaps[4] , txt("m_cut_text") ) ;
-    toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] , txt("m_copy_text") ) ;
-    toolBar->AddTool( MDI_PASTE, myapp()->frame->bitmaps[6] , txt("m_paste_text") ) ;
+    toolBar->AddTool( MDI_CUT, txt("m_cut_text") , myapp()->frame->bitmaps[4] , myapp()->frame->bitmaps[23] ) ;
+    toolBar->AddTool( MDI_COPY, txt("m_copy_text") , myapp()->frame->bitmaps[5] , myapp()->frame->bitmaps[24] ) ;
+    toolBar->AddTool( MDI_PASTE, txt("m_paste_text") , myapp()->frame->bitmaps[6] , myapp()->frame->bitmaps[25] ) ;
     if ( findbutton )
-       toolBar->AddTool( MDI_FIND, myapp()->frame->bitmaps[22] , txt("m_find_text") ) ;
+       toolBar->AddTool( MDI_FIND, txt("m_find_text") , myapp()->frame->bitmaps[22] , myapp()->frame->bitmaps[26] ) ;
     if ( !mainToolBar ) toolBar->AddSeparator () ;
    }
 
-/**	\brief Updates cut, copy, paste, find icons on Mac
+/**	\brief Updates cut, copy, paste, find icons
 */
 void MyFrame::updateCCP ( ChildBase *c )
 	{
-	if ( !mainToolBar ) return ;
-	mainToolBar->EnableTool ( MDI_CUT , c ? c->allow_cut : false ) ;
-	mainToolBar->EnableTool ( MDI_COPY , c ? c->allow_copy : false ) ;
-	mainToolBar->EnableTool ( MDI_PASTE , c ? c->allow_paste : false ) ;
-	mainToolBar->EnableTool ( MDI_FIND , c ? c->allow_find : false ) ;
+    if ( !mainToolBar && !c ) return ;
+    wxToolBar *tb = mainToolBar ? mainToolBar : c->toolbar ;
+	tb->EnableTool ( MDI_FILE_SAVE , c ? c->allow_save : false ) ;
+	tb->EnableTool ( MDI_UNDO , c ? c->allow_undo : false ) ;
+	tb->EnableTool ( SEQ_PRINT , c ? c->allow_print : false ) ;
+	tb->EnableTool ( MDI_CUT , c ? c->allow_cut : false ) ;
+	tb->EnableTool ( MDI_COPY , c ? c->allow_copy : false ) ;
+	tb->EnableTool ( MDI_PASTE , c ? c->allow_paste : false ) ;
+	tb->EnableTool ( MDI_FIND , c ? c->allow_find : false ) ;
 	}
 
 /** \brief Generates a basic tooblar

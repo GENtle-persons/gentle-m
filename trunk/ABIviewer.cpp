@@ -58,6 +58,7 @@ TABIviewer::TABIviewer(wxWindow *parent, const wxString& title)
     from = -1 ;
     vec->undo.clear () ;
     stat = NULL ;
+    allow_save = allow_print = allow_find = allow_copy = true ;
     }
     
 TABIviewer::~TABIviewer ()
@@ -166,20 +167,15 @@ void TABIviewer::initme ()
     wxCheckBox *horiz = NULL ;
 
     // Toolbar
-	int orient = myapp()->frame->mainToolBar ? wxTB_VERTICAL : wxTB_HORIZONTAL ;
+	int orient = wxTB_HORIZONTAL ;
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | orient |wxTB_DOCKABLE);
     myapp()->frame->InitToolBar(toolBar);
 	myapp()->frame->addTool ( toolBar , MDI_TEXT_IMPORT ) ;
 	myapp()->frame->addTool ( toolBar , MDI_FILE_OPEN ) ;
-    toolBar->AddTool( MDI_FILE_SAVE, 
-                myapp()->frame->bitmaps[2] ,
-                txt("m_store_in_db") , 
-                txt("m_txt_store_in_db"));
-    toolBar->AddTool( SEQ_PRINT, 
-                myapp()->frame->bitmaps[16],
-                txt("m_print_sequence") ) ;
-    toolBar->AddSeparator() ;
-    toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] , txt("m_copy_text") ) ;
+	myapp()->frame->addTool ( toolBar , MDI_FILE_SAVE ) ;
+	myapp()->frame->addTool ( toolBar , SEQ_PRINT ) ;
+    if ( !myapp()->frame->mainToolBar ) toolBar->AddSeparator() ;
+	myapp()->frame->addTool ( toolBar , MDI_COPY ) ;
     toolBar->AddSeparator() ;
     horiz = new wxCheckBox ( toolBar , ALIGN_HORIZ , txt("t_horizontal") ) ;
     toolBar->AddControl ( horiz ) ;

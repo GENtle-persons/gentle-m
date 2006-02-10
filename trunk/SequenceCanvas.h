@@ -533,6 +533,7 @@ class SequenceCanvas : public wxScrolledWindow
     virtual TAminoAcids *getAA() ; ///< Returns pointer to amino acid module, or NULL
     virtual TPrimerDesign *getPD() ; ///< Returns pointer to primer design module, or NULL
     virtual TAlignment *getAln() ; ///< Returns pointer to alignment module, or NULL
+    virtual wxString getChildType() ; ///< Returns the child identifier, or _T("")
     
     virtual bool getPrintToColor () { return printToColor ; } ///< Are we printing to a color printer?
     virtual void setPrintToColor ( bool _b ) { printToColor = _b ; } ///< We are printing to a color printer!
@@ -550,7 +551,7 @@ class SequenceCanvas : public wxScrolledWindow
     virtual bool isPrinting () { return printing ; } ///< Are we printing (or drawing on the screen)?
     virtual void forceOverwrite ( bool _b ) { forceoverwrite = _b ; } ///< Ensure overwrite mode (for example, ABI and PCR mode)
     virtual bool getEditMode () { return editMode ; } ///< Are we editing?
-    virtual void setEditMode ( bool _b ) { editMode = _b ; } ///< Sets wether we're editing
+    virtual void setEditMode ( bool _b ) ; ///< Sets wether we're editing
     virtual void setLowX ( int _i ) { if ( lowx < _i ) lowx = _i ; } ///< Minimum X coodrinate to draw
     virtual void startEdit ( wxString id ) ; ///< Initiate editing mode
     virtual void stopEdit () ; ///< Terminate editing mode

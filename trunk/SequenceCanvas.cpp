@@ -164,6 +164,12 @@ SequenceCanvas::~SequenceCanvas()
 void SequenceCanvas::unmark ()
 	{
     mark_firstrow = mark_lastrow = -1 ;
+    if ( p || getAA() || getPD() )
+       {
+       child->allow_cut = false ;
+       child->allow_copy = false ;
+       myapp()->frame->updateCCP ( child ) ;
+       }
 	if ( lastmarked < 0 || lastmarked >= seq.GetCount() ) return ;
 	if ( markedFrom() == -1 ) return ;
 	mark ( seq[lastmarked]->whatsthis() , -1 , -1 ) ;
@@ -1015,6 +1021,22 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value , int fo
     if ( seq.GetCount() == 0 ) return ;
     if ( marking ) return ;
     if ( getEditMode() && from != -1 && from != to ) return ;
+
+    if ( child && !isMiniDisplay() && ( p || getAA() || getPD() || getChildType() == _T("ABIviewer") ) )
+       {
+       bool state = ( from != -1 ) ;
+       if ( value != 1 ) state = false ;
+       bool update = false ;
+       if ( p || getAA() )
+          {
+          if ( child->allow_cut != state ) update = true ;
+          child->allow_cut = state ;
+          }
+       if ( child->allow_copy != state ) update = true ;
+       child->allow_copy = state ;
+       if ( update ) myapp()->frame->updateCCP ( child ) ;
+       }
+
     marking = true ;
     if ( child && child->cSequence && isMiniDisplay() )
         {
@@ -2035,6 +2057,12 @@ TAlignment *SequenceCanvas::getAln()
     return (TAlignment*) child ;
     }
 
+wxString SequenceCanvas::getChildType()
+    {
+    if ( !child ) return _T("") ;
+    return child->def ;
+    }
+
 void SequenceCanvas::startEdit ( wxString id )
     {
     mylog ( "startEdit" , "1" ) ;
@@ -2358,6 +2386,18 @@ void SequenceCanvas::OnOpenFeature(wxCommandEvent& event)
 	else if ( getAA() ) getAA()->invokeVectorEditor ( _T("item") , itemnumber ) ;
 	}
 
+void SequenceCanvas::setEditMode ( bool _b )
+     {
+     if ( child )
+        {
+        if ( p || getAA() )
+           child->allow_paste = _b ;
+        if ( p || getAA() )
+           child->allow_find = !child->allow_find ;
+        myapp()->frame->updateCCP ( child ) ;
+        }
+     editMode = _b ;
+     }
 
 
 // -------------------------------------------------------- TMarkMem

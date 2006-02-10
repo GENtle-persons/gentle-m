@@ -65,7 +65,7 @@ TAminoAcids::TAminoAcids(wxWindow *parent, const wxString& title)
     sc2 = NULL ;
     lastLBsel = _T("") ;
     miniDisplayOptions = MINI_DISPLAY_CONDENSED ;
-	allow_cut = allow_copy = allow_paste = allow_find = true ;
+    allow_print = allow_save = allow_find = true ;
     }
 
 TAminoAcids::~TAminoAcids ()
@@ -202,14 +202,8 @@ void TAminoAcids::initme ()
     toolbar->Reparent ( this ) ;
 	myapp()->frame->addTool ( toolbar , MDI_TEXT_IMPORT ) ;
 	myapp()->frame->addTool ( toolbar , MDI_FILE_OPEN ) ;
-    toolbar->AddTool( MDI_FILE_SAVE, 
-                myapp()->frame->bitmaps[2],
-                txt("m_store_in_db") , 
-                txt("m_txt_store_in_db"));
-    toolbar->AddTool( SEQ_PRINT, 
-                myapp()->frame->bitmaps[16],
-                txt("m_print_sequence") ) ;
-
+    myapp()->frame->addTool ( toolbar , MDI_FILE_SAVE ) ;
+    myapp()->frame->addTool ( toolbar , SEQ_PRINT ) ;
     myapp()->frame->addCCPFTools ( toolbar , true ) ;
     wxCheckBox *mycb = new wxCheckBox ( toolbar , ALIGN_HORIZ , txt("t_horizontal") ) ;
     toolbar->AddControl ( mycb ) ;

@@ -187,6 +187,8 @@ public:
 	wxToolBar *mainToolBar ; ///< The main toolbar
 
     private :
+    wxBitmap to_grey ( wxBitmap &bmp1 ) ;
+            
     wxSashLayoutWindow* m_topWindow; ///< \brief Frame layout, top window (unused)
     wxSashLayoutWindow* m_leftWindow1; ///< \brief Frame layout, left window
     wxSashLayoutWindow* m_leftWindow2; ///< \brief Frame layout, right window

@@ -99,7 +99,7 @@ TPrimerDesign::TPrimerDesign(wxWindow *parent,
     from = -1 ;
     stat = NULL ;
     lastPrimerActivated = -1 ;
-	allow_copy = true ;
+    allow_print = true ;
     }
     
 TPrimerDesign::~TPrimerDesign ()
@@ -417,10 +417,8 @@ void TPrimerDesign::initme ()
     myapp()->frame->InitToolBar(toolBar);
 	myapp()->frame->addTool ( toolBar , MDI_TEXT_IMPORT ) ;
 	myapp()->frame->addTool ( toolBar , MDI_FILE_OPEN ) ;
-    toolBar->AddTool( SEQ_PRINT, 
-                myapp()->frame->bitmaps[16],
-                txt("m_print_sequence") ) ;
-    toolBar->AddSeparator() ;
+	myapp()->frame->addTool ( toolBar , SEQ_PRINT ) ;
+    if ( !myapp()->frame->mainToolBar ) toolBar->AddSeparator() ;
     toolBar->AddTool( PD_IMPORT, 
             myapp()->frame->bitmaps[14] ,
             txt("b_import_primer") ) ;
@@ -428,6 +426,7 @@ void TPrimerDesign::initme ()
             myapp()->frame->bitmaps[15] ,
             txt("b_export_primer") ) ;
     toolBar->AddSeparator() ;
+	myapp()->frame->addTool ( toolBar , MDI_COPY ) ;
     toolBar->AddTool( MDI_EDIT_MODE,
         myapp()->frame->bitmaps[13] ,
         myapp()->frame->bitmaps[13] ,
@@ -436,7 +435,6 @@ void TPrimerDesign::initme ()
         myapp()->frame->bitmaps[10] ,
         myapp()->frame->bitmaps[10] ,
         TRUE, -1, -1, (wxObject *) NULL, txt("m_display_features") ) ;
-    
     toolBar->AddSeparator() ;
     
     spin = new wxSpinCtrl ( toolBar , PCR_SPIN , _T("") , wxDefaultPosition , wxSize ( MYSPINBOXSIZE , -1 ) ) ;
