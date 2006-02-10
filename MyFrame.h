@@ -169,7 +169,8 @@ public:
     TStorage *LS ; ///< \brief Pointer to the local TStorage database structure
     bool dying , enhancedRefresh , showVectorTitle , showVectorLength , 
             loadLastProject , useMetafile , showSplashScreen , checkUpdate ,
-            useCoolCanvas , useInternalHelp , doRegisterStuff , showEnzymePos ;
+            useCoolCanvas , useInternalHelp , doRegisterStuff , showEnzymePos ,
+			useTwoToolbars ;
     wxColour aa_color ;
     int editFeatureMode , showStopCodon ;
     TProject project ; ///< \brief The current project
@@ -183,6 +184,7 @@ public:
     char stopcodon ;
     int nonstandard_translation_table ;
     wxArrayString dna_marker ;
+	wxToolBar *mainToolBar ; ///< The main toolbar
 
     private :
     wxSashLayoutWindow* m_topWindow; ///< \brief Frame layout, top window (unused)
@@ -192,7 +194,6 @@ public:
     wxArrayTStorage dbcache ; ///< \brief Cache of databases for faster access
     ChildBase *lastChild ; ///< \brief Last child shown
     wxMenuBar *menu_bar ; ///< \brief The current menu bar
-	wxToolBar *mainToolBar ; ///< The main toolbar
     int locked ; ///< \brief State of display locking
     bool activating ; ///< \brief In child activation?
 #ifdef MYTEST

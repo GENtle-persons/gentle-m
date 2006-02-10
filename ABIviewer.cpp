@@ -166,7 +166,8 @@ void TABIviewer::initme ()
     wxCheckBox *horiz = NULL ;
 
     // Toolbar
-    wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
+	int orient = myapp()->frame->mainToolBar ? wxTB_VERTICAL : wxTB_HORIZONTAL ;
+    wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | orient |wxTB_DOCKABLE);
     myapp()->frame->InitToolBar(toolBar);
 	myapp()->frame->addTool ( toolBar , MDI_TEXT_IMPORT ) ;
 	myapp()->frame->addTool ( toolBar , MDI_FILE_OPEN ) ;

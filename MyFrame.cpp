@@ -164,6 +164,13 @@ void MyFrame::initme ()
 #ifdef __WXGTK__
     SetFont ( *MYFONT ( 8 , wxSWISS , wxNORMAL , wxNORMAL ) ) ;    
 #endif
+
+#ifdef __WXMAC__
+	int borders = wxNO_BORDER ;
+#else
+	int borders = wxSUNKEN_BORDER ;
+#endif
+
   	wxSashLayoutWindow* win ;
   	m_leftWindow2 = m_topWindow = m_bottomWindow = NULL ;
 
@@ -171,7 +178,7 @@ void MyFrame::initme ()
     // This contains the main tree
     win = new wxSashLayoutWindow(this, FRAME_SASH_1,
                                wxDefaultPosition, wxSize(200, 30),
-                               wxNO_BORDER | wxSW_3D | wxCLIP_CHILDREN);
+                               borders | wxSW_3D | wxCLIP_CHILDREN);
     win->SetDefaultSize(wxSize(200, 1000));
     win->SetOrientation(wxLAYOUT_VERTICAL);
     win->SetAlignment(wxLAYOUT_LEFT);
@@ -184,7 +191,7 @@ void MyFrame::initme ()
     // The client window
     win = new wxSashLayoutWindow(this, FRAME_SASH_2,
                                wxDefaultPosition, wxSize(500, 30),
-                               wxNO_BORDER | wxSW_3D | wxCLIP_CHILDREN);
+                               borders | wxSW_3D | wxCLIP_CHILDREN);
     win->SetDefaultSize(wxSize(500, 1000));
     win->SetOrientation(wxLAYOUT_VERTICAL);
     win->SetAlignment(wxLAYOUT_LEFT);
@@ -230,6 +237,11 @@ void MyFrame::initme ()
     useInternalHelp = LS->getOption ( _T("USEINTERNALHELP") , false ) ;
     showEnzymePos = LS->getOption ( _T("SHOWENZYMEPOS") , true ) ;
     nonstandard_translation_table = LS->getOption ( _T("nonstandard_translation_table") , -1 ) ;
+#ifdef __WXMAC__
+	useTwoToolbars = LS->getOption ( _T("use_two_toolbars") , true ) ;
+#else
+	useTwoToolbars = LS->getOption ( _T("use_two_toolbars") , false ) ;
+#endif
     
     int aa_red = LS->getOption ( _T("AA_RED") , wxLIGHT_GREY->Red() ) ;
     int aa_green = LS->getOption ( _T("AA_GREEN") , wxLIGHT_GREY->Green() ) ;
@@ -312,7 +324,6 @@ void MyFrame::initme ()
     SetDropTarget ( dt ) ;
 
     // Bitmap library
-#ifdef USE_22_ICONS
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("document-new.png") , wxBITMAP_TYPE_PNG) ) ;  // 0
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("document-open.png") , wxBITMAP_TYPE_PNG) ) ; // 1
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("document-save.png") , wxBITMAP_TYPE_PNG) ) ; // 2
@@ -336,45 +347,23 @@ void MyFrame::initme ()
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("accessories-calculator.png") , wxBITMAP_TYPE_PNG) ) ; // 20
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("preferences-desktop.png") , wxBITMAP_TYPE_PNG) ) ; // 21
     bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("edit-find.png") , wxBITMAP_TYPE_PNG) ) ; // 22
-#else
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("new.bmp") , wxBITMAP_TYPE_BMP) ) ;  // 0
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("open.bmp") , wxBITMAP_TYPE_BMP) ) ; // 1
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("save.bmp") , wxBITMAP_TYPE_BMP) ) ; // 2
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("undo.bmp") , wxBITMAP_TYPE_BMP) ) ; // 3
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("cut.bmp") , wxBITMAP_TYPE_BMP) ) ;  // 4
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("copy.bmp") , wxBITMAP_TYPE_BMP) ) ; // 5
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("paste.bmp") , wxBITMAP_TYPE_BMP) ) ;// 6
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("plasmid_circular.bmp") , wxBITMAP_TYPE_BMP) ) ; // 7
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("plasmid_linear.bmp") , wxBITMAP_TYPE_BMP) ) ;   // 8
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("orfs.bmp") , wxBITMAP_TYPE_BMP) ) ; // 9
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("display_features.bmp") , wxBITMAP_TYPE_BMP) ) ; // 10
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("display_restriction.bmp") , wxBITMAP_TYPE_BMP) ) ; // 11
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("mode_view.bmp") , wxBITMAP_TYPE_BMP) ) ; // 12
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("mode_edit.bmp") , wxBITMAP_TYPE_BMP) ) ; // 13
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("primer_import.bmp") , wxBITMAP_TYPE_BMP) ) ; // 14
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("primer_export.bmp") , wxBITMAP_TYPE_BMP) ) ; // 15
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("print.png") , wxBITMAP_TYPE_BMP) ) ; // 16
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("align_tool.bmp") , wxBITMAP_TYPE_BMP) ) ; // 17
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("image.bmp") , wxBITMAP_TYPE_BMP) ) ; // 18
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("web.bmp") , wxBITMAP_TYPE_BMP) ) ; // 19
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("calc_tool.bmp") , wxBITMAP_TYPE_BMP) ) ; // 20
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("settings_tool.bmp") , wxBITMAP_TYPE_BMP) ) ; // 21
-    bitmaps.push_back ( wxBitmap (myapp()->bmpdir+myapp()->slash+ _T("help.bmp") , wxBITMAP_TYPE_BMP) ) ; // 22
-#endif
 
-#ifdef __WXMAC__
-	mainToolBar = CreateToolBar ( wxTB_HORIZONTAL ) ;
-	InitToolBar ( mainToolBar ) ;
-	addTool ( mainToolBar , MDI_TEXT_IMPORT ) ;
-	addTool ( mainToolBar , MDI_FILE_OPEN ) ;
-	addCCPFTools ( mainToolBar , true ) ;
-	addDefaultTools ( mainToolBar ) ;
-	mainToolBar->Realize() ;
-	updateCCP ( NULL ) ;
-#else
-	mainToolBar = NULL ;
-#endif
-
+	if ( useTwoToolbars )
+		{
+		mainToolBar = CreateToolBar ( wxTB_HORIZONTAL ) ;
+		InitToolBar ( mainToolBar ) ;
+		addTool ( mainToolBar , MDI_TEXT_IMPORT ) ;
+		addTool ( mainToolBar , MDI_FILE_IMPORT ) ;
+		addTool ( mainToolBar , MDI_FILE_OPEN ) ;
+		addCCPFTools ( mainToolBar , true ) ;
+		addDefaultTools ( mainToolBar ) ;
+		mainToolBar->Realize() ;
+		updateCCP ( NULL ) ;
+		}
+	else
+		{
+		mainToolBar = NULL ;
+		}
 
 #ifdef __WXGTK__
     Show(TRUE);
@@ -1036,14 +1025,26 @@ void MyFrame::OnSize(wxSizeEvent& event)
 */
 void MyFrame::InitToolBar(wxToolBar* toolBar)
 {
-#ifdef USE_22_ICONS
+	wxSize ns ;
+	if ( useTwoToolbars )
+		{
 #ifdef __WXMAC__
-     wxSize ns ( 40 , 40 ) ;
+		if ( toolBar == mainToolBar ) ns = wxSize ( 48 , 48 ) ;
+		else ns = wxSize ( 36 , 36 ) ;
 #else
-     wxSize ns ( 22 , 22 ) ;
+		ns = wxSize ( 22 , 22 ) ;
 #endif
+		}
+	else
+		{
+#ifdef __WXMAC__
+		ns = wxSize ( 32 , 32 ) ;
+#else
+		ns = wxSize ( 22 , 22 ) ;
+#endif
+		}
+		
      toolBar->SetToolBitmapSize ( ns ) ;
-#endif
 }
 
 
@@ -1057,10 +1058,14 @@ void MyFrame::addTool ( wxToolBar* toolBar , int id )
 		toolBar->AddTool( MDI_TEXT_IMPORT ,
                     bitmaps[0],
                     txt("m_new_sequence") ) ;  
+	else if ( id == MDI_FILE_IMPORT )
+		toolBar->AddTool( MDI_FILE_IMPORT, 
+                    bitmaps[14],
+                txt("m_importtxt") );
 	else if ( id == MDI_FILE_OPEN )
 		toolBar->AddTool( MDI_FILE_OPEN, 
                     bitmaps[1],
-                txt("m_open") , txt("m_opentxt") );
+                txt("m_opentxt") );
 	}
 
 /** \brief Adds default tools to a given toolbar
@@ -1184,6 +1189,8 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
 
    	wxBeginBusyCursor() ;
 
+	bool useTwoToolbarsBefore = useTwoToolbars ;
+
     // retrieving options
 //    TEnzymeRules oo == *global_enzyme_rules ;
     global_enzyme_rules->lookup_options ( pod.globalEnzymesPanel ) ;
@@ -1199,13 +1206,14 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     editFeatureMode = pod.editFeatureMode->GetSelection() ;
     showStopCodon = pod.showStopCodon->GetSelection() ;    
     showEnzymePos = pod.showEnzymePos->GetValue() ;
+	useTwoToolbars = pod.useTwoToolbars->GetValue() ;
     if ( pod.use_nonstandard_translation_table->GetValue() )
     	nonstandard_translation_table = pod.translation_tables[pod.nonstandard_translation_table->GetSelection()] ;
     else nonstandard_translation_table = -1 ;
     aa_color = pod.aacol ;
     stopcodon = showStopCodon == 0 ? '|' : '*' ;
     wxString lang = pod.language->GetStringSelection() ;
-    if ( lang != lang_string )
+    if ( lang != lang_string || useTwoToolbars != useTwoToolbarsBefore )
         {
         wxMessageDialog md ( this , txt("t_effect_after_restart" ) ) ;
         md.ShowModal () ;
@@ -1230,6 +1238,7 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     LS->setOption ( _T("AA_GREEN") , aa_color.Green() ) ;
     LS->setOption ( _T("AA_BLUE") , aa_color.Blue() ) ;
     LS->setOption ( _T("nonstandard_translation_table") , nonstandard_translation_table ) ;
+	LS->setOption ( _T("use_two_toolbars") , useTwoToolbars ) ;
     LS->setOption ( _T("SHOWTIP") , pod.showTips->GetValue() ) ;
     global_enzyme_rules->save_global_settings() ; //!!!!!!! fix this!
     LS->endRecord() ;

@@ -259,6 +259,8 @@ void ProgramOptionsDialog::initGlobalSettings ()
                         txt("t_showenzymepos") ) ;
     showTips = new wxCheckBox ( globalSettingsPanel , -1 ,
                         txt("t_show_tips") ) ;
+	useTwoToolbars = new wxCheckBox ( globalSettingsPanel , -1 ,
+                        txt("t_use_two_toolbars") ) ;
     use_nonstandard_translation_table = new wxCheckBox ( globalSettingsPanel , -1 ,
                         txt("t_use_nonstandard_translation_table") ) ;
     nonstandard_translation_table = new wxChoice ( globalSettingsPanel , -1 ) ;
@@ -296,6 +298,7 @@ void ProgramOptionsDialog::initGlobalSettings ()
     useInternalHelp->SetValue ( myapp()->frame->useInternalHelp ) ;
     doRegisterStuff->SetValue ( myapp()->frame->doRegisterStuff ) ;
     showEnzymePos->SetValue ( myapp()->frame->showEnzymePos ) ;
+	useTwoToolbars->SetValue ( myapp()->frame->useTwoToolbars ) ;
     showTips->SetValue ( myapp()->frame->LS->getOption ( _T("SHOWTIP") , true ) ) ;
     use_nonstandard_translation_table->SetValue ( myapp()->frame->nonstandard_translation_table != -1 ) ;
     language->Append ( _T("en") ) ;
@@ -321,30 +324,31 @@ void ProgramOptionsDialog::initGlobalSettings ()
     wxBoxSizer *h = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
-    h->Add ( new wxStaticText ( globalSettingsPanel , -1 , txt("t_language") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-    h->Add ( language , 0 , wxEXPAND|wxALL , 5 ) ;
+    h->Add ( new wxStaticText ( globalSettingsPanel , -1 , txt("t_language") ) , 0 , wxEXPAND|wxALL , 3 ) ;
+    h->Add ( language , 0 , wxEXPAND|wxALL , 3 ) ;
 
-    h1->Add ( showStopCodon , 1 , wxEXPAND|wxALL , 5 ) ;
-    h1->Add ( b_aacol, 0 , wxEXPAND|wxALL , 5 ) ;
+    h1->Add ( showStopCodon , 1 , wxEXPAND|wxALL , 3 ) ;
+    h1->Add ( b_aacol, 0 , wxEXPAND|wxALL , 3 ) ;
 
-	 h2->Add ( use_nonstandard_translation_table , 0 , wxEXPAND|wxALL , 5 ) ; 
-	 h2->Add ( nonstandard_translation_table , 0 , wxEXPAND|wxALL , 5 ) ; 
+	 h2->Add ( use_nonstandard_translation_table , 0 , wxEXPAND|wxALL , 3 ) ; 
+	 h2->Add ( nonstandard_translation_table , 0 , wxEXPAND|wxALL , 3 ) ; 
 	 
-    v->Add ( h , 0 , wxEXPAND|wxALL , 5 ) ;
-    v->Add ( enhancedDisplay , 0 , wxEXPAND|wxALL , 5 ) ;
-    v->Add ( vectorTitle , 0 , wxEXPAND|wxALL , 5 ) ;
-    v->Add ( vectorLength , 0 , wxEXPAND|wxALL , 5 ) ;
-    v->Add ( loadLastProject , 0 , wxEXPAND|wxALL , 5 ) ;
-    v->Add ( useMetafile , 0 , wxEXPAND|wxALL , 5 ) ;
-    v->Add ( showSplashScreen , 0 , wxEXPAND|wxALL , 5 ) ;
-    v->Add ( checkUpdate , 0 , wxEXPAND|wxALL , 5 ) ;
-    v->Add ( useInternalHelp , 0 , wxEXPAND|wxALL , 5 ) ;
-    v->Add ( doRegisterStuff , 0 , wxEXPAND|wxALL , 5 ) ;
-    v->Add ( showEnzymePos , 0 , wxEXPAND|wxALL , 5 ) ;
-    v->Add ( showTips , 0 , wxEXPAND|wxALL , 5 ) ;
-    v->Add ( editFeatureMode , 0 , wxEXPAND|wxALL , 5 ) ;
-    v->Add ( h1 , 0 , wxEXPAND|wxALL , 5 ) ;
-    v->Add ( h2 , 0 , wxEXPAND|wxALL , 5 ) ;
+    v->Add ( h , 0 , wxEXPAND|wxALL , 3 ) ;
+    v->Add ( enhancedDisplay , 0 , wxEXPAND|wxALL , 3 ) ;
+    v->Add ( vectorTitle , 0 , wxEXPAND|wxALL , 3 ) ;
+    v->Add ( vectorLength , 0 , wxEXPAND|wxALL , 3 ) ;
+    v->Add ( loadLastProject , 0 , wxEXPAND|wxALL , 3 ) ;
+    v->Add ( useMetafile , 0 , wxEXPAND|wxALL , 3 ) ;
+    v->Add ( showSplashScreen , 0 , wxEXPAND|wxALL , 3 ) ;
+    v->Add ( checkUpdate , 0 , wxEXPAND|wxALL , 3 ) ;
+    v->Add ( useInternalHelp , 0 , wxEXPAND|wxALL , 3 ) ;
+    v->Add ( doRegisterStuff , 0 , wxEXPAND|wxALL , 3 ) ;
+    v->Add ( showEnzymePos , 0 , wxEXPAND|wxALL , 3 ) ;
+    v->Add ( showTips , 0 , wxEXPAND|wxALL , 3 ) ;
+	v->Add ( useTwoToolbars , 0 , wxEXPAND|wxALL , 3 ) ;
+    v->Add ( editFeatureMode , 0 , wxEXPAND|wxALL , 3 ) ;
+    v->Add ( h1 , 0 , wxEXPAND|wxALL , 3 ) ;
+    v->Add ( h2 , 0 , wxEXPAND|wxALL , 3 ) ;
 
 	 globalSettingsPanel->SetSizer ( v ) ;
 	 v->Fit ( globalSettingsPanel ) ;
