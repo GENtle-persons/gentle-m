@@ -257,15 +257,9 @@ void TAlignment::initme ()
                 myapp()->frame->bitmaps[16],
                 txt("m_print_sequence") ) ;
     toolBar->AddSeparator () ;
-#ifdef USE_22_ICONS
     toolBar->AddTool( ALIGNMENT_SETTINGS,
                 myapp()->frame->bitmaps[21],
                 txt("t_alignment_settings") ) ;
-#else
-    toolBar->AddTool( ALIGNMENT_SETTINGS, 
-                wxBitmap (myapp()->bmpdir + myapp()->slash + _T("alignment.bmp") , wxBITMAP_TYPE_BMP),
-                txt("t_alignment_settings") ) ;
-#endif
     toolBar->AddSeparator () ;
 
     wxCheckBox *mycb = new wxCheckBox ( toolBar , ALIGN_HORIZ , txt("t_horizontal") ) ;
