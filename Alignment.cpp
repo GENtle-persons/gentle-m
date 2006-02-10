@@ -85,6 +85,7 @@ TAlignment::TAlignment(wxWindow *parent, const wxString& title)
     aaa = NULL ;
     colCur = NULL ;
     readTabColors ( myapp()->homedir + myapp()->slash + _T("default.tab") ) ;
+    allow_print = allow_save = true ;
     }
 
 TAlignment::~TAlignment ()
@@ -249,14 +250,9 @@ void TAlignment::initme ()
     myapp()->frame->InitToolBar(toolBar);
 	myapp()->frame->addTool ( toolBar , MDI_TEXT_IMPORT ) ;
 	myapp()->frame->addTool ( toolBar , MDI_FILE_OPEN ) ;
-    toolBar->AddTool( MDI_FILE_SAVE, 
-                myapp()->frame->bitmaps[2],
-                txt("m_store_in_db") , 
-                txt("m_txt_store_in_db"));
-    toolBar->AddTool( SEQ_PRINT, 
-                myapp()->frame->bitmaps[16],
-                txt("m_print_sequence") ) ;
-    toolBar->AddSeparator () ;
+	myapp()->frame->addTool ( toolBar , MDI_FILE_SAVE ) ;
+	myapp()->frame->addTool ( toolBar , SEQ_PRINT ) ;
+    if ( !myapp()->frame->mainToolBar ) toolBar->AddSeparator () ;
     toolBar->AddTool( ALIGNMENT_SETTINGS,
                 myapp()->frame->bitmaps[21],
                 txt("t_alignment_settings") ) ;

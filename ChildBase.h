@@ -57,12 +57,13 @@ class ChildBase : public MyChildBase
     virtual void Activate () ; ///< Activates the module (in foreground etc.)
     virtual void SetIcon ( wxIcon icon ) ; ///< Sets the module icon (unused)
     virtual void SetMyMenuBar () ; ///< Sets the menu bar (used for mac version primarily)
+
+	bool allow_cut , allow_copy , allow_paste , allow_find , allow_save , allow_print , allow_undo ;
     
     protected :
     friend class MyFrame ;
     wxMenuBar *menubar ; ///< Pointer to the window menu bar
     wxToolBar *toolbar ; ///< Pointer to the window too bar
-	bool allow_cut , allow_copy , allow_paste , allow_find ;
     
     virtual wxString getExportFilters () ;
     virtual void doExport ( wxString filename , int filter ) ; ///< Export data, depending on filename and export type

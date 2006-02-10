@@ -81,7 +81,7 @@ void MyChild::OnFileSave(wxCommandEvent& WXUNUSED(event) )
 MyChild::MyChild(wxWindow *parent, const wxString& title,
                  const wxPoint& pos, const wxSize& size,
                  const long style)
-       : ChildBase(parent, title)//, pos, size, style)
+       : ChildBase(parent, title)
 {
     cPlasmid = (PlasmidCanvas *) NULL;
     cSequence = (SequenceCanvas *) NULL;
@@ -93,7 +93,7 @@ MyChild::MyChild(wxWindow *parent, const wxString& title,
     orf_mode = 63 ;
     viewMode = false ;
     aa_offset = 1 ;
-	allow_cut = allow_copy = allow_paste = allow_find = true ;
+    allow_print = allow_find = allow_save = true ;
 }
 
 MyChild::~MyChild()
@@ -379,15 +379,11 @@ void MyChild::initToolbar ()
 #endif
         {
 	    wxToolBar *toolBar = CreateToolBar(wxTB_HORIZONTAL);//(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
-       myapp()->frame->InitToolBar(toolBar);
-       myapp()->frame->addTool ( toolBar , MDI_TEXT_IMPORT ) ;
-       myapp()->frame->addTool ( toolBar , MDI_FILE_OPEN ) ;
-        toolBar->AddTool( MDI_FILE_SAVE, 
-                    myapp()->frame->bitmaps[2],
-                    txt("m_store_in_db") , 
-                    txt("m_txt_store_in_db"));
-        toolBar->AddSeparator() ;
-        toolBar->AddTool( MDI_UNDO, myapp()->frame->bitmaps[3] , txt("m_undo_text") ) ;
+        myapp()->frame->InitToolBar(toolBar);
+        myapp()->frame->addTool ( toolBar , MDI_TEXT_IMPORT ) ;
+        myapp()->frame->addTool ( toolBar , MDI_FILE_OPEN ) ;
+        myapp()->frame->addTool ( toolBar , MDI_FILE_SAVE ) ;
+        myapp()->frame->addTool ( toolBar , MDI_UNDO ) ;
         myapp()->frame->addCCPFTools ( toolBar , true ) ;
         toolBar->AddTool( MDI_CIRCULAR_LINEAR,
             myapp()->frame->bitmaps[7],
@@ -1480,16 +1476,19 @@ void MyChild::updateUndoMenu ()
         {
         mi->SetText ( txt("u_no") ) ;
         mi->Enable ( false ) ;
-	canUndo = false ;
+	    canUndo = false ;
         }
     else
         {
         mi->Enable ( true ) ;
         mi->SetText ( lm ) ;
-	canUndo = true ;
+	    canUndo = true ;
         }
+    allow_undo = canUndo ;
+    myapp()->frame->updateCCP ( this ) ;
+
 #ifdef __WXMSW__
-    GetToolBar()->EnableTool ( MDI_UNDO , canUndo ) ;
+//    GetToolBar()->EnableTool ( MDI_UNDO , canUndo ) ;
 #else
     //    myapp()->frame->GetToolBar()->EnableTool ( MDI_UNDO , canUndo ) ;
 #endif

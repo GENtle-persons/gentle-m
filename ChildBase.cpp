@@ -12,6 +12,7 @@ ChildBase::ChildBase ()
     toolbar = NULL ;
     menubar = NULL ;
 	allow_cut = allow_copy = allow_paste = allow_find = false ;
+	allow_save = allow_print = allow_undo = false ;
     }
     
 ChildBase::ChildBase(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style)
@@ -23,6 +24,7 @@ ChildBase::ChildBase(wxWindow *parent, const wxString& title, const wxPoint& pos
     toolbar = NULL ;
     menubar = NULL ;
 	allow_cut = allow_copy = allow_paste = allow_find = false ;
+	allow_save = allow_print = allow_undo = false ;
     }
         
 ChildBase::ChildBase(wxWindow *parent, const wxString& title)
@@ -34,6 +36,7 @@ ChildBase::ChildBase(wxWindow *parent, const wxString& title)
     toolbar = NULL ;
     menubar = NULL ;
 	allow_cut = allow_copy = allow_paste = allow_find = false ;
+	allow_save = allow_print = allow_undo = false ;
     }
 
 
