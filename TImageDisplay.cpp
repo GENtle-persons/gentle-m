@@ -10,6 +10,9 @@ BEGIN_EVENT_TABLE(TImageDisplay, MyChildBase)
     EVT_CHECKBOX(IV_CB_INVERT, TImageDisplay::OnCBinvert)
     EVT_CLOSE(ChildBase::OnClose)
     EVT_SET_FOCUS(ChildBase::OnFocus)
+    EVT_MENU(MDI_COPY,TImageDisplay::OnCopy)
+    EVT_MENU(MDI_FILE_SAVE,TImageDisplay::OnSave)
+    EVT_MENU(SEQ_PRINT, TImageDisplay::OnPrint)
 
     // Dummies
     EVT_MENU(MDI_TOGGLE_FEATURES,ChildBase::OnDummy)
@@ -20,24 +23,22 @@ BEGIN_EVENT_TABLE(TImageDisplay, MyChildBase)
     EVT_MENU(MDI_CIRCULAR_LINEAR,ChildBase::OnDummy)
     EVT_MENU(MDI_UNDO,ChildBase::OnDummy)
     EVT_MENU(MDI_CUT,ChildBase::OnDummy)
-    EVT_MENU(MDI_COPY,ChildBase::OnDummy)
     EVT_MENU(MDI_PASTE,ChildBase::OnDummy)
     EVT_MENU(MDI_EDIT_MODE,ChildBase::OnDummy)
     EVT_MENU(MDI_EXPORT,ChildBase::OnDummy)
     EVT_MENU(MDI_MARK_ALL,ChildBase::OnDummy)
-    EVT_MENU(MDI_FILE_SAVE,ChildBase::OnDummy)
     EVT_MENU(MDI_FIND,ChildBase::OnDummy)
-    EVT_MENU(AA_NONE,TABIviewer::OnDummy)
-    EVT_MENU(AA_KNOWN, TABIviewer::OnDummy)
-    EVT_MENU(AA_ALL, TABIviewer::OnDummy)
-    EVT_MENU(AA_THREE, TABIviewer::OnDummy)
-    EVT_MENU(AA_ONE, TABIviewer::OnDummy)
-    EVT_MENU(AA_THREE_1, TABIviewer::OnDummy)
-    EVT_MENU(AA_THREE_2, TABIviewer::OnDummy)
-    EVT_MENU(AA_THREE_3, TABIviewer::OnDummy)
-    EVT_MENU(AA_THREE_M1, TABIviewer::OnDummy)
-    EVT_MENU(AA_THREE_M2, TABIviewer::OnDummy)
-    EVT_MENU(AA_THREE_M3, TABIviewer::OnDummy)
+    EVT_MENU(AA_NONE,ChildBase::OnDummy)
+    EVT_MENU(AA_KNOWN, ChildBase::OnDummy)
+    EVT_MENU(AA_ALL, ChildBase::OnDummy)
+    EVT_MENU(AA_THREE, ChildBase::OnDummy)
+    EVT_MENU(AA_ONE, ChildBase::OnDummy)
+    EVT_MENU(AA_THREE_1, ChildBase::OnDummy)
+    EVT_MENU(AA_THREE_2, ChildBase::OnDummy)
+    EVT_MENU(AA_THREE_3, ChildBase::OnDummy)
+    EVT_MENU(AA_THREE_M1, ChildBase::OnDummy)
+    EVT_MENU(AA_THREE_M2, ChildBase::OnDummy)
+    EVT_MENU(AA_THREE_M3, ChildBase::OnDummy)
 
 END_EVENT_TABLE()
 
@@ -47,8 +48,8 @@ BEGIN_EVENT_TABLE(TMyImagePanel, wxPanel)
 
     EVT_MOUSE_EVENTS(TMyImagePanel::OnEvent)
     EVT_MENU(IV_MENU_SAVE_AS_BITMAP, TMyImagePanel::OnSaveAsBitmap)
-    EVT_MENU(IV_MENU_COPY, TMyImagePanel::OnCopy)
-    EVT_MENU(IV_MENU_PRINT, TMyImagePanel::OnPrint)
+    EVT_MENU(MDI_COPY, TMyImagePanel::OnCopy)
+    EVT_MENU(SEQ_PRINT, TMyImagePanel::OnPrint)
 END_EVENT_TABLE()
 
 
@@ -156,6 +157,21 @@ void TImageDisplay::ShowDir ( wxString s )
    	wxEndBusyCursor() ;
    	}
    
+void TImageDisplay::OnCopy ( wxCommandEvent &event )
+    {
+	if ( right ) right->OnCopy ( event ) ;
+	}
+
+void TImageDisplay::OnPrint ( wxCommandEvent &event )
+    {
+	if ( right ) right->OnPrint ( event ) ;
+	}
+
+void TImageDisplay::OnSave ( wxCommandEvent &event )
+    {
+	if ( right ) right->OnSaveAsBitmap ( event ) ;
+	}
+
 void TImageDisplay::OnDir ( wxCommandEvent &event )
     {
     wxDirDialog dd ( this  , txt("t_choose_dir") , bu->GetLabel() ) ;
@@ -177,9 +193,17 @@ void TImageDisplay::OnFile ( wxCommandEvent &event )
     }   	
     else
     {
-	right->i.LoadFile ( fn , wxBITMAP_TYPE_ANY ) ;
-/*	    if ( !right->i.LoadFile ( fn , wxBITMAP_TYPE_ANY ) )
-	    wxMessageBox ( txt("t_invalid_image") , txt("msg_box") ) ;*/
+//	right->i.LoadFile ( fn , wxBITMAP_TYPE_ANY ) ;
+	if ( !right->i.LoadFile ( fn , wxBITMAP_TYPE_ANY ) )
+		{
+		right->ClearBackground() ;
+		ClearBackground() ;
+		Refresh ( true ) ;
+		right->Refresh ( true ) ;
+		allow_save = allow_copy = allow_print = false ;
+		myapp()->frame->updateCCP ( this ) ;
+		}
+	/*    wxMessageBox ( txt("t_invalid_image") , txt("msg_box") ) ;*/
     }    
     
     wxClientDC dc ( right ) ;
@@ -191,6 +215,8 @@ void TImageDisplay::OnFile ( wxCommandEvent &event )
     if ( right->bmp ) delete right->bmp ;
     right->bmp = new wxBitmap ( right->i ) ;
     right->Refresh () ;
+	allow_save = allow_copy = allow_print = true ;
+	myapp()->frame->updateCCP ( this );
     wxEndBusyCursor () ;
     }
     
@@ -283,7 +309,7 @@ void TMyImagePanel::OnDraw(wxDC& pdc)
             pdc.SetLogicalFunction ( wxINVERT ) ;
             pdc.SetBrush ( *wxWHITE_BRUSH ) ;
             pdc.SetPen ( *wxWHITE_PEN ) ;
-            pdc.DrawRectangle ( x , y , nw / xs , nh / ys ) ;
+            pdc.DrawRectangle ( (int) x , (int) y , (int) (nw / xs) , (int) (nh / ys) ) ;
             pdc.SetLogicalFunction ( lf ) ;
             }    
         
@@ -327,8 +353,8 @@ void TMyImagePanel::OnEvent(wxMouseEvent& event)
         {
         wxMenu *cm = new wxMenu ;
         cm->Append ( IV_MENU_SAVE_AS_BITMAP , txt("m_save_as_bitmap") ) ;
-        cm->Append ( IV_MENU_COPY , txt("m_copy_to_clipboard") ) ;
-        cm->Append ( IV_MENU_PRINT , txt("m_print") ) ;
+        cm->Append ( MDI_COPY , txt("m_copy_to_clipboard") ) ;
+        cm->Append ( SEQ_PRINT , txt("m_print") ) ;
         PopupMenu ( cm , pt ) ;
         delete cm ;    
         }
@@ -359,6 +385,7 @@ void TMyImagePanel::OnSaveAsBitmap(wxCommandEvent &event)
     
 void TMyImagePanel::OnCopy(wxCommandEvent &event)
     {
+	wxBell();
     if (wxTheClipboard->Open())
       {
       wxBitmap bmp ;
