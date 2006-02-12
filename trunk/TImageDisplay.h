@@ -31,6 +31,9 @@ class TImageDisplay : public ChildBase
     virtual void OnCBinvert ( wxCommandEvent &event ) ; ///< Invert image event handler
     virtual void OnDir ( wxCommandEvent &event ) ; ///< Choose directory event handler
     virtual void OnFile ( wxCommandEvent &event ) ; ///< File selection event handler
+    virtual void OnCopy(wxCommandEvent &event); ///< The copy event handler
+    virtual void OnPrint(wxCommandEvent &event); ///< The print event handler
+    virtual void OnSave(wxCommandEvent &event); ///< The save event handler
     
     void ShowDir ( wxString s ) ; ///< Displays the list of files in the chosen directory
 
