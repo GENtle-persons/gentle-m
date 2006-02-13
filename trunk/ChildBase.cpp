@@ -6,29 +6,22 @@
 
 ChildBase::ChildBase ()
     {
-    def = _T("") ;
-    vec = NULL ;
-    cSequence = NULL ;
-    toolbar = NULL ;
-    menubar = NULL ;
-	allow_cut = allow_copy = allow_paste = allow_find = false ;
-	allow_save = allow_print = allow_undo = false ;
+    init () ;
     }
     
 ChildBase::ChildBase(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style)
         : MyChildBase((MyFrameType*)parent, -1, pos, size, style|wxFULL_REPAINT_ON_RESIZE|wxCLIP_CHILDREN)
     {
-    def = _T("") ;
-    vec = NULL ;
-    cSequence = NULL ;
-    toolbar = NULL ;
-    menubar = NULL ;
-	allow_cut = allow_copy = allow_paste = allow_find = false ;
-	allow_save = allow_print = allow_undo = false ;
+    init () ;
     }
         
 ChildBase::ChildBase(wxWindow *parent, const wxString& title)
         : MyChildBase((MyFrameType*)parent, -1,wxDefaultPosition,wxDefaultSize,wxFULL_REPAINT_ON_RESIZE|wxCLIP_CHILDREN)
+    {
+    init () ;
+    }
+
+void ChildBase::init ()
     {
     def = _T("") ;
     vec = NULL ;
@@ -38,7 +31,6 @@ ChildBase::ChildBase(wxWindow *parent, const wxString& title)
 	allow_cut = allow_copy = allow_paste = allow_find = false ;
 	allow_save = allow_print = allow_undo = false ;
     }
-
 
 wxToolBar *ChildBase::CreateToolBar ( int i )
 {

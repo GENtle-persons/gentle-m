@@ -6,6 +6,9 @@ BEGIN_EVENT_TABLE(TPhyloTree, MyChildBase)
     EVT_SIZE(ChildBase::OnSize)
     EVT_CHECKBOX(PHYLIP_DIRECT_LINES,TPhyloTree::OnDirectLines)
     EVT_LISTBOX(PHYLIP_TREE_LIST,TPhyloTree::OnTreeList)
+    EVT_MENU(MDI_FILE_SAVE,TPhyloTree::OnFileSave)
+    EVT_MENU(SEQ_PRINT,TPhyloTree::OnPrint)
+    EVT_MENU(MDI_COPY,TPhyloTree::OnCopy)
 
     // Dummies
     EVT_MENU(MDI_TOGGLE_FEATURES,ChildBase::OnDummy)
@@ -16,12 +19,10 @@ BEGIN_EVENT_TABLE(TPhyloTree, MyChildBase)
     EVT_MENU(MDI_CIRCULAR_LINEAR,ChildBase::OnDummy)
     EVT_MENU(MDI_UNDO,ChildBase::OnDummy)
     EVT_MENU(MDI_CUT,ChildBase::OnDummy)
-    EVT_MENU(MDI_COPY,ChildBase::OnDummy)
     EVT_MENU(MDI_PASTE,ChildBase::OnDummy)
     EVT_MENU(MDI_EDIT_MODE,ChildBase::OnDummy)
     EVT_MENU(MDI_EXPORT,ChildBase::OnDummy)
     EVT_MENU(MDI_MARK_ALL,ChildBase::OnDummy)
-    EVT_MENU(MDI_FILE_SAVE,ChildBase::OnDummy)
     EVT_MENU(MDI_FIND,ChildBase::OnDummy)
     EVT_MENU(AA_NONE,ChildBase::OnDummy)
     EVT_MENU(AA_KNOWN, ChildBase::OnDummy)
@@ -54,6 +55,7 @@ TPhyloTree::TPhyloTree (wxWindow *parent, const wxString& title)
 	tree = NULL ;
 	directlines = false ;
 	ali = NULL ;
+	allow_copy = allow_save = allow_print = true ;
 	}
 	
 void TPhyloTree::initme ()
@@ -76,13 +78,8 @@ void TPhyloTree::initme ()
 	myapp()->frame->InitToolBar(toolBar);
 	myapp()->frame->addTool ( toolBar , MDI_TEXT_IMPORT ) ;
 	myapp()->frame->addTool ( toolBar , MDI_FILE_OPEN ) ;
-	toolBar->AddTool( MDI_FILE_SAVE, 
-	          myapp()->frame->bitmaps[2] ,
-	          txt("m_store_in_db") , 
-	          txt("m_txt_store_in_db"));
-	toolBar->AddTool( SEQ_PRINT, 
-	          myapp()->frame->bitmaps[16],
-	          txt("m_print_sequence") ) ;
+	myapp()->frame->addTool ( toolBar , MDI_FILE_SAVE ) ;
+	myapp()->frame->addTool ( toolBar , SEQ_PRINT ) ;
 	toolBar->AddSeparator() ;
 //	toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] ) ;
 //	toolBar->AddSeparator() ;
@@ -190,6 +187,21 @@ void TPhyloTree::setRealNames ( TAlignment *ali )
 			}
 		}	
 	}
+
+void TPhyloTree::OnFileSave(wxCommandEvent& event)
+	{
+    if ( box ) box->OnSaveAsBitmap ( event ) ;
+    }
+
+void TPhyloTree::OnPrint(wxCommandEvent& event)
+	{
+    if ( box ) box->OnPrint ( event ) ;
+    }
+
+void TPhyloTree::OnCopy(wxCommandEvent& event)
+	{
+    if ( box ) box->OnCopy ( event ) ;
+    }
 
 void TPhyloTree::OnDirectLines(wxCommandEvent& event)
 	{

@@ -384,6 +384,7 @@ void MyChild::initToolbar ()
         myapp()->frame->addTool ( toolBar , MDI_FILE_OPEN ) ;
         myapp()->frame->addTool ( toolBar , MDI_FILE_SAVE ) ;
         myapp()->frame->addTool ( toolBar , MDI_UNDO ) ;
+        myapp()->frame->addTool ( toolBar , SEQ_PRINT ) ;
         myapp()->frame->addCCPFTools ( toolBar , true ) ;
         toolBar->AddTool( MDI_CIRCULAR_LINEAR,
             myapp()->frame->bitmaps[7],

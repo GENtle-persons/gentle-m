@@ -83,8 +83,13 @@ void ExternalInterface::initme ()
 
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
 
-    myapp()->frame->setDummyToolbar ( this ) ;
-    v0->Add ( toolbar , 0 , wxEXPAND|wxBOTTOM , 2 ) ;
+    if ( !myapp()->frame->mainToolBar )
+       {
+       myapp()->frame->setDummyToolbar ( this ) ;
+       myapp()->frame->addDefaultTools ( toolbar ) ;
+       toolbar->Realize() ;
+       v0->Add ( toolbar , 0 , wxEXPAND|wxBOTTOM , 2 ) ;
+       }
     v0->Add ( nb , 1 , wxEXPAND , 5 ) ;
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;

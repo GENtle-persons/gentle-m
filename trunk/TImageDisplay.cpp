@@ -105,10 +105,18 @@ void TImageDisplay::initme ()
     h0->Add ( v0 , 0 , wxEXPAND , 5 ) ;
     h0->Add ( right , 1 , wxEXPAND , 5 ) ;
 
-    myapp()->frame->setDummyToolbar ( this ) ;
-    vx->Add ( toolbar , 0 , wxEXPAND|wxBOTTOM , 2 ) ;
-    vx->Add ( h0 , 1 , wxEXPAND , 5 ) ;
+    if ( !myapp()->frame->mainToolBar )
+       {
+       myapp()->frame->setDummyToolbar ( this ) ;
+       myapp()->frame->addTool ( toolbar , MDI_FILE_SAVE ) ;
+       myapp()->frame->addTool ( toolbar , SEQ_PRINT ) ;
+       myapp()->frame->addTool ( toolbar , MDI_COPY ) ;
+       myapp()->frame->addDefaultTools ( toolbar ) ;
+       toolbar->Realize() ;
+       vx->Add ( toolbar , 0 , wxEXPAND|wxBOTTOM , 2 ) ;
+       }
 
+    vx->Add ( h0 , 1 , wxEXPAND , 5 ) ;
     SetSizer ( vx ) ;
     vx->Fit ( this ) ;
     
@@ -385,7 +393,6 @@ void TMyImagePanel::OnSaveAsBitmap(wxCommandEvent &event)
     
 void TMyImagePanel::OnCopy(wxCommandEvent &event)
     {
-	wxBell();
     if (wxTheClipboard->Open())
       {
       wxBitmap bmp ;

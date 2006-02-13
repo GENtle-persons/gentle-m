@@ -801,7 +801,7 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
            	g->gd->AutoScale () ;
            	g->gd->UpdateDisplay () ;
            	wxEndBusyCursor();
-           	if ( filter == 6 ) return true ;
+           	/*if ( filter == 6 ) */return true ;
            	}   	
        	else
        		{
@@ -1095,27 +1095,31 @@ void MyFrame::addTool ( wxToolBar* toolBar , int id )
 		toolBar->AddTool( MDI_FILE_OPEN, 
                     bitmaps[1],
                 txt("m_opentxt") );
-	else if ( id == MDI_FILE_OPEN )
-		toolBar->AddTool( MDI_FILE_OPEN, 
-                    bitmaps[1],
-                txt("m_opentxt") );
 	else if ( id == MDI_FILE_SAVE )
         toolBar->AddTool( MDI_FILE_SAVE, 
                     txt("m_txt_store_in_db"),
-                    myapp()->frame->bitmaps[2],
-                    myapp()->frame->bitmaps[27] ) ;
+                    myapp()->frame->bitmaps[2] ,
+                    myapp()->frame->bitmaps[27] ,
+                    wxITEM_NORMAL , txt("m_txt_store_in_db") ) ;
 	else if ( id == SEQ_PRINT )
         toolBar->AddTool( SEQ_PRINT, 
                     txt("m_print_sequence"),
-                    myapp()->frame->bitmaps[16],
-                    myapp()->frame->bitmaps[29] ) ;
+                    myapp()->frame->bitmaps[16] ,
+                    myapp()->frame->bitmaps[29] ,
+                    wxITEM_NORMAL , txt("m_print_sequence") ) ;
 	else if ( id == MDI_UNDO )
 	    {
         toolBar->AddSeparator() ;
         toolBar->AddTool( MDI_UNDO, txt("m_undo_text"),
-                          myapp()->frame->bitmaps[3],
-                          myapp()->frame->bitmaps[28] ) ;
+                          myapp()->frame->bitmaps[3] ,
+                          myapp()->frame->bitmaps[28] ,
+                          wxITEM_NORMAL , txt("m_undo_text") ) ;
         }
+	else if ( id == MDI_COPY )
+        toolBar->AddTool( MDI_COPY, txt("m_copy_text") , 
+                          myapp()->frame->bitmaps[5] , 
+                          myapp()->frame->bitmaps[24] ,
+                          wxITEM_NORMAL , txt("m_copy_text") ) ;
 	}
 
 /** \brief Adds default tools to a given toolbar
@@ -1137,11 +1141,19 @@ void MyFrame::addCCPFTools(wxToolBar* toolBar, bool findbutton )
 	{
 	if ( mainToolBar && toolBar != mainToolBar ) return ;
     toolBar->AddSeparator() ;
-    toolBar->AddTool( MDI_CUT, txt("m_cut_text") , myapp()->frame->bitmaps[4] , myapp()->frame->bitmaps[23] ) ;
-    toolBar->AddTool( MDI_COPY, txt("m_copy_text") , myapp()->frame->bitmaps[5] , myapp()->frame->bitmaps[24] ) ;
-    toolBar->AddTool( MDI_PASTE, txt("m_paste_text") , myapp()->frame->bitmaps[6] , myapp()->frame->bitmaps[25] ) ;
+    toolBar->AddTool( MDI_CUT, txt("m_cut_text") , 
+                      myapp()->frame->bitmaps[4] , myapp()->frame->bitmaps[23] ,
+                      wxITEM_NORMAL , txt("m_cut_text") ) ;
+    toolBar->AddTool( MDI_COPY, txt("m_copy_text") , 
+                      myapp()->frame->bitmaps[5] , myapp()->frame->bitmaps[24] ,
+                      wxITEM_NORMAL , txt("m_copy_text") ) ;
+    toolBar->AddTool( MDI_PASTE, txt("m_paste_text") , 
+                      myapp()->frame->bitmaps[6] , myapp()->frame->bitmaps[25] ,
+                      wxITEM_NORMAL , txt("m_paste_text") ) ;
     if ( findbutton )
-       toolBar->AddTool( MDI_FIND, txt("m_find_text") , myapp()->frame->bitmaps[22] , myapp()->frame->bitmaps[26] ) ;
+       toolBar->AddTool( MDI_FIND, txt("m_find_text") , 
+                         myapp()->frame->bitmaps[22] , myapp()->frame->bitmaps[26] ,
+                         wxITEM_NORMAL , txt("m_find_text") ) ;
     if ( !mainToolBar ) toolBar->AddSeparator () ;
    }
 
@@ -1171,7 +1183,6 @@ void MyFrame::setDummyToolbar ( ChildBase *c )
 	addTool ( toolBar , MDI_TEXT_IMPORT ) ;
 	addTool ( toolBar , MDI_FILE_OPEN ) ;
     c->toolbar = toolBar ;
-    toolBar->Realize() ;
    }
 
 /** \brief Creates a new alignment window
