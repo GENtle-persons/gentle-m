@@ -59,6 +59,9 @@ class TPhyloTree : public ChildBase
     
     virtual void OnDirectLines(wxCommandEvent& event); ///< Toggle direct lines
     virtual void OnTreeList(wxCommandEvent& event); ///< Tree list event
+    virtual void OnFileSave(wxCommandEvent& event); ///< Save event
+    virtual void OnPrint(wxCommandEvent& event); ///< Print event
+    virtual void OnCopy(wxCommandEvent& event); ///< Copy event
     
     private :
 	 friend class TPhyloTreeBox ;

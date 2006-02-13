@@ -13,6 +13,7 @@ BEGIN_EVENT_TABLE(TVirtualGel, MyChildBase)
     EVT_CHOICE(VG_PERCENT,TVirtualGel::OnPercent)
     EVT_CHOICE(VG_MARKER,TVirtualGel::OnMarker)
     EVT_CHECKBOX(VG_LABEL,TVirtualGel::OnLabel)
+    EVT_MENU(SEQ_PRINT, TVirtualGel::OnPrint)
 
     // Dummies
     EVT_MENU(MDI_TOGGLE_FEATURES,ChildBase::OnDummy)
@@ -62,6 +63,7 @@ TVirtualGel::TVirtualGel(wxWindow *parent, const wxString& title)
     percent = 1 ;
     cb_label = NULL ;
     ch_percent = NULL ;
+    allow_print = true ;
     }
 
 void TVirtualGel::initme ()
@@ -81,23 +83,43 @@ void TVirtualGel::initme ()
 	
 	right = new TMyGelControl ( this , IV_IMAGE ) ;
 	right->vg = this ;
+
+    wxToolBar *toolBar = CreateToolBar(wxTB_HORIZONTAL);
 	
 	int a ;
 	wxBoxSizer *hs = new wxBoxSizer ( wxHORIZONTAL ) ;
-	ch_percent = new wxChoice ( this , VG_PERCENT , wxDefaultPosition , wxSize ( 50 , -1 ) ) ;
-	ch_marker = new wxChoice ( this , VG_MARKER , wxDefaultPosition , wxSize ( 250 , -1 ) ) ;
-	cb_label = new wxCheckBox ( this , VG_LABEL , txt("t_vg_show_label") ) ;
+	ch_percent = new wxChoice ( toolBar , VG_PERCENT , wxDefaultPosition , wxSize ( 50 , -1 ) ) ;
+	ch_marker = new wxChoice ( toolBar , VG_MARKER , wxDefaultPosition , wxSize ( 250 , -1 ) ) ;
+	cb_label = new wxCheckBox ( toolBar , VG_LABEL , txt("t_vg_show_label") ) ;
 	cb_label->SetValue ( true ) ;
-	
+
+
+    myapp()->frame->InitToolBar(toolBar);
+    myapp()->frame->addTool ( toolBar , MDI_TEXT_IMPORT ) ;
+    myapp()->frame->addTool ( toolBar , MDI_FILE_OPEN ) ;
+//  myapp()->frame->addTool ( toolBar , MDI_FILE_SAVE ) ;
+    myapp()->frame->addTool ( toolBar , SEQ_PRINT ) ;
+
+    toolBar->AddControl ( cb_label ) ;
+    toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_vg_concentration") ) ) ;
+    toolBar->AddControl ( ch_percent ) ;
+    toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_vg_marker") ) ) ;
+    toolBar->AddControl ( ch_marker ) ;
+    myapp()->frame->addDefaultTools ( toolBar ) ;
+    toolBar->Realize() ;    
+	toolbar = toolBar ;
+
+
+/*
 	hs->Add ( cb_label , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
 	hs->Add ( new wxStaticText ( this , -1 , txt("t_vg_concentration") ) , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
 	hs->Add ( ch_percent , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
 	hs->Add ( new wxStaticText ( this , -1 , txt("t_vg_marker") ) , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
 	hs->Add ( ch_marker , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
-	
+*/
 	
 	wxBoxSizer *vs = new wxBoxSizer ( wxVERTICAL ) ;
-	vs->Add ( hs , 0 , wxEXPAND , 5 ) ;
+    vs->Add ( toolBar , 0 , wxEXPAND , 5 ) ;
 	vs->Add ( right , 1 , wxEXPAND , 5 ) ;
 	
 	myapp()->frame->setChild ( this ) ;
@@ -120,6 +142,7 @@ void TVirtualGel::initme ()
 	this->SetSizer ( vs ) ;
 	vs->Fit ( this ) ;    
 	this->Show () ;
+    Activate () ;
 	}
 
 wxString TVirtualGel::getName ()
@@ -130,6 +153,11 @@ wxString TVirtualGel::getName ()
 void TVirtualGel::OnPercent ( wxCommandEvent &ev )
 	{
 	Refresh () ;
+	}    
+
+void TVirtualGel::OnPrint ( wxCommandEvent &ev )
+	{
+    if ( right ) right->OnPrint ( ev ) ;
 	}    
 
 void TVirtualGel::OnMarker ( wxCommandEvent &ev )

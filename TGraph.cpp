@@ -11,6 +11,8 @@ BEGIN_EVENT_TABLE(TGraph, MyChildBase)
     EVT_SET_FOCUS(ChildBase::OnFocus)
     EVT_COMMAND_SCROLL(GRAPH_ZOOM_X, TGraph::OnZoomX)
     EVT_COMMAND_SCROLL(GRAPH_ZOOM_Y, TGraph::OnZoomY)
+    EVT_MENU(MDI_COPY,TGraph::OnCopy)
+    EVT_MENU(MDI_FILE_SAVE,TGraph::OnSave)
 
     // Dummies
     EVT_MENU(MDI_TOGGLE_FEATURES,ChildBase::OnDummy)
@@ -21,12 +23,10 @@ BEGIN_EVENT_TABLE(TGraph, MyChildBase)
     EVT_MENU(MDI_CIRCULAR_LINEAR,ChildBase::OnDummy)
     EVT_MENU(MDI_UNDO,ChildBase::OnDummy)
     EVT_MENU(MDI_CUT,ChildBase::OnDummy)
-    EVT_MENU(MDI_COPY,ChildBase::OnDummy)
     EVT_MENU(MDI_PASTE,ChildBase::OnDummy)
     EVT_MENU(MDI_EDIT_MODE,ChildBase::OnDummy)
     EVT_MENU(MDI_EXPORT,ChildBase::OnDummy)
     EVT_MENU(MDI_MARK_ALL,ChildBase::OnDummy)
-    EVT_MENU(MDI_FILE_SAVE,ChildBase::OnDummy)
     EVT_MENU(MDI_FIND,ChildBase::OnDummy)
     EVT_MENU(AA_NONE,TABIviewer::OnDummy)
     EVT_MENU(AA_KNOWN, TABIviewer::OnDummy)
@@ -50,6 +50,7 @@ TGraph::TGraph(wxWindow *parent, const wxString& title)
     def = _T("GRAPH") ;
     vec = NULL ;
     nb = NULL ;
+    allow_save = allow_copy = true ;
 	}
  
 TGraph::~TGraph()
@@ -145,6 +146,16 @@ void TGraph::OnZoomY(wxScrollEvent& event)
 	if ( zoom_linked->GetValue() ) zoom_x->SetValue ( zoom_y->GetValue() ) ;
 	gd->SetZoom ( zoom_x->GetValue() , zoom_y->GetValue() ) ;
 	}    
+
+void TGraph::OnCopy(wxCommandEvent& event)
+	{
+    if ( gd ) gd->OnCopyAsImage ( event ) ;
+    }
+
+void TGraph::OnSave(wxCommandEvent& event)
+	{
+    if ( gd ) gd->OnSaveAsImage ( event ) ;
+    }
 
 //******************************************************** TGraphData
 

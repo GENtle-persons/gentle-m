@@ -676,7 +676,7 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
     TGraphData *new_data = NULL ;
     
     // Over a scale?
-    for ( a = 0 ; a < scales.size() ; a++ )
+    for ( a = 0 ; !event.Dragging() && a < scales.size() ; a++ )
     	{
     	scales[a]->selected = false ;
     	if ( scales[a]->outline.Inside ( pt ) ) new_scale = scales[a] ;

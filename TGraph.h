@@ -161,6 +161,8 @@ class TGraph : public ChildBase
     virtual void OnZoomX(wxScrollEvent& event); ///< Zoom event handler
     virtual void OnZoomY(wxScrollEvent& event); ///< Zoom event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler
+    virtual void OnCopy(wxCommandEvent& event) ; ///< Copy event handler
+    virtual void OnSave(wxCommandEvent& event) ; ///< Save event handler
  	virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
 
     TGraphDisplay *gd ; ///< Pointer to the display class (a tab)

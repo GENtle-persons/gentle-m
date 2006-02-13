@@ -8,7 +8,7 @@
 
 #define GENTLE_VERSION_MAJOR 1
 #define GENTLE_VERSION_MINOR 8
-#define GENTLE_VERSION_SUB 1
+#define GENTLE_VERSION_SUB 2
 
 typedef unsigned int uint ;
 
@@ -32,7 +32,7 @@ typedef unsigned int uint ;
 
 //#define MYDEBUG
 //#define MYLOG
-//#define MYTEST
+#define MYTEST
 
 #ifdef MYTEST
 	#ifndef MYLOG

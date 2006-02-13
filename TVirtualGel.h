@@ -44,6 +44,7 @@ class TVirtualGel : public ChildBase
     virtual void OnPercent ( wxCommandEvent &ev ) ; ///< Gel percent setting change event handler
     virtual void OnLabel ( wxCommandEvent &ev ) ; ///< Show labels event handler
     virtual void OnMarker ( wxCommandEvent &ev ) ; ///< Show labels event handler
+    virtual void OnPrint ( wxCommandEvent &ev ) ; ///< Print event handler
 
     TMyGelControl *right ; ///< Pointer to the actual gel
     wxChoice *ch_percent , *ch_marker ; ///< Gel concentration choice box

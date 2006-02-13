@@ -47,6 +47,7 @@ class ChildBase : public MyChildBase
     virtual void OnPaste (wxCommandEvent& WXUNUSED(event)) {} ; ///< Paste event handler
     virtual void OnExport (wxCommandEvent& WXUNUSED(event)) ; ///< Export command event handler
     virtual void EnforceRefesh () {} ; ///< Refreshes the module display
+    virtual void init () ;
 
     
     // Compatability functions
