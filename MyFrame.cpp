@@ -1925,8 +1925,8 @@ wxString MyFrame::check4update ()
         }
     else
     	{
-//	    delete in ;
-	    wxMessageBox ( _T("Error") ) ;
+// Cannot connect to check for update
+//	    wxMessageBox ( _T("Error") ) ;
     	}    
     return _T("") ;
     }
