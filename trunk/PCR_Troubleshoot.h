@@ -1,3 +1,6 @@
+/** \file
+	\brief Contains the FindSequenceDialog class
+*/
 #ifndef _PCRTROUBLESHOOT_H_
 #define _PCRTROUBLESHOOT_H_
 
@@ -6,6 +9,8 @@
 class TPrimerDesign ;
 class TPrimer ;
 
+/**	\brief The class implementing a "Santa Lucia" free energy set
+*/
 class TSantaLucia
 	{
 	public :
@@ -22,6 +27,8 @@ class TSantaLucia
 	double deltaS ;
 	} ;
 
+/**	\brief The class implementing the PCR troubleshooting dialog
+*/
 class PCR_troubleshoot_dialog : public wxDialog
 	{
 	public :
@@ -33,21 +40,21 @@ class PCR_troubleshoot_dialog : public wxDialog
 	virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
 	
 	private :
-	virtual void scan () ;
-	virtual void scan_hairpin ( TPrimer &p , int nr ) ;
-	virtual void scan_dimer ( TPrimer &p1 , TPrimer &p2 , int nr1 , int nr2 ) ;
-	virtual void scan_length ( TPrimer &p , int nr ) ;
-	virtual void scan_GCcontent ( TPrimer &p , int nr ) ;
-	virtual void scan_GCclamp ( TPrimer &p , int nr ) ;
-	virtual void scan_end_stability ( TPrimer &p , int nr ) ;
+	virtual void scan () ; ///< Performs various scans
+	virtual void scan_hairpin ( TPrimer &p , int nr ) ; ///< Scans for hairpins
+	virtual void scan_dimer ( TPrimer &p1 , TPrimer &p2 , int nr1 , int nr2 ) ; ///< Scans for (self-)dimers
+	virtual void scan_length ( TPrimer &p , int nr ) ; ///< Checks primer length
+	virtual void scan_GCcontent ( TPrimer &p , int nr ) ; ///< Checks primer GC contents
+	virtual void scan_GCclamp ( TPrimer &p , int nr ) ; ///< Checks for GC clamp
+	virtual void scan_end_stability ( TPrimer &p , int nr ) ; ///< Checks primer end stability
 	virtual void scan_Runs ( TPrimer &p , int nr , int length ) ;
-	virtual void scan_specificity ( TPrimer &p , int nr ) ;
-	virtual void scan_melting_temperature ( TPrimer &p , int nr ) ;
+	virtual void scan_specificity ( TPrimer &p , int nr ) ; ///< Checks primer specificity
+	virtual void scan_melting_temperature ( TPrimer &p , int nr ) ; ///< Checks melting temperature
 	
-	virtual void add_warning ( TPrimer &p , int nr , wxString head , wxString tail ) ;
-	virtual void add_error ( TPrimer &p , int nr , wxString head , wxString tail ) ;
+	virtual void add_warning ( TPrimer &p , int nr , wxString head , wxString tail ) ; ///< Adds a warning to the list
+	virtual void add_error ( TPrimer &p , int nr , wxString head , wxString tail ) ; ///< Adds an error to the list
 	virtual void show_item ( int n ) ;
-	virtual wxString invert ( wxString s ) ;
+	virtual wxString invert ( wxString s ) ; ///< Inverts a (DNA) sequence
 	virtual wxString trim_both ( wxString s1 , wxString s2 , wxString s3 ) ;
 	virtual wxArrayString get_matrix ( wxString s1 , wxString s2 ) ;
 	virtual wxArrayString get_matches ( wxArrayString &m , int min , int allowed_gaps = 0 ) ;
