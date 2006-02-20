@@ -198,7 +198,7 @@ wxString ABItype::getSequence ( int num )
     {
     wxString r ;
     int a = getRecord ( _T("PBAS") , num ) , b ;
-    myass ( a > -1 , "ABItype::getSequence" ) ;
+    myass ( a > -1 , _T("ABItype::getSequence") ) ;
     for ( b = 0 ; b < vf[a].nbytes ; b++ ) r += vf[a].data[b] ;
     return r ;
     }

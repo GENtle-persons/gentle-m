@@ -22,6 +22,20 @@
 			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
 		};
 	};
+	9146A01A09A46CC40061E9A7 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 9180A67C0866FD46000C7D5E /* MyFrame.cpp */;
+	};
+	9146A02D09A4B5CE0061E9A7 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9180A67C0866FD46000C7D5E /* MyFrame.cpp */;
+		name = "MyFrame.cpp: 1928";
+		rLen = 0;
+		rLoc = 63764;
+		rType = 0;
+		vrLen = 1130;
+		vrLoc = 63204;
+	};
 	9157CB6208A78B690053C2D6 /* TProteolysis.cpp */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {925, 7210}}";
@@ -120,14 +134,12 @@
 					PBXFileDataSource_SCM_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 161303450;
-			PBXWorkspaceStateSaveDate = 161303450;
+			PBXPerProjectTemplateStateSaveDate = 161770517;
+			PBXWorkspaceStateSaveDate = 161770517;
 		};
 		perUserProjectItems = {
-			91CBF6F4099DE7C800DE4D34 /* PBXBookmark */ = 91CBF6F4099DE7C800DE4D34 /* PBXBookmark */;
-			91CBF727099F4DD800DE4D34 /* PBXTextBookmark */ = 91CBF727099F4DD800DE4D34 /* PBXTextBookmark */;
-			91CBF750099F549C00DE4D34 /* PBXTextBookmark */ = 91CBF750099F549C00DE4D34 /* PBXTextBookmark */;
-			91CBF751099F549C00DE4D34 /* PBXTextBookmark */ = 91CBF751099F549C00DE4D34 /* PBXTextBookmark */;
+			9146A01A09A46CC40061E9A7 /* PBXBookmark */ = 9146A01A09A46CC40061E9A7 /* PBXBookmark */;
+			9146A02D09A4B5CE0061E9A7 /* PBXTextBookmark */ = 9146A02D09A4B5CE0061E9A7 /* PBXTextBookmark */;
 		};
 		sourceControlManager = 9180A64F0866FCF9000C7D5E /* Source Control */;
 		userBuildSettings = {
@@ -198,9 +210,9 @@
 	};
 	9180A65E0866FD45000C7D5E /* ABItype.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {925, 3640}}";
-			sepNavSelRange = "{4788, 0}";
-			sepNavVisRect = "{{0, 3097}, {925, 543}}";
+			sepNavIntBoundsRect = "{{0, 0}, {623, 3640}}";
+			sepNavSelRange = "{5198, 0}";
+			sepNavVisRect = "{{0, 2693}, {623, 229}}";
 			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
 		};
 	};
@@ -379,9 +391,9 @@
 	};
 	9180A67C0866FD46000C7D5E /* MyFrame.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1616, 33642}}";
-			sepNavSelRange = "{34722, 0}";
-			sepNavVisRect = "{{0, 14143}, {925, 543}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1616, 33796}}";
+			sepNavSelRange = "{63764, 0}";
+			sepNavVisRect = "{{0, 26761}, {925, 543}}";
 			sepNavWindowFrame = "{{38, 48}, {964, 672}}";
 		};
 	};
@@ -575,9 +587,9 @@
 	};
 	9180A69D0866FD46000C7D5E /* TImageDisplay.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {925, 5880}}";
+			sepNavIntBoundsRect = "{{0, 0}, {925, 5978}}";
 			sepNavSelRange = "{6371, 0}";
-			sepNavVisRect = "{{0, 2520}, {925, 543}}";
+			sepNavVisRect = "{{0, 2466}, {925, 543}}";
 			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
 		};
 	};
@@ -739,56 +751,6 @@
 			sepNavVisRect = "{{0, 12421}, {925, 543}}";
 			sepNavWindowFrame = "{{38, 48}, {964, 672}}";
 		};
-	};
-	91CBF6F4099DE7C800DE4D34 /* PBXBookmark */ = {
-		isa = PBXBookmark;
-		fRef = 9180A69D0866FD46000C7D5E /* TImageDisplay.cpp */;
-	};
-	91CBF727099F4DD800DE4D34 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 91CBF728099F4DD800DE4D34 /* TImageDisplay.h */;
-		rLen = 0;
-		rLoc = "-2147483419";
-		rType = 0;
-	};
-	91CBF728099F4DD800DE4D34 /* TImageDisplay.h */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = TImageDisplay.h;
-		path = /Users/magnusmanske/GENtle/TImageDisplay.h;
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {925, 1176}}";
-			sepNavSelRange = "{3194, 0}";
-			sepNavVisRect = "{{0, 541}, {925, 543}}";
-			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
-		};
-	};
-	91CBF750099F549C00DE4D34 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 9180A69D0866FD46000C7D5E /* TImageDisplay.cpp */;
-		name = "TImageDisplay.cpp: 205";
-		rLen = 0;
-		rLoc = 6371;
-		rType = 0;
-		vrLen = 1045;
-		vrLoc = 5714;
-	};
-	91CBF751099F549C00DE4D34 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 91CBF752099F549C00DE4D34 /* TImageDisplay.h */;
-		name = "(null): 84";
-		rLen = 0;
-		rLoc = 3194;
-		rType = 0;
-		vrLen = 1776;
-		vrLoc = 1371;
-	};
-	91CBF752099F549C00DE4D34 /* TImageDisplay.h */ = {
-		isa = PBXFileReference;
-		name = TImageDisplay.h;
-		path = /Users/magnusmanske/GENtle/TImageDisplay.h;
-		sourceTree = "<absolute>";
 	};
 	91CC568B088B961300567E40 /* PCR_Troubleshoot.cpp */ = {
 		uiCtxt = {
