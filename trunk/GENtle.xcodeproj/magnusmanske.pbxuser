@@ -22,19 +22,55 @@
 			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
 		};
 	};
-	9146A01A09A46CC40061E9A7 /* PBXBookmark */ = {
+	915162D609AB053900DBAEBD /* PBXBookmark */ = {
 		isa = PBXBookmark;
-		fRef = 9180A67C0866FD46000C7D5E /* MyFrame.cpp */;
+		fRef = 9180A6B20866FD46000C7D5E /* TVector.cpp */;
 	};
-	9146A02D09A4B5CE0061E9A7 /* PBXTextBookmark */ = {
+	9151631D09AB1DB300DBAEBD /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
-		fRef = 9180A67C0866FD46000C7D5E /* MyFrame.cpp */;
-		name = "MyFrame.cpp: 1928";
+		fRef = 9180A6B20866FD46000C7D5E /* TVector.cpp */;
+		name = "TVector.cpp: setRF";
 		rLen = 0;
-		rLoc = 63764;
+		rLoc = 57401;
 		rType = 0;
-		vrLen = 1130;
-		vrLoc = 63204;
+		vrLen = 970;
+		vrLoc = 56595;
+	};
+	9151632009AB1DB300DBAEBD /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9151632109AB1DB300DBAEBD /* TVector.h */;
+		rLen = 0;
+		rLoc = 2147483647;
+		rType = 0;
+	};
+	9151632109AB1DB300DBAEBD /* TVector.h */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = TVector.h;
+		path = /Users/magnusmanske/GENtle/TVector.h;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {925, 4746}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRect = "{{0, 1190}, {925, 543}}";
+			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
+		};
+	};
+	9151632209AB1DB300DBAEBD /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9151632309AB1DB300DBAEBD /* TVector.h */;
+		name = "(null): 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 2449;
+		vrLoc = 2591;
+	};
+	9151632309AB1DB300DBAEBD /* TVector.h */ = {
+		isa = PBXFileReference;
+		name = TVector.h;
+		path = /Users/magnusmanske/GENtle/TVector.h;
+		sourceTree = "<absolute>";
 	};
 	9157CB6208A78B690053C2D6 /* TProteolysis.cpp */ = {
 		uiCtxt = {
@@ -134,12 +170,14 @@
 					PBXFileDataSource_SCM_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 161770517;
-			PBXWorkspaceStateSaveDate = 161770517;
+			PBXPerProjectTemplateStateSaveDate = 162138699;
+			PBXWorkspaceStateSaveDate = 162138699;
 		};
 		perUserProjectItems = {
-			9146A01A09A46CC40061E9A7 /* PBXBookmark */ = 9146A01A09A46CC40061E9A7 /* PBXBookmark */;
-			9146A02D09A4B5CE0061E9A7 /* PBXTextBookmark */ = 9146A02D09A4B5CE0061E9A7 /* PBXTextBookmark */;
+			915162D609AB053900DBAEBD /* PBXBookmark */ = 915162D609AB053900DBAEBD /* PBXBookmark */;
+			9151631D09AB1DB300DBAEBD /* PBXTextBookmark */ = 9151631D09AB1DB300DBAEBD /* PBXTextBookmark */;
+			9151632009AB1DB300DBAEBD /* PBXTextBookmark */ = 9151632009AB1DB300DBAEBD /* PBXTextBookmark */;
+			9151632209AB1DB300DBAEBD /* PBXTextBookmark */ = 9151632209AB1DB300DBAEBD /* PBXTextBookmark */;
 		};
 		sourceControlManager = 9180A64F0866FCF9000C7D5E /* Source Control */;
 		userBuildSettings = {
@@ -393,7 +431,7 @@
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1616, 33796}}";
 			sepNavSelRange = "{63764, 0}";
-			sepNavVisRect = "{{0, 26761}, {925, 543}}";
+			sepNavVisRect = "{{0, 26754}, {925, 543}}";
 			sepNavWindowFrame = "{{38, 48}, {964, 672}}";
 		};
 	};
@@ -680,18 +718,18 @@
 	};
 	9180A6B20866FD46000C7D5E /* TVector.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {758, 29680}}";
-			sepNavSelRange = "{19438, 0}";
-			sepNavVisRect = "{{0, 7180}, {459, 186}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1094, 30436}}";
+			sepNavSelRange = "{57401, 0}";
+			sepNavVisRect = "{{0, 25552}, {925, 543}}";
 			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
 		};
 	};
 	9180A6B30866FD46000C7D5E /* TVectorEditor.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {740, 5796}}";
-			sepNavSelRange = "{10206, 0}";
-			sepNavVisRect = "{{0, 4030}, {459, 186}}";
-			sepNavWindowFrame = "{{38, 48}, {964, 672}}";
+			sepNavIntBoundsRect = "{{0, 0}, {925, 5810}}";
+			sepNavSelRange = "{12624, 0}";
+			sepNavVisRect = "{{0, 5267}, {925, 543}}";
+			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
 		};
 	};
 	9180A6B40866FD46000C7D5E /* TVectorEditorEnzymes.cpp */ = {
@@ -704,9 +742,10 @@
 	};
 	9180A6B50866FD46000C7D5E /* TVectorEditorItems.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {680, 5880}}";
-			sepNavSelRange = "{10679, 0}";
-			sepNavVisRect = "{{0, 4996}, {459, 186}}";
+			sepNavIntBoundsRect = "{{0, 0}, {925, 5922}}";
+			sepNavSelRange = "{9937, 0}";
+			sepNavVisRect = "{{0, 4345}, {925, 543}}";
+			sepNavWindowFrame = "{{38, 48}, {964, 672}}";
 		};
 	};
 	9180A6B70866FD46000C7D5E /* TVirtualGel.cpp */ = {

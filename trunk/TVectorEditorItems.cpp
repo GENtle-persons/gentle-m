@@ -6,7 +6,7 @@
 void TVectorEditor::commitItems ()
     {
     storeItemData () ;
-    int a , b ;
+    int a ;
     vector <bool> found ;
     while ( found.size() < v->items.size() ) found.push_back ( false ) ;
     for ( a = 0 ; a < newitems.GetCount() ; a++ )
@@ -262,7 +262,7 @@ void TVectorEditor::makeItemsList ()
     
 void TVectorEditor::DeselItems ( wxListEvent &ev )
     {
-    int i , j = ev.GetIndex() ;
+    int j = ev.GetIndex() ;
     storeItemData ( items->GetItemData ( j ) ) ;
     lastSelection = -1 ;
     itemClr () ;
@@ -327,7 +327,7 @@ void TVectorEditor::storeItemData ( int i )
     bool b = icb->GetValue () ;
     if ( b ) c.direction = 1 ;
     else c.direction = -1 ;
-    
+	
     if ( o.name != c.name ||
          o.desc != c.desc ||
          o.type != c.type ||
@@ -364,7 +364,7 @@ void TVectorEditor::itemAdd ( wxCommandEvent &ev )
     
 void TVectorEditor::itemDel ( wxCommandEvent &ev )
     {
-    int i = getCurrentItem() , num ;
+    int i = getCurrentItem() ;
     if ( i == -1 ) return ;
     storeItemData () ;
     delete newitems[i] ;

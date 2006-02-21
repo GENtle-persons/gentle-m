@@ -1845,7 +1845,9 @@ void TVectorItem::initParams ()
 int TVectorItem::getRF ()
     {
     if ( type != VIT_CDS ) return 0 ;
-    return atoi ( (char*) getParam ( _T("/codon_start") ).c_str() ) ;
+	long l ;
+	getParam ( _T("/codon_start") ).ToLong ( &l ) ;
+	return (int) l ;
     }
     
 void TVectorItem::setRF ( int x )
