@@ -372,11 +372,12 @@ void FindSequenceDialog::restrictionSearch ()
     for ( a = 0 ; a < v->rc.size() ; a++ )
         {
         if ( lb->GetCount() > FIND_MAX ) return ;
-        if ( v->rc[a].e->name.Upper().Find(s) != -1 )
+        wxString en = v->rc[a].getDisplayName() ;
+        if ( en.Upper().Find(s) != -1 )
            {
            lb->Append ( wxString::Format ( _T("%s: %s (%d)") ,
                                  txt("m_restriction").c_str() , 
-                                 v->rc[a].e->name.c_str() ,
+                                 en.c_str() ,
                                  v->rc[a].pos+1 ) ) ;
            vi.Add ( a ) ;
            }    
