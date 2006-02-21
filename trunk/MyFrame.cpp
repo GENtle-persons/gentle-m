@@ -2097,6 +2097,7 @@ void MyFrame::BollocksMenu(wxCommandEvent& event)
           {
           mainTree->EnsureVisible ( children[a]->inMainTree ) ;
           mainTree->SelectItem ( children[a]->inMainTree ) ;
+          children[a]->EnforceRefesh () ;
           }
        return ;
        }
