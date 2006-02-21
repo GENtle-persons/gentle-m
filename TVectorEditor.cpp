@@ -292,7 +292,7 @@ void TVectorEditor::commitEnzymes ()
 
 void TVectorEditor::commitProteases ()
     {
-    int a , b ;
+    int a ;
     bool changed = false ;
     
     wxArrayString v1 , v2 ;
