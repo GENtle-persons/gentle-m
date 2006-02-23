@@ -35,6 +35,7 @@ BEGIN_EVENT_TABLE(TAlignment, MyChildBase)
     EVT_MENU(ALIGN_CONS,TAlignment::OnMenuCons)
     EVT_MENU(ALIGN_IDENT,TAlignment::OnMenuIdent)
     EVT_MENU(SEQ_PRINT, TAlignment::OnSeqPrint)
+    EVT_MENU(MDI_COPY,TAlignment::OnCopy)
 
     // Dummies
     EVT_MENU(MDI_TOGGLE_FEATURES,ChildBase::OnDummy)
@@ -45,7 +46,6 @@ BEGIN_EVENT_TABLE(TAlignment, MyChildBase)
     EVT_MENU(MDI_CIRCULAR_LINEAR,ChildBase::OnDummy)
     EVT_MENU(MDI_UNDO,ChildBase::OnDummy)
     EVT_MENU(MDI_CUT,ChildBase::OnDummy)
-    EVT_MENU(MDI_COPY,ChildBase::OnDummy)
     EVT_MENU(MDI_PASTE,ChildBase::OnDummy)
     EVT_MENU(MDI_EDIT_MODE,ChildBase::OnDummy)
     EVT_MENU(MDI_EXPORT,ChildBase::OnExport)
@@ -695,6 +695,11 @@ void TAlignment::updateSequence ()
 wxString TAlignment::getName ()
     {
     return name.IsEmpty() ? _T("Alignment") : name ;
+    }
+
+void TAlignment::OnCopy ( wxCommandEvent &ev ) // This is never actually called!
+    {
+//    if ( sc->markedFrom() == -1 ) return ;
     }
 
 void TAlignment::OnMarkAll ( wxCommandEvent &ev )

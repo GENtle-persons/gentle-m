@@ -1,7 +1,7 @@
 [Project]
 FileName=GENtle.dev
 Name=GENtle
-UnitCount=165
+UnitCount=167
 Type=0
 Ver=1
 ObjFiles=
@@ -1669,7 +1669,7 @@ BuildCmd=
 
 [Unit163]
 FileName=RELEASE-NOTES.txt
-Folder=GENtle
+Folder=
 Compile=0
 Link=0
 Priority=1000
@@ -1690,6 +1690,26 @@ BuildCmd=
 FileName=AlignmentAppearanceDialog.cpp
 CompileCpp=1
 Folder=Dialogs
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit167]
+FileName=OnlineTools.h
+CompileCpp=1
+Folder=Components
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit166]
+FileName=OnlineTools.cpp
+CompileCpp=1
+Folder=Components
 Compile=1
 Link=1
 Priority=1000

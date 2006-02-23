@@ -25,6 +25,7 @@ class TEnzymeRules ;
 class TVirtualGel ;
 class TGraph ;
 class TPhyloTree ;
+class TOnlineTools ;
 
 typedef wxFrame MyFrameType ;
 
@@ -118,6 +119,7 @@ public:
     virtual void OnGraph(wxCommandEvent& event);
     
     virtual void RerouteMenu(wxCommandEvent& event);
+    virtual void OnlineTools(wxCommandEvent& event);
     virtual void BollocksMenu(wxCommandEvent& event);
     virtual void TestMenu(wxCommandEvent& event);
     virtual void OnMDIClose(wxCommandEvent& event);
@@ -185,6 +187,7 @@ public:
     int nonstandard_translation_table ;
     wxArrayString dna_marker ;
 	wxToolBar *mainToolBar ; ///< The main toolbar
+	TOnlineTools *online_tools ;
 
     private :
     wxBitmap to_grey ( wxBitmap &bmp1 ) ;
