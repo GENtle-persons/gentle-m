@@ -35,6 +35,7 @@ BEGIN_EVENT_TABLE(MyFrame, MyFrameType)
     EVT_MENU(MDI_PREV_WINDOW, MyFrame::BollocksMenu)
 
     EVT_MENU_RANGE(A___,Z___,MyFrame::RerouteMenu)
+    EVT_MENU_RANGE(ONLINE_TOOLS_BEGIN,ONLINE_TOOLS_END,MyFrame::OnlineTools)
 
 
     EVT_SASH_DRAGGED_RANGE(FRAME_SASH_1, FRAME_SASH_TOP, MyFrame::OnSashDrag)
@@ -119,6 +120,7 @@ MyFrame::MyFrame(wxWindow *parent,
     html_ep = NULL ;
     lastChild = NULL ;
     tb_mychild = NULL ;
+    online_tools = new TOnlineTools ;
 
     // Load DNA markers
     wxTextFile tf ( _T("marker.txt") ) ;
@@ -2104,7 +2106,14 @@ void MyFrame::BollocksMenu(wxCommandEvent& event)
     if ( lastChild->def != _T("dna") ) return ;
     lastChild->ProcessEvent ( event ) ;
     }
-    
+
+/** \brief Reroutes context menu events to online tools
+*/
+void MyFrame::OnlineTools(wxCommandEvent& event)
+    {
+    online_tools->take_event ( event ) ;
+    }
+
 /** \brief Reroutes menu events from the frame to the active child
 */
 void MyFrame::RerouteMenu(wxCommandEvent& event) 

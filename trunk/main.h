@@ -246,6 +246,7 @@ WX_DECLARE_OBJARRAY(float, wxArrayFloat);
 #include "CGview.h"
 #include "AutoAnnotate.h"
 #include "ChildBase.h"
+#include "OnlineTools.h"
 #include "ABItype.h"
 #include "MiscDialogs.h"
 #include "TStorage.h"

@@ -170,6 +170,11 @@ void SequenceCanvas::unmark ()
        child->allow_copy = false ;
        myapp()->frame->updateCCP ( child ) ;
        }
+    else if ( getAln() ) 
+       {
+       getAln()->allow_copy = false ;
+       myapp()->frame->updateCCP(getAln());
+       }
 	if ( lastmarked < 0 || lastmarked >= seq.GetCount() ) return ;
 	if ( markedFrom() == -1 ) return ;
 	mark ( seq[lastmarked]->whatsthis() , -1 , -1 ) ;
@@ -899,6 +904,17 @@ void SequenceCanvas::OnCopy ( wxCommandEvent &ev )
     {
     if ( p ) { p->OnCopy ( ev ) ; return ; }
     wxString s = getSelection () ;
+    if ( getAln() && mark_firstrow >= 0 && _from > 0 )
+       {
+        int a ;
+        for ( a = mark_firstrow ; a <= mark_lastrow ; a++ )
+            {
+            if ( seq[a]->whatsthis() != _T("ALIGN") ) continue ;
+            int id = ((SeqAlign*)seq[a])->id ;
+            if ( id < 0 ) continue ;
+            s += seq[a]->s.Mid ( _from-1 , _to-_from+1 ) + _T("\n") ;
+            }
+       }
     if ( s.IsEmpty() ) return ;
     if (wxTheClipboard->Open())
         {
@@ -1009,6 +1025,8 @@ void SequenceCanvas::mark ( SeqBasic *where , int from , int to , int value )
         preventUpdate = false ;
         if ( last > -1 )
            mark ( seq[last]->whatsthis() , from , to , value , last ) ;
+        getAln()->allow_copy = true ;
+        myapp()->frame->updateCCP(getAln());
         return ;
         }
     // Fallback
@@ -1622,6 +1640,8 @@ void SequenceCanvas::showContextMenu ( SeqBasic *where , int pos , wxPoint pt )
            cm->Append ( MDI_AS_NEW_FEATURE , txt("m_as_new_feature") ) ;
            }
        cm->Append ( AMINOACIDS_BLAST_AA , txt("m_blast_aa") ) ;
+       myapp()->frame->online_tools->init ( this ) ;
+       myapp()->frame->online_tools->add_context_menu ( cm ) ;
        }
     else if ( getPD() ) // Primer design
        {
@@ -1688,7 +1708,10 @@ void SequenceCanvas::showContextMenu ( SeqBasic *where , int pos , wxPoint pt )
 
               // Marked
               if ( _from >= 0 )
+                 {
                  cm->Append ( ALIGN_APPEARANCE , txt("m_align_appearance") ) ;
+                 cm->Append ( MDI_COPY , txt("m_copy") ) ;
+                 }
 
 	          wxMenu *cb = new wxMenu ;
 	          TAlignment *ali = (TAlignment*) child ;
