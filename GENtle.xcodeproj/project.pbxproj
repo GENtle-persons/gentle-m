@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		910675BC09AF28CC00AB09B0 /* OnlineTools.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 910675BB09AF28CC00AB09B0 /* OnlineTools.cpp */; };
 		9109C18D099B387000122020 /* accessories-calculator.png in Resources */ = {isa = PBXBuildFile; fileRef = 9109C177099B387000122020 /* accessories-calculator.png */; };
 		9109C18E099B387000122020 /* accessories-text-editor.png in Resources */ = {isa = PBXBuildFile; fileRef = 9109C178099B387000122020 /* accessories-text-editor.png */; };
 		9109C18F099B387000122020 /* alignments.png in Resources */ = {isa = PBXBuildFile; fileRef = 9109C179099B387000122020 /* alignments.png */; };
@@ -302,6 +303,7 @@
 
 /* Begin PBXFileReference section */
 		91023BCC0893BBA600BD8757 /* libmysqlclient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmysqlclient.a; path = /usr/local/lib/mysql/libmysqlclient.a; sourceTree = "<absolute>"; };
+		910675BB09AF28CC00AB09B0 /* OnlineTools.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OnlineTools.cpp; sourceTree = "<group>"; };
 		9109C177099B387000122020 /* accessories-calculator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "accessories-calculator.png"; path = "bitmaps/Tango icons 48x48/accessories-calculator.png"; sourceTree = "<group>"; };
 		9109C178099B387000122020 /* accessories-text-editor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "accessories-text-editor.png"; path = "bitmaps/Tango icons 48x48/accessories-text-editor.png"; sourceTree = "<group>"; };
 		9109C179099B387000122020 /* alignments.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = alignments.png; path = "bitmaps/Tango icons 48x48/alignments.png"; sourceTree = "<group>"; };
@@ -641,6 +643,7 @@
 		9180A6490866FCF9000C7D5E = {
 			isa = PBXGroup;
 			children = (
+				910675BB09AF28CC00AB09B0 /* OnlineTools.cpp */,
 				915162D009AA201E00DBAEBD /* AlignmentAppearanceDialog.cpp */,
 				9109C177099B387000122020 /* accessories-calculator.png */,
 				9109C178099B387000122020 /* accessories-text-editor.png */,
@@ -1250,6 +1253,7 @@
 				91CC568C088B961300567E40 /* PCR_Troubleshoot.cpp in Sources */,
 				9157CB6308A78B6A0053C2D6 /* TProteolysis.cpp in Sources */,
 				915162D109AA201E00DBAEBD /* AlignmentAppearanceDialog.cpp in Sources */,
+				910675BC09AF28CC00AB09B0 /* OnlineTools.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

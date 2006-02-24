@@ -1,5 +1,12 @@
 // !$*UTF8*$!
 {
+	910675BB09AF28CC00AB09B0 /* OnlineTools.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {740, 1820}}";
+			sepNavSelRange = "{827, 0}";
+			sepNavVisRect = "{{0, 397}, {623, 229}}";
+		};
+	};
 	91179E290998CC95004741E8 /* XCBreakpointsBucket */ = {
 		isa = XCBreakpointsBucket;
 		name = "Project Breakpoints";
@@ -21,56 +28,6 @@
 			sepNavVisRect = "{{0, 0}, {925, 543}}";
 			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
 		};
-	};
-	915162D609AB053900DBAEBD /* PBXBookmark */ = {
-		isa = PBXBookmark;
-		fRef = 9180A6B20866FD46000C7D5E /* TVector.cpp */;
-	};
-	9151631D09AB1DB300DBAEBD /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 9180A6B20866FD46000C7D5E /* TVector.cpp */;
-		name = "TVector.cpp: setRF";
-		rLen = 0;
-		rLoc = 57401;
-		rType = 0;
-		vrLen = 970;
-		vrLoc = 56595;
-	};
-	9151632009AB1DB300DBAEBD /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 9151632109AB1DB300DBAEBD /* TVector.h */;
-		rLen = 0;
-		rLoc = 2147483647;
-		rType = 0;
-	};
-	9151632109AB1DB300DBAEBD /* TVector.h */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = TVector.h;
-		path = /Users/magnusmanske/GENtle/TVector.h;
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {925, 4746}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRect = "{{0, 1190}, {925, 543}}";
-			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
-		};
-	};
-	9151632209AB1DB300DBAEBD /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 9151632309AB1DB300DBAEBD /* TVector.h */;
-		name = "(null): 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 2449;
-		vrLoc = 2591;
-	};
-	9151632309AB1DB300DBAEBD /* TVector.h */ = {
-		isa = PBXFileReference;
-		name = TVector.h;
-		path = /Users/magnusmanske/GENtle/TVector.h;
-		sourceTree = "<absolute>";
 	};
 	9157CB6208A78B690053C2D6 /* TProteolysis.cpp */ = {
 		uiCtxt = {
@@ -170,14 +127,8 @@
 					PBXFileDataSource_SCM_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 162138699;
-			PBXWorkspaceStateSaveDate = 162138699;
-		};
-		perUserProjectItems = {
-			915162D609AB053900DBAEBD /* PBXBookmark */ = 915162D609AB053900DBAEBD /* PBXBookmark */;
-			9151631D09AB1DB300DBAEBD /* PBXTextBookmark */ = 9151631D09AB1DB300DBAEBD /* PBXTextBookmark */;
-			9151632009AB1DB300DBAEBD /* PBXTextBookmark */ = 9151632009AB1DB300DBAEBD /* PBXTextBookmark */;
-			9151632209AB1DB300DBAEBD /* PBXTextBookmark */ = 9151632209AB1DB300DBAEBD /* PBXTextBookmark */;
+			PBXPerProjectTemplateStateSaveDate = 162474151;
+			PBXWorkspaceStateSaveDate = 162474151;
 		};
 		sourceControlManager = 9180A64F0866FCF9000C7D5E /* Source Control */;
 		userBuildSettings = {
@@ -720,7 +671,7 @@
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1094, 30436}}";
 			sepNavSelRange = "{57401, 0}";
-			sepNavVisRect = "{{0, 25552}, {925, 543}}";
+			sepNavVisRect = "{{0, 25553}, {925, 543}}";
 			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
 		};
 	};
