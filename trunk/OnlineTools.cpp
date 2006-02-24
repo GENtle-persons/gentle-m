@@ -19,7 +19,7 @@ void TOnlineTools::init ( SequenceCanvas *sc )
 
 void TOnlineTools::determine_marked_or_complete_sequence ()
     {
-    sequence = "" ;
+    sequence = _T("") ;
     if ( !canvas || !child ) return ;
     sequence = canvas->getSelection() ;
     if ( !sequence.IsEmpty() ) return ;
@@ -34,7 +34,7 @@ void TOnlineTools::add_context_menu ( wxMenu *base )
     {
     if ( !canvas || !child ) return ;
     
-    sequence = "" ;
+    sequence = _T("") ;
     wxMenu *ret = new wxMenu ;
     base->Append ( POPUP_DUMMY , txt("m_online_tools") , ret ) ;
     if ( child->def == _T("AminoAcids") )
