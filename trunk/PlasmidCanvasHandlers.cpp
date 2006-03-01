@@ -280,6 +280,10 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn , int pos 
         // Features at this position
         if ( pos != -1 && p->vec->hasItemsAtPosition ( pos-1 ) )
 				cm->Append ( CM_OPEN_FEATURE , txt("m_open_feature") ) ;
+
+        // Online tools
+        myapp()->frame->online_tools->init ( p->cSequence ) ;
+        myapp()->frame->online_tools->add_context_menu ( cm ) ;
         
         // PCR context menu
         if ( getMarkFrom() == -1 )

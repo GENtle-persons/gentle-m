@@ -46,6 +46,10 @@ void TOnlineTools::add_context_menu ( wxMenu *base )
        ret->Append ( ONLINE_TOOLS_ELM , txt("m_ot_elm") ) ;
        ret->Append ( ONLINE_TOOLS_JPRED , txt("m_ot_jpred") ) ;
        }
+    else if ( child->def == _T("dna") )
+       {
+       ret->Append ( ONLINE_TOOLS_NEB_CUTTER , txt("m_neb_cutter") ) ;
+       }
     }
 
 void TOnlineTools::take_event ( wxCommandEvent& event )
@@ -64,6 +68,7 @@ void TOnlineTools::take_event ( wxCommandEvent& event )
         case ONLINE_TOOLS_PVAL_FPSCAN : do_pval_fpscan () ; break ;
         case ONLINE_TOOLS_ELM : do_elm () ; break ;
         case ONLINE_TOOLS_JPRED : do_jpred () ; break ;
+        case ONLINE_TOOLS_NEB_CUTTER : do_neb_cutter () ; break ;
         } ;
     }
 
@@ -127,3 +132,16 @@ void TOnlineTools::do_pval_fpscan ()
     }
 
 //__________________________________________ DNA
+
+void TOnlineTools::do_neb_cutter ()
+    {
+    wxString url ;
+    url = _T("http://tools.neb.com/NEBcutter2/enzcut.php?") ;
+    url += _T("username=") + get_fasta_name() ;
+    url += _T("&min_orf=100") ;
+    url += _T("&circular=") + _T( child->vec->isLinear() ? "0" : "1" ) ;
+    url += _T("&enz_suppl=1") ;
+    url += _T("&sequence=") + sequence ;
+    wxExecute ( myapp()->getHTMLCommand ( url ) ) ;
+
+    }
