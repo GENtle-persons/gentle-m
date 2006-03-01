@@ -28,6 +28,7 @@ class TOnlineTools
     void do_pval_fpscan () ;
     void do_elm () ;
     void do_jpred () ;
+    void do_neb_cutter () ;
     
     SequenceCanvas *canvas ;
     ChildBase *child ;
