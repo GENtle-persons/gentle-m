@@ -40,9 +40,12 @@ FindSequenceDialog::FindSequenceDialog ( wxWindow *parent, const wxString& title
 	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxALL|wxEXPAND , 2 ) ;
 	h0->Add ( new wxButton ( this , SH_CANCEL , txt("b_cancel") ) , 1 , wxALL|wxEXPAND , 2 ) ;
 
-	h1->Add ( new wxButton ( this , FD_ADD_HIGHLIGHTS , txt("b_find_highlight") ) , 1 , wxALL|wxEXPAND , 2 ) ;
-	h1->Add ( new wxButton ( this , FD_SET_HIGHLIGHT_COLOR , txt("b_find_highlght_color") ) , 1 , wxALL|wxEXPAND , 2 ) ;
-	h1->Add ( new wxButton ( this , FD_RESET_HIGHLIGHTS , txt("b_find_remove_highlights") ) , 1 , wxALL|wxEXPAND , 2 ) ;
+    highlight_display = new wxStaticText ( this , -1 , _T("      ") ) ;
+	h1->Add ( new wxButton ( this , FD_ADD_HIGHLIGHTS , txt("b_find_highlight") ) , 0 , wxALL|wxEXPAND , 2 ) ;
+	h1->Add ( highlight_display , 0 , wxLEFT|wxEXPAND , 5 ) ;
+	h1->Add ( new wxButton ( this , FD_SET_HIGHLIGHT_COLOR , txt("b_find_highlight_color") ) , 0 , wxALL|wxEXPAND , 2 ) ;
+	h1->Add ( new wxButton ( this , FD_RESET_HIGHLIGHTS , txt("b_find_remove_highlights") ) , 0 , wxALL|wxEXPAND , 2 ) ;
+	highlight_display->SetBackgroundColour ( highlight ) ;
 	             
 	lb = new wxListBox ( this , SH_LB ) ;
 	
@@ -511,6 +514,7 @@ void FindSequenceDialog::OnAddHighlights ( wxCommandEvent &ev )
 		if ( from < 0 ) continue ; // Something's wrong, ignore
 		seq->addHighlight ( from , to , highlight ) ;
 		}
+	canvas->unmark () ;
 	canvas->SilentRefresh () ;
 	}
 
@@ -520,6 +524,7 @@ void FindSequenceDialog::OnSetHighlightColor ( wxCommandEvent &ev )
 	col = wxGetColourFromUser ( this , col ) ;
     if ( !col.Ok() ) return ;
 	highlight = col ;
+	highlight_display->SetBackgroundColour ( highlight ) ;
 	}
 
 void FindSequenceDialog::OnResetHighlights ( wxCommandEvent &ev )
