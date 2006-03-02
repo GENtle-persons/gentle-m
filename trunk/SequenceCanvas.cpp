@@ -586,7 +586,8 @@ void SequenceCanvas::OnCut ( wxCommandEvent &ev )
     getAA()->vec->doRemove ( _from , _to ) ;
     _from = -1 ;
     
-    for ( int a = 0 ; a < seq.GetCount() ; a++ )
+    int a ;
+    for ( a = 0 ; a < seq.GetCount() ; a++ )
        {
        if ( seq[a]->whatsthis() == _T("AA") )
           {
@@ -2090,6 +2091,7 @@ void SequenceCanvas::startEdit ( wxString id )
     {
     mylog ( "startEdit" , "1" ) ;
     setEditMode ( true ) ;
+    findID(id)->clearHighlights () ;
     if ( !forceoverwrite ) 
 	 	{
 		findID(id)->s.Append ( _T(" ") ) ;

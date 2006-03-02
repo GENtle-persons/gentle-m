@@ -48,6 +48,7 @@ class FindSequenceDialog : public wxDialog
 	wxColour highlight ;
     wxArrayInt vi ;
     wxHashChar codonhash ;
+    wxStaticText *highlight_display ;
 
     DECLARE_EVENT_TABLE()
     } ;

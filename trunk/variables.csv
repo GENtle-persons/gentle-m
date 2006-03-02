@@ -932,5 +932,5 @@
 "m_ot_jpred","Jpred (protein secondary structure prediction) [www.compbio.dundee.ac.uk]","Jpred (Protein-Sekundärstrukturvorhersage) [www.compbio.dundee.ac.uk]"
 "m_neb_cutter","NEBcutter [tools.neb.com]","NEBcutter [tools.neb.com]"
 "b_find_highlight","Highlight","Hervorheben"
-"b_find_highlght_color","Highlght color","Hervorheben in Farbe"
-"b_find_remove_highlights,"Remove highlights","Hervorhebungne entfernen"
+"b_find_highlight_color","Highlight color","Hervorhebungs-Farbe"
+"b_find_remove_highlights","Remove highlights","Hervorhebungen entfernen"

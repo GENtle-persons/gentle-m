@@ -530,6 +530,8 @@ void MyChild::OnCut(wxCommandEvent& event)
     if ( s.IsEmpty() ) return ;
     if (!wxTheClipboard->Open()) return ;
 
+    cSequence->findID(_T("DNA"))->clearHighlights () ;
+
     vec->undo.start ( txt("u_cut") ) ;
     wxTheClipboard->SetData( new wxTextDataObject(s) );
     wxTheClipboard->Close();
