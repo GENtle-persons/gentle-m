@@ -342,7 +342,8 @@ void PCR_troubleshoot_dialog::scan_specificity ( TPrimer &p , int nr )
 	
 	wxString text ;
 	for ( a = 0 ; a < vs.size() ; a++ )
-		text += wxString::Format ( _T("%s") , vs[a].mb_str() ) + nl ;
+		text += vs[a] + nl ;
+//		text += wxString::Format ( _T("%s") , vs[a].mb_str() ) + nl ;
 	add_warning ( p , nr , txt("t_pcr_ts_warning_specificity") , text ) ;		
 	}
 
@@ -371,7 +372,7 @@ void PCR_troubleshoot_dialog::scan_length ( TPrimer &p , int nr )
 
 void PCR_troubleshoot_dialog::scan_GCcontent ( TPrimer &p , int nr )
 	{
-	int gc = p.getGCcontents () ;
+	float gc = p.getGCcontents () ;
 	if ( gc >= 40 && gc <= 60 ) return ; // Everthing's OK
 	
 	add_warning ( p , nr , txt("t_pcr_ts_warning_GC") , 
@@ -407,13 +408,13 @@ void PCR_troubleshoot_dialog::scan_Runs ( TPrimer &p , int nr , int length )
 		if ( ( b - a ) / length > 4 )
 			{
 			add_error ( p , nr , msg ,
-			wxString::Format ( txt("t_pcr_ts_warning_runs_text") , s.Mid(a,length).mb_str() ) ) ;
+			wxString::Format ( txt("t_pcr_ts_warning_runs_text") , (char*)s.Mid(a,length).c_str() ) ) ;
 			a = b - length ;
 			}
 		else if ( ( b - a ) / length  == 4 )
 			{
 			add_warning ( p , nr , msg ,
-			wxString::Format ( txt("t_pcr_ts_warning_runs_text2") , s.Mid(a,length).mb_str() ) ) ;
+			wxString::Format ( txt("t_pcr_ts_warning_runs_text2") , (char*)s.Mid(a,length).c_str() ) ) ;
 			a = b - length ;
 			}
 		}
@@ -425,10 +426,7 @@ void PCR_troubleshoot_dialog::scan_hairpin ( TPrimer &p , int nr )
 	wxArrayString n = get_matches ( m , 4 , 1 ) ;
 	
 	wxString s ;
-//	int a ;
-//	for ( a = 0 ; a < m.GetCount() ; a++ )
-//		s += m[a] + nl ;
-	
+
 	l_title.Add ( wxString::Format ( _T("%d: ") , nr ) + p.getName() ) ;
 	l_text.Add ( s ) ;
 	}

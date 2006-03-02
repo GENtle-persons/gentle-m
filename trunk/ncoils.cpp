@@ -35,7 +35,7 @@ string ncoils_function( const char *_sequence , int window ) {
 	
 	string ret ;
 
-	int i,j,k,l;
+	int i,k,l;
 	int verb;
 //	int window;
 	int pt;
@@ -203,7 +203,7 @@ string ncoils_function( const char *_sequence , int window ) {
 
 int ncoils_main(int argc, char *argv[]) {
 
-	int i,j,k,l;
+	int i,j,l;
 	int verb;
 	int window,pt;
 	int which,weighted;
@@ -374,7 +374,6 @@ string pred_coils(char *seq,char *ident,char *title,struct hept_pref *h,int win,
 
 	int i,j;
 	int len,pos,aa_pt;
-	int pt;
 	int total_coil_segments;
 	int are_there_coils;
 

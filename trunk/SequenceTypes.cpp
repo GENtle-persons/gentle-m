@@ -36,6 +36,37 @@ void SeqBasic::editMode ( bool on )
  			s = s.Left ( s.length() - 1 ) ;
    		}        
 	}    
+	
+void SeqBasic::addHighlight ( int from , int to , wxColour c )
+    {
+	if ( can && can->child )
+		{
+		if ( to < from ) to += can->child->vec->getSequenceLength() ;
+		}
+	highlight_begin.Add ( from ) ;
+	highlight_end.Add ( to ) ;
+	highlight_color.push_back ( c ) ;
+    }
+
+wxColour SeqBasic::getHighlightColor ( int pos , wxColour c )
+    {
+	int a ;
+	for ( a = 0 ; a < highlight_end.size() ; a++ )
+		{
+		if ( pos >= highlight_begin[a] && pos <= highlight_end[a] )
+			break ;
+		}
+	if ( a == highlight_end.size() ) return c ;
+	return highlight_color[a] ;
+    }
+
+void SeqBasic::clearHighlights ()
+    {
+	highlight_begin.Clear () ;
+	highlight_end.Clear () ;
+	highlight_color.clear () ;
+    }
+
 
 SeqBasic::~SeqBasic ()
     {

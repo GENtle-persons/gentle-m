@@ -316,7 +316,6 @@ wxString TVector::getStickyEnd ( bool left , bool upper )
     }
 
 
-
 TVector::TVector ( ChildBase *win )
     {
     enzyme_rules = NULL ;

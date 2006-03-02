@@ -278,7 +278,7 @@ class TVector
     int countCodonTables () ;
     wxString getCodonTableName ( int x ) ;
     void resetTurn () ; ///< Sets the turned variable to zero
-    
+	
     // Variables
     vector <TVectorItem> items ; ///< Items/features/annotations
     vector <TRestrictionCut> rc ; ///< Restriction enzyme cuts
