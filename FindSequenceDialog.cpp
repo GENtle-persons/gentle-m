@@ -6,11 +6,15 @@
 BEGIN_EVENT_TABLE(FindSequenceDialog, wxDialog )
     EVT_BUTTON(SH_SEARCH,FindSequenceDialog::OnSearch)
     EVT_BUTTON(SH_CANCEL,FindSequenceDialog::OnCancel)
+    EVT_BUTTON(FD_ADD_HIGHLIGHTS,FindSequenceDialog::OnAddHighlights)
+    EVT_BUTTON(FD_SET_HIGHLIGHT_COLOR,FindSequenceDialog::OnSetHighlightColor)
+    EVT_BUTTON(FD_RESET_HIGHLIGHTS,FindSequenceDialog::OnResetHighlights)
     EVT_LISTBOX(SH_LB,FindSequenceDialog::OnLB)
     EVT_LISTBOX_DCLICK(SH_LB,FindSequenceDialog::OnLBdclick)
     EVT_TEXT(SH_TEXT,FindSequenceDialog::OnTextChange)
     EVT_CHAR_HOOK(FindSequenceDialog::OnCharHook)
 END_EVENT_TABLE()
+
 
 #define FIND_MAX 1000
 
@@ -18,8 +22,10 @@ END_EVENT_TABLE()
 FindSequenceDialog::FindSequenceDialog ( wxWindow *parent, const wxString& title )
 	: wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 380 , 400 ) )
 	{
+	highlight = *wxBLUE ;
 	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
 	wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
 	p = 0 ;
 	c = (ChildBase*) parent ;
 	allowed_chars = _T("AGCT") ; // For DNA search; currently ignored
@@ -29,16 +35,20 @@ FindSequenceDialog::FindSequenceDialog ( wxWindow *parent, const wxString& title
 		wxDefaultPosition , wxDefaultSize , wxTE_READONLY|wxSTATIC_BORDER ) ;
 	status->SetBackgroundColour ( GetBackgroundColour() ) ;
 	
-	find_button = new wxButton ( this , SH_SEARCH , txt("b_find") ) ;
-	
+	find_button = new wxButton ( this , SH_SEARCH , txt("b_find") ) ;	
 	h0->Add ( find_button , 1 , wxALL|wxEXPAND , 2 ) ;
 	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxALL|wxEXPAND , 2 ) ;
 	h0->Add ( new wxButton ( this , SH_CANCEL , txt("b_cancel") ) , 1 , wxALL|wxEXPAND , 2 ) ;
+
+	h1->Add ( new wxButton ( this , FD_ADD_HIGHLIGHTS , txt("b_find_highlight") ) , 1 , wxALL|wxEXPAND , 2 ) ;
+	h1->Add ( new wxButton ( this , FD_SET_HIGHLIGHT_COLOR , txt("b_find_highlght_color") ) , 1 , wxALL|wxEXPAND , 2 ) ;
+	h1->Add ( new wxButton ( this , FD_RESET_HIGHLIGHTS , txt("b_find_remove_highlights") ) , 1 , wxALL|wxEXPAND , 2 ) ;
 	             
 	lb = new wxListBox ( this , SH_LB ) ;
 	
 	v0->Add ( t , 0 , wxALL|wxEXPAND , 2 ) ;
 	v0->Add ( h0 , 0 , wxALL|wxEXPAND , 2 ) ;
+	v0->Add ( h1 , 0 , wxALL|wxEXPAND , 2 ) ;
 	v0->Add ( status , 0 , wxALL|wxEXPAND , 2 ) ;
 	v0->Add ( lb , 1 , wxALL|wxEXPAND , 2 ) ;
 	
@@ -85,16 +95,40 @@ void FindSequenceDialog::OnLBdclick ( wxCommandEvent &ev )
     doAction ( true ) ;
     wxDialog::OnOK ( ev ) ;
     }    
-    
-void FindSequenceDialog::doAction ( bool doubleclick )
-    {
-    int idx = lb->GetSelection () ;
-    wxString s = lb->GetStringSelection () ;
+	
+void FindSequenceDialog::getFromTo ( wxString s , long &from , long &to , int idx )
+	{
+	from = to = -1 ;
     wxString type = s.BeforeFirst ( ':' ) ;
     wxString data = s.AfterFirst ( ':' ) ;
-    
-    wxString mark ;
-    SequenceCanvas *canvas = NULL ;
+	if ( type == txt("sequence") )
+		{
+        data.BeforeFirst('-').ToLong ( &from ) ;
+        data.AfterFirst('-').ToLong ( &to ) ;        
+		}
+    else if ( type == txt("amino_acid") )
+        {
+		getFromTo ( s , from , to ) ;
+        data = data.AfterLast ( '(' ) ;
+        data.BeforeFirst('-').ToLong ( &from ) ;
+        data.AfterFirst('-').ToLong ( &to ) ;
+		}
+    else if ( type == txt("t_vec_item") )
+        {
+        from = c->vec->items[vi[idx]].from ;
+        to = c->vec->items[vi[idx]].to ;
+		}
+    else if ( type == txt("m_restriction") )
+        {
+        int a = vi[idx] ;
+        from = c->vec->rc[a].pos - c->vec->rc[a].e->cut + 1 ;
+        to = c->vec->rc[a].pos - c->vec->rc[a].e->cut + c->vec->rc[a].e->sequence.length() + 1 ;
+		}
+	}
+
+SequenceCanvas *FindSequenceDialog::getMarkSequence ( wxString &mark )
+	{
+	SequenceCanvas *canvas = NULL ;
     if ( c->def == _T("dna") )
         {
         mark = _T("DNA") ;
@@ -115,30 +149,36 @@ void FindSequenceDialog::doAction ( bool doubleclick )
         mark = _T("ABI") ;
         canvas = ( (TABIviewer*) c ) -> sc ;
         }    
-        
+	return canvas ;
+	}
+    
+void FindSequenceDialog::doAction ( bool doubleclick )
+    {
+    int idx = lb->GetSelection () ;
+    wxString s = lb->GetStringSelection () ;
+    wxString type = s.BeforeFirst ( ':' ) ;
+    wxString data = s.AfterFirst ( ':' ) ;
+    
+    wxString mark ;
+    SequenceCanvas *canvas = getMarkSequence ( mark ) ;        
     if ( !canvas ) return ; // Just a safety
     
+	long from , to ;
     if ( type == txt("sequence") )
         {
-        long from , to ;
-        data.BeforeFirst('-').ToLong ( &from ) ;
-        data.AfterFirst('-').ToLong ( &to ) ;        
+		getFromTo ( s , from , to ) ;
         canvas->mark ( mark , from , to ) ;
         canvas->ensureVisible ( canvas->getBatchMark() ) ;
-        }    
+        }
     else if ( type == txt("amino_acid") )
         {
-        long from , to ;
-        data = data.AfterLast ( '(' ) ;
-        data.BeforeFirst('-').ToLong ( &from ) ;
-        data.AfterFirst('-').ToLong ( &to ) ;        
+		getFromTo ( s , from , to ) ;
         canvas->mark ( mark , from , to ) ;
         canvas->ensureVisible ( canvas->getBatchMark() ) ;
         }    
     else if ( type == txt("t_vec_item") )
         {
-        int from = c->vec->items[vi[idx]].from ;
-        int to = c->vec->items[vi[idx]].to ;
+		getFromTo ( s , from , to , idx ) ;
         canvas->mark ( mark , from , to ) ;
         canvas->ensureVisible ( canvas->getBatchMark() ) ;
         if ( doubleclick )
@@ -151,8 +191,7 @@ void FindSequenceDialog::doAction ( bool doubleclick )
     else if ( type == txt("m_restriction") )
         {
         int a = vi[idx] ;
-        int from = c->vec->rc[a].pos - c->vec->rc[a].e->cut + 1 ;
-        int to = c->vec->rc[a].pos - c->vec->rc[a].e->cut + c->vec->rc[a].e->sequence.length() + 1 ;
+		getFromTo ( s , from , to , idx ) ;
         canvas->mark ( mark , from , to ) ;
         canvas->ensureVisible ( canvas->getBatchMark() ) ;
         if ( doubleclick && c->def == _T("dna") ) // Only is DNA
@@ -453,3 +492,45 @@ void FindSequenceDialog::OnCancel ( wxCommandEvent &ev )
     wxDialog::OnOK ( ev ) ;
     }
 
+
+
+void FindSequenceDialog::OnAddHighlights ( wxCommandEvent &ev )
+	{
+    wxString mark ;
+    SequenceCanvas *canvas = getMarkSequence ( mark ) ;        
+    if ( !canvas ) return ; // Just a safety
+	
+	SeqBasic *seq = canvas->findID ( mark ) ;
+	if ( !seq ) return ; // Just a safety
+
+	for ( int idx = 0 ; idx < lb->GetCount() ; idx++ )
+		{
+		wxString s = lb->GetString ( idx ) ;
+		long from , to ;
+		getFromTo ( s , from , to , idx ) ;
+		if ( from < 0 ) continue ; // Something's wrong, ignore
+		seq->addHighlight ( from , to , highlight ) ;
+		}
+	canvas->SilentRefresh () ;
+	}
+
+void FindSequenceDialog::OnSetHighlightColor ( wxCommandEvent &ev )
+	{
+	wxColour col = highlight ;
+	col = wxGetColourFromUser ( this , col ) ;
+    if ( !col.Ok() ) return ;
+	highlight = col ;
+	}
+
+void FindSequenceDialog::OnResetHighlights ( wxCommandEvent &ev )
+	{
+    wxString mark ;
+    SequenceCanvas *canvas = getMarkSequence ( mark ) ;        
+    if ( !canvas ) return ; // Just a safety
+	
+	SeqBasic *seq = canvas->findID ( mark ) ;
+	if ( !seq ) return ; // Just a safety
+
+	seq->clearHighlights () ;
+	canvas->SilentRefresh () ;
+	}

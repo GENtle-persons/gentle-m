@@ -148,7 +148,11 @@ class SeqBasic
     virtual bool isDisplayOnly () { return false ; } ///< Do we show something?
     virtual void logsize () ; ///< Some memory calculation for debugging, I think...
     virtual void editMode ( bool on = true ) ; ///< Set edit mode for this sequence line
-    
+
+	virtual void addHighlight ( int from , int to , wxColour c ) ; ///< Adds a sequence highlight
+	virtual wxColour getHighlightColor ( int pos , wxColour c ) ; ///< Sets the color to the highlight color, if the position is highlighted
+	virtual void clearHighlights () ; ///< Removes all highlights
+	
     // Variables
     wxString s ; ///< The sequence as a text; may be blank for some linetypes
     int offset , endnumberlength , itemsperline ;
@@ -159,6 +163,8 @@ class SeqBasic
     virtual int arrange_direct ( int n ) { return arrange ( n ) ; } ///< Arrange quickly (bypassing SeqPos)
     virtual void show_direct ( wxDC& dc ) { show ( dc ) ; } ; ///< Show quickly
 
+	wxArrayInt highlight_begin , highlight_end ;
+	vector <wxColour> highlight_color ;
     SeqPos pos ; ///< Position class (empty when using direct routines)
     } ;
 

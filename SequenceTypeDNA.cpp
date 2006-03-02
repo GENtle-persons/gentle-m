@@ -337,7 +337,7 @@ void SeqDNA::show_direct ( wxDC& dc )
            dc.SetTextBackground ( *wxBLACK ) ;
            dc.SetTextForeground ( *wxWHITE ) ;
            }
-        else dc.SetTextForeground ( getBaseColor ( ac ) ) ;
+        else dc.SetTextForeground ( getHighlightColor ( a , getBaseColor ( ac ) ) ) ;
         
         if ( isPrimer )
            {

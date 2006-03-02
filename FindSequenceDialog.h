@@ -20,11 +20,14 @@ class FindSequenceDialog : public wxDialog
     virtual void OnTextChange ( wxCommandEvent &ev ) ; ///< Search text change event handler
     virtual void OnLB ( wxCommandEvent &ev ) ; ///< List box choice change event handler
     virtual void OnLBdclick ( wxCommandEvent &ev ) ; ///< List box double click event handler
+	virtual void OnAddHighlights ( wxCommandEvent &ev ) ; ///< Adds highlights
+	virtual void OnSetHighlightColor ( wxCommandEvent &ev ) ; ///< Changes highlght color
+	virtual void OnResetHighlights ( wxCommandEvent &ev ) ; ///< Resets highlights
 
     wxString allowed_chars ; ///< Chars one can search for
 
     private :
-	 virtual wxString getQuery () ;
+	virtual wxString getQuery () ;
     virtual bool doesMatch ( char a , char b ) ; ///< Returns if a matches b ( more than "is equal"!)
     virtual int subsearch ( const wxString &s , const wxString &sub , int start ) ; ///< Compares a string and a substring
     virtual void sequenceSearch ( bool invers = false ) ; ///< Search in sequence
@@ -33,6 +36,8 @@ class FindSequenceDialog : public wxDialog
     virtual void restrictionSearch () ; ///< Search for restriction enzymes
     virtual void doAction ( bool doubleclick ) ; ///< Perform action, now that a list item has been double-clicked
     virtual void aaSubSearch ( const wxString &s , int start , int dir , wxString rf ) ; ///< Search in resulting amino acid sequence
+	virtual void getFromTo ( wxString s , long &from , long &to , int idx = -1 ) ;
+	virtual SequenceCanvas *getMarkSequence ( wxString &mark ) ;
     
     ChildBase *c ; ///< Pointer to calling ChildBase class
     wxTextCtrl *t ; ///< The text control
@@ -40,6 +45,7 @@ class FindSequenceDialog : public wxDialog
     wxListBox *lb ; ///< The results list box control
     wxButton *find_button ; ///< The "Find" button
     wxTextCtrl *status ; ///< The status text
+	wxColour highlight ;
     wxArrayInt vi ;
     wxHashChar codonhash ;
 

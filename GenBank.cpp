@@ -89,7 +89,7 @@ void TGenBank::parseLines ()
          vs[0].Left ( 5 ) != _T("LOCUS") )
        return ;
 
-    int a , b ;
+    int a ;
     vi.Alloc ( vs.GetCount() ) ;
     for ( a = 0 ; a < vs.GetCount() ; a++ )
         vi.Add ( count_blanks ( vs[a] ) ) ;

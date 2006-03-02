@@ -709,7 +709,7 @@ void MyChild::initPanels ()
 //    cSequence->seq.Clear () ;
 	CLEAR_DELETE ( cSequence->seq ) ;
     
-	 SeqFeature *seqF ;
+	 SeqFeature *seqF = NULL ;
     if ( !vec->getGenomeMode() ) seqF = new SeqFeature ( cSequence ) ;
     SeqDNA *seq = new SeqDNA ( cSequence ) ;
     SeqRestriction *seqR = new SeqRestriction ( cSequence ) ;
@@ -1335,7 +1335,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
     pdc->GetTextExtent ( _T("A") , &cw , &ch ) ;
     
     int a , b ;
-    int x , y ;
+    int y ;
     int x0 = w / 20 ;
     int x1 = x0 + w / 5 ;
     int x2 = x1 + w / 12 ;

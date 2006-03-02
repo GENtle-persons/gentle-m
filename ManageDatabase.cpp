@@ -787,7 +787,7 @@ void TManageDatabaseDialog::pmGetContext ( wxListCtrl *side )
 void TManageDatabaseDialog::pmOnActivate ( wxListEvent &ev , wxListCtrl *side )
     {
     wxChoice *c = (side==pm_left)?pm_dd_l:pm_dd_r;
-    int i = ev.GetIndex () ;
+    //int i = ev.GetIndex () ;
     wxString t = c->GetStringSelection() ;
     pmGetContext ( side ) ;
     pmOpenFiles ( context_names , t ) ;
@@ -832,8 +832,8 @@ bool TManageDatabaseDialog::do_load_project ( wxString name , wxString db )
     TStorage *tstorage = getTempDB ( getFileName ( db ) ) ;
     TSQLresult sr ;
 
-    MyFrame *f = myapp()->frame ;
-    int oc = f->children.GetCount() ;
+    //MyFrame *f = myapp()->frame ;
+    //int oc = f->children.GetCount() ;
     
     // Closing current windows
     wxCommandEvent dummy ;
