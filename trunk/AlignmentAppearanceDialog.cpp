@@ -43,9 +43,15 @@ void AlignmentAppearanceDialog::addLine ( wxString name , wxArrayString &as , wx
     spin->SetValue ( 1 ) ;
     }
 
+AlignmentAppearanceDialog::~AlignmentAppearanceDialog ()
+	{
+	myapp()->frame->pop_help () ;
+	}
+
 AlignmentAppearanceDialog::AlignmentAppearanceDialog ( wxWindow *_parent , const wxString& title )
     : wxDialog ( _parent , -1 , title )
     {
+	myapp()->frame->push_help ( _T("GENtle:Alignment_Appearance_Dialog") ) ;
     line_color_buttons = 0 ;
     wxFlexGridSizer *fgs = new wxFlexGridSizer ( 2 , 2 , 2 ) ;
 

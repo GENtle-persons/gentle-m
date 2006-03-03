@@ -10,6 +10,7 @@ class TAutoAnnotateDialog : public wxDialog
 	{
 	public :
     TAutoAnnotateDialog ( wxWindow *parent, const wxString& title , AutoAnnotate *_aa ) ; ///< Constructor
+	~TAutoAnnotateDialog () ; ///< Destructor
     virtual void OnCharHook ( wxKeyEvent& event ) ; ///< Key event handler
     
     wxCheckBox *useCommonDatabase , *useAdditionalDatabase , *useMachete , *doAddORFs ;
@@ -27,9 +28,16 @@ BEGIN_EVENT_TABLE(TAutoAnnotateDialog, wxDialog )
     EVT_CHAR_HOOK(TAutoAnnotateDialog::OnCharHook)
 END_EVENT_TABLE()
 
+TAutoAnnotateDialog::~TAutoAnnotateDialog ()
+	{
+	myapp()->frame->pop_help () ;
+	}
+
+
 TAutoAnnotateDialog::TAutoAnnotateDialog ( wxWindow *parent, const wxString& title , AutoAnnotate *_aa )
     : wxDialog ( parent , TSD , title , wxDefaultPosition , wxSize ( 400 , 200 ) )
 	{
+	myapp()->frame->push_help ( _T("Automatic_annotation") ) ;
 	aa = _aa ;
 	aa->dbname.Clear () ;
 	aa->dbfile.Clear () ;

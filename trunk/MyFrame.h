@@ -166,13 +166,18 @@ public:
     virtual bool isActivating () ;
     virtual TVirtualGel *useGel ( wxString type ) ;
     virtual void saveImage ( wxBitmap *bmp , wxString name = _T("") ) ;
+	
+	virtual void push_help ( wxString name ) ;
+	virtual void pop_help () ;
+	virtual wxString get_help () ;
+	virtual int count_help () { return help_name.size() ; }
 
     TMainTree *mainTree ; ///< \brief The main tree (for sequences etc.)
     TStorage *LS ; ///< \brief Pointer to the local TStorage database structure
     bool dying , enhancedRefresh , showVectorTitle , showVectorLength , 
             loadLastProject , useMetafile , showSplashScreen , checkUpdate ,
             useCoolCanvas , useInternalHelp , doRegisterStuff , showEnzymePos ,
-			useTwoToolbars ;
+			useTwoToolbars , useOnlineHelp ;
     wxColour aa_color ;
     int editFeatureMode , showStopCodon ;
     TProject project ; ///< \brief The current project
@@ -201,6 +206,7 @@ public:
     wxMenuBar *menu_bar ; ///< \brief The current menu bar
     int locked ; ///< \brief State of display locking
     bool activating ; ///< \brief In child activation?
+	vector <wxString> help_name ;
 #ifdef MYTEST
     TTestSuite *test_suite ; ///< \brief The Test suite
 #endif

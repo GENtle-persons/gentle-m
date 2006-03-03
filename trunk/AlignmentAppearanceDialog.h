@@ -12,6 +12,7 @@ class AlignmentAppearanceDialog : public wxDialog
     {
     public :
     AlignmentAppearanceDialog ( wxWindow *_parent , const wxString& title ) ; ///< Constructor
+	~AlignmentAppearanceDialog () ;
     virtual void setup ( int _from , int _to , int _firstline , int _lastline , TAlignment *_ali ) ; ///< Setup from marked region
 
     virtual void OnLineColorButton ( wxCommandEvent &event ) ; ///< Line color button event handler
