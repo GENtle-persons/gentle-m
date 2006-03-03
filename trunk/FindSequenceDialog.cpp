@@ -111,7 +111,6 @@ void FindSequenceDialog::getFromTo ( wxString s , long &from , long &to , int id
 		}
     else if ( type == txt("amino_acid") )
         {
-		getFromTo ( s , from , to ) ;
         data = data.AfterLast ( '(' ) ;
         data.BeforeFirst('-').ToLong ( &from ) ;
         data.AfterFirst('-').ToLong ( &to ) ;
@@ -480,7 +479,8 @@ void FindSequenceDialog::OnTextChange ( wxCommandEvent &ev )
     {
 	 find_button->Enable() ;
     if ( c->vec->getGenomeMode() ) return ;
-    if ( getQuery().length() < 3 )
+	int ql = getQuery().length() ;
+    if ( ql < 3 )
        {
        lb->Clear () ;
        vi.Clear () ;
@@ -488,6 +488,10 @@ void FindSequenceDialog::OnTextChange ( wxCommandEvent &ev )
        }    
     find_button->Disable () ;
     OnSearch ( ev ) ;
+#ifdef __WXMAC__
+	t->SetFocus () ;
+	t->SetSelection ( ql , ql ) ;
+#endif
     }    
 
 void FindSequenceDialog::OnCancel ( wxCommandEvent &ev )
@@ -502,17 +506,17 @@ void FindSequenceDialog::OnAddHighlights ( wxCommandEvent &ev )
     wxString mark ;
     SequenceCanvas *canvas = getMarkSequence ( mark ) ;        
     if ( !canvas ) return ; // Just a safety
-	
+
 	SeqBasic *seq = canvas->findID ( mark ) ;
 	if ( !seq ) return ; // Just a safety
-
+	
 	for ( int idx = 0 ; idx < lb->GetCount() ; idx++ )
 		{
 		wxString s = lb->GetString ( idx ) ;
 		long from , to ;
 		getFromTo ( s , from , to , idx ) ;
 		if ( from < 0 ) continue ; // Something's wrong, ignore
-		seq->addHighlight ( from , to , highlight ) ;
+		seq->addHighlight ( from-1 , to-1 , highlight ) ;
 		}
 	canvas->unmark () ;
 	canvas->SilentRefresh () ;

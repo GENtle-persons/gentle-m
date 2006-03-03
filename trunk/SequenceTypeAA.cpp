@@ -107,14 +107,12 @@ void SeqAA::show ( wxDC& dc )
     wxColour tbg = dc.GetTextBackground () ;
     wxColour tfg = dc.GetTextForeground () ;
     int bm = dc.GetBackgroundMode () ;
-    int a , b , cnt = offset+1 ;
+    int a = 0 , b , cnt = offset+1 ;
     wxString t ;
-    char u[100] ;
     wxColour bbg ( 150 , 150 , 255 ) ;
     dc.SetTextBackground ( *wxWHITE ) ;
-    if ( primaryMode ) dc.SetTextForeground ( *wxBLACK ) ;
-    else dc.SetTextForeground ( myapp()->frame->aa_color /* *wxLIGHT_GREY */ ) ;
-//    dc.SetBackgroundMode ( wxSOLID ) ;
+    if ( primaryMode ) dc.SetTextForeground ( getHighlightColor ( a , *wxBLACK ) ) ;
+    else dc.SetTextForeground ( myapp()->frame->aa_color ) ;
     dc.SetBackgroundMode ( wxTRANSPARENT ) ;
 
     int xa , ya , yb ;
@@ -126,7 +124,7 @@ void SeqAA::show ( wxDC& dc )
         {
         if ( can->hardstop > -1 && a > can->hardstop ) break ;
         b = pos.p[a] ;
-        int tx = pos.r[a].x , ty = pos.r[a].y ;
+        int ty = pos.r[a].y ;
         int tz = ty + can->charheight ;
         bool insight = true ;
         if ( tz < ya ) insight = false ;
@@ -180,8 +178,8 @@ void SeqAA::show ( wxDC& dc )
            if ( getMark ( a ) > 0 )
               {
               dc.SetTextBackground ( *wxWHITE ) ;
-              if ( primaryMode ) dc.SetTextForeground ( *wxBLACK ) ;
-              else dc.SetTextForeground ( myapp()->frame->aa_color /* *wxLIGHT_GREY */ ) ;
+              if ( primaryMode ) dc.SetTextForeground ( getHighlightColor ( a , *wxBLACK ) ) ;
+              else dc.SetTextForeground ( myapp()->frame->aa_color ) ;
               dc.SetBackgroundMode ( wxTRANSPARENT ) ;
               }
 
@@ -209,8 +207,8 @@ void SeqAA::show ( wxDC& dc )
                  dc.DrawText ( pn , qx - u1/2 , qy - u2/2 ) ;
                  dc.SetFont(*can->font);
                  
-                 if ( primaryMode ) dc.SetTextForeground ( *wxBLACK ) ;
-                 else dc.SetTextForeground ( myapp()->frame->aa_color /* *wxLIGHT_GREY */ ) ;
+                 if ( primaryMode ) dc.SetTextForeground ( getHighlightColor ( a , *wxBLACK ) ) ;
+                 else dc.SetTextForeground ( myapp()->frame->aa_color ) ;
                  }
               }
               
@@ -235,7 +233,7 @@ void SeqAA::show ( wxDC& dc )
 wxPoint SeqAA::showText ( int ystart , wxArrayString &tout )
     {
     wxPoint p ( -1 , -1 ) ;
-    int a , b , c ;
+    int a , b ;
     wxString t ;
     int x = 0 , y = ystart-can->seq.GetCount() , ly = -1 ;
     for ( a = 0 ; a < pos.p.GetCount() ; a++ )
@@ -552,7 +550,7 @@ void SeqAA::show_direct ( wxDC& dc )
           {
           dc.SetBackgroundMode ( wxSOLID ) ;
           dc.SetTextBackground ( *wxLIGHT_GREY ) ;
-          dc.SetTextForeground ( tf ) ;
+          dc.SetTextForeground ( getHighlightColor ( a , tf ) ) ;
           }
        else if ( pm == 2 && can->doOverwrite() ) // Overwrite cursor
           {
@@ -560,7 +558,7 @@ void SeqAA::show_direct ( wxDC& dc )
           dc.SetTextBackground ( *wxBLACK ) ;
           }
        if ( pm == 2 && can->doOverwrite() ) dc.SetTextForeground ( *wxWHITE ) ;
-       else dc.SetTextForeground ( tf ) ;
+       else dc.SetTextForeground ( getHighlightColor ( a , tf ) ) ;
        if ( can->isPrinting() && pm == 1 )
           {
           dc.SetBrush ( *MYBRUSH ( wxColour ( 230 , 230 , 230 ) ) ) ;
@@ -590,7 +588,7 @@ void SeqAA::show_direct ( wxDC& dc )
        if ( pm > 0 ) // Reverting cursor settings
           {
           dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-          dc.SetTextForeground ( tf ) ;
+          dc.SetTextForeground ( getHighlightColor ( a , tf ) ) ;
           }
 
        // Protease cuts
@@ -617,7 +615,7 @@ void SeqAA::show_direct ( wxDC& dc )
              dc.DrawText ( pn , qx - u1/2 , qy - u2/2 ) ;
              dc.SetFont(*can->font);
              
-             if ( primaryMode ) dc.SetTextForeground ( *wxBLACK ) ;
+             if ( primaryMode ) dc.SetTextForeground ( getHighlightColor ( a , *wxBLACK ) ) ;
              else dc.SetTextForeground ( myapp()->frame->aa_color /* *wxLIGHT_GREY */ ) ;
              }
           }
