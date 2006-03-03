@@ -1176,7 +1176,7 @@ void MyChild::OnTransformSequence(wxCommandEvent& event)
     bool invert = tsd.invert->GetValue() ;
     
     if ( !complement && !invert ) return ; // Noting to do
-    
+    if ( !inNewVector ) cSequence->findID(_T("DNA"))->clearHighlights();
     doTransformSequence ( inNewVector , complement , invert ) ;
     }    
     

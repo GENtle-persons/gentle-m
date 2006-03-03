@@ -589,6 +589,7 @@ void SequenceCanvas::OnCut ( wxCommandEvent &ev )
     int a ;
     for ( a = 0 ; a < seq.GetCount() ; a++ )
        {
+	   seq[a]->clearHighlights();
        if ( seq[a]->whatsthis() == _T("AA") )
           {
           SeqAA *x = (SeqAA*) seq[a] ;
