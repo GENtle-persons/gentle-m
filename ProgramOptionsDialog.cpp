@@ -253,6 +253,8 @@ void ProgramOptionsDialog::initGlobalSettings ()
                         txt("t_check4update") ) ;
     useInternalHelp = new wxCheckBox ( globalSettingsPanel , -1 , 
                         txt("t_useinternalhelp") ) ; 
+    useOnlineHelp = new wxCheckBox ( globalSettingsPanel , -1 , 
+                        txt("t_useonlinehelp") ) ; 
     doRegisterStuff = new wxCheckBox ( globalSettingsPanel , -1 , 
                         txt("t_doregisterstuff") ) ; 
     showEnzymePos = new wxCheckBox ( globalSettingsPanel , -1 ,
@@ -296,6 +298,7 @@ void ProgramOptionsDialog::initGlobalSettings ()
     showSplashScreen->SetValue ( myapp()->frame->showSplashScreen ) ;
     checkUpdate->SetValue ( myapp()->frame->checkUpdate ) ;
     useInternalHelp->SetValue ( myapp()->frame->useInternalHelp ) ;
+    useOnlineHelp->SetValue ( myapp()->frame->useOnlineHelp ) ;
     doRegisterStuff->SetValue ( myapp()->frame->doRegisterStuff ) ;
     showEnzymePos->SetValue ( myapp()->frame->showEnzymePos ) ;
 	useTwoToolbars->SetValue ( myapp()->frame->useTwoToolbars ) ;
@@ -342,6 +345,7 @@ void ProgramOptionsDialog::initGlobalSettings ()
     v->Add ( showSplashScreen , 0 , wxEXPAND|wxALL , 3 ) ;
     v->Add ( checkUpdate , 0 , wxEXPAND|wxALL , 3 ) ;
     v->Add ( useInternalHelp , 0 , wxEXPAND|wxALL , 3 ) ;
+	v->Add ( useOnlineHelp , 0 , wxEXPAND|wxALL , 3 ) ;
     v->Add ( doRegisterStuff , 0 , wxEXPAND|wxALL , 3 ) ;
     v->Add ( showEnzymePos , 0 , wxEXPAND|wxALL , 3 ) ;
     v->Add ( showTips , 0 , wxEXPAND|wxALL , 3 ) ;

@@ -121,6 +121,7 @@ MyFrame::MyFrame(wxWindow *parent,
     lastChild = NULL ;
     tb_mychild = NULL ;
     online_tools = new TOnlineTools ;
+	push_help ( _T("GENtle_manual") ) ;
 
     // Load DNA markers
     wxTextFile tf ( _T("marker.txt") ) ;
@@ -142,6 +143,7 @@ MyFrame::MyFrame(wxWindow *parent,
 */
 MyFrame::~MyFrame ()
     {
+	pop_help () ;
     if ( html_ep ) delete html_ep ;
     rememberLastProject () ;
     CLEAR_DELETE ( dbcache ) ;
@@ -233,6 +235,7 @@ void MyFrame::initme ()
     showStopCodon = LS->getOption ( _T("SHOWSTOPCODON") , 0 ) ;
     useCoolCanvas = LS->getOption ( _T("USECOOLCANVAS") , false ) ; // Ignored
     useInternalHelp = LS->getOption ( _T("USEINTERNALHELP") , false ) ;
+    useOnlineHelp = LS->getOption ( _T("USEONLINEHELP") , true ) ;
     showEnzymePos = LS->getOption ( _T("SHOWENZYMEPOS") , true ) ;
     nonstandard_translation_table = LS->getOption ( _T("nonstandard_translation_table") , -1 ) ;
 //#ifdef __WXMAC__
@@ -523,10 +526,10 @@ void MyFrame::OnAbout(wxCommandEvent& event )
 */
 void MyFrame::OnHelp(wxCommandEvent& event )
 {
+	wxString helpfile ;
     if ( useInternalHelp )
         {
         wxHtmlHelpController *hc = new wxHtmlHelpController ( wxHF_DEFAULT_STYLE|wxHF_OPEN_FILES ) ;
-        wxString helpfile ;
         helpfile += myapp()->homedir ;
         helpfile += _T("\\help\\") ;
         helpfile += lang_string ;
@@ -536,30 +539,40 @@ void MyFrame::OnHelp(wxCommandEvent& event )
         }
     else
         {
-		#ifdef __WXMAC__
-            wxString helpfile = _T("\"") ;
-            helpfile += myapp()->homedir ;
-            helpfile += _T("/") ;
-            helpfile += txt("f_help").AfterFirst ( '/' ) ;
-            helpfile += _T("\"") ;
+		helpfile = get_help() ;
+		if ( useOnlineHelp && !helpfile.IsEmpty() )
+			{
+			helpfile = _T("http://en.wikibooks.org/wiki/") + helpfile ;
+			}
+		else helpfile.Clear() ;
+		
+		if ( helpfile.IsEmpty() )
+			{
+			#ifdef __WXMAC__
+				helpfile = _T("\"") ;
+				helpfile += myapp()->homedir ;
+				helpfile += _T("/") ;
+				helpfile += txt("f_help").AfterFirst ( '/' ) ;
+				helpfile += _T("\"") ;
+			#endif
 
-            wxString command = myapp()->getHTMLCommand ( helpfile ) ;
-            wxExecute ( command ) ;
-		#endif
+			#ifdef __WXMSW__
+				helpfile = _T("\"") ;
+				helpfile += myapp()->homedir ;
+				helpfile += _T("\\") ;
+				helpfile += txt("f_help") ;
+				helpfile += _T("\"") ;
+            
+				for ( int a = 0 ; a < helpfile.length() ; a++ )
+					if ( helpfile.GetChar(a) == '/' ) helpfile.SetChar ( a , '\\' ) ;
+			#endif
+			}
 
-        #ifdef __WXMSW__
-            wxString helpfile = _T("\"") ;
-            helpfile += myapp()->homedir ;
-            helpfile += _T("\\") ;
-            helpfile += txt("f_help") ;
-            helpfile += _T("\"") ;
-            
-            for ( int a = 0 ; a < helpfile.length() ; a++ )
-               if ( helpfile.GetChar(a) == '/' ) helpfile.SetChar ( a , '\\' ) ;
-            
-            wxString command = myapp()->getHTMLCommand ( helpfile ) ;
-            wxExecute ( command ) ;
-        #endif
+		if ( !helpfile.IsEmpty() )
+			{
+			wxString command = myapp()->getHTMLCommand ( helpfile ) ;
+			wxExecute ( command ) ;
+			}
         }
 }
 
@@ -1269,6 +1282,7 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     showSplashScreen = pod.showSplashScreen->GetValue() ;
     checkUpdate = pod.checkUpdate->GetValue() ;
     useInternalHelp = pod.useInternalHelp->GetValue() ;
+    useOnlineHelp = pod.useOnlineHelp->GetValue() ;
     doRegisterStuff = pod.doRegisterStuff->GetValue() ;
     editFeatureMode = pod.editFeatureMode->GetSelection() ;
     showStopCodon = pod.showStopCodon->GetSelection() ;    
@@ -1297,6 +1311,7 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     LS->setOption ( _T("SHOWSPLASHSCREEN") , showSplashScreen ) ;
     LS->setOption ( _T("CHECKUPDATE") , checkUpdate ) ;
     LS->setOption ( _T("USEINTERNALHELP") , useInternalHelp ) ;
+    LS->setOption ( _T("USEONLINEHELP") , useOnlineHelp ) ;
     LS->setOption ( _T("REGISTERSTUFF") , doRegisterStuff ) ;
     LS->setOption ( _T("EDITFEATUREMODE") , editFeatureMode ) ;
     LS->setOption ( _T("SHOWSTOPCODON") , showStopCodon ) ;
@@ -2188,7 +2203,25 @@ void MyFrame::TestMenu(wxCommandEvent& event)
     wxPostEvent ( this , ev ) ;
 #endif
     }
-    	
+
+
+void MyFrame::push_help ( wxString name )
+	{
+	help_name.push_back ( name ) ;
+	}
+
+void MyFrame::pop_help ()
+	{
+	if ( help_name.size() == 0 ) return ;
+	help_name.pop_back() ;
+	}
+
+wxString MyFrame::get_help ()
+	{
+	if ( help_name.size() == 0 ) return _T("") ;
+	return help_name[help_name.size()-1] ;
+	}
+
 //******************************************************************* TTestSuite
 
 #ifdef MYTEST

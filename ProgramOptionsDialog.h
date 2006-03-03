@@ -66,7 +66,7 @@ class ProgramOptionsDialog : public wxDialog
                 *loadLastProject , *useMetafile , *showSplashScreen ,
                 *checkUpdate , *useInternalHelp , *doRegisterStuff ,
 					 *showEnzymePos , *use_nonstandard_translation_table ,
-                *showTips , *useTwoToolbars ;
+                *showTips , *useTwoToolbars , *useOnlineHelp ;
                 
     wxRadioBox *editFeatureMode ; ///< Pointer to the list of choices of how to treat edited items
     wxRadioBox *showStopCodon ; ///< Pointer to the list of choices of how to display stop codons

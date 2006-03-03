@@ -368,9 +368,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>9143964709B85B56004EEFCD</string>
+				<string>91D8A08109B893AC00940D5D</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>9143964809B85B56004EEFCD</string>
+				<string>91D8A08209B893AC00940D5D</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -504,9 +504,10 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
+		<string>1C530D57069F1CE1000CFCEE</string>
 		<string>9180A7220866FE4F000C7D5E</string>
-		<string>/Users/magnusmanske/GENtle/GENtle.xcodeproj</string>
 		<string>1C0AD2B3069F1EA900FABCE6</string>
+		<string>/Users/magnusmanske/GENtle/GENtle.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
 	<string>208 338 690 397 0 0 1024 746 </string>
@@ -530,7 +531,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CD0528F0623707200166675</string>
 								<key>PBXProjectModuleLabel</key>
-								<string></string>
+								<string>Alignment.cpp</string>
 								<key>StatusBarVisibility</key>
 								<true/>
 							</dict>
@@ -547,6 +548,8 @@
 							<string>261pt</string>
 						</dict>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -586,7 +589,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>9180A7220866FE4F000C7D5E</string>
-				<string>9143964909B85B56004EEFCD</string>
+				<string>91D8A0B809B8AB7B00940D5D</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
@@ -731,7 +734,7 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CDD528C0622207200134675</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>TItemEditDialog.cpp</string>
+										<string></string>
 										<key>StatusBarVisibility</key>
 										<true/>
 									</dict>
@@ -752,8 +755,6 @@
 							<string>446pt</string>
 						</dict>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -789,8 +790,8 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C530D57069F1CE1000CFCEE</string>
-				<string>91CECD8009B6FDEE00CF878E</string>
-				<string>91CECD8109B6FDEE00CF878E</string>
+				<string>91D8A0D009B8F95E00940D5D</string>
+				<string>91D8A0D109B8F95E00940D5D</string>
 				<string>1CDD528C0622207200134675</string>
 				<string>1CD0528E0623707200166675</string>
 			</array>
@@ -898,8 +899,8 @@
 										<string>yes</string>
 										<key>sizes</key>
 										<array>
-											<string>{{0, 0}, {367, 168}}</string>
-											<string>{{0, 173}, {367, 270}}</string>
+											<string>{{0, 0}, {491, 168}}</string>
+											<string>{{0, 173}, {491, 270}}</string>
 										</array>
 									</dict>
 									<key>VerticalSplitView</key>
@@ -948,9 +949,9 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C0AD2B3069F1EA900FABCE6</string>
-				<string>9143964A09B85B56004EEFCD</string>
+				<string>91D8A08309B893AC00940D5D</string>
 				<string>1CD0528B0623707200166675</string>
-				<string>9143964B09B85B56004EEFCD</string>
+				<string>91D8A08409B893AC00940D5D</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.run</string>

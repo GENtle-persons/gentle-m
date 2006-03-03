@@ -139,6 +139,21 @@ void ChildBase::SetMyMenuBar ()
 
 void ChildBase::Activate ()
     {
+	// Help
+	while ( myapp()->frame->count_help() > 1 )
+		myapp()->frame->pop_help() ;
+	if ( def == _T("dna") ) myapp()->frame->push_help ( _T("GENtle:DNA") ) ;
+	else if ( def == _T("AminoAcids") ) myapp()->frame->push_help ( _T("GENtle:Protein") ) ;
+	else if ( def == _T("ABIviewer") ) myapp()->frame->push_help ( _T("GENtle:Sequencing") ) ;
+	else if ( def == _T("alignment") ) myapp()->frame->push_help ( _T("GENtle:Alignments") ) ;
+	else if ( def == _T("EXTERNAL") ) myapp()->frame->push_help ( _T("GENtle:Web_interface") ) ;
+	else if ( def == _T("PrimerDesign") ) myapp()->frame->push_help ( _T("GENtle:PCR_and_Primer_Design") ) ;
+	else if ( def == _T("CALCULATOR") ) myapp()->frame->push_help ( _T("GENtle:Calculators") ) ;
+	else if ( def == _T("GRAPH") ) myapp()->frame->push_help ( _T("GENtle:Graph") ) ;
+	else if ( def == _T("IMAGE") ) myapp()->frame->push_help ( _T("GENtle:Image_Viewer") ) ;
+	else if ( def == _T("PHYLOTREE") ) myapp()->frame->push_help ( _T("GENtle:Protein") ) ;
+	else if ( def == _T("GEL") ) myapp()->frame->push_help ( _T("GENtle:Virtual_Gel") ) ;
+	
     myapp()->frame->setActiveChild ( this ) ;
 	SetMyMenuBar () ;
     if ( myapp()->frame->isLocked() ) return ;
