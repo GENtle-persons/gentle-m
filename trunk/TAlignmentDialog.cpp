@@ -19,6 +19,7 @@ END_EVENT_TABLE()
 TAlignmentDialog::TAlignmentDialog(wxWindow *parent, const wxString& title )
     : wxDialog ( myapp()->frame , -1 , title , wxDefaultPosition , wxSize ( 600 , 450 ) )
     {
+	myapp()->frame->push_help ( _T("GENtle:Alignments") ) ; // TODO : Link to dialog help page
     bo = 5 ;
     th = 15 ;
     al = (TAlignment*) parent ;
@@ -231,6 +232,7 @@ void TAlignmentDialog::OnCharHook ( wxKeyEvent& event )
     int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
     if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
     else event.Skip() ;
     }
 

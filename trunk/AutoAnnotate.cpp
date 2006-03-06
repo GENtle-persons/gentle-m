@@ -37,7 +37,7 @@ TAutoAnnotateDialog::~TAutoAnnotateDialog ()
 TAutoAnnotateDialog::TAutoAnnotateDialog ( wxWindow *parent, const wxString& title , AutoAnnotate *_aa )
     : wxDialog ( parent , TSD , title , wxDefaultPosition , wxSize ( 400 , 200 ) )
 	{
-	myapp()->frame->push_help ( _T("Automatic_annotation") ) ;
+	myapp()->frame->push_help ( _T("GENtle:Automatic_annotation") ) ;
 	aa = _aa ;
 	aa->dbname.Clear () ;
 	aa->dbfile.Clear () ;
@@ -97,6 +97,7 @@ void TAutoAnnotateDialog::OnCharHook ( wxKeyEvent& event )
     wxCommandEvent ev ;
     if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
     else if ( k == WXK_RETURN ) OnOK ( ev ) ;
+    else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
     else event.Skip() ;
 	}    
 

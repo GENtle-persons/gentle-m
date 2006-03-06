@@ -33,6 +33,7 @@ class PCR_troubleshoot_dialog : public wxDialog
 	{
 	public :
 	PCR_troubleshoot_dialog(TPrimerDesign *_parent, const wxString& title ) ; ///< Constructor
+	~PCR_troubleshoot_dialog () ; ///< Destructor
 	
 	virtual void OnOK ( wxCommandEvent &ev ) ; ///< OK button event handler
 	virtual void OnCancel ( wxCommandEvent &ev ) ; ///< Cancel button event handler

@@ -12,7 +12,16 @@ BEGIN_EVENT_TABLE(AlignmentAppearanceDialog, wxDialog)
     EVT_BUTTON(wxID_OK,AlignmentAppearanceDialog::OnOK)
     EVT_BUTTON(wxID_CANCEL,AlignmentAppearanceDialog::OnCancel)
     EVT_BUTTON(ALIGN_APPEARANCE_RESET,AlignmentAppearanceDialog::OnReset)
+    EVT_CHAR_HOOK(AlignmentAppearanceDialog::OnCharHook)
 END_EVENT_TABLE()
+
+void AlignmentAppearanceDialog::OnCharHook(wxKeyEvent& event)
+    {
+    int k = event.GetKeyCode () ;
+    wxCommandEvent ev ;
+    if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
+    else event.Skip() ;
+    }
 
 void AlignmentAppearanceDialog::addLine ( wxString name , wxArrayString &as , wxFlexGridSizer *sizer )
     {

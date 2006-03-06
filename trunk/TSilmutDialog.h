@@ -32,6 +32,8 @@ class TSilmutDialog : public wxDialog
     TSilmutDialog ( wxWindow *parent , const wxString &s , 
                     int _mode = M_SILMUT , 
                     int _mut_pos = -1 , int _mut_dir = 1 ) ; ///< Constructor
+    ~TSilmutDialog () ; ///< Destructor
+    
     virtual void initme ( TVector *vec , int _from , int _to ) ; ///< Initialization
     virtual void calc () ; ///< Calculate
     virtual void showit () ; ///< Show results

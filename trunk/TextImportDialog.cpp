@@ -13,6 +13,7 @@ END_EVENT_TABLE()
 TextImportDialog::TextImportDialog(wxWindow *parent, const wxString& title )
          : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 600 , 450 ) )
     {
+	myapp()->frame->push_help ( _T("GENtle:Enter sequence") ) ;
     int w , h ;
     int bo = 5 , lh = 22 ;
     GetClientSize ( &w , &h ) ;
@@ -52,11 +53,18 @@ TextImportDialog::TextImportDialog(wxWindow *parent, const wxString& title )
     name->SetFocus() ;
     }
 
+TextImportDialog::~TextImportDialog ()
+    {
+    myapp()->frame->pop_help () ;
+    }
+
+
 void TextImportDialog::OnCharHook(wxKeyEvent& event)
     {
     int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
     if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
     else event.Skip() ;
     }
 

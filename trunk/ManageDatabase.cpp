@@ -44,6 +44,7 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , wxString title
                             int mode , TVector *_v )
     : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 700 , 550 ) )
     {
+    myapp()->frame->push_help ( _T("GENtle:Databases") ) ;
     actionMode = mode ;
     il = NULL ;
     thetarget = NULL ;
@@ -91,6 +92,7 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , wxString title
     
 TManageDatabaseDialog::~TManageDatabaseDialog ()
     {
+    myapp()->frame->pop_help () ;
     nb->DeleteAllPages() ;
     if ( il ) delete il ;
     }
@@ -595,6 +597,7 @@ void TManageDatabaseDialog::OnCharHook(wxKeyEvent& event)
     int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
     if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
     else event.Skip() ;
     }
 

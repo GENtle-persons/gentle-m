@@ -74,7 +74,8 @@ class TSpeakDialog : public wxDialog
 	{
     public : 
     TSpeakDialog(wxWindow *parent, const wxString& title , wxString _seq ) ; ///< Constructor
-
+    ~TSpeakDialog () ; ///< Destructor
+    
     virtual void OnCharHook(wxKeyEvent& event) ; ///< Cancel button event handler
     virtual void OnPlay ( wxCommandEvent &ev ) ;
     virtual void OnStop ( wxCommandEvent &ev ) ;
@@ -155,6 +156,7 @@ class TEnzymeDialog : public wxDialog
     public :
     TEnzymeDialog(wxWindow *parent, const wxString& title, const wxPoint& pos , 
                         const wxSize& size , const long style ) ; ///< Constructor
+    ~TEnzymeDialog () ; ///< Destructor
     void initme ( TRestrictionEnzyme *_e = NULL , bool ro = false ) ; ///< Initialization
     void OnOK ( wxCommandEvent &ev ) ; ///< OK button event handler
     void OnCharHook(wxKeyEvent& event) ; ///< Cancel button event handler

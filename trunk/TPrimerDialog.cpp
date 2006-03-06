@@ -41,12 +41,14 @@ bool operator == ( const TPrimer &p1 , const TPrimer &p2 )
 TPrimerDialog::TPrimerDialog(wxWindow *parent, const wxString& title )
          : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 760 , 500 ) )
     {
+	myapp()->frame->push_help ( _T("GENtle:Edit_primer_dialog") ) ;
     Center() ;
     cp = NULL ;
     }
     
 TPrimerDialog::~TPrimerDialog()
     {
+	myapp()->frame->pop_help () ;
     if ( cp ) delete cp ;
     }
     
@@ -55,6 +57,7 @@ void TPrimerDialog::OnCharHook(wxKeyEvent& event)
     int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
     if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
     else event.Skip() ;
     }
 

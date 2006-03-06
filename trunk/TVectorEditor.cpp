@@ -44,12 +44,14 @@ void TVectorEditor::OnCharHook(wxKeyEvent& event)
     int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
     if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
     else event.Skip() ;
     }
 
 TVectorEditor::TVectorEditor(wxWindow *parent, const wxString& title , TVector *_v )
          : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 620 , 550 ) )
     {
+    myapp()->frame->push_help ( _T("GENtle:Sequence_editor") ) ;
     lastSelection = -1 ;
     v = _v ;
     panProp = panItem = panEnzym = NULL ;
@@ -84,6 +86,7 @@ TVectorEditor::TVectorEditor(wxWindow *parent, const wxString& title , TVector *
 
 TVectorEditor::~TVectorEditor ()
     {
+    myapp()->frame->pop_help () ;
     nb->DeleteAllPages() ;
     }
     

@@ -39,6 +39,7 @@ class TRestrictionEditor : public wxDialog
     public :
     TRestrictionEditor(MyFrame *parent, const wxString& title, const wxPoint& pos, 
                        const wxSize& size, const long style); ///< Constructor
+    ~TRestrictionEditor () ; ///< Destructor
 
     virtual void initme ( TVector *_v ) ; ///< Initialization
     virtual void initRestrictionPage () ; ///< Sets up the page
@@ -51,7 +52,7 @@ class TRestrictionEditor : public wxDialog
     virtual void getFragmentList ( wxArrayInt &cuts , vector <TFragment> &fragments ) ; ///< Set list of fragments
     virtual void listFragments ( wxListCtrl *list , wxArrayInt &vi ) ; ///< Show fragments in a list
     virtual void listEnzymesInGroup ( wxString gr , wxArrayString &vs ) ; ///< List the enzymes in group
-    
+
     virtual void res_ll ( wxListEvent &event ) ; ///<  event handler
     virtual void res_coc_ll ( wxListEvent &event ) ; ///<  event handler
     virtual void res_ll_act ( wxListEvent &event ) ; ///<  event handler

@@ -50,7 +50,8 @@ class ProgramOptionsDialog : public wxDialog
     {
     public :
     ProgramOptionsDialog(wxWindow *parent, const wxString& title ) ; ///< Constructor
-
+    ~ProgramOptionsDialog () ; ///< Destructor
+    
     virtual void OnOK ( wxCommandEvent &ev ) ; ///< OK button event handler
     virtual void OnCancel ( wxCommandEvent &ev ) ; ///< Cancel button event handler
     virtual void OnAACol ( wxCommandEvent &ev ) ; ///< Amino acid color event handler

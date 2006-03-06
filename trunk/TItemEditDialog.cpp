@@ -16,6 +16,7 @@ TItemEditDialog::TItemEditDialog ( wxWindow *parent, const wxString& title ,
                         TVectorItem &_vi )
    : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 400 , 400 ) )
    {
+   myapp()->frame->push_help ( _T("GENtle:Sequence_editor#Features") ) ;
    vi = new TVectorItem ;
    *vi = _vi ;
    
@@ -68,6 +69,7 @@ TItemEditDialog::TItemEditDialog ( wxWindow *parent, const wxString& title ,
    
 TItemEditDialog::~TItemEditDialog ()
     {
+    myapp()->frame->pop_help () ;
     delete vi ;
     }
     
@@ -78,6 +80,7 @@ void TItemEditDialog::OnCharHook(wxKeyEvent& event)
     int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
     if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
     else event.Skip() ;
     }
 

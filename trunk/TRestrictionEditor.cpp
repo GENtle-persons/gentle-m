@@ -53,6 +53,7 @@ void TRestrictionEditor::OnCharHook(wxKeyEvent& event)
     int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
     if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
     else event.Skip() ;
     }
 
@@ -72,11 +73,17 @@ TRestrictionEditor::TRestrictionEditor(MyFrame *parent, const wxString& title,
                  const wxPoint& pos , const wxSize& size ,
                  const long style )
          : wxDialog ( parent , -1 , title , pos , size , style )
-{
+    {
+    myapp()->frame->push_help ( _T("GENtle:Restriction_Assistant") ) ;
     numberoffragments = 0 ;
     global_sort_mode = BY_NAME ;
     global_sort_ascending = true ;
-}
+    }
+
+TRestrictionEditor::~TRestrictionEditor ()
+    {
+    myapp()->frame->pop_help () ;
+    }
 
 void TRestrictionEditor::initme ( TVector *_v )
     {

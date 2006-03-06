@@ -22,7 +22,7 @@ class TVectorEditor : public wxDialog
     {
     public :
     TVectorEditor(wxWindow *parent, const wxString& title , TVector *_v ) ; ///< Constructor
-    virtual ~TVectorEditor () ; ///< Destructor
+    ~TVectorEditor () ; ///< Destructor
     
     virtual void initialViewItem ( int num ) ; ///< Initially, view item #num
     virtual void initialViewEnzyme ( wxString e ) ; ///< Initially, view enzyme e
