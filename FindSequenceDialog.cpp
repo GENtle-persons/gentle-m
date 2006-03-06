@@ -21,7 +21,8 @@ END_EVENT_TABLE()
 
 FindSequenceDialog::FindSequenceDialog ( wxWindow *parent, const wxString& title )
 	: wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 380 , 400 ) )
-	{
+	{ 
+    myapp()->frame->push_help ( _T("GENtle:Find") ) ;
 	highlight = *wxBLUE ;
 	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
 	wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
@@ -72,6 +73,11 @@ FindSequenceDialog::FindSequenceDialog ( wxWindow *parent, const wxString& title
 	if ( x < x1+5 ) x = x1+5 ;
 	if ( y < y1+5 ) y = y1+5 ;
 	Move ( x , y ) ;	
+	}
+
+FindSequenceDialog::~FindSequenceDialog ()
+	{
+    myapp()->frame->pop_help () ;
 	}
     
 wxString FindSequenceDialog::getQuery ()
@@ -209,6 +215,7 @@ void FindSequenceDialog::OnCharHook(wxKeyEvent& event)
     int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
     if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    else if ( k == WXK_F1 ) myapp()->frame->OnHelp ( ev ) ;
     else event.Skip() ;
     }
 

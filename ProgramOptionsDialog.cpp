@@ -24,6 +24,7 @@ END_EVENT_TABLE()
 TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent , int _mode )
 	: wxPanel ( parent )
 	{
+    myapp()->frame->push_help ( _T("GENtle:Options") ) ;
 	mode = _mode ;
 	int w , h ;
     GetClientSize ( &w , &h ) ;
@@ -126,6 +127,11 @@ TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent , int _mode )
     updateGlobalEnzymes () ;
 	vs->Fit ( this ) ;
 	}    
+
+ProgramOptionsDialog::~ProgramOptionsDialog ()
+	{
+	myapp()->frame->pop_help () ;
+    }
 
 void TEnzymeSettingsTab::updateGlobalEnzymes ()
 	{
@@ -363,6 +369,7 @@ void ProgramOptionsDialog::OnCharHook(wxKeyEvent& event)
     int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
     if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
     else event.Skip() ;
     }
 

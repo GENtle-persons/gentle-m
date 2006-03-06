@@ -57,6 +57,7 @@ END_EVENT_TABLE()
 TGraphDialog::TGraphDialog ( wxWindow *_parent , const wxString& title )
     : wxDialog ( _parent , -1 , title )
 	{
+    myapp()->frame->push_help ( _T("GENtle:Graph") ) ;
 	parent = (TGraph*) _parent ;
 	set_up = false ;
 
@@ -84,6 +85,7 @@ TGraphDialog::TGraphDialog ( wxWindow *_parent , const wxString& title )
 
 TGraphDialog::~TGraphDialog()
 	{
+    myapp()->frame->pop_help () ;
 	}
 
 void TGraphDialog::OnOK ( wxCommandEvent &ev )
@@ -354,6 +356,7 @@ void TGraphDialog::OnButtonScales ( wxCommandEvent &ev )
 TSpeakDialog::TSpeakDialog(wxWindow *parent, const wxString& title , wxString _seq )
     : wxDialog ( parent , -1 , title )
     {
+    myapp()->frame->push_help ( _T("GENtle:Speak") ) ;
 	sequence = _seq ;
 	doPlay = false ;
 	
@@ -396,6 +399,12 @@ TSpeakDialog::TSpeakDialog(wxWindow *parent, const wxString& title , wxString _s
 	seq->SetSelection ( -1 , -1 ) ;
 //	seq->ShowPosition ( 0 ) ;
 	}
+
+TSpeakDialog::~TSpeakDialog ()
+	{
+    myapp()->frame->pop_help () ;
+	}
+
 	
 void TSpeakDialog::OnPlay ( wxCommandEvent &ev )
 	 {
@@ -437,6 +446,7 @@ void TSpeakDialog::OnCharHook ( wxKeyEvent& event )
     int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
     if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
     else event.Skip() ;
     }
 
@@ -524,6 +534,7 @@ double TIPCDialog::estimate_time ( int f )
 TSequencingPrimerDialog::TSequencingPrimerDialog (wxWindow *parent, const wxString& title )
     : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 600 , 450 ) )
     {
+	myapp()->frame->push_help ( _T("GENtle:Sequencing_Primers") ) ;
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
@@ -608,6 +619,7 @@ void TSequencingPrimerDialog::OnCharHook ( wxKeyEvent& event )
     int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
     if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
     else if ( k == WXK_RETURN ) OnOK ( ev ) ;
     else event.Skip() ;
     }
@@ -744,6 +756,7 @@ int TSequencingPrimerDialog::findBestMatch ( wxString &s , wxString seq , int &p
     
 TSequencingPrimerDialog::~TSequencingPrimerDialog ()
     {
+    myapp()->frame->pop_help () ;
     }
 
 // ******************************************* TMutationDialog
@@ -966,6 +979,7 @@ void TransformSequenceDialog::OnCharHook ( wxKeyEvent& event )
     int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
     if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
     else if ( k == WXK_RETURN ) OnOK ( ev ) ;
     else event.Skip() ;
     }
@@ -979,8 +993,14 @@ TEnzymeDialog::TEnzymeDialog(wxWindow *parent, const wxString& title,
                  const long style)
          : wxDialog ( parent , ED , title , pos , size , style )
 {
+	myapp()->frame->push_help ( _T("GENtle:Enzyme_management") ) ;
 }
 
+TEnzymeDialog::~TEnzymeDialog ()
+    {
+    myapp()->frame->pop_help () ;
+    }
+                                                                         
 void TEnzymeDialog::initme ( TRestrictionEnzyme *_e , bool ro )
     {
     readonly = ro ;
@@ -1035,6 +1055,7 @@ void TEnzymeDialog::OnCharHook(wxKeyEvent& event)
     int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
     if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
     else event.Skip() ;
     }
 

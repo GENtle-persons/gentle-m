@@ -34,9 +34,10 @@ bool operator == ( const TProteolysisSuggestion &c1 , const TProteolysisSuggesti
 TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 	: wxDialog ( (wxWindow*) _parent , -1 , title , wxDefaultPosition , wxSize ( 710 , 550 ) )
 	{
+	myapp()->frame->push_help ( _T("GENtle:Proteolysis_assistant") ) ;
 	parent = _parent ;
 	v = parent->vec ;
-		
+	
 	sep_fragments = new wxCheckListBox ( this , PRO_SEP_FRAGMENTS ) ;
 	proteases = new wxCheckListBox ( this , PRO_PROTEASES ) ;
 	ignore = new wxCheckListBox ( this , PRO_IGNORE ) ;
@@ -178,6 +179,7 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 
 TProteolysis::~TProteolysis ()
 	{
+	myapp()->frame->pop_help () ;
 	for ( int a = 0 ; a < pc_cache.size() ; a++ )
 		{
 		for ( int b = 0 ; b < pc_cache[a].size() ; b++ )
@@ -260,7 +262,7 @@ void TProteolysis::calc_spearation_sub ( int depth , TProteaseArray &prop , vect
 		remove_ignored_cuts ( apc ) ;
 
 		// Start description
-		desc += _T("* ") + wxString::Format ( txt("t_proteolysis_auto_fragments") , apc.size() ) + _T("\r\n") ;
+		desc += _T("* ") + wxString::Format ( txt("t_proteolysis_auto_fragments") , apc.size()+1 ) + _T("\r\n") ;
 		for ( b = 0 ; b < prop.size() ; b++ )
 			{
 			if ( name != _T("") ) name += _T(", ") ;
@@ -305,7 +307,7 @@ void TProteolysis::calc_spearation_sub ( int depth , TProteaseArray &prop , vect
 		s.proteases = prop ;
 		s.grade = grade ;
 		s.desc = desc ;
-		s.name = name + _T(" (" ) + wxString::Format ( txt("t_proteolysis_auto_fragments") , apc.size() ) + _T(")") ;
+		s.name = name + _T(" (" ) + wxString::Format ( txt("t_proteolysis_auto_fragments") , apc.size()+1 ) + _T(")") ;
 		suggestions.push_back ( s ) ;
 		}
 	prop.pop_back () ;
@@ -729,6 +731,7 @@ void TProteolysis::OnCharHook(wxKeyEvent& event)
 	int k = event.GetKeyCode () ;
 	wxCommandEvent ev ;
 	if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+	else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
 	else event.Skip() ;
 	}
 

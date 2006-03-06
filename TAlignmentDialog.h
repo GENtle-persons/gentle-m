@@ -15,6 +15,7 @@ class TAlignmentDialog : public wxDialog
     public :
     TAlignmentDialog(wxWindow *parent, const wxString& title ) ; ///< Constructor
     ~TAlignmentDialog(); ///< Destructor
+    
     virtual void init_what () ; ///< Tab for sequences to align
     virtual void init_how () ; ///< Tab for algorithm settings
     virtual void init_disp () ; ///< Tab for display settings (unused)

@@ -20,12 +20,14 @@ void TSilmutDialog::OnCharHook(wxKeyEvent& event)
     int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
     if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
     else event.Skip() ;
     }
 
 TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode , int _mut_pos , int _mut_dir )
     : wxDialog ( parent , -1 , s )
     {
+	myapp()->frame->push_help ( _T("GENtle:Silent_Mutagenesis") ) ;
     running = false ;
     mut_pos = _mut_pos ;
     mut_dir = _mut_dir ;
@@ -103,6 +105,11 @@ TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode 
     else pd = (TPrimerDesign*) parent ;
     last_selection = -1 ;
     }
+
+TSilmutDialog::~TSilmutDialog ()
+	{
+	myapp()->frame->pop_help () ;
+	}
 
 void TSilmutDialog::initme ( TVector *vec , int _from , int _to )
     {

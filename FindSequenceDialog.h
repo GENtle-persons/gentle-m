@@ -14,6 +14,7 @@ class FindSequenceDialog : public wxDialog
     {
     public :
     FindSequenceDialog ( wxWindow *parent, const wxString& title ) ; ///< Constructor
+    ~FindSequenceDialog () ; ///< Destructor
     virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
     virtual void OnSearch ( wxCommandEvent &ev ) ; ///< Search button event handler
     virtual void OnCancel ( wxCommandEvent &ev ) ; ///< Cancel button event handler

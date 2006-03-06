@@ -21,6 +21,7 @@ vector <TSantaLucia> PCR_troubleshoot_dialog::santa_lucia = vector <TSantaLucia>
 PCR_troubleshoot_dialog::PCR_troubleshoot_dialog(TPrimerDesign *_parent, const wxString& title )
 	: wxDialog ( (wxWindow*) _parent , -1 , title , wxDefaultPosition , wxSize ( 600 , 500 ) )
 	{
+    myapp()->frame->push_help ( _T("GENtle:PCR_troubleshoot_dialog") ) ;
 	parent = _parent ;
 #ifdef __WXMSW__
 	nl = _T("\r\n") ;
@@ -55,7 +56,12 @@ PCR_troubleshoot_dialog::PCR_troubleshoot_dialog(TPrimerDesign *_parent, const w
 	v0->Layout () ;
 	Center () ;
 	}
-	
+
+PCR_troubleshoot_dialog::~PCR_troubleshoot_dialog ()
+	{
+	myapp()->frame->pop_help () ;
+	}
+
 void PCR_troubleshoot_dialog::fillSantaLucia ()
 	{
 	if ( santa_lucia.size() > 0 ) return ; // Already done ;
@@ -516,5 +522,6 @@ void PCR_troubleshoot_dialog::OnCharHook(wxKeyEvent& event)
 	int k = event.GetKeyCode () ;
 	wxCommandEvent ev ;
 	if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+	else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
 	else event.Skip() ;
 	}

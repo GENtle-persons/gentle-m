@@ -21,6 +21,7 @@ class AlignmentAppearanceDialog : public wxDialog
     virtual void OnOK ( wxCommandEvent &event ) ; ///< OK button event handler
     virtual void OnCancel ( wxCommandEvent &event ) ; ///< Cancel button event handler
     virtual void OnReset ( wxCommandEvent &event ) ; ///< Reset button event handler
+    virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
     
     private :
     void set_pen ( SequenceCharMarkup &scm , int id , int border ) ; ///< Sets a pen in the markup object; used by OnOK

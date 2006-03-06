@@ -20,6 +20,8 @@ class TLigationDialog : public wxDialog
     {
     public :
     TLigationDialog(wxWindow *parent, const wxString& title ) ; ///< Constructor
+    ~TLigationDialog () ; ///< Destructor
+    
     virtual void init () ; ///< Initialize
     virtual void generateTargets () ; ///< Generate the target list
     virtual void curseTargets ( vector <bool> &vc , vector <bool> &used , wxArrayInt &vi ) ; ///< Recurse through targets

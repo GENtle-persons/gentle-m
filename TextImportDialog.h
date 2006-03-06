@@ -17,6 +17,7 @@ class TextImportDialog : public wxDialog
     {
     public :
     TextImportDialog(wxWindow *parent, const wxString& title ) ; ///< Constructor
+    ~TextImportDialog () ; ///< Destructor
 
     void OnOK ( wxCommandEvent &ev ) ; ///< OK button event handler
     void OnCancel ( wxCommandEvent &ev ) ; ///< Cancel button event handler
