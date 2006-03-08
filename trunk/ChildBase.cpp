@@ -137,9 +137,8 @@ void ChildBase::SetMyMenuBar ()
 		}
 	}
 
-void ChildBase::Activate ()
+void ChildBase::initHelp ()
     {
-	// Help
 	while ( myapp()->frame->count_help() > 1 )
 		myapp()->frame->pop_help() ;
 	if ( def == _T("dna") ) myapp()->frame->push_help ( _T("GENtle:DNA") ) ;
@@ -153,7 +152,11 @@ void ChildBase::Activate ()
 	else if ( def == _T("IMAGE") ) myapp()->frame->push_help ( _T("GENtle:Image_Viewer") ) ;
 	else if ( def == _T("PHYLOTREE") ) myapp()->frame->push_help ( _T("GENtle:Protein") ) ;
 	else if ( def == _T("GEL") ) myapp()->frame->push_help ( _T("GENtle:Virtual_Gel") ) ;
-	
+    }
+
+void ChildBase::Activate ()
+    {
+	initHelp () ;
     myapp()->frame->setActiveChild ( this ) ;
 	SetMyMenuBar () ;
     if ( myapp()->frame->isLocked() ) return ;

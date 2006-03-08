@@ -1724,6 +1724,8 @@ void SequenceCanvas::showContextMenu ( SeqBasic *where , int pos , wxPoint pt )
 	          if ( cb->GetMenuItemCount() > 0 ) cm->Append ( SEQ_COPY_AS , txt("t_seq_move") , cb ) ;
 	          if ( ali->lines[last_al->id].hasFeatures() ) cm->Append ( SEQ_FEAT_HIDE , txt("t_hide_feature_line") ) ;
 	          else cm->Append ( SEQ_FEAT_SHOW , txt("t_show_feature_line") ) ;
+              myapp()->frame->online_tools->init ( this ) ;
+              myapp()->frame->online_tools->add_context_menu ( cm ) ;
 	          cm->AppendSeparator () ;
 	          }
 			}

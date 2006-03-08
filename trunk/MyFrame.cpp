@@ -598,7 +598,8 @@ void MyFrame::OnFileOpen(wxCommandEvent& event )
 	unsigned int i = children.GetCount() ;
     TManageDatabaseDialog dbd ( this , txt("t_open") , ACTION_MODE_LOAD ) ;
     dbd.ShowModal () ;
-    if ( i != children.GetCount() ) setActiveChild ( children[children.GetCount()-1] ) ;
+    if ( i != children.GetCount() )
+       setActiveChild ( children[children.GetCount()-1] ) ;
     if ( GetActiveChild() ) GetActiveChild()->SetFocus() ;
 }
 
@@ -1833,6 +1834,10 @@ void MyFrame::removeChild ( ChildBase *ch )
     children.RemoveAt ( a ) ;
     lastChild = NULL ;
     activateChild ( 0 ) ;
+    
+    if ( children.size() == 0 )
+       while ( count_help () > 1 )
+             pop_help() ;
     }
 
 /** \brief Activates a child (brings to front, makes visible, etc.)

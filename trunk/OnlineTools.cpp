@@ -35,30 +35,39 @@ void TOnlineTools::add_context_menu ( wxMenu *base )
     if ( !canvas || !child ) return ;
     
     sequence = _T("") ;
-    wxMenu *ret = new wxMenu ;
-    base->Append ( POPUP_DUMMY , txt("m_online_tools") , ret ) ;
+    wxMenu *ret = NULL ;
     if ( child->def == _T("AminoAcids") )
        {
+       ret = new wxMenu ;
        ret->Append ( ONLINE_TOOLS_PHOBIUS , txt("m_ot_phobius") ) ;
        ret->Append ( ONLINE_TOOLS_POLY_PHOBIUS , txt("m_ot_poly_phobius") ) ;
        ret->Append ( ONLINE_TOOLS_MOTIF_SCAN , txt("m_ot_motif_scan") ) ;
        ret->Append ( ONLINE_TOOLS_PVAL_FPSCAN , txt("m_ot_pval_fpscan") ) ;
        ret->Append ( ONLINE_TOOLS_ELM , txt("m_ot_elm") ) ;
+       ret->Append ( ONLINE_TOOLS_GOR , txt("m_ot_gor") ) ;
+       ret->Append ( ONLINE_TOOLS_HNN , txt("m_ot_hnn") ) ;
        ret->Append ( ONLINE_TOOLS_JPRED , txt("m_ot_jpred") ) ;
+       ret->Append ( ONLINE_TOOLS_CALCPI , txt("m_ot_calcpi") ) ;
        }
     else if ( child->def == _T("dna") )
        {
-       ret->Append ( ONLINE_TOOLS_NEB_CUTTER , txt("m_neb_cutter") ) ;
+       ret = new wxMenu ;
+       ret->Append ( ONLINE_TOOLS_NEB_CUTTER , txt("m_ot_neb_cutter") ) ; // Partially functional
        }
+    else if ( child->def == _T("alignment") )
+       {
+//       ret = new wxMenu ;
+//       ret->Append ( ONLINE_TOOLS_NOMAD , txt("m_ot_nomad") ) ;
+       }
+    if ( ret ) base->Append ( POPUP_DUMMY , txt("m_online_tools") , ret ) ;
     }
 
 void TOnlineTools::take_event ( wxCommandEvent& event )
     {
-    if ( !canvas || !child ) return ;
-    if ( !child->vec ) return ;
+    if ( !child ) return ;
+    if ( child->def != _T("alignment") && !child->vec ) return ;
     determine_marked_or_complete_sequence () ;
-    if ( sequence.IsEmpty() ) return ;
-    
+    if ( child->def != _T("alignment") && sequence.IsEmpty() ) return ;
     int id = event.GetId() ;
     switch ( id )
         {
@@ -68,13 +77,18 @@ void TOnlineTools::take_event ( wxCommandEvent& event )
         case ONLINE_TOOLS_PVAL_FPSCAN : do_pval_fpscan () ; break ;
         case ONLINE_TOOLS_ELM : do_elm () ; break ;
         case ONLINE_TOOLS_JPRED : do_jpred () ; break ;
+        case ONLINE_TOOLS_CALCPI : do_calcpi () ; break ;
+        case ONLINE_TOOLS_GOR : do_gor () ; break ;
+        case ONLINE_TOOLS_HNN : do_hnn () ; break ;
         case ONLINE_TOOLS_NEB_CUTTER : do_neb_cutter () ; break ;
+        case ONLINE_TOOLS_NOMAD : do_nomad () ; break ;
         } ;
     }
 
-wxString TOnlineTools::get_fasta_name ()
+wxString TOnlineTools::get_fasta_name ( wxString ret )
     {
-    wxString ret = child->vec->getName() ;
+    if ( ret.IsEmpty() )
+       ret = child->vec->getName() ;
     ret.Replace ( _T(" ") , _T("_") ) ;
     return ret ;
     }
@@ -131,6 +145,30 @@ void TOnlineTools::do_pval_fpscan ()
     wxExecute ( myapp()->getHTMLCommand ( url ) ) ;
     }
 
+void TOnlineTools::do_calcpi ()
+    {
+    wxString url ;
+    url = _T("http://scansite.mit.edu/cgi-bin/calcpi?sequence=") + sequence ;
+    url += _T("&nphos=10") ;
+    wxExecute ( myapp()->getHTMLCommand ( url ) ) ;
+    }
+
+void TOnlineTools::do_gor ()
+    {
+    wxString url ;
+    url = _T("http://npsa-pbil.ibcp.fr/cgi-bin/secpred_gor4.pl?notice=") + sequence ;
+    wxExecute ( myapp()->getHTMLCommand ( url ) ) ;
+    }
+
+void TOnlineTools::do_hnn ()
+    {
+    wxString url ;
+    url = _T("http://npsa-pbil.ibcp.fr/cgi-bin/secpred_hnn.pl?notice=") + sequence ;
+    wxExecute ( myapp()->getHTMLCommand ( url ) ) ;
+    }
+
+
+
 //__________________________________________ DNA
 
 void TOnlineTools::do_neb_cutter ()
@@ -143,5 +181,33 @@ void TOnlineTools::do_neb_cutter ()
     url += _T("&enz_suppl=1") ;
     url += _T("&sequence=") + sequence ;
     wxExecute ( myapp()->getHTMLCommand ( url ) ) ;
-
     }
+
+
+//__________________________________________ Alignments
+
+void TOnlineTools::do_nomad ()
+    {
+    int a ;
+    wxString fasta ;
+    TAlignment *ali = (TAlignment*) child ;
+    for ( a = 0 ; a < ali->lines.size() ; a++ )
+        {
+        if ( ali->lines[a].isIdentity ) continue ;
+        wxString t = ali->lines[a].s ;
+        t.Replace ( _T("-") , _T("") ) ;
+        if ( !fasta.IsEmpty() ) fasta += _T("%0A") ;
+        fasta += _T("%3E") + get_fasta_name ( ali->lines[a].name ) + _T("%0A") ;
+        fasta += t ;
+        }
+
+    wxString url ;
+    url = _T("http://www.expasy.org/cgi-bin/nomad_form.pl?") ;
+    url += _T("fasta=") + fasta ;
+    url += _T("&seq=") + ali->isAA() ? _T("1-p") : _T("3-dna") ;
+    url += _T("&width=12&occurence=12&nb_occ=2&sort=on") ;
+    wxExecute ( myapp()->getHTMLCommand ( url ) ) ;
+    }
+
+//http://www.expasy.org/cgi-bin/nomad_form.pl?fasta=abc&
+//seq=1-p&width=12&occurence=12&nb_occ=2&sort=on

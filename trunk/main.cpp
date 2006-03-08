@@ -444,8 +444,8 @@ wxString MyApp::getHTMLCommand ( wxString command )
 #endif
     }
 
-/**	\fn MyApp::getHTMLCommand ( wxString command )
-	\brief Returns the command line to invoke the browser.
+/**	\fn MyApp::getFileFormatCommand ( wxString command )
+	\brief Returns the command line to invoke the application.
 	\param type The file ending to find the application for.
 	\param file The URL/file.
 */

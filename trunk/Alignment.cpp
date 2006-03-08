@@ -65,8 +65,6 @@ BEGIN_EVENT_TABLE(TAlignment, MyChildBase)
 END_EVENT_TABLE()
 
 
-
-
 TAlignment::TAlignment(wxWindow *parent, const wxString& title)
     : ChildBase(parent, title)
     {

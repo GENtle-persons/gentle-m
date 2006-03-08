@@ -83,6 +83,7 @@ class TManageDatabaseDialog : public wxDialog
     virtual void pmOnFilterDNA ( wxCommandEvent &ev ) ; ///< "Show DNA checkbox" event handler
     virtual void pmOnFilterProtein ( wxCommandEvent &ev ) ; ///< "Show protein checkbox" event handler
     virtual void pmOnFilterPrimer ( wxCommandEvent &ev ) ; ///< "Show primer checkbox" event handler
+    virtual void pmOnFilterAlignments ( wxCommandEvent &ev ) ; ///< "Show alignments checkbox" event handler
     virtual void pmOnFilterDesc ( wxCommandEvent &ev ) ; ///< "Search description checkbox" event handler
     virtual void pmOnFilterSeq ( wxCommandEvent &ev ) ; ///< "Search sequence checkbox" event handler
     virtual void pmOnTwoPanes ( wxCommandEvent &ev ) ; ///< "Toggle one/two lists" event handler
@@ -142,7 +143,7 @@ class TManageDatabaseDialog : public wxDialog
     bool doSave , doLoad , isProject ;
     wxString filter ;
     wxTextCtrl *filter_txt ;
-    wxCheckBox *f_dna , *f_prot , *f_primer , *f_twopanes ;
+    wxCheckBox *f_dna , *f_prot , *f_primer , *f_align , *f_twopanes ;
     wxCheckBox *f_desc , *f_seq ;
 	wxBoxSizer *v0 , *v2 ; // Sizers needed for second (right) list
     
