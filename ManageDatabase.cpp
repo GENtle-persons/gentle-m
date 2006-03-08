@@ -20,6 +20,7 @@ BEGIN_EVENT_TABLE(TManageDatabaseDialog, wxDialog )
     EVT_CHECKBOX(MD_PM_FILTER_DNA,TManageDatabaseDialog::pmOnFilterDNA)
     EVT_CHECKBOX(MD_PM_FILTER_PROTEIN,TManageDatabaseDialog::pmOnFilterProtein)
     EVT_CHECKBOX(MD_PM_FILTER_PRIMER,TManageDatabaseDialog::pmOnFilterPrimer)
+    EVT_CHECKBOX(MD_PM_FILTER_ALIGN,TManageDatabaseDialog::pmOnFilterAlignments)
     EVT_CHECKBOX(MD_PM_TWOPANES,TManageDatabaseDialog::pmOnTwoPanes)
     EVT_CHECKBOX(MD_PM_FILTER_DESC,TManageDatabaseDialog::pmOnFilterDesc)
     EVT_CHECKBOX(MD_PM_FILTER_SEQ,TManageDatabaseDialog::pmOnFilterSeq)
@@ -44,7 +45,6 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , wxString title
                             int mode , TVector *_v )
     : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 700 , 550 ) )
     {
-    myapp()->frame->push_help ( _T("GENtle:Databases") ) ;
     actionMode = mode ;
     il = NULL ;
     thetarget = NULL ;
@@ -55,7 +55,11 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , wxString title
     isProject = ( mode & ACTION_MODE_PROJECT ) != 0 ;
     bool startup = ( mode & ACTION_MODE_STARTUP ) != 0 ;
     justload = false ;
+
+    if ( isProject ) myapp()->frame->push_help ( _T("GENtle:Projects") ) ;
+    else myapp()->frame->push_help ( _T("GENtle:Databases") ) ;
     
+
     int w , h ;
     GetClientSize ( &w , &h ) ;
 
@@ -92,7 +96,6 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , wxString title
     
 TManageDatabaseDialog::~TManageDatabaseDialog ()
     {
-    myapp()->frame->pop_help () ;
     nb->DeleteAllPages() ;
     if ( il ) delete il ;
     }
@@ -159,6 +162,7 @@ void TManageDatabaseDialog::initCopynMove ()
        f_dna = new wxCheckBox ( p , MD_PM_FILTER_DNA , txt("dna") ) ;
        f_prot = new wxCheckBox ( p , MD_PM_FILTER_PROTEIN , txt("protein") ) ;
        f_primer = new wxCheckBox ( p , MD_PM_FILTER_PRIMER , txt("primers") ) ;
+       f_align = new wxCheckBox ( p , MD_PM_FILTER_ALIGN , txt("alignments") ) ;
        f_desc = new wxCheckBox ( p , MD_PM_FILTER_DESC , txt("desc") ) ;
        f_seq = new wxCheckBox ( p , MD_PM_FILTER_SEQ , txt("sequences") ) ;
        f_desc->SetValue ( 1 ) ;
@@ -167,6 +171,7 @@ void TManageDatabaseDialog::initCopynMove ()
 	   h2->Add ( f_dna , 0 , wxEXPAND|wxALL , 2 ) ;
 	   h2->Add ( f_prot , 0 , wxEXPAND|wxALL , 2 ) ;
 	   h2->Add ( f_primer , 0 , wxEXPAND|wxALL , 2 ) ;
+	   h2->Add ( f_align , 0 , wxEXPAND|wxALL , 2 ) ;
 	   h2->Add ( f_desc , 0 , wxEXPAND|wxALL , 2 ) ;
 	   h2->Add ( f_seq , 0 , wxEXPAND|wxALL , 2 ) ;
 	   }
@@ -326,26 +331,31 @@ void TManageDatabaseDialog::pm_list_items ( int x )
                  sql2 += _T(")") ;
                  }
               }
-           if ( f_dna->GetValue() )
+           if ( f_dna->GetValue() ) // DNA
               {
               if ( !sql3.IsEmpty() ) sql3 += _T(" OR ") ;
               sql3 += _T("dna_type=0 OR dna_type=1 OR dna_type=2") ;
               }
-           if ( f_prot->GetValue() )
+           if ( f_prot->GetValue() ) // Protein
               {
               if ( !sql3.IsEmpty() ) sql3 += _T(" OR ") ;
               sql3 += _T("dna_type=5") ;
               }
-           if ( f_primer->GetValue() )
+           if ( f_primer->GetValue() ) // Primer
               {
               if ( !sql3.IsEmpty() ) sql3 += _T(" OR ") ;
               sql3 += _T("dna_type=3") ;
               }
-           if ( false ) // Alignment
+           if ( f_align->GetValue() ) // Alignments
               {
               if ( !sql3.IsEmpty() ) sql3 += _T(" OR ") ;
               sql3 += _T("dna_type=4") ;
               }
+/*           if ( false ) // Alignment
+              {
+              if ( !sql3.IsEmpty() ) sql3 += _T(" OR ") ;
+              sql3 += _T("dna_type=4") ;
+              }*/
            if ( !sql3.IsEmpty() )
               {
               if ( !sql2.IsEmpty() ) sql2 += _T(" AND (") + sql3 + _T(")") ;
@@ -603,11 +613,13 @@ void TManageDatabaseDialog::OnCharHook(wxKeyEvent& event)
 
 void TManageDatabaseDialog::OnOK ( wxCommandEvent &ev )
     {
+    myapp()->frame->pop_help () ;
     wxDialog::OnOK ( ev ) ;
     }
     
 void TManageDatabaseDialog::OnCancel ( wxCommandEvent &ev )
     {
+    myapp()->frame->pop_help () ;
     wxDialog::OnCancel ( ev ) ;
     }
 
@@ -799,6 +811,7 @@ void TManageDatabaseDialog::pmOnActivate ( wxListEvent &ev , wxListCtrl *side )
 void TManageDatabaseDialog::pmOpenFiles ( wxArrayString &_names , wxString _db )
     {
     if ( _names.GetCount() == 0 ) return ;
+    myapp()->frame->pop_help () ;
     if ( doLoad || doSave )
         myapp()->frame->LS->setOption ( _T("TWOPANES") , f_twopanes->GetValue() ) ;
 
@@ -1385,7 +1398,13 @@ void TManageDatabaseDialog::pmOnFilterPrimer ( wxCommandEvent &ev )
     pm_list_items ( PM_LEFT ) ;
     pm_list_items ( PM_RIGHT ) ;    
     }
-    
+
+void TManageDatabaseDialog::pmOnFilterAlignments ( wxCommandEvent &ev )
+    {
+    pm_list_items ( PM_LEFT ) ;
+    pm_list_items ( PM_RIGHT ) ;    
+    }    
+
 void TManageDatabaseDialog::pmOnFilterDesc ( wxCommandEvent &ev )
     {
     pm_list_items ( PM_LEFT ) ;
