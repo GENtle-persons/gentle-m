@@ -34,7 +34,7 @@ class TOnlineTools
 
     void do_neb_cutter () ;
 
-    void do_nomad () ;
+    wxString get_fasta_sequences ( bool clean_gaps , bool for_clipboard ) ;
     
     SequenceCanvas *canvas ;
     ChildBase *child ;
