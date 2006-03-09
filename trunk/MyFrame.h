@@ -109,6 +109,7 @@ public:
     virtual void OnSize(wxSizeEvent& event);
     virtual void OnAbout(wxCommandEvent& event);
     virtual void OnHelp(wxCommandEvent& event);
+    virtual void OnHomepage(wxCommandEvent& event);
     virtual void OnProgramOptions(wxCommandEvent& event);
     virtual void OnProjectSave(wxCommandEvent& event);
     virtual void OnProjectLoad(wxCommandEvent& event);

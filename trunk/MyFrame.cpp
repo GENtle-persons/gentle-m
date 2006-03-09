@@ -25,6 +25,7 @@ BEGIN_EVENT_TABLE(MyFrame, MyFrameType)
     EVT_MENU(MDI_CLOSE, MyFrame::OnMDIClose)
     EVT_MENU(MDI_MANAGE_DATABASE, MyFrame::OnManageDatabase)
     EVT_MENU(PROGRAM_OPTIONS, MyFrame::OnProgramOptions)
+    EVT_MENU(MDI_HOMEPAGE, MyFrame::OnHomepage)
     
     EVT_MENU(Y___, MyFrame::TestMenu)
     EVT_MENU(MDI_RESTRICTION, MyFrame::BollocksMenu)
@@ -520,6 +521,13 @@ void MyFrame::OnAbout(wxCommandEvent& event )
 {
 	wxString text = txt("t_about_txt") ;
     (void)wxMessageBox(text + _T("\n\nV ") + myapp()->get_GENtle_version(), txt("t_about") );
+}
+
+/** \brief Invokes homepage
+*/
+void MyFrame::OnHomepage(wxCommandEvent& event )
+{
+     wxExecute ( myapp()->getHTMLCommand ( _T("http://gentle.magnusmanske.de") ) ) ;
 }
 
 /** \brief Invokes help
@@ -1806,6 +1814,7 @@ wxMenu *MyFrame::getHelpMenu ()
     wxMenu *help_menu = new wxMenu;
     help_menu->Append(MDI_HELP, txt("m_help_content") ) ;
     help_menu->Append(MDI_ABOUT, txt("m_about") );
+    help_menu->Append(MDI_HOMEPAGE, txt("m_homepage") );
     return help_menu ;
     }
     
@@ -1836,8 +1845,11 @@ void MyFrame::removeChild ( ChildBase *ch )
     activateChild ( 0 ) ;
     
     if ( children.size() == 0 )
-       while ( count_help () > 1 )
-             pop_help() ;
+       {
+       while ( count_help () > 1 ) pop_help() ;
+       ChildBase c ;
+       updateCCP ( &c ) ;
+       }
     }
 
 /** \brief Activates a child (brings to front, makes visible, etc.)

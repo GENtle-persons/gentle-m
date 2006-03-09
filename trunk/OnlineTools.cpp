@@ -82,6 +82,8 @@ void TOnlineTools::add_context_menu ( wxMenu *base )
        ret = new wxMenu ;
        ret->Append ( ONLINE_TOOLS_NEB_CUTTER , txt("m_ot_neb_cutter") ) ; // Partially functional
        ret->Append ( ONLINE_TOOLS_TRANSLATE , txt("m_ot_translate") ) ;
+       if ( child->vec->isCircular() )
+          ret->Append ( ONLINE_TOOLS_PLASMAPPER , txt("m_ot_plasmapper") ) ;
        }
     else if ( child->def == _T("alignment") )
        {
@@ -162,6 +164,10 @@ void TOnlineTools::take_event ( wxCommandEvent& event )
         case ONLINE_TOOLS_DGPI :
              url = _T("http://129.194.185.165/dgpi/DGPI_demo_en.html") ;
              clipboard = sequence ;
+             break ;
+        case ONLINE_TOOLS_PLASMAPPER :
+             url = _T("http://wishart.biology.ualberta.ca/PlasMapper/index.html") ;
+             clipboard = _T(">") + get_fasta_name() + _T("\n") + sequence ;
              break ;
         } ;
     if ( url.IsEmpty() ) return ;
