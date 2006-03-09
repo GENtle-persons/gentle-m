@@ -237,7 +237,6 @@ void TMyGelControl::OnDraw(wxDC& dc)
    	// Drawing gel
     int fontfactor = 10 ;
     if ( printing ) fontfactor = w/5000 ;
-    wxFont *smallFont = MYFONT ( fontfactor * 9 / 10 , wxSWISS , wxNORMAL , wxNORMAL ) ;
     wxFont *normalFont = MYFONT ( fontfactor * 11 / 10 , wxSWISS , wxNORMAL , wxNORMAL ) ;
     wxFont *bigFont = MYFONT ( fontfactor * 14 / 10 , wxSWISS , wxNORMAL , wxNORMAL ) ;
 
@@ -285,10 +284,8 @@ void TMyGelControl::OnDraw(wxDC& dc)
 		   				vg->lanes[a].pos.GetTop() - th * 3 / 2 ) ;
 			}
 
-//	    dc.SetFont ( *smallFont ) ;
 	    for ( b = 0 ; b < vg->lanes[a].vi.GetCount() ; b++ )
  	    	drawBand ( dc , vg->lanes[a] , b ) ;
-	    
 	    
     	}    
     }
@@ -320,21 +317,25 @@ void TMyGelControl::drawBand ( wxDC &dc , TGelLane &lane , int band )
     if ( !vg->cb_label->GetValue() ) return ; // Don't show labels
     wxString title = wxString::Format ( _T("%d") , lane.vi[band] ) ;
     if ( lane.vs[band] != _T("") ) title = lane.vs[band] ;
-    /*
-    int i = y ;
-    i -= getLanePos ( lane.vi[0] , h ) + lane.pos.GetTop() ;
-    title = wxString::Format ( "%d (%dbp)" , i , lane.vi[band] ) ;
-    */
+
     int tw , th ;
     dc.SetTextForeground ( *wxBLUE ) ;
-    
-    int ps = dc.GetFont().GetPointSize() + 1 ;
 
-    do {
-        ps-- ;
-        dc.SetFont ( *MYFONT ( ps , wxROMAN , wxNORMAL , wxNORMAL ) ) ;
-        dc.GetTextExtent ( title , &tw , &th ) ;
-       } while ( tw > lane.pos.GetRight() - lane.pos.GetLeft() ) ;
+    int ps = 1000 ;
+    int bw = lane.pos.GetRight() - lane.pos.GetLeft() ;
+    dc.SetFont ( *MYFONT ( ps , wxROMAN , wxNORMAL , wxNORMAL ) ) ;
+    dc.GetTextExtent ( title , &tw , &th ) ;
+    ps = ps * bw / tw ;
+    dc.SetFont ( *MYFONT ( ps , wxROMAN , wxNORMAL , wxNORMAL ) ) ;
+    dc.GetTextExtent ( title , &tw , &th ) ;
+    
+    if ( th > bw / 5 )
+       {
+       ps = ps * ( bw / 5 ) / th ;
+       dc.SetFont ( *MYFONT ( ps , wxROMAN , wxNORMAL , wxNORMAL ) ) ;
+       dc.GetTextExtent ( title , &tw , &th ) ;
+       }
+
     tw = lane.pos.GetRight() - tw ;
     dc.DrawText ( title , tw , y ) ;
 	}    

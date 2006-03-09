@@ -27,7 +27,7 @@ class TGelLane
 	wxArrayInt vi , vw ;
 	wxArrayString vs ;
 	double unit_volume ;
-   wxRect pos ; ///< The outer border of the lane
+	wxRect pos ; ///< The outer border of the lane
 	} ;    
 
 /**	\class TVirtualGel
