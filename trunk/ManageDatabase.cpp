@@ -934,8 +934,15 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
            {
            if ( !t.IsEmpty() )
               {
-              if ( t.GetChar(0) == '*' ) v->proteases.Add ( t.substr ( 1 ) ) ;
-              else v->re.Add ( tstorage->getRestrictionEnzyme ( t ) ) ;
+              if ( t.GetChar(0) == '*' )
+                 {
+                 v->proteases.Add ( t.substr ( 1 ) ) ;
+                 }
+              else
+                 {
+                 TRestrictionEnzyme *re = tstorage->getRestrictionEnzyme ( t ) ;
+                 if ( re ) v->re.Add ( re ) ;
+                 }
               }
            t = _T("") ;
            }

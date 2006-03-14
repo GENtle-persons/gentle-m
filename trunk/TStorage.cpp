@@ -836,7 +836,38 @@ void TStorage::endRecord ()
 	record = _T("") ;
 	}
 
+void TStorage::startup ()
+    {
+    if ( !isLocalDB() ) return ;
+    TSQLresult sr ;
+    int a ;
+    wxString sql ;
+    sql = _T("SELECT * FROM stuff WHERE s_type=\"STARTUP\"") ;
+    sr = getObject ( sql ) ;
+    if ( sr.rows() == 0 ) return ; // Nothing to do
+    for ( a = 0 ; a < sr.rows() ; a++ )
+        {
+        wxString v = sr[a][sr[_T("s_value")]] ;
+        if ( sr[a][sr[_T("s_name")]] == _T("DELETE_ENZYME") )
+           {
+           sql = _T("DELETE FROM enzyme WHERE e_name=\"") + v + _T("\"") ;
+           getObject ( sql ) ;
+           }
+        }
+    sql = _T("DELETE FROM stuff WHERE s_type=\"STARTUP\"") ;
+    getObject ( sql ) ;
+    }
+
+
 // Enzyme functions
+
+void TStorage::markEnzymeForDeletion ( wxString s )
+    {
+    wxString sql ;
+    sql = _T("INSERT INTO stuff (s_type,s_name,s_value) VALUES (") ;
+    sql += _T("\"STARTUP\",\"DELETE_ENZYME\",\"") + s + _T("\")") ;
+    getObject ( sql ) ;
+    }
 
 bool TStorage::addEnzymeGroup ( wxString s )
     {

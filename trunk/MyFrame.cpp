@@ -202,6 +202,7 @@ void MyFrame::initme ()
     // Database access
     LS = new TStorage ( LOCAL_STORAGE ) ;
     LS->createDatabase() ;
+    LS->startup () ;
     LS->syncEnzymes () ;
 //    LS->optimizeDatabase () ; // This will VACUUM sqlite databases
 
