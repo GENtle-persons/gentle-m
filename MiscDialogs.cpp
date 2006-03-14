@@ -1037,6 +1037,9 @@ void TEnzymeDialog::initme ( TRestrictionEnzyme *_e , bool ro )
     eb_to   = new wxTextCtrl ( this , -1 , wxString::Format ( _T("%d") , e->overlap ) , wxPoint ( x1 , bo+lh*5 ) ,
                     wxSize ( w-bo-x2 , lh-bo ) ) ;
     
+    if ( !e->name.IsEmpty() )
+       eb_name->Disable () ;
+    
     if ( !readonly )
         {
         wxButton *b = new wxButton ( this , ED_OK , _T("OK") ,

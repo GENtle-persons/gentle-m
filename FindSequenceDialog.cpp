@@ -9,6 +9,10 @@ BEGIN_EVENT_TABLE(FindSequenceDialog, wxDialog )
     EVT_BUTTON(FD_ADD_HIGHLIGHTS,FindSequenceDialog::OnAddHighlights)
     EVT_BUTTON(FD_SET_HIGHLIGHT_COLOR,FindSequenceDialog::OnSetHighlightColor)
     EVT_BUTTON(FD_RESET_HIGHLIGHTS,FindSequenceDialog::OnResetHighlights)
+    EVT_CHECKBOX(SH_CB_SEQUENCE,FindSequenceDialog::OnTextChange)
+    EVT_CHECKBOX(SH_CB_ITEMS,FindSequenceDialog::OnTextChange)
+    EVT_CHECKBOX(SH_CB_ENZYMES,FindSequenceDialog::OnTextChange)
+    EVT_CHECKBOX(SH_CB_TRANSLATION,FindSequenceDialog::OnTextChange)
     EVT_LISTBOX(SH_LB,FindSequenceDialog::OnLB)
     EVT_LISTBOX_DCLICK(SH_LB,FindSequenceDialog::OnLBdclick)
     EVT_TEXT(SH_TEXT,FindSequenceDialog::OnTextChange)
@@ -20,13 +24,14 @@ END_EVENT_TABLE()
 
 
 FindSequenceDialog::FindSequenceDialog ( wxWindow *parent, const wxString& title )
-	: wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 380 , 400 ) )
+	: wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 410 , 400 ) )
 	{ 
     myapp()->frame->push_help ( _T("GENtle:Find") ) ;
 	highlight = *wxBLUE ;
 	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
 	wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
 	wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
 	p = 0 ;
 	c = (ChildBase*) parent ;
 	allowed_chars = _T("AGCT") ; // For DNA search; currently ignored
@@ -41,21 +46,47 @@ FindSequenceDialog::FindSequenceDialog ( wxWindow *parent, const wxString& title
 	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxALL|wxEXPAND , 2 ) ;
 	h0->Add ( new wxButton ( this , SH_CANCEL , txt("b_cancel") ) , 1 , wxALL|wxEXPAND , 2 ) ;
 
+    // Highlight stuff
     highlight_display = new wxStaticText ( this , -1 , _T("      ") ) ;
-	h1->Add ( new wxButton ( this , FD_ADD_HIGHLIGHTS , txt("b_find_highlight") ) , 0 , wxALL|wxEXPAND , 2 ) ;
+    do_highlight = new wxButton ( this , FD_ADD_HIGHLIGHTS , txt("b_find_highlight") ) ;
+	h1->Add ( do_highlight , 0 , wxALL|wxEXPAND , 2 ) ;
 	h1->Add ( highlight_display , 0 , wxLEFT|wxEXPAND , 5 ) ;
 	h1->Add ( new wxButton ( this , FD_SET_HIGHLIGHT_COLOR , txt("b_find_highlight_color") ) , 0 , wxALL|wxEXPAND , 2 ) ;
 	h1->Add ( new wxButton ( this , FD_RESET_HIGHLIGHTS , txt("b_find_remove_highlights") ) , 0 , wxALL|wxEXPAND , 2 ) ;
 	highlight_display->SetBackgroundColour ( highlight ) ;
-	             
+
+    // Options
+    cb_sequence = cb_items = cb_enzymes = cb_translation = NULL ;
+    cb_sequence = new wxCheckBox ( this , SH_CB_SEQUENCE , txt("t_sh_cb_sequence") ) ;
+    h2->Add ( cb_sequence , 0 , wxALL|wxEXPAND , 2 ) ;
+    cb_sequence->SetValue ( true ) ;
+    if ( c->def != _T("ABIviewer") )
+       {
+       cb_items = new wxCheckBox ( this , SH_CB_ITEMS , txt("t_sh_cb_items") ) ;
+       h2->Add ( cb_items , 0 , wxALL|wxEXPAND , 2 ) ;
+       cb_items->SetValue ( true ) ;
+       }
+    if ( c->def == _T("dna") || c->def == _T("PrimerDesign") )
+       {
+       cb_enzymes = new wxCheckBox ( this , SH_CB_ENZYMES , txt("t_sh_cb_enzymes") ) ;
+       cb_translation = new wxCheckBox ( this , SH_CB_TRANSLATION , txt("t_sh_cb_translation") ) ;
+       h2->Add ( cb_enzymes , 0 , wxALL|wxEXPAND , 2 ) ;
+       h2->Add ( cb_translation , 0 , wxALL|wxEXPAND , 2 ) ;
+       cb_enzymes->SetValue ( true ) ;
+       cb_translation->SetValue ( true ) ;
+       }
+    
+
 	lb = new wxListBox ( this , SH_LB ) ;
 	
 	v0->Add ( t , 0 , wxALL|wxEXPAND , 2 ) ;
 	v0->Add ( h0 , 0 , wxALL|wxEXPAND , 2 ) ;
 	v0->Add ( h1 , 0 , wxALL|wxEXPAND , 2 ) ;
+	v0->Add ( h2 , 0 , wxALL|wxEXPAND , 2 ) ;
 	v0->Add ( status , 0 , wxALL|wxEXPAND , 2 ) ;
 	v0->Add ( lb , 1 , wxALL|wxEXPAND , 2 ) ;
 	
+	do_highlight->Disable() ;
 	find_button->SetDefault () ;
 	t->SetFocus () ;
 	
@@ -70,6 +101,7 @@ FindSequenceDialog::FindSequenceDialog ( wxWindow *parent, const wxString& title
 	myapp()->frame->GetPosition ( &x1, &y1 ) ;
 	x -= w ;
 	y -= h/2 ;
+	x -= 30 ;
 	if ( x < x1+5 ) x = x1+5 ;
 	if ( y < y1+5 ) y = y1+5 ;
 	Move ( x , y ) ;	
@@ -258,11 +290,15 @@ void FindSequenceDialog::OnSearch ( wxCommandEvent &ev )
 	Freeze () ;
 	lb->Clear () ;
 	vi.Clear () ;
-	sequenceSearch() ;
-	if ( c->def == _T("dna") || c->def == _T("ABIviewer") || c->def == _T("PrimerDesign") ) sequenceSearch ( true ) ;
-	if ( c->def == _T("dna") || c->def == _T("PrimerDesign") ) aaSearch () ;
-	itemSearch() ;
-	restrictionSearch() ;
+	if ( cb_sequence && cb_sequence->GetValue() )
+       {
+       sequenceSearch() ;
+       if ( c->def == _T("dna") || c->def == _T("ABIviewer") || c->def == _T("PrimerDesign") ) sequenceSearch ( true ) ;
+       }
+	//if ( c->def == _T("dna") || c->def == _T("PrimerDesign") ) 
+	if ( cb_translation && cb_translation->GetValue() ) aaSearch () ;
+	if ( cb_items && cb_items->GetValue() ) itemSearch() ;
+	if ( cb_enzymes && cb_enzymes->GetValue() ) restrictionSearch() ;
 	if ( !vi.IsEmpty() )
 		{
 		lb->SetSelection ( 0 ) ;
@@ -271,11 +307,19 @@ void FindSequenceDialog::OnSearch ( wxCommandEvent &ev )
 
 	// Status text
 	if ( lb->GetCount() > FIND_MAX )
+	    {
 		status->SetLabel ( wxString::Format ( txt("t_too_many_search_results") , FIND_MAX ) ) ;
+		do_highlight->Enable() ;
+        }
 	else if ( lb->GetCount() == 0 )
-		status->SetLabel ( txt("t_no_matches_found") ) ;
+	     {
+	     status->SetLabel ( txt("t_no_matches_found") ) ;
+         }
 	else
+	    {
 		status->SetLabel ( wxString::Format ( txt("t_matches_found") , lb->GetCount() ) ) ;
+		do_highlight->Enable() ;
+        }
 	
 	Thaw () ;
 	wxEndBusyCursor() ;
@@ -484,7 +528,8 @@ void FindSequenceDialog::sequenceSearch ( bool invers )
     
 void FindSequenceDialog::OnTextChange ( wxCommandEvent &ev )
     {
-	 find_button->Enable() ;
+	do_highlight->Disable() ;
+    find_button->Enable() ;
     if ( c->vec->getGenomeMode() ) return ;
 	int ql = getQuery().length() ;
     if ( ql < 3 )

@@ -64,6 +64,7 @@ class TVectorEditor : public wxDialog
     virtual void enzymeDelGr ( wxCommandEvent& WXUNUSED(event) ) ; ///< "Delete enzyme group" event handler
     virtual void enzymeDelFromGr ( wxCommandEvent& WXUNUSED(event) ) ; ///< "Delete enzyme from group" event handler
     virtual void enzymeDelEn ( wxCommandEvent& WXUNUSED(event) ) ; ///< "Delete enzyme" event handler
+    virtual void enzymeReallyDeleteEnzyme ( wxCommandEvent& WXUNUSED(event) ) ; ///< "Delete enzyme" event handler
     virtual void newEnzyme ( wxCommandEvent& WXUNUSED(event) ) ; ///< "New enzyme" event handler
     virtual void importCloneEnzymes ( wxCommandEvent& WXUNUSED(event) ) ; ///< "Import CLONE-format enzyme list" event handler (not used anymore)
     virtual void proteaseSelChange ( wxCommandEvent& WXUNUSED(event) ) ; ///< "Protease selection change" event handler
@@ -105,6 +106,7 @@ class TVectorEditor : public wxDialog
     wxCheckBox *icb , *icv ;
     wxCheckListBox *prots ;
     TEnzymeRules *oldEnzymeRules ;
+    wxButton *delete_enzyme_button ;
     
     wxArrayTVectorItem newitems ;
     int lastSelection ;

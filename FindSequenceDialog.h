@@ -45,7 +45,9 @@ class FindSequenceDialog : public wxDialog
     int p , last ;
     wxListBox *lb ; ///< The results list box control
     wxButton *find_button ; ///< The "Find" button
+    wxButton *do_highlight ; ///< The "Highlight" button
     wxTextCtrl *status ; ///< The status text
+    wxCheckBox *cb_sequence , *cb_items , *cb_enzymes , *cb_translation ;
 	wxColour highlight ;
     wxArrayInt vi ;
     wxHashChar codonhash ;

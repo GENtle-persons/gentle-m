@@ -42,6 +42,7 @@ void TVectorEditor::initPanEnzym ()
 //    if ( !v ) b1 = new wxButton ( panEnzym , TVE_IMPORT , txt("import_clone_enzymes") ) ;
 
     b2 = new wxButton ( panEnzym , TVE_NEW_ENZYME , txt("add_new_enzyme") ) ;
+    delete_enzyme_button = new wxButton ( panEnzym , TVE_DEL_ENZYME , txt("b_del_enzyme") ) ;
     b3 = new wxButton ( panEnzym , TVE_EN_ADD_EN , txt("<-- add") ) ;
     b4 = new wxButton ( panEnzym , TVE_EN_DEL_EN , txt("del -->") ) ;
     b_dfg = new wxButton ( panEnzym , TVE_DEL_FROM_GROUP , txt("b_del_from_group") ) ;
@@ -57,6 +58,7 @@ void TVectorEditor::initPanEnzym ()
     v2->Add ( b_dg , 0 , wxEXPAND|wxALL , 5 ) ;
     if ( b1 ) v2->Add ( b1 , 0 , wxEXPAND|wxALL , 5 ) ;
     v2->Add ( b2 , 0 , wxEXPAND|wxALL , 5 ) ;
+    v2->Add ( delete_enzyme_button , 0 , wxEXPAND|wxALL , 5 ) ;
     v2->Add ( new wxStaticText ( panEnzym , -1 , _T("") ) , 0 , wxEXPAND , 5 ) ;
     v2->Add ( b3 , 0 , wxEXPAND|wxALL , 5 ) ;
     v2->Add ( b4 , 0 , wxEXPAND|wxALL , 5 ) ;
@@ -115,14 +117,24 @@ void TVectorEditor::enzymeListDlbClick ( wxCommandEvent &ev )
             ed.initme ( e ) ;
             if ( ed.ShowModal() == wxID_OK )
                {
-/*               ed.e->name = e->name ; // No name change!
+               bool addit = false ;
+               ed.e->name = e->name ; // No name change!
                if ( e->differ ( *ed.e ) )
                   {
-                  *e = *ed.e ;
-                  myapp()->frame->LS->updateRestrictionEnzyme ( e ) ;
-                  }*/
-               wxCommandEvent ev ;
-               enzymeAddEn ( ev ) ;
+                  int x = wxMessageBox ( txt("t_enzyme_list_double_click") , txt("msg_box") , wxYES_NO|wxCANCEL ) ;
+                  if ( x == wxYES )
+                     {
+                     *e = *ed.e ;
+                     myapp()->frame->LS->updateRestrictionEnzyme ( e ) ;
+                     }
+                  if ( x == wxNO ) addit = true ;
+                  }
+               else addit = true ;
+               if ( addit )
+                  { 
+                  wxCommandEvent ev ;
+                  enzymeAddEn ( ev ) ;
+                  }
                }
             }
         }
@@ -170,12 +182,14 @@ void TVectorEditor::showGroupEnzymes ( wxString gr )
         b_atg->Disable() ;
         b_dg->Disable() ;
         b_dfg->Disable() ;
+        delete_enzyme_button->Enable() ;
         }
     else
         {
         b_atg->Enable() ;
         b_dg->Enable() ;
         b_dfg->Enable() ;
+        delete_enzyme_button->Disable() ;
         }
     }
 
@@ -245,18 +259,24 @@ void TVectorEditor::enzymeAddToNewGr ( wxCommandEvent &ev )
     wxString ng = ted.GetValue() ;
     ng = myapp()->frame->LS->UCfirst ( ng ) ;
     if ( !myapp()->frame->LS->addEnzymeGroup ( ng ) ) return ;
-/*
-    wxArrayInt vi ;
-    int n = listCE->GetSelections ( vi ) ;
-    if ( n = 0 ) // Nothing selected, so select all
-    	{
-	    for ( n = 0 ; n < listCE->GetCount() ; n++ )
-	    	listCE->SetSelection ( n , TRUE ) ;
-    	}    
-*/
+
     listGroups->Append ( ng ) ;
     listGroups->SetStringSelection ( ng ) ;
     enzymeAddToGr ( ev ) ;
+    }
+
+void TVectorEditor::enzymeReallyDeleteEnzyme ( wxCommandEvent &ev )
+    {
+    wxArrayInt vi ;
+    int a , n = listGE->GetSelections ( vi ) ;
+    if ( n == 0 ) return ;
+    if ( wxYES != wxMessageBox ( txt("t_warn_delete_enzymes") , txt("msg_box") , wxYES_NO ) ) return ;
+    for ( a = 0 ; a < n ; a++ )
+        {
+        wxString name = listGE->GetString ( vi[a] ) ;
+        myapp()->frame->LS->markEnzymeForDeletion ( name ) ;
+        }
+    wxMessageBox ( txt("t_enzymes_marked_for_deletion") ) ;
     }
 
 void TVectorEditor::enzymeDelEn ( wxCommandEvent &ev )

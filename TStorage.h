@@ -121,6 +121,7 @@ class TStorage
     void updateRestrictionEnzyme ( TRestrictionEnzyme *e ) ; ///< Write enzyme information back to database
     void addRestrictionEnzyme ( TRestrictionEnzyme *r ) ; ///< Add new restriction enzyme
     bool addEnzymeGroup ( wxString s ) ; ///< Add new enzyme group
+    void markEnzymeForDeletion ( wxString s ) ; ///< Mark an enzyme for deletion
 
     TProtease *getProtease ( wxString s ) ; ///< Pointer to a TProtease from pr
     void updateProtease ( TProtease *p ) ; ///< Write protease information back to database
@@ -132,6 +133,7 @@ class TStorage
     wxString getOption ( wxString oname , wxString def ) ; ///< Get option from local database
     bool copySQLfields ( TStorage &target , wxString table , wxString cond ) ; ///< Internal use for update
     void synchronize () ; ///< Synchronize information between databases (not used)
+    void startup () ; ///< Startup method
 
     void autoUpdateSchema () ; ///< Update database to a new schema
     wxString fixDNAname ( wxString s ) ; ///< Fix name quotes
