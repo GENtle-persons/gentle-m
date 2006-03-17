@@ -156,7 +156,7 @@ void TGridData::OnSelectCell(wxGridEvent& event)
 void TGridData::init ()
     {
     BeginBatch() ;
-    CreateGrid ( 41 , 6 ) ;
+    CreateGrid ( 42 , 6 ) ;
     SetGridCursor ( 0 , 1 ) ;
     DisableDragGridSize() ;
     DisableDragRowSize() ;
@@ -311,9 +311,9 @@ void TGridLigation::init ()
         
     gridSetEntry ( 0 , 0 , txt("t_calc_lig_1") , _T("0") , _T("ng") ) ;
     gridSetEntry ( 1 , 0 , txt("t_calc_lig_2") , _T("0") , _T("bp") ) ;
-    gridSetEntry ( 2 , 0 , txt("t_calc_lig_3") , _T("0") , _T("ng/l") ) ;
+    gridSetEntry ( 2 , 0 , txt("t_calc_lig_3") , _T("0") , _T("ng/µl") ) ;
     gridSetEntry ( 3 , 0 , txt("t_calc_lig_4") , _T("0") , _T("bp") ) ;
-    gridSetEntry ( 4 , 0 , txt("t_calc_lig_5") , _T("0") , _T("ng/l") ) ;
+    gridSetEntry ( 4 , 0 , txt("t_calc_lig_5") , _T("0") , _T("ng/µl") ) ;
     gridSetEntry ( 5 , 0 , txt("t_calc_lig_6") , _T("0") , _T(" : 1") ) ;
 
     SetCellValue ( 0 , 3 , _T("<=>") ) ;

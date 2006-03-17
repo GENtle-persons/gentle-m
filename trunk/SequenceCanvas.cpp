@@ -2239,6 +2239,8 @@ void SequenceCanvas::insertRestrictionSite ( bool left )
     TVector *v = NULL ;
     if ( child ) v = child->vec ;
     if ( !v ) return ;
+    
+    // Query enzyme
     wxBeginBusyCursor() ;
     wxArrayString vs ;
     myapp()->frame->LS->getEnzymesInGroup ( txt("All") , vs ) ;
@@ -2254,6 +2256,7 @@ void SequenceCanvas::insertRestrictionSite ( bool left )
         }    
     delete [] as ;
     
+    // Insert sequence
     TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme(scd.GetStringSelection()) ;
     wxString se = e->sequence ;
 
@@ -2263,11 +2266,24 @@ void SequenceCanvas::insertRestrictionSite ( bool left )
     TVector tv ;
     tv.setFromVector ( *v ) ;
     tv.setSequence ( seq[lastmarked]->s ) ;
+    
+    // Find DNA sequence
+    SeqDNA *dna ;
+    for ( a = 0 ; a < seq.size() ; a++ )
+        {
+        if ( seq[a]->whatsthis() != _T("AA") ) continue ;
+        if ( seq[lastmarked]->whatsthis() == _T("PRIMER_DOWN") ) dna = (SeqDNA*) seq[a+1] ;
+        else dna = dna = (SeqDNA*) seq[a-1] ;
+        break ;
+        }
+    
     for ( a = 0 ; a < se.length() ; a++ )
         {
         char c = se.GetChar(a) ;
         if ( seq[lastmarked]->whatsthis() == _T("PRIMER_DOWN") )
            c = tv.getComplement ( c ) ;
+        if ( c == 'N' )
+           c = dna->vec->getSequenceChar ( p1+a ) ;
         tv.setNucleotide ( p1+a , c ) ;
         }    
     seq[lastmarked]->s = tv.getSequence() ;
@@ -2278,9 +2294,11 @@ void SequenceCanvas::insertRestrictionSite ( bool left )
 
     if ( getPD() ) v = NULL ;
     wxString id = seq[lastmarked]->whatsthis() ;
-    TMarkMem m ( this ) ;
+//    TMarkMem m ( this ) ;
     updateEdit ( v , id , _from ) ;
-    m.remark() ;
+    if ( getEditMode() ) stopEdit () ;
+    unmark () ;
+//    m.remark() ;
 
     if ( !getPD() ) return ;
     wxCommandEvent event ;
