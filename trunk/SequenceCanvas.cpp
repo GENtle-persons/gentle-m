@@ -2130,7 +2130,11 @@ void SequenceCanvas::stopEdit ()
     for ( int a = 0 ; a < seq.GetCount() ; a++ ) seq[a]->editMode ( false ) ;
     arrange () ;
     mylog ( "stopEdit" , "3" ) ;
-    if ( id != _T("") ) unmark () ; //mark ( id , -1 , -1 ) ;
+    if ( id != _T("") )
+       {
+       unmark () ; //mark ( id , -1 , -1 ) ;
+       _from = _to = -1 ;
+       }
     mylog ( "stopEdit" , "END" ) ;
     SilentRefresh () ;
     }
@@ -2295,10 +2299,14 @@ void SequenceCanvas::insertRestrictionSite ( bool left )
     if ( getPD() ) v = NULL ;
     wxString id = seq[lastmarked]->whatsthis() ;
 //    TMarkMem m ( this ) ;
-    updateEdit ( v , id , _from ) ;
+    int from2 = _from ;
     if ( getEditMode() ) stopEdit () ;
     unmark () ;
+    _from = _to = -1 ;
+    updateEdit ( v , id , from2 ) ;
 //    m.remark() ;
+    unmark () ;
+    _from = _to = -1 ;
 
     if ( !getPD() ) return ;
     wxCommandEvent event ;
