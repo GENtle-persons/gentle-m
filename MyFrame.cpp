@@ -1182,6 +1182,8 @@ void MyFrame::addCCPFTools(wxToolBar* toolBar, bool findbutton )
     if ( !mainToolBar ) toolBar->AddSeparator () ;
    }
 
+#define UGLY_MENU_UPDATE(x,y) if(GetMenuBar()&&GetMenuBar()->FindItem(x))GetMenuBar()->FindItem(x)->Enable(y);
+
 /**	\brief Updates cut, copy, paste, find icons
 */
 void MyFrame::updateCCP ( ChildBase *c )
@@ -1195,6 +1197,16 @@ void MyFrame::updateCCP ( ChildBase *c )
 	tb->EnableTool ( MDI_COPY , c ? c->allow_copy : false ) ;
 	tb->EnableTool ( MDI_PASTE , c ? c->allow_paste : false ) ;
 	tb->EnableTool ( MDI_FIND , c ? c->allow_find : false ) ;
+	
+	UGLY_MENU_UPDATE ( MDI_FILE_SAVE , c ? c->allow_save : false ) ;
+	UGLY_MENU_UPDATE ( SEQ_PRINT , c ? c->allow_print : false ) ;
+	UGLY_MENU_UPDATE ( MDI_CUT , c ? c->allow_cut : false ) ;
+	UGLY_MENU_UPDATE ( MDI_COPY , c ? c->allow_copy : false ) ;
+	UGLY_MENU_UPDATE ( MDI_PASTE , c ? c->allow_paste : false ) ;
+	UGLY_MENU_UPDATE ( MDI_MARK_ALL , c ? !c->allow_paste : false ) ;
+	UGLY_MENU_UPDATE ( MDI_COPY_TO_NEW , c ? !c->allow_paste : false ) ;
+	UGLY_MENU_UPDATE ( MDI_AS_NEW_FEATURE , c ? !c->allow_paste : false ) ;
+	UGLY_MENU_UPDATE ( MDI_FIND , c ? c->allow_find : false ) ;
 	}
 
 /** \brief Generates a basic tooblar
