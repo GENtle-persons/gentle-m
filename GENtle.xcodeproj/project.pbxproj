@@ -445,7 +445,7 @@
 		9180A6940866FD46000C7D5E /* SequenceTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = SequenceTypes.cpp; sourceTree = "<group>"; };
 		9180A6950866FD46000C7D5E /* showpair.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = showpair.cpp; path = clustalw/showpair.cpp; sourceTree = "<group>"; };
 		9180A6960866FD46000C7D5E /* TAlignmentDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = TAlignmentDialog.cpp; sourceTree = "<group>"; };
-		9180A6970866FD46000C7D5E /* TCalculator.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = TCalculator.cpp; sourceTree = "<group>"; };
+		9180A6970866FD46000C7D5E /* TCalculator.cpp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.cpp.cpp; path = TCalculator.cpp; sourceTree = "<group>"; };
 		9180A6980866FD46000C7D5E /* TClone.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = TClone.cpp; sourceTree = "<group>"; };
 		9180A6990866FD46000C7D5E /* TextImportDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = TextImportDialog.cpp; sourceTree = "<group>"; };
 		9180A69A0866FD46000C7D5E /* TGraph.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = TGraph.cpp; sourceTree = "<group>"; };

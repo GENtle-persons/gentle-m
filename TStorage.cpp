@@ -847,8 +847,8 @@ void TStorage::startup ()
     if ( sr.rows() == 0 ) return ; // Nothing to do
     for ( a = 0 ; a < sr.rows() ; a++ )
         {
-        wxString v = sr[a][sr[_T("s_value")]] ;
-        if ( sr[a][sr[_T("s_name")]] == _T("DELETE_ENZYME") )
+        wxString v = sr[a][sr["s_value"]] ;
+        if ( sr[a][sr["s_name"]] == _T("DELETE_ENZYME") )
            {
            sql = _T("DELETE FROM enzyme WHERE e_name=\"") + v + _T("\"") ;
            getObject ( sql ) ;
