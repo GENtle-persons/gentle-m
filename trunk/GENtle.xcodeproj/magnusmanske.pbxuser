@@ -159,8 +159,8 @@
 					PBXFileDataSource_SCM_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 163672817;
-			PBXWorkspaceStateSaveDate = 163672817;
+			PBXPerProjectTemplateStateSaveDate = 164534248;
+			PBXWorkspaceStateSaveDate = 164534248;
 		};
 		sourceControlManager = 9180A64F0866FCF9000C7D5E /* Source Control */;
 		userBuildSettings = {
@@ -582,9 +582,9 @@
 	};
 	9180A6970866FD46000C7D5E /* TCalculator.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {983, 9352}}";
-			sepNavSelRange = "{662, 8}";
-			sepNavVisRect = "{{0, 38}, {983, 414}}";
+			sepNavIntBoundsRect = "{{0, 0}, {716, 9408}}";
+			sepNavSelRange = "{21471, 0}";
+			sepNavVisRect = "{{0, 6817}, {623, 229}}";
 			sepNavWindowFrame = "{{15, 68}, {964, 672}}";
 		};
 	};
@@ -787,7 +787,7 @@
 	};
 	91C9EABF0867351700AE735B /* variables.csv */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {2618, 13132}}";
+			sepNavIntBoundsRect = "{{0, 0}, {2618, 13580}}";
 			sepNavSelRange = "{30764, 0}";
 			sepNavVisRect = "{{0, 6862}, {925, 543}}";
 			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
