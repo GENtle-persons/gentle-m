@@ -378,6 +378,7 @@
 "format_filter_plain_dna","Plain text DNA (*.*)|*.*","Text DNA (*.*)|*.*"
 "format_filter_plain_aa","Plain text amino acids (*.*)|*.*","Text Aminosäuren (*.*)|*.*"
 "format_filter_csv","Spectrum (*.*)|*.*","Spektrum (*.*)|*.*"
+"format_filter_cm5","Clone Manager 5 (*.cm5)|*.cm5","Clone Manager 5 (*.cm5)|*.cm5"
 "t_filter","Filter","Filter"
 "m_plasmid_map","Sequence map","Sequenzkarte"
 "format_filter_abi","ABI/Chromas (*.*)|*.*","ABI/Chromas (*.*)|*.*"

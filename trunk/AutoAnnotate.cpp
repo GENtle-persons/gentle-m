@@ -179,7 +179,16 @@ bool AutoAnnotate::ScanDatabase ( wxString database )
 	TStorage *db = mdb.getTempDB ( database ) ;
 	TSQLresult r ;
 
-	wxString dbname = db->UCfirst ( database.AfterLast('/').AfterLast('\\').BeforeLast('.') ) ;
+	wxString dbname ;
+	if ( database.Left(1) == _T(":") )
+	{
+		dbname = db->UCfirst ( database.AfterLast(':') ) ;
+	}
+	else
+	{
+		dbname = db->UCfirst ( database.AfterLast('/').AfterLast('\\').BeforeLast('.') ) ;
+	}
+	
 	if ( wxNOT_FOUND == mdb.db_file.Index ( database.c_str() ) )
 		{
 		mdb.db_name.Add ( dbname ) ;
