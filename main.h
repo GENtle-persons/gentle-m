@@ -260,6 +260,7 @@ WX_DECLARE_OBJARRAY(float, wxArrayFloat);
 #include "TClone.h"
 #include "GenBank.h"
 #include "TPDB.h"
+#include "CloneManager.h"
 #include "TXMLfile.h"
 #include "TVectorTree.h"
 #include "TMainTree.h"

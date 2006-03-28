@@ -706,6 +706,7 @@ void MyFrame::OnFileImport(wxCommandEvent& event )
     wxString wcPlainTextAA = txt("format_filter_plain_aa") ;
     wxString wcABIformat = txt("format_filter_abi") ;
     wxString wcCSVformat = txt("format_filter_csv") ;
+    wxString wcCM5format = txt("format_filter_cm5") ;
     wxString wildcard = wcAutomatic +
                         _T("|") + wcClone +
                         _T("|") + wcGenBank +
@@ -713,7 +714,8 @@ void MyFrame::OnFileImport(wxCommandEvent& event )
                         _T("|") + wcPlainTextDNA +
                         _T("|") + wcPlainTextAA +
                         _T("|") + wcABIformat +
-                        _T("|") + wcCSVformat ;
+                        _T("|") + wcCSVformat +
+						_T("|") + wcCM5format ;
     wxString lastdir = LS->getOption ( _T("LAST_IMPORT_DIR") , _T("C:") ) ;
     wxFileDialog d ( this , txt("import_file") , lastdir , 
             _T("") , wildcard , wxOPEN | wxMULTIPLE ) ;
@@ -798,6 +800,19 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
            }
         }
 
+    // Trying Clone Manager 5 format
+    if ( filter == -1 || filter == 7 )
+       {
+        TCloneManager cm ;
+        cm.load ( path ) ;
+        if ( cm.success() )
+        	{
+			for ( int a = 0 ; a < cm.countVectors() ; a++ )
+				newFromVector ( cm.getVector ( a ) ) ;
+			return true ;
+			}
+       }
+
     // Trying PDB format
     if ( filter == -1 )
        {
@@ -809,6 +824,7 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
            return true ;
            }
        }
+
 
     // Trying spectra
     if ( filter == 6 || filter == -1 )
