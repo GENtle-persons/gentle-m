@@ -19,6 +19,8 @@ class TCloneManager
     TVector *getVector ( int a ) ; ///< Returns pointer to one of the vectors
     
     private :
+	int scan_item ( unsigned char *t , int a , TVector *v ) ;
+		
     bool _success ; ///< Internal success marker
     vector <TVector*> _v ; ///< The generated vectors
     } ;
