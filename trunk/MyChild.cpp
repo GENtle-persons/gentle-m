@@ -25,7 +25,6 @@ BEGIN_EVENT_TABLE(MyChild, MyChildBase)
     EVT_MENU(MDI_MARK_ALL, MyChild::OnMarkAll)
     EVT_MENU(MDI_EXTRACT_AA, MyChild::OnExtractAA)
     EVT_MENU(MDI_CIRCULAR_LINEAR, MyChild::OnCircularLinear)
-    EVT_MENU(MDI_LIGATION, MyChild::OnLigation)
     EVT_MENU(MDI_FILE_SAVE, MyChild::OnFileSave)
     EVT_MENU(MDI_CUT, MyChild::OnCut)
     EVT_MENU(MDI_COPY, MyChild::OnCopy)
@@ -488,7 +487,7 @@ void MyChild::initme ()
 
     updateUndoMenu () ;
     }
-
+/*
 void MyChild::OnLigation(wxCommandEvent& event)
     {
     TLigationDialog ld ( this , txt("t_ligation") ) ;
@@ -518,7 +517,7 @@ void MyChild::OnLigation(wxCommandEvent& event)
         }
     myapp()->frame->lastCocktail.Clear () ;
     }
-    
+*/
 wxString MyChild::getName ()
     {
     return vec->getName() ;

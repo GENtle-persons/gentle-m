@@ -1,7 +1,7 @@
 [Project]
 FileName=GENtle.dev
 Name=GENtle
-UnitCount=169
+UnitCount=171
 Type=0
 Ver=1
 ObjFiles=
@@ -1719,7 +1719,7 @@ BuildCmd=
 [Unit168]
 FileName=CloneManager.h
 CompileCpp=1
-Folder=
+Folder=Data structures
 Compile=1
 Link=1
 Priority=1000
@@ -1729,7 +1729,27 @@ BuildCmd=
 [Unit169]
 FileName=CloneManager.cpp
 CompileCpp=1
-Folder=
+Folder=Data structures
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit170]
+FileName=CloningAssistant.h
+CompileCpp=1
+Folder=Child-Types
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit171]
+FileName=CloningAssistant.cpp
+CompileCpp=1
+Folder=Child-Types
 Compile=1
 Link=1
 Priority=1000
