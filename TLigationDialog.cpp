@@ -35,7 +35,35 @@ TLigationDialog::~TLigationDialog ()
 
 void TLigationDialog::init ()
     {
-    int w , h ;
+	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+	wxBoxSizer *v1a = new wxBoxSizer ( wxVERTICAL ) ;
+	wxBoxSizer *v1b = new wxBoxSizer ( wxVERTICAL ) ;
+	wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
+	
+    l_sources = new wxCheckListBox ( this , LD_SOURCES ) ;
+    l_targets = new wxCheckListBox ( this , LD_TARGETS ) ;
+	v1a->Add ( new wxStaticText ( this , -1 , txt("frag2lig") ) , 0 , wxEXPAND ) ;
+	v1a->Add ( l_sources , 1 , wxEXPAND|wxTOP , 5 ) ;
+	v1b->Add ( new wxStaticText ( this , -1 , txt("what2create") ) , 0 , wxEXPAND ) ;
+	v1b->Add ( l_targets , 1 , wxEXPAND|wxTOP , 5 ) ;
+	h1->Add ( v1a , 1 , wxEXPAND ) ;
+	h1->Add ( v1b , 1 , wxEXPAND ) ;
+	
+	message = new wxTextCtrl ( this , -1 ) ;
+	
+	h0->Add ( new wxButton ( this , LD_OK , txt("b_ligate") ) , 0 ) ;
+	h0->Add ( new wxStaticText ( this , -1 , _T(" ") ) , 1 , wxEXPAND ) ;
+	h0->Add ( new wxButton ( this , LD_CANCEL , txt("b_cancel") ) , 0 ) ;
+	
+	v0->Add ( h1 , 1 , wxEXPAND ) ;
+	v0->Add ( message , 0 , wxEXPAND|wxTOP , 5 ) ;
+	v0->Add ( h0 , 0 , wxEXPAND|wxTOP , 5 ) ;
+
+    this->SetSizer ( v0 ) ;
+//    v0->Fit ( this ) ;
+	
+/*    int w , h ;
     int bo = 5 ;
     int lh = 2 * bo ;
     GetClientSize ( &w , &h ) ;
@@ -54,7 +82,7 @@ void TLigationDialog::init ()
                                 wxSize ( w / 4 , lh*3 )
                                 ) ;
 
-    
+*/  
     for ( int a = 0 ; a < vv.GetCount() ; a++ )
         {
         bool state = true ;
@@ -108,9 +136,16 @@ void TLigationDialog::generateTargets ()
         }
     if ( vt.GetCount() > MAX_LIGATIONS )
     	{
-	    wxMessageBox ( txt("t_too_many_ligations") ) ;
-    	}    
-
+	    message->SetLabel ( txt("t_too_many_ligations") ) ;
+	    message->SetEditable ( false ) ;
+	    message->SetForegroundColour ( *wxRED ) ;
+	    message->Show () ;
+    	}
+	else
+		{
+	    message->Hide () ;
+		}    
+    GetSizer()->Layout () ;
     }
     
 void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , wxArrayInt &vi  )

@@ -968,3 +968,5 @@
 "t_warn_delete_enzymes","You are about to permanently delete enzymes! Continue?","Sie sind dabei, Enzyme permanent zu löschen! Weiter?"
 "t_enzymes_marked_for_deletion","The marked enzymes will be deleted on the next start of GENtle.","Die markierten Enzyme werden beim nächsten GENtle-Start gelöscht."
 "t_enzyme_list_double_click","Save changes to enzyme ('No' will only add it to the enzyme list on the left)?","Änderungen am Enzym speichern ('Nein' fügt es nur der Liste aktueller Enzyme hinzu)?"
+"m_cloning_assistant","Cloning &assistant\tCtrl-K","Klonierungs-&Assistent\tStrg-K"
+"t_cloning_assistant","Cloning assistant","Klonierungs-Assistent"

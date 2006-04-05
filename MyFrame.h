@@ -118,6 +118,8 @@ public:
     virtual void OnExternalInterface(wxCommandEvent& event);
     virtual void OnCalculator(wxCommandEvent& event);
     virtual void OnGraph(wxCommandEvent& event);
+    virtual void OnLigation(wxCommandEvent& event);
+    virtual void OnCloningAssistant(wxCommandEvent& event);
     
     virtual void RerouteMenu(wxCommandEvent& event);
     virtual void OnlineTools(wxCommandEvent& event);

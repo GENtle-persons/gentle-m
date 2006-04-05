@@ -26,10 +26,11 @@ BEGIN_EVENT_TABLE(MyFrame, MyFrameType)
     EVT_MENU(MDI_MANAGE_DATABASE, MyFrame::OnManageDatabase)
     EVT_MENU(PROGRAM_OPTIONS, MyFrame::OnProgramOptions)
     EVT_MENU(MDI_HOMEPAGE, MyFrame::OnHomepage)
+    EVT_MENU(MDI_LIGATION, MyFrame::OnLigation)
+    EVT_MENU(MDI_CLONING_ASSISTANT, MyFrame::OnCloningAssistant)
     
     EVT_MENU(Y___, MyFrame::TestMenu)
     EVT_MENU(MDI_RESTRICTION, MyFrame::BollocksMenu)
-    EVT_MENU(MDI_LIGATION, MyFrame::BollocksMenu)
     EVT_MENU(MDI_PRINT_REPORT, MyFrame::BollocksMenu)
 
     EVT_MENU(MDI_NEXT_WINDOW, MyFrame::BollocksMenu)
@@ -47,7 +48,7 @@ BEGIN_EVENT_TABLE(MyFrame, MyFrameType)
 END_EVENT_TABLE()
 
 /// \brief Number of wxAcceleratorEntry entries
-#define ACC_ENT 41
+#define ACC_ENT 42
 
 /** \brief Constructor
 
@@ -114,6 +115,7 @@ MyFrame::MyFrame(wxWindow *parent,
 //    entries[38].Set(wxACCEL_CTRL, WXK_F12, MDI_GRAPH);
     entries[39].Set(wxACCEL_CTRL, WXK_F1, MDI_ABOUT);
     entries[40].Set(wxACCEL_NORMAL, WXK_F9, MDI_AUTO_ANNOTATE);
+    entries[41].Set(wxACCEL_CTRL, (int) 'K', MDI_CLONING_ASSISTANT);
 
     wxAcceleratorTable accel(ACC_ENT, entries);
     SetAcceleratorTable(accel);
@@ -1832,6 +1834,7 @@ wxMenu *MyFrame::getToolMenu ( bool _pcr )
     tool_menu->Append(MDI_EXTERNAL_INTERFACE, txt("m_external_interface") ) ;
     tool_menu->Append(MDI_CALCULATOR, txt("m_calculator") , txt("m_calculator_txt") ) ;
 //    tool_menu->Append(MDI_GRAPH, txt("m_graph") , txt("m_graph_txt") ) ; // TESTING, Deactivated in release
+	tool_menu->Append(MDI_CLONING_ASSISTANT, txt("m_cloning_assistant") ) ;
     tool_menu->Append(PROGRAM_OPTIONS, txt("m_options") , txt("m_options_txt") ) ;
     return tool_menu ;
     }
@@ -2268,6 +2271,60 @@ wxString MyFrame::get_help ()
 	return help_name[help_name.size()-1] ;
 	}
 
+void MyFrame::OnCloningAssistant(wxCommandEvent& event)
+    {
+    TCloningAssistant *subframe = new TCloningAssistant(getCommonParent(), txt("t_cloning_assistant") );
+    myass ( subframe , "MyFrame::OnCloningAssistant" ) ;
+    setChild ( subframe ) ;
+
+    // Give it an icon
+#ifdef __WXMSW__
+    subframe->SetIcon(wxIcon("chrt_icn"));
+#elif __WXMAC__
+#else
+    subframe->SetIcon(wxIcon( mondrian_xpm ));
+#endif
+
+    subframe->initme() ;
+/*    delete subframe->vec ;
+    subframe->vec = nv ;
+    subframe->vec->setWindow ( subframe ) ;
+
+    subframe->initPanels() ;*/
+    mainTree->addChild(subframe,TYPE_MISC) ;
+    children.Last()->Activate () ;
+	}
+
+void MyFrame::OnLigation(wxCommandEvent& event)
+    {
+    TLigationDialog ld ( this , txt("t_ligation") ) ;
+    long l ;
+    for ( l = 0 ; l < myapp()->frame->children.GetCount() ; l++ )
+        {
+        MyChild *p = (MyChild*) myapp()->frame->children[l] ;
+        if ( p->def == _T("dna") && !p->vec->isCircular() )
+           {
+           ld.vv.Add ( p->vec ) ;
+           }
+        }
+    
+    ld.init () ;
+    ld.ShowModal() ;
+    if ( !ld.doLigate ) return ;
+    for ( l = 0 ; l < ld.ligates.size() ; l++ )
+        {
+        if ( !ld.ligates[l].getSequence().IsEmpty() )
+           {
+           TVector *v = new TVector ;
+           v->setFromVector ( ld.ligates[l] ) ;
+           for ( int a = 0 ; a < v->items.size() ; a++ )
+              v->items[a].r1 = -1 ; // Resetting item radius to "recalc"
+           myapp()->frame->newFromVector ( v ) ;
+           }
+        }
+    myapp()->frame->lastCocktail.Clear () ;
+    }
+
 //******************************************************************* TTestSuite
 
 #ifdef MYTEST
@@ -2458,7 +2515,7 @@ void TTestSuite::Step()
     mylog ( "Testsuite:Status" , x ) ;
     
     if ( r < 6 ) pressKey ( ac ) ;
-   	else if ( r == 6 ) mouseEvent ( ac ) ;
+//   	else if ( r == 6 ) mouseEvent ( ac ) ;
    	else if ( r == 7 ) editMode ( ac ) ;
    	else if ( r == 8 )
    		{

@@ -923,10 +923,8 @@ void TGraphDisplay::OnSaveAsImage(wxCommandEvent &event)
 void TGraphDisplay::UpdateDisplay ()
 	{
     wxClientDC dc ( this ) ;
-        {
-        wxBufferedDC dc2 ( &dc , dc.GetSize() ) ;
-        drawit ( dc2 ) ;
-        }    
+	wxBufferedDC dc2 ( &dc , dc.GetSize() ) ;
+	drawit ( dc2 ) ;
 	}
     
 bool TGraphDisplay::IsSetupComplete()

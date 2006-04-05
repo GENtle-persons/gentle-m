@@ -147,6 +147,7 @@ class TVectorItem
     friend class TVectorEditor ;
     friend class MyChild ;
     friend class PlasmidCanvas ;
+    friend class MyFrame ;
     int r1 , r2 ;
     int r3 , r4 ; // Only used in linar display mode
     float a1 , a2 ;

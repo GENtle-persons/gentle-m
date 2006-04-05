@@ -45,6 +45,8 @@ class TLigationDialog : public wxDialog
     private :
     virtual wxString invert ( wxString s ) ; ///< Invert the string
 
+	wxTextCtrl *message ;
+
     DECLARE_EVENT_TABLE()
     } ;
 

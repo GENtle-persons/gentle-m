@@ -70,7 +70,7 @@ public:
     virtual void OnViewMode(wxCommandEvent& event); ///< Switch to fullscreen plasmid map event handler
     virtual void OnEditMode(wxCommandEvent& event); ///< Sqitch to edit mode event handler
     virtual void OnCircularLinear(wxCommandEvent& event); ///< Toggle circular/linear event handler
-    virtual void OnLigation(wxCommandEvent& event); ///< Ligation event handler
+//    virtual void OnLigation(wxCommandEvent& event); ///< Ligation event handler
     virtual void OnCopyToNew(wxCommandEvent& event); ///< "Copy as new sequence" event handler
     virtual void OnAsNewFeature(wxCommandEvent& event); ///< "Selection as new feature" event handler
     virtual void OnPrintImage(wxCommandEvent& event); ///< Print image event handler

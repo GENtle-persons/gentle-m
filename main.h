@@ -248,6 +248,7 @@ WX_DECLARE_OBJARRAY(float, wxArrayFloat);
 #include "ChildBase.h"
 #include "OnlineTools.h"
 #include "ABItype.h"
+#include "CloningAssistant.h"
 #include "MiscDialogs.h"
 #include "TStorage.h"
 #include "TPrimer.h"
