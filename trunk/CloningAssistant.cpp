@@ -39,11 +39,12 @@ BEGIN_EVENT_TABLE(TCloningAssistant, MyChildBase)
     EVT_MENU(AA_THREE_M3, TABIviewer::OnDummy)
 END_EVENT_TABLE()
 
-wxPen DDRThickRedPen ( *wxRED , 5 ) ;
+wxPen TDDR::ThickRedPen ;
 
 TCloningAssistant::TCloningAssistant(wxWindow *parent, const wxString& title)
     : ChildBase(parent, title)
 	{
+	TDDR::ThickRedPen = wxPen ( *wxRED , 5 ) ;
 	def = _T("CloningAssistant") ;
 	
 	base = new TDDR ;
@@ -61,7 +62,6 @@ TCloningAssistant::TCloningAssistant(wxWindow *parent, const wxString& title)
 		{
 		vectors.push_back ( new TVector ) ;
 		tlist->children.push_back ( new_from_vector ( vectors[a] ) ) ;
-		tlist->children[tlist->children.size()-1]->parent = tlist ;
 		}
 	}
 
@@ -140,6 +140,7 @@ TDDR *TCloningAssistant::new_from_vector ( TVector *v )
 	{
 	TDDR *n = new TDDR ( DDR_AS_SEQUENCE ) ;
 	n->title = v->getName() ;
+	n->parent = tlist ;
 	return n ;
 	}
 
@@ -346,7 +347,7 @@ void TDDR::clear_children ()
 
 void TDDR::draw ( wxDC &dc , wxPoint off )
 	{
-	if ( highlight == DDR_HIGHLIGHT_AS ) dc.SetPen ( DDRThickRedPen ) ;
+	if ( highlight == DDR_HIGHLIGHT_AS ) dc.SetPen ( ThickRedPen ) ;
 	else dc.SetPen ( pen ) ;
 	dc.SetBrush ( brush ) ;
 	dc.DrawRectangle ( r.GetLeft() + off.x , r.GetTop() + off.y , 
@@ -359,7 +360,7 @@ void TDDR::draw ( wxDC &dc , wxPoint off )
 		}
 	
 	if ( highlight == DDR_HIGHLIGHT_NONE ) return ;
-	dc.SetPen ( DDRThickRedPen ) ;
+	dc.SetPen ( ThickRedPen ) ;
 	int x ;
 	if ( highlight == DDR_HIGHLIGHT_LEFT ) x = r.GetLeft() + off.x - 2 ;
 	else if ( highlight == DDR_HIGHLIGHT_RIGHT ) x = r.GetRight() + off.x + 2 ;
