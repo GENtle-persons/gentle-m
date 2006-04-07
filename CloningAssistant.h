@@ -48,6 +48,7 @@ class TDDR // Drag'n'Drop Rect
 	TVector *vector ;
 	TVectorItem *item ;
 	int highlight ;
+	static wxPen ThickRedPen ;
 	} ;
 
 class TCloningAssistantPanel : public wxScrolledWindow
