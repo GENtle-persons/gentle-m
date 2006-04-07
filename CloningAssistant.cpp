@@ -141,6 +141,15 @@ TDDR *TCloningAssistant::new_from_vector ( TVector *v )
 	TDDR *n = new TDDR ( DDR_AS_SEQUENCE ) ;
 	n->title = v->getName() ;
 	n->parent = tlist ;
+	int a ;
+	for ( a = 0 ; a < v->items.size() ; a++ )
+		{
+		TDDR *m = new TDDR ( DDR_AS_ITEM ) ;
+		m->title = v->items[a].name ;
+		m->r = wxRect ( 0 , 0 , 10 , 15 ) ;
+		m->parent = n ;
+		n->children.push_back ( m ) ;
+		}
 	return n ;
 	}
 
@@ -206,8 +215,12 @@ void TCloningAssistantPanel::OnEvent(wxMouseEvent& event)
 		{
 		if ( highlight )
 			{
-			highlight->highlight = DDR_HIGHLIGHT_NONE ;
-			highlight = NULL ;
+			do_drop ( dragging , highlight ) ;
+			if ( highlight )
+				{
+				highlight->highlight = DDR_HIGHLIGHT_NONE ;
+				highlight = NULL ;
+				}
 			dragging->dragging = false ;
 			dragging = NULL ;
 			Refresh () ;
@@ -265,7 +278,7 @@ void TCloningAssistantPanel::OnEvent(wxMouseEvent& event)
 
 void TCloningAssistantPanel::arrange ()
 	{
-	int a ;
+	int a , b ;
 	wxRect r ;
 	wxClientDC dc ( this ) ;
 	wxSize cs = dc.GetSize() ;
@@ -280,9 +293,11 @@ void TCloningAssistantPanel::arrange ()
 	for ( a = 0 ; a < myapp()->frame->children.GetCount() ; a++ )
 		{
 		if ( myapp()->frame->children[a]->def != _T("dna") ) continue ;
+		if ( !myapp()->frame->children[a]->vec ) continue ;
 		TDDR *x = new TDDR ;
 		x->title = myapp()->frame->children[a]->getName() ;
 		x->r = r ;
+		x->vector = myapp()->frame->children[a]->vec ;
 		x->draggable = DDR_AS_SEQUENCE ;
 		x->parent = ca->vlist ;
 		ca->vlist->children.push_back ( x ) ;
@@ -302,13 +317,22 @@ void TCloningAssistantPanel::arrange ()
 							ca->vlist->r.GetHeight() ) ;
 	for ( a = 0 ; a < ca->tlist->children.size() ; a++ )
 		{
-//		ca->tlist->children[a]->type = DDR_AS_SEQUENCE ;
-		ca->tlist->children[a]->r = wxRect (
+		TDDR *i = ca->tlist->children[a] ;
+		i->r = wxRect (
 			5 ,
 			ca->tlist->r.GetHeight() * a / ca->tlist->children.size() + 5 ,
 			ca->tlist->r.GetWidth() - 10 ,
 			ca->tlist->r.GetHeight() / ca->tlist->children.size() - 10
 			) ;
+		
+		int lastx = 5 ;
+		for ( b = 0 ; b < i->children.size() ; b++ )
+			{
+			i->children[b]->resizeForText ( dc ) ;
+			i->children[b]->r.x = lastx + 5 ;
+			i->children[b]->r.y = 15 ;
+			lastx += i->children[b]->r.width + 5 ;
+			}
 		}
 	}
 
@@ -316,6 +340,26 @@ void TCloningAssistantPanel::OnSize (wxSizeEvent& event)
 	{
 	arrange () ;
 	Refresh () ;
+	}
+
+void TCloningAssistantPanel::do_drop ( TDDR *source , TDDR *target )
+	{
+	int a ;
+	if ( ( source->dragging & target->type & DDR_AS_SEQUENCE ) > 0 ) // Sequence
+		{
+		for ( a = 0 ; a < ca->tlist->children.size() ; a++ )
+			{
+			if ( ca->tlist->children[a] != target ) continue ;
+			TVector *nv = new TVector ;
+			nv->setFromVector ( *(source->vector) ) ;
+			ca->vectors[a] = nv ;
+			delete ca->tlist->children[a] ;
+			ca->tlist->children[a] = ca->new_from_vector ( nv ) ;
+			ca->tlist->children[a]->parent = ca->tlist ;
+			break ;
+			}
+		highlight = NULL ;
+		}
 	}
 
 //______________________________________________________________________________
