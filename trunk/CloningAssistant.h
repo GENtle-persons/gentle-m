@@ -65,6 +65,8 @@ class TCloningAssistantPanel : public wxScrolledWindow
     void arrange () ;
     
 	private :
+	void do_drop ( TDDR *source , TDDR *target ) ;
+		
 	TCloningAssistant *ca ;
 	TDDR *dragging , *highlight ;
 	wxPoint drag_diff , last_dragged_point ;
