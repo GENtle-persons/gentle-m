@@ -331,7 +331,11 @@ void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , wxString key , wxString va
     {
     int a ;
     for ( a = 0 ; a < value.length() ; a++ ) // Avoiding single quotes in value
-        if ( value .GetChar(a) == '"' ) value.SetChar(a,39) ;
+    	{
+        if ( value.GetChar(a) == '"' ) value.SetChar(a,39) ;
+        else if ( value.GetChar(a) > 127 ) value.SetChar(a,' ') ;
+        else if ( value.GetChar(a) == 0 ) value.SetChar(a,' ') ;
+		}
     value.Replace ( _T("\n") , _T("\013") ) ;
     if ( !s1.IsEmpty() ) s1 += _T(",") ;
     if ( !s2.IsEmpty() ) s2 += _T(",") ;
