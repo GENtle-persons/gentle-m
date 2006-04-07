@@ -59,6 +59,7 @@
 		codeSenseManager = 9180A6500866FCF9000C7D5E /* Code sense */;
 		executables = (
 			9180A6590866FD0A000C7D5E /* GENtle */,
+			91B03D3009E6635B00036DFE /* GENtle (Intel) */,
 		);
 		perUserDictionary = {
 			"PBXConfiguration.PBXBreakpointsDataSource.v1:1CA1AED706398EBD00589147" = {
@@ -103,7 +104,7 @@
 				PBXFileTableDataSourceColumnWidthsKey = (
 					22,
 					300,
-					130.5835,
+					130,
 				);
 				PBXFileTableDataSourceColumnsKey = (
 					PBXExecutablesDataSource_ActiveFlagID,
@@ -159,8 +160,8 @@
 					PBXFileDataSource_SCM_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 164534248;
-			PBXWorkspaceStateSaveDate = 164534248;
+			PBXPerProjectTemplateStateSaveDate = 166097554;
+			PBXWorkspaceStateSaveDate = 166097554;
 		};
 		sourceControlManager = 9180A64F0866FCF9000C7D5E /* Source Control */;
 		userBuildSettings = {
@@ -247,9 +248,9 @@
 	};
 	9180A6600866FD45000C7D5E /* Alignment.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {716, 21588}}";
-			sepNavSelRange = "{30580, 47}";
-			sepNavVisRect = "{{0, 13963}, {623, 229}}";
+			sepNavIntBoundsRect = "{{0, 0}, {821, 21560}}";
+			sepNavSelRange = "{30578, 47}";
+			sepNavVisRect = "{{0, 13950}, {821, 243}}";
 			sepNavWindowFrame = "{{15, 69}, {964, 672}}";
 		};
 	};
@@ -381,9 +382,9 @@
 	};
 	9180A6770866FD46000C7D5E /* main.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {983, 8330}}";
-			sepNavSelRange = "{5934, 11}";
-			sepNavVisRect = "{{0, 2978}, {983, 414}}";
+			sepNavIntBoundsRect = "{{0, 0}, {925, 8330}}";
+			sepNavSelRange = "{6584, 0}";
+			sepNavVisRect = "{{0, 3327}, {925, 543}}";
 			sepNavWindowFrame = "{{38, 48}, {964, 672}}";
 		};
 	};
@@ -413,9 +414,9 @@
 	};
 	9180A67C0866FD46000C7D5E /* MyFrame.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1616, 34398}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1616, 35840}}";
 			sepNavSelRange = "{61511, 0}";
-			sepNavVisRect = "{{0, 25671}, {925, 543}}";
+			sepNavVisRect = "{{0, 2334}, {925, 543}}";
 			sepNavWindowFrame = "{{38, 48}, {964, 672}}";
 		};
 	};
@@ -784,6 +785,42 @@
 			sepNavVisRect = "{{0, 0}, {925, 543}}";
 			sepNavWindowFrame = "{{38, 48}, {964, 672}}";
 		};
+	};
+	91B03BD409E404F100036DFE /* CloningAssistant.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {821, 2450}}";
+			sepNavSelRange = "{3648, 0}";
+			sepNavVisRect = "{{0, 1594}, {821, 243}}";
+		};
+	};
+	91B03C1E09E6635B00036DFE /* GENtle (Intel) */ = {
+		activeExec = 0;
+		executables = (
+			91B03D3009E6635B00036DFE /* GENtle (Intel) */,
+		);
+	};
+	91B03D3009E6635B00036DFE /* GENtle (Intel) */ = {
+		isa = PBXExecutable;
+		activeArgIndex = 2147483647;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = "GENtle (Intel)";
+		sourceDirectories = (
+		);
 	};
 	91C9EABF0867351700AE735B /* variables.csv */ = {
 		uiCtxt = {
