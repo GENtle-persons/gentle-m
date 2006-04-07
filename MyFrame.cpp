@@ -1083,13 +1083,13 @@ void MyFrame::OnSize(wxSizeEvent& event)
 {
     wxLayoutAlgorithm layout;
     layout.LayoutFrame(this);
-/*
+/*#ifdef __WXMSW__
     if ( lastChild )
     	{
 	    setActiveChild ( lastChild ) ;
         lastChild->Refresh() ;
         }    
-*/
+#endif*/
 }
 
 
@@ -2286,13 +2286,11 @@ void MyFrame::OnCloningAssistant(wxCommandEvent& event)
 #endif
 
     subframe->initme() ;
-/*    delete subframe->vec ;
-    subframe->vec = nv ;
-    subframe->vec->setWindow ( subframe ) ;
-
-    subframe->initPanels() ;*/
     mainTree->addChild(subframe,TYPE_MISC) ;
     children.Last()->Activate () ;
+//    subframe->Show ( TRUE ) ;
+//    subframe->EnforceRefesh () ;
+//    subframe->Activate () ;
 	}
 
 void MyFrame::OnLigation(wxCommandEvent& event)

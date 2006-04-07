@@ -1,8 +1,9 @@
 #include "CloningAssistant.h"
 #include <wx/dcbuffer.h>
 
-BEGIN_EVENT_TABLE(TCloningAssistantPanel, wxPanel)
+BEGIN_EVENT_TABLE(TCloningAssistantPanel, wxScrolledWindow)
     EVT_MOUSE_EVENTS(TCloningAssistantPanel::OnEvent)
+    EVT_SIZE(TCloningAssistantPanel::OnSize)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(TCloningAssistant, MyChildBase)
@@ -38,19 +39,30 @@ BEGIN_EVENT_TABLE(TCloningAssistant, MyChildBase)
     EVT_MENU(AA_THREE_M3, TABIviewer::OnDummy)
 END_EVENT_TABLE()
 
+wxPen DDRThickRedPen ( *wxRED , 5 ) ;
+
 TCloningAssistant::TCloningAssistant(wxWindow *parent, const wxString& title)
     : ChildBase(parent, title)
 	{
 	def = _T("CloningAssistant") ;
 	
-	dragging = NULL ;
 	base = new TDDR ;
 	vlist = new TDDR ;
+	tlist = new TDDR ;
 	
 	base->r = wxRect ( 0 , 0 , 200 , 200 ) ;
-	vlist->r = wxRect ( 0 , 0 , 100 , 100 ) ;
+	vlist->r = wxRect ( 10 , 10 , 100 , 100 ) ;
+	base->brush = *wxWHITE_BRUSH ;
 	
 	base->children.push_back ( vlist ) ;
+	base->children.push_back ( tlist ) ;
+
+	for ( int a = 0 ; a < 5 ; a++ )
+		{
+		vectors.push_back ( new TVector ) ;
+		tlist->children.push_back ( new_from_vector ( vectors[a] ) ) ;
+		tlist->children[tlist->children.size()-1]->parent = tlist ;
+		}
 	}
 
 TCloningAssistant::~TCloningAssistant ()
@@ -72,7 +84,10 @@ void TCloningAssistant::initme ()
 
     SetMenuBar(menu_bar);
     
-    panel = new TCloningAssistantPanel ( this ) ;
+    wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+    panel = new TCloningAssistantPanel ( this , this ) ;
+	panel->arrange () ;
+    v0->Add ( panel , 1 , wxEXPAND ) ;
 
 	// Toolbar
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
@@ -84,10 +99,15 @@ void TCloningAssistant::initme ()
     myapp()->frame->addDefaultTools ( toolBar ) ;
     toolBar->Realize() ;
 	
+	SetSizer ( v0 ) ;
     myapp()->frame->setChild ( this ) ;
     Maximize () ;
+	panel->arrange () ;
+	
     Activate () ;
-    Refresh () ;
+	v0->Layout () ;
+//	EnforceRefesh () ;
+//	Refresh () ;
 	}
 
 wxString TCloningAssistant::getName ()
@@ -109,34 +129,55 @@ void TCloningAssistant::OnDraw(wxDC& pdc)
 	{
 	panel->OnDraw ( pdc ) ;
 	}
+
+void TCloningAssistant::EnforceRefesh ()
+	{
+	panel->arrange () ;
+	panel->Refresh () ;
+	}
+
+TDDR *TCloningAssistant::new_from_vector ( TVector *v )
+	{
+	TDDR *n = new TDDR ( DDR_AS_SEQUENCE ) ;
+	n->title = v->getName() ;
+	return n ;
+	}
+
 //______________________________________________________________________________
 
-TCloningAssistantPanel::TCloningAssistantPanel ( TCloningAssistant *parent )
-	: wxPanel ( (wxWindow*) parent , -1 )
+TCloningAssistantPanel::TCloningAssistantPanel ( TCloningAssistant *_ca , wxWindow *parent )
+	: wxScrolledWindow ( (wxWindow*) parent , -1 )
 	{
-	ca = parent ;
-//	Maximize () ;
+	dragging = NULL ;
+	highlight = NULL ;
+	ca = _ca ;
 	}
 
 void TCloningAssistantPanel::OnDraw(wxDC& pdc)
 	{
-	wxMessageBox ( "!" ) ;
+	pdc.Clear () ;
 	ca->base->draw ( pdc ) ;
-	pdc.SetPen ( *wxBLACK_PEN ) ;
-	pdc.DrawLine ( 0 , 0 , 1000 , 1000 ) ;
 	}
 
 void TCloningAssistantPanel::OnPaint(wxPaintEvent& event)
 	{
 	wxPaintDC dc(this);
-//	wxBufferedDC dc2 ( &dc , dc.GetSize() ) ;
-	OnDraw ( dc ) ;
+	if ( dragging )
+		{
+		wxBufferedDC dc2 ( &dc , dc.GetSize() ) ;
+		OnDraw ( dc ) ;
+		}
+	else
+		{
+		OnDraw ( dc ) ;
+		}
     }
 
 void TCloningAssistantPanel::Refresh (bool eraseBackground , const wxRect* rect )
 	{
 	wxClientDC dc ( this ) ;
-	OnDraw ( dc ) ;
+	wxBufferedDC dc2 ( &dc , dc.GetSize() ) ;
+	OnDraw ( dc2 ) ;
 //	wxPaintEvent ev ;
 //	OnPaint ( ev ) ;	
 	}
@@ -145,31 +186,238 @@ void TCloningAssistantPanel::OnEvent(wxMouseEvent& event)
 	{
 	wxPaintEvent ev ;
 	OnPaint ( ev ) ;	
+    wxPoint pt(event.GetPosition());
+	
+	TDDR *over = NULL ;
+	if ( !dragging ) over = ca->base->findItem ( pt ) ;
+	
+	if ( event.LeftDown() )
+		{
+		if ( dragging ) dragging->dragging = false ;
+		dragging = over ;
+		if ( over && over->draggable != DDR_NONE )
+			{
+			drag_diff = pt - over->getRealOffset() ;
+			dragging->dragging = true ;
+			}
+		}
+	else if ( dragging && event.LeftUp() )
+		{
+		if ( highlight )
+			{
+			highlight->highlight = DDR_HIGHLIGHT_NONE ;
+			highlight = NULL ;
+			dragging->dragging = false ;
+			dragging = NULL ;
+			Refresh () ;
+			return ;
+			}
+		int max = 25 ;
+		for ( int a = 0 ; a <= max ; a++ )
+			{
+			wxClientDC dc ( this ) ;
+			wxBufferedDC dc2 ( &dc , dc.GetSize() ) ;
+			wxPoint p = dragging->getRealOffset() ;
+			p.x -= dragging->r.x ;
+			p.y -= dragging->r.y ;
+			p.x = ( p.x * a + last_dragged_point.x * ( max - a ) ) / max ;
+			p.y = ( p.y * a + last_dragged_point.y * ( max - a ) ) / max ;
+			OnDraw ( dc2 ) ;
+			dragging->draw ( dc2 , p ) ;
+			}
+		dragging->dragging = false ;
+		dragging = NULL ;
+		return ;
+		}
+	
+	if ( dragging && event.LeftIsDown() )
+		{
+		over = ca->base->findItem ( pt , wxPoint ( 0 , 0 ) , dragging ) ;
+		if ( highlight ) highlight->highlight = DDR_HIGHLIGHT_NONE ;
+		if ( !over || dragging == highlight ) highlight = NULL ;
+		else
+			{
+			highlight = over ;
+			highlight->do_highlight ( pt ) ;
+			if ( highlight->highlight == DDR_HIGHLIGHT_NONE )
+				highlight = NULL ;
+			}
+
+		last_dragged_point = wxPoint ( -dragging->r.x , -dragging->r.y ) ;
+		last_dragged_point += pt ;
+		last_dragged_point -= drag_diff ;
+		wxClientDC dc ( this ) ;
+		wxBufferedDC dc2 ( &dc , dc.GetSize() ) ;
+		OnDraw ( dc2 ) ;
+		dragging->draw ( dc2 , last_dragged_point ) ;
+		}
+	else if ( over && over->draggable != DDR_NONE )
+		{
+		SetCursor(wxCursor(wxCURSOR_HAND)) ;
+		}
+	else
+		{
+		SetCursor(*wxSTANDARD_CURSOR) ;
+		}
+	
+	}
+
+void TCloningAssistantPanel::arrange ()
+	{
+	int a ;
+	wxRect r ;
+	wxClientDC dc ( this ) ;
+	wxSize cs = dc.GetSize() ;
+	
+	// Base
+	ca->base->r = wxRect ( wxPoint ( 0 , 0 ) , GetClientSize() ) ;
+	
+	// Object list
+	r = wxRect ( 5 , 5 , 50 , 15 ) ;
+	while ( ca->vlist->children.size() ) ca->vlist->children.pop_back () ;
+	int maxw = 0 ;
+	for ( a = 0 ; a < myapp()->frame->children.GetCount() ; a++ )
+		{
+		if ( myapp()->frame->children[a]->def != _T("dna") ) continue ;
+		TDDR *x = new TDDR ;
+		x->title = myapp()->frame->children[a]->getName() ;
+		x->r = r ;
+		x->draggable = DDR_AS_SEQUENCE ;
+		x->parent = ca->vlist ;
+		ca->vlist->children.push_back ( x ) ;
+		x->resizeForText ( dc ) ;
+		r = x->r ;
+		if ( r.width > maxw ) maxw = r.width ;
+		r.SetY ( r.GetBottom() + 5 ) ;
+		}
+	for ( a = 0 ; a < ca->vlist->children.size() ; a++ )
+		ca->vlist->children[a]->r.width = maxw ;
+	ca->vlist->r = wxRect ( 5 , 5 , maxw + 10 , ca->base->r.GetHeight() - 10 ) ;
+	
+	// Targets
+	ca->tlist->r = wxRect ( ca->vlist->r.GetRight() + 5 , 
+							ca->vlist->r.GetTop() ,
+							cs.GetWidth() - ca->vlist->r.GetRight() - 10 , 
+							ca->vlist->r.GetHeight() ) ;
+	for ( a = 0 ; a < ca->tlist->children.size() ; a++ )
+		{
+//		ca->tlist->children[a]->type = DDR_AS_SEQUENCE ;
+		ca->tlist->children[a]->r = wxRect (
+			5 ,
+			ca->tlist->r.GetHeight() * a / ca->tlist->children.size() + 5 ,
+			ca->tlist->r.GetWidth() - 10 ,
+			ca->tlist->r.GetHeight() / ca->tlist->children.size() - 10
+			) ;
+		}
+	}
+
+void TCloningAssistantPanel::OnSize (wxSizeEvent& event)
+	{
+	arrange () ;
+	Refresh () ;
 	}
 
 //______________________________________________________________________________
 
-TDDR::TDDR ()
+TDDR::TDDR ( int _type )
 	{
 	draggable = DDR_NONE ;
 	pen = *wxBLACK_PEN ;
 	brush = *wxTRANSPARENT_BRUSH ;
+	type = _type ;
+	parent = NULL ;
+	dragging = false ;
+	vector = NULL ;
+	item = NULL ;
+	highlight = DDR_HIGHLIGHT_NONE ;
 	}
 
 TDDR::~TDDR ()
 	{
+	clear_children () ;
+	}
+
+void TDDR::clear_children ()
+	{
 	for ( int a = 0 ; a < children.size() ; a++ )
 		delete children[a] ;
+	children.clear () ;
 	}
 
 void TDDR::draw ( wxDC &dc , wxPoint off )
 	{
-	dc.SetPen ( *wxBLACK_PEN ) ;
-	dc.SetBrush ( *wxWHITE_BRUSH ) ;
-	dc.DrawLine ( 0 , 0 , 100 , 100 ) ;
+	if ( highlight == DDR_HIGHLIGHT_AS ) dc.SetPen ( DDRThickRedPen ) ;
+	else dc.SetPen ( pen ) ;
+	dc.SetBrush ( brush ) ;
 	dc.DrawRectangle ( r.GetLeft() + off.x , r.GetTop() + off.y , 
-						r.GetRight() + off.x , r.GetBottom() + off.y ) ;
+						r.GetWidth() , r.GetHeight() ) ;
 	wxPoint p = wxPoint ( r.GetLeft() + off.x , r.GetTop() + off.y ) ;
+	if ( !title.IsEmpty() ) dc.DrawText ( title , p.x + 2 , p.y + 2 ) ;
 	for ( int a = 0 ; a < children.size() ; a++ )
-		children[a]->draw ( dc , p ) ;
+		{
+		if ( !children[a]->dragging ) children[a]->draw ( dc , p ) ;
+		}
+	
+	if ( highlight == DDR_HIGHLIGHT_NONE ) return ;
+	dc.SetPen ( DDRThickRedPen ) ;
+	int x ;
+	if ( highlight == DDR_HIGHLIGHT_LEFT ) x = r.GetLeft() + off.x - 2 ;
+	else if ( highlight == DDR_HIGHLIGHT_RIGHT ) x = r.GetRight() + off.x + 2 ;
+	else return ;
+	dc.DrawLine ( x , r.GetTop() + off.y , x , r.GetBottom() + off.y ) ;
+	dc.DrawLine ( x-5 , r.GetTop() + off.y-5, x , r.GetTop() + off.y ) ;
+	dc.DrawLine ( x+5 , r.GetTop() + off.y-5 , x , r.GetTop() + off.y ) ;
+	dc.DrawLine ( x-5 , r.GetBottom() + off.y+5, x , r.GetBottom() + off.y ) ;
+	dc.DrawLine ( x+5 , r.GetBottom() + off.y+5 , x , r.GetBottom() + off.y ) ;
+	}
+
+void TDDR::resizeForText ( wxDC &dc )
+	{
+	long w , h ;
+	dc.GetTextExtent ( title , &w , &h ) ;
+	r.SetWidth ( w + 4 ) ;
+	r.SetHeight ( h + 4 ) ;
+	}
+
+TDDR *TDDR::findItem ( wxPoint p , wxPoint ori , TDDR *match )
+	{
+	if ( dragging ) return NULL ;
+	wxRect rr = r ;
+	rr.x += ori.x ;
+	rr.y += ori.y ;
+	if ( !rr.Inside ( p ) ) return NULL ;
+	wxPoint p2 ( rr.x , rr.y ) ;
+	for ( int a = 0 ; a < children.size() ; a++ )
+		{
+		TDDR *ret = children[a]->findItem ( p , p2 , match ) ;
+		if ( ret ) return ret ;
+		}
+	if ( match && ( type & match->draggable ) > 0 ) return this ;
+	if ( match ) return NULL ;
+	if ( draggable == DDR_NONE ) return NULL ;
+	return this ;
+	}
+
+wxPoint TDDR::getRealOffset ()
+	{
+	wxPoint p ( 0 , 0 ) ;
+	if ( parent ) p = parent->getRealOffset () ;
+	p.x += r.x ;
+	p.y += r.y ;
+	return p ;
+	}
+
+void TDDR::do_highlight ( wxPoint p )
+	{
+	if ( ( type & DDR_AS_SEQUENCE ) > 0 )
+		{
+		highlight = DDR_HIGHLIGHT_AS ;
+		return ;
+		}
+	wxPoint ro = getRealOffset () ;
+	wxRect rl = wxRect ( ro.x , ro.y , r.GetWidth() / 10 , r.GetHeight() ) ;
+	wxRect rr = wxRect ( ro.x + r.GetWidth() * 9 / 10 , ro.y , r.GetWidth() / 10 + 1 , r.GetHeight() ) ;
+	if ( rl.Inside ( p ) ) highlight = DDR_HIGHLIGHT_LEFT ;
+	else if ( rr.Inside ( p ) ) highlight = DDR_HIGHLIGHT_RIGHT ;
+	else highlight = DDR_HIGHLIGHT_AS ;
 	}
