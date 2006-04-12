@@ -970,3 +970,5 @@
 "t_enzyme_list_double_click","Save changes to enzyme ('No' will only add it to the enzyme list on the left)?","Änderungen am Enzym speichern ('Nein' fügt es nur der Liste aktueller Enzyme hinzu)?"
 "m_cloning_assistant","Cloning &assistant\tCtrl-K","Klonierungs-&Assistent\tStrg-K"
 "t_cloning_assistant","Cloning assistant","Klonierungs-Assistent"
+"t_ddr_target","Drop target sequence here","Zielsequenz hierhin ziehen"
+"t_ddr_source","Drop additional sequence here","Zusätzliche Sequenz hier ablegen"

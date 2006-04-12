@@ -23,6 +23,15 @@ enum {
 class TCloningAssistant ;
 class TVector ;
 class TVectorItem ;
+class TCloningAssistantPanel ;
+
+class TDDR_Timer : public wxTimer
+	{
+	public :
+	virtual void Notify() ;
+	TCloningAssistantPanel *cap ;
+	int move_back , max ;
+	} ;
 
 class TDDR // Drag'n'Drop Rect
 	{
@@ -65,8 +74,10 @@ class TCloningAssistantPanel : public wxScrolledWindow
     void arrange () ;
     
 	private :
+	friend class TDDR_Timer ;
 	void do_drop ( TDDR *source , TDDR *target ) ;
 		
+	TDDR_Timer timer ;
 	TCloningAssistant *ca ;
 	TDDR *dragging , *highlight ;
 	wxPoint drag_diff , last_dragged_point ;
@@ -92,7 +103,7 @@ class TCloningAssistant : public ChildBase
     private :
 	friend class TCloningAssistantPanel ;
 	
-	TDDR *new_from_vector ( TVector *v ) ;
+	TDDR *new_from_vector ( TVector *v , int drag = DDR_NONE ) ;
 	
 	vector <TVector*> vectors ;
 	TDDR *base , *vlist , *tlist ;
