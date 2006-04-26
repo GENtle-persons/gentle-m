@@ -73,7 +73,7 @@ BEGIN_EVENT_TABLE(SequenceCanvas, wxScrolledWindow)
 	EVT_MENU_RANGE(PHYLIP_CMD_PROTPARS,PHYLIP_CMD_SETUP,SequenceCanvas::OnPhylip)
     EVT_MENU(CM_OPEN_FEATURE,SequenceCanvas::OnOpenFeature)
     EVT_MENU(ALIGN_APPEARANCE,SequenceCanvas::OnAppearance)
-    
+
 /*	EVT_MENU(PHYLIP_CMD_PROTPARS, SequenceCanvas::OnPhylip)
 	EVT_MENU(PHYLIP_CMD_DNAPARS, SequenceCanvas::OnPhylip)
 	EVT_MENU(PHYLIP_CMD_DNAMOVE, SequenceCanvas::OnPhylip)
@@ -2454,7 +2454,6 @@ void SequenceCanvas::setEditMode ( bool _b )
         }
      editMode = _b ;
      }
-
 
 // -------------------------------------------------------- TMarkMem
 

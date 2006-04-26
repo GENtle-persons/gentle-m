@@ -360,21 +360,21 @@ void TCloningAssistantPanel::do_drop ( TDDR *source , TDDR *target )
 		highlight->highlight = DDR_HIGHLIGHT_NONE ;
 		highlight = NULL ;
 		}
-	else if ( ( source->dragging & target->type & DDR_AS_ITEM ) > 0 ) // Item
+	else if ( ( source->draggable & target->type & DDR_AS_ITEM ) > 0 ) // Item
 		{
-			wxMessageBox ( "!" ) ;
 		int h = target->highlight ;
 		if ( h == DDR_HIGHLIGHT_AS )
 			{
-			TDDR *op = target->parent ;
-			*target = *source ;
-			target->parent = op ;
+			target->duplicate_from ( source ) ;
+			target->original = source->original ? source->original : source ;
 			}
-		else if ( h == DDR_HIGHLIGHT_LEFT )
+		else if ( h == DDR_HIGHLIGHT_LEFT || h == DDR_HIGHLIGHT_RIGHT )
 			{
-			}
-		else if ( h == DDR_HIGHLIGHT_RIGHT )
-			{
+			TDDR *nt = new TDDR ;
+			nt->parent = target->parent ;
+			nt->duplicate_from ( source ) ;
+			nt->original = source->original ? source->original : source ;
+			target->parent->insert_new_child ( nt , target , h == DDR_HIGHLIGHT_LEFT ) ;
 			}
 		arrange () ;
 		//ca->EnforceRefesh () ;
@@ -392,6 +392,7 @@ TDDR::TDDR ( int _type )
 	brush = *wxTRANSPARENT_BRUSH ;
 	type = _type ;
 	parent = NULL ;
+	original = NULL ;
 	dragging = false ;
 	vector = NULL ;
 	item = NULL ;
@@ -412,6 +413,11 @@ void TDDR::clear_children ()
 
 void TDDR::draw ( wxDC &dc , wxPoint off )
 	{
+	if ( original )
+		{
+		dc.SetPen ( *MYPEN(wxColour(0,0,200)) ) ;
+		dc.DrawLine ( getRealOffset() , original->getRealOffset() ) ;
+		}
 	if ( highlight == DDR_HIGHLIGHT_AS ) dc.SetPen ( ThickRedPen ) ;
 	else dc.SetPen ( pen ) ;
 	dc.SetBrush ( brush ) ;
@@ -490,6 +496,51 @@ void TDDR::do_highlight ( wxPoint p )
 	else highlight = DDR_HIGHLIGHT_AS ;
 	}
 
+void TDDR::duplicate_from ( TDDR *b )
+	{
+	TDDR *old_parent = parent ;
+	clear_children () ;
+	*this = *b ;
+	children.clear () ;
+	
+	while ( children.size() < b->children.size() )
+		{
+		TDDR *dummy_child = new TDDR ;
+		dummy_child->parent = this ;
+		children.push_back ( dummy_child ) ;
+		children[children.size()-1]->duplicate_from ( b->children[children.size()-1] ) ;
+		}
+	dragging = false ;
+	parent = old_parent ;
+	}
+
+void TDDR::insert_new_child ( TDDR *i , TDDR *t , bool before )
+	{
+	VDDR c2 ;
+	c2 = children ;
+	children.clear () ;
+	for ( unsigned int a = 0 ; a < c2.size() ; a++ )
+		{
+		if ( c2[a] == t )
+			{
+			if ( before )
+				{
+				children.push_back ( i ) ;
+				children.push_back ( c2[a] ) ;
+				}
+			else
+				{
+				children.push_back ( c2[a] ) ;
+				children.push_back ( i ) ;
+				}
+			}
+		else
+			{
+			children.push_back ( c2[a] ) ;
+			}
+		}
+	i->parent = this ;
+	}
 
 //______________________________________________________________________________
 

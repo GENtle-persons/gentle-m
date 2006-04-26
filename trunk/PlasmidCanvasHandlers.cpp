@@ -328,6 +328,8 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn , int pos 
             cm->Append ( PC_RS_CUT_WITH_COCKTAIL , txt("p_cut_with_cocktail") ) ;
             }
         
+        if ( doreturn ) return cm ;
+
         if ( p->vec->isCircular() )
         		{
 				double angle ;
@@ -336,7 +338,6 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn , int pos 
 				cm->Append ( PC_TURNING_POINT , txt("p_turn_this_zero") ) ;
 				}
          
-        if ( doreturn ) return cm ;
         cm->AppendSeparator();
         }
     
@@ -364,6 +365,8 @@ void PlasmidCanvas::OnTurningPoint ( wxCommandEvent &ev )
 	setMark ( -1 , -1 ) ;
 	p->vec->resetTurn () ;
 	p->vec->undo.stop() ;
+    for ( int a = 0 ; a < p->cSequence->seq.GetCount() ; a++ )
+       p->cSequence->seq[a]->initFromTVector ( p->vec ) ;
 	p->EnforceRefesh () ;
 	}
 
