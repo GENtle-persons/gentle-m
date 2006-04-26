@@ -45,8 +45,9 @@ void TPrimer::makeStats ()
     for ( a = 0 ; a < sequence.length() ; a++ )
        contents[sequence.GetChar(a)]++ ;
     int gc = contents['C'] + contents['G'] ;
-    int at = sequence.length() - gc ;
-    pgc = gc * 100 / sequence.length() ;
+    int at = contents['A'] + contents['T'] ;
+    pgc = (float) gc * 100.0 ;
+	pgc /= (float) sequence.length() ;
     tm = evaluateTm () ;
     evaluation = 0 ;
     }

@@ -33,6 +33,9 @@ class TDDR_Timer : public wxTimer
 	int move_back , max ;
 	} ;
 
+class TDDR ;
+typedef vector <TDDR*> VDDR ;
+
 class TDDR // Drag'n'Drop Rect
 	{
 	public :
@@ -44,11 +47,13 @@ class TDDR // Drag'n'Drop Rect
 	wxPoint getRealOffset () ;
 	void clear_children () ;
 	void do_highlight ( wxPoint p ) ;
+	void duplicate_from ( TDDR *b ) ;
+	void insert_new_child ( TDDR *i , TDDR *t , bool before ) ;
 	
 	wxRect r ;
 	int draggable ;
-	vector <TDDR*> children ;
-	TDDR *parent ;
+	VDDR children ;
+	TDDR *parent , *original ;
 	wxPen pen ;
 	wxBrush brush ;
 	wxString title ;

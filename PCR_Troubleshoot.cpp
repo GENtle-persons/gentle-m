@@ -171,6 +171,7 @@ void PCR_troubleshoot_dialog::scan ()
 	int a , b ;
 	for ( a = 0 ; a < parent->primer.size() ; a++ )
 		{
+		parent->primer[a].makeStats () ;
 		scan_length ( parent->primer[a] , a ) ;
 		scan_GCcontent ( parent->primer[a] , a ) ;
 		scan_GCclamp ( parent->primer[a] , a ) ;
@@ -382,7 +383,7 @@ void PCR_troubleshoot_dialog::scan_GCcontent ( TPrimer &p , int nr )
 	if ( gc >= 40 && gc <= 60 ) return ; // Everthing's OK
 	
 	add_warning ( p , nr , txt("t_pcr_ts_warning_GC") , 
-	wxString::Format ( txt("t_pcr_ts_warning_GC_text") , gc ) ) ;
+	wxString::Format ( txt("t_pcr_ts_warning_GC_text") , (int) gc ) ) ;
 	}
 
 void PCR_troubleshoot_dialog::scan_GCclamp ( TPrimer &p , int nr )
