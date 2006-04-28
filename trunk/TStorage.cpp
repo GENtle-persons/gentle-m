@@ -315,13 +315,13 @@ void TStorage::import ()
         else
            {
            TRestrictionEnzyme *e = new TRestrictionEnzyme ;
-           e->name = name ;
+           e->setName ( name ) ;
            e->dbid = atol ( sr[a][sr["e_id"]].mb_str() ) ;
-           e->sequence = sr[a][sr["e_sequence"]] ;
+           e->setSequence ( sr[a][sr["e_sequence"]] ) ;
            e->note = sr[a][sr["e_note"]] ;
            e->location = sr[a][sr["e_location"]] ;
-           e->cut = atoi ( sr[a][sr["e_cut"]].mb_str() ) ;
-           e->overlap = atoi ( sr[a][sr["e_overlap"]].mb_str() ) ;
+           e->setCut ( atoi ( sr[a][sr["e_cut"]].mb_str() ) ) ;
+           e->setOverlap ( atoi ( sr[a][sr["e_overlap"]].mb_str() ) ) ;
            re.Add ( e ) ;
            }
         }
@@ -738,9 +738,9 @@ TProtease *TStorage::getProtease ( wxString s )
 void TStorage::updateProtease ( TProtease *p )
     {
     TRestrictionEnzyme e ;
-    e.name = _T("*") + p->name ;
-    e.cut = p->cut ;
-    e.sequence = p->str_match ;
+    e.setName ( _T("*") + p->name ) ;
+    e.setCut ( p->cut ) ;
+    e.setSequence ( p->str_match ) ;
     e.note = p->note ;
     updateRestrictionEnzyme ( &e ) ;
     }
@@ -916,7 +916,7 @@ TRestrictionEnzyme* TStorage::getRestrictionEnzyme ( wxString s )
         }
 
     for ( int a = 0 ; !ret && a < re.GetCount() ; a++ )
-        if ( re[a]->name == s )
+        if ( re[a]->getName() == s )
            ret = re[a] ;
            
     if ( storagetype == TEMP_STORAGE && ret )
@@ -1022,11 +1022,11 @@ void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme *e )
     TSQLresult sr ;
     wxString sql ;
     char u[100] ;
-    if ( e->name.IsEmpty() ) return ;
+    if ( e->getName().IsEmpty() ) return ;
     
     cleanEnzymeGroupCache() ;
     // Remove old enzyme, if any
-    sql = _T("DELETE FROM enzyme WHERE e_name=\"")  +e->name + _T("\"") ;
+    sql = _T("DELETE FROM enzyme WHERE e_name=\"")  +e->getName() + _T("\"") ;
     getObject ( sql ) ;
     
     // Get new id
@@ -1041,15 +1041,15 @@ void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme *e )
     sql = _T("INSERT INTO enzyme (e_id,e_name,e_sequence,e_location,e_note,e_cut,e_overlap) VALUES (\"") ;
     sql += wxString ( u , wxConvUTF8 ) ;
     sql += _T("\",\"") ;
-    sql += e->name + _T("\",\"") ;
-    sql += e->sequence + _T("\",\"") ;
+    sql += e->getName() + _T("\",\"") ;
+    sql += e->getSequence() + _T("\",\"") ;
     sql += e->location + _T("\",\"") ;
     sql += e->note + _T("\",\"") ;
     //sprintf ( u , "%d" , e->cut ) ;
-    sql += wxString::Format ( _T("%d") , e->cut ) ;
+    sql += wxString::Format ( _T("%d") , e->getCut() ) ;
     sql += _T("\",\"") ;
     //sprintf ( u , _T("%d") , e->overlap ) ;
-    sql += wxString::Format ( _T("%d") , e->overlap ) ;
+    sql += wxString::Format ( _T("%d") , e->getOverlap() ) ;
     sql += _T("\")") ;
     getObject ( sql ) ;
     }

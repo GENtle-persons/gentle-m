@@ -123,10 +123,10 @@ void TVectorTree::initme ()
     enzroot = AppendItem ( treeroot , txt("res_enzymes") ) ;
     for ( a = 0 ; a < p->vec->re.GetCount() ; a++ )
         {
-        y = AppendItem ( enzroot , p->vec->re[a]->name ) ;
+        y = AppendItem ( enzroot , p->vec->re[a]->getName() ) ;
 //        p->vec->re[a]->treeid = y ;
         bool used = false , visible = true ;
-        wxString out = p->vec->re[a]->name.c_str() ;
+        wxString out = p->vec->re[a]->getName().c_str() ;
         out += _T("\n") ;
         for ( b = 0 ; !used && b < p->vec->rc.size() ; b++ )
            {
@@ -137,7 +137,7 @@ void TVectorTree::initme ()
         else
            {
            SetItemData ( y , new TTreeItem ( out , _T("RE") , p->vec->re[a] ) ) ;
-           visible = !p->vec->isEnzymeHidden ( p->vec->re[a]->name ) ;
+           visible = !p->vec->isEnzymeHidden ( p->vec->re[a]->getName() ) ;
            SetItemBold ( y , visible ) ;
            }
         }
@@ -165,7 +165,7 @@ void TVectorTree::OnEvent ( wxTreeEvent &event )
         {
         TRestrictionEnzyme *e = (TRestrictionEnzyme*) d->p ;
         out += txt("res_seq") ;
-        out += e->sequence.c_str() ;
+        out += e->getSequence().c_str() ;
         out += _T("\n") ;
         out += txt("res_loc") ;
         out += e->location.c_str() ;
@@ -221,15 +221,15 @@ void TVectorTree::ToggleEnzymeVisibility ( TRestrictionEnzyme *e )
     wxTreeItemId y ;
     long l ;
     y = GetFirstChild ( enzroot , l ) ;
-    while ( y.IsOk() && GetItemText ( y ) != e->name )
+    while ( y.IsOk() && GetItemText ( y ) != e->getName() )
        y = GetNextChild ( enzroot , l ) ;
     if ( !y.IsOk() ) // Automatically added enzyme
     	{
-        p->vec->hideEnzyme ( e->name , true ) ;
+        p->vec->hideEnzyme ( e->getName() , true ) ;
         }    
     else // Manually added enzyme
     	{
-        p->vec->hideEnzyme ( e->name , IsBold ( y ) ) ;
+        p->vec->hideEnzyme ( e->getName() , IsBold ( y ) ) ;
         SetItemBold ( y , !IsBold ( y ) ) ;
     	}    
     

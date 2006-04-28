@@ -1021,9 +1021,9 @@ void TEnzymeDialog::initme ( TRestrictionEnzyme *_e , bool ro )
     new wxStaticText ( this , -1 , _T("Cuts at") , wxPoint ( bo , bo+lh*4+lh/3 ) ) ;
     new wxStaticText ( this , -1 , _T("Overlap") , wxPoint ( bo , bo+lh*5+lh/3 ) ) ;
     
-    eb_name = new wxTextCtrl ( this , -1 , e->name , 
+    eb_name = new wxTextCtrl ( this , -1 , e->getName() , 
                 wxPoint ( x1 , bo ) , wxSize ( w-bo-x1 , lh-bo ) ) ;
-    eb_seq  = new wxTextCtrl ( this , -1 , e->sequence , 
+    eb_seq  = new wxTextCtrl ( this , -1 , e->getSequence() , 
                 wxPoint ( x1 , bo+lh ) , wxSize ( w-bo-x1 , lh-bo ) ) ;
     eb_loc  = new wxTextCtrl ( this , -1 , e->location , 
                 wxPoint ( x1 , bo+lh*2 ) , wxSize ( w-bo-x1 , lh-bo ) ) ;
@@ -1031,13 +1031,13 @@ void TEnzymeDialog::initme ( TRestrictionEnzyme *_e , bool ro )
                 wxPoint ( x1 , bo+lh*3 ) , wxSize ( w-bo-x1 , lh-bo ) ) ;
 
 //    sprintf ( u , "%d" , e->cut ) ;
-    eb_from = new wxTextCtrl ( this , -1 , wxString::Format ( _T("%d") , e->cut) , wxPoint ( x1 , bo+lh*4 ) ,
+    eb_from = new wxTextCtrl ( this , -1 , wxString::Format ( _T("%d") , e->getCut()) , wxPoint ( x1 , bo+lh*4 ) ,
                     wxSize ( w-bo-x2 , lh-bo ) ) ;
 //    sprintf ( u , "%d" , e->overlap ) ;
-    eb_to   = new wxTextCtrl ( this , -1 , wxString::Format ( _T("%d") , e->overlap ) , wxPoint ( x1 , bo+lh*5 ) ,
+    eb_to   = new wxTextCtrl ( this , -1 , wxString::Format ( _T("%d") , e->getOverlap() ) , wxPoint ( x1 , bo+lh*5 ) ,
                     wxSize ( w-bo-x2 , lh-bo ) ) ;
     
-    if ( !e->name.IsEmpty() )
+    if ( !e->getName().IsEmpty() )
        eb_name->Disable () ;
     
     if ( !readonly )
@@ -1064,12 +1064,12 @@ void TEnzymeDialog::OnCharHook(wxKeyEvent& event)
 
 void TEnzymeDialog::OnOK ( wxCommandEvent &ev )
     {
-    e->name = eb_name->GetValue() ;
-    e->sequence = eb_seq->GetValue() ;
+    e->setName ( eb_name->GetValue() ) ;
+    e->setSequence ( eb_seq->GetValue() ) ;
     e->location = eb_loc->GetValue() ;
     e->note = eb_note->GetValue() ;
-    e->cut = atoi ( eb_from->GetValue().mb_str() ) ;
-    e->overlap = atoi ( eb_to->GetValue().mb_str() ) ;
+    e->setCut ( atoi ( eb_from->GetValue().mb_str() ) ) ;
+    e->setOverlap ( atoi ( eb_to->GetValue().mb_str() ) ) ;
     wxDialog::OnOK ( ev ) ;
     }
 

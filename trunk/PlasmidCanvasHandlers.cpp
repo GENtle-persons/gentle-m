@@ -123,7 +123,7 @@ wxMenu *PlasmidCanvas::invokeRsPopup ( int rs , wxPoint pt , bool doreturn )
     cm->AppendSeparator () ;
     
     for ( a = 0 ; a < p->vec->cocktail.GetCount() && 
-                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->name ;
+                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->getName() ;
                     a++ ) ;
     if ( a == p->vec->cocktail.GetCount() )
         {
@@ -159,9 +159,9 @@ wxMenu *PlasmidCanvas::invokeRsPopup ( int rs , wxPoint pt , bool doreturn )
     
 void PlasmidCanvas::rsMark ( wxCommandEvent &ev )
     {
-    int from = p->vec->rc[context_last_rs].pos - 
-                p->vec->rc[context_last_rs].e->cut + 1 ;
-    int to = from + p->vec->rc[context_last_rs].e->sequence.length() - 1 ;
+    int from = p->vec->rc[context_last_rs].getPos() - 
+                p->vec->rc[context_last_rs].e->getCut() + 1 ;
+    int to = from + p->vec->rc[context_last_rs].e->getSequence().length() - 1 ;
     p->cSequence->mark ( _T("DNA") , from , to ) ;
     }
     
@@ -175,11 +175,11 @@ void PlasmidCanvas::rsAdd2Cocktail ( wxCommandEvent &ev )
     {
     int a , b ;
     for ( a = 0 ; a < p->vec->cocktail.GetCount() && 
-                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->name ;
+                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->getName() ;
                     a++ ) ;
     if ( a == p->vec->cocktail.GetCount() ) // Add to cocktail
         {
-        p->vec->cocktail.Add ( p->vec->rc[context_last_rs].e->name ) ;
+        p->vec->cocktail.Add ( p->vec->rc[context_last_rs].e->getName() ) ;
         }
     else // Remove from cocktail
         {
@@ -210,7 +210,7 @@ void PlasmidCanvas::rsEdit ( wxCommandEvent &ev )
 void PlasmidCanvas::rsInfo ( wxCommandEvent &ev )
     {
     wxString command = _T("http://rebase.neb.com/rebase/enz/") ;
-    command += p->vec->rc[context_last_rs].e->name ;
+    command += p->vec->rc[context_last_rs].e->getName() ;
     command += _T(".html") ;
     command = myapp()->getHTMLCommand ( command ) ;
     wxExecute ( command ) ;
@@ -232,7 +232,7 @@ void PlasmidCanvas::rsDel ( wxCommandEvent &ev )
     p->vec->undo.start ( txt("u_del_enzyme") ) ;
     int a ;
     for ( a = 0 ; a < p->vec->cocktail.GetCount() && 
-                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->name ;
+                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->getName() ;
                     a++ ) ;
     if ( a < p->vec->cocktail.GetCount() )
         rsAdd2Cocktail ( ev ) ; // Effectively removing enzyme from cocktail

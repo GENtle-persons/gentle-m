@@ -215,7 +215,7 @@ void TSilmutDialog::calc ()
     for ( a = 0 ; a < re.GetCount() ; a++ )
         {
         TRestrictionEnzyme *e = re[a] ;
-        wxString s = e->sequence ;
+        wxString s = e->getSequence() ;
         int f , t ;
         f = from - s.length() + 1 ;
         t = to - 1 ;
@@ -274,7 +274,7 @@ void TSilmutDialog::calc ()
               
               // Calculating the resulting fragments
               si.fragments.Alloc ( vc.size() + 5 ) ;
-              for ( c = 0 ; c < vc.size() ; c++ ) si.fragments.Add ( vc[c].pos ) ;
+              for ( c = 0 ; c < vc.size() ; c++ ) si.fragments.Add ( vc[c].getCut() ) ;
               si.fragments.Add ( v->getSequenceLength()-1 ) ;
               for ( c = si.fragments.GetCount()-1 ; c > 0 ; c-- )
                  si.fragments[c] -= si.fragments[c-1] ;
@@ -327,7 +327,7 @@ void TSilmutDialog::showit ()
     for ( a = 0 ; a < vs.size() ; a++ )
         {
         vector <TRestrictionCut> vc ;
-        wxString e_name = vs[a].e->name ;
+        wxString e_name = vs[a].e->getName() ;
         while ( e_name.length() < 8 ) e_name += ' ' ;
         v->getCuts ( vs[a].e , vc ) ;
         int cuts_before = vc.size() ;

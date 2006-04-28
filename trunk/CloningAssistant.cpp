@@ -153,6 +153,10 @@ TDDR *TCloningAssistant::new_from_vector ( TVector *v , int drag )
 		m->r = wxRect ( 0 , 0 , 10 , 15 ) ;
 		m->parent = n ;
 		m->draggable = drag ;
+		m->vector = v ;
+		m->item = &v->items[a] ;
+		if ( v->items[a].getType() == VIT_CDS ) m->pen = *MYPEN ( wxColour ( 100 , 200 , 100 ) ) ;
+		else m->pen = *MYPEN ( *wxWHITE ) ;
 		n->children.push_back ( m ) ;
 		}
 	return n ;
@@ -367,6 +371,7 @@ void TCloningAssistantPanel::do_drop ( TDDR *source , TDDR *target )
 			{
 			target->duplicate_from ( source ) ;
 			target->original = source->original ? source->original : source ;
+			target->draggable = false ;
 			}
 		else if ( h == DDR_HIGHLIGHT_LEFT || h == DDR_HIGHLIGHT_RIGHT )
 			{
@@ -374,10 +379,10 @@ void TCloningAssistantPanel::do_drop ( TDDR *source , TDDR *target )
 			nt->parent = target->parent ;
 			nt->duplicate_from ( source ) ;
 			nt->original = source->original ? source->original : source ;
+			nt->draggable = false ;
 			target->parent->insert_new_child ( nt , target , h == DDR_HIGHLIGHT_LEFT ) ;
 			}
 		arrange () ;
-		//ca->EnforceRefesh () ;
 		highlight->highlight = DDR_HIGHLIGHT_NONE ;
 		highlight = NULL ;
 		}
@@ -416,7 +421,13 @@ void TDDR::draw ( wxDC &dc , wxPoint off )
 	if ( original )
 		{
 		dc.SetPen ( *MYPEN(wxColour(0,0,200)) ) ;
-		dc.DrawLine ( getRealOffset() , original->getRealOffset() ) ;
+		wxPoint p1 = getRealOffset() ;
+		wxPoint p2 = original->getRealOffset() ;
+		p1.x += r.GetWidth() / 2 ;
+		p1.y += r.GetHeight() / 2 ;
+		p2.x += original->r.GetWidth() / 2 ;
+		p2.y += original->r.GetHeight() / 2 ;
+		dc.DrawLine ( p1 , p2 ) ;
 		}
 	if ( highlight == DDR_HIGHLIGHT_AS ) dc.SetPen ( ThickRedPen ) ;
 	else dc.SetPen ( pen ) ;
@@ -425,11 +436,34 @@ void TDDR::draw ( wxDC &dc , wxPoint off )
 						r.GetWidth() , r.GetHeight() ) ;
 	wxPoint p = wxPoint ( r.GetLeft() + off.x , r.GetTop() + off.y ) ;
 	if ( !title.IsEmpty() ) dc.DrawText ( title , p.x + 2 , p.y + 2 ) ;
+	
+	if ( item && item->getType() == VIT_CDS && item->getDirection() != 0 )
+		{
+		int x1 , x2 ;
+		int dy = r.GetHeight() / 3 ;
+		int y = r.GetBottom() + dy + off.y ;
+		if ( item->getDirection() < 0 )
+			{
+			x1 = off.x + r.GetLeft() ;
+			x2 = x1 + r.GetWidth() / 10 ;
+			}
+		else
+			{
+			x1 = off.x + r.GetRight() ;
+			x2 = x1 - r.GetWidth() / 10 ;
+			}
+		dc.DrawLine ( off.x + r.GetLeft() , y , off.x + r.GetRight() , y ) ;
+		dc.DrawLine ( x1 , y , x2 , y - dy/2 ) ;
+		dc.DrawLine ( x1 , y , x2 , y + dy/2 ) ;
+		}
+	
+	// Update children
 	for ( int a = 0 ; a < children.size() ; a++ )
 		{
 		if ( !children[a]->dragging ) children[a]->draw ( dc , p ) ;
-		}
+		}	
 	
+	// Highlighting?
 	if ( highlight == DDR_HIGHLIGHT_NONE ) return ;
 	dc.SetPen ( ThickRedPen ) ;
 	int x ;

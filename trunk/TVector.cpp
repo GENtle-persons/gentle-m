@@ -726,16 +726,17 @@ void TVector::getCuts ( TRestrictionEnzyme *e , vector <TRestrictionCut> &ret ,
     {
     int b , c ;
     if ( clear_vector ) ret.clear () ;
-    wxString rs = e->sequence ;
+    wxString rs = e->getSequence() ;
     wxString t = sequence ;
     if ( circular ) t += sequence ;
+    
     for ( b = 0 ; b < sequence.length() ; b++ )
         {
         for ( c = 0 ; b+c < t.length() && c < rs.length() && 
                         basematch ( t.GetChar(b+c) , rs.GetChar(c) ) ; c++ ) ;
         if ( c == rs.length() )
            {
-           int thecut = (b+e->cut)%sequence.length() ;
+           int thecut = (b+e->getCut())%sequence.length() ;
            if ( thecut >= 0 && thecut < sequence.length() )
            	  {
               ret.push_back ( TRestrictionCut ( thecut , e ) ) ;
@@ -743,6 +744,57 @@ void TVector::getCuts ( TRestrictionEnzyme *e , vector <TRestrictionCut> &ret ,
               }    
            }
         }
+    
+    if ( e->isPalindromic() ) return ;
+
+
+    // Complement & invert for non-palindromic sequences
+    TVector vv ;
+    vv.sequence = rs ;
+    rs = vv.transformSequence ( true , true ) ;
+
+    for ( b = 0 ; b < sequence.length() ; b++ )
+        {
+        for ( c = 0 ; b+c < t.length() && c < rs.length() && 
+                        basematch ( t.GetChar(b+c) , rs.GetChar(c) ) ; c++ ) ;
+        if ( c == rs.length() )
+           {
+           int thecut = (b+e->getCut())%sequence.length() ;
+           if ( thecut >= 0 && thecut < sequence.length() )
+           	  {
+              ret.push_back ( TRestrictionCut ( thecut , e , false ) ) ;
+              if ( ret.size() > max ) return ;
+              }    
+           }
+        }
+
+
+
+/*
+    t = sequence ;
+    for ( b = 0 ; b < sequence.length() ; b++ )
+    	{
+		t.SetChar ( b , getNucleotide ( sequence.length() - b - 1 , true ) ) ;
+		}
+	
+    if ( circular ) t += sequence ;
+    int realpos = sequence.length() ;
+    for ( b = 0 ; b < sequence.length() ; b++ )
+        {
+		realpos-- ;
+        for ( c = 0 ; b+c < t.length() && c < rs.length() && 
+                        basematch ( t.GetChar(b+c) , rs.GetChar(c) ) ; c++ ) ;
+        if ( c == rs.length() )
+           {
+           int thecut = ( realpos + 1 + e->getCut(false) - e->getSequence().length() ) % sequence.length() ;
+           if ( thecut >= 0 && thecut < sequence.length() )
+           	  {
+              ret.push_back ( TRestrictionCut ( thecut , e ) ) ;
+              if ( ret.size() > max ) return ;
+              }    
+           }
+        }
+*/
     }
     
 void TVector::recalculateCuts ()
@@ -769,10 +821,10 @@ void TVector::recalculateCuts ()
         int a , b ;
         for ( a = 0 ; a < rc.size() ; a++ )
         	{
-    	    for ( b = a+1 ; b < rc.size() && rc[b].pos == rc[a].pos ; b++ )
+    	    for ( b = a+1 ; b < rc.size() && rc[b].getPos() == rc[a].getPos() ; b++ )
     	    	{
     	    	if ( b == rc.size() ) continue ;
-    	    	if ( rc[b].pos != rc[a].pos ) continue ;
+    	    	if ( rc[b].getPos() != rc[a].getPos() ) continue ;
     	    	if ( !rc[a].join ( &rc[b] ) ) continue ;
         	    rc.erase ( rc.begin() + b ) ;
         	    a-- ;
@@ -837,28 +889,28 @@ bool TVector::reduceToFragment ( TRestrictionCut left , TRestrictionCut right )
     int a , from , to ;
     wxString s ;
 
-    from = left.pos ;
-    to = right.pos ;
+    from = left.getPos() ;
+    to = right.getPos() ;
     if ( to <= from ) to += sequence.length() ;
 
-    from -= left.e->cut ;
-    to += right.e->sequence.length() - right.e->cut - 1 ;
+    from -= left.e->getCut() ;
+    to += right.e->getSequence().length() - right.e->getCut() - 1 ;
 
-    int from2 = from + left.e->sequence.length() ;
-    int to2 = to - right.e->sequence.length() + 1 ;
+    int from2 = from + left.e->getSequence().length() ;
+    int to2 = to - right.e->getSequence().length() + 1 ;
     
     for ( a = from ; a <= to ; a++ )
         s += getNucleotide ( a ) ;
     
     wxString mlu , mll , mru , mrl ;
     
-    if ( left.e->sequence.IsEmpty() ) // Blank enzyme
+    if ( left.e->getSequence().IsEmpty() ) // Blank enzyme
     	{
     	mlu = getStickyEnd ( true , true ) ;
     	mll = getStickyEnd ( true , false ) ;
     	}
     
-    if ( right.e->sequence.IsEmpty() ) // Blank enzyme
+    if ( right.e->getSequence().IsEmpty() ) // Blank enzyme
     	{
     	mru = getStickyEnd ( false , true ) ;
     	mrl = getStickyEnd ( false , false ) ;
@@ -877,14 +929,14 @@ bool TVector::reduceToFragment ( TRestrictionCut left , TRestrictionCut right )
     TVector dv ;
     dv.setSequence ( s ) ;
     wxString is = dv.transformSequence ( true , false ) ; // Inverse sequence
-    _lu =  s.substr ( left.e->sequence.length() - _lu.length() , _lu.length() - lo ) ;
-    _ll = is.substr ( left.e->sequence.length() - _ll.length() , _ll.length() - lo ) ;
-    _ru =  s.substr ( s.length() - right.e->sequence.length() + ro , _ru.length() - ro ) ;
-    _rl = is.substr ( s.length() - right.e->sequence.length() + ro , _rl.length() - ro ) ;
+    _lu =  s.substr ( left.e->getSequence().length() - _lu.length() , _lu.length() - lo ) ;
+    _ll = is.substr ( left.e->getSequence().length() - _ll.length() , _ll.length() - lo ) ;
+    _ru =  s.substr ( s.length() - right.e->getSequence().length() + ro , _ru.length() - ro ) ;
+    _rl = is.substr ( s.length() - right.e->getSequence().length() + ro , _rl.length() - ro ) ;
 
     // Removing sticky ends from main sequence
-    s = s.substr ( 0 , s.length() - right.e->sequence.length() + ro ) ;
-    s = s.substr ( left.e->sequence.length() - lo ) ;
+    s = s.substr ( 0 , s.length() - right.e->getSequence().length() + ro ) ;
+    s = s.substr ( left.e->getSequence().length() - lo ) ;
     
     from2 -= lo ;
     to2 += ro ;
@@ -958,16 +1010,16 @@ void TVector::doRestriction ()
     myapp()->frame->lastCocktail = cocktail ;
     
     TRestrictionEnzyme blankEnzyme ;
-    blankEnzyme.cut = 0 ;
-    blankEnzyme.sequence = _T("") ;
-    blankEnzyme.overlap = 0 ;
+    blankEnzyme.setCut ( 0 ) ;
+    blankEnzyme.setSequence ( _T("") ) ;
+    blankEnzyme.setOverlap ( 0 ) ;
     if ( !circular )
         cl.push_back ( TRestrictionCut ( 0 , &blankEnzyme ) ) ;
 
     mylog ( "TVector::doRestriction" , "3" ) ;
     for ( a = 0 ; a < cocktail.GetCount() ; a++ )
        {
-       for ( b = 0 ; b < re.GetCount() && re[b]->name != cocktail[a] ; b++ ) ;
+       for ( b = 0 ; b < re.GetCount() && re[b]->getName() != cocktail[a] ; b++ ) ;
        if ( b == re.GetCount() )
           {
           recalcvisual = true ;
@@ -984,7 +1036,7 @@ void TVector::doRestriction ()
     {
         for ( b = 0 ; b < rc.size() ; b++ )
 	{
-	    if ( rc[b].e->name == cocktail[a] )
+	    if ( rc[b].e->getName() == cocktail[a] )
 	    {
 		cl.push_back ( rc[b] ) ;
 	    }
@@ -995,7 +1047,7 @@ void TVector::doRestriction ()
     // Arranging
     for ( a = 1 ; a < cl.size() ; a++ )
         {
-        if ( cl[a-1].pos > cl[a].pos )
+        if ( cl[a-1].getPos() > cl[a].getPos() )
            {
            TRestrictionCut ct = cl[a] ;
            cl[a] = cl[a-1] ;
@@ -1014,8 +1066,8 @@ void TVector::doRestriction ()
     for ( a = 0 ; a+1 < cl.size() ; a++ )
         {
         char t1[100] , t2[100] ;
-        sprintf ( t1 , "%d" , cl[a].pos ) ;
-        sprintf ( t2 , "%d" , cl[a+1].pos ) ;
+        sprintf ( t1 , "%d" , cl[a].getPos() ) ;
+        sprintf ( t2 , "%d" , cl[a+1].getPos() ) ;
         TVector *nv = new TVector ;
         nv->setFromVector ( *this ) ;
         nv->reduceToFragment ( cl[a] , cl[a+1] ) ;
@@ -1023,19 +1075,19 @@ void TVector::doRestriction ()
         nv->recalcvisual = true ;
         if ( !nv->getDescription().IsEmpty() ) nv->addDescription ( _T("\n") ) ;
         //char tx[1000] ;
-		  wxString tx = wxString::Format ( txt("res_desc").c_str() , nv->getName().c_str() , cl[a].e->name.c_str() , t1 ) ;
+		  wxString tx = wxString::Format ( txt("res_desc").c_str() , nv->getName().c_str() , cl[a].e->getName().c_str() , t1 ) ;
         //sprintf ( tx , txt("res_desc").mb_str() , nv->getName().mb_str() , cl[a].e->name.mb_str() , t1 ) ;
         nv->addDescription ( tx ) ;
-        if ( cl[a].e->name == cl[a+1].e->name )
+        if ( cl[a].e->getName() == cl[a+1].e->getName() )
            {
            nv->addDescription ( _T(".") ) ;
-           nv->addName ( _T(" (") + cl[a].e->name + _T(")") ) ;
+           nv->addName ( _T(" (") + cl[a].e->getName() + _T(")") ) ;
            }
         else
            {
-			  tx = wxString::Format ( txt("res_desc2").c_str() , cl[a+1].e->name.c_str() , t2 ) ;
+			  tx = wxString::Format ( txt("res_desc2").c_str() , cl[a+1].e->getName().c_str() , t2 ) ;
            //sprintf ( tx , txt("res_desc2").c_str() , cl[a+1].e->name.c_str() , t2 ) ;
-           nv->addName ( _T(" (") + cl[a].e->name + _T("/") + cl[a+1].e->name +_T(")") ) ;
+           nv->addName ( _T(" (") + cl[a].e->getName() + _T("/") + cl[a+1].e->getName() +_T(")") ) ;
            }
         nv->cocktail.Clear() ; // Cleaning up cocktail
         if ( nv->sequence.length() >= action_value ) // "No fragments smaller than XX base pairs"
@@ -1286,7 +1338,7 @@ int TVector::countCuts ( wxString enzyme )
     {
     int a , count ;
     for ( a = count = 0 ; a < rc.size() ; a++ )
-        if ( rc[a].e->name == enzyme )
+        if ( rc[a].e->getName() == enzyme )
            count++ ;
     return count ;
     }
@@ -1555,7 +1607,7 @@ void TVector::sortRestrictionSites ()
     int a ;
     for ( a = 1 ; a < rc.size() ; a++ ) // Sort by pos
         {
-        if ( rc[a].pos < rc[a-1].pos )
+        if ( rc[a].getPos() < rc[a-1].getPos() )
            {
            TRestrictionCut dummy = rc[a] ;
            rc[a] = rc[a-1] ;

@@ -54,7 +54,7 @@ void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc )
         {
         TRestrictionCut *c = &p->vec->rc[a] ;
         if ( c->isHidden ( p->vec ) ) continue ;
-        float angle = (float) c->pos * 360 / l ;
+        float angle = (float) c->getPos() * 360 / l ;
         c->angle = angle ;
         c->angle3 = angle ; //(float) (a+1) * 360 / p->vec->rc.size() ;
         c->r1 = STANDARDRADIUS ;
@@ -541,9 +541,9 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
     for ( a = 0 ; a < p->vec->rc.size() ; a++ )
         {
         TRestrictionCut c = p->vec->rc[a] ;
-        if ( isEnzymeVisible ( c.e->name ) )
+        if ( isEnzymeVisible ( c.e->getName() ) )
            {
-           wxColour *col = p->vec->getEnzymeRule()->getColor ( p->vec->countCuts ( c.e->name ) ) ;
+           wxColour *col = p->vec->getEnzymeRule()->getColor ( p->vec->countCuts ( c.e->getName() ) ) ;
            dc.SetTextForeground ( *col ) ;
            dc.SetPen ( *MYPEN(*col) ) ;
            c.r1 = c.r1 * 100 * r / ( STANDARDRADIUS * 100 ) ;

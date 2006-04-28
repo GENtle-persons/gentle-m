@@ -183,8 +183,8 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
         for ( a = 0 ; a < p->vec->rc.size() ; a++ )
             {
             TRestrictionCut *c = &p->vec->rc[a] ;
-            if ( p->vec->isEnzymeHidden ( c->e->name ) ) continue ;
-            c->p = wxPoint ( lineOff + lineLen * c->pos / (l+1) , lineH - markH ) ;
+            if ( p->vec->isEnzymeHidden ( c->e->getName() ) ) continue ;
+            c->p = wxPoint ( lineOff + lineLen * c->getPos() / (l+1) , lineH - markH ) ;
             arrangeRestrictionSitesLinear ( a , dc ) ;
             }
         for ( a = 0 ; a < p->vec->rc.size() ; a++ )
@@ -236,13 +236,13 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
     for ( a = 0 ; a < p->vec->rc.size() ; a++ )
         {
         TRestrictionCut *c = &p->vec->rc[a] ;
-        if ( isEnzymeVisible ( c->e->name ) )
+        if ( isEnzymeVisible ( c->e->getName() ) )
            {
-           wxColour *col = p->vec->getEnzymeRule()->getColor ( p->vec->countCuts ( c->e->name ) ) ;
+           wxColour *col = p->vec->getEnzymeRule()->getColor ( p->vec->countCuts ( c->e->getName() ) ) ;
            dc.SetTextForeground ( *col ) ;
            dc.SetPen ( *MYPEN(*col) ) ;
            c->linearUpdate ( w , h ) ;
-           int xx = lineOff + c->pos*lineLen/(l+1) ;
+           int xx = lineOff + c->getPos()*lineLen/(l+1) ;
            dc.DrawLine ( c->lastrect.GetRight() , c->lastrect.GetBottom() , xx , lineH - markH ) ;
            dc.DrawLine ( xx , lineH , xx , lineH - markH - 1 ) ;
            dc.DrawText ( c->getNameAndPosition() , c->lastrect.x , c->lastrect.y ) ;
@@ -318,7 +318,7 @@ void PlasmidCanvas::arrangeRestrictionSitesLinear ( int a , wxDC &dc )
         {
         c->lastrect = wxRect ( x1 , y1 , x2-x1+1 , y2-y1 ) ;
         for ( b = 0 ; b < a &&
-                      !p->vec->isEnzymeHidden(c->e->name) &&
+                      !p->vec->isEnzymeHidden(c->e->getName()) &&
                       !intersects(c->lastrect,p->vec->rc[b].lastrect) &&
                       !intersectsLine(c->lastrect,p->vec->rc[b].p)
                       ; b++ ) ;

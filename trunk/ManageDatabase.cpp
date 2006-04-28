@@ -1178,7 +1178,7 @@ void TManageDatabaseDialog::do_save_DNA ()
     
     // Restriction enzymes
     for ( a = 0 ; a < v->re.GetCount() ; a++ )
-        enzymes += v->re[a]->name + _T(",") ;
+        enzymes += v->re[a]->getName() + _T(",") ;
         
     // Proteases
     for ( a = 0 ; a < v->proteases.GetCount() ; a++ )

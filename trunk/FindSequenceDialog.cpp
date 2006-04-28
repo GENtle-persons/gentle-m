@@ -161,8 +161,8 @@ void FindSequenceDialog::getFromTo ( wxString s , long &from , long &to , int id
     else if ( type == txt("m_restriction") )
         {
         int a = vi[idx] ;
-        from = c->vec->rc[a].pos - c->vec->rc[a].e->cut + 1 ;
-        to = c->vec->rc[a].pos - c->vec->rc[a].e->cut + c->vec->rc[a].e->sequence.length() + 1 ;
+        from = c->vec->rc[a].getPos() - c->vec->rc[a].e->getCut() + 1 ;
+        to = c->vec->rc[a].getPos() - c->vec->rc[a].e->getCut() + c->vec->rc[a].e->getSequence().length() + 1 ;
 		}
 	}
 
@@ -470,7 +470,7 @@ void FindSequenceDialog::restrictionSearch ()
            lb->Append ( wxString::Format ( _T("%s: %s (%d)") ,
                                  txt("m_restriction").c_str() , 
                                  en.c_str() ,
-                                 v->rc[a].pos+1 ) ) ;
+                                 v->rc[a].getPos()+1 ) ) ;
            vi.Add ( a ) ;
            }    
         }    
