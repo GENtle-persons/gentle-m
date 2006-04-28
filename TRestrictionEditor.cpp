@@ -264,7 +264,7 @@ void TRestrictionEditor::initRestrictionPage ()
     
     int i ;
     for ( i = 0 ; i < v->rc.size() ; i++ )
-        cutcache.push_back ( TREcache ( v->rc[i].e->name , v->rc[i].pos ) ) ;
+        cutcache.push_back ( TREcache ( v->rc[i].e->getName() , v->rc[i].getPos() ) ) ;
     
     pR_showGroupEnzymes ( txt("Current") ) ;
     
@@ -279,9 +279,9 @@ void TRestrictionEditor::listEnzymesInGroup ( wxString gr , wxArrayString &vs )
         {
         int i ;
         for ( i = 0 ; i < v->re.GetCount() ; i++ )
-            vs.Add ( v->re[i]->name ) ;
+            vs.Add ( v->re[i]->getName() ) ;
         for ( i = 0 ; i < v->re2.GetCount() ; i++ )
-            vs.Add ( v->re2[i]->name ) ;
+            vs.Add ( v->re2[i]->getName() ) ;
         }
     else myapp()->frame->LS->getEnzymesInGroup ( gr , vs ) ;
 	}    
@@ -358,8 +358,8 @@ wxArrayInt TRestrictionEditor::getcuts ( wxString enzyme )
             }
         for ( j = 0 ; j < x.size() ; j++ )
             {
-            cutcache.push_back ( TREcache ( enzyme , x[j].pos ) ) ;
-            ret.Add ( x[j].pos ) ;
+            cutcache.push_back ( TREcache ( enzyme , x[j].getPos() ) ) ;
+            ret.Add ( x[j].getPos() ) ;
             }
         }
     return ret ;

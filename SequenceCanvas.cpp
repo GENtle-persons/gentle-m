@@ -2151,7 +2151,7 @@ void SequenceCanvas::rsHideLimit ( wxCommandEvent &ev )
        int cnt = 0 ;
        for ( b = 0 ; b < p->vec->rc.size() ; b++ )
           if ( p->vec->rc[b].e == p->vec->re[a] ) cnt++ ;
-       if ( cnt > limit && !p->vec->isEnzymeHidden ( p->vec->re[a]->name ) )
+       if ( cnt > limit && !p->vec->isEnzymeHidden ( p->vec->re[a]->getName() ) )
           p->treeBox->ToggleEnzymeVisibility ( p->vec->re[a] ) ;
        }
     p->vec->recalculateCuts() ;
@@ -2262,7 +2262,7 @@ void SequenceCanvas::insertRestrictionSite ( bool left )
     
     // Insert sequence
     TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme(scd.GetStringSelection()) ;
-    wxString se = e->sequence ;
+    wxString se = e->getSequence() ;
 
     int a , p1 = _from - se.length() - 1 ;
     if ( !left ) p1 = _to ;

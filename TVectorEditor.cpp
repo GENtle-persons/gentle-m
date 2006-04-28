@@ -258,7 +258,7 @@ void TVectorEditor::commitEnzymes ()
     // Removed enzymes
     for ( a = 0 ; a < v->re.GetCount() ; a++ )
         {
-        for ( b = 0 ; b < ce.GetCount() && ce[b] != v->re[a]->name ; b++ ) ;
+        for ( b = 0 ; b < ce.GetCount() && ce[b] != v->re[a]->getName() ; b++ ) ;
         if ( b == ce.GetCount() )
            {
            changed = true ;
@@ -270,7 +270,7 @@ void TVectorEditor::commitEnzymes ()
     // Added enzymes
     for ( b = 0 ; b < ce.GetCount() ; b++ )
         {
-        for ( a = 0 ; a < v->re.GetCount() && ce[b] != v->re[a]->name ; a++ ) ;
+        for ( a = 0 ; a < v->re.GetCount() && ce[b] != v->re[a]->getName() ; a++ ) ;
         if ( a == v->re.GetCount() )
            {
            changed = true ;
@@ -384,14 +384,14 @@ void TVectorEditor::hideEm ()
 void TVectorEditor::newProtease ( wxCommandEvent &ev )
     {
     TRestrictionEnzyme *e = new TRestrictionEnzyme ;
-    e->cut = 0 ;
-    e->overlap = 0 ;
+    e->setCut ( 0 ) ;
+    e->setOverlap ( 0 ) ;
     TEnzymeDialog ed ( this , txt("t_new_protease") , wxPoint(-1,-1) , wxSize(600,400) , 
                     wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL ) ;
     ed.initme ( e ) ;
     if ( ed.ShowModal() == wxID_OK )
        {
-       TProtease *pr = new TProtease ( ed.e->name , ed.e->sequence , ed.e->note ) ;
+       TProtease *pr = new TProtease ( ed.e->getName() , ed.e->getSequence() , ed.e->note ) ;
        myapp()->frame->LS->pr.Add ( pr ) ;
        myapp()->frame->LS->updateProtease ( pr ) ;
        }

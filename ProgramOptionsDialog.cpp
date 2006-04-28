@@ -584,12 +584,12 @@ void TEnzymeRules::getVectorCuts ( TVector *v )
     // Removing the ones we already did because they were manually selected
     for ( a = 0 ; a < v->re.GetCount() ; a++ )
     {
-	if ( v->re[a]->name.IsEmpty() ) continue ; // Avoid endless loop
-	int i = vs.Index ( v->re[a]->name ) ;
+	if ( v->re[a]->getName().IsEmpty() ) continue ; // Avoid endless loop
+	int i = vs.Index ( v->re[a]->getName() ) ;
 	while ( i != wxNOT_FOUND )
 	{
 	    vs[i] = _T("") ;
-	    i = vs.Index ( v->re[a]->name ) ;
+	    i = vs.Index ( v->re[a]->getName() ) ;
 	}    
     }    
 
@@ -599,13 +599,13 @@ void TEnzymeRules::getVectorCuts ( TVector *v )
 	if ( vs[a].IsEmpty() ) continue ; // Was removed earlier
 	TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( vs[a] ) ;
 	bool keep = true ;
-	if ( keep && !pattern3 && e->overlap < 0 ) keep = false ;
-	if ( keep && !pattern5 && e->overlap > 0 ) keep = false ;
-	if ( keep && !pattern_blunt && e->overlap == 0 ) keep = false ;
-	if ( keep && !recog4 && e->sequence.length() == 4 ) keep = false ;
-	if ( keep && !recog5 && e->sequence.length() == 5 ) keep = false ;
-	if ( keep && !recog6 && e->sequence.length() == 6 ) keep = false ;
-	if ( keep && !recog_longer && e->sequence.length() > 6 ) keep = false ;
+	if ( keep && !pattern3 && e->getOverlap() < 0 ) keep = false ;
+	if ( keep && !pattern5 && e->getOverlap() > 0 ) keep = false ;
+	if ( keep && !pattern_blunt && e->getOverlap() == 0 ) keep = false ;
+	if ( keep && !recog4 && e->getSequence().length() == 4 ) keep = false ;
+	if ( keep && !recog5 && e->getSequence().length() == 5 ) keep = false ;
+	if ( keep && !recog6 && e->getSequence().length() == 6 ) keep = false ;
+	if ( keep && !recog_longer && e->getSequence().length() > 6 ) keep = false ;
 	if ( keep ) ve.Add ( e ) ;
     }    
     

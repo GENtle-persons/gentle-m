@@ -84,7 +84,7 @@ void TVectorEditor::initPanEnzym ()
     ce.Clear() ;
     for ( a = 0 ; v && a < v->re.GetCount() ; a++ )
         {
-        wxString s = v->re[a]->name ;
+        wxString s = v->re[a]->getName() ;
         listCE->Append ( s ) ;
         ce.Add ( s ) ;
         }
@@ -118,7 +118,7 @@ void TVectorEditor::enzymeListDlbClick ( wxCommandEvent &ev )
             if ( ed.ShowModal() == wxID_OK )
                {
                bool addit = false ;
-               ed.e->name = e->name ; // No name change!
+               ed.e->setName ( e->getName() ) ; // No name change!
                if ( e->differ ( *ed.e ) )
                   {
                   int x = wxMessageBox ( txt("t_enzyme_list_double_click") , txt("msg_box") , wxYES_NO|wxCANCEL ) ;
@@ -316,7 +316,7 @@ void TVectorEditor::importCloneEnzymes ( wxCommandEvent &ev )
     int a ;
     for ( a = 0 ; a < TS.re.GetCount() ; a++ )
        {
-       listCE->Append ( TS.re[a]->name ) ;
+       listCE->Append ( TS.re[a]->getName() ) ;
        myapp()->frame->LS->re.Add ( TS.re[a] ) ;
        myapp()->frame->LS->updateRestrictionEnzyme ( TS.re[a] ) ;
        TS.re[a] = NULL ; // avoid deletion
@@ -329,8 +329,8 @@ void TVectorEditor::importCloneEnzymes ( wxCommandEvent &ev )
 void TVectorEditor::newEnzyme ( wxCommandEvent &ev )
     {
     TRestrictionEnzyme *e = new TRestrictionEnzyme ;
-    e->cut = 0 ;
-    e->overlap = 0 ;
+    e->setCut ( 0 ) ;
+    e->setOverlap ( 0 ) ;
     TEnzymeDialog ed ( this , txt("t_new_enzyme") , wxPoint(-1,-1) , wxSize(600,400) , 
                     wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL ) ;
     ed.initme ( e ) ;

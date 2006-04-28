@@ -34,21 +34,24 @@ void TClone::loadEnzymeList ( TStorage *st , wxString filename )
 	 {
 	 int a ;
 	 TRestrictionEnzyme r ;
+	 string r_name , r_sequence ;
 	 for ( a = 0 ; a < 8 ; a++ )
-	   if ( *d ) r.name += *d++ ;
+	   if ( *d ) r_name += *d++ ;
 	   else d++ ;
+	 r.setName ( r_name.c_str() ) ;
 	 for ( a = 0 ; a < 16 ; a++ )
        {
-	   if ( *d >= '0' && *d <= 'z' ) r.sequence += *d++ ;
+	   if ( *d >= '0' && *d <= 'z' ) r_sequence += *d++ ;
 	   else d++ ;
 	   }
+	 r.setSequence ( r_sequence.c_str() ) ;
 	   
-     r.overlap = (int) *d++ ;
-     if ( r.overlap > 127 )
-          r.overlap = 255 - r.overlap ;
+     r.setOverlap ( (int) *d++ ) ;
+     if ( r.getOverlap() > 127 )
+          r.setOverlap ( 255 - r.getOverlap() ) ;
      d++ ; // ??? Total length ???
-     r.cut = (int) *d++ ;
-     if ( r.overlap < 0 ) r.cut -= r.overlap ;
+     r.setCut ( (int) *d++ ) ;
+     if ( r.getOverlap() < 0 ) r.setCut ( r.getCut() - r.getOverlap() ) ;
      
      vr.push_back ( r ) ;
 	 }
@@ -56,7 +59,7 @@ void TClone::loadEnzymeList ( TStorage *st , wxString filename )
 
 	for ( i = 0 ; i < vr.size() ; i++ )
 	 {
-	   if ( !st->getRestrictionEnzyme(vr[i].name) )
+	   if ( !st->getRestrictionEnzyme(vr[i].getName()) )
 	       {
 	       TRestrictionEnzyme *r = new TRestrictionEnzyme ;
 	       *r = vr[i] ;

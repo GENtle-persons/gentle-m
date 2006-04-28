@@ -386,7 +386,7 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
     if ( rs != -1 ) // Passing over restriction site
         {
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
-        s = p->vec->rc[rs].e->name ;
+        s = p->vec->rc[rs].e->getName() ;
         wxLogStatus(txt("rsite_status_bar") , s.c_str() ) ;
 //        char ttt[1000] ;
 //        sprintf ( ttt , txt("tt_rs") , s.c_str() , p->vec->countCuts ( s ) ) ;
@@ -741,7 +741,7 @@ void PlasmidCanvas::invokeVectorEditor ( wxString what , int num , bool forceUpd
         }
     else if ( what == _T("enzyme") )
         {
-        ve.initialViewEnzyme ( p->vec->rc[num].e->name ) ;
+        ve.initialViewEnzyme ( p->vec->rc[num].e->getName() ) ;
         }
 
     int x = ve.ShowModal () ;

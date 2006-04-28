@@ -229,7 +229,7 @@ wxString CGview::getXML()
 	    	ret += _T("  <feature color='black' decoration='arc' label=\"") ;
 	    	ret += label + _T("\">\n") ;
 	    	ret += _T("   <featureRange ") ;
-	    	ret += wxString::Format ( _T("start='%d' stop='%d'/>\n") , v->rc[a].pos , v->rc[a].pos ) ;
+	    	ret += wxString::Format ( _T("start='%d' stop='%d'/>\n") , v->rc[a].getPos() , v->rc[a].getPos() ) ;
 	    	ret += _T("  </feature>\n") ;
   			}    
   		ret += _T(" </featureSlot>\n") ;

@@ -956,7 +956,7 @@ void MyChild::OnPrintRestrictionList(wxCommandEvent& event)
 		b = vec->rc.size() - a - 1 ;
 		if ( a == 0 ) html += _T("<table border='1' width='100%'><tr>") ;
 		else if ( a % 6 == 0 ) html += _T("</tr><tr>") ;
-		html += _T("<td>") + wxString::Format ( _T("%d") , vec->rc[b].pos ) + _T(" : ") + vec->rc[b].e->name + _T("</td>") ;
+		html += _T("<td>") + wxString::Format ( _T("%d") , vec->rc[b].getPos() ) + _T(" : ") + vec->rc[b].e->getName() + _T("</td>") ;
 		}
 	if ( a > 0 ) html += _T("</tr></table>") ;
 
@@ -965,16 +965,16 @@ void MyChild::OnPrintRestrictionList(wxCommandEvent& event)
 	vector <wxString> c_name , c_pos ;
 	for ( a = 0 ; a < vec->rc.size() ; a++ )
 		{
-		for ( b = 0 ; b < c_name.size() && c_name[b] != vec->rc[a].e->name ; b++ ) ;
+		for ( b = 0 ; b < c_name.size() && c_name[b] != vec->rc[a].e->getName() ; b++ ) ;
 		if ( b == c_name.size() )
 			{
-			c_name.push_back ( vec->rc[a].e->name ) ;
-			c_pos.push_back ( wxString::Format ( _T("%d") , vec->rc[a].pos ) ) ;
+			c_name.push_back ( vec->rc[a].e->getName() ) ;
+			c_pos.push_back ( wxString::Format ( _T("%d") , vec->rc[a].getPos() ) ) ;
 			c_count.push_back ( 1 ) ;
 			}
 		else
 			{
-			c_pos[b] += wxString::Format ( _T(", %d") , vec->rc[a].pos ) ;
+			c_pos[b] += wxString::Format ( _T(", %d") , vec->rc[a].getPos() ) ;
 			c_count[b]++ ;
 			}
 		}

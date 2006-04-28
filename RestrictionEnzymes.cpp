@@ -5,12 +5,13 @@
 
 bool operator < ( const TRestrictionCut &c1 , const TRestrictionCut &c2 )
     {
-    return ( c1.pos > c2.pos ) || ( c1.pos == c2.pos && c1.e->name < c2.e->name ) ;
+    return ( ((TRestrictionCut)c1).getPos() > ((TRestrictionCut)c2).getPos() ) || 
+		( ((TRestrictionCut)c1).getPos() == ((TRestrictionCut)c2).getPos() && c1.e->getName() < c2.e->getName() ) ;
     }
     
 bool operator == ( const TRestrictionCut &c1 , const TRestrictionCut &c2 )
     {
-    return c1.pos == c2.pos && c1.e->name == c2.e->name ;
+    return ((TRestrictionCut)c1).getPos() == ((TRestrictionCut)c2).getPos() && c1.e->getName() == c2.e->getName() ;
     }
 
 bool operator < ( const TFragment &f1 , const TFragment &f2 )
@@ -43,34 +44,34 @@ bool TRestrictionEnzyme::differ ( TRestrictionEnzyme &e )
     return false ;
     }
     
-wxString TRestrictionEnzyme::getEndUpperLeft ()
+wxString TRestrictionEnzyme::getEndUpperLeft ( bool first_strand )
     {
     wxString r ;
-    for ( int a = 0 ; a < cut ; a++ )
+    for ( int a = 0 ; a < getCut(first_strand) ; a++ )
         r += sequence.GetChar(a) ;
     return r ;
     }
     
-wxString TRestrictionEnzyme::getEndLowerLeft ()
+wxString TRestrictionEnzyme::getEndLowerLeft ( bool first_strand )
     {
     wxString r , s = invertSequence () ;
-    for ( int a = 0 ; a < cut+overlap ; a++ )
+    for ( int a = 0 ; a < getCut(first_strand)+getOverlap(first_strand) ; a++ )
         r += s.GetChar(a) ;
     return r ;
     }
     
-wxString TRestrictionEnzyme::getEndUpperRight ()
+wxString TRestrictionEnzyme::getEndUpperRight ( bool first_strand )
     {
     wxString r ;
-    for ( int a = cut ; a < sequence.length() ; a++ )
+    for ( int a = getCut(first_strand) ; a < sequence.length() ; a++ )
         r += sequence.GetChar(a) ;
     return r ;
     }
     
-wxString TRestrictionEnzyme::getEndLowerRight ()
+wxString TRestrictionEnzyme::getEndLowerRight ( bool first_strand )
     {
     wxString r , s = invertSequence () ;
-    for ( int a = cut+overlap ; a < s.length() ; a++ )
+    for ( int a = getCut(first_strand)+getOverlap(first_strand) ; a < s.length() ; a++ )
         r += s.GetChar(a) ;
     return r ;
     }
@@ -82,6 +83,31 @@ wxString TRestrictionEnzyme::invertSequence ()
     return v.transformSequence ( true , false ) . c_str() ;
     }
     
+int TRestrictionEnzyme::getCut ( bool first_strand )
+	{
+	return first_strand ? cut : sequence.length() - cut ;
+	}
+
+int TRestrictionEnzyme::getOverlap ( bool first_strand )
+	{
+	return first_strand ? overlap : -overlap ;
+	}
+
+void TRestrictionEnzyme::setCut ( int c ) { cut = c ; }
+void TRestrictionEnzyme::setOverlap ( int o ) { overlap = o ; }
+wxString TRestrictionEnzyme::getName () { return name ; }
+void TRestrictionEnzyme::setName ( wxString _name ) { name = _name ; }
+wxString TRestrictionEnzyme::getSequence () { return sequence ; }
+bool TRestrictionEnzyme::isPalindromic () { return palindromic ; }
+
+void TRestrictionEnzyme::setSequence ( wxString _seq )
+	{
+	sequence = _seq ;
+    TVector v ;
+    v.setSequence ( sequence ) ;
+    _seq = v.transformSequence ( true , true ) . c_str() ;
+	palindromic = _seq == sequence ;
+	}
 
 
 //------------------------------------------------------------------------------
@@ -108,12 +134,12 @@ wxString TRestrictionCut::getNameAndPosition ()
 
 bool TRestrictionCut::isHidden ( TVector *v )
     {
-    return v->isEnzymeHidden ( e->name ) ;
+    return v->isEnzymeHidden ( e->getName() ) ;
     }
 
 wxString TRestrictionCut::getDisplayName ()
 	{
-	if ( display_name.IsEmpty() ) return e->name ;
+	if ( display_name.IsEmpty() ) return e->getName() ;
 	return display_name ;
 	}    
 
@@ -123,14 +149,43 @@ wxString TRestrictionCut::getDisplayName ()
 bool TRestrictionCut::join ( TRestrictionCut *c )
 	{
 	if ( pos != c->pos ) return false ;
-	if ( e->sequence != c->e->sequence ) return false ;
-	if ( e->cut != c->e->cut ) return false ;
-	if ( e->overlap != c->e->overlap ) return false ;
-	if ( display_name.IsEmpty() ) display_name = e->name ;
-	display_name += _T(", ") + c->e->name ;
+	if ( e->getSequence() != c->e->getSequence() ) return false ;
+	if ( e->getCut() != c->e->getCut() ) return false ;
+	if ( e->getOverlap() != c->e->getOverlap() ) return false ;
+	if ( display_name.IsEmpty() ) display_name = e->getName() ;
+	display_name += _T(", ") + c->e->getName() ;
 	return true ;
 	}    
         
+wxString TRestrictionCut::getEndUpperLeft () { return e->getEndUpperLeft ( first_strand ) ; }
+wxString TRestrictionCut::getEndLowerLeft () { return e->getEndLowerLeft ( first_strand ) ; }
+wxString TRestrictionCut::getEndUpperRight () { return e->getEndUpperRight ( first_strand ) ; }
+wxString TRestrictionCut::getEndLowerRight () { return e->getEndLowerRight ( first_strand ) ; }
+int TRestrictionCut::getCut () { return e->getCut ( first_strand ) ; }
+int TRestrictionCut::getOverlap () { return e->getOverlap ( first_strand ) ; }
+void TRestrictionCut::setPos ( int p ) { pos = p ; }
+
+int TRestrictionCut::getPos ()
+	{
+	if ( first_strand ) return pos ;
+	int a = pos ;
+	a -= e->getCut() ;
+	a += e->getSequence().length() ;
+	a -= e->getCut() ;
+	return a ;
+	}
+
+int TRestrictionCut::getFrom ()
+	{
+	return pos - e->getCut() ;
+	}
+
+int TRestrictionCut::getTo ()
+	{
+	return pos - e->getCut() + e->getSequence().length() - 1 ;
+	}
+
+
 //------------------------------------------------------------------------------
 
 TProtease::TProtease ( wxString _name , wxString m , wxString _note )

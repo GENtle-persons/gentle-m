@@ -15,9 +15,11 @@ int SeqRestriction::arrange ( int n )
     pl.prepare ( vec->rc.size() ) ;    
     for ( a = 0 ; a < vec->rc.size() ; a++ )
         {
-        int from = vec->rc[a].pos - vec->rc[a].e->cut ;
-        int to = from + vec->rc[a].e->sequence.length() - 1 ;
-        if ( !vec->isEnzymeHidden ( vec->rc[a].e->name ) )
+		int from = vec->rc[a].getFrom() ;
+		int to = vec->rc[a].getTo() ;
+//        int from = vec->rc[a].getPos() - vec->rc[a].e->getCut() ;
+//        int to = from + vec->rc[a].e->getSequence().length() - 1 ;
+        if ( !vec->isEnzymeHidden ( vec->rc[a].e->getName() ) )
            pl.add ( a , from , to ) ;
         }    
     pl.makeLevels () ;
@@ -151,16 +153,16 @@ void SeqRestriction::show ( wxDC& dc )
 
                if ( vec->getEnzymeRule()->use_color_coding && !(can->isPrinting() && !can->getPrintToColor()) )
                   {
-            	  wxColour *col = vec->getEnzymeRule()->getColor ( vec->countCuts ( rc->e->name ) ) ;
+            	  wxColour *col = vec->getEnzymeRule()->getColor ( vec->countCuts ( rc->e->getName() ) ) ;
             	  dc.SetPen(*MYPEN(*col)); 
             	  dc.SetTextForeground ( *col ) ;
               	  }
 
-               if ( rc->pos == b-1 ) c = '|' ;
-               else if ( rc->pos == b ) c = '#' ;
+               if ( rc->getPos() == b-1 ) c = '|' ;
+               else if ( rc->getPos() == b ) c = '#' ;
                
                char c2 = ' ' ;
-               int ol = rc->pos + rc->e->overlap ;
+               int ol = rc->getPos() + rc->getOverlap() ;
                if ( b-1 == ol ) c2 = '|' ; 
                else if ( b == ol ) c2 = '#' ; 
 
