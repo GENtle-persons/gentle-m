@@ -1056,7 +1056,6 @@ void TVector::doRestriction ()
            }
         }
     mylog ( "TVector::doRestriction" , "7" ) ;
-    wxMessageBox ( wxString::Format ( "p:%d c:%d" , cl[1].getPos() , cl[1].getCut() ) ) ;
 
     if ( circular )
         cl.push_back ( cl[0] ) ;
@@ -1098,6 +1097,7 @@ void TVector::doRestriction ()
     mylog ( "TVector::doRestriction" , "9" ) ;
     cocktail.Clear() ;
     mylog ( "TVector::doRestriction" , "10" ) ;
+    updateDisplay ( true ) ;
     }
         
 void TVector::doAction ()
