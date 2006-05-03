@@ -893,33 +893,33 @@ bool TVector::reduceToFragment ( TRestrictionCut left , TRestrictionCut right )
     to = right.getPos() ;
     if ( to <= from ) to += sequence.length() ;
 
-    from -= left.e->getCut() ;
-    to += right.e->getSequence().length() - right.e->getCut() - 1 ;
+    from -= left.getCut() ;
+    to += right.getSequence().length() - right.getCut() - 1 ;
 
-    int from2 = from + left.e->getSequence().length() ;
-    int to2 = to - right.e->getSequence().length() + 1 ;
+    int from2 = from + left.getSequence().length() ;
+    int to2 = to - right.getSequence().length() + 1 ;
     
     for ( a = from ; a <= to ; a++ )
         s += getNucleotide ( a ) ;
     
     wxString mlu , mll , mru , mrl ;
     
-    if ( left.e->getSequence().IsEmpty() ) // Blank enzyme
+    if ( left.getSequence().IsEmpty() ) // Blank enzyme
     	{
     	mlu = getStickyEnd ( true , true ) ;
     	mll = getStickyEnd ( true , false ) ;
     	}
     
-    if ( right.e->getSequence().IsEmpty() ) // Blank enzyme
+    if ( right.getSequence().IsEmpty() ) // Blank enzyme
     	{
     	mru = getStickyEnd ( false , true ) ;
     	mrl = getStickyEnd ( false , false ) ;
     	}
     	
-	 _lu = left.e->getEndUpperRight () ;
-	 _ll = left.e->getEndLowerRight () ;
-    _ru = right.e->getEndUpperLeft () ;
-    _rl = right.e->getEndLowerLeft () ;
+	 _lu = left.getEndUpperRight () ;
+	 _ll = left.getEndLowerRight () ;
+    _ru = right.getEndUpperLeft () ;
+    _rl = right.getEndLowerLeft () ;
     
     // How many overlapping nucleotides are on both strands on either side?
     int lo = MIN ( _lu.length() , _ll.length() ) ;
@@ -929,14 +929,14 @@ bool TVector::reduceToFragment ( TRestrictionCut left , TRestrictionCut right )
     TVector dv ;
     dv.setSequence ( s ) ;
     wxString is = dv.transformSequence ( true , false ) ; // Inverse sequence
-    _lu =  s.substr ( left.e->getSequence().length() - _lu.length() , _lu.length() - lo ) ;
-    _ll = is.substr ( left.e->getSequence().length() - _ll.length() , _ll.length() - lo ) ;
-    _ru =  s.substr ( s.length() - right.e->getSequence().length() + ro , _ru.length() - ro ) ;
-    _rl = is.substr ( s.length() - right.e->getSequence().length() + ro , _rl.length() - ro ) ;
+    _lu =  s.substr ( left.getSequence().length() - _lu.length() , _lu.length() - lo ) ;
+    _ll = is.substr ( left.getSequence().length() - _ll.length() , _ll.length() - lo ) ;
+    _ru =  s.substr ( s.length() - right.getSequence().length() + ro , _ru.length() - ro ) ;
+    _rl = is.substr ( s.length() - right.getSequence().length() + ro , _rl.length() - ro ) ;
 
     // Removing sticky ends from main sequence
-    s = s.substr ( 0 , s.length() - right.e->getSequence().length() + ro ) ;
-    s = s.substr ( left.e->getSequence().length() - lo ) ;
+    s = s.substr ( 0 , s.length() - right.getSequence().length() + ro ) ;
+    s = s.substr ( left.getSequence().length() - lo ) ;
     
     from2 -= lo ;
     to2 += ro ;
@@ -1033,15 +1033,15 @@ void TVector::doRestriction ()
 
     // Collecting restriction cuts
     for ( a = 0 ; a < cocktail.GetCount() ; a++ )
-    {
-        for ( b = 0 ; b < rc.size() ; b++ )
-	{
-	    if ( rc[b].e->getName() == cocktail[a] )
 	    {
-		cl.push_back ( rc[b] ) ;
+        for ( b = 0 ; b < rc.size() ; b++ )
+			{
+		    if ( rc[b].e->getName() == cocktail[a] )
+			    {
+				cl.push_back ( rc[b] ) ;
+			    }
+			}
 	    }
-	}
-    }
     mylog ( "TVector::doRestriction" , "6" ) ;
 
     // Arranging
@@ -1056,6 +1056,7 @@ void TVector::doRestriction ()
            }
         }
     mylog ( "TVector::doRestriction" , "7" ) ;
+    wxMessageBox ( wxString::Format ( "p:%d c:%d" , cl[1].getPos() , cl[1].getCut() ) ) ;
 
     if ( circular )
         cl.push_back ( cl[0] ) ;
