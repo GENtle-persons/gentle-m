@@ -68,6 +68,7 @@ class TRestrictionCut
 	void setPos ( int p ) ;
 	int getFrom () ;
 	int getTo () ;
+	wxString getSequence () ;
 	
     TRestrictionEnzyme *e ; ///< Cutting enzyme
     wxString display_name ; ///< The name to display

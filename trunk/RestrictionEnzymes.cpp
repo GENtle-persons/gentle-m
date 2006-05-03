@@ -85,12 +85,12 @@ wxString TRestrictionEnzyme::invertSequence ()
     
 int TRestrictionEnzyme::getCut ( bool first_strand )
 	{
-	return first_strand ? cut : sequence.length() - cut ;
+	return first_strand ? cut : sequence.length() - cut - overlap ;
 	}
 
 int TRestrictionEnzyme::getOverlap ( bool first_strand )
 	{
-	return first_strand ? overlap : -overlap ;
+	return overlap ;
 	}
 
 void TRestrictionEnzyme::setCut ( int c ) { cut = c ; }
@@ -164,14 +164,16 @@ wxString TRestrictionCut::getEndLowerRight () { return e->getEndLowerRight ( fir
 int TRestrictionCut::getCut () { return e->getCut ( first_strand ) ; }
 int TRestrictionCut::getOverlap () { return e->getOverlap ( first_strand ) ; }
 void TRestrictionCut::setPos ( int p ) { pos = p ; }
+wxString TRestrictionCut::getSequence () { return e->getSequence () ; }
 
 int TRestrictionCut::getPos ()
 	{
 	if ( first_strand ) return pos ;
 	int a = pos ;
 	a -= e->getCut() ;
-	a += e->getSequence().length() ;
-	a -= e->getCut() ;
+	a += getCut() ;
+//	a += e->getSequence().length() ;
+//	a -= e->getCut(first_strand) ;
 	return a ;
 	}
 
