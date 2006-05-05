@@ -325,10 +325,40 @@ void TCloningAssistantPanel::arrange ()
 			ca->tlist->r.GetHeight() / ca->tlist->children.size() - 10
 			) ;
 		if ( a == 0 ) i->brush = wxBrush ( wxColour ( 200 , 200 , 200 ) ) ;
+		
+		// Sort children
+		for ( b = 1 ; b < i->children.size() ; b++ )
+			{
+			if ( !i->children[b]->item ) continue ;
+			if ( !i->children[b-1]->item ) continue ;
+			if ( i->children[b]->original ) continue ;
+			if ( i->children[b-1]->original ) continue ;
+			if ( i->children[b]->item->from >= i->children[b-1]->item->from ) continue ;
+			TDDR *dummy = i->children[b] ;
+			i->children[b] = i->children[b-1] ;
+			i->children[b-1] = dummy ;
+			b = 0 ;
+			}
 
 		int lastx = 5 ;
 		for ( b = 0 ; b < i->children.size() ; b++ )
 			{
+			int c ;
+			for ( c = b - 1 ; c >= 0 ; c-- )
+				{
+				if ( b > 0 && c >= 0 &&
+				 i->children[c]->vector == i->children[b]->vector &&
+				 i->children[b]->original == NULL &&
+				 i->children[c]->original == NULL &&
+//				 i->children[c]->item &&
+//				 i->children[b]->item &&
+				 i->children[c]->item->to + 50 < i->children[b]->item->from )
+				break ;
+				}
+			if ( c >= 0 &&
+				 ( i->children[b]->item->getType() != VIT_CDS ||
+				 	i->children[c]->item->getType() != VIT_CDS )
+				) lastx += 15 ;
 			i->children[b]->resizeForText ( dc ) ;
 			i->children[b]->r.x = lastx + 5 ;
 			i->children[b]->r.y = 25 ;
