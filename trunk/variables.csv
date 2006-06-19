@@ -770,6 +770,7 @@
 "t_graph_file_type_xypair","XY pairs","XY-Paare"
 "t_graph_file_type_bio","BIO format","BIO-Format"
 "t_graph_file_type_bio_csv","BioRad FPLC CSV/TXT format","BioRad FPLC CSV/TXT-Format"
+"t_graph_file_type_duf","DUF format","DUF-Format"
 "t_primer_up","5'","5'"
 "t_primer_down","3'","3'"
 "m_graph_save_as_image","Save as image","Als Bild speichern"
@@ -972,3 +973,4 @@
 "t_cloning_assistant","Cloning assistant","Klonierungs-Assistent"
 "t_ddr_target","Drop target sequence here","Zielsequenz hierhin ziehen"
 "t_ddr_source","Drop additional sequence here","Zusätzliche Sequenz hier ablegen"
+"t_silmut_allow_cut_removal","Look for cut removals instead","Stattdessen nach Schnitt-Entfernung suchen"
