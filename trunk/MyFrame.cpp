@@ -833,7 +833,7 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
     	{
 	    wxEndBusyCursor();
         TGraph *g = RunGraph() ;
-        if ( filter == -1 && g->gd->tryall ( path ) == _T("") )
+        if ( filter == -1 && g->gd && g->gd->tryall ( path ) == _T("") )
         	{
         	wxBeginBusyCursor();
    		    g->Close () ;

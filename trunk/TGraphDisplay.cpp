@@ -223,7 +223,8 @@ bool TGraphDisplay::SetupFromFile ( wxString filename )
 	as.Add ( txt("t_graph_file_type_xypair") ) ;
 	as.Add ( txt("t_graph_file_type_bio") ) ;
 	as.Add ( txt("t_graph_file_type_bio_csv") ) ;
-	
+	as.Add ( txt("t_graph_file_type_duf") ) ;
+
 	wxString *vs = new wxString [ as.GetCount() ] ;
 	for ( a = 0 ; a < as.GetCount() ; a++ )
 		vs[a] = as[a] ;
@@ -247,6 +248,7 @@ bool TGraphDisplay::SetupFromFile ( wxString filename )
 	if ( s == txt("t_graph_file_type_xypair") ) setupXYpair ( readTextfile ( filename ) ) ;
 	if ( s == txt("t_graph_file_type_bio") ) setupBioFormat ( filename ) ;
 	if ( s == txt("t_graph_file_type_bio_csv") ) setupBioCSVFormat ( readTextfile ( filename ) ) ;
+	if ( s == txt("t_graph_file_type_duf") ) setupDUF ( filename ) ;
 	
 	return true ;
 	}
@@ -369,7 +371,12 @@ wxString TGraphDisplay::tryall ( wxString filename )
 	int a , cnt ;
 	stringField sf = readTextfile ( filename ) ;
 	init () ;
-
+/*
+	setupDUF ( filename ) ; // Not working yet
+	for ( a = cnt = 0; a < data.size() ; a++ ) cnt += data[a]->dx.size() ;
+	if ( cnt > best ) { r = _T("t_graph_file_type_duf") ; best = cnt ; }
+	init () ;
+*/	
 	setupPhotometerGraph ( sf ) ;
 	for ( a = cnt = 0; a < data.size() ; a++ ) cnt += data[a]->dx.size() ;
 	if ( cnt > best ) { r = _T("t_graph_file_type_photometer") ; best = cnt ; }
@@ -476,6 +483,81 @@ void TGraphDisplay::setupBioFormat ( wxString filenamebase )
 
 	d = readRawData ( filenamebase , l ) ;
 	addRawData2 ( d , l , _T("1") ) ;
+	delete d ;
+	}
+
+/*
+ * Not used
+ */
+void TGraphDisplay::setupDUF ( wxString filenamebase )
+	{
+	if ( filenamebase.Right(4).Upper() != _T(".DUF") ) return ;
+ 	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , _T("X") , _T("") , *wxBLACK ) ;
+  	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , _T("Y") , _T("") , *wxBLACK ) ;
+ 	scales.push_back ( sx ) ;
+ 	scales.push_back ( sy ) ;
+
+	long l ;
+	unsigned char *d ;
+
+	d = readRawData ( filenamebase , l ) ;
+	
+	wxString text ;
+	unsigned long pos = 40 ;
+	unsigned long w ;
+	do {
+		w = d[pos] ;
+		if ( w == 0 ) break ;
+		pos += 4 ;
+		wxString s = (char*) d+pos ;
+		s = s.BeforeFirst ( ':' ) ;
+		text += s ;
+		pos += 10 + w ;
+	} while ( w > 0 ) ;
+	
+	pos += 8*5*21 ;
+	
+	for ( int b = 0 ; b < 8 ; b++ )
+		{
+		double *x = (double*) (d+b+pos) ;
+		wxMessageBox ( wxString::Format ( "%d : %f" , b , *x ) ) ;
+		}
+
+	// Add data
+ 	TGraphData *ng1 = new TGraphData ( this ) ;
+	ng1->name = wxString ( "1" , wxConvUTF8 ) ;
+	ng1->SetScales ( sx , sy ) ;
+	ng1->pointStyle = _T("none") ;
+	ng1->col = wxTheColourDatabase->Find ( _T("BLUE") ) ;
+	
+ 	TGraphData *ng2 = new TGraphData ( this ) ;
+	ng2->name = wxString ( "2" , wxConvUTF8 ) ;
+	ng2->SetScales ( sx , sy ) ;
+	ng2->pointStyle = _T("none") ;
+	ng2->col = wxTheColourDatabase->Find ( _T("GREEN") ) ;
+
+ 	TGraphData *ng3 = new TGraphData ( this ) ;
+	ng3->name = wxString ( "3" , wxConvUTF8 ) ;
+	ng3->SetScales ( sx , sy ) ;
+	ng3->pointStyle = _T("none") ;
+	ng3->col = wxTheColourDatabase->Find ( _T("BLUE") ) ;
+
+	data.push_back ( ng1 ) ;
+	data.push_back ( ng2 ) ;
+	data.push_back ( ng3 ) ;
+
+	for ( int a = 0 ; a < 20 ; a++ )
+		{
+		double *x = (double*) (d+pos) ;
+		double *y1 = (double*) (d+pos+8*2) ;
+		double *y2 = (double*) (d+pos+8*3) ;
+		double *y3 = (double*) (d+pos+8*4) ;
+    	ng1->Add ( (float) *x , (float) *y1 ) ;
+    	ng2->Add ( (float) *x , (float) *y2 ) ;
+    	ng3->Add ( (float) *x , (float) *y3 ) ;
+		pos += 8 * 5 ;
+		}
+	
 	delete d ;
 	}
 

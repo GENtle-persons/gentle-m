@@ -100,6 +100,7 @@ class TGraphDisplay : public wxPanel
  	void setupRawFPLC ( wxString filenamebase ) ; ///< EXPERIMENTAL Reads raw BioRad FPLC data
  	void setupBioFormat ( wxString filenamebase ) ; ///< EXPERIMENTAL Reads BIO FPLC format
  	void setupBioCSVFormat ( const stringField &sf ) ; ///< EXPERIMENTAL Reads BIO CSV FPLC format
+	void setupDUF ( wxString filenamebase ) ; ///< Reads Beckman DUF format
  	void addNewGraph ( const stringField &sf , wxString title , TGraphScale *sx , TGraphScale*sy , int startrow = 0 ) ; ///< Adds a TGraphData
  	void addRawData ( unsigned char *d , long l , wxString title ) ;
  	void addRawData2 ( unsigned char *d , long l , wxString title ) ;
