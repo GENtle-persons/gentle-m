@@ -1741,6 +1741,14 @@ int TVector::getMem ()
     return r ;
     }    
 
+void TVector::addRestrictionEnzyme ( TRestrictionEnzyme *e )
+	{
+	for ( int a = 0 ; a < re.size() ; a++ )
+		{
+		if ( re[a] == e ) return ;
+		}
+	re.Add ( e ) ;
+	}
     
 // ***************************************************************************************
 // TVectorItem

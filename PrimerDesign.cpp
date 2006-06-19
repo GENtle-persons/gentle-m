@@ -833,8 +833,10 @@ void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
            if ( sc->seq[4+show_features]->s.GetChar(b) != ' ' ) sc->seq[4+show_features]->s.SetChar(b,nt.GetChar(a)) ;
            }
         }
-    for ( a = 0 ; a < w->re.GetCount() && w->re[a] != e ; a++ ) ;
-    if ( a == w->re.GetCount() ) w->re.Add ( e ) ;
+    
+	if ( w ) w->addRestrictionEnzyme ( e ) ;
+	if ( vec ) vec->addRestrictionEnzyme ( e ) ;
+	if ( vc ) vc->addRestrictionEnzyme ( e ) ;
     updatePrimersFromSequence () ;
     showSequence () ;
     }

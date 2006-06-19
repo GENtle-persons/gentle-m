@@ -35,13 +35,15 @@ class TSilmutDialog : public wxDialog
     ~TSilmutDialog () ; ///< Destructor
     
     virtual void initme ( TVector *vec , int _from , int _to ) ; ///< Initialization
-    virtual void calc () ; ///< Calculate
+    virtual void calc () ; ///< Calculate new cuts through mutation
+    virtual void calc_acr () ; ///< Calculate cuts that go away through mutation
     virtual void showit () ; ///< Show results
     virtual void OnSpin ( wxSpinEvent &event ) ; ///< Spin control (changes) event handler
     virtual void OnSpin2 ( wxCommandEvent &event ) ; ///< Spin control (max) event handler
     virtual void OnChoose ( wxCommandEvent &event ) ; ///< Choice event handler
     virtual void OnOK ( wxCommandEvent &ev ) ; ///< OK button event handler
     virtual void OnCancel ( wxCommandEvent &ev ) ; ///< Cancel button event handler
+    virtual void OnACR ( wxCommandEvent &ev ) ; ///< Allow cut removal event handler
     virtual void OnLbDoubleClick ( wxCommandEvent &ev ) ; ///< Listbox double-click event handler
     virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
     virtual wxString getSequence () ; ///< Returns the sequence
@@ -56,6 +58,7 @@ class TSilmutDialog : public wxDialog
     int from , to ;
     vector <TSilmutItem> vs ;
     wxListBox *lb ;
+    wxCheckBox *allow_cut_removal ;
     TPrimerDesign *pd ;
     wxSpinCtrl *lim_xhg , *lim_max ;
     wxChoice *egr , *mut ;

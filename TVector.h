@@ -278,6 +278,7 @@ class TVector
     bool hasItemsAtPosition ( int pos ) ; ///< Returns wether there are items at that position (pos is 0-based)
     int countCodonTables () ;
     wxString getCodonTableName ( int x ) ;
+    void addRestrictionEnzyme ( TRestrictionEnzyme *e ) ;
     void resetTurn () ; ///< Sets the turned variable to zero
 	
     // Variables
