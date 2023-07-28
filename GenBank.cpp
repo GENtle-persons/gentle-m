@@ -61,7 +61,7 @@ void TGenBank::load ( wxString s )
            d = c+1 ;
            }    
         }    
-    delete t ;
+    delete [] t ;
     mylog ( "-GenBank import" , "file added" ) ;
     
     parseLines () ; // Calling parser

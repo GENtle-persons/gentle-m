@@ -178,7 +178,7 @@ void TPrimerDesign::OnImportPrimer ( wxCommandEvent &ev )
                             
     if ( cbl.GetCount() <= 2 ) scd.CheckAll () ;
     int res = scd.ShowModal() ;
-    delete sl ;
+    delete [] sl ;
     if ( res != wxID_OK ) return ;
     
     for ( a = 0 ; a < cbl.GetCount() ; a++ )

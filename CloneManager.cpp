@@ -62,7 +62,7 @@ void TCloneManager::load ( wxString file )
 	
 	if ( t[0] != 26 || t[1] != 'S' || t[2] != 'E' || t[3] != 'S' )
 	{
-		delete t ;
+		delete [] t ;
 		return ;
 	}
 	
@@ -104,7 +104,7 @@ void TCloneManager::load ( wxString file )
 	
 	_v.push_back ( v ) ;
 	_success = true ;
-	delete t ;
+	delete [] t ;
 }
 
 int TCloneManager::countVectors ()
