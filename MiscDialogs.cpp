@@ -835,14 +835,14 @@ TMyMultipleChoiceDialog::TMyMultipleChoiceDialog ( wxWindow *parent ,
    wxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
    wxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
    
-   if ( options & wxCANCEL > 0 )
+   if ( options & wxCANCEL )
 		{
 		wxButton *b = new wxButton ( this , wxID_CANCEL , txt("b_cancel") ) ;
 		h0->Add ( b , wxEXPAND|wxALL , 2 ) ;
 		}
 	else h0->Add ( new wxStaticText ( this , -1 , _T("") ) , wxEXPAND|wxALL , 2 ) ;
 
-   if ( options & wxOK > 0 )
+   if ( options & wxOK )
 		{
 		wxButton *b = new wxButton ( this , MCD_OK , txt("b_ok") ) ;
 		h0->Add ( b , wxEXPAND|wxALL , 2 ) ;
@@ -865,7 +865,7 @@ TMyMultipleChoiceDialog::TMyMultipleChoiceDialog ( wxWindow *parent ,
    SetSizer ( v0 ) ;
    v0->Layout () ;
    
-   if ( options & wxCENTRE > 0 ) Center () ;
+   if ( options & wxCENTRE ) Center () ;
    }
 
 TMyMultipleChoiceDialog::~TMyMultipleChoiceDialog ()

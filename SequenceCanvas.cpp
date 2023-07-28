@@ -2712,9 +2712,9 @@ SequenceCharMarkup::SequenceCharMarkup()
 
 void SequenceCharMarkup::draw ( wxDC &dc , const wxRect &rect , wxString s , int mode , int lastx )
     {
-    bool mark = ( mode & SEQUENCECHARMARKUP_MARK ) > 0 ;
-    bool mono = ( mode & SEQUENCECHARMARKUP_MONO ) > 0 ;
-    bool bold = ( mode & SEQUENCECHARMARKUP_BOLD ) > 0 | this->bold ;
+    bool mark =   ( mode & SEQUENCECHARMARKUP_MARK   ) > 0 ;
+    bool mono =   ( mode & SEQUENCECHARMARKUP_MONO   ) > 0 ;
+    bool bold =  (( mode & SEQUENCECHARMARKUP_BOLD   ) > 0) | this->bold ;
     bool invert = ( mode & SEQUENCECHARMARKUP_INVERT ) > 0 ;
 
     wxColour bg ;
