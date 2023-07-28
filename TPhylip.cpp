@@ -307,7 +307,7 @@ wxString TPhylip::runapp ( wxString app , const wxString s )
 	outtree.Close () ;
 	n[l] = 0 ;
 	wxString result ( n , wxConvUTF8 ) ;
-	delete n ;
+	delete [] n ;
 	
 //	result = "(3:0.23647,(4:0.12270,2:0.00296):0.29673,1:0.65529);(4:0.12270,2:0.00296);" ; // Test
 
