@@ -852,7 +852,7 @@ TMyMultipleChoiceDialog::TMyMultipleChoiceDialog ( wxWindow *parent ,
    wxButton *buttonOK = NULL ;
    wxButton *buttonCancel = NULL ;
    
-   if ( options & wxOK > 0 )
+   if ( options & wxOK )
       {
       buttonOK = new wxButton ( this , MCD_OK , txt("b_ok") ) ;
       buttonOK->SetDefault () ;
@@ -860,7 +860,7 @@ TMyMultipleChoiceDialog::TMyMultipleChoiceDialog ( wxWindow *parent ,
       buttonOK->Move ( w / 2 - q.GetWidth() / 2 , h - q.GetHeight() - bo ) ;
       }
 
-   if ( options & wxCANCEL > 0 )
+   if ( options & wxCANCEL )
       {
       buttonCancel = new wxButton ( this , wxID_CANCEL , txt("b_cancel") ) ;
       q = buttonCancel->GetRect() ;
@@ -884,14 +884,14 @@ TMyMultipleChoiceDialog::TMyMultipleChoiceDialog ( wxWindow *parent ,
       clb->SetSize ( w - bo * 2 , h - r.GetBottom() - q.GetHeight() - bo * 3 ) ;
    */
    
-   if ( options & wxCANCEL > 0 )
+   if ( options & wxCANCEL )
 		{
 		wxButton *b = new wxButton ( this , wxID_CANCEL , txt("b_cancel") ) ;
 		h0->Add ( b , wxEXPAND|wxALL , 2 ) ;
 		}
 	else h0->Add ( new wxStaticText ( this , -1 , _T("") ) , wxEXPAND|wxALL , 2 ) ;
 
-   if ( options & wxOK > 0 )
+   if ( options & wxOK )
 		{
 		wxButton *b = new wxButton ( this , MCD_OK , txt("b_ok") ) ;
 		h0->Add ( b , wxEXPAND|wxALL , 2 ) ;
@@ -914,7 +914,7 @@ TMyMultipleChoiceDialog::TMyMultipleChoiceDialog ( wxWindow *parent ,
    SetSizer ( v0 ) ;
    v0->Layout () ;
    
-   if ( options & wxCENTRE > 0 ) Center () ;
+   if ( options & wxCENTRE ) Center () ;
    }
 
 TMyMultipleChoiceDialog::~TMyMultipleChoiceDialog ()
