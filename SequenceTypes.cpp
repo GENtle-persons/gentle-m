@@ -84,7 +84,7 @@ bool SeqPrimer::useDirectRoutines () { return true ; }
 int SeqPrimer::arrange_direct ( int n )
     {
 //    arrange ( n ) ;
-    SeqDNA::arrange_direct ( n ) ;
+    return SeqDNA::arrange_direct ( n ) ;
     }    
 
 void SeqPrimer::show_direct ( wxDC& dc )

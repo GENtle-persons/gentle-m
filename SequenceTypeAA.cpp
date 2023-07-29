@@ -21,6 +21,7 @@ int SeqAA::arrange ( int n )
     {
     if ( useDirectRoutines() ) return arrange_direct ( n ) ;
     wxMessageBox ( _T("One has to wonder...1") ) ;
+    assert(0);
     }
     
 void SeqAA::show ( wxDC& dc )

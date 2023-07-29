@@ -36,6 +36,10 @@ bool operator < ( const TREcache c1 , const TREcache c2 )
         return global_sort_ascending?(c1.enzyme<c2.enzyme):(c1.enzyme>c2.enzyme);
     else if ( global_sort_mode == BY_CUTS )
         return global_sort_ascending?(c1.cut<c2.cut):(c1.cut>c2.cut);
+
+    fprintf(stderr,"E: This should not be reached in bool operator < ( const TREcache c1 , const TREcache c2 )\n");
+    assert(0);
+    return 0;
 }
 
 bool operator == ( const TREcache c1 , const TREcache c2 )
@@ -44,6 +48,11 @@ bool operator == ( const TREcache c1 , const TREcache c2 )
         return c1.enzyme == c2.enzyme ;
     else if ( global_sort_mode == BY_CUTS )
         return c1.cut == c2.cut ;
+
+    fprintf(stderr,"E: This should not be reached in bool operator == ( const TREcache c1 , const TREcache c2 )\n");
+    assert(0);
+    return 0;
+    }
 }
 
 //******************************************************************************    
