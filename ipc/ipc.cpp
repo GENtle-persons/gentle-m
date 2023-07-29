@@ -381,7 +381,8 @@ int TIPC::ipc_main(int argc,char **argv){
       return 16;
     }
 
-  return 0;*/
+  */
+  return 0;
 }
 
 
