@@ -89,7 +89,7 @@ wxString myExternal::getTextLocal ( wxString url )
 	in.Read ( c , l ) ;
 	in.Close() ;
 	wxString ret = wxString ( c , wxConvUTF8 ) ;
-	delete c ;
+	delete [] c ;
 	return ret ;
 	}
      

@@ -55,7 +55,7 @@ void TClone::loadEnzymeList ( TStorage *st , wxString filename )
      
      vr.push_back ( r ) ;
 	 }
-	delete t ;
+	delete [] t ;
 
 	for ( i = 0 ; i < vr.size() ; i++ )
 	 {
@@ -184,7 +184,7 @@ void TClone::load ( wxString s )
 	
 	wxArrayString v ;
 	parseLines ( v , t , l ) ;
-	delete t ;
+	delete [] t ;
 
 	int i ;
 	success = true ;

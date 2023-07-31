@@ -90,7 +90,7 @@ void ABItype::parse ( wxString filename )
         nrecords-- ;
         }
 
-	delete t ;
+	delete [] t ;
     }
     
 /** \brief Deterimnes the position of the "ABIF" key
