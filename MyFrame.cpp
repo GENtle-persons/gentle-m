@@ -586,7 +586,11 @@ void MyFrame::OnHelp(wxCommandEvent& event )
 	{
         wxHtmlHelpController *hc = new wxHtmlHelpController ( wxHF_DEFAULT_STYLE|wxHF_OPEN_FILES ) ;
         helpfile += myapp()->homedir ;
+#ifdef __WXMSW__
         helpfile += _T("\\help\\") ;
+#else
+        helpfile += _T("/help/") ;
+#endif
         helpfile += lang_string ;
         helpfile += _T(".hhp") ;
         hc->AddBook ( helpfile ) ;
