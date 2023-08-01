@@ -66,9 +66,12 @@ class ProgramOptionsDialog : public wxDialog
     wxCheckBox *enhancedDisplay , *vectorTitle , *vectorLength ,
                 *loadLastProject , *useMetafile , *showSplashScreen ,
                 *checkUpdate , *useInternalHelp , *doRegisterStuff ,
-					 *showEnzymePos , *use_nonstandard_translation_table ,
-                *showTips , *useTwoToolbars , *useOnlineHelp ;
-                
+				*showEnzymePos , *use_nonstandard_translation_table ,
+                *showTips , *useTwoToolbars , *useOnlineHelp , *showToolTips , 
+				*showLowercaseDNA;
+    
+    wxTextCtrl *proxyName , *proxyPort , *orfLength ;
+    
     wxRadioBox *editFeatureMode ; ///< Pointer to the list of choices of how to treat edited items
     wxRadioBox *showStopCodon ; ///< Pointer to the list of choices of how to display stop codons
     wxColour aacol ; ///< The color in which to draw the amino acids in DNA mode

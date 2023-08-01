@@ -78,12 +78,12 @@ void TextImportDialog::OnOK ( wxCommandEvent &ev )
         if ( s.GetChar(a) >= 'a' && s.GetChar(a) <= 'z' ) sSequence += s.GetChar(a)-'a'+'A' ;
         else if ( s.GetChar(a) >= 'A' && s.GetChar(a) <= 'Z' ) sSequence += s.GetChar(a) ;
         }
-    wxDialog::OnOK ( ev ) ;
+    EndModal ( wxID_OK ) ; // wxDialog::OnOK ( ev ) ;
     }
 
 void TextImportDialog::OnCancel ( wxCommandEvent &ev )
     {
-    wxDialog::OnCancel ( ev ) ;
+    EndModal ( wxID_CANCEL ) ; // wxDialog::OnCancel ( ev ) ;
     }
 
 

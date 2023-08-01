@@ -38,7 +38,7 @@ class TVirtualGel : public ChildBase
     public :
     TVirtualGel(wxWindow *parent, const wxString& title) ; ///< Constructor
     
-    void initme () ; ///< Initialization
+    virtual void initme () ; ///< Initialization
     virtual wxString getName () ; ///< Returns the gel module name
 
     virtual void OnPercent ( wxCommandEvent &ev ) ; ///< Gel percent setting change event handler
@@ -84,5 +84,35 @@ class TMyGelControl : public wxControl
 
     DECLARE_EVENT_TABLE()
     } ;
+
+
+class TRestrictionIdentifier : public TVirtualGel
+{
+    public :
+    TRestrictionIdentifier(wxWindow *parent, const wxString& title) ; ///< Constructor
+    virtual void initme () ; ///< Initialization
     
+    virtual void OnDNAListChange(wxCommandEvent &event);
+    virtual void OnEnzymeListChange(wxCommandEvent &event);
+    virtual wxString getName () ; ///< Returns the gel module name
+    virtual void otherChildrenChanged () ;
+
+    private:
+    void listDNA () ;
+    void recalcEnzymes() ;
+    void addRestrictionLane ( wxString en , TVector *v ) ;
+    wxArrayInt getRestrictionFragments ( wxString en , TVector *v ) ;
+    bool check4separation ( wxString en ) ;
+    bool arrays_are_separate ( const wxArrayInt &a1 , const wxArrayInt &a2 ) ;
+    bool arrays_differ ( const wxArrayInt &a1 , const wxArrayInt &a2 , int bp , int percent ) ;
+    
+    wxCheckListBox *dna_list ;
+    wxListBox *enzymes_list ;
+    wxChoice *bp_list , *percent_list , *group_list ;
+    vector <MyChild*> dna_items ;
+    bool running ;
+    
+    DECLARE_EVENT_TABLE()
+} ;
+
 #endif

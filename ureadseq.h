@@ -7,8 +7,10 @@
 #define UREADSEQ_H
 
 
-
+#ifndef __WXMSW__
 typedef char  boolean;
+#endif
+
 #define NEWLINE         '\n'
 #ifndef false
 	#define false 0

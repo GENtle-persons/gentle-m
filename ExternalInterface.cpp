@@ -79,7 +79,8 @@ void ExternalInterface::initme ()
 
     nb = new wxNotebook ( this , -1 ) ;
     
-    nb->AddPage ( new EIpanel ( nb , EI_NCBI ) , _T("NCBI") ) ; // Default panel
+    EIpanel *panel = new EIpanel ( nb , EI_NCBI ) ;
+    nb->AddPage ( panel  , _T("NCBI") ) ; // Default panel
 
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
 
@@ -97,6 +98,7 @@ void ExternalInterface::initme ()
     myapp()->frame->setChild ( this ) ;
     Maximize () ;
     Activate () ;
+    if ( panel->t1 ) panel->t1->SetFocus () ;
     }
 
 wxString ExternalInterface::getName ()
@@ -179,6 +181,7 @@ EIpanel::EIpanel ( wxWindow *parent , int _mode )
     : wxPanel ( parent )
 {
     mode = _mode ;
+    t1 = NULL ;
     
     blast_thread = NULL ;
 
@@ -192,6 +195,7 @@ EIpanel::EIpanel ( wxWindow *parent , int _mode )
     v0->Add ( up , 0 , wxEXPAND , 5 ) ;
     v0->Add ( hlb , 1 , wxEXPAND , 5 ) ;
     SetSizer ( v0 ) ;
+	if ( t1 ) t1->SetFocus() ;
 }
      
 

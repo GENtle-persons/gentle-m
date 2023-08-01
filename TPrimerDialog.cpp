@@ -64,7 +64,6 @@ void TPrimerDialog::OnCharHook(wxKeyEvent& event)
 wxSpinCtrl *TPrimerDialog::addSpinCtrl ( int id , wxString title , int x , int y , int def )
     {
     wxSpinCtrl *n ;
-    wxStaticText *t ;
     int w = 140 ;
     x *= w ;
     x += 10 ;
@@ -109,9 +108,9 @@ void TPrimerDialog::initme ( TPrimer *_p , TPrimerDesign *_pd )
     lmax->SetRange ( 1 , 99 ) ;
     
 //    wxButton *bs = new wxButton ( this , PD_SEARCH , txt("t_recalc") , wxPoint ( 300 , 10 ) ) ;
-    wxButton *br = new wxButton ( this , PD_RESET , txt("t_reset") , wxPoint ( 5 , 150 ) ) ;
+//    wxButton *br = new wxButton ( this , PD_RESET , txt("t_reset") , wxPoint ( 5 , 150 ) ) ;
     wxButton *bo = new wxButton ( this , PD_OK , txt("b_ok") , wxPoint ( 105 , 150 ) ) ;
-    wxButton *bc = new wxButton ( this , PD_CANCEL , txt("b_cancel") , wxPoint ( 205 , 150 ) ) ;
+//    wxButton *bc = new wxButton ( this , PD_CANCEL , txt("b_cancel") , wxPoint ( 205 , 150 ) ) ;
     
     seq = new wxTextCtrl ( this , -1 , _T("") , 
                         wxPoint ( 0 , 180 ) ,
@@ -153,7 +152,7 @@ void TPrimerDialog::OnActivatePrimer ( wxListEvent& event )
     
 void TPrimerDialog::OnOK ( wxCommandEvent &ev )
     {
-    wxDialog::OnOK ( ev ) ;
+    EndModal ( wxID_OK ) ; //wxDialog::OnOK ( ev ) ;
     }
 
 void TPrimerDialog::OnReset ( wxCommandEvent &ev )
@@ -164,7 +163,7 @@ void TPrimerDialog::OnReset ( wxCommandEvent &ev )
 
 void TPrimerDialog::OnCancel ( wxCommandEvent &ev )
     {
-    wxDialog::OnCancel ( ev ) ;    
+    EndModal ( wxID_CANCEL ) ; //wxDialog::OnCancel ( ev ) ;    
     }
 
 void TPrimerDialog::OnSearch ( wxCommandEvent &ev )
@@ -196,7 +195,7 @@ void TPrimerDialog::updateList ()
         }
     else // !!!! incomplete!
         {
-        t = pd->vc->getSequence() ;
+        t = pd->inverse_template_vector->getSequence() ;
         s = t ; 
         for ( a = 0 ; a < p->sequence.length() ; a++ )
            s.SetChar ( a+p->from-1 , p->sequence.GetChar(a) ) ;

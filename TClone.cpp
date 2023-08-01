@@ -34,17 +34,17 @@ void TClone::loadEnzymeList ( TStorage *st , wxString filename )
 	 {
 	 int a ;
 	 TRestrictionEnzyme r ;
-	 string r_name , r_sequence ;
+	 wxString r_name , r_sequence ;
 	 for ( a = 0 ; a < 8 ; a++ )
 	   if ( *d ) r_name += *d++ ;
 	   else d++ ;
-	 r.setName ( r_name.c_str() ) ;
+	 r.setName ( r_name ) ;
 	 for ( a = 0 ; a < 16 ; a++ )
        {
 	   if ( *d >= '0' && *d <= 'z' ) r_sequence += *d++ ;
 	   else d++ ;
 	   }
-	 r.setSequence ( r_sequence.c_str() ) ;
+	 r.setSequence ( r_sequence ) ;
 	   
      r.setOverlap ( (int) *d++ ) ;
      if ( r.getOverlap() > 127 )
@@ -186,7 +186,6 @@ void TClone::load ( wxString s )
 	parseLines ( v , t , l ) ;
 	delete t ;
 
-	int i ;
 	success = true ;
 	if ( v.GetCount() < 3 || v[0].IsEmpty() || v[0].length() > 50 )
 	{

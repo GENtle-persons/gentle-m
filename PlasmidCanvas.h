@@ -96,7 +96,7 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void OnTurningPoint ( wxCommandEvent &ev ) ; ///< "Turning point (12 o'clock)" event handler
 
     virtual void setPrinting ( bool _b ) ; ///< Sets the printing mode on/off
-    virtual void setLastContextItem ( int _i ) ; ///< Sets the last item the mouse was over
+    virtual void setLastContextItem ( long _l ) ; ///< Sets the last item the mouse was over
     
     virtual int getMarkFrom () ; ///< Returns the first selected position, or -1
     virtual int getMarkTo () ; ///< Returns the last selected position, or -1
@@ -151,7 +151,8 @@ class PlasmidCanvas : public wxScrolledWindow
     // Variables
     int context_last_rs , lasttooltip , context_last_orf ;
     int lastvectorobject , lastrestrictionsite , lastbp ;
-    int mousediffx , mousediffy , zoom , context_last_item , last_rightclick_base ;
+    int mousediffx , mousediffy , zoom , last_rightclick_base ;
+	long context_last_item ;
     int r , w , h ;
     bool initialclick , painting , hasBeenPainted , printing ;
     wxToolTip *tt ; ///< The current/last tooptip

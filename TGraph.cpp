@@ -200,7 +200,7 @@ void TGraphData::drawit ( wxDC &dc )
 	{
 	int a ;
 	int x , y ;
-	int lx , ly ;
+	int lx = 0 , ly = 0 ;
 	wxRect inner ;
 	drawn.clear () ;
 	dc.GetClippingBox ( &inner.x , &inner.y , &inner.width , &inner.height ) ;

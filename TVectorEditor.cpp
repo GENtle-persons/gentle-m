@@ -26,6 +26,7 @@ BEGIN_EVENT_TABLE(TVectorEditor, wxDialog )
     EVT_BUTTON(TVE_EN_ADD_TO_GR,TVectorEditor::enzymeAddToGr)
     EVT_BUTTON(TVE_EN_ADD_TO_NEW_GR,TVectorEditor::enzymeAddToNewGr)
     EVT_BUTTON(TVE_EN_DEL_GR,TVectorEditor::enzymeDelGr)
+    EVT_BUTTON(TVE_EN_IMPORT_REBASE,TVectorEditor::enzymeImportRebase)
     EVT_BUTTON(TVE_DEL_FROM_GROUP,TVectorEditor::enzymeDelFromGr)
     EVT_BUTTON(TVE_IMPORT,TVectorEditor::importCloneEnzymes)
     EVT_BUTTON(TVE_NEW_ENZYME,TVectorEditor::newEnzyme)
@@ -210,19 +211,31 @@ void TVectorEditor::initPanEnzym2 ()
 
 void TVectorEditor::addOkCancel ( wxWindow *p )
     {
-    int w , h , z ;
-    p->GetClientSize ( &w , &h ) ;
-    z = w / 5 ;
-    
-    wxButton *b = new wxButton ( p , TVE_OK , txt("b_ok") ,
-                    wxPoint ( z , h - th - bo ) ,
-                    wxSize ( z , th ) ) ;
+    wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+    wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
 
-    new wxButton ( p , TVE_CANCEL , txt("b_cancel") ,
-                    wxPoint ( w - z*2 , h - th - bo ) ,
-                    wxSize ( z , th ) ) ;
-                    
-    b->SetDefault () ;
+    wxButton *b1 = new wxButton ( p , TVE_OK , txt("b_ok") ) ;
+	wxButton *b2 = new wxButton ( p , TVE_CANCEL , txt("b_cancel") ) ;
+	wxButton *b3 = b1 ;
+
+#ifdef __WXMAC__
+	b1 = b2 ;
+	b2 = b3 ;
+#endif
+	
+	h1->Add ( b1 , 0 , wxEXPAND ) ;
+	h1->Add ( new wxStaticText ( this , -1 , _T("        ") ) , 0 , wxEXPAND ) ;
+	h1->Add ( b2 , 0 , wxEXPAND ) ;
+    
+	v0->Add ( nb , 1 , wxEXPAND ) ;
+	v0->Add ( h1 , 0 , wxCENTER|wxALL , 2 ) ;
+
+    b3->SetDefault () ;
+    
+    
+    this->SetSizer ( v0 ) ;
+    v0->Fit ( this ) ;    
+    Center () ;
     }
 
 #define VCOMMIT(_p1,_p2) if(_p1!=v->_p2){v->_p2=_p1;v->setChanged();}
@@ -334,12 +347,12 @@ void TVectorEditor::OnOK ( wxCommandEvent &ev )
         if ( panEnzym ) commitEnzymes () ;
         if ( panProt ) commitProteases () ;
         }
-    wxDialog::OnOK ( ev ) ;
+    EndModal ( wxID_OK ) ; //wxDialog::OnOK ( ev ) ;
     }
 
 void TVectorEditor::OnCancel ( wxCommandEvent &ev )
     {
-    wxDialog::OnCancel ( ev ) ;
+    EndModal ( wxID_CANCEL ) ; //wxDialog::OnCancel ( ev ) ;
     }
     
 void TVectorEditor::cleanup ()

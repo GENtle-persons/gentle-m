@@ -3,6 +3,7 @@
 BEGIN_EVENT_TABLE(TCalculator, MyChildBase)
     EVT_MENU(SEQ_PRINT, TCalculator::OnSeqPrint)
     EVT_MENU(MDI_PRINT_REPORT,TCalculator::OnPrintPreview)
+    EVT_MENU(MDI_COPY,TCalculator::OnCopy)
     EVT_CLOSE(ChildBase::OnClose)
     EVT_SET_FOCUS(ChildBase::OnFocus)
 
@@ -15,7 +16,6 @@ BEGIN_EVENT_TABLE(TCalculator, MyChildBase)
     EVT_MENU(MDI_CIRCULAR_LINEAR,ChildBase::OnDummy)
     EVT_MENU(MDI_UNDO,ChildBase::OnDummy)
     EVT_MENU(MDI_CUT,ChildBase::OnDummy)
-    EVT_MENU(MDI_COPY,ChildBase::OnDummy)
     EVT_MENU(MDI_PASTE,ChildBase::OnDummy)
     EVT_MENU(MDI_EDIT_MODE,ChildBase::OnDummy)
     EVT_MENU(MDI_EXPORT,ChildBase::OnDummy)
@@ -65,6 +65,8 @@ TCalculator::TCalculator(wxWindow *parent, const wxString& title)
     {
     def = _T("CALCULATOR") ;
     vec = NULL ;
+    allow_print = true ;
+    allow_copy = true ;
     }
 
 TCalculator::~TCalculator ()
@@ -72,6 +74,15 @@ TCalculator::~TCalculator ()
     delete nb ;
     }
     
+void TCalculator::OnCopy(wxCommandEvent& event)
+    {
+    if (!wxTheClipboard->Open()) return ;
+    TGridBasic *g = (TGridBasic*) nb->GetPage ( nb->GetSelection () ) ;
+    wxString text = g->getText() ;
+    wxTheClipboard->SetData( new wxTextDataObject(text) );
+    wxTheClipboard->Close();
+    }
+
 void TCalculator::OnSeqPrint(wxCommandEvent& event)
     {
     TGridBasic *g = (TGridBasic*) nb->GetPage ( nb->GetSelection () ) ;
@@ -595,7 +606,31 @@ void TGridBasic::cleanup ()
     SetRowLabelSize ( 0 ) ;
     SetColLabelSize ( 0 ) ;
     }
-    
+
+wxString TGridBasic::getText ()
+    {
+    int cols = GetNumberCols() ;
+    int rows = GetNumberRows() ;
+    int col , row ;
+    wxString text ;
+
+    for ( row = 0 ; row < rows ; row++ )
+        {
+        for ( col = 0 ; col < cols ; col++ )
+            {
+            wxString s = GetCellValue ( row , col ) ;
+            if ( myapp()->frame->LS->getOption(_T("LANGUAGE"),_T("en")) == _T("de") ) 
+                s.Replace ( _T(".") , _T(",") ) ;
+            s = s.Trim().Trim(false) ;
+            if ( col > 0 ) text += _T("\t") ;
+            text += s ;
+            }
+        text += _T("\n") ;
+        }
+
+    return text ;
+    }
+
 void TGridBasic::print ( int mode )
     {
     int cols = GetNumberCols() ;
@@ -656,8 +691,7 @@ void TGridBasic::print ( int mode )
         }
     else if ( mode == HTML_PRINT )
         {
-//        myapp()->frame->html_ep->PrinterSetup () ;
-        myapp()->frame->html_ep->PageSetup () ;
+        myapp()->frame->html_ep->PrintText ( html ) ;
         }
     }
     

@@ -1,18 +1,18 @@
 [Project]
 FileName=GENtle.dev
 Name=GENtle
-UnitCount=171
+UnitCount=184
 Type=0
 Ver=1
 ObjFiles=
-Includes=C:\Programme\Dev-Cpp\Mine\GENtle;C:\Programme\Dev-Cpp\Mine\GENtle\clustal;C:\Programme\Dev-Cpp\include\MySQL;"C:\Program Files\Dev-Cpp\include\MySQL";C:\Programme\Dev-Cpp\Mine\GENtle\coils
+Includes=C:\Programme\Dev-Cpp\Mine\GENtle;C:\Programme\Dev-Cpp\Mine\GENtle\clustal;C:\Programme\Dev-Cpp\include\MySQL;"C:\Program Files\Dev-Cpp\include\MySQL";C:\Programme\Dev-Cpp\Mine\GENtle\coils;C:\Programme\Dev-Cpp\include\wx-2.6
 Libs=C:\Programme\Dev-Cpp\Mine\GENtle;C:\Programme\Dev-Cpp\Mine\GENtle\tinyxml;C:\Programme\Dev-Cpp\Mine\GENtle\ipc
 PrivateResource=GENtle_private.rc
 ResourceIncludes=C:\Programme\Dev-Cpp\include;"C:\Program Files\Dev-Cpp\include"
 MakeIncludes=
 Compiler=--pipe -D_X86_=1 -DWIN32 -D_WIN32 -DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -D__WIN32__ -mthreads -DSTRICT  -D__WXMSW__ -D__WINDOWS__ -Wall  -fno-pcc-struct-return -fno-rtti -fno-exceptions -O3_@@_
 CppCompiler=--pipe -D_X86_=1 -DWIN32 -D_WIN32 -DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -D__WIN32__ -mthreads -DSTRICT  -D__WXMSW__ -D__WINDOWS__ -Wall -fno-pcc-struct-return -fno-rtti -fno-exceptions -finline-functions -O3_@@_
-Linker=-lwxmsw26_@@_-lwxmsw26_gl_@@_-lwxtiff_@@_-lwxjpeg_@@_-lwxpng_@@_-lwxzlib_@@_-lwxregex_@@_-lwxexpat_@@_-lstdc++_@@_-lgcc_@@_-lodbc32_@@_-lwsock32_@@_-lwinspool_@@_-lwinmm_@@_-lshell32_@@_-lcomctl32_@@_-lctl3d32_@@_-lodbc32_@@_-ladvapi32 _@@_-lodbc32 _@@_-lwsock32 _@@_-lopengl32 _@@_-lglu32 _@@_-lole32 _@@_-loleaut32 _@@_-luuid_@@_sqlite.dll_@@_libmySQL.a_@@_libmySQL.dll_@@_sqlite3.dll_@@_-s_@@_
+Linker=-lwx_mswu-2.6_@@_-lwxexpat-2.6_@@_-lwxregexu-2.6_@@_-lstdc++_@@_-lgcc_@@_-lodbc32_@@_-lwsock32_@@_-lwinspool_@@_-lwinmm_@@_-lshell32_@@_-lcomctl32_@@_-lctl3d32_@@_-lodbc32_@@_-ladvapi32 _@@_-lodbc32 _@@_-lwsock32 _@@_-lopengl32 _@@_-lglu32 _@@_-lole32 _@@_-loleaut32 _@@_-luuid_@@_-lz_@@_-ljpeg_@@_-ltiff_@@_-lpng_@@_sqlite.dll_@@_libmySQL.a_@@_libmySQL.dll_@@_sqlite3.dll_@@_libpng13.dll_@@_-s_@@_
 IsCpp=1
 Icon=GENtle.ico
 ExeOutput=
@@ -458,17 +458,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit44]
-FileName=..\..\include\wx\msw\wx.rc
-CompileCpp=1
-Folder=Resources
-Compile=1
-Link=0
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit46]
-FileName=PrimerDesign.cpp
+FileName=PrimerDesign.h
 CompileCpp=1
 Folder=Child-Types
 Compile=1
@@ -477,7 +467,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit47]
+[Unit46]
 FileName=SequenceTypes.cpp
 CompileCpp=1
 Folder=Canvases
@@ -487,8 +477,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit48]
+[Unit47]
 FileName=PlasmidCanvasLinear.cpp
+CompileCpp=1
+Folder=Canvases
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit48]
+FileName=PlasmidCanvasCircular.cpp
 CompileCpp=1
 Folder=Canvases
 Compile=1
@@ -518,7 +518,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit45]
-FileName=PrimerDesign.h
+FileName=PrimerDesign.cpp
 Folder=Child-Types
 Compile=1
 Link=1
@@ -528,16 +528,6 @@ BuildCmd=
 CompileCpp=1
 
 [Unit49]
-FileName=PlasmidCanvasCircular.cpp
-CompileCpp=1
-Folder=Canvases
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit50]
 FileName=PlasmidCanvasHandlers.cpp
 CompileCpp=1
 Folder=Canvases
@@ -547,7 +537,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit51]
+[Unit50]
 FileName=AminoAcids.cpp
 CompileCpp=1
 Folder=Child-Types
@@ -557,7 +547,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit52]
+[Unit51]
 FileName=ABIviewer.h
 CompileCpp=1
 Folder=Child-Types
@@ -567,7 +557,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit53]
+[Unit52]
 FileName=ABItype.h
 CompileCpp=1
 Folder=Data structures
@@ -577,7 +567,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit54]
+[Unit53]
 FileName=ABItype.cpp
 CompileCpp=1
 Folder=Data structures
@@ -587,7 +577,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit55]
+[Unit54]
 FileName=TODO.cpp
 CompileCpp=1
 Folder=
@@ -597,7 +587,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit56]
+[Unit55]
 FileName=TPrimer.h
 CompileCpp=1
 Folder=Data structures
@@ -607,7 +597,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit57]
+[Unit56]
 FileName=TPrimer.cpp
 CompileCpp=1
 Folder=Data structures
@@ -617,7 +607,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit58]
+[Unit57]
 FileName=TPrimerDialog.h
 CompileCpp=1
 Folder=Dialogs
@@ -627,7 +617,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit59]
+[Unit58]
 FileName=TPrimerDialog.cpp
 CompileCpp=1
 Folder=Dialogs
@@ -637,7 +627,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit60]
+[Unit59]
 FileName=TItemEditDialog.h
 CompileCpp=1
 Folder=Dialogs
@@ -647,7 +637,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit61]
+[Unit60]
 FileName=TItemEditDialog.cpp
 CompileCpp=1
 Folder=Dialogs
@@ -657,7 +647,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit62]
+[Unit61]
 FileName=TIMGreader.h
 CompileCpp=1
 Folder=Data structures
@@ -667,7 +657,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit63]
+[Unit62]
 FileName=TIMGreader.cpp
 CompileCpp=1
 Folder=Data structures
@@ -677,7 +667,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit64]
+[Unit63]
 FileName=TImageDisplay.h
 CompileCpp=1
 Folder=Child-Types
@@ -687,7 +677,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit65]
+[Unit64]
 FileName=TImageDisplay.cpp
 CompileCpp=1
 Folder=Child-Types
@@ -697,7 +687,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit66]
+[Unit65]
 FileName=TCalculator.h
 CompileCpp=1
 Folder=Child-Types
@@ -707,7 +697,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit67]
+[Unit66]
 FileName=TCalculator.cpp
 CompileCpp=1
 Folder=Child-Types
@@ -717,267 +707,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit69]
-FileName=TSilmutDialog.cpp
-CompileCpp=1
-Folder=Dialogs
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit70]
-FileName=TUndo.h
-CompileCpp=1
-Folder=Data structures
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit71]
-FileName=TUndo.cpp
-CompileCpp=1
-Folder=Data structures
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit72]
-FileName=ureadseq.h
-CompileCpp=1
-Folder=External sources
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit78]
-FileName=SequenceTypeRestriction.cpp
-CompileCpp=1
-Folder=Canvases
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit80]
-FileName=SequenceTypeABI.cpp
-CompileCpp=1
-Folder=Canvases
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit81]
-FileName=SequenceTypeFeature.cpp
-CompileCpp=1
-Folder=Canvases
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit82]
-FileName=SequenceTypeAlign.cpp
-CompileCpp=1
-Folder=Canvases
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit83]
-FileName=SequenceTypePlot.cpp
-CompileCpp=1
-Folder=Canvases
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit84]
-FileName=tinyxml\tinystr.cpp
-CompileCpp=1
-Folder=External sources/tinyxml
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit85]
-FileName=tinyxml\tinystr.h
-CompileCpp=1
-Folder=External sources/tinyxml
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit86]
-FileName=tinyxml\tinyxml.cpp
-CompileCpp=1
-Folder=External sources/tinyxml
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit87]
-FileName=tinyxml\tinyxml.h
-CompileCpp=1
-Folder=External sources/tinyxml
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit88]
-FileName=tinyxml\tinyxmlerror.cpp
-CompileCpp=1
-Folder=External sources/tinyxml
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit89]
-FileName=tinyxml\tinyxmlparser.cpp
-CompileCpp=1
-Folder=External sources/tinyxml
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit90]
-FileName=TXMLfile.h
-CompileCpp=1
-Folder=Data structures
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit91]
-FileName=TXMLfile.cpp
-CompileCpp=1
-Folder=Data structures
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit94]
-FileName=ChildBase.cpp
-CompileCpp=1
-Folder=Child-Types
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit95]
-FileName=TVectorEditorItems.cpp
-CompileCpp=1
-Folder=Dialogs
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit96]
-FileName=ProgramOptionsDialog.h
-CompileCpp=1
-Folder=Dialogs
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit73]
-FileName=ureadseq.c
-CompileCpp=1
-Folder=External sources
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit74]
-FileName=variables.csv
-CompileCpp=1
-Folder=
-Compile=0
-Link=0
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit75]
-FileName=TUReadSeq.h
-Folder=Data structures
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-CompileCpp=1
-
-[Unit76]
-FileName=TUReadSeq.cpp
-CompileCpp=1
-Folder=Data structures
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit77]
-FileName=SequenceTypeDNA.cpp
-CompileCpp=1
-Folder=Canvases
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit79]
-FileName=SequenceTypeAA.cpp
-CompileCpp=1
-Folder=Canvases
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit68]
+[Unit67]
 FileName=TSilmutDialog.h
 CompileCpp=1
 Folder=Dialogs
@@ -987,7 +717,167 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit92]
+[Unit69]
+FileName=TUndo.h
+CompileCpp=1
+Folder=Data structures
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit70]
+FileName=TUndo.cpp
+CompileCpp=1
+Folder=Data structures
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit71]
+FileName=ureadseq.h
+CompileCpp=1
+Folder=External sources
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit72]
+FileName=ureadseq.c
+CompileCpp=1
+Folder=External sources
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit78]
+FileName=SequenceTypeAA.cpp
+CompileCpp=1
+Folder=Canvases
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit80]
+FileName=SequenceTypeFeature.cpp
+CompileCpp=1
+Folder=Canvases
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit81]
+FileName=SequenceTypeAlign.cpp
+CompileCpp=1
+Folder=Canvases
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit82]
+FileName=SequenceTypePlot.cpp
+CompileCpp=1
+Folder=Canvases
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit83]
+FileName=tinyxml\tinystr.cpp
+CompileCpp=1
+Folder=External sources/tinyxml
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit84]
+FileName=tinyxml\tinystr.h
+CompileCpp=1
+Folder=External sources/tinyxml
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit85]
+FileName=tinyxml\tinyxml.cpp
+CompileCpp=1
+Folder=External sources/tinyxml
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit86]
+FileName=tinyxml\tinyxml.h
+CompileCpp=1
+Folder=External sources/tinyxml
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit87]
+FileName=tinyxml\tinyxmlerror.cpp
+CompileCpp=1
+Folder=External sources/tinyxml
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit88]
+FileName=tinyxml\tinyxmlparser.cpp
+CompileCpp=1
+Folder=External sources/tinyxml
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit89]
+FileName=TXMLfile.h
+CompileCpp=1
+Folder=Data structures
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit90]
+FileName=TXMLfile.cpp
+CompileCpp=1
+Folder=Data structures
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit91]
 FileName=TPDB.h
 CompileCpp=1
 Folder=Data structures
@@ -997,17 +887,27 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit93]
-FileName=TPDB.cpp
+[Unit94]
+FileName=TVectorEditorItems.cpp
 CompileCpp=1
-Folder=Data structures
+Folder=Dialogs
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit97]
+[Unit95]
+FileName=ProgramOptionsDialog.h
+CompileCpp=1
+Folder=Dialogs
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit96]
 FileName=ProgramOptionsDialog.cpp
 CompileCpp=1
 Folder=Dialogs
@@ -1017,8 +917,68 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit99]
-FileName=FindSequenceDialog.cpp
+[Unit73]
+FileName=variables.csv
+CompileCpp=1
+Folder=
+Compile=0
+Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit74]
+FileName=TUReadSeq.h
+CompileCpp=1
+Folder=Data structures
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit75]
+FileName=TUReadSeq.cpp
+Folder=Data structures
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+CompileCpp=1
+
+[Unit76]
+FileName=SequenceTypeDNA.cpp
+CompileCpp=1
+Folder=Canvases
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit77]
+FileName=SequenceTypeRestriction.cpp
+CompileCpp=1
+Folder=Canvases
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit79]
+FileName=SequenceTypeABI.cpp
+CompileCpp=1
+Folder=Canvases
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit68]
+FileName=TSilmutDialog.cpp
 CompileCpp=1
 Folder=Dialogs
 Compile=1
@@ -1027,7 +987,27 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit98]
+[Unit92]
+FileName=TPDB.cpp
+CompileCpp=1
+Folder=Data structures
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit93]
+FileName=ChildBase.cpp
+CompileCpp=1
+Folder=Child-Types
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit97]
 FileName=FindSequenceDialog.h
 CompileCpp=1
 Folder=Dialogs
@@ -1037,7 +1017,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit100]
+[Unit99]
 FileName=TVirtualGel.cpp
 CompileCpp=1
 Folder=Child-Types
@@ -1047,7 +1027,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit101]
+[Unit98]
+FileName=FindSequenceDialog.cpp
+CompileCpp=1
+Folder=Dialogs
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit100]
 FileName=TVirtualGel.h
 CompileCpp=1
 Folder=Child-Types
@@ -1057,7 +1047,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit102]
+[Unit101]
 FileName=TVectorEditorEnzymes.cpp
 CompileCpp=1
 Folder=Dialogs
@@ -1067,27 +1057,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit104]
-FileName=SendHTTP.h
-CompileCpp=1
-Folder=External sources
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit103]
+[Unit102]
 FileName=SendHTTP.cpp
 CompileCpp=1
-Folder=External sources
+Folder=Data structures
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit105]
+[Unit104]
 FileName=ExternalInterface.h
 CompileCpp=1
 Folder=Child-Types
@@ -1097,7 +1077,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit106]
+[Unit103]
+FileName=SendHTTP.h
+CompileCpp=1
+Folder=Data structures
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit105]
 FileName=ExternalInterface.cpp
 CompileCpp=1
 Folder=Child-Types
@@ -1107,7 +1097,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit107]
+[Unit106]
 FileName=ExternalNCBI.cpp
 CompileCpp=1
 Folder=Child-Types
@@ -1117,7 +1107,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit108]
+[Unit107]
 FileName=ExternalBLAST.cpp
 CompileCpp=1
 Folder=Child-Types
@@ -1127,7 +1117,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit109]
+[Unit108]
 FileName=clustalw\xmenu.h
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1137,7 +1127,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit110]
+[Unit109]
 FileName=clustalw\alnscore.c
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1147,7 +1137,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit111]
+[Unit110]
 FileName=clustalw\amenu.c
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1157,7 +1147,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit112]
+[Unit111]
 FileName=clustalw\calcgap.c
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1167,7 +1157,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit113]
+[Unit112]
 FileName=clustalw\calcprf1.c
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1177,7 +1167,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit114]
+[Unit113]
 FileName=clustalw\calcprf2.c
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1187,7 +1177,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit115]
+[Unit114]
 FileName=clustalw\calctree.c
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1197,7 +1187,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit116]
+[Unit115]
 FileName=clustalw\clustalw.c
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1207,7 +1197,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit117]
+[Unit116]
 FileName=clustalw\clustalw.h
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1217,7 +1207,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit118]
+[Unit117]
 FileName=clustalw\dayhoff.h
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1227,7 +1217,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit119]
+[Unit118]
 FileName=clustalw\gcgcheck.c
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1237,7 +1227,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit120]
+[Unit119]
 FileName=clustalw\general.h
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1247,7 +1237,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit121]
+[Unit120]
 FileName=clustalw\interfac.c
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1257,7 +1247,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit122]
+[Unit121]
 FileName=clustalw\malign.c
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1267,7 +1257,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit123]
+[Unit122]
 FileName=clustalw\matrices.h
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1277,7 +1267,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit124]
+[Unit123]
 FileName=clustalw\palign.c
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1287,7 +1277,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit125]
+[Unit124]
 FileName=clustalw\param.h
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1297,7 +1287,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit126]
+[Unit125]
 FileName=clustalw\prfalign.c
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1307,7 +1297,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit127]
+[Unit126]
 FileName=clustalw\random.c
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1317,7 +1307,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit128]
+[Unit127]
 FileName=clustalw\readmat.c
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1327,7 +1317,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit129]
+[Unit128]
 FileName=clustalw\sequence.c
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1337,7 +1327,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit130]
+[Unit129]
 FileName=clustalw\showpair.c
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1347,7 +1337,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit131]
+[Unit130]
 FileName=clustalw\trees.c
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1357,7 +1347,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit132]
+[Unit131]
 FileName=clustalw\util.c
 CompileCpp=1
 Folder=External sources/ClustalW
@@ -1367,7 +1357,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit133]
+[Unit132]
 FileName=CGview.h
 CompileCpp=1
 Folder=Data structures
@@ -1377,7 +1367,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit134]
+[Unit133]
 FileName=CGview.cpp
 CompileCpp=1
 Folder=Data structures
@@ -1387,7 +1377,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit135]
+[Unit134]
 FileName=AutoAnnotate.h
 CompileCpp=1
 Folder=Data structures
@@ -1397,7 +1387,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit136]
+[Unit135]
 FileName=AutoAnnotate.cpp
 CompileCpp=1
 Folder=Data structures
@@ -1407,7 +1397,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit137]
+[Unit136]
 FileName=TGraph.h
 CompileCpp=1
 Folder=Child-Types
@@ -1417,7 +1407,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit138]
+[Unit137]
 FileName=TGraph.cpp
 CompileCpp=1
 Folder=Child-Types
@@ -1427,7 +1417,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit139]
+[Unit138]
 FileName=TGraphScale.cpp
 CompileCpp=1
 Folder=Child-Types
@@ -1437,7 +1427,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit140]
+[Unit139]
 FileName=TGraphDisplay.cpp
 CompileCpp=1
 Folder=Child-Types
@@ -1447,7 +1437,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit141]
+[Unit140]
 FileName=ipc\acconfig.h
 CompileCpp=1
 Folder=External sources/IPC
@@ -1457,7 +1447,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit142]
+[Unit141]
 FileName=ipc\element.h
 CompileCpp=1
 Folder=External sources/IPC
@@ -1467,7 +1457,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit143]
+[Unit142]
 FileName=ipc\global.h
 CompileCpp=1
 Folder=External sources/IPC
@@ -1477,7 +1467,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit144]
+[Unit143]
 FileName=ipc\gp_out.h
 CompileCpp=1
 Folder=External sources/IPC
@@ -1487,7 +1477,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit145]
+[Unit144]
 FileName=ipc\ipc.h
 CompileCpp=1
 Folder=External sources/IPC
@@ -1497,7 +1487,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit146]
+[Unit145]
 FileName=ipc\pars.h
 CompileCpp=1
 Folder=External sources/IPC
@@ -1507,7 +1497,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit147]
+[Unit146]
 FileName=TAlignmentDialog.h
 CompileCpp=1
 Folder=Dialogs
@@ -1517,7 +1507,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit148]
+[Unit147]
 FileName=TAlignmentDialog.cpp
 CompileCpp=1
 Folder=Dialogs
@@ -1527,7 +1517,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit149]
+[Unit148]
 FileName=ipc\element.cpp
 CompileCpp=1
 Folder=External sources/IPC
@@ -1537,7 +1527,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit150]
+[Unit149]
 FileName=ipc\gp_out.cpp
 CompileCpp=1
 Folder=External sources/IPC
@@ -1547,7 +1537,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit151]
+[Unit150]
 FileName=ipc\ipc.cpp
 CompileCpp=1
 Folder=External sources/IPC
@@ -1557,7 +1547,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit152]
+[Unit151]
 FileName=ipc\pars.cpp
 CompileCpp=1
 Folder=External sources/IPC
@@ -1567,37 +1557,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit155]
-FileName=TPhylip.h
-CompileCpp=1
-Folder=Data structures
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit156]
-FileName=TPhylip.cpp
-CompileCpp=1
-Folder=Data structures
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit158]
-FileName=TPhyloTree.cpp
-CompileCpp=1
-Folder=Child-Types
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit153]
+[Unit152]
 FileName=ncoils.h
 CompileCpp=1
 Folder=External sources
@@ -1607,17 +1567,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit154]
-FileName=ncoils.cpp
+[Unit155]
+FileName=TPhylip.cpp
 CompileCpp=1
-Folder=External sources
+Folder=Data structures
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit157]
+[Unit156]
 FileName=TPhyloTree.h
 CompileCpp=1
 Folder=Child-Types
@@ -1627,17 +1587,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit160]
-FileName=PCR_Troubleshoot.cpp
-CompileCpp=1
-Folder=Dialogs
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit159]
+[Unit158]
 FileName=PCR_Troubleshoot.h
 CompileCpp=1
 Folder=Dialogs
@@ -1647,7 +1597,37 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit161]
+[Unit153]
+FileName=ncoils.cpp
+CompileCpp=1
+Folder=External sources
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit154]
+FileName=TPhylip.h
+CompileCpp=1
+Folder=Data structures
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit157]
+FileName=TPhyloTree.cpp
+CompileCpp=1
+Folder=Child-Types
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit160]
 FileName=TProteolysis.h
 CompileCpp=1
 Folder=Dialogs
@@ -1657,7 +1637,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit162]
+[Unit159]
+FileName=PCR_Troubleshoot.cpp
+CompileCpp=1
+Folder=Dialogs
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit161]
 FileName=TProteolysis.cpp
 CompileCpp=1
 Folder=Dialogs
@@ -1667,8 +1657,9 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit163]
+[Unit162]
 FileName=RELEASE-NOTES.txt
+CompileCpp=1
 Folder=
 Compile=0
 Link=0
@@ -1676,17 +1667,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit164]
+[Unit163]
 FileName=AlignmentAppearanceDialog.h
-CompileCpp=1
 Folder=Dialogs
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
+CompileCpp=1
 
-[Unit165]
+[Unit164]
 FileName=AlignmentAppearanceDialog.cpp
 CompileCpp=1
 Folder=Dialogs
@@ -1696,17 +1687,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit167]
-FileName=OnlineTools.h
-CompileCpp=1
-Folder=Components
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit166]
+[Unit165]
 FileName=OnlineTools.cpp
 CompileCpp=1
 Folder=Components
@@ -1716,7 +1697,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit168]
+[Unit167]
 FileName=CloneManager.h
 CompileCpp=1
 Folder=Data structures
@@ -1726,7 +1707,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit169]
+[Unit166]
+FileName=OnlineTools.h
+CompileCpp=1
+Folder=Components
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit168]
 FileName=CloneManager.cpp
 CompileCpp=1
 Folder=Data structures
@@ -1736,7 +1727,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit170]
+[Unit169]
 FileName=CloningAssistant.h
 CompileCpp=1
 Folder=Child-Types
@@ -1746,8 +1737,148 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit171]
+[Unit170]
 FileName=CloningAssistant.cpp
+CompileCpp=1
+Folder=Child-Types
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit171]
+FileName=TSequencingAssistantDialog.h
+CompileCpp=1
+Folder=Dialogs
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit172]
+FileName=TSequencingAssistantDialog.cpp
+CompileCpp=1
+Folder=Dialogs
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit173]
+FileName=SequenceTypeAAstructure.cpp
+CompileCpp=1
+Folder=Canvases
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit174]
+FileName=SCFtype.h
+CompileCpp=1
+Folder=Data structures
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit175]
+FileName=SCFtype.cpp
+CompileCpp=1
+Folder=Data structures
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit176]
+FileName=TSequencerData.h
+CompileCpp=1
+Folder=Data structures
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit177]
+FileName=TDotPlot.cpp
+CompileCpp=1
+Folder=Child-Types
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit178]
+FileName=TDotPlot.h
+CompileCpp=1
+Folder=Child-Types
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit179]
+FileName=TStoreAllDialog.h
+CompileCpp=1
+Folder=Dialogs
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit180]
+FileName=TStoreAllDialog.cpp
+CompileCpp=1
+Folder=Dialogs
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit181]
+FileName=TEliteLaChromLogDialog.h
+CompileCpp=1
+Folder=Dialogs
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit182]
+FileName=TEliteLaChromLogDialog.cpp
+CompileCpp=1
+Folder=Dialogs
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit183]
+FileName=TRestrictionIdentifier.h
+CompileCpp=1
+Folder=Child-Types
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit184]
+FileName=TRestrictionIdentifier.cpp
 CompileCpp=1
 Folder=Child-Types
 Compile=1

@@ -280,7 +280,7 @@ void TVector::setNucleotide ( int pos , char t )
 
 bool TVector::basematch ( char b1 , char b2 ) // b1 in IUPAC, b2 in SIUPAC
    {
-   return ( IUPAC[b1] & SIUPAC[b2] ) > 0 ;
+   return b1 == b2 || ( ( IUPAC[b1] & SIUPAC[b2] ) > 0 ) ;
    }
    
 wxString TVector::vary_base ( char b )
@@ -363,7 +363,7 @@ void TVector::init ()
     setCodonTable (  1 , _T("FFLLSSSSYY||CC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , _T("Standard") ) ;
     setCodonTable (  2 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSS||VVVVAAAADDEEGGGG") , _T("Vertebrate mitochondrial") ) ;
     setCodonTable (  3 , _T("FFLLSSSSYY||CCWWTTTTPPPPHHQQRRRRIIMMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , _T("Yeast mitochondrial") ) ;
-    setCodonTable (  4 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , _T("Mold, Protozoan, and Coelenterate mitochondrial, Mycoplasma/Spiroplasma") ) ;
+    setCodonTable (  4 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , _T("Mold,Protozoan,Coelenterate Mitochondrial,Myco-/Spiroplasma") ) ;
     setCodonTable (  5 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSSSVVVVAAAADDEEGGGG") , _T("Invertebrate mitochondrial") ) ;
     setCodonTable (  6 , _T("FFLLSSSSYYQQCC|WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG") , _T("Ciliate, Dasycladacean and Hexamita nuclear") ) ;
     setCodonTable (  9 , _T("FFLLSSSSYY||CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG") , _T("Echinoderm mitochondrial") ) ;
@@ -726,18 +726,22 @@ void TVector::getCuts ( TRestrictionEnzyme *e , vector <TRestrictionCut> &ret ,
     {
     int b , c ;
     if ( clear_vector ) ret.clear () ;
+    if ( ret.empty() ) ret.reserve ( 5 ) ; // Speedup, little waste
     wxString rs = e->getSequence() ;
     wxString t = sequence ;
     if ( circular ) t += sequence ;
+    unsigned int sequence_length = sequence.length() ;
+    unsigned int t_length = t.length() ;
+    unsigned int rs_length = rs.length() ;
     
-    for ( b = 0 ; b < sequence.length() ; b++ )
+    for ( b = 0 ; b < sequence_length ; b++ )
         {
-        for ( c = 0 ; b+c < t.length() && c < rs.length() && 
+        for ( c = 0 ; b+c < t_length && c < rs_length && 
                         basematch ( t.GetChar(b+c) , rs.GetChar(c) ) ; c++ ) ;
-        if ( c == rs.length() )
+        if ( c == rs_length )
            {
-           int thecut = (b+e->getCut())%sequence.length() ;
-           if ( thecut >= 0 && thecut < sequence.length() )
+           int thecut = (b+e->getCut()) % sequence_length ;
+           if ( thecut >= 0 && thecut < sequence_length )
            	  {
               ret.push_back ( TRestrictionCut ( thecut , e ) ) ;
               if ( ret.size() > max ) return ;
@@ -747,20 +751,19 @@ void TVector::getCuts ( TRestrictionEnzyme *e , vector <TRestrictionCut> &ret ,
     
     if ( e->isPalindromic() ) return ;
 
-
     // Complement & invert for non-palindromic sequences
-    TVector vv ;
-    vv.sequence = rs ;
-    rs = vv.transformSequence ( true , true ) ;
+    TVector dummy_vector ;
+    dummy_vector.sequence = rs ;
+    rs = dummy_vector.transformSequence ( true , true ) ;
 
-    for ( b = 0 ; b < sequence.length() ; b++ )
+    for ( b = 0 ; b < sequence_length ; b++ )
         {
-        for ( c = 0 ; b+c < t.length() && c < rs.length() && 
+        for ( c = 0 ; b+c < t_length && c < rs_length && 
                         basematch ( t.GetChar(b+c) , rs.GetChar(c) ) ; c++ ) ;
-        if ( c == rs.length() )
+        if ( c == rs_length )
            {
-           int thecut = (b+e->getCut())%sequence.length() ;
-           if ( thecut >= 0 && thecut < sequence.length() )
+           int thecut = (b+e->getCut()) % sequence_length ;
+           if ( thecut >= 0 && thecut < sequence_length )
            	  {
               ret.push_back ( TRestrictionCut ( thecut , e , false ) ) ;
               if ( ret.size() > max ) return ;
@@ -768,33 +771,6 @@ void TVector::getCuts ( TRestrictionEnzyme *e , vector <TRestrictionCut> &ret ,
            }
         }
 
-
-
-/*
-    t = sequence ;
-    for ( b = 0 ; b < sequence.length() ; b++ )
-    	{
-		t.SetChar ( b , getNucleotide ( sequence.length() - b - 1 , true ) ) ;
-		}
-	
-    if ( circular ) t += sequence ;
-    int realpos = sequence.length() ;
-    for ( b = 0 ; b < sequence.length() ; b++ )
-        {
-		realpos-- ;
-        for ( c = 0 ; b+c < t.length() && c < rs.length() && 
-                        basematch ( t.GetChar(b+c) , rs.GetChar(c) ) ; c++ ) ;
-        if ( c == rs.length() )
-           {
-           int thecut = ( realpos + 1 + e->getCut(false) - e->getSequence().length() ) % sequence.length() ;
-           if ( thecut >= 0 && thecut < sequence.length() )
-           	  {
-              ret.push_back ( TRestrictionCut ( thecut , e ) ) ;
-              if ( ret.size() > max ) return ;
-              }    
-           }
-        }
-*/
     }
     
 void TVector::recalculateCuts ()
@@ -839,8 +815,13 @@ void TVector::recalculateCuts ()
 	{
 		setParam ( _T("toomanycuts") , _T("1") ) ;
 		if ( getParam ( _T("toomanycuts_warning") ) == _T("") )
-			wxMessageBox ( wxString::Format ( txt("t_too_many_cuts") , rc.size() , maxcuts ) ) ;
-		setParam ( _T("toomanycuts_warning") , _T("1") ) ;
+		{
+			if ( !myapp()->frame->isLocked() )
+			{
+				wxMessageBox ( wxString::Format ( txt("t_too_many_cuts") , rc.size() , maxcuts ) ) ;
+				setParam ( _T("toomanycuts_warning") , _T("1") ) ;
+			}
+		}
 //		while ( rc.size() > maxcuts ) rc.pop_back () ;
 	}    
 
@@ -1061,22 +1042,21 @@ void TVector::doRestriction ()
         cl.push_back ( cl[0] ) ;
     else
         cl.push_back ( TRestrictionCut ( sequence.length()-1 , &blankEnzyme ) ) ;
-        
+	
+		myapp()->frame->lockDisplay ( true ) ;
+
     mylog ( "TVector::doRestriction" , "8" ) ;
     for ( a = 0 ; a+1 < cl.size() ; a++ )
         {
-        char t1[100] , t2[100] ;
-        sprintf ( t1 , "%d" , cl[a].getPos() ) ;
-        sprintf ( t2 , "%d" , cl[a+1].getPos() ) ;
+        wxString t1 = wxString::Format ( _T("%d") , cl[a].getPos() ) ;
+        wxString t2 = wxString::Format ( _T("%d") , cl[a+1].getPos() ) ;
         TVector *nv = new TVector ;
         nv->setFromVector ( *this ) ;
         nv->reduceToFragment ( cl[a] , cl[a+1] ) ;
         nv->recalculateCuts () ;
         nv->recalcvisual = true ;
         if ( !nv->getDescription().IsEmpty() ) nv->addDescription ( _T("\n") ) ;
-        //char tx[1000] ;
-		  wxString tx = wxString::Format ( txt("res_desc").c_str() , nv->getName().c_str() , cl[a].e->getName().c_str() , t1 ) ;
-        //sprintf ( tx , txt("res_desc").mb_str() , nv->getName().mb_str() , cl[a].e->name.mb_str() , t1 ) ;
+		  wxString tx = wxString::Format ( txt("res_desc").c_str() , nv->getName().c_str() , cl[a].e->getName().c_str() , t1.c_str() ) ;
         nv->addDescription ( tx ) ;
         if ( cl[a].e->getName() == cl[a+1].e->getName() )
            {
@@ -1085,8 +1065,7 @@ void TVector::doRestriction ()
            }
         else
            {
-			  tx = wxString::Format ( txt("res_desc2").c_str() , cl[a+1].e->getName().c_str() , t2 ) ;
-           //sprintf ( tx , txt("res_desc2").c_str() , cl[a+1].e->name.c_str() , t2 ) ;
+           tx = wxString::Format ( txt("res_desc2").c_str() , cl[a+1].e->getName().c_str() , t2.c_str() ) ;
            nv->addName ( _T(" (") + cl[a].e->getName() + _T("/") + cl[a+1].e->getName() +_T(")") ) ;
            }
         nv->cocktail.Clear() ; // Cleaning up cocktail
@@ -1094,6 +1073,7 @@ void TVector::doRestriction ()
            myapp()->frame->newFromVector ( nv , TYPE_FRAGMENT ) ;        
         else delete nv ;
         }
+		myapp()->frame->lockDisplay ( false ) ;
     mylog ( "TVector::doRestriction" , "9" ) ;
     cocktail.Clear() ;
     mylog ( "TVector::doRestriction" , "10" ) ;
@@ -1422,7 +1402,7 @@ void TVector::addORFs ( int off )
                    codon == _T("TAG") ||
                    codon == _T("TGA") )
                  {
-                 if ( aa > 100 )
+                 if ( aa > myapp()->frame->orfLength )
                     {
                     int from = a ;
                     int to = b + dir * 2 ;
@@ -1775,13 +1755,13 @@ wxBrush *TVectorItem::getBrush ()
     {
     if ( getParam ( _T("ISDEFAULTBRUSH") ) == _T("1") )
         {
-        if ( type == VIT_GENE ) return wxBLUE_BRUSH ;
-        else if ( type == VIT_CDS  ) return wxRED_BRUSH ;
-        else if ( type == VIT_REP_ORI ) return wxBLACK_BRUSH ;
-        else if ( type == VIT_PROMOTER ) return wxGREY_BRUSH ;
-        else if ( type == VIT_TERMINATOR ) return wxMEDIUM_GREY_BRUSH ;
-        else if ( type == VIT_MISC ) return wxBLACK_BRUSH ;
-        return wxBLUE_BRUSH ;
+        if ( type == VIT_GENE ) return (wxBrush*) wxBLUE_BRUSH ;
+        else if ( type == VIT_CDS  ) return (wxBrush*) wxRED_BRUSH ;
+        else if ( type == VIT_REP_ORI ) return (wxBrush*) wxBLACK_BRUSH ;
+        else if ( type == VIT_PROMOTER ) return (wxBrush*) wxGREY_BRUSH ;
+        else if ( type == VIT_TERMINATOR ) return (wxBrush*) wxMEDIUM_GREY_BRUSH ;
+        else if ( type == VIT_MISC ) return (wxBrush*) wxBLACK_BRUSH ;
+        return (wxBrush*) wxBLUE_BRUSH ;
         }
     else
         {
@@ -2221,6 +2201,11 @@ TORF::TORF ()
 
 
 TORF::TORF ( int _f , int _t , int _r )
+	{
+	set ( _f , _t , _r ) ;
+	}
+
+void TORF::set ( int _f , int _t , int _r )
 	{
 	from = _f ;
 	to = _t ;

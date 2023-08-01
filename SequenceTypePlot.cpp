@@ -29,8 +29,8 @@ int SeqPlot::arrange ( int n )
     while ( endnumber > 0 ) { endnumber /= 10 ; ox += wx ; endnumberlength++ ; }
 
     if ( can->isMiniDisplay() ) can->MyGetClientSize ( &w , &h ) ;
-    else can->MyGetSize ( &w , &h ) ;
-    w -= 20 ; // Scrollbar dummy
+    else can->MyGetClientSize ( &w , &h ) ;
+//    w -= 20 ; // Scrollbar dummy
     if ( can->isMiniDisplay() && can->getAA() )
         {
         if ( can->getAA()->miniDisplayOptions == MINI_DISPLAY_REAL ) wx = w / s.length() + 1 ;
@@ -128,7 +128,7 @@ void SeqPlot::show ( wxDC& dc )
     int bm = dc.GetBackgroundMode () ;
     int a , b , cnt = offset+1 ;
     wxString t ;
-    char u[100] , valid[256] ;
+    char valid[256] ;
     for ( a = 0 ; a < 256 ; a++ ) valid[a] = 0 ;
     valid['A'] = valid['C'] = valid['T'] = valid['G'] = valid[' '] = 1 ;
 //    dc.SetTextBackground ( *wxWHITE ) ;
@@ -286,8 +286,8 @@ void SeqPlot::showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx )
 //	 mylog ( "SeqPlot::showChouFasman" , "2" ) ;
     for ( u = 1 ; u < d1.GetCount() ; u++ )
         {
-        wxPen *pen = wxRED_PEN ;
-        if ( u == 2 ) pen = wxGREEN_PEN ;
+        wxPen *pen = (wxPen*) wxRED_PEN ;
+        if ( u == 2 ) pen = (wxPen*) wxGREEN_PEN ;
         if ( u == 3 ) pen = MYPEN(_T("BLUE")) ;
         int tz = ty + (u-1) * ch + 1 ;
         int tw = ( tx + cw ) - lx ;
@@ -385,9 +385,9 @@ void SeqPlot::showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph )
 	mylog ( "SeqPlot::showPlot" , "5" ) ;
     for ( u = 0 ; u < prop[b].data.size() ; u++ )
         {
-        wxPen *pen = wxRED_PEN ;
-        if ( can->isPrinting() ) pen = wxBLACK_PEN ;
-        else if ( u == 1 ) pen = wxGREEN_PEN ;
+        wxPen *pen = (wxPen*) wxRED_PEN ;
+        if ( can->isPrinting() ) pen = (wxPen*) wxBLACK_PEN ;
+        else if ( u == 1 ) pen = (wxPen*) wxGREEN_PEN ;
         else if ( u == 2 ) pen = MYPEN(_T("BLUE")) ;
         dc.SetPen(*pen);
         float ny = prop[b].data[u] ;

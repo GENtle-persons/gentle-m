@@ -150,7 +150,7 @@ void TPDB::remap ()
            wxString name2 = vs[a].Mid(47,3) ;
            char chain1 = (char) vs[a].GetChar ( 21 ) ;
            char chain2 = (char) vs[a].GetChar ( 51 ) ;
-           name += wxString::Format ( _T(" %s%d %c") , name2.c_str() , id2 , chain2 ) ;
+           name += _T(" ") + name2 + wxString::Format ( _T("%d %c") , id2 , chain2 ) ;
            TVectorItem vi1 ( name , desc , id1 , id1 , VIT_MISC ) ;
            vi1.setParam ( _T("SEQUENCE_STYLE") , _T("5") ) ;
            seqres[seq(chain1)].v->items.push_back ( vi1 ) ;

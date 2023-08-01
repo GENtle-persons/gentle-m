@@ -5,6 +5,7 @@
 #define	_FindSequenceDialog_h_
 
 #include "main.h"
+#include <wx/regex.h>
 
 WX_DECLARE_STRING_HASH_MAP ( wxChar , wxHashChar ) ;
 
@@ -29,8 +30,7 @@ class FindSequenceDialog : public wxDialog
 
     private :
 	virtual wxString getQuery () ;
-    virtual bool doesMatch ( char a , char b ) ; ///< Returns if a matches b ( more than "is equal"!)
-    virtual int subsearch ( const wxString &s , const wxString &sub , int start ) ; ///< Compares a string and a substring
+    virtual int subsearch ( const wxString &s , const wxRegEx &regex , int start, int& len ) ; ///< Compares a string and a substring
     virtual void sequenceSearch ( bool invers = false ) ; ///< Search in sequence
     virtual void aaSearch () ; ///< Search in amino acid sequence
     virtual void itemSearch () ; ///< Search in items
@@ -39,10 +39,9 @@ class FindSequenceDialog : public wxDialog
     virtual void aaSubSearch ( const wxString &s , int start , int dir , wxString rf ) ; ///< Search in resulting amino acid sequence
 	virtual void getFromTo ( wxString s , long &from , long &to , int idx = -1 ) ;
 	virtual SequenceCanvas *getMarkSequence ( wxString &mark ) ;
-    
+
     ChildBase *c ; ///< Pointer to calling ChildBase class
     wxTextCtrl *t ; ///< The text control
-    int p , last ;
     wxListBox *lb ; ///< The results list box control
     wxButton *find_button ; ///< The "Find" button
     wxButton *do_highlight ; ///< The "Highlight" button

@@ -32,7 +32,7 @@ class ChildBase : public MyChildBase
     
     ChildBase(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style) ; ///< Constructor
     ChildBase(wxWindow *parent, const wxString& title); ///< Constructor
-        
+
     virtual wxString getName () { return _T("") ; } ///< Returns the name of the module (e.g., the vector name)
     virtual void showName ( wxString x = _T("") ) ; ///< Shows the module name in the window title
     virtual void OnFocus(wxFocusEvent& event); ///< Event handler for focus event
@@ -49,6 +49,7 @@ class ChildBase : public MyChildBase
     virtual void EnforceRefesh () {} ; ///< Refreshes the module display
     virtual void init () ; ///< Initializes pointers and toolbar options
     virtual void initHelp () ; ///< Initializes help link for online help
+    virtual void otherChildrenChanged () {} ; ///< Update modules that depend on other modules when one was added/deleted
 
     
     // Compatability functions
@@ -59,6 +60,7 @@ class ChildBase : public MyChildBase
     virtual void Activate () ; ///< Activates the module (in foreground etc.)
     virtual void SetIcon ( wxIcon icon ) ; ///< Sets the module icon (unused)
     virtual void SetMyMenuBar () ; ///< Sets the menu bar (used for mac version primarily)
+    virtual bool HasUndoData () ; ///< TRUE if undo button available and active (undo data present)
 
 	bool allow_cut , allow_copy , allow_paste , allow_find , allow_save , allow_print , allow_undo ;
     

@@ -5,6 +5,7 @@
 #define _MYFRAME_H_
 
 #include "main.h"
+#include "TRestrictionIdentifier.h"
 #include <wx/utils.h>
 #include <wx/dnd.h>
 #include <wx/docview.h>
@@ -22,10 +23,11 @@ class TXMLfile ;
 class TCalculator ;
 class TPDB ;
 class TEnzymeRules ;
-class TVirtualGel ;
 class TGraph ;
 class TPhyloTree ;
 class TOnlineTools ;
+class TVirtualGel ;
+class TRestrictionIdentifier ;
 
 typedef wxFrame MyFrameType ;
 
@@ -98,6 +100,7 @@ public:
     virtual void initme () ;
     virtual void rememberLastProject () ;
     virtual wxString check4update () ;
+    virtual wxString check4update_sub ( wxString text ) ;
     virtual void update2version ( wxString ver ) ;
     
     virtual wxMenu *getFileMenu ( int options = 0 ) ;
@@ -120,6 +123,10 @@ public:
     virtual void OnGraph(wxCommandEvent& event);
     virtual void OnLigation(wxCommandEvent& event);
     virtual void OnCloningAssistant(wxCommandEvent& event);
+    virtual void OnSequencingAssistant(wxCommandEvent& event);
+    virtual void OnDotPlot(wxCommandEvent& event);
+    virtual void OnRestrictionIdentifier(wxCommandEvent& event);
+    virtual void OnStoreAll(wxCommandEvent& event);
     
     virtual void RerouteMenu(wxCommandEvent& event);
     virtual void OnlineTools(wxCommandEvent& event);
@@ -169,6 +176,8 @@ public:
     virtual bool isActivating () ;
     virtual TVirtualGel *useGel ( wxString type ) ;
     virtual void saveImage ( wxBitmap *bmp , wxString name = _T("") ) ;
+    virtual wxChoice *AddFontsizeTool ( wxToolBar* toolBar , int id ) ;
+    virtual void notifyChildrenChanged() ;
 	
 	virtual void push_help ( wxString name ) ;
 	virtual void pop_help () ;
@@ -177,12 +186,13 @@ public:
 
     TMainTree *mainTree ; ///< \brief The main tree (for sequences etc.)
     TStorage *LS ; ///< \brief Pointer to the local TStorage database structure
+    wxString proxy ;
     bool dying , enhancedRefresh , showVectorTitle , showVectorLength , 
             loadLastProject , useMetafile , showSplashScreen , checkUpdate ,
             useCoolCanvas , useInternalHelp , doRegisterStuff , showEnzymePos ,
-			useTwoToolbars , useOnlineHelp ;
+			useTwoToolbars , useOnlineHelp , showToolTips , showLowercaseDNA ;
     wxColour aa_color ;
-    int editFeatureMode , showStopCodon ;
+    int editFeatureMode , showStopCodon , orfLength ;
     TProject project ; ///< \brief The current project
     TEnzymeRules *global_enzyme_rules ; ///< \brief The global rules for which enzymes to use/display
     wxString lang_string ; ///< \brief The user interface language name
@@ -196,6 +206,8 @@ public:
     wxArrayString dna_marker ;
 	wxToolBar *mainToolBar ; ///< The main toolbar
 	TOnlineTools *online_tools ;
+	wxArrayString language_list ;
+    bool update_child_list ;
 
     private :
     wxBitmap to_grey ( wxBitmap &bmp1 ) ;

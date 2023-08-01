@@ -18,10 +18,11 @@ class TTreeItem : public wxTreeItemData
     TTreeItem () : wxTreeItemData() {} ; ///< Empty constructor
     TTreeItem ( wxString m , wxString _t = _T("") , void *_p = NULL )  ///< Constructor
     	: wxTreeItemData()
-    	{ message = m ; type = _t ; p = _p ; } ;
+    	{ message = m ; type = _t ; p = _p ; data = 0 ; } ;
     wxString message ; ///< The message to display
     wxString type ; ///< The item type
     void *p ; ///< Can contain multiple different values, depending on the type
+	int data ;
     } ;
 
 /** \class TVectorTree
@@ -61,6 +62,8 @@ class TVectorTree : public wxTreeCtrl
     void itemCopyDNA ( wxCommandEvent &ev ) ; ///< Event redirect to parent child
     void blastDNA ( wxCommandEvent &ev ) ; ///< Event redirect to parent child
     void blastAA ( wxCommandEvent &ev ) ; ///< Event redirect to parent child
+    void copyAA ( wxCommandEvent &ev ) ; ///< Event redirect to parent child
+    void AAasNewSequence ( wxCommandEvent &ev ) ; ///< Event redirect to parent child
     
     // Variables
     MyChild *p ; ///< Pointer to the child containing this tree

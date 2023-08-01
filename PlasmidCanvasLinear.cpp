@@ -259,9 +259,9 @@ void PlasmidCanvas::drawLinearORFs ( wxDC &dc )
     int l = p->vec->getSequenceLength() ;
     for ( a = 0 ; a < p->vec->countORFs() ; a++ )
         {
-        float mf = p->vec->getORF(a)->from ;
-        float mt = p->vec->getORF(a)->to ;
-        int rf = p->vec->getORF(a)->rf ;
+        float mf = p->vec->getORF(a)->get_from() ;
+        float mt = p->vec->getORF(a)->get_to() ;
+        int rf = p->vec->getORF(a)->get_rf() ;
         int lineOff = w / 20 ;
         int mh = h/2 ;
         int ah = h/20 ;

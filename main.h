@@ -7,8 +7,8 @@
 //#define __DEBIAN__
 
 #define GENTLE_VERSION_MAJOR 1
-#define GENTLE_VERSION_MINOR 8
-#define GENTLE_VERSION_SUB 5
+#define GENTLE_VERSION_MINOR 9
+#define GENTLE_VERSION_SUB 4
 
 typedef unsigned int uint ;
 
@@ -87,6 +87,8 @@ typedef unsigned int uint ;
 #include <wx/file.h>
 #include <wx/dialup.h>
 #include <wx/utils.h>
+#include <wx/numdlg.h>
+#include <wx/timer.h>
 
 #ifdef _UNICODE
 	#define wxUSE_UNICODE 1
@@ -184,6 +186,7 @@ class MyApp : public wxApp
     virtual wxString getFileFormatCommand ( wxString type , wxString file ) ; ///< Returns the command line for running this file
     virtual wxString get_GENtle_version () ; ///< Returns the GENtle version string
 	virtual wxString getLocalDBname () ; ///< Returns the filename of the default local database
+	virtual void launchBrowser ( wxString url ) ;
     
     MyFrame *frame; ///< The application frame
     wxMimeTypesManager mtm ; ///< The MIME types manager
@@ -193,7 +196,9 @@ class MyApp : public wxApp
     int programVersion ; ///< The database access program version
     int dbWarningIssued ; ///< Was a database warning issued?
     wxHashString _text ; ///< Contains the current GUI translation.
+    wxHashString clp ; ///< Command line parameters
 	 wxCSConv *isoconv ; ///< UTF-8 conversion helper
+		wxStopWatch sw ;
     
     private :
     virtual void registerFileExtension ( wxString extension ) ; ///< Registers a file extension to GENtle (windows only).
@@ -247,7 +252,9 @@ WX_DECLARE_OBJARRAY(float, wxArrayFloat);
 #include "AutoAnnotate.h"
 #include "ChildBase.h"
 #include "OnlineTools.h"
+#include "TSequencerData.h"
 #include "ABItype.h"
+#include "SCFtype.h"
 #include "CloningAssistant.h"
 #include "MiscDialogs.h"
 #include "TStorage.h"
@@ -255,6 +262,9 @@ WX_DECLARE_OBJARRAY(float, wxArrayFloat);
 #include "TIMGreader.h"
 #include "PlasmidCanvas.h"
 #include "SequenceCanvas.h"
+#include "TDotPlot.h"
+#include "TStoreAllDialog.h"
+#include "TSequencingAssistantDialog.h"
 #include "MyFrame.h"
 #include "MyChild.h"
 #include "TRestrictionEditor.h"
@@ -268,6 +278,7 @@ WX_DECLARE_OBJARRAY(float, wxArrayFloat);
 #include "RestrictionEnzymes.h"
 #include "TImageDisplay.h"
 #include "TVirtualGel.h"
+//#include "TRestrictionIdentifier.h"
 #include "TCalculator.h"
 #include "TGraph.h"
 #include "TPhyloTree.h"

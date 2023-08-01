@@ -274,7 +274,7 @@ wxString TPhylip::runapp ( wxString app , const wxString s )
 	
 #ifdef __WXMAC__
 	wxMessageBox ( cmd ) ;
-	wxString owd = wxGetWorkingDirectory () ;
+	wxString owd = wxGetCwd () ;
 	wxSetWorkingDirectory ( tmpdir ) ;
 	wxExecute ( cmd , wxEXEC_SYNC ) ;
 	wxSetWorkingDirectory ( owd ) ;

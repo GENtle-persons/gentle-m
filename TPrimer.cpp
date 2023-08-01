@@ -45,7 +45,7 @@ void TPrimer::makeStats ()
     for ( a = 0 ; a < sequence.length() ; a++ )
        contents[sequence.GetChar(a)]++ ;
     int gc = contents['C'] + contents['G'] ;
-    int at = contents['A'] + contents['T'] ;
+//    int at = contents['A'] + contents['T'] ;
     pgc = (float) gc * 100.0 ;
 	pgc /= (float) sequence.length() ;
     tm = evaluateTm () ;
@@ -55,9 +55,8 @@ void TPrimer::makeStats ()
 wxString TPrimer::report ()
     {
     wxString r ;
-    int a , l = sequence.length() ;
+    int l = sequence.length() ;
     TVector v ;
-    char u[100] ;
 
     r += _T("5'-") + get53sequence() + _T("-3'\n") ;
 
@@ -110,10 +109,12 @@ void TPrimer::evaluate ( float tm_opt )
     
 float TPrimer::evaluateTm ( double conc_nm , double Na_mm )
     {
+/*
     double tx = -21.6 ; // C
     double T0 = -237.15 ; // C
     double R = 1.987 ; // Molar gas constant
     double y = 50.0 / 1000000000.0 ;
+*/
     double ret ;
 
     wxString s = getAnnealingSequence() ;

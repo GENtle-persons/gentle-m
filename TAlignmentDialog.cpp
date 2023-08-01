@@ -219,12 +219,12 @@ void TAlignmentDialog::init_disp ()
 
 void TAlignmentDialog::OnOK ( wxCommandEvent &ev )
     {
-    wxDialog::OnOK ( ev ) ;
+    EndModal ( wxID_OK ) ; // wxDialog::OnOK ( ev ) ;
     }
 
 void TAlignmentDialog::OnCancel ( wxCommandEvent &ev )
     {
-    wxDialog::OnCancel ( ev ) ;
+    EndModal ( wxID_CANCEL ) ; // wxDialog::OnCancel ( ev ) ;
     }
 
 void TAlignmentDialog::OnCharHook ( wxKeyEvent& event )

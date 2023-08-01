@@ -505,12 +505,12 @@ wxString PCR_troubleshoot_dialog::invert ( wxString s )
 
 void PCR_troubleshoot_dialog::OnOK ( wxCommandEvent &ev )
 	{
-    wxDialog::OnOK ( ev ) ;
+    EndModal ( wxID_OK ) ; //wxDialog::OnOK ( ev ) ;
 	}
 
 void PCR_troubleshoot_dialog::OnCancel ( wxCommandEvent &ev )
 	{
-    wxDialog::OnCancel ( ev ) ;
+    EndModal ( wxID_CANCEL ) ; //wxDialog::OnCancel ( ev ) ;
 	}
 
 void PCR_troubleshoot_dialog::OnList ( wxCommandEvent &ev )

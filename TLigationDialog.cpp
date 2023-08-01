@@ -98,7 +98,7 @@ void TLigationDialog::init ()
     
 void TLigationDialog::generateTargets ()
     {
-    int a , b ;
+    int a ;
     int cnt = l_sources->GetCount() ;
     vector <bool> vc , used ;
     wxArrayInt vi ;
@@ -150,7 +150,7 @@ void TLigationDialog::generateTargets ()
     
 void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , wxArrayInt &vi  )
     {
-    int a , b ;
+    int a ;
     int cnt = vi.GetCount() ;
     wxString name ;
     myass ( cnt-1 >= 0 && cnt-1 < orientation.size() , _T("TLigationDialog::curseTargets:1") ) ;

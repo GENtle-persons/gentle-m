@@ -53,6 +53,7 @@ BEGIN_EVENT_TABLE(MyChild, MyChildBase)
     EVT_MENU(MDI_AUTO_ANNOTATE,MyChild::OnAutoAnnotate)
     EVT_MENU(MDI_SPEAK,MyChild::OnSpeak)
     EVT_MENU(MDI_SIRNA,MyChild::OnSiRNA)
+    EVT_CHOICE(AA_FONTSIZE,MyChild::OnFontsize)
 
     EVT_CHOICE(PC_ZOOM,MyChild::OnZoom)
     EVT_UPDATE_UI(MDI_REFRESH, MyChild::OnUpdateRefresh)
@@ -101,6 +102,15 @@ MyChild::~MyChild()
     delete swu ;
     delete sw ;
 }
+
+void MyChild::OnFontsize ( wxCommandEvent& event )
+    {
+	long l ;
+	wxString s = fontsize->GetStringSelection() ;
+	s.ToLong ( &l ) ;
+	cSequence->set_font_size ( (int) l ) ;
+	updateSequenceCanvas ( true ) ;
+	}
 
 void MyChild::OnRemoveSequencingPrimers(wxCommandEvent& event)
 	{
@@ -282,10 +292,11 @@ void MyChild::OnCircularLinear(wxCommandEvent& event)
     {
     if ( vec->hasStickyEnds() )
         {
-#ifdef __WXMSW__ // LINUX
-        GetToolBar()->ToggleTool(MDI_CIRCULAR_LINEAR,vec->isCircular());
-#endif
-        return ;
+//#ifdef __WXMSW__
+			wxMessageBox ( txt("t_cannot_circularize_due_to_sticky_ends") , txt("t_error") ) ;
+			GetToolBar()->ToggleTool(MDI_CIRCULAR_LINEAR,vec->isCircular());
+//#endif
+			return ;
         }
     for ( int a = 0 ; a < vec->items.size() ; a++ ) vec->items[a].r1 = -1 ;
     vec->setCircular ( vec->isLinear() ) ;
@@ -412,7 +423,12 @@ void MyChild::initToolbar ()
             TRUE, -1, -1, (wxObject *) NULL, txt("m_edit_mode") ) ;
         toolBar->AddSeparator() ;
         toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_zoom") ) ) ;
-        wxChoice *zoom_cb = new wxChoice ( toolBar , PC_ZOOM , wxDefaultPosition , wxSize ( 60 , -1 ) ) ;
+#ifdef __WXMSW__
+		int zoom_width = 60 ;
+#else
+		int zoom_width = 80 ;
+#endif
+        wxChoice *zoom_cb = new wxChoice ( toolBar , PC_ZOOM , wxDefaultPosition , wxSize ( zoom_width , -1 ) ) ;
         zoom_cb->Append ( _T("100%") ) ;
         zoom_cb->Append ( _T("200%") ) ;
         zoom_cb->Append ( _T("300%") ) ;
@@ -421,6 +437,7 @@ void MyChild::initToolbar ()
         zoom_cb->Append ( _T("1600%") ) ;
         zoom_cb->SetSelection ( 0 ) ;
         toolBar->AddControl ( zoom_cb ) ;
+	    fontsize = myapp()->frame->AddFontsizeTool ( toolBar , AA_FONTSIZE ) ;
         myapp()->frame->addDefaultTools ( toolBar ) ;
         toolBar->Realize() ;    
         
@@ -447,6 +464,9 @@ void MyChild::initme ()
     // Canvas
     int width, height;
     GetParent()->GetClientSize(&width, &height);
+#ifdef __WXMAC__
+	height -= 100 ; // Strange bug that doesn't show scroll arrows, voodoo fix
+#endif
 
     sw = new MySplitter ( this , SPLIT_1 , this ) ;
     swu = new MySplitter ( sw , SPLIT_2 , this ) ;
@@ -471,7 +491,7 @@ void MyChild::initme ()
 	treeBox->SetFont ( *MYFONT ( MYFONTSIZE , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
 	propBox->SetFont ( *MYFONT ( MYFONTSIZE , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
 #endif
-                               
+
     sw->SplitHorizontally ( swu , cSequence , height/2 ) ;
     swu->SplitVertically ( swl , cPlasmid , width/4 ) ;
     swl->SplitHorizontally ( treeBox , propBox , height/3 ) ;
@@ -480,10 +500,12 @@ void MyChild::initme ()
 
     wxSafeYield() ;
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
-    v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
-    v0->Add ( sw , 1 , wxEXPAND , 5 ) ;
+    v0->Add ( toolbar , 0 , wxALL|wxEXPAND , 2 ) ;
+    v0->Add ( sw , 1 , wxALL|wxEXPAND , 2 ) ;
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;
+	
+	
 
     updateUndoMenu () ;
     }
@@ -703,12 +725,15 @@ void MyChild::OnEditMode(wxCommandEvent& event)
 
 void MyChild::initPanels ()
     {
+//	myapp()->frame->lockDisplay ( true ) ;
     if ( vec->getSequenceLength() > 100000 ) // Arbitary number, 100K
         {
         vec->setGenomeMode ( true ) ;
         }    
 //    cSequence->seq.Clear () ;
 	CLEAR_DELETE ( cSequence->seq ) ;
+	
+	vec->recalculateCuts () ;
     
 	 SeqFeature *seqF = NULL ;
     if ( !vec->getGenomeMode() ) seqF = new SeqFeature ( cSequence ) ;
@@ -766,7 +791,7 @@ void MyChild::initPanels ()
     swl->SetSashPosition ( 200 ) ;
     swu->SetSashPosition ( 200 ) ;
 #endif
-
+//	myapp()->frame->lockDisplay ( false ) ;
     if ( myapp()->frame->isLocked() ) return ;
     Show() ;
     mylog ( "MyChild" , "shown" ) ;
@@ -1112,7 +1137,7 @@ void MyChild::OnExtractAA(wxCommandEvent& event)
     myapp()->frame->newAminoAcids ( seq , wxString::Format ( txt("t_aa_from_vec") , vec->getName().c_str() ) ) ;
     }
         
-void MyChild::runRestriction ( wxString s )
+bool MyChild::runRestriction ( wxString s )
 	{
     MyFrame *f = myapp()->frame ; //(MyFrame*) GetParent() ;
     TRestrictionEditor ed ( f , _T("") , wxPoint(-1,-1) , wxSize(600,400) ,
@@ -1121,37 +1146,44 @@ void MyChild::runRestriction ( wxString s )
     ed.cocktail = vec->cocktail ;
     ed.remoteCocktail = &vec->cocktail ;
     ed.initme ( vec ) ;
-    if ( ed.ShowModal () != wxID_OK ) return ;
+    if ( ed.ShowModal () != wxID_OK ) return false ;
 
     vec->cocktail = ed.cocktail ;
     if ( ed.createFragments->GetValue() ) vec->doAction() ; // Cut it!
-    if ( FALSE == ed.add2gel->GetValue() ) return ; // No add to gel
+    if ( FALSE == ed.add2gel->GetValue() ) return true ; // No add to gel
     
     TVirtualGel *gel = myapp()->frame->useGel ( _T("DNA") ) ;
     if ( ed.oneLaneEach->GetValue() )
     	{
-	    int c ;
-	    for ( c = 0 ; c < ed.cocktail.GetCount() ; c++ )
+	    for ( unsigned int c = 0 ; c < ed.cocktail.GetCount() ; c++ )
 	    	{
  	    	wxArrayInt vi ;
  	    	vi = ed.getcuts ( ed.cocktail[c] ) ;
- 	    	addFragmentsToGel ( ed.cocktail[c] , vi , gel , ed ) ;
+ 	    	addFragmentsToGel ( ed.cocktail[c] , vi , gel , ed , false ) ;
 	    	}
     	}
     else
     	{
-	    addFragmentsToGel ( _T("Cuts") , ed.cocktailFragments , gel , ed ) ;
+		wxString name ;
+	    for ( unsigned int c = 0 ; c < ed.cocktail.GetCount() ; c++ )
+	    	{
+			if ( !name.IsEmpty() ) name += _T(", ") ;
+			name += ed.cocktail[c] ;
+			}
+		addFragmentsToGel ( name , ed.cocktailFragments , gel , ed , ed.partialDigestion->GetValue() ) ;
     	}    
    	myapp()->frame->activateChild ( myapp()->frame->getChildIndex ( this ) ) ;
    	myapp()->frame->activateChild ( myapp()->frame->getChildIndex ( gel ) ) ;
+   	return true ;
 	}    
 	
-void MyChild::addFragmentsToGel ( wxString title , wxArrayInt &cuts , TVirtualGel *gel , TRestrictionEditor &ed )
+void MyChild::addFragmentsToGel ( wxString title , wxArrayInt &cuts , TVirtualGel *gel , TRestrictionEditor &ed , bool partial )
 	{
 	TGelLane lane ;
     lane.name = title ;
     vector <TFragment> fragments ;
-    ed.getFragmentList ( cuts , fragments ) ;
+    if ( partial ) ed.iterateFragments ( cuts , fragments ) ;
+    else ed.getFragmentList ( cuts , fragments ) ;
     for ( int a = 0 ; a < fragments.size() ; a++ )
     	{
     	wxString text = wxString::Format ( _T("%d [%d-%d]") , fragments[a].length , fragments[a].from+1 , fragments[a].to+1 ) ;
@@ -1458,13 +1490,23 @@ void MyChild::Undo(wxCommandEvent& event)
     cSequence->unmark () ;
     vec->undo.pop() ;
     initPanels () ;
+    vec->updateDisplay() ;
 
     updateSequenceCanvas ( false ) ;
     cPlasmid->Refresh() ;
     treeBox->Refresh() ;
     updateUndoMenu () ;
     }
-    
+
+bool MyChild::HasUndoData ()        
+    {
+    if ( !vec ) return false ;
+    if ( !allow_undo ) return false ;
+    wxString lm = vec->undo.getLastMessage() ;
+    if ( lm.IsEmpty() ) return false ;
+    return true ;
+    }
+
 void MyChild::updateUndoMenu ()
     {
     if ( !vec ) return ;

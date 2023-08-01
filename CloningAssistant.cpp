@@ -521,7 +521,7 @@ TDDR *TDDR::findItem ( wxPoint p , wxPoint ori , TDDR *match )
 	wxRect rr = r ;
 	rr.x += ori.x ;
 	rr.y += ori.y ;
-	if ( !rr.Inside ( p ) ) return NULL ;
+	if ( !rr.Contains ( p ) ) return NULL ;
 	wxPoint p2 ( rr.x , rr.y ) ;
 	for ( int a = 0 ; a < children.size() ; a++ )
 		{
@@ -555,8 +555,8 @@ void TDDR::do_highlight ( wxPoint p )
 	if ( type == DDR_AS_ITEM ) margin = 3 ;
 	wxRect rl = wxRect ( ro.x , ro.y , r.GetWidth() * margin / 10 , r.GetHeight() ) ;
 	wxRect rr = wxRect ( ro.x + r.GetWidth() * ( 10 - margin ) / 10 , ro.y , margin * r.GetWidth() / 10 + 1 , r.GetHeight() ) ;
-	if ( rl.Inside ( p ) ) highlight = DDR_HIGHLIGHT_LEFT ;
-	else if ( rr.Inside ( p ) ) highlight = DDR_HIGHLIGHT_RIGHT ;
+	if ( rl.Contains ( p ) ) highlight = DDR_HIGHLIGHT_LEFT ;
+	else if ( rr.Contains ( p ) ) highlight = DDR_HIGHLIGHT_RIGHT ;
 	else highlight = DDR_HIGHLIGHT_AS ;
 	}
 

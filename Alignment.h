@@ -88,6 +88,7 @@ class TAlignment : public ChildBase,wxThreadHelper
     virtual void OnMenuIdent ( wxCommandEvent &ev ) ; ///< Some event handler
     virtual void OnHorizontal ( wxCommandEvent& event ) ; ///< "Display horizontal" event handler
     virtual void OnCopy ( wxCommandEvent& event ) ; ///< Copy event handler
+    virtual void OnFontsize(wxCommandEvent& event); ///< Fontsize event handler
     
     virtual void invokeOriginal ( int id , int pos ) ; ///< Open the original sequence at the given position
     virtual void callMiddleMouseButton ( int id , int pos , wxString _mode = _T("") ) ; ///< Perform the middle mouse button function (the gap orgy)
@@ -115,6 +116,7 @@ class TAlignment : public ChildBase,wxThreadHelper
     SeqAA *aaa ;
     bool threadRunning ;
     bool keepIdentity ;
+    wxChoice *fontsize ;
     
     virtual void myInsert ( int line , int pos , char what ) ;
     virtual void myDelete ( int line , int pos ) ;

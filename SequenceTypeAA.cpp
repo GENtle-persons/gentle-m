@@ -21,213 +21,12 @@ int SeqAA::arrange ( int n )
     {
     if ( useDirectRoutines() ) return arrange_direct ( n ) ;
     wxMessageBox ( _T("One has to wonder...1") ) ;
-/*	Obsolete code
-    int a , b , x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
-    int lasta = 0 ;
-    
-    // Setting basic values
-    can->SetFont(*can->font);
-    int wx = can->charwidth , wy = can->charheight ;
-    int ox = bo + wx + wx * endnumberlength , oy = n*wy+bo ;
-
-    can->MyGetClientSize ( &w , &h ) ;
-
-    itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx - 1 ) * can->blocksize ;
-    
-    pos.cleanup() ;
-    if ( primaryMode ) pos.reserve ( s.length() * 11 / 10 , s.length() / itemsperline ) ;
-    else pos.reserve ( s.length() * 11 / 10 , 0 ) ;
-    x = ox ;
-    y = oy ;
-    if ( showNumbers )
-       pos.add ( -(++l) , bo , y , ox-wx-bo , wy-1 ) ; // Line number
-    int icnt = 0 ;
-    for ( a = 0 ; a < s.length() ; a++ )
-        {
-        icnt++ ;
-        pos.add ( a+1 , x , y , wx-1 , wy-1 ) ;
-        can->setLowX ( x + wx*2 ) ;
-        lowy = y+wy ;
-        x += wx ;
-        if ( (a+1) % can->blocksize == 0 )
-           {
-           x += wx-1 ;
-           if ( icnt == itemsperline )
-              {
-              icnt = 0 ;
-              if ( primaryMode ) pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
-              lasta = pos.p.GetCount()+1 ;
-              x = ox ;
-              y += wy * ( can->seq.GetCount() + can->blankline ) ;
-              if ( showNumbers && a+1 < s.length() )
-                 pos.add ( -(++l) , bo , y , ox-wx-5 , wy-1 ) ; // Line number
-              }
-           }
-        }
-    if ( primaryMode && showNumbers && lasta != pos.p.GetCount()+1 ) 
-        pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
-        
-    // Marking features
-    wxString t = s ;
-    for ( a = 0 ; a < t.length() ; a++ ) t[(uint)a] = ' ' ;
-    
-    x = 2 ;
-    if ( mode != AA_ALL ) x = 0 ;
-    
-    for ( a = 0 ; vec && a < vec->items.size() ; a++ )
-        {
-        y = vec->items[a].to ;
-        if ( y < vec->items[a].from ) y += s.length() ;
-        for ( b = vec->items[a].from-1 ; b+x < y ; b++ )
-           {
-           t[(uint)(b+1)%s.length()] = 'X' ;
-           }
-        }
-    
-    for ( a = 0 ; a < pos.p.GetCount() ; a++ )
-        {
-        b = pos.p[a] ;
-        if ( b > 0 ) // Char
-           {
-           if ( t.GetChar(b) == 'X' ) setMark ( a , 1 ) ;
-           }
-        }
-        
-    return lowy + bo*2 ;*/
     }
     
 void SeqAA::show ( wxDC& dc )
     {
     if ( useDirectRoutines() ) { show_direct ( dc ) ; return ; }
     wxMessageBox ( _T("One has to wonder...2") ) ;
-    int cw2 , ch2 ;
-    dc.SetFont(*can->smallFont);
-    dc.GetTextExtent ( _T("A") , &cw2 , &ch2 ) ;
-    dc.SetFont(*can->font);
-    wxColour tbg = dc.GetTextBackground () ;
-    wxColour tfg = dc.GetTextForeground () ;
-    int bm = dc.GetBackgroundMode () ;
-    int a = 0 , b , cnt = offset+1 ;
-    wxString t ;
-    wxColour bbg ( 150 , 150 , 255 ) ;
-    dc.SetTextBackground ( *wxWHITE ) ;
-    if ( primaryMode ) dc.SetTextForeground ( getHighlightColor ( a , *wxBLACK ) ) ;
-    else dc.SetTextForeground ( myapp()->frame->aa_color ) ;
-    dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-
-    int xa , ya , yb ;
-    dc.GetDeviceOrigin ( &xa , &ya ) ;
-    ya = -ya ;
-    can->MyGetClientSize ( &xa , &yb ) ;
-    yb += ya ;
-    for ( a = 0 ; a < pos.p.GetCount() ; a++ )
-        {
-        if ( can->hardstop > -1 && a > can->hardstop ) break ;
-        b = pos.p[a] ;
-        int ty = pos.r[a].y ;
-        int tz = ty + can->charheight ;
-        bool insight = true ;
-        if ( tz < ya ) insight = false ;
-        if ( ty > yb ) insight = false ;
-        if ( can->getDrawAll() ) insight = true ;
-        if ( !insight && ty > yb ) a = pos.p.GetCount() ;
-        if ( b > 0 && !insight ) cnt++ ;
-        if ( b > 0 && insight ) // Character
-           {
-           if ( getMark ( a ) == 1 )
-              {
-              if ( primaryMode )
-                 {
-                 dc.SetTextForeground ( *wxBLACK ) ;
-              dc.SetBackgroundMode ( wxSOLID ) ;
-                 dc.SetTextBackground ( *wxLIGHT_GREY ) ;
-                 }
-              else
-                 {
-                 dc.SetTextForeground ( bbg ) ;
-                 dc.SetTextBackground ( *wxWHITE ) ;
-                 }
-              }
-           else if ( getMark ( a ) == 2 && can->doOverwrite() )
-              {
-              dc.SetTextForeground ( *wxWHITE ) ;
-              dc.SetTextBackground ( *wxBLACK ) ;
-              dc.SetBackgroundMode ( wxSOLID ) ;
-              }
-
-	 		  wxChar ch2 = s.GetChar(b-1) ;
-		 	  if ( ch2 == '|' ) ch2 = myapp()->frame->stopcodon ;
-           t = ch2 ;
-           if ( can->isPrinting() && !can->getPrintToColor() )
-              {
-              dc.SetTextForeground ( *wxBLACK ) ;
-              dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-              }
-
-           dc.DrawText ( t, pos.r[a].x, pos.r[a].y ) ;
-
-           if ( getMark ( a ) == 2 && !can->doOverwrite() )
-              {
-                 int tx = pos.r[a].x , ty = pos.r[a].y ;
-                 int tz = ty + can->charheight ;
-                 dc.SetPen(*wxBLACK_PEN);
-                 dc.DrawLine ( tx-1 , ty , tx-1 , tz ) ;
-                 dc.DrawLine ( tx-3 , ty , tx+2 , ty ) ;
-                 dc.DrawLine ( tx-3 , tz , tx+2 , tz ) ;
-              }
-           if ( getMark ( a ) > 0 )
-              {
-              dc.SetTextBackground ( *wxWHITE ) ;
-              if ( primaryMode ) dc.SetTextForeground ( getHighlightColor ( a , *wxBLACK ) ) ;
-              else dc.SetTextForeground ( myapp()->frame->aa_color ) ;
-              dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-              }
-
-           // Protease cuts
-           for ( int q = 0 ; q < pc.GetCount() ; q++ )
-              {
-              if ( b == pc[q]->cut )
-                 {
-                 int qx = pos.r[a].x - 2 ;
-                 int qy = pos.r[a].y ;
-                 if ( !pc[q]->left ) qx += can->charwidth + 4 ;
-                 dc.SetTextForeground ( *wxBLACK ) ;
-                 dc.SetPen(*wxGREY_PEN);
-                 dc.DrawLine ( qx   , qy + 1 , qx   , qy + can->charheight - 2 ) ;
-                 dc.SetPen(*wxBLACK_PEN);
-                 dc.DrawLine ( qx+1 , qy + 1 , qx+1 , qy + can->charheight - 2 ) ;
-
-                 wxString pn = pc[q]->protease->name ;
-                 for ( int w = 0 ; w+1 < pn.length() ; w++ )
-                    if ( pn.GetChar(w) == ' ' && pn.GetChar(w+1) == '(' )
-                       pn = pn.substr ( 0 , w ) ;
-                 dc.SetFont(*can->smallFont);
-                 int u1 , u2 ;
-                 dc.GetTextExtent ( pn , &u1 , &u2 ) ;
-                 dc.DrawText ( pn , qx - u1/2 , qy - u2/2 ) ;
-                 dc.SetFont(*can->font);
-                 
-                 if ( primaryMode ) dc.SetTextForeground ( getHighlightColor ( a , *wxBLACK ) ) ;
-                 else dc.SetTextForeground ( myapp()->frame->aa_color ) ;
-                 }
-              }
-              
-           cnt++ ;
-           }
-        else if ( insight ) // Front number
-           {
-//           if ( primaryMode ) sprintf ( u , "%d" , cnt ) ;
-//           else sprintf ( u , "%d" , cnt/3 ) ;
-//           t = u ;
-			  if ( primaryMode ) t = wxString::Format ( _T("%d") , cnt ) ;
-			  else t = wxString::Format ( _T("%d") , cnt/3 ) ;
-           while ( t.length() < endnumberlength ) t = _T("0") + t ;
-           dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
-           }
-        }
-    dc.SetBackgroundMode ( bm ) ;
-    dc.SetTextBackground ( tbg ) ;
-    dc.SetTextForeground ( tfg ) ;
     }
 
 wxPoint SeqAA::showText ( int ystart , wxArrayString &tout )
@@ -379,7 +178,7 @@ void SeqAA::initFromTVector ( TVector *v )
     updateProteases () ;
     if ( v->isCircular() ) t += t.substr ( 0 , 2 ) ;
     else t += _T("  ") ;
-    int a , b , sl = s.length() ;
+    int a , sl = s.length() ;
     s += _T("  ") ;
 
     if ( mode == AA_ALL )
@@ -464,15 +263,16 @@ bool SeqAA::useDirectRoutines ()
 
 int SeqAA::arrange_direct ( int n )
     {
-    int a , x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
-    int lasta = 0 ;
+    int w , h , bo = can->border ;
     
     // Setting basic values
     can->SetFont(*can->font);
-    int wx = can->charwidth , wy = can->charheight ;
-    int ox = bo + wx + wx * endnumberlength , oy = n*wy+bo ;
+    int wx = can->charwidth ; //, wy = can->charheight ;
+    int ox = bo + wx + wx * endnumberlength ;//, oy = n*wy+bo ;
     can->MyGetClientSize ( &w , &h ) ;
-    itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx - 1 ) * can->blocksize ;
+    itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx - 1 ) ;
+    if ( itemsperline == 0 ) itemsperline = 1 ;
+	itemsperline *= can->blocksize ;
     pos.cleanup() ;
 //    pos.m.Alloc ( s.length() ) ;
     if ( can->isHorizontal() ) can->setLowX ( ox + ( s.length() ) * can->charwidth ) ;
@@ -572,12 +372,21 @@ void SeqAA::show_direct ( wxDC& dc )
           }
 
 		 // Show the char
-		 wxChar ch2 = s.GetChar(a) ;
-		 if ( ch2 == '|' ) ch2 = myapp()->frame->stopcodon ;
+	   wxChar ch2 = s.GetChar(a) ;
+	   if ( ch2 == '|' ) ch2 = myapp()->frame->stopcodon ;
        dc.DrawText ( wxString ( ch2 ) , px , py ) ;
        
        int pz = py + ch ;
 
+       if ( show_diff_to && ch2 != ' ' ) // Mark changed amino acids in PCR
+       	{
+		if ( show_diff_to->s.GetChar(a) != ch2 )
+			{
+			dc.SetPen(*wxRED_PEN);
+			dc.DrawLine ( px-1 , pz , px-1+cw , pz ) ;
+			}
+		}
+       
        if ( pm == 2 && !can->doOverwrite() ) // Insert cursor
           {
              dc.SetPen(*wxBLACK_PEN);

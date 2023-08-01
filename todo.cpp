@@ -9,6 +9,7 @@ WONTFIX:
 * Absturz bei Inline-Plot-Änderung : Ncoils-bug
 
 Feature Requests :
+* Dot-Plot (DNA)
 * Optimierung Überhang-Primer
 * Primer-Bearbeiten-Dialog : Spalten klicken => sortieren
 * Primer secondary structure prediction

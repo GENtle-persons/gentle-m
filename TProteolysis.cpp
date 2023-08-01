@@ -5,19 +5,45 @@ BEGIN_EVENT_TABLE(TProteolysis, wxDialog)
 	EVT_BUTTON(POD_CANCEL, TProteolysis::OnCancel)
 	EVT_BUTTON(PRO_FRAGMENTS_ALL, TProteolysis::OnAll)
 	EVT_BUTTON(PRO_FRAGMENTS_NONE, TProteolysis::OnNone)
+	EVT_BUTTON(PRO_CREATE_REPORT, TProteolysis::OnReport)
 	EVT_RADIOBOX(PRO_SORT_RESULTS, TProteolysis::OnSortResults)
 	EVT_RADIOBOX(PRO_SEP_NUM_PROT, TProteolysis::OnNumProts)
 	EVT_CHAR_HOOK(TProteolysis::OnCharHook)
 	EVT_CHECKLISTBOX(PRO_PROTEASES, TProteolysis::OnProtease)
+	EVT_CHECKLISTBOX(PRO_RESULTS, TProteolysis::OnResults)
 	EVT_CHECKLISTBOX(PRO_IGNORE, TProteolysis::OnIgnore)
 	EVT_CHECKLISTBOX(PRO_CUTS, TProteolysis::OnCuts)
 	EVT_CHECKLISTBOX(PRO_SEP_FRAGMENTS, TProteolysis::OnSepFragments)
 	EVT_LISTBOX(PRO_SEP_RES, TProteolysis::OnSepResults)
 	EVT_CHECKBOX(PRO_SHOW_UNCUT, TProteolysis::OnShowGel)
+	EVT_CHECKBOX(PRO_PARTIAL, TProteolysis::OnPartial)
 END_EVENT_TABLE()
 
-//BEGIN_EVENT_TABLE(TProteolysisGel, wxScrolledWindow)
-//END_EVENT_TABLE()
+BEGIN_EVENT_TABLE(TProteolysisGel, wxScrolledWindow)
+    EVT_MOUSE_EVENTS(TProteolysisGel::OnEvent)
+END_EVENT_TABLE()
+
+void TProteolysisGel::OnEvent(wxMouseEvent& event)
+    {
+    if ( !event.LeftDown() ) return ;
+	wxClientDC dc ( this ) ;
+    wxPoint p = event.GetLogicalPosition ( dc ) ;
+    
+    wxArrayInt res ;
+    int a , best = 99999 ;
+    for ( a = 0 ; a < screen.GetCount() ; a++ )
+        {
+        int dist = abs ( p.y - screen[a] ) ;
+        if ( dist > best ) continue ; // Farther than the best so far
+        if ( dist < best ) res.Clear() ;
+        best = dist ;
+        res.Add ( a ) ;
+        }
+    if ( best > 30 ) res.Clear() ; // No good match
+    
+    TProteolysis *parent = (TProteolysis *) GetParent() ;
+    parent->select_fragments ( res ) ;
+    }
 
 bool operator < ( const TProteolysisSuggestion &c1 , const TProteolysisSuggestion &c2 )
     {
@@ -42,21 +68,22 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 	proteases = new wxCheckListBox ( this , PRO_PROTEASES ) ;
 	ignore = new wxCheckListBox ( this , PRO_IGNORE ) ;
 	cuts = new wxCheckListBox ( this , PRO_CUTS ) ;
-	results = new wxCheckListBox ( this , -1 ) ;
+	results = new wxCheckListBox ( this , PRO_RESULTS ) ;
 	gel = new TProteolysisGel ( this , -1 ) ;
 		
 	create_fragments = new wxCheckBox ( this , -1 , txt("t_proteolysis_create_fragments") ) ;
 	create_labels = new wxCheckBox ( this , -1 , txt("t_proteolysis_annotate") ) ;
 	use_proteases = new wxCheckBox ( this , -1 , txt("t_proteolysis_keep_proteases") ) ;
 	show_uncut = new wxCheckBox ( this , PRO_SHOW_UNCUT , txt("t_proteolysis_show_uncut") ) ;
+    partial_digestion = new wxCheckBox ( this , PRO_PARTIAL , txt("t_proteolysis_partial_digestion") ) ;
 	
-	sep_results = new wxListBox ( this , PRO_SEP_RES ) ;
+    sep_results = new wxListBox ( this , PRO_SEP_RES ) ;
 	
-   wxString rb_np[4] ;
-   rb_np[0] = _T("1") ;
-   rb_np[1] = _T("2") ;
-   rb_np[2] = _T("3") ;
-   rb_np[3] = _T("4") ;
+    wxString rb_np[4] ;
+    rb_np[0] = _T("1") ;
+    rb_np[1] = _T("2") ;
+    rb_np[2] = _T("3") ;
+    rb_np[3] = _T("4") ;
 	sep_num_prot = new wxRadioBox ( this , PRO_SEP_NUM_PROT , 
 								txt("t_proteolysis_auto_num_prot") ,
 								wxDefaultPosition , wxDefaultSize ,
@@ -68,10 +95,10 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 	sep_desc->SetBackgroundColour ( GetBackgroundColour() ) ;
 	sep_desc->SetFont ( *MYFONT ( 8 , wxSWISS , wxNORMAL , wxNORMAL ) ) ;
 	
-   wxString rb_sr[3] ;
-   rb_sr[0] = txt("t_pro_sort_results_1" ) ;
-   rb_sr[1] = txt("t_pro_sort_results_2" ) ;
-   rb_sr[2] = txt("t_pro_sort_results_3" ) ;
+    wxString rb_sr[3] ;
+    rb_sr[0] = txt("t_pro_sort_results_1" ) ;
+    rb_sr[1] = txt("t_pro_sort_results_2" ) ;
+    rb_sr[2] = txt("t_pro_sort_results_3" ) ;
 	sortresults = new wxRadioBox ( this , PRO_SORT_RESULTS , txt("t_pro_sort_results") ,
                            wxDefaultPosition ,
                            wxDefaultSize ,
@@ -82,7 +109,8 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 	
 	
 	wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
-	wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
+//	wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxFlexGridSizer *h1 = new wxFlexGridSizer ( 3 ) ;
 	wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
 	wxBoxSizer *h3 = new wxBoxSizer ( wxHORIZONTAL ) ;
 	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
@@ -103,12 +131,12 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 	vl->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_skip") ) , 0 , wxEXPAND|wxALL , 5 ) ;
 	vl->Add ( ignore , 1 , wxEXPAND|wxALL , 5 ) ;
 
-	vr->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_cuts") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-	vr->Add ( cuts , 1 , wxEXPAND|wxALL , 5 ) ;
-
 	h3->Add ( new wxButton ( this , PRO_FRAGMENTS_ALL , txt("b_all") ) , 0 , wxALL|wxEXPAND , 2 ) ;
 	h3->Add ( new wxButton ( this , PRO_FRAGMENTS_NONE , txt("b_none") ) , 0 , wxALL|wxEXPAND , 2 ) ;
 
+	vr->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_cuts") ) , 0 , wxEXPAND|wxALL , 5 ) ;
+	vr->Add ( cuts , 1 , wxEXPAND|wxALL , 5 ) ;
+	vr->Add ( partial_digestion , 0 , wxEXPAND|wxALL , 5 ) ;
 	vr->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_results") ) , 0 , wxEXPAND|wxALL , 5 ) ;
 	vr->Add ( results , 1 , wxEXPAND|wxALL , 5 ) ;
 	vr->Add ( sortresults , 0 , wxEXPAND|wxALL , 5 ) ;
@@ -126,7 +154,8 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 	h1->Add ( create_fragments , 0 , wxALL|wxEXPAND , 2 ) ;
 	h1->Add ( create_labels , 0 , wxALL|wxEXPAND , 2 ) ;
 	h1->Add ( use_proteases , 0 , wxALL|wxEXPAND , 2 ) ;
-	h1->Add ( show_uncut , 0 , wxALL|wxALIGN_RIGHT , 2 ) ;
+	h1->Add ( show_uncut , 0 , wxALL|wxEXPAND , 2 ) ;
+	h1->Add ( new wxButton ( this , PRO_CREATE_REPORT , txt("b_pro_report") ) , 0 , wxALL|wxEXPAND , 2 ) ;
 
 	h2->Add ( new wxStaticText ( this , -1 , txt("") ) , 2 , wxEXPAND|wxALL , 2 ) ;
 	h2->Add ( new wxButton ( this , POD_OK , txt("b_ok") ) , 1 , wxALL|wxEXPAND , 2 ) ;
@@ -186,6 +215,15 @@ TProteolysis::~TProteolysis ()
 			delete pc_cache[a][b] ;
 		}
 	}
+
+void TProteolysis::select_fragments ( const wxArrayInt &ai )
+    {
+    results->Select ( wxNOT_FOUND ) ;
+    for ( int a = 0 ; a < ai.GetCount() ; a++ )
+        {
+        results->Select ( ai[a] ) ;
+        }
+    }
 
 void TProteolysis::find_cutting_proteases ()
 	{
@@ -440,25 +478,58 @@ void TProteolysis::calc_cut_list ()
 	}
 
 void TProteolysis::calc_fragment_list ()
-	{
+{
 	// Create fragment list
 	fragments.clear () ;
 	int a , last = 1 ;
-	for ( a = 0 ; a < pc.size() ; a++ )
-		{
-		if ( a < cuts->GetCount() && !cuts->IsChecked ( a ) ) continue ;
-		if ( pc[a]->cut == last ) continue ;
-		TFragment f ;
-		f.from = last ;
-		f.to = pc[a]->cut ;
-		f.length = pc[a]->cut - last + 1 ;
-		f.weight = get_weight ( f.from , f.to ) ;
-		fragments.push_back ( f ) ;
-		last = pc[a]->cut + 1 ;
-		}	
+	bool partial = partial_digestion->IsChecked() ;
+	
+	if ( partial ) {
+        int b , c ;
+        last = 1 ;
+    	for ( a = 0 ; a < pc.size() ; a++ )
+    	{
+        	if ( a < cuts->GetCount() && !cuts->IsChecked ( a ) ) continue ;
+//            if ( a == 0 ) last = 1 ; else
+//            last = pc[a-1]->cut + 1 ;
+            for ( b = a ; b < pc.size() ; b++ )
+            {
+        		if ( b < cuts->GetCount() && !cuts->IsChecked ( b ) ) continue ;
+        		if ( pc[b]->cut == last ) continue ;
+        		TFragment f ;
+        		f.from = last ;
+        		f.to = pc[b]->cut ;
+        		f.length = pc[b]->cut - last + 1 ;
+        		f.weight = get_weight ( f.from , f.to ) ;
+        		
+        		if ( f.length == v->getSequenceLength() ) continue ; // No digestion
+        		for ( c = 0 ; c < fragments.size() && ( fragments[c].from != f.from || fragments[c].to != f.to ) ; c++ ) ;
+        		if ( c != fragments.size() ) continue ;
+        		
+                fragments.push_back ( f ) ;
+            }
+            last = pc[a]->cut + 1 ;
+    	}
+    } else {
+    	for ( a = 0 ; a < pc.size() ; a++ )
+    	{
+    		if ( a < cuts->GetCount() && !cuts->IsChecked ( a ) ) continue ;
+    		if ( pc[a]->cut == last ) continue ;
+    		TFragment f ;
+    		f.from = last ;
+    		f.to = pc[a]->cut ;
+    		f.length = pc[a]->cut - last + 1 ;
+    		f.weight = get_weight ( f.from , f.to ) ;
+    		fragments.push_back ( f ) ;
+    		last = pc[a]->cut + 1 ;
+    	}
+    }
 	show_fragment_list () ;
 	show_gel () ;
-	}
+    
+    wxCommandEvent ev ;
+    OnSortResults ( ev ) ;
+}
 	
 void TProteolysis::show_fragment_list ()
 	{
@@ -468,12 +539,13 @@ void TProteolysis::show_fragment_list ()
 	for ( a = 0 ; a < fragments.size() ; a++ )
 		{
 		wxString s ;
-		s = wxString::Format ( _T("%d-%d (%d; %2.2fkD)") , 
+		s = wxString::Format ( _T("%d-%d (%dAA; %2.2fkD)") , 
 				fragments[a].from , 
 				fragments[a].to , 
 				fragments[a].length ,
 				fragments[a].weight ) ;
 		results->Append ( s ) ;
+		results->Check ( a , true ) ;
 		}
 	}
 
@@ -507,6 +579,7 @@ void TProteolysis::draw_gel ( wxDC &dc )
 		max = 0 ;
 		for ( a = 0 ; a < fragments.size() ; a++ )
 			{
+            if ( !results->IsChecked ( a ) ) continue ; // Don't draw unchecked fragments
 			if ( fragments[a].weight > max ) 
 				max = fragments[a].weight ;
 			}
@@ -531,11 +604,17 @@ void TProteolysis::draw_gel ( wxDC &dc )
 		dc.DrawLine ( w*3/10 , y , w*4/10 , y ) ;
 		}
 
+    gel->screen.Clear() ;
+    gel->logical.Clear() ;
+
 	// Draw fragments
 	for ( a = 0 ; a < fragments.size() ; a++ )
 		{
+        if ( !results->IsChecked ( a ) ) continue ; // Don't draw unchecked fragments
 		y = get_y ( fragments[a].weight , h , min , max ) ;
 		dc.DrawLine ( w/2 , y , w*9/10 , y ) ;
+		gel->logical.Add ( a ) ;
+		gel->screen.Add ( y ) ;
 		}
 
 	// Draw uncut protein
@@ -595,15 +674,24 @@ void TProteolysis::OnOK ( wxCommandEvent &ev )
 			{
 			if ( !results->IsChecked ( a ) ) continue ;
 			cnt++ ;
-			TVectorItem i ( wxString::Format ( txt("t_proteolysis_fragment") , cnt ) , 
-								 wxString::Format ( txt("t_proteolysis_fragment_long") , cnt ) , 
+			wxString name = wxString::Format ( txt("t_proteolysis_fragment") , cnt ) ;
+			wxString desc = wxString::Format ( txt("t_proteolysis_fragment_long") , cnt ) ;
+			name += wxString::Format ( _T(" (%d-%d; %dbp; %2.2fkD)") , 
+                                        fragments[a].from , 
+                                        fragments[a].to ,
+                                        fragments[a].length ,
+                                        fragments[a].weight ) ;
+			TVectorItem i ( name , 
+								 desc , 
 								 fragments[a].from , 
 								 fragments[a].to ,
 								 VIT_MISC ) ;
+			if ( a & 1 ) i.setColor ( *wxGREEN ) ;
+			else i.setColor ( *wxBLUE ) ;
 			v->items.push_back ( i ) ;
 			}
 		v->setChanged() ;
-      parent->showSequence () ;
+        parent->showSequence () ;
 		}
 	
 	// Create fragments
@@ -613,17 +701,18 @@ void TProteolysis::OnOK ( wxCommandEvent &ev )
 			{
 			if ( !results->IsChecked ( a ) ) continue ;
 			
-			TVector *nv = new TVector ;
-			nv->setFromVector ( *v ) ;
-			nv->eraseSequence ( fragments[a].to , v->getSequenceLength() ) ;
-			nv->eraseSequence ( 0 , fragments[a].from-1 ) ;
-			nv->addName ( wxString::Format ( _T(" [%d-%d]") , fragments[a].from , fragments[a].to ) ) ;
+			TVector *nv = v->newFromMark ( fragments[a].from , fragments[a].to ) ;
+			nv->addName ( wxString::Format ( _T(" [%d-%d; %dbp; %2.2fkD]") , 
+                                                fragments[a].from , 
+                                                fragments[a].to ,
+                                                fragments[a].length , 
+                                                fragments[a].weight ) ) ;
 
 			myapp()->frame->newAminoAcids ( nv , nv->getName() ) ;
 			}
 		}
 	
-   wxDialog::OnOK ( ev ) ;
+   EndModal ( wxID_OK ) ; //wxDialog::OnOK ( ev ) ;
 	}
 
 void TProteolysis::OnAll ( wxCommandEvent &ev )
@@ -631,6 +720,7 @@ void TProteolysis::OnAll ( wxCommandEvent &ev )
 	int a ;
 	for ( a = 0 ; a < results->GetCount() ; a++ )
 		results->Check ( a , true ) ;
+	show_gel() ;
 	}
 	
 void TProteolysis::OnNone ( wxCommandEvent &ev )
@@ -638,12 +728,18 @@ void TProteolysis::OnNone ( wxCommandEvent &ev )
 	int a ;
 	for ( a = 0 ; a < results->GetCount() ; a++ )
 		results->Check ( a , false ) ;
+	show_gel() ;
 	}
 	
 
 void TProteolysis::OnCancel ( wxCommandEvent &ev )
 	{
-   wxDialog::OnCancel ( ev ) ;
+	EndModal ( wxID_CANCEL ) ; //wxDialog::OnCancel ( ev ) ;
+	}
+
+void TProteolysis::OnResults ( wxCommandEvent &ev )
+	{
+	show_gel () ;
 	}
 	
 void TProteolysis::OnProtease ( wxCommandEvent &ev )
@@ -734,6 +830,59 @@ void TProteolysis::OnCharHook(wxKeyEvent& event)
 	else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
 	else event.Skip() ;
 	}
+
+void TProteolysis::OnReport ( wxCommandEvent &ev )
+{
+	int a ;
+    wxString html , s ;
+    
+    // Protease list
+    html += txt("t_vec_prot") + _T(" : ") ;
+	int nop = proteases->GetCount() ;
+	for ( a = 0 ; a < nop ; a++ )
+		{
+		if ( !proteases->IsChecked ( a ) ) continue ;
+		if ( !s.IsEmpty() ) s += _T(", ") ;
+		s += proteases->GetString ( a ) ;
+		}
+	if ( partial_digestion->IsChecked() ) s += _T(" (") + txt("t_proteolysis_partial_digestion") + _T(")") ;
+    html += s + _T("<br/>\n") ;
+    
+    html += _T("<table width=\"100%\" border=\"1\">\n") ;
+	for ( a = 0 ; a < fragments.size() ; a++ )
+		{
+        if ( !results->IsChecked ( a ) ) continue ;
+		s = wxString::Format ( _T("<tr><td>%d-%d (%dAA; %2.2fkD)<br>\n") , 
+				fragments[a].from , 
+				fragments[a].to , 
+				fragments[a].length ,
+				fragments[a].weight ) ;
+		html += s ;
+		s = v->getSequence().Mid ( fragments[a].from-1 , fragments[a].length ) ;
+		
+		html += _T("<tt><small>") ;
+		while ( !s.IsEmpty() )
+		{
+            html += s.Left ( 10 ) + _T(" ") ;
+            s = s.Mid ( 10 ) ;
+        }
+        html += _T("</small></tt><br/></td></tr>\n") ;
+		}
+	html += _T("</table>") ;
+    
+	html = _T("<html><body>") + html + _T("</body></html>") ;
+	wxDateTime now = wxDateTime::Now() ;
+	myapp()->frame->html_ep->SetHeader ( _T("<table width='100%'><tr><td width='100%'>") + v->getName() + _T("</td><td nowrap align='right'>") + now.Format() + _T("</td></tr></table>") ) ;
+	myapp()->frame->html_ep->SetFooter ( _T("<p align=right>@PAGENUM@/@PAGESCNT@</p>") ) ;
+	myapp()->frame->html_ep->PreviewText ( html ) ;
+}
+
+void TProteolysis::OnPartial ( wxCommandEvent &ev )
+{
+	Freeze () ;
+	calc_fragment_list () ;
+	Thaw () ;
+}
 
 //************************************
 

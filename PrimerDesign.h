@@ -70,12 +70,13 @@ class TPrimerDesign : public ChildBase
     virtual void OnSilmut ( wxCommandEvent& event) ;
     virtual void OnHorizontal ( wxCommandEvent& event ) ;
     virtual void OnPaste (wxCommandEvent& WXUNUSED(event)) ;
+    virtual void OnFontsize(wxCommandEvent& event); ///< Fontsize event handler
     
     // Variables
     SequenceCanvas *sc ;
     int from ;
     vector <TPrimer> primer ;
-    TVector *vc , *w ;
+    TVector *inverse_template_vector , *resulting_sequence_vector ;
     
     int aa_state , aa_disp ;
     int lastPrimerActivated ;
@@ -85,12 +86,14 @@ class TPrimerDesign : public ChildBase
     private :
     virtual void guessOptNuc () ;
     virtual void calculateResultSequence () ;
+    
     wxSpinCtrl *spin ;
     wxTextCtrl *stat ;
     wxBoxSizer *v0 ;
     wxListCtrl *lc ;
     bool spinTextEnabeled ;
     bool updating ;
+    wxChoice *fontsize ;
     
     DECLARE_EVENT_TABLE()
     } ;

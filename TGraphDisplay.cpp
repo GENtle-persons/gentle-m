@@ -78,7 +78,6 @@ stringField TGraphDisplay::readTextfile ( wxString filename )
 	wxString s ;
 	stringField sf ;
 	if ( !file.IsOpened() ) return sf ;
-	int a = 0 ;
 	for ( s = file.GetFirstLine(); !file.Eof(); s = file.GetNextLine() )
 		{
   		TVS as ;
@@ -300,7 +299,7 @@ void TGraphDisplay::addRawData2 ( unsigned char *d , long l , wxString title )
 	b.push_back ( "" ) ;
 	b.push_back ( "" ) ;
 	
-	long a , sum = 0 , integrate = 10 , cnt = 0 ;
+	long a , sum = 0 , cnt = 0 ;//, integrate = 10 ;
 	for ( a = 2000+1 ; a+30 < l ; a += 4 )
 		{
   		unsigned long x = 0 ;
@@ -371,6 +370,10 @@ wxString TGraphDisplay::tryall ( wxString filename )
 	int a , cnt ;
 	stringField sf = readTextfile ( filename ) ;
 	init () ;
+	
+	// Catch small table (no good)
+	if ( sf.size() < 3 ) return r ;
+	
 /*
 	setupDUF ( filename ) ; // Not working yet
 	for ( a = cnt = 0; a < data.size() ; a++ ) cnt += data[a]->dx.size() ;
@@ -509,7 +512,7 @@ void TGraphDisplay::setupDUF ( wxString filenamebase )
 		w = d[pos] ;
 		if ( w == 0 ) break ;
 		pos += 4 ;
-		wxString s = (char*) d+pos ;
+		wxString s ( (char*) d+pos , wxConvUTF8 ) ;
 		s = s.BeforeFirst ( ':' ) ;
 		text += s ;
 		pos += 10 + w ;
@@ -520,7 +523,7 @@ void TGraphDisplay::setupDUF ( wxString filenamebase )
 	for ( int b = 0 ; b < 8 ; b++ )
 		{
 		double *x = (double*) (d+b+pos) ;
-		wxMessageBox ( wxString::Format ( "%d : %f" , b , *x ) ) ;
+		wxMessageBox ( wxString::Format ( _T("%d : %f") , b , *x ) ) ;
 		}
 
 	// Add data
@@ -602,7 +605,7 @@ void TGraphDisplay::drawit ( wxDC &dc , int mode )
 	{
  	dc.Clear () ;
 	if ( !IsSetupComplete() ) return ;
- 	int a , b ;
+ 	int a ;
  	wxRect outer ( 0 , 0 , 0 , 0 ) ;
  	dc.GetSize ( &outer.width , &outer.height ) ;
  	int border = 5 ;
@@ -752,7 +755,7 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
     wxPoint pt(event.GetPosition());
     
     // Find out where the mouse is
-    int a , b ;
+    int a ;
     bool doRefresh = event.Leaving() ;
     TGraphScale *new_scale = NULL ;
     TGraphData *new_data = NULL ;
@@ -761,7 +764,7 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
     for ( a = 0 ; !event.Dragging() && a < scales.size() ; a++ )
     	{
     	scales[a]->selected = false ;
-    	if ( scales[a]->outline.Inside ( pt ) ) new_scale = scales[a] ;
+    	if ( scales[a]->outline.Contains ( pt ) ) new_scale = scales[a] ;
      	}
    	if ( new_scale )
 			{
@@ -776,7 +779,7 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
 			}
    	
    	// Inside the graph?
-   	if ( inner.Inside ( pt ) )
+   	if ( inner.Contains ( pt ) )
    		{
 	    // Status text with coordinates of mouse pointer
 	    wxString c1 ;
@@ -817,7 +820,7 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
    		
     // Dragging (CTRL)?
     bool showMiniature = false ;
-    if ( inner.Inside ( pt ) && !event.ControlDown() && zx*zy != 10000 && 
+    if ( inner.Contains ( pt ) && !event.ControlDown() && zx*zy != 10000 && 
     		event.Dragging() && !event.RightIsDown() && !event.MiddleIsDown() )
     	{
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
@@ -833,7 +836,7 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
     	}
 
    	// End of dragging (box)?
-   	else if ( inner.Inside ( pt ) && event.LeftUp() && draggingRect.x != -1  )
+   	else if ( inner.Contains ( pt ) && event.LeftUp() && draggingRect.x != -1  )
    		{
    		SetCursor(*wxSTANDARD_CURSOR) ;
 	    int x1 = draggingRect.GetLeft() ;
@@ -842,7 +845,7 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
 	    int y2 = draggingRect.GetBottom() ;
 	    if ( x1 > x2 ) { int temp = x1 ; x1 = x2 ; x2 = temp ; }
 	    if ( y1 > y2 ) { int temp = y1 ; y1 = y2 ; y2 = temp ; }
-	    int nx , ny ;
+	    int nx = 0 , ny = 0 ;
 	    for ( a = 0 ; a < scales.size() ; a++ )
 	    	{
  	    	float _top , _bottom ;
@@ -871,7 +874,7 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
    		}
 
    	// Dragging (box)?
-    else if ( inner.Inside ( pt ) && event.ControlDown() &&
+    else if ( inner.Contains ( pt ) && event.ControlDown() &&
     		event.Dragging() && !event.RightIsDown() && !event.MiddleIsDown() )
     	{
 	    SetCursor ( *wxCROSS_CURSOR ) ;
@@ -897,7 +900,7 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
    	else if ( !event.ControlDown() )
     	{
      	draggingRect.x = -1 ;
-     	if ( inner.Inside ( pt ) ) SetCursor(wxCursor(wxCURSOR_HAND)) ;
+     	if ( inner.Contains ( pt ) ) SetCursor(wxCursor(wxCURSOR_HAND)) ;
      	else SetCursor(*wxSTANDARD_CURSOR) ;
        	}   	
     	
@@ -917,7 +920,7 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
    		}    
 
     // Red marker lines
-    if ( inner.Inside ( pt ) )
+    if ( inner.Contains ( pt ) )
     	{
        	for ( a = 0 ; a < scales.size() ; a++ )
         	{
