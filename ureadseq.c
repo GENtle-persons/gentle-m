@@ -101,7 +101,7 @@ struct ReadSeqVars {
   boolean allDone, done, filestart, addit;
   FILE  *f;
   long  linestart;
-  char  s[256], *sp;
+  char  s[256*10+42], *sp; // to reduce the chance to run into unallocated memory
 
   //int (*isseqchar)();
    int  (*isseqchar)(int c);
@@ -183,16 +183,16 @@ Local void countseq(char *s, struct ReadSeqVars *V)
 }
 
 
-Local void addinfo(char *s, struct ReadSeqVars *V)
+Local void addinfo(const char * const s, struct ReadSeqVars * const V)
 {
-  char s2[256], *si;
-  boolean saveadd;
+  char s2[256*10+42+314]; // needs to be long enough to accept V->s
 
-  si = s2;
-  while (*s == ' ') s++;
-  sprintf(si, " %d)  %s\n", V->nseq, s);
+  char * const si = s2;
+  const char *stmp=s;
+  while (*stmp == ' ') stmp++;
+  snprintf(si, sizeof(s2)-1, " %d)  %s\n", V->nseq, stmp); // skipping prefix of spaces
 
-  saveadd = V->addit;
+  const boolean saveadd = V->addit;
   V->addit = true;
   V->isseqchar = isAnyChar;
   addseq( si, V);
@@ -1565,7 +1565,7 @@ short writeSeq(FILE *outf, const char *seq, const long seqlen,
 /* dump sequence to standard output */
 {
   const short kSpaceAll = -9;
-#define kMaxseqwidth  250
+#define kMaxseqwidth  2500
 
   boolean baseonlynum= false; /* nocountsymbols -- only count true bases, not "-" */
   short  numline = 0; /* only true if we are writing seq number line (for interleave) */
@@ -1577,10 +1577,10 @@ short writeSeq(FILE *outf, const char *seq, const long seqlen,
 
   short linesout = 0, seqtype = kNucleic;
   long  i, j, l, l1, ibase;
-  char  idword[31], endstr[10];
+  char  idword[31+42], endstr[10+42];
   char  seqnamestore[128], *seqname = seqnamestore;
   char  s[kMaxseqwidth], *cp;
-  char  nameform[10], numform[10], nocountsymbols[10];
+  char  nameform[10+42], numform[10+42], nocountsymbols[10+42];
   unsigned long checksum = 0, checktotal = 0;
 
   gPretty.atseq++;
@@ -1592,7 +1592,7 @@ short writeSeq(FILE *outf, const char *seq, const long seqlen,
   sscanf( seqname, "%30s", idword);
   sprintf(numform, "%d", seqlen);
   numwidth= strlen(numform)+1;
-  nameform[0]= '\0';
+  nameform[0]= 0;
 
   if (strstr(seqname,"checksum") != NULL) {
     cp = strstr(seqname,"bases");
@@ -1602,7 +1602,7 @@ short writeSeq(FILE *outf, const char *seq, const long seqlen,
       }
     }
 
-  strcpy( endstr,"");
+  endstr[0]=0;
   l1 = 0;
 
   if (outform == kGCG || outform == kMSF)
