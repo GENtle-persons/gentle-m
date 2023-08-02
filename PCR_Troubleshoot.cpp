@@ -429,6 +429,7 @@ void PCR_troubleshoot_dialog::scan_Runs ( TPrimer &p , int nr , int length )
 
 void PCR_troubleshoot_dialog::scan_hairpin ( TPrimer &p , int nr )
 	{return;
+/* dead code, invoking get_matches that is not fully implemented (comment by Steffen)
 	wxArrayString m = get_matrix ( p.get53sequence() , invert ( p.get53sequence() ) ) ;
 	wxArrayString n = get_matches ( m , 4 , 1 ) ;
 	
@@ -436,6 +437,7 @@ void PCR_troubleshoot_dialog::scan_hairpin ( TPrimer &p , int nr )
 
 	l_title.Add ( wxString::Format ( _T("%d: ") , nr ) + p.getName() ) ;
 	l_text.Add ( s ) ;
+*/
 	}
 	
 void PCR_troubleshoot_dialog::add_error ( TPrimer &p , int nr , wxString head , wxString tail )
@@ -468,6 +470,7 @@ wxArrayString PCR_troubleshoot_dialog::get_matrix ( wxString s1 , wxString s2 )
 	return ret ;
 	}
 
+/* misses return value, i.e. not fully implemented, not called/dead code (Comment by Steffen)
 wxArrayString PCR_troubleshoot_dialog::get_matches ( wxArrayString &m , int min , int allowed_gaps )
 	{
 	int col , row ;
@@ -483,6 +486,7 @@ wxArrayString PCR_troubleshoot_dialog::get_matches ( wxArrayString &m , int min 
 			if ( t.GetChar ( a ) == '1' ) cnt++ ;
 		}
 	}
+*/
 
 wxString PCR_troubleshoot_dialog::invert ( wxString s )
 	{
