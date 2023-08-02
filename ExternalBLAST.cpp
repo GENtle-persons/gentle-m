@@ -180,7 +180,7 @@ void EIpanel::process_blast()
     blast_res.Empty() ;
     wxString seq = t1->GetValue() ;
     blast_thread = new blastThread ( this , seq ) ;
-    if ( !blast_thread || wxTHREAD_NO_ERROR != blast_thread->Create() )
+    if ( !blast_thread || wxTHREAD_NO_ERROR != blast_thread->CreateThread() )
     {
 	blast_thread = NULL ;
 	return ;

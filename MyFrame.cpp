@@ -1223,14 +1223,17 @@ void MyFrame::addTool ( wxToolBar* toolBar , int id )
 	
 	if ( id == MDI_TEXT_IMPORT )
 		toolBar->AddTool( MDI_TEXT_IMPORT ,
+						 wxEmptyString,
 						 bitmaps[0],
 						 txt("m_new_sequence") ) ;  
 	else if ( id == MDI_FILE_IMPORT )
 		toolBar->AddTool( MDI_FILE_IMPORT, 
+						 wxEmptyString,
 						 bitmaps[14],
 						 txt("m_importtxt") );
 	else if ( id == MDI_FILE_OPEN )
 		toolBar->AddTool( MDI_FILE_OPEN, 
+						 wxEmptyString,
 						 bitmaps[1],
 						 txt("m_opentxt") );
 	else if ( id == MDI_FILE_SAVE )
@@ -1266,11 +1269,11 @@ void MyFrame::addDefaultTools(wxToolBar* toolBar)
 {
 	if ( mainToolBar && toolBar != mainToolBar ) return ;
  	toolBar->AddSeparator() ;
- 	toolBar->AddTool( MDI_ALIGNMENT, myapp()->frame->bitmaps[17] , txt("m_alignment_text") ) ;
- 	toolBar->AddTool( MDI_IMAGE_VIEWER, myapp()->frame->bitmaps[18] , txt("m_imageviewer_text") ) ;
- 	toolBar->AddTool( MDI_CALCULATOR, myapp()->frame->bitmaps[20] , txt("m_calculator_text") ) ;
- 	toolBar->AddTool( PROGRAM_OPTIONS, myapp()->frame->bitmaps[21] , txt("m_options_text") ) ;
- 	toolBar->AddTool( MDI_EXTERNAL_INTERFACE, myapp()->frame->bitmaps[19] , txt("m_external_text") ) ;
+ 	toolBar->AddTool( MDI_ALIGNMENT, wxEmptyString, myapp()->frame->bitmaps[17] , txt("m_alignment_text") ) ;
+ 	toolBar->AddTool( MDI_IMAGE_VIEWER, wxEmptyString, myapp()->frame->bitmaps[18] , txt("m_imageviewer_text") ) ;
+ 	toolBar->AddTool( MDI_CALCULATOR, wxEmptyString, myapp()->frame->bitmaps[20] , txt("m_calculator_text") ) ;
+ 	toolBar->AddTool( PROGRAM_OPTIONS, wxEmptyString, myapp()->frame->bitmaps[21] , txt("m_options_text") ) ;
+ 	toolBar->AddTool( MDI_EXTERNAL_INTERFACE, wxEmptyString, myapp()->frame->bitmaps[19] , txt("m_external_text") ) ;
 }
 
 /** \brief Adds cut,copy,paste (and find) tools to a given toolbar

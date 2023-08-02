@@ -206,8 +206,8 @@ void TCloningAssistantPanel::Refresh (bool eraseBackground , const wxRect* rect 
 void TCloningAssistantPanel::OnEvent(wxMouseEvent& event)
 	{
 	if ( timer.move_back ) return ;
-	wxPaintEvent ev ;
-	OnPaint ( ev ) ;	
+	Refresh();
+	Update();
     wxPoint pt(event.GetPosition());
 	
 	TDDR *over = NULL ;
@@ -509,7 +509,7 @@ void TDDR::draw ( wxDC &dc , wxPoint off )
 
 void TDDR::resizeForText ( wxDC &dc )
 	{
-	long w , h ;
+	wxCoord w , h ;
 	dc.GetTextExtent ( title , &w , &h ) ;
 	r.SetWidth ( w + 4 ) ;
 	r.SetHeight ( h + 4 ) ;

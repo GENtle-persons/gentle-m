@@ -602,14 +602,14 @@ void TAminoAcids::updateUndoMenu ()
     bool canUndo ;
     if ( lm.IsEmpty() )
         {
-        mi->SetText ( txt("u_no") ) ;
+        mi->SetItemLabel ( txt("u_no") ) ;
         mi->Enable ( false ) ;
 	canUndo = false ;
         }
     else
         {
         mi->Enable ( true ) ;
-        mi->SetText ( lm ) ;
+        mi->SetItemLabel ( lm ) ;
 	canUndo = true ;
         }
 #ifdef __WXMSW__
