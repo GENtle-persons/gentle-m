@@ -506,8 +506,8 @@ void MyChild::initme ()
 
     wxSafeYield() ;
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
-    v0->Add ( toolbar , 0 , wxALL|wxEXPAND , 2 ) ;
-    v0->Add ( sw , 1 , wxALL|wxEXPAND , 2 ) ;
+    v0->Add ( toolbar , 0 , wxEXPAND , 2 ) ;
+    v0->Add ( sw , 1 , wxEXPAND , 2 ) ;
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;
 	

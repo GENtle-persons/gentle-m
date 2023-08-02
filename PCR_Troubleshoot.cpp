@@ -37,15 +37,15 @@ PCR_troubleshoot_dialog::PCR_troubleshoot_dialog(TPrimerDesign *_parent, const w
 	text = new wxTextCtrl ( this , -1 , _T("") , wxDefaultPosition , wxDefaultSize , wxTE_MULTILINE ) ;
 	text->SetFont ( *MYFONT ( MYFONTSIZE , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
 	
-	h0->Add ( new wxStaticText ( this , -1 , _T("")) , 1 , wxEXPAND|wxALL , 5 ) ;
-	h0->Add ( new wxButton ( this , POD_OK , txt("b_ok") ) , 1 , wxEXPAND|wxALL , 5 ) ;
-	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxEXPAND|wxALL , 5 ) ;
-	h0->Add ( new wxButton ( this , POD_CANCEL , txt("b_cancel") ) , 1 , wxEXPAND|wxALL , 5 ) ;
-	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxEXPAND|wxALL , 5 ) ;
+	h0->Add ( new wxStaticText ( this , -1 , _T("")) , 1 , wxEXPAND , 5 ) ;
+	h0->Add ( new wxButton ( this , POD_OK , txt("b_ok") ) , 1 , wxEXPAND , 5 ) ;
+	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxEXPAND , 5 ) ;
+	h0->Add ( new wxButton ( this , POD_CANCEL , txt("b_cancel") ) , 1 , wxEXPAND , 5 ) ;
+	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxEXPAND , 5 ) ;
 	
-	v0->Add ( list , 1 , wxEXPAND|wxALL , 5 ) ;
-	v0->Add ( text , 2 , wxEXPAND|wxALL , 5 ) ;
-	v0->Add ( h0 , 0 , wxEXPAND|wxALL , 5 ) ;
+	v0->Add ( list , 1 , wxEXPAND , 5 ) ;
+	v0->Add ( text , 2 , wxEXPAND , 5 ) ;
+	v0->Add ( h0 , 0 , wxEXPAND , 5 ) ;
 	
 	scan () ;
 	for ( int a = 0 ; a < l_title.GetCount() ; a++ )

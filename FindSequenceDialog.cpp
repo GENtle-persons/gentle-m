@@ -59,45 +59,45 @@ FindSequenceDialog::FindSequenceDialog ( wxWindow *parent, const wxString& title
                               wxDefaultPosition , wxDefaultSize , wxTE_READONLY|wxSTATIC_BORDER ) ;
     status->SetBackgroundColour ( GetBackgroundColour() ) ;
     find_button = new wxButton ( this , SH_SEARCH , txt("b_find") ) ;
-    h0->Add ( find_button , 1 , wxALL|wxEXPAND , 2 ) ;
-    h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxALL|wxEXPAND , 2 ) ;
-    h0->Add ( new wxButton ( this , SH_CANCEL , txt("b_cancel") ) , 1 , wxALL|wxEXPAND , 2 ) ;
+    h0->Add ( find_button , 1 , wxEXPAND , 2 ) ;
+    h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxEXPAND , 2 ) ;
+    h0->Add ( new wxButton ( this , SH_CANCEL , txt("b_cancel") ) , 1 , wxEXPAND , 2 ) ;
     // Highlight stuff
     highlight_display = new wxStaticText ( this , -1 , _T("      ") ) ;
     do_highlight = new wxButton ( this , FD_ADD_HIGHLIGHTS , txt("b_find_highlight") ) ;
-    h1->Add ( do_highlight , 0 , wxALL|wxEXPAND , 2 ) ;
-    h1->Add ( highlight_display , 0 , wxLEFT|wxEXPAND , 5 ) ;
-    h1->Add ( new wxButton ( this , FD_SET_HIGHLIGHT_COLOR , txt("b_find_highlight_color") ) , 0 , wxALL|wxEXPAND , 2 ) ;
-    h1->Add ( new wxButton ( this , FD_RESET_HIGHLIGHTS , txt("b_find_remove_highlights") ) , 0 , wxALL|wxEXPAND , 2 ) ;
+    h1->Add ( do_highlight , 0 , wxEXPAND , 2 ) ;
+    h1->Add ( highlight_display , 0 , wxEXPAND , 5 ) ;
+    h1->Add ( new wxButton ( this , FD_SET_HIGHLIGHT_COLOR , txt("b_find_highlight_color") ) , 0 , wxEXPAND , 2 ) ;
+    h1->Add ( new wxButton ( this , FD_RESET_HIGHLIGHTS , txt("b_find_remove_highlights") ) , 0 , wxEXPAND , 2 ) ;
     highlight_display->SetBackgroundColour ( highlight ) ;
     // Options
     cb_sequence = cb_items = cb_enzymes = cb_translation = NULL ;
     cb_sequence = new wxCheckBox ( this , SH_CB_SEQUENCE , txt("t_sh_cb_sequence") ) ;
-    h2->Add ( cb_sequence , 0 , wxALL|wxEXPAND , 2 ) ;
+    h2->Add ( cb_sequence , 0 , wxEXPAND , 2 ) ;
     cb_sequence->SetValue ( true ) ;
     if ( c->def != _T("ABIviewer") )
     {
         cb_items = new wxCheckBox ( this , SH_CB_ITEMS , txt("t_sh_cb_items") ) ;
-        h2->Add ( cb_items , 0 , wxALL|wxEXPAND , 2 ) ;
+        h2->Add ( cb_items , 0 , wxEXPAND , 2 ) ;
         cb_items->SetValue ( true ) ;
     }
     if ( c->def == _T("dna") || c->def == _T("PrimerDesign") )
     {
         cb_enzymes = new wxCheckBox ( this , SH_CB_ENZYMES , txt("t_sh_cb_enzymes") ) ;
         cb_translation = new wxCheckBox ( this , SH_CB_TRANSLATION , txt("t_sh_cb_translation") ) ;
-        h2->Add ( cb_enzymes , 0 , wxALL|wxEXPAND , 2 ) ;
-        h2->Add ( cb_translation , 0 , wxALL|wxEXPAND , 2 ) ;
+        h2->Add ( cb_enzymes , 0 , wxEXPAND , 2 ) ;
+        h2->Add ( cb_translation , 0 , wxEXPAND , 2 ) ;
         cb_enzymes->SetValue ( true ) ;
         cb_translation->SetValue ( true ) ;
     }
 
     lb = new wxListBox ( this , SH_LB ) ;
-    v0->Add ( t , 0 , wxALL|wxEXPAND , 2 ) ;
-    v0->Add ( h0 , 0 , wxALL|wxEXPAND , 2 ) ;
-    v0->Add ( h1 , 0 , wxALL|wxEXPAND , 2 ) ;
-    v0->Add ( h2 , 0 , wxALL|wxEXPAND , 2 ) ;
-    v0->Add ( status , 0 , wxALL|wxEXPAND , 2 ) ;
-    v0->Add ( lb , 1 , wxALL|wxEXPAND , 2 ) ;
+    v0->Add ( t , 0 , wxEXPAND , 2 ) ;
+    v0->Add ( h0 , 0 , wxEXPAND , 2 ) ;
+    v0->Add ( h1 , 0 , wxEXPAND , 2 ) ;
+    v0->Add ( h2 , 0 , wxEXPAND , 2 ) ;
+    v0->Add ( status , 0 , wxEXPAND , 2 ) ;
+    v0->Add ( lb , 1 , wxEXPAND , 2 ) ;
     do_highlight->Disable() ;
     find_button->SetDefault () ;
     t->SetFocus () ;

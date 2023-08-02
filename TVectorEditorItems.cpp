@@ -183,9 +183,9 @@ void TVectorEditor::initPanItem ()
 			   wxDefaultPosition , wxDefaultSize ,
 			   4 , vt , wxRA_SPECIFY_COLS ) ;
 
-    v1->Add ( h0a , 0 , wxEXPAND|wxALL , 2 ) ;
-    v1->Add ( h1a , 0 , wxEXPAND|wxALL , 2 ) ;
-    v1->Add ( idesc , 1 , wxEXPAND|wxALL , 2 ) ;
+    v1->Add ( h0a , 0 , wxEXPAND , 2 ) ;
+    v1->Add ( h1a , 0 , wxEXPAND , 2 ) ;
+    v1->Add ( idesc , 1 , wxEXPAND , 2 ) ;
 
     v2->Add ( h0b ) ;
     v2->Add ( h1b ) ;
@@ -204,8 +204,8 @@ void TVectorEditor::initPanItem ()
     h2->Add ( v1 , 1, wxEXPAND ) ;
     h2->Add ( v2 , 0 , 0 ) ;
 
-    v0->Add ( items , 1 , wxEXPAND|wxALL , 5 ) ;
-    v0->Add ( h2 , 1 , wxEXPAND|wxALL , 5 ) ;
+    v0->Add ( items , 1 , wxEXPAND , 5 ) ;
+    v0->Add ( h2 , 1 , wxEXPAND , 5 ) ;
     panItem->SetSizer ( v0 ) ;
     nb->AddPage ( panItem , txt("t_vec_item") ) ;
     }

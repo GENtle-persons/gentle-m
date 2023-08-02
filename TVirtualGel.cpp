@@ -110,11 +110,11 @@ void TVirtualGel::initme ()
 
 
 /*
-	hs->Add ( cb_label , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
-	hs->Add ( new wxStaticText ( this , -1 , txt("t_vg_concentration") ) , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
-	hs->Add ( ch_percent , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
-	hs->Add ( new wxStaticText ( this , -1 , txt("t_vg_marker") ) , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
-	hs->Add ( ch_marker , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
+	hs->Add ( cb_label , 0 , wxEXPAND , 5 ) ;
+	hs->Add ( new wxStaticText ( this , -1 , txt("t_vg_concentration") ) , 0 , wxEXPAND , 5 ) ;
+	hs->Add ( ch_percent , 0 , wxEXPAND , 5 ) ;
+	hs->Add ( new wxStaticText ( this , -1 , txt("t_vg_marker") ) , 0 , wxEXPAND , 5 ) ;
+	hs->Add ( ch_marker , 0 , wxEXPAND , 5 ) ;
 */
 	
 	wxBoxSizer *vs = new wxBoxSizer ( wxVERTICAL ) ;

@@ -280,14 +280,14 @@ void TABIviewer::initme ()
     wxBoxSizer *h3 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h4 = new wxBoxSizer ( wxHORIZONTAL ) ;
     
-    h1->Add ( aidLines , 0 , wxEXPAND|wxLEFT|wxRIGHT , 5 ) ;
-    h1->Add ( inv_compl , 0 , wxEXPAND|wxLEFT|wxRIGHT , 5 ) ;
-    h2->Add ( f_height , 0 , wxEXPAND|wxLEFT|wxRIGHT , 5 ) ;
-    h2->Add ( new wxStaticText ( this , -1 , txt("t_scale_height") ) , 0 , wxEXPAND|wxLEFT|wxRIGHT , 5 ) ;
-    h3->Add ( f_width , 0 , wxEXPAND|wxLEFT|wxRIGHT , 5 ) ;
-    h3->Add ( new wxStaticText ( this , -1 , txt("t_scale_width") ) , 0 , wxEXPAND|wxLEFT|wxRIGHT , 5 ) ;    
-    h4->Add ( slider , 0 , wxEXPAND|wxLEFT|wxRIGHT , 5 ) ;
-    h4->Add ( new wxStaticText ( this , -1 , txt("t_zoom") ) , 0 , wxEXPAND|wxLEFT|wxRIGHT , 5 ) ;
+    h1->Add ( aidLines , 0 , wxEXPAND , 5 ) ;
+    h1->Add ( inv_compl , 0 , wxEXPAND , 5 ) ;
+    h2->Add ( f_height , 0 , wxEXPAND , 5 ) ;
+    h2->Add ( new wxStaticText ( this , -1 , txt("t_scale_height") ) , 0 , wxEXPAND , 5 ) ;
+    h3->Add ( f_width , 0 , wxEXPAND , 5 ) ;
+    h3->Add ( new wxStaticText ( this , -1 , txt("t_scale_width") ) , 0 , wxEXPAND , 5 ) ;    
+    h4->Add ( slider , 0 , wxEXPAND , 5 ) ;
+    h4->Add ( new wxStaticText ( this , -1 , txt("t_zoom") ) , 0 , wxEXPAND , 5 ) ;
 
 	v1->Add ( h1 , 1 ) ;
 	v1->Add ( h2 , 1 ) ;
@@ -300,7 +300,7 @@ void TABIviewer::initme ()
 
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     v0->Add ( toolbar , 0 , wxBOTTOM , 5 ) ;
-    v0->Add ( h0 , 0 , wxBOTTOM|wxEXPAND , 5 ) ;
+    v0->Add ( h0 , 0 , wxEXPAND , 5 ) ;
     v0->Add ( sc , 1 , wxEXPAND ) ;
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;

@@ -119,31 +119,31 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 	wxBoxSizer *vr = new wxBoxSizer ( wxVERTICAL ) ;
 	wxBoxSizer *vg = new wxBoxSizer ( wxVERTICAL ) ;
 	
-	va->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_separate") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-	va->Add ( sep_fragments , 2 , wxEXPAND|wxALL , 5 ) ;
-	va->Add ( sep_num_prot , 0 , wxEXPAND|wxALL , 5 ) ;
-	va->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_auto_results") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-	va->Add ( sep_results , 2 , wxEXPAND|wxALL , 5 ) ;
-	va->Add ( sep_desc , 1 , wxEXPAND|wxALL , 5 ) ;
+	va->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_separate") ) , 0 , wxEXPAND , 5 ) ;
+	va->Add ( sep_fragments , 2 , wxEXPAND , 5 ) ;
+	va->Add ( sep_num_prot , 0 , wxEXPAND , 5 ) ;
+	va->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_auto_results") ) , 0 , wxEXPAND , 5 ) ;
+	va->Add ( sep_results , 2 , wxEXPAND , 5 ) ;
+	va->Add ( sep_desc , 1 , wxEXPAND , 5 ) ;
 
-	vl->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_proteases") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-	vl->Add ( proteases , 1 , wxEXPAND|wxALL , 5 ) ;
-	vl->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_skip") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-	vl->Add ( ignore , 1 , wxEXPAND|wxALL , 5 ) ;
+	vl->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_proteases") ) , 0 , wxEXPAND , 5 ) ;
+	vl->Add ( proteases , 1 , wxEXPAND , 5 ) ;
+	vl->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_skip") ) , 0 , wxEXPAND , 5 ) ;
+	vl->Add ( ignore , 1 , wxEXPAND , 5 ) ;
 
-	h3->Add ( new wxButton ( this , PRO_FRAGMENTS_ALL , txt("b_all") ) , 0 , wxALL|wxEXPAND , 2 ) ;
-	h3->Add ( new wxButton ( this , PRO_FRAGMENTS_NONE , txt("b_none") ) , 0 , wxALL|wxEXPAND , 2 ) ;
+	h3->Add ( new wxButton ( this , PRO_FRAGMENTS_ALL , txt("b_all") ) , 0 , wxEXPAND , 2 ) ;
+	h3->Add ( new wxButton ( this , PRO_FRAGMENTS_NONE , txt("b_none") ) , 0 , wxEXPAND , 2 ) ;
 
-	vr->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_cuts") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-	vr->Add ( cuts , 1 , wxEXPAND|wxALL , 5 ) ;
-	vr->Add ( partial_digestion , 0 , wxEXPAND|wxALL , 5 ) ;
-	vr->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_results") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-	vr->Add ( results , 1 , wxEXPAND|wxALL , 5 ) ;
-	vr->Add ( sortresults , 0 , wxEXPAND|wxALL , 5 ) ;
-	vr->Add ( h3 , 0 , wxEXPAND|wxALL , 5 ) ;
+	vr->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_cuts") ) , 0 , wxEXPAND , 5 ) ;
+	vr->Add ( cuts , 1 , wxEXPAND , 5 ) ;
+	vr->Add ( partial_digestion , 0 , wxEXPAND , 5 ) ;
+	vr->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_results") ) , 0 , wxEXPAND , 5 ) ;
+	vr->Add ( results , 1 , wxEXPAND , 5 ) ;
+	vr->Add ( sortresults , 0 , wxEXPAND , 5 ) ;
+	vr->Add ( h3 , 0 , wxEXPAND , 5 ) ;
 	
-	vg->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_gel") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-	vg->Add ( gel , 1 , wxEXPAND|wxALL , 5 ) ;
+	vg->Add ( new wxStaticText ( this , -1 , txt("t_proteolysis_gel") ) , 0 , wxEXPAND , 5 ) ;
+	vg->Add ( gel , 1 , wxEXPAND , 5 ) ;
 
 	
 	h0->Add ( va , 2 , wxEXPAND ) ;
@@ -151,17 +151,17 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 	h0->Add ( vr , 2 , wxEXPAND ) ;
 	h0->Add ( vg , 1 , wxEXPAND ) ;
 
-	h1->Add ( create_fragments , 0 , wxALL|wxEXPAND , 2 ) ;
-	h1->Add ( create_labels , 0 , wxALL|wxEXPAND , 2 ) ;
-	h1->Add ( use_proteases , 0 , wxALL|wxEXPAND , 2 ) ;
-	h1->Add ( show_uncut , 0 , wxALL|wxEXPAND , 2 ) ;
-	h1->Add ( new wxButton ( this , PRO_CREATE_REPORT , txt("b_pro_report") ) , 0 , wxALL|wxEXPAND , 2 ) ;
+	h1->Add ( create_fragments , 0 , wxEXPAND , 2 ) ;
+	h1->Add ( create_labels , 0 , wxEXPAND , 2 ) ;
+	h1->Add ( use_proteases , 0 , wxEXPAND , 2 ) ;
+	h1->Add ( show_uncut , 0 , wxEXPAND , 2 ) ;
+	h1->Add ( new wxButton ( this , PRO_CREATE_REPORT , txt("b_pro_report") ) , 0 , wxEXPAND , 2 ) ;
 
-	h2->Add ( new wxStaticText ( this , -1 , txt("") ) , 2 , wxEXPAND|wxALL , 2 ) ;
-	h2->Add ( new wxButton ( this , POD_OK , txt("b_ok") ) , 1 , wxALL|wxEXPAND , 2 ) ;
-	h2->Add ( new wxStaticText ( this , -1 , txt("") ) , 1 , wxEXPAND|wxALL , 2 ) ;
-	h2->Add ( new wxButton ( this , POD_CANCEL , txt("b_cancel") ) , 1 , wxALL|wxEXPAND , 2 ) ;
-	h2->Add ( new wxStaticText ( this , -1 , txt("") ) , 2 , wxEXPAND|wxALL , 2 ) ;
+	h2->Add ( new wxStaticText ( this , -1 , txt("") ) , 2 , wxEXPAND , 2 ) ;
+	h2->Add ( new wxButton ( this , POD_OK , txt("b_ok") ) , 1 , wxEXPAND , 2 ) ;
+	h2->Add ( new wxStaticText ( this , -1 , txt("") ) , 1 , wxEXPAND , 2 ) ;
+	h2->Add ( new wxButton ( this , POD_CANCEL , txt("b_cancel") ) , 1 , wxEXPAND , 2 ) ;
+	h2->Add ( new wxStaticText ( this , -1 , txt("") ) , 2 , wxEXPAND , 2 ) ;
 	
 	v0->Add ( h0 , 1 , wxEXPAND ) ;
 	v0->Add ( h1 , 0 , wxEXPAND ) ;

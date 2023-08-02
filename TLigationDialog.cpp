@@ -44,9 +44,9 @@ void TLigationDialog::init ()
     l_sources = new wxCheckListBox ( this , LD_SOURCES ) ;
     l_targets = new wxCheckListBox ( this , LD_TARGETS ) ;
 	v1a->Add ( new wxStaticText ( this , -1 , txt("frag2lig") ) , 0 , wxEXPAND ) ;
-	v1a->Add ( l_sources , 1 , wxEXPAND|wxTOP , 5 ) ;
+	v1a->Add ( l_sources , 1 , wxEXPAND , 5 ) ;
 	v1b->Add ( new wxStaticText ( this , -1 , txt("what2create") ) , 0 , wxEXPAND ) ;
-	v1b->Add ( l_targets , 1 , wxEXPAND|wxTOP , 5 ) ;
+	v1b->Add ( l_targets , 1 , wxEXPAND , 5 ) ;
 	h1->Add ( v1a , 1 , wxEXPAND ) ;
 	h1->Add ( v1b , 1 , wxEXPAND ) ;
 	
@@ -57,8 +57,8 @@ void TLigationDialog::init ()
 	h0->Add ( new wxButton ( this , LD_CANCEL , txt("b_cancel") ) , 0 ) ;
 	
 	v0->Add ( h1 , 1 , wxEXPAND ) ;
-	v0->Add ( message , 0 , wxEXPAND|wxTOP , 5 ) ;
-	v0->Add ( h0 , 0 , wxEXPAND|wxTOP , 5 ) ;
+	v0->Add ( message , 0 , wxEXPAND , 5 ) ;
+	v0->Add ( h0 , 0 , wxEXPAND , 5 ) ;
 
     this->SetSizer ( v0 ) ;
 //    v0->Fit ( this ) ;
