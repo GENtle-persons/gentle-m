@@ -27,6 +27,7 @@ class TGridBasic : public wxGrid
     virtual void gridSetEntry ( int y , int x , wxString title , wxString value = _T("0") , wxString unit = _T("") ) ; ///< Sets a cell group
     virtual void gridSetValue ( int y , int x , wxString value , wxString unit = _T("") ) ; ///< Sets a cell group
     virtual void print ( int mode ) ; ///< Prints the submodule
+    virtual wxString getText() ;
     virtual double getDouble ( int y , int x ) ; ///< Returns the value of a cell as a floating-point number
     
     protected :
@@ -108,6 +109,7 @@ class TCalculator : public ChildBase
 //    virtual void OnClose(wxCloseEvent& event) ;
     virtual void OnSeqPrint(wxCommandEvent& event) ; ///< Print event handler
     virtual void OnPrintPreview(wxCommandEvent& event) ; ///< Print preview event handler
+    virtual void OnCopy(wxCommandEvent& event) ; ///< Copy event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler
     
     wxNotebook *nb ; ///< Pointer to the wxNotebook structure that holds the submodules

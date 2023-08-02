@@ -45,6 +45,9 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , wxString title
                             int mode , TVector *_v )
     : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 700 , 550 ) )
     {
+	pm_dd_l = pm_dd_r = NULL ;
+	filter_txt = NULL ;
+	pm_name = NULL ;
     actionMode = mode ;
     il = NULL ;
     thetarget = NULL ;
@@ -53,8 +56,9 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , wxString title
     doLoad = ( mode & ACTION_MODE_LOAD ) != 0 ;
     doSave = ( mode & ACTION_MODE_SAVE ) != 0 ;
     isProject = ( mode & ACTION_MODE_PROJECT ) != 0 ;
-    bool startup = ( mode & ACTION_MODE_STARTUP ) != 0 ;
+    startup = ( mode & ACTION_MODE_STARTUP ) != 0 ;
     justload = false ;
+    silent_overwrite = false ;
 
     if ( isProject ) myapp()->frame->push_help ( _T("GENtle:Projects") ) ;
     else myapp()->frame->push_help ( _T("GENtle:Databases") ) ;
@@ -89,6 +93,9 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , wxString title
     updateTwoLists () ;
     
     nb->SetSelection ( 1 ) ;
+
+	if ( !doSave && filter_txt ) filter_txt->SetFocus() ;
+	else if ( pm_name ) pm_name->SetFocus() ;
     
     Center () ;
     wxEndBusyCursor() ;
@@ -293,9 +300,9 @@ void TManageDatabaseDialog::pm_list_items ( int x )
         }
     if ( !l->IsShown() ) return ; // No need to load data for a list that isn't visible
     SetCursor ( *wxHOURGLASS_CURSOR ) ;
-    wxString name = c->GetStringSelection() ;
+    wxString name = c ? c->GetStringSelection() : _T("") ;
     TStorage *st = getTempDB ( getFileName ( name ) ) ;
-    
+
     l->DeleteAllItems () ;
     TSQLresult r ;
     if ( isProject )
@@ -311,59 +318,55 @@ void TManageDatabaseDialog::pm_list_items ( int x )
     else
         {
         wxString sql = _T("SELECT dna_name,dna_type FROM dna") ;
-//        if ( !filter.IsEmpty() )
-           {
-           for ( a = 0 ; a < filter.length() ; a++ )
-              if ( filter.GetChar(a) == '\"' ) filter.SetChar ( a , '\'' ) ;
-           wxArrayString vf ;
-           explode ( _T(" ") , filter , vf ) ;
-           wxString sql2 , sql3 ;
-           for ( a = 0 ; a < vf.GetCount() ; a++ )
-              {
-              if ( !vf[a].IsEmpty() )
-                 {
-                 if ( !sql2.IsEmpty() ) sql2 += _T(" AND") ;
-                 sql2 += _T(" (dna_name LIKE \"%") + vf[a] + _T("%\"") ;
-                 if ( f_desc->GetValue() )
-                    sql2 += _T(" OR dna_description LIKE \"%") + vf[a] + _T("%\"") ;
-                 if ( f_seq->GetValue() )
-                    sql2 += _T(" OR dna_sequence LIKE \"%") + vf[a] + _T("%\"") ;
-                 sql2 += _T(")") ;
-                 }
-              }
-           if ( f_dna->GetValue() ) // DNA
-              {
-              if ( !sql3.IsEmpty() ) sql3 += _T(" OR ") ;
-              sql3 += _T("dna_type=0 OR dna_type=1 OR dna_type=2") ;
-              }
-           if ( f_prot->GetValue() ) // Protein
-              {
-              if ( !sql3.IsEmpty() ) sql3 += _T(" OR ") ;
-              sql3 += _T("dna_type=5") ;
-              }
-           if ( f_primer->GetValue() ) // Primer
-              {
-              if ( !sql3.IsEmpty() ) sql3 += _T(" OR ") ;
-              sql3 += _T("dna_type=3") ;
-              }
-           if ( f_align->GetValue() ) // Alignments
-              {
-              if ( !sql3.IsEmpty() ) sql3 += _T(" OR ") ;
-              sql3 += _T("dna_type=4") ;
-              }
-/*           if ( false ) // Alignment
-              {
-              if ( !sql3.IsEmpty() ) sql3 += _T(" OR ") ;
-              sql3 += _T("dna_type=4") ;
-              }*/
-           if ( !sql3.IsEmpty() )
-              {
-              if ( !sql2.IsEmpty() ) sql2 += _T(" AND (") + sql3 + _T(")") ;
-              else sql2 = _T(" ") + sql3 ;
-              }
-           if ( !sql2.IsEmpty() ) sql += _T(" WHERE") + sql2 ;
-           }
+
+		// Filtering
+	   for ( a = 0 ; a < filter.length() ; a++ )
+		  if ( filter.GetChar(a) == '\"' ) filter.SetChar ( a , '\'' ) ;
+	   wxArrayString vf ;
+	   explode ( _T(" ") , filter , vf ) ;
+	   wxString sql2 , sql3 ;
+	   for ( a = 0 ; a < vf.GetCount() ; a++ )
+		  {
+		  if ( !vf[a].IsEmpty() )
+			 {
+			 if ( !sql2.IsEmpty() ) sql2 += _T(" AND") ;
+			 sql2 += _T(" (dna_name LIKE \"%") + vf[a] + _T("%\"") ;
+			 if ( f_desc->GetValue() )
+				sql2 += _T(" OR dna_description LIKE \"%") + vf[a] + _T("%\"") ;
+			 if ( f_seq->GetValue() )
+				sql2 += _T(" OR dna_sequence LIKE \"%") + vf[a] + _T("%\"") ;
+			 sql2 += _T(")") ;
+			 }
+		  }
+	   if ( f_dna->GetValue() ) // DNA
+		  {
+		  if ( !sql3.IsEmpty() ) sql3 += _T(" OR ") ;
+		  sql3 += _T("dna_type=0 OR dna_type=1 OR dna_type=2") ;
+		  }
+	   if ( f_prot->GetValue() ) // Protein
+		  {
+		  if ( !sql3.IsEmpty() ) sql3 += _T(" OR ") ;
+		  sql3 += _T("dna_type=5") ;
+		  }
+	   if ( f_primer->GetValue() ) // Primer
+		  {
+		  if ( !sql3.IsEmpty() ) sql3 += _T(" OR ") ;
+		  sql3 += _T("dna_type=3") ;
+		  }
+	   if ( f_align->GetValue() ) // Alignments
+		  {
+		  if ( !sql3.IsEmpty() ) sql3 += _T(" OR ") ;
+		  sql3 += _T("dna_type=4") ;
+		  }
+	   if ( !sql3.IsEmpty() )
+		  {
+		  if ( !sql2.IsEmpty() ) sql2 += _T(" AND (") + sql3 + _T(")") ;
+		  else sql2 = _T(" ") + sql3 ;
+		  }
+	   if ( !sql2.IsEmpty() ) sql += _T(" WHERE") + sql2 ;
+
         r = st->getObject ( sql ) ;        
+
         for ( a = 0 ; a < r.rows() ; a++ )
            {
            wxString s = r[a][r["dna_name"]] ;
@@ -587,8 +590,8 @@ void TManageDatabaseDialog::accessDB ()
     name = pd_db->GetStringSelection() ;
     for ( a = 0 ; db_name[a] != name ; a++ ) ;
     file = db_file[a] ;
-    pd_db_name->SetTitle ( wxString::Format ( txt("t_db_name") , db_name[a].c_str() ) ) ;
-    pd_db_file->SetTitle ( wxString::Format ( txt("t_db_location") , db_file[a].c_str() ) ) ;
+    pd_db_name->SetLabel ( wxString::Format ( txt("t_db_name") , db_name[a].c_str() ) ) ;
+    pd_db_file->SetLabel ( wxString::Format ( txt("t_db_location") , db_file[a].c_str() ) ) ;
     }
 
 void TManageDatabaseDialog::pd_loadList ()
@@ -614,13 +617,13 @@ void TManageDatabaseDialog::OnCharHook(wxKeyEvent& event)
 void TManageDatabaseDialog::OnOK ( wxCommandEvent &ev )
     {
     myapp()->frame->pop_help () ;
-    wxDialog::OnOK ( ev ) ;
+    EndModal ( wxID_OK ) ; //wxDialog::OnOK ( ev ) ;
     }
     
 void TManageDatabaseDialog::OnCancel ( wxCommandEvent &ev )
     {
     myapp()->frame->pop_help () ;
-    wxDialog::OnCancel ( ev ) ;
+    EndModal ( wxID_CANCEL ) ; //wxDialog::OnCancel ( ev ) ;
     }
 
 void TManageDatabaseDialog::pdOnDBchange ( wxCommandEvent &ev )
@@ -1056,14 +1059,15 @@ bool TManageDatabaseDialog::doesNameExist ( wxString name , wxString dbname )
         }
     if ( s == sc )
         {
-        wxMessageDialog md ( this , txt("t_entry_exists_but") , txt("msg_box") ,
+        if ( silent_overwrite ) return false ;
+        wxMessageDialog md ( this , txt("t_entry_exists_but") , name ,
                                 wxYES|wxNO|wxYES_DEFAULT ) ;
         int r = md.ShowModal () ;
         if ( r == wxID_YES ) return false ;
         }
     else
         {
-        wxMessageDialog md ( this , txt("t_entry_exists") , txt("msg_box") ) ;
+        wxMessageDialog md ( this , txt("t_entry_exists") , name ) ;
         md.ShowModal () ;
         }
     
@@ -1199,7 +1203,7 @@ void TManageDatabaseDialog::do_save_DNA ()
     sql = _T("INSERT INTO dna (") + s1 + _T(") VALUES (") + s2 + _T(")") ;
     sr = storage->getObject ( sql ) ;
     v->setName ( x ) ;
-    
+
     // Inserting items
     wxString type = _T(" ") ;
     storage->startRecord () ;

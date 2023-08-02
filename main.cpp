@@ -133,7 +133,7 @@ void MyApp::registerFileExtension ( wxString extension )
     {
 #ifdef __WXMSW__    
     wxRegKey regKey;
-    wxString idName("HKEY_CLASSES_ROOT\\."+extension);
+    wxString idName(_T("HKEY_CLASSES_ROOT\\.")+extension);
     regKey.SetName(idName);    
   
     if ( !regKey.Exists() )
@@ -159,7 +159,7 @@ void MyApp::registerProtocol ( wxString extension )
     {
 #ifdef __WXMSW__    
     wxRegKey regKey;
-    wxString idName("HKEY_CLASSES_ROOT\\"+extension);
+    wxString idName(_T("HKEY_CLASSES_ROOT\\")+extension);
     regKey.SetName(idName);    
   
     if ( !regKey.Exists() )
@@ -217,8 +217,12 @@ bool MyApp::OnInit()
     wxStartTimer() ;
 #endif
 
-   wxString s1 , s2 ;
-   wxFileName::SplitPath ( argv[0] , &homedir , &s1 , &s2 ) ;
+	wxString s1 , s2 ;
+	wxFileName::SplitPath ( argv[0] , &homedir , &s1 , &s2 ) ;
+
+#ifdef __WXMSW__
+   if ( homedir.IsEmpty() ) homedir = wxGetCwd() ;
+#endif
 
 #ifdef __WXMAC__
    homedir = homedir.BeforeLast ( '/' ) ;
@@ -239,19 +243,20 @@ bool MyApp::OnInit()
    wxFileSystem::AddHandler ( new wxInternetFSHandler ) ;
 
    wxSetWorkingDirectory ( homedir ) ; // Setting home directory as working dir
-
-   // Setting ncoils dir as an environment variable
+	
+	// Setting ncoils dir as an environment variable
    wxString ncoilsdir ;
    ncoilsdir = _T("COILSDIR=") ;
    ncoilsdir += homedir ;
 
 #ifdef __WXMAC__	
-	wxUnsetEnv ( _T("COILSDIR") ) ;
+	if ( wxGetEnv ( _T("COILSDIR") , NULL ) ) wxUnsetEnv ( _T("COILSDIR") ) ;
 	wxSetEnv ( _T("COILSDIR") , homedir ) ;
 #else
 	putenv ( (char*) ncoilsdir.c_str() ) ;
-#endif
+#endif	
 
+	
     // Is an instance already running?
     const wxString name = wxString::Format ( _T("GENtle-%s") , wxGetUserId().c_str());
     m_checker = new wxSingleInstanceChecker (name);
@@ -278,8 +283,8 @@ bool MyApp::OnInit()
 #else
     bmpdir = homedir + slash + _T("bitmaps") ;
 #endif
-     
-	 // Make sure local database exists
+	
+	// Make sure local database exists
     wxString localdb , blankdb ;
     localdb = getLocalDBname() ;
     blankdb = homedir + slash + _T("blank.db") ;
@@ -308,17 +313,20 @@ bool MyApp::OnInit()
 		else local_ok = true ;
 		}
 
-    frame = new MyFrame((wxFrame *)NULL, -1, _T(""),
+	frame = new MyFrame((wxFrame *)NULL, -1, _T(""),
                         wxPoint(-1, -1), wxSize(500, 400),
                         wxDEFAULT_FRAME_STYLE );    
     frame->initme () ;
     if ( frame->dying ) return FALSE ;
     SetTopWindow(frame);
 
+	if ( clp[_T("no-splash-screen")] == _T("1") )
+		frame->showSplashScreen = false ;
+
 	if ( !local_ok )
 		wxMessageBox ( txt("t_local_db_warning") ) ;
 
-//#ifndef __WXMAC__
+	
     if ( frame->showSplashScreen )
         {
         wxBitmap bitmap;
@@ -333,11 +341,14 @@ bool MyApp::OnInit()
             }
         wxYield();
         }
-//#endif
 
     // Tips turned off until I can figure out how the hell
     // to get the state of the !"$%& show-again-checkbox
     bool showTip = frame->LS->getOption ( _T("SHOWTIP") , true ) ;
+
+	if ( clp[_T("no-tips")] == _T("1") )
+		showTip = false ;
+
     if ( showTip )
         {
         int tip = frame->LS->getOption ( _T("NEXTTIP") , 0 ) ;
@@ -408,7 +419,15 @@ int MyApp::OnExit ()
 	return wxApp::OnExit () ;
 //    return 0;
     }
-    
+
+void MyApp::launchBrowser ( wxString url )
+	{
+//	wxMessageBox ( url ) ;
+//	if ( wxLaunchDefaultBrowser ( url ) ) return ;
+    wxString command = myapp()->getHTMLCommand ( url ) ;
+    wxExecute ( command ) ;
+	}
+
 /**	\fn MyApp::getHTMLCommand ( wxString command )
 	\brief Returns the command line to invoke the browser.
 	\param command The URL/file.
@@ -426,7 +445,7 @@ wxString MyApp::getHTMLCommand ( wxString command )
 // Fallback
 #ifdef __WXMSW__    
     wxRegKey regKey;
-    wxString idName("HKEY_CLASSES_ROOT\\.html");
+    wxString idName(_T("HKEY_CLASSES_ROOT\\.html"));
     regKey.SetName(idName);    
     wxString s , t = regKey ;
     s += _T("HKEY_CLASSES_ROOT\\") ;
@@ -436,7 +455,7 @@ wxString MyApp::getHTMLCommand ( wxString command )
     wxString q = regKey ;
     regKey.Close();
     q.Replace ( _T("-nohome") , _T("") ) ;
-    if ( 0 == q.Replace ( wxString ( _T("%1") ) , wxString((char*)command.c_str()) ) )
+    if ( 0 == q.Replace ( wxString ( _T("%1") ) , command ) )
         q += _T(" \"") + command + _T("\"") ;
     return q ;
 #else
@@ -464,7 +483,7 @@ wxString MyApp::getFileFormatApplication ( wxString type )
     {
 #ifdef __WXMSW__    
     wxRegKey regKey;
-    wxString idName("HKEY_CLASSES_ROOT\\.");
+    wxString idName(_T("HKEY_CLASSES_ROOT\\."));
     idName += type ;
     regKey.SetName(idName);    
     wxString s , t = regKey ;
@@ -521,7 +540,7 @@ void MyApp::do_my_log ( wxString function , wxString msg )
     	}
     total_log_counter++ ;
 
-    int i = wxGetElapsedTime() ;
+    int i = sw.Time() ;
     total_log_time += i ;
     logout->Write ( function + _T(" : ") + msg + _T(" (") + wxString::Format ( _T("%d ms") , i ) + _T(")\n") ) ;
     logout->Flush() ;
@@ -538,48 +557,52 @@ void MyApp::init_txt ( wxString lang , wxString csv , wxHashString *target , int
     {
     if ( !target ) target = &_text ;
     wxTextFile in ( myapp()->homedir + _T("/") + csv) ;
-    in.Open ( *isoconv ) ;
-    unsigned char t[10000] ;
+    in.Open ( wxConvUTF8 ) ;
+//    in.Open ( *isoconv ) ;
+//    unsigned char t[10000] ;
     bool firstline = true ;
     TGenBank dummy ;
-#ifdef __WXMAC__
-	wxMBConv *conv = isoconv ;
-#else
+
+/*
+#ifdef __WXGTK__
 	wxMBConv *conv = &wxConvUTF8 ;
+#else
+	wxMBConv *conv = isoconv ;
 #endif
+*/
+
     for ( int lc = 0 ; lc < in.GetLineCount() ; lc++ )
         {
-        wxArrayString v ;
-        strcpy ( (char*)t , in[lc].mb_str() ) ;
-        if ( *t == 0 ) break ;
-        unsigned char *c , *l ;
-        bool quote = false ;
-        for ( c = l = (unsigned char*) t ; *c ; c++ )
-           {
-           if ( *c == '\\' )
-              {
-              *c = ' ' ;
-              c++ ;
-              if ( *c == 't' ) *c = '\t' ;
-              else if ( *c == '"' ) *c = '"' ;
-              else if ( *c == 'n' ) *c = '\n' ;
-              }
-           else if ( *c == '"' ) quote = !quote ;
-           else if ( *c == ',' && !quote )
-              {
-              *c = 0 ;
-              v.Add ( dummy.trimQuotes(wxString((char*)l,*conv)) ) ;
-              l = c+1 ;
-              }
-           }
-        if ( l < c )
-           {
-           *(c-1) = 0 ;
-           v.Add ( dummy.trimQuotes(wxString((char*)l,*conv)) ) ;
-           }
-        
+		wxString s = in[lc] ;
+		if ( s.IsEmpty() ) continue ; // Blank line
+		wxArrayString v ;
+		s.Replace ( _T("\\t") , _T("\t") ) ;
+		s.Replace ( _T("\\n") , _T("\n") ) ;
+		s = s.Mid ( 1 ) ; // Get rid of initial "
+		while ( 1 )
+			{
+			int f = s.Find ( _T("\",\"") ) ;
+			if ( f == -1 )
+				{
+				s = s.Left ( s.length()-1 ) ; // Get rid of final "
+				v.Add ( s ) ;
+				break ;
+				}
+			else
+				{
+				v.Add ( s.Left ( f ) ) ;
+				s = s.Mid ( f + 3 ) ;
+				}
+			}
+
+		// Get key (firstline) or value
         if ( firstline )
            {
+           if ( frame->language_list.IsEmpty() )
+		   	{
+			frame->language_list = v ;
+			frame->language_list.RemoveAt ( 0 ) ;
+			}
            for ( int a = 0 ; a < v.GetCount() ; a++ )
               if ( v[a].Upper() == lang.Upper() )
                  ln = a ;

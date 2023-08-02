@@ -174,7 +174,6 @@ void SeqFeature::show ( wxDC& dc )
                        int xw = can->charwidth / 2 ;
                        int yh = level - ty + lh ;
                        int xm = x_to - xw ;
-                       int yo = yh / 4 ;
                        dc.DrawLine ( xm , level , xm , ty + yh ) ;
                        }
                     else if ( mode == FEAT_NONE ) // Default

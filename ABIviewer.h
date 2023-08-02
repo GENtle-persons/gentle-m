@@ -23,6 +23,10 @@ class TABIviewer : public ChildBase
     virtual void showSequence () ; ///< Show/refresh the sequence
     virtual wxString getStat () ; ///< Get statistics as a wxString
     virtual void showStat () ; ///< Show the statistics
+    virtual void set_view_only ( int from , int to ) ; ///< Sets partial view
+    virtual bool is_only_view () { return view_from != -1 || view_to != -1 ; } ///< Partial view?
+    virtual void toggle_inv_compl () ; ///< Switches between normal and inverse/complementary display
+    virtual bool get_inv_compl () ; ///< Returns the state of normal or inverse/complementary display
     
     virtual void OnMarkAll(wxCommandEvent& event); ///< Ctrl-A event handler
     virtual void OnFileSave(wxCommandEvent& event); ///< Save-as event handler
@@ -40,6 +44,7 @@ class TABIviewer : public ChildBase
     virtual void OnHorizontal(wxCommandEvent& event); ///< Horizontal mode event handler
     virtual void OnSpeak(wxCommandEvent& WXUNUSED(event)); ///< Speak sequence event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler
+    virtual void OnFontsize(wxCommandEvent& event); ///< Fontsize event handler
 
     // Variables
     SequenceCanvas *sc ; ///< Pointer to the sequence canvas structure
@@ -47,6 +52,7 @@ class TABIviewer : public ChildBase
     private :
     friend class MyFrame ;
     virtual void spinHeight() ; ///< Sets the height spin box
+    virtual void set_view ( long _from , long _to ) ;
     
     // Variables
     wxTextCtrl *stat ; ///< Pointer to statistics text box
@@ -55,6 +61,8 @@ class TABIviewer : public ChildBase
     wxCheckBox *aidLines , *inv_compl ;
     wxSpinCtrl *f_height , *f_width ;
     wxSlider *slider ; ///< Pointer to the slider structure
+    long view_from , view_to ;
+    wxChoice *fontsize ;
     
     DECLARE_EVENT_TABLE()
     } ;

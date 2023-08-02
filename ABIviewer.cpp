@@ -21,6 +21,7 @@ BEGIN_EVENT_TABLE(TABIviewer, MyChildBase)
     EVT_SPINCTRL(ABI_HEIGHT, TABIviewer::OnSpinHeight)
     EVT_COMMAND_SCROLL(ABI_SLIDER, TABIviewer::OnZoom)
     EVT_CHECKBOX(ALIGN_HORIZ, TABIviewer::OnHorizontal)
+    EVT_CHOICE(AA_FONTSIZE,TABIviewer::OnFontsize)
 
     EVT_SET_FOCUS(ChildBase::OnFocus)
     EVT_CLOSE(ChildBase::OnClose)
@@ -52,6 +53,7 @@ END_EVENT_TABLE()
 TABIviewer::TABIviewer(wxWindow *parent, const wxString& title)
     : ChildBase(parent, title)
     {
+    inv_compl = NULL ;
     vec = new TVector ( this ) ;
     def = _T("ABIviewer") ;
     vec->setName ( title ) ;
@@ -59,6 +61,41 @@ TABIviewer::TABIviewer(wxWindow *parent, const wxString& title)
     vec->undo.clear () ;
     stat = NULL ;
     allow_save = allow_print = allow_find = allow_copy = true ;
+
+	long _from = -1 , _to = -1 ;
+    if ( !myapp()->clp[_T("view-sequencing-start")].IsEmpty() )
+		{
+		myapp()->clp[_T("view-sequencing-start")].ToLong ( &_from ) ;
+		myapp()->clp.erase(_T("view-sequencing-start")) ;
+		}
+    if ( !myapp()->clp[_T("view-sequencing-end")].IsEmpty() ) 
+		{
+		myapp()->clp[_T("view-sequencing-end")].ToLong ( &_to ) ;
+		myapp()->clp.erase(_T("view-sequencing-end")) ;
+		}
+	set_view ( _from , _to ) ;
+	}
+
+void TABIviewer::OnFontsize ( wxCommandEvent& event )
+    {
+	long l ;
+	wxString s = fontsize->GetStringSelection() ;
+	s.ToLong ( &l ) ;
+	sc->set_font_size ( (int) l ) ;
+    spinHeight() ;
+	}
+
+bool TABIviewer::get_inv_compl ()
+	{
+	return inv_compl ? inv_compl->GetValue() : false ;
+	}
+void TABIviewer::set_view ( long _from , long _to )
+	{
+    if ( _from < 1 ) _from = -1 ;
+	if ( _to < 1 ) _to = -1 ;
+	if ( _from > _to ) { _from = _to = -1 ; }
+	view_from = _from ;
+	view_to = _to ;
     }
     
 TABIviewer::~TABIviewer ()
@@ -66,6 +103,22 @@ TABIviewer::~TABIviewer ()
     if ( vec ) delete vec ;
     if ( stat ) delete stat ;
     }
+    
+void TABIviewer::set_view_only ( int from , int to )
+    {
+	if ( view_from == -1 ) set_view ( from , to ) ;
+	else set_view ( -1 , -1 ) ;
+
+	if ( !sc || sc->seq.size() == 0 ) return ;
+	SeqABI *abi = (SeqABI*) sc->seq[0] ;
+	if ( abi )
+		{
+		abi->view_from = view_from ;
+		abi->view_to = view_to ;
+		}
+
+    spinHeight() ;
+	}
     
 void TABIviewer::OnHorizontal(wxCommandEvent& event)
     {
@@ -178,8 +231,9 @@ void TABIviewer::initme ()
 	myapp()->frame->addTool ( toolBar , MDI_COPY ) ;
     toolBar->AddSeparator() ;
     horiz = new wxCheckBox ( toolBar , ALIGN_HORIZ , txt("t_horizontal") ) ;
-    toolBar->AddControl ( horiz ) ;
     myapp()->frame->addDefaultTools ( toolBar ) ;
+    toolBar->AddControl ( horiz ) ;
+	fontsize = myapp()->frame->AddFontsizeTool ( toolBar , AA_FONTSIZE ) ;
     toolBar->Realize() ;
     toolbar = toolBar ;
 
@@ -202,7 +256,6 @@ void TABIviewer::initme ()
     f_width->SetRange ( 1 , 9 ) ;
     aidLines->SetValue ( true ) ;
 
-    
     slider = new wxSlider ( this , ABI_SLIDER , 1 , 1 , 50 , 
                              wxDefaultPosition ,
 #ifdef __WXMSW
@@ -217,7 +270,7 @@ void TABIviewer::initme ()
                             -1 ,
                             _T("Test") ,
                             wxDefaultPosition ,
-                            wxDefaultSize ,
+                            wxSize ( -1 , 150 ) ,
                             wxTE_MULTILINE | wxTE_READONLY ) ;
     stat->SetFont ( *MYFONT ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
 
@@ -242,8 +295,8 @@ void TABIviewer::initme ()
 	v1->Add ( h4 , 1 ) ;
 
     wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
-	h0->Add ( v1 , 1 , wxTOP|wxBOTTOM|wxEXPAND , 5 ) ;
-	h0->Add ( stat , 4 , wxEXPAND ) ;
+	h0->Add ( v1 , 0 , wxTOP|wxBOTTOM , 5 ) ;
+	h0->Add ( stat , 1 , 0 ) ;
 
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     v0->Add ( toolbar , 0 , wxBOTTOM , 5 ) ;
@@ -268,6 +321,7 @@ wxString TABIviewer::getStat ()
     {
     SeqABI *abi = (SeqABI*) sc->seq[0] ;
     ABItype *at = abi->at ;
+	if ( !at ) return wxString () ;
     wxString comb = at->getRecordPascalString ( _T("CMBF") , 1 ) ;
     wxString pdmf = at->getRecordPascalString ( _T("PDMF") , 1 ) ;
     wxString smpl = at->getRecordPascalString ( _T("SMPL") , 1 ) ;
@@ -340,6 +394,8 @@ void TABIviewer::showSequence ()
     // Display
     SeqABI *d = new SeqABI ( sc ) ;
     d->vec = vec ;
+    d->view_from = view_from ;
+    d->view_to = view_to ;
     d->initFromFile ( filename ) ;
     d->takesMouseActions = true ;
     sc->seq.Add ( d ) ;
@@ -351,6 +407,7 @@ void TABIviewer::showSequence ()
     
 void TABIviewer::OnEditMode(wxCommandEvent& event)
     {
+    if ( inv_compl->GetValue() ) { wxBell() ; return ; }
     wxMenuBar *mb = GetMenuBar () ;
     wxMenuItem *mi = mb->FindItem ( MDI_EDIT_MODE ) ;
     wxString s ;
@@ -432,11 +489,31 @@ void TABIviewer::OnCopy(wxCommandEvent& event)
     sc->OnCopy ( event ) ;
     }
 
+void TABIviewer::toggle_inv_compl ()
+	{
+	inv_compl->SetValue ( 1-inv_compl->GetValue() ) ;
+	wxCommandEvent ev ;
+	OnInvCompl ( ev ) ;
+	}
+
 void TABIviewer::OnInvCompl(wxCommandEvent& event)
     {
+	if ( sc->getEditMode() ) { wxBell() ; return ; }
     bool state = inv_compl->GetValue() ;
     SeqABI *abi = (SeqABI*) sc->seq[0] ;
     abi->setInvCompl ( state ) ;
+    if ( view_from != -1 && view_to != -1 )
+    	{
+		long l = vec->getSequenceLength() ;
+		set_view ( l - view_to + 1 , l - view_from + 1 ) ;
+//		view_from = l - view_from ;
+//		view_to = l - view_to ;
+		abi->view_from = view_from ;
+		abi->view_to = view_to ;
+//		wxMessageBox ( wxString::Format ( "%d/%d/%d" , view_from , view_to , l ) ) ;
+	    spinHeight() ;
+	    return ;
+		}
     sc->arrange () ;
     sc->SilentRefresh () ;
     }

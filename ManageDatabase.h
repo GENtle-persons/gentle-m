@@ -137,10 +137,10 @@ class TManageDatabaseDialog : public wxDialog
     wxArrayString context_names ;
     int actionMode ;
     TVector *v ;
-    bool justload ;
+    bool justload , silent_overwrite ;
     
     private:
-    bool doSave , doLoad , isProject ;
+    bool doSave , doLoad , isProject , startup ;
     wxString filter ;
     wxTextCtrl *filter_txt ;
     wxCheckBox *f_dna , *f_prot , *f_primer , *f_align , *f_twopanes ;

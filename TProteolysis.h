@@ -9,9 +9,12 @@ class TProteolysisGel : public wxScrolledWindow
 	{
 	public :
 	TProteolysisGel(wxWindow* parent, wxWindowID id = -1 ) ;
-	virtual void OnDraw(wxDC& dc) ;
+	virtual void OnDraw(wxDC& dc) ; ///< Redraw
+    virtual void OnEvent(wxMouseEvent& event); ///< Mouse event handler
+    
+    wxArrayInt screen , logical ;
 	
-//	DECLARE_EVENT_TABLE()
+	DECLARE_EVENT_TABLE()
 	} ;
 
 typedef vector <TProtease*> TProteaseArray ;
@@ -38,33 +41,37 @@ class TProteolysis : public wxDialog
 	void OnCancel ( wxCommandEvent &ev ) ; ///< Cancel button event handler
 	void OnAll ( wxCommandEvent &ev ) ; ///< "All" button event handler
 	void OnNone ( wxCommandEvent &ev ) ; ///< "None" button event handler
+	void OnReport ( wxCommandEvent &ev ) ; ///< "Report" button event handler
 	void OnProtease ( wxCommandEvent &ev ) ; ///< Protease list event handler
 	void OnIgnore ( wxCommandEvent &ev ) ; ///< Ignore list event handler
 	void OnSepFragments ( wxCommandEvent &ev ) ; ///< Separate fragments event handler
 	void OnSepResults ( wxCommandEvent &ev ) ; ///< Separation results event handler
 	void OnCuts ( wxCommandEvent &ev ) ; ///< Cut list event handler
 	void OnShowGel ( wxCommandEvent &ev ) ; // Show/refresh gel
+	void OnPartial ( wxCommandEvent &ev ) ; // Toggle partial digestion
 	void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
 	void OnSortResults(wxCommandEvent& event) ; ///< Sort results event handler
 	void OnNumProts(wxCommandEvent& event) ; ///< Number of proteases event handler
+	void OnResults ( wxCommandEvent &ev ) ; ///< Fragment list checkbox changed
 	
-	virtual void draw_gel ( wxDC &dc ) ; ///< Draw the virtual gel
+	void draw_gel ( wxDC &dc ) ; ///< Draw the virtual gel
+	void select_fragments ( const wxArrayInt &ai ) ;
 
 	private :
-	virtual void recalc () ;
-	virtual void calc_cut_list () ;
-	virtual void calc_fragment_list () ;
-	virtual void calc_spearation () ;
-	virtual void calc_spearation_sub ( int depth , TProteaseArray &prop , vector <TFragment> &tobe , int start = 0 ) ;
-	virtual void show_gel () ;
-	virtual void show_fragment_list () ;
-	virtual double get_weight ( int from , int to ) ;
-	virtual int get_y ( double y , int h , double min , double max ) ;
-	virtual void determine_cuts ( TProteaseArray &prop , TProteaseCutArray &apc ) ;
-	virtual void remove_ignored_cuts ( TProteaseCutArray &apc ) ;
-	virtual void sort_cuts ( TProteaseCutArray &apc ) ;
-	virtual void add_final_piece ( TProteaseCutArray &apc ) ;
-	virtual void find_cutting_proteases () ;
+	void recalc () ;
+	void calc_cut_list () ;
+	void calc_fragment_list () ;
+	void calc_spearation () ;
+	void calc_spearation_sub ( int depth , TProteaseArray &prop , vector <TFragment> &tobe , int start = 0 ) ;
+	void show_gel () ;
+	void show_fragment_list () ;
+	double get_weight ( int from , int to ) ;
+	int get_y ( double y , int h , double min , double max ) ;
+	void determine_cuts ( TProteaseArray &prop , TProteaseCutArray &apc ) ;
+	void remove_ignored_cuts ( TProteaseCutArray &apc ) ;
+	void sort_cuts ( TProteaseCutArray &apc ) ;
+	void add_final_piece ( TProteaseCutArray &apc ) ;
+	void find_cutting_proteases () ;
 	
 	TAminoAcids *parent ;
 	TVector *v ;
@@ -72,7 +79,7 @@ class TProteolysis : public wxDialog
 	wxCheckListBox *proteases , *ignore , *cuts , *results , *sep_fragments ;
 	wxListBox *sep_results ;
 	wxRadioBox *sep_num_prot ;
-	wxCheckBox *show_uncut , *create_fragments, *create_labels , *use_proteases ;
+	wxCheckBox *show_uncut , *create_fragments, *create_labels , *use_proteases , *partial_digestion ;
 	TProteolysisGel *gel ;
 	TProteaseCutArray pc ;
 	wxTextCtrl *sep_desc ;

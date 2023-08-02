@@ -18,6 +18,8 @@ BEGIN_EVENT_TABLE(TVectorTree, wxTreeCtrl)
     EVT_MENU(PC_ITEM_COPY_DNA, TVectorTree::itemCopyDNA)
     EVT_MENU(PC_ITEM_BLAST_DNA, TVectorTree::blastDNA)
     EVT_MENU(PC_ITEM_BLAST_AA, TVectorTree::blastAA)
+    EVT_MENU(PC_ITEM_COPY_AA , TVectorTree::copyAA)
+    EVT_MENU(PC_ITEM_AS_NEW_AA_SEQUENCE , TVectorTree::AAasNewSequence)
     
     EVT_MENU(PRIMER_FORWARD, TVectorTree::OnPrimerForward)
     EVT_MENU(PRIMER_BACKWARD, TVectorTree::OnPrimerBackward)
@@ -85,7 +87,7 @@ void TVectorTree::initme ()
         {
         if ( p->vec->items[a].name.IsEmpty() )
            {
-           p->vec->items[a].setTreeID ( (long int) -1 ) ;
+           p->vec->items[a].setTreeID ((void*)NULL);//( (long int) -1 ) ; //2.6/2.8
            continue ;
            }
         int it = p->vec->items[a].getType() ;
@@ -116,7 +118,9 @@ void TVectorTree::initme ()
                sType + _T("\n") +
                sOritentation + _T("\n") +
                sDescription ;
-        SetItemData ( y , new TTreeItem ( out , _T("ITEM") , (void*)a ) ) ;
+		TTreeItem *ni = new TTreeItem ( out , _T("ITEM") ) ;
+		ni->data = a ;
+        SetItemData ( y , ni ) ;
         }
 
     // Enzymes
@@ -199,7 +203,7 @@ void TVectorTree::OnActivation ( wxTreeEvent &event )
     if ( d->type == _T("ITEM") )
         {
         wxCommandEvent ev ;
-        p->cPlasmid->setLastContextItem ( (int) d->p ) ;
+        p->cPlasmid->setLastContextItem ( d->data ) ;
         p->cPlasmid->itemShowHide ( ev ) ;
         }
     else if ( d->type == _T("RE") )
@@ -219,7 +223,7 @@ void TVectorTree::ToggleEnzymeVisibility ( TRestrictionEnzyme *e )
     {
     if ( !e ) return ;
     wxTreeItemId y ;
-    long l ;
+    wxTreeItemIdValue l ;
     y = GetFirstChild ( enzroot , l ) ;
     while ( y.IsOk() && GetItemText ( y ) != e->getName() )
        y = GetNextChild ( enzroot , l ) ;
@@ -243,13 +247,14 @@ void TVectorTree::ToggleEnzymeVisibility ( TRestrictionEnzyme *e )
 void TVectorTree::OnRightClick ( wxTreeEvent &event )
     {
     wxTreeItemId id = event.GetItem () ;
+    if ( !id.IsOk() ) return ;
     TTreeItem *d = (TTreeItem*) GetItemData ( id ) ;
     if ( !d ) return ;
     wxPoint pt = event.GetPoint() ;
     if ( d->type == _T("ITEM") )
         {
-        int item = (int) d->p ;
-        wxMenu *cm = p->cPlasmid->invokeItemPopup ( item , pt , true ) ;
+        wxMenu *cm = p->cPlasmid->invokeItemPopup ( d->data , pt , true ) ;
+        p->cPlasmid->setLastContextItem ( d->data ) ;
         PopupMenu ( cm , pt ) ;
         delete cm ;
         }
@@ -321,6 +326,12 @@ void TVectorTree::blastDNA ( wxCommandEvent &ev )
 
 void TVectorTree::blastAA ( wxCommandEvent &ev )
     { p->cPlasmid->blastAA ( ev ) ; }
+
+void TVectorTree::copyAA ( wxCommandEvent &ev )
+    { p->cPlasmid->itemCopyAA ( ev ) ; }
+
+void TVectorTree::AAasNewSequence ( wxCommandEvent &ev )
+    { p->cPlasmid->itemAsNewAA ( ev ) ; }
 
 void TVectorTree::rsShowHide ( wxCommandEvent &ev )
     { p->cPlasmid->rsShowHide ( ev ) ; }

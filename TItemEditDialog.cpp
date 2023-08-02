@@ -14,17 +14,16 @@ END_EVENT_TABLE()
 
 TItemEditDialog::TItemEditDialog ( wxWindow *parent, const wxString& title ,
                         TVectorItem &_vi )
-   : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 400 , 400 ) )
+   : wxDialog ( parent , -1 , title )
    {
    myapp()->frame->push_help ( _T("GENtle:Sequence_editor#Features") ) ;
    vi = new TVectorItem ;
    *vi = _vi ;
    
-   int th = 30 , bo = 5 ;
-   int w , h ;
-   GetClientSize ( &w , &h ) ;
-   new wxButton ( this , IED_COLOR , txt("b_item_color") , wxPoint ( bo , bo ) ) ;
+   // Color button
+   wxButton *item_color_button = new wxButton ( this , IED_COLOR , txt("b_item_color") ) ;
 
+   // Styles
    wxString rb_ch[6] ;
    rb_ch[0] = txt("t_seq_style_default" ) ;
    rb_ch[1] = txt("t_seq_style_alpha" ) ;
@@ -33,38 +32,64 @@ TItemEditDialog::TItemEditDialog ( wxWindow *parent, const wxString& title ,
    rb_ch[4] = txt("t_seq_style_noline" ) ;
    rb_ch[5] = txt("t_seq_style_vline" ) ;
    rb = new wxRadioBox ( this , -1 , txt("t_seq_style") ,
-                           wxPoint ( bo , th + bo ) ,
+                           wxDefaultPosition ,
                            wxDefaultSize ,
                            6 ,
-                           rb_ch ,
-                           wxRA_SPECIFY_COLS
+                           rb_ch , 3 ,
+                           wxRA_SPECIFY_COLS 
                            ) ;
    rb->SetSelection ( atoi ( vi->getParam ( _T("SEQUENCE_STYLE") ).mb_str() ) ) ;
 
+   // Offset
    int off = vi->getOffset() ;
    wxString off_t = (off==-1) ? _T("") : wxString::Format(_T("%d"),off) ;
-   wxRect r = rb->GetRect() ;
-   useOffset = new wxCheckBox ( this , IED_USEOFFSET , txt("t_use_item_offset") ,
-                                 wxPoint ( r.GetLeft() , r.GetBottom() + bo ) ) ;
+
+   useOffset = new wxCheckBox ( this , IED_USEOFFSET , txt("t_use_item_offset") ) ;
    useOffset->SetValue ( (off!=-1) ) ;
-   r = useOffset->GetRect() ;
-   offset = new wxTextCtrl ( this , -1 , off_t ,
-                                 wxPoint ( r.GetRight()+bo , r.GetTop() ) ) ;
-   r = offset->GetRect() ;
+
+   offset = new wxTextCtrl ( this , -1 , off_t ) ;
    if ( off == -1 ) offset->Disable() ;
    
+   // Properties listbox
    lb = new wxListBox ( this , IED_LIST , 
-                           wxPoint ( bo , r.GetBottom() + bo ) , 
-                           wxSize ( w - bo*2 , h - r.GetBottom() - th - bo*2 ) ,
+                           wxDefaultPosition , 
+                           wxSize ( 300 , -1 ) ,
                            0 , NULL , wxLB_SORT|wxLB_HSCROLL|wxLB_ALWAYS_SB ) ;
    initlb () ;
 
-   wxButton *OK ;
-   OK = new wxButton ( this , IED_OK , txt("b_ok") , wxPoint ( w/5 , h-th ) ) ;
-   new wxButton ( this , IED_CANCEL , txt("b_cancel") , wxPoint ( w*3/5 , h-th ) ) ;
+   wxButton *button_OK = new wxButton ( this , IED_OK , txt("b_ok") ) ;
+   wxButton *button_cancel = new wxButton ( this , IED_CANCEL , txt("b_cancel") ) ;
    
-   OK->SetDefault() ;
-   OK->SetFocus() ;
+   wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+   wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
+   wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
+   
+   h0->Add ( item_color_button , 0 , wxEXPAND ) ;
+   h0->Add ( new wxStaticText ( this , -1 , _T("   ") ) , 0 , wxEXPAND ) ;
+   h0->Add ( useOffset , 0 , wxEXPAND ) ;
+   h0->Add ( offset , 0 , wxEXPAND ) ;
+
+#ifdef __WXMAC__
+   h1->Add ( button_cancel , 0 , wxEXPAND ) ;
+   h1->Add ( new wxStaticText ( this , -1 , _T("         ") ) , 0 , wxEXPAND ) ;
+   h1->Add ( button_OK , 0 , wxEXPAND ) ;
+#else
+   h1->Add ( button_OK , 0 , wxEXPAND ) ;
+   h1->Add ( new wxStaticText ( this , -1 , _T("         ") ) , 0 , wxEXPAND ) ;
+   h1->Add ( button_cancel , 0 , wxEXPAND ) ;
+#endif
+   
+   v0->Add ( rb , 0 , wxEXPAND|wxALL , 5 ) ;
+   v0->Add ( h0 , 0 , wxEXPAND|wxALL , 5 ) ;
+   v0->Add ( lb , 1 , wxEXPAND|wxALL , 5 ) ;
+   v0->Add ( h1 , 0 , wxCENTER|wxALL , 5 ) ;
+      
+   button_OK->SetDefault() ;
+   button_OK->SetFocus() ;
+   
+   this->SetSizer ( v0 ) ;
+   v0->Fit ( this ) ;
+   Center() ;
    }
    
 TItemEditDialog::~TItemEditDialog ()
@@ -90,12 +115,12 @@ void TItemEditDialog::OnOK ( wxCommandEvent &ev )
     vi->setParam ( _T("CHANGED") , _T("YES") ) ;
     if ( useOffset->IsChecked() ) vi->setOffset ( atoi(offset->GetValue().mb_str()) ) ;
     else vi->setOffset ( -1 ) ;
-    wxDialog::OnOK(ev) ;
+    EndModal ( wxID_OK ) ; // wxDialog::OnOK(ev) ;
     }
     
 void TItemEditDialog::OnCancel ( wxCommandEvent &ev )
     {
-    wxDialog::OnCancel(ev) ;
+    EndModal ( wxID_CANCEL ) ; // wxDialog::OnCancel(ev) ;
     }
 
 void TItemEditDialog::OnColor ( wxCommandEvent &ev )

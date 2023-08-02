@@ -23,8 +23,8 @@ class TAutoAnnotateDialog : public wxDialog
 	} ;    
 	
 BEGIN_EVENT_TABLE(TAutoAnnotateDialog, wxDialog )
-    EVT_BUTTON(wxID_OK,TAutoAnnotateDialog::OnOK)
-    EVT_BUTTON(wxID_CANCEL,TAutoAnnotateDialog::OnCancel)
+//    EVT_BUTTON(wxID_OK,TAutoAnnotateDialog::OnOK)
+//    EVT_BUTTON(wxID_CANCEL,TAutoAnnotateDialog::OnCancel)
     EVT_CHAR_HOOK(TAutoAnnotateDialog::OnCharHook)
 END_EVENT_TABLE()
 
@@ -95,8 +95,8 @@ void TAutoAnnotateDialog::OnCharHook ( wxKeyEvent& event )
 	{
     int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
-    if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
-    else if ( k == WXK_RETURN ) OnOK ( ev ) ;
+    if ( k == WXK_ESCAPE ) EndModal ( wxID_CANCEL ) ; // OnCancel ( ev ) ;
+    else if ( k == WXK_RETURN ) EndModal ( wxID_OK ) ; // OnOK ( ev ) ;
     else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
     else event.Skip() ;
 	}    
@@ -285,20 +285,21 @@ bool AutoAnnotate::addORFs ( TVector *v )
 	for ( a = 0 ; a < v->countORFs() ; a++ )
 		{
   		TORF *o = v->getORF ( a ) ;
- 		o->from++ ;
- 		o->to++ ;
+  		o->set ( o->get_from()+1 , o->get_to()+1 , o->get_rf() ) ;
+// 		o->from++ ;
+// 		o->to++ ;
   		for ( b = 0 ; b < v->items.size() ; b++ )
   			{
 	    	if ( v->items[b].getType() != VIT_CDS ) continue ;
-	    	if ( v->items[b].from == o->from ) break ;
-	    	if ( v->items[b].from == o->to ) break ;
-	    	if ( v->items[b].to == o->from ) break ;
-	    	if ( v->items[b].to == o->to ) break ;
+	    	if ( v->items[b].from == o->get_from() ) break ;
+	    	if ( v->items[b].from == o->get_to() ) break ;
+	    	if ( v->items[b].to == o->get_from() ) break ;
+	    	if ( v->items[b].to == o->get_to() ) break ;
   			}    
 		if ( b < v->items.size() ) continue ; // Already a CDS item
-		TVectorItem i ( _T("???") , _T("Unknown open reading frame") , o->from , o->to , VIT_CDS ) ;
+		TVectorItem i ( _T("???") , _T("Unknown open reading frame") , o->get_from() , o->get_to() , VIT_CDS ) ;
 		i.setRF ( 1 ) ;
-		i.setDirection ( o->rf > 0 ? 1 : -1 ) ;
+		i.setDirection ( o->get_rf() > 0 ? 1 : -1 ) ;
 		v->items.push_back ( i ) ;
 		found |= true ;
 		}    

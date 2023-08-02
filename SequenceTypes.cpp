@@ -11,6 +11,7 @@ void SeqBasic::init ( SequenceCanvas *ncan )
     takesMouseActions = false ;
     can = ncan ;
     endnumberlength = 0 ;
+    force_add_line_number = 0 ;
     }
 
 void SeqBasic::logsize ()
@@ -88,7 +89,6 @@ int SeqPrimer::arrange_direct ( int n )
 
 void SeqPrimer::show_direct ( wxDC& dc )
     {
-//    show ( dc ) ;
     SeqDNA::show_direct ( dc ) ;
     }    
 
@@ -101,7 +101,8 @@ void SeqPrimer::show ( wxDC& dc )
     int bm = dc.GetBackgroundMode () ;
     int a , b , cnt = offset+1 ;
     wxString t ;
-//    char u[100] ;
+	bool showLowercaseDNA = myapp()->frame->showLowercaseDNA ;
+
     dc.SetTextBackground ( *wxWHITE ) ;
     dc.SetTextForeground ( *wxBLACK ) ;
     dc.SetBackgroundMode ( wxSOLID ) ;
@@ -114,7 +115,7 @@ void SeqPrimer::show ( wxDC& dc )
     for ( a = 0 ; a < pos.p.GetCount() ; a++ )
         {
         b = pos.p[a] ;
-        int tx = pos.r[a].x , ty = pos.r[a].y ;
+        int ty = pos.r[a].y ;
         int tz = ty + can->charheight ;
         bool insight = true ;
         if ( tz < ya ) insight = false ;
@@ -144,7 +145,8 @@ void SeqPrimer::show ( wxDC& dc )
               dc.SetBackgroundMode ( wxTRANSPARENT ) ;
               }
 
-           dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
+		   if ( showLowercaseDNA ) dc.DrawText ( t.Lower() , pos.r[a].x, pos.r[a].y ) ;
+           else dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
 
            if ( pm == 2 && !can->doOverwrite() )
               {
@@ -211,14 +213,14 @@ void SeqPrimer::addPrimer ( TPrimer *p )
 
 int SeqNum::arrange ( int n )
     {
-    int a , x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
+    int a , x , y , w , h , bo = can->border , lowy = 0 ;
     int lasta = 0 ;
     
     // Setting basic values
     can->SetFont(*can->font);
     int wx = can->charwidth , wy = can->charheight ;
     endnumberlength = 0 ;
-    int ox = bo+wx , oy = n*wy+bo , endnumber = offset + s.length() ;
+    int ox = bo+wx , oy = n*wy+bo ;//, endnumber = offset + s.length() ;
     
     endnumberlength = 0 ;
     for ( a = 0 ; a < can->seq.GetCount() ; a++ )

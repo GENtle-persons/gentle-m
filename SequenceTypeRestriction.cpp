@@ -5,9 +5,9 @@
 
 int SeqRestriction::arrange ( int n )
     {
-    unsigned int a , b ;
-    int x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
-    int lasta = 0 , cut , thepos ;
+    unsigned int a ;
+    int x , y , w , h , bo = can->border , lowy = 0 ;
+    int lasta = 0 ;
     wxString t ;
 
     pl.slen = vec->getSequenceLength() + ( ( can && can->getEditMode() ) ? -1 : 0 ) ;
@@ -32,7 +32,9 @@ int SeqRestriction::arrange ( int n )
     
     can->MyGetClientSize ( &w , &h ) ;
 
-    itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx - 1 ) * can->blocksize ;
+    itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx - 1 ) ;
+    if ( itemsperline == 0 ) itemsperline = 1 ;
+	itemsperline *= can->blocksize ;
 
     pos.cleanup() ;
     bool direct = useDirectRoutines() ;
@@ -69,7 +71,7 @@ void SeqRestriction::show ( wxDC& dc )
 	myass ( can , "SeqRestriction::show1" ) ;
 	myass ( vec , "SeqRestriction::show2" ) ;
 	mylog ( "SeqRestriction::show" , "1" ) ;
-    int cw2 , ch2 ;
+    int ch2 ;
     dc.SetFont(*can->smallFont);
     dc.GetTextExtent ( _T("A") , &ch2 , &ch2 ) ;
     int xa , ya , yb ;
@@ -89,8 +91,7 @@ void SeqRestriction::show ( wxDC& dc )
     for ( int level = 0 ; level < pl.maxlevels ; level++ )
         {
         mylog ( "SeqRestriction::show" , wxString::Format ( "Round %d of %d" , level , pl.maxlevels ) ) ;
-        int a , b , cut ;
-        char u[100] ;
+        int a , b ;
         char lc = ' ' ;
         int ly = -1 ;
         int yo = (level*2) * 2 - 6 ;
@@ -117,7 +118,7 @@ void SeqRestriction::show ( wxDC& dc )
            dc.SetPen(*wxBLACK_PEN); 
            dc.SetTextForeground ( *wxBLACK ) ; 
            }
-        int qlx = -1 , idx ;
+        int qlx = -1 , idx = -1;
         wxRect ra , rb ;
         mylog ( "SeqRestriction::show" , "B" ) ;
         for ( a = 0 ; a < vec->getSequenceLength() ; a++ )
@@ -136,7 +137,7 @@ void SeqRestriction::show ( wxDC& dc )
             else ra = getRect ( a ) ;
                     
             
-            int tx = ra.x , ty = ra.y ;
+            int ty = ra.y ;
             int tz = ty + can->charheight ;
             
             bool insight = true ; // Meaning "is this part visible"

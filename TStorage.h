@@ -51,25 +51,10 @@ class TSQLresult
     wxArrayString field ; ///< List of result fields (or column names)
     vector <wxArrayString> content ; ///< The results table ([row][column])
     
-    /// \brief Reset internal state
-    void clean()
-        {
-        field.Clear() ;
-        while ( content.size() ) content.pop_back() ;
-        }
-    int cols () { return field.GetCount() ; }  ///< Number of columns (fields) in the result table
-    int rows () { return content.size() ; } ///< Number of rows in the result table
-    
-    /// \brief Returns entry for field s in row i
-    wxString item ( char *s , int i )
-        {
-        int a ;
-        wxString s2 ( s , *wxConvCurrent ) ;
-        for ( a = 0 ; a < field.GetCount() ; a++ )
-           if ( 0 == s2.CmpNoCase ( field[a] ) )
-               return content[i][a] ;
-        return _T("") ;
-        }
+    void clean() ; ///< Reset internal state
+    int cols () ; ///< Number of columns (fields) in the result table
+    int rows () ; ///< Number of rows in the result table
+    wxString item ( char *s , int i ) ; ///< Returns entry for field s in row i
     
     ///< \brief Returns row i
     wxArrayString & operator [] ( int i )
@@ -167,9 +152,9 @@ class TStorage
     void setEnzymeCache ( wxString group , wxArrayString &enzymes ) ; ///< Set cache for an enzyme group
     void getEnzymeCache ( wxString group , wxArrayString &enzymes ) ; ///< Get cached enzyme group data
     bool isLocalDB () ; ///< Is this the local database?
-    bool convertSqlite2to3 () ; ///< Converts a sqlite2 database into sqlite3
+//    bool convertSqlite2to3 () ; ///< Converts a sqlite2 database into sqlite3
     void createDatabaseSqlite3 () ; ///< Creates an sqlite3 database (NOT FUNCTIONAL)
-    TSQLresult getObjectSqlite2 ( const wxString &query ) ; ///< Get object from sqlite2 database
+//    TSQLresult getObjectSqlite2 ( const wxString &query ) ; ///< Get object from sqlite2 database
     TSQLresult getObjectSqlite3 ( const wxString &query ) ; ///< Get object from sqlite3 database
     TSQLresult getObject_MySQL ( const wxString &query ) ; ///< Get object from MySQL database
     

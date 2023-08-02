@@ -2,6 +2,6 @@
 ...dass viele Funtionen in GENtle über die rechte Maustaste erreicht werden können?
 ...dass Sequenzen einfach über "F2" bearbeitet werden können?
 ...dass GENtle auch die mittlere Maustaste unterstützt, die auch über "Alt+linke Maustaste" simuliert werden kann?
-...dass Sie unter en.wikibooks.org/wiki/GENtle_manual mithelfen können, die GENtle-Anleitung zu verbessern?
+...dass Sie unter en.wikibooks.org/wiki/GENtle mithelfen können, die GENtle-Anleitung zu verbessern?
 ...dass GENtle nicht nur Bilder exportieren, sondern auch anzeigen kann (Werkzeuge/Bildbetrachter)?
 ...dass dies der letzte Tip ist, und jetzt alles wieder von vorne beginnt?

@@ -166,6 +166,7 @@ class SeqBasic
 	wxArrayInt highlight_begin , highlight_end ;
 	vector <wxColour> highlight_color ;
     SeqPos pos ; ///< Position class (empty when using direct routines)
+    int force_add_line_number ; ///< Default counter to add to the line number display; usually 0
     } ;
 
 /** \brief Sequence display class showing numbers "inline"
@@ -305,7 +306,9 @@ class SeqAA : public SeqBasic
         init ( ncan ) ; 
         mode = AA_ALL ; 
         primaryMode = false ; 
-        unknownAA = '?' ; } ///< Constructor
+        unknownAA = '?' ;
+        show_diff_to = NULL ;
+		} ///< Constructor
     virtual ~SeqAA () ; ///< Destructor
     virtual int  arrange ( int n ) ; ///< Arrange "chars" as line n
     virtual void show ( wxDC& dc ) ; ///< Show
@@ -340,17 +343,43 @@ class SeqAA : public SeqBasic
     wxArrayTProtease proteases ; ///< List of proteases to look for
     wxArrayInt offsets , pa_wa ;
     wxArrayTVectorItem offset_items ;
+    SeqAA *show_diff_to ;
     } ;
+
+/** \brief Sequence display class showing amino acids
+*/
+class SeqAAstructure : public SeqBasic
+    {
+    public :
+    SeqAAstructure ( SequenceCanvas *ncan = NULL , SeqAA *_aa = NULL ) ;
+    virtual wxString whatsthis () { return _T("SEQAASTRUCTURE") ; } ///< Returns the linetype
+    virtual ~SeqAAstructure () ; ///< Destructor
+    virtual int  arrange ( int n ) ; ///< Arrange "chars" as line n
+    virtual void show ( wxDC& dc ) ; ///< Show
+	
+	// Variables
+	SeqAA *aa ;
+	
+	private:
+    void draw_amino_acid ( wxDC &dc , char as , int x , int y , int w , int h ) ;
+	void add_atom ( vector <wxPoint> &atom_pos , wxString &atom_type , char atom , int x , int y ) ;
+	void add_bond ( vector <wxPoint> &bond , int from , int to , bool double_bond = false ) ;
+	
+	wxBrush *brush_C , *brush_N , *brush_S , *brush_O ;
+	wxPen *pen_C , *pen_N , *pen_S , *pen_O ;
+	} ;
 
 /** \brief Sequence display class showing ABI sequencer peaks
 */
 class SeqABI : public SeqDNA
     {
     public :
-    SeqABI ( SequenceCanvas *ncan = NULL ) { at = NULL ; inv_compl = false ; init ( ncan ) ; } ///< Constructor
+    SeqABI ( SequenceCanvas *ncan = NULL ) { view_from = view_to = -1 ; at = NULL ; inv_compl = false ; init ( ncan ) ; } ///< Constructor
     virtual ~SeqABI () ; ///< Destructor
     virtual int  arrange ( int n ) ; ///< Arrange "chars" as line n
+    virtual int  arrange_sd ( int n ) ; ///< Arrange "chars" as line n, for data in sd
     virtual void show ( wxDC& dc ) ; ///< Show
+    virtual void show_sd ( wxDC& dc ) ; ///< Show, for data in sd
     virtual void initFromFile ( wxString filename ) ; ///< Setup sequence from ABI file
     virtual wxString whatsthis () { return _T("ABI") ; } ///< Returns the linetype
     virtual void drawTopLine ( wxDC &dc , int y ) ; ///< Some layout thingy
@@ -361,6 +390,7 @@ class SeqABI : public SeqDNA
     virtual bool useDirectRoutines () { return false ; } ///< Do we draw directly (or do we use SeqPos)?
     
     // Variables
+    TSequencerData sd ;
     ABItype *at ; ///< Pointer to the calling ABI module
     int minx , maxx ;
     int scalex ;
@@ -370,6 +400,11 @@ class SeqABI : public SeqDNA
     int screenScale ;
     int zoom ; ///< Zoom factor
     bool inv_compl ; ///< Use inverse/complement?
+    long view_from , view_to ;
+    
+    private :
+	int get_bx ( int id , int idx ) ;
+	int strange_compensation_factor ;
     } ;
 
 /** \brief Sequence display class showing annotated features
@@ -517,6 +552,7 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void OnKillFocus(wxFocusEvent& event) ; ///<  "Display loses focus" event handler
     virtual void OnAppearance(wxCommandEvent& event) ; ///<  Change the apperance of the sequence
     virtual void rsHideLimit ( wxCommandEvent &ev ) ; ///<  "Limit restriction enzymes" event handler
+    virtual void OnABIViewOnly ( wxCommandEvent &ev ) ; ///<  View toggle for ABI display
     
     virtual wxString getSelection () ; ///< Returns the current selection as a wxString
     
@@ -565,6 +601,8 @@ class SequenceCanvas : public wxScrolledWindow
     virtual int markedTo () { return _to ; } ///< Return last marked position, or -1
     virtual void unmark () ; ///< Removes any marking
     virtual int NumberOfLines() { return seq.GetCount() + blankline ; } ///< Returns the number of seq struntures AND blank lines
+    virtual void set_font_size ( int size = 12 ) ;
+    virtual TVector *getPCR_DNA_vector() ; ///< Returns a pointer to the DNA vector in PCR mode; otherwise, NULL
 
     ChildBase *child ; ///< Wanna-be universal pointer to the containing module
     MyChild *p ; ///< Pointer to the containing MyChild; if this is not within the DNA module, NULL
@@ -576,7 +614,6 @@ class SequenceCanvas : public wxScrolledWindow
     
     private :
     virtual wxBitmap *getSequenceBitmap () ; ///< Returns the sequences display as a bitmap
-    virtual TVector *getPCR_DNA_vector() ; ///< Returns a pointer to the DNA vector in PCR mode; otherwise, NULL
     virtual void showContextMenu ( SeqBasic *where , int pos , wxPoint pt ) ; ///< Generates the context menu
     virtual void insertRestrictionSite ( bool left ) ; ///< Creates a new restriction site via simulated editing, left or right of the current mark
     virtual void editSequence ( int k , wxKeyEvent& event ) ;
@@ -594,6 +631,7 @@ class SequenceCanvas : public wxScrolledWindow
     SeqAlign *last_al ;
     SeqBasic *lastwhere ;
     int contextMenuPosition ;
+    int last_font_size ;
     
     DECLARE_EVENT_TABLE()
     };

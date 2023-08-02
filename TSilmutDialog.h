@@ -60,6 +60,7 @@ class TSilmutDialog : public wxDialog
     wxListBox *lb ;
     wxCheckBox *allow_cut_removal ;
     TPrimerDesign *pd ;
+    wxStaticText *status ;
     wxSpinCtrl *lim_xhg , *lim_max ;
     wxChoice *egr , *mut ;
     wxArrayInt lb_retro ;

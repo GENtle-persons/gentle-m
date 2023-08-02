@@ -49,9 +49,10 @@ class TRestrictionEditor : public wxDialog
     virtual void add2cocktail ( wxString s ) ; ///< Add enzyme to restriction cocktail
     virtual void del_from_cocktail ( wxString s ) ; ///< Remove enzyme from restriction cocktail
     virtual void refreshCocktail () ; ///< Update cocktail list
-    virtual void getFragmentList ( wxArrayInt &cuts , vector <TFragment> &fragments ) ; ///< Set list of fragments
+    virtual void getFragmentList ( wxArrayInt &cuts , vector <TFragment> &fragments , bool clear = true ) ; ///< Set list of fragments
     virtual void listFragments ( wxListCtrl *list , wxArrayInt &vi ) ; ///< Show fragments in a list
     virtual void listEnzymesInGroup ( wxString gr , wxArrayString &vs ) ; ///< List the enzymes in group
+    virtual void iterateFragments ( wxArrayInt cuts , vector <TFragment> &fragments , int depth = 0 ) ;
 
     virtual void res_ll ( wxListEvent &event ) ; ///<  event handler
     virtual void res_coc_ll ( wxListEvent &event ) ; ///<  event handler
@@ -70,7 +71,7 @@ class TRestrictionEditor : public wxDialog
     virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
     
     // Variables
-    wxCheckBox *createFragments , *add2gel , *oneLaneEach ;
+    wxCheckBox *createFragments , *add2gel , *oneLaneEach , *partialDigestion ;
     wxListCtrl *el , *el2 , *rsl , *rsl2 ;
     wxRadioBox *rb ;
     wxChoice *gl ;

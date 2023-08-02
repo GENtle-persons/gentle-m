@@ -6,6 +6,7 @@
 #include "SendHTTP.h"
 #include <wx/filesys.h>
 #include <wx/protocol/http.h>
+#include <wx/protocol/ftp.h>
 
 myExternal::myExternal () { pd = NULL ; } ;
 
@@ -45,6 +46,7 @@ wxString myExternal::getTextHTTP ( wxString url )
     wxFSFile *file = fs.OpenFile ( url ) ;
     if ( !file ) return _T("") ; // Error
     wxInputStream *in_stream = file->GetStream () ;
+
     if ( !in_stream ) // Error
     	{
 		delete file ;
@@ -59,15 +61,57 @@ wxString myExternal::getTextHTTP ( wxString url )
 		ret += wxString ( n , wxConvUTF8 ) ;
 		}
 
-		
-//    while ( !in_stream->Eof() ) ret += (wxChar) in_stream->GetC() ;
     delete file ;
     return ret ; 
 }
 
+wxString myExternal::getTextFTP ( wxString server , wxString dir , wxString file )
+	{
+	wxString ret ;
+	wxFTP ftp;
+
+    if ( !ftp.Connect(server) ) return ret ;
+    if ( !ftp.ChDir(dir) ) return ret ;
+
+	int size = ftp.GetFileSize ( file ) ;
+    wxInputStream *in = ftp.GetInputStream(file);
+    if ( in )
+	    {
+		char data[10001] ;
+		int read_total = 0 ;
+		wxProgressDialog pd ( txt("t_downloading_rebase") , _T("") , size , NULL , 
+				wxPD_AUTO_HIDE|wxPD_APP_MODAL|wxPD_SMOOTH|wxPD_ELAPSED_TIME|wxPD_ESTIMATED_TIME|wxPD_REMAINING_TIME|wxPD_CAN_ABORT ) ;
+		while ( read_total < size )
+			{
+			in->Read ( data , 10000 ) ;
+			int read = in->LastRead() ;
+			read_total += read ;
+			data[read] = 0 ;
+			ret += wxString ( data , wxConvUTF8 ) ;
+			wxString msg = wxString::Format ( txt("t_downloading_rebase2") , read_total * 100 / size ) ;
+			if ( !pd.Update ( read_total , msg ) )
+				{
+				delete in ;
+				ret.Clear() ;
+				return ret ;
+				}
+			}
+        delete in;
+	    }
+    return ret ;
+	}
+
 wxString myExternal::getText ( wxString url )
 	{
 	if ( url.Left(7).Lower() == _T("http://") ) return getTextHTTP ( url ) ;
+	if ( url.Left(6).Lower() == _T("ftp://") )
+		{
+		url = url.Mid ( 6 ) ;
+		wxString server = url.BeforeFirst ( '/' ) ;
+		wxString file = url.AfterLast ( '/' ) ;
+		wxString dir = _T("/") + url.AfterFirst('/').BeforeLast('/') ;
+		return getTextFTP ( server , dir , file ) ;
+		}
 	return getTextLocal ( url ) ; // fallback
 	}
      

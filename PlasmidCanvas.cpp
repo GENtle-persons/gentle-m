@@ -68,7 +68,7 @@ void PlasmidCanvas::OnPaint(wxPaintEvent& event)
     }
 
 void PlasmidCanvas::setPrinting ( bool _b ) { printing = _b ; }
-void PlasmidCanvas::setLastContextItem ( int _i ) { context_last_item = _i ; }
+void PlasmidCanvas::setLastContextItem ( long _l ) { context_last_item = _l ; }
 void PlasmidCanvas::getMark ( int &i1 , int &i2 ) { i1 = getMarkFrom() ; i2 = getMarkTo() ; }
 void PlasmidCanvas::setRootChild ( MyChild *_p ) { p = _p ; }
 int PlasmidCanvas::getZoom () { return zoom ; }
@@ -304,8 +304,8 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
 
 
     wxPoint pt2 , pto = pt ;
-    int a , vo , rs , orf , pos = 0 , lineOff = w/20 ;
-    float angle , radius ;
+    int vo = -1 , rs = -1 , orf = -1 , lineOff = w/20 ;
+    float angle = 0 , radius = 0 ;
     wxString s , id = _T("DNA") ;
     if ( p->def == _T("AminoAcids") ) id = _T("AA") ;
     
@@ -346,8 +346,23 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
         ReleaseMouse() ;
         }
 
+	// Scroll wheel
+    int wr = event.GetWheelDelta() ;
+	if ( wr != 0 ) wr = event.GetWheelRotation() * event.GetLinesPerAction() * ( wr < 0 ? 1 : -1 ) * zoom * 4 / 100 ;
+	
+    if ( wr != 0 && zoom != 100 )
+	{
+		int horiz = 0 ; //event.GetWheelAxis() ; // ACTIVATE FOR wxWidgets >= 2.9.0
+		int wrx = horiz ? wr : 0 ;
+		int wry = horiz ? 0 : wr ;
+		int nx , ny ;
+		GetViewStart ( &nx , &ny ) ;
+		Scroll ( nx + wrx , ny + wry ) ;
+	}
+	
+	
    // Moving canvas in zoom mode
-   if ( event.ControlDown() && zoom != 100 )
+   if ( event.CmdDown() && zoom != 100 )
       {
         lastrestrictionsite = rs = -1 ;
         lastvectorobject = vo = -1 ;
@@ -399,7 +414,15 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
            }
         else if ( middledown )
            {
-           p->runRestriction ( s ) ;
+				p->runRestriction ( s );
+//           if ( !p->runRestriction ( s ) )
+           	{
+			p->vec->recalculateCuts() ;
+			p->vec->updateDisplay() ;
+			p->Refresh () ;
+			p->cSequence->SetFocus() ;
+			}
+			return ;
            }
         else if ( event.RightDown() )
            invokeRsPopup ( rs , pt_abs ) ;
@@ -471,7 +494,7 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
     else
         {
         SetMyToolTip ( _T("") , TT_NONE ) ;
-        if ( !event.ControlDown() ) SetCursor(*wxSTANDARD_CURSOR) ;
+        if ( !event.CmdDown() ) SetCursor(*wxSTANDARD_CURSOR) ;
         if ( mode == MODE_CIRCULAR )
         	{
         	wxLogStatus(txt("bp"), int(circular_pos ( angle )) ) ;
@@ -554,14 +577,14 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
     else if ( event.LeftIsDown() && orf != -1 )
         {
         p->cSequence->mark ( id ,
-                                p->vec->getORF(orf)->from + 1 ,
-                                p->vec->getORF(orf)->to + 1 ) ;
+                                p->vec->getORF(orf)->get_from() + 1 ,
+                                p->vec->getORF(orf)->get_to() + 1 ) ;
         }
     else if ( event.RightDown() && orf != -1 )
         {
         p->cSequence->mark ( id ,
-                                p->vec->getORF(orf)->from + 1 ,
-                                p->vec->getORF(orf)->to + 1 ) ;
+                                p->vec->getORF(orf)->get_from() + 1 ,
+                                p->vec->getORF(orf)->get_to() + 1 ) ;
         invokeORFpopup ( orf , pt_abs ) ;
         }
     else if ( event.LeftIsDown() && rs == -1 && vo == -1 && orf == -1 )
@@ -648,7 +671,7 @@ void PlasmidCanvas::SetMyToolTip ( wxString s , int mode )
 
     tt = new wxToolTip ( _T("") ) ;
     tt->Enable ( false ) ;
-    SetToolTip ( tt ) ;
+    if ( myapp()->frame->showToolTips ) SetToolTip ( tt ) ;
     
     if ( mode == TT_NONE )
         {
@@ -658,7 +681,7 @@ void PlasmidCanvas::SetMyToolTip ( wxString s , int mode )
     SetToolTip ( NULL ) ;
     tt = new wxToolTip ( s ) ;
     tt->Enable ( true ) ;
-    SetToolTip ( tt ) ;
+    if ( myapp()->frame->showToolTips ) SetToolTip ( tt ) ;
     }
 
 int PlasmidCanvas::findVectorObjectLinear ( wxPoint pp )
@@ -744,7 +767,8 @@ void PlasmidCanvas::invokeVectorEditor ( wxString what , int num , bool forceUpd
         ve.initialViewEnzyme ( p->vec->rc[num].e->getName() ) ;
         }
 
-    int x = ve.ShowModal () ;
+    //int x = 
+	ve.ShowModal () ;
     ve.cleanup () ;
     if ( forceUpdate || p->vec->isChanged() )
         {

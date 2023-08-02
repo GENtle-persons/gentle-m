@@ -62,13 +62,19 @@ class TORF
 	~TORF () {} ; ///< Destructor (empty)
     
     wxString getText () ;
+    void set ( int _f , int _t , int _r ) ;
+    inline int get_from () { return from ; }
+	inline int get_to () { return to ; }
+	inline int get_rf () { return rf ; }
+
+    float dist1 , dist2 ;
+    float deg1 , deg2 ;
     
+    private:
     /// \brief Start of ORF
     int from , to ; ///< End of ORF
     int rf ; ///< Reading frame
     
-    float dist1 , dist2 ;
-    float deg1 , deg2 ;
     } ;
 
 /// This class stores a codon and the corresponding amino acid. Used by TVector
@@ -87,7 +93,7 @@ class TVectorItem
     public :
     TVectorItem () ; ///< Default constructor
     TVectorItem ( wxString sn , wxString n , int f , int t , char ty ) ; ///< Constructor
-	 ~TVectorItem () {} ; ///< Destructor (empty)
+	~TVectorItem () {} ; ///< Destructor (empty)
     
     wxBrush *getBrush () ; ///< Returns a pointer to the brush used to draw the item
     wxColour getFontColor () ; ///< Returns the font color

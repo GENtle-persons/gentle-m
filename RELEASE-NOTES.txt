@@ -1,3 +1,10 @@
+CURRENT RELEASE NOTES ONLY AT
+http://en.wikibooks.org/wiki/GENtle:Release_notes
+
+
+OLD RELEASE NOTES
+
+
 1.8.1
 Notes
 * TIFF export deactivated due to patent enforcement

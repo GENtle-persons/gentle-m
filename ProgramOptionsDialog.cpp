@@ -206,7 +206,7 @@ ProgramOptionsDialog::ProgramOptionsDialog(wxWindow *parent, const wxString& tit
 	
     globalSettingsPanel = NULL ;
     nb = new wxNotebook ( (wxWindow*) this , -1 ) ;
-	wxNotebookSizer *nbs = new wxNotebookSizer ( nb ) ;
+//	wxNotebookSizer *nbs = new wxNotebookSizer ( nb ) ;
 
     initGlobalSettings () ;
     initGlobalEnzymes () ;
@@ -220,7 +220,7 @@ ProgramOptionsDialog::ProgramOptionsDialog(wxWindow *parent, const wxString& tit
 	h0->Add ( CANCEL , 1 , 0 ) ;
 	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , 0 ) ;
 
-	v0->Add ( nbs , 1 , wxALL|wxEXPAND , 5 ) ;
+	v0->Add ( nb , 1 , wxALL|wxEXPAND , 5 ) ;
 	v0->Add ( h0 , 0 , wxALL|wxEXPAND , 5 ) ;
 
 	SetSizer ( v0 ) ;
@@ -242,19 +242,15 @@ void ProgramOptionsDialog::initGlobalSettings ()
     globalSettingsPanel = new wxPanel ( nb , -1 ) ;
     nb->AddPage ( globalSettingsPanel , txt("t_global_settings") ) ;    
 
+	wxStaticBoxSizer *display_options = new wxStaticBoxSizer ( wxVERTICAL , globalSettingsPanel , txt("program_options_display") ) ;
+	wxStaticBoxSizer *general_options = new wxStaticBoxSizer ( wxVERTICAL , globalSettingsPanel , txt("program_options_general") ) ;
+
+	// General settings
     language = new wxChoice ( globalSettingsPanel , -1 ) ;
-    enhancedDisplay = new wxCheckBox ( globalSettingsPanel , -1 , 
-                        txt("t_enhanced_display") ) ; 
-    vectorTitle = new wxCheckBox ( globalSettingsPanel , -1 , 
-                        txt("t_vector_title") ) ;
-    vectorLength = new wxCheckBox ( globalSettingsPanel , -1 , 
-                        txt("t_vector_length") ) ;
     loadLastProject = new wxCheckBox ( globalSettingsPanel , -1 , 
                         txt("t_load_last_project") ) ;
     useMetafile = new wxCheckBox ( globalSettingsPanel , -1 , 
                         txt("t_use_metafile") ) ;
-    showSplashScreen = new wxCheckBox ( globalSettingsPanel , -1 , 
-                        txt("t_show_splashscreen") ) ;
     checkUpdate = new wxCheckBox ( globalSettingsPanel , -1 , 
                         txt("t_check4update") ) ;
     useInternalHelp = new wxCheckBox ( globalSettingsPanel , -1 , 
@@ -263,15 +259,38 @@ void ProgramOptionsDialog::initGlobalSettings ()
                         txt("t_useonlinehelp") ) ; 
     doRegisterStuff = new wxCheckBox ( globalSettingsPanel , -1 , 
                         txt("t_doregisterstuff") ) ; 
+    use_nonstandard_translation_table = new wxCheckBox ( globalSettingsPanel , -1 ,
+                        txt("t_use_nonstandard_translation_table") ) ;
+    nonstandard_translation_table = new wxChoice ( globalSettingsPanel , -1 ) ;
+    proxyName = new wxTextCtrl ( globalSettingsPanel , -1 , myapp()->frame->proxy.BeforeLast(':') ) ;
+    proxyPort = new wxTextCtrl ( globalSettingsPanel , -1 , myapp()->frame->proxy.AfterLast(':') ) ;
+
+	// ORF length
+    wxBoxSizer *orf_sizer = new wxBoxSizer ( wxHORIZONTAL ) ;	
+    orfLength = new wxTextCtrl ( globalSettingsPanel , -1 , wxString::Format ( _T("%d") , myapp()->frame->orfLength ) ) ;
+    orf_sizer->Add ( new wxStaticText ( globalSettingsPanel , -1 , _T("ORF length") ) , 0 , wxEXPAND|wxALL , 3 ) ;
+    orf_sizer->Add ( orfLength , 1 , wxEXPAND|wxALL , 3 ) ;
+
+    
+    // Display options
+    enhancedDisplay = new wxCheckBox ( globalSettingsPanel , -1 , 
+                        txt("t_enhanced_display") ) ; 
+    vectorTitle = new wxCheckBox ( globalSettingsPanel , -1 , 
+                        txt("t_vector_title") ) ;
+    vectorLength = new wxCheckBox ( globalSettingsPanel , -1 , 
+                        txt("t_vector_length") ) ;
+    showSplashScreen = new wxCheckBox ( globalSettingsPanel , -1 , 
+                        txt("t_show_splashscreen") ) ;
     showEnzymePos = new wxCheckBox ( globalSettingsPanel , -1 ,
                         txt("t_showenzymepos") ) ;
     showTips = new wxCheckBox ( globalSettingsPanel , -1 ,
                         txt("t_show_tips") ) ;
 	useTwoToolbars = new wxCheckBox ( globalSettingsPanel , -1 ,
                         txt("t_use_two_toolbars") ) ;
-    use_nonstandard_translation_table = new wxCheckBox ( globalSettingsPanel , -1 ,
-                        txt("t_use_nonstandard_translation_table") ) ;
-    nonstandard_translation_table = new wxChoice ( globalSettingsPanel , -1 ) ;
+    showToolTips = new wxCheckBox ( globalSettingsPanel , -1 ,
+                        txt("t_show_tooltips") ) ;
+    showLowercaseDNA = new wxCheckBox ( globalSettingsPanel , -1 ,
+                        txt("t_show_lowercase_dna") ) ; // !!!!! VARIABLES!!!!
                         
                         
     wxString efm[3] ;
@@ -309,9 +328,19 @@ void ProgramOptionsDialog::initGlobalSettings ()
     showEnzymePos->SetValue ( myapp()->frame->showEnzymePos ) ;
 	useTwoToolbars->SetValue ( myapp()->frame->useTwoToolbars ) ;
     showTips->SetValue ( myapp()->frame->LS->getOption ( _T("SHOWTIP") , true ) ) ;
+    showToolTips->SetValue ( myapp()->frame->LS->getOption ( _T("SHOWTOOLTIPS") , true ) ) ;
+    showLowercaseDNA->SetValue ( myapp()->frame->showLowercaseDNA ) ;
     use_nonstandard_translation_table->SetValue ( myapp()->frame->nonstandard_translation_table != -1 ) ;
-    language->Append ( _T("en") ) ;
-    language->Append ( _T("de") ) ;
+    
+    int a ;
+    for ( a = 0 ; a < myapp()->frame->language_list.GetCount() ; a++ )
+    	{
+		if ( myapp()->frame->language_list[a].IsEmpty() ) continue ;
+		language->Append ( myapp()->frame->language_list[a] ) ;
+		}
+    
+//    language->Append ( _T("en") ) ;
+//    language->Append ( _T("de") ) ;
     language->SetStringSelection ( myapp()->frame->lang_string ) ;
     aacol = myapp()->frame->aa_color ;
     
@@ -329,36 +358,45 @@ void ProgramOptionsDialog::initGlobalSettings ()
     	nonstandard_translation_table->SetSelection ( tt_mark ) ;
     else nonstandard_translation_table->SetSelection ( 0 ) ;
 
-    wxBoxSizer *v = new wxBoxSizer ( wxVERTICAL ) ;
+    wxBoxSizer *proxy_sizer = new wxBoxSizer ( wxHORIZONTAL ) ;
+    proxy_sizer->Add ( new wxStaticText ( globalSettingsPanel , -1 , txt("t_proxy_name") ) , 0 , wxEXPAND|wxALL , 3 ) ;
+    proxy_sizer->Add ( proxyName , 1 , wxEXPAND|wxALL , 3 ) ;
+    proxy_sizer->Add ( new wxStaticText ( globalSettingsPanel , -1 , txt("t_proxy_port") ) , 0 , wxEXPAND|wxALL , 3 ) ;
+    proxy_sizer->Add ( proxyPort , 0 , wxEXPAND|wxALL , 3 ) ;
+
+    wxBoxSizer *v = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h = new wxBoxSizer ( wxHORIZONTAL ) ;
-    wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
-    wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
     h->Add ( new wxStaticText ( globalSettingsPanel , -1 , txt("t_language") ) , 0 , wxEXPAND|wxALL , 3 ) ;
     h->Add ( language , 0 , wxEXPAND|wxALL , 3 ) ;
 
-    h1->Add ( showStopCodon , 1 , wxEXPAND|wxALL , 3 ) ;
-    h1->Add ( b_aacol, 0 , wxEXPAND|wxALL , 3 ) ;
-
-	 h2->Add ( use_nonstandard_translation_table , 0 , wxEXPAND|wxALL , 3 ) ; 
-	 h2->Add ( nonstandard_translation_table , 0 , wxEXPAND|wxALL , 3 ) ; 
-	 
-    v->Add ( h , 0 , wxEXPAND|wxALL , 3 ) ;
-    v->Add ( enhancedDisplay , 0 , wxEXPAND|wxALL , 3 ) ;
-    v->Add ( vectorTitle , 0 , wxEXPAND|wxALL , 3 ) ;
-    v->Add ( vectorLength , 0 , wxEXPAND|wxALL , 3 ) ;
-    v->Add ( loadLastProject , 0 , wxEXPAND|wxALL , 3 ) ;
-    v->Add ( useMetafile , 0 , wxEXPAND|wxALL , 3 ) ;
-    v->Add ( showSplashScreen , 0 , wxEXPAND|wxALL , 3 ) ;
-    v->Add ( checkUpdate , 0 , wxEXPAND|wxALL , 3 ) ;
-    v->Add ( useInternalHelp , 0 , wxEXPAND|wxALL , 3 ) ;
-	v->Add ( useOnlineHelp , 0 , wxEXPAND|wxALL , 3 ) ;
-    v->Add ( doRegisterStuff , 0 , wxEXPAND|wxALL , 3 ) ;
-    v->Add ( showEnzymePos , 0 , wxEXPAND|wxALL , 3 ) ;
-    v->Add ( showTips , 0 , wxEXPAND|wxALL , 3 ) ;
-	v->Add ( useTwoToolbars , 0 , wxEXPAND|wxALL , 3 ) ;
-    v->Add ( editFeatureMode , 0 , wxEXPAND|wxALL , 3 ) ;
-    v->Add ( h1 , 0 , wxEXPAND|wxALL , 3 ) ;
-    v->Add ( h2 , 0 , wxEXPAND|wxALL , 3 ) ;
+    v->Add ( general_options , 0 , wxEXPAND|wxALL , 3 ) ;
+    v->Add ( display_options , 0 , wxEXPAND|wxALL , 3 ) ;
+	
+    general_options->Add ( h , 0 , wxEXPAND|wxALL , 3 ) ;
+    general_options->Add ( loadLastProject , 0 , wxEXPAND|wxALL , 3 ) ;
+    general_options->Add ( useMetafile , 0 , wxEXPAND|wxALL , 3 ) ;
+    general_options->Add ( checkUpdate , 0 , wxEXPAND|wxALL , 3 ) ;
+    general_options->Add ( useInternalHelp , 0 , wxEXPAND|wxALL , 3 ) ;
+	general_options->Add ( useOnlineHelp , 0 , wxEXPAND|wxALL , 3 ) ;
+    general_options->Add ( doRegisterStuff , 0 , wxEXPAND|wxALL , 3 ) ;
+    general_options->Add ( new wxStaticText ( globalSettingsPanel , -1 , _T("") ) , 0 , wxEXPAND|wxALL , 3 ) ;
+    general_options->Add ( use_nonstandard_translation_table , 0 , wxEXPAND|wxALL , 3 ) ; 
+    general_options->Add ( nonstandard_translation_table , 0 , wxEXPAND|wxALL , 3 ) ;
+    general_options->Add ( proxy_sizer , 0 , wxEXPAND|wxALL , 3 ) ;
+    general_options->Add ( orf_sizer , 0 , wxEXPAND|wxALL , 3 ) ;
+    
+    display_options->Add ( enhancedDisplay , 0 , wxEXPAND|wxALL , 3 ) ;
+    display_options->Add ( vectorTitle , 0 , wxEXPAND|wxALL , 3 ) ;
+    display_options->Add ( vectorLength , 0 , wxEXPAND|wxALL , 3 ) ;
+    display_options->Add ( showSplashScreen , 0 , wxEXPAND|wxALL , 3 ) ;
+    display_options->Add ( showEnzymePos , 0 , wxEXPAND|wxALL , 3 ) ;
+    display_options->Add ( showTips , 0 , wxEXPAND|wxALL , 3 ) ;
+	display_options->Add ( useTwoToolbars , 0 , wxEXPAND|wxALL , 3 ) ;
+    display_options->Add ( showToolTips , 0 , wxEXPAND|wxALL , 3 ) ;
+    display_options->Add ( showLowercaseDNA , 0 , wxEXPAND|wxALL , 3 ) ;
+    display_options->Add ( editFeatureMode , 0 , wxEXPAND|wxALL , 3 ) ;
+    display_options->Add ( showStopCodon , 1 , wxEXPAND|wxALL , 3 ) ;
+    display_options->Add ( b_aacol, 0 , wxEXPAND|wxALL , 3 ) ;
 
 	 globalSettingsPanel->SetSizer ( v ) ;
 	 v->Fit ( globalSettingsPanel ) ;
@@ -382,12 +420,12 @@ void ProgramOptionsDialog::OnAACol ( wxCommandEvent &ev )
 
 void ProgramOptionsDialog::OnOK ( wxCommandEvent &ev )
     {
-    wxDialog::OnOK ( ev ) ;
+    EndModal ( wxID_OK ) ; //wxDialog::OnOK ( ev ) ;
     }
 
 void ProgramOptionsDialog::OnCancel ( wxCommandEvent &ev )
     {
-    wxDialog::OnCancel ( ev ) ;
+    EndModal ( wxID_CANCEL ) ; //wxDialog::OnCancel ( ev ) ;
     }
 
 
@@ -561,7 +599,7 @@ wxColour TEnzymeRules::scan_color ( wxString s )
 
 wxColour *TEnzymeRules::getColor ( int cuts )
 	{
-	if ( !use_color_coding || cuts == 0 || cuts > 3 ) return wxBLACK ;
+	if ( !use_color_coding || cuts == 0 || cuts > 3 ) return (wxColour*) wxBLACK ;
 	if ( cuts == 1 ) return &col1 ;
 	if ( cuts == 2 ) return &col2 ;
 	if ( cuts == 3 ) return &col3 ;

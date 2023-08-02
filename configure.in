@@ -5,7 +5,7 @@ dnl Name:       configure.in
 dnl Purpose:    Create configure for wxAuto sample project
 dnl Author:     Linus McCabe
 dnl Created:    2004-09-17
-dnl RCS-ID:     $Id$
+dnl RCS-ID:     $Id: configure.in,v 1.5 2005/05/09 10:38:21 magnus_manske Exp $
 dnl Copyright:  (c) 2004 Linus McCabe <linus@mccabe.nu>
 dnl Licence:    The wxWidgets License
 dnl ---------------------------------------------------------------------------

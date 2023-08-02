@@ -60,6 +60,9 @@ TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode 
 	h1->Add ( lim_max , 0 , wxEXPAND|wxALL , 5 ) ;
     h1->Add ( new wxStaticText ( this , -1 , txt("t_silmut_max_cut2") ) , 0 , wxEXPAND|wxALL , 5 ) ;
 
+	status = new wxStaticText ( this , -1 , _T("") ) ;
+	status->Hide() ;
+
 	// Enzyme groups
     wxArrayString z ;
     myapp()->frame->LS->getEnzymeGroups ( z ) ;
@@ -93,6 +96,7 @@ TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode 
 	v0->Add ( h1 , 0 , wxEXPAND ) ;
 	v0->Add ( h2 , 0 , wxEXPAND ) ;
 	v0->Add ( lb , 1 , wxEXPAND ) ;
+	v0->Add ( status , 0 , wxEXPAND ) ;
 	
     if ( mode == M_WHATCUTS )
         {
@@ -163,14 +167,14 @@ void TSilmutDialog::OnOK ( wxCommandEvent &ev )
     {
     last_selection = lb->GetSelection () ;
     if ( last_selection < 0 )
-        wxDialog::OnCancel ( ev ) ;
+        EndModal ( wxID_CANCEL ) ; //wxDialog::OnCancel ( ev ) ;
     else
-        wxDialog::OnOK ( ev ) ;
+        EndModal ( wxID_OK ) ; //wxDialog::OnOK ( ev ) ;
     }
     
 void TSilmutDialog::OnCancel ( wxCommandEvent &ev )
     {
-    wxDialog::OnCancel ( ev ) ;
+    EndModal ( wxID_CANCEL ) ; //wxDialog::OnCancel ( ev ) ;
     }
     
 void TSilmutDialog::OnSpin ( wxSpinEvent &event )
@@ -195,8 +199,19 @@ void TSilmutDialog::OnChoose ( wxCommandEvent &event )
 void TSilmutDialog::calc ()
     {
     SetCursor ( *wxHOURGLASS_CURSOR ) ;
-    wxString orig_aa = getAAresult ( v->getSequence() ) ;
     bool acr = allow_cut_removal->GetValue() ;
+    wxString orig_aa = getAAresult ( v->getSequence() ) ;
+    wxString orig_aa_trim = orig_aa ;
+    
+    if ( mode == M_SILMUT && orig_aa_trim.Trim().IsEmpty() )
+    	{
+		status->SetLabel ( txt("t_no_reading_frame") ) ;
+		status->Show ( TRUE ) ;
+		SetCursor ( *wxSTANDARD_CURSOR ) ;
+		return ;
+		}
+	else status->Hide() ;
+    
     int limit = lim_xhg->GetValue() ; // Maximum number of exchanges
     int limit_cuts = lim_max->GetValue() ; // Maximum number of cuts
     vs.clear() ;
@@ -212,104 +227,125 @@ void TSilmutDialog::calc ()
         wxArrayString z ;
         myapp()->frame->LS->getEnzymesInGroup ( group , z ) ;
         for ( a = 0 ; a < z.GetCount() ; a++ )
-           re.Add ( myapp()->frame->LS->getRestrictionEnzyme ( z[a] ) ) ;
+        	re.Add ( myapp()->frame->LS->getRestrictionEnzyme ( z[a] ) ) ;
         }
     
     wxString vseq = v->getSequence() ; // Marked sequence, uppercase
-    wxString vseq_l = vseq ; // Marked sequence, lowercase
-    for ( a = 0 ; a < vseq.length() ; a++ )
-        {
-        if ( vseq.GetChar(a) >= 'A' && vseq.GetChar(a) <= 'Z' )
-           vseq_l.SetChar ( a , vseq.GetChar(a) - 'A' + 'a' ) ;
-        }
+    wxString vseq_l = vseq.Lower() ; // Marked sequence, lowercase
+    
+    
     
     // Check each restriction enzyme
     for ( a = 0 ; a < re.GetCount() ; a++ )
-        {
-        TRestrictionEnzyme *e = re[a] ;
-        wxString s = e->getSequence() ;
-        int f , t ;
-        f = from - s.length() + 1 ;
-        t = to - 1 ;
-        if ( f < 0 ) f = 0 ;
-        while ( t + s.length() >= vseq.length() ) t-- ;
-        for ( b = f ; b <= t ; b++ )
-           {
-           match = mismatch = 0 ;
-           wxString x ;
-           for ( c = 0 ; c < s.length() && mismatch <= limit ; c++ )
-              {
-              if ( v->basematch ( vseq.GetChar(b+c) , s.GetChar(c) ) )
-            	{
-				match++ ;
-				x += vseq_l.GetChar(b+c) ;
-				}
-              else if ( b+c < from-1 || b+c >= to )
-			  	{
-				mismatch = limit + 1 ; // Needs mutation outside specified region
-				}
-              else
+		{
+		TRestrictionEnzyme *e = re[a] ;
+		wxString s = e->getSequence() ;
+		int f , t ;
+		f = from - s.length() + 1 ;
+		t = to - 1 ;
+		if ( f < 0 ) f = 0 ;
+		while ( t + s.length() >= vseq.length() ) t-- ;
+		for ( b = f ; b <= t ; b++ )
+			{
+			match = mismatch = 0 ;
+			wxString x ;
+			for ( c = 0 ; c < s.length() && mismatch <= limit ; c++ )
 				{
-				mismatch++ ;
-				x += s.GetChar(c) ;
+				if ( v->basematch ( vseq.GetChar(b+c) , s.GetChar(c) ) )
+					{
+					match++ ;
+					x += vseq_l.GetChar(b+c) ;
+					}
+				else if ( b+c < from-1 || b+c >= to )
+					{
+					mismatch = limit + 1 ; // Needs mutation outside specified region
+					}
+				else
+					{
+					mismatch++ ;
+					x += s.GetChar(c) ;
+					}
 				}
-              }
+			
+			// Does this preserve the amino acid sequence?
+			wxString new_dna ;
+			bool useit = false ;
+			if ( mismatch <= limit )
+				{
+				new_dna = vseq ;//v->getSequence() ;
+				for ( c = 0 ; c < new_dna.length() ; c++ )
+					{
+					if ( c >= b && c < b + s.length() && 
+						c-b >= 0 && c-b <= x.length() &&
+						x.GetChar(c-b) >= 'A' &&
+						x.GetChar(c-b) <= 'Z' ) 
+						new_dna.SetChar ( c ,  x.GetChar(c-b) ) ;
+					}
+				wxString new_aa = getAAresult ( new_dna ) ;
+				if ( new_aa == orig_aa ) useit = true ;
+				}
 
-           wxString new_dna = v->getSequence() ;
-           bool useit = false ;
-           if ( mismatch <= limit )
-              {
-              for ( c = 0 ; c < new_dna.length() ; c++ )
-                 if ( c >= b && c < b + s.length() && 
-                                  c-b >= 0 && c-b <= x.length() &&
-                                  x.GetChar(c-b) >= 'A' &&
-                                  x.GetChar(c-b) <= 'Z' ) 
-                    new_dna.SetChar ( c ,  x.GetChar(c-b) ) ;
-              wxString new_aa = getAAresult ( new_dna ) ;
-              if ( new_aa == orig_aa ) useit = true ;
-              }
-           else useit = false ;
-           
-           if ( acr && mismatch != 0 ) useit = false ; // Shorcut if used as "first stage"
-           
-           if ( useit )
-              {
-              wxString y ;
-              for ( c = from-1 ; c < to ; c++ )
-                 {
-                 if ( c >= b && c < b + s.length() ) y += x.GetChar(c-b) ;
-                 else y += vseq_l.GetChar(c) ; 
-                 }
-              TSilmutItem si ;
-              si.e = e ;
-              si.changes = mismatch ;
-              si.mut = y ;
-              wxString old_dna = v->getSequence() ;
-              v->setSequence ( new_dna ) ;
-              vector <TRestrictionCut> vc ;
-              v->getCuts ( e , vc ) ;
-              
-              // Calculating the resulting fragments
-              si.fragments.Alloc ( vc.size() + 5 ) ;
-              for ( c = 0 ; c < vc.size() ; c++ ) si.fragments.Add ( vc[c].getCut() ) ;
-              si.fragments.Add ( v->getSequenceLength()-1 ) ;
-              for ( c = si.fragments.GetCount()-1 ; c > 0 ; c-- )
-                 si.fragments[c] -= si.fragments[c-1] ;
-              si.fragments[0]++ ;
-              if ( v->isCircular() )
-                 {
-                 si.fragments[0] += si.fragments.Last() ;
-                 si.fragments.RemoveAt ( si.fragments.GetCount()-1 ) ;
-                 }
-              si.fragments.Sort(cmpint) ;
+			
+			if ( acr && mismatch != 0 ) useit = false ; // Shorcut if used as "first stage"
+			
+			if ( !useit ) continue ; // Don't use it!
 
-              si.cuts = vc.size() ;
-              v->setSequence ( old_dna ) ;
-              if ( vc.size() <= limit_cuts )
-                 vs.push_back ( si ) ;
-              }
-           }
-        }
+			// Add it to the list
+			wxString y ;
+			for ( c = from-1 ; c < to ; c++ )
+				{
+				if ( c >= b && c < b + s.length() ) y += x.GetChar(c-b) ;
+				else y += vseq_l.GetChar(c) ; 
+				}
+			TSilmutItem si ;
+			si.e = e ;
+			si.changes = mismatch ;
+			si.mut = y ;
+			wxString old_dna = v->getSequence() ;
+			v->setSequence ( new_dna ) ;
+			int ndl = new_dna.length() ;
+			vector <TRestrictionCut> vc ;
+			v->getCuts ( e , vc , true ) ;
+			
+			// Calculating the resulting fragments
+			wxArrayInt fragments ;
+			fragments.Alloc ( vc.size() + 5 ) ;
+			int now , last = -1 ;
+			for ( c = 0 ; c < vc.size() ; c++ )
+				{
+				now = vc[c].getPos() ;
+				if ( now > ndl ) now -= ndl ;
+				if ( now == last ) continue ;
+				last = now ;
+				fragments.Add ( now ) ;
+				}
+			fragments.Sort(cmpint) ;
+			now = ndl-1 ;
+			if ( last != now ) fragments.Add ( now ) ;
+			
+			for ( c = fragments.GetCount()-1 ; c > 0 ; c-- ) fragments[c] -= fragments[c-1] ;
+			fragments[0]++ ;
+
+			if ( v->isCircular() )
+				{
+				fragments[0] += fragments.Last() ;
+				fragments.RemoveAt ( fragments.GetCount()-1 ) ;
+				}
+
+			fragments.Sort(cmpint) ; // Sort fragments by size
+			
+			int cnt , sum = 0 ;
+			for ( cnt = 0 ; cnt < fragments.size() ; cnt++ ) sum += fragments[cnt] ;
+			fragments.Add ( sum ) ;
+			
+			si.fragments = fragments ;
+			
+			si.cuts = vc.size() ;
+			v->setSequence ( old_dna ) ;
+			if ( vc.size() <= limit_cuts ) vs.push_back ( si ) ;
+
+			}
+		}
     
     if ( acr ) calc_acr () ;
     
@@ -319,11 +355,10 @@ void TSilmutDialog::calc ()
 void TSilmutDialog::calc_acr ()
     {
     wxString orig_aa = getAAresult ( v->getSequence() ) ;
-    int limit = lim_xhg->GetValue() ; // Maximum number of exchanges
+//    int limit = lim_xhg->GetValue() ; // Maximum number of exchanges
     int limit_cuts = lim_max->GetValue() ; // Maximum number of cuts
     int a , b , c ;
-    int match , mismatch ;
-
+//    int match , mismatch ;
 
     
     // List of restriction enzymes to check
@@ -340,7 +375,7 @@ void TSilmutDialog::calc_acr ()
            vseq_l.SetChar ( a , vseq.GetChar(a) - 'A' + 'a' ) ;
         }
     
-    wxString bases = "ACTG" ;
+    wxString bases = _T("ACTG") ;
     
     // Check each restriction enzyme
     for ( a = 0 ; a < re.GetCount() ; a++ )

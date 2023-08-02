@@ -87,8 +87,8 @@ void TVirtualGel::initme ()
     wxToolBar *toolBar = CreateToolBar(wxTB_HORIZONTAL);
 	
 	int a ;
-	wxBoxSizer *hs = new wxBoxSizer ( wxHORIZONTAL ) ;
-	ch_percent = new wxChoice ( toolBar , VG_PERCENT , wxDefaultPosition , wxSize ( 50 , -1 ) ) ;
+	//wxBoxSizer *hs = new wxBoxSizer ( wxHORIZONTAL ) ;
+	ch_percent = new wxChoice ( toolBar , VG_PERCENT , wxDefaultPosition , wxSize ( 80 , -1 ) ) ;
 	ch_marker = new wxChoice ( toolBar , VG_MARKER , wxDefaultPosition , wxSize ( 250 , -1 ) ) ;
 	cb_label = new wxCheckBox ( toolBar , VG_LABEL , txt("t_vg_show_label") ) ;
 	cb_label->SetValue ( true ) ;
@@ -130,10 +130,18 @@ void TVirtualGel::initme ()
 		ch_percent->Append ( wxString::Format ( _T("%1.1f %%") , ((float)a)/10.0 ) ) ;
 		ch_percent->SetStringSelection ( _T("1.0 %") ) ;
 		
-		for ( a = 0 ; a < myapp()->frame->dna_marker.GetCount() ; a++ )
-			ch_marker->Append ( myapp()->frame->dna_marker[a].BeforeFirst(':') ) ;
-		ch_marker->SetStringSelection ( myapp()->frame->LS->getOption ( _T("LASTDNAMARKER") , 
-				myapp()->frame->dna_marker[0].BeforeFirst(':') ) ) ;
+			for ( a = 0 ; a < myapp()->frame->dna_marker.GetCount() ; a++ ) 
+			{
+				ch_marker->Append ( myapp()->frame->dna_marker[a].BeforeFirst(':') ) ;
+			}
+
+			
+			wxString mbf = _T("??") ;
+			if ( myapp()->frame && ( myapp()->frame->dna_marker.size() > 0 ) ) 
+			{
+				mbf = myapp()->frame->dna_marker[0].BeforeFirst(':') ;
+			}
+			ch_marker->SetStringSelection ( myapp()->frame->LS->getOption ( _T("LASTDNAMARKER") , mbf ) ) ;
 
 		lanes.push_back ( TGelLane() ) ;
 		lanes[0].setMarker ( ch_marker->GetStringSelection() ) ;
@@ -370,11 +378,28 @@ void TMyGelControl::OnEvent(wxMouseEvent& event)
     {
     wxPoint pt(event.GetPosition());
 
-    if ( event.RightDown() )
+	if ( event.LeftDClick() )
+		{
+		wxPoint p = event.GetPosition() ;
+		int a ;
+		for ( a = 0 ; a < vg->lanes.size() ; a++ )
+			{
+			if ( vg->lanes[a].pos.GetLeft() > p.x ) continue ;
+			if ( vg->lanes[a].pos.GetRight() < p.x ) continue ;
+			break ;
+			}
+		if ( a == vg->lanes.size() ) return ;
+//		if ( vg->lanes[a].type != "DNA" ) return ;
+		wxString s = wxGetTextFromUser ( txt("t_vg_edit_name1") , txt("t_vg_edit_name2") , vg->lanes[a].name ) ;
+		if ( s.IsEmpty() ) return ;
+		vg->lanes[a].name = s ;
+		vg->Refresh () ;
+		}
+    else if ( event.RightDown() )
         {
         wxMenu *cm = new wxMenu ;
-//        cm->Append ( IV_MENU_SAVE_AS_BITMAP , txt("m_save_as_bitmap") ) ;
-//        cm->Append ( IV_MENU_COPY , txt("m_copy_to_clipboard") ) ;
+        cm->Append ( IV_MENU_SAVE_AS_BITMAP , txt("m_save_as_bitmap") ) ;
+        cm->Append ( IV_MENU_COPY , txt("m_copy_to_clipboard") ) ;
         cm->Append ( IV_MENU_PRINT , txt("m_print") ) ;
         PopupMenu ( cm , pt ) ;
         delete cm ;    
@@ -383,29 +408,32 @@ void TMyGelControl::OnEvent(wxMouseEvent& event)
     
 void TMyGelControl::OnSaveAsBitmap(wxCommandEvent &event)
     {
-/*    char t[1000] , *c , *d ;
-    strcpy ( t , file.c_str() ) ;
-    d = NULL ;
-    for ( c = t ; *c ; c++ )
-       if ( *c == '.' ) d = c ;
-    if ( d ) *d = 0 ;
-    wxFileDialog fd ( this , 
-                        txt("t_export_as_bitmap") , 
-                        dir ,
-                        t ,
-                        "*.bmp" ,
-                        wxSAVE 	 ) ;
-    if ( wxID_OK != fd.ShowModal() ) return ;
-    i.SaveFile ( fd.GetPath() , wxBITMAP_TYPE_BMP ) ;*/
+    int w = 1024 ;
+    int h = 768 ;
+    wxBitmap bmp ( w , h , -1 ) ;
+    wxMemoryDC dc ;
+    dc.SelectObject ( bmp ) ;
+    dc.Clear() ;
+	OnDraw ( dc ) ;
+    wxString title = _T("t_gelname_") + vg->type ;
+    title = wxString::Format ( txt(title.c_str()) , vg->percent ) ;
+    myapp()->frame->saveImage ( &bmp , title ) ;
     }
     
 void TMyGelControl::OnCopy(wxCommandEvent &event)
     {
-/*    if (wxTheClipboard->Open())
+    int w = 1024 ;
+    int h = 768 ;
+    wxBitmap bmp ( w , h , -1 ) ;
+    wxMemoryDC dc ;
+    dc.SelectObject ( bmp ) ;
+    dc.Clear() ;
+	OnDraw ( dc ) ;
+    if (wxTheClipboard->Open())
       {
-        wxTheClipboard->SetData( new wxBitmapDataObject ( *bmp ) );
+        wxTheClipboard->SetData( new wxBitmapDataObject ( bmp ) );
         wxTheClipboard->Close();
-      }*/
+      }
     }
 
 void TMyGelControl::OnPrint(wxCommandEvent &event)

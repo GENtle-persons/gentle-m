@@ -20,8 +20,8 @@ class CGdialog : public wxDialog
 	} ;    
 
 BEGIN_EVENT_TABLE(CGdialog, wxDialog )
-    EVT_BUTTON(wxID_OK,CGdialog::OnOK)
-    EVT_BUTTON(wxID_CANCEL,CGdialog::OnCancel)
+//    EVT_BUTTON(wxID_OK,CGdialog::OnOK)
+//    EVT_BUTTON(wxID_CANCEL,CGdialog::OnCancel)
     EVT_BUTTON(CGVIEW_CHOOSE_JAR,CGdialog::OnChooseJar)
     EVT_BUTTON(CGVIEW_CHOOSE_BACKGROUND_COLOR,CGdialog::OnChooseBackgroundColor)
     EVT_CHECKBOX(CGVIEW_RUN_CGVIEWER,CGdialog::OnRunCGviewer)
@@ -125,8 +125,8 @@ void CGdialog::OnCharHook ( wxKeyEvent& event )
     {
     int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
-    if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
-    else if ( k == WXK_RETURN ) OnOK ( ev ) ;
+    if ( k == WXK_ESCAPE ) EndModal ( wxID_CANCEL ) ; // OnCancel ( ev ) ;
+    else if ( k == WXK_RETURN ) EndModal ( wxID_OK ) ; // OnOK ( ev ) ;
     else event.Skip() ;
     }
 

@@ -2,6 +2,6 @@
 ...that many functions of GENtle can be invoked through the right mouse button?
 ...that sequences can be easily edited via "F2"?
 ...that GENtle also supports the middle mouse button, which can be simulated via "Alt+left mouse button"?
-...that you can help improve the GENtle manual at en.wikibooks.org/wiki/GENtle_manual ?
+...that you can help improve the GENtle manual at en.wikibooks.org/wiki/GENtle ?
 ...that GENtle can not only export, but also display images (Tools/Image viewer)?
 ...that this was the last tip, and now you'll have to see them all over again?

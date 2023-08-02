@@ -141,17 +141,19 @@ void ChildBase::initHelp ()
     {
 	while ( myapp()->frame->count_help() > 1 )
 		myapp()->frame->pop_help() ;
-	if ( def == _T("dna") ) myapp()->frame->push_help ( _T("GENtle:DNA") ) ;
-	else if ( def == _T("AminoAcids") ) myapp()->frame->push_help ( _T("GENtle:Protein") ) ;
-	else if ( def == _T("ABIviewer") ) myapp()->frame->push_help ( _T("GENtle:Sequencing") ) ;
-	else if ( def == _T("alignment") ) myapp()->frame->push_help ( _T("GENtle:Alignments") ) ;
-	else if ( def == _T("EXTERNAL") ) myapp()->frame->push_help ( _T("GENtle:Web_interface") ) ;
-	else if ( def == _T("PrimerDesign") ) myapp()->frame->push_help ( _T("GENtle:PCR_and_Primer_Design") ) ;
-	else if ( def == _T("CALCULATOR") ) myapp()->frame->push_help ( _T("GENtle:Calculators") ) ;
-	else if ( def == _T("GRAPH") ) myapp()->frame->push_help ( _T("GENtle:Graph") ) ;
-	else if ( def == _T("IMAGE") ) myapp()->frame->push_help ( _T("GENtle:Image_Viewer") ) ;
-	else if ( def == _T("PHYLOTREE") ) myapp()->frame->push_help ( _T("GENtle:Protein") ) ;
-	else if ( def == _T("GEL") ) myapp()->frame->push_help ( _T("GENtle:Virtual_Gel") ) ;
+	if ( def == _T("dna") ) myapp()->frame->push_help ( _T("GENtle/DNA") ) ;
+	else if ( def == _T("AminoAcids") ) myapp()->frame->push_help ( _T("GENtle/Protein") ) ;
+	else if ( def == _T("ABIviewer") ) myapp()->frame->push_help ( _T("GENtle/Sequencing") ) ;
+	else if ( def == _T("alignment") ) myapp()->frame->push_help ( _T("GENtle/Alignments") ) ;
+	else if ( def == _T("EXTERNAL") ) myapp()->frame->push_help ( _T("GENtle/Web_interface") ) ;
+	else if ( def == _T("PrimerDesign") ) myapp()->frame->push_help ( _T("GENtle/PCR_and_Primer_Design") ) ;
+	else if ( def == _T("CALCULATOR") ) myapp()->frame->push_help ( _T("GENtle/Calculators") ) ;
+	else if ( def == _T("GRAPH") ) myapp()->frame->push_help ( _T("GENtle/Graph") ) ;
+	else if ( def == _T("IMAGE") ) myapp()->frame->push_help ( _T("GENtle/Image_Viewer") ) ;
+	else if ( def == _T("PHYLOTREE") ) myapp()->frame->push_help ( _T("GENtle/Protein") ) ;
+	else if ( def == _T("GEL") ) myapp()->frame->push_help ( _T("GENtle/Virtual_Gel") ) ;
+	else if ( def == _T("RESTRICTION_IDENTIFIER") ) myapp()->frame->push_help ( _T("GENtle/Restriction_Identifier") ) ;
+	else if ( def == _T("DOTPLOT") ) myapp()->frame->push_help ( _T("GENtle/Dot_plot") ) ;
     }
 
 void ChildBase::Activate ()
@@ -179,6 +181,13 @@ void ChildBase::Activate ()
            					cSequence->markedTo() , 
                 			cSequence->getEditMode() ? 2 : 1 ) ;
  		}
+
+    if ( myapp()->frame->update_child_list )
+        {
+        myapp()->frame->update_child_list = false ;
+        myapp()->frame->notifyChildrenChanged() ;
+        }
+
 //    Refresh () ;
     }
     
@@ -203,7 +212,7 @@ void ChildBase::OnClose(wxCloseEvent& event)
     myass ( this , "ChildBase::OnClose" ) ;
     myapp()->frame->mainTree->removeChild ( this ) ;
     myapp()->frame->SetTitle ( txt("gentle") ) ;
-    SetTitle ( txt("gentle") ) ;
+//    SetTitle ( txt("gentle") ) ; // 2.8
     event.Skip();
     myapp()->frame->removeChild ( this ) ;
 }
@@ -317,4 +326,8 @@ void ChildBase::arrangedExport ( wxFile &out , wxString n , wxString s , int l )
        n = blank ;
        }    
     }
-        
+
+bool ChildBase::HasUndoData ()        
+     {
+     return false ;
+     }

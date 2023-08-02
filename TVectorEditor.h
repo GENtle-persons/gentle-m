@@ -62,6 +62,7 @@ class TVectorEditor : public wxDialog
     virtual void enzymeAddToGr ( wxCommandEvent& WXUNUSED(event) ) ; ///< "Add enzyme(s) to group" event handler
     virtual void enzymeAddToNewGr ( wxCommandEvent& WXUNUSED(event) ) ; ///< "Add enzyme(s) to new group" event handler
     virtual void enzymeDelGr ( wxCommandEvent& WXUNUSED(event) ) ; ///< "Delete enzyme group" event handler
+    virtual void enzymeImportRebase ( wxCommandEvent& WXUNUSED(event) ) ; ///< "Import ReBase" event handler
     virtual void enzymeDelFromGr ( wxCommandEvent& WXUNUSED(event) ) ; ///< "Delete enzyme from group" event handler
     virtual void enzymeDelEn ( wxCommandEvent& WXUNUSED(event) ) ; ///< "Delete enzyme" event handler
     virtual void enzymeReallyDeleteEnzyme ( wxCommandEvent& WXUNUSED(event) ) ; ///< "Delete enzyme" event handler

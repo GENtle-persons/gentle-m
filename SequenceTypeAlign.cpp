@@ -15,6 +15,7 @@ int SeqAlign::arrange ( int n )
     can->MyGetClientSize ( &w , &h ) ;
 
     itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx ) ;
+    if ( itemsperline == 0 ) itemsperline = 1 ;
     itemsperline *= can->blocksize ;
     
     pos.cleanup() ;
@@ -57,7 +58,6 @@ void SeqAlign::show ( wxDC& dc )
     int bm = dc.GetBackgroundMode () ;
     int a , b , cnt = offset+1 ;
     wxString t ;
-    char u[100] ;
 //    TAlignment *win = (TAlignment*) can->child ;
     
     wxColour nbgc ;

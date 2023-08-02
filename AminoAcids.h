@@ -45,12 +45,14 @@ class TAminoAcids : public ChildBase
     virtual void OnIPC ( wxCommandEvent& event ) ; ///< "IPC prediction" event handler
     virtual void OnSpeak(wxCommandEvent& WXUNUSED(event)); ///< Speak sequence event handler
     virtual void OnProteolysis(wxCommandEvent& WXUNUSED(event)); ///< Proteolysis event handler
+    virtual void OnFontsize(wxCommandEvent& event); ///< Fontsize event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler
     
     virtual void Undo(wxCommandEvent& event); ///< "Undo" event handler
     virtual void Redo(wxCommandEvent& event); ///< "Redo" event handler (unused)
     virtual void updateUndoMenu () ; ///< Updates the message for the undo function
     virtual void handleListBox ( wxString t ) ; ///< Choses a new entry from the listbox
+    virtual bool HasUndoData () ;
         
     // Variables
     SequenceCanvas *sc , *sc2 ;
@@ -73,6 +75,7 @@ class TAminoAcids : public ChildBase
     wxBoxSizer *h1 , *v1 ;
     wxChoice *inlinePlot ; ///< Inline plot dropdown box (in toolbar)
     wxString lastLBsel ; ///< The last selected "mini-display", as the string from the listbox
+    wxChoice *fontsize ;
 
     DECLARE_EVENT_TABLE()
     } ;

@@ -9,21 +9,21 @@ BEGIN_EVENT_TABLE(TMyMultipleChoiceDialog, wxDialog )
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(TEnzymeDialog, wxDialog )
-    EVT_BUTTON(ED_OK,TEnzymeDialog::OnOK)
-    EVT_BUTTON(ED_CANCEL,TEnzymeDialog::OnCancel)
+//    EVT_BUTTON(ED_OK,TEnzymeDialog::OnOK)
+//    EVT_BUTTON(wxID_CANCEL,TEnzymeDialog::OnCancel)
     EVT_CHAR_HOOK(TEnzymeDialog::OnCharHook)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(TSequencingPrimerDialog, wxDialog )
-    EVT_BUTTON(ED_OK,wxDialog::OnOK)
-    EVT_BUTTON(ED_CANCEL,wxDialog::OnCancel)
+//    EVT_BUTTON(ED_OK,wxDialog::OnOK)
+//    EVT_BUTTON(wxID_CANCEL,wxDialog::OnCancel)
     EVT_CHOICE(SPD_DB,TSequencingPrimerDialog::OnDB)
     EVT_CHAR_HOOK(TSequencingPrimerDialog::OnCharHook)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(TransformSequenceDialog, wxDialog )
-    EVT_BUTTON(TSD_OK,TransformSequenceDialog::OnOK)
-    EVT_BUTTON(TSD_CANCEL,TransformSequenceDialog::OnCancel)
+//    EVT_BUTTON(wxID_OK,TransformSequenceDialog::OnOK)
+//    EVT_BUTTON(wxID_CANCEL,TransformSequenceDialog::OnCancel)
     EVT_CHAR_HOOK(TransformSequenceDialog::OnCharHook)
 END_EVENT_TABLE()
 
@@ -33,8 +33,8 @@ END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(TIPCDialog, wxDialog )
 	EVT_TEXT(TIPC_DIA_LIMIT,TIPCDialog::OnLimit)
-    EVT_BUTTON(AL_OK,wxDialog::OnOK)
-    EVT_BUTTON(AL_CANCEL,wxDialog::OnCancel)
+//    EVT_BUTTON(wxID_OK,wxDialog::OnOK)
+//    EVT_BUTTON(wxID_CANCEL,wxDialog::OnCancel)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(TSpeakDialog, wxDialog )
@@ -49,7 +49,7 @@ BEGIN_EVENT_TABLE(TGraphDialog, wxDialog )
    EVT_BUTTON(TGD_BT_DATA,TGraphDialog::OnButtonData)
    EVT_BUTTON(TGD_BT_SCALES,TGraphDialog::OnButtonScales)
    EVT_BUTTON(TGD_OK,TGraphDialog::OnOK)
-   EVT_BUTTON(wxID_CANCEL,wxDialog::OnCancel)
+//   EVT_BUTTON(wxID_CANCEL,wxDialog::OnCancel)
 END_EVENT_TABLE()
 
 // ******************************************* TGraphDialog
@@ -65,7 +65,7 @@ TGraphDialog::TGraphDialog ( wxWindow *_parent , const wxString& title )
 	wxBoxSizer *h_buttons = new wxBoxSizer ( wxHORIZONTAL ) ;
 	
 	nb = new wxNotebook ( this , -1 ) ;
-	wxNotebookSizer *ns = new wxNotebookSizer ( nb ) ;
+//	wxNotebookSizer *ns = new wxNotebookSizer ( nb ) ;
 	
 	add_nb_graph () ;
 	add_nb_data () ;
@@ -75,7 +75,7 @@ TGraphDialog::TGraphDialog ( wxWindow *_parent , const wxString& title )
 	h_buttons->Add ( new wxStaticText ( this , -1 , _T(" ") ) , 1 , wxEXPAND ) ;
 	h_buttons->Add ( new wxButton ( this , wxID_CANCEL , txt("b_cancel") ) , 1 , 0 ) ;
 	
-	v0->Add ( ns , 1 , wxEXPAND , 0 ) ;
+	v0->Add ( nb , 1 , wxEXPAND , 0 ) ;
 	v0->Add ( h_buttons , 0 , wxALL|wxALIGN_CENTER_HORIZONTAL , 5 ) ;
 	
 	SetSizer ( v0 ) ;
@@ -103,7 +103,7 @@ void TGraphDialog::OnOK ( wxCommandEvent &ev )
 		}
 	parent->Refresh ( TRUE ) ;
 //	parent->gd->UpdateDisplay () ;
-	wxDialog::OnOK ( ev ) ;
+	EndModal ( wxID_OK ) ; // wxDialog::OnOK ( ev ) ;
 	}
 
 void TGraphDialog::add_nb_graph ()
@@ -445,7 +445,7 @@ void TSpeakDialog::OnCharHook ( wxKeyEvent& event )
     {
     int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
-    if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    if ( k == WXK_ESCAPE ) EndModal ( wxID_CANCEL ) ; // OnCancel ( ev ) ;
     else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
     else event.Skip() ;
     }
@@ -482,8 +482,8 @@ TIPCDialog::TIPCDialog(wxWindow *parent, const wxString& title , int _seqlen )
     
     est = new wxStaticText ( this , -1 , _T("") ) ;
     
-    h1->Add ( new wxButton ( this , AL_OK , txt("b_ok") ) , 0 , wxALL , 5 ) ;
-    h1->Add ( new wxButton ( this , AL_CANCEL , txt("b_cancel") ) , 0 , wxALL , 5 ) ;
+    h1->Add ( new wxButton ( this , wxID_OK , txt("b_ok") ) , 0 , wxALL , 5 ) ;
+    h1->Add ( new wxButton ( this , wxID_CANCEL , txt("b_cancel") ) , 0 , wxALL , 5 ) ;
     
     v0->Add ( new wxStaticText ( this , -1 , title ) , 0 , wxALL , 5 ) ;
     v0->Add ( h0 , 0 , wxALL , 5 ) ;
@@ -581,8 +581,8 @@ TSequencingPrimerDialog::TSequencingPrimerDialog (wxWindow *parent, const wxStri
     cb_35->SetValue ( TRUE ) ;
     cb_53->SetValue ( TRUE ) ;
     
-    h3->Add ( new wxButton ( this , ED_OK , txt("b_ok") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-    h3->Add ( new wxButton ( this , ED_CANCEL , txt("b_cancel") ) , 0 , wxEXPAND|wxALL , 5 ) ;
+    h3->Add ( new wxButton ( this , wxID_OK , txt("b_ok") ) , 0 , wxEXPAND|wxALL , 5 ) ;
+    h3->Add ( new wxButton ( this , wxID_CANCEL , txt("b_cancel") ) , 0 , wxEXPAND|wxALL , 5 ) ;
     
     v0->Add ( h0 , 0 , wxALL , 5 ) ;
     v0->Add ( h1 , 0 , wxEXPAND|wxALL , 5 ) ;
@@ -618,9 +618,9 @@ void TSequencingPrimerDialog::OnCharHook ( wxKeyEvent& event )
     {
     int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
-    if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    if ( k == WXK_ESCAPE ) EndModal ( wxID_CANCEL ) ; // OnCancel ( ev ) ;
     else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
-    else if ( k == WXK_RETURN ) OnOK ( ev ) ;
+    else if ( k == WXK_RETURN ) EndModal ( wxID_OK ) ; //OnOK ( ev ) ;
     else event.Skip() ;
     }
     
@@ -835,55 +835,6 @@ TMyMultipleChoiceDialog::TMyMultipleChoiceDialog ( wxWindow *parent ,
    wxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
    wxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
    
-/*   wxCoord w , h , bo = 5 ; // bo is border width
-   GetClientSize ( &w , &h ) ;
-           
-   wxRect q ( 0 , 0 , w , 0 ) ;
-   wxRect r ( 0 , h , w , h ) ;
-   if ( !message.IsEmpty() )
-      {
-      wxStaticText *st = new wxStaticText ( this , 
-                                            -1 , 
-                                            message , 
-                                            wxPoint ( bo , bo ) ) ;
-      r = st->GetRect() ;
-      }
-
-   wxButton *buttonOK = NULL ;
-   wxButton *buttonCancel = NULL ;
-   
-   if ( options & wxOK )
-      {
-      buttonOK = new wxButton ( this , MCD_OK , txt("b_ok") ) ;
-      buttonOK->SetDefault () ;
-      q = buttonOK->GetRect() ;
-      buttonOK->Move ( w / 2 - q.GetWidth() / 2 , h - q.GetHeight() - bo ) ;
-      }
-
-   if ( options & wxCANCEL )
-      {
-      buttonCancel = new wxButton ( this , wxID_CANCEL , txt("b_cancel") ) ;
-      q = buttonCancel->GetRect() ;
-      buttonCancel->Move ( w / 2 - q.GetWidth() / 2 , h - q.GetHeight() - bo ) ;
-      if ( !buttonOK ) buttonCancel->SetDefault () ;
-      }
-      
-   if ( buttonOK && buttonCancel )
-      {
-      buttonOK->Move ( bo , h - q.GetHeight() - bo ) ;
-      buttonCancel->Move ( w - q.GetWidth() - bo , h - q.GetHeight() - bo ) ;
-      }
-   
-   clb = new wxCheckListBox ( this , 
-                                 -1 , 
-                                 wxPoint ( bo , bo + r.GetBottom() ) ,
-                                 wxSize ( w - bo * 2 , h - bo * 2 - r.GetBottom() ) ,
-                                 n ,
-                                 choices ) ;
-   if ( buttonOK || buttonCancel )
-      clb->SetSize ( w - bo * 2 , h - r.GetBottom() - q.GetHeight() - bo * 3 ) ;
-   */
-   
    if ( options & wxCANCEL )
 		{
 		wxButton *b = new wxButton ( this , wxID_CANCEL , txt("b_cancel") ) ;
@@ -931,7 +882,7 @@ void TMyMultipleChoiceDialog::OnOK ( wxCommandEvent &ev )
         for ( a = 0 ; a < clb->GetCount() ; a++ )
             check.push_back ( clb->IsChecked ( a ) ) ;
         }
-    wxDialog::OnOK ( ev ) ;
+    EndModal ( wxID_OK ) ; // wxDialog::OnOK ( ev ) ;
     }
 
 void TMyMultipleChoiceDialog::Check ( int item, bool check )
@@ -962,8 +913,8 @@ TransformSequenceDialog::TransformSequenceDialog ( wxWindow *parent, const wxStr
     invert = new wxCheckBox ( this , -1 , txt("t_invert_sequence") , wxPoint ( bo , bo + lh * 0 ) ) ;
     complement = new wxCheckBox ( this , -1 , txt("t_complement_sequence") , wxPoint ( bo , bo + lh * 1 ) ) ;
     new_item = new wxCheckBox ( this , -1 , txt("t_as_new_item") , wxPoint ( bo , bo + lh * 2 ) ) ;
-    new wxButton ( this , TSD_OK , txt("b_ok") , wxPoint ( bo , lh * 4 ) ) ;
-    new wxButton ( this , TSD_CANCEL , txt("b_cancel") , wxPoint ( 100 , lh * 4 ) ) ;    
+    new wxButton ( this , wxID_OK , txt("b_ok") , wxPoint ( bo , lh * 4 ) ) ;
+    new wxButton ( this , wxID_CANCEL , txt("b_cancel") , wxPoint ( 100 , lh * 4 ) ) ;    
     Center() ;
     }
 
@@ -978,9 +929,9 @@ void TransformSequenceDialog::OnCharHook ( wxKeyEvent& event )
     {
     int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
-    if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    if ( k == WXK_ESCAPE ) EndModal ( wxID_CANCEL ) ; // OnCancel ( ev ) ;
     else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
-    else if ( k == WXK_RETURN ) OnOK ( ev ) ;
+    else if ( k == WXK_RETURN ) EndModal ( wxID_OK ) ; // OnOK ( ev ) ;
     else event.Skip() ;
     }
     
@@ -1042,11 +993,11 @@ void TEnzymeDialog::initme ( TRestrictionEnzyme *_e , bool ro )
     
     if ( !readonly )
         {
-        wxButton *b = new wxButton ( this , ED_OK , _T("OK") ,
+        wxButton *b = new wxButton ( this , wxID_OK , _T("OK") ,
                 wxPoint ( x2a , bo+lh*4 ) , wxSize ( w-bo-x2a , lh-bo ) ) ;
         b->SetDefault() ;
         }
-    new wxButton ( this , ED_CANCEL , _T("Cancel") , wxPoint ( x2a , bo+lh*5 ) ,
+    new wxButton ( this , wxID_CANCEL , _T("Cancel") , wxPoint ( x2a , bo+lh*5 ) ,
                 wxSize ( w-bo-x2a , lh-bo ) ) ;
 
     SetClientSize ( w , h ) ;
@@ -1057,7 +1008,7 @@ void TEnzymeDialog::OnCharHook(wxKeyEvent& event)
     {
     int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
-    if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
+    if ( k == WXK_ESCAPE ) EndModal ( wxID_CANCEL ) ; // OnCancel ( ev ) ;
     else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
     else event.Skip() ;
     }
@@ -1070,7 +1021,7 @@ void TEnzymeDialog::OnOK ( wxCommandEvent &ev )
     e->note = eb_note->GetValue() ;
     e->setCut ( atoi ( eb_from->GetValue().mb_str() ) ) ;
     e->setOverlap ( atoi ( eb_to->GetValue().mb_str() ) ) ;
-    wxDialog::OnOK ( ev ) ;
+    EndModal ( wxID_OK ) ; // wxDialog::OnOK ( ev ) ;
     }
 
 

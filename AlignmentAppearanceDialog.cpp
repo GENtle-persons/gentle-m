@@ -143,13 +143,13 @@ void AlignmentAppearanceDialog::set_pen ( SequenceCharMarkup &scm , int id , int
     int t = thickness[id]->GetValue() ;
     if ( b == 0 ) return ;
     
-    wxPen *p ;
+    wxPen *p = NULL ;
     scm.borders |= border ;
     
     if ( border == wxTOP ) p = &scm.borderTop ;
-    if ( border == wxBOTTOM ) p = &scm.borderBottom ;
-    if ( border == wxLEFT ) p = &scm.borderLeft ;
-    if ( border == wxRIGHT ) p = &scm.borderRight ;
+    else if ( border == wxBOTTOM ) p = &scm.borderBottom ;
+    else if ( border == wxLEFT ) p = &scm.borderLeft ;
+    else if ( border == wxRIGHT ) p = &scm.borderRight ;
     
     switch ( b )
        {
@@ -172,7 +172,7 @@ void AlignmentAppearanceDialog::OnReset ( wxCommandEvent &event )
                 ali->lines[l].markup[ali->lines[l].markup.size()-1].ignore )
               ali->lines[l].markup.pop_back() ;
         }
-    wxDialog::OnOK(event);
+    EndModal ( wxID_OK ) ; //wxDialog::OnOK(event);
     }
 
 void AlignmentAppearanceDialog::OnOK ( wxCommandEvent &event )
@@ -201,12 +201,12 @@ void AlignmentAppearanceDialog::OnOK ( wxCommandEvent &event )
             ali->lines[l].markup[x] = scm ;
             }
         }
-    wxDialog::OnOK(event);
+    EndModal ( wxID_OK ) ; //wxDialog::OnOK(event);
     }
 
 void AlignmentAppearanceDialog::OnCancel ( wxCommandEvent &event )
     {
-    wxDialog::OnCancel(event);
+    EndModal ( wxID_CANCEL ) ; //wxDialog::OnCancel(event);
     }
 
 void AlignmentAppearanceDialog::setup ( int _from , int _to , int _firstline , int _lastline , TAlignment *_ali )

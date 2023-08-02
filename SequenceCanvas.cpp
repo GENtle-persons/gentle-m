@@ -73,6 +73,7 @@ BEGIN_EVENT_TABLE(SequenceCanvas, wxScrolledWindow)
 	EVT_MENU_RANGE(PHYLIP_CMD_PROTPARS,PHYLIP_CMD_SETUP,SequenceCanvas::OnPhylip)
     EVT_MENU(CM_OPEN_FEATURE,SequenceCanvas::OnOpenFeature)
     EVT_MENU(ALIGN_APPEARANCE,SequenceCanvas::OnAppearance)
+    EVT_MENU(ABI_VIEW_ONLY,SequenceCanvas::OnABIViewOnly)
 
 /*	EVT_MENU(PHYLIP_CMD_PROTPARS, SequenceCanvas::OnPhylip)
 	EVT_MENU(PHYLIP_CMD_DNAPARS, SequenceCanvas::OnPhylip)
@@ -119,10 +120,7 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
         : wxScrolledWindow(parent, -1, pos, size, wxSUNKEN_BORDER|wxHSCROLL|wxFULL_REPAINT_ON_RESIZE)
 {
     SetBackgroundColour(wxColour(_T("WHITE")));
-
-    font = MYFONT ( 12 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
-    smallFont = MYFONT ( MYFONTSIZE , wxSWISS , wxNORMAL , wxNORMAL ) ;
-    varFont = MYFONT ( 11 , wxROMAN  , wxNORMAL , wxNORMAL ) ;
+	set_font_size ( 12 ) ;
     mark_firstrow = mark_lastrow = -1 ;
     charwidth = 0 ;
     charheight = 0 ;
@@ -143,6 +141,7 @@ SequenceCanvas::SequenceCanvas(wxWindow *parent, const wxPoint& pos, const wxSiz
     border = 4 ;
     contextMenuPosition = -1 ;
     preventUpdate = false ;
+    last_font_size = 12 ;
 
     setMiniDisplay ( false ) ;
     editMode = false ;
@@ -161,6 +160,14 @@ SequenceCanvas::~SequenceCanvas()
     CLEAR_DELETE ( seq ) ;
     }
     
+void SequenceCanvas::set_font_size ( int size )
+	{
+	last_font_size = size ;
+    font = MYFONT ( size , wxMODERN , wxNORMAL , wxNORMAL ) ; 
+    smallFont = MYFONT ( MYFONTSIZE * size / 12 , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    varFont = MYFONT ( size-1 , wxROMAN  , wxNORMAL , wxNORMAL ) ;
+	}
+
 void SequenceCanvas::unmark ()
 	{
     mark_firstrow = mark_lastrow = -1 ;
@@ -199,7 +206,10 @@ void SequenceCanvas::MyGetClientSize ( int *w , int *h )
     else
        {
        GetClientSize ( w , h ) ;
-       if ( !drawing && isHorizontal() && !isMiniDisplay() ) *w = 1000000 ;
+       if ( !drawing && isHorizontal() && !isMiniDisplay() )
+	   	{
+		*w = 1000000 ;
+		}
        }
     }
     
@@ -282,7 +292,7 @@ void SequenceCanvas::editSequence ( int k , wxKeyEvent& event )
        return ;
        }
     SeqDNA *dna = (SeqDNA*) seq[b] ;
-    int from = _from ;
+//    int from = _from ;
     wxString *the_sequence ;
     if ( dna->whatsthis() == _T("AA") ) the_sequence = getAA()->vec->getSequencePointer() ;
     else if ( dna->whatsthis() == _T("DNA") ) the_sequence = dna->vec->getSequencePointer() ;
@@ -507,7 +517,7 @@ void SequenceCanvas::vecEdit ( wxCommandEvent &ev )
         }
     else if ( getPD() )
         {
-        TVectorEditor ve ( this , txt("t_vector_editor") , getPD()->w ) ;
+        TVectorEditor ve ( this , txt("t_vector_editor") , getPD()->resulting_sequence_vector ) ;
         ve.initialViewEnzyme ( _T("") ) ;
         ve.hideProp = true ;
         ve.hideItem = true ;
@@ -516,7 +526,7 @@ void SequenceCanvas::vecEdit ( wxCommandEvent &ev )
         ve.cleanup () ;
         if ( x == wxID_OK )
             {
-            getPD()->vec->re = getPD()->w->re ;
+            getPD()->vec->re = getPD()->resulting_sequence_vector->re ;
             for ( x = 0 ; x < 4 ; x++ ) seq.RemoveAt ( seq.GetCount()-1 ) ;
             getPD()->updateResultSequence() ;
             arrange () ;
@@ -680,9 +690,9 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
     wxFont *oldsmallFont = smallFont ;
     wxFont *bigfont = MYFONT ( w/30 , wxMODERN , wxNORMAL , wxNORMAL ) ;
     wxFont *medfont = MYFONT ( w/80 , wxMODERN , wxNORMAL , wxNORMAL ) ;
-    font = MYFONT ( fs/10 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
-    smallFont = MYFONT ( fs/15 , wxSWISS , wxNORMAL , wxNORMAL ) ;
-    varFont = MYFONT ( fs/11 , wxROMAN  , wxNORMAL , wxNORMAL ) ;
+    font = MYFONT ( fs*last_font_size/10/12 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
+    smallFont = MYFONT ( fs*last_font_size/15/12 , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    varFont = MYFONT ( fs*last_font_size/11/12 , wxROMAN  , wxNORMAL , wxNORMAL ) ;
 
     print_maxx = -w ;
 
@@ -870,8 +880,6 @@ wxBitmap *SequenceCanvas::getSequenceBitmap ()
     MyGetClientSize ( &w , &h ) ;
     h = lowy ;
 
-    int vx = 0 , vy = 0 ;
-    int yoff = charheight * vy ;
     if ( isHorizontal() )
     	{
 	    w = 0 ;
@@ -1170,10 +1178,10 @@ void SequenceCanvas::mark ( wxString id , int from , int to , int value , int fo
     else if ( child && child->def == _T("AminoAcids") )
         {
         TAminoAcids *ama = (TAminoAcids*) child ;
-        if ( ama->curDisplay == ama->pc )
+        if ( ama->pc && ama->curDisplay == ama->pc )
            {
             // Refreshing plasmid canvas
-            ama->pc->setMark ( from , to ) ;
+            if ( ama && ama->pc ) ama->pc->setMark ( from , to ) ;
             if ( !editMode )
                 {
 //					 char tt[1000] ;
@@ -1310,7 +1318,6 @@ void SequenceCanvas::OnDraw(wxDC& dc)
     if ( getHide() ) return ;
     if ( myapp()->frame->isLocked() ) return ;
     if ( child && !child->IsShown() ) return ;
-
     drawing = true ;
     dc.SetFont ( *font ) ;
     int wx , wy ;
@@ -1324,14 +1331,17 @@ void SequenceCanvas::OnDraw(wxDC& dc)
         mylog ( "SequenceCanvas::OnDraw" , "2b" ) ;
         if ( printing && print_maxx < 0 )
             {
+	        mylog ( "SequenceCanvas::OnDraw" , "2b1" ) ;
             for ( int a = 0 ; a < seq.GetCount() ; a++ )
                {
                for ( int b = 0 ; b < seq[a]->getRectSize() ; b++ )
                   {
+			      mylog ( "SequenceCanvas::OnDraw" , "2b1 COUNT" ) ;
                   if ( seq[a]->getRect(b).GetRight() > print_maxx )
                      print_maxx = seq[a]->getRect(b).GetRight() ;
                   }
                }
+	        mylog ( "SequenceCanvas::OnDraw" , "2b2" ) ;
             drawing = false ;
             return ;
             }
@@ -1344,7 +1354,7 @@ void SequenceCanvas::OnDraw(wxDC& dc)
         return ;
         }
 	mylog ( "SequenceCanvas::OnDraw" , "4" ) ;
-        
+
     int vx , vy ;
     GetViewStart ( &vx , &vy ) ;
 
@@ -1405,13 +1415,16 @@ void SequenceCanvas::safeShow ( wxDC &dc )
        }
     mylog ( "SequenceCanvas::safeShow" , "Done" ) ;
     }
-    
+
+
 void SequenceCanvas::OnEvent(wxMouseEvent& event)
 {
     if ( drawing ) return ;
     if ( getAln() && getAln()->isThreadRunning() ) return ;
     wxClientDC dc(this);
     PrepareDC(dc);
+	
+    if ( event.LeftDown() ) this->SetFocus() ;
     
     bool middledown = event.MiddleDown() ;
     if ( event.AltDown() && event.LeftDown() )
@@ -1426,6 +1439,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
 
     int wr = event.GetWheelDelta() ;
     if ( wr != 0 ) wr = event.GetWheelRotation() / wr ;
+
     if ( wr != 0 )
         {
         int vx , vy ;
@@ -1490,10 +1504,15 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         SetCursor(wxCursor(*wxSTANDARD_CURSOR)) ;
         }
 
-    if ( newToolTip != lastToolTip )
+    if ( newToolTip != lastToolTip && myapp()->frame->showToolTips )
        {
        lastToolTip = newToolTip ;
-       SetToolTip ( newToolTip ) ;
+	if ( newToolTip.IsEmpty() ) SetToolTip ( NULL ) ;
+	else
+		{
+		wxToolTip::Enable ( true ) ;
+		SetToolTip ( newToolTip ) ;
+		}
        }
         
     if ( middledown && where )
@@ -1537,7 +1556,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
            else
               {
               lastToolTip = _T("") ;
-              SetToolTip ( _T("") ) ;
+              if ( myapp()->frame->showToolTips ) SetToolTip ( _T("") ) ;
               int a , b ;
               for ( a = b = 0 ; a < pos ; a++ )
                  if ( al->s.GetChar(a) != '-' )
@@ -1680,6 +1699,9 @@ void SequenceCanvas::showContextMenu ( SeqBasic *where , int pos , wxPoint pt )
           {
           cm->Append ( MDI_COPY , txt("m_copy") ) ;
           }
+        TABIviewer *abi = (TABIviewer*) child ;
+        if ( abi->is_only_view() ) cm->Append ( ABI_VIEW_ONLY , txt("m_abi_view_only1") ) ;
+        else if ( _from != -1 ) cm->Append ( ABI_VIEW_ONLY , txt("m_abi_view_only2") ) ;
        cm->AppendSeparator () ;
        }
     else if ( child && child->def == _T("alignment") ) // Alignment
@@ -1871,12 +1893,12 @@ TVector *SequenceCanvas::getPCR_DNA_vector()
     myass ( getPD()->w , "SequenceCanvas::OnNewFromResultDNA_1" ) ;
     int a , b , c ;
     TVector n ;
-    n.setFromVector ( *getPD()->w ) ;
-    char blank = '-' ;
+    n.setFromVector ( *getPD()->resulting_sequence_vector ) ;
+//    char blank = '-' ;
     wxString s , t ;
     s = n.getSequence() ;
     t = s ;
-    if ( getPD()->w->isCircular() )
+    if ( getPD()->resulting_sequence_vector->isCircular() )
         {
         t += t ;
         for ( a = 0 ; a < t.length() && t.GetChar(a) != ' ' ; a++ ) t.SetChar(a,' ') ;
@@ -2272,7 +2294,7 @@ void SequenceCanvas::insertRestrictionSite ( bool left )
     tv.setSequence ( seq[lastmarked]->s ) ;
     
     // Find DNA sequence
-    SeqDNA *dna ;
+    SeqDNA *dna = NULL ;
     for ( a = 0 ; a < seq.size() ; a++ )
         {
         if ( seq[a]->whatsthis() != _T("AA") ) continue ;
@@ -2455,6 +2477,13 @@ void SequenceCanvas::setEditMode ( bool _b )
      editMode = _b ;
      }
 
+void SequenceCanvas::OnABIViewOnly ( wxCommandEvent &ev )
+	{
+	TABIviewer *abi = (TABIviewer*) child ;
+	abi->set_view_only ( _from , _to ) ;
+	}
+
+
 // -------------------------------------------------------- TMarkMem
 
 TMarkMem::TMarkMem ( SequenceCanvas *_sc )
@@ -2516,13 +2545,12 @@ void SeqPos::addline ( int from , int to , int vfrom , int vto )
     
 int SeqPos::getLine ( int y )
     {
-    int ret = -1 ;
-    for ( int a = 0 ; a < l.size() /*&& ret == -1 */; a++ )
+    for ( int a = 0 ; a < l.size() ; a++ )
        {
        if ( l[a].width <= y && l[a].height >= y )
-          return a ;//ret = a ;
+          return a ;
        }
-    return -1 ; //ret ;
+    return -1 ;
     }
     
 int SeqPos::getItem ( wxPoint pt , int line )

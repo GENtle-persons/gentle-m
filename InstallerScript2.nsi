@@ -73,6 +73,12 @@ Section "GENtle (required)"
   File "sqlite.dll"
   File "sqlite3.dll"
   File "libmySQL.dll"
+  
+  File "libpng13.dll"
+  File "jpeg62.dll"
+  File "zlib1.dll"
+  File "libtiff3.dll"
+  
   File "commonvectors.db"
   File "codon_catalog.csv"
   File "default.tab"

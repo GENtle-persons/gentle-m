@@ -14,14 +14,14 @@ int TCloneManager::scan_item ( unsigned char *t , int a , TVector *v )
 	int b ;
 	wxString name , desc ;
 	a += 4 ;
-	unsigned int strange1 = *((unsigned int*)(t+a)) ;
+//	unsigned int strange1 = *((unsigned int*)(t+a)) ;
 	a += 4 ;
 	if ( t[a] == 8 )
 	{
 		while ( t[a] != 255 || t[a+1] != 255 ) a += 4 ;
 		return a ;
 	}
-	unsigned int strange2 = *((unsigned int*)(t+a)) ;
+//	unsigned int strange2 = *((unsigned int*)(t+a)) ;
 	a += 4 ;
 	unsigned int from = *((unsigned int*)(t+a)) ;
 	a += 4 ;
@@ -66,7 +66,7 @@ void TCloneManager::load ( wxString file )
 		return ;
 	}
 	
-	int a , b ;
+	int a ;
 	TVector *v = new TVector ;
 	wxString name = file.AfterLast('/').AfterLast('\\').BeforeLast('.') ;
 	wxString seq , desc ;

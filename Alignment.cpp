@@ -36,6 +36,7 @@ BEGIN_EVENT_TABLE(TAlignment, MyChildBase)
     EVT_MENU(ALIGN_IDENT,TAlignment::OnMenuIdent)
     EVT_MENU(SEQ_PRINT, TAlignment::OnSeqPrint)
     EVT_MENU(MDI_COPY,TAlignment::OnCopy)
+    EVT_CHOICE(AA_FONTSIZE,TAlignment::OnFontsize)
 
     // Dummies
     EVT_MENU(MDI_TOGGLE_FEATURES,ChildBase::OnDummy)
@@ -90,6 +91,16 @@ TAlignment::TAlignment(wxWindow *parent, const wxString& title)
 TAlignment::~TAlignment ()
     {
     }
+
+void TAlignment::OnFontsize ( wxCommandEvent& event )
+    {
+	long l ;
+	wxString s = fontsize->GetStringSelection() ;
+	s.ToLong ( &l ) ;
+	sc->set_font_size ( (int) l ) ;
+    updateSequence () ;
+//	updateSequenceCanvas ( true ) ;
+	}
 
 bool TAlignment::isDNA ()
 	{
@@ -268,6 +279,7 @@ void TAlignment::initme ()
     mmb->SetStringSelection ( txt("t_mmb_insert_gap") ) ;
     toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_mmb") ) ) ;
     toolBar->AddControl ( mmb ) ;
+	fontsize = myapp()->frame->AddFontsizeTool ( toolBar , AA_FONTSIZE ) ;
     myapp()->frame->addDefaultTools ( toolBar ) ;
     toolbar = toolBar ;
     
@@ -291,8 +303,16 @@ void* TAlignment::Entry()
     TAlignLine line ;
     wxString cwt = _T("clustalw.txt") ;
     wxString hd = myapp()->homedir ;
-    wxString tx = hd + _T("/") + cwt ;
     
+    wxString tmpdir = wxGetTempFileName ( _T("") ) ;
+    tmpdir.Replace ( _T("\\") , _T("/") ) ;
+    tmpdir = tmpdir.BeforeLast ( '/' ) ;
+    
+    wxString tx = tmpdir + _T("/") + cwt ;
+    
+    wxString cwd = wxGetCwd() ;
+    wxSetWorkingDirectory ( tmpdir ) ;
+	    
     wxFile out ( tx , wxFile::write ) ;
     for ( a = 0 ; a < lines.size() ; a++ )
     {
@@ -300,16 +320,16 @@ void* TAlignment::Entry()
 	out.Write ( lines[a].v->getSequence() + _T("\n") ) ;
     }
     out.Close() ;
-    
+
 #ifdef USE_EXTERNAL_CLUSTALW // Use external ClustalW
     wxString bn ;
     
 #ifdef __WXMSW__
 	// This is not used anymore under Windows
-    bn = hd + _T("\\clustalw.bat") ;
+    bn = tmpdir + _T("\\clustalw.bat") ;
     wxFile bat ( bn , wxFile::write ) ;
     bat.Write ( _T("@echo off\n") ) ;
-    bat.Write ( _T("cd ") + hd + _T("\n") ) ;
+    bat.Write ( _T("cd ") + tmpdir + _T("\n") ) ;
     bat.Write ( _T("clustalw.exe clustalw.txt") +
 		wxString::Format ( _T(" /gapopen=%d") , gap_penalty ) +
 		wxString::Format ( _T(" /gapext=%d") , mismatch ) + _T("\n") ) ;
@@ -320,21 +340,26 @@ void* TAlignment::Entry()
 			wxString::Format ( _T(" /gapopen=%d") , gap_penalty ) +
 			wxString::Format ( _T(" /gapext=%d") , mismatch ) + _T("\n") ;
 //	cout << "Executing " << bn.mb_str() << endl ;
-#endif
-
+#endif 
     wxExecute ( bn , wxEXEC_SYNC ) ;
+	
+	
 #else // Using internal ClustalW - cool!
+
+
     wxString a1 = wxString::Format ( _T("/gapopen=%d") , gap_penalty ) ;
     wxString a2 = wxString::Format ( _T("/gapext=%d") , mismatch ) ;
+    wxString text = tmpdir + _T("/clustalw.txt") ;
     char *av[4] ;
     av[0] = new char[100] ; strcpy ( av[0] , "clustalw.exe" ) ;
-    av[1] = new char[100] ; strcpy ( av[1] , "clustalw.txt" ) ;
+    av[1] = new char[500] ; strcpy ( av[1] , text.mb_str() ) ;
     av[2] = new char[100] ; strcpy ( av[2] , a1.mb_str() ) ;
     av[3] = new char[100] ; strcpy ( av[3] , a2.mb_str() ) ;
     clustalw_main ( 4 , av ) ;
 #endif
+
     
-    wxString aln = hd + _T("/clustalw.aln") ;
+    wxString aln = tmpdir + _T("/clustalw.aln") ;
     wxTextFile in ( aln ) ;
     in.Open ( *(myapp()->isoconv) ) ;
     wxString s = in.GetFirstLine() ;
@@ -362,6 +387,8 @@ void* TAlignment::Entry()
 		 }
 		if ( !in.Eof() ) s = in.GetNextLine() ; // Blank line
     }
+    
+    wxSetWorkingDirectory ( cwd ) ;
 
 #ifndef __WXMSW__
     wxMutexGuiEnter() ;
@@ -374,6 +401,7 @@ void* TAlignment::Entry()
 #ifndef __WXMSW__
     wxMutexGuiLeave() ;
 #endif
+    return NULL ;
 }
 
 
@@ -408,7 +436,6 @@ void TAlignment::recalcAlignments ()
 		SetCursor ( *wxSTANDARD_CURSOR ) ;
 		threadRunning = true ;
 		sc->Refresh () ;
-//		sc->SilentRefresh() ;
 //		wxSafeYield() ;
 		wxThreadHelper::Create () ;
 		GetThread()->Run() ;
@@ -1002,7 +1029,7 @@ void TAlignment::OnMenuSoa ( wxCommandEvent &ev )
     {
     for ( unsigned int a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
-        SeqAlign *x = (SeqAlign*) sc->seq[a] ;
+//        SeqAlign *x = (SeqAlign*) sc->seq[a] ;
         }
     }
 
@@ -1010,7 +1037,7 @@ void TAlignment::OnMenuSoaI ( wxCommandEvent &ev )
     {
     for ( unsigned int a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
-        SeqAlign *x = (SeqAlign*) sc->seq[a] ;
+//        SeqAlign *x = (SeqAlign*) sc->seq[a] ;
         }
     }
 
@@ -1018,7 +1045,7 @@ void TAlignment::OnMenuSiml ( wxCommandEvent &ev )
     {
     for ( unsigned int a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
-        SeqAlign *x = (SeqAlign*) sc->seq[a] ;
+//        SeqAlign *x = (SeqAlign*) sc->seq[a] ;
         }
     }
 
@@ -1026,7 +1053,7 @@ void TAlignment::OnMenuSeq ( wxCommandEvent &ev )
     {
     for ( unsigned int a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
-        SeqAlign *x = (SeqAlign*) sc->seq[a] ;
+//        SeqAlign *x = (SeqAlign*) sc->seq[a] ;
         }
     }
 
@@ -1034,7 +1061,7 @@ void TAlignment::OnMenuFeat ( wxCommandEvent &ev )
     {
     for ( unsigned int a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
-        SeqAlign *x = (SeqAlign*) sc->seq[a] ;
+//        SeqAlign *x = (SeqAlign*) sc->seq[a] ;
         }
     }
 
@@ -1042,7 +1069,7 @@ void TAlignment::OnMenuRNA ( wxCommandEvent &ev )
     {
     for ( unsigned int a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
-        SeqAlign *x = (SeqAlign*) sc->seq[a] ;
+//        SeqAlign *x = (SeqAlign*) sc->seq[a] ;
         }
     }
 

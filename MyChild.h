@@ -92,6 +92,7 @@ public:
     virtual void OnAutoAnnotate(wxCommandEvent& WXUNUSED(event)); ///< Automatic annotation event handler
     virtual void OnSpeak(wxCommandEvent& WXUNUSED(event)); ///< Speak sequence event handler
     virtual void OnSiRNA(wxCommandEvent& WXUNUSED(event)); ///< siRNA event handler
+    virtual void OnFontsize(wxCommandEvent& event); ///< Fontsize event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler (to catch weird messages)
 
     virtual void initme () ; ///< Initializes the module
@@ -100,9 +101,10 @@ public:
     virtual void EnforceRefesh () ; ///< Force display refresh
     virtual void updateSequenceCanvas ( bool remember = false ) ; ///< Refresh the sequence display
     virtual wxString doExtractAA ( bool coding = true ) ; ///< Extract amino acid sequence from DNA
-    virtual void runRestriction ( wxString s ) ; ///< Run the restriction
-    virtual void addFragmentsToGel ( wxString title , wxArrayInt &cuts , TVirtualGel *gel , TRestrictionEditor &ed ) ; ///< Add restriction fragments to gel
+    virtual bool runRestriction ( wxString s ) ; ///< Run the restriction
+    virtual void addFragmentsToGel ( wxString title , wxArrayInt &cuts , TVirtualGel *gel , TRestrictionEditor &ed , bool partial ) ; ///< Add restriction fragments to gel
     virtual MyChild *doTransformSequence ( bool inNewVector , bool complement , bool invers ) ; ///< Transform the sequence
+    virtual bool HasUndoData () ;
     
     TVectorTree *treeBox ; ///< Pointer to the sequence properties tree structure
     TURLtext *propBox ; ///< Pointer to the properties text box
@@ -120,6 +122,8 @@ public:
     
     void add_siRNA ( int item ) ;
     int add_siRNA_sub ( wxString s , int pos ) ;
+
+    wxChoice *fontsize ;
     
     DECLARE_EVENT_TABLE()
 };

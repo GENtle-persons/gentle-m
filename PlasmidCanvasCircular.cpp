@@ -152,9 +152,9 @@ void PlasmidCanvas::drawCircularORFs ( wxDC &dc )
     int l = p->vec->getSequenceLength() ;
     for ( a = 0 ; a < p->vec->countORFs() ; a++ )
         {
-        float mf = p->vec->getORF(a)->from ;
-        float mt = p->vec->getORF(a)->to ;
-        int rf = p->vec->getORF(a)->rf ;
+        float mf = p->vec->getORF(a)->get_from() ;
+        float mt = p->vec->getORF(a)->get_to() ;
+        int rf = p->vec->getORF(a)->get_rf() ;
         
         if ( mf > mt )
         {
@@ -233,7 +233,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
     wxFont *smallFont = MYFONT ( fontfactor , wxSWISS , wxNORMAL , wxNORMAL ) ;
     wxFont *normalFont = MYFONT ( fontfactor*6/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
     wxFont *bigFont = MYFONT ( fontfactor*7/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
-    wxFont *hugeFont = MYFONT ( fontfactor*9/5 , wxSWISS , wxNORMAL , wxBOLD ) ;
+//    wxFont *hugeFont = MYFONT ( fontfactor*9/5 , wxSWISS , wxNORMAL , wxBOLD ) ;
     
     int d ;
     for ( d = 1 ; d*10 < l ; d *= 10 ) ;
@@ -320,7 +320,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
         if ( getMarkFrom() == getMarkTo() ) mf = mt - 0.1 ;
         else if ( mf > mt ) { float mm = mf ; mf = mt ; mt = mm ; }
         int r1 = p->vec->showGC() > 0 ? r - r/40 : r ;
-        dc.DrawEllipticArc ( w/2-r1 , h/2-r1 , r1*2 , r1*2 , mf , mt ) ;
+		dc.DrawEllipticArc ( w/2-r1 , h/2-r1 , r1*2 , r1*2 , mf , mt ) ;
         dc.DrawLine ( w/2 , h/2 , deg2x(90-mf,r1)+w/2 , deg2y(90-mf,r1)+h/2 ) ;
         dc.DrawLine ( w/2 , h/2 , deg2x(90-mt,r1)+w/2 , deg2y(90-mt,r1)+h/2 ) ;
         dc.SetPen(*wxBLACK_PEN);
@@ -414,8 +414,8 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
             float df = i->from*360.0/((float)l) ;
             float dt = i->to*360.0/((float)l) ;
             if ( dt < df ) dt += 360.0 ;
-            float dd = (dt-df)*5.0/100.0 ; // Arrow length in degrees
-            float ds = 1 ; // Paint steps for genes, in degrees
+//            float dd = (dt-df)*5.0/100.0 ; // Arrow length in degrees
+//            float ds = 1 ; // Paint steps for genes, in degrees
             int tf = 19 ;
             tf += ( i->type % 3 ) * 2 - 2 ;
             int r1 = STANDARDRADIUS*tf/20 ;
@@ -513,12 +513,12 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
         if ( i->isVisible() && i->getParam ( _T("PREDECESSOR") ).IsEmpty() )
             {
             int r1 = i->r1 * 100 * r / ( STANDARDRADIUS * 100 ) ;
-            int r2 = i->r2 * 100 * r / ( STANDARDRADIUS * 100 ) ;
+//            int r2 = i->r2 * 100 * r / ( STANDARDRADIUS * 100 ) ;
             float df = i->a1 ;
             float dt = i->a2 ;
             
             float dd = (dt-df)*5/100 ; // Arrow length in degrees
-            float ds = 1 ; // Paint steps for genes, in degrees
+//            float ds = 1 ; // Paint steps for genes, in degrees
             // Drawing name
             wxColor fc = dc.GetTextForeground () ;
             dc.SetTextForeground ( i->getFontColor() ) ;

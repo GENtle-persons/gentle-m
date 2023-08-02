@@ -72,6 +72,9 @@ TVectorEditorItems.cpp\
 TVectorEditorEnzymes.cpp\
 TVectorEditor.cpp\
 TVector.cpp\
+SCFtype.cpp\
+TStoreAllDialog.cpp\
+TDotPlot.cpp\
 TUndo.cpp\
 TUReadSeq.cpp\
 TStorage.cpp\
@@ -160,10 +163,27 @@ ipc/element.cpp\
 ipc/gp_out.cpp\
 ipc/ipc.cpp\
 ipc/pars.cpp\
+CloneManager.cpp\
+CloningAssistant.cpp\
+TSequencingAssistantDialog.cpp\
+AlignmentAppearanceDialog.cpp\
+SequenceTypeAAstructure.cpp\
+OnlineTools.cpp\
+TEliteLaChromLogDialog.cpp\
+TRestrictionIdentifier.cpp\
+TRestrictionIdentifier.h\
+CloningAssistant.h\
+AlignmentAppearanceDialog.h\
+TSequencingAssistantDialog.h\
+OnlineTools.h\
+CloneManager.h\
 enums.h \
 lin_sqlite.h \
 lin_sqlite3.h \
 TXMLfile.h\
+SCFtype.h\
+TStoreAllDialog.h\
+TDotPlot.h\
 AutoAnnotate.h\
 CGview.h\
 TAlignmentDialog.h\
@@ -213,6 +233,7 @@ ABItype.h\
 ureadseq.h\
 TPhylip.h\
 TPhyloTree.h\
+TEliteLaChromLogDialog.h\
 ncoils.h\
 tinyxml/tinyxml.h\
 tinyxml/tinystr.h\

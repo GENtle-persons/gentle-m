@@ -195,24 +195,23 @@ void TImageDisplay::OnFile ( wxCommandEvent &event )
     wxString fn = dir + _T("/") + file ;
     
     if ( fn.AfterLast('.').Upper() == _T("IMG") )
-    {
+	    {
     	r->readFile ( fn ) ;
     	right->i = r->makeImage() ;
-    }   	
+    	}   	
     else
-    {
-//	right->i.LoadFile ( fn , wxBITMAP_TYPE_ANY ) ;
-	if ( !right->i.LoadFile ( fn , wxBITMAP_TYPE_ANY ) )
-		{
-		right->ClearBackground() ;
-		ClearBackground() ;
-		Refresh ( true ) ;
-		right->Refresh ( true ) ;
-		allow_save = allow_copy = allow_print = false ;
-		myapp()->frame->updateCCP ( this ) ;
-		}
-	/*    wxMessageBox ( txt("t_invalid_image") , txt("msg_box") ) ;*/
-    }    
+	    {
+		wxLogNull logNo; // Supress error message
+		if ( !right->i.LoadFile ( fn , wxBITMAP_TYPE_ANY ) )
+			{
+			right->ClearBackground() ;
+			ClearBackground() ;
+			Refresh ( true ) ;
+			right->Refresh ( true ) ;
+			allow_save = allow_copy = allow_print = false ;
+			myapp()->frame->updateCCP ( this ) ;
+			}
+	    }    
     
     wxClientDC dc ( right ) ;
     dc.Clear() ;
@@ -268,77 +267,68 @@ void TMyImagePanel::OnDraw(wxDC& pdc)
     if ( !bmp ) return ;
 
     pdc.SetFont ( *MYFONT ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
-//    if ( printing )
-        {
-        int w , h , iw , ih ;
-        pdc.GetSize ( &w , &h ) ;
 
-        int tw , th ;
-        pdc.GetTextExtent ( file , &tw , &th ) ;
+    int w , h , iw , ih ;
+    pdc.GetSize ( &w , &h ) ;
 
-        iw = bmp->GetWidth() ;
-        ih = bmp->GetHeight() ;
-        
-        double xs , ys ;
-        xs = w ;
-        xs /= iw ;
-        ys = xs ;
-        if ( ih * ys > (h) )
-           {
-           ys = h ;
-           ys /= ih ;
-           xs = ys ;
-           }
-        
-        double factor = 0.6 ; factor = 0.95 ;
-        xs *= factor ;
-        ys *= factor ;        
-        pdc.SetUserScale ( xs , ys ) ;
-        
-        double nw = iw ;
-        double nh = ih ;
-        nw *= xs ;
-        nh *= ys ;
-        
-        double x = w ;
-        double y = h ;
-        x -= nw ;
-        y -= nh ;
-        x /= 2 ;
-        y /= 2 ;
-        x /= xs ;
-        y /= ys ;
-        
-        pdc.DrawBitmap ( *bmp , (int)x , (int)y ) ;
+    int tw , th ;
+    pdc.GetTextExtent ( file , &tw , &th ) ;
 
-        if ( invert )
-        	{
-            int lf = pdc.GetLogicalFunction() ;
-            pdc.SetLogicalFunction ( wxINVERT ) ;
-            pdc.SetBrush ( *wxWHITE_BRUSH ) ;
-            pdc.SetPen ( *wxWHITE_PEN ) ;
-            pdc.DrawRectangle ( (int) x , (int) y , (int) (nw / xs) , (int) (nh / ys) ) ;
-            pdc.SetLogicalFunction ( lf ) ;
-            }    
-        
-        pdc.SetTextForeground ( wxColour ( 0 , 0 , 150 ) ) ;
-        if ( show_text )
-        	{
-            for ( int i = 0 ; i < imdi->r->items.size() ; i++ )
-               imdi->r->items[i].draw ( pdc , (int)x , (int)y , (int)(x+nw) , (int)(y+nh) ) ;
+    iw = bmp->GetWidth() ;
+    ih = bmp->GetHeight() ;
+    
+    double xs , ys ;
+    xs = w ;
+    xs /= iw ;
+    ys = xs ;
+    if ( ih * ys > (h) )
+       {
+       ys = h ;
+       ys /= ih ;
+       xs = ys ;
+       }
+    
+    double factor = 0.95 ;
             
-            double tx = w - tw ;
-            double ty = h ;
-            tx /= (double) 2 * xs ;
-            ty = y ;
-            ty -= ( (double) th ) / ys ;
-            pdc.DrawText ( file , (int)tx , (int)ty ) ;
-            }    
+    xs *= factor ;
+    ys *= factor ;        
+    
+    double nw = iw ;
+    double nh = ih ;
+    nw *= xs ;
+    nh *= ys ;
+    
+    wxImage imago = bmp->ConvertToImage () ;
+    imago = imago.Rescale ( nw , nh ) ;
+    wxBitmap bmp2 ( imago ) ;
+    
+    double x , y ;
+    x = ( w - nw ) / 2 ;
+    y = ( h - nh ) / 2 ;
+    
+    pdc.DrawBitmap ( bmp2 , (int)x , (int)y ) ;
 
-        pdc.SetUserScale ( 1 , 1 ) ;
+    if ( invert )
+    	{
+        int lf = pdc.GetLogicalFunction() ;
+        pdc.SetLogicalFunction ( wxINVERT ) ;
+        pdc.SetBrush ( *wxWHITE_BRUSH ) ;
+        pdc.SetPen ( *wxWHITE_PEN ) ;
+        pdc.DrawRectangle ( (int) x , (int) y , (int) (nw) , (int) (nh) ) ;
+        pdc.SetLogicalFunction ( lf ) ;
+        }    
+    
+    pdc.SetTextForeground ( wxColour ( 0 , 0 , 150 ) ) ;
+    if ( show_text )
+    	{
+        for ( int i = 0 ; i < imdi->r->items.size() ; i++ )
+           imdi->r->items[i].draw ( pdc , (int)x , (int)y , (int)(x+nw) , (int)(y+nh) ) ;
         
-        }
-//    else pdc.DrawBitmap ( *bmp , 0 , 0 ) ;
+        double tx , ty ;
+        tx = ( w - tw ) / 2 ;
+        ty = y - th / 2 ;
+        pdc.DrawText ( file , (int)tx , (int)ty ) ;
+        }    
     }
     
 void TMyImagePanel::Refresh (bool eraseBackground , const wxRect* rect)
@@ -350,7 +340,6 @@ void TMyImagePanel::Refresh (bool eraseBackground , const wxRect* rect)
 void TMyImagePanel::OnSize(wxSizeEvent &event)
     {
     Refresh () ;
-//    wxPanel::OnSize ( event ) ;
     }
 
 void TMyImagePanel::OnEvent(wxMouseEvent& event)

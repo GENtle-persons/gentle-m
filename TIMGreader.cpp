@@ -112,9 +112,8 @@ void TIMGitem::draw ( wxDC &dc , int x1 , int y1 , int x2 , int y2 )
         int px = xx ( p1.x ) ;
         int py = yy ( p1.y ) ;
         
-        wxString t = wxString::Format ( _T("%s {%s:%d} (%d:%d) [%d:%d]") , 
-                                s.c_str() , 
-                                font_name.c_str() , font_size ,
+        wxString t = s + _T(" {") + font_name + wxString::Format ( _T(":%d} (%d:%d) [%d:%d]") , 
+                                font_size ,
                                 p1.x , p1.y , 
                                 px , py ) ;
 
