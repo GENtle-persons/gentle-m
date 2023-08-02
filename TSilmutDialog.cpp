@@ -90,7 +90,7 @@ TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode 
 	// List
     lb = new wxListBox ( this , PD_SILMUT_LB , wxDefaultPosition , wxDefaultSize ,
                             0 , NULL , wxLB_SINGLE|wxLB_SORT ) ;
-    lb->SetFont ( *MYFONT ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
+    lb->SetFont ( *MYFONT ( 8 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
 	
 	v0->Add ( h0 , 0 , wxEXPAND ) ;
 	v0->Add ( h1 , 0 , wxEXPAND ) ;

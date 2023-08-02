@@ -481,7 +481,7 @@ void TPrimerDesign::initme ()
                             wxDefaultSize,//wxSize ( w*2/3 - 70 , h ) ,
                             wxTE_MULTILINE | wxTE_READONLY ) ;
                             
-    stat->SetFont ( *MYFONT ( MYFONTSIZE , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
+    stat->SetFont ( *MYFONT ( MYFONTSIZE , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
 
     GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,show_features);
 

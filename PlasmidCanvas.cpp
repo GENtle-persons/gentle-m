@@ -824,8 +824,8 @@ void PlasmidCanvas::showGClegend ( wxDC &dc )
 	{
     int fontfactor = 10 ;
     if ( printing ) fontfactor = (w>h?h:w)/10000 ;
-    wxFont *smallFont = MYFONT ( fontfactor*2/3 , wxSWISS , wxNORMAL , wxNORMAL ) ;
-    wxFont *normalFont = MYFONT ( fontfactor*6/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    wxFont *smallFont = MYFONT ( fontfactor*2/3 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
+    wxFont *normalFont = MYFONT ( fontfactor*6/5 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
 	wxRect r ;
 	int nw = w / 5 ;
     dc.SetFont(*normalFont);

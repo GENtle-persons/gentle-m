@@ -101,7 +101,7 @@ void TGraphScale::drawit ( wxDC &dc , wxRect &r , wxRect &inner )
    	float minor = major / 5 ;
    	
    	// Draw scale
-   	dc.SetFont ( *MYFONT ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
+   	dc.SetFont ( *MYFONT ( 8 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
    	dc.SetTextForeground ( col ) ;
    	dc.SetPen ( *MYPEN ( col ) ) ;
    	
