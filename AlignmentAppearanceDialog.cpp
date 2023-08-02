@@ -153,9 +153,9 @@ void AlignmentAppearanceDialog::set_pen ( SequenceCharMarkup &scm , int id , int
     
     switch ( b )
        {
-       case 1 : *p = wxPen ( colors[id] , t , wxSOLID ) ; break ;
-       case 2 : *p = wxPen ( colors[id] , t , wxSHORT_DASH ) ; break ;
-       case 3 : *p = wxPen ( colors[id] , t , wxDOT ) ; break ;
+       case 1 : *p = wxPen ( colors[id] , t , wxPENSTYLE_SOLID ) ; break ;
+       case 2 : *p = wxPen ( colors[id] , t , wxPENSTYLE_SHORT_DASH ) ; break ;
+       case 3 : *p = wxPen ( colors[id] , t , wxPENSTYLE_DOT ) ; break ;
        }
     }
 
