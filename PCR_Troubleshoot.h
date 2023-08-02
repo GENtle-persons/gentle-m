@@ -58,7 +58,8 @@ class PCR_troubleshoot_dialog : public wxDialog
 	virtual wxString invert ( wxString s ) ; ///< Inverts a (DNA) sequence
 	virtual wxString trim_both ( wxString s1 , wxString s2 , wxString s3 ) ;
 	virtual wxArrayString get_matrix ( wxString s1 , wxString s2 ) ;
-	virtual wxArrayString get_matches ( wxArrayString &m , int min , int allowed_gaps = 0 ) ;
+	// dead code (Comment by Steffen)
+	// virtual wxArrayString get_matches ( wxArrayString &m , int min , int allowed_gaps = 0 ) ;
 	virtual void fillSantaLucia () ;
 	
 	virtual wxChar opp ( wxChar c ) ;
