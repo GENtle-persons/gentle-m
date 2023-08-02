@@ -394,13 +394,13 @@ void SequenceCanvas::editSpecialKeyPressed ( int k , TVector *v , wxString *the_
       {
       mark ( id , the_sequence->length() , the_sequence->length() , 2 ) ;
       }   	
-    else if ( k == WXK_PRIOR )
+    else if ( k == WXK_PAGEUP )
       {
       from -= page ;
       if ( from < 1 ) from = 1 ;
       mark ( id , from , from , 2 ) ;
       }
-    else if ( k == WXK_NEXT )
+    else if ( k == WXK_PAGEDOWN )
       {
       from += page ;
       if ( from > the_sequence->length() ) from = the_sequence->length() ;

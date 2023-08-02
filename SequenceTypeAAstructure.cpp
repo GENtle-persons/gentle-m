@@ -400,7 +400,7 @@ void SeqAAstructure::draw_amino_acid ( wxDC &dc , char as , int x , int y , int 
 	dc.SetPen ( *pen_C ) ;
 	for ( a = 0 ; a < atom_pos.size() ; a++ )
 		{
-		switch ( atom_type.GetChar ( a ) )
+		switch ( (char)atom_type.GetChar ( a ) )
 			{
 			case 'C' : if ( can->isPrinting() ) dc.SetPen ( *pen_C ) ; dc.SetBrush ( *brush_C ) ; break ;
 			case 'S' : if ( can->isPrinting() ) dc.SetPen ( *pen_S ) ; dc.SetBrush ( *brush_S ) ; break ;

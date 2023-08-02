@@ -656,7 +656,7 @@ void TAminoAcids::handleListBox ( wxString t )
 		{
 		if ( curDisplay )
 			{
-			h1->Remove ( curDisplay ) ;
+			h1->Detach ( curDisplay ) ;
 			delete curDisplay ;
 			}
 		curDisplay = NULL ;

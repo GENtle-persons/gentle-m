@@ -221,7 +221,7 @@ void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
         {
         char u[100] ;
         sprintf ( u , "short_itemtype%d" , i.getType() ) ;
-        i.name = wxString ( txt(u) , wxConvUTF8 ) ;
+        i.name = txt(u);
         wxString d2 = i.desc ;
         int k = d2.find ( _T("\n") ) ;
         if ( k > -1 ) d2.erase ( k ) ;

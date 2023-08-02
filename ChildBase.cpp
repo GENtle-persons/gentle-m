@@ -223,7 +223,7 @@ void ChildBase::OnExport (wxCommandEvent& event)
 
 	 wxString wildcard = getExportFilters () ;
     wxString lastdir = myapp()->frame->LS->getOption ( _T("LAST_IMPORT_DIR") , _T("C:") ) ;
-    wxFileDialog d ( this , txt("export_file") , lastdir , _T("") , wildcard , wxSAVE|wxOVERWRITE_PROMPT ) ;
+    wxFileDialog d ( this , txt("export_file") , lastdir , _T("") , wildcard , wxFD_SAVE|wxFD_OVERWRITE_PROMPT ) ;
     d.SetFilterIndex ( myapp()->frame->LS->getOption ( _T("LAST_EXPORT_FILTER") , 0 ) ) ;
     int x = d.ShowModal() ;
     if ( x != wxID_OK ) return ;

@@ -310,7 +310,7 @@ void TMyImagePanel::OnDraw(wxDC& pdc)
 
     if ( invert )
     	{
-        int lf = pdc.GetLogicalFunction() ;
+        wxRasterOperationMode lf = pdc.GetLogicalFunction() ;
         pdc.SetLogicalFunction ( wxINVERT ) ;
         pdc.SetBrush ( *wxWHITE_BRUSH ) ;
         pdc.SetPen ( *wxWHITE_PEN ) ;

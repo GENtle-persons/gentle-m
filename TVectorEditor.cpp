@@ -400,7 +400,7 @@ void TVectorEditor::newProtease ( wxCommandEvent &ev )
     e->setCut ( 0 ) ;
     e->setOverlap ( 0 ) ;
     TEnzymeDialog ed ( this , txt("t_new_protease") , wxPoint(-1,-1) , wxSize(600,400) , 
-                    wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL ) ;
+                    wxDEFAULT_DIALOG_STYLE|wxCENTRE ) ;
     ed.initme ( e ) ;
     if ( ed.ShowModal() == wxID_OK )
        {

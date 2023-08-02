@@ -538,7 +538,7 @@ void SeqPlot::useNcoils ()
 		mylog ( "SeqPlot::useNcoils" , wxString::Format ( _T("BEGIN ncoils_function (%d): ") , b ) + s ) ;
 		x = ncoils_function ( (const char*) s.mb_str() , b ) . c_str() ;
 		mylog ( "SeqPlot::useNcoils" , "END ncoils_function" ) ;
-		wxString t ( (char*) x.c_str() , wxConvUTF8 ) ;
+		wxString t ( (const char*) x.c_str() , wxConvUTF8 ) ;
 		wxArrayString ta ;
 		explode ( _T("\n") , t , ta ) ;
 		for ( b = 0 ; b < s.length() ; b++ )

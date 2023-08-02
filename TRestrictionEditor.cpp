@@ -385,7 +385,7 @@ void TRestrictionEditor::res_ll_act ( wxListEvent &event )
     wxString s = el->GetItemText ( i ) ;
     TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( s ) ;
     TEnzymeDialog ed ( this , s , wxPoint(-1,-1) , wxSize(600,400) , 
-					  wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL ) ;
+					  wxDEFAULT_DIALOG_STYLE|wxCENTRE ) ;
     ed.initme ( e , true ) ;
     ed.ShowModal() ;
 }

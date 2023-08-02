@@ -272,7 +272,7 @@ TSQLresult TStorage::getObjectSqlite3 ( const wxString &query )
         } while ( rc == SQLITE_BUSY ) ;
     
     ierror = e ? 1 : 0 ;
-    if ( e ) error = wxString ( _T("An error has occurred when executing query ") + query , wxConvUTF8 ) ;
+    if ( e ) error = _T("An error has occurred when executing query ") + query;
     else error = _T("Alles OK") ;
 
     sqlite3_close ( db ) ;
@@ -531,7 +531,7 @@ void TStorage::replaceTable ( wxString table , wxArrayString &f , wxArrayString 
         s1 = s2 = _T("") ;
         for ( b = 0 ; b < f.GetCount() ; b++ )
            {
-           int id = r[(char*)f[b].c_str()] ;
+           int id = r[(const char*)f[b].c_str()] ;
            if ( id > -1 ) sqlAdd ( s1 , s2 , f[b] , r[a][id] ) ;
            else sqlAdd ( s1 , s2 , f[b] , _T("") ) ;
            }

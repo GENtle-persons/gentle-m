@@ -1141,7 +1141,7 @@ bool MyChild::runRestriction ( wxString s )
 	{
     MyFrame *f = myapp()->frame ; //(MyFrame*) GetParent() ;
     TRestrictionEditor ed ( f , _T("") , wxPoint(-1,-1) , wxSize(600,400) ,
-               wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL);
+               wxDEFAULT_DIALOG_STYLE|wxCENTRE);
     ed.pre = s ;
     ed.cocktail = vec->cocktail ;
     ed.remoteCocktail = &vec->cocktail ;

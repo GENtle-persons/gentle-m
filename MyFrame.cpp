@@ -727,7 +727,7 @@ void MyFrame::saveImage ( wxBitmap *bmp , wxString name )
     name.Replace ( _T("\\") , _T("_") , TRUE ) ;
 	
     wxString lastdir = LS->getOption ( _T("LAST_IMPORT_DIR") , _T("C:") ) ;
-    wxFileDialog d ( this , txt("t_save_image") , lastdir , name , wildcard , wxSAVE|wxOVERWRITE_PROMPT ) ;
+    wxFileDialog d ( this , txt("t_save_image") , lastdir , name , wildcard , wxFD_SAVE|wxFD_OVERWRITE_PROMPT ) ;
     if ( d.ShowModal() != wxID_OK ) return ;
     wxString filename = d.GetPath() ;
     
@@ -764,7 +764,7 @@ void MyFrame::OnFileImport(wxCommandEvent& event )
 	_T("|") + wcCM5format ;
     wxString lastdir = LS->getOption ( _T("LAST_IMPORT_DIR") , _T("C:") ) ;
     wxFileDialog d ( this , txt("import_file") , lastdir , 
-					_T("") , wildcard , wxOPEN | wxMULTIPLE ) ;
+					_T("") , wildcard , wxFD_OPEN | wxFD_MULTIPLE ) ;
     int x = d.ShowModal() ;
     if ( x != wxID_OK ) return ;
     
@@ -2616,8 +2616,8 @@ void TTestSuite::vectorPressKey ( ChildBase *ac )
     if ( r == 10 ) { ev.m_keyCode = WXK_LEFT ; msg = _T("LEFT") ; }
     if ( r == 11 ) { ev.m_keyCode = WXK_UP ; msg = _T("UP") ; }
     if ( r == 12 ) { ev.m_keyCode = WXK_DOWN ; msg = _T("DOWN") ; }
-    if ( r == 13 ) { ev.m_keyCode = WXK_PRIOR ; msg = _T("PRIOR") ; }
-    if ( r == 14 ) { ev.m_keyCode = WXK_NEXT ; msg = _T("NEXT") ; }
+    if ( r == 13 ) { ev.m_keyCode = WXK_PAGEUP ; msg = _T("PAGEUP") ; }
+    if ( r == 14 ) { ev.m_keyCode = WXK_PAGEDOWN ; msg = _T("PAGEDOWN") ; }
     mylog ( "Testsuite:Key" , wxString::Format ( "%s" , msg.c_str() ) ) ;
     if ( ac->def == _T("PrimerDesign") ) ((TPrimerDesign*)ac)->sc->OnCharHook(ev) ;
     else ac->cSequence->OnCharHook(ev) ;

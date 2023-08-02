@@ -111,7 +111,7 @@ void CGdialog::OnRunCGviewer ( wxCommandEvent &event )
 
 void CGdialog::OnChooseJar ( wxCommandEvent &event )
 	{
-    wxFileDialog d ( this , txt("t_cgview_choose_jar") , cgviewapp->GetLabel() , _T("") , _T("cgview.jar|cgview.jar") , wxOPEN ) ;
+    wxFileDialog d ( this , txt("t_cgview_choose_jar") , cgviewapp->GetLabel() , _T("") , _T("cgview.jar|cgview.jar") , wxFD_OPEN ) ;
     if ( wxID_OK != d.ShowModal() ) return ;
     cgviewapp->SetLabel ( d.GetPath() ) ;
 	}

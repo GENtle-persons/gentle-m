@@ -415,13 +415,13 @@ void PCR_troubleshoot_dialog::scan_Runs ( TPrimer &p , int nr , int length )
 		if ( ( b - a ) / length > 4 )
 			{
 			add_error ( p , nr , msg ,
-			wxString::Format ( txt("t_pcr_ts_warning_runs_text") , (char*)s.Mid(a,length).c_str() ) ) ;
+			wxString::Format ( txt("t_pcr_ts_warning_runs_text") , (const char*)s.Mid(a,length).c_str() ) ) ;
 			a = b - length ;
 			}
 		else if ( ( b - a ) / length  == 4 )
 			{
 			add_warning ( p , nr , msg ,
-			wxString::Format ( txt("t_pcr_ts_warning_runs_text2") , (char*)s.Mid(a,length).c_str() ) ) ;
+			wxString::Format ( txt("t_pcr_ts_warning_runs_text2") , (const char*)s.Mid(a,length).c_str() ) ) ;
 			a = b - length ;
 			}
 		}
@@ -489,7 +489,7 @@ wxString PCR_troubleshoot_dialog::invert ( wxString s )
 	int a ;
 	for ( a = 0 ; a < s.length() ; a++ )
 		{
-		switch ( s.GetChar ( a ) )
+		switch ( (char)s.GetChar ( a ) )
 			{
 			case 'A' : s.SetChar ( a , 'T' ) ; break ;
 			case 'C' : s.SetChar ( a , 'G' ) ; break ;
