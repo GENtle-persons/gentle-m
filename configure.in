@@ -24,14 +24,11 @@ AC_PROG_CXX
 AC_PROG_CC
 
 WXCONFIG=wx-config
-AC_ARG_WITH(wx-config,
-[[  --with-wx-config=FILE     Use the given path to wx-config when determining
-                            wxWidgets configuration; defaults to "wx-config"]],
-[
-    if test "$withval" != "yes" -a "$withval" != ""; then
-        WXCONFIG=$withval
-    fi
-])
+AC_ARG_WITH([wxconfig],
+            AS_HELP_STRING([--with-wx-config],[Give path to wx-config to determine wxWidgets configuration; defaults to "wx-config".]),
+            [],[])
+AS_IF([test x$with_wxconfig != "x"],[if test "$with_wxconfig" != "yes" -a "$with_wxconfig" != ""; then WXCONFIG=$with_wxconfig; fi],[])
+
 AC_MSG_CHECKING([wxWidgets version])
 if wxversion=`$WXCONFIG --version`; then
     AC_MSG_RESULT([$wxversion])
@@ -49,8 +46,22 @@ CXXFLAGS="$CXXFLAGS $WX_CPPFLAGS"
 
 AC_SUBST(WX_LIBS)
 
+AC_ARG_WITH([clustalw],AS_HELP_STRING([--with-clustalw],[Use external binary of clustalw for sequence alignments (default=yes)]),
+            [with_clustalw=yes],[with_clustalw=no])
+if test "x$with_clustalw" != "xno"; then
+  AC_DEFINE([USE_EXTERNAL_CLUSTALW], [1], [Define to use the clustalw binary in your PATH for sequence alignments from within GENtle.])
+fi
+
+
+
+dnl AC_ARG_ENABLE(externalclustalw,
+dnl [Use external binary of clustalw for sequence alignments])
+
+
+[ CXXFLAGS="{$CXXFLAGS} -DUSE_EXTERNAL_CLUSTALW" ])
+
 AC_ARG_ENABLE(debug,
-[  --enable-debug,  Enable debug build],
+[  --enable-debug Enable debug build],
 [
   debugbuild="y"
   CXXFLAGS="${CXXFLAGS} -ggdb"
