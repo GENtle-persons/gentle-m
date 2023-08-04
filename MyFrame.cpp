@@ -136,15 +136,21 @@ MyFrame::MyFrame(wxWindow *parent,
     // Load DNA markers
 	wxString marker_file = myapp()->homedir + myapp()->slash + _T("marker.txt") ;
 	wxTextFile tf ( marker_file ) ;
-    if ( tf.Open ( wxConvUTF8 ) ) wxSafeShowMessage ( marker_file , marker_file ) ;
-    for ( unsigned int a = 0 ; a < tf.GetLineCount() ; a++ )
-    {
-		wxString s = tf.GetLine ( a ) ;
-		s = s.Trim().Trim(false) ;
-		if ( s.IsEmpty() ) continue ; // Skip blank lines
-		if ( s.Left ( 1 ) == _T("#") ) continue ; // Skip comments
-		dna_marker.Add ( s ) ;
-    }
+    if ( tf.Open ( wxConvUTF8 ) ) {
+	    //wxSafeShowMessage ( marker_file , marker_file ) ;
+	    for ( unsigned int a = 0 ; a < tf.GetLineCount() ; a++ )
+	    {
+			wxString s = tf.GetLine ( a ) ;
+			s = s.Trim().Trim(false) ;
+			if ( s.IsEmpty() ) continue ; // Skip blank lines
+			if ( s.Left ( 1 ) == _T("#") ) continue ; // Skip comments
+			dna_marker.Add ( s ) ;
+	    }
+		wxPrintf("I: Successfully opened marker file on '%s'\n",marker_file);
+	} else {
+	    //wxSafeShowMessage ( marker_file , marker_file ) ;
+		wxPrintf("W: Failed to open marker file on '%s'\n",marker_file);
+	}
 }
 
 /** \brief Destructor
