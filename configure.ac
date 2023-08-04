@@ -11,10 +11,10 @@ dnl Licence:    The wxWidgets License
 dnl ---------------------------------------------------------------------------
 
 dnl generic init
-AC_INIT
+AC_INIT([GENtle], [1.5])
 AC_CONFIG_SRCDIR([main.cpp])
 dnl AM_CONFIG_HEADER(config.h:config.h.in)
-AM_INIT_AUTOMAKE(GENtle, 1.5)
+AM_INIT_AUTOMAKE
 dnl AC_PROG_MAKE_SET
 dnl AC_ARG_PROGRAM
 dnl AC_PROG_INSTALL
