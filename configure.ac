@@ -11,7 +11,8 @@ dnl Licence:    The wxWidgets License
 dnl ---------------------------------------------------------------------------
 
 dnl generic init
-AC_INIT(main.cpp)
+AC_INIT
+AC_CONFIG_SRCDIR([main.cpp])
 dnl AM_CONFIG_HEADER(config.h:config.h.in)
 AM_INIT_AUTOMAKE(GENtle, 1.5)
 dnl AC_PROG_MAKE_SET
@@ -57,9 +58,10 @@ AC_ARG_ENABLE(debug,
 ])
 
 dnl that's all, folks
-AC_OUTPUT([
+AC_CONFIG_FILES([
             Makefile
           ])
+AC_OUTPUT
 
 dnl Summarized output
 echo
