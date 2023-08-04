@@ -24,7 +24,6 @@ dnl AC_PROG_LIBTOOL
 
 WITH_MYSQL()
 
-
 dnl check for programs we use
 AC_PROG_CXX
 AC_PROG_CC
@@ -117,4 +116,3 @@ echo "tinyXML             External library ($with_tinyxml)"
 else
 echo "tinyXML             Self-compiled library ($with_tinyxml)"
 fi
-
