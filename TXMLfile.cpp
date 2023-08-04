@@ -50,7 +50,7 @@ void TXMLfile::load ( wxString file )
     analyze ( doc ) ;
     }
 
-void TXMLfile::analyze ( const TiXmlDocument &doc )
+void TXMLfile::analyze ( TiXmlDocument &doc )
     {
     if ( doc.FirstChild ( "GBSeq" ) )
         {
