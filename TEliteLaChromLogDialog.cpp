@@ -115,7 +115,7 @@ void TEliteLaChromLogDialog::ReadFile ( wxString filename , wxArrayString &data 
             ld = d + 1 ;
         }
     }
-    delete c ;
+    delete [] c ;
 }
 
 #define MAKE_DATE_TIME(line) line[0].Mid(6,4) + _T("-") + line[0].Mid(3,2) + _T("-") + line[0].Mid(0,2) + _T(" ") + line[1]
