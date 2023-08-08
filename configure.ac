@@ -13,7 +13,7 @@ dnl ---------------------------------------------------------------------------
 m4_include([m4/mysql.m4])
 
 dnl generic init
-AC_INIT([GENtle], [1.5])
+AC_INIT([GENtle],[1.5])
 AC_CONFIG_SRCDIR([main.cpp])
 dnl AM_CONFIG_HEADER(config.h:config.h.in)
 AM_INIT_AUTOMAKE
@@ -85,9 +85,10 @@ AC_ARG_ENABLE(debug,
 ])
 
 dnl that's all, folks
-AC_OUTPUT([
+AC_CONFIG_FILES([
             Makefile
           ])
+AC_OUTPUT
 
 dnl Summarized output
 echo
