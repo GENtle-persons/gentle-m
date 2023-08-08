@@ -329,10 +329,10 @@ void explode ( wxString sep , wxString s , wxArrayString &r ) ;
 /** \brief Join wxStrings in "r" while putting "sep"s between them */
 wxString implode ( wxString sep , wxArrayString &r ) ;
 /*
-/** \brief Returns the current language version of the "item" /
+//  \brief Returns the current language version of the "item" /
 char* txt ( wxString item ) ;
 
-/** \brief Returns the current language version of the "item" /
+//  \brief Returns the current language version of the "item" /
 char* txt ( char *item ) ;
 */
 /** \brief Returns the current language version of the "item" */
