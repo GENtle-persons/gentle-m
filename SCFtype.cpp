@@ -288,7 +288,7 @@ bool SCFtype::parse ( wxString filename )
 //	wxMessageBox ( out ) ;
 //	wxMessageBox ( sd.comment ) ;
 	
-	delete t ;
+	delete [] t ;
 	return true ;
 	}
 
