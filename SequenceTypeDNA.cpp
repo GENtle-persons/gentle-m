@@ -308,8 +308,7 @@ void SeqDNA::show_direct ( wxDC& dc )
     myass ( ch , "SeqDNA::show_direct2a" ) ;
     myass ( csgc , "SeqDNA::show_direct2b" ) ;
     b = ( ya - ch - oy ) / ( ch * csgc ) * itemsperline ;
-    for ( a = 0 ; a < b && a < s.length() ; a += itemsperline ) ;
-        
+ 
     myass ( itemsperline , "SeqDNA::show_direct3" ) ;
     myass ( cbs , "SeqDNA::show_direct4" ) ;
     for ( a = 0 ; a < s.length() ; a++ )
