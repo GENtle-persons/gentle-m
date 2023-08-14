@@ -63,9 +63,8 @@ bitmaps/plasmid_circular.bmp \
 bitmaps/print.bmp \
 bitmaps/scissors.bmp
 
-
-GENtle_LDADD = $(WX_LIBS) -L/usr/lib -L/usr/local/lib -lsqlite -lsqlite3 -lmysqlclient -ltinyxml
-GENtle_LDFLAGS = -s
+GENtle_LDADD = $(WX_LIBS) -L/usr/lib -lsqlite3 -ltinyxml
+GENtle_LDFLAGS =
 GENtle_SOURCES = TXMLfile.cpp \
 TVectorTree.cpp \
 TVirtualGel.cpp \
