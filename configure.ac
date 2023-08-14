@@ -77,8 +77,7 @@ fi
 
 dnl Set debug flags
 
-AC_ARG_ENABLE(debug,
-[  --enable-debug Enable debug build],
+AC_ARG_ENABLE(debug,AS_HELP_STRING([--enable-debug],[Enable debug build]),
 [
   debugbuild="y"
   CXXFLAGS="${CXXFLAGS} -ggdb"
@@ -105,6 +104,12 @@ if [[ "x$with_clustalw" != "xno" ]]; then
 echo "ClustalW            External binary"
 else
 echo "ClustalW            Self-compiled binary"
+fi
+
+if [[ "x$with_mysql" != "xno" ]]; then
+echo "MySQL               Enabled"
+else
+echo "MySQL               Disabled"
 fi
 
 if [[ "x$with_tinyxml" != "xno" ]]; then
