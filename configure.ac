@@ -60,20 +60,6 @@ if test "x$with_clustalw" != "xno"; then
   AC_DEFINE([USE_EXTERNAL_CLUSTALW], [1], [Define to use the clustalw binary in your PATH for sequence alignments from within GENtle.])
 fi
 
-dnl Clarify location of tinyxml
-
-TINYXML=""
-AC_ARG_WITH([tinyxml],AS_HELP_STRING([--with-tinyxml],[Use externally provided tinyXML library instead of the version shipping with source tree (default=/usr).]),[],[with_tinyxml="/usr"])
-if test "x$with_tinyxml" != "x"; then
-  if test "x$with_tinyxml" != "xno"; then
-    AC_DEFINE([USE_EXTERNAL_TINYXML], [/usr], [Define to use the clustalw binary in your PATH for sequence alignments from within GENtle.])
-  else
-    TINYXML=""
-  fi
-else
-  AC_DEFINE([USE_EXTERNAL_TINYXML], [$withval], [Define to use the clustalw binary in your PATH for sequence alignments from within GENtle.])
-fi
-
 dnl Set debug flags
 
 AC_ARG_ENABLE(debug,AS_HELP_STRING([--enable-debug],[Enable debug build]),
