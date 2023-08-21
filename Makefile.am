@@ -63,9 +63,10 @@ bitmaps/plasmid_circular.bmp \
 bitmaps/print.bmp \
 bitmaps/scissors.bmp
 
-GENtle_LDADD = $(WX_LIBS) -L/usr/lib -lsqlite3 -ltinyxml
-GENtle_LDFLAGS =
-GENtle_SOURCES = TXMLfile.cpp \
+GENtle_LDADD = $(WX_LIBS) $(LDFLAGS) -L/usr/lib -lsqlite3 -ltinyxml
+GENtle_LDFLAGS = $(LDFLAGS)
+GENtle_SOURCES = \
+TXMLfile.cpp \
 TVectorTree.cpp \
 TVirtualGel.cpp \
 TVectorEditorItems.cpp \

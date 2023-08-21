@@ -22,12 +22,11 @@ dnl AC_ARG_PROGRAM
 dnl AC_PROG_INSTALL
 dnl AC_PROG_LIBTOOL
 
-WITH_MYSQL()
-
 dnl check for programs we use
 AC_PROG_CXX
 AC_PROG_CC
 
+WITH_MYSQL()
 
 WXCONFIG=wx-config
 AC_ARG_WITH([wxconfig],
@@ -51,6 +50,7 @@ CPPFLAGS="$CPPFLAGS $WX_CPPFLAGS"
 CXXFLAGS="$CXXFLAGS $WX_CPPFLAGS"
 
 AC_SUBST(WX_LIBS)
+AC_SUBST(LDFLAGS)
 
 dnl Clarify inclusion/exclusion of ClustalW source tree
 
@@ -96,3 +96,7 @@ echo "MySQL               Enabled"
 else
 echo "MySQL               Disabled"
 fi
+
+echo "CPPFLAGS=$CPPFLAGS"
+echo "CXXFLAGS=$CXXFLAGS"
+echo "LDFLAGS=$LDFLAGS"
