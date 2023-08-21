@@ -96,9 +96,3 @@ echo "MySQL               Enabled"
 else
 echo "MySQL               Disabled"
 fi
-
-if [[ "x$with_tinyxml" != "xno" ]]; then
-echo "tinyXML             External library ($with_tinyxml)"
-else
-echo "tinyXML             Self-compiled library ($with_tinyxml)"
-fi
