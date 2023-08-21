@@ -274,7 +274,8 @@ void TOnlineTools::do_neb_cutter ()
     url = _T("http://tools.neb.com/NEBcutter2/enzcut.php?") ;
     url += _T("username=") + get_fasta_name() ;
     url += _T("&min_orf=100") ;
-    url += _T("&circular=") + child->vec->isLinear() ? _T("0") : _T("1") ;
+    url += _T("&circular=") ;
+    url += child->vec->isLinear() ? _T("0") : _T("1") ;
     url += _T("&enz_suppl=1") ;
     url += _T("&sequence=") + sequence ;
     wxExecute ( myapp()->getHTMLCommand ( url ) ) ;
