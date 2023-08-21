@@ -175,7 +175,7 @@ void TRestrictionEditor::initRestrictionPage ()
     nfstv->SetSize ( 70 , th * 2 ) ;
     h1d->Add ( nfstv , 0 , wxALL|wxALIGN_CENTER_VERTICAL , 5 ) ;
     h1d->Add ( new wxStaticText ( this , -1 , txt("base pairs.") ) , 
-			  1 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
+			  1 , wxEXPAND , 5 ) ;
 	
 	
 	wxBoxSizer *v3a = new wxBoxSizer ( wxVERTICAL ) ;
@@ -239,9 +239,9 @@ void TRestrictionEditor::initRestrictionPage ()
     v2b->Add ( h1e , 1 , wxEXPAND , 5 ) ;
     v2b->Add ( h1f , 1 , wxEXPAND , 5 ) ;
 	
-    h1->Add ( v2a , 1 , wxEXPAND|wxALL , 5 ) ;
-    h1->Add ( v2b , 1 , wxEXPAND|wxALL , 5 ) ;
-    h1->Add ( v2c , 1 , wxEXPAND|wxALL , 5 ) ;
+    h1->Add ( v2a , 1 , wxEXPAND , 5 ) ;
+    h1->Add ( v2b , 1 , wxEXPAND , 5 ) ;
+    h1->Add ( v2c , 1 , wxEXPAND , 5 ) ;
     
     // "This enzyme cuts" list
     rsl = new wxListCtrl ( this , -1 , wxDefaultPosition , wxDefaultSize ,
@@ -261,8 +261,8 @@ void TRestrictionEditor::initRestrictionPage ()
 	
     rsl->SetSize ( w/3 , h/3 ) ;
 	
-    h2->Add ( rsl , 1 , wxEXPAND|wxALL , 5 ) ;
-    h2->Add ( rsl2 , 1 , wxEXPAND|wxALL , 5 ) ;
+    h2->Add ( rsl , 1 , wxEXPAND , 5 ) ;
+    h2->Add ( rsl2 , 1 , wxEXPAND , 5 ) ;
     
     v1->Add ( h1 , 1 , wxEXPAND , 5 ) ;
     v1->Add ( h2 , 1 , wxEXPAND , 5 ) ;

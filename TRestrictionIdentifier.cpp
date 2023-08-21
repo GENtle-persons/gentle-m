@@ -66,27 +66,27 @@ void TRestrictionIdentifier::initme ()
     group_list = new wxChoice ( this , RI_GROUP ) ;
     enzymes_list = new wxListBox ( this , RI_ENZYMES_LIST ) ;
 
-    h1->Add ( new wxStaticText(this,-1,txt("t_minumum")+_T(" ")) , 0 , wxEXPAND|wxALL , 2 ) ;
-    h1->Add ( bp_list , 0 , wxEXPAND|wxALL , 2 ) ;
-    h1->Add ( new wxStaticText(this,-1,txt("t_bp")) , 0 , wxEXPAND|wxALL , 2 ) ;
+    h1->Add ( new wxStaticText(this,-1,txt("t_minumum")+_T(" ")) , 0 , wxEXPAND , 2 ) ;
+    h1->Add ( bp_list , 0 , wxEXPAND , 2 ) ;
+    h1->Add ( new wxStaticText(this,-1,txt("t_bp")) , 0 , wxEXPAND , 2 ) ;
 
-    h2->Add ( new wxStaticText(this,-1,txt("t_minumum")+_T(" ")) , 0 , wxEXPAND|wxALL , 2 ) ;
-    h2->Add ( percent_list , 0 , wxEXPAND|wxALL , 2 ) ;
-    h2->Add ( new wxStaticText(this,-1,_T("%")) , 0 , wxEXPAND|wxALL , 2 ) ;
+    h2->Add ( new wxStaticText(this,-1,txt("t_minumum")+_T(" ")) , 0 , wxEXPAND , 2 ) ;
+    h2->Add ( percent_list , 0 , wxEXPAND , 2 ) ;
+    h2->Add ( new wxStaticText(this,-1,_T("%")) , 0 , wxEXPAND , 2 ) ;
     
-//    h3->Add ( new wxStaticText(this,-1,txt("enzyme_groups")+_T(" ")) , 0 , wxEXPAND|wxALL , 2 ) ;
-//    h3->Add ( group_list , 0 , wxEXPAND|wxALL , 2 ) ;
+//    h3->Add ( new wxStaticText(this,-1,txt("enzyme_groups")+_T(" ")) , 0 , wxEXPAND , 2 ) ;
+//    h3->Add ( group_list , 0 , wxEXPAND , 2 ) ;
     
-    v->Add ( new wxStaticText(this,-1,txt("band_difference")) , 0 , wxEXPAND|wxALL , 2 ) ;
-    v->Add ( h1 , 0 , wxEXPAND|wxALL , 2 ) ;
-    v->Add ( h2 , 0 , wxEXPAND|wxALL , 2 ) ;
-//    v->Add ( h3 , 0 , wxEXPAND|wxALL , 5 ) ;
+    v->Add ( new wxStaticText(this,-1,txt("band_difference")) , 0 , wxEXPAND , 2 ) ;
+    v->Add ( h1 , 0 , wxEXPAND , 2 ) ;
+    v->Add ( h2 , 0 , wxEXPAND , 2 ) ;
+//    v->Add ( h3 , 0 , wxEXPAND , 5 ) ;
 
-    v->Add ( new wxStaticText(this,-1,txt("enzyme_groups")) , 0 , wxEXPAND|wxALL , 2 ) ;
-    v->Add ( group_list , 0 , wxEXPAND|wxALL , 2 ) ;
+    v->Add ( new wxStaticText(this,-1,txt("enzyme_groups")) , 0 , wxEXPAND , 2 ) ;
+    v->Add ( group_list , 0 , wxEXPAND , 2 ) ;
 
-    v->Add ( enzymes_list , 2 , wxEXPAND|wxALL , 2 ) ;
-    v->Add ( dna_list , 1 , wxEXPAND|wxALL , 2 ) ;
+    v->Add ( enzymes_list , 2 , wxEXPAND , 2 ) ;
+    v->Add ( dna_list , 1 , wxEXPAND , 2 ) ;
 
     main->Add ( v , 0 , wxEXPAND , 2 ) ;
     main->Add ( right , 1 , wxEXPAND , 2 ) ;

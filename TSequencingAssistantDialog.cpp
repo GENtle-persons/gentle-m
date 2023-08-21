@@ -20,12 +20,12 @@ TSequencingAssistantDialog::TSequencingAssistantDialog (wxWindow *parent , const
 	abi2 = new wxChoice ( this , SAD_ABI2 ) ;
 	
 	// Sequence/sequencing data dropdown boxes
-	h1a->Add ( new wxStaticText ( this , -1 , txt("t_sad_sequence") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-	h1a->Add ( sequence , 1 , wxEXPAND|wxALL , 5 ) ;
-	h1a->Add ( new wxStaticText ( this , -1 , txt("t_sad_abi1") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-	h1a->Add ( abi1 , 1 , wxEXPAND|wxALL , 5 ) ;
-	h1a->Add ( new wxStaticText ( this , -1 , txt("t_sad_abi2") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-	h1a->Add ( abi2 , 1 , wxEXPAND|wxALL , 5 ) ;
+	h1a->Add ( new wxStaticText ( this , -1 , txt("t_sad_sequence") ) , 0 , wxEXPAND , 5 ) ;
+	h1a->Add ( sequence , 1 , wxEXPAND , 5 ) ;
+	h1a->Add ( new wxStaticText ( this , -1 , txt("t_sad_abi1") ) , 0 , wxEXPAND , 5 ) ;
+	h1a->Add ( abi1 , 1 , wxEXPAND , 5 ) ;
+	h1a->Add ( new wxStaticText ( this , -1 , txt("t_sad_abi2") ) , 0 , wxEXPAND , 5 ) ;
+	h1a->Add ( abi2 , 1 , wxEXPAND , 5 ) ;
 
 	// OK/Cancel
     ok = new wxButton ( this , wxID_OK , txt("b_ok") ) ;
@@ -35,8 +35,8 @@ TSequencingAssistantDialog::TSequencingAssistantDialog (wxWindow *parent , const
 	
 	// Initial help text
     v0->Add ( new wxStaticText ( this , -1 , txt("t_sad_text") , wxDefaultPosition , wxSize(400,60) , wxALIGN_CENTRE ) , 
-               0 , wxEXPAND|wxALL , 5 ) ;
-	v0->Add ( h1a , 0 , wxEXPAND|wxALL , 5 ) ;
+               0 , wxEXPAND , 5 ) ;
+	v0->Add ( h1a , 0 , wxEXPAND , 5 ) ;
 	v0->Add ( h2 , 0 , wxCENTER|wxALL , 5 ) ;
 	
 	// Initialize dropdown boxes

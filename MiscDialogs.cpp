@@ -70,11 +70,11 @@ TGraphDialog::TGraphDialog ( wxWindow *_parent , const wxString& title )
 	add_nb_graph () ;
 	add_nb_data () ;
 	add_nb_scales () ;
-	
+
 	h_buttons->Add ( new wxButton ( this , TGD_OK , txt("b_ok") ) , 1 , 0 ) ;
 	h_buttons->Add ( new wxStaticText ( this , -1 , _T(" ") ) , 1 , wxEXPAND ) ;
 	h_buttons->Add ( new wxButton ( this , wxID_CANCEL , txt("b_cancel") ) , 1 , 0 ) ;
-	
+
 	v0->Add ( nb , 1 , wxEXPAND , 0 ) ;
 	v0->Add ( h_buttons , 0 , wxALL|wxALIGN_CENTER_HORIZONTAL , 5 ) ;
 	
@@ -138,8 +138,8 @@ void TGraphDialog::add_nb_data ()
 	wxBoxSizer *h3 = new wxBoxSizer ( wxHORIZONTAL ) ;
 	
 	data_name = new wxTextCtrl ( nb_data , -1 ) ;
-	h1->Add ( new wxStaticText ( nb_data , -1 , txt("name") ) , 0 , wxEXPAND|wxALL , 2 ) ;
-	h1->Add ( data_name , 1 , wxEXPAND|wxALL , 2 ) ;
+	h1->Add ( new wxStaticText ( nb_data , -1 , txt("name") ) , 0 , wxEXPAND , 2 ) ;
+	h1->Add ( data_name , 1 , wxEXPAND , 2 ) ;
 	
 	ch_data_scalex = new wxChoice ( nb_data , -1 ) ;
 	ch_data_scaley = new wxChoice ( nb_data , -1 ) ;
@@ -148,28 +148,28 @@ void TGraphDialog::add_nb_data ()
 		ch_data_scalex->Append ( parent->gd->scales[a]->name ) ;
 		ch_data_scaley->Append ( parent->gd->scales[a]->name ) ;
 		}
-	h2->Add ( new wxStaticText ( nb_data , -1 , _T("Scale X") ) , 0 , wxEXPAND|wxALL , 2 ) ;
-	h2->Add ( ch_data_scalex , 1 , wxEXPAND|wxALL , 2 ) ;
-	h2->Add ( new wxStaticText ( nb_data , -1 , _T("Scale Y") ) , 0 , wxEXPAND|wxALL , 2 ) ;
-	h2->Add ( ch_data_scaley , 1 , wxEXPAND|wxALL , 2 ) ;
+	h2->Add ( new wxStaticText ( nb_data , -1 , _T("Scale X") ) , 0 , wxEXPAND , 2 ) ;
+	h2->Add ( ch_data_scalex , 1 , wxEXPAND , 2 ) ;
+	h2->Add ( new wxStaticText ( nb_data , -1 , _T("Scale Y") ) , 0 , wxEXPAND , 2 ) ;
+	h2->Add ( ch_data_scaley , 1 , wxEXPAND , 2 ) ;
 	
 	data_color = new wxTextCtrl ( nb_data , -1 , _T("  ") ) ;
 	ch_data_pointstyle = new wxChoice ( nb_data , -1 ) ;
 	ch_data_pointstyle->Append ( _T("none") ) ;
 	for ( a = 0 ; a < parent->gd->styles.GetCount() ; a++ )
 		ch_data_pointstyle->Append ( parent->gd->styles[a] ) ;
-	h3->Add ( new wxStaticText ( nb_data , -1 , _T("Point style") ) , 0 , wxEXPAND|wxALL , 2 ) ;
-	h3->Add ( ch_data_pointstyle , 0 , wxEXPAND|wxALL , 2 ) ;
-	h3->Add ( new wxButton ( nb_data , TGD_BT_DATA , txt("color") ) , 0 , wxEXPAND|wxALL , 2 ) ;
-	h3->Add ( data_color , 0 , wxEXPAND|wxALL , 2 ) ;
-	
-	v0->Add ( h1 , 0 , wxEXPAND|wxALL , 5 ) ;
-	v0->Add ( h2 , 0 , wxEXPAND|wxALL , 5 ) ;
-	v0->Add ( h3 , 0 , wxEXPAND|wxALL , 5 ) ;	
-		
-	h0->Add ( lb_data , 0 , wxEXPAND|wxALL , 5 ) ;
-	h0->Add ( v0 , 0 , wxEXPAND|wxALL , 5 ) ;
-	
+	h3->Add ( new wxStaticText ( nb_data , -1 , _T("Point style") ) , 0 , wxEXPAND , 2 ) ;
+	h3->Add ( ch_data_pointstyle , 0 , wxEXPAND , 2 ) ;
+	h3->Add ( new wxButton ( nb_data , TGD_BT_DATA , txt("color") ) , 0 , wxEXPAND , 2 ) ;
+	h3->Add ( data_color , 0 , wxEXPAND , 2 ) ;
+
+	v0->Add ( h1 , 0 , wxEXPAND , 5 ) ;
+	v0->Add ( h2 , 0 , wxEXPAND , 5 ) ;
+	v0->Add ( h3 , 0 , wxEXPAND , 5 ) ;
+
+	h0->Add ( lb_data , 0 , wxEXPAND , 5 ) ;
+	h0->Add ( v0 , 0 , wxEXPAND , 5 ) ;
+
 	nb_data->SetSizer ( h0 ) ;
 	h0->Fit ( nb_data ) ;
 
@@ -204,34 +204,34 @@ void TGraphDialog::add_nb_scales ()
 	wxBoxSizer *h3 = new wxBoxSizer ( wxHORIZONTAL ) ;
 
 	scales_name = new wxTextCtrl ( nb_scales , -1 ) ;
-	h1->Add ( new wxStaticText ( nb_scales , -1 , txt("name") ) , 0 , wxEXPAND|wxALL , 2 ) ;
-	h1->Add ( scales_name , 1 , wxEXPAND|wxALL , 2 ) ;
+	h1->Add ( new wxStaticText ( nb_scales , -1 , txt("name") ) , 0 , wxEXPAND , 2 ) ;
+	h1->Add ( scales_name , 1 , wxEXPAND , 2 ) ;
 
 	scales_min = new wxTextCtrl ( nb_scales , -1 ) ;
 	scales_max = new wxTextCtrl ( nb_scales , -1 ) ;
-	h2->Add ( new wxStaticText ( nb_scales , -1 , _T("Min") ) , 0 , wxEXPAND|wxALL , 2 ) ;
-	h2->Add ( scales_min , 1 , wxEXPAND|wxALL , 2 ) ;
-	h2->Add ( new wxStaticText ( nb_scales , -1 , _T("Max") ) , 0 , wxEXPAND|wxALL , 2 ) ;
-	h2->Add ( scales_max , 1 , wxEXPAND|wxALL , 2 ) ;
+	h2->Add ( new wxStaticText ( nb_scales , -1 , _T("Min") ) , 0 , wxEXPAND , 2 ) ;
+	h2->Add ( scales_min , 1 , wxEXPAND , 2 ) ;
+	h2->Add ( new wxStaticText ( nb_scales , -1 , _T("Max") ) , 0 , wxEXPAND , 2 ) ;
+	h2->Add ( scales_max , 1 , wxEXPAND , 2 ) ;
 
 	scales_color = new wxTextCtrl ( nb_scales , -1 , _T("  ") ) ;
 	scales_unit = new wxTextCtrl ( nb_scales , -1 ) ;
 	ch_scales_type = new wxChoice ( nb_scales , -1 ) ;
 	for ( a = 0 ; a < parent->gd->scaleTypes.GetCount() ; a++ )
 		ch_scales_type->Append ( parent->gd->scaleTypes[a] ) ;
-	h3->Add ( new wxStaticText ( nb_scales , -1 , _T("Unit") ) , 0 , wxEXPAND|wxALL , 2 ) ;
-	h3->Add ( scales_unit , 0 , wxEXPAND|wxALL , 2 ) ;
-	h3->Add ( new wxStaticText ( nb_scales , -1 , _T("Type") ) , 0 , wxEXPAND|wxALL , 2 ) ;
-	h3->Add ( ch_scales_type , 0 , wxEXPAND|wxALL , 2 ) ;
-	h3->Add ( new wxButton ( nb_scales , TGD_BT_SCALES , txt("color") ) , 0 , wxEXPAND|wxALL , 2 ) ;
-	h3->Add ( scales_color , 0 , wxEXPAND|wxALL , 2 ) ;
+	h3->Add ( new wxStaticText ( nb_scales , -1 , _T("Unit") ) , 0 , wxEXPAND , 2 ) ;
+	h3->Add ( scales_unit , 0 , wxEXPAND , 2 ) ;
+	h3->Add ( new wxStaticText ( nb_scales , -1 , _T("Type") ) , 0 , wxEXPAND , 2 ) ;
+	h3->Add ( ch_scales_type , 0 , wxEXPAND , 2 ) ;
+	h3->Add ( new wxButton ( nb_scales , TGD_BT_SCALES , txt("color") ) , 0 , wxEXPAND , 2 ) ;
+	h3->Add ( scales_color , 0 , wxEXPAND , 2 ) ;
 
-	v0->Add ( h1 , 0 , wxEXPAND|wxALL , 5 ) ;
-	v0->Add ( h2 , 0 , wxEXPAND|wxALL , 5 ) ;
-	v0->Add ( h3 , 0 , wxEXPAND|wxALL , 5 ) ;
+	v0->Add ( h1 , 0 , wxEXPAND , 5 ) ;
+	v0->Add ( h2 , 0 , wxEXPAND , 5 ) ;
+	v0->Add ( h3 , 0 , wxEXPAND , 5 ) ;
 	
-	h0->Add ( lb_scales , 0 , wxEXPAND|wxALL , 5 ) ;
-	h0->Add ( v0 , 0 , wxEXPAND|wxALL , 5 ) ;
+	h0->Add ( lb_scales , 0 , wxEXPAND , 5 ) ;
+	h0->Add ( v0 , 0 , wxEXPAND , 5 ) ;
 	
 	nb_scales->SetSizer ( h0 ) ;
 	h0->Fit ( nb_scales ) ;
@@ -374,8 +374,8 @@ TSpeakDialog::TSpeakDialog(wxWindow *parent, const wxString& title , wxString _s
 	wxButton *b1 = new wxButton ( this , SPEAK_PLAY , txt("b_speak_play") ) ;
 	wxButton *b2 = new wxButton ( this , SPEAK_STOP , txt("b_speak_stop") ) ;
 	
-	h0->Add ( b1 , 1 , wxEXPAND|wxALL , 5 ) ;
-	h0->Add ( b2 , 1 , wxEXPAND|wxALL , 5 ) ;
+	h0->Add ( b1 , 1 , wxEXPAND , 5 ) ;
+	h0->Add ( b2 , 1 , wxEXPAND , 5 ) ;
 	
 	doPause = new wxCheckBox ( this , -1 , txt("t_speak_do_pause") ) ;
 	pause = new wxSpinCtrl ( this , -1 ) ;
@@ -383,16 +383,16 @@ TSpeakDialog::TSpeakDialog(wxWindow *parent, const wxString& title , wxString _s
 	pause->SetRange ( 1 , 10 ) ;
 	pause->SetValue ( _T("3") ) ;
 
-	h1->Add ( doPause , 0 , wxEXPAND|wxALL , 5 ) ;
-	h1->Add ( pause , 0 , wxEXPAND|wxALL , 5 ) ;
-	h1->Add ( new wxStaticText ( this , -1 , txt("t_speak_pause") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-	
-	v0->Add ( seq , 0 , wxEXPAND|wxALL , 5 ) ;
-	v0->Add ( h1 , 0 , wxEXPAND|wxALL , 5 ) ;
-	v0->Add ( h0 , 0 , wxEXPAND|wxALL , 5 ) ;
+	h1->Add ( doPause , 0 , wxEXPAND , 5 ) ;
+	h1->Add ( pause , 0 , wxEXPAND , 5 ) ;
+	h1->Add ( new wxStaticText ( this , -1 , txt("t_speak_pause") ) , 0 , wxEXPAND , 5 ) ;
 
-	
-	
+	v0->Add ( seq , 0 , wxEXPAND , 5 ) ;
+	v0->Add ( h1 , 0 , wxEXPAND , 5 ) ;
+	v0->Add ( h0 , 0 , wxEXPAND , 5 ) ;
+
+
+
 	SetSizer ( v0 ) ;
 	v0->Fit ( this ) ;
 	
@@ -556,7 +556,7 @@ TSequencingPrimerDialog::TSequencingPrimerDialog (wxWindow *parent, const wxStri
     c_db = new wxChoice ( this , SPD_DB ) ;
     h1->Add ( new wxStaticText ( this , -1 , txt("t_use_this_database") ) , 0 , wxEXPAND ) ;
     h1->Add ( c_db , 0 , wxEXPAND ) ;
-    
+
     myapp()->frame->LS->getDatabaseList ( db_names , db_files ) ;
     for ( int a = 0 ; a < db_names.GetCount() ; a++ )
 	    c_db->Append ( db_names[a] ) ;
@@ -581,15 +581,15 @@ TSequencingPrimerDialog::TSequencingPrimerDialog (wxWindow *parent, const wxStri
     cb_35->SetValue ( TRUE ) ;
     cb_53->SetValue ( TRUE ) ;
     
-    h3->Add ( new wxButton ( this , wxID_OK , txt("b_ok") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-    h3->Add ( new wxButton ( this , wxID_CANCEL , txt("b_cancel") ) , 0 , wxEXPAND|wxALL , 5 ) ;
+    h3->Add ( new wxButton ( this , wxID_OK , txt("b_ok") ) , 0 , wxEXPAND , 5 ) ;
+    h3->Add ( new wxButton ( this , wxID_CANCEL , txt("b_cancel") ) , 0 , wxEXPAND , 5 ) ;
     
     v0->Add ( h0 , 0 , wxALL , 5 ) ;
-    v0->Add ( h1 , 0 , wxEXPAND|wxALL , 5 ) ;
-    v0->Add ( h1a , 0 , wxEXPAND|wxALL , 5 ) ;
-    v0->Add ( h2a , 0 , wxEXPAND|wxALL , 5 ) ;
-    v0->Add ( h2 , 0 , wxEXPAND|wxALL , 5 ) ;
-    v0->Add ( h3 , 0 , wxEXPAND|wxALL|wxALIGN_CENTER_VERTICAL , 5 ) ;
+    v0->Add ( h1 , 0 , wxEXPAND , 5 ) ;
+    v0->Add ( h1a , 0 , wxEXPAND , 5 ) ;
+    v0->Add ( h2a , 0 , wxEXPAND , 5 ) ;
+    v0->Add ( h2 , 0 , wxEXPAND , 5 ) ;
+    v0->Add ( h3 , 0 , wxEXPAND , 5 ) ;
     
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;    
@@ -838,17 +838,17 @@ TMyMultipleChoiceDialog::TMyMultipleChoiceDialog ( wxWindow *parent ,
    if ( options & wxCANCEL )
 		{
 		wxButton *b = new wxButton ( this , wxID_CANCEL , txt("b_cancel") ) ;
-		h0->Add ( b , wxEXPAND|wxALL , 2 ) ;
+		h0->Add ( b , wxEXPAND , 2 ) ;
 		}
-	else h0->Add ( new wxStaticText ( this , -1 , _T("") ) , wxEXPAND|wxALL , 2 ) ;
+	else h0->Add ( new wxStaticText ( this , -1 , _T("") ) , wxEXPAND , 2 ) ;
 
    if ( options & wxOK )
 		{
 		wxButton *b = new wxButton ( this , MCD_OK , txt("b_ok") ) ;
-		h0->Add ( b , wxEXPAND|wxALL , 2 ) ;
+		h0->Add ( b , wxEXPAND , 2 ) ;
 		b->SetDefault() ;
 		}
-	else h0->Add ( new wxStaticText ( this , -1 , _T("") ) , wxEXPAND|wxALL , 2 ) ;
+	else h0->Add ( new wxStaticText ( this , -1 , _T("") ) , wxEXPAND , 2 ) ;
 
 	clb = new wxCheckListBox ( this , 
                                  -1 , 
@@ -858,9 +858,9 @@ TMyMultipleChoiceDialog::TMyMultipleChoiceDialog ( wxWindow *parent ,
                                  choices ) ;
 
    if ( !message.IsEmpty() )
-		v0->Add ( new wxStaticText ( this , -1 , message ) , 0 , wxEXPAND|wxALL , 2 ) ;
-	v0->Add ( clb , 1 , wxEXPAND|wxALL , 2 ) ;
-	v0->Add ( h0 , 0 , wxEXPAND|wxALL , 2 ) ;
+		v0->Add ( new wxStaticText ( this , -1 , message ) , 0 , wxEXPAND , 2 ) ;
+	v0->Add ( clb , 1 , wxEXPAND , 2 ) ;
+	v0->Add ( h0 , 0 , wxEXPAND , 2 ) ;
    
    SetSizer ( v0 ) ;
    v0->Layout () ;

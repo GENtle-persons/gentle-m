@@ -220,8 +220,8 @@ ProgramOptionsDialog::ProgramOptionsDialog(wxWindow *parent, const wxString& tit
 	h0->Add ( CANCEL , 1 , 0 ) ;
 	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , 0 ) ;
 
-	v0->Add ( nb , 1 , wxALL|wxEXPAND , 5 ) ;
-	v0->Add ( h0 , 0 , wxALL|wxEXPAND , 5 ) ;
+	v0->Add ( nb , 1 , wxEXPAND , 5 ) ;
+	v0->Add ( h0 , 0 , wxEXPAND , 5 ) ;
 
 	SetSizer ( v0 ) ;
 	v0->Fit ( this ) ;
@@ -266,12 +266,12 @@ void ProgramOptionsDialog::initGlobalSettings ()
     proxyPort = new wxTextCtrl ( globalSettingsPanel , -1 , myapp()->frame->proxy.AfterLast(':') ) ;
 
 	// ORF length
-    wxBoxSizer *orf_sizer = new wxBoxSizer ( wxHORIZONTAL ) ;	
+    wxBoxSizer *orf_sizer = new wxBoxSizer ( wxHORIZONTAL ) ;
     orfLength = new wxTextCtrl ( globalSettingsPanel , -1 , wxString::Format ( _T("%d") , myapp()->frame->orfLength ) ) ;
-    orf_sizer->Add ( new wxStaticText ( globalSettingsPanel , -1 , _T("ORF length") ) , 0 , wxEXPAND|wxALL , 3 ) ;
-    orf_sizer->Add ( orfLength , 1 , wxEXPAND|wxALL , 3 ) ;
+    orf_sizer->Add ( new wxStaticText ( globalSettingsPanel , -1 , _T("ORF length") ) , 0 , wxEXPAND , 3 ) ;
+    orf_sizer->Add ( orfLength , 1 , wxEXPAND , 3 ) ;
 
-    
+
     // Display options
     enhancedDisplay = new wxCheckBox ( globalSettingsPanel , -1 , 
                         txt("t_enhanced_display") ) ; 
@@ -359,44 +359,44 @@ void ProgramOptionsDialog::initGlobalSettings ()
     else nonstandard_translation_table->SetSelection ( 0 ) ;
 
     wxBoxSizer *proxy_sizer = new wxBoxSizer ( wxHORIZONTAL ) ;
-    proxy_sizer->Add ( new wxStaticText ( globalSettingsPanel , -1 , txt("t_proxy_name") ) , 0 , wxEXPAND|wxALL , 3 ) ;
-    proxy_sizer->Add ( proxyName , 1 , wxEXPAND|wxALL , 3 ) ;
-    proxy_sizer->Add ( new wxStaticText ( globalSettingsPanel , -1 , txt("t_proxy_port") ) , 0 , wxEXPAND|wxALL , 3 ) ;
-    proxy_sizer->Add ( proxyPort , 0 , wxEXPAND|wxALL , 3 ) ;
+    proxy_sizer->Add ( new wxStaticText ( globalSettingsPanel , -1 , txt("t_proxy_name") ) , 0 , wxEXPAND , 3 ) ;
+    proxy_sizer->Add ( proxyName , 1 , wxEXPAND , 3 ) ;
+    proxy_sizer->Add ( new wxStaticText ( globalSettingsPanel , -1 , txt("t_proxy_port") ) , 0 , wxEXPAND , 3 ) ;
+    proxy_sizer->Add ( proxyPort , 0 , wxEXPAND , 3 ) ;
 
     wxBoxSizer *v = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h = new wxBoxSizer ( wxHORIZONTAL ) ;
-    h->Add ( new wxStaticText ( globalSettingsPanel , -1 , txt("t_language") ) , 0 , wxEXPAND|wxALL , 3 ) ;
-    h->Add ( language , 0 , wxEXPAND|wxALL , 3 ) ;
+    h->Add ( new wxStaticText ( globalSettingsPanel , -1 , txt("t_language") ) , 0 , wxEXPAND , 3 ) ;
+    h->Add ( language , 0 , wxEXPAND , 3 ) ;
 
-    v->Add ( general_options , 0 , wxEXPAND|wxALL , 3 ) ;
-    v->Add ( display_options , 0 , wxEXPAND|wxALL , 3 ) ;
-	
-    general_options->Add ( h , 0 , wxEXPAND|wxALL , 3 ) ;
-    general_options->Add ( loadLastProject , 0 , wxEXPAND|wxALL , 3 ) ;
-    general_options->Add ( useMetafile , 0 , wxEXPAND|wxALL , 3 ) ;
-    general_options->Add ( checkUpdate , 0 , wxEXPAND|wxALL , 3 ) ;
-    general_options->Add ( useInternalHelp , 0 , wxEXPAND|wxALL , 3 ) ;
-	general_options->Add ( useOnlineHelp , 0 , wxEXPAND|wxALL , 3 ) ;
-    general_options->Add ( doRegisterStuff , 0 , wxEXPAND|wxALL , 3 ) ;
-    general_options->Add ( new wxStaticText ( globalSettingsPanel , -1 , _T("") ) , 0 , wxEXPAND|wxALL , 3 ) ;
-    general_options->Add ( use_nonstandard_translation_table , 0 , wxEXPAND|wxALL , 3 ) ; 
-    general_options->Add ( nonstandard_translation_table , 0 , wxEXPAND|wxALL , 3 ) ;
-    general_options->Add ( proxy_sizer , 0 , wxEXPAND|wxALL , 3 ) ;
-    general_options->Add ( orf_sizer , 0 , wxEXPAND|wxALL , 3 ) ;
-    
-    display_options->Add ( enhancedDisplay , 0 , wxEXPAND|wxALL , 3 ) ;
-    display_options->Add ( vectorTitle , 0 , wxEXPAND|wxALL , 3 ) ;
-    display_options->Add ( vectorLength , 0 , wxEXPAND|wxALL , 3 ) ;
-    display_options->Add ( showSplashScreen , 0 , wxEXPAND|wxALL , 3 ) ;
-    display_options->Add ( showEnzymePos , 0 , wxEXPAND|wxALL , 3 ) ;
-    display_options->Add ( showTips , 0 , wxEXPAND|wxALL , 3 ) ;
-	display_options->Add ( useTwoToolbars , 0 , wxEXPAND|wxALL , 3 ) ;
-    display_options->Add ( showToolTips , 0 , wxEXPAND|wxALL , 3 ) ;
-    display_options->Add ( showLowercaseDNA , 0 , wxEXPAND|wxALL , 3 ) ;
-    display_options->Add ( editFeatureMode , 0 , wxEXPAND|wxALL , 3 ) ;
-    display_options->Add ( showStopCodon , 1 , wxEXPAND|wxALL , 3 ) ;
-    display_options->Add ( b_aacol, 0 , wxEXPAND|wxALL , 3 ) ;
+    v->Add ( general_options , 0 , wxEXPAND , 3 ) ;
+    v->Add ( display_options , 0 , wxEXPAND , 3 ) ;
+
+    general_options->Add ( h , 0 , wxEXPAND , 3 ) ;
+    general_options->Add ( loadLastProject , 0 , wxEXPAND , 3 ) ;
+    general_options->Add ( useMetafile , 0 , wxEXPAND , 3 ) ;
+    general_options->Add ( checkUpdate , 0 , wxEXPAND , 3 ) ;
+    general_options->Add ( useInternalHelp , 0 , wxEXPAND , 3 ) ;
+	general_options->Add ( useOnlineHelp , 0 , wxEXPAND , 3 ) ;
+    general_options->Add ( doRegisterStuff , 0 , wxEXPAND , 3 ) ;
+    general_options->Add ( new wxStaticText ( globalSettingsPanel , -1 , _T("") ) , 0 , wxEXPAND , 3 ) ;
+    general_options->Add ( use_nonstandard_translation_table , 0 , wxEXPAND , 3 ) ;
+    general_options->Add ( nonstandard_translation_table , 0 , wxEXPAND , 3 ) ;
+    general_options->Add ( proxy_sizer , 0 , wxEXPAND , 3 ) ;
+    general_options->Add ( orf_sizer , 0 , wxEXPAND , 3 ) ;
+
+    display_options->Add ( enhancedDisplay , 0 , wxEXPAND , 3 ) ;
+    display_options->Add ( vectorTitle , 0 , wxEXPAND , 3 ) ;
+    display_options->Add ( vectorLength , 0 , wxEXPAND , 3 ) ;
+    display_options->Add ( showSplashScreen , 0 , wxEXPAND , 3 ) ;
+    display_options->Add ( showEnzymePos , 0 , wxEXPAND , 3 ) ;
+    display_options->Add ( showTips , 0 , wxEXPAND , 3 ) ;
+	display_options->Add ( useTwoToolbars , 0 , wxEXPAND , 3 ) ;
+    display_options->Add ( showToolTips , 0 , wxEXPAND , 3 ) ;
+    display_options->Add ( showLowercaseDNA , 0 , wxEXPAND , 3 ) ;
+    display_options->Add ( editFeatureMode , 0 , wxEXPAND , 3 ) ;
+    display_options->Add ( showStopCodon , 1 , wxEXPAND , 3 ) ;
+    display_options->Add ( b_aacol, 0 , wxEXPAND , 3 ) ;
 
 	 globalSettingsPanel->SetSizer ( v ) ;
 	 v->Fit ( globalSettingsPanel ) ;

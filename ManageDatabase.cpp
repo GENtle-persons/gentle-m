@@ -159,10 +159,10 @@ void TManageDatabaseDialog::initCopynMove ()
     pm_left->SetImageList ( il , wxIMAGE_LIST_SMALL ) ;
     pm_right->SetImageList ( il , wxIMAGE_LIST_SMALL ) ;
     
-	h1->Add (  new wxStaticText ( p , -1 , txt("t_filter") ) , 0 , wxEXPAND|wxALL , 2 ) ;
-	h1->Add ( filter_txt , 1 , wxEXPAND|wxALL , 2 ) ;
+	h1->Add (  new wxStaticText ( p , -1 , txt("t_filter") ) , 0 , wxEXPAND , 2 ) ;
+	h1->Add ( filter_txt , 1 , wxEXPAND , 2 ) ;
 
-	h2->Add ( f_twopanes , 0 , wxEXPAND|wxALL , 2 ) ;
+	h2->Add ( f_twopanes , 0 , wxEXPAND , 2 ) ;
 
     if ( !isProject )
        {
@@ -174,25 +174,25 @@ void TManageDatabaseDialog::initCopynMove ()
        f_seq = new wxCheckBox ( p , MD_PM_FILTER_SEQ , txt("sequences") ) ;
        f_desc->SetValue ( 1 ) ;
 
-	   h2->Add ( new wxStaticText ( p , -1 , _T("") ) , 1 , wxEXPAND|wxALL , 2 ) ; // Dummy to shove the rest to the right
-	   h2->Add ( f_dna , 0 , wxEXPAND|wxALL , 2 ) ;
-	   h2->Add ( f_prot , 0 , wxEXPAND|wxALL , 2 ) ;
-	   h2->Add ( f_primer , 0 , wxEXPAND|wxALL , 2 ) ;
-	   h2->Add ( f_align , 0 , wxEXPAND|wxALL , 2 ) ;
-	   h2->Add ( f_desc , 0 , wxEXPAND|wxALL , 2 ) ;
-	   h2->Add ( f_seq , 0 , wxEXPAND|wxALL , 2 ) ;
+	   h2->Add ( new wxStaticText ( p , -1 , _T("") ) , 1 , wxEXPAND , 2 ) ; // Dummy to shove the rest to the right
+	   h2->Add ( f_dna , 0 , wxEXPAND , 2 ) ;
+	   h2->Add ( f_prot , 0 , wxEXPAND , 2 ) ;
+	   h2->Add ( f_primer , 0 , wxEXPAND , 2 ) ;
+	   h2->Add ( f_align , 0 , wxEXPAND , 2 ) ;
+	   h2->Add ( f_desc , 0 , wxEXPAND , 2 ) ;
+	   h2->Add ( f_seq , 0 , wxEXPAND , 2 ) ;
 	   }
 
-	v1->Add ( pm_dd_l , 0 , wxEXPAND|wxALL , 2 ) ;
-	v1->Add ( pm_left , 1 , wxEXPAND|wxALL , 2 ) ;
-	v2->Add ( pm_dd_r , 0 , wxEXPAND|wxALL , 2 ) ;
-	v2->Add ( pm_right , 1 , wxEXPAND|wxALL , 2 ) ;
-	h3->Add ( v1 , 1 , wxEXPAND|wxALL , 2 ) ;
-	h3->Add ( v2 , 1 , wxEXPAND|wxALL , 2 ) ;
+	v1->Add ( pm_dd_l , 0 , wxEXPAND , 2 ) ;
+	v1->Add ( pm_left , 1 , wxEXPAND , 2 ) ;
+	v2->Add ( pm_dd_r , 0 , wxEXPAND , 2 ) ;
+	v2->Add ( pm_right , 1 , wxEXPAND , 2 ) ;
+	h3->Add ( v1 , 1 , wxEXPAND , 2 ) ;
+	h3->Add ( v2 , 1 , wxEXPAND , 2 ) ;
 
-	v0->Add ( h1 , 0 , wxEXPAND|wxALL , 2 ) ;
-	v0->Add ( h2 , 0 , wxEXPAND|wxALL , 2 ) ;
-	v0->Add ( h3 , 1 , wxEXPAND|wxALL , 2 ) ;
+	v0->Add ( h1 , 0 , wxEXPAND , 2 ) ;
+	v0->Add ( h2 , 0 , wxEXPAND , 2 ) ;
+	v0->Add ( h3 , 1 , wxEXPAND , 2 ) ;
 
     if ( !doSave )
         {
@@ -211,10 +211,10 @@ void TManageDatabaseDialog::initCopynMove ()
 		sb->SetDefault () ;
 		pm_name->SetSelection ( -1 , -1 ) ;
 		pm_name->SetFocus() ;
-		h4->Add ( pm_dd_save , 0 , wxEXPAND|wxALL , 2 ) ;
-		h4->Add ( pm_name , 1 , wxEXPAND|wxALL , 2 ) ;
-		h4->Add ( sb , 0 , wxEXPAND|wxALL , 2 ) ;
-		v0->Add ( h4 , 0 , wxEXPAND|wxALL , 2 ) ;
+		h4->Add ( pm_dd_save , 0 , wxEXPAND , 2 ) ;
+		h4->Add ( pm_name , 1 , wxEXPAND , 2 ) ;
+		h4->Add ( sb , 0 , wxEXPAND , 2 ) ;
+		v0->Add ( h4 , 0 , wxEXPAND , 2 ) ;
 		}
 	
 	p->SetSizer ( v0 ) ;
@@ -570,7 +570,7 @@ void TManageDatabaseDialog::initDatabases ()
     v1->Add ( pd_db_name , 0 , wxEXPAND , 5 ) ;
     v1->Add ( pd_db_file , 0 , wxEXPAND , 5 ) ;
     v1->Add ( new wxStaticText ( p , -1 , _T("") ) , 0 , wxEXPAND , 5 ) ;
-    v1->Add ( g1 , 1 , wxEXPAND | wxALL , 5 ) ;
+    v1->Add ( g1 , 1 , wxEXPAND , 5 ) ;
     
     pd_db = new wxListBox ( p , MD_PD_DBLIST ) ;
     h1->Add ( pd_db , 1 , wxEXPAND , 5 ) ;

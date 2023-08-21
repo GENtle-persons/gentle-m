@@ -50,7 +50,7 @@ TAlignmentDialog::TAlignmentDialog(wxWindow *parent, const wxString& title )
     h0->Add ( b , 1 , wxALL , 5 ) ;
     h0->Add ( c , 1 , wxALL , 5 ) ;
 
-    v0->Add ( nb , 1 , wxEXPAND|wxALL , 5 ) ;
+    v0->Add ( nb , 1 , wxEXPAND , 5 ) ;
     v0->Add ( h0 , 0 , wxCENTRE , 5 ) ;
     SetSizer ( v0 ) ;
 #else
@@ -139,9 +139,9 @@ void TAlignmentDialog::init_what ()
         }
 */
 
-    h0->Add ( v0 , 1 , wxEXPAND|wxALL , 5 ) ;    
+    h0->Add ( v0 , 1 , wxEXPAND , 5 ) ;    
     h0->Add ( v1 , 1 , wxALL , 5 ) ;    
-    h0->Add ( v2 , 1 , wxEXPAND|wxALL , 5 ) ;    
+    h0->Add ( v2 , 1 , wxEXPAND , 5 ) ;    
     vx->Add ( h0 , 1 , wxEXPAND ) ;
     vx->Add ( new wxStaticText ( p , -1 , txt("t_alignment_txt") ) , 0 , wxEXPAND|wxALIGN_CENTER_HORIZONTAL ) ;    
     p->SetSizer ( vx ) ;

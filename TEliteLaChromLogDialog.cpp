@@ -62,14 +62,14 @@ TEliteLaChromLogDialog::TEliteLaChromLogDialog ( wxWindow *parent, const wxStrin
     for ( a = 0 ; a < col_headers.GetCount() ; a++ )
         lines->InsertColumn (  a , col_headers[a] ) ;
 
-    h0->Add ( unique_dates , 1 , wxEXPAND|wxALL , 2 ) ;
-    h0->Add ( unique_users , 1 , wxEXPAND|wxALL , 2 ) ;
+    h0->Add ( unique_dates , 1 , wxEXPAND , 2 ) ;
+    h0->Add ( unique_users , 1 , wxEXPAND , 2 ) ;
     
-    h1->Add ( b_excel , 0 , wxEXPAND|wxALL , 2 ) ;
+    h1->Add ( b_excel , 0 , wxEXPAND , 2 ) ;
     
-    v0->Add ( h0 , 1 , wxEXPAND|wxALL , 2 ) ;
-    v0->Add ( lines , 1 , wxEXPAND|wxALL , 2 ) ;
-    v0->Add ( h1 , 0 , wxEXPAND|wxALL , 2 ) ;
+    v0->Add ( h0 , 1 , wxEXPAND , 2 ) ;
+    v0->Add ( lines , 1 , wxEXPAND , 2 ) ;
+    v0->Add ( h1 , 0 , wxEXPAND , 2 ) ;
     
     // Fill interface with data
     unique_users->Append ( txt("t_eld_all_users") ) ;

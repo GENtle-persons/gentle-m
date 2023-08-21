@@ -485,9 +485,9 @@ void TPrimerDesign::initme ()
 
     GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,show_features);
 
-    h0->Add ( lc , 1 , wxEXPAND|wxALL , 2 ) ;
-    h0->Add ( v1 , 0 , wxEXPAND|wxALL , 2 ) ;
-    h0->Add ( stat , 1 , wxEXPAND|wxALL , 2 ) ;
+    h0->Add ( lc , 1 , wxEXPAND , 2 ) ;
+    h0->Add ( v1 , 0 , wxEXPAND , 2 ) ;
+    h0->Add ( stat , 1 , wxEXPAND , 2 ) ;
 
     v0->Add ( toolbar , 0 , wxEXPAND , 2 ) ;
     v0->Add ( h0 , 0 , wxEXPAND , 2 ) ;
