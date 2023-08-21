@@ -129,6 +129,7 @@ using namespace std ;
 
 // Don't you *EVER* turn this on again!!!!
 //#define TIXML_USE_STL
+
 #include <tinyxml.h>
 
 #include <wx/wx.h>
