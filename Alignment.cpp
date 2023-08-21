@@ -6,7 +6,9 @@
 #include <wx/textfile.h>
 
 #ifdef __DEBIAN__
+#ifndef USE_EXTERNAL_CLUSTALW
 	#define USE_EXTERNAL_CLUSTALW
+#endif
 #endif
 
 #ifndef USE_EXTERNAL_CLUSTALW
