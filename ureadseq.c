@@ -510,8 +510,8 @@ Local void readUWGCG(struct ReadSeqVars *V)
   strcpy(V->seqid, V->s);
   /*writeseq: "    %s  Length: %d  (today)  Check: %d  ..\n" */
   /*drop above or ".." from id*/
-  if (si = strstr(V->seqid,"  Length: ")) *si = 0;
-  else if (si = strstr(V->seqid,"..")) *si = 0;
+  if ((si = strstr(V->seqid,"  Length: "))) *si = 0;
+  else if ((si = strstr(V->seqid,".."))) *si = 0;
   do {
     V->done = feof(V->f);
     mygetline(V);
@@ -555,7 +555,7 @@ Local void readOlsen(struct ReadSeqVars *V)
         /* si = (V->s)+21; < was this before VMS CC wasted my time */
         si += 10;  /* use strstr index plus offset to outfox VMS CC bug */
 
-        if (sk = strstr(si, sid)) *(sk-2) = 0;
+        if ((sk = strstr(si, sid))) *(sk-2) = 0;
         for (sk = si; *sk != 0; sk++) {
            if (*sk == ' ') *sk = '.';
            /* 18aug92: !! some olsen masks are NUMBERS !! which addseq eats */
@@ -566,7 +566,7 @@ Local void readOlsen(struct ReadSeqVars *V)
         }
       }
 
-    else if (sk = strstr(V->s, "): ")) {  /* seq info header line */
+    else if ((sk = strstr(V->s, "): "))) {  /* seq info header line */
   /* 18aug92: correct for diff seqs w/ same name -- use number, e.g. */
   /*   3 (Agr.tume):  agrobacterium.prna  18-JUN-1987 16:12 */
   /* 328 (Agr.tume):  agrobacterium.prna XYZ  19-DEC-1992   */
@@ -1186,7 +1186,7 @@ short seqFileFormatFp(
         }
       }
 
-    if (sp==NULL || *sp==0)
+    if (*sp==0)
       ; /* nada */
 
     /* high probability identities: */
