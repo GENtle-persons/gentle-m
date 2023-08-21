@@ -156,7 +156,7 @@ TDDR *TCloningAssistant::new_from_vector ( TVector *v , int drag )
 		m->vector = v ;
 		m->item = &v->items[a] ;
 		if ( v->items[a].getType() == VIT_CDS ) m->pen = *MYPEN ( wxColour ( 100 , 200 , 100 ) ) ;
-		else m->pen = *MYPEN ( *wxWHITE ) ;
+		else m->pen = *wxWHITE_PEN ;
 		n->children.push_back ( m ) ;
 		}
 	return n ;

@@ -494,8 +494,8 @@ void MyChild::initme ()
     treeBox->p = this ;
 	
 #ifdef __WXMAC__
-	treeBox->SetFont ( *MYFONT ( MYFONTSIZE , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
-	propBox->SetFont ( *MYFONT ( MYFONTSIZE , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
+	treeBox->SetFont ( *MYFONT ( MYFONTSIZE , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
+	propBox->SetFont ( *MYFONT ( MYFONTSIZE , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
 #endif
 
     sw->SplitHorizontally ( swu , cSequence , height/2 ) ;
@@ -1367,9 +1367,9 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
     // Feature list
     pdc->SetDeviceOrigin ( 0 , h/2 ) ;
     int cw , ch ;
-    wxFont *font = MYFONT ( w/80 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
-    wxFont *sfont = MYFONT ( w/120 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
-    wxFont *bfont = MYFONT ( w/40 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
+    wxFont *font = MYFONT ( w/80 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
+    wxFont *sfont = MYFONT ( w/120 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
+    wxFont *bfont = MYFONT ( w/40 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
     pdc->SetFont ( *font ) ;
     pdc->GetTextExtent ( _T("A") , &cw , &ch ) ;
     

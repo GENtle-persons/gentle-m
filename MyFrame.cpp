@@ -179,7 +179,7 @@ void MyFrame::initme ()
 //	myapp()->sw.Start() ;
 
 #ifdef __WXGTK__
-    SetFont ( *MYFONT ( 8 , wxSWISS , wxNORMAL , wxNORMAL ) ) ;    
+    SetFont ( *MYFONT ( 8 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
 #endif
 	
 	int borders = wxNO_BORDER ;

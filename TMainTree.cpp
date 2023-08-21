@@ -30,7 +30,7 @@ void TMainTree::initme()
     amino_acids = AppendItem ( treeroot , txt("amino_acids") ) ;
     misc = AppendItem ( treeroot , txt("misc_stuff") ) ;
 
-    SetFont ( *MYFONT ( MYFONTSIZE , wxSWISS , wxNORMAL , wxNORMAL ) ) ;
+    SetFont ( *MYFONT ( MYFONTSIZE , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
 
     EnsureVisible ( vectors ) ;
     }
