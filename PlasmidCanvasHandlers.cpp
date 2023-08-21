@@ -359,6 +359,8 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn , int pos 
 
     PopupMenu ( cm , pt ) ;
     delete cm ;
+
+    return (wxMenu *) NULL;
     }
 
 void PlasmidCanvas::OnTurningPoint ( wxCommandEvent &ev )
