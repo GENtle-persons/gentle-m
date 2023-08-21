@@ -52,7 +52,6 @@ bool operator == ( const TREcache c1 , const TREcache c2 )
     fprintf(stderr,"E: This should not be reached in bool operator == ( const TREcache c1 , const TREcache c2 )\n");
     assert(0);
     return 0;
-    }
 }
 
 //******************************************************************************    
