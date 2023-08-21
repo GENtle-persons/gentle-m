@@ -474,6 +474,7 @@ wxArrayString PCR_troubleshoot_dialog::get_matrix ( wxString s1 , wxString s2 )
 wxArrayString PCR_troubleshoot_dialog::get_matches ( wxArrayString &m , int min , int allowed_gaps )
 	{
 	int col , row ;
+	wxArrayString ret ;
 	for ( row = 0 ; row < m.GetCount() ; row++ )
 		{
 		int row2 = row ;
@@ -485,6 +486,7 @@ wxArrayString PCR_troubleshoot_dialog::get_matches ( wxArrayString &m , int min 
 		for ( int a = 0 ; a < t.length() ; a++ )
 			if ( t.GetChar ( a ) == '1' ) cnt++ ;
 		}
+	return ret ; // FIXME:
 	}
 */
 
