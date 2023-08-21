@@ -4,6 +4,7 @@
 #include "Alignment.h"
 #include "AlignmentAppearanceDialog.h"
 #include <wx/textfile.h>
+#include <wx/filename.h>
 
 #ifdef __DEBIAN__
 	#define USE_EXTERNAL_CLUSTALW
@@ -264,6 +265,7 @@ void TAlignment::initme ()
 	myapp()->frame->addTool ( toolBar , SEQ_PRINT ) ;
     if ( !myapp()->frame->mainToolBar ) toolBar->AddSeparator () ;
     toolBar->AddTool( ALIGNMENT_SETTINGS,
+                wxEmptyString,
                 myapp()->frame->bitmaps[21],
                 txt("t_alignment_settings") ) ;
     toolBar->AddSeparator () ;
@@ -304,7 +306,7 @@ void* TAlignment::Entry()
     wxString cwt = _T("clustalw.txt") ;
     wxString hd = myapp()->homedir ;
     
-    wxString tmpdir = wxGetTempFileName ( _T("") ) ;
+    wxString tmpdir = wxFileName::CreateTempFileName ( _T("") ) ;
     tmpdir.Replace ( _T("\\") , _T("/") ) ;
     tmpdir = tmpdir.BeforeLast ( '/' ) ;
     
@@ -437,7 +439,7 @@ void TAlignment::recalcAlignments ()
 		threadRunning = true ;
 		sc->Refresh () ;
 //		wxSafeYield() ;
-		wxThreadHelper::Create () ;
+		wxThreadHelper::CreateThread () ;
 		GetThread()->Run() ;
 		return ;
 	    }

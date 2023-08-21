@@ -111,8 +111,8 @@ void TCalculator::initme ()
 
     SetMenuBar(menu_bar);
     
-    menu_bar->FindItem ( SEQ_PRINT ) -> SetText ( txt("m_print") ) ;
-    menu_bar->FindItem ( MDI_PRINT_REPORT ) -> SetText ( txt("m_print_preview") ) ;
+    menu_bar->FindItem ( SEQ_PRINT ) -> SetItemLabel ( txt("m_print") ) ;
+    menu_bar->FindItem ( MDI_PRINT_REPORT ) -> SetItemLabel ( txt("m_print_preview") ) ;
     
 
     nb = new wxNotebook ( this , -1 ) ;

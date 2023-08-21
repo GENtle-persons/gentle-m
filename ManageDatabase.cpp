@@ -634,7 +634,7 @@ void TManageDatabaseDialog::pdOnDBchange ( wxCommandEvent &ev )
 void TManageDatabaseDialog::pdOnNew ( wxCommandEvent &ev )
     {
     wxString wildcard = _T("GENtle database (*.db)|*.db") ;
-    wxFileDialog d ( this , txt("t_add_new_db") , _T("") , _T("") , wildcard , wxSAVE|wxOVERWRITE_PROMPT ) ;
+    wxFileDialog d ( this , txt("t_add_new_db") , _T("") , _T("") , wildcard , wxFD_SAVE|wxFD_OVERWRITE_PROMPT ) ;
     int x = d.ShowModal() ;
     if ( x != wxID_OK ) return ;
 
@@ -655,7 +655,7 @@ void TManageDatabaseDialog::pdOnNew ( wxCommandEvent &ev )
 void TManageDatabaseDialog::pdOnAdd ( wxCommandEvent &ev )
     {
     wxString wildcard = _T("GENtle database (*.db)|*.db") ;
-    wxFileDialog d ( this , txt("t_choose_db") , _T("") , _T("") , wildcard , wxOPEN ) ;
+    wxFileDialog d ( this , txt("t_choose_db") , _T("") , _T("") , wildcard , wxFD_OPEN ) ;
     int x = d.ShowModal() ;
     if ( x != wxID_OK ) return ;
     
@@ -965,7 +965,7 @@ bool TManageDatabaseDialog::do_load_DNA ( wxString name , wxString db )
         TVectorItem i ;
         i.name = sr[a][sr["di_name"]] ;
         i.desc = sr[a][sr["di_description"]] ;
-        i.setType ( sr[a][sr["di_type"]].GetChar(0) ) ;
+        i.setType ( (char)sr[a][sr["di_type"]].GetChar(0) ) ;
         i.from = atoi ( sr[a][sr["di_from"]].mb_str() ) ;
         i.to = atoi ( sr[a][sr["di_to"]].mb_str() ) ;
         i.setDirection ( atoi ( sr[a][sr["di_direction"]].mb_str() ) ) ;

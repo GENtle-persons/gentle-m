@@ -397,30 +397,36 @@ void MyChild::initToolbar ()
         myapp()->frame->addTool ( toolBar , SEQ_PRINT ) ;
         myapp()->frame->addCCPFTools ( toolBar , true ) ;
         toolBar->AddTool( MDI_CIRCULAR_LINEAR,
+            wxEmptyString,
             myapp()->frame->bitmaps[7],
             myapp()->frame->bitmaps[8],
-            TRUE, -1, -1, (wxObject *) NULL, txt("m_toggle_rc") ) ;
+            wxITEM_CHECK, txt("m_toggle_rc") ) ;
         toolBar->AddTool( MDI_ORFS,
+            wxEmptyString,
             myapp()->frame->bitmaps[9],
             myapp()->frame->bitmaps[9],
-            TRUE, -1, -1, (wxObject *) NULL, txt("m_orfs") ) ;
+            wxITEM_CHECK, txt("m_orfs") ) ;
         toolBar->AddTool( MDI_TOGGLE_FEATURES,
+            wxEmptyString,
             myapp()->frame->bitmaps[10],
             myapp()->frame->bitmaps[10],
-            TRUE, -1, -1, (wxObject *) NULL, txt("m_display_features") ) ;
+            wxITEM_CHECK, txt("m_display_features") ) ;
         toolBar->AddTool( MDI_TOGGLE_RESTRICTION,
+            wxEmptyString,
             myapp()->frame->bitmaps[11],
             myapp()->frame->bitmaps[11],
-            TRUE, -1, -1, (wxObject *) NULL, txt("m_display_restriction") ) ;        
+            wxITEM_CHECK, txt("m_display_restriction") ) ;
         toolBar->AddSeparator() ;
         toolBar->AddTool( MDI_VIEW_MODE,
+            wxEmptyString,
             myapp()->frame->bitmaps[12],
             myapp()->frame->bitmaps[12],
-            TRUE, -1, -1, (wxObject *) NULL, txt("m_view_mode") ) ;
+            wxITEM_CHECK, txt("m_view_mode") ) ;
         toolBar->AddTool( MDI_EDIT_MODE,
+            wxEmptyString,
             myapp()->frame->bitmaps[13],
             myapp()->frame->bitmaps[13],
-            TRUE, -1, -1, (wxObject *) NULL, txt("m_edit_mode") ) ;
+            wxITEM_CHECK, txt("m_edit_mode") ) ;
         toolBar->AddSeparator() ;
         toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_zoom") ) ) ;
 #ifdef __WXMSW__
@@ -1141,7 +1147,7 @@ bool MyChild::runRestriction ( wxString s )
 	{
     MyFrame *f = myapp()->frame ; //(MyFrame*) GetParent() ;
     TRestrictionEditor ed ( f , _T("") , wxPoint(-1,-1) , wxSize(600,400) ,
-               wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL);
+               wxDEFAULT_DIALOG_STYLE|wxCENTRE);
     ed.pre = s ;
     ed.cocktail = vec->cocktail ;
     ed.remoteCocktail = &vec->cocktail ;
@@ -1518,14 +1524,14 @@ void MyChild::updateUndoMenu ()
     bool canUndo ;
     if ( lm.IsEmpty() )
         {
-        mi->SetText ( txt("u_no") ) ;
+        mi->SetItemLabel ( txt("u_no") ) ;
         mi->Enable ( false ) ;
 	    canUndo = false ;
         }
     else
         {
         mi->Enable ( true ) ;
-        mi->SetText ( lm ) ;
+        mi->SetItemLabel ( lm ) ;
 	    canUndo = true ;
         }
     allow_undo = canUndo ;

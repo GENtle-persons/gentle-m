@@ -68,7 +68,7 @@ class TClone
 	void parseLines ( wxArrayString &v , char *t , long l ) ; ///< Breaks text into lines
 	void separateNames ( wxString &s1 , wxString &s2 ) ; ///< ???
 	int cmp ( const wxString &s1 , const wxString &s2 ) ; ///< String comparison
-	int a2i ( wxString &s ) { return atoi ( (char*) s.c_str() ) ; }  ///< Converts string to integer
+	int a2i ( wxString &s ) { return atoi ( (const char*) s.c_str() ) ; }  ///< Converts string to integer
 	
 	wxString filename , name , sequence , description ;
 	int size ; ///< Sequence length

@@ -971,8 +971,8 @@ void TGraphDisplay::OnSwapSides(wxCommandEvent &event)
 	{
 	if ( !old_scale ) return ;
 	old_scale->left = !old_scale->left ;
-	wxPaintEvent ev ;
-	OnPaint ( ev ) ;
+	Refresh();
+	Update();
 	}
 	
 void TGraphDisplay::DrawIntoBitmap ( wxBitmap &bmp )

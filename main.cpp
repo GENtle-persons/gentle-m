@@ -253,7 +253,7 @@ bool MyApp::OnInit()
 	if ( wxGetEnv ( _T("COILSDIR") , NULL ) ) wxUnsetEnv ( _T("COILSDIR") ) ;
 	wxSetEnv ( _T("COILSDIR") , homedir ) ;
 #else
-	putenv ( (char*) ncoilsdir.c_str() ) ;
+	setenv ( "COILSDIR" , homedir.c_str() , 1 ) ;
 #endif	
 
 	

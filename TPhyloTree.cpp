@@ -3,7 +3,6 @@
 BEGIN_EVENT_TABLE(TPhyloTree, MyChildBase)
     EVT_CLOSE(ChildBase::OnClose)
     EVT_SET_FOCUS(ChildBase::OnFocus)
-    EVT_SIZE(ChildBase::OnSize)
     EVT_CHECKBOX(PHYLIP_DIRECT_LINES,TPhyloTree::OnDirectLines)
     EVT_LISTBOX(PHYLIP_TREE_LIST,TPhyloTree::OnTreeList)
     EVT_MENU(MDI_FILE_SAVE,TPhyloTree::OnFileSave)

@@ -52,7 +52,6 @@ bool operator == ( const TREcache c1 , const TREcache c2 )
     fprintf(stderr,"E: This should not be reached in bool operator == ( const TREcache c1 , const TREcache c2 )\n");
     assert(0);
     return 0;
-    }
 }
 
 //******************************************************************************    
@@ -385,7 +384,7 @@ void TRestrictionEditor::res_ll_act ( wxListEvent &event )
     wxString s = el->GetItemText ( i ) ;
     TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( s ) ;
     TEnzymeDialog ed ( this , s , wxPoint(-1,-1) , wxSize(600,400) , 
-					  wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL ) ;
+					  wxDEFAULT_DIALOG_STYLE|wxCENTRE ) ;
     ed.initme ( e , true ) ;
     ed.ShowModal() ;
 }

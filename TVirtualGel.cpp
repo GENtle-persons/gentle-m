@@ -8,7 +8,6 @@
 BEGIN_EVENT_TABLE(TVirtualGel, MyChildBase)
     EVT_CLOSE(ChildBase::OnClose)
     EVT_SET_FOCUS(ChildBase::OnFocus)
-    EVT_SIZE(TVirtualGel::OnSize)
     
     EVT_CHOICE(VG_PERCENT,TVirtualGel::OnPercent)
     EVT_CHOICE(VG_MARKER,TVirtualGel::OnMarker)
