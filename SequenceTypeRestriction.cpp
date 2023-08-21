@@ -81,7 +81,8 @@ void SeqRestriction::show ( wxDC& dc )
     yb += ya ;
     int n , csgc = can->NumberOfLines() , cbs = can->blocksize , bo = can->border ;
 	mylog ( "SeqRestriction::show" , "2" ) ;
-    for ( n = 0 ; n < csgc && can->seq[n] != this ; n++ ) ;
+    for ( n = 0 ; n < csgc && can->seq[n] != this ; n++ ) // n is used below
+	;
 	mylog ( "SeqRestriction::show" , "3" ) ;
     int cw = can->charwidth , ch = can->charheight ;
     int ox = bo + cw + cw * endnumberlength ;

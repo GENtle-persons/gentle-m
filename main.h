@@ -129,7 +129,11 @@ using namespace std ;
 
 // Don't you *EVER* turn this on again!!!!
 //#define TIXML_USE_STL
+#ifndef USE_EXTERNAL_TINYXML
 #include "tinyxml/tinyxml.h"
+#else
+#include <tinyxml.h>
+#endif
 
 #include <wx/wx.h>
 #include <wx/toolbar.h>
@@ -329,10 +333,10 @@ void explode ( wxString sep , wxString s , wxArrayString &r ) ;
 /** \brief Join wxStrings in "r" while putting "sep"s between them */
 wxString implode ( wxString sep , wxArrayString &r ) ;
 /*
-/** \brief Returns the current language version of the "item" /
+//  \brief Returns the current language version of the "item" /
 char* txt ( wxString item ) ;
 
-/** \brief Returns the current language version of the "item" /
+//  \brief Returns the current language version of the "item" /
 char* txt ( char *item ) ;
 */
 /** \brief Returns the current language version of the "item" */

@@ -7,9 +7,6 @@
 #include <stdio.h>
 #include "main.h"
 
-/// Additionally, use MySQL (instead of sqlite only)
-#define USEMYSQL
-
 #ifdef USEMYSQL
  #ifdef __WXMSW__
   #include <mysql.h>

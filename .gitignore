@@ -1,0 +1,14 @@
+*~
+*.o
+.deps
+GENtle
+Makefile
+Makefile.in
+aclocal.m4
+autom4te.cache/
+compile
+config.log
+config.status
+local.db
+ltmain.sh
+

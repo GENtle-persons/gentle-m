@@ -25,7 +25,7 @@ class TXMLfile
     TVector *getVector ( int a ) ; ///< Returns pointer to one of the vectors
     
     private :
-    void analyze ( const TiXmlDocument &doc ) ; ///< Parse single/multiple sequences
+    void analyze ( TiXmlDocument &doc ) ; ///< Parse single/multiple sequences
     void readGBSeq ( TiXmlNode *base ) ; ///< The actual parser
     wxString t ( TiXmlText *txt ) ; ///< Safe text conversion
     wxString t ( const char *txt ) ; ///< Safe text conversion
