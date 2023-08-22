@@ -54,27 +54,27 @@ void TVectorEditor::initPanEnzym ()
     v1->Add ( listCE , 1 , wxEXPAND , 5 ) ;
 
     v2->Add ( new wxStaticText ( panEnzym , -1 , _T("") ) , 0 , wxEXPAND , 5 ) ;
-    v2->Add ( b_addgr , 0 , wxEXPAND|wxALL , 5 ) ;
-    v2->Add ( b_atg , 0 , wxEXPAND|wxALL , 5 ) ;
-    v2->Add ( b_asng , 0 , wxEXPAND|wxALL , 5 ) ;
-    v2->Add ( b_dg , 0 , wxEXPAND|wxALL , 5 ) ;
-    if ( b1 ) v2->Add ( b1 , 0 , wxEXPAND|wxALL , 5 ) ;
-    v2->Add ( b2 , 0 , wxEXPAND|wxALL , 5 ) ;
-    v2->Add ( delete_enzyme_button , 0 , wxEXPAND|wxALL , 5 ) ;
+    v2->Add ( b_addgr , 0 , wxEXPAND , 5 ) ;
+    v2->Add ( b_atg , 0 , wxEXPAND , 5 ) ;
+    v2->Add ( b_asng , 0 , wxEXPAND , 5 ) ;
+    v2->Add ( b_dg , 0 , wxEXPAND , 5 ) ;
+    if ( b1 ) v2->Add ( b1 , 0 , wxEXPAND , 5 ) ;
+    v2->Add ( b2 , 0 , wxEXPAND , 5 ) ;
+    v2->Add ( delete_enzyme_button , 0 , wxEXPAND , 5 ) ;
     v2->Add ( new wxStaticText ( panEnzym , -1 , _T("") ) , 0 , wxEXPAND , 5 ) ;
-    v2->Add ( b3 , 0 , wxEXPAND|wxALL , 5 ) ;
-    v2->Add ( b4 , 0 , wxEXPAND|wxALL , 5 ) ;
-    v2->Add ( b_dfg , 0 , wxEXPAND|wxALL , 5 ) ;
-    v2->Add ( b_import_rebase , 0 , wxEXPAND|wxALL , 5 ) ;
+    v2->Add ( b3 , 0 , wxEXPAND , 5 ) ;
+    v2->Add ( b4 , 0 , wxEXPAND , 5 ) ;
+    v2->Add ( b_dfg , 0 , wxEXPAND , 5 ) ;
+    v2->Add ( b_import_rebase , 0 , wxEXPAND , 5 ) ;
     
     v3->Add ( tGR , 0 , wxEXPAND , 5 ) ;
     v3->Add ( listGroups , 1 , wxEXPAND , 5 ) ;
     v3->Add ( tGE , 0 , wxEXPAND , 5 ) ;
     v3->Add ( listGE , 3 , wxEXPAND , 5 ) ;
     
-    h1->Add ( v1 , 1 , wxEXPAND|wxALL , 5 ) ;
+    h1->Add ( v1 , 1 , wxEXPAND , 5 ) ;
     h1->Add ( v2 , 0 , wxEXPAND , 5 ) ;
-    h1->Add ( v3 , 1 , wxEXPAND|wxALL , 5 ) ;
+    h1->Add ( v3 , 1 , wxEXPAND , 5 ) ;
 
     panEnzym->SetSizer ( h1 ) ;
     h1->Fit ( panEnzym ) ;
@@ -116,7 +116,7 @@ void TVectorEditor::enzymeListDlbClick ( wxCommandEvent &ev )
             wxString s = lb->GetString ( vi[k] ) ;
             TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( s ) ;
             TEnzymeDialog ed ( this , s , wxPoint(-1,-1) , wxSize(600,400) , 
-                            wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL ) ;
+                            wxDEFAULT_DIALOG_STYLE|wxCENTRE ) ;
             ed.initme ( e ) ;
             if ( ed.ShowModal() == wxID_OK )
                {
@@ -149,7 +149,7 @@ void TVectorEditor::enzymeListDlbClick ( wxCommandEvent &ev )
         wxString s = lb->GetString ( vi[0] ) ;
         TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( s ) ;
         TEnzymeDialog ed ( this , s , wxPoint(-1,-1) , wxSize(600,400) , 
-                        wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL ) ;
+                        wxDEFAULT_DIALOG_STYLE|wxCENTRE ) ;
         ed.initme ( e ) ;
         ed.ShowModal() ;
         }
@@ -335,7 +335,7 @@ void TVectorEditor::newEnzyme ( wxCommandEvent &ev )
     e->setCut ( 0 ) ;
     e->setOverlap ( 0 ) ;
     TEnzymeDialog ed ( this , txt("t_new_enzyme") , wxPoint(-1,-1) , wxSize(600,400) , 
-                    wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL ) ;
+                    wxDEFAULT_DIALOG_STYLE|wxCENTRE ) ;
     ed.initme ( e ) ;
     if ( ed.ShowModal() == wxID_OK )
        {

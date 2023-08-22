@@ -123,8 +123,8 @@ using namespace std ;
 	\brief Creates or reuses a font. Parameters are the same as wxCreateFont
 */
 
-#define MYPEN(_a) (wxThePenList->FindOrCreatePen ( _a , 1 , wxSOLID ) )
-#define MYBRUSH(_a) (wxTheBrushList->FindOrCreateBrush ( _a , wxSOLID ) )
+#define MYPEN(_a) (wxThePenList->FindOrCreatePen ( _a , 1 , wxPENSTYLE_SOLID ) )
+#define MYBRUSH(_a) (wxTheBrushList->FindOrCreateBrush ( _a , wxBRUSHSTYLE_SOLID ) )
 #define MYFONT(_a,_b,_c,_d) (wxTheFontList->FindOrCreateFont(_a,_b,_c,_d) )
 
 // Don't you *EVER* turn this on again!!!!

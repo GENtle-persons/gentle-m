@@ -107,7 +107,7 @@ void TIMGitem::draw ( wxDC &dc , int x1 , int y1 , int x2 , int y2 )
     if ( type == IMGTYPE_TEXT )
         {
         wxFont oldfont = dc.GetFont() ;
-        dc.SetFont ( *MYFONT ( font_size*2/3 , wxMODERN , wxNORMAL , wxNORMAL /*, false , font_name.c_str()*/ ) ) ;
+        dc.SetFont ( *MYFONT ( font_size*2/3 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL /*, false , font_name.c_str()*/ ) ) ;
 
         int px = xx ( p1.x ) ;
         int py = yy ( p1.y ) ;

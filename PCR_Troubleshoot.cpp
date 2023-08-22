@@ -35,17 +35,17 @@ PCR_troubleshoot_dialog::PCR_troubleshoot_dialog(TPrimerDesign *_parent, const w
 	
 	list = new wxListBox ( this , PCR_TROUBLESHOOT_LIST ) ;
 	text = new wxTextCtrl ( this , -1 , _T("") , wxDefaultPosition , wxDefaultSize , wxTE_MULTILINE ) ;
-	text->SetFont ( *MYFONT ( MYFONTSIZE , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
+	text->SetFont ( *MYFONT ( MYFONTSIZE , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
 	
-	h0->Add ( new wxStaticText ( this , -1 , _T("")) , 1 , wxEXPAND|wxALL , 5 ) ;
-	h0->Add ( new wxButton ( this , POD_OK , txt("b_ok") ) , 1 , wxEXPAND|wxALL , 5 ) ;
-	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxEXPAND|wxALL , 5 ) ;
-	h0->Add ( new wxButton ( this , POD_CANCEL , txt("b_cancel") ) , 1 , wxEXPAND|wxALL , 5 ) ;
-	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxEXPAND|wxALL , 5 ) ;
+	h0->Add ( new wxStaticText ( this , -1 , _T("")) , 1 , wxEXPAND , 5 ) ;
+	h0->Add ( new wxButton ( this , POD_OK , txt("b_ok") ) , 1 , wxEXPAND , 5 ) ;
+	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxEXPAND , 5 ) ;
+	h0->Add ( new wxButton ( this , POD_CANCEL , txt("b_cancel") ) , 1 , wxEXPAND , 5 ) ;
+	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxEXPAND , 5 ) ;
 	
-	v0->Add ( list , 1 , wxEXPAND|wxALL , 5 ) ;
-	v0->Add ( text , 2 , wxEXPAND|wxALL , 5 ) ;
-	v0->Add ( h0 , 0 , wxEXPAND|wxALL , 5 ) ;
+	v0->Add ( list , 1 , wxEXPAND , 5 ) ;
+	v0->Add ( text , 2 , wxEXPAND , 5 ) ;
+	v0->Add ( h0 , 0 , wxEXPAND , 5 ) ;
 	
 	scan () ;
 	for ( int a = 0 ; a < l_title.GetCount() ; a++ )
@@ -415,13 +415,13 @@ void PCR_troubleshoot_dialog::scan_Runs ( TPrimer &p , int nr , int length )
 		if ( ( b - a ) / length > 4 )
 			{
 			add_error ( p , nr , msg ,
-			wxString::Format ( txt("t_pcr_ts_warning_runs_text") , (char*)s.Mid(a,length).c_str() ) ) ;
+			wxString::Format ( txt("t_pcr_ts_warning_runs_text") , (const char*)s.Mid(a,length).c_str() ) ) ;
 			a = b - length ;
 			}
 		else if ( ( b - a ) / length  == 4 )
 			{
 			add_warning ( p , nr , msg ,
-			wxString::Format ( txt("t_pcr_ts_warning_runs_text2") , (char*)s.Mid(a,length).c_str() ) ) ;
+			wxString::Format ( txt("t_pcr_ts_warning_runs_text2") , (const char*)s.Mid(a,length).c_str() ) ) ;
 			a = b - length ;
 			}
 		}
@@ -495,7 +495,7 @@ wxString PCR_troubleshoot_dialog::invert ( wxString s )
 	int a ;
 	for ( a = 0 ; a < s.length() ; a++ )
 		{
-		switch ( s.GetChar ( a ) )
+		switch ( (char)s.GetChar ( a ) )
 			{
 			case 'A' : s.SetChar ( a , 'T' ) ; break ;
 			case 'C' : s.SetChar ( a , 'G' ) ; break ;

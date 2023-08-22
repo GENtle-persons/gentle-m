@@ -60,8 +60,8 @@ void EIpanel::init_ncbi()
     st_msg = new wxStaticText ( up , -1 , _T("") ) ;
     
     v1->Add ( h0 , 0 , wxEXPAND , 0 ) ;
-    v1->Add ( h1 , 0 , wxEXPAND|wxTOP|wxBOTTOM , 3 ) ;
-    v1->Add ( st_msg , 0 , wxEXPAND|wxTOP|wxBOTTOM , 3 ) ;
+    v1->Add ( h1 , 0 , wxEXPAND , 3 ) ;
+    v1->Add ( st_msg , 0 , wxEXPAND , 3 ) ;
     up->SetSizer ( v1 ) ;
     v1->Fit ( up ) ;
     v1->Show ( h1 , false ) ; // Hide PubMed specifics

@@ -163,9 +163,9 @@ SequenceCanvas::~SequenceCanvas()
 void SequenceCanvas::set_font_size ( int size )
 	{
 	last_font_size = size ;
-    font = MYFONT ( size , wxMODERN , wxNORMAL , wxNORMAL ) ; 
-    smallFont = MYFONT ( MYFONTSIZE * size / 12 , wxSWISS , wxNORMAL , wxNORMAL ) ;
-    varFont = MYFONT ( size-1 , wxROMAN  , wxNORMAL , wxNORMAL ) ;
+    font = MYFONT ( size , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
+    smallFont = MYFONT ( MYFONTSIZE * size / 12 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
+    varFont = MYFONT ( size-1 , wxFONTFAMILY_ROMAN  , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
 	}
 
 void SequenceCanvas::unmark ()
@@ -394,13 +394,13 @@ void SequenceCanvas::editSpecialKeyPressed ( int k , TVector *v , wxString *the_
       {
       mark ( id , the_sequence->length() , the_sequence->length() , 2 ) ;
       }   	
-    else if ( k == WXK_PRIOR )
+    else if ( k == WXK_PAGEUP )
       {
       from -= page ;
       if ( from < 1 ) from = 1 ;
       mark ( id , from , from , 2 ) ;
       }
-    else if ( k == WXK_NEXT )
+    else if ( k == WXK_PAGEDOWN )
       {
       from += page ;
       if ( from > the_sequence->length() ) from = the_sequence->length() ;
@@ -688,11 +688,11 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
     wxFont *oldfont = font ;
     wxFont *oldvarfont = varFont ;
     wxFont *oldsmallFont = smallFont ;
-    wxFont *bigfont = MYFONT ( w/30 , wxMODERN , wxNORMAL , wxNORMAL ) ;
-    wxFont *medfont = MYFONT ( w/80 , wxMODERN , wxNORMAL , wxNORMAL ) ;
-    font = MYFONT ( fs*last_font_size/10/12 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
-    smallFont = MYFONT ( fs*last_font_size/15/12 , wxSWISS , wxNORMAL , wxNORMAL ) ;
-    varFont = MYFONT ( fs*last_font_size/11/12 , wxROMAN  , wxNORMAL , wxNORMAL ) ;
+    wxFont *bigfont = MYFONT ( w/30 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
+    wxFont *medfont = MYFONT ( w/80 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
+    font = MYFONT ( fs*last_font_size/10/12 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
+    smallFont = MYFONT ( fs*last_font_size/15/12 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
+    varFont = MYFONT ( fs*last_font_size/11/12 , wxFONTFAMILY_ROMAN  , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
 
     print_maxx = -w ;
 
@@ -2827,10 +2827,11 @@ wxColour SequenceCharMarkup::getColorFromXML ( wxString s )
 wxPen SequenceCharMarkup::getPenFromXML ( TiXmlElement *e )
     {
     wxColour c = getColorFromXML ( getSafeXML ( e->Attribute ( "color" ) ) ) ;
-    long width , style ;
-    getSafeXML ( e->Attribute ( "width" ) ) . ToLong ( &width ) ;
-    getSafeXML ( e->Attribute ( "style" ) ) . ToLong ( &style ) ;
-    return * wxThePenList->FindOrCreatePen ( c , width , style ) ;
+    int width;
+    int style ;
+    getSafeXML ( e->Attribute ( "width" ) ) . ToInt ( &width ) ;
+    getSafeXML ( e->Attribute ( "style" ) ) . ToInt ( &style ) ;
+    return * wxThePenList->FindOrCreatePen ( c , width , (wxPenStyle) style ) ;
     }
 
 void SequenceCharMarkup::setFromXML ( TiXmlNode *base )

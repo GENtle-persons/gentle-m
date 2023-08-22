@@ -41,10 +41,10 @@ CGdialog::CGdialog ( wxWindow *parent, const wxString& title , CGview *_p )
     
     width = new wxTextCtrl ( this , -1 , wxString::Format ( _T("%d") , p->width ) ) ;
     height = new wxTextCtrl ( this , -1 , wxString::Format ( _T("%d") , p->height ) ) ;
-    h1->Add ( new wxStaticText ( this , -1 , txt("t_cgview_image_dimensions") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-    h1->Add ( width , 1 , wxEXPAND|wxALL , 5 ) ;
-    h1->Add ( new wxStaticText ( this , -1 , _T(" x ") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-    h1->Add ( height , 1 , wxEXPAND|wxALL , 5 ) ;
+    h1->Add ( new wxStaticText ( this , -1 , txt("t_cgview_image_dimensions") ) , 0 , wxEXPAND , 5 ) ;
+    h1->Add ( width , 1 , wxEXPAND , 5 ) ;
+    h1->Add ( new wxStaticText ( this , -1 , _T(" x ") ) , 0 , wxEXPAND , 5 ) ;
+    h1->Add ( height , 1 , wxEXPAND , 5 ) ;
     
     useDefaultColors = new wxCheckBox ( this , -1 , txt("t_cgview_use_default_colors") ) ;
     
@@ -52,22 +52,22 @@ CGdialog::CGdialog ( wxWindow *parent, const wxString& title , CGview *_p )
     runcgview = new wxCheckBox ( this , CGVIEW_RUN_CGVIEWER , txt("t_cgview_run_cgview") ) ;
     cgviewapp = new wxTextCtrl ( this , -1 , appname ) ;
     choosejar = new wxButton ( this , CGVIEW_CHOOSE_JAR , _T("..") ) ;
-    h3->Add ( runcgview , 0 , wxEXPAND|wxALL , 5 ) ;
-    h3->Add ( cgviewapp , 1 , wxEXPAND|wxALL , 5 ) ;
+    h3->Add ( runcgview , 0 , wxEXPAND , 5 ) ;
+    h3->Add ( cgviewapp , 1 , wxEXPAND , 5 ) ;
     h3->Add ( choosejar , 0 , wxALL , 5 ) ;
     
     runimageapp = new wxCheckBox ( this , -1 , txt("t_cgview_run_image_app") ) ;
     imagetypes = new wxChoice ( this , -1 ) ;
-    h4->Add ( new wxStaticText ( this , -1 , txt("t_cgview_imagetypes") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-    h4->Add ( imagetypes , 0 , wxEXPAND|wxALL , 5 ) ;
-    h4->Add ( runimageapp , 0 , wxEXPAND|wxALL , 5 ) ;
+    h4->Add ( new wxStaticText ( this , -1 , txt("t_cgview_imagetypes") ) , 0 , wxEXPAND , 5 ) ;
+    h4->Add ( imagetypes , 0 , wxEXPAND , 5 ) ;
+    h4->Add ( runimageapp , 0 , wxEXPAND , 5 ) ;
 
     showrestrictionsites = new wxCheckBox ( this , -1 , txt("t_cgview_showrestrictionsites") ) ;
     showgc = new wxCheckBox ( this , -1 , txt("t_cgview_showgc") ) ;
     wxButton *bgc = new wxButton ( this , CGVIEW_CHOOSE_BACKGROUND_COLOR , txt("t_cgview_backgroundcolor") ) ;
-    h5->Add ( showrestrictionsites , 0 , wxEXPAND|wxALL , 5 ) ;
-    h5->Add ( showgc , 0 , wxEXPAND|wxALL , 5 ) ;
-    h5->Add ( bgc , 0 , wxEXPAND|wxALL , 5 ) ;
+    h5->Add ( showrestrictionsites , 0 , wxEXPAND , 5 ) ;
+    h5->Add ( showgc , 0 , wxEXPAND , 5 ) ;
+    h5->Add ( bgc , 0 , wxEXPAND , 5 ) ;
 
     
     h2->Add ( new wxButton ( this , wxID_OK , txt("b_ok" ) ) , 0 , wxALL , 5 ) ;
@@ -111,7 +111,7 @@ void CGdialog::OnRunCGviewer ( wxCommandEvent &event )
 
 void CGdialog::OnChooseJar ( wxCommandEvent &event )
 	{
-    wxFileDialog d ( this , txt("t_cgview_choose_jar") , cgviewapp->GetLabel() , _T("") , _T("cgview.jar|cgview.jar") , wxOPEN ) ;
+    wxFileDialog d ( this , txt("t_cgview_choose_jar") , cgviewapp->GetLabel() , _T("") , _T("cgview.jar|cgview.jar") , wxFD_OPEN ) ;
     if ( wxID_OK != d.ShowModal() ) return ;
     cgviewapp->SetLabel ( d.GetPath() ) ;
 	}

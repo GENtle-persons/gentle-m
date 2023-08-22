@@ -32,24 +32,24 @@ TStoreAllDialog::TStoreAllDialog ( wxWindow *_parent , const wxString& title )
    force_db = new wxCheckBox ( this , -1 , txt("t_sad_force_database") ) ;
    auto_overwrite = new wxCheckBox ( this , -1 , txt("t_sad_auto_overwrite") ) ;
 
-   h0->Add ( b_all , 1 , wxEXPAND|wxALL , 2 ) ;
-   h0->Add ( b_none , 1 , wxEXPAND|wxALL , 2 ) ;
-   h0->Add ( b_invert , 1 , wxEXPAND|wxALL , 2 ) ;
+   h0->Add ( b_all , 1 , wxEXPAND , 2 ) ;
+   h0->Add ( b_none , 1 , wxEXPAND , 2 ) ;
+   h0->Add ( b_invert , 1 , wxEXPAND , 2 ) ;
    
-   h1->Add ( b_ok , 1 , wxEXPAND|wxALL , 2 ) ;
-   h1->Add ( b_cancel , 1 , wxEXPAND|wxALL , 2 ) ;
+   h1->Add ( b_ok , 1 , wxEXPAND , 2 ) ;
+   h1->Add ( b_cancel , 1 , wxEXPAND , 2 ) ;
    
-   h2->Add ( auto_overwrite , 0 , wxEXPAND|wxALL , 2 ) ;   
-   h2->Add ( force_db , 0 , wxEXPAND|wxALL , 2 ) ;
+   h2->Add ( auto_overwrite , 0 , wxEXPAND , 2 ) ;   
+   h2->Add ( force_db , 0 , wxEXPAND , 2 ) ;
 
-   h3->Add ( new wxStaticText ( this , -1 , _T("t_default_database") ) , 0 , wxEXPAND|wxALL , 2 ) ;
-   h3->Add ( database , 1 , wxEXPAND|wxALL , 2 ) ;
+   h3->Add ( new wxStaticText ( this , -1 , _T("t_default_database") ) , 0 , wxEXPAND , 2 ) ;
+   h3->Add ( database , 1 , wxEXPAND , 2 ) ;
    
-   v0->Add ( list , 1 , wxEXPAND|wxALL , 2 ) ;
-   v0->Add ( h3 , 0 , wxEXPAND|wxALL , 2 ) ;
-   v0->Add ( h2 , 0 , wxEXPAND|wxALL , 2 ) ;
-   v0->Add ( h0 , 0 , wxEXPAND|wxALL , 2 ) ;
-   v0->Add ( h1 , 0 , wxEXPAND|wxALL , 2 ) ;
+   v0->Add ( list , 1 , wxEXPAND , 2 ) ;
+   v0->Add ( h3 , 0 , wxEXPAND , 2 ) ;
+   v0->Add ( h2 , 0 , wxEXPAND , 2 ) ;
+   v0->Add ( h0 , 0 , wxEXPAND , 2 ) ;
+   v0->Add ( h1 , 0 , wxEXPAND , 2 ) ;
    
    PopulateList() ;
    database->SetStringSelection ( defdb ) ;

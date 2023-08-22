@@ -79,9 +79,9 @@ TItemEditDialog::TItemEditDialog ( wxWindow *parent, const wxString& title ,
    h1->Add ( button_cancel , 0 , wxEXPAND ) ;
 #endif
    
-   v0->Add ( rb , 0 , wxEXPAND|wxALL , 5 ) ;
-   v0->Add ( h0 , 0 , wxEXPAND|wxALL , 5 ) ;
-   v0->Add ( lb , 1 , wxEXPAND|wxALL , 5 ) ;
+   v0->Add ( rb , 0 , wxEXPAND , 5 ) ;
+   v0->Add ( h0 , 0 , wxEXPAND , 5 ) ;
+   v0->Add ( lb , 1 , wxEXPAND , 5 ) ;
    v0->Add ( h1 , 0 , wxCENTER|wxALL , 5 ) ;
       
    button_OK->SetDefault() ;

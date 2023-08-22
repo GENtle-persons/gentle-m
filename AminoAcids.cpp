@@ -363,7 +363,7 @@ void TAminoAcids::showStat ()
    		}  		
     
     stat->SetValue ( t ) ;
-    stat->SetFont ( *MYFONT ( MYFONTSIZE , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
+    stat->SetFont ( *MYFONT ( MYFONTSIZE , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
     }
 
 void TAminoAcids::showSequence ()
@@ -602,14 +602,14 @@ void TAminoAcids::updateUndoMenu ()
     bool canUndo ;
     if ( lm.IsEmpty() )
         {
-        mi->SetText ( txt("u_no") ) ;
+        mi->SetItemLabel ( txt("u_no") ) ;
         mi->Enable ( false ) ;
 	canUndo = false ;
         }
     else
         {
         mi->Enable ( true ) ;
-        mi->SetText ( lm ) ;
+        mi->SetItemLabel ( lm ) ;
 	canUndo = true ;
         }
 #ifdef __WXMSW__
@@ -656,7 +656,7 @@ void TAminoAcids::handleListBox ( wxString t )
 		{
 		if ( curDisplay )
 			{
-			h1->Remove ( curDisplay ) ;
+			h1->Detach ( curDisplay ) ;
 			delete curDisplay ;
 			}
 		curDisplay = NULL ;

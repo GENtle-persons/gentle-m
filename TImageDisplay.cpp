@@ -95,12 +95,12 @@ void TImageDisplay::initme ()
     cb = new wxCheckBox ( this , IV_CB , txt("img_show_text" ) ) ;
     invert = new wxCheckBox ( this , IV_CB_INVERT , txt("t_invert" ) ) ;
     
-    v0->Add ( bu , 0 , wxEXPAND|wxALL , 5 ) ;
-    v0->Add ( lb , 1 , wxEXPAND|wxALL , 5 ) ;
+    v0->Add ( bu , 0 , wxEXPAND , 5 ) ;
+    v0->Add ( lb , 1 , wxEXPAND , 5 ) ;
     
     h1->Add ( cb , 0 , wxEXPAND , 5 ) ;
     h1->Add ( invert , 0 , wxEXPAND , 5 ) ;
-    v0->Add ( h1 , 0 , wxEXPAND|wxALL , 5 ) ;
+    v0->Add ( h1 , 0 , wxEXPAND , 5 ) ;
     
     h0->Add ( v0 , 0 , wxEXPAND , 5 ) ;
     h0->Add ( right , 1 , wxEXPAND , 5 ) ;
@@ -113,7 +113,7 @@ void TImageDisplay::initme ()
        myapp()->frame->addTool ( toolbar , MDI_COPY ) ;
        myapp()->frame->addDefaultTools ( toolbar ) ;
        toolbar->Realize() ;
-       vx->Add ( toolbar , 0 , wxEXPAND|wxBOTTOM , 2 ) ;
+       vx->Add ( toolbar , 0 , wxEXPAND , 2 ) ;
        }
 
     vx->Add ( h0 , 1 , wxEXPAND , 5 ) ;
@@ -266,7 +266,7 @@ void TMyImagePanel::OnDraw(wxDC& pdc)
     {
     if ( !bmp ) return ;
 
-    pdc.SetFont ( *MYFONT ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
+    pdc.SetFont ( *MYFONT ( 8 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
 
     int w , h , iw , ih ;
     pdc.GetSize ( &w , &h ) ;
@@ -310,7 +310,7 @@ void TMyImagePanel::OnDraw(wxDC& pdc)
 
     if ( invert )
     	{
-        int lf = pdc.GetLogicalFunction() ;
+        wxRasterOperationMode lf = pdc.GetLogicalFunction() ;
         pdc.SetLogicalFunction ( wxINVERT ) ;
         pdc.SetBrush ( *wxWHITE_BRUSH ) ;
         pdc.SetPen ( *wxWHITE_PEN ) ;

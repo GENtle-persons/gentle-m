@@ -318,7 +318,7 @@ void TDotPlotPanel::Draw2Memory ()
      memdc.SetBackground ( *wxWHITE_BRUSH ) ;
      memdc.Clear() ;
      memdc.SetPen ( *wxBLACK_PEN ) ;
-     memdc.SetFont ( *MYFONT ( 10 , wxSWISS , wxNORMAL , wxNORMAL ) ) ;
+     memdc.SetFont ( *MYFONT ( 10 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
 
      int x , y ;
      for ( x = 0 ; x < len1 ; x++ )

@@ -185,7 +185,7 @@ void MyFrame::initme ()
 //	myapp()->sw.Start() ;
 
 #ifdef __WXGTK__
-    SetFont ( *MYFONT ( 8 , wxSWISS , wxNORMAL , wxNORMAL ) ) ;    
+    SetFont ( *MYFONT ( 8 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
 #endif
 	
 	int borders = wxNO_BORDER ;
@@ -737,7 +737,7 @@ void MyFrame::saveImage ( wxBitmap *bmp , wxString name )
     name.Replace ( _T("\\") , _T("_") , TRUE ) ;
 	
     wxString lastdir = LS->getOption ( _T("LAST_IMPORT_DIR") , _T("C:") ) ;
-    wxFileDialog d ( this , txt("t_save_image") , lastdir , name , wildcard , wxSAVE|wxOVERWRITE_PROMPT ) ;
+    wxFileDialog d ( this , txt("t_save_image") , lastdir , name , wildcard , wxFD_SAVE|wxFD_OVERWRITE_PROMPT ) ;
     if ( d.ShowModal() != wxID_OK ) return ;
     wxString filename = d.GetPath() ;
     
@@ -774,7 +774,7 @@ void MyFrame::OnFileImport(wxCommandEvent& event )
 	_T("|") + wcCM5format ;
     wxString lastdir = LS->getOption ( _T("LAST_IMPORT_DIR") , _T("C:") ) ;
     wxFileDialog d ( this , txt("import_file") , lastdir , 
-					_T("") , wildcard , wxOPEN | wxMULTIPLE ) ;
+					_T("") , wildcard , wxFD_OPEN | wxFD_MULTIPLE ) ;
     int x = d.ShowModal() ;
     if ( x != wxID_OK ) return ;
     
@@ -1233,14 +1233,17 @@ void MyFrame::addTool ( wxToolBar* toolBar , int id )
 	
 	if ( id == MDI_TEXT_IMPORT )
 		toolBar->AddTool( MDI_TEXT_IMPORT ,
+						 wxEmptyString,
 						 bitmaps[0],
 						 txt("m_new_sequence") ) ;  
 	else if ( id == MDI_FILE_IMPORT )
 		toolBar->AddTool( MDI_FILE_IMPORT, 
+						 wxEmptyString,
 						 bitmaps[14],
 						 txt("m_importtxt") );
 	else if ( id == MDI_FILE_OPEN )
 		toolBar->AddTool( MDI_FILE_OPEN, 
+						 wxEmptyString,
 						 bitmaps[1],
 						 txt("m_opentxt") );
 	else if ( id == MDI_FILE_SAVE )
@@ -1276,11 +1279,11 @@ void MyFrame::addDefaultTools(wxToolBar* toolBar)
 {
 	if ( mainToolBar && toolBar != mainToolBar ) return ;
  	toolBar->AddSeparator() ;
- 	toolBar->AddTool( MDI_ALIGNMENT, myapp()->frame->bitmaps[17] , txt("m_alignment_text") ) ;
- 	toolBar->AddTool( MDI_IMAGE_VIEWER, myapp()->frame->bitmaps[18] , txt("m_imageviewer_text") ) ;
- 	toolBar->AddTool( MDI_CALCULATOR, myapp()->frame->bitmaps[20] , txt("m_calculator_text") ) ;
- 	toolBar->AddTool( PROGRAM_OPTIONS, myapp()->frame->bitmaps[21] , txt("m_options_text") ) ;
- 	toolBar->AddTool( MDI_EXTERNAL_INTERFACE, myapp()->frame->bitmaps[19] , txt("m_external_text") ) ;
+ 	toolBar->AddTool( MDI_ALIGNMENT, wxEmptyString, myapp()->frame->bitmaps[17] , txt("m_alignment_text") ) ;
+ 	toolBar->AddTool( MDI_IMAGE_VIEWER, wxEmptyString, myapp()->frame->bitmaps[18] , txt("m_imageviewer_text") ) ;
+ 	toolBar->AddTool( MDI_CALCULATOR, wxEmptyString, myapp()->frame->bitmaps[20] , txt("m_calculator_text") ) ;
+ 	toolBar->AddTool( PROGRAM_OPTIONS, wxEmptyString, myapp()->frame->bitmaps[21] , txt("m_options_text") ) ;
+ 	toolBar->AddTool( MDI_EXTERNAL_INTERFACE, wxEmptyString, myapp()->frame->bitmaps[19] , txt("m_external_text") ) ;
 }
 
 /** \brief Adds cut,copy,paste (and find) tools to a given toolbar
@@ -2626,8 +2629,8 @@ void TTestSuite::vectorPressKey ( ChildBase *ac )
     if ( r == 10 ) { ev.m_keyCode = WXK_LEFT ; msg = _T("LEFT") ; }
     if ( r == 11 ) { ev.m_keyCode = WXK_UP ; msg = _T("UP") ; }
     if ( r == 12 ) { ev.m_keyCode = WXK_DOWN ; msg = _T("DOWN") ; }
-    if ( r == 13 ) { ev.m_keyCode = WXK_PRIOR ; msg = _T("PRIOR") ; }
-    if ( r == 14 ) { ev.m_keyCode = WXK_NEXT ; msg = _T("NEXT") ; }
+    if ( r == 13 ) { ev.m_keyCode = WXK_PAGEUP ; msg = _T("PAGEUP") ; }
+    if ( r == 14 ) { ev.m_keyCode = WXK_PAGEDOWN ; msg = _T("PAGEDOWN") ; }
     mylog ( "Testsuite:Key" , wxString::Format ( "%s" , msg.c_str() ) ) ;
     if ( ac->def == _T("PrimerDesign") ) ((TPrimerDesign*)ac)->sc->OnCharHook(ev) ;
     else ac->cSequence->OnCharHook(ev) ;

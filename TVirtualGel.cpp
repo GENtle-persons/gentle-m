@@ -8,7 +8,6 @@
 BEGIN_EVENT_TABLE(TVirtualGel, MyChildBase)
     EVT_CLOSE(ChildBase::OnClose)
     EVT_SET_FOCUS(ChildBase::OnFocus)
-    EVT_SIZE(TVirtualGel::OnSize)
     
     EVT_CHOICE(VG_PERCENT,TVirtualGel::OnPercent)
     EVT_CHOICE(VG_MARKER,TVirtualGel::OnMarker)
@@ -111,11 +110,11 @@ void TVirtualGel::initme ()
 
 
 /*
-	hs->Add ( cb_label , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
-	hs->Add ( new wxStaticText ( this , -1 , txt("t_vg_concentration") ) , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
-	hs->Add ( ch_percent , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
-	hs->Add ( new wxStaticText ( this , -1 , txt("t_vg_marker") ) , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
-	hs->Add ( ch_marker , 0 , wxEXPAND|wxALIGN_CENTER_VERTICAL , 5 ) ;
+	hs->Add ( cb_label , 0 , wxEXPAND , 5 ) ;
+	hs->Add ( new wxStaticText ( this , -1 , txt("t_vg_concentration") ) , 0 , wxEXPAND , 5 ) ;
+	hs->Add ( ch_percent , 0 , wxEXPAND , 5 ) ;
+	hs->Add ( new wxStaticText ( this , -1 , txt("t_vg_marker") ) , 0 , wxEXPAND , 5 ) ;
+	hs->Add ( ch_marker , 0 , wxEXPAND , 5 ) ;
 */
 	
 	wxBoxSizer *vs = new wxBoxSizer ( wxVERTICAL ) ;
@@ -245,8 +244,8 @@ void TMyGelControl::OnDraw(wxDC& dc)
    	// Drawing gel
     int fontfactor = 10 ;
     if ( printing ) fontfactor = w/5000 ;
-    wxFont *normalFont = MYFONT ( fontfactor * 11 / 10 , wxSWISS , wxNORMAL , wxNORMAL ) ;
-    wxFont *bigFont = MYFONT ( fontfactor * 14 / 10 , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    wxFont *normalFont = MYFONT ( fontfactor * 11 / 10 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
+    wxFont *bigFont = MYFONT ( fontfactor * 14 / 10 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
 
     int tw , th ;
     wxString title = _T("t_gelname_") + vg->type ;
@@ -331,16 +330,16 @@ void TMyGelControl::drawBand ( wxDC &dc , TGelLane &lane , int band )
 
     int ps = 1000 ;
     int bw = lane.pos.GetRight() - lane.pos.GetLeft() ;
-    dc.SetFont ( *MYFONT ( ps , wxROMAN , wxNORMAL , wxNORMAL ) ) ;
+    dc.SetFont ( *MYFONT ( ps , wxFONTFAMILY_ROMAN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
     dc.GetTextExtent ( title , &tw , &th ) ;
     ps = ps * bw / tw ;
-    dc.SetFont ( *MYFONT ( ps , wxROMAN , wxNORMAL , wxNORMAL ) ) ;
+    dc.SetFont ( *MYFONT ( ps , wxFONTFAMILY_ROMAN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
     dc.GetTextExtent ( title , &tw , &th ) ;
     
     if ( th > bw / 5 )
        {
        ps = ps * ( bw / 5 ) / th ;
-       dc.SetFont ( *MYFONT ( ps , wxROMAN , wxNORMAL , wxNORMAL ) ) ;
+       dc.SetFont ( *MYFONT ( ps , wxFONTFAMILY_ROMAN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
        dc.GetTextExtent ( title , &tw , &th ) ;
        }
 

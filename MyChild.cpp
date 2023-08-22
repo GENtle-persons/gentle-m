@@ -397,30 +397,36 @@ void MyChild::initToolbar ()
         myapp()->frame->addTool ( toolBar , SEQ_PRINT ) ;
         myapp()->frame->addCCPFTools ( toolBar , true ) ;
         toolBar->AddTool( MDI_CIRCULAR_LINEAR,
+            wxEmptyString,
             myapp()->frame->bitmaps[7],
             myapp()->frame->bitmaps[8],
-            TRUE, -1, -1, (wxObject *) NULL, txt("m_toggle_rc") ) ;
+            wxITEM_CHECK, txt("m_toggle_rc") ) ;
         toolBar->AddTool( MDI_ORFS,
+            wxEmptyString,
             myapp()->frame->bitmaps[9],
             myapp()->frame->bitmaps[9],
-            TRUE, -1, -1, (wxObject *) NULL, txt("m_orfs") ) ;
+            wxITEM_CHECK, txt("m_orfs") ) ;
         toolBar->AddTool( MDI_TOGGLE_FEATURES,
+            wxEmptyString,
             myapp()->frame->bitmaps[10],
             myapp()->frame->bitmaps[10],
-            TRUE, -1, -1, (wxObject *) NULL, txt("m_display_features") ) ;
+            wxITEM_CHECK, txt("m_display_features") ) ;
         toolBar->AddTool( MDI_TOGGLE_RESTRICTION,
+            wxEmptyString,
             myapp()->frame->bitmaps[11],
             myapp()->frame->bitmaps[11],
-            TRUE, -1, -1, (wxObject *) NULL, txt("m_display_restriction") ) ;        
+            wxITEM_CHECK, txt("m_display_restriction") ) ;
         toolBar->AddSeparator() ;
         toolBar->AddTool( MDI_VIEW_MODE,
+            wxEmptyString,
             myapp()->frame->bitmaps[12],
             myapp()->frame->bitmaps[12],
-            TRUE, -1, -1, (wxObject *) NULL, txt("m_view_mode") ) ;
+            wxITEM_CHECK, txt("m_view_mode") ) ;
         toolBar->AddTool( MDI_EDIT_MODE,
+            wxEmptyString,
             myapp()->frame->bitmaps[13],
             myapp()->frame->bitmaps[13],
-            TRUE, -1, -1, (wxObject *) NULL, txt("m_edit_mode") ) ;
+            wxITEM_CHECK, txt("m_edit_mode") ) ;
         toolBar->AddSeparator() ;
         toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_zoom") ) ) ;
 #ifdef __WXMSW__
@@ -488,8 +494,8 @@ void MyChild::initme ()
     treeBox->p = this ;
 	
 #ifdef __WXMAC__
-	treeBox->SetFont ( *MYFONT ( MYFONTSIZE , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
-	propBox->SetFont ( *MYFONT ( MYFONTSIZE , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
+	treeBox->SetFont ( *MYFONT ( MYFONTSIZE , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
+	propBox->SetFont ( *MYFONT ( MYFONTSIZE , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
 #endif
 
     sw->SplitHorizontally ( swu , cSequence , height/2 ) ;
@@ -500,8 +506,8 @@ void MyChild::initme ()
 
     wxSafeYield() ;
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
-    v0->Add ( toolbar , 0 , wxALL|wxEXPAND , 2 ) ;
-    v0->Add ( sw , 1 , wxALL|wxEXPAND , 2 ) ;
+    v0->Add ( toolbar , 0 , wxEXPAND , 2 ) ;
+    v0->Add ( sw , 1 , wxEXPAND , 2 ) ;
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;
 	
@@ -1141,7 +1147,7 @@ bool MyChild::runRestriction ( wxString s )
 	{
     MyFrame *f = myapp()->frame ; //(MyFrame*) GetParent() ;
     TRestrictionEditor ed ( f , _T("") , wxPoint(-1,-1) , wxSize(600,400) ,
-               wxDEFAULT_DIALOG_STYLE|wxCENTRE|wxDIALOG_MODAL);
+               wxDEFAULT_DIALOG_STYLE|wxCENTRE);
     ed.pre = s ;
     ed.cocktail = vec->cocktail ;
     ed.remoteCocktail = &vec->cocktail ;
@@ -1361,9 +1367,9 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
     // Feature list
     pdc->SetDeviceOrigin ( 0 , h/2 ) ;
     int cw , ch ;
-    wxFont *font = MYFONT ( w/80 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
-    wxFont *sfont = MYFONT ( w/120 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
-    wxFont *bfont = MYFONT ( w/40 , wxMODERN , wxNORMAL , wxNORMAL ) ; 
+    wxFont *font = MYFONT ( w/80 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
+    wxFont *sfont = MYFONT ( w/120 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
+    wxFont *bfont = MYFONT ( w/40 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
     pdc->SetFont ( *font ) ;
     pdc->GetTextExtent ( _T("A") , &cw , &ch ) ;
     
@@ -1518,14 +1524,14 @@ void MyChild::updateUndoMenu ()
     bool canUndo ;
     if ( lm.IsEmpty() )
         {
-        mi->SetText ( txt("u_no") ) ;
+        mi->SetItemLabel ( txt("u_no") ) ;
         mi->Enable ( false ) ;
 	    canUndo = false ;
         }
     else
         {
         mi->Enable ( true ) ;
-        mi->SetText ( lm ) ;
+        mi->SetItemLabel ( lm ) ;
 	    canUndo = true ;
         }
     allow_undo = canUndo ;

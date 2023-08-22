@@ -156,7 +156,7 @@ TDDR *TCloningAssistant::new_from_vector ( TVector *v , int drag )
 		m->vector = v ;
 		m->item = &v->items[a] ;
 		if ( v->items[a].getType() == VIT_CDS ) m->pen = *MYPEN ( wxColour ( 100 , 200 , 100 ) ) ;
-		else m->pen = *MYPEN ( *wxWHITE ) ;
+		else m->pen = *wxWHITE_PEN ;
 		n->children.push_back ( m ) ;
 		}
 	return n ;
@@ -206,8 +206,8 @@ void TCloningAssistantPanel::Refresh (bool eraseBackground , const wxRect* rect 
 void TCloningAssistantPanel::OnEvent(wxMouseEvent& event)
 	{
 	if ( timer.move_back ) return ;
-	wxPaintEvent ev ;
-	OnPaint ( ev ) ;	
+	Refresh();
+	Update();
     wxPoint pt(event.GetPosition());
 	
 	TDDR *over = NULL ;
@@ -509,7 +509,7 @@ void TDDR::draw ( wxDC &dc , wxPoint off )
 
 void TDDR::resizeForText ( wxDC &dc )
 	{
-	long w , h ;
+	wxCoord w , h ;
 	dc.GetTextExtent ( title , &w , &h ) ;
 	r.SetWidth ( w + 4 ) ;
 	r.SetHeight ( h + 4 ) ;

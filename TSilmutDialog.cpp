@@ -48,17 +48,17 @@ TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode 
                             wxDefaultPosition , wxSize ( MYSPINBOXSIZE , -1 ) ,
                             wxSP_ARROW_KEYS , 0 , 9 , 2 ) ;
     allow_cut_removal = new wxCheckBox ( this , PD_SILMUT_ACR , txt("t_silmut_allow_cut_removal") ) ;
-    h0->Add ( st , 0 , wxEXPAND|wxALL , 5 ) ;
-	h0->Add ( lim_xhg , 0 , wxEXPAND|wxALL , 5 ) ;
-	h0->Add ( allow_cut_removal , 0 , wxEXPAND|wxALL , 5 ) ;
+    h0->Add ( st , 0 , wxEXPAND , 5 ) ;
+	h0->Add ( lim_xhg , 0 , wxEXPAND , 5 ) ;
+	h0->Add ( allow_cut_removal , 0 , wxEXPAND , 5 ) ;
 	
 	// Max cuts
     lim_max = new wxSpinCtrl ( this , PD_SILMUT_MAX_CUT , _T("5") ,
                             wxDefaultPosition , wxSize ( MYSPINBOXSIZE , -1 ) ,
                             wxSP_ARROW_KEYS , 0 , 99 , 5 ) ;
-    h1->Add ( new wxStaticText ( this , -1 , txt("t_silmut_max_cut1") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-	h1->Add ( lim_max , 0 , wxEXPAND|wxALL , 5 ) ;
-    h1->Add ( new wxStaticText ( this , -1 , txt("t_silmut_max_cut2") ) , 0 , wxEXPAND|wxALL , 5 ) ;
+    h1->Add ( new wxStaticText ( this , -1 , txt("t_silmut_max_cut1") ) , 0 , wxEXPAND , 5 ) ;
+	h1->Add ( lim_max , 0 , wxEXPAND , 5 ) ;
+    h1->Add ( new wxStaticText ( this , -1 , txt("t_silmut_max_cut2") ) , 0 , wxEXPAND , 5 ) ;
 
 	status = new wxStaticText ( this , -1 , _T("") ) ;
 	status->Hide() ;
@@ -77,20 +77,20 @@ TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode 
     if ( mode == M_WHATCUTS ) egr->SetStringSelection ( txt("All") ) ;
     else if ( mode == M_SILMUT ) egr->SetStringSelection ( txt("Current") ) ;
     
-    h2->Add ( egr , 0 , wxEXPAND|wxALL , 5 ) ;
-    h2->Add ( new wxButton ( this , PD_SILMUT_OK , txt("b_ok") ) , 0 , wxEXPAND|wxALL , 5 ) ;
-    h2->Add ( new wxButton ( this , PD_SILMUT_CANCEL , txt("b_cancel") ) , 0 , wxEXPAND|wxALL , 5 ) ;
+    h2->Add ( egr , 0 , wxEXPAND , 5 ) ;
+    h2->Add ( new wxButton ( this , PD_SILMUT_OK , txt("b_ok") ) , 0 , wxEXPAND , 5 ) ;
+    h2->Add ( new wxButton ( this , PD_SILMUT_CANCEL , txt("b_cancel") ) , 0 , wxEXPAND , 5 ) ;
     
     if ( mut_pos > -1 ) // I have no idea what this is for...
         {
         mut = new wxChoice ( this , PD_SILMUT_EGR ) ;
-        h2->Add ( mut , 0 , wxEXPAND|wxALL , 5 ) ;
+        h2->Add ( mut , 0 , wxEXPAND , 5 ) ;
         }
         
 	// List
     lb = new wxListBox ( this , PD_SILMUT_LB , wxDefaultPosition , wxDefaultSize ,
                             0 , NULL , wxLB_SINGLE|wxLB_SORT ) ;
-    lb->SetFont ( *MYFONT ( 8 , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
+    lb->SetFont ( *MYFONT ( 8 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
 	
 	v0->Add ( h0 , 0 , wxEXPAND ) ;
 	v0->Add ( h1 , 0 , wxEXPAND ) ;

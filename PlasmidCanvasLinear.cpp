@@ -7,8 +7,8 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
     if ( printing ) h = h * 2 / 3 ;
     int fontfactor = MYFONTSIZE * 10 / 8 ;
     if ( printing ) fontfactor = (w>h?h:w)/10000 ;
-    wxFont *tinyFont = MYFONT ( fontfactor*4/5 , wxSWISS , wxNORMAL , wxNORMAL ) ;
-    wxFont *smallFont = MYFONT ( fontfactor , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    wxFont *tinyFont = MYFONT ( fontfactor*4/5 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
+    wxFont *smallFont = MYFONT ( fontfactor , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
 
     // Initial calculations    
     int a , b ;
@@ -344,8 +344,8 @@ bool PlasmidCanvas::intersectsLine ( wxRect &a , wxPoint p )
 void PlasmidCanvas::drawLinearItem ( wxDC& dc , int r1 , int r2 , float a1 , float a2 , TVectorItem *i )
     {
     if ( i->direction == -1 ) { int rr = r1 ; r1 = r2 ; r2 = rr ; }
-    wxFont *normalFont = MYFONT ( 12 , wxSWISS , wxNORMAL , wxNORMAL ) ;
-    wxFont *smallFont = MYFONT ( 8 , wxSWISS , wxNORMAL , wxNORMAL ) ;
+    wxFont *normalFont = MYFONT ( 12 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
+    wxFont *smallFont = MYFONT ( 8 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
     int r1b = r2 - ( r2 - r1 ) / 10 ;
     int y1 = (int) ( a2 - a1 ) / 3 ;
     int y2 = (int) ( a1 + a2 ) / 2 ;

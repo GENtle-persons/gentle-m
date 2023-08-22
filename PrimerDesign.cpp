@@ -415,21 +415,25 @@ void TPrimerDesign::initme ()
 	myapp()->frame->addTool ( toolBar , SEQ_PRINT ) ;
     if ( !myapp()->frame->mainToolBar ) toolBar->AddSeparator() ;
     toolBar->AddTool( PD_IMPORT, 
+            wxEmptyString ,
             myapp()->frame->bitmaps[14] ,
             txt("b_import_primer") ) ;
     toolBar->AddTool( PD_EXPORT, 
+            wxEmptyString ,
             myapp()->frame->bitmaps[15] ,
             txt("b_export_primer") ) ;
     toolBar->AddSeparator() ;
 	myapp()->frame->addTool ( toolBar , MDI_COPY ) ;
     toolBar->AddTool( MDI_EDIT_MODE,
+        wxEmptyString ,
         myapp()->frame->bitmaps[13] ,
         myapp()->frame->bitmaps[13] ,
-        TRUE, -1, -1, (wxObject *) NULL, txt("m_edit_mode") ) ;
+        wxITEM_CHECK, txt("m_edit_mode") ) ;
     toolBar->AddTool( MDI_TOGGLE_FEATURES,
+        wxEmptyString ,
         myapp()->frame->bitmaps[10] ,
         myapp()->frame->bitmaps[10] ,
-        TRUE, -1, -1, (wxObject *) NULL, txt("m_display_features") ) ;
+        wxITEM_CHECK, txt("m_display_features") ) ;
     toolBar->AddSeparator() ;
     
     spin = new wxSpinCtrl ( toolBar , PCR_SPIN , _T("") , wxDefaultPosition , wxSize ( MYSPINBOXSIZE , -1 ) ) ;
@@ -477,13 +481,13 @@ void TPrimerDesign::initme ()
                             wxDefaultSize,//wxSize ( w*2/3 - 70 , h ) ,
                             wxTE_MULTILINE | wxTE_READONLY ) ;
                             
-    stat->SetFont ( *MYFONT ( MYFONTSIZE , wxMODERN , wxNORMAL , wxNORMAL ) ) ;
+    stat->SetFont ( *MYFONT ( MYFONTSIZE , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
 
     GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,show_features);
 
-    h0->Add ( lc , 1 , wxEXPAND|wxALL , 2 ) ;
-    h0->Add ( v1 , 0 , wxEXPAND|wxALL , 2 ) ;
-    h0->Add ( stat , 1 , wxEXPAND|wxALL , 2 ) ;
+    h0->Add ( lc , 1 , wxEXPAND , 2 ) ;
+    h0->Add ( v1 , 0 , wxEXPAND , 2 ) ;
+    h0->Add ( stat , 1 , wxEXPAND , 2 ) ;
 
     v0->Add ( toolbar , 0 , wxEXPAND , 2 ) ;
     v0->Add ( h0 , 0 , wxEXPAND , 2 ) ;
