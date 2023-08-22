@@ -22,13 +22,11 @@ dnl AC_ARG_PROGRAM
 dnl AC_PROG_INSTALL
 dnl AC_PROG_LIBTOOL
 
-WITH_MYSQL()
-
-
 dnl check for programs we use
 AC_PROG_CXX
 AC_PROG_CC
 
+WITH_MYSQL()
 
 WXCONFIG=wx-config
 AC_ARG_WITH([wxconfig],
@@ -52,6 +50,7 @@ CPPFLAGS="$CPPFLAGS $WX_CPPFLAGS"
 CXXFLAGS="$CXXFLAGS $WX_CPPFLAGS"
 
 AC_SUBST(WX_LIBS)
+AC_SUBST(LDFLAGS)
 
 dnl Clarify inclusion/exclusion of ClustalW source tree
 
@@ -59,20 +58,6 @@ AC_ARG_WITH([clustalw],AS_HELP_STRING([--with-clustalw],[Use external binary of 
 
 if test "x$with_clustalw" != "xno"; then
   AC_DEFINE([USE_EXTERNAL_CLUSTALW], [1], [Define to use the clustalw binary in your PATH for sequence alignments from within GENtle.])
-fi
-
-dnl Clarify location of tinyxml
-
-TINYXML=""
-AC_ARG_WITH([tinyxml],AS_HELP_STRING([--with-tinyxml],[Use externally provided tinyXML library instead of the version shipping with source tree (default=/usr).]),[],[with_tinyxml="/usr"])
-if test "x$with_tinyxml" != "x"; then
-  if test "x$with_tinyxml" != "xno"; then
-    AC_DEFINE([USE_EXTERNAL_TINYXML], [/usr], [Define to use the clustalw binary in your PATH for sequence alignments from within GENtle.])
-  else
-    TINYXML=""
-  fi
-else
-  AC_DEFINE([USE_EXTERNAL_TINYXML], [$withval], [Define to use the clustalw binary in your PATH for sequence alignments from within GENtle.])
 fi
 
 dnl Set debug flags
@@ -112,9 +97,6 @@ else
 echo "MySQL               Disabled"
 fi
 
-if [[ "x$with_tinyxml" != "xno" ]]; then
-echo "tinyXML             External library ($with_tinyxml)"
-else
-echo "tinyXML             Self-compiled library ($with_tinyxml)"
-fi
-
+echo "CPPFLAGS=$CPPFLAGS"
+echo "CXXFLAGS=$CXXFLAGS"
+echo "LDFLAGS=$LDFLAGS"

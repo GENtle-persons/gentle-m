@@ -7,7 +7,7 @@
 #define TAG_COMPLEMENT 1
 
 /// \brief The item type names
-char* gb_item_type[VIT_TYPES] =
+const char * const gb_item_type[VIT_TYPES] =
     {
     "",
     "gene",
