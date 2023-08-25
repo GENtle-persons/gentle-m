@@ -2827,10 +2827,10 @@ wxColour SequenceCharMarkup::getColorFromXML ( wxString s )
 wxPen SequenceCharMarkup::getPenFromXML ( TiXmlElement *e )
     {
     wxColour c = getColorFromXML ( getSafeXML ( e->Attribute ( "color" ) ) ) ;
-    int width;
-    int style ;
-    getSafeXML ( e->Attribute ( "width" ) ) . ToInt ( &width ) ;
-    getSafeXML ( e->Attribute ( "style" ) ) . ToInt ( &style ) ;
+    long width;
+    long style ;
+    getSafeXML ( e->Attribute ( "width" ) ) . ToLong ( &width ) ;
+    getSafeXML ( e->Attribute ( "style" ) ) . ToLong ( &style ) ;
     return * wxThePenList->FindOrCreatePen ( c , width , (wxPenStyle) style ) ;
     }
 
