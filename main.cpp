@@ -106,12 +106,12 @@ wxString implode ( wxString sep , wxArrayString &r )
 	return ret ;
 	}
 
-wxString txt ( char *item )
+const wxString txt ( const char * const item )
 	{
 	return txt ( wxString(item,wxConvUTF8) ) ;
 	}
 
-wxString txt ( wxString item )
+const wxString txt ( wxString item )
     {
 #ifndef __WXMSW__
 	 if ( item.MakeUpper().Left(2) == _T("M_") )
@@ -129,7 +129,7 @@ wxString txt ( wxString item )
 // END GLOBAL FUNCTIONS
 
 
-void MyApp::registerFileExtension ( wxString extension )
+void MyApp::registerFileExtension ( const wxString& extension )
     {
 #ifdef __WXMSW__    
     wxRegKey regKey;
@@ -155,7 +155,7 @@ void MyApp::registerFileExtension ( wxString extension )
 #endif
     }
     
-void MyApp::registerProtocol ( wxString extension )
+void MyApp::registerProtocol ( const wxString& extension )
     {
 #ifdef __WXMSW__    
     wxRegKey regKey;
