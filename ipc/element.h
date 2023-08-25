@@ -26,23 +26,23 @@ class TIPC_PARS ;
 
 /// Part of the IPC package
 class TIPC_ELEMENT
-	{
-	public :
- 	TIPC_ELEMENT ( TIPC *i ) ;
+{
+ public :
+    TIPC_ELEMENT ( TIPC *i ) ;
  	
- 	private :
+ private :
     friend class TIPC ;
     friend class TIPC_PARS ;
     int init_elements(void);
-    FILE* open_file(char *filename);
+    FILE* open_file(const char * const filename);
     void add_element(element *ce);
     void add_isotope(isotope *ci,element *ce);
-    char *get_token(char *linebuffer);
+    char *get_token(const char * const linebuffer);
     
-  	element *elements;
+    element *elements;
     TIPC *ipc ;
     char * ELEMENTFILE ;
-	} ;    
+} ;    
 
 /*
 

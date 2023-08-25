@@ -26,12 +26,12 @@ class TIPC_PARS
 	
 	private :
  	friend class TIPC ;
-    int pars_peptid(char *formel);
-    int pars_chem_form(char *formel);
-    int is_symbol(char *probe);
-    int add_component(char *symbol,int number);
-    int pars_amino_acid(char *formel);
-    int add_amino_acid(char acid);
+    int pars_peptid(const char *formel);
+    int pars_chem_form(const char *formel);
+    int is_symbol(const char *probe);
+    int add_component(const char *symbol, const int number);
+    int pars_amino_acid(const char *formel);
+    int add_amino_acid(const char acid);
     int print_sum(void);
 
  	TIPC *ipc ;
