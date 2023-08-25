@@ -610,7 +610,7 @@ Local void readMSF(struct ReadSeqVars *V)
 
   char    *si, *sj, sid[128];
   boolean indata = false;
-  int     atseq= 0, iline= 0;
+  int     iline= 0;
 
   V->addit = (V->choice > 0);
   if (V->addit) V->seqlen = 0;
@@ -673,7 +673,8 @@ Local void readPAUPinterleaved(struct ReadSeqVars *V)
 
   char    *si, *sj, *send, sid[40], sid1[40], saveseq[255];
   boolean first = true, indata = false, domatch;
-  int     atseq= 0, iline= 0, ifmc, saveseqlen=0;
+  int     iline= 0, ifmc;
+  unsigned long saveseqlen=0;
 
 #define fixmatchchar(s) { \
   for (ifmc=0; ifmc<saveseqlen; ifmc++) \
@@ -714,7 +715,10 @@ Local void readPAUPinterleaved(struct ReadSeqVars *V)
             }
           else if (V->nseq == V->choice) {
             if (domatch) {
-              if (V->nseq == 1) { strcpy( saveseq, sj); saveseqlen= strlen(saveseq); }
+              if (V->nseq == 1) {
+                  strcpy( saveseq, sj);
+                  saveseqlen= strlen(saveseq);
+              }
               else fixmatchchar( sj);
               }
             addseq(sj, V);
@@ -729,7 +733,10 @@ Local void readPAUPinterleaved(struct ReadSeqVars *V)
           while (isalnum(*si)) si++;
           skipwhitespace(si);
           if (domatch) {
-            if (V->nseq == 1) { strcpy( saveseq, si); saveseqlen= strlen(saveseq); }
+            if (V->nseq == 1) {
+                strcpy( saveseq, si);
+                saveseqlen= strlen(saveseq);
+            }
             else fixmatchchar( si);
             }
           addseq(si, V);
@@ -1157,9 +1164,10 @@ short seqFileFormatFp(
             gotolsen= false, gotpaup = false, gotasn1 = false, gotuw= false, gotMSF= false,
             isfitch= false,  isphylip= false, done= false;
   short     format= kUnknown;
-  int       nlines= 0, k, splen= 0, otherlines= 0, aminolines= 0, dnalines= 0;
+  int       nlines= 0, k, otherlines= 0, aminolines= 0, dnalines= 0;
   char      sp[256];
   long      linestart=0;
+  size_t  splen= 0;
   int     maxlines2check=500;
 
 #define ReadOneLine(sp)   \

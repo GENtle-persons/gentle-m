@@ -28,7 +28,7 @@ TIPC_ELEMENT::TIPC_ELEMENT ( TIPC *i )
 	}    
 
 
-FILE *TIPC_ELEMENT::open_file(char *filename)
+FILE *TIPC_ELEMENT::open_file(const char * const filename)
 {
   FILE *datenfile;
   char *pwd;
@@ -54,23 +54,26 @@ FILE *TIPC_ELEMENT::open_file(char *filename)
  return datenfile;
 }
 
-char *TIPC_ELEMENT::get_token(char *linebuffer)
+char *TIPC_ELEMENT::get_token(const char * const linebuffer)
 {
-  static char *buffer;
+  static const char *buffer;
   static char token[MAX_LINE];
   int c=0;
 
   if(linebuffer)
     buffer=linebuffer;
 
+  // copying content from buffer to token
   while( (*buffer!=' ') && (*buffer!='\n') && (*buffer!='\r') )
     {
       token[c]=*buffer;
-      *buffer++;
+      buffer++;
       c++;
     }
   token[c]='\0';
-  *buffer++;
+
+  // buffer is a static variable, forwarding to the next valid character/start of next token
+  buffer++;
   return token;
 }
 

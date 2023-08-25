@@ -25,7 +25,7 @@ TIPC_PARS::TIPC_PARS ( TIPC *i )
 	ipc = i ;
 	}    
 
-int TIPC_PARS::is_symbol(char *probe)
+int TIPC_PARS::is_symbol(const char *probe)
 {
   element *cur;
 
@@ -39,7 +39,7 @@ int TIPC_PARS::is_symbol(char *probe)
   return 0;
 }
 
-int TIPC_PARS::add_component(char *symbol,int number)
+int TIPC_PARS::add_component(const char *symbol, const int number)
 {
   element *el;
   ipc_compound *newco=NULL,*co;
@@ -90,7 +90,7 @@ int TIPC_PARS::add_component(char *symbol,int number)
   return 1;
 }
 
-int TIPC_PARS::pars_chem_form(char *formel)
+int TIPC_PARS::pars_chem_form(const char *formel)
 {
   char par[MAX_DIGITS],par1[MAX_DIGITS];
   int m=0,number=0;
@@ -105,7 +105,7 @@ int TIPC_PARS::pars_chem_form(char *formel)
 	  par[m]=*formel;
 	  par[m+1]='\0';
 	  m++;
-	  *formel++;
+	  formel++;
 	  /*Adding omiited 1, e.g. CCl4 ->C1Cl4 */
 	  if(is_symbol(par) && isupper(*formel))
 	    {
@@ -119,7 +119,7 @@ int TIPC_PARS::pars_chem_form(char *formel)
 	{
 	  par1[m]=*formel;
 	  m++;
-	  *formel++;
+	  formel++;
 	}
       par1[m]='\0';
       number=atoi(par1);
@@ -131,7 +131,7 @@ int TIPC_PARS::pars_chem_form(char *formel)
   return 1;
 }
 
-int TIPC_PARS::add_amino_acid(char acid)
+int TIPC_PARS::add_amino_acid(const char acid)
 {
   switch(acid)
     {
@@ -262,13 +262,13 @@ int TIPC_PARS::add_amino_acid(char acid)
   return 1;
 }
 
-int TIPC_PARS::pars_amino_acid(char *formel)
+int TIPC_PARS::pars_amino_acid(const char *formel)
 {
   while(*formel)
     {
       if(!add_amino_acid(*formel))
-	return 0;
-      *formel++;
+          return 0;
+      formel++;
     }
   add_component("O",1);
   add_component("H",2);
@@ -276,7 +276,7 @@ int TIPC_PARS::pars_amino_acid(char *formel)
   return 1;
 }
 
-int TIPC_PARS::pars_peptid(char *formel)
+int TIPC_PARS::pars_peptid(const char *formel)
 {
   FILE *peptid_file;
   char linebuffer[MAX_PEP_LINE];
@@ -284,26 +284,26 @@ int TIPC_PARS::pars_peptid(char *formel)
 
   if(!(peptid_file=fopen(formel,"r")))
     {
-      printf("Can´t open file: %s\n",formel);
+      printf("Can't open file: %s\n",formel);
       return 0;
     }
 
   while( fgets(linebuffer,MAX_PEP_LINE,peptid_file) )
-    {
+  {
       while( linebuffer[index] != '\n' )
-	{
-	  add_amino_acid(linebuffer[index]);
-	  index++;
-	}
+      {
+          add_amino_acid(linebuffer[index]);
+          index++;
+      }
       index=0;
-    }
+  }
 
-      add_component("O",1);
-      add_component("H",2);
+  add_component("O",1);
+  add_component("H",2);
 
-      fclose(peptid_file);
-      
-      return 1;
+  fclose(peptid_file);
+  
+  return 1;
 }
 
 

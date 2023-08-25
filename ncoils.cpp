@@ -35,16 +35,16 @@ string ncoils_function( const char *_sequence , int window ) {
 	
 	string ret ;
 
-	int i,k,l;
+	int i;
 	int verb;
 //	int window;
 	int pt;
 	int which,weighted;
 	int nseq;
 	int t,tc;
-	int seqlen;
+	size_t seqlen;
 	int mode;
-	int min_seg;
+	int min_seg; //FIXME: undef when used
 
 	char heptfile[1000];
 	char *buff;
@@ -201,15 +201,15 @@ string ncoils_function( const char *_sequence , int window ) {
 
 }
 
-int ncoils_main(int argc, char *argv[]) {
+int ncoils_main(const int argc, const char * const argv[]) {
 
-	int i,j,l;
+	int i,j;
 	int verb;
 	int window,pt;
 	int which,weighted;
 	int nseq;
 	int t,tc;
-	int seqlen;
+	size_t seqlen;
 	int mode;
 	int min_seg;
 
@@ -373,7 +373,7 @@ string pred_coils(char *seq,char *ident,char *title,struct hept_pref *h,int win,
     string ret ;
 
 	int i,j;
-	int len,pos,aa_pt;
+	int pos,aa_pt;
 	int total_coil_segments;
 	int are_there_coils;
 
@@ -387,7 +387,7 @@ string pred_coils(char *seq,char *ident,char *title,struct hept_pref *h,int win,
 	
 	char *hept_seq;
 	
-	len=strlen(seq);
+	size_t len=strlen(seq);
 
 	score    = (float*)malloc(len*sizeof(float));
 	P        = (float*)malloc(len*sizeof(float));
