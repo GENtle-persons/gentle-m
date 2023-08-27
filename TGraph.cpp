@@ -130,7 +130,7 @@ void TGraph::initme ()
     gd->SetFocus() ;
 	}
 
-wxString TGraph::getName ()
+const wxString TGraph::getName () const
 	{
     return txt("t_graph") ;
 	}

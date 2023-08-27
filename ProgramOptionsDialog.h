@@ -97,10 +97,10 @@ class TEnzymeRules
 	virtual void save_global_settings () ; ///< Save global settings to the database
 	virtual void setup_options ( TEnzymeSettingsTab *est ) ; ///< Set options in the tab
 	virtual void lookup_options ( TEnzymeSettingsTab *est ) ; ///< Look up options from the tab
-	virtual bool isEqual ( TEnzymeRules &r ) ; ///< Compare with another set of settings
+	virtual bool isEqual ( const TEnzymeRules &r ) const ; ///< Compare with another set of settings
 	
-	virtual wxString to_string () ; ///< "Compress" to storable string
-	virtual void from_string ( wxString &s ) ; ///< "Decompress" from storage string
+	virtual wxString to_string () const ; ///< "Compress" to storable string
+	virtual void from_string ( const wxString &s ) ; ///< "Decompress" from storage string
 
 	virtual void getVectorCuts ( TVector *v ) ;
 	virtual wxColour *getColor ( int cuts ) ; ///< Returns a pointer to a wxColour structure with the correct color for the given number of cuts

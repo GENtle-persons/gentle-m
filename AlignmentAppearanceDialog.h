@@ -25,7 +25,7 @@ class AlignmentAppearanceDialog : public wxDialog
     
     private :
     void set_pen ( SequenceCharMarkup &scm , int id , int border ) ; ///< Sets a pen in the markup object; used by OnOK
-    void addLine ( wxString name , wxArrayString &as , wxFlexGridSizer *sizer ) ; ///< Adds a line of elements (radio boxes, buttons)
+    void addLine ( const wxString& name , wxArrayString &as , wxFlexGridSizer *sizer ) ; ///< Adds a line of elements (radio boxes, buttons)
     
     vector <wxRadioBox*> radioboxes ;
     vector <wxSpinCtrl*> thickness ;

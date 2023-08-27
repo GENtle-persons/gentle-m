@@ -312,7 +312,7 @@ void TABIviewer::initme ()
     sc->SetFocus() ;
     }
     
-wxString TABIviewer::getName ()
+const wxString TABIviewer::getName () const
     {
     return vec->getName() ;
     }

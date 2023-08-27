@@ -43,16 +43,17 @@ void ChildBase::Maximize ( bool isit )
   Activate () ;
 }
 
-void ChildBase::showName ( wxString x )
-    {
-    if ( x.IsEmpty() )
-       {
-       x = getName() ;
-       if ( vec && vec->isChanged() ) x += _T("*") ;
-       }
-    if ( myapp()->frame->GetTitle() != x )
-        myapp()->frame->SetTitle ( x ) ;
+void ChildBase::showName ( const wxString& x )
+{
+    wxString s=x;
+    if ( x.IsEmpty() ) {
+       s = getName() ;
+       if ( vec && vec->isChanged() ) s += _T("*") ;
     }
+    if ( myapp()->frame->GetTitle() != s ) {
+        myapp()->frame->SetTitle ( s ) ;
+    }
+}
     
 void ChildBase::OnFocus(wxFocusEvent& event)
     {

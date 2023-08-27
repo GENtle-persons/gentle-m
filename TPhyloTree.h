@@ -14,7 +14,7 @@ class TPTree
 	virtual void setWeight ( double w ) { weight = w ; }
 	virtual void setName ( wxString n ) { name = n ; }
 	virtual float getWeight () { return weight ; }
-	virtual wxString getName () { return name ; }
+	virtual const wxString getName () const { return name ; }
 	virtual bool isLeaf () { return children.size() == 0 ; }
 	virtual double getMaxWeight () ;
 	virtual double getCurrentWeight () ;
@@ -50,7 +50,7 @@ class TPhyloTree : public ChildBase
     TPhyloTree(wxWindow *parent, const wxString& title) ; ///< Constructor
     
     virtual void initme () ; ///< Initialization
-    virtual wxString getName () ; ///< Returns the gel module name
+    virtual const wxString getName () const ; ///< Returns the gel module name
     
     virtual void setNewickTrees ( wxString s , TAlignment *_ali = NULL ) ;
     virtual void setModeStrange () ;

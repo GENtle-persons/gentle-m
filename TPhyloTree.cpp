@@ -112,7 +112,7 @@ void TPhyloTree::initme ()
 	Show () ;
 	}
 
-wxString TPhyloTree::getName()
+const wxString TPhyloTree::getName() const
 	{
 	return _T("Phylogenetic tree") ;
 	}
@@ -174,7 +174,8 @@ void TPhyloTree::setRealNames ( TAlignment *ali )
 	
 	for ( a = 0 ; a < vt.size() ; a++ )
 		{
-		wxString vn = vt[a]->getName().Trim().Trim(true) ;
+		wxString _vn = vt[a]->getName();
+		wxString vn = _vn.Trim().Trim(true) ;
 		if ( vn == _T("") ) continue ;
 		for ( b = 0 ; b < ali->lines.size() ; b++ )
 			{

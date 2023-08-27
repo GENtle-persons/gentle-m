@@ -34,12 +34,12 @@ class TGelLane
 	\brief The virtual gel module
 */
 class TVirtualGel : public ChildBase
-    {
-    public :
+{
+  public :
     TVirtualGel(wxWindow *parent, const wxString& title) ; ///< Constructor
     
     virtual void initme () ; ///< Initialization
-    virtual wxString getName () ; ///< Returns the gel module name
+    virtual const wxString getName () const ; ///< Returns the gel module name
 
     virtual void OnPercent ( wxCommandEvent &ev ) ; ///< Gel percent setting change event handler
     virtual void OnLabel ( wxCommandEvent &ev ) ; ///< Show labels event handler
@@ -55,7 +55,7 @@ class TVirtualGel : public ChildBase
     int cutoff , maxband ;
     
     DECLARE_EVENT_TABLE()
-    } ;
+} ;
     
 /**	\class TMyGelControl
 	\brief This class handles a single virtual gel for TVirtualGel, using TGelLane lanes
@@ -94,7 +94,7 @@ class TRestrictionIdentifier : public TVirtualGel
     
     virtual void OnDNAListChange(wxCommandEvent &event);
     virtual void OnEnzymeListChange(wxCommandEvent &event);
-    virtual wxString getName () ; ///< Returns the gel module name
+    virtual const wxString getName () const ; ///< Returns the gel module name
     virtual void otherChildrenChanged () ;
 
     private:

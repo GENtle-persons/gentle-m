@@ -54,7 +54,7 @@ class TAlignment : public ChildBase,wxThreadHelper
     virtual ~TAlignment () ; ///< Destructor
     
     virtual void initme () ; ///< Initialization
-    virtual wxString getName () ; ///< Returns "Alignment"
+    virtual const wxString getName () const ; ///< Returns "Alignment"
 
     virtual void* Entry() ; // wxThreadHelper
 

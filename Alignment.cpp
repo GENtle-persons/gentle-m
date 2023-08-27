@@ -6,17 +6,6 @@
 #include <wx/textfile.h>
 #include <wx/filename.h>
 
-#ifdef __DEBIAN__
-#ifndef USE_EXTERNAL_CLUSTALW
-	#define USE_EXTERNAL_CLUSTALW
-#endif
-#endif
-
-#ifndef USE_EXTERNAL_CLUSTALW
- #include "clustalw/clustalw.h"
- int clustalw_main(int argc,char **argv) ;
-#endif
-
 BEGIN_EVENT_TABLE(TAlignment, MyChildBase)
     EVT_CLOSE(ChildBase::OnClose)
     EVT_SET_FOCUS(ChildBase::OnFocus)
@@ -325,9 +314,8 @@ void* TAlignment::Entry()
     }
     out.Close() ;
 
-#ifdef USE_EXTERNAL_CLUSTALW // Use external ClustalW
+    // Using external ClustalW
     wxString bn ;
-    
 #ifdef __WXMSW__
 	// This is not used anymore under Windows
     bn = tmpdir + _T("\\clustalw.bat") ;
@@ -346,22 +334,6 @@ void* TAlignment::Entry()
 //	cout << "Executing " << bn.mb_str() << endl ;
 #endif 
     wxExecute ( bn , wxEXEC_SYNC ) ;
-	
-	
-#else // Using internal ClustalW - cool!
-
-
-    wxString a1 = wxString::Format ( _T("/gapopen=%d") , gap_penalty ) ;
-    wxString a2 = wxString::Format ( _T("/gapext=%d") , mismatch ) ;
-    wxString text = tmpdir + _T("/clustalw.txt") ;
-    char *av[4] ;
-    av[0] = new char[100] ; strcpy ( av[0] , "clustalw.exe" ) ;
-    av[1] = new char[500] ; strcpy ( av[1] , text.mb_str() ) ;
-    av[2] = new char[100] ; strcpy ( av[2] , a1.mb_str() ) ;
-    av[3] = new char[100] ; strcpy ( av[3] , a2.mb_str() ) ;
-    clustalw_main ( 4 , av ) ;
-#endif
-
     
     wxString aln = tmpdir + _T("/clustalw.aln") ;
     wxTextFile in ( aln ) ;
@@ -721,7 +693,7 @@ void TAlignment::updateSequence ()
     sc->SilentRefresh() ;
     }
     
-wxString TAlignment::getName ()
+const wxString TAlignment::getName () const
     {
     return name.IsEmpty() ? _T("Alignment") : name ;
     }
@@ -1142,7 +1114,7 @@ void TAlignment::OnFileSave ( wxCommandEvent &ev )
         if ( lines[a].isIdentity ) continue ;
 
         wxString p = lines[a].v->getParams() ;
-        lines[a].v->setParams ( _T("") ) ;
+        lines[a].v->setParams ( txt("") ) ;
         d += lines[a].v->getName() + _T("\n") ;
         d += lines[a].v->getDatabase() + _T("\n") ;
         d += lines[a].s + _T("\n") ;

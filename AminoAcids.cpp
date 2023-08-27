@@ -261,7 +261,7 @@ void TAminoAcids::initme ()
     mylog ( "TAminoAcids::initme" , "11b" ) ;
     }
     
-wxString TAminoAcids::getName ()
+const wxString TAminoAcids::getName () const
     {
     return vec->getName() ;
     }
@@ -452,7 +452,7 @@ void TAminoAcids::OnEditMode(wxCommandEvent& event)
         }    
     }
 
-void TAminoAcids::invokeVectorEditor ( wxString what , int num , bool forceUpdate )
+void TAminoAcids::invokeVectorEditor ( const wxString& what , const int num , const bool forceUpdate )
 	{
 	vec->undo.start ( txt("u_vec_edit") ) ;
 	TVectorEditor ve ( this , txt("t_vector_editor") , vec ) ;
@@ -645,7 +645,7 @@ void TAminoAcids::OnListBox ( wxCommandEvent& event )
     handleListBox ( lb->GetStringSelection() ) ;
     }
 
-void TAminoAcids::handleListBox ( wxString t )
+void TAminoAcids::handleListBox ( const wxString& t )
 	{
 	mylog ( "TAminoAcids::handleListBox" , "1" ) ;
 	bool update = false ;

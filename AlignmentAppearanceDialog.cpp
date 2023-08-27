@@ -23,7 +23,7 @@ void AlignmentAppearanceDialog::OnCharHook(wxKeyEvent& event)
     else event.Skip() ;
     }
 
-void AlignmentAppearanceDialog::addLine ( wxString name , wxArrayString &as , wxFlexGridSizer *sizer )
+void AlignmentAppearanceDialog::addLine ( const wxString& name , wxArrayString &as , wxFlexGridSizer *sizer )
     {
     wxBoxSizer *line = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxButton *col = new wxButton ( this , ALIGN_APPEARANCE_LINE_COLOR_BUTTON1 + line_color_buttons , 

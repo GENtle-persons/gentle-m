@@ -141,7 +141,7 @@ void TDotPlot::initme ()
     update_sequence_lists() ;
 }
 
-wxString TDotPlot::getName ()
+const wxString TDotPlot::getName () const
 {
     return txt("t_dotplot") ;
 }

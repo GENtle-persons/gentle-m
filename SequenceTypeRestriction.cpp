@@ -207,7 +207,7 @@ void SeqRestriction::show ( wxDC& dc )
                qlx = x ;
                if ( b == pl.getTo ( idx ) )
                   {
-                  wxString t = rc->getDisplayName() ;
+                  const wxString t = rc->getDisplayName() ;
                   if ( down ) dc.DrawText ( t , llx , ly - ch2 ) ;
                   else dc.DrawText ( t , llx , ly ) ;
                   }

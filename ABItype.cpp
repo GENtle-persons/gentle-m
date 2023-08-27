@@ -22,9 +22,9 @@ ABItype::~ABItype ()
 	\param t Pointer to the data to parse
 	\param l Length of the data
 */
-int ABItype::getCMBF ( unsigned char *t , int l )
+int ABItype::getCMBF ( const unsigned char * const t, const int l ) const
     {
-    unsigned char *s , *r = NULL ;
+    const unsigned char *s , *r = NULL ;
     for ( s = t + l - 8 ; s > t ; s-- )
        {
        if ( *s == 'C' )
@@ -39,7 +39,8 @@ int ABItype::getCMBF ( unsigned char *t , int l )
           }
        }
     if ( !r ) return -1 ;
-    return r - t ;
+    // difference between two pointers that should be positive
+    return (int) (r - t) ;
     }
     
 /** \brief Parses an ABI format file
@@ -50,7 +51,7 @@ int ABItype::getCMBF ( unsigned char *t , int l )
 	* - finding the offset for the first CMBF structure
 	* - iterating through the CMBF structures
 */
-void ABItype::parse ( wxString filename )
+void ABItype::parse ( const wxString& filename ) 
     {
 	wxFile f ( filename , wxFile::read ) ;
 	long l = f.Length() ;
@@ -101,7 +102,7 @@ void ABItype::parse ( wxString filename )
  	* - 128 for a valid Mac file
  	* - -1 if the file is invalid
 */
-int ABItype::getMacOffset ( unsigned char *t )
+int ABItype::getMacOffset ( const unsigned char * const t ) const
     {
     int r = 0 ;
     if ( t[r+0]=='A' && t[r+1]=='B' && t[r+2]=='I' && t[r+3]=='F' ) return r ;
@@ -114,7 +115,7 @@ int ABItype::getMacOffset ( unsigned char *t )
 	\param t Pointer to the raw data
 	\param from Offset; is changed after the structure is read
 */    
-TFLAG ABItype::getFlag ( unsigned char *t , int &from )
+TFLAG ABItype::getFlag ( const unsigned char * const t , int &from ) const
     {
     TFLAG r ;
     r.data = NULL ;
@@ -131,7 +132,7 @@ TFLAG ABItype::getFlag ( unsigned char *t , int &from )
     return r ;
     }
     
-wxString ABItype::getText ( unsigned char *t , int &from )
+wxString ABItype::getText ( const unsigned char * const t , int &from ) const
     {
     wxString r ;
     int l = t[from++] ;
@@ -140,18 +141,18 @@ wxString ABItype::getText ( unsigned char *t , int &from )
     }
 
 // This function does not appear to be used anywhere...
-int ABItype::getInt10 ( unsigned char *t , int &from )
+int ABItype::getInt10 ( const unsigned char * const t , int &from ) const
     {
     from += 10 ; // Essentially ignoring
 	return 0 ;
     }
     
-int ABItype::getInt1 ( unsigned char *t , int &from )
+int ABItype::getInt1 ( const unsigned char * const t , int &from ) const
     {
     return (unsigned char) t[from++] ;
     }
     
-int ABItype::getInt2 ( unsigned char *t , int &from )
+int ABItype::getInt2 ( const unsigned char * const t , int &from ) const
     {
     int r = 0 ;
     int t1 = (unsigned char) t[from++] ;
@@ -160,7 +161,7 @@ int ABItype::getInt2 ( unsigned char *t , int &from )
     return r ;
     }
     
-int ABItype::getInt4 ( unsigned char *t , int &from )
+int ABItype::getInt4 ( const unsigned char * const t , int &from ) const
     {
     int r = 0 ;
     int t1 = getInt2 ( t , from ) ;
@@ -169,7 +170,7 @@ int ABItype::getInt4 ( unsigned char *t , int &from )
     return r ;
     }
     
-wxString ABItype::getStr ( unsigned char *t , int from , int len )
+wxString ABItype::getStr ( const unsigned char * const t , const int from , const int len ) const
     {
     wxString r ;
     for ( int a = 0 ; a < len ; a++ ) r += t[from+a] ;
@@ -183,7 +184,7 @@ wxString ABItype::getStr ( unsigned char *t , int from , int len )
 	\param id The flag (type) of the record
 	\param num The number of the record
 */    
-int ABItype::getRecord ( wxString id , int num )
+int ABItype::getRecord ( const wxString& id , const int num ) const
     {
     unsigned int a ;
     for ( a = 0 ; a < vf.size() && ( vf[a].flag != id || vf[a].instance != num ) ; a++ ) ;
@@ -194,7 +195,7 @@ int ABItype::getRecord ( wxString id , int num )
 /** \brief Finds a specific sequence record
 	\param num The number of the sequence record
 */    
-wxString ABItype::getSequence ( int num )
+wxString ABItype::getSequence ( const int num ) const
     {
     wxString r ;
     int a = getRecord ( _T("PBAS") , num ) , b ;
@@ -207,7 +208,7 @@ wxString ABItype::getSequence ( int num )
 	\param id The flag (type) of the record
 	\param num The number of the record
 */    
-wxString ABItype::getRecordPascalString ( wxString id , int num )
+wxString ABItype::getRecordPascalString ( const wxString& id , const int num ) const
     {
     int i = getRecord ( id , num ) ;
     if ( i == -1 ) return _T("") ;
@@ -218,7 +219,7 @@ wxString ABItype::getRecordPascalString ( wxString id , int num )
 	\param id The flag (type) of the record
 	\param num The number of the record
 */    
-int ABItype::getRecordValue ( wxString id , int num )
+int ABItype::getRecordValue ( const wxString& id , const int num ) const
     {
     int i = getRecord ( id , num ) ;
     if ( i == -1 ) return 0 ;
@@ -239,7 +240,7 @@ TFLAG::~TFLAG ()
     }    
 
 /// \brief Reads a Pascal-like string from the data   
-wxString TFLAG::getPascalString ()
+wxString TFLAG::getPascalString () const
     {
     if ( !data )
        {

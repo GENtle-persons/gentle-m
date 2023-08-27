@@ -52,7 +52,7 @@ class TDotPlot : public ChildBase
     ~TDotPlot () ; ///< Destructor
         
     void initme () ; ///< Initialization
-    virtual wxString getName () ; ///< Returns the module name
+    virtual const wxString getName () const ; ///< Returns the module name
 
     virtual void OnZoom(wxScrollEvent& event); ///< Zoom event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler

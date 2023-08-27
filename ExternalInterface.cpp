@@ -101,12 +101,12 @@ void ExternalInterface::initme ()
     if ( panel->t1 ) panel->t1->SetFocus () ;
     }
 
-wxString ExternalInterface::getName ()
+const wxString ExternalInterface::getName () const
     {
     return _T("External Interface") ;
     }
 
-void ExternalInterface::runBlast ( wxString seq , wxString prg ) 
+void ExternalInterface::runBlast ( const wxString& seq , wxString prg ) 
 {
     EIpanel *bl = new EIpanel ( nb , EI_BLAST ) ;    
     prg.MakeUpper() ;

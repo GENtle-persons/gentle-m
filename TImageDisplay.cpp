@@ -241,7 +241,7 @@ void TImageDisplay::OnCBinvert ( wxCommandEvent &event )
 	right->Refresh () ;
 	}    
 
-wxString TImageDisplay::getName ()
+const wxString TImageDisplay::getName () const
     {
     return _T("Image Viewer") ;
     }

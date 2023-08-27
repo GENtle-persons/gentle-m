@@ -26,8 +26,8 @@ class TPrimerDesign : public ChildBase
     ~TPrimerDesign () ; ///< Destructor
     
     void initme () ; ///< Initialize
-    virtual wxString getName () ; ///< Returns the name of the vector
-    virtual void AddPrimer ( wxString s , wxString pname = _T("") ) ; ///< Add a primer to the module
+    virtual const wxString getName () const ; ///< Returns the name of the vector
+    virtual void AddPrimer ( const wxString& s , const wxString& pname = _T("") ) ; ///< Add a primer to the module
     virtual void showSequence () ; ///< Refresh the sequence map
     virtual void updateResultSequence () ; ///< Generates the resulting DNA and amino acid sequences from the template sequence and the primers
     virtual void updatePrimersFromSequence () ; ///< Updates the primers from the primer sequences in the map (after editing)

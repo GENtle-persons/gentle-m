@@ -19,7 +19,7 @@ class TABIviewer : public ChildBase
     virtual ~TABIviewer () ; ///< Destructor
     
     virtual void initme () ; ///< Initialization
-    virtual wxString getName () ; ///< Returns the module name
+    virtual const wxString getName () const ; ///< Returns the module name
     virtual void showSequence () ; ///< Show/refresh the sequence
     virtual wxString getStat () ; ///< Get statistics as a wxString
     virtual void showStat () ; ///< Show the statistics

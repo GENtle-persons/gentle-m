@@ -8,67 +8,67 @@
 
 /// \brief Stores a restriction enzyme
 class TRestrictionEnzyme
-    {
-    public :
+{
+  public :
 	TRestrictionEnzyme () { palindromic = false ; } ; ///< Empty constructor
 	~TRestrictionEnzyme () {} ; ///< Dummy destructor
 	
-    bool differ ( TRestrictionEnzyme &e ) ;
+    bool differ ( const TRestrictionEnzyme &e ) const;
     
-    wxString getEndUpperLeft ( bool first_strand = true ) ; ///< The "upper left" sequence after the cut
-    wxString getEndLowerLeft ( bool first_strand = true ) ; ///< The "lower left" sequence after the cut
-    wxString getEndUpperRight ( bool first_strand = true ) ; ///< The "upper right" sequence after the cut
-    wxString getEndLowerRight ( bool first_strand = true ) ; ///< The "lower right" sequence after the cut
+    wxString getEndUpperLeft ( const bool first_strand = true ) const ; ///< The "upper left" sequence after the cut
+    wxString getEndLowerLeft ( const bool first_strand = true ) const ; ///< The "lower left" sequence after the cut
+    wxString getEndUpperRight ( const bool first_strand = true ) const ; ///< The "upper right" sequence after the cut
+    wxString getEndLowerRight ( const bool first_strand = true ) const ; ///< The "lower right" sequence after the cut
     
-    wxString invertSequence () ; ///< The recognition sequence, inverted
+    wxString invertSequence () const ; ///< The recognition sequence, inverted
     
-    int getCut ( bool first_strand = true ) ;
-    void setCut ( int c ) ;
-    int getOverlap ( bool first_strand = true ) ;
+    int getCut ( bool first_strand = true ) const ;
+    void setCut ( const int c ) ;
+    int getOverlap ( const bool first_strand = true ) const ;
     void setOverlap ( int o ) ;
-    wxString getName () ;
-    void setName ( wxString _name ) ;
-    wxString getSequence () ;
+    const wxString getName () const ;
+    void setName ( const wxString& _name ) ;
+    const wxString getSequence () const ;
     void setSequence ( wxString _seq ) ;
-    bool isPalindromic () ;
+    bool isPalindromic () const ;
     
     /// The physical location of the vial containing the enzyme, if entered
     wxString location , note ; ///< A note about the enzyme, if entered
     unsigned long dbid ; ///< Database ID of the enzyme
 
-	private :
+  private :
     /// The enzyme name
     wxString name , sequence ; ///< The recognition sequence
     bool palindromic ;
     /// Where the cut occurs
     int cut , overlap ; ///< Length of the sticky ends (negative=<--)
-    } ;
+} ;
 
 /// \brief Stores a specific cut of a restriction enzyme
 class TRestrictionCut
-    {
-    public :
+{
+  public :
     TRestrictionCut ( int _pos , TRestrictionEnzyme *_e , bool _first_strand = true ) ///< Constructor
         { pos = _pos ; e = _e ; first_strand = _first_strand ; }
-	~TRestrictionCut () {} ; ///< Dummy destructor
+    ~TRestrictionCut () {} ; ///< Dummy destructor
         
     void linearUpdate ( int w , int h ) ;
-    wxString getNameAndPosition () ; ///< Returns the enzyme name and cut pusition
-    bool isHidden ( TVector *v ) ; ///< Is this enzyme in this TVector hidden?
-    wxString getDisplayName () ; ///< Returns the enzyme name (or the joined names)
+    wxString getNameAndPosition () const ; ///< Returns the enzyme name and cut pusition
+    bool isHidden ( const TVector * const v ) const ; ///< Is this enzyme in this TVector hidden?
+    const wxString getDisplayName () const ; ///< Returns the enzyme name (or the joined names)
     bool join ( TRestrictionCut *c ) ;
 
-    wxString getEndUpperLeft () ; ///< The "upper left" sequence after the cut
-    wxString getEndLowerLeft () ; ///< The "lower left" sequence after the cut
-    wxString getEndUpperRight () ; ///< The "upper right" sequence after the cut
-    wxString getEndLowerRight () ; ///< The "lower right" sequence after the cut
-	int getCut () ;
-	int getOverlap () ;
-	int getPos () ;
-	void setPos ( int p ) ;
-	int getFrom () ;
-	int getTo () ;
-	wxString getSequence () ;
+    const wxString getEndUpperLeft () const ; ///< The "upper left" sequence after the cut
+    const wxString getEndLowerLeft () const ; ///< The "lower left" sequence after the cut
+    const wxString getEndUpperRight () const ; ///< The "upper right" sequence after the cut
+    const wxString getEndLowerRight () const ; ///< The "lower right" sequence after the cut
+    int getCut () const ;
+    int getOverlap () const ;
+    int getPos () const ;
+    void setPos ( const int p ) ;
+    int getFrom () const ;
+    int getTo () const ;
+    const wxString getSequence () const ;
 	
     TRestrictionEnzyme *e ; ///< Cutting enzyme
     wxString display_name ; ///< The name to display
@@ -78,22 +78,22 @@ class TRestrictionCut
     wxRect lastrect ;
     wxPoint p , lp ;
     wxTreeItemId treeid ; ///< ID of the cut in the TVectorTree
-    
-    private:
+
+  private:
     int pos ; ///< Position of the cut
     bool first_strand ;
-    } ;
+} ;
 
 bool operator < ( const TRestrictionCut &c1 , const TRestrictionCut &c2 ) ;
 bool operator == ( const TRestrictionCut &c1 , const TRestrictionCut &c2 ) ;
 
 /// \brief Class to store a protease
 class TProtease
-    {
-    public :
-    TProtease ( wxString _name = _T("") , wxString m = _T("") , wxString _note = _T("") ) ; ///< Constructor
-    bool does_match ( wxString s ) ; ///< Does this protease recognize this sequence?
-    inline int len() { return match.GetCount() ; } ///< Returns the number of different recognition sequences
+{
+  public :
+    TProtease ( const wxString& _name = _T("") , const wxString& m = _T("") , const wxString& _note = _T("") ) ; ///< Constructor
+    bool does_match ( const wxString& s ) ; ///< Does this protease recognize this sequence?
+    inline int len() const { return match.GetCount() ; } ///< Returns the number of different recognition sequences
     wxString name ; ///< The name of the protease
     wxArrayString match ; ///< The different recognition sequences
     int cut ; ///< Where the cut occurs, starting at 0
@@ -101,16 +101,16 @@ class TProtease
     
     /// A note about the protease
     wxString note , str_match ;
-    } ;
+} ;
 
 /// \brief Class to store a protease cut
 class TProteaseCut
-    {
-    public :
+{
+  public :
     TProtease *protease ; ///< Pointer to the protease
     int cut ; ///< Position of the cut
     bool left ; ///< Left or right from the given position?
-    } ;
+} ;
     
 
 #endif

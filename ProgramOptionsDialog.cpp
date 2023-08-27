@@ -520,12 +520,12 @@ void TEnzymeRules::lookup_options ( TEnzymeSettingsTab *est )
 	if ( est->met_dcm->GetValue() ) methylation += DCM_METHYLATION ;
 	}
 	
-bool TEnzymeRules::isEqual ( TEnzymeRules &r )
+bool TEnzymeRules::isEqual ( const TEnzymeRules &r ) const
 	{
  	return to_string() == r.to_string() ;
 	}    
      
-wxString TEnzymeRules::to_string ()
+wxString TEnzymeRules::to_string () const
 	{
 	wxString ret ;
 	ret += wxString::Format ( _T("useit=%d\r") , useit ) ;
@@ -551,7 +551,7 @@ wxString TEnzymeRules::to_string ()
 	return ret ;
 	}    
 
-void TEnzymeRules::from_string ( wxString &s )
+void TEnzymeRules::from_string ( const wxString &s )
 	{
 	init () ;
 	wxArrayString as ;

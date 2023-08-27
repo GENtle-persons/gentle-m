@@ -150,7 +150,7 @@ void TCalculator::initme ()
     Activate () ;
     }
 
-wxString TCalculator::getName ()
+const wxString TCalculator::getName () const
     {
     return txt("t_calculator") ;
     }

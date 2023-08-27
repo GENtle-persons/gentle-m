@@ -152,7 +152,7 @@ void TVirtualGel::initme ()
     Activate () ;
 	}
 
-wxString TVirtualGel::getName ()
+const wxString TVirtualGel::getName () const
     {
     return _T("Virtual Gel") ;
     }

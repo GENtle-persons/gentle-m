@@ -104,19 +104,19 @@ class EIpanel : public wxPanel
 /**	\brief The External Interface ChildBase class
 */
 class ExternalInterface : public ChildBase
-    {
-    public :
+{
+  public :
     ExternalInterface(wxWindow *parent, const wxString& title) ; ///< Constructor
     ~ExternalInterface () ; ///< Destructor
     
     void initme () ; ///< Initialization
-    virtual wxString getName () ; ///< Returns the class name
+    virtual const wxString getName () const ; ///< Returns the class name
 
-    virtual void runBlast ( wxString seq , wxString prg ) ; ///< Directly runs a BLAST query
+    virtual void runBlast ( const wxString& seq , wxString prg ) ; ///< Directly runs a BLAST query
 
     wxNotebook *nb ; ///< Pointer to the wxNotebook class containing one or more EIpanel
 
     DECLARE_EVENT_TABLE()
-    } ;
+} ;
 
 #endif

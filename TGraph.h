@@ -157,7 +157,7 @@ class TGraph : public ChildBase
     ~TGraph () ; ///< Destructor
         
     void initme () ; ///< Initialization
-    virtual wxString getName () ; ///< Returns the module name
+    virtual const wxString getName () const ; ///< Returns the module name
 
     virtual void OnZoomX(wxScrollEvent& event); ///< Zoom event handler
     virtual void OnZoomY(wxScrollEvent& event); ///< Zoom event handler

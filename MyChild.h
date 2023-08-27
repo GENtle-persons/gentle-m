@@ -97,7 +97,7 @@ public:
 
     virtual void initme () ; ///< Initializes the module
     virtual void initPanels () ; ///< Initializes the panels
-    virtual wxString getName () ; ///< Returns the module name
+    virtual const wxString getName () const ; ///< Returns the module name
     virtual void EnforceRefesh () ; ///< Force display refresh
     virtual void updateSequenceCanvas ( bool remember = false ) ; ///< Refresh the sequence display
     virtual wxString doExtractAA ( bool coding = true ) ; ///< Extract amino acid sequence from DNA

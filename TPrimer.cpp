@@ -23,8 +23,8 @@ float TPrimer::getTm ( int type )
     return 0 ;
     }
     
-wxString TPrimer::getName () { return name ; }    
-void TPrimer::setName ( wxString nn ) { name = nn ; }    
+const wxString TPrimer::getName () const { return name ; }    
+void TPrimer::setName ( const wxString& nn ) { name = nn ; }    
 float TPrimer::getEvaluation () { return evaluation ; }
 float TPrimer::getGCcontents () { return pgc ; }
 

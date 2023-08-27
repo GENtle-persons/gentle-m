@@ -43,8 +43,8 @@ class TPrimer
     float getEvaluation () ; ///< Get quality evaluation (for annealing)
     float getGCcontents () ; ///< Get GC contents
     
-    wxString getName () ; ///< Returns the name of the primer, if any was given
-    void setName ( wxString nn ) ; ///< Sets the name of the primer
+    const wxString getName () const ; ///< Returns the name of the primer, if any was given
+    void setName ( const wxString& nn ) ; ///< Sets the name of the primer
     
     
     // Variables

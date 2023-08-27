@@ -546,7 +546,7 @@ void MyChild::OnLigation(wxCommandEvent& event)
     myapp()->frame->lastCocktail.Clear () ;
     }
 */
-wxString MyChild::getName ()
+const wxString MyChild::getName () const
     {
     return vec->getName() ;
     }
