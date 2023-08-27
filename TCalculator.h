@@ -104,7 +104,7 @@ class TCalculator : public ChildBase
     ~TCalculator () ; ///< Destructor
 
     void initme () ; ///< Initialization
-    virtual wxString getName () ; ///< Returns the module name
+    virtual wxString getName () const ; ///< Returns the module name
 
 //    virtual void OnClose(wxCloseEvent& event) ;
     virtual void OnSeqPrint(wxCommandEvent& event) ; ///< Print event handler

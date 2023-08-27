@@ -97,7 +97,7 @@ class TCloningAssistant : public ChildBase
     public :
 	TCloningAssistant(wxWindow *parent, const wxString& title) ; ///< Constructor
     virtual ~TCloningAssistant () ; ///< Destructor
-    virtual wxString getName () ; ///< Returns the module name
+    virtual wxString getName () const ; ///< Returns the module name
     virtual void EnforceRefesh () ; ///< Refreshes the module display
 
     virtual void initme () ;
@@ -108,7 +108,7 @@ class TCloningAssistant : public ChildBase
     private :
 	friend class TCloningAssistantPanel ;
 	
-	TDDR *new_from_vector ( TVector *v , int drag = DDR_NONE ) ;
+	TDDR *new_from_vector ( TVector * const v , const int drag = DDR_NONE ) ;
 	
 	vector <TVector*> vectors ;
 	TDDR *base , *vlist , *tlist ;

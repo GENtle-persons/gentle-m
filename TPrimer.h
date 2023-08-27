@@ -30,23 +30,22 @@ class TPrimer
     public :
     TPrimer ( int _from = 0 , int _to = 0 , bool _upper = true ) ; ///< Constructor
     ~TPrimer () {} ; ///< Dummy Destructor
-    void getSequenceFromVector ( TVector *v , bool from3 = false ) ; ///< Reads primer sequence from vectors
+    void getSequenceFromVector ( const TVector * const v , const bool from3 = false ) ; ///< Reads primer sequence from vectors
     void makeStats () ; ///< Generates key values about the primer
     void evaluate ( float tm_opt = 0 ) ; ///< Evaluates primer
-    wxString report () ; ///< Generates a human-readable report
-    wxString get53sequence () ; ///< Returns the 5'->3' primer sequence
-    wxString get35sequence () ; ///< Returns the 3'->5' primer sequence
-    int checkFit ( TVector *v , bool justCount = false ) ; ///< Tries to fit the primer to a sequence
-    bool overlap ( TPrimer &op ) ; ///< Does this primer overlap with another?
+    wxString report () const ; ///< Generates a human-readable report
+    wxString get53sequence () const ; ///< Returns the 5'->3' primer sequence
+    wxString get35sequence () const ; ///< Returns the 3'->5' primer sequence
+    int checkFit ( const TVector * const v , const bool justCount = false ) const ; ///< Tries to fit the primer to a sequence
+    bool overlap ( const TPrimer &op ) const ; ///< Does this primer overlap with another?
 
-    float getTm ( int type = TM_STANDARD ) ; ///< Get melting temperature
-    float getEvaluation () ; ///< Get quality evaluation (for annealing)
-    float getGCcontents () ; ///< Get GC contents
-
-    wxString getName () ; ///< Returns the name of the primer, if any was given
-    void setName ( wxString nn ) ; ///< Sets the name of the primer
-
-
+    float getTm ( const int type = TM_STANDARD ) const ; ///< Get melting temperature
+    float getEvaluation () const ; ///< Get quality evaluation (for annealing)
+    float getGCcontents () const ; ///< Get GC contents
+    
+    wxString getName () const ; ///< Returns the name of the primer, if any was given
+    void setName ( const wxString& nn ) ; ///< Sets the name of the primer
+    
     // Variables
     /// The beginning of the primer in a sequence
     int from , to ; ///< The end of a primer in the sequence
@@ -56,20 +55,20 @@ class TPrimer
 
     private :
     void evaluateSelfAnnealing () ; ///< Check for self-annealing
-    float evaluateTm ( double conc_nm = 50 , double Na_mm = 50 ) ; ///< Calculate melting temperature, salt-adjusted
+    float evaluateTm ( const double& conc_nm = 50 , const double& Na_mm = 50 ) ; ///< Calculate melting temperature, salt-adjusted
 
     void OligoCount () ; ///< Nearest neighbour helper method
-    double NeighbourTM ( bool max , double pconc , double saltconc ) ; ///< Calculate melting temperature, nearest neighbour
-    bool IsBase ( wxString theBase ) ; ///< Nearest neighbour helper method
-    bool IsIUpacBase ( wxString theBase ) ; ///< Nearest neighbour helper method
-    double *CalcIUpair ( wxString base0 , wxString base , int i , bool max ) ; ///< Nearest neighbour helper method
-    double DeltaG ( bool max ) ; ///< Nearest neighbour helper method
-    double DeltaH ( bool max ) ; ///< Nearest neighbour helper method
-    double DeltaS ( bool max ) ; ///< Nearest neighbour helper method
-    double CountNeighbors ( wxString s ) ; ///< Nearest neighbour helper method
+    double NeighbourTM ( const bool max , const double& pconc , const double& saltconc ) const ; ///< Calculate melting temperature, nearest neighbour
+    bool IsBase ( const wxString& theBase ) const ; ///< Nearest neighbour helper method
+    bool IsIUpacBase ( const wxString& theBase ) const ; ///< Nearest neighbour helper method
+    double *CalcIUpair ( wxString base0 , wxString base , int i , const bool max ) ; ///< Nearest neighbour helper method
+    double DeltaG ( const bool max ) const ; ///< Nearest neighbour helper method
+    double DeltaH ( const bool max ) const ; ///< Nearest neighbour helper method
+    double DeltaS ( const bool max ) const ; ///< Nearest neighbour helper method
+    double CountNeighbors ( const wxString& s ) const ; ///< Nearest neighbour helper method
 
     void invertSequence() ; ///< Inverts the sequence
-    wxString getAnnealingSequence() ; ///< Returns annealing sequence
+    wxString getAnnealingSequence() const ; ///< Returns annealing sequence
 
     // Variables
     wxString name ;

@@ -13,33 +13,33 @@ class TMyGelControl ;
 	\brief This class represents a lane on a virtual gel
 */
 class TGelLane
-	{
-	public :
-	TGelLane () ; ///< Constructor
-	virtual ~TGelLane () {} ///< Dummy destructor
-	
-	virtual void clear () ; ///< Clears the lane data
-	virtual void setMarker ( wxString _name ) ; ///< Sets a default marker
-	virtual void add ( int size , int weight = 1 ) ; ///< Adds a weightenend band
-	virtual void add ( int size , wxString title ) ; ///< Adds a labeled band
-	virtual void add ( int size , int weight , wxString title ) ; ///< Adds a band with weight and label
-	wxString name , type ;
-	wxArrayInt vi , vw ;
-	wxArrayString vs ;
-	double unit_volume ;
-	wxRect pos ; ///< The outer border of the lane
-	} ;
+    {
+    public :
+    TGelLane () ; ///< Constructor
+    virtual ~TGelLane () {} ///< Dummy destructor
+    
+    virtual void clear () ; ///< Clears the lane data
+    virtual void setMarker ( wxString _name ) ; ///< Sets a default marker
+    virtual void add ( int size , int weight = 1 ) ; ///< Adds a weightenend band
+    virtual void add ( int size , wxString title ) ; ///< Adds a labeled band
+    virtual void add ( int size , int weight , wxString title ) ; ///< Adds a band with weight and label
+    wxString name , type ;
+    wxArrayInt vi , vw ;
+    wxArrayString vs ;
+    double unit_volume ;
+    wxRect pos ; ///< The outer border of the lane
+    } ;
 
 /**	\class TVirtualGel
 	\brief The virtual gel module
 */
 class TVirtualGel : public ChildBase
     {
-    public :
+  public :
     TVirtualGel(wxWindow *parent, const wxString& title) ; ///< Constructor
 
     virtual void initme () ; ///< Initialization
-    virtual wxString getName () ; ///< Returns the gel module name
+    virtual wxString getName () const ; ///< Returns the gel module name
 
     virtual void OnPercent ( wxCommandEvent &ev ) ; ///< Gel percent setting change event handler
     virtual void OnLabel ( wxCommandEvent &ev ) ; ///< Show labels event handler
@@ -56,7 +56,7 @@ class TVirtualGel : public ChildBase
 
     DECLARE_EVENT_TABLE()
     } ;
-
+    
 /**	\class TMyGelControl
 	\brief This class handles a single virtual gel for TVirtualGel, using TGelLane lanes
 */
@@ -87,14 +87,14 @@ class TMyGelControl : public wxControl
 
 
 class TRestrictionIdentifier : public TVirtualGel
-{
+    {
     public :
     TRestrictionIdentifier(wxWindow *parent, const wxString& title) ; ///< Constructor
     virtual void initme () ; ///< Initialization
 
     virtual void OnDNAListChange(wxCommandEvent &event);
     virtual void OnEnzymeListChange(wxCommandEvent &event);
-    virtual wxString getName () ; ///< Returns the gel module name
+    virtual wxString getName () const ; ///< Returns the gel module name
     virtual void otherChildrenChanged () ;
 
     private:
@@ -113,6 +113,6 @@ class TRestrictionIdentifier : public TVirtualGel
     bool running ;
 
     DECLARE_EVENT_TABLE()
-} ;
+    } ;
 
 #endif

@@ -45,7 +45,7 @@ TRestrictionIdentifier::TRestrictionIdentifier(wxWindow *parent, const wxString&
     running = false ;
 }
 
-wxString TRestrictionIdentifier::getName ()
+wxString TRestrictionIdentifier::getName () const
     {
     return _T("Restriction Identifier") ;
     }

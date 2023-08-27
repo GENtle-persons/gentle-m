@@ -21,9 +21,9 @@ class TAminoAcids : public ChildBase
     virtual ~TAminoAcids () ; ///< Destructor
 
     virtual void initme () ; ///< Initialization
-    virtual wxString getName () ; ///< Returns the name of the TVector structure
-    virtual void showSequence () ; ///< Update the sequence display
-    virtual void showStat () ; ///< Show the sequence statistics box
+    virtual wxString getName () const ; ///< Returns the name of the TVector structure
+    virtual void showSequence () const ; ///< Update the sequence display
+    virtual void showStat () const ; ///< Show the sequence statistics box
 
     virtual void OnMarkAll(wxCommandEvent& event); ///< "Mark all" event handler
     virtual void OnFileSave(wxCommandEvent& WXUNUSED(event) ) ; ///< "Save sequence" event handler
@@ -37,7 +37,7 @@ class TAminoAcids : public ChildBase
     virtual void OnAsNewFeature(wxCommandEvent& event); ///< "Selection as new feature" event handler
     virtual void OnBlastAA(wxCommandEvent& event); ///< "Blast sequence" event handler
     virtual void OnPhotometer(wxCommandEvent& event); ///< "Start photometer calculator" event handler
-    virtual void invokeVectorEditor ( wxString what = _T("") , int num = 0 , bool forceUpdate = false ) ; ///< "Edit sequence dialog" event handler
+    virtual void invokeVectorEditor ( const wxString& what = _T("") , const int num = 0 , const bool forceUpdate = false ) ; ///< "Edit sequence dialog" event handler
     virtual void OnHorizontal ( wxCommandEvent& event ) ; ///< "Toggle horizontal/vertical" event handler
     virtual void OnListBox ( wxCommandEvent& event ) ; ///< "List box choice" event handler
     virtual void OnIP ( wxCommandEvent& event ) ; ///< "Inline plot dropdown box" event handler
@@ -51,7 +51,7 @@ class TAminoAcids : public ChildBase
     virtual void Undo(wxCommandEvent& event); ///< "Undo" event handler
     virtual void Redo(wxCommandEvent& event); ///< "Redo" event handler (unused)
     virtual void updateUndoMenu () ; ///< Updates the message for the undo function
-    virtual void handleListBox ( wxString t ) ; ///< Choses a new entry from the listbox
+    virtual void handleListBox ( const wxString& t ) ; ///< Choses a new entry from the listbox
     virtual bool HasUndoData () ;
 
     // Variables

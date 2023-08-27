@@ -25,7 +25,7 @@ class TImageDisplay : public ChildBase
     ~TImageDisplay () ; ///< Destructor
 
     void initme () ; ///< Initialization
-    virtual wxString getName () ; ///< Returns the image module name
+    virtual wxString getName () const ; ///< Returns the image module name
 
     virtual void OnCB ( wxCommandEvent &event ) ; ///< Show labels event handler
     virtual void OnCBinvert ( wxCommandEvent &event ) ; ///< Invert image event handler

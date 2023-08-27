@@ -6,17 +6,6 @@
 #include <wx/textfile.h>
 #include <wx/filename.h>
 
-#ifdef __DEBIAN__
-#ifndef USE_EXTERNAL_CLUSTALW
-    #define USE_EXTERNAL_CLUSTALW
-#endif
-#endif
-
-#ifndef USE_EXTERNAL_CLUSTALW
- #include "clustalw/clustalw.h"
- int clustalw_main(int argc,char **argv) ;
-#endif
-
 BEGIN_EVENT_TABLE(TAlignment, MyChildBase)
     EVT_CLOSE(ChildBase::OnClose)
     EVT_SET_FOCUS(ChildBase::OnFocus)
@@ -325,45 +314,27 @@ void* TAlignment::Entry()
         }
     out.Close() ;
 
-#ifdef USE_EXTERNAL_CLUSTALW // Use external ClustalW
-    wxString bn ;
-
+    // Using external ClustalW
 #ifdef __WXMSW__
     // This is not used anymore under Windows
-    bn = tmpdir + "\\clustalw.bat" ;
+    wxString bn = tmpdir + "\\clustalw.bat" ;
     wxFile bat ( bn , wxFile::write ) ;
     bat.Write ( "@echo off\n")  ;
     bat.Write ( "cd " + tmpdir + "\n")  ;
     bat.Write ( "clustalw.exe clustalw.txt" +
-                wxString::Format ( " /gapopen=%d" , gap_penalty ) +
-                wxString::Format ( " /gapext=%d" , mismatch ) + "\n" ) ;
+    wxString::Format ( " /gapopen=%d" , gap_penalty ) +
+    wxString::Format ( " /gapext=%d" , mismatch ) + "\n" ) ;
     bat.Close() ;
 #else
-     // External call to be used by Debian
-     bn = "clustalw clustalw.txt" +
-     wxString::Format ( " /gapopen=%d" , gap_penalty ) +
-     wxString::Format ( " /gapext=%d" , mismatch ) + "\n" ;
-//        cout << "Executing " << bn.mb_str() << endl ;
+    // External call to be used by Debian
+    wxString bn = "clustalw clustalw.txt" +
+    wxString::Format ( " /gapopen=%d" , gap_penalty ) +
+    wxString::Format ( " /gapext=%d" , mismatch ) + "\n" ;
+//  cout << "Executing " << bn.mb_str() << endl ;
 #endif
     wxExecute ( bn , wxEXEC_SYNC ) ;
-
-
-#else // Using internal ClustalW - cool!
-
-
-    wxString a1 = wxString::Format ( "/gapopen=%d" , gap_penalty ) ;
-    wxString a2 = wxString::Format ( "/gapext=%d" , mismatch ) ;
-    wxString text = tmpdir + "/clustalw.txt" ;
-    char *av[4] ;
-    av[0] = new char[100] ; strcpy ( av[0] , "clustalw.exe" ) ;
-    av[1] = new char[500] ; strcpy ( av[1] , text.mb_str() ) ;
-    av[2] = new char[100] ; strcpy ( av[2] , a1.mb_str() ) ;
-    av[3] = new char[100] ; strcpy ( av[3] , a2.mb_str() ) ;
-    clustalw_main ( 4 , av ) ;
-#endif
-
-
-    wxString aln = tmpdir + "/clustalw.aln" ;
+    
+    wxString aln = tmpdir + _T("/clustalw.aln") ;
     wxTextFile in ( aln ) ;
     in.Open ( *(myapp()->isoconv) ) ;
     wxString s = in.GetFirstLine() ;
@@ -422,7 +393,6 @@ void TAlignment::recalcAlignments ()
     if ( lines.size() == 0 ) return ;
 
     // Align
-    int a ;
     TAlignLine line ;
     SetCursor ( *wxHOURGLASS_CURSOR ) ;
     if ( lines.size() <= 1 ) // Just one sequence
@@ -451,10 +421,11 @@ void TAlignment::recalcAlignments ()
     else // Internal routines
         {
         myass ( lines.size() > 0 , "Alignment::recalcAlignments:internal1" ) ;
-//        while ( lines.size() > 2 ) lines.pop_back () ;
-        for ( a = 0 ; a < lines.size() ; a++ ) lines[a].ResetSequence () ;
+//      while ( lines.size() > 2 ) lines.pop_back () ;
+        for ( int a = 0 ; a < lines.size() ; a++ )
+            lines[a].ResetSequence () ;
 
-        for ( a = 1 ; a < lines.size() ; a++ )
+        for ( int a = 1 ; a < lines.size() ; a++ )
             {
             wxString s0 = lines[0].s ;
 
@@ -465,13 +436,12 @@ void TAlignment::recalcAlignments ()
 
             if ( lines[0].s == s0 ) continue ; // No gaps were introduced into first sequence
 
-            int b ;
-            for ( b = 0 ; b <= a ; b++ ) // All lines get the same length
+            for ( int b = 0 ; b <= a ; b++ ) // All lines get the same length
                 {
                 while ( lines[b].s.length() < s0.length() )
                     lines[b].s += " " ;
                 }
-            for ( b = 0 ; b < s0.length() ; b++ ) // Insert gaps
+            for ( int b = 0 ; b < s0.length() ; b++ ) // Insert gaps
                 {
                 if ( lines[0].s.GetChar(b) != s0.GetChar(b) ) // New gap
                     {
@@ -489,7 +459,7 @@ void TAlignment::recalcAlignments ()
         generateConsensusSequence ( true ) ;
         }
 
-    for ( a = 0 ; a < 1 ; a++ )
+    for ( int a = 0 ; a < 1 ; a++ )
         {
         if ( !lines[a].isIdentity && lines[a].v->items.size() > 0 )
            lines[a].showFeatures () ;
@@ -500,7 +470,6 @@ void TAlignment::recalcAlignments ()
 
 void TAlignment::redoAlignments ( bool doRecalc )
     {
-    int a ;
     // Cleaning up
     CLEAR_DELETE ( sc->seq ) ;
 
@@ -510,7 +479,7 @@ void TAlignment::redoAlignments ( bool doRecalc )
     // Display
     sc->maxendnumberlength = txt("t_identity").length() ;
 
-    for ( a = 0 ; a < lines.size() ; a++ )
+    for ( int a = 0 ; a < lines.size() ; a++ )
         {
         if ( lines[a].hasFeatures() )
             {
@@ -534,7 +503,7 @@ void TAlignment::redoAlignments ( bool doRecalc )
         if ( !lines[g].isIdentity && lines[g].hasFeatures() )
             {
 //            lines[g].showFeatures () ;
-            for ( a = 0 ; a < lines[g].s.length() ; a++ )
+            for ( int a = 0 ; a < lines[g].s.length() ; a++ )
                 {
                 if ( lines[g].s.GetChar(a) == '-' )
                    lines[g].getFeatures()->insert_char ( '-' , a+1 , false ) ;
@@ -547,16 +516,15 @@ void TAlignment::redoAlignments ( bool doRecalc )
 
 void TAlignment::generateConsensusSequence ( bool addit )
     {
-    int a , b ;
     // The stars'n'stripes sequence ;-)
     TAlignLine line ;
     line.isIdentity = true ;
     line.name = txt("t_identity") ;
     wxString s ;
-    for ( a = 0 ; a < lines[0].s.length() ; a++ )
+    for ( int a = 0 ; a < lines[0].s.length() ; a++ )
         {
         char c = '*' ;
-        for ( b = 1 ; b < lines.size() && c == '*' ; b++ )
+        for ( int b = 1 ; b < lines.size() && c == '*' ; b++ )
             {
             if ( lines[0].s.GetChar(a) != lines[b].s.GetChar(a) /*&&
                     lines[0].s.GetChar(a) != '-' &&
@@ -570,13 +538,13 @@ void TAlignment::generateConsensusSequence ( bool addit )
 
     // The REAL consensus sequence
     consensusSequence = lines[0].s ;
-    for ( a = 0 ; a < consensusSequence.length() ; a++ )
+    for ( int a = 0 ; a < consensusSequence.length() ; a++ )
         {
         int c[256] ;
-        for ( b = 0 ; b < 256 ; b++ ) c[b] = 0 ;
-        for ( b = 0 ; b + 1 < lines.size() ; b++ ) c[lines[b].s.GetChar(a)]++ ;
+        for ( int b = 0 ; b < 256 ; b++ ) c[b] = 0 ;
+        for ( int b = 0 ; b + 1 < lines.size() ; b++ ) c[lines[b].s.GetChar(a)]++ ;
         consensusSequence.SetChar ( a , ' ' ) ;
-        for ( b = 0 ; b < 256 ; b++ )
+        for ( int b = 0 ; b < 256 ; b++ )
             {
             float f = 100 * c[b] ;
             f /= lines.size() - 1 ;
@@ -724,7 +692,7 @@ void TAlignment::updateSequence ()
     sc->SilentRefresh() ;
     }
 
-wxString TAlignment::getName ()
+wxString TAlignment::getName () const
     {
     return name.IsEmpty() ? _T("Alignment") : name ;
     }

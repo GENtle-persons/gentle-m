@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the ExternalInterface and its helper classes
+    \brief Contains the ExternalInterface and its helper classes
 */
 #ifndef _EXTERNAL_INTERFACE_H_
 #define _EXTERNAL_INTERFACE_H_
@@ -12,49 +12,49 @@
 #include <wx/thread.h>
 
 enum {
-	ID_HLB = 6000,
-	ID_T1,
-	ID_T2,
-	ID_T3,
-	ID_T4,
-	ID_B1,
-	ID_B2,
-	ID_B3,
-	ID_B_LAST,
-	ID_B_NEXT,
-	ID_C1,
-	ID_C2,
-	} ;	
+    ID_HLB = 6000,
+    ID_T1,
+    ID_T2,
+    ID_T3,
+    ID_T4,
+    ID_B1,
+    ID_B2,
+    ID_B3,
+    ID_B_LAST,
+    ID_B_NEXT,
+    ID_C1,
+    ID_C2,
+    } ;
 
 enum {
-	EI_NCBI = 1,
-	EI_BLAST,
-	} ;	
-	
+    EI_NCBI = 1,
+    EI_BLAST,
+    } ;
+
 class blastThread ;
 
 /// The External Interface List Box class, a specialized wxHtmlListBox
 class EILB : public wxHtmlListBox
-	{
-	public :
-	EILB ( wxWindow *parent , int id = wxID_ANY ) ; ///< Constructor
-	virtual wxString OnGetItem(size_t n) const ; ///< Get the item string
-	virtual void Clear () ; ///< Clear the list box
-	virtual void Sort () ; ///< Sort the list box
-	virtual void Update () ; ///< Update the list box
-	virtual void Set ( int id , wxString s , wxString t = _T("") ) ; ///< Set an entry
-	
-	wxArrayString was , data ;
-	} ;
+    {
+    public :
+    EILB ( wxWindow *parent , int id = wxID_ANY ) ; ///< Constructor
+    virtual wxString OnGetItem(size_t n) const ; ///< Get the item string
+    virtual void Clear () ; ///< Clear the list box
+    virtual void Sort () ; ///< Sort the list box
+    virtual void Update () ; ///< Update the list box
+    virtual void Set ( int id , wxString s , wxString t = _T("") ) ; ///< Set an entry
+
+    wxArrayString was , data ;
+    } ;
 
 /// The External Interface panel class
 class EIpanel : public wxPanel
-{
+    {
     public :
-	EIpanel ( wxWindow *parent , int _mode ) ; ///< Constructor
+    EIpanel ( wxWindow *parent , int _mode ) ; ///< Constructor
 
-//    private :
-	virtual void process () ; ///< Runs the query, as process_blast or process_ncbi
+//  private :
+    virtual void process () ; ///< Runs the query, as process_blast or process_ncbi
     virtual wxString num2html ( int num , int digits ) ; ///< Returns a HTML-formatted number
     void showMessage ( wxString msg ) ; ///< Displays a message beneath the search controls
 
@@ -97,11 +97,10 @@ class EIpanel : public wxPanel
     blastThread *blast_thread ;
     wxString blast_res ;
 
-
     DECLARE_EVENT_TABLE()
-	} ;
+    } ;
 
-/**	\brief The External Interface ChildBase class
+/** \brief The External Interface ChildBase class
 */
 class ExternalInterface : public ChildBase
     {
@@ -110,9 +109,9 @@ class ExternalInterface : public ChildBase
     ~ExternalInterface () ; ///< Destructor
 
     void initme () ; ///< Initialization
-    virtual wxString getName () ; ///< Returns the class name
+    virtual wxString getName () const ; ///< Returns the class name
 
-    virtual void runBlast ( wxString seq , wxString prg ) ; ///< Directly runs a BLAST query
+    virtual void runBlast ( const wxString& seq , const wxString& prg ) ; ///< Directly runs a BLAST query
 
     wxNotebook *nb ; ///< Pointer to the wxNotebook class containing one or more EIpanel
 

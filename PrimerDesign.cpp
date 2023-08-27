@@ -201,7 +201,7 @@ void TPrimerDesign::OnImportPrimer ( wxCommandEvent &ev )
     guessOptNuc () ;
     }
 
-void TPrimerDesign::AddPrimer ( wxString s , wxString pname )
+void TPrimerDesign::AddPrimer ( const wxString& s , const wxString& pname )
     {
     TPrimer best ;
     int a , bestVal = 0 ;
@@ -538,7 +538,7 @@ void TPrimerDesign::OnPaste (wxCommandEvent& event)
     }
 
 
-wxString TPrimerDesign::getName ()
+wxString TPrimerDesign::getName () const
     {
     return vec->getName() ;
     }
