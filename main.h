@@ -202,8 +202,8 @@ class MyApp : public wxApp
 		wxStopWatch sw ;
     
     private :
-    virtual void registerFileExtension ( wxString extension ) ; ///< Registers a file extension to GENtle (windows only).
-    virtual void registerProtocol ( wxString extension ) ; ///< Registers a protocol to GENtle (windows only).
+    virtual void registerFileExtension ( const wxString& extension ) ; ///< Registers a file extension to GENtle (windows only).
+    virtual void registerProtocol ( const wxString& extension ) ; ///< Registers a protocol to GENtle (windows only).
     wxFile *errout ; ///< The ERROR.txt file handler for do_my_ass
     wxFile *logout ; ///< The LOG.txt file handler for do_my_log
     int total_log_time ; ///< The log timer for do_my_log
@@ -331,16 +331,16 @@ void explode ( wxString sep , wxString s , wxArrayString &r ) ;
 wxString implode ( wxString sep , wxArrayString &r ) ;
 /*
 //  \brief Returns the current language version of the "item" /
-char* txt ( wxString item ) ;
+const char * txt ( const wxString item ) ;
 
 //  \brief Returns the current language version of the "item" /
-char* txt ( char *item ) ;
+const char* txt ( const char * const item ) ;
 */
 /** \brief Returns the current language version of the "item" */
-wxString txt ( wxString item ) ;
+const wxString txt ( const wxString item ) ;
 
 /** \brief Returns the current language version of the "item" */
-wxString txt ( char *item ) ;
+const wxString txt ( const char * const item ) ;
 
 /** \brief Returns a pointer to the application */
 MyApp *myapp () ;

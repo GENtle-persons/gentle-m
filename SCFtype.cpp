@@ -104,7 +104,7 @@ SCFtype::SCFtype ()
 	{
 	}
 
-bool SCFtype::parse ( wxString filename )
+bool SCFtype::parse ( const wxString& filename )
 	{
 	wxFile f ( filename , wxFile::read ) ;
 	long l = f.Length() ;
@@ -114,12 +114,11 @@ bool SCFtype::parse ( wxString filename )
 	
 	if ( *(t+0) != '.' || *(t+1) != 's' || *(t+2) != 'c' || *(t+3) != 'f' )
 		{
-		delete t ;
+		delete [] t ;
 		return false ; // No luck
 		}
 	
 	SCF_Header *header = (SCF_Header*) t ;
-
 
 	wxString version ;
 	version += (*header).version[0] ;
@@ -129,6 +128,7 @@ bool SCFtype::parse ( wxString filename )
 	if ( (*header).version[0] < '3' )
 		{
 		wxMessageBox ( _T("Cannot read SFC prior to 3.0, this is ") + version ) ;
+                delete [] t;
 		return false ;
 		}
 

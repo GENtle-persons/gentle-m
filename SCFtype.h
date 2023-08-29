@@ -10,7 +10,7 @@ class SCFtype
 	{
 	public :
 	SCFtype () ;
-	bool parse ( wxString filename ) ;
+	bool parse ( const wxString& filename ) ;
 	
 	TSequencerData sd ;
 	

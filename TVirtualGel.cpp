@@ -249,7 +249,7 @@ void TMyGelControl::OnDraw(wxDC& dc)
 
     int tw , th ;
     wxString title = _T("t_gelname_") + vg->type ;
-    title = wxString::Format ( txt(title.c_str()) , vg->percent ) ;
+    title = wxString::Format ( txt(title) , vg->percent ) ;
     dc.SetTextForeground ( *wxBLACK ) ;
     dc.SetFont ( *bigFont ) ;
     dc.GetTextExtent ( title , &tw , &th ) ;
@@ -415,7 +415,7 @@ void TMyGelControl::OnSaveAsBitmap(wxCommandEvent &event)
     dc.Clear() ;
 	OnDraw ( dc ) ;
     wxString title = _T("t_gelname_") + vg->type ;
-    title = wxString::Format ( txt(title.c_str()) , vg->percent ) ;
+    title = wxString::Format ( txt(title) , vg->percent ) ;
     myapp()->frame->saveImage ( &bmp , title ) ;
     }
     
