@@ -24,9 +24,9 @@ class TSequencingAssistantDialog : public wxDialog
 	private :
 	void OnCheckOK ( wxCommandEvent &ev ) ;
     void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
-    
+
     wxButton *ok ;
-    
+
     DECLARE_EVENT_TABLE()
 	} ;
 

@@ -25,7 +25,7 @@ void TPDB::paste ( wxString s )
     explode ( _T("\n") , s , vs ) ;
     check4success () ;
     }
-    
+
 int TPDB::seq ( char c )
     {
     for ( int a = 0 ; a < seqres.size() ; a++ )
@@ -35,7 +35,7 @@ int TPDB::seq ( char c )
     seqres[seqres.size()-1].chain = c ;
     seqres[seqres.size()-1].v = new TVector ;
     return seqres.size()-1 ;
-    }    
+    }
 
 void TPDB::remap ()
     {
@@ -51,12 +51,12 @@ void TPDB::remap ()
         if ( six == _T("TITLE") )
            {
            _name = right ;
-           }    
+           }
         else if ( six == _T("REMARK") )
            {
            right = right.AfterFirst ( ' ' ) ;
            _desc += right + _T("\n") ;
-           }    
+           }
         else if ( six == _T("SEQRES") )
            {
            char chain = vs[a].GetChar ( 11 ) ;
@@ -67,7 +67,7 @@ void TPDB::remap ()
               {
               v2.Add ( right.BeforeFirst ( ' ' ) ) ;
               right = right.AfterFirst ( ' ' ) ;
-              }    
+              }
            for ( b = 0 ; b < v2.GetCount() ; b++ )
               {
               wxString h = v2[b] ;
@@ -86,7 +86,7 @@ void TPDB::remap ()
            seqres[seq(chain)].v->addDescription ( _T("GenBank : http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=protein&val=") + ncbi + _T("\n") ) ;
            seqres[seq(chain)].v->addDescription ( _T("NiceProt : http://expasy.org/cgi-bin/niceprot.pl?") + gb + _T("\n") ) ;
            seqres[seq(chain)].v->addDescription ( _T("SwissProt : http://expasy.org/cgi-bin/get-sprot-entry?") + ncbi + _T("\n") ) ;
-           }    
+           }
         else if ( six == _T("HELIX") )
            {
            wxString name = _T("alpha-") + vs[a].Mid(11,4).Trim(false).Trim() ;
@@ -99,7 +99,7 @@ void TPDB::remap ()
            TVectorItem vi ( name , desc , from , to , VIT_MISC ) ;
            vi.setParam ( _T("SEQUENCE_STYLE") , _T("1") ) ;
            seqres[seq(chain)].v->items.push_back ( vi ) ;
-           }    
+           }
         else if ( six == _T("SHEET") )
            {
            wxString name = _T("beta-") + vs[a].Mid(11,4).Trim(false).Trim() ;
@@ -110,7 +110,7 @@ void TPDB::remap ()
            TVectorItem vi ( name , desc , from , to , VIT_MISC ) ;
            vi.setParam ( _T("SEQUENCE_STYLE") , _T("2") ) ;
            seqres[seq(chain)].v->items.push_back ( vi ) ;
-           }    
+           }
         else if ( six == _T("TURN") )
            {
            wxString name = _T("turn-") + vs[a].Mid(11,4).Trim(false).Trim() ;
@@ -154,19 +154,19 @@ void TPDB::remap ()
            TVectorItem vi1 ( name , desc , id1 , id1 , VIT_MISC ) ;
            vi1.setParam ( _T("SEQUENCE_STYLE") , _T("5") ) ;
            seqres[seq(chain1)].v->items.push_back ( vi1 ) ;
-           }    
+           }
         }
-        
+
     for ( a = 0 ; a < seqres.size() ; a++ )
         {
         seqres[a].v->setSequence ( seqres[a].sequence ) ;
         seqres[a].v->setName ( _name + _T(" (") + wxString::Format ( _T("%d") , seqres[a].chain ) + _T(")") ) ;
 //        seqres[a].v->setName ( _name + _T(" (") + wxString ( (char*)seqres[a].chain , *wxConvCurrent ) + _T(")") ) ;
         seqres[a].v->addDescription ( _desc ) ;
-        }    
+        }
     }
 
-    
+
 void TPDB::check4success ()
     {
     success = false ;
@@ -174,4 +174,4 @@ void TPDB::check4success ()
     if ( vs[0].Left ( 6 ) != _T("HEADER") ) return ;
     success = true ;
     }
-        
+

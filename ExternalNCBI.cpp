@@ -20,8 +20,8 @@ void EIpanel::init_ncbi()
 	b_last->Disable () ;
 	b_next->Disable () ;
 	b3->Disable () ;
-	
-	
+
+
 /*
 	structure, genome, pmc, omim, taxonomy, books, probeset,  domains, unists, cdd, snp, journals, unigene, popset
 	c1->Append ( "" ) ;
@@ -47,7 +47,7 @@ void EIpanel::init_ncbi()
 	c2->Append ( _T("Author") ) ;
 	c2->Append ( _T("Journal") ) ;
 	c2->Append ( _T("Pub date") ) ;
-	
+
 	h1->Add ( new wxStaticText ( up , -1 , txt("author(s)") ) , 0 , wxEXPAND , 5 ) ;
     h1->Add ( t2 , 1 , wxEXPAND , 5 ) ;
 	h1->Add ( new wxStaticText ( up , -1 , off + txt("from") ) , 0 , wxEXPAND , 5 ) ;
@@ -56,9 +56,9 @@ void EIpanel::init_ncbi()
     h1->Add ( t4 , 1 , wxEXPAND , 5 ) ;
 	h1->Add ( new wxStaticText ( up , -1 , off + txt("sort") ) , 0 , wxEXPAND , 5 ) ;
     h1->Add ( c2 , 1 , wxEXPAND , 5 ) ;
-	
+
     st_msg = new wxStaticText ( up , -1 , _T("") ) ;
-    
+
     v1->Add ( h0 , 0 , wxEXPAND , 0 ) ;
     v1->Add ( h1 , 0 , wxEXPAND , 3 ) ;
     v1->Add ( st_msg , 0 , wxEXPAND , 3 ) ;
@@ -72,14 +72,14 @@ void EIpanel::init_ncbi()
 	t1->SetFocus() ;
     t1->SetSelection ( -1 , -1 ) ;
 	}
-	
+
 
 void EIpanel::process_ncbi()
 	{
 	myExternal ex ;
 	wxString database = c1->GetStringSelection() ;
 	database = database.Lower() ;
-	
+
 	wxString search = t1->GetValue() ;
 	wxString authors = t2->GetValue() ;
 	wxString from = t3->GetValue() ;
@@ -92,10 +92,10 @@ void EIpanel::process_ncbi()
   			{
   			search = authors.BeforeFirst ( ',' ) + _T(" [au] ") + search ;
   			authors = authors.AfterFirst ( ',' ) ;
-  			} 			
-		}    
+  			}
+		}
 	search.Replace ( _T(" ") , _T("+") ) ;
-	
+
 	// Invoking ESearch
 	wxString query = _T("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?") ;
  	query += _T("db=") + database ;
@@ -124,13 +124,13 @@ void EIpanel::process_ncbi()
     	{
 	    showMessage ( txt("t_error") ) ;
 	    return ;
-    	}    
-	
+    	}
+
 	// Extracting items from XML
 	res_count = 0 ;
 	wxArrayString ids ;
 	TiXmlNode *x = doc.FirstChild ( "eSearchResult" ) ;
-	if ( x ) 
+	if ( x )
 		{
 		TiXmlNode *y ;
 		y = x->FirstChild ( "Count" ) ;
@@ -142,24 +142,24 @@ void EIpanel::process_ncbi()
 			{
    			for ( x = x->FirstChild ( "Id" ) ; x ; x = x->NextSibling ( "Id" ) )
    				ids.Add ( valFC ( x ) ) ;
-			}    
-		}    
+			}
+		}
 //	wxMessageBox ( wxString::Format ( _T("%d of %d") , res_count , res_start ) ) ;
-	
+
 	if ( ids.IsEmpty() )
 		{
  		showMessage ( _T("The search returned no results.") ) ;
  		return ;
-		}    
-	
+		}
+
 	int a ;
 	res = _T("") ;
 	for ( a = 0 ; a < ids.GetCount() ; a++ )
 		{
   		if ( !res.IsEmpty() ) res += _T(",") ;
 		res += ids[a] ;
-		}		
-		
+		}
+
 	// Invoking ESummary
 	query = _T("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?") ;
  	query += _T("db=") + database ;
@@ -178,8 +178,8 @@ void EIpanel::process_ncbi()
     	{
 	    showMessage ( txt("t_error") ) ;
 	    return ;
-    	}    
-	
+    	}
+
 	// Parsing ESummary XML
 	a = 0 ;
 	for ( x = x->FirstChild ( "DocSum" ) ; x ; x = x->NextSibling ( "DocSum" ) )
@@ -203,9 +203,9 @@ void EIpanel::process_ncbi()
    	    			if ( wxString(z->ToElement()->Attribute ( "Name" ),wxConvUTF8).Upper() != _T("AUTHOR") ) continue ;
    	    			if ( !authors.IsEmpty() ) authors += _T(", ") ;
    	    			authors += valFC ( z ) ;
-			    	}    
-   				}    
-			}    
+			    	}
+   				}
+			}
 		wxString s ;
 		if ( database == _T("nucleotide") || database == _T("protein") )
   			{
@@ -229,10 +229,10 @@ void EIpanel::process_ncbi()
  			s += _T("<td valign=top width='10%'>") + source + _T("</td>") ;
  			s += _T("<td valign=top>") + authors + _T("</td>") ;
  			s += _T("</tr></table>") ;
-			}    
+			}
 		hlb->Set ( a++ , s , id ) ;
-		}    
-		
+		}
+
 	int res_to = res_start + RETMAX ;
 	if ( res_to > res_count ) res_to = res_count ;
 	wxString msg = wxString::Format ( txt("t_ext_show_res") , res_start + 1 , res_to , res_count ) ;
@@ -242,7 +242,7 @@ void EIpanel::process_ncbi()
 	b_last->Enable ( res_start > 0 ) ;
    b3->Enable ( true ) ;
 	t1->SetFocus() ;
-	}    
+	}
 
 void EIpanel::execute_ncbi()
 	{
@@ -259,13 +259,13 @@ void EIpanel::execute_ncbi_load ( wxString database )
 		{
 		if ( !hlb->IsSelected ( a ) ) continue ;
 		if ( hlb->data[a] == _T("") ) continue ;
-		
+
 		if ( !ids.IsEmpty() ) ids += _T(",") ;
 		ids += hlb->data[a] ;
-		}		
-	
+		}
+
 	database = database.Lower() ;
-	
+
 	if ( database == _T("nucleotide") || database == _T("protein") ) // Requesting sequence
 		{
 		wxString query = _T("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?") ;
@@ -275,12 +275,12 @@ void EIpanel::execute_ncbi_load ( wxString database )
 		query += _T("&id=") + ids ;
 		if ( database == _T("nucleotide") ) query += _T("&retmode=xml&rettype=gb") ;
 		else query += _T("&retmode=text&rettype=gp") ;
-		
+
 		myExternal ex ;
 		wxString res = ex.getText ( query ) ;
-		
-		//    wxTheClipboard->Open(); wxTheClipboard->SetData( new wxTextDataObject(res) );    wxTheClipboard->Close();    	
-		
+
+		//    wxTheClipboard->Open(); wxTheClipboard->SetData( new wxTextDataObject(res) );    wxTheClipboard->Close();
+
 		if ( database == _T("nucleotide") )
 			{
 			if ( res.Left ( 5 ) == _T("LOCUS") )
@@ -302,10 +302,10 @@ void EIpanel::execute_ncbi_load ( wxString database )
 			{
 			TGenBank gb ;
 			gb.paste ( res ) ;
-			if ( gb.success ) 
+			if ( gb.success )
 				myapp()->frame->newGB ( gb , _T("") ) ;
 			}
-		}    
+		}
 	else if ( database == _T("pubmed") ) // Requesting paper
 		{
 		wxString query = _T("http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?") ;
@@ -314,8 +314,8 @@ void EIpanel::execute_ncbi_load ( wxString database )
 		query += _T("&list_uids=") + ids ;
 		query += _T("&dopt=abstract") ;
 		wxExecute ( myapp()->getHTMLCommand ( query ) ) ;
-		}    
-	}	    
+		}
+	}
 
 void EIpanel::execute_ncbi_b3()
 	{
@@ -330,7 +330,7 @@ void EIpanel::execute_ncbi_b3()
 		{
 		if ( !hlb->IsSelected ( i ) ) continue ;
 		wxString s = hlb->data[i] ;
-		
+
 		s = s.BeforeFirst ( '|' ) ;
 		s = _T("http://www.ncbi.nlm.nih.gov/entrez/") + script + _T(".fcgi?db=") + database + _T("&list_uids=") + s ;
 		s = myapp()->getHTMLCommand ( s ) ;

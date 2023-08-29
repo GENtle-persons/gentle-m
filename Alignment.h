@@ -34,13 +34,13 @@ class TAlignLine // pun intended
     void hideFeatures () ; ///< Hide the features of this sequence
     TVector *getFeatures () ; ///< Returns a pointer to the TVector structure, so the features can be accessed
     bool hasFeatures () ; ///< Does this sequence have annotated items/features
-    
+
     wxString name , s ;
     TVector *v ;
     bool isIdentity ; ///< Is this line an identity display (or a "real" sequence)?
     wxString phylip_id ;
     vector <SequenceCharMarkup> markup ;
-    
+
     private :
     TVector *features ;
     } ;
@@ -52,7 +52,7 @@ class TAlignment : public ChildBase,wxThreadHelper
     public :
     TAlignment(wxWindow *parent, const wxString& title) ; ///< Constructor
     virtual ~TAlignment () ; ///< Destructor
-    
+
     virtual void initme () ; ///< Initialization
     virtual wxString getName () ; ///< Returns "Alignment"
 
@@ -61,11 +61,11 @@ class TAlignment : public ChildBase,wxThreadHelper
     virtual int NeedlemanWunsch ( wxString &s1 , wxString &s2 )  ; ///< Needleman-Wunsch-align two sequences
     virtual int SmithWaterman ( wxString &s1 , wxString &s2 )  ; ///< Smith-Waterman-align two sequences
     virtual int MatrixAlignment ( wxString &_s1 , wxString &_s2 , bool local ) ; ///< Part of NW/SW alignment algorithm
-    virtual void MatrixBacktrack ( vector <wxArrayInt> &back , 
-                                    wxString s1 , wxString s2 , 
+    virtual void MatrixBacktrack ( vector <wxArrayInt> &back ,
+                                    wxString s1 , wxString s2 ,
                                     wxString &t1 , wxString &t2 ,
                                     int i , int j ) ; ///< Part of NW/SW alignment algorithm
-    
+
     virtual void redoAlignments ( bool doRecalc = true ) ; ///< Repaint and (maybe) recalculate the alignment
     virtual void recalcAlignments () ; ///< Recalculate the alignment
     virtual wxColour findColors ( char c1 , char c2 , bool fg ) ; ///< Generate the appropriate foreground/background color, using current settings
@@ -89,7 +89,7 @@ class TAlignment : public ChildBase,wxThreadHelper
     virtual void OnHorizontal ( wxCommandEvent& event ) ; ///< "Display horizontal" event handler
     virtual void OnCopy ( wxCommandEvent& event ) ; ///< Copy event handler
     virtual void OnFontsize(wxCommandEvent& event); ///< Fontsize event handler
-    
+
     virtual void invokeOriginal ( int id , int pos ) ; ///< Open the original sequence at the given position
     virtual void callMiddleMouseButton ( int id , int pos , wxString _mode = _T("") ) ; ///< Perform the middle mouse button function (the gap orgy)
     virtual void MoveUpDown ( int what , int where ) ; ///< Move a line into the given direction
@@ -97,12 +97,12 @@ class TAlignment : public ChildBase,wxThreadHelper
     virtual void fromVector ( TVector *nv ) ; ///< Initialize from a single vector (???)
     virtual bool isDNA () ; ///< Tries to determine wether this is a DNA or an amino acid alignment
     virtual bool isAA () ; ///< Tries to determine wether this is a DNA or an amino acid alignment
-    
+
     virtual void RunPhylip ( int cmd ) ; ///< Takes Phylip commands (invoked from SequenceCanvas)
     virtual bool isThreadRunning() { return threadRunning ; } ///< Is a thread (alignment calculation) currently running?
     void getCharMarkup ( SequenceCharMarkup &scm , int vline , int pos , int vfirst ) ;
     void editAppearance ( int from , int to , int firstline , int lastline ) ;
-    
+
     // Variables
     SequenceCanvas *sc ; ///< Pointer to the sequence canvas
     vector <TAlignLine> lines ; ///< The list of TAlignLine structures
@@ -110,25 +110,25 @@ class TAlignment : public ChildBase,wxThreadHelper
     wxString gap , matrix , consensusSequence , name , database ;
     int match , mismatch , gap_penalty , algorithm ;
     bool bold , mono , cons , invs , showIdentity ;
-        
+
     private :
     wxChoice *mmb ;
     SeqAA *aaa ;
     bool threadRunning ;
     bool keepIdentity ;
     wxChoice *fontsize ;
-    
+
     virtual void myInsert ( int line , int pos , char what ) ;
     virtual void myDelete ( int line , int pos ) ;
     virtual void updateSequence () ;
     virtual void generateConsensusSequence ( bool addit = true ) ;
     virtual void fixMenus ( int i ) ;
-    
+
     protected :
     virtual wxString getExportFilters () ;
     virtual void doExport ( wxString filename , int filter ) ; ///< Export data, depending on filename and export type
     virtual void readTabColors ( wxString filename ) ;
-    
+
     DECLARE_EVENT_TABLE()
     } ;
 

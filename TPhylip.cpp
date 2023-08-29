@@ -265,20 +265,20 @@ wxString TPhylip::runapp ( wxString app , const wxString s )
 	wxFile data ( datafile , wxFile::write ) ;
 	data.Write ( s ) ;
 	data.Close () ;
-	
+
 	// Write cmd file
 	wxFile command ( cmdfile , wxFile::write ) ;
 	command.Write ( datafile + _T("\n") ) ;
 	command.Write ( _T("Y\n") ) ;
-	command.Close () ;	
-	
+	command.Close () ;
+
 #ifdef __WXMAC__
 	wxMessageBox ( cmd ) ;
 	wxString owd = wxGetCwd () ;
 	wxSetWorkingDirectory ( tmpdir ) ;
 	wxExecute ( cmd , wxEXEC_SYNC ) ;
 	wxSetWorkingDirectory ( owd ) ;
-#else	
+#else
 	// Write batch file
 	wxString batchfile = tmpdir + _T("/run.bat") ;
 	wxFile bat ( batchfile , wxFile::write ) ;
@@ -290,10 +290,10 @@ wxString TPhylip::runapp ( wxString app , const wxString s )
 	// Delete old files, if any
 	wxRemoveFile ( tmpdir + _T("/outfile") ) ;
 	wxRemoveFile ( tmpdir + _T("/outtree") ) ;
-	
+
 	// Run program
 	wxExecute ( batchfile , wxEXEC_SYNC ) ;
-	
+
 	wxRemoveFile ( dummy ) ;
 	wxRemoveFile ( batchfile ) ;
 	wxRemoveFile ( cmdfile ) ;
@@ -308,7 +308,7 @@ wxString TPhylip::runapp ( wxString app , const wxString s )
 	n[l] = 0 ;
 	wxString result ( n , wxConvUTF8 ) ;
 	delete [] n ;
-	
+
 //	result = "(3:0.23647,(4:0.12270,2:0.00296):0.29673,1:0.65529);(4:0.12270,2:0.00296);" ; // Test
 
 	while ( result.Right ( 1 ) == _T(";") ) result = result.Left ( result.length() - 1 ) ;

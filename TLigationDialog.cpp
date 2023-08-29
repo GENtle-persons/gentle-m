@@ -40,7 +40,7 @@ void TLigationDialog::init ()
 	wxBoxSizer *v1b = new wxBoxSizer ( wxVERTICAL ) ;
 	wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
 	wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
-	
+
     l_sources = new wxCheckListBox ( this , LD_SOURCES ) ;
     l_targets = new wxCheckListBox ( this , LD_TARGETS ) ;
 	v1a->Add ( new wxStaticText ( this , -1 , txt("frag2lig") ) , 0 , wxEXPAND ) ;
@@ -49,40 +49,40 @@ void TLigationDialog::init ()
 	v1b->Add ( l_targets , 1 , wxEXPAND , 5 ) ;
 	h1->Add ( v1a , 1 , wxEXPAND ) ;
 	h1->Add ( v1b , 1 , wxEXPAND ) ;
-	
+
 	message = new wxTextCtrl ( this , -1 ) ;
-	
+
 	h0->Add ( new wxButton ( this , LD_OK , txt("b_ligate") ) , 0 ) ;
 	h0->Add ( new wxStaticText ( this , -1 , _T(" ") ) , 1 , wxEXPAND ) ;
 	h0->Add ( new wxButton ( this , LD_CANCEL , txt("b_cancel") ) , 0 ) ;
-	
+
 	v0->Add ( h1 , 1 , wxEXPAND ) ;
 	v0->Add ( message , 0 , wxEXPAND , 5 ) ;
 	v0->Add ( h0 , 0 , wxEXPAND , 5 ) ;
 
     this->SetSizer ( v0 ) ;
 //    v0->Fit ( this ) ;
-	
+
 /*    int w , h ;
     int bo = 5 ;
     int lh = 2 * bo ;
     GetClientSize ( &w , &h ) ;
     l_sources = new wxCheckListBox ( this , LD_SOURCES , wxPoint ( bo , lh*2 ) , wxSize ( w/3-bo , h-lh*6 ) ) ;
     l_targets = new wxCheckListBox ( this , LD_TARGETS , wxPoint ( w/3 , lh*2 ) , wxSize ( w*2/3-bo , h-lh*6 ) ) ;
-    
+
     new wxStaticText ( this , -1 , txt("frag2lig") , wxPoint ( bo , bo ) ) ;
     new wxStaticText ( this , -1 , txt("what2create") , wxPoint ( w/3 , bo ) ) ;
 
-    new wxButton ( this , LD_OK , txt("b_ligate") , 
-                                wxPoint ( bo , h - lh*3 - bo ) , 
+    new wxButton ( this , LD_OK , txt("b_ligate") ,
+                                wxPoint ( bo , h - lh*3 - bo ) ,
                                 wxSize ( w / 4 , lh*3 )
                                 ) ;
-    new wxButton ( this , LD_CANCEL , txt("b_cancel") , 
-                                wxPoint ( w - w/4 - bo , h - lh*3 - bo ) , 
+    new wxButton ( this , LD_CANCEL , txt("b_cancel") ,
+                                wxPoint ( w - w/4 - bo , h - lh*3 - bo ) ,
                                 wxSize ( w / 4 , lh*3 )
                                 ) ;
 
-*/  
+*/
     for ( int a = 0 ; a < vv.GetCount() ; a++ )
         {
         bool state = true ;
@@ -95,7 +95,7 @@ void TLigationDialog::init ()
     Center() ;
     generateTargets () ;
     }
-    
+
 void TLigationDialog::generateTargets ()
     {
     int a ;
@@ -144,10 +144,10 @@ void TLigationDialog::generateTargets ()
 	else
 		{
 	    message->Hide () ;
-		}    
+		}
     GetSizer()->Layout () ;
     }
-    
+
 void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , wxArrayInt &vi  )
     {
     int a ;
@@ -166,7 +166,7 @@ void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , w
         name = getVIName ( vi ) ;
         addVTname ( name , vi , false ) ;
         }
-        
+
     for ( a = 0 ; a < vc.size() ; a++ )
         {
         if ( vt.GetCount() > MAX_LIGATIONS ) return ;
@@ -203,7 +203,7 @@ void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , w
            }
         }
     }
-    
+
 wxString TLigationDialog::invert ( wxString s )
     {
     wxString t ;
@@ -213,7 +213,7 @@ wxString TLigationDialog::invert ( wxString s )
 
 bool TLigationDialog::doMatch ( int l , int r , bool invertSecond )
     {
-    wxString s1 , s2 ; 
+    wxString s1 , s2 ;
 
     myass ( l >= 0 && l < vv.GetCount() , "TLigationDialog::doMatch:1" ) ;
     myass ( vv[l] , "TLigationDialog::doMatch:2" ) ;
@@ -229,14 +229,14 @@ bool TLigationDialog::doMatch ( int l , int r , bool invertSecond )
        s1 = vv[l]->getStickyEnd(false,true) + vv[r]->getStickyEnd(true,true) ;
        s2 = vv[l]->getStickyEnd(false,false) + vv[r]->getStickyEnd(true,false) ;
        }
-    
+
     TVector v ;
     v.setSequence ( s1 ) ;
     wxString s3 = v.transformSequence ( true , false ) ;
     if ( s2 == s3 ) return true ;
     return false ;
     }
-    
+
 wxString TLigationDialog::getVIName ( wxArrayInt &vi )
     {
     int a ;
@@ -253,11 +253,11 @@ wxString TLigationDialog::getVIName ( wxArrayInt &vi )
         }
     return ret ;
     }
-    
+
 void TLigationDialog::addVTname ( wxString name , wxArrayInt &vi , bool circular )
     {
     vt.Add ( name ) ;
-    
+
     int a ;
     TVector v ;
     wxString d ;
@@ -285,7 +285,7 @@ void TLigationDialog::addVTname ( wxString name , wxArrayInt &vi , bool circular
     v.setDescription ( d ) ;
     ligates.push_back ( v ) ;
     }
-    
+
 void TLigationDialog::OnToggleSources ( wxCommandEvent &ev )
     {
     generateTargets () ;
@@ -294,9 +294,9 @@ void TLigationDialog::OnToggleSources ( wxCommandEvent &ev )
 void TLigationDialog::OnCancel ( wxCommandEvent &ev )
     {
     SetReturnCode ( wxID_CANCEL ) ;
-    EndModal ( false ) ;    
+    EndModal ( false ) ;
     }
-        
+
 void TLigationDialog::OnOK ( wxCommandEvent &ev )
     {
     doLigate = true ;
@@ -307,6 +307,6 @@ void TLigationDialog::OnOK ( wxCommandEvent &ev )
            ligates[a].setSequence ( wxString() ) ; // Yes, it's brutal ;-)
         }
     SetReturnCode ( wxID_OK ) ;
-    EndModal ( true ) ;    
+    EndModal ( true ) ;
     }
 

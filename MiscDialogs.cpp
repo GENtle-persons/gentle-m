@@ -63,10 +63,10 @@ TGraphDialog::TGraphDialog ( wxWindow *_parent , const wxString& title )
 
 	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
 	wxBoxSizer *h_buttons = new wxBoxSizer ( wxHORIZONTAL ) ;
-	
+
 	nb = new wxNotebook ( this , -1 ) ;
 //	wxNotebookSizer *ns = new wxNotebookSizer ( nb ) ;
-	
+
 	add_nb_graph () ;
 	add_nb_data () ;
 	add_nb_scales () ;
@@ -77,7 +77,7 @@ TGraphDialog::TGraphDialog ( wxWindow *_parent , const wxString& title )
 
 	v0->Add ( nb , 1 , wxEXPAND , 0 ) ;
 	v0->Add ( h_buttons , 0 , wxALL|wxALIGN_CENTER_HORIZONTAL , 5 ) ;
-	
+
 	SetSizer ( v0 ) ;
 	v0->Fit ( this ) ;
 	set_up = true ;
@@ -116,12 +116,12 @@ void TGraphDialog::add_nb_data ()
 	{
 	nb_data = new wxPanel ( nb , -1 ) ;
 	nb->AddPage ( nb_data , txt("t_gd_data") ) ;
-	
+
 	int a ;
 	last_data = -1 ;
-	
+
 	wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
-	
+
 	lb_data = new wxListBox ( nb_data , TGD_LB_DATA ) ;
 	for ( a = 0 ; a < parent->gd->data.size() ; a++ )
 		{
@@ -136,11 +136,11 @@ void TGraphDialog::add_nb_data ()
 	wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
 	wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
 	wxBoxSizer *h3 = new wxBoxSizer ( wxHORIZONTAL ) ;
-	
+
 	data_name = new wxTextCtrl ( nb_data , -1 ) ;
 	h1->Add ( new wxStaticText ( nb_data , -1 , txt("name") ) , 0 , wxEXPAND , 2 ) ;
 	h1->Add ( data_name , 1 , wxEXPAND , 2 ) ;
-	
+
 	ch_data_scalex = new wxChoice ( nb_data , -1 ) ;
 	ch_data_scaley = new wxChoice ( nb_data , -1 ) ;
 	for ( a = 0 ; a < parent->gd->scales.size() ; a++ )
@@ -152,7 +152,7 @@ void TGraphDialog::add_nb_data ()
 	h2->Add ( ch_data_scalex , 1 , wxEXPAND , 2 ) ;
 	h2->Add ( new wxStaticText ( nb_data , -1 , _T("Scale Y") ) , 0 , wxEXPAND , 2 ) ;
 	h2->Add ( ch_data_scaley , 1 , wxEXPAND , 2 ) ;
-	
+
 	data_color = new wxTextCtrl ( nb_data , -1 , _T("  ") ) ;
 	ch_data_pointstyle = new wxChoice ( nb_data , -1 ) ;
 	ch_data_pointstyle->Append ( _T("none") ) ;
@@ -182,12 +182,12 @@ void TGraphDialog::add_nb_scales ()
 	{
 	nb_scales = new wxPanel ( nb , -1 ) ;
 	nb->AddPage ( nb_scales , txt("t_gd_scales") ) ;
-	
+
 	int a ;
 	last_scale = -1 ;
-	
+
 	wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
-	
+
 	lb_scales = new wxListBox ( nb_scales , TGD_LB_SCALES ) ;
 	for ( a = 0 ; a < parent->gd->scales.size() ; a++ )
 		{
@@ -196,7 +196,7 @@ void TGraphDialog::add_nb_scales ()
 		*ns = *(parent->gd->scales[a]) ;
 		scales.push_back ( ns ) ;
 		}
-	
+
 	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
 
 	wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
@@ -229,13 +229,13 @@ void TGraphDialog::add_nb_scales ()
 	v0->Add ( h1 , 0 , wxEXPAND , 5 ) ;
 	v0->Add ( h2 , 0 , wxEXPAND , 5 ) ;
 	v0->Add ( h3 , 0 , wxEXPAND , 5 ) ;
-	
+
 	h0->Add ( lb_scales , 0 , wxEXPAND , 5 ) ;
 	h0->Add ( v0 , 0 , wxEXPAND , 5 ) ;
-	
+
 	nb_scales->SetSizer ( h0 ) ;
 	h0->Fit ( nb_scales ) ;
-	
+
 	lb_scales->SetSelection ( 0 ) ;
 	wxCommandEvent ev ;
 	OnScalesList ( ev ) ;
@@ -291,7 +291,7 @@ void TGraphDialog::OnDataList ( wxCommandEvent &ev )
 	wxString style = data[i]->pointStyle ;
 	if ( style.IsEmpty() ) style = _T("none") ;
 	ch_data_pointstyle->SetStringSelection ( style ) ;
-	
+
 	int a ;
 	for ( a = 0 ; a < parent->gd->scales.size() ; a++ )
 		{
@@ -346,7 +346,7 @@ void TGraphDialog::OnButtonScales ( wxCommandEvent &ev )
 	if ( last_scale == -1 ) return ;
 	wxColour c = wxGetColourFromUser ( this , scales[last_scale]->col ) ;
 	if ( !c.Ok() ) return ; // Cancelled
-	scales[last_scale]->col = c ;	
+	scales[last_scale]->col = c ;
 	scales_color->SetBackgroundColour ( scales[last_scale]->col ) ;
 	scales_color->Refresh ( TRUE ) ;
 	}
@@ -359,24 +359,24 @@ TSpeakDialog::TSpeakDialog(wxWindow *parent, const wxString& title , wxString _s
     myapp()->frame->push_help ( _T("GENtle:Speak") ) ;
 	sequence = _seq ;
 	doPlay = false ;
-	
+
 	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
 	wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
 	wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
-	
-	seq = new wxTextCtrl ( this , -1 , sequence , 
+
+	seq = new wxTextCtrl ( this , -1 , sequence ,
 			   		wxDefaultPosition , wxDefaultSize ,
 #ifndef __WXMAC__
 					wxTE_READONLY|
 #endif
 			   		wxTE_NOHIDESEL ) ;
-	
+
 	wxButton *b1 = new wxButton ( this , SPEAK_PLAY , txt("b_speak_play") ) ;
 	wxButton *b2 = new wxButton ( this , SPEAK_STOP , txt("b_speak_stop") ) ;
-	
+
 	h0->Add ( b1 , 1 , wxEXPAND , 5 ) ;
 	h0->Add ( b2 , 1 , wxEXPAND , 5 ) ;
-	
+
 	doPause = new wxCheckBox ( this , -1 , txt("t_speak_do_pause") ) ;
 	pause = new wxSpinCtrl ( this , -1 ) ;
 	doPause->SetValue ( true ) ;
@@ -395,7 +395,7 @@ TSpeakDialog::TSpeakDialog(wxWindow *parent, const wxString& title , wxString _s
 
 	SetSizer ( v0 ) ;
 	v0->Fit ( this ) ;
-	
+
 	seq->SetSelection ( -1 , -1 ) ;
 //	seq->ShowPosition ( 0 ) ;
 	}
@@ -405,7 +405,7 @@ TSpeakDialog::~TSpeakDialog ()
     myapp()->frame->pop_help () ;
 	}
 
-	
+
 void TSpeakDialog::OnPlay ( wxCommandEvent &ev )
 	 {
 	 long from , to ;
@@ -417,14 +417,14 @@ void TSpeakDialog::OnPlay ( wxCommandEvent &ev )
 	    {
 		seq->GetSelection ( &from , &to ) ;
 		s = seq->GetStringSelection () ;
-		
+
 		if ( s == _T("") )
 		   {
  	   	   doPlay = false ;
 		   seq->SetSelection ( -1 , -1 ) ;
 		   break ;
 		   }
-		
+
 		speakLetter ( s.Left ( 1 ) ) ;
 		seq->SetSelection ( from+1 , to ) ;
 		myapp()->Yield() ;
@@ -475,30 +475,30 @@ TIPCDialog::TIPCDialog(wxWindow *parent, const wxString& title , int _seqlen )
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
-    
+
     limit = new wxTextCtrl ( this , TIPC_DIA_LIMIT , _T("") ) ;
     h0->Add ( new wxStaticText ( this , -1 , txt("t_limit") ) , 0 , wxALL , 5 ) ;
     h0->Add ( limit , 0 , wxALL , 5 ) ;
-    
+
     est = new wxStaticText ( this , -1 , _T("") ) ;
-    
+
     h1->Add ( new wxButton ( this , wxID_OK , txt("b_ok") ) , 0 , wxALL , 5 ) ;
     h1->Add ( new wxButton ( this , wxID_CANCEL , txt("b_cancel") ) , 0 , wxALL , 5 ) ;
-    
+
     v0->Add ( new wxStaticText ( this , -1 , title ) , 0 , wxALL , 5 ) ;
     v0->Add ( h0 , 0 , wxALL , 5 ) ;
     v0->Add ( est , 0 , wxALL , 5 ) ;
     v0->Add ( h1 , 0 , wxALL , 5 ) ;
 
     SetSizer ( v0 ) ;
-    v0->Fit ( this ) ;    
+    v0->Fit ( this ) ;
 
     limit->SetValue ( _T("1000") ) ;
 	}
 
 TIPCDialog::~TIPCDialog ()
 	{
-	}        
+	}
 
 void TIPCDialog::OnLimit ( wxCommandEvent &event )
 	{
@@ -510,7 +510,7 @@ void TIPCDialog::OnLimit ( wxCommandEvent &event )
 	s = s.Trim ( false ) ;
 	s = wxString::Format ( txt("t_ipc_est") , s.c_str() ) ;
 	est->SetLabel ( s ) ;
-	}    
+	}
 
 double TIPCDialog::estimate_time ( int f )
 	{
@@ -521,12 +521,12 @@ double TIPCDialog::estimate_time ( int f )
     b = POWER ( b , 3.27 ) ;
     a = a * 0.000002 ;
     b = b * 0.00000002 ;
-    
+
     double e = f ;
     e = e * a + b ;
     if ( e < 0 ) e = 0 ; // Fix for very small f
     return e ; // [ms]
-    }    
+    }
 
 
 // ******************************************* TSequencingPrimerDialog
@@ -542,17 +542,17 @@ TSequencingPrimerDialog::TSequencingPrimerDialog (wxWindow *parent, const wxStri
     wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h2a = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h3 = new wxBoxSizer ( wxHORIZONTAL ) ;
-    
+
     wxString defdb = myapp()->frame->LS->getOption ( _T("SEQUENCINGPRIMER_DB") , myapp()->frame->LS->getDefaultDB() ) ;
     wxString defpj = myapp()->frame->LS->getOption ( _T("SEQUENCINGPRIMER_PJ") , _T("") ) ;
     bool usepj = myapp()->frame->LS->getOption ( _T("SEQUENCINGPRIMER_USE_PJ") , false ) ;
     int ml = myapp()->frame->LS->getOption ( _T("SEQUENCINGPRIMER_MIN_ALIGNMENT") , 20 ) ;
 
     t_ma = new wxSpinCtrl ( this , -1 , wxString::Format ( _T("%d") , ml ) , wxDefaultPosition , wxSize ( MYSPINBOXSIZE , 20 ) ) ;
-    h0->Add ( new wxStaticText ( this , -1 , txt("t_minimum_alignment") ) , 0 , wxALIGN_CENTER_VERTICAL ) ;    
+    h0->Add ( new wxStaticText ( this , -1 , txt("t_minimum_alignment") ) , 0 , wxALIGN_CENTER_VERTICAL ) ;
     h0->Add ( t_ma , 0 , wxALL|wxALIGN_CENTER_VERTICAL , 5 ) ;
     h0->Add ( new wxStaticText ( this , -1 , _T("bp") ) , 0 , wxALIGN_CENTER_VERTICAL ) ;
-    
+
     c_db = new wxChoice ( this , SPD_DB ) ;
     h1->Add ( new wxStaticText ( this , -1 , txt("t_use_this_database") ) , 0 , wxEXPAND ) ;
     h1->Add ( c_db , 0 , wxEXPAND ) ;
@@ -570,30 +570,30 @@ TSequencingPrimerDialog::TSequencingPrimerDialog (wxWindow *parent, const wxStri
 
     cb_clear = new wxCheckBox ( this , -1 , txt("t_clear_old_sp") ) ;
     h2->Add ( cb_clear , 0 , wxEXPAND ) ;
-    
+
     cb_35 = new wxCheckBox ( this , -1 , txt("t_3_5") ) ;
     cb_53 = new wxCheckBox ( this , -1 , txt("t_5_3") ) ;
     h2a->Add ( new wxStaticText ( this , -1 , txt("t_find_primers") ) , 0 , wxRIGHT , 5 ) ;
     h2a->Add ( cb_53 , 0 , wxEXPAND ) ; // -->
     h2a->Add ( cb_35 , 0 , wxEXPAND ) ; // <--
-    
+
     cb_clear->SetValue ( TRUE ) ;
     cb_35->SetValue ( TRUE ) ;
     cb_53->SetValue ( TRUE ) ;
-    
+
     h3->Add ( new wxButton ( this , wxID_OK , txt("b_ok") ) , 0 , wxEXPAND , 5 ) ;
     h3->Add ( new wxButton ( this , wxID_CANCEL , txt("b_cancel") ) , 0 , wxEXPAND , 5 ) ;
-    
+
     v0->Add ( h0 , 0 , wxALL , 5 ) ;
     v0->Add ( h1 , 0 , wxEXPAND , 5 ) ;
     v0->Add ( h1a , 0 , wxEXPAND , 5 ) ;
     v0->Add ( h2a , 0 , wxEXPAND , 5 ) ;
     v0->Add ( h2 , 0 , wxEXPAND , 5 ) ;
     v0->Add ( h3 , 0 , wxEXPAND , 5 ) ;
-    
+
     SetSizer ( v0 ) ;
-    v0->Fit ( this ) ;    
-  
+    v0->Fit ( this ) ;
+
     wxCommandEvent ev ;
     OnDB ( ev ) ;
     c_pj->SetStringSelection ( defpj ) ;
@@ -601,7 +601,7 @@ TSequencingPrimerDialog::TSequencingPrimerDialog (wxWindow *parent, const wxStri
 
     Center () ;
     }
-    
+
 void TSequencingPrimerDialog::OnDB ( wxCommandEvent& event )
 	{
 	c_pj->Clear() ;
@@ -612,7 +612,7 @@ void TSequencingPrimerDialog::OnDB ( wxCommandEvent& event )
 	TSQLresult r = db->getObject ( sql ) ;
 	for ( int a = 0 ; a < r.rows() ; a++ )
 		c_pj->Append ( r[a][r["pr_name"]] ) ;
-	}    
+	}
 
 void TSequencingPrimerDialog::OnCharHook ( wxKeyEvent& event )
     {
@@ -623,7 +623,7 @@ void TSequencingPrimerDialog::OnCharHook ( wxKeyEvent& event )
     else if ( k == WXK_RETURN ) EndModal ( wxID_OK ) ; //OnOK ( ev ) ;
     else event.Skip() ;
     }
-    
+
 void TSequencingPrimerDialog::getPrimerList ( wxArrayString &p_name , wxArrayString &p_seq )
 	{
 	p_name.Clear () ;
@@ -647,10 +647,10 @@ void TSequencingPrimerDialog::getPrimerList ( wxArrayString &p_name , wxArrayStr
 					wxString::Format ( _T("%d") , TYPE_PRIMER ) + _T(" AND dna_name=\"") +
      				r[a][r["pd_dna"]]  + _T("\"") ;
 		    TSQLresult r2 = db2->getObject ( sql ) ;
-		    if ( r2.rows() != 1 ) continue ; // Illegal dna query		    
+		    if ( r2.rows() != 1 ) continue ; // Illegal dna query
 		    p_name.Add ( r2[0][r2["dna_name"]] ) ;
 		    p_seq.Add ( r2[0][r2["dna_sequence"]] ) ;
-		    }    
+		    }
 		}
 	else
  		{
@@ -661,24 +661,24 @@ void TSequencingPrimerDialog::getPrimerList ( wxArrayString &p_name , wxArrayStr
 			{
 			p_name.Add ( r[a][r["dna_name"]] ) ;
 			p_seq.Add ( r[a][r["dna_sequence"]] ) ;
-			}    
-   		}        
+			}
+   		}
     long ml = t_ma->GetValue() ;
     myapp()->frame->LS->setOption ( _T("SEQUENCINGPRIMER_MIN_ALIGNMENT") , ml ) ;
     myapp()->frame->LS->setOption ( _T("SEQUENCINGPRIMER_DB") , c_db->GetStringSelection() ) ;
     myapp()->frame->LS->setOption ( _T("SEQUENCINGPRIMER_PJ") , c_pj->GetStringSelection() ) ;
     myapp()->frame->LS->setOption ( _T("SEQUENCINGPRIMER_USE_PJ") , cb_pj->GetValue() ) ;
-	}    
-	
+	}
+
 bool TSequencingPrimerDialog::matchToVector ( TVector *v , wxString name , wxString seq )
 	{
 	bool ret = false ;
 	long ml = t_ma->GetValue() ; // Minimum length
 	wxString s ;
-	
+
  	s = v->getSequence() ;
 	if ( v->isCircular() ) s += s.Left ( seq.length() - 1 ) ;
-	int best_pos , best_score = 0 ;	
+	int best_pos , best_score = 0 ;
 	if ( cb_53->GetValue() )
 		best_score = findBestMatch ( s , seq , best_pos , ml ) ;
 	if ( best_score > 0 )
@@ -686,7 +686,7 @@ bool TSequencingPrimerDialog::matchToVector ( TVector *v , wxString name , wxStr
  		addSequencingPrimer ( v , name , seq , best_pos , best_score , 1 ) ;
  		ret = true ;
  		}
-	
+
 	// opposite direction
 	s = v->transformSequence ( true , true ) ;
 	if ( v->isCircular() ) s += s.Left ( seq.length() - 1 ) ; // ???
@@ -697,13 +697,13 @@ bool TSequencingPrimerDialog::matchToVector ( TVector *v , wxString name , wxStr
  		{
  		addSequencingPrimer ( v , name , seq , v->getSequenceLength() - best_pos , best_score , -1 ) ;
  		ret = true ;
- 		} 		
-	
-	
+ 		}
+
+
 	return ret ;
-	}    
-	
-void TSequencingPrimerDialog::addSequencingPrimer ( TVector *v , wxString name , 
+	}
+
+void TSequencingPrimerDialog::addSequencingPrimer ( TVector *v , wxString name ,
 						wxString seq , int best_pos , int best_score , int dir )
 	{
 	int from = best_pos + 1 ;
@@ -714,7 +714,7 @@ void TSequencingPrimerDialog::addSequencingPrimer ( TVector *v , wxString name ,
 		from -= seq.length() ;
 		to -= seq.length() ;
 		to -= seq.length() - best_score ;
-		}    
+		}
 	TVectorItem i ( name , name , from , to , VIT_SEQUENCING ) ;
 	i.setParam ( _T("AUTOMATIC") , _T("SEQUENCING PRIMER") ) ;
 	i.setDirection ( dir ) ;
@@ -729,9 +729,9 @@ void TSequencingPrimerDialog::addSequencingPrimer ( TVector *v , wxString name ,
 	i.desc += _T("\n") ;
 	i.desc += seq ;
 	v->items.push_back ( i ) ;
-	}    
+	}
 
-	
+
 int TSequencingPrimerDialog::findBestMatch ( wxString &s , wxString seq , int &pos , int ml )
 	{
 	int a , b , cnt ;
@@ -744,16 +744,16 @@ int TSequencingPrimerDialog::findBestMatch ( wxString &s , wxString seq , int &p
  			{
  			if ( seq.GetChar(b) == s.GetChar(a+b) ) cnt++ ;
  			else cnt = 0 ;
- 			}    
+ 			}
 		if ( cnt > best_score && cnt >= ml )
 			{
 			best_score = cnt ;
 			pos = a ;
-			}    
-		}    
+			}
+		}
 	return best_score ;
-	}    
-    
+	}
+
 TSequencingPrimerDialog::~TSequencingPrimerDialog ()
     {
     myapp()->frame->pop_help () ;
@@ -768,7 +768,7 @@ TMutationDialog::TMutationDialog (wxWindow *parent, const wxString& title , wxSt
     v = new TVector ;
     aa = v->dna2aa(codon).GetChar(0) ;
     }
-    
+
 TMutationDialog::~TMutationDialog ()
     {
     delete v ;
@@ -778,13 +778,13 @@ TMutationDialog::~TMutationDialog ()
 /*
 // TStandbyDialog
 
-TStandbyDialog::TStandbyDialog ( wxWindow *parent , 
-                                 const wxString &s , 
+TStandbyDialog::TStandbyDialog ( wxWindow *parent ,
+                                 const wxString &s ,
                                  const wxString &t )
     : wxDialog ( parent , -1 , s )
     {
     Center () ;
-    
+
     }
 */
 
@@ -793,7 +793,7 @@ TStandbyDialog::TStandbyDialog ( wxWindow *parent ,
 
 TURLtext::TURLtext ( wxWindow *parent , int id , wxString title ,
                     wxPoint pos , wxSize size , int style )
-    : wxTextCtrl ( parent , id , title , pos , size , 
+    : wxTextCtrl ( parent , id , title , pos , size ,
         ( style | wxTE_RICH | wxTE_AUTO_URL ) )
     {
     }
@@ -805,7 +805,7 @@ void TURLtext::OnURL(wxTextUrlEvent& event)
     long from = event.GetURLStart() ;
     long to = event.GetURLEnd() ;
     wxString url = GetRange ( from , to ) ;
-    if ( url.IsEmpty() ) return ; // No url    
+    if ( url.IsEmpty() ) return ; // No url
     wxExecute ( myapp()->getHTMLCommand ( url ) ) ;
     }
 
@@ -817,7 +817,7 @@ TMyMultipleChoiceDialog::TMyMultipleChoiceDialog ()
     {
     clb = NULL ;
     }
-    
+
 TMyMultipleChoiceDialog::TMyMultipleChoiceDialog ( wxWindow *parent ,
                               const wxString &message ,
                               const wxString &caption ,
@@ -827,14 +827,14 @@ TMyMultipleChoiceDialog::TMyMultipleChoiceDialog ( wxWindow *parent ,
                               const wxPoint& pos )
    : wxDialog ( parent , -1 , caption , pos )
    {
-   
-   
+
+
    wxSize size ( 400 , 300 ) ;
    SetSize ( size ) ;
-   
+
    wxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
    wxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
-   
+
    if ( options & wxCANCEL )
 		{
 		wxButton *b = new wxButton ( this , wxID_CANCEL , txt("b_cancel") ) ;
@@ -850,8 +850,8 @@ TMyMultipleChoiceDialog::TMyMultipleChoiceDialog ( wxWindow *parent ,
 		}
 	else h0->Add ( new wxStaticText ( this , -1 , _T("") ) , wxEXPAND , 2 ) ;
 
-	clb = new wxCheckListBox ( this , 
-                                 -1 , 
+	clb = new wxCheckListBox ( this ,
+                                 -1 ,
                                  wxDefaultPosition ,
                                  wxDefaultSize ,
                                  n ,
@@ -861,10 +861,10 @@ TMyMultipleChoiceDialog::TMyMultipleChoiceDialog ( wxWindow *parent ,
 		v0->Add ( new wxStaticText ( this , -1 , message ) , 0 , wxEXPAND , 2 ) ;
 	v0->Add ( clb , 1 , wxEXPAND , 2 ) ;
 	v0->Add ( h0 , 0 , wxEXPAND , 2 ) ;
-   
+
    SetSizer ( v0 ) ;
    v0->Layout () ;
-   
+
    if ( options & wxCENTRE ) Center () ;
    }
 
@@ -873,7 +873,7 @@ TMyMultipleChoiceDialog::~TMyMultipleChoiceDialog ()
     if ( clb ) delete clb ;
     clb = NULL ;
     }
-    
+
 void TMyMultipleChoiceDialog::OnOK ( wxCommandEvent &ev )
     {
     if ( clb )
@@ -897,7 +897,7 @@ void TMyMultipleChoiceDialog::CheckAll ( bool check )
     while ( --n >= 0 )
         clb->Check ( n , check ) ;
     }
-    
+
 bool TMyMultipleChoiceDialog::IsChecked ( int item ) const
     {
     if ( item >= 0 && item < check.size() ) return check[item] ;
@@ -914,7 +914,7 @@ TransformSequenceDialog::TransformSequenceDialog ( wxWindow *parent, const wxStr
     complement = new wxCheckBox ( this , -1 , txt("t_complement_sequence") , wxPoint ( bo , bo + lh * 1 ) ) ;
     new_item = new wxCheckBox ( this , -1 , txt("t_as_new_item") , wxPoint ( bo , bo + lh * 2 ) ) ;
     new wxButton ( this , wxID_OK , txt("b_ok") , wxPoint ( bo , lh * 4 ) ) ;
-    new wxButton ( this , wxID_CANCEL , txt("b_cancel") , wxPoint ( 100 , lh * 4 ) ) ;    
+    new wxButton ( this , wxID_CANCEL , txt("b_cancel") , wxPoint ( 100 , lh * 4 ) ) ;
     Center() ;
     }
 
@@ -934,7 +934,7 @@ void TransformSequenceDialog::OnCharHook ( wxKeyEvent& event )
     else if ( k == WXK_RETURN ) EndModal ( wxID_OK ) ; // OnOK ( ev ) ;
     else event.Skip() ;
     }
-    
+
 
 
 //*************************************** TEnzymeDialog
@@ -951,34 +951,34 @@ TEnzymeDialog::~TEnzymeDialog ()
     {
     myapp()->frame->pop_help () ;
     }
-                                                                         
+
 void TEnzymeDialog::initme ( TRestrictionEnzyme *_e , bool ro )
     {
     readonly = ro ;
     e = new TRestrictionEnzyme ;
     if ( _e ) *e = *_e ;
-    
+
     // Layout
     int w = 300 , h = 190 , bo = 5 ;
     int x1 = 70 , x2 = w/2 , x2a = x2+x1 ;
     int lh = bo*6 ;
 //    char u[100] ;
-    
+
     new wxStaticText ( this , -1 , _T("Name") , wxPoint ( bo , bo+lh/3 ) ) ;
     new wxStaticText ( this , -1 , _T("Sequence") , wxPoint ( bo , bo+lh+lh/3 ) ) ;
     new wxStaticText ( this , -1 , _T("Location") , wxPoint ( bo , bo+lh*2+lh/3 ) );
     new wxStaticText ( this , -1 , _T("Note") , wxPoint ( bo , bo+lh*3+lh/3 ) ) ;
-    
+
     new wxStaticText ( this , -1 , _T("Cuts at") , wxPoint ( bo , bo+lh*4+lh/3 ) ) ;
     new wxStaticText ( this , -1 , _T("Overlap") , wxPoint ( bo , bo+lh*5+lh/3 ) ) ;
-    
-    eb_name = new wxTextCtrl ( this , -1 , e->getName() , 
+
+    eb_name = new wxTextCtrl ( this , -1 , e->getName() ,
                 wxPoint ( x1 , bo ) , wxSize ( w-bo-x1 , lh-bo ) ) ;
-    eb_seq  = new wxTextCtrl ( this , -1 , e->getSequence() , 
+    eb_seq  = new wxTextCtrl ( this , -1 , e->getSequence() ,
                 wxPoint ( x1 , bo+lh ) , wxSize ( w-bo-x1 , lh-bo ) ) ;
-    eb_loc  = new wxTextCtrl ( this , -1 , e->location , 
+    eb_loc  = new wxTextCtrl ( this , -1 , e->location ,
                 wxPoint ( x1 , bo+lh*2 ) , wxSize ( w-bo-x1 , lh-bo ) ) ;
-    eb_note = new wxTextCtrl ( this , -1 , e->note , 
+    eb_note = new wxTextCtrl ( this , -1 , e->note ,
                 wxPoint ( x1 , bo+lh*3 ) , wxSize ( w-bo-x1 , lh-bo ) ) ;
 
 //    sprintf ( u , "%d" , e->cut ) ;
@@ -987,10 +987,10 @@ void TEnzymeDialog::initme ( TRestrictionEnzyme *_e , bool ro )
 //    sprintf ( u , "%d" , e->overlap ) ;
     eb_to   = new wxTextCtrl ( this , -1 , wxString::Format ( _T("%d") , e->getOverlap() ) , wxPoint ( x1 , bo+lh*5 ) ,
                     wxSize ( w-bo-x2 , lh-bo ) ) ;
-    
+
     if ( !e->getName().IsEmpty() )
        eb_name->Disable () ;
-    
+
     if ( !readonly )
         {
         wxButton *b = new wxButton ( this , wxID_OK , _T("OK") ,

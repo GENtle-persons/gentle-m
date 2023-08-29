@@ -8,7 +8,7 @@ int SeqDNA::arrange ( int n )
     if ( useDirectRoutines() ) return arrange_direct ( n ) ;
     int a , x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
     int lasta = 0 ;
-    
+
     // Setting basic values
     can->SetFont(*can->font);
     int wx = can->charwidth , wy = can->charheight ;
@@ -17,28 +17,28 @@ int SeqDNA::arrange ( int n )
     int endnumber = offset + s.length() ;
     endnumberlength = 0 ;
     while ( endnumber > 0 ) { endnumber /= 10 ; ox += wx ; endnumberlength++ ; }
-    
-    if ( whatsthis() == "FEATURE" && 
-         can->child && 
+
+    if ( whatsthis() == "FEATURE" &&
+         can->child &&
          can->child->def == "alignment" )
         {
         endnumberlength = can->maxendnumberlength ;
         ox = bo + wx + wx * endnumberlength ;
         }
-    
+
     can->MyGetSize ( &w , &h ) ;
     w -= 20 ; // Scrollbar dummy
 
     itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx ) ;
     itemsperline *= can->blocksize ;
-*/    
+*/
     can->MyGetClientSize ( &w , &h ) ;
 
     itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx - 1 ) ;
     if ( itemsperline == 0 ) itemsperline = 1 ;
 	itemsperline *= can->blocksize ;
     bool memsave = ( whatsthis() == _T("FEATURE") ) ;
-    
+
     pos.cleanup() ;
     mylog ( "SeqDNA::arrange" , wxString::Format ( _T("1 : ox=%d w=%d blocksize=%d wx=%d itemsperline=%d") , ox , w , can->blocksize , wx , itemsperline ) ) ;
     pos.reserve ( s.length() * 11 / 10 , s.length() / itemsperline , memsave ) ;
@@ -71,16 +71,16 @@ int SeqDNA::arrange ( int n )
                  {
                  pos.add ( -(++l) , bo , y , ox-wx-5 , wy-1 , memsave ) ; // Line number
                  pcnt++ ;
-                 }    
+                 }
               }
            }
         }
     mylog ( "SeqDNA::arrange" , "3" ) ;
-    if ( lasta != pos.p.GetCount()+1 && !memsave ) 
+    if ( lasta != pos.p.GetCount()+1 && !memsave )
         pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
     return lowy + bo*2 ;
     }
-    
+
 wxPoint SeqDNA::showText ( int ystart , wxArrayString &tout )
     {
     wxPoint p ( -1 , -1 ) ;
@@ -93,7 +93,7 @@ wxPoint SeqDNA::showText ( int ystart , wxArrayString &tout )
         if ( b > 0 ) // Character
            {
            t = s.GetChar(b-1) ;
-           if ( pos.r[a].y != ly ) 
+           if ( pos.r[a].y != ly )
               {
               ly = pos.r[a].y ;
               y += can->seq.GetCount() ;
@@ -212,13 +212,13 @@ void SeqDNA::show ( wxDC& dc )
     dc.SetTextBackground ( tbg ) ;
     dc.SetTextForeground ( tfg ) ;
     }
-    
+
 wxColor SeqDNA::getBaseColor ( char b )
     {
     if ( b == 'N' ) return *wxRED ;
     return fontColor ;
     }
-    
+
 void SeqDNA::initFromTVector ( TVector *v )
     {
     vec = v ;
@@ -250,7 +250,7 @@ bool SeqDNA::useDirectRoutines ()
 int SeqDNA::arrange_direct ( int n )
     {
     int w , h , bo = can->border ;
-    
+
     // Setting basic values
     can->SetFont(*can->font);
     int wx = can->charwidth ;// , wy = can->charheight ;
@@ -266,7 +266,7 @@ int SeqDNA::arrange_direct ( int n )
     int ret = ( s.length() + itemsperline - 1 ) / itemsperline ;
     ret = can->NumberOfLines() * ret * can->charheight + 1 ;
     return ret ;
-    }    
+    }
 
 void SeqDNA::show_direct ( wxDC& dc )
     {
@@ -282,14 +282,14 @@ void SeqDNA::show_direct ( wxDC& dc )
     bool showLowercaseDNA = myapp()->frame->showLowercaseDNA ;
     for ( n = 0 ; n < can->seq.GetCount() && can->seq[n] != this ; n++ ) ;
     if ( n == can->seq.GetCount() ) return ;
-    
+
     // Setting basic values
     int cw = can->charwidth , ch = can->charheight ;
     int ox = bo + cw + cw * endnumberlength ;
     int oy = n*ch+bo ;
     bool isPrimer = false ;
     if ( whatsthis().StartsWith ( _T("PRIMER") ) ) isPrimer = true ;
-    
+
     can->MyGetClientSize ( &w , &h ) ;
     xb = w ;
     yb = h ;
@@ -304,22 +304,22 @@ void SeqDNA::show_direct ( wxDC& dc )
     xb += xa ;
     ya = -ya ;
     yb += ya ;
-    
+
     myass ( ch , "SeqDNA::show_direct2a" ) ;
     myass ( csgc , "SeqDNA::show_direct2b" ) ;
     b = ( ya - ch - oy ) / ( ch * csgc ) * itemsperline ;
- 
+
     myass ( itemsperline , "SeqDNA::show_direct3" ) ;
     myass ( cbs , "SeqDNA::show_direct4" ) ;
     for ( a = 0 ; a < s.length() ; a++ )
         {
         int px = a % itemsperline , py = a / itemsperline ;
-        
+
         bool showNumber = ( px == 0 ) ;
-        
+
         px = px * cw + ( px / cbs ) * ( cw - 1 ) + ox ;
         py = py * ch * csgc + oy ;
-        
+
         if ( !can->getDrawAll() )
            {
            if ( py + ch < ya ) continue ;
@@ -328,13 +328,13 @@ void SeqDNA::show_direct ( wxDC& dc )
               {
               if ( px + cw < xa ) continue ;
               if ( px > xb ) continue ;
-              }    
-           }    
+              }
+           }
 
         int pm = getMark ( a ) ;
         char ac = s.GetChar(a) ;
         if ( pm == 0 && !showNumber && ac == ' ' ) continue ;
-        
+
         if ( pm == 1 ) // Marked (light gray background)
            {
            dc.SetBackgroundMode ( wxSOLID ) ;
@@ -348,13 +348,13 @@ void SeqDNA::show_direct ( wxDC& dc )
            dc.SetTextForeground ( *wxWHITE ) ;
            }
         else dc.SetTextForeground ( getHighlightColor ( a , getBaseColor ( ac ) ) ) ;
-        
+
         if ( isPrimer )
            {
            if ( s.GetChar(a) == vec->getSequenceChar(a) ) dc.SetTextForeground ( *wxBLUE ) ;
            else dc.SetTextForeground ( *wxRED ) ;
-           }    
-        
+           }
+
         if ( can->isPrinting() && pm == 1 )
            {
            dc.SetBrush ( *MYBRUSH ( wxColour ( 230 , 230 , 230 ) ) ) ;
@@ -369,8 +369,8 @@ void SeqDNA::show_direct ( wxDC& dc )
 
 		if ( showLowercaseDNA ) dc.DrawText ( wxString ( (wxChar) ac ) . Lower() , px , py ) ;
         else dc.DrawText ( wxString ( (wxChar) ac ) , px , py ) ;
-        
-        int pz = py + ch ; 
+
+        int pz = py + ch ;
 
         if ( pm == 2 && !can->doOverwrite() ) // Insert cursor
            {
@@ -391,7 +391,7 @@ void SeqDNA::show_direct ( wxDC& dc )
             dc.SetPen(*wxRED_PEN);
             dc.DrawLine ( px , py + ch - 2 , px + cw , py + ch - 2 ) ;
             dc.SetPen(*wxTRANSPARENT_PEN);
-        	}    
+        	}
 
         if ( showNumber )
            {
@@ -407,7 +407,7 @@ void SeqDNA::show_direct ( wxDC& dc )
               mylog ( "SeqDNA::show_direct" , wxString::Format ( "C: %d, %d" , endnumberlength , padd ) ) ;
               if ( padd > 0 && padd < 20 ) t.Pad ( padd , '0' , false ) ;
               mylog ( "SeqDNA::show_direct" , "D" ) ;
-              }    
+              }
            else
               {
               mylog ( "SeqDNA::show_direct" , "B2" ) ;
@@ -416,17 +416,17 @@ void SeqDNA::show_direct ( wxDC& dc )
               mylog ( "SeqDNA::show_direct" , "C2" ) ;
               t = alternateName ;
               mylog ( "SeqDNA::show_direct" , "D2" ) ;
-              }    
+              }
            dc.DrawText ( t , bo , py ) ;
            mylog ( "SeqDNA::show_direct" , "E" ) ;
-           }    
-        }    
+           }
+        }
 
 
     dc.SetBackgroundMode ( bm ) ;
     dc.SetTextBackground ( tbg ) ;
     dc.SetTextForeground ( tfg ) ;
-    }    
+    }
 
 void SeqDNA::makeEndnumberLength()
     {
@@ -435,16 +435,16 @@ void SeqDNA::makeEndnumberLength()
     int endnumber = offset + s.length() ;
     endnumberlength = 0 ;
     while ( endnumber > 0 ) { endnumber /= 10 ; ox += wx ; endnumberlength++ ; }
-    
+
     if ( whatsthis() == _T("FEATURE") &&
-         can->child && 
+         can->child &&
          can->child->def == _T("alignment") )
         {
         endnumberlength = can->maxendnumberlength ;
-        }        
+        }
     }
-        
-        
+
+
 int SeqDNA::getLine ( int y )
     {
     if ( !useDirectRoutines() ) return SeqBasic::getLine ( y ) ;
@@ -458,7 +458,7 @@ int SeqDNA::getLine ( int y )
         int ret = y / can->NumberOfLines() ;
         if ( ret < 0 ) return -1 ;
         return ret ;
-        }    
+        }
     else return -1 ;
     }
 
@@ -474,15 +474,15 @@ int SeqDNA::getItem ( wxPoint pt , int line )
     y -= can->border ;
     y /= ch ;
     y /= can->NumberOfLines() ;
-    
+
     x -= ox ;
     if ( x < 0 ) return -1 ;
     int j = 0 ;
-    while ( x >= cw * can->blocksize + cw - 1 ) 
+    while ( x >= cw * can->blocksize + cw - 1 )
         {
         j += can->blocksize ;
         x -= cw * can->blocksize + cw - 1 ;
-        }    
+        }
     while ( x >= 0 && j < itemsperline )
         {
         if ( x >= 0 && x <= cw )
@@ -490,35 +490,35 @@ int SeqDNA::getItem ( wxPoint pt , int line )
            int ret = line * itemsperline + j + 1 ;
            if ( ret > s.length() ) return -1 ;
            return ret ;
-           }    
+           }
         j++ ;
         x -= cw ;
         if ( j % can->blocksize == 0 ) x -= cw - 1 ;
-        }    
+        }
 
     return 0 ;
     }
 
-int SeqDNA::getMarkSize ()    
+int SeqDNA::getMarkSize ()
     {
     if ( !useDirectRoutines() ) return SeqBasic::getMarkSize() ;
     return s.length()+1 ;
     }
-    
+
 int SeqDNA::getRectSize ()
     {
     if ( !useDirectRoutines() ) return SeqBasic::getRectSize() ;
     return 0 ;
     }
-    
+
 wxRect SeqDNA::getRect ( int i )
     {
     if ( !useDirectRoutines() ) return pos.r[i] ;
-    
+
     wxRect ret ;
     ret.x = 0 ;
     ret.y = ( (i-1) / itemsperline ) * can->charheight * can->NumberOfLines() ;
-    
+
     return ret ;
     }
 

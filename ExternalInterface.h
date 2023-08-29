@@ -45,14 +45,14 @@ class EILB : public wxHtmlListBox
 	virtual void Set ( int id , wxString s , wxString t = _T("") ) ; ///< Set an entry
 	
 	wxArrayString was , data ;
-	} ;    
+	} ;
 
 /// The External Interface panel class
 class EIpanel : public wxPanel
 {
     public :
 	EIpanel ( wxWindow *parent , int _mode ) ; ///< Constructor
-    
+
 //    private :
 	virtual void process () ; ///< Runs the query, as process_blast or process_ncbi
     virtual wxString num2html ( int num , int digits ) ; ///< Returns a HTML-formatted number
@@ -64,14 +64,14 @@ class EIpanel : public wxPanel
     virtual void execute_blast_b3() ; ///< Opens the associated link
     virtual void execute_blast() ; ///< Opens returned BLAST entry
     virtual wxString blast_align ( wxString qseq , wxString mseq , wxString hseq , int cpl , int qoff , int hoff ) ;
-    
+
     virtual void init_ncbi() ; ///< Initializes NCBI interface
     virtual void process_ncbi() ; ///< Processes NCBI request
     virtual void execute_ncbi() ; ///< Opens returned sequence entry
     virtual void execute_ncbi_b3() ; ///< Opens the associated link
 
     virtual void execute_ncbi_load ( wxString database ) ; ///< Load a sequence from NCBI
-    
+
     virtual void OnB1 ( wxCommandEvent& WXUNUSED(event) ) ; ///< Button 1 handler
     virtual void OnB2 ( wxCommandEvent& WXUNUSED(event) ) ; ///< Button 2 handler
     virtual void OnB3 ( wxCommandEvent& WXUNUSED(event) ) ; ///< Button 3 handler
@@ -79,10 +79,10 @@ class EIpanel : public wxPanel
     virtual void OnBnext ( wxCommandEvent& WXUNUSED(event) ) ; ///< "Next" event handler
     virtual void OnC1 ( wxCommandEvent& WXUNUSED(event) ) ; ///< Choice box 1 event handler
     virtual void OnLboxDClick ( wxCommandEvent& WXUNUSED(event) ) ; ///< List box double click event handler
-    
+
     virtual wxString val ( TiXmlNode *n ) ; ///< Return safe value
     virtual wxString valFC ( TiXmlNode *n ) ; ///< Return value of FirstChild
-    
+
     int mode ;
     wxPanel *up ;
     EILB *hlb ;
@@ -92,14 +92,14 @@ class EIpanel : public wxPanel
     wxButton *b1 , *b2 , *b3 , *b_last , *b_next ;
     wxChoice *c1 , *c2 ;
     long res_count , res_start , RETMAX ;
-    
+
     // BLAST-specific
     blastThread *blast_thread ;
     wxString blast_res ;
 
-    
+
     DECLARE_EVENT_TABLE()
-	} ;    
+	} ;
 
 /**	\brief The External Interface ChildBase class
 */
@@ -108,7 +108,7 @@ class ExternalInterface : public ChildBase
     public :
     ExternalInterface(wxWindow *parent, const wxString& title) ; ///< Constructor
     ~ExternalInterface () ; ///< Destructor
-    
+
     void initme () ; ///< Initialization
     virtual wxString getName () ; ///< Returns the class name
 

@@ -25,12 +25,12 @@ class TEliteLaChromLogDialog : public wxDialog
 {
     public :
     TEliteLaChromLogDialog ( wxWindow *parent, const wxString& title , wxString basefile ) ;
-    
+
     virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
     virtual void OnDatesList(wxCommandEvent &event);
     virtual void OnUserList(wxCommandEvent &event);
     virtual void OnExcel(wxCommandEvent &event);
-    
+
     private :
     void ReadFile ( wxString filename , wxArrayString &data ) ;
     void Uniquify ( wxArrayString &data , vector <wxArrayString> &tabs ) ;
@@ -38,15 +38,15 @@ class TEliteLaChromLogDialog : public wxDialog
     void UpdateLines () ;
     void SortTabs ( vector <wxArrayString> &tabs ) ;
     void MergeWith ( vector <wxArrayString> &tabs , int col ) ;
-    
+
     wxString filename_apex , filename_area , filename_estdconc ;
     wxArrayString data_apex , data_area , data_estdconc ;
     wxArrayString unique[12] , col_headers ;
     vector <wxArrayString> tabs_apex , tabs_area , tabs_estdconc , tabs_merged , tabs_display ;
-    
+
     wxListBox *unique_dates , *unique_users ;
     wxListCtrl *lines ;
-    
+
     DECLARE_EVENT_TABLE()
 } ;
 

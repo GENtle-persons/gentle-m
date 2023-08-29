@@ -9,7 +9,7 @@ BEGIN_EVENT_TABLE(ProgramOptionsDialog, wxDialog )
     EVT_BUTTON(POD_AA_COL,ProgramOptionsDialog::OnAACol)
     EVT_CHAR_HOOK(ProgramOptionsDialog::OnCharHook)
 END_EVENT_TABLE()
-    
+
 BEGIN_EVENT_TABLE(TEnzymeSettingsTab, wxPanel )
     EVT_CHECKBOX(GES_USE,TEnzymeSettingsTab::OnEnzymeCheckbox)
     EVT_CHECKBOX(GES_USE_MINCUTOFF,TEnzymeSettingsTab::OnEnzymeCheckbox)
@@ -28,32 +28,32 @@ TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent , int _mode )
 	mode = _mode ;
 	int w , h ;
     GetClientSize ( &w , &h ) ;
-    
+
     wxBoxSizer *vs = new wxBoxSizer ( wxVERTICAL ) ;
     wxFlexGridSizer *topSizer = new wxFlexGridSizer ( 2 , 15 , 5 ) ;
-    optionsSizer = new wxFlexGridSizer ( 4 , 15 , 5 ) ;    
-    
+    optionsSizer = new wxFlexGridSizer ( 4 , 15 , 5 ) ;
+
     // Top
     wxString t = txt("t_use_global_enzyme_settings") ; // EST_GLOBAL
     if ( mode == EST_PROJECT ) t = txt("t_use_project_enzyme_settings") ;
     if ( mode == EST_SINGLE ) t = txt("t_use_single_enzyme_settings") ;
-    useSettings = new wxCheckBox ( this , GES_USE , t ) ; 
-    join_enzymes = new wxCheckBox ( this , -1 , txt("t_ges_join_enzymes") ) ;    
+    useSettings = new wxCheckBox ( this , GES_USE , t ) ;
+    join_enzymes = new wxCheckBox ( this , -1 , txt("t_ges_join_enzymes") ) ;
     topSizer->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
     topSizer->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
     topSizer->Add ( useSettings , 1 , wxALIGN_CENTER_VERTICAL ) ;
     topSizer->Add ( join_enzymes , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    
+
     vs->Add ( topSizer , 0 , wxEXPAND , 5 ) ;
     vs->Add ( new wxStaticText ( this , -1 , _T(" ") ) , 0 , wxEXPAND , 5 ) ;
     vs->Add ( optionsSizer , 1 , wxEXPAND , 5 ) ;
-    
+
     // Min/max cutoff
     useMinCutoff = new wxCheckBox ( this , GES_USE_MINCUTOFF , txt("t_ges_use_min_cutoff") ) ;
     minCutoff = new wxSpinCtrl ( this , -1 , _T("1")  , wxDefaultPosition , wxSize ( MYSPINBOXSIZE , 30 ) ) ;
     useMaxCutoff = new wxCheckBox ( this , GES_USE_MAXCUTOFF , txt("t_ges_use_max_cutoff") ) ;
     maxCutoff = new wxSpinCtrl ( this , -1 , _T("3")  , wxDefaultPosition , wxSize ( MYSPINBOXSIZE , 30 ) ) ;
-    
+
     // Length of recognition sequence
     recog4 = new wxCheckBox ( this , -1 , txt("t_ges_seqlen4") ) ;
     recog5 = new wxCheckBox ( this , -1 , txt("t_ges_seqlen5") ) ;
@@ -64,7 +64,7 @@ TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent , int _mode )
     pattern3 = new wxCheckBox ( this , -1 , txt("t_ges_overlap3") ) ;
     pattern5 = new wxCheckBox ( this , -1 , txt("t_ges_overlap5") ) ;
     pattern_blunt = new wxCheckBox ( this , -1 , txt("t_ges_overlap_blunt") ) ;
-    
+
     // Group list
     default_group = new wxChoice ( this , -1 ) ;
     default_group->Append ( txt("All") ) ;
@@ -73,20 +73,20 @@ TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent , int _mode )
     for ( int i = 0 ; i < vs2.GetCount() ; i++ )
         default_group->Append ( vs2[i] ) ;
     default_group->SetStringSelection ( txt("All") ) ;
-    
+
     // Colors
     use_color_coding = new wxCheckBox ( this , GES_USE_COLOR_CODING , txt("t_ges_use_color_coding") ) ;
     bcol1 = new wxButton ( this , GES_COL_1 , txt("t_ges_cut1") ) ;
     bcol2 = new wxButton ( this , GES_COL_2 , txt("t_ges_cut2") ) ;
     bcol3 = new wxButton ( this , GES_COL_3 , txt("t_ges_cut3") ) ;
-    
+
     // Methylation
     met_dam = new wxCheckBox ( this , -1 , txt("t_ges_met_dam") ) ;
     met_dcm = new wxCheckBox ( this , -1 , txt("t_ges_met_dcm") ) ;
-    
+
     // GC%
     showgc = new wxCheckBox ( this , -1 , txt("t_ges_showgc") ) ;
-    
+
     // Adding elements to gridsizer
     optionsSizer->Add ( use_color_coding , 1 , wxALIGN_CENTER_VERTICAL ) ;
     optionsSizer->Add ( bcol1 , 1 , wxALIGN_CENTER_VERTICAL ) ;
@@ -97,17 +97,17 @@ TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent , int _mode )
     optionsSizer->Add ( minCutoff , 1 , wxALIGN_CENTER_VERTICAL ) ;
     optionsSizer->Add ( useMaxCutoff , 1 , wxALIGN_CENTER_VERTICAL ) ;
     optionsSizer->Add ( maxCutoff , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    
+
     optionsSizer->Add ( new wxStaticText ( this , -1 , txt("t_ges_overlaps") ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
     optionsSizer->Add ( pattern3 , 1 , wxALIGN_CENTER_VERTICAL ) ;
     optionsSizer->Add ( pattern5 , 1 , wxALIGN_CENTER_VERTICAL ) ;
     optionsSizer->Add ( pattern_blunt , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    
+
     optionsSizer->Add ( recog4 , 1 , wxALIGN_CENTER_VERTICAL ) ;
     optionsSizer->Add ( recog5 , 1 , wxALIGN_CENTER_VERTICAL ) ;
     optionsSizer->Add ( recog6 , 1 , wxALIGN_CENTER_VERTICAL ) ;
     optionsSizer->Add ( recog6p , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    
+
     optionsSizer->Add ( new wxStaticText ( this , -1 , txt("t_ges_enzyme_group") ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
     optionsSizer->Add ( default_group , 1 , wxALIGN_CENTER_VERTICAL ) ;
     optionsSizer->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
@@ -119,14 +119,14 @@ TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent , int _mode )
     optionsSizer->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxALIGN_CENTER_VERTICAL ) ;
 
     optionsSizer->Add ( showgc , 1 , wxALIGN_CENTER_VERTICAL ) ;
-    
+
     // Do it!
     this->SetSizer ( vs ) ;
-    vs->Fit ( this ) ;    
+    vs->Fit ( this ) ;
     this->Show () ;
     updateGlobalEnzymes () ;
 	vs->Fit ( this ) ;
-	}    
+	}
 
 ProgramOptionsDialog::~ProgramOptionsDialog ()
 	{
@@ -152,7 +152,7 @@ void TEnzymeSettingsTab::updateGlobalEnzymes ()
 		{
 		join_enzymes->Enable ( use ) ;
 		use_color_coding->Enable ( use ) ;
-		}    
+		}
 	updateColorButton ( bcol1 , col1 ) ;
 	updateColorButton ( bcol2 , col2 ) ;
 	updateColorButton ( bcol3 , col3 ) ;
@@ -165,27 +165,27 @@ void TEnzymeSettingsTab::updateColorButton ( wxButton *b , wxColour &c )
 	else b->SetBackgroundColour ( *wxBLACK ) ;
 	if ( mode == EST_GLOBAL ) b->Enable ( use_color_coding->GetValue() ) ;
  	else b->Enable ( use_color_coding->GetValue() && useSettings->GetValue() ) ;
-	}    
-	
+	}
+
 void TEnzymeSettingsTab::OnEnzymeCheckbox ( wxCommandEvent &event )
 	{
 	updateGlobalEnzymes () ;
-	}    
+	}
 
 void TEnzymeSettingsTab::OnButton1 ( wxCommandEvent &event )
 	{
 	updateColor ( col1 ) ;
-	}    
+	}
 
 void TEnzymeSettingsTab::OnButton2 ( wxCommandEvent &event )
 	{
 	updateColor ( col2 ) ;
-	}    
+	}
 
 void TEnzymeSettingsTab::OnButton3 ( wxCommandEvent &event )
 	{
 	updateColor ( col3 ) ;
-	}    
+	}
 
 void TEnzymeSettingsTab::updateColor ( wxColour &c )
 	{
@@ -193,8 +193,8 @@ void TEnzymeSettingsTab::updateColor ( wxColour &c )
 	if ( !c2.Ok() ) return ;
 	c = c2 ;
 	updateGlobalEnzymes () ;
-	}    
-    
+	}
+
 
 // ****************************************
 
@@ -203,7 +203,7 @@ ProgramOptionsDialog::ProgramOptionsDialog(wxWindow *parent, const wxString& tit
     {
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
-	
+
     globalSettingsPanel = NULL ;
     nb = new wxNotebook ( (wxWindow*) this , -1 ) ;
 //	wxNotebookSizer *nbs = new wxNotebookSizer ( nb ) ;
@@ -230,35 +230,35 @@ ProgramOptionsDialog::ProgramOptionsDialog(wxWindow *parent, const wxString& tit
     OK->SetDefault () ;
     OK->SetFocus() ;
     }
-    
+
 void ProgramOptionsDialog::initGlobalEnzymes ()
 	{
     globalEnzymesPanel = new TEnzymeSettingsTab ( nb ) ;
-    nb->AddPage ( globalEnzymesPanel , txt("t_global_enzymes") ) ;    
-    }    
-    
+    nb->AddPage ( globalEnzymesPanel , txt("t_global_enzymes") ) ;
+    }
+
 void ProgramOptionsDialog::initGlobalSettings ()
 	{
     globalSettingsPanel = new wxPanel ( nb , -1 ) ;
-    nb->AddPage ( globalSettingsPanel , txt("t_global_settings") ) ;    
+    nb->AddPage ( globalSettingsPanel , txt("t_global_settings") ) ;
 
 	wxStaticBoxSizer *display_options = new wxStaticBoxSizer ( wxVERTICAL , globalSettingsPanel , txt("program_options_display") ) ;
 	wxStaticBoxSizer *general_options = new wxStaticBoxSizer ( wxVERTICAL , globalSettingsPanel , txt("program_options_general") ) ;
 
 	// General settings
     language = new wxChoice ( globalSettingsPanel , -1 ) ;
-    loadLastProject = new wxCheckBox ( globalSettingsPanel , -1 , 
+    loadLastProject = new wxCheckBox ( globalSettingsPanel , -1 ,
                         txt("t_load_last_project") ) ;
-    useMetafile = new wxCheckBox ( globalSettingsPanel , -1 , 
+    useMetafile = new wxCheckBox ( globalSettingsPanel , -1 ,
                         txt("t_use_metafile") ) ;
-    checkUpdate = new wxCheckBox ( globalSettingsPanel , -1 , 
+    checkUpdate = new wxCheckBox ( globalSettingsPanel , -1 ,
                         txt("t_check4update") ) ;
-    useInternalHelp = new wxCheckBox ( globalSettingsPanel , -1 , 
-                        txt("t_useinternalhelp") ) ; 
-    useOnlineHelp = new wxCheckBox ( globalSettingsPanel , -1 , 
-                        txt("t_useonlinehelp") ) ; 
-    doRegisterStuff = new wxCheckBox ( globalSettingsPanel , -1 , 
-                        txt("t_doregisterstuff") ) ; 
+    useInternalHelp = new wxCheckBox ( globalSettingsPanel , -1 ,
+                        txt("t_useinternalhelp") ) ;
+    useOnlineHelp = new wxCheckBox ( globalSettingsPanel , -1 ,
+                        txt("t_useonlinehelp") ) ;
+    doRegisterStuff = new wxCheckBox ( globalSettingsPanel , -1 ,
+                        txt("t_doregisterstuff") ) ;
     use_nonstandard_translation_table = new wxCheckBox ( globalSettingsPanel , -1 ,
                         txt("t_use_nonstandard_translation_table") ) ;
     nonstandard_translation_table = new wxChoice ( globalSettingsPanel , -1 ) ;
@@ -273,13 +273,13 @@ void ProgramOptionsDialog::initGlobalSettings ()
 
 
     // Display options
-    enhancedDisplay = new wxCheckBox ( globalSettingsPanel , -1 , 
-                        txt("t_enhanced_display") ) ; 
-    vectorTitle = new wxCheckBox ( globalSettingsPanel , -1 , 
+    enhancedDisplay = new wxCheckBox ( globalSettingsPanel , -1 ,
+                        txt("t_enhanced_display") ) ;
+    vectorTitle = new wxCheckBox ( globalSettingsPanel , -1 ,
                         txt("t_vector_title") ) ;
-    vectorLength = new wxCheckBox ( globalSettingsPanel , -1 , 
+    vectorLength = new wxCheckBox ( globalSettingsPanel , -1 ,
                         txt("t_vector_length") ) ;
-    showSplashScreen = new wxCheckBox ( globalSettingsPanel , -1 , 
+    showSplashScreen = new wxCheckBox ( globalSettingsPanel , -1 ,
                         txt("t_show_splashscreen") ) ;
     showEnzymePos = new wxCheckBox ( globalSettingsPanel , -1 ,
                         txt("t_showenzymepos") ) ;
@@ -291,15 +291,15 @@ void ProgramOptionsDialog::initGlobalSettings ()
                         txt("t_show_tooltips") ) ;
     showLowercaseDNA = new wxCheckBox ( globalSettingsPanel , -1 ,
                         txt("t_show_lowercase_dna") ) ; // !!!!! VARIABLES!!!!
-                        
-                        
+
+
     wxString efm[3] ;
     efm[0] = txt("t_editfeaturemode_1") ;
     efm[1] = txt("t_editfeaturemode_2") ;
     efm[2] = txt("t_editfeaturemode_3") ;
-    editFeatureMode = new wxRadioBox ( globalSettingsPanel , -1 , 
-                        txt("t_editfeaturemode") , 
-                        wxDefaultPosition , 
+    editFeatureMode = new wxRadioBox ( globalSettingsPanel , -1 ,
+                        txt("t_editfeaturemode") ,
+                        wxDefaultPosition ,
                         wxDefaultSize ,
                         3 , efm , 1 , wxRA_SPECIFY_ROWS ) ;
     editFeatureMode->SetSelection ( myapp()->frame->editFeatureMode ) ;
@@ -307,14 +307,14 @@ void ProgramOptionsDialog::initGlobalSettings ()
     wxString ssc[2] ;
     ssc[0] = _T("|") ;
     ssc[1] = _T("*") ;
-    showStopCodon = new wxRadioBox ( globalSettingsPanel , -1 , 
-                        txt("t_show_stop_codon") , 
-                        wxDefaultPosition , 
+    showStopCodon = new wxRadioBox ( globalSettingsPanel , -1 ,
+                        txt("t_show_stop_codon") ,
+                        wxDefaultPosition ,
                         wxDefaultSize ,
                         2 , ssc , 1 , wxRA_SPECIFY_ROWS ) ;
     showStopCodon->SetSelection ( myapp()->frame->showStopCodon ) ;
     wxButton *b_aacol = new wxButton ( globalSettingsPanel , POD_AA_COL , txt("t_aa_col") ) ;
-                        
+
     enhancedDisplay->SetValue ( myapp()->frame->enhancedRefresh ) ;
     vectorTitle->SetValue ( myapp()->frame->showVectorTitle ) ;
     vectorLength->SetValue ( myapp()->frame->showVectorLength ) ;
@@ -331,19 +331,19 @@ void ProgramOptionsDialog::initGlobalSettings ()
     showToolTips->SetValue ( myapp()->frame->LS->getOption ( _T("SHOWTOOLTIPS") , true ) ) ;
     showLowercaseDNA->SetValue ( myapp()->frame->showLowercaseDNA ) ;
     use_nonstandard_translation_table->SetValue ( myapp()->frame->nonstandard_translation_table != -1 ) ;
-    
+
     int a ;
     for ( a = 0 ; a < myapp()->frame->language_list.GetCount() ; a++ )
     	{
 		if ( myapp()->frame->language_list[a].IsEmpty() ) continue ;
 		language->Append ( myapp()->frame->language_list[a] ) ;
 		}
-    
+
 //    language->Append ( _T("en") ) ;
 //    language->Append ( _T("de") ) ;
     language->SetStringSelection ( myapp()->frame->lang_string ) ;
     aacol = myapp()->frame->aa_color ;
-    
+
     TVector dummy ;
     int tt_mark = 0 ;
     for ( int a = 0 ; a < dummy.countCodonTables() ; a++ )
@@ -453,19 +453,19 @@ void TEnzymeRules::init () // Default settings
 	use_color_coding = true ;
 	methylation = 0 ;
 	showgc = false ;
-	}    
+	}
 
 void TEnzymeRules::load_global_settings ()
 	{
 	init () ;
     wxString s = myapp()->frame->LS->getOption ( _T("GLOBALENZYMESETTINGS") , _T("") ) ;
     from_string ( s ) ;
-	}    
+	}
 
 void TEnzymeRules::save_global_settings ()
 	{
     myapp()->frame->LS->setOption ( _T("GLOBALENZYMESETTINGS") , to_string() ) ;
-	}    
+	}
 
 void TEnzymeRules::setup_options ( TEnzymeSettingsTab *est )
 	{
@@ -491,7 +491,7 @@ void TEnzymeRules::setup_options ( TEnzymeSettingsTab *est )
 	est->met_dcm->SetValue ( ( methylation & DCM_METHYLATION ) > 0 ) ;
 	est->showgc->SetValue ( showgc ) ;
 	est->updateGlobalEnzymes () ;
-	}    
+	}
 
 void TEnzymeRules::lookup_options ( TEnzymeSettingsTab *est )
 	{
@@ -514,17 +514,17 @@ void TEnzymeRules::lookup_options ( TEnzymeSettingsTab *est )
 	join_enzymes = est->join_enzymes->GetValue() ;
 	use_color_coding = est->use_color_coding->GetValue() ;
 	showgc = est->showgc->GetValue() ;
-	
+
 	methylation = 0 ;
 	if ( est->met_dam->GetValue() ) methylation += DAM_METHYLATION ;
 	if ( est->met_dcm->GetValue() ) methylation += DCM_METHYLATION ;
 	}
-	
+
 bool TEnzymeRules::isEqual ( TEnzymeRules &r )
 	{
  	return to_string() == r.to_string() ;
-	}    
-     
+	}
+
 wxString TEnzymeRules::to_string ()
 	{
 	wxString ret ;
@@ -549,7 +549,7 @@ wxString TEnzymeRules::to_string ()
 	ret += wxString::Format ( _T("methylation=%d\r") , methylation ) ;
 	ret += wxString::Format ( _T("showgc=%d\r") , showgc ) ;
 	return ret ;
-	}    
+	}
 
 void TEnzymeRules::from_string ( wxString &s )
 	{
@@ -583,8 +583,8 @@ void TEnzymeRules::from_string ( wxString &s )
 		else if ( key == _T("use_color_coding") ) use_color_coding = l ;
 		else if ( key == _T("methylation") ) methylation = l ;
 		else if ( key == _T("showgc") ) showgc = l ;
-		}    
-	}    
+		}
+	}
 
 wxColour TEnzymeRules::scan_color ( wxString s )
 	{
@@ -604,7 +604,7 @@ wxColour *TEnzymeRules::getColor ( int cuts )
 	if ( cuts == 2 ) return &col2 ;
 	if ( cuts == 3 ) return &col3 ;
 	return &col1 ; // Dummy
-	}    
+	}
 
 void TEnzymeRules::getVectorCuts ( TVector *v )
 {
@@ -618,7 +618,7 @@ void TEnzymeRules::getVectorCuts ( TVector *v )
     wxArrayString vs ;
     myapp()->frame->LS->getEnzymesInGroup ( default_group , vs ) ;
     ve.Alloc ( vs.GetCount() ) ;
-    
+
     // Removing the ones we already did because they were manually selected
     for ( a = 0 ; a < v->re.GetCount() ; a++ )
     {
@@ -628,8 +628,8 @@ void TEnzymeRules::getVectorCuts ( TVector *v )
 	{
 	    vs[i] = _T("") ;
 	    i = vs.Index ( v->re[a]->getName() ) ;
-	}    
-    }    
+	}
+    }
 
     // Eliminating from properties
     for ( a = 0 ; a < vs.GetCount() ; a++ )
@@ -645,8 +645,8 @@ void TEnzymeRules::getVectorCuts ( TVector *v )
 	if ( keep && !recog6 && e->getSequence().length() == 6 ) keep = false ;
 	if ( keep && !recog_longer && e->getSequence().length() > 6 ) keep = false ;
 	if ( keep ) ve.Add ( e ) ;
-    }    
-    
+    }
+
     // Add what has the correct number of cuts
     v->re2.Clear () ; // The list of used enzymes that were *not* added manually
     int max = 10000000 ; // Ridiculously high number
@@ -660,7 +660,7 @@ void TEnzymeRules::getVectorCuts ( TVector *v )
 	{
 	    v->re2.Add ( ve[a] ) ;
 	    for ( b = 0 ; b < vc.size() ; b++ ) v->rc.push_back ( vc[b] ) ;
-	}    
-    }    
+	}
+    }
 }
 

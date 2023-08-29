@@ -32,7 +32,7 @@ class TVectorTree : public wxTreeCtrl
     {
     public :
     TVectorTree ( ChildBase *parent , int i ) ;
-    
+
     void initme () ;
     void OnEvent ( wxTreeEvent &event ) ;
     void OnActivation ( wxTreeEvent &event ) ;
@@ -64,15 +64,15 @@ class TVectorTree : public wxTreeCtrl
     void blastAA ( wxCommandEvent &ev ) ; ///< Event redirect to parent child
     void copyAA ( wxCommandEvent &ev ) ; ///< Event redirect to parent child
     void AAasNewSequence ( wxCommandEvent &ev ) ; ///< Event redirect to parent child
-    
+
     // Variables
     MyChild *p ; ///< Pointer to the child containing this tree
     wxTextCtrl *textWindow ; ///< Pointer to the (con)text display area
     wxTreeItemId treeroot ; ///< The root item
     wxTreeItemId vroot ; ///< The vector root item
     wxTreeItemId enzroot ; ///< The enzyme root item
-    
-    
+
+
     DECLARE_EVENT_TABLE()
     } ;
 

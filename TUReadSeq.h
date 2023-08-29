@@ -21,9 +21,9 @@ class TUReadSeq
     void convert ( TGenBank &gb ) ; ///< Convert the sequences to GenBank format
 
     static int getSeqType ( wxString t ) ; ///< Return the sequence type
-    
+
     short error ; // Parsing error
-    
+
     private :
     wxString filename ; ///< Name of source file
     short format ;

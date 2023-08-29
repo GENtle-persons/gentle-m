@@ -27,7 +27,7 @@ int SeqAAstructure::arrange ( int n )
 	if ( !can || !aa ) return 0 ;
     int w , h , bo = can->border ;
     s = aa->s ;
-    
+
     // Setting basic values
     can->SetFont(*can->font);
     int wx = can->charwidth , wy = can->charheight ;
@@ -59,12 +59,12 @@ void SeqAAstructure::show ( wxDC& dc )
     for ( n = 0 ; n < csgc && can->seq[n] != this ; n++ ) ;
     if ( n == csgc ) return ;
     mylog ( "SeqAAstructure::show_direct" , "1" ) ;
-    
+
     // Setting basic values
     int cw = can->charwidth , ch = can->charheight ;
     int ox = bo + cw + cw * endnumberlength ;
     int oy = n*ch+bo ;
-    
+
     can->MyGetClientSize ( &w , &h ) ;
     xb = w ;
     yb = h ;
@@ -82,19 +82,19 @@ void SeqAAstructure::show ( wxDC& dc )
     xb += xa ;
     ya = -ya ;
     yb += ya ;
-    
+
     mylog ( "SeqAAstructure::show_direct" , "2" ) ;
     b = ( ya - ch - oy ) / ( ch * csgc ) * itemsperline ;
     mylog ( "SeqAAstructure::show_direct" , "3" ) ;
     for ( a = 0 ; a < b && a < s.length() ; a += itemsperline ) ;
-        
+
     for ( ; a < s.length() ; a++ )
         {
 		int px = a % itemsperline , py = a / itemsperline ;
-		
+
 		px = px * cw + ( px / cbs ) * ( cw - 1 ) + ox ;
 		py = py * ch * csgc + oy ;
-		
+
 		if ( !can->getDrawAll() )
 			{
 			if ( py + ch < ya ) continue ;
@@ -103,13 +103,13 @@ void SeqAAstructure::show ( wxDC& dc )
 				{
 				if ( px + cw < xa ) continue ;
 				if ( px > xb ) continue ;
-				}    
-			}    
-		
+				}
+			}
+
 		// Show the amino acid
 		wxChar ch2 = s.GetChar(a) ;
 		draw_amino_acid ( dc , ch2 , px , py , cw , ch ) ;
-        }    
+        }
 
     dc.SetBackgroundMode ( bm ) ;
     dc.SetTextBackground ( tbg ) ;
@@ -122,14 +122,14 @@ void SeqAAstructure::draw_amino_acid ( wxDC &dc , char as , int x , int y , int 
 	unsigned int a ;
 	int point_radius = w / ( can->isPrinting() ? 8 : 6 ) ;
 	wxPoint base ( x , y ) ;
-	
+
 	vector <wxPoint> atom_pos , bonds ;
 	wxString atom_type ;
 	add_atom ( atom_pos , atom_type , 'N' , w * 1 / 9 , h * 2 / 9 ) ; // 0
 	add_atom ( atom_pos , atom_type , 'C' , w * 4 / 9 , h * 2 / 9 ) ; // 1
 	add_atom ( atom_pos , atom_type , 'C' , w * 7 / 9 , h * 2 / 9 ) ; // 2
 	add_atom ( atom_pos , atom_type , 'O' , w * 7 / 9 , h * 0 / 9 ) ; // 3
-	
+
 	add_bond ( bonds , 0 , 1 ) ;
 	add_bond ( bonds , 1 , 2 ) ;
 	add_bond ( bonds , 2 , 3 , true ) ;
@@ -357,7 +357,7 @@ void SeqAAstructure::draw_amino_acid ( wxDC &dc , char as , int x , int y , int 
 			add_bond ( bonds , 5 , 1 ) ;
 			break ;
 		}
-	
+
 	// Draw bonds
 	if ( can->isPrinting() ) dc.SetPen ( *pen_C ) ;
 	else dc.SetPen ( *wxGREY_PEN ) ;
@@ -395,7 +395,7 @@ void SeqAAstructure::draw_amino_acid ( wxDC &dc , char as , int x , int y , int 
 			dc.DrawLine ( p1 , p2 ) ;
 			}
 		}
-	
+
 	// Draw atoms
 	dc.SetPen ( *pen_C ) ;
 	for ( a = 0 ; a < atom_pos.size() ; a++ )

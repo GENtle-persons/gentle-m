@@ -1,7 +1,7 @@
 #include "PlasmidCanvas.h"
 
 // Popup menu handlers
-    
+
 void PlasmidCanvas::invokeORFpopup ( int item , wxPoint pt )
     {
     wxMenu *cm = new wxMenu ;
@@ -14,26 +14,26 @@ void PlasmidCanvas::invokeORFpopup ( int item , wxPoint pt )
     dm->Append ( ORF_AS_NEW_DNA , txt("p_orf_as_new_dna") ) ;
     dm->Append ( ORF_BLAST_DNA , txt("m_blast_dna") ) ;
     cm->Append ( POPUP_DUMMY , txt("p_dna_sequence") , dm ) ;
-    
+
     wxMenu *am = new wxMenu ;
     am->Append ( ORF_COPY_AA , txt("p_orf_copy_aa") ) ;
     am->Append ( ORF_AS_NEW_AA , txt("p_orf_as_new_aa") ) ;
     am->Append ( ORF_BLAST_AA , txt("m_blast_aa") ) ;
     cm->Append ( POPUP_DUMMY , txt("p_aa_sequence") , am ) ;
-    
+
     PopupMenu ( cm , pt ) ;
     delete cm ;
     }
-    
+
 wxMenu *PlasmidCanvas::invokeItemPopup ( int item , wxPoint pt , bool doreturn )
     {
     wxMenu *cm = new wxMenu ;
     context_last_item = item ;
     int rf = 0 ;
 	if ( context_last_item >= 0 && context_last_item < p->vec->items.size() ) rf = p->vec->items[context_last_item].getRF() ;
-    
+
     cm->Append ( PC_ITEM_EDIT , txt("p_item_edit") ) ;
-    if ( p->vec->items[item].isVisible() ) 
+    if ( p->vec->items[item].isVisible() )
         cm->Append ( PC_ITEM_HIDE , txt("d_item_hide") ) ;
     else
         cm->Append ( PC_ITEM_SHOW , txt("d_item_show") ) ;
@@ -64,7 +64,7 @@ wxMenu *PlasmidCanvas::invokeItemPopup ( int item , wxPoint pt , bool doreturn )
     delete cm ;
     return NULL ;
     }
-    
+
 void PlasmidCanvas::itemMark ( wxCommandEvent &ev )
     {
 	if ( context_last_item < 0 || context_last_item >= p->vec->items.size() ) return ;
@@ -74,13 +74,13 @@ void PlasmidCanvas::itemMark ( wxCommandEvent &ev )
                     p->vec->items[context_last_item].from ,
                     p->vec->items[context_last_item].to ) ;
     }
-    
+
 void PlasmidCanvas::itemMarkShow ( wxCommandEvent &ev )
     {
     itemMark ( ev ) ;
     p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
     }
-    
+
 void PlasmidCanvas::itemEdit ( wxCommandEvent &ev )
     {
 	if ( context_last_item < 0 ) return ;
@@ -111,7 +111,7 @@ void PlasmidCanvas::itemShowHide ( wxCommandEvent &ev )
     }
 
 // Restriction enzyme context menu
-    
+
 wxMenu *PlasmidCanvas::invokeRsPopup ( int rs , wxPoint pt , bool doreturn )
     {
     int a ;
@@ -125,8 +125,8 @@ wxMenu *PlasmidCanvas::invokeRsPopup ( int rs , wxPoint pt , bool doreturn )
     cm->Append ( PC_RS_MARK_SHOW , txt("p_rs_mark_show") ) ;
     cm->Append ( PC_RS_INFO , txt("p_rs_info") ) ;
     cm->AppendSeparator () ;
-    
-    for ( a = 0 ; a < p->vec->cocktail.GetCount() && 
+
+    for ( a = 0 ; a < p->vec->cocktail.GetCount() &&
                     p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->getName() ;
                     a++ ) ;
     if ( a == p->vec->cocktail.GetCount() )
@@ -138,7 +138,7 @@ wxMenu *PlasmidCanvas::invokeRsPopup ( int rs , wxPoint pt , bool doreturn )
         {
         cm->Append ( PC_RS_ADD2COCKTAIL , txt("p_rs_del_from_cocktail") ) ;
         }
-    
+
     if ( p->vec->cocktail.GetCount() > 0 )
         {
         cm->Append ( PC_RS_CUT_WITH_COCKTAIL , txt("p_cut_with_cocktail") ) ;
@@ -153,32 +153,32 @@ wxMenu *PlasmidCanvas::invokeRsPopup ( int rs , wxPoint pt , bool doreturn )
             cm->Append ( PC_DUMMY , c ) ;
             }
         }
-        
+
     lastrestrictionsite = -1 ;
     if ( doreturn ) return cm ;
     PopupMenu ( cm , pt ) ;
     delete cm ;
     return NULL ;
     }
-    
+
 void PlasmidCanvas::rsMark ( wxCommandEvent &ev )
     {
-    int from = p->vec->rc[context_last_rs].getPos() - 
+    int from = p->vec->rc[context_last_rs].getPos() -
                 p->vec->rc[context_last_rs].e->getCut() + 1 ;
     int to = from + p->vec->rc[context_last_rs].e->getSequence().length() - 1 ;
     p->cSequence->mark ( _T("DNA") , from , to ) ;
     }
-    
+
 void PlasmidCanvas::rsMarkShow ( wxCommandEvent &ev )
     {
     rsMark ( ev ) ;
-    p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;    
+    p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
     }
-    
+
 void PlasmidCanvas::rsAdd2Cocktail ( wxCommandEvent &ev )
     {
     int a ;
-    for ( a = 0 ; a < p->vec->cocktail.GetCount() && 
+    for ( a = 0 ; a < p->vec->cocktail.GetCount() &&
                     p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->getName() ;
                     a++ ) ;
     if ( a == p->vec->cocktail.GetCount() ) // Add to cocktail
@@ -193,13 +193,13 @@ void PlasmidCanvas::rsAdd2Cocktail ( wxCommandEvent &ev )
         p->vec->cocktail.pop_back () ;*/
         }
     }
-    
+
 void PlasmidCanvas::rsCutWithCocktail ( wxCommandEvent &ev )
     {
     p->vec->setAction ( _T("RESTRICTION") , 20 ) ;
     p->vec->doAction() ;
     }
-    
+
 void PlasmidCanvas::rsAddAndCut ( wxCommandEvent &ev )
     {
     rsAdd2Cocktail ( ev ) ;
@@ -210,7 +210,7 @@ void PlasmidCanvas::rsEdit ( wxCommandEvent &ev )
     {
     invokeVectorEditor ( _T("enzyme") , context_last_rs ) ;
     }
-    
+
 void PlasmidCanvas::rsInfo ( wxCommandEvent &ev )
     {
     wxString command = _T("http://rebase.neb.com/rebase/enz/") ;
@@ -218,28 +218,28 @@ void PlasmidCanvas::rsInfo ( wxCommandEvent &ev )
     command += _T(".html") ;
     myapp()->launchBrowser ( command ) ;
     }
-    
+
 void PlasmidCanvas::rsShowHide ( wxCommandEvent &ev )
     {
     if ( context_last_rs < 0 || context_last_rs >= p->vec->rc.size() ) return ;
     if ( p->def == _T("dna") ) p->treeBox->ToggleEnzymeVisibility ( p->vec->rc[context_last_rs].e ) ;
     }
-    
+
 void PlasmidCanvas::rsHideLimit ( wxCommandEvent &ev )
     {
     p->cSequence->rsHideLimit ( ev ) ;
     }
-    
+
 void PlasmidCanvas::rsDel ( wxCommandEvent &ev )
     {
     p->vec->undo.start ( txt("u_del_enzyme") ) ;
     int a ;
-    for ( a = 0 ; a < p->vec->cocktail.GetCount() && 
+    for ( a = 0 ; a < p->vec->cocktail.GetCount() &&
                     p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->getName() ;
                     a++ ) ;
     if ( a < p->vec->cocktail.GetCount() )
         rsAdd2Cocktail ( ev ) ; // Effectively removing enzyme from cocktail
-        
+
     for ( a = 0 ; a < p->vec->re.GetCount() &&
                         p->vec->re[a] != p->vec->rc[context_last_rs].e ; a++ ) ;
     for ( a++ ; a < p->vec->re.GetCount() ; a++ )
@@ -261,7 +261,7 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn , int pos 
     {
     wxMenu *cm = new wxMenu ;
     cm->Append ( PC_VECTOR_EDIT , txt("p_vector_edit") ) ;
-    
+
     if ( p->def == _T("dna") )
        {
         cm->Append(MDI_TRANSFORM_SEQUENCE, txt("t_transform_sequence") );
@@ -278,8 +278,8 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn , int pos 
            pm->Append( STRAND_NEW_53 , txt("m_strand_new_53") );
            pm->Append( STRAND_NEW_35 , txt("m_strand_new_35") );
            pm->Append( STRAND_NEW_BOTH , txt("m_strand_new_both") );
-           }    
-         
+           }
+
         // Features at this position
         if ( pos != -1 && p->vec->hasItemsAtPosition ( pos-1 ) )
 				cm->Append ( CM_OPEN_FEATURE , txt("m_open_feature") ) ;
@@ -287,7 +287,7 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn , int pos 
         // Online tools
         myapp()->frame->online_tools->init ( p->cSequence ) ;
         myapp()->frame->online_tools->add_context_menu ( cm ) ;
-        
+
         // PCR context menu
         if ( getMarkFrom() == -1 )
            {
@@ -304,10 +304,10 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn , int pos 
            if ( getMarkFrom() + 2 == getMarkTo() )
               pm->Append ( PRIMER_MUTATION , txt("m_primer_mutation") ) ;
            }
-        
+
         if ( p->vec->hasStickyEnds() && p->vec->isLinear() )
             cm->Append ( MDI_FILL_KLENOW , txt("p_fill_klenow") ) ;
-    
+
         if ( getMarkFrom() != -1 )
             {
             wxMenu *mm = new wxMenu ;
@@ -322,15 +322,15 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn , int pos 
                mm->Append ( MDI_EXTRACT_AA , txt("m_extract_aa") ) ;
                mm->Append ( PC_BLAST_AA , txt("m_blast_aa") ) ;
                }
-    
+
             mm->Append ( PC_BLAST_DNA , txt("m_blast_dna") ) ;
-            
+
             }
         if ( p->vec->cocktail.GetCount() > 0 )
             {
             cm->Append ( PC_RS_CUT_WITH_COCKTAIL , txt("p_cut_with_cocktail") ) ;
             }
-        
+
         if ( doreturn ) return cm ;
 
         if ( p->vec->isCircular() )
@@ -340,17 +340,17 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( wxPoint pt , bool doreturn , int pos 
 				last_rightclick_base = circular_pos ( angle ) ;
 				cm->Append ( PC_TURNING_POINT , txt("p_turn_this_zero") ) ;
 				}
-         
+
         cm->AppendSeparator();
         }
-    
+
     wxMenu *pm = new wxMenu ;
     cm->Append ( POPUP_DUMMY , txt("m_plasmid_map") , pm ) ;
     pm->Append ( PC_SAVE_IMAGE , txt("m_save_image") ) ;
     pm->Append ( PC_COPY_IMAGE , txt("m_copy_image") ) ;
     pm->Append ( MDI_PRINT_IMAGE , txt("m_print_image") ) ;
 	 pm->Append(MDI_PRINT_RESTRICTION_LIST, txt("m_print_restrictions") , txt("m_print_restrictions_txt") );
-    
+
     if ( p->def == _T("dna") )
        {
        cm->Append(MDI_ORFS, txt("m_orfs") );
@@ -379,7 +379,7 @@ void PlasmidCanvas::vecEdit ( wxCommandEvent &ev )
     {
     invokeVectorEditor ( _T("") , 0 ) ;
     }
-    
+
 void PlasmidCanvas::blastDNA ( wxCommandEvent &ev )
     {
     if ( getMarkFrom() == -1 ) return ;
@@ -392,7 +392,7 @@ void PlasmidCanvas::blastDNA ( wxCommandEvent &ev )
     if ( seq.IsEmpty() ) return ;
     myapp()->frame->blast ( seq , _T("blastn") ) ;
     }
-        
+
 void PlasmidCanvas::blastAA ( wxCommandEvent &ev )
     {
     wxString seq = p->doExtractAA() ;
@@ -400,7 +400,7 @@ void PlasmidCanvas::blastAA ( wxCommandEvent &ev )
     for ( a = 0 ; a < seq.length() && seq.GetChar(a) == ' ' ; a++ ) ;
     if ( a == seq.length() )
        {
-       wxMessageBox ( txt("t_no_or_empty_sequence") , 
+       wxMessageBox ( txt("t_no_or_empty_sequence") ,
                       txt("t_blast_failed") ,
                       wxOK | wxICON_ERROR  ) ;
        return ;
@@ -410,12 +410,12 @@ void PlasmidCanvas::blastAA ( wxCommandEvent &ev )
 
 void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl , int mut )
     {
-    TPrimerDesign *subframe = new TPrimerDesign ( 
-            myapp()->frame->getCommonParent() , 
+    TPrimerDesign *subframe = new TPrimerDesign (
+            myapp()->frame->getCommonParent() ,
             txt("t_pcr") ,
             p->vec ,
             pl , mut ) ;
-    
+
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon(_T("chrt_icn")));
@@ -431,7 +431,7 @@ void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl , int mut )
     subframe->Show() ;
     subframe->Maximize() ;
 
-    
+
     myapp()->frame->mainTree->addChild ( subframe , TYPE_PRIMER ) ;
     myapp()->frame->setChild ( subframe ) ;
     myapp()->frame->activateChild ( myapp()->frame->children.GetCount()-1 ) ;
@@ -478,31 +478,31 @@ void PlasmidCanvas::OnPrimerMutation ( wxCommandEvent &ev )
     if ( end >= p->vec->getSequenceLength() ) end = p->vec->getSequenceLength() ;
     if ( start < 1 ) start = 1 ;
     pl.push_back ( TPrimer ( start , end , true ) ) ;
-    
+
     start = getMarkFrom() - 20 ;
     end = getMarkTo() + 10 ;
     if ( end >= p->vec->getSequenceLength() ) end = p->vec->getSequenceLength() ;
-    if ( start < 1 ) start = 1 ;    
+    if ( start < 1 ) start = 1 ;
     pl.push_back ( TPrimer ( start , getMarkTo() , false ) ) ;
-    
+
     RunPrimerEditor ( pl ) ;
     }
 
-// **** ORF popup menu handlers    
+// **** ORF popup menu handlers
 
 wxString PlasmidCanvas::getDNAorAA ( int from , int to , int dir , bool dna )
     {
     int a ;
     wxString r , s ;
     if ( to < from ) to += p->vec->getSequenceLength() ;
-    
+
     for ( a = from ; a <= to ; a++ )
         {
         int b = a ;
         if ( a >= p->vec->getSequenceLength() ) b -= p->vec->getSequenceLength() ;
         r += p->vec->getNucleotide ( b ) ;
         }
-    
+
     if ( dir < 0 )
         {
         s = _T("") ;
@@ -532,7 +532,7 @@ void PlasmidCanvas::orfCopyDNA ( wxCommandEvent &ev )
         {
         wxTheClipboard->SetData( new wxTextDataObject(s) );
         wxTheClipboard->Close();
-        }    
+        }
     }
 
 void PlasmidCanvas::orfCopyAA ( wxCommandEvent &ev )
@@ -544,7 +544,7 @@ void PlasmidCanvas::orfCopyAA ( wxCommandEvent &ev )
         {
         wxTheClipboard->SetData( new wxTextDataObject(s) );
         wxTheClipboard->Close();
-        }    
+        }
     }
 
 void PlasmidCanvas::orfAsNewItem ( wxCommandEvent &ev )
@@ -608,7 +608,7 @@ void PlasmidCanvas::orfBlastDNA ( wxCommandEvent &ev )
     if ( s.IsEmpty() ) return ;
     myapp()->frame->blast ( s , _T("blastn") ) ;
     }
-        
+
 void PlasmidCanvas::orfBlastAA ( wxCommandEvent &ev )
     {
     int from = p->vec->getORF(context_last_orf)->get_from() ;
@@ -629,7 +629,7 @@ void PlasmidCanvas::itemBlastDNA ( wxCommandEvent &ev )
     if ( s.IsEmpty() ) return ;
     myapp()->frame->blast ( s , _T("blastn") ) ;
     }
-        
+
 void PlasmidCanvas::itemBlastAA ( wxCommandEvent &ev )
     {
 /*    int from = p->vec->items[context_last_item].from ;
@@ -659,7 +659,7 @@ void PlasmidCanvas::itemCopyAA ( wxCommandEvent &ev )
         {
         wxTheClipboard->SetData( new wxTextDataObject(s) );
         wxTheClipboard->Close();
-        }    
+        }
     }
 
 void PlasmidCanvas::itemAsNewAA ( wxCommandEvent &ev )
@@ -678,7 +678,7 @@ void PlasmidCanvas::itemAsNewAA ( wxCommandEvent &ev )
     delete nv ;
     aaa->vec->setChanged() ;
     }
-    
+
 void PlasmidCanvas::itemAsNewSequence ( wxCommandEvent &ev )
     {
     int from = p->vec->items[context_last_item].from ;
@@ -697,7 +697,7 @@ void PlasmidCanvas::itemAsNewSequence ( wxCommandEvent &ev )
         to += dir * ( rf - 1 ) - 1 ;
         wxString n = p->vec->items[context_last_item].name ;
         n += _T(" (") + p->vec->getName() + _T(")") ;
-    
+
         TVector *nv = new TVector ;
         nv->setSequence ( getDNAorAA ( from , to , dir , true ) ) ;
         nv->setName ( n ) ;
@@ -707,14 +707,14 @@ void PlasmidCanvas::itemAsNewSequence ( wxCommandEvent &ev )
         nv->updateDisplay() ;
         myapp()->frame->newFromVector ( nv ) ;
         }
-    }    
+    }
 
 void PlasmidCanvas::itemCopyDNA ( wxCommandEvent &ev )
     {
     int from = p->vec->items[context_last_item].from ;
     int to = p->vec->items[context_last_item].to ;
     int dir = p->vec->items[context_last_item].direction ;
-    
+
     int rf = p->vec->items[context_last_item].getRF() ;
     if ( rf != 0 )
         {
@@ -728,7 +728,7 @@ void PlasmidCanvas::itemCopyDNA ( wxCommandEvent &ev )
         {
         wxTheClipboard->SetData( new wxTextDataObject(s) );
         wxTheClipboard->Close();
-        }    
+        }
     }
 
 void PlasmidCanvas::OnFillKlenow(wxCommandEvent& event)
@@ -784,41 +784,41 @@ void PlasmidCanvas::setZoom ( int factor )
     SetVirtualSize ( vx , vy ) ;
     Refresh () ;
     }
-    
+
 void PlasmidCanvas::OnWhatCuts(wxCommandEvent& event)
     {
     p->cSequence->OnWhatCuts(event) ;
     }
-    
+
 void PlasmidCanvas::OnStrandCopy35(wxCommandEvent& event)
 	{
  	p->cSequence->OnStrandCopy35 ( event ) ;
-	}    
+	}
 
 void PlasmidCanvas::OnStrandCopy53(wxCommandEvent& event)
 	{
  	p->cSequence->OnStrandCopy53 ( event ) ;
-	}    
+	}
 
 void PlasmidCanvas::OnStrandCopyBoth(wxCommandEvent& event)
 	{
  	p->cSequence->OnStrandCopyBoth ( event ) ;
-	}    
+	}
 
 void PlasmidCanvas::OnStrandNew35(wxCommandEvent& event)
 	{
  	p->cSequence->OnStrandNew35 ( event ) ;
-	}    
+	}
 
 void PlasmidCanvas::OnStrandNew53(wxCommandEvent& event)
 	{
  	p->cSequence->OnStrandNew53 ( event ) ;
-	}    
+	}
 
 void PlasmidCanvas::OnStrandNewBoth(wxCommandEvent& event)
 	{
  	p->cSequence->OnStrandNewBoth ( event ) ;
-	}    
+	}
 
 
 void PlasmidCanvas::OnOpenFeature(wxCommandEvent& event)

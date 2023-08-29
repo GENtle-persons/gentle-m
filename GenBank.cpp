@@ -32,14 +32,14 @@ TGenBank::TGenBank ()
 	isblankorquote['"'] = true ;
     success = false ;
     }
-    
+
 /** \brief Loads text from file, calles parser
 	\param s Filename
 */
 void TGenBank::load ( wxString s )
     {
 	vs.Clear() ; // Clearing old data
-	
+
 	// Loading file to memory
     wxFile file ( s , wxFile::read ) ;
 	long l = file.Length() ;
@@ -49,7 +49,7 @@ void TGenBank::load ( wxString s )
 	t[l] = '\n' ;
 	t[l+1] = 0 ;
     mylog ( "-GenBank import" , "file opened" ) ;
-    
+
     char *c , *d ;
     vs.Alloc ( l / 60 ) ;
     for ( c = d = t ; *c ; c++ )
@@ -59,15 +59,15 @@ void TGenBank::load ( wxString s )
            *c = 0 ;
            if ( *d ) vs.Add ( wxString ( d , *wxConvCurrent ) ) ;
            d = c+1 ;
-           }    
-        }    
+           }
+        }
     delete [] t ;
     mylog ( "-GenBank import" , "file added" ) ;
-    
+
     parseLines () ; // Calling parser
     mylog ( "-GenBank import" , "file parsed" ) ;
     }
-    
+
 /** \brief Calls parser for text
 	\param s The text in GenBank format
 */
@@ -84,7 +84,7 @@ void TGenBank::parseLines ()
     vi.Clear () ;
     vi_l.clear () ;
     vs_l.clear () ;
-    
+
     if ( vs.IsEmpty () ||
          vs[0].Left ( 5 ) != _T("LOCUS") )
        return ;
@@ -95,7 +95,7 @@ void TGenBank::parseLines ()
         vi.Add ( count_blanks ( vs[a] ) ) ;
 
     // Pre-processing
-    int last = -1 ;    
+    int last = -1 ;
     wxArrayString vs2 ;
     wxArrayInt vi2 ;
     vs2.Alloc ( vs.GetCount() ) ;
@@ -111,9 +111,9 @@ void TGenBank::parseLines ()
            last++ ;
            vs2.Add ( trim ( vs[a] ) ) ;
            vi2.Add ( vi[a] ) ;
-           }    
+           }
         }
-    
+
 
     // Checking if only one sequence, can be handeled faster
     if ( vs2.GetCount()-1 == vs2.Index ( _T("//") ) )
@@ -128,13 +128,13 @@ void TGenBank::parseLines ()
        vs2.Clear () ;
        vi2.Clear () ;
        return ;
-       }    
-    
+       }
+
     vs = vs2 ;
     vi = vi2 ;
     vs2.Clear() ;
     vi2.Clear() ;
-    
+
     wxArrayString t ;
     wxArrayInt ti ;
     t.Alloc ( vs.GetCount() ) ;
@@ -148,19 +148,19 @@ void TGenBank::parseLines ()
            t.Clear () ;
            ti.Clear () ;
            }
-        else if ( !trim(vs[a]).IsEmpty() ) 
+        else if ( !trim(vs[a]).IsEmpty() )
            {
            t.Add ( trim ( vs[a] ) ) ;
            ti.Add ( vi[a] ) ;
            }
         }
-    
+
     if ( t.GetCount() > 0 )
         {
         vs_l.push_back ( t ) ;
         vi_l.push_back ( ti ) ;
         }
-    
+
     if ( vs_l.size() > 0 )
         {
         success = true ;
@@ -173,7 +173,7 @@ void TGenBank::parseLines ()
 void TGenBank::remap ( TVector *v )
     {
     remap ( v , vs , vi ) ;
-    }    
+    }
 
 /** \brief Remaps the given data to a TVector
 	\param v Pointer to the TVector
@@ -186,12 +186,12 @@ void TGenBank::remap ( TVector *v , const wxArrayString &vs , const wxArrayInt &
 	wxString k1 ;
 	vector <wxArrayString> items ;
 	wxString ns ;
-	
+
 	int a = 0 ;
-	
+
 	for ( line = 0 ; line < vs.GetCount() ; line++ ) a += (vi[line]==5) ? 1 : 0 ;
 	items.reserve ( a*2 ) ;
-	
+
 	wxString l , l2 ;
 	for ( line = 0 ; line < vs.GetCount() ; line++ )
 	 {
@@ -237,14 +237,14 @@ void TGenBank::remap ( TVector *v , const wxArrayString &vs , const wxArrayInt &
              l2 = l.Mid ( a ) ;
              l2.Replace ( _T(" ") , _T("") ) ;
              ns += l2 ;
-             }    
+             }
           }
       else
       	{
 			v->addDescription ( l + _T("\n") ) ;
 			}
 	 }
-	 
+
     v->setSequence ( ns.MakeUpper() ) ;
     v->items.reserve ( items.size() ) ;
     for ( a = 0 ; a < items.size() ; a++ ) addItem ( v , items[a] ) ;
@@ -269,7 +269,7 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
     {
     TVectorItem i ( _T("") , _T("") , 1 , 1 , VIT_MISC ) ; // Dummy values
     int a ;
-            
+
     // Type
     if ( va[0].MakeLower() == _T("source") ) return ;
 /*    for ( a = 0 ; a < VIT_TYPES ; a++ )
@@ -278,10 +278,10 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
            {
            i.setType ( a ) ;
            break ;
-           }    
+           }
         }
     if ( a == VIT_TYPES )*/ i.setType ( va[0] ) ;
-       
+
     // Properties
     i.desc.Alloc ( 1000 ) ;
     for ( a = 1 ; a < va.GetCount() ; a++ )
@@ -316,9 +316,9 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
                     v2 = v.AfterFirst ( ':' ) ;
                     v2 = _T("http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=protein&val=") + v2 ;
                     v2 = v + _T(" (") + v2 + _T(")") ;
-                    }    
+                    }
                  else v2 = v ;
-                 }    
+                 }
               i.desc += v2 ;
               }
            p = _T("/") + p ;
@@ -333,7 +333,7 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
            iterateItem ( v , i , va[a].Upper() ) ;
         }
     }
-    
+
 /** \brief Used for generating multiple items from a single GenBank item entry
 	\param Pointer to the TVector
 	\param i The TVectorItem new items should be based on
@@ -458,7 +458,7 @@ void TGenBank::itrim ( wxString &s )
 //    for ( a = 0 ; a < s.length() && ( s.GetChar(a) == ' ' || s.GetChar(a) < 15 ) ; a++ ) ;
 	if ( a ) s = s.Mid ( a ) ;
 	}
-	
+
 /** \brief Removes the leading and ending blanks and/or quotes from a string
 	\param s The string (as reference)
 */
@@ -473,7 +473,7 @@ void TGenBank::multitrim ( wxString &s , bool quotes )
 
     if ( a == 0 && b == s.length()-1 ) return ;
     s = s.Mid ( a , b - a + 1 ) ;
-    }    
+    }
 
 /** \brief Removes the leading and ending quotes from a string
 	\param s The string
@@ -508,7 +508,7 @@ void TGenBank::wrapit ( wxArrayString &ex , wxString init , wxString data , int 
         ex.Add ( s ) ;
         }
     }
-    
+
 /** \brief Sets a string to a certain width, and fills it up if necessary
 	\param init The string to expand/cut
 	\param to The desired length
@@ -519,7 +519,7 @@ wxString TGenBank::expand ( wxString init , int to , wxString with )
     while ( init.length() < to ) init += with ;
     return init.substr ( 0 , to ) ;
     }
-    
+
 /** \brief ???
 	\param pre ???
 	\param q ???
@@ -553,9 +553,9 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
     int a , b ;
     wxString s , t , u ;
 //    char z[1000] ;
-    
+
     wxString b21 = expand ( _T("") , 21 ) ;
-    
+
     // Vector
     t = expand ( v->getName() , 24 ) ;
 //    sprintf ( z , _T("%d bp") , v->getSequenceLength() ) ;
@@ -569,14 +569,14 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
     if ( v->isCircular() ) s += _T("circular ") ;
     else s += _T("linear ") ;
     ex.Add ( s ) ;
-    
+
     // Definition
     wrapit ( ex , _T("DEFINITION  ") , v->getDescription() ) ;
     s = v->getParam ( _T("genbank") ) ;
     while ( !s.IsEmpty() && s[s.length()-1] == '\n' )
        s.RemoveLast() ;
     ex.Add ( s ) ;
-    
+
     // Features
     ex.Add ( _T("FEATURES             Location/Qualifiers") ) ;
     for ( a = 0 ; a < v->items.size() ; a++ )
@@ -595,7 +595,7 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
            wrapit ( ex , b21 , quote ( _T("/gene") , v->items[a].name ) ) ;
         if ( !v->items[a].desc.IsEmpty() )
            wrapit ( ex , b21 , quote ( _T("/note") , v->items[a].desc ) ) ;
-           
+
         wxArrayString vs ;
         wxArrayString vss ;
         vss = v->items[a].getParamKeys() ;
@@ -606,7 +606,7 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
               wrapit ( ex , b21 , quote ( vs[b] , v->items[a].getParam(vs[b]) ) ) ;
            }
         }
-    
+
     // Sequence
     int q[256] ;
     for ( a = 0 ; a < 256 ; a++ ) q[a] = 0 ;
@@ -618,7 +618,7 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
         t.SetChar(a,b) ;
         q[b]++ ;
         }
-        
+
     if ( v->getType() != TYPE_AMINO_ACIDS )
        {
        s = _T("BASE COUNT   ") ;
@@ -639,7 +639,7 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
            }
         ex.Add ( s ) ;
         }
-    
+
     // Finally
     ex.Add ( _T("//") ) ;
     }
@@ -648,4 +648,4 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
 TGenBank::~TGenBank ()
     {
     }
-        
+

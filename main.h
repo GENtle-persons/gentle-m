@@ -188,7 +188,7 @@ class MyApp : public wxApp
     virtual wxString get_GENtle_version () ; ///< Returns the GENtle version string
 	virtual wxString getLocalDBname () ; ///< Returns the filename of the default local database
 	virtual void launchBrowser ( wxString url ) ;
-    
+
     MyFrame *frame; ///< The application frame
     wxMimeTypesManager mtm ; ///< The MIME types manager
     wxString homedir ; ///< Directory of the application
@@ -200,7 +200,7 @@ class MyApp : public wxApp
     wxHashString clp ; ///< Command line parameters
 	 wxCSConv *isoconv ; ///< UTF-8 conversion helper
 		wxStopWatch sw ;
-    
+
     private :
     virtual void registerFileExtension ( const wxString& extension ) ; ///< Registers a file extension to GENtle (windows only).
     virtual void registerProtocol ( const wxString& extension ) ; ///< Registers a protocol to GENtle (windows only).
@@ -312,7 +312,7 @@ WX_DECLARE_OBJARRAY(float, wxArrayFloat);
 #else
 	#define myass(a,b)
 #endif
- 
+
 #ifdef MYLOG
 	#define mylog(a,b) myapp()->do_my_log(a,b)	
 #else

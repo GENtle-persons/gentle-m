@@ -24,7 +24,7 @@ class TItemEditDialog : public wxDialog
     virtual void OnUseOffset ( wxCommandEvent &ev ) ; ///< Offset checkbox event handler
     virtual void OnList ( wxCommandEvent & WXUNUSED(ev) ) ; ///< Context list box event handler
     virtual void initlb () ; ///< Initialized list box
-                                            
+
     // Variables
     TVectorItem *vi ; ///< Pointer to the TVectorItem
     wxRadioBox *rb ; ///< The different item types

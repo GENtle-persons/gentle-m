@@ -22,9 +22,9 @@ float TPrimer::getTm ( int type )
         }
     return 0 ;
     }
-    
-wxString TPrimer::getName () { return name ; }    
-void TPrimer::setName ( wxString nn ) { name = nn ; }    
+
+wxString TPrimer::getName () { return name ; }
+void TPrimer::setName ( wxString nn ) { name = nn ; }
 float TPrimer::getEvaluation () { return evaluation ; }
 float TPrimer::getGCcontents () { return pgc ; }
 
@@ -37,7 +37,7 @@ void TPrimer::getSequenceFromVector ( TVector *v , bool from3 )
     for ( a = from ; a <= to ; a++ )
         sequence += v->getNucleotide ( a-1 , invert ) ;
     }
-    
+
 void TPrimer::makeStats ()
     {
     int a ;
@@ -51,7 +51,7 @@ void TPrimer::makeStats ()
     tm = evaluateTm () ;
     evaluation = 0 ;
     }
-    
+
 wxString TPrimer::report ()
     {
     wxString r ;
@@ -63,26 +63,26 @@ wxString TPrimer::report ()
     r += wxString::Format ( _T("deltaH=%2.1fKcal/mol; deltaS=%2.1fcal/(K*mol)\n") , H , S ) ;
     r += wxString::Format ( _T("%d bp; %2.1f %%GC\n") , l , pgc ) ;
     r += wxString::Format ( txt("t_melting_temperatures") , tm , tm_salt , tm_gc ) ;
-   
+
     // Self annealing
     r += wxString::Format ( _T("Highest self-annealing score : %d\n") , annScore ) ;
     r += ann1 + _T("\n") + annm + _T("\n") + ann2 + _T("\n\n") ;
 
     return r ;
     }
-    
+
 void TPrimer::evaluate ( float tm_opt )
     {
     int a ;
     int gc = 1 ;
     wxString s = getAnnealingSequence() ;
-    
+
     // Start value
     evaluation = 500 ;
-    
+
     // Difference from optimum temperature
     evaluation -= ( tm - tm_opt ) * ( tm - tm_opt ) ;
-    
+
     // End-GC
     if ( upper )
         {
@@ -101,12 +101,12 @@ void TPrimer::evaluate ( float tm_opt )
            }
         }
     if ( gc > 1 ) evaluation += gc ;
-    
+
     // Self-Annealing
     evaluateSelfAnnealing () ;
     evaluation -= annScore / 10 ;
     }
-    
+
 float TPrimer::evaluateTm ( double conc_nm , double Na_mm )
     {
 /*
@@ -124,41 +124,41 @@ float TPrimer::evaluateTm ( double conc_nm , double Na_mm )
     int a , base[256] ;
     for ( a = 0 ; a < 256 ; a++ ) base[a] = 0 ;
     for ( a = 0 ; a < s.size() ; a++ ) base[s.GetChar(a)]++ ;
-    
+
     double CG = base['C'] + base['G'] ;
     double AT = base['A'] + base['T'] ;
     double ATCG = AT + CG ;
-    
+
     if ( ATCG > 0 && AT > 0 )
        {
        tm_salt = 100.5 + ( 41.0 * CG / ATCG ) - ( 820.0 / ATCG ) + 16.6 * log ( Na_mm / 1000.0 ) / log ( 10.0 ) ;
        tm_gc = 64 + ( CG + 16.4 ) / ( AT ) ;
        }
-    
+
     OligoCount () ;
-    
+
 	deltaHValmin = DeltaH(false);
 	deltaGValmin = DeltaG(false);
 	deltaSValmin = DeltaS(false);
 	deltaHValmax = deltaHValmin;
 	deltaGValmax = deltaGValmin;
 	deltaSValmax = deltaSValmin;
-	
+
 	H = deltaHValmin ;
 	S = deltaSValmin ;
-    
+
     ret = NeighbourTM ( false , 50 , 50 ) ;
-    
+
     return ret ;
     }
-    
+
 void TPrimer::invertSequence()
     {
     wxString t ;
     for ( int a = 0 ; a < sequence.length() ; a++ ) t = sequence.GetChar(a) + t ;
     sequence = t ;
     }
-    
+
 wxString TPrimer::get53sequence ()
     {
     if ( upper ) return sequence ;
@@ -166,14 +166,14 @@ wxString TPrimer::get53sequence ()
     for ( int a = 0 ; a < sequence.length() ; a++ ) t = sequence.GetChar(a) + t ;
     return t ;
     }
-    
+
 wxString TPrimer::get35sequence ()
     {
     wxString s , t = get53sequence () ;
     for ( int a = 0 ; a < t.length() ; a++ ) s = t.GetChar(a) + s ;
     return s ;
     }
-    
+
 double TPrimer::NeighbourTM ( bool max , double pconc , double saltconc )
     {
 	double theReturn = 0 ;
@@ -201,9 +201,9 @@ double TPrimer::NeighbourTM ( bool max , double pconc , double saltconc )
 	} else {
 //		RlogK ="";
 	}
-	return theReturn;    
+	return theReturn;
     }
-    
+
 double TPrimer::CountNeighbors ( wxString s )
     {
     int a ;
@@ -215,7 +215,7 @@ double TPrimer::CountNeighbors ( wxString s )
         }
     return ret ;
     }
-    
+
 void TPrimer::OligoCount ()
     {
     int i , j ;
@@ -240,7 +240,7 @@ void TPrimer::OligoCount ()
         base0 += seq.GetChar(i-1) ;
         base += seq.GetChar(i) ;
         double *temp ;
-	
+
 		temp=CalcIUpair(base0, base, i, false );
 		for( j=0; j<3; j++) IUpairVals_min[j]+=temp[j];
 		delete temp ;
@@ -250,7 +250,7 @@ void TPrimer::OligoCount ()
 		delete temp ;
 		}
     }
-    
+
 bool TPrimer::IsBase ( wxString theBase )
     {
 	if ((theBase == _T("A")) ||
@@ -261,7 +261,7 @@ bool TPrimer::IsBase ( wxString theBase )
 	}
 	return false;
     }
-    
+
 bool TPrimer::IsIUpacBase ( wxString theBase )
     {
 	if ((theBase == _T("M")) ||
@@ -280,25 +280,25 @@ bool TPrimer::IsIUpacBase ( wxString theBase )
 	}
 	return false;
     }
-    
+
 double *TPrimer::CalcIUpair ( wxString base0 , wxString base , int i , bool max )
     {
     double *reValue = new double[3] ;
     double temp1[3] , temp2[3] ;
     wxString IUpacBase, pair1 , pair2 , base2 ;
     wxString seq = getAnnealingSequence() ;
-    
+
     // Init
     int a , k ;
     for ( a = 0 ; a < 3 ; a++ )
        reValue[a] = temp1[a] = temp2[a] = 0 ;
     if ( i+1 < seq.length() ) base2 += seq.GetChar(i+1) ;
-    
+
 
     // JavaScript dump
 	if(IsIUpacBase(base0))	//if previous base is IUpacBase, do nothing
 	{	return reValue;	}
-	
+
 	if(IsIUpacBase(base) )
 	{
 		if(base==_T("M")){IUpacBase=_T("AC");}
@@ -312,7 +312,7 @@ double *TPrimer::CalcIUpair ( wxString base0 , wxString base , int i , bool max 
 		else if(base==_T("D")){IUpacBase=_T("AGT");}
 		else if(base==_T("B")){IUpacBase=_T("CGT");}
 		else if(base==_T("N")){IUpacBase=_T("ACGT");}
-		
+
 		int j=0;
 //		while(IUpacBase.charAt(j)!="")
         while ( j < IUpacBase.length() )
@@ -332,11 +332,11 @@ double *TPrimer::CalcIUpair ( wxString base0 , wxString base , int i , bool max 
 			else if(pair1==_T("CG")){temp1[0]= 2.8 ;temp1[1]=11.8; temp1[2]=29.0  ;}
 			else if(pair1==_T("GC")){temp1[0]=2.3  ;temp1[1]=10.5; temp1[2]=26.4  ;}
 			else if(pair1==_T("GG")){temp1[0]=2.1  ;temp1[1]=10.9; temp1[2]=28.4  ;}
-			
+
 			if(base2.IsEmpty()){
 				for(k=0; k<2; k++)
 				{	temp2[k]=0.0;	}
-			
+
 			}else if(!IsIUpacBase(base2)){
 				pair2=base+base2;
 				if(pair2==_T("AA")){temp2[0]= 1.2 ;temp2[1]=8.0; temp2[2]=21.9 ;}
@@ -352,22 +352,22 @@ double *TPrimer::CalcIUpair ( wxString base0 , wxString base , int i , bool max 
 			}else if(IsIUpacBase(base2)){
 				base0=base;
                 base=base2;
-                i++; 
+                i++;
                 double *tempp = CalcIUpair(base0,base,i,max);
                 for ( a = 0 ; a < 3 ; a++ ) temp2[a] = tempp[a] ;
                 delete tempp ;
 				i--;
 			}
-			
+
 			for(k=0;k<3;k++)
 			{
 				if(j==0){
 					reValue[k]=temp1[k]+temp2[k];
 				}else{
 					if ((max)&&(reValue[k]<temp1[k]+temp2[k]))
-					{	reValue[k]=temp1[k]+temp2[k];	
+					{	reValue[k]=temp1[k]+temp2[k];
 					}else if((!max)&&(reValue[k]>temp1[k]+temp2[k]))
-					{	reValue[k]=temp1[k]+temp2[k]; 	
+					{	reValue[k]=temp1[k]+temp2[k];
 					}
 				}
 			}
@@ -375,8 +375,8 @@ double *TPrimer::CalcIUpair ( wxString base0 , wxString base , int i , bool max 
 		}
 	}
 	return reValue;
-    
-    
+
+
     }
 
 double TPrimer::DeltaG ( bool max )
@@ -396,9 +396,9 @@ double TPrimer::DeltaG ( bool max )
 		val+=2.8*cgCount;
 		val+=2.3*gcCount;
 		val+=2.1*ggCount;
-		if(!max){ 
+		if(!max){
 			val+=IUpairVals_min[0];
-		}else{				
+		}else{
 			val+=IUpairVals_max[0];
 		}
 		return val ;
@@ -456,8 +456,8 @@ double TPrimer::DeltaS ( bool max )
 	}
 	return 0;
 }
-    
-    
+
+
 // ***
 
 void TPrimer::evaluateSelfAnnealing ()
@@ -501,7 +501,7 @@ void TPrimer::evaluateSelfAnnealing ()
            }
         }
     }
-    
+
 int TPrimer::checkFit ( TVector *v , bool justCount )
     {
     int a ;
@@ -525,17 +525,17 @@ int TPrimer::checkFit ( TVector *v , bool justCount )
     if ( justCount ) return count ;
     return match + match3 ;
     }
-    
+
 wxString TPrimer::getAnnealingSequence()
     {
     if ( !annealingVector ) return get53sequence () ;
     wxString s = get53sequence () ;
     return s.substr ( s.length() - checkFit ( annealingVector , true ) ) ;
     }
-    
+
 bool TPrimer::overlap ( TPrimer &op )
     {
     if ( op.from <= to && op.to >= from ) return true ;
     return false ;
     }
-    
+

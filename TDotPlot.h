@@ -22,13 +22,13 @@ class TDotPlotPanel : public wxScrolledWindow
     virtual void OnOpenSequence2(wxCommandEvent& event) ; ///< Open sequence 2 event handler
     virtual void OnCopy(wxCommandEvent& event) ; ///< Copy event handler
     virtual void OnSave(wxCommandEvent& event) ; ///< Save event handler
-    
+
     private :
     void Recalc () ; ///< Recalculate dot-plot
     void Redraw ( wxDC &dc ) ; ///< Draw the visible section of the dot-plot from memory DC
     void Draw2Memory () ; ///< Generate the memory DC
     int CheckWindow ( int x , int y ) ; ///< check for valid scanning window in sequences
-    
+
     TDotPlot *parent ;
     MyChild *seq1 , *seq2 ;
     long window , mismatch ;
@@ -50,7 +50,7 @@ class TDotPlot : public ChildBase
     public :
     TDotPlot(wxWindow *parent, const wxString& title) ; ///< Constructor
     ~TDotPlot () ; ///< Destructor
-        
+
     void initme () ; ///< Initialization
     virtual wxString getName () ; ///< Returns the module name
 
@@ -62,12 +62,12 @@ class TDotPlot : public ChildBase
     virtual void OnSelectSeq2(wxCommandEvent& event) ; ///< event handler
     virtual void OnSelectWindowSize(wxCommandEvent& event) ; ///< event handler
     virtual void OnSelectMismatches(wxCommandEvent& event) ; ///< event handler
-    
+
 
     private :
     friend class TDotPlotPanel ;
     void update_sequence_lists () ;
-    
+
     TDotPlotPanel *panel ;
     wxSlider *zoom ;
     wxChoice *seq1 , *seq2 , *window_size , *mismatch_limit ;

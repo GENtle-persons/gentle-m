@@ -1,8 +1,8 @@
 #include "TGraph.h"
 
 //******************************************************** TGraphScale
- 
-TGraphScale::TGraphScale ( float _min , float _max , bool _horizontal , bool _left , wxString _name , wxString _unit , 
+
+TGraphScale::TGraphScale ( float _min , float _max , bool _horizontal , bool _left , wxString _name , wxString _unit ,
 				wxColour _col , wxString _type )
 	{
  	min = _min ;
@@ -20,12 +20,12 @@ TGraphScale::TGraphScale ( float _min , float _max , bool _horizontal , bool _le
  	selected = false ;
  	show_mark = false ;
 	}
-	
+
 int TGraphScale::GetWidth ()
 	{
  	return horizontal ? 30 : 50 ;
 	}
-	
+
 wxRect TGraphScale::CalcInternalRect ( wxRect &r )
 	{
 	wxRect ir = r ;
@@ -39,7 +39,7 @@ wxRect TGraphScale::CalcInternalRect ( wxRect &r )
       	else // Bottom
        		{
    		    ir.y += ir.height - w ;
-         	}        
+         	}
       	ir.height = w ;
       	r.height -= w ;
 		}
@@ -52,18 +52,18 @@ wxRect TGraphScale::CalcInternalRect ( wxRect &r )
       	else // Right
        		{
    		    ir.x += ir.width - w ;
-         	}        
+         	}
       	ir.width = w ;
       	r.width -= w ;
-    	}        
+    	}
    	return ir ;
-	}    
+	}
 
 void TGraphScale::drawit ( wxDC &dc , wxRect &r , wxRect &inner )
 	{
    	wxRect ir = CalcInternalRect ( r ) ;
    	int border = 2 ;
-   	
+
    	if ( horizontal )
    		{
 	    if ( ir.x < inner.x ) ir.x = inner.x ;
@@ -79,8 +79,8 @@ void TGraphScale::drawit ( wxDC &dc , wxRect &r , wxRect &inner )
 	    outline = ir ;
 	    ir.width -= border*2 ;
 	    ir.x += border ;
-     	}        
-   	
+     	}
+
    	// Selected? Draw nice background!
    	if ( selected )
    		{
@@ -88,23 +88,23 @@ void TGraphScale::drawit ( wxDC &dc , wxRect &r , wxRect &inner )
 	    dc.SetBrush ( *MYBRUSH ( TGraphDisplay::prettyColor ) ) ;
 	    dc.DrawRectangle ( outline ) ;
 	    dc.SetBrush ( *wxTRANSPARENT_BRUSH ) ;
-   		}   
-   	
+   		}
+
    	// Calculate major and minor units
    	float multiplier = 10 ; //( unit == _T("s") ) ? 6 : 10 ;
    	float factor = 1 ;
    	while ( factor <= max ) factor *= multiplier ;
    	float f2 = top - bottom ;
    	while ( factor >= f2 ) factor /= multiplier ;
-   	
+
    	float major = factor ;
    	float minor = major / 5 ;
-   	
+
    	// Draw scale
    	dc.SetFont ( *MYFONT ( 8 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
    	dc.SetTextForeground ( col ) ;
    	dc.SetPen ( *MYPEN ( col ) ) ;
-   	
+
    	float p = 0 ;
    	while ( p > bottom ) p -= minor ;
    	while ( p < bottom ) p += minor ;
@@ -116,8 +116,8 @@ void TGraphScale::drawit ( wxDC &dc , wxRect &r , wxRect &inner )
 			else */label = wxString::Format ( _T("%f") , p ) ;
 			DrawMark ( dc , p , ir , label , ( p - ((int)(p/major))*major ) == 0 ) ;
 			p += minor ;
-   		}    
-	
+   		}
+
 	// Draw "backline" and name/unit
 	wxString text = name ;
 	if ( !unit.IsEmpty() ) text += _T(" [") + unit + _T("]") ;
@@ -129,26 +129,26 @@ void TGraphScale::drawit ( wxDC &dc , wxRect &r , wxRect &inner )
     		{
           	dc.DrawLine ( ir.x , ir.y , ir.GetRight() , ir.y ) ;
           	dc.DrawText ( text , ir.x , ir.y ) ;
-          	}   	
+          	}
   		else
     		{
      		dc.DrawLine ( ir.x , ir.GetBottom() , ir.GetRight() , ir.GetBottom() ) ;
           	dc.DrawText ( text , ir.x , ir.GetBottom() - th ) ;
-     		}  		
+     		}
   		if ( show_mark )
   			{
 	    	int c = GetRealCoord ( GetVirtualCoordinate ( mark , inner ) , inner ) ;
 	    	dc.SetPen ( *wxRED_PEN ) ;
 	    	dc.DrawLine ( c , ir.GetTop() , c , ir.GetBottom() ) ;
-  			}    
-		}		
+  			}
+		}
 	else
 		{
 		if ( left )
   			{
          dc.DrawLine ( ir.x , ir.y , ir.x , ir.GetBottom() ) ;
          dc.DrawRotatedText ( text , ir.x + 2 , ir.GetBottom() , 90 ) ;
-         }   	
+         }
 		else
   			{
     		dc.DrawLine ( ir.GetRight() , ir.y , ir.GetRight() , ir.GetBottom() ) ;
@@ -159,11 +159,11 @@ void TGraphScale::drawit ( wxDC &dc , wxRect &r , wxRect &inner )
 	    	int c = GetRealCoord ( GetVirtualCoordinate ( mark , inner ) , inner ) ;
 	    	dc.SetPen ( *wxRED_PEN ) ;
 	    	dc.DrawLine ( ir.GetLeft() , c , ir.GetRight() , c ) ;
-  			}    
+  			}
   		}
 	last_inner = inner ;
 	show_mark = false ;
-	}    
+	}
 
 void TGraphScale::DrawMark ( wxDC &dc , float p , wxRect &ir , wxString text , bool big )
 	{
@@ -181,11 +181,11 @@ void TGraphScale::DrawMark ( wxDC &dc , float p , wxRect &ir , wxString text , b
     	y = GetRealCoord ( p , ir ) ;
     	z = big ? 0 : ir.width / 4 ;
     	if ( y < ir.y || y > ir.GetBottom() ) return ;
-    	}        
-   
+    	}
+
 	while ( text.Last() == '0' ) text = text.Left ( text.length() - 1 ) ;
    while ( text.Last() == '.' ) text = text.Left ( text.length() - 1 ) ;
-   	
+
    int tw , th ;
    dc.GetTextExtent ( text , &tw , &th ) ;
    if ( horizontal )
@@ -201,11 +201,11 @@ void TGraphScale::DrawMark ( wxDC &dc , float p , wxRect &ir , wxString text , b
 	    else dc.DrawLine ( x+z , y , ir.GetRight() , y ) ;
 	    y -= th / 2 ;
 	    x = left ? ir.GetRight() - tw : ir.x ;
-     	}        
+     	}
 
    if ( big ) dc.DrawText ( text , x , y ) ;
 	}
-    
+
 int TGraphScale::GetRealCoord ( float f , wxRect &inner )
 	{
 	float m2 = horizontal ? inner.width : inner.height ; // The pixel "width"
@@ -214,7 +214,7 @@ int TGraphScale::GetRealCoord ( float f , wxRect &inner )
 	if ( horizontal ) ret += (float ) inner.x ;
 	else ret = (float) ( inner.GetBottom() ) - ret ;
  	return (int) ret ;
-	}    
+	}
 
 float TGraphScale::GetVirtualCoordinate ( int i , wxRect &inner )
 	{
@@ -226,7 +226,7 @@ float TGraphScale::GetVirtualCoordinate ( int i , wxRect &inner )
 	if ( horizontal ) f2 += bottom ;
 	else f2 = top - f2 ;
 	return f2 ;
- 	}    	
+ 	}
 
 void TGraphScale::Drag ( int delta )
 	{
@@ -238,10 +238,10 @@ void TGraphScale::Drag ( int delta )
  		{
    		bottom -= top - max ;
         top = max ;
-        }    
+        }
     if ( bottom < min )
     	{
 	    top += min - bottom ;
 	    bottom = min ;
-    	}    
-	}    
+    	}
+	}

@@ -32,7 +32,7 @@ string pred_coils(char *seq,char *ident,char *title,struct hept_pref *h,int win,
 /* Rob Russell's attempt to make a COILS program */
 
 string ncoils_function( const char *_sequence , int window ) {
-	
+
 	string ret ;
 
 	int i;
@@ -153,15 +153,15 @@ string ncoils_function( const char *_sequence , int window ) {
 	strcpy ( seq , _sequence ) ;
 	t = 0;
 	tc = 0;
-	
+
 	strcpy ( title , "TEST!" ) ;
 
 	/* There is a memory problem - the matrix data gets corrupted under OSF after this fgets */
 	for(i=0; i<strlen(buff); ++i) if(buff[i]=='\n' || buff[i]=='\r') buff[i]='\0';
 /*
 	if(buff[0]=='>') {
-		if(nseq>0) { 
-			pred_coils(seq,ident,title,h,window,which,weighted,mode,min_P,&t,&tc,min_seg); 
+		if(nseq>0) {
+			pred_coils(seq,ident,title,h,window,which,weighted,mode,min_P,&t,&tc,min_seg);
 			free(seq);
 		}
         seqlen = 0;
@@ -180,22 +180,22 @@ string ncoils_function( const char *_sequence , int window ) {
 	} else {
 
 		seq=(char*)realloc(seq,(seqlen+strlen(buff)+1)*sizeof(char));
-		strcpy(&seq[seqlen],buff); 
+		strcpy(&seq[seqlen],buff);
 		seqlen=strlen(seq);
 
 	}
 */
 //	return "!" ;
 
-	strcpy(seq,buff); 
+	strcpy(seq,buff);
 	seqlen=strlen(seq);
-	
-//	if(nseq>0) { 
-		ret = pred_coils(seq,ident,title,h,window,which,weighted,mode,min_P,&t,&tc,min_seg); 
+
+//	if(nseq>0) {
+		ret = pred_coils(seq,ident,title,h,window,which,weighted,mode,min_P,&t,&tc,min_seg);
 		free(seq);
 //	}
 	fprintf(stderr,"%8d sequences %8d aas %8d in coil\n",nseq,t,tc);
-	free(title); free(ident); 
+	free(title); free(ident);
 
 	return ret ;
 
@@ -317,8 +317,8 @@ int ncoils_main(const int argc, const char * const argv[]) {
 		/* There is a memory problem - the matrix data gets corrupted under OSF after this fgets */
 		for(i=0; i<strlen(buff); ++i) if(buff[i]=='\n' || buff[i]=='\r') buff[i]='\0';
 		if(buff[0]=='>') {
-			if(nseq>0) { 
-				pred_coils(seq,ident,title,h,window,which,weighted,mode,min_P,&t,&tc,min_seg); 
+			if(nseq>0) {
+				pred_coils(seq,ident,title,h,window,which,weighted,mode,min_P,&t,&tc,min_seg);
 				free(seq);
 			}
                         seqlen = 0;
@@ -337,17 +337,17 @@ int ncoils_main(const int argc, const char * const argv[]) {
 		} else {
 /*			printf("Adding |%s| to |%s| = \n",buff,seq);  */
 			seq=(char*)realloc(seq,(seqlen+strlen(buff)+1)*sizeof(char));
-		        strcpy(&seq[seqlen],buff); 
+		        strcpy(&seq[seqlen],buff);
                         seqlen=strlen(seq);
 /*			printf("       |%s|\n",seq);  */
 		}
 	}
-	if(nseq>0) { 
-		pred_coils(seq,ident,title,h,window,which,weighted,mode,min_P,&t,&tc,min_seg); 
+	if(nseq>0) {
+		pred_coils(seq,ident,title,h,window,which,weighted,mode,min_P,&t,&tc,min_seg);
 		free(seq);
 	}
 	fprintf(stderr,"%8d sequences %8d aas %8d in coil\n",nseq,t,tc);
-	free(title); free(ident); 
+	free(title); free(ident);
 
 	exit(0);
 
@@ -365,7 +365,7 @@ void exit_error() {
 	fprintf(stderr,"       -w                  [weight heptad positions a&d the same as b,c,e,f,g]\n");
 	fprintf(stderr,"       -v                  [verbose/debug mode - print extra junk]\n");
 	fprintf(stderr,"       -max_seq_len <int>  [longest sequence tolerated; DEFAULT = 100 000]\n");
-	exit(-1); 
+	exit(-1);
 }
 
 string pred_coils(char *seq,char *ident,char *title,struct hept_pref *h,int win, int which, int weighted,int mode, float min_P, int *t, int *tc, int min_seg) {
@@ -384,9 +384,9 @@ string pred_coils(char *seq,char *ident,char *title,struct hept_pref *h,int win,
 	float *P;
 
 	char tmp[10000] ;
-	
+
 	char *hept_seq;
-	
+
 	size_t len=strlen(seq);
 
 	score    = (float*)malloc(len*sizeof(float));
@@ -454,7 +454,7 @@ string pred_coils(char *seq,char *ident,char *title,struct hept_pref *h,int win,
 		if(P[i]>=min_P) {
                    are_there_coils=1;
                    if((i==0) || (P[i-1]<min_P)) { total_coil_segments++; }
-		   (*tc)++; 
+		   (*tc)++;
                 }
 		(*t)++;
 		if(mode==1) {
@@ -466,7 +466,7 @@ string pred_coils(char *seq,char *ident,char *title,struct hept_pref *h,int win,
 			ret += tmp ;
 		}
 	}
-	if(mode==1) { printf("\n"); } 
+	if(mode==1) { printf("\n"); }
         if((mode==2) && (are_there_coils==1) && (total_coil_segments>=min_seg)) {
 		if(total_coil_segments==1) {
 			sprintf(tmp,"Pred %4d coil segment  : %s %s\n",total_coil_segments,ident,title);
@@ -478,7 +478,7 @@ string pred_coils(char *seq,char *ident,char *title,struct hept_pref *h,int win,
 	}
 
 	free(P); free(score); free(hept_seq);
-	
+
 	return ret ;
 }
 
@@ -520,14 +520,14 @@ struct hept_pref *read_matrix(FILE *IN) {
 			sscanf(buff,"%s %d %f %f %f %f %f",
 				&junk[0],&win,&m_cc,&sd_cc,&m_g,&sd_g,&sc);
 				h->f[i].win   = win;
-				h->f[i].m_cc  = (float)m_cc; 
+				h->f[i].m_cc  = (float)m_cc;
 				h->f[i].sd_cc = (float)sd_cc;
 				h->f[i].m_g   = (float)m_g;
 				h->f[i].sd_g  = (float)sd_g;
 				h->f[i].sc    = (float)sc;
 			h->n++;
-			h->f = (struct fit_dat*)realloc(h->f,((h->n)+1)*sizeof(struct fit_dat)); 
-			if((h->n)>=9) { 
+			h->f = (struct fit_dat*)realloc(h->f,((h->n)+1)*sizeof(struct fit_dat));
+			if((h->n)>=9) {
 				fprintf(stderr,"Error: too many window parms in matrix file\n");
 				exit(-1);
 			}

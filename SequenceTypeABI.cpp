@@ -61,13 +61,13 @@ int SeqABI::arrange_sd ( int n )
     // Base order
 //    id = at->getRecord ( _T("FWO_") , 1 ) ;
 //    myass ( id != -1 , "SeqABI::arrange_1" ) ;
-    
+
     // GATC
     base2color[0] = 'T' ;//AGC
     base2color[1] = 'G' ;//CT
     base2color[2] = 'C' ;//TAT
     base2color[3] = 'A' ;//GC
-    
+
     // For painting
     minx = ox ;
     maxx = w - ox - wx ;
@@ -85,7 +85,7 @@ int SeqABI::arrange_sd ( int n )
 //	int lastx = 0 ; //!!!!
     int lastx = sd.tracer2[0].size() ;
     strange_compensation_factor = 0 ;
-    
+
     if ( view_from > 0 ) diffx = get_bx ( id , view_from-1 ) * scalex ;
 /*    if ( view_from > 0 )
     {
@@ -94,7 +94,7 @@ int SeqABI::arrange_sd ( int n )
         diffx *= scalex ;
     }
 */
-	bool first = true ;    
+	bool first = true ;
     for ( a = 0 ; a < s.length() ; a++ )
         {
 		if ( view_from > 0 && a+1 < view_from ) continue ;
@@ -105,7 +105,7 @@ int SeqABI::arrange_sd ( int n )
 		int bx = get_bx ( 0 , idx ) ;
         if ( inv_compl ) bx = lastx - bx ;
         x = bx * scalex - diffx ;
-        
+
         // Ugly hack for partial inverse/complementary view
         if ( first && view_from > 0 && inv_compl && x < 0 )
         	{
@@ -131,11 +131,11 @@ int SeqABI::arrange_sd ( int n )
         lowy = y+wy ;
 
         }
-    if ( lasta != pos.p.GetCount()+1 ) 
+    if ( lasta != pos.p.GetCount()+1 )
         pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
-    
+
     lowy += wy * ( can->blankline ) ; // For sequence data
-    
+
     return lowy + bo*2 ;
 	}
 
@@ -176,11 +176,11 @@ int SeqABI::arrange ( int n )
     // Base order
     id = at->getRecord ( _T("FWO_") , 1 ) ;
     myass ( id != -1 , "SeqABI::arrange_1" ) ;
-    
+
     // GATC
     int *ii = (int*) base2color ;
     *ii = at->vf[id].value ;
-    
+
     // For painting
     minx = ox ;
     maxx = w - ox - wx ;
@@ -192,14 +192,14 @@ int SeqABI::arrange ( int n )
     x = ox ;
     y = oy ;
     pos.add ( -(++l) , bo , y , ox-wx-bo , wy-1 ) ; // Line number
-    
+
     int id2 = at->getRecord ( _T("DATA") , 9 ) ;
     int lastx = at->vf[id2].nrecords ;
     strange_compensation_factor = 0 ;
-    
+
     if ( view_from > 0 ) diffx = get_bx ( id , view_from-1 ) * scalex ;
 
-	bool first = true ;    
+	bool first = true ;
     for ( a = 0 ; a < s.length() ; a++ )
         {
 		if ( view_from > 0 && a+1 < view_from ) continue ;
@@ -210,7 +210,7 @@ int SeqABI::arrange ( int n )
 		int bx = get_bx ( id , idx ) ;
         if ( inv_compl ) bx = lastx - bx ;
         x = bx * scalex - diffx ;
-        
+
         // Ugly hack for partial inverse/complementary view
         if ( first && view_from > 0 && inv_compl && x < 0 )
         	{
@@ -236,14 +236,14 @@ int SeqABI::arrange ( int n )
         lowy = y+wy ;
 
         }
-    if ( lasta != pos.p.GetCount()+1 ) 
+    if ( lasta != pos.p.GetCount()+1 )
         pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
-    
+
     lowy += wy * ( can->blankline ) ; // For sequence data
-    
+
     return lowy + bo*2 ;
     }
-    
+
 void SeqABI::setInvCompl ( bool x )
     {
     if ( inv_compl != x ) // Inverting and complementing sequence
@@ -254,10 +254,10 @@ void SeqABI::setInvCompl ( bool x )
         s = s2 ;
         can->child->vec->setSequence ( s ) ;
         }
-    
+
     inv_compl = x ;
     }
-    
+
 void SeqABI::show_sd ( wxDC& dc )
     {
     SeqDNA::show ( dc ) ;
@@ -280,7 +280,7 @@ void SeqABI::show_sd ( wxDC& dc )
     // Determining height scaling factors
     int hy = ( can->blankline - 1 ) * can->charheight ;
     unsigned short int high = 0 ;
-    
+
     for ( data = 0 ; data < 4 ; data++ )
         {
         for ( int a = 0 ; a < sd.tracer2[data].size() ; a++ )
@@ -293,7 +293,7 @@ void SeqABI::show_sd ( wxDC& dc )
 //    int limit_abs_x = ( view_to > 0 ) ? get_bx ( at->getRecord ( _T("PLOC") , 2 ) , view_to ) * scalex : -1 ;
     int limit_abs_x = ( view_to > 0 ) ? get_bx ( 0 , view_to ) * scalex : -1 ;
 //	int limit_abs_x = -1 ; //!!!!
-    
+
     // Painting
     for ( data = 0 ; data < 4 ; data++ )
         {
@@ -301,7 +301,7 @@ void SeqABI::show_sd ( wxDC& dc )
            dc.SetPen ( *wxBLACK_PEN ) ;
         else
            dc.SetPen ( *MYPEN ( colors[data] ) ) ;
-        
+
         long a ;
 //        int id = at->getRecord ( _T("DATA") , 9 + data ) ;
 //        myass ( id > -1 , "SeqABI::show_sd" ) ;
@@ -370,7 +370,7 @@ void SeqABI::show ( wxDC& dc )
            dc.DrawLine ( tx , ty + wy , tx , ty + wy * can->blankline ) ;
            }
         }
-    
+
     // Determining height scaling factors
     int hy = ( can->blankline - 1 ) * can->charheight ;
     int high = 0 ;
@@ -385,9 +385,9 @@ void SeqABI::show ( wxDC& dc )
            if ( b > high ) high = b ;
            }
         }
-    
+
     int limit_abs_x = ( view_to > 0 ) ? get_bx ( at->getRecord ( _T("PLOC") , 2 ) , view_to ) * scalex : -1 ;
-    
+
     // Painting
     for ( data = 0 ; data < 4 ; data++ )
         {
@@ -395,7 +395,7 @@ void SeqABI::show ( wxDC& dc )
            dc.SetPen ( *wxBLACK_PEN ) ;
         else
            dc.SetPen ( *MYPEN ( colors[data] ) ) ;
-        
+
         int a ;
         int id = at->getRecord ( _T("DATA") , 9 + data ) ;
         myass ( id > -1 , "SeqABI::show" ) ;
@@ -446,7 +446,7 @@ void SeqABI::show ( wxDC& dc )
         }
 
     }
-    
+
 void SeqABI::drawTopLine ( wxDC &dc , int y )
     {
     wxPen p = dc.GetPen () ;
@@ -454,13 +454,13 @@ void SeqABI::drawTopLine ( wxDC &dc , int y )
     dc.DrawLine ( 4 , y , minx + maxx , y ) ;
     dc.SetPen(p);
     }
-    
+
 void SeqABI::initFromFile ( wxString filename )
     {
     zoom = 1 ;
     showHelpLines = true ;
     screenScale = 2 ;
-    
+
     SCFtype sc ;
     if ( sc.parse ( filename ) ) // SCF
     	{
@@ -482,7 +482,7 @@ void SeqABI::initFromFile ( wxString filename )
     showNumbers = true ;
     fontColor.Set ( 0 , 0 , 0 ) ;
     }
-    
+
 wxColor SeqABI::getBaseColor ( char b )
     {
     for ( int a = 0 ; a < 4 ; a++ )
@@ -500,4 +500,4 @@ wxColor SeqABI::getBaseColor ( char b )
        }
     return wxColor ( _T("magenta") ) ;
     }
-    
+

@@ -29,7 +29,7 @@ BEGIN_EVENT_TABLE(TPrimerDesign, MyChildBase)
     EVT_MENU(SEQ_INSERT_RESTRICTION_SITE_LEFT,TPrimerDesign::OnInsertRestrictionSiteLeft)
     EVT_MENU(SEQ_INSERT_RESTRICTION_SITE_RIGHT,TPrimerDesign::OnInsertRestrictionSiteRight)
     EVT_MENU(PD_TROUBLESHOOT,TPrimerDesign::OnTroubleshoot)
-    
+
     EVT_LIST_ITEM_ACTIVATED(PD_LC,TPrimerDesign::OnActivatePrimer)
     EVT_LIST_ITEM_SELECTED(PD_LC,TPrimerDesign::OnSelectPrimer)
     EVT_CHOICE(AA_FONTSIZE,TPrimerDesign::OnFontsize)
@@ -42,7 +42,7 @@ BEGIN_EVENT_TABLE(TPrimerDesign, MyChildBase)
 
     EVT_MENU(MDI_EDIT_MODE, TPrimerDesign::OnEditMode)
     EVT_CLOSE(ChildBase::OnClose)
-    
+
     // Dummies
     EVT_MENU(AA_NONE, TPrimerDesign::ChildBase::OnDummy)
     EVT_MENU(MDI_TOGGLE_RESTRICTION,ChildBase::OnDummy)
@@ -60,7 +60,7 @@ BEGIN_EVENT_TABLE(TPrimerDesign, MyChildBase)
 
 END_EVENT_TABLE()
 
-TPrimerDesign::TPrimerDesign(wxWindow *parent, 
+TPrimerDesign::TPrimerDesign(wxWindow *parent,
                     wxString title,
                     TVector *_vec,
                     vector <TPrimer> pl ,
@@ -77,14 +77,14 @@ TPrimerDesign::TPrimerDesign(wxWindow *parent,
     resulting_sequence_vector = new TVector ;
     vec->setFromVector ( *_vec ) ;
     resulting_sequence_vector->setFromVector ( *vec ) ;
-    
+
     aa_state = AA_ALL ;
     aa_disp = AA_ONE ;
     for ( a = 0 ; a < vec->items.size() ; a++ )
         if ( vec->items[a].getRF() != 0 ) aa_state = AA_KNOWN ;
-    
+
     primer = pl ;
-    
+
     for ( a = 0 ; a < primer.size() ; a++ )
         {
         if ( primer[a].from >= vec->getSequenceLength() )
@@ -93,24 +93,24 @@ TPrimerDesign::TPrimerDesign(wxWindow *parent,
            primer[a].to -= vec->getSequenceLength() ;
            }
         }
-    
+
     for ( a = 0 ; a < primer.size() ; a++ )
         primer[a].getSequenceFromVector ( vec ) ;
-        
+
     def = _T("PrimerDesign") ;
     from = -1 ;
     stat = NULL ;
     lastPrimerActivated = -1 ;
     allow_print = true ;
     }
-    
+
 TPrimerDesign::~TPrimerDesign ()
     {
     if ( stat ) delete stat ;
     delete inverse_template_vector ;
     delete resulting_sequence_vector ;
     }
-    
+
 void TPrimerDesign::OnFontsize ( wxCommandEvent& event )
     {
 	long l ;
@@ -123,7 +123,7 @@ void TPrimerDesign::OnFontsize ( wxCommandEvent& event )
 void TPrimerDesign::guessOptNuc ()
     {
     int nuc = vec->getSequenceLength() ;
-    
+
     if ( primer.size() == 2 )
         {
         if ( primer[0].overlap ( primer[1] ) ) // Mutagenesis?
@@ -137,7 +137,7 @@ void TPrimerDesign::guessOptNuc ()
            nuc++ ;
            }
         }
-    
+
     spin->SetValue ( wxString::Format ( _T("%d") , nuc ) ) ;
     }
 
@@ -145,7 +145,7 @@ void TPrimerDesign::OnPrint ( wxCommandEvent &ev )
     {
     sc->OnPrint ( ev ) ;
     }
-    
+
 void TPrimerDesign::OnExportPrimer ( wxCommandEvent &ev )
     {
     if ( lastPrimerActivated == -1 ) return ;
@@ -163,35 +163,35 @@ void TPrimerDesign::OnImportPrimer ( wxCommandEvent &ev )
     {
     int a ;
     wxArrayChildBase cbl ;
-    
+
     for ( a = 0 ; a < myapp()->frame->children.GetCount() ; a++ )
-       if ( myapp()->frame->children[a] && 
+       if ( myapp()->frame->children[a] &&
        		myapp()->frame->children[a]->vec &&
          	myapp()->frame->children[a]->vec->getType() == TYPE_PRIMER )
           cbl.Add ( myapp()->frame->children[a] ) ;
-    
+
     if ( cbl.GetCount() == 0 )
        {
        wxMessageBox ( txt("t_load_primers_first") ) ;
        return ;
        }
-    
+
     wxString *sl = new wxString[cbl.GetCount()] ;
     for ( a = 0 ; a < cbl.GetCount() ; a++ )
         sl[a] = cbl[a]->getName() ;
 
-    TMyMultipleChoiceDialog scd ( this , 
-                            txt("t_chose_primer_txt") , 
+    TMyMultipleChoiceDialog scd ( this ,
+                            txt("t_chose_primer_txt") ,
                             txt("t_chose_primer") ,
                             cbl.GetCount() ,
                             sl
                             ) ;
-                            
+
     if ( cbl.GetCount() <= 2 ) scd.CheckAll () ;
     int res = scd.ShowModal() ;
     delete [] sl ;
     if ( res != wxID_OK ) return ;
-    
+
     for ( a = 0 ; a < cbl.GetCount() ; a++ )
        {
        if ( scd.IsChecked ( a ) )
@@ -211,13 +211,13 @@ void TPrimerDesign::AddPrimer ( wxString s , wxString pname )
         TPrimer pl ( a , a + s.length() - 1 , false ) ;
         pu.sequence = s ; // 5'-primer
         pl.sequence = pu.get35sequence() ; // 3'-primer
-        
+
         if ( pu.checkFit ( vec ) > bestVal )
            {
            bestVal = pu.checkFit ( vec ) ;
            best = pu ;
            }
-           
+
         if ( pl.checkFit ( vec ) > bestVal )
            {
            bestVal = pl.checkFit ( vec ) ;
@@ -241,7 +241,7 @@ void TPrimerDesign::OnEditMode(wxCommandEvent& event)
     wxString item = _T("PRIMER_UP") ;
     if ( sc->lastmarked != -1 ) item = sc->seq[sc->lastmarked]->whatsthis() ;
     sc->edit_id = item ;
-    
+
     if ( sc->getEditMode() ) sc->stopEdit() ;
     else sc->startEdit ( item ) ;
     /*
@@ -266,7 +266,7 @@ void TPrimerDesign::OnEditMode(wxCommandEvent& event)
         }*/
     mi->Check ( sc->getEditMode() ) ;
     }
-    
+
 void TPrimerDesign::updatePrimersFromSequence ()
     {
     int a , b ;
@@ -276,7 +276,7 @@ void TPrimerDesign::updatePrimersFromSequence ()
         {
         if ( primer[a].upper ) s = sc->seq[show_features]->s ;
         else s = sc->seq[4+show_features]->s ;
-        
+
         TVector d ;
         d.setSequence ( s ) ;
         d.setCircular ( vec->isCircular() ) ;
@@ -289,7 +289,7 @@ void TPrimerDesign::updatePrimersFromSequence ()
            primer.pop_back() ;
            a-- ;
            continue ;
-           }    
+           }
 
         for ( b = primer[a].from-1 ; d.getNucleotide(b) == ' ' ; b++ ) ;
         while ( d.getNucleotide(b) != ' ' ) b-- ;
@@ -297,7 +297,7 @@ void TPrimerDesign::updatePrimersFromSequence ()
         for ( b = primer[a].to-1 ; d.getNucleotide(b) == ' ' ; b-- ) ;
         while ( d.getNucleotide(b) != ' ' ) b++ ;
         primer[a].to = b ;
-        
+
         primer[a].getSequenceFromVector ( &d , !primer[a].upper ) ;
         }
     updatePrimerStats () ;
@@ -325,9 +325,9 @@ void TPrimerDesign::updatePrimerStats ()
         if ( primer[a].upper ) u = _T("5'->3'") ; //strcpy ( u , "-->" ) ;
         else u = _T("3'->5'") ; //strcpy ( u , "<--" ) ;
         int len = primer[a].to - primer[a].from + 1 ;
-        
+
         long l = lc->InsertItem ( a , wxString::Format ( _T("%d") , a+1 ) ) ;
-        
+
         lc->SetItem ( l , 1 , u ) ;
         lc->SetItem ( l , 2 , wxString::Format ( _T("%d") , len ) ) ;
         lc->SetItem ( l , 3 , wxString::Format ( _T("%2.1f") , primer[a].getTm() ) ) ;
@@ -365,7 +365,7 @@ void TPrimerDesign::initme ()
 /*    view_menu->Append(MDI_REFRESH, txt("m_refresh_picture") );
     view_menu->Append(MDI_CIRCULAR_LINEAR, txt("m_toggle_rc") );
     view_menu->Append(MDI_VIEW_MODE, txt("m_view_mode") , "" , true );*/
-    
+
     wxMenu *mAA = new wxMenu ;
     view_menu->Append(MDI_EDIT_MODE, txt("m_edit_mode") , _T("") , true );
     view_menu->Append(MDI_TOGGLE_FEATURES, txt("m_display_features") , _T("") );
@@ -381,7 +381,7 @@ void TPrimerDesign::initme ()
     mAA->AppendSeparator();
     mAA->Append (AA_ONE,txt("m_aa_one"), _T("") , true );
     mAA->Append (AA_THREE,txt("m_aa_three"), _T("") , true );
-    
+
     wxMenuBar *menu_bar = new wxMenuBar;
 
     menu_bar->Append(file_menu, txt("m_file") );
@@ -407,18 +407,18 @@ void TPrimerDesign::initme ()
     sc->edit_id = _T("DNA") ;
     sc->edit_valid = _T("ACTG .") ;
     sc->forceOverwrite ( true ) ;
-    
+
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
     myapp()->frame->InitToolBar(toolBar);
 	myapp()->frame->addTool ( toolBar , MDI_TEXT_IMPORT ) ;
 	myapp()->frame->addTool ( toolBar , MDI_FILE_OPEN ) ;
 	myapp()->frame->addTool ( toolBar , SEQ_PRINT ) ;
     if ( !myapp()->frame->mainToolBar ) toolBar->AddSeparator() ;
-    toolBar->AddTool( PD_IMPORT, 
+    toolBar->AddTool( PD_IMPORT,
             wxEmptyString ,
             myapp()->frame->bitmaps[14] ,
             txt("b_import_primer") ) ;
-    toolBar->AddTool( PD_EXPORT, 
+    toolBar->AddTool( PD_EXPORT,
             wxEmptyString ,
             myapp()->frame->bitmaps[15] ,
             txt("b_export_primer") ) ;
@@ -435,7 +435,7 @@ void TPrimerDesign::initme ()
         myapp()->frame->bitmaps[10] ,
         wxITEM_CHECK, txt("m_display_features") ) ;
     toolBar->AddSeparator() ;
-    
+
     spin = new wxSpinCtrl ( toolBar , PCR_SPIN , _T("") , wxDefaultPosition , wxSize ( MYSPINBOXSIZE , -1 ) ) ;
     spin->SetRange ( 1 , vec->getSequenceLength() ) ;
     spin->SetValue ( wxString::Format ( _T("%d") , vec->getSequenceLength() ) ) ;
@@ -470,7 +470,7 @@ void TPrimerDesign::initme ()
     GetClientSize ( &w , &h ) ;
     lc = new wxListCtrl ( this , PD_LC , wxDefaultPosition , wxDefaultSize , wxLC_REPORT|wxLC_SINGLE_SEL ) ;
 
-		
+
     v1->Add ( new wxButton ( this , PD_EDIT , txt("m_edit") , wxPoint ( w/3 + 5 , 20 ) ) , 0 , wxALL , 2 ) ;
     v1->Add ( new wxButton ( this , PD_DEL , txt("b_del") , wxPoint ( w/3 + 5 , 50 ) ) , 0 , wxALL , 2 ) ;
 
@@ -480,7 +480,7 @@ void TPrimerDesign::initme ()
                             wxDefaultPosition,//wxPoint ( w/3 + 70 , 0 ) ,
                             wxDefaultSize,//wxSize ( w*2/3 - 70 , h ) ,
                             wxTE_MULTILINE | wxTE_READONLY ) ;
-                            
+
     stat->SetFont ( *MYFONT ( MYFONTSIZE , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
 
     GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,show_features);
@@ -503,7 +503,7 @@ void TPrimerDesign::initme ()
     for ( int a = 0 ; a < lc->GetColumnCount() ; a++ )
 	    lc->SetColumnWidth ( a , wxLIST_AUTOSIZE_USEHEADER ) ;
     }
-    
+
 void TPrimerDesign::OnEditPrimer ( wxCommandEvent &ev )
     {
     if ( lastPrimerActivated == -1 ) return ;
@@ -526,7 +526,7 @@ void TPrimerDesign::OnDeletePrimer ( wxCommandEvent &ev )
     showSequence () ;
     updatePrimersFromSequence () ;
     }
-    
+
 void TPrimerDesign::OnCopy(wxCommandEvent& event)
     {
     sc->OnCopy ( event ) ;
@@ -553,7 +553,7 @@ void TPrimerDesign::showSequence ()
     sc->blankline = 0 ;
     inverse_template_vector->setSequence ( vec->transformSequence ( true , false ) ) ;
     inverse_template_vector->setCircular ( vec->isCircular() ) ;
-    
+
     // Features
     SeqFeature *seqF = NULL ;
     if ( show_features )
@@ -561,7 +561,7 @@ void TPrimerDesign::showSequence ()
        seqF = new SeqFeature ( sc ) ;
        seqF->initFromTVector ( vec ) ;
        }
-    
+
     // Upper primer
     SeqPrimer *p1 = new SeqPrimer ( sc ) ;
     p1->initFromTVector ( vec ) ;
@@ -576,7 +576,7 @@ void TPrimerDesign::showSequence ()
     SeqDNA *s1 = new SeqDNA ( sc ) ;
     s1->initFromTVector ( vec ) ;
     s1->takesMouseActions = false ;
-    
+
     // Amino acid sequence of template
     SeqAA *a1 = new SeqAA ( sc ) ;
     a1->mode = aa_state ;
@@ -608,24 +608,24 @@ void TPrimerDesign::showSequence ()
     sc->seq.Add ( s2 ) ;
     sc->seq.Add ( p2 ) ;
     updateResultSequence() ;
-        
+
     sc->arrange () ;
-    sc->Refresh ( false ) ;    
+    sc->Refresh ( false ) ;
     updatePrimerStats () ;
     }
-    
+
 void TPrimerDesign::calculateResultSequence()
     {
     int a , b ;
-    
+
     // Constructing result vector
     resulting_sequence_vector->setFromVector ( *vec ) ;
-    
+
     int nuc = spin->GetValue() ;
     for ( a = 0 ; a < resulting_sequence_vector->getSequenceLength() ; a++ ) resulting_sequence_vector->alterSequence ( a , ' ' ) ;
     TVector w2 ;
     w2.setFromVector ( *resulting_sequence_vector ) ;
-    
+
     for ( a = 0 ; a < primer.size() ; a++ )
         {
         TVector *wp = primer[a].upper ? resulting_sequence_vector : &w2 ;
@@ -637,14 +637,14 @@ void TPrimerDesign::calculateResultSequence()
            wp->setNucleotide ( pos , vec->getNucleotide ( pos ) ) ;
            }
         }
-        
+
     for ( a = 0 ; a < resulting_sequence_vector->getSequenceLength() ; a++ )
         {
         if ( resulting_sequence_vector->getSequenceChar(a) != ' ' && w2.getSequenceChar(a) != ' ' )
            resulting_sequence_vector->alterSequence ( a , vec->getSequenceChar(a) ) ;
         else resulting_sequence_vector->alterSequence ( a , ' ' ) ;
-        }    
-       
+        }
+
     // Overwriting result sequence with primer sequences
     for ( a = 0 ; a < resulting_sequence_vector->getSequenceLength() ; a++ )
         {
@@ -656,10 +656,10 @@ void TPrimerDesign::calculateResultSequence()
            }
         if ( t != ' ' ) resulting_sequence_vector->setNucleotide ( a , t ) ;
         }
-    
+
     resulting_sequence_vector->recalculateCuts() ;
     }
-    
+
 void TPrimerDesign::updateResultSequence()
     {
     calculateResultSequence() ;
@@ -668,7 +668,7 @@ void TPrimerDesign::updateResultSequence()
         {
         delete sc->seq[sc->seq.GetCount()-1] ;
         sc->seq.RemoveAt ( sc->seq.GetCount()-1 ) ;
-        }    
+        }
 
     SeqRestriction *r3 = new SeqRestriction ( sc ) ;
     SeqDNA *s3 = new SeqDNA ( sc ) ;
@@ -685,7 +685,7 @@ void TPrimerDesign::updateResultSequence()
     s3->fontColor.Set ( 0 , 100 , 0 ) ;
     s3->takesMouseActions = false ;
     s3->alternateName = _T("RES") ;
-    
+
     // Resulting amino acids
     a3->mode = aa_state ;
     a3->disp = aa_disp ;
@@ -702,7 +702,7 @@ void TPrimerDesign::updateResultSequence()
     if ( !sc->isHorizontal() )
         {
         SeqDivider *div = new SeqDivider ( sc ) ;
-        div->initFromTVector ( vec ) ;    
+        div->initFromTVector ( vec ) ;
         sc->seq.Add ( div ) ;
         }
     }
@@ -736,7 +736,7 @@ void TPrimerDesign::OnAA_setit(int mode)
            sc->seq[a] = sc->seq[a-1] ;
         SeqAA *seqAA = new SeqAA ( sc ) ;
         sc->seq[0] = seqAA ;
-        seqAA->initFromTVector ( vec ) ;    
+        seqAA->initFromTVector ( vec ) ;
         }
     if ( mode == AA_THREE || mode == AA_ONE )
         aa_disp = mode ;
@@ -761,34 +761,34 @@ void TPrimerDesign::OnAA_setit(int mode)
         sc->mark ( s , oldfrom , oldto ) ;
         }
     }
-    
+
 void TPrimerDesign::OnAA_known(wxCommandEvent& event)
     {    OnAA_setit ( AA_KNOWN ) ;    }
-    
+
 void TPrimerDesign::OnAA_all(wxCommandEvent& event)
     {    OnAA_setit ( AA_ALL ) ;    }
-    
+
 void TPrimerDesign::OnAA_three_1(wxCommandEvent& event)
     {    OnAA_setit ( AA_THREE_1 ) ;    }
-    
+
 void TPrimerDesign::OnAA_three_2(wxCommandEvent& event)
     {    OnAA_setit ( AA_THREE_2 ) ;    }
-    
+
 void TPrimerDesign::OnAA_three_3(wxCommandEvent& event)
     {    OnAA_setit ( AA_THREE_3 ) ;    }
-    
+
 void TPrimerDesign::OnAA_three_M1(wxCommandEvent& event)
     {    OnAA_setit ( AA_THREE_M1 ) ;    }
-    
+
 void TPrimerDesign::OnAA_three_M2(wxCommandEvent& event)
     {    OnAA_setit ( AA_THREE_M2 ) ;    }
-    
+
 void TPrimerDesign::OnAA_three_M3(wxCommandEvent& event)
     {    OnAA_setit ( AA_THREE_M3 ) ;    }
-    
+
 void TPrimerDesign::OnAA_three(wxCommandEvent& event)
     {    OnAA_setit ( AA_THREE ) ;    }
-    
+
 void TPrimerDesign::OnAA_one(wxCommandEvent& event)
     {    OnAA_setit ( AA_ONE ) ;    }
 
@@ -814,7 +814,7 @@ void TPrimerDesign::OnSelectPrimer ( wxListEvent& event)
     stat->SetValue ( x ) ;
     sc->SetFocus () ;
     }
-    
+
 void TPrimerDesign::OnActivatePrimer ( wxListEvent& event)
     {
     lastPrimerActivated = event.GetIndex () ;
@@ -824,7 +824,7 @@ void TPrimerDesign::OnActivatePrimer ( wxListEvent& event)
 void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
     {
 	if ( !vec || !resulting_sequence_vector ) return ; // Paranoia
-	
+
 	// Construct new vector containing just the resulting sequence
 	wxString resulting_sequence ;
 	int from = sc->markedFrom() ;
@@ -832,13 +832,13 @@ void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
 	int rsvl = resulting_sequence_vector->getSequenceLength() ;
 	wxString dummy = resulting_sequence_vector->getSequence() ;
 	dummy.Replace ( _T(" ") , _T("") ) ;
-	
+
 	TVector *temp_result = sc->getPCR_DNA_vector () ;
 //	if ( aa_disp != AA_KNOWN ) temp_result->items.clear () ;
-	
+
 	int old_aa_disp = aa_disp ;
 	int old_aa_state = aa_state ;
-	
+
 	int new_dir = 0 ;
 	switch ( aa_state )
 		{
@@ -849,7 +849,7 @@ void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
 		case AA_THREE_M2 : new_dir = -2 ; break ;
 		case AA_THREE_M3 : new_dir = -3 ; break ;
 		}
-	
+
 	if ( vec->getSequenceLength() != dummy.length() )
 		{
 		int move_to_left = 0 ;
@@ -899,9 +899,9 @@ void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
 			}
 		}
 	if ( from < 0 ) { to += -from ; from = 0 ; }
-	
+
 	if ( new_dir != 0 ) aa_disp = AA_ONE ;
-	switch ( new_dir ) 
+	switch ( new_dir )
 		{
 		case  1 : aa_state = AA_THREE_1 ; break ;
 		case  2 : aa_state = AA_THREE_2 ; break ;
@@ -911,19 +911,19 @@ void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
 		case -3 : aa_state = AA_THREE_M3 ; break ;
 		}
 
-	
+
 	// Run silmut dialog
     TSilmutDialog sd ( this , txt("t_silmut") ) ;
     sd.initme ( temp_result , from , to ) ;
     int dialog_result = sd.ShowModal () ;
-    
+
     aa_state = old_aa_state ;
     aa_disp = old_aa_disp ;
-    
+
     if ( wxID_OK != dialog_result ) return ; //Canceled
     wxString ns = sd.getSequence() ;
     if ( ns.IsEmpty() ) return ;
-    
+
     // Change sequence to mutated version
     TVector z ;
     z.setSequence ( ns ) ;
@@ -939,7 +939,7 @@ void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
            if ( sc->seq[4+show_features]->s.GetChar(b) != ' ' ) sc->seq[4+show_features]->s.SetChar(b,nt.GetChar(a)) ;
            }
         }
-    
+
     // Add new restriction enzyme and refresh display
 	resulting_sequence_vector->addRestrictionEnzyme ( e ) ;
 	vec->addRestrictionEnzyme ( e ) ;
@@ -947,31 +947,31 @@ void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
     updatePrimersFromSequence () ;
     showSequence () ;
     }
-    
+
 void TPrimerDesign::OnToggleFeatures ( wxCommandEvent &ev )
     {
     show_features = sc->findID ( _T("FEATURE") ) ? 0 : 1 ;
-    showSequence () ;    
+    showSequence () ;
     GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,show_features);
     }
-    
+
 void TPrimerDesign::OnSpin(wxSpinEvent& event)
     {
     updateResultSequence() ;
     sc->arrange () ;
-    sc->Refresh ( false ) ;    
+    sc->Refresh ( false ) ;
     }
-    
+
 void TPrimerDesign::OnSpinText(wxCommandEvent& event)
     {
     if ( spinTextEnabeled )
         {
         updateResultSequence() ;
         sc->arrange () ;
-        sc->Refresh ( false ) ;    
-        }    
+        sc->Refresh ( false ) ;
+        }
     }
-    
+
 void TPrimerDesign::OnHorizontal ( wxCommandEvent& event )
     {
     sc->toggleHorizontal () ;
@@ -983,14 +983,14 @@ void TPrimerDesign::OnHorizontal ( wxCommandEvent& event )
     else
        {
        SeqDivider *div = new SeqDivider ( sc ) ;
-       div->initFromTVector ( vec ) ;    
+       div->initFromTVector ( vec ) ;
        sc->seq.Add ( div ) ;
        }
     sc->arrange () ;
-    sc->SilentRefresh() ;    
+    sc->SilentRefresh() ;
     sc->SetFocus () ;
     }
-    
+
 void TPrimerDesign::OnFind(wxCommandEvent& event)
     {
     FindSequenceDialog fsd ( this , txt("t_find") ) ;

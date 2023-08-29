@@ -5,10 +5,10 @@
 
 bool operator < ( const TRestrictionCut &c1 , const TRestrictionCut &c2 )
     {
-    return ( ((TRestrictionCut)c1).getPos() > ((TRestrictionCut)c2).getPos() ) || 
+    return ( ((TRestrictionCut)c1).getPos() > ((TRestrictionCut)c2).getPos() ) ||
 		( ((TRestrictionCut)c1).getPos() == ((TRestrictionCut)c2).getPos() && c1.e->getName() < c2.e->getName() ) ;
     }
-    
+
 bool operator == ( const TRestrictionCut &c1 , const TRestrictionCut &c2 )
     {
     return ((TRestrictionCut)c1).getPos() == ((TRestrictionCut)c2).getPos() && c1.e->getName() == c2.e->getName() ;
@@ -21,7 +21,7 @@ bool operator < ( const TFragment &f1 , const TFragment &f2 )
 	 if ( f1.to < f2.to ) return true ;
 	 return false ;
     }
-    
+
 bool operator == ( const TFragment &f1 , const TFragment &f2 )
     {
     return ( f1.from == f2.from ) && ( f1.to == f2.to ) ;
@@ -29,7 +29,7 @@ bool operator == ( const TFragment &f1 , const TFragment &f2 )
 
 /** \brief Compares two restriction enzymes
 	\param e The enzyme to compare this one to
-	
+
 	If any of name, sequence, note, location, cut, or overlap do
 	not match, FALSE is returned
 */
@@ -43,7 +43,7 @@ bool TRestrictionEnzyme::differ ( TRestrictionEnzyme &e )
     if ( overlap != e.overlap ) return true ;
     return false ;
     }
-    
+
 wxString TRestrictionEnzyme::getEndUpperLeft ( bool first_strand )
     {
     wxString r ;
@@ -51,7 +51,7 @@ wxString TRestrictionEnzyme::getEndUpperLeft ( bool first_strand )
         r += sequence.GetChar(a) ;
     return r ;
     }
-    
+
 wxString TRestrictionEnzyme::getEndLowerLeft ( bool first_strand )
     {
     wxString r , s = invertSequence () ;
@@ -59,7 +59,7 @@ wxString TRestrictionEnzyme::getEndLowerLeft ( bool first_strand )
         r += s.GetChar(a) ;
     return r ;
     }
-    
+
 wxString TRestrictionEnzyme::getEndUpperRight ( bool first_strand )
     {
     wxString r ;
@@ -67,7 +67,7 @@ wxString TRestrictionEnzyme::getEndUpperRight ( bool first_strand )
         r += sequence.GetChar(a) ;
     return r ;
     }
-    
+
 wxString TRestrictionEnzyme::getEndLowerRight ( bool first_strand )
     {
     wxString r , s = invertSequence () ;
@@ -75,14 +75,14 @@ wxString TRestrictionEnzyme::getEndLowerRight ( bool first_strand )
         r += s.GetChar(a) ;
     return r ;
     }
-    
+
 wxString TRestrictionEnzyme::invertSequence ()
     {
     TVector v ;
     v.setSequence ( sequence ) ;
     return v.transformSequence ( true , false ) . c_str() ;
     }
-    
+
 int TRestrictionEnzyme::getCut ( bool first_strand )
 	{
 	return first_strand ? cut : sequence.length() - cut - overlap ;
@@ -125,7 +125,7 @@ void TRestrictionCut::linearUpdate ( int w , int h )
                         lastrect.GetWidth() ,
                         lastrect.GetHeight() ) ;
     }
-    
+
 wxString TRestrictionCut::getNameAndPosition ()
     {
 	 if ( !myapp()->frame->showEnzymePos ) return getDisplayName() ;
@@ -141,7 +141,7 @@ wxString TRestrictionCut::getDisplayName ()
 	{
 	if ( display_name.IsEmpty() ) return e->getName() ;
 	return display_name ;
-	}    
+	}
 
 /** \brief Merges a cut with an isoenzyme for simplified display
 	\param c The restriction cut to merge
@@ -155,8 +155,8 @@ bool TRestrictionCut::join ( TRestrictionCut *c )
 	if ( display_name.IsEmpty() ) display_name = e->getName() ;
 	display_name += _T(", ") + c->e->getName() ;
 	return true ;
-	}    
-        
+	}
+
 wxString TRestrictionCut::getEndUpperLeft () { return e->getEndUpperLeft ( first_strand ) ; }
 wxString TRestrictionCut::getEndLowerLeft () { return e->getEndLowerLeft ( first_strand ) ; }
 wxString TRestrictionCut::getEndUpperRight () { return e->getEndUpperRight ( first_strand ) ; }
@@ -232,4 +232,4 @@ bool TProtease::does_match ( wxString s )
         }
     return true ;
     }
-    
+

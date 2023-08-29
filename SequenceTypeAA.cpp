@@ -23,7 +23,7 @@ int SeqAA::arrange ( int n )
     wxMessageBox ( _T("One has to wonder...1") ) ;
     assert(0);
     }
-    
+
 void SeqAA::show ( wxDC& dc )
     {
     if ( useDirectRoutines() ) { show_direct ( dc ) ; return ; }
@@ -42,7 +42,7 @@ wxPoint SeqAA::showText ( int ystart , wxArrayString &tout )
         if ( b > 0 ) // Character
            {
            t = s.GetChar(b-1) ;
-           if ( pos.r[a].y != ly ) 
+           if ( pos.r[a].y != ly )
               {
               ly = pos.r[a].y ;
               y += can->seq.GetCount() ;
@@ -64,7 +64,7 @@ wxPoint SeqAA::showText ( int ystart , wxArrayString &tout )
        p = wxPoint ( -1 , -1 ) ;
     return p ;
     }
-    
+
 void SeqAA::initFromString ( wxString t )
     {
     s = t ;
@@ -73,7 +73,7 @@ void SeqAA::initFromString ( wxString t )
     offsets.Clear() ;
 //    offsets.Alloc ( s.length() ) ;
 //    while ( offsets.GetCount() < s.length() ) offsets.Add ( -1 ) ;
-    
+
     // Proteases
     updateProteases () ;
     pa_w = _T("") ;
@@ -106,7 +106,7 @@ void SeqAA::updateProteases ()
         if ( pro ) proteases.Add ( pro ) ;
         }
     }
-    
+
 void SeqAA::analyzeProteases ()
     {
     if ( !can ) return ;
@@ -155,9 +155,9 @@ void SeqAA::fixOffsets ( TVector *v )
            }
         }
     }
-    
 
-        
+
+
 void SeqAA::initFromTVector ( TVector *v )
     {
     showNumbers = true ;
@@ -236,7 +236,7 @@ void SeqAA::initFromTVector ( TVector *v )
                 }
             }
         }
-    
+
     s = s.substr ( 0 , sl ) ;
     for ( a = 0 ; a < s.length() ; a++ )
        if ( s.GetChar(a) == '?' ) s.SetChar(a, unknownAA) ;
@@ -245,7 +245,7 @@ void SeqAA::initFromTVector ( TVector *v )
        v->addToSequence ( _T(" ") ) ;
        s += _T(" ") ;
        }
-       
+
     int mem = 0 ;
 //    mem += pa_w.length() ;
     mem += offsets.GetCount() * sizeof ( int ) ;
@@ -253,7 +253,7 @@ void SeqAA::initFromTVector ( TVector *v )
 //    mem += sizeof ( wxArrayTProteaseCut ) + sizeof ( wxArrayTProtease ) + sizeof ( wxArrayTVectorItem ) ;
     mylog ( "AA_mem" , wxString::Format ( "%d" , mem ) ) ;
     }
-    
+
 // direct
 
 
@@ -265,7 +265,7 @@ bool SeqAA::useDirectRoutines ()
 int SeqAA::arrange_direct ( int n )
     {
     int w , h , bo = can->border ;
-    
+
     // Setting basic values
     can->SetFont(*can->font);
     int wx = can->charwidth ; //, wy = can->charheight ;
@@ -280,7 +280,7 @@ int SeqAA::arrange_direct ( int n )
     int ret = ( s.length() + itemsperline - 1 ) / itemsperline ;
     ret = can->NumberOfLines() * ret * can->charheight + 1 ;
     return ret ;
-    }    
+    }
 
 void SeqAA::show_direct ( wxDC& dc )
     {
@@ -296,12 +296,12 @@ void SeqAA::show_direct ( wxDC& dc )
     for ( n = 0 ; n < csgc && can->seq[n] != this ; n++ ) ;
     if ( n == csgc ) return ;
     mylog ( "SeqAA::show_direct" , "1" ) ;
-    
+
     // Setting basic values
     int cw = can->charwidth , ch = can->charheight ;
     int ox = bo + cw + cw * endnumberlength ;
     int oy = n*ch+bo ;
-    
+
     can->MyGetClientSize ( &w , &h ) ;
     xb = w ;
     yb = h ;
@@ -320,21 +320,21 @@ void SeqAA::show_direct ( wxDC& dc )
     xb += xa ;
     ya = -ya ;
     yb += ya ;
-    
+
     mylog ( "SeqAA::show_direct" , "2" ) ;
     b = ( ya - ch - oy ) / ( ch * csgc ) * itemsperline ;
     mylog ( "SeqAA::show_direct" , "3" ) ;
     for ( a = 0 ; a < b && a < s.length() ; a += itemsperline ) ;
-        
+
     for ( ; a < s.length() ; a++ )
         {
         int px = a % itemsperline , py = a / itemsperline ;
-        
+
         bool showNumber = ( px == 0 ) ;
-        
+
         px = px * cw + ( px / cbs ) * ( cw - 1 ) + ox ;
         py = py * ch * csgc + oy ;
-        
+
         if ( !can->getDrawAll() )
            {
            if ( py + ch < ya ) continue ;
@@ -343,8 +343,8 @@ void SeqAA::show_direct ( wxDC& dc )
               {
               if ( px + cw < xa ) continue ;
               if ( px > xb ) continue ;
-              }    
-           }    
+              }
+           }
 
        int pm = getMark ( a ) ;
        if ( pm == 1 ) // Marked (light gray background)
@@ -376,7 +376,7 @@ void SeqAA::show_direct ( wxDC& dc )
 	   wxChar ch2 = s.GetChar(a) ;
 	   if ( ch2 == '|' ) ch2 = myapp()->frame->stopcodon ;
        dc.DrawText ( wxString ( ch2 ) , px , py ) ;
-       
+
        int pz = py + ch ;
 
        if ( show_diff_to && ch2 != ' ' ) // Mark changed amino acids in PCR
@@ -387,7 +387,7 @@ void SeqAA::show_direct ( wxDC& dc )
 			dc.DrawLine ( px-1 , pz , px-1+cw , pz ) ;
 			}
 		}
-       
+
        if ( pm == 2 && !can->doOverwrite() ) // Insert cursor
           {
              dc.SetPen(*wxBLACK_PEN);
@@ -424,7 +424,7 @@ void SeqAA::show_direct ( wxDC& dc )
              dc.GetTextExtent ( pn , &u1 , &u2 ) ;
              dc.DrawText ( pn , qx - u1/2 , qy - u2/2 ) ;
              dc.SetFont(*can->font);
-             
+
              if ( primaryMode ) dc.SetTextForeground ( getHighlightColor ( a , *wxBLACK ) ) ;
              else dc.SetTextForeground ( myapp()->frame->aa_color /* *wxLIGHT_GREY */ ) ;
              }
@@ -436,15 +436,15 @@ void SeqAA::show_direct ( wxDC& dc )
            while ( endnumberlength > t.length() ) t = _T("0") + t ;
 //           t.Pad ( endnumberlength - t.length() , '0' , false ) ;
            dc.DrawText ( t , bo , py ) ;
-           }    
-        }    
+           }
+        }
 
 
     dc.SetBackgroundMode ( bm ) ;
     dc.SetTextBackground ( tbg ) ;
     dc.SetTextForeground ( tfg ) ;
     }
-    
+
 int SeqAA::getLine ( int y )
     {
     if ( !useDirectRoutines() ) return SeqBasic::getLine ( y ) ;
@@ -458,7 +458,7 @@ int SeqAA::getLine ( int y )
         int ret = y / can->NumberOfLines() ;
         if ( ret < 0 ) return -1 ;
         return ret ;
-        }    
+        }
     else return -1 ;
     }
 
@@ -474,15 +474,15 @@ int SeqAA::getItem ( wxPoint pt , int line )
     y -= can->border ;
     y /= ch ;
     y /= can->NumberOfLines() ;
-    
+
     x -= ox ;
     if ( x < 0 ) return -1 ;
     int j = 0 ;
-    while ( x >= cw * can->blocksize + cw - 1 ) 
+    while ( x >= cw * can->blocksize + cw - 1 )
         {
         j += can->blocksize ;
         x -= cw * can->blocksize + cw - 1 ;
-        }    
+        }
     while ( x >= 0 && j < itemsperline )
         {
         if ( x >= 0 && x <= cw )
@@ -490,35 +490,35 @@ int SeqAA::getItem ( wxPoint pt , int line )
            int ret = line * itemsperline + j + 1 ;
            if ( ret > s.length() ) return -1 ;
            return ret ;
-           }    
+           }
         j++ ;
         x -= cw ;
         if ( j % can->blocksize == 0 ) x -= cw - 1 ;
-        }    
+        }
 
     return 0 ;
     }
 
-int SeqAA::getMarkSize ()    
+int SeqAA::getMarkSize ()
     {
     if ( !useDirectRoutines() ) return SeqBasic::getMarkSize() ;
     return s.length()+1 ;
     }
-    
+
 int SeqAA::getRectSize ()
     {
     if ( !useDirectRoutines() ) return SeqBasic::getRectSize() ;
     return 0 ;
     }
-    
+
 wxRect SeqAA::getRect ( int i )
     {
     if ( !useDirectRoutines() ) return pos.r[i] ;
-    
+
     wxRect ret ;
     ret.x = 0 ;
     ret.y = ( (i-1) / itemsperline ) * can->charheight * can->NumberOfLines() ;
-    
+
     return ret ;
     }
 

@@ -12,13 +12,13 @@ TUndo::TUndo ()
     cnt = 0 ;
     base = NULL ;
     }
-    
+
 // Sets the vector that holds the TUndo item
 void TUndo::setbase ( TVector *_base )
     {
     base = _base ;
     }
-    
+
 // Remembers the "before" state
 // To avoid having multiple "undos" for a (for the user) single action,
 // only the first one is stored, the other in-between steps
@@ -42,7 +42,7 @@ void TUndo::stop ()
     if ( base ) base->setChanged() ;
     if ( base ) base->callUpdateUndoMenu() ;
     }
-    
+
 // Same as stop, but if called from the "initial" caller,
 // the undo process will be cancelled
 void TUndo::abort ()
@@ -55,14 +55,14 @@ void TUndo::abort ()
     msg.RemoveAt ( msg.GetCount() - 1 ) ;
     if ( base ) base->callUpdateUndoMenu() ;
     }
-    
+
 void TUndo::remember ( wxString _msg )
     {
     IS_UNDO_OFF
     start ( _msg ) ;
     stop () ;
     }
-    
+
 void TUndo::clear ()
     {
     IS_UNDO_OFF
@@ -70,7 +70,7 @@ void TUndo::clear ()
         {
         mem[a]->undo.clear () ;
         delete mem[a] ;
-        }    
+        }
     msg.Clear() ;
     mem.Clear() ;
     cnt = 0 ;
@@ -90,33 +90,33 @@ void TUndo::pop ()
 
     wxArrayTVector _mem = mem ;
     wxArrayString _msg = msg;
-    
+
     v->undo.mem.Clear() ;
     v->undo.msg.Clear() ;
     mem.Clear() ;
     msg.Clear() ;
-    
+
     *base = *v ;
     delete v ;
-    
+
     base->undo.mem = _mem ;
     base->undo.msg = _msg ;
-    
+
     if ( canUndo() ) base->setChanged ( true ) ;
     else base->setChanged ( false ) ;
     }
-    
+
 bool TUndo::canUndo ()
     {
     return ( mem.GetCount() > 0 ) ;
     }
-    
+
 wxString TUndo::getLastMessage ()
     {
     if ( !canUndo() ) return _T("") ;
     return msg.Last() ;
     }
-    
+
 TUndo &TUndo::operator = ( TUndo &u )
     {
     TVector *b = base ;
@@ -125,4 +125,4 @@ TUndo &TUndo::operator = ( TUndo &u )
     base = b ;
     return *this ;
     }
-    
+

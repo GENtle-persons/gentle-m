@@ -28,7 +28,7 @@ class TGelLane
 	wxArrayString vs ;
 	double unit_volume ;
 	wxRect pos ; ///< The outer border of the lane
-	} ;    
+	} ;
 
 /**	\class TVirtualGel
 	\brief The virtual gel module
@@ -37,7 +37,7 @@ class TVirtualGel : public ChildBase
     {
     public :
     TVirtualGel(wxWindow *parent, const wxString& title) ; ///< Constructor
-    
+
     virtual void initme () ; ///< Initialization
     virtual wxString getName () ; ///< Returns the gel module name
 
@@ -53,10 +53,10 @@ class TVirtualGel : public ChildBase
     wxString type ; ///< Gel type (unused yet)
     double percent ; ///< Gel concentration
     int cutoff , maxband ;
-    
+
     DECLARE_EVENT_TABLE()
     } ;
-    
+
 /**	\class TMyGelControl
 	\brief This class handles a single virtual gel for TVirtualGel, using TGelLane lanes
 */
@@ -73,12 +73,12 @@ class TMyGelControl : public wxControl
     virtual void OnCopy(wxCommandEvent &event); ///< Copy event handler
     virtual void OnPrint(wxCommandEvent &event); ///< Print event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler
-    
+
     virtual int getLanePos ( int size , int height , float perc = 0 ) ;
     virtual double fix_percent ( int size , float perc = 0 ) ;
-    
+
     virtual void drawBand ( wxDC &dc , TGelLane &lane , int band ) ; ///< Draws a gel band
-    
+
     bool printing ; ///< Is the current output going to printer?
     TVirtualGel *vg ; ///< Pointer to the parent module
 
@@ -91,7 +91,7 @@ class TRestrictionIdentifier : public TVirtualGel
     public :
     TRestrictionIdentifier(wxWindow *parent, const wxString& title) ; ///< Constructor
     virtual void initme () ; ///< Initialization
-    
+
     virtual void OnDNAListChange(wxCommandEvent &event);
     virtual void OnEnzymeListChange(wxCommandEvent &event);
     virtual wxString getName () ; ///< Returns the gel module name
@@ -105,13 +105,13 @@ class TRestrictionIdentifier : public TVirtualGel
     bool check4separation ( wxString en ) ;
     bool arrays_are_separate ( const wxArrayInt &a1 , const wxArrayInt &a2 ) ;
     bool arrays_differ ( const wxArrayInt &a1 , const wxArrayInt &a2 , int bp , int percent ) ;
-    
+
     wxCheckListBox *dna_list ;
     wxListBox *enzymes_list ;
     wxChoice *bp_list , *percent_list , *group_list ;
     vector <MyChild*> dna_items ;
     bool running ;
-    
+
     DECLARE_EVENT_TABLE()
 } ;
 

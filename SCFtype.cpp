@@ -17,40 +17,40 @@ typedef signed   char   int_1;
  */
 typedef struct {
     uint_4 magic_number;
-    uint_4 samples;          ///< Number of elements in Samples matrix 
-    uint_4 samples_offset;   ///< Byte offset from start of file 
-    uint_4 bases;            ///< Number of bases in Bases matrix 
-    uint_4 bases_left_clip;  ///< OBSOLETE: No. bases in left clip (vector) 
-    uint_4 bases_right_clip; ///< OBSOLETE: No. bases in right clip (qual) 
-    uint_4 bases_offset;     ///< Byte offset from start of file 
-    uint_4 comments_size;    ///< Number of bytes in Comment section 
-    uint_4 comments_offset;  ///< Byte offset from start of file 
-    char version[4];         ///< "version.revision", eg '3' '.' '0' '0' 
+    uint_4 samples;          ///< Number of elements in Samples matrix
+    uint_4 samples_offset;   ///< Byte offset from start of file
+    uint_4 bases;            ///< Number of bases in Bases matrix
+    uint_4 bases_left_clip;  ///< OBSOLETE: No. bases in left clip (vector)
+    uint_4 bases_right_clip; ///< OBSOLETE: No. bases in right clip (qual)
+    uint_4 bases_offset;     ///< Byte offset from start of file
+    uint_4 comments_size;    ///< Number of bytes in Comment section
+    uint_4 comments_offset;  ///< Byte offset from start of file
+    char version[4];         ///< "version.revision", eg '3' '.' '0' '0'
     uint_4 sample_size;      ///< Size of samples in bytes 1=8bits, 2=16bits
     uint_4 code_set;         ///< code set used (but ignored!)
-    uint_4 private_size;     ///< No. of bytes of Private data, 0 if none 
-    uint_4 private_offset;   ///< Byte offset from start of file 
-    uint_4 spare[18];        ///< Unused 
+    uint_4 private_size;     ///< No. of bytes of Private data, 0 if none
+    uint_4 private_offset;   ///< Byte offset from start of file
+    uint_4 spare[18];        ///< Unused
 } SCF_Header;
 
 /**	\typedef SCF_Samples1
 	\brief Type definition for the SCF_Samples1 data
  */
 typedef struct {
-        uint_1 sample_A;           ///< Sample for A trace 
-        uint_1 sample_C;           ///< Sample for C trace 
-        uint_1 sample_G;           ///< Sample for G trace 
-        uint_1 sample_T;           ///< Sample for T trace 
+        uint_1 sample_A;           ///< Sample for A trace
+        uint_1 sample_C;           ///< Sample for C trace
+        uint_1 sample_G;           ///< Sample for G trace
+        uint_1 sample_T;           ///< Sample for T trace
 } SCF_Samples1;
 
 /**	\typedef SCF_Samples2
 	\brief Type definition for the SCF_Samples2 data
  */
 typedef struct {
-        uint_2 sample_A;           ///< Sample for A trace 
-        uint_2 sample_C;           ///< Sample for C trace 
-        uint_2 sample_G;           ///< Sample for G trace 
-        uint_2 sample_T;           ///< Sample for T trace 
+        uint_2 sample_A;           ///< Sample for A trace
+        uint_2 sample_C;           ///< Sample for C trace
+        uint_2 sample_G;           ///< Sample for G trace
+        uint_2 sample_T;           ///< Sample for T trace
 } SCF_Samples2 ;
 
 /*
@@ -88,7 +88,7 @@ void make_real_uint4 ( uint_4 &x )
 	{
 	x = get_real_uint4 ( x ) ;
 	}
-	
+
 uint_2 get_real_uint2 ( uint_2 x )
 	{
 	unsigned char *c = (unsigned char*) (&x) ;
@@ -111,13 +111,13 @@ bool SCFtype::parse ( const wxString& filename )
 	unsigned char *t = new unsigned char [l+15] ;
 	f.Read ( t , l ) ;
 	f.Close() ;
-	
+
 	if ( *(t+0) != '.' || *(t+1) != 's' || *(t+2) != 'c' || *(t+3) != 'f' )
 		{
 		delete [] t ;
 		return false ; // No luck
 		}
-	
+
 	SCF_Header *header = (SCF_Header*) t ;
 
 	wxString version ;
@@ -140,17 +140,17 @@ bool SCFtype::parse ( const wxString& filename )
 	make_real_uint4 ( (*header).samples ) ;
 	make_real_uint4 ( (*header).samples_offset ) ;
 	make_real_uint4 ( (*header).sample_size ) ;
-	
+
 	if ( (*header).samples == 0 || (*header).bases == 0 ) return false ; // Paranoia
 
 	unsigned char *c ;
 	unsigned int a ;
-	
+
 	// Read comment
 	sd.comment.Empty() ;
 	for ( a = 0 , c = t + (*header).comments_offset ; a < (*header).comments_size ; a++ , c++ )
 		sd.comment += *c ;
-	
+
 	// Preparing to read sequence information
 	void *v = t + (*header).bases_offset ;
 	unsigned long *ulp ;
@@ -180,7 +180,7 @@ bool SCFtype::parse ( const wxString& filename )
 		a = 0 ;
 		}
 
-/*	
+/*
 	// Maximum trace data
 	unsigned long min = 9999 , max = 0 ;
 	for ( a = 0 ; a < sd.sequence.size() ; a++ )
@@ -224,7 +224,7 @@ bool SCFtype::parse ( const wxString& filename )
 		out.Write ( wxString::Format ( _T("%5d: %5d %c\r\n") , a , sd.sequence[a].peak_index , sd.sequence[a].base ) ) ;
     }
 
-/*	
+/*
 	// THE FOLLOWING MESS MIGHT PROVE USEFUL ONE DAY
 	// TO IMPORT SCF VERSIONS 1 AND 2 AS WELL
 	v += (*header).bases * 4
@@ -236,14 +236,14 @@ bool SCFtype::parse ( const wxString& filename )
 		si.prob_c = (*base).prob_C ;
 		si.prob_g = (*base).prob_G ;
 		si.prob_t = (*base).prob_T ;
-		
+
 		char c = 'A' ;
 		int prob = si.prob_a ;
 		if ( prob < si.prob_c ) { prob = si.prob_c ; c = 'C' ; }
 		if ( prob < si.prob_g ) { prob = si.prob_g ; c = 'G' ; }
 		if ( prob < si.prob_t ) { prob = si.prob_t ; c = 'T' ; }
 		sd.seq += c ;
-		
+
 		si.base = (*base).base ;
 		sd[a] = si ;
 //		sd.sequence.push_back ( si ) ;
@@ -287,7 +287,7 @@ bool SCFtype::parse ( const wxString& filename )
 */
 //	wxMessageBox ( out ) ;
 //	wxMessageBox ( sd.comment ) ;
-	
+
 	delete [] t ;
 	return true ;
 	}
@@ -305,11 +305,11 @@ void SCFtype::read_tracer_block ( void *v , unsigned int mode , unsigned int sam
 			x |= (unsigned char) *(c+0) ;
 			x <<= 8 ;
 			x |= (unsigned char) *(c+1) ;
-			
+
 			if ( x >= 32768 ) {
                 x = x - 65536 ;
             }
-			
+
 			c += 2 ;
 			}
 		else x = *c++ ;

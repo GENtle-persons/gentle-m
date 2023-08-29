@@ -35,7 +35,7 @@ class TPrimerDialog : public wxDialog
     void OnActivatePrimer ( wxListEvent& event); ///< Primer activation event handler
     void OnSpinChanged ( wxSpinEvent &ev ) ; ///< "A spin control has changed" event handler
     void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
-    
+
     void updateList () ; ///< Update the potential primer list
     void ShowCur () ; ///< Refreshes the currently selected primer and its properties
     void ShowLC () ; ///< Refreshes the potential primer list
@@ -43,7 +43,7 @@ class TPrimerDialog : public wxDialog
     private :
     TPrimerDesign *pd ;
     vector <TPrimer> pl ; ///< The list of potential primers
-    
+
     wxSpinCtrl *l3 , *l5 , *r3 , *r5 , *lmin , *lmax , *tmin , *tmax ;
     wxTextCtrl *seq , *rep ;
     wxListCtrl *lc ; ///< The list display of potential primers

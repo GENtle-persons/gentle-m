@@ -17,7 +17,7 @@ class TABIviewer : public ChildBase
     public :
     TABIviewer(wxWindow *parent, const wxString& title) ; ///< Constructor
     virtual ~TABIviewer () ; ///< Destructor
-    
+
     virtual void initme () ; ///< Initialization
     virtual wxString getName () ; ///< Returns the module name
     virtual void showSequence () ; ///< Show/refresh the sequence
@@ -27,7 +27,7 @@ class TABIviewer : public ChildBase
     virtual bool is_only_view () { return view_from != -1 || view_to != -1 ; } ///< Partial view?
     virtual void toggle_inv_compl () ; ///< Switches between normal and inverse/complementary display
     virtual bool get_inv_compl () ; ///< Returns the state of normal or inverse/complementary display
-    
+
     virtual void OnMarkAll(wxCommandEvent& event); ///< Ctrl-A event handler
     virtual void OnFileSave(wxCommandEvent& event); ///< Save-as event handler
     virtual void OnFind(wxCommandEvent& event); ///< Find event handler
@@ -53,7 +53,7 @@ class TABIviewer : public ChildBase
     friend class MyFrame ;
     virtual void spinHeight() ; ///< Sets the height spin box
     virtual void set_view ( long _from , long _to ) ;
-    
+
     // Variables
     wxTextCtrl *stat ; ///< Pointer to statistics text box
     int from , oldh ;
@@ -63,9 +63,9 @@ class TABIviewer : public ChildBase
     wxSlider *slider ; ///< Pointer to the slider structure
     long view_from , view_to ;
     wxChoice *fontsize ;
-    
+
     DECLARE_EVENT_TABLE()
     } ;
-    
+
 #endif
 

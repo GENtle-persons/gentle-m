@@ -22,11 +22,11 @@ class AlignmentAppearanceDialog : public wxDialog
     virtual void OnCancel ( wxCommandEvent &event ) ; ///< Cancel button event handler
     virtual void OnReset ( wxCommandEvent &event ) ; ///< Reset button event handler
     virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
-    
+
     private :
     void set_pen ( SequenceCharMarkup &scm , int id , int border ) ; ///< Sets a pen in the markup object; used by OnOK
     void addLine ( wxString name , wxArrayString &as , wxFlexGridSizer *sizer ) ; ///< Adds a line of elements (radio boxes, buttons)
-    
+
     vector <wxRadioBox*> radioboxes ;
     vector <wxSpinCtrl*> thickness ;
     vector <wxColour> colors ;
@@ -35,7 +35,7 @@ class AlignmentAppearanceDialog : public wxDialog
     wxColour color_foreground , color_background ;
     int from , to , firstline , lastline ;
     TAlignment *ali ; ///< Pointer to the alignment
-    
+
     DECLARE_EVENT_TABLE()
     } ;
 

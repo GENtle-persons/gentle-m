@@ -72,13 +72,13 @@ public :
 	    if ( p->c1->GetSelection() == 0 ) url += _T("&PROGRAM=blastp") ;
 	    if ( p->c1->GetSelection() == 1 ) url += _T("&PROGRAM=blastn") ;
 	    url += _T("&HITLIST_SIZE=") + p->c2->GetStringSelection() ;
-	    
+
 	    res = ex.getText ( url ) ;
-	    
+
 	    hs = parseQblast ( res ) ;
 	    RID = hs[_T("RID")] ;
 	    RTOE = hs[_T("RTOE")] ;
-	    
+
 	    // Prepare URL
 	    RTOE.ToLong ( &wait ) ;
 	    url = _T("http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?") ;
@@ -111,7 +111,7 @@ public :
 		wxMutexGuiEnter() ;
 		res = ex.getText ( url ) ;
 		wxMutexGuiLeave() ;
-		
+
 		hs = parseQblast ( res ) ;
 		if ( hs[_T("STATUS")].Upper() == _T("WAITING") ) wait = 5 ; // Wait another 5 seconds
 		else wait = 0 ; // Done!
@@ -131,16 +131,16 @@ private :
 	    wxHashString ret ;
 	    wxString q1 = _T("QBlastInfoBegin") ;
 	    wxString q2 = _T("QBlastInfoEnd") ;
-	    
+
 	    int i ;
 	    i = res.First ( q1 ) ;
 	    if ( i == -1 ) return ret ;
 	    res = res.Mid ( i + q1.Length() ) ;
-	    
+
 	    i = res.First ( q2 ) ;
 	    if ( i == -1 ) return ret ;
 	    res = res.Left ( i - 1 ) ;
-	    
+
 	    while ( !res.IsEmpty() )
 	    {
 		wxString k , v ;
@@ -156,7 +156,7 @@ private :
 	    }
 	    return ret ;
 	}
-    
+
     wxString res , url , RID , RTOE ;
     myExternal ex ;
     wxHashString hs ;
@@ -188,7 +188,7 @@ void EIpanel::process_blast()
     mylog ( "blast1" , "3" ) ;
 
 //    blast_thread->SetPriority ( 10 ) ; // Quite low
-    
+
     if ( wxTHREAD_NO_ERROR != blast_thread->GetThread()->Run() )
     {
 	blast_thread = NULL ;
@@ -228,18 +228,18 @@ void EIpanel::process_blast2()
     showMessage ( txt("t_blast_failed") ) ;
     TiXmlNode *x = blast_doc.FirstChild ( "BlastOutput" ) ;
     if ( !x ) return ;
-    
+
     mylog ( "blast2" , "4" ) ;
     int w , h ;
     hlb->GetClientSize ( &w , &h ) ;
     w /= 8 ;
-    
+
     wxString blast_version = valFC ( x->FirstChild ( "BlastOutput_version" ) ) ;
 
     x = x->FirstChild ( "BlastOutput_iterations" ) ;
     x = x->FirstChild ( "Iteration" ) ;
     x = x->FirstChild ( "Iteration_hits" ) ;
-    
+
     mylog ( "blast2" , "5" ) ;
     int a = 0 ;
     for ( x = x->FirstChild ( "Hit" ) ; x ; x = x->NextSibling ( "Hit" ) , a++ )
@@ -258,9 +258,9 @@ void EIpanel::process_blast2()
 		wxString html ;
 		wxString name = valFC ( x->FirstChild ( "Hit_def" ) ) ;
 		wxString id = valFC ( x->FirstChild ( "Hit_id" ) ) ;
-	
+
 		name = name.BeforeFirst ( '>' ) ;
-	
+
 		TiXmlNode *h = x->FirstChild ( "Hit_hsps" ) ;
 		h = h->FirstChild ( "Hsp" ) ;
 		wxString evalue = valFC ( h->FirstChild ( "Hsp_evalue" ) ) ;
@@ -268,21 +268,21 @@ void EIpanel::process_blast2()
 			{
 		   wxString base = evalue.BeforeFirst ( 'e' ) + _T("&times;10") ;
 		   wxString exp = _T("<font size=2>") + evalue.AfterFirst ( 'e' )  + _T("</font>") ;
-		    
+
 		   evalue = _T("<table border=0 cellpadding=0 cellspacing=0><tr><td rowspan=2 valign=bottom>E-Value=</td>") ;
 		   evalue += _T("<td align=left valign=bottom><br>") + base + _T("</td>") ;
 		   evalue += _T("<td align=right valign=top>") + exp + _T("</td>") ;
 		   evalue += _T("</tr></table>") ;
 			}
 		else evalue = _T("E-Value=") + evalue ;
-		
+
 		wxString qseq = valFC ( h->FirstChild ( "Hsp_qseq" ) ) ;
 		wxString mseq = valFC ( h->FirstChild ( "Hsp_midline" ) ) ;
 		wxString hseq = valFC ( h->FirstChild ( "Hsp_hseq" ) ) ;
 		long qoff , hoff ;
 		valFC ( h->FirstChild ( "Hsp_query-from" ) ) . ToLong ( &qoff ) ;
 		valFC ( h->FirstChild ( "Hsp_hit-from" ) ) . ToLong ( &hoff ) ;
-	
+
 		html = _T("<table width=100%><tr>") ;
 		html += _T("<td rowspan=2>") + wxString::Format ( _T("%d") , a+1 ) + _T("</td>") ;
 		html += _T("<td valign=top width=100%>") + name + _T("</td>") ;
@@ -294,7 +294,7 @@ void EIpanel::process_blast2()
 		html += _T("</tr></table>") ;
 		hlb->Set ( a - res_start , html , id ) ;
 	   }
-	
+
     mylog ( "blast2" , "6" ) ;
     hlb->Update () ;
     mylog ( "blast2" , "7" ) ;
@@ -366,7 +366,7 @@ void EIpanel::execute_blast_b3()
 		{
 		if ( !hlb->IsSelected ( i ) ) continue ;
 		wxString s = hlb->data[i] ;
-		
+
 		int a = s.Find ( _T("gi|") ) ;
 		if ( a == -1 ) return ;
 		s = s.Mid ( a + 3 ) ;

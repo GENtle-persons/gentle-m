@@ -23,7 +23,7 @@ class TVectorEditor : public wxDialog
     public :
     TVectorEditor(wxWindow *parent, const wxString& title , TVector *_v ) ; ///< Constructor
     ~TVectorEditor () ; ///< Destructor
-    
+
     virtual void initialViewItem ( int num ) ; ///< Initially, view item #num
     virtual void initialViewEnzyme ( wxString e ) ; ///< Initially, view enzyme e
     virtual void GetMyClientSize ( int *w , int *h , wxPanel *pan ) ; ///< Client size of the panel/tab
@@ -34,7 +34,7 @@ class TVectorEditor : public wxDialog
     virtual void DeselItems ( wxListEvent &ev ) ; ///< "Item unselected" event handler
     virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
     virtual void addItem2list ( TVectorItem &i , int a ) ; ///< Adds an item at position a to the item list
-    
+
     virtual void cleanup () ; ///< Clean up the dialog
     virtual void initPanProp () ; ///< Initialize properties tab
     virtual void initPanItem () ; ///< Initialize items tab
@@ -45,7 +45,7 @@ class TVectorEditor : public wxDialog
     virtual void makeItemsList () ; ///< Generates the list of items
     virtual void storeItemData ( int i = -1 ) ; ///< Stores data with an item
     virtual void hideEm () ;
-    
+
     virtual void commitVector () ; ///< Do changes to the original vector
     virtual void commitItems () ; ///< Do changes to the original items list
     virtual void commitEnzymes () ; ///< Do changes to the original enzyme settings
@@ -54,7 +54,7 @@ class TVectorEditor : public wxDialog
     virtual void showGroupEnzymes ( wxString gr ) ; ///< Slow list of enzymes in group gr
     virtual void showEnzymeGroups () ; ///< Show list of available enzyme groups
     void showProteases () ; ///< Lists the proteases
-    
+
     virtual void enzymeSelChange ( wxCommandEvent& WXUNUSED(event) ) ; ///< "A different enzyme was selected" event handler
     virtual void enzymeListDlbClick ( wxCommandEvent& WXUNUSED(event) ) ; ///< "Double-click on enzyme" event handler
     virtual void enzymeAddEn ( wxCommandEvent& WXUNUSED(event) ) ; ///< "Add enzyme" event handler
@@ -87,10 +87,10 @@ class TVectorEditor : public wxDialog
     virtual void clearItemSelection () ; ///< Clears the current item selection
     virtual void itemColInternal() ;
 
-        
+
     wxListBox *listCE , *listGroups , *listGE ;
     wxArrayString eig , ce ;
-    
+
     TVector *v ;
     int bo , th ;
 
@@ -108,14 +108,14 @@ class TVectorEditor : public wxDialog
     wxCheckListBox *prots ;
     TEnzymeRules *oldEnzymeRules ;
     wxButton *delete_enzyme_button ;
-    
+
     wxArrayTVectorItem newitems ;
     int lastSelection ;
     bool e_diduseit ;
-    
+
     virtual void loadItemData ( int i ) ;
     virtual void updateItem ( TVectorItem &i ) ;
-    
+
     DECLARE_EVENT_TABLE()
     } ;
 

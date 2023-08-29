@@ -23,7 +23,7 @@
  #include <wx/msw/winundef.h>
 #elif __WXMAC__
  #include "mac_sqlite2.h"
- #include "mac_sqlite3.h" 
+ #include "mac_sqlite3.h"
 #else
  #include "lin_sqlite.h"
  #include "lin_sqlite3.h"
@@ -47,18 +47,18 @@ class TSQLresult
 	~TSQLresult () {} ; ///< Dummy destructor
     wxArrayString field ; ///< List of result fields (or column names)
     vector <wxArrayString> content ; ///< The results table ([row][column])
-    
+
     void clean() ; ///< Reset internal state
     int cols () ; ///< Number of columns (fields) in the result table
     int rows () ; ///< Number of rows in the result table
     wxString item ( char *s , int i ) ; ///< Returns entry for field s in row i
-    
+
     ///< \brief Returns row i
     wxArrayString & operator [] ( int i )
         {
         return content[i] ;
         }
-        
+
     /// \brief Returns the number of field s
     int operator [] ( wxString &s2 )
         {
@@ -68,7 +68,7 @@ class TSQLresult
                return a ;
         return -1 ;
         }
-    
+
      /// \brief Returns the number of field s
     int operator [] ( const char *s )
         {
@@ -94,7 +94,7 @@ class TStorage
     void sqlAdd ( wxString &s1 , wxString &s2 , wxString key , wxString value ) ;  ///< Query construction helper method
     void sqlAdd ( wxString &s1 , wxString &s2 , wxString key , char* value ) ;  ///< Query construction helper method
     void sqlAdd ( wxString &s1 , wxString &s2 , wxString key , int value ) ;  ///< Query construction helper method
-    
+
     // Restriction enzymes
     void import () ; ///< Import enzymes from database
     TRestrictionEnzyme* getRestrictionEnzyme ( wxString s ) ; ///< Pointer to TRestrictionEnzyme from re
@@ -107,7 +107,7 @@ class TStorage
 
     TProtease *getProtease ( wxString s ) ; ///< Pointer to a TProtease from pr
     void updateProtease ( TProtease *p ) ; ///< Write protease information back to database
-    
+
     wxString getDatabaseList ( wxArrayString &name , wxArrayString &file ) ; ///< List of all known databases
     void setOption ( wxString oname , int value ) ; ///< Set option in local database
     void setOption ( wxString oname , wxString vname ) ; ///< Set option in local database
@@ -131,12 +131,12 @@ class TStorage
     void syncEnzymes ( TStorage *to = NULL ) ; ///< Get new enzymes from (basic) database
     void startRecord () ; ///< Start recording queries
     void endRecord () ; ///< Stop recording, execute all recorded queries
-    
+
     // Variables
     wxArrayTRestrictionEnzyme re ; ///< List of restriction enzymes in this database
     wxArrayTProtease pr ; ///< List of proteases in this database
     TSQLresult results ; ///< The results of the last query
-    
+
     private :
     wxString getSingleField ( wxString query , wxString field , wxString def = _T("") ) ; ///< Get a single field from a query, with default value
     int getSingleField ( wxString query , wxString field , int def = 0 ) ; ///< Get a single field from a query, with default value
@@ -154,7 +154,7 @@ class TStorage
 //    TSQLresult getObjectSqlite2 ( const wxString &query ) ; ///< Get object from sqlite2 database
     TSQLresult getObjectSqlite3 ( const wxString &query ) ; ///< Get object from sqlite3 database
     TSQLresult getObject_MySQL ( const wxString &query ) ; ///< Get object from MySQL database
-    
+
     // Variables
     wxArrayString enzymeGroupCache , enzymeGroupNameCache ;
     wxString dbname , error ;
@@ -169,6 +169,6 @@ class TStorage
     MYSQL *conn,*mysql;
 #endif
     } ;
- 
+
 #endif
 

@@ -57,7 +57,7 @@ public:
     virtual void Undo(wxCommandEvent& event); ///< Undo event handler
     virtual void Redo(wxCommandEvent& event); ///< Redo event handler (not implemented)
     virtual void updateUndoMenu () ; ///< Updates the undo menu item
-    
+
     virtual void OnMarkAll(wxCommandEvent& event); ///< "Mark all" (Ctrl-A) event handler
     virtual void OnTransformSequence(wxCommandEvent& event); ///< "Transform sequence" event handler
     virtual void OnExtractAA(wxCommandEvent& event); ///< "Extract amino acids" event handler
@@ -105,7 +105,7 @@ public:
     virtual void addFragmentsToGel ( wxString title , wxArrayInt &cuts , TVirtualGel *gel , TRestrictionEditor &ed , bool partial ) ; ///< Add restriction fragments to gel
     virtual MyChild *doTransformSequence ( bool inNewVector , bool complement , bool invers ) ; ///< Transform the sequence
     virtual bool HasUndoData () ;
-    
+
     TVectorTree *treeBox ; ///< Pointer to the sequence properties tree structure
     TURLtext *propBox ; ///< Pointer to the properties text box
     PlasmidCanvas *cPlasmid; ///< Pointer to the plasmid canvas
@@ -114,17 +114,17 @@ public:
     bool showORFs , viewMode ;
     int sp1 , sp2 , aa_offset , ly ;
     int aa_state , aa_disp , orf_mode ;
-    
+
     protected :
     virtual void updateToolbar () ; ///< Set the toolbar of this module
     virtual void initToolbar () ; ///< Setup the toolbar for this module
     virtual void initMenus () ; ///< Initialize the menus
-    
+
     void add_siRNA ( int item ) ;
     int add_siRNA_sub ( wxString s , int pos ) ;
 
     wxChoice *fontsize ;
-    
+
     DECLARE_EVENT_TABLE()
 };
 

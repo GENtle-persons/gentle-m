@@ -20,12 +20,12 @@ BEGIN_EVENT_TABLE(TVectorTree, wxTreeCtrl)
     EVT_MENU(PC_ITEM_BLAST_AA, TVectorTree::blastAA)
     EVT_MENU(PC_ITEM_COPY_AA , TVectorTree::copyAA)
     EVT_MENU(PC_ITEM_AS_NEW_AA_SEQUENCE , TVectorTree::AAasNewSequence)
-    
+
     EVT_MENU(PRIMER_FORWARD, TVectorTree::OnPrimerForward)
     EVT_MENU(PRIMER_BACKWARD, TVectorTree::OnPrimerBackward)
     EVT_MENU(PRIMER_BOTH, TVectorTree::OnPrimerBoth)
     EVT_MENU(PRIMER_MUTATION, TVectorTree::OnPrimerMutation)
-    
+
     EVT_MENU(PC_RS_EDIT, TVectorTree::rsEdit)
     EVT_MENU(PC_RS_DEL, TVectorTree::rsDel)
     EVT_MENU(PC_RS_SHOW_HIDE, TVectorTree::rsShowHide)
@@ -46,7 +46,7 @@ TVectorTree::TVectorTree ( ChildBase *parent , int i )
     p = (MyChild*) parent ;
     textWindow = NULL ;
     }
-    
+
 /** \brief Initializes the tree
 
 	Parses the vector and creates a list of
@@ -60,21 +60,21 @@ void TVectorTree::initme ()
 //    char u[1000] ;
 	 wxString u ;
     wxTreeItemId x , y ;
-    
+
     // Basic stuff
     Freeze () ;
     DeleteAllItems () ;
     treeroot = AddRoot ( p->vec->getName() ) ;
 	 u = wxString::Format ( txt("#bp") , p->vec->getSequenceLength() ) ;
 //    sprintf ( u , txt("#bp").mb_str() , p->vec->getSequenceLength() ) ;
-    
+
     // Vector information
     wxString dp = _T(" : ") ;
     vroot = AppendItem ( treeroot , txt("vector") ) ;
     SetItemData ( vroot , new TTreeItem ( _T("") , _T("VECTOR") , p->vec ) ) ;
     x = AppendItem ( vroot , txt("name") + dp + p->vec->getName() ) ;
     AppendItem ( vroot , txt("size") + dp + u ) ;
-    
+
     // Genes
     vector <wxTreeItemId> irs ;
     for ( a = 1 ; a < VIT_TYPES ; a++ )
@@ -106,9 +106,9 @@ void TVectorTree::initme ()
         if ( p->vec->items[a].getDirection() == 1 ) sOritentation = txt("cw") ;
         else sOritentation = txt("ccw") ;
         sDescription = wxString::Format ( txt("s_desc") , p->vec->items[a].desc.c_str() ) ;
-        
+
         p->vec->items[a].setTreeID ( y ) ;
-        
+
         // Item data
         wxString out = p->vec->items[a].name ;
         out += _T("\n") ;
@@ -145,12 +145,12 @@ void TVectorTree::initme ()
            SetItemBold ( y , visible ) ;
            }
         }
-    
+
     Thaw();
     EnsureVisible ( x ) ; // Making vector properties visible
     SelectItem ( vroot ) ;
     }
-    
+
 /** \brief Handles (selection) events
 */
 void TVectorTree::OnEvent ( wxTreeEvent &event )
@@ -158,7 +158,7 @@ void TVectorTree::OnEvent ( wxTreeEvent &event )
     wxTreeItemId id = event.GetItem () ;
     TTreeItem *d = (TTreeItem*) GetItemData ( id ) ;
     if ( !textWindow ) return ;
-    if ( !d ) 
+    if ( !d )
         {
         textWindow->SetValue ( _T("") ) ;
         return ;
@@ -195,7 +195,7 @@ void TVectorTree::OnActivation ( wxTreeEvent &event )
     wxTreeItemId id = event.GetItem () ;
     TTreeItem *d = (TTreeItem*) GetItemData ( id ) ;
     if ( !textWindow ) return ;
-    if ( !d ) 
+    if ( !d )
         {
         textWindow->SetValue ( _T("") ) ;
         return ;
@@ -230,13 +230,13 @@ void TVectorTree::ToggleEnzymeVisibility ( TRestrictionEnzyme *e )
     if ( !y.IsOk() ) // Automatically added enzyme
     	{
         p->vec->hideEnzyme ( e->getName() , true ) ;
-        }    
+        }
     else // Manually added enzyme
     	{
         p->vec->hideEnzyme ( e->getName() , IsBold ( y ) ) ;
         SetItemBold ( y , !IsBold ( y ) ) ;
-    	}    
-    
+    	}
+
     p->cPlasmid->Refresh() ;
     p->cSequence->arrange() ;
     p->cSequence->SilentRefresh() ;
@@ -266,7 +266,7 @@ void TVectorTree::OnRightClick ( wxTreeEvent &event )
         if ( a == p->vec->rc.size() ) return ;
         wxMenu *cm = p->cPlasmid->invokeRsPopup ( a , pt , true ) ;
         PopupMenu ( cm , pt ) ;
-        delete cm ;        
+        delete cm ;
         }
     else if ( d->type == _T("VECTOR") )
         {
@@ -278,13 +278,13 @@ void TVectorTree::OnRightClick ( wxTreeEvent &event )
 
 void TVectorTree::itemMark ( wxCommandEvent &ev )
     { p->cPlasmid->itemMark ( ev ) ; }
-    
+
 void TVectorTree::itemMarkShow ( wxCommandEvent &ev )
     { p->cPlasmid->itemMarkShow ( ev ) ; }
-    
+
 void TVectorTree::itemEdit ( wxCommandEvent &ev )
     { p->cPlasmid->itemEdit ( ev ) ; }
-    
+
 void TVectorTree::itemDelete ( wxCommandEvent &ev )
     { p->cPlasmid->itemDelete ( ev ) ; }
 
@@ -296,25 +296,25 @@ void TVectorTree::itemShowHide ( wxCommandEvent &ev )
 
 void TVectorTree::rsEdit ( wxCommandEvent &ev )
     { p->cPlasmid->rsEdit ( ev ) ; }
-    
+
 void TVectorTree::rsInfo ( wxCommandEvent &ev )
     { p->cPlasmid->rsInfo ( ev ) ; }
-    
+
 void TVectorTree::rsDel ( wxCommandEvent &ev )
     { p->cPlasmid->rsDel ( ev ) ; }
-    
+
 void TVectorTree::rsMark ( wxCommandEvent &ev )
     { p->cPlasmid->rsMark ( ev ) ; }
-    
+
 void TVectorTree::rsMarkShow ( wxCommandEvent &ev )
     { p->cPlasmid->rsMarkShow ( ev ) ; }
-    
+
 void TVectorTree::rsAdd2Cocktail ( wxCommandEvent &ev )
     { p->cPlasmid->rsAdd2Cocktail ( ev ) ; }
-    
+
 void TVectorTree::rsAddAndCut ( wxCommandEvent &ev )
     { p->cPlasmid->rsAddAndCut ( ev ) ; }
-    
+
 void TVectorTree::rsCutWithCocktail ( wxCommandEvent &ev )
     { p->cPlasmid->rsCutWithCocktail ( ev ) ; }
 

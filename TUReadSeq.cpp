@@ -12,7 +12,7 @@ TUReadSeq::TUReadSeq ( wxString _filename )
     getSequences () ;
     if ( seqs.GetCount() == 0 ) error = 1 ;
     }
-    
+
 
 void TUReadSeq::getFormat ()
     {
@@ -20,7 +20,7 @@ void TUReadSeq::getFormat ()
     format = seqFileFormat ( filename.mb_str() , &skiplines , &error ) ;
     if ( format < kMinFormat || format > kMaxFormat ) error = 1 ;
     }
-    
+
 
 int TUReadSeq::getSequenceNames ()
     {
@@ -33,14 +33,14 @@ int TUReadSeq::getSequenceNames ()
     explode ( _T("\n") , s , seq_names ) ;
     return seq_names.GetCount() ;
     }
-    
+
 void TUReadSeq::getSequences ()
     {
     if ( error != 0 ) return ;
     short seqIndex ;
     seqs.Clear () ;
     for ( seqIndex = 1 ; error == 0 && seqIndex <= seq_names.GetCount() ; seqIndex++ )
-        {    
+        {
         long  seqlen;     /* length of seq */
         char  seqid[256]; /* sequence name */
         char  *seq;       /* sequence, 0 terminated, free when done */
@@ -56,14 +56,14 @@ void TUReadSeq::getSequences ()
         free(seq);
         }
     }
-    
+
 int TUReadSeq::getSeqType ( wxString t )
     {
     short i = getseqtype ( t.mb_str() , t.length() ) ;
     if ( i == kAmino ) return TYPE_AMINO_ACIDS ;
     return TYPE_VECTOR ;
     }
-    
+
 void TUReadSeq::convert ( TGenBank &gb )
     {
     wxString s ;
@@ -77,4 +77,4 @@ void TUReadSeq::convert ( TGenBank &gb )
         }
     gb.paste ( s ) ;
     }
-    
+

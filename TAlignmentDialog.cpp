@@ -62,12 +62,12 @@ TAlignmentDialog::TAlignmentDialog(wxWindow *parent, const wxString& title )
     b->SetDefault () ;
     b->SetFocus () ;
     }
-    
+
 TAlignmentDialog::~TAlignmentDialog ()
     {
     nb->DeleteAllPages() ;
     }
-    
+
 void TAlignmentDialog::init_what ()
     {
 
@@ -82,11 +82,11 @@ void TAlignmentDialog::init_what ()
     v0->Add ( new wxStaticText ( p , -1 , txt("al_cur") ) , 0 , wxEXPAND ) ;
     v2->Add ( new wxStaticText ( p , -1 , txt("al_all") ) , 0 , wxEXPAND ) ;
 
-    cur = new wxListBox ( p , AL_CUR , 
+    cur = new wxListBox ( p , AL_CUR ,
 			  wxDefaultPosition ,
 			  wxDefaultSize ,
 			  0 , NULL , wxLB_EXTENDED ) ;
-    all = new wxListBox ( p , AL_ALL , 
+    all = new wxListBox ( p , AL_ALL ,
 			  wxDefaultPosition ,
 			  wxDefaultSize ,
 			  0 , NULL , wxLB_EXTENDED ) ;
@@ -100,7 +100,7 @@ void TAlignmentDialog::init_what ()
     v1->Add ( new wxStaticText ( p , -1 , _T(" ") ) , 0 , wxALIGN_CENTER_HORIZONTAL ) ;
     v1->Add ( new wxButton ( p , AL_UP , txt("b_up_in_list") ) , 0 , wxALIGN_LEFT ) ;
     v1->Add ( new wxButton ( p , AL_DOWN , txt("b_down_in_list") ) , 0 , wxALIGN_LEFT ) ;
-				  
+
     unsigned int a ;
     MyFrame *f = myapp()->frame ;
     // All
@@ -115,7 +115,7 @@ void TAlignmentDialog::init_what ()
            all->Append ( f->children[a]->getName() ) ;
            }
         }
-        
+
     // Current
     for ( a = 0 ; a < al->lines.size() ; a++ )
         {
@@ -139,15 +139,15 @@ void TAlignmentDialog::init_what ()
         }
 */
 
-    h0->Add ( v0 , 1 , wxEXPAND , 5 ) ;    
-    h0->Add ( v1 , 1 , wxALL , 5 ) ;    
-    h0->Add ( v2 , 1 , wxEXPAND , 5 ) ;    
+    h0->Add ( v0 , 1 , wxEXPAND , 5 ) ;
+    h0->Add ( v1 , 1 , wxALL , 5 ) ;
+    h0->Add ( v2 , 1 , wxEXPAND , 5 ) ;
     vx->Add ( h0 , 1 , wxEXPAND ) ;
-    vx->Add ( new wxStaticText ( p , -1 , txt("t_alignment_txt") ) , 0 , wxEXPAND|wxALIGN_CENTER_HORIZONTAL ) ;    
+    vx->Add ( new wxStaticText ( p , -1 , txt("t_alignment_txt") ) , 0 , wxEXPAND|wxALIGN_CENTER_HORIZONTAL ) ;
     p->SetSizer ( vx ) ;
     nb->AddPage ( pwhat , txt("t_sequences") ) ;
     }
-    
+
 void TAlignmentDialog::init_how ()
     {
     phow = new wxPanel ( nb , -1 ) ;
@@ -158,29 +158,29 @@ void TAlignmentDialog::init_how ()
     wxRect r ;
     st = new wxStaticText ( p , -1 , txt("t_algorithm") , wxPoint ( bo , th ) ) ;
     r = st->GetRect () ;
-    alg = new wxListBox ( p , AL_ALG , 
-                wxPoint ( bo , r.GetBottom()+bo ) , 
+    alg = new wxListBox ( p , AL_ALG ,
+                wxPoint ( bo , r.GetBottom()+bo ) ,
                 wxSize ( w/2-bo , h/2 ) ,
                 0 , NULL , wxLB_SINGLE ) ;
     alg->Append ( txt("t_clustal_w") ) ;
     alg->Append ( txt("t_smith_waterman") ) ;
     alg->Append ( txt("t_needleman_wunsch") ) ;
     alg->SetSelection ( al->algorithm ) ;
-    
+
     new wxStaticText ( p , -1 , txt("t_alg_param") , wxPoint ( w/2+bo , th ) ) ;
     st = new wxStaticText ( p , -1 , txt("t_match") , wxPoint ( w/2+bo , th*2+bo ) ) ;
     r = st->GetRect() ;
     int xo = r.GetRight() ;
-    
+
     st = new wxStaticText ( p , -1 , txt("t_mismatch") , wxPoint ( w/2+bo , th*4+bo ) ) ;
     r = st->GetRect() ;
     if ( xo < r.GetRight() ) xo = r.GetRight() ;
-    
+
     st = new wxStaticText ( p , -1 , txt("t_gap_penalty") , wxPoint ( w/2+bo , th*6+bo ) ) ;
     r = st->GetRect() ;
     if ( xo < r.GetRight() ) xo = r.GetRight() ;
     xo += bo ;
-    
+
     alg_match = new wxSpinCtrl ( p , AL_MATCH , _T("") ,
                                     wxPoint ( xo , th*2 ) ,
 				 wxSize ( MYSPINBOXSIZE /*w/5*/ , th*3/2 ) ) ;
@@ -198,7 +198,7 @@ void TAlignmentDialog::init_how ()
 				   wxSize ( MYSPINBOXSIZE /*w/5*/ , th*3/2 ) ) ;
     alg_penalty->SetRange ( -100 , 100 ) ;
     alg_penalty->SetValue ( al->gap_penalty ) ;
-    
+
     alg_matrix = new wxChoice ( p , AL_MATRIX , wxPoint ( xo , th*8 ) ) ;
     alg_matrix->Append ( txt("t_matrix_blosum") ) ;
     alg_matrix->Append ( txt("t_matrix_pam") ) ;

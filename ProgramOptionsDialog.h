@@ -21,7 +21,7 @@ class TEnzymeSettingsTab : public wxPanel
     virtual void updateColorButton ( wxButton *b , wxColour &c ) ; ///< Updates the color of one of the color choice buttons
     virtual void updateGlobalEnzymes () ; ///< Update the global enzymes list
     virtual void updateColor ( wxColour &c ) ; ///< ???
-    
+
     virtual void OnEnzymeCheckbox ( wxCommandEvent &event ) ; ///< Enyzme checkbox event handler
     virtual void OnButton1 ( wxCommandEvent &event ) ; ///< Button 1 (single cutter) event handler
     virtual void OnButton2 ( wxCommandEvent &event ) ; ///< Button 2 (double cutter) event handler
@@ -42,7 +42,7 @@ class TEnzymeSettingsTab : public wxPanel
     int mode ;
 
     DECLARE_EVENT_TABLE()
-	} ;    
+	} ;
 
 /**	\brief The dialog containing program end enzyme global settings
 */
@@ -51,7 +51,7 @@ class ProgramOptionsDialog : public wxDialog
     public :
     ProgramOptionsDialog(wxWindow *parent, const wxString& title ) ; ///< Constructor
     ~ProgramOptionsDialog () ; ///< Destructor
-    
+
     virtual void OnOK ( wxCommandEvent &ev ) ; ///< OK button event handler
     virtual void OnCancel ( wxCommandEvent &ev ) ; ///< Cancel button event handler
     virtual void OnAACol ( wxCommandEvent &ev ) ; ///< Amino acid color event handler
@@ -67,20 +67,20 @@ class ProgramOptionsDialog : public wxDialog
                 *loadLastProject , *useMetafile , *showSplashScreen ,
                 *checkUpdate , *useInternalHelp , *doRegisterStuff ,
 				*showEnzymePos , *use_nonstandard_translation_table ,
-                *showTips , *useTwoToolbars , *useOnlineHelp , *showToolTips , 
+                *showTips , *useTwoToolbars , *useOnlineHelp , *showToolTips ,
 				*showLowercaseDNA;
-    
+
     wxTextCtrl *proxyName , *proxyPort , *orfLength ;
-    
+
     wxRadioBox *editFeatureMode ; ///< Pointer to the list of choices of how to treat edited items
     wxRadioBox *showStopCodon ; ///< Pointer to the list of choices of how to display stop codons
     wxColour aacol ; ///< The color in which to draw the amino acids in DNA mode
-                
+
     private :
     virtual void initGlobalSettings () ; ///< Initialize "Global settings" tab
     virtual void initGlobalEnzymes () ; ///< Initialize "Global enzyme settings" tab
     int bo , lh ;
-    
+
     DECLARE_EVENT_TABLE()
     } ;
 
@@ -118,6 +118,6 @@ class TEnzymeRules
 	
 	private :
 	virtual wxColour scan_color ( wxString s ) ; ///< Make color from string
-	} ;    
+	} ;
 
 #endif

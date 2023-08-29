@@ -10,20 +10,20 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
     wxFont *tinyFont = MYFONT ( fontfactor*4/5 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
     wxFont *smallFont = MYFONT ( fontfactor , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
 
-    // Initial calculations    
+    // Initial calculations
     int a , b ;
     int d , l = p->vec->getSequenceLength() - 1 ;
     for ( d = 1 ; d*10 < l ; d *= 10 ) ;
-    
+
     int lineOff = w / 20 ;
     int lineLen = w - 2 * lineOff ;
     int lineH = h * 3 / 4 ;
     if ( p->def == _T("AminoAcids") ) lineH = h / 2 ;
     int markH = 20 ;
     wxCoord dx , dy ;
-    
+
     dc.SetPen(*wxBLACK_PEN);
-    
+
     // Sticky ends
     if ( p->vec->hasStickyEnds() )
         {
@@ -32,22 +32,22 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
         wxString ru = _T("- ") + p->vec->getStickyEnd(false,true) ;
         wxString rl = _T("- ") + p->vec->getStickyEnd(false,false) ;
         wxCoord nx , ny ;
-        
+
         dc.GetTextExtent ( lu , &dx , &dy ) ;
         dc.GetTextExtent ( ll , &nx , &ny ) ;
         if ( dx < nx ) { dx = nx - dx ; nx = 0 ; }
         else { nx = dx - nx ; dx = 0 ; }
-        
+
         dc.DrawText ( lu , int(10 + dx) , 10 ) ;
         dc.DrawText ( ll , 10 + nx , 10 + dy ) ;
-        
+
         dc.GetTextExtent ( ru , &dx , &dy ) ;
         dc.GetTextExtent ( rl , &nx , &ny ) ;
         if ( dx > nx ) nx = dx ;
         dc.DrawText ( ru , w - 10 - nx , 10 ) ;
         dc.DrawText ( rl , w - 10 - nx , 10 + dy ) ;
         }
-    
+
     // Mark
     if ( getMarkFrom() != -1 )
         {
@@ -79,7 +79,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
             }
         dc.SetBackgroundMode ( wxTRANSPARENT ) ;
         }
-    
+
     // Baseline
     if ( p->vec->showGC() > 0 ) // %GC
     	{
@@ -94,7 +94,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
  		    	if ( c == 'A' || c == 'T' ) at++ ;
  		    	else if ( c == 'G' || c == 'C' ) gc++ ;
  		    	else other++ ;
-	    		}    
+	    		}
     		int sum = at + gc + other ;
     		if ( sum == 0 ) continue ;
     		int per = gc * 100 / sum ;
@@ -108,7 +108,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
         					   lineH - dh ,
         					   x2 - x1 ,
         					   dh * 2 ) ;
-	    	}    
+	    	}
 	    showGClegend ( dc ) ;
     	dc.SetPen(*wxBLACK_PEN);
 	    dc.DrawLine ( lineOff , lineH-dh , w - lineOff , lineH-dh ) ;
@@ -118,7 +118,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
 
     // Numbers
     dc.SetFont(*smallFont);
-    for ( a = 0 ; a < l ; a += d ) 
+    for ( a = 0 ; a < l ; a += d )
         {
         dc.DrawLine ( lineOff + lineLen * a / (l+1) ,
                       lineH ,
@@ -140,7 +140,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
                       lineH ,
                       lineOff + lineLen * p->vec->getMethylationSite(a) / (l+1) ,
                       lineH + h / 40 ) ;
-    	}    
+    	}
     dc.SetPen(*wxBLACK_PEN);
 
     // Recalc
@@ -169,15 +169,15 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
                 }
             i->a1 = lineH - markH / 2 ; // From Y
             i->a2 = lineH + markH / 2 ; // To Y
-            
+
             int tf = ( i->type % 3 ) * STANDARDRADIUS / 15 ;
-        
+
             i->r1 = i->r1 * STANDARDRADIUS / w ;
             i->r2 = i->r2 * STANDARDRADIUS / w ;
             i->a1 = i->a1 * STANDARDRADIUS / h + tf ;
             i->a2 = i->a2 * STANDARDRADIUS / h + tf ;
             }
-        
+
         // Restriction sites
         dc.SetFont(*tinyFont);
         for ( a = 0 ; a < p->vec->rc.size() ; a++ )
@@ -194,7 +194,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
             c->lp.y = c->p.y * STANDARDRADIUS / h ;
             }
         dc.SetFont(*smallFont);
-        
+
         // ORFs
         if ( p->def == _T("dna") && p->showORFs )
            {
@@ -202,7 +202,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
            wxCommandEvent event ;
            p->OnORFs ( event ) ;
            }
-        
+
         p->vec->updateDisplay ( false ) ;
         }
 
@@ -215,22 +215,22 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
         TVectorItem i = p->vec->items[a] ;
         if ( i.isVisible() )
             {
-            drawLinearItem ( dc , 
-                             i.r1 * w / STANDARDRADIUS , 
-                             i.r2 * w / STANDARDRADIUS , 
-                             i.a1 * h / STANDARDRADIUS , 
-                             i.a2 * h / STANDARDRADIUS , 
+            drawLinearItem ( dc ,
+                             i.r1 * w / STANDARDRADIUS ,
+                             i.r2 * w / STANDARDRADIUS ,
+                             i.a1 * h / STANDARDRADIUS ,
+                             i.a2 * h / STANDARDRADIUS ,
                              &i ) ;
             if ( i.r3 != -1 )
-                drawLinearItem ( dc , 
-                                 i.r3 * w / STANDARDRADIUS , 
-                                 i.r4 * w / STANDARDRADIUS , 
-                                 i.a1 * h / STANDARDRADIUS , 
-                                 i.a2 * h / STANDARDRADIUS , 
+                drawLinearItem ( dc ,
+                                 i.r3 * w / STANDARDRADIUS ,
+                                 i.r4 * w / STANDARDRADIUS ,
+                                 i.a1 * h / STANDARDRADIUS ,
+                                 i.a2 * h / STANDARDRADIUS ,
                                  &i ) ;
             }
         }
-        
+
     // Drawing Restriction Sites
     dc.SetFont(*tinyFont);
     for ( a = 0 ; a < p->vec->rc.size() ; a++ )
@@ -281,7 +281,7 @@ void PlasmidCanvas::drawLinearORFs ( wxDC &dc )
         p->vec->getORF(a)->dist2 = mh + ah/4 ;
         p->vec->getORF(a)->deg1 = mf ;
         p->vec->getORF(a)->deg2 = mt ;
-        
+
         int dir = 1 ;
         if ( rf < 0 )
            {
@@ -295,12 +295,12 @@ void PlasmidCanvas::drawLinearORFs ( wxDC &dc )
         dc.DrawLine ( (int)mt , (int)mh , (int)(mt - dir*w/100) , (int)(mh + ah/4) ) ;
         dc.DrawCircle ( (int)mf , (int)mh , (int)(ah/4) ) ;
 
-        dc.SetBackgroundMode ( wxTRANSPARENT ) ;    
-        dc.SetBrush ( *wxTRANSPARENT_BRUSH ) ;    
+        dc.SetBackgroundMode ( wxTRANSPARENT ) ;
+        dc.SetBrush ( *wxTRANSPARENT_BRUSH ) ;
         }
     dc.SetPen(*wxBLACK_PEN);
     }
-    
+
 void PlasmidCanvas::arrangeRestrictionSitesLinear ( int a , wxDC &dc )
     {
     TRestrictionCut *c = &p->vec->rc[a] ;
@@ -331,7 +331,7 @@ void PlasmidCanvas::arrangeRestrictionSitesLinear ( int a , wxDC &dc )
         }
     c->p.y = c->lastrect.GetBottom() ;
     }
-    
+
 bool PlasmidCanvas::intersectsLine ( wxRect &a , wxPoint p )
     {
     if ( a.GetBottom() > p.y &&
@@ -367,7 +367,7 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , int r1 , int r2 , float a1 , flo
     dc.SetBrush ( *i->getBrush() ) ;
     dc.DrawPolygon ( pt.size() , wp , 0 , 0 ) ;
     free ( wp ) ;
-    
+
     // Name
     if ( !i->getParam ( _T("PREDECESSOR") ).IsEmpty() ) return ; // Only first name
     wxCoord dx , dy ;
@@ -375,7 +375,7 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , int r1 , int r2 , float a1 , flo
     dc.SetTextForeground ( i->getFontColor() ) ;
     if ( p->def == _T("dna") ) dc.SetFont(*normalFont);
     else if ( p->def == _T("AminoAcids") ) dc.SetFont(*smallFont);
-    
+
     if ( !p->vec->getGenomeMode() )
         {
 		  wxString t2 = wxString::Format ( _T("%s") , i->name.c_str() ) ;
@@ -384,8 +384,8 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , int r1 , int r2 , float a1 , flo
         dc.DrawText ( t2 ,
                   (r2+r1)/2 - dx/2 ,
                   (int) a2 - y1 + 1 ) ;
-        }    
-    dc.SetTextForeground ( fc ) ;    
+        }
+    dc.SetTextForeground ( fc ) ;
     dc.SetPen(*wxBLACK_PEN);
     }
 

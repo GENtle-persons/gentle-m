@@ -11,7 +11,7 @@ TEliteLaChromLogDialog::TEliteLaChromLogDialog ( wxWindow *parent, const wxStrin
     : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 790 , 400 ) )
 {
     int a ;
-    
+
     col_headers.Clear() ;
     col_headers.Add ( _T("Date") ) ;
     col_headers.Add ( _T("Time") ) ;
@@ -26,51 +26,51 @@ TEliteLaChromLogDialog::TEliteLaChromLogDialog ( wxWindow *parent, const wxStrin
     col_headers.Add ( _T("Area") ) ;
     col_headers.Add ( _T("EstdConc") ) ;
 
-    
+
     // Setup data
     basefile = basefile.BeforeLast ( '.' ) ;
     filename_apex = basefile + _T(".Apex") ;
     filename_area = basefile + _T(".Area") ;
     filename_estdconc = basefile + _T(".ESTDConc") ;
-    
+
     ReadFile ( filename_apex , data_apex ) ;
     ReadFile ( filename_area , data_area ) ;
     ReadFile ( filename_estdconc , data_estdconc ) ;
-    
+
     for ( a = 0 ; a <= ELL_DATE_TIME ; a++ ) unique[a].Clear() ;
     Uniquify ( data_apex , tabs_apex ) ;
     Uniquify ( data_area , tabs_area ) ;
     Uniquify ( data_estdconc , tabs_estdconc ) ;
     for ( a = 0 ; a <= ELL_DATE_TIME ; a++ ) unique[a].Sort ( (bool) true ) ;
-    
+
     tabs_merged = tabs_apex ;
     MergeWith ( tabs_area , ELL_DATA2 ) ;
     MergeWith ( tabs_estdconc , ELL_DATA3 ) ;
     SortTabs ( tabs_merged ) ;
-    
+
     // Now create inteface
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
-    
+
     wxButton *b_excel = new wxButton ( this , ELL_B_EXCEL , txt("b_open_excel") ) ;
-    
+
     unique_dates = new wxListBox ( this , ELL_LB_DATES , wxDefaultPosition , wxDefaultSize, 0 , NULL , wxLB_EXTENDED ) ;
     unique_users = new wxListBox ( this , ELL_LB_USERS , wxDefaultPosition , wxDefaultSize, 0 , NULL , wxLB_EXTENDED ) ;
     lines = new wxListCtrl ( this , -1 , wxDefaultPosition , wxDefaultSize , wxLC_REPORT ) ;
-        
+
     for ( a = 0 ; a < col_headers.GetCount() ; a++ )
         lines->InsertColumn (  a , col_headers[a] ) ;
 
     h0->Add ( unique_dates , 1 , wxEXPAND , 2 ) ;
     h0->Add ( unique_users , 1 , wxEXPAND , 2 ) ;
-    
+
     h1->Add ( b_excel , 0 , wxEXPAND , 2 ) ;
-    
+
     v0->Add ( h0 , 1 , wxEXPAND , 2 ) ;
     v0->Add ( lines , 1 , wxEXPAND , 2 ) ;
     v0->Add ( h1 , 0 , wxEXPAND , 2 ) ;
-    
+
     // Fill interface with data
     unique_users->Append ( txt("t_eld_all_users") ) ;
     for ( a = 0 ; a < unique[ELL_USER].GetCount() ; a++ ) unique_users->Append ( unique[ELL_USER][a] ) ;
@@ -83,7 +83,7 @@ TEliteLaChromLogDialog::TEliteLaChromLogDialog ( wxWindow *parent, const wxStrin
 
     unique_users->SetSelection ( 0 ) ;
     unique_dates->SetSelection ( 0 ) ;
-    
+
     UpdateLines() ;
 
     this->SetSizer ( v0 ) ;
@@ -103,7 +103,7 @@ void TEliteLaChromLogDialog::ReadFile ( wxString filename , wxArrayString &data 
     c[l] = '\n' ;
     c[l+1] = 0 ;
     wxCSConv co ( _T("iso-8859-1") ) ;
-    
+
     for ( d = ld = c ; *d ; d++ )
     {
         if ( *d == '\n' )
@@ -148,7 +148,7 @@ void TEliteLaChromLogDialog::Uniquify ( wxArrayString &data , vector <wxArrayStr
 void TEliteLaChromLogDialog::FilterLines ()
 {
     tabs_display = tabs_merged ;
-    
+
     if ( !unique_dates->IsSelected ( 0 ) ) // If not "All dates"
     {
         int a , b ;
@@ -171,7 +171,7 @@ void TEliteLaChromLogDialog::FilterLines ()
         }
         tabs_display = n ;
     }
-    
+
     if ( !unique_users->IsSelected ( 0 ) ) // If not "All dates"
     {
         int a , b ;
@@ -189,8 +189,8 @@ void TEliteLaChromLogDialog::FilterLines ()
         }
         tabs_display = n ;
     }
-    
-    
+
+
 }
 
 void TEliteLaChromLogDialog::UpdateLines ()
@@ -219,7 +219,7 @@ void TEliteLaChromLogDialog::MergeWith ( vector <wxArrayString> &tabs , int col 
 {
     vector <wxArrayString> nt ;
     int a , b , c ;
-    
+
     for ( a = 0 ; a < tabs.size() ; a++ )
     {
         for ( b = 0 ; b < tabs_merged.size() ; b++ )
@@ -234,7 +234,7 @@ void TEliteLaChromLogDialog::MergeWith ( vector <wxArrayString> &tabs , int col 
             break ;
         }
     }
-    
+
     tabs_merged = nt ;
 }
 
@@ -263,7 +263,7 @@ void TEliteLaChromLogDialog::OnUserList(wxCommandEvent &event)
 void TEliteLaChromLogDialog::SortTabs ( vector <wxArrayString> &tabs )
 {
     int a , b ;
-    
+
     // Sorting
     for ( a = 1 ; a < tabs.size() ; a++ )
     {
@@ -285,7 +285,7 @@ void TEliteLaChromLogDialog::SortTabs ( vector <wxArrayString> &tabs )
         a -= 2 ;
         if ( a < 0 ) a = 0 ;
     }
-    
+
     // Removing doubles, inverting
     vector <wxArrayString> n ;
     for ( a = 0 ; a < tabs.size() ; a++ )
@@ -304,7 +304,7 @@ void TEliteLaChromLogDialog::OnExcel(wxCommandEvent &event)
 {
     int a , b ;
     wxString s , sep = _T("\t") , q = _T("\"") ;
-    
+
     // Headings
     for ( a = 0 ; a < col_headers.GetCount() ; a++ )
     {
@@ -312,7 +312,7 @@ void TEliteLaChromLogDialog::OnExcel(wxCommandEvent &event)
         s += q + col_headers[a] + q ;
     }
     s += _T("\r\n") ;
-    
+
     // Data
     for ( a = 0 ; a < tabs_display.size() ; a++ )
     {
@@ -333,13 +333,13 @@ void TEliteLaChromLogDialog::OnExcel(wxCommandEvent &event)
         }
         s += _T("\r\n") ;
     }
-    
+
     wxString filename = wxFileName::CreateTempFileName ( _T("") ) + _T(".txt") ;
 //    filename = _T("C:\\1.txt") ; // Testing...
     wxFile file ( filename , wxFile::write ) ;
     file.Write ( s , *wxConvCurrent ) ;
     file.Close() ;
-    
+
 //    wxString cmd = myapp()->getFileFormatCommand ( _T("csv") , filename ) ;
     wxString cmd = myapp()->getFileFormatApplication ( _T("xls") ) ;
     cmd += _T(" \"") + filename + q ;

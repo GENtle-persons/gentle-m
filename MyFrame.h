@@ -60,7 +60,7 @@ class TTestSuite
 	virtual void aaAction ( ChildBase *ac ) ; ///< \brief Simulates a random action
     int start ; ///< \brief Internal start value
     int cnt ; ///< \brief Internal counter
-	} ;    
+	} ;
 #endif
 
 /** \class TProject
@@ -78,10 +78,10 @@ class TProject
     wxString name ;  ///< \brief The project name
     wxString desc ;  ///< \brief The project description
     wxString db ;    ///< \brief The name of the database the project is stored in
-    
+
     private :
 	TEnzymeRules *enzyme_rules ; ///< \brief The enzyme rules of the project
-	} ;    
+	} ;
 
 /** \class MyFrame
 	\brief Frame class
@@ -102,11 +102,11 @@ public:
     virtual wxString check4update () ;
     virtual wxString check4update_sub ( wxString text ) ;
     virtual void update2version ( wxString ver ) ;
-    
+
     virtual wxMenu *getFileMenu ( int options = 0 ) ;
     virtual wxMenu *getToolMenu ( bool _pcr = false ) ;
     virtual wxMenu *getHelpMenu () ;
-    
+
     virtual void InitToolBar(wxToolBar* toolBar);
 
     virtual void OnSize(wxSizeEvent& event);
@@ -127,7 +127,7 @@ public:
     virtual void OnDotPlot(wxCommandEvent& event);
     virtual void OnRestrictionIdentifier(wxCommandEvent& event);
     virtual void OnStoreAll(wxCommandEvent& event);
-    
+
     virtual void RerouteMenu(wxCommandEvent& event);
     virtual void OnlineTools(wxCommandEvent& event);
     virtual void BollocksMenu(wxCommandEvent& event);
@@ -143,7 +143,7 @@ public:
     virtual void OnQuit(wxCommandEvent& event);
     virtual void OnClose(wxCloseEvent& event);
     virtual void OnSashDrag(wxSashEvent& event);
-    
+
 	virtual void updateCCP ( ChildBase *c ) ;
     virtual void addTool ( wxToolBar* toolBar , int id ) ;
     virtual void addDefaultTools ( wxToolBar* toolBar ) ;
@@ -187,7 +187,7 @@ public:
     TMainTree *mainTree ; ///< \brief The main tree (for sequences etc.)
     TStorage *LS ; ///< \brief Pointer to the local TStorage database structure
     wxString proxy ;
-    bool dying , enhancedRefresh , showVectorTitle , showVectorLength , 
+    bool dying , enhancedRefresh , showVectorTitle , showVectorLength ,
             loadLastProject , useMetafile , showSplashScreen , checkUpdate ,
             useCoolCanvas , useInternalHelp , doRegisterStuff , showEnzymePos ,
 			useTwoToolbars , useOnlineHelp , showToolTips , showLowercaseDNA ;
@@ -211,7 +211,7 @@ public:
 
     private :
     wxBitmap to_grey ( wxBitmap &bmp1 ) ;
-            
+
     wxSashLayoutWindow* m_topWindow; ///< \brief Frame layout, top window (unused)
     wxSashLayoutWindow* m_leftWindow1; ///< \brief Frame layout, left window
     wxSashLayoutWindow* m_leftWindow2; ///< \brief Frame layout, right window
@@ -225,7 +225,7 @@ public:
 #ifdef MYTEST
     TTestSuite *test_suite ; ///< \brief The Test suite
 #endif
-    
+
     DECLARE_EVENT_TABLE()
 };
 

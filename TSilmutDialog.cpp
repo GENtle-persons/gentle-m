@@ -35,7 +35,7 @@ TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode 
     SetSize ( 600 , 400 ) ;
     Center () ;
     mode = _mode ;
-    
+
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
@@ -51,7 +51,7 @@ TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode 
     h0->Add ( st , 0 , wxEXPAND , 5 ) ;
 	h0->Add ( lim_xhg , 0 , wxEXPAND , 5 ) ;
 	h0->Add ( allow_cut_removal , 0 , wxEXPAND , 5 ) ;
-	
+
 	// Max cuts
     lim_max = new wxSpinCtrl ( this , PD_SILMUT_MAX_CUT , _T("5") ,
                             wxDefaultPosition , wxSize ( MYSPINBOXSIZE , -1 ) ,
@@ -69,35 +69,35 @@ TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode 
     z.Add ( txt("Current") ) ;
     z.Add ( txt("All") ) ;
     z.Sort () ;
-    
+
     egr = new wxChoice ( this , PD_SILMUT_EGR ) ;
     for ( int a = 0 ; a < z.GetCount() ; a++ )
         egr->Append ( z[a] ) ;
-    
+
     if ( mode == M_WHATCUTS ) egr->SetStringSelection ( txt("All") ) ;
     else if ( mode == M_SILMUT ) egr->SetStringSelection ( txt("Current") ) ;
-    
+
     h2->Add ( egr , 0 , wxEXPAND , 5 ) ;
     h2->Add ( new wxButton ( this , PD_SILMUT_OK , txt("b_ok") ) , 0 , wxEXPAND , 5 ) ;
     h2->Add ( new wxButton ( this , PD_SILMUT_CANCEL , txt("b_cancel") ) , 0 , wxEXPAND , 5 ) ;
-    
+
     if ( mut_pos > -1 ) // I have no idea what this is for...
         {
         mut = new wxChoice ( this , PD_SILMUT_EGR ) ;
         h2->Add ( mut , 0 , wxEXPAND , 5 ) ;
         }
-        
+
 	// List
     lb = new wxListBox ( this , PD_SILMUT_LB , wxDefaultPosition , wxDefaultSize ,
                             0 , NULL , wxLB_SINGLE|wxLB_SORT ) ;
     lb->SetFont ( *MYFONT ( 8 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
-	
+
 	v0->Add ( h0 , 0 , wxEXPAND ) ;
 	v0->Add ( h1 , 0 , wxEXPAND ) ;
 	v0->Add ( h2 , 0 , wxEXPAND ) ;
 	v0->Add ( lb , 1 , wxEXPAND ) ;
 	v0->Add ( status , 0 , wxEXPAND ) ;
-	
+
     if ( mode == M_WHATCUTS )
         {
         lim_xhg->SetValue ( 0 ) ;
@@ -105,7 +105,7 @@ TSilmutDialog::TSilmutDialog ( wxWindow *parent , const wxString &s , int _mode 
         st->Hide() ;
         allow_cut_removal->Hide() ;
         }
-	
+
     SetSizer ( v0 ) ;
 
     if ( mode == M_WHATCUTS ) pd = NULL ;
@@ -127,32 +127,32 @@ void TSilmutDialog::initme ( TVector *vec , int _from , int _to )
     showit () ;
     running = true ;
     }
-    
+
 void TSilmutDialog::OnACR ( wxCommandEvent &ev )
     {
 	OnSpin2 ( ev ) ;
 	lim_xhg->Enable ( !allow_cut_removal->GetValue() ) ;
     }
-    
+
 void TSilmutDialog::OnLbDoubleClick ( wxCommandEvent &ev )
     {
     OnOK ( ev ) ;
     }
-    
+
 wxString TSilmutDialog::getSequence ()
     {
     int i = selID() ;
     if ( i == -1 ) return _T("") ;
     return vs[i].mut ;
     }
-    
+
 TRestrictionEnzyme *TSilmutDialog::getEnzyme ()
     {
     int i = selID() ;
     if ( i == -1 ) return NULL ;
     return vs[i].e ;
     }
-    
+
 int TSilmutDialog::selID ()
     {
     if ( last_selection == -1 ) return -1 ;
@@ -162,7 +162,7 @@ int TSilmutDialog::selID ()
           return a ;
     return -1 ;
     }
-    
+
 void TSilmutDialog::OnOK ( wxCommandEvent &ev )
     {
     last_selection = lb->GetSelection () ;
@@ -171,16 +171,16 @@ void TSilmutDialog::OnOK ( wxCommandEvent &ev )
     else
         EndModal ( wxID_OK ) ; //wxDialog::OnOK ( ev ) ;
     }
-    
+
 void TSilmutDialog::OnCancel ( wxCommandEvent &ev )
     {
     EndModal ( wxID_CANCEL ) ; //wxDialog::OnCancel ( ev ) ;
     }
-    
+
 void TSilmutDialog::OnSpin ( wxSpinEvent &event )
     {
  wxCommandEvent event2 ;
- OnSpin2 ( event2 ) ; 
+ OnSpin2 ( event2 ) ;
     }
 
 void TSilmutDialog::OnSpin2 ( wxCommandEvent &event )
@@ -189,20 +189,20 @@ void TSilmutDialog::OnSpin2 ( wxCommandEvent &event )
     calc () ;
     showit () ;
     }
-    
+
 void TSilmutDialog::OnChoose ( wxCommandEvent &event )
     {
     calc () ;
     showit () ;
     }
-    
+
 void TSilmutDialog::calc ()
     {
     SetCursor ( *wxHOURGLASS_CURSOR ) ;
     bool acr = allow_cut_removal->GetValue() ;
     wxString orig_aa = getAAresult ( v->getSequence() ) ;
     wxString orig_aa_trim = orig_aa ;
-    
+
     if ( mode == M_SILMUT && orig_aa_trim.Trim().IsEmpty() )
     	{
 		status->SetLabel ( txt("t_no_reading_frame") ) ;
@@ -211,13 +211,13 @@ void TSilmutDialog::calc ()
 		return ;
 		}
 	else status->Hide() ;
-    
+
     int limit = lim_xhg->GetValue() ; // Maximum number of exchanges
     int limit_cuts = lim_max->GetValue() ; // Maximum number of cuts
     vs.clear() ;
     int a , b , c ;
     int match , mismatch ;
-    
+
     // List of restriction enzymes to check
     wxArrayTRestrictionEnzyme re ;
     wxString group = egr->GetStringSelection() ;
@@ -229,12 +229,12 @@ void TSilmutDialog::calc ()
         for ( a = 0 ; a < z.GetCount() ; a++ )
         	re.Add ( myapp()->frame->LS->getRestrictionEnzyme ( z[a] ) ) ;
         }
-    
+
     wxString vseq = v->getSequence() ; // Marked sequence, uppercase
     wxString vseq_l = vseq.Lower() ; // Marked sequence, lowercase
-    
-    
-    
+
+
+
     // Check each restriction enzyme
     for ( a = 0 ; a < re.GetCount() ; a++ )
 		{
@@ -266,7 +266,7 @@ void TSilmutDialog::calc ()
 					x += s.GetChar(c) ;
 					}
 				}
-			
+
 			// Does this preserve the amino acid sequence?
 			wxString new_dna ;
 			bool useit = false ;
@@ -275,19 +275,19 @@ void TSilmutDialog::calc ()
 				new_dna = vseq ;//v->getSequence() ;
 				for ( c = 0 ; c < new_dna.length() ; c++ )
 					{
-					if ( c >= b && c < b + s.length() && 
+					if ( c >= b && c < b + s.length() &&
 						c-b >= 0 && c-b <= x.length() &&
 						x.GetChar(c-b) >= 'A' &&
-						x.GetChar(c-b) <= 'Z' ) 
+						x.GetChar(c-b) <= 'Z' )
 						new_dna.SetChar ( c ,  x.GetChar(c-b) ) ;
 					}
 				wxString new_aa = getAAresult ( new_dna ) ;
 				if ( new_aa == orig_aa ) useit = true ;
 				}
 
-			
+
 			if ( acr && mismatch != 0 ) useit = false ; // Shorcut if used as "first stage"
-			
+
 			if ( !useit ) continue ; // Don't use it!
 
 			// Add it to the list
@@ -295,7 +295,7 @@ void TSilmutDialog::calc ()
 			for ( c = from-1 ; c < to ; c++ )
 				{
 				if ( c >= b && c < b + s.length() ) y += x.GetChar(c-b) ;
-				else y += vseq_l.GetChar(c) ; 
+				else y += vseq_l.GetChar(c) ;
 				}
 			TSilmutItem si ;
 			si.e = e ;
@@ -306,7 +306,7 @@ void TSilmutDialog::calc ()
 			int ndl = new_dna.length() ;
 			vector <TRestrictionCut> vc ;
 			v->getCuts ( e , vc , true ) ;
-			
+
 			// Calculating the resulting fragments
 			wxArrayInt fragments ;
 			fragments.Alloc ( vc.size() + 5 ) ;
@@ -322,7 +322,7 @@ void TSilmutDialog::calc ()
 			fragments.Sort(cmpint) ;
 			now = ndl-1 ;
 			if ( last != now ) fragments.Add ( now ) ;
-			
+
 			for ( c = fragments.GetCount()-1 ; c > 0 ; c-- ) fragments[c] -= fragments[c-1] ;
 			fragments[0]++ ;
 
@@ -333,22 +333,22 @@ void TSilmutDialog::calc ()
 				}
 
 			fragments.Sort(cmpint) ; // Sort fragments by size
-			
+
 			int cnt , sum = 0 ;
 			for ( cnt = 0 ; cnt < fragments.size() ; cnt++ ) sum += fragments[cnt] ;
 			fragments.Add ( sum ) ;
-			
+
 			si.fragments = fragments ;
-			
+
 			si.cuts = vc.size() ;
 			v->setSequence ( old_dna ) ;
 			if ( vc.size() <= limit_cuts ) vs.push_back ( si ) ;
 
 			}
 		}
-    
+
     if ( acr ) calc_acr () ;
-    
+
     SetCursor ( *wxSTANDARD_CURSOR ) ;
     }
 
@@ -360,13 +360,13 @@ void TSilmutDialog::calc_acr ()
     int a , b , c ;
 //    int match , mismatch ;
 
-    
+
     // List of restriction enzymes to check
 	// Only those which already exist from previous run ("first stage")
     wxArrayTRestrictionEnzyme re ;
 	for ( a = 0 ; a < vs.size() ; a++ ) re.Add ( vs[a].e ) ;
     vs.clear() ;
-    
+
     wxString vseq = v->getSequence() ; // Marked sequence, uppercase
     wxString vseq_l = vseq ; // Marked sequence, lowercase
     for ( a = 0 ; a < vseq.length() ; a++ )
@@ -374,43 +374,43 @@ void TSilmutDialog::calc_acr ()
         if ( vseq.GetChar(a) >= 'A' && vseq.GetChar(a) <= 'Z' )
            vseq_l.SetChar ( a , vseq.GetChar(a) - 'A' + 'a' ) ;
         }
-    
+
     wxString bases = _T("ACTG") ;
-    
+
     // Check each restriction enzyme
     for ( a = 0 ; a < re.GetCount() ; a++ )
         {
         TRestrictionEnzyme *e = re[a] ;
 		vector <TRestrictionCut> vc_base ;
 		v->getCuts ( e , vc_base ) ;
-		
+
 		// Sanity checks
 		if ( vc_base.size() == 0 ) continue ;
 		if ( vc_base.size() > limit_cuts ) continue ;
 
         for ( b = from-1 ; b <= to ; b++ )
            {
-			for ( int base = 0 ; base < 4 ; base++ ) 
+			for ( int base = 0 ; base < 4 ; base++ )
 				{
 				wxString new_dna = v->getSequence() ;
 				new_dna.SetChar ( b , bases.GetChar ( base ) ) ;
 				wxString new_aa = getAAresult ( new_dna ) ;
 				if ( new_aa != orig_aa ) continue ;
-				
+
 				// This is a silent mutation
 				vector <TRestrictionCut> vc_new ;
 				v->setSequence ( new_dna ) ;
 				v->getCuts ( e , vc_new ) ;
 				v->setSequence ( vseq ) ;
-				
+
 				// Did this reduce the number of cuts?
 				if ( vc_base.size() <= vc_new.size() ) continue ;
-				
+
 				wxString y ;
 				for ( c = from-1 ; c < to ; c++ )
 					{
-					if ( b == c ) y += bases.GetChar ( base ) ; 
-					else y += vseq_l.GetChar(c) ; 
+					if ( b == c ) y += bases.GetChar ( base ) ;
+					else y += vseq_l.GetChar(c) ;
 					}
 
 				TSilmutItem si ;
@@ -431,10 +431,10 @@ void TSilmutDialog::calc_acr ()
 					si.fragments.RemoveAt ( si.fragments.GetCount()-1 ) ;
 					}
 				si.fragments.Sort(cmpint) ;
-				
+
 				si.cuts = vc_new.size() ;
 				vs.push_back ( si ) ;
-				}	
+				}
 			}
         }
 	}
@@ -461,7 +461,7 @@ wxString TSilmutDialog::getAAresult ( wxString dna )
     delete a3 ;
     return ret ;
     }
-    
+
 void TSilmutDialog::showit ()
     {
     int a , b ;
@@ -481,12 +481,12 @@ void TSilmutDialog::showit ()
            if ( b > 0 ) fragments += _T(", ") ;
            fragments += wxString::Format ( _T("%d") , vs[a].fragments[b] ) ;
            }
-        
+
         wxString s ;
         if ( mode == M_SILMUT )
            {
            s = wxString::Format ( _T("%2d %s %s (%2d=>%2d) [%s]") ,
-                        vs[a].changes , 
+                        vs[a].changes ,
                         e_name.c_str() ,
                         vs[a].mut.c_str() ,
                         cuts_before ,
@@ -495,12 +495,12 @@ void TSilmutDialog::showit ()
            }
         else if ( mode == M_WHATCUTS )
            {
-           s = wxString::Format ( txt("t_whatcuts_format") , 
+           s = wxString::Format ( txt("t_whatcuts_format") ,
                         e_name.c_str() ,
                         vs[a].cuts ,
                         fragments.c_str() ) ;
            }
-           
+
         lb->Append ( s ) ;
         list.Add ( s ) ;
         }

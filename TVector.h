@@ -60,7 +60,7 @@ class TORF
     TORF () ; ///< Default constructor, empty
     TORF ( int _f , int _t , int _r ) ; ///< Constructor
 	~TORF () {} ; ///< Destructor (empty)
-    
+
     wxString getText () ;
     void set ( int _f , int _t , int _r ) ;
     inline int get_from () { return from ; }
@@ -69,12 +69,12 @@ class TORF
 
     float dist1 , dist2 ;
     float deg1 , deg2 ;
-    
+
     private:
     /// \brief Start of ORF
     int from , to ; ///< End of ORF
     int rf ; ///< Reading frame
-    
+
     } ;
 
 /// This class stores a codon and the corresponding amino acid. Used by TVector
@@ -94,7 +94,7 @@ class TVectorItem
     TVectorItem () ; ///< Default constructor
     TVectorItem ( wxString sn , wxString n , int f , int t , char ty ) ; ///< Constructor
 	~TVectorItem () {} ; ///< Destructor (empty)
-    
+
     wxBrush *getBrush () ; ///< Returns a pointer to the brush used to draw the item
     wxColour getFontColor () ; ///< Returns the font color
     void setColor ( wxColour col ) ; ///< Sets the font color
@@ -106,7 +106,7 @@ class TVectorItem
     void setOffset ( int o = -1 ) ; ///< Sets the offset; -1 = no offset
     void setType ( wxString s ) ; ///< Sets the item type
     int getOffsetAt ( int i ) ; ///< Returns the offset of the item at a specific position
-    
+
     void doRemove ( int f , int t , int l ) ; ///< Remove a part of the item
     wxString implodeParams () ; ///< Join item parameters for storage
     void explodeParams ( wxString _s ) ; ///< Extract item parameters from stored form
@@ -129,21 +129,21 @@ class TVectorItem
     void getArrangedAA ( TVector *v , wxString &s , int disp , SeqAA *aa = NULL ) ; ///< Generate the amino acid sequence in place
     wxString getAminoAcidSequence () ; ///< Return the amino acid sequence
     void setLastVector ( TVector *v ) ; ///< Set the last TVector to own this item
-    
+
     // Variables
     /// \brief Item description
     wxString desc , name ; ///< Item name
-    
+
     int from , ///< Item start
     	to ; ///< Item end
-    
+
     private:
     void initParams () ; ///< Reset parameters
-    
+
     signed char direction ; ///< The item direction; 1=clockwise, -1=counter-clockwise
     char type ; ///< The type of the item in VIT_XXX form
     wxTreeItemId treeid ; ///< The item ID in the TVectorTree
-    
+
     /// \brief Parameter keys
     wxArrayString pname , pvalue ; ///< Parameter values
     vector <Tdna2aa> dna2aa_item ; ///< The cache of the translated amino acids
@@ -173,34 +173,34 @@ class TVector
     ~TVector () ; ///< Destructor
     void init () ; ///< Set up basic values
     void clear () ; ///< Reset internal state
-    
+
     // Restriction enzymes
     void recalculateCuts () ; ///< Recalculate restriction enzyme cuts
-    void getCuts ( TRestrictionEnzyme *e , vector <TRestrictionCut> &ret , 
+    void getCuts ( TRestrictionEnzyme *e , vector <TRestrictionCut> &ret ,
     						bool clear_vector = true , int max = 10000000 ) ; ///< Gets the cuts of restriction enzyme in this sequence
     bool reduceToFragment ( TRestrictionCut left , TRestrictionCut right ) ; ///< Cuts off everything except what is betreen these two cuts
     void doRestriction () ; ///< Performs restriction. See TRestrictionEditor
     void sortRestrictionSites () ; ///< Sorts the restriction sites by point of cut
     int countCuts ( wxString enzyme ) ; ///< Counts the number of cuts for an enzyme in this sequence
     void methylationSites ( wxArrayInt &vi , int what = ALL_METHYLATION_ENZYMES ) ; ///< Finds methylation sites
-    
+
     // Nucleotide access/conversion
     bool basematch ( char b1 , char b2 ) ; ///< matches DNA bases; b1 in IUPAC, b2 in SIUPAC. This is superior to the "=" operator :-)
     void setIUPAC ( char b , wxString s , char *pac = NULL ) ;
     char getNucleotide ( int pos , bool complement = false ) ; ///< Returns the base at a certain position, or its complement
     void setNucleotide ( int pos , char t ) ; ///< Sets a base at a certain position
     char getComplement ( char c ) ; ///< Returns the complement of a given base
-    
+
     // Vector/sequence access
     void ligate_right ( TVector &v , bool inverted = false ) ; ///< Adds another TVector to the right of this one
     void closeCircle () ; ///< Closes a linear sequence into a circular (intramolecular ligation)
     void turn ( int off ) ; ///< Turns a circular sequence "off" bases
-    
+
     TVector *getAAvector ( int from , int to , int dir = 1 ) ; ///< Returns part of the sequence translated into amino acids
     void doAction () ; ///< Perform an action (restriction, usually). Internal use
     void doRemove ( int from , int to , bool update = true , bool enableUndo = true ) ; ///< Removes part of the sequence
     void insert_char ( char x , int pos , bool overwrite = false ) ; ///< Inserts a character into the sequence
-    
+
     float getAAmw ( char aa ) ; ///< Returns the molecular weight of an amino acid
     float getAApi ( char aa ) ; ///< Returns the isoelectric point of an amino acid
     wxString dna2aa ( wxString codon , int translation_table = -1 ) ; ///< Translates a codon into an amino acid
@@ -208,16 +208,16 @@ class TVector
     void setDatabase ( wxString s ) { database = s ; } ///< Sets the database in which the sequence is stored
     wxString getDatabase () { return database ; } ///< Returns the database name in which the sequence is stored
     TVector *newFromMark ( int from , int to ) ; ///< Generates a new sequence based on a part of this one
-    
+
     void setChanged ( bool c = true ) ; ///< The sequence has been changed.
     bool isChanged () { return changed ; } ///< Was the sequence changed?
-    
+
     void ClearORFs () ; ///< Clear the found open reading frames
     void addORFs ( int off ) ; ///< Add open reading frames for a specific reading frame
 
     void removeBlanksFromSequence () ; ///< Removes blank chars (spaces etc.) from the sequence
     void removeBlanksFromVector () ; ///< Removes blank chars (spaces etc.) from the sequence, altering items if necessary
-    
+
     wxString getParams () ; ///< Return sequence parameters
     void setParams ( wxString t ) ; ///< Set sequence parameters
     wxString getParam ( wxString key ) ; ///< Return the value of a parameter
@@ -255,7 +255,7 @@ class TVector
     int getSequenceLength() ; ///< Returns the sequence length
     void eraseSequence ( int from , int len ) ; ///< Removes part of the sequence
     void removeAlignmentArtifacts ( char what = '-' ) ; ///< Removes alignment artifacts from the sequence
-    
+
     wxString getDescription () ; ///< Returns the sequence description
     void setDescription ( wxString s ) ; ///< Sets the sequence description
     void addDescription ( wxString s ) ; ///< Appends to the sequence description
@@ -290,14 +290,14 @@ class TVector
     // Variables
     vector <TVectorItem> items ; ///< Items/features/annotations
     vector <TRestrictionCut> rc ; ///< Restriction enzyme cuts
-    
+
     wxArrayTRestrictionEnzyme re , ///< Manually specified restriction enzymes
     						  re2 ; ///< Automatically added restriction enzymes
 
     wxArrayString proteases ,  ///< Proteases used
      	cocktail ; ///< Enzymes from the last restriction
     TUndo undo ; ///< Undo information
-    
+
     private :
     wxString invert ( wxString s ) ; ///< Inverts a string
     wxString vary_base ( char b ) ; ///< Turns a SIUPAC into a string of A, C, G, T
@@ -332,7 +332,7 @@ class TVector
     wxString AA2DNA[256] ; ///< AA-to-DNA "translation" table; used by makeAA2DNA()
     wxArrayString paramk ; ///< Parameter keys
     wxArrayString paramv ; ///< Parameter values
-    
+
     static char IUPAC[256] ; ///< The ACTG chars in binary encoding (IUPAC_A, IUPAC_C, IUPAC_T, IUPAC_G)
     static char SIUPAC[256] ; ///< The extended IUPAC codes in binary encoding
     static char COMPLEMENT[256] ; ///< The complement to each SIUPAC base
@@ -341,6 +341,6 @@ class TVector
     static wxArrayString codon_tables ; ///< The codon tables for different organisms
     static wxArrayString codon_table_names ; ///< The names of these codon tables
     } ;
-    
+
 #endif
 

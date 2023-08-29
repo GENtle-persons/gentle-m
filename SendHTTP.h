@@ -28,6 +28,6 @@ class myExternal
 	wxString getTextFTP ( wxString server , wxString dir , wxString file ) ; ///< FTP get text
 	
 	int targetSize ; ///< File size, if known
-	} ;    
+	} ;
 
 #endif

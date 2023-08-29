@@ -23,7 +23,7 @@ void TOnlineTools::determine_marked_or_complete_sequence ()
     if ( !canvas || !child ) return ;
     sequence = canvas->getSelection() ;
     if ( sequence.length() > 1 ) return ;
-    
+
     // Nothing selected, try to get the whole sequence
     if ( !child ) return ;
     if ( !child->vec ) return ;
@@ -33,23 +33,23 @@ void TOnlineTools::determine_marked_or_complete_sequence ()
 void TOnlineTools::add_context_menu ( wxMenu *base )
     {
     if ( !canvas || !child ) return ;
-    
+
     sequence = _T("") ;
     wxMenu *ret = NULL ;
     if ( child->def == _T("AminoAcids") )
        {
        ret = new wxMenu ;
-       
-       
+
+
        wxMenu *primary = new wxMenu ;
        primary->Append ( ONLINE_TOOLS_2ZIP , txt("m_ot_2zip") ) ;
        primary->Append ( ONLINE_TOOLS_SAPS , txt("m_ot_saps") ) ;
-       
+
        wxMenu *topology = new wxMenu ;
        topology->Append ( ONLINE_TOOLS_PHOBIUS , txt("m_ot_phobius") ) ;
        topology->Append ( ONLINE_TOOLS_POLY_PHOBIUS , txt("m_ot_poly_phobius") ) ;
        topology->Append ( ONLINE_TOOLS_TARGETP , txt("m_ot_targetp") ) ;
-       
+
        wxMenu *motif = new wxMenu ;
        motif->Append ( ONLINE_TOOLS_MOTIF_SCAN , txt("m_ot_motif_scan") ) ;
        motif->Append ( ONLINE_TOOLS_PVAL_FPSCAN , txt("m_ot_pval_fpscan") ) ;
@@ -59,8 +59,8 @@ void TOnlineTools::add_context_menu ( wxMenu *base )
        ssp->Append ( ONLINE_TOOLS_GOR , txt("m_ot_gor") ) ;
        ssp->Append ( ONLINE_TOOLS_HNN , txt("m_ot_hnn") ) ;
        ssp->Append ( ONLINE_TOOLS_JPRED , txt("m_ot_jpred") ) ;
-       
-       
+
+
        wxMenu *ptm = new wxMenu ;
        ptm->Append ( ONLINE_TOOLS_CALCPI , txt("m_ot_calcpi") ) ;
        ptm->Append ( ONLINE_TOOLS_MITOPROT , txt("m_ot_mitoprot") ) ;
@@ -70,7 +70,7 @@ void TOnlineTools::add_context_menu ( wxMenu *base )
        ptm->Append ( ONLINE_TOOLS_SUMOPLOT , txt("m_ot_sumoplot" ) ) ;
        ptm->Append ( ONLINE_TOOLS_PREPS , txt("m_ot_preps" ) ) ;
        ptm->Append ( ONLINE_TOOLS_DGPI , txt("m_ot_dgpi" ) ) ;
-       
+
        ret->Append ( POPUP_DUMMY , txt("m_ot_primary") , primary ) ;
        ret->Append ( POPUP_DUMMY , txt("m_ot_ssp") , ssp ) ;
        ret->Append ( POPUP_DUMMY , txt("m_ot_topology") , topology ) ;
@@ -102,7 +102,7 @@ void TOnlineTools::take_event ( wxCommandEvent& event )
     determine_marked_or_complete_sequence () ;
     if ( child->def != _T("alignment") && sequence.IsEmpty() ) return ;
     int id = event.GetId() ;
-    
+
     wxString url , clipboard ;
     switch ( id )
         {
@@ -132,7 +132,7 @@ void TOnlineTools::take_event ( wxCommandEvent& event )
              url += get_fasta_sequences ( false , false ) ;
              break ;
         case ONLINE_TOOLS_MITOPROT :
-             url = _T("http://ihg.gsf.de/cgi-bin/paolo/mitofilter?seq=") + 
+             url = _T("http://ihg.gsf.de/cgi-bin/paolo/mitofilter?seq=") +
                    sequence + _T("&seqname=") + get_fasta_name() ;
              break ;
         case ONLINE_TOOLS_MYRISTOYLATOR :

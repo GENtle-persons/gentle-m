@@ -17,7 +17,7 @@ int TIMGreader::getInt ( int adr )
    int r = a1 + a2 * 256 ;
    return r ;
    }
-   
+
 void TIMGreader::readFile ( wxString fn )
     {
     wxFile file ( fn ) ;
@@ -26,20 +26,20 @@ void TIMGreader::readFile ( wxString fn )
     file.Read ( (char*)buffer, size );
     file.Close() ;
     }
-    
+
 wxImage TIMGreader::makeImage()
     {
     int w_adr = 3549 ;
     int h_adr = w_adr + 2 ;
     int xoff = 0 , yoff = 0 ;
-    
+
     w = getInt ( w_adr ) ;
     h = getInt ( h_adr ) ;
-    
+
 //    xoff = -getInt ( 3577 ) ;
 //    yoff = -getInt ( 3577 ) ;
 //    yoff = -buffer[3577] ;
-      
+
     int cur = 4089 ;
     output = (unsigned char*) malloc ( w * h * 3 ) ;
     int offset = 0 , x , y ;
@@ -55,7 +55,7 @@ wxImage TIMGreader::makeImage()
        }
     wxImage i ( w , h ) ;
     i.SetData ( output ) ;
-    
+
     // Items
     items.clear() ;
     x = 0 ;
@@ -72,34 +72,34 @@ wxImage TIMGreader::makeImage()
           { // "FF FF FF 00 FF FF FF" | y at 00
           TIMGitem it ;
           it.type = IMGTYPE_TEXT ;
-          
+
           for ( x = y + 7 ; buffer[x] ; x++ ) ;
           for ( x++ ; buffer[x] == 0 ; x++ ) ;
-          
+
           it.p1.x = getInt ( x + 1 ) + xoff ;
           it.p1.y = getInt ( x + 5 ) + yoff ;
-          
+
           it.orig = wxSize ( w , h ) ;
           for ( x = 7 ; x < 50 && buffer[y+x] ; x++ )
              it.s += buffer[y+x] ;
-             
+
           it.font_size = ( 243 - buffer[y-61] ) / 3 + 10 ;
           it.font_name = wxString ( (char*) buffer + y - 43 , *wxConvCurrent ) ;
-             
+
           items.push_back ( it ) ;
           }
        }
-    
+
     return i ;
     }
-    
+
 //
 
-void TIMGitem::draw ( wxDC &dc , int x1 , int y1 , int x2 , int y2 ) 
+void TIMGitem::draw ( wxDC &dc , int x1 , int y1 , int x2 , int y2 )
     {
     cur = wxSize ( x2 - x1 , y2 - y1 ) ;
     off = wxPoint ( x1 , y1 ) ;
-    
+
 //    dc.DrawLine ( xx ( 0 ) , yy ( 0 ) , xx ( orig.GetWidth() ) , yy ( orig.GetHeight() ) ) ;
 //    wxString u = wxString::Format ( "Image dimensions : %d:%d" , orig.GetWidth() , orig.GetHeight() ) ;
 //    dc.DrawText ( u , xx ( 0 ) , yy ( 0 ) ) ;
@@ -111,19 +111,19 @@ void TIMGitem::draw ( wxDC &dc , int x1 , int y1 , int x2 , int y2 )
 
         int px = xx ( p1.x ) ;
         int py = yy ( p1.y ) ;
-        
-        wxString t = s + _T(" {") + font_name + wxString::Format ( _T(":%d} (%d:%d) [%d:%d]") , 
+
+        wxString t = s + _T(" {") + font_name + wxString::Format ( _T(":%d} (%d:%d) [%d:%d]") ,
                                 font_size ,
-                                p1.x , p1.y , 
+                                p1.x , p1.y ,
                                 px , py ) ;
 
         t = s ; // Back to the roots ;-)
-        
+
         dc.DrawText ( t , px , py ) ;
         dc.SetFont ( oldfont ) ;
         }
     }
-    
+
 int TIMGitem::xx ( int x )
     {
     return off.x + x * 19 / 24 ;

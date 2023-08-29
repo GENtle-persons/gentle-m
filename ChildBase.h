@@ -29,7 +29,7 @@ class ChildBase : public MyChildBase
     TVector *vec ; ///< Pointer to the base vector (may be NULL, depending on the module)
     wxTreeItemId inMainTree ; ///< The ID of this module in the main tree
     SequenceCanvas *cSequence; ///< Pointer to the sequence display (may be NULL, depending on the module)
-    
+
     ChildBase(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style) ; ///< Constructor
     ChildBase(wxWindow *parent, const wxString& title); ///< Constructor
 
@@ -51,7 +51,7 @@ class ChildBase : public MyChildBase
     virtual void initHelp () ; ///< Initializes help link for online help
     virtual void otherChildrenChanged () {} ; ///< Update modules that depend on other modules when one was added/deleted
 
-    
+
     // Compatability functions
     virtual wxToolBar *CreateToolBar ( int i , int j , wxString s ) ; ///< Generates the tool bar
     virtual void SetMenuBar ( wxMenuBar *menu_bar ) ; ///< Sets the menu bar for the window
@@ -63,12 +63,12 @@ class ChildBase : public MyChildBase
     virtual bool HasUndoData () ; ///< TRUE if undo button available and active (undo data present)
 
 	bool allow_cut , allow_copy , allow_paste , allow_find , allow_save , allow_print , allow_undo ;
-    
+
     protected :
     friend class MyFrame ;
     wxMenuBar *menubar ; ///< Pointer to the window menu bar
     wxToolBar *toolbar ; ///< Pointer to the window too bar
-    
+
     virtual wxString getExportFilters () ;
     virtual void doExport ( wxString filename , int filter ) ; ///< Export data, depending on filename and export type
     virtual void exportVector ( TVector *vec , wxFile &out , int filter , wxString filename = _T("") ) ; ///< Exports a TVector

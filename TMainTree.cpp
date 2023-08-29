@@ -13,7 +13,7 @@ TMainTree::TMainTree ( wxSashLayoutWindow *parent , int i )
     {
     lastChild = NULL ;
     }
-    
+
 /** \brief Initialization of the tree; removal of old items, if any
 */
 void TMainTree::initme()
@@ -44,15 +44,15 @@ void TMainTree::OnRightClick ( wxTreeEvent &event )
     if ( !id.IsOk() ) return ;
     TMainTreeItem *d = (TMainTreeItem*) GetItemData ( id ) ;
     if ( !d || !d->c ) return ;
-    
+
     lastChild = (ChildBase*) d->c ;
-    
+
     wxMenu *cm = new wxMenu ;
     cm->Append ( MT_CLOSE , txt("m_close") ) ;
     PopupMenu ( cm , pt ) ;
     delete cm ;
     }
-    
+
 /** \brief Adds a child to the tree
 	\param c Pointer to child
 	\param type Where to add it
@@ -80,7 +80,7 @@ void TMainTree::removeChild ( ChildBase *c )
     if ( !c || !c->inMainTree.IsOk() ) return ;
     Delete ( c->inMainTree ) ;
     }
-    
+
 /** \brief Event handler (when an item gets the focus, via keyboard or mouse)
 */
 void TMainTree::OnEvent ( wxTreeEvent &event )
@@ -94,7 +94,7 @@ void TMainTree::OnEvent ( wxTreeEvent &event )
     if ( !d->c ) return ;
     d->c->Activate () ;
     }
-    
+
 /** \brief Closes the current child
 */
 void TMainTree::OnCloseChild ( wxCommandEvent &event )

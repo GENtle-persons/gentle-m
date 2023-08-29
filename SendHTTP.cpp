@@ -35,12 +35,12 @@ int myExternal::copyFileHTTP ( wxString _url , wxString _file )
 	}
     out.Close () ;
 
-    delete file ;    
-    return 0 ; 
+    delete file ;
+    return 0 ;
 }
 
-wxString myExternal::getTextHTTP ( wxString url ) 
-{ 
+wxString myExternal::getTextHTTP ( wxString url )
+{
     wxString ret ;
     wxFileSystem fs ;
     wxFSFile *file = fs.OpenFile ( url ) ;
@@ -62,7 +62,7 @@ wxString myExternal::getTextHTTP ( wxString url )
 		}
 
     delete file ;
-    return ret ; 
+    return ret ;
 }
 
 wxString myExternal::getTextFTP ( wxString server , wxString dir , wxString file )
@@ -79,7 +79,7 @@ wxString myExternal::getTextFTP ( wxString server , wxString dir , wxString file
 	    {
 		char data[10001] ;
 		int read_total = 0 ;
-		wxProgressDialog pd ( txt("t_downloading_rebase") , _T("") , size , NULL , 
+		wxProgressDialog pd ( txt("t_downloading_rebase") , _T("") , size , NULL ,
 				wxPD_AUTO_HIDE|wxPD_APP_MODAL|wxPD_SMOOTH|wxPD_ELAPSED_TIME|wxPD_ESTIMATED_TIME|wxPD_REMAINING_TIME|wxPD_CAN_ABORT ) ;
 		while ( read_total < size )
 			{
@@ -114,13 +114,13 @@ wxString myExternal::getText ( wxString url )
 		}
 	return getTextLocal ( url ) ; // fallback
 	}
-     
+
 int myExternal::copyFile ( wxString url , wxString file , int _t )
 	{
 	targetSize = _t ;
 	if ( url.Left(7).Lower() == _T("http://") ) return copyFileHTTP ( url , file ) ;
 	return copyFileLocal ( url , file ) ; // fallback
-	}    
+	}
 
 // ****
 
@@ -136,9 +136,9 @@ wxString myExternal::getTextLocal ( wxString url )
 	delete [] c ;
 	return ret ;
 	}
-     
+
 int myExternal::copyFileLocal ( wxString url , wxString file )
 	{
 	if ( true == wxCopyFile ( url , file , true ) ) return 0 ;
 	return 1 ;
-	}	
+	}

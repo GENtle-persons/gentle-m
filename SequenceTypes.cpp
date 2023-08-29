@@ -22,8 +22,8 @@ void SeqBasic::logsize ()
     mylog ( whatsthis() , wxString::Format ( _T("r %d") , pos.r.size() * sizeof ( wxRect ) ) ) ;
     mylog ( whatsthis() , wxString::Format ( _T("l %d") , pos.l.size() * sizeof ( wxRect ) ) ) ;
     mylog ( "---" , "" ) ;
-    }    
-    
+    }
+
 void SeqBasic::editMode ( bool on )
 	{
 	if ( on )
@@ -35,9 +35,9 @@ void SeqBasic::editMode ( bool on )
 		if ( !whatsthis().StartsWith ( _T("PRIMER") ) &&
  				!s.IsEmpty() && s.GetChar ( s.length() - 1 ) == ' ' )
  			s = s.Left ( s.length() - 1 ) ;
-   		}        
-	}    
-	
+   		}
+	}
+
 void SeqBasic::addHighlight ( int from , int to , wxColour c )
     {
 	if ( can && can->child )
@@ -85,12 +85,12 @@ int SeqPrimer::arrange_direct ( int n )
     {
 //    arrange ( n ) ;
     return SeqDNA::arrange_direct ( n ) ;
-    }    
+    }
 
 void SeqPrimer::show_direct ( wxDC& dc )
     {
     SeqDNA::show_direct ( dc ) ;
-    }    
+    }
 
 void SeqPrimer::show ( wxDC& dc )
     {
@@ -106,7 +106,7 @@ void SeqPrimer::show ( wxDC& dc )
     dc.SetTextBackground ( *wxWHITE ) ;
     dc.SetTextForeground ( *wxBLACK ) ;
     dc.SetBackgroundMode ( wxSOLID ) ;
-    
+
     int xa , ya , yb ;
     dc.GetDeviceOrigin ( &xa , &ya ) ;
     ya = -ya ;
@@ -191,7 +191,7 @@ void SeqPrimer::initFromTVector ( TVector *v )
     takesMouseActions = true ;
     showNumbers = false ;
     }
-    
+
 void SeqPrimer::addPrimer ( TPrimer *p )
     {
     int a ;
@@ -208,20 +208,20 @@ void SeqPrimer::addPrimer ( TPrimer *p )
         }
     s = d.getSequence () ;
     }
-    
+
 //************************************************ SeqNum
 
 int SeqNum::arrange ( int n )
     {
     int a , x , y , w , h , bo = can->border , lowy = 0 ;
     int lasta = 0 ;
-    
+
     // Setting basic values
     can->SetFont(*can->font);
     int wx = can->charwidth , wy = can->charheight ;
     endnumberlength = 0 ;
     int ox = bo+wx , oy = n*wy+bo ;//, endnumber = offset + s.length() ;
-    
+
     endnumberlength = 0 ;
     for ( a = 0 ; a < can->seq.GetCount() ; a++ )
         {
@@ -234,7 +234,7 @@ int SeqNum::arrange ( int n )
         }
     if ( endnumberlength > can->maxendnumberlength )
         endnumberlength = can->maxendnumberlength ;
-    
+
     ox += wx * endnumberlength ;
     can->MyGetSize ( &w , &h ) ;
     w -= 20 ; // Scrollbar dummy
@@ -262,11 +262,11 @@ int SeqNum::arrange ( int n )
               }
            }
         }
-    if ( lasta != pos.p.GetCount()+1 ) 
+    if ( lasta != pos.p.GetCount()+1 )
         pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
     return lowy + bo*2 ;
     }
-    
+
 void SeqNum::show ( wxDC& dc )
     {
     dc.SetFont(*can->font);
@@ -293,7 +293,7 @@ int SeqDivider::arrange ( int n )
     {
     int a , x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
     int lasta = 0 ;
-    
+
     // Setting basic values
     can->SetFont(*can->font);
     int wx = can->charwidth , wy = can->charheight ;
@@ -305,7 +305,7 @@ int SeqDivider::arrange ( int n )
 
     itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx ) ;
     itemsperline *= can->blocksize ;
-    
+
     pos.cleanup() ;
     x = ox ;
     y = oy ;
@@ -329,11 +329,11 @@ int SeqDivider::arrange ( int n )
               }
            }
         }
-    if ( lasta != pos.p.GetCount()+1 ) 
+    if ( lasta != pos.p.GetCount()+1 )
         pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
     return lowy + bo*2 ;
     }
-    
+
 void SeqDivider::show ( wxDC& dc )
     {
     int a , w , h ;
