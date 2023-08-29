@@ -49,17 +49,17 @@ wxString TRestrictionIdentifier::getName ()
     {
     return _T("Restriction Identifier") ;
     }
-    
+
 void TRestrictionIdentifier::initme ()
 {
     TVirtualGel::initme () ;
-    
+
     wxBoxSizer *main = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
 //    wxBoxSizer *h3 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *v = new wxBoxSizer ( wxVERTICAL ) ;
-    
+
     dna_list = new wxCheckListBox ( this , RI_DNA_LIST ) ;
     bp_list = new wxChoice ( this , RI_MIN_BP ) ;
     percent_list = new wxChoice ( this , RI_MIN_PERCENT ) ;
@@ -73,10 +73,10 @@ void TRestrictionIdentifier::initme ()
     h2->Add ( new wxStaticText(this,-1,txt("t_minumum")+_T(" ")) , 0 , wxEXPAND , 2 ) ;
     h2->Add ( percent_list , 0 , wxEXPAND , 2 ) ;
     h2->Add ( new wxStaticText(this,-1,_T("%")) , 0 , wxEXPAND , 2 ) ;
-    
+
 //    h3->Add ( new wxStaticText(this,-1,txt("enzyme_groups")+_T(" ")) , 0 , wxEXPAND , 2 ) ;
 //    h3->Add ( group_list , 0 , wxEXPAND , 2 ) ;
-    
+
     v->Add ( new wxStaticText(this,-1,txt("band_difference")) , 0 , wxEXPAND , 2 ) ;
     v->Add ( h1 , 0 , wxEXPAND , 2 ) ;
     v->Add ( h2 , 0 , wxEXPAND , 2 ) ;
@@ -90,14 +90,14 @@ void TRestrictionIdentifier::initme ()
 
     main->Add ( v , 0 , wxEXPAND , 2 ) ;
     main->Add ( right , 1 , wxEXPAND , 2 ) ;
-    
+
 	wxBoxSizer *vs = new wxBoxSizer ( wxVERTICAL ) ;
     vs->Add ( toolbar , 0 , wxEXPAND , 2 ) ;
 	vs->Add ( main , 1 , wxEXPAND , 2 ) ;
-    
-    
+
+
     int a ;
-    
+
     // Init bp/% lists
     for ( a = 0 ; a < 51 ; a++ ) percent_list->Append ( wxString::Format ( _T("%2d") , a ) ) ;
     bp_list->Append ( _T("0") ) ;
@@ -108,7 +108,7 @@ void TRestrictionIdentifier::initme ()
     bp_list->Append ( _T("500") ) ;
     percent_list->SetSelection ( 10 ) ;
     bp_list->SetSelection ( 2 ) ;
-    
+
     // Init enzyme groups list
     wxArrayString as ;
     myapp()->frame->LS->getEnzymeGroups ( as ) ;
@@ -123,8 +123,8 @@ void TRestrictionIdentifier::initme ()
     listDNA() ;
 
 	this->SetSizer ( vs ) ;
-	vs->Fit ( this ) ;    
-	
+	vs->Fit ( this ) ;
+
 //	for ( a = 0 ; a < dna_list->GetCount() ; a++ ) dna_list->Check ( a , true ) ;
     recalcEnzymes() ;
     running = true ;
@@ -138,7 +138,7 @@ void TRestrictionIdentifier::OnDNAListChange(wxCommandEvent &event)
 void TRestrictionIdentifier::OnEnzymeListChange(wxCommandEvent &event)
 {
     while ( lanes.size() > 1 ) lanes.pop_back() ;
-    
+
     int sel = enzymes_list->GetSelection() ;
     if ( sel != wxNOT_FOUND )
     {
@@ -152,7 +152,7 @@ void TRestrictionIdentifier::OnEnzymeListChange(wxCommandEvent &event)
             addRestrictionLane ( en , v ) ;
         }
     }
-    
+
     right->Refresh ( true ) ;
 }
 
@@ -163,8 +163,8 @@ wxArrayInt TRestrictionIdentifier::getRestrictionFragments ( wxString en , TVect
     vector <TRestrictionCut> x ;
     v->getCuts ( e , x ) ;
     if ( x.size() == 0 ) return ret ; // Empty
-    
-    
+
+
     int a , last , len = v->getSequenceLength() ;
     if ( v->isCircular() )
     {
@@ -204,12 +204,12 @@ void TRestrictionIdentifier::addRestrictionLane ( wxString en , TVector *v )
 
 void TRestrictionIdentifier::recalcEnzymes()
 {
-    
+
     int a ;
     wxArrayString enzyme_names ;
     myapp()->frame->LS->getEnzymesInGroup ( group_list->GetStringSelection() , enzyme_names ) ;
     enzyme_names.Sort() ;
-    
+
     enzymes_list->Clear() ;
     for ( a = 0 ; a < enzyme_names.GetCount() ; a++ )
     {
@@ -217,7 +217,7 @@ void TRestrictionIdentifier::recalcEnzymes()
         if ( !check4separation ( en ) ) continue ;
         enzymes_list->Append ( en ) ;
     }
-    
+
     if ( enzymes_list->GetCount() > 0 ) enzymes_list->SetSelection ( 0 ) ;
     wxCommandEvent event ;
     OnEnzymeListChange(event) ;
@@ -226,7 +226,7 @@ void TRestrictionIdentifier::recalcEnzymes()
 void TRestrictionIdentifier::listDNA ()
 {
     int a , b ;
-    
+
     // Remember which ones were checked
     vector <MyChild*> was_checked ;
     for ( a = 0 ; a < dna_items.size() ; a++ )
@@ -234,7 +234,7 @@ void TRestrictionIdentifier::listDNA ()
         if ( !dna_list->IsChecked ( a ) ) continue ;
         was_checked.push_back ( dna_items[a] ) ;
     }
-    
+
     // Regenerate visual and pointer list
     dna_items.clear() ;
     dna_list->Clear() ;
@@ -244,7 +244,7 @@ void TRestrictionIdentifier::listDNA ()
  		dna_items.push_back ( (MyChild*) myapp()->frame->children[a] ) ;
  		dna_list->Append ( myapp()->frame->children[a]->getName() ) ;
 		}
-	
+
 	// Re-check previously checked ones
 	for ( a = 0 ; a < was_checked.size() ; a++ )
 	{
@@ -281,7 +281,7 @@ bool TRestrictionIdentifier::arrays_are_separate ( const wxArrayInt &a1 , const 
     long bp , percent ;
     bp_list->GetStringSelection().ToLong ( &bp ) ;
     percent_list->GetStringSelection().ToLong ( &percent ) ;
-    
+
     if ( arrays_differ ( a1 , a2 , bp , percent ) ) return true ;
     if ( arrays_differ ( a2 , a1 , bp , percent ) ) return true ;
     return false ;
@@ -305,7 +305,7 @@ bool TRestrictionIdentifier::arrays_differ ( const wxArrayInt &a1 , const wxArra
             dupe = true ;
             break ;
         }
-        
+
         if ( !dupe ) return true ;
     }
     return false ;

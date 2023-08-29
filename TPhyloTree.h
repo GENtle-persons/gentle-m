@@ -48,21 +48,21 @@ class TPhyloTree : public ChildBase
     {
     public :
     TPhyloTree(wxWindow *parent, const wxString& title) ; ///< Constructor
-    
+
     virtual void initme () ; ///< Initialization
     virtual wxString getName () ; ///< Returns the gel module name
-    
+
     virtual void setNewickTrees ( wxString s , TAlignment *_ali = NULL ) ;
     virtual void setModeStrange () ;
     virtual void setModeDrawgram () ;
     virtual void setRealNames ( TAlignment *ali ) ;
-    
+
     virtual void OnDirectLines(wxCommandEvent& event); ///< Toggle direct lines
     virtual void OnTreeList(wxCommandEvent& event); ///< Tree list event
     virtual void OnFileSave(wxCommandEvent& event); ///< Save event
     virtual void OnPrint(wxCommandEvent& event); ///< Print event
     virtual void OnCopy(wxCommandEvent& event); ///< Copy event
-    
+
     private :
 	 friend class TPhyloTreeBox ;
 
@@ -78,7 +78,7 @@ class TPhyloTree : public ChildBase
 	 bool directlines ;
 	 wxCheckBox *cb_directlines ;
 	 TAlignment *ali ;
-    
+
     DECLARE_EVENT_TABLE()
     } ;
 

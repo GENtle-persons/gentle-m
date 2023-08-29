@@ -30,10 +30,10 @@ class TGraphData ;
 
 class TGraphDialog : public wxDialog
 	{
-   public : 
+   public :
    TGraphDialog ( wxWindow *_parent , const wxString& title ) ; ///< Constructor
    virtual ~TGraphDialog() ;
-   
+
    virtual void ShowScale ( TGraphScale *s ) ;
    virtual void ShowData ( TGraphData *d ) ;
 
@@ -72,14 +72,14 @@ class TGraphDialog : public wxDialog
 
 class TSpeakDialog : public wxDialog
 	{
-    public : 
+    public :
     TSpeakDialog(wxWindow *parent, const wxString& title , wxString _seq ) ; ///< Constructor
     ~TSpeakDialog () ; ///< Destructor
-    
+
     virtual void OnCharHook(wxKeyEvent& event) ; ///< Cancel button event handler
     virtual void OnPlay ( wxCommandEvent &ev ) ;
     virtual void OnStop ( wxCommandEvent &ev ) ;
-    
+
     private :
 	virtual void speakLetter ( wxString c ) ;
 	wxTextCtrl *seq ;
@@ -95,10 +95,10 @@ class TSpeakDialog : public wxDialog
 */
 class TIPCDialog : public wxDialog
 	{
-    public : 
+    public :
     TIPCDialog(wxWindow *parent, const wxString& title , int _seqlen ) ; ///< Constructor
     virtual ~TIPCDialog () ; ///< Destructor
-    
+
     void OnLimit ( wxCommandEvent &event ) ; ///< Limit update event handler
 //    void OnOK ( wxCommandEvent &ev ) ;
 //    void OnCancel ( wxCommandEvent &ev ) ;
@@ -107,11 +107,11 @@ class TIPCDialog : public wxDialog
     int seqlen ; ///< The sequence length
     wxTextCtrl *limit ; ///< Pointer to the text box containing the limit
     wxStaticText *est ; ///< Pointer to the time estimation display
-    
+
     double estimate_time ( int f ) ; ///< Function estimating runtime
-    
+
     DECLARE_EVENT_TABLE()
-	} ;    
+	} ;
 
 /** \brief A text control highlighting URLs
 */
@@ -154,13 +154,13 @@ class TMyMultipleChoiceDialog : public wxDialog
 class TEnzymeDialog : public wxDialog
     {
     public :
-    TEnzymeDialog(wxWindow *parent, const wxString& title, const wxPoint& pos , 
+    TEnzymeDialog(wxWindow *parent, const wxString& title, const wxPoint& pos ,
                         const wxSize& size , const long style ) ; ///< Constructor
     ~TEnzymeDialog () ; ///< Destructor
     void initme ( TRestrictionEnzyme *_e = NULL , bool ro = false ) ; ///< Initialization
     void OnOK ( wxCommandEvent &ev ) ; ///< OK button event handler
     void OnCharHook(wxKeyEvent& event) ; ///< Cancel button event handler
-    
+
     // Variables
     bool readonly ; ///< Protect dialog from user changes
     TRestrictionEnzyme *e ; ///< The enzyme in question
@@ -176,24 +176,24 @@ class TSequencingPrimerDialog : public wxDialog
     public :
     TSequencingPrimerDialog ( wxWindow *parent, const wxString& title ) ; ///< Constructor
     ~TSequencingPrimerDialog () ; ///< Destructor
-    
+
     virtual void OnCharHook ( wxKeyEvent& event ) ; ///< Key event handler
     virtual void OnDB ( wxCommandEvent& event ) ; ///< Second database event handler
 
     virtual void getPrimerList ( wxArrayString &p_name , wxArrayString &p_seq ) ; ///< Retrieve a list of primers
     virtual bool matchToVector ( TVector *v , wxString name , wxString seq ) ; ///< Match the primers to the vector
     virtual bool getClear() { return cb_clear->GetValue() ; } ///< Clear existing sequencing primer items from vecotr?
-    
+
     private :
     virtual int findBestMatch ( wxString &s , wxString seq , int &pos , int ml ) ; ///< Finds the best match for a primer in the vector
-    virtual void addSequencingPrimer ( TVector *v , wxString name , wxString seq , 
+    virtual void addSequencingPrimer ( TVector *v , wxString name , wxString seq ,
     								int best_pos , int best_score , int dir ) ; ///< Add the primer as an item to the vector
 
     wxSpinCtrl *t_ma ; ///< Minimum number of aligning bases
     wxChoice *c_db , *c_pj ;
     wxCheckBox *cb_pj , *cb_clear , *cb_35 , *cb_53 ;
     wxArrayString db_names , db_files ;
-    
+
     DECLARE_EVENT_TABLE()
     } ;
 
@@ -205,7 +205,7 @@ class TransformSequenceDialog : public wxDialog
     TransformSequenceDialog ( wxWindow *parent, const wxString& title ) ; ///< Constructor
     ~TransformSequenceDialog () ; ///< Destructor
     virtual void OnCharHook ( wxKeyEvent& event ) ; ///< Key event handler
-    
+
     wxCheckBox *invert , *complement , *new_item ;
 
     DECLARE_EVENT_TABLE()

@@ -21,7 +21,7 @@ class TLigationDialog : public wxDialog
     public :
     TLigationDialog(wxWindow *parent, const wxString& title ) ; ///< Constructor
     ~TLigationDialog () ; ///< Destructor
-    
+
     virtual void init () ; ///< Initialize
     virtual void generateTargets () ; ///< Generate the target list
     virtual void curseTargets ( vector <bool> &vc , vector <bool> &used , wxArrayInt &vi ) ; ///< Recurse through targets
@@ -41,7 +41,7 @@ class TLigationDialog : public wxDialog
     wxArrayString vt ;
     vector <bool> orientation ;
     bool doLigate ;
-    
+
     private :
     virtual wxString invert ( wxString s ) ; ///< Invert the string
 

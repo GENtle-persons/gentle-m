@@ -35,6 +35,6 @@ class CGview
   	wxColour backgroundColor ;
   	wxString cgviewapp , imageformat ;
   	vector <int> used_types ; ///< The item types used in this vector (internal use only)
-	} ;    
+	} ;
 
 #endif

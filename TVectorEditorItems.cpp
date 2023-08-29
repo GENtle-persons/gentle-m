@@ -42,26 +42,26 @@ void TVectorEditor::commitItems ()
             found.push_back ( true ) ;
             }
         }
-        
+
 	vector <TVectorItem> ni ;
 	bool doUpdate = false ;
 	for ( a = 0 ; a < found.size() ; a++ )
 		{
 		if ( found[a] ) ni.push_back ( v->items[a] ) ;
 		else doUpdate = true ;
-		}    
+		}
 	v->items = ni ;
 
 	if ( doUpdate )
 		{
 		v->setChanged () ;
 		v->updateDisplay() ;
-		}    
+		}
 
 /*
     for ( a = found.size() - 1 ; a >= 0 ; a-- )
         {
-        if ( !found[a] ) 
+        if ( !found[a] )
             {
             for ( b = a+1 ; b < found.size() ; b++ ) v->items[b-1] = v->items[b] ;
             v->items.pop_back () ;
@@ -88,15 +88,15 @@ int TVectorEditor::getCurrentItem ()
            return items->GetItemData ( a ) ;
     return -1 ;
     }
-    
+
 void TVectorEditor::clearItemSelection ()
     {
     lastSelection = -1 ;
-    }    
-        
+    }
+
 void TVectorEditor::initPanItem ()
     {
-    
+
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     wxBoxSizer *h0a = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h0b = new wxBoxSizer ( wxHORIZONTAL ) ;
@@ -130,13 +130,13 @@ void TVectorEditor::initPanItem ()
         newitems.Add ( nvi ) ;
         }
     makeItemsList () ;
-    
+
     // Edit fields
     clearItemSelection () ;
     wxRect r ;
-    wxString vs[VIT_TYPES] ; 
+    wxString vs[VIT_TYPES] ;
     char t[1000] ;
-    
+
     iname = new wxTextCtrl(panItem,-1,_T(""));
     h0a->Add ( new wxStaticText(panItem,-1,txt("name")),0,wxALIGN_CENTER_VERTICAL);
     h0a->Add ( iname , 1 , wxEXPAND ) ;
@@ -200,7 +200,7 @@ void TVectorEditor::initPanItem ()
         ichoice->Disable () ;
         irb->Disable () ;
         }
-    
+
     h2->Add ( v1 , 1, wxEXPAND ) ;
     h2->Add ( v2 , 0 , 0 ) ;
 
@@ -239,8 +239,8 @@ void TVectorEditor::updateItem ( TVectorItem &i )
     if ( i.to < i.from ) len += v->getSequenceLength() ;
 	 t = wxString::Format ( _T("%d") , len ) ;
 //    sprintf ( t , "%d" , len ) ;
-    items->SetItem ( l , 5 , t ) ;    
-    }    
+    items->SetItem ( l , 5 , t ) ;
+    }
 
 void TVectorEditor::addItem2list ( TVectorItem &i , int a )
     {
@@ -249,7 +249,7 @@ void TVectorEditor::addItem2list ( TVectorItem &i , int a )
     i.r4 = l ;
     updateItem ( i ) ;
     }
-    
+
 void TVectorEditor::makeItemsList ()
     {
     items->DeleteAllItems() ;
@@ -257,9 +257,9 @@ void TVectorEditor::makeItemsList ()
         addItem2list ( *newitems[a] , a ) ;
     lastSelection = -1 ;
     }
-    
+
 // handlers ITEM
-    
+
 void TVectorEditor::DeselItems ( wxListEvent &ev )
     {
     int j = ev.GetIndex() ;
@@ -267,7 +267,7 @@ void TVectorEditor::DeselItems ( wxListEvent &ev )
     lastSelection = -1 ;
     itemClr () ;
     }
-        
+
 void TVectorEditor::SelChangeItems ( wxListEvent &ev )
     {
     int i , j = ev.GetIndex() ;
@@ -284,7 +284,7 @@ void TVectorEditor::loadItemData ( int i )
     iname->SetValue ( newitems[i]->name ) ;
     idesc->SetValue ( newitems[i]->desc ) ;
     ichoice->SetSelection ( newitems[i]->type ) ;
-    
+
     int rf = newitems[i]->getRF () ;
     if ( newitems[i]->type != VIT_CDS )
         {
@@ -297,10 +297,10 @@ void TVectorEditor::loadItemData ( int i )
         irb->SetSelection ( rf ) ;
         }
 
-    
+
     ifrom->SetValue ( wxString::Format ( _T("%d") , newitems[i]->from ) ) ;
     ito->SetValue ( wxString::Format ( _T("%d") , newitems[i]->to ) ) ;
-    
+
     if ( newitems[i]->direction == 1 ) icb->SetValue ( true ) ;
     else icb->SetValue ( false ) ;
 
@@ -323,11 +323,11 @@ void TVectorEditor::storeItemData ( int i )
     c.to = atoi ( ito->GetValue().mb_str() ) ;
     c.setRF ( irb->GetSelection() ) ;
     c.setVisible ( icv->GetValue() ) ;
-    
+
     bool b = icb->GetValue () ;
     if ( b ) c.direction = 1 ;
     else c.direction = -1 ;
-	
+
     if ( o.name != c.name ||
          o.desc != c.desc ||
          o.type != c.type ||
@@ -361,7 +361,7 @@ void TVectorEditor::itemAdd ( wxCommandEvent &ev )
                             wxLIST_MASK_IMAGE|wxLIST_MASK_STATE ) ;
     items->EnsureVisible ( nvi->r4 ) ;
     }
-    
+
 void TVectorEditor::itemDel ( wxCommandEvent &ev )
     {
     int i = getCurrentItem() ;
@@ -376,7 +376,7 @@ void TVectorEditor::itemDel ( wxCommandEvent &ev )
     items->SetItemState ( newitems[i]->r4 , wxLIST_STATE_SELECTED , wxLIST_STATE_SELECTED ) ;
     items->EnsureVisible ( newitems[i]->r4 ) ;
     }
-    
+
 void TVectorEditor::itemClr ()
     {
     iname->SetValue ( _T("") ) ;
@@ -393,22 +393,22 @@ void TVectorEditor::itemClr ()
 void TVectorEditor::itemColInternal()
     {
     if ( getCurrentItem() == -1 ) return ;
-    storeItemData () ;    
+    storeItemData () ;
     TItemEditDialog ied ( (wxWindow*)this , txt("t_edit_item") , *newitems[getCurrentItem()] ) ;
     if ( ied.ShowModal() != wxID_OK ) return ;
     *newitems[getCurrentItem()] = *ied.vi ;
-    }    
+    }
 
 void TVectorEditor::itemCol ( wxListEvent &ev )
     {
     itemColInternal() ;
-    }    
-    
+    }
+
 void TVectorEditor::itemCol2 ( wxCommandEvent &ev )
     {
     itemColInternal() ;
-    }    
-    
+    }
+
 // Item choice dropdown box handler
 // Enables reading frame selection box if item type is CDS,
 // disables it if not

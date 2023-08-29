@@ -35,16 +35,16 @@ class TMainTree : public wxTreeCtrl
 
     void OnEvent ( wxTreeEvent &event ) ;
     void OnRightClick ( wxTreeEvent &event ) ;
-    
+
     void OnCloseChild ( wxCommandEvent &event ) ;
 
     // Variables
-    wxTreeItemId treeroot , vectors , primers , fragments , sequences , 
+    wxTreeItemId treeroot , vectors , primers , fragments , sequences ,
                     alignments , amino_acids , misc ;
-                    
+
     private :
     ChildBase *lastChild ; ///< \brief Pointer to the last selected child
-    
+
     DECLARE_EVENT_TABLE()
     } ;
 

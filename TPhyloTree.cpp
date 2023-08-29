@@ -56,20 +56,20 @@ TPhyloTree::TPhyloTree (wxWindow *parent, const wxString& title)
 	ali = NULL ;
 	allow_copy = allow_save = allow_print = true ;
 	}
-	
+
 void TPhyloTree::initme ()
 	{
 	// Menus
 	wxMenu *file_menu = myapp()->frame->getFileMenu () ;
 	wxMenu *tool_menu = myapp()->frame->getToolMenu () ;
 	wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
-	
+
 	wxMenuBar *menu_bar = new wxMenuBar;
-	
+
 	menu_bar->Append(file_menu, txt("m_file") );
 	menu_bar->Append(tool_menu, txt("m_tools") );
 	menu_bar->Append(help_menu, txt("m_help") );
-	
+
 	SetMenuBar(menu_bar);
 
 	// Tooblar
@@ -83,17 +83,17 @@ void TPhyloTree::initme ()
 //	toolBar->AddTool( MDI_COPY, myapp()->frame->bitmaps[5] ) ;
 //	toolBar->AddSeparator() ;
 	myapp()->frame->addDefaultTools ( toolBar ) ;
-	
+
 	toolBar->AddSeparator() ;
 	cb_directlines = new wxCheckBox ( toolBar , PHYLIP_DIRECT_LINES , txt("t_phylip_directlines") ) ;
 	toolBar->AddControl ( cb_directlines ) ;
-	
+
 	toolBar->Realize() ;
 	toolbar = toolBar ;
 
 	// Phylo-Box
 	box = new TPhyloTreeBox ( this , PHYLOBOX ) ;
-	
+
 	treelist = new wxListBox ( this , PHYLIP_TREE_LIST ) ;
 
 	wxBoxSizer *vs = new wxBoxSizer ( wxVERTICAL ) ;
@@ -108,7 +108,7 @@ void TPhyloTree::initme ()
 	myapp()->frame->setChild ( this ) ;
 	this->SetSizer ( vs ) ;
 	vs->Layout () ;
-//	vs->Fit ( this ) ;    
+//	vs->Fit ( this ) ;
 	Show () ;
 	}
 
@@ -116,19 +116,19 @@ wxString TPhyloTree::getName()
 	{
 	return _T("Phylogenetic tree") ;
 	}
-	
+
 void TPhyloTree::setNewickTrees ( wxString s , TAlignment *_ali )
 	{
 	int a ;
 	wxArrayString vs ;
 	ali = _ali ;
 	explode ( _T(";") , s , vs ) ;
-	
+
 	// Clear old trees
 	for ( a = 0 ; a < trees.size() ; a++ )
 		delete trees[a] ;
 	while ( trees.size() ) trees.pop_back() ;
-	
+
 	// Generate new tree list
 	for ( a = 0 ; a < vs.GetCount() ; a++ )
 		{
@@ -140,7 +140,7 @@ void TPhyloTree::setNewickTrees ( wxString s , TAlignment *_ali )
 		setRealNames ( ali ) ;
 		trees.push_back ( tree ) ;
 		}
-	
+
 	if ( trees.size() > 0 ) tree = trees[0] ;
 	else tree = NULL ;
 	updateTreeList () ;
@@ -165,13 +165,13 @@ void TPhyloTree::setNewickTree ( wxString s )
 	tree->scanNewick ( s ) ;
 	tree->setWeight ( 0 ) ;
 	}
-	
+
 void TPhyloTree::setRealNames ( TAlignment *ali )
 	{
 	int a , b ;
 	vector <TPTree*> vt ;
 	tree->getAll ( vt ) ;
-	
+
 	for ( a = 0 ; a < vt.size() ; a++ )
 		{
 		wxString vn = vt[a]->getName().Trim().Trim(true) ;
@@ -184,7 +184,7 @@ void TPhyloTree::setRealNames ( TAlignment *ali )
 				break ;
 				}
 			}
-		}	
+		}
 	}
 
 void TPhyloTree::OnFileSave(wxCommandEvent& event)
@@ -264,7 +264,7 @@ void TPhyloTree::setModeDrawgram ()
 	double mw = tree->getMaxWeight() ;
 	int mc = tree->countLeafs () ;
 	int border = 5 ;
-	
+
 	vector <TPTree*> vt ;
 	tree->getAll ( vt ) ;
 
@@ -285,7 +285,7 @@ void TPhyloTree::setModeDrawgram ()
 							th + border ) ;
 			vt[a]->rect = r2 ;
 			if ( r2.GetWidth() > maxw ) maxw = r2.GetWidth() ;
-			b++ ;	
+			b++ ;
 			}
 		}
 
@@ -331,18 +331,18 @@ void TPhyloTreeBox::OnPaint(wxPaintEvent& event)
 	wxPaintDC dc(this);
 	OnDraw ( dc ) ;
 	}
-	
+
 void TPhyloTreeBox::OnEvent(wxMouseEvent& event)
 	{
 	wxPoint pt = event.GetPosition() ;
-	
+
 	if ( event.RightDown() )
 		{
 		wxMenu *cm = new wxMenu ;
-		
+
 		cm->Append ( SEQ_COPY_IMAGE , txt("m_copy_as_image") ) ;
 		cm->Append ( SEQ_SAVE_IMAGE , txt("m_save_as_image") ) ;
-		
+
 		PopupMenu ( cm , pt ) ;
 		delete cm ;
 		}
@@ -356,7 +356,7 @@ void TPhyloTreeBox::WriteIntoBitmap(wxBitmap &bmp)
     wxMemoryDC memdc ;
     memdc.SelectObject ( bmp ) ;
     memdc.Clear () ;
-    OnDraw ( memdc ) ;    
+    OnDraw ( memdc ) ;
     }
 
 void TPhyloTreeBox::OnSaveAsBitmap(wxCommandEvent &event)
@@ -467,7 +467,7 @@ int TPTree::getMaxDepth ()
 		{
 		int x = children[a]->getMaxDepth() ;
 		if ( x > r ) r = x ;
-		}	
+		}
 	return r ;
 	}
 
@@ -479,7 +479,7 @@ int TPTree::getCurrentDepth ()
 int TPTree::countLeafs ()
 	{
 	if ( isLeaf () ) return 1 ;
-	int 
+	int
 	cnt = 0 ;
 	for ( int a = 0 ; a < children.size() ; a++ )
 		cnt += children[a]->countLeafs() ;
@@ -493,7 +493,7 @@ int TPTree::numberLeafs ( int i )
 		leafNumber = ++i ;
 		return i ;
 		}
-	
+
 	// Not a leaf
 	leafNumber = 0 ;
 //	int cnt = 0 ;
@@ -503,21 +503,21 @@ int TPTree::numberLeafs ( int i )
 	}
 
 void TPTree::drawRecursive ( wxDC &dc , wxString mode )
-	{	
+	{
 	int nw , nh ;
 	dc.GetSize ( &nw , &nh ) ;
 	int fix = nw ;
 	int a ;
-	
+
 	for ( a = 0 ; a < children.size() ; a++ )
 		{
 		int d = children[a]->rect.GetLeft() - rect.GetRight() ;
 		d /= 10 ;
 		if ( d < fix ) fix = d ;
 		}
-	
+
 	bool directline = mode.Find ( _T("[DIRECTLINE]") ) != -1 ;
-	
+
 	for ( a = 0 ; a < children.size() ; a++ )
 		{
 		wxPoint p1 ( rect.GetRight() , ( rect.GetTop() + rect.GetBottom() ) / 2 ) ;
@@ -531,12 +531,12 @@ void TPTree::drawRecursive ( wxDC &dc , wxString mode )
 			dc.DrawLine ( p1a , p1b ) ;
 			dc.DrawLine ( p1b , p2 ) ;
 			}
-		
+
 		wxString s = wxString::Format ( _T("%1.5f") , children[a]->getWeight() ) ;
 		dedigitize ( s ) ;
 		if ( directline ) dc.DrawText ( s , ( p1.x + p2.x ) / 2 , ( p1.y + p2.y ) / 2 ) ;
 		else dc.DrawText ( s , p1.x + fix , ( p1.y + p2.y ) / 2 ) ;
-		
+
 		children[a]->drawRecursive ( dc , mode ) ;
 		}
 
@@ -559,7 +559,7 @@ void TPTree::filterDepth ( int depth , vector <TPTree*> &vt )
 		vt.push_back ( this ) ;
 //		return ;
 		}
-	
+
 	for ( int a = 0 ; a < children.size() ; a++ )
 		children[a]->filterDepth ( depth , vt ) ;
 	}
@@ -576,7 +576,7 @@ void TPTree::averageY ()
 	if ( isLeaf() ) return ;
 	int a ;
 	for ( a = 0 ; a < children.size() ; a++ ) children[a]->averageY () ;
-	
+
 	int y = 0 ;
 	for ( a = 0 ; a < children.size() ; a++ )
 		y += ( children[a]->rect.GetTop() + children[a]->rect.GetBottom() ) / 2 ;

@@ -8,7 +8,7 @@ TXMLfile::TXMLfile ()
     TiXmlBase::SetCondenseWhiteSpace ( true ) ;
     _success = false ;
     }
-    
+
 void TXMLfile::parse ( wxString text )
     {
     TiXmlDocument doc ;
@@ -18,10 +18,10 @@ void TXMLfile::parse ( wxString text )
         _success = false ;
         return ;
         }
-    analyze ( doc ) ;   
+    analyze ( doc ) ;
     }
 
-void TXMLfile::load ( wxString file ) 
+void TXMLfile::load ( wxString file )
     {
 //	 wxStartTimer() ;
     TiXmlDocument doc ( file.mb_str() );
@@ -64,17 +64,17 @@ void TXMLfile::analyze ( TiXmlDocument &doc )
         }
     _success = _v.GetCount() > 0 ;
     }
-    
+
 int TXMLfile::countVectors ()
     {
     return _v.GetCount() ;
     }
-    
+
 TVector *TXMLfile::getVector ( int a )
     {
     return _v[a] ;
     }
-    
+
 
 // private
 
@@ -93,21 +93,21 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
     myass ( base , _T("TXMLfile::readGBSeq") ) ;
     TVector *v = new TVector ;
     v->setType ( TYPE_VECTOR ) ; // Dummy
-    
+
     int a ;
     TiXmlNode *n ;
     TiXmlElement *e ;
     wxString s ;
     TiXmlHandle h ( base ) ;
-    
+
     wxString n1 = t ( h.FirstChild("GBSeq_definition").FirstChild().Text() ) ;
     wxString n2 = t ( h.FirstChild("GBSeq_locus").FirstChild().Text() ) ;
     if ( !n1.IsEmpty() && n1.Freq ( '\n' ) == 0 && n2.Freq ( ' ' ) == 0 )
 	    n2 = n1 + _T("(") + n2 + _T("))") ;
-    
+
     v->setName ( n2 ) ;
     v->setSequence ( t ( h.FirstChild("GBSeq_sequence").FirstChild().Text() ) . MakeUpper() ) ;
-    
+
     e = h.FirstChild("GBSeq_topology").Element() ;
     if ( e ) // topology
         {
@@ -123,7 +123,7 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
         TVectorItem i ;
         TiXmlHandle h2 ( n ) ;
         s = t ( h2.FirstChild("GBFeature_key").FirstChild().Text() ) . MakeUpper() ;
-        
+
         // Dummy values
         i.name = _T("") ;
         i.from = 1 ;
@@ -132,7 +132,7 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
         i.setDirection ( 1 ) ;
         i.setType ( s ) ;
         readGBqualifiers ( i , n ) ;
-        
+
         vector <TVectorItem> vi ;
         readGBintervals ( vi , i , n ) ;
         for ( a = 0 ; a < vi.size() ; a++ )
@@ -151,7 +151,7 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
 		x = get_sub_desc ( n ) ;
 		v->addDescription ( x ) ;
 		}
-        
+
     // Sorting by size, just for fun
     // Only for less than 100 items
     for ( a = 1 ; v->items.size() < 100 && a < v->items.size() ; a++ )
@@ -164,7 +164,7 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
            a = 0 ;
            }
         }
-        
+
     v->updateDisplay() ;
     v->recalculateCuts () ;
     _v.Add ( v ) ;
@@ -185,11 +185,11 @@ wxString TXMLfile::get_sub_desc ( TiXmlNode *base , int depth )
 		ret += get_sub_desc ( n , depth + 1 ) ;
 	return ret ;
 	}
-    
+
 void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
     {
     TiXmlNode *n2 = n->FirstChild("GBFeature_quals") ;
-    if ( !n2 ) return ;    
+    if ( !n2 ) return ;
     for ( n2 = n2->FirstChild("GBQualifier") ; n2 ; n2 = n2->NextSibling("GBQualifier") )
         {
         TiXmlHandle h ( n2 ) ;
@@ -212,11 +212,11 @@ void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
         }
     if ( i.name.IsEmpty() )
     	{
-	    wxString try2 = i.desc ; 
+	    wxString try2 = i.desc ;
 	    while ( try2.Right ( 1 ) == _T("\n") ) try2 = try2.Left ( try2.length() - 1 ) ;
      	try2 = try2.AfterLast('\n').AfterLast('\r') ;
 	if ( !try2.IsEmpty() && try2.length() < 20 ) i.name = try2 ;
-    	}    
+    	}
     if ( i.name.IsEmpty() )
         {
         char u[100] ;
@@ -229,7 +229,7 @@ void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
            i.name = d2 ;
         }
     }
-    
+
 void TXMLfile::readGBintervals ( vector <TVectorItem> &vi , const TVectorItem &i , TiXmlNode *n )
     {
     TiXmlNode *n2 = n->FirstChild("GBFeature_intervals") ;
@@ -253,4 +253,4 @@ void TXMLfile::readGBintervals ( vector <TVectorItem> &vi , const TVectorItem &i
         vi.push_back ( j ) ;
         }
     }
-    
+

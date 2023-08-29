@@ -6,7 +6,7 @@
 /**	\mainpage GENtle - the source code documentation
 
 	\section players The big players
-	
+
 	There are some classes that are of fundamental importance to understanding the GENtle code.
 	<ul>
 	<li>MyFrame - The base window of the whole application
@@ -21,7 +21,7 @@
     <li>TStorage - The class to communicate with databases
     <li>TVector - The class to store all sequence information, be it DNA or amino acids
     </ul>
-	
+
 */
 
 /////////////////////////////////////////////////////////////////////////////
@@ -46,7 +46,7 @@
 
 
 #include "main.h"
-#include <wx/tipdlg.h> 
+#include <wx/tipdlg.h>
 #include <wx/splash.h>
 #include <wx/filesys.h>
 #include <wx/file.h>
@@ -67,17 +67,17 @@ WX_DEFINE_OBJARRAY(wxArrayFloat);
 int cmpint(int *first, int *second)
     {
     return *first > *second ;
-    }    
-    
+    }
+
 int cmpre(TRestrictionEnzyme *first, TRestrictionEnzyme *second)
     {
     return first > second ; //????
-    }    
+    }
 
 void wxStringInsert ( wxString &s , int from , wxString t )
     {
     s = s.Mid ( 0 , from ) + t + s.Mid ( from ) ;
-    }    
+    }
 
 void explode ( wxString sep , wxString s , wxArrayString &r )
     {
@@ -94,9 +94,9 @@ void explode ( wxString sep , wxString s , wxArrayString &r )
            }
         else n += s.GetChar(a) ;
         }
-    if ( !n.IsEmpty() ) r.Add ( n ) ; 
+    if ( !n.IsEmpty() ) r.Add ( n ) ;
     }
-    
+
 wxString implode ( wxString sep , wxArrayString &r )
 	{
 	if ( r.GetCount() == 0 ) return _T("") ;
@@ -131,17 +131,17 @@ const wxString txt ( wxString item )
 
 void MyApp::registerFileExtension ( const wxString& extension )
     {
-#ifdef __WXMSW__    
+#ifdef __WXMSW__
     wxRegKey regKey;
     wxString idName(_T("HKEY_CLASSES_ROOT\\.")+extension);
-    regKey.SetName(idName);    
-  
+    regKey.SetName(idName);
+
     if ( !regKey.Exists() )
         {
         regKey.Create() ;
         regKey.SetValue ( _T("") , extension + _T("file") ) ;
-        }    
-  
+        }
+
     wxString s = _T("") , t = regKey ;
     s += _T("HKEY_CLASSES_ROOT\\") ;
     s += t ;
@@ -154,21 +154,21 @@ void MyApp::registerFileExtension ( const wxString& extension )
 #else
 #endif
     }
-    
+
 void MyApp::registerProtocol ( const wxString& extension )
     {
-#ifdef __WXMSW__    
+#ifdef __WXMSW__
     wxRegKey regKey;
     wxString idName(_T("HKEY_CLASSES_ROOT\\")+extension);
-    regKey.SetName(idName);    
-  
+    regKey.SetName(idName);
+
     if ( !regKey.Exists() )
         {
         regKey.Create () ;
         regKey.SetValue ( _T("") , _T("URL: GENtle Protocol") ) ;
         regKey.SetValue ( _T("URL Protocol") , _T("") ) ;
-        }    
-  
+        }
+
     wxString s , t = regKey ;
     s += _T("HKEY_CLASSES_ROOT\\") ;
 	 s += extension ;
@@ -196,7 +196,7 @@ MyApp *myapp ()
 
 /**	\fn MyApp::OnInit()
 	\brief Initializes the application.
-	
+
 	* - Initializes variables
 	* - Initializes handlers
 	* - Checks if another program instance is already running
@@ -232,7 +232,7 @@ bool MyApp::OnInit()
    wxApp::s_macPreferencesMenuItemId = PROGRAM_OPTIONS;
    wxApp::s_macExitMenuItemId = MDI_QUIT;
 //	wxApp::s_macHelpMenuTitleName = "Help";
-	
+
 #endif
 
 #ifdef __DEBIAN__
@@ -243,20 +243,20 @@ bool MyApp::OnInit()
    wxFileSystem::AddHandler ( new wxInternetFSHandler ) ;
 
    wxSetWorkingDirectory ( homedir ) ; // Setting home directory as working dir
-	
+
 	// Setting ncoils dir as an environment variable
    wxString ncoilsdir ;
    ncoilsdir = _T("COILSDIR=") ;
    ncoilsdir += homedir ;
 
-#ifdef __WXMAC__	
+#ifdef __WXMAC__
 	if ( wxGetEnv ( _T("COILSDIR") , NULL ) ) wxUnsetEnv ( _T("COILSDIR") ) ;
 	wxSetEnv ( _T("COILSDIR") , homedir ) ;
 #else
 	setenv ( "COILSDIR" , homedir.c_str() , 1 ) ;
-#endif	
+#endif
 
-	
+
     // Is an instance already running?
     const wxString name = wxString::Format ( _T("GENtle-%s") , wxGetUserId().c_str());
     m_checker = new wxSingleInstanceChecker (name);
@@ -270,7 +270,7 @@ bool MyApp::OnInit()
     programVersion = 0 ; // This ensures that no old program version messes with a new database scheme
 
     wxFileSystem::AddHandler(new wxInternetFSHandler);
-    
+
     // Create the main frame window
 #ifdef __WXMSW__
     slash = _T("\\") ;
@@ -283,7 +283,7 @@ bool MyApp::OnInit()
 #else
     bmpdir = homedir + slash + _T("bitmaps") ;
 #endif
-	
+
 	// Make sure local database exists
     wxString localdb , blankdb ;
     localdb = getLocalDBname() ;
@@ -293,7 +293,7 @@ bool MyApp::OnInit()
     	{
 		wxCopyFile ( blankdb , localdb ) ;
 		}
-	
+
 	// Check is local.db exists and is writable
 	bool local_ok = true ;
 	if ( !wxFileExists ( localdb ) ) local_ok = false ;
@@ -315,7 +315,7 @@ bool MyApp::OnInit()
 
 	frame = new MyFrame((wxFrame *)NULL, -1, _T(""),
                         wxPoint(-1, -1), wxSize(500, 400),
-                        wxDEFAULT_FRAME_STYLE );    
+                        wxDEFAULT_FRAME_STYLE );
     frame->initme () ;
     if ( frame->dying ) return FALSE ;
     SetTopWindow(frame);
@@ -326,14 +326,14 @@ bool MyApp::OnInit()
 	if ( !local_ok )
 		wxMessageBox ( txt("t_local_db_warning") ) ;
 
-	
+
     if ( frame->showSplashScreen )
         {
         wxBitmap bitmap;
         wxString bmpfile = bmpdir + slash + _T("splash.bmp") ;
         if (bitmap.LoadFile(bmpfile, wxBITMAP_TYPE_BMP))
             {
-            //wxSplashScreen* splash = 
+            //wxSplashScreen* splash =
 			new wxSplashScreen(bitmap,
             wxSPLASH_CENTRE_ON_SCREEN|wxSPLASH_TIMEOUT,
             2500, NULL, -1, wxDefaultPosition, wxDefaultSize,
@@ -364,7 +364,7 @@ bool MyApp::OnInit()
         frame->LS->setOption ( _T("SHOWTIP") , showTip ) ;
         delete tipProvider;
         }
-        
+
     if ( frame->doRegisterStuff )
     	{
         registerFileExtension ( _T("gb") ) ;
@@ -380,7 +380,7 @@ bool MyApp::OnInit()
         registerFileExtension ( _T("NBRF_PIR") ) ;
         registerFileExtension ( _T("swissprot") ) ;
         registerProtocol ( _T("gentle") ) ;
-        }    
+        }
 
     return TRUE;
 }
@@ -399,13 +399,13 @@ wxString MyApp::getLocalDBname ()
 wxString MyApp::get_GENtle_version ()
 	{
  	return wxString::Format ( _T("%d.%d.%d") , GENTLE_VERSION_MAJOR ,
-  											GENTLE_VERSION_MINOR , 
+  											GENTLE_VERSION_MINOR ,
   											GENTLE_VERSION_SUB ) ;
-	}    
+	}
 
 /**	\fn MyApp::OnExit ()
 	\brief Exits the application.
-	
+
 	* - Finished a log, if one is written
 	* - deletes the wxSingleInstanceChecker
 */
@@ -443,10 +443,10 @@ wxString MyApp::getHTMLCommand ( wxString command )
     if ( !ret.IsEmpty() ) return ret ;
 
 // Fallback
-#ifdef __WXMSW__    
+#ifdef __WXMSW__
     wxRegKey regKey;
     wxString idName(_T("HKEY_CLASSES_ROOT\\.html"));
-    regKey.SetName(idName);    
+    regKey.SetName(idName);
     wxString s , t = regKey ;
     s += _T("HKEY_CLASSES_ROOT\\") ;
     s += t ;
@@ -473,19 +473,19 @@ wxString MyApp::getFileFormatCommand ( wxString type , wxString file )
     wxFileType *ft = mtm.GetFileTypeFromExtension ( type ) ;
     if ( !ft ) return _T("") ;
     return ft->GetOpenCommand ( file ) ;
-	}    
-    
+	}
+
 /**	\fn MyApp::getFileFormatApplication ( wxString type )
 	\brief Returns the application associated with a file type. Windows only.
 	\param type The file ending to find the application for.
 */
 wxString MyApp::getFileFormatApplication ( wxString type )
     {
-#ifdef __WXMSW__    
+#ifdef __WXMSW__
     wxRegKey regKey;
     wxString idName(_T("HKEY_CLASSES_ROOT\\."));
     idName += type ;
-    regKey.SetName(idName);    
+    regKey.SetName(idName);
     wxString s , t = regKey ;
     s += _T("HKEY_CLASSES_ROOT\\") ;
     s += t ;
@@ -504,7 +504,7 @@ wxString MyApp::getFileFormatApplication ( wxString type )
 	\brief "My assertion" - little inside joke...
 	\param b The condition given in the call. No assertion when b is FALSE.
 	\param msg The message string to write into errout.
-	
+
 	The function writes the text of "msg" to the ERROR.txt file
 	in case "b" is true. This is done to catch possible out-of-range errors.
 	The function should not be used in releases, as the mere out-of-range check
@@ -517,12 +517,12 @@ void MyApp::do_my_ass ( bool b , wxString msg )
     errout->Write ( msg + _T("\n") ) ;
     errout->Flush() ;
     }
-    
+
 /**	\fn MyApp::do_my_log ( wxString function , wxString msg )
 	\brief Logs events to a file.
 	\param function The originating function name of the log event.
 	\param msg The message string to write into logout.
-	
+
 	The function writes the text of "msg" to the LOG.txt file
 	together with the "function" name. This is done to log events and
 	variable values at certain points in the code. This should not

@@ -19,12 +19,12 @@ class TAminoAcids : public ChildBase
     public :
     TAminoAcids(wxWindow *parent, const wxString& title) ; ///< Constructor
     virtual ~TAminoAcids () ; ///< Destructor
-    
+
     virtual void initme () ; ///< Initialization
     virtual wxString getName () ; ///< Returns the name of the TVector structure
     virtual void showSequence () ; ///< Update the sequence display
     virtual void showStat () ; ///< Show the sequence statistics box
-    
+
     virtual void OnMarkAll(wxCommandEvent& event); ///< "Mark all" event handler
     virtual void OnFileSave(wxCommandEvent& WXUNUSED(event) ) ; ///< "Save sequence" event handler
     virtual void OnFind(wxCommandEvent& event); ///< Find event handler
@@ -47,13 +47,13 @@ class TAminoAcids : public ChildBase
     virtual void OnProteolysis(wxCommandEvent& WXUNUSED(event)); ///< Proteolysis event handler
     virtual void OnFontsize(wxCommandEvent& event); ///< Fontsize event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler
-    
+
     virtual void Undo(wxCommandEvent& event); ///< "Undo" event handler
     virtual void Redo(wxCommandEvent& event); ///< "Redo" event handler (unused)
     virtual void updateUndoMenu () ; ///< Updates the message for the undo function
     virtual void handleListBox ( wxString t ) ; ///< Choses a new entry from the listbox
     virtual bool HasUndoData () ;
-        
+
     // Variables
     SequenceCanvas *sc , *sc2 ;
     wxTextCtrl *stat ; ///< Pointer to the sequence statistics mini-display
@@ -61,7 +61,7 @@ class TAminoAcids : public ChildBase
     wxSplitterWindow *hs , *vs ;
     int from ; ///< Cursor position (sometimes...)
     int miniDisplayOptions ; ///< Options for the mini-display
-    
+
     wxWindow *curDisplay ;
     PlasmidCanvas *pc ; ///< Plasmid canvas, used in "scheme" mini-display
     wxBoxSizer *v0 ;
@@ -79,6 +79,6 @@ class TAminoAcids : public ChildBase
 
     DECLARE_EVENT_TABLE()
     } ;
-    
+
 #endif
 

@@ -26,7 +26,7 @@ void TClone::loadEnzymeList ( TStorage *st , wxString filename )
 	char *t = new char [l+15] ;
 	f.Read ( t , l ) ;
 	f.Close() ;
-	
+
 	vector <TRestrictionEnzyme> vr ;
 	char *d ;
 	int i ;
@@ -45,14 +45,14 @@ void TClone::loadEnzymeList ( TStorage *st , wxString filename )
 	   else d++ ;
 	   }
 	 r.setSequence ( r_sequence ) ;
-	   
+
      r.setOverlap ( (int) *d++ ) ;
      if ( r.getOverlap() > 127 )
           r.setOverlap ( 255 - r.getOverlap() ) ;
      d++ ; // ??? Total length ???
      r.setCut ( (int) *d++ ) ;
      if ( r.getOverlap() < 0 ) r.setCut ( r.getCut() - r.getOverlap() ) ;
-     
+
      vr.push_back ( r ) ;
 	 }
 	delete [] t ;
@@ -72,7 +72,7 @@ void TClone::remap ( TVector *v )
 {
     int a , b ;
     v->updateDisplay() ;
-    
+
     v->setSequence ( sequence ) ;
     v->setName ( name ) ;
     v->setDescription ( description ) ;
@@ -86,9 +86,9 @@ void TClone::remap ( TVector *v )
         if ( t == _T("GENE") ) ty = VIT_GENE ;
         long gf = genes[a].begin ;
         long gt = genes[a].end ;
-        
+
         if ( genes[a].getCCW() ) { long gg = gf ; gf = gt ; gt = gg ; }
-        
+
         wxString sname = genes[a].shortname ;
         if ( sname.IsEmpty() ) sname = genes[a].fullname ;
         TVectorItem vi ( sname ,
@@ -99,7 +99,7 @@ void TClone::remap ( TVector *v )
         vi.setDirection ( genes[a].getCCW()?-1:1 );
         v->items.push_back ( vi ) ;
         }
-        
+
     // Restriction enzymes
     wxArrayString vs ;
     for ( a = 0 ; a < enzymes.size() ; a++ )
@@ -140,7 +140,7 @@ void TClone::cleanup ()
 	enzymes.clear () ;
 }
 
-void TClone::parseLines ( wxArrayString &v , char *t , long l ) 
+void TClone::parseLines ( wxArrayString &v , char *t , long l )
 {
 	char *c , *d ;
 	for ( c = d = t ; c-t < l ; c++ )
@@ -153,8 +153,8 @@ void TClone::parseLines ( wxArrayString &v , char *t , long l )
 			c += 2 ;
 			d = c ;
 			c-- ;
-		} 
-	} 
+		}
+	}
 }
 
 void TClone::separateNames ( wxString &s1 , wxString &s2 )
@@ -174,14 +174,14 @@ void TClone::separateNames ( wxString &s1 , wxString &s2 )
 	delete t ;
 }
 
-void TClone::load ( wxString s ) 
+void TClone::load ( wxString s )
 {
 	wxFile f ( s , wxFile::read ) ;
 	long l = f.Length() ;
 	char *t = new char [l+15] ;
 	f.Read ( t , l ) ;
 	f.Close() ;
-	
+
 	wxArrayString v ;
 	parseLines ( v , t , l ) ;
 	delete [] t ;
@@ -192,12 +192,12 @@ void TClone::load ( wxString s )
 	    success = false ;
 		return ;
 	}
-	
+
 	cleanup () ;
 
 	int a , n , cnt ;
 	filename = s ;
-	
+
 	// Basic Data
 	name = v[0] ;
 	size = a2i ( v[1] ) ;
@@ -262,7 +262,7 @@ void TClone::load ( wxString s )
 			linear_s2 = v[cnt++] ;
 		}
 	}
-	
+
 //	sort ( enzymes.begin() , enzymes.end() ) ;
     if ( sequence.IsEmpty() ) success = false ;
 }

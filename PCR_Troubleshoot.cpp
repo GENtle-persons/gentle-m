@@ -29,24 +29,24 @@ PCR_troubleshoot_dialog::PCR_troubleshoot_dialog(TPrimerDesign *_parent, const w
 	nl = _T("\n") ;
 #endif
 	fillSantaLucia () ;
-	
+
 	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
 	wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
-	
+
 	list = new wxListBox ( this , PCR_TROUBLESHOOT_LIST ) ;
 	text = new wxTextCtrl ( this , -1 , _T("") , wxDefaultPosition , wxDefaultSize , wxTE_MULTILINE ) ;
 	text->SetFont ( *MYFONT ( MYFONTSIZE , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
-	
+
 	h0->Add ( new wxStaticText ( this , -1 , _T("")) , 1 , wxEXPAND , 5 ) ;
 	h0->Add ( new wxButton ( this , POD_OK , txt("b_ok") ) , 1 , wxEXPAND , 5 ) ;
 	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxEXPAND , 5 ) ;
 	h0->Add ( new wxButton ( this , POD_CANCEL , txt("b_cancel") ) , 1 , wxEXPAND , 5 ) ;
 	h0->Add ( new wxStaticText ( this , -1 , _T("") ) , 1 , wxEXPAND , 5 ) ;
-	
+
 	v0->Add ( list , 1 , wxEXPAND , 5 ) ;
 	v0->Add ( text , 2 , wxEXPAND , 5 ) ;
 	v0->Add ( h0 , 0 , wxEXPAND , 5 ) ;
-	
+
 	scan () ;
 	for ( int a = 0 ; a < l_title.GetCount() ; a++ )
 		list->Append ( l_title[a] ) ;
@@ -75,7 +75,7 @@ void PCR_troubleshoot_dialog::fillSantaLucia ()
 	santa_lucia.push_back ( TSantaLucia ( _T("CG/GC") , -2.17 , -10.6 , -27.2 ) ) ; // CG
 	santa_lucia.push_back ( TSantaLucia ( _T("GC/CG") , -2.24 , - 9.8 , -24.4 ) ) ; // GC
 	santa_lucia.push_back ( TSantaLucia ( _T("GG/CC") , -1.84 , - 8.0 , -19.9 ) ) ; // GG
-	
+
 	// I guess...
 	santa_lucia.push_back ( TSantaLucia ( _T("TT/AA") , -1.00 , - 7.9 , -22.2 ) ) ; // TT
 	santa_lucia.push_back ( TSantaLucia ( _T("CC/GG") , -1.84 , - 8.0 , -19.9 ) ) ; // CC
@@ -97,13 +97,13 @@ double PCR_troubleshoot_dialog::deltaG0 ( TPrimer &p )
 		if ( i >= santa_lucia.size() ) continue ; // Ignore this one
 		ret += santa_lucia[i].unifiedFE ;
 		}
-	
+
 	s = s.Right ( 2 ) ; // This is the end, my friend
 	if ( s.Left ( 1 ) == _T("C") || s.Left ( 1 ) == _T("G") ) ret += 0.98 ;
 	if ( s.Right ( 1 ) == _T("C") || s.Right ( 1 ) == _T("G") ) ret += 0.98 ;
 	if ( s.Left ( 1 ) == _T("A") || s.Left ( 1 ) == _T("T") ) ret += 1.03 ;
 	if ( s.Right ( 1 ) == _T("A") || s.Right ( 1 ) == _T("T") ) ret += 1.03 ;
-	
+
 	return ret ;
 	}
 
@@ -117,13 +117,13 @@ double PCR_troubleshoot_dialog::deltaH0 ( TPrimer &p )
 		int i = getSLindex ( s.Mid ( a , 2 ) ) ;
 		ret += santa_lucia[i].deltaH ;
 		}
-	
+
 	s = s.Right ( 2 ) ; // This is the end, my friend
 	if ( s.Left ( 1 ) == _T("C") || s.Left ( 1 ) == _T("G") ) ret += 0.1 ;
 	if ( s.Right ( 1 ) == _T("C") || s.Right ( 1 ) == _T("G") ) ret += 0.1 ;
 	if ( s.Left ( 1 ) == _T("A") || s.Left ( 1 ) == _T("T") ) ret += 2.3 ;
 	if ( s.Right ( 1 ) == _T("A") || s.Right ( 1 ) == _T("T") ) ret += 2.3 ;
-	
+
 	return ret ;
 	}
 
@@ -137,13 +137,13 @@ double PCR_troubleshoot_dialog::deltaS0 ( TPrimer &p )
 		int i = getSLindex ( s.Mid ( a , 2 ) ) ;
 		ret += santa_lucia[i].deltaS ;
 		}
-	
+
 	s = s.Right ( 2 ) ; // This is the end, my friend
 	if ( s.Left ( 1 ) == _T("C") || s.Left ( 1 ) == _T("G") ) ret -= 2.8 ;
 	if ( s.Right ( 1 ) == _T("C") || s.Right ( 1 ) == _T("G") ) ret -= 2.8 ;
 	if ( s.Left ( 1 ) == _T("A") || s.Left ( 1 ) == _T("T") ) ret += 4.1 ;
 	if ( s.Right ( 1 ) == _T("A") || s.Right ( 1 ) == _T("T") ) ret += 4.1 ;
-	
+
 	return ret - 1.4 ;
 	}
 
@@ -167,7 +167,7 @@ void PCR_troubleshoot_dialog::scan ()
 	p.sequence = "CGTTGA" ;
 	double x = deltaG0 ( p ) ;
 	wxMessageBox ( wxString::Format ( "%2.2f" , x ) ) ;
-*/	
+*/
 	int a , b ;
 	for ( a = 0 ; a < parent->primer.size() ; a++ )
 		{
@@ -247,7 +247,7 @@ void PCR_troubleshoot_dialog::scan_dimer ( TPrimer &p1 , TPrimer &p2 , int nr1 ,
 	s1.Pad ( s2.length() , ' ' , true ) ;
 	s1.Pad ( s2.length() , ' ' , false ) ;
 	while ( s2.length() < s1.length() ) s2.Pad ( 1 ) ;
-	
+
 	int a ;
 	double best = 10000 ; // Just to be on the safe side :-)
 	wxString best_text ;
@@ -262,13 +262,13 @@ void PCR_troubleshoot_dialog::scan_dimer ( TPrimer &p1 , TPrimer &p2 , int nr1 ,
 			}
 		s2 = _T(" ") + s2 ; // Move
 		}
-	
+
 	if ( best > -5 ) return ; // Seems OK
-	
+
 	wxString msg = txt("t_pcr_ts_warning_dimer_formation") ;
 	if ( nr1 == nr2 ) msg += txt("t_pcr_ts_warning_self_dimer") ;
 	else msg += wxString::Format ( txt("t_pcr_ts_warning_crossdimer") , nr2+1 ) ;
-	
+
 	add_warning ( p1 , nr1 , msg , best_text ) ;
 	}
 
@@ -289,19 +289,19 @@ void PCR_troubleshoot_dialog::scan_melting_temperature ( TPrimer &p , int nr )
 	{
 	double K , H , R , S , c ;
 	double tm ;
-	
+
 	K = 0.050 ; // 50 mM
 	H = deltaH0 ( p ) * 1 ;
 	R = 8.314472 ;
 	S = deltaS0 ( p ) ;
 	c = 2.5E-2 ; // 250 pM
-		
+
 //	tm = H / ( S + R * log ( c / 4.0 ) - 237.15 + 16.6 * log ( K ) / log ( 10.0 ) ) ;
 
 
 	tm = ( (-H) - 5 ) / ( (-S) + R * log ( 1 / c ) ) + 16.6 * log ( K ) / log ( 10.0 ) ;
 
-	add_warning ( p , nr , wxString::Format ( _T("Melting temperature %f; dS=%f; dH=%f; X=%f") , tm , S , H , R*log ( 1/c ) ) , _T("") ) ;		
+	add_warning ( p , nr , wxString::Format ( _T("Melting temperature %f; dS=%f; dH=%f; X=%f") , tm , S , H , R*log ( 1/c ) ) , _T("") ) ;
 	}
 
 void PCR_troubleshoot_dialog::scan_specificity ( TPrimer &p , int nr )
@@ -318,13 +318,13 @@ void PCR_troubleshoot_dialog::scan_specificity ( TPrimer &p , int nr )
 		s2 += s2.Left ( psl ) ;
 		}
 	wxString s = s2 + _T(" ") + s1 ;
-	
+
 	wxArrayString vs ;
 	for ( a = 0 ; a + psl < s.length() ; a++ )
 		{
 		wxString su = s.Mid ( a , psl ) ;
 		double d = deltaG0_dimer ( p.sequence , su ) ;
-		
+
 		wxString x = wxString::Format ( _T("%6.2f : %5d") , d , a ) ;
 
 		x += nl ;
@@ -334,24 +334,24 @@ void PCR_troubleshoot_dialog::scan_specificity ( TPrimer &p , int nr )
 		x += nl ;
 		x += su ;
 		x += nl + nl ;
-		
+
 		vs.Add ( x ) ;
 		if ( vs.GetCount() <= 5 ) continue ;
 		vs.Sort ( true ) ;
 		vs.RemoveAt ( vs.GetCount() - 1 ) ;
 		}
 	vs.Sort ( true ) ;
-	
+
 	double d0 , d1 ;
 	vs[0].ToDouble ( &d0 ) ;
 	vs[1].ToDouble ( &d1 ) ;
 	if ( d1 * 2 > d0 ) return ; // The second best is less than half as good as the first fit, so everything's OK...
-	
+
 	wxString text ;
 	for ( a = 0 ; a < vs.size() ; a++ )
 		text += vs[a] + nl ;
 //		text += wxString::Format ( _T("%s") , vs[a].mb_str() ) + nl ;
-	add_warning ( p , nr , txt("t_pcr_ts_warning_specificity") , text ) ;		
+	add_warning ( p , nr , txt("t_pcr_ts_warning_specificity") , text ) ;
 	}
 
 void PCR_troubleshoot_dialog::scan_end_stability ( TPrimer &p , int nr )
@@ -366,14 +366,14 @@ void PCR_troubleshoot_dialog::scan_end_stability ( TPrimer &p , int nr )
 		double j = santa_lucia[i].unifiedFE ;
 		if ( j > best ) best = j ;
 		}
-	add_warning ( p , nr , txt("t_pcr_ts_warning_end_stability") , 
+	add_warning ( p , nr , txt("t_pcr_ts_warning_end_stability") ,
 	wxString::Format ( txt("t_pcr_ts_warning_end_stability_text") , best ) ) ;
 	}
 
 void PCR_troubleshoot_dialog::scan_length ( TPrimer &p , int nr )
 	{
 	if ( p.sequence.length() >= 18 && p.sequence.length() <= 22 ) return ; // OK
-	add_warning ( p , nr , txt("t_pcr_ts_warning_primer_length") , 
+	add_warning ( p , nr , txt("t_pcr_ts_warning_primer_length") ,
 	wxString::Format ( txt("t_pcr_ts_warning_primer_length_text") , p.sequence.length() ) ) ;
 	}
 
@@ -381,8 +381,8 @@ void PCR_troubleshoot_dialog::scan_GCcontent ( TPrimer &p , int nr )
 	{
 	float gc = p.getGCcontents () ;
 	if ( gc >= 40 && gc <= 60 ) return ; // Everthing's OK
-	
-	add_warning ( p , nr , txt("t_pcr_ts_warning_GC") , 
+
+	add_warning ( p , nr , txt("t_pcr_ts_warning_GC") ,
 	wxString::Format ( txt("t_pcr_ts_warning_GC_text") , (int) gc ) ) ;
 	}
 
@@ -392,12 +392,12 @@ void PCR_troubleshoot_dialog::scan_GCclamp ( TPrimer &p , int nr )
 	int gc = s.Freq ( 'C' ) + s.Freq ( 'G' ) ;
 	if ( gc == 0 )
 		{
-		add_warning ( p , nr , txt("t_pcr_ts_warning_gc_clamp") , 
+		add_warning ( p , nr , txt("t_pcr_ts_warning_gc_clamp") ,
 		txt("t_pcr_ts_warning_gc_clamp_t1") ) ;
 		}
 	else if ( gc > 3 )
 		{
-		add_warning ( p , nr , txt("t_pcr_ts_warning_gc_clamp") , 
+		add_warning ( p , nr , txt("t_pcr_ts_warning_gc_clamp") ,
 		txt("t_pcr_ts_warning_gc_clamp_t2") ) ;
 		}
 	}
@@ -405,7 +405,7 @@ void PCR_troubleshoot_dialog::scan_GCclamp ( TPrimer &p , int nr )
 void PCR_troubleshoot_dialog::scan_Runs ( TPrimer &p , int nr , int length )
 	{
 	wxString s = p.get53sequence() ;
-	
+
 	int a , b ;
 	wxString msg = txt("t_pcr_ts_warning_runs") ;
 	if ( length > 1 ) msg = txt("t_pcr_ts_warning_repeats") ;
@@ -432,14 +432,14 @@ void PCR_troubleshoot_dialog::scan_hairpin ( TPrimer &p , int nr )
 /* dead code, invoking get_matches that is not fully implemented (comment by Steffen)
 	wxArrayString m = get_matrix ( p.get53sequence() , invert ( p.get53sequence() ) ) ;
 	wxArrayString n = get_matches ( m , 4 , 1 ) ;
-	
+
 	wxString s ;
 
 	l_title.Add ( wxString::Format ( _T("%d: ") , nr ) + p.getName() ) ;
 	l_text.Add ( s ) ;
 */
 	}
-	
+
 void PCR_troubleshoot_dialog::add_error ( TPrimer &p , int nr , wxString head , wxString tail )
 	{
 	add_warning ( p , nr , head.Upper() + _T("!") , tail ) ;
@@ -481,7 +481,7 @@ wxArrayString PCR_troubleshoot_dialog::get_matches ( wxArrayString &m , int min 
 		wxString t ;
 		for ( col = 0 ; row2 < m.GetCount() && col < m[row2].length() ; col++ , row2++ )
 			t += m[row2].GetChar ( col ) ;
-		
+
 		int cnt = 0 ;
 		for ( int a = 0 ; a < t.length() ; a++ )
 			if ( t.GetChar ( a ) == '1' ) cnt++ ;
@@ -523,7 +523,7 @@ void PCR_troubleshoot_dialog::OnList ( wxCommandEvent &ev )
 	{
 	show_item ( list->GetSelection() ) ;
 	}
-	
+
 void PCR_troubleshoot_dialog::OnCharHook(wxKeyEvent& event)
 	{
 	int k = event.GetKeyCode () ;

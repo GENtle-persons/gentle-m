@@ -33,13 +33,13 @@ class SequenceCharMarkup
     void draw ( wxDC &dc , const wxRect &rect , wxString s , int mode , int lastx = -1 ) ;
     wxString getXML () ;
     void setFromXML ( TiXmlNode *base ) ;
-    
+
     bool ignore ;
     wxColour textcolor , backcolor ;
     int borders ; ///< wxTOP|wxBOTTOM|wxLEFT|wxRIGHT
     wxPen borderTop , borderBottom , borderLeft , borderRight ;
     bool bold , italics ;
-    
+
     private :
     wxString getColorXML ( wxString name , wxColour c ) ;
     wxString getPenXML ( wxPen &pen ) ;
@@ -66,27 +66,27 @@ class SequencePartList
     virtual int getLevel ( int i ) ;
 
     int maxlevels , slen ;
-    
+
     private :
     wxArrayInt vi , vl , vx , vy ;
     vector <wxArrayInt> vl2 ; ///< Items per position per level
-    } ;    
-    
+    } ;
+
 /** \brief SeqPos manages the positions of all items for a single "type" (for example, DNA)
 
  The vectors p, r and m are always the same size, and contain information
    about the same item at the same index:
-       
+
  p contains the seqeunce position matching the item
- 
+
  r contains the visual position of the item
- 
+
  m contains the marking of the item:
-     
+
    0 = not marked
-   
+
    1 = marked
-   
+
    2 = cursor in edit mode
 
  Vector l contains additional positioning information, namely the visual
@@ -105,7 +105,7 @@ class SeqPos
     virtual int getLine ( int y ) ; ///< Gets a line for the y position
     virtual int getItem ( wxPoint pt , int line ) ; ///< Gets the item in the line for the position
     virtual void reserve ( int n , int n2 = -1 , bool memsave = false ) ; ///< Reserves memory (faster for huge sequences)
-    
+
     virtual void mark ( int where , int value ) ; ///< Mark part of the sequence
     virtual int getmark ( int where ) ; ///< The "type" of marikg at the position
 
@@ -113,7 +113,7 @@ class SeqPos
     wxString m ; ///< The marking data
     vector <wxRect> r ; ///< Bounding rectangles for the data
     vector <wxRect> l ; ///< Bounding rectangles for the lines
-    
+
     private :
     wxArrayInt mark_from , mark_to ;
     int mark_value ;
@@ -134,7 +134,7 @@ class SeqBasic
         { return wxPoint ( -1 , -1 ) ; } ; ///< Show as text (rarely used)
     virtual wxString whatsthis () { return _T("BASIC") ; } ///< Returns the linetype
     virtual void makeEndnumberLength() { endnumberlength = 0 ; } ; ///< Calculates the width needed for the leading numbers
-    
+
     virtual bool useDirectRoutines () { return false ; } ///< Do we draw directly (or do we use SeqPos)?
     virtual int getMarkSize () { return pos.m.length() ; } ///< Returns the length of the SeqPos marked part of the sequence
     virtual int getRectSize () { return pos.r.size() ; } ///< Returns the number of SeqPos rectangles
@@ -158,7 +158,7 @@ class SeqBasic
     int offset , endnumberlength , itemsperline ;
     SequenceCanvas *can ; ///< The containing SequenceCanvas
     bool takesMouseActions , shown ;
-    
+
     protected :
     virtual int arrange_direct ( int n ) { return arrange ( n ) ; } ///< Arrange quickly (bypassing SeqPos)
     virtual void show_direct ( wxDC& dc ) { show ( dc ) ; } ; ///< Show quickly
@@ -193,7 +193,7 @@ class SeqDivider : public SeqBasic
     virtual void show ( wxDC& dc ) ; ///< Show
     virtual bool isDisplayOnly () { return true ; } ///< Do we show something?
     } ;
-    
+
 /** \brief Sequence display class showing a blank line
 */
 class SeqBlank : public SeqDivider
@@ -231,7 +231,7 @@ class SeqDNA : public SeqBasic
     virtual void setPos ( int i , int v ) ; ///< Sets the internal ID of the "char"
     virtual int getLine ( int y ) ; ///< Returns the line number for the y position
     virtual int getItem ( wxPoint pt , int line ) ; ///< Returns the "char" at that position
-        
+
     // Variables
     TVector *vec ; ///< Pointer to the vector containing the DNA sequence
     bool showNumbers ; ///< Show leading numbers? (Not for IDNA, for example)
@@ -245,9 +245,9 @@ class SeqDNA : public SeqBasic
 class SeqPrimer : public SeqDNA
     {
     public :
-    SeqPrimer ( SequenceCanvas *ncan = NULL ) { 
-        vec = NULL ; 
-        init ( ncan ) ; 
+    SeqPrimer ( SequenceCanvas *ncan = NULL ) {
+        vec = NULL ;
+        init ( ncan ) ;
         myname = _T("PRIMER") ; } ///< Constructor
     virtual void show ( wxDC& dc ) ; ///< Show
     virtual void initFromTVector ( TVector *v ) ; ///< Set from a TVector class
@@ -256,7 +256,7 @@ class SeqPrimer : public SeqDNA
     virtual int arrange_direct ( int n ) ; ///< Arrange quickly (bypassing SeqPos)
     virtual void show_direct ( wxDC& dc ) ; ///< Show quickly
     virtual bool useDirectRoutines () ; ///< Do we draw directly (or do we use SeqPos)?
-    
+
     // Variables
     wxString myname ; ///< Alternative name
     } ;
@@ -271,7 +271,7 @@ class SeqAlign : public SeqBasic
     virtual void show ( wxDC& dc ) ; ///< Show
     virtual wxString whatsthis () { return _T("ALIGN") ; } ///< Returns the linetype
     virtual void makeEndnumberLength() ; ///< Calculates the width needed for the leading numbers
-    
+
     // Variables
     wxString myname ; ///< Alternative name
     int id ; ///< Internal counter to differentiate several alignment lines
@@ -289,7 +289,7 @@ class SeqRestriction : public SeqBasic
     virtual wxString whatsthis () { return _T("RESTRICTION") ; } ///< Returns the linetype
     virtual bool isDisplayOnly () { return true ; } ///< The hell if I know what this does!
     virtual bool useDirectRoutines () ; ///< Do we draw directly (or do we use SeqPos)?
-    
+
     // Variables
     TVector *vec ; ///< Pointer to the original sequence data
     bool down ; ///< Is this below the matching SeqDNA line (or above)?
@@ -303,9 +303,9 @@ class SeqAA : public SeqBasic
     public :
     SeqAA ( SequenceCanvas *ncan = NULL ) {
         vec = NULL ;
-        init ( ncan ) ; 
-        mode = AA_ALL ; 
-        primaryMode = false ; 
+        init ( ncan ) ;
+        mode = AA_ALL ;
+        primaryMode = false ;
         unknownAA = '?' ;
         show_diff_to = NULL ;
 		} ///< Constructor
@@ -332,7 +332,7 @@ class SeqAA : public SeqBasic
     virtual int getLine ( int y ) ; ///< Returns the line number for the y position
     virtual int getItem ( wxPoint pt , int line ) ; ///< Returns the "char" at that position
     virtual void logsize () ; ///< Some internal debugging thingy
-    
+
     // Variables
     TVector *vec ; ///< Pointer to the original sequence data
     int mode , disp ;
@@ -388,7 +388,7 @@ class SeqABI : public SeqDNA
     virtual int arrange_direct ( int n ) { return arrange ( n ) ; } ///< Arrange quickly (bypassing SeqPos)
     virtual void show_direct ( wxDC& dc ) { show ( dc ) ; } ; ///< Show quickly
     virtual bool useDirectRoutines () { return false ; } ///< Do we draw directly (or do we use SeqPos)?
-    
+
     // Variables
     TSequencerData sd ;
     ABItype *at ; ///< Pointer to the calling ABI module
@@ -401,7 +401,7 @@ class SeqABI : public SeqDNA
     int zoom ; ///< Zoom factor
     bool inv_compl ; ///< Use inverse/complement?
     long view_from , view_to ;
-    
+
     private :
 	int get_bx ( int id , int idx ) ;
 	int strange_compensation_factor ;
@@ -422,7 +422,7 @@ class SeqFeature : public SeqDNA
     virtual void show_direct ( wxDC& dc ) { show ( dc ) ; } ; ///< Show quickly
     virtual bool useDirectRoutines () { return false ; } ///< Do we draw directly (or do we use SeqPos)?
     virtual bool isDisplayOnly () { return true ; } ///< WTF??
-    
+
     // Variables
     vector <wxRect> vr ;
     vector <wxPen> pens ; ///< Different pens (colors) to use
@@ -457,7 +457,7 @@ class SeqPlot : public SeqDNA
 
     private :
     virtual void scanMinMax () ; ///< Determine minimum/maximum values
-    virtual void scanChouFasman ( int x , int y , int t , int min , 
+    virtual void scanChouFasman ( int x , int y , int t , int min ,
                                     int seek_cnt , int seek_avg , int avg ) ;
     virtual void drawSymbol ( char c , wxDC &dc , int x1 , int y1 , int x2 , int y2 ) ;
     virtual void showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx ) ; ///< Display Chou-Fasman
@@ -526,12 +526,12 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void OnSeqTop ( wxCommandEvent &ev ) ; ///<  "Move alignment sequence to top" event handler
     virtual void OnSeqBottom ( wxCommandEvent &ev ) ; ///<  "Move alignment sequence to bottom" event handler
     virtual void OnToggleFeat ( wxCommandEvent &ev ) ; ///<  "Toggle feature display for this alignment sequence" event handler
-    
+
     virtual void OnCopyResultDNA ( wxCommandEvent &ev ) ; ///<  "Copy DNA resulting from PCR" event handler
     virtual void OnCopyResultAA ( wxCommandEvent &ev ) ; ///<  "Copy amino acids for DNA resulting from PCR" event handler
     virtual void OnNewFromResultDNA ( wxCommandEvent &ev ) ; ///<  "New DNA module resulting from PCR" event handler
     virtual void OnNewFromResultAA ( wxCommandEvent &ev ) ; ///<  "New amino acids module for DNA resulting from PCR" event handler
-    
+
     virtual void OnInsertGap ( wxCommandEvent &ev ) ; ///<  "Insert gap into alignment sequence" event handler
     virtual void OnDeleteGap ( wxCommandEvent &ev ) ; ///<  "Delete gap from alignment sequence" event handler
     virtual void OnInsertOtherGaps ( wxCommandEvent &ev ) ; ///<  "Insert gap into all other alignment sequences" event handler
@@ -553,9 +553,9 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void OnAppearance(wxCommandEvent& event) ; ///<  Change the apperance of the sequence
     virtual void rsHideLimit ( wxCommandEvent &ev ) ; ///<  "Limit restriction enzymes" event handler
     virtual void OnABIViewOnly ( wxCommandEvent &ev ) ; ///<  View toggle for ABI display
-    
+
     virtual wxString getSelection () ; ///< Returns the current selection as a wxString
-    
+
     virtual void updateEdit ( TVector *v , wxString id , int from ) ; ///< Updates the sequences and display once a key was pressed and, thus, the sequence altered
     virtual void arrange () ; ///< Arranges tghe layout for all the seq structures
     virtual SeqBasic* findMouseTarget ( wxPoint pt , int &pos ) ; ///< Returns a pointer to the seq structure (and the position inside) the given point is within
@@ -576,7 +576,7 @@ class SequenceCanvas : public wxScrolledWindow
     virtual TPrimerDesign *getPD() ; ///< Returns pointer to primer design module, or NULL
     virtual TAlignment *getAln() ; ///< Returns pointer to alignment module, or NULL
     virtual wxString getChildType() ; ///< Returns the child identifier, or _T("")
-    
+
     virtual bool getPrintToColor () { return printToColor ; } ///< Are we printing to a color printer?
     virtual void setPrintToColor ( bool _b ) { printToColor = _b ; } ///< We are printing to a color printer!
     virtual bool getDrawAll () { return drawall ; } ///< Are we drawing everything ( not just the visible part)?
@@ -611,7 +611,7 @@ class SequenceCanvas : public wxScrolledWindow
     wxArraySeqBasic seq ; ///< The list of SeqBasic structures
     wxFont *font , *smallFont , *varFont;
     wxString edit_id , edit_valid ;
-    
+
     private :
     virtual wxBitmap *getSequenceBitmap () ; ///< Returns the sequences display as a bitmap
     virtual void showContextMenu ( SeqBasic *where , int pos , wxPoint pt ) ; ///< Generates the context menu
@@ -632,7 +632,7 @@ class SequenceCanvas : public wxScrolledWindow
     SeqBasic *lastwhere ;
     int contextMenuPosition ;
     int last_font_size ;
-    
+
     DECLARE_EVENT_TABLE()
     };
 
@@ -645,7 +645,7 @@ class TMarkMem
 	virtual ~TMarkMem () {} ; ///< Dummy destructor
     virtual void unmark () ; ///< Resets the marking
     virtual void remark () ; ///< Reapplies the stored marking
-    
+
     private :
     SequenceCanvas *sc ;
     int f , t , l ;

@@ -15,7 +15,7 @@ class tseqres
     char chain ; ///< Chain number
     wxString sequence ; ///< Sequence
     TVector *v ; ///< Pointer to the TVector
-    } ;    
+    } ;
 
 /// The TPDB class can parse PDB files and generated annotated TVector sequences
 class TPDB
@@ -30,14 +30,14 @@ class TPDB
 
     bool success ; ///< Errors during parsing?
     vector <tseqres> seqres ; ///< The resulting sequences
-    
+
     private :
     void check4success () ; ///< Valid PDB?
     int seq ( char c ) ; ///< Access (or create) a certain chain
     wxArrayString vs ; ///< The text lines
-    
+
     /// The PDB name
     wxString _name , _desc ; ///< The PDB description
     } ;
-    
-#endif    
+
+#endif

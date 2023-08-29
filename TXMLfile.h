@@ -23,7 +23,7 @@ class TXMLfile
     bool success () { return _success ; } ///< Errors during parsing?
     int countVectors () ; ///< How many vectors were made from the XML?
     TVector *getVector ( int a ) ; ///< Returns pointer to one of the vectors
-    
+
     private :
     void analyze ( TiXmlDocument &doc ) ; ///< Parse single/multiple sequences
     void readGBSeq ( TiXmlNode *base ) ; ///< The actual parser

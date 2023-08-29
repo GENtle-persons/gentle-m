@@ -30,9 +30,9 @@ class TUndo
     wxString getLastMessage () ; ///< Returns the name of the last action with undo information
     void remember ( wxString _msg ) ; ///< Remember the current state and action name
     void clear () ; ///< Remove all undo information
-    
+
     TUndo & operator = ( TUndo &u ) ;
-    
+
     private :
     wxArrayTVector mem ; ///< The old TVector objects
     wxArrayString msg ; ///< The action names

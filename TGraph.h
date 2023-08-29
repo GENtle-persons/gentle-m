@@ -46,19 +46,19 @@ class TGraphData
 	wxColour col ; ///< The color of this graph
 	vector <wxPoint> drawn ; ///< Cache of last drawn points in pixels
 	bool selected ; ///< Is this graph selected (by mouse)?
-	} ;    
+	} ;
 	
 /**	\brief The class containing a scale used in the graph
 */
 class TGraphScale
 	{
 	public :
- 	TGraphScale ( float _min = 0 , 
- 					float _max = 0 , 
-  		  			bool _horizontal = false , 
-      	  			bool _left = true , 
-            		wxString _name = _T("") , 
-              		wxString _unit = _T("") , 
+ 	TGraphScale ( float _min = 0 ,
+ 					float _max = 0 ,
+  		  			bool _horizontal = false ,
+      	  			bool _left = true ,
+            		wxString _name = _T("") ,
+              		wxString _unit = _T("") ,
               		wxColour _col = *wxBLACK ,
               		wxString _type = _T("linear") ) ; ///< Constructor
 	int GetWidth () ; ///< Returns height/width in pixels
@@ -80,7 +80,7 @@ class TGraphScale
 	wxColour col ;
 	int mark ;
 	bool show_mark ;
-	} ;    
+	} ;
 	
 /** \brief The display class, containing graphs and scales; essentially, a "tab"
 */
@@ -145,7 +145,7 @@ class TGraphDisplay : public wxPanel
  	wxRect draggingRect ;
 
     DECLARE_EVENT_TABLE()
-	} ;    
+	} ;
 
 /**	\class TGraph
 	\brief The graph drawing module
@@ -155,7 +155,7 @@ class TGraph : public ChildBase
     public :
     TGraph(wxWindow *parent, const wxString& title) ; ///< Constructor
     ~TGraph () ; ///< Destructor
-        
+
     void initme () ; ///< Initialization
     virtual wxString getName () ; ///< Returns the module name
 

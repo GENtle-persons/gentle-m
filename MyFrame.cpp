@@ -56,7 +56,7 @@ END_EVENT_TABLE()
 #define ACC_ENT 43
 
 /** \brief Constructor
- 
+
  * - Initializes variables
  * - Sets the accelerator keys
  */
@@ -75,7 +75,7 @@ MyFrame::MyFrame(wxWindow *parent,
 #ifdef MYTEST
     test_suite = NULL ;
 #endif
-	
+
 #ifndef __WXMAC__
     // Accelerators
     wxAcceleratorEntry entries[ACC_ENT];
@@ -93,7 +93,7 @@ MyFrame::MyFrame(wxWindow *parent,
     entries[11].Set(wxACCEL_CTRL, (int) '3', AA_THREE_3);
     entries[12].Set(wxACCEL_CTRL, (int) '4', AA_THREE_M1);
     entries[13].Set(wxACCEL_CTRL, (int) '5', AA_THREE_M2);
-    entries[14].Set(wxACCEL_CTRL, (int) '6', AA_THREE_M3); 
+    entries[14].Set(wxACCEL_CTRL, (int) '6', AA_THREE_M3);
     entries[15].Set(wxACCEL_CTRL, (int) '7', AA_ALL);
     entries[16].Set(wxACCEL_CTRL, (int) '8', AA_KNOWN);
     entries[17].Set(wxACCEL_CTRL, (int) 'G', MDI_ALIGNMENT);
@@ -123,7 +123,7 @@ MyFrame::MyFrame(wxWindow *parent,
     entries[40].Set(wxACCEL_NORMAL, WXK_F9, MDI_AUTO_ANNOTATE);
     entries[41].Set(wxACCEL_CTRL, (int) 'K', MDI_CLONING_ASSISTANT);
     entries[42].Set(wxACCEL_CTRL|wxACCEL_SHIFT, (int) 'S', MDI_FILE_SAVE_ALL);
-	
+
     wxAcceleratorTable accel(ACC_ENT, entries);
     SetAcceleratorTable(accel);
 #endif
@@ -132,7 +132,7 @@ MyFrame::MyFrame(wxWindow *parent,
     tb_mychild = NULL ;
     online_tools = new TOnlineTools ;
 	push_help ( _T("GENtle") ) ;
-	
+
     // Load DNA markers
 	wxString marker_file = myapp()->homedir + myapp()->slash + _T("marker.txt") ;
 	wxTextFile tf ( marker_file ) ;
@@ -154,7 +154,7 @@ MyFrame::MyFrame(wxWindow *parent,
 }
 
 /** \brief Destructor
- 
+
  * - Stores the last project used, so it can be reopened on the next program start
  * - Clears memory
  */
@@ -168,7 +168,7 @@ MyFrame::~MyFrame ()
 }
 
 /** \brief Initializes the frame
- 
+
  * - Creates frame layout
  * - Accesses local database and imports enzyme list
  * - Sets options
@@ -187,13 +187,13 @@ void MyFrame::initme ()
 #ifdef __WXGTK__
     SetFont ( *MYFONT ( 8 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
 #endif
-	
+
 	int borders = wxNO_BORDER ;
     wxFileSystem::AddHandler(new wxInternetFSHandler );
-	
+
   	wxSashLayoutWindow* win ;
   	m_leftWindow2 = m_topWindow = m_bottomWindow = NULL ;
-	
+
     // A window to the left of the client window
     // This contains the main tree
     win = new wxSashLayoutWindow(this, FRAME_SASH_1,
@@ -204,10 +204,10 @@ void MyFrame::initme ()
     win->SetAlignment(wxLAYOUT_LEFT);
     win->SetSashVisible(wxSASH_RIGHT, TRUE);
     mainTree = new TMainTree ( win , MAIN_TREE_DUMMY ) ;
-    
-	
+
+
     m_leftWindow1 = win;
-	
+
     // The client window
     win = new wxSashLayoutWindow(this, FRAME_SASH_2,
 								 wxDefaultPosition, wxSize(500, 30),
@@ -217,31 +217,31 @@ void MyFrame::initme ()
     win->SetAlignment(wxLAYOUT_LEFT);
     win->SetSashVisible(wxSASH_RIGHT, TRUE);
     m_leftWindow2 = win;
-	
+
     // Database access
     LS = new TStorage ( LOCAL_STORAGE ) ;
     LS->createDatabase() ;
     LS->startup () ;
     LS->syncEnzymes () ;
 	//    LS->optimizeDatabase () ; // This will VACUUM sqlite databases
-	
+
     // Synchronize enzymes in known databases
     // Turned of temporarily
 	//    LS->synchronize () ;
-    
+
     // Import enzymes from local database
     LS->import() ;
-	
+
 #ifndef MISER_MODE
     bool default_update = false ;
 #else
     bool default_update = true ;
 #endif
-	
+
 #ifdef __WXMAC__
     default_update = true ;
 #endif
-	
+
     // Loading program options from database
     showVectorTitle = LS->getOption ( _T("SHOWVECTORTITLE") , true ) ;
     showVectorLength = LS->getOption ( _T("SHOWVECTORLENGTH") , true ) ;
@@ -268,33 +268,33 @@ void MyFrame::initme ()
 	/*#else
 	 useTwoToolbars = LS->getOption ( _T("use_two_toolbars") , false ) ;
 	 #endif*/
-	
-    
+
+
     int aa_red = LS->getOption ( _T("AA_RED") , wxLIGHT_GREY->Red() ) ;
     int aa_green = LS->getOption ( _T("AA_GREEN") , wxLIGHT_GREY->Green() ) ;
     int aa_blue = LS->getOption ( _T("AA_BLUE") , wxLIGHT_GREY->Blue() ) ;
     aa_color.Set ( aa_red , aa_green , aa_blue ) ;
-    
+
 	//    if ( !proxy.IsEmpty() ) wxURL::SetDefaultProxy ( proxy ) ;
-    
+
     stopcodon = showStopCodon == 0 ? '|' : '*' ;
-	
+
 	myapp()->init_txt ( lang_string.c_str() , _T("variables.csv") ) ;
-	
-	
+
+
     global_enzyme_rules = new TEnzymeRules ;
     global_enzyme_rules->load_global_settings() ;
-	
+
     // Set the DEBUGGING option in your local test database,
     // so you won't be bothered with updates anymore :-)
     if ( LS->getOption ( _T("DEBUGGING") , _T("") ) == _T("1") ) checkUpdate = false ;
-	
+
 #ifndef __WXMSW__
 #ifndef __WXMAC__
 	checkUpdate = false ;
 #endif
 #endif
-	
+
     // Check for update online
     if ( checkUpdate )
 	{
@@ -307,11 +307,11 @@ void MyFrame::initme ()
             return ;
 		}
 	}
-	
+
     project.name = txt("project") ;
     SetTitle ( txt("gentle") ) ;
     mainTree->initme() ;
-    
+
     // Give it an icon
 #ifdef __WXMSW__
     SetIcon(wxIcon(_T("GENtle.ico"),wxBITMAP_TYPE_ICO));
@@ -319,38 +319,38 @@ void MyFrame::initme ()
 #else
     SetIcon(wxIcon( mondrian_xpm ));
 #endif
-    
+
     // Make a menubar
     wxMenu *file_menu = new wxMenu;
-	
+
     file_menu->Append(MDI_FILE_OPEN, txt("m_open") , txt("m_opentxt") );
     file_menu->Append(MDI_FILE_IMPORT, txt("m_import") , txt("m_importtxt") );
     file_menu->Append(MDI_TEXT_IMPORT, txt("m_text_import") , txt("m_text_importtxt") );
     file_menu->AppendSeparator();
-    file_menu->Append(MDI_PROJECT_LOAD, txt("m_project_open") , txt("m_project_opentxt") );    
-    file_menu->Append(MDI_PROJECT_SAVE, txt("m_project_save") , txt("m_project_savetxt") );    
-    file_menu->Append(MDI_PROJECT_CLOSE, txt("m_project_close") , txt("m_project_closetxt") );    
+    file_menu->Append(MDI_PROJECT_LOAD, txt("m_project_open") , txt("m_project_opentxt") );
+    file_menu->Append(MDI_PROJECT_SAVE, txt("m_project_save") , txt("m_project_savetxt") );
+    file_menu->Append(MDI_PROJECT_CLOSE, txt("m_project_close") , txt("m_project_closetxt") );
     file_menu->AppendSeparator();
     file_menu->Append(MDI_QUIT, txt("m_exit") , txt("m_exittxt") ) ;
-	
+
     wxMenu *tool_menu = getToolMenu ( false ) ;
     wxMenu *help_menu = getHelpMenu () ;
-	
+
     menu_bar = new wxMenuBar;
-	
+
     menu_bar->Append(file_menu, txt("m_file") );
     menu_bar->Append(tool_menu, txt("m_tools") );
     menu_bar->Append(help_menu, txt("m_help") );
-	
+
     // Associate the menu bar with the frame
     SetMenuBar(menu_bar);
     CreateStatusBar();
     GetStatusBar()->SetFieldsCount ( 2 ) ;
-	
-    // Drag'n'drop    
+
+    // Drag'n'drop
     MyFrameDropTarget *dt = new MyFrameDropTarget ;
     SetDropTarget ( dt ) ;
-	
+
     // Bitmap library
     wxString icondir = myapp()->bmpdir + myapp()->slash ;
     bitmaps.push_back ( wxBitmap (icondir + _T("document-new.png") , wxBITMAP_TYPE_PNG) ) ;  // 0
@@ -376,7 +376,7 @@ void MyFrame::initme ()
     bitmaps.push_back ( wxBitmap (icondir + _T("accessories-calculator.png") , wxBITMAP_TYPE_PNG) ) ; // 20
     bitmaps.push_back ( wxBitmap (icondir + _T("preferences-desktop.png") , wxBITMAP_TYPE_PNG) ) ; // 21
     bitmaps.push_back ( wxBitmap (icondir + _T("edit-find.png") , wxBITMAP_TYPE_PNG) ) ; // 22
-	
+
     bitmaps.push_back ( to_grey ( bitmaps[ 4] ) ) ; // 23 - GREY Cut
     bitmaps.push_back ( to_grey ( bitmaps[ 5] ) ) ; // 24 - GREY Copy
     bitmaps.push_back ( to_grey ( bitmaps[ 6] ) ) ; // 25 - GREY Paste
@@ -384,8 +384,8 @@ void MyFrame::initme ()
     bitmaps.push_back ( to_grey ( bitmaps[ 2] ) ) ; // 27 - GREY Save
     bitmaps.push_back ( to_grey ( bitmaps[ 3] ) ) ; // 28 - GREY Undo
     bitmaps.push_back ( to_grey ( bitmaps[16] ) ) ; // 29 - GREY Print sequence
-	
-	
+
+
 	if ( useTwoToolbars )
 	{
 		mainToolBar = CreateToolBar ( wxTB_HORIZONTAL ) ;
@@ -405,7 +405,7 @@ void MyFrame::initme ()
 	{
 		mainToolBar = NULL ;
 	}
-	
+
 #ifdef __WXGTK__
     Show(TRUE);
     int sw , sh ;
@@ -416,15 +416,15 @@ void MyFrame::initme ()
     Show(TRUE);
     Maximize() ;
 #endif
-	
-	
+
+
     html_ep = new wxHtmlEasyPrinting ( _T("") , this ) ;
-    
+
     wxBeginBusyCursor() ;
 #ifndef MISER_MODE
     lockDisplay ( true ) ;
 #endif
-	
+
     // Load last project?
 	//    loadLastProject = false ;
     if ( loadLastProject )
@@ -444,16 +444,16 @@ void MyFrame::initme ()
 			mainTree->Refresh () ;
 		}
 	}
-	
+
 #ifndef MISER_MODE
     lockDisplay ( false ) ;
 #endif
-	
+
     // Command line parameters?
     if ( myapp()->argc > 1 )
 	{
 		int a ;
-		
+
 		// Pre-cache key-value pairs
 		for ( a = 1 ; a < myapp()->argc ; a++ )
 		{
@@ -465,7 +465,7 @@ void MyFrame::initme ()
 			if ( value.IsEmpty() ) value = _T("1") ;
 			myapp()->clp[key] = value ;
 		}
-		
+
 		// Try to import images
 		wxProgressDialog pd ( txt("t_loading") , _T("") , myapp()->argc-1 , NULL , wxPD_ALL ) ;
 		for ( a = 1 ; a < myapp()->argc ; a++ )
@@ -491,15 +491,15 @@ void MyFrame::initme ()
 				file = file.AfterLast ( '\\' ) ;
 				importFile ( file , path , -1 ) ;
 				wxSetWorkingDirectory ( myapp()->homedir ) ;
-			}   	
+			}
 		}
 	}
-	
-	
+
+
     wxEndBusyCursor() ;
     Raise () ;
     mainTree->Refresh () ;
-    
+
     SetSizeHints ( 600 , 400 ) ;
     Show(TRUE);
     m_leftWindow2->SetFocus () ;
@@ -538,7 +538,7 @@ wxBitmap MyFrame::to_grey ( wxBitmap &bmp1 )
 
 
 /** \brief Handles close event
- 
+
  Scans through all the children; if any one is changed, ask the user the
  darn "are you sure" question, unless in debugging mode
  */
@@ -554,10 +554,10 @@ void MyFrame::OnClose(wxCloseEvent& event)
 			canclose = true ;
 	}
     if ( canclose )
-	{    
+	{
         dying = true ;
         event.Skip();
-	}    
+	}
     else event.Veto() ;
 }
 
@@ -610,7 +610,7 @@ void MyFrame::OnHelp(wxCommandEvent& event )
 			helpfile = _T("http://en.wikibooks.org/wiki/") + helpfile ;
 		}
 		else helpfile.Clear() ;
-		
+
 		if ( helpfile.IsEmpty() )
 		{
 #ifdef __WXMAC__
@@ -620,19 +620,19 @@ void MyFrame::OnHelp(wxCommandEvent& event )
 			helpfile += txt("f_help").AfterFirst ( '/' ) ;
 			helpfile += _T("\"") ;
 #endif
-			
+
 #ifdef __WXMSW__
 			helpfile = _T("\"") ;
 			helpfile += myapp()->homedir ;
 			helpfile += _T("\\") ;
 			helpfile += txt("f_help") ;
 			helpfile += _T("\"") ;
-            
+
 			for ( int a = 0 ; a < helpfile.length() ; a++ )
 				if ( helpfile.GetChar(a) == '/' ) helpfile.SetChar ( a , '\\' ) ;
 #endif
 		}
-		
+
 		if ( !helpfile.IsEmpty() )
 		{
 			wxString command = myapp()->getHTMLCommand ( helpfile ) ;
@@ -651,7 +651,7 @@ ChildBase *MyFrame::GetActiveChild() //SDI
 /** \brief Invokes the enzyme editor
  */
 void MyFrame::OnEnzymeEditor(wxCommandEvent& event )
-{   
+{
     TVectorEditor ee ( this , txt("t_enzymeeditor") , NULL ) ;
     ee.ShowModal () ;
 }
@@ -673,14 +673,14 @@ void MyFrame::OnFileOpen(wxCommandEvent& event )
 void MyFrame::OnTextImport(wxCommandEvent& event )
 {
     TextImportDialog d ( this , txt("m_text_importtxt") ) ;
-    
+
     ChildBase *c = (ChildBase*) GetActiveChild() ;
     if ( c && c->def == _T("PrimerDesign") ) d.type->SetSelection ( 4 ) ;
-    
+
     if ( d.ShowModal () != wxID_OK ) return ;
-	
+
     int type = d.type->GetSelection () ;
-	
+
     if ( type == 0 ) // DNA
 	{
         TVector *v = new TVector ;
@@ -689,7 +689,7 @@ void MyFrame::OnTextImport(wxCommandEvent& event )
         v->setDescription ( txt("manually_entered_sequence") + wxString ( _T("\n") + wxGetUserName() ) ) ;
         newFromVector ( v ) ;
 	}
-    else if ( type == 1 ) // Amino Acids 
+    else if ( type == 1 ) // Amino Acids
 	{
         newAminoAcids ( d.sSequence , d.sName ) ;
 	}
@@ -698,7 +698,7 @@ void MyFrame::OnTextImport(wxCommandEvent& event )
         TGenBank gb ;
         gb.paste ( d.sequence->GetValue() ) ;
         newGB ( gb , d.sName ) ;
-	}        
+	}
     else if ( type == 3 ) // XML
 	{
         // Trying XML formats
@@ -730,17 +730,17 @@ void MyFrame::saveImage ( wxBitmap *bmp , wxString name )
 	//    wildcard += _T("|TIF (*.tif)|*.tif") ;
     wildcard += _T("|Bitmap (*.bmp)|*.bmp") ;
     wildcard += _T("|JPEG (*.jpg)|*.jpg") ;
-    
+
     name.Replace ( _T("*") , _T("") , TRUE ) ;
     name.Replace ( _T(":") , _T("_") , TRUE ) ;
     name.Replace ( _T("/") , _T("_") , TRUE ) ;
     name.Replace ( _T("\\") , _T("_") , TRUE ) ;
-	
+
     wxString lastdir = LS->getOption ( _T("LAST_IMPORT_DIR") , _T("C:") ) ;
     wxFileDialog d ( this , txt("t_save_image") , lastdir , name , wildcard , wxFD_SAVE|wxFD_OVERWRITE_PROMPT ) ;
     if ( d.ShowModal() != wxID_OK ) return ;
     wxString filename = d.GetPath() ;
-    
+
     wxBeginBusyCursor () ;
     wxString type = filename.AfterLast('.').Upper() ;
     if ( type == _T("BMP") ) bmp->SaveFile ( filename , wxBITMAP_TYPE_BMP ) ;
@@ -748,9 +748,9 @@ void MyFrame::saveImage ( wxBitmap *bmp , wxString name )
     if ( type == _T("JPG") ) bmp->SaveFile ( filename , wxBITMAP_TYPE_JPEG ) ;
     if ( type == _T("TIF") ) bmp->SaveFile ( filename , wxBITMAP_TYPE_TIF ) ;
     wxEndBusyCursor () ;
-}    
+}
 
-/** \brief Handles the "import from file" dialog, then calls MyFrame::importFile 
+/** \brief Handles the "import from file" dialog, then calls MyFrame::importFile
  */
 void MyFrame::OnFileImport(wxCommandEvent& event )
 {
@@ -773,13 +773,13 @@ void MyFrame::OnFileImport(wxCommandEvent& event )
 	_T("|") + wcCSVformat +
 	_T("|") + wcCM5format ;
     wxString lastdir = LS->getOption ( _T("LAST_IMPORT_DIR") , _T("C:") ) ;
-    wxFileDialog d ( this , txt("import_file") , lastdir , 
+    wxFileDialog d ( this , txt("import_file") , lastdir ,
 					_T("") , wildcard , wxFD_OPEN | wxFD_MULTIPLE ) ;
     int x = d.ShowModal() ;
     if ( x != wxID_OK ) return ;
-    
+
     LS->setOption ( _T("LAST_IMPORT_DIR") , d.GetDirectory() ) ;
-	
+
     int filter = d.GetFilterIndex () - 1 ;
     wxArrayString files , paths ;
     d.GetFilenames ( files ) ;
@@ -797,7 +797,7 @@ void MyFrame::OnFileImport(wxCommandEvent& event )
 		{
    		    if ( !unknown.IsEmpty() ) unknown += _T("\n ") ;
             unknown += files[a] ;
-		}    
+		}
 	}
     if ( a == files.GetCount() ) pd.Update ( a ) ; // Hide progress dialog
     if ( !unknown.IsEmpty() )
@@ -811,7 +811,7 @@ void MyFrame::OnFileImport(wxCommandEvent& event )
 }
 
 /** \brief Imports a file
- 
+
  If a "filter" number is given, only the matching file type is tried.
  If "filter" is not given (-1), it tries to detect the type
  by opening it with all import modules until there is a match.
@@ -819,7 +819,7 @@ void MyFrame::OnFileImport(wxCommandEvent& event )
 bool MyFrame::importFile ( wxString file , wxString path , int filter )
 {
     wxString end = path.AfterLast('.').Lower() ;
-    
+
     // Trying Elite LaChrom chromatogram software
     if ( filter == -1 && ( end == _T("apex") || end == _T("area") || end == _T("estdconc") ) )
     {
@@ -828,8 +828,8 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
 		//eld.ShowModal() ;
 		return true ;
     }
-	
-	
+
+
     // Trying XML formats
     if ( filter == -1 )
 	{
@@ -841,7 +841,7 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
 			return true ;
 		}
 	}
-	
+
     // Trying GenBank format
     if ( filter == 1 || filter == -1 )
 	{
@@ -855,7 +855,7 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
 			return true ;
 		}
 	}
-	
+
     // Trying ABI format
     if ( filter == 5 || filter == -1 )
 	{
@@ -867,7 +867,7 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
 			return true ;
 		}
 	}
-	
+
     // Trying SCF format
     if ( filter == 5 || filter == -1 )
 	{
@@ -878,7 +878,7 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
 			return true ;
 		}
 	}
-	
+
     // Trying Clone Manager 5 format
     if ( filter == -1 || filter == 7 )
 	{
@@ -891,7 +891,7 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
 			return true ;
 		}
 	}
-	
+
     // Trying PDB format
     if ( filter == -1 )
 	{
@@ -903,8 +903,8 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
 			return true ;
 		}
 	}
-	
-	
+
+
     // Trying spectra
     if ( filter == 6 || filter == -1 )
 	{
@@ -914,7 +914,7 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
 		{
         	wxBeginBusyCursor();
    		    g->Close () ;
-		}    
+		}
         else if ( g->gd->SetupFromFile ( path ) )
 		{
         	wxBeginBusyCursor();
@@ -922,16 +922,16 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
            	g->gd->UpdateDisplay () ;
            	wxEndBusyCursor();
            	/*if ( filter == 6 ) */return true ;
-		}   	
+		}
        	else
 		{
         	wxBeginBusyCursor();
    		    g->Close () ;
    		    wxEndBusyCursor();
    		    if ( filter == 6 ) return false ;
-		}    
-	}    
-	
+		}
+	}
+
     // Trying UReadSeq package
     if ( filter == 2 || filter == 3 || filter == 4 || filter == -1 )
 	{
@@ -945,7 +945,7 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
 			return true ;
 		}
 	}
-	
+
     // Trying CLONE format
     if ( filter == 0 || filter == -1 )
 	{
@@ -958,7 +958,7 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
 			return true ;
 		}
 	}
-	
+
     return false ;
 }
 
@@ -967,9 +967,9 @@ bool MyFrame::importFile ( wxString file , wxString path , int filter )
 TPhyloTree *MyFrame::newPhyloTree ( wxString title )
 {
 	TPhyloTree *subframe = new TPhyloTree(getCommonParent(), txt("t_phylogenetic_tree")) ;
-	
+
 	setChild ( subframe ) ;
-	
+
 	// Give it an icon
 #ifdef __WXMSW__
 	subframe->SetIcon(wxIcon(_T("chrt_icn")));
@@ -977,8 +977,8 @@ TPhyloTree *MyFrame::newPhyloTree ( wxString title )
 #else
 	subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
-	
-	
+
+
 	subframe->initme() ;
 	mainTree->addChild(subframe,TYPE_MISC) ;
 	subframe->Maximize() ;
@@ -1011,7 +1011,7 @@ MyChild *MyFrame::newCLONE ( TClone &clone )
                                     wxPoint(-1, -1), wxSize(-1, -1),
                                     wxDEFAULT_FRAME_STYLE);
     setChild ( subframe ) ;
-	
+
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon(_T("chrt_icn")));
@@ -1019,8 +1019,8 @@ MyChild *MyFrame::newCLONE ( TClone &clone )
 #else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
-	
-    
+
+
     subframe->initme() ;
     int type = TYPE_VECTOR ;
     clone.remap ( subframe->vec ) ;
@@ -1041,11 +1041,11 @@ void MyFrame::newPDB ( TPDB &pdb , wxString title )
 	{
         newAminoAcids ( pdb.seqres[a].v , pdb.seqres[a].v->getName() ) -> Activate () ;
         delete pdb.seqres[a].v ;
-	}    
+	}
 }
 
 /** \brief Creates a new entry from a GenBank import
- 
+
  This function can actually open multiple sequences from one and the same
  GenBank structure. This is used, for example, when opening alignments.
  */
@@ -1060,14 +1060,14 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
 	//    wxStartTimer () ;
     gb.vs.Clear () ;
     gb.vi.Clear () ;
-	
+
     for ( n = 0 ; n < gb.vs_l.size() ; n++ )
 	{
         nv = new TVector ;
         gb.remap ( nv , gb.vs_l[n] , gb.vi_l[n] ) ;
         gb.vs_l[n].Clear () ;
         gb.vi_l[n].Clear () ;
-		
+
         mylog ( "GenBank import" , "remapped " + nv->getName() ) ;
         vs.Add ( nv->getSequence() ) ;
         vv.Add ( nv ) ;
@@ -1077,12 +1077,12 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
         mylog ( "GenBank import" , "added " + nv->getName() ) ;
 	}
     if ( gb.vs_l.size() == 1 ) alignment = false ;
-    
+
     // Removing alignment artifacts from sequences
     for ( n = 0 ; n < vv.GetCount() ; n++ )
         vv[n]->removeAlignmentArtifacts () ;
     mylog ( "GenBank import" , "artifacts removed" ) ;
-	
+
 	/*
 	 // Ask if GenBank alignment should be opened as such (not using this right now)
 	 if ( alignment )
@@ -1091,9 +1091,9 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
 	 title , wxYES_NO|wxICON_QUESTION ) )
 	 {
 	 alignment = false ;
-	 }        
+	 }
 	 }*/
-	
+
     wxBeginBusyCursor() ;
     for ( n = 0 ; n < gb.vs_l.size() ; n++ )
 	{
@@ -1108,7 +1108,7 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
         mylog ( "GenBank import" , "child added" ) ;
 	}
     vv.Clear () ;
-	
+
     if ( alignment )
 	{
         runAlignment ( vs , vc ) ;
@@ -1119,7 +1119,7 @@ void MyFrame::newGB ( TGenBank &gb , wxString title )
 
 
 /** \brief Creates a new DNA entry from a TVector structure
- 
+
  This is a very important function. Virtually all import/open/enter
  functions call this one to create the actual window containing
  that data.
@@ -1133,7 +1133,7 @@ MyChild* MyFrame::newFromVector ( TVector *nv , int type )
                                     wxDEFAULT_FRAME_STYLE);
     myass ( subframe , "MyFrame::newFromVector" ) ;
     setChild ( subframe ) ;
-	
+
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon(_T("chrt_icn")));
@@ -1141,16 +1141,16 @@ MyChild* MyFrame::newFromVector ( TVector *nv , int type )
 #else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
-	
+
     subframe->initme() ;
     delete subframe->vec ;
     subframe->vec = nv ;
     subframe->vec->setWindow ( subframe ) ;
-	
+
     subframe->initPanels() ;
     mainTree->addChild(subframe,type) ;
     children.Last()->Activate () ;
-	
+
     return subframe ;
 }
 
@@ -1166,7 +1166,7 @@ void MyFrame::OnSize(wxSizeEvent& event)
 	 {
 	 setActiveChild ( lastChild ) ;
 	 lastChild->Refresh() ;
-	 }    
+	 }
 	 #endif*/
 }
 
@@ -1193,7 +1193,7 @@ void MyFrame::InitToolBar(wxToolBar* toolBar)
 		ns = wxSize ( 32 , 32 ) ;
 #endif
 	}
-	
+
 	toolBar->SetToolBitmapSize ( ns ) ;
 }
 
@@ -1206,7 +1206,7 @@ wxChoice *MyFrame::AddFontsizeTool ( wxToolBar* toolBar , int id )
 	int width = 60 ;
 #endif
     wxChoice *fontsize = new wxChoice ( toolBar , id , wxDefaultPosition , wxSize ( width , -1 ) ) ;
-    toolBar->AddControl ( fontsize ) ;	
+    toolBar->AddControl ( fontsize ) ;
     fontsize->Append ( _T(" 6") ) ;
     fontsize->Append ( _T(" 8") ) ;
     fontsize->Append ( _T("10") ) ;
@@ -1230,30 +1230,30 @@ wxChoice *MyFrame::AddFontsizeTool ( wxToolBar* toolBar , int id )
 void MyFrame::addTool ( wxToolBar* toolBar , int id )
 {
 	if ( mainToolBar && toolBar != mainToolBar ) return ;
-	
+
 	if ( id == MDI_TEXT_IMPORT )
 		toolBar->AddTool( MDI_TEXT_IMPORT ,
 						 wxEmptyString,
 						 bitmaps[0],
-						 txt("m_new_sequence") ) ;  
+						 txt("m_new_sequence") ) ;
 	else if ( id == MDI_FILE_IMPORT )
-		toolBar->AddTool( MDI_FILE_IMPORT, 
+		toolBar->AddTool( MDI_FILE_IMPORT,
 						 wxEmptyString,
 						 bitmaps[14],
 						 txt("m_importtxt") );
 	else if ( id == MDI_FILE_OPEN )
-		toolBar->AddTool( MDI_FILE_OPEN, 
+		toolBar->AddTool( MDI_FILE_OPEN,
 						 wxEmptyString,
 						 bitmaps[1],
 						 txt("m_opentxt") );
 	else if ( id == MDI_FILE_SAVE )
-        toolBar->AddTool( MDI_FILE_SAVE, 
+        toolBar->AddTool( MDI_FILE_SAVE,
 						 txt("m_txt_store_in_db"),
 						 myapp()->frame->bitmaps[2] ,
 						 myapp()->frame->bitmaps[27] ,
 						 wxITEM_NORMAL , txt("m_txt_store_in_db") ) ;
 	else if ( id == SEQ_PRINT )
-        toolBar->AddTool( SEQ_PRINT, 
+        toolBar->AddTool( SEQ_PRINT,
 						 txt("m_print_sequence"),
 						 myapp()->frame->bitmaps[16] ,
 						 myapp()->frame->bitmaps[29] ,
@@ -1267,8 +1267,8 @@ void MyFrame::addTool ( wxToolBar* toolBar , int id )
 						 wxITEM_NORMAL , txt("m_undo_text") ) ;
 	}
 	else if ( id == MDI_COPY )
-        toolBar->AddTool( MDI_COPY, txt("m_copy_text") , 
-						 myapp()->frame->bitmaps[5] , 
+        toolBar->AddTool( MDI_COPY, txt("m_copy_text") ,
+						 myapp()->frame->bitmaps[5] ,
 						 myapp()->frame->bitmaps[24] ,
 						 wxITEM_NORMAL , txt("m_copy_text") ) ;
 }
@@ -1292,17 +1292,17 @@ void MyFrame::addCCPFTools(wxToolBar* toolBar, bool findbutton )
 {
 	if ( mainToolBar && toolBar != mainToolBar ) return ;
     toolBar->AddSeparator() ;
-    toolBar->AddTool( MDI_CUT, txt("m_cut_text") , 
+    toolBar->AddTool( MDI_CUT, txt("m_cut_text") ,
 					 myapp()->frame->bitmaps[4] , myapp()->frame->bitmaps[23] ,
 					 wxITEM_NORMAL , txt("m_cut_text") ) ;
-    toolBar->AddTool( MDI_COPY, txt("m_copy_text") , 
+    toolBar->AddTool( MDI_COPY, txt("m_copy_text") ,
 					 myapp()->frame->bitmaps[5] , myapp()->frame->bitmaps[24] ,
 					 wxITEM_NORMAL , txt("m_copy_text") ) ;
-    toolBar->AddTool( MDI_PASTE, txt("m_paste_text") , 
+    toolBar->AddTool( MDI_PASTE, txt("m_paste_text") ,
 					 myapp()->frame->bitmaps[6] , myapp()->frame->bitmaps[25] ,
 					 wxITEM_NORMAL , txt("m_paste_text") ) ;
     if ( findbutton )
-		toolBar->AddTool( MDI_FIND, txt("m_find_text") , 
+		toolBar->AddTool( MDI_FIND, txt("m_find_text") ,
                          myapp()->frame->bitmaps[22] , myapp()->frame->bitmaps[26] ,
                          wxITEM_NORMAL , txt("m_find_text") ) ;
     if ( !mainToolBar ) toolBar->AddSeparator () ;
@@ -1323,7 +1323,7 @@ void MyFrame::updateCCP ( ChildBase *c )
 	tb->EnableTool ( MDI_COPY , c ? c->allow_copy : false ) ;
 	tb->EnableTool ( MDI_PASTE , c ? c->allow_paste : false ) ;
 	tb->EnableTool ( MDI_FIND , c ? c->allow_find : false ) ;
-	
+
 	UGLY_MENU_UPDATE ( MDI_FILE_SAVE , c ? c->allow_save : false ) ;
 	UGLY_MENU_UPDATE ( SEQ_PRINT , c ? c->allow_print : false ) ;
 	UGLY_MENU_UPDATE ( MDI_CUT , c ? c->allow_cut : false ) ;
@@ -1355,7 +1355,7 @@ TAlignment *MyFrame::runAlignment ( wxArrayString &vs , wxArrayChildBase &vc , T
 	//    Thaw () ;
     TAlignment *subframe = new TAlignment ( getCommonParent() , _T("Alignment") ) ;
     setChild ( subframe ) ;
-    
+
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon(_T("chrt_icn")));
@@ -1363,10 +1363,10 @@ TAlignment *MyFrame::runAlignment ( wxArrayString &vs , wxArrayChildBase &vc , T
 #else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
-	
+
     subframe->initme () ;
     if ( locked == 0 ) subframe->Activate () ;
-	
+
     if ( nv )
 	{
         subframe->fromVector ( nv ) ;
@@ -1380,9 +1380,9 @@ TAlignment *MyFrame::runAlignment ( wxArrayString &vs , wxArrayChildBase &vc , T
 	{
         subframe->prealigned ( vs , vc ) ;
 	}
-	
+
     if ( locked == 0 ) subframe->Show() ;
-    
+
     mainTree->addChild ( subframe , TYPE_ALIGNMENT ) ;
     mainTree->Refresh () ;
     activateChild ( children.GetCount()-1 ) ;
@@ -1414,11 +1414,11 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     global_enzyme_rules->setup_options ( pod.globalEnzymesPanel ) ;
     int r = pod.ShowModal() ;
     if ( r != wxID_OK ) return ;
-	
+
    	wxBeginBusyCursor() ;
-	
+
 	bool useTwoToolbarsBefore = useTwoToolbars ;
-	
+
     // retrieving options
 	//    TEnzymeRules oo == *global_enzyme_rules ;
     global_enzyme_rules->lookup_options ( pod.globalEnzymesPanel ) ;
@@ -1433,21 +1433,21 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     useOnlineHelp = pod.useOnlineHelp->GetValue() ;
     doRegisterStuff = pod.doRegisterStuff->GetValue() ;
     editFeatureMode = pod.editFeatureMode->GetSelection() ;
-    showStopCodon = pod.showStopCodon->GetSelection() ;    
+    showStopCodon = pod.showStopCodon->GetSelection() ;
     showEnzymePos = pod.showEnzymePos->GetValue() ;
 	useTwoToolbars = pod.useTwoToolbars->GetValue() ;
 	showToolTips =  pod.showToolTips->GetValue() ;
 	showLowercaseDNA = pod.showLowercaseDNA->GetValue() ;
-	
+
 	long l ;
 	pod.orfLength->GetValue().ToLong ( &l ) ;
 	if ( l < 10 ) l = 10 ;
 	orfLength = l ;
-	
+
 	proxy = pod.proxyName->GetValue() + _T(":") + pod.proxyPort->GetValue() ;
 	if ( proxy == _T(":") ) proxy = _T("") ;
 	wxURL::SetDefaultProxy ( proxy ) ;
-	
+
 	wxToolTip::Enable ( showToolTips ) ;
     if ( pod.use_nonstandard_translation_table->GetValue() )
     	nonstandard_translation_table = pod.translation_tables[pod.nonstandard_translation_table->GetSelection()] ;
@@ -1460,7 +1460,7 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
         wxMessageDialog md ( this , txt("t_effect_after_restart" ) ) ;
         md.ShowModal () ;
 	}
-    
+
     // Storing options
     LS->startRecord() ;
     LS->setOption ( _T("USEMETAFILE") , useMetafile ) ;
@@ -1495,7 +1495,7 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
 	    children[a]->vec->recalculateCuts() ;
 		//	    children[a]->vec->updateDisplay() ;
 		children[a]->EnforceRefesh () ;
-	}    
+	}
 	//   	if ( GetActiveChild() ) GetActiveChild()->EnforceRefesh () ;
    	wxEndBusyCursor() ;
 }
@@ -1518,13 +1518,13 @@ void MyFrame::OnProjectLoad(wxCommandEvent& event)
 	}
     if ( !notindb.IsEmpty() )
 	{
-        notindb = txt("t_following_not_in_db_open") + 
+        notindb = txt("t_following_not_in_db_open") +
 		notindb + txt("t_following_end_open") ;
         wxMessageDialog md ( this , notindb ,
 							txt("msg_box") , wxICON_EXCLAMATION|wxYES|wxNO ) ;
         if ( md.ShowModal() != wxID_YES ) return ;
 	}
-	
+
     // All are stored, or loading anyway
     TManageDatabaseDialog mdd ( this , txt("m_project_opentxt") ,
 							   ACTION_MODE_LOAD|ACTION_MODE_PROJECT ) ;
@@ -1554,7 +1554,7 @@ void MyFrame::OnProjectSave(wxCommandEvent& event)
 							txt("msg_box") , wxICON_EXCLAMATION|wxYES|wxNO ) ;
         if ( md.ShowModal() != wxID_YES ) return ;
 	}
-	
+
     // All are stored, or saving anyway
     TManageDatabaseDialog mdd ( this , txt("m_project_savetxt") ,
 							   ACTION_MODE_SAVE|ACTION_MODE_PROJECT ) ;
@@ -1571,7 +1571,7 @@ void MyFrame::OnProjectClose(wxCommandEvent& event)
     	tb_mychild->Close ( TRUE ) ;
     	delete tb_mychild ;
     	tb_mychild = NULL ;
-	}   	
+	}
     lastChild = NULL ;
     for ( a = 0 ; a < children.GetCount() ; a++ )
 	{
@@ -1591,7 +1591,7 @@ void MyFrame::OnProjectClose(wxCommandEvent& event)
 void MyFrame::rememberLastProject ()
 {
     wxString sql ;
-	
+
     sql = _T("DELETE FROM stuff WHERE s_type='LASTPROJECT'") ;
     LS->getObject ( sql ) ;
 	LS->getObject ( wxString::Format ( _T("INSERT INTO stuff (s_type,s_name,s_value) VALUES ('LASTPROJECT','NAME','%s')") , project.name.c_str() ) ) ;
@@ -1608,7 +1608,7 @@ TAminoAcids *MyFrame::newAminoAcids ( wxString aa , wxString title )
 }
 
 /** \brief Creates a new amino acid entry from a TVector structure
- 
+
  This function basically does the same as MyFrame::newFromVector,
  but for amino acid sequences instead of DNA
  */
@@ -1616,32 +1616,32 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , wxString title )
 {
     int a ;
     if ( title.IsEmpty() ) title = _T("Surprise!") ;
-	
-    mylog ( "MyFrame::newAminoAcids" , "1" ) ;    
+
+    mylog ( "MyFrame::newAminoAcids" , "1" ) ;
     TAminoAcids *subframe = new TAminoAcids ( (wxWindow*) getCommonParent() , title ) ;
     setChild ( subframe ) ;
-	
-    mylog ( "MyFrame::newAminoAcids" , "2" ) ;    
+
+    mylog ( "MyFrame::newAminoAcids" , "2" ) ;
     subframe->vec->setFromVector ( *nv ) ;
-    
-    mylog ( "MyFrame::newAminoAcids" , "3" ) ;    
+
+    mylog ( "MyFrame::newAminoAcids" , "3" ) ;
     wxString seq = subframe->vec->getSequence() ;
     seq.Replace ( _T("|") , _T("") , true ) ;
     subframe->vec->setSequence ( seq ) ;
-    
-    mylog ( "MyFrame::newAminoAcids" , "4" ) ;    
+
+    mylog ( "MyFrame::newAminoAcids" , "4" ) ;
     subframe->vec->setWindow ( subframe ) ;
     subframe->vec->setType ( TYPE_AMINO_ACIDS ) ;
     subframe->vec->setName ( title ) ;
     subframe->vec->undo.clear() ;
-	
-    mylog ( "MyFrame::newAminoAcids" , "5" ) ;    
+
+    mylog ( "MyFrame::newAminoAcids" , "5" ) ;
     for ( a = 0 ; a < nv->items.size() ; a++ )
 	{
         nv->items[a].setType ( VIT_MISC ) ;
         nv->items[a].setDirection ( 1 ) ;
 	}
-    
+
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon(_T("chrt_icn")));
@@ -1649,19 +1649,19 @@ TAminoAcids *MyFrame::newAminoAcids ( TVector *nv , wxString title )
 #else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
-	
-    mylog ( "MyFrame::newAminoAcids" , "6" ) ;    
-    mainTree->addChild ( subframe , TYPE_AMINO_ACIDS ) ; 
-    mylog ( "MyFrame::newAminoAcids" , "6a" ) ;    
+
+    mylog ( "MyFrame::newAminoAcids" , "6" ) ;
+    mainTree->addChild ( subframe , TYPE_AMINO_ACIDS ) ;
+    mylog ( "MyFrame::newAminoAcids" , "6a" ) ;
     subframe->initme () ;
-    mylog ( "MyFrame::newAminoAcids" , "7" ) ;    
+    mylog ( "MyFrame::newAminoAcids" , "7" ) ;
     if ( locked != 0 ) return subframe ;
     subframe->Show() ;
     subframe->Maximize() ;
     subframe->showName() ;
     subframe->Activate () ;
     children.Last()->Activate () ;
-    mylog ( "MyFrame::newAminoAcids" , "8" ) ;    
+    mylog ( "MyFrame::newAminoAcids" , "8" ) ;
     return subframe ;
 }
 
@@ -1674,7 +1674,7 @@ TABIviewer *MyFrame::newABI ( wxString filename , wxString title )
     subframe->filename = filename ;
     subframe->vec->setType ( TYPE_SEQUENCE ) ;
     subframe->vec->addDescription ( _T("\n") + wxGetUserName() ) ;
-	
+
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon(_T("chrt_icn")));
@@ -1682,16 +1682,16 @@ TABIviewer *MyFrame::newABI ( wxString filename , wxString title )
 #else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
-	
+
     subframe->initme () ;
-	
+
     subframe->Show() ;
     subframe->Maximize() ;
     subframe->showName() ;
-    
+
     setChild ( subframe ) ;
     mainTree->addChild ( subframe , TYPE_SEQUENCE ) ;
-	
+
     if ( LS->getOption ( _T("SHOWABIHORIZONTAL") , false ) )
 	{
         subframe->sc->SilentRefresh () ;
@@ -1700,17 +1700,17 @@ TABIviewer *MyFrame::newABI ( wxString filename , wxString title )
         if ( horiz ) horiz->SetValue ( true ) ;
         wxCommandEvent event ;
         subframe->OnHorizontal(event) ;
-	}    
-	
+	}
+
     if ( myapp()->clp[_T("view-sequencing-reverse-complement")] == _T("1") )
 	{
 		subframe->toggle_inv_compl () ;
 		myapp()->clp.erase(_T("view-sequencing-reverse-complement")) ;
 	}
-	
+
     subframe->Activate () ;
     children.Last()->Activate () ;
-	
+
     return subframe ;
 }
 
@@ -1729,7 +1729,7 @@ void MyFrame::blast ( wxString seq , wxString prg )
 	ExternalInterface *ei = (ExternalInterface*) children[a] ;
 	ei->runBlast ( seq , prg ) ;
 	return ;
-	
+
 	/*
 	 // Obsolete
 	 #ifdef __WXMSW__
@@ -1737,41 +1737,41 @@ void MyFrame::blast ( wxString seq , wxString prg )
 	 unique.Replace ( ":" , "_" ) ;
 	 unique.Replace ( "/" , "_" ) ;
 	 unique.Replace ( " " , "_" ) ;
-	 
+
 	 wxString hd = myapp()->homedir ;
 	 wxString exe = hd + "\\blastcl3.exe" ; // WINDOWS-SPECIFIC!
 	 wxString ifile = hd + "\\blasts\\temp_" + unique + ".tmp" ;
 	 wxString ofile = hd + "\\blasts\\blast_results_" + unique + ".html" ;
 	 wxString bfile = hd + "\\blasts\\batch_" + unique + ".bat" ;
-	 
+
 	 wxString blast_dir = hd + "\\blasts" ;
 	 if ( !wxDir::Exists ( blast_dir ) )
 	 wxMkdir ( blast_dir ) ;
-	 
+
 	 // Writing temporary blast file
 	 wxFile out ( ifile , wxFile::write ) ;
 	 out.Write ( seq ) ;
 	 out.Close () ;
-	 
+
 	 wxFile batch ( bfile , wxFile::write ) ;
 	 batch.Write ( "@echo off\n" ) ;
-	 
+
 	 // Creating blast command line
 	 exe += " -p \"" + prg + "\"" ;
 	 exe += " -i \"" + ifile + "\"" ;
 	 exe += " -o \"" + ofile + "\"" ;
 	 exe += " -Tt" ; // Create HTML
 	 batch.Write ( exe + "\n" ) ;
-	 
+
 	 // Starting browser
 	 exe = "start " ;
 	 exe += myapp()->getHTMLCommand ( ofile ) ;
 	 batch.Write ( exe + "\n" ) ;
-	 
+
 	 // Delete temporary files
 	 batch.Write ( "del \"" + ifile + "\"\n" ) ;
 	 batch.Write ( "del \"" + bfile + "\"\n" ) ;
-	 
+
 	 // Run it
 	 batch.Close() ;
 	 wxExecute ( bfile ) ;
@@ -1784,7 +1784,7 @@ void MyFrame::blast ( wxString seq , wxString prg )
 void MyFrame::OnExternalInterface(wxCommandEvent& event)
 {
     ExternalInterface *subframe = new ExternalInterface ( getCommonParent() , txt("t_external_interface") ) ;
-	
+
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon(_T("chrt_icn")));
@@ -1792,13 +1792,13 @@ void MyFrame::OnExternalInterface(wxCommandEvent& event)
 #else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
-	
+
     subframe->initme () ;
-	
+
     subframe->Show() ;
     subframe->Maximize() ;
     subframe->showName() ;
-    
+
     mainTree->addChild ( subframe , TYPE_MISC ) ;
     setChild ( subframe ) ;
     activateChild ( children.GetCount()-1 ) ;
@@ -1809,7 +1809,7 @@ void MyFrame::OnExternalInterface(wxCommandEvent& event)
 void MyFrame::OnImageViewer(wxCommandEvent& event)
 {
     TImageDisplay *subframe = new TImageDisplay ( getCommonParent() , txt("t_image_viewer") ) ;
-	
+
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon(_T("chrt_icn")));
@@ -1817,13 +1817,13 @@ void MyFrame::OnImageViewer(wxCommandEvent& event)
 #else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
-	
+
     subframe->initme () ;
-	
+
     subframe->Show() ;
     subframe->Maximize() ;
     subframe->showName() ;
-    
+
     mainTree->addChild ( subframe , TYPE_MISC ) ;
     setChild ( subframe ) ;
     activateChild ( children.GetCount()-1 ) ;
@@ -1834,14 +1834,14 @@ void MyFrame::OnImageViewer(wxCommandEvent& event)
 void MyFrame::OnCalculator(wxCommandEvent& event)
 {
     RunCalculator () ;
-}    
+}
 
 /** \brief Handles the Dot plot menu event
  */
 void MyFrame::OnDotPlot(wxCommandEvent& event)
 {
     TDotPlot *subframe = new TDotPlot ( getCommonParent() , txt("t_dotplot") ) ;
-	
+
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon(_T("chrt_icn")));
@@ -1849,17 +1849,17 @@ void MyFrame::OnDotPlot(wxCommandEvent& event)
 #else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
-	
+
     subframe->initme () ;
-	
+
     subframe->Show() ;
     subframe->Maximize() ;
     subframe->showName() ;
-	
+
     mainTree->addChild ( subframe , TYPE_MISC ) ;
     setChild ( subframe ) ;
     activateChild ( children.GetCount()-1 ) ;
-	
+
 	//    return subframe ;
 }
 
@@ -1872,7 +1872,7 @@ void MyFrame::OnGraph(wxCommandEvent& event)
 	wxString seq = _T("MSPILGYWKIKGLVQPTRLLLEYLEEKYEEHLYERDEGDKWRNKKFELGLEFPNLPYYIDGDVKLTQSMAIIRYIADKHNMLGGCPKERAEISMLEGAVLDIRYGVSRIAYSKDFETLKVDFLSKLPEMLKMFEDRLCHKTYLNGDHVTHPDFMLYDALDVVLYMDPMCLDAFPKLVCFKKRIEAIPQIDKYLKSSKYIAWPLQGWQATFGGGDHPPKSDLIEGRGIPGNSS") ; // GST
 	//	char *s2 = new char[seq.length()+5] ;
 	//	strcpy ( s2 , seq.mb_str() ) ;
-	
+
 	wxString ret ;
 	wxArrayFloat af[3] ;
 	for ( int a = 0 ; a < 3 ; a++ )
@@ -1892,21 +1892,21 @@ void MyFrame::OnGraph(wxCommandEvent& event)
   			ret += wxString::Format ( _T("%1.4f, ") , (float) prob ) ;
 		}
         ret += _T("\n") ;
-	}	
+	}
 	wxMessageBox ( ret ) ;
-	
+
 	/*    TGraph *g = RunGraph() ;
 	 g->gd->SetupDummy() ;
 	 g->gd->AutoScale () ;
 	 g->gd->UpdateDisplay () ;*/
-}    
+}
 
 /** \brief Invokes the calculator module
  */
 TCalculator *MyFrame::RunCalculator ()
 {
     TCalculator *subframe = new TCalculator ( getCommonParent() , txt("t_calculator") ) ;
-	
+
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon(_T("chrt_icn")));
@@ -1914,13 +1914,13 @@ TCalculator *MyFrame::RunCalculator ()
 #else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
-	
+
     subframe->initme () ;
-	
+
     subframe->Show() ;
     subframe->Maximize() ;
     subframe->showName() ;
-    
+
     mainTree->addChild ( subframe , TYPE_MISC ) ;
     setChild ( subframe ) ;
     activateChild ( children.GetCount()-1 ) ;
@@ -1932,7 +1932,7 @@ TCalculator *MyFrame::RunCalculator ()
 TGraph *MyFrame::RunGraph ()
 {
     TGraph *subframe = new TGraph ( getCommonParent() , txt("t_graph") ) ;
-	
+
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon(_T("chrt_icn")));
@@ -1940,13 +1940,13 @@ TGraph *MyFrame::RunGraph ()
 #else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
-	
+
     subframe->initme () ;
-	
+
     subframe->Show() ;
     subframe->Maximize() ;
     subframe->showName() ;
-    
+
     mainTree->addChild ( subframe , TYPE_MISC ) ;
     setChild ( subframe ) ;
     activateChild ( children.GetCount()-1 ) ;
@@ -1968,9 +1968,9 @@ wxMenu *MyFrame::getFileMenu ( int options )
     file_menu->Append(MDI_TEXT_IMPORT, txt("m_text_import") , txt("m_text_importtxt") );
     if ( 0 < ( options & FILE_MENU_EXPORT ) ) file_menu->Append(MDI_EXPORT, txt("m_export") , txt("m_export_txt") );
     file_menu->AppendSeparator();
-    file_menu->Append(MDI_PROJECT_LOAD, txt("m_project_open") , txt("m_project_opentxt") );    
-    file_menu->Append(MDI_PROJECT_SAVE, txt("m_project_save") , txt("m_project_savetxt") );    
-    file_menu->Append(MDI_PROJECT_CLOSE, txt("m_project_close") , txt("m_project_closetxt") );    
+    file_menu->Append(MDI_PROJECT_LOAD, txt("m_project_open") , txt("m_project_opentxt") );
+    file_menu->Append(MDI_PROJECT_SAVE, txt("m_project_save") , txt("m_project_savetxt") );
+    file_menu->Append(MDI_PROJECT_CLOSE, txt("m_project_close") , txt("m_project_closetxt") );
     file_menu->AppendSeparator();
     if ( 0 < ( options & FILE_MENU_PRINT ) ) file_menu->Append(MDI_PRINT_IMAGE, txt("m_print_image") , txt("m_print_image_txt") );
     if ( 0 < ( options & FILE_MENU_PRINT_RESTRICTIONS ) ) file_menu->Append(MDI_PRINT_RESTRICTION_LIST, txt("m_print_restrictions") , txt("m_print_restrictions_txt") );
@@ -1978,7 +1978,7 @@ wxMenu *MyFrame::getFileMenu ( int options )
     file_menu->Append(MDI_PRINT_REPORT, txt("m_print_report") , txt("m_print_report_txt") );
     file_menu->AppendSeparator();
     file_menu->Append(MDI_QUIT, txt("m_exit") , txt("m_exittxt") ) ;
-    return file_menu ;    
+    return file_menu ;
 }
 
 /** \brief Returns the standard Tools menu, with variations
@@ -2045,7 +2045,7 @@ void MyFrame::removeChild ( ChildBase *ch )
     children.RemoveAt ( a ) ;
     lastChild = NULL ;
     activateChild ( 0 ) ;
-    
+
     if ( children.size() == 0 )
 	{
 		while ( count_help () > 1 ) pop_help() ;
@@ -2093,26 +2093,26 @@ void MyFrame::lockDisplay ( bool lock )
 				if ( GetActiveChild() ) GetActiveChild()->Activate() ;
 				else children.Last()->Activate () ;
 			}
-		}    
-	}        
-}    
+		}
+	}
+}
 
 /** \brief Is display locked?
  */
 bool MyFrame::isLocked ()
 {
     return ( locked != 0 ) ;
-}    
+}
 
 /** \brief Is a child activation sequence running?
  */
 bool MyFrame::isActivating ()
 {
     return activating ;
-}    
+}
 
 /** \brief Is a new version available online?
- 
+
  This function is currently a mess, due to bugs in wxWidgets,
  but it basically works...
  */
@@ -2120,42 +2120,42 @@ wxString MyFrame::check4update ()
 {
     wxString text , file ;
 	myExternal ex ;
-	
+
 #ifdef __WXMSW__
 	file = _T("currentversion.txt") ;
 #endif
-	
+
 #ifdef __WXMAC__
 	file = _T("mac_currentversion.txt") ;
 #endif
-	
+
 	text = check4update_sub ( ex.getText ( _T("http://gentle.magnusmanske.de/") + file ) ) ;
 //	if ( text.IsEmpty() ) // Fallback
 //		text = check4update_sub ( ex.getText ( _T("http://www.uni-koeln.de/math-nat-fak/biochemie/klein/gentle/") + file ) ) ;
-	
+
 	if ( text == _T("-") ) text = _T("") ;
     return text ;
 }
 
 wxString MyFrame::check4update_sub ( wxString text )
 {
-    bool error = true ;    
+    bool error = true ;
 	if ( !text.IsEmpty() ) error = false ;
-	
+
     if ( !error )
 	{
 	    wxString it = text ;
 	    wxString td = text ;
         td = td.BeforeFirst ( '\n' ) ;
         td = td.BeforeFirst ( '\r' ) ;
-        
+
         wxString lu = LS->getOption ( _T("LAST_UPDATE") , _T("") ) ;
         if ( lu.IsEmpty() ) // Assuming new installation of the latest version, so no update
 		{
 			lu = td ;
 			LS->setOption ( _T("LAST_UPDATE") , lu ) ;
 		}
-		
+
         if ( td > lu )
 		{
 			wxString msg = it.AfterFirst ( '\n' ) ;
@@ -2164,7 +2164,7 @@ wxString MyFrame::check4update_sub ( wxString text )
 								wxOK | wxCANCEL | wxCENTRE | wxICON_INFORMATION ) ;
 			if ( wxID_OK != md.ShowModal() )
 				return _T("-") ;
-			
+
 			return td ;
 		}
 	}
@@ -2173,7 +2173,7 @@ wxString MyFrame::check4update_sub ( wxString text )
         // Cannot connect to check for update
         // SetStatusText ( txt("t_update_warning") , 1 ) ;
         // wxMessageBox ( _T("Error") , text ) ;
-	}    
+	}
     return _T("") ;
 }
 
@@ -2186,21 +2186,21 @@ void MyFrame::update2version ( wxString ver )
     wxProgressDialog pd ( _T("Updating...") , _T("Downloading installer...") , 2 , NULL , 0 ) ;
     myExternal ex ;
     ex.pd = &pd ;
-	
+
 	wxString sourcefile , sourcefile2 , localfile ;
-	
+
 #ifdef __WXMSW__
     localfile = myapp()->homedir + _T("\\GENtleSetup.exe") ;
 	sourcefile = _T("http://gentle.magnusmanske.de/GENtleSetup.exe") ;
 	sourcefile2 = _T("http://www.uni-koeln.de/math-nat-fak/biochemie/klein/gentle/GENtleSetup.exe") ; // Fallback
 #endif
-	
+
 #ifdef __WXMAC__
 	localfile = wxString(wxGetUserHome()) + _T("/Desktop/GENtle.pkg.zip") ;
 	sourcefile = _T("http://gentle.magnusmanske.de/GENtle.pkg.zip") ;
 	sourcefile2 = _T("http://www.uni-koeln.de/math-nat-fak/biochemie/klein/gentle/GENtle.pkg.zip") ; // Fallback
 #endif
-	
+
     if ( ex.copyFile ( sourcefile , localfile ) > 0 )
 	{
         if ( ex.copyFile ( sourcefile2 , localfile ) > 0 )
@@ -2208,8 +2208,8 @@ void MyFrame::update2version ( wxString ver )
             wxMessageBox ( _T("Couldn't read setup file") ) ;
             wxExit() ; // Hard exit
 		}
-	}    
-	
+	}
+
 #ifdef __WXMSW__
     do_run = _T("\"") + localfile + _T("\" /D=\"") ;
     do_run += myapp()->homedir ;
@@ -2219,7 +2219,7 @@ void MyFrame::update2version ( wxString ver )
     if ( 0 == wxExecute ( do_run , wxEXEC_ASYNC ) ) return ; // 0 means the process couldn't start :-(
     wxExit() ; // Hard exit
 #endif
-	
+
 #ifdef __WXMAC__
 	do_run = _T("unzip -o ") + localfile + _T(" -d ") + wxGetUserHome() + _T("/Desktop") ;
 	wxExecute ( do_run , wxEXEC_SYNC ) ;
@@ -2239,7 +2239,7 @@ void MyFrame::OnSashDrag(wxSashEvent& event)
 {
     if (event.GetDragStatus() == wxSASH_STATUS_OUT_OF_RANGE)
         return;
-	
+
     switch (event.GetId())
     {
         case FRAME_SASH_TOP:
@@ -2266,9 +2266,9 @@ void MyFrame::OnSashDrag(wxSashEvent& event)
     wxLayoutAlgorithm layout;
     layout.LayoutFrame(this);
 	Refresh () ;
-	
+
     // Leaves bits of itself behind sometimes
-	//    GetClientWindow()->Refresh();    
+	//    GetClientWindow()->Refresh();
 }
 
 /** \brief Creates a temporary database, or uses one from the cache
@@ -2278,7 +2278,7 @@ TStorage *MyFrame::getTempDB ( wxString name )
 {
     unsigned int a ;
     for ( a = 0 ; a < dbcache.GetCount() && dbcache[a]->getDBname() != name ; a++ ) ;
-    if ( a == dbcache.GetCount() ) 
+    if ( a == dbcache.GetCount() )
         dbcache.Add ( new TStorage ( TEMP_STORAGE , name ) ) ;
     return dbcache[a] ;
 }
@@ -2365,7 +2365,7 @@ void MyFrame::OnlineTools(wxCommandEvent& event)
 
 /** \brief Reroutes menu events from the frame to the active child
  */
-void MyFrame::RerouteMenu(wxCommandEvent& event) 
+void MyFrame::RerouteMenu(wxCommandEvent& event)
 {
     bool b = false ;
     if ( lastChild ) b = lastChild->ProcessEvent ( event ) ;
@@ -2401,11 +2401,11 @@ TVirtualGel *MyFrame::useGel ( wxString type )
  		if ( children[a]->def != _T("GEL") ) continue ;
  		gel = (TVirtualGel*) children[a] ;
  		if ( gel->type == type ) return gel ;
-	}    
-	
+	}
+
 	gel = new TVirtualGel ( getCommonParent() , _T("GEL ") + type ) ;
 	gel->type = type ;
-	
+
     // Give it an icon
 #ifdef __WXMSW__
     gel->SetIcon(wxIcon(_T("chrt_icn")));
@@ -2413,18 +2413,18 @@ TVirtualGel *MyFrame::useGel ( wxString type )
 #else
     gel->SetIcon(wxIcon( mondrian_xpm ));
 #endif
-	
+
     gel->initme () ;
-	
+
     gel->Show() ;
     gel->Maximize() ;
     gel->showName() ;
-    
+
     mainTree->addChild ( gel , TYPE_MISC ) ;
     setChild ( gel ) ;
     activateChild ( children.GetCount()-1 ) ;
 	return gel ;
-}    
+}
 
 /** \brief Handles the menu request for running the test suite
  */
@@ -2460,22 +2460,22 @@ void MyFrame::OnSequencingAssistant(wxCommandEvent& event)
 {
     TSequencingAssistantDialog sa ( getCommonParent(), txt("t_sequencing_assistant") );
     if ( wxID_OK != sa.ShowModal() ) return ; // Cancel
-    
+
     int sel_seq = sa.sequence->GetSelection() ;
     int sel_abi1 = sa.abi1->GetSelection() ;
     int sel_abi2 = sa.abi2->GetSelection() ;
-	
+
     if ( sel_seq == wxNOT_FOUND || sel_seq == 0 ) return ; // No sequence selected
     if ( sel_abi1 <= 0 && sel_abi2 <= 0 ) return ; // No ABI selected
     sa.fix_rev_compl () ;
-    
+
     // Alignment call
     wxArrayString vs ;
     wxArrayChildBase vc ;
     ChildBase *seq = sa.dna[sel_seq] ;
     ChildBase *abi1 = sel_abi1 <= 0 ? NULL : sa.abi[sa.abi1->GetSelection()] ;
     ChildBase *abi2 = sel_abi2 <= 0 ? NULL : sa.abi[sa.abi2->GetSelection()] ;
-    
+
     // Put 5'->3' first
     if ( abi1 && abi2 && ((TABIviewer*)abi1)->get_inv_compl() && !((TABIviewer*)abi2)->get_inv_compl() )
 	{
@@ -2483,7 +2483,7 @@ void MyFrame::OnSequencingAssistant(wxCommandEvent& event)
 		abi1 = abi2 ;
 		abi2 = abi3 ;
 	}
-    
+
     vs.Add ( seq->getName() ) ;
     vc.Add ( seq ) ;
     if ( abi1 )
@@ -2496,7 +2496,7 @@ void MyFrame::OnSequencingAssistant(wxCommandEvent& event)
 	    vs.Add ( abi2->getName() ) ;
 	    vc.Add ( abi2 ) ;
 	}
-    
+
     TAlignment *ali = runAlignment ( vs , vc , NULL ) ;
     ali->algorithm = 1 ;
     ali->redoAlignments () ;
@@ -2507,7 +2507,7 @@ void MyFrame::OnCloningAssistant(wxCommandEvent& event)
     TCloningAssistant *subframe = new TCloningAssistant(getCommonParent(), txt("t_cloning_assistant") );
     myass ( subframe , "MyFrame::OnCloningAssistant" ) ;
     setChild ( subframe ) ;
-	
+
     // Give it an icon
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon(_T("chrt_icn")));
@@ -2515,7 +2515,7 @@ void MyFrame::OnCloningAssistant(wxCommandEvent& event)
 #else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
-	
+
     subframe->initme() ;
     mainTree->addChild(subframe,TYPE_MISC) ;
     children.Last()->Activate () ;
@@ -2536,7 +2536,7 @@ void MyFrame::OnLigation(wxCommandEvent& event)
 			ld.vv.Add ( p->vec ) ;
 		}
 	}
-    
+
     ld.init () ;
     ld.ShowModal() ;
     if ( !ld.doLigate ) return ;
@@ -2577,14 +2577,14 @@ TTestSuite::TTestSuite ()
 {
     srand ( time(NULL) );
     cnt = 0 ;
-}    
+}
 
 void TTestSuite::pressKey ( ChildBase *ac )
 {
 	if ( ac->def == _T("dna") ) vectorPressKey ( ac ) ;
 	if ( ac->def == _T("AminoAcids") ) vectorPressKey ( ac ) ;
 	if ( ac->def == _T("PrimerDesign") ) vectorPressKey ( ac ) ;
-}    
+}
 
 void TTestSuite::action ( ChildBase *ac )
 {
@@ -2601,7 +2601,7 @@ void TTestSuite::editMode ( ChildBase *ac )
     if ( ac->def == _T("AminoAcids") )
 	{
         ((TAminoAcids*)ac)->OnEditMode(event) ;
-	}    
+	}
 }
 
 void TTestSuite::vectorPressKey ( ChildBase *ac )
@@ -2668,14 +2668,14 @@ void TTestSuite::vectorAction ( ChildBase *ac )
 	    case 21 : c->OnToggleIDNA ( ev ) ; break ;
 	    case 22 : c->Undo ( ev ) ; break ;
 	    case 23 : if ( c->cSequence ) c->OnRunPCR ( ev ) ; break ;
-	}    
-}	
+	}
+}
 
 void TTestSuite::aaAction ( ChildBase *ac )
 {
     wxCommandEvent ev ;
 	TAminoAcids *aa = (TAminoAcids*) ac ;
-	
+
 	int r = rand() % 15 ;
 	if ( r == 0 )
 	{
@@ -2690,21 +2690,21 @@ void TTestSuite::aaAction ( ChildBase *ac )
 	else if ( r == 3 ) { mylog ( "TTestSuite::aaAction" , "Cut" ) ; aa->OnCut ( ev ) ; }
 	//	else if ( r == 4 ) aa->OnPhotometer ( ev ) ; // Works, too many boring calculators ;-)
 	else
-	{    
+	{
  		int num = aa->lb->GetCount() ;
  		num = rand() % num ;
- 		mylog ( "TTestSuite::aaAction" , wxString::Format ( "ListBox to %d" , num ) ) ; 
+ 		mylog ( "TTestSuite::aaAction" , wxString::Format ( "ListBox to %d" , num ) ) ;
  		aa->lb->SetSelection ( num , true ) ;
     	aa->OnListBox ( ev ) ;
-	}   	
-}	
+	}
+}
 
 void TTestSuite::mouseEvent ( ChildBase *ac )
 {
 	SequenceCanvas *can = ac->cSequence ;
 	if ( !can && ac->def == _T("PrimerDesign") ) can = ((TPrimerDesign*)ac)->sc ;
 	if ( !can ) return ;
-	
+
 	wxArrayInt vi ;
 	vi.Add ( wxEVT_ENTER_WINDOW ) ;
 	vi.Add ( wxEVT_LEAVE_WINDOW ) ;
@@ -2719,34 +2719,34 @@ void TTestSuite::mouseEvent ( ChildBase *ac )
 	vi.Add ( wxEVT_RIGHT_DCLICK ) ;
 	vi.Add ( wxEVT_MOTION ) ;
 	vi.Add ( wxEVT_MOUSEWHEEL ) ;
-	
+
 	int et = vi[rand()%vi.GetCount()] ;
-	
+
 	wxMouseEvent event ( et ) ;
 	int w , h ;
 	can->GetClientSize ( &w , &h ) ;
 	event.m_x = rand() % w ;
 	event.m_y = rand() % h ;
 	can->OnEvent ( event ) ;
-}	
+}
 
 void TTestSuite::Step()
 {
     if ( cnt == 0 ) start = wxGetLocalTime() ;
     MyFrame *f = myapp()->frame ;
-	
+
     ChildBase *ac = f->GetActiveChild () ;
     if ( !ac ) return ; // No child open
-    
+
     cnt++ ;
     if ( cnt > 1000000 )
 	{
 	    wxMessageBox ( _T("1000K") ) ;
 	    wxExit() ;
-	}    
+	}
     int r = rand() ;
     r %= 10 ;
-    
+
     wxString x ;
     x = ac->getName() ;
     x += _T(" [") + ac->def + _T("] ") ;
@@ -2757,7 +2757,7 @@ void TTestSuite::Step()
     if ( ac->cSequence ) x += wxString::Format ( _T(", Mark %d-%d") , ac->cSequence->markedFrom() , ac->cSequence->markedTo() ) ;
     x += wxString::Format ( _T(", r=%d") , r ) ;
     mylog ( "Testsuite:Status" , x ) ;
-    
+
     if ( r < 6 ) pressKey ( ac ) ;
 	//   	else if ( r == 6 ) mouseEvent ( ac ) ;
    	else if ( r == 7 ) editMode ( ac ) ;
@@ -2766,9 +2766,9 @@ void TTestSuite::Step()
 	    r = rand() % f->children.GetCount() ;
 	    mylog ( "Testsuite:Activate" , wxString::Format ( "%d" , r ) ) ;
 	    f->activateChild ( r ) ;
-	}    
+	}
    	else if ( r == 9 ) action ( ac ) ;
-}            
+}
 
 #endif
 

@@ -23,7 +23,7 @@ class TImageDisplay : public ChildBase
     public :
     TImageDisplay(wxWindow *parent, const wxString& title) ; ///< Constructor
     ~TImageDisplay () ; ///< Destructor
-    
+
     void initme () ; ///< Initialization
     virtual wxString getName () ; ///< Returns the image module name
 
@@ -34,21 +34,21 @@ class TImageDisplay : public ChildBase
     virtual void OnCopy(wxCommandEvent &event); ///< The copy event handler
     virtual void OnPrint(wxCommandEvent &event); ///< The print event handler
     virtual void OnSave(wxCommandEvent &event); ///< The save event handler
-    
+
     void ShowDir ( wxString s ) ; ///< Displays the list of files in the chosen directory
 
     TIMGreader *r ; ///< Pointer to the BioRad image reader class
-    
-    private :    
+
+    private :
     TMyImagePanel *right ; ///< Pointer to the image display class
     wxListBox *lb ; ///< The list box containing the file list
     wxButton *bu ; ///< The directory button
     wxCheckBox *cb ; ///< The "Show labels" check box
     wxCheckBox *invert ; ///< The "Invert image" check box
-    
+
     DECLARE_EVENT_TABLE()
     } ;
-    
+
 /**	\class TMyImagePanel
 	\brief This class represents the actual image displayed by TImageDisplay
 */
@@ -68,7 +68,7 @@ class TMyImagePanel : public wxPanel
     virtual void OnCopy(wxCommandEvent &event); ///< The copy event handler
     virtual void OnPrint(wxCommandEvent &event); ///< The print event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< The dummy event handler
-    
+
     virtual void WriteIntoBitmap(wxBitmap &bmp2) ; ///< Converts an image into a bitmap
 
     wxBitmap *bmp ; ///< Pointer to current bitmap structure
@@ -79,5 +79,5 @@ class TMyImagePanel : public wxPanel
 
     DECLARE_EVENT_TABLE()
     } ;
-    
+
 #endif

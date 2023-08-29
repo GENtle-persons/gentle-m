@@ -16,7 +16,7 @@ class TIMGitem
     void draw ( wxDC &dc , int x1 , int y1 , int x2 , int y2 ) ; ///< Draws the annotation
     int xx ( int x ) ; ///< X-coordinate conversion
     int yy ( int y ) ; ///< Y-coordinate conversion
-    
+
     int type ; ///< Annotation type
     wxPoint p1 , p2 ;
     wxString s ; ///< Annotation
@@ -35,17 +35,17 @@ class TIMGreader
     void readFile ( wxString fn ) ; ///< Reads the IMG file
     int getInt ( int adr ) ; ///< Gets an interger value from a dertain adress in the buffer
     wxImage makeImage () ; ///< Returns the parsed IMG file as a wxImage
-    
+
     vector <TIMGitem> items ; ///< Annotation items
-    
+
     private :
     unsigned char *output ; ///< Output memory
     unsigned char *buffer ; ///< Buffer memory
     long size; ///< Buffer size
-    
+
     /// Image width
     int w , h ; ///< Image height
     } ;
-    
+
 #endif
 

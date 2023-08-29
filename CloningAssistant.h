@@ -77,7 +77,7 @@ class TCloningAssistantPanel : public wxScrolledWindow
     virtual void OnSize (wxSizeEvent& event) ;
     	
     void arrange () ;
-    
+
 	private :
 	friend class TDDR_Timer ;
 	void do_drop ( TDDR *source , TDDR *target ) ;
@@ -104,7 +104,7 @@ class TCloningAssistant : public ChildBase
     virtual void Refresh (bool eraseBackground = true, const wxRect* rect = NULL) ;
     virtual void OnPaint(wxPaintEvent& event) ; ///< Paint event handler
     virtual void OnDraw(wxDC& pdc) ;
-    
+
     private :
 	friend class TCloningAssistantPanel ;
 	

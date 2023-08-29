@@ -11,7 +11,7 @@ class TProteolysisGel : public wxScrolledWindow
 	TProteolysisGel(wxWindow* parent, wxWindowID id = -1 ) ;
 	virtual void OnDraw(wxDC& dc) ; ///< Redraw
     virtual void OnEvent(wxMouseEvent& event); ///< Mouse event handler
-    
+
     wxArrayInt screen , logical ;
 	
 	DECLARE_EVENT_TABLE()

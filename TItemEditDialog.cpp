@@ -19,7 +19,7 @@ TItemEditDialog::TItemEditDialog ( wxWindow *parent, const wxString& title ,
    myapp()->frame->push_help ( _T("GENtle:Sequence_editor#Features") ) ;
    vi = new TVectorItem ;
    *vi = _vi ;
-   
+
    // Color button
    wxButton *item_color_button = new wxButton ( this , IED_COLOR , txt("b_item_color") ) ;
 
@@ -36,7 +36,7 @@ TItemEditDialog::TItemEditDialog ( wxWindow *parent, const wxString& title ,
                            wxDefaultSize ,
                            6 ,
                            rb_ch , 3 ,
-                           wxRA_SPECIFY_COLS 
+                           wxRA_SPECIFY_COLS
                            ) ;
    rb->SetSelection ( atoi ( vi->getParam ( _T("SEQUENCE_STYLE") ).mb_str() ) ) ;
 
@@ -49,21 +49,21 @@ TItemEditDialog::TItemEditDialog ( wxWindow *parent, const wxString& title ,
 
    offset = new wxTextCtrl ( this , -1 , off_t ) ;
    if ( off == -1 ) offset->Disable() ;
-   
+
    // Properties listbox
-   lb = new wxListBox ( this , IED_LIST , 
-                           wxDefaultPosition , 
+   lb = new wxListBox ( this , IED_LIST ,
+                           wxDefaultPosition ,
                            wxSize ( 300 , -1 ) ,
                            0 , NULL , wxLB_SORT|wxLB_HSCROLL|wxLB_ALWAYS_SB ) ;
    initlb () ;
 
    wxButton *button_OK = new wxButton ( this , IED_OK , txt("b_ok") ) ;
    wxButton *button_cancel = new wxButton ( this , IED_CANCEL , txt("b_cancel") ) ;
-   
+
    wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
    wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
    wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
-   
+
    h0->Add ( item_color_button , 0 , wxEXPAND ) ;
    h0->Add ( new wxStaticText ( this , -1 , _T("   ") ) , 0 , wxEXPAND ) ;
    h0->Add ( useOffset , 0 , wxEXPAND ) ;
@@ -78,26 +78,26 @@ TItemEditDialog::TItemEditDialog ( wxWindow *parent, const wxString& title ,
    h1->Add ( new wxStaticText ( this , -1 , _T("         ") ) , 0 , wxEXPAND ) ;
    h1->Add ( button_cancel , 0 , wxEXPAND ) ;
 #endif
-   
+
    v0->Add ( rb , 0 , wxEXPAND , 5 ) ;
    v0->Add ( h0 , 0 , wxEXPAND , 5 ) ;
    v0->Add ( lb , 1 , wxEXPAND , 5 ) ;
    v0->Add ( h1 , 0 , wxCENTER|wxALL , 5 ) ;
-      
+
    button_OK->SetDefault() ;
    button_OK->SetFocus() ;
-   
+
    this->SetSizer ( v0 ) ;
    v0->Fit ( this ) ;
    Center() ;
    }
-   
+
 TItemEditDialog::~TItemEditDialog ()
     {
     myapp()->frame->pop_help () ;
     delete vi ;
     }
-    
+
 // Handlers
 
 void TItemEditDialog::OnCharHook(wxKeyEvent& event)
@@ -117,7 +117,7 @@ void TItemEditDialog::OnOK ( wxCommandEvent &ev )
     else vi->setOffset ( -1 ) ;
     EndModal ( wxID_OK ) ; // wxDialog::OnOK(ev) ;
     }
-    
+
 void TItemEditDialog::OnCancel ( wxCommandEvent &ev )
     {
     EndModal ( wxID_CANCEL ) ; // wxDialog::OnCancel(ev) ;
@@ -138,7 +138,7 @@ void TItemEditDialog::OnUseOffset ( wxCommandEvent &ev )
     if ( useOffset->IsChecked() ) offset->Enable() ;
     else offset->Disable() ;
     }
-    
+
 void TItemEditDialog::initlb ()
     {
     lb->Clear () ;
@@ -148,9 +148,9 @@ void TItemEditDialog::initlb ()
         wxString line = vs[a] + _T(" : ") + vi->getParam ( vs[a] ) ;
         if ( line.Left ( 1 ) == _T("/") )
            lb->Append ( line.Mid ( 1 ) ) ;
-        }    
-    }    
-    
+        }
+    }
+
 void TItemEditDialog::OnList ( wxCommandEvent &ev )
     {
     wxString sel = lb->GetStringSelection () ;
@@ -163,4 +163,4 @@ void TItemEditDialog::OnList ( wxCommandEvent &ev )
     vi->setParam ( _T("/") + key , ted.GetValue() ) ;
     initlb () ;
     }
-    
+

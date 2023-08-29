@@ -59,7 +59,7 @@ class TManageDatabaseDialog : public wxDialog
     virtual void pdOnSetDefault ( wxCommandEvent &ev ) ; ///< "Set as default database button" event handler
     virtual void pmAddSQL ( wxCommandEvent &ev ) ; ///< "Add MySQL database button" event handler
     virtual void pmNewSQL ( wxCommandEvent &ev ) ; ///< "New MySQL database button" event handler
-    
+
     virtual void pmOnListEvent ( wxListEvent &ev , wxListCtrl *source , wxListCtrl *target ) ; ///< "Drag/drop" event handler
     virtual void pmOnLeftListEvent ( wxListEvent &ev ) ; ///< "Event in left dropdown list" event handler
     virtual void pmOnRightListEvent ( wxListEvent &ev ) ; ///< "Event in right dropdown list" event handler
@@ -74,7 +74,7 @@ class TManageDatabaseDialog : public wxDialog
     virtual void pmOnRightClickLeft ( wxListEvent &ev ) ; ///< "Context menu for left list" event handler
     virtual void pmOnRightClickRight ( wxListEvent &ev ) ; ///< "Context menu for right list" event handler
     virtual void pmOnRightClick ( wxListEvent &ev , wxListCtrl *lc , wxChoice *cc ) ; ///< "Right click" universal event handler
-    
+
     virtual void pmOnActivate ( wxListEvent &ev , wxListCtrl *side ) ; ///< activation event handler
     virtual void pmOnOpen ( wxCommandEvent &ev ) ; ///< "Open item" event handler
     virtual void pmOnDelete ( wxCommandEvent &ev ) ; ///< "Delete item" event handler
@@ -87,24 +87,24 @@ class TManageDatabaseDialog : public wxDialog
     virtual void pmOnFilterDesc ( wxCommandEvent &ev ) ; ///< "Search description checkbox" event handler
     virtual void pmOnFilterSeq ( wxCommandEvent &ev ) ; ///< "Search sequence checkbox" event handler
     virtual void pmOnTwoPanes ( wxCommandEvent &ev ) ; ///< "Toggle one/two lists" event handler
-    
+
     virtual bool do_copy ( wxString name , wxString sdb , wxString tdb ) ; ///< Copy item "name" from source to target database
     virtual bool do_move ( wxString name , wxString sdb , wxString tdb ) ; ///< Move item "name" from source to target database
     virtual void do_del  ( wxString name , wxString db ) ; ///< Delete item "name" from the database
     virtual void pmOpenFiles ( wxArrayString &_names , wxString _db ) ; ///< Open the selected files
-    
+
     virtual bool copyDNA ( wxString name , wxString sdb , wxString tdb ) ; ///< Copy item "name" from source to target database
     virtual bool moveDNA ( wxString name , wxString sdb , wxString tdb ) ; ///< Move item "name" from source to target database
     virtual void delDNA ( wxString name , wxString db ) ; ///< Delete item "name" from the database
 
     virtual void delProject ( wxString name , wxString db ) ; ///< Remove a project from the database
-    
+
     virtual bool do_load ( wxString name , wxString db ) ; ///< Load an entry from the database
     virtual bool do_load_DNA ( wxString name , wxString db ) ; ///< Load a sequence from the database
     virtual bool do_load_project ( wxString name , wxString db ) ; ///< Load a project from the database
     virtual void do_save_DNA () ; ///< Save a sequence to the database
     virtual void do_save_project () ; ///< Save a project to the database
-    
+
     virtual void initDatabases () ; ///< Initialize internal database list
     virtual void accessDB () ; ///< Access the database
     virtual void pd_loadList () ; ///< Loads the database
@@ -116,7 +116,7 @@ class TManageDatabaseDialog : public wxDialog
     virtual wxString getFileName ( wxString dbname ) ; ///< Returns the filename of the database
     virtual wxArrayInt getSelectedListItems ( wxListCtrl *l ) ; ///< Returns the numbers of the selected items in the given list
     virtual TStorage *getTempDB ( wxString filename ) ; ///< Returns a pointer to termorarily accessed database
-    
+
     virtual void initCopynMove () ; ///< Prepare the open/store/search tab
     virtual void pmGetContext ( wxListCtrl *side ) ; ///< ???
     virtual void updateTwoLists() ; ///< Update both database lists
@@ -126,7 +126,7 @@ class TManageDatabaseDialog : public wxDialog
     wxPanel *pDatabases , *pCopynMove ;
     wxStaticText *pd_db_name , *pd_db_file ;
     wxListBox *pd_db ;
-    
+
     public :
     wxListCtrl *pm_left , *pm_right , *thetarget ;
     wxChoice *pm_dd_l , *pm_dd_r , *pm_dd_save ;
@@ -138,7 +138,7 @@ class TManageDatabaseDialog : public wxDialog
     int actionMode ;
     TVector *v ;
     bool justload , silent_overwrite ;
-    
+
     private:
     bool doSave , doLoad , isProject , startup ;
     wxString filter ;
@@ -146,7 +146,7 @@ class TManageDatabaseDialog : public wxDialog
     wxCheckBox *f_dna , *f_prot , *f_primer , *f_align , *f_twopanes ;
     wxCheckBox *f_desc , *f_seq ;
 	wxBoxSizer *v0 , *v2 ; // Sizers needed for second (right) list
-    
+
     DECLARE_EVENT_TABLE()
     } ;
 

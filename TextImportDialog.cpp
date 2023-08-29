@@ -17,21 +17,21 @@ TextImportDialog::TextImportDialog(wxWindow *parent, const wxString& title )
     int w , h ;
     int bo = 5 , lh = 22 ;
     GetClientSize ( &w , &h ) ;
-    
+
     wxStaticText *s1 = new wxStaticText ( this , -1 , txt("title") , wxPoint ( bo , bo+2 ) ) ;
     wxRect r = s1->GetRect() ;
-    
+
     name = new wxTextCtrl ( this , -1 , _T("") ,
-                                wxPoint ( r.GetRight() + bo , bo ) , 
+                                wxPoint ( r.GetRight() + bo , bo ) ,
                                 wxSize ( w * 2 / 3 - r.GetRight() - bo , lh ) ) ;
     type = new wxChoice ( this , -1 ,
                                 wxPoint ( w * 2 / 3 + bo , bo ) ,
                                 wxSize ( w / 4 , lh ) ) ;
     sequence = new wxTextCtrl ( this , -1 , _T("") ,
-                                wxPoint ( bo , bo*2 + lh ) , 
+                                wxPoint ( bo , bo*2 + lh ) ,
                                 wxSize ( w - bo*2 , h - bo*4 - lh*2 ) ,
                                 wxTE_MULTILINE ) ;
-                                
+
     wxButton *OK = new wxButton ( this , TID_OK , txt("b_ok") ,
                                 wxPoint ( bo , h - lh - bo ) ,
                                 wxSize ( w/4 , lh ) ) ;
@@ -45,7 +45,7 @@ TextImportDialog::TextImportDialog(wxWindow *parent, const wxString& title )
     type->Append ( txt("t_xml") ) ;
     type->Append ( txt("t_primer") ) ;
     type->SetSelection ( 0 ) ;
-    
+
     sequence->SetMaxLength ( 0 ) ; // Text length only limited by native gadget now
 
     Center () ;

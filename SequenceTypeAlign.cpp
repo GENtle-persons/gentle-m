@@ -7,7 +7,7 @@ int SeqAlign::arrange ( int n )
     {
     int a , x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
     int lasta = 0 ;
-    
+
     // Setting basic values
     can->SetFont(*can->font);
     int wx = can->charwidth , wy = can->charheight ;
@@ -17,7 +17,7 @@ int SeqAlign::arrange ( int n )
     itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx ) ;
     if ( itemsperline == 0 ) itemsperline = 1 ;
     itemsperline *= can->blocksize ;
-    
+
     pos.cleanup() ;
     pos.reserve ( s.length() * 11 / 10 , s.length() / itemsperline ) ;
     x = ox ;
@@ -43,12 +43,12 @@ int SeqAlign::arrange ( int n )
               }
            }
         }
-    if ( lasta != pos.p.GetCount()+1 ) 
+    if ( lasta != pos.p.GetCount()+1 )
         pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
     pos.r.clear () ;
     return lowy + bo*2 ;
     }
-    
+
 void SeqAlign::show ( wxDC& dc )
     {
     can->SetFont(*can->font);
@@ -59,7 +59,7 @@ void SeqAlign::show ( wxDC& dc )
     int a , b , cnt = offset+1 ;
     wxString t ;
 //    TAlignment *win = (TAlignment*) can->child ;
-    
+
     wxColour nbgc ;
     for ( a = 0 ; can->seq[a] != this ; a++ ) ;
     switch ( id%3 )
@@ -68,7 +68,7 @@ void SeqAlign::show ( wxDC& dc )
         case 1 : nbgc = wxColour ( 200 , 255 , 200 ) ; break ;
         case 2 : nbgc = wxColour ( 200 , 255 , 255 ) ; break ;
         }
-    
+
     int first = -1 , me = -1 ;
     for ( a = 0 ; a < can->seq.GetCount() ; a++ )
         {
@@ -87,7 +87,7 @@ void SeqAlign::show ( wxDC& dc )
     for ( n = 0 ; can->seq[n] != this ; n++ ) ;
     int wx = can->charwidth , wy = can->charheight ;
     int ox = bo + wx + wx * endnumberlength  , oy = n*wy+bo ;
-    
+
     int xa , xb , ya , yb ;
     dc.GetDeviceOrigin ( &xa , &ya ) ;
     ya = -ya ;
@@ -107,13 +107,13 @@ void SeqAlign::show ( wxDC& dc )
         if ( ray < ya ) continue ;
         b = pos.p[a] ;
         if ( b < 0 ) rax = bo ;
-        else 
+        else
            {
            int x2 = ( b - 1 ) % itemsperline ;
            rax = ox ;
            rax += x2 * wx ;
            rax += ( x2 / can->blocksize ) * ( wx - 1 ) ;
-           }    
+           }
         if ( can->isPrinting() ) rax += xa ; // PATCH AS PATCH CAN!!!
 
         int tx = rax , ty = ray ;
@@ -148,7 +148,7 @@ void SeqAlign::show ( wxDC& dc )
               if ( can->isPrinting() && !can->getPrintToColor() ) mode |= SEQUENCECHARMARKUP_MONO ;
               if ( al->bold ) mode |= SEQUENCECHARMARKUP_BOLD ;
               }
-           
+
            scm.draw ( dc , wxRect ( rax , ray , wx , wy ) , t , mode , last_wx ) ;
            if ( scm.ignore || getMark ( a ) ) last_wx = -1 ;
            else last_wx = rax + wx ;
@@ -179,11 +179,11 @@ void SeqAlign::show ( wxDC& dc )
     dc.SetTextBackground ( tbg ) ;
     dc.SetTextForeground ( tfg ) ;
     }
-    
+
 
 void SeqAlign::makeEndnumberLength()
     {
     endnumberlength = myname.length() ;
     while ( endnumberlength > 10 ) endnumberlength-- ;
     }
-        
+

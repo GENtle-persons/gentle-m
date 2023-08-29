@@ -14,14 +14,14 @@ class TRestrictionEnzyme
 	~TRestrictionEnzyme () {} ; ///< Dummy destructor
 	
     bool differ ( TRestrictionEnzyme &e ) ;
-    
+
     wxString getEndUpperLeft ( bool first_strand = true ) ; ///< The "upper left" sequence after the cut
     wxString getEndLowerLeft ( bool first_strand = true ) ; ///< The "lower left" sequence after the cut
     wxString getEndUpperRight ( bool first_strand = true ) ; ///< The "upper right" sequence after the cut
     wxString getEndLowerRight ( bool first_strand = true ) ; ///< The "lower right" sequence after the cut
-    
+
     wxString invertSequence () ; ///< The recognition sequence, inverted
-    
+
     int getCut ( bool first_strand = true ) ;
     void setCut ( int c ) ;
     int getOverlap ( bool first_strand = true ) ;
@@ -31,7 +31,7 @@ class TRestrictionEnzyme
     wxString getSequence () ;
     void setSequence ( wxString _seq ) ;
     bool isPalindromic () ;
-    
+
     /// The physical location of the vial containing the enzyme, if entered
     wxString location , note ; ///< A note about the enzyme, if entered
     unsigned long dbid ; ///< Database ID of the enzyme
@@ -51,7 +51,7 @@ class TRestrictionCut
     TRestrictionCut ( int _pos , TRestrictionEnzyme *_e , bool _first_strand = true ) ///< Constructor
         { pos = _pos ; e = _e ; first_strand = _first_strand ; }
 	~TRestrictionCut () {} ; ///< Dummy destructor
-        
+
     void linearUpdate ( int w , int h ) ;
     wxString getNameAndPosition () ; ///< Returns the enzyme name and cut pusition
     bool isHidden ( TVector *v ) ; ///< Is this enzyme in this TVector hidden?
@@ -72,13 +72,13 @@ class TRestrictionCut
 	
     TRestrictionEnzyme *e ; ///< Cutting enzyme
     wxString display_name ; ///< The name to display
-    
+
     // Visual information
-    float angle , angle3 , r1 , r2 , r3 ; 
+    float angle , angle3 , r1 , r2 , r3 ;
     wxRect lastrect ;
     wxPoint p , lp ;
     wxTreeItemId treeid ; ///< ID of the cut in the TVectorTree
-    
+
     private:
     int pos ; ///< Position of the cut
     bool first_strand ;
@@ -98,7 +98,7 @@ class TProtease
     wxArrayString match ; ///< The different recognition sequences
     int cut ; ///< Where the cut occurs, starting at 0
     bool use ; ///< Use this protease?
-    
+
     /// A note about the protease
     wxString note , str_match ;
     } ;
@@ -111,7 +111,7 @@ class TProteaseCut
     int cut ; ///< Position of the cut
     bool left ; ///< Left or right from the given position?
     } ;
-    
+
 
 #endif
 

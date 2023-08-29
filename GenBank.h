@@ -41,7 +41,7 @@ class TGenBank
     int count_blanks ( wxString &s ) ;
 
     bool success ; ///< Did we encounter any errors while parsing?
-    
+
     private :
     friend class TAlignment ;
     friend class MyFrame ;
@@ -56,11 +56,11 @@ class TGenBank
     bool validseq[256] ; ///< Allowed sequence chars
     bool isblank[256] ; ///< Blank chars
     bool isblankorquote[256] ; ///< Blank or quote chars
-    
+
     void parseLines () ;
     void addItem ( TVector *v , wxArrayString &va ) ;
     void iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag = 0 ) ;
-    bool isValidSequence ( char a ) ;    
+    bool isValidSequence ( char a ) ;
     } ;
 
 #endif

@@ -5,7 +5,7 @@
 
 class TStoreAllDialog : public wxDialog
 	{
-   public : 
+   public :
    TStoreAllDialog ( wxWindow *_parent , const wxString& title ) ; ///< Constructor
    virtual ~TStoreAllDialog() ;
    virtual void OnCharHook(wxKeyEvent& event) ; ///< Cancel button event handler
@@ -13,7 +13,7 @@ class TStoreAllDialog : public wxDialog
    virtual void OnAll ( wxCommandEvent &ev ) ;
    virtual void OnNone ( wxCommandEvent &ev ) ;
    virtual void OnInvert ( wxCommandEvent &ev ) ;
-   
+
    private :
    void PopulateList () ;
    wxCheckListBox *list ;

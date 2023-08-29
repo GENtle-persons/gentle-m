@@ -37,6 +37,6 @@ class AutoAnnotate
  	wxString commonVectorsDatabase , additionalDatabase ;
  	bool useCommonDatabase , useAdditionalDatabase , useMachete , doAddORFs ;
     wxArrayString dbname , dbfile ;
-	} ;    
+	} ;
 
 #endif

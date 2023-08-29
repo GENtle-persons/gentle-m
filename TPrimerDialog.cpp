@@ -29,14 +29,14 @@ bool operator < ( const TPrimer &p1 , const TPrimer &p2 )
     TPrimer *x2 = (TPrimer*) &p2 ;
     return x1->getEvaluation() > x2->getEvaluation() ;
     }
-    
+
 bool operator == ( const TPrimer &p1 , const TPrimer &p2 )
     {
     TPrimer *x1 = (TPrimer*) &p1 ;
     TPrimer *x2 = (TPrimer*) &p2 ;
     return x1->getEvaluation() == x2->getEvaluation() ;
     }
-    
+
 
 TPrimerDialog::TPrimerDialog(wxWindow *parent, const wxString& title )
          : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 760 , 500 ) )
@@ -45,13 +45,13 @@ TPrimerDialog::TPrimerDialog(wxWindow *parent, const wxString& title )
     Center() ;
     cp = NULL ;
     }
-    
+
 TPrimerDialog::~TPrimerDialog()
     {
 	myapp()->frame->pop_help () ;
     if ( cp ) delete cp ;
     }
-    
+
 void TPrimerDialog::OnCharHook(wxKeyEvent& event)
     {
     int k = event.GetKeyCode () ;
@@ -78,78 +78,78 @@ wxSpinCtrl *TPrimerDialog::addSpinCtrl ( int id , wxString title , int x , int y
     n->SetValue ( wxString::Format ( _T("%d") , def ) ) ;
     return n ;
     }
-    
+
 void TPrimerDialog::initme ( TPrimer *_p , TPrimerDesign *_pd )
     {
     p = _p ;
     pd = _pd ;
     cp = new TPrimer ;
     SetTitle ( p->sequence ) ;
-    
+
     int w , h ;
     GetClientSize ( &w , &h ) ;
-    
+
     new wxStaticBox ( this , -1 , txt("t_limits") , wxPoint ( 5 , 5 ) , wxSize ( 290 , 135 ) ) ;
-    
+
     int mintmp = 45 , maxtmp = 65 ;
     int minlen = 20 , maxlen = 40 ;
     int varlen = 5 ;
-    
+
     l5 = addSpinCtrl ( PD_DIAG_5L , txt("t_5_l") , 0 , 1 , varlen ) ;
     r5 = addSpinCtrl ( PD_DIAG_5R , txt("t_5_r") , 1 , 1 , varlen ) ;
     l3 = addSpinCtrl ( PD_DIAG_3L , txt("t_3_l") , 0 , 2 , varlen ) ;
     r3 = addSpinCtrl ( PD_DIAG_3R , txt("t_3_r") , 1 , 2 , varlen ) ;
     lmin = addSpinCtrl ( PD_DIAG_MINLEN , txt("t_minlen") , 0 , 3 , minlen ) ;
-    lmax = addSpinCtrl ( PD_DIAG_MAXLEN , txt("t_maxlen") , 1 , 3 , maxlen ) ;    
+    lmax = addSpinCtrl ( PD_DIAG_MAXLEN , txt("t_maxlen") , 1 , 3 , maxlen ) ;
     tmin = addSpinCtrl ( PD_DIAG_MINDEG , txt("t_mintmp") , 0 , 4 , mintmp ) ;
-    tmax = addSpinCtrl ( PD_DIAG_MAXDEG , txt("t_maxtmp") , 1 , 4 , maxtmp ) ;    
-    
+    tmax = addSpinCtrl ( PD_DIAG_MAXDEG , txt("t_maxtmp") , 1 , 4 , maxtmp ) ;
+
     lmin->SetRange ( 1 , 99 ) ;
     lmax->SetRange ( 1 , 99 ) ;
-    
+
 //    wxButton *bs = new wxButton ( this , PD_SEARCH , txt("t_recalc") , wxPoint ( 300 , 10 ) ) ;
 //    wxButton *br = new wxButton ( this , PD_RESET , txt("t_reset") , wxPoint ( 5 , 150 ) ) ;
     wxButton *bo = new wxButton ( this , PD_OK , txt("b_ok") , wxPoint ( 105 , 150 ) ) ;
 //    wxButton *bc = new wxButton ( this , PD_CANCEL , txt("b_cancel") , wxPoint ( 205 , 150 ) ) ;
-    
-    seq = new wxTextCtrl ( this , -1 , _T("") , 
+
+    seq = new wxTextCtrl ( this , -1 , _T("") ,
                         wxPoint ( 0 , 180 ) ,
                         wxSize ( w , 20 ) ,
                         wxTE_READONLY|wxTE_CENTRE ) ;
-                        
-    rep = new wxTextCtrl ( this , -1 , _T("") , 
+
+    rep = new wxTextCtrl ( this , -1 , _T("") ,
                         wxPoint ( 300 , 10 ) ,
                         wxSize ( w-300 , 160 ) ,
                         wxTE_READONLY|wxTE_MULTILINE|wxTE_DONTWRAP ) ;
-                        
-    lc = new wxListCtrl ( this , PD_DIAG_LC , 
-                            wxPoint ( 0 , 210 ) , 
-                            wxSize ( w , h-210 ) , 
+
+    lc = new wxListCtrl ( this , PD_DIAG_LC ,
+                            wxPoint ( 0 , 210 ) ,
+                            wxSize ( w , h-210 ) ,
                             wxLC_REPORT|wxLC_SINGLE_SEL ) ;
 
     rep->SetFont ( *MYFONT ( 8 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
-                        
+
     bo->SetDefault() ;
-                        
+
     p->annealingVector = pd->vec ;
     p->evaluate ( ( mintmp + maxtmp ) / 2 ) ;
     *cp = *p ;
     cp->evaluate ( ( mintmp + maxtmp ) / 2 ) ;
     updateList() ;
     }
-    
+
 void TPrimerDialog::OnSpinChanged ( wxSpinEvent &ev )
     {
     updateList () ;
     }
-    
+
 void TPrimerDialog::OnActivatePrimer ( wxListEvent& event )
     {
     int i = event.GetIndex () ;
     *cp = pl[i] ;
     ShowCur () ;
     }
-    
+
 void TPrimerDialog::OnOK ( wxCommandEvent &ev )
     {
     EndModal ( wxID_OK ) ; //wxDialog::OnOK ( ev ) ;
@@ -163,18 +163,18 @@ void TPrimerDialog::OnReset ( wxCommandEvent &ev )
 
 void TPrimerDialog::OnCancel ( wxCommandEvent &ev )
     {
-    EndModal ( wxID_CANCEL ) ; //wxDialog::OnCancel ( ev ) ;    
+    EndModal ( wxID_CANCEL ) ; //wxDialog::OnCancel ( ev ) ;
     }
 
 void TPrimerDialog::OnSearch ( wxCommandEvent &ev )
     {
     updateList () ;
-    }    
+    }
 
 void TPrimerDialog::updateList ()
     {
     while ( pl.size() ) pl.pop_back () ;
-    
+
     wxString s , t ;
     int a , b ;
     int l1 , l2 , r1 , r2 ;
@@ -196,7 +196,7 @@ void TPrimerDialog::updateList ()
     else // !!!! incomplete!
         {
         t = pd->inverse_template_vector->getSequence() ;
-        s = t ; 
+        s = t ;
         for ( a = 0 ; a < p->sequence.length() ; a++ )
            s.SetChar ( a+p->from-1 , p->sequence.GetChar(a) ) ;
         l1 = p->from - 1 - l3->GetValue() ;
@@ -204,7 +204,7 @@ void TPrimerDialog::updateList ()
         r1 = p->to - 1 - l5->GetValue() ;
         r2 = p->to - 1 + r5->GetValue() ;
         }
-        
+
     for ( a = l1 ; a <= l2 ; a++ )
        {
        for ( b = r1 ; b <= r2 ; b++ )
@@ -222,8 +222,8 @@ void TPrimerDialog::updateList ()
              }
           }
        }
-       
-    sort ( pl.begin() , pl.end() ) ;    
+
+    sort ( pl.begin() , pl.end() ) ;
     ShowLC() ;
     lc->SetFocus() ;
     }
@@ -236,7 +236,7 @@ void TPrimerDialog::ShowCur ()
     else seq->SetValue ( _T("3'-") + cur + _T("-5'") ) ;
     rep->SetValue ( cp->report() ) ;
     }
-    
+
 void TPrimerDialog::ShowLC ()
     {
     ShowCur () ;
@@ -254,22 +254,22 @@ void TPrimerDialog::ShowLC ()
     for ( int a = 0 ; a < pl.size() ; a++ )
         {
         int len = pl[a].to - pl[a].from + 1 ;
-        
+
         //sprintf ( t , "%d" , a+1 ) ;
         long l = lc->InsertItem ( a , wxString::Format ( _T("%d") , a+1 ) ) ;
-        
+
         //sprintf ( t , "%d" , len ) ;
         lc->SetItem ( l , 1 , wxString::Format ( _T("%d") , len ) ) ;
-        
+
         //sprintf ( t , "%2.1f" , pl[a].getTm() ) ;
         lc->SetItem ( l , 2 , wxString::Format ( _T("%2.1f") , pl[a].getTm() ) ) ;
-        
+
         //sprintf ( t , "%2.1f" , pl[a].getEvaluation() ) ;
         lc->SetItem ( l , 3 , wxString::Format ( _T("%2.1f") , pl[a].getEvaluation() ) ) ;
 
         lc->SetItem ( l , 4 , pl[a].sequence ) ;
         }
-        
+
     lc->SetColumnWidth ( 0 , wxLIST_AUTOSIZE ) ;
     lc->SetColumnWidth ( 1 , wxLIST_AUTOSIZE_USEHEADER ) ;
     lc->SetColumnWidth ( 2 , wxLIST_AUTOSIZE_USEHEADER ) ;

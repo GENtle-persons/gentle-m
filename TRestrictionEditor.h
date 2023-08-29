@@ -27,7 +27,7 @@ class TFragment
 	public :
 	int from , to , length ;
 	double weight ; ///< Used in TProteolysis
-	} ;    
+	} ;
 
 bool operator < ( const TFragment &f1 , const TFragment &f2 ) ;
 bool operator == ( const TFragment &f1 , const TFragment &f2 ) ;
@@ -37,7 +37,7 @@ bool operator == ( const TFragment &f1 , const TFragment &f2 ) ;
 class TRestrictionEditor : public wxDialog
     {
     public :
-    TRestrictionEditor(MyFrame *parent, const wxString& title, const wxPoint& pos, 
+    TRestrictionEditor(MyFrame *parent, const wxString& title, const wxPoint& pos,
                        const wxSize& size, const long style); ///< Constructor
     ~TRestrictionEditor () ; ///< Destructor
 
@@ -69,7 +69,7 @@ class TRestrictionEditor : public wxDialog
     virtual void onCancel ( wxCommandEvent &event ) ; ///< Cancel button event handler
     virtual void onAddAll ( wxCommandEvent &event ) ; ///< "Add all" button event handler
     virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
-    
+
     // Variables
     wxCheckBox *createFragments , *add2gel , *oneLaneEach , *partialDigestion ;
     wxListCtrl *el , *el2 , *rsl , *rsl2 ;

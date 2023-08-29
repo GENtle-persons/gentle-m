@@ -12,8 +12,8 @@ BEGIN_EVENT_TABLE(TGraphDisplay, wxPanel)
     EVT_MENU(GRAPH_SAVE_AS_IMAGE,TGraphDisplay::OnSaveAsImage)
 END_EVENT_TABLE()
 
-//******************************************************** TGraphDisplay    
-    
+//******************************************************** TGraphDisplay
+
 TGraphDisplay::TGraphDisplay ( wxWindow *parent , int id )
 	: wxPanel ( parent , id )
 	{
@@ -24,12 +24,12 @@ TGraphDisplay::TGraphDisplay ( wxWindow *parent , int id )
  	styles.Add ( _T("rect") ) ;
  	styles.Add ( _T("circle") ) ;
  	styles.Add ( _T("triangle") ) ;
- 	
+
  	scaleTypes.Add ( _T("linear") ) ;
- 	
+
 	init () ;
 	}
-	
+
 TGraphDisplay::~TGraphDisplay ()
 	{/*
 	int a ;
@@ -39,8 +39,8 @@ TGraphDisplay::~TGraphDisplay ()
 	for ( a = 0 ; a < scales.size() ; a++ )
 		delete scales[a] ;
 	scales.clear () ;*/
-	}    
-	
+	}
+
 void TGraphDisplay::init ()
 	{
 	while ( data.size() ) data.pop_back () ;
@@ -50,8 +50,8 @@ void TGraphDisplay::init ()
 	zx = zy = 100 ;
 	draggingRect = wxRect ( -1 , -1 , -1 , -1 ) ;
 	setupCompleted = false ;
-	}    
-	
+	}
+
 void TGraphDisplay::SetZoom ( int _zx , int _zy )
 	{
 	int a ;
@@ -69,7 +69,7 @@ void TGraphDisplay::SetZoom ( int _zx , int _zy )
 	zx = _zx ;
 	zy = _zy ;
 	UpdateDisplay () ;
-	}    
+	}
 
 stringField TGraphDisplay::readTextfile ( wxString filename )
 	{
@@ -82,7 +82,7 @@ stringField TGraphDisplay::readTextfile ( wxString filename )
 		{
   		TVS as ;
   		s = s.Trim().Trim(false);
-  		
+
   		if ( s.Find ( '\t' ) > -1 )
   			{
 	    	s.Replace ( _T(",") , _T(".") ) ;
@@ -91,7 +91,7 @@ stringField TGraphDisplay::readTextfile ( wxString filename )
 					wxString xyz = s.BeforeFirst ( '\t' ) ;
 	    	    	as.push_back ( string ( xyz.mb_str() ) ) ;
    	 	    	s = s.AfterFirst ( '\t' ) ;
-      			}    
+      			}
 	    		as.push_back ( string ( s.mb_str() ) ) ;
       		sf.push_back ( as ) ;
   			}
@@ -101,14 +101,14 @@ stringField TGraphDisplay::readTextfile ( wxString filename )
       			{
     	    	as.push_back ( string (s.BeforeFirst ( ',' ).mb_str()) ) ;
     	    	s = s.AfterFirst ( ',' ) ;
-      			}    
+      			}
     			as.push_back ( string ( s.mb_str() ) ) ;
       		sf.push_back ( as ) ;
-      		}  		
-		}    
+      		}
+		}
 	return sf ;
-	}    
-	
+	}
+
 void TGraphDisplay::setupIPCfile ( wxString filename )
 	{
 	stringField sf = readTextfile ( filename ) ;
@@ -119,7 +119,7 @@ void TGraphDisplay::setupIPCfile ( wxString filename )
   	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , _T("rel. Int.") , _T("") , *wxBLACK ) ;
  	scales.push_back ( sx ) ;
  	scales.push_back ( sy ) ;
- 	
+
  	TGraphData *ng = new TGraphData ( this ) ;
 	ng->name = _T("IPC") ;
 	ng->SetScales ( sx , sy ) ;
@@ -138,15 +138,15 @@ void TGraphDisplay::setupIPCfile ( wxString filename )
     	ng->Add ( (float) x , (float) y ) ;
  		}
 	}
-    
+
 void TGraphDisplay::setupXYpair ( const stringField &sf )
 	{
  	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , _T("X") , _T("") , *wxBLACK ) ;
   	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , _T("Y") , _T("") , *wxBLACK ) ;
  	scales.push_back ( sx ) ;
  	scales.push_back ( sy ) ;
-	addNewGraph ( sf , txt("t_data") , sx , sy , 0 ) ; 	
- 	} 	
+	addNewGraph ( sf , txt("t_data") , sx , sy , 0 ) ;
+ 	}
 
 void TGraphDisplay::setupPhotometerGraph ( const stringField &sf )
 	{
@@ -157,7 +157,7 @@ void TGraphDisplay::setupPhotometerGraph ( const stringField &sf )
   	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , wxString ( sf[1][1].c_str() , wxConvUTF8 ) , _T("") , *wxBLACK ) ;
  	scales.push_back ( sx ) ;
  	scales.push_back ( sy ) ;
- 	
+
  	TGraphData *ng = new TGraphData ( this ) ;
 	ng->name = wxString ( sf[0][0].c_str() , wxConvUTF8 ) ;
 	ng->SetScales ( sx , sy ) ;
@@ -174,8 +174,8 @@ void TGraphDisplay::setupPhotometerGraph ( const stringField &sf )
     	s0.ToDouble ( &x ) ;
     	s1.ToDouble ( &y ) ;
     	ng->Add ( (float) x , (float) y ) ;
- 		}    
- 	} 	
+ 		}
+ 	}
 
 void TGraphDisplay::setupFluorimeterGraph ( const stringField &sf )
 	{
@@ -183,9 +183,9 @@ void TGraphDisplay::setupFluorimeterGraph ( const stringField &sf )
   	TGraphScale *sy = new TGraphScale ( 0 , 0 , false , true , txt("t_intensity") , _T("au") , *wxBLACK ) ;
  	scales.push_back ( sx ) ;
  	scales.push_back ( sy ) ;
- 	
+
  	int cnt_col = 0 , cnt_sty = 0 ;
-	
+
 	int a , b ;
 	for ( a = 0 ; a+2 < sf[0].size() ; a += 2 )
 		{
@@ -208,11 +208,11 @@ void TGraphDisplay::setupFluorimeterGraph ( const stringField &sf )
         	s0.ToDouble ( &x ) ;
         	s1.ToDouble ( &y ) ;
 	    	ng->Add ( (float) x , (float) y ) ;
-  			}    
+  			}
   		data.push_back ( ng ) ;
-		}    
-	}    
-	
+		}
+	}
+
 bool TGraphDisplay::SetupFromFile ( wxString filename )
 	{
 	int a ;
@@ -227,7 +227,7 @@ bool TGraphDisplay::SetupFromFile ( wxString filename )
 	wxString *vs = new wxString [ as.GetCount() ] ;
 	for ( a = 0 ; a < as.GetCount() ; a++ )
 		vs[a] = as[a] ;
-	
+
 	wxSingleChoiceDialog scd ( this , txt("t_graph_open_text") , txt("t_graph_open_title") , as.GetCount() , vs ) ;
 	wxString guess = tryall ( filename ) ;
 	if ( guess != _T("") )
@@ -236,11 +236,11 @@ bool TGraphDisplay::SetupFromFile ( wxString filename )
   			{
 	    	if ( as[a] == txt(guess) )
 	    		scd.SetSelection ( a ) ;
-  			}    
+  			}
 		}
 	else return false ;
 	if ( wxID_OK != scd.ShowModal() ) return false ;
-	
+
 	wxString s = scd.GetStringSelection() ;
 	if ( s == txt("t_graph_file_type_photometer") ) setupPhotometerGraph ( readTextfile ( filename ) ) ;
 	if ( s == txt("t_graph_file_type_fluorimeter") ) setupFluorimeterGraph ( readTextfile ( filename ) ) ;
@@ -248,7 +248,7 @@ bool TGraphDisplay::SetupFromFile ( wxString filename )
 	if ( s == txt("t_graph_file_type_bio") ) setupBioFormat ( filename ) ;
 	if ( s == txt("t_graph_file_type_bio_csv") ) setupBioCSVFormat ( readTextfile ( filename ) ) ;
 	if ( s == txt("t_graph_file_type_duf") ) setupDUF ( filename ) ;
-	
+
 	return true ;
 	}
 
@@ -260,14 +260,14 @@ unsigned char *TGraphDisplay::readRawData ( wxString filename , long &l )
  	f.Read ( r , l ) ;
  	return r ;
 	}
-    
+
 void TGraphDisplay::addRawData ( unsigned char *d , long l , wxString title )
 	{
 	stringField sf ;
 	TVS b ;
 	b.push_back ( "" ) ;
 	b.push_back ( "" ) ;
-	
+
 	long a , sum = 0 , integrate = 10 , cnt = 0 ;
 	for ( a = 2000+1 ; a+30 < l ; a += 4 )
 		{
@@ -284,13 +284,13 @@ void TGraphDisplay::addRawData ( unsigned char *d , long l , wxString title )
   			sf.push_back ( b ) ;
   			sum = 0 ;
   			cnt = 0 ;
-   			} 	
-        cnt++ ;		
-		}    
-	
+   			}
+        cnt++ ;
+		}
+
 	delete d ;
 	addNewGraph ( sf , title , scales[0] , scales[1] , 0 ) ;
-	}	
+	}
 
 void TGraphDisplay::addRawData2 ( unsigned char *d , long l , wxString title )
 	{
@@ -298,7 +298,7 @@ void TGraphDisplay::addRawData2 ( unsigned char *d , long l , wxString title )
 	TVS b ;
 	b.push_back ( "" ) ;
 	b.push_back ( "" ) ;
-	
+
 	long a , sum = 0 , cnt = 0 ;//, integrate = 10 ;
 	for ( a = 2000+1 ; a+30 < l ; a += 4 )
 		{
@@ -307,10 +307,10 @@ void TGraphDisplay::addRawData2 ( unsigned char *d , long l , wxString title )
   		x |= (unsigned long) d[a+1] ; x <<= 8 ;
   		x |= (unsigned long) d[a+2] ; x <<= 8 ;
   		x |= (unsigned long) d[a+3] ;
-  		
+
   		signed long y = (signed long) x ;
   		y /= 10 ;
-  		
+
 //  		sum += x / integrate;
 //  		if ( cnt >= integrate )
   			{
@@ -319,12 +319,12 @@ void TGraphDisplay::addRawData2 ( unsigned char *d , long l , wxString title )
   			sf.push_back ( b ) ;
   			sum = 0 ;
   			cnt = 0 ;
-   			} 	
-        cnt++ ;		
-		}    
-	
+   			}
+        cnt++ ;
+		}
+
 	addNewGraph ( sf , title , scales[0] , scales[1] , 0 ) ;
-	}	
+	}
 
 void TGraphDisplay::addNewGraph ( const stringField &sf , wxString title , TGraphScale *sx , TGraphScale*sy , int startrow )
 	{
@@ -343,9 +343,9 @@ void TGraphDisplay::addNewGraph ( const stringField &sf , wxString title , TGrap
     	s0.ToDouble ( &x ) ;
     	s1.ToDouble ( &y ) ;
     	ng->Add ( (float) x , (float) y ) ;
- 		}    
+ 		}
 	}
-    
+
 void TGraphDisplay::setupRawFPLC ( wxString filenamebase )
 	{
  	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , _T("X") , _T("") , *wxBLACK ) ;
@@ -361,7 +361,7 @@ void TGraphDisplay::setupRawFPLC ( wxString filenamebase )
 
 	d = readRawData ( filenamebase + _T("_2.DAT") , l ) ;
 	addRawData ( d , l , _T("2") ) ;
-	}    
+	}
 
 wxString TGraphDisplay::tryall ( wxString filename )
 	{
@@ -370,45 +370,45 @@ wxString TGraphDisplay::tryall ( wxString filename )
 	int a , cnt ;
 	stringField sf = readTextfile ( filename ) ;
 	init () ;
-	
+
 	// Catch small table (no good)
 	if ( sf.size() < 3 ) return r ;
-	
+
 /*
 	setupDUF ( filename ) ; // Not working yet
 	for ( a = cnt = 0; a < data.size() ; a++ ) cnt += data[a]->dx.size() ;
 	if ( cnt > best ) { r = _T("t_graph_file_type_duf") ; best = cnt ; }
 	init () ;
-*/	
+*/
 	setupPhotometerGraph ( sf ) ;
 	for ( a = cnt = 0; a < data.size() ; a++ ) cnt += data[a]->dx.size() ;
 	if ( cnt > best ) { r = _T("t_graph_file_type_photometer") ; best = cnt ; }
 	init () ;
-	
+
 	setupFluorimeterGraph ( sf ) ;
 	for ( a = cnt = 0; a < data.size() ; a++ ) cnt += data[a]->dx.size() ;
 	if ( cnt > best ) { r = _T("t_graph_file_type_fluorimeter") ; best = cnt ; }
 	init () ;
-	
+
 	setupXYpair ( sf ) ;
 	for ( a = cnt = 0; a < data.size() ; a++ ) cnt += data[a]->dx.size() ;
 	if ( cnt > best ) { r = _T("t_graph_file_type_xypair") ; best = cnt ; }
 	init () ;
-	
+
 	setupBioFormat ( filename ) ;
 	for ( a = cnt = 0; a < data.size() ; a++ ) cnt += data[a]->dx.size() ;
 	if ( cnt > best ) { r = _T("t_graph_file_type_bio") ; best = cnt ; }
 	init () ;
-	
+
 	setupBioCSVFormat ( sf ) ;
 	for ( a = cnt = 0; a < data.size() ; a++ ) cnt += data[a]->dx.size() ;
 	if ( cnt > best ) { r = _T("t_graph_file_type_bio_csv") ; best = cnt ; }
 	init () ;
-	
+
 	if ( best < 5 ) r = _T("") ; // A graph with less points is useless
-	
+
 	return r ;
-	}    
+	}
 
 void TGraphDisplay::setupBioCSVFormat ( const stringField &sf )
 	{
@@ -421,7 +421,7 @@ void TGraphDisplay::setupBioCSVFormat ( const stringField &sf )
 		if ( sf[a][2] != "Conductivity" ) continue ;
 		break ;
 		}
-	
+
 	if ( a >= sf.size() ) return ; // Wrong file type, no need to bother any more
 
  	TGraphScale *sx = new TGraphScale ( 0 , 0 , true , false , txt("t_biorad_csv_time") , _T("s") , *wxBLACK ) ;
@@ -430,19 +430,19 @@ void TGraphDisplay::setupBioCSVFormat ( const stringField &sf )
  	scales.push_back ( sx ) ;
  	scales.push_back ( sy ) ;
  	scales.push_back ( sz ) ;
- 	
+
  	TGraphData *ng1 = new TGraphData ( this ) ;
 	ng1->name = wxString ( "UV" , wxConvUTF8 ) ;
 	ng1->SetScales ( sx , sy ) ;
 	ng1->pointStyle = _T("none") ;
 	ng1->col = wxTheColourDatabase->Find ( _T("BLUE") ) ;
-	
+
  	TGraphData *ng2 = new TGraphData ( this ) ;
 	ng2->name = wxString ( "Conductivity" , wxConvUTF8 ) ;
 	ng2->SetScales ( sx , sz ) ;
 	ng2->pointStyle = _T("none") ;
 	ng2->col = wxTheColourDatabase->Find ( _T("RED") ) ;
-	
+
 	data.push_back ( ng1 ) ;
 	data.push_back ( ng2 ) ;
 /*
@@ -455,9 +455,9 @@ void TGraphDisplay::setupBioCSVFormat ( const stringField &sf )
     	s0.ToDouble ( &x ) ;
     	s1.ToDouble ( &y ) ;
     	ng->Add ( (float) x , (float) y ) ;
- 		}    
+ 		}
 */
-	
+
 	for ( a++ ; a < sf.size() ; a++ )
 		{
 		if ( sf[a].size() != 3 ) break ;
@@ -468,8 +468,8 @@ void TGraphDisplay::setupBioCSVFormat ( const stringField &sf )
     	s0.ToDouble ( &x ) ;
     	s1.ToDouble ( &y ) ;
     	s2.ToDouble ( &z ) ;
-    	ng1->Add ( (float) x , (float) y ) ;		
-    	ng2->Add ( (float) x , (float) z ) ;		
+    	ng1->Add ( (float) x , (float) y ) ;
+    	ng2->Add ( (float) x , (float) z ) ;
 		}
 	}
 
@@ -504,7 +504,7 @@ void TGraphDisplay::setupDUF ( wxString filenamebase )
 	unsigned char *d ;
 
 	d = readRawData ( filenamebase , l ) ;
-	
+
 	wxString text ;
 	unsigned long pos = 40 ;
 	unsigned long w ;
@@ -517,9 +517,9 @@ void TGraphDisplay::setupDUF ( wxString filenamebase )
 		text += s ;
 		pos += 10 + w ;
 	} while ( w > 0 ) ;
-	
+
 	pos += 8*5*21 ;
-	
+
 	for ( int b = 0 ; b < 8 ; b++ )
 		{
 		double *x = (double*) (d+b+pos) ;
@@ -532,7 +532,7 @@ void TGraphDisplay::setupDUF ( wxString filenamebase )
 	ng1->SetScales ( sx , sy ) ;
 	ng1->pointStyle = _T("none") ;
 	ng1->col = wxTheColourDatabase->Find ( _T("BLUE") ) ;
-	
+
  	TGraphData *ng2 = new TGraphData ( this ) ;
 	ng2->name = wxString ( "2" , wxConvUTF8 ) ;
 	ng2->SetScales ( sx , sy ) ;
@@ -560,7 +560,7 @@ void TGraphDisplay::setupDUF ( wxString filenamebase )
     	ng3->Add ( (float) *x , (float) *y3 ) ;
 		pos += 8 * 5 ;
 		}
-	
+
 	delete d ;
 	}
 
@@ -578,17 +578,17 @@ void TGraphDisplay::AutoScale ()
  	for ( a = 0 ; a < scales.size() ; a++ )
  		{
    		scales[a]->min = scales[a]->max = 0 ;
- 		}    
+ 		}
  	for ( a = 0 ; a < data.size() ; a++ )
  		{
    		if ( data[a]->dx.size() == 0 ) continue ;
    		data[a]->sx->min = data[a]->sx->max = data[a]->dx[0] ;
    		data[a]->sy->min = data[a]->sy->max = data[a]->dy[0] ;
- 		}    
+ 		}
  	for ( a = 0 ; a < data.size() ; a++ )
  		{
    		data[a]->AutoScale () ;
- 		}    
+ 		}
 	setupCompleted = true ;
 /*	for ( a = 0 ; a < scales.size() ; a++ )
 		{
@@ -613,21 +613,21 @@ void TGraphDisplay::drawit ( wxDC &dc , int mode )
  	outer.y += border ;
  	outer.width -= border * 4 ;
  	outer.height -= border * 2 ;
- 	
+
  	// Setting inner rectangle
  	inner = outer ;
  	for ( a = 0 ; a < scales.size() ; a++ )
    		scales[a]->CalcInternalRect ( inner ) ;
- 		
+
 	dc.SetPen ( *wxBLACK_PEN ) ;
 	dc.DrawRectangle ( inner ) ;
-	
+
 	wxRect o2 = outer ;
 	for ( a = 0 ; a < scales.size() ; a++ )
   		scales[a]->drawit ( dc , o2 , inner ) ;
-	
+
 	dc.DestroyClippingRegion () ;
-	
+
 	if ( mode & GRAPH_DRAW_MAP )
 		{
 		dc.SetClippingRegion ( inner ) ;
@@ -635,28 +635,28 @@ void TGraphDisplay::drawit ( wxDC &dc , int mode )
     	for ( a = 0 ; a < data.size() ; a++ )
     		{
       		data[a]->drawit ( dc ) ;
-    		}    
+    		}
     	showLegend ( dc ) ;
     	dc.DestroyClippingRegion () ;
-     	}   	
-     	
+     	}
+
  	if ( mode & GRAPH_DRAW_MINI )
  		showMiniature ( dc ) ;
 	}
-	
+
 void TGraphDisplay::showDraggingRect ( wxDC &dc )
 	{
 	if ( draggingRect.x == -1 ) return ;
 	dc.SetPen ( *wxBLACK_PEN ) ;
 	dc.SetBrush ( *MYBRUSH ( prettyColor ) ) ;
 	dc.DrawRectangle ( draggingRect ) ;
-	}    
-	
+	}
+
 void TGraphDisplay::showMiniature ( wxDC &dc )
 	{
 	dc.SetPen ( *wxBLACK_PEN ) ;
 	dc.SetBrush ( *wxWHITE_BRUSH ) ;
-	
+
 	int border = 20 ;
 	wxRect r = inner ;
 	r.x += border ;
@@ -664,7 +664,7 @@ void TGraphDisplay::showMiniature ( wxDC &dc )
 	r.width = 100 ;
 	r.height = r.width * inner.height / inner.width ;
 	dc.DrawRectangle ( r ) ;
-	
+
 	int a ;
 	bool has_x = false , has_y = false ;
 	for ( a = 0 ; a < scales.size() ; a++ )
@@ -681,20 +681,20 @@ void TGraphDisplay::showMiniature ( wxDC &dc )
 	    	r.y += r.height - ( ((float)r.height) * ( scales[a]->bottom - scales[a]->min ) / scales[a]->GetTotalWidth() ) ;
 	    	r.height = ((float)r.height) * scales[a]->GetVisibleWidth() / scales[a]->GetTotalWidth() ;
 	    	r.y -= r.height ;
-      		}    
-		}    
+      		}
+		}
 	dc.SetBrush ( *MYBRUSH ( prettyColor ) ) ;
 	dc.DrawRectangle ( r ) ;
-	}    
-	
+	}
+
 void TGraphDisplay::showLegend ( wxDC &dc )
 	{
 	dc.SetPen ( *wxBLACK_PEN ) ;
 	dc.SetBrush ( *wxWHITE_BRUSH ) ;
-	
+
 	int w = 0 , h = 4 , symw = 50 ;
 	int border = 20 ;
-	
+
 	int a ;
 	int tw , th ;
 	for ( a = 0 ; a < data.size() ; a++ )
@@ -702,26 +702,26 @@ void TGraphDisplay::showLegend ( wxDC &dc )
   		dc.GetTextExtent ( data[a]->name , &tw , &th ) ;
   		h += th + 2 ;
   		w = tw > w ? tw : w ;
-		}    
+		}
 	w += 4 + symw ;
-	
+
 	lr.x = inner.GetRight() - w - border ;
 	lr.y = inner.y + border ;
 	lr.width = w ;
 	lr.height = h ;
-	
+
 	dc.DrawRectangle ( lr ) ;
-	
+
 	for ( a = 0 ; a < data.size() ; a++ )
 		{
  		if ( data[a]->selected )
  			{
     		dc.SetBrush ( *MYBRUSH ( TGraphDisplay::prettyColor ) ) ;
     		dc.SetPen ( *MYPEN ( TGraphDisplay::prettyColor ) ) ;
-    		dc.DrawRectangle ( lr.x + 2 , 
+    		dc.DrawRectangle ( lr.x + 2 ,
       						   lr.y + 2 + ( 2 + th ) * a ,
       						   w - 4 , th ) ;
- 			}    
+ 			}
   		dc.SetTextForeground( data[a]->col ) ;
 		dc.DrawText ( data[a]->name , lr.x + 2 + symw , lr.y + 2 + ( 2 + th ) * a ) ;
 		dc.SetPen ( *MYPEN ( data[a]->col ) ) ;
@@ -730,36 +730,36 @@ void TGraphDisplay::showLegend ( wxDC &dc )
 					  lr.y + 2 + ( 2 + th ) * a + th/2 ,
 					  lr.x + 2 + symw*9/10 ,
 					  lr.y + 2 + ( 2 + th ) * a + th/2 ) ;
-        data[a]->DrawSymbol ( dc , 
-        					  data[a]->pointStyle , 
+        data[a]->DrawSymbol ( dc ,
+        					  data[a]->pointStyle ,
         					  lr.x + 2 + symw/2 ,
         					  lr.y + 2 + ( 2 + th ) * a + th/2 ) ;
-		}		
-	}    
+		}
+	}
 
 void TGraphDisplay::OnPaint(wxPaintEvent& event)
 	{
 	wxPaintDC dc(this);
 
 	if ( !IsSetupComplete() ) return ;
-	
+
         {
         wxBufferedDC dc2 ( &dc , dc.GetSize() ) ;
         drawit ( dc2 ) ;
-        }    
+        }
     }
 
 void TGraphDisplay::OnEvent(wxMouseEvent& event)
     {
 	if ( !IsSetupComplete() ) return ;
     wxPoint pt(event.GetPosition());
-    
+
     // Find out where the mouse is
     int a ;
     bool doRefresh = event.Leaving() ;
     TGraphScale *new_scale = NULL ;
     TGraphData *new_data = NULL ;
-    
+
     // Over a scale?
     for ( a = 0 ; !event.Dragging() && a < scales.size() ; a++ )
     	{
@@ -777,7 +777,7 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
 				return ;
 				}
 			}
-   	
+
    	// Inside the graph?
    	if ( inner.Contains ( pt ) )
    		{
@@ -790,10 +790,10 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
  	    	c1 += _T(":") ;
 	    	int v = scales[a]->horizontal ? pt.x : pt.y ;
  	    	c1 += wxString::Format ( _T("%f") , scales[a]->GetVirtualCoordinate ( v , inner ) ) ;
-	    	}    
+	    	}
     	myapp()->frame->SetStatusText ( c1.c_str() , 0 ) ;
-    	
-    	
+
+
 	    int best = 100 ;
 	    for ( a = 0 ; a < data.size() ; a++ )
 	    	{
@@ -803,9 +803,9 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
  	    		{
   		    	new_data = data[a] ;
   		    	best = d ;
- 	    		}    
+ 	    		}
     		if ( best >= 4 ) new_data = NULL ; // Not good enough!
-	    	}    
+	    	}
     	if ( new_data ) new_data->selected = true ;
 
    		if ( event.LeftDClick() )
@@ -816,11 +816,11 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
 				return ;
 				}
 
-   		}    
-   		
+   		}
+
     // Dragging (CTRL)?
     bool showMiniature = false ;
-    if ( inner.Contains ( pt ) && !event.ControlDown() && zx*zy != 10000 && 
+    if ( inner.Contains ( pt ) && !event.ControlDown() && zx*zy != 10000 &&
     		event.Dragging() && !event.RightIsDown() && !event.MiddleIsDown() )
     	{
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
@@ -832,7 +832,7 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
 	    	{
  	    	if ( scales[a]->horizontal ) scales[a]->Drag ( dx ) ;
  	    	else scales[a]->Drag ( dy ) ;
-	    	}    
+	    	}
     	}
 
    	// End of dragging (box)?
@@ -855,7 +855,7 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
   		    	_bottom = scales[a]->GetVirtualCoordinate ( x1 , inner ) ;
   		    	nx = 100 * ( scales[a]->max - scales[a]->min ) / ( _top - _bottom ) ;
  	    		}
-        	else    
+        	else
  	    		{
   		    	_top = scales[a]->GetVirtualCoordinate ( y1 , inner ) ;
   		    	_bottom = scales[a]->GetVirtualCoordinate ( y2 , inner ) ;
@@ -863,9 +863,9 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
  	    		}
     		scales[a]->top = _top ;
     		scales[a]->bottom = _bottom ;
-	    	}    
+	    	}
     	draggingRect.x = -1 ;
-    	
+
     	zx = nx ;
     	zy = ny ;
     	g->zoom_x->SetValue ( zx ) ;
@@ -894,16 +894,16 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
    	    		if ( draggingRect.width > draggingRect.height )
    	    			draggingRect.height = draggingRect.width ;
     			else draggingRect.width = draggingRect.height ;
- 		    	}    
+ 		    	}
        		}
-    	}    
+    	}
    	else if ( !event.ControlDown() )
     	{
      	draggingRect.x = -1 ;
      	if ( inner.Contains ( pt ) ) SetCursor(wxCursor(wxCURSOR_HAND)) ;
      	else SetCursor(*wxSTANDARD_CURSOR) ;
-       	}   	
-    	
+       	}
+
    	// Mouse Wheel?
    	if ( zx*zy != 10000 && event.GetWheelRotation() != 0 )
    		{
@@ -916,19 +916,19 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
 	    	{
  	    	if ( scales[a]->horizontal ) scales[a]->Drag ( dx ) ;
  	    	else scales[a]->Drag ( dy ) ;
-	    	}    
-   		}    
+	    	}
+   		}
 
     // Red marker lines
     if ( inner.Contains ( pt ) )
     	{
        	for ( a = 0 ; a < scales.size() ; a++ )
         	{
-            scales[a]->show_mark = true ; 
+            scales[a]->show_mark = true ;
             scales[a]->mark = scales[a]->horizontal ? pt.x : pt.y ;
-            }    
+            }
         }
-   	
+
    	// Redraw
     old_scale = new_scale ;
     old_data = new_data ;
@@ -938,7 +938,7 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
         int mode = GRAPH_DRAW_SCALES | GRAPH_DRAW_MAP ;
         if ( showMiniature ) mode |= GRAPH_DRAW_MINI ;
         drawit ( dc2 , mode ) ;
-        }    
+        }
 
     // Context menu?
     if ( event.RightDown() )
@@ -952,20 +952,20 @@ void TGraphDisplay::OnEvent(wxMouseEvent& event)
     		{
 		    cm->Append ( GRAPH_COPY_AS_IMAGE , txt("m_graph_copy_as_image") ) ;
 		    cm->Append ( GRAPH_SAVE_AS_IMAGE , txt("m_graph_save_as_image") ) ;
-    		}    
+    		}
         PopupMenu ( cm , pt ) ;
-        delete cm ;    
-    	}   
-    	
-   	mouse_pos = pt ; 
-    }    
+        delete cm ;
+    	}
+
+   	mouse_pos = pt ;
+    }
 
 void TGraphDisplay::OnCharHook ( wxKeyEvent& event )
 	{
  	if ( event.ControlDown() ) SetCursor ( *wxCROSS_CURSOR ) ;
-// 	else if ( event.ShiftDown() ) 
+// 	else if ( event.ShiftDown() )
  	else SetCursor(wxCursor(wxCURSOR_HAND)) ;
-	}    
+	}
 
 void TGraphDisplay::OnSwapSides(wxCommandEvent &event)
 	{
@@ -974,7 +974,7 @@ void TGraphDisplay::OnSwapSides(wxCommandEvent &event)
 	Refresh();
 	Update();
 	}
-	
+
 void TGraphDisplay::DrawIntoBitmap ( wxBitmap &bmp )
 	{
 	int w , h ;
@@ -984,7 +984,7 @@ void TGraphDisplay::DrawIntoBitmap ( wxBitmap &bmp )
 	memdc.SelectObject ( bmp2 ) ;
 	drawit ( memdc ) ;
 	bmp = bmp2 ;
-	}    
+	}
 
 void TGraphDisplay::OnCopyAsImage(wxCommandEvent &event)
 	{
@@ -996,7 +996,7 @@ void TGraphDisplay::OnCopyAsImage(wxCommandEvent &event)
       wxTheClipboard->Close();
       }
 	}
-	
+
 void TGraphDisplay::OnSaveAsImage(wxCommandEvent &event)
 	{
  	wxString filename = _T("Graph") ;
@@ -1004,16 +1004,16 @@ void TGraphDisplay::OnSaveAsImage(wxCommandEvent &event)
  	DrawIntoBitmap ( bmp ) ;
 	myapp()->frame->saveImage ( &bmp , filename ) ;
 	}
-	
+
 void TGraphDisplay::UpdateDisplay ()
 	{
     wxClientDC dc ( this ) ;
 	wxBufferedDC dc2 ( &dc , dc.GetSize() ) ;
 	drawit ( dc2 ) ;
 	}
-    
+
 bool TGraphDisplay::IsSetupComplete()
 	{
 	return setupCompleted && scales.size()>0 && data.size()>0 ;
 	}
-    
+

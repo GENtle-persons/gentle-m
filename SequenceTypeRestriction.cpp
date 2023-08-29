@@ -12,7 +12,7 @@ int SeqRestriction::arrange ( int n )
 
     pl.slen = vec->getSequenceLength() + ( ( can && can->getEditMode() ) ? -1 : 0 ) ;
     vec->sortRestrictionSites() ;
-    pl.prepare ( vec->rc.size() ) ;    
+    pl.prepare ( vec->rc.size() ) ;
     for ( a = 0 ; a < vec->rc.size() ; a++ )
         {
 		int from = vec->rc[a].getFrom() ;
@@ -21,7 +21,7 @@ int SeqRestriction::arrange ( int n )
 //        int to = from + vec->rc[a].e->getSequence().length() - 1 ;
         if ( !vec->isEnzymeHidden ( vec->rc[a].e->getName() ) )
            pl.add ( a , from , to ) ;
-        }    
+        }
     pl.makeLevels () ;
 
     // Setting basic values
@@ -29,7 +29,7 @@ int SeqRestriction::arrange ( int n )
     endnumberlength = 0 ;
     int ox = bo+wx , oy = n*wy+bo , endnumber = offset + pl.slen ;
     while ( endnumber > 0 ) { endnumber /= 10 ; ox += wx ; endnumberlength++ ; }
-    
+
     can->MyGetClientSize ( &w , &h ) ;
 
     itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx - 1 ) ;
@@ -65,9 +65,9 @@ int SeqRestriction::arrange ( int n )
 
     return lowy + bo*2 ;
     }
-    
+
 void SeqRestriction::show ( wxDC& dc )
-    { 
+    {
 	myass ( can , "SeqRestriction::show1" ) ;
 	myass ( vec , "SeqRestriction::show2" ) ;
 	mylog ( "SeqRestriction::show" , "1" ) ;
@@ -99,25 +99,25 @@ void SeqRestriction::show ( wxDC& dc )
         if ( down ) yo = can->charheight / 2 - ( (level*2) * 2 ) ;
         int llx = 0 ;
         if ( !vec->getEnzymeRule()->use_color_coding )
-        	{    
+        	{
             switch ( (level*2)%3 )
                 {
-                case 0 : dc.SetPen(*wxRED_PEN); 
+                case 0 : dc.SetPen(*wxRED_PEN);
                          dc.SetTextForeground ( wxColor ( *wxRED ) ) ;
                          break ;
-                case 1 : dc.SetPen(*MYPEN(wxColour(0,200,0))); 
-                         dc.SetTextForeground ( wxColour ( 0 , 200 , 0 ) ) ; 
+                case 1 : dc.SetPen(*MYPEN(wxColour(0,200,0)));
+                         dc.SetTextForeground ( wxColour ( 0 , 200 , 0 ) ) ;
                          break ;
-                case 2 : dc.SetPen(*MYPEN(wxColour(0,0,200))); 
-                         dc.SetTextForeground ( wxColour ( 0 , 0 , 200 ) ) ; 
+                case 2 : dc.SetPen(*MYPEN(wxColour(0,0,200)));
+                         dc.SetTextForeground ( wxColour ( 0 , 0 , 200 ) ) ;
                          break ;
-                }    
+                }
             }
         mylog ( "SeqRestriction::show" , "A" ) ;
         if ( can->isPrinting() && !can->getPrintToColor() )
            {
-           dc.SetPen(*wxBLACK_PEN); 
-           dc.SetTextForeground ( *wxBLACK ) ; 
+           dc.SetPen(*wxBLACK_PEN);
+           dc.SetTextForeground ( *wxBLACK ) ;
            }
         int qlx = -1 , idx = -1;
         wxRect ra , rb ;
@@ -127,20 +127,20 @@ void SeqRestriction::show ( wxDC& dc )
             if ( can->hardstop > -1 && a > can->hardstop ) break ;
             char c = ' ' ;
             b = a + 1 ;
-            
+
             if ( direct )
                {
                int px = a % itemsperline , py = a / itemsperline ;
                px = px * cw + ( px / cbs ) * ( cw - 1 ) + ox ;
                py = py * ch * csgc + oy ;
                ra = wxRect ( px , py , cw , ch ) ;
-               }    
+               }
             else ra = getRect ( a ) ;
-                    
-            
+
+
             int ty = ra.y ;
             int tz = ty + can->charheight ;
-            
+
             bool insight = true ; // Meaning "is this part visible"
             if ( tz < ya ) insight = false ;
             if ( ty > yb ) insight = false ;
@@ -156,17 +156,17 @@ void SeqRestriction::show ( wxDC& dc )
                if ( vec->getEnzymeRule()->use_color_coding && !(can->isPrinting() && !can->getPrintToColor()) )
                   {
             	  wxColour *col = vec->getEnzymeRule()->getColor ( vec->countCuts ( rc->e->getName() ) ) ;
-            	  dc.SetPen(*MYPEN(*col)); 
+            	  dc.SetPen(*MYPEN(*col));
             	  dc.SetTextForeground ( *col ) ;
               	  }
 
                if ( rc->getPos() == b-1 ) c = '|' ;
                else if ( rc->getPos() == b ) c = '#' ;
-               
+
                char c2 = ' ' ;
                int ol = rc->getPos() + rc->getOverlap() ;
-               if ( b-1 == ol ) c2 = '|' ; 
-               else if ( b == ol ) c2 = '#' ; 
+               if ( b-1 == ol ) c2 = '|' ;
+               else if ( b == ol ) c2 = '#' ;
 
                if ( qlx == -1 ) qlx = ra.x ;
                int lx = ra.x ;
@@ -175,7 +175,7 @@ void SeqRestriction::show ( wxDC& dc )
                if ( down ) bt = ( ra.y + ra.height ) + yo ;
                int y = ( ra.y + ( ra.y + ra.height ) ) / 2 + yo ;
                if ( lc != ' ' && ly == y ) lx = rb.GetRight() ;
-               
+
                if ( c == '-' )
                   {
                   if ( c2 == ' ' ) dc.DrawLine ( lx , y , ra.GetRight() , y ) ;
@@ -201,7 +201,7 @@ void SeqRestriction::show ( wxDC& dc )
                   if ( lx < x ) dc.DrawLine ( lx , y + ( y - bt ) , x , y ) ;
                   dc.DrawLine ( x , y , ra.GetRight() , y ) ;
                   }
-                  
+
                llx = ra.GetRight() ;
                ly = y ;
                qlx = x ;
@@ -221,7 +221,7 @@ void SeqRestriction::show ( wxDC& dc )
     dc.SetTextForeground ( wxColor ( *wxBLACK ) ) ;
 	mylog ( "SeqRestriction::show" , "fin" ) ;
     }
-    
+
 void SeqRestriction::initFromTVector ( TVector *v )
     {
     vec = v ;
@@ -233,4 +233,4 @@ bool SeqRestriction::useDirectRoutines ()
     {
     return true ;
     }
-        
+

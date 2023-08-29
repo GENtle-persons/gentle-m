@@ -46,15 +46,15 @@ TCloningAssistant::TCloningAssistant(wxWindow *parent, const wxString& title)
 	{
 	TDDR::ThickRedPen = wxPen ( *wxRED , 5 ) ;
 	def = _T("CloningAssistant") ;
-	
+
 	base = new TDDR ;
 	vlist = new TDDR ;
 	tlist = new TDDR ;
-	
+
 	base->r = wxRect ( 0 , 0 , 200 , 200 ) ;
 	vlist->r = wxRect ( 10 , 10 , 100 , 100 ) ;
 	base->brush = *wxWHITE_BRUSH ;
-	
+
 	base->children.push_back ( vlist ) ;
 	base->children.push_back ( tlist ) ;
 
@@ -86,7 +86,7 @@ void TCloningAssistant::initme ()
     menu_bar->Append(help_menu, txt("m_help") );
 
     SetMenuBar(menu_bar);
-    
+
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     panel = new TCloningAssistantPanel ( this , this ) ;
 	panel->arrange () ;
@@ -101,12 +101,12 @@ void TCloningAssistant::initme ()
 	myapp()->frame->addTool ( toolBar , MDI_FILE_OPEN ) ;
     myapp()->frame->addDefaultTools ( toolBar ) ;
     toolBar->Realize() ;
-	
+
 	SetSizer ( v0 ) ;
     myapp()->frame->setChild ( this ) ;
     Maximize () ;
 	panel->arrange () ;
-	
+
     Activate () ;
 	v0->Layout () ;
 //	EnforceRefesh () ;
@@ -200,7 +200,7 @@ void TCloningAssistantPanel::Refresh (bool eraseBackground , const wxRect* rect 
 	wxBufferedDC dc2 ( &dc , dc.GetSize() ) ;
 	OnDraw ( dc2 ) ;
 //	wxPaintEvent ev ;
-//	OnPaint ( ev ) ;	
+//	OnPaint ( ev ) ;
 	}
 
 void TCloningAssistantPanel::OnEvent(wxMouseEvent& event)
@@ -209,10 +209,10 @@ void TCloningAssistantPanel::OnEvent(wxMouseEvent& event)
 	Refresh();
 	Update();
     wxPoint pt(event.GetPosition());
-	
+
 	TDDR *over = NULL ;
 	if ( !dragging ) over = ca->base->findItem ( pt ) ;
-	
+
 	if ( event.LeftDown() )
 		{
 		if ( dragging ) dragging->dragging = false ;
@@ -243,7 +243,7 @@ void TCloningAssistantPanel::OnEvent(wxMouseEvent& event)
 		timer.Start ( 20 ) ;
 		return ;
 		}
-	
+
 	if ( dragging && event.LeftIsDown() )
 		{
 		over = ca->base->findItem ( pt , wxPoint ( 0 , 0 ) , dragging ) ;
@@ -273,7 +273,7 @@ void TCloningAssistantPanel::OnEvent(wxMouseEvent& event)
 		{
 		SetCursor(*wxSTANDARD_CURSOR) ;
 		}
-	
+
 	}
 
 void TCloningAssistantPanel::arrange ()
@@ -282,10 +282,10 @@ void TCloningAssistantPanel::arrange ()
 	wxRect r ;
 	wxClientDC dc ( this ) ;
 	wxSize cs = dc.GetSize() ;
-	
+
 	// Base
 	ca->base->r = wxRect ( wxPoint ( 0 , 0 ) , GetClientSize() ) ;
-	
+
 	// Object list
 	r = wxRect ( 5 , 5 , 50 , 15 ) ;
 	while ( ca->vlist->children.size() ) ca->vlist->children.pop_back () ;
@@ -309,11 +309,11 @@ void TCloningAssistantPanel::arrange ()
 	for ( a = 0 ; a < ca->vlist->children.size() ; a++ )
 		ca->vlist->children[a]->r.width = maxw ;
 	ca->vlist->r = wxRect ( 5 , 5 , maxw + 10 , ca->base->r.GetHeight() - 10 ) ;
-	
+
 	// Targets
-	ca->tlist->r = wxRect ( ca->vlist->r.GetRight() + 5 , 
+	ca->tlist->r = wxRect ( ca->vlist->r.GetRight() + 5 ,
 							ca->vlist->r.GetTop() ,
-							cs.GetWidth() - ca->vlist->r.GetRight() - 10 , 
+							cs.GetWidth() - ca->vlist->r.GetRight() - 10 ,
 							ca->vlist->r.GetHeight() ) ;
 	for ( a = 0 ; a < ca->tlist->children.size() ; a++ )
 		{
@@ -325,7 +325,7 @@ void TCloningAssistantPanel::arrange ()
 			ca->tlist->r.GetHeight() / ca->tlist->children.size() - 10
 			) ;
 		if ( a == 0 ) i->brush = wxBrush ( wxColour ( 200 , 200 , 200 ) ) ;
-		
+
 		// Sort children
 		for ( b = 1 ; b < i->children.size() ; b++ )
 			{
@@ -462,11 +462,11 @@ void TDDR::draw ( wxDC &dc , wxPoint off )
 	if ( highlight == DDR_HIGHLIGHT_AS ) dc.SetPen ( ThickRedPen ) ;
 	else dc.SetPen ( pen ) ;
 	dc.SetBrush ( brush ) ;
-	dc.DrawRectangle ( r.GetLeft() + off.x , r.GetTop() + off.y , 
+	dc.DrawRectangle ( r.GetLeft() + off.x , r.GetTop() + off.y ,
 						r.GetWidth() , r.GetHeight() ) ;
 	wxPoint p = wxPoint ( r.GetLeft() + off.x , r.GetTop() + off.y ) ;
 	if ( !title.IsEmpty() ) dc.DrawText ( title , p.x + 2 , p.y + 2 ) ;
-	
+
 	if ( item && item->getType() == VIT_CDS && item->getDirection() != 0 )
 		{
 		int x1 , x2 ;
@@ -486,13 +486,13 @@ void TDDR::draw ( wxDC &dc , wxPoint off )
 		dc.DrawLine ( x1 , y , x2 , y - dy/2 ) ;
 		dc.DrawLine ( x1 , y , x2 , y + dy/2 ) ;
 		}
-	
+
 	// Update children
 	for ( int a = 0 ; a < children.size() ; a++ )
 		{
 		if ( !children[a]->dragging ) children[a]->draw ( dc , p ) ;
-		}	
-	
+		}
+
 	// Highlighting?
 	if ( highlight == DDR_HIGHLIGHT_NONE ) return ;
 	dc.SetPen ( ThickRedPen ) ;
@@ -566,7 +566,7 @@ void TDDR::duplicate_from ( TDDR *b )
 	clear_children () ;
 	*this = *b ;
 	children.clear () ;
-	
+
 	while ( children.size() < b->children.size() )
 		{
 		TDDR *dummy_child = new TDDR ;

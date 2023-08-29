@@ -18,13 +18,13 @@ class TPrimer ;
 class TPrimerDesign : public ChildBase
     {
     public :
-    TPrimerDesign(wxWindow *parent, 
+    TPrimerDesign(wxWindow *parent,
                     wxString title,
                     TVector *_vec,
                     vector <TPrimer> pl ,
                     int _mut = -1 ) ; ///< Constructor
     ~TPrimerDesign () ; ///< Destructor
-    
+
     void initme () ; ///< Initialize
     virtual wxString getName () ; ///< Returns the name of the vector
     virtual void AddPrimer ( wxString s , wxString pname = _T("") ) ; ///< Add a primer to the module
@@ -36,7 +36,7 @@ class TPrimerDesign : public ChildBase
 
     virtual void OnCopy(wxCommandEvent& event);
     virtual void OnEditMode(wxCommandEvent& event);
-    
+
     virtual void OnSelectPrimer ( wxListEvent& event);
     virtual void OnActivatePrimer ( wxListEvent& event);
     virtual void OnPrint ( wxCommandEvent &ev ) ;
@@ -51,7 +51,7 @@ class TPrimerDesign : public ChildBase
     virtual void OnToggleFeatures ( wxCommandEvent &ev ) ;
     virtual void OnSpin(wxSpinEvent& event);
     virtual void OnSpinText(wxCommandEvent& event);
-    
+
     virtual void OnAA_all(wxCommandEvent& event);
     virtual void OnAA_three(wxCommandEvent& event);
     virtual void OnAA_one(wxCommandEvent& event);
@@ -66,27 +66,27 @@ class TPrimerDesign : public ChildBase
     virtual void OnInsertRestrictionSiteLeft ( wxCommandEvent &ev ) ;
     virtual void OnInsertRestrictionSiteRight ( wxCommandEvent &ev ) ;
     virtual void OnTroubleshoot ( wxCommandEvent &ev ) ;
-    
+
     virtual void OnSilmut ( wxCommandEvent& event) ;
     virtual void OnHorizontal ( wxCommandEvent& event ) ;
     virtual void OnPaste (wxCommandEvent& WXUNUSED(event)) ;
     virtual void OnFontsize(wxCommandEvent& event); ///< Fontsize event handler
-    
+
     // Variables
     SequenceCanvas *sc ;
     int from ;
     vector <TPrimer> primer ;
     TVector *inverse_template_vector , *resulting_sequence_vector ;
-    
+
     int aa_state , aa_disp ;
     int lastPrimerActivated ;
     int show_features ;
     int mut ;
-    
+
     private :
     virtual void guessOptNuc () ;
     virtual void calculateResultSequence () ;
-    
+
     wxSpinCtrl *spin ;
     wxTextCtrl *stat ;
     wxBoxSizer *v0 ;
@@ -94,7 +94,7 @@ class TPrimerDesign : public ChildBase
     bool spinTextEnabeled ;
     bool updating ;
     wxChoice *fontsize ;
-    
+
     DECLARE_EVENT_TABLE()
     } ;
 

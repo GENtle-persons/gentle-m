@@ -52,7 +52,7 @@ TGraph::TGraph(wxWindow *parent, const wxString& title)
     nb = NULL ;
     allow_save = allow_copy = true ;
 	}
- 
+
 TGraph::~TGraph()
 	{/*
 	if ( nb )
@@ -66,7 +66,7 @@ void TGraph::OnCharHook ( wxKeyEvent& event )
 	{
 	wxMessageBox ( _T("!") ) ;
 	if ( gd ) gd->OnCharHook ( event ) ;
-	}    
+	}
 
 void TGraph::initme ()
 	{
@@ -95,16 +95,16 @@ void TGraph::initme ()
     toolbar = toolBar ;
     myapp()->frame->InitToolBar(toolBar);
 
-    zoom_x = new wxSlider ( toolBar , GRAPH_ZOOM_X , 1 , 1 , 91 , 
+    zoom_x = new wxSlider ( toolBar , GRAPH_ZOOM_X , 1 , 1 , 91 ,
                              wxDefaultPosition ,
                              wxDefaultSize ,
                              wxSL_HORIZONTAL ) ;
-    zoom_y = new wxSlider ( toolBar , GRAPH_ZOOM_Y , 1 , 1 , 91 , 
+    zoom_y = new wxSlider ( toolBar , GRAPH_ZOOM_Y , 1 , 1 , 91 ,
                              wxDefaultPosition ,
                              wxDefaultSize ,
                              wxSL_HORIZONTAL ) ;
     zoom_linked = new wxCheckBox ( toolBar , GRAPH_ZOOM_LINKED , txt("t_zoom_linked") ) ;
-    
+
 	myapp()->frame->addTool ( toolBar , MDI_TEXT_IMPORT ) ;
 	myapp()->frame->addTool ( toolBar , MDI_FILE_OPEN ) ;
     toolBar->AddControl ( new wxStaticText ( toolBar , -1 , _T("Zoom (X)") ) ) ;
@@ -121,7 +121,7 @@ void TGraph::initme ()
     v0->Add ( nb , 1 , wxEXPAND , 5 ) ;
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;
-    
+
     zoom_linked->SetValue ( true ) ;
 
     myapp()->frame->setChild ( this ) ;
@@ -139,13 +139,13 @@ void TGraph::OnZoomX(wxScrollEvent& event)
 	{
 	if ( zoom_linked->GetValue() ) zoom_y->SetValue ( zoom_x->GetValue() ) ;
 	gd->SetZoom ( zoom_x->GetValue() , zoom_y->GetValue() ) ;
-	}    
+	}
 
 void TGraph::OnZoomY(wxScrollEvent& event)
 	{
 	if ( zoom_linked->GetValue() ) zoom_x->SetValue ( zoom_y->GetValue() ) ;
 	gd->SetZoom ( zoom_x->GetValue() , zoom_y->GetValue() ) ;
-	}    
+	}
 
 void TGraph::OnCopy(wxCommandEvent& event)
 	{
@@ -168,17 +168,17 @@ TGraphData::TGraphData ( TGraphDisplay *d )
  	selected = false ;
 	}
 
-void TGraphData::Add ( float x , float y )    
+void TGraphData::Add ( float x , float y )
 	{
 	dx.push_back ( x ) ;
 	dy.push_back ( y ) ;
-	}    
-	
+	}
+
 void TGraphData::SetScales ( TGraphScale *_sx , TGraphScale *_sy )
 	{
 	sx = _sx ;
 	sy = _sy ;
-	}    
+	}
 
 void TGraphData::AutoScale ()
 	{
@@ -195,7 +195,7 @@ void TGraphData::AutoScale ()
 	sy->top = sy->max ;
 	sy->bottom = sy->min ;
 	}
-         
+
 void TGraphData::drawit ( wxDC &dc )
 	{
 	int a ;
@@ -212,7 +212,7 @@ void TGraphData::drawit ( wxDC &dc )
   		x = sx->GetRealCoord ( dx[a] , inner ) ;
   		y = sy->GetRealCoord ( dy[a] , inner ) ;
   		if ( a != 0 ) dc.DrawLine ( lx , ly , x , y ) ;
-  		
+
   		if ( x >= inner.GetLeft() && x <= inner.GetRight() )
   			{
 	    	wxPoint p ( x , y ) ;
@@ -220,19 +220,19 @@ void TGraphData::drawit ( wxDC &dc )
 	    		{
    	   			drawn.push_back ( p ) ;
    	   			last_drawn = p ;
-   	   			} 			
-   			} 			
-  		
+   	   			}
+   			}
+
   		if ( selected ) dc.SetPen ( *wxBLACK_PEN ) ;
   		DrawSymbol ( dc , pointStyle , x , y ) ;
   		if ( selected ) dc.SetPen ( *MYPEN ( col ) ) ;
-  		
+
   		lx = x ;
     	ly = y ;
-		}    
+		}
 	dc.SetBrush ( *wxTRANSPARENT_BRUSH ) ;
-	}    
-	
+	}
+
 void TGraphData::DrawSymbol ( wxDC &dc , wxString symbol , int x , int y , int size )
 	{
 	if ( symbol == _T("rect") ) dc.DrawRectangle ( x-size*2/3 , y-size*2/3 , size*4/3+1 , size*4/3+1 ) ;
@@ -245,9 +245,9 @@ void TGraphData::DrawSymbol ( wxDC &dc , wxString symbol , int x , int y , int s
   		points[1] = wxPoint ( x - ns , y + ns ) ;
   		points[2] = wxPoint ( x + ns , y + ns ) ;
   		dc.DrawPolygon ( 3 , points ) ;
-		}    
-	}    
-    
+		}
+	}
+
 
 unsigned long TGraphData::GetCount ()
 	{
@@ -262,7 +262,7 @@ int TGraphData::Distance ( const wxPoint &pt )
 	for ( a = 1 ; a < drawn.size() ; a++ )
 		{
   		p2 = drawn[a] ;
-  		
+
   		int f , min = 999999999 ;
   		float max = ( p2.x - p1.x ) * ( p2.x - p1.x ) + ( p2.y - p1.y ) * ( p2.y - p1.y ) ;
   		max = max > 0 ? sqrt ( max ) : 1 ;
@@ -279,12 +279,12 @@ int TGraphData::Distance ( const wxPoint &pt )
 	    	fx = fx * fx ;
 	    	fy = fy * fy ;
 	    	if ( fx + fy < min ) min = fx + fy ;
-  			}    
+  			}
 		min = sqrt ( (double) min ) ;
 		if ( best > (int) min ) best = (int) min ;
-  		
+
   		p1 = p2 ;
-		}    
+		}
 	return best ;
 	}
-    
+

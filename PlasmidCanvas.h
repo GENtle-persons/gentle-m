@@ -48,7 +48,7 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void OnPrimerMutation ( wxCommandEvent &ev ) ; ///< "Run PCR with mutation primers" event handler
     virtual void OnPaint(wxPaintEvent& event) ; ///< Paint event handler
     virtual void OnSaveImage ( wxCommandEvent &ev ) ; ///< "Save as image" event handler
-    
+
     virtual void OnStrandCopy35(wxCommandEvent& event); ///< "Copy 3'->5' strand" event handler
     virtual void OnStrandCopy53(wxCommandEvent& event); ///< "Copy 5'->3' strand" event handler
     virtual void OnStrandCopyBoth(wxCommandEvent& event); ///< "Copy both strands" event handler
@@ -97,7 +97,7 @@ class PlasmidCanvas : public wxScrolledWindow
 
     virtual void setPrinting ( bool _b ) ; ///< Sets the printing mode on/off
     virtual void setLastContextItem ( long _l ) ; ///< Sets the last item the mouse was over
-    
+
     virtual int getMarkFrom () ; ///< Returns the first selected position, or -1
     virtual int getMarkTo () ; ///< Returns the last selected position, or -1
     virtual void getMark ( int &i1 , int &i2 ) ; ///< Sets i1 and i2 to the first/last selected positions, or to -1
@@ -123,7 +123,7 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual bool optimizeCircularRestrictionSites ( int a , wxDC &dc ) ; ///< Rearranges the restriction site labels
     virtual int findORFcircular ( float angle , float radius ) ; ///< Returns the number of the open reading frame at the given position, or -1
     virtual void drawCircularORFs ( wxDC &dc ) ; ///< Draws open reading frames in circular mode
-    
+
     // linear mode
     virtual int findVectorObjectLinear ( wxPoint pp ) ; ///< Returns the number of an item/feature at the given position, or -1
     virtual void drawLinearItem ( wxDC &dc , int r1 , int r2 , float a1 , float a2 , TVectorItem *i ) ; ///< Draws an item/feature in linear mode
@@ -131,13 +131,13 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual bool intersectsLine ( wxRect &a , wxPoint p ) ; ///< Does the point lie within the rectangle, except for the top part?
     virtual void drawLinearORFs ( wxDC &dc ) ; ///< Draws open reading frames in linear mode
     virtual int findORFlinear ( int x , int y ) ; ///< Returns the number of the open reading frame at the given position, or -1
-    
+
     // both modes
     virtual bool intersects ( wxRect &a , wxRect &b ) ; ///< Does the point lie within the rectangle?
     virtual bool pointinrect ( int x , int y , wxRect &a ) ; ///< Does the point lie within the rectangle?
     virtual bool isEnzymeVisible ( wxString s ) ; ///< Is the enzyme visible (or was it set to "hidden")?
     virtual void updateLinkedItems ( TVector *vec , int in ) ; ///< Update items that belong together (like exons)
-    
+
     // Misc internal methods
     virtual void SetMyToolTip ( wxString s , int mode ) ; ///< Sets the tool tip
     virtual wxString getDNAorAA ( int from , int to , int dir , bool dna = true ) ; ///< Returns the given DNA or amino acid sequence
@@ -147,7 +147,7 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void recalc_rc ( int a , wxDC &dc ) ; ///< Recalculates the position of the restriction cuts and labels
     virtual void makeGCcolor ( int percent , wxColour &col ) ; ///< Sets the color appropriate for the percentage of the GC contents
     virtual void showGClegend ( wxDC &dc ) ; ///< Draws the GC contents legend
-    
+
     // Variables
     int context_last_rs , lasttooltip , context_last_orf ;
     int lastvectorobject , lastrestrictionsite , lastbp ;
@@ -157,7 +157,7 @@ class PlasmidCanvas : public wxScrolledWindow
     bool initialclick , painting , hasBeenPainted , printing ;
     wxToolTip *tt ; ///< The current/last tooptip
     MyChild *p ; ///< The MyChild structure containing this PlasmidCanvas
-    
+
     DECLARE_EVENT_TABLE()
     };
 

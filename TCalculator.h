@@ -29,11 +29,11 @@ class TGridBasic : public wxGrid
     virtual void print ( int mode ) ; ///< Prints the submodule
     virtual wxString getText() ;
     virtual double getDouble ( int y , int x ) ; ///< Returns the value of a cell as a floating-point number
-    
+
     protected :
     bool calculating ; ///< Are we currently (re)calculating?
     } ;
-    
+
 /**	\class TGridLigation
 	\brief The ligation calculator submodule
 */
@@ -45,7 +45,7 @@ class TGridLigation : public TGridBasic
     virtual void init () ; ///< Initialization
     virtual void recalc () ; ///< Recalculates the submodule
     virtual void OnSelectCell(wxGridEvent& event) ; ///< Selection changed event handler
-    
+
     DECLARE_EVENT_TABLE()
     } ;
 
@@ -60,7 +60,7 @@ class TGridDNA : public TGridBasic
     virtual void init () ; ///< Initialization
     virtual void recalc () ; ///< Recalculates the submodule
     virtual void OnSelectCell(wxGridEvent& event) ; ///< Selection changed event handler
-    
+
     DECLARE_EVENT_TABLE()
     } ;
 
@@ -75,7 +75,7 @@ class TGridProtein : public TGridBasic
     virtual void init () ; ///< Initialization
     virtual void recalc () ; ///< Recalculates the submodule
     virtual void OnSelectCell(wxGridEvent& event) ; ///< Selection changed event handler
-    
+
     DECLARE_EVENT_TABLE()
     } ;
 
@@ -90,7 +90,7 @@ class TGridData : public TGridBasic
     virtual void init () ; ///< Initialization
     virtual void recalc () ; ///< Recalculates the submodule
     virtual void OnSelectCell(wxGridEvent& event) ; ///< Selection changed event handler
-    
+
     DECLARE_EVENT_TABLE()
     } ;
 
@@ -102,7 +102,7 @@ class TCalculator : public ChildBase
     public :
     TCalculator(wxWindow *parent, const wxString& title) ; ///< Constructor
     ~TCalculator () ; ///< Destructor
-    
+
     void initme () ; ///< Initialization
     virtual wxString getName () ; ///< Returns the module name
 
@@ -111,7 +111,7 @@ class TCalculator : public ChildBase
     virtual void OnPrintPreview(wxCommandEvent& event) ; ///< Print preview event handler
     virtual void OnCopy(wxCommandEvent& event) ; ///< Copy event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler
-    
+
     wxNotebook *nb ; ///< Pointer to the wxNotebook structure that holds the submodules
     TGridLigation *ligGrid ; ///< Pointer to the ligation submodule
     TGridDNA *ligDNA ; ///< Pointer to the DNA submodule

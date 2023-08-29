@@ -59,11 +59,11 @@ TDotPlot::TDotPlot(wxWindow *parent, const wxString& title)
     vec = NULL ;
     allow_save = allow_copy = true ;
 }
-                  
+
 TDotPlot::~TDotPlot ()
 {
 }
-    
+
 void TDotPlot::initme ()
 {
     // Menus
@@ -75,14 +75,14 @@ void TDotPlot::initme ()
     menu_bar->Append(tool_menu, txt("m_tools") );
     menu_bar->Append(help_menu, txt("m_help") );
     SetMenuBar(menu_bar);
-    
+
     // Toolbar
     wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
     toolBar->Reparent ( this ) ;
     toolbar = toolBar ;
     myapp()->frame->InitToolBar(toolBar);
 /*
-    zoom = new wxSlider ( toolBar , GRAPH_ZOOM_X , 1 , 1 , 91 , 
+    zoom = new wxSlider ( toolBar , GRAPH_ZOOM_X , 1 , 1 , 91 ,
                              wxDefaultPosition ,
                              wxDefaultSize ,
                              wxSL_HORIZONTAL ) ;
@@ -92,7 +92,7 @@ void TDotPlot::initme ()
     window_size = new wxChoice ( toolBar , DP_WINDOW_SIZE , wxDefaultPosition , wxSize ( 40 , -1 ) ) ;
     mismatch_limit = new wxChoice ( toolBar , DP_MISMATCH_LIMIT , wxDefaultPosition , wxSize ( 40 , -1 ) ) ;
     open_seq1 = new wxCheckBox ( toolBar , DP_OPEN_SEQ1 , txt("t_open_seq1") ) ;
-    
+
 	myapp()->frame->addTool ( toolBar , MDI_TEXT_IMPORT ) ;
 	myapp()->frame->addTool ( toolBar , MDI_FILE_OPEN ) ;
 //    toolBar->AddControl ( new wxStaticText ( toolBar , -1 , _T("Zoom") ) ) ;
@@ -215,7 +215,7 @@ void TDotPlotPanel::Run ()
 //     wxMessageBox ( parent->window_size->GetStringSelection() ) ; ;
 //     return ;
      parent->mismatch_limit->GetStringSelection().ToLong ( &mismatch ) ;
-     
+
      for ( a = 0 ; a < myapp()->frame->children.GetCount() ; a++ )
      {
          if ( myapp()->frame->children[a]->def != _T("dna") ) continue ;
@@ -223,7 +223,7 @@ void TDotPlotPanel::Run ()
          if ( !seq1 && parent->seq1->GetStringSelection() == name ) seq1 = (MyChild*) myapp()->frame->children[a] ;
          if ( !seq2 && parent->seq2->GetStringSelection() == name ) seq2 = (MyChild*) myapp()->frame->children[a] ;
      }
-     
+
      Recalc() ;
      Update() ;
      wxMouseEvent ev ;
@@ -249,7 +249,7 @@ void TDotPlotPanel::Recalc ()
      len1 = seq1->vec->getSequenceLength() ;
      len2 = seq2->vec->getSequenceLength() ;
      data = vector <char> ( len1 * len2 + 1 ) ;
-     
+
      int a , b ;
      for ( a = 0 ; a < len1 ; a++ )
      {
@@ -259,11 +259,11 @@ void TDotPlotPanel::Recalc ()
              data[dppos(a,b)] = CheckWindow ( a , b ) ;
          }
      }
-     
+
      x1 = y1 = 0 ;
      SetVirtualSize ( offx + len1 , offy + len2 ) ;
      SetScrollRate ( 1 , 1 ) ;
-     Draw2Memory () ;     
+     Draw2Memory () ;
 //     SetScrollbars ( 1 , 1 , len1 , len2 ) ;
      wxEndBusyCursor() ;
 }
@@ -328,7 +328,7 @@ void TDotPlotPanel::Draw2Memory ()
              if ( data[dppos(x,y)] ) memdc.DrawPoint ( x+offx , y+offy ) ;
          }
      }
-     
+
      // Scales
      int step = 50 ;
      wxCoord w , h ;
@@ -340,7 +340,7 @@ void TDotPlotPanel::Draw2Memory ()
          memdc.DrawText ( s , offx + x - w/2 , 2 ) ;
          memdc.DrawLine ( x + offx , 2 + h , x + offx , offy - 1 ) ;
      }
-     
+
      for ( y = step-1 ; y < len2 ; y += step )
      {
          wxString s = wxString::Format ( _T("%d") , y+1 ) ;
@@ -348,7 +348,7 @@ void TDotPlotPanel::Draw2Memory ()
          memdc.DrawText ( s , 2 , offy + y - h/2 ) ;
          memdc.DrawLine ( 2 + w , y + offy , offx - 1 , y + offy ) ;
      }
-     
+
      memdc.DrawText ( seq1->getName() , offx , offy/2 ) ;
      memdc.GetTextExtent ( seq2->getName() , &w , &h ) ;
      memdc.DrawRotatedText ( seq2->getName() , offx/2 , offy + w , 90 ) ;
@@ -387,7 +387,7 @@ void TDotPlotPanel::OnMouse(wxMouseEvent& event)
           else OnOpenSequence2 ( ev ) ;
           return ;
      }
-     
+
      // Context menu
      if ( event.RightIsDown() )
      {
@@ -421,12 +421,12 @@ void TDotPlotPanel::OnOpenSequence2(wxCommandEvent& event)
 void TDotPlotPanel::OnCopy(wxCommandEvent& event)
 {
     wxBitmap *bmp = new wxBitmap ( membmp ) ;//getSequenceBitmap () ;
-    
+
     // Copy to clipboard
     if (wxTheClipboard->Open())
         {
         wxBitmapDataObject *bdo = new wxBitmapDataObject ( *bmp ) ;
-        wxTheClipboard->SetData( bdo ) ; 
+        wxTheClipboard->SetData( bdo ) ;
         wxTheClipboard->Close();
         }
 }

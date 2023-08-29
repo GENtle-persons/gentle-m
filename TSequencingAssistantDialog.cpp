@@ -18,7 +18,7 @@ TSequencingAssistantDialog::TSequencingAssistantDialog (wxWindow *parent , const
 	sequence = new wxChoice ( this , SAD_SEQUENCE ) ;
 	abi1 = new wxChoice ( this , SAD_ABI1 ) ;
 	abi2 = new wxChoice ( this , SAD_ABI2 ) ;
-	
+
 	// Sequence/sequencing data dropdown boxes
 	h1a->Add ( new wxStaticText ( this , -1 , txt("t_sad_sequence") ) , 0 , wxEXPAND , 5 ) ;
 	h1a->Add ( sequence , 1 , wxEXPAND , 5 ) ;
@@ -32,13 +32,13 @@ TSequencingAssistantDialog::TSequencingAssistantDialog (wxWindow *parent , const
     wxButton *btCC = new wxButton ( this , wxID_CANCEL , txt("b_cancel") ) ;
     h2->Add ( ok ) ;
     h2->Add ( btCC ) ;
-	
+
 	// Initial help text
-    v0->Add ( new wxStaticText ( this , -1 , txt("t_sad_text") , wxDefaultPosition , wxSize(400,60) , wxALIGN_CENTRE ) , 
+    v0->Add ( new wxStaticText ( this , -1 , txt("t_sad_text") , wxDefaultPosition , wxSize(400,60) , wxALIGN_CENTRE ) ,
                0 , wxEXPAND , 5 ) ;
 	v0->Add ( h1a , 0 , wxEXPAND , 5 ) ;
 	v0->Add ( h2 , 0 , wxCENTER|wxALL , 5 ) ;
-	
+
 	// Initialize dropdown boxes
 	sequence->Append ( _T("<none>") ) ;
 	abi1->Append ( _T("<none>") ) ;
@@ -60,7 +60,7 @@ TSequencingAssistantDialog::TSequencingAssistantDialog (wxWindow *parent , const
 			abi.push_back ( c ) ;
 			}
 		}
-	
+
 	// Pre-select if only two sequencing data items are present
 	sequence->Select ( 0 ) ;
 	abi1->Select ( 0 ) ;
@@ -72,10 +72,10 @@ TSequencingAssistantDialog::TSequencingAssistantDialog (wxWindow *parent , const
 		}
 	else if ( abi1->GetCount() == 2 ) abi1->Select ( 1 ) ;
 	if ( sequence->GetCount() == 2 ) sequence->Select ( 1 ) ;
-	
+
 	wxCommandEvent ev ;
 	OnCheckOK ( ev ) ;
-	
+
 	// Make it so!
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;
@@ -124,7 +124,7 @@ void TSequencingAssistantDialog::fix_rev_compl ( int sel )
 		s_dna1 += s_dna1.Left ( s_abi.length() ) ;
 		s_dna2 += s_dna2.Left ( s_abi.length() ) ;
 		}
-	
+
 	// Try to find parts
 	int a , part_length = 10 , cnt1 = 0 , cnt2 = 0 ;
 	for ( a = 0 ; a < s_abi.length() ; a += part_length )
@@ -133,7 +133,7 @@ void TSequencingAssistantDialog::fix_rev_compl ( int sel )
 		if ( -1 != s_dna1.Find ( part ) ) cnt1++ ;
 		if ( -1 != s_dna2.Find ( part ) ) cnt2++ ;
 		}
-	
+
 	if ( cnt1 < cnt2 ) ab->toggle_inv_compl() ;
 	else if ( cnt1 < 3 && cnt2 < 3 ) wxMessageBox ( ab->vec->getName() + txt("t_sad_warning_mismatch") ) ;
 	}

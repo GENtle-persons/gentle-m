@@ -8,13 +8,13 @@ ChildBase::ChildBase ()
     {
     init () ;
     }
-    
+
 ChildBase::ChildBase(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style)
         : MyChildBase((MyFrameType*)parent, -1, pos, size, style|wxFULL_REPAINT_ON_RESIZE|wxCLIP_CHILDREN)
     {
     init () ;
     }
-        
+
 ChildBase::ChildBase(wxWindow *parent, const wxString& title)
         : MyChildBase((MyFrameType*)parent, -1,wxDefaultPosition,wxDefaultSize,wxFULL_REPAINT_ON_RESIZE|wxCLIP_CHILDREN)
     {
@@ -53,13 +53,13 @@ void ChildBase::showName ( wxString x )
     if ( myapp()->frame->GetTitle() != x )
         myapp()->frame->SetTitle ( x ) ;
     }
-    
+
 void ChildBase::OnFocus(wxFocusEvent& event)
     {
     myass ( myapp() , "Oh no! No application defined!" ) ;
     myass ( myapp()->frame , "Oh no! No frame defined!" ) ;
     if ( myapp()->frame->dying ) return ;
-    
+
     Activate () ;
     showName ( ) ;
     myapp()->frame->mainTree->SelectItem ( inMainTree ) ;
@@ -71,9 +71,9 @@ bool ChildBase::caniclose(wxCloseEvent& event)
     {
     if ( /*event.CanVeto() && */vec && vec->isChanged() )
        {
-       int r = wxMessageBox ( wxString::Format ( txt("t_close_anyway") , getName().c_str() ) , 
+       int r = wxMessageBox ( wxString::Format ( txt("t_close_anyway") , getName().c_str() ) ,
                             txt("msg_box"), wxICON_QUESTION | wxYES | wxNO | wxCANCEL ) ;
-       
+
        if ( r == wxYES )
           {
           wxCommandEvent ev ;
@@ -89,34 +89,34 @@ bool ChildBase::caniclose(wxCloseEvent& event)
     return true ;
     }
 
-void ChildBase::updateUndoMenu () 
+void ChildBase::updateUndoMenu ()
     {
     }
-    
+
 wxToolBar *ChildBase::CreateToolBar ( int i , int j , wxString s )
     {
     toolbar = new wxToolBar ( this , -1 ) ;
     return toolbar ;
     }
-    
+
 void ChildBase::SetMenuBar ( wxMenuBar *menu_bar )
     {
     menubar = menu_bar ;
     }
-    
+
 wxMenuBar *ChildBase::GetMenuBar ()
     {
     return menubar ;
     }
-    
-    
+
+
 void ChildBase::updateToolbar ()
     {
-    }    
+    }
 
 void ChildBase::updateSequenceCanvas ( bool remember ) // Dummy
     {
-    }    
+    }
 
 void ChildBase::SetMyMenuBar ()
 	{
@@ -172,13 +172,13 @@ void ChildBase::Activate ()
     int a ;
     for ( a = 0 ; a < myapp()->frame->GetStatusBar()->GetFieldsCount() ; a++ )
     	myapp()->frame->SetStatusText ( _T("") , a ) ;
-   	if ( cSequence && 
-    	 cSequence->markedFrom() != -1 && 
+   	if ( cSequence &&
+    	 cSequence->markedFrom() != -1 &&
   		 cSequence->lastmarked < cSequence->seq.GetCount() )
    		{
-   		cSequence->mark ( cSequence->seq[cSequence->lastmarked]->whatsthis() , 
-     						cSequence->markedFrom() , 
-           					cSequence->markedTo() , 
+   		cSequence->mark ( cSequence->seq[cSequence->lastmarked]->whatsthis() ,
+     						cSequence->markedFrom() ,
+           					cSequence->markedTo() ,
                 			cSequence->getEditMode() ? 2 : 1 ) ;
  		}
 
@@ -190,16 +190,16 @@ void ChildBase::Activate ()
 
 //    Refresh () ;
     }
-    
+
 wxToolBar *ChildBase::GetToolBar ()
     {
     return toolbar ;
     }
-    
+
 void ChildBase::SetIcon ( wxIcon icon )
     {
     }
-    
+
 void ChildBase::OnClose(wxCloseEvent& event)
 {
     if ( !caniclose ( event ) )
@@ -230,9 +230,9 @@ void ChildBase::OnExport (wxCommandEvent& event)
 
     myapp()->frame->LS->setOption ( _T("LAST_EXPORT_FILTER") , d.GetFilterIndex() ) ;
     myapp()->frame->LS->setOption ( _T("LAST_IMPORT_DIR") , d.GetDirectory() ) ;
-    doExport ( d.GetPath() , d.GetFilterIndex() ) ;    
-    }   
-    
+    doExport ( d.GetPath() , d.GetFilterIndex() ) ;
+    }
+
 wxString ChildBase::getExportFilters ()
 	{
     wxString wcGenBank = _T("GenBank (*.gb)|*.gb") ;
@@ -252,17 +252,17 @@ wxString ChildBase::getExportFilters ()
 								wcCSV ;
 	return wildcard ;
 	}
-    
+
 void ChildBase::doExport ( wxString filename , int filter )
     {
     wxFile out ( filename , wxFile::write ) ;
     exportVector ( vec , out , filter , filename ) ;
     out.Close () ;
-    }    
+    }
 
 void ChildBase::exportVector ( TVector *vec , wxFile &out , int filter , wxString filename )
     {
-    if ( filter == 0 ) // GeneBank 
+    if ( filter == 0 ) // GeneBank
         {
         TGenBank gb ;
         wxArrayString ex ;
@@ -282,7 +282,7 @@ void ChildBase::exportVector ( TVector *vec , wxFile &out , int filter , wxStrin
            {
            out.Write ( s.Left ( 80 ) + _T("\n") ) ;
            s = s.Mid ( 80 ) ;
-           }    
+           }
         }
     else if ( filter == 3 ) // EMBL
         {
@@ -304,7 +304,7 @@ void ChildBase::exportVector ( TVector *vec , wxFile &out , int filter , wxStrin
            {
            out.Write ( s.Left ( 79 ) + _T("\n") ) ;
            s = s.Mid ( 80 ) ;
-           }    
+           }
         }
     else if ( filter == 5 ) // GCview XML
         {
@@ -314,7 +314,7 @@ void ChildBase::exportVector ( TVector *vec , wxFile &out , int filter , wxStrin
         cgv.postProcess ( filename ) ;
         }
     }
-        
+
 void ChildBase::arrangedExport ( wxFile &out , wxString n , wxString s , int l )
     {
     int sl = l - n.length() ;
@@ -324,10 +324,10 @@ void ChildBase::arrangedExport ( wxFile &out , wxString n , wxString s , int l )
        out.Write ( n + s.Left ( sl ) + _T("\n") ) ;
        s = s.Mid ( sl ) ;
        n = blank ;
-       }    
+       }
     }
 
-bool ChildBase::HasUndoData ()        
+bool ChildBase::HasUndoData ()
      {
      return false ;
      }

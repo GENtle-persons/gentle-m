@@ -33,7 +33,7 @@ int TCloneManager::scan_item ( unsigned char *t , int a , TVector *v )
 	a = b ;
 	while ( a % 4 > 0 ) a++ ;
 	while ( t[a] != 255 && ( t[a] < 'A' || t[a] > 'Z' ) ) a += 4 ; // Ugly hack!
-	
+
 	int dir = 1 ;
 	if ( to < from )
 	{
@@ -48,7 +48,7 @@ int TCloneManager::scan_item ( unsigned char *t , int a , TVector *v )
 	TVectorItem vi ( name , desc , from , to , type ) ;
 	vi.setDirection ( dir ) ;
 	v->items.push_back ( vi ) ;
-	
+
 	return a ;
 }
 
@@ -59,18 +59,18 @@ void TCloneManager::load ( wxString file )
 	unsigned char *t = new unsigned char [l+5] ;
 	f.Read ( t , l ) ;
 	f.Close() ;
-	
+
 	if ( t[0] != 26 || t[1] != 'S' || t[2] != 'E' || t[3] != 'S' )
 	{
 		delete [] t ;
 		return ;
 	}
-	
+
 	int a ;
 	TVector *v = new TVector ;
 	wxString name = file.AfterLast('/').AfterLast('\\').BeforeLast('.') ;
 	wxString seq , desc ;
-	
+
 	// Items
 	a = 12 ;
 	while ( t[a+2] == 0 && t[2+3] == 0 )
@@ -83,10 +83,10 @@ void TCloneManager::load ( wxString file )
 			a += 8 ;
 		}
 	}
-	
+
 	// Sequence
 	while ( t[a] >= 65 ) seq += t[a++] ;
-	
+
 	// Rest
 	for ( a = l - 1 ; t[a-1] || t[a-2] ; a-- ) ;
 	for ( ; a < l ; a++ )
@@ -101,7 +101,7 @@ void TCloneManager::load ( wxString file )
 	v->setSequence ( seq ) ;
 	v->setDescription ( desc ) ;
 	if ( seq.length() > 3000 ) v->setCircular () ; // Guessing
-	
+
 	_v.push_back ( v ) ;
 	_success = true ;
 	delete [] t ;

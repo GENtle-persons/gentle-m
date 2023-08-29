@@ -12,7 +12,7 @@ class TVector ;
 class TPrimerDialog ;
 class TPrimerDesign ;
 
-/** \def TM_STANDARD 
+/** \def TM_STANDARD
 	\brief Standard (nearest neighbour) method */
 #define TM_STANDARD 0
 
@@ -42,18 +42,18 @@ class TPrimer
     float getTm ( int type = TM_STANDARD ) ; ///< Get melting temperature
     float getEvaluation () ; ///< Get quality evaluation (for annealing)
     float getGCcontents () ; ///< Get GC contents
-    
+
     wxString getName () ; ///< Returns the name of the primer, if any was given
     void setName ( wxString nn ) ; ///< Sets the name of the primer
-    
-    
+
+
     // Variables
     /// The beginning of the primer in a sequence
     int from , to ; ///< The end of a primer in the sequence
     wxString sequence ; ///< The primer sequence
     bool upper ; ///< Upper (5'->3') or lower (3'->5') primer?
     TVector *annealingVector ; ///< The vector to anneal to
-    
+
     private :
     void evaluateSelfAnnealing () ; ///< Check for self-annealing
     float evaluateTm ( double conc_nm = 50 , double Na_mm = 50 ) ; ///< Calculate melting temperature, salt-adjusted
@@ -67,10 +67,10 @@ class TPrimer
     double DeltaH ( bool max ) ; ///< Nearest neighbour helper method
     double DeltaS ( bool max ) ; ///< Nearest neighbour helper method
     double CountNeighbors ( wxString s ) ; ///< Nearest neighbour helper method
-    
+
     void invertSequence() ; ///< Inverts the sequence
     wxString getAnnealingSequence() ; ///< Returns annealing sequence
-    
+
     // Variables
     wxString name ;
     int contents[256] ;

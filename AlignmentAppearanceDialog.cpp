@@ -26,28 +26,28 @@ void AlignmentAppearanceDialog::OnCharHook(wxKeyEvent& event)
 void AlignmentAppearanceDialog::addLine ( wxString name , wxArrayString &as , wxFlexGridSizer *sizer )
     {
     wxBoxSizer *line = new wxBoxSizer ( wxHORIZONTAL ) ;
-    wxButton *col = new wxButton ( this , ALIGN_APPEARANCE_LINE_COLOR_BUTTON1 + line_color_buttons , 
+    wxButton *col = new wxButton ( this , ALIGN_APPEARANCE_LINE_COLOR_BUTTON1 + line_color_buttons ,
                         txt("t_alignment_appearance_line_color") ) ;
-    wxRadioBox *line_rb = new wxRadioBox ( this , -1 , txt("t_alignment_appearance_line_style") , 
+    wxRadioBox *line_rb = new wxRadioBox ( this , -1 , txt("t_alignment_appearance_line_style") ,
                                   wxDefaultPosition , wxDefaultSize , as ) ;
     wxSpinCtrl *spin = new wxSpinCtrl ( this , -1 , _T("") , wxDefaultPosition , wxSize ( 40 , -1 ) ) ;
     spin->SetRange ( 0 , 5 ) ;
     spin->SetValue ( 0 ) ;
-    
+
     line->Add ( line_rb , 0 , wxALIGN_LEFT ) ;
     line->Add ( spin , 0 , wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT , 5 ) ;
-    line->Add ( new wxStaticText ( this , -1 , txt("t_alignment_appearance_px") ) , 
+    line->Add ( new wxStaticText ( this , -1 , txt("t_alignment_appearance_px") ) ,
                        0 , wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT , 5 ) ;
     line->Add ( col , 0 , wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT , 5 ) ;
-    
+
     sizer->Add ( new wxStaticText ( this , -1 , name ) , 0 , wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL ) ;
     sizer->Add ( line , 0 , wxALIGN_LEFT ) ;
-    
+
     line_color_buttons++ ;
     radioboxes.push_back ( line_rb ) ;
     thickness.push_back ( spin ) ;
     colors.push_back ( *wxBLACK ) ;
-    
+
 //    line_rb->SetSelection ( 1 ) ;
     spin->SetValue ( 1 ) ;
     }
@@ -69,7 +69,7 @@ AlignmentAppearanceDialog::AlignmentAppearanceDialog ( wxWindow *_parent , const
     line_choices.Add ( txt("t_alignment_appearance_line_solid") ) ;
     line_choices.Add ( txt("t_alignment_appearance_line_dashed") ) ;
     line_choices.Add ( txt("t_alignment_appearance_line_dotted") ) ;
-    
+
     addLine ( txt("t_alignment_appearance_line_top") , line_choices , fgs ) ;
     addLine ( txt("t_alignment_appearance_line_bottom") , line_choices , fgs ) ;
     addLine ( txt("t_alignment_appearance_line_left") , line_choices , fgs ) ;
@@ -84,7 +84,7 @@ AlignmentAppearanceDialog::AlignmentAppearanceDialog ( wxWindow *_parent , const
     wxButton *background = new wxButton ( this , ALIGN_APPEARANCE_TEXT_BACKGROUND , txt("t_alignment_appearance_background") ) ;
     bold = new wxCheckBox ( this , -1 , txt("m_align_bold") ) ;
     italics = NULL ; //new wxCheckBox ( this , -1 , txt("m_align_italics") ) ;
-    
+
     line->Add ( use_foreground , 0 , wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL ) ;
     line->Add ( foreground , 0 , wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL ) ;
     line->Add ( use_background , 0 , wxLEFT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL , 25 ) ;
@@ -108,10 +108,10 @@ AlignmentAppearanceDialog::AlignmentAppearanceDialog ( wxWindow *_parent , const
 
     fgs->Add ( new wxStaticText ( this , -1 , _T("") ) , 0 , wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL ) ;
     fgs->Add ( line2 , 0 , wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL ) ;
-    
+
     SetSizer ( fgs ) ;
     fgs->Fit ( this ) ;
-    }                                                                
+    }
 
 void AlignmentAppearanceDialog::OnForegroundButton ( wxCommandEvent &event )
     {
@@ -142,15 +142,15 @@ void AlignmentAppearanceDialog::set_pen ( SequenceCharMarkup &scm , int id , int
     int b = radioboxes[id]->GetSelection() ;
     int t = thickness[id]->GetValue() ;
     if ( b == 0 ) return ;
-    
+
     wxPen *p = NULL ;
     scm.borders |= border ;
-    
+
     if ( border == wxTOP ) p = &scm.borderTop ;
     else if ( border == wxBOTTOM ) p = &scm.borderBottom ;
     else if ( border == wxLEFT ) p = &scm.borderLeft ;
     else if ( border == wxRIGHT ) p = &scm.borderRight ;
-    
+
     switch ( b )
        {
        case 1 : *p = wxPen ( colors[id] , t , wxPENSTYLE_SOLID ) ; break ;
@@ -168,7 +168,7 @@ void AlignmentAppearanceDialog::OnReset ( wxCommandEvent &event )
               ali->lines[l].markup.push_back ( SequenceCharMarkup() ) ;
         for ( x = from ; x <= to ; x++ )
             ali->lines[l].markup[x] = SequenceCharMarkup () ;
-        while ( ali->lines[l].markup.size() > 0 && 
+        while ( ali->lines[l].markup.size() > 0 &&
                 ali->lines[l].markup[ali->lines[l].markup.size()-1].ignore )
               ali->lines[l].markup.pop_back() ;
         }
@@ -185,17 +185,17 @@ void AlignmentAppearanceDialog::OnOK ( wxCommandEvent &event )
             SequenceCharMarkup scm ;
             ali->getCharMarkup ( scm , l , x , 0 ) ;
             scm.ignore = false ;
-            
+
             if ( use_foreground->GetValue() ) scm.textcolor = color_foreground ;
             if ( use_background->GetValue() ) scm.backcolor = color_background ;
             scm.bold = bold->GetValue() ;
             if ( italics ) scm.italics = italics->GetValue() ;
-            
+
             set_pen ( scm , l==firstline ? 0 : 4 , wxTOP ) ;
             set_pen ( scm , l==lastline ? 1 : 4 , wxBOTTOM ) ;
             set_pen ( scm , x==from ? 2 : 5 , wxLEFT ) ;
             set_pen ( scm , x==to ? 3 : 5 , wxRIGHT ) ;
-            
+
             while ( ali->lines[l].markup.size() <= x )
                   ali->lines[l].markup.push_back ( SequenceCharMarkup() ) ;
             ali->lines[l].markup[x] = scm ;
