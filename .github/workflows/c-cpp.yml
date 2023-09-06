@@ -14,13 +14,17 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: installing non-GUI dependencies
-      run: sudo apt update && sudo apt install default-libmysqlclient-dev libsqlite3-dev libtinyxml-dev
+      run: |
+        sudo apt update && sudo apt install default-libmysqlclient-dev libsqlite3-dev libtinyxml-dev autoconf automake libtool make
+	autoconf --version
     - name: installing wxWidgets
       run: sudo apt install libwxgtk3.2-dev || sudo apt install libwxgtk3.0-gtk3-dev || sudo apt install libwxgtk3.0-dev
     - name: remove local redundancy to build-deps
       run: rm -f mysql* sqlite* && rm -rf clustalw tinyxml
     - name: autogen
-      run: ./autogen.sh
+      run: |
+        ./autogen.sh
+	autoreconf --force --install
     - name: configure
       run: ./configure
     - name: make
