@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the methods of the TAlignment class and its helper class, TAlignLine
+    \brief Contains the methods of the TAlignment class and its helper class, TAlignLine
 */
 #include "Alignment.h"
 #include "AlignmentAppearanceDialog.h"
@@ -8,7 +8,7 @@
 
 #ifdef __DEBIAN__
 #ifndef USE_EXTERNAL_CLUSTALW
-	#define USE_EXTERNAL_CLUSTALW
+    #define USE_EXTERNAL_CLUSTALW
 #endif
 #endif
 
@@ -72,9 +72,9 @@ END_EVENT_TABLE()
 TAlignment::TAlignment(wxWindow *parent, const wxString& title)
     : ChildBase(parent, title)
     {
-    name = _T("") ;
-    database = _T("") ;
-	keepIdentity = false ;
+    name = "" ;
+    database = "" ;
+    keepIdentity = false ;
     threadRunning = false ;
     invs = cons = bold = mono = false ;
     def = _T("alignment") ;
@@ -82,12 +82,12 @@ TAlignment::TAlignment(wxWindow *parent, const wxString& title)
     mismatch = -1 ; // Mismatch score
     gap_penalty = -2 ; // Gap penalty
     matrix = _T("BLOSUM") ;
-    gap = _T("-") ;
+    gap = "-" ;
     algorithm = ALG_CW ;
     vec = NULL ;
     aaa = NULL ;
     colCur = NULL ;
-    readTabColors ( myapp()->homedir + myapp()->slash + _T("default.tab") ) ;
+    readTabColors ( myapp()->homedir.GetFullPath() + wxFileName::GetPathSeparator() + _T("default.tab") ) ;
     allow_print = allow_save = true ;
     }
 
@@ -97,40 +97,40 @@ TAlignment::~TAlignment ()
 
 void TAlignment::OnFontsize ( wxCommandEvent& event )
     {
-	long l ;
-	wxString s = fontsize->GetStringSelection() ;
-	s.ToLong ( &l ) ;
-	sc->set_font_size ( (int) l ) ;
+    long l ;
+    wxString s = fontsize->GetStringSelection() ;
+    s.ToLong ( &l ) ;
+    sc->set_font_size ( (int) l ) ;
     updateSequence () ;
-//	updateSequenceCanvas ( true ) ;
-	}
+//    updateSequenceCanvas ( true ) ;
+    }
 
 bool TAlignment::isDNA ()
-	{
-	wxString s ;
-	int a , b = 0 ;
-	for ( a = 0 ; a < lines.size() ; a++ )
-		{
-		if ( !lines[a].isIdentity ) s += lines[a].s ;
-		}
+    {
+    wxString s ;
+    int a , b = 0 ;
+    for ( a = 0 ; a < lines.size() ; a++ )
+        {
+        if ( !lines[a].isIdentity ) s += lines[a].s ;
+        }
 
-	for ( a = 0 ; a < s.length() ; a++ )
-		{
-		wxChar c = s.GetChar ( a ) ;
-		if ( c == 'N' || c == ' ' || c == '-' ) continue ;
-		if ( c == 'A' || c == 'C' || c == 'G' || c == 'T' ) continue ;
-		b++ ;
-		}
+    for ( a = 0 ; a < s.length() ; a++ )
+        {
+        wxChar c = s.GetChar ( a ) ;
+        if ( c == 'N' || c == ' ' || c == '-' ) continue ;
+        if ( c == 'A' || c == 'C' || c == 'G' || c == 'T' ) continue ;
+        b++ ;
+        }
 
-	// Guess : if more than 1/4 of the sequence are not ACTGN, it's an amino acid sequence
-	if ( b >= s.length() / 4 ) return false ;
-	return true ;
-	}
+    // Guess : if more than 1/4 of the sequence are not ACTGN, it's an amino acid sequence
+    if ( b >= s.length() / 4 ) return false ;
+    return true ;
+    }
 
 bool TAlignment::isAA ()
-	{
-	return !isDNA() ;
-	}
+    {
+    return !isDNA() ;
+    }
 
 void TAlignment::readTabColors ( wxString filename )
     {
@@ -207,21 +207,21 @@ void TAlignment::initme ()
     wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
     wxMenu *view_menu = new wxMenu ;
 
-    view_menu->Append(ALIGN_BOLD, txt("m_align_bold") , _T("") , true ) ;
-    view_menu->Append(ALIGN_MONO, txt("m_align_mono") , _T("") , true ) ;
-    view_menu->Append(ALIGN_CONS, txt("m_align_cons") , _T("") , true ) ;
+    view_menu->Append(ALIGN_BOLD, txt("m_align_bold") , "" , true ) ;
+    view_menu->Append(ALIGN_MONO, txt("m_align_mono") , "" , true ) ;
+    view_menu->Append(ALIGN_CONS, txt("m_align_cons") , "" , true ) ;
     view_menu->AppendSeparator();
-    view_menu->Append(ALIGN_NORM, txt("m_align_norm") , _T("") , true ) ;
-    view_menu->Append(ALIGN_INVS, txt("m_align_invs") , _T("") , true ) ;
-    view_menu->Append(ALIGN_SOA , txt("m_align_soa")  , _T("") , true ) ;
-    view_menu->Append(ALIGN_SOAI, txt("m_align_soai") , _T("") , true ) ;
-    view_menu->Append(ALIGN_SIML, txt("m_align_siml") , _T("") , true ) ;
-    view_menu->Append(ALIGN_SEQ , txt("m_align_seq")  , _T("") , true ) ;
-    view_menu->Append(ALIGN_FEAT, txt("m_align_feat") , _T("") , true ) ;
-    view_menu->Append(ALIGN_RNA , txt("m_align_rna")  , _T("") , true ) ;
+    view_menu->Append(ALIGN_NORM, txt("m_align_norm") , "" , true ) ;
+    view_menu->Append(ALIGN_INVS, txt("m_align_invs") , "" , true ) ;
+    view_menu->Append(ALIGN_SOA , txt("m_align_soa")  , "" , true ) ;
+    view_menu->Append(ALIGN_SOAI, txt("m_align_soai") , "" , true ) ;
+    view_menu->Append(ALIGN_SIML, txt("m_align_siml") , "" , true ) ;
+    view_menu->Append(ALIGN_SEQ , txt("m_align_seq")  , "" , true ) ;
+    view_menu->Append(ALIGN_FEAT, txt("m_align_feat") , "" , true ) ;
+    view_menu->Append(ALIGN_RNA , txt("m_align_rna")  , "" , true ) ;
 
     view_menu->AppendSeparator();
-    view_menu->Append(ALIGN_IDENT, txt("m_align_ident") , _T("") , true ) ;
+    view_menu->Append(ALIGN_IDENT, txt("m_align_ident") , "" , true ) ;
 
     wxMenuBar *menu_bar = new wxMenuBar;
 
@@ -261,10 +261,10 @@ void TAlignment::initme ()
     toolBar->Reparent ( this ) ;
     toolbar = toolBar ;
     myapp()->frame->InitToolBar(toolBar);
-	myapp()->frame->addTool ( toolBar , MDI_TEXT_IMPORT ) ;
-	myapp()->frame->addTool ( toolBar , MDI_FILE_OPEN ) ;
-	myapp()->frame->addTool ( toolBar , MDI_FILE_SAVE ) ;
-	myapp()->frame->addTool ( toolBar , SEQ_PRINT ) ;
+    myapp()->frame->addTool ( toolBar , MDI_TEXT_IMPORT ) ;
+    myapp()->frame->addTool ( toolBar , MDI_FILE_OPEN ) ;
+    myapp()->frame->addTool ( toolBar , MDI_FILE_SAVE ) ;
+    myapp()->frame->addTool ( toolBar , SEQ_PRINT ) ;
     if ( !myapp()->frame->mainToolBar ) toolBar->AddSeparator () ;
     toolBar->AddTool( ALIGNMENT_SETTINGS,
                 wxEmptyString,
@@ -283,7 +283,7 @@ void TAlignment::initme ()
     mmb->SetStringSelection ( txt("t_mmb_insert_gap") ) ;
     toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_mmb") ) ) ;
     toolBar->AddControl ( mmb ) ;
-	fontsize = myapp()->frame->AddFontsizeTool ( toolBar , AA_FONTSIZE ) ;
+    fontsize = myapp()->frame->AddFontsizeTool ( toolBar , AA_FONTSIZE ) ;
     myapp()->frame->addDefaultTools ( toolBar ) ;
     toolbar = toolBar ;
 
@@ -298,52 +298,52 @@ void TAlignment::initme ()
 //    Maximize () ;
     sc->SetFocus() ;
     myapp()->frame->setChild ( this ) ;
-    readTabColors ( myapp()->homedir + myapp()->slash + _T("default.tab") ) ;
+    readTabColors ( myapp()->homedir.GetFullPath() + wxFileName::GetPathSeparator() + _T("default.tab") ) ;
     }
 
 void* TAlignment::Entry()
-{
-	int a ;
+    {
+    int a ;
     TAlignLine line ;
-    wxString cwt = _T("clustalw.txt") ;
-    wxString hd = myapp()->homedir ;
+    wxString cwt = "clustalw.txt" ;
+    wxString hd = myapp()->homedir.GetFullPath() ;
 
-    wxString tmpdir = wxFileName::CreateTempFileName ( _T("") ) ;
-    tmpdir.Replace ( _T("\\") , _T("/") ) ;
+    wxString tmpdir = wxFileName::CreateTempFileName ( "" ) ;
+    tmpdir.Replace ( "\\" , "/" ) ;
     tmpdir = tmpdir.BeforeLast ( '/' ) ;
 
-    wxString tx = tmpdir + _T("/") + cwt ;
+    wxString tx = tmpdir + "/" + cwt ;
 
     wxString cwd = wxGetCwd() ;
     wxSetWorkingDirectory ( tmpdir ) ;
 
     wxFile out ( tx , wxFile::write ) ;
     for ( a = 0 ; a < lines.size() ; a++ )
-    {
-	out.Write ( wxString::Format ( _T(">%d\n") , a ) ) ;
-	out.Write ( lines[a].v->getSequence() + _T("\n") ) ;
-    }
+        {
+        out.Write ( wxString::Format ( ">%d\n" , a ) ) ;
+        out.Write ( lines[a].v->getSequence() + "\n" ) ;
+        }
     out.Close() ;
 
 #ifdef USE_EXTERNAL_CLUSTALW // Use external ClustalW
     wxString bn ;
 
 #ifdef __WXMSW__
-	// This is not used anymore under Windows
-    bn = tmpdir + _T("\\clustalw.bat") ;
+    // This is not used anymore under Windows
+    bn = tmpdir + "\\clustalw.bat" ;
     wxFile bat ( bn , wxFile::write ) ;
-    bat.Write ( _T("@echo off\n") ) ;
-    bat.Write ( _T("cd ") + tmpdir + _T("\n") ) ;
-    bat.Write ( _T("clustalw.exe clustalw.txt") +
-		wxString::Format ( _T(" /gapopen=%d") , gap_penalty ) +
-		wxString::Format ( _T(" /gapext=%d") , mismatch ) + _T("\n") ) ;
+    bat.Write ( "@echo off\n")  ;
+    bat.Write ( "cd " + tmpdir + "\n")  ;
+    bat.Write ( "clustalw.exe clustalw.txt" +
+                wxString::Format ( " /gapopen=%d" , gap_penalty ) +
+                wxString::Format ( " /gapext=%d" , mismatch ) + "\n" ) ;
     bat.Close() ;
 #else
-	// External call to be used by Debian
-	 bn = _T("clustalw clustalw.txt") +
-			wxString::Format ( _T(" /gapopen=%d") , gap_penalty ) +
-			wxString::Format ( _T(" /gapext=%d") , mismatch ) + _T("\n") ;
-//	cout << "Executing " << bn.mb_str() << endl ;
+     // External call to be used by Debian
+     bn = "clustalw clustalw.txt" +
+     wxString::Format ( " /gapopen=%d" , gap_penalty ) +
+     wxString::Format ( " /gapext=%d" , mismatch ) + "\n" ;
+//        cout << "Executing " << bn.mb_str() << endl ;
 #endif
     wxExecute ( bn , wxEXEC_SYNC ) ;
 
@@ -351,9 +351,9 @@ void* TAlignment::Entry()
 #else // Using internal ClustalW - cool!
 
 
-    wxString a1 = wxString::Format ( _T("/gapopen=%d") , gap_penalty ) ;
-    wxString a2 = wxString::Format ( _T("/gapext=%d") , mismatch ) ;
-    wxString text = tmpdir + _T("/clustalw.txt") ;
+    wxString a1 = wxString::Format ( "/gapopen=%d" , gap_penalty ) ;
+    wxString a2 = wxString::Format ( "/gapext=%d" , mismatch ) ;
+    wxString text = tmpdir + "/clustalw.txt" ;
     char *av[4] ;
     av[0] = new char[100] ; strcpy ( av[0] , "clustalw.exe" ) ;
     av[1] = new char[500] ; strcpy ( av[1] , text.mb_str() ) ;
@@ -363,12 +363,12 @@ void* TAlignment::Entry()
 #endif
 
 
-    wxString aln = tmpdir + _T("/clustalw.aln") ;
+    wxString aln = tmpdir + "/clustalw.aln" ;
     wxTextFile in ( aln ) ;
     in.Open ( *(myapp()->isoconv) ) ;
     wxString s = in.GetFirstLine() ;
     do {
-		s = in.GetNextLine() ;
+        s = in.GetNextLine() ;
     } while ( s.IsEmpty() ) ;
     int off ;
     for ( off = s.length()-1 ; s.GetChar(off-1) != ' ' ; off-- ) ;
@@ -376,21 +376,23 @@ void* TAlignment::Entry()
     line.name = txt("t_identity") ;
     lines.push_back ( line ) ;
     bool first = true ;
-    for ( a = 0 ; a < lines.size() ; a++ ) lines[a].s = _T("") ;
+    for ( a = 0 ; a < lines.size() ; a++ ) lines[a].s = "" ;
     while ( !in.Eof() )
-    {
-		for ( a = 0 ; a < lines.size() ; a++ )
-		 {
-	    if ( !first ) s = in.GetNextLine() ;
-	    else first = false ;
-		 long index ;
-		 wxString i = s.substr ( 0 , off-1 ) ;
-		 i.ToLong ( &index ) ;
-	    if ( s.GetChar(0) == ' ' ) index = lines.size()-1 ;
-	    lines[index].s += s.substr ( off , s.length() ) ;
-		 }
-		if ( !in.Eof() ) s = in.GetNextLine() ; // Blank line
-    }
+        {
+        for ( a = 0 ; a < lines.size() ; a++ )
+            {
+            if ( !first ) s = in.GetNextLine() ;
+            else first = false ;
+            long index ;
+            wxString i = s.substr ( 0 , off-1 ) ;
+            i.ToLong ( &index ) ;
+            if ( s.GetChar(0) == ' ' )
+                index = lines.size()-1 ;
+            lines[index].s += s.substr ( off , s.length() ) ;
+            }
+            if ( !in.Eof() )
+                s = in.GetNextLine() ; // Blank line
+        }
 
     wxSetWorkingDirectory ( cwd ) ;
 
@@ -406,17 +408,17 @@ void* TAlignment::Entry()
     wxMutexGuiLeave() ;
 #endif
     return NULL ;
-}
+    }
 
 
 // Calculating alignments; all changes are lost!
 void TAlignment::recalcAlignments ()
     {
-	if ( !keepIdentity )
-	   {
-	   while ( lines.size() && lines[lines.size()-1].isIdentity )
- 		 lines.pop_back () ;
-	   }
+    if ( !keepIdentity )
+        {
+        while ( lines.size() && lines[lines.size()-1].isIdentity )
+            lines.pop_back () ;
+        }
     if ( lines.size() == 0 ) return ;
 
     // Align
@@ -429,22 +431,22 @@ void TAlignment::recalcAlignments ()
         }
     else if ( algorithm == ALG_CW ) // Clustal-W
         {
-	    if ( threadRunning )
-	    {
-		generateConsensusSequence ( false ) ;
-		threadRunning = false ;
-//		SetCursor ( *wxSTANDARD_CURSOR ) ;
-	    }
-	    else
-	    {
-		SetCursor ( *wxSTANDARD_CURSOR ) ;
-		threadRunning = true ;
-		sc->Refresh () ;
-//		wxSafeYield() ;
-		wxThreadHelper::CreateThread () ;
-		GetThread()->Run() ;
-		return ;
-	    }
+            if ( threadRunning )
+            {
+                generateConsensusSequence ( false ) ;
+                threadRunning = false ;
+//              SetCursor ( *wxSTANDARD_CURSOR ) ;
+            }
+            else
+            {
+                SetCursor ( *wxSTANDARD_CURSOR ) ;
+                threadRunning = true ;
+                sc->Refresh () ;
+//              wxSafeYield() ;
+                wxThreadHelper::CreateThread () ;
+                GetThread()->Run() ;
+                return ;
+            }
         }
     else // Internal routines
         {
@@ -453,35 +455,35 @@ void TAlignment::recalcAlignments ()
         for ( a = 0 ; a < lines.size() ; a++ ) lines[a].ResetSequence () ;
 
         for ( a = 1 ; a < lines.size() ; a++ )
-           {
-           wxString s0 = lines[0].s ;
+            {
+            wxString s0 = lines[0].s ;
 
-           if ( algorithm == ALG_NW )
-              NeedlemanWunsch ( s0 , lines[a].s ) ;
-           else if ( algorithm == ALG_SW )
-              SmithWaterman ( s0 , lines[a].s ) ;
+            if ( algorithm == ALG_NW )
+                NeedlemanWunsch ( s0 , lines[a].s ) ;
+            else if ( algorithm == ALG_SW )
+                SmithWaterman ( s0 , lines[a].s ) ;
 
-           if ( lines[0].s == s0 ) continue ; // No gaps were introduced into first sequence
+            if ( lines[0].s == s0 ) continue ; // No gaps were introduced into first sequence
 
-           int b ;
-           for ( b = 0 ; b <= a ; b++ ) // All lines get the same length
-              {
-              while ( lines[b].s.length() < s0.length() )
-                 lines[b].s += _T(" ") ;
-              }
-           for ( b = 0 ; b < s0.length() ; b++ ) // Insert gaps
-              {
-              if ( lines[0].s.GetChar(b) != s0.GetChar(b) ) // New gap
-                 {
-                 for ( int c = 0 ; c < a ; c++ )
+            int b ;
+            for ( b = 0 ; b <= a ; b++ ) // All lines get the same length
+                {
+                while ( lines[b].s.length() < s0.length() )
+                    lines[b].s += " " ;
+                }
+            for ( b = 0 ; b < s0.length() ; b++ ) // Insert gaps
+                {
+                if ( lines[0].s.GetChar(b) != s0.GetChar(b) ) // New gap
                     {
-                    for ( int d = s0.length()-1 ; d > b && d >= 0 ; d-- )
-                       lines[c].s.SetChar ( d , lines[c].s.GetChar(d-1) ) ;
-                    myass ( lines[c].s.length() > b , "Alignment::recalcAlignments:internal2" ) ;
-                    lines[c].s.SetChar ( b , '-' ) ;
+                    for ( int c = 0 ; c < a ; c++ )
+                        {
+                        for ( int d = s0.length()-1 ; d > b && d >= 0 ; d-- )
+                            lines[c].s.SetChar ( d , lines[c].s.GetChar(d-1) ) ;
+                        myass ( lines[c].s.length() > b , "Alignment::recalcAlignments:internal2" ) ;
+                        lines[c].s.SetChar ( b , '-' ) ;
+                        }
                     }
-                 }
-              }
+                }
            }
 
         generateConsensusSequence ( true ) ;
@@ -511,16 +513,16 @@ void TAlignment::redoAlignments ( bool doRecalc )
     for ( a = 0 ; a < lines.size() ; a++ )
         {
         if ( lines[a].hasFeatures() )
-           {
-           lines[a].showFeatures () ;
-           SeqFeature *f = new SeqFeature ( sc ) ;
-           f->id = a ;
-           sc->seq.Add ( f ) ;
-           }
+            {
+            lines[a].showFeatures () ;
+            SeqFeature *f = new SeqFeature ( sc ) ;
+            f->id = a ;
+            sc->seq.Add ( f ) ;
+            }
         SeqAlign *d = new SeqAlign ( sc ) ;
         sc->seq.Add ( d ) ;
         if ( lines[a].isIdentity )
-           d->takesMouseActions = false ;
+            d->takesMouseActions = false ;
         d->id = a ;
         d->s = lines[a].s ;
         d->myname = lines[a].name ;
@@ -530,7 +532,7 @@ void TAlignment::redoAlignments ( bool doRecalc )
     for ( int g = 0 ; g < lines.size() ; g++ )
         {
         if ( !lines[g].isIdentity && lines[g].hasFeatures() )
-           {
+            {
 //            lines[g].showFeatures () ;
             for ( a = 0 ; a < lines[g].s.length() ; a++ )
                 {
@@ -553,13 +555,14 @@ void TAlignment::generateConsensusSequence ( bool addit )
     wxString s ;
     for ( a = 0 ; a < lines[0].s.length() ; a++ )
         {
-	  	char c = '*' ;
-	  	for ( b = 1 ; b < lines.size() && c == '*' ; b++ )
-	  		{
-		  	if ( lines[0].s.GetChar(a) != lines[b].s.GetChar(a) /*&&
-			   	 lines[0].s.GetChar(a) != '-' &&
-				 lines[b].s.GetChar(a) != '-' */) c = ' ' ;
-			}
+        char c = '*' ;
+        for ( b = 1 ; b < lines.size() && c == '*' ; b++ )
+            {
+            if ( lines[0].s.GetChar(a) != lines[b].s.GetChar(a) /*&&
+                    lines[0].s.GetChar(a) != '-' &&
+                    lines[b].s.GetChar(a) != '-' */)
+                c = ' ' ;
+            }
         s += (wxChar) c ;
         }
     line.s = s ;
@@ -574,11 +577,11 @@ void TAlignment::generateConsensusSequence ( bool addit )
         for ( b = 0 ; b + 1 < lines.size() ; b++ ) c[lines[b].s.GetChar(a)]++ ;
         consensusSequence.SetChar ( a , ' ' ) ;
         for ( b = 0 ; b < 256 ; b++ )
-           {
-           float f = 100 * c[b] ;
-           f /= lines.size() - 1 ;
-           if ( f >= 60 ) consensusSequence.SetChar ( a , b ) ;
-           }
+            {
+            float f = 100 * c[b] ;
+            f /= lines.size() - 1 ;
+            if ( f >= 60 ) consensusSequence.SetChar ( a , b ) ;
+            }
         }
     }
 
@@ -619,10 +622,10 @@ void TAlignment::callMiddleMouseButton ( int id , int pos , wxString _mode )
     for ( a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
         if ( sc->seq[a]->whatsthis() == _T("ALIGN") )
-           {
-           SeqAlign *b = (SeqAlign*) sc->seq[a] ;
-           l2s[b->id] = a ;
-           }
+            {
+            SeqAlign *b = (SeqAlign*) sc->seq[a] ;
+            l2s[b->id] = a ;
+            }
         }
 
     for ( a = 0 ; a < lines.size() ; a++ )
@@ -636,10 +639,10 @@ void TAlignment::callMiddleMouseButton ( int id , int pos , wxString _mode )
         else if ( mode == txt("t_mmb_delete_gap") )
             {
             if ( line == a )
-               {
-               myDelete ( a , pos ) ;
-               myInsert (  a , lines[a].s.length()+1 , '-' ) ;
-               }
+                {
+                myDelete ( a , pos ) ;
+                myInsert (  a , lines[a].s.length()+1 , '-' ) ;
+                }
             }
         else if ( mode == txt("t_mmb_insert_gap_others") )
             {
@@ -649,10 +652,10 @@ void TAlignment::callMiddleMouseButton ( int id , int pos , wxString _mode )
         else if ( mode == txt("t_mmb_delete_gap_others") )
             {
             if ( line != a && lines[a].s.GetChar(pos-1) == '-' )
-               {
-               myDelete ( a , pos ) ;
-               myInsert ( a , lines[a].s.length()+1 , '-' ) ;
-               }
+                {
+                myDelete ( a , pos ) ;
+                myInsert ( a , lines[a].s.length()+1 , '-' ) ;
+                }
             }
         SeqAlign *d = (SeqAlign*) sc->seq[l2s[a]] ;
         d->id = a ;
@@ -669,8 +672,8 @@ void TAlignment::callMiddleMouseButton ( int id , int pos , wxString _mode )
         if ( a == max )
             {
             for ( a = 0 ; a < lines.size() ; a++ )
-               if ( !lines[a].isIdentity )
-                  myDelete ( a , lines[a].s.length() ) ;
+                if ( !lines[a].isIdentity )
+                   myDelete ( a , lines[a].s.length() ) ;
             }
         else again = false ;
         }
@@ -907,16 +910,16 @@ int TAlignment::MatrixAlignment ( wxString &_s1 , wxString &_s2 , bool local )
     for ( a = b = 0 ; a < t2.size() ; a++ )
         if ( t2.GetChar(a) != gap0 ) b++ ;
     k2 = s2.substr ( 0 , mj - b ) ;
-    while ( k1.length() < k2.length() ) k1 = _T("-") + k1 ;
-    while ( k2.length() < k1.length() ) k2 = _T("-") + k2 ;
+    while ( k1.length() < k2.length() ) k1 = "-" + k1 ;
+    while ( k2.length() < k1.length() ) k2 = "-" + k2 ;
     t1 = k1 + t1 ;
     t2 = k2 + t2 ;
 
     // The end
     k1 = s1.substr ( mi ) ;
     k2 = s2.substr ( mj ) ;
-    while ( k1.length() < k2.length() ) k1 += _T("-") ;
-    while ( k2.length() < k1.length() ) k2 += _T("-") ;
+    while ( k1.length() < k2.length() ) k1 += "-" ;
+    while ( k2.length() < k1.length() ) k2 += "-" ;
     t1 += k1 ;
     t2 += k2 ;
 
@@ -930,8 +933,8 @@ void TAlignment::MatrixBacktrack ( vector <wxArrayInt> &back ,
                                     wxString &t1 , wxString &t2 ,
                                     int i , int j )
     {
-    t1 = _T("") ;
-    t2 = _T("") ;
+    t1 = "" ;
+    t2 = "" ;
     while ( i > 0 || j > 0 )
         {
         if ( (back[i][j]&BACK_LU) == BACK_LU ) // upper left
@@ -1136,35 +1139,35 @@ void TAlignment::OnFileSave ( wxCommandEvent &ev )
     wxString s , d ;
     TGenBank gb ;
     for ( a = b = 0 ; a < lines.size() ; a++ ) b += lines[a].isIdentity?0:1 ;
-    d = wxString::Format ( _T("%d\n") , b ) ;
+    d = wxString::Format ( "%d\n" , b ) ;
     for ( a = 0 ; a < lines.size() ; a++ )
         {
         if ( lines[a].isIdentity ) continue ;
 
         wxString p = lines[a].v->getParams() ;
-        lines[a].v->setParams ( _T("") ) ;
-        d += lines[a].v->getName() + _T("\n") ;
-        d += lines[a].v->getDatabase() + _T("\n") ;
-        d += lines[a].s + _T("\n") ;
+        lines[a].v->setParams ( "" ) ;
+        d += lines[a].v->getName() + "\n" ;
+        d += lines[a].v->getDatabase() + "\n" ;
+        d += lines[a].s + "\n" ;
         wxArrayString ex ;
         gb.doExport ( lines[a].v , ex ) ;
         for ( b = 0 ; b < ex.GetCount() ; b++ )
             {
             s += ex[b] ;
-            s += _T("\n") ;
+            s += "\n" ;
             }
         lines[a].v->setParams ( p ) ;
         }
 
     // Add layout
-    d += wxString::Format ( _T("%d\n") , lines.size() ) ;
+    d += wxString::Format ( "%d\n" , lines.size() ) ;
     for ( a = 0 ; a < lines.size() ; a++ )
         {
         wxString layout ;
-        layout += _T("<layout>") ;
+        layout += "<layout>" ;
         for ( b = 0 ; b < lines[a].markup.size() ; b++ )
             layout += lines[a].markup[b].getXML() ;
-        layout += _T("</layout>\n") ;
+        layout += "</layout>\n" ;
         d += layout ;
         }
 
@@ -1184,149 +1187,149 @@ void TAlignment::doExport ( wxString filename , int filter )
 
     int a , b ;
     if ( filter == 0 ) // GenBank
-    	{
-		TGenBank gb ;
-/*		wxArrayString ex ;
-		gb.doExport ( vec , ex ) ;
-		for ( unsigned int a = 0 ; a < ex.GetCount() ; a++ )
-			out.Write ( ex[a] + _T("\n") ) ;
+        {
+        TGenBank gb ;
+/*      wxArrayString ex ;
+        gb.doExport ( vec , ex ) ;
+        for ( unsigned int a = 0 ; a < ex.GetCount() ; a++ )
+            out.Write ( ex[a] + "\n" ) ;
 */
-		for ( a = 0 ; a < lines.size() ; a++ )
-			{
-			if ( !lines[a].v ) continue ;
-			wxArrayString ex ;
-			TVector tmpvec ;
-			tmpvec.setFromVector ( *lines[a].v ) ;
-			tmpvec.setSequence ( lines[a].s ) ;
-			gb.doExport ( &tmpvec , ex ) ;
-			for ( b = 0 ; b < ex.GetCount() ; b++ )
-				out.Write ( ex[b] + _T("\n") ) ;
-			}
+        for ( a = 0 ; a < lines.size() ; a++ )
+            {
+            if ( !lines[a].v ) continue ;
+            wxArrayString ex ;
+            TVector tmpvec ;
+            tmpvec.setFromVector ( *lines[a].v ) ;
+            tmpvec.setSequence ( lines[a].s ) ;
+            gb.doExport ( &tmpvec , ex ) ;
+            for ( b = 0 ; b < ex.GetCount() ; b++ )
+                out.Write ( ex[b] + "\n" ) ;
+            }
 
-		}
+        }
     else if ( filter == 1 ) // Plain text
-    	{
-		for ( a = b = 0 ; a < lines.size() ; a++ )
-			if ( lines[a].name.length() > b )
-				b = lines[a].name.length() ;
-		for ( a = 0 ; a < lines.size() ; a++ )
-			{
-			wxString name = lines[a].name ;
-			name.Pad ( b - name.length() , ' ' , false ) ;
-			out.Write ( name ) ;
-			out.Write ( _T(" ") ) ;
-			out.Write ( lines[a].s ) ;
-			out.Write ( _T("\n") ) ;
-			}
-		}
+        {
+        for ( a = b = 0 ; a < lines.size() ; a++ )
+            if ( lines[a].name.length() > b )
+                 b = lines[a].name.length() ;
+        for ( a = 0 ; a < lines.size() ; a++ )
+            {
+            wxString name = lines[a].name ;
+            name.Pad ( b - name.length() , ' ' , false ) ;
+            out.Write ( name ) ;
+            out.Write ( " " ) ;
+            out.Write ( lines[a].s ) ;
+            out.Write ( "\n" ) ;
+            }
+        }
     else if ( filter == 2 ) // CSV
-    	{
-		int offset ;
-		int inc = wxGetNumberFromUser ( txt("t_number_csv_columns") , _T("") , _T("") , 100 , 10 , 200 ) ;
-		for ( offset = 0 ; offset < lines[0].s.length() ; offset += inc )
-			{
-			for ( a = 0 ; a < lines.size() ; a++ )
-				{
-				out.Write ( _T("\"") + lines[a].name + _T("\"") ) ;
-				for ( b = 0 ; b < inc && b + offset < lines[a].s.length() ; b++ )
-					{
-					out.Write ( _T(";") ) ;
-					out.Write ( _T("\"") + wxString ( lines[a].s.GetChar ( b+offset ) ) + _T("\"") ) ;
-					}
-				out.Write ( _T("\n") ) ;
-				}
-			out.Write ( _T("\n") ) ;
-			}
-		}
+        {
+        int offset ;
+        int inc = wxGetNumberFromUser ( txt("t_number_csv_columns") , "" , "" , 100 , 10 , 200 ) ;
+        for ( offset = 0 ; offset < lines[0].s.length() ; offset += inc )
+            {
+            for ( a = 0 ; a < lines.size() ; a++ )
+                {
+                out.Write ( "\"" + lines[a].name + "\"" ) ;
+                for ( b = 0 ; b < inc && b + offset < lines[a].s.length() ; b++ )
+                    {
+                    out.Write ( ";" ) ;
+                    out.Write ( "\"" + wxString ( lines[a].s.GetChar ( b+offset ) ) + "\"" ) ;
+                    }
+                out.Write ( "\n" ) ;
+                }
+            out.Write ( "\n" ) ;
+            }
+        }
     else if ( filter == 3 || filter == 4 ) // FASTA
-    	{
-		for ( a = 0 ; a < lines.size() ; a++ )
-			{
-			if ( !lines[a].v ) continue ;
-			wxString name = lines[a].name.Upper() ;
-			name.Replace ( _T(" ") , _T("_") ) ;
-			name = _T(">") + name.Left ( 59 ) ;
-			out.Write ( name + _T("\n") ) ;
-			wxString s = lines[a].s ;
-			if ( filter == 4 )
-				s.Replace ( _T("-") , _T("") ) ;
-			while ( !s.IsEmpty() )
-				{
-				wxString t = s.Left ( 60 ) ;
-				s = s.Mid ( 60 ) ;
-				out.Write ( t + _T("\n") ) ;
-				}
-			}
-		}
+        {
+        for ( a = 0 ; a < lines.size() ; a++ )
+            {
+            if ( !lines[a].v ) continue ;
+            wxString name = lines[a].name.Upper() ;
+            name.Replace ( " " , "_" ) ;
+            name = ">" + name.Left ( 59 ) ;
+            out.Write ( name + "\n" ) ;
+            wxString s = lines[a].s ;
+            if ( filter == 4 )
+                s.Replace ( "-" , "" ) ;
+            while ( !s.IsEmpty() )
+                {
+                wxString t = s.Left ( 60 ) ;
+                s = s.Mid ( 60 ) ;
+                out.Write ( t + "\n" ) ;
+                }
+            }
+        }
     else if ( filter == 5 ) // MSF
-    	{
-		int namelimit = 50 ;
-		int a , firstseq ;
-		for ( firstseq = 0 ; firstseq < lines.size() && !lines[firstseq].v ; firstseq++ ) ;
-		int maxlen = lines[firstseq].s.length() ;
-		int type = lines[firstseq].v->getType() == TYPE_AMINO_ACIDS ? 'P' : 'N' ;
-		int maxname = 0 ;
-		for ( a = 0 ; a < lines.size() ; a++ )
-			{
-			if ( !lines[a].v ) continue ;
-			maxname = lines[a].name.length() > maxname ? lines[a].name.length() : maxname ;
-			}
-		if ( maxname > namelimit ) maxname = namelimit ;
+        {
+        int namelimit = 50 ;
+        int a , firstseq ;
+        for ( firstseq = 0 ; firstseq < lines.size() && !lines[firstseq].v ; firstseq++ ) ;
+        int maxlen = lines[firstseq].s.length() ;
+        int type = lines[firstseq].v->getType() == TYPE_AMINO_ACIDS ? 'P' : 'N' ;
+        int maxname = 0 ;
+        for ( a = 0 ; a < lines.size() ; a++ )
+            {
+            if ( !lines[a].v ) continue ;
+            maxname = lines[a].name.length() > maxname ? lines[a].name.length() : maxname ;
+            }
+        if ( maxname > namelimit ) maxname = namelimit ;
 
-		out.Write ( wxString::Format ( _T("MSF:%d  Type:%c Check:0 ..\n\n") , maxlen , type ) ) ;
-		for ( a = 0 ; a < lines.size() ; a++ )
-			{
-			if ( !lines[a].v ) continue ;
-			wxString name = lines[a].name ;
-			name.Replace ( _T(" ") , _T("_") ) ;
-			name = name.Left ( namelimit ) ;
-			name += wxString ( ' ' , maxname - name.length() + 2 ) ;
-			wxString x = _T(" Name: ") + name ;
-			x += wxString::Format ( _T(" Len: %5d Weight: 1.0 Check: 0\n") , lines[a].s.length() ) ;
-			out.Write ( x ) ;
-			}
-		out.Write ( _T("\n//\n") ) ;
+        out.Write ( wxString::Format ( _T("MSF:%d  Type:%c Check:0 ..\n\n") , maxlen , type ) ) ;
+        for ( a = 0 ; a < lines.size() ; a++ )
+            {
+            if ( !lines[a].v ) continue ;
+            wxString name = lines[a].name ;
+            name.Replace ( " " , "_" ) ;
+            name = name.Left ( namelimit ) ;
+            name += wxString ( ' ' , maxname - name.length() + 2 ) ;
+            wxString x = _T(" Name: ") + name ;
+            x += wxString::Format ( _T(" Len: %5d Weight: 1.0 Check: 0\n") , lines[a].s.length() ) ;
+            out.Write ( x ) ;
+            }
+        out.Write ( "\n//\n" ) ;
 
-		int perline = ( 80 - maxname - 1 ) / 11 ;
-		for ( int pos = 1 ; pos <= maxlen ; pos += perline * 10 )
-			{
-			for ( a = 0 ; a < lines.size() ; a++ )
-				{
-				if ( !lines[a].v ) continue ;
-				wxString x = lines[a].name ;
-				x.Replace ( _T(" ") , _T("_") ) ;
-				x = x.Left ( namelimit ) ;
-				x += wxString ( ' ' , maxname - x.length() + 1 ) ;
-				for ( int b = 0 ; b < perline ; b++ )
-					{
-					wxString y = lines[a].s.Mid ( pos-1+b*10 , 10 ) ;
-					y.Replace ( _T("-") , _T(".") ) ;
-					x += y + _T(" ") ;
-					}
-				out.Write ( x + _T("\n") ) ;
-				}
-			out.Write ( _T("\n\n") ) ;
-			}
-		}
+        int perline = ( 80 - maxname - 1 ) / 11 ;
+        for ( int pos = 1 ; pos <= maxlen ; pos += perline * 10 )
+            {
+            for ( a = 0 ; a < lines.size() ; a++ )
+                {
+                if ( !lines[a].v ) continue ;
+                wxString x = lines[a].name ;
+                x.Replace ( " " , "_" ) ;
+                x = x.Left ( namelimit ) ;
+                x += wxString ( ' ' , maxname - x.length() + 1 ) ;
+                for ( int b = 0 ; b < perline ; b++ )
+                    {
+                    wxString y = lines[a].s.Mid ( pos-1+b*10 , 10 ) ;
+                    y.Replace ( "-" , "." ) ;
+                    x += y + " " ;
+                    }
+                out.Write ( x + "\n" ) ;
+                }
+            out.Write ( "\n\n" ) ;
+            }
+        }
     out.Close () ;
     }
 
 wxString TAlignment::getExportFilters ()
-	{
+    {
     wxString wcGenBank = _T("GenBank (*.gb)|*.gb") ;
     wxString wcPlain = _T("Plain text|*.*") ;
     wxString wcCSV = _T("Comma-separated values (CSV)|*.csv") ;
     wxString wcFasta1 = _T("FASTA (with gaps)|*.fasta") ;
     wxString wcFasta2 = _T("FASTA (without gaps)|*.fasta") ;
     wxString wcMsf = _T("GCG alignment format (MSF)|*.msf") ;
-    wxString wildcard = wcGenBank + _T("|") +
-                        wcPlain + _T("|") +
-								wcCSV + _T("|") +
-								wcFasta1 + _T("|") +
-								wcFasta2 + + _T("|") +
-								wcMsf ;
-	return wildcard ;
-	}
+    wxString wildcard = wcGenBank + "|" +
+                        wcPlain + "|" +
+                        wcCSV + "|" +
+                        wcFasta1 + "|" +
+                        wcFasta2 + + "|" +
+                        wcMsf ;
+    return wildcard ;
+    }
 
 
 void TAlignment::fromVector ( TVector *nv )
@@ -1336,7 +1339,7 @@ void TAlignment::fromVector ( TVector *nv )
     gb.paste ( vec->getSequence() ) ;
     wxString vdesc = vec->getDescription() ;
     wxArrayString vs ;
-    explode ( _T("\n") , vdesc , vs ) ;
+    explode ( "\n" , vdesc , vs ) ;
     int nol = atoi ( vs[0].mb_str() ) ; // Number of lines
     int n ;
     wxString broken ;
@@ -1371,7 +1374,7 @@ void TAlignment::fromVector ( TVector *nv )
 
            if ( !db.IsEmpty() )
               {
-              if ( !broken.IsEmpty() ) broken += _T(", ") ;
+              if ( !broken.IsEmpty() ) broken += ", " ;
               broken += vv->getName() ;
               }
            line.v = vv ;
@@ -1395,7 +1398,7 @@ void TAlignment::fromVector ( TVector *nv )
     for ( n = nol*3+2 ; n < vs.size() ; n++ )
         {
         wxString t = vs[n].Lower() ;
-        if ( t.Left ( 8 ) != _T("<layout>") ) continue ;
+        if ( t.Left ( 8 ) != "<layout>" ) continue ;
 
         TiXmlDocument doc ;
         doc.Parse ( t.mb_str() ) ;
@@ -1424,65 +1427,65 @@ void TAlignment::OnSeqPrint(wxCommandEvent& event)
     }
 
 void TAlignment::RunPhylip ( int cmd )
-	{
-	TPhylip phylip ;
-	if ( !phylip.IsOK() ) return ; // Something's wrong
+    {
+    TPhylip phylip ;
+    if ( !phylip.IsOK() ) return ; // Something's wrong
 
-	if ( cmd == PHYLIP_CMD_SETUP )
-		{
-		phylip.query_phylip_dir ( false ) ;
-		return ;
-		}
+    if ( cmd == PHYLIP_CMD_SETUP )
+        {
+        phylip.query_phylip_dir ( false ) ;
+        return ;
+        }
 
-	wxString data ;
+    wxString data ;
 
-	unsigned int a , b ;
-	int seqlen = 0 ;
-	wxArrayString vs ;
-	for ( a = b = 0 ; a < lines.size() ; a++ )
-		{
-		if ( lines[a].isIdentity ) continue ;
-		wxString t ;
-		t = wxString::Format ( _T("%d ") , ++b ) ;
-		lines[a].phylip_id = t.Trim().Trim(false) ;
-		while ( t.length() < 20 ) t += _T(" ") ;
-		t = t.Mid ( 0 , 20 ) ;
-		t += lines[a].s ;
-		seqlen = lines[a].s.length() ;
-		vs.Add ( t ) ;
-		}
+    unsigned int a , b ;
+    int seqlen = 0 ;
+    wxArrayString vs ;
+    for ( a = b = 0 ; a < lines.size() ; a++ )
+        {
+        if ( lines[a].isIdentity ) continue ;
+        wxString t ;
+        t = wxString::Format ( "%d " , ++b ) ;
+        lines[a].phylip_id = t.Trim().Trim(false) ;
+        while ( t.length() < 20 ) t += " " ;
+        t = t.Mid ( 0 , 20 ) ;
+        t += lines[a].s ;
+        seqlen = lines[a].s.length() ;
+        vs.Add ( t ) ;
+        }
 
-	data += wxString::Format ( _T("%3d%7d\n") , (int) vs.GetCount() , seqlen ) ;
-	for ( a = 0 ; a < vs.GetCount() ; a++ )
-		data += vs[a] + _T("\n") ;
+    data += wxString::Format ( "%3d%7d\n" , (int) vs.GetCount() , seqlen ) ;
+    for ( a = 0 ; a < vs.GetCount() ; a++ )
+        data += vs[a] + "\n" ;
 
-	wxString out ;
-	switch ( cmd )
-		{
-		case PHYLIP_CMD_PROTPARS : out = phylip.protpars ( data ) ; break ;
-		case PHYLIP_CMD_PROTDIST : out = phylip.protdist ( data ) ; break ;
-		case PHYLIP_CMD_DNAPARS : out = phylip.dnapars ( data ) ; break ;
-		case PHYLIP_CMD_PROML : out = phylip.proml ( data ) ; break ;
-		case PHYLIP_CMD_PROMLK : out = phylip.promlk ( data ) ; break ;
-		case PHYLIP_CMD_SEQBOOT : out = phylip.seqboot ( data ) ; break ;
-		case PHYLIP_CMD_CONSENSE : out = phylip.consense ( data ) ; break ;
+    wxString out ;
+    switch ( cmd )
+        {
+        case PHYLIP_CMD_PROTPARS : out = phylip.protpars ( data ) ; break ;
+        case PHYLIP_CMD_PROTDIST : out = phylip.protdist ( data ) ; break ;
+        case PHYLIP_CMD_DNAPARS : out = phylip.dnapars ( data ) ; break ;
+        case PHYLIP_CMD_PROML : out = phylip.proml ( data ) ; break ;
+        case PHYLIP_CMD_PROMLK : out = phylip.promlk ( data ) ; break ;
+        case PHYLIP_CMD_SEQBOOT : out = phylip.seqboot ( data ) ; break ;
+        case PHYLIP_CMD_CONSENSE : out = phylip.consense ( data ) ; break ;
 
-		case PHYLIP_CMD_DNAMOVE : out = phylip.dnamove ( data ) ; break ;
-		case PHYLIP_CMD_DNAPENNY : out = phylip.dnapenny ( data ) ; break ;
-		case PHYLIP_CMD_DNACOMP : out = phylip.dnacomp ( data ) ; break ;
-		case PHYLIP_CMD_DNAINVAR : out = phylip.dnainvar ( data ) ; break ;
-		case PHYLIP_CMD_DNAML : out = phylip.dnaml ( data ) ; break ;
-		case PHYLIP_CMD_DNAMLK : out = phylip.dnamlk ( data ) ; break ;
-		case PHYLIP_CMD_DNADIST : out = phylip.dnadist ( data ) ; break ;
+        case PHYLIP_CMD_DNAMOVE : out = phylip.dnamove ( data ) ; break ;
+        case PHYLIP_CMD_DNAPENNY : out = phylip.dnapenny ( data ) ; break ;
+        case PHYLIP_CMD_DNACOMP : out = phylip.dnacomp ( data ) ; break ;
+        case PHYLIP_CMD_DNAINVAR : out = phylip.dnainvar ( data ) ; break ;
+        case PHYLIP_CMD_DNAML : out = phylip.dnaml ( data ) ; break ;
+        case PHYLIP_CMD_DNAMLK : out = phylip.dnamlk ( data ) ; break ;
+        case PHYLIP_CMD_DNADIST : out = phylip.dnadist ( data ) ; break ;
 
-		case PHYLIP_CMD_RESTML : out = phylip.restml ( data ) ; break ;
+        case PHYLIP_CMD_RESTML : out = phylip.restml ( data ) ; break ;
 
-		}
+        }
 
-	TPhyloTree *tree = myapp()->frame->newPhyloTree () ;
-	tree->setNewickTrees ( out , this ) ;
-	tree->setModeDrawgram () ;
-	}
+    TPhyloTree *tree = myapp()->frame->newPhyloTree () ;
+    tree->setNewickTrees ( out , this ) ;
+    tree->setModeDrawgram () ;
+    }
 
 void TAlignment::getCharMarkup ( SequenceCharMarkup &scm , int vline , int pos , int vfirst )
     {
@@ -1503,7 +1506,7 @@ void TAlignment::getCharMarkup ( SequenceCharMarkup &scm , int vline , int pos ,
 
 void TAlignment::editAppearance ( int from , int to , int firstline , int lastline )
     {
-    AlignmentAppearanceDialog aad ( this , _T("!!") ) ;
+    AlignmentAppearanceDialog aad ( this , "!!" ) ;
     aad.setup ( from , to , firstline , lastline , this ) ;
     if ( wxID_OK == aad.ShowModal() )
        sc->SilentRefresh() ;
@@ -1531,7 +1534,7 @@ TAlignLine::~TAlignLine ()
 void TAlignLine::ResetSequence ()
     {
     if ( v ) s = v->getSequence() ;
-    else s = _T("") ;
+    else s = "" ;
     }
 
 ChildBase *TAlignLine::FindOrigin ()

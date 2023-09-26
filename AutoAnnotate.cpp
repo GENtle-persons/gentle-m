@@ -159,7 +159,7 @@ void AutoAnnotate::Run ()
 AutoAnnotate::AutoAnnotate ( MyChild *_p )
 	{
 	p = _p ;
- 	commonVectorsDatabase = myapp()->homedir + myapp()->slash + _T("commonvectors.db") ;
+ 	commonVectorsDatabase = myapp()->homedir.GetFullPath() + wxFileName::GetPathSeparator() + _T("commonvectors.db") ;
   	additionalDatabase =  myapp()->frame->LS->getOption ( _T("AUTOANN_ADDITIONALDB") , _T("") ) ;
  	useCommonDatabase = myapp()->frame->LS->getOption ( _T("AUTOANN_USECOMMON") , true ) ;
  	useAdditionalDatabase = myapp()->frame->LS->getOption ( _T("AUTOANN_USEADDITIONAL") , true ) ;

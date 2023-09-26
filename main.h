@@ -89,6 +89,7 @@ typedef unsigned int uint ;
 #include <wx/utils.h>
 #include <wx/numdlg.h>
 #include <wx/timer.h>
+#include <wx/filename.h>
 
 #ifdef _UNICODE
 	#define wxUSE_UNICODE 1
@@ -191,15 +192,14 @@ class MyApp : public wxApp
 
     MyFrame *frame; ///< The application frame
     wxMimeTypesManager mtm ; ///< The MIME types manager
-    wxString homedir ; ///< Directory of the application
-    wxString bmpdir ; ///< Directory of the bitmaps
-    wxString slash ; ///< The platform-dependent directory separator slash
+    wxFileName homedir ; ///< Directory of the application
+    wxFileName bmpdir ; ///< Directory of the bitmaps
     int programVersion ; ///< The database access program version
     int dbWarningIssued ; ///< Was a database warning issued?
     wxHashString _text ; ///< Contains the current GUI translation.
     wxHashString clp ; ///< Command line parameters
-	 wxCSConv *isoconv ; ///< UTF-8 conversion helper
-		wxStopWatch sw ;
+    wxCSConv *isoconv ; ///< UTF-8 conversion helper
+    wxStopWatch sw ;
 
     private :
     virtual void registerFileExtension ( const wxString& extension ) ; ///< Registers a file extension to GENtle (windows only).

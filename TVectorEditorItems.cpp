@@ -157,7 +157,7 @@ void TVectorEditor::initPanItem ()
     // Item type list
     for ( a = 0 ; a < VIT_TYPES ; a++ )
         {
-        sprintf ( t , "itemtype%d" , a ) ;
+        snprintf ( t , sizeof(t)-1, "itemtype%d" , a ) ;
         vs[a] = txt(t) ;
         }
     ichoice = new wxChoice(panItem,TVE_ICHOICE,
@@ -221,7 +221,7 @@ void TVectorEditor::updateItem ( TVectorItem &i )
 	 wxString t ;
 //    char t[1000] ;
 	 t = wxString::Format ( _T("itemtype%d") , i.type ) ;
-//    sprintf ( t , "itemtype%d" , i.type ) ;
+//    snprintf ( t , sizeof(t)-1, "itemtype%d" , i.type ) ;
     items->SetItemText ( l , i.name ) ;
     items->SetItem ( l , 1 , txt(t) ) ;
 
@@ -238,7 +238,7 @@ void TVectorEditor::updateItem ( TVectorItem &i )
     int len = i.to - i.from + 1 ;
     if ( i.to < i.from ) len += v->getSequenceLength() ;
 	 t = wxString::Format ( _T("%d") , len ) ;
-//    sprintf ( t , "%d" , len ) ;
+//    snprintf ( t , sizeof(t)-1, "%d" , len ) ;
     items->SetItem ( l , 5 , t ) ;
     }
 

@@ -7,6 +7,7 @@
 #include <wx/filesys.h>
 #include <wx/protocol/http.h>
 #include <wx/protocol/ftp.h>
+#include <wx/filefn.h> // wxCopyFile
 
 myExternal::myExternal () { pd = NULL ; } ;
 
@@ -139,6 +140,6 @@ wxString myExternal::getTextLocal ( wxString url )
 
 int myExternal::copyFileLocal ( wxString url , wxString file )
 	{
-	if ( true == wxCopyFile ( url , file , true ) ) return 0 ;
+	if ( wxCopyFile ( url , file , true ) ) return 0 ;
 	return 1 ;
 	}

@@ -256,9 +256,9 @@ TVector *TVector::newFromMark ( int from , int to )
 
     if ( to > sequence.length() )
             nv->turn ( sequence.length() - from + 1 ) ;
-    if ( !nv->getDescription().IsEmpty() ) nv->addDescription ( _T("\n") ) ;
-	 wxString t = wxString::Format ( txt("t_cropped_fragment") , nv->getName().c_str() , from , to ) ;
-//    sprintf ( t , txt("t_cropped_fragment") , nv->getName().c_str() , from , to ) ;
+    if ( !nv->getDescription().IsEmpty() )
+        nv->addDescription ( _T("\n") ) ;
+    wxString t = wxString::Format ( txt("t_cropped_fragment") , nv->getName().c_str() , from , to ) ;
     nv->addDescription ( t ) ;
     nv->addName ( _T("*") ) ;
     nv->setChanged () ;
@@ -695,7 +695,7 @@ void TVector::insert_char ( char x , int pos , bool overwrite )
        sequence.SetChar(pos-1,x) ;
        return ;
        }
-    wxStringInsert ( sequence , pos-1 , dummy ) ;
+    sequence.insert(pos-1 , dummy ) ;
 
     int a ;
     for ( a = 0 ; a < items.size() ; a++ )

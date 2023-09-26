@@ -164,9 +164,9 @@ void TRestrictionEditor::initRestrictionPage ()
     rbs[1] = txt("Enzymes that cut") ;
     rbs[2] = txt("Enzymes that don't cut") ;
     rb = new wxRadioBox ( this , RSE_RES_RB , txt("subsel") ,
-						 wxDefaultPosition ,
-						 wxDefaultSize ,
-						 3 , rbs , 1 , wxRA_SPECIFY_COLS ) ;
+                          wxDefaultPosition ,
+                          wxDefaultSize ,
+                          3 , rbs , 1 , wxRA_SPECIFY_COLS ) ;
 
     nfst = new wxCheckBox ( this , RSE_COC_CB , txt("Do not create fragments below ") ) ;
 
@@ -175,26 +175,26 @@ void TRestrictionEditor::initRestrictionPage ()
     nfstv->SetSize ( 70 , th * 2 ) ;
     h1d->Add ( nfstv , 0 , wxALL|wxALIGN_CENTER_VERTICAL , 5 ) ;
     h1d->Add ( new wxStaticText ( this , -1 , txt("base pairs.") ) ,
-			  1 , wxEXPAND , 5 ) ;
+               1 , wxEXPAND , 5 ) ;
 
 
-	wxBoxSizer *v3a = new wxBoxSizer ( wxVERTICAL ) ;
-	wxBoxSizer *v3b = new wxBoxSizer ( wxVERTICAL ) ;
+    wxBoxSizer *v3a = new wxBoxSizer ( wxVERTICAL ) ;
+    wxBoxSizer *v3b = new wxBoxSizer ( wxVERTICAL ) ;
 
     bb = new wxBitmapButton ( this , RSE_RES_AC ,
-							 wxBitmap (myapp()->bmpdir+_T("/cocktail.bmp"), wxBITMAP_TYPE_BMP),
-							 wxDefaultPosition ,
-							 wxDefaultSize ,
-							 wxBU_AUTODRAW ,
-							 wxDefaultValidator ,
-							 txt("add2cocktail") ) ;
+                              wxBitmap (myapp()->bmpdir.GetFullPath() + wxFileName::GetPathSeparator()+"/cocktail.bmp", wxBITMAP_TYPE_BMP),
+                              wxDefaultPosition ,
+                              wxDefaultSize ,
+                              wxBU_AUTODRAW ,
+                              wxDefaultValidator ,
+                              txt("add2cocktail") ) ;
     wxBitmapButton *bib = new wxBitmapButton ( this , RSE_COC_CT ,
-											  wxBitmap (myapp()->bmpdir+_T("/scissors.bmp"), wxBITMAP_TYPE_BMP),
-											  wxDefaultPosition ,
-											  wxDefaultSize ,
-											  wxBU_AUTODRAW ,
-											  wxDefaultValidator ,
-											  txt("start_res") ) ;
+                              wxBitmap (myapp()->bmpdir.GetFullPath() + wxFileName::GetPathSeparator()+"/scissors.bmp", wxBITMAP_TYPE_BMP),
+                              wxDefaultPosition ,
+                              wxDefaultSize ,
+                              wxBU_AUTODRAW ,
+                              wxDefaultValidator ,
+                              txt("start_res") ) ;
 
     v3a->Add ( bb , 1 , wxEXPAND , 5 ) ;
     v3a->Add ( new wxStaticText ( this , -1 , txt("add2cocktail") ) ) ;
@@ -245,7 +245,7 @@ void TRestrictionEditor::initRestrictionPage ()
 
     // "This enzyme cuts" list
     rsl = new wxListCtrl ( this , -1 , wxDefaultPosition , wxDefaultSize ,
-						  wxLC_REPORT|wxLC_SINGLE_SEL|MYLISTBORDER ) ;
+                           wxLC_REPORT|wxLC_SINGLE_SEL|MYLISTBORDER ) ;
     rsl->InsertColumn ( 0 , _T("#") , wxLIST_FORMAT_LEFT , th*2 ) ;
     rsl->InsertColumn ( 1 , txt("from") ) ;
     rsl->InsertColumn ( 2 , txt("to") ) ;
@@ -253,7 +253,7 @@ void TRestrictionEditor::initRestrictionPage ()
 
     // All fragments list
     rsl2 = new wxListCtrl ( this , -1 , wxDefaultPosition , wxDefaultSize ,
-						   wxLC_REPORT|wxLC_SINGLE_SEL|MYLISTBORDER ) ;
+                            wxLC_REPORT|wxLC_SINGLE_SEL|MYLISTBORDER ) ;
     rsl2->InsertColumn ( 0 , _T("#") , wxLIST_FORMAT_LEFT , th*2 ) ;
     rsl2->InsertColumn ( 1 , txt("from") ) ;
     rsl2->InsertColumn ( 2 , txt("to") ) ;
