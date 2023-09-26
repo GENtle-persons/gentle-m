@@ -42,8 +42,8 @@ else
     AC_MSG_ERROR([wxWidgets is required. Try --with-wx-config.])
 fi
 
-WX_CPPFLAGS="`$WXCONFIG --cppflags`"
-WX_CXXFLAGS="`$WXCONFIG --cxxflags | sed -e 's/-fno-exceptions//'`"
+WX_CPPFLAGS="-std=gnu++11 `$WXCONFIG --cppflags`"
+WX_CXXFLAGS="-std=gnu++11 `$WXCONFIG --cxxflags | sed -e 's/-fno-exceptions//'`"
 WX_LIBS="`$WXCONFIG --libs`"
 
 CPPFLAGS="$CPPFLAGS $WX_CPPFLAGS"
@@ -99,4 +99,5 @@ fi
 
 echo "CPPFLAGS=$CPPFLAGS"
 echo "CXXFLAGS=$CXXFLAGS"
+echo "WX_LIBS=$WX_LIBS"
 echo "LDFLAGS=$LDFLAGS"
