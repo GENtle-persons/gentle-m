@@ -353,7 +353,7 @@ wxString MyApp::getLocalDBname ()
 #ifdef __WXMAC__
     theRealLocalDb = wxGetHomeDir() + wxFileName::GetPathSeparator() + "local.db" ;
 #else
-    theRealLocalDb = myapp()->homedir + wxFileName::GetPathSeparator() + "local.db" ;
+    theRealLocalDb = myapp()->homedir.GetFullPath() + wxFileName::GetPathSeparator() + "local.db" ;
 #endif
     return theRealLocalDb ;
     }
