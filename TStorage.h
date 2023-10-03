@@ -1,5 +1,5 @@
 /** \file
-	\brief The TStorage and TSQLresult classes
+    \brief The TStorage and TSQLresult classes
 */
 #ifndef _TSTORAGE_H_
 #define _TSTORAGE_H_
@@ -85,7 +85,7 @@ class TSQLresult
 class TStorage
     {
     public :
-    TStorage ( int nt , wxString fn = _T("") ) ; ///< Constructor
+    TStorage ( int nt , wxString fn = "" ) ; ///< Constructor
     ~TStorage () ; ///< Destructor
     void createDatabase () ; ///< Creates the database, is it does not exist
     TSQLresult getObject ( const wxString &query ) ; ///< Runs a query
@@ -138,7 +138,7 @@ class TStorage
     TSQLresult results ; ///< The results of the last query
 
     private :
-    wxString getSingleField ( wxString query , wxString field , wxString def = _T("") ) ; ///< Get a single field from a query, with default value
+    wxString getSingleField ( wxString query , wxString field , wxString def = "" ) ; ///< Get a single field from a query, with default value
     int getSingleField ( wxString query , wxString field , int def = 0 ) ; ///< Get a single field from a query, with default value
     wxString makeInsert ( wxString table , wxArrayString &field , wxArrayString &data ) ; ///< Insert all the fields with their data into a table
     void replaceTable ( wxString table , wxArrayString &f , wxArrayString &t ) ; ///< ???

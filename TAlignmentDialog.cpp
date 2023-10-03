@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the methods of the TAlignmentDialog class
+    \brief Contains the methods of the TAlignmentDialog class
 */
 #include "TAlignmentDialog.h"
 
@@ -19,7 +19,7 @@ END_EVENT_TABLE()
 TAlignmentDialog::TAlignmentDialog(wxWindow *parent, const wxString& title )
     : wxDialog ( myapp()->frame , -1 , title , wxDefaultPosition , wxSize ( 600 , 450 ) )
     {
-	myapp()->frame->push_help ( _T("GENtle:Alignments") ) ; // TODO : Link to dialog help page
+    myapp()->frame->push_help ( _T("GENtle:Alignments") ) ; // TODO : Link to dialog help page
     bo = 5 ;
     th = 15 ;
     al = (TAlignment*) parent ;
@@ -38,7 +38,7 @@ TAlignmentDialog::TAlignmentDialog(wxWindow *parent, const wxString& title )
 
     init_what () ;
     init_how () ;
-//    init_disp () ;
+//  init_disp () ;
 
     wxButton *b = new wxButton ( this , AL_OK , txt("b_OK") ) ;
     wxButton *c = new wxButton ( this , AL_CANCEL , txt("b_cancel") ) ;
@@ -54,8 +54,8 @@ TAlignmentDialog::TAlignmentDialog(wxWindow *parent, const wxString& title )
     v0->Add ( h0 , 0 , wxCENTRE , 5 ) ;
     SetSizer ( v0 ) ;
 #else
-	b->SetSize ( w / 5 , h + 5 , -1 , -1 ) ;
-	c->SetSize ( w / 5 * 3 , h + 5 , -1 , -1 ) ;
+    b->SetSize ( w / 5 , h + 5 , -1 , -1 ) ;
+    c->SetSize ( w / 5 * 3 , h + 5 , -1 , -1 ) ;
 #endif
     nb->SetSelection ( 0 ) ;
 
@@ -71,33 +71,27 @@ TAlignmentDialog::~TAlignmentDialog ()
 void TAlignmentDialog::init_what ()
     {
 
-	wxBoxSizer *vx = new wxBoxSizer ( wxVERTICAL ) ;
-	wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
-	wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
-	wxBoxSizer *v1 = new wxBoxSizer ( wxVERTICAL ) ;
-	wxBoxSizer *v2 = new wxBoxSizer ( wxVERTICAL ) ;
+    wxBoxSizer *vx = new wxBoxSizer ( wxVERTICAL ) ;
+    wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
+    wxBoxSizer *v1 = new wxBoxSizer ( wxVERTICAL ) ;
+    wxBoxSizer *v2 = new wxBoxSizer ( wxVERTICAL ) ;
 
     pwhat = new wxPanel ( nb , -1 ) ;
     wxPanel *p = pwhat ;
     v0->Add ( new wxStaticText ( p , -1 , txt("al_cur") ) , 0 , wxEXPAND ) ;
     v2->Add ( new wxStaticText ( p , -1 , txt("al_all") ) , 0 , wxEXPAND ) ;
 
-    cur = new wxListBox ( p , AL_CUR ,
-			  wxDefaultPosition ,
-			  wxDefaultSize ,
-			  0 , NULL , wxLB_EXTENDED ) ;
-    all = new wxListBox ( p , AL_ALL ,
-			  wxDefaultPosition ,
-			  wxDefaultSize ,
-			  0 , NULL , wxLB_EXTENDED ) ;
+    cur = new wxListBox ( p , AL_CUR , wxDefaultPosition , wxDefaultSize , 0 , NULL , wxLB_EXTENDED ) ;
+    all = new wxListBox ( p , AL_ALL , wxDefaultPosition , wxDefaultSize , 0 , NULL , wxLB_EXTENDED ) ;
 
     v0->Add ( cur , 1 , wxEXPAND ) ;
     v2->Add ( all , 1 , wxEXPAND ) ;
 
-    v1->Add ( new wxStaticText ( p , -1 , _T(" ") ) , 0 , wxALIGN_CENTER_HORIZONTAL ) ;
+    v1->Add ( new wxStaticText ( p , -1 , " " ) , 0 , wxALIGN_CENTER_HORIZONTAL ) ;
     v1->Add ( new wxButton ( p , AL_ADD , txt("<-- add") ) , 0 , wxALIGN_CENTER_HORIZONTAL ) ;
     v1->Add ( new wxButton ( p , AL_DEL , txt("del -->") ) , 0 , wxALIGN_CENTER_HORIZONTAL ) ;
-    v1->Add ( new wxStaticText ( p , -1 , _T(" ") ) , 0 , wxALIGN_CENTER_HORIZONTAL ) ;
+    v1->Add ( new wxStaticText ( p , -1 , " " ) , 0 , wxALIGN_CENTER_HORIZONTAL ) ;
     v1->Add ( new wxButton ( p , AL_UP , txt("b_up_in_list") ) , 0 , wxALIGN_LEFT ) ;
     v1->Add ( new wxButton ( p , AL_DOWN , txt("b_down_in_list") ) , 0 , wxALIGN_LEFT ) ;
 
@@ -127,7 +121,7 @@ void TAlignmentDialog::init_what ()
            }
         }
 /*
-	// Add all when dialog is first opened
+    // Add all when dialog is first opened
     if ( vcn.GetCount() == 0 )
         {
         for ( a = 0 ; a < van.GetCount() ; a++ )
@@ -158,10 +152,7 @@ void TAlignmentDialog::init_how ()
     wxRect r ;
     st = new wxStaticText ( p , -1 , txt("t_algorithm") , wxPoint ( bo , th ) ) ;
     r = st->GetRect () ;
-    alg = new wxListBox ( p , AL_ALG ,
-                wxPoint ( bo , r.GetBottom()+bo ) ,
-                wxSize ( w/2-bo , h/2 ) ,
-                0 , NULL , wxLB_SINGLE ) ;
+    alg = new wxListBox ( p , AL_ALG , wxPoint ( bo , r.GetBottom()+bo ) , wxSize ( w/2-bo , h/2 ) , 0 , NULL , wxLB_SINGLE ) ;
     alg->Append ( txt("t_clustal_w") ) ;
     alg->Append ( txt("t_smith_waterman") ) ;
     alg->Append ( txt("t_needleman_wunsch") ) ;
@@ -181,21 +172,15 @@ void TAlignmentDialog::init_how ()
     if ( xo < r.GetRight() ) xo = r.GetRight() ;
     xo += bo ;
 
-    alg_match = new wxSpinCtrl ( p , AL_MATCH , _T("") ,
-                                    wxPoint ( xo , th*2 ) ,
-				 wxSize ( MYSPINBOXSIZE /*w/5*/ , th*3/2 ) ) ;
+    alg_match = new wxSpinCtrl ( p , AL_MATCH , "" , wxPoint ( xo , th*2 ) , wxSize ( MYSPINBOXSIZE /*w/5*/ , th*3/2 ) ) ;
     alg_match->SetRange ( -100 , 100 ) ;
     alg_match->SetValue ( al->match ) ;
 
-    alg_mismatch = new wxSpinCtrl ( p , AL_MISMATCH , _T("") ,
-                                    wxPoint ( xo , th*4 ) ,
-                                    wxSize ( MYSPINBOXSIZE /*w/5*/ , th*3/2 ) ) ;
+    alg_mismatch = new wxSpinCtrl ( p , AL_MISMATCH , "" , wxPoint ( xo , th*4 ) , wxSize ( MYSPINBOXSIZE /*w/5*/ , th*3/2 ) ) ;
     alg_mismatch->SetRange ( -100 , 100 ) ;
     alg_mismatch->SetValue ( al->mismatch ) ;
 
-    alg_penalty = new wxSpinCtrl ( p , AL_PENALTY , _T("") ,
-                                    wxPoint ( xo , th*6 ) ,
-				   wxSize ( MYSPINBOXSIZE /*w/5*/ , th*3/2 ) ) ;
+    alg_penalty = new wxSpinCtrl ( p , AL_PENALTY , "" , wxPoint ( xo , th*6 ) , wxSize ( MYSPINBOXSIZE /*w/5*/ , th*3/2 ) ) ;
     alg_penalty->SetRange ( -100 , 100 ) ;
     alg_penalty->SetValue ( al->gap_penalty ) ;
 
