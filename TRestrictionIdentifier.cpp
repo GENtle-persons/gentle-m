@@ -194,7 +194,7 @@ void TRestrictionIdentifier::addRestrictionLane ( wxString en , TVector *v )
 {
     wxArrayInt ai = getRestrictionFragments ( en , v ) ;
     TGelLane l ;
-    if ( v->isLinear() ) l.add ( v->getSequenceLength() , 10 , wxString::Format ( "orig" , v->getSequenceLength() ) ) ;
+    if ( v->isLinear() ) l.add ( v->getSequenceLength() , 10 , wxString::Format ( txt("f_orig") , v->getSequenceLength() ) ) ;
     for ( int a = 0 ; a < ai.GetCount() ; a++ )
     {
         l.add ( ai[a] , 100 ) ;
