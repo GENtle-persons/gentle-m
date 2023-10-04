@@ -60,52 +60,55 @@ void TRestrictionIdentifier::initme ()
 //    wxBoxSizer *h3 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *v = new wxBoxSizer ( wxVERTICAL ) ;
 
-    dna_list = new wxCheckListBox ( this , RI_DNA_LIST ) ;
-    bp_list = new wxChoice ( this , RI_MIN_BP ) ;
+    dna_list     = new wxCheckListBox ( this , RI_DNA_LIST ) ;
+    bp_list      = new wxChoice ( this , RI_MIN_BP ) ;
     percent_list = new wxChoice ( this , RI_MIN_PERCENT ) ;
-    group_list = new wxChoice ( this , RI_GROUP ) ;
+    group_list   = new wxChoice ( this , RI_GROUP ) ;
     enzymes_list = new wxListBox ( this , RI_ENZYMES_LIST ) ;
 
-    h1->Add ( new wxStaticText(this,-1,txt("t_minumum")+_T(" ")) , 0 , wxEXPAND , 2 ) ;
-    h1->Add ( bp_list , 0 , wxEXPAND , 2 ) ;
-    h1->Add ( new wxStaticText(this,-1,txt("t_bp")) , 0 , wxEXPAND , 2 ) ;
+    h1->Add ( new wxStaticText(this,-1,txt("t_minumum")+" ") ,  0 , wxEXPAND , 2 ) ;
+    h1->Add ( bp_list ,                                         0 , wxEXPAND , 2 ) ;
+    h1->Add ( new wxStaticText(this,-1,txt("t_bp")) ,           0 , wxEXPAND , 2 ) ;
 
-    h2->Add ( new wxStaticText(this,-1,txt("t_minumum")+_T(" ")) , 0 , wxEXPAND , 2 ) ;
-    h2->Add ( percent_list , 0 , wxEXPAND , 2 ) ;
-    h2->Add ( new wxStaticText(this,-1,_T("%")) , 0 , wxEXPAND , 2 ) ;
+    h2->Add ( new wxStaticText(this,-1,txt("t_minumum")+" ") ,  0 , wxEXPAND , 2 ) ;
+    h2->Add ( percent_list ,                                    0 , wxEXPAND , 2 ) ;
+    h2->Add ( new wxStaticText(this,-1,_T("%")) ,               0 , wxEXPAND , 2 ) ;
 
 //    h3->Add ( new wxStaticText(this,-1,txt("enzyme_groups")+_T(" ")) , 0 , wxEXPAND , 2 ) ;
 //    h3->Add ( group_list , 0 , wxEXPAND , 2 ) ;
 
     v->Add ( new wxStaticText(this,-1,txt("band_difference")) , 0 , wxEXPAND , 2 ) ;
-    v->Add ( h1 , 0 , wxEXPAND , 2 ) ;
-    v->Add ( h2 , 0 , wxEXPAND , 2 ) ;
+    v->Add ( h1 ,                                               0 , wxEXPAND , 2 ) ;
+    v->Add ( h2 ,                                               0 , wxEXPAND , 2 ) ;
 //    v->Add ( h3 , 0 , wxEXPAND , 5 ) ;
 
-    v->Add ( new wxStaticText(this,-1,txt("enzyme_groups")) , 0 , wxEXPAND , 2 ) ;
-    v->Add ( group_list , 0 , wxEXPAND , 2 ) ;
+    v->Add ( new wxStaticText(this,-1,txt("enzyme_groups")) ,   0 , wxEXPAND , 2 ) ;
+    v->Add ( group_list ,                                       0 , wxEXPAND , 2 ) ;
 
-    v->Add ( enzymes_list , 2 , wxEXPAND , 2 ) ;
-    v->Add ( dna_list , 1 , wxEXPAND , 2 ) ;
+    v->Add ( enzymes_list ,                                     2 , wxEXPAND , 2 ) ;
+    v->Add ( dna_list ,                                         1 , wxEXPAND , 2 ) ;
 
-    main->Add ( v , 0 , wxEXPAND , 2 ) ;
-    main->Add ( right , 1 , wxEXPAND , 2 ) ;
-
-	wxBoxSizer *vs = new wxBoxSizer ( wxVERTICAL ) ;
-    vs->Add ( toolbar , 0 , wxEXPAND , 2 ) ;
-	vs->Add ( main , 1 , wxEXPAND , 2 ) ;
+    main->Add ( v ,                                             0 , wxEXPAND , 2 ) ;
+    //main->Add ( virtualGel ,                                  1 , wxEXPAND , 2 ) ;
+    main->Add ( right ,                                         1 , wxEXPAND , 2 ) ;
 
 
-    int a ;
+    wxBoxSizer *vs = new wxBoxSizer (wxVERTICAL) ;
+    vs->Add ( toolbar ,                                         1 , wxEXPAND , 2 ) ;
+    vs->Add ( main ,                                            1 , wxEXPAND , 2 ) ;
+
 
     // Init bp/% lists
-    for ( a = 0 ; a < 51 ; a++ ) percent_list->Append ( wxString::Format ( _T("%2d") , a ) ) ;
-    bp_list->Append ( _T("0") ) ;
-    bp_list->Append ( _T("20") ) ;
-    bp_list->Append ( _T("50") ) ;
-    bp_list->Append ( _T("100") ) ;
-    bp_list->Append ( _T("200") ) ;
-    bp_list->Append ( _T("500") ) ;
+    for ( int a = 0 ; a < 51 ; a++ )
+	{
+        percent_list->Append ( wxString::Format ( "%2d" , a ) ) ;
+	}
+    bp_list->Append ( "0" ) ;
+    bp_list->Append ( "20" ) ;
+    bp_list->Append ( "50" ) ;
+    bp_list->Append ( "100" ) ;
+    bp_list->Append ( "200" ) ;
+    bp_list->Append ( "500" ) ;
     percent_list->SetSelection ( 10 ) ;
     bp_list->SetSelection ( 2 ) ;
 
@@ -113,19 +116,18 @@ void TRestrictionIdentifier::initme ()
     wxArrayString as ;
     myapp()->frame->LS->getEnzymeGroups ( as ) ;
     group_list->Append ( txt("All") ) ;
-    for ( a = 0 ; a < as.GetCount() ; a++ )
-    {
+    for ( int a = 0 ; a < as.GetCount() ; a++ )
+        {
         group_list->Append ( as[a] ) ;
-    }
+        }
     group_list->SetSelection ( 0 ) ;
 
     // Init dna list
     listDNA() ;
 
-	this->SetSizer ( vs ) ;
-	vs->Fit ( this ) ;
+    SetSizerAndFit ( vs ) ;
 
-//	for ( a = 0 ; a < dna_list->GetCount() ; a++ ) dna_list->Check ( a , true ) ;
+    //for ( int a = 0 ; a < dna_list->GetCount() ; a++ ) dna_list->Check ( a , true ) ;
     recalcEnzymes() ;
     running = true ;
 }
@@ -192,7 +194,7 @@ void TRestrictionIdentifier::addRestrictionLane ( wxString en , TVector *v )
 {
     wxArrayInt ai = getRestrictionFragments ( en , v ) ;
     TGelLane l ;
-    if ( v->isLinear() ) l.add ( v->getSequenceLength() , 10 , wxString::Format ( txt("orig") , v->getSequenceLength() ) ) ;
+    if ( v->isLinear() ) l.add ( v->getSequenceLength() , 10 , wxString::Format ( txt("f_orig") , v->getSequenceLength() ) ) ;
     for ( int a = 0 ; a < ai.GetCount() ; a++ )
     {
         l.add ( ai[a] , 100 ) ;

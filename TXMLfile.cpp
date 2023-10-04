@@ -219,8 +219,8 @@ void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
     	}
     if ( i.name.IsEmpty() )
         {
-        char u[100] ;
-        sprintf ( u , "short_itemtype%d" , i.getType() ) ;
+        char u[100+42] ;
+        snprintf ( u , sizeof(u)-1, "short_itemtype%d" , i.getType() ) ;
         i.name = txt(u);
         wxString d2 = i.desc ;
         int k = d2.find ( _T("\n") ) ;

@@ -26,8 +26,8 @@ class TGenBank
     public :
     TGenBank () ;
     ~TGenBank () ;
-    void load ( wxString s ) ;
-    void paste ( wxString s ) ;
+    void load ( const wxString& s ) ;
+    void paste ( const wxString& s ) ;
     void remap ( TVector *v ) ;
     void remap ( TVector *v , const wxArrayString &vs , const wxArrayInt &vi ) ;
     void doExport ( TVector *v , wxArrayString &ex ) ;

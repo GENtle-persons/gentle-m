@@ -462,17 +462,17 @@ string pred_coils(char *seq,char *ident,char *title,struct hept_pref *h,int win,
 			else ret += seq[i] ;//{ printf("%c",seq[i]); }
 			if(((i+1)%60)==0) ret += "\n" ; //{ printf("\n"); }
 		} else if(mode==0) {
-			sprintf(tmp,"%4d %c %c %7.3f %7.3f (%7.3f %7.3f)\n",i+1,seq[i],hept_seq[i],score[i],P[i],Gcc,Gg);
+			snprintf(tmp,sizeof(tmp)-1,"%4d %c %c %7.3f %7.3f (%7.3f %7.3f)\n",i+1,seq[i],hept_seq[i],score[i],P[i],Gcc,Gg);
 			ret += tmp ;
 		}
 	}
 	if(mode==1) { printf("\n"); }
         if((mode==2) && (are_there_coils==1) && (total_coil_segments>=min_seg)) {
 		if(total_coil_segments==1) {
-			sprintf(tmp,"Pred %4d coil segment  : %s %s\n",total_coil_segments,ident,title);
+			snprintf(tmp,sizeof(tmp)-1,"Pred %4d coil segment  : %s %s\n",total_coil_segments,ident,title);
 //			ret += tmp ;
 		} else {
-			sprintf(tmp,"Pred %4d coil segments : %s %s\n",total_coil_segments,ident,title);
+			snprintf(tmp,sizeof(tmp)-1,"Pred %4d coil segments : %s %s\n",total_coil_segments,ident,title);
 //			ret += tmp ;
 		}
 	}

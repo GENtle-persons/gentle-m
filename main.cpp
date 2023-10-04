@@ -50,6 +50,8 @@
 #include <wx/splash.h>
 #include <wx/filesys.h>
 #include <wx/file.h>
+#include <wx/filefn.h> // wxCopyFile
+#include <wx/filename.h> // wxFileExists
 
 #ifdef __WXMSW__
 #include "wx/msw/registry.h"
@@ -60,97 +62,28 @@ using namespace std ;
 
 IMPLEMENT_APP(MyApp)
 
-#include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
-WX_DEFINE_OBJARRAY(wxArrayFloat);
-
-// GLOBAL FUNCTIONS
-int cmpint(int *first, int *second)
-    {
-    return *first > *second ;
-    }
-
-int cmpre(TRestrictionEnzyme *first, TRestrictionEnzyme *second)
-    {
-    return first > second ; //????
-    }
-
-void wxStringInsert ( wxString &s , int from , wxString t )
-    {
-    s = s.Mid ( 0 , from ) + t + s.Mid ( from ) ;
-    }
-
-void explode ( wxString sep , wxString s , wxArrayString &r )
-    {
-    int a , b ;
-    wxString n ;
-    r.Clear () ;
-    for ( a = 0 ; a + sep.Length() <= s.Length() ; a++ )
-        {
-        for ( b = 0 ; b < sep.Length() && s.GetChar(a+b) == sep.GetChar(b) ; b++ ) ;
-        if ( b == sep.Length() )
-           {
-           r.Add ( n ) ;
-           n = _T("") ;
-           }
-        else n += s.GetChar(a) ;
-        }
-    if ( !n.IsEmpty() ) r.Add ( n ) ;
-    }
-
-wxString implode ( wxString sep , wxArrayString &r )
-	{
-	if ( r.GetCount() == 0 ) return _T("") ;
-	wxString ret = r[0] ;
-	for ( int a = 1 ; a < r.GetCount() ; a++ )
-		ret += sep + r[a] ;
-	return ret ;
-	}
-
-const wxString txt ( const char * const item )
-	{
-	return txt ( wxString(item,wxConvUTF8) ) ;
-	}
-
-const wxString txt ( wxString item )
-    {
-#ifndef __WXMSW__
-	 if ( item.MakeUpper().Left(2) == _T("M_") )
-	 {
-		wxString s = myapp()->_text[item.MakeUpper()].Trim() ;
-#ifdef __WXMAC__
-		s.Replace ( _T("\tStrg-") , _T("\tCtrl-") ) ; // DE fix
-#endif
-		return s ;
-	 }
-#endif
-    return myapp()->_text[item.MakeUpper()] ;
-    }
-
-// END GLOBAL FUNCTIONS
-
-
 void MyApp::registerFileExtension ( const wxString& extension )
     {
 #ifdef __WXMSW__
     wxRegKey regKey;
-    wxString idName(_T("HKEY_CLASSES_ROOT\\.")+extension);
+    wxString idName("HKEY_CLASSES_ROOT\\."+extension);
     regKey.SetName(idName);
 
     if ( !regKey.Exists() )
         {
         regKey.Create() ;
-        regKey.SetValue ( _T("") , extension + _T("file") ) ;
+        regKey.SetValue ( "" , extension + "file" ) ;
         }
 
-    wxString s = _T("") , t = regKey ;
-    s += _T("HKEY_CLASSES_ROOT\\") ;
+    wxString s = "" , t = regKey ;
+    s += "HKEY_CLASSES_ROOT\\" ;
     s += t ;
-    s += _T("\\shell\\open\\command") ;
+    s += "\\shell\\open\\command" ;
     regKey.SetName ( s ) ;
 
     if ( !regKey.Exists() ) regKey.Create () ;
 
-    regKey.SetValue ( _T("") , _T("\"") + wxString ( myapp()->argv[0] ) + _T("\" \"%1\"") ) ;
+    regKey.SetValue ( "" , "\"" + wxString ( myapp()->argv[0] ) + "\" \"%1\"")  ;
 #else
 #endif
     }
@@ -159,25 +92,25 @@ void MyApp::registerProtocol ( const wxString& extension )
     {
 #ifdef __WXMSW__
     wxRegKey regKey;
-    wxString idName(_T("HKEY_CLASSES_ROOT\\")+extension);
+    wxString idName("HKEY_CLASSES_ROOT\\"+extension);
     regKey.SetName(idName);
 
     if ( !regKey.Exists() )
         {
         regKey.Create () ;
-        regKey.SetValue ( _T("") , _T("URL: GENtle Protocol") ) ;
-        regKey.SetValue ( _T("URL Protocol") , _T("") ) ;
+        regKey.SetValue ( "" , "URL: GENtle Protocol" ) ;
+        regKey.SetValue ( "URL Protocol" , "" ) ;
         }
 
     wxString s , t = regKey ;
-    s += _T("HKEY_CLASSES_ROOT\\") ;
-	 s += extension ;
-    s += _T("\\shell\\open\\command") ;
+    s += "HKEY_CLASSES_ROOT\\" ;
+    s += extension ;
+    s += "\\shell\\open\\command" ;
     regKey.SetName ( s ) ;
 
     if ( !regKey.Exists() ) regKey.Create () ;
 
-    regKey.SetValue ( _T("") , _T("\"") + wxString ( myapp()->argv[0] ) + _T("\" \"%1\"") ) ;
+    regKey.SetValue ( "" , "\"" + wxString ( myapp()->argv[0] ) + "\" \"%1\"" ) ;
 #else
 #endif
     }
@@ -207,27 +140,63 @@ MyApp *myapp ()
 	* - Registers file extensions
 */
 bool MyApp::OnInit()
-{
-   isoconv = new wxCSConv ( _T("iso-8859-1") ) ;
-   wxConvCurrent = isoconv ;
-   errout = NULL ;
-   total_log_time = 0 ;
-   total_log_counter = 0 ;
+    {
+    // Handling command-line arguments
+    for(int i=1; i<argc; i++)
+        {
+        if (0==strcmp("--version",argv[i]) || 0==strcmp("-v",argv[i]) ) 
+            {
+            wxPrintf("%s\n",get_GENtle_version());
+	    exit(0);
+ 	    }
+        else if (0==strcmp("--help",argv[i]) || 0==strcmp("-h",argv[i]))
+ 	    {
+            wxPrintf("%s","Please see the GENtle man page for help.\n");
+	    exit(0);
+ 	    }
+        else if (0==strcmp("--help",argv[i]) || 0==strcmp("-h",argv[i]))
+ 	    {
+            wxPrintf("%s","Unknown option '%s'.\n",argv[i]);
+	    exit(1);
+ 	    }
+	}
+
+    isoconv = new wxCSConv ( "iso-8859-1" ) ;
+    wxConvCurrent = isoconv ;
+    errout = NULL ;
+    total_log_time = 0 ;
+    total_log_counter = 0 ;
 #ifdef MYLOG
     wxStartTimer() ;
 #endif
 
-	wxString s1 , s2 ;
-	wxFileName::SplitPath ( argv[0] , &homedir , &s1 , &s2 ) ;
 
-#ifdef __WXMSW__
-   if ( homedir.IsEmpty() ) homedir = wxGetCwd() ;
+#ifdef __DEBIAN__
+    homedir.AssignDir("/usr/share/gentle") ;
+#elif defined __WXMSW__ || defined __WXMAC__
+    wxString h, s1 , s2 ;
+    wxFileName::SplitPath ( argv[0] , &h, &s1 , &s2 ) ;
+    if ( h.IsEmpty() )
+        {
+	homedir.AssignCwd() ;
+	}
+    else
+        {
+	//h.MakeAbsolute() ;
+	homedir.Assign(h) ;
+	}
+#endif
+
+//FIXME: Unfortunate - why differ from Windows?
+#ifdef __WXMAC__
+   if (wxNOT_FOUND != homedir.GetFullPath().Find( wxFileName::GetPathSeparator() )) {
+       homedir.AssignDir(homedir.GetFullPath().BeforeLast ( '/' ) ) ;
+   }
+   //FIXME: Why?
+   //homedir += "/Resources" ;
 #endif
 
 #ifdef __WXMAC__
-   homedir = homedir.BeforeLast ( '/' ) ;
-   homedir += _T("/Resources") ;
-
    wxApp::s_macAboutMenuItemId = MDI_ABOUT;
    wxApp::s_macPreferencesMenuItemId = PROGRAM_OPTIONS;
    wxApp::s_macExitMenuItemId = MDI_QUIT;
@@ -235,30 +204,26 @@ bool MyApp::OnInit()
 
 #endif
 
-#ifdef __DEBIAN__
-	homedir = _T("/usr/share/gentle") ;
-#endif
 
    wxInitAllImageHandlers() ;
    wxFileSystem::AddHandler ( new wxInternetFSHandler ) ;
 
-   wxSetWorkingDirectory ( homedir ) ; // Setting home directory as working dir
+   wxSetWorkingDirectory ( homedir.GetFullPath() ) ; // Setting home directory as working dir
 
-	// Setting ncoils dir as an environment variable
+   // Setting ncoils dir as an environment variable
    wxString ncoilsdir ;
-   ncoilsdir = _T("COILSDIR=") ;
-   ncoilsdir += homedir ;
+   ncoilsdir = "COILSDIR=" ;
+   ncoilsdir += homedir.GetFullPath() ;
 
 #ifdef __WXMAC__
-	if ( wxGetEnv ( _T("COILSDIR") , NULL ) ) wxUnsetEnv ( _T("COILSDIR") ) ;
-	wxSetEnv ( _T("COILSDIR") , homedir ) ;
+   if ( wxGetEnv ( "COILSDIR" , NULL ) ) wxUnsetEnv ( "COILSDIR" ) ;
+   wxSetEnv ( "COILSDIR" , homedir.GetFullPath() ) ;
 #else
-	setenv ( "COILSDIR" , homedir.c_str() , 1 ) ;
+   setenv ( "COILSDIR" , homedir.GetFullPath().c_str() , 1 ) ;
 #endif
 
-
     // Is an instance already running?
-    const wxString name = wxString::Format ( _T("GENtle-%s") , wxGetUserId().c_str());
+    const wxString name = wxString::Format ( "GENtle-%s" , wxGetUserId().c_str());
     m_checker = new wxSingleInstanceChecker (name);
     if ( m_checker->IsAnotherRunning() )
     {
@@ -271,56 +236,53 @@ bool MyApp::OnInit()
 
     wxFileSystem::AddHandler(new wxInternetFSHandler);
 
-    // Create the main frame window
-#ifdef __WXMSW__
-    slash = _T("\\") ;
-#else
-    slash = _T("/") ;
-#endif
+    bmpdir.AssignDir(homedir.GetFullPath() + wxFileName::GetPathSeparator() + "bitmaps") ;
+    wxPrintf("D: Assigned bmpdir to '%s'\n",bmpdir.GetFullPath());
+    if ( !wxDirExists ( bmpdir.GetFullPath() ) )
+        {
+	    wxPrintf("E: Could not find bitmap directory expected at '%s'.\n",bmpdir.GetFullPath());
+	}
 
-#ifdef __WXMAC__
-	bmpdir = homedir ;
-#else
-    bmpdir = homedir + slash + _T("bitmaps") ;
-#endif
-
-	// Make sure local database exists
+    // Make sure local database exists
     wxString localdb , blankdb ;
     localdb = getLocalDBname() ;
-    blankdb = homedir + slash + _T("blank.db") ;
+    blankdb = homedir.GetFullPath() + wxFileName::GetPathSeparator() + "blank.db" ;
     wxLogNull logNo; // Suppress error message
     if ( !wxFileExists ( localdb ) && wxFileExists ( blankdb ) )
-    	{
-		wxCopyFile ( blankdb , localdb ) ;
-		}
+        {
+        wxCopyFile ( blankdb , localdb ) ;
+        }
 
-	// Check is local.db exists and is writable
-	bool local_ok = true ;
-	if ( !wxFileExists ( localdb ) ) local_ok = false ;
-	else
-		{
-		wxFile test ( localdb , wxFile::write_append ) ;
-		if ( !test.IsOpened() ) local_ok = false ;
-		}
-	if ( !local_ok )
-		{
-		theRealLocalDb = wxGetHomeDir() + myapp()->slash + _T("local.db") ;
-		localdb = theRealLocalDb ;
-		if ( !wxFileExists ( localdb ) )
-			{
-			wxCopyFile ( blankdb , localdb ) ;
-			}
-		else local_ok = true ;
-		}
+    // Check is local.db exists and is writable
+    bool local_ok = true ;
+    if ( !wxFileExists ( localdb ) )
+            local_ok = false ;
+    else
+        {
+        wxFile test ( localdb , wxFile::write_append ) ;
+        if ( !test.IsOpened() )
+	    local_ok = false ;
+        }
 
-	frame = new MyFrame((wxFrame *)NULL, -1, _T(""),
+    if ( !local_ok )
+        {
+        theRealLocalDb = wxGetHomeDir() + wxFileName::GetPathSeparator() + "local.db" ;
+        localdb = theRealLocalDb ;
+        if ( !wxFileExists ( localdb ) )
+            {
+            wxCopyFile ( blankdb , localdb ) ;
+            }
+        else local_ok = true ;
+        }
+
+    frame = new MyFrame((wxFrame *)NULL, -1, "",
                         wxPoint(-1, -1), wxSize(500, 400),
                         wxDEFAULT_FRAME_STYLE );
     frame->initme () ;
     if ( frame->dying ) return FALSE ;
     SetTopWindow(frame);
 
-	if ( clp[_T("no-splash-screen")] == _T("1") )
+	if ( clp[_T("no-splash-screen")] == "1" )
 		frame->showSplashScreen = false ;
 
 	if ( !local_ok )
@@ -330,14 +292,14 @@ bool MyApp::OnInit()
     if ( frame->showSplashScreen )
         {
         wxBitmap bitmap;
-        wxString bmpfile = bmpdir + slash + _T("splash.bmp") ;
+        wxString bmpfile = bmpdir.GetFullPath() + wxFileName::GetPathSeparator() + "splash.bmp" ;
         if (bitmap.LoadFile(bmpfile, wxBITMAP_TYPE_BMP))
             {
             //wxSplashScreen* splash =
-			new wxSplashScreen(bitmap,
-            wxSPLASH_CENTRE_ON_SCREEN|wxSPLASH_TIMEOUT,
-            2500, NULL, -1, wxDefaultPosition, wxDefaultSize,
-            wxSIMPLE_BORDER|wxSTAY_ON_TOP);
+            new wxSplashScreen(bitmap,
+                               wxSPLASH_CENTRE_ON_SCREEN|wxSPLASH_TIMEOUT,
+                               2500, NULL, -1, wxDefaultPosition, wxDefaultSize,
+                               wxSIMPLE_BORDER|wxSTAY_ON_TOP);
             }
         wxYield();
         }
@@ -346,15 +308,15 @@ bool MyApp::OnInit()
     // to get the state of the !"$%& show-again-checkbox
     bool showTip = frame->LS->getOption ( _T("SHOWTIP") , true ) ;
 
-	if ( clp[_T("no-tips")] == _T("1") )
-		showTip = false ;
+    if ( clp["no-tips"] == "1" )
+        showTip = false ;
 
     if ( showTip )
         {
         int tip = frame->LS->getOption ( _T("NEXTTIP") , 0 ) ;
-        wxString tipfile = _T("tips_") ;
+        wxString tipfile = "tips_" ;
         tipfile += frame->lang_string ;
-        tipfile += _T(".txt") ;
+        tipfile += ".txt" ;
         wxTipProvider *tipProvider = wxCreateFileTipProvider(tipfile, tip);
         showTip = wxShowTip(frame, tipProvider, showTip);
 //        showTip = tipProvider->ShowTipsOnStartup() ;
@@ -367,41 +329,39 @@ bool MyApp::OnInit()
 
     if ( frame->doRegisterStuff )
     	{
-        registerFileExtension ( _T("gb") ) ;
-        registerFileExtension ( _T("genbank") ) ;
-        registerFileExtension ( _T("gbxml") ) ;
-        registerFileExtension ( _T("fasta") ) ;
-        registerFileExtension ( _T("clone") ) ;
-        registerFileExtension ( _T("abi") ) ;
-        registerFileExtension ( _T("ab1") ) ;
-        registerFileExtension ( _T("seq") ) ;
-        registerFileExtension ( _T("gcg") ) ;
-        registerFileExtension ( _T("codata") ) ;
-        registerFileExtension ( _T("NBRF_PIR") ) ;
-        registerFileExtension ( _T("swissprot") ) ;
-        registerProtocol ( _T("gentle") ) ;
+        registerFileExtension ( "gb") ;
+        registerFileExtension ( "genbank") ;
+        registerFileExtension ( "gbxml") ;
+        registerFileExtension ( "fasta") ;
+        registerFileExtension ( "clone") ;
+        registerFileExtension ( "abi") ;
+        registerFileExtension ( "ab1") ;
+        registerFileExtension ( "seq") ;
+        registerFileExtension ( "gcg") ;
+        registerFileExtension ( "codata") ;
+        registerFileExtension ( "NBRF_PIR") ;
+        registerFileExtension ( "swissprot") ;
+        registerProtocol ( "gentle") ;
         }
 
     return TRUE;
-}
+    }
 
 wxString MyApp::getLocalDBname ()
-	{
-	if ( !theRealLocalDb.IsEmpty() ) return theRealLocalDb ;
+    {
+    if ( !theRealLocalDb.IsEmpty() ) return theRealLocalDb ;
 #ifdef __WXMAC__
-	theRealLocalDb = wxGetHomeDir() + myapp()->slash + _T("local.db") ;
+    theRealLocalDb = wxGetHomeDir() + wxFileName::GetPathSeparator() + "local.db" ;
 #else
-	theRealLocalDb = myapp()->homedir + myapp()->slash + _T("local.db") ;
+    theRealLocalDb = myapp()->homedir.GetFullPath() + wxFileName::GetPathSeparator() + "local.db" ;
 #endif
-	return theRealLocalDb ;
-	}
+    return theRealLocalDb ;
+    }
 
 wxString MyApp::get_GENtle_version ()
-	{
- 	return wxString::Format ( _T("%d.%d.%d") , GENTLE_VERSION_MAJOR ,
-  											GENTLE_VERSION_MINOR ,
-  											GENTLE_VERSION_SUB ) ;
-	}
+    {
+    return wxString::Format ( "%d.%d.%d" , GENTLE_VERSION_MAJOR , GENTLE_VERSION_MINOR , GENTLE_VERSION_SUB ) ;
+    }
 
 /**	\fn MyApp::OnExit ()
 	\brief Exits the application.
@@ -412,21 +372,21 @@ wxString MyApp::get_GENtle_version ()
 int MyApp::OnExit ()
     {
 #ifdef MYLOG
-    logout->Write ( _T("Total log time : ") + wxString::Format ( _T("%d ms") , total_log_time ) + _T("\n") ) ;
+    logout->Write ( _T("Total log time : ") + wxString::Format ( "%d ms" , total_log_time ) + "\n" ) ;
     logout->Flush() ;
 #endif
     delete m_checker;
-	return wxApp::OnExit () ;
+    return wxApp::OnExit () ;
 //    return 0;
     }
 
 void MyApp::launchBrowser ( wxString url )
-	{
+    {
 //	wxMessageBox ( url ) ;
 //	if ( wxLaunchDefaultBrowser ( url ) ) return ;
     wxString command = myapp()->getHTMLCommand ( url ) ;
     wxExecute ( command ) ;
-	}
+    }
 
 /**	\fn MyApp::getHTMLCommand ( wxString command )
 	\brief Returns the command line to invoke the browser.
@@ -435,31 +395,31 @@ void MyApp::launchBrowser ( wxString url )
 wxString MyApp::getHTMLCommand ( wxString command )
     {
 #ifdef __WXMAC__
-	return _T("open ") + command ;
+    return "open " + command ;
 #endif
     wxString ret ;
-    ret = getFileFormatCommand ( command , _T("html") ) ;
-    if ( ret.IsEmpty() ) ret = getFileFormatCommand ( command , _T("htm") ) ;
+    ret = getFileFormatCommand ( command , "html" ) ;
+    if ( ret.IsEmpty() ) ret = getFileFormatCommand ( command , "htm" ) ;
     if ( !ret.IsEmpty() ) return ret ;
 
 // Fallback
 #ifdef __WXMSW__
     wxRegKey regKey;
-    wxString idName(_T("HKEY_CLASSES_ROOT\\.html"));
+    wxString idName("HKEY_CLASSES_ROOT\\.html");
     regKey.SetName(idName);
     wxString s , t = regKey ;
-    s += _T("HKEY_CLASSES_ROOT\\") ;
+    s += "HKEY_CLASSES_ROOT\\" ;
     s += t ;
-    s += _T("\\shell\\open\\command") ;
+    s += "\\shell\\open\\command" ;
     regKey.SetName ( s ) ;
     wxString q = regKey ;
     regKey.Close();
-    q.Replace ( _T("-nohome") , _T("") ) ;
-    if ( 0 == q.Replace ( wxString ( _T("%1") ) , command ) )
-        q += _T(" \"") + command + _T("\"") ;
+    q.Replace ( "-nohome" , "" ) ;
+    if ( 0 == q.Replace ( wxString ( "%1" ) , command ) )
+        q += " \"" + command + "\"" ;
     return q ;
 #else
-    return _T("") ;
+    return "" ;
 #endif
     }
 
@@ -471,7 +431,7 @@ wxString MyApp::getHTMLCommand ( wxString command )
 wxString MyApp::getFileFormatCommand ( wxString type , wxString file )
 	{
     wxFileType *ft = mtm.GetFileTypeFromExtension ( type ) ;
-    if ( !ft ) return _T("") ;
+    if ( !ft ) return "" ;
     return ft->GetOpenCommand ( file ) ;
 	}
 
@@ -483,20 +443,20 @@ wxString MyApp::getFileFormatApplication ( wxString type )
     {
 #ifdef __WXMSW__
     wxRegKey regKey;
-    wxString idName(_T("HKEY_CLASSES_ROOT\\."));
+    wxString idName("HKEY_CLASSES_ROOT\\.");
     idName += type ;
     regKey.SetName(idName);
     wxString s , t = regKey ;
-    s += _T("HKEY_CLASSES_ROOT\\") ;
+    s += "HKEY_CLASSES_ROOT\\" ;
     s += t ;
-    s += _T("\\shell\\open\\command") ;
+    s += "\\shell\\open\\command" ;
     regKey.SetName ( s ) ;
     wxString q = regKey ;
     regKey.Close();
-    q.Replace ( wxString ( _T("%1") ) , _T("") ) ;
+    q.Replace ( wxString ( "%1" ) , "" ) ;
     return q ;
 #else
-    return _T("") ;
+    return "" ;
 #endif
     }
 
@@ -513,8 +473,8 @@ wxString MyApp::getFileFormatApplication ( wxString type )
 void MyApp::do_my_ass ( bool b , wxString msg )
     {
     if ( b ) return ;
-    if ( !errout ) errout = new wxFile ( _T("ERROR.txt") , wxFile::write ) ;
-    errout->Write ( msg + _T("\n") ) ;
+    if ( !errout ) errout = new wxFile ( "ERROR.txt" , wxFile::write ) ;
+    errout->Write ( msg + "\n" ) ;
     errout->Flush() ;
     }
 
@@ -531,18 +491,18 @@ void MyApp::do_my_ass ( bool b , wxString msg )
 */
 void MyApp::do_my_log ( wxString function , wxString msg )
     {
-    if ( !logout ) logout = new wxFile ( _T("LOG.txt") , wxFile::write ) ;
+    if ( !logout ) logout = new wxFile ( "LOG.txt" , wxFile::write ) ;
     if ( total_log_counter > 5000 )
     	{
 	    logout->Close () ;
-	    logout->Open ( _T("LOG.txt") , wxFile::write ) ;
+	    logout->Open ( "LOG.txt" , wxFile::write ) ;
 	    total_log_counter = 0 ;
     	}
     total_log_counter++ ;
 
     int i = sw.Time() ;
     total_log_time += i ;
-    logout->Write ( function + _T(" : ") + msg + _T(" (") + wxString::Format ( _T("%d ms") , i ) + _T(")\n") ) ;
+    logout->Write ( function + " : " + msg + " (" + wxString::Format ( "%d ms" , i ) + ")\n" ) ;
     logout->Flush() ;
     }
 
@@ -556,7 +516,7 @@ void MyApp::do_my_log ( wxString function , wxString msg )
 void MyApp::init_txt ( wxString lang , wxString csv , wxHashString *target , int ln )
     {
     if ( !target ) target = &_text ;
-    wxTextFile in ( myapp()->homedir + _T("/") + csv) ;
+    wxTextFile in ( myapp()->homedir.GetFullPath() + wxFileName::GetPathSeparator() + csv) ;
     in.Open ( wxConvUTF8 ) ;
 //    in.Open ( *isoconv ) ;
 //    unsigned char t[10000] ;
@@ -573,45 +533,45 @@ void MyApp::init_txt ( wxString lang , wxString csv , wxHashString *target , int
 
     for ( int lc = 0 ; lc < in.GetLineCount() ; lc++ )
         {
-		wxString s = in[lc] ;
-		if ( s.IsEmpty() ) continue ; // Blank line
-		wxArrayString v ;
-		s.Replace ( _T("\\t") , _T("\t") ) ;
-		s.Replace ( _T("\\n") , _T("\n") ) ;
-		s = s.Mid ( 1 ) ; // Get rid of initial "
-		while ( 1 )
+	wxString s = in[lc] ;
+	if ( s.IsEmpty() ) continue ; // Blank line
+	wxArrayString v ;
+	s.Replace ( "\\t" , "\t" ) ;
+	s.Replace ( "\\n" , "\n" ) ;
+	s = s.Mid ( 1 ) ; // Get rid of initial "
+	while ( 1 )
+            {
+            int f = s.Find ( "\",\"" ) ;
+            if ( f == -1 )
 			{
-			int f = s.Find ( _T("\",\"") ) ;
-			if ( f == -1 )
-				{
-				s = s.Left ( s.length()-1 ) ; // Get rid of final "
-				v.Add ( s ) ;
-				break ;
-				}
-			else
-				{
-				v.Add ( s.Left ( f ) ) ;
-				s = s.Mid ( f + 3 ) ;
-				}
+			s = s.Left ( s.length()-1 ) ; // Get rid of final "
+			v.Add ( s ) ;
+			break ;
 			}
+            else
+			{
+			v.Add ( s.Left ( f ) ) ;
+			s = s.Mid ( f + 3 ) ;
+			}
+            }
 
-		// Get key (firstline) or value
-        if ( firstline )
-           {
-           if ( frame->language_list.IsEmpty() )
+	// Get key (firstline) or value
+       if ( firstline )
+            {
+            if ( frame->language_list.IsEmpty() )
 		   	{
 			frame->language_list = v ;
 			frame->language_list.RemoveAt ( 0 ) ;
 			}
-           for ( int a = 0 ; a < v.GetCount() ; a++ )
-              if ( v[a].Upper() == lang.Upper() )
-                 ln = a ;
-           }
+            for ( int a = 0 ; a < v.GetCount() ; a++ )
+                if ( v[a].Upper() == lang.Upper() )
+                    ln = a ;
+            }
         else if ( v.GetCount() > ln )
-           {
-           if ( v[ln].Find ( '\t' ) > -1 ) v[ln] += _T(" ") ;
-           (*target)[v[0].MakeUpper()] = v[ln] ;
-           }
+            {
+            if ( v[ln].Find ( '\t' ) > -1 ) v[ln] += " " ;
+            (*target)[v[0].MakeUpper()] = v[ln] ;
+            }
         firstline = false ;
         }
     }

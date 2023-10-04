@@ -66,31 +66,30 @@ TVirtualGel::TVirtualGel(wxWindow *parent, const wxString& title)
     }
 
 void TVirtualGel::initme ()
-	{
-	// Menus
-	wxMenu *file_menu = myapp()->frame->getFileMenu () ;
-	wxMenu *tool_menu = myapp()->frame->getToolMenu () ;
-	wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
+    {
+    // Menus
+    wxMenu *file_menu = myapp()->frame->getFileMenu () ;
+    wxMenu *tool_menu = myapp()->frame->getToolMenu () ;
+    wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
 
-	wxMenuBar *menu_bar = new wxMenuBar;
+    wxMenuBar *menu_bar = new wxMenuBar;
 
-	menu_bar->Append(file_menu, txt("m_file") );
-	menu_bar->Append(tool_menu, txt("m_tools") );
-	menu_bar->Append(help_menu, txt("m_help") );
+    menu_bar->Append(file_menu, txt("m_file") );
+    menu_bar->Append(tool_menu, txt("m_tools") );
+    menu_bar->Append(help_menu, txt("m_help") );
 
-	SetMenuBar(menu_bar);
+    SetMenuBar(menu_bar);
 
-	right = new TMyGelControl ( this , IV_IMAGE ) ;
-	right->vg = this ;
+    right = new TMyGelControl ( this , IV_IMAGE ) ;
+    right->vg = this ;
 
     wxToolBar *toolBar = CreateToolBar(wxTB_HORIZONTAL);
 
-	int a ;
-	//wxBoxSizer *hs = new wxBoxSizer ( wxHORIZONTAL ) ;
-	ch_percent = new wxChoice ( toolBar , VG_PERCENT , wxDefaultPosition , wxSize ( 80 , -1 ) ) ;
-	ch_marker = new wxChoice ( toolBar , VG_MARKER , wxDefaultPosition , wxSize ( 250 , -1 ) ) ;
-	cb_label = new wxCheckBox ( toolBar , VG_LABEL , txt("t_vg_show_label") ) ;
-	cb_label->SetValue ( true ) ;
+    //wxBoxSizer *hs = new wxBoxSizer ( wxHORIZONTAL ) ;
+    ch_percent = new wxChoice ( toolBar , VG_PERCENT , wxDefaultPosition , wxSize ( 80 , -1 ) ) ;
+    ch_marker = new wxChoice ( toolBar , VG_MARKER , wxDefaultPosition , wxSize ( 250 , -1 ) ) ;
+    cb_label = new wxCheckBox ( toolBar , VG_LABEL , txt("t_vg_show_label") ) ;
+    cb_label->SetValue ( true ) ;
 
 
     myapp()->frame->InitToolBar(toolBar);
@@ -104,53 +103,56 @@ void TVirtualGel::initme ()
     toolBar->AddControl ( ch_percent ) ;
     toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_vg_marker") ) ) ;
     toolBar->AddControl ( ch_marker ) ;
+
     myapp()->frame->addDefaultTools ( toolBar ) ;
     toolBar->Realize() ;
-	toolbar = toolBar ;
+
+    toolbar = toolBar ;
 
 
 /*
-	hs->Add ( cb_label , 0 , wxEXPAND , 5 ) ;
-	hs->Add ( new wxStaticText ( this , -1 , txt("t_vg_concentration") ) , 0 , wxEXPAND , 5 ) ;
-	hs->Add ( ch_percent , 0 , wxEXPAND , 5 ) ;
-	hs->Add ( new wxStaticText ( this , -1 , txt("t_vg_marker") ) , 0 , wxEXPAND , 5 ) ;
-	hs->Add ( ch_marker , 0 , wxEXPAND , 5 ) ;
+    hs->Add ( cb_label , 0 , wxEXPAND , 5 ) ;
+    hs->Add ( new wxStaticText ( this , -1 , txt("t_vg_concentration") ) , 0 , wxEXPAND , 5 ) ;
+    hs->Add ( ch_percent , 0 , wxEXPAND , 5 ) ;
+    hs->Add ( new wxStaticText ( this , -1 , txt("t_vg_marker") ) , 0 , wxEXPAND , 5 ) ;
+    hs->Add ( ch_marker , 0 , wxEXPAND , 5 ) ;
 */
 
-	wxBoxSizer *vs = new wxBoxSizer ( wxVERTICAL ) ;
+    wxBoxSizer* vs = new wxBoxSizer ( wxVERTICAL ) ;
     vs->Add ( toolBar , 0 , wxEXPAND , 5 ) ;
-	vs->Add ( right , 1 , wxEXPAND , 5 ) ;
+    vs->Add ( right , 1 , wxEXPAND , 5 ) ;
 
-	myapp()->frame->setChild ( this ) ;
+    myapp()->frame->setChild ( this ) ;
 
-	if ( type == _T("DNA") )
-		{
-		for ( a = 3 ; a <= 30 ; a++ )
-		ch_percent->Append ( wxString::Format ( _T("%1.1f %%") , ((float)a)/10.0 ) ) ;
-		ch_percent->SetStringSelection ( _T("1.0 %") ) ;
+    if ( type == _T("DNA") )
+        {
+        for ( int a = 3 ; a <= 30 ; a++ )
+            ch_percent->Append ( wxString::Format ( _T("%1.1f %%") , ((float)a)/10.0 ) ) ;
+        ch_percent->SetStringSelection ( _T("1.0 %") ) ;
 
-			for ( a = 0 ; a < myapp()->frame->dna_marker.GetCount() ; a++ )
-			{
-				ch_marker->Append ( myapp()->frame->dna_marker[a].BeforeFirst(':') ) ;
-			}
+        for ( int a = 0 ; a < myapp()->frame->dna_marker.GetCount() ; a++ )
+            {
+            ch_marker->Append ( myapp()->frame->dna_marker[a].BeforeFirst(':') ) ;
+            }
 
 
-			wxString mbf = _T("??") ;
-			if ( myapp()->frame && ( myapp()->frame->dna_marker.size() > 0 ) )
-			{
-				mbf = myapp()->frame->dna_marker[0].BeforeFirst(':') ;
-			}
-			ch_marker->SetStringSelection ( myapp()->frame->LS->getOption ( _T("LASTDNAMARKER") , mbf ) ) ;
+        wxString mbf = _T("??") ;
+        if ( myapp()->frame && ( myapp()->frame->dna_marker.size() > 0 ) )
+            {
+            mbf = myapp()->frame->dna_marker[0].BeforeFirst(':') ;
+            }
+        ch_marker->SetStringSelection ( myapp()->frame->LS->getOption ( _T("LASTDNAMARKER") , mbf ) ) ;
 
-		lanes.push_back ( TGelLane() ) ;
-		lanes[0].setMarker ( ch_marker->GetStringSelection() ) ;
-		}
-
-	this->SetSizer ( vs ) ;
-	vs->Fit ( this ) ;
-	this->Show () ;
+        lanes.push_back ( TGelLane() ) ;
+        lanes[0].setMarker ( ch_marker->GetStringSelection() ) ;
+        }
+	
+    SetSizer(vs);
+//      SetSizerAndFit(vs);
+    Show () ;
     Activate () ;
-	}
+
+    }
 
 wxString TVirtualGel::getName ()
     {
@@ -158,26 +160,26 @@ wxString TVirtualGel::getName ()
     }
 
 void TVirtualGel::OnPercent ( wxCommandEvent &ev )
-	{
-	Refresh () ;
-	}
+    {
+    Refresh () ;
+    }
 
 void TVirtualGel::OnPrint ( wxCommandEvent &ev )
-	{
+    {
     if ( right ) right->OnPrint ( ev ) ;
-	}
+    }
 
 void TVirtualGel::OnMarker ( wxCommandEvent &ev )
-	{
-	lanes[0].setMarker ( ch_marker->GetStringSelection() ) ;
-	myapp()->frame->LS->setOption ( _T("LASTDNAMARKER") , ch_marker->GetStringSelection() ) ;
-	Refresh () ;
-	}
+    {
+    lanes[0].setMarker ( ch_marker->GetStringSelection() ) ;
+    myapp()->frame->LS->setOption ( _T("LASTDNAMARKER") , ch_marker->GetStringSelection() ) ;
+    Refresh () ;
+    }
 
 void TVirtualGel::OnLabel ( wxCommandEvent &ev )
-	{
-	Refresh () ;
-	}
+    {
+    Refresh () ;
+    }
 
 
 // ****************************************************************
@@ -195,7 +197,7 @@ void TMyGelControl::OnDraw(wxDC& dc)
 
     // Initialize
     vg->ch_percent->GetStringSelection().ToDouble ( &vg->percent ) ;
-//    vg->percent /= 10.0 ;
+//  vg->percent /= 10.0 ;
 
     int a , b ;
     int w , h ;
@@ -205,18 +207,18 @@ void TMyGelControl::OnDraw(wxDC& dc)
 
     if ( printing )
     	{
-	    w = w > h ? h : w ; // smallest side
-	    w /= 2 ; // half of it
-	    h = w ;
-	    lw = w / ( vg->lanes.size() > 6 ? vg->lanes.size() : 6 ) ; // min 6 lanes
-	    dc.SetDeviceOrigin ( w / 2 , h / 2 ) ; // center it
-	    go = h / 10 ;
+	w = w > h ? h : w ; // smallest side
+	w /= 2 ; // half of it
+	h = w ;
+	lw = w / ( vg->lanes.size() > 6 ? vg->lanes.size() : 6 ) ; // min 6 lanes
+	dc.SetDeviceOrigin ( w / 2 , h / 2 ) ; // center it
+	go = h / 10 ;
     	}
     else
     	{
-	    lw = w / vg->lanes.size() ;
-	    if ( lw > 100 ) lw = 100 ;
-	    go = 50 ;
+	lw = w / vg->lanes.size() ;
+	if ( lw > 100 ) lw = 100 ;
+	go = 50 ;
     	}
 
     int x = lw / 10 ;
@@ -226,20 +228,20 @@ void TMyGelControl::OnDraw(wxDC& dc)
     vg->cutoff = 10000000 ;
     for ( a = 0 ; a < vg->lanes.size() ; a++ )
     	{
-	    for ( b = 0 ; b < vg->lanes[a].vi.GetCount() ; b++ )
-	    	{
- 	    	if ( vg->lanes[a].vi[b] < LOW_LIMIT ) continue ; // HARD LIMIT
- 	    	if ( vg->lanes[a].vi[b] > vg->maxband )
-       			vg->maxband = vg->lanes[a].vi[b] ;
- 	    	if ( vg->lanes[a].vi[b] < vg->cutoff )
-       			vg->cutoff = vg->lanes[a].vi[b] ;
-	    	}
-	    wxRect r ( x+go/10 , go , lw-go*2/10 , h - go*11/10 ) ;
-	    vg->lanes[a].pos = r ;
-	    x += lw ;
+	for ( b = 0 ; b < vg->lanes[a].vi.GetCount() ; b++ )
+            {
+            if ( vg->lanes[a].vi[b] < LOW_LIMIT ) continue ; // HARD LIMIT
+            if ( vg->lanes[a].vi[b] > vg->maxband )
+                 vg->maxband = vg->lanes[a].vi[b] ;
+            if ( vg->lanes[a].vi[b] < vg->cutoff )
+                 vg->cutoff = vg->lanes[a].vi[b] ;
+            }
+	wxRect r ( x+go/10 , go , lw-go*2/10 , h - go*11/10 ) ;
+	vg->lanes[a].pos = r ;
+	x += lw ;
      	}
 
-   	vg->cutoff = vg->cutoff * 8 / 10 ;
+    vg->cutoff = vg->cutoff * 8 / 10 ;
 
    	// Drawing gel
     int fontfactor = 10 ;
@@ -258,66 +260,66 @@ void TMyGelControl::OnDraw(wxDC& dc)
     dc.SetPen ( *wxBLACK_PEN ) ;
     dc.SetBrush ( *wxWHITE_BRUSH ) ;
     dc.DrawRectangle ( vg->lanes[0].pos.GetLeft() ,
-    					vg->lanes[0].pos.GetTop() ,
-    					vg->lanes[vg->lanes.size()-1].pos.GetRight() - vg->lanes[0].pos.GetLeft() ,
-    					vg->lanes[vg->lanes.size()-1].pos.GetBottom() - vg->lanes[0].pos.GetTop() ) ;
+                       vg->lanes[0].pos.GetTop() ,
+                       vg->lanes[vg->lanes.size()-1].pos.GetRight() - vg->lanes[0].pos.GetLeft() ,
+                       vg->lanes[vg->lanes.size()-1].pos.GetBottom() - vg->lanes[0].pos.GetTop() ) ;
 
     // Drawing lanes
     for ( a = 0 ; a < vg->lanes.size() ; a++ )
     	{
-	    title = vg->lanes[a].name ;
-	    dc.SetTextForeground ( *wxBLACK ) ;
-	    dc.SetFont ( *normalFont ) ;
+        title = vg->lanes[a].name ;
+        dc.SetTextForeground ( *wxBLACK ) ;
+        dc.SetFont ( *normalFont ) ;
 
-		 int n = title.Freq ( ' ' ) + 1 ;
-		 if ( n > 3 ) n = 3 ; // Three lines max
-	    if ( n > 2 )
-	    	{
-			for ( int m = 0 ; m < n ; m++ )
-				{
-				wxString t = title.BeforeFirst ( ' ' ) ;
-				title = title.AfterFirst ( ' ' ) ;
-			   dc.GetTextExtent ( t , &tw , &th ) ;
-			   dc.DrawText ( t ,
-			   				( vg->lanes[a].pos.GetLeft() + vg->lanes[a].pos.GetRight() - tw ) / 2 ,
-			   				vg->lanes[a].pos.GetTop() - ( n - m ) * th ) ;
-				}
-			}
-	    else
-	    	{
-		   dc.GetTextExtent ( title , &tw , &th ) ;
-		   dc.DrawText ( title ,
-		   				( vg->lanes[a].pos.GetLeft() + vg->lanes[a].pos.GetRight() - tw ) / 2 ,
-		   				vg->lanes[a].pos.GetTop() - th * 3 / 2 ) ;
-			}
+        int n = title.Freq ( ' ' ) + 1 ;
+        if ( n > 3 ) n = 3 ; // Three lines max
+        if ( n > 2 )
+            {
+            for ( int m = 0 ; m < n ; m++ )
+                {
+                wxString t = title.BeforeFirst ( ' ' ) ;
+                title = title.AfterFirst ( ' ' ) ;
+                dc.GetTextExtent ( t , &tw , &th ) ;
+                dc.DrawText ( t ,
+                              ( vg->lanes[a].pos.GetLeft() + vg->lanes[a].pos.GetRight() - tw ) / 2 ,
+                              vg->lanes[a].pos.GetTop() - ( n - m ) * th ) ;
+                }
+            }
+        else
+            {
+            dc.GetTextExtent ( title , &tw , &th ) ;
+            dc.DrawText ( title ,
+                          ( vg->lanes[a].pos.GetLeft() + vg->lanes[a].pos.GetRight() - tw ) / 2 ,
+                          vg->lanes[a].pos.GetTop() - th * 3 / 2 ) ;
+            }
 
-	    for ( b = 0 ; b < vg->lanes[a].vi.GetCount() ; b++ )
- 	    	drawBand ( dc , vg->lanes[a] , b ) ;
+        for ( b = 0 ; b < vg->lanes[a].vi.GetCount() ; b++ )
+            drawBand ( dc , vg->lanes[a] , b ) ;
 
     	}
     }
 
 void TMyGelControl::drawBand ( wxDC &dc , TGelLane &lane , int band )
-	{
-	if ( lane.vi[band] < LOW_LIMIT ) return ; // HARD LIMIT; don't draw anything below LOW_LIMIT
-	int h = lane.pos.GetHeight() ;
-	int y = getLanePos ( lane.vi[band] , h ) + lane.pos.GetTop() ;
+    {
+    if ( lane.vi[band] < LOW_LIMIT ) return ; // HARD LIMIT; don't draw anything below LOW_LIMIT
+    int h = lane.pos.GetHeight() ;
+    int y = getLanePos ( lane.vi[band] , h ) + lane.pos.GetTop() ;
 
-	double w = lane.vw[band] ;
-	w /= lane.unit_volume ;
-	w /= 2 ;
-	if ( w < 1 ) w = 1 ;
+    double w = lane.vw[band] ;
+    w /= lane.unit_volume ;
+    w /= 2 ;
+    if ( w < 1 ) w = 1 ;
 
-	for ( int b = 0 ; b < w ; b++ )
-		{
-		int i = (int) (b * 255 / ( w + 1 )) ;// b * 30 ;
-		if ( i > 255 ) continue ;
-		int c = 5 + b * b ;
-		dc.SetPen ( *MYPEN ( wxColour ( i , i , i ) ) ) ;
-    	dc.DrawLine ( lane.pos.GetLeft() + c , y + b ,
-    				  lane.pos.GetRight() - c , y + b ) ;
-    	dc.DrawLine ( lane.pos.GetLeft() + c , y - b ,
-    				  lane.pos.GetRight() - c, y - b ) ;
+    for ( int b = 0 ; b < w ; b++ )
+        {
+        int i = (int) (b * 255 / ( w + 1 )) ;// b * 30 ;
+        if ( i > 255 ) continue ;
+        int c = 5 + b * b ;
+        dc.SetPen ( *MYPEN ( wxColour ( i , i , i ) ) ) ;
+        dc.DrawLine ( lane.pos.GetLeft() + c , y + b ,
+                      lane.pos.GetRight() - c , y + b ) ;
+        dc.DrawLine ( lane.pos.GetLeft() + c , y - b ,
+                      lane.pos.GetRight() - c, y - b ) ;
         }
 
     // Label
@@ -345,7 +347,7 @@ void TMyGelControl::drawBand ( wxDC &dc , TGelLane &lane , int band )
 
     tw = lane.pos.GetRight() - tw ;
     dc.DrawText ( title , tw , y ) ;
-	}
+    }
 
 int TMyGelControl::getLanePos ( int size , int height , float perc )
 	{
@@ -357,18 +359,18 @@ int TMyGelControl::getLanePos ( int size , int height , float perc )
 	}
 
 double TMyGelControl::fix_percent ( int size , float perc )
-	{
-	if ( perc == 0 ) perc = vg->percent ;
-	double ret = size ;
-	ret = 400 / log10 ( ret / perc ) ;
+    {
+    if ( perc == 0 ) perc = vg->percent ;
+    double ret = size ;
+    ret = 400 / log10 ( ret / perc ) ;
 /*	double a = -0.000235 ;
-	double b = 1.8564 ;
-	ret = pow ( 10 , a * ret + b ) * 10 ;*/
-	return ret ;
-	}
+    double b = 1.8564 ;
+    ret = pow ( 10 , a * ret + b ) * 10 ;*/
+    return ret ;
+    }
 
 void TMyGelControl::OnPaint(wxPaintEvent& event)
-	{
+    {
     wxPaintDC dc(this);
     OnDraw ( dc ) ;
     }
@@ -377,23 +379,23 @@ void TMyGelControl::OnEvent(wxMouseEvent& event)
     {
     wxPoint pt(event.GetPosition());
 
-	if ( event.LeftDClick() )
-		{
-		wxPoint p = event.GetPosition() ;
-		int a ;
-		for ( a = 0 ; a < vg->lanes.size() ; a++ )
-			{
-			if ( vg->lanes[a].pos.GetLeft() > p.x ) continue ;
-			if ( vg->lanes[a].pos.GetRight() < p.x ) continue ;
-			break ;
-			}
-		if ( a == vg->lanes.size() ) return ;
-//		if ( vg->lanes[a].type != "DNA" ) return ;
-		wxString s = wxGetTextFromUser ( txt("t_vg_edit_name1") , txt("t_vg_edit_name2") , vg->lanes[a].name ) ;
-		if ( s.IsEmpty() ) return ;
-		vg->lanes[a].name = s ;
-		vg->Refresh () ;
-		}
+    if ( event.LeftDClick() )
+        {
+        wxPoint p = event.GetPosition() ;
+        int a ;
+        for ( a = 0 ; a < vg->lanes.size() ; a++ )
+            {
+            if ( vg->lanes[a].pos.GetLeft() > p.x ) continue ;
+            if ( vg->lanes[a].pos.GetRight() < p.x ) continue ;
+            break ;
+            }
+        if ( a == vg->lanes.size() ) return ;
+//        if ( vg->lanes[a].type != "DNA" ) return ;
+        wxString s = wxGetTextFromUser ( txt("t_vg_edit_name1") , txt("t_vg_edit_name2") , vg->lanes[a].name ) ;
+        if ( s.IsEmpty() ) return ;
+        vg->lanes[a].name = s ;
+        vg->Refresh () ;
+        }
     else if ( event.RightDown() )
         {
         wxMenu *cm = new wxMenu ;
@@ -413,7 +415,7 @@ void TMyGelControl::OnSaveAsBitmap(wxCommandEvent &event)
     wxMemoryDC dc ;
     dc.SelectObject ( bmp ) ;
     dc.Clear() ;
-	OnDraw ( dc ) ;
+    OnDraw ( dc ) ;
     wxString title = _T("t_gelname_") + vg->type ;
     title = wxString::Format ( txt(title) , vg->percent ) ;
     myapp()->frame->saveImage ( &bmp , title ) ;
@@ -427,12 +429,12 @@ void TMyGelControl::OnCopy(wxCommandEvent &event)
     wxMemoryDC dc ;
     dc.SelectObject ( bmp ) ;
     dc.Clear() ;
-	OnDraw ( dc ) ;
+    OnDraw ( dc ) ;
     if (wxTheClipboard->Open())
-      {
+        {
         wxTheClipboard->SetData( new wxBitmapDataObject ( bmp ) );
         wxTheClipboard->Close();
-      }
+        }
     }
 
 void TMyGelControl::OnPrint(wxCommandEvent &event)
@@ -454,65 +456,65 @@ void TMyGelControl::OnPrint(wxCommandEvent &event)
 // *************************************************
 
 TGelLane::TGelLane ()
-	{
-	unit_volume = 20.0 ;
-	}
+    {
+    unit_volume = 20.0 ;
+    }
 
 void TGelLane::clear ()
-	{
-	name = type = _T("") ;
-	vi.Clear () ;
-	vw.Clear () ;
-	vs.Clear () ;
-	unit_volume = 20.0 ; // l
-	}
+    {
+    name = type = _T("") ;
+    vi.Clear () ;
+    vw.Clear () ;
+    vs.Clear () ;
+    unit_volume = 20.0 ; // l
+    }
 
 void TGelLane::setMarker ( wxString _name )
-	{
-	int a ;
-	for ( a = 0 ; a < myapp()->frame->dna_marker.GetCount() ; a++ )
-		{
-		if ( myapp()->frame->dna_marker[a].BeforeFirst(':') == _name )
+    {
+    int a ;
+    for ( a = 0 ; a < myapp()->frame->dna_marker.GetCount() ; a++ )
+        {
+        if ( myapp()->frame->dna_marker[a].BeforeFirst(':') == _name )
 			break ;
-		}
-	if ( a == myapp()->frame->dna_marker.GetCount() ) return ; // Invalid marker name
+        }
+    if ( a == myapp()->frame->dna_marker.GetCount() ) return ; // Invalid marker name
 
-	clear () ;
-	name = _name ;
-	wxString s = myapp()->frame->dna_marker[a] ;
-	a = 0 ;
-	while ( !s.IsEmpty() )
-		{
-		wxString t = s.BeforeFirst ( ',' ) ;
-		s = s.AfterFirst ( ',' ) ;
-		long l1 , l2 ;
-		double d1 ;
-		t.BeforeFirst(':').ToLong ( &l1 );
-		t.AfterFirst(':').ToLong ( &l2 ) ;
-		if ( a++ == 0 )
+    clear () ;
+    name = _name ;
+    wxString s = myapp()->frame->dna_marker[a] ;
+    a = 0 ;
+    while ( !s.IsEmpty() )
+        {
+        wxString t = s.BeforeFirst ( ',' ) ;
+        s = s.AfterFirst ( ',' ) ;
+        long l1 , l2 ;
+        double d1 ;
+        t.BeforeFirst(':').ToLong ( &l1 );
+        t.AfterFirst(':').ToLong ( &l2 ) ;
+        if ( a++ == 0 )
 			{
 			t.BeforeFirst(':').ToDouble ( &d1 );
 			unit_volume = 20 ;
 //			unit_volume = d1 ;
 			}
-		else add ( l1 , l2 ) ;
-		}
-	}
+        else add ( l1 , l2 ) ;
+        }
+    }
 
 void TGelLane::add ( int size , int weight , wxString title )
-	{
-	vi.Add ( size ) ;
-	vw.Add ( weight ) ;
-	vs.Add ( title ) ;
-	}
+    {
+    vi.Add ( size ) ;
+    vw.Add ( weight ) ;
+    vs.Add ( title ) ;
+    }
 
 void TGelLane::add ( int size , int weight )
-	{
-	add ( size , weight , _T("") ) ;
-	}
+    {
+    add ( size , weight , _T("") ) ;
+    }
 
 void TGelLane::add ( int size , wxString title )
-	{
-	add ( size , 1 , title ) ;
-	}
+    {
+    add ( size , 1 , title ) ;
+    }
 

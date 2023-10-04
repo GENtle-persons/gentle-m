@@ -1,6 +1,7 @@
 #include "MyFrame.h"
 #include "SendHTTP.h"
 #include <wx/sysopt.h>
+#include <wx/filename.h>
 #include "TEliteLaChromLogDialog.h"
 
 // ---------------------------------------------------------------------------
@@ -118,7 +119,7 @@ MyFrame::MyFrame(wxWindow *parent,
     entries[36].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_TAB, MDI_PREV_WINDOW);
     entries[37].Set(wxACCEL_NORMAL, WXK_F8, MDI_TOGGLE_IDNA);
     entries[38].Set(wxACCEL_CTRL|wxACCEL_SHIFT, WXK_F12, Y___);
-	//    entries[38].Set(wxACCEL_CTRL, WXK_F12, MDI_GRAPH);
+    //    entries[38].Set(wxACCEL_CTRL, WXK_F12, MDI_GRAPH);
     entries[39].Set(wxACCEL_CTRL, WXK_F1, MDI_ABOUT);
     entries[40].Set(wxACCEL_NORMAL, WXK_F9, MDI_AUTO_ANNOTATE);
     entries[41].Set(wxACCEL_CTRL, (int) 'K', MDI_CLONING_ASSISTANT);
@@ -131,25 +132,28 @@ MyFrame::MyFrame(wxWindow *parent,
     lastChild = NULL ;
     tb_mychild = NULL ;
     online_tools = new TOnlineTools ;
-	push_help ( _T("GENtle") ) ;
+    push_help ( _T("GENtle") ) ;
 
     // Load DNA markers
-	wxString marker_file = myapp()->homedir + myapp()->slash + _T("marker.txt") ;
-	wxTextFile tf ( marker_file ) ;
+    wxString marker_file = myapp()->homedir.GetFullPath() + wxFileName::GetPathSeparator() + _T("marker.txt") ;
+    wxTextFile tf ( marker_file ) ;
+
     if ( tf.Open ( wxConvUTF8 ) ) {
-	    //wxSafeShowMessage ( marker_file , marker_file ) ;
-	    for ( unsigned int a = 0 ; a < tf.GetLineCount() ; a++ )
-	    {
-			wxString s = tf.GetLine ( a ) ;
-			s = s.Trim().Trim(false) ;
-			if ( s.IsEmpty() ) continue ; // Skip blank lines
-			if ( s.Left ( 1 ) == _T("#") ) continue ; // Skip comments
-			dna_marker.Add ( s ) ;
-	    }
-		wxPrintf("I: Successfully opened marker file on '%s'\n",marker_file);
-	} else {
-	    //wxSafeShowMessage ( marker_file , marker_file ) ;
-		wxPrintf("W: Failed to open marker file on '%s'\n",marker_file);
+        //wxSafeShowMessage ( marker_file , marker_file ) ;
+        for ( unsigned int a = 0 ; a < tf.GetLineCount() ; a++ )
+            {
+            wxString s = tf.GetLine ( a ) ;
+            s = s.Trim().Trim(false) ;
+            if ( s.IsEmpty() ) continue ; // Skip blank lines
+            if ( s.Left ( 1 ) == _T("#") ) continue ; // Skip comments
+            dna_marker.Add ( s ) ;
+            }
+        wxPrintf("I: Successfully opened marker file on '%s'\n",marker_file);
+	}
+    else
+        {
+        //wxSafeShowMessage ( marker_file , marker_file ) ;
+    	wxPrintf("W: Failed to open marker file on '%s'\n",marker_file);
 	}
 }
 
@@ -160,11 +164,11 @@ MyFrame::MyFrame(wxWindow *parent,
  */
 MyFrame::~MyFrame ()
 {
-	pop_help () ;
+    pop_help () ;
     if ( html_ep ) delete html_ep ;
     rememberLastProject () ;
     CLEAR_DELETE ( dbcache ) ;
-	//    delete LS ;
+    //    delete LS ;
 }
 
 /** \brief Initializes the frame
@@ -352,30 +356,61 @@ void MyFrame::initme ()
     SetDropTarget ( dt ) ;
 
     // Bitmap library
-    wxString icondir = myapp()->bmpdir + myapp()->slash ;
-    bitmaps.push_back ( wxBitmap (icondir + _T("document-new.png") , wxBITMAP_TYPE_PNG) ) ;  // 0
-    bitmaps.push_back ( wxBitmap (icondir + _T("document-open.png") , wxBITMAP_TYPE_PNG) ) ; // 1
-    bitmaps.push_back ( wxBitmap (icondir + _T("document-save.png") , wxBITMAP_TYPE_PNG) ) ; // 2
-    bitmaps.push_back ( wxBitmap (icondir + _T("edit-undo.png") , wxBITMAP_TYPE_PNG) ) ; // 3
-    bitmaps.push_back ( wxBitmap (icondir + _T("edit-cut.png") , wxBITMAP_TYPE_PNG) ) ;  // 4
-    bitmaps.push_back ( wxBitmap (icondir + _T("edit-copy.png") , wxBITMAP_TYPE_PNG) ) ; // 5
-    bitmaps.push_back ( wxBitmap (icondir + _T("edit-paste.png") , wxBITMAP_TYPE_PNG) ) ;// 6
-    bitmaps.push_back ( wxBitmap (icondir + _T("display_circular_linear.png") , wxBITMAP_TYPE_PNG) ) ; // 7
-    bitmaps.push_back ( wxBitmap (icondir + _T("display_circular_linear.png") , wxBITMAP_TYPE_PNG) ) ;   // 8
-    bitmaps.push_back ( wxBitmap (icondir + _T("display_orfs.png") , wxBITMAP_TYPE_PNG) ) ; // 9
-    bitmaps.push_back ( wxBitmap (icondir + _T("display_features.png") , wxBITMAP_TYPE_PNG) ) ; // 10
-    bitmaps.push_back ( wxBitmap (icondir + _T("restriction_new.png") , wxBITMAP_TYPE_PNG) ) ; // 11
-    bitmaps.push_back ( wxBitmap (icondir + _T("view_new.png") , wxBITMAP_TYPE_PNG) ) ; // 12
-    bitmaps.push_back ( wxBitmap (icondir + _T("accessories-text-editor.png") , wxBITMAP_TYPE_PNG) ) ; // 13
-    bitmaps.push_back ( wxBitmap (icondir + _T("go-down.png") , wxBITMAP_TYPE_PNG) ) ; // 14
-    bitmaps.push_back ( wxBitmap (icondir + _T("go-up.png") , wxBITMAP_TYPE_PNG) ) ; // 15
-    bitmaps.push_back ( wxBitmap (icondir + _T("document-print.png") , wxBITMAP_TYPE_PNG) ) ; // 16
-    bitmaps.push_back ( wxBitmap (icondir + _T("alignments.png") , wxBITMAP_TYPE_PNG) ) ; // 17
-    bitmaps.push_back ( wxBitmap (icondir + _T("image_viewer.png") , wxBITMAP_TYPE_PNG) ) ; // 18
-    bitmaps.push_back ( wxBitmap (icondir + _T("applications-internet.png") , wxBITMAP_TYPE_PNG) ) ; // 19
-    bitmaps.push_back ( wxBitmap (icondir + _T("accessories-calculator.png") , wxBITMAP_TYPE_PNG) ) ; // 20
-    bitmaps.push_back ( wxBitmap (icondir + _T("preferences-desktop.png") , wxBITMAP_TYPE_PNG) ) ; // 21
-    bitmaps.push_back ( wxBitmap (icondir + _T("edit-find.png") , wxBITMAP_TYPE_PNG) ) ; // 22
+    wxFileName icondir(myapp()->bmpdir) ;
+    if ( ! wxDirExists( icondir.GetFullPath() ))
+        {
+        wxPrintf("E: Failed to find directory '%s'.\n",icondir.GetFullName()) ;
+	exit(1);
+        }
+
+    wxString s = icondir.GetFullPath() + wxFileName::GetPathSeparator();
+
+    //wxPrintf("D: Finding bitmaps in '%s'.\n",s);
+
+    std::vector<std::string> icons = {
+        "document-new.png" , // 0
+        "document-open.png" , // 1
+        "document-save.png" , // 2
+        "edit-undo.png" , // 3
+        "edit-cut.png" , // 4
+        "edit-copy.png" , // 5
+        "edit-paste.png" , // 6
+        "display_circular_linear.png" , // 7
+        "display_circular_linear.png" , // 8
+        "display_orfs.png" , // 9
+        "display_features.png" , // 10
+        "restriction_new.png" , // 11
+        "view_new.png" , // 12
+        "accessories-text-editor.png" , // 13
+        "go-down.png" , // 14
+        "go-up.png" , // 15
+        "document-print.png" , // 16
+        "alignments.png" , // 17
+        "image_viewer.png" , // 18
+        "applications-internet.png" , // 19
+        "accessories-calculator.png" , // 20
+        "preferences-desktop.png" , // 21
+        "edit-find.png" , // 22
+    } ;
+
+    for(int i=0; i < icons.size(); i++)
+        {
+	wxString is(s+icons[i]);
+        wxFileName f(is);
+	//wxPrintf("D: s:%s, is:%s, f:%s\n",s,is,f.GetFullPath());
+        if (wxFileExists(is))
+	    {
+            wxBitmap *b = new wxBitmap(is, wxBITMAP_TYPE_PNG) ;
+            bitmaps.push_back (*b) ;
+            //wxPrintf("I: Successfully added bitmap '%s'.\n",is) ;
+            }
+        else
+            {
+            wxPrintf("E: Could not find bitmap '%s'.\n",is) ;
+            exit( 1 ) ;
+            }
+        
+        }
 
     bitmaps.push_back ( to_grey ( bitmaps[ 4] ) ) ; // 23 - GREY Cut
     bitmaps.push_back ( to_grey ( bitmaps[ 5] ) ) ; // 24 - GREY Copy
@@ -386,25 +421,25 @@ void MyFrame::initme ()
     bitmaps.push_back ( to_grey ( bitmaps[16] ) ) ; // 29 - GREY Print sequence
 
 
-	if ( useTwoToolbars )
-	{
-		mainToolBar = CreateToolBar ( wxTB_HORIZONTAL ) ;
-		InitToolBar ( mainToolBar ) ;
-		addTool ( mainToolBar , MDI_TEXT_IMPORT ) ;
-		addTool ( mainToolBar , MDI_FILE_IMPORT ) ;
-		addTool ( mainToolBar , MDI_FILE_OPEN ) ;
-		addTool ( mainToolBar , MDI_FILE_SAVE ) ;
-		addTool ( mainToolBar , SEQ_PRINT ) ;
-		addTool ( mainToolBar , MDI_UNDO ) ;
-		addCCPFTools ( mainToolBar , true ) ;
-		addDefaultTools ( mainToolBar ) ;
-		mainToolBar->Realize() ;
-		updateCCP ( NULL ) ;
-	}
-	else
-	{
-		mainToolBar = NULL ;
-	}
+    if ( useTwoToolbars )
+        {
+        mainToolBar = CreateToolBar ( wxTB_HORIZONTAL ) ;
+        InitToolBar ( mainToolBar ) ;
+        addTool ( mainToolBar , MDI_TEXT_IMPORT ) ;
+        addTool ( mainToolBar , MDI_FILE_IMPORT ) ;
+        addTool ( mainToolBar , MDI_FILE_OPEN ) ;
+        addTool ( mainToolBar , MDI_FILE_SAVE ) ;
+        addTool ( mainToolBar , SEQ_PRINT ) ;
+        addTool ( mainToolBar , MDI_UNDO ) ;
+        addCCPFTools ( mainToolBar , true ) ;
+        addDefaultTools ( mainToolBar ) ;
+        mainToolBar->Realize() ;
+        updateCCP ( NULL ) ;
+       }
+    else
+       {
+        mainToolBar = NULL ;
+       }
 
 #ifdef __WXGTK__
     Show(TRUE);
@@ -490,7 +525,7 @@ void MyFrame::initme ()
 				wxString file = path.AfterLast ( '/' ) ;
 				file = file.AfterLast ( '\\' ) ;
 				importFile ( file , path , -1 ) ;
-				wxSetWorkingDirectory ( myapp()->homedir ) ;
+				wxSetWorkingDirectory ( myapp()->homedir.GetFullPath() ) ;
 			}
 		}
 	}
@@ -591,12 +626,9 @@ void MyFrame::OnHelp(wxCommandEvent& event )
     if ( useInternalHelp )
 	{
         wxHtmlHelpController *hc = new wxHtmlHelpController ( wxHF_DEFAULT_STYLE|wxHF_OPEN_FILES ) ;
-        helpfile += myapp()->homedir ;
-#ifdef __WXMSW__
-        helpfile += _T("\\help\\") ;
-#else
-        helpfile += _T("/help/") ;
-#endif
+        helpfile += myapp()->homedir.GetFullPath() + wxFileName::GetPathSeparator() ;
+        helpfile += "help" ;
+        helpfile += wxFileName::GetPathSeparator() ;
         helpfile += lang_string ;
         helpfile += _T(".hhp") ;
         hc->AddBook ( helpfile ) ;
@@ -615,7 +647,7 @@ void MyFrame::OnHelp(wxCommandEvent& event )
 		{
 #ifdef __WXMAC__
 			helpfile = _T("\"") ;
-			helpfile += myapp()->homedir ;
+			helpfile += myapp()->homedir.GetFullPath() ;
 			helpfile += _T("/") ;
 			helpfile += txt("f_help").AfterFirst ( '/' ) ;
 			helpfile += _T("\"") ;
@@ -623,7 +655,7 @@ void MyFrame::OnHelp(wxCommandEvent& event )
 
 #ifdef __WXMSW__
 			helpfile = _T("\"") ;
-			helpfile += myapp()->homedir ;
+			helpfile += myapp()->homedir.GetFullPath() ;
 			helpfile += _T("\\") ;
 			helpfile += txt("f_help") ;
 			helpfile += _T("\"") ;
@@ -1738,7 +1770,7 @@ void MyFrame::blast ( wxString seq , wxString prg )
 	 unique.Replace ( "/" , "_" ) ;
 	 unique.Replace ( " " , "_" ) ;
 
-	 wxString hd = myapp()->homedir ;
+	 wxString hd = myapp()->homedir.GetFullPath() ;
 	 wxString exe = hd + "\\blastcl3.exe" ; // WINDOWS-SPECIFIC!
 	 wxString ifile = hd + "\\blasts\\temp_" + unique + ".tmp" ;
 	 wxString ofile = hd + "\\blasts\\blast_results_" + unique + ".html" ;
@@ -2190,7 +2222,7 @@ void MyFrame::update2version ( wxString ver )
 	wxString sourcefile , sourcefile2 , localfile ;
 
 #ifdef __WXMSW__
-    localfile = myapp()->homedir + _T("\\GENtleSetup.exe") ;
+    localfile = myapp()->homedir.GetFullPath() + _T("\\GENtleSetup.exe") ;
 	sourcefile = _T("http://gentle.magnusmanske.de/GENtleSetup.exe") ;
 	sourcefile2 = _T("http://www.uni-koeln.de/math-nat-fak/biochemie/klein/gentle/GENtleSetup.exe") ; // Fallback
 #endif
@@ -2212,7 +2244,7 @@ void MyFrame::update2version ( wxString ver )
 
 #ifdef __WXMSW__
     do_run = _T("\"") + localfile + _T("\" /D=\"") ;
-    do_run += myapp()->homedir ;
+    do_run += myapp()->homedir.GetFullPath() ;
     do_run += _T("\"") ;
     LS->setOption ( _T("LAST_UPDATE") , ver ) ;
 	dying = true ;

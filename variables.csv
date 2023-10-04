@@ -1072,6 +1072,6 @@
 "t_minumum","Minimum","Minimum",""
 "t_bp","bp","bp",""
 "band_difference","Band difference","Bandenunterschied",""
-"orig","%d (orig)"," %d (orig)",""
+"f_orig","%d (orig)"," %d (orig)",""
 
 "t_cannot_circularize_due_to_sticky_ends","Cannot circularize sequence due to sticky ends","Die Sequenz kann wegen 'sticky ends' nicht circulär werden",""

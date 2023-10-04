@@ -451,17 +451,17 @@ void TSpeakDialog::OnCharHook ( wxKeyEvent& event )
     }
 
 void TSpeakDialog::speakLetter ( wxString c )
-	{
-	wxString file = myapp()->homedir + myapp()->slash ;
+    {
+    wxString file = myapp()->homedir.GetFullPath() + wxFileName::GetPathSeparator() ;
 #ifndef __WXMAC__
-	file += _T("wav/") ;
+    file += _T("wav/") ;
 #endif
-	file += c.Left(1).Upper() + _T(".wav") ;
-//	wxMessageBox ( file ) ;
-	wxSound sound ( file ) ;
-	if ( !sound.IsOk() ) { wxMessageBox ( txt("t_error") ) ; return ; }
-	sound.Play ( wxSOUND_SYNC ) ;
-  	}
+    file += c.Left(1).Upper() + _T(".wav") ;
+    	wxMessageBox ( file ) ;
+    wxSound sound ( file ) ;
+    if ( !sound.IsOk() ) { wxMessageBox ( txt("t_error") ) ; return ; }
+    sound.Play ( wxSOUND_SYNC ) ;
+    }
 
 // ******************************************* TIPCDialog
 
@@ -469,8 +469,8 @@ void TSpeakDialog::speakLetter ( wxString c )
 
 TIPCDialog::TIPCDialog(wxWindow *parent, const wxString& title , int _seqlen )
     : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 300 , 100 ) )
-	{
-	seqlen = _seqlen ;
+    {
+    seqlen = _seqlen ;
 
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
@@ -494,26 +494,26 @@ TIPCDialog::TIPCDialog(wxWindow *parent, const wxString& title , int _seqlen )
     v0->Fit ( this ) ;
 
     limit->SetValue ( _T("1000") ) ;
-	}
+    }
 
 TIPCDialog::~TIPCDialog ()
-	{
-	}
+    {
+    }
 
 void TIPCDialog::OnLimit ( wxCommandEvent &event )
-	{
-	wxString s = limit->GetValue() ;
-	long l ;
-	s.ToLong ( &l ) ;
-	double d = estimate_time ( l ) ;
-	s = wxString::Format ( _T("%3.1f") , (float) d ) ;
-	s = s.Trim ( false ) ;
-	s = wxString::Format ( txt("t_ipc_est") , s.c_str() ) ;
-	est->SetLabel ( s ) ;
-	}
+    {
+    wxString s = limit->GetValue() ;
+    long l ;
+    s.ToLong ( &l ) ;
+    double d = estimate_time ( l ) ;
+    s = wxString::Format ( _T("%3.1f") , (float) d ) ;
+    s = s.Trim ( false ) ;
+    s = wxString::Format ( txt("t_ipc_est") , s.c_str() ) ;
+    est->SetLabel ( s ) ;
+    }
 
 double TIPCDialog::estimate_time ( int f )
-	{
+    {
     double a , b ;
     a = seqlen ;
     b = seqlen ;
@@ -534,7 +534,7 @@ double TIPCDialog::estimate_time ( int f )
 TSequencingPrimerDialog::TSequencingPrimerDialog (wxWindow *parent, const wxString& title )
     : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 600 , 450 ) )
     {
-	myapp()->frame->push_help ( _T("GENtle:Sequencing_Primers") ) ;
+    myapp()->frame->push_help ( _T("GENtle:Sequencing_Primers") ) ;
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
@@ -603,16 +603,17 @@ TSequencingPrimerDialog::TSequencingPrimerDialog (wxWindow *parent, const wxStri
     }
 
 void TSequencingPrimerDialog::OnDB ( wxCommandEvent& event )
-	{
-	c_pj->Clear() ;
-	int i = c_db->GetSelection() ;
-	if ( i == wxNOT_FOUND ) return ;
-	TStorage *db = myapp()->frame->getTempDB ( db_files[i] ) ;
-	wxString sql = _T("SELECT pr_name FROM project") ;
-	TSQLresult r = db->getObject ( sql ) ;
-	for ( int a = 0 ; a < r.rows() ; a++ )
-		c_pj->Append ( r[a][r["pr_name"]] ) ;
-	}
+    {
+    c_pj->Clear() ;
+    int i = c_db->GetSelection() ;
+    if ( i == wxNOT_FOUND )
+        return ;
+    TStorage *db = myapp()->frame->getTempDB ( db_files[i] ) ;
+    wxString sql = _T("SELECT pr_name FROM project") ;
+    TSQLresult r = db->getObject ( sql ) ;
+    for ( int a = 0 ; a < r.rows() ; a++ )
+        c_pj->Append ( r[a][r["pr_name"]] ) ;
+    }
 
 void TSequencingPrimerDialog::OnCharHook ( wxKeyEvent& event )
     {

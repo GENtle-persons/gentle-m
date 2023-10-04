@@ -23,15 +23,18 @@ void TVectorEditor::initPanEnzym ()
 
     // List of current enzymes
     listCE = new wxListBox ( panEnzym , TVE_LB_CE , wxDefaultPosition ,
-            wxDefaultSize , 0 , NULL , wxLB_EXTENDED|wxLB_SORT ) ;
+            //wxDefaultSize , 0 , NULL , wxLB_EXTENDED|wxLB_SORT ) ;
+            wxDefaultSize , 0 , NULL , wxLB_EXTENDED) ;
 
     // List of Groups
     listGroups = new wxListBox ( panEnzym , TVE_LB_GR , wxDefaultPosition ,
-            wxDefaultSize , 0 , NULL , wxLB_SINGLE|wxLB_SORT);
+            //wxDefaultSize , 0 , NULL , wxLB_SINGLE|wxLB_SORT);
+            wxDefaultSize , 0 , NULL , wxLB_SINGLE);
 
     // List of enzymes in group
     listGE = new wxListBox ( panEnzym , TVE_LB_GE , wxDefaultPosition ,
-            wxDefaultSize , 0 , NULL , wxLB_EXTENDED|wxLB_SORT ) ;
+            //wxDefaultSize , 0 , NULL , wxLB_EXTENDED|wxLB_SORT ) ;
+            wxDefaultSize , 0 , NULL , wxLB_EXTENDED) ;
 
     wxButton *b1 = NULL , *b2 , *b3 , *b4 , *b_asng , *b_addgr , *b_import_rebase ;
     b_addgr = new wxButton ( panEnzym , TVE_EN_ADD_GR , txt("<-- add") ) ;

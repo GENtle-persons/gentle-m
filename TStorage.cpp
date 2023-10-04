@@ -4,6 +4,7 @@
 #include "TStorage.h"
 #include <wx/textfile.h>
 #include <wx/filename.h>
+#include <wx/filefn.h>  // wxCopyFile
 
 using namespace std ;
 
@@ -50,6 +51,8 @@ TStorage::TStorage ( int nt , wxString fn )
     storagetype = nt ;
     if ( fn.IsEmpty() ) fn = myapp()->getLocalDBname() ;
     dbname = fn ;
+
+    wxPrintf("I: Expecting database on '%s'\n",fn);
 
     isSqlite3 = false ;
     if ( !isMySQL && !fn.IsEmpty() )
@@ -392,9 +395,7 @@ void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , wxString key , char* value
 
 void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , wxString key , int value )
     {
-    wxString t = wxString::Format ( _T("%d") , (unsigned int) value ) ;
-//    char t[1000] ;
-//    sprintf ( t , "%d" , value ) ;
+    wxString t = wxString::Format ( "%d" , (unsigned int) value ) ;
     if ( !s1.IsEmpty() ) s1 += _T(",") ;
     if ( !s2.IsEmpty() ) s2 += _T(",") ;
     s1 += key ;
@@ -446,8 +447,8 @@ wxString TStorage::getSingleField ( wxString query , wxString field , wxString d
 int TStorage::getSingleField ( wxString query , wxString field , int def )
     {
 //    char t[100] ;
-//    sprintf ( t , "%d" , def ) ;
-    wxString r = getSingleField ( query , field , wxString::Format ( _T("%d") , def ) ) ;
+//    snprintf ( t , sizeof(t)-1, "%d" , def ) ;
+    wxString r = getSingleField ( query , field , wxString::Format ( "%d" , def ) ) ;
     return atoi ( r.mb_str() ) ;
     }
 
@@ -583,7 +584,7 @@ void TStorage::setOption ( wxString oname , wxString vname )
 void TStorage::autoUpdateSchema ()
     {
     if ( isMySQL ) return ; // No updates yet
-	wxString blankdb = myapp()->homedir + myapp()->slash + _T("blank.db") ;
+    wxString blankdb = myapp()->homedir.GetFullPath() + wxFileName::GetPathSeparator() + "blank.db" ;
     if ( dbname == _T("blank.db") ) return ; // No update of blank db
     if ( dbname == blankdb ) return ; // No update of blank db
     TSQLresult r ;
@@ -697,8 +698,8 @@ void TStorage::autoUpdateSchema ()
         sql = _T("DELETE FROM stuff WHERE s_type=\"INTERNAL\" AND s_name=\"DATABASE_VERSION\"") ;
         getObject ( sql ) ;
         s1 = s2 = _T("") ;
-        wxString st = wxString::Format ( _T("%d") , version ) ;
-//        sprintf ( t , "%d" , version ) ;
+        wxString st = wxString::Format ( "%d" , version ) ;
+//        snprintf ( t , sizeof(t)-1, "%d" , version ) ;
         sqlAdd ( s1 , s2 , _T("s_type")  , _T("INTERNAL") ) ;
         sqlAdd ( s1 , s2 , _T("s_name")  , _T("DATABASE_VERSION") ) ;
         sqlAdd ( s1 , s2 , _T("s_value") , st ) ;
@@ -828,7 +829,7 @@ wxString TStorage::createMySQLdb ( wxString ip , wxString db , wxString name , w
                                     0 ,
                                     NULL , CLIENT_COMPRESS ) ;
 
-    wxString t , fn = myapp()->homedir + myapp()->slash + _T("MySQL template.txt") ;
+    wxString t , fn = myapp()->homedir.GetFullPath() + wxFileName::GetPathSeparator() + "MySQL template.txt" ;
     wxTextFile tf ( fn ) ;
     tf.Open ( *(myapp()->isoconv) ) ;
     for ( int lc = 0 ; lc < tf.GetLineCount() ; lc++ )
@@ -1073,7 +1074,7 @@ void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme *e )
     {
     TSQLresult sr ;
     wxString sql ;
-    char u[100] ;
+    char u[100+42] ;
     if ( e->getName().IsEmpty() ) return ;
 
     cleanEnzymeGroupCache() ;
@@ -1086,7 +1087,7 @@ void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme *e )
     sr = getObject ( sql ) ;
     if ( ierror ) return ;
     int e_id = atoi ( sr.content[0][0].mb_str() ) ;
-    sprintf ( u , "%d" , e_id+1 ) ;
+    snprintf ( u , sizeof(u)-1, "%d" , e_id+1 ) ;
     e->dbid = e_id ;
 
     // Insert new enzyme
@@ -1097,11 +1098,9 @@ void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme *e )
     sql += e->getSequence() + _T("\",\"") ;
     sql += e->location + _T("\",\"") ;
     sql += e->note + _T("\",\"") ;
-    //sprintf ( u , "%d" , e->cut ) ;
-    sql += wxString::Format ( _T("%d") , e->getCut() ) ;
+    sql += wxString::Format ( "%d" , e->getCut() ) ;
     sql += _T("\",\"") ;
-    //sprintf ( u , _T("%d") , e->overlap ) ;
-    sql += wxString::Format ( _T("%d") , e->getOverlap() ) ;
+    sql += wxString::Format ( "%d" , e->getOverlap() ) ;
     sql += _T("\")") ;
     getObject ( sql ) ;
     }
@@ -1268,7 +1267,7 @@ void TStorage::syncEnzymes ( TStorage *to )
 	bool useBlank = false ;
 	if ( to == NULL )
 		{
-		to = new TStorage ( TEMP_STORAGE , myapp()->homedir + myapp()->slash + _T("blank.db") ) ;
+		to = new TStorage ( TEMP_STORAGE , myapp()->homedir.GetFullPath() + wxFileName::GetPathSeparator() + "blank.db" ) ;
 		useBlank = true ;
 		}
 
