@@ -13,7 +13,7 @@ dnl ---------------------------------------------------------------------------
 m4_include([m4/mysql.m4])
 
 dnl generic init
-AC_INIT([GENtle],[1.5])
+AC_INIT([GENtle],[1.9.4.99.2],[https://github.com/GENtle-persons/gentle-m/issues],[https://github.com/GENtle-persons/gentle-m])
 AC_CONFIG_SRCDIR([main.cpp])
 dnl AM_CONFIG_HEADER(config.h:config.h.in)
 AM_INIT_AUTOMAKE
@@ -26,6 +26,10 @@ dnl check for programs we use
 AC_PROG_CXX
 AC_PROG_CC
 
+dnl Finds linker and sets $LD
+dnl LT_PATH_LD # needs libtool
+
+dnl Defined in m4/mysql.m4
 WITH_MYSQL()
 
 WXCONFIG=wx-config
@@ -49,11 +53,16 @@ WX_LIBS="`$WXCONFIG --libs`"
 CPPFLAGS="$CPPFLAGS $WX_CPPFLAGS"
 CXXFLAGS="$CXXFLAGS $WX_CPPFLAGS"
 
+if [ -n "$PREFIX" ]; then
+  CPPFLAGS="$CPPFLAGS -I$PREFIX/include"
+  CXXFLAGS="$CXXFLAGS -I$PREFIX/include"
+  LDFLAGS="$LDFLAGS -L$PREFIX/lib"
+fi
+
 AC_SUBST(WX_LIBS)
 AC_SUBST(LDFLAGS)
 
 dnl Clarify inclusion/exclusion of ClustalW source tree
-
 AC_ARG_WITH([clustalw],AS_HELP_STRING([--with-clustalw],[Use external binary of clustalw for sequence alignments (default=yes)]),[],[])
 
 if test "x$with_clustalw" != "xno"; then
@@ -61,17 +70,14 @@ if test "x$with_clustalw" != "xno"; then
 fi
 
 dnl Set debug flags
-
 AC_ARG_ENABLE(debug,AS_HELP_STRING([--enable-debug],[Enable debug build]),
 [
   debugbuild="y"
   CXXFLAGS="${CXXFLAGS} -ggdb"
 ])
 
-dnl that's all, folks
-AC_CONFIG_FILES([
-            Makefile
-          ])
+dnl That's all, folks!
+AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
 
 dnl Summarized output
