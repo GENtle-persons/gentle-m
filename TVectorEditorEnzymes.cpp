@@ -56,7 +56,7 @@ void TVectorEditor::initPanEnzym ()
     v1->Add ( tCE , 0 , wxEXPAND , 5 ) ;
     v1->Add ( listCE , 1 , wxEXPAND , 5 ) ;
 
-    v2->Add ( new wxStaticText ( panEnzym , -1 , _T("") ) , 0 , wxEXPAND , 5 ) ;
+    v2->Add ( new wxStaticText ( panEnzym , -1 , "" ) , 0 , wxEXPAND , 5 ) ;
     v2->Add ( b_addgr , 0 , wxEXPAND , 5 ) ;
     v2->Add ( b_atg , 0 , wxEXPAND , 5 ) ;
     v2->Add ( b_asng , 0 , wxEXPAND , 5 ) ;
@@ -64,7 +64,7 @@ void TVectorEditor::initPanEnzym ()
     if ( b1 ) v2->Add ( b1 , 0 , wxEXPAND , 5 ) ;
     v2->Add ( b2 , 0 , wxEXPAND , 5 ) ;
     v2->Add ( delete_enzyme_button , 0 , wxEXPAND , 5 ) ;
-    v2->Add ( new wxStaticText ( panEnzym , -1 , _T("") ) , 0 , wxEXPAND , 5 ) ;
+    v2->Add ( new wxStaticText ( panEnzym , -1 , "" ) , 0 , wxEXPAND , 5 ) ;
     v2->Add ( b3 , 0 , wxEXPAND , 5 ) ;
     v2->Add ( b4 , 0 , wxEXPAND , 5 ) ;
     v2->Add ( b_dfg , 0 , wxEXPAND , 5 ) ;
@@ -118,8 +118,7 @@ void TVectorEditor::enzymeListDlbClick ( wxCommandEvent &ev )
             {
             wxString s = lb->GetString ( vi[k] ) ;
             TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( s ) ;
-            TEnzymeDialog ed ( this , s , wxPoint(-1,-1) , wxSize(600,400) ,
-                            wxDEFAULT_DIALOG_STYLE|wxCENTRE ) ;
+            TEnzymeDialog ed ( this , s , wxPoint(-1,-1) , wxSize(600,400) , wxDEFAULT_DIALOG_STYLE|wxCENTRE ) ;
             ed.initme ( e ) ;
             if ( ed.ShowModal() == wxID_OK )
                {
@@ -151,8 +150,7 @@ void TVectorEditor::enzymeListDlbClick ( wxCommandEvent &ev )
         if ( n != 1 ) return ;
         wxString s = lb->GetString ( vi[0] ) ;
         TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( s ) ;
-        TEnzymeDialog ed ( this , s , wxPoint(-1,-1) , wxSize(600,400) ,
-                        wxDEFAULT_DIALOG_STYLE|wxCENTRE ) ;
+        TEnzymeDialog ed ( this , s , wxPoint(-1,-1) , wxSize(600,400) , wxDEFAULT_DIALOG_STYLE|wxCENTRE ) ;
         ed.initme ( e ) ;
         ed.ShowModal() ;
         }
@@ -242,11 +240,11 @@ void TVectorEditor::enzymeAddToGr ( wxCommandEvent &ev )
     int i , k , n = listCE->GetSelections ( vi ) ;
 
     if ( n == 0 ) // Nothing selected, so select all
-    	{
-	    for ( n = 0 ; n < listCE->GetCount() ; n++ )
+        {
+        for ( n = 0 ; n < listCE->GetCount() ; n++ )
 	    	listCE->SetSelection ( n , TRUE ) ;
-    	n = listCE->GetSelections ( vi ) ;
-    	}
+       	n = listCE->GetSelections ( vi ) ;
+       	}
 
     for ( k = n-1 ; k >= 0 ; k-- )
         {
@@ -259,8 +257,7 @@ void TVectorEditor::enzymeAddToGr ( wxCommandEvent &ev )
 
 void TVectorEditor::enzymeAddToNewGr ( wxCommandEvent &ev )
     {
-    wxTextEntryDialog ted ( this , txt("b_add_as_new_group") ,
-                                txt("t_new_enzyme_group_name") ) ;
+    wxTextEntryDialog ted ( this , txt("b_add_as_new_group") , txt("t_new_enzyme_group_name") ) ;
     if ( wxID_OK != ted.ShowModal () ) return ;
     wxString ng = ted.GetValue() ;
     ng = myapp()->frame->LS->UCfirst ( ng ) ;
@@ -318,7 +315,7 @@ void TVectorEditor::importCloneEnzymes ( wxCommandEvent &ev )
     {
     TStorage TS ( TEMP_STORAGE ) ;
     TClone clone ;
-    clone.loadEnzymeList ( &TS , _T("./CLONE.ENZ") ) ;
+    clone.loadEnzymeList ( &TS , "./CLONE.ENZ" ) ;
     int a ;
     for ( a = 0 ; a < TS.re.GetCount() ; a++ )
        {
@@ -363,130 +360,139 @@ void TVectorEditor::enzymeDelGr ( wxCommandEvent &ev )
 
 void TVectorEditor::enzymeImportRebase ( wxCommandEvent &ev )
     {
-	if ( wxYES != wxMessageBox ( txt("t_import_rebase_warning") , txt("t_attention") , wxYES_NO ) ) return ;
-	wxString filename = wxFileName::CreateTempFileName ( _T("GENtle") ) ;
-	wxString text ;
-	wxArrayString lines ;
+    if ( wxYES != wxMessageBox ( txt("t_import_rebase_warning") , txt("t_attention") , wxYES_NO ) )
+        return ;
+    wxString filename = wxFileName::CreateTempFileName ( "GENtle_rebase_" ) ;
+    wxPrintf("D: enzymeImportRebase created temp filename '%s'.\n",filename ) ;
 
-	// Read file
-	wxBeginBusyCursor () ;
-	myExternal ex ;
+    // Read file
+    wxBeginBusyCursor () ;
 
-	wxString version = ex.getText ( _T("ftp://ftp.neb.com/pub/rebase/VERSION") ) ;
-	version = version.BeforeFirst ( 10 ) ;
-	version = version.BeforeFirst ( 13 ) ;
-	text = ex.getText ( _T("ftp://ftp.neb.com/pub/rebase/bairoch.") + version ) ;
+    myExternal ex ;
+    wxString version = ex.getText ( "ftp://ftp.neb.com/pub/rebase/VERSION" ) ;
+    version.Trim(true) ;
+    wxPrintf( "D: Found rebase version '%s'.\n" , version ) ;
+    wxString text = ex.getText ( "ftp://ftp.neb.com/pub/rebase/bairoch." + version ) ;
+    wxPrintf( "D: Downloaded text of length %ld.\n" , text.Len() ) ;
 
-	// Success?
-	if ( text.length() < 100000 )
-		{
-		wxEndBusyCursor () ;
-		wxMessageBox ( txt("t_download_failed") ) ;
-		return ;
-		}
+    // Success?
+    if ( text.Len() < 100000 )
+        {
+        wxEndBusyCursor () ;
+        wxMessageBox ( txt("t_download_failed") ) ;
+        return ;
+        }
 
-	explode ( _T("\n") , text , lines ) ;
-	text.Clear() ; // Free memory
+    wxArrayString lines ;
+    explode ( "\n" , text , lines ) ;
+    text.Clear() ; // Free memory
 
-	unsigned int a , changed = 0 , added = 0 , last_enzyme_count = 0 ;
-	wxString tag , enzyme_name , last_enzyme ;
-	for ( a = 0 ; a < lines.GetCount() ; a++ )
-		{
-		text = lines[a] ;
-		tag = text.Mid ( 0 , 2 ) ;
-		text = text.Mid(2).Trim().Trim(false) ;
-		if ( tag == _T("ID") )
-			{
-			enzyme_name = text ;
-			if ( last_enzyme == enzyme_name )
-				{
-				last_enzyme_count++ ;
-				enzyme_name += wxString::Format ( _T(" [%d]") , last_enzyme_count ) ;
-				}
-			else
-				{
-				last_enzyme = enzyme_name ;
-				last_enzyme_count = 0 ;
-				}
-			}
-		else if ( tag == _T("//") ) enzyme_name.Clear () ;
-		else if ( tag == _T("RS") )
-			{
-			wxString p1 = text.BeforeFirst(';') ;
-			wxString p2 = text.AfterFirst(';') ;
-			p2.Replace(_T(";"),_T("")) ;
-			wxString seq1 = p1.BeforeFirst(',').Trim().Trim(false) ;
-			wxString seq2 = p2.BeforeFirst(',').Trim().Trim(false) ;
-			wxString cut1 = p1.AfterFirst(',').Trim().Trim(false) ;
-			wxString cut2 = p2.AfterFirst(',').Trim().Trim(false) ;
+    unsigned int changed = 0 , added = 0 , last_enzyme_count = 0 ;
+    wxString tag , enzyme_name , last_enzyme ;
+    for ( unsigned int a = 0 ; a < lines.GetCount() ; a++ )
+        {
+        wxString text = lines[a] ;
+        wxString tag = text.Mid ( 0 , 2 ) ;
+        text = text.Mid(2).Trim().Trim(false) ;
+        if ( tag == "ID" )
+            {
+            enzyme_name = text ;
+            wxPrintf("D: enzyme name: '%s'\n", enzyme_name ) ;
+            if ( last_enzyme == enzyme_name )
+                {
+                last_enzyme_count++ ;
+                enzyme_name += wxString::Format ( " [%d]" , last_enzyme_count ) ;
+                }
+            else
+                {
+                last_enzyme = enzyme_name ;
+                last_enzyme_count = 0 ;
+                }
+            }
+        else if ( tag == "//" ) enzyme_name.Clear () ;
+        else if ( tag == "RS" )
+            {
+            wxString p1 = text.BeforeFirst(';') ;
+            wxString p2 = text.AfterFirst(';') ;
+            p2.Replace(";","") ;
+            wxString seq1 = p1.BeforeFirst(',').Trim().Trim(false) ;
+            wxString seq2 = p2.BeforeFirst(',').Trim().Trim(false) ;
+            wxString cut1 = p1.AfterFirst(',').Trim().Trim(false) ;
+            wxString cut2 = p2.AfterFirst(',').Trim().Trim(false) ;
 
-			if ( enzyme_name.IsEmpty() || seq1.IsEmpty() || cut1.IsEmpty() ) continue ; // Paranoia
-			if ( !seq2.IsEmpty() && seq1.length() != seq2.length() ) continue ; // Paranoia
-			if ( enzyme_name.StartsWith ( _T("M.") ) ) continue ; // Strange things, ignore
-			if ( cut1 == _T("?") ) continue ; // Unknown cut, ignore
+            if ( enzyme_name.IsEmpty() || seq1.IsEmpty() || cut1.IsEmpty() ) continue ; // Paranoia
+            if ( !seq2.IsEmpty() && seq1.length() != seq2.length() ) continue ; // Paranoia
+            if ( enzyme_name.StartsWith ( "M." ) ) continue ; // Strange things, ignore
+            if ( cut1 == "?" ) continue ; // Unknown cut, ignore
 
-			signed long lcut1 , lcut2 , ol1 = seq1.length() ;
-			cut1.ToLong ( &lcut1 ) ;
-			cut2.ToLong ( &lcut2 ) ;
+            signed long lcut1 , lcut2 , ol1 = seq1.length() ;
+            cut1.ToLong ( &lcut1 ) ;
+            cut2.ToLong ( &lcut2 ) ;
 
-			if ( seq2.IsEmpty() ) lcut2 = lcut1 ; // No overlap given, creating one in VectorNTI count
+            if ( seq2.IsEmpty() ) lcut2 = lcut1 ; // No overlap given, creating one in VectorNTI count
 
-			while ( lcut1 > 0 && seq1.length() < lcut1 ) seq1 += _T("N") ;
-			lcut2 = ol1 - lcut2 - lcut1 ;
-			while ( lcut1 + lcut2 > 0 && seq1.length() < lcut1 + lcut2 ) seq1 += _T("N") ;
-			while ( lcut1 < 0 )
-				{
-				lcut1++ ;
-				// lcut2 is now relative to lcut1, so it stays unchanged
-				seq1 = _T("N") + seq1 ;
-				}
+            while ( lcut1 > 0 && seq1.length() < lcut1 ) seq1 += "N" ;
+            lcut2 = ol1 - lcut2 - lcut1 ;
+            while ( lcut1 + lcut2 > 0 && seq1.length() < lcut1 + lcut2 ) seq1 += "N" ;
+            while ( lcut1 < 0 )
+                {
+                lcut1++ ;
+                // lcut2 is now relative to lcut1, so it stays unchanged
+                seq1 = "N" + seq1 ;
+                }
 
-			TRestrictionEnzyme *re = myapp()->frame->LS->getRestrictionEnzyme ( enzyme_name ) ;
-			if ( re == NULL ) // Add new enzyme
-				{
-				unsigned long b , c = myapp()->frame->LS->re.GetCount() ;
-				for ( b = 0 ; b < c ; b++ )
-					{
-					if ( myapp()->frame->LS->re[b]->getSequence() == seq1 &&
-						 myapp()->frame->LS->re[b]->getCut() == lcut1 &&
-						 myapp()->frame->LS->re[b]->getOverlap() == lcut2 ) break ;
-					}
-				if ( b < c ) continue ; // Already an enzyme with these properties, no need to add it under another name again
+            TRestrictionEnzyme *re = myapp()->frame->LS->getRestrictionEnzyme ( enzyme_name ) ;
+            if ( re == NULL ) // Add new enzyme
+                {
+                unsigned long b , c = myapp()->frame->LS->re.GetCount() ;
+                for ( b = 0 ; b < c ; b++ )
+                    {
+                    if ( myapp()->frame->LS->re[b]->getSequence() == seq1 &&
+                         myapp()->frame->LS->re[b]->getCut() == lcut1 &&
+                         myapp()->frame->LS->re[b]->getOverlap() == lcut2 )
+			 {
+                         break ;
+			 }
+                    }
+                if ( b < c )
+                    {
+		    continue ; // Already an enzyme with these properties, no need to add it under another name again
+		    }
 
-				// A real new enzyme!
-				added++ ;
-				re = new TRestrictionEnzyme ;
-				re->setName ( enzyme_name ) ;
-				re->setCut ( lcut1 ) ;
-				re->setOverlap ( lcut2 ) ;
-				re->setSequence ( seq1 ) ;
-				myapp()->frame->LS->addRestrictionEnzyme ( re ) ;
-				myapp()->frame->LS->updateRestrictionEnzyme ( re ) ;
-				//wxMessageBox ( enzyme_name , "New enzyme!" ) ;
-				}
-			else if ( re->getCut() != lcut1 || re->getOverlap() != lcut2 || re->getSequence() != seq1 ) // Update enzyme
-				{
-				changed++ ;
-				re->setCut ( lcut1 ) ;
-				re->setOverlap ( lcut2 ) ;
-				re->setSequence ( seq1 ) ;
-				myapp()->frame->LS->updateRestrictionEnzyme ( re ) ;
-				//wxMessageBox ( wxString::Format ( "%d:%d ; %d:%d / " , lcut1 , lcut2 , re->getCut() , re->getOverlap() ) + seq1 + ":" + re->getSequence() , enzyme_name ) ;
-				}
-			}
-		}
-	wxEndBusyCursor () ;
+                // A real new enzyme!
+                added++ ;
+                re = new TRestrictionEnzyme ;
+                re->setName ( enzyme_name ) ;
+                re->setCut ( lcut1 ) ;
+                re->setOverlap ( lcut2 ) ;
+                re->setSequence ( seq1 ) ;
+                myapp()->frame->LS->addRestrictionEnzyme ( re ) ;
+                myapp()->frame->LS->updateRestrictionEnzyme ( re ) ;
+                //wxMessageBox ( enzyme_name , "New enzyme!" ) ;
+                }
+            else if ( re->getCut() != lcut1 || re->getOverlap() != lcut2 || re->getSequence() != seq1 ) // Update enzyme
+                {
+                changed++ ;
+                re->setCut ( lcut1 ) ;
+                re->setOverlap ( lcut2 ) ;
+                re->setSequence ( seq1 ) ;
+                myapp()->frame->LS->updateRestrictionEnzyme ( re ) ;
+                //wxMessageBox ( wxString::Format ( "%d:%d ; %d:%d / " , lcut1 , lcut2 , re->getCut() , re->getOverlap() ) + seq1 + ":" + re->getSequence() , enzyme_name ) ;
+                }
+            }
+        }
+    wxEndBusyCursor () ;
 
-	if ( changed + added != 0 )
-		{
-		wxMessageBox ( wxString::Format ( txt("t_import_rebase_updates") , added , changed ) ) ;
-		exit ( 1 ) ; // Hard exit
-		}
-	else
-		{
-		wxMessageBox ( txt("t_import_rebase_no_updates") ) ;
-		}
-	}
+    if ( changed + added != 0 )
+        {
+        wxMessageBox ( wxString::Format ( txt("t_import_rebase_updates") , added , changed ) ) ;
+        exit ( 1 ) ; // Hard exit
+        }
+    else
+        {
+        wxMessageBox ( txt("t_import_rebase_no_updates") ) ;
+        }
+    }
 
 void TVectorEditor::enzymeDelFromGr ( wxCommandEvent &ev )
     {

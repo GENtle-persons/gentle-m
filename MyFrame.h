@@ -156,15 +156,15 @@ public:
     virtual TAminoAcids *newAminoAcids ( TVector *nv , wxString title = _T("") ) ;
     virtual TABIviewer *newABI ( wxString filename , wxString title ) ;
     virtual MyChild *newCLONE ( TClone &clone ) ;
-    virtual void newGB ( TGenBank &gb , wxString title = _T("") ) ;
-    virtual void newPDB ( TPDB &pdb , wxString title = _T("") ) ;
-    virtual void newXML ( TXMLfile &xml , wxString title = _T("") ) ;
-    virtual TPhyloTree *newPhyloTree ( wxString title = _T("") ) ;
-    virtual void blast ( wxString seq , wxString prg ) ;
-    virtual bool importFile ( wxString file , wxString path , int filter = -1 ) ;
+    virtual void newGB ( TGenBank &gb , wxString title = "" ) ;
+    virtual void newPDB ( TPDB &pdb , wxString title = "" ) ;
+    virtual void newXML ( TXMLfile &xml , wxString title = "" ) ;
+    virtual TPhyloTree *newPhyloTree ( wxString title = "" ) ;
+    virtual void blast ( const wxString& seq , const wxString& prg ) ;
+    virtual bool importFile ( const wxString& file , const wxString& path , const int filter = -1 ) ;
     virtual void setChild ( ChildBase *ch ) ;
     virtual void removeChild ( ChildBase *ch ) ;
-    virtual TStorage *getTempDB ( wxString name ) ;
+    virtual TStorage *getTempDB ( const wxString& name ) ;
     virtual TAlignment *runAlignment ( wxArrayString &vs , wxArrayChildBase &vc , TVector *nv = NULL ) ;
     virtual ChildBase *GetActiveChild() ;
     virtual void setActiveChild ( ChildBase *c ) ;
@@ -175,14 +175,14 @@ public:
     virtual bool isLocked () ;
     virtual bool isActivating () ;
     virtual TVirtualGel *useGel ( wxString type ) ;
-    virtual void saveImage ( wxBitmap *bmp , wxString name = _T("") ) ;
+    virtual void saveImage ( const wxBitmap * const bmp , const wxString& name = "" ) ;
     virtual wxChoice *AddFontsizeTool ( wxToolBar* toolBar , int id ) ;
     virtual void notifyChildrenChanged() ;
 	
-	virtual void push_help ( wxString name ) ;
-	virtual void pop_help () ;
-	virtual wxString get_help () ;
-	virtual int count_help () { return help_name.size() ; }
+    virtual void push_help ( const wxString& name ) ;
+    virtual void pop_help () ;
+    virtual wxString get_help () ;
+    virtual int count_help () { return help_name.size() ; }
 
     TMainTree *mainTree ; ///< \brief The main tree (for sequences etc.)
     TStorage *LS ; ///< \brief Pointer to the local TStorage database structure
