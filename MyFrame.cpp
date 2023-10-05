@@ -186,7 +186,7 @@ MyFrame::~MyFrame ()
  */
 void MyFrame::initme ()
     {
-//    myapp()->sw.Start() ;
+//  myapp()->sw.Start() ;
 
 #ifdef __WXGTK__
     SetFont ( *MYFONT ( 8 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
@@ -280,7 +280,6 @@ void MyFrame::initme ()
     stopcodon = showStopCodon == 0 ? '|' : '*' ;
 
     myapp()->init_txt ( lang_string.c_str() , "variables.csv" ) ;
-
 
     global_enzyme_rules = new TEnzymeRules ;
     global_enzyme_rules->load_global_settings() ;
@@ -395,7 +394,7 @@ void MyFrame::initme ()
         wxFileName f(is);
         //wxPrintf("D: s:%s, is:%s, f:%s\n",s,is,f.GetFullPath());
         if (wxFileExists(is))
-	    {
+            {
             wxBitmap *b = new wxBitmap(is, wxBITMAP_TYPE_PNG) ;
             bitmaps.push_back (*b) ;
             //wxPrintf("I: Successfully added bitmap '%s'.\n",is) ;
@@ -507,9 +506,9 @@ void MyFrame::initme ()
                     {
                     path = path.Mid ( 9 ) ;
                     if ( path.GetChar ( path.length()-1 ) == '/' ) // Trailing '/'
-			{
+                        {
                         path = path.Mid ( 0 , path.length() - 1 ) ;
-			}
+                        }
                     wxString db = path.BeforeFirst ( ':' ) ;
                     wxString name = path.AfterFirst ( ':' ) ;
                     TManageDatabaseDialog mdb ( this , _T("dummy") , ACTION_MODE_STARTUP ) ;
@@ -545,21 +544,23 @@ wxBitmap MyFrame::to_grey ( wxBitmap &bmp1 )
 #ifdef __WXMSW__
      wxImage i2 ( i.GetWidth() , i.GetHeight() ) ;
 #endif
-     for ( int x = 0 ; x < i.GetWidth() ; x++ )
-	{
-		for ( int y = 0 ; y < i.GetHeight() ; y++ )
-		{
-			int z = ( i.GetRed(x,y) + i.GetGreen(x,y) + i.GetBlue(x,y) ) / 3 ;
+    for ( int x = 0 ; x < i.GetWidth() ; x++ )
+        {
+        for ( int y = 0 ; y < i.GetHeight() ; y++ )
+            {
+            int z = ( i.GetRed(x,y) + i.GetGreen(x,y) + i.GetBlue(x,y) ) / 3 ;
 #ifndef __WXMSW__
-			z /= 2 ;
-			i.SetRGB ( x , y , z , z , z ) ;
+            z /= 2 ;
+            i.SetRGB ( x , y , z , z , z ) ;
 #else
-			if ( i.GetAlpha ( x , y ) < 255 ) z = 200 ;
-			else z /= 2 ;
-			i2.SetRGB ( x , y , z , z , z ) ;
+            if ( i.GetAlpha ( x , y ) < 255 )
+                z = 200 ;
+            else
+                z /= 2 ;
+            i2.SetRGB ( x , y , z , z , z ) ;
 #endif
-		}
-     }
+        }
+    }
 #ifdef __WXMSW__
     return wxBitmap ( i2 ) ;
 #else
@@ -580,15 +581,15 @@ void MyFrame::OnClose(wxCloseEvent& event)
         canclose = ! ( children[a]->vec && children[a]->vec->isChanged() ) ;
     if ( LS->getOption ( _T("DEBUGGING") , _T("") ) == _T("1") ) canclose = true ; // For debugging
     if ( !canclose )
-	{
+        {
         if ( wxYES == wxMessageBox ( txt("t_some_changed") , txt("msg_box") , wxICON_QUESTION | wxYES | wxNO ) )
             canclose = true ;
-	}
+        }
     if ( canclose )
-	{
+        {
         dying = true ;
         event.Skip();
-	}
+        }
     else event.Veto() ;
     }
 
@@ -692,7 +693,7 @@ void MyFrame::OnFileOpen(wxCommandEvent& event )
     TManageDatabaseDialog dbd ( this , txt("t_open") , ACTION_MODE_LOAD ) ;
     dbd.ShowModal () ;
     if ( i != children.GetCount() )
-     	setActiveChild ( children[children.GetCount()-1] ) ;
+        setActiveChild ( children[children.GetCount()-1] ) ;
     if ( GetActiveChild() ) GetActiveChild()->SetFocus() ;
     }
 
@@ -733,10 +734,10 @@ void MyFrame::OnTextImport(wxCommandEvent& event )
         TXMLfile xml ;
         xml.parse ( d.sequence->GetValue().c_str() ) ;
         if ( xml.success() )
-        	{
-			newXML ( xml , d.sName ) ;
-			return ;
-		}
+            {
+            newXML ( xml , d.sName ) ;
+            return ;
+            }
         }
     else if ( type == 4 ) // Primer
         {
@@ -901,10 +902,10 @@ bool MyFrame::importFile ( const wxString& file , const wxString& path , const i
         {
         SCFtype dummy ;
         if ( dummy.parse ( path ) ) // Success
-		{
-			newABI ( path , file ) ;
-			return true ;
-		}
+            {
+            newABI ( path , file ) ;
+            return true ;
+            }
         }
 
     // Trying Clone Manager 5 format
@@ -913,11 +914,11 @@ bool MyFrame::importFile ( const wxString& file , const wxString& path , const i
         TCloneManager cm ;
         cm.load ( path ) ;
         if ( cm.success() )
-		{
-			for ( int a = 0 ; a < cm.countVectors() ; a++ )
-				newFromVector ( cm.getVector ( a ) ) ;
-			return true ;
-		}
+            {
+            for ( int a = 0 ; a < cm.countVectors() ; a++ )
+            newFromVector ( cm.getVector ( a ) ) ;
+            return true ;
+            }
 	}
 
     // Trying PDB format
@@ -926,11 +927,11 @@ bool MyFrame::importFile ( const wxString& file , const wxString& path , const i
         TPDB pdb ;
         pdb.load ( path ) ;
         if ( pdb.success )
-		{
-			newPDB ( pdb , file ) ;
-			return true ;
-		}
-	}
+            {
+            newPDB ( pdb , file ) ;
+            return true ;
+            }
+        }
 
 
     // Trying spectra

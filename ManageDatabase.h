@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the TManageDatabaseDialog class and its helper classes, TMyDropTarget and TMySQLDialog
+    \brief Contains the TManageDatabaseDialog class and its helper classes, TMyDropTarget and TMySQLDialog
 */
 #ifndef _MANAGE_DATABASE_H_
 #define _MANAGE_DATABASE_H_
@@ -44,8 +44,7 @@ class TMySQLDialog : public wxDialog
 class TManageDatabaseDialog : public wxDialog
     {
     public :
-    TManageDatabaseDialog ( wxWindow *parent , wxString title ,
-                        int mode = ACTION_MODE_MANAGE , TVector *_v = NULL ) ; ///< Constructor
+    TManageDatabaseDialog ( wxWindow *parent , wxString title , int mode = ACTION_MODE_MANAGE , TVector *_v = NULL ) ; ///< Constructor
     virtual ~TManageDatabaseDialog () ; ///< Destructor
 
     virtual void OnOK ( wxCommandEvent &ev ) ; ///< "OK button" event handler
@@ -88,20 +87,20 @@ class TManageDatabaseDialog : public wxDialog
     virtual void pmOnFilterSeq ( wxCommandEvent &ev ) ; ///< "Search sequence checkbox" event handler
     virtual void pmOnTwoPanes ( wxCommandEvent &ev ) ; ///< "Toggle one/two lists" event handler
 
-    virtual bool do_copy ( wxString name , wxString sdb , wxString tdb ) ; ///< Copy item "name" from source to target database
-    virtual bool do_move ( wxString name , wxString sdb , wxString tdb ) ; ///< Move item "name" from source to target database
-    virtual void do_del  ( wxString name , wxString db ) ; ///< Delete item "name" from the database
+    virtual bool do_copy ( const wxString& name , const wxString& sdb , const wxString& tdb ) ; ///< Copy item "name" from source to target database
+    virtual bool do_move ( const wxString& name , const wxString& sdb , const wxString& tdb ) ; ///< Move item "name" from source to target database
+    virtual void do_del  ( const wxString& name , const wxString& db ) ; ///< Delete item "name" from the database
     virtual void pmOpenFiles ( wxArrayString &_names , wxString _db ) ; ///< Open the selected files
 
-    virtual bool copyDNA ( wxString name , wxString sdb , wxString tdb ) ; ///< Copy item "name" from source to target database
-    virtual bool moveDNA ( wxString name , wxString sdb , wxString tdb ) ; ///< Move item "name" from source to target database
-    virtual void delDNA ( wxString name , wxString db ) ; ///< Delete item "name" from the database
+    virtual bool copyDNA ( const wxString& name , const wxString& sdb , const wxString& tdb ) ; ///< Copy item "name" from source to target database
+    virtual bool moveDNA ( const wxString& name , const wxString& sdb , const wxString& tdb ) ; ///< Move item "name" from source to target database
+    virtual void delDNA ( const wxString& name , const wxString& db ) ; ///< Delete item "name" from the database
 
-    virtual void delProject ( wxString name , wxString db ) ; ///< Remove a project from the database
+    virtual void delProject ( const wxString& name , const wxString& db ) ; ///< Remove a project from the database
 
-    virtual bool do_load ( wxString name , wxString db ) ; ///< Load an entry from the database
-    virtual bool do_load_DNA ( wxString name , wxString db ) ; ///< Load a sequence from the database
-    virtual bool do_load_project ( wxString name , wxString db ) ; ///< Load a project from the database
+    virtual bool do_load ( const wxString& name , const wxString& db ) ; ///< Load an entry from the database
+    virtual bool do_load_DNA ( const wxString& name , const wxString& db ) ; ///< Load a sequence from the database
+    virtual bool do_load_project ( const wxString& name , const wxString& db ) ; ///< Load a project from the database
     virtual void do_save_DNA () ; ///< Save a sequence to the database
     virtual void do_save_project () ; ///< Save a project to the database
 
@@ -109,13 +108,13 @@ class TManageDatabaseDialog : public wxDialog
     virtual void accessDB () ; ///< Access the database
     virtual void pd_loadList () ; ///< Loads the database
     virtual void pm_init_lists () ; ///< Initializes the lists
-    virtual void pm_list_items ( int x ) ; ///< Initializes list items
-    virtual bool doesNameExist ( wxString name , wxString dbname ) ; ///< Does an item "name" exist in that database?
-    virtual void addDatabase ( wxString fn ) ; ///< Add a database to the list
-    virtual wxString fixQuotes ( wxString s ) ; ///< Fix quotes for storing in the database
-    virtual wxString getFileName ( wxString dbname ) ; ///< Returns the filename of the database
-    virtual wxArrayInt getSelectedListItems ( wxListCtrl *l ) ; ///< Returns the numbers of the selected items in the given list
-    virtual TStorage *getTempDB ( wxString filename ) ; ///< Returns a pointer to termorarily accessed database
+    virtual void pm_list_items ( const int x ) ; ///< Initializes list items
+    virtual bool doesNameExist ( const wxString& name , const wxString& dbname ) ; ///< Does an item "name" exist in that database?
+    virtual void addDatabase ( const wxString& fn ) ; ///< Add a database to the list
+    virtual wxString fixQuotes  ( const wxString& _s ) const ; ///< Fix quotes for storing in the database
+    virtual wxString getFileName ( const wxString& dbname ) const ; ///< Returns the filename of the database
+    virtual wxArrayInt getSelectedListItems ( const wxListCtrl * const l ) const ; ///< Returns the numbers of the selected items in the given list
+    virtual TStorage *getTempDB ( const wxString& filename ) const ; ///< Returns a pointer to termorarily accessed database
 
     virtual void initCopynMove () ; ///< Prepare the open/store/search tab
     virtual void pmGetContext ( wxListCtrl *side ) ; ///< ???

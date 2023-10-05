@@ -34,14 +34,14 @@ class ChildBase : public MyChildBase
     ChildBase(wxWindow *parent, const wxString& title); ///< Constructor
 
     virtual wxString getName () { return _T("") ; } ///< Returns the name of the module (e.g., the vector name)
-    virtual void showName ( wxString x = _T("") ) ; ///< Shows the module name in the window title
+    virtual void showName ( const wxString& x = _T("") ) ; ///< Shows the module name in the window title
     virtual void OnFocus(wxFocusEvent& event); ///< Event handler for focus event
     virtual bool caniclose(wxCloseEvent& event); ///< Checks for unsaved edits
     virtual void OnFileSave(wxCommandEvent& WXUNUSED(event) ) {} ; ///< Event handler for save command
     virtual wxToolBar *CreateToolBar ( int i ) ; ///< Tool bar creation
-    virtual void Maximize ( bool isit = true ) ; ///< Maximize the window
+    virtual void Maximize ( const bool isit = true ) ; ///< Maximize the window
     virtual void updateUndoMenu () ; ///< Updates the "undo" menu entry
-    virtual void updateSequenceCanvas ( bool remember = false ) ; ///< Refresh the sequence display
+    virtual void updateSequenceCanvas ( const bool remember = false ) ; ///< Refresh the sequence display
     virtual void OnClose(wxCloseEvent& event); ///< Close event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler
     virtual void OnPaste (wxCommandEvent& WXUNUSED(event)) {} ; ///< Paste event handler
@@ -51,28 +51,27 @@ class ChildBase : public MyChildBase
     virtual void initHelp () ; ///< Initializes help link for online help
     virtual void otherChildrenChanged () {} ; ///< Update modules that depend on other modules when one was added/deleted
 
-
     // Compatability functions
-    virtual wxToolBar *CreateToolBar ( int i , int j , wxString s ) ; ///< Generates the tool bar
+    virtual wxToolBar *CreateToolBar ( const int i , const int j , const wxString& s ) ; ///< Generates the tool bar
     virtual void SetMenuBar ( wxMenuBar *menu_bar ) ; ///< Sets the menu bar for the window
     virtual wxMenuBar *GetMenuBar () ; ///< Returns a pointer to the menu bar
     virtual wxToolBar *GetToolBar () ; ///< Returns a pointer to the tool bar
     virtual void Activate () ; ///< Activates the module (in foreground etc.)
-    virtual void SetIcon ( wxIcon icon ) ; ///< Sets the module icon (unused)
+    virtual void SetIcon ( const wxIcon& icon ) ; ///< Sets the module icon (unused)
     virtual void SetMyMenuBar () ; ///< Sets the menu bar (used for mac version primarily)
     virtual bool HasUndoData () ; ///< TRUE if undo button available and active (undo data present)
 
-	bool allow_cut , allow_copy , allow_paste , allow_find , allow_save , allow_print , allow_undo ;
+    bool allow_cut , allow_copy , allow_paste , allow_find , allow_save , allow_print , allow_undo ;
 
     protected :
     friend class MyFrame ;
     wxMenuBar *menubar ; ///< Pointer to the window menu bar
     wxToolBar *toolbar ; ///< Pointer to the window too bar
 
-    virtual wxString getExportFilters () ;
-    virtual void doExport ( wxString filename , int filter ) ; ///< Export data, depending on filename and export type
-    virtual void exportVector ( TVector *vec , wxFile &out , int filter , wxString filename = _T("") ) ; ///< Exports a TVector
-    virtual void arrangedExport ( wxFile &out , wxString n , wxString s , int l ) ;
+    virtual wxString getExportFilters () const ;
+    virtual void doExport ( const wxString& filename , int filter ) ; ///< Export data, depending on filename and export type
+    virtual void exportVector ( TVector *vec , wxFile &out , int filter , const wxString& filename = _T("") ) ; ///< Exports a TVector
+    virtual void arrangedExport ( wxFile &out , const wxString& n , const wxString& s , int l ) ;
     virtual void updateToolbar () ; ///< Sets the tool bar
     } ;
 

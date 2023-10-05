@@ -864,7 +864,7 @@ TSQLresult TStorage::getObject ( const wxString &query )
     {
     if ( recording )
     	{
-	    record += query + _T("; ") ;
+	    record += query + "; " ;
         results.clean() ;
 	    return results ;
     	}
@@ -1056,7 +1056,7 @@ void TStorage::getEnzymeGroups ( wxArrayString &vs )
 
     TSQLresult sr ;
     if ( !isLocalDB() ) cleanEnzymeGroupCache () ;
-    wxString sql = _T("SELECT eg_name FROM enzyme_group") ;
+    wxString sql = "SELECT eg_name FROM enzyme_group" ;
     sr = getObject ( sql ) ;
     for ( a = 0 ; a < sr.content.size() ; a++ )
     	{
@@ -1162,12 +1162,8 @@ void TStorage::removeEnzymeFromGroup ( wxString enzyme , wxString group )
 		}
 
     cleanEnzymeGroupCache() ;
-    wxString sql ;
-    sql = _T("DELETE FROM link_enzyme_group WHERE leg_enzyme=\"") +
-          enzyme +
-          _T("\" AND leg_group=\"") +
-          group +
-          _T("\"") ;
+    wxString sql = "DELETE FROM link_enzyme_group WHERE leg_enzyme=\"" +
+          enzyme + "\" AND leg_group=\"" + group + "\"" ;
     getObject ( sql ) ;
 	}
 
