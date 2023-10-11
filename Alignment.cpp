@@ -1139,7 +1139,7 @@ void TAlignment::OnFileSave ( wxCommandEvent &ev )
     wxString s , d ;
     TGenBank gb ;
     for ( a = b = 0 ; a < lines.size() ; a++ ) b += lines[a].isIdentity?0:1 ;
-    d = wxString::Format ( "%d\n" , b ) ;
+    d = wxString::Format ( "%u\n" , b ) ;
     for ( a = 0 ; a < lines.size() ; a++ )
         {
         if ( lines[a].isIdentity ) continue ;
@@ -1160,7 +1160,7 @@ void TAlignment::OnFileSave ( wxCommandEvent &ev )
         }
 
     // Add layout
-    d += wxString::Format ( "%d\n" , lines.size() ) ;
+    d += wxString::Format ( "%ld\n" , lines.size() ) ;
     for ( a = 0 ; a < lines.size() ; a++ )
         {
         wxString layout ;
