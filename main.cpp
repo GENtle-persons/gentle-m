@@ -147,19 +147,19 @@ bool MyApp::OnInit()
         if (0==strcmp("--version",argv[i]) || 0==strcmp("-v",argv[i]) ) 
             {
             wxPrintf("%s\n",get_GENtle_version());
-	    exit(0);
- 	    }
+            exit(0);
+            }
         else if (0==strcmp("--help",argv[i]) || 0==strcmp("-h",argv[i]))
- 	    {
+            {
             wxPrintf("%s","Please see the GENtle man page for help.\n");
-	    exit(0);
- 	    }
-        else if (0==strcmp("--help",argv[i]) || 0==strcmp("-h",argv[i]))
- 	    {
+            exit(0);
+            }
+        else
+            {
             wxPrintf("%s","Unknown option '%s'.\n",argv[i]);
-	    exit(1);
- 	    }
-	}
+            exit(1);
+            }
+        }
 
     isoconv = new wxCSConv ( "iso-8859-1" ) ;
     wxConvCurrent = isoconv ;
@@ -170,31 +170,41 @@ bool MyApp::OnInit()
     wxStartTimer() ;
 #endif
 
-
-#ifdef __DEBIAN__
-    homedir.AssignDir("/usr/share/gentle") ;
-#elif defined __WXMSW__ || defined __WXMAC__
-    wxString h, s1 , s2 ;
-    wxFileName::SplitPath ( argv[0] , &h, &s1 , &s2 ) ;
-    if ( h.IsEmpty() )
+    wxString tmp;
+    if ( wxGetEnv ( "GENTLE_HOMEDIR" , &tmp ) )
         {
-	homedir.AssignCwd() ;
-	}
+        homedir.AssignDir( tmp );
+	wxPrintf( "I: GENtle's homedir variable set by eviroment: '%s'\n", homedir.GetFullPath() ) ;
+        }
     else
         {
-	//h.MakeAbsolute() ;
-	homedir.Assign(h) ;
-	}
+#ifdef __DEBIAN__
+        homedir.AssignDir("/usr/share/gentle") ;
+#elif defined __WXMSW__ || defined __WXMAC__
+        wxString h, s1 , s2 ;
+        wxFileName::SplitPath ( argv[0] , &h, &s1 , &s2 ) ;
+        if ( h.IsEmpty() )
+            {
+            homedir.AssignCwd() ;
+            }
+        else
+            {
+            //h.MakeAbsolute() ;
+            homedir.Assign(h) ;
+            }
 #endif
 
 //FIXME: Unfortunate - why differ from Windows?
 #ifdef __WXMAC__
-   if (wxNOT_FOUND != homedir.GetFullPath().Find( wxFileName::GetPathSeparator() )) {
-       homedir.AssignDir(homedir.GetFullPath().BeforeLast ( '/' ) ) ;
-   }
-   //FIXME: Why?
-   //homedir += "/Resources" ;
+        if (wxNOT_FOUND != homedir.GetFullPath().Find( wxFileName::GetPathSeparator() ))
+            {
+            homedir.AssignDir(homedir.GetFullPath().BeforeLast ( '/' ) ) ;
+            }
+            //FIXME: Why?
+            //homedir += "/Resources" ;
 #endif
+	wxPrintf( "I: GENtle's homedir variable self-determined: '%s'\n", homedir.GetFullPath() ) ;
+        }
 
 #ifdef __WXMAC__
    wxApp::s_macAboutMenuItemId = MDI_ABOUT;
@@ -226,10 +236,10 @@ bool MyApp::OnInit()
     const wxString name = wxString::Format ( "GENtle-%s" , wxGetUserId().c_str());
     m_checker = new wxSingleInstanceChecker (name);
     if ( m_checker->IsAnotherRunning() )
-    {
+        {
         wxLogError(_T("Another program instance is already running, aborting."));
         return false;
-    }
+        }
     theapp = this ;
     dbWarningIssued = false ;
     programVersion = 0 ; // This ensures that no old program version messes with a new database scheme
