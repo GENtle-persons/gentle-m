@@ -16,10 +16,10 @@ bool operator == ( const TRestrictionCut &c1 , const TRestrictionCut &c2 )
 
 bool operator < ( const TFragment &f1 , const TFragment &f2 )
     {
-	 if ( f1.from < f2.from ) return true ;
-	 if ( f1.from > f2.from ) return false ;
-	 if ( f1.to < f2.to ) return true ;
-	 return false ;
+    if ( f1.from < f2.from ) return true ;
+    if ( f1.from > f2.from ) return false ;
+    if ( f1.to < f2.to ) return true ;
+    return false ;
     }
 
 bool operator == ( const TFragment &f1 , const TFragment &f2 )
@@ -44,7 +44,7 @@ bool TRestrictionEnzyme::differ ( TRestrictionEnzyme &e )
     return false ;
     }
 
-wxString TRestrictionEnzyme::getEndUpperLeft ( bool first_strand )
+wxString TRestrictionEnzyme::getEndUpperLeft ( bool first_strand ) const
     {
     wxString r ;
     for ( int a = 0 ; a < getCut(first_strand) ; a++ )
@@ -52,7 +52,7 @@ wxString TRestrictionEnzyme::getEndUpperLeft ( bool first_strand )
     return r ;
     }
 
-wxString TRestrictionEnzyme::getEndLowerLeft ( bool first_strand )
+wxString TRestrictionEnzyme::getEndLowerLeft ( bool first_strand ) const
     {
     wxString r , s = invertSequence () ;
     for ( int a = 0 ; a < getCut(first_strand)+getOverlap(first_strand) ; a++ )
@@ -60,7 +60,7 @@ wxString TRestrictionEnzyme::getEndLowerLeft ( bool first_strand )
     return r ;
     }
 
-wxString TRestrictionEnzyme::getEndUpperRight ( bool first_strand )
+wxString TRestrictionEnzyme::getEndUpperRight ( bool first_strand ) const
     {
     wxString r ;
     for ( int a = getCut(first_strand) ; a < sequence.length() ; a++ )
@@ -68,7 +68,7 @@ wxString TRestrictionEnzyme::getEndUpperRight ( bool first_strand )
     return r ;
     }
 
-wxString TRestrictionEnzyme::getEndLowerRight ( bool first_strand )
+wxString TRestrictionEnzyme::getEndLowerRight ( bool first_strand ) const
     {
     wxString r , s = invertSequence () ;
     for ( int a = getCut(first_strand)+getOverlap(first_strand) ; a < s.length() ; a++ )
@@ -76,38 +76,38 @@ wxString TRestrictionEnzyme::getEndLowerRight ( bool first_strand )
     return r ;
     }
 
-wxString TRestrictionEnzyme::invertSequence ()
+wxString TRestrictionEnzyme::invertSequence () const
     {
     TVector v ;
     v.setSequence ( sequence ) ;
     return v.transformSequence ( true , false ) . c_str() ;
     }
 
-int TRestrictionEnzyme::getCut ( bool first_strand )
-	{
-	return first_strand ? cut : sequence.length() - cut - overlap ;
-	}
+int TRestrictionEnzyme::getCut ( bool first_strand ) const
+    {
+    return first_strand ? cut : sequence.length() - cut - overlap ;
+    }
 
-int TRestrictionEnzyme::getOverlap ( bool first_strand )
-	{
-	return overlap ;
-	}
+int TRestrictionEnzyme::getOverlap ( bool first_strand ) const
+    {
+    return overlap ;
+    }
 
 void TRestrictionEnzyme::setCut ( int c ) { cut = c ; }
 void TRestrictionEnzyme::setOverlap ( int o ) { overlap = o ; }
-wxString TRestrictionEnzyme::getName () { return name ; }
-void TRestrictionEnzyme::setName ( wxString _name ) { name = _name ; }
-wxString TRestrictionEnzyme::getSequence () { return sequence ; }
-bool TRestrictionEnzyme::isPalindromic () { return palindromic ; }
+wxString TRestrictionEnzyme::getName () const { return name ; }
+void TRestrictionEnzyme::setName ( const wxString& _name ) { name = _name ; }
+wxString TRestrictionEnzyme::getSequence () const { return sequence ; }
+bool TRestrictionEnzyme::isPalindromic () const { return palindromic ; }
 
-void TRestrictionEnzyme::setSequence ( wxString _seq )
-	{
-	sequence = _seq ;
+void TRestrictionEnzyme::setSequence ( const wxString& _seq )
+    {
+    sequence = _seq ;
     TVector v ;
     v.setSequence ( sequence ) ;
-    _seq = v.transformSequence ( true , true ) . c_str() ;
-	palindromic = _seq == sequence ;
-	}
+    wxString tmpSeq = v.transformSequence ( true , true ) . c_str() ;
+    palindromic = (tmpSeq == sequence) ;
+    }
 
 
 //------------------------------------------------------------------------------
@@ -126,18 +126,18 @@ void TRestrictionCut::linearUpdate ( int w , int h )
                         lastrect.GetHeight() ) ;
     }
 
-wxString TRestrictionCut::getNameAndPosition ()
+wxString TRestrictionCut::getNameAndPosition () const
     {
-	 if ( !myapp()->frame->showEnzymePos ) return getDisplayName() ;
+    if ( !myapp()->frame->showEnzymePos ) return getDisplayName() ;
     return wxString::Format ( _T("%s %d") , getDisplayName().c_str() , pos ) ;
     }
 
-bool TRestrictionCut::isHidden ( TVector *v )
+bool TRestrictionCut::isHidden ( const TVector * const v ) const
     {
     return v->isEnzymeHidden ( e->getName() ) ;
     }
 
-wxString TRestrictionCut::getDisplayName ()
+wxString TRestrictionCut::getDisplayName () const
 	{
 	if ( display_name.IsEmpty() ) return e->getName() ;
 	return display_name ;
@@ -157,16 +157,16 @@ bool TRestrictionCut::join ( TRestrictionCut *c )
 	return true ;
 	}
 
-wxString TRestrictionCut::getEndUpperLeft () { return e->getEndUpperLeft ( first_strand ) ; }
-wxString TRestrictionCut::getEndLowerLeft () { return e->getEndLowerLeft ( first_strand ) ; }
-wxString TRestrictionCut::getEndUpperRight () { return e->getEndUpperRight ( first_strand ) ; }
-wxString TRestrictionCut::getEndLowerRight () { return e->getEndLowerRight ( first_strand ) ; }
-int TRestrictionCut::getCut () { return e->getCut ( first_strand ) ; }
-int TRestrictionCut::getOverlap () { return e->getOverlap ( first_strand ) ; }
+wxString TRestrictionCut::getEndUpperLeft () const { return e->getEndUpperLeft ( first_strand ) ; }
+wxString TRestrictionCut::getEndLowerLeft () const { return e->getEndLowerLeft ( first_strand ) ; }
+wxString TRestrictionCut::getEndUpperRight () const { return e->getEndUpperRight ( first_strand ) ; }
+wxString TRestrictionCut::getEndLowerRight () const { return e->getEndLowerRight ( first_strand ) ; }
+int TRestrictionCut::getCut () const { return e->getCut ( first_strand ) ; }
+int TRestrictionCut::getOverlap () const { return e->getOverlap ( first_strand ) ; }
 void TRestrictionCut::setPos ( int p ) { pos = p ; }
-wxString TRestrictionCut::getSequence () { return e->getSequence () ; }
+wxString TRestrictionCut::getSequence () const { return e->getSequence () ; }
 
-int TRestrictionCut::getPos ()
+int TRestrictionCut::getPos () const
 	{
 	if ( first_strand ) return pos ;
 	int a = pos ;
@@ -177,12 +177,12 @@ int TRestrictionCut::getPos ()
 	return a ;
 	}
 
-int TRestrictionCut::getFrom ()
+int TRestrictionCut::getFrom () const
 	{
 	return pos - e->getCut() ;
 	}
 
-int TRestrictionCut::getTo ()
+int TRestrictionCut::getTo () const
 	{
 	return pos - e->getCut() + e->getSequence().length() - 1 ;
 	}
@@ -190,7 +190,7 @@ int TRestrictionCut::getTo ()
 
 //------------------------------------------------------------------------------
 
-TProtease::TProtease ( wxString _name , wxString m , wxString _note )
+TProtease::TProtease ( const wxString& _name , const wxString& m , const wxString& _note )
     {
     name = _name ;
     str_match = m ;
@@ -214,7 +214,7 @@ TProtease::TProtease ( wxString _name , wxString m , wxString _note )
 
 
 
-bool TProtease::does_match ( wxString s )
+bool TProtease::does_match ( const wxString& s ) const
     {
     if ( s.length() != len() ) return false ;
     int a , b ;
