@@ -241,7 +241,7 @@ class TVector
 
     TAAProp getAAprop ( char a ) ; ///< Returns the properties of the one-letter code amino acid
     int find_item ( wxString s ) ; ///< Finds an item with that name
-    bool isEnzymeHidden ( wxString s ) ; ///< Is enzyme "s" hidden?
+    bool isEnzymeHidden ( const wxString& s ) const ; ///< Is enzyme "s" hidden?
     void hideEnzyme ( wxString s , bool hideit = true ) ; ///< Set enzyme hidden state
 
     wxString getSubstring ( int mf , int mt ) ; ///< Returns a sequence substring

@@ -1562,10 +1562,9 @@ int TVector::find_item ( wxString s )
     return -1 ; // Not found
     }
 
-bool TVector::isEnzymeHidden ( wxString s )
+bool TVector::isEnzymeHidden ( const wxString& s ) const
     {
-    int a ;
-    for ( a = 0 ; a < hiddenEnzymes.GetCount() ; a++ )
+    for ( int a = 0 ; a < hiddenEnzymes.GetCount() ; a++ )
        if ( hiddenEnzymes[a] == s ) return true ;
     return false ;
     }
