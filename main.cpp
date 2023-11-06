@@ -174,13 +174,13 @@ bool MyApp::OnInit()
     if ( wxGetEnv ( "GENTLE_HOMEDIR" , &tmp ) )
         {
         homedir.AssignDir( tmp );
-	wxPrintf( "I: GENtle's homedir variable set by eviroment: '%s'\n", homedir.GetFullPath() ) ;
+        wxPrintf( "I: GENtle's homedir variable set by eviroment: '%s'\n", homedir.GetFullPath() ) ;
         }
     else
         {
 #ifdef __DEBIAN__
         homedir.AssignDir("/usr/share/gentle") ;
-#elif defined __WXMSW__ || defined __WXMAC__
+#else
         wxString h, s1 , s2 ;
         wxFileName::SplitPath ( argv[0] , &h, &s1 , &s2 ) ;
         if ( h.IsEmpty() )
@@ -189,7 +189,6 @@ bool MyApp::OnInit()
             }
         else
             {
-            //h.MakeAbsolute() ;
             homedir.Assign(h) ;
             }
 #endif
@@ -203,8 +202,11 @@ bool MyApp::OnInit()
             //FIXME: Why?
             //homedir += "/Resources" ;
 #endif
-	wxPrintf( "I: GENtle's homedir variable self-determined: '%s'\n", homedir.GetFullPath() ) ;
+        wxPrintf( "I: GENtle's homedir variable self-determined: '%s'\n", homedir.GetFullPath() ) ;
         }
+
+        homedir.MakeAbsolute() ;
+        wxPrintf( "I: GENtle's homedir as absolute path: '%s'\n", homedir.GetFullPath() ) ;
 
 #ifdef __WXMAC__
    wxApp::s_macAboutMenuItemId = MDI_ABOUT;
@@ -218,6 +220,8 @@ bool MyApp::OnInit()
    wxInitAllImageHandlers() ;
    wxFileSystem::AddHandler ( new wxInternetFSHandler ) ;
 
+   // Caveat: Because of this change of the working directory,
+   //         all prior paths need to be absolute or relative to homedir.
    wxSetWorkingDirectory ( homedir.GetFullPath() ) ; // Setting home directory as working dir
 
    // Setting ncoils dir as an environment variable
@@ -250,8 +254,8 @@ bool MyApp::OnInit()
     wxPrintf("D: Assigned bmpdir to '%s'\n",bmpdir.GetFullPath());
     if ( !wxDirExists ( bmpdir.GetFullPath() ) )
         {
-	    wxPrintf("E: Could not find bitmap directory expected at '%s'.\n",bmpdir.GetFullPath());
-	}
+            wxPrintf("E: Could not find bitmap directory expected at '%s'.\n",bmpdir.GetFullPath());
+        }
 
     // Make sure local database exists
     wxString localdb , blankdb ;
@@ -271,12 +275,12 @@ bool MyApp::OnInit()
         {
         wxFile test ( localdb , wxFile::write_append ) ;
         if ( !test.IsOpened() )
-	    local_ok = false ;
+            local_ok = false ;
         }
 
     if ( !local_ok )
         {
-        theRealLocalDb = wxGetHomeDir() + wxFileName::GetPathSeparator() + "local.db" ;
+        theRealLocalDb = wxGetHomeDir() + wxFileName::GetPathSeparator()  + "local.db" ;
         localdb = theRealLocalDb ;
         if ( !wxFileExists ( localdb ) )
             {
@@ -292,11 +296,11 @@ bool MyApp::OnInit()
     if ( frame->dying ) return FALSE ;
     SetTopWindow(frame);
 
-	if ( clp[_T("no-splash-screen")] == "1" )
-		frame->showSplashScreen = false ;
+    if ( clp[_T("no-splash-screen")] == "1" )
+        frame->showSplashScreen = false ;
 
-	if ( !local_ok )
-		wxMessageBox ( txt("t_local_db_warning") ) ;
+    if ( !local_ok )
+        wxMessageBox ( txt("t_local_db_warning") ) ;
 
 
     if ( frame->showSplashScreen )
@@ -338,7 +342,7 @@ bool MyApp::OnInit()
         }
 
     if ( frame->doRegisterStuff )
-    	{
+        {
         registerFileExtension ( "gb") ;
         registerFileExtension ( "genbank") ;
         registerFileExtension ( "gbxml") ;
@@ -439,11 +443,11 @@ wxString MyApp::getHTMLCommand ( wxString command )
 	\param file The URL/file.
 */
 wxString MyApp::getFileFormatCommand ( wxString type , wxString file )
-	{
+    {
     wxFileType *ft = mtm.GetFileTypeFromExtension ( type ) ;
     if ( !ft ) return "" ;
     return ft->GetOpenCommand ( file ) ;
-	}
+    }
 
 /**	\fn MyApp::getFileFormatApplication ( wxString type )
 	\brief Returns the application associated with a file type. Windows only.
@@ -503,11 +507,11 @@ void MyApp::do_my_log ( wxString function , wxString msg )
     {
     if ( !logout ) logout = new wxFile ( "LOG.txt" , wxFile::write ) ;
     if ( total_log_counter > 5000 )
-    	{
-	    logout->Close () ;
-	    logout->Open ( "LOG.txt" , wxFile::write ) ;
-	    total_log_counter = 0 ;
-    	}
+        {
+        logout->Close () ;
+        logout->Open ( "LOG.txt" , wxFile::write ) ;
+        total_log_counter = 0 ;
+        }
     total_log_counter++ ;
 
     int i = sw.Time() ;
@@ -535,44 +539,44 @@ void MyApp::init_txt ( wxString lang , wxString csv , wxHashString *target , int
 
 /*
 #ifdef __WXGTK__
-	wxMBConv *conv = &wxConvUTF8 ;
+    wxMBConv *conv = &wxConvUTF8 ;
 #else
-	wxMBConv *conv = isoconv ;
+    wxMBConv *conv = isoconv ;
 #endif
 */
 
     for ( int lc = 0 ; lc < in.GetLineCount() ; lc++ )
         {
-	wxString s = in[lc] ;
-	if ( s.IsEmpty() ) continue ; // Blank line
-	wxArrayString v ;
-	s.Replace ( "\\t" , "\t" ) ;
-	s.Replace ( "\\n" , "\n" ) ;
-	s = s.Mid ( 1 ) ; // Get rid of initial "
-	while ( 1 )
+        wxString s = in[lc] ;
+        if ( s.IsEmpty() ) continue ; // Blank line
+        wxArrayString v ;
+        s.Replace ( "\\t" , "\t" ) ;
+        s.Replace ( "\\n" , "\n" ) ;
+        s = s.Mid ( 1 ) ; // Get rid of initial "
+        while ( 1 )
             {
             int f = s.Find ( "\",\"" ) ;
             if ( f == -1 )
-			{
-			s = s.Left ( s.length()-1 ) ; // Get rid of final "
-			v.Add ( s ) ;
-			break ;
-			}
+                {
+                s = s.Left ( s.length()-1 ) ; // Get rid of final "
+                v.Add ( s ) ;
+                break ;
+                }
             else
-			{
-			v.Add ( s.Left ( f ) ) ;
-			s = s.Mid ( f + 3 ) ;
-			}
+                {
+                v.Add ( s.Left ( f ) ) ;
+                s = s.Mid ( f + 3 ) ;
+                }
             }
 
-	// Get key (firstline) or value
-       if ( firstline )
+        // Get key (firstline) or value
+        if ( firstline )
             {
             if ( frame->language_list.IsEmpty() )
-		   	{
-			frame->language_list = v ;
-			frame->language_list.RemoveAt ( 0 ) ;
-			}
+                {
+                frame->language_list = v ;
+                frame->language_list.RemoveAt ( 0 ) ;
+                }
             for ( int a = 0 ; a < v.GetCount() ; a++ )
                 if ( v[a].Upper() == lang.Upper() )
                     ln = a ;
