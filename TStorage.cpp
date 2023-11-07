@@ -52,7 +52,7 @@ TStorage::TStorage ( int nt , wxString fn )
     if ( fn.IsEmpty() ) fn = myapp()->getLocalDBname() ;
     dbname = fn ;
 
-    wxPrintf("I: Expecting database on '%s'\n",fn);
+    wxPrintf("I: TStorage: Expecting database on '%s'\n",fn);
 
     isSqlite3 = false ;
     if ( !isMySQL && !fn.IsEmpty() )
