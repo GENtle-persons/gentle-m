@@ -47,11 +47,11 @@ else
 fi
 
 WX_CPPFLAGS="`$WXCONFIG --cppflags`"
-WX_CXXFLAGS="-std=gnu++11 `$WXCONFIG --cxxflags | sed -e 's/-fno-exceptions//'`"
+WX_CXXFLAGS="-std=c++11 `$WXCONFIG --cxxflags | sed -e 's/-fno-exceptions//'`"
 WX_LIBS="`$WXCONFIG --libs`"
 
 CPPFLAGS="$CPPFLAGS $WX_CPPFLAGS"
-CXXFLAGS="$CXXFLAGS $WX_CPPFLAGS"
+CXXFLAGS="$CXXFLAGS $WX_CXXFLAGS"
 
 if [[ "x" != "x$PREFIX" ]]; then
   CPPFLAGS="$CPPFLAGS -I$PREFIX/include"
@@ -61,6 +61,8 @@ fi
 
 AC_SUBST(WX_LIBS)
 AC_SUBST(LDFLAGS)
+AC_SUBST(CPPFLAGS)
+AC_SUBST(CXXFLAGS)
 
 dnl Clarify inclusion/exclusion of ClustalW source tree
 AC_ARG_WITH([clustalw],AS_HELP_STRING([--with-clustalw],[Use external binary of clustalw for sequence alignments (default=yes)]),[],[])
