@@ -1,12 +1,12 @@
 /** \file
-	\brief Contains the TRestrictionEnzyme, TRestrictionCut, TProtease, and TProteaseCut classes
+    \brief Contains the TRestrictionEnzyme, TRestrictionCut, TProtease, and TProteaseCut classes
 */
 #include "RestrictionEnzymes.h"
 
 bool operator < ( const TRestrictionCut &c1 , const TRestrictionCut &c2 )
     {
     return ( ((TRestrictionCut)c1).getPos() > ((TRestrictionCut)c2).getPos() ) ||
-		( ((TRestrictionCut)c1).getPos() == ((TRestrictionCut)c2).getPos() && c1.e->getName() < c2.e->getName() ) ;
+        ( ((TRestrictionCut)c1).getPos() == ((TRestrictionCut)c2).getPos() && c1.e->getName() < c2.e->getName() ) ;
     }
 
 bool operator == ( const TRestrictionCut &c1 , const TRestrictionCut &c2 )
@@ -28,12 +28,12 @@ bool operator == ( const TFragment &f1 , const TFragment &f2 )
     }
 
 /** \brief Compares two restriction enzymes
-	\param e The enzyme to compare this one to
+    \param e The enzyme to compare this one to
 
-	If any of name, sequence, note, location, cut, or overlap do
-	not match, FALSE is returned
+    If any of name, sequence, note, location, cut, or overlap do
+    not match, FALSE is returned
 */
-bool TRestrictionEnzyme::differ ( TRestrictionEnzyme &e )
+bool TRestrictionEnzyme::differ ( const TRestrictionEnzyme &e ) const
     {
     if ( name != e.name ) return true ;
     if ( note != e.note ) return true ;
@@ -43,66 +43,65 @@ bool TRestrictionEnzyme::differ ( TRestrictionEnzyme &e )
     if ( overlap != e.overlap ) return true ;
     return false ;
     }
-
-wxString TRestrictionEnzyme::getEndUpperLeft ( bool first_strand ) const
+    
+wxString TRestrictionEnzyme::getEndUpperLeft ( const bool first_strand ) const
     {
     wxString r ;
     for ( int a = 0 ; a < getCut(first_strand) ; a++ )
         r += sequence.GetChar(a) ;
     return r ;
     }
-
-wxString TRestrictionEnzyme::getEndLowerLeft ( bool first_strand ) const
+    
+wxString TRestrictionEnzyme::getEndLowerLeft ( const bool first_strand ) const
     {
     wxString r , s = invertSequence () ;
     for ( int a = 0 ; a < getCut(first_strand)+getOverlap(first_strand) ; a++ )
         r += s.GetChar(a) ;
     return r ;
     }
-
-wxString TRestrictionEnzyme::getEndUpperRight ( bool first_strand ) const
+    
+wxString TRestrictionEnzyme::getEndUpperRight ( const bool first_strand ) const
     {
     wxString r ;
     for ( int a = getCut(first_strand) ; a < sequence.length() ; a++ )
         r += sequence.GetChar(a) ;
     return r ;
     }
-
-wxString TRestrictionEnzyme::getEndLowerRight ( bool first_strand ) const
+    
+wxString TRestrictionEnzyme::getEndLowerRight ( const bool first_strand ) const
     {
     wxString r , s = invertSequence () ;
     for ( int a = getCut(first_strand)+getOverlap(first_strand) ; a < s.length() ; a++ )
         r += s.GetChar(a) ;
     return r ;
     }
-
+    
 wxString TRestrictionEnzyme::invertSequence () const
     {
     TVector v ;
     v.setSequence ( sequence ) ;
     return v.transformSequence ( true , false ) . c_str() ;
     }
-
-int TRestrictionEnzyme::getCut ( bool first_strand ) const
+    
+int TRestrictionEnzyme::getCut ( const bool first_strand ) const
     {
     return first_strand ? cut : sequence.length() - cut - overlap ;
     }
 
-int TRestrictionEnzyme::getOverlap ( bool first_strand ) const
+int TRestrictionEnzyme::getOverlap ( const bool first_strand ) const
     {
     return overlap ;
     }
 
-void TRestrictionEnzyme::setCut ( int c ) { cut = c ; }
-void TRestrictionEnzyme::setOverlap ( int o ) { overlap = o ; }
+void TRestrictionEnzyme::setCut ( const int c ) { cut = c ; }
+void TRestrictionEnzyme::setOverlap ( const int o ) { overlap = o ; }
 wxString TRestrictionEnzyme::getName () const { return name ; }
 void TRestrictionEnzyme::setName ( const wxString& _name ) { name = _name ; }
 wxString TRestrictionEnzyme::getSequence () const { return sequence ; }
 bool TRestrictionEnzyme::isPalindromic () const { return palindromic ; }
 
-void TRestrictionEnzyme::setSequence ( const wxString& _seq )
+void TRestrictionEnzyme::setSequence ( const wxString& sequence )
     {
-    sequence = _seq ;
     TVector v ;
     v.setSequence ( sequence ) ;
     wxString tmpSeq = v.transformSequence ( true , true ) . c_str() ;
@@ -113,10 +112,10 @@ void TRestrictionEnzyme::setSequence ( const wxString& _seq )
 //------------------------------------------------------------------------------
 
 /** \brief updates the cut position in linear display
-	\param w Screen width
-	\param h Screen height
+    \param w Screen width
+    \param h Screen height
 */
-void TRestrictionCut::linearUpdate ( int w , int h )
+void TRestrictionCut::linearUpdate ( const int w , const int h )
     {
     p.x = lp.x * w / STANDARDRADIUS + 2 ;
     p.y = lp.y * h / STANDARDRADIUS ;
@@ -138,24 +137,24 @@ bool TRestrictionCut::isHidden ( const TVector * const v ) const
     }
 
 wxString TRestrictionCut::getDisplayName () const
-	{
-	if ( display_name.IsEmpty() ) return e->getName() ;
-	return display_name ;
-	}
+    {
+    if ( display_name.IsEmpty() ) return e->getName() ;
+    return display_name ;
+    }
 
 /** \brief Merges a cut with an isoenzyme for simplified display
-	\param c The restriction cut to merge
+    \param c The restriction cut to merge
 */
-bool TRestrictionCut::join ( TRestrictionCut *c )
-	{
-	if ( pos != c->pos ) return false ;
-	if ( e->getSequence() != c->e->getSequence() ) return false ;
-	if ( e->getCut() != c->e->getCut() ) return false ;
-	if ( e->getOverlap() != c->e->getOverlap() ) return false ;
-	if ( display_name.IsEmpty() ) display_name = e->getName() ;
-	display_name += _T(", ") + c->e->getName() ;
-	return true ;
-	}
+bool TRestrictionCut::join ( TRestrictionCut * const c )
+    {
+    if ( pos != c->pos ) return false ;
+    if ( e->getSequence() != c->e->getSequence() ) return false ;
+    if ( e->getCut() != c->e->getCut() ) return false ;
+    if ( e->getOverlap() != c->e->getOverlap() ) return false ;
+    if ( display_name.IsEmpty() ) display_name = e->getName() ;
+    display_name += _T(", ") + c->e->getName() ;
+    return true ;
+    }
 
 wxString TRestrictionCut::getEndUpperLeft () const { return e->getEndUpperLeft ( first_strand ) ; }
 wxString TRestrictionCut::getEndLowerLeft () const { return e->getEndLowerLeft ( first_strand ) ; }
@@ -167,25 +166,25 @@ void TRestrictionCut::setPos ( int p ) { pos = p ; }
 wxString TRestrictionCut::getSequence () const { return e->getSequence () ; }
 
 int TRestrictionCut::getPos () const
-	{
-	if ( first_strand ) return pos ;
-	int a = pos ;
-	a -= e->getCut() ;
-	a += getCut() ;
-//	a += e->getSequence().length() ;
-//	a -= e->getCut(first_strand) ;
-	return a ;
-	}
+    {
+    if ( first_strand ) return pos ;
+    int a = pos ;
+    a -= e->getCut() ;
+    a += getCut() ;
+//    a += e->getSequence().length() ;
+//    a -= e->getCut(first_strand) ;
+    return a ;
+    }
 
 int TRestrictionCut::getFrom () const
-	{
-	return pos - e->getCut() ;
-	}
+    {
+    return pos - e->getCut() ;
+    }
 
 int TRestrictionCut::getTo () const
-	{
-	return pos - e->getCut() + e->getSequence().length() - 1 ;
-	}
+    {
+    return pos - e->getCut() + e->getSequence().length() - 1 ;
+    }
 
 
 //------------------------------------------------------------------------------
@@ -195,8 +194,7 @@ TProtease::TProtease ( const wxString& _name , const wxString& m , const wxStrin
     name = _name ;
     str_match = m ;
     wxString s ;
-    int a ;
-    for ( a = 0 ; a < m.length() ; a++ )
+    for ( int a = 0 ; a < m.length() ; a++ )
         {
         char ma = m.GetChar(a) ;
         if ( ma == ',' || ma == ' ' || ma == '|' )
@@ -217,12 +215,11 @@ TProtease::TProtease ( const wxString& _name , const wxString& m , const wxStrin
 bool TProtease::does_match ( const wxString& s ) const
     {
     if ( s.length() != len() ) return false ;
-    int a , b ;
-    for ( a = 0 ; a < len() ; a++ )
+    for ( int a = 0 ; a < len() ; a++ )
         {
         bool yes = true , found = false ;
         wxString m = match[a] ;
-        for ( b = 0 ; b < m.length() && !found ; b++ )
+        for ( int b = 0 ; b < m.length() && !found ; b++ )
            {
            if ( m.GetChar(b) == '!' ) yes = !yes ;
            else if ( !yes && s.GetChar(a) == m.GetChar(b) ) return false ;

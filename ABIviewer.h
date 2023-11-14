@@ -19,14 +19,14 @@ class TABIviewer : public ChildBase
     virtual ~TABIviewer () ; ///< Destructor
 
     virtual void initme () ; ///< Initialization
-    virtual wxString getName () ; ///< Returns the module name
-    virtual void showSequence () ; ///< Show/refresh the sequence
-    virtual wxString getStat () ; ///< Get statistics as a wxString
-    virtual void showStat () ; ///< Show the statistics
+    virtual wxString getName () const ; ///< Returns the module name
+    virtual void showSequence () const ; ///< Show/refresh the sequence
+    virtual wxString getStat () const ; ///< Get statistics as a wxString
+    virtual void showStat () const ; ///< Show the statistics
     virtual void set_view_only ( int from , int to ) ; ///< Sets partial view
-    virtual bool is_only_view () { return view_from != -1 || view_to != -1 ; } ///< Partial view?
+    virtual bool is_only_view () const { return view_from != -1 || view_to != -1 ; } ///< Partial view?
     virtual void toggle_inv_compl () ; ///< Switches between normal and inverse/complementary display
-    virtual bool get_inv_compl () ; ///< Returns the state of normal or inverse/complementary display
+    virtual bool get_inv_compl () const ; ///< Returns the state of normal or inverse/complementary display
 
     virtual void OnMarkAll(wxCommandEvent& event); ///< Ctrl-A event handler
     virtual void OnFileSave(wxCommandEvent& event); ///< Save-as event handler

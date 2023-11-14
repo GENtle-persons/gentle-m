@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the ChildBase class
+    \brief Contains the ChildBase class
 */
 #ifndef _CHILDBASE_H_
 #define _CHILDBASE_H_
@@ -18,8 +18,8 @@ class TVector ;
 class MyFrame ;
 class SequenceCanvas ;
 
-/**	\class ChildBase
-	\brief The base class for all modules
+/** \class ChildBase
+    \brief The base class for all modules
 */
 class ChildBase : public MyChildBase
     {
@@ -33,8 +33,8 @@ class ChildBase : public MyChildBase
     ChildBase(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style) ; ///< Constructor
     ChildBase(wxWindow *parent, const wxString& title); ///< Constructor
 
-    virtual wxString getName () { return _T("") ; } ///< Returns the name of the module (e.g., the vector name)
-    virtual void showName ( const wxString& x = _T("") ) ; ///< Shows the module name in the window title
+    virtual wxString getName () const { return _T("") ; } ///< Returns the name of the module (e.g., the vector name)
+    virtual void showName ( const wxString& x = _T("") ) const ; ///< Shows the module name in the window title
     virtual void OnFocus(wxFocusEvent& event); ///< Event handler for focus event
     virtual bool caniclose(wxCloseEvent& event); ///< Checks for unsaved edits
     virtual void OnFileSave(wxCommandEvent& WXUNUSED(event) ) {} ; ///< Event handler for save command

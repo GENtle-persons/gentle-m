@@ -34,13 +34,13 @@
 // Licence:     GPL
 /////////////////////////////////////////////////////////////////////////////
 
-// ===========================================================================
+// ===
 // declarations
-// ===========================================================================
+// ===
 
-// ---------------------------------------------------------------------------
+// ---
 // headers
-// ---------------------------------------------------------------------------
+// ---
 
 // For compilers that support precompilation, includes "wx/wx.h".
 
@@ -127,17 +127,17 @@ MyApp *myapp ()
 // MyApp
 // ---------------------------------------------------------------------------
 
-/**	\fn MyApp::OnInit()
-	\brief Initializes the application.
+/** \fn MyApp::OnInit()
+    \brief Initializes the application.
 
-	* - Initializes variables
-	* - Initializes handlers
-	* - Checks if another program instance is already running
-	* - Creates a new local database, if necessary
-	* - Creates the frame
-	* - Shows the splash screen
-	* - Shows Tip of the Day (currently deactivated)
-	* - Registers file extensions
+    * - Initializes variables
+    * - Initializes handlers
+    * - Checks if another program instance is already running
+    * - Creates a new local database, if necessary
+    * - Creates the frame
+    * - Shows the splash screen
+    * - Shows Tip of the Day (currently deactivated)
+    * - Registers file extensions
 */
 bool MyApp::OnInit()
     {
@@ -189,7 +189,7 @@ bool MyApp::OnInit()
             }
         else
             {
-            homedir.Assign(h) ;
+            homedir.AssignDir(h) ;
             }
 #endif
 

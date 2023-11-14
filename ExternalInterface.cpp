@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the ExternalInterface, EIpanel and EILB class members
+    \brief Contains the ExternalInterface, EIpanel and EILB class members
 */
 #include "ExternalInterface.h"
 
@@ -101,14 +101,15 @@ void ExternalInterface::initme ()
     if ( panel->t1 ) panel->t1->SetFocus () ;
     }
 
-wxString ExternalInterface::getName ()
+wxString ExternalInterface::getName () const
     {
     return _T("External Interface") ;
     }
 
-void ExternalInterface::runBlast ( wxString seq , wxString prg )
-{
-    EIpanel *bl = new EIpanel ( nb , EI_BLAST ) ;
+void ExternalInterface::runBlast ( const wxString& seq , const wxString& _prg ) 
+    {
+    EIpanel * const bl = new EIpanel ( nb , EI_BLAST ) ;
+    wxString prg = _prg ;
     prg.MakeUpper() ;
     nb->AddPage ( bl , prg ) ;
     if ( prg == _T("BLASTP") ) bl->c1->SetSelection ( 0 ) ;
@@ -117,69 +118,66 @@ void ExternalInterface::runBlast ( wxString seq , wxString prg )
     nb->SetSelection ( nb->GetPageCount()-1 ) ;
     wxCommandEvent event( wxEVT_COMMAND_BUTTON_CLICKED, ID_B1 );
     wxPostEvent ( bl , event ) ;
-}
+    }
 
 
 // *****************************************************************************
-EILB::EILB ( wxWindow *parent , int id )
-	: wxHtmlListBox ( parent , id , wxDefaultPosition , wxDefaultSize , wxLB_MULTIPLE )
-	{
-	SetItemCount ( 0 ) ;
-	}
+EILB::EILB ( wxWindow *parent , int id ) : wxHtmlListBox ( parent , id , wxDefaultPosition , wxDefaultSize , wxLB_MULTIPLE )
+    {
+    SetItemCount ( 0 ) ;
+    }
 
 wxString EILB::OnGetItem(size_t n) const
-	{
-	    if ( n >= was.GetCount() ) return _T("") ;
-	wxString ret = was[n] ;
-	wxString bgcolor ;
-	if ( n % 3 == 0 ) bgcolor = _T("#FFFFFF") ;
-	if ( n % 3 == 1 ) bgcolor = _T("#EEEEEE") ;
-	if ( n % 3 == 2 ) bgcolor = _T("#DDDDDD") ;
-	ret = _T("<table bgcolor='") + bgcolor + _T("' width='100%' cellspacing=0 cellpadding=0><tr><td>") + ret + _T("</td></tr></table>") ;
-	return ret ;
-	}
+    {
+    if ( n >= was.GetCount() ) return _T("") ;
+    wxString ret = was[n] ;
+    wxString bgcolor ;
+    if ( n % 3 == 0 ) bgcolor = _T("#FFFFFF") ;
+    if ( n % 3 == 1 ) bgcolor = _T("#EEEEEE") ;
+    if ( n % 3 == 2 ) bgcolor = _T("#DDDDDD") ;
+    ret = _T("<table bgcolor='") + bgcolor + _T("' width='100%' cellspacing=0 cellpadding=0><tr><td>") + ret + _T("</td></tr></table>") ;
+    return ret ;
+    }
 
 void EILB::Clear ()
-	{
-	DeselectAll () ;
-	wxHtmlListBox::Clear () ;
-	SetItemCount ( 0 ) ;
-	was.Clear () ;
-	data.Clear () ;
-	}
+    {
+    DeselectAll () ;
+    wxHtmlListBox::Clear () ;
+    SetItemCount ( 0 ) ;
+    was.Clear () ;
+    data.Clear () ;
+    }
 
 void EILB::Set ( int id , wxString s , wxString t )
-	{
-	while ( was.GetCount() <= id ) was.Add ( _T("") ) ;
-	while ( data.GetCount() <= id ) data.Add ( _T("") ) ;
-	was[id] = s ;
-	data[id] = t ;
-	}
+    {
+    while ( was.GetCount() <= id ) was.Add ( _T("") ) ;
+    while ( data.GetCount() <= id ) data.Add ( _T("") ) ;
+    was[id] = s ;
+    data[id] = t ;
+    }
 
 void EILB::Sort()
-	{
-	int a ;
-	for ( a = 1 ; a < was.GetCount() ; a++ )
-		{
-		if ( was[a-1] <= was[a] ) continue ;
-		wxString tmp ;
-		tmp = was[a] ; was[a] = was[a-1] ; was[a-1] = tmp ;
-		tmp = data[a] ; data[a] = data[a-1] ; data[a-1] = tmp ;
-		a = 0 ;
-		}
-	}
+    {
+    for ( int a = 1 ; a < was.GetCount() ; a++ )
+        {
+        if ( was[a-1] <= was[a] ) continue ;
+        wxString tmp ;
+        tmp = was[a] ; was[a] = was[a-1] ; was[a-1] = tmp ;
+        tmp = data[a] ; data[a] = data[a-1] ; data[a-1] = tmp ;
+        a = 0 ;
+        }
+    }
 
 void EILB::Update()
-	{
-	SetItemCount ( was.GetCount() ) ;
-	Refresh () ;
-	}
+    {
+    SetItemCount ( was.GetCount() ) ;
+    Refresh () ;
+    }
 
 // *****************************************************************************
 
-EIpanel::EIpanel ( wxWindow *parent , int _mode )
-    : wxPanel ( parent )
-{
+EIpanel::EIpanel ( wxWindow *parent , int _mode ) : wxPanel ( parent )
+    {
     mode = _mode ;
     t1 = NULL ;
 
@@ -195,115 +193,115 @@ EIpanel::EIpanel ( wxWindow *parent , int _mode )
     v0->Add ( up , 0 , wxEXPAND , 5 ) ;
     v0->Add ( hlb , 1 , wxEXPAND , 5 ) ;
     SetSizer ( v0 ) ;
-	if ( t1 ) t1->SetFocus() ;
-}
+    if ( t1 ) t1->SetFocus() ;
+    }
 
 
 wxString EIpanel::valFC ( TiXmlNode *n )
-	{
-	if ( !n ) return _T("") ;
-	if ( !n->FirstChild() ) return _T("") ;
-	return val ( n->FirstChild() ) ;
-	}
+    {
+    if ( !n ) return _T("") ;
+    if ( !n->FirstChild() ) return _T("") ;
+    return val ( n->FirstChild() ) ;
+    }
 
 wxString EIpanel::val ( TiXmlNode *n )
-	{
-	if ( !n ) return _T("") ;
-	if ( !n->Value() ) return _T("") ;
-	return wxString ( n->Value() , wxConvUTF8 ) ;
-	}
+    {
+    if ( !n ) return _T("") ;
+    if ( !n->Value() ) return _T("") ;
+    return wxString ( n->Value() , wxConvUTF8 ) ;
+    }
 
 
 void EIpanel::OnLboxDClick ( wxCommandEvent& event )
-	{
-	OnB2 ( event ) ;
-	}
+    {
+    OnB2 ( event ) ;
+    }
 
 void EIpanel::OnC1 ( wxCommandEvent& event )
-	{
-	if ( mode == EI_NCBI )
-		{
-		wxString database = c1->GetStringSelection() ;
-		database = database.Lower() ;
-		if ( database == _T("pubmed") )
-			{
+    {
+    if ( mode == EI_NCBI )
+        {
+        wxString database = c1->GetStringSelection() ;
+        database = database.Lower() ;
+        if ( database == _T("pubmed") )
+            {
             v1->Show ( h1 , true ) ;
-			}
-		else
-  			{
+            }
+        else
+            {
             v1->Show ( h1 , false ) ;
-     		}
-   		v0->Layout() ;
-		}
-	}
+            }
+        v0->Layout() ;
+        }
+    }
 
 void EIpanel::OnB1 ( wxCommandEvent& event )
-	{
-	res_start = 0 ;
-	b_next->Disable () ;
-	b_last->Disable () ;
-	process () ;
- 	}
+    {
+    res_start = 0 ;
+    b_next->Disable () ;
+    b_last->Disable () ;
+    process () ;
+    }
 
 void EIpanel::OnB2 ( wxCommandEvent& event )
-	{
-	wxBeginBusyCursor () ;
-	if ( mode == EI_NCBI ) execute_ncbi() ;
-	if ( mode == EI_BLAST ) execute_blast() ;
-	wxEndBusyCursor () ;
-	}
+    {
+    wxBeginBusyCursor () ;
+    if ( mode == EI_NCBI ) execute_ncbi() ;
+    if ( mode == EI_BLAST ) execute_blast() ;
+    wxEndBusyCursor () ;
+    }
 
 void EIpanel::OnB3 ( wxCommandEvent& event )
-	{
-	wxBeginBusyCursor () ;
-	if ( mode == EI_NCBI ) execute_ncbi_b3() ;
-	if ( mode == EI_BLAST ) execute_blast_b3() ;
-	wxEndBusyCursor () ;
-	}
+    {
+    wxBeginBusyCursor () ;
+    if ( mode == EI_NCBI ) execute_ncbi_b3() ;
+    if ( mode == EI_BLAST ) execute_blast_b3() ;
+    wxEndBusyCursor () ;
+    }
 
 void EIpanel::OnBlast ( wxCommandEvent& event )
-	{
-	if ( res_start == 0 ) return ;
-	res_start -= RETMAX ;
-	process () ;
-	}
+    {
+    if ( res_start == 0 ) return ;
+    res_start -= RETMAX ;
+    process () ;
+    }
 
 void EIpanel::OnBnext ( wxCommandEvent& event )
-	{
-	if ( res_start + RETMAX > res_count ) return ;
-	res_start += RETMAX ;
-	process () ;
-	}
+    {
+    if ( res_start + RETMAX > res_count ) return ;
+    res_start += RETMAX ;
+    process () ;
+    }
 
 void EIpanel::process ()
-	{
+    {
     mylog ( "EIpanel::process" , "1" ) ;
-	wxBeginBusyCursor () ;
-	hlb->Clear () ;
+    wxBeginBusyCursor () ;
+    hlb->Clear () ;
     mylog ( "EIpanel::process" , "2" ) ;
-	if ( mode == EI_NCBI ) process_ncbi() ;
-	if ( mode == EI_BLAST ) process_blast() ;
+    if ( mode == EI_NCBI ) process_ncbi() ;
+    if ( mode == EI_BLAST ) process_blast() ;
     mylog ( "EIpanel::process" , "3" ) ;
-	hlb->Update () ;
+    hlb->Update () ;
     mylog ( "EIpanel::process" , "4" ) ;
-	wxEndBusyCursor () ;
-	}
+    wxEndBusyCursor () ;
+    }
 
 wxString EIpanel::num2html ( int num , int digits )
-	{
-	wxString s = wxString::Format ( _T("%d") , num ) ;
-	while ( s.length() < digits ) s = _T(" ") + s ;
-	s.Replace ( _T(" ") , _T("&nbsp;") ) ;
-	return s ;
-	}
+    {
+    wxString s = wxString::Format ( _T("%d") , num ) ;
+    while ( s.length() < digits ) s = _T(" ") + s ;
+    s.Replace ( _T(" ") , _T("&nbsp;") ) ;
+    return s ;
+    }
 
 void EIpanel::showMessage ( wxString msg )
-	{
-	if ( !st_msg->IsShown() )
-		{
-		v1->Show ( st_msg , true ) ;
-		v0->Layout () ;
-		}
-	st_msg->SetLabel ( msg ) ;
-	}
+    {
+    if ( !st_msg->IsShown() )
+        {
+        v1->Show ( st_msg , true ) ;
+        v0->Layout () ;
+        }
+    st_msg->SetLabel ( msg ) ;
+    }
 

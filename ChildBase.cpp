@@ -44,7 +44,7 @@ void ChildBase::Maximize ( bool isit )
   Activate () ;
 }
 
-void ChildBase::showName ( const wxString& _x )
+void ChildBase::showName ( const wxString& _x ) const
     {
     wxString x(_x) ;
     if ( x.IsEmpty() )

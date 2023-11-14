@@ -113,7 +113,7 @@ void TCloningAssistant::initme ()
 //	Refresh () ;
 	}
 
-wxString TCloningAssistant::getName ()
+wxString TCloningAssistant::getName () const
 	{
 	return txt("t_cloning_assistant") ;
 	}
@@ -139,7 +139,7 @@ void TCloningAssistant::EnforceRefesh ()
 	panel->Refresh () ;
 	}
 
-TDDR *TCloningAssistant::new_from_vector ( TVector *v , int drag )
+TDDR *TCloningAssistant::new_from_vector ( TVector * const v , const int drag )
 	{
 	TDDR *n = new TDDR ( DDR_AS_SEQUENCE ) ;
 	n->title = v->getName() ;

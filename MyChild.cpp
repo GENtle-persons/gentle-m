@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the MyChild class, as well as the MySplitter helper class
+    \brief Contains the MyChild class, as well as the MySplitter helper class
 */
 #include "MyChild.h"
 #include <wx/datetime.h>
@@ -105,44 +105,44 @@ MyChild::~MyChild()
 
 void MyChild::OnFontsize ( wxCommandEvent& event )
     {
-	long l ;
-	wxString s = fontsize->GetStringSelection() ;
-	s.ToLong ( &l ) ;
-	cSequence->set_font_size ( (int) l ) ;
-	updateSequenceCanvas ( true ) ;
-	}
+    long l ;
+    wxString s = fontsize->GetStringSelection() ;
+    s.ToLong ( &l ) ;
+    cSequence->set_font_size ( (int) l ) ;
+    updateSequenceCanvas ( true ) ;
+    }
 
 void MyChild::OnRemoveSequencingPrimers(wxCommandEvent& event)
-	{
-	bool found = false ;
-	int a , b ;
-	vec->undo.start ( txt("m_undo") + wxString ( _T(" ") ) + txt("m_remove_sequencing_primers") ) ;
-	for ( a = 0 ; a < vec->items.size() ; a++ )
-		{
-		if ( vec->items[a].getParam ( _T("AUTOMATIC") ) == _T("SEQUENCING PRIMER") )
-			{
-			for ( b = a + 1 ; b < vec->items.size() ; b++ )
-				vec->items[b-1] = vec->items[b] ;
-			vec->items.pop_back() ;
-			a-- ;
-			found = true ;
-			}
-		}
-	if ( !found )
- 		{
-   		vec->undo.abort() ;
+    {
+    bool found = false ;
+    int a , b ;
+    vec->undo.start ( txt("m_undo") + wxString ( _T(" ") ) + txt("m_remove_sequencing_primers") ) ;
+    for ( a = 0 ; a < vec->items.size() ; a++ )
+        {
+        if ( vec->items[a].getParam ( _T("AUTOMATIC") ) == _T("SEQUENCING PRIMER") )
+            {
+            for ( b = a + 1 ; b < vec->items.size() ; b++ )
+                vec->items[b-1] = vec->items[b] ;
+            vec->items.pop_back() ;
+            a-- ;
+            found = true ;
+            }
+        }
+    if ( !found )
+         {
+           vec->undo.abort() ;
         return ;
         }
 
-	vec->undo.stop() ;
-	vec->updateDisplay() ;
-	vec->setChanged () ;
-	Refresh () ;
-	treeBox->initme() ;
-	treeBox->Refresh() ;
-	cPlasmid->Refresh () ;
-	updateSequenceCanvas ( true ) ;
-	}
+    vec->undo.stop() ;
+    vec->updateDisplay() ;
+    vec->setChanged () ;
+    Refresh () ;
+    treeBox->initme() ;
+    treeBox->Refresh() ;
+    cPlasmid->Refresh () ;
+    updateSequenceCanvas ( true ) ;
+    }
 
 void MyChild::OnSequencingPrimer(wxCommandEvent& event)
     {
@@ -150,31 +150,31 @@ void MyChild::OnSequencingPrimer(wxCommandEvent& event)
     if ( wxID_OK != spd.ShowModal() ) return ; // Cancel
 
     if ( spd.getClear() )
-    	OnRemoveSequencingPrimers ( event ) ;
+        OnRemoveSequencingPrimers ( event ) ;
     wxArrayString p_name , p_seq ;
     wxBeginBusyCursor() ;
     spd.getPrimerList ( p_name , p_seq ) ;
     bool found = false ;
-	vec->undo.remember ( txt("m_undo") + wxString ( _T(" ") ) + txt("m_show_sequencing_primers") ) ;
+    vec->undo.remember ( txt("m_undo") + wxString ( _T(" ") ) + txt("m_show_sequencing_primers") ) ;
     for ( int a = 0 ; a < p_name.GetCount() ; a++ )
-    	{
-	    if ( spd.matchToVector ( vec , p_name[a] , p_seq[a] ) )
-	    	{
-	    	vec->updateDisplay() ;
-	    	found = true ;
-	    	}
-    	}
-   	if ( found )
-   		{
-	    vec->undo.stop() ;
-   		vec->setChanged () ;
-   		Refresh () ;
-   		treeBox->initme() ;
-   		treeBox->Refresh() ;
-   		cPlasmid->Refresh () ;
-   		updateSequenceCanvas ( true ) ;
-   		}
-	else vec->undo.abort() ;
+        {
+        if ( spd.matchToVector ( vec , p_name[a] , p_seq[a] ) )
+            {
+            vec->updateDisplay() ;
+            found = true ;
+            }
+        }
+       if ( found )
+           {
+        vec->undo.stop() ;
+           vec->setChanged () ;
+           Refresh () ;
+           treeBox->initme() ;
+           treeBox->Refresh() ;
+           cPlasmid->Refresh () ;
+           updateSequenceCanvas ( true ) ;
+           }
+    else vec->undo.abort() ;
     wxEndBusyCursor() ;
     }
 
@@ -279,12 +279,12 @@ void MyChild::OnUpdateRefresh(wxUpdateUIEvent& event)
 
 void MyChild::OnActivate(wxActivateEvent& event)
 {
-	mylog ( "MyChild::OnActivate" , "1" ) ;
+    mylog ( "MyChild::OnActivate" , "1" ) ;
     ChildBase::Activate () ;
-	mylog ( "MyChild::OnActivate" , "2" ) ;
+    mylog ( "MyChild::OnActivate" , "2" ) ;
     if ( event.GetActive() && cSequence )
        cSequence->SetFocus();
-	mylog ( "MyChild::OnActivate" , "3" ) ;
+    mylog ( "MyChild::OnActivate" , "3" ) ;
 }
 
 
@@ -293,10 +293,10 @@ void MyChild::OnCircularLinear(wxCommandEvent& event)
     if ( vec->hasStickyEnds() )
         {
 //#ifdef __WXMSW__
-			wxMessageBox ( txt("t_cannot_circularize_due_to_sticky_ends") , txt("t_error") ) ;
-			GetToolBar()->ToggleTool(MDI_CIRCULAR_LINEAR,vec->isCircular());
+            wxMessageBox ( txt("t_cannot_circularize_due_to_sticky_ends") , txt("t_error") ) ;
+            GetToolBar()->ToggleTool(MDI_CIRCULAR_LINEAR,vec->isCircular());
 //#endif
-			return ;
+            return ;
         }
     for ( int a = 0 ; a < vec->items.size() ; a++ ) vec->items[a].r1 = -1 ;
     vec->setCircular ( vec->isLinear() ) ;
@@ -311,7 +311,7 @@ void MyChild::OnCircularLinear(wxCommandEvent& event)
     }
 
 void MyChild::initMenus ()
-	{
+    {
     // Make a menubar
     wxMenu *file_menu = myapp()->frame->getFileMenu ( FILE_MENU_SAVE|FILE_MENU_EXPORT|FILE_MENU_PRINT|FILE_MENU_PRINT_RESTRICTIONS ) ;
     wxMenu *tool_menu = myapp()->frame->getToolMenu ( true ) ;
@@ -380,15 +380,15 @@ void MyChild::initMenus ()
 
     // Associate the menu bar with the frame
     SetMenuBar(menu_bar);
-	}
+    }
 
 void MyChild::initToolbar ()
-	{
+    {
 #ifdef __WXMSW__
     if ( myapp()->frame->tb_mychild == NULL )
 #endif
         {
-	    wxToolBar *toolBar = CreateToolBar(wxTB_HORIZONTAL);//(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
+        wxToolBar *toolBar = CreateToolBar(wxTB_HORIZONTAL);//(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
         myapp()->frame->InitToolBar(toolBar);
         myapp()->frame->addTool ( toolBar , MDI_TEXT_IMPORT ) ;
         myapp()->frame->addTool ( toolBar , MDI_FILE_OPEN ) ;
@@ -430,9 +430,9 @@ void MyChild::initToolbar ()
         toolBar->AddSeparator() ;
         toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_zoom") ) ) ;
 #ifdef __WXMSW__
-		int zoom_width = 60 ;
+        int zoom_width = 60 ;
 #else
-		int zoom_width = 80 ;
+        int zoom_width = 80 ;
 #endif
         wxChoice *zoom_cb = new wxChoice ( toolBar , PC_ZOOM , wxDefaultPosition , wxSize ( zoom_width , -1 ) ) ;
         zoom_cb->Append ( _T("100%") ) ;
@@ -443,12 +443,12 @@ void MyChild::initToolbar ()
         zoom_cb->Append ( _T("1600%") ) ;
         zoom_cb->SetSelection ( 0 ) ;
         toolBar->AddControl ( zoom_cb ) ;
-	    fontsize = myapp()->frame->AddFontsizeTool ( toolBar , AA_FONTSIZE ) ;
+        fontsize = myapp()->frame->AddFontsizeTool ( toolBar , AA_FONTSIZE ) ;
         myapp()->frame->addDefaultTools ( toolBar ) ;
         toolBar->Realize() ;
 
         myapp()->frame->tb_mychild = toolBar ;
-	toolbar = toolBar ;
+    toolbar = toolBar ;
 
         }
 
@@ -456,7 +456,7 @@ void MyChild::initToolbar ()
     toolbar = myapp()->frame->tb_mychild ;
     toolbar->Reparent ( this ) ;
 #endif
-	}
+    }
 
 void MyChild::initme ()
     {
@@ -471,7 +471,7 @@ void MyChild::initme ()
     int width, height;
     GetParent()->GetClientSize(&width, &height);
 #ifdef __WXMAC__
-	height -= 100 ; // Strange bug that doesn't show scroll arrows, voodoo fix
+    height -= 100 ; // Strange bug that doesn't show scroll arrows, voodoo fix
 #endif
 
     sw = new MySplitter ( this , SPLIT_1 , this ) ;
@@ -494,8 +494,8 @@ void MyChild::initme ()
     treeBox->p = this ;
 
 #ifdef __WXMAC__
-	treeBox->SetFont ( *MYFONT ( MYFONTSIZE , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
-	propBox->SetFont ( *MYFONT ( MYFONTSIZE , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
+    treeBox->SetFont ( *MYFONT ( MYFONTSIZE , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
+    propBox->SetFont ( *MYFONT ( MYFONTSIZE , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
 #endif
 
     sw->SplitHorizontally ( swu , cSequence , height/2 ) ;
@@ -546,7 +546,7 @@ void MyChild::OnLigation(wxCommandEvent& event)
     myapp()->frame->lastCocktail.Clear () ;
     }
 */
-wxString MyChild::getName ()
+wxString MyChild::getName () const
     {
     return vec->getName() ;
     }
@@ -584,15 +584,15 @@ void MyChild::OnCut(wxCommandEvent& event)
     }
 
 void MyChild::EnforceRefesh ()
-	{
+    {
     vec->updateDisplay() ;
     treeBox->initme() ;
     treeBox->Refresh() ;
     cPlasmid->Refresh() ;
-//    cSequence->Refresh() ;
-//    Refresh () ;
+//  cSequence->Refresh() ;
+//  Refresh () ;
     updateSequenceCanvas ( true ) ;
-	}
+    }
 
 void MyChild::OnCopy(wxCommandEvent& event)
     {
@@ -622,7 +622,7 @@ void MyChild::OnCopyToNew(wxCommandEvent& event)
 
 void MyChild::OnAsNewFeature(wxCommandEvent& event)
     {
-//    char t[1000] ;
+//  char t[1000] ;
     int from , to ;
     cPlasmid->getMark ( from , to ) ;
     if ( from == -1 ) return ;
@@ -633,7 +633,7 @@ void MyChild::OnAsNewFeature(wxCommandEvent& event)
         to -= vec->getSequenceLength() ;
 
     TVectorItem nvi ;
-//    sprintf ( t , txt("t_new_item_title") , from , to ) ;
+//  sprintf ( t , txt("t_new_item_title") , from , to ) ;
     nvi.name = wxString::Format ( txt("t_new_item_title") , from , to ) ;
     nvi.direction = 1 ;
     nvi.type = VIT_GENE ;
@@ -700,7 +700,6 @@ void MyChild::OnEditMode(wxCommandEvent& event)
     myass ( mb , "MyChild::OnEditMode_1" ) ;
     wxMenuItem *mi = mb->FindItem ( MDI_EDIT_MODE ) ;
     myass ( mi , "MyChild::OnEditMode_2" ) ;
-    wxString s ;
     if ( viewMode ) OnViewMode ( event ) ;
 
     if ( !cSequence->getEditMode() )
@@ -731,17 +730,17 @@ void MyChild::OnEditMode(wxCommandEvent& event)
 
 void MyChild::initPanels ()
     {
-//	myapp()->frame->lockDisplay ( true ) ;
+//  myapp()->frame->lockDisplay ( true ) ;
     if ( vec->getSequenceLength() > 100000 ) // Arbitary number, 100K
         {
         vec->setGenomeMode ( true ) ;
         }
-//    cSequence->seq.Clear () ;
-	CLEAR_DELETE ( cSequence->seq ) ;
+//  cSequence->seq.Clear () ;
+    CLEAR_DELETE ( cSequence->seq ) ;
 
-	vec->recalculateCuts () ;
+    vec->recalculateCuts () ;
 
-	 SeqFeature *seqF = NULL ;
+     SeqFeature *seqF = NULL ;
     if ( !vec->getGenomeMode() ) seqF = new SeqFeature ( cSequence ) ;
     SeqDNA *seq = new SeqDNA ( cSequence ) ;
     SeqRestriction *seqR = new SeqRestriction ( cSequence ) ;
@@ -762,8 +761,8 @@ void MyChild::initPanels ()
     mylog ( "MyChild" , "initialized restriction sites" ) ;
 
 
-    int a , b = AA_ALL ;
-    for ( a = 0 ; b == AA_ALL && vec && a < vec->items.size() ; a++ )
+    int b = AA_ALL ;
+    for ( int a = 0 ; b == AA_ALL && vec && a < vec->items.size() ; a++ )
         if ( vec->items[a].getRF() != 0 )
            b = AA_KNOWN ;
     aa_state = b ;
@@ -785,7 +784,7 @@ void MyChild::initPanels ()
     GetToolBar()->ToggleTool(MDI_TOGGLE_RESTRICTION,cSequence->findID ( _T("RESTRICTION" ) ) ) ;
 //#endif
 
-//    if ( aa_state != b ) OnAA_setit ( b ) ;
+//  if ( aa_state != b ) OnAA_setit ( b ) ;
     mylog ( "MyChild" , "AA set" ) ;
 
     mylog ( "MyChild::initPanels" , wxString::Format ( "Vector %d bytes" , vec->getMem() ) ) ;
@@ -797,7 +796,7 @@ void MyChild::initPanels ()
     swl->SetSashPosition ( 200 ) ;
     swu->SetSashPosition ( 200 ) ;
 #endif
-//	myapp()->frame->lockDisplay ( false ) ;
+//    myapp()->frame->lockDisplay ( false ) ;
     if ( myapp()->frame->isLocked() ) return ;
     Show() ;
     mylog ( "MyChild" , "shown" ) ;
@@ -823,7 +822,7 @@ void MyChild::updateSequenceCanvas ( bool remember )
     int old_mode = aa_state ;
 
     if ( cSequence->findID ( _T("FEATURE") ) )
-       cSequence->findID ( _T("FEATURE") )->initFromTVector ( vec ) ;
+        cSequence->findID ( _T("FEATURE") )->initFromTVector ( vec ) ;
 
     if ( old_mode != AA_NONE )
         {
@@ -839,10 +838,10 @@ void MyChild::updateSequenceCanvas ( bool remember )
         }
 
     if ( remember )
-       {
-       mm.remark () ;
-       cSequence->Scroll ( -1 , oldscrollpos ) ;
-       }
+        {
+        mm.remark () ;
+        cSequence->Scroll ( -1 , oldscrollpos ) ;
+        }
     cSequence->SetFocus () ;
     }
 
@@ -967,107 +966,109 @@ void MyChild::OnAA_one(wxCommandEvent& event)
 void MyChild::OnPrintImage(wxCommandEvent& event)
     {
     cPlasmid->print() ;
-	}
+    }
 
 void MyChild::OnPrintRestrictionList(wxCommandEvent& event)
-	{
-	wxString html ;
-	wxString h_open = _T("<p><font size='+1'><b><u>") ;
-	wxString h_close = _T("</u></b></font></p>") ;
-	int a , b ;
+    {
+    wxString html ;
+    wxString h_open = _T("<p><font size='+1'><b><u>") ;
+    wxString h_close = _T("</u></b></font></p>") ;
 
-	// Forcing restruction cuts non-joined
-	vec->setAction ( _T("RESTRICTION") ) ;
-	vec->recalculateCuts () ;
+    // Forcing restruction cuts non-joined
+    vec->setAction ( _T("RESTRICTION") ) ;
+    vec->recalculateCuts () ;
 
-	// Restriction cuts by position
-	html += h_open + txt("t_res_list_1") + h_close ;
-	for ( a = 0 ; a < vec->rc.size() ; a++ )
-		{
-		b = vec->rc.size() - a - 1 ;
-		if ( a == 0 ) html += _T("<table border='1' width='100%'><tr>") ;
-		else if ( a % 6 == 0 ) html += _T("</tr><tr>") ;
-		html += _T("<td>") + wxString::Format ( _T("%d") , vec->rc[b].getPos() ) + _T(" : ") + vec->rc[b].e->getName() + _T("</td>") ;
-		}
-	if ( a > 0 ) html += _T("</tr></table>") ;
+    // Restriction cuts by position
+    html += h_open + txt("t_res_list_1") + h_close ;
+    int a;
+    for ( a = 0 ; a < vec->rc.size() ; a++ )
+        {
+        int b = vec->rc.size() - a - 1 ;
+        if ( a == 0 ) html += _T("<table border='1' width='100%'><tr>") ;
+        else if ( a % 6 == 0 ) html += _T("</tr><tr>") ;
+        html += _T("<td>") + wxString::Format ( _T("%d") , vec->rc[b].getPos() ) + _T(" : ") + vec->rc[b].e->getName() + _T("</td>") ;
+        }
+    if ( a > 0 ) html += _T("</tr></table>") ;
 
-	// Restriction cuts by enzyme and count (prep)
-	vector <int> c_count ;
-	vector <wxString> c_name , c_pos ;
-	for ( a = 0 ; a < vec->rc.size() ; a++ )
-		{
-		for ( b = 0 ; b < c_name.size() && c_name[b] != vec->rc[a].e->getName() ; b++ ) ;
-		if ( b == c_name.size() )
-			{
-			c_name.push_back ( vec->rc[a].e->getName() ) ;
-			c_pos.push_back ( wxString::Format ( _T("%d") , vec->rc[a].getPos() ) ) ;
-			c_count.push_back ( 1 ) ;
-			}
-		else
-			{
-			c_pos[b] += wxString::Format ( _T(", %d") , vec->rc[a].getPos() ) ;
-			c_count[b]++ ;
-			}
-		}
+    // Restriction cuts by enzyme and count (prep)
+    vector <int> c_count ;
+    vector <wxString> c_name , c_pos ;
+    for ( int a = 0 ; a < vec->rc.size() ; a++ )
+        {
+	int b;
+        for ( b = 0 ; b < c_name.size() && c_name[b] != vec->rc[a].e->getName() ; b++ ) ;
+        if ( b == c_name.size() )
+            {
+            c_name.push_back ( vec->rc[a].e->getName() ) ;
+            c_pos.push_back ( wxString::Format ( _T("%d") , vec->rc[a].getPos() ) ) ;
+            c_count.push_back ( 1 ) ;
+            }
+        else
+            {
+            c_pos[b] += wxString::Format ( _T(", %d") , vec->rc[a].getPos() ) ;
+            c_count[b]++ ;
+            }
+        }
 
-	// Restriction cuts by enzyme
-	for ( a = 1 ; a < c_name.size() ; a++ ) // Sort by name
-		{
-		if ( c_name[a-1] < c_name[a] ) continue ; // OK
-		wxString s ;
-		s = c_name[a-1] ; c_name[a-1] = c_name[a] ; c_name[a] = s ;
-		s = c_pos[a-1] ; c_pos[a-1] = c_pos[a] ; c_pos[a] = s ;
-		b = c_count[a-1] ; c_count[a-1] = c_count[a] ; c_count[a] = b ;
-		a = 0 ;
-		}
-	html += h_open + txt("t_res_list_2") + h_close ;
-	for ( a = 0 ; a < c_name.size() ; a++ )
-		{
-		if ( a == 0 ) html += _T("<table border='1' width='100%'><tr>") ;
-		else if ( a % 3 == 0 ) html += _T("</tr><tr>") ;
-		html += _T("<td width='33%' valign='top'><b>") + c_name[a] + _T("</b>") ;
-		html += wxString::Format ( _T(" (%d&times;) : ") , c_count[a] ) ;
-		html += c_pos[a] + _T("</td>") ;
-		}
-	if ( a > 0 ) html += _T("</tr></table>") ;
+    // Restriction cuts by enzyme
+    for ( int a = 1 ; a < c_name.size() ; a++ ) // Sort by name
+        {
+        if ( c_name[a-1] < c_name[a] ) continue ; // OK
+        wxString s ;
+        s = c_name[a-1] ; c_name[a-1] = c_name[a] ; c_name[a] = s ;
+        s = c_pos[a-1] ; c_pos[a-1] = c_pos[a] ; c_pos[a] = s ;
+        int b = c_count[a-1] ; c_count[a-1] = c_count[a] ; c_count[a] = b ;
+        a = 0 ;
+        }
+    html += h_open + txt("t_res_list_2") + h_close ;
 
-	// Restriction cuts by number of cuts
-	for ( a = 1 ; a < c_name.size() ; a++ ) // Sort by name
-		{
-		if ( c_count[a-1] <= c_count[a] ) continue ; // OK
-		wxString s ;
-		s = c_name[a-1] ; c_name[a-1] = c_name[a] ; c_name[a] = s ;
-		s = c_pos[a-1] ; c_pos[a-1] = c_pos[a] ; c_pos[a] = s ;
-		b = c_count[a-1] ; c_count[a-1] = c_count[a] ; c_count[a] = b ;
-		a = 0 ;
-		}
-	html += h_open + txt("t_res_list_3") + h_close ;
-	for ( a = 0 ; a < c_name.size() ; a++ )
-		{
-		if ( a == 0 ) html += _T("<table border='1' width='100%'><tr>") ;
-		else if ( a % 3 == 0 ) html += _T("</tr><tr>") ;
-		html += _T("<td width='33%' valign='top'><b>") + c_name[a] + _T("</b>") ;
-		html += wxString::Format ( _T(" %d&times; (") , c_count[a] ) ;
-		html += c_pos[a] + _T(")</td>") ;
-		}
-	if ( a > 0 ) html += _T("</tr></table>") ;
+    for ( a = 0 ; a < c_name.size() ; a++ )
+        {
+        if ( a == 0 ) html += _T("<table border='1' width='100%'><tr>") ;
+        else if ( a % 3 == 0 ) html += _T("</tr><tr>") ;
+        html += _T("<td width='33%' valign='top'><b>") + c_name[a] + _T("</b>") ;
+        html += wxString::Format ( _T(" (%d&times;) : ") , c_count[a] ) ;
+        html += c_pos[a] + _T("</td>") ;
+        }
+    if ( a > 0 ) html += _T("</tr></table>") ;
 
-	// Back to normal
-	vec->setAction ( _T("") ) ;
-	vec->recalculateCuts () ;
+    // Restriction cuts by number of cuts
+    for ( a = 1 ; a < c_name.size() ; a++ ) // Sort by name
+        {
+        if ( c_count[a-1] <= c_count[a] ) continue ; // OK
+        wxString s ;
+        s = c_name[a-1] ; c_name[a-1] = c_name[a] ; c_name[a] = s ;
+        s = c_pos[a-1] ; c_pos[a-1] = c_pos[a] ; c_pos[a] = s ;
+        int b = c_count[a-1] ; c_count[a-1] = c_count[a] ; c_count[a] = b ;
+        a = 0 ;
+        }
+    html += h_open + txt("t_res_list_3") + h_close ;
+    for ( a = 0 ; a < c_name.size() ; a++ )
+        {
+        if ( a == 0 ) html += _T("<table border='1' width='100%'><tr>") ;
+        else if ( a % 3 == 0 ) html += _T("</tr><tr>") ;
+        html += _T("<td width='33%' valign='top'><b>") + c_name[a] + _T("</b>") ;
+        html += wxString::Format ( _T(" %d&times; (") , c_count[a] ) ;
+        html += c_pos[a] + _T(")</td>") ;
+        }
+    if ( a > 0 ) html += _T("</tr></table>") ;
+
+    // Back to normal
+    vec->setAction ( _T("") ) ;
+    vec->recalculateCuts () ;
 
 
-	html = _T("<html><body>") + html + _T("</body></html>") ;
-	wxDateTime now = wxDateTime::Now() ;
-	myapp()->frame->html_ep->SetHeader ( _T("<table width='100%'><tr><td width='100%'>") + vec->getName() + _T("</td><td nowrap align='right'>") + now.Format() + _T("</td></tr></table>") ) ;
-	myapp()->frame->html_ep->SetFooter ( _T("<p align=right>@PAGENUM@/@PAGESCNT@</p>") ) ;
+    html = _T("<html><body>") + html + _T("</body></html>") ;
+    wxDateTime now = wxDateTime::Now() ;
+    myapp()->frame->html_ep->SetHeader ( _T("<table width='100%'><tr><td width='100%'>") + vec->getName() + _T("</td><td nowrap align='right'>") + now.Format() + _T("</td></tr></table>") ) ;
+    myapp()->frame->html_ep->SetFooter ( _T("<p align=right>@PAGENUM@/@PAGESCNT@</p>") ) ;
 
-	int mode = HTML_PRINT_PREVIEW ;
-	if ( mode == HTML_PRINT_PREVIEW )
-		myapp()->frame->html_ep->PreviewText ( html ) ;
-	else if ( mode == HTML_PRINT )
-		myapp()->frame->html_ep->PageSetup () ;
-	}
+    int mode = HTML_PRINT_PREVIEW ;
+    if ( mode == HTML_PRINT_PREVIEW )
+        myapp()->frame->html_ep->PreviewText ( html ) ;
+    else if ( mode == HTML_PRINT )
+        myapp()->frame->html_ep->PageSetup () ;
+    }
 
 void MyChild::OnFind(wxCommandEvent& event)
     {
@@ -1109,7 +1110,6 @@ wxString MyChild::doExtractAA ( bool coding )
     aa.initFromTVector ( vec ) ;
 
     wxString z = aa.s , t ;
-    int a ;
     int from , to ;
     cPlasmid->getMark ( from , to ) ;
     if ( to <= z.length() )
@@ -1121,7 +1121,7 @@ wxString MyChild::doExtractAA ( bool coding )
         z = z.substr ( from-1 ) + z.substr ( 0 , to-z.length() ) ;
         }
 
-    for ( a = 0 ; a < z.length() ; a++ )
+    for ( int a = 0 ; a < z.length() ; a++ )
         {
         if ( z.GetChar(a) != ' ' && z.GetChar(a) != '|' )
            {
@@ -1143,8 +1143,8 @@ void MyChild::OnExtractAA(wxCommandEvent& event)
     myapp()->frame->newAminoAcids ( seq , wxString::Format ( txt("t_aa_from_vec") , vec->getName().c_str() ) ) ;
     }
 
-bool MyChild::runRestriction ( wxString s )
-	{
+bool MyChild::runRestriction ( const wxString& s )
+    {
     MyFrame *f = myapp()->frame ; //(MyFrame*) GetParent() ;
     TRestrictionEditor ed ( f , _T("") , wxPoint(-1,-1) , wxSize(600,400) ,
                wxDEFAULT_DIALOG_STYLE|wxCENTRE);
@@ -1160,43 +1160,43 @@ bool MyChild::runRestriction ( wxString s )
 
     TVirtualGel *gel = myapp()->frame->useGel ( _T("DNA") ) ;
     if ( ed.oneLaneEach->GetValue() )
-    	{
-	    for ( unsigned int c = 0 ; c < ed.cocktail.GetCount() ; c++ )
-	    	{
- 	    	wxArrayInt vi ;
- 	    	vi = ed.getcuts ( ed.cocktail[c] ) ;
- 	    	addFragmentsToGel ( ed.cocktail[c] , vi , gel , ed , false ) ;
-	    	}
-    	}
+        {
+        for ( unsigned int c = 0 ; c < ed.cocktail.GetCount() ; c++ )
+            {
+             wxArrayInt vi ;
+             vi = ed.getcuts ( ed.cocktail[c] ) ;
+             addFragmentsToGel ( ed.cocktail[c] , vi , gel , ed , false ) ;
+            }
+        }
     else
-    	{
-		wxString name ;
-	    for ( unsigned int c = 0 ; c < ed.cocktail.GetCount() ; c++ )
-	    	{
-			if ( !name.IsEmpty() ) name += _T(", ") ;
-			name += ed.cocktail[c] ;
-			}
-		addFragmentsToGel ( name , ed.cocktailFragments , gel , ed , ed.partialDigestion->GetValue() ) ;
-    	}
-   	myapp()->frame->activateChild ( myapp()->frame->getChildIndex ( this ) ) ;
-   	myapp()->frame->activateChild ( myapp()->frame->getChildIndex ( gel ) ) ;
-   	return true ;
-	}
+        {
+        wxString name ;
+        for ( unsigned int c = 0 ; c < ed.cocktail.GetCount() ; c++ )
+            {
+            if ( !name.IsEmpty() ) name += _T(", ") ;
+            name += ed.cocktail[c] ;
+            }
+        addFragmentsToGel ( name , ed.cocktailFragments , gel , ed , ed.partialDigestion->GetValue() ) ;
+        }
+       myapp()->frame->activateChild ( myapp()->frame->getChildIndex ( this ) ) ;
+       myapp()->frame->activateChild ( myapp()->frame->getChildIndex ( gel ) ) ;
+       return true ;
+    }
 
 void MyChild::addFragmentsToGel ( wxString title , wxArrayInt &cuts , TVirtualGel *gel , TRestrictionEditor &ed , bool partial )
-	{
-	TGelLane lane ;
+    {
+    TGelLane lane ;
     lane.name = title ;
     vector <TFragment> fragments ;
     if ( partial ) ed.iterateFragments ( cuts , fragments ) ;
     else ed.getFragmentList ( cuts , fragments ) ;
     for ( int a = 0 ; a < fragments.size() ; a++ )
-    	{
-    	wxString text = wxString::Format ( _T("%d [%d-%d]") , fragments[a].length , fragments[a].from+1 , fragments[a].to+1 ) ;
-    	lane.add ( fragments[a].length , text ) ;
-    	}
-	gel->lanes.push_back ( lane ) ;
-	}
+        {
+        wxString text = wxString::Format ( _T("%d [%d-%d]") , fragments[a].length , fragments[a].from+1 , fragments[a].to+1 ) ;
+        lane.add ( fragments[a].length , text ) ;
+        }
+    gel->lanes.push_back ( lane ) ;
+    }
 
 void MyChild::OnRestriction(wxCommandEvent& event)
     {
@@ -1401,8 +1401,8 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
 //        sprintf ( t , "%d" , vec->items[a].from ) ; pdc->DrawText ( t , x1 , y ) ;
 //        sprintf ( t , "%d" , vec->items[a].to ) ; pdc->DrawText ( t , x2 , y ) ;
 
-		  pdc->DrawText ( wxString::Format ( _T("%d") , vec->items[a].from ) , x1 , y ) ;
-		  pdc->DrawText ( wxString::Format ( _T("%d") , vec->items[a].to ) , x2 , y ) ;
+          pdc->DrawText ( wxString::Format ( _T("%d") , vec->items[a].from ) , x1 , y ) ;
+          pdc->DrawText ( wxString::Format ( _T("%d") , vec->items[a].to ) , x2 , y ) ;
 
         int len = vec->items[a].to - vec->items[a].from + 1 ;
         if ( vec->items[a].to < vec->items[a].from )
@@ -1526,13 +1526,13 @@ void MyChild::updateUndoMenu ()
         {
         mi->SetItemLabel ( txt("u_no") ) ;
         mi->Enable ( false ) ;
-	    canUndo = false ;
+        canUndo = false ;
         }
     else
         {
         mi->Enable ( true ) ;
         mi->SetItemLabel ( lm ) ;
-	    canUndo = true ;
+        canUndo = true ;
         }
     allow_undo = canUndo ;
     myapp()->frame->updateCCP ( this ) ;
@@ -1576,30 +1576,30 @@ void MyChild::updateToolbar ()
     toolbar->ToggleTool ( MDI_TOGGLE_RESTRICTION , cSequence->findID ( _T("RESTRICTION") ) ) ;
     cSequence->SetFocus() ;
 #ifdef __WXGTK__
-	swl->SetSashPosition ( swl->GetSashPosition() , true ) ;
+    swl->SetSashPosition ( swl->GetSashPosition() , true ) ;
 #endif
     }
 
 void MyChild::OnAutoAnnotate(wxCommandEvent& event)
-	{
-	AutoAnnotate auan ( this ) ;
-	if ( auan.SettingsDialog () )
-		auan.Run () ;
-	}
+    {
+    AutoAnnotate auan ( this ) ;
+    if ( auan.SettingsDialog () )
+        auan.Run () ;
+    }
 
 void MyChild::OnSpeak(wxCommandEvent& event)
-	{
+    {
    wxString s = cPlasmid->getSelection () ;
    if ( s.IsEmpty() ) s = vec->getSequence() ; // Nothing selected, read whole sequence
    TSpeakDialog sd ( this , txt("t_speak") , s ) ;
    sd.ShowModal() ;
-	}
+    }
 
 void MyChild::OnSiRNA(wxCommandEvent& event)
    {
    int a ;
    bool ref = false ;
-	vec->undo.start ( txt("m_undo") + wxString ( _T(" ") ) + txt("m_sirna_duplexes") ) ;
+    vec->undo.start ( txt("m_undo") + wxString ( _T(" ") ) + txt("m_sirna_duplexes") ) ;
    for ( a = 0 ; a < vec->items.size() ; a++ )
        {
        if ( vec->items[a].getRF() == 0 ) continue ; // No CDS
@@ -1730,9 +1730,9 @@ void MySplitter::OnChanged ( wxSplitterEvent &ev )
         c->swl->SetSashPosition ( lp ) ;
         }
     else if ( this == c->swl )
-	{
-	    return ;
-	}
+    {
+        return ;
+    }
 
     SetSashPosition ( np ) ;
     c->cPlasmid->Refresh();

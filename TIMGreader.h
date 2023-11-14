@@ -32,8 +32,8 @@ class TIMGreader
     public :
     TIMGreader () { buffer = NULL ; output = NULL ; } ; ///< Constructor
     ~TIMGreader () ; ///< Destructor
-    void readFile ( wxString fn ) ; ///< Reads the IMG file
-    int getInt ( int adr ) ; ///< Gets an interger value from a dertain adress in the buffer
+    void readFile ( const wxString& fn ) ; ///< Reads the IMG file
+    int getInt ( const int adr ) const ; ///< Gets an integer value from a dertain adress in the buffer
     wxImage makeImage () ; ///< Returns the parsed IMG file as a wxImage
 
     vector <TIMGitem> items ; ///< Annotation items

@@ -10,7 +10,7 @@ TIMGreader::~TIMGreader ()
     if ( output ) delete output ;
     }
 
-int TIMGreader::getInt ( int adr )
+int TIMGreader::getInt ( const int adr ) const
    {
    int a1 = (unsigned char) buffer[adr] ;
    int a2 = (unsigned char) buffer[adr+1] ;
@@ -18,7 +18,7 @@ int TIMGreader::getInt ( int adr )
    return r ;
    }
 
-void TIMGreader::readFile ( wxString fn )
+void TIMGreader::readFile ( const wxString& fn )
     {
     wxFile file ( fn ) ;
     size = file.Length() ;

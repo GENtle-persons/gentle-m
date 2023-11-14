@@ -15,9 +15,9 @@ class TVector ;
 /**	\brief The "tab" for global and per-sequence enzyme/methylation/etc. settings
 */
 class TEnzymeSettingsTab : public wxPanel
-	{
-	public :
-	TEnzymeSettingsTab ( wxWindow *parent = NULL , int _mode = EST_GLOBAL ) ; ///< Constructor
+    {
+    public :
+    TEnzymeSettingsTab ( wxWindow *parent = NULL , const int _mode = EST_GLOBAL ) ; ///< Constructor
     virtual void updateColorButton ( wxButton *b , wxColour &c ) ; ///< Updates the color of one of the color choice buttons
     virtual void updateGlobalEnzymes () ; ///< Update the global enzymes list
     virtual void updateColor ( wxColour &c ) ; ///< ???
@@ -94,16 +94,16 @@ class TEnzymeRules
 
 	virtual void init () ; ///< Initialization
 	virtual void load_global_settings () ; ///< Loads global settings from the database
-	virtual void save_global_settings () ; ///< Save global settings to the database
-	virtual void setup_options ( TEnzymeSettingsTab *est ) ; ///< Set options in the tab
-	virtual void lookup_options ( TEnzymeSettingsTab *est ) ; ///< Look up options from the tab
-	virtual bool isEqual ( TEnzymeRules &r ) ; ///< Compare with another set of settings
+	virtual void save_global_settings () const ; ///< Save global settings to the database
+	virtual void setup_options ( TEnzymeSettingsTab * const est ) ; ///< Set options in the tab
+	virtual void lookup_options ( TEnzymeSettingsTab * const est ) ; ///< Look up options from the tab
+	virtual bool isEqual ( const TEnzymeRules &r ) const ; ///< Compare with another set of settings
 	
-	virtual wxString to_string () ; ///< "Compress" to storable string
-	virtual void from_string ( wxString &s ) ; ///< "Decompress" from storage string
+	virtual wxString to_string () const ; ///< "Compress" to storable string
+	virtual void from_string ( const wxString &s ) ; ///< "Decompress" from storage string
 
 	virtual void getVectorCuts ( TVector *v ) ;
-	virtual wxColour *getColor ( int cuts ) ; ///< Returns a pointer to a wxColour structure with the correct color for the given number of cuts
+	virtual wxColour *getColor ( const int cuts ) ; ///< Returns a pointer to a wxColour structure with the correct color for the given number of cuts
 	
 	bool useit ;
 	int min_cutoff , max_cutoff ;
@@ -117,7 +117,7 @@ class TEnzymeRules
 	int methylation ;
 	
 	private :
-	virtual wxColour scan_color ( wxString s ) ; ///< Make color from string
+	virtual wxColour scan_color ( const wxString& s ) const ; ///< Make color from string
 	} ;
 
 #endif

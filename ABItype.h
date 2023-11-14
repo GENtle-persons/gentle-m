@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the ABItype class, as well as its TFLAG helper class
+    \brief Contains the ABItype class, as well as its TFLAG helper class
 */
 #ifndef _ABI_TYPE_H_
 #define _ABI_TYPE_H_
@@ -13,7 +13,7 @@
 #include <algorithm>
 
 /** \class TFLAG
-	\brief Helper class for ABItype
+    \brief Helper class for ABItype
 */
 class TFLAG
     {
@@ -26,7 +26,7 @@ class TFLAG
     int pos , after ;
     unsigned char *data ;
 
-    wxString getPascalString () ;
+    wxString getPascalString () const ;
 
     wxString flag ; ///< The flag name
     int instance ; ///< Flag data item
@@ -40,31 +40,31 @@ class TFLAG
     } ;
 
 /** \class ABItype
-	\brief Reads files in ABI format
+    \brief Reads files in ABI format
 */
 class ABItype
     {
     public :
     ABItype () ;
     ~ABItype () ;
-
-    int getRecord ( wxString id , int num ) ;
-    int getRecordValue ( wxString id , int num ) ;
-    wxString getRecordPascalString ( wxString id , int num ) ;
-    wxString getSequence ( int num = 2 ) ;
-    int getMacOffset ( unsigned char *t ) ;
-
+    
+    int getRecord ( const wxString& id , const int num ) const ;
+    int getRecordValue ( const wxString& id , const int num ) const ;
+    wxString getRecordPascalString ( const wxString& id , const int num ) const ;
+    wxString getSequence ( const int num = 2 ) const ;
+    int getMacOffset ( const unsigned char * const t ) const ;
+    
     // Parser functions
-    void parse ( wxString filename ) ;
-    TFLAG getFlag ( unsigned char *t , int &from ) ;
-    wxString getStr ( unsigned char *t , int from , int len ) ;
-    wxString getText ( unsigned char *t , int &from ) ; ///< Reads a Pascal-like string
-    int getInt1 ( unsigned char *t , int &from ) ; ///< Reads a 1-byte number
-    int getInt2 ( unsigned char *t , int &from ) ; ///< Reads a 2-byte number
-    int getInt4 ( unsigned char *t , int &from ) ; ///< Reads a 4-byte number
-    int getInt10 ( unsigned char *t , int &from ) ; ///< Jumps ahead 10 bytes, ignores contents
-    int getCMBF ( unsigned char *t , int l ) ; ///< Reads a Pascal-like string with known length
-
+    void parse ( const wxString& filename ) ;
+    TFLAG getFlag ( const unsigned char * const t , int &from ) const ;
+    wxString getStr ( const unsigned char * const t , const  int from , const int len ) const ;
+    wxString getText ( const unsigned char * const t , int &from ) const ; ///< Reads a Pascal-like string
+    int getInt1 ( const unsigned char * const t , int &from ) const ; ///< Reads a 1-byte number
+    int getInt2 ( const unsigned char * const t , int &from ) const ; ///< Reads a 2-byte number
+    int getInt4 ( const unsigned char * const t , int &from ) const ; ///< Reads a 4-byte number
+    int getInt10 ( const unsigned char * const t , int &from ) const ; ///< Jumps ahead 10 bytes, ignores contents
+    int getCMBF ( const unsigned char * const t , const int l ) const ; ///< Reads a Pascal-like string with known length
+    
     // Variables
     vector <TFLAG> vf ; ///< All the flags
     } ;
