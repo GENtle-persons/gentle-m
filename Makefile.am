@@ -255,3 +255,19 @@ clustalw/general.h \
 clustalw/matrices.h \
 clustalw/param.h \
 clustalw/xmenu.h
+
+ICON=GENtle.icns
+BUNDLE=GENtle.app
+macos_bundle: $(BUNDLE)/Contents/MacOS/$(bin_PROGRAMS)
+$(BUNDLE)/Contents/MacOS/$(bin_PROGRAMS) $(BUNDLE)/Contents/Resources/$(ICON) $(BUNDLE)/Contents/Info.plist: $(bin_PROGRAMS) Info.plist $(ICON)
+	mkdir -p "$(BUNDLE)/Contents/MacOS"
+	echo -n 'APPL????' > "$(BUNDLE)/Contents/PkgInfo"
+	cp "$(bin_PROGRAMS)" "$(BUNDLE)/Contents/MacOS/"
+	cp mondrian.xpm variables.csv blank.db default.tab marker.txt "$(BUNDLE)/Contents/MacOS/"
+	cp -r bitmaps help "$(BUNDLE)/Contents/MacOS/"
+	cp Info.plist "$(BUNDLE)/Contents/"
+	mkdir -p "$(BUNDLE)/Contents/Resources"
+	cp "$(ICON)" "$(BUNDLE)/Contents/Resources/"
+	dylibbundler -od -b -x "$(BUNDLE)/Contents/MacOS/$(bin_PROGRAMS)" -d "$(BUNDLE)/Contents/libs"
+
+.PHONY: bundle
