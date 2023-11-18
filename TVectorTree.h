@@ -41,7 +41,7 @@ class TVectorTree : public wxTreeCtrl
     void OnPrimerBackward ( wxCommandEvent &ev ) ;
     void OnPrimerBoth ( wxCommandEvent &ev ) ;
     void OnPrimerMutation ( wxCommandEvent &ev ) ;
-    void ToggleEnzymeVisibility ( TRestrictionEnzyme *e ) ;
+    void ToggleEnzymeVisibility ( const TRestrictionEnzyme * const e ) ;
 
     void itemMark ( wxCommandEvent &ev ) ; ///< Event redirect to parent child
     void itemMarkShow ( wxCommandEvent &ev ) ; ///< Event redirect to parent child

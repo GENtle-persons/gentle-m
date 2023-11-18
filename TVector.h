@@ -176,8 +176,7 @@ class TVector
 
     // Restriction enzymes
     void recalculateCuts () ; ///< Recalculate restriction enzyme cuts
-    void getCuts ( TRestrictionEnzyme *e , vector <TRestrictionCut> &ret ,
-    						bool clear_vector = true , int max = 10000000 ) ; ///< Gets the cuts of restriction enzyme in this sequence
+    void getCuts ( const TRestrictionEnzyme * const e , vector <TRestrictionCut> &ret , const bool clear_vector = true , const int max = 10000000 ) const ; ///< Gets the cuts of restriction enzyme in this sequence
     bool reduceToFragment ( TRestrictionCut left , TRestrictionCut right ) ; ///< Cuts off everything except what is betreen these two cuts
     void doRestriction () ; ///< Performs restriction. See TRestrictionEditor
     void sortRestrictionSites () ; ///< Sorts the restriction sites by point of cut
@@ -229,7 +228,7 @@ class TVector
     const wxString one2three ( const int a ) const ; ///< Converts one letter amino acid code to three-letter acronym
     char three2one ( wxString s ) const ; ///< Converts three-letter acronym to one letter amino acid code
     void setStickyEnd ( const bool left , const bool upper , const wxString& s ) ; ///< Sets one of the four possible sticky ends
-    wxString getStickyEnd ( bool left , bool upper ) ; ///< Returns one of the possible sticky ends
+    wxString getStickyEnd ( const bool left , const bool upper ) const ; ///< Returns one of the possible sticky ends
     bool hasStickyEnds () const ; ///< Does this sequence have sticky ends?
     void callUpdateUndoMenu () ; ///< Refreshes the Undo menu
     void setFromVector ( TVector v ) ; ///< Makes this sequence a copy of another one (v)
