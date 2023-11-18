@@ -48,11 +48,11 @@ class TRestrictionEnzyme
 class TRestrictionCut
 {
   public :
-    TRestrictionCut ( int _pos , TRestrictionEnzyme *_e , bool _first_strand = true ) ///< Constructor
+    TRestrictionCut ( const int _pos , const TRestrictionEnzyme * const _e , const bool _first_strand = true ) ///< Constructor
         { pos = _pos ; e = _e ; first_strand = _first_strand ; }
     ~TRestrictionCut () {} ; ///< Dummy destructor
 
-    void linearUpdate ( int w , int h ) ;
+    void linearUpdate ( const int w , const int h ) ;
     wxString getNameAndPosition () const ; ///< Returns the enzyme name and cut pusition
     bool isHidden ( const TVector * const v ) const ; ///< Is this enzyme in this TVector hidden?
     wxString getDisplayName () const ; ///< Returns the enzyme name (or the joined names)
@@ -70,7 +70,7 @@ class TRestrictionCut
     int getTo () const ;
     wxString getSequence () const ;
 
-    TRestrictionEnzyme *e ; ///< Cutting enzyme
+    const TRestrictionEnzyme *e ; ///< Cutting enzyme
     wxString display_name ; ///< The name to display
 
     // Visual information

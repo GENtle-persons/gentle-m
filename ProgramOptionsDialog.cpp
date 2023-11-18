@@ -47,6 +47,10 @@ TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent , const int _mode ) : 
     vs->Add ( new wxStaticText ( this , -1 , _T(" ") ) , 0 , wxEXPAND , 5 ) ;
     vs->Add ( optionsSizer , 1 , wxEXPAND , 5 ) ;
 
+    col1.Set( 200 , 0 , 0 ) ;
+    col2.Set( 0 , 200 , 0 ) ;
+    col3.Set( 0 , 0 , 200 ) ;
+
     // Min/max cutoff
     useMinCutoff = new wxCheckBox ( this , GES_USE_MINCUTOFF , txt("t_ges_use_min_cutoff") ) ;
     minCutoff = new wxSpinCtrl ( this , -1 , _T("1")  , wxDefaultPosition , wxSize ( MYSPINBOXSIZE , 30 ) ) ;
@@ -157,8 +161,18 @@ void TEnzymeSettingsTab::updateGlobalEnzymes ()
     updateColorButton ( bcol3 , col3 ) ;
     }
 
-void TEnzymeSettingsTab::updateColorButton ( wxButton *b , wxColour &c )
+void TEnzymeSettingsTab::updateColorButton ( wxButton *b , const wxColour &c )
     {
+    if (NULL == b)
+        {
+        wxPrintf("D: TEnzymeSettingsTab::updateColorButton: NULL==b\n") ;
+        return ;
+        }
+    if (!c.IsOk())
+        {
+        wxPrintf("D: TEnzymeSettingsTab::updateColorButton: c.IsOk() failed\n") ;
+        return ;
+	}
     b->SetForegroundColour ( c ) ;
     if ( ( c.Red() + c.Green() + c.Blue() ) / 3 < 230 ) b->SetBackgroundColour ( *wxWHITE ) ;
     else b->SetBackgroundColour ( *wxBLACK ) ;
@@ -188,7 +202,11 @@ void TEnzymeSettingsTab::OnButton3 ( wxCommandEvent &event )
 
 void TEnzymeSettingsTab::updateColor ( wxColour &c )
     {
+    wxPrintf("D: TEnzymeSettingsTab::updateColor(%s)\n",c.GetAsString()) ;
+
     wxColour c2 = wxGetColourFromUser ( this , c ) ;
+    wxPrintf("D: TEnzymeSettingsTab  wxGetColourFromUser -> %s\n",c2.GetAsString()) ;
+
     if ( !c2.Ok() ) return ;
     c = c2 ;
     updateGlobalEnzymes () ;
@@ -580,10 +598,10 @@ wxColour *TEnzymeRules::getColor ( const int cuts )
     return &col1 ; // Dummy
     }
 
-void TEnzymeRules::getVectorCuts ( TVector *v )
+void TEnzymeRules::getVectorCuts ( /* not const */ TVector * const v ) const
     {
     for ( int a = 0 ; a < v->re.GetCount() ; a++ )
-        v->getCuts ( v->re[a] , v->rc , false ) ;
+        v->getCuts ( v->re[a] , /* not const */ v->rc , false ) ;
     if ( !useit ) return ;
 
     // Getting the default list of enzymes

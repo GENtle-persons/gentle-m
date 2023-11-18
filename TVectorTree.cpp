@@ -1,5 +1,5 @@
 /** \file
-	\brief The vector items tree component.
+    \brief The vector items tree component.
 */
 #include "TVectorTree.h"
 
@@ -49,24 +49,23 @@ TVectorTree::TVectorTree ( ChildBase *parent , int i )
 
 /** \brief Initializes the tree
 
-	Parses the vector and creates a list of
-	* - vector information
-	* - marked regions (genes etc.)
-	* - restriction enzymes
+    Parses the vector and creates a list of
+    * - vector information
+    * - marked regions (genes etc.)
+    * - restriction enzymes
 */
 void TVectorTree::initme ()
     {
-    int a , b ;
-//    char u[1000] ;
-	 wxString u ;
+//  char u[1000] ;
+    wxString u ;
     wxTreeItemId x , y ;
 
     // Basic stuff
     Freeze () ;
     DeleteAllItems () ;
     treeroot = AddRoot ( p->vec->getName() ) ;
-	 u = wxString::Format ( txt("#bp") , p->vec->getSequenceLength() ) ;
-//    sprintf ( u , txt("#bp").mb_str() , p->vec->getSequenceLength() ) ;
+    u = wxString::Format ( txt("#bp") , p->vec->getSequenceLength() ) ;
+//  sprintf ( u , txt("#bp").mb_str() , p->vec->getSequenceLength() ) ;
 
     // Vector information
     wxString dp = _T(" : ") ;
@@ -77,13 +76,13 @@ void TVectorTree::initme ()
 
     // Genes
     vector <wxTreeItemId> irs ;
-    for ( a = 1 ; a < VIT_TYPES ; a++ )
+    for ( int a = 1 ; a < VIT_TYPES ; a++ )
         {
-		  u = wxString::Format ( _T("itemtype%d") , a ) ;
+        u = wxString::Format ( _T("itemtype%d") , a ) ;
         irs.push_back ( AppendItem ( treeroot , txt(u) ) ) ;
         }
 
-    for ( a = 0 ; a < p->vec->items.size() ; a++ )
+    for ( int a = 0 ; a < p->vec->items.size() ; a++ )
         {
         if ( p->vec->items[a].name.IsEmpty() )
            {
@@ -101,7 +100,7 @@ void TVectorTree::initme ()
         sFrom = wxString::Format ( txt("s_from") , p->vec->items[a].from ) ;
         sTo = wxString::Format ( txt("s_to") , p->vec->items[a].to ) ;
         sLength = wxString::Format ( txt("s_length") , abs ( p->vec->items[a].to - p->vec->items[a].from ) ) ;
-		  u = wxString::Format ( _T("itemtype%d") , p->vec->items[a].getType() ) ;
+        u = wxString::Format ( _T("itemtype%d") , p->vec->items[a].getType() ) ;
         sType = wxString::Format ( txt("s_type").c_str() , txt(u).c_str() ) ;
         if ( p->vec->items[a].getDirection() == 1 ) sOritentation = txt("cw") ;
         else sOritentation = txt("ccw") ;
@@ -118,21 +117,21 @@ void TVectorTree::initme ()
                sType + _T("\n") +
                sOritentation + _T("\n") +
                sDescription ;
-		TTreeItem *ni = new TTreeItem ( out , _T("ITEM") ) ;
-		ni->data = a ;
+        TTreeItem *ni = new TTreeItem ( out , _T("ITEM") ) ;
+        ni->data = a ;
         SetItemData ( y , ni ) ;
         }
 
     // Enzymes
     enzroot = AppendItem ( treeroot , txt("res_enzymes") ) ;
-    for ( a = 0 ; a < p->vec->re.GetCount() ; a++ )
+    for ( int a = 0 ; a < p->vec->re.GetCount() ; a++ )
         {
         y = AppendItem ( enzroot , p->vec->re[a]->getName() ) ;
 //        p->vec->re[a]->treeid = y ;
         bool used = false , visible = true ;
         wxString out = p->vec->re[a]->getName().c_str() ;
         out += _T("\n") ;
-        for ( b = 0 ; !used && b < p->vec->rc.size() ; b++ )
+        for ( int b = 0 ; !used && b < p->vec->rc.size() ; b++ )
            {
            if ( p->vec->rc[b].e == p->vec->re[a] )
               used = true ;
@@ -219,23 +218,25 @@ void TVectorTree::OnActivation ( wxTreeEvent &event )
 
 /** \brief Toggles if an enzyme is displayed
 */
-void TVectorTree::ToggleEnzymeVisibility ( TRestrictionEnzyme *e )
+void TVectorTree::ToggleEnzymeVisibility ( const TRestrictionEnzyme * const e )
     {
     if ( !e ) return ;
     wxTreeItemId y ;
     wxTreeItemIdValue l ;
     y = GetFirstChild ( enzroot , l ) ;
     while ( y.IsOk() && GetItemText ( y ) != e->getName() )
-       y = GetNextChild ( enzroot , l ) ;
+        {
+        y = GetNextChild ( enzroot , l ) ;
+        }
     if ( !y.IsOk() ) // Automatically added enzyme
-    	{
+        {
         p->vec->hideEnzyme ( e->getName() , true ) ;
         }
     else // Manually added enzyme
-    	{
+        {
         p->vec->hideEnzyme ( e->getName() , IsBold ( y ) ) ;
         SetItemBold ( y , !IsBold ( y ) ) ;
-    	}
+        }
 
     p->cPlasmid->Refresh() ;
     p->cSequence->arrange() ;
