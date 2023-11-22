@@ -23,11 +23,11 @@ class TREcache
 /** \brief A restriction fragment (from, to, length)
 */
 class TFragment
-	{
-	public :
-	int from , to , length ;
-	double weight ; ///< Used in TProteolysis
-	} ;
+    {
+    public :
+    int from , to , length ;
+    double weight ; ///< Used in TProteolysis
+    } ;
 
 bool operator < ( const TFragment &f1 , const TFragment &f2 ) ;
 bool operator == ( const TFragment &f1 , const TFragment &f2 ) ;
@@ -46,13 +46,13 @@ class TRestrictionEditor : public wxDialog
     virtual void pR_showGroupEnzymes ( wxString gr ) ; ///< Shows enzymes in selected enzyme group
     virtual wxArrayInt getcuts ( wxString enzyme ) ; ///< Returns the cut positions for the given enzyme
     virtual void pR_showFragments ( int i ) ; ///< Show the resulting fragments
-    virtual void add2cocktail ( wxString s ) ; ///< Add enzyme to restriction cocktail
-    virtual void del_from_cocktail ( wxString s ) ; ///< Remove enzyme from restriction cocktail
+    virtual void add2cocktail ( const wxString& s ) ; ///< Add enzyme to restriction cocktail
+    virtual void del_from_cocktail ( const wxString& s ) ; ///< Remove enzyme from restriction cocktail
     virtual void refreshCocktail () ; ///< Update cocktail list
-    virtual void getFragmentList ( wxArrayInt &cuts , vector <TFragment> &fragments , bool clear = true ) ; ///< Set list of fragments
-    virtual void listFragments ( wxListCtrl *list , wxArrayInt &vi ) ; ///< Show fragments in a list
-    virtual void listEnzymesInGroup ( wxString gr , wxArrayString &vs ) ; ///< List the enzymes in group
-    virtual void iterateFragments ( wxArrayInt cuts , vector <TFragment> &fragments , int depth = 0 ) ;
+    virtual void getFragmentList ( wxArrayInt &cuts , vector <TFragment> &fragments , const bool clear = true ) const ; ///< Set list of fragments
+    virtual void listFragments ( wxListCtrl * const list , wxArrayInt &vi ) ; ///< Show fragments in a list
+    virtual void listEnzymesInGroup ( const wxString& gr , wxArrayString &vs ) const ; ///< List the enzymes in group
+    virtual void iterateFragments ( const wxArrayInt& cuts , vector <TFragment> &fragments , const int depth = 0 ) const ;
 
     virtual void res_ll ( wxListEvent &event ) ; ///<  event handler
     virtual void res_coc_ll ( wxListEvent &event ) ; ///<  event handler

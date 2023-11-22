@@ -43,7 +43,7 @@ bool TRestrictionEnzyme::differ ( const TRestrictionEnzyme &e ) const
     if ( overlap != e.overlap ) return true ;
     return false ;
     }
-    
+
 wxString TRestrictionEnzyme::getEndUpperLeft ( const bool first_strand ) const
     {
     wxString r ;
@@ -51,7 +51,7 @@ wxString TRestrictionEnzyme::getEndUpperLeft ( const bool first_strand ) const
         r += sequence.GetChar(a) ;
     return r ;
     }
-    
+
 wxString TRestrictionEnzyme::getEndLowerLeft ( const bool first_strand ) const
     {
     wxString r , s = invertSequence () ;
@@ -59,7 +59,7 @@ wxString TRestrictionEnzyme::getEndLowerLeft ( const bool first_strand ) const
         r += s.GetChar(a) ;
     return r ;
     }
-    
+
 wxString TRestrictionEnzyme::getEndUpperRight ( const bool first_strand ) const
     {
     wxString r ;
@@ -67,7 +67,7 @@ wxString TRestrictionEnzyme::getEndUpperRight ( const bool first_strand ) const
         r += sequence.GetChar(a) ;
     return r ;
     }
-    
+
 wxString TRestrictionEnzyme::getEndLowerRight ( const bool first_strand ) const
     {
     wxString r , s = invertSequence () ;
@@ -75,14 +75,14 @@ wxString TRestrictionEnzyme::getEndLowerRight ( const bool first_strand ) const
         r += s.GetChar(a) ;
     return r ;
     }
-    
+
 wxString TRestrictionEnzyme::invertSequence () const
     {
     TVector v ;
     v.setSequence ( sequence ) ;
     return v.transformSequence ( true , false ) . c_str() ;
     }
-    
+
 int TRestrictionEnzyme::getCut ( const bool first_strand ) const
     {
     return first_strand ? cut : sequence.length() - cut - overlap ;

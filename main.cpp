@@ -144,7 +144,7 @@ bool MyApp::OnInit()
     // Handling command-line arguments
     for(int i=1; i<argc; i++)
         {
-        if (0==strcmp("--version",argv[i]) || 0==strcmp("-v",argv[i]) ) 
+        if (0==strcmp("--version",argv[i]) || 0==strcmp("-v",argv[i]) )
             {
             wxPrintf("%s\n",get_GENtle_version());
             exit(0);
@@ -176,11 +176,19 @@ bool MyApp::OnInit()
         homedir.AssignDir( tmp );
         wxPrintf( "I: GENtle's homedir variable set by eviroment: '%s'\n", homedir.GetFullPath() ) ;
         }
+#ifdef HOMEDIR
+    else if ( wxDirExists ( HOMEDIR ) )
+        {
+	    wxPrintf( "I: GENtle's homedir assigned to configuration parameter '%s' since that dir is indeed existing.\n", HOMEDIR ) ;
+            homedir.AssignDir( HOMEDIR ) ;
+	}
     else
         {
-#ifdef __DEBIAN__
-        homedir.AssignDir("/usr/share/gentle") ;
+	    wxPrintf( "W: GENtle's homedir could not be assigned to configuration parameter '%s' since that dir was not found.\n", HOMEDIR ) ;
 #else
+    else
+        {
+#endif
         wxString h, s1 , s2 ;
         wxFileName::SplitPath ( argv[0] , &h, &s1 , &s2 ) ;
         if ( h.IsEmpty() )
@@ -191,7 +199,6 @@ bool MyApp::OnInit()
             {
             homedir.AssignDir(h) ;
             }
-#endif
 
 //FIXME: Unfortunate - why differ from Windows?
 #ifdef __WXMAC__

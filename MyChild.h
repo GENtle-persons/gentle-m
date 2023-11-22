@@ -102,9 +102,9 @@ public:
     virtual void updateSequenceCanvas ( bool remember = false ) ; ///< Refresh the sequence display
     virtual wxString doExtractAA ( bool coding = true ) ; ///< Extract amino acid sequence from DNA
     virtual bool runRestriction ( const wxString& s ) ; ///< Run the restriction
-    virtual void addFragmentsToGel ( wxString title , wxArrayInt &cuts , TVirtualGel *gel , TRestrictionEditor &ed , bool partial ) ; ///< Add restriction fragments to gel
-    virtual MyChild *doTransformSequence ( bool inNewVector , bool complement , bool invers ) ; ///< Transform the sequence
-    virtual bool HasUndoData () ;
+    virtual void addFragmentsToGel ( const wxString& title , wxArrayInt &cuts , TVirtualGel * const gel , const TRestrictionEditor& ed , const bool partial ) const ; ///< Add restriction fragments to gel
+    virtual MyChild *doTransformSequence ( const bool inNewVector , const bool complement , const bool invers ) ; ///< Transform the sequence
+    virtual bool HasUndoData () const ;
 
     TVectorTree *treeBox ; ///< Pointer to the sequence properties tree structure
     TURLtext *propBox ; ///< Pointer to the properties text box
@@ -120,7 +120,7 @@ public:
     virtual void initToolbar () ; ///< Setup the toolbar for this module
     virtual void initMenus () ; ///< Initialize the menus
 
-    void add_siRNA ( int item ) ;
+    void add_siRNA ( const int item ) ;
     int add_siRNA_sub ( wxString s , int pos ) ;
 
     wxChoice *fontsize ;

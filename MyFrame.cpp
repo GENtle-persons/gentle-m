@@ -681,6 +681,7 @@ ChildBase *MyFrame::GetActiveChild() //SDI
  */
 void MyFrame::OnEnzymeEditor(wxCommandEvent& event )
     {
+    wxPrintf("MyFrame::OnEnzymeEditor\n");
     TVectorEditor ee ( this , txt("t_enzymeeditor") , NULL ) ;
     ee.ShowModal () ;
     }
@@ -2327,24 +2328,34 @@ wxWindow *MyFrame::getCommonParent()
  */
 void MyFrame::BollocksMenu(wxCommandEvent& event)
     {
-    if ( !lastChild ) return ;
+    wxPrintf("MyFrame::BollocksMenu\n") ;
+    if ( !lastChild )
+        {
+        wxPrintf("MyFrame::BollocksMenu - return - !lastChild\n") ;
+	return ;
+	}
     if ( event.GetId() == MDI_NEXT_WINDOW ||
 		event.GetId() == MDI_PREV_WINDOW )
 	{
-		int a = getChildIndex ( lastChild ) ;
-		if ( event.GetId() == MDI_NEXT_WINDOW ) a++ ;
-		else a-- ;
-		if ( a < 0 ) a = children.GetCount()-1 ;
-		if ( a >= children.GetCount() ) a = 0 ;
-		if ( a >= 0 && a <= children.GetCount() )
-		{
-			mainTree->EnsureVisible ( children[a]->inMainTree ) ;
-			mainTree->SelectItem ( children[a]->inMainTree ) ;
-			children[a]->EnforceRefesh () ;
-		}
-		return ;
+        int a = getChildIndex ( lastChild ) ;
+        if ( event.GetId() == MDI_NEXT_WINDOW ) a++ ;
+        else a-- ;
+        if ( a < 0 ) a = children.GetCount()-1 ;
+        if ( a >= children.GetCount() ) a = 0 ;
+        if ( a >= 0 && a <= children.GetCount() )
+            {
+            mainTree->EnsureVisible ( children[a]->inMainTree ) ;
+            mainTree->SelectItem ( children[a]->inMainTree ) ;
+            children[a]->EnforceRefesh () ;
+            }
+        wxPrintf("MyFrame::BollocksMenu - return - NEXT_WINDOW\n") ;
+        return ;
 	}
-    if ( lastChild->def != _T("dna") ) return ;
+    if ( lastChild->def != _T("dna") )
+        {
+        wxPrintf("MyFrame::BollocksMenu - return - dna != lastChild->def\n") ;
+        return ;
+	}
     lastChild->ProcessEvent ( event ) ;
     }
 

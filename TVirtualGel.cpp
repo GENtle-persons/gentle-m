@@ -350,13 +350,13 @@ void TMyGelControl::drawBand ( wxDC &dc , TGelLane &lane , int band )
     }
 
 int TMyGelControl::getLanePos ( int size , int height , float perc )
-	{
-	int border = height / 100 ;
-	double ret = height - border * 2 ;
-	ret *= fix_percent ( size ) - fix_percent ( vg->maxband ) ;
-	ret /= fix_percent ( vg->cutoff ) - fix_percent ( vg->maxband ) ;
-	return (int) ret + border ;
-	}
+    {
+    int border = height / 100 ;
+    double ret = height - border * 2 ;
+    ret *= fix_percent ( size ) - fix_percent ( vg->maxband ) ;
+    ret /= fix_percent ( vg->cutoff ) - fix_percent ( vg->maxband ) ;
+    return (int) ret + border ;
+    }
 
 double TMyGelControl::fix_percent ( int size , float perc )
     {
@@ -390,7 +390,7 @@ void TMyGelControl::OnEvent(wxMouseEvent& event)
             break ;
             }
         if ( a == vg->lanes.size() ) return ;
-//        if ( vg->lanes[a].type != "DNA" ) return ;
+//      if ( vg->lanes[a].type != "DNA" ) return ;
         wxString s = wxGetTextFromUser ( txt("t_vg_edit_name1") , txt("t_vg_edit_name2") , vg->lanes[a].name ) ;
         if ( s.IsEmpty() ) return ;
         vg->lanes[a].name = s ;

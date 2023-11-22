@@ -17,7 +17,7 @@ class TGelLane
     public :
     TGelLane () ; ///< Constructor
     virtual ~TGelLane () {} ///< Dummy destructor
-    
+
     virtual void clear () ; ///< Clears the lane data
     virtual void setMarker ( wxString _name ) ; ///< Sets a default marker
     virtual void add ( int size , int weight = 1 ) ; ///< Adds a weightenend band
@@ -56,7 +56,7 @@ class TVirtualGel : public ChildBase
 
     DECLARE_EVENT_TABLE()
     } ;
-    
+
 /**	\class TMyGelControl
 	\brief This class handles a single virtual gel for TVirtualGel, using TGelLane lanes
 */
@@ -100,11 +100,11 @@ class TRestrictionIdentifier : public TVirtualGel
     private:
     void listDNA () ;
     void recalcEnzymes() ;
-    void addRestrictionLane ( wxString en , TVector *v ) ;
-    wxArrayInt getRestrictionFragments ( wxString en , TVector *v ) ;
-    bool check4separation ( wxString en ) ;
-    bool arrays_are_separate ( const wxArrayInt &a1 , const wxArrayInt &a2 ) ;
-    bool arrays_differ ( const wxArrayInt &a1 , const wxArrayInt &a2 , int bp , int percent ) ;
+    void addRestrictionLane ( const wxString& en , const TVector * const v ) ;
+    wxArrayInt getRestrictionFragments ( const wxString& en , const TVector * const v ) const ;
+    bool check4separation ( const wxString& en ) const ;
+    bool arrays_are_separate ( const wxArrayInt &a1 , const wxArrayInt &a2 ) const ;
+    bool arrays_differ ( const wxArrayInt &a1 , const wxArrayInt &a2 , const int bp , const int percent ) const ;
 
     wxCheckListBox *dna_list ;
     wxListBox *enzymes_list ;

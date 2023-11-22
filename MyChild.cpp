@@ -1163,9 +1163,9 @@ bool MyChild::runRestriction ( const wxString& s )
         {
         for ( unsigned int c = 0 ; c < ed.cocktail.GetCount() ; c++ )
             {
-             wxArrayInt vi ;
-             vi = ed.getcuts ( ed.cocktail[c] ) ;
-             addFragmentsToGel ( ed.cocktail[c] , vi , gel , ed , false ) ;
+            wxArrayInt vi ;
+            vi = ed.getcuts ( ed.cocktail[c] ) ;
+            addFragmentsToGel ( ed.cocktail[c] , vi , gel , ed , false ) ;
             }
         }
     else
@@ -1183,7 +1183,7 @@ bool MyChild::runRestriction ( const wxString& s )
        return true ;
     }
 
-void MyChild::addFragmentsToGel ( wxString title , wxArrayInt &cuts , TVirtualGel *gel , TRestrictionEditor &ed , bool partial )
+void MyChild::addFragmentsToGel ( const wxString& title , wxArrayInt &cuts , TVirtualGel * const gel , const TRestrictionEditor &ed , const bool partial ) const
     {
     TGelLane lane ;
     lane.name = title ;
@@ -1217,9 +1217,8 @@ void MyChild::OnTransformSequence(wxCommandEvent& event)
     doTransformSequence ( inNewVector , complement , invert ) ;
     }
 
-MyChild *MyChild::doTransformSequence ( bool inNewVector , bool complement , bool invers )
+MyChild *MyChild::doTransformSequence ( const bool inNewVector , const bool complement , const bool invers )
     {
-    int a ;
     TVector *v = vec ;
     if ( inNewVector ) // Creating new vector, if needed
         {
@@ -1238,7 +1237,7 @@ MyChild *MyChild::doTransformSequence ( bool inNewVector , bool complement , boo
     if ( invers )
         {
         int l = v->getSequenceLength() ;
-        for ( a = 0 ; a < v->items.size() ; a++ )
+        for ( int a = 0 ; a < v->items.size() ; a++ )
            {
            v->items[a].direction *= -1 ;
            int from = v->items[a].from ;
@@ -1373,7 +1372,6 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
     pdc->SetFont ( *font ) ;
     pdc->GetTextExtent ( _T("A") , &cw , &ch ) ;
 
-    int a , b ;
     int y ;
     int x0 = w / 20 ;
     int x1 = x0 + w / 5 ;
@@ -1394,7 +1392,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
     pdc->DrawLine ( x0 , y+ch*6/10 , w - x0 , y+ch*6/10 ) ;
     pdc->DrawLine ( x0 , y+ch*8/10 , w - x0 , y+ch*8/10 ) ;
 
-    for ( a = 0 ; a < vec->items.size() ; a++ )
+    for ( int a = 0 ; a < vec->items.size() ; a++ )
         {
         y += ch ;
         pdc->DrawText ( vec->items[a].name , x0 , y ) ;
@@ -1422,7 +1420,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
            strcpy ( t , vec->items[a].desc.mb_str() ) ;
 
            int cnt = 0 , ls = 0 ;
-           for ( b = 0 ; t[b] ; b++ )
+           for ( int b = 0 ; t[b] ; b++ )
               {
               cnt++ ;
               if ( cnt > w / cw )
@@ -1433,7 +1431,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
               else if ( t[b] == ' ' ) ls = b ;
               }
 
-           for ( b = 0 ; t[b] ; b++ )
+           for ( int b = 0 ; t[b] ; b++ )
               {
               if ( t[b] > 15 ) s += t[b] ;
               else
@@ -1446,7 +1444,7 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
            int dx , dy ;
            y += ch ;
            pdc->SetFont ( *sfont ) ;
-           for ( b = 0 ; b < vs.GetCount() ; b++ )
+           for ( int b = 0 ; b < vs.GetCount() ; b++ )
               {
               pdc->GetTextExtent ( vs[b] , &dx , &dy ) ;
               pdc->DrawText ( vs[b] , x0 + cw * 3 , y ) ;
@@ -1504,7 +1502,7 @@ void MyChild::Undo(wxCommandEvent& event)
     updateUndoMenu () ;
     }
 
-bool MyChild::HasUndoData ()
+bool MyChild::HasUndoData () const
     {
     if ( !vec ) return false ;
     if ( !allow_undo ) return false ;
@@ -1589,28 +1587,27 @@ void MyChild::OnAutoAnnotate(wxCommandEvent& event)
 
 void MyChild::OnSpeak(wxCommandEvent& event)
     {
-   wxString s = cPlasmid->getSelection () ;
-   if ( s.IsEmpty() ) s = vec->getSequence() ; // Nothing selected, read whole sequence
-   TSpeakDialog sd ( this , txt("t_speak") , s ) ;
-   sd.ShowModal() ;
+    wxString s = cPlasmid->getSelection () ;
+    if ( s.IsEmpty() ) s = vec->getSequence() ; // Nothing selected, read whole sequence
+    TSpeakDialog sd ( this , txt("t_speak") , s ) ;
+    sd.ShowModal() ;
     }
 
 void MyChild::OnSiRNA(wxCommandEvent& event)
    {
-   int a ;
    bool ref = false ;
-    vec->undo.start ( txt("m_undo") + wxString ( _T(" ") ) + txt("m_sirna_duplexes") ) ;
-   for ( a = 0 ; a < vec->items.size() ; a++ )
+   vec->undo.start ( txt("m_undo") + wxString ( _T(" ") ) + txt("m_sirna_duplexes") ) ;
+   for ( int a = 0 ; a < vec->items.size() ; a++ )
        {
        if ( vec->items[a].getRF() == 0 ) continue ; // No CDS
        add_siRNA ( a ) ;
        ref = true ;
        }
    if ( ref )
-      {
-      vec->undo.stop () ;
-      EnforceRefesh () ;
-      }
+       {
+       vec->undo.stop () ;
+       EnforceRefesh () ;
+       }
    else vec->undo.abort () ;
    }
 
@@ -1632,18 +1629,18 @@ bool operator<(const TsiRNA& x, const TsiRNA& y)
     return x.score > y.score;
 }
 
-void MyChild::add_siRNA ( int item )
+void MyChild::add_siRNA ( const int item )
    {
-   int a , b , dir = 1 ;
+   int dir = 1 ;
    int from = vec->items[item].from ;
    int to = vec->items[item].to ;
    int l = vec->getSequenceLength() ;
    if ( vec->items[item].getRF() < 0 )
       dir = -1 ;
-   b = 0 ;
+   int b = 0 ;
    wxString sub ;
    vector <TsiRNA> rna ;
-   for ( a = from ; a != to ; a += dir )
+   for ( int a = from ; a != to ; a += dir )
        {
        if ( a < 0 ) a = l - 1 ;
        else if ( a >= l ) a = 0 ;
@@ -1659,10 +1656,10 @@ void MyChild::add_siRNA ( int item )
        b++ ;
        }
    sort ( rna.begin() , rna.end() ) ;
-   a = rna.size() >= 10 ? 9 : rna.size()-1 ;
-   while ( a+1 < rna.size() && rna[a+1].score == rna[a].score ) a++ ;
-   while ( rna.size() > a ) rna.pop_back () ;
-   for ( a = 0 ; a < rna.size() ; a++ )
+   int rnaMaxsize = rna.size() >= 10 ? 9 : rna.size()-1 ;
+   while ( rnaMaxsize+1 < rna.size() && rna[rnaMaxsize+1].score == rna[rnaMaxsize].score ) rnaMaxsize++ ;
+   while ( rna.size() > rnaMaxsize ) rna.pop_back () ;
+   for ( int a = 0 ; a < rna.size() ; a++ )
        {
        TVectorItem i ( txt("t_siRNA") ,
                        wxString::Format ( txt("t_siRNA_l") , rna[a].score ) ,
@@ -1681,8 +1678,7 @@ int MyChild::add_siRNA_sub ( wxString s , int pos )
 
    // GC%
    int gc = 0 ;
-   int a ;
-   for ( a = 0 ; a < s.length() ; a++ )
+   for ( int a = 0 ; a < s.length() ; a++ )
        gc += s.GetChar(a)=='G' || s.GetChar(a)=='C' ? 1 : 0 ;
    gc = gc * 100 / s.length() ;
    if ( gc < 25 ) return 0 ;

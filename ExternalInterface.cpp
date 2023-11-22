@@ -106,7 +106,7 @@ wxString ExternalInterface::getName () const
     return _T("External Interface") ;
     }
 
-void ExternalInterface::runBlast ( const wxString& seq , const wxString& _prg ) 
+void ExternalInterface::runBlast ( const wxString& seq , const wxString& _prg )
     {
     EIpanel * const bl = new EIpanel ( nb , EI_BLAST ) ;
     wxString prg = _prg ;
@@ -119,7 +119,6 @@ void ExternalInterface::runBlast ( const wxString& seq , const wxString& _prg )
     wxCommandEvent event( wxEVT_COMMAND_BUTTON_CLICKED, ID_B1 );
     wxPostEvent ( bl , event ) ;
     }
-
 
 // *****************************************************************************
 EILB::EILB ( wxWindow *parent , int id ) : wxHtmlListBox ( parent , id , wxDefaultPosition , wxDefaultSize , wxLB_MULTIPLE )
