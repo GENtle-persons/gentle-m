@@ -131,7 +131,7 @@ wxString TVector::getStrand53 () const
     {
     return _lu + sequence + _ru ;
     }
-     
+
 wxString TVector::getStrand35 () const
     {
     wxString t1 , t2 , t3 ;
@@ -140,7 +140,7 @@ wxString TVector::getStrand35 () const
     for ( int a = 0 ; a < _ll.length() ; a++ ) t3 = _ll.GetChar(a) + t3 ;
     return t1 + t2 + t3 ;
     }
-     
+
 int TVector::showGC () const // Return 0 for "no", otherwise number of blocks
     {
     if ( type == TYPE_AMINO_ACIDS ) return 0 ;
@@ -158,7 +158,7 @@ wxString TVector::getParams () const
     }
     return params ;
     }
-    
+
 wxString TVector::getParam ( const wxString& key ) const
     {
     int a ;
@@ -166,7 +166,7 @@ wxString TVector::getParam ( const wxString& key ) const
     if ( a == paramk.GetCount() ) return _T("") ;
     else return paramv[a] ;
     }
-     
+
 void TVector::setParam ( const wxString& key , const wxString& value ) /* not const */
     {
     int a ;
@@ -199,7 +199,7 @@ void TVector::setParams ( wxString t ) /* not const */
     for ( int a = 0 ; a < paramk.GetCount() ; a++ )
         evaluate_key_value ( paramk[a] , paramv[a] ) ;
     }
-    
+
 void TVector::evaluate_key_value ( const wxString& key , const wxString& value )
     {
     if ( key == _T("enzymerule") )
@@ -272,7 +272,7 @@ TVector *TVector::newFromMark ( const int from , const int to )  const
     nv->recalcvisual = true ;
     return nv ;
     }
-    
+
 void TVector::setNucleotide ( const int _pos , const char t )
     {
     int sl = sequence.length() ;
@@ -289,7 +289,7 @@ bool TVector::basematch ( const char b1 , const char b2 ) const // b1 in IUPAC, 
    {
    return b1 == b2 || ( ( IUPAC[b1] & SIUPAC[b2] ) > 0 ) ;
    }
-   
+
 wxString TVector::vary_base ( const char b ) const
     {
     wxString ret ;
@@ -305,7 +305,7 @@ const wxString TVector::one2three ( const int a ) const
     if ( a < 0 || a > 255 ) return _T("") ;
     return aaprop[a].tla ;
     }
-    
+
 void TVector::setStickyEnd ( const bool left , const bool upper , const wxString& s )
     {
     if ( left && upper ) _lu = s ;
@@ -341,7 +341,7 @@ TVector::~TVector ()
     undo.setbase ( NULL ) ;
     undo.clear () ;
     }
-    
+
 void TVector::setCodonTable ( const int table , const wxString& sequence , const wxString& name )
     {
     while ( codon_tables.GetCount() <= table ) codon_tables.Add ( _T("") ) ;
@@ -557,7 +557,7 @@ void TVector::init ()
 
     for ( char a = 'a' ; a <= 'z' ; a++ ) aaprop[a] = aaprop[a-'a'+'A'] ;
     }
-    
+
 void TVector::makeAA2DNA ( const wxString& mode ) // not const
     {
     wxString iu = _T("ACGT") ;
@@ -948,7 +948,7 @@ bool TVector::reduceToFragment ( TRestrictionCut left , TRestrictionCut right )
 
     return true ; // Success; actually, no "return false" yet.
     }
-    
+
 char TVector::getNucleotide ( const int _pos ,  const bool complement ) const
     {
     int sl = sequence.length() ;
@@ -959,7 +959,7 @@ char TVector::getNucleotide ( const int _pos ,  const bool complement ) const
     if ( complement ) return getComplement ( sequence.GetChar(pos) ) ;
     return sequence.GetChar(pos) ;
     }
-    
+
 wxString TVector::transformSequence ( const bool inverse , const bool reverse ) const
     {
     int a ;
@@ -1086,7 +1086,7 @@ void TVector::doAction ()
     recalculateCuts () ;
     return ;
     }
-    
+
 wxString TVector::invert ( const wxString& s ) const
     {
     wxString t ;
@@ -1277,7 +1277,7 @@ wxString TVector::dna2aa ( const wxString& codon , const int translation_table )
        }
     return r ;
     }
-    
+
 void TVector::turn ( const int off )
     {
     // Allowing turn of linear fragments as a temporary measure due to a problem in getAAvector
@@ -1314,7 +1314,7 @@ void TVector::turn ( const int off )
     recalcvisual = true ;
     turned += off ;
     }
-    
+
 int TVector::countCuts ( const wxString& enzyme ) const
     {
     int a , count ;
@@ -1323,7 +1323,7 @@ int TVector::countCuts ( const wxString& enzyme ) const
            count++ ;
     return count ;
     }
-        
+
 void TVector::setAction ( const wxString& _action , const int _action_value )
     {
     action = _action ;
@@ -1347,7 +1347,7 @@ wxString TVector::getSubstring ( int mf , int mt )
         return s ;
         }
     }
-    
+
 void TVector::setChanged ( const bool c )
     {
     if ( c == changed ) return ;
@@ -1417,7 +1417,7 @@ void TVector::addORFs ( int off )
            }
         }
     }
-    
+
 TVector *TVector::getAAvector ( const int _from , const int _to , const int dir ) const
     {
     char UNIQUE = '#' ;
@@ -1556,7 +1556,7 @@ void TVector::clear ()
     hiddenEnzymes.Clear () ;
     proteases.Clear () ;
     }
-    
+
 int TVector::find_item ( const wxString& s ) const
     {
     int a ;
@@ -1600,79 +1600,79 @@ void TVector::sortRestrictionSites ()
            }
         }
     }
-    
+
 const wxString TVector::getDescription () const
     {
     return desc ;
-    }    
-    
+    }
+
 void TVector::setDescription ( const wxString& s )
     {
     desc = s ;
     }
-    
+
 void TVector::addDescription ( const wxString& s )
     {
     desc += s ;
     }
-    
+
 const wxString TVector::getName () const
     {
     return name ;
-    }    
-    
+    }
+
 void TVector::setName ( const wxString& s )
     {
     name = s ;
     }
-    
+
 void TVector::addName ( const wxString& s )
     {
     name += s ;
     }
-    
+
 wxString TVector::getSequence () const
     {
     return sequence ;
     }
-    
+
 void TVector::removeAlignmentArtifacts ( const char what )
     {
     wxString what2 ( (wxChar) what ) ;
     sequence.Replace ( what2 , _T("") ) ;
-    }    
-    
+    }
+
 char TVector::getSequenceChar ( const int x ) const
     {
     return sequence.GetChar(x) ;
-    }    
-        
+    }
+
 void TVector::setSequence ( const wxString& ns )
     {
     sequence.Alloc ( ns.length() + 10 ) ;
     sequence = ns ;
-    }    
-    
+    }
+
 void TVector::addToSequence ( const wxString& x )
     {
     sequence.Append ( x ) ;
-    }    
-    
+    }
+
 void TVector::alterSequence ( const int pos , const char c )
     {
     sequence.SetChar ( pos , c ) ;
-    }    
-    
+    }
+
 int TVector::getSequenceLength() const
     {
     return sequence.length() ;
-    }    
-    
+    }
+
 void TVector::eraseSequence ( const int from , const int len )
     {
     sequence.erase ( from , len ) ;
-    }    
-    
+    }
+
 char TVector::three2one ( wxString s ) const
     {
     s.MakeUpper() ;
@@ -1783,18 +1783,18 @@ wxColour TVectorItem::getFontColor () const
         c = wxColour ( 255 , 255 , 255 ) ;
     return c ;
     }
-    
+
 bool TVectorItem::isVisible () const
     {
     wxString s = getParam ( _T("ISVISIBLE") ) ;
     return ( s == _T("1") ) ;
     }
-    
+
 void TVectorItem::setVisible ( const bool b )
     {
     setParam ( _T("ISVISIBLE") , b ) ;
     }
-    
+
 void TVectorItem::setColor ( const wxColour& col )
     {
     setParam ( _T("ISDEFAULTBRUSH") , false ) ;
@@ -1815,18 +1815,18 @@ void TVectorItem::setParam ( const wxString& p , const wxString& v )
         }
     else pvalue[a] = v ;
     }
-    
+
 void TVectorItem::setParam ( const wxString& p , const int v )
     {
     setParam ( p , wxString::Format ( _T("%d") , v ) ) ;
     }
-    
+
 const wxString TVectorItem::getParam ( const wxString& p , const wxString& def ) const
     {
     int a = pname.Index ( p ) ;
     return ( a == wxNOT_FOUND ) ? def : pvalue[a] ;
     }
-    
+
 wxArrayString TVectorItem::getParamKeys () const
     {
     return pname ;
@@ -1891,13 +1891,13 @@ int TVectorItem::getRF () const
     getParam ( _T("/codon_start") ).ToLong ( &l ) ;
     return (int) l ;
     }
-    
+
 void TVectorItem::setRF ( const int x )
     {
     if ( type != VIT_CDS ) return ;
     setParam ( _T("/codon_start") , x ) ;
     }
-    
+
 void TVectorItem::doRemove ( const int f , const int t , const int l )
     {
     if ( from == -1 ) return ;
@@ -1925,7 +1925,7 @@ void TVectorItem::doRemove ( const int f , const int t , const int l )
     to += from ;
 
     const int l_mod = l - rt - f + 1 ;
-    if ( l_mod == 0 ) 
+    if ( l_mod == 0 )
         {
         from = -1 ;
         return ;
@@ -1934,17 +1934,17 @@ void TVectorItem::doRemove ( const int f , const int t , const int l )
     while ( from > l_mod ) from -= l_mod ;
 
     }
-    
+
 int TVectorItem::getOffset () const
     {
     return atoi ( getParam ( _T("OFFSET") , _T("-1") ).mb_str() ) ;
     }
-    
+
 void TVectorItem::setOffset ( const int o )
     {
     setParam ( _T("OFFSET") , o ) ;
     }
-    
+
 void TVectorItem::setType ( const wxString& _s )
     {
     wxString s = _s.Upper() ;
@@ -2097,7 +2097,7 @@ int TVectorItem::getOffsetAt ( int i ) const
         }
     return -1 ;
     }
-    
+
 int TVectorItem::getMem () const
     {
     int a , r = 0 ;
@@ -2108,8 +2108,8 @@ int TVectorItem::getMem () const
     r += 2 * sizeof ( float ) + sizeof ( wxTreeItemId ) ;
     r += sizeof ( TVectorItem ) ;
     return r ;
-    }    
-    
+    }
+
 void TVectorItem::setLastVector ( TVector * const v )
     {
     lastVector = v ;
@@ -2137,7 +2137,7 @@ TAAProp::TAAProp ()
     carbon = hydrogen = nitrogen = oxygen = sulfur = 0 ;
     hl_mammal = hl_yeast = hl_ecoli = 0 ;
     }
-    
+
 void TAAProp::set_cf ( const int pa , const int pb , const int pt , const float f0 , const float f1 , const float f2 , const float f3 )
     {
     cf_pa = pa ;
@@ -2148,14 +2148,14 @@ void TAAProp::set_cf ( const int pa , const int pb , const int pt , const float 
     cf_f[2] = f2 ;
     cf_f[3] = f3 ;
     }
-    
+
 void TAAProp::set_data ( const float _mw , const float _pi , const wxString& _tla )
     {
     mw = _mw ;
     pi = _pi ;
     tla = _tla ;
     }
-    
+
 void TAAProp::set_hp ( const float _hp_kd , const float _hp_hw )
     {
     hp_kd = _hp_kd ;
@@ -2170,14 +2170,14 @@ void TAAProp::set_atoms ( const int C , const int H , const int N , const int O 
     oxygen = O ;
     sulfur = S ;
      }
-         
+
 void TAAProp::set_halflife ( const int mammal , const int yeast , const int ecoli )
     {
     hl_mammal = mammal ;
     hl_yeast = yeast ;
     hl_ecoli = ecoli ;
     }
-     
+
 wxString TAAProp::get_halflife_text ( int hl ) const
     {
     wxString ret ;

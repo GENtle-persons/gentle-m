@@ -333,7 +333,7 @@ void* TAlignment::Entry()
 //  cout << "Executing " << bn.mb_str() << endl ;
 #endif
     wxExecute ( bn , wxEXEC_SYNC ) ;
-    
+
     wxString aln = tmpdir + _T("/clustalw.aln") ;
     wxTextFile in ( aln ) ;
     in.Open ( *(myapp()->isoconv) ) ;

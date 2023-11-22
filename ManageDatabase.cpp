@@ -42,8 +42,7 @@ BEGIN_EVENT_TABLE(TManageDatabaseDialog, wxDialog )
 END_EVENT_TABLE()
 
 
-TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , wxString title ,
-                            int mode , TVector *_v )
+TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , const wxString& title , const int mode , TVector * const _v )
     : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 700 , 550 ) )
     {
     pm_dd_l = pm_dd_r = NULL ;
@@ -321,22 +320,22 @@ void TManageDatabaseDialog::pm_list_items ( const int x )
         // Filtering
         for ( int a = 0 ; a < filter.length() ; a++ )
             if ( filter.GetChar(a) == '\"' )
-	        filter.SetChar ( a , '\'' ) ;
+                filter.SetChar ( a , '\'' ) ;
         wxArrayString vf ;
         explode ( " " , filter , vf ) ;
         wxString sql2 , sql3 ;
         for ( int a = 0 ; a < vf.GetCount() ; a++ )
             {
             if ( !vf[a].IsEmpty() )
-			 {
-			 if ( !sql2.IsEmpty() ) sql2 += " AND" ;
-			 sql2 += " (dna_name LIKE \"%" + vf[a] + "%\"" ;
-			 if ( f_desc->GetValue() )
-				sql2 += " OR dna_description LIKE \"%" + vf[a] + "%\"" ;
-			 if ( f_seq->GetValue() )
-				sql2 += " OR dna_sequence LIKE \"%" + vf[a] + "%\"" ;
-			 sql2 += ")" ;
-			 }
+                {
+                if ( !sql2.IsEmpty() ) sql2 += " AND" ;
+                sql2 += " (dna_name LIKE \"%" + vf[a] + "%\"" ;
+                if ( f_desc->GetValue() )
+                    sql2 += " OR dna_description LIKE \"%" + vf[a] + "%\"" ;
+                if ( f_seq->GetValue() )
+                    sql2 += " OR dna_sequence LIKE \"%" + vf[a] + "%\"" ;
+                sql2 += ")" ;
+                }
             }
         if ( f_dna->GetValue() ) // DNA
             {
@@ -368,13 +367,13 @@ void TManageDatabaseDialog::pm_list_items ( const int x )
         r = st->getObject ( sql ) ;
 
         for ( int a = 0 ; a < r.rows() ; a++ )
-           {
-           wxString s = r[a][r["dna_name"]] ;
-          if ( r[a][r["dna_type"]] == "5" ) l->InsertItem ( a , s , 2 ) ;
-           else if ( r[a][r["dna_type"]] == "3" ) l->InsertItem ( a , s , 3 ) ;
-           else if ( r[a][r["dna_type"]] == "4" ) l->InsertItem ( a , s , 4 ) ;
-           else l->InsertItem ( a , s , 0 ) ;
-           }
+            {
+            wxString s = r[a][r["dna_name"]] ;
+            if ( r[a][r["dna_type"]] == "5" ) l->InsertItem ( a , s , 2 ) ;
+            else if ( r[a][r["dna_type"]] == "3" ) l->InsertItem ( a , s , 3 ) ;
+            else if ( r[a][r["dna_type"]] == "4" ) l->InsertItem ( a , s , 4 ) ;
+            else l->InsertItem ( a , s , 0 ) ;
+            }
         }
     SetCursor ( *wxSTANDARD_CURSOR ) ;
     }
@@ -509,7 +508,7 @@ bool TManageDatabaseDialog::copyDNA ( const wxString& _n , const wxString& sdb ,
         }
 
     SetCursor ( *wxSTANDARD_CURSOR ) ;
-	return true ;
+    return true ;
     }
 
 bool TManageDatabaseDialog::moveDNA ( const wxString& name , const wxString& sdb , const wxString& tdb )
@@ -534,8 +533,6 @@ wxString TManageDatabaseDialog::getFileName ( const wxString& dbname ) const
            return db_file[a] ;
     return "" ;
     }
-
-
 
 
 void TManageDatabaseDialog::initDatabases ()
@@ -591,9 +588,9 @@ void TManageDatabaseDialog::accessDB ()
     for ( a = 0 ; db_name[a] != name ; a++ ) ;
     if ( db_name[a] != name )
         {
-	wxPrintf("E: TManageDatabaseDialog::accessDB: db_name[a] != name = '%s'\n" , name ) ;
+        wxPrintf("E: TManageDatabaseDialog::accessDB: db_name[a] != name = '%s'\n" , name ) ;
         exit( 1 ) ;
-	}
+        }
 
     wxString file = db_file[a] ;
     pd_db_name->SetLabel ( wxString::Format ( txt("t_db_name") , db_name[a].c_str() ) ) ;
@@ -731,12 +728,20 @@ void TManageDatabaseDialog::pdOnDel ( wxCommandEvent &ev )
         return ;
         }
 
-    int a ;
-    for ( a = 0 ; a < db_name.GetCount() && db_name[a] != name ; a++ ) ;
+    int namePos = 0 ;
+    while ( namePos < db_name.GetCount() && db_name[namePos] != name )
+        {
+        namePos++ ;
+        }
+    if ( namePos >= db_name.GetCount() )
+        {
+        wxPrintf("E: TManageDatabaseDialog::pdOnDel: Could not find name '%s' among db_name entries.\n", name ) ;
+        return ;
+        }
 
     // Removing from database
     TSQLresult r ;
-    wxString sql = "DELETE FROM stuff WHERE s_type=\"DATABASE\" AND s_name=\"" + name + "\" AND s_value=\"" + db_file[a] + "\"" ;
+    wxString sql = "DELETE FROM stuff WHERE s_type=\"DATABASE\" AND s_name=\"" + name + "\" AND s_value=\"" + db_file[namePos] + "\"" ;
     r = myapp()->frame->LS->getObject ( sql ) ;
     pd_loadList () ;
     pd_db->SetStringSelection ( txt("local_db") ) ;
@@ -814,7 +819,7 @@ void TManageDatabaseDialog::pmOnActivate ( wxListEvent &ev , wxListCtrl *side )
     pmOpenFiles ( context_names , t ) ;
     }
 
-void TManageDatabaseDialog::pmOpenFiles ( wxArrayString & _names , wxString _db )
+void TManageDatabaseDialog::pmOpenFiles ( const wxArrayString & _names , const wxString& _db )
     {
     if ( _names.GetCount() == 0 ) return ;
     myapp()->frame->pop_help () ;
@@ -829,11 +834,11 @@ void TManageDatabaseDialog::pmOpenFiles ( wxArrayString & _names , wxString _db 
 
     wxProgressDialog pd ( txt("t_loading") , "" , _names.GetCount() , NULL , wxPD_ALL ) ;
     for ( int a = 0 ; a < _names.GetCount() ; a++ )
-    	{
+        {
         if ( !pd.Update ( a , _names[a] ) )
             break ;
-    	do_load ( _names[a] , _db ) ;
-     	}
+        do_load ( _names[a] , _db ) ;
+        }
 
     myapp()->frame->lockDisplay ( false ) ;
     wxEndBusyCursor () ;
@@ -911,13 +916,19 @@ bool TManageDatabaseDialog::do_load_DNA ( const wxString& name , const wxString&
     TSQLresult sr ;
     v = new TVector () ;
 
+    wxPrintf("D: TManageDatabaseDialog::do_load_DNA (name = %s, db = %s)\n", name, db ) ;
+
     if ( name.IsEmpty() ) return false ;
     // Loading vector
     sql = "SELECT * FROM dna WHERE dna_name=\"" ;
     sql += name ;
     sql += "\"" ;
     sr = tstorage->getObject ( sql ) ;
-    if( sr.rows() == 0 ) { wxMessageBox ( name , txt("t_could_not_load") ) ; return false ; }
+    if( sr.rows() == 0 )
+        {
+        wxMessageBox ( name , txt("t_could_not_load") ) ;
+        return false ;
+        }
     v->setName ( sr[0][sr["dna_name"]] ) ;
     v->setDescription ( sr[0][sr["dna_description"]] ) ;
     v->setSequence ( sr[0][sr["dna_sequence"]] ) ;
@@ -933,64 +944,94 @@ bool TManageDatabaseDialog::do_load_DNA ( const wxString& name , const wxString&
     v->setDatabase ( db ) ;
     if ( v->getType() != TYPE_ALIGNMENT ) v->removeBlanksFromSequence () ;
 
-    wxString s = sr[0][sr["dna_restriction_enzymes"]] , t = "" ;
+    wxString s = sr[0][sr["dna_restriction_enzymes"]] ;
+    wxString t = "" ;
+    wxPrintf("D: Iterating over restrition enzymes (s=%s)\n", s ) ;
     for ( int a = 0 ; a < s.length() ; a++ )
         {
         if ( s.GetChar(a) == ',' )
-           {
-           if ( !t.IsEmpty() )
-              {
-              if ( t.GetChar(0) == '*' )
-                 {
-                 v->proteases.Add ( t.substr ( 1 ) ) ;
-                 }
-              else
-                 {
-                 TRestrictionEnzyme *re = tstorage->getRestrictionEnzyme ( t ) ;
-                 if ( re ) v->re.Add ( re ) ;
-                 }
-              }
-           t = "" ;
-           }
+            {
+            if ( !t.IsEmpty() )
+                {
+                if ( t.GetChar(0) == '*' )
+                    {
+                    v->proteases.Add ( t.substr ( 1 ) ) ;
+                    }
+                else
+                    {
+                    TRestrictionEnzyme *re = tstorage->getRestrictionEnzyme ( t ) ;
+                    if ( re ) v->re.Add ( re ) ;
+                    }
+                }
+            t = "" ;
+            }
         else t += s.GetChar(a) ;
         }
+
+    wxPrintf("D: t=%s\n",t);
+
     if ( !t.IsEmpty() )
         {
+        wxPrintf("D: t is not empty: '%s'\n",t);
         if ( t.GetChar(0) == '*' ) v->proteases.Add ( t.substr ( 1 ) ) ;
         else v->re.Add ( tstorage->getRestrictionEnzyme ( t ) ) ;
+        }
+    else
+        {
+        wxPrintf("D: t is empty\n");
         }
 
     // Loading items
     sql = "SELECT * FROM dna_item WHERE di_dna=\"" + name + "\"" ;
+    wxPrintf("D: %s\n", sql ) ;
     sr = tstorage->getObject ( sql ) ;
     for ( int a = 0 ; a < sr.rows() ; a++ )
         {
         TVectorItem i ;
         i.name = sr[a][sr["di_name"]] ;
         i.desc = sr[a][sr["di_description"]] ;
-        i.setType ( (char)sr[a][sr["di_type"]].GetChar(0) ) ;
+        wxPrintf( "D: %d of %d: %s : %s\n", a, sr.rows() , i.name, i.desc ) ;
+        wxString typeString = sr[a][sr["di_type"]] ;
+        wxPrintf( "D: di_type: '%s'\n", typeString ) ;
+        if (typeString.length() > 0) {
+            auto c = typeString[0].GetValue() ;
+            i.setType ( c ) ;
+        }
+        else {
+            i.setType ( "" ) ;
+        }
+        //wxPrintf( "D: type: %c\n", i.getType() ) ;
         i.from = atoi ( sr[a][sr["di_from"]].mb_str() ) ;
         i.to = atoi ( sr[a][sr["di_to"]].mb_str() ) ;
+        wxPrintf( "D: from: %d, to %d\n", i.from, i.to ) ;
         i.setDirection ( atoi ( sr[a][sr["di_direction"]].mb_str() ) ) ;
         i.explodeParams ( sr[a][sr["di_params"]] ) ;
         v->items.push_back ( i ) ;
         }
 
-    if ( justload ) return true ;
+    if ( justload )
+        {
+        wxPrintf( "D: do_load_DNA - return (justload)\n" ) ;
+        return true ;
+        }
 
     // Sorting by size, largest first
-    if ( v->items.size() < 100 ) // Don't do that for genoms!
-    	{
+    wxPrintf("D: retrieved %u elements \n", v->items.size() ) ;
+    if ( v->items.size() < 100 ) // Don't do that for genomes!
+        {
         for ( int a = 1 ; a < v->items.size() ; a++ )
             {
             if ( v->getItemLength ( a-1 ) < v->getItemLength ( a ) )
-               {
-               TVectorItem dummy = v->items[a] ;
-               v->items[a] = v->items[a-1] ;
-               v->items[a-1] = dummy ;
-               a -= 2 ;
-               if ( a < 0 ) a = 0 ;
-               }
+                {
+                TVectorItem dummy = v->items[a] ;
+                v->items[a] = v->items[a-1] ;
+                v->items[a-1] = dummy ;
+                a -= 2 ;
+                if ( a < 0 )
+                    {
+                    a = 0 ;
+                    }
+                }
             }
         }
 
@@ -1167,7 +1208,6 @@ void TManageDatabaseDialog::do_save_DNA ()
     wxBeginBusyCursor() ;
 
     // New name, or overwriting old one
-    int a ;
     TSQLresult sr ;
     wxString sql , s1 , s2 ;
     wxString x = fixQuotes ( name ) ;
@@ -1183,11 +1223,11 @@ void TManageDatabaseDialog::do_save_DNA ()
     wxString enzymes = "," ;
 
     // Restriction enzymes
-    for ( a = 0 ; a < v->re.GetCount() ; a++ )
+    for ( int a = 0 ; a < v->re.GetCount() ; a++ )
         enzymes += v->re[a]->getName() + "," ;
 
     // Proteases
-    for ( a = 0 ; a < v->proteases.GetCount() ; a++ )
+    for ( int a = 0 ; a < v->proteases.GetCount() ; a++ )
         enzymes += "*" + wxString ( v->proteases[a] ) + "," ;
 
     s1 = s2 = "" ;
@@ -1209,7 +1249,7 @@ void TManageDatabaseDialog::do_save_DNA ()
     // Inserting items
     wxString type = " " ;
     storage->startRecord () ;
-    for ( a = 0 ; a < v->items.size() ; a++ )
+    for ( int a = 0 ; a < v->items.size() ; a++ )
         {
         s1 = s2 = "" ;
         type.SetChar ( 0 , v->items[a].getType() ) ;
@@ -1256,8 +1296,7 @@ void TManageDatabaseDialog::pmOnRightClickRight ( wxListEvent &ev )
     pmOnRightClick ( ev , pm_right , pm_dd_r ) ;
     }
 
-void TManageDatabaseDialog::pmOnRightClick ( wxListEvent &ev ,
-                                            wxListCtrl *lc , wxChoice *cc )
+void TManageDatabaseDialog::pmOnRightClick ( wxListEvent &ev , wxListCtrl *lc , wxChoice *cc )
     {
     wxPoint p = ev.GetPoint() ;
     pmGetContext ( lc ) ;
@@ -1468,7 +1507,7 @@ bool TMyDropTarget::OnDropText(int x, int y, const wxString &data)
 
 // *****************************************************************
 
-TMySQLDialog::TMySQLDialog ( wxWindow *parent , wxString title , wxString server , wxString db , wxString user , wxString password )
+TMySQLDialog::TMySQLDialog ( wxWindow *parent , const wxString& title , const wxString& server , const wxString& db , const wxString& user , const wxString& password )
         : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 200 , 180 ) )
    {
    wxBoxSizer *v = new wxBoxSizer ( wxVERTICAL ) ;

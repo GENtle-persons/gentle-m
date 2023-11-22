@@ -78,9 +78,7 @@ void TRestrictionEditor::res_ll_col ( wxListEvent &event )
     pR_showGroupEnzymes ( gl->GetStringSelection() ) ;
 }
 
-TRestrictionEditor::TRestrictionEditor(MyFrame *parent, const wxString& title,
-									   const wxPoint& pos , const wxSize& size ,
-									   const long style )
+TRestrictionEditor::TRestrictionEditor(MyFrame *parent, const wxString& title, const wxPoint& pos , const wxSize& size , const long style )
 : wxDialog ( parent , -1 , title , pos , size , style )
 {
     myapp()->frame->push_help ( _T("GENtle:Restriction_Assistant") ) ;
@@ -117,24 +115,20 @@ void TRestrictionEditor::initRestrictionPage ()
 
     wxFlexGridSizer *v1 = new wxFlexGridSizer ( 2 , 1 , 5 , 5 ) ;
     wxBoxSizer *v2a = new wxBoxSizer ( wxVERTICAL ) ;
-    wxFlexGridSizer *v2b = new wxFlexGridSizer ( 6 , 1 , 5 , 5 ) ;
+    wxFlexGridSizer *v2b = new wxFlexGridSizer ( 7 , 1 , 5 , 5 ) ;
     wxBoxSizer *v2c = new wxBoxSizer ( wxVERTICAL ) ;
     wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h2 = new wxBoxSizer ( wxHORIZONTAL ) ;
 
     // Available enzymes list
-    el = new wxListCtrl ( this , RSE_RES_LL , wxDefaultPosition , wxDefaultSize ,
-						 wxLC_REPORT|wxLC_SINGLE_SEL|MYLISTBORDER ) ;
+    el = new wxListCtrl ( this , RSE_RES_LL , wxDefaultPosition , wxDefaultSize , wxLC_REPORT|wxLC_SINGLE_SEL|MYLISTBORDER ) ;
     el->InsertColumn ( 0 , txt("name") ) ;
     el->InsertColumn ( 1 , txt("cuts") ) ;
     v2a->Add ( new wxStaticText ( this , -1 , txt("t_available_enzymes") ) , 0 , wxEXPAND , 5 ) ;
     v2a->Add ( el , 1 , wxEXPAND , 5 ) ;
 
-
     // Cocktail
-    el2 = new wxListCtrl ( this , RSE_COC_LL , wxPoint ( rw*2/3+bo , th*2 ) ,
-						  wxSize ( rw/3-bo*2 , rh*2/3-th*2-bo ) ,
-						  wxLC_REPORT|wxLC_SINGLE_SEL|MYLISTBORDER ) ;
+    el2 = new wxListCtrl ( this , RSE_COC_LL , wxPoint ( rw*2/3+bo , th*2 ) , wxSize ( rw/3-bo*2 , rh*2/3-th*2-bo ) , wxLC_REPORT|wxLC_SINGLE_SEL|MYLISTBORDER ) ;
     el2->InsertColumn ( 0 , txt("name") ) ;
     el2->InsertColumn ( 1 , txt("cuts") ) ;
     v2c->Add ( new wxStaticText ( this , -1 , txt("Cocktail") ) , 0 , wxEXPAND , 5 ) ;
@@ -154,7 +148,9 @@ void TRestrictionEditor::initRestrictionPage ()
     wxArrayString vs ;
     myapp()->frame->LS->getEnzymeGroups ( vs ) ;
     for ( int i = 0 ; i < vs.GetCount() ; i++ )
+        {
         gl->Append ( vs[i] ) ;
+	}
     gl->SetStringSelection ( txt("Current") ) ;
     h1a->Add ( new wxStaticText ( this , -1 , _gt ) , 1 , wxEXPAND , 5 ) ;
     h1a->Add ( gl , 1 , wxEXPAND , 5 ) ;
@@ -163,10 +159,7 @@ void TRestrictionEditor::initRestrictionPage ()
     rbs[0] = txt("All enzymes") ;
     rbs[1] = txt("Enzymes that cut") ;
     rbs[2] = txt("Enzymes that don't cut") ;
-    rb = new wxRadioBox ( this , RSE_RES_RB , txt("subsel") ,
-                          wxDefaultPosition ,
-                          wxDefaultSize ,
-                          3 , rbs , 1 , wxRA_SPECIFY_COLS ) ;
+    rb = new wxRadioBox ( this , RSE_RES_RB , txt("subsel") , wxDefaultPosition , wxDefaultSize , 3 , rbs , 1 , wxRA_SPECIFY_COLS ) ;
 
     nfst = new wxCheckBox ( this , RSE_COC_CB , txt("Do not create fragments below ") ) ;
 
@@ -174,9 +167,7 @@ void TRestrictionEditor::initRestrictionPage ()
     nfst->SetValue ( true ) ;
     nfstv->SetSize ( 70 , th * 2 ) ;
     h1d->Add ( nfstv , 0 , wxALL|wxALIGN_CENTER_VERTICAL , 5 ) ;
-    h1d->Add ( new wxStaticText ( this , -1 , txt("base pairs.") ) ,
-               1 , wxEXPAND , 5 ) ;
-
+    h1d->Add ( new wxStaticText ( this , -1 , txt("base pairs.") ) , 1 , wxEXPAND , 5 ) ;
 
     wxBoxSizer *v3a = new wxBoxSizer ( wxVERTICAL ) ;
     wxBoxSizer *v3b = new wxBoxSizer ( wxVERTICAL ) ;
@@ -201,7 +192,6 @@ void TRestrictionEditor::initRestrictionPage ()
     v3a->Add ( new wxStaticText ( this , -1 , _T("") ) , 0 , wxEXPAND , 5 ) ;
     v3a->Add ( bib , 1 , wxEXPAND , 5 ) ;
     v3a->Add ( new wxStaticText ( this , -1 , txt("start_res") ) ) ;
-
 
     btOK = new wxButton ( this , RSE_RES_OK , txt("b_done") ) ;
     btCC = new wxButton ( this , RSE_RES_CC , txt("b_cancel") ) ;
@@ -275,25 +265,27 @@ void TRestrictionEditor::initRestrictionPage ()
 
     Centre() ;
 
-    int i ;
-    for ( i = 0 ; i < v->rc.size() ; i++ )
+    for ( int i = 0 ; i < v->rc.size() ; i++ )
+        {
         cutcache.push_back ( TREcache ( v->rc[i].e->getName() , v->rc[i].getPos() ) ) ;
+	}
 
     pR_showGroupEnzymes ( txt("Current") ) ;
 
-    for ( i = 0 ; i < myapp()->frame->lastCocktail.GetCount() ; i++ )
-		add2cocktail ( myapp()->frame->lastCocktail[i] ) ;
+    for ( int i = 0 ; i < myapp()->frame->lastCocktail.GetCount() ; i++ )
+        {
+        add2cocktail ( myapp()->frame->lastCocktail[i] ) ;
+	}
     myapp()->frame->lastCocktail.Clear() ;
 }
 
-void TRestrictionEditor::listEnzymesInGroup ( wxString gr , wxArrayString &vs )
+void TRestrictionEditor::listEnzymesInGroup ( const wxString& gr , wxArrayString &vs ) const
 {
     if ( gr == txt("Current") )
 	{
-        int i ;
-        for ( i = 0 ; i < v->re.GetCount() ; i++ )
+        for ( int i = 0 ; i < v->re.GetCount() ; i++ )
             vs.Add ( v->re[i]->getName() ) ;
-        for ( i = 0 ; i < v->re2.GetCount() ; i++ )
+        for ( int i = 0 ; i < v->re2.GetCount() ; i++ )
             vs.Add ( v->re2[i]->getName() ) ;
 	}
     else myapp()->frame->LS->getEnzymesInGroup ( gr , vs ) ;
@@ -304,47 +296,44 @@ void TRestrictionEditor::pR_showGroupEnzymes ( wxString gr )
     el->DeleteAllItems() ;
     rsl->DeleteAllItems() ;
 
-
     wxArrayString vs ;
     listEnzymesInGroup ( gr , vs ) ;
 
-	//    char t[100] ;
+    // char t[100] ;
     int sel = rb->GetSelection() ;
     bool docut = true , donotcut = true ;
     if ( sel == 1 ) donotcut = false ;
     if ( sel == 2 ) docut = false ;
-    int cnt = 0 , i ;
-	//    bool ascending = true ;
+    int cnt = 0 ;
+    // bool ascending = true ;
     vector <TREcache> list ;
-    for ( i = 0 ; i < vs.GetCount() ; i++ )
-	{
+    for ( int i = 0 ; i < vs.GetCount() ; i++ )
+        {
         int k = getcuts(vs[i]).GetCount() ;
-        if ( ( k == 0 && donotcut ) ||
-			( k > 0 && docut ) )
-		{
-			list.push_back ( TREcache ( vs[i] , k ) ) ;
-		}
-	}
+        if ( ( k == 0 && donotcut ) || ( k > 0 && docut ) )
+            {
+            list.push_back ( TREcache ( vs[i] , k ) ) ;
+            }
+        }
 
     sort ( list.begin() , list.end() ) ;
 
-    for ( i = 0 ; i < list.size() ; i++ )
-	{
-		//        sprintf ( t , "%d" , list[i].cut ) ;
+    for ( int i = 0 ; i < list.size() ; i++ )
+        {
+        // sprintf ( t , "%d" , list[i].cut ) ;
         int z = el->InsertItem ( cnt , list[i].enzyme ) ;
         el->SetItem ( z , 1 , wxString::Format ( _T("%d") , list[i].cut ) ) ;
         cnt++ ;
-	}
-
+        }
 
     if ( !pre.IsEmpty() )
-	{
+        {
         int pre_id = el->FindItem ( 0 , pre ) ;
         el->SetItemState ( pre_id , wxLIST_STATE_SELECTED , wxLIST_STATE_SELECTED );
         el->EnsureVisible ( pre_id ) ;
         el->SetFocus() ;
         pre = _T("") ;
-	}
+        }
 }
 
 wxArrayInt TRestrictionEditor::getcuts ( wxString enzyme )
@@ -403,20 +392,19 @@ void TRestrictionEditor::pR_showFragments ( int i )
     listFragments ( rsl , vi ) ;
 }
 
-void TRestrictionEditor::getFragmentList ( wxArrayInt &cuts , vector <TFragment> &fragments , bool clear )
+void TRestrictionEditor::getFragmentList ( wxArrayInt& cuts , vector <TFragment>& fragments , const bool clear ) const
 {
-	if ( clear ) fragments.clear () ;
+    if ( clear ) fragments.clear () ;
     if ( cuts.GetCount() == 0 ) return ;
     if ( !v->isCircular() ) // Adding last fragment for linear DNA
 	{
         int from = cuts.Last() ;
         int to = v->getSequenceLength() ;
         if ( from != to )
-			cuts.Add ( to ) ;
+            cuts.Add ( to ) ;
 	}
 
-    int i ;
-    for ( i = 0 ; i < cuts.GetCount() ; i++ )
+    for ( int i = 0 ; i < cuts.GetCount() ; i++ )
 	{
         TFragment fr ;
 
@@ -433,7 +421,7 @@ void TRestrictionEditor::getFragmentList ( wxArrayInt &cuts , vector <TFragment>
 	}
 }
 
-void TRestrictionEditor::listFragments ( wxListCtrl *list , wxArrayInt &vi )
+void TRestrictionEditor::listFragments ( wxListCtrl * const list , wxArrayInt &vi ) /* not const */
 {
     list->DeleteAllItems() ;
     if ( vi.GetCount() == 0 ) return ;
@@ -444,11 +432,10 @@ void TRestrictionEditor::listFragments ( wxListCtrl *list , wxArrayInt &vi )
         if ( from != to )
 			vi.Add ( to ) ;
 	}
-    numberoffragments = vi.GetCount() ;
+    numberoffragments = vi.GetCount() ; // not const
 
-    int i ;
-	//    char u[100] ;
-    for ( i = 0 ; i < vi.GetCount() ; i++ )
+    // char u[100] ;
+    for ( int i = 0 ; i < vi.GetCount() ; i++ )
 	{
         //sprintf ( u , "%d" , i+1 ) ; // Number
         int k = list->InsertItem ( i , wxString::Format ( _T("%d") , i+1 ) ) ;
@@ -502,7 +489,7 @@ void TRestrictionEditor::refreshCocktail ()
     listFragments ( rsl2 , vi ) ;
 }
 
-void TRestrictionEditor::add2cocktail ( wxString s )
+void TRestrictionEditor::add2cocktail ( const wxString& s )
 {
     if ( s.IsEmpty() ) return ;
     wxString s2 = s ;
@@ -514,7 +501,7 @@ void TRestrictionEditor::add2cocktail ( wxString s )
     refreshCocktail () ;
 }
 
-void TRestrictionEditor::del_from_cocktail ( wxString s )
+void TRestrictionEditor::del_from_cocktail ( const wxString& s )
 {
     int i ;
     wxString s2 = s ;
@@ -598,40 +585,41 @@ void TRestrictionEditor::res_cb_add2gel ( wxCommandEvent &event )
 
 void TRestrictionEditor::onAddAll ( wxCommandEvent &event )
 {
-	wxArrayString vs ;
+    wxArrayString vs ;
     wxString s = gl->GetStringSelection() ;
-	listEnzymesInGroup ( s , vs ) ;
-	for ( int a = 0 ; a < vs.GetCount() ; a++ )
-		add2cocktail ( vs[a] ) ;
+    listEnzymesInGroup ( s , vs ) ;
+    for ( int a = 0 ; a < vs.GetCount() ; a++ )
+        add2cocktail ( vs[a] ) ;
 }
 
-void TRestrictionEditor::iterateFragments ( wxArrayInt cuts , vector <TFragment> &fragments , int depth )
+void TRestrictionEditor::iterateFragments ( const wxArrayInt& cuts , vector <TFragment> &fragments , const int depth ) const
 {
-	if ( cuts.size() == 0 ) return ;
-	int a ;
-	wxArrayInt cuts2 = cuts ;
-	getFragmentList ( cuts2 , fragments , false ) ;
-	for ( a = 0 ; a < cuts.size() ; a++ )
+    if ( cuts.size() == 0 ) return ;
+    wxArrayInt cuts2 = cuts ;
+    getFragmentList ( cuts2 , fragments , false ) ;
+    for ( int a = 0 ; a < cuts.size() ; a++ )
 	{
-		cuts2 = cuts ;
-		cuts2.RemoveAt ( a ) ;
-		iterateFragments ( cuts2 , fragments , depth + 1 ) ;
+        cuts2 = cuts ;
+        cuts2.RemoveAt ( a ) ;
+        iterateFragments ( cuts2 , fragments , depth + 1 ) ;
 	}
-	if ( depth > 0 ) return ;
+    if ( depth > 0 ) return ;
 
-	// Clean up double fragments
-	int gsm = global_sort_mode ;
-	global_sort_mode = BY_CUTS ;
-	sort ( fragments.begin() , fragments.end() ) ;
+    // Clean up double fragments
+    int gsm = global_sort_mode ;
+    global_sort_mode = BY_CUTS ;
+    sort ( fragments.begin() , fragments.end() ) ;
 
-	for ( a = 1 ; a < fragments.size() ; a++ )
-	{
-		if ( ! ( fragments[a-1] == fragments[a] ) ) continue ;
-		for ( int b = a ; b + 1 < fragments.size() ; b++ )
-			fragments[b] = fragments[b+1] ;
-		fragments.pop_back() ;
-		a-- ;
+    for ( int a = 1 ; a < fragments.size() ; a++ )
+        {
+        if ( ! ( fragments[a-1] == fragments[a] ) ) continue ;
+        for ( int b = a ; b + 1 < fragments.size() ; b++ )
+	    {
+            fragments[b] = fragments[b+1] ;
+	    }
+        fragments.pop_back() ;
+        a-- ;
 	}
 
-	global_sort_mode = gsm ;
+    global_sort_mode = gsm ;
 }

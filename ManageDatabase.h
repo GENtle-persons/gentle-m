@@ -33,8 +33,8 @@ class TMyDropTarget : public wxTextDropTarget
 class TMySQLDialog : public wxDialog
     {
     public :
-    TMySQLDialog ( wxWindow *parent , wxString title , wxString server = _T("") ,
-        wxString db = _T("") , wxString user = _T("root") , wxString password = _T("") ) ; ///< Constructor
+    TMySQLDialog ( wxWindow *parent , const wxString& title , const wxString& server = _T("") ,
+                   const wxString& db = _T("") , const wxString& user = _T("root") , const wxString& password = _T("") ) ; ///< Constructor
 
     wxTextCtrl *s , *d , *u , *p ;
     } ;
@@ -44,7 +44,7 @@ class TMySQLDialog : public wxDialog
 class TManageDatabaseDialog : public wxDialog
     {
     public :
-    TManageDatabaseDialog ( wxWindow *parent , wxString title , int mode = ACTION_MODE_MANAGE , TVector *_v = NULL ) ; ///< Constructor
+    TManageDatabaseDialog ( wxWindow *parent , const wxString& title , const int mode = ACTION_MODE_MANAGE , TVector * const _v = NULL ) ; ///< Constructor
     virtual ~TManageDatabaseDialog () ; ///< Destructor
 
     virtual void OnOK ( wxCommandEvent &ev ) ; ///< "OK button" event handler
@@ -90,7 +90,7 @@ class TManageDatabaseDialog : public wxDialog
     virtual bool do_copy ( const wxString& name , const wxString& sdb , const wxString& tdb ) ; ///< Copy item "name" from source to target database
     virtual bool do_move ( const wxString& name , const wxString& sdb , const wxString& tdb ) ; ///< Move item "name" from source to target database
     virtual void do_del  ( const wxString& name , const wxString& db ) ; ///< Delete item "name" from the database
-    virtual void pmOpenFiles ( wxArrayString &_names , wxString _db ) ; ///< Open the selected files
+    virtual void pmOpenFiles ( const wxArrayString& _names , const wxString& _db ) ; ///< Open the selected files
 
     virtual bool copyDNA ( const wxString& name , const wxString& sdb , const wxString& tdb ) ; ///< Copy item "name" from source to target database
     virtual bool moveDNA ( const wxString& name , const wxString& sdb , const wxString& tdb ) ; ///< Move item "name" from source to target database
