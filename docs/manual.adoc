@@ -4,7 +4,7 @@ v1.9.4, 2005-03-01
 :license-url: https://www.gnu.org/licenses/fdl.en.html
 :license-title: GFDL
 
-image::images/Grafik20.png[]
+image::images/Grafik20.png["Logo",width="650mm",pdfwidth="650mm",align="center"]
 
 == About
 
@@ -69,6 +69,7 @@ Features and restriction enzymes can be toggled in visibility by a double click,
 
 === Special menus
 
+.Features of special menu.
 [cols="1,2"]
 |===
 |View/Show 3'-&gt;5'|Show the complementary DNA strand in the sequence map
@@ -97,6 +98,7 @@ Also, depending on the properties of the object, some functions might not be ava
 
 ==== Background
 
+.Functions available with clicks at the background
 [cols="1,2"]
 |===
 |Edit sequence|Opens the http://en.wikibooks.org/wiki/GENtle/Sequence_editor[Sequence editor]
@@ -124,6 +126,7 @@ Also, depending on the properties of the object, some functions might not be ava
 
 ==== Restriction sites
 
+.Functions available for restriction sites
 [cols="1,2"]
 |===
 |Edit restriction enzyme|Add/remove/manage restriction enzyme via the http://en.wikibooks.org/wiki/GENtle/Sequence_editor[Sequence editor]
@@ -137,6 +140,7 @@ Also, depending on the properties of the object, some functions might not be ava
 
 ==== Features
 
+.Functions available for DNA/amino acid features
 [cols="1,2"]
 |===
 |Edit feature|Edit the feature properties (see http://en.wikibooks.org/wiki/GENtle/Sequence_editor[Sequence editor])
@@ -152,8 +156,9 @@ Also, depending on the properties of the object, some functions might not be ava
 |Amino acid sequence/Blast amino acids|Runs a BLAST search for the amino acid sequence of the feature
 |===
 
-==== Open reading frames
+==== Open reading frames (ORFs)
 
+.Functions available for Open Reading Frames
 [cols="1,2"]
 |===
 |As new feature|Generate a new feature from the ORF, with the appropriate reading frame and direction
@@ -183,6 +188,7 @@ A double click usually opens the http://en.wikibooks.org/wiki/GENtle/Sequence_ed
 
 The available functions in the context menu vary with the module the sequence map is used in, its state, and selection.
 
+.Funftions available as context menu
 [cols="1,2"]
 |===
 |Edit sequence|Turn on edit mode
@@ -257,6 +263,7 @@ Several functions and display options can be invoked in the tool bar:
 
 The smaller display on the top can show several types of information:
 
+.Summary of protein properties
 [cols="1,2"]
 |===
 |Data|Shows some basic data that has been calculated from the sequence
@@ -270,6 +277,7 @@ The smaller display on the top can show several types of information:
 
 === Special menus
 
+.Special menus
 [cols="1,2"]
 |===
 |Edit/Photometer analysis|Invokes the respective http://en.wikibooks.org/wiki/GENtle/Calculators#Protein_calculator[calculator]
@@ -358,6 +366,7 @@ http://en.wikibooks.org/wiki/GENtle/Sequencing
 The data is shown in the main http://en.wikibooks.org/wiki/GENtle/Sequence_map[sequence] window.
 The text window on the upper right shows data stored in the file. On the left side, the following display options for the sequence are available:
 
+.Settings for the display
 [cols="1,2"]
 |===
 |Help lines|Gray vertial lines down from each sequence letter to the baseline. These can help to identify which letter belongs to which peak
@@ -396,8 +405,10 @@ The alignment module displays alignments of DNA and amino acid sequences. It can
 The settings dialog will be invoked upon starting the module, or through the "settings" button in the toolbar.
 The sequences to align, their order, and the alignment algorithm and its paramaters can be chosen here. The following algorithms are available:
 
-[cols="1,2"]
+.Settings for sequence alignments
+[options="header",cols="1,2"]
 |===
+|Tool|Description
 |Clustal-W|This (default) algorithm generates alignments of high quality, but is rather slow for simple alignments, and sometimes stumbles over local alignments. It runs as an external program that will automatically be invoked by GENtle.
 |Smith-Waterman|An internal, fast, but simple algorithm for local alignments, that is, aligning one or multiple short sequences againast a long one. The long sequence has to be the first. It works great for checking http://en.wikibooks.org/wiki/GENtle/Sequencing[sequencing data] against the expected sequence.
 |Needlemann-Wunsch|An internal, fast, but simple algorithm for global alignments, that is, aligning sequences of roughly the same length (e.g., different alleles of a gene). As with Smith-Waterman, all alignments are made against the first sequence.
@@ -525,6 +536,7 @@ The PubMed option gives new entry fields for author(s) (written "Lastname Initia
 Double-clicking an entry will open a web browser window with the respective PubMed abstract page.
 
 === BLAST
+
 Running a BLAST search for a DNA or amino acid sequence will open a new tab in the web interface, showing a countdown for the time the BLAST results are expected to arrive. Once loaded, the results are displayed as simple alignments.
 
 Double-clicking an entry will open the found sequence.
@@ -555,7 +567,8 @@ Global program options can be altered via Tools/Options.
 image::images/Grafik12.png[]
 //width="8.501cm" depth="6.409cm
 
-[cols="1,2"]
+.Global settings
+[options="header",cols="1,2"]
 |===
 |Option|Description
 |Language|Currently English and German are available
@@ -577,7 +590,7 @@ image::images/Grafik13.png[]
 //width="8.501cm" depth="6.409cm"
 Here the global enzyme options can be selected. These can be overridden for an individual sequence in the http://en.wikibooks.org/wiki/GENtle:Sequence_editor#Restriction_enzymes_.282.29[sequence editor], where there is a tab identical to this one.
 
-[cols="1,2"]
+[options="header",cols="1,2"]
 |===
 |Option|Description
 |Use global enzyme settings|Turn most of the other options on this tab on or off globally
@@ -787,15 +800,19 @@ image::images/Grafik26.png[]
 ==== Proteases
 
 .List of available proteases
-image::images/Grafik24[]
+image::images/Grafik24.png[]
 //width="8.501cm" depth="7.69cm"
 This tab holds a list of available proteases.
 Potential cleavage sites for selected (checked) proteases are shown in the http://en.wikibooks.org/wiki/GENtle:Sequence_map[sequence map] (not in the http://en.wikibooks.org/wiki/GENtle:DNA_map[DNA map]).
 
 New proteases can be added similar to the following examples:
 
-* Example: "Thermolysin"
+* Example: Thermolysin
+  - Sequence : !DE|AFILMV
+  - Description: "not D or E", "then cleavage“ , "then A, F, I, L, M or V"
 * Example: Proline-endopeptidase
+  - Sequence : HKR,P|!P
+  - Description: "H, K or R", "then P", "then cleavage", "then not P"
 
 === Restriction Assistant
 
