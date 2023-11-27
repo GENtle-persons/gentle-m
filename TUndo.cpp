@@ -117,7 +117,7 @@ wxString TUndo::getLastMessage ()
     return msg.Last() ;
     }
 
-TUndo &TUndo::operator = ( TUndo &u )
+TUndo &TUndo::operator = ( const TUndo &u )
     {
     TVector *b = base ;
     base = NULL ;
