@@ -2,19 +2,19 @@
 
 // DRAWING
 
-int PlasmidCanvas::deg2x ( float deg , int r )
+int PlasmidCanvas::deg2x ( const float& deg , const int& r ) const
 {
     float f = sin ( (180-deg)*PI/180 ) * r ;
     return int ( f ) ;
 }
 
-int PlasmidCanvas::deg2y ( float deg , int r )
+int PlasmidCanvas::deg2y ( const float& deg , const int& r ) const
 {
     float f = cos ( (180-deg)*PI/180 ) * r ;
     return int ( f ) ;
 }
 
-float PlasmidCanvas::xy2deg ( float x , float y )
+float PlasmidCanvas::xy2deg ( const float& x , const float& y ) const
 {
     float f ;
     f = atan2(x,y) ;
@@ -22,22 +22,21 @@ float PlasmidCanvas::xy2deg ( float x , float y )
     return f ;
 }
 
-float PlasmidCanvas::xy2r ( float x , float y )
+float PlasmidCanvas::xy2r ( const float& x , const float& y ) const
 {
     float f ;
     f = sqrt(x*x+y*y) ;
     return f ;
 }
 
-void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc )
+void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc ) const
     {
-    int a ;
     int l = p->vec->getSequenceLength() ;
     if ( p->vec->rc.size() == 0 ) return ;
 
     vector <TRestrictionCut> trc ;
     trc.reserve ( p->vec->rc.size() ) ;
-    for ( a = 0 ; a < p->vec->rc.size() ; a++ ) // Removing invisible
+    for ( int a = 0 ; a < p->vec->rc.size() ; a++ ) // Removing invisible
         {
         if ( p->vec->rc[a].isHidden ( p->vec ) )
            {
@@ -50,7 +49,7 @@ void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc )
 
     p->vec->sortRestrictionSites() ;
 
-    for ( a = 0 ; a < p->vec->rc.size() ; a++ ) // Init
+    for ( int a = 0 ; a < p->vec->rc.size() ; a++ ) // Init
         {
         TRestrictionCut *c = &p->vec->rc[a] ;
         if ( c->isHidden ( p->vec ) ) continue ;
@@ -64,7 +63,7 @@ void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc )
         recalc_rc ( a , dc ) ;
         }
 
-    for ( a = 1 ; a < p->vec->rc.size() ; a++ ) // Ensure different angle
+    for ( int a = 1 ; a < p->vec->rc.size() ; a++ ) // Ensure different angle
         {
         if ( p->vec->rc[a].isHidden ( p->vec ) ) continue ;
         if ( p->vec->rc[a-1].isHidden ( p->vec ) ) continue ;
@@ -77,19 +76,19 @@ void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc )
     while ( redo && cnt > 0 )
         {
         redo = false ;
-        for ( a = 0 ; a < p->vec->rc.size() ; a++ ) // Optimize
+        for ( int a = 0 ; a < p->vec->rc.size() ; a++ ) // Optimize
            redo |= optimizeCircularRestrictionSites ( a , dc ) ;
         cnt-- ;
         }
 
     // Appending hidden ones
     p->vec->rc.reserve ( trc.size() ) ;
-    for ( a = 0 ; a < trc.size() ; a++ )
+    for ( int a = 0 ; a < trc.size() ; a++ )
         p->vec->rc.push_back ( trc[a] ) ;
     p->vec->sortRestrictionSites() ;
     }
 
-bool PlasmidCanvas::optimizeCircularRestrictionSites ( int a , wxDC &dc )
+bool PlasmidCanvas::optimizeCircularRestrictionSites ( const int a , wxDC &dc ) const
     {
     TRestrictionCut *c = &p->vec->rc[a] ;
     if ( p->vec->rc[a].isHidden ( p->vec ) ) return false ;
@@ -111,7 +110,7 @@ bool PlasmidCanvas::optimizeCircularRestrictionSites ( int a , wxDC &dc )
     return ret ;
     }
 
-void PlasmidCanvas::push_rc_left ( int a , wxDC &dc )
+void PlasmidCanvas::push_rc_left ( const int a , wxDC &dc ) const
     {
     if ( p->vec->rc.size() < 2 ) return ;
     TRestrictionCut *c = &p->vec->rc[a] ;
@@ -124,7 +123,7 @@ void PlasmidCanvas::push_rc_left ( int a , wxDC &dc )
     while ( c->angle3 + add < cl->angle3 ) push_rc_left ( b , dc ) ;
     }
 
-void PlasmidCanvas::push_rc_right ( int a , wxDC &dc )
+void PlasmidCanvas::push_rc_right ( const int a , wxDC &dc ) const
     {
     if ( p->vec->rc.size() < 2 ) return ;
     TRestrictionCut *c = &p->vec->rc[a] ;
@@ -137,7 +136,7 @@ void PlasmidCanvas::push_rc_right ( int a , wxDC &dc )
     while ( c->angle3 > cr->angle3 + add ) push_rc_right ( b , dc ) ;
     }
 
-void PlasmidCanvas::recalc_rc ( int a, wxDC &dc )
+void PlasmidCanvas::recalc_rc ( const int a, wxDC &dc ) const
     {
     TRestrictionCut *c = &p->vec->rc[a] ;
     wxPoint p2 ( deg2x ( c->angle , (int)c->r2 )+w/2 , deg2y ( c->angle , (int)c->r2 )+h/2 ) ;
@@ -146,11 +145,10 @@ void PlasmidCanvas::recalc_rc ( int a, wxDC &dc )
     makeLastRect ( a , dc ) ;
     }
 
-void PlasmidCanvas::drawCircularORFs ( wxDC &dc )
+void PlasmidCanvas::drawCircularORFs ( wxDC &dc ) const
     {
-    int a ;
     int l = p->vec->getSequenceLength() ;
-    for ( a = 0 ; a < p->vec->countORFs() ; a++ )
+    for ( int a = 0 ; a < p->vec->countORFs() ; a++ )
         {
         float mf = p->vec->getORF(a)->get_from() ;
         float mt = p->vec->getORF(a)->get_to() ;
@@ -216,13 +214,13 @@ void PlasmidCanvas::drawCircularORFs ( wxDC &dc )
     dc.SetPen(*wxBLACK_PEN);
     }
 
-void PlasmidCanvas::OnDrawCircular(wxDC& dc)
+void PlasmidCanvas::OnDrawCircular(wxDC& dc) /* not const */
 {
     // Initial calculations
     char t[10000] ;
     wxCoord dx , dy ;
     int l = p->vec->getSequenceLength();
-    int a , mwh ;
+    int mwh ;
     mwh = w<h?w:h ;
 
     if ( printing ) mwh -= mwh / 5 ;
@@ -235,9 +233,9 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
     wxFont *bigFont = MYFONT ( fontfactor*7/5 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
 //    wxFont *hugeFont = MYFONT ( fontfactor*9/5 , wxSWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_BOLD ) ;
 
-    int d ;
+    int d;
     for ( d = 1 ; d*10 < l ; d *= 10 ) ;
-    r = (mwh*2/3)/2 ;
+    r = (mwh*2/3)/2 ; // not const
 
     // Basic elements
     dc.SetPen(*wxBLACK_PEN);
@@ -246,62 +244,73 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
     // Baseline
     dc.SetBackgroundMode ( wxTRANSPARENT ) ;
     if ( p->vec->showGC() > 0 ) // %GC
-    	{
+        {
         int r1 = r + r/40 ;
         int r2 = r - r/40 ;
-//    	dc.DrawEllipse ( w/2-r - r/40 , h/2-r - r/40 , r*2 + r*2/40 , r*2 + r*2/40 ) ;
-//	    int dh = h / 80 ;
-	    int b , nob = p->vec->showGC() ;
-	    for ( a = 0 ; a < nob ; a++ )
-	    	{
- 	    	int at = 0 , gc = 0 , other = 0 ;
-	    	for ( b = l * a / nob ; b < l * ( a + 1 ) / nob ; b++ )
-	    		{
- 		        char c = p->vec->getSequenceChar ( b ) ;
- 		    	if ( c == 'A' || c == 'T' ) at++ ;
- 		    	else if ( c == 'G' || c == 'C' ) gc++ ;
- 		    	else other++ ;
-	    		}
-    		int sum = at + gc + other ;
-    		if ( sum == 0 ) continue ;
-    		int per = gc * 100 / sum ;
-    		wxColour col ;
-    		makeGCcolor ( per , col ) ;
-    		dc.SetPen(*MYPEN(col));
-    		dc.SetBrush(*MYBRUSH(col));
+//      dc.DrawEllipse ( w/2-r - r/40 , h/2-r - r/40 , r*2 + r*2/40 , r*2 + r*2/40 ) ;
+//      int dh = h / 80 ;
+        int nob = p->vec->showGC() ;
+        for ( int a = 0 ; a < nob ; a++ )
+            {
+            int at = 0 , gc = 0 , other = 0 ;
+            for ( int b = l * a / nob ; b < l * ( a + 1 ) / nob ; b++ )
+                {
+                char c = p->vec->getSequenceChar ( b ) ;
+                if ( c == 'A' || c == 'T' ) at++ ;
+                else if ( c == 'G' || c == 'C' ) gc++ ;
+                else other++ ;
+                }
+            int sum = at + gc + other ;
+            if ( sum == 0 ) continue ;
+            int per = gc * 100 / sum ;
+            wxColour col ;
+            makeGCcolor ( per , col ) ;
+            dc.SetPen(*MYPEN(col));
+            dc.SetBrush(*MYBRUSH(col));
 
             // Drawing polygon
             vector <wxPoint> p ;
-            int b = a + 1 , c ;
+            int b = a + 1 ;
             p.push_back ( wxPoint ( deg2x ( 360*a/nob , r1 ) , deg2y ( 360*a/nob , r1 ) ) ) ;
-            for ( c = int(360*a/nob) ; c%361 != int(360*b/nob)%361 ; c++ )
-            	p.push_back ( wxPoint ( deg2x ( c , r1 ) , deg2y ( c , r1 ) ) ) ;
+            for ( int c = int(360*a/nob) ; c%361 != int(360*b/nob)%361 ; c++ )
+                {
+                p.push_back ( wxPoint ( deg2x ( c , r1 ) , deg2y ( c , r1 ) ) ) ;
+                }
             p.push_back ( wxPoint ( deg2x ( 360*b/nob , r1 ) , deg2y ( 360*b/nob , r1 ) ) ) ;
             p.push_back ( wxPoint ( deg2x ( 360*b/nob , r2 ) , deg2y ( 360*b/nob , r2 ) ) ) ;
-            for ( c = int(360*b/nob) ; c%361 != int(360*a/nob)%361 ; c-- )
-            	p.push_back ( wxPoint ( deg2x ( c , r2 ) , deg2y ( c , r2 ) ) ) ;
+            for ( int c = int(360*b/nob) ; c%361 != int(360*a/nob)%361 ; c-- )
+                {
+                p.push_back ( wxPoint ( deg2x ( c , r2 ) , deg2y ( c , r2 ) ) ) ;
+                }
             p.push_back ( wxPoint ( deg2x ( 360*a/nob , r2 ) , deg2y ( 360*a/nob , r2 ) ) ) ;
             p.push_back ( wxPoint ( deg2x ( 360*a/nob , r1 ) , deg2y ( 360*a/nob , r1 ) ) ) ;
             wxPoint *wp ;
             wp = (wxPoint*) malloc ( sizeof ( wxPoint ) * (p.size()+1) ) ;
-            for ( b = 0 ; b < p.size() ; b++ ) wp[b] = p[b] ;
-            dc.DrawPolygon ( p.size() , wp , w/2 , h/2 ) ;
+            for ( int b = 0 ; b < p.size() ; b++ ) wp[b] = p[b] ;
+	    if (p.size()<2)
+	        {
+		wxPrintf("W: Not drawing polygon with <2  corners - A\n");
+                }
+	    else
+	        {
+                dc.DrawPolygon ( p.size() , wp , w/2 , h/2 ) ;
+	        }
             free ( wp ) ;
 
-        	dc.SetPen(*wxBLACK_PEN);
-        	dc.DrawLine ( w/2+p[0].x , h/2+p[0].y , w/2+p[1].x , h/2+p[1].y ) ;
-        	dc.DrawLine ( w/2+p[2].x , h/2+p[2].y , w/2+p[3].x , h/2+p[3].y ) ;
-	    	}
-	    showGClegend ( dc ) ;
-    	dc.SetPen(*wxBLACK_PEN);
-    	dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-    	dc.SetBrush ( *wxWHITE_BRUSH ) ;
-//    	dc.DrawEllipse ( w/2-r + r/40 , h/2-r + r/40 , r*2 - r*2/40 , r*2 - r*2/40 ) ;
-    	}
+            dc.SetPen(*wxBLACK_PEN);
+            dc.DrawLine ( w/2+p[0].x , h/2+p[0].y , w/2+p[1].x , h/2+p[1].y ) ;
+            dc.DrawLine ( w/2+p[2].x , h/2+p[2].y , w/2+p[3].x , h/2+p[3].y ) ;
+            }
+        showGClegend ( dc ) ;
+        dc.SetPen(*wxBLACK_PEN);
+        dc.SetBackgroundMode ( wxTRANSPARENT ) ;
+        dc.SetBrush ( *wxWHITE_BRUSH ) ;
+//      dc.DrawEllipse ( w/2-r + r/40 , h/2-r + r/40 , r*2 - r*2/40 , r*2 - r*2/40 ) ;
+        }
     else
-    	{
-    	dc.DrawEllipse ( w/2-r , h/2-r , r*2 , r*2 ) ;
-     	}
+        {
+        dc.DrawEllipse ( w/2-r , h/2-r , r*2 , r*2 ) ;
+        }
     dc.SetBackgroundMode ( wxSOLID ) ;
 
     // Marking
@@ -320,7 +329,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
         if ( getMarkFrom() == getMarkTo() ) mf = mt - 0.1 ;
         else if ( mf > mt ) { float mm = mf ; mf = mt ; mt = mm ; }
         int r1 = p->vec->showGC() > 0 ? r - r/40 : r ;
-		dc.DrawEllipticArc ( w/2-r1 , h/2-r1 , r1*2 , r1*2 , mf , mt ) ;
+        dc.DrawEllipticArc ( w/2-r1 , h/2-r1 , r1*2 , r1*2 , mf , mt ) ;
         dc.DrawLine ( w/2 , h/2 , deg2x(90-mf,r1)+w/2 , deg2y(90-mf,r1)+h/2 ) ;
         dc.DrawLine ( w/2 , h/2 , deg2x(90-mt,r1)+w/2 , deg2y(90-mt,r1)+h/2 ) ;
         dc.SetPen(*wxBLACK_PEN);
@@ -333,32 +342,33 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
         char *c1 , *c2 ;
         strcpy ( t , p->vec->getName().mb_str() ) ;
         strcat ( t , " " ) ;
-        a = 0 ;
+        int a = 0 ;
         dc.SetFont ( *bigFont ) ;
         dc.GetTextExtent ( wxString ( t , *wxConvCurrent ) , &dx , &dy ) ;
         for ( c1 = t ; *c1 ; c1++ )
-           if ( *c1 == ' ' ) a -= dy ;
+            {
+            if ( *c1 == ' ' ) a -= dy ;
+            }
         for ( c1 = c2 = t ; *c1 ; c1++ )
-           {
-           if ( *c1 == ' ' )
-              {
-              *c1 = 0 ;
-				  wxString t2 ( c2 , *wxConvCurrent ) ;
-              dc.GetTextExtent ( t2 , &dx , &dy ) ;
-              dc.DrawText ( t2 , w/2-dx/2 , h/2-dy/2+a ) ;
-              c2 = c1+1 ;
-              a += dy ;
-              }
-           }
+            {
+            if ( *c1 == ' ' )
+                {
+                *c1 = 0 ;
+                wxString t2 ( c2 , *wxConvCurrent ) ;
+                dc.GetTextExtent ( t2 , &dx , &dy ) ;
+                dc.DrawText ( t2 , w/2-dx/2 , h/2-dy/2+a ) ;
+                c2 = c1+1 ;
+                a += dy ;
+                }
+            }
         }
 
-	 wxString t2 ;
-
+    wxString t2 ;
     // Show length
     if ( myapp()->frame->showVectorLength )
         {
-		  t2 = wxString::Format ( txt("#bp") , p->vec->getSequenceLength() ) ;
-//        sprintf ( t , txt("#bp") , p->vec->getSequenceLength() ) ;
+        t2 = wxString::Format ( txt("#bp") , p->vec->getSequenceLength() ) ;
+//      sprintf ( t , txt("#bp") , p->vec->getSequenceLength() ) ;
         dc.SetFont ( *normalFont ) ;
         dc.GetTextExtent ( t2 , &dx , &dy ) ;
         dc.DrawText ( t2 , w/2-dx/2 , h/2-dy/2 ) ;
@@ -368,33 +378,30 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
     dc.SetFont(*smallFont);
     dc.SetBackgroundMode ( wxTRANSPARENT ) ;
 
-	 for ( a = 0 ; a <= l ; a += d )
+    for ( int a = 0 ; a <= l ; a += d ) // d initialized at very beginning of function
         {
-            float deg = a*360/l ;
-            int r1 = r*17/20 ;
-            int r2 = r*20/20 ;
-            dc.DrawLine ( deg2x ( deg , r1 ) + w/2 ,
-                          deg2y ( deg , r1 ) + h/2 ,
-                          deg2x ( deg , r2 ) + w/2 ,
-                          deg2y ( deg , r2 ) + h/2 ) ;
+        float deg = a*360/l ;
+        int r1 = r*17/20 ;
+        int r2 = r*20/20 ;
+        dc.DrawLine ( deg2x ( deg , r1 ) + w/2 ,
+                      deg2y ( deg , r1 ) + h/2 ,
+                      deg2x ( deg , r2 ) + w/2 ,
+                      deg2y ( deg , r2 ) + h/2 ) ;
 
-            // Numbers
-				t2 = wxString::Format ( _T("%d") , a ) ;
-//				sprintf ( t , "%d" , a ) ;
-            dc.GetTextExtent ( t2 , &dx , &dy ) ;
-            if ( deg > 180 && deg < 350 ) dx = 0 ;
-            if ( deg < 15 ) dx = 0 ;
-            if ( deg < 90 || deg > 270 ) dy = 0 ;
-            if ( a > 0 )
-               dc.DrawText ( t2 ,
-                             deg2x ( deg , r1 ) + w/2 - dx ,
-                             deg2y ( deg , r1 ) + h/2 - dy ) ;
+        // Numbers
+        t2 = wxString::Format ( _T("%d") , a ) ;
+//      sprintf ( t , "%d" , a ) ;
+        dc.GetTextExtent ( t2 , &dx , &dy ) ;
+        if ( deg > 180 && deg < 350 ) dx = 0 ;
+        if ( deg < 15 ) dx = 0 ;
+        if ( deg < 90 || deg > 270 ) dy = 0 ;
+        if ( a > 0 ) dc.DrawText ( t2 , deg2x ( deg , r1 ) + w/2 - dx , deg2y ( deg , r1 ) + h/2 - dy ) ;
         }
 
     // Methylation sites
     dc.SetPen(*wxRED_PEN);
-    for ( a = 0 ; a < p->vec->countMethylationSites() ; a++ )
-    	{
+    for ( int a = 0 ; a < p->vec->countMethylationSites() ; a++ )
+        {
         float deg = p->vec->getMethylationSite(a)*360/l ;
         int r1 = r*19/20 ;
         int r2 = r*20/20 ;
@@ -402,13 +409,13 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
                       deg2y ( deg , r1 ) + h/2 ,
                       deg2x ( deg , r2 ) + w/2 ,
                       deg2y ( deg , r2 ) + h/2 ) ;
-    	}
+        }
     dc.SetPen(*wxBLACK_PEN);
 
     if ( p->vec->displayUpdate() )
         {
         // Items (Genes etc.)
-        for ( a = 0 ; a < p->vec->items.size() ; a++ )
+        for ( int a = 0 ; a < p->vec->items.size() ; a++ )
             {
             TVectorItem *i = &p->vec->items[a] ;
             float df = i->from*360.0/((float)l) ;
@@ -449,7 +456,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
     drawCircularORFs ( dc ) ;
 
     // Drawing items
-    for ( a = 0 ; a < p->vec->items.size() ; a++ )
+    for ( int a = 0 ; a < p->vec->items.size() ; a++ )
         {
         TVectorItem *i = &p->vec->items[a] ;
         if ( i->isVisible() )
@@ -468,7 +475,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
             vector <wxPoint> p ;
 
             if ( i->getParam ( _T("AUTOMATIC") ) == _T("SEQUENCING PRIMER") )
-            	dd = ( dt - df ) / 2 ;
+                dd = ( dt - df ) / 2 ;
 
             if ( i->direction ==  1 && abs ( (int) ( dt - df ) ) > 3 )
                 {
@@ -489,8 +496,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
 
 
             if ( i->direction != 0 )
-            	p.push_back ( wxPoint ( deg2x ( dt+dd*i->direction , (r1+r2)/2 ) ,
-             							deg2y ( dt+dd*i->direction , (r1+r2)/2 ) ) ) ;
+                p.push_back ( wxPoint ( deg2x ( dt+dd*i->direction , (r1+r2)/2 ) , deg2y ( dt+dd*i->direction , (r1+r2)/2 ) ) ) ;
 
             for ( float b = dt ; b > df ; b -= ds )
                     p.push_back ( wxPoint ( deg2x ( b , r2 ) , deg2y ( b , r2 ) ) ) ;
@@ -502,23 +508,30 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
             if ( !this->p->vec->getGenomeMode() ) dc.SetPen(*wxBLACK_PEN);
             else dc.SetPen ( *MYPEN((wxColour)i->getBrush()->GetColour()) ) ;
             dc.SetBrush ( *(i->getBrush()) ) ;
-            dc.DrawPolygon ( p.size() , wp , w/2 , h/2 ) ;
+	    if (p.size() < 2)
+	        {
+		wxPrintf("W: Not drawing polygon with <2 corners - B - attempted to draw item '%s' (%s)\n", i->name, i->desc ) ; 
+		}
+	    else
+	        {
+                dc.DrawPolygon ( p.size() , wp , w/2 , h/2 ) ;
+	        }
             free ( wp ) ;
             }
         }
 
-    for ( a = 0 ; !p->vec->getGenomeMode() && a < p->vec->items.size() ; a++ ) // Item titles
+    for ( int a = 0 ; !p->vec->getGenomeMode() && a < p->vec->items.size() ; a++ ) // Item titles
         {
         TVectorItem *i = &p->vec->items[a] ;
         if ( i->isVisible() && i->getParam ( _T("PREDECESSOR") ).IsEmpty() )
             {
             int r1 = i->r1 * 100 * r / ( STANDARDRADIUS * 100 ) ;
-//            int r2 = i->r2 * 100 * r / ( STANDARDRADIUS * 100 ) ;
+//          int r2 = i->r2 * 100 * r / ( STANDARDRADIUS * 100 ) ;
             float df = i->a1 ;
             float dt = i->a2 ;
 
             float dd = (dt-df)*5/100 ; // Arrow length in degrees
-//            float ds = 1 ; // Paint steps for genes, in degrees
+//          float ds = 1 ; // Paint steps for genes, in degrees
             // Drawing name
             wxColor fc = dc.GetTextForeground () ;
             dc.SetTextForeground ( i->getFontColor() ) ;
@@ -538,7 +551,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
 
     // Restriction sites
     dc.SetFont ( *tinyFont ) ;
-    for ( a = 0 ; a < p->vec->rc.size() ; a++ )
+    for ( int a = 0 ; a < p->vec->rc.size() ; a++ )
         {
         TRestrictionCut c = p->vec->rc[a] ;
         if ( isEnzymeVisible ( c.e->getName() ) )
@@ -555,15 +568,14 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
            wxPoint p3 = p->vec->rc[a].lp ;
 
            p3 = makeLastRect ( a , dc ) ;
-           if ( p3.x < w/2 )
-              p3.x = p->vec->rc[a].lastrect.GetRight() ;
+           if ( p3.x < w/2 ) p3.x = p->vec->rc[a].lastrect.GetRight() ;
            p3.y = ( p->vec->rc[a].lastrect.GetTop() + p->vec->rc[a].lastrect.GetBottom() ) / 2 ;
 
            dc.DrawLine ( p2 , p3 ) ;
 
            wxString u = c.getNameAndPosition () ;
-//           char u[100] ;
-//           sprintf ( u , "%s (%d)" , c.e->name.c_str() , c.pos ) ;
+//         char u[100] ;
+//         sprintf ( u , "%s (%d)" , c.e->name.c_str() , c.pos ) ;
            p3.x = p->vec->rc[a].lastrect.GetLeft() ;
            p3.y = p->vec->rc[a].lastrect.GetTop() ;
 
@@ -575,10 +587,10 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc)
     dc.SetTextForeground ( *wxBLACK ) ;
     }
 
-int PlasmidCanvas::findORFcircular ( float angle , float radius )
+int PlasmidCanvas::findORFcircular ( const float& angle , const float& radius ) const
     {
-    int a , found = -1 ;
-    for ( a = 0 ; a < p->vec->countORFs() ; a++ )
+    int found = -1 ;
+    for ( int a = 0 ; a < p->vec->countORFs() ; a++ )
         {
         if ( angle >= p->vec->getORF(a)->deg1 &&
              angle <= p->vec->getORF(a)->deg2 &&
@@ -594,15 +606,15 @@ int PlasmidCanvas::findORFcircular ( float angle , float radius )
     return found ;
     }
 
-wxPoint PlasmidCanvas::makeLastRect ( int a , wxDC &dc )
+wxPoint PlasmidCanvas::makeLastRect ( const int a , wxDC &dc ) const
     {
     wxPoint p3 = p->vec->rc[a].lp ;
     p3.x = p3.x * 100 * r / ( STANDARDRADIUS * 100 ) + w/2 ;
     p3.y = p3.y * 100 * r / ( STANDARDRADIUS * 100 ) + h/2 ;
 
-//    char u[100] ;
-//    sprintf ( u , "%s (%d)" , p->vec->rc[a].e->name.c_str() , p->vec->rc[a].pos ) ;
-	wxString u = p->vec->rc[a].getNameAndPosition () ;
+//  char u[100] ;
+//  sprintf ( u , "%s (%d)" , p->vec->rc[a].e->name.c_str() , p->vec->rc[a].pos ) ;
+    wxString u = p->vec->rc[a].getNameAndPosition () ;
     int te_x , te_y ;
     dc.GetTextExtent ( u , &te_x , &te_y ) ;
     p3.y -= te_y / 2 ;
@@ -614,7 +626,7 @@ wxPoint PlasmidCanvas::makeLastRect ( int a , wxDC &dc )
     return p3 ;
     }
 
-int PlasmidCanvas::circular_pos ( float angle )
+int PlasmidCanvas::circular_pos ( const float& angle ) const
     {
     int l = p->vec->getSequenceLength() ;
     float a = l ;

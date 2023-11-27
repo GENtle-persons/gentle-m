@@ -2,17 +2,17 @@
 
 // DRAWING
 
-void PlasmidCanvas::OnDrawLinear(wxDC& dc)
+void PlasmidCanvas::OnDrawLinear(wxDC& dc) /* not const */
 {
-    if ( printing ) h = h * 2 / 3 ;
+    if ( printing ) h = h * 2 / 3 ; // not const
     int fontfactor = MYFONTSIZE * 10 / 8 ;
     if ( printing ) fontfactor = (w>h?h:w)/10000 ;
     wxFont *tinyFont = MYFONT ( fontfactor*4/5 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
     wxFont *smallFont = MYFONT ( fontfactor , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
 
     // Initial calculations
-    int a , b ;
-    int d , l = p->vec->getSequenceLength() - 1 ;
+    int l = p->vec->getSequenceLength() - 1 ;
+    int d ; 
     for ( d = 1 ; d*10 < l ; d *= 10 ) ;
 
     int lineOff = w / 20 ;
@@ -82,72 +82,67 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
 
     // Baseline
     if ( p->vec->showGC() > 0 ) // %GC
-    	{
-	    int dh = h / 80 ;
-	    int nob = p->vec->showGC() ;
-	    for ( a = 0 ; a < nob ; a++ )
-	    	{
- 	    	int at = 0 , gc = 0 , other = 0 ;
-	    	for ( b = l * a / nob ; b < l * ( a + 1 ) / nob ; b++ )
-	    		{
- 		        char c = p->vec->getSequenceChar ( b ) ;
- 		    	if ( c == 'A' || c == 'T' ) at++ ;
- 		    	else if ( c == 'G' || c == 'C' ) gc++ ;
- 		    	else other++ ;
-	    		}
-    		int sum = at + gc + other ;
-    		if ( sum == 0 ) continue ;
-    		int per = gc * 100 / sum ;
-    		wxColour col ;
-    		makeGCcolor ( per , col ) ;
-    		dc.SetPen(*MYPEN(col));
-    		dc.SetBrush(*MYBRUSH(col));
-    		int x1 = lineOff + lineLen * a / nob ;
-    		int x2 = lineOff + lineLen * (a+1) / nob ;
-    		dc.DrawRectangle ( x1 ,
-        					   lineH - dh ,
-        					   x2 - x1 ,
-        					   dh * 2 ) ;
-	    	}
-	    showGClegend ( dc ) ;
-    	dc.SetPen(*wxBLACK_PEN);
-	    dc.DrawLine ( lineOff , lineH-dh , w - lineOff , lineH-dh ) ;
-	    dc.DrawLine ( lineOff , lineH+dh , w - lineOff , lineH+dh ) ;
-    	}
+        {
+        int dh = h / 80 ;
+        int nob = p->vec->showGC() ;
+        for ( int a = 0 ; a < nob ; a++ )
+            {
+            int at = 0 , gc = 0 , other = 0 ;
+            for ( int b = l * a / nob ; b < l * ( a + 1 ) / nob ; b++ )
+                {
+                char c = p->vec->getSequenceChar ( b ) ;
+                if ( c == 'A' || c == 'T' ) at++ ;
+                else if ( c == 'G' || c == 'C' ) gc++ ;
+                else other++ ;
+                }
+            int sum = at + gc + other ;
+            if ( sum == 0 ) continue ;
+            int per = gc * 100 / sum ;
+            wxColour col ;
+            makeGCcolor ( per , col ) ;
+            dc.SetPen(*MYPEN(col));
+            dc.SetBrush(*MYBRUSH(col));
+            int x1 = lineOff + lineLen * a / nob ;
+            int x2 = lineOff + lineLen * (a+1) / nob ;
+            dc.DrawRectangle ( x1 , lineH - dh , x2 - x1 , dh * 2 ) ;
+            }
+        showGClegend ( dc ) ;
+        dc.SetPen(*wxBLACK_PEN);
+        dc.DrawLine ( lineOff , lineH-dh , w - lineOff , lineH-dh ) ;
+        dc.DrawLine ( lineOff , lineH+dh , w - lineOff , lineH+dh ) ;
+        }
     else dc.DrawLine ( lineOff , lineH , w - lineOff , lineH ) ;
 
     // Numbers
     dc.SetFont(*smallFont);
-    for ( a = 0 ; a < l ; a += d )
+    for ( int a = 0 ; a < l ; a += d ) // defined at function entry
         {
         dc.DrawLine ( lineOff + lineLen * a / (l+1) ,
                       lineH ,
                       lineOff + lineLen * a / (l+1) ,
                       h - markH ) ;
-		  wxString t2 = wxString::Format ( _T("%d") , a+1 ) ;
-//        sprintf ( t , "%d" , a+1 ) ;
+        wxString t2 = wxString::Format ( _T("%d") , a+1 ) ;
+//      sprintf ( t , "%d" , a+1 ) ;
         dc.GetTextExtent ( t2 , &dx , &dy ) ;
-        dc.DrawText ( t2 ,
-                      lineOff + lineLen * a / (l+1) - dx/2 ,
-                      h - markH ) ;
+        dc.DrawText ( t2 , lineOff + lineLen * a / (l+1) - dx/2 , h - markH ) ;
         }
 
     // Methylation sites
     dc.SetPen(*wxRED_PEN);
-    for ( a = 0 ; a < p->vec->countMethylationSites() ; a++ )
-    	{
+    for ( int a = 0 ; a < p->vec->countMethylationSites() ; a++ )
+        {
         dc.DrawLine ( lineOff + lineLen * p->vec->getMethylationSite(a) / (l+1) ,
                       lineH ,
                       lineOff + lineLen * p->vec->getMethylationSite(a) / (l+1) ,
                       lineH + h / 40 ) ;
-    	}
+        }
     dc.SetPen(*wxBLACK_PEN);
 
     // Recalc
     if ( p->vec->displayUpdate() )
         {
         // Genes, items, etc.
-        for ( a = 0 ; a < p->vec->items.size() ; a++ )
+        for ( int a = 0 ; a < p->vec->items.size() ; a++ )
             {
             TVectorItem *i = &p->vec->items[a] ;
             int r1 = lineOff + lineLen * ( i->from - 1 ) / (l+1) ;
@@ -180,14 +175,14 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
 
         // Restriction sites
         dc.SetFont(*tinyFont);
-        for ( a = 0 ; a < p->vec->rc.size() ; a++ )
+        for ( int a = 0 ; a < p->vec->rc.size() ; a++ )
             {
             TRestrictionCut *c = &p->vec->rc[a] ;
             if ( p->vec->isEnzymeHidden ( c->e->getName() ) ) continue ;
             c->p = wxPoint ( lineOff + lineLen * c->getPos() / (l+1) , lineH - markH ) ;
             arrangeRestrictionSitesLinear ( a , dc ) ;
             }
-        for ( a = 0 ; a < p->vec->rc.size() ; a++ )
+        for ( int a = 0 ; a < p->vec->rc.size() ; a++ )
             {
             TRestrictionCut *c = &p->vec->rc[a] ;
             c->lp.x = c->p.x * STANDARDRADIUS / w ;
@@ -210,7 +205,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
     drawLinearORFs ( dc ) ;
 
     // Drawing items
-    for ( a = 0 ; a < p->vec->items.size() ; a++ )
+    for ( int a = 0 ; a < p->vec->items.size() ; a++ )
         {
         TVectorItem i = p->vec->items[a] ;
         if ( i.isVisible() )
@@ -233,27 +228,27 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc)
 
     // Drawing Restriction Sites
     dc.SetFont(*tinyFont);
-    for ( a = 0 ; a < p->vec->rc.size() ; a++ )
+    for ( int a = 0 ; a < p->vec->rc.size() ; a++ )
         {
         TRestrictionCut *c = &p->vec->rc[a] ;
         if ( isEnzymeVisible ( c->e->getName() ) )
-           {
-           wxColour *col = p->vec->getEnzymeRule()->getColor ( p->vec->countCuts ( c->e->getName() ) ) ;
-           dc.SetTextForeground ( *col ) ;
-           dc.SetPen ( *MYPEN(*col) ) ;
-           c->linearUpdate ( w , h ) ;
-           int xx = lineOff + c->getPos()*lineLen/(l+1) ;
-           dc.DrawLine ( c->lastrect.GetRight() , c->lastrect.GetBottom() , xx , lineH - markH ) ;
-           dc.DrawLine ( xx , lineH , xx , lineH - markH - 1 ) ;
-           dc.DrawText ( c->getNameAndPosition() , c->lastrect.x , c->lastrect.y ) ;
-           }
+            {
+            wxColour *col = p->vec->getEnzymeRule()->getColor ( p->vec->countCuts ( c->e->getName() ) ) ;
+            dc.SetTextForeground ( *col ) ;
+            dc.SetPen ( *MYPEN(*col) ) ;
+            c->linearUpdate ( w , h ) ;
+            int xx = lineOff + c->getPos()*lineLen/(l+1) ;
+            dc.DrawLine ( c->lastrect.GetRight() , c->lastrect.GetBottom() , xx , lineH - markH ) ;
+            dc.DrawLine ( xx , lineH , xx , lineH - markH - 1 ) ;
+            dc.DrawText ( c->getNameAndPosition() , c->lastrect.x , c->lastrect.y ) ;
+            }
         }
     dc.SetFont(*smallFont);
     dc.SetPen ( *wxBLACK_PEN ) ;
     dc.SetTextForeground ( *wxBLACK ) ;
 }
 
-void PlasmidCanvas::drawLinearORFs ( wxDC &dc )
+void PlasmidCanvas::drawLinearORFs ( wxDC &dc ) const
     {
     int a ;
     int l = p->vec->getSequenceLength() ;
@@ -301,17 +296,16 @@ void PlasmidCanvas::drawLinearORFs ( wxDC &dc )
     dc.SetPen(*wxBLACK_PEN);
     }
 
-void PlasmidCanvas::arrangeRestrictionSitesLinear ( int a , wxDC &dc )
+void PlasmidCanvas::arrangeRestrictionSitesLinear ( const int a , wxDC &dc ) const
     {
     TRestrictionCut *c = &p->vec->rc[a] ;
-    int x1 , y1 , x2 , y2 ;
     wxCoord dx , dy ;
-	wxString t = c->getNameAndPosition () ;
+    wxString t = c->getNameAndPosition () ;
     dc.GetTextExtent ( t , &dx , &dy ) ;
-    x1 = c->p.x - dx ;
-    y1 = c->p.y - dy ;
-    x2 = c->p.x ;
-    y2 = c->p.y ;
+    int x1 = c->p.x - dx ;
+    int y1 = c->p.y - dy ;
+    int x2 = c->p.x ;
+    int y2 = c->p.y ;
     bool doit = true ;
     int b ;
     while ( doit )
@@ -332,7 +326,7 @@ void PlasmidCanvas::arrangeRestrictionSitesLinear ( int a , wxDC &dc )
     c->p.y = c->lastrect.GetBottom() ;
     }
 
-bool PlasmidCanvas::intersectsLine ( wxRect &a , wxPoint p )
+bool PlasmidCanvas::intersectsLine ( const wxRect &a , const wxPoint& p ) const
     {
     if ( a.GetBottom() > p.y &&
          a.GetLeft() < p.x &&
@@ -341,9 +335,13 @@ bool PlasmidCanvas::intersectsLine ( wxRect &a , wxPoint p )
     return false ;
     }
 
-void PlasmidCanvas::drawLinearItem ( wxDC& dc , int r1 , int r2 , float a1 , float a2 , TVectorItem *i )
+void PlasmidCanvas::drawLinearItem ( wxDC& dc , const int _r1 , const int _r2 , const float a1 , const float a2 , TVectorItem *i ) const
     {
-    if ( i->direction == -1 ) { int rr = r1 ; r1 = r2 ; r2 = rr ; }
+
+    int r1 = _r1; 
+    int r2 = _r2; 
+    if ( i->direction == -1 ) { r1 = _r2 ; r2 = _r1 ; }
+
     wxFont *normalFont = MYFONT ( 12 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
     wxFont *smallFont = MYFONT ( 8 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
     int r1b = r2 - ( r2 - r1 ) / 10 ;
@@ -378,12 +376,10 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , int r1 , int r2 , float a1 , flo
 
     if ( !p->vec->getGenomeMode() )
         {
-		  wxString t2 = wxString::Format ( _T("%s") , i->name.c_str() ) ;
+        wxString t2 = wxString::Format ( _T("%s") , i->name.c_str() ) ;
 //        sprintf ( t , "%s" , i->name.c_str() ) ;
         dc.GetTextExtent ( t2 , &dx , &dy ) ;
-        dc.DrawText ( t2 ,
-                  (r2+r1)/2 - dx/2 ,
-                  (int) a2 - y1 + 1 ) ;
+        dc.DrawText ( t2 , (r2+r1)/2 - dx/2 , (int) a2 - y1 + 1 ) ;
         }
     dc.SetTextForeground ( fc ) ;
     dc.SetPen(*wxBLACK_PEN);
@@ -391,10 +387,10 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , int r1 , int r2 , float a1 , flo
 
 // EVENTS
 
-int PlasmidCanvas::findORFlinear ( int x , int y )
+int PlasmidCanvas::findORFlinear ( const int x , const int y ) const
     {
-    int a , found = -1 ;
-    for ( a = 0 ; a < p->vec->countORFs() ; a++ )
+    int found = -1 ;
+    for ( int a = 0 ; a < p->vec->countORFs() ; a++ )
         {
         if ( x >= p->vec->getORF(a)->deg1 &&
              x <= p->vec->getORF(a)->deg2 &&

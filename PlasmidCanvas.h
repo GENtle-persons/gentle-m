@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the PlasmidCanvas class
+    \brief Contains the PlasmidCanvas class
 */
 #ifndef _PlasmidCanvas_H_
 #define _PlasmidCanvas_H_
@@ -22,24 +22,24 @@ class MyChild ;
 class TVectorItem ;
 class TPrimer ;
 
-/**	\brief The class to draw the DNA map, as well as the mini-map in the amino acid module
+/**  \brief The class to draw the DNA map, as well as the mini-map in the amino acid module
 */
 class PlasmidCanvas : public wxScrolledWindow
     {
     public:
     PlasmidCanvas(wxWindow *parent, const wxPoint& pos, const wxSize& size); ///< Constructor
     virtual ~PlasmidCanvas () ; ///< Destructor
-    virtual void OnDraw(wxDC& pdc); ///< Draws the map
+    virtual void OnDraw(wxDC& pdc) ; ///< Draws the map
     virtual void Refresh () ; ///< Redraws the map
     virtual void print () ; ///< Prints the map
-    virtual void setZoom ( int factor ) ; ///< Sets the display zoom factor
-    virtual wxString getSelection () ; ///< Returns the current sequence selection
+    virtual void setZoom ( const int factor ) ; ///< Sets the display zoom factor
+    virtual wxString getSelection () const ; ///< Returns the current sequence selection
     virtual void RunPrimerEditor ( vector <TPrimer> &pl , int mut = -1 ) ; ///< Invokes the PCR/primer design module
     virtual void invokeVectorEditor ( wxString what = _T("") , int num = 0 , bool forceUpdate = false ) ; ///< Invokes the vector editor dialog
-    virtual wxMenu *invokeItemPopup ( int item , wxPoint pt , bool doreturn = false ) ; ///< Generates the item/feature context menu
-    virtual wxMenu *invokeRsPopup ( int rs , wxPoint pt , bool doreturn = false ) ; ///< Generates the restriction enzyme context menu
-    virtual wxMenu *invokeVectorPopup ( wxPoint pt , bool doreturn = false , int pos = -1 ) ; ///< Generates the vector context menu
-    virtual void invokeORFpopup ( int item , wxPoint pt ) ; ///< Generates the open reading frame context menu
+    virtual wxMenu *invokeItemPopup ( const int item , const wxPoint& pt , const bool doreturn = false ) ; ///< Generates the item/feature context menu
+    virtual wxMenu *invokeRsPopup ( const int rs , const wxPoint& pt , const bool doreturn = false ) ; ///< Generates the restriction enzyme context menu
+    virtual wxMenu *invokeVectorPopup ( const wxPoint& pt , const bool doreturn = false , int pos = -1 ) ; ///< Generates the vector context menu
+    virtual void invokeORFpopup ( const int item , const wxPoint& pt ) ; ///< Generates the open reading frame context menu
 
 
     virtual void OnPrimerForward ( wxCommandEvent &ev ) ; ///< "Run PCR with primer forward" event handler
@@ -95,64 +95,64 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void itemShowHide ( wxCommandEvent &ev ) ; ///< "Toggle item visibility" event handler
     virtual void OnTurningPoint ( wxCommandEvent &ev ) ; ///< "Turning point (12 o'clock)" event handler
 
-    virtual void setPrinting ( bool _b ) ; ///< Sets the printing mode on/off
-    virtual void setLastContextItem ( long _l ) ; ///< Sets the last item the mouse was over
+    virtual void setPrinting ( const bool _b ) ; ///< Sets the printing mode on/off
+    virtual void setLastContextItem ( const long _l ) ; ///< Sets the last item the mouse was over
 
-    virtual int getMarkFrom () ; ///< Returns the first selected position, or -1
-    virtual int getMarkTo () ; ///< Returns the last selected position, or -1
-    virtual void getMark ( int &i1 , int &i2 ) ; ///< Sets i1 and i2 to the first/last selected positions, or to -1
-    virtual void setMark ( int i1 , int i2 ) ; ///< Sets the selection
-    virtual void setRootChild ( MyChild *_p ) ; ///< Sets the MyChild parent
-    virtual int getZoom () ; ///< Returns the current zoom factor
+    virtual int getMarkFrom () const ; ///< Returns the first selected position, or -1
+    virtual int getMarkTo () const ; ///< Returns the last selected position, or -1
+    virtual void getMark ( int &i1 , int &i2 ) const ; ///< Sets i1 and i2 to the first/last selected positions, or to -1
+    virtual void setMark ( const int i1 , const int i2 ) ; ///< Sets the selection
+    virtual void setRootChild ( MyChild * const _p ) ; ///< Sets the MyChild parent
+    virtual int getZoom () const ; ///< Returns the current zoom factor
 
     private :
     // Event handlers
-    virtual void OnDrawLinear(wxDC& dc); ///< Draw a linear sequence
-    virtual void OnDrawCircular(wxDC& dc); ///< Draw a circular sequence
+    virtual void OnDrawLinear(wxDC& dc) ; ///< Draw a linear sequence
+    virtual void OnDrawCircular(wxDC& dc) ; ///< Draw a circular sequence
     virtual void OnEvent(wxMouseEvent& event); ///< Mouse event handler
 
     // circular mode
-    virtual int deg2x ( float deg , int r ) ; ///< Converts degree/radius to x coordinate
-    virtual int deg2y ( float deg , int r ) ; ///< Converts degree/radius to y coordinate
-    virtual float xy2deg ( float x , float y ) ; ///< Converts x/y coordinate to degrees
-    virtual float xy2r ( float x , float y ) ; ///< Converts x/y coordinate to radius
-    virtual int findVectorObjectCircular ( float angle , float radius ) ; ///< Returns the number of an item/feature at the given position, or -1
-    virtual int findRestrictionSite ( int x , int y ) ; ///< Returns the number of the restriction site at the given position, or -1
-    virtual wxPoint makeLastRect ( int a , wxDC &dc ) ; ///< Some internal function...
-    virtual void arrangeRestrictionSitesCircular ( wxDC &dc ) ; ///< Arranges the restriction site labels
-    virtual bool optimizeCircularRestrictionSites ( int a , wxDC &dc ) ; ///< Rearranges the restriction site labels
-    virtual int findORFcircular ( float angle , float radius ) ; ///< Returns the number of the open reading frame at the given position, or -1
-    virtual void drawCircularORFs ( wxDC &dc ) ; ///< Draws open reading frames in circular mode
+    virtual int deg2x ( const float& deg , const int& r ) const ; ///< Converts degree/radius to x coordinate
+    virtual int deg2y ( const float& deg , const int& r ) const ; ///< Converts degree/radius to y coordinate
+    virtual float xy2deg ( const float& x , const float& y ) const ; ///< Converts x/y coordinate to degrees
+    virtual float xy2r ( const float& x , const float& y ) const ; ///< Converts x/y coordinate to radius
+    virtual int findVectorObjectCircular ( const float& angle , const float& radius ) const ; ///< Returns the number of an item/feature at the given position, or -1
+    virtual int findRestrictionSite ( const int x , const int y ) const ; ///< Returns the number of the restriction site at the given position, or -1
+    virtual wxPoint makeLastRect ( int a , wxDC &dc ) const ; ///< Some internal function...
+    virtual void arrangeRestrictionSitesCircular ( wxDC &dc ) const ; ///< Arranges the restriction site labels
+    virtual bool optimizeCircularRestrictionSites ( const int a , wxDC &dc ) const ; ///< Rearranges the restriction site labels
+    virtual int findORFcircular ( const float& angle , const float& radius ) const ; ///< Returns the number of the open reading frame at the given position, or -1
+    virtual void drawCircularORFs ( wxDC &dc ) const ; ///< Draws open reading frames in circular mode
 
     // linear mode
-    virtual int findVectorObjectLinear ( wxPoint pp ) ; ///< Returns the number of an item/feature at the given position, or -1
-    virtual void drawLinearItem ( wxDC &dc , int r1 , int r2 , float a1 , float a2 , TVectorItem *i ) ; ///< Draws an item/feature in linear mode
-    virtual void arrangeRestrictionSitesLinear ( int a , wxDC &dc ) ; ///< Arranges the restriction site labels
-    virtual bool intersectsLine ( wxRect &a , wxPoint p ) ; ///< Does the point lie within the rectangle, except for the top part?
-    virtual void drawLinearORFs ( wxDC &dc ) ; ///< Draws open reading frames in linear mode
-    virtual int findORFlinear ( int x , int y ) ; ///< Returns the number of the open reading frame at the given position, or -1
+    virtual int findVectorObjectLinear ( const wxPoint& pp ) const ; ///< Returns the number of an item/feature at the given position, or -1
+    virtual void drawLinearItem ( wxDC &dc , const int r1 , const int r2 , const float a1 , const float a2 , TVectorItem *i ) const ; ///< Draws an item/feature in linear mode
+    virtual void arrangeRestrictionSitesLinear ( const int a , wxDC &dc ) const ; ///< Arranges the restriction site labels
+    virtual bool intersectsLine ( const wxRect &a , const wxPoint& p ) const ; ///< Does the point lie within the rectangle, except for the top part?
+    virtual void drawLinearORFs ( wxDC &dc ) const ; ///< Draws open reading frames in linear mode
+    virtual int findORFlinear ( const int x , const int y ) const ; ///< Returns the number of the open reading frame at the given position, or -1
 
     // both modes
-    virtual bool intersects ( wxRect &a , wxRect &b ) ; ///< Does the point lie within the rectangle?
-    virtual bool pointinrect ( int x , int y , wxRect &a ) ; ///< Does the point lie within the rectangle?
-    virtual bool isEnzymeVisible ( wxString s ) ; ///< Is the enzyme visible (or was it set to "hidden")?
+    virtual bool intersects ( const wxRect &a , const wxRect &b ) const ; ///< Does the point lie within the rectangle?
+    virtual bool pointinrect ( const int x , const int y , const wxRect &a ) const ; ///< Does the point lie within the rectangle?
+    virtual bool isEnzymeVisible ( const wxString& s ) const ; ///< Is the enzyme visible (or was it set to "hidden")?
     virtual void updateLinkedItems ( TVector *vec , int in ) ; ///< Update items that belong together (like exons)
 
     // Misc internal methods
-    virtual void SetMyToolTip ( wxString s , int mode ) ; ///< Sets the tool tip
-    virtual wxString getDNAorAA ( int from , int to , int dir , bool dna = true ) ; ///< Returns the given DNA or amino acid sequence
-    virtual int circular_pos ( float angle ) ; ///< Converts an angle to a DNA position in circular mode
-    virtual void push_rc_left ( int a , wxDC &dc ) ; ///< Internally "push" a restriction site label to the "left"
-    virtual void push_rc_right ( int a , wxDC &dc ) ; ///< Internally "push" a restriction site label to the "right"
-    virtual void recalc_rc ( int a , wxDC &dc ) ; ///< Recalculates the position of the restriction cuts and labels
-    virtual void makeGCcolor ( int percent , wxColour &col ) ; ///< Sets the color appropriate for the percentage of the GC contents
-    virtual void showGClegend ( wxDC &dc ) ; ///< Draws the GC contents legend
+    virtual void SetMyToolTip ( const wxString& s , const int mode ) ; ///< Sets the tool tip
+    virtual wxString getDNAorAA ( const int from , const int to , const int dir , const bool dna = true ) const ; ///< Returns the given DNA or amino acid sequence
+    virtual int circular_pos ( const float& angle ) const ; ///< Converts an angle to a DNA position in circular mode
+    virtual void push_rc_left ( const int a , wxDC &dc ) const ; ///< Internally "push" a restriction site label to the "left"
+    virtual void push_rc_right ( const int a , wxDC &dc ) const ; ///< Internally "push" a restriction site label to the "right"
+    virtual void recalc_rc ( const int a , wxDC &dc ) const ; ///< Recalculates the position of the restriction cuts and labels
+    virtual void makeGCcolor ( const int percent , wxColour &col ) const ; ///< Sets the color appropriate for the percentage of the GC contents
+    virtual void showGClegend ( wxDC &dc ) const ; ///< Draws the GC contents legend
 
     // Variables
     int context_last_rs , lasttooltip , context_last_orf ;
     int lastvectorobject , lastrestrictionsite , lastbp ;
     int mousediffx , mousediffy , zoom , last_rightclick_base ;
-	long context_last_item ;
+    long context_last_item ;
     int r , w , h ;
     bool initialclick , painting , hasBeenPainted , printing ;
     wxToolTip *tt ; ///< The current/last tooptip

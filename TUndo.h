@@ -20,7 +20,7 @@ class TUndo
     {
     public :
     TUndo () ; ///< Constructor
-	~TUndo () {} ; ///< Destructor (empty)
+    ~TUndo () {} ; ///< Destructor (empty)
     void setbase ( TVector *_base ) ; ///< Set the base TVector
     void start ( wxString _msg = _T("") ) ; ///< Start the undo record, with action name
     void stop () ; ///< End the undo record
@@ -31,7 +31,7 @@ class TUndo
     void remember ( wxString _msg ) ; ///< Remember the current state and action name
     void clear () ; ///< Remove all undo information
 
-    TUndo & operator = ( TUndo &u ) ;
+    TUndo & operator = ( const TUndo &u ) ;
 
     private :
     wxArrayTVector mem ; ///< The old TVector objects
