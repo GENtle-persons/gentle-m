@@ -287,7 +287,14 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc) /* not const */
             wxPoint *wp ;
             wp = (wxPoint*) malloc ( sizeof ( wxPoint ) * (p.size()+1) ) ;
             for ( int b = 0 ; b < p.size() ; b++ ) wp[b] = p[b] ;
-            dc.DrawPolygon ( p.size() , wp , w/2 , h/2 ) ;
+	    if (p.size()<2)
+	        {
+		wxPrintf("W: Not drawing polygon with <2  corners - A\n");
+                }
+	    else
+	        {
+                dc.DrawPolygon ( p.size() , wp , w/2 , h/2 ) ;
+	        }
             free ( wp ) ;
 
             dc.SetPen(*wxBLACK_PEN);
@@ -501,7 +508,14 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc) /* not const */
             if ( !this->p->vec->getGenomeMode() ) dc.SetPen(*wxBLACK_PEN);
             else dc.SetPen ( *MYPEN((wxColour)i->getBrush()->GetColour()) ) ;
             dc.SetBrush ( *(i->getBrush()) ) ;
-            dc.DrawPolygon ( p.size() , wp , w/2 , h/2 ) ;
+	    if (p.size() < 2)
+	        {
+		wxPrintf("W: Not drawing polygon with <2 corners - B - attempted to draw item '%s' (%s)\n", i->name, i->desc ) ; 
+		}
+	    else
+	        {
+                dc.DrawPolygon ( p.size() , wp , w/2 , h/2 ) ;
+	        }
             free ( wp ) ;
             }
         }
