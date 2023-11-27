@@ -23,6 +23,11 @@ requires much tinkering to adapt to local install paths of the
 build-dependencies. For now, we find it much easier to work with conda or
 homebrew as described for Linux.
 
+We are providing the target "macos_bundle" that, with what is provided
+by homebrew " crafts a folder named "GENtle.app" that can be copied as it
+is into Applications folder on any Mac of the same architecture for a complete
+deployment.
+
 LINUX:
 
 The Linux OS offers several routes to install GENtle:
