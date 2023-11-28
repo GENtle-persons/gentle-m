@@ -88,19 +88,19 @@ void EIpanel::process_ncbi()
     sort.Replace ( _T(" ") , _T("+") ) ;
     if ( database == _T("pubmed") && !authors.IsEmpty() )
         {
-          while ( !authors.IsEmpty() )
-              {
-              search = authors.BeforeFirst ( ',' ) + _T(" [au] ") + search ;
-              authors = authors.AfterFirst ( ',' ) ;
-              }
+        while ( !authors.IsEmpty() )
+            {
+            search = authors.BeforeFirst ( ',' ) + _T(" [au] ") + search ;
+            authors = authors.AfterFirst ( ',' ) ;
+            }
         }
     search.Replace ( _T(" ") , _T("+") ) ;
 
     // Invoking ESearch
     wxString query = _T("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?") ;
-     query += _T("db=") + database ;
-    query += _T("&retstart=") + wxString::Format ( _T("%d") , res_start ) ;
-    query += _T("&retmax=") + wxString::Format ( _T("%d") , RETMAX ) ;
+    query += _T("db=") + database ;
+    query += _T("&retstart=") + wxString::Format ( "%ld" , res_start ) ;
+    query += _T("&retmax=") + wxString::Format ( "%ld" , RETMAX ) ;
     query += _T("&tool=GENtle") ;
     query += _T("&retmode=xml") ;
     if ( database == _T("pubmed") )
@@ -110,10 +110,10 @@ void EIpanel::process_ncbi()
         query += _T("&sort=") + sort ;
         }
     query += _T("&term=") + search ;
-//    query = wxURL::ConvertToValidURI ( query ) ;//!!!!!!!!!!!!!
+//  query = wxURL::ConvertToValidURI ( query ) ;//!!!!!!!!!!!!!
 
-//    wxURI uri ( query ) ;
-//    query = uri.BuildUnescapedURI () ;
+//  wxURI uri ( query ) ;
+//  query = uri.BuildUnescapedURI () ;
 
     wxString res ;
     res = ex.getText ( query ) ; // The XML is now in res
@@ -144,17 +144,16 @@ void EIpanel::process_ncbi()
                 ids.Add ( valFC ( x ) ) ;
             }
         }
-//    wxMessageBox ( wxString::Format ( _T("%d of %d") , res_count , res_start ) ) ;
+//  wxMessageBox ( wxString::Format ( _T("%ld of %ld") , res_count , res_start ) ) ;
 
     if ( ids.IsEmpty() )
         {
-         showMessage ( _T("The search returned no results.") ) ;
-         return ;
+        showMessage ( _T("The search returned no results.") ) ;
+        return ;
         }
 
-    int a ;
     res = _T("") ;
-    for ( a = 0 ; a < ids.GetCount() ; a++ )
+    for ( int a = 0 ; a < ids.GetCount() ; a++ )
         {
         if ( !res.IsEmpty() ) res += _T(",") ;
         res += ids[a] ;
@@ -166,7 +165,7 @@ void EIpanel::process_ncbi()
     query += _T("&tool=GENtle&") ;
     query += _T("id=") + res ;
     query += _T("&retmode=xml") ;
-    query += _T("&retmax=") + wxString::Format ( _T("%d") , RETMAX ) ;
+    query += _T("&retmax=") + wxString::Format ( _T("%ld") , RETMAX ) ;
 
     res = ex.getText ( query ) ; // The XML is now in res
 //cout << res.mb_str() << endl ;
@@ -181,7 +180,7 @@ void EIpanel::process_ncbi()
         }
 
     // Parsing ESummary XML
-    a = 0 ;
+    int a = 0 ;
     for ( x = x->FirstChild ( "DocSum" ) ; x ; x = x->NextSibling ( "DocSum" ) )
         {
         TiXmlNode *y = x ;
@@ -189,46 +188,46 @@ void EIpanel::process_ncbi()
         id = valFC ( x->FirstChild ( "Id" ) ) ;
         for ( y = x->FirstChild ( "Item" ) ; y ; y = y->NextSibling ( "Item" ) )
             {
-               wxString at ( y->ToElement()->Attribute ( "Name" ) , wxConvUTF8 ) ;
-               at = at.Upper() ;
-               if ( at == _T("TITLE") ) title = valFC ( y ) ;
-               else if ( at == _T("PUBDATE") ) pubdate = valFC ( y ) ;
-               else if ( at == _T("SOURCE") ) source = valFC ( y ) ;
-               else if ( at == _T("CAPTION") ) caption = valFC ( y ) ;
-               else if ( at == _T("AUTHORLIST") )
-                   {
+            wxString at ( y->ToElement()->Attribute ( "Name" ) , wxConvUTF8 ) ;
+            at = at.Upper() ;
+            if ( at == _T("TITLE") ) title = valFC ( y ) ;
+            else if ( at == _T("PUBDATE") ) pubdate = valFC ( y ) ;
+            else if ( at == _T("SOURCE") ) source = valFC ( y ) ;
+            else if ( at == _T("CAPTION") ) caption = valFC ( y ) ;
+            else if ( at == _T("AUTHORLIST") )
+                {
                 TiXmlNode *z ;
                 for ( z = y->FirstChild ( "Item" ) ; z ; z = z->NextSibling ( "Item" ) )
                     {
-                       if ( wxString(z->ToElement()->Attribute ( "Name" ),wxConvUTF8).Upper() != _T("AUTHOR") ) continue ;
-                       if ( !authors.IsEmpty() ) authors += _T(", ") ;
-                       authors += valFC ( z ) ;
+                    if ( wxString(z->ToElement()->Attribute ( "Name" ),wxConvUTF8).Upper() != _T("AUTHOR") ) continue ;
+                    if ( !authors.IsEmpty() ) authors += _T(", ") ;
+                    authors += valFC ( z ) ;
                     }
-                   }
+                }
             }
         wxString s ;
         if ( database == _T("nucleotide") || database == _T("protein") )
-              {
-             s = _T("<table width='100%'><tr>") ;
-             s += _T("<td align=right valign=center width='50px'>") ;
-             s += wxString::Format ( _T("%d") , a + res_start + 1 ) ;
-             s += _T("</td>") ;
-             s += _T("<td width='10%'>") + caption + _T("</td>") ;
-             s += _T("<td>") + title + _T("</td>") ;
-             s += _T("</tr></table>") ;
-              }
+            {
+            s = _T("<table width='100%'><tr>") ;
+            s += _T("<td align=right valign=center width='50px'>") ;
+            s += wxString::Format ( _T("%ld") , a + res_start + 1 ) ;
+            s += _T("</td>") ;
+            s += _T("<td width='10%'>") + caption + _T("</td>") ;
+            s += _T("<td>") + title + _T("</td>") ;
+            s += _T("</tr></table>") ;
+            }
         else if ( database == _T("pubmed") )
             {
-             s = _T("<table width='100%'><tr>") ;
-             s += _T("<td rowspan=2 align=right valign=top width='50px'>") ;
-             s += wxString::Format ( _T("%d") , a + res_start + 1 ) ;
-             s += _T("</td>") ;
-             s += _T("<td colspan=3><b>") + title + _T("</b></td>") ; // !!!!!!!!!!!!!!!!!!!!
-             s += _T("</tr><tr>") ;
-             s += _T("<td valign=top width='10%'>") + pubdate + _T("</td>") ;
-             s += _T("<td valign=top width='10%'>") + source + _T("</td>") ;
-             s += _T("<td valign=top>") + authors + _T("</td>") ;
-             s += _T("</tr></table>") ;
+            s = _T("<table width='100%'><tr>") ;
+            s += _T("<td rowspan=2 align=right valign=top width='50px'>") ;
+            s += wxString::Format ( _T("%ld") , a + res_start + 1 ) ;
+            s += _T("</td>") ;
+            s += _T("<td colspan=3><b>") + title + _T("</b></td>") ; // !!!!!!!!!!!!!!!!!!!!
+            s += _T("</tr><tr>") ;
+            s += _T("<td valign=top width='10%'>") + pubdate + _T("</td>") ;
+            s += _T("<td valign=top width='10%'>") + source + _T("</td>") ;
+            s += _T("<td valign=top>") + authors + _T("</td>") ;
+            s += _T("</tr></table>") ;
             }
         hlb->Set ( a++ , s , id ) ;
         }
@@ -253,9 +252,8 @@ void EIpanel::execute_ncbi()
 void EIpanel::execute_ncbi_load ( wxString database )
     {
     // Opening selected items
-    int a ;
     wxString ids ;
-    for ( a = 0 ; a < hlb->was.GetCount() ; a++ )
+    for ( int a = 0 ; a < hlb->was.GetCount() ; a++ )
         {
         if ( !hlb->IsSelected ( a ) ) continue ;
         if ( hlb->data[a] == _T("") ) continue ;
@@ -271,7 +269,7 @@ void EIpanel::execute_ncbi_load ( wxString database )
         wxString query = _T("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?") ;
         query += _T("db=") + database ;
         query += _T("&tool=GENtle") ;
-        //        query += "&retmax=" + wxString::Format ( "%d" , RETMAX ) ;
+        // query += "&retmax=" + wxString::Format ( "%ld" , RETMAX ) ;
         query += _T("&id=") + ids ;
         if ( database == _T("nucleotide") ) query += _T("&retmode=xml&rettype=gb") ;
         else query += _T("&retmode=text&rettype=gp") ;
@@ -279,7 +277,7 @@ void EIpanel::execute_ncbi_load ( wxString database )
         myExternal ex ;
         wxString res = ex.getText ( query ) ;
 
-        //    wxTheClipboard->Open(); wxTheClipboard->SetData( new wxTextDataObject(res) );    wxTheClipboard->Close();
+        // wxTheClipboard->Open(); wxTheClipboard->SetData( new wxTextDataObject(res) );    wxTheClipboard->Close();
 
         if ( database == _T("nucleotide") )
             {
