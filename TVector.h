@@ -135,7 +135,7 @@ class TVectorItem
     wxString desc , name ; ///< Item name
 
     int from , ///< Item start
-    	to ; ///< Item end
+        to ; ///< Item end
 
     wxString toString() const ;
 
@@ -163,10 +163,10 @@ class TVectorItem
 
 /** \brief This class stores all sequence information, both DNA and amino acids
 
-	This class is of extreme importance. It carries sequence data, annotated items,
-	methods for sequence manipulation, and static data, e.e., about amino acid
-	properties and translation tables. So don't let the name fool you, this class
-	does much more than storing vectors.
+    This class is of extreme importance. It carries sequence data, annotated items,
+    methods for sequence manipulation, and static data, e.e., about amino acid
+    properties and translation tables. So don't let the name fool you, this class
+    does much more than storing vectors.
 */
 class TVector
     {
@@ -187,7 +187,7 @@ class TVector
 
     // Nucleotide access/conversion
     bool basematch ( const char b1 , const char b2 ) const ; ///< matches DNA bases; b1 in IUPAC, b2 in SIUPAC. This is superior to the "=" operator :-)
-    void setIUPAC ( const char b , const wxString& s , char *pac = NULL ) ;
+    void setIUPAC ( const char b , const wxString& s , char * pac = NULL ) const ;
     char getNucleotide ( const int pos , const bool complement = false ) const ; ///< Returns the base at a certain position, or its complement
     void setNucleotide ( const int pos , const char t ) ; ///< Sets a base at a certain position
     char getComplement ( const char c ) const ; ///< Returns the complement of a given base
@@ -233,9 +233,9 @@ class TVector
     wxString getStickyEnd ( const bool left , const bool upper ) const ; ///< Returns one of the possible sticky ends
     bool hasStickyEnds () const ; ///< Does this sequence have sticky ends?
     void callUpdateUndoMenu () ; ///< Refreshes the Undo menu
-    void setFromVector ( /* not yet const */ TVector /* & */ v ) ; ///< Makes this sequence a copy of another one (v)
+    void setFromVector ( TVector v ) ; ///< Makes this sequence a copy of another one (v)
     void doRemoveNucleotide ( const int x ) ; ///<Removes single base at position x
-    int getItemLength ( int a ) ; ///< Return the length of item a
+    int getItemLength ( const int a ) const ; ///< Return the length of item a
     TVector *backtranslate ( const wxString& mode = _T("") ) ; ///< Generate a new DNA sequence from this amino acid sequence
     wxString getStrand53 () const ; ///< Returns the 5'->3' strand of the sequence
     wxString getStrand35 () const ; ///< Returns the 3'->5' strand of the sequence, as 5'->3'
@@ -271,8 +271,8 @@ class TVector
     int showGC () const ; ///< Returns 0 for "no", otherwise the number of blocks
     TORF *getORF ( const int a ) ; ///< Returns an open reading frame
     int countORFs () ; ///< Returns the number of found open reading frames
-    void updateDisplay ( bool update = true ) ; ///< Recalc visual information on next draw
-    bool displayUpdate () ; ///< Update the display?
+    void updateDisplay ( const bool update = true ) ; ///< Recalc visual information on next draw
+    bool displayUpdate () const ; ///< Update the display?
     void setType ( const int newtype ) ; ///< Set the sequence type
     int getType () const ; ///< Returns the sequence type
     int getMethylationSiteIndex ( const int pos ) const ; ///< Returns the index of a potential methylation site
@@ -287,7 +287,7 @@ class TVector
     wxString getCodonTableName ( const int x ) const ;
     void addRestrictionEnzyme ( TRestrictionEnzyme * const e ) ;
     void resetTurn () ; ///< Sets the turned variable to zero
-	
+
     // Variables
     vector <TVectorItem> items ; ///< Items/features/annotations
     vector <TRestrictionCut> rc ; ///< Restriction enzyme cuts
@@ -303,7 +303,7 @@ class TVector
     wxString invert ( const wxString& s ) const ; ///< Inverts a string
     wxString vary_base ( const char b ) const ; ///< Turns a SIUPAC into a string of A, C, G, T
     void makeAA2DNA ( const wxString& mode = _T("") ) ; ///< "Translate" amino acid sequence into DNA; can be specified for an organism
-    wxString mergeCodons ( wxString c1 , wxString c2 ) ; ///< Used by makeAA2DNA for generating "abstract" (SIUPAC) DNA
+    wxString mergeCodons ( wxString c1 , wxString c2 ) const ; ///< Used by makeAA2DNA for generating "abstract" (SIUPAC) DNA
     void setCodonTable ( const int table , const wxString& sequence , const wxString& name ) ; ///< Sets up the codon_tables variable
     void evaluate_key_value ( const wxString& key , const wxString& value ) ; ///< Used in setParam() and setParams()
     wxString get_translation_table ( const int translation_table ) const ;
