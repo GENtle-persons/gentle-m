@@ -686,7 +686,7 @@
 "t_ges_cut2","Double cutter","Zwei Schnitte","双点剪切"
 "t_ges_cut3","Triple cutter","Drei Schnitte","三点剪切"
 "t_enzymes_2","Restriction enzymes (2)","Restriktionsenzyme (2)","剪切酶 （2）"
-"t_too_many_cuts","%d restriction cuts are too many to display; only %d wil be shown.\nPlease reduce the number of restriction enzymes or change the settings.","Von den %d Restriktions-Schnittstellen werden nur %d angezeigt.\nBitte reduzieren Sie die Anzahl der Restriktionsenzyme oder ändern Sie die Einstellungen."," %d 酶中只有 d% 被显示出来，\n请减少剪切酶的数量或更改您的设置。"
+"t_too_many_cuts","%zu restriction cuts are too many to display; only %d wil be shown.\nPlease reduce the number of restriction enzymes or change the settings.","Von den %zu Restriktions-Schnittstellen werden nur %d angezeigt.\nBitte reduzieren Sie die Anzahl der Restriktionsenzyme oder ändern Sie die Einstellungen."," %d 酶中只有 d% 被显示出来，\n请减少剪切酶的数量或更改您的设置。"
 "t_ges_met","Show methylation","Zeige Methylierung","展示甲基化"
 "t_ges_met_dam","DAM","DAM","DAM"
 "t_ges_met_dcm","DCM","DCM","DCM"
