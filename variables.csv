@@ -734,7 +734,7 @@
 "sort","Sort by","Sortieren nach","排序按照"
 "b_last","<<","<<","<<"
 "b_next",">>",">>",">>"
-"t_ext_show_res","Showing results %d-%d of %d","Suchergebnisse %d-%d von %d","展示%d-%d 在 %d 结果中"
+"t_ext_show_res","Showing results %ld-%ld of %ld","Suchergebnisse %ld-%ld von %ld","展示%ld-%ld 在 %ld 结果中"
 "t_data_by_ncbi","all data by NCBI","alle Daten von NCBI","左右来自NCBI的数据"
 "t_calc_data_amino_acids","Amino acids","Aminosäuren","氨基酸"
 "t_calc_data_olc","One letter code","Ein-Buchstaben-Code","单字母编码"
