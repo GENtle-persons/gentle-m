@@ -100,14 +100,14 @@ class SeqPos
 	virtual ~SeqPos () {} ; ///< Dummy destructor
 	
     virtual void cleanup () ; ///< Empty the class
-    virtual void add ( int np , int x , int y , int w , int h , bool memsave = false ) ; ///< Add a "char"
-    virtual void addline ( int from , int to , int vfrom , int vto ) ; ///< Add a "virtual" line (for faster seeking where the mouse cursor is over)
-    virtual int getLine ( int y ) ; ///< Gets a line for the y position
-    virtual int getItem ( wxPoint pt , int line ) ; ///< Gets the item in the line for the position
+    virtual void add ( const int np , const int x , const int y , const int w , const int h , const bool memsave = false ) ; ///< Add a "char"
+    virtual void addline ( const int from , const int to , const int vfrom , const int vto ) ; ///< Add a "virtual" line (for faster seeking where the mouse cursor is over)
+    virtual int getLine ( const int y ) const ; ///< Gets a line for the y position
+    virtual int getItem ( const wxPoint& pt , const int line ) const ; ///< Gets the item in the line for the position
     virtual void reserve ( int n , int n2 = -1 , bool memsave = false ) ; ///< Reserves memory (faster for huge sequences)
 
     virtual void mark ( int where , int value ) ; ///< Mark part of the sequence
-    virtual int getmark ( int where ) ; ///< The "type" of marikg at the position
+    virtual int getmark ( const int where ) const ; ///< The "type" of marikg at the position
 
     wxArrayInt p ; ///< The data
     wxString m ; ///< The marking data
@@ -572,36 +572,36 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void MyGetViewStart ( int *x , int *y ) ; ///< Wrapper function; will compensate for printing device context
     virtual void SilentRefresh () ; ///< Refresh without cleaning background first (no flicker)
     virtual bool doOverwrite () ; ///< Are we in edit overwrite mode?
-    virtual TAminoAcids *getAA() ; ///< Returns pointer to amino acid module, or NULL
-    virtual TPrimerDesign *getPD() ; ///< Returns pointer to primer design module, or NULL
-    virtual TAlignment *getAln() ; ///< Returns pointer to alignment module, or NULL
-    virtual wxString getChildType() ; ///< Returns the child identifier, or _T("")
+    virtual TAminoAcids *getAA() const ; ///< Returns pointer to amino acid module, or NULL
+    virtual TPrimerDesign *getPD() const ; ///< Returns pointer to primer design module, or NULL
+    virtual TAlignment *getAln() const ; ///< Returns pointer to alignment module, or NULL
+    virtual wxString getChildType() const ; ///< Returns the child identifier, or _T("")
 
-    virtual bool getPrintToColor () { return printToColor ; } ///< Are we printing to a color printer?
-    virtual void setPrintToColor ( bool _b ) { printToColor = _b ; } ///< We are printing to a color printer!
-    virtual bool getDrawAll () { return drawall ; } ///< Are we drawing everything ( not just the visible part)?
-    virtual void setDrawAll ( bool _b ) { drawall = _b ; } ///< We are drawing everything ( not just the visible part)
+    virtual bool getPrintToColor () const { return printToColor ; } ///< Are we printing to a color printer?
+    virtual void setPrintToColor ( const bool _b ) { printToColor = _b ; } ///< We are printing to a color printer!
+    virtual bool getDrawAll () const { return drawall ; } ///< Are we drawing everything ( not just the visible part)?
+    virtual void setDrawAll ( const bool _b ) { drawall = _b ; } ///< We are drawing everything ( not just the visible part)
     virtual bool isHorizontal () { return horizontal ; } ///< Is the display set to horizontal mode?
-    virtual void setHorizontal ( bool _b ) { horizontal = _b ; } ///< Set the display to horizontal mode
+    virtual void setHorizontal ( const bool _b ) { horizontal = _b ; } ///< Set the display to horizontal mode
     virtual void toggleHorizontal () { setHorizontal ( !isHorizontal() ) ; } ///< Toggle horizontal/vertical mode
-    virtual bool getHide () { return hide ; } ///< Is the display hidden (so we don't have to draw anything)?
-    virtual void doHide ( bool _b ) { hide = _b ; } ///< Hide the display
-    virtual bool isMiniDisplay () { return miniDisplay ; } ///< Is this a mini display in the amino acid module?
-    virtual void setMiniDisplay ( bool _b ) { miniDisplay = _b ; } ///< This is a mini display in the amino acid module
-    virtual SeqBasic *getLastWhere() { return lastwhere ; } ///< Returns a pointer to the last marked seq structure
-    virtual void setLastWhere ( SeqBasic *where ) { lastwhere = where ; }
-    virtual bool isPrinting () { return printing ; } ///< Are we printing (or drawing on the screen)?
-    virtual void forceOverwrite ( bool _b ) { forceoverwrite = _b ; } ///< Ensure overwrite mode (for example, ABI and PCR mode)
-    virtual bool getEditMode () { return editMode ; } ///< Are we editing?
+    virtual bool getHide () const { return hide ; } ///< Is the display hidden (so we don't have to draw anything)?
+    virtual void doHide ( const bool _b ) { hide = _b ; } ///< Hide the display
+    virtual bool isMiniDisplay () const { return miniDisplay ; } ///< Is this a mini display in the amino acid module?
+    virtual void setMiniDisplay ( const bool _b ) { miniDisplay = _b ; } ///< This is a mini display in the amino acid module
+    virtual SeqBasic *getLastWhere() const { return lastwhere ; } ///< Returns a pointer to the last marked seq structure
+    virtual void setLastWhere ( SeqBasic * const where ) { lastwhere = where ; }
+    virtual bool isPrinting () const { return printing ; } ///< Are we printing (or drawing on the screen)?
+    virtual void forceOverwrite ( const bool _b ) { forceoverwrite = _b ; } ///< Ensure overwrite mode (for example, ABI and PCR mode)
+    virtual bool getEditMode () const { return editMode ; } ///< Are we editing?
     virtual void setEditMode ( bool _b ) ; ///< Sets wether we're editing
-    virtual void setLowX ( int _i ) { if ( lowx < _i ) lowx = _i ; } ///< Minimum X coodrinate to draw
-    virtual void startEdit ( wxString id ) ; ///< Initiate editing mode
+    virtual void setLowX ( const int _i ) { if ( lowx < _i ) lowx = _i ; } ///< Minimum X coodrinate to draw
+    virtual void startEdit ( const wxString& id ) ; ///< Initiate editing mode
     virtual void stopEdit () ; ///< Terminate editing mode
-    virtual int markedFrom () { return _from ; } ///< Return first marked position, or -1
-    virtual int markedTo () { return _to ; } ///< Return last marked position, or -1
+    virtual int markedFrom () const { return _from ; } ///< Return first marked position, or -1
+    virtual int markedTo () const { return _to ; } ///< Return last marked position, or -1
     virtual void unmark () ; ///< Removes any marking
-    virtual int NumberOfLines() { return seq.GetCount() + blankline ; } ///< Returns the number of seq struntures AND blank lines
-    virtual void set_font_size ( int size = 12 ) ;
+    virtual int NumberOfLines() const { return seq.GetCount() + blankline ; } ///< Returns the number of seq struntures AND blank lines
+    virtual void set_font_size ( const int size = 12 ) ;
     virtual TVector *getPCR_DNA_vector() ; ///< Returns a pointer to the DNA vector in PCR mode; otherwise, NULL
 
     ChildBase *child ; ///< Wanna-be universal pointer to the containing module
@@ -616,13 +616,14 @@ class SequenceCanvas : public wxScrolledWindow
     virtual wxBitmap *getSequenceBitmap () ; ///< Returns the sequences display as a bitmap
     virtual void showContextMenu ( SeqBasic *where , int pos , wxPoint pt ) ; ///< Generates the context menu
     virtual void insertRestrictionSite ( bool left ) ; ///< Creates a new restriction site via simulated editing, left or right of the current mark
-    virtual void editSequence ( int k , wxKeyEvent& event ) ;
-    virtual void editCharPressed ( int k , TVector *v , wxString *the_sequence ) ;
-    virtual void editSpecialKeyPressed ( int k , TVector *v , wxString *the_sequence , int wy , wxKeyEvent& event ) ;
+    virtual void editSequence ( const int k , wxKeyEvent& event ) ;
+    virtual void editCharPressed ( const int k , TVector *v , wxString *the_sequence ) ;
+    virtual void editSpecialKeyPressed ( const int k , TVector *v , wxString *the_sequence , int wy , wxKeyEvent& event ) ;
 
     bool printToColor , drawall , horizontal , hide , miniDisplay , preventUpdate ;
     bool marking , drawing , printing , wantOverwrite , forceoverwrite ;
     bool editMode ;
+    bool captured ; 
     wxDC *print_dc ;
     int _from , _to ; // Mark
     int mark_firstrow , mark_lastrow ;

@@ -115,6 +115,7 @@ PlasmidCanvas::PlasmidCanvas(wxWindow *parent, const wxPoint& pos, const wxSize&
     lastbp = -1 ;
     lasttooltip = -1 ;
     hasBeenPainted = false ;
+    captured = false ;
     tt = new wxToolTip ( _T("") ) ;
     }
 
@@ -283,7 +284,7 @@ wxString PlasmidCanvas::getSelection() const
 
 
 void PlasmidCanvas::OnEvent(wxMouseEvent& event)
-{
+    {
     if ( !p || !p->vec ) return ;
     if ( !hasBeenPainted ) return ;
     if ( w == 0 || h == 0 ) return ;
@@ -333,11 +334,17 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
         pt2.y = pt.y * STANDARDRADIUS / h ;
         vo = findVectorObjectLinear ( pt2 ) ;
         }
+    else
+        {
+        wxPrintf("E: Unknown mode: %d", mode ) ;
+	return ;
+	}
 
     // Capturing/releasing mouse for left click
     if ( event.LeftDown() )
         {
         CaptureMouse() ;
+	captured = true ; 
         initialclick = true ;
         mousediffx = mousediffy = 0 ;
         }
@@ -345,12 +352,25 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
         {
         lastbp = -1 ;
         initialclick = false ;
-        ReleaseMouse() ;
+	if (captured)
+	    {
+            ReleaseMouse() ;
+	    }
+	else
+	    {
+	    // Upon some wild double-clicks, at times a release is attempted on a window that was not captured
+	    // This demands some further investigation.
+	    wxPrintf( "I: Prevented attempt to release a window that was not captured.\n" ) ;
+	    }
+	captured = false ; 
         }
 
     // Scroll wheel
     int wr = event.GetWheelDelta() ;
-    if ( wr != 0 ) wr = event.GetWheelRotation() * event.GetLinesPerAction() * ( wr < 0 ? 1 : -1 ) * zoom * 4 / 100 ;
+    if ( wr != 0 )
+        {
+        wr = event.GetWheelRotation() * event.GetLinesPerAction() * ( wr < 0 ? 1 : -1 ) * zoom * 4 / 100 ;
+	}
 
     if ( wr != 0 && zoom != 100 )
         {
@@ -722,22 +742,24 @@ int PlasmidCanvas::findRestrictionSite ( const int x , const int y ) const
     for ( int a = 0 ; a < p->vec->rc.size() ; a++ )
         {
         if ( pointinrect ( x , y , p->vec->rc[a].lastrect ) )
-             return a ;
+            {
+            return a ;
+	    }
         }
     return -1 ;
     }
 
 bool PlasmidCanvas::pointinrect ( const int x , const int y , const wxRect &a ) const
     {
-    if ( x >= a.GetLeft() &&
-         x <= a.GetRight() &&
-         y >= a.GetTop() &&
-         y <= a.GetBottom() )
+    if ( x >= a.GetLeft() && x <= a.GetRight() &&
+         y >= a.GetTop() && y <= a.GetBottom() )
+	 {
          return true ;
+	 }
     return false ;
     }
 
-void PlasmidCanvas::invokeVectorEditor ( wxString what , int num , bool forceUpdate )
+void PlasmidCanvas::invokeVectorEditor ( const wxString& what , const int num , const bool forceUpdate )
     {
     if ( p->def == _T("AminoAcids") )
         {
@@ -759,7 +781,6 @@ void PlasmidCanvas::invokeVectorEditor ( wxString what , int num , bool forceUpd
         ve.initialViewEnzyme ( p->vec->rc[num].e->getName() ) ;
         }
 
-    //int x =
     ve.ShowModal () ;
     ve.cleanup () ;
     if ( forceUpdate || p->vec->isChanged() )
