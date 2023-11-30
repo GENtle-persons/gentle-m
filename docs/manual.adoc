@@ -27,11 +27,23 @@ GENtle is ©2004 by Magnus Manske, licensed under GPL.
 
 This manual is ©2004 by its authors, licensed under GFDL.
 
+== Project Tree
+
+The initial contact with GENtle is made with the the tree to the left of the program window. It lists all the data types that GENtle is prepared to work with, and this document has the very same structure, describing
+
+1. <<dna,DNA>>
+2. DNA fragments and their <<ligation,Ligation>>
+3. <<sequencing,Sequencing>>
+4. <<pcr_and_primer_design,PCR/Primers>>
+5. <<alignments,Alignments>>
+6. Amino acid sequences / <<protein,Proteins>>
+7. Other smallish bits and pieces
+
 == DNA
 
 .DNA module
-image::images/Grafik1.png[]
-//width="8.501cm" depth="6.152cm"
+image::images/Grafik1.png["DNA Module",width="1000mm"]
+//depth="6.152cm"
 
 Within the DNA module, DNA sequences can be viewed, edited and annotated. It is the central module of GENtle.
 Two major components of the DNA module are the https://en.wikibooks.org/wiki/GENtle/DNA_map[DNA map] and the https://en.wikibooks.org/wiki/GENtle/Sequence_map[Sequence map]; see there for details.
@@ -51,6 +63,8 @@ To reproduce the screenshot of the DNA module via file input perform the followi
    - Visit that URL
    - Select "Send to:" -> ("Complete Record","File") which yields a file "sequence.db" in your download folder.
 2. In GENtle use "File" -> "Import" and select that file.
+
+It is a general concept of GENtle that routines that generate a new sequence will have that sequence shown next to other sequences that are already in the project. This works also across different sequence types. An open reading frame that gets translated will spawn a new amino acid sequence. An endonuclease applied to a DNA will yield DNA fragments - which may have sticky ends and thus are treated not as regular DNA sequences. This GenBank entry will be the origin of several graphs throughout this manual.
 
 === Toolbar
 
@@ -152,39 +166,39 @@ Also, depending on the properties of the object, some functions might not be ava
 ==== Features
 
 .Functions available for DNA/amino acid features
-[cols="1,2"]
+[cols="1,1,2"]
 |===
-|Edit feature|Edit the feature properties (see http://en.wikibooks.org/wiki/GENtle/Sequence_editor[Sequence editor])
-|Hide feature|Hide the feature from display
-|Delete feature|Delete the feature
-|DNA Sequence/Mark feature sequence|Mark the DNA sequence that matches the feature
-|DNA Sequence/Mark and show feature sequence|Mark the DNA sequence that matches the feature and shows it in the sequence
-|DNA Sequence/Copy (coding) DNA sequence|Copies the DNA sequence that matches the feature to the clipboard
-|DNA Sequence/This feature as new sequence|Generates a new DNA sequence based on the feature
-|DNA Sequence/BLAST DNA|Runs a BLAST search for the DNA of the feature
-|Amino acid sequence/Copy amino acid sequence|Copies the amino acid sequence of the feature to the clipboard
-|Amino acid sequence/As new entry|Generates a new protein entry based on the amino acid sequence of the feature
-|Amino acid sequence/Blast amino acids|Runs a BLAST search for the amino acid sequence of the feature
+|Edit feature |Edit feature properties |(see http://en.wikibooks.org/wiki/GENtle/Sequence_editor[Sequence editor])
+|Hide feature | |Hide the feature from display
+|Delete feature | |Delete the feature
+|DNA Sequence |Mark feature sequence |Mark the DNA sequence that matches the feature
+|DNA Sequence |Mark and show feature sequence |Mark the DNA sequence that matches the feature and shows it in the sequence
+|DNA Sequence |Copy (coding) DNA sequence |Copies the DNA sequence that matches the feature to the clipboard
+|DNA Sequence |This feature as new sequence |Generates a new DNA sequence based on the feature
+|DNA Sequence |BLAST DNA|Runs a BLAST search for the DNA of the feature
+|Amino acid sequence |Copy amino acid sequence |Copies the amino acid sequence of the feature to the clipboard
+|Amino acid sequence |As new entry |Generates a new protein entry based on the amino acid sequence of the feature
+|Amino acid sequence |Blast amino acids |Runs a BLAST search for the amino acid sequence of the feature
 |===
 
 ==== Open reading frames (ORFs)
 
 .Functions available for Open Reading Frames
-[cols="1,2"]
+[cols="1,1,2"]
 |===
-|As new feature|Generate a new feature from the ORF, with the appropriate reading frame and direction
-|DNA sequence/Copy DNA sequence|Copies the DNA sequence of the ORF to the clipboard
-|DNA sequence/As new DNA|Generates a new DNA sequence entry based on the DNA sequence of the ORF
-|DNA sequence/BLAST DNA|Runs a BLAST search for the DNA sequence of the ORF
-|Amino acid sequence/Copy amino acid sequence|Copies the amino acid sequence of the ORF to the clipboard
-|Amino acid sequence/As new AA|Generates a new protein entry based on the amino acid sequence of the ORF
-|Amino acid sequence/BLAST amino acids|Runs a BLAST search for the amino acid sequence of the ORF
+|As new feature | |Generate a new feature from the ORF, with the appropriate reading frame and direction
+|DNA sequence |Copy DNA sequence |Copies the DNA sequence of the ORF to the clipboard
+|DNA sequence |As new DNA |Generates a new DNA sequence entry based on the DNA sequence of the ORF
+|DNA sequence |BLAST DNA |Runs a BLAST search for the DNA sequence of the ORF
+|Amino acid sequence |Copy amino acid sequence |Copies the amino acid sequence of the ORF to the clipboard
+|Amino acid sequence |As new AA |Generates a new protein entry based on the amino acid sequence of the ORF
+|Amino acid sequence |BLAST amino acids |Runs a BLAST search for the amino acid sequence of the ORF
 |===
 
 === Sequence map
 
-.Sequence Map
-image::images/Grafik3.png[]
+.Sequence map
+image::images/Grafik3.png["Sequence Map",width="1000mm"]
 //width="8.501cm" depth="5.64cm"
 
 The sequence map is used by most GENtle modules.
@@ -202,14 +216,14 @@ The available functions in the context menu vary with the module the sequence ma
 .Funftions available as context menu
 [cols="1,2"]
 |===
-|Edit sequence|Turn on edit mode
-|Transform sequence|Invert and/or complement the sequence (http://en.wikibooks.org/wiki/GENtle/DNA[DNA] module only)
-|Limit enzymes|Limit enzymes so that only enzymes below a certain number of cuts in the sequence is shown (http://en.wikibooks.org/wiki/GENtle/DNA[DNA] module only)
-|PCR|Compare http://en.wikibooks.org/wiki/GENtle/DNA_map[DNA map]
-|Selection|Compare http://en.wikibooks.org/wiki/GENtle/DNA_map[DNA map]
-|Copy as image|Copys the sequence map as a bitmap to the clipborad (Caveat : Such a bitmap can take up a huge amount of memory, depending on the length of the sequence)
-|Save as image|Saves the sequence map in one of several image formats
-|Print sequence|Prints the sequence
+|Edit sequence |Turn on edit mode
+|Transform sequence |Invert and/or complement the sequence (http://en.wikibooks.org/wiki/GENtle/DNA[DNA] module only)
+|Limit enzymes |Limit enzymes so that only enzymes below a certain number of cuts in the sequence is shown (http://en.wikibooks.org/wiki/GENtle/DNA[DNA] module only)
+|PCR |Compare http://en.wikibooks.org/wiki/GENtle/DNA_map[DNA map]
+|Selection |Compare http://en.wikibooks.org/wiki/GENtle/DNA_map[DNA map]
+|Copy as image |Copys the sequence map as a bitmap to the clipborad (Caveat : Such a bitmap can take up a huge amount of memory, depending on the length of the sequence)
+|Save as image |Saves the sequence map in one of several image formats
+|Print sequence |Prints the sequence
 |===
 
 === Keys
@@ -249,7 +263,7 @@ In some modules, the sequence display can be toggled to horizontal. This can enh
 == Protein
 
 .Protein module
-image:images/Grafik4.png[]
+image:images/Grafik4.png["Protein Module",width="1000mm"]
 //width="8.501cm" depth="6.152cm"
 
 In this module, amino acid sequences (peptides/proteins) can be viewed, edited and annotated.
@@ -277,28 +291,33 @@ The smaller display on the top can show several types of information:
 .Summary of protein properties
 [cols="1,2"]
 |===
-|Data|Shows some basic data that has been calculated from the sequence
-|Description|Shows the sequence description
-|Scheme|Shows a http://en.wikibooks.org/wiki/GENtle/DNA_map[DNA map]-like layout of the whole protein
-|AA weight|Shows a plot of the molecular weight of the individual amino acids
-|AA isoelectric point|Shows a plot of the isoelectric point of the individual amino acids
-|Hydrophobicity|Shows a plot of the local hydrophobicity of the amino acids nearby
-|Chou-Fasman plot|Shows a detailed Chou-Fasman-plot
+|Data |Shows some basic data that has been calculated from the sequence
+|Description |Shows the sequence description
+|Scheme |Shows a http://en.wikibooks.org/wiki/GENtle/DNA_map[DNA map]-like layout of the whole protein
+|AA weight |Shows a plot of the molecular weight of the individual amino acids
+|AA isoelectric point |Shows a plot of the isoelectric point of the individual amino acids
+|Hydrophobicity |Shows a plot of the local hydrophobicity of the amino acids nearby
+|Chou-Fasman plot |Shows a detailed Chou-Fasman-plot for secondary structure prediction
 |===
+
+=== Sequence representation
+
+The presentation of the amino acid sequence in the Sequence Canvas ist mostly equivalent to the representation of DNA, except for the obvious presentation of the amino acid residues and the DNA is not shown.
+The context menu is also mostly the same.
 
 === Special menus
 
 .Special menus
 [cols="1,2"]
 |===
-|Edit/Photometer analysis|Invokes the respective http://en.wikibooks.org/wiki/GENtle/Calculators#Protein_calculator[calculator]
-|Edit/'Backtranslate' DNA|Attempts to generate the DNA sequence which codes for this amino acid sequence, using the full range of IUPAC base letters
+|Edit/Photometer analysis|Invokes the respective http://en.wikibooks.org/wiki/GENtle/Calculators#Protein_calculator[calculator], data of the current selected peptide are transferred to it.
+|Edit/'Backtranslate' DNA|Attempts to generate the DNA sequence which codes for this amino acid sequence, using the full range of IUPAC base letters.
 |===
 
 == PCR and Primer Design
 
 .Virtual PCR and primer design
-image::images/Grafik5.png[]
+image::images/Grafik5.png["Virtual PCR and Primer Design",width="1000mm"]
 //width="8.501cm" depth="6.152cm"
 
 This module allows for designing primers and running virtual PCRs.
@@ -308,12 +327,12 @@ These will only be rough suggestions, and are in no way optimized by default.
 
 === Toolbar
 
-* Enter new primer
-* Open primer/sequence
+* Manually enter new primer. This can then be added to a virtual PCR.
+* Open primer/sequence from file
 * Print PCR
-* Add a primer (you will have to open or enter the primer first)
+* Add a primer (you will have to open or enter the primer first). Added primers are auto-annealing to the sequence at the respective optimal optimal position and direction.
 * Export a primer (generate its sequence)
-* Edit mode
+* Edit mode (=`F2`)
 * Show/hide features
 * Polymerase running length
 * Horizontal mode
@@ -322,16 +341,17 @@ The polymerase running length is the number of nucleotides the polymerase is all
 
 === Primer list
 
-The primer list (the upper left) shows all primers used in this PCR, as well as certain key properties of these.
-Selecting one of these primers will show more detailed information in the box on the right (see http://en.wikibooks.org/wiki/GENtle/Edit_primer_dialog#Properties_display[here] for details).
+The primer list (the upper left) shows all primers used in this PCR, as well as certain key properties of these, e.g. length, melting temperature T_m_, and direction when annealed to current sequence at optimal position.
+
+Selecting one of these primers will trigger the display of more detailed information on the respective primer in the box on the right (see http://en.wikibooks.org/wiki/GENtle/Edit_primer_dialog#Properties_display[here] for details).
 Double-clicking one of the primers will mark and show that primer in the sequence.
-A selected primer can be removed through the Remove button, or http://en.wikibooks.org/wiki/GENtle/Edit_primer_dialog[edited] via the Edit button.
-A selected primer can also be exported via the Export button in the toolbar; a new sequence will be generated for that primer.
+A selected primer can be
 
-Caveat : The generated sequence is not stored anywhere automatically, it needs to be saved manually!
+* removed through the Remove button, or
+* http://en.wikibooks.org/wiki/GENtle/Edit_primer_dialog[edited] via the Edit button (see dialog "editing primers"),
+* exported via the Export button in the toolbar; a new sequence will be generated for that primer.  Caveat : The generated sequence is not stored anywhere automatically, it needs to be saved manually!
 
-Caveat : To add a primer, use the Add button in the toolbar, or the Selection as new primer context menu.
-Merely editing the sequence (see below) is for editing existing primers only, it will not create new ones!
+Note: To add a primer, use the Add button in the toolbar, or the Selection as new primer context menu. Merely editing the sequence (see below) is for editing existing primers only, it will not create new ones!
 
 === Sequence
 
@@ -339,36 +359,44 @@ The sequence consists of the following lines:
 
 * Features of the template DNA (can be turned off in the toolbar)
 * 5' primer
-* Template DNA (5'→3')
-* Amino acid sequence of the template
-* Template DNA (3'→5')
+* Template DNA sequence (5'→3')
+* Template amino acid sequence
+* Template DNA sequence (3'→5')
 * 3' primer
 * Restriction sites of the resulting DNA
-* Resulting DNA (shown in green)
+* Resulting DNA sequence (shown in green)
 * Amino acid sequence of the resulting DNA
 * Some special functions and properties of the PCR sequence display:
-* The amino acid reading frame can be set as described http://en.wikibooks.org/wiki/GENtle/Sequence_map#Keys[here].
+  The amino acid reading frame can be set as described http://en.wikibooks.org/wiki/GENtle/Sequence_map#Keys[here].
   This will affect both amino acid sequences shown (template and result).
-* Only the two primer sequences can be edited; overwrite mode is mandatory, and deleting is disabeled.
+
+=== Primer sequences
+
+* Only the two primer sequences (2nd and 6th line) can be edited; overwrite mode is mandatory, and deleting is disabeled.
 * To delete a nucleotide, overwrite it with Space.
-* The "." key will copy the matching template nucleotide to that position in the primer sequence.
-* Matching primer nucleotides (that is, matching with the template) are shown in blue, mismatches in red.
-* If (when not in edit mode) an empty span of the primer sequence is selected, it can be turned into a new primer via the context menu (Selection as new primer).
+* The "`.`" key will copy the matching template nucleotide to that position in the primer sequence.
+* Primer nucleotides matching with the template are shown in blue, mismatches in red.
+* If (when not in edit mode) an empty span of the primer sequence is selected, it can be turned into a new primer via the context menu (Selection as new primer). _No_ new primer is added upon editing an empty space in the primer sequence.
+
+=== Yielded resulting sequences
+
+Resulting DNA- and amino acid sequences can be copied to the clipboard via the context menu or be added to the project as a new DNA or amino acid sequence. The copying preserves the sequence erhalten, features und restriction enzymes are lost.
+
+=== Speciel menus
+
 * The sequence of a restriction site can be inserted left or right of a selection (in edit mode, right or left of the cursor) via the context menu. A selection dialog for the desired enzyme will appear.
 
 A http://en.wikibooks.org/wiki/GENtle/Silent_Mutagenesis[silent mutation] can be introduced via the context menu.
 
-
-Finally, the resulting DNA or amino acid sequence (the green sequence, which will be the one generated by the PCR) can be copied to the clipboard or generated as a new sequence (containing all features, restriction enzymes etc.) via the context menu.
-
 == Sequencing
 
 .Sequencing module
-image::images/Grafik6.png[]
+image::images/Grafik6.png["Sequencing Module",width="1000mm"]
 //width="8.501cm" depth="6.152cm"
 
 The sequencing module allows to view the data recorded by a sequence analyser.
-The data is loaded by importing the appropriate .abi/.ab1 file.
+The data is loaded by importing the appropriate ABI-formatted .abi/.ab1 file
+and such raw data on the sequencing is displayed.
 
 http://en.wikibooks.org/wiki/GENtle/Sequencing
 
@@ -389,6 +417,12 @@ The text window on the upper right shows data stored in the file. On the left si
 
 http://en.wikibooks.org/wiki/GENtle/Sequencing
 
+=== Editing
+
+In Edit mode, nucleotides can be replaced; however, inserting or removing nucleotides is not possible.
+
+Note: When saving the sequencing, only the sequence is stored, and the graphics are not retained.
+
 === Toolbar
 
 * Enter new sequence
@@ -397,19 +431,15 @@ http://en.wikibooks.org/wiki/GENtle/Sequencing
 * Copy sequence to clipboard
 * Horizontal mode
 
-=== Caveats
-
-Editing works in overwrite-mode only.
-
-Saving will only store the sequence in the database, not the sequencer data (the peaks), due to memory concerns.
-
 == Alignments
 
 .Sequence alignment
-image::images/Grafik7.png[]
+image::images/Grafik7.png["Sequence Alignment",width="1000mm"]
 //width="8.501cm" depth="6.152cm"
 
-The alignment module displays alignments of DNA and amino acid sequences. It can be invoked through Tools/Alignment or `Ctrl-G`.
+The alignment module displays alignments of DNA and amino acid sequences. It can be invoked through the menu Tools/Alignment or the keyboard shortcut `Ctrl-G`.
+
+When the module is launched, the settings dialog appears, which can also be accessed later through the respective button. When importing an alignment from a file (via menu File/Import), this dialog is not called because an alignment already exists that only needs to be displayed.
 
 === Settings dialog
 
@@ -431,13 +461,15 @@ Caveat : Clicking OK in this dialog will recalculate the alignment; the previou
 
 Several functions and display options can be invoked in the tool bar:
 
-* Enter sequence
-* Open sequence
-* Save sequence
-* Print sequence
-* Settings
-* Horizontal mode
-* Middle mouse button function
+|===
+|Enter sequence |Manually enter new sequence
+|Open sequence |Open file with sequence.
+|Save sequence |Save sequence/alignment.
+|Print sequence |
+|Settings |Opens the settings dialog.
+|Horizontal mode |Shows alignment as long line.
+|Middle mouse button function |Allows to perform alignment functions via the sequence' context menu.
+|===
 
 http://en.wikibooks.org/wiki/GENtle/Alignments
 
@@ -456,6 +488,7 @@ Some of them exlude one another:
 * Inverted (shows white text on colored background)
 
 Some other display options are planned, but not implemented as of now.
+There are many external tools available for alignments, please check out https://doua.prabi.fr/software/seaview[seaview] and https://www.jalview.org/[Jalview].
 
 === Sequence display
 
@@ -483,10 +516,15 @@ The editable fields are shown in blue, the (major) results of the calculation ar
 === Ligation calculator
 
 This calculator gives the amount (in µl) of vector and insert for a ligation, based on the length and concentration of each respectively, their desired ration and total mass of DNA. A typical ratio of insert:vector is 4:1 or 5:1.
+Also to be specified is the desired total mass of ligated molecules.
+If no specific total mass is required, this value can still influence the result to generate "pipetteable" amounts (e.g., 2 μl instead of 0.34 μl).
 
 === DNA concentration calculator
 
-This calculator gives the amount and putiry of DNA based on photometric absorption at 260 and 280 nm, respectively, as well as the dilution (in case one measures a 1:100 dilution of the original DNA sample) and a correction factor for different types of nucleic acids.
+From photometer readings of DNA solution absorption at 260 nm and 280 nm, purity and quantity of DNA can be calculated.
+If a diluted DNA solution was measured, the DNA quantity of the stock solution can be calculated by specifying the dilution factor. For undiluted DNA solution, a 1:1 ratio (input "1") should be used.
+
+When measuring single-stranded DNA/RNA or oligonucleotides, the corresponding correction factor needs to be entered.
 
 http://en.wikibooks.org/wiki/GENtle/Calculators
 
@@ -494,7 +532,7 @@ http://en.wikibooks.org/wiki/GENtle/Calculators
 
 This calculator gives the amount and purity of peptides/proteins based on photometric absorption at 250 and 280 nm, respectively, as well as the molecular weight of the peptide, the layer thickness of the cuvette used, and the number of tryptophanes, tyrosines and cysteines in the peptide.
 
-This calculator can also be invoked via the Edit/Photmeter analysis menu in the http://en.wikibooks.org/wiki/GENtle/Protein[Protein] module, in which case GENtle automatically fills in all values except the layer thickness and the photometric values.
+This calculator can also be invoked via the Edit/Photometer analysis menu in the http://en.wikibooks.org/wiki/GENtle/Protein[Protein] module, in which case GENtle automatically fills in all values except the layer thickness and the photometric values.
 
 === Data
 
@@ -503,7 +541,7 @@ This shows a codon table and a reverse codon table, both for standard code. This
 == Virtual Gel
 
 .Virtual Gel
-image::images/Grafik9.png[]
+image::images/Grafik9.png["Virtual Gel",width="1000mm"]
 //width="8.501cm" depth="6.152cm
 
 A "virtual agarose (DNA) gel" can be generated or expanded via the http://en.wikibooks.org/wiki/GENtle/Restriction_Assistant[Restriction Assistant].
@@ -513,7 +551,7 @@ Within the gel viewer, gel concentration can be varied. Also, labelling can be t
 == Image Viewer
 
 .Image Viewer
-image::images/Grafik10.png[]
+image::images/Grafik10.png["Image Viewer",width="1000mm"]
 //width="8.501cm" depth="6.152cm"
 
 The Image Viewer module can be invoked via Tools/Image viewer. It can display images, such as gel photos, print them, or save them in another image format.
@@ -527,6 +565,12 @@ The context menu of the image contains entries to save or print the image, or co
 Labels of IMG images are shown on screen, print, and saved images by default. This can be changed through the "Show labels" checkbox beneath the file list.
 
 An image can be inverted (black &lt;=&gt; white) through the "Invert" checkbox.
+
+Known issues:
+
+* The image display may appear rasterized during presentation, but it should still appear normal when printed.
+* If the image in the BioRad IMG file is annotated, the annotations may be displayed slightly offset.
+* If the image display is overlaid by another window, the display may disappear. Selecting the file again restores the correct image display.
 
 http://en.wikibooks.org/w/index.php?title=GENtle:The_whole_thing&amp;action=edit&amp;section=12
 
@@ -566,11 +610,13 @@ It can be invoked via Tools/Ligation or `Ctrl-L`.
 The left list shows all potential DNA sequences to be ligated. Some of these are automatically selected, but selection can be manually changed.
 The right list shows the possible products of a ligation of the selected sequences. Some circular products will be shown in two forms (A-B and B-A), which only differ visually.
 
-The selected products will be generated as new sequences on clicking the Ligate button.
+The selected ligation products will be generated as new sequences on clicking the Ligate button.
+
+In the calculation of possible ligation products, each available fragment is used at most once. For circular ligation products, two forms ("A-B" and "B-A") are displayed, which do not differ in sequence but differ in layout. In case of doubt, both should be generated, compared, and then one can be deleted
 
 === Options
 
-Global program options can be altered via Tools/Options.
+Global program options can be altered via menu item Tools/Options.
 
 ==== Global settings
 
@@ -647,6 +693,12 @@ Grabbing selected entries with the left mouse button and dragging them into the 
 
 Selected entries can be opened, renamed, and deleted via their context menu.
 
+===== Open
+
+A single entry can be opened by double-clicking. Multiple entries can be selected as a group by dragging a frame with the left mouse button or by selecting multiple entries while holding down the Ctrl key. They can be opened via the context menu Open or by pressing the Enter key.
+
+Entries can be renamed or permanently deleted through the context menu.
+
 ===== Save
 
 If you save an entry to a database, there will be an additional line below the lists. It consits of a drop-down box with the database to save the entry to, and a text box for the name. The name of the database is remembered if you originally opened that entry from a database, otherwise the standard database is the default.
@@ -655,6 +707,9 @@ Saving an entry to a database where an entry with that name already exists will 
 
 * If the sequence of the entry in the database is exactly the same as the sequence of the entry you're trying to save, a message box will ask you if you really want to overwrite that entry.
 * If the sequence of the entry in the database differs from the sequence of the entry you're trying to save, a message box will tell you that this action was preveneted. This will avoid accitential overwriting of an entry with a different sequence. If you are very certain you want to relpace that entry, you will have to delete the entry in the database manually via the context menu, as descibed above.
+
+
+When an entry in the list is selected, the name of the sequence to be saved changes accordingly. This is helpful when the new name of the sequence should resemble an existing one.
 
 === Databases
 
@@ -696,17 +751,23 @@ Once the MySQL setup is complete, MySQL databases can be created (by one) and ad
 
 The import dialog is a standard "file open" dialog. It can be invoked via Files/Import or `Ctrl-I`.
 
-Multiple files can be chosen to be imported in a row. GENtle will automatically try to determine the file type, but also a file type can be chosen manually.
+Multiple files can be chosen to be imported in a row. GENtle will automatically try to determine the file type, but also a file type can be chosen manually. Multiple files to import can be selected by holding the `Ctrl`-key.
 
 Supported formats include:
 
-* GenBank
-* GenBank XML
-* FASTA
-* ABI/AB1 (popular sequencer output format)
-* PDB (a 3D format, import as annotated sequence)
-* Clone (old DOS program, proprietary format)
-* Numerous other formats that will be imported as "sequence only", without annnotations, features etc.
+[options="header",cols="1,1,2"]
+|===
+|Format |Type | Comment
+|GenBank |Sequence |
+|GenBank XML |Sequence |
+|FASTA |Sequence |
+|ABI/AB1 |Sequencing |popular sequencer output format
+|PDB | Protein Structure |a 3D format, import as annotated sequence
+|Clone | |old DOS program, proprietary format
+3+|_Numerous other formats that will be imported as "sequence only", without annnotations, features etc._
+|===
+
+The FASTA format bears sequence information and a title line to describe that sequence, which is however unstructured. It is recommended to use the GenBank format for the import of genomic sequences or vectors.
 
 === Enter sequence
 
@@ -759,7 +820,9 @@ A double click will exit the dialog, and open the http://en.wikibooks.org/wiki/G
 image::images/Grafik17.png[]
 //width="8.501cm" depth="7.69cm"
 
-The sequence editor holds the key to several properties of a sequence. It consists of several tabs, depending on the type of sequence, which can be DNA or amino acid.
+In the Sequence Editor, properties of the sequence, features, as well as the specified restriction enzymes and proteases can be entered and edited.
+It consists of several tabs, depending on the type of sequence, which can be DNA or amino acid.
+All changes are applied to the sequence only after confirming with OK.
 
 http://en.wikibooks.org/w/index.php?title=GENtle:Sequence_editor&amp;action=edit&amp;section=1
 
@@ -778,19 +841,20 @@ This tab shows a list of all features of the sequence. Features can be added, ed
 Most of the settings should be self-explanatory.
 
 * The setting reading frame is only available when the type is set to "CDS" ("coding sequence").
-* A leading sequence is read 5'→3'; leading unchecked, 3'→5'
+* A leading sequence is read 5'→3' (default); leading unchecked, 3'→5'
 * Edit feature will invoke an additional "Edit feature" dialog
+
+Note: "clear selection" only refers to the selection process. The removal of features has its separate invocation.
 
 ==== Edit feature
 
 * Fill color is the color of the feature; it will invoke a color choice dialog
 * Type in sequence display determines how that feature is drawn in the http://en.wikibooks.org/wiki/GENtle:Sequence_map[sequence map]
+* Use offset sets the numbering for the first amino acid of the feature; useful if the feature marks a part of a protein
 
 .Feature editing
 image::images/Grafik19.png[]
 //width="8.501cm" depth="8.459cm
-
-Use offset sets the numbering for the first amino acid of the feature; useful if the feature marks a part of a protein
 
 The list box below contains original data from GenBank format import.
 
@@ -798,7 +862,7 @@ The list box below contains original data from GenBank format import.
 
 When editing a DNA sequence, two tabs with settings for restriction enzymes are available.
 The first one is identical to the http://en.wikibooks.org/w/index.php?title=GENtle:Enzyme_management&amp;action=edit[enzyme management] dialog.
-The second one is identical to the http://en.wikibooks.org/wiki/GENtle:Options#Enzyme_settings[global enzyme settings] tab, but contains the settings for this sequence alone. By default, its options are disabled, and the global options are used. By activation the options here, global settings are overridden.
+The second one ("Restriction enzymes 2") is identical to the http://en.wikibooks.org/wiki/GENtle:Options#Enzyme_settings[global enzyme settings] tab, but contains the settings for this sequence alone. By default, its options are disabled, and the global options are used. By activation the options here, global settings are overridden.
 
 .Sequence editor, enzyme settings tab.
 image::images/Grafik25.png[]
@@ -847,10 +911,10 @@ The restriction cocktail will be preserved so you can cut another DNA with that 
 
 === Projects
 
-A project in GENtle is a collection of sequences that belong together, even is tey are in different databases. Projects can be
+A project in GENtle is a collection of sequences that belong together, even is they are in different databases. Projects can be
 
-* loaded via File/Load Project or F11
-* saved via File/Save Project or F12
+* loaded via File/Load Project (or `F11`)
+* saved via File/Save Project (or `F12`)
 * closed via File/Close Project
 
 Depending on the http://en.wikibooks.org/wiki/GENtle/options[options], the last used project is automatically opened wehn GENtle starts.
@@ -863,8 +927,9 @@ For efficient use of sequencing primers, one can create a project that contains 
 === Edit primer dialog
 
 .Primer editing
-image::images/Grafik22.png[]
-This dialog assists in optimizing a primer. For that reason, many variants of the primer are generated and can be examined.
+image::images/Grafik22.png["Primer Editing Dialog"]
+
+This dialog assists in optimizing a primer. For that reason, many variants of the primer are generated and can be examined.  This dialog is opened upon marking a primer from the <<primer-list>> followed by invoking "Edit".
 
 The center line of the dialog shows the current variant of the primer; details of that variant are shown in the upper right box.
 OK will end the dialog, commiting that variant to the PCR module.
@@ -879,9 +944,14 @@ The "region" of variants can be influenced by multiple settings in the upper lef
 * The minimum and maximum length of the primer.
 * The minimum and maximum melting temperature of the primer.
 
-Any change of these settings will trigger a recalculation of possible variations.
-These variations are then evaluated and shown in the list in the lower half of the dialog.
-Double-clicking one of the varaiations will change the current variation in the center line, and the properties display in the upper right quarter of the dialog.
+Any change of these settings will trigger a recalculation of possible primers that are respecting the updated constraints.
+The computed primers are evaluated in the background and sorted by their score, presented together with other key values in a list in the lower half of the dialog.
+A double-click on one of these entries determines that selected variant as a new primr. It will then be presented in the middle row of the dialog and the text field presents detailed data on properties of that new primer in the upper-right quarter of the dialog.
+
+Upon RESET the primer initially selected in the primer list is restored.r
+With OK the current primer is added to the PCR-Module.
+It thus substitutes the initially selected primer of that list.
+CANCEL returns to the  PCR-Module without performing a persistent change, i.e. changes performed via the dialog are dropped.
 
 ==== Properties display
 
@@ -942,15 +1012,23 @@ Sequencing primers will display as yellow features, where the shade of yellow de
 image::images/Grafik27.png[]
 //width="8.501cm" depth="5.64cm"
 
-This dialog can find restriction enzymes that cut in a marked DNA sequence (context menu Selection/Show enzymes that cut here in the DNA module).
-It can also find alternate versions of the DNA which will translate into the same amino acid sequence, but contains a new restriction site (silent mutation).
-A chosen enzyme/mutation will appear in the sequence (DNA or primer, respectively) upon OK.
+This dialogue is accessed by marking a primer (or part of a primer) in the sequence. The dialogue is then called via the context menu SILENT MUTATION. The dialogue aids in the search for silent mutations, which introduce a new restriction site but do not alter the resulting amino acid sequence. Silent mutations are useful for verifying the success of a PCR. In this process, the DNA generated during PCR is cut with the chosen restriction enzyme. The number or length of the resulting DNA fragments indicates whether a new restriction site has been created by PCR, demonstrating the success of the PCR.
 
-The results can be changed by
+The search for silent mutations can be limited in the dialogue as follows:
 
-* changing which enzyme group to search
-* limiting the number of times an enzyme may cut in the whole sequence
-* limiting the number of mutations needed for a restriction site to manifest (PCR module only)
+Maximum number of mutations:: Primers should ideally closely match their target sequence, so the number of introduced mutations should be kept to a minimum.
+Ignore restriction enzymes that would cut more than X times:: If the entire vector is cut into many fragments by a restriction enzyme, an additional restriction site is difficult or impossible to detect.
+The group of enzymes for which silent mutations are sought can be determined:: Searching all enzymes can be time-consuming on slow computers and may yield many "good" results that often fail in practice due to the absence of the enzymes. Therefore, the group of current enzymes is selected by default when starting the dialogue.
+
+If any of these settings is changed, all matching silent mutations are immediately recalculated. The list of silent mutations shows, in each line:
+
+* The number of necessary mutations to introduce this site
+* The name of the restriction enzyme
+* The mutated sequence, with the original nucleotides in lowercase and the mutations in uppercase
+* The number of sites of this enzyme, before and after mutations, in the form "before => after"
+* The resulting DNA fragments (in square brackets) in a successful PCR.
+
+A double-click on one of the lines (or selecting a line and clicking OK) adopts the mutation(s) of the selected line. Additionally, the selected restriction enzyme, if necessary, is added to the PCR display.
 
 === Automatic annotation
 
@@ -965,6 +1043,15 @@ Invoked through Edit/Auto-annotate sequence or F9, a dialog opens, offering vari
 * Wether or not to use a user-generated database (and, if so, which one)
 * Wether or not to reduce the number of generated features (recommended; otherwise, a lot of features are annotated)
 * Wether or not to add unrecognized open reading frames as features
+
+=== Sequence Representation
+
+The entire sequence can be selected using `Ctrl-A` or through the menu Edit/Select All.
+Searching within a sequence can be done with `Ctrl-F` or through the menu Edit/Find.
+
+=== Restriction Enzyme Editor
+
+This dialog is used for managing restriction enzymes. It corresponds to the restriction enzyme section of the Sequence Editor (→IX.6).
 
 == FAQ
 
