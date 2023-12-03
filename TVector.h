@@ -60,7 +60,7 @@ class TORF
     TORF () ; ///< Default constructor, empty
     TORF ( const int _f , const int _t , const int _r ) ; ///< Constructor
     ~TORF () {} ; ///< Destructor (empty)
-    
+
     wxString getText () const ;
     void set ( const int _f , const int _t , const int _r ) ;
     inline int get_from () const { return from ; }
@@ -69,12 +69,12 @@ class TORF
 
     float dist1 , dist2 ;
     float deg1 , deg2 ;
-    
+
   private:
     /// \brief Start of ORF
     int from , to ; ///< End of ORF
     int rf ; ///< Reading frame
-    
+
     } ;
 
 /// This class stores a codon and the corresponding amino acid. Used by TVector
@@ -94,7 +94,7 @@ class TVectorItem
     TVectorItem () ; ///< Default constructor
     TVectorItem ( const wxString& sn , const wxString& n , const int f , const int t , const char ty ) ; ///< Constructor
     ~TVectorItem () {} ; ///< Destructor (empty)
-    
+
     wxBrush *getBrush () const ; ///< Returns a pointer to the brush used to draw the item
     wxColour getFontColor () const ; ///< Returns the font color
     void setColor ( const wxColour& col ) ; ///< Sets the font color
@@ -106,15 +106,15 @@ class TVectorItem
     void setOffset ( const int o = -1 ) ; ///< Sets the offset; -1 = no offset
     void setType ( const wxString& s ) ; ///< Sets the item type
     int getOffsetAt ( const int i ) const; ///< Returns the offset of the item at a specific position
-    
+
     void doRemove ( const int f , const int t , const int l ) ; ///< Remove a part of the item
-    wxString implodeParams () ; ///< Join item parameters for storage
+    wxString implodeParams () const ; ///< Join item parameters for storage
     void explodeParams ( const wxString& _s ) ; ///< Extract item parameters from stored form
-    wxTreeItemId getTreeID () { return treeid ; } ; ///< The current ID of the item in TVectorTree
+    wxTreeItemId getTreeID () const { return treeid ; } ; ///< The current ID of the item in TVectorTree
     void setTreeID ( wxTreeItemId newid ) { treeid = newid ; } ///< Set new item ID in TVectorTree
-    int getDirection () { return direction ; } ///< Return the direction
+    int getDirection () const { return direction ; } ///< Return the direction
     void setDirection ( int newdir ) { direction = newdir ; } ///< Set the direction
-    char getType () { return type ; } ///< Returns the item type
+    char getType () const { return type ; } ///< Returns the item type
     void setType ( char newtype ) { type = newtype ; } ///< Sets the item type
     int getMem () const ; ///< Estimates the memory usage of this item (debugging use only)
 
@@ -129,14 +129,16 @@ class TVectorItem
     void getArrangedAA ( TVector * const v , wxString &s , const int disp , SeqAA *aa = NULL ) ; ///< Generate the amino acid sequence in place, not const
     wxString getAminoAcidSequence () ; ///< Return the amino acid sequence
     void setLastVector ( TVector * const v) ; ///< Set the last TVector to own this item
-    
+
     // Variables
     /// \brief Item description
     wxString desc , name ; ///< Item name
 
     int from , ///< Item start
     	to ; ///< Item end
-    
+
+    wxString toString() const ;
+
   private:
     void initParams () ; ///< Reset parameters
 
@@ -185,21 +187,21 @@ class TVector
 
     // Nucleotide access/conversion
     bool basematch ( const char b1 , const char b2 ) const ; ///< matches DNA bases; b1 in IUPAC, b2 in SIUPAC. This is superior to the "=" operator :-)
-    void setIUPAC ( char b , wxString s , char *pac = NULL ) ;
+    void setIUPAC ( const char b , const wxString& s , char *pac = NULL ) ;
     char getNucleotide ( const int pos , const bool complement = false ) const ; ///< Returns the base at a certain position, or its complement
     void setNucleotide ( const int pos , const char t ) ; ///< Sets a base at a certain position
     char getComplement ( const char c ) const ; ///< Returns the complement of a given base
-    
+
     // Vector/sequence access
     void ligate_right ( TVector &v , const bool inverted = false ) ; ///< Adds another TVector to the right of this one
     void closeCircle () ; ///< Closes a linear sequence into a circular (intramolecular ligation)
     void turn ( const int off ) ; ///< Turns a circular sequence "off" bases
-    
+
     TVector *getAAvector ( const int from , const int to , const int dir = 1 ) const ; ///< Returns part of the sequence translated into amino acids
     void doAction () ; ///< Perform an action (restriction, usually). Internal use
     void doRemove ( const int from , const int to , const bool update = true , const bool enableUndo = true ) ; ///< Removes part of the sequence
     void insert_char ( const char x , const int pos , const bool overwrite = false ) ; ///< Inserts a character into the sequence
-    
+
     float getAAmw ( const char aa ) const ; ///< Returns the molecular weight of an amino acid
     float getAApi ( const char aa ) const ; ///< Returns the isoelectric point of an amino acid
     wxString dna2aa ( const wxString& codon , const int translation_table = -1 ) const ; ///< Translates a codon into an amino acid
@@ -207,18 +209,18 @@ class TVector
     void setDatabase ( const wxString& s ) { database = s ; } ///< Sets the database in which the sequence is stored
     const wxString getDatabase () const { return database ; } ///< Returns the database name in which the sequence is stored
     TVector *newFromMark ( const int from , const int to ) const ; ///< Generates a new sequence based on a part of this one
-    
+
     void setChanged ( const bool c = true ) ; ///< The sequence has been changed.
     bool isChanged () const { return changed ; } ///< Was the sequence changed?
-    
+
     void ClearORFs () ; ///< Clear the found open reading frames
     void addORFs ( const int off ) ; ///< Add open reading frames for a specific reading frame
 
     void removeBlanksFromSequence () ; ///< Removes blank chars (spaces etc.) from the sequence
     void removeBlanksFromVector () ; ///< Removes blank chars (spaces etc.) from the sequence, altering items if necessary
-    
+
     wxString getParams () const ; ///< Return sequence parameters
-    void setParams ( wxString t ) ; ///< Set sequence parameters
+    void setParams ( const wxString& t ) ; ///< Set sequence parameters
     wxString getParam ( const wxString& key ) const ; ///< Return the value of a parameter
     void setParam ( const wxString& key , const wxString& value ) ; ///< Set a parameter key/value pair
     void setWindow ( ChildBase * const c ) ; ///< Set the window which owns this sequence
@@ -231,8 +233,8 @@ class TVector
     wxString getStickyEnd ( const bool left , const bool upper ) const ; ///< Returns one of the possible sticky ends
     bool hasStickyEnds () const ; ///< Does this sequence have sticky ends?
     void callUpdateUndoMenu () ; ///< Refreshes the Undo menu
-    void setFromVector ( TVector v ) ; ///< Makes this sequence a copy of another one (v)
-    void doRemoveNucleotide ( int x ) ; ///<Removes single base at position x
+    void setFromVector ( /* not yet const */ TVector /* & */ v ) ; ///< Makes this sequence a copy of another one (v)
+    void doRemoveNucleotide ( const int x ) ; ///<Removes single base at position x
     int getItemLength ( int a ) ; ///< Return the length of item a
     TVector *backtranslate ( const wxString& mode = _T("") ) ; ///< Generate a new DNA sequence from this amino acid sequence
     wxString getStrand53 () const ; ///< Returns the 5'->3' strand of the sequence
@@ -254,7 +256,7 @@ class TVector
     int getSequenceLength() const ; ///< Returns the sequence length
     void eraseSequence ( const int from , const int len ) ; ///< Removes part of the sequence
     void removeAlignmentArtifacts ( const char what = '-' ) ; ///< Removes alignment artifacts from the sequence
-    
+
     const wxString getDescription () const ; ///< Returns the sequence description
     void setDescription ( const wxString& s ) ; ///< Sets the sequence description
     void addDescription ( const wxString& s ) ; ///< Appends to the sequence description
@@ -289,14 +291,14 @@ class TVector
     // Variables
     vector <TVectorItem> items ; ///< Items/features/annotations
     vector <TRestrictionCut> rc ; ///< Restriction enzyme cuts
-    
+
     wxArrayTRestrictionEnzyme re ,  ///< Manually specified restriction enzymes
                               re2 ; ///< Automatically added restriction enzymes
 
     wxArrayString proteases , ///< Proteases used
                   cocktail ;  ///< Enzymes from the last restriction
     TUndo undo ; ///< Undo information
-    
+
   private :
     wxString invert ( const wxString& s ) const ; ///< Inverts a string
     wxString vary_base ( const char b ) const ; ///< Turns a SIUPAC into a string of A, C, G, T
