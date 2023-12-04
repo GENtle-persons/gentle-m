@@ -39,7 +39,7 @@ We welcome contributions from the community to enhance GENtle and make it even m
 
 Please also inspect the
 
- * [GENtle documentation](git@github.com:GENtle-persons/gentle-m.git)
+ * [GENtle documentation](docs/manual.adoc)
  * [GENtle home page](http://gentle.magnusmanske.de/)
 
 ## License
