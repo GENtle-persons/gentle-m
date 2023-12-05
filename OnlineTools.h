@@ -20,7 +20,7 @@ class TOnlineTools
 
     private :
     void determine_marked_or_complete_sequence () ;
-    wxString get_fasta_name ( wxString ret = _T("") ) ;
+    wxString get_fasta_name ( wxString ret = _T("") ) const ;
 
     void do_phobius ( wxString additional = _T("") ) ;
     void do_poly_phobius () ;
@@ -34,7 +34,7 @@ class TOnlineTools
 
     void do_neb_cutter () ;
 
-    wxString get_fasta_sequences ( bool clean_gaps , bool for_clipboard ) ;
+    wxString get_fasta_sequences ( const bool clean_gaps , const bool for_clipboard ) const ;
 
     SequenceCanvas *canvas ;
     ChildBase *child ;
