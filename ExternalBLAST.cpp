@@ -1,10 +1,10 @@
 /** \file
-	\brief Contains the EIpanel methods and the blastThread helper class
+    \brief Contains the EIpanel methods and the blastThread helper class
 */
 #include "ExternalInterface.h"
 
 void EIpanel::init_blast()
-{
+    {
     RETMAX = 10 ;
     t1 = new wxTextCtrl ( up , ID_T1 , _T("") , wxDefaultPosition , wxDefaultSize , wxTE_PROCESS_ENTER ) ;
     b1 = new wxButton ( up , ID_B1 , txt("b_find") , wxDefaultPosition ) ;
@@ -39,123 +39,123 @@ void EIpanel::init_blast()
     st_msg = new wxStaticText ( up , -1 , _T("") ) ;
 
     v1->Add ( h0 , 0 , wxEXPAND , 0 ) ;
-//    v1->Add ( h1 , 0 , wxEXPAND , 3 ) ;
+//  v1->Add ( h1 , 0 , wxEXPAND , 3 ) ;
     v1->Add ( st_msg , 0 , wxEXPAND , 3 ) ;
     up->SetSizer ( v1 ) ;
 
     c1->SetSelection ( 0 ) ;
     c2->SetSelection ( 0 ) ;
     t1->SetFocus() ;
-}
+    }
 
 
 #if !wxUSE_THREADS
     #error "This requires thread support!"
 #endif // wxUSE_THREADS
 
-/**	\brief A wxThreadHelper class to run BLAST queries in the background
+/**    \brief A wxThreadHelper class to run BLAST queries in the background
 */
 class blastThread : public wxThreadHelper
 {
 public :
     /// Constructor
     blastThread ( EIpanel *panel , wxString seq ) : wxThreadHelper()
-	{
-	    p = panel ;
-	    seq.Replace ( _T("|") , _T("") ) ; // Amino acid search fix
+        {
+        p = panel ;
+        seq.Replace ( _T("|") , _T("") ) ; // Amino acid search fix
 
-	    // Put
-	    url = _T("http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?") ;
-	    url += _T("CMD=Put") ;
-	    url += _T("&QUERY=") + seq ;
-	    url += _T("&DATABASE=nr") ;
-	    if ( p->c1->GetSelection() == 0 ) url += _T("&PROGRAM=blastp") ;
-	    if ( p->c1->GetSelection() == 1 ) url += _T("&PROGRAM=blastn") ;
-	    url += _T("&HITLIST_SIZE=") + p->c2->GetStringSelection() ;
+        // Put
+        url = _T("http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?") ;
+        url += _T("CMD=Put") ;
+        url += _T("&QUERY=") + seq ;
+        url += _T("&DATABASE=nr") ;
+        if ( p->c1->GetSelection() == 0 ) url += _T("&PROGRAM=blastp") ;
+        if ( p->c1->GetSelection() == 1 ) url += _T("&PROGRAM=blastn") ;
+        url += _T("&HITLIST_SIZE=") + p->c2->GetStringSelection() ;
 
-	    res = ex.getText ( url ) ;
+        res = ex.getText ( url ) ;
 
-	    hs = parseQblast ( res ) ;
-	    RID = hs[_T("RID")] ;
-	    RTOE = hs[_T("RTOE")] ;
+        hs = parseQblast ( res ) ;
+        RID = hs[_T("RID")] ;
+        RTOE = hs[_T("RTOE")] ;
 
-	    // Prepare URL
-	    RTOE.ToLong ( &wait ) ;
-	    url = _T("http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?") ;
-	    url += _T("CMD=Get") ;
-	    url += _T("&RID=") + RID ;
-	    url += _T("&FORMAT_TYPE=XML") ;
-	} ;
+        // Prepare URL
+        RTOE.ToLong ( &wait ) ;
+        url = _T("http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?") ;
+        url += _T("CMD=Get") ;
+        url += _T("&RID=") + RID ;
+        url += _T("&FORMAT_TYPE=XML") ;
+        } ;
 
-	/// This display the time left, and (re-)checks online if the query is done
+    /// This display the time left, and (re-)checks online if the query is done
     virtual void *Entry ()
-	{
-	    // Get & wait
-	    do {
-		while ( wait )
-		{
+        {
+        // Get & wait
+        do {
+            while ( wait )
+                {
 #ifndef __WXMAC__
-		    wxMutexGuiEnter() ;
-		    p->showMessage ( wxString::Format ( txt("t_blast_time") , wait ) ) ;
-		    wxMutexGuiLeave() ;
+                wxMutexGuiEnter() ;
+                p->showMessage ( wxString::Format ( txt("t_blast_time") , wait ) ) ;
+                wxMutexGuiLeave() ;
 #endif
-		    wxThread::Sleep ( 1000 ) ; // Wait 1 sec
-		    wait-- ;
-		    if ( GetThread()->TestDestroy() ) // Currently, there's no way to interrupt this!
-			{
-			    // MISSING : Set search button to "on" again
-			    return NULL ;
-			}
-		}
-//		cout << res << endl << "----\n\n" ;
-		wxMutexGuiEnter() ;
-		res = ex.getText ( url ) ;
-		wxMutexGuiLeave() ;
+                wxThread::Sleep ( 1000 ) ; // Wait 1 sec
+                wait-- ;
+                if ( GetThread()->TestDestroy() ) // Currently, there's no way to interrupt this!
+                    {
+                    // MISSING : Set search button to "on" again
+                    return NULL ;
+                }
+            }
+//          cout << res << endl << "----\n\n" ;
+            wxMutexGuiEnter() ;
+            res = ex.getText ( url ) ;
+            wxMutexGuiLeave() ;
 
-		hs = parseQblast ( res ) ;
-		if ( hs[_T("STATUS")].Upper() == _T("WAITING") ) wait = 5 ; // Wait another 5 seconds
-		else wait = 0 ; // Done!
-	    } while ( wait ) ;
+            hs = parseQblast ( res ) ;
+            if ( hs[_T("STATUS")].Upper() == _T("WAITING") ) wait = 5 ; // Wait another 5 seconds
+            else wait = 0 ; // Done!
+        } while ( wait ) ;
 
-	    // Set result and display
-	    p->blast_res = res ;
-	    wxCommandEvent event( wxEVT_COMMAND_BUTTON_CLICKED, ID_B1 );
-	    wxPostEvent ( p , event ) ;
-	    return NULL ;
-	}
+        // Set result and display
+        p->blast_res = res ;
+        wxCommandEvent event( wxEVT_COMMAND_BUTTON_CLICKED, ID_B1 );
+        wxPostEvent ( p , event ) ;
+        return NULL ;
+        }
 private :
 
-	/// I'll be damned if I remember what this is for!
+    /// I'll be damned if I remember what this is for!
     wxHashString parseQblast ( wxString res )
-	{
-	    wxHashString ret ;
-	    wxString q1 = _T("QBlastInfoBegin") ;
-	    wxString q2 = _T("QBlastInfoEnd") ;
+        {
+        wxHashString ret ;
+        wxString q1 = _T("QBlastInfoBegin") ;
+        wxString q2 = _T("QBlastInfoEnd") ;
 
-	    int i ;
-	    i = res.First ( q1 ) ;
-	    if ( i == -1 ) return ret ;
-	    res = res.Mid ( i + q1.Length() ) ;
+        int i ;
+        i = res.First ( q1 ) ;
+        if ( i == -1 ) return ret ;
+        res = res.Mid ( i + q1.Length() ) ;
 
-	    i = res.First ( q2 ) ;
-	    if ( i == -1 ) return ret ;
-	    res = res.Left ( i - 1 ) ;
+        i = res.First ( q2 ) ;
+        if ( i == -1 ) return ret ;
+        res = res.Left ( i - 1 ) ;
 
-	    while ( !res.IsEmpty() )
-	    {
-		wxString k , v ;
-		k = res.BeforeFirst ( '\n' ) ;
-		res = res.AfterFirst ( '\n' ) ;
-		v = k.AfterFirst ( '=' ) ;
-		k = k.BeforeFirst ( '=' ) ;
-		v = v.Trim(true).Trim(false) ;
-		k = k.Trim(true).Trim(false) ;
-		if ( v.IsEmpty() || k.IsEmpty() ) continue ;
-		k.MakeUpper() ;
-		ret[k] = v ;
-	    }
-	    return ret ;
-	}
+        while ( !res.IsEmpty() )
+            {
+            wxString k , v ;
+            k = res.BeforeFirst ( '\n' ) ;
+            res = res.AfterFirst ( '\n' ) ;
+            v = k.AfterFirst ( '=' ) ;
+            k = k.BeforeFirst ( '=' ) ;
+            v = v.Trim(true).Trim(false) ;
+            k = k.Trim(true).Trim(false) ;
+            if ( v.IsEmpty() || k.IsEmpty() ) continue ;
+            k.MakeUpper() ;
+            ret[k] = v ;
+            }
+        return ret ;
+        }
 
     wxString res , url , RID , RTOE ;
     myExternal ex ;
@@ -166,13 +166,13 @@ private :
 
 /// This starts the thread
 void EIpanel::process_blast()
-{
+    {
     mylog ( "blast1" , "1" ) ;
     if ( !blast_res.IsEmpty() || blast_thread ) // If thread is running, or results are there...
     {
     mylog ( "blast1" , "1a" ) ;
-	process_blast2() ;
-	return ;
+    process_blast2() ;
+    return ;
     }
     mylog ( "blast1" , "2" ) ;
 
@@ -182,8 +182,8 @@ void EIpanel::process_blast()
     blast_thread = new blastThread ( this , seq ) ;
     if ( !blast_thread || wxTHREAD_NO_ERROR != blast_thread->CreateThread() )
     {
-	blast_thread = NULL ;
-	return ;
+    blast_thread = NULL ;
+    return ;
     }
     mylog ( "blast1" , "3" ) ;
 
@@ -191,32 +191,32 @@ void EIpanel::process_blast()
 
     if ( wxTHREAD_NO_ERROR != blast_thread->GetThread()->Run() )
     {
-	blast_thread = NULL ;
-	return ;
+    blast_thread = NULL ;
+    return ;
     }
     mylog ( "blast1" , "4" ) ;
 
     b1->Disable() ;
     mylog ( "blast1" , "5" ) ;
-}
+    }
 
 /// This is called upon termination of the thread
 void EIpanel::process_blast2()
-{
+    {
     bool initial = false ;
     mylog ( "blast2" , "1" ) ;
     if ( blast_thread )
-    {
+        {
 #ifdef __WXMSW__
-//	blast_thread->Wait() ;
-//	blast_thread->Delete() ;
+//    blast_thread->Wait() ;
+//    blast_thread->Delete() ;
 #endif
-	blast_thread = NULL ;
-	b1->Enable() ;
-	initial = true ;
-	res_count = 0 ;
-	res_start = 0 ;
-    }
+        blast_thread = NULL ;
+        b1->Enable() ;
+        initial = true ;
+        res_count = 0 ;
+        res_start = 0 ;
+        }
     mylog ( "blast2" , "2" ) ;
 
     TiXmlDocument blast_doc ;
@@ -243,62 +243,62 @@ void EIpanel::process_blast2()
     mylog ( "blast2" , "5" ) ;
     int a = 0 ;
     for ( x = x->FirstChild ( "Hit" ) ; x ; x = x->NextSibling ( "Hit" ) , a++ )
-	    {
-		if ( initial )
-			{
-			res_count++ ;
-			if ( a >= RETMAX ) continue ;
-			}
-		else
-			{
-	   	if ( a < res_start ) continue ;
-	   	if ( a >= res_start + RETMAX ) break ;
-			}
+        {
+        if ( initial )
+            {
+            res_count++ ;
+            if ( a >= RETMAX ) continue ;
+            }
+        else
+            {
+            if ( a < res_start ) continue ;
+            if ( a >= res_start + RETMAX ) break ;
+            }
 
-		wxString html ;
-		wxString name = valFC ( x->FirstChild ( "Hit_def" ) ) ;
-		wxString id = valFC ( x->FirstChild ( "Hit_id" ) ) ;
+        wxString html ;
+        wxString name = valFC ( x->FirstChild ( "Hit_def" ) ) ;
+        wxString id = valFC ( x->FirstChild ( "Hit_id" ) ) ;
 
-		name = name.BeforeFirst ( '>' ) ;
+        name = name.BeforeFirst ( '>' ) ;
 
-		TiXmlNode *h = x->FirstChild ( "Hit_hsps" ) ;
-		h = h->FirstChild ( "Hsp" ) ;
-		wxString evalue = valFC ( h->FirstChild ( "Hsp_evalue" ) ) ;
-		if ( evalue.Find ( 'e' ) > -1 )
-			{
-		   wxString base = evalue.BeforeFirst ( 'e' ) + _T("&times;10") ;
-		   wxString exp = _T("<font size=2>") + evalue.AfterFirst ( 'e' )  + _T("</font>") ;
+        TiXmlNode *h = x->FirstChild ( "Hit_hsps" ) ;
+        h = h->FirstChild ( "Hsp" ) ;
+        wxString evalue = valFC ( h->FirstChild ( "Hsp_evalue" ) ) ;
+        if ( evalue.Find ( 'e' ) > -1 )
+            {
+            wxString base = evalue.BeforeFirst ( 'e' ) + _T("&times;10") ;
+            wxString exp = _T("<font size=2>") + evalue.AfterFirst ( 'e' )  + _T("</font>") ;
 
-		   evalue = _T("<table border=0 cellpadding=0 cellspacing=0><tr><td rowspan=2 valign=bottom>E-Value=</td>") ;
-		   evalue += _T("<td align=left valign=bottom><br>") + base + _T("</td>") ;
-		   evalue += _T("<td align=right valign=top>") + exp + _T("</td>") ;
-		   evalue += _T("</tr></table>") ;
-			}
-		else evalue = _T("E-Value=") + evalue ;
+            evalue = _T("<table border=0 cellpadding=0 cellspacing=0><tr><td rowspan=2 valign=bottom>E-Value=</td>") ;
+            evalue += _T("<td align=left valign=bottom><br>") + base + _T("</td>") ;
+            evalue += _T("<td align=right valign=top>") + exp + _T("</td>") ;
+            evalue += _T("</tr></table>") ;
+            }
+        else evalue = _T("E-Value=") + evalue ;
 
-		wxString qseq = valFC ( h->FirstChild ( "Hsp_qseq" ) ) ;
-		wxString mseq = valFC ( h->FirstChild ( "Hsp_midline" ) ) ;
-		wxString hseq = valFC ( h->FirstChild ( "Hsp_hseq" ) ) ;
-		long qoff , hoff ;
-		valFC ( h->FirstChild ( "Hsp_query-from" ) ) . ToLong ( &qoff ) ;
-		valFC ( h->FirstChild ( "Hsp_hit-from" ) ) . ToLong ( &hoff ) ;
+        wxString qseq = valFC ( h->FirstChild ( "Hsp_qseq" ) ) ;
+        wxString mseq = valFC ( h->FirstChild ( "Hsp_midline" ) ) ;
+        wxString hseq = valFC ( h->FirstChild ( "Hsp_hseq" ) ) ;
+        long qoff , hoff ;
+        valFC ( h->FirstChild ( "Hsp_query-from" ) ) . ToLong ( &qoff ) ;
+        valFC ( h->FirstChild ( "Hsp_hit-from" ) ) . ToLong ( &hoff ) ;
 
-		html = _T("<table width=100%><tr>") ;
-		html += _T("<td rowspan=2>") + wxString::Format ( _T("%d") , a+1 ) + _T("</td>") ;
-		html += _T("<td valign=top width=100%>") + name + _T("</td>") ;
-		html += _T("<td align=right valign=top>") + evalue + _T("</td>") ;
-		html += _T("</tr><tr>") ;
-		html += _T("<td colspan=2><tt><font size=2>\n") ;
-		html += blast_align ( qseq , mseq , hseq , w , qoff , hoff ) ;
-		html += _T("</font></tt></td>") ;
-		html += _T("</tr></table>") ;
-		hlb->Set ( a - res_start , html , id ) ;
-	   }
+        html = _T("<table width=100%><tr>") ;
+        html += _T("<td rowspan=2>") + wxString::Format ( _T("%d") , a+1 ) + _T("</td>") ;
+        html += _T("<td valign=top width=100%>") + name + _T("</td>") ;
+        html += _T("<td align=right valign=top>") + evalue + _T("</td>") ;
+        html += _T("</tr><tr>") ;
+        html += _T("<td colspan=2><tt><font size=2>\n") ;
+        html += blast_align ( qseq , mseq , hseq , w , qoff , hoff ) ;
+        html += _T("</font></tt></td>") ;
+        html += _T("</tr></table>") ;
+        hlb->Set ( a - res_start , html , id ) ;
+        }
 
     mylog ( "blast2" , "6" ) ;
     hlb->Update () ;
     mylog ( "blast2" , "7" ) ;
-//    wxMessageBox ( wxString::Format ( "%d" , res_count ) ) ;
+//  wxMessageBox ( wxString::Format ( "%d" , res_count ) ) ;
     b_next->Enable ( res_start + RETMAX < res_count ) ;
     b_last->Enable ( res_start > 0 ) ;
     b3->Enable ( true ) ;
@@ -308,10 +308,10 @@ void EIpanel::process_blast2()
     showMessage ( wxString::Format ( txt("t_blast_results_by" ) , blast_version.c_str() , res_start+1 , max , res_count ) ) ;
     wxWakeUpIdle();
     mylog ( "blast2" , "8" ) ;
-}
+    }
 
 wxString EIpanel::blast_align ( wxString qseq , wxString mseq , wxString hseq , int cpl , int qoff , int hoff )
-{
+    {
     wxString lead[3] ;
     lead[0] = txt("t_blast_qseq" ) ;
     lead[2] = txt("t_blast_hseq" ) ;
@@ -334,45 +334,45 @@ wxString EIpanel::blast_align ( wxString qseq , wxString mseq , wxString hseq , 
 
     wxString ret ;
     while ( !qseq.IsEmpty() )
-    {
-//	ret += "<p>" ;
+        {
+//      ret += "<p>" ;
 	int a ;
-	wxString z ;
-	for ( a = 0 , z = qseq.Left ( cpl ) ; a < z.length() ; a++ ) if ( z.GetChar(a) >= 'A' && z.GetChar(a) <= 'Z' ) qoff++ ;
-	for ( a = 0 , z = hseq.Left ( cpl ) ; a < z.length() ; a++ ) if ( z.GetChar(a) >= 'A' && z.GetChar(a) <= 'Z' ) hoff++ ;
+        wxString z ;
+        for ( a = 0 , z = qseq.Left ( cpl ) ; a < z.length() ; a++ ) if ( z.GetChar(a) >= 'A' && z.GetChar(a) <= 'Z' ) qoff++ ;
+        for ( a = 0 , z = hseq.Left ( cpl ) ; a < z.length() ; a++ ) if ( z.GetChar(a) >= 'A' && z.GetChar(a) <= 'Z' ) hoff++ ;
 
-	ret += lead[0] + _T(" ") + qseq.Left ( cpl ) + _T(" ") + wxString::Format ( _T("%5d") , qoff ) + _T("\n") ;
-	ret += lead[1] + _T(" ") + mseq.Left ( cpl ) + _T("\n") ;
-	ret += lead[2] + _T(" ") + hseq.Left ( cpl ) + _T(" ") + wxString::Format ( _T("%5d") , hoff ) + _T("\n") ;
-	qseq = qseq.Mid ( cpl ) ;
-	mseq = mseq.Mid ( cpl ) ;
-	hseq = hseq.Mid ( cpl ) ;
-	if ( !qseq.IsEmpty() ) ret += _T("<p></p>\n") ;
-    }
+        ret += lead[0] + _T(" ") + qseq.Left ( cpl ) + _T(" ") + wxString::Format ( _T("%5d") , qoff ) + _T("\n") ;
+        ret += lead[1] + _T(" ") + mseq.Left ( cpl ) + _T("\n") ;
+        ret += lead[2] + _T(" ") + hseq.Left ( cpl ) + _T(" ") + wxString::Format ( _T("%5d") , hoff ) + _T("\n") ;
+        qseq = qseq.Mid ( cpl ) ;
+        mseq = mseq.Mid ( cpl ) ;
+        hseq = hseq.Mid ( cpl ) ;
+        if ( !qseq.IsEmpty() ) ret += _T("<p></p>\n") ;
+        }
     ret.Replace ( _T(" ") , _T("&nbsp;") ) ;
     return ret ;
-}
+    }
 
 void EIpanel::execute_blast()
-{
+    {
     wxString database = c1->GetStringSelection() ;
     execute_ncbi_load ( database ) ; // Dummy
-}
+    }
 
 void EIpanel::execute_blast_b3()
-	{
-	wxString database = c1->GetStringSelection().Lower() ;
-	for ( int i = 0 ; i < hlb->data.GetCount() ; i++ )
-		{
-		if ( !hlb->IsSelected ( i ) ) continue ;
-		wxString s = hlb->data[i] ;
+    {
+    wxString database = c1->GetStringSelection().Lower() ;
+    for ( int i = 0 ; i < hlb->data.GetCount() ; i++ )
+        {
+        if ( !hlb->IsSelected ( i ) ) continue ;
+        wxString s = hlb->data[i] ;
 
-		int a = s.Find ( _T("gi|") ) ;
-		if ( a == -1 ) return ;
-		s = s.Mid ( a + 3 ) ;
-		s = s.BeforeFirst ( '|' ) ;
-		s = _T("http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?cmd=Retrieve&db=") + database + _T("&list_uids=") + s + _T("&dopt=GenPept") ;
-		s = myapp()->getHTMLCommand ( s ) ;
-		wxExecute ( s ) ;
-		}
-	}
+        int a = s.Find ( _T("gi|") ) ;
+        if ( a == -1 ) return ;
+        s = s.Mid ( a + 3 ) ;
+        s = s.BeforeFirst ( '|' ) ;
+        s = _T("http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?cmd=Retrieve&db=") + database + _T("&list_uids=") + s + _T("&dopt=GenPept") ;
+        s = myapp()->getHTMLCommand ( s ) ;
+        wxExecute ( s ) ;
+        }
+    }

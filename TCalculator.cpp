@@ -135,12 +135,12 @@ void TCalculator::initme ()
 
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     if ( !myapp()->frame->mainToolBar )
-       {
-       myapp()->frame->setDummyToolbar ( this ) ;
-       myapp()->frame->addDefaultTools ( toolbar ) ;
-       toolbar->Realize() ;
-       v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
-       }
+        {
+        myapp()->frame->setDummyToolbar ( this ) ;
+        myapp()->frame->addDefaultTools ( toolbar ) ;
+        toolbar->Realize() ;
+        v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
+        }
     v0->Add ( nb , 1 , wxEXPAND , 5 ) ;
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;
@@ -174,7 +174,7 @@ void TGridData::init ()
     DisableDragColSize() ;
     cleanup() ;
 
-    int a , row ;
+    int row ;
     wxString s ;
     TVector d ; // Dummy
 
@@ -187,20 +187,19 @@ void TGridData::init ()
     SetCellValue ( 1 , 4 , txt("t_calc_data_pi") ) ;
     SetCellValue ( 1 , 5 , txt("t_calc_data_codons") ) ;
     SetCellTextColour ( 0 , 0 , *wxRED ) ;
-    for ( a = 0 ; a < 6 ; a++ )
-    	{
-    	SetCellTextColour ( 1 , a , *wxBLUE ) ;
-    	SetCellAlignment ( 1 , a , wxALIGN_CENTRE , wxALIGN_CENTRE ) ;
-     	}
+    for ( int a = 0 ; a < 6 ; a++ )
+        {
+        SetCellTextColour ( 1 , a , *wxBLUE ) ;
+        SetCellAlignment ( 1 , a , wxALIGN_CENTRE , wxALIGN_CENTRE ) ;
+        }
 
-    int b , c ;
     wxString iu = _T("TCAG") ;
     wxString codons[256] ;
-    for ( a = 0 ; a < iu.length() ; a++ )
+    for ( int a = 0 ; a < iu.length() ; a++ )
        {
-       for ( b = 0 ; b < iu.length() ; b++ )
+       for ( int b = 0 ; b < iu.length() ; b++ )
           {
-          for ( c = 0 ; c < iu.length() ; c++ )
+          for ( int c = 0 ; c < iu.length() ; c++ )
              {
              wxString codon ;
              codon += iu.GetChar(a) ;
@@ -214,27 +213,27 @@ void TGridData::init ()
        }
 
     row = 2 ;
-    for ( a = 'A' ; a <= 'Z' && a != '|'+1 ; a++ )
-    	{
+    for ( char a = 'A' ; a <= 'Z' && a != '|'+1 ; a++ )
+        {
        if ( a == 'Z' ) a = '|' ;
-	    TAAProp p = d.getAAprop ( a ) ;
-	    if ( p.tla == _T("") ) continue ;
-	    if ( p.tla == _T("???") ) continue ;
-	    s = _T("t_aa_ ") ;
-	    s.SetChar ( 5 , a ) ;
-	    SetCellValue ( row , 0 , wxString ( (wxChar) a ) ) ;
-	    SetCellValue ( row , 1 , p.tla ) ;
-	    if ( a != '|' )
-          {
-   	    SetCellValue ( row , 2 , txt(s) ) ;
-   	    SetCellValue ( row , 3 , wxString::Format ( _T("%4.4f") , p.mw ) ) ;
-   	    SetCellValue ( row , 4 , wxString::Format ( _T("%4.2f") , p.pi ) ) ;
-          }
-	    SetCellValue ( row , 5 , codons[a] ) ;
-	    SetCellAlignment ( row , 3 , wxALIGN_RIGHT , wxALIGN_CENTRE ) ;
-	    SetCellAlignment ( row , 4 , wxALIGN_RIGHT , wxALIGN_CENTRE ) ;
-	    row++ ;
-    	}
+        TAAProp p = d.getAAprop ( a ) ;
+        if ( p.tla == _T("") ) continue ;
+        if ( p.tla == _T("???") ) continue ;
+        s = _T("t_aa_ ") ;
+        s.SetChar ( 5 , a ) ;
+        SetCellValue ( row , 0 , wxString ( (wxChar) a ) ) ;
+        SetCellValue ( row , 1 , p.tla ) ;
+        if ( a != '|' )
+            {
+            SetCellValue ( row , 2 , txt(s) ) ;
+            SetCellValue ( row , 3 , wxString::Format ( _T("%4.4f") , p.mw ) ) ;
+            SetCellValue ( row , 4 , wxString::Format ( _T("%4.2f") , p.pi ) ) ;
+            }
+        SetCellValue ( row , 5 , codons[a] ) ;
+        SetCellAlignment ( row , 3 , wxALIGN_RIGHT , wxALIGN_CENTRE ) ;
+        SetCellAlignment ( row , 4 , wxALIGN_RIGHT , wxALIGN_CENTRE ) ;
+        row++ ;
+        }
 
 
     // DNA
@@ -248,44 +247,43 @@ void TGridData::init ()
     SetCellTextColour ( row , 0 , *wxBLUE ) ;
     SetCellTextColour ( row , 5 , *wxBLUE ) ;
     SetCellAlignment ( row , 0 , wxALIGN_RIGHT , wxALIGN_CENTRE ) ;
-    for ( a = 0 ; a < 4 ; a++ )
-    	{
-	    s = iu.GetChar(a) ;
-    	SetCellValue ( row , a+1 , s ) ;
-    	SetCellValue ( row+1+a*4 , 0 , s ) ;
-    	SetCellTextColour ( row , a+1 , *wxBLUE ) ;
-    	SetCellTextColour ( row+1+a*4 , 0 , *wxBLUE ) ;
-    	SetCellAlignment ( row , a+1 , wxALIGN_CENTRE , wxALIGN_CENTRE ) ;
-    	SetCellAlignment ( row+1+a*4 , 0 , wxALIGN_RIGHT , wxALIGN_CENTRE ) ;
-    	for ( b = 0 ; b < 4 ; b++ )
-    		{
-    		SetCellValue ( row+1+a+b*4 , 5 , s ) ;
-    		SetCellTextColour ( row+1+a+b*4 , 5 , *wxBLUE ) ;
-      		}
-   		for ( b = 0 ; b < 4 ; b++ )
-   			{
-		    for ( c = 0 ; c < 4 ; c++ )
-		    	{
-  	    		s = _T("") ;
-  	    		s += iu.GetChar(a) ;
-  	    		s += iu.GetChar(b) ;
-  	    		s += iu.GetChar(c) ;
-  	    		s = d.dna2aa ( s ) . GetChar ( 0 ) ;
-  	    		TAAProp p = d.getAAprop ( s.GetChar(0) ) ;
-  	    		s = wxString ( txt(_T("t_aa_")+s) ) + _T(" (") + p.tla + _T("; ") + s + _T(")") ;
-  	    		if ( p.tla == _T("STP") ) s = _T("STOP") + s ;
-		    	SetCellValue ( row+1+a*4+c , 1+b , s ) ;
-		    	SetCellAlignment ( row+1+a*4+c , 1+b , wxALIGN_CENTRE , wxALIGN_CENTRE ) ;
-		    	}
-   			}
-    	}
+    for ( int a = 0 ; a < 4 ; a++ )
+        {
+        s = iu.GetChar(a) ;
+        SetCellValue ( row , a+1 , s ) ;
+        SetCellValue ( row+1+a*4 , 0 , s ) ;
+        SetCellTextColour ( row , a+1 , *wxBLUE ) ;
+        SetCellTextColour ( row+1+a*4 , 0 , *wxBLUE ) ;
+        SetCellAlignment ( row , a+1 , wxALIGN_CENTRE , wxALIGN_CENTRE ) ;
+        SetCellAlignment ( row+1+a*4 , 0 , wxALIGN_RIGHT , wxALIGN_CENTRE ) ;
+        for ( int b = 0 ; b < 4 ; b++ )
+            {
+            SetCellValue ( row+1+a+b*4 , 5 , s ) ;
+            SetCellTextColour ( row+1+a+b*4 , 5 , *wxBLUE ) ;
+            }
+        for ( int b = 0 ; b < 4 ; b++ )
+            {
+            for ( int c = 0 ; c < 4 ; c++ )
+                {
+                s = _T("") ;
+                s += iu.GetChar(a) ;
+                s += iu.GetChar(b) ;
+                s += iu.GetChar(c) ;
+                s = d.dna2aa ( s ) . GetChar ( 0 ) ;
+                TAAProp p = d.getAAprop ( s.GetChar(0) ) ;
+                s = wxString ( txt(_T("t_aa_")+s) ) + _T(" (") + p.tla + _T("; ") + s + _T(")") ;
+                if ( p.tla == _T("STP") ) s = _T("STOP") + s ;
+                SetCellValue ( row+1+a*4+c , 1+b , s ) ;
+                SetCellAlignment ( row+1+a*4+c , 1+b , wxALIGN_CENTRE , wxALIGN_CENTRE ) ;
+                }
+            }
+        }
 
-    for ( a = 0 ; a < GetNumberRows() ; a++ )
-    	{
-	    for ( b = 0 ; b < GetNumberCols() ; b++ )
-	    	SetReadOnly ( a , b , true ) ;
-    	}
-
+    for ( int a = 0 ; a < GetNumberRows() ; a++ )
+        {
+        for ( int b = 0 ; b < GetNumberCols() ; b++ )
+            SetReadOnly ( a , b , true ) ;
+        }
 
     AutoSizeColumns () ;
     EndBatch () ;
@@ -593,14 +591,13 @@ void TGridBasic::OnCellChanged(wxGridEvent& event)
 
 void TGridBasic::cleanup ()
     {
-    int x , y ;
-    for ( x = 0 ; x < GetNumberCols() ; x++ )
+    for ( int x = 0 ; x < GetNumberCols() ; x++ )
         {
         SetColLabelValue ( x , _T("") ) ;
-        for ( y = 0 ; y < GetNumberRows() ; y++ )
+        for ( int y = 0 ; y < GetNumberRows() ; y++ )
            SetReadOnly ( y , x , true ) ;
         }
-    for ( y = 0 ; y < GetNumberRows() ; y++ )
+    for ( int y = 0 ; y < GetNumberRows() ; y++ )
         SetRowLabelValue ( y , _T("") ) ;
 
     SetRowLabelSize ( 0 ) ;
@@ -611,12 +608,11 @@ wxString TGridBasic::getText ()
     {
     int cols = GetNumberCols() ;
     int rows = GetNumberRows() ;
-    int col , row ;
     wxString text ;
 
-    for ( row = 0 ; row < rows ; row++ )
+    for ( int row = 0 ; row < rows ; row++ )
         {
-        for ( col = 0 ; col < cols ; col++ )
+        for ( int col = 0 ; col < cols ; col++ )
             {
             wxString s = GetCellValue ( row , col ) ;
             if ( myapp()->frame->LS->getOption(_T("LANGUAGE"),_T("en")) == _T("de") )
@@ -635,18 +631,17 @@ void TGridBasic::print ( int mode )
     {
     int cols = GetNumberCols() ;
     int rows = GetNumberRows() ;
-    int col , row ;
     wxString html ;
     html = _T("<HTML><BODY><TABLE border=0>") ;
 
     int colwidth = 0 ;
-    for ( col = 0 ; col < cols ; col++ )
+    for ( int col = 0 ; col < cols ; col++ )
         colwidth += GetColSize ( col ) ;
 
-    for ( row = 0 ; row < rows ; row++ )
+    for ( int row = 0 ; row < rows ; row++ )
         {
         html += _T("<tr>") ;
-        for ( col = 0 ; col < cols ; col++ )
+        for ( int col = 0 ; col < cols ; col++ )
            {
            int w = GetColSize ( col ) ;
            wxColour bgc = GetCellBackgroundColour ( row , col ) ;
@@ -702,4 +697,4 @@ double TGridBasic::getDouble ( int y , int x )
     s.Replace ( _T(",") , _T(".") ) ;
     s.ToDouble ( &ret ) ;
     return ret ;
-	}
+    }

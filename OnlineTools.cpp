@@ -182,7 +182,7 @@ void TOnlineTools::take_event ( wxCommandEvent& event )
     wxExecute ( myapp()->getHTMLCommand ( url ) ) ;
     }
 
-wxString TOnlineTools::get_fasta_name ( wxString ret )
+wxString TOnlineTools::get_fasta_name ( wxString ret ) const
     {
     if ( ret.IsEmpty() )
        ret = child->vec->getName() ;
@@ -284,14 +284,13 @@ void TOnlineTools::do_neb_cutter ()
 
 //__________________________________________ Alignments
 
-wxString TOnlineTools::get_fasta_sequences ( bool clean_gaps , bool for_clipboard )
+wxString TOnlineTools::get_fasta_sequences ( const bool clean_gaps ,  const bool for_clipboard ) const
     {
-    int a ;
     wxString nl = for_clipboard ? _T("\n") : _T("%0A") ;
     wxString fa = for_clipboard ? _T(">") : _T("%3E") ;
     wxString fasta ;
     TAlignment *ali = (TAlignment*) child ;
-    for ( a = 0 ; a < ali->lines.size() ; a++ )
+    for ( int a = 0 ; a < ali->lines.size() ; a++ )
         {
         if ( ali->lines[a].isIdentity ) continue ;
         wxString t = ali->lines[a].s ;
