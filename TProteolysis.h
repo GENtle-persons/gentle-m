@@ -54,7 +54,7 @@ class TProteolysis : public wxDialog
 	void OnNumProts(wxCommandEvent& event) ; ///< Number of proteases event handler
 	void OnResults ( wxCommandEvent &ev ) ; ///< Fragment list checkbox changed
 	
-	void draw_gel ( wxDC &dc ) ; ///< Draw the virtual gel
+	void draw_gel ( wxDC &dc ) const ; ///< Draw the virtual gel
 	void select_fragments ( const wxArrayInt &ai ) ;
 
 	private :
@@ -63,10 +63,10 @@ class TProteolysis : public wxDialog
 	void calc_fragment_list () ;
 	void calc_spearation () ;
 	void calc_spearation_sub ( int depth , TProteaseArray &prop , vector <TFragment> &tobe , int start = 0 ) ;
-	void show_gel () ;
+	void show_gel () const ;
 	void show_fragment_list () ;
-	double get_weight ( int from , int to ) ;
-	int get_y ( double y , int h , double min , double max ) ;
+	double get_weight ( int from , int to ) const ;
+	int get_y ( const double y , const int h , const double min , const double max ) const ;
 	void determine_cuts ( TProteaseArray &prop , TProteaseCutArray &apc ) ;
 	void remove_ignored_cuts ( TProteaseCutArray &apc ) ;
 	void sort_cuts ( TProteaseCutArray &apc ) ;
