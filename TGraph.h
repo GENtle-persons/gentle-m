@@ -28,15 +28,15 @@ class TGraphDisplay ;
 class TGraphData
     {
     public :
-     TGraphData ( TGraphDisplay *d = NULL ) ; ///< Constructor
-     void Add ( float x , float y ) ; ///< Add a XY pair
-     void SetScales ( TGraphScale *_sx , TGraphScale *_sy ) ; ///< Assign scales to this gprah
+     TGraphData ( TGraphDisplay * const d = NULL ) ; ///< Constructor
+     void Add ( const float x , const float y ) ; ///< Add a XY pair
+     void SetScales ( TGraphScale * const _sx , TGraphScale * const _sy ) ; ///< Assign scales to this gprah
      void AutoScale () ; ///< Size scales to (at least) fit the data in this graph
-     unsigned long GetCount () ; ///< Returns the number of XY pairs
-     int Distance ( const wxPoint &pt ) ; ///< Returns the minimum distance of the given point to the graph curve
+     unsigned long GetCount () const ; ///< Returns the number of XY pairs
+     int Distance ( const wxPoint &pt ) const ; ///< Returns the minimum distance of the given point to the graph curve
      
      void drawit ( wxDC &dc ) ; ///< Draws the graph in the given drawing context
-     void DrawSymbol ( wxDC &dc , wxString symbol , int x , int y , int size = 4 ) ; ///< Draws a point symbol (if any)
+     void DrawSymbol ( wxDC &dc , const wxString& symbol , const int x , const int y , const int size = 4 ) const ; ///< Draws a point symbol (if any)
 
      wxString name ; ///< Name of the graph
      wxString pointStyle ; ///< Style of the point (used in DrawSymbol)
@@ -53,27 +53,27 @@ class TGraphData
 class TGraphScale
     {
     public :
-     TGraphScale ( float _min = 0 ,
-                     float _max = 0 ,
-                        bool _horizontal = false ,
-                        bool _left = true ,
-                    wxString _name = _T("") ,
-                      wxString _unit = _T("") ,
-                      wxColour _col = *wxBLACK ,
-                      wxString _type = _T("linear") ) ; ///< Constructor
-    int GetWidth () ; ///< Returns height/width in pixels
+    TGraphScale ( const float _min = 0 ,
+                  const float _max = 0 ,
+                  const bool _horizontal = false ,
+                  const bool _left = true ,
+                  const wxString& _name = _T("") ,
+                  const wxString& _unit = _T("") ,
+                  const wxColour& _col = *wxBLACK ,
+                  const wxString& _type = _T("linear") ) ; ///< Constructor
+    int GetWidth () const ; ///< Returns height/width in pixels
     void drawit ( wxDC &dc , wxRect &r , wxRect &inner ) ; ///< Draws the scale, adjusts the inner rectangle
-    void DrawMark ( wxDC &dc , float p , wxRect &ir , wxString text , bool big = false ) ; ///< Draws the red marker for cursor position
-    int GetRealCoord ( float f , wxRect &inner ) ; ///< Converts float value to pixel
-    float GetVirtualCoordinate ( int i , wxRect &inner ) ; ///< Converts pixel to float
-    wxRect CalcInternalRect ( wxRect &r ) ; ///< Returns the internal rectangle
+    void DrawMark ( wxDC &dc , const float p , wxRect &ir , wxString text , const bool big = false ) ; ///< Draws the red marker for cursor position
+    int GetRealCoord ( const float f , const wxRect &inner ) const ; ///< Converts float value to pixel
+    float GetVirtualCoordinate ( int i , const wxRect &inner ) const ; ///< Converts pixel to float
+    wxRect CalcInternalRect ( wxRect &r ) const ; ///< Returns the internal rectangle
     void Drag ( int delta ) ; ///< Drags the scale into a direction (pixel)
-    float GetTotalWidth () { return max - min ; } ///< Returns the height/width in arb. units
-    float GetVisibleWidth () { return top - bottom ; } ///< Returns the visible height/width in arb. units
+    float GetTotalWidth () const { return max - min ; } ///< Returns the height/width in arb. units
+    float GetVisibleWidth () const { return top - bottom ; } ///< Returns the visible height/width in arb. units
     
-     wxRect outline ;
-     wxRect last_inner ;
-     float min , max ;
+    wxRect outline ;
+    wxRect last_inner ;
+    float min , max ;
     float top , bottom ;
     bool horizontal , left , selected ;
     wxString name , unit , type ;
@@ -86,63 +86,63 @@ class TGraphScale
 */
 class TGraphDisplay : public wxPanel
     {
-     public :
-     TGraphDisplay ( wxWindow *parent , int id = -1 ) ; ///< Constructor
-     ~TGraphDisplay () ; ///< Destructor
-     void init () ; ///< Initialization
+    public :
+    TGraphDisplay ( wxWindow *parent , int id = -1 ) ; ///< Constructor
+    ~TGraphDisplay () ; ///< Destructor
+    void init () ; ///< Initialization
      
-     stringField readTextfile ( wxString filename ) ; ///< Converts a CSV file into s stringField
-     unsigned char *readRawData ( wxString filename , long &l ) ; ///< Reads raw binary data
-     void setupPhotometerGraph ( const stringField &sf ) ; ///< Reads CSV-based photometer data
-     void setupFluorimeterGraph ( const stringField &sf ) ; ///< Reads CSV-based fluorimeter data
-     void setupXYpair ( const stringField &sf ) ; ///< Reads plain XY-pair CSV data
-     void setupIPCfile ( wxString filename ) ; ///< Reads IPC data
-     void setupRawFPLC ( wxString filenamebase ) ; ///< EXPERIMENTAL Reads raw BioRad FPLC data
-     void setupBioFormat ( wxString filenamebase ) ; ///< EXPERIMENTAL Reads BIO FPLC format
-     void setupBioCSVFormat ( const stringField &sf ) ; ///< EXPERIMENTAL Reads BIO CSV FPLC format
-    void setupDUF ( wxString filenamebase ) ; ///< Reads Beckman DUF format
-     void addNewGraph ( const stringField &sf , wxString title , TGraphScale *sx , TGraphScale*sy , int startrow = 0 ) ; ///< Adds a TGraphData
-     void addRawData ( unsigned char *d , long l , wxString title ) ;
-     void addRawData2 ( unsigned char *d , long l , wxString title ) ;
-     wxString tryall ( wxString filename ) ; ///< Tries all formats, pre-selects the "best fit"
-     void SetupDummy () ; ///< For testing only
-     bool SetupFromFile ( wxString filename ) ; ///< Calls tryall, display dialog, eventually opens file
-     void SetZoom ( int _zx , int _zy ) ; ///< Sets the zoom factor
-     void UpdateDisplay () ; ///< Refresh
+    stringField readTextfile ( const wxString& filename ) ; ///< Converts a CSV file into s stringField
+    unsigned char *readRawData ( const wxString& filename , long &l ) ; ///< Reads raw binary data
+    void setupPhotometerGraph ( const stringField &sf ) ; ///< Reads CSV-based photometer data
+    void setupFluorimeterGraph ( const stringField &sf ) ; ///< Reads CSV-based fluorimeter data
+    void setupXYpair ( const stringField& sf ) ; ///< Reads plain XY-pair CSV data
+    void setupIPCfile ( const wxString& filename ) ; ///< Reads IPC data
+    void setupRawFPLC ( const wxString& filenamebase ) ; ///< EXPERIMENTAL Reads raw BioRad FPLC data
+    void setupBioFormat ( const wxString& filenamebase ) ; ///< EXPERIMENTAL Reads BIO FPLC format
+    void setupBioCSVFormat ( const stringField& sf ) ; ///< EXPERIMENTAL Reads BIO CSV FPLC format
+    void setupDUF ( const wxString& filenamebase ) ; ///< Reads Beckman DUF format
+    void addNewGraph ( const stringField& sf , const wxString& title , TGraphScale *sx , TGraphScale*sy , int startrow = 0 ) ; ///< Adds a TGraphData
+    void addRawData ( unsigned char *d , long l , const wxString& title ) ;
+    void addRawData2 ( unsigned char *d , long l , const wxString& title ) ;
+    wxString tryall ( const wxString& filename ) ; ///< Tries all formats, pre-selects the "best fit"
+    void SetupDummy () ; ///< For testing only
+    bool SetupFromFile ( const wxString& filename ) ; ///< Calls tryall, display dialog, eventually opens file
+    void SetZoom ( int _zx , int _zy ) ; ///< Sets the zoom factor
+    void UpdateDisplay () ; ///< Refresh
 
-     void AutoScale () ; ///< Adjusts the scales to fit the graphs
-     void drawit ( wxDC &dc , int mode = GRAPH_DRAW_ALL ) ; ///< Draws the graphs and scales in the device context
-     void showLegend ( wxDC &dc ) ; ///< Draws the legend
-     void showMiniature ( wxDC &dc ) ; ///< Draws the miniature preview (in zoomed mode)
-     void showDraggingRect ( wxDC &dc ) ;
+    void AutoScale () ; ///< Adjusts the scales to fit the graphs
+    void drawit ( wxDC &dc , const int mode = GRAPH_DRAW_ALL ) ; ///< Draws the graphs and scales in the device context
+    void showLegend ( wxDC &dc ) ; ///< Draws the legend
+    void showMiniature ( wxDC &dc ) ; ///< Draws the miniature preview (in zoomed mode)
+    void showDraggingRect ( wxDC &dc ) ;
      
-     virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
+    virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
     virtual void OnPaint(wxPaintEvent& event) ; ///< Paint event handler
     virtual void OnEvent(wxMouseEvent& event) ; ///< Mouse event handler
     virtual void OnSwapSides(wxCommandEvent &event) ; ///< "Switch scales left/right or top/bottom" event handler
     virtual void OnCopyAsImage(wxCommandEvent &event) ; ///< "Copy as image" event handler
     virtual void OnSaveAsImage(wxCommandEvent &event) ; ///< "Save as image" event handler
      
-     vector <TGraphScale*> scales ; ///< The scales
-     vector <TGraphData*> data ; ///< The graphs (data)
-     TGraph *g ; ///< The calling TGraph
-     static wxColour prettyColor ; ///< A pretty blue
-     wxArrayString scaleTypes ;
-     wxArrayString colors , styles ;
+    vector <TGraphScale*> scales ; ///< The scales
+    vector <TGraphData*> data ; ///< The graphs (data)
+    TGraph *g ; ///< The calling TGraph
+    static wxColour prettyColor ; ///< A pretty blue
+    wxArrayString scaleTypes ;
+    wxArrayString colors , styles ;
      
-     private :
-      bool IsSetupComplete() ; ///< Don't draw before setup is complete (divsion by zero and other ugliness)
-      void DrawIntoBitmap ( wxBitmap &bmp ) ; ///< Draws the current display into a wxBitmap instead of the display (for copying and saving)
+    private :
+    bool IsSetupComplete() const ; ///< Don't draw before setup is complete (divsion by zero and other ugliness)
+    void DrawIntoBitmap ( wxBitmap &bmp ) ; ///< Draws the current display into a wxBitmap instead of the display (for copying and saving)
 
-      bool setupCompleted ; ///< Is setup complete?
-     TGraphScale *old_scale ; ///< The last scale
-     TGraphData *old_data ; ///< The last graph
+    bool setupCompleted ; ///< Is setup complete?
+    TGraphScale *old_scale ; ///< The last scale
+    TGraphData *old_data ; ///< The last graph
      
-     wxRect inner ; ///< The place where the data is drawn
-     wxRect lr ; ///< The legend rectangle
-     int zx , zy ;
-     wxPoint mouse_pos ;
-     wxRect draggingRect ;
+    wxRect inner ; ///< The place where the data is drawn
+    wxRect lr ; ///< The legend rectangle
+    int zx , zy ;
+    wxPoint mouse_pos ;
+    wxRect draggingRect ;
 
     DECLARE_EVENT_TABLE()
     } ;

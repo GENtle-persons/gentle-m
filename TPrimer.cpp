@@ -5,7 +5,7 @@
 
 //********************************************************************** TPrimer
 
-TPrimer::TPrimer ( int _from , int _to , bool _upper )
+TPrimer::TPrimer ( const int _from , const int _to , const bool _upper )
     {
     from = _from ;
     to = _to ;
@@ -150,7 +150,7 @@ float TPrimer::evaluateTm ( const double& conc_nm , const double& Na_mm ) /* not
     return ret ;
     }
 
-void TPrimer::invertSequence()
+void TPrimer::invertSequence() /* not const */
     {
     wxString t ;
     for ( int a = 0 ; a < sequence.length() ; a++ ) t = sequence.GetChar(a) + t ;
@@ -285,8 +285,7 @@ double *TPrimer::CalcIUpair ( wxString base0 , wxString base , int i , const boo
     wxString seq = getAnnealingSequence() ;
 
     // Init
-    int a , k ;
-    for ( a = 0 ; a < 3 ; a++ )
+    for ( int a = 0 ; a < 3 ; a++ )
        reValue[a] = temp1[a] = temp2[a] = 0 ;
     if ( i+1 < seq.length() ) base2 += seq.GetChar(i+1) ;
 
@@ -330,7 +329,7 @@ double *TPrimer::CalcIUpair ( wxString base0 , wxString base , int i , const boo
             else if(pair1==_T("GG")){temp1[0]=2.1  ;temp1[1]=10.9; temp1[2]=28.4  ;}
 
             if(base2.IsEmpty()){
-                for(k=0; k<2; k++)
+                for(int k=0; k<2; k++)
                 {    temp2[k]=0.0;    }
 
             }else if(!IsIUpacBase(base2)){
@@ -350,12 +349,12 @@ double *TPrimer::CalcIUpair ( wxString base0 , wxString base , int i , const boo
                 base=base2;
                 i++;
                 double *tempp = CalcIUpair(base0,base,i,max);
-                for ( a = 0 ; a < 3 ; a++ ) temp2[a] = tempp[a] ;
+                for ( int a = 0 ; a < 3 ; a++ ) temp2[a] = tempp[a] ;
                 delete tempp ;
                 i--;
             }
 
-            for(k=0;k<3;k++)
+            for(int k=0;k<3;k++)
             {
                 if(j==0){
                     reValue[k]=temp1[k]+temp2[k];
