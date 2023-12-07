@@ -1,5 +1,7 @@
 #include "TVector.h"
 
+#include <wx/debug.h>
+
 #define MAXCUTS_PER_1K 30
 
 // ***************************************************************************************
@@ -49,8 +51,7 @@ void TVector::prepareFeatureEdit ( const int _pos , const bool overwrite )
 
     if ( mode == 0 ) return ; // Keep as is
 
-    int a ;
-    for ( a = 0 ; a < items.size() ; a++ )
+    for ( int a = 0 ; a < items.size() ; a++ )
         {
         int from = items[a].from ;
         int to = items[a].to ;
@@ -180,11 +181,16 @@ void TVector::setParam ( const wxString& key , const wxString& value ) /* not co
     evaluate_key_value ( key , value ) ;
     }
 
-void TVector::setParams ( wxString t ) /* not const */
+void TVector::setParams ( const wxString& _t ) /* not const */
     {
     paramk.Clear () ;
     paramv.Clear () ;
-    if ( t.IsEmpty() || t.GetChar(0) != '#' ) t = _T("#genbank\n") + t ; // Backwards compatability
+    wxString t( _t );
+    if ( t.IsEmpty() || t.GetChar(0) != '#' )
+        {
+        t = _T("#genbank\n") + t ; // Backwards compatability
+        }
+
     wxArrayString vs ;
     explode ( _T("\n") , t , vs ) ;
     for ( int a = 0 ; a < vs.GetCount() ; a++ )
@@ -196,8 +202,12 @@ void TVector::setParams ( wxString t ) /* not const */
             }
         else paramv[paramv.GetCount()-1] += vs[a] + _T("\n") ;
         }
+
     for ( int a = 0 ; a < paramk.GetCount() ; a++ )
+        {
         evaluate_key_value ( paramk[a] , paramv[a] ) ;
+        }
+
     }
 
 void TVector::evaluate_key_value ( const wxString& key , const wxString& value )
@@ -239,22 +249,56 @@ void TVector::methylationSites ( wxArrayInt &vi , const int what )
         }
     }
 
-TVector *TVector::newFromMark ( const int from , const int to )  const
+TVector *TVector::newFromMark ( const int from , const int _to )  const
     {
 //  char t[1000] ;
+
+    // copy the complete sequence first
     TVector *nv = new TVector ;
     nv->setFromVector ( *this ) ;
-    if ( from == 1 && to == sequence.length() ) return nv ; // The whole vector
+
+    int to = _to ;
+
+    wxASSERT_MSG ( sequence.length() == nv->sequence.length() , wxString::Format ("sequence.length() != nv->sequence.length()\n" ) ) ;
+
+    // now remove the parts that are not within from and to
+    if ( from == 1 && to == sequence.length() )
+        {
+        // wxPrintf( "D: TVector::newFromMark(%d,%d): returning whole vector.\n" , from , to ) ;
+        return nv ; // The whole vector
+        }
+
     if ( to > nv->sequence.length() ) // Marking includes "0" point
         {
-        nv->doRemove ( to+1-nv->sequence.length() , from-1 , false ) ;
+        // interpretation as circular
+        //           to-length            from
+        // allowinnewVectorNEEDSTOGONEEDSTOGOallowinnewvector
+        // wxPrintf( "D: TVector::newFromMark(%d,%d): to>nv.length.\n" , from , to ) ;
+        to -= nv->sequence.length() ;
+        if ( to+1 > from - 1 )
+            {
+            wxPrintf("E: Something is weird - to + 1 = %d > from - 1 = %d in remove after initial checks\n", to + 1, from - 1 ) ;
+            exit(-1);
+            }
+        nv->doRemove ( to+1 , from-1 , false ) ;
         }
     else
         {
+        //        from                to
+        // REMOVEREMOVEallowinnewvectorREMOVEREMOVE
+        // wxPrintf( "D: TVector::newFromMark(%d,%d): to>nv.length.\n" , from , to ) ;
+        // wxPrintf( "D: TVector::newFromMark(%d,%d) - 1 : to<=nv.length.\n" , from , to ) ;
         nv->doRemove ( to+1 , nv->sequence.length() , false ) ;
-        nv->doRemove ( 1 , from-1 , false ) ;
+
+        //wxPrintf( "D: TVector::newFromMark(%d,%d) - 2 : to<=nv.length, length reduced to %l.\n" , from , to , nv->sequence.length() ) ;
+        wxASSERT_MSG( from > 0 , wxString::Format("from = %d <= 0" , from ) ) ;
+        if ( from >= 2 )
+            {
+            nv->doRemove ( 1 , from-1 , false ) ;
+            }
         }
 
+    //FIXME: may interfere with above -= sequence length
     if ( to > sequence.length() )
         {
         nv->turn ( sequence.length() - from + 1 ) ;
@@ -638,7 +682,8 @@ void TVector::removeBlanksFromVector ()
         }
     }
 
-void TVector::doRemoveNucleotide ( int x )
+// x is nucleotide position in computer science sense that starts at position 0 and ends at length-1
+void TVector::doRemoveNucleotide ( const int x )
     {
     if ( sequence.IsEmpty() )
         {
@@ -651,27 +696,28 @@ void TVector::doRemoveNucleotide ( int x )
     if ( isCircular () )
         {
         for ( int a = 0 ; a < items.size() ; a++ )
-           {
-           if ( items[a].from > items[a].to ) items[a].to += sequence.length() ;
-           }
+            {
+            if ( items[a].from > items[a].to ) items[a].to += sequence.length() ;
+            }
         }
 
     for ( int a = 0 ; a < items.size() ; a++ )
         {
         if ( items[a].from <= x+1 && items[a].to >= x+1 )
-           {
-           items[a].to-- ;
-           if ( items[a].to < items[a].from )
-              {
-              items.erase ( items.begin()+a ) ;
-              a-- ;
-              }
-           }
+            {
+            items[a].to-- ;
+            if ( items[a].to < items[a].from )
+                {
+                items.erase ( items.begin()+a ) ;
+                a-- ;
+                }
+            }
         else if ( items[a].from > x+1 )
-           {
-           items[a].from-- ;
-           items[a].to-- ;
-           }
+            {
+            // FIXME: to could be left of from, and can be >x or not
+            items[a].from-- ;
+            items[a].to-- ;
+            }
         }
 
     sequence.erase ( x , 1 ) ;
@@ -679,9 +725,9 @@ void TVector::doRemoveNucleotide ( int x )
     if ( isCircular () )
         {
         for ( int a = 0 ; a < items.size() ; a++ )
-           {
-           if ( items[a].to > sequence.length() ) items[a].to -= sequence.length() ;
-           }
+            {
+            if ( items[a].to > sequence.length() ) items[a].to -= sequence.length() ;
+            }
         }
     }
 
@@ -691,11 +737,11 @@ void TVector::insert_char ( const char x , const int pos , const bool overwrite 
     dummy = (wxChar) x ;
     if ( !overwrite || sequence.GetChar(pos-1) != x ) prepareFeatureEdit ( pos , overwrite ) ;
     if ( overwrite && pos < sequence.length() )
-       {
-       myass ( pos-1 >= 0 && pos-1 < sequence.length() , "TVector::insert_char_1" ) ;
-       sequence.SetChar(pos-1,x) ;
-       return ;
-       }
+        {
+        myass ( pos-1 >= 0 && pos-1 < sequence.length() , "TVector::insert_char_1" ) ;
+        sequence.SetChar(pos-1,x) ;
+        return ;
+        }
     sequence.insert(pos-1 , dummy ) ;
 
     for ( int a = 0 ; a < items.size() ; a++ )
@@ -705,12 +751,12 @@ void TVector::insert_char ( const char x , const int pos , const bool overwrite 
         }
     }
 
-void TVector::setIUPAC ( char b , wxString s , char *pac )
+void TVector::setIUPAC ( const char b , const wxString& s , char *pac )
     {
     int x = 0 ;
     for ( int y = 0 ; y < s.Length() ; y++ )
         {
-          char c = s.GetChar(y) ;
+        char c = s.GetChar(y) ;
         if ( c == 'A' || c == 'a' ) x += IUPAC_A ;
         if ( c == 'C' || c == 'c' ) x += IUPAC_C ;
         if ( c == 'G' || c == 'g' ) x += IUPAC_G ;
@@ -723,7 +769,6 @@ void TVector::setIUPAC ( char b , wxString s , char *pac )
 
 void TVector::getCuts ( const TRestrictionEnzyme * const e , vector <TRestrictionCut> &ret , const bool clear_vector , const int max ) const
     {
-    int b , c ;
     if ( clear_vector ) ret.clear () ;
     if ( ret.empty() ) ret.reserve ( 5 ) ; // Speedup, little waste
     wxString rs = e->getSequence() ;
@@ -733,8 +778,9 @@ void TVector::getCuts ( const TRestrictionEnzyme * const e , vector <TRestrictio
     unsigned int t_length = t.length() ;
     unsigned int rs_length = rs.length() ;
 
-    for ( b = 0 ; b < sequence_length ; b++ )
+    for ( int b = 0 ; b < sequence_length ; b++ )
         {
+        int c ;
         for ( c = 0 ; b+c < t_length && c < rs_length && basematch ( t.GetChar(b+c) , rs.GetChar(c) ) ; c++ ) ;
         if ( c == rs_length )
             {
@@ -754,19 +800,19 @@ void TVector::getCuts ( const TRestrictionEnzyme * const e , vector <TRestrictio
     dummy_vector.sequence = rs ;
     rs = dummy_vector.transformSequence ( true , true ) ;
 
-    for ( b = 0 ; b < sequence_length ; b++ )
+    for ( int b = 0 ; b < sequence_length ; b++ )
         {
-        for ( c = 0 ; b+c < t_length && c < rs_length &&
-                        basematch ( t.GetChar(b+c) , rs.GetChar(c) ) ; c++ ) ;
+        int c ;
+        for ( c = 0 ; b+c < t_length && c < rs_length && basematch ( t.GetChar(b+c) , rs.GetChar(c) ) ; c++ ) ;
         if ( c == rs_length )
-           {
-           int thecut = (b+e->getCut()) % sequence_length ;
-           if ( thecut >= 0 && thecut < sequence_length )
-                 {
-              ret.push_back ( TRestrictionCut ( thecut , e , false ) ) ;
-              if ( ret.size() > max ) return ;
-              }
-           }
+            {
+            int thecut = (b+e->getCut()) % sequence_length ;
+            if ( thecut >= 0 && thecut < sequence_length )
+                {
+                ret.push_back ( TRestrictionCut ( thecut , e , false ) ) ;
+                if ( ret.size() > max ) return ;
+                }
+            }
         }
 
     }
@@ -792,10 +838,9 @@ void TVector::recalculateCuts ()
     // Join doubles
     if ( join )
         {
-        int a , b ;
-        for ( a = 0 ; a < rc.size() ; a++ )
+        for ( int a = 0 ; a < rc.size() ; a++ )
             {
-            for ( b = a+1 ; b < rc.size() && rc[b].getPos() == rc[a].getPos() ; b++ )
+            for ( int b = a+1 ; b < rc.size() && rc[b].getPos() == rc[a].getPos() ; b++ )
                 {
                 if ( b == rc.size() ) continue ;
                 if ( rc[b].getPos() != rc[a].getPos() ) continue ;
@@ -820,7 +865,7 @@ void TVector::recalculateCuts ()
                 setParam ( _T("toomanycuts_warning") , _T("1") ) ;
             }
         }
-//        while ( rc.size() > maxcuts ) rc.pop_back () ;
+//      while ( rc.size() > maxcuts ) rc.pop_back () ;
     }
 
     // Methylation
@@ -847,10 +892,9 @@ TEnzymeRules *TVector::getEnzymeRule () const
 
     if ( myapp()->frame->project.getEnzymeRules() ) // Project settings
         {
-         er = myapp()->frame->project.getEnzymeRules() ;
-         if ( er->useit ) return er ;
-         }
-
+        er = myapp()->frame->project.getEnzymeRules() ;
+        if ( er->useit ) return er ;
+        }
 
     er = myapp()->frame->global_enzyme_rules ; // Global settings
     return er ;
@@ -865,7 +909,7 @@ TEnzymeRules *TVector::getEnzymeRule () const
 // to the fragment between two cuts of restriction enzymes
 bool TVector::reduceToFragment ( TRestrictionCut left , TRestrictionCut right )
     {
-    int a , from , to ;
+    int from , to ;
     wxString s ;
 
     from = left.getPos() ;
@@ -878,7 +922,7 @@ bool TVector::reduceToFragment ( TRestrictionCut left , TRestrictionCut right )
     int from2 = from + left.getSequence().length() ;
     int to2 = to - right.getSequence().length() + 1 ;
 
-    for ( a = from ; a <= to ; a++ )
+    for ( int a = from ; a <= to ; a++ )
         s += getNucleotide ( a ) ;
 
     wxString mlu , mll , mru , mrl ;
@@ -962,17 +1006,16 @@ char TVector::getNucleotide ( const int _pos ,  const bool complement ) const
 
 wxString TVector::transformSequence ( const bool inverse , const bool reverse ) const
     {
-    int a ;
     wxString r = sequence ;
     if ( inverse )
         {
-        for ( a = 0 ; a < r.length() ; a++ )
+        for ( int a = 0 ; a < r.length() ; a++ )
            r.SetChar ( a , getComplement ( r.GetChar(a) ) ) ;
         }
     if ( reverse )
         {
         wxString s = r ;
-        for ( a = 0 ; a < r.length() ; a++ )
+        for ( int a = 0 ; a < r.length() ; a++ )
            r.SetChar ( a , s.GetChar(s.length()-a-1) ) ;
         }
     return r ;
@@ -981,7 +1024,6 @@ wxString TVector::transformSequence ( const bool inverse , const bool reverse ) 
 void TVector::doRestriction ()
     {
     vector <TRestrictionCut> cl ;
-    int a , b ;
 
     mylog ( "TVector::doRestriction" , "1" ) ;
     if ( cocktail.GetCount() == 0 ) return ;
@@ -997,8 +1039,9 @@ void TVector::doRestriction ()
         cl.push_back ( TRestrictionCut ( 0 , &blankEnzyme ) ) ;
 
     mylog ( "TVector::doRestriction" , "3" ) ;
-    for ( a = 0 ; a < cocktail.GetCount() ; a++ )
+    for ( int a = 0 ; a < cocktail.GetCount() ; a++ )
        {
+       int b ;
        for ( b = 0 ; b < re.GetCount() && re[b]->getName() != cocktail[a] ; b++ ) ;
        if ( b == re.GetCount() )
           {
@@ -1012,9 +1055,9 @@ void TVector::doRestriction ()
     mylog ( "TVector::doRestriction" , "5" ) ;
 
     // Collecting restriction cuts
-    for ( a = 0 ; a < cocktail.GetCount() ; a++ )
+    for ( int a = 0 ; a < cocktail.GetCount() ; a++ )
         {
-        for ( b = 0 ; b < rc.size() ; b++ )
+        for ( int b = 0 ; b < rc.size() ; b++ )
             {
             if ( rc[b].e->getName() == cocktail[a] )
                 {
@@ -1025,7 +1068,7 @@ void TVector::doRestriction ()
     mylog ( "TVector::doRestriction" , "6" ) ;
 
     // Arranging
-    for ( a = 1 ; a < cl.size() ; a++ )
+    for ( int a = 1 ; a < cl.size() ; a++ )
         {
         if ( cl[a-1].getPos() > cl[a].getPos() )
            {
@@ -1042,10 +1085,10 @@ void TVector::doRestriction ()
     else
         cl.push_back ( TRestrictionCut ( sequence.length()-1 , &blankEnzyme ) ) ;
 
-        myapp()->frame->lockDisplay ( true ) ;
+    myapp()->frame->lockDisplay ( true ) ;
 
     mylog ( "TVector::doRestriction" , "8" ) ;
-    for ( a = 0 ; a+1 < cl.size() ; a++ )
+    for ( int a = 0 ; a+1 < cl.size() ; a++ )
         {
         wxString t1 = wxString::Format ( _T("%d") , cl[a].getPos() ) ;
         wxString t2 = wxString::Format ( _T("%d") , cl[a+1].getPos() ) ;
@@ -1100,7 +1143,6 @@ void TVector::ligate_right ( TVector &v , bool inverted )
     {
     if ( circular ) return ;
     if ( v.circular ) return ;
-    int a , b ;
 
     // Is the ligand (to the right!) inverted?
     if ( inverted )
@@ -1126,12 +1168,16 @@ void TVector::ligate_right ( TVector &v , bool inverted )
     if ( turned == 0 ) turned = v.turned ;
 
     // Merging items
-    for ( a = 0 ; a < v.items.size() ; a++ )
+    for ( int a = 0 ; a < v.items.size() ; a++ )
         {
         TVectorItem i = v.items[a] ;
         i.from += sequence.length() - v.sequence.length() ;
         i.to += sequence.length() - v.sequence.length() ;
-        for ( b = 0 ; b < items.size() ; b++ )
+
+        wxASSERT_MSG(i.from > 0, wxString::Format("E: TVector::ligate_right: item.from = %d <= 0\n" , i.from) ) ;
+        wxASSERT_MSG(i.to > 0, wxString::Format("TVector::ligate_right: item.to = %d <= 0\n" , i.to ) ) ;
+
+        for ( int b = 0 ; b < items.size() ; b++ )
            {
            if ( items[b].name == i.name && items[b].getType() == i.getType() )
               {
@@ -1143,10 +1189,12 @@ void TVector::ligate_right ( TVector &v , bool inverted )
         }
 
     // Merging restriction enzymes
-    for ( a = 0 ; a < v.re.GetCount() ; a++ )
+    for ( int a = 0 ; a < v.re.GetCount() ; a++ )
         {
         if ( wxNOT_FOUND == re.Index ( v.re[a] ) )
-           re.Add ( v.re[a] ) ;
+            {
+            re.Add ( v.re[a] ) ;
+            }
         }
 
     }
@@ -1165,17 +1213,45 @@ void TVector::closeCircle ()
     }
 
 // This function is a plague
-void TVector::doRemove ( int from , int to , bool update , bool enableUndo )
+// expecting "biological" sequence positions, i.e. starting with 1
+void TVector::doRemove ( const int from , const int _to , const bool update , const bool enableUndo )
     {
-    if ( from == to + 1 ) return ; // Nothing to remove
-    int a ;
+    // wxPrintf("TVector::doRemove(%d,%d,%d,%d)\n", from, _to, update, enableUndo ) ;
+
+    wxASSERT_MSG(from > 0, wxString::Format("TVector::doRemove() - from = %d <= 0\n" , from ) ) ;
+    wxASSERT_MSG( _to > 0 , wxString::Format("TVector::doRemove() - to = %d <= 0\n" , _to ) ) ;
+
     int l = sequence.length() ;
+
+    // from == to would remove single position
+    // from just one larger then either removes everything or nothing
+    if ( from == _to + 1 || from==1 && _to==l)
+        {
+        // wxPrintf("D: TVector::doRemove: from (%d) == to (%d) + 1 - not removing anything, l=%d\n" , from , _to , l ) ;
+        return ; // Nothing to remove
+        }
+
     if ( enableUndo ) undo.start ( txt("u_del_seq") ) ;
 
     // Sequence
-    to %= l ;
-    if ( to >= from ) sequence.Remove ( from - 1 , to - from + 1 ) ;
-    else sequence = sequence.Mid ( to , from - to - 1 ) ;
+    int to = _to ;
+    if (_to > l) // l is valid position
+        {
+        to = _to % l ; // not l+1 (!)
+        to += 1 ; // 0 is not a valid position
+        }
+    if ( to >= from )
+        {
+        // wxPrintf("D: TVector::doRemove - sequence.Remove(%d,%d) to >= from \n", from-1, to-from+1 ) ;
+        sequence.Remove ( from - 1 , to - from + 1 ) ;
+        }
+    else
+        {
+        // wxPrintf("D: TVector::doRemove - sequence.Mid(%d,%d)\n", to, from-to-1 ) ;
+        sequence = sequence.Mid ( to , from - to - 1 ) ;
+        }
+
+    //wxPrintf("D: TVector::doRemove - interim removal prior to items performed successfully\n" ) ;
 
 /*
     // Old code
@@ -1196,8 +1272,10 @@ void TVector::doRemove ( int from , int to , bool update , bool enableUndo )
 
 
     // Items
-    for ( a = 0 ; a < items.size() ; a++ )
+    for ( int a = 0 ; a < items.size() ; a++ )
        {
+       //wxPrintf("Item #%d prior to invocation of removal\n%s",a,items[a].toString());
+       // wxPrintf("D: TVector::doRemove: items[%d].doRemove(%d,%d,%d) with item.from=%d, item.to=%d\n", a,from,to,l,items[a].from,items[a].to ) ;
        items[a].doRemove ( from , to , l ) ;
        if ( items[a].from == -1 )
           {
@@ -1210,6 +1288,8 @@ void TVector::doRemove ( int from , int to , bool update , bool enableUndo )
           else items[a].to -= sequence.length() ;
           }    */
        }
+
+    // wxPrintf("D: TVector::doRemove - mostly complete\n");
 
     // Finish
     if ( update )
@@ -1283,10 +1363,10 @@ void TVector::turn ( const int off )
     // Allowing turn of linear fragments as a temporary measure due to a problem in getAAvector
     //if ( !circular ) return ;
     if ( off == 0 ) return ;
-    int a ;
+    assert(off > 0);
 
     // Items
-    for ( a = 0 ; a < items.size() ; a++ )
+    for ( int a = 0 ; a < items.size() ; a++ )
         {
         items[a].from += off ;
         items[a].to += off ;
@@ -1751,7 +1831,17 @@ TVectorItem::TVectorItem ( const wxString& sn , const wxString& n , const int f 
     type = ty ;
     direction = 1 ;
     r3 = r4 = -1 ;
+
+    wxASSERT_MSG(from > 0, "TVectorItem initialized with f <= 0") ;
+    wxASSERT_MSG(to > 0, "TVectorItem initialized with t <= 0") ;
     }
+
+wxString TVectorItem::toString() const
+    {
+        wxString s ( wxString::Format("> %s (f:%d, t:%d) : %s\n" , name, from, to, desc ) ) ;
+        return s;
+    }
+
 
 wxBrush *TVectorItem::getBrush () const
     {
@@ -1832,16 +1922,15 @@ wxArrayString TVectorItem::getParamKeys () const
     return pname ;
     }
 
-wxString TVectorItem::implodeParams ()
+wxString TVectorItem::implodeParams () const
     {
     wxString s ;
-    int a , b ;
-    for ( a = 0 ; a < pname.GetCount() ; a++ )
+    for ( int a = 0 ; a < pname.GetCount() ; a++ )
         {
         wxString t = pvalue[a] ;
-        for ( b = 0 ; b < t.length() ; b++ )
-           if ( t.GetChar(b) == '\n' )
-              t.SetChar ( b , 2 ) ;
+        for ( int b = 0 ; b < t.length() ; b++ )
+            if ( t.GetChar(b) == '\n' )
+                t.SetChar ( b , 2 ) ;
         s += pname[a] ;
         s += _T("\n") + t + _T("\n") ;
         }
@@ -1851,16 +1940,16 @@ wxString TVectorItem::implodeParams ()
 void TVectorItem::explodeParams ( const wxString& _s )
     {
     wxString s = _s ;
-    int a ;
     initParams () ;
     while ( !s.IsEmpty() )
         {
+        int a;
         for ( a = 0 ; s.GetChar(a) != '\n' ; a++ ) ;
         wxString n = s.substr ( 0 , a ) ;
         s = s.substr ( a + 1 ) ;
-        for ( a = 0 ; s.GetChar(a) != '\n' ; a++ ) ;
+        for ( int a = 0 ; s.GetChar(a) != '\n' ; a++ ) ;
         wxString v = s.substr ( 0 , a ) ;
-        for ( a = 0 ; a < v.length() ; a++ )
+        for ( int a = 0 ; a < v.length() ; a++ )
            if ( v.GetChar(a) == 2 )
               v.SetChar ( a , '\n' ) ;
         s = s.substr ( a + 1 ) ;
@@ -1900,31 +1989,73 @@ void TVectorItem::setRF ( const int x )
 
 void TVectorItem::doRemove ( const int f , const int t , const int l )
     {
-    if ( from == -1 ) return ;
+    if ( from < 1 )
+        {
+        //wxPrintf("D: TVectorItem::doRemove(%d,%d,%d): from (%d) < 1, to (%d)\n" , f , t , l , from , to) ;
+        return ;
+        }
     int rt = t ;
     int rto = to ;
-    if ( t < f ) rt += l ;
-    if ( to < from ) rto += l ;
-    int a ;
-    wxString s ( (wxChar) '_' , l * 3 + 1 ) ;
-    for ( a = from ; a <= rto ; a++ ) s.SetChar ( a , 'X' ) ;
-    for ( a = f ; a <= rt ; a++ ) s.SetChar ( a , ' ' ) ;
+    if ( t < f )
+        {
+        //wxPrintf("D: TVectorItem::doRemove(f=%d,t=%d,l=%d): (from=%d, to=%d) aded l to rt (= %d)\n" , f, t, l , from , to , rt ) ;
+        rt += l ;
+        }
+    if ( to < from )
+        {
+        //wxPrintf("D: TVectorItem::doRemove(f=%d,t=%d,l=%d): (from=%d, to=%d) to < from, aded l to to (= %d)\n" , f, t, l ) ;
+        rto += l ;
+        }
 
+    //wxPrintf("D: TVectorItem::doRemove(f=%d,t=%d,l=%d) (from=%d, to=%d) (rt=%d, rto=%d): A\n" , f , t , l , from , to , rt, rto  ) ;
+    wxString s ( (wxChar) '_' , l * 3 + 1 ) ;
+    for ( int a = from ; a <= rto ; a++ )
+        {
+        s.SetChar ( a , 'X' ) ; // marks position of feature, unrolled
+        }
+
+    //wxPrintf("D: TVectorItem::doRemove(f=%d,t=%d,l=%d) (rto:%d): B\n", f, t, l, rto ) ;
+    for ( int a = f ; a <= rt ; a++ )
+        {
+        s.SetChar ( a , ' ' ) ; // marks area of removal
+        }
+
+    //wxPrintf("D: TVectorItem::doRemove(f=%d,t=%d,l=%d) (rt:%d): C\n", f, t, l, rt ) ;
+    //wxPrintf("D: %s\n", s ) ;
     from = -1 ;
     to = -1 ;
     int ff = 0 ;
-    for ( a = 1 ; a < s.length() ; a++ )
+    for ( int a = 1 ; a < s.length() ; a++ )
        {
        if ( s.GetChar(a) == ' ' ) ff++ ;
-       else if ( s.GetChar(a) == 'X' )
+       else if ( (char) s.GetChar(a) == 'X' )
           {
-          if ( from == -1 ) from = a - ff ;
+          if ( from == -1 )
+              {
+              from = a - ff ;
+              //wxPrintf("D: TVectorItem::doRemove: Found first 'X' at a=%d with ff=%d, yielding new from=%d\n", a, ff, from ) ;
+              }
           to++ ;
           }
        }
+
+    if ( -1 == from )
+        {
+        wxPrintf("I: Feature '%s' completely erradicated by removal (%d-%d), flagged as from = to = -1\n", name, f, t ) ;
+        return ;
+        }
+
+    wxASSERT_MSG(from>0,wxString::Format("TVectorItem::doRemove A yielded from=%d, with to=%d, ff=%d <= 0\n", from , to , ff ) ) ;
+
+    wxASSERT_MSG(to>0, wxString::Format("TVectorItem::doRemove A yielded to=%d <= 0, with from=%d, ff=%d\n", to , from , ff ) ) ;
+
     to += from ;
 
-    const int l_mod = l - rt - f + 1 ;
+    // wxPrintf("D: TVectorItem::doRemove(f=%d,t=%d,l=%d) (from:%d,to:%d): D\n" , f,t,l, from , to) ;
+
+    const int l_mod = l - (rt - f) + 1 ;
+    wxASSERT_MSG(l_mod>0,wxString::Format("l_mod = %d <= 0 with l:%d,rt:%d,f:%d",l_mod,l,rt,f));
+
     if ( l_mod == 0 )
         {
         from = -1 ;
@@ -1932,6 +2063,9 @@ void TVectorItem::doRemove ( const int f , const int t , const int l )
         }
     while ( to > l_mod ) to -= l_mod ;
     while ( from > l_mod ) from -= l_mod ;
+
+    wxASSERT_MSG(from>0, wxString::Format("TVectorItem::doRemove B yielded from=%d <= 0\n", from ) ) ;
+    wxASSERT_MSG(to>0, wxString::Format("TVectorItem::doRemove B yielded to=%d <= 0\n", to ) ) ;
 
     }
 
@@ -1971,7 +2105,7 @@ void TVectorItem::setType ( const wxString& _s )
 void TVectorItem::translate ( TVector * const v , SeqAA * const aa , vector <Tdna2aa> &dna2aa ) // not const
     {
     lastVector = v ; // -> not const
-//   dna2aa.clear () ;
+//  dna2aa.clear () ;
     if ( type != VIT_CDS ) return ;
     if ( getRF() == 0 ) return ;
 
@@ -2057,7 +2191,9 @@ wxString TVectorItem::getAminoAcidSequence () // not const because of translate
     vector <Tdna2aa> dna2aa ;
     translate ( lastVector , NULL , dna2aa ) ;
     for ( int a = 0 ; a < dna2aa.size() ; a++ )
+        {
         s += dna2aa[a].aa ;
+        }
     return s ;
     }
 
@@ -2084,7 +2220,7 @@ void TVectorItem::getArrangedAA ( TVector * const v , wxString &s , const int di
         }
     }
 
-int TVectorItem::getOffsetAt ( int i ) const
+int TVectorItem::getOffsetAt ( const int i ) const
     {
 //    myass ( lastVector , "TVectorItem::getOffsetAt" ) ;
     if ( !lastVector ) return -1 ;
@@ -2100,9 +2236,12 @@ int TVectorItem::getOffsetAt ( int i ) const
 
 int TVectorItem::getMem () const
     {
-    int a , r = 0 ;
-    for ( a = 0 ; a < pname.GetCount() ; a++ ) r += pname[a].length() + pvalue[a].length() ;
-//    r += dna2aa.size() * sizeof ( Tdna2aa ) ;
+    int r = 0 ;
+    for ( int a = 0 ; a < pname.GetCount() ; a++ )
+        {
+        r += pname[a].length() + pvalue[a].length() ;
+        }
+//  r += dna2aa.size() * sizeof ( Tdna2aa ) ;
     r += 7 * sizeof ( int ) ;
     r += desc.length() + name.length() ;
     r += 2 * sizeof ( float ) + sizeof ( wxTreeItemId ) ;
