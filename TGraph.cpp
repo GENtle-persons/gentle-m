@@ -159,7 +159,7 @@ void TGraph::OnSave(wxCommandEvent& event)
 
 //******************************************************** TGraphData
 
-TGraphData::TGraphData ( TGraphDisplay *d )
+TGraphData::TGraphData ( TGraphDisplay * const d )
     {
      display = d ;
      sx = sy = NULL ;
@@ -168,13 +168,13 @@ TGraphData::TGraphData ( TGraphDisplay *d )
      selected = false ;
     }
 
-void TGraphData::Add ( float x , float y )
+void TGraphData::Add ( const float x , const float y )
     {
     dx.push_back ( x ) ;
     dy.push_back ( y ) ;
     }
 
-void TGraphData::SetScales ( TGraphScale *_sx , TGraphScale *_sy )
+void TGraphData::SetScales ( TGraphScale * const _sx , TGraphScale * const _sy )
     {
     sx = _sx ;
     sy = _sy ;
@@ -233,7 +233,7 @@ void TGraphData::drawit ( wxDC &dc )
     dc.SetBrush ( *wxTRANSPARENT_BRUSH ) ;
     }
 
-void TGraphData::DrawSymbol ( wxDC &dc , wxString symbol , int x , int y , int size )
+void TGraphData::DrawSymbol ( wxDC &dc , const wxString& symbol , const int x , const int y , const int size ) const
     {
     if ( symbol == _T("rect") ) dc.DrawRectangle ( x-size*2/3 , y-size*2/3 , size*4/3+1 , size*4/3+1 ) ;
     else if ( symbol == _T("circle") ) dc.DrawCircle ( x , y , size ) ;
@@ -249,12 +249,12 @@ void TGraphData::DrawSymbol ( wxDC &dc , wxString symbol , int x , int y , int s
     }
 
 
-unsigned long TGraphData::GetCount ()
+unsigned long TGraphData::GetCount () const
     {
     return dx.size() ;
     }
 
-int TGraphData::Distance ( const wxPoint &pt )
+int TGraphData::Distance ( const wxPoint &pt ) const
     {
     int best = 999999999 ;
     if ( drawn.size() < 2 ) return best ; // Not near at all

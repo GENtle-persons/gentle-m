@@ -28,11 +28,11 @@ class TPrimerDesign ;
 class TPrimer
     {
     public :
-    TPrimer ( int _from = 0 , int _to = 0 , bool _upper = true ) ; ///< Constructor
+    TPrimer ( const int _from = 0 , const int _to = 0 , const bool _upper = true ) ; ///< Constructor
     ~TPrimer () {} ; ///< Dummy Destructor
     void getSequenceFromVector ( const TVector * const v , const bool from3 = false ) ; ///< Reads primer sequence from vectors
     void makeStats () ; ///< Generates key values about the primer
-    void evaluate ( float tm_opt = 0 ) ; ///< Evaluates primer
+    void evaluate ( const float tm_opt = 0 ) ; ///< Evaluates primer
     wxString report () const ; ///< Generates a human-readable report
     wxString get53sequence () const ; ///< Returns the 5'->3' primer sequence
     wxString get35sequence () const ; ///< Returns the 3'->5' primer sequence

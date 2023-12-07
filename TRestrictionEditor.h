@@ -43,8 +43,8 @@ class TRestrictionEditor : public wxDialog
 
     virtual void initme ( TVector *_v ) ; ///< Initialization
     virtual void initRestrictionPage () ; ///< Sets up the page
-    virtual void pR_showGroupEnzymes ( wxString gr ) ; ///< Shows enzymes in selected enzyme group
-    virtual wxArrayInt getcuts ( wxString enzyme ) ; ///< Returns the cut positions for the given enzyme
+    virtual void pR_showGroupEnzymes ( const wxString& gr ) ; ///< Shows enzymes in selected enzyme group
+    virtual wxArrayInt getcuts ( const wxString& enzyme ) ; ///< Returns the cut positions for the given enzyme
     virtual void pR_showFragments ( int i ) ; ///< Show the resulting fragments
     virtual void add2cocktail ( const wxString& s ) ; ///< Add enzyme to restriction cocktail
     virtual void del_from_cocktail ( const wxString& s ) ; ///< Remove enzyme from restriction cocktail
