@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the TPrimerDesign module class
+    \brief Contains the TPrimerDesign module class
 */
 #ifndef _PRIMER_DSEGIN_H_
 #define _PRIMER_DSEGIN_H_
@@ -13,7 +13,7 @@ class TPrimerDialog ;
 class TPrimerDesign ;
 class TPrimer ;
 
-/**	\brief The virtual PCR/primer design module
+/** \brief The virtual PCR/primer design module
 */
 class TPrimerDesign : public ChildBase
     {

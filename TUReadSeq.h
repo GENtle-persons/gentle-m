@@ -12,25 +12,25 @@ class TGenBank ;
 class TUReadSeq
     {
     public :
-    TUReadSeq ( wxString _filename = _T("") ) ; ///< Constructor
-	~TUReadSeq () {} ; ///< Destructor (empty)
+    TUReadSeq ( const wxString& filename = _T("") ) ; ///< Constructor
+    ~TUReadSeq () {} ; ///< Destructor (empty)
 
     void getFormat () ; ///< Try to determine format
     int getSequenceNames () ; ///< Get the names of the sequences
     void getSequences () ; ///< Get the sequences
-    void convert ( TGenBank &gb ) ; ///< Convert the sequences to GenBank format
+    void convert ( TGenBank &gb ) const ; ///< Convert the sequences to GenBank format
 
-    static int getSeqType ( wxString t ) ; ///< Return the sequence type
+    static int getSeqType ( const wxString& t ) ; ///< Return the sequence type
 
     short error ; // Parsing error
 
     private :
     wxString filename ; ///< Name of source file
     short format ;
-	 short numseqs ;
+    short numseqs ;
     long skiplines ;
     wxArrayString seq_names ;
-	 wxArrayString seqs ;
+    wxArrayString seqs ;
     } ;
 
 

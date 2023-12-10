@@ -24,8 +24,8 @@ class TPDB
     TPDB () ; ///< Constructor
     ~TPDB () {} ; ///< Dummy destructor
 	
-    void load ( wxString s ) ; ///< Load file
-    void paste ( wxString s ) ; ///< Take pasted text
+    void load ( const wxString& s ) ; ///< Load file
+    void paste ( const wxString& s ) ; ///< Take pasted text
     void remap () ; ///< Parse and generate sequences
 
     bool success ; ///< Errors during parsing?
@@ -33,7 +33,7 @@ class TPDB
 
     private :
     void check4success () ; ///< Valid PDB?
-    int seq ( char c ) ; ///< Access (or create) a certain chain
+    int seq ( const char c ) ; ///< Access (or create) a certain chain
     wxArrayString vs ; ///< The text lines
 
     /// The PDB name

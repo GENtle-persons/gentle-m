@@ -172,7 +172,7 @@ void TEnzymeSettingsTab::updateColorButton ( wxButton *b , const wxColour &c )
         {
         wxPrintf("D: TEnzymeSettingsTab::updateColorButton: c.IsOk() failed\n") ;
         return ;
-	}
+        }
     b->SetForegroundColour ( c ) ;
     if ( ( c.Red() + c.Green() + c.Blue() ) / 3 < 230 ) b->SetBackgroundColour ( *wxWHITE ) ;
     else b->SetBackgroundColour ( *wxBLACK ) ;

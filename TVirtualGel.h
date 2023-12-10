@@ -19,10 +19,10 @@ class TGelLane
     virtual ~TGelLane () {} ///< Dummy destructor
 
     virtual void clear () ; ///< Clears the lane data
-    virtual void setMarker ( wxString _name ) ; ///< Sets a default marker
-    virtual void add ( int size , int weight = 1 ) ; ///< Adds a weightenend band
-    virtual void add ( int size , wxString title ) ; ///< Adds a labeled band
-    virtual void add ( int size , int weight , wxString title ) ; ///< Adds a band with weight and label
+    virtual void setMarker ( const wxString& _name ) ; ///< Sets a default marker
+    virtual void add ( const int size , int weight = 1 ) ; ///< Adds a weightenend band
+    virtual void add ( const int size , const wxString& title ) ; ///< Adds a labeled band
+    virtual void add ( const int size , const int weight , const wxString& title ) ; ///< Adds a band with weight and label
     wxString name , type ;
     wxArrayInt vi , vw ;
     wxArrayString vs ;
@@ -74,8 +74,8 @@ class TMyGelControl : public wxControl
     virtual void OnPrint(wxCommandEvent &event); ///< Print event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler
 
-    virtual int getLanePos ( int size , int height , float perc = 0 ) ;
-    virtual double fix_percent ( int size , float perc = 0 ) ;
+    virtual int getLanePos ( const int size , const int height , const float perc = 0 ) ;
+    virtual double fix_percent ( const int size , const float perc = 0 ) ;
 
     virtual void drawBand ( wxDC &dc , TGelLane &lane , int band ) ; ///< Draws a gel band
 

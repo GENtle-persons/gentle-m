@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains defines, global functions, includes, and the MyApp class
+    \brief Contains defines, global functions, includes, and the MyApp class
 */
 #ifndef _MAIN_H_
 #define _MAIN_H_
@@ -12,22 +12,22 @@
 
 typedef unsigned int uint ;
 
-/**	\fn myass ( bool b , wxString msg )
-	\brief "My assertion" - little inside joke...
-	\param b The condition given in the call. No assertion when b is FALSE.
-	\param msg The message string to write into errout.
+/**    \fn myass ( bool b , wxString msg )
+    \brief "My assertion" - little inside joke...
+    \param b The condition given in the call. No assertion when b is FALSE.
+    \param msg The message string to write into errout.
 */
 
-/**	\def MYDEBUG
-	\brief Turns on output of the myass function; should not be used for releases
+/**    \def MYDEBUG
+    \brief Turns on output of the myass function; should not be used for releases
 */
 
-/**	\def MYLOG
-	\brief Turns on output of logging; should not be used for releases
+/**    \def MYLOG
+    \brief Turns on output of logging; should not be used for releases
 */
 
-/**	\def MYTEST
-	\brief Turns on both MYDEBUG and MYLOG; should not be used for releases
+/**    \def MYTEST
+    \brief Turns on both MYDEBUG and MYLOG; should not be used for releases
 */
 
 //#define MYDEBUG
@@ -35,41 +35,41 @@ typedef unsigned int uint ;
 //#define MYTEST
 
 #ifdef MYTEST
-	#ifndef MYLOG
-		#define MYLOG
-	#endif // MYLOG
-	#ifndef MYDEBUG
-		#define MYDEBUG
-	#endif // MYDEBUG
+    #ifndef MYLOG
+        #define MYLOG
+    #endif // MYLOG
+    #ifndef MYDEBUG
+        #define MYDEBUG
+    #endif // MYDEBUG
 #endif // MYTEST
 
-/**	\def MYSPINBOXSIZE
-	\brief Width of spin box, for windows only
+/**    \def MYSPINBOXSIZE
+    \brief Width of spin box, for windows only
 */
 #ifdef __WXMSW__
-	#define MYSPINBOXSIZE 80
+    #define MYSPINBOXSIZE 80
 #else
-	#define MYSPINBOXSIZE -1
+    #define MYSPINBOXSIZE -1
 #endif
 
 #include "wx/wxprec.h"
 
-/**	\def MYFONTSIZE
-	\brief Main tree font size
+/**    \def MYFONTSIZE
+    \brief Main tree font size
 */
 #ifdef __WXMAC__
-	#define MYFONTSIZE 10
+    #define MYFONTSIZE 10
 #else
-	#define MYFONTSIZE 8
+    #define MYFONTSIZE 8
 #endif
 
-/**	\def MYSPINBOXSIZE
-	\brief List box style, for GTK only
+/**    \def MYSPINBOXSIZE
+    \brief List box style, for GTK only
 */
 #ifdef __WXGTK__
-	#define MYLISTBORDER wxSIMPLE_BORDER
+    #define MYLISTBORDER wxSIMPLE_BORDER
 #else
-	#define MYLISTBORDER 0
+    #define MYLISTBORDER 0
 #endif
 
 #ifdef __BORLANDC__
@@ -92,7 +92,7 @@ typedef unsigned int uint ;
 #include <wx/filename.h>
 
 #ifdef _UNICODE
-	#define wxUSE_UNICODE 1
+    #define wxUSE_UNICODE 1
 #endif
 
 #if defined(__WXGTK__) || defined(__WXMOTIF__)
@@ -113,15 +113,15 @@ typedef unsigned int uint ;
 using namespace std ;
 
 /** \def MYPEN(_a)
-	\brief Creates or reuses a solid pen with size 1. _a is of type wxColour
+    \brief Creates or reuses a solid pen with size 1. _a is of type wxColour
 */
 
 /** \def MYBRUSH(_a)
-	\brief Creates or reuses a solid brush. _a is of type wxColour
+    \brief Creates or reuses a solid brush. _a is of type wxColour
 */
 
 /** \def MYFONT(_a,_b,_c,_d)
-	\brief Creates or reuses a font. Parameters are the same as wxCreateFont
+    \brief Creates or reuses a font. Parameters are the same as wxCreateFont
 */
 
 #define MYPEN(_a) (wxThePenList->FindOrCreatePen ( _a , 1 , wxPENSTYLE_SOLID ) )
@@ -173,22 +173,22 @@ WX_DECLARE_STRING_HASH_MAP( wxString, wxHashString );
 class MyFrame ;
 
 /** \class MyApp
-	\brief Application class
+    \brief Application class
 */
 class MyApp : public wxApp
     {
     public:
     virtual bool OnInit();
     virtual int OnExit () ;
-    virtual void init_txt ( wxString lang , wxString csv , wxHashString *target = NULL , int ln = 1 ) ;
-    virtual void do_my_ass ( bool b , wxString msg = _T("") ) ;
-    virtual void do_my_log ( wxString function , wxString msg = _T("") ) ;
-    virtual wxString getHTMLCommand ( wxString command ) ; ///< Returns the command line for running a browser
-    virtual wxString getFileFormatApplication ( wxString type ) ; ///< Returns application associated with a file type
-    virtual wxString getFileFormatCommand ( wxString type , wxString file ) ; ///< Returns the command line for running this file
-    virtual wxString get_GENtle_version () ; ///< Returns the GENtle version string
-	virtual wxString getLocalDBname () ; ///< Returns the filename of the default local database
-	virtual void launchBrowser ( wxString url ) ;
+    virtual void init_txt ( const wxString& lang , const wxString& csv , wxHashString *target = NULL , int ln = 1 ) ;
+    virtual void do_my_ass ( const bool b , const wxString& msg = _T("") ) ;
+    virtual void do_my_log ( const wxString& function , const wxString& msg = _T("") ) ;
+    virtual wxString getHTMLCommand ( const wxString& command ) ; ///< Returns the command line for running a browser
+    virtual wxString getFileFormatApplication ( const wxString& type ) ; ///< Returns application associated with a file type
+    virtual wxString getFileFormatCommand ( const wxString& type , const wxString& file ) ; ///< Returns the command line for running this file
+    virtual wxString get_GENtle_version () const ; ///< Returns the GENtle version string
+    virtual wxString getLocalDBname () ; ///< Returns the filename of the default local database
+    virtual void launchBrowser ( const wxString& url ) ;
 
     MyFrame *frame; ///< The application frame
     wxMimeTypesManager mtm ; ///< The MIME types manager
@@ -232,8 +232,8 @@ WX_DEFINE_ARRAY(TProteaseCut *,wxArrayTProteaseCut);
 WX_DECLARE_OBJARRAY(float, wxArrayFloat);
 
 #ifndef _wxArrayTVector
-	#define _wxArrayTVector
-	WX_DEFINE_ARRAY(TVector *, wxArrayTVector);
+    #define _wxArrayTVector
+    WX_DEFINE_ARRAY(TVector *, wxArrayTVector);
 #endif
 
 /** \brief Clear wxArray of pointers and delete the not-NULL-pointer objects */
@@ -308,15 +308,15 @@ WX_DECLARE_OBJARRAY(float, wxArrayFloat);
 // ---------------------------------------------------------------------------
 
 #ifdef MYDEBUG
-	#define myass(a,b) myapp()->do_my_ass(a,b)
+    #define myass(a,b) myapp()->do_my_ass(a,b)
 #else
-	#define myass(a,b)
+    #define myass(a,b)
 #endif
 
 #ifdef MYLOG
-	#define mylog(a,b) myapp()->do_my_log(a,b)	
+    #define mylog(a,b) myapp()->do_my_log(a,b)    
 #else
-	#define mylog(a,b)
+    #define mylog(a,b)
 #endif
 
 #define CHAR2WX(__c) wxString((char*)l,wxConvUTF8)

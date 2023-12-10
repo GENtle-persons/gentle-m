@@ -1,9 +1,9 @@
 /** \file
-	\brief The TUReadSeq class
+    \brief The TUReadSeq class
 */
 #include "TUReadSeq.h"
 
-TUReadSeq::TUReadSeq ( wxString _filename )
+TUReadSeq::TUReadSeq ( const wxString& _filename )
     {
     error = 0 ;
     filename = _filename ;
@@ -14,7 +14,7 @@ TUReadSeq::TUReadSeq ( wxString _filename )
     }
 
 
-void TUReadSeq::getFormat ()
+void TUReadSeq::getFormat () /* not const */
     {
     if ( error != 0 ) return ;
     format = seqFileFormat ( filename.mb_str() , &skiplines , &error ) ;
@@ -22,24 +22,23 @@ void TUReadSeq::getFormat ()
     }
 
 
-int TUReadSeq::getSequenceNames ()
+int TUReadSeq::getSequenceNames () /* not const */
     {
     if ( error != 0 ) return 0 ;
     char  *seqlist;   /* list of sequence names, newline separated, 0 terminated */
 
-    seqlist = listSeqs( filename.mb_str(), skiplines, format, &numseqs, &error);
+    seqlist = listSeqs( filename.mb_str(), skiplines, format, &numseqs, &error); // not const
     wxString s ( seqlist , *wxConvCurrent ) ;
     free( seqlist);
     explode ( _T("\n") , s , seq_names ) ;
     return seq_names.GetCount() ;
     }
 
-void TUReadSeq::getSequences ()
+void TUReadSeq::getSequences () /* not const */
     {
     if ( error != 0 ) return ;
-    short seqIndex ;
     seqs.Clear () ;
-    for ( seqIndex = 1 ; error == 0 && seqIndex <= seq_names.GetCount() ; seqIndex++ )
+    for ( short seqIndex = 1 ; error == 0 && seqIndex <= seq_names.GetCount() ; seqIndex++ )
         {
         long  seqlen;     /* length of seq */
         char  seqid[256]; /* sequence name */
@@ -52,19 +51,19 @@ void TUReadSeq::getSequences ()
            if ( *c >= 'a' && *c <= 'z' ) *c = *c - 'a' + 'A' ;
            }
         seq_names[seqIndex-1] = wxString ( seqid , *wxConvCurrent ) ;
-        seqs.Add ( wxString ( seq , *wxConvCurrent) ) ;
+        seqs.Add ( wxString ( seq , *wxConvCurrent) ) ; // not const
         free(seq);
         }
     }
 
-int TUReadSeq::getSeqType ( wxString t )
+int TUReadSeq::getSeqType ( const wxString& t )
     {
     short i = getseqtype ( t.mb_str() , t.length() ) ;
     if ( i == kAmino ) return TYPE_AMINO_ACIDS ;
     return TYPE_VECTOR ;
     }
 
-void TUReadSeq::convert ( TGenBank &gb )
+void TUReadSeq::convert ( TGenBank &gb ) const
     {
     wxString s ;
     for ( int a = 0 ; a < seqs.GetCount() ; a++ )

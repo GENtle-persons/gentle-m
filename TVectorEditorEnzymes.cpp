@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the TVectorEditor class methods concerning enzymes
+    \brief Contains the TVectorEditor class methods concerning enzymes
 */
 #include "TVectorEditor.h"
 
@@ -8,8 +8,8 @@ void TVectorEditor::initPanEnzym ()
     nb->AddPage ( panEnzym , txt("t_vec_enzym") ) ;
     if ( v ) initPanEnzym2 () ;
 
-//    int w , h ;
-//    GetMyClientSize ( &w , &h , panEnzym ) ;
+//  int w , h ;
+//  GetMyClientSize ( &w , &h , panEnzym ) ;
 
     wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *v1 = new wxBoxSizer ( wxVERTICAL ) ;
@@ -86,9 +86,8 @@ void TVectorEditor::initPanEnzym ()
     listGroups->Clear() ;
     showEnzymeGroups () ;
 
-    int a ;
     ce.Clear() ;
-    for ( a = 0 ; v && a < v->re.GetCount() ; a++ )
+    for ( int a = 0 ; v && a < v->re.GetCount() ; a++ )
         {
         wxString s = v->re[a]->getName() ;
         listCE->Append ( s ) ;
@@ -113,8 +112,8 @@ void TVectorEditor::enzymeListDlbClick ( wxCommandEvent &ev )
     if ( lb == listGE )
         {
         wxArrayInt vi ;
-        int k , n = lb->GetSelections ( vi ) ;
-        for ( k = 0 ; k < n ; k++ )
+        int n = lb->GetSelections ( vi ) ;
+        for ( int k = 0 ; k < n ; k++ )
             {
             wxString s = lb->GetString ( vi[k] ) ;
             TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( s ) ;
@@ -128,10 +127,10 @@ void TVectorEditor::enzymeListDlbClick ( wxCommandEvent &ev )
                   {
                   int x = wxMessageBox ( txt("t_enzyme_list_double_click") , txt("msg_box") , wxYES_NO|wxCANCEL ) ;
                   if ( x == wxYES )
-                     {
-                     *e = *ed.e ;
-                     myapp()->frame->LS->updateRestrictionEnzyme ( e ) ;
-                     }
+                      {
+                      *e = *ed.e ;
+                      myapp()->frame->LS->updateRestrictionEnzyme ( e ) ;
+                      }
                   if ( x == wxNO ) addit = true ;
                   }
                else addit = true ;
@@ -200,10 +199,10 @@ void TVectorEditor::showGroupEnzymes ( wxString gr )
 void TVectorEditor::enzymeAddEn ( wxCommandEvent &ev )
     {
     wxArrayInt vi ;
-    int i , k , n = listGE->GetSelections ( vi ) ;
-    for ( k = 0 ; k < n ; k++ )
+    int n = listGE->GetSelections ( vi ) ;
+    for ( int k = 0 ; k < n ; k++ )
         {
-        i = vi[k] ;
+        int i = vi[k] ;
         wxString s = listGE->GetString ( i ) ;
         listGE->Deselect ( i ) ;
         int p = listCE->FindString ( s ) ;
@@ -217,12 +216,11 @@ void TVectorEditor::enzymeAddEn ( wxCommandEvent &ev )
 
 void TVectorEditor::enzymeAddGr ( wxCommandEvent &ev )
     {
-    int a , b ;
     wxString s ;
-    for ( a = 0 ; a < eig.GetCount() ; a++ )
+    for ( int a = 0 ; a < eig.GetCount() ; a++ )
         {
         s = eig[a] ;
-        b = listCE->FindString ( s ) ;
+        int b = listCE->FindString ( s ) ;
         if ( b == wxNOT_FOUND )
            {
            listCE->Append ( s ) ;
@@ -237,18 +235,20 @@ void TVectorEditor::enzymeAddToGr ( wxCommandEvent &ev )
     group = myapp()->frame->LS->UCfirst ( group ) ;
     if ( group == txt("All") ) return ;
     wxArrayInt vi ;
-    int i , k , n = listCE->GetSelections ( vi ) ;
+    int n = listCE->GetSelections ( vi ) ;
 
     if ( n == 0 ) // Nothing selected, so select all
         {
         for ( n = 0 ; n < listCE->GetCount() ; n++ )
-	    	listCE->SetSelection ( n , TRUE ) ;
-       	n = listCE->GetSelections ( vi ) ;
-       	}
+            {
+            listCE->SetSelection ( n , TRUE ) ;
+            }
+        n = listCE->GetSelections ( vi ) ;
+        }
 
-    for ( k = n-1 ; k >= 0 ; k-- )
+    for ( int k = n-1 ; k >= 0 ; k-- )
         {
-        i = vi[k] ;
+        int i = vi[k] ;
         wxString s = listCE->GetString(i) ;
         myapp()->frame->LS->addEnzymeToGroup ( s , group ) ;
         }
@@ -271,10 +271,10 @@ void TVectorEditor::enzymeAddToNewGr ( wxCommandEvent &ev )
 void TVectorEditor::enzymeReallyDeleteEnzyme ( wxCommandEvent &ev )
     {
     wxArrayInt vi ;
-    int a , n = listGE->GetSelections ( vi ) ;
+    int n = listGE->GetSelections ( vi ) ;
     if ( n == 0 ) return ;
     if ( wxYES != wxMessageBox ( txt("t_warn_delete_enzymes") , txt("msg_box") , wxYES_NO ) ) return ;
-    for ( a = 0 ; a < n ; a++ )
+    for ( int a = 0 ; a < n ; a++ )
         {
         wxString name = listGE->GetString ( vi[a] ) ;
         myapp()->frame->LS->markEnzymeForDeletion ( name ) ;
@@ -285,10 +285,10 @@ void TVectorEditor::enzymeReallyDeleteEnzyme ( wxCommandEvent &ev )
 void TVectorEditor::enzymeDelEn ( wxCommandEvent &ev )
     {
     wxArrayInt vi ;
-    int i , k , n = listCE->GetSelections ( vi ) ;
-    for ( k = n-1 ; k >= 0 ; k-- )
+    int n = listCE->GetSelections ( vi ) ;
+    for ( int k = n-1 ; k >= 0 ; k-- )
         {
-        i = vi[k] ;
+        int i = vi[k] ;
         wxString s = listCE->GetString ( i ) ;
         listCE->Delete ( i ) ;
         for ( i = 0 ; i < ce.GetCount() ; i++ )
@@ -305,7 +305,7 @@ void TVectorEditor::enzymeDelEn ( wxCommandEvent &ev )
         }
     }
 
-void TVectorEditor::initialViewEnzyme ( wxString e )
+void TVectorEditor::initialViewEnzyme ( const wxString& e )
     {
     nb->SetSelection ( 2 ) ;
     listCE->SetStringSelection ( e ) ;
@@ -316,8 +316,7 @@ void TVectorEditor::importCloneEnzymes ( wxCommandEvent &ev )
     TStorage TS ( TEMP_STORAGE ) ;
     TClone clone ;
     clone.loadEnzymeList ( &TS , "./CLONE.ENZ" ) ;
-    int a ;
-    for ( a = 0 ; a < TS.re.GetCount() ; a++ )
+    for ( int a = 0 ; a < TS.re.GetCount() ; a++ )
        {
        listCE->Append ( TS.re[a]->getName() ) ;
        myapp()->frame->LS->re.Add ( TS.re[a] ) ;
@@ -450,14 +449,14 @@ void TVectorEditor::enzymeImportRebase ( wxCommandEvent &ev )
                     if ( myapp()->frame->LS->re[b]->getSequence() == seq1 &&
                          myapp()->frame->LS->re[b]->getCut() == lcut1 &&
                          myapp()->frame->LS->re[b]->getOverlap() == lcut2 )
-			 {
+                         {
                          break ;
-			 }
+                         }
                     }
                 if ( b < c )
                     {
-		    continue ; // Already an enzyme with these properties, no need to add it under another name again
-		    }
+                    continue ; // Already an enzyme with these properties, no need to add it under another name again
+                    }
 
                 // A real new enzyme!
                 added++ ;
@@ -501,10 +500,10 @@ void TVectorEditor::enzymeDelFromGr ( wxCommandEvent &ev )
     if ( group == txt("All") ) return ;
 
     wxArrayInt vi ;
-    int i , k , n = listGE->GetSelections ( vi ) ;
-    for ( k = n-1 ; k >= 0 ; k-- )
+    int n = listGE->GetSelections ( vi ) ;
+    for ( int k = n-1 ; k >= 0 ; k-- )
         {
-        i = vi[k] ;
+        int i = vi[k] ;
         wxString s = listGE->GetString(i) ;
         myapp()->frame->LS->removeEnzymeFromGroup ( s , group ) ;
         }

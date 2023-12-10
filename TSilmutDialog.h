@@ -46,12 +46,12 @@ class TSilmutDialog : public wxDialog
     virtual void OnACR ( wxCommandEvent &ev ) ; ///< Allow cut removal event handler
     virtual void OnLbDoubleClick ( wxCommandEvent &ev ) ; ///< Listbox double-click event handler
     virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
-    virtual wxString getSequence () ; ///< Returns the sequence
-    virtual TRestrictionEnzyme *getEnzyme () ; ///< Returns a pointer to the enzyme
+    virtual wxString getSequence () const ; ///< Returns the sequence
+    virtual TRestrictionEnzyme *getEnzyme () const ; ///< Returns a pointer to the enzyme
 
     private :
-    wxString getAAresult ( wxString dna ) ; ///< Returns resulting amino acid sequence
-    int selID () ; ///< Returns selected ID
+    wxString getAAresult ( const wxString& dna ) ; ///< Returns resulting amino acid sequence
+    int selID () const ; ///< Returns selected ID
 
     // Variables
     TVector *v ;
