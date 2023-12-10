@@ -258,8 +258,10 @@ TVector *TVector::newFromMark ( const int from , const int _to )  const
     nv->setFromVector ( *this ) ;
 
     int to = _to ;
+    const int nvLength = nv->sequence.length() ; 
 
-    wxASSERT_MSG ( sequence.length() == nv->sequence.length() , wxString::Format ("sequence.length() != nv->sequence.length()\n" ) ) ;
+    wxASSERT_MSG ( sequence.length() == nvLength ,
+                   wxString::Format ("TVector::newFromMark(%d,%d) %d=sequence.length() != nv->sequence.length()\n" , from, to , sequence.length() , nvLength ) ) ;
 
     // now remove the parts that are not within from and to
     if ( from == 1 && to == sequence.length() )
@@ -277,10 +279,18 @@ TVector *TVector::newFromMark ( const int from , const int _to )  const
         to -= nv->sequence.length() ;
         if ( to+1 > from - 1 )
             {
-            wxPrintf("E: Something is weird - to + 1 = %d > from - 1 = %d in remove after initial checks\n", to + 1, from - 1 ) ;
+            wxPrintf("E: TVector::newFromMark(%d,%d): Something is weird - to + 1 = %d > from - 1 = %d in remove after initial checks\n", from , to , to + 1, from - 1 ) ;
             exit(-1);
             }
-        nv->doRemove ( to+1 , from-1 , false ) ;
+	if ( 1 == from )
+	    {
+            wxPrintf(wxString::Format("W: TVector::newFromMark(%d,%d) 1==from and %d=to:\n", from , _to , to ) ) ;
+            nv->doRemove ( to+1 , sequence.length() , false ) ;
+	    }
+	else
+	    {
+            nv->doRemove ( to+1 , from-1 , false ) ;
+	    }
         }
     else
         {
@@ -2013,6 +2023,7 @@ void TVectorItem::doRemove ( const int f , const int t , const int l )
         }
 
     //wxPrintf("D: TVectorItem::doRemove(f=%d,t=%d,l=%d) (from=%d, to=%d) (rt=%d, rto=%d): A\n" , f , t , l , from , to , rt, rto  ) ;
+
     wxString s ( (wxChar) '_' , l * 3 + 1 ) ;
     for ( int a = from ; a <= rto ; a++ )
         {
@@ -2044,17 +2055,24 @@ void TVectorItem::doRemove ( const int f , const int t , const int l )
           }
        }
 
+    // to up to here only counted the number of "X"s
+    to += from ; // now to turned into a position
+
     if ( -1 == from )
         {
-        wxPrintf("I: Feature '%s' completely erradicated by removal (%d-%d), flagged as from = to = -1\n", name, f, t ) ;
+        wxPrintf( "I: Feature '%s' completely erradicated by removal (%d-%d), flagged as from = to = -1\n", name, f, t ) ;
         return ;
         }
 
-    wxASSERT_MSG(from>0,wxString::Format("TVectorItem::doRemove A yielded from=%d, with to=%d, ff=%d <= 0\n", from , to , ff ) ) ;
+    if ( 0 == to )
+        {
+        wxPrintf( "I: Feature '%s' and removal (%d-%d), has 0 == to \n", name, f, t ) ;
+	wxPrintf( "%s", s ) ;
+        //return ;
+	}
 
-    wxASSERT_MSG(to>0, wxString::Format("TVectorItem::doRemove A yielded to=%d <= 0, with from=%d, ff=%d\n", to , from , ff ) ) ;
-
-    to += from ;
+    wxASSERT_MSG(from>0,wxString::Format("TVectorItem '%s'::doRemove A yielded from=%d, with to=%d , ff=%d <= 0 , l=%d\n", name , from , to , ff  , l) ) ;
+    wxASSERT_MSG(to>0, wxString::Format("TVectorItem '%s'::doRemove A yielded to==%d <= 0 , with from=%d, ff=%d, l=%d\n", name , to , from , ff , l ) ) ;
 
     // wxPrintf("D: TVectorItem::doRemove(f=%d,t=%d,l=%d) (from:%d,to:%d): D\n" , f,t,l, from , to) ;
 
@@ -2069,8 +2087,8 @@ void TVectorItem::doRemove ( const int f , const int t , const int l )
     while ( to > l_mod ) to -= l_mod ;
     while ( from > l_mod ) from -= l_mod ;
 
-    wxASSERT_MSG(from>0, wxString::Format("TVectorItem::doRemove B yielded from=%d <= 0\n", from ) ) ;
-    wxASSERT_MSG(to>0, wxString::Format("TVectorItem::doRemove B yielded to=%d <= 0\n", to ) ) ;
+    wxASSERT_MSG(from>0, wxString::Format("TVectorItem::doRemove B yielded from=%d <= 0, to=%d, l_mod=%d\n", from , to , l_mod ) ) ;
+    wxASSERT_MSG(to>0, wxString::Format("TVectorItem::doRemove B yielded to=%d <= 0, from=%d, l_mod=%d\n", to , from , l_mod ) ) ;
 
     }
 
