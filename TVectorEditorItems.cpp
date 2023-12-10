@@ -1,15 +1,14 @@
 /** \file
-	\brief Contains the TVectorEditor class methods concerning items
+    \brief Contains the TVectorEditor class methods concerning items
 */
 #include "TVectorEditor.h"
 
 void TVectorEditor::commitItems ()
     {
     storeItemData () ;
-    int a ;
     vector <bool> found ;
     while ( found.size() < v->items.size() ) found.push_back ( false ) ;
-    for ( a = 0 ; a < newitems.GetCount() ; a++ )
+    for ( int a = 0 ; a < newitems.GetCount() ; a++ )
         {
         TVectorItem c = *newitems[a] ;
         if ( c.r2 != -1 )
@@ -43,20 +42,20 @@ void TVectorEditor::commitItems ()
             }
         }
 
-	vector <TVectorItem> ni ;
-	bool doUpdate = false ;
-	for ( a = 0 ; a < found.size() ; a++ )
-		{
-		if ( found[a] ) ni.push_back ( v->items[a] ) ;
-		else doUpdate = true ;
-		}
-	v->items = ni ;
+    vector <TVectorItem> ni ;
+    bool doUpdate = false ;
+    for ( int a = 0 ; a < found.size() ; a++ )
+        {
+        if ( found[a] ) ni.push_back ( v->items[a] ) ;
+        else doUpdate = true ;
+        }
+    v->items = ni ;
 
-	if ( doUpdate )
-		{
-		v->setChanged () ;
-		v->updateDisplay() ;
-		}
+    if ( doUpdate )
+        {
+        v->setChanged () ;
+        v->updateDisplay() ;
+        }
 
 /*
     for ( a = found.size() - 1 ; a >= 0 ; a-- )
@@ -72,7 +71,7 @@ void TVectorEditor::commitItems ()
 */
     }
 
-void TVectorEditor::initialViewItem ( int num )
+void TVectorEditor::initialViewItem ( const int num )
     {
     nb->SetSelection ( 1 ) ;
     items->SetItemState ( num , wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED ,
@@ -81,7 +80,7 @@ void TVectorEditor::initialViewItem ( int num )
     }
 
 
-int TVectorEditor::getCurrentItem ()
+int TVectorEditor::getCurrentItem () const
     {
     for ( int a = 0 ; a < items->GetItemCount() ; a++ )
         if ( items->GetItemState ( a , wxLIST_STATE_SELECTED/*wxLIST_STATE_DONTCARE*/ ) != 0 )
@@ -110,9 +109,7 @@ void TVectorEditor::initPanItem ()
     GetMyClientSize ( &w , &h , panItem ) ;
 
     // Items list
-    items = new wxListCtrl ( panItem , TVE_ILIST ,
-			     wxDefaultPosition , wxDefaultSize ,
-			     wxLC_REPORT|wxLC_SINGLE_SEL|MYLISTBORDER ) ;
+    items = new wxListCtrl ( panItem , TVE_ILIST , wxDefaultPosition , wxDefaultSize , wxLC_REPORT|wxLC_SINGLE_SEL|MYLISTBORDER ) ;
     items->InsertColumn ( 0 , txt("name") ) ;
     items->InsertColumn ( 1 , txt("type") ) ;
     items->InsertColumn ( 2 , txt("from") ) ;
@@ -120,8 +117,7 @@ void TVectorEditor::initPanItem ()
     items->InsertColumn ( 4 , txt("direction") ) ;
     items->InsertColumn ( 5 , txt("length") ) ;
 
-    int a ;
-    for ( a = 0 ; a < v->items.size() ; a++ )
+    for ( int a = 0 ; a < v->items.size() ; a++ )
         {
         TVectorItem *nvi = new TVectorItem ;
         *nvi = v->items[a] ;
@@ -155,21 +151,15 @@ void TVectorEditor::initPanItem ()
     h1a->Add ( ito ) ;
 
     // Item type list
-    for ( a = 0 ; a < VIT_TYPES ; a++ )
+    for ( int a = 0 ; a < VIT_TYPES ; a++ )
         {
         snprintf ( t , sizeof(t)-1, "itemtype%d" , a ) ;
         vs[a] = txt(t) ;
         }
-    ichoice = new wxChoice(panItem,TVE_ICHOICE,
-			   wxDefaultPosition , wxDefaultSize ,
-			   VIT_TYPES,
-			   vs) ;
+    ichoice = new wxChoice(panItem,TVE_ICHOICE, wxDefaultPosition , wxDefaultSize , VIT_TYPES, vs) ;
     h1b->Add ( ichoice ) ;
 
-    idesc = new TURLtext(panItem,URLTEXT_DUMMY,_T(""),
-			 wxDefaultPosition , wxDefaultSize ,
-			 wxTE_PROCESS_ENTER|wxTE_MULTILINE );
-
+    idesc = new TURLtext(panItem,URLTEXT_DUMMY,_T(""), wxDefaultPosition , wxDefaultSize , wxTE_PROCESS_ENTER|wxTE_MULTILINE );
     bAdd = new wxButton ( panItem , TVE_I_ADD , txt("b_add_item") ) ;
     bDel = new wxButton ( panItem ,TVE_I_DEL , txt("d_del_item") ) ;
     bCol = new wxButton ( panItem ,TVE_I_COL , txt("t_edit_item") ) ;
@@ -179,9 +169,7 @@ void TVectorEditor::initPanItem ()
     vt[1] = _T("1") ;
     vt[2] = _T("2") ;
     vt[3] = _T("3") ;
-    irb = new wxRadioBox ( panItem , -1 , txt("t_reading_frame") ,
-			   wxDefaultPosition , wxDefaultSize ,
-			   4 , vt , wxRA_SPECIFY_COLS ) ;
+    irb = new wxRadioBox ( panItem , -1 , txt("t_reading_frame") , wxDefaultPosition , wxDefaultSize , 4 , vt , wxRA_SPECIFY_COLS ) ;
 
     v1->Add ( h0a , 0 , wxEXPAND , 2 ) ;
     v1->Add ( h1a , 0 , wxEXPAND , 2 ) ;
@@ -211,17 +199,13 @@ void TVectorEditor::initPanItem ()
     }
 
 
-
-
-
-
 void TVectorEditor::updateItem ( TVectorItem &i )
     {
     int l = i.r4 ;
-	 wxString t ;
-//    char t[1000] ;
-	 t = wxString::Format ( _T("itemtype%d") , i.type ) ;
-//    snprintf ( t , sizeof(t)-1, "itemtype%d" , i.type ) ;
+    wxString t ;
+//  char t[1000] ;
+    t = wxString::Format ( _T("itemtype%d") , i.type ) ;
+//  snprintf ( t , sizeof(t)-1, "itemtype%d" , i.type ) ;
     items->SetItemText ( l , i.name ) ;
     items->SetItem ( l , 1 , txt(t) ) ;
 
@@ -229,16 +213,16 @@ void TVectorEditor::updateItem ( TVectorItem &i )
     items->SetItem ( l , 3 , wxString::Format ( _T("%d") , i.to ) ) ;
 
     if ( i.direction == 1 )
-       items->SetItem ( l , 4 , txt("cw") ) ;
+        items->SetItem ( l , 4 , txt("cw") ) ;
     else if ( i.direction == -1 )
-       items->SetItem ( l , 4 , txt("ccw") ) ;
+        items->SetItem ( l , 4 , txt("ccw") ) ;
     else
-       items->SetItem ( l , 4 , _T("---") ) ;
+        items->SetItem ( l , 4 , _T("---") ) ;
 
     int len = i.to - i.from + 1 ;
     if ( i.to < i.from ) len += v->getSequenceLength() ;
-	 t = wxString::Format ( _T("%d") , len ) ;
-//    snprintf ( t , sizeof(t)-1, "%d" , len ) ;
+    t = wxString::Format ( _T("%d") , len ) ;
+//  snprintf ( t , sizeof(t)-1, "%d" , len ) ;
     items->SetItem ( l , 5 , t ) ;
     }
 
@@ -270,10 +254,10 @@ void TVectorEditor::DeselItems ( wxListEvent &ev )
 
 void TVectorEditor::SelChangeItems ( wxListEvent &ev )
     {
-    int i , j = ev.GetIndex() ;
+    int j = ev.GetIndex() ;
     if ( lastSelection == j ) return ;
     lastSelection = j ;
-    i = items->GetItemData ( j ) ;
+    int i = items->GetItemData ( j ) ;
     loadItemData ( i ) ;
     items->SetFocus() ;
     }
@@ -305,14 +289,14 @@ void TVectorEditor::loadItemData ( int i )
     else icb->SetValue ( false ) ;
 
     icv->SetValue ( newitems[i]->isVisible () ) ;
-//    items->SetItemState ( newitems[i]->r4 , wxLIST_STATE_SELECTED , wxLIST_STATE_SELECTED ) ;
+//  items->SetItemState ( newitems[i]->r4 , wxLIST_STATE_SELECTED , wxLIST_STATE_SELECTED ) ;
     }
 
 void TVectorEditor::storeItemData ( int i )
     {
     if ( i == -1 ) i = getCurrentItem() ;
     if ( i == -1 ) return ;
-//    if ( lastSelection == -1 ) return ;
+//  if ( lastSelection == -1 ) return ;
 
     TVectorItem o = *newitems[lastSelection] ;
     TVectorItem c = o ;

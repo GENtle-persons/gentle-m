@@ -24,8 +24,8 @@ class TVectorEditor : public wxDialog
     TVectorEditor(wxWindow *parent, const wxString& title , TVector *_v ) ; ///< Constructor
     ~TVectorEditor () ; ///< Destructor
 
-    virtual void initialViewItem ( int num ) ; ///< Initially, view item #num
-    virtual void initialViewEnzyme ( wxString e ) ; ///< Initially, view enzyme e
+    virtual void initialViewItem ( const int num ) ; ///< Initially, view item #num
+    virtual void initialViewEnzyme ( const wxString& e ) ; ///< Initially, view enzyme e
     virtual void GetMyClientSize ( int *w , int *h , wxPanel *pan ) ; ///< Client size of the panel/tab
 
     virtual void OnOK ( wxCommandEvent& WXUNUSED(event) ) ; ///< OK button event handler
@@ -83,7 +83,7 @@ class TVectorEditor : public wxDialog
     bool hideProp , hideItem , hideEnzym ;
 
     private :
-    virtual int getCurrentItem () ; ///< Returns the ID of the currently selected item
+    virtual int getCurrentItem () const ; ///< Returns the ID of the currently selected item
     virtual void clearItemSelection () ; ///< Clears the current item selection
     virtual void itemColInternal() ;
 
@@ -113,7 +113,7 @@ class TVectorEditor : public wxDialog
     int lastSelection ;
     bool e_diduseit ;
 
-    virtual void loadItemData ( int i ) ;
+    virtual void loadItemData ( const int i ) ;
     virtual void updateItem ( TVectorItem &i ) ;
 
     DECLARE_EVENT_TABLE()

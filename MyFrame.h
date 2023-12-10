@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains classes MyFrame, TProject, MyFrameDropTarget, and TTestSuite (only when compiled with MYTEST)
+    \brief Contains classes MyFrame, TProject, MyFrameDropTarget, and TTestSuite (only when compiled with MYTEST)
 */
 #ifndef _MYFRAME_H_
 #define _MYFRAME_H_
@@ -151,38 +151,38 @@ public:
     virtual void setDummyToolbar ( ChildBase *c ) ;
     virtual TCalculator *RunCalculator () ;
     virtual TGraph *RunGraph () ;
-    virtual MyChild* newFromVector ( TVector *nv , int type = TYPE_VECTOR ) ;
-    virtual TAminoAcids *newAminoAcids ( wxString aa , wxString title = _T("") ) ;
-    virtual TAminoAcids *newAminoAcids ( TVector *nv , wxString title = _T("") ) ;
-    virtual TABIviewer *newABI ( wxString filename , wxString title ) ;
+    virtual MyChild* newFromVector ( TVector * const nv , const int type = TYPE_VECTOR ) ;
+    virtual TAminoAcids *newAminoAcids ( const wxString& aa , const wxString& title = _T("") ) ;
+    virtual TAminoAcids *newAminoAcids ( TVector* const nv , const wxString& title = _T("") ) ;
+    virtual TABIviewer *newABI ( const wxString& filename , const wxString& title ) ;
     virtual MyChild *newCLONE ( TClone &clone ) ;
-    virtual void newGB ( TGenBank &gb , wxString title = "" ) ;
-    virtual void newPDB ( TPDB &pdb , wxString title = "" ) ;
-    virtual void newXML ( TXMLfile &xml , wxString title = "" ) ;
-    virtual TPhyloTree *newPhyloTree ( wxString title = "" ) ;
+    virtual void newGB ( TGenBank &gb , const wxString& title = "" ) ;
+    virtual void newPDB ( TPDB &pdb , const wxString& title = "" ) ;
+    virtual void newXML ( TXMLfile &xml , const wxString& title = "" ) ;
+    virtual TPhyloTree *newPhyloTree ( const wxString& title = "" ) ;
     virtual void blast ( const wxString& seq , const wxString& prg ) ;
     virtual bool importFile ( const wxString& file , const wxString& path , const int filter = -1 ) ;
-    virtual void setChild ( ChildBase *ch ) ;
+    virtual void setChild ( ChildBase * const ch ) ;
     virtual void removeChild ( ChildBase *ch ) ;
     virtual TStorage *getTempDB ( const wxString& name ) ;
     virtual TAlignment *runAlignment ( wxArrayString &vs , wxArrayChildBase &vc , TVector *nv = NULL ) ;
     virtual ChildBase *GetActiveChild() ;
     virtual void setActiveChild ( ChildBase *c ) ;
-    virtual wxWindow *getCommonParent() ;
+    virtual wxWindow *getCommonParent() const ;
     virtual int getChildIndex ( ChildBase *c ) ;
     virtual void activateChild ( int a ) ;
-    virtual void lockDisplay ( bool lock = true ) ;
-    virtual bool isLocked () ;
-    virtual bool isActivating () ;
-    virtual TVirtualGel *useGel ( wxString type ) ;
+    virtual void lockDisplay ( const bool lock = true ) ;
+    virtual bool isLocked () const ;
+    virtual bool isActivating () const ;
+    virtual TVirtualGel *useGel ( const wxString& type ) ;
     virtual void saveImage ( const wxBitmap * const bmp , const wxString& name = "" ) ;
     virtual wxChoice *AddFontsizeTool ( wxToolBar* toolBar , int id ) ;
     virtual void notifyChildrenChanged() ;
 	
     virtual void push_help ( const wxString& name ) ;
     virtual void pop_help () ;
-    virtual wxString get_help () ;
-    virtual int count_help () { return help_name.size() ; }
+    virtual wxString get_help () const ;
+    virtual int count_help () const { return help_name.size() ; }
 
     TMainTree *mainTree ; ///< \brief The main tree (for sequences etc.)
     TStorage *LS ; ///< \brief Pointer to the local TStorage database structure
@@ -210,7 +210,7 @@ public:
     bool update_child_list ;
 
     private :
-    wxBitmap to_grey ( wxBitmap &bmp1 ) ;
+    wxBitmap to_grey ( const wxBitmap &bmp1 ) const ;
 
     wxSashLayoutWindow* m_topWindow; ///< \brief Frame layout, top window (unused)
     wxSashLayoutWindow* m_leftWindow1; ///< \brief Frame layout, left window

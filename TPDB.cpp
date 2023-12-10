@@ -1,5 +1,5 @@
 /** \file
-	\brief TPDB class, and its tseqres helper class
+    \brief TPDB class, and its tseqres helper class
 */
 #include "TPDB.h"
 #include <wx/textfile.h>
@@ -9,7 +9,7 @@ TPDB::TPDB ()
     success = false ;
     }
 
-void TPDB::load ( wxString s )
+void TPDB::load ( const wxString& s )
     {
     vs.Clear () ;
     wxTextFile tf ;
@@ -20,13 +20,13 @@ void TPDB::load ( wxString s )
     check4success () ;
     }
 
-void TPDB::paste ( wxString s )
+void TPDB::paste ( const wxString& s )
     {
     explode ( _T("\n") , s , vs ) ;
     check4success () ;
     }
 
-int TPDB::seq ( char c )
+int TPDB::seq ( const char c )
     {
     for ( int a = 0 ; a < seqres.size() ; a++ )
         if ( seqres[a].chain == c )
@@ -39,9 +39,8 @@ int TPDB::seq ( char c )
 
 void TPDB::remap ()
     {
-    int a , b ;
     seqres.clear () ;
-    for ( a = 0 ; a < vs.GetCount() ; a++ )
+    for ( int a = 0 ; a < vs.GetCount() ; a++ )
         {
         wxString six = vs[a].Left ( 6 ) ;
         wxString right = vs[a].Mid ( 6 ) ;
@@ -68,7 +67,7 @@ void TPDB::remap ()
               v2.Add ( right.BeforeFirst ( ' ' ) ) ;
               right = right.AfterFirst ( ' ' ) ;
               }
-           for ( b = 0 ; b < v2.GetCount() ; b++ )
+           for ( int b = 0 ; b < v2.GetCount() ; b++ )
               {
               wxString h = v2[b] ;
               h = h.Trim() ;
@@ -142,7 +141,7 @@ void TPDB::remap ()
            }
         else if ( six == _T("SLTBRG") || six == _T("LINK") )
            {
-			  wxString name = _T("PDB_") + six ;
+           wxString name = _T("PDB_") + six ;
            name = txt(name);
            wxString desc = vs[a] ;
            int id1 = atoi ( vs[a].Mid(22,4).mb_str() ) ;
@@ -157,11 +156,11 @@ void TPDB::remap ()
            }
         }
 
-    for ( a = 0 ; a < seqres.size() ; a++ )
+    for ( int a = 0 ; a < seqres.size() ; a++ )
         {
         seqres[a].v->setSequence ( seqres[a].sequence ) ;
         seqres[a].v->setName ( _name + _T(" (") + wxString::Format ( _T("%d") , seqres[a].chain ) + _T(")") ) ;
-//        seqres[a].v->setName ( _name + _T(" (") + wxString ( (char*)seqres[a].chain , *wxConvCurrent ) + _T(")") ) ;
+//      seqres[a].v->setName ( _name + _T(" (") + wxString ( (char*)seqres[a].chain , *wxConvCurrent ) + _T(")") ) ;
         seqres[a].v->addDescription ( _desc ) ;
         }
     }

@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the TVectorEditor class methods
+    \brief Contains the TVectorEditor class methods
 */
 #include "TVectorEditor.h"
 
@@ -110,7 +110,6 @@ void TVectorEditor::initPanProt ()
     int w , h ;
     GetMyClientSize ( &w , &h , panProt ) ;
 
-
     prots = new wxCheckListBox ( panProt , TVE_PROTEASE_LIST , wxPoint ( th , th ) , wxSize ( w - th*2 , h * 2 / 3 ) ) ;
 
     showProteases () ;
@@ -130,16 +129,18 @@ void TVectorEditor::initPanProt ()
 
 void TVectorEditor::showProteases ()
     {
-    int a , b ;
     wxArrayString vs ;
-    for ( a = 0 ; a < myapp()->frame->LS->pr.GetCount() ; a++ )
+    for ( int a = 0 ; a < myapp()->frame->LS->pr.GetCount() ; a++ )
+        {
         vs.Add ( myapp()->frame->LS->pr[a]->name ) ;
+        }
     vs.Sort () ;
     prots->Clear () ;
-    for ( a = 0 ; a < vs.GetCount() ; a++ )
+    for ( int a = 0 ; a < vs.GetCount() ; a++ )
         {
         wxString n = vs[a] ;
         prots->Append ( n ) ;
+        int b ; 
         for ( b = 0 ; b < v->proteases.GetCount() && v->proteases[b] != n ; b++ ) ;
         if ( b < v->proteases.GetCount() ) prots->Check ( prots->FindString ( n ) ) ;
         }
@@ -196,11 +197,11 @@ void TVectorEditor::initPanEnzym2 ()
     *oldEnzymeRules = *v->getEnzymeRule() ;
     e_diduseit = oldEnzymeRules->useit ;
     if ( !v->getEnzymeRules() )
-    	{
-	    v->setEnzymeRules ( new TEnzymeRules ) ;
-	    oldEnzymeRules->useit = false ;
-	    *(v->getEnzymeRules()) = *oldEnzymeRules ;
-    	}
+        {
+        v->setEnzymeRules ( new TEnzymeRules ) ;
+        oldEnzymeRules->useit = false ;
+        *(v->getEnzymeRules()) = *oldEnzymeRules ;
+        }
     panEnzyme2 = new TEnzymeSettingsTab ( nb , EST_SINGLE ) ;
     v->getEnzymeRules()->setup_options ( panEnzyme2 ) ;
     nb->AddPage ( panEnzyme2 , txt("t_enzymes_2") ) ;
@@ -216,20 +217,20 @@ void TVectorEditor::addOkCancel ( wxWindow *p )
     wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
 
     wxButton *b1 = new wxButton ( p , TVE_OK , txt("b_ok") ) ;
-	wxButton *b2 = new wxButton ( p , TVE_CANCEL , txt("b_cancel") ) ;
-	wxButton *b3 = b1 ;
+    wxButton *b2 = new wxButton ( p , TVE_CANCEL , txt("b_cancel") ) ;
+    wxButton *b3 = b1 ;
 
 #ifdef __WXMAC__
-	b1 = b2 ;
-	b2 = b3 ;
+    b1 = b2 ;
+    b2 = b3 ;
 #endif
 
-	h1->Add ( b1 , 0 , wxEXPAND ) ;
-	h1->Add ( new wxStaticText ( this , -1 , _T("        ") ) , 0 , wxEXPAND ) ;
-	h1->Add ( b2 , 0 , wxEXPAND ) ;
+    h1->Add ( b1 , 0 , wxEXPAND ) ;
+    h1->Add ( new wxStaticText ( this , -1 , _T("        ") ) , 0 , wxEXPAND ) ;
+    h1->Add ( b2 , 0 , wxEXPAND ) ;
 
-	v0->Add ( nb , 1 , wxEXPAND ) ;
-	v0->Add ( h1 , 0 , wxCENTER|wxALL , 2 ) ;
+    v0->Add ( nb , 1 , wxEXPAND ) ;
+    v0->Add ( h1 , 0 , wxCENTER|wxALL , 2 ) ;
 
     b3->SetDefault () ;
 
@@ -293,11 +294,11 @@ void TVectorEditor::commitEnzymes ()
         }
 
     v->getEnzymeRules()->lookup_options ( panEnzyme2 ) ;
-	if ( !v->getEnzymeRules()->isEqual ( *oldEnzymeRules ) || v->getEnzymeRules()->useit != e_diduseit )
-    	{
-    	changed = true ;
-    	v->setParam ( _T("enzymerule") , v->getEnzymeRules()->to_string() ) ;
-     	}
+    if ( !v->getEnzymeRules()->isEqual ( *oldEnzymeRules ) || v->getEnzymeRules()->useit != e_diduseit )
+        {
+        changed = true ;
+        v->setParam ( _T("enzymerule") , v->getEnzymeRules()->to_string() ) ;
+        }
 
     if ( changed )
         {

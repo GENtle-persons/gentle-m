@@ -271,7 +271,6 @@ void TPrimerDesign::updatePrimersFromSequence ()
     updating = true ;
     for ( int a = 0 ; a < primer.size() ; a++ )
         {
-	int b ; 
         wxString s ;
 
         if ( primer[a].upper ) s = sc->seq[show_features]->s ;
@@ -281,6 +280,7 @@ void TPrimerDesign::updatePrimersFromSequence ()
         d.setSequence ( s ) ;
         d.setCircular ( vec->isCircular() ) ;
 
+        int b ;
         for ( b = primer[a].from-1 ; b <= primer[a].to-1 && d.getNucleotide(b) == ' ' ; b++ ) ;
         if ( b == primer[a].to ) // Primer has been deleted
            {
@@ -877,7 +877,7 @@ void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
                     case -1 : new_dir = -3 ; break ;
                     case -2 : new_dir = -1 ; break ;
                     case -3 : new_dir = -2 ; break ;
-	            default: wxASSERT_MSG(false,wxString::Format("Unexpected new_dir = %d (A)", new_dir ) ) ;
+                    default: wxASSERT_MSG(false,wxString::Format("Unexpected new_dir = %d (A)", new_dir ) ) ;
                     }
                 }
             else if ( move_to_left == 2 )
@@ -890,7 +890,7 @@ void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
                     case -1 : new_dir = -2 ; break ;
                     case -2 : new_dir = -3 ; break ;
                     case -3 : new_dir = -1 ; break ;
-	            default: wxASSERT_MSG(false,wxString::Format("Unexpected new_dir = %d (B)", new_dir ) ) ;
+                    default: wxASSERT_MSG(false,wxString::Format("Unexpected new_dir = %d (B)", new_dir ) ) ;
                     }
                 }
             }
@@ -906,7 +906,7 @@ void TPrimerDesign::OnSilmut ( wxCommandEvent& event)
         case -1 : aa_state = AA_THREE_M1 ; break ;
         case -2 : aa_state = AA_THREE_M2 ; break ;
         case -3 : aa_state = AA_THREE_M3 ; break ;
-	default: wxASSERT_MSG(false,wxString::Format("Unexpected new_dir = %d (C)", new_dir ) ) ;
+        default: wxASSERT_MSG(false,wxString::Format("Unexpected new_dir = %d (C)", new_dir ) ) ;
         }
 
 

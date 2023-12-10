@@ -351,18 +351,17 @@ void TProteolysis::calc_spearation_sub ( int depth , TProteaseArray &prop , vect
 
 void TProteolysis::determine_cuts ( TProteaseArray &prop , TProteaseCutArray &apc )
     {
-    int w ;
     TProteaseArray prop2 ;
 
     // Trying cache first
     for ( int a = 0 ; a < prop.size() ; a++ )
         {
-	int q ;
+        int q ;
         for ( q = 0 ; q < pr_cache.size() && prop[a] != pr_cache[q] ; q++ ) ;
         if ( q == pr_cache.size() ) prop2.push_back ( prop[a] ) ;
         else // Read from cache
             {
-            for ( w = 0 ; w < pc_cache[q].size() ; w++ )
+            for ( int w = 0 ; w < pc_cache[q].size() ; w++ )
                 {
                 apc.push_back ( pc_cache[q][w] ) ;
                 }
@@ -486,8 +485,8 @@ void TProteolysis::calc_fragment_list ()
         for ( int a = 0 ; a < pc.size() ; a++ )
         {
             if ( a < cuts->GetCount() && !cuts->IsChecked ( a ) ) continue ;
-//            if ( a == 0 ) last = 1 ; else
-//            last = pc[a-1]->cut + 1 ;
+//          if ( a == 0 ) last = 1 ; else
+//          last = pc[a-1]->cut + 1 ;
             for ( int b = a ; b < pc.size() ; b++ )
             {
                 if ( b < cuts->GetCount() && !cuts->IsChecked ( b ) ) continue ;
@@ -534,12 +533,11 @@ void TProteolysis::show_fragment_list ()
     results->Clear () ;
     for ( int a = 0 ; a < fragments.size() ; a++ )
         {
-        wxString s ;
-        s = wxString::Format ( _T("%d-%d (%dAA; %2.2fkD)") ,
-                               fragments[a].from ,
-                               fragments[a].to ,
-                               fragments[a].length ,
-                               fragments[a].weight ) ;
+        wxString s = wxString::Format ( _T("%d-%d (%dAA; %2.2fkD)") ,
+                                       fragments[a].from ,
+                                       fragments[a].to ,
+                                       fragments[a].length ,
+                                       fragments[a].weight ) ;
         results->Append ( s ) ;
         results->Check ( a , true ) ;
         }
@@ -644,8 +642,6 @@ double TProteolysis::get_weight ( const int from , const int to ) const
 
 void TProteolysis::OnOK ( wxCommandEvent &ev )
     {
-    wxString s ;
-
     // Use proteases
     if ( use_proteases->IsChecked() )
         {
@@ -653,7 +649,7 @@ void TProteolysis::OnOK ( wxCommandEvent &ev )
         for ( int a = 0 ; a < proteases->GetCount() ; a++ )
             {
             if ( !proteases->IsChecked ( a ) ) continue ;
-            s = proteases->GetString ( a ) ;
+            wxString s = proteases->GetString ( a ) ;
             v->proteases.Add ( s ) ;
             }
         v->setChanged() ;

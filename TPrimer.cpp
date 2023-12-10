@@ -497,7 +497,7 @@ void TPrimer::evaluateSelfAnnealing () /* not const */
         }
     }
 
-int TPrimer::checkFit ( const TVector * const v , const bool justCount ) const 
+int TPrimer::checkFit ( const TVector * const v , const bool justCount ) const
     {
     int count = 0 ;
     int match = 0 ;

@@ -12,7 +12,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc) /* not const */
 
     // Initial calculations
     int l = p->vec->getSequenceLength() - 1 ;
-    int d ; 
+    int d ;
     for ( d = 1 ; d*10 < l ; d *= 10 ) ;
 
     int lineOff = w / 20 ;
@@ -338,8 +338,8 @@ bool PlasmidCanvas::intersectsLine ( const wxRect &a , const wxPoint& p ) const
 void PlasmidCanvas::drawLinearItem ( wxDC& dc , const int _r1 , const int _r2 , const float a1 , const float a2 , TVectorItem *i ) const
     {
 
-    int r1 = _r1; 
-    int r2 = _r2; 
+    int r1 = _r1;
+    int r2 = _r2;
     if ( i->direction == -1 ) { r1 = _r2 ; r2 = _r1 ; }
 
     wxFont *normalFont = MYFONT ( 12 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
@@ -377,7 +377,7 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , const int _r1 , const int _r2 , 
     if ( !p->vec->getGenomeMode() )
         {
         wxString t2 = wxString::Format ( _T("%s") , i->name.c_str() ) ;
-//        sprintf ( t , "%s" , i->name.c_str() ) ;
+//      sprintf ( t , "%s" , i->name.c_str() ) ;
         dc.GetTextExtent ( t2 , &dx , &dy ) ;
         dc.DrawText ( t2 , (r2+r1)/2 - dx/2 , (int) a2 - y1 + 1 ) ;
         }

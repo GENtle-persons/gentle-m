@@ -42,14 +42,14 @@ void TClone::loadEnzymeList ( TStorage *st , const wxString& filename )
           else d++ ;
           }
         r.setSequence ( r_sequence ) ;
-   
+
         r.setOverlap ( (int) *d++ ) ;
         if ( r.getOverlap() > 127 )
              r.setOverlap ( 255 - r.getOverlap() ) ;
         d++ ; // ??? Total length ???
         r.setCut ( (int) *d++ ) ;
         if ( r.getOverlap() < 0 ) r.setCut ( r.getCut() - r.getOverlap() ) ;
-   
+
         vr.push_back ( r ) ;
         }
     delete [] t ;
@@ -100,7 +100,7 @@ void TClone::remap ( TVector *v ) const
     wxArrayString vs ;
     for ( int a = 0 ; a < enzymes.size() ; a++ )
         {
-	int b;
+        int b;
         for ( b = 0 ; b < vs.GetCount() && vs[b] != enzymes[a].name ; b++ ) ;
         if ( b == vs.GetCount() )
            vs.Add ( enzymes[a].name ) ;

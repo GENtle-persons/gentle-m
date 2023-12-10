@@ -54,8 +54,8 @@ void TMainTree::OnRightClick ( wxTreeEvent &event )
     }
 
 /** \brief Adds a child to the tree
-	\param c Pointer to child
-	\param type Where to add it
+    \param c Pointer to child
+    \param type Where to add it
 */
 void TMainTree::addChild ( ChildBase *c , int type )
     {

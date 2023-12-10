@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the methods of the TPrimerDialog class
+    \brief Contains the methods of the TPrimerDialog class
 */
 #include "TPrimerDialog.h"
 
@@ -41,14 +41,14 @@ bool operator == ( const TPrimer &p1 , const TPrimer &p2 )
 TPrimerDialog::TPrimerDialog(wxWindow *parent, const wxString& title )
          : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 760 , 500 ) )
     {
-	myapp()->frame->push_help ( _T("GENtle:Edit_primer_dialog") ) ;
+    myapp()->frame->push_help ( _T("GENtle:Edit_primer_dialog") ) ;
     Center() ;
     cp = NULL ;
     }
 
 TPrimerDialog::~TPrimerDialog()
     {
-	myapp()->frame->pop_help () ;
+    myapp()->frame->pop_help () ;
     if ( cp ) delete cp ;
     }
 

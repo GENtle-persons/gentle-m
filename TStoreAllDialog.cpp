@@ -66,9 +66,8 @@ TStoreAllDialog::~TStoreAllDialog ()
 
 void TStoreAllDialog::PopulateList ()
 {
-     unsigned int a ;
      children.clear() ;
-     for ( a = 0 ; a < myapp()->frame->children.GetCount() ; a++ )
+     for ( unsigned int a = 0 ; a < myapp()->frame->children.GetCount() ; a++ )
      {
          wxString def = myapp()->frame->children[a]->def ;
          if ( def != _T("ABIviewer") &&
@@ -85,15 +84,14 @@ void TStoreAllDialog::PopulateList ()
 
     defdb = myapp()->frame->LS->getDatabaseList ( db_name , db_file ) ;
     database->Clear () ;
-    for ( a = 0 ; a < db_name.GetCount() ; a++ )
+    for ( unsigned int a = 0 ; a < db_name.GetCount() ; a++ )
         database->Append ( db_name[a] ) ;
 }
 
 void TStoreAllDialog::OnOK ( wxCommandEvent &ev )
 {
-     unsigned int a ;
      wxString sel_db = database->GetStringSelection() ;
-     for ( a = 0 ; a < list->GetCount() ; a++ )
+     for ( unsigned int a = 0 ; a < list->GetCount() ; a++ )
      {
          if ( !list->IsChecked ( a ) ) continue ; // Entry not checked
 
@@ -115,22 +113,20 @@ void TStoreAllDialog::OnOK ( wxCommandEvent &ev )
 
 void TStoreAllDialog::OnAll ( wxCommandEvent &ev )
 {
-     unsigned int a ;
-     for ( a = 0 ; a < list->GetCount() ; a++ )
+     for ( unsigned int a = 0 ; a < list->GetCount() ; a++ )
          list->Check ( a , true ) ;
 }
 
 void TStoreAllDialog::OnNone ( wxCommandEvent &ev )
 {
-     unsigned int a ;
-     for ( a = 0 ; a < list->GetCount() ; a++ )
+     
+     for ( unsigned int a = 0 ; a < list->GetCount() ; a++ )
          list->Check ( a , false ) ;
 }
 
 void TStoreAllDialog::OnInvert ( wxCommandEvent &ev )
 {
-     unsigned int a ;
-     for ( a = 0 ; a < list->GetCount() ; a++ )
+     for ( unsigned int a = 0 ; a < list->GetCount() ; a++ )
          list->Check ( a , !list->IsChecked(a) ) ;
 }
 

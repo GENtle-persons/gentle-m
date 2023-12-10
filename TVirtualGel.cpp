@@ -146,7 +146,7 @@ void TVirtualGel::initme ()
         lanes.push_back ( TGelLane() ) ;
         lanes[0].setMarker ( ch_marker->GetStringSelection() ) ;
         }
-	
+    
     SetSizer(vs);
 //      SetSizerAndFit(vs);
     Show () ;
@@ -199,51 +199,50 @@ void TMyGelControl::OnDraw(wxDC& dc)
     vg->ch_percent->GetStringSelection().ToDouble ( &vg->percent ) ;
 //  vg->percent /= 10.0 ;
 
-    int a , b ;
     int w , h ;
     dc.GetSize ( &w , &h ) ;
     int lw ; // Lane width
     int go ; // gel offset (y)
 
     if ( printing )
-    	{
-	w = w > h ? h : w ; // smallest side
-	w /= 2 ; // half of it
-	h = w ;
-	lw = w / ( vg->lanes.size() > 6 ? vg->lanes.size() : 6 ) ; // min 6 lanes
-	dc.SetDeviceOrigin ( w / 2 , h / 2 ) ; // center it
-	go = h / 10 ;
-    	}
+        {
+        w = w > h ? h : w ; // smallest side
+        w /= 2 ; // half of it
+        h = w ;
+        lw = w / ( vg->lanes.size() > 6 ? vg->lanes.size() : 6 ) ; // min 6 lanes
+        dc.SetDeviceOrigin ( w / 2 , h / 2 ) ; // center it
+        go = h / 10 ;
+        }
     else
-    	{
-	lw = w / vg->lanes.size() ;
-	if ( lw > 100 ) lw = 100 ;
-	go = 50 ;
-    	}
+        {
+        lw = w / vg->lanes.size() ;
+        if ( lw > 100 ) lw = 100 ;
+        go = 50 ;
+        }
 
     int x = lw / 10 ;
 
     // Calculating presets
     vg->maxband = 0 ;
     vg->cutoff = 10000000 ;
-    for ( a = 0 ; a < vg->lanes.size() ; a++ )
-    	{
-	for ( b = 0 ; b < vg->lanes[a].vi.GetCount() ; b++ )
+    for ( int a = 0 ; a < vg->lanes.size() ; a++ )
+        {
+        for ( int b = 0 ; b < vg->lanes[a].vi.GetCount() ; b++ )
             {
             if ( vg->lanes[a].vi[b] < LOW_LIMIT ) continue ; // HARD LIMIT
             if ( vg->lanes[a].vi[b] > vg->maxband )
-                 vg->maxband = vg->lanes[a].vi[b] ;
+                vg->maxband = vg->lanes[a].vi[b] ;
             if ( vg->lanes[a].vi[b] < vg->cutoff )
-                 vg->cutoff = vg->lanes[a].vi[b] ;
+                vg->cutoff = vg->lanes[a].vi[b] ;
             }
-	wxRect r ( x+go/10 , go , lw-go*2/10 , h - go*11/10 ) ;
-	vg->lanes[a].pos = r ;
-	x += lw ;
-     	}
+        wxRect r ( x+go/10 , go , lw-go*2/10 , h - go*11/10 ) ;
+        vg->lanes[a].pos = r ;
+        x += lw ;
+        }
 
     vg->cutoff = vg->cutoff * 8 / 10 ;
 
-   	// Drawing gel
+    // Drawing gel
     int fontfactor = 10 ;
     if ( printing ) fontfactor = w/5000 ;
     wxFont *normalFont = MYFONT ( fontfactor * 11 / 10 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
@@ -265,8 +264,8 @@ void TMyGelControl::OnDraw(wxDC& dc)
                        vg->lanes[vg->lanes.size()-1].pos.GetBottom() - vg->lanes[0].pos.GetTop() ) ;
 
     // Drawing lanes
-    for ( a = 0 ; a < vg->lanes.size() ; a++ )
-    	{
+    for ( int a = 0 ; a < vg->lanes.size() ; a++ )
+        {
         title = vg->lanes[a].name ;
         dc.SetTextForeground ( *wxBLACK ) ;
         dc.SetFont ( *normalFont ) ;
@@ -293,13 +292,13 @@ void TMyGelControl::OnDraw(wxDC& dc)
                           vg->lanes[a].pos.GetTop() - th * 3 / 2 ) ;
             }
 
-        for ( b = 0 ; b < vg->lanes[a].vi.GetCount() ; b++ )
+        for ( int b = 0 ; b < vg->lanes[a].vi.GetCount() ; b++ )
             drawBand ( dc , vg->lanes[a] , b ) ;
 
-    	}
+        }
     }
 
-void TMyGelControl::drawBand ( wxDC &dc , TGelLane &lane , int band )
+void TMyGelControl::drawBand ( wxDC &dc , TGelLane &lane , const int band )
     {
     if ( lane.vi[band] < LOW_LIMIT ) return ; // HARD LIMIT; don't draw anything below LOW_LIMIT
     int h = lane.pos.GetHeight() ;
@@ -349,7 +348,7 @@ void TMyGelControl::drawBand ( wxDC &dc , TGelLane &lane , int band )
     dc.DrawText ( title , tw , y ) ;
     }
 
-int TMyGelControl::getLanePos ( int size , int height , float perc )
+int TMyGelControl::getLanePos ( const int size , const int height , const float perc )
     {
     int border = height / 100 ;
     double ret = height - border * 2 ;
@@ -358,12 +357,13 @@ int TMyGelControl::getLanePos ( int size , int height , float perc )
     return (int) ret + border ;
     }
 
-double TMyGelControl::fix_percent ( int size , float perc )
+double TMyGelControl::fix_percent ( const int size , const float _perc )
     {
+    float perc = _perc ;
     if ( perc == 0 ) perc = vg->percent ;
     double ret = size ;
     ret = 400 / log10 ( ret / perc ) ;
-/*	double a = -0.000235 ;
+/* double a = -0.000235 ;
     double b = 1.8564 ;
     ret = pow ( 10 , a * ret + b ) * 10 ;*/
     return ret ;
@@ -469,13 +469,13 @@ void TGelLane::clear ()
     unit_volume = 20.0 ; // l
     }
 
-void TGelLane::setMarker ( wxString _name )
+void TGelLane::setMarker ( const wxString& _name )
     {
     int a ;
     for ( a = 0 ; a < myapp()->frame->dna_marker.GetCount() ; a++ )
         {
         if ( myapp()->frame->dna_marker[a].BeforeFirst(':') == _name )
-			break ;
+            break ;
         }
     if ( a == myapp()->frame->dna_marker.GetCount() ) return ; // Invalid marker name
 
@@ -492,28 +492,28 @@ void TGelLane::setMarker ( wxString _name )
         t.BeforeFirst(':').ToLong ( &l1 );
         t.AfterFirst(':').ToLong ( &l2 ) ;
         if ( a++ == 0 )
-			{
-			t.BeforeFirst(':').ToDouble ( &d1 );
-			unit_volume = 20 ;
-//			unit_volume = d1 ;
-			}
+            {
+            t.BeforeFirst(':').ToDouble ( &d1 );
+            unit_volume = 20 ;
+//          unit_volume = d1 ;
+            }
         else add ( l1 , l2 ) ;
         }
     }
 
-void TGelLane::add ( int size , int weight , wxString title )
+void TGelLane::add ( const int size , const int weight , const wxString& title )
     {
     vi.Add ( size ) ;
     vw.Add ( weight ) ;
     vs.Add ( title ) ;
     }
 
-void TGelLane::add ( int size , int weight )
+void TGelLane::add ( const int size , const int weight )
     {
     add ( size , weight , _T("") ) ;
     }
 
-void TGelLane::add ( int size , wxString title )
+void TGelLane::add ( const int size , const wxString& title )
     {
     add ( size , 1 , title ) ;
     }

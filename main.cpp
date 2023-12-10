@@ -1,23 +1,23 @@
 /** \file main.cpp
-	\brief Contains global functions, includes, and the MyApp class
+    \brief Contains global functions, includes, and the MyApp class
  */
 
 
-/**	\mainpage GENtle - the source code documentation
+/**    \mainpage GENtle - the source code documentation
 
-	\section players The big players
+    \section players The big players
 
-	There are some classes that are of fundamental importance to understanding the GENtle code.
-	<ul>
-	<li>MyFrame - The base window of the whole application
- 	<li>ChildBase - The "mother" of all modules, including the oddly named DNA module, MyChild
-	<ul>
-	<li>PlasmidCanvas - The colorful map used in the DNA and, partially, amino acid modules
-	<li>SequenceCanvas - The universal sequence text class, used in most of the modules
-	<ul>
-	<li>SeqBasic - The base class for each "line type" in a SequenceCanvas, including DNA, amino acids, features, restriction enzymes, ABI peaks, etc.
-	</ul>
-	</ul>
+    There are some classes that are of fundamental importance to understanding the GENtle code.
+    <ul>
+    <li>MyFrame - The base window of the whole application
+     <li>ChildBase - The "mother" of all modules, including the oddly named DNA module, MyChild
+    <ul>
+    <li>PlasmidCanvas - The colorful map used in the DNA and, partially, amino acid modules
+    <li>SequenceCanvas - The universal sequence text class, used in most of the modules
+    <ul>
+    <li>SeqBasic - The base class for each "line type" in a SequenceCanvas, including DNA, amino acids, features, restriction enzymes, ABI peaks, etc.
+    </ul>
+    </ul>
     <li>TStorage - The class to communicate with databases
     <li>TVector - The class to store all sequence information, be it DNA or amino acids
     </ul>
@@ -179,12 +179,12 @@ bool MyApp::OnInit()
 #ifdef HOMEDIR
     else if ( wxDirExists ( HOMEDIR ) )
         {
-	    wxPrintf( "I: GENtle's homedir assigned to configuration parameter '%s' since that dir is indeed existing.\n", HOMEDIR ) ;
+        wxPrintf( "I: GENtle's homedir assigned to configuration parameter '%s' since that dir is indeed existing.\n", HOMEDIR ) ;
             homedir.AssignDir( HOMEDIR ) ;
-	}
+    }
     else
         {
-	    wxPrintf( "W: GENtle's homedir could not be assigned to configuration parameter '%s' since that dir was not found.\n", HOMEDIR ) ;
+        wxPrintf( "W: GENtle's homedir could not be assigned to configuration parameter '%s' since that dir was not found.\n", HOMEDIR ) ;
 #else
     else
         {
@@ -219,7 +219,7 @@ bool MyApp::OnInit()
    wxApp::s_macAboutMenuItemId = MDI_ABOUT;
    wxApp::s_macPreferencesMenuItemId = PROGRAM_OPTIONS;
    wxApp::s_macExitMenuItemId = MDI_QUIT;
-//	wxApp::s_macHelpMenuTitleName = "Help";
+//    wxApp::s_macHelpMenuTitleName = "Help";
 
 #endif
 
@@ -368,7 +368,7 @@ bool MyApp::OnInit()
     return TRUE;
     }
 
-wxString MyApp::getLocalDBname ()
+wxString MyApp::getLocalDBname () /* not const */
     {
     if ( !theRealLocalDb.IsEmpty() ) return theRealLocalDb ;
 #ifdef __WXMAC__
@@ -379,16 +379,16 @@ wxString MyApp::getLocalDBname ()
     return theRealLocalDb ;
     }
 
-wxString MyApp::get_GENtle_version ()
+wxString MyApp::get_GENtle_version () const
     {
     return wxString::Format ( "%d.%d.%d" , GENTLE_VERSION_MAJOR , GENTLE_VERSION_MINOR , GENTLE_VERSION_SUB ) ;
     }
 
-/**	\fn MyApp::OnExit ()
-	\brief Exits the application.
+/**    \fn MyApp::OnExit ()
+    \brief Exits the application.
 
-	* - Finished a log, if one is written
-	* - deletes the wxSingleInstanceChecker
+    * - Finished a log, if one is written
+    * - deletes the wxSingleInstanceChecker
 */
 int MyApp::OnExit ()
     {
@@ -398,22 +398,22 @@ int MyApp::OnExit ()
 #endif
     delete m_checker;
     return wxApp::OnExit () ;
-//    return 0;
+//  return 0;
     }
 
-void MyApp::launchBrowser ( wxString url )
+void MyApp::launchBrowser ( const wxString& url )
     {
-//	wxMessageBox ( url ) ;
-//	if ( wxLaunchDefaultBrowser ( url ) ) return ;
+//  wxMessageBox ( url ) ;
+//  if ( wxLaunchDefaultBrowser ( url ) ) return ;
     wxString command = myapp()->getHTMLCommand ( url ) ;
     wxExecute ( command ) ;
     }
 
-/**	\fn MyApp::getHTMLCommand ( wxString command )
-	\brief Returns the command line to invoke the browser.
-	\param command The URL/file.
+/**    \fn MyApp::getHTMLCommand ( wxString command )
+    \brief Returns the command line to invoke the browser.
+    \param command The URL/file.
 */
-wxString MyApp::getHTMLCommand ( wxString command )
+wxString MyApp::getHTMLCommand ( const wxString& command )
     {
 #ifdef __WXMAC__
     return "open " + command ;
@@ -444,23 +444,23 @@ wxString MyApp::getHTMLCommand ( wxString command )
 #endif
     }
 
-/**	\fn MyApp::getFileFormatCommand ( wxString command )
-	\brief Returns the command line to invoke the application.
-	\param type The file ending to find the application for.
-	\param file The URL/file.
+/**    \fn MyApp::getFileFormatCommand ( wxString command )
+    \brief Returns the command line to invoke the application.
+    \param type The file ending to find the application for.
+    \param file The URL/file.
 */
-wxString MyApp::getFileFormatCommand ( wxString type , wxString file )
+wxString MyApp::getFileFormatCommand ( const wxString& type , const wxString& file )
     {
     wxFileType *ft = mtm.GetFileTypeFromExtension ( type ) ;
     if ( !ft ) return "" ;
     return ft->GetOpenCommand ( file ) ;
     }
 
-/**	\fn MyApp::getFileFormatApplication ( wxString type )
-	\brief Returns the application associated with a file type. Windows only.
-	\param type The file ending to find the application for.
+/**    \fn MyApp::getFileFormatApplication ( wxString type )
+    \brief Returns the application associated with a file type. Windows only.
+    \param type The file ending to find the application for.
 */
-wxString MyApp::getFileFormatApplication ( wxString type )
+wxString MyApp::getFileFormatApplication ( const wxString& type )
     {
 #ifdef __WXMSW__
     wxRegKey regKey;
@@ -481,17 +481,17 @@ wxString MyApp::getFileFormatApplication ( wxString type )
 #endif
     }
 
-/**	\fn MyApp::do_my_ass ( bool b , wxString msg )
-	\brief "My assertion" - little inside joke...
-	\param b The condition given in the call. No assertion when b is FALSE.
-	\param msg The message string to write into errout.
+/**    \fn MyApp::do_my_ass ( bool b , wxString msg )
+    \brief "My assertion" - little inside joke...
+    \param b The condition given in the call. No assertion when b is FALSE.
+    \param msg The message string to write into errout.
 
-	The function writes the text of "msg" to the ERROR.txt file
-	in case "b" is true. This is done to catch possible out-of-range errors.
-	The function should not be used in releases, as the mere out-of-range check
-	might significantly impact on performance. Called as "myass" (see main.h defs).
+    The function writes the text of "msg" to the ERROR.txt file
+    in case "b" is true. This is done to catch possible out-of-range errors.
+    The function should not be used in releases, as the mere out-of-range check
+    might significantly impact on performance. Called as "myass" (see main.h defs).
 */
-void MyApp::do_my_ass ( bool b , wxString msg )
+void MyApp::do_my_ass ( const bool b , const wxString& msg )
     {
     if ( b ) return ;
     if ( !errout ) errout = new wxFile ( "ERROR.txt" , wxFile::write ) ;
@@ -499,18 +499,18 @@ void MyApp::do_my_ass ( bool b , wxString msg )
     errout->Flush() ;
     }
 
-/**	\fn MyApp::do_my_log ( wxString function , wxString msg )
-	\brief Logs events to a file.
-	\param function The originating function name of the log event.
-	\param msg The message string to write into logout.
+/**    \fn MyApp::do_my_log ( wxString function , wxString msg )
+    \brief Logs events to a file.
+    \param function The originating function name of the log event.
+    \param msg The message string to write into logout.
 
-	The function writes the text of "msg" to the LOG.txt file
-	together with the "function" name. This is done to log events and
-	variable values at certain points in the code. This should not
-	be used in releases, as it <b>will</b> severely impact on
-	performance. Called as "mylog" (see main.h defs).
+    The function writes the text of "msg" to the LOG.txt file
+    together with the "function" name. This is done to log events and
+    variable values at certain points in the code. This should not
+    be used in releases, as it <b>will</b> severely impact on
+    performance. Called as "mylog" (see main.h defs).
 */
-void MyApp::do_my_log ( wxString function , wxString msg )
+void MyApp::do_my_log ( const wxString& function , const wxString& msg )
     {
     if ( !logout ) logout = new wxFile ( "LOG.txt" , wxFile::write ) ;
     if ( total_log_counter > 5000 )
@@ -528,19 +528,19 @@ void MyApp::do_my_log ( wxString function , wxString msg )
     }
 
 /** \fn MyApp::init_txt ( wxString lang , wxString csv , wxHashString *target , int ln )
-	\brief Initializes a hash table from a CSV file
-	\param lang the column identifier (first row of the CSV file)
-	\param csv the CSV file
-	\param target the hash table; if NULL (default), the language table is created
-	\param ln the default language number
+    \brief Initializes a hash table from a CSV file
+    \param lang the column identifier (first row of the CSV file)
+    \param csv the CSV file
+    \param target the hash table; if NULL (default), the language table is created
+    \param ln the default language number
 */
-void MyApp::init_txt ( wxString lang , wxString csv , wxHashString *target , int ln )
+void MyApp::init_txt ( const wxString& lang , const wxString& csv , wxHashString *target , int ln )
     {
     if ( !target ) target = &_text ;
     wxTextFile in ( myapp()->homedir.GetFullPath() + wxFileName::GetPathSeparator() + csv) ;
     in.Open ( wxConvUTF8 ) ;
-//    in.Open ( *isoconv ) ;
-//    unsigned char t[10000] ;
+//  in.Open ( *isoconv ) ;
+//  unsigned char t[10000] ;
     bool firstline = true ;
     TGenBank dummy ;
 

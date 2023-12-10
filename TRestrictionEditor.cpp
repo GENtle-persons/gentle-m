@@ -30,7 +30,7 @@ using namespace std ;
 int global_sort_mode ;
 bool global_sort_ascending ;
 
-bool operator < ( const TREcache c1 , const TREcache c2 )
+bool operator < ( const TREcache& c1 , const TREcache& c2 )
 {
     if ( global_sort_mode == BY_NAME )
         return global_sort_ascending?(c1.enzyme<c2.enzyme):(c1.enzyme>c2.enzyme);
@@ -339,7 +339,7 @@ void TRestrictionEditor::pR_showGroupEnzymes ( const wxString& gr )
 wxArrayInt TRestrictionEditor::getcuts ( const wxString& enzyme )
     {
     wxArrayInt ret ;
-    int j ; 
+    int j ;
     for ( j = 0 ; j < nocut.GetCount() && nocut[j] != enzyme ; j++ ) ;
     if ( j < nocut.GetCount() ) return ret ; // No cuts, returning empty list
 
@@ -454,7 +454,7 @@ void TRestrictionEditor::listFragments ( wxListCtrl * const list , wxArrayInt &v
         }
     }
 
-void TRestrictionEditor::refreshCocktail ()
+void TRestrictionEditor::refreshCocktail () /* not const */
     {
     wxArrayString vs = cocktail ;
     el2->DeleteAllItems() ;
@@ -480,15 +480,15 @@ void TRestrictionEditor::refreshCocktail ()
     for ( int i = 0 ; i < vit.GetCount() ; i++ )
         {
         if ( vi.GetCount() == 0 || vi.Last() != vit[i] )
-	    {
+            {
             vi.Add ( vit[i] ) ;
             }
         }
-    cocktailFragments = vi ;
+    cocktailFragments = vi ; // not const
     listFragments ( rsl2 , vi ) ;
     }
 
-void TRestrictionEditor::add2cocktail ( const wxString& s )
+void TRestrictionEditor::add2cocktail ( const wxString& s ) /* not const */
     {
     if ( s.IsEmpty() ) return ;
     wxString s2 = s ;
@@ -500,7 +500,7 @@ void TRestrictionEditor::add2cocktail ( const wxString& s )
     refreshCocktail () ;
     }
 
-void TRestrictionEditor::del_from_cocktail ( const wxString& s )
+void TRestrictionEditor::del_from_cocktail ( const wxString& s ) /* not const */
     {
     int i ;
     wxString s2 = s ;

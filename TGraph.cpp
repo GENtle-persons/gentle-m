@@ -210,7 +210,7 @@ void TGraphData::drawit ( wxDC &dc )
         x = sx->GetRealCoord ( dx[a] , inner ) ;
         y = sy->GetRealCoord ( dy[a] , inner ) ;
         if ( a != 0 ) dc.DrawLine ( lx , ly , x , y ) ;
-    
+
         if ( x >= inner.GetLeft() && x <= inner.GetRight() )
             {
             wxPoint p ( x , y ) ;
@@ -220,13 +220,13 @@ void TGraphData::drawit ( wxDC &dc )
                 last_drawn = p ;
                 }
             }
-    
+
         if ( selected )
             dc.SetPen ( *wxBLACK_PEN ) ;
         DrawSymbol ( dc , pointStyle , x , y ) ;
         if ( selected )
             dc.SetPen ( *MYPEN ( col ) ) ;
-    
+
         lx = x ;
         ly = y ;
         }
