@@ -1,5 +1,5 @@
 /** \file
-	\brief The TStorage and TSQLresult classes
+    \brief The TStorage and TSQLresult classes
 */
 #include "TStorage.h"
 #include <wx/textfile.h>
@@ -14,22 +14,21 @@ void TSQLresult::clean()
     while ( content.size() ) content.pop_back() ;
     }
 
-int TSQLresult::cols ()
-	{
-	return field.GetCount() ;
-	}
-
-int TSQLresult::rows ()
-	{
-	return content.size() ;
-	}
-
-
-wxString TSQLresult::item ( char *s , int i )
+int TSQLresult::cols () const
     {
-    int a ;
+    return field.GetCount() ;
+    }
+
+int TSQLresult::rows () const
+    {
+    return content.size() ;
+    }
+
+
+wxString TSQLresult::item ( const char * const s , const int i ) const
+    {
     wxString s2 ( s , *wxConvCurrent ) ;
-    for ( a = 0 ; a < field.GetCount() ; a++ )
+    for ( int a = 0 ; a < field.GetCount() ; a++ )
        if ( 0 == s2.CmpNoCase ( field[a] ) )
            return content[i][a] ;
     return _T("") ;
@@ -39,9 +38,9 @@ wxString TSQLresult::item ( char *s , int i )
 
 //______________________________________________________________________________
 
-bool TStorage::getWriteProtect () { return writeProtect ; }
+bool TStorage::getWriteProtect () const { return writeProtect ; }
 
-TStorage::TStorage ( int nt , wxString fn )
+TStorage::TStorage ( int nt , const wxString& fn )
     {
     if ( fn.IsEmpty() ) isMySQL = false ;
     else isMySQL = (fn.GetChar(0)==':') ;
@@ -49,21 +48,28 @@ TStorage::TStorage ( int nt , wxString fn )
     recording = false ;
     writeProtect = false ;
     storagetype = nt ;
-    if ( fn.IsEmpty() ) fn = myapp()->getLocalDBname() ;
-    dbname = fn ;
+    if ( fn.IsEmpty() )
+        {
+        dbname = myapp()->getLocalDBname() ;
+	wxPrintf( wxString::Format ( "W: TStorage::TStorage - fn is empty, falling back to dbname='%s'\n", dbname ) ) ;
+        }
+    else
+        {
+        dbname = fn ;
+        }
 
-    wxPrintf("I: TStorage: Expecting database on '%s'\n",fn);
+    wxPrintf("I: TStorage: Expecting database on '%s'\n", dbname ) ;
 
     isSqlite3 = false ;
-    if ( !isMySQL && !fn.IsEmpty() )
-    	{
-    	wxFile f ( fn , wxFile::read ) ;
-    	char xx[20] ;
-    	f.Read ( xx , 15 ) ;
-    	xx[15] = 0 ;
-    	if ( wxString ( xx , wxConvUTF8 ) == _T("SQLite format 3") )
-    		isSqlite3 = true ;
-    	}
+    if ( !isMySQL && !dbname.IsEmpty() )
+        {
+        wxFile f ( dbname , wxFile::read ) ;
+        char xx[20] ;
+        f.Read ( xx , 15 ) ;
+        xx[15] = 0 ;
+        if ( wxString ( xx , wxConvUTF8 ) == _T("SQLite format 3") )
+            isSqlite3 = true ;
+        }
 
 #ifdef USEMYSQL
     if ( isMySQL )
@@ -71,7 +77,7 @@ TStorage::TStorage ( int nt , wxString fn )
         conn = new MYSQL ;
         mysql_init (conn);
         wxArrayString ex ;
-        explode ( _T(":") , fn + _T(":") , ex ) ;
+        explode ( _T(":") , dbname + _T(":") , ex ) ;
         if ( !mysql_real_connect ( conn ,
                                 ex[1].mb_str() ,
                                 ex[2].mb_str() ,
@@ -106,7 +112,7 @@ static int callback (void *NotUsed, int argc, char **argv, char **azColName)
     if ( st->results.content.size() == 0 )
         {
         for(i=0; i<argc; i++)
-			st->results.field.Add ( wxString ( azColName[i] , wxConvUTF8 ) ) ;
+            st->results.field.Add ( wxString ( azColName[i] , wxConvUTF8 ) ) ;
         }
 
     nf = st->results.content.size() ;
@@ -116,14 +122,14 @@ static int callback (void *NotUsed, int argc, char **argv, char **azColName)
         {
         wxString tmp ;
         if ( argv[i] )
-		  	{
+              {
 #ifndef __WXGTK__
-			tmp = wxString ( argv[i] , *(myapp()->isoconv) ) ;
+            tmp = wxString ( argv[i] , *(myapp()->isoconv) ) ;
 #else
-			tmp = wxString ( argv[i] , wxConvUTF8 ) ;
+            tmp = wxString ( argv[i] , wxConvUTF8 ) ;
 #endif
-			tmp.Replace ( _T("\013") , _T("\n") ) ;
-			}
+            tmp.Replace ( _T("\013") , _T("\n") ) ;
+            }
         st->results.content[nf].Add ( tmp ) ;
 //        if ( argv[i] ) st->results.content[nf].Add( argv[i] ) ;
 //        else st->results.content[nf].Add ( "" ) ;
@@ -135,7 +141,7 @@ void TStorage::createDatabaseSqlite3 ()
     {
         return;
 #ifdef USING_SQLITE_3
-	 sqlite3 *db ;
+     sqlite3 *db ;
     sqlite3_open ( dbname.mb_str() , &db ) ;
 //    ierror = (int) e ;
 //    if ( e ) error = e ;
@@ -147,8 +153,8 @@ void TStorage::createDatabaseSqlite3 ()
 void TStorage::createDatabase ()
     {
     if ( isMySQL ) return ;
-	createDatabaseSqlite3() ;
-	return ;
+    createDatabaseSqlite3() ;
+    return ;
 /*    sqlite *db ;
     char *e = 0 ;
     db = sqlite_open ( dbname.mb_str() , 0 , &e ) ;
@@ -177,7 +183,7 @@ TSQLresult TStorage::getObject_MySQL ( const wxString &query )
 #ifdef __WXGTK__
     int err = mysql_query ( conn , (const char*) query.mb_str(*(myapp()->isoconv)) ) ;
 #else
-	int err = mysql_query ( conn , query.mb_str() ) ;
+    int err = mysql_query ( conn , query.mb_str() ) ;
 #endif
 
     if ( err == 0 )
@@ -189,7 +195,7 @@ TSQLresult TStorage::getObject_MySQL ( const wxString &query )
             MYSQL_ROW row;
             unsigned int i , num_fields = mysql_num_fields(result) ;
 
-			while ((row = mysql_fetch_row(result)))
+            while ((row = mysql_fetch_row(result)))
             {
                unsigned long *lengths;
                lengths = mysql_fetch_lengths(result);
@@ -197,15 +203,15 @@ TSQLresult TStorage::getObject_MySQL ( const wxString &query )
                results.content.push_back ( wxArrayString() ) ;
                for(i = 0; i < num_fields; i++)
                {
-               	  wxString tmp = row[i] ? wxString ( row[i] , *wxConvCurrent ) : _T("") ;
+                     wxString tmp = row[i] ? wxString ( row[i] , *wxConvCurrent ) : _T("") ;
 /*
 #ifdef __WXMSW__
-               	  wxString tmp = row[i] ? wxString ( row[i] , wxConvUTF8 ) : _T("") ;
+                     wxString tmp = row[i] ? wxString ( row[i] , wxConvUTF8 ) : _T("") ;
 #else
-               	  wxString tmp = row[i] ? wxString ( row[i] , *wxConvCurrent ) : _T("") ;
+                     wxString tmp = row[i] ? wxString ( row[i] , *wxConvCurrent ) : _T("") ;
 #endif
 */
-               	  tmp.Replace ( _T("\013") , _T("\n") ) ;
+                     tmp.Replace ( _T("\013") , _T("\n") ) ;
                   results.content[rownum].Add ( tmp ) ;
                }
             }
@@ -215,23 +221,23 @@ TSQLresult TStorage::getObject_MySQL ( const wxString &query )
             fields = mysql_fetch_fields(result);
 
             for(i = 0; fields && i < num_fields; i++)
-				{
-				wxString f = fields[i].name ? wxString ( fields[i].name , wxConvUTF8 ) : _T("") ;
-				results.field.Add ( f ) ;
-				}
+                {
+                wxString f = fields[i].name ? wxString ( fields[i].name , wxConvUTF8 ) : _T("") ;
+                results.field.Add ( f ) ;
+                }
 
             mysql_free_result ( result ) ;
             }
         }
     else
-    	{
-	    err = mysql_errno(conn) ;
-	    if ( err == 1153 )
-	    	{
- 	    	wxMessageBox ( txt("t_mysql_error_1153" ) ) ;
-	    	}
+        {
+        err = mysql_errno(conn) ;
+        if ( err == 1153 )
+            {
+             wxMessageBox ( txt("t_mysql_error_1153" ) ) ;
+            }
         else
-        	{
+            {
              wxMessageBox ( wxString ( mysql_error(conn) , wxConvUTF8 ) , wxString::Format ( _T("MySQL error %d") , err ) ) ;
              wxFile of ( _T("mysqlerr.txt") , wxFile::write ) ;
              of.Write ( query ) ;
@@ -265,13 +271,13 @@ TSQLresult TStorage::getObjectSqlite3 ( const wxString &query )
     do {
         rc = sqlite3_exec ( db , query.mb_str() , callback , 0 , &e ) ;
         if ( rc == SQLITE_BUSY ) // If busy, wait 200 ms
-        	{
+            {
 #ifdef __WXMSW__
-			wxUsleep ( 200 ) ;
+            wxUsleep ( 200 ) ;
 #else
-       	    wxMilliSleep ( 200 ) ;
+               wxMilliSleep ( 200 ) ;
 #endif
-        	}
+            }
         } while ( rc == SQLITE_BUSY ) ;
 
     ierror = e ? 1 : 0 ;
@@ -282,14 +288,14 @@ TSQLresult TStorage::getObjectSqlite3 ( const wxString &query )
 
     return results ;
 #else
-	 results.clean() ;
-	 return results ;
+     results.clean() ;
+     return results ;
 #endif
     }
 
 /*
 TSQLresult TStorage::getObjectSqlite2 ( const wxString &query )
-	{
+    {
     sqlite *db ;
     char *e = 0 ;
     int rc ;
@@ -310,23 +316,23 @@ TSQLresult TStorage::getObjectSqlite2 ( const wxString &query )
        }
 
     if ( query.length() > 1000000 ) // Approx. 1MB, too large for sqlite 2.X
-    	{
-	    if ( wxYES != wxMessageBox ( txt("t_large_warning_message") , txt("t_large_warning_caption") , wxYES_NO ) )
-	    	return results ; // No conversion wanted, abort
-    	convertSqlite2to3 () ; // Convert to 3.X
-    	return getObject ( query ) ;
-    	}
+        {
+        if ( wxYES != wxMessageBox ( txt("t_large_warning_message") , txt("t_large_warning_caption") , wxYES_NO ) )
+            return results ; // No conversion wanted, abort
+        convertSqlite2to3 () ; // Convert to 3.X
+        return getObject ( query ) ;
+        }
 
     do {
         rc = sqlite_exec ( db , query.mb_str() , callback , 0 , &e ) ;
         if ( rc == SQLITE_BUSY ) // If busy, wait 200 ms
-        	{
+            {
 #ifdef __WXMSW__
-			wxUsleep ( 200 ) ;
+            wxUsleep ( 200 ) ;
 #else
-//       	    wxMilliSleep ( 200 ) ;
+//               wxMilliSleep ( 200 ) ;
 #endif
-        	}
+            }
         } while ( rc == SQLITE_BUSY ) ;
 
     ierror = e ? 1 : 0 ;
@@ -341,12 +347,9 @@ TSQLresult TStorage::getObjectSqlite2 ( const wxString &query )
 
 void TStorage::import ()
     {
-    TSQLresult sr ;
-    int a ;
-
     // Importing restriction enzymes
-    sr = getObject ( _T("SELECT * FROM enzyme") ) ;
-    for ( a = 0 ; a < sr.content.size() ; a++ )
+    TSQLresult sr = getObject ( _T("SELECT * FROM enzyme") ) ;
+    for ( int a = 0 ; a < sr.content.size() ; a++ )
         {
         wxString name = sr[a][sr["e_name"]] ;
         if ( name.IsEmpty() ) {}
@@ -372,15 +375,15 @@ void TStorage::import ()
         }
     }
 
-void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , wxString key , wxString value )
+void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , const wxString& key , const wxString& _value )
     {
-    int a ;
-    for ( a = 0 ; a < value.length() ; a++ ) // Avoiding single quotes in value
-    	{
+    wxString value ( _value ) ;
+    for ( int a = 0 ; a < value.length() ; a++ ) // Avoiding single quotes in value
+        {
         if ( value.GetChar(a) == '"' ) value.SetChar(a,39) ;
 //        else if ( (unsigned char) value.GetChar(a) > 127 ) value.SetChar(a,' ') ;
         else if ( value.GetChar(a) == 0 ) value.SetChar(a,' ') ;
-		}
+        }
     value.Replace ( _T("\n") , _T("\013") ) ;
     if ( !s1.IsEmpty() ) s1 += _T(",") ;
     if ( !s2.IsEmpty() ) s2 += _T(",") ;
@@ -388,12 +391,12 @@ void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , wxString key , wxString va
     s2 += _T("\"") + value + _T("\"") ;
     }
 
-void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , wxString key , char* value )
+void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , const wxString& key , const char * const value )
     {
     sqlAdd ( s1 , s2 , key , wxString ( value , wxConvUTF8 ) ) ;
     }
 
-void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , wxString key , int value )
+void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , const wxString& key , const int value )
     {
     wxString t = wxString::Format ( "%d" , (unsigned int) value ) ;
     if ( !s1.IsEmpty() ) s1 += _T(",") ;
@@ -423,7 +426,7 @@ wxString TStorage::getDatabaseList ( wxArrayString &name , wxArrayString &file )
     }
 
 wxString TStorage::getDefaultDB ()
-	{
+    {
     TSQLresult r ;
     wxString defdb = txt("local_db") ;
     wxString sql = _T("SELECT * FROM stuff WHERE s_type=\"DEFAULT_DATABASE\"") ;
@@ -432,72 +435,66 @@ wxString TStorage::getDefaultDB ()
     else return r[0][r["s_name"]] ;
     }
 
-wxString TStorage::getSingleField ( wxString query , wxString field , wxString def )
+wxString TStorage::getSingleField ( const wxString& query , const wxString& field , const wxString& def ) /* not const */
     {
-    TSQLresult sr ;
-    sr = getObject ( query ) ;
+    TSQLresult sr = getObject ( query ) ; // not const
     if ( sr.content.size() > 0 )
-	 	{
-		int p = sr[field.mb_str()] ;
-		return sr[0][p] ;
-		}
+        {
+        int p = sr[field.mb_str()] ;
+        return sr[0][p] ;
+        }
     else return def ;
     }
 
-int TStorage::getSingleField ( wxString query , wxString field , int def )
+int TStorage::getSingleField ( const wxString& query , const wxString& field , const int def ) /* not const */
     {
-//    char t[100] ;
-//    snprintf ( t , sizeof(t)-1, "%d" , def ) ;
-    wxString r = getSingleField ( query , field , wxString::Format ( "%d" , def ) ) ;
+//  char t[100] ;
+//  snprintf ( t , sizeof(t)-1, "%d" , def ) ;
+    wxString r = getSingleField ( query , field , wxString::Format ( "%d" , def ) ) ; // not const
     return atoi ( r.mb_str() ) ;
     }
 
-wxString TStorage::getOption ( wxString oname , wxString def )
+wxString TStorage::getOption ( const wxString& oname , const wxString& def ) /* not const */
     {
-    return getSingleField ( _T("SELECT s_value FROM stuff WHERE s_name=\"") +
-                            oname +
-                            _T("\" AND s_type=\"OPTION\"") ,
-                            _T("s_value") , def ) ;
+    return getSingleField ( _T("SELECT s_value FROM stuff WHERE s_name=\"") + oname + _T("\" AND s_type=\"OPTION\"") ,
+                            _T("s_value") , def ) ; // not const
     }
 
-int TStorage::getOption ( wxString oname , int def )
+int TStorage::getOption ( const wxString& oname , const int def ) /* not const */
     {
-    return getSingleField ( _T("SELECT s_value FROM stuff WHERE s_name=\"") +
-                            oname +
-                            _T("\" AND s_type=\"OPTION\"") ,
-                            _T("s_value") , def ) ;
+    return getSingleField ( _T("SELECT s_value FROM stuff WHERE s_name=\"") + oname + _T("\" AND s_type=\"OPTION\"") ,
+                            _T("s_value") , def ) ; // not const
     }
 
-wxString TStorage::UCfirst ( wxString s )
+wxString TStorage::UCfirst ( const wxString& _s ) const
     {
-    int a ;
-    for ( a = 0 ; a < s.length() ; a++ )
+    wxString s ( _s ) ;
+    for ( int a = 0 ; a < s.length() ; a++ )
         if ( s.GetChar(a) >= 'A' && s.GetChar(a) <= 'Z' )
            s.SetChar ( a , s.GetChar(a) - 'A' + 'a' ) ;
     if ( !s.IsEmpty() && s.GetChar(0) >= 'a' && s.GetChar(0) <= 'z' ) s.SetChar ( 0 , s.GetChar(0) - 'a' + 'A' ) ;
-    for ( a = 0 ; a < s.length() ; a++ )
-	if ( s.GetChar(a) < 10 ) s.SetChar ( a , '_' ) ; // !!!!!!!!!!!!!
+    int a = 0;
+    while ( a < s.length() ) a++ ;
+    if ( s.GetChar(a) < 10 ) s.SetChar ( a , '_' ) ; // !!!!!!!!!!!!!
     return s ;
     }
 
 
-/**	\brief Copies a whole table to another database
+/**    \brief Copies a whole table to another database
 
-	This is used for auto-updating sqlite databases, which do not support ALTER TABLE
+    This is used for auto-updating sqlite databases, which do not support ALTER TABLE
 */
-bool TStorage::copySQLfields ( TStorage &target , wxString table , wxString cond )
+bool TStorage::copySQLfields ( TStorage &target , const wxString& table , const wxString& cond )
     {
-    int a , b ;
-    TSQLresult r ;
     wxString sql , s1 , s2 ;
     sql = _T("SELECT * FROM ") + table + _T(" WHERE ") + cond ;
-    r = getObject ( sql ) ;
+    TSQLresult r = getObject ( sql ) ;
     sql = _T("DELETE FROM ") + table + _T(" WHERE ") + cond ;
     target.getObject ( sql ) ;
-    for ( a = 0 ; a < r.rows() ; a++ )
+    for ( int a = 0 ; a < r.rows() ; a++ )
         {
         s1 = s2 = _T("") ;
-        for ( b = 0 ; b < r.cols() ; b++ )
+        for ( int b = 0 ; b < r.cols() ; b++ )
            target.sqlAdd ( s1 , s2 , r.field[b] , r[a][b] ) ;
         sql = _T("INSERT INTO ") + table + _T(" (") + s1 + _T(") VALUES (") + s2 + _T(")") ;
         target.getObject ( sql ) ;
@@ -508,17 +505,15 @@ bool TStorage::copySQLfields ( TStorage &target , wxString table , wxString cond
 
 
 
-void TStorage::replaceTable ( wxString table , wxArrayString &f , wxArrayString &t )
+void TStorage::replaceTable ( const wxString& table , wxArrayString &f , wxArrayString &t )
     {
-    int a , b ;
-    TSQLresult r ;
     wxString sql , s1 , s2 ;
     sql = _T("SELECT * FROM ") + table ;
-    r = getObject ( sql ) ;
+    TSQLresult r = getObject ( sql ) ;
     getObject ( _T("DROP TABLE ") + table ) ;
 
     wxString create ;
-    for ( a = 0 ; a < f.GetCount() ; a++ )
+    for ( int a = 0 ; a < f.GetCount() ; a++ )
         {
         if ( !create.IsEmpty() ) create += _T(",\n") ;
         create += f[a] + _T(" ") + t[a] ;
@@ -527,10 +522,10 @@ void TStorage::replaceTable ( wxString table , wxArrayString &f , wxArrayString 
 
     getObject ( create ) ;
 
-    for ( a = 0 ; a < r.rows() ; a++ )
+    for ( int a = 0 ; a < r.rows() ; a++ )
         {
         s1 = s2 = _T("") ;
-        for ( b = 0 ; b < f.GetCount() ; b++ )
+        for ( int b = 0 ; b < f.GetCount() ; b++ )
            {
            int id = r[(const char*)f[b].c_str()] ;
            if ( id > -1 ) sqlAdd ( s1 , s2 , f[b] , r[a][id] ) ;
@@ -541,10 +536,10 @@ void TStorage::replaceTable ( wxString table , wxArrayString &f , wxArrayString 
         }
     }
 
-void TStorage::tableInfoSet ( wxArrayString &f , wxArrayString &t , wxString nf , wxString nt )
+void TStorage::tableInfoSet ( wxArrayString &f , wxArrayString &t , const wxString& nf , const wxString& nt )
     {
     int a ;
-    for ( a = 0 ; a < f.GetCount() && f[a] != nf ; a++ ) ;
+    for (a = 0 ; a < f.GetCount() && f[a] != nf ; a++ ) ;
     if ( a == f.GetCount() )
         {
         f.Add ( nf ) ;
@@ -556,20 +551,20 @@ void TStorage::tableInfoSet ( wxArrayString &f , wxArrayString &t , wxString nf 
         }
     }
 
-wxString TStorage::fixDNAname ( wxString s )
+wxString TStorage::fixDNAname ( const wxString& _s ) const
     {
-    int a ;
-    for ( a = 0 ; a < s.length() ; a++ )
+    wxString s (_s) ;
+    for ( int a = 0 ; a < s.length() ; a++ )
         if ( s.GetChar(a) == '"' ) s.SetChar ( a , 39 ) ;
     return s ;
     }
 
-void TStorage::setOption ( wxString oname , int value )
+void TStorage::setOption ( const wxString& oname , const int value )
     {
     setOption ( oname , wxString::Format ( _T("%d") , value ) ) ;
     }
 
-void TStorage::setOption ( wxString oname , wxString vname )
+void TStorage::setOption ( const wxString& oname , const wxString& vname )
     {
     wxString sql ;
     sql = _T("DELETE FROM stuff WHERE s_type=\"OPTION\" AND s_name=\"") ;
@@ -670,12 +665,12 @@ void TStorage::autoUpdateSchema ()
         wxString title = _T("Updating enzymes. This may take a while.") ;
         version = 5 ;
 
-		TStorage bl ( TEMP_STORAGE , blankdb ) ;
+        TStorage bl ( TEMP_STORAGE , blankdb ) ;
         r = bl.getObject ( _T("SELECT * FROM enzyme") ) ;
-		wxProgressDialog pd ( title , _T("") , r.rows() ) ;
+        wxProgressDialog pd ( title , _T("") , r.rows() ) ;
         for ( int a = 0 ; a < r.rows() ; a++ )
            {
-		   pd.Update ( a + 1 , r[a][r["e_name"]] ) ;
+           pd.Update ( a + 1 , r[a][r["e_name"]] ) ;
            wxString name = r[a][r["e_name"]] ;
            wxString seq = r[a][r["e_sequence"]] ;
            wxString cut = r[a][r["e_cut"]] ;
@@ -684,9 +679,9 @@ void TStorage::autoUpdateSchema ()
                       _T("', e_cut='") + cut +
                       _T("', e_overlap='") + ol +
                       _T("' WHERE e_name='") + name + _T("' AND (e_cut<>'") +
-					  cut + _T("' OR e_overlap<>'") +
-					  ol + _T("' OR e_sequence<>'") +
-					  seq + _T("')") ;
+                      cut + _T("' OR e_overlap<>'") +
+                      ol + _T("' OR e_sequence<>'") +
+                      seq + _T("')") ;
            getObject ( sql ) ;
            }
         wxEndBusyCursor() ;
@@ -714,7 +709,6 @@ void TStorage::synchronize ()
     {
     bool changed ;
     TSQLresult r ;
-    int a , b , c ;
 
     // Sync only once a day
     wxDateTime d = wxDateTime::Now () ;
@@ -725,52 +719,53 @@ void TStorage::synchronize ()
     // Known database list
     wxArrayString files ;
     r = getObject ( _T("SELECT s_value FROM stuff WHERE s_type=\"DATABASE\"") ) ;
-    for ( a = 0 ; a < r.rows() ; a++ )
+    for ( int a = 0 ; a < r.rows() ; a++ )
         files.Add ( r[a][r["s_value"]] ) ;
 
     do {
         changed = false ;
-        for ( a = 0 ; a < files.GetCount() ; a++ )
-           {
-           TStorage t ( TEMP_STORAGE , files[a] ) ;
+        for ( int a = 0 ; a < files.GetCount() ; a++ )
+            {
+            TStorage t ( TEMP_STORAGE , files[a] ) ;
 
-           TSQLresult r1 , r2 ;
-           r1 = getObject ( _T("SELECT * FROM enzyme ORDER BY e_name") ) ;
-           r2 = t.getObject ( _T("SELECT * FROM enzyme ORDER BY e_name") ) ;
+            TSQLresult r1 , r2 ;
+            r1 = getObject ( _T("SELECT * FROM enzyme ORDER BY e_name") ) ;
+            r2 = t.getObject ( _T("SELECT * FROM enzyme ORDER BY e_name") ) ;
 
-           for ( b = c = 0 ; b < r1.rows() && c < r2.rows() ; )
-              {
-              if ( r1[b][r1["e_name"]] == r2[c][r2["e_name"]] )
-                 {
-                 b++ ;
-                 c++ ;
-                 }
-              else if ( r1[b][r1["e_name"]] < r2[c][r2["e_name"]] ) // Export
-                 {
-                 t.getObject ( makeInsert ( _T("enzyme") , r1.field , r1[b] ) ) ;
-                 b++ ;
-                 }
-              else if ( r1[b][r1["e_name"]] > r2[c][r2["e_name"]] ) // Import
-                 {
-                 changed = true ;
-                 getObject ( makeInsert ( _T("enzyme") , r2.field , r2[c] ) ) ;
-                 c++ ;
-                 }
-              }
+            int b = 0 , c = 0 ;
+            for ( ; b < r1.rows() && c < r2.rows() ; )
+                {
+                if ( r1[b][r1["e_name"]] == r2[c][r2["e_name"]] )
+                    {
+                    b++ ;
+                    c++ ;
+                    }
+                else if ( r1[b][r1["e_name"]] < r2[c][r2["e_name"]] ) // Export
+                    {
+                    t.getObject ( makeInsert ( _T("enzyme") , r1.field , r1[b] ) ) ;
+                    b++ ;
+                    }
+                else if ( r1[b][r1["e_name"]] > r2[c][r2["e_name"]] ) // Import
+                    {
+                    changed = true ;
+                    getObject ( makeInsert ( _T("enzyme") , r2.field , r2[c] ) ) ;
+                    c++ ;
+                    }
+                }
             while ( b < r1.rows() )
-               {
-               t.getObject ( makeInsert ( _T("enzyme") , r1.field , r1[b++] ) ) ;
-               }
+                {
+                t.getObject ( makeInsert ( _T("enzyme") , r1.field , r1[b++] ) ) ;
+                }
             while ( c < r2.rows() )
-               {
-               getObject ( makeInsert ( _T("enzyme") , r2.field , r2[c++] ) ) ;
-               changed = true ;
-               }
+                {
+                getObject ( makeInsert ( _T("enzyme") , r2.field , r2[c++] ) ) ;
+                changed = true ;
+                }
            }
         } while ( changed ) ;
     }
 
-wxString TStorage::makeInsert ( wxString table , wxArrayString &field , wxArrayString &data )
+wxString TStorage::makeInsert ( const wxString& table , wxArrayString &field , wxArrayString &data )
     {
     wxString sql , s1 , s2 ;
     for ( int a = 0 ; a < field.GetCount() ; a++ )
@@ -778,32 +773,31 @@ wxString TStorage::makeInsert ( wxString table , wxArrayString &field , wxArrayS
     sql = _T("INSERT INTO ") + table + _T(" (") + s1 + _T(") VALUES (") + s2 + _T(")") ;
     return sql ;
     }
-TProtease *TStorage::getProtease ( wxString s )
+TProtease *TStorage::getProtease ( const wxString& s ) const
     {
-    int a ;
-    for ( a = 0 ; a < pr.GetCount() ; a++ )
+    for ( int a = 0 ; a < pr.GetCount() ; a++ )
         if ( pr[a]->name == s )
            return pr[a] ;
     return NULL ;
     }
 
-void TStorage::updateProtease ( TProtease *p )
+void TStorage::updateProtease ( TProtease * const p ) /* not const */
     {
     TRestrictionEnzyme e ;
     e.setName ( _T("*") + p->name ) ;
     e.setCut ( p->cut ) ;
     e.setSequence ( p->str_match ) ;
     e.note = p->note ;
-    updateRestrictionEnzyme ( &e ) ;
+    updateRestrictionEnzyme ( &e ) ; // not const
     }
 
 
-wxString TStorage::getDBname ()
+wxString TStorage::getDBname () const
     {
     return dbname ;
     }
 
-wxString TStorage::createMySQLdb ( wxString ip , wxString db , wxString name , wxString pwd )
+wxString TStorage::createMySQLdb ( const wxString& ip , const wxString& db , const wxString& name , const wxString& pwd )
     {
 #ifdef USEMYSQL
     MYSQL c ;
@@ -855,43 +849,43 @@ wxString TStorage::createMySQLdb ( wxString ip , wxString db , wxString name , w
     }
 
 void TStorage::optimizeDatabase ()
-	{
+    {
     if ( isMySQL ) return ;
-	getObject ( _T("VACUUM;") ) ;
-	}
+    getObject ( _T("VACUUM;") ) ;
+    }
 
 TSQLresult TStorage::getObject ( const wxString &query )
     {
     if ( recording )
-    	{
-	    record += query + "; " ;
+        {
+        record += query + "; " ;
         results.clean() ;
-	    return results ;
-    	}
+        return results ;
+        }
     if ( isMySQL ) return getObject_MySQL ( query ) ;
-	return getObjectSqlite3 ( query ) ;
-//	if ( isSqlite3 ) return getObjectSqlite3 ( query ) ;
-//   	return getObjectSqlite2 ( query ) ;
-   	}
+    return getObjectSqlite3 ( query ) ;
+//    if ( isSqlite3 ) return getObjectSqlite3 ( query ) ;
+//       return getObjectSqlite2 ( query ) ;
+       }
 
 void TStorage::startRecord ()
-	{
- 	if ( isMySQL ) { /*getObject ( "BEGIN" ) ; */return ; }
-	record = _T("") ;
-	recording = true ;
-	}
+    {
+     if ( isMySQL ) { /*getObject ( "BEGIN" ) ; */return ; }
+    record = _T("") ;
+    recording = true ;
+    }
 
 void TStorage::endRecord ()
-	{
- 	if ( isMySQL ) { /*getObject ( "COMMIT" ) ; */return ; }
-	recording = false ;
-	if ( !record.IsEmpty() )
-		{
-    	record = _T("BEGIN; ") + record + _T("COMMIT;") ;
-		getObject ( record ) ;
-		}
-	record = _T("") ;
-	}
+    {
+     if ( isMySQL ) { /*getObject ( "COMMIT" ) ; */return ; }
+    recording = false ;
+    if ( !record.IsEmpty() )
+        {
+        record = _T("BEGIN; ") + record + _T("COMMIT;") ;
+        getObject ( record ) ;
+        }
+    record = _T("") ;
+    }
 
 void TStorage::startup ()
     {
@@ -918,7 +912,7 @@ void TStorage::startup ()
 
 // Enzyme functions
 
-void TStorage::markEnzymeForDeletion ( wxString s )
+void TStorage::markEnzymeForDeletion ( const wxString& s )
     {
     wxString sql ;
     sql = _T("INSERT INTO stuff (s_type,s_name,s_value) VALUES (") ;
@@ -926,18 +920,18 @@ void TStorage::markEnzymeForDeletion ( wxString s )
     getObject ( sql ) ;
     }
 
-bool TStorage::addEnzymeGroup ( wxString s )
+bool TStorage::addEnzymeGroup ( const wxString& _s )
     {
-    if ( s.IsEmpty() ) return false ;
-    s = UCfirst ( s ) ;
+    if ( _s.IsEmpty() ) return false ;
+    wxString s = UCfirst ( _s ) ;
     if ( s == txt("all") ) return false ;
 
-	TStorage *t = getDBfromEnzymeGroup ( s ) ;
-	if ( t )
-		{
-		bool b = t->addEnzymeGroup ( stripGroupName ( s ) ) ;
-		return b ;
-		}
+    TStorage *t = getDBfromEnzymeGroup ( s ) ;
+    if ( t )
+        {
+        bool b = t->addEnzymeGroup ( stripGroupName ( s ) ) ;
+        return b ;
+        }
 
 
     TSQLresult sr ;
@@ -953,13 +947,13 @@ bool TStorage::addEnzymeGroup ( wxString s )
     return true ;
     }
 
-void TStorage::addRestrictionEnzyme ( TRestrictionEnzyme *r )
+void TStorage::addRestrictionEnzyme ( TRestrictionEnzyme * const r )
     {
     cleanEnzymeGroupCache() ;
     re.Add ( r ) ;
     }
 
-TRestrictionEnzyme* TStorage::getRestrictionEnzyme ( wxString s )
+TRestrictionEnzyme* TStorage::getRestrictionEnzyme ( const wxString& s )
     {
     TRestrictionEnzyme *ret = NULL , *ret2 ;
     if ( storagetype == TEMP_STORAGE )
@@ -984,32 +978,31 @@ TRestrictionEnzyme* TStorage::getRestrictionEnzyme ( wxString s )
     return ret ;
     }
 
-void TStorage::getEnzymesInGroup ( wxString gn , wxArrayString &vs )
+void TStorage::getEnzymesInGroup ( const wxString& _gn , wxArrayString &vs )
     {
-    int a ;
-	TStorage *t = getDBfromEnzymeGroup ( gn ) ;
-	if ( t )
-		{
-		t->getEnzymesInGroup ( stripGroupName ( gn ) , vs ) ;
-		return ;
-		}
+    TStorage *t = getDBfromEnzymeGroup ( _gn ) ;
+    if ( t )
+        {
+        t->getEnzymesInGroup ( stripGroupName ( _gn ) , vs ) ;
+        return ;
+        }
 
-	if ( !isLocalDB() ) // Use cache
-		{
-		getEnzymeCache ( gn , vs ) ;
-		if ( vs.GetCount() ) return ;
-		}
+    if ( !isLocalDB() ) // Use cache
+        {
+        getEnzymeCache ( _gn , vs ) ;
+        if ( vs.GetCount() ) return ;
+        }
 
     TSQLresult sr ;
     vs.Clear() ;
     wxString sql ;
-    gn = UCfirst ( gn ) ;
+    wxString gn = UCfirst ( _gn ) ;
     if ( gn != txt("All") )
         {
         sql = _T("SELECT leg_enzyme FROM link_enzyme_group") ;
         sql += _T(" WHERE leg_group=\"") + gn + _T("\"") ;
         sr = getObject ( sql ) ;
-        for ( a = 0 ; a < sr.content.size() ; a++ )
+        for ( int a = 0 ; a < sr.content.size() ; a++ )
            if ( sr[a][sr["leg_enzyme"]].GetChar(0) != '*' )
               vs.Add ( sr[a][sr["leg_enzyme"]] ) ;
         }
@@ -1017,12 +1010,12 @@ void TStorage::getEnzymesInGroup ( wxString gn , wxArrayString &vs )
         {
         sql = _T("SELECT e_name from enzyme") ;
         sr = getObject ( sql ) ;
-        for ( a = 0 ; a < sr.content.size() ; a++ )
+        for ( int a = 0 ; a < sr.content.size() ; a++ )
            if ( sr[a][sr["e_name"]].GetChar(0) != '*' )
               vs.Add ( sr[a][sr["e_name"]] ) ;
         }
 
-    for ( a = 0 ; a < vs.GetCount() ; a++ )
+    for ( int a = 0 ; a < vs.GetCount() ; a++ )
         {
         if ( vs[a].IsEmpty() )
            {
@@ -1039,38 +1032,37 @@ void TStorage::getEnzymeGroups ( wxArrayString &vs )
     wxString defdb = getDefaultDB() ;
     TStorage *t = getDBfromEnzymeGroup ( defdb + _T(":dummy") ) ;
     if ( t && isLocalDB() && t != this )
-    	{
-	    t->getEnzymeGroups ( vs ) ;
-	    for ( int a = 0 ; a < vs.GetCount() ; a++ )
-	    	vs[a] = defdb + _T(":") + vs[a] ;
-     	}
+        {
+        t->getEnzymeGroups ( vs ) ;
+        for ( int a = 0 ; a < vs.GetCount() ; a++ )
+            vs[a] = defdb + _T(":") + vs[a] ;
+         }
     else vs.Clear() ;
 
-    int a ;
-   	if ( !isLocalDB() && enzymeGroupNameCache.GetCount() ) // Use cache
-   		{
-	    for ( a = 0 ; a < enzymeGroupNameCache.GetCount() ; a++ )
-	    	vs.Add ( enzymeGroupNameCache[a] ) ;
-    	return ;
-   		}
+    if ( !isLocalDB() && enzymeGroupNameCache.GetCount() ) // Use cache
+        {
+        for ( int a = 0 ; a < enzymeGroupNameCache.GetCount() ; a++ )
+            vs.Add ( enzymeGroupNameCache[a] ) ;
+        return ;
+        }
 
     TSQLresult sr ;
     if ( !isLocalDB() ) cleanEnzymeGroupCache () ;
     wxString sql = "SELECT eg_name FROM enzyme_group" ;
     sr = getObject ( sql ) ;
-    for ( a = 0 ; a < sr.content.size() ; a++ )
-    	{
-	    wxString groupname = UCfirst ( sr[a][sr["eg_name"]] ) ;
+    for ( int a = 0 ; a < sr.content.size() ; a++ )
+        {
+        wxString groupname = UCfirst ( sr[a][sr["eg_name"]] ) ;
         vs.Add ( groupname ) ;
         if ( !isLocalDB() )
-        	{
-        	enzymeGroupNameCache.Add ( groupname ) ; // Add to cache
-        	enzymeGroupCache.Add ( _T("") ) ; // Add blank dummy to cache
-        	}
+            {
+            enzymeGroupNameCache.Add ( groupname ) ; // Add to cache
+            enzymeGroupCache.Add ( _T("") ) ; // Add blank dummy to cache
+            }
         }
     }
 
-void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme *e )
+void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme * const e ) /* not const */
     {
     TSQLresult sr ;
     wxString sql ;
@@ -1102,24 +1094,24 @@ void TStorage::updateRestrictionEnzyme ( TRestrictionEnzyme *e )
     sql += _T("\",\"") ;
     sql += wxString::Format ( "%d" , e->getOverlap() ) ;
     sql += _T("\")") ;
-    getObject ( sql ) ;
+    getObject ( sql ) ; // not const
     }
 
 void TStorage::cleanEnzymeGroupCache ()
-	{
-	enzymeGroupNameCache.Clear () ;
-	enzymeGroupCache.Clear () ;
-	}
+    {
+    enzymeGroupNameCache.Clear () ;
+    enzymeGroupCache.Clear () ;
+    }
 
-void TStorage::addEnzymeToGroup ( wxString enzyme , wxString group )
-	{
-	TStorage *t = getDBfromEnzymeGroup ( group ) ;
-	if ( t )
-		{
-		t->cleanEnzymeGroupCache () ;
-		t->addEnzymeToGroup ( enzyme , stripGroupName ( group ) ) ;
-		return ;
-		}
+void TStorage::addEnzymeToGroup ( const wxString& enzyme , const wxString& group )
+    {
+    TStorage *t = getDBfromEnzymeGroup ( group ) ;
+    if ( t )
+        {
+        t->cleanEnzymeGroupCache () ;
+        t->addEnzymeToGroup ( enzyme , stripGroupName ( group ) ) ;
+        return ;
+        }
     wxString sql ;
 
     cleanEnzymeGroupCache() ;
@@ -1128,53 +1120,54 @@ void TStorage::addEnzymeToGroup ( wxString enzyme , wxString group )
     getObject ( sql ) ;
 
     sql = _T("INSERT INTO link_enzyme_group (leg_enzyme,leg_group) VALUES (\"") +
-	 	enzyme + _T("\",\"") + group + _T("\")") ;
+         enzyme + _T("\",\"") + group + _T("\")") ;
     getObject ( sql ) ;
-	}
+    }
 
-TStorage *TStorage::getDBfromEnzymeGroup ( wxString group )
-	{
-	wxString s = group.BeforeLast ( ':' ) ;
-	if ( s.IsEmpty() ) return NULL ;
+TStorage *TStorage::getDBfromEnzymeGroup ( const wxString& group )
+    {
+    wxString s = group.BeforeLast ( ':' ) ;
+    if ( s.IsEmpty() ) return NULL ;
 
-	wxArrayString db_name , db_file ;
+    wxArrayString db_name , db_file ;
     myapp()->frame->LS->getDatabaseList ( db_name , db_file ) ;
     for ( int a = 0 ; a < db_name.GetCount() ; a++ )
-    	{
-	    if ( db_name[a] == s )
-	    	return myapp()->frame->getTempDB ( db_file[a] ) ;
-    	}
-	return NULL ;
-	}
+        {
+        if ( db_name[a] == s )
+            return myapp()->frame->getTempDB ( db_file[a] ) ;
+        }
+    return NULL ;
+    }
 
-wxString TStorage::stripGroupName ( wxString s )
-	{
-	return UCfirst ( s.AfterLast ( ':' ) ) ;
-	}
+wxString TStorage::stripGroupName ( const wxString& _s ) const
+    {
+    wxString s = _s.AfterLast ( ':' )  ;
+    return UCfirst ( s ) ;
+    }
 
-void TStorage::removeEnzymeFromGroup ( wxString enzyme , wxString group )
-	{
-	TStorage *t = getDBfromEnzymeGroup ( group ) ;
-	if ( t )
-		{
-		t->removeEnzymeFromGroup ( enzyme , stripGroupName ( group ) ) ;
-		return ;
-		}
+void TStorage::removeEnzymeFromGroup ( const wxString& enzyme , const wxString& group )
+    {
+    TStorage *t = getDBfromEnzymeGroup ( group ) ;
+    if ( t )
+        {
+        t->removeEnzymeFromGroup ( enzyme , stripGroupName ( group ) ) ;
+        return ;
+        }
 
     cleanEnzymeGroupCache() ;
     wxString sql = "DELETE FROM link_enzyme_group WHERE leg_enzyme=\"" +
           enzyme + "\" AND leg_group=\"" + group + "\"" ;
     getObject ( sql ) ;
-	}
+    }
 
-void TStorage::removeEnzymeGroup ( wxString group )
-	{
-	TStorage *t = getDBfromEnzymeGroup ( group ) ;
-	if ( t )
-		{
-		t->removeEnzymeGroup ( stripGroupName ( group ) ) ;
-		return ;
-		}
+void TStorage::removeEnzymeGroup ( const wxString& group )
+    {
+    TStorage *t = getDBfromEnzymeGroup ( group ) ;
+    if ( t )
+        {
+        t->removeEnzymeGroup ( stripGroupName ( group ) ) ;
+        return ;
+        }
 
     cleanEnzymeGroupCache() ;
     wxString sql ;
@@ -1182,117 +1175,115 @@ void TStorage::removeEnzymeGroup ( wxString group )
     getObject ( sql ) ;
     sql = _T("DELETE FROM enzyme_group WHERE eg_name=\"") + group + _T("\"") ;
     getObject ( sql ) ;
-	}
+    }
 
-bool TStorage::isLocalDB ()
-	{
-	return dbname == myapp()->frame->LS->dbname ;
-	}
+bool TStorage::isLocalDB () const
+    {
+    return dbname == myapp()->frame->LS->dbname ;
+    }
 
-void TStorage::setEnzymeCache ( wxString group , wxArrayString &enzymes )
-	{
-	if ( group == txt("All") ) return ;
-	int a ;
-	for ( a = 0 ; a < enzymeGroupNameCache.GetCount() && group != enzymeGroupNameCache[a] ; a++ ) ;
-	if ( a == enzymeGroupNameCache.GetCount() )
-		{
-		enzymeGroupNameCache.Add ( group ) ;
-		enzymeGroupCache.Add ( _T("") ) ;
-		}
-	enzymeGroupCache[a] = implode ( _T(",") , enzymes ) ;
-	}
+void TStorage::setEnzymeCache ( const wxString& group , wxArrayString &enzymes )
+    {
+    if ( group == txt("All") ) return ;
+    int a ;
+    for ( a = 0 ; a < enzymeGroupNameCache.GetCount() && group != enzymeGroupNameCache[a] ; a++ ) ;
+    if ( a == enzymeGroupNameCache.GetCount() )
+        {
+        enzymeGroupNameCache.Add ( group ) ;
+        enzymeGroupCache.Add ( _T("") ) ;
+        }
+    enzymeGroupCache[a] = implode ( _T(",") , enzymes ) ;
+    }
 
-void TStorage::getEnzymeCache ( wxString group , wxArrayString &enzymes )
-	{
-	enzymes.Clear () ;
-	if ( group == txt("All") ) return ;
+void TStorage::getEnzymeCache ( const wxString& group , wxArrayString &enzymes )
+    {
+    enzymes.Clear () ;
+    if ( group == txt("All") ) return ;
 
-	int a ;
-	for ( a = 0 ; a < enzymeGroupNameCache.GetCount() && group != enzymeGroupNameCache[a] ; a++ ) ;
-	if ( a == enzymeGroupNameCache.GetCount() ) return ;
+    int a ;
+    for ( a = 0 ; a < enzymeGroupNameCache.GetCount() && group != enzymeGroupNameCache[a] ; a++ ) ;
+    if ( a == enzymeGroupNameCache.GetCount() ) return ;
 
-	explode ( _T(",") , enzymeGroupCache[a] , enzymes ) ;
-	}
+    explode ( _T(",") , enzymeGroupCache[a] , enzymes ) ;
+    }
 
 /*
 // This function can convert a sqlite 2.X database into an sqlite 3.X one
 bool TStorage::convertSqlite2to3 ()
-	{
+    {
     wxBeginBusyCursor() ;
-	wxString filename = wxFileName::CreateTempFileName ( _T("GENtle_") ) ;
-	wxCopyFile ( _T("blank.db") , filename ) ;
-	TStorage s3 ( TEMP_STORAGE , filename ) ;
+    wxString filename = wxFileName::CreateTempFileName ( _T("GENtle_") ) ;
+    wxCopyFile ( _T("blank.db") , filename ) ;
+    TStorage s3 ( TEMP_STORAGE , filename ) ;
 
-	wxString sql = _T("SELECT name FROM sqlite_master WHERE type='table'") ;
+    wxString sql = _T("SELECT name FROM sqlite_master WHERE type='table'") ;
     TSQLresult r ;
     r = getObjectSqlite2 ( sql ) ;
 
     wxArrayString tables ;
     int a , b , c ;
     for ( a = 0 ; a < r.content.size() ; a++ )
-    	tables.Add ( r[a][r["name"]] ) ;
+        tables.Add ( r[a][r["name"]] ) ;
 
-   	for ( a = 0 ; a < tables.GetCount() ; a++ )
-   		{
-	    sql = _T("SELECT * FROM ") + tables[a] ;
-	    r = getObjectSqlite2 ( sql ) ;
-	    s3.startRecord() ;
-	    s3.getObject ( _T("DELETE FROM ") + tables[a] ) ;
-	    for ( b = 0 ; b < r.content.size() ; b++ )
-	    	{
- 	    	wxString s1 , s2 ;
- 	    	for ( c = 0 ; c < r.field.GetCount() ; c++ )
-  		    	s3.sqlAdd ( s1 , s2 , r.field[c] , r[b][c] ) ;
-			sql = _T("INSERT INTO ") + tables[a] + _T(" (") + s1 + _T(") VALUES (") + s2 + _T(")") ;
+       for ( a = 0 ; a < tables.GetCount() ; a++ )
+           {
+        sql = _T("SELECT * FROM ") + tables[a] ;
+        r = getObjectSqlite2 ( sql ) ;
+        s3.startRecord() ;
+        s3.getObject ( _T("DELETE FROM ") + tables[a] ) ;
+        for ( b = 0 ; b < r.content.size() ; b++ )
+            {
+             wxString s1 , s2 ;
+             for ( c = 0 ; c < r.field.GetCount() ; c++ )
+                  s3.sqlAdd ( s1 , s2 , r.field[c] , r[b][c] ) ;
+            sql = _T("INSERT INTO ") + tables[a] + _T(" (") + s1 + _T(") VALUES (") + s2 + _T(")") ;
          s3.getObject ( sql ) ;
-	    	}
-  	    s3.endRecord() ;
-   		}
+            }
+          s3.endRecord() ;
+           }
 
-	wxCopyFile ( filename , dbname ) ;
-	isSqlite3 = true ;
-	getObjectSqlite3 ( _T("VACUUM;") ) ;
+    wxCopyFile ( filename , dbname ) ;
+    isSqlite3 = true ;
+    getObjectSqlite3 ( _T("VACUUM;") ) ;
     wxEndBusyCursor() ;
     wxMessageBox ( txt("t_conversion_complete") ) ;
     return true ; // Dummy default
-	}
+    }
 */
 
 void TStorage::syncEnzymes ( TStorage *to )
-	{
-	bool useBlank = false ;
-	if ( to == NULL )
-		{
-		to = new TStorage ( TEMP_STORAGE , myapp()->homedir.GetFullPath() + wxFileName::GetPathSeparator() + "blank.db" ) ;
-		useBlank = true ;
-		}
+    {
+    bool useBlank = false ;
+    if ( to == NULL )
+        {
+        to = new TStorage ( TEMP_STORAGE , myapp()->homedir.GetFullPath() + wxFileName::GetPathSeparator() + "blank.db" ) ;
+        useBlank = true ;
+        }
 
-	TSQLresult r1 , r2 ;
-	r1 = getObject ( _T("SELECT * FROM enzyme") ) ;
-	r2 = to->getObject ( _T("SELECT * FROM enzyme") ) ;
+    TSQLresult r1 = getObject ( _T("SELECT * FROM enzyme") ) ;
+    TSQLresult r2 = to->getObject ( _T("SELECT * FROM enzyme") ) ;
 
-	int a ;
-	wxArrayString s1 , s2 ;
-	for ( a = 0 ; a < r1.rows() ; a++ ) s1.Add ( r1[a][r1["e_name"]] ) ;
-	for ( a = 0 ; a < r2.rows() ; a++ ) s2.Add ( r2[a][r2["e_name"]] ) ;
+    wxArrayString s1 , s2 ;
+    for ( int a = 0 ; a < r1.rows() ; a++ ) s1.Add ( r1[a][r1["e_name"]] ) ;
+    for ( int a = 0 ; a < r2.rows() ; a++ ) s2.Add ( r2[a][r2["e_name"]] ) ;
 
-	startRecord() ;
-	for ( a = 0 ; a < s2.GetCount() ; a++ )
-		{
-		if ( wxNOT_FOUND != s1.Index ( s2[a] ) ) continue ; // It's there
-		wxString sql , k , v  ;
-		sqlAdd ( k , v , _T("e_name") , s2[a] ) ;
-		sqlAdd ( k , v , _T("e_sequence") , r2[a][r2["e_sequence"]] ) ;
-		sqlAdd ( k , v , _T("e_note") , r2[a][r2["e_note"]] ) ;
-		sqlAdd ( k , v , _T("e_location") , _T("") ) ;
-		sqlAdd ( k , v , _T("e_cut") , r2[a][r2["e_cut"]] ) ;
-		sqlAdd ( k , v , _T("e_overlap") , r2[a][r2["e_overlap"]] ) ;
-		k.Replace ( _T("\"") , _T("'") ) ;
-		v.Replace ( _T("\"") , _T("'") ) ;
-		sql = _T("INSERT INTO enzyme (e_id,") + k + _T(") VALUES ((SELECT max(e_id) FROM enzyme)+1,") + v + _T(")") ;
-		getObject ( sql ) ;
-		}
-	endRecord() ;
+    startRecord() ;
+    for ( int a = 0 ; a < s2.GetCount() ; a++ )
+        {
+        if ( wxNOT_FOUND != s1.Index ( s2[a] ) ) continue ; // It's there
+        wxString sql , k , v  ;
+        sqlAdd ( k , v , _T("e_name") , s2[a] ) ;
+        sqlAdd ( k , v , _T("e_sequence") , r2[a][r2["e_sequence"]] ) ;
+        sqlAdd ( k , v , _T("e_note") , r2[a][r2["e_note"]] ) ;
+        sqlAdd ( k , v , _T("e_location") , _T("") ) ;
+        sqlAdd ( k , v , _T("e_cut") , r2[a][r2["e_cut"]] ) ;
+        sqlAdd ( k , v , _T("e_overlap") , r2[a][r2["e_overlap"]] ) ;
+        k.Replace ( _T("\"") , _T("'") ) ;
+        v.Replace ( _T("\"") , _T("'") ) ;
+        sql = _T("INSERT INTO enzyme (e_id,") + k + _T(") VALUES ((SELECT max(e_id) FROM enzyme)+1,") + v + _T(")") ;
+        getObject ( sql ) ;
+        }
+    endRecord() ;
 
-	if ( useBlank ) delete to ;
-	}
+    if ( useBlank ) delete to ;
+    }
