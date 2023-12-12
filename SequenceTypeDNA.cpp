@@ -6,7 +6,7 @@
 int SeqDNA::arrange ( int n )
     {
     if ( useDirectRoutines() ) return arrange_direct ( n ) ;
-    int a , x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
+    int x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
     int lasta = 0 ;
 
     // Setting basic values
@@ -49,7 +49,7 @@ int SeqDNA::arrange ( int n )
     mylog ( "SeqDNA::arrange" , "1d" ) ;
     pos.add ( -(++l) , bo , y , ox-wx-bo , wy-1 , memsave ) ; // Line number
     mylog ( "SeqDNA::arrange" , "2" ) ;
-    for ( a = 0 ; a < s.length() ; a++ )
+    for ( int a = 0 ; a < s.length() ; a++ )
         {
         icnt++ ;
         pos.add ( a+1 , x , y , wx-1 , wy-1 , memsave ) ;
@@ -261,7 +261,7 @@ int SeqDNA::arrange_direct ( int n )
 	itemsperline *= can->blocksize ;
 
     pos.cleanup() ;
-//    pos.m.Alloc ( s.length() ) ;
+//  pos.m.Alloc ( s.length() ) ;
     if ( can->isHorizontal() ) can->setLowX ( ox + ( s.length() ) * can->charwidth ) ;
     int ret = ( s.length() + itemsperline - 1 ) / itemsperline ;
     ret = can->NumberOfLines() * ret * can->charheight + 1 ;
