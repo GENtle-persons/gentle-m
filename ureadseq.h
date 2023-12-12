@@ -13,8 +13,8 @@ typedef char  boolean;
 
 #define NEWLINE         '\n'
 #ifndef false
-	#define false 0
-	#define true  1
+    #define false 0
+    #define true  1
 #endif
 #define min(a,b)      (a<b)?a:b
 #define max(a,b)      (a>b)?a:b
