@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the TMainTree and TMainTreeItem classes
+    \brief Contains the TMainTree and TMainTreeItem classes
 */
 
 #ifndef _TMAINTREE_H_
@@ -11,7 +11,7 @@ class MyFrame ;
 class ChildBase ;
 
 /** \class TMainTreeItem
-	\brief Item in TMainTree
+    \brief Item in TMainTree
 */
 class TMainTreeItem : public wxTreeItemData
     {
@@ -22,7 +22,7 @@ class TMainTreeItem : public wxTreeItemData
     } ;
 
 /** \class TMainTree
-	\brief The main tree class
+    \brief The main tree class
 */
 class TMainTree : public wxTreeCtrl
     {

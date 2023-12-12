@@ -57,7 +57,7 @@ void TMainTree::OnRightClick ( wxTreeEvent &event )
     \param c Pointer to child
     \param type Where to add it
 */
-void TMainTree::addChild ( ChildBase *c , int type )
+void TMainTree::addChild ( ChildBase * const c , const int type )
     {
     wxTreeItemId theroot ;
     if ( type == TYPE_VECTOR ) theroot = vectors ;
@@ -70,12 +70,12 @@ void TMainTree::addChild ( ChildBase *c , int type )
     c->inMainTree = AppendItem ( theroot , c->getName() , -1 ) ;
     SetItemData ( c->inMainTree , new TMainTreeItem ( c ) ) ;
     EnsureVisible ( c->inMainTree ) ;
-//    SelectItem ( c->inMainTree ) ;
+//  SelectItem ( c->inMainTree ) ;
     }
 
 /** \brief Remove child from the tree
 */
-void TMainTree::removeChild ( ChildBase *c )
+void TMainTree::removeChild ( ChildBase * const c )
     {
     if ( !c || !c->inMainTree.IsOk() ) return ;
     Delete ( c->inMainTree ) ;
@@ -101,5 +101,5 @@ void TMainTree::OnCloseChild ( wxCommandEvent &event )
     {
     if ( !lastChild ) return ;
     if ( lastChild->Close ( FALSE ) ) lastChild = NULL ;
-//    else wxBell();
+//  else wxBell();
     }
