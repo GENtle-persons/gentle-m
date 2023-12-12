@@ -1,5 +1,5 @@
 /** \file
-	\brief The TUReadSeq class
+    \brief The TUReadSeq class
 */
 #ifndef _TUREADSEQ_H_
 #define _TUREADSEQ_H_
