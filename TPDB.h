@@ -1,5 +1,5 @@
 /** \file
-	\brief TPDB class, and its tseqres helper class
+    \brief TPDB class, and its tseqres helper class
 */
 #ifndef _PDB_H_
 #define _PDB_H_
@@ -23,7 +23,7 @@ class TPDB
     public :
     TPDB () ; ///< Constructor
     ~TPDB () {} ; ///< Dummy destructor
-	
+
     void load ( const wxString& s ) ; ///< Load file
     void paste ( const wxString& s ) ; ///< Take pasted text
     void remap () ; ///< Parse and generate sequences
