@@ -13,26 +13,26 @@ class TOnlineTools
     {
     public :
     TOnlineTools () ;
-    void init ( SequenceCanvas *sc = NULL ) ;
+    void init ( SequenceCanvas * const sc = NULL ) ;
     void add_context_menu ( wxMenu *base ) ;
     void take_event ( wxCommandEvent& event ) ;
     void invalidate () ;
 
     private :
     void determine_marked_or_complete_sequence () ;
-    wxString get_fasta_name ( wxString ret = _T("") ) const ;
+    wxString get_fasta_name ( const wxString& ret = _T("") ) const ;
 
-    void do_phobius ( wxString additional = _T("") ) ;
-    void do_poly_phobius () ;
-    void do_motif_scan () ;
-    void do_pval_fpscan () ;
-    void do_elm () ;
-    void do_jpred () ;
-    void do_calcpi () ;
-    void do_gor () ;
-    void do_hnn () ;
+    void do_phobius ( const wxString& additional = _T("") ) const ;
+    void do_poly_phobius () const ;
+    void do_motif_scan () const ;
+    void do_pval_fpscan () const ;
+    void do_elm () const ;
+    void do_jpred () const ;
+    void do_calcpi () const ;
+    void do_gor () const ;
+    void do_hnn () const ;
 
-    void do_neb_cutter () ;
+    void do_neb_cutter () const ;
 
     wxString get_fasta_sequences ( const bool clean_gaps , const bool for_clipboard ) const ;
 
