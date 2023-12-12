@@ -53,14 +53,14 @@ void AlignmentAppearanceDialog::addLine ( const wxString& name , wxArrayString &
     }
 
 AlignmentAppearanceDialog::~AlignmentAppearanceDialog ()
-	{
-	myapp()->frame->pop_help () ;
-	}
+    {
+    myapp()->frame->pop_help () ;
+    }
 
 AlignmentAppearanceDialog::AlignmentAppearanceDialog ( wxWindow *_parent , const wxString& title )
     : wxDialog ( _parent , -1 , title )
     {
-	myapp()->frame->push_help ( _T("GENtle:Alignment_Appearance_Dialog") ) ;
+    myapp()->frame->push_help ( _T("GENtle:Alignment_Appearance_Dialog") ) ;
     line_color_buttons = 0 ;
     wxFlexGridSizer *fgs = new wxFlexGridSizer ( 2 , 2 , 2 ) ;
 
@@ -152,35 +152,32 @@ void AlignmentAppearanceDialog::set_pen ( SequenceCharMarkup &scm , int id , int
     else if ( border == wxRIGHT ) p = &scm.borderRight ;
 
     switch ( b )
-       {
-       case 1 : *p = wxPen ( colors[id] , t , wxPENSTYLE_SOLID ) ; break ;
-       case 2 : *p = wxPen ( colors[id] , t , wxPENSTYLE_SHORT_DASH ) ; break ;
-       case 3 : *p = wxPen ( colors[id] , t , wxPENSTYLE_DOT ) ; break ;
-       }
+        {
+        case 1 : *p = wxPen ( colors[id] , t , wxPENSTYLE_SOLID ) ; break ;
+        case 2 : *p = wxPen ( colors[id] , t , wxPENSTYLE_SHORT_DASH ) ; break ;
+        case 3 : *p = wxPen ( colors[id] , t , wxPENSTYLE_DOT ) ; break ;
+        }
     }
 
 void AlignmentAppearanceDialog::OnReset ( wxCommandEvent &event )
     {
-    int l , x ;
-    for ( l = firstline ; l <= lastline ; l++ )
+    for ( int l = firstline ; l <= lastline ; l++ )
         {
         while ( ali->lines[l].markup.size() <= to )
-              ali->lines[l].markup.push_back ( SequenceCharMarkup() ) ;
-        for ( x = from ; x <= to ; x++ )
-            ali->lines[l].markup[x] = SequenceCharMarkup () ;
-        while ( ali->lines[l].markup.size() > 0 &&
-                ali->lines[l].markup[ali->lines[l].markup.size()-1].ignore )
-              ali->lines[l].markup.pop_back() ;
+           ali->lines[l].markup.push_back ( SequenceCharMarkup() ) ;
+        for ( int x = from ; x <= to ; x++ )
+           ali->lines[l].markup[x] = SequenceCharMarkup () ;
+        while ( ali->lines[l].markup.size() > 0 && ali->lines[l].markup[ali->lines[l].markup.size()-1].ignore )
+           ali->lines[l].markup.pop_back() ;
         }
     EndModal ( wxID_OK ) ; //wxDialog::OnOK(event);
     }
 
 void AlignmentAppearanceDialog::OnOK ( wxCommandEvent &event )
     {
-    int l , x ;
-    for ( l = firstline ; l <= lastline ; l++ )
+    for ( int l = firstline ; l <= lastline ; l++ )
         {
-        for ( x = from ; x <= to ; x++ )
+        for ( int x = from ; x <= to ; x++ )
             {
             SequenceCharMarkup scm ;
             ali->getCharMarkup ( scm , l , x , 0 ) ;
@@ -197,7 +194,7 @@ void AlignmentAppearanceDialog::OnOK ( wxCommandEvent &event )
             set_pen ( scm , x==to ? 3 : 5 , wxRIGHT ) ;
 
             while ( ali->lines[l].markup.size() <= x )
-                  ali->lines[l].markup.push_back ( SequenceCharMarkup() ) ;
+                ali->lines[l].markup.push_back ( SequenceCharMarkup() ) ;
             ali->lines[l].markup[x] = scm ;
             }
         }
