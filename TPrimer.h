@@ -1,5 +1,5 @@
 /** \file
-	\brief The TPrimer class
+    \brief The TPrimer class
 */
 #ifndef _TPRIMER_H_
 #define _TPRIMER_H_
@@ -13,15 +13,15 @@ class TPrimerDialog ;
 class TPrimerDesign ;
 
 /** \def TM_STANDARD
-	\brief Standard (nearest neighbour) method */
+    \brief Standard (nearest neighbour) method */
 #define TM_STANDARD 0
 
 /** \def TM_SALT
-	\brief Salt-adjusted method */
+    \brief Salt-adjusted method */
 #define TM_SALT 1
 
 /** \def TM_GC
-	\brief GC method */
+    \brief GC method */
 #define TM_GC 2
 
 /// This class holds and generates information about a primer
