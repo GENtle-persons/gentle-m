@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the TPrimerDialog class
+    \brief Contains the TPrimerDialog class
 */
 #ifndef _T_PRIMER_DIALOG_
 #define _T_PRIMER_DIALOG_
@@ -22,8 +22,8 @@ class TPrimerDialog : public wxDialog
     public:
     TPrimerDialog(wxWindow *parent , const wxString& title ) ; ///< Constructor
     ~TPrimerDialog() ; ///< Destructor
-    void initme ( TPrimer *_p , TPrimerDesign *_pd ) ; ///< Initialize
-    wxSpinCtrl *addSpinCtrl ( int id , wxString title , int x , int y , int def ) ; ///< Create a new wxSpinCtrl (this dialog has so many of them...)
+    void initme ( TPrimer * const _p , TPrimerDesign * const _pd ) ; ///< Initialize
+    wxSpinCtrl *addSpinCtrl ( const int id , const wxString& title , const int x , const int y , const int def ) ; ///< Create a new wxSpinCtrl (this dialog has so many of them...)
 
     TPrimer *p , *cp ;
 

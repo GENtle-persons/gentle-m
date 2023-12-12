@@ -61,25 +61,22 @@ void TPrimerDialog::OnCharHook(wxKeyEvent& event)
     else event.Skip() ;
     }
 
-wxSpinCtrl *TPrimerDialog::addSpinCtrl ( int id , wxString title , int x , int y , int def )
+wxSpinCtrl *TPrimerDialog::addSpinCtrl ( const int id , const wxString& title , const int _x , const int _y , const int def )
     {
-    wxSpinCtrl *n ;
     int w = 140 ;
-    x *= w ;
-    x += 10 ;
-    y *= 30 ;
-    y -= 5 ;
+    int x = _x * w + 10 ;
+    int y = _y * 30 - 5 ;
     new wxStaticText ( this , -1 , title , wxPoint ( x , y ) ) ;
     x += w - 80 ;
     y -= 3 ;
-    n = new wxSpinCtrl ( this , id , _T("0") , wxPoint ( x, y ) , wxSize ( MYSPINBOXSIZE , 20 ) ) ;
-//    char s[100] ;
-//    sprintf ( s , "%d" , def ) ;
+    wxSpinCtrl* n = new wxSpinCtrl ( this , id , _T("0") , wxPoint ( x, y ) , wxSize ( MYSPINBOXSIZE , 20 ) ) ;
+//  char s[100] ;
+//  sprintf ( s , "%d" , def ) ;
     n->SetValue ( wxString::Format ( _T("%d") , def ) ) ;
     return n ;
     }
 
-void TPrimerDialog::initme ( TPrimer *_p , TPrimerDesign *_pd )
+void TPrimerDialog::initme ( TPrimer * const _p , TPrimerDesign * const _pd )
     {
     p = _p ;
     pd = _pd ;
@@ -176,7 +173,6 @@ void TPrimerDialog::updateList ()
     while ( pl.size() ) pl.pop_back () ;
 
     wxString s , t ;
-    int a , b ;
     int l1 , l2 , r1 , r2 ;
     int minlen = lmin->GetValue() ;
     int maxlen = lmax->GetValue() ;
@@ -186,8 +182,10 @@ void TPrimerDialog::updateList ()
         {
         t = pd->vec->getSequence() ;
         s = t ;
-        for ( a = 0 ; a < p->sequence.length() ; a++ )
-           s.SetChar( a+p->from-1 , p->sequence.GetChar(a) ) ;
+        for ( int a = 0 ; a < p->sequence.length() ; a++ )
+	    {
+            s.SetChar( a+p->from-1 , p->sequence.GetChar(a) ) ;
+	    }
         l1 = p->from - 1 - l5->GetValue() ;
         l2 = p->from - 1 + r5->GetValue() ;
         r1 = p->to - 1 - l3->GetValue() ;
@@ -197,17 +195,19 @@ void TPrimerDialog::updateList ()
         {
         t = pd->inverse_template_vector->getSequence() ;
         s = t ;
-        for ( a = 0 ; a < p->sequence.length() ; a++ )
-           s.SetChar ( a+p->from-1 , p->sequence.GetChar(a) ) ;
+        for ( int a = 0 ; a < p->sequence.length() ; a++ )
+	    {
+            s.SetChar ( a+p->from-1 , p->sequence.GetChar(a) ) ;
+	    }
         l1 = p->from - 1 - l3->GetValue() ;
         l2 = p->from - 1 + r3->GetValue() ;
         r1 = p->to - 1 - l5->GetValue() ;
         r2 = p->to - 1 + r5->GetValue() ;
         }
 
-    for ( a = l1 ; a <= l2 ; a++ )
+    for ( int a = l1 ; a <= l2 ; a++ )
        {
-       for ( b = r1 ; b <= r2 ; b++ )
+       for ( int b = r1 ; b <= r2 ; b++ )
           {
           int len = b - a + 1 ;
           if ( a >= 0 && len >= minlen && len <= maxlen )
@@ -250,7 +250,7 @@ void TPrimerDialog::ShowLC ()
 
     if ( pl.size() == 0 ) return ;
 
-//    char t[100] ;
+//  char t[100] ;
     for ( int a = 0 ; a < pl.size() ; a++ )
         {
         int len = pl[a].to - pl[a].from + 1 ;
