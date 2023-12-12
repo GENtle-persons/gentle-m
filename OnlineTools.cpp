@@ -10,7 +10,7 @@ void TOnlineTools::invalidate ()
     init ( NULL ) ;
     }
 
-void TOnlineTools::init ( SequenceCanvas *sc )
+void TOnlineTools::init ( SequenceCanvas * const sc )
     {
     canvas = sc ;
     if ( sc ) child = sc->child ;
@@ -39,7 +39,6 @@ void TOnlineTools::add_context_menu ( wxMenu *base )
     if ( child->def == _T("AminoAcids") )
        {
        ret = new wxMenu ;
-
 
        wxMenu *primary = new wxMenu ;
        primary->Append ( ONLINE_TOOLS_2ZIP , txt("m_ot_2zip") ) ;
@@ -182,8 +181,9 @@ void TOnlineTools::take_event ( wxCommandEvent& event )
     wxExecute ( myapp()->getHTMLCommand ( url ) ) ;
     }
 
-wxString TOnlineTools::get_fasta_name ( wxString ret ) const
+wxString TOnlineTools::get_fasta_name ( const wxString& _ret ) const
     {
+    wxString ret ( _ret ) ;
     if ( ret.IsEmpty() )
        ret = child->vec->getName() ;
     ret.Replace ( _T(" ") , _T("_") ) ;
@@ -192,7 +192,7 @@ wxString TOnlineTools::get_fasta_name ( wxString ret ) const
 
 //__________________________________________ Amino acids
 
-void TOnlineTools::do_phobius ( wxString additional )
+void TOnlineTools::do_phobius ( const wxString& additional ) const
     {
     wxString url ;
     url = _T("http://phobius.cgb.ki.se/cgi-bin/predict.pl?protseq=") ;
@@ -202,19 +202,18 @@ void TOnlineTools::do_phobius ( wxString additional )
     wxExecute ( myapp()->getHTMLCommand ( url ) ) ;
     }
 
-void TOnlineTools::do_poly_phobius ()
+void TOnlineTools::do_poly_phobius () const
     {
     do_phobius ( _T("&poly=Y") ) ;
     }
 
-void TOnlineTools::do_motif_scan ()
+void TOnlineTools::do_motif_scan () const
     {
-    wxString url ;
-    url = _T("http://myhits.isb-sib.ch/cgi-bin/motif_scan?text=") + sequence ;
+    wxString url = _T("http://myhits.isb-sib.ch/cgi-bin/motif_scan?text=") + sequence ;
     wxExecute ( myapp()->getHTMLCommand ( url ) ) ;
     }
 
-void TOnlineTools::do_jpred ()
+void TOnlineTools::do_jpred () const
     {
     wxString url ;
     url = _T("http://www.compbio.dundee.ac.uk/~www-jpred/cgi-bin/jpred_form?seq=") ;
@@ -222,7 +221,7 @@ void TOnlineTools::do_jpred ()
     wxExecute ( myapp()->getHTMLCommand ( url ) ) ;
     }
 
-void TOnlineTools::do_elm ()
+void TOnlineTools::do_elm () const
     {
     wxString url ;
     url = _T("http://elm.eu.org/basicELM/cgimodel.py?sequence=") ;
@@ -231,7 +230,7 @@ void TOnlineTools::do_elm ()
     wxExecute ( myapp()->getHTMLCommand ( url ) ) ;
     }
 
-void TOnlineTools::do_pval_fpscan ()
+void TOnlineTools::do_pval_fpscan () const
     {
     wxString url ;
     url = _T("http://umber.sbs.man.ac.uk/cgi-bin/dbbrowser/fingerPRINTScan/muppet/FPScan_fam.cgi?textbox=") + sequence ;
@@ -242,7 +241,7 @@ void TOnlineTools::do_pval_fpscan ()
     wxExecute ( myapp()->getHTMLCommand ( url ) ) ;
     }
 
-void TOnlineTools::do_calcpi ()
+void TOnlineTools::do_calcpi () const
     {
     wxString url ;
     url = _T("http://scansite.mit.edu/cgi-bin/calcpi?sequence=") + sequence ;
@@ -250,25 +249,21 @@ void TOnlineTools::do_calcpi ()
     wxExecute ( myapp()->getHTMLCommand ( url ) ) ;
     }
 
-void TOnlineTools::do_gor ()
+void TOnlineTools::do_gor () const
     {
-    wxString url ;
-    url = _T("http://npsa-pbil.ibcp.fr/cgi-bin/secpred_gor4.pl?notice=") + sequence ;
+    wxString url = _T("http://npsa-pbil.ibcp.fr/cgi-bin/secpred_gor4.pl?notice=") + sequence ;
     wxExecute ( myapp()->getHTMLCommand ( url ) ) ;
     }
 
-void TOnlineTools::do_hnn ()
+void TOnlineTools::do_hnn () const
     {
-    wxString url ;
-    url = _T("http://npsa-pbil.ibcp.fr/cgi-bin/secpred_hnn.pl?notice=") + sequence ;
+    wxString url = _T("http://npsa-pbil.ibcp.fr/cgi-bin/secpred_hnn.pl?notice=") + sequence ;
     wxExecute ( myapp()->getHTMLCommand ( url ) ) ;
     }
-
-
 
 //__________________________________________ DNA
 
-void TOnlineTools::do_neb_cutter ()
+void TOnlineTools::do_neb_cutter () const
     {
     wxString url ;
     url = _T("http://tools.neb.com/NEBcutter2/enzcut.php?") ;
