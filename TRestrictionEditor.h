@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the TRestrictionEditor class, as well as the TREcache and TFragment helper class
+    \brief Contains the TRestrictionEditor class, as well as the TREcache and TFragment helper class
 */
 #ifndef _TRESTRICTIONEDITOR_H_
 #define _TRESTRICTIONEDITOR_H_
@@ -10,12 +10,12 @@
 class wxNotebook ;
 class TRestrictionEnzyme ;
 
-/**	\brief Restriction enzyme site cache
+/** \brief Restriction enzyme site cache
 */
 class TREcache
     {
     public :
-    TREcache ( wxString a , int b ) { enzyme = a ; cut = b ; } ///< Constructor
+    TREcache ( const wxString& a , const int b ) { enzyme = a ; cut = b ; } ///< Constructor
     wxString enzyme ; ///< Enzyme name
     int cut ; ///< Position of cut
     } ;
