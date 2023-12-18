@@ -115,7 +115,7 @@ void TRestrictionEnzyme::setSequence ( const wxString& sequence )
     \param w Screen width
     \param h Screen height
 */
-void TRestrictionCut::linearUpdate ( const int w , const int h )
+void TRestrictionCut::linearUpdate ( const int w , const int h ) /* not const */
     {
     p.x = lp.x * w / STANDARDRADIUS + 2 ;
     p.y = lp.y * h / STANDARDRADIUS ;
@@ -209,7 +209,6 @@ TProtease::TProtease ( const wxString& _name , const wxString& m , const wxStrin
     use = true ;
     note = _note ;
     }
-
 
 
 bool TProtease::does_match ( const wxString& s ) const

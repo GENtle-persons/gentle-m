@@ -55,6 +55,11 @@ class TVirtualGel : public ChildBase
     int cutoff , maxband ;
 
     DECLARE_EVENT_TABLE()
+
+  protected:
+    wxBoxSizer* vs ; // 
+    wxBoxSizer* v ; // 
+    wxBoxSizer* main ; // 
     } ;
 
 /**	\class TMyGelControl
