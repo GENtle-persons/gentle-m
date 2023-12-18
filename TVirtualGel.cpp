@@ -67,6 +67,9 @@ TVirtualGel::TVirtualGel(wxWindow *parent, const wxString& title)
 
 void TVirtualGel::initme ()
     {
+
+    wxPrintf("TVirtualGel::initme() - for %s\n", getName()) ;
+       
     // Menus
     wxMenu *file_menu = myapp()->frame->getFileMenu () ;
     wxMenu *tool_menu = myapp()->frame->getToolMenu () ;
@@ -79,9 +82,6 @@ void TVirtualGel::initme ()
     menu_bar->Append(help_menu, txt("m_help") );
 
     SetMenuBar(menu_bar);
-
-    right = new TMyGelControl ( this , IV_IMAGE ) ;
-    right->vg = this ;
 
     wxToolBar *toolBar = CreateToolBar(wxTB_HORIZONTAL);
 
@@ -109,6 +109,16 @@ void TVirtualGel::initme ()
 
     toolbar = toolBar ;
 
+    v = new wxBoxSizer ( wxVERTICAL ) ;
+    main = new wxBoxSizer ( wxHORIZONTAL ) ;
+
+    // used in TRestrictionIdentifier
+    main->Add ( v ,                                             0 , wxEXPAND , 2 ) ;
+
+    // vs provided from TVirtualGel
+    vs = new wxBoxSizer ( wxVERTICAL ) ;
+    vs->Add ( toolBar , 0 , wxEXPAND , 5 ) ;
+    vs->Add ( main ,                                            1 , wxEXPAND , 2 ) ;
 
 /*
     hs->Add ( cb_label , 0 , wxEXPAND , 5 ) ;
@@ -118,23 +128,35 @@ void TVirtualGel::initme ()
     hs->Add ( ch_marker , 0 , wxEXPAND , 5 ) ;
 */
 
-    wxBoxSizer* vs = new wxBoxSizer ( wxVERTICAL ) ;
-    vs->Add ( toolBar , 0 , wxEXPAND , 5 ) ;
-    vs->Add ( right , 1 , wxEXPAND , 5 ) ;
+    right = new TMyGelControl ( this , IV_IMAGE ) ;
+    right->vg = this ;
+
+    if ( getName().IsSameAs ( _T("Restriction Identifier")))
+        {
+        wxPrintf("D: TVirtualGel::initme: This is for the display of restriction identifiers\n") ;
+        main->Add ( right , 1 , wxEXPAND , 5 ) ;
+        }
+    else
+        {
+        wxPrintf(wxString::Format("D: TVirtualGel::initme: This is for the display of a '%s'\n" , getName() ) ) ;
+        vs->Add ( right , 1 , wxEXPAND , 5 ) ;
+	}
+
 
     myapp()->frame->setChild ( this ) ;
 
     if ( type == _T("DNA") )
         {
         for ( int a = 3 ; a <= 30 ; a++ )
+	    {
             ch_percent->Append ( wxString::Format ( _T("%1.1f %%") , ((float)a)/10.0 ) ) ;
+	    }
         ch_percent->SetStringSelection ( _T("1.0 %") ) ;
 
         for ( int a = 0 ; a < myapp()->frame->dna_marker.GetCount() ; a++ )
             {
             ch_marker->Append ( myapp()->frame->dna_marker[a].BeforeFirst(':') ) ;
             }
-
 
         wxString mbf = _T("??") ;
         if ( myapp()->frame && ( myapp()->frame->dna_marker.size() > 0 ) )
@@ -146,9 +168,8 @@ void TVirtualGel::initme ()
         lanes.push_back ( TGelLane() ) ;
         lanes[0].setMarker ( ch_marker->GetStringSelection() ) ;
         }
-    
-    SetSizer(vs);
-//      SetSizerAndFit(vs);
+
+    SetSizerAndFit ( vs ) ;
     Show () ;
     Activate () ;
 
@@ -382,12 +403,12 @@ void TMyGelControl::OnEvent(wxMouseEvent& event)
     if ( event.LeftDClick() )
         {
         wxPoint p = event.GetPosition() ;
-        int a ;
-        for ( a = 0 ; a < vg->lanes.size() ; a++ )
+        int a = 0 ;
+        while ( a < vg->lanes.size() )
             {
-            if ( vg->lanes[a].pos.GetLeft() > p.x ) continue ;
-            if ( vg->lanes[a].pos.GetRight() < p.x ) continue ;
-            break ;
+            if ( vg->lanes[a].pos.GetLeft() <= p.x ) break ;
+            if ( vg->lanes[a].pos.GetRight() >= p.x ) break ;
+	    a++ ;
             }
         if ( a == vg->lanes.size() ) return ;
 //      if ( vg->lanes[a].type != "DNA" ) return ;
@@ -471,11 +492,12 @@ void TGelLane::clear ()
 
 void TGelLane::setMarker ( const wxString& _name )
     {
-    int a ;
-    for ( a = 0 ; a < myapp()->frame->dna_marker.GetCount() ; a++ )
+    int a = 0 ;
+    while ( a < myapp()->frame->dna_marker.GetCount() )
         {
         if ( myapp()->frame->dna_marker[a].BeforeFirst(':') == _name )
             break ;
+        a++ ;
         }
     if ( a == myapp()->frame->dna_marker.GetCount() ) return ; // Invalid marker name
 
