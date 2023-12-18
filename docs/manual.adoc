@@ -548,6 +548,60 @@ A "virtual agarose (DNA) gel" can be generated or expanded via the http://en.wik
 
 Within the gel viewer, gel concentration can be varied. Also, labelling can be turened on/off.
 
+=== DNA Markers
+
+The file "markers.txt" contains DNA markers for virtual gels.
+For some, it is a bit of a misnomer, since genetic markers are typically anything that can be used to distinguish individuals (or distinguish genetic mosaics within the same individual).
+Statistical geneticists would expect primer pairs to enclose copy number variations or low complexity regions of different lengths, or plain single nucleotide polymorphisms.
+These could also be relevant for GENtle to describe but are not covered, yet.
+GENtle's markers for the time being are molecular-weight-markers, i.e. collections of well-defined DNA fragments with known molecular weight that you can expect to order from one of the popular suppliers or to produce yourself by exposing a well-accessible DNA sequence to a combination of endonucleases.
+One entry constitutes of exactly one line in that file.
+You can add your own entry in the following form:
+
+Name:amount,bp:amount,bp:amount,bp:amount,bp: ...
+*Name is the name of the marker.
+*bp is the number of base pairs in that band.
+*amount is the amount of DNA in that band if 500 ng of the marker is loaded per lane (ng).
+":amount" can be omitted. The default amount (20) is then used.
+Markers you enter will be used in the next GENtle release!
+
+```
+Promega BenchTop PCR Markers: 1000:750:500:300:150:50
+Promega BenchTop pGEM® DNA Markers: 2645:1605:1198:676:517:460:396:350:222:179:126:75:65
+Promega BenchTop ΦX174 DNA/HaeIII Markers: 1353:1078:872:603:310:281:271:234:194:118:72
+Promega ΦX174 DNA/HinfI Markers: 726;713:553:500:427:417:413:311:249:200:151:140:118:100:82:66:48:42:40:24
+Promega 10bp DNA Step Ladder: 100:90:80:70:60:50:40:30:20:10
+Promega 25bp DNA Step Ladder: 1800:60,300:275:250:225:200:175:150:125:100:19,75:18,50:10,25
+Promega 50bp DNA Step Ladder: 1800:800:750:700:650:600:550:500:450:400:350:300:250:200:150:100:15,50
+Promega 100bp DNA Ladder: 1500:1000:900:800:700:600:60,500:400:300:200:100
+Promega 100bp DNA Step Ladder: 60,4000:60,3900:60,3800:60,3700:60,3600:60,3500:60,3400:60,3300:60,3200:60,3100:60,3000:60,2900:60,2800:60,2700:60,2600:60,2500:60,2400:60,2300:60,2200:60,2100:60,2000:1900:1800:1700:1600:1500:1400:1300:1200:1100:60,1000:900:800:700:600:500:400:300:200:100
+Promega 200bp DNA Step Ladder: 10,6600:10,6400:40,6200:6000:5800:5600:5400:5200:5000:4800:4600:4400:4200:4000:3800:3600:3400:3400:3200:3000:2800:2600:2400:2200:2000:1800:1600:1400:1200:1000:800:600:400:200
+Promega 1kb DNA Ladder: 60,10000:60,8000:6000:5000:4000:60,3000:2500:2000:1500:60,1000:750:500:253:250
+Promega 1kb DNA Step Ladder: 10000:9000:8ß00:7000:6000:60,5000:4000:3000:2000:1000
+GeneRuler 50 bp DNA Ladder:20,1031:73,900:64,800:57,700:50,600:43,500:71,400:28,300:21,250:18,200:28,150:11,100:21,50
+GeneRuler DNA Ladder Mix:20,10000:11,8000:13,6000:16,5000:16,4000:22,3500:27,3000:69,2500:18,2000:46,1500:24,1200:16,1031:30,900:21,800:19,700:16,600:14,500:42,400:20,300:20,200:20,100
+GeneRuler and O'GeneRuler 1 kb DNA Ladder:
+GeneRuler and O'GeneRuler 1 kb Plus DNA Ladder:
+GeneRuler and O'GeneRuler 100 bp DNA Ladder:
+GeneRuler and O'GeneRuler 100 bp Plus DNA Ladder:
+GeneRuler and O'GeneRuler Ultra Low Range DNA Ladder:
+GeneRuler and O'GeneRuler Low Range DNA Ladder:
+GeneRuler and O'GeneRuler Express DNA Ladder:
+GeneRuler High Range DNA Ladder:
+Lambda DNA/Eco130I (StyI) Marker:199,19329:80,7743:64,6223:44,4254:36,3472:28,2690:19,1882:15,1489:10,925:4,421:1,74
+Lambda DNA/EcoRI+HindIII Mix:0.5,21226:219,5148:53,4973:51,4268:44,3530:36,2027:21,1904:19,1584:16,1375:14,947:10,831:8,564
+Lambda DNA/HindIII Marker:238,23130:97,9416:68,6557:45,4361:24,2322:21,2027:6,564:1,125
+Lambda DNA/Pst1 Marker:0.5,11501:118.6,5077:52.3,4749:49,4507:46.5,2838:29.3,2556:26.3,2459:25.3,2443:25.2,2140:22.1,1986:20.5,1700:17.5,1159:11.9,1093:11.3,805:8.3,514:5.3,468:4.8,448:4.6,339:3.5,264:2.7,247:2.5
+MassRuler High Range:20,10000:200,8000:160,6000:120,5000:100,4000:80,3000:60,2500:52,2000:40,1500
+MassRuler Low Range:20,1031:200,900:180,800:160,700:140,600:120,500:200,400:80,300:60,200:40,100:20,80
+MassRuler Mix:20,10000:200,8000:160,6000:120,5000:100,4000:80,3000:60,2500:50,2000:40,1500:32,1031:200,900:180,800:160,700:140,600:120,500:200,400:80,300:60,200:40,100:20,80
+pBR322 DNA/AluI Marker:104,908:76,659:75,656:60,521:46,403:32,281:30,257:26,226:12,100:10, 90:1,63:1,57:1,49:1,46:1,19:1,15:1,11
+Plasmid Factory 1kb DNA Ladder:115,10000:92,8000:69,6000:57,5000:46,4000:35,3000:29,2500:23,2000:17,1500:12,1000:6,500
+Stratagene 1kb DNA Ladder:50,12000:50,10000:50,9000:50,8000:50,7000:40,6000:42,5000:42,4000:43,3000:40,2000:10,1500:8,1000:8,750:7,500:10,250
+NEB 1kb DNA Ladder:42,10002:42,8001:50,6001:42,5001:33,4001:125,3001:48,2000:36,1500:42,1000:21,517:21,500
+NEB 100bp DNA Ladder:45,1517:35,1200:95,1000:27,900:24,800:21,700:18,600:97,500:97,517:38,400:29,300:25,200:48,100
+```
+
 == Image Viewer
 
 .Image Viewer
@@ -1053,7 +1107,9 @@ Searching within a sequence can be done with `Ctrl-F` or through the menu Edit/F
 
 This dialog is used for managing restriction enzymes. It corresponds to the restriction enzyme section of the Sequence Editor (→IX.6).
 
-== FAQ
+== Supplements
+
+=== FAQ
 
 FAQ - frequently asked questions.
 
@@ -1068,3 +1124,21 @@ Q: Why can't I perform a BLAST search for the amino acids coded by the selected 
 Q: Why can't I extract amino acids from the selected DNA sequence?
 
 A: A reading frame must be selected.
+
+=== Requested Features:
+
+The following requested features are listed on the GENtle https://en.wikibooks.org/wiki/GENtle/Feature_requests[WikiBook]. With the advent of GitHub, a better place to manage requests for new developments may be its GENtle https://github.com/GENtle-persons/gentle-m/issues[issues] page.
+
+* Import of Vector NTI Database/Data
+* Export of Map as Vector Graphic
+* Edit and move around Plasmid Map Layout
+* Allow storage in database of complete sequencing files (if space is a concern maybe an upper limit of 2 sequences for each clone would suffice)
+* Add sections in the database to allow record of box storage position of clone's DNA, glycerol stock, primers
+* Allow closing of files with Ctrl-W
+* Clicking a region in the vector map should take the cursor to that region in the sequence viewer.
+* Tm and palindromic sequences should show for primers
+* The database should be searchable for a protein/nucleotide sequence
+* Feature names should be maintained when inverted during ligation
+* Selection should be able to be copied as reverse complementary
+* "Klenow-filling" should include removal of 3'-overhangs
+* Virtual gel for any DNA sequence
