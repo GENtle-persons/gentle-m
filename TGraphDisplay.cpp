@@ -17,15 +17,15 @@ END_EVENT_TABLE()
 TGraphDisplay::TGraphDisplay ( wxWindow *parent , int id )
     : wxPanel ( parent , id )
     {
-     colors.Add ( _T("BLUE") ) ;
-     colors.Add ( _T("RED") ) ;
-     colors.Add ( _T("GREEN") ) ;
-     colors.Add ( _T("MAGENTA") ) ;
-     styles.Add ( _T("rect") ) ;
-     styles.Add ( _T("circle") ) ;
-     styles.Add ( _T("triangle") ) ;
+    colors.Add ( _T("BLUE") ) ;
+    colors.Add ( _T("RED") ) ;
+    colors.Add ( _T("GREEN") ) ;
+    colors.Add ( _T("MAGENTA") ) ;
+    styles.Add ( _T("rect") ) ;
+    styles.Add ( _T("circle") ) ;
+    styles.Add ( _T("triangle") ) ;
 
-     scaleTypes.Add ( _T("linear") ) ;
+    scaleTypes.Add ( _T("linear") ) ;
 
     init () ;
     }
@@ -495,13 +495,11 @@ void TGraphDisplay::setupDUF ( const wxString& filenamebase )
     scales.push_back ( sy ) ;
 
     long l ;
-    unsigned char *d ;
-
-    d = readRawData ( filenamebase , l ) ;
+    unsigned char *d = readRawData ( filenamebase , l ) ;
 
     wxString text ;
     unsigned long pos = 40 ;
-    unsigned long w ;
+    unsigned long w;
     do {
         w = d[pos] ;
         if ( w == 0 ) break ;
@@ -686,9 +684,10 @@ void TGraphDisplay::showLegend ( wxDC &dc )
     int w = 0 , h = 4 , symw = 50 ;
     int border = 20 ;
 
-    int tw , th ;
+    int th ;
     for ( int a = 0 ; a < data.size() ; a++ )
         {
+        int tw ;
         dc.GetTextExtent ( data[a]->name , &tw , &th ) ;
         h += th + 2 ;
         w = tw > w ? tw : w ;
@@ -709,7 +708,7 @@ void TGraphDisplay::showLegend ( wxDC &dc )
             dc.SetBrush ( *MYBRUSH ( TGraphDisplay::prettyColor ) ) ;
             dc.SetPen ( *MYPEN ( TGraphDisplay::prettyColor ) ) ;
             dc.DrawRectangle ( lr.x + 2 ,
-                               lr.y + 2 + ( 2 + th ) * a ,
+                               lr.y + 2 + ( 2 + th ) * a , // needs access to th defined above
                                w - 4 , th ) ;
             }
         dc.SetTextForeground( data[a]->col ) ;
@@ -729,14 +728,10 @@ void TGraphDisplay::showLegend ( wxDC &dc )
 
 void TGraphDisplay::OnPaint(wxPaintEvent& event)
     {
-    wxPaintDC dc(this);
-
     if ( !IsSetupComplete() ) return ;
-
-        {
-        wxBufferedDC dc2 ( &dc , dc.GetSize() ) ;
-        drawit ( dc2 ) ;
-        }
+    wxPaintDC dc(this);
+    wxBufferedDC dc2 ( &dc , dc.GetSize() ) ;
+    drawit ( dc2 ) ;
     }
 
 void TGraphDisplay::OnEvent(wxMouseEvent& event)
@@ -961,7 +956,7 @@ void TGraphDisplay::OnSwapSides(wxCommandEvent &event)
     Update();
     }
 
-void TGraphDisplay::DrawIntoBitmap ( wxBitmap &bmp ) 
+void TGraphDisplay::DrawIntoBitmap ( wxBitmap &bmp )
     {
     int w , h ;
     g->GetClientSize ( &w , &h ) ;

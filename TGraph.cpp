@@ -96,13 +96,13 @@ void TGraph::initme ()
     myapp()->frame->InitToolBar(toolBar);
 
     zoom_x = new wxSlider ( toolBar , GRAPH_ZOOM_X , 1 , 1 , 91 ,
-                             wxDefaultPosition ,
-                             wxDefaultSize ,
-                             wxSL_HORIZONTAL ) ;
+                            wxDefaultPosition ,
+                            wxDefaultSize ,
+                            wxSL_HORIZONTAL ) ;
     zoom_y = new wxSlider ( toolBar , GRAPH_ZOOM_Y , 1 , 1 , 91 ,
-                             wxDefaultPosition ,
-                             wxDefaultSize ,
-                             wxSL_HORIZONTAL ) ;
+                            wxDefaultPosition ,
+                            wxDefaultSize ,
+                            wxSL_HORIZONTAL ) ;
     zoom_linked = new wxCheckBox ( toolBar , GRAPH_ZOOM_LINKED , txt("t_zoom_linked") ) ;
 
     myapp()->frame->addTool ( toolBar , MDI_TEXT_IMPORT ) ;
@@ -161,11 +161,11 @@ void TGraph::OnSave(wxCommandEvent& event)
 
 TGraphData::TGraphData ( TGraphDisplay * const d )
     {
-     display = d ;
-     sx = sy = NULL ;
-     pointStyle = _T("rect") ;
-     col = *wxBLACK ;
-     selected = false ;
+    display = d ;
+    sx = sy = NULL ;
+    pointStyle = _T("rect") ;
+    col = *wxBLACK ;
+    selected = false ;
     }
 
 void TGraphData::Add ( const float x , const float y )
@@ -197,7 +197,6 @@ void TGraphData::AutoScale ()
 
 void TGraphData::drawit ( wxDC &dc )
     {
-    int x , y ;
     int lx = 0 , ly = 0 ;
     wxRect inner ;
     drawn.clear () ;
@@ -207,8 +206,8 @@ void TGraphData::drawit ( wxDC &dc )
     wxPoint last_drawn = wxPoint ( -1 , -1 ) ;
     for ( int a = 0 ; a < dx.size() ; a++ )
         {
-        x = sx->GetRealCoord ( dx[a] , inner ) ;
-        y = sy->GetRealCoord ( dy[a] , inner ) ;
+        int x = sx->GetRealCoord ( dx[a] , inner ) ;
+        int y = sy->GetRealCoord ( dy[a] , inner ) ;
         if ( a != 0 ) dc.DrawLine ( lx , ly , x , y ) ;
 
         if ( x >= inner.GetLeft() && x <= inner.GetRight() )
@@ -239,12 +238,12 @@ void TGraphData::DrawSymbol ( wxDC &dc , const wxString& symbol , const int x , 
     else if ( symbol == _T("circle") ) dc.DrawCircle ( x , y , size ) ;
     else if ( symbol == _T("triangle") )
         {
-          wxPoint points[3] ;
-          int ns = size ;
-          points[0] = wxPoint ( x , y - ns ) ;
-          points[1] = wxPoint ( x - ns , y + ns ) ;
-          points[2] = wxPoint ( x + ns , y + ns ) ;
-          dc.DrawPolygon ( 3 , points ) ;
+        wxPoint points[3] ;
+        int ns = size ;
+        points[0] = wxPoint ( x , y - ns ) ;
+        points[1] = wxPoint ( x - ns , y + ns ) ;
+        points[2] = wxPoint ( x + ns , y + ns ) ;
+        dc.DrawPolygon ( 3 , points ) ;
         }
     }
 
@@ -258,10 +257,10 @@ int TGraphData::Distance ( const wxPoint &pt ) const
     {
     int best = 999999999 ;
     if ( drawn.size() < 2 ) return best ; // Not near at all
-    wxPoint p1 = drawn[0] , p2 ;
+    wxPoint p1 = drawn[0] ;
     for ( int a = 1 ; a < drawn.size() ; a++ )
         {
-        p2 = drawn[a] ;
+        wxPoint p2 = drawn[a] ;
 
         int f , min = 999999999 ;
         float max = ( p2.x - p1.x ) * ( p2.x - p1.x ) + ( p2.y - p1.y ) * ( p2.y - p1.y ) ;
