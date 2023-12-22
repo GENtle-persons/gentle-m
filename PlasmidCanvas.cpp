@@ -337,14 +337,14 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
     else
         {
         wxPrintf("E: Unknown mode: %d", mode ) ;
-	return ;
-	}
+        return ;
+        }
 
     // Capturing/releasing mouse for left click
     if ( event.LeftDown() )
         {
         CaptureMouse() ;
-	captured = true ; 
+        captured = true ;
         initialclick = true ;
         mousediffx = mousediffy = 0 ;
         }
@@ -352,17 +352,17 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
         {
         lastbp = -1 ;
         initialclick = false ;
-	if (captured)
-	    {
+        if (captured)
+            {
             ReleaseMouse() ;
-	    }
-	else
-	    {
-	    // Upon some wild double-clicks, at times a release is attempted on a window that was not captured
-	    // This demands some further investigation.
-	    wxPrintf( "I: Prevented attempt to release a window that was not captured.\n" ) ;
-	    }
-	captured = false ; 
+            }
+        else
+            {
+            // Upon some wild double-clicks, at times a release is attempted on a window that was not captured
+            // This demands some further investigation.
+            wxPrintf( "I: Prevented attempt to release a window that was not captured.\n" ) ;
+            }
+        captured = false ;
         }
 
     // Scroll wheel
@@ -370,7 +370,7 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
     if ( wr != 0 )
         {
         wr = event.GetWheelRotation() * event.GetLinesPerAction() * ( wr < 0 ? 1 : -1 ) * zoom * 4 / 100 ;
-	}
+        }
 
     if ( wr != 0 && zoom != 100 )
         {
@@ -744,18 +744,17 @@ int PlasmidCanvas::findRestrictionSite ( const int x , const int y ) const
         if ( pointinrect ( x , y , p->vec->rc[a].lastrect ) )
             {
             return a ;
-	    }
+            }
         }
     return -1 ;
     }
 
 bool PlasmidCanvas::pointinrect ( const int x , const int y , const wxRect &a ) const
     {
-    if ( x >= a.GetLeft() && x <= a.GetRight() &&
-         y >= a.GetTop() && y <= a.GetBottom() )
-	 {
-         return true ;
-	 }
+    if ( x >= a.GetLeft() && x <= a.GetRight() && y >= a.GetTop() && y <= a.GetBottom() )
+        {
+        return true ;
+        }
     return false ;
     }
 

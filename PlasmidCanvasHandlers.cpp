@@ -71,9 +71,7 @@ void PlasmidCanvas::itemMark ( wxCommandEvent &ev )
     if ( context_last_item < 0 || context_last_item >= p->vec->items.size() ) return ;
     wxString id = _T("DNA") ;
     if ( p->def == _T("AminoAcids") ) id = _T("AA") ;
-    p->cSequence->mark ( id ,
-                    p->vec->items[context_last_item].from ,
-                    p->vec->items[context_last_item].to ) ;
+    p->cSequence->mark ( id , p->vec->items[context_last_item].from , p->vec->items[context_last_item].to ) ;
     }
 
 void PlasmidCanvas::itemMarkShow ( wxCommandEvent &ev )
@@ -179,9 +177,8 @@ void PlasmidCanvas::rsMarkShow ( wxCommandEvent &ev )
 void PlasmidCanvas::rsAdd2Cocktail ( wxCommandEvent &ev )
     {
     int a ;
-    for ( a = 0 ; a < p->vec->cocktail.GetCount() &&
-                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->getName() ;
-                    a++ ) ;
+    for ( a = 0 ; a < p->vec->cocktail.GetCount() && p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->getName() ; a++ )
+        ;
     if ( a == p->vec->cocktail.GetCount() ) // Add to cocktail
         {
         p->vec->cocktail.Add ( p->vec->rc[context_last_rs].e->getName() ) ;
@@ -235,14 +232,11 @@ void PlasmidCanvas::rsDel ( wxCommandEvent &ev )
     {
     p->vec->undo.start ( txt("u_del_enzyme") ) ;
     int a ;
-    for ( a = 0 ; a < p->vec->cocktail.GetCount() &&
-                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->getName() ;
-                    a++ ) ;
+    for ( a = 0 ; a < p->vec->cocktail.GetCount() && p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->getName() ; a++ ) ;
     if ( a < p->vec->cocktail.GetCount() )
         rsAdd2Cocktail ( ev ) ; // Effectively removing enzyme from cocktail
 
-    for ( a = 0 ; a < p->vec->re.GetCount() &&
-                        p->vec->re[a] != p->vec->rc[context_last_rs].e ; a++ ) ;
+    for ( a = 0 ; a < p->vec->re.GetCount() && p->vec->re[a] != p->vec->rc[context_last_rs].e ; a++ ) ;
     for ( a++ ; a < p->vec->re.GetCount() ; a++ )
         p->vec->re[a-1] = p->vec->re[a] ;
     p->vec->re.RemoveAt ( p->vec->re.GetCount() ) ;
@@ -283,7 +277,7 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( const wxPoint& pt , const bool doretu
 
         // Features at this position
         if ( pos != -1 && p->vec->hasItemsAtPosition ( pos-1 ) )
-				cm->Append ( CM_OPEN_FEATURE , txt("m_open_feature") ) ;
+                                cm->Append ( CM_OPEN_FEATURE , txt("m_open_feature") ) ;
 
         // Online tools
         myapp()->frame->online_tools->init ( p->cSequence ) ;
@@ -303,7 +297,7 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( const wxPoint& pt , const bool doretu
            pm->Append ( PRIMER_BACKWARD , txt("m_primer_backward") ) ;
            pm->Append ( PRIMER_BOTH , txt("m_primer_both") ) ;
            if ( getMarkFrom() + 2 == getMarkTo() )
-              pm->Append ( PRIMER_MUTATION , txt("m_primer_mutation") ) ;
+               pm->Append ( PRIMER_MUTATION , txt("m_primer_mutation") ) ;
            }
 
         if ( p->vec->hasStickyEnds() && p->vec->isLinear() )
@@ -319,10 +313,10 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( const wxPoint& pt , const bool doretu
             mm->Append ( PC_WHAT_CUTS , txt("m_what_cuts") ) ;
             mm->Append ( MDI_AS_NEW_FEATURE , txt("m_as_new_feature") ) ;
             if ( p->aa_state != AA_NONE && p->aa_state != AA_ALL )
-               {
-               mm->Append ( MDI_EXTRACT_AA , txt("m_extract_aa") ) ;
-               mm->Append ( PC_BLAST_AA , txt("m_blast_aa") ) ;
-               }
+                {
+                mm->Append ( MDI_EXTRACT_AA , txt("m_extract_aa") ) ;
+                mm->Append ( PC_BLAST_AA , txt("m_blast_aa") ) ;
+                }
 
             mm->Append ( PC_BLAST_DNA , txt("m_blast_dna") ) ;
 
@@ -335,12 +329,11 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( const wxPoint& pt , const bool doretu
         if ( doreturn ) return cm ;
 
         if ( p->vec->isCircular() )
-        		{
-				double angle ;
-				angle  = xy2deg ( pt.x-w/2 , pt.y-h/2 ) ;
-				last_rightclick_base = circular_pos ( angle ) ;
-				cm->Append ( PC_TURNING_POINT , txt("p_turn_this_zero") ) ;
-				}
+            {
+            double angle = xy2deg ( pt.x-w/2 , pt.y-h/2 ) ;
+            last_rightclick_base = circular_pos ( angle ) ;
+            cm->Append ( PC_TURNING_POINT , txt("p_turn_this_zero") ) ;
+            }
 
         cm->AppendSeparator();
         }
@@ -353,10 +346,10 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( const wxPoint& pt , const bool doretu
     pm->Append(MDI_PRINT_RESTRICTION_LIST, txt("m_print_restrictions") , txt("m_print_restrictions_txt") );
 
     if ( p->def == _T("dna") )
-       {
-       cm->Append(MDI_ORFS, txt("m_orfs") );
-       cm->Append(MDI_EDIT_ORFS, txt("m_edit_orfs") );
-       }
+        {
+        cm->Append(MDI_ORFS, txt("m_orfs") );
+        cm->Append(MDI_EDIT_ORFS, txt("m_edit_orfs") );
+        }
 
     PopupMenu ( cm , pt ) ;
     delete cm ;
@@ -399,10 +392,10 @@ void PlasmidCanvas::blastAA ( wxCommandEvent &ev )
     int a ;
     for ( a = 0 ; a < seq.length() && seq.GetChar(a) == ' ' ; a++ ) ;
     if ( a == seq.length() )
-       {
-       wxMessageBox ( txt("t_no_or_empty_sequence") , txt("t_blast_failed") , wxOK | wxICON_ERROR  ) ;
-       return ;
-       }
+        {
+        wxMessageBox ( txt("t_no_or_empty_sequence") , txt("t_blast_failed") , wxOK | wxICON_ERROR  ) ;
+        return ;
+        }
     myapp()->frame->blast ( seq , _T("blastp") ) ;
     }
 
@@ -414,10 +407,10 @@ void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl , int mut )
 #ifdef __WXMSW__
     subframe->SetIcon(wxIcon(_T("chrt_icn")));
 #else
-	#ifdef __WXMAC__
-	#else
+    #ifdef __WXMAC__
+    #else
     subframe->SetIcon(wxIcon( mondrian_xpm ));
-	#endif
+    #endif
 #endif
 
     subframe->initme () ;
@@ -485,7 +478,7 @@ void PlasmidCanvas::OnPrimerMutation ( wxCommandEvent &ev )
 
 wxString PlasmidCanvas::getDNAorAA ( const int from , const int _to , const int dir , const bool dna ) const
     {
-    wxString r , s ;
+    wxString r ;
     int to = _to ;
     if ( to < from ) to += p->vec->getSequenceLength() ;
 
@@ -498,14 +491,14 @@ wxString PlasmidCanvas::getDNAorAA ( const int from , const int _to , const int 
 
     if ( dir < 0 )
         {
-        s = _T("") ;
+        wxString s = _T("") ;
         for ( int a = 0 ; a < r.length() ; a++ )
             s = ( (wxChar) p->vec->getComplement ( r.GetChar(a) ) ) + s ;
         r = s ;
         }
     if ( !dna )
         {
-        s = _T("") ;
+        wxString s = _T("") ;
         for ( int a = 0 ; a+2 < r.length() ; a += 3 )
            {
            wxString t = p->vec->dna2aa ( r.substr ( a , 3 ) ) ;

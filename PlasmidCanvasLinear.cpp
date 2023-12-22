@@ -307,9 +307,9 @@ void PlasmidCanvas::arrangeRestrictionSitesLinear ( const int a , wxDC &dc ) con
     int x2 = c->p.x ;
     int y2 = c->p.y ;
     bool doit = true ;
-    int b ;
     while ( doit )
         {
+        int b ;
         c->lastrect = wxRect ( x1 , y1 , x2-x1+1 , y2-y1 ) ;
         for ( b = 0 ; b < a &&
                       !p->vec->isEnzymeHidden(c->e->getName()) &&
@@ -328,16 +328,13 @@ void PlasmidCanvas::arrangeRestrictionSitesLinear ( const int a , wxDC &dc ) con
 
 bool PlasmidCanvas::intersectsLine ( const wxRect &a , const wxPoint& p ) const
     {
-    if ( a.GetBottom() > p.y &&
-         a.GetLeft() < p.x &&
-         a.GetRight() > p.x )
-         return true ;
+    if ( a.GetBottom() > p.y && a.GetLeft() < p.x && a.GetRight() > p.x )
+        return true ;
     return false ;
     }
 
 void PlasmidCanvas::drawLinearItem ( wxDC& dc , const int _r1 , const int _r2 , const float a1 , const float a2 , TVectorItem *i ) const
     {
-
     int r1 = _r1;
     int r2 = _r2;
     if ( i->direction == -1 ) { r1 = _r2 ; r2 = _r1 ; }
@@ -392,11 +389,8 @@ int PlasmidCanvas::findORFlinear ( const int x , const int y ) const
     int found = -1 ;
     for ( int a = 0 ; a < p->vec->countORFs() ; a++ )
         {
-        if ( x >= p->vec->getORF(a)->deg1 &&
-             x <= p->vec->getORF(a)->deg2 &&
-             y >= p->vec->getORF(a)->dist1 &&
-             y <= p->vec->getORF(a)->dist2 )
-             found = a ;
+        if ( x >= p->vec->getORF(a)->deg1 && x <= p->vec->getORF(a)->deg2 && y >= p->vec->getORF(a)->dist1 && y <= p->vec->getORF(a)->dist2 )
+            found = a ;
         }
     return found ;
     }

@@ -18,11 +18,7 @@ class TPrimer ;
 class TPrimerDesign : public ChildBase
     {
     public :
-    TPrimerDesign(wxWindow *parent,
-                    wxString title,
-                    TVector *_vec,
-                    vector <TPrimer> pl ,
-                    int _mut = -1 ) ; ///< Constructor
+    TPrimerDesign(wxWindow *parent, const wxString& title, TVector *_vec, vector <TPrimer> pl , const int _mut = -1 ) ; ///< Constructor
     ~TPrimerDesign () ; ///< Destructor
 
     void initme () ; ///< Initialize
@@ -97,8 +93,6 @@ class TPrimerDesign : public ChildBase
 
     DECLARE_EVENT_TABLE()
     } ;
-
-
 
 #endif
 
