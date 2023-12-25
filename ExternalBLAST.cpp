@@ -53,7 +53,7 @@ void EIpanel::init_blast()
     #error "This requires thread support!"
 #endif // wxUSE_THREADS
 
-/**    \brief A wxThreadHelper class to run BLAST queries in the background
+/** \brief A wxThreadHelper class to run BLAST queries in the background
 */
 class blastThread : public wxThreadHelper
 {
@@ -65,7 +65,7 @@ public :
         seq.Replace ( _T("|") , _T("") ) ; // Amino acid search fix
 
         // Put
-        url = _T("http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?") ;
+        url = _T("https://www.ncbi.nlm.nih.gov/blast/Blast.cgi?") ;
         url += _T("CMD=Put") ;
         url += _T("&QUERY=") + seq ;
         url += _T("&DATABASE=nr") ;
@@ -73,7 +73,7 @@ public :
         if ( p->c1->GetSelection() == 1 ) url += _T("&PROGRAM=blastn") ;
         url += _T("&HITLIST_SIZE=") + p->c2->GetStringSelection() ;
 
-        res = ex.getText ( url ) ;
+        res = p->ExecuteHttpsQuery ( url ) ;
 
         hs = parseQblast ( res ) ;
         RID = hs[_T("RID")] ;
@@ -81,7 +81,7 @@ public :
 
         // Prepare URL
         RTOE.ToLong ( &wait ) ;
-        url = _T("http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?") ;
+        url = _T("https://www.ncbi.nlm.nih.gov/blast/Blast.cgi?") ;
         url += _T("CMD=Get") ;
         url += _T("&RID=") + RID ;
         url += _T("&FORMAT_TYPE=XML") ;
@@ -109,7 +109,7 @@ public :
             }
 //          cout << res << endl << "----\n\n" ;
             wxMutexGuiEnter() ;
-            res = ex.getText ( url ) ;
+            res = p->ExecuteHttpsQuery ( url ) ;
             wxMutexGuiLeave() ;
 
             hs = parseQblast ( res ) ;
@@ -310,9 +310,17 @@ void EIpanel::process_blast2()
     mylog ( "blast2" , "8" ) ;
     }
 
-wxString EIpanel::blast_align ( wxString qseq , wxString mseq , wxString hseq , int cpl , int qoff , int hoff )
+wxString EIpanel::blast_align ( const wxString& _qseq , const wxString& _mseq , const wxString& _hseq , const int _cpl , const int _qoff , const int _hoff )
     {
     wxString lead[3] ;
+    wxString mseq = _mseq ;
+    wxString hseq = _hseq ;
+    wxString qseq = _qseq ;
+
+    int hoff ( _hoff ) ;
+    int qoff ( _qoff ) ;
+    int cpl ( _cpl ) ;
+
     lead[0] = txt("t_blast_qseq" ) ;
     lead[2] = txt("t_blast_hseq" ) ;
     while ( lead[0].Length() < lead[2].Length() ) lead[0] += _T(" ") ;
@@ -336,8 +344,8 @@ wxString EIpanel::blast_align ( wxString qseq , wxString mseq , wxString hseq , 
     while ( !qseq.IsEmpty() )
         {
 //      ret += "<p>" ;
-	int a ;
         wxString z ;
+        int a ;
         for ( a = 0 , z = qseq.Left ( cpl ) ; a < z.length() ; a++ ) if ( z.GetChar(a) >= 'A' && z.GetChar(a) <= 'Z' ) qoff++ ;
         for ( a = 0 , z = hseq.Left ( cpl ) ; a < z.length() ; a++ ) if ( z.GetChar(a) >= 'A' && z.GetChar(a) <= 'Z' ) hoff++ ;
 
@@ -371,7 +379,7 @@ void EIpanel::execute_blast_b3()
         if ( a == -1 ) return ;
         s = s.Mid ( a + 3 ) ;
         s = s.BeforeFirst ( '|' ) ;
-        s = _T("http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?cmd=Retrieve&db=") + database + _T("&list_uids=") + s + _T("&dopt=GenPept") ;
+        s = _T("https://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?cmd=Retrieve&db=") + database + _T("&list_uids=") + s + _T("&dopt=GenPept") ;
         s = myapp()->getHTMLCommand ( s ) ;
         wxExecute ( s ) ;
         }

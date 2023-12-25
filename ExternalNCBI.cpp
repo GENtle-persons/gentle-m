@@ -1,7 +1,47 @@
 /** \file
     \brief Contains the EIpanel functions for NCBI
 */
+
+#include <wx/webrequest.h>
+#include <wx/txtstrm.h>
+
 #include "ExternalInterface.h"
+
+wxString EIpanel::ExecuteHttpsQuery ( const wxString& url )
+    {
+    wxWebRequest request = wxWebSession::GetDefault().CreateRequest( this, url ) ;
+
+    if ( !request.IsOk() )
+        {
+        // This is not expected, but handle the error somehow.
+        wxPrintf( "D: request not oK\n" ) ;
+        return "" ;
+        }
+
+    wxString res ;
+ 
+    request.Start();
+    wxWebRequest::State state;
+    do
+       {
+       sleep(1) ;
+       state = request.GetState() ;
+       }
+    while ( wxWebRequest::State_Completed != state &&  wxWebRequest::State_Failed != state &&  wxWebRequest::State_Cancelled != state ) ;
+
+    if ( wxWebRequest::State_Completed == state )
+        {
+        res = request.GetResponse().AsString() ;
+        //wxPrintf("Completed: %s\n", res ) ;
+        }
+    else
+        {
+        wxPrintf(wxString::Format("E: Access to '%s' failed\n", url ) ) ;
+        res = "" ;
+        }
+
+    return res ;
+    }
 
 void EIpanel::init_ncbi()
     {
@@ -20,7 +60,6 @@ void EIpanel::init_ncbi()
     b_last->Disable () ;
     b_next->Disable () ;
     b3->Disable () ;
-
 
 /*
     structure, genome, pmc, omim, taxonomy, books, probeset,  domains, unists, cdd, snp, journals, unigene, popset
@@ -97,10 +136,10 @@ void EIpanel::process_ncbi()
     search.Replace ( _T(" ") , _T("+") ) ;
 
     // Invoking ESearch
-    wxString query = _T("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?") ;
+    wxString query = _T("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?") ;
     query += _T("db=") + database ;
-    query += _T("&retstart=") + wxString::Format ( "%ld" , res_start ) ;
-    query += _T("&retmax=") + wxString::Format ( "%ld" , RETMAX ) ;
+    query += wxString::Format( "&retstart=%ld" , res_start ) ;
+    query += wxString::Format( "&retmax=%ld" , RETMAX ) ;
     query += _T("&tool=GENtle") ;
     query += _T("&retmode=xml") ;
     if ( database == _T("pubmed") )
@@ -115,8 +154,9 @@ void EIpanel::process_ncbi()
 //  wxURI uri ( query ) ;
 //  query = uri.BuildUnescapedURI () ;
 
-    wxString res ;
-    res = ex.getText ( query ) ; // The XML is now in res
+    wxPrintf("NCBI query: %s\n" , query ) ;
+    wxString res = ExecuteHttpsQuery ( query ) ;
+    wxPrintf("NCBI res:\n%s\n" , res ) ;
 
     TiXmlDocument doc ;
     doc.Parse ( res.mb_str() ) ;
@@ -141,9 +181,16 @@ void EIpanel::process_ncbi()
         if ( x )
             {
             for ( x = x->FirstChild ( "Id" ) ; x ; x = x->NextSibling ( "Id" ) )
+	        {
+		wxPrintf( "Id: %s\n" , valFC ( x ) ) ;
                 ids.Add ( valFC ( x ) ) ;
+		}
             }
         }
+    else
+        {
+	wxPrintf("D: NCBI response did not contain eSearchResult\n" ) ;
+	}
 //  wxMessageBox ( wxString::Format ( _T("%ld of %ld") , res_count , res_start ) ) ;
 
     if ( ids.IsEmpty() )
@@ -160,16 +207,15 @@ void EIpanel::process_ncbi()
         }
 
     // Invoking ESummary
-    query = _T("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?") ;
+    query = _T("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?") ;
     query += _T("db=") + database ;
     query += _T("&tool=GENtle&") ;
     query += _T("id=") + res ;
     query += _T("&retmode=xml") ;
-    query += _T("&retmax=") + wxString::Format ( _T("%ld") , RETMAX ) ;
-
-    res = ex.getText ( query ) ; // The XML is now in res
-//cout << res.mb_str() << endl ;
-//    wxTheClipboard->Open(); wxTheClipboard->SetData( new wxTextDataObject(res) );    wxTheClipboard->Close();
+    query += wxString( "&retmax=%ld" , RETMAX ) ;
+    
+    res = ExecuteHttpsQuery ( query ) ; // The XML is now in res
+    // wxTheClipboard->Open(); wxTheClipboard->SetData( new wxTextDataObject(res) );    wxTheClipboard->Close();
 
     if ( res != _T("") ) doc.Parse ( res.mb_str() ) ;
     x = doc.FirstChild ( "eSummaryResult" ) ;
@@ -210,7 +256,7 @@ void EIpanel::process_ncbi()
             {
             s = _T("<table width='100%'><tr>") ;
             s += _T("<td align=right valign=center width='50px'>") ;
-            s += wxString::Format ( _T("%ld") , a + res_start + 1 ) ;
+            s += wxString::Format( "%ld" ,  a + res_start + 1 ) ;
             s += _T("</td>") ;
             s += _T("<td width='10%'>") + caption + _T("</td>") ;
             s += _T("<td>") + title + _T("</td>") ;
@@ -220,7 +266,7 @@ void EIpanel::process_ncbi()
             {
             s = _T("<table width='100%'><tr>") ;
             s += _T("<td rowspan=2 align=right valign=top width='50px'>") ;
-            s += wxString::Format ( _T("%ld") , a + res_start + 1 ) ;
+            s += wxString::Format( "%ld" ,  a + res_start + 1 ) ;
             s += _T("</td>") ;
             s += _T("<td colspan=3><b>") + title + _T("</b></td>") ; // !!!!!!!!!!!!!!!!!!!!
             s += _T("</tr><tr>") ;
@@ -232,7 +278,7 @@ void EIpanel::process_ncbi()
         hlb->Set ( a++ , s , id ) ;
         }
 
-    int res_to = res_start + RETMAX ;
+    long res_to = res_start + RETMAX ;
     if ( res_to > res_count ) res_to = res_count ;
     wxString msg = wxString::Format ( txt("t_ext_show_res") , res_start + 1 , res_to , res_count ) ;
     msg += _T(" (") + wxString ( txt("t_data_by_ncbi") ) + _T(")") ;
@@ -245,8 +291,8 @@ void EIpanel::process_ncbi()
 
 void EIpanel::execute_ncbi()
     {
-        wxString database = c1->GetStringSelection() ;
-        execute_ncbi_load ( database ) ;
+    wxString database = c1->GetStringSelection() ;
+    execute_ncbi_load ( database ) ;
     }
 
 void EIpanel::execute_ncbi_load ( wxString database )
@@ -266,7 +312,7 @@ void EIpanel::execute_ncbi_load ( wxString database )
 
     if ( database == _T("nucleotide") || database == _T("protein") ) // Requesting sequence
         {
-        wxString query = _T("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?") ;
+        wxString query = _T("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?") ;
         query += _T("db=") + database ;
         query += _T("&tool=GENtle") ;
         // query += "&retmax=" + wxString::Format ( "%ld" , RETMAX ) ;
@@ -275,7 +321,7 @@ void EIpanel::execute_ncbi_load ( wxString database )
         else query += _T("&retmode=text&rettype=gp") ;
 
         myExternal ex ;
-        wxString res = ex.getText ( query ) ;
+        wxString res = ExecuteHttpsQuery ( query ) ;
 
         // wxTheClipboard->Open(); wxTheClipboard->SetData( new wxTextDataObject(res) );    wxTheClipboard->Close();
 
@@ -306,12 +352,12 @@ void EIpanel::execute_ncbi_load ( wxString database )
         }
     else if ( database == _T("pubmed") ) // Requesting paper
         {
-        wxString query = _T("http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?") ;
+        wxString query = _T("https://www.ncbi.nlm.nih.gov/entrez/query.fcgi?") ;
         query += _T("db=") + database ;
         query += _T("&cmd=retrieve") ;
         query += _T("&list_uids=") + ids ;
         query += _T("&dopt=abstract") ;
-        wxExecute ( myapp()->getHTMLCommand ( query ) ) ;
+        wxExecute ( myapp()->getHTMLCommand ( query ) ) ; // Direct Web browser to that URL
         }
     }
 
@@ -330,8 +376,8 @@ void EIpanel::execute_ncbi_b3()
         wxString s = hlb->data[i] ;
 
         s = s.BeforeFirst ( '|' ) ;
-        s = _T("http://www.ncbi.nlm.nih.gov/entrez/") + script + _T(".fcgi?db=") + database + _T("&list_uids=") + s ;
+        s = _T("https://www.ncbi.nlm.nih.gov/entrez/") + script + _T(".fcgi?db=") + database + _T("&list_uids=") + s ;
         s = myapp()->getHTMLCommand ( s ) ;
-        wxExecute ( s ) ;
+        wxExecute ( s ) ; // Direct Web browser to that URL
         }
     }

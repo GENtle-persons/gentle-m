@@ -126,7 +126,7 @@ EILB::EILB ( wxWindow *parent , int id ) : wxHtmlListBox ( parent , id , wxDefau
     SetItemCount ( 0 ) ;
     }
 
-wxString EILB::OnGetItem(size_t n) const
+wxString EILB::OnGetItem(const size_t n) const
     {
     if ( n >= was.GetCount() ) return _T("") ;
     wxString ret = was[n] ;
@@ -147,7 +147,7 @@ void EILB::Clear ()
     data.Clear () ;
     }
 
-void EILB::Set ( int id , wxString s , wxString t )
+void EILB::Set ( const int id , const wxString& s , const wxString& t )
     {
     while ( was.GetCount() <= id ) was.Add ( _T("") ) ;
     while ( data.GetCount() <= id ) data.Add ( _T("") ) ;
@@ -196,14 +196,14 @@ EIpanel::EIpanel ( wxWindow *parent , int _mode ) : wxPanel ( parent )
     }
 
 
-wxString EIpanel::valFC ( TiXmlNode *n )
+wxString EIpanel::valFC ( TiXmlNode *n ) const
     {
     if ( !n ) return _T("") ;
     if ( !n->FirstChild() ) return _T("") ;
     return val ( n->FirstChild() ) ;
     }
 
-wxString EIpanel::val ( TiXmlNode *n )
+wxString EIpanel::val ( TiXmlNode *n ) const
     {
     if ( !n ) return _T("") ;
     if ( !n->Value() ) return _T("") ;
@@ -286,7 +286,7 @@ void EIpanel::process ()
     wxEndBusyCursor () ;
     }
 
-wxString EIpanel::num2html ( int num , int digits )
+wxString EIpanel::num2html ( const int num , const int digits ) const
     {
     wxString s = wxString::Format ( _T("%d") , num ) ;
     while ( s.length() < digits ) s = _T(" ") + s ;
@@ -294,7 +294,7 @@ wxString EIpanel::num2html ( int num , int digits )
     return s ;
     }
 
-void EIpanel::showMessage ( wxString msg )
+void EIpanel::showMessage ( const wxString& msg )
     {
     if ( !st_msg->IsShown() )
         {

@@ -38,11 +38,11 @@ class EILB : public wxHtmlListBox
     {
     public :
     EILB ( wxWindow *parent , int id = wxID_ANY ) ; ///< Constructor
-    virtual wxString OnGetItem(size_t n) const ; ///< Get the item string
+    virtual wxString OnGetItem(const size_t n) const ; ///< Get the item string
     virtual void Clear () ; ///< Clear the list box
     virtual void Sort () ; ///< Sort the list box
     virtual void Update () ; ///< Update the list box
-    virtual void Set ( int id , wxString s , wxString t = _T("") ) ; ///< Set an entry
+    virtual void Set ( const int id , const wxString& s , const wxString& t = _T("") ) ; ///< Set an entry
 
     wxArrayString was , data ;
     } ;
@@ -55,15 +55,17 @@ class EIpanel : public wxPanel
 
 //  private :
     virtual void process () ; ///< Runs the query, as process_blast or process_ncbi
-    virtual wxString num2html ( int num , int digits ) ; ///< Returns a HTML-formatted number
-    void showMessage ( wxString msg ) ; ///< Displays a message beneath the search controls
+    virtual wxString num2html ( const int num , const int digits ) const ; ///< Returns a HTML-formatted number
+    void showMessage ( const wxString& msg ) ; ///< Displays a message beneath the search controls
+
+    wxString ExecuteHttpsQuery ( const wxString& url ) ; // knows how to execute https queries
 
     virtual void init_blast() ; ///< Initialized BLAST interface
     virtual void process_blast() ; ///< Processes BLAST command, starts thread
     virtual void process_blast2() ; ///< Processes thread results
     virtual void execute_blast_b3() ; ///< Opens the associated link
     virtual void execute_blast() ; ///< Opens returned BLAST entry
-    virtual wxString blast_align ( wxString qseq , wxString mseq , wxString hseq , int cpl , int qoff , int hoff ) ;
+    virtual wxString blast_align ( const wxString& qseq , const wxString& mseq , const wxString& hseq , const int cpl , const int qoff , const int hoff ) ;
 
     virtual void init_ncbi() ; ///< Initializes NCBI interface
     virtual void process_ncbi() ; ///< Processes NCBI request
@@ -80,8 +82,8 @@ class EIpanel : public wxPanel
     virtual void OnC1 ( wxCommandEvent& WXUNUSED(event) ) ; ///< Choice box 1 event handler
     virtual void OnLboxDClick ( wxCommandEvent& WXUNUSED(event) ) ; ///< List box double click event handler
 
-    virtual wxString val ( TiXmlNode *n ) ; ///< Return safe value
-    virtual wxString valFC ( TiXmlNode *n ) ; ///< Return value of FirstChild
+    virtual wxString val ( TiXmlNode *n ) const ; ///< Return safe value
+    virtual wxString valFC ( TiXmlNode *n ) const ; ///< Return value of FirstChild
 
     int mode ;
     wxPanel *up ;
