@@ -181,7 +181,7 @@ bool MyApp::OnInit()
         {
         wxPrintf( "I: GENtle's homedir assigned to configuration parameter '%s' since that dir is indeed existing.\n", HOMEDIR ) ;
             homedir.AssignDir( HOMEDIR ) ;
-    }
+        }
     else
         {
         wxPrintf( "W: GENtle's homedir could not be assigned to configuration parameter '%s' since that dir was not found.\n", HOMEDIR ) ;
@@ -212,35 +212,35 @@ bool MyApp::OnInit()
         wxPrintf( "I: GENtle's homedir variable self-determined: '%s'\n", homedir.GetFullPath() ) ;
         }
 
-        homedir.MakeAbsolute() ;
-        wxPrintf( "I: GENtle's homedir as absolute path: '%s'\n", homedir.GetFullPath() ) ;
+    homedir.MakeAbsolute() ;
+    wxPrintf( "I: GENtle's homedir as absolute path: '%s'\n", homedir.GetFullPath() ) ;
 
 #ifdef __WXMAC__
-   wxApp::s_macAboutMenuItemId = MDI_ABOUT;
-   wxApp::s_macPreferencesMenuItemId = PROGRAM_OPTIONS;
-   wxApp::s_macExitMenuItemId = MDI_QUIT;
+    wxApp::s_macAboutMenuItemId = MDI_ABOUT;
+    wxApp::s_macPreferencesMenuItemId = PROGRAM_OPTIONS;
+    wxApp::s_macExitMenuItemId = MDI_QUIT;
 //    wxApp::s_macHelpMenuTitleName = "Help";
 
 #endif
 
 
-   wxInitAllImageHandlers() ;
-   wxFileSystem::AddHandler ( new wxInternetFSHandler ) ;
+    wxInitAllImageHandlers() ;
+    wxFileSystem::AddHandler ( new wxInternetFSHandler ) ;
 
-   // Caveat: Because of this change of the working directory,
-   //         all prior paths need to be absolute or relative to homedir.
-   wxSetWorkingDirectory ( homedir.GetFullPath() ) ; // Setting home directory as working dir
+    // Caveat: Because of this change of the working directory,
+    //         all prior paths need to be absolute or relative to homedir.
+    wxSetWorkingDirectory ( homedir.GetFullPath() ) ; // Setting home directory as working dir
 
-   // Setting ncoils dir as an environment variable
-   wxString ncoilsdir ;
-   ncoilsdir = "COILSDIR=" ;
-   ncoilsdir += homedir.GetFullPath() ;
+    // Setting ncoils dir as an environment variable
+    wxString ncoilsdir ;
+    ncoilsdir = "COILSDIR=" ;
+    ncoilsdir += homedir.GetFullPath() ;
 
 #ifdef __WXMAC__
-   if ( wxGetEnv ( "COILSDIR" , NULL ) ) wxUnsetEnv ( "COILSDIR" ) ;
-   wxSetEnv ( "COILSDIR" , homedir.GetFullPath() ) ;
+    if ( wxGetEnv ( "COILSDIR" , NULL ) ) wxUnsetEnv ( "COILSDIR" ) ;
+    wxSetEnv ( "COILSDIR" , homedir.GetFullPath() ) ;
 #else
-   setenv ( "COILSDIR" , homedir.GetFullPath().c_str() , 1 ) ;
+    setenv ( "COILSDIR" , homedir.GetFullPath().c_str() , 1 ) ;
 #endif
 
     // Is an instance already running?
@@ -308,7 +308,6 @@ bool MyApp::OnInit()
 
     if ( !local_ok )
         wxMessageBox ( txt("t_local_db_warning") ) ;
-
 
     if ( frame->showSplashScreen )
         {
@@ -409,7 +408,7 @@ void MyApp::launchBrowser ( const wxString& url )
     wxExecute ( command ) ;
     }
 
-/**    \fn MyApp::getHTMLCommand ( wxString command )
+/** \fn MyApp::getHTMLCommand ( wxString command )
     \brief Returns the command line to invoke the browser.
     \param command The URL/file.
 */
@@ -418,8 +417,7 @@ wxString MyApp::getHTMLCommand ( const wxString& command )
 #ifdef __WXMAC__
     return "open " + command ;
 #endif
-    wxString ret ;
-    ret = getFileFormatCommand ( command , "html" ) ;
+    wxString ret = getFileFormatCommand ( command , "html" ) ;
     if ( ret.IsEmpty() ) ret = getFileFormatCommand ( command , "htm" ) ;
     if ( !ret.IsEmpty() ) return ret ;
 
@@ -444,7 +442,7 @@ wxString MyApp::getHTMLCommand ( const wxString& command )
 #endif
     }
 
-/**    \fn MyApp::getFileFormatCommand ( wxString command )
+/** \fn MyApp::getFileFormatCommand ( wxString command )
     \brief Returns the command line to invoke the application.
     \param type The file ending to find the application for.
     \param file The URL/file.
@@ -456,7 +454,7 @@ wxString MyApp::getFileFormatCommand ( const wxString& type , const wxString& fi
     return ft->GetOpenCommand ( file ) ;
     }
 
-/**    \fn MyApp::getFileFormatApplication ( wxString type )
+/** \fn MyApp::getFileFormatApplication ( wxString type )
     \brief Returns the application associated with a file type. Windows only.
     \param type The file ending to find the application for.
 */
@@ -481,7 +479,7 @@ wxString MyApp::getFileFormatApplication ( const wxString& type )
 #endif
     }
 
-/**    \fn MyApp::do_my_ass ( bool b , wxString msg )
+/** \fn MyApp::do_my_ass ( bool b , wxString msg )
     \brief "My assertion" - little inside joke...
     \param b The condition given in the call. No assertion when b is FALSE.
     \param msg The message string to write into errout.
@@ -499,7 +497,7 @@ void MyApp::do_my_ass ( const bool b , const wxString& msg )
     errout->Flush() ;
     }
 
-/**    \fn MyApp::do_my_log ( wxString function , wxString msg )
+/** \fn MyApp::do_my_log ( wxString function , wxString msg )
     \brief Logs events to a file.
     \param function The originating function name of the log event.
     \param msg The message string to write into logout.

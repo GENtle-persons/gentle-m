@@ -42,10 +42,10 @@ class TPrimer
     float getTm ( const int type = TM_STANDARD ) const ; ///< Get melting temperature
     float getEvaluation () const ; ///< Get quality evaluation (for annealing)
     float getGCcontents () const ; ///< Get GC contents
-    
+
     wxString getName () const ; ///< Returns the name of the primer, if any was given
     void setName ( const wxString& nn ) ; ///< Sets the name of the primer
-    
+
     // Variables
     /// The beginning of the primer in a sequence
     int from , to ; ///< The end of a primer in the sequence
