@@ -122,12 +122,12 @@ wxString myExternal::getTextFTP ( const wxString& server , const wxString& dir ,
 wxString myExternal::getText ( const wxString& _u )
     {
     wxString url ( _u ) ;
-    if ( url.Left(7).Lower() == "http://" )
+    if ( url.Left(7).Lower() == "http://" || url.Left(8).Lower() == "https://" )
         {
         wxPrintf( "D: Invoking getTextHTTP(%s)\n" , url ) ;
         return getTextHTTP ( url ) ;
         }
-    if ( url.Left(6).Lower() == "ftp://" )
+    else if ( url.Left(6).Lower() == "ftp://" )
        {
         url = url.Mid ( 6 ) ;
         wxString server = url.BeforeFirst ( '/' ) ;
@@ -136,7 +136,7 @@ wxString myExternal::getText ( const wxString& _u )
         wxPrintf( "D: Invoking getTextFTP(%s,%s,%s)\n" , server, dir, file ) ;
         return getTextFTP ( server , dir , file ) ;
         }
-    wxPrintf( "D: Invoking getTextHTTP(%s)\n" , url ) ;
+    wxPrintf( "D: Invoking getTextLocal(%s)\n" , url ) ;
     return getTextLocal ( url ) ; // fallback
     }
 
