@@ -7,22 +7,28 @@ on:
     branches: ["main"]
 
 jobs:
-  build:
 
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest]
+#        os: [macos-latest, ubuntu-latest]
 
     steps:
-      - uses: actions/checkout@v3
-      - name: installing non-GUI dependencies
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install Dependencies
         run: |
-          sudo apt update
-          sudo apt install default-libmysqlclient-dev libsqlite3-dev libtinyxml-dev autoconf automake make
-          autoconf --version
-      - name: installing wxWidgets
-        run: |
-          sudo apt install libwxgtk3.2-dev \
-          || sudo apt install libwxgtk3.0-gtk3-dev \
-          || sudo apt install libwxgtk3.0-dev
+          if [ "${{ matrix.os }}" = "macos-latest" ]; then
+            brew update
+            brew install wxwidgets m4 tinyxml zstd autoconf libtool automake wxwidgets libpng sqlite
+            brew install dylibbundler
+          elif [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
+            sudo apt-get update
+            sudo apt install libwxgtk3.2-dev || sudo apt install wx3.2-headers || sudo apt install libwxgtk3.0-gtk3-dev || sudo apt install libwxgtk3.0-dev
+          fi
       - name: remove local redundancy to build-deps
         run: rm -f mysql* sqlite* && rm -rf clustalw tinyxml
       - name: autogen
