@@ -72,7 +72,7 @@ class TProject
  	TProject () ; ///< Constructor
 	virtual ~TProject () {} ; ///< Dummy destructor
 
-    virtual TEnzymeRules *getEnzymeRules () ; ///< Returns the restriction enzyme display rules for the project
+    virtual TEnzymeRules *getEnzymeRules () const ; ///< Returns the restriction enzyme display rules for the project
     virtual void setEnzymeRules ( TEnzymeRules *er ) ; ///< Sets the restriction enzyme display rules for the project
 
     wxString name ;  ///< \brief The project name

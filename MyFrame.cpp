@@ -2785,7 +2785,7 @@ bool MyFrameDropTarget::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& f
     for ( int a = 0 ; a < filenames.GetCount() ; a++ )
         {
         wxString path = filenames[a] ;
-	int b ;
+        int b ;
         for ( b = path.length() - 1 ; path.GetChar(b) != '\\' && path.GetChar(b) != '/' ; b-- ) ;
         wxString file = path.substr ( b+1 ) ;
         myapp()->frame->importFile ( file , path , -1 ) ;
@@ -2802,6 +2802,6 @@ TProject::TProject ()
     enzyme_rules = NULL ;
     }
 
-TEnzymeRules *TProject::getEnzymeRules () { return enzyme_rules ; }
-void TProject::setEnzymeRules ( TEnzymeRules *er ) { enzyme_rules = er ; }
+TEnzymeRules *TProject::getEnzymeRules () const { return enzyme_rules ; }
+void TProject::setEnzymeRules ( TEnzymeRules * const er ) { enzyme_rules = er ; }
 
