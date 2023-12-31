@@ -16,7 +16,7 @@ Feature Requests :
 * Homology Plot
 * Export plot data
 * Helical wheel
-* That ligation thingy 
+* That ligation thingy
 
 * Alignment-Farben wie bei ABI
 * Save all

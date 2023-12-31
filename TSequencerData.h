@@ -4,27 +4,27 @@
 #include "main.h"
 
 class TSequencerDataTracerItem
-	{
-	public :
-	signed long data[4] ; //a , c , g , t ;
-	} ;
+    {
+    public :
+    signed long data[4] ; //a , c , g , t ;
+    } ;
 
 class TSequencerDataSequenceItem
-	{
-	public :
-	unsigned long peak_index ;
-	unsigned char prob_a , prob_c , prob_t , prob_g ;
-	char base ;
-	} ;
+    {
+    public :
+    unsigned long peak_index ;
+    unsigned char prob_a , prob_c , prob_t , prob_g ;
+    char base ;
+    } ;
 
 class TSequencerData
-	{
-	public :
-	wxString comment , seq ;
-	vector <TSequencerDataTracerItem> tracer ;
-	vector <TSequencerDataSequenceItem> sequence ;
-	vector <unsigned long> tracer2[4] ; // A,C,G,T
-	} ;
+    {
+    public :
+    wxString comment , seq ;
+    vector <TSequencerDataTracerItem> tracer ;
+    vector <TSequencerDataSequenceItem> sequence ;
+    vector <unsigned long> tracer2[4] ; // A,C,G,T
+    } ;
 
 #define TRACER_ID_A 0
 #define TRACER_ID_C 1

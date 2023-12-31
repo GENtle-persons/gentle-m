@@ -34,7 +34,7 @@ class TGraphData
      void AutoScale () ; ///< Size scales to (at least) fit the data in this graph
      unsigned long GetCount () const ; ///< Returns the number of XY pairs
      int Distance ( const wxPoint &pt ) const ; ///< Returns the minimum distance of the given point to the graph curve
-     
+
      void drawit ( wxDC &dc ) ; ///< Draws the graph in the given drawing context
      void DrawSymbol ( wxDC &dc , const wxString& symbol , const int x , const int y , const int size = 4 ) const ; ///< Draws a point symbol (if any)
 
@@ -47,7 +47,7 @@ class TGraphData
     vector <wxPoint> drawn ; ///< Cache of last drawn points in pixels
     bool selected ; ///< Is this graph selected (by mouse)?
     } ;
-    
+
 /**    \brief The class containing a scale used in the graph
 */
 class TGraphScale
@@ -70,7 +70,7 @@ class TGraphScale
     void Drag ( int delta ) ; ///< Drags the scale into a direction (pixel)
     float GetTotalWidth () const { return max - min ; } ///< Returns the height/width in arb. units
     float GetVisibleWidth () const { return top - bottom ; } ///< Returns the visible height/width in arb. units
-    
+
     wxRect outline ;
     wxRect last_inner ;
     float min , max ;
@@ -81,7 +81,7 @@ class TGraphScale
     int mark ;
     bool show_mark ;
     } ;
-    
+
 /** \brief The display class, containing graphs and scales; essentially, a "tab"
 */
 class TGraphDisplay : public wxPanel
@@ -90,7 +90,7 @@ class TGraphDisplay : public wxPanel
     TGraphDisplay ( wxWindow *parent , int id = -1 ) ; ///< Constructor
     ~TGraphDisplay () ; ///< Destructor
     void init () ; ///< Initialization
-     
+
     stringField readTextfile ( const wxString& filename ) ; ///< Converts a CSV file into s stringField
     unsigned char *readRawData ( const wxString& filename , long &l ) ; ///< Reads raw binary data
     void setupPhotometerGraph ( const stringField &sf ) ; ///< Reads CSV-based photometer data
@@ -115,21 +115,21 @@ class TGraphDisplay : public wxPanel
     void showLegend ( wxDC &dc ) ; ///< Draws the legend
     void showMiniature ( wxDC &dc ) ; ///< Draws the miniature preview (in zoomed mode)
     void showDraggingRect ( wxDC &dc ) ;
-     
+
     virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
     virtual void OnPaint(wxPaintEvent& event) ; ///< Paint event handler
     virtual void OnEvent(wxMouseEvent& event) ; ///< Mouse event handler
     virtual void OnSwapSides(wxCommandEvent &event) ; ///< "Switch scales left/right or top/bottom" event handler
     virtual void OnCopyAsImage(wxCommandEvent &event) ; ///< "Copy as image" event handler
     virtual void OnSaveAsImage(wxCommandEvent &event) ; ///< "Save as image" event handler
-     
+
     vector <TGraphScale*> scales ; ///< The scales
     vector <TGraphData*> data ; ///< The graphs (data)
     TGraph *g ; ///< The calling TGraph
     static wxColour prettyColor ; ///< A pretty blue
     wxArrayString scaleTypes ;
     wxArrayString colors , styles ;
-     
+
     private :
     bool IsSetupComplete() const ; ///< Don't draw before setup is complete (divsion by zero and other ugliness)
     void DrawIntoBitmap ( wxBitmap &bmp ) ; ///< Draws the current display into a wxBitmap instead of the display (for copying and saving)
@@ -137,7 +137,7 @@ class TGraphDisplay : public wxPanel
     bool setupCompleted ; ///< Is setup complete?
     TGraphScale *old_scale ; ///< The last scale
     TGraphData *old_data ; ///< The last graph
-     
+
     wxRect inner ; ///< The place where the data is drawn
     wxRect lr ; ///< The legend rectangle
     int zx , zy ;

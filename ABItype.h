@@ -47,13 +47,13 @@ class ABItype
     public :
     ABItype () ;
     ~ABItype () ;
-    
+
     int getRecord ( const wxString& id , const int num ) const ;
     int getRecordValue ( const wxString& id , const int num ) const ;
     wxString getRecordPascalString ( const wxString& id , const int num ) const ;
     wxString getSequence ( const int num = 2 ) const ;
     int getMacOffset ( const unsigned char * const t ) const ;
-    
+
     // Parser functions
     void parse ( const wxString& filename ) ;
     TFLAG getFlag ( const unsigned char * const t , int &from ) const ;
@@ -64,7 +64,7 @@ class ABItype
     int getInt4 ( const unsigned char * const t , int &from ) const ; ///< Reads a 4-byte number
     int getInt10 ( const unsigned char * const t , int &from ) const ; ///< Jumps ahead 10 bytes, ignores contents
     int getCMBF ( const unsigned char * const t , const int l ) const ; ///< Reads a Pascal-like string with known length
-    
+
     // Variables
     vector <TFLAG> vf ; ///< All the flags
     } ;

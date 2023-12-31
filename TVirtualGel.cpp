@@ -69,7 +69,7 @@ void TVirtualGel::initme ()
     {
 
     wxPrintf("TVirtualGel::initme() - for %s\n", getName()) ;
-       
+
     // Menus
     wxMenu *file_menu = myapp()->frame->getFileMenu () ;
     wxMenu *tool_menu = myapp()->frame->getToolMenu () ;
@@ -140,7 +140,7 @@ void TVirtualGel::initme ()
         {
         wxPrintf(wxString::Format("D: TVirtualGel::initme: This is for the display of a '%s'\n" , getName() ) ) ;
         vs->Add ( right , 1 , wxEXPAND , 5 ) ;
-	}
+        }
 
 
     myapp()->frame->setChild ( this ) ;
@@ -148,9 +148,9 @@ void TVirtualGel::initme ()
     if ( type == _T("DNA") )
         {
         for ( int a = 3 ; a <= 30 ; a++ )
-	    {
+            {
             ch_percent->Append ( wxString::Format ( _T("%1.1f %%") , ((float)a)/10.0 ) ) ;
-	    }
+            }
         ch_percent->SetStringSelection ( _T("1.0 %") ) ;
 
         for ( int a = 0 ; a < myapp()->frame->dna_marker.GetCount() ; a++ )
@@ -408,7 +408,7 @@ void TMyGelControl::OnEvent(wxMouseEvent& event)
             {
             if ( vg->lanes[a].pos.GetLeft() <= p.x ) break ;
             if ( vg->lanes[a].pos.GetRight() >= p.x ) break ;
-	    a++ ;
+            a++ ;
             }
         if ( a == vg->lanes.size() ) return ;
 //      if ( vg->lanes[a].type != "DNA" ) return ;

@@ -314,7 +314,7 @@ WX_DECLARE_OBJARRAY(float, wxArrayFloat);
 #endif
 
 #ifdef MYLOG
-    #define mylog(a,b) myapp()->do_my_log(a,b)    
+    #define mylog(a,b) myapp()->do_my_log(a,b)
 #else
     #define mylog(a,b)
 #endif

@@ -119,7 +119,6 @@ void TStoreAllDialog::OnAll ( wxCommandEvent &ev )
 
 void TStoreAllDialog::OnNone ( wxCommandEvent &ev )
 {
-     
      for ( unsigned int a = 0 ; a < list->GetCount() ; a++ )
          list->Check ( a , false ) ;
 }
