@@ -22,19 +22,19 @@ class TPTree
     virtual int getCurrentDepth () const ;
     virtual int countLeafs () const ;
     virtual int numberLeafs ( int i = 0 ) ;
-    
+
     virtual void filterDepth ( const int depth , vector <TPTree*> &vt ) ;
     virtual void getAll ( vector <TPTree*> &vt ) ;
     virtual void averageY () ;
-    
+
     virtual void drawRecursive ( wxDC &dc , const wxString& mode ) const ;
-    
+
     wxRect rect ;
     vector <TPTree*> children ;
-    
+
     private :
     virtual void dedigitize ( wxString &s ) const ;
-    
+
     double weight ;
     wxString name ;
     TPTree* parent ;
@@ -86,22 +86,21 @@ class TPhyloTreeBox : public wxControl
     {
     public :
     TPhyloTreeBox ( wxWindow *parent , int id = -1 ) ; ///< Constructor
-    
+
     virtual void OnDraw(wxDC& dc) ; ///< Draw event handler
     virtual void OnPaint(wxPaintEvent& event) ; ///< Paint event handler
-    
+
     virtual void OnEvent(wxMouseEvent& event); ///< Mouse event handler
     virtual void OnSaveAsBitmap(wxCommandEvent &event); ///< Save image handler
     virtual void OnCopy(wxCommandEvent &event); ///< Copy event handler
     virtual void OnPrint(wxCommandEvent &event); ///< Print event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler
-    
+
     private :
-    
     virtual void WriteIntoBitmap(wxBitmap &bmp) ;
-    
+
     TPhyloTree *_parent ;
-    
+
     DECLARE_EVENT_TABLE()
     } ;
 

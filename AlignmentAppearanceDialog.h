@@ -1,18 +1,18 @@
 /** \file
-	\brief Contains the AlignmentAppearanceDialog class
+    \brief Contains the AlignmentAppearanceDialog class
 */
 #ifndef _ALIGNMENTAPPEARANCEDIALOG_H_
 #define _ALIGNMENTAPPEARANCEDIALOG_H_
 
 #include "Alignment.h"
 
-/**	\brief The class implementing the "Alignment appearance" dialog in the alignment module
+/** \brief The class implementing the "Alignment appearance" dialog in the alignment module
 */
 class AlignmentAppearanceDialog : public wxDialog
     {
     public :
     AlignmentAppearanceDialog ( wxWindow *_parent , const wxString& title ) ; ///< Constructor
-	~AlignmentAppearanceDialog () ;
+    ~AlignmentAppearanceDialog () ;
     virtual void setup ( int _from , int _to , int _firstline , int _lastline , TAlignment *_ali ) ; ///< Setup from marked region
 
     virtual void OnLineColorButton ( wxCommandEvent &event ) ; ///< Line color button event handler
@@ -26,7 +26,7 @@ class AlignmentAppearanceDialog : public wxDialog
     private :
     void set_pen ( SequenceCharMarkup &scm , int id , int border ) ; ///< Sets a pen in the markup object; used by OnOK
     void addLine ( const wxString& name , wxArrayString &as , wxFlexGridSizer *sizer ) ; ///< Adds a line of elements (radio boxes, buttons)
-    
+
     vector <wxRadioBox*> radioboxes ;
     vector <wxSpinCtrl*> thickness ;
     vector <wxColour> colors ;

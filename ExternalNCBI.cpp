@@ -19,7 +19,7 @@ wxString EIpanel::ExecuteHttpsQuery ( const wxString& url )
         }
 
     wxString res ;
- 
+
     request.Start();
     wxWebRequest::State state;
     do
@@ -213,7 +213,7 @@ void EIpanel::process_ncbi()
     query += _T("id=") + res ;
     query += _T("&retmode=xml") ;
     query += wxString( "&retmax=%ld" , RETMAX ) ;
-    
+
     res = ExecuteHttpsQuery ( query ) ; // The XML is now in res
     // wxTheClipboard->Open(); wxTheClipboard->SetData( new wxTextDataObject(res) );    wxTheClipboard->Close();
 

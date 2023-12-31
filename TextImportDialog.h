@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the TextImportDialog class
+    \brief Contains the TextImportDialog class
 */
 #ifndef _TEXTIMPORTDIALOG_H_
 #define _TEXTIMPORTDIALOG_H_
@@ -11,7 +11,7 @@ class TVectorItem ;
 class MyFrame ;
 class TStorage ;
 
-/**	\brief The dialog where one can enter a sequence manually
+/** \brief The dialog where one can enter a sequence manually
 */
 class TextImportDialog : public wxDialog
     {

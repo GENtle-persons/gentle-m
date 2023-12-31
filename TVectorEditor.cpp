@@ -140,7 +140,7 @@ void TVectorEditor::showProteases ()
         {
         wxString n = vs[a] ;
         prots->Append ( n ) ;
-        int b ; 
+        int b ;
         for ( b = 0 ; b < v->proteases.GetCount() && v->proteases[b] != n ; b++ ) ;
         if ( b < v->proteases.GetCount() ) prots->Check ( prots->FindString ( n ) ) ;
         }

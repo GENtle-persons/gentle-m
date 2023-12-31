@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the classes SequenceCanvas, SeqBasic and its children, and the SequencePartList and SeqPos helper classes
+    \brief Contains the classes SequenceCanvas, SeqBasic and its children, and the SequencePartList and SeqPos helper classes
 */
 #ifndef _SequenceCanvas_H_
 #define _SequenceCanvas_H_
@@ -54,7 +54,7 @@ class SequencePartList
     {
     public :
     SequencePartList () { maxlevels = slen = 0 ; } ; ///< Constructor
-	virtual ~SequencePartList () {} ; ///< Dummy destructor
+    virtual ~SequencePartList () {} ; ///< Dummy destructor
     virtual void prepare ( int size ) ; ///< Prepares memory for storage (improves speed on huge sequences)
     virtual void add ( int id , int from , int to ) ; ///< Adds an item
     virtual void makeLevels () ; ///< Generates the number of necessary levels to show items non-overlapping
@@ -96,9 +96,9 @@ class SequencePartList
 class SeqPos
     {
     public :
-	SeqPos () {} ; ///< Constructor (empty)
-	virtual ~SeqPos () {} ; ///< Dummy destructor
-	
+    SeqPos () {} ; ///< Constructor (empty)
+    virtual ~SeqPos () {} ; ///< Dummy destructor
+
     virtual void cleanup () ; ///< Empty the class
     virtual void add ( const int np , const int x , const int y , const int w , const int h , const bool memsave = false ) ; ///< Add a "char"
     virtual void addline ( const int from , const int to , const int vfrom , const int vto ) ; ///< Add a "virtual" line (for faster seeking where the mouse cursor is over)
@@ -149,10 +149,10 @@ class SeqBasic
     virtual void logsize () ; ///< Some memory calculation for debugging, I think...
     virtual void editMode ( bool on = true ) ; ///< Set edit mode for this sequence line
 
-	virtual void addHighlight ( int from , int to , wxColour c ) ; ///< Adds a sequence highlight
-	virtual wxColour getHighlightColor ( int pos , wxColour c ) ; ///< Sets the color to the highlight color, if the position is highlighted
-	virtual void clearHighlights () ; ///< Removes all highlights
-	
+    virtual void addHighlight ( int from , int to , wxColour c ) ; ///< Adds a sequence highlight
+    virtual wxColour getHighlightColor ( int pos , wxColour c ) ; ///< Sets the color to the highlight color, if the position is highlighted
+    virtual void clearHighlights () ; ///< Removes all highlights
+
     // Variables
     wxString s ; ///< The sequence as a text; may be blank for some linetypes
     int offset , endnumberlength , itemsperline ;
@@ -163,8 +163,8 @@ class SeqBasic
     virtual int arrange_direct ( int n ) { return arrange ( n ) ; } ///< Arrange quickly (bypassing SeqPos)
     virtual void show_direct ( wxDC& dc ) { show ( dc ) ; } ; ///< Show quickly
 
-	wxArrayInt highlight_begin , highlight_end ;
-	vector <wxColour> highlight_color ;
+    wxArrayInt highlight_begin , highlight_end ;
+    vector <wxColour> highlight_color ;
     SeqPos pos ; ///< Position class (empty when using direct routines)
     int force_add_line_number ; ///< Default counter to add to the line number display; usually 0
     } ;
@@ -301,14 +301,15 @@ class SeqRestriction : public SeqBasic
 class SeqAA : public SeqBasic
     {
     public :
-    SeqAA ( SequenceCanvas *ncan = NULL ) {
+    SeqAA ( SequenceCanvas *ncan = NULL )
+        {
         vec = NULL ;
         init ( ncan ) ;
         mode = AA_ALL ;
         primaryMode = false ;
         unknownAA = '?' ;
         show_diff_to = NULL ;
-		} ///< Constructor
+        } ///< Constructor
     virtual ~SeqAA () ; ///< Destructor
     virtual int  arrange ( int n ) ; ///< Arrange "chars" as line n
     virtual void show ( wxDC& dc ) ; ///< Show
@@ -356,18 +357,18 @@ class SeqAAstructure : public SeqBasic
     virtual ~SeqAAstructure () ; ///< Destructor
     virtual int  arrange ( int n ) ; ///< Arrange "chars" as line n
     virtual void show ( wxDC& dc ) ; ///< Show
-	
-	// Variables
-	SeqAA *aa ;
-	
-	private:
+
+    // Variables
+    SeqAA *aa ;
+
+    private:
     void draw_amino_acid ( wxDC &dc , char as , int x , int y , int w , int h ) ;
-	void add_atom ( vector <wxPoint> &atom_pos , wxString &atom_type , char atom , int x , int y ) ;
-	void add_bond ( vector <wxPoint> &bond , int from , int to , bool double_bond = false ) ;
-	
-	wxBrush *brush_C , *brush_N , *brush_S , *brush_O ;
-	wxPen *pen_C , *pen_N , *pen_S , *pen_O ;
-	} ;
+    void add_atom ( vector <wxPoint> &atom_pos , wxString &atom_type , char atom , int x , int y ) ;
+    void add_bond ( vector <wxPoint> &bond , int from , int to , bool double_bond = false ) ;
+
+    wxBrush *brush_C , *brush_N , *brush_S , *brush_O ;
+    wxPen *pen_C , *pen_N , *pen_S , *pen_O ;
+    } ;
 
 /** \brief Sequence display class showing ABI sequencer peaks
 */
@@ -403,8 +404,8 @@ class SeqABI : public SeqDNA
     long view_from , view_to ;
 
     private :
-	int get_bx ( int id , int idx ) ;
-	int strange_compensation_factor ;
+    int get_bx ( int id , int idx ) ;
+    int strange_compensation_factor ;
     } ;
 
 /** \brief Sequence display class showing annotated features
@@ -481,9 +482,9 @@ class SeqPlot : public SeqDNA
 
 /** \brief The main sequence display class
 
-	This class gets filled with "sequence lines", which are descendants of SeqBasic.
-	It manages the "total" layout, mouse and keyboard actions, scrolling,
-	and context menus.
+    This class gets filled with "sequence lines", which are descendants of SeqBasic.
+    It manages the "total" layout, mouse and keyboard actions, scrolling,
+    and context menus.
 */
 class SequenceCanvas : public wxScrolledWindow
     {
@@ -623,7 +624,7 @@ class SequenceCanvas : public wxScrolledWindow
     bool printToColor , drawall , horizontal , hide , miniDisplay , preventUpdate ;
     bool marking , drawing , printing , wantOverwrite , forceoverwrite ;
     bool editMode ;
-    bool captured ; 
+    bool captured ;
     wxDC *print_dc ;
     int _from , _to ; // Mark
     int mark_firstrow , mark_lastrow ;
@@ -643,7 +644,7 @@ class TMarkMem
     {
     public :
     TMarkMem ( SequenceCanvas *_sc = NULL ) ; ///< Constructor
-	virtual ~TMarkMem () {} ; ///< Dummy destructor
+    virtual ~TMarkMem () {} ; ///< Dummy destructor
     virtual void unmark () ; ///< Resets the marking
     virtual void remark () ; ///< Reapplies the stored marking
 

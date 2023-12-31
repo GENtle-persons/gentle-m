@@ -312,7 +312,7 @@ void SequenceCanvas::editSequence ( const int _k , wxKeyEvent& event )
     wy -= wy % ( seq.GetCount() + 1 ) ;
 
     // Checking key validity
-    int k = _k ; 
+    int k = _k ;
     if ( k >= 'a' && k <= 'z' ) k = k - 'a' + 'A' ;
     int a ;
     for ( a = 0 ; a < valid.length() && valid.GetChar(a) != k ; a++ ) ;
@@ -458,7 +458,7 @@ void SequenceCanvas::editCharPressed ( const int _k , TVector *v , wxString *the
         return ;
         }
 
-    int k = _k ; 
+    int k = _k ;
     if ( k == '.' && getPD() )
        {
        int u ;

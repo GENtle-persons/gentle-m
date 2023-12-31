@@ -258,7 +258,7 @@ TVector *TVector::newFromMark ( const int from , const int _to )  const
     nv->setFromVector ( *this ) ;
 
     int to = _to ;
-    const int nvLength = nv->sequence.length() ; 
+    const int nvLength = nv->sequence.length() ;
 
     wxASSERT_MSG ( sequence.length() == nvLength ,
                    wxString::Format ("TVector::newFromMark(%d,%d) %d=sequence.length() != nv->sequence.length()\n" , from, to , sequence.length() , nvLength ) ) ;

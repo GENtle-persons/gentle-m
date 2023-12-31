@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the TVirtualGel class, as well as the TGelLane and TMyGelControl helper classes
+    \brief Contains the TVirtualGel class, as well as the TGelLane and TMyGelControl helper classes
 */
 #ifndef _TVIRTUAL_GEL_H_
 #define _TVIRTUAL_GEL_H_
@@ -9,8 +9,8 @@
 
 class TMyGelControl ;
 
-/**	\class TGelLane
-	\brief This class represents a lane on a virtual gel
+/** \class TGelLane
+    \brief This class represents a lane on a virtual gel
 */
 class TGelLane
     {
@@ -30,8 +30,8 @@ class TGelLane
     wxRect pos ; ///< The outer border of the lane
     } ;
 
-/**	\class TVirtualGel
-	\brief The virtual gel module
+/** \class TVirtualGel
+    \brief The virtual gel module
 */
 class TVirtualGel : public ChildBase
     {
@@ -57,13 +57,13 @@ class TVirtualGel : public ChildBase
     DECLARE_EVENT_TABLE()
 
   protected:
-    wxBoxSizer* vs ; // 
-    wxBoxSizer* v ; // 
-    wxBoxSizer* main ; // 
+    wxBoxSizer* vs ; //
+    wxBoxSizer* v ; //
+    wxBoxSizer* main ; //
     } ;
 
-/**	\class TMyGelControl
-	\brief This class handles a single virtual gel for TVirtualGel, using TGelLane lanes
+/** \class TMyGelControl
+    \brief This class handles a single virtual gel for TVirtualGel, using TGelLane lanes
 */
 class TMyGelControl : public wxControl
     {
