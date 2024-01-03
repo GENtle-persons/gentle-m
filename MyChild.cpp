@@ -813,7 +813,7 @@ void MyChild::OnHelp(wxCommandEvent& event)
     myapp()->frame->OnHelp ( event ) ;
     }
 
-void MyChild::updateSequenceCanvas ( bool remember )
+void MyChild::updateSequenceCanvas ( const bool& remember )
     {
     myass ( cSequence , "MyChild::updateSequenceCanvas" ) ;
     TMarkMem mm ( cSequence ) ;
@@ -868,7 +868,7 @@ void MyChild::OnAA_none(wxCommandEvent& event)
     mm.remark () ;
     }
 
-void MyChild::OnAA_setit(int mode)
+void MyChild::OnAA_setit(const int mode)
     {
     bool wasZero = aa_state == AA_NONE ;
     int oldscrollpos , dummy , oldmarkfrom , oldmarkto , oldmarkwhat ;
@@ -995,7 +995,7 @@ void MyChild::OnPrintRestrictionList(wxCommandEvent& event)
     vector <wxString> c_name , c_pos ;
     for ( int a = 0 ; a < vec->rc.size() ; a++ )
         {
-	int b;
+        int b;
         for ( b = 0 ; b < c_name.size() && c_name[b] != vec->rc[a].e->getName() ; b++ ) ;
         if ( b == c_name.size() )
             {
@@ -1083,7 +1083,7 @@ void MyChild::OnMarkAll(wxCommandEvent& event)
     Refresh () ;
     }
 
-wxString MyChild::doExtractAA ( bool coding )
+wxString MyChild::doExtractAA ( const bool& coding )
     {
     if ( aa_state == AA_NONE || aa_state == AA_ALL )
         {
@@ -1396,19 +1396,19 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
         {
         y += ch ;
         pdc->DrawText ( vec->items[a].name , x0 , y ) ;
-//        sprintf ( t , "%d" , vec->items[a].from ) ; pdc->DrawText ( t , x1 , y ) ;
-//        sprintf ( t , "%d" , vec->items[a].to ) ; pdc->DrawText ( t , x2 , y ) ;
+//      sprintf ( t , "%d" , vec->items[a].from ) ; pdc->DrawText ( t , x1 , y ) ;
+//      sprintf ( t , "%d" , vec->items[a].to ) ; pdc->DrawText ( t , x2 , y ) ;
 
-          pdc->DrawText ( wxString::Format ( _T("%d") , vec->items[a].from ) , x1 , y ) ;
-          pdc->DrawText ( wxString::Format ( _T("%d") , vec->items[a].to ) , x2 , y ) ;
+        pdc->DrawText ( wxString::Format ( _T("%d") , vec->items[a].from ) , x1 , y ) ;
+        pdc->DrawText ( wxString::Format ( _T("%d") , vec->items[a].to ) , x2 , y ) ;
 
         int len = vec->items[a].to - vec->items[a].from + 1 ;
         if ( vec->items[a].to < vec->items[a].from )
            len += vec->getSequenceLength() ;
-//        sprintf ( t , "%d" , len ) ; pdc->DrawText ( t , x3 , y ) ;
+//      sprintf ( t , "%d" , len ) ; pdc->DrawText ( t , x3 , y ) ;
         pdc->DrawText ( wxString::Format ( _T("%d") , len ) , x3 , y ) ;
 
-//        sprintf ( t , "itemtype%d" , vec->items[a].type ) ;
+//      sprintf ( t , "itemtype%d" , vec->items[a].type ) ;
         pdc->DrawText ( txt(wxString::Format( _T("itemtype%d") , vec->items[a].type)) , x4 , y ) ;
         if ( vec->items[a].direction > 0 ) pdc->DrawText ( txt("cw") , x5 , y ) ;
         else pdc->DrawText ( txt("ccw") , x5 , y ) ;
@@ -1670,7 +1670,7 @@ void MyChild::add_siRNA ( const int item )
    vec->updateDisplay () ;
    }
 
-int MyChild::add_siRNA_sub ( wxString s , int pos )
+int MyChild::add_siRNA_sub ( const wxString& s , const int pos )
    {
    int score = 0 ;
    if ( s.GetChar ( 2 ) != 'A' ) return 0 ;

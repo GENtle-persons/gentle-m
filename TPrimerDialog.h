@@ -22,7 +22,7 @@ class TPrimerDialog : public wxDialog
     public:
     TPrimerDialog(wxWindow *parent , const wxString& title ) ; ///< Constructor
     ~TPrimerDialog() ; ///< Destructor
-    void initme ( TPrimer * const _p , TPrimerDesign * const _pd ) ; ///< Initialize
+    void initme ( TPrimer * const _p , const TPrimerDesign * const _pd ) ; ///< Initialize
     wxSpinCtrl *addSpinCtrl ( const int id , const wxString& title , const int x , const int y , const int def ) ; ///< Create a new wxSpinCtrl (this dialog has so many of them...)
 
     TPrimer *p , *cp ;
@@ -41,7 +41,7 @@ class TPrimerDialog : public wxDialog
     void ShowLC () ; ///< Refreshes the potential primer list
 
     private :
-    TPrimerDesign *pd ;
+    const TPrimerDesign *pd ;
     vector <TPrimer> pl ; ///< The list of potential primers
 
     wxSpinCtrl *l3 , *l5 , *r3 , *r5 , *lmin , *lmax , *tmin , *tmax ;

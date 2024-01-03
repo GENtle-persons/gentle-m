@@ -51,7 +51,7 @@ public:
     virtual void OnAA_three_M1(wxCommandEvent& event); ///< "Display amino acids, reading frame -1" event handler
     virtual void OnAA_three_M2(wxCommandEvent& event); ///< "Display amino acids, reading frame -2" event handler
     virtual void OnAA_three_M3(wxCommandEvent& event); ///< "Display amino acids, reading frame -3" event handler
-    virtual void OnAA_setit(int mode); ///< Sets the amino acid display mode (called by the OnAA_ event handlers)
+    virtual void OnAA_setit(const int mode); ///< Sets the amino acid display mode (called by the OnAA_ event handlers)
 
     virtual void OnActivate(wxActivateEvent& event); ///< Activation event handler
     virtual void Undo(wxCommandEvent& event); ///< Undo event handler
@@ -99,8 +99,8 @@ public:
     virtual void initPanels () ; ///< Initializes the panels
     virtual wxString getName () const ; ///< Returns the module name
     virtual void EnforceRefesh () ; ///< Force display refresh
-    virtual void updateSequenceCanvas ( bool remember = false ) ; ///< Refresh the sequence display
-    virtual wxString doExtractAA ( bool coding = true ) ; ///< Extract amino acid sequence from DNA
+    virtual void updateSequenceCanvas ( const bool& remember = false ) ; ///< Refresh the sequence display
+    virtual wxString doExtractAA ( const bool& coding = true ) ; ///< Extract amino acid sequence from DNA
     virtual bool runRestriction ( const wxString& s ) ; ///< Run the restriction
     virtual void addFragmentsToGel ( const wxString& title , wxArrayInt &cuts , TVirtualGel * const gel , const TRestrictionEditor& ed , const bool partial ) const ; ///< Add restriction fragments to gel
     virtual MyChild *doTransformSequence ( const bool inNewVector , const bool complement , const bool invers ) ; ///< Transform the sequence
@@ -121,7 +121,7 @@ public:
     virtual void initMenus () ; ///< Initialize the menus
 
     void add_siRNA ( const int item ) ;
-    int add_siRNA_sub ( wxString s , int pos ) ;
+    int add_siRNA_sub ( const wxString& s , const int pos ) ;
 
     wxChoice *fontsize ;
 

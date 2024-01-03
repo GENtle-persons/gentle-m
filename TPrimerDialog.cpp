@@ -76,7 +76,7 @@ wxSpinCtrl *TPrimerDialog::addSpinCtrl ( const int id , const wxString& title , 
     return n ;
     }
 
-void TPrimerDialog::initme ( TPrimer * const _p , TPrimerDesign * const _pd )
+void TPrimerDialog::initme ( TPrimer * const _p , const TPrimerDesign * const _pd )
     {
     p = _p ;
     pd = _pd ;
@@ -183,9 +183,9 @@ void TPrimerDialog::updateList ()
         t = pd->vec->getSequence() ;
         s = t ;
         for ( int a = 0 ; a < p->sequence.length() ; a++ )
-	    {
+            {
             s.SetChar( a+p->from-1 , p->sequence.GetChar(a) ) ;
-	    }
+            }
         l1 = p->from - 1 - l5->GetValue() ;
         l2 = p->from - 1 + r5->GetValue() ;
         r1 = p->to - 1 - l3->GetValue() ;
@@ -196,9 +196,9 @@ void TPrimerDialog::updateList ()
         t = pd->inverse_template_vector->getSequence() ;
         s = t ;
         for ( int a = 0 ; a < p->sequence.length() ; a++ )
-	    {
+            {
             s.SetChar ( a+p->from-1 , p->sequence.GetChar(a) ) ;
-	    }
+            }
         l1 = p->from - 1 - l3->GetValue() ;
         l2 = p->from - 1 + r3->GetValue() ;
         r1 = p->to - 1 - l5->GetValue() ;
