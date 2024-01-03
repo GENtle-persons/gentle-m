@@ -12,7 +12,23 @@ image::images/Grafik20.png["Logo",width="650mm",pdfwidth="650mm",align="center"]
 [abstract]
 == About
 
-GENtle is an open source software for molecular biology. It is available at https://github.com/GENtle-persons/gentle-m.
+GENtle is an open-source molecular biology software available at link:https://github.com/GENtle-persons/gentle-m[GENtle on GitHub]. Distinguished as the sole software of its kind:
+
+- It is governed by an Open Source license.
+- It stands apart from platforms where you submit your data via a web interface.
+
+Originating in the early years of this millennium, GENtle provides a valuable resource despite the acknowledged smoother user experiences offered by commercially available alternatives in routine tasks related to cloning.
+
+For users seeking alternative solutions, the following commercial platforms are noteworthy:
+
+- link:https://vectorbuilder.com[VectorBuilder]
+- link:https://www.origene.com[OriGene]
+- link:https://snapgene.com[SnapGene]
+- link:https://benchling.com[Benchling]
+
+These platforms offer extensive lists of cloning vectors with annotations. VectorBuilder goes a step further by enabling users to construct their own vectors.
+
+We encourage the GENtle community to actively contribute by sharing insights into functionalities present in competing products that they wish to see implemented in GENtle. Feel free to open an issue on link:https://github.com/GENtle-persons/gentle-m/issues[GENtle's GitHub repository] to share your thoughts and suggestions.
 
 === Conventions
 
