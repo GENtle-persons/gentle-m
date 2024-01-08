@@ -18,6 +18,10 @@ GENtle is an open-source molecular biology software available at link:https://gi
 - It stands apart from platforms where you submit your data via a web interface.
 
 Originating in the early years of this millennium, GENtle provides a valuable resource despite the acknowledged smoother user experiences offered by commercially available alternatives in routine tasks related to cloning.
+Still, in our humble opinion, GENtle has a competitive edge in
+- representing how all data somehow belongs together
+- integrating local tools and databases for the analysis
+and obviously it is basically unbeatable for integrating anything novel since it is Open Source.
 
 For users seeking alternative solutions, the following commercial platforms are noteworthy:
 
@@ -28,7 +32,9 @@ For users seeking alternative solutions, the following commercial platforms are 
 
 These platforms offer extensive lists of cloning vectors with annotations. VectorBuilder goes a step further by enabling users to construct their own vectors.
 
-We encourage the GENtle community to actively contribute by sharing insights into functionalities present in competing products that they wish to see implemented in GENtle. Feel free to open an issue on link:https://github.com/GENtle-persons/gentle-m/issues[GENtle's GitHub repository] to share your thoughts and suggestions.
+We encourage the GENtle community to actively contribute by sharing insights into functionalities present in competing products that they wish to see implemented in GENtle.
+Feel free to open an issue on link:https://github.com/GENtle-persons/gentle-m/issues[GENtle's GitHub repository] to share your thoughts and suggestions.
+Maybe there is a chance you can contribute to GENtle in your Bachelor or Master thesis. 
 
 === Conventions
 
@@ -36,6 +42,8 @@ We encourage the GENtle community to actively contribute by sharing insights int
 2. Menus, Buttons etc. are marked as italic _like this_ .
 3. "Double click" always refers to the left mouse button
 4. "Context menu" always refers to the popup menu that appears on clicking with the right mouse button
+
+For some honorable historic reasons dating from when Wikis were the very latest thing and the world did not yet know about distributed version management of even of GitHub, this manual instead of internal references refers to a https://en.wikibooks.org/wiki/GENtle[Wiki Book's] chapter that presents the same content. This will change over time towards regular internal references with the one too the book in parentheses.
 
 === Copyright
 
@@ -62,15 +70,15 @@ image::images/Grafik1.png["DNA Module",width="1000mm"]
 //depth="6.152cm"
 
 Within the DNA module, DNA sequences can be viewed, edited and annotated. It is the central module of GENtle.
-Two major components of the DNA module are the https://en.wikibooks.org/wiki/GENtle/DNA_map[DNA map] and the https://en.wikibooks.org/wiki/GENtle/Sequence_map[Sequence map]; see there for details.
+Two major components of the DNA module are the <<dna-map,DNA map>> (https://en.wikibooks.org/wiki/GENtle/DNA_map[Wiki book]) and the <<sequence-map,Sequence map>> (https://en.wikibooks.org/wiki/GENtle/Sequence_map[Wiki book]); follow the respective link for details.
 
 === Open and display DNA
 
 A DNA sequence can be opened in one of the following ways:
 
-1. Open from a database (see http://en.wikibooks.org/wiki/GENtle/Databases)
-2. Import from file (see http://en.wikibooks.org/wiki/GENtle/Import)
-3. Manual input (see http://en.wikibooks.org/wiki/GENtle/Enter_sequence)
+1. Open from a <<database>> (http://en.wikibooks.org/wiki/GENtle/Databases[Wiki book])
+2. <<import,Import>> (http://en.wikibooks.org/wiki/GENtle/Import[Wiki book]) from file 
+3. Entering sequence <<enter-sequence,manually>> (http://en.wikibooks.org/wiki/GENtle/Enter_sequence[Wiki book])
 4. Create from another DNA module
 
 To reproduce the screenshot of the DNA module via file input perform the following:
@@ -80,7 +88,7 @@ To reproduce the screenshot of the DNA module via file input perform the followi
    - Select "Send to:" -> ("Complete Record","File") which yields a file "sequence.db" in your download folder.
 2. In GENtle use "File" -> "Import" and select that file.
 
-It is a general concept of GENtle that routines that generate a new sequence will have that sequence shown next to other sequences that are already in the project. This works also across different sequence types. An open reading frame that gets translated will spawn a new amino acid sequence. An endonuclease applied to a DNA will yield DNA fragments - which may have sticky ends and thus are treated not as regular DNA sequences. This GenBank entry will be the origin of several graphs throughout this manual.
+It is a general concept of GENtle that routines that generate a new sequence will have that sequence shown next to other sequences that are already in the project. This works also across different sequence types. An open reading frame that gets translated will spawn a new amino acid sequence. An endonuclease applied to a DNA will yield DNA fragments - which may have sticky ends and thus are treated not as regular DNA sequences. The above referenced GenBank entry on the https://www.ncbi.nlm.nih.gov/nuccore/U13852[pGEX-3X cloning vector] will be the origin of several graphs throughout this manual.
 
 === Toolbar
 
@@ -100,8 +108,6 @@ Several functions and display options can be invoked in the tool bar:
 12. Expand (=show only) map
 13. Toggle edit mode
 14. Zoom
-
-http://en.wikibooks.org/wiki/GENtle/DNA
 
 === Detail tree
 
@@ -129,7 +135,7 @@ Features and restriction enzymes can be toggled in visibility by a double click,
 image::images/Grafik2.png[]
 //width="8.501cm" depth="5.896cm"
 
-The DNA map is shown for DNA sequences (though a variant is also used in http://en.wikibooks.org/wiki/GENtle/Protein[protein] module for the schematics display).
+The DNA map is shown for DNA sequences (though a variant is also used in the <<protein,protein module>> (http://en.wikibooks.org/wiki/GENtle/Protein[Wiki book]) for the schematics display).
 It shows the linear or circular (e.g., plasmid) DNA sequence as a map.
 
 === Display
@@ -142,27 +148,27 @@ Also, depending on the properties of the object, some functions might not be ava
 .Functions available with clicks at the background
 [cols="1,2"]
 |===
-|Edit sequence|Opens the http://en.wikibooks.org/wiki/GENtle/Sequence_editor[Sequence editor]
-|Transform sequence|Make sequence inverted and/or complementary
-|Limit enzymes|Limits enzymes to thos that cut no more than n times
-|PCR/PCR|Starts the http://en.wikibooks.org/wiki/GENtle/PCR_and_Primer_Design[PCR module]
-|PCR/Forward|Starts the http://en.wikibooks.org/wiki/GENtle/PCR_and_Primer_Design[PCR module] and generates a 5'-&gt;3'-primer
-|PCR/Backward|Starts the http://en.wikibooks.org/wiki/GENtle/PCR_and_Primer_Design[PCR module] and generates a 5'-&gt;3'-primer
-|PCR/Both|Starts the http://en.wikibooks.org/wiki/GENtle/PCR_and_Primer_Design[PCR module] and generates both primers
-|PCR/Mutation|Starts the http://en.wikibooks.org/wiki/GENtle/PCR_and_Primer_Design[PCR modul] and generates overlapping mutagenesis primers
-|Selection/Cut|Removes the selected part of the sequence and puts it into the clipboard
-|Selection/Copy|Copys the selected part of the sequence into the clipboard
-|Selection/Copy to new sequence|Genetate a new DNA sequence entry based on the selection
-|Selection/Show enzymes that cut here|Opens a variant of the http://en.wikibooks.org/wiki/GENtle/Silent_Mutagenesis[Silent Mutagenesis] dialog for the selected part of the sequence
-|Selection/Selection as new feature|Generates a new feature for the selected part of the sequence
-|Selection/Extract amino acids|Extracts the amino acid sequence of the selected part of the DNA sequence
-|Selection/BLAST amino acids|Runs a BLAST search for the amino acid sequence of the selected part of the DNA sequence
-|Selection/BLAST DNA|Runs a BLAST search for the selected part of the DNA sequence
-|Sequence map/Save as image|Saves the DNA map as an image file
-|Sequence map/Copy image to clipboard|Copies the DNA map as a bitmap or WMF (see http://en.wikibooks.org/wiki/GENtle/Options[Options]) to the clipboard
-|Sequence map/Print map|Prints the DNA map
-|Show/hide ORFs|Toggles the open reading frame display
-|Edit ORFs|Adjusts the open reading frame display
+|Edit sequence |Opens the <<sequence-editor,sequence editor>> (http://en.wikibooks.org/wiki/GENtle/Sequence_editor[Wiki book])
+|Transform sequence |Make sequence inverted and/or complementary
+|Limit enzymes |Limits enzymes to thos that cut no more than _n_ times
+|PCR/PCR |Starts the <<pcr-and-primer-design,PCR module>> (http://en.wikibooks.org/wiki/GENtle/PCR_and_Primer_Design[Wiki book])
+|PCR/Forward |Starts the <<pcr-and-primer-design,PCR module>> (http://en.wikibooks.org/wiki/GENtle/PCR_and_Primer_Design[Wiki book]) and generates a 5'-&gt;3'-primer
+|PCR/Backward |Starts the <<pcr-and-primer-design,PCR module>> (http://en.wikibooks.org/wiki/GENtle/PCR_and_Primer_Design[Wiki book]) and generates a 5'-&gt;3'-primer
+|PCR/Both |Starts the <<pcr-and-primer-design,PCR module>> (http://en.wikibooks.org/wiki/GENtle/PCR_and_Primer_Design[Wiki book]) and generates both primers
+|PCR/Mutation |Starts the <<pcr-and-primer-design,PCR module>> (http://en.wikibooks.org/wiki/GENtle/PCR_and_Primer_Design[Wiki book]) and generates overlapping mutagenesis primers
+|Selection/Cut |Removes the selected part of the sequence and puts it into the clipboard
+|Selection/Copy |Copys the selected part of the sequence into the clipboard
+|Selection/Copy to new sequence |Genetate a new DNA sequence entry based on the selection
+|Selection/Show enzymes that cut here |Opens a variant of the <<silent-mutation,Silent Mutagenesis>> (http://en.wikibooks.org/wiki/GENtle/Silent_Mutagenesis[Wiki book]) dialog for the selected part of the sequence
+|Selection/Selection as new feature |Generates a new feature for the selected part of the sequence
+|Selection/Extract amino acids |Extracts the amino acid sequence of the selected part of the DNA sequence
+|Selection/BLAST amino acids |Runs a BLAST search for the amino acid sequence of the selected part of the DNA sequence
+|Selection/BLAST DNA |Runs a BLAST search for the selected part of the DNA sequence
+|Sequence map/Save as image |Saves the DNA map as an image file
+|Sequence map/Copy image to clipboard |Copies the DNA map as a bitmap or WMF (see http://en.wikibooks.org/wiki/GENtle/Options[Options]) to the clipboard
+|Sequence map/Print map |Prints the DNA map
+|Show/hide ORFs |Toggles the open reading frame display
+|Edit ORFs |Adjusts the open reading frame display
 |===
 
 ==== Restriction sites
@@ -170,13 +176,13 @@ Also, depending on the properties of the object, some functions might not be ava
 .Functions available for restriction sites
 [cols="1,2"]
 |===
-|Edit restriction enzyme|Add/remove/manage restriction enzyme via the http://en.wikibooks.org/wiki/GENtle/Sequence_editor[Sequence editor]
-|Show/hide enzyme|Toggle visibility for the enzyme (this will affect all restriction sites for that enzyme in this sequence)
-|Remove enzyme|Remove the enzyme from the current selection (this will affect all restriction sites for that enzyme in this sequence).This will not work for automatically added enzymes (see http://en.wikibooks.org/wiki/GENtle/Options#Enzyme_settings[Options])
-|Mark restriction site|Marks the recognition sequence of that enzyme at that restriction site
-|Mark and show restriction site|Marks the recognition sequence of that enzyme at that restriction site and shows it in the sequence
-|Online enzyme information|Opens the http://rebase.neb.com/rebase/rebase.html[ReBase] page for that enzyme
-|Add to cocktail|This adds the enzyme to the restriction cocktail (see http://en.wikibooks.org/wiki/GENtle/Restriction_Assistant[Restriction Assistant]) and starts the restiction
+|Edit restriction enzyme |Add/remove/manage restriction enzyme via the<<sequence-editor,Sequence editor>> (http://en.wikibooks.org/wiki/GENtle/Sequence_editor[Wiki book])
+|Show/hide enzyme |Toggle visibility for the enzyme (this will affect all restriction sites for that enzyme in this sequence)
+|Remove enzyme |Remove the enzyme from the current selection (this will affect all restriction sites for that enzyme in this sequence).This will not work for automatically added enzymes (see http://en.wikibooks.org/wiki/GENtle/Options#Enzyme_settings[Options])
+|Mark restriction site |Marks the recognition sequence of that enzyme at that restriction site
+|Mark and show restriction site |Marks the recognition sequence of that enzyme at that restriction site and shows it in the sequence
+|Online enzyme information |Opens the http://rebase.neb.com/rebase/rebase.html[ReBase] page for that enzyme
+|Add to cocktail |This adds the enzyme to the restriction cocktail (see <<restriction-assistant,Restriction Assistant>> (http://en.wikibooks.org/wiki/GENtle/Restriction_Assistant[Wiki book])) and starts the restiction
 |===
 
 ==== Features
@@ -184,7 +190,7 @@ Also, depending on the properties of the object, some functions might not be ava
 .Functions available for DNA/amino acid features
 [cols="1,1,2"]
 |===
-|Edit feature |Edit feature properties |(see http://en.wikibooks.org/wiki/GENtle/Sequence_editor[Sequence editor])
+|Edit feature |Edit feature properties |(see <<sequence-editor,Sequence editor>> (http://en.wikibooks.org/wiki/GENtle/Sequence_editor[Wiki book]))
 |Hide feature | |Hide the feature from display
 |Delete feature | |Delete the feature
 |DNA Sequence |Mark feature sequence |Mark the DNA sequence that matches the feature
@@ -223,7 +229,7 @@ The basic behaviour, however, is always similar.
 
 === Clicks
 
-A double click usually opens the http://en.wikibooks.org/wiki/GENtle/Sequence_editor[editor] for the sequence.
+A double click usually opens the <<sequence-editor,editor>> (http://en.wikibooks.org/wiki/GENtle/Sequence_editor[Wiki book]) for the sequence.
 
 === Context menu
 
@@ -233,10 +239,10 @@ The available functions in the context menu vary with the module the sequence ma
 [cols="1,2"]
 |===
 |Edit sequence |Turn on edit mode
-|Transform sequence |Invert and/or complement the sequence (http://en.wikibooks.org/wiki/GENtle/DNA[DNA] module only)
-|Limit enzymes |Limit enzymes so that only enzymes below a certain number of cuts in the sequence is shown (http://en.wikibooks.org/wiki/GENtle/DNA[DNA] module only)
-|PCR |Compare http://en.wikibooks.org/wiki/GENtle/DNA_map[DNA map]
-|Selection |Compare http://en.wikibooks.org/wiki/GENtle/DNA_map[DNA map]
+|Transform sequence |Invert and/or complement the sequence (<<dna,DNA>> (http://en.wikibooks.org/wiki/GENtle/DNA[Wiki book]) module only)
+|Limit enzymes |Limit enzymes so that only enzymes below a certain number of cuts in the sequence is shown (<<dna,DNA module>> (http://en.wikibooks.org/wiki/GENtle/DNA[Wiki book]) only)
+|PCR |Compare <<dna-map,DNA map>> (http://en.wikibooks.org/wiki/GENtle/DNA_map[Wiki book])
+|Selection |Compare <<dna-map,DNA map>> (http://en.wikibooks.org/wiki/GENtle/DNA_map[Wiki book])
 |Copy as image |Copys the sequence map as a bitmap to the clipborad (Caveat : Such a bitmap can take up a huge amount of memory, depending on the length of the sequence)
 |Save as image |Saves the sequence map in one of several image formats
 |Print sequence |Prints the sequence
@@ -245,7 +251,7 @@ The available functions in the context menu vary with the module the sequence ma
 === Keys
 
 The whole sequence can be marked by `Ctrl-A`.
-The http://en.wikibooks.org/wiki/GENtle/Find[Find] dialog can be invoked by `Ctrl-F`.
+The <<find-dialog,Find dialog>> (http://en.wikibooks.org/wiki/GENtle/Find[Wiki book]) can be invoked by `Ctrl-F`.
 Both functions can also be called upon through a menu.
 
 In the DNA and PCR modules, the amino acid reading frame can be toggled by keys like this:
@@ -283,7 +289,7 @@ image:images/Grafik4.png["Protein Module",width="1000mm"]
 //width="8.501cm" depth="6.152cm"
 
 In this module, amino acid sequences (peptides/proteins) can be viewed, edited and annotated.
-It uses a http://en.wikibooks.org/wiki/GENtle/Sequence_map[sequence map] as main display, and a multi-purpose overview display at the top.
+It uses a <<sequence-map,sequence map>> (http://en.wikibooks.org/wiki/GENtle/Sequence_map[Wiki book]) as main display, and a multi-purpose overview display at the top.
 
 === Toolbar
 
@@ -309,7 +315,7 @@ The smaller display on the top can show several types of information:
 |===
 |Data |Shows some basic data that has been calculated from the sequence
 |Description |Shows the sequence description
-|Scheme |Shows a http://en.wikibooks.org/wiki/GENtle/DNA_map[DNA map]-like layout of the whole protein
+|Scheme |Shows a <<dna-map,DNA map>> (http://en.wikibooks.org/wiki/GENtle/DNA_map[Wiki book])-like layout of the whole protein
 |AA weight |Shows a plot of the molecular weight of the individual amino acids
 |AA isoelectric point |Shows a plot of the isoelectric point of the individual amino acids
 |Hydrophobicity |Shows a plot of the local hydrophobicity of the amino acids nearby
@@ -326,7 +332,7 @@ The context menu is also mostly the same.
 .Special menus
 [cols="1,2"]
 |===
-|Edit/Photometer analysis|Invokes the respective http://en.wikibooks.org/wiki/GENtle/Calculators#Protein_calculator[calculator], data of the current selected peptide are transferred to it.
+|Edit/Photometer analysis|Invokes the respective <<protein-calculator,calculator>> (http://en.wikibooks.org/wiki/GENtle/Calculators#Protein_calculator[Wiki book]), data of the current selected peptide are transferred to it.
 |Edit/'Backtranslate' DNA|Attempts to generate the DNA sequence which codes for this amino acid sequence, using the full range of IUPAC base letters.
 |===
 
@@ -337,7 +343,7 @@ image::images/Grafik5.png["Virtual PCR and Primer Design",width="1000mm"]
 //width="8.501cm" depth="6.152cm"
 
 This module allows for designing primers and running virtual PCRs.
-It can be started from a http://en.wikibooks.org/wiki/GENtle/DNA[DNA] module via context menu of the http://en.wikibooks.org/wiki/GENtle/DNA_map#Background[DNA] or http://en.wikibooks.org/wiki/GENtle/Sequence_map#Context_menu[sequence map], or through Tools/PCR.
+It can be started from a <<dna,DNA>> (http://en.wikibooks.org/wiki/GENtle/DNA[Wiki book]) module via context menu of the <<dna,DNA>> (http://en.wikibooks.org/wiki/GENtle/DNA_map#Background[Wiki book]) or <<sequence-map,sequence map>> (http://en.wikibooks.org/wiki/GENtle/Sequence_map#Context_menu[Wiki book]), or through Tools/PCR.
 If a sequence is selected in the DNA module, one or more primers can be generated automatically upon startup of the PCR module.
 These will only be rough suggestions, and are in no way optimized by default.
 
@@ -398,13 +404,14 @@ The sequence consists of the following lines:
 
 Resulting DNA- and amino acid sequences can be copied to the clipboard via the context menu or be added to the project as a new DNA or amino acid sequence. The copying preserves the sequence erhalten, features und restriction enzymes are lost.
 
-=== Speciel menus
+=== Special menus
 
 * The sequence of a restriction site can be inserted left or right of a selection (in edit mode, right or left of the cursor) via the context menu. A selection dialog for the desired enzyme will appear.
 
-A http://en.wikibooks.org/wiki/GENtle/Silent_Mutagenesis[silent mutation] can be introduced via the context menu.
+A <<silent-mutation,silent mutation>> (http://en.wikibooks.org/wiki/GENtle/Silent_Mutagenesis[Wiki book]) can be introduced via the context menu.
 
 == Sequencing
+http://en.wikibooks.org/wiki/GENtle/Sequencing[Wiki book]
 
 .Sequencing module
 image::images/Grafik6.png["Sequencing Module",width="1000mm"]
@@ -414,24 +421,20 @@ The sequencing module allows to view the data recorded by a sequence analyser.
 The data is loaded by importing the appropriate ABI-formatted .abi/.ab1 file
 and such raw data on the sequencing is displayed.
 
-http://en.wikibooks.org/wiki/GENtle/Sequencing
-
 === Display
 
-The data is shown in the main http://en.wikibooks.org/wiki/GENtle/Sequence_map[sequence] window.
+The data is shown in the main <<sequence-map,sequence map>> (http://en.wikibooks.org/wiki/GENtle/Sequence_map[Wiki book]) window.
 The text window on the upper right shows data stored in the file. On the left side, the following display options for the sequence are available:
 
 .Settings for the display
 [cols="1,2"]
 |===
-|Help lines|Gray vertial lines down from each sequence letter to the baseline. These can help to identify which letter belongs to which peak
-|Invert&amp;complement|Shows the sequencing complement/inverted. Useful for http://en.wikibooks.org/wiki/GENtle/Alignments[Alignments]
-|Scale height|Sets the height of the graphic display [unit in text lines]
-|Scale width|Sets the graphical points per data value. Default is 2; 1 would mean one pixel width per data point
-|Zoom|Sets the zoom factor for the data; useful to see small peaks
+|Help lines |Gray vertial lines down from each sequence letter to the baseline. These can help to identify which letter belongs to which peak
+|Invert&amp;complement |Shows the sequencing complement/inverted. Useful for <<alignments>> (http://en.wikibooks.org/wiki/GENtle/Alignments[Wiki book]).
+|Scale height |Sets the height of the graphic display [unit in text lines]
+|Scale width |Sets the graphical points per data value. Default is 2; 1 would mean one pixel width per data point
+|Zoom |Sets the zoom factor for the data; useful to see small peaks
 |===
-
-http://en.wikibooks.org/wiki/GENtle/Sequencing
 
 === Editing
 
@@ -448,6 +451,7 @@ Note: When saving the sequencing, only the sequence is stored, and the graphics 
 * Horizontal mode
 
 == Alignments
+http://en.wikibooks.org/wiki/GENtle/Alignments[Wiki book]
 
 .Sequence alignment
 image::images/Grafik7.png["Sequence Alignment",width="1000mm"]
@@ -455,7 +459,8 @@ image::images/Grafik7.png["Sequence Alignment",width="1000mm"]
 
 The alignment module displays alignments of DNA and amino acid sequences. It can be invoked through the menu Tools/Alignment or the keyboard shortcut `Ctrl-G`.
 
-When the module is launched, the settings dialog appears, which can also be accessed later through the respective button. When importing an alignment from a file (via menu File/Import), this dialog is not called because an alignment already exists that only needs to be displayed.
+When the module is launched, the settings dialog appears, which can also be accessed later through the respective button.
+When importing an alignment from a file (via menu File/Import), this dialog is not called because an alignment already exists that only needs to be displayed.
 
 === Settings dialog
 
@@ -465,10 +470,10 @@ The sequences to align, their order, and the alignment algorithm and its paramat
 .Settings for sequence alignments
 [options="header",cols="1,2"]
 |===
-|Tool|Description
-|Clustal-W|This (default) algorithm generates alignments of high quality, but is rather slow for simple alignments, and sometimes stumbles over local alignments. It runs as an external program that will automatically be invoked by GENtle.
-|Smith-Waterman|An internal, fast, but simple algorithm for local alignments, that is, aligning one or multiple short sequences againast a long one. The long sequence has to be the first. It works great for checking http://en.wikibooks.org/wiki/GENtle/Sequencing[sequencing data] against the expected sequence.
-|Needlemann-Wunsch|An internal, fast, but simple algorithm for global alignments, that is, aligning sequences of roughly the same length (e.g., different alleles of a gene). As with Smith-Waterman, all alignments are made against the first sequence.
+|Tool |Description
+|Clustal-W |This (default) algorithm generates alignments of high quality, but is rather slow for simple alignments, and sometimes stumbles over local alignments. It runs as an external program that will automatically be invoked by GENtle.
+|Smith-Waterman |An internal, fast, but simple algorithm for local alignments, that is, aligning one or multiple short sequences againast a long one. The long sequence has to be the first. It works great for checking <<sequencing,sequencing raw data>> (http://en.wikibooks.org/wiki/GENtle/Sequencing[Wiki book]) against the expected sequence.
+|Needlemann-Wunsch |An internal, fast, but simple algorithm for global alignments, that is, aligning sequences of roughly the same length (e.g., different alleles of a gene). As with Smith-Waterman, all alignments are made against the first sequence.
 |===
 
 Caveat : Clicking OK in this dialog will recalculate the alignment; the previous alignment and all manual changes made to it will be lost.
@@ -486,8 +491,6 @@ Several functions and display options can be invoked in the tool bar:
 |Horizontal mode |Shows alignment as long line.
 |Middle mouse button function |Allows to perform alignment functions via the sequence' context menu.
 |===
-
-http://en.wikibooks.org/wiki/GENtle/Alignments
 
 === View menu
 
@@ -508,7 +511,7 @@ There are many external tools available for alignments, please check out https:/
 
 === Sequence display
 
-The http://en.wikibooks.org/wiki/GENtle/Sequence_map[sequence map] can be altered through the context menu.
+The <<sequence-map,sequence map>> (http://en.wikibooks.org/wiki/GENtle/Sequence_map[Wiki book]) can be altered through the context menu.
 These changes will only alter the display, not recalculate the alignment.
 
 * Lines can be moved up or down
@@ -520,6 +523,7 @@ These changes will only alter the display, not recalculate the alignment.
 Sequences can not be edited within the alignment module. For that, you will have to edit the original sequence, then re-run the alignment.
 
 == Calculators
+http://en.wikibooks.org/wiki/GENtle/Calculators[Wiki book]
 
 .Calculator module
 image::images/Grafik8.png[]
@@ -542,13 +546,11 @@ If a diluted DNA solution was measured, the DNA quantity of the stock solution c
 
 When measuring single-stranded DNA/RNA or oligonucleotides, the corresponding correction factor needs to be entered.
 
-http://en.wikibooks.org/wiki/GENtle/Calculators
-
 === Protein calculator
 
 This calculator gives the amount and purity of peptides/proteins based on photometric absorption at 250 and 280 nm, respectively, as well as the molecular weight of the peptide, the layer thickness of the cuvette used, and the number of tryptophanes, tyrosines and cysteines in the peptide.
 
-This calculator can also be invoked via the Edit/Photometer analysis menu in the http://en.wikibooks.org/wiki/GENtle/Protein[Protein] module, in which case GENtle automatically fills in all values except the layer thickness and the photometric values.
+This calculator can also be invoked via the Edit/Photometer analysis menu in the <<protein>> (http://en.wikibooks.org/wiki/GENtle/Protein[Wiki book]) module, in which case GENtle automatically fills in all values except the layer thickness and the photometric values.
 
 === Data
 
@@ -560,7 +562,7 @@ This shows a codon table and a reverse codon table, both for standard code. This
 image::images/Grafik9.png["Virtual Gel",width="1000mm"]
 //width="8.501cm" depth="6.152cm
 
-A "virtual agarose (DNA) gel" can be generated or expanded via the http://en.wikibooks.org/wiki/GENtle/Restriction_Assistant[Restriction Assistant].
+A "virtual agarose (DNA) gel" can be generated or expanded via the <<restriction-assistant,restriction assistant>> (http://en.wikibooks.org/wiki/GENtle/Restriction_Assistant[Wiki book]).
 
 Within the gel viewer, gel concentration can be varied. Also, labelling can be turened on/off.
 
@@ -646,7 +648,8 @@ http://en.wikibooks.org/w/index.php?title=GENtle:The_whole_thing&amp;action=edit
 
 == Web interface
 
-The GENtle web interface lets you access DNA and amino acid sequences from http://www.ncbi.com/[NCBI] (http://www.ncbi.com), as well as publications listed at http://www.ncbi.nlm.nih.gov/[PubMed] (http://www.ncbi.nlm.nih.gov). The interface also covers BLAST searches.
+The GENtle web interface lets you access DNA and amino acid sequences from and publications provided at the https://www.ncbi.nlm.nih.gov/[NCBI] (https://www.ncbi.nlm.nih.gov).
+The interface also covers BLAST searches.
 
 === NCBI
 
@@ -700,10 +703,10 @@ image::images/Grafik12.png[]
 |Option|Description
 |Language|Currently English and German are available
 |Enhanced display|Can be turned off on machines with very show graphics
-|Show sequence title|Displays the sequence title in the http://en.wikibooks.org/wiki/GENtle:DNA_map[DNA map]
-|Show sequence length|Displays the sequence length in the http://en.wikibooks.org/wiki/GENtle:DNA_map[DNA map]
-|Load last project on startup|Automatically loads the last used http://en.wikibooks.org/wiki/GENtle:Projects[project] when starting GENtle
-|Use metafile format|Generates a WMF when copying the http://en.wikibooks.org/wiki/GENtle:DNA_map[DNA map] instead of a bitmap
+|Show sequence title|Displays the sequence title in the <<dna-map,DNA map>> (http://en.wikibooks.org/wiki/GENtle:DNA_map[Wiki book])
+|Show sequence length|Displays the sequence length in the <<dna-map,DNA map>> (http://en.wikibooks.org/wiki/GENtle:DNA_map[Wiki book])
+|Load last project on startup|Automatically loads the last used <<projects>> (http://en.wikibooks.org/wiki/GENtle:Projects[Wiki book]) when starting GENtle
+|Use metafile format|Generates a WMF when copying the <<dna-map,DNA map>> (http://en.wikibooks.org/wiki/GENtle:DNA_map[Wiki book]) instead of a bitmap
 |Show splashscreen|Shows the GENtle splashscreen when starting
 |Check for new version on startup|Checks (and downloads) a new GENtle version via internet on startup
 |Use internal help|Help should open in a browser window by default. If that doesn't work, check this option
@@ -715,13 +718,13 @@ image::images/Grafik12.png[]
 .Enzyme Options
 image::images/Grafik13.png[]
 //width="8.501cm" depth="6.409cm"
-Here the global enzyme options can be selected. These can be overridden for an individual sequence in the http://en.wikibooks.org/wiki/GENtle:Sequence_editor#Restriction_enzymes_.282.29[sequence editor], where there is a tab identical to this one.
+Here the global enzyme options can be selected. These can be overridden for an individual sequence in the <<sequence-editor,sequence editor>> (http://en.wikibooks.org/wiki/GENtle:Sequence_editor#Restriction_enzymes_.282.29[Wiki book]), where there is a tab identical to this one.
 
 [options="header",cols="1,2"]
 |===
 |Option|Description
 |Use global enzyme settings|Turn most of the other options on this tab on or off globally
-|Join enzymes|In a http://en.wikibooks.org/wiki/GENtle:DNA_map[DNA map], cuts of isoenzymes can be grouped together instead of displayed individually
+|Join enzymes|In a <<dna-map,DNA map>> (http://en.wikibooks.org/wiki/GENtle:DNA_map[Wiki book]), cuts of isoenzymes can be grouped together instead of displayed individually
 |Use color coding|Restriction enzymes can be shown in a color matching their number of cuts in a given sequence. The three buttons to the right of this option each hold a color choice dialog for single, double, and triple cutters.
 |Use min/max cutoff|Shows only enzymes that cut a minimum/maximum times
 |Sequence length|Shows only enzymes with recognition sequences of the selected lengths
@@ -794,7 +797,7 @@ Removal of a database will not delete the database itself, only the entry in the
 
 One of the databases in the list is the default database.
 The default database can be set by selecting its entry in the list, then clicking the As Default button.
-The default database can carry shared http://en.wikibooks.org/wiki/GENtle:Sequence_editor[enzyme groups].
+The default database can carry shared <<sequence-editor,enzyme groups in the sequence editor>> (http://en.wikibooks.org/wiki/GENtle:Sequence_editor[Wiki book]).
 
 ==== SQLite
 
@@ -866,7 +869,7 @@ Note : A primer has to be given the type "Primer", otherwise it will be added a
 .Find dialog box
 image::images/Grafik16.png[]
 //width="8.501cm" depth="9.741cm"
-The Find dialog in http://en.wikibooks.org/wiki/GENtle:DNA[DNA] and http://en.wikibooks.org/wiki/GENtle:Protein[amino acid] sequence can be invoked via `Ctrl-F` or Edit/Search.
+The Find dialog in <<dna,DNA>> (http://en.wikibooks.org/wiki/GENtle:DNA[Wiki book]) and <<protein,amino acid>> (http://en.wikibooks.org/wiki/GENtle:Protein[Wiki book]) sequence can be invoked via `Ctrl-F` or Edit/Search.
 It displays can find a string in
 
 * the current sequence
@@ -882,9 +885,10 @@ In DNA sequence display, it also look in
 The search is commenced automatically after changing the search string, if it is three or more characters long. For shorter search queries, the Search button has to be clicked.
 
 Single-clicking on a search result will select and display the result in the sequence.
-A double click will exit the dialog, and open the http://en.wikibooks.org/wiki/GENtle:Sequence_editor[sequence editor] for features, or the http://en.wikibooks.org/w/index.php?title=GENtle:Enzyme_management&amp;action=edit[enzyme management] dialog for restriction enzymes.
+A double click will exit the dialog, and open the <<sequence-editor,sequence editor>> (http://en.wikibooks.org/wiki/GENtle:Sequence_editor[Wiki book]) for features, or the <<enzyme-management,enzyme management>> (http://en.wikibooks.org/w/index.php?title=GENtle:Enzyme_management&amp;action=edit[Wiki book]) dialog for restriction enzymes.
  
 === Sequence editor
+http://en.wikibooks.org/w/index.php?title=GENtle:Sequence_editor&amp;action=edit&amp;section=1[Wiki book]
 
 .Sequence editor, properties tab.
 image::images/Grafik17.png[]
@@ -893,8 +897,6 @@ image::images/Grafik17.png[]
 In the Sequence Editor, properties of the sequence, features, as well as the specified restriction enzymes and proteases can be entered and edited.
 It consists of several tabs, depending on the type of sequence, which can be DNA or amino acid.
 All changes are applied to the sequence only after confirming with OK.
-
-http://en.wikibooks.org/w/index.php?title=GENtle:Sequence_editor&amp;action=edit&amp;section=1
 
 ==== Properties
 
@@ -918,9 +920,9 @@ Note: "clear selection" only refers to the selection process. The removal of fea
 
 ==== Edit feature
 
-* Fill color is the color of the feature; it will invoke a color choice dialog
-* Type in sequence display determines how that feature is drawn in the http://en.wikibooks.org/wiki/GENtle:Sequence_map[sequence map]
-* Use offset sets the numbering for the first amino acid of the feature; useful if the feature marks a part of a protein
+* Fill color is the color of the feature; it will invoke a color choice dialog.
+* Type in sequence display determines how that feature is drawn in the <<sequence-map,sequence map>> (http://en.wikibooks.org/wiki/GENtle:Sequence_map[Wiki book]).
+* Use offset sets the numbering for the first amino acid of the feature; useful if the feature marks a part of a protein.
 
 .Feature editing
 image::images/Grafik19.png[]
@@ -931,8 +933,8 @@ The list box below contains original data from GenBank format import.
 ==== Restriction enzymes
 
 When editing a DNA sequence, two tabs with settings for restriction enzymes are available.
-The first one is identical to the http://en.wikibooks.org/w/index.php?title=GENtle:Enzyme_management&amp;action=edit[enzyme management] dialog.
-The second one ("Restriction enzymes 2") is identical to the http://en.wikibooks.org/wiki/GENtle:Options#Enzyme_settings[global enzyme settings] tab, but contains the settings for this sequence alone. By default, its options are disabled, and the global options are used. By activation the options here, global settings are overridden.
+The first one is identical to the <<enzyme-management,enzyme management dialog>> (http://en.wikibooks.org/w/index.php?title=GENtle:Enzyme_management&amp;action=edit[Wiki book]).
+The second one ("Restriction enzymes 2") is identical to the <<enzyme-settings,enzyme settings tab>> (http://en.wikibooks.org/wiki/GENtle:Options#Enzyme_settings[Wiki book]), but contains the settings for this sequence alone. By default, its options are disabled, and the global options are used. By activation the options here, global settings are overridden.
 
 .Sequence editor, enzyme settings tab.
 image::images/Grafik25.png[]
@@ -948,7 +950,7 @@ image::images/Grafik26.png[]
 image::images/Grafik24.png[]
 //width="8.501cm" depth="7.69cm"
 This tab holds a list of available proteases.
-Potential cleavage sites for selected (checked) proteases are shown in the http://en.wikibooks.org/wiki/GENtle:Sequence_map[sequence map] (not in the http://en.wikibooks.org/wiki/GENtle:DNA_map[DNA map]).
+Potential cleavage sites for selected (checked) proteases are shown in the <<sequence-map,sequence map>> (http://en.wikibooks.org/wiki/GENtle:Sequence_map[Wiki book]) (not in the <<dna-map,DNA map>> (http://en.wikibooks.org/wiki/GENtle:DNA_map[Wiki book])).
 
 New proteases can be added similar to the following examples:
 
@@ -965,7 +967,7 @@ New proteases can be added similar to the following examples:
 image::images/Grafik23.png[]
 //width="8.501cm" depth="7.434cm"
 
-The Restriction Assistant can be invoked via menu Tools/Restriction Assistant, or through a click with the middle mouse button on a restriction site in the http://en.wikibooks.org/wiki/GENtle:DNA_map[DNA map]. For the latter, the selected enzyme is automatically selected in the list of "Available enzymes" (left). This list depends on the selections "Group" and "Subselection". It can be sorted by enzyme name or number of cuts by clicking on the respective column title. For a selected enzyme, the resulting fragments are shown in the lower left list.
+The Restriction Assistant can be invoked via menu Tools/Restriction Assistant, or through a click with the middle mouse button on a restriction site in the <<dna-map,DNA map>> (http://en.wikibooks.org/wiki/GENtle:DNA_map[Wiki book]). For the latter, the selected enzyme is automatically selected in the list of "Available enzymes" (left). This list depends on the selections "Group" and "Subselection". It can be sorted by enzyme name or number of cuts by clicking on the respective column title. For a selected enzyme, the resulting fragments are shown in the lower left list.
 
 The list on the right shows the contents of the "restriction cocktail", the enzymes already selected for cutting. The resulting fragments for these enzymes together are shown in the lower right list. The enzyme selected in the left list can be put in the cocktail via Add to cocktail; all enzymes from the left list can be added at once via Add all. An enzyme can be removed from the cocktail by selecting it in the right list, then via Remove enzyme.
 
@@ -974,10 +976,10 @@ Do not create fragments below ___ base pairs, when selected, limits the fragment
 Start restriction (the scissors symbol) will initiate the simulated restriction. The result of this can be influenced by several further settings:
 
 * Create fragments will generate the actual DNA sequences with their blunt/sticky ends that will result from a digestion with the cocktail. This option is pre-selected
-* Add to gel will add the fragments to a http://en.wikibooks.org/wiki/GENtle:Virtual_Gel[virtual gel], together in one lane.
+* Add to gel will add the fragments to a <<virtual-gel,virtual gel>> (http://en.wikibooks.org/wiki/GENtle:Virtual_Gel[Wiki book]), together in one lane.
 * One lane each will alter the above so that each enzyme gets its own lane.
 
-The restriction cocktail will be preserved so you can cut another DNA with that very enzyme combination, which is useful for an upcoming http://en.wikibooks.org/wiki/GENtle/Ligation[Ligation].
+The restriction cocktail will be preserved so you can cut another DNA with that very enzyme combination, which is useful for an upcoming <<ligation>> (http://en.wikibooks.org/wiki/GENtle/Ligation[Wiki book]).
 
 === Projects
 
@@ -992,7 +994,7 @@ Depending on the http://en.wikibooks.org/wiki/GENtle/options[options], the last 
 Projects consists of a list of sequences, not the sequences themselves.
 If a sequence is renamed, moved or deleted, GENtle will dispay a warning next time a project containing that sequence is opened.
 
-For efficient use of sequencing primers, one can create a project that contains all available sequencing primers, and then refer to thast project in the http://en.wikibooks.org/wiki/GENtle/Sequencing_Primers[Sequencing Primers] dialog.
+For efficient use of sequencing primers, one can create a project that contains all available sequencing primers, and then refer to thast project in the <<sequencing-primers,sequencing primers>> (http://en.wikibooks.org/wiki/GENtle/Sequencing_Primers[Wiki book]) dialog.
 
 === Edit primer dialog
 
@@ -1039,9 +1041,9 @@ Caveat : Calculating primer melting temperatures is tricky. If one of the three
 
 === Printing
 
-http://en.wikibooks.org/wiki/GENtle/Sequence_map[Sequence] and http://en.wikibooks.org/wiki/GENtle/DNA_map[DNA maps] can be printed via the respective context menus or the File menu.
+<<sequence-map,Sequence map>> (http://en.wikibooks.org/wiki/GENtle:Sequence_map[Wiki book]) and <<dna-map,DNA maps>> (http://en.wikibooks.org/wiki/GENtle:DNA_map[Wiki book]) can be printed via the respective context menus or the File menu.
 
-For http://en.wikibooks.org/wiki/GENtle/DNA[DNA], a report can be printed via File/Print report.
+For <<dna,DNA>> (http://en.wikibooks.org/wiki/GENtle:DNA[Wiki book]), a report can be printed via File/Print report.
 It contains the DNA map and a list of the features annotated in the sequence.
 This can be useful for a detailed overview of the sequence where the sequence itself is not required.
 
@@ -1065,7 +1067,7 @@ All enzymes from a group can be added to the left list, and a group can be delet
 
 === Sequencing Primers
 
-The sequencing primers dialog can add possible sequencing primers as features to a http://en.wikibooks.org/wiki/GENtle/DNA[DNA] sequence. What primers to add can be specified:
+The sequencing primers dialog can add possible sequencing primers as features to a <<dna,DNA>> (http://en.wikibooks.org/wiki/GENtle:DNA[Wiki book]) sequence. What primers to add can be specified:
 
 * The mimimum alignment (3') of a primer to the sequence. This means exact annealing!
 * The database to search for primers. All primers from that database will be considered.
@@ -1082,7 +1084,7 @@ Sequencing primers will display as yellow features, where the shade of yellow de
 image::images/Grafik27.png[]
 //width="8.501cm" depth="5.64cm"
 
-This dialogue is accessed by marking a primer (or part of a primer) in the sequence. The dialogue is then called via the context menu SILENT MUTATION. The dialogue aids in the search for silent mutations, which introduce a new restriction site but do not alter the resulting amino acid sequence. Silent mutations are useful for verifying the success of a PCR. In this process, the DNA generated during PCR is cut with the chosen restriction enzyme. The number or length of the resulting DNA fragments indicates whether a new restriction site has been created by PCR, demonstrating the success of the PCR.
+This dialogue is accessed by marking a primer (or part of a primer) in the sequence. The dialogue is then called via the context menu SILENT MUTATION. The dialog aids in the search for silent mutations, which introduce a new restriction site but do not alter the resulting amino acid sequence. Silent mutations are useful for verifying the success of a PCR. In this process, the DNA generated during PCR is cut with the chosen restriction enzyme. The number or length of the resulting DNA fragments indicates whether a new restriction site has been created by PCR, demonstrating the success of the PCR.
 
 The search for silent mutations can be limited in the dialogue as follows:
 
