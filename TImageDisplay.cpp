@@ -127,7 +127,7 @@ void TImageDisplay::initme ()
     }
 
 void TImageDisplay::ShowDir ( wxString s )
-	{
+    {
     wxBeginBusyCursor() ;
     wxDir dir(s);
     lb->Clear() ;
@@ -154,31 +154,31 @@ void TImageDisplay::ShowDir ( wxString s )
 */
     int a ;
     for ( a = 0 ; a < vs.GetCount() ; a++ )
-    	{
-	    vs[a] = vs[a].AfterLast ( '/' ) ;
-	    vs[a] = vs[a].AfterLast ( '\\' ) ;
-     	}
+        {
+        vs[a] = vs[a].AfterLast ( '/' ) ;
+        vs[a] = vs[a].AfterLast ( '\\' ) ;
+        }
     vs.Sort () ;
 
     for ( a = 0 ; a < vs.GetCount() ; a++ )
-    	lb->Append ( vs[a] ) ;
-   	wxEndBusyCursor() ;
-   	}
+        lb->Append ( vs[a] ) ;
+       wxEndBusyCursor() ;
+       }
 
 void TImageDisplay::OnCopy ( wxCommandEvent &event )
     {
-	if ( right ) right->OnCopy ( event ) ;
-	}
+    if ( right ) right->OnCopy ( event ) ;
+    }
 
 void TImageDisplay::OnPrint ( wxCommandEvent &event )
     {
-	if ( right ) right->OnPrint ( event ) ;
-	}
+    if ( right ) right->OnPrint ( event ) ;
+    }
 
 void TImageDisplay::OnSave ( wxCommandEvent &event )
     {
-	if ( right ) right->OnSaveAsBitmap ( event ) ;
-	}
+    if ( right ) right->OnSaveAsBitmap ( event ) ;
+    }
 
 void TImageDisplay::OnDir ( wxCommandEvent &event )
     {
@@ -195,23 +195,23 @@ void TImageDisplay::OnFile ( wxCommandEvent &event )
     wxString fn = dir + _T("/") + file ;
 
     if ( fn.AfterLast('.').Upper() == _T("IMG") )
-	    {
-    	r->readFile ( fn ) ;
-    	right->i = r->makeImage() ;
-    	}
+        {
+        r->readFile ( fn ) ;
+        right->i = r->makeImage() ;
+        }
     else
-	    {
-		wxLogNull logNo; // Supress error message
-		if ( !right->i.LoadFile ( fn , wxBITMAP_TYPE_ANY ) )
-			{
-			right->ClearBackground() ;
-			ClearBackground() ;
-			Refresh ( true ) ;
-			right->Refresh ( true ) ;
-			allow_save = allow_copy = allow_print = false ;
-			myapp()->frame->updateCCP ( this ) ;
-			}
-	    }
+        {
+        wxLogNull logNo; // Supress error message
+        if ( !right->i.LoadFile ( fn , wxBITMAP_TYPE_ANY ) )
+            {
+            right->ClearBackground() ;
+            ClearBackground() ;
+            Refresh ( true ) ;
+            right->Refresh ( true ) ;
+            allow_save = allow_copy = allow_print = false ;
+            myapp()->frame->updateCCP ( this ) ;
+            }
+        }
 
     wxClientDC dc ( right ) ;
     dc.Clear() ;
@@ -222,24 +222,24 @@ void TImageDisplay::OnFile ( wxCommandEvent &event )
     if ( right->bmp ) delete right->bmp ;
     right->bmp = new wxBitmap ( right->i ) ;
     right->Refresh () ;
-	allow_save = allow_copy = allow_print = true ;
-	myapp()->frame->updateCCP ( this );
+    allow_save = allow_copy = allow_print = true ;
+    myapp()->frame->updateCCP ( this );
     wxEndBusyCursor () ;
     }
 
 void TImageDisplay::OnCB ( wxCommandEvent &event )
-	{
-	right->show_text = cb->GetValue() ;
-	right->ClearBackground () ;
-	right->Refresh () ;
-	}
+    {
+    right->show_text = cb->GetValue() ;
+    right->ClearBackground () ;
+    right->Refresh () ;
+    }
 
 void TImageDisplay::OnCBinvert ( wxCommandEvent &event )
-	{
-	right->invert = invert->GetValue() ;
-	right->ClearBackground () ;
-	right->Refresh () ;
-	}
+    {
+    right->invert = invert->GetValue() ;
+    right->ClearBackground () ;
+    right->Refresh () ;
+    }
 
 wxString TImageDisplay::getName () const
     {
@@ -309,7 +309,7 @@ void TMyImagePanel::OnDraw(wxDC& pdc)
     pdc.DrawBitmap ( bmp2 , (int)x , (int)y ) ;
 
     if ( invert )
-    	{
+        {
         wxRasterOperationMode lf = pdc.GetLogicalFunction() ;
         pdc.SetLogicalFunction ( wxINVERT ) ;
         pdc.SetBrush ( *wxWHITE_BRUSH ) ;
@@ -320,7 +320,7 @@ void TMyImagePanel::OnDraw(wxDC& pdc)
 
     pdc.SetTextForeground ( wxColour ( 0 , 0 , 150 ) ) ;
     if ( show_text )
-    	{
+        {
         for ( int i = 0 ; i < imdi->r->items.size() ; i++ )
            imdi->r->items[i].draw ( pdc , (int)x , (int)y , (int)(x+nw) , (int)(y+nh) ) ;
 
@@ -372,7 +372,7 @@ void TMyImagePanel::OnSaveAsBitmap(wxCommandEvent &event)
     strcpy ( t , file.mb_str() ) ;
     d = NULL ;
     for ( c = t ; *c ; c++ )
-       if ( *c == '.' ) d = c ;
+        if ( *c == '.' ) d = c ;
     if ( d ) *d = 0 ;
 
     wxBitmap bmp2 ;
@@ -383,12 +383,12 @@ void TMyImagePanel::OnSaveAsBitmap(wxCommandEvent &event)
 void TMyImagePanel::OnCopy(wxCommandEvent &event)
     {
     if (wxTheClipboard->Open())
-      {
-      wxBitmap bmp ;
-      WriteIntoBitmap ( bmp ) ;
-      wxTheClipboard->SetData( new wxBitmapDataObject ( bmp ) );
-      wxTheClipboard->Close();
-      }
+        {
+        wxBitmap bmp ;
+        WriteIntoBitmap ( bmp ) ;
+        wxTheClipboard->SetData( new wxBitmapDataObject ( bmp ) );
+        wxTheClipboard->Close();
+        }
     }
 
 void TMyImagePanel::OnPrint(wxCommandEvent &event)
@@ -408,7 +408,7 @@ void TMyImagePanel::OnPrint(wxCommandEvent &event)
     }
 
 void TMyImagePanel::OnPaint(wxPaintEvent& event)
-	{
+    {
     wxPaintDC dc(this);
     OnDraw ( dc ) ;
     }

@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the TImageDisplay class, as well as the TMyImagePanel helper class
+    \brief Contains the TImageDisplay class, as well as the TMyImagePanel helper class
 */
 #ifndef _TIMAGE_DISPLAY_H_
 #define _TIMAGE_DISPLAY_H_
@@ -15,8 +15,8 @@ class TIMGreader ;
 class TMyImagePanel ;
 class TMyFileBox ;
 
-/**	\class TImageDisplay
-	\brief The image display module
+/** \class TImageDisplay
+    \brief The image display module
 */
 class TImageDisplay : public ChildBase
     {
@@ -49,8 +49,8 @@ class TImageDisplay : public ChildBase
     DECLARE_EVENT_TABLE()
     } ;
 
-/**	\class TMyImagePanel
-	\brief This class represents the actual image displayed by TImageDisplay
+/** \class TMyImagePanel
+    \brief This class represents the actual image displayed by TImageDisplay
 */
 class TMyImagePanel : public wxPanel
     {

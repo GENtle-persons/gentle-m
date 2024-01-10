@@ -486,13 +486,13 @@ enum {
     DP_WINDOW_SIZE,
     DP_MISMATCH_LIMIT,
     DP_OPEN_SEQ1,
- 
+
     RI_MIN_BP,
     RI_MIN_PERCENT,
     RI_GROUP,
     RI_DNA_LIST,
     RI_ENZYMES_LIST,
- 
+
     Y___,
     Z___,
 

@@ -14,14 +14,14 @@ class TRestrictionEnzyme
     ~TRestrictionEnzyme () {} ; ///< Dummy destructor
 
     bool differ ( const TRestrictionEnzyme &e ) const ;
-    
+
     wxString getEndUpperLeft ( const bool first_strand = true ) const ; ///< The "upper left" sequence after the cut
     wxString getEndLowerLeft ( const bool first_strand = true ) const ; ///< The "lower left" sequence after the cut
     wxString getEndUpperRight ( const bool first_strand = true ) const ; ///< The "upper right" sequence after the cut
     wxString getEndLowerRight ( const bool first_strand = true ) const ; ///< The "lower right" sequence after the cut
-    
+
     wxString invertSequence () const ; ///< The recognition sequence, inverted
-    
+
     int getCut ( const bool first_strand = true ) const ;
     void setCut ( const int c ) ;
     int getOverlap ( const bool first_strand = true ) const ;

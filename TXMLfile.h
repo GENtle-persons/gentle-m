@@ -29,9 +29,9 @@ class TXMLfile
     void readGBSeq ( TiXmlNode *base ) ; ///< The actual parser
     wxString t ( TiXmlText * const txt ) const ; ///< Safe text conversion
     wxString t ( const char * const txt ) const ; ///< Safe text conversion
-    void readGBqualifiers ( TVectorItem &i , TiXmlNode *n ) ; ///< Part of the parser
+    void readGBqualifiers ( TVectorItem &i , TiXmlNode * const n ) ; ///< Part of the parser
     void readGBintervals ( vector <TVectorItem> &vi , const TVectorItem &i , TiXmlNode *n ) ; ///< Part of the parser
-    wxString get_sub_desc ( TiXmlNode *base , int depth = 0 ) const ;
+    wxString get_sub_desc ( TiXmlNode * const base , const int depth = 0 ) const ;
     bool _success ; ///< Internal success marker
     wxArrayTVector _v ; ///< The generated vectors
     } ;

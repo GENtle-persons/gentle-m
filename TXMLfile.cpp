@@ -170,7 +170,7 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
 //     cout << "The rest took " << wxGetElapsedTime() << " ms\n" ;
     }
 
-wxString TXMLfile::get_sub_desc ( TiXmlNode *base , int depth ) const
+wxString TXMLfile::get_sub_desc ( /* not const */ TiXmlNode * const base , const int depth ) const
     {
     if ( !base ) return _T("") ; // Just fore safety...
     wxString name = t ( base->Value() ) ;
@@ -180,7 +180,7 @@ wxString TXMLfile::get_sub_desc ( TiXmlNode *base , int depth ) const
     ret += name ;
     ret += _T("\n") ;
     TiXmlNode *n ;
-    for ( n = base->FirstChild() ; n ; n = n->NextSibling() )
+    for ( n = /* not const */ base->FirstChild() ; n ; n = n->NextSibling() )
         ret += get_sub_desc ( n , depth + 1 ) ;
     return ret ;
     }
@@ -232,7 +232,7 @@ void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
         }
     }
 
-void TXMLfile::readGBintervals ( vector <TVectorItem> &vi , const TVectorItem &i , TiXmlNode *n )
+void TXMLfile::readGBintervals ( vector <TVectorItem> &vi , const TVectorItem &i , TiXmlNode * const n )
     {
     TiXmlNode *n2 = n->FirstChild("GBFeature_intervals") ;
     if ( !n2 ) return ;
@@ -247,7 +247,7 @@ void TXMLfile::readGBintervals ( vector <TVectorItem> &vi , const TVectorItem &i
         j.to = atoi ( to.mb_str() ) ;
         if ( j.from > j.to )
             {
-            int o = j.from ;
+            const int o = j.from ;
             j.from = j.to ;
             j.to = o ;
             j.setDirection ( -1 ) ;
