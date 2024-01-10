@@ -21,7 +21,7 @@ class AutoAnnotate
 
     bool SettingsDialog () ; ///< Runs the dialog; returns wether to Run or not
     void Run () ; ///< Runs the search
-    
+
     private :
     bool ScanDatabase ( const wxString& database ) ; ///< Scans a database for matching features
     bool addORFs ( TVector *v ) ; ///< Adds open reading frames as features (that could not be identified)
