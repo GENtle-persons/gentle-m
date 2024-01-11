@@ -449,6 +449,15 @@ void TAminoAcids::OnEditMode(wxCommandEvent& event)
 
 void TAminoAcids::invokeVectorEditor ( const wxString& what , const int num , const bool forceUpdate )
     {
+    if (NULL == vec)
+        {
+        wxPrintf( "E (TAminoAcids::invokeVectorEditor) : NULL == vec (what==%s, num==%d, forceUpdate==%d)\n" , what , num , forceUpdate ) ;
+        return ;
+        }
+    else
+        {
+        wxPrintf( "I (TAminoAcids::invokeVectorEditor) : ok (what==%s, num==%d, forceUpdate==%d)\n" , what , num , forceUpdate ) ;
+        }
     vec->undo.start ( txt("u_vec_edit") ) ;
     TVectorEditor ve ( this , txt("t_vector_editor") , vec ) ;
     bool changed = vec->isChanged() ;

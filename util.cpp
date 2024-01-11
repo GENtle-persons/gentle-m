@@ -40,23 +40,23 @@ using namespace std ;
 WX_DEFINE_OBJARRAY(wxArrayFloat);
 
 // GLOBAL FUNCTIONS
-int cmpint(int *first, int *second)
+int cmpint(/* const */ int * const first, /* const */ int * const second) // not const for compatibility with CMPFUNC
     {
-    return *first > *second ;
+    return (*first) > (*second) ;
     }
 
-int cmpre(TRestrictionEnzyme *first, TRestrictionEnzyme *second)
+int cmpre(/*const*/ TRestrictionEnzyme * const first, /* const */ TRestrictionEnzyme * const second)
     {
     return first > second ; //????
     }
 
-void explode ( wxString sep , wxString s , wxArrayString &r )
+void explode ( const wxString& sep , const wxString& s , wxArrayString &r )
     {
-    int a , b ;
     wxString n ;
     r.Clear () ;
-    for ( a = 0 ; a + sep.Length() <= s.Length() ; a++ )
+    for ( int a = 0 ; a + sep.Length() <= s.Length() ; a++ )
         {
+	int b ;
         for ( b = 0 ; b < sep.Length() && s.GetChar(a+b) == sep.GetChar(b) ; b++ ) ;
         if ( b == sep.Length() )
            {
@@ -68,7 +68,7 @@ void explode ( wxString sep , wxString s , wxArrayString &r )
     if ( !n.IsEmpty() ) r.Add ( n ) ;
     }
 
-wxString implode ( wxString sep , wxArrayString &r )
+wxString implode ( const wxString& sep , wxArrayString &r )
     {
     if ( r.GetCount() == 0 ) return _T("") ;
     wxString ret = r[0] ;

@@ -6,8 +6,8 @@
 
 class TDotPlot ;
 
-/**	\class TDotPlotPanel
-	\brief The dot plot drawing panel
+/** \class TDotPlotPanel
+    \brief The dot plot drawing panel
 */
 class TDotPlotPanel : public wxScrolledWindow
     {
@@ -42,8 +42,8 @@ class TDotPlotPanel : public wxScrolledWindow
     DECLARE_EVENT_TABLE()
     } ;
 
-/**	\class TDotPlot
-	\brief The dot plot drawing module
+/** \class TDotPlot
+    \brief The dot plot drawing module
 */
 class TDotPlot : public ChildBase
     {
@@ -56,7 +56,7 @@ class TDotPlot : public ChildBase
 
     virtual void OnZoom(wxScrollEvent& event); ///< Zoom event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler
- 	virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
+    virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
 
     virtual void OnSelectSeq1(wxCommandEvent& event) ; ///< event handler
     virtual void OnSelectSeq2(wxCommandEvent& event) ; ///< event handler
