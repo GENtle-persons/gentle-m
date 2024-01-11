@@ -12,21 +12,21 @@
 
 typedef unsigned int uint ;
 
-/**    \fn myass ( bool b , wxString msg )
+/** \fn myass ( bool b , wxString msg )
     \brief "My assertion" - little inside joke...
     \param b The condition given in the call. No assertion when b is FALSE.
     \param msg The message string to write into errout.
 */
 
-/**    \def MYDEBUG
+/** \def MYDEBUG
     \brief Turns on output of the myass function; should not be used for releases
 */
 
-/**    \def MYLOG
+/** \def MYLOG
     \brief Turns on output of logging; should not be used for releases
 */
 
-/**    \def MYTEST
+/** \def MYTEST
     \brief Turns on both MYDEBUG and MYLOG; should not be used for releases
 */
 
@@ -321,14 +321,11 @@ WX_DECLARE_OBJARRAY(float, wxArrayFloat);
 
 #define CHAR2WX(__c) wxString((char*)l,wxConvUTF8)
 
-/** \brief Insert wxString "t" into wxString "s" at position "from" */
-void wxStringInsert ( wxString &s , int from , wxString t ) ;
-
 /** \brief Chop wxString "s" into parts "r" separated by "sep" */
-void explode ( wxString sep , wxString s , wxArrayString &r ) ;
+void explode ( const wxString& sep , const wxString& s , wxArrayString &r ) ;
 
 /** \brief Join wxStrings in "r" while putting "sep"s between them */
-wxString implode ( wxString sep , wxArrayString &r ) ;
+wxString implode ( const wxString& sep , wxArrayString &r ) ;
 /*
 //  \brief Returns the current language version of the "item" /
 const char * txt ( const wxString item ) ;
@@ -337,7 +334,7 @@ const char * txt ( const wxString item ) ;
 const char* txt ( const char * const item ) ;
 */
 /** \brief Returns the current language version of the "item" */
-const wxString txt ( const wxString item ) ;
+const wxString txt ( wxString item ) ;
 
 /** \brief Returns the current language version of the "item" */
 const wxString txt ( const char * const item ) ;
@@ -346,10 +343,10 @@ const wxString txt ( const char * const item ) ;
 MyApp *myapp () ;
 
 /** \brief Compares the values of two int pointers */
-int cmpint(int *first, int *second) ;
+int cmpint(/*const*/ int * const first, /*const*/ int * const second) ; // no const to match SCMPFUNC
 
 /** \brief Compares the values of two TRestrictionEnzyme pointers */
-int cmpre(TRestrictionEnzyme *first, TRestrictionEnzyme *second) ;
+int cmpre(const TRestrictionEnzyme * const first, const TRestrictionEnzyme * const second) ;
 
 #endif
 // _MAIN_H__
