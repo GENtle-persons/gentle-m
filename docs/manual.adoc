@@ -599,7 +599,8 @@ Name:amount,bp:amount,bp:amount,bp:amount,bp: ...
 ":amount" can be omitted. The default amount (20) is then used.
 Markers you enter will be used in the next GENtle release!
 
-```
+.The markers.txt file offers ladders for the identification of molecular weights as offered in GENtle's virtual gels.
+----
 Promega BenchTop PCR Markers: 1000:750:500:300:150:50
 Promega BenchTop pGEM® DNA Markers: 2645:1605:1198:676:517:460:396:350:222:179:126:75:65
 Promega BenchTop ΦX174 DNA/HaeIII Markers: 1353:1078:872:603:310:281:271:234:194:118:72
@@ -634,7 +635,7 @@ Plasmid Factory 1kb DNA Ladder:115,10000:92,8000:69,6000:57,5000:46,4000:35,3000
 Stratagene 1kb DNA Ladder:50,12000:50,10000:50,9000:50,8000:50,7000:40,6000:42,5000:42,4000:43,3000:40,2000:10,1500:8,1000:8,750:7,500:10,250
 NEB 1kb DNA Ladder:42,10002:42,8001:50,6001:42,5001:33,4001:125,3001:48,2000:36,1500:42,1000:21,517:21,500
 NEB 100bp DNA Ladder:45,1517:35,1200:95,1000:27,900:24,800:21,700:18,600:97,500:97,517:38,400:29,300:25,200:48,100
-```
+----
 
 == Image Viewer
 
