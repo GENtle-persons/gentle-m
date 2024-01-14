@@ -15,7 +15,7 @@ image::images/Grafik20.png["Logo",width="650mm",pdfwidth="650mm",align="center"]
 GENtle is an open-source molecular biology software available at link:https://github.com/GENtle-persons/gentle-m[GENtle on GitHub]. Distinguished as the sole software of its kind:
 
 - It is governed by an Open Source license.
-- It stands apart from platforms where you submit your data via a web interface.
+- It stands apart from platforms where you submit your data via a <<web-interface,web interface>>.
 
 Originating in the early years of this millennium, GENtle provides a valuable resource despite the acknowledged smoother user experiences offered by commercially available alternatives in routine tasks related to cloning.
 Still, in our humble opinion, GENtle has a competitive edge in
@@ -58,7 +58,7 @@ The initial contact with GENtle is made with the the tree to the left of the pro
 1. <<dna,DNA>>
 2. DNA fragments and their <<ligation,Ligation>>
 3. <<sequencing,Sequencing>>
-4. <<pcr_and_primer_design,PCR/Primers>>
+4. <<pcr-and-primer-design,PCR/Primers>>
 5. <<alignments,Alignments>>
 6. Amino acid sequences / <<protein,Proteins>>
 7. Other smallish bits and pieces
@@ -284,12 +284,27 @@ In some modules, the sequence display can be toggled to horizontal. This can enh
 
 == Protein
 
-.Protein module
+A protein/amino acid sequence can be derived from data already presented in GENtle
+* automated translations of
+  - DNA sequence
+  - DNA fragment (unsure)
+* cleavage by restriction enzyme and selection of fragment
+
+or GENtle accepts external input via
+* direct entering of the sequence
+* opening a text file from the hard drive, acceptable formats are
+  - Uniprot
+  - FASTA
+* retrieval from a public database via the <<web-interface,web interface>> dialog.
+
+.Protein module displaying the protein IRS1 (Insulin Receptor Substrate 1)
 image:images/Grafik4.png["Protein Module",width="1000mm"]
 //width="8.501cm" depth="6.152cm"
 
 In this module, amino acid sequences (peptides/proteins) can be viewed, edited and annotated.
 It uses a <<sequence-map,sequence map>> (http://en.wikibooks.org/wiki/GENtle/Sequence_map[Wiki book]) as main display, and a multi-purpose overview display at the top.
+
+The protein shown in that figure is the product of the gene IRS1 (Insulin Receptor Substrate 1) as it can be retrieved from https://www.ncbi.nlm.nih.gov/gene/3667[GenBank] or https://www.uniprot.org/uniprotkb/P35568[Uniprot]. It is imported most easily directly via the <<web-interface,web interface module>> and the search string "ISG1 human". The DNA sequence being the cloning vector and this protein associated with insulin resistance may be at the very onset of an experiment to integrate a DNA sequence coding for that protein into the cloning vector. Yes, GENtle offers all the tools required to do that.
 
 === Toolbar
 
@@ -313,13 +328,13 @@ The smaller display on the top can show several types of information:
 .Summary of protein properties
 [cols="1,2"]
 |===
-|Data |Shows some basic data that has been calculated from the sequence
-|Description |Shows the sequence description
-|Scheme |Shows a <<dna-map,DNA map>> (http://en.wikibooks.org/wiki/GENtle/DNA_map[Wiki book])-like layout of the whole protein
-|AA weight |Shows a plot of the molecular weight of the individual amino acids
-|AA isoelectric point |Shows a plot of the isoelectric point of the individual amino acids
-|Hydrophobicity |Shows a plot of the local hydrophobicity of the amino acids nearby
-|Chou-Fasman plot |Shows a detailed Chou-Fasman-plot for secondary structure prediction
+|Data |Shows some basic data that has been calculated from the sequence.
+|Description |Shows the sequence description.
+|Scheme |Shows a <<dna-map,DNA map>> (http://en.wikibooks.org/wiki/GENtle/DNA_map[Wiki book])-like layout of the whole protein.
+|AA weight |Shows a plot of the molecular weight of the individual amino acids.
+|AA isoelectric point |Shows a plot of the isoelectric point of the individual amino acids.
+|Hydrophobicity |Shows a plot of the local hydrophobicity of the amino acids nearby.
+|Chou-Fasman plot |Shows a detailed Chou-Fasman-plot for secondary structure prediction.
 |===
 
 === Sequence representation
@@ -406,7 +421,8 @@ Resulting DNA- and amino acid sequences can be copied to the clipboard via the c
 
 === Special menus
 
-* The sequence of a restriction site can be inserted left or right of a selection (in edit mode, right or left of the cursor) via the context menu. A selection dialog for the desired enzyme will appear.
+* The sequence of a restriction site can be inserted left or right of a selection (in edit mode, right or left of the cursor) via the context menu.
+  A selection dialog for the desired enzyme will appear.
 
 A <<silent-mutation,silent mutation>> (http://en.wikibooks.org/wiki/GENtle/Silent_Mutagenesis[Wiki book]) can be introduced via the context menu.
 
@@ -583,7 +599,8 @@ Name:amount,bp:amount,bp:amount,bp:amount,bp: ...
 ":amount" can be omitted. The default amount (20) is then used.
 Markers you enter will be used in the next GENtle release!
 
-```
+.The markers.txt file offers ladders for the identification of molecular weights as offered in GENtle's virtual gels.
+----
 Promega BenchTop PCR Markers: 1000:750:500:300:150:50
 Promega BenchTop pGEM® DNA Markers: 2645:1605:1198:676:517:460:396:350:222:179:126:75:65
 Promega BenchTop ΦX174 DNA/HaeIII Markers: 1353:1078:872:603:310:281:271:234:194:118:72
@@ -618,7 +635,7 @@ Plasmid Factory 1kb DNA Ladder:115,10000:92,8000:69,6000:57,5000:46,4000:35,3000
 Stratagene 1kb DNA Ladder:50,12000:50,10000:50,9000:50,8000:50,7000:40,6000:42,5000:42,4000:43,3000:40,2000:10,1500:8,1000:8,750:7,500:10,250
 NEB 1kb DNA Ladder:42,10002:42,8001:50,6001:42,5001:33,4001:125,3001:48,2000:36,1500:42,1000:21,517:21,500
 NEB 100bp DNA Ladder:45,1517:35,1200:95,1000:27,900:24,800:21,700:18,600:97,500:97,517:38,400:29,300:25,200:48,100
-```
+----
 
 == Image Viewer
 
@@ -651,21 +668,31 @@ http://en.wikibooks.org/w/index.php?title=GENtle:The_whole_thing&amp;action=edit
 The GENtle web interface lets you access DNA and amino acid sequences from and publications provided at the https://www.ncbi.nlm.nih.gov/[NCBI] (https://www.ncbi.nlm.nih.gov).
 The interface also covers BLAST searches.
 
-=== NCBI
+A selection box in the upper left corner decides about the exact function of that dialog box and adjust the fields that are displayed. 
 
-Chosing Nucleotide or Protein, entering a sequence name/keywords, and hitting Search/ENTER will show the NCBI search results for that query. More results (if any) can be browsed with &gt;&gt;.
+=== NCBI DNA/protein sequence search.
+
+Chosing Nucleotide or Protein from the selection box, entering a sequence name/keywords, and hitting Search/ENTER will show the NCBI search results for that query.
+More results (if any) can be browsed with &gt;&gt;.
 
 Double-clicking an entry will download and open the (annotated) sequence.
+
+.NCBI Genbank sequence retrieval
+image::images/Grafik_ExternalInterface_NCBI.png .png[]
 
 === PubMed
 
 The PubMed option gives new entry fields for author(s) (written "Lastname Initials", separated by ","), and date limitations (years), as well as a result sort option.
+But there is no ultimate need to use those extra fields, particularly so after making yourself familiar with the https://pubmed.ncbi.nlm.nih.gov/help/[NCBI PubMed user guide].
 
 Double-clicking an entry will open a web browser window with the respective PubMed abstract page.
 
+.NCBI PubMed Interface.
+image::images/Grafik_ExternalInterface_PubMed.png[]
+
 === BLAST
 
-Running a BLAST search for a DNA or amino acid sequence will open a new tab in the web interface, showing a countdown for the time the BLAST results are expected to arrive. Once loaded, the results are displayed as simple alignments.
+Running a BLAST search for a DNA or amino acid sequence will open a new tab in the <<web-interface,web interface>>, showing a countdown for the time the BLAST results are expected to arrive. Once loaded, the results are displayed as simple alignments.
 
 Double-clicking an entry will open the found sequence.
 

@@ -12,3 +12,4 @@ config.status
 local.db
 ltmain.sh
 GENtle.app
+docs/manual.html
