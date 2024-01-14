@@ -228,7 +228,7 @@ class TVector
     bool isCircular () const ; ///< Is this a circular sequence?
     bool isLinear () const ; ///< Is this a linear sequence?
     const wxString one2three ( const int a ) const ; ///< Converts one letter amino acid code to three-letter acronym
-    char three2one ( wxString s ) const ; ///< Converts three-letter acronym to one letter amino acid code
+    char three2one ( const wxString& s ) const ; ///< Converts three-letter acronym to one letter amino acid code
     void setStickyEnd ( const bool left , const bool upper , const wxString& s ) ; ///< Sets one of the four possible sticky ends
     wxString getStickyEnd ( const bool left , const bool upper ) const ; ///< Returns one of the possible sticky ends
     bool hasStickyEnds () const ; ///< Does this sequence have sticky ends?
@@ -242,8 +242,8 @@ class TVector
 
     TAAProp getAAprop ( const char a ) const ; ///< Returns the properties of the one-letter code amino acid
     int find_item ( const wxString& s ) const ; ///< Finds an item with that name
-    bool isEnzymeHidden ( const wxString&s ) const ; ///< Is enzyme "s" hidden?
-    void hideEnzyme ( const wxString& s , bool hideit = true ) ; ///< Set enzyme hidden state
+    bool isEnzymeHidden ( const wxString& s ) const ; ///< Is enzyme "s" hidden?
+    void hideEnzyme ( const wxString& s , const bool hideit = true ) ; ///< Set enzyme hidden state
 
     wxString getSubstring ( const int mf , const int mt ) ; ///< Returns a sequence substring
     wxString transformSequence ( const bool inverse , const bool reverse ) const ; ///< Transforms the sequence
@@ -263,10 +263,10 @@ class TVector
     const wxString getName () const ; ///< Returns the sequence name
     void setName ( const wxString& s ) ; ///< Sets the sequence name
     void addName ( const wxString& s ) ; ///< Appends to the sequence name
-    void setGenomeMode ( bool gm = true ) ; ///< Turns genome mode on/off
+    void setGenomeMode ( const bool gm = true ) ; ///< Turns genome mode on/off
     bool getGenomeMode () const ; ///< Returns the genome mode
     int getMem () const ; ///< Returns memory usage estimate for this sequence. Debugging use only
-    bool getVectorCuts ( TVector *v ) ; ///< Returns wether or not isoenzymes should be joined
+    bool getVectorCuts ( const TVector * const v ) ; ///< Returns wether or not isoenzymes should be joined
     TEnzymeRules *getEnzymeRule () const ; ///< Gets the enzyme rules to follow
     int showGC () const ; ///< Returns 0 for "no", otherwise the number of blocks
     TORF *getORF ( const int a ) ; ///< Returns an open reading frame
