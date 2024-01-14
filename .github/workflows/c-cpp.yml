@@ -36,3 +36,12 @@ jobs:
         run: ./configure
       - name: make
         run: make
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: GENtle_${{ matrix.os }}
+          path: |
+            GENtle
+            variables.csv
+            marker.txt
+          retention-days: 10
