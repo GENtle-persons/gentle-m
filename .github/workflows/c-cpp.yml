@@ -45,3 +45,14 @@ jobs:
           fi
       - name: build manual.html
         run: asciidoc docs/manual.adoc
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: GENtle_${{ matrix.os }}
+          path: |
+            GENtle
+            variables.csv
+            marker.txt
+            docs/manual.html
+            docs/images
+          retention-days: 10
