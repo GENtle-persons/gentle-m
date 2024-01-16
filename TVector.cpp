@@ -21,8 +21,8 @@ void TVector::setCircular ( const bool c ) { circular = c ; }
 bool TVector::isCircular () const { return circular ; }
 bool TVector::isLinear () const { return !circular ; }
 bool TVector::hasStickyEnds () const { return (_lu+_ll+_ru+_rl!=_T("")) ; }
-float TVector::getAAmw ( char aa ) const { return aaprop[aa].mw ; }
-float TVector::getAApi ( char aa ) const { return aaprop[aa].pi ; }
+float TVector::getAAmw ( const char aa ) const { return aaprop[aa].mw ; }
+float TVector::getAApi ( const char aa ) const { return aaprop[aa].pi ; }
 char TVector::getComplement ( const char c ) const { return COMPLEMENT[c] ; }
 TAAProp TVector::getAAprop ( const char a ) const { return aaprop[a] ; }
 void TVector::setGenomeMode ( const bool gm ) { genomeMode = gm ; }
@@ -282,15 +282,15 @@ TVector *TVector::newFromMark ( const int from , const int _to )  const
             wxPrintf("E: TVector::newFromMark(%d,%d): Something is weird - to + 1 = %d > from - 1 = %d in remove after initial checks\n", from , to , to + 1, from - 1 ) ;
             exit(-1);
             }
-	if ( 1 == from )
-	    {
+        if ( 1 == from )
+            {
             wxPrintf(wxString::Format("W: TVector::newFromMark(%d,%d) 1==from and %d=to:\n", from , _to , to ) ) ;
             nv->doRemove ( to+1 , sequence.length() , false ) ;
-	    }
-	else
-	    {
+            }
+        else
+            {
             nv->doRemove ( to+1 , from-1 , false ) ;
-	    }
+            }
         }
     else
         {
@@ -884,7 +884,7 @@ void TVector::recalculateCuts ()
     }
 
 // Returns wether or not "equal" enzymes should be joined
-bool TVector::getVectorCuts ( TVector *v )
+bool TVector::getVectorCuts ( const TVector * const v ) //FIXME: v not used.
     {
     TEnzymeRules *er = getEnzymeRule () ;
     er->getVectorCuts ( this ) ;
@@ -1155,7 +1155,7 @@ wxString TVector::invert ( const wxString& s ) const
 
 // This function can attach a linear vector at the "right" end.
 // It does *NOT* test if the action is valid!
-void TVector::ligate_right ( TVector &v , bool inverted )
+void TVector::ligate_right ( TVector &v , const bool inverted )
     {
     if ( circular ) return ;
     if ( v.circular ) return ;
@@ -1381,7 +1381,6 @@ void TVector::turn ( const int off )
     // Allowing turn of linear fragments as a temporary measure due to a problem in getAAvector
     //if ( !circular ) return ;
     if ( off == 0 ) return ;
-    wxASSERT_MSG ( off > 0 , wxString::Format ( "Not accepting offset = %d < 0", off ) ) ;
 
     // Items
     for ( int a = 0 ; a < items.size() ; a++ )
@@ -1428,20 +1427,16 @@ void TVector::setAction ( const wxString& _action , const int _action_value )
     action_value = _action_value ;
     }
 
-wxString TVector::getSubstring ( int mf , int mt )
+wxString TVector::getSubstring ( const int mf , const int mt )
     {
     int l = sequence.length() ;
-    mf-- ;
-    mt-- ;
-    if ( mt <= l )
+    if ( mt < l ) // mt-1 <= l
         {
-        return sequence.substr ( mf , mt-mf+1 ) ;
+        return sequence.substr ( mf-1 , mt-mf+1 ) ;
         }
     else
         {
-        wxString s ;
-        s += sequence.substr ( 0 , mt-l+1 ) ;
-        s += sequence.substr ( mf ) ;
+        wxString s ( sequence.substr ( 0 , mt-1-l+1 ) + sequence.substr ( mf-1 ) ) ;
         return s ;
         }
     }
@@ -1458,7 +1453,9 @@ void TVector::ClearORFs ()
     worf.clear() ;
     }
 
-void TVector::addORFs ( int off )
+/** \brief Add open reading frames for a specific reading frame
+ */
+void TVector::addORFs ( const int off )
     {
     int b ;
     int dir ;
@@ -1478,41 +1475,41 @@ void TVector::addORFs ( int off )
         }
     for ( int a = b ; a+dir*3 > 0 && a+dir*3 < sequence.length() ; a += dir * 3 )
         {
+
         wxString codon ;
-        codon += getNucleotide ( a + dir * 0 , complement ) ;
-        codon += getNucleotide ( a + dir * 1 , complement ) ;
-        codon += getNucleotide ( a + dir * 2 , complement ) ;
+        codon += getNucleotide ( a + dir * 0 , complement )
+               + getNucleotide ( a + dir * 1 , complement )
+               + getNucleotide ( a + dir * 2 , complement ) ;
+
         if ( codon == _T("ATG") )
-           {
-           int cnt = (sequence.length()+2)/3 ;
-           int aa = 0 ;
-           for ( int b = a ; cnt > 0 ; b += dir * 3 )
-              {
-              cnt-- ;
-              aa++ ;
-              if ( b < 0 ) b = sequence.length() - b ;
-              if ( b >= sequence.length() ) b -= sequence.length() ;
-              codon = _T("") ;
-              codon += getNucleotide ( b + dir * 0 , complement ) ;
-              codon += getNucleotide ( b + dir * 1 , complement ) ;
-              codon += getNucleotide ( b + dir * 2 , complement ) ;
-              if ( codon == _T("TAA") ||
-                   codon == _T("TAG") ||
-                   codon == _T("TGA") )
-                 {
-                 if ( aa > myapp()->frame->orfLength )
+            {
+            int cnt = (sequence.length()+2)/3 ;
+            int aa = 0 ;
+            for ( int b = a ; cnt > 0 ; b += dir * 3 )
+                {
+                cnt-- ;
+                aa++ ;
+                if ( b < 0 ) b = sequence.length() - b ;
+                if ( b >= sequence.length() ) b -= sequence.length() ;
+                codon = _T("") ;
+                codon += getNucleotide ( b + dir * 0 , complement ) ;
+                codon += getNucleotide ( b + dir * 1 , complement ) ;
+                codon += getNucleotide ( b + dir * 2 , complement ) ;
+                if ( codon == _T("TAA") || codon == _T("TAG") || codon == _T("TGA") )
                     {
-                    int from = a ;
-                    int to = b + dir * 2 ;
-                    if ( from < to || dir == 1 )
-                       worf.push_back ( TORF ( from , to , off ) ) ;
-                    else
-                       worf.push_back ( TORF ( to , from , off ) ) ;
+                    if ( aa > myapp()->frame->orfLength )
+                        {
+                        int from = a ;
+                        int to = b + dir * 2 ;
+                        if ( from < to || dir == 1 )
+                            worf.push_back ( TORF ( from , to , off ) ) ;
+                        else
+                            worf.push_back ( TORF ( to , from , off ) ) ;
+                        }
+                    cnt = 0 ;
                     }
-                 cnt = 0 ;
-                 }
-              }
-           }
+                }
+            }
         }
     }
 
@@ -1656,8 +1653,7 @@ void TVector::clear ()
 
 int TVector::find_item ( const wxString& s ) const
     {
-    int a ;
-    for ( a = 0 ; a < items.size() ; a++ )
+    for ( int a = 0 ; a < items.size() ; a++ )
        if ( items[a].name == s )
           return a ;
     return -1 ; // Not found
@@ -1674,12 +1670,12 @@ void TVector::hideEnzyme ( const wxString& s , const bool hideit )
     {
     bool isHidden = isEnzymeHidden ( s ) ;
     if ( hideit && !isHidden ) // Add enzymes to hidden enzyme list
-         {
-           hiddenEnzymes.Add ( s ) ;
-           }
+        {
+            hiddenEnzymes.Add ( s ) ;
+        }
     else if ( !hideit && isHidden ) // Remove enzyme from hidden enzyme list
         {
-          hiddenEnzymes.Remove ( s ) ;
+            hiddenEnzymes.Remove ( s ) ;
         }
     }
 
@@ -1688,12 +1684,12 @@ void TVector::sortRestrictionSites ()
     for ( int a = 1 ; a < rc.size() ; a++ ) // Sort by pos
         {
         if ( rc[a].getPos() < rc[a-1].getPos() )
-           {
-           TRestrictionCut dummy = rc[a] ;
-           rc[a] = rc[a-1] ;
-           rc[a-1] = dummy ;
-           a = 0 ;
-           }
+            {
+            TRestrictionCut dummy = rc[a] ;
+            rc[a] = rc[a-1] ;
+            rc[a-1] = dummy ;
+            a = 0 ;
+            }
         }
     }
 
@@ -1769,18 +1765,32 @@ void TVector::eraseSequence ( const int from , const int len )
     sequence.erase ( from , len ) ;
     }
 
-char TVector::three2one ( wxString s ) const
+/** \brief Converts three-letter acronym to one letter amino acid code
+ */
+char TVector::three2one ( const wxString& s ) const
     {
-    s.MakeUpper() ;
-    for ( int a = 0 ; a < 255 ; a++ )
-       {
-           if ( aaprop[a].tla.Upper() == s )
-              return a ;
-       }
+    for ( unsigned int a = 0 ; a < 255 ; a++ )
+        {
+            if ( aaprop[a].tla == s )
+                return a ;
+        }
+
+    // Correct case (first upper, remainder lower) is expected,
+    // the function will hence most likely already return above - the less efficient code below will not often be executed.
+
+    wxString t ( s ) ;
+    t.MakeUpper() ;
+    for ( unsigned int a = 0 ; a < 255 ; a++ )
+        {
+            if ( aaprop[a].tla.Upper() == t )
+                return a ;
+        }
+
     return ' ' ;
     }
 
-// "Back-translate" amino acid sequence to DNA
+/** \brief "Back-translate" amino acid sequence to DNA
+ */
 TVector *TVector::backtranslate ( const wxString& mode ) // not const becaues of makeAA2DNA
     {
     TVector *nv = new TVector ;
@@ -1956,7 +1966,7 @@ void TVectorItem::explodeParams ( const wxString& _s )
     {
     wxString s = _s ;
     initParams () ;
-    while ( !s.IsEmpty() )
+    while ( ! s.IsEmpty() )
         {
         int a;
         for ( a = 0 ; s.GetChar(a) != '\n' ; a++ ) ; // proceed until end of line
@@ -2067,9 +2077,9 @@ void TVectorItem::doRemove ( const int f , const int t , const int l )
     if ( 0 == to )
         {
         wxPrintf( "I: Feature '%s' and removal (%d-%d), has 0 == to \n", name, f, t ) ;
-	wxPrintf( "%s", s ) ;
+        wxPrintf( "%s", s ) ;
         //return ;
-	}
+        }
 
     wxASSERT_MSG(from>0,wxString::Format("TVectorItem '%s'::doRemove A yielded from=%d, with to=%d , ff=%d <= 0 , l=%d\n", name , from , to , ff  , l) ) ;
     wxASSERT_MSG(to>0, wxString::Format("TVectorItem '%s'::doRemove A yielded to==%d <= 0 , with from=%d, ff=%d, l=%d\n", name , to , from , ff , l ) ) ;
