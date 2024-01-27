@@ -62,7 +62,16 @@ jobs:
         # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
         # queries: security-extended,security-and-quality
 
-
+    - name: Install Dependencies
+      run: |
+        if [ "${{ matrix.os }}" = "macos-latest" ]; then
+          brew update
+          brew install wxwidgets m4 tinyxml zstd autoconf libtool automake wxwidgets libpng sqlite
+          brew install dylibbundler
+        elif [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
+          sudo apt-get update
+          sudo apt install libwxgtk3.2-dev || sudo apt install wx3.2-headers || sudo apt install libwxgtk3.0-gtk3-dev || sudo apt install libwxgtk3.0-dev
+        fi
     # Autobuild attempts to build any compiled languages (C/C++, C#, Go, Java, or Swift).
     # If this step fails, then you should remove it and run the build manually (see below)
     - name: Autobuild
@@ -76,7 +85,7 @@ jobs:
 
     # - run: |
     #     echo "Run, Build Application using script"
-    #     ./location_of_script_within_repo/buildscript.sh
+    #     ./GENtle
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
