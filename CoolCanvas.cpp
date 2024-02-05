@@ -29,8 +29,7 @@ void CoolCanvas::OnDrawCircular(wxDC& dc)
     int h2 = h * 3 / 10 ;
     string s = p->vec->getSequence() ;
 
-    int a ;
-    for ( a = 0 ; a < s.length() ; a++ )
+    for ( int a = 0 ; a < s.length() ; a++ )
         {
         float deg = a * 360 ;
         deg /= s.length() ;

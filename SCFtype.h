@@ -15,9 +15,9 @@ class SCFtype
 	TSequencerData sd ;
 	
 	private :
-	void read_data_block ( void *v , unsigned int mode ) ;
-	void read_tracer_block ( void *v , unsigned int mode , unsigned int sample_size ) ;
-	void fix_diff ( int mode ) ;
+	void read_data_block ( const void * const v , const unsigned int mode ) ;
+	void read_tracer_block ( const void * const v , const unsigned int mode , const unsigned int sample_size ) ;
+	void fix_diff ( const int mode ) ;
 	} ;
 
 #endif
