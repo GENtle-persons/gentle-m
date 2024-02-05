@@ -1,9 +1,9 @@
 /** \file
-	\brief Contains the SeqDNA class members
+    \brief Contains the SeqDNA class members
 */
 #include "SequenceCanvas.h"
 
-int SeqDNA::arrange ( int n )
+int SeqDNA::arrange ( const int n )
     {
     if ( useDirectRoutines() ) return arrange_direct ( n ) ;
     int x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
@@ -36,7 +36,7 @@ int SeqDNA::arrange ( int n )
 
     itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx - 1 ) ;
     if ( itemsperline == 0 ) itemsperline = 1 ;
-	itemsperline *= can->blocksize ;
+        itemsperline *= can->blocksize ;
     bool memsave = ( whatsthis() == _T("FEATURE") ) ;
 
     pos.cleanup() ;
@@ -81,15 +81,14 @@ int SeqDNA::arrange ( int n )
     return lowy + bo*2 ;
     }
 
-wxPoint SeqDNA::showText ( int ystart , wxArrayString &tout )
+wxPoint SeqDNA::showText ( const int ystart , wxArrayString &tout )
     {
     wxPoint p ( -1 , -1 ) ;
-    int a , b ;
     wxString t ;
     int x = 0 , y = ystart-can->seq.GetCount() , ly = -1 ;
-    for ( a = 0 ; a < pos.p.GetCount() ; a++ )
+    for ( int a = 0 ; a < pos.p.GetCount() ; a++ )
         {
-        b = pos.p[a] ;
+        int b = pos.p[a] ;
         if ( b > 0 ) // Character
            {
            t = s.GetChar(b-1) ;
@@ -123,11 +122,11 @@ void SeqDNA::show ( wxDC& dc )
     wxColour tbg = dc.GetTextBackground () ;
     wxColour tfg = dc.GetTextForeground () ;
     int bm = dc.GetBackgroundMode () ;
-    int a , b , cnt = offset+1 ;
+    int cnt = offset+1 ;
     bool showLowercaseDNA = myapp()->frame->showLowercaseDNA ;
     wxString t ;
     char valid[256] ;
-    for ( a = 0 ; a < 256 ; a++ ) valid[a] = 0 ;
+    for ( int a = 0 ; a < 256 ; a++ ) valid[a] = 0 ;
     valid['A'] = valid['C'] = valid['T'] = valid['G'] = valid[' '] = 1 ;
 //    dc.SetTextBackground ( *wxWHITE ) ;
     dc.SetTextForeground ( fontColor ) ;
@@ -138,10 +137,10 @@ void SeqDNA::show ( wxDC& dc )
     ya = -ya ;
     can->MyGetClientSize ( &xa , &yb ) ;
     yb += ya ;
-    for ( a = 0 ; a < pos.p.GetCount() ; a++ )
+    for ( int a = 0 ; a < pos.p.GetCount() ; a++ )
         {
         if ( can->hardstop > -1 && a > can->hardstop ) break ;
-        b = pos.p[a] ;
+        int b = pos.p[a] ;
         int tx = pos.r[a].x , ty = pos.r[a].y ;
         int tz = ty + can->charheight ;
         bool insight = true ; // Meaning "is this part visible"
@@ -151,75 +150,75 @@ void SeqDNA::show ( wxDC& dc )
         if ( !insight && ty > yb ) a = pos.p.GetCount() ;
         if ( b > 0 && !insight ) cnt++ ;
         if ( b > 0 && insight ) // Character
-           {
-		   t = s.GetChar(b-1) ;
-           int pm = getMark ( a ) ;
-           if ( pm == 1 ) // Marked (light gray background)
-              {
-              dc.SetBackgroundMode ( wxSOLID ) ;
-              dc.SetTextBackground ( *wxLIGHT_GREY ) ;
-              dc.SetTextForeground ( *wxBLACK ) ;
-              }
-           else if ( pm == 2 && can->doOverwrite() ) // Overwrite cursor
-              {
-              dc.SetBackgroundMode ( wxSOLID ) ;
-              dc.SetTextBackground ( *wxBLACK ) ;
-              }
-           if ( pm == 2 && can->doOverwrite() ) dc.SetTextForeground ( *wxWHITE ) ;
-           else dc.SetTextForeground ( getBaseColor ( t.GetChar(0) ) ) ;
-           if ( can->isPrinting() && pm == 1 )
-              {
-              dc.SetBrush ( *MYBRUSH ( wxColour ( 230 , 230 , 230 ) ) ) ;
-              dc.SetPen(*wxTRANSPARENT_PEN);
-              dc.DrawRectangle ( tx , ty , can->charwidth , can->charheight ) ;
-              }
-           if ( can->isPrinting() && !can->getPrintToColor() )
-              {
-              dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-              dc.SetTextForeground ( *wxBLACK ) ;
-              }
+            {
+            t = s.GetChar(b-1) ;
+            int pm = getMark ( a ) ;
+            if ( pm == 1 ) // Marked (light gray background)
+                {
+                dc.SetBackgroundMode ( wxSOLID ) ;
+                dc.SetTextBackground ( *wxLIGHT_GREY ) ;
+                dc.SetTextForeground ( *wxBLACK ) ;
+                }
+            else if ( pm == 2 && can->doOverwrite() ) // Overwrite cursor
+                {
+                dc.SetBackgroundMode ( wxSOLID ) ;
+                dc.SetTextBackground ( *wxBLACK ) ;
+               }
+            if ( pm == 2 && can->doOverwrite() ) dc.SetTextForeground ( *wxWHITE ) ;
+            else dc.SetTextForeground ( getBaseColor ( t.GetChar(0) ) ) ;
+            if ( can->isPrinting() && pm == 1 )
+                {
+                dc.SetBrush ( *MYBRUSH ( wxColour ( 230 , 230 , 230 ) ) ) ;
+                dc.SetPen(*wxTRANSPARENT_PEN);
+                dc.DrawRectangle ( tx , ty , can->charwidth , can->charheight ) ;
+                }
+            if ( can->isPrinting() && !can->getPrintToColor() )
+                {
+                dc.SetBackgroundMode ( wxTRANSPARENT ) ;
+                dc.SetTextForeground ( *wxBLACK ) ;
+                }
 
-		   if ( showLowercaseDNA ) dc.DrawText ( t.Lower() , tx , ty ) ;
-           else dc.DrawText ( t , tx , ty ) ;
+            if ( showLowercaseDNA ) dc.DrawText ( t.Lower() , tx , ty ) ;
+            else dc.DrawText ( t , tx , ty ) ;
 
-           if ( pm == 2 && !can->doOverwrite() ) // Insert cursor
-              {
-                 dc.SetPen(*wxBLACK_PEN);
-                 dc.DrawLine ( tx-1 , ty , tx-1 , tz ) ;
-                 dc.DrawLine ( tx-3 , ty , tx+2 , ty ) ;
-                 dc.DrawLine ( tx-3 , tz , tx+2 , tz ) ;
-              }
-           if ( pm > 0 ) // Reverting cursor settings
-              {
-              dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-              dc.SetTextForeground ( fontColor ) ;
-              }
-           cnt++ ;
-           }
+            if ( pm == 2 && !can->doOverwrite() ) // Insert cursor
+                {
+                    dc.SetPen(*wxBLACK_PEN);
+                    dc.DrawLine ( tx-1 , ty , tx-1 , tz ) ;
+                    dc.DrawLine ( tx-3 , ty , tx+2 , ty ) ;
+                    dc.DrawLine ( tx-3 , tz , tx+2 , tz ) ;
+                }
+            if ( pm > 0 ) // Reverting cursor settings
+                {
+                dc.SetBackgroundMode ( wxTRANSPARENT ) ;
+                dc.SetTextForeground ( fontColor ) ;
+                }
+            cnt++ ;
+            }
         else if ( insight ) // Front number
-           {
-           if ( showNumbers )
-			{
-			t = wxString::Format ( _T("%d") , cnt + force_add_line_number ) ;
-			while ( t.length() < endnumberlength ) t = _T("0") + t ;
-			}
-           else t = alternateName ;
-           dc.SetTextForeground ( *wxBLACK ) ;
-           dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
-           }
+            {
+            if ( showNumbers )
+                {
+                t = wxString::Format ( _T("%d") , cnt + force_add_line_number ) ;
+                while ( t.length() < endnumberlength ) t = _T("0") + t ;
+                }
+            else t = alternateName ;
+            dc.SetTextForeground ( *wxBLACK ) ;
+            dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
+            }
         }
     dc.SetBackgroundMode ( bm ) ;
     dc.SetTextBackground ( tbg ) ;
     dc.SetTextForeground ( tfg ) ;
     }
 
-wxColor SeqDNA::getBaseColor ( char b )
+wxColor SeqDNA::getBaseColor ( const char b ) const
     {
     if ( b == 'N' ) return *wxRED ;
     return fontColor ;
     }
 
-void SeqDNA::initFromTVector ( TVector *v )
+void SeqDNA::initFromTVector ( TVector * const v )
     {
     vec = v ;
     s = vec->getSequence() ;
@@ -228,9 +227,8 @@ void SeqDNA::initFromTVector ( TVector *v )
     fontColor.Set ( 0 , 0 , 0 ) ;
     if ( invers )
        {
-       int a ;
-       for ( a = 0 ; a < s.length() ; a++ )
-          s.SetChar ( a , vec->getComplement ( s.GetChar(a) ) ) ;
+       for ( int a = 0 ; a < s.length() ; a++ )
+           s.SetChar ( a , vec->getComplement ( s.GetChar(a) ) ) ;
        takesMouseActions = false ;
        showNumbers = false ;
        alternateName = _T("") ;
@@ -241,13 +239,13 @@ void SeqDNA::initFromTVector ( TVector *v )
 // direct
 
 
-bool SeqDNA::useDirectRoutines ()
+bool SeqDNA::useDirectRoutines () const
     {
     return true ;
     }
 
 
-int SeqDNA::arrange_direct ( int n )
+int SeqDNA::arrange_direct ( const int n )
     {
     int w , h , bo = can->border ;
 
@@ -258,7 +256,7 @@ int SeqDNA::arrange_direct ( int n )
     can->MyGetClientSize ( &w , &h ) ;
     itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx - 1 ) ;
     if ( itemsperline == 0 ) itemsperline = 1 ;
-	itemsperline *= can->blocksize ;
+        itemsperline *= can->blocksize ;
 
     pos.cleanup() ;
 //  pos.m.Alloc ( s.length() ) ;
@@ -275,7 +273,7 @@ void SeqDNA::show_direct ( wxDC& dc )
     myass ( can , "SeqDNA::show_direct1" ) ;
     can->SetFont(*can->font);
     dc.SetFont(*can->font);
-    int a , b , w , h , n , bo = can->border ;
+    int b , w , h , n , bo = can->border ;
     int csgc = can->NumberOfLines() , cbs = can->blocksize ;
     int cih = can->isHorizontal() ;
     int xa , xb , ya , yb ;
@@ -311,7 +309,7 @@ void SeqDNA::show_direct ( wxDC& dc )
 
     myass ( itemsperline , "SeqDNA::show_direct3" ) ;
     myass ( cbs , "SeqDNA::show_direct4" ) ;
-    for ( a = 0 ; a < s.length() ; a++ )
+    for ( int a = 0 ; a < s.length() ; a++ )
         {
         int px = a % itemsperline , py = a / itemsperline ;
 
@@ -321,77 +319,77 @@ void SeqDNA::show_direct ( wxDC& dc )
         py = py * ch * csgc + oy ;
 
         if ( !can->getDrawAll() )
-           {
-           if ( py + ch < ya ) continue ;
-           if ( py > yb ) break ;
-           if ( cih )
-              {
-              if ( px + cw < xa ) continue ;
-              if ( px > xb ) continue ;
-              }
-           }
+            {
+            if ( py + ch < ya ) continue ;
+            if ( py > yb ) break ;
+            if ( cih )
+                {
+                if ( px + cw < xa ) continue ;
+                if ( px > xb ) continue ;
+                }
+            }
 
         int pm = getMark ( a ) ;
         char ac = s.GetChar(a) ;
         if ( pm == 0 && !showNumber && ac == ' ' ) continue ;
 
         if ( pm == 1 ) // Marked (light gray background)
-           {
-           dc.SetBackgroundMode ( wxSOLID ) ;
-           dc.SetTextBackground ( *wxLIGHT_GREY ) ;
-           dc.SetTextForeground ( *wxBLACK ) ;
-           }
+            {
+            dc.SetBackgroundMode ( wxSOLID ) ;
+            dc.SetTextBackground ( *wxLIGHT_GREY ) ;
+            dc.SetTextForeground ( *wxBLACK ) ;
+            }
         else if ( pm == 2 && can->doOverwrite() ) // Overwrite cursor
-           {
-           dc.SetBackgroundMode ( wxSOLID ) ;
-           dc.SetTextBackground ( *wxBLACK ) ;
-           dc.SetTextForeground ( *wxWHITE ) ;
-           }
+            {
+            dc.SetBackgroundMode ( wxSOLID ) ;
+            dc.SetTextBackground ( *wxBLACK ) ;
+            dc.SetTextForeground ( *wxWHITE ) ;
+            }
         else dc.SetTextForeground ( getHighlightColor ( a , getBaseColor ( ac ) ) ) ;
 
         if ( isPrimer )
-           {
-           if ( s.GetChar(a) == vec->getSequenceChar(a) ) dc.SetTextForeground ( *wxBLUE ) ;
-           else dc.SetTextForeground ( *wxRED ) ;
-           }
+            {
+            if ( s.GetChar(a) == vec->getSequenceChar(a) ) dc.SetTextForeground ( *wxBLUE ) ;
+            else dc.SetTextForeground ( *wxRED ) ;
+            }
 
         if ( can->isPrinting() && pm == 1 )
-           {
-           dc.SetBrush ( *MYBRUSH ( wxColour ( 230 , 230 , 230 ) ) ) ;
-           dc.SetPen(*wxTRANSPARENT_PEN);
-           dc.DrawRectangle ( px , py , cw , ch ) ;
-           }
+            {
+            dc.SetBrush ( *MYBRUSH ( wxColour ( 230 , 230 , 230 ) ) ) ;
+            dc.SetPen(*wxTRANSPARENT_PEN);
+            dc.DrawRectangle ( px , py , cw , ch ) ;
+            }
         if ( can->isPrinting() && !can->getPrintToColor() )
-           {
-           dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-           dc.SetTextForeground ( *wxBLACK ) ;
-           }
+            {
+            dc.SetBackgroundMode ( wxTRANSPARENT ) ;
+            dc.SetTextForeground ( *wxBLACK ) ;
+            }
 
-		if ( showLowercaseDNA ) dc.DrawText ( wxString ( (wxChar) ac ) . Lower() , px , py ) ;
+        if ( showLowercaseDNA ) dc.DrawText ( wxString ( (wxChar) ac ) . Lower() , px , py ) ;
         else dc.DrawText ( wxString ( (wxChar) ac ) , px , py ) ;
 
         int pz = py + ch ;
 
         if ( pm == 2 && !can->doOverwrite() ) // Insert cursor
-           {
-              dc.SetPen(*wxBLACK_PEN);
-              dc.DrawLine ( px-1 , py , px-1 , pz ) ;
-              dc.DrawLine ( px-3 , py , px+2 , py ) ;
-              dc.DrawLine ( px-3 , pz , px+2 , pz ) ;
-           }
+            {
+            dc.SetPen(*wxBLACK_PEN);
+            dc.DrawLine ( px-1 , py , px-1 , pz ) ;
+            dc.DrawLine ( px-3 , py , px+2 , py ) ;
+            dc.DrawLine ( px-3 , pz , px+2 , pz ) ;
+            }
         if ( pm > 0 ) // Reverting cursor settings
-           {
-           dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-           dc.SetTextForeground ( fontColor ) ;
-           }
+            {
+            dc.SetBackgroundMode ( wxTRANSPARENT ) ;
+            dc.SetTextForeground ( fontColor ) ;
+            }
 
         // Methylation
         if ( !invers && alternateName.IsEmpty() && wxNOT_FOUND != vec->getMethylationSiteIndex ( a ) )
-        	{
+            {
             dc.SetPen(*wxRED_PEN);
             dc.DrawLine ( px , py + ch - 2 , px + cw , py + ch - 2 ) ;
             dc.SetPen(*wxTRANSPARENT_PEN);
-        	}
+            }
 
         if ( showNumber )
            {
@@ -400,57 +398,56 @@ void SeqDNA::show_direct ( wxDC& dc )
            mylog ( "SeqDNA::show_direct" , "A" ) ;
            wxString t ;
            if ( showNumbers )
-              {
-              mylog ( "SeqDNA::show_direct" , "B" ) ;
-              t = wxString::Format ( _T("%d") , a + 1 ) ;
-              int padd = endnumberlength - t.length() ;
-              mylog ( "SeqDNA::show_direct" , wxString::Format ( "C: %d, %d" , endnumberlength , padd ) ) ;
-              if ( padd > 0 && padd < 20 ) t.Pad ( padd , '0' , false ) ;
-              mylog ( "SeqDNA::show_direct" , "D" ) ;
-              }
+               {
+               mylog ( "SeqDNA::show_direct" , "B" ) ;
+               t = wxString::Format ( _T("%d") , a + 1 ) ;
+               int padd = endnumberlength - t.length() ;
+               mylog ( "SeqDNA::show_direct" , wxString::Format ( "C: %d, %d" , endnumberlength , padd ) ) ;
+               if ( padd > 0 && padd < 20 ) t.Pad ( padd , '0' , false ) ;
+               mylog ( "SeqDNA::show_direct" , "D" ) ;
+               }
            else
-              {
-              mylog ( "SeqDNA::show_direct" , "B2" ) ;
-              if ( isPrimer ) dc.SetTextForeground ( *wxBLUE ) ;
-              else dc.SetTextForeground ( *wxBLACK ) ;
-              mylog ( "SeqDNA::show_direct" , "C2" ) ;
-              t = alternateName ;
-              mylog ( "SeqDNA::show_direct" , "D2" ) ;
-              }
+               {
+               mylog ( "SeqDNA::show_direct" , "B2" ) ;
+               if ( isPrimer ) dc.SetTextForeground ( *wxBLUE ) ;
+               else dc.SetTextForeground ( *wxBLACK ) ;
+               mylog ( "SeqDNA::show_direct" , "C2" ) ;
+               t = alternateName ;
+               mylog ( "SeqDNA::show_direct" , "D2" ) ;
+               }
            dc.DrawText ( t , bo , py ) ;
            mylog ( "SeqDNA::show_direct" , "E" ) ;
            }
         }
-
 
     dc.SetBackgroundMode ( bm ) ;
     dc.SetTextBackground ( tbg ) ;
     dc.SetTextForeground ( tfg ) ;
     }
 
-void SeqDNA::makeEndnumberLength()
+void SeqDNA::makeEndnumberLength() /* not const */
     {
     int wx = can->charwidth ;
     int ox = wx + can->border ;
     int endnumber = offset + s.length() ;
-    endnumberlength = 0 ;
+    endnumberlength = 0 ; // not const
     while ( endnumber > 0 ) { endnumber /= 10 ; ox += wx ; endnumberlength++ ; }
 
-    if ( whatsthis() == _T("FEATURE") &&
-         can->child &&
-         can->child->def == _T("alignment") )
+    if ( whatsthis() == _T("FEATURE") && can->child && can->child->def == _T("alignment") )
         {
         endnumberlength = can->maxendnumberlength ;
         }
     }
 
 
-int SeqDNA::getLine ( int y )
+int SeqDNA::getLine ( const int _y ) const
     {
-    if ( !useDirectRoutines() ) return SeqBasic::getLine ( y ) ;
+    if ( !useDirectRoutines() ) return SeqBasic::getLine ( _y ) ;
     if ( can->charheight == 0 ) return -1 ;
-    int n ;
+
+    int n ; 
     for ( n = 0 ; can->seq[n] != this ; n++ ) ;
+    int y (_y) ;
     y -= can->border ;
     y /= can->charheight ;
     if ( y % can->NumberOfLines() == n )
@@ -462,12 +459,12 @@ int SeqDNA::getLine ( int y )
     else return -1 ;
     }
 
-int SeqDNA::getItem ( wxPoint pt , int line )
+int SeqDNA::getItem ( const wxPoint& pt , const int line ) const
     {
     if ( !useDirectRoutines() ) return SeqBasic::getItem ( pt , line ) ;
     if ( line < 0 ) return 0 ;
-    int n , x = pt.x , y = pt.y ;
-    for ( n = 0 ; can->seq[n] != this ; n++ ) ;
+    int x = pt.x , y = pt.y ;
+    for ( int n = 0 ; can->seq[n] != this ; n++ ) ;
     int cw = can->charwidth , ch = can->charheight ;
     int ox = can->border + cw + cw * endnumberlength ;
     if ( ch == 0 ) return 0 ;
@@ -486,11 +483,11 @@ int SeqDNA::getItem ( wxPoint pt , int line )
     while ( x >= 0 && j < itemsperline )
         {
         if ( x >= 0 && x <= cw )
-           {
-           int ret = line * itemsperline + j + 1 ;
-           if ( ret > s.length() ) return -1 ;
-           return ret ;
-           }
+            {
+            int ret = line * itemsperline + j + 1 ;
+            if ( ret > s.length() ) return -1 ;
+            return ret ;
+            }
         j++ ;
         x -= cw ;
         if ( j % can->blocksize == 0 ) x -= cw - 1 ;
@@ -499,19 +496,19 @@ int SeqDNA::getItem ( wxPoint pt , int line )
     return 0 ;
     }
 
-int SeqDNA::getMarkSize ()
+int SeqDNA::getMarkSize () const
     {
     if ( !useDirectRoutines() ) return SeqBasic::getMarkSize() ;
     return s.length()+1 ;
     }
 
-int SeqDNA::getRectSize ()
+int SeqDNA::getRectSize () const
     {
     if ( !useDirectRoutines() ) return SeqBasic::getRectSize() ;
     return 0 ;
     }
 
-wxRect SeqDNA::getRect ( int i )
+wxRect SeqDNA::getRect ( const int i )
     {
     if ( !useDirectRoutines() ) return pos.r[i] ;
 
@@ -522,27 +519,27 @@ wxRect SeqDNA::getRect ( int i )
     return ret ;
     }
 
-int SeqDNA::getMark ( int i )
+int SeqDNA::getMark ( const int i ) const
     {
     if ( !useDirectRoutines() ) return SeqBasic::getMark ( i ) ;
     if ( i >= s.length() ) return 0 ;
     return pos.getmark ( i ) ;
     }
 
-void SeqDNA::setMark ( int i , int v )
+void SeqDNA::setMark ( const int i , const int v )
     {
     if ( !useDirectRoutines() ) { SeqBasic::setMark ( i , v ) ; return ; }
     if ( i <= 0 ) return ;
     pos.mark ( i-1 , v ) ;
     }
 
-int SeqDNA::getPos ( int i )
+int SeqDNA::getPos ( const int i ) const
     {
     if ( !useDirectRoutines() ) return pos.p[i] ;
     return i ;
     }
 
-void SeqDNA::setPos ( int i , int v )
+void SeqDNA::setPos ( const int i , const int v )
     {
     if ( !useDirectRoutines() ) pos.p[i] = v ;
     }

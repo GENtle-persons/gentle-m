@@ -90,7 +90,7 @@ wxString TXMLfile::t ( TiXmlText * const txt ) const
     return txt && txt->Value() ? wxString ( txt->Value() , wxConvUTF8 ) : wxString() ;
     }
 
-void TXMLfile::readGBSeq ( TiXmlNode *base )
+void TXMLfile::readGBSeq ( TiXmlNode * const base )
     {
     myass ( base , _T("TXMLfile::readGBSeq") ) ;
     TVector *v = new TVector ;
@@ -137,7 +137,7 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
         readGBintervals ( vi , i , n ) ;
         for ( int a = 0 ; a < vi.size() ; a++ ) v->items.push_back ( vi[a] ) ;
         }
-//     cout << "Features took " << wxGetElapsedTime() << " ms\n" ;
+//  cout << "Features took " << wxGetElapsedTime() << " ms\n" ;
 
     // The rest
     for ( TiXmlNode *n = h.Node()->FirstChild() ; n ; n = n->NextSibling() )
@@ -167,7 +167,7 @@ void TXMLfile::readGBSeq ( TiXmlNode *base )
     v->updateDisplay() ;
     v->recalculateCuts () ;
     _v.Add ( v ) ;
-//     cout << "The rest took " << wxGetElapsedTime() << " ms\n" ;
+//  cout << "The rest took " << wxGetElapsedTime() << " ms\n" ;
     }
 
 wxString TXMLfile::get_sub_desc ( /* not const */ TiXmlNode * const base , const int depth ) const

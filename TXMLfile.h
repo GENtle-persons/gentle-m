@@ -26,7 +26,7 @@ class TXMLfile
 
     private :
     void analyze ( TiXmlDocument &doc ) ; ///< Parse single/multiple sequences
-    void readGBSeq ( TiXmlNode *base ) ; ///< The actual parser
+    void readGBSeq ( TiXmlNode * const base ) ; ///< The actual parser
     wxString t ( TiXmlText * const txt ) const ; ///< Safe text conversion
     wxString t ( const char * const txt ) const ; ///< Safe text conversion
     void readGBqualifiers ( TVectorItem &i , TiXmlNode * const n ) ; ///< Part of the parser

@@ -503,8 +503,7 @@ void TRestrictionEditor::add2cocktail ( const wxString& s ) /* not const */
 void TRestrictionEditor::del_from_cocktail ( const wxString& s ) /* not const */
     {
     int i ;
-    wxString s2 = s ;
-    for ( i = 0 ; i < cocktail.GetCount() && cocktail[i] != s2 ; i++ ) ;
+    for ( i = 0 ; i < cocktail.GetCount() && cocktail[i] != s ; i++ ) ;
     if ( i == cocktail.GetCount() ) return ; // Not there
     cocktail.RemoveAt ( i ) ;
     refreshCocktail () ;

@@ -34,24 +34,24 @@ void ChildBase::init ()
     }
 
 wxToolBar *ChildBase::CreateToolBar ( int i )
-{
-  i = wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL | wxTB_DOCKABLE ; // Override
-  return ChildBase::CreateToolBar ( i , -1 , _T("") ) ;
-}
+    {
+    i = wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL | wxTB_DOCKABLE ; // Override
+    return ChildBase::CreateToolBar ( i , -1 , _T("") ) ;
+    }
 
 void ChildBase::Maximize ( bool isit )
-{
-  Activate () ;
-}
+    {
+    Activate () ;
+    }
 
 void ChildBase::showName ( const wxString& _x ) const
     {
     wxString x(_x) ;
     if ( x.IsEmpty() )
-       {
-       x = getName() ;
-       if ( vec && vec->isChanged() ) x += "*" ;
-       }
+        {
+        x = getName() ;
+        if ( vec && vec->isChanged() ) x += "*" ;
+        }
     if ( myapp()->frame->GetTitle() != x )
         myapp()->frame->SetTitle ( x ) ;
     }
@@ -74,22 +74,22 @@ void ChildBase::OnFocus(wxFocusEvent& event)
 bool ChildBase::caniclose(wxCloseEvent& event)
     {
     if ( /*event.CanVeto() && */vec && vec->isChanged() )
-       {
-       int r = wxMessageBox ( wxString::Format ( txt("t_close_anyway") , getName().c_str() ) ,
+        {
+        int r = wxMessageBox ( wxString::Format ( txt("t_close_anyway") , getName().c_str() ) ,
                             txt("msg_box"), wxICON_QUESTION | wxYES | wxNO | wxCANCEL ) ;
 
-       if ( r == wxYES )
-          {
-          wxCommandEvent ev ;
-          OnFileSave ( ev ) ;
-          return true ;
-          }
-       else if ( r == wxCANCEL )
-          {
-          event.Veto();
-          return false ;
-          }
-       }
+        if ( r == wxYES )
+            {
+            wxCommandEvent ev ;
+            OnFileSave ( ev ) ;
+            return true ;
+            }
+        else if ( r == wxCANCEL )
+            {
+            event.Veto();
+            return false ;
+            }
+        }
     return true ;
     }
 
@@ -190,7 +190,7 @@ void ChildBase::Activate ()
         myapp()->frame->notifyChildrenChanged() ;
         }
 
-//    Refresh () ;
+//  Refresh () ;
     }
 
 wxToolBar *ChildBase::GetToolBar ()
@@ -214,7 +214,7 @@ void ChildBase::OnClose(wxCloseEvent& event)
     myass ( this , "ChildBase::OnClose" ) ;
     myapp()->frame->mainTree->removeChild ( this ) ;
     myapp()->frame->SetTitle ( txt("gentle") ) ;
-//    SetTitle ( txt("gentle") ) ; // 2.8
+//  SetTitle ( txt("gentle") ) ; // 2.8
     event.Skip();
     myapp()->frame->removeChild ( this ) ;
 }
@@ -275,10 +275,10 @@ void ChildBase::exportVector ( TVector *vec , wxFile &out , int filter , const w
         out.Write ( ">" + vec->getName() + "\n" ) ;
         wxString s = vec->getSequence() ;
         while ( !s.IsEmpty() )
-           {
-           out.Write ( s.Left ( 80 ) + "\n" ) ;
-           s = s.Mid ( 80 ) ;
-           }
+            {
+            out.Write ( s.Left ( 80 ) + "\n" ) ;
+            s = s.Mid ( 80 ) ;
+            }
         }
     else if ( filter == 3 ) // EMBL
         {
@@ -297,10 +297,10 @@ void ChildBase::exportVector ( TVector *vec , wxFile &out , int filter , const w
         if ( vec->isCircular() ) s += "2" ;
         else s += "1" ;
         while ( !s.IsEmpty() )
-           {
-           out.Write ( s.Left ( 79 ) + "\n" ) ;
-           s = s.Mid ( 80 ) ;
-           }
+            {
+            out.Write ( s.Left ( 79 ) + "\n" ) ;
+            s = s.Mid ( 80 ) ;
+            }
         }
     else if ( filter == 5 ) // GCview XML
         {
@@ -318,14 +318,14 @@ void ChildBase::arrangedExport ( wxFile &out , const wxString& n , const wxStrin
     wxString blank ( ' ' , n.length() ) ;
     wxString o(n);
     while ( !s.IsEmpty() )
-       {
-       out.Write ( o + s.Left ( sl ) + "\n" ) ;
-       s = s.Mid ( sl ) ;
-       o = blank ;
-       }
+        {
+        out.Write ( o + s.Left ( sl ) + "\n" ) ;
+        s = s.Mid ( sl ) ;
+        o = blank ;
+        }
     }
 
 bool ChildBase::HasUndoData ()
-     {
-     return false ;
-     }
+    {
+    return false ;
+    }
