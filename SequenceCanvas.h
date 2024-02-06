@@ -127,12 +127,12 @@ class SeqBasic
     SeqBasic ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; } ///< Constructor
     virtual ~SeqBasic () ; ///< Destructor
     virtual void init ( SequenceCanvas * const ncan = NULL ) ; ///< Initialization
-    virtual void initFromTVector ( TVector *v ) {} ///< Set from a TVector class
+    virtual void initFromTVector ( TVector * const v ) {} ///< Set from a TVector class
     virtual int  arrange ( const int n ) { return 0 ; } ; ///< Arrange "chars" as line n
     virtual void show ( wxDC& dc ) {} ; ///< Show
     virtual wxPoint showText ( int ystart , wxArrayString &tout ) const
         { return wxPoint ( -1 , -1 ) ; } ; ///< Show as text (rarely used)
-    virtual wxString whatsthis () { return _T("BASIC") ; } ///< Returns the linetype
+    virtual wxString whatsthis () const { return _T("BASIC") ; } ///< Returns the linetype
     virtual void makeEndnumberLength() { endnumberlength = 0 ; } ; ///< Calculates the width needed for the leading numbers
 
     virtual bool useDirectRoutines () const { return false ; } ///< Do we draw directly (or do we use SeqPos)?
@@ -175,7 +175,7 @@ class SeqNum : public SeqBasic
     {
     public :
     SeqNum ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; offset = 0 ; } ///< Constructor
-    virtual wxString whatsthis () { return _T("NUM") ; } ///< Returns the linetype
+    virtual wxString whatsthis () const { return _T("NUM") ; } ///< Returns the linetype
     virtual int  arrange ( const int n ) ; ///< Arrange "chars" as line n
     virtual void show ( wxDC& dc ) ; ///< Show
     virtual bool isDisplayOnly () { return true ; } ///< Do we show something?
@@ -245,14 +245,16 @@ class SeqDNA : public SeqBasic
 class SeqPrimer : public SeqDNA
     {
     public :
-    SeqPrimer ( SequenceCanvas *ncan = NULL ) {
+    SeqPrimer ( SequenceCanvas *ncan = NULL )
+        {
         vec = NULL ;
         init ( ncan ) ;
-        myname = _T("PRIMER") ; } ///< Constructor
+        myname = _T("PRIMER") ;
+        } ///< Constructor
     virtual void show ( wxDC& dc ) ; ///< Show
-    virtual void initFromTVector ( TVector *v ) ; ///< Set from a TVector class
-    virtual void addPrimer ( TPrimer *p ) ; ///< Adds a primer to the sequence
-    virtual wxString whatsthis () { return myname ; } ///< Returns the linetype
+    virtual void initFromTVector ( TVector * const v ) ; ///< Set from a TVector class
+    virtual void addPrimer ( const TPrimer * const p ) ; ///< Adds a primer to the sequence
+    virtual wxString whatsthis () const { return myname ; } ///< Returns the linetype
     virtual int arrange_direct ( const int n ) ; ///< Arrange quickly (bypassing SeqPos)
     virtual void show_direct ( wxDC& dc ) ; ///< Show quickly
     virtual bool useDirectRoutines () const ; ///< Do we draw directly (or do we use SeqPos)?
@@ -319,7 +321,7 @@ class SeqAA : public SeqBasic
     virtual void analyzeProteases () ; ///< Find protease cuts
     virtual void updateProteases () ; ///< Set protease cuts in display
     virtual void fixOffsets ( TVector * const v ) ; ///< Feature offsets fix (see SeqFeature)
-    virtual wxString whatsthis () { return _T("AA") ; } ///< Returns the linetype
+    virtual wxString whatsthis () const { return _T("AA") ; } ///< Returns the linetype
     virtual int arrange_direct ( const int n ) ; ///< Arrange quickly (bypassing SeqPos)
     virtual void show_direct ( wxDC& dc ) ; ///< Show quickly
     virtual bool useDirectRoutines () const ; ///< Do we draw directly (or do we use SeqPos)?
@@ -381,8 +383,8 @@ class SeqABI : public SeqDNA
     virtual int  arrange_sd ( const int n ) ; ///< Arrange "chars" as line n, for data in sd
     virtual void show ( wxDC& dc ) ; ///< Show
     virtual void show_sd ( wxDC& dc ) ; ///< Show, for data in sd
-    virtual void initFromFile ( wxString filename ) ; ///< Setup sequence from ABI file
-    virtual wxString whatsthis () { return _T("ABI") ; } ///< Returns the linetype
+    virtual void initFromFile ( const wxString& filename ) ; ///< Setup sequence from ABI file
+    virtual wxString whatsthis () const { return _T("ABI") ; } ///< Returns the linetype
     virtual void drawTopLine ( wxDC &dc , int y ) ; ///< Some layout thingy
     virtual wxColor getBaseColor ( char b ) ; ///< Returns the color to draw the base in
     virtual void setInvCompl ( bool x ) ; ///< Display inverse/complement sequence
@@ -415,8 +417,8 @@ class SeqFeature : public SeqDNA
     public :
     SeqFeature ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; aaa = NULL ; } ///< Constructor
     virtual void show ( wxDC& dc ) ; ///< Show
-    virtual wxString whatsthis () { return _T("FEATURE") ; } ///< Returns the linetype
-    virtual void initFromTVector ( TVector *v ) ; ///< Set from a TVector class
+    virtual wxString whatsthis () const { return _T("FEATURE") ; } ///< Returns the linetype
+    virtual void initFromTVector ( TVector * const v ) ; ///< Set from a TVector class
     virtual bool collide ( const int a , const int b ) const ; ///< Do features #a and #b overlap?
     virtual bool doesHit ( const int a , const int x ) const ; ///< Is position x within feature #a
     virtual int arrange_direct ( const int n ) { return arrange ( n ) ; } ///< Arrange quickly (bypassing SeqPos)
@@ -440,8 +442,8 @@ class SeqPlot : public SeqDNA
     public :
     SeqPlot ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; lines = 0 ; } ///< Constructor
     virtual void show ( wxDC& dc ) ; ///< Show
-    virtual wxString whatsthis () { return _T("PLOT") ; } ///< Returns the linetype
-    virtual void initFromTVector ( TVector *v ) ; ///< Set from a TVector class
+    virtual wxString whatsthis () const { return _T("PLOT") ; } ///< Returns the linetype
+    virtual void initFromTVector ( TVector * const v ) ; ///< Set from a TVector class
     virtual int  arrange ( const int n ) ; ///< Arrange "chars" as line n
     virtual void setLines ( const int l ) ; ///< What line(s) this spans
     virtual void useChouFasman () ; ///< Chou-Fasman-Plot

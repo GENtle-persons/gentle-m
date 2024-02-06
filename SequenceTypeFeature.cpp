@@ -241,9 +241,9 @@ void SeqFeature::show ( wxDC& dc )
     mylog ( "SeqFeature::show" , "END" ) ;
     }
 
-void SeqFeature::initFromTVector ( TVector * const v )
+void SeqFeature::initFromTVector ( /* const */ TVector * const v )
     {
-    vec = v ;
+    vec = v ; // FIXME: Needs copy constructor - not const
 
     s = vec->getSequence() ;
     if ( can && can->getEditMode() && v->getSequenceLength() && v->getSequenceChar(v->getSequenceLength()-1) == ' ' )

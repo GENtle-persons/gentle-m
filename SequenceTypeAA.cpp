@@ -154,10 +154,10 @@ void SeqAA::fixOffsets ( TVector * const v )
 
 
 
-void SeqAA::initFromTVector ( TVector * const v )
+void SeqAA::initFromTVector ( /* const */ TVector * const v )
     {
     showNumbers = true ;
-    vec = v ;
+    vec = v ; //FIXME: Needs copy constructor, not const
     bool truncateEditSequence = false ;
     if ( can && can->getEditMode() && v->getSequenceLength() && v->getSequenceChar(v->getSequenceLength()-1) == ' ' )
        {

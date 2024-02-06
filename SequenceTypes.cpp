@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the SeqBasic, SeqPrimer, SeqNum, and SeqDivider class members
+    \brief Contains the SeqBasic, SeqPrimer, SeqNum, and SeqDivider class members
 */
 #include "SequenceCanvas.h"
 
@@ -25,44 +25,43 @@ void SeqBasic::logsize () const
     }
 
 void SeqBasic::editMode ( const bool on )
-	{
-	if ( on )
-		{
-//		s += " " ;
-		}
-	else
- 		{
-		if ( !whatsthis().StartsWith ( _T("PRIMER") ) &&
- 				!s.IsEmpty() && s.GetChar ( s.length() - 1 ) == ' ' )
- 			s = s.Left ( s.length() - 1 ) ;
-   		}
-	}
+    {
+    if ( on )
+        {
+//      s += " " ;
+        }
+    else
+        {
+        if ( !whatsthis().StartsWith ( _T("PRIMER") ) && !s.IsEmpty() && s.GetChar ( s.length() - 1 ) == ' ' )
+             s = s.Left ( s.length() - 1 ) ;
+        }
+    }
 
 void SeqBasic::addHighlight ( const int from , const int t , const wxColour& c )
     {
-	int to (t) ;
-	if ( can && can->child )
-		{
-		if ( to < from ) to += can->child->vec->getSequenceLength() ;
-		}
-	highlight_begin.Add ( from ) ;
-	highlight_end.Add ( to ) ;
-	highlight_color.push_back ( c ) ;
+    int to (t) ;
+    if ( can && can->child )
+        {
+        if ( to < from ) to += can->child->vec->getSequenceLength() ;
+        }
+    highlight_begin.Add ( from ) ;
+    highlight_end.Add ( to ) ;
+    highlight_color.push_back ( c ) ;
     }
 
 wxColour SeqBasic::getHighlightColor ( const int pos , const wxColour& c )
     {
     if ( !can || !can->child || !can->child->vec ) return c ;
-	int a , l = can->child->vec->getSequenceLength() ;
-	for ( a = 0 ; a < highlight_end.size() ; a++ )
-		{
-		if ( pos >= highlight_begin[a] && pos <= highlight_end[a] )
-			break ;
-		if ( highlight_end[a] - l >= pos )
-		   break ;
-		}
-	if ( a == highlight_end.size() ) return c ;
-	return highlight_color[a] ;
+    int a , l = can->child->vec->getSequenceLength() ;
+    for ( a = 0 ; a < highlight_end.size() ; a++ )
+        {
+        if ( pos >= highlight_begin[a] && pos <= highlight_end[a] )
+            break ;
+        if ( highlight_end[a] - l >= pos )
+            break ;
+        }
+    if ( a == highlight_end.size() ) return c ;
+    return highlight_color[a] ;
     }
 
 void SeqBasic::clearHighlights ()
@@ -184,16 +183,16 @@ void SeqPrimer::show ( wxDC& dc )
     dc.SetTextForeground ( tfg ) ;
     }
 
-void SeqPrimer::initFromTVector ( TVector * const v )
+void SeqPrimer::initFromTVector ( /* const */ TVector * const v )
     {
-    vec = v ;
+    vec = v ; // FIXME: Needs copy constructor - not const
     s = vec->getSequence() ;
     for ( int a = 0 ; a < s.length() ; a++ ) s.SetChar(a,' ') ;
     takesMouseActions = true ;
     showNumbers = false ;
     }
 
-void SeqPrimer::addPrimer ( TPrimer *p )
+void SeqPrimer::addPrimer ( const TPrimer * const p )
     {
     TVector d ;
     myass ( p , "SeqPrimer::addPrimer_0" ) ;
@@ -211,7 +210,7 @@ void SeqPrimer::addPrimer ( TPrimer *p )
 
 //************************************************ SeqNum
 
-int SeqNum::arrange ( int n )
+int SeqNum::arrange ( const int n )
     {
     int x , y , w , h , bo = can->border , lowy = 0 ;
     int lasta = 0 ;
@@ -289,7 +288,7 @@ void SeqNum::show ( wxDC& dc )
 
 //************************************************ SeqDivider
 
-int SeqDivider::arrange ( int n )
+int SeqDivider::arrange ( const int n )
     {
     int x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
     int lasta = 0 ;

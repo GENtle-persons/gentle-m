@@ -81,13 +81,13 @@ void SeqRestriction::show ( wxDC& dc )
     int n , csgc = can->NumberOfLines() , cbs = can->blocksize , bo = can->border ;
     mylog ( "SeqRestriction::show" , "2" ) ;
     for ( n = 0 ; n < csgc && can->seq[n] != this ; n++ ) // n is used below
-    ;
+        ;
     mylog ( "SeqRestriction::show" , "3" ) ;
     int cw = can->charwidth , ch = can->charheight ;
     int ox = bo + cw + cw * endnumberlength ;
     int oy = n*ch+bo ;
     bool direct = useDirectRoutines() ;
-        mylog ( "SeqRestriction::show" , "4" ) ;
+    mylog ( "SeqRestriction::show" , "4" ) ;
     for ( int level = 0 ; level < pl.maxlevels ; level++ )
         {
         mylog ( "SeqRestriction::show" , wxString::Format ( "Round %d of %d" , level , pl.maxlevels ) ) ;
@@ -113,10 +113,10 @@ void SeqRestriction::show ( wxDC& dc )
             }
         mylog ( "SeqRestriction::show" , "A" ) ;
         if ( can->isPrinting() && !can->getPrintToColor() )
-           {
-           dc.SetPen(*wxBLACK_PEN);
-           dc.SetTextForeground ( *wxBLACK ) ;
-           }
+            {
+            dc.SetPen(*wxBLACK_PEN);
+            dc.SetTextForeground ( *wxBLACK ) ;
+            }
         int qlx = -1 , idx = -1;
         wxRect ra , rb ;
         mylog ( "SeqRestriction::show" , "B" ) ;
@@ -220,9 +220,9 @@ void SeqRestriction::show ( wxDC& dc )
     mylog ( "SeqRestriction::show" , "fin" ) ;
     }
 
-void SeqRestriction::initFromTVector ( TVector * const v )
+void SeqRestriction::initFromTVector ( /* const */ TVector * const v )
     {
-    vec = v ;
+    vec = v ; // FIXME: not const
 //  s = vec->getSequence() ;
     down = false ;
     }

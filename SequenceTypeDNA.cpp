@@ -218,9 +218,9 @@ wxColor SeqDNA::getBaseColor ( const char b ) const
     return fontColor ;
     }
 
-void SeqDNA::initFromTVector ( TVector * const v )
+void SeqDNA::initFromTVector ( /* const */ TVector * const v )
     {
-    vec = v ;
+    vec = v ; // FIXME: Needs copy constructor, not const
     s = vec->getSequence() ;
     takesMouseActions = true ;
     showNumbers = true ;
