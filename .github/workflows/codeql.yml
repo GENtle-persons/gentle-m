@@ -46,7 +46,7 @@ jobs:
       - name: Install Dependencies
         run: |
           #if [ "${{ matrix.os }}" = "macos-latest" ]; then
-            brew update
+            #brew update # seems to make problems
             brew install wxwidgets m4 tinyxml zstd autoconf libtool automake wxwidgets libpng sqlite
             brew install dylibbundler
           #elif [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
