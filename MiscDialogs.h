@@ -118,8 +118,7 @@ class TIPCDialog : public wxDialog
 class TURLtext : public wxTextCtrl
     {
     public :
-    TURLtext ( wxWindow *parent , int id , wxString title ,
-                    wxPoint pos , wxSize size , int style ) ; ///< Constructor
+    TURLtext ( wxWindow * const parent ,  const int id ,  const wxString& title , const wxPoint& pos , const wxSize size , const int style ) ; ///< Constructor
     virtual void OnURL(wxTextUrlEvent& event) ; ///< URL event handler
     DECLARE_EVENT_TABLE()
     } ;
@@ -130,9 +129,9 @@ class TMyMultipleChoiceDialog : public wxDialog
     {
     public :
     TMyMultipleChoiceDialog () ; ///< Default constructor
-    TMyMultipleChoiceDialog ( wxWindow *parent ,
-                              const wxString &message ,
-                              const wxString &caption ,
+    TMyMultipleChoiceDialog ( wxWindow * const parent ,
+                              const wxString& message ,
+                              const wxString& caption ,
                               int n,
                               const wxString choices[] = NULL,
                               int options = wxOK | wxCANCEL | wxCENTRE ,
@@ -186,8 +185,8 @@ class TSequencingPrimerDialog : public wxDialog
 
     private :
     virtual int findBestMatch ( wxString &s , wxString seq , int &pos , int ml ) ; ///< Finds the best match for a primer in the vector
-    virtual void addSequencingPrimer ( TVector *v , wxString name , wxString seq ,
-    								int best_pos , int best_score , int dir ) ; ///< Add the primer as an item to the vector
+    virtual void addSequencingPrimer ( TVector * const v ,  const wxString& name ,  const wxString& seq ,
+                                       const int best_pos ,  const int best_score ,  const int dir ) ; ///< Add the primer as an item to the vector
 
     wxSpinCtrl *t_ma ; ///< Minimum number of aligning bases
     wxChoice *c_db , *c_pj ;
