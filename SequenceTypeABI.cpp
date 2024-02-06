@@ -8,7 +8,7 @@ SeqABI::~SeqABI ()
     if ( at ) delete at ;
     }
 
-int SeqABI::get_bx ( int id , int idx )
+int SeqABI::get_bx ( const int id , const int idx )
     {
     if ( at )
         {
@@ -25,7 +25,7 @@ int SeqABI::get_bx ( int id , int idx )
         }
     }
 
-int SeqABI::arrange_sd ( int n )
+int SeqABI::arrange_sd ( const int n )
     {
     int x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
     int lasta = 0 ;
@@ -139,7 +139,7 @@ int SeqABI::arrange_sd ( int n )
     return lowy + bo*2 ;
     }
 
-int SeqABI::arrange ( int n )
+int SeqABI::arrange ( const int n )
     {
     if ( !at ) return arrange_sd ( n ) ;
     int x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
@@ -244,7 +244,7 @@ int SeqABI::arrange ( int n )
     return lowy + bo*2 ;
     }
 
-void SeqABI::setInvCompl ( bool x )
+void SeqABI::setInvCompl ( const bool x )
     {
     if ( inv_compl != x ) // Inverting and complementing sequence
         {
@@ -310,7 +310,7 @@ void SeqABI::show_sd ( wxDC& dc )
         if ( view_from > 0 )
             {
 //          x = -get_bx ( at->getRecord ( _T("PLOC") , 2 ) , view_from-1 ) * scalex ;
-            x = -get_bx ( 0 , view_from-1 ) * scalex ;
+            x = static_cast<long>(-get_bx ( 0 , view_from-1 )) * static_cast<long>(scalex) ;
             if ( inv_compl ) x += strange_compensation_factor ;
             }
         for ( long a = 0 ; a < sd.tracer2[data].size() ; a++ )
