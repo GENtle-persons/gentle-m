@@ -1,5 +1,5 @@
 /** \file
-	\brief The vector items tree component.
+    \brief The vector items tree component.
 */
 #ifndef _TVECTORTREE_H_
 #define _TVECTORTREE_H_
@@ -10,23 +10,23 @@
 class MyChild ;
 
 /** \class TTreeItem
-	\brief Item in TVectorTree
+    \brief Item in TVectorTree
 */
 class TTreeItem : public wxTreeItemData
     {
     public :
     TTreeItem () : wxTreeItemData() {} ; ///< Empty constructor
     TTreeItem ( wxString m , wxString _t = _T("") , void *_p = NULL )  ///< Constructor
-    	: wxTreeItemData()
-    	{ message = m ; type = _t ; p = _p ; data = 0 ; } ;
+        : wxTreeItemData()
+        { message = m ; type = _t ; p = _p ; data = 0 ; } ;
     wxString message ; ///< The message to display
     wxString type ; ///< The item type
     void *p ; ///< Can contain multiple different values, depending on the type
-	int data ;
+    int data ;
     } ;
 
 /** \class TVectorTree
-	\brief The vector items tree class
+    \brief The vector items tree class
 */
 class TVectorTree : public wxTreeCtrl
     {

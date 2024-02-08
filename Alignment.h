@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the TAlignment class and its helper class, TAlignLine
+    \brief Contains the TAlignment class and its helper class, TAlignLine
 */
 #ifndef _ALIGNMENT_H_
 #define _ALIGNMENT_H_
@@ -21,7 +21,7 @@ class SeqAA ;
 class SequenceCharMarkup ;
 class SeqAlign ;
 
-/**	\brief Helper class for TAlignment; represents a line (a sequence) in the alignment
+/** \brief Helper class for TAlignment; represents a line (a sequence) in the alignment
 */
 class TAlignLine // pun intended
     {
@@ -62,9 +62,8 @@ class TAlignment : public ChildBase,wxThreadHelper
     virtual int SmithWaterman ( wxString &s1 , wxString &s2 )  ; ///< Smith-Waterman-align two sequences
     virtual int MatrixAlignment ( wxString &_s1 , wxString &_s2 , bool local ) ; ///< Part of NW/SW alignment algorithm
     virtual void MatrixBacktrack ( vector <wxArrayInt> &back ,
-                                    wxString s1 , wxString s2 ,
-                                    wxString &t1 , wxString &t2 ,
-                                    int i , int j ) ; ///< Part of NW/SW alignment algorithm
+                                   wxString s1 , wxString s2 , wxString &t1 , wxString &t2 ,
+                                   int i , int j ) ; ///< Part of NW/SW alignment algorithm
 
     virtual void redoAlignments ( bool doRecalc = true ) ; ///< Repaint and (maybe) recalculate the alignment
     virtual void recalcAlignments () ; ///< Recalculate the alignment

@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the TItemEditDialog class
+    \brief Contains the TItemEditDialog class
 */
 #ifndef _T_ITEM_EDIT_DIALOG_
 #define _T_ITEM_EDIT_DIALOG_
@@ -8,7 +8,7 @@
 
 class TVectorItem ;
 
-/**	\brief Dialog to set item/feature color, offset, type etc.; called from TVectorEditor
+/** \brief Dialog to set item/feature color, offset, type etc.; called from TVectorEditor
 */
 class TItemEditDialog : public wxDialog
     {

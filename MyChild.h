@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the MyChild class, as well as the MySplitter helper class
+    \brief Contains the MyChild class, as well as the MySplitter helper class
 */
 #ifndef _MYCHILD_H_
 #define _MYCHILD_H_
@@ -20,7 +20,7 @@ class TURLtext ;
 class TRestrictionEditor ;
 class TVirtualGel ;
 
-/**	\brief Specialized class based on wxSplitterWindow; used in MyChild to separate the different parts of the module
+/** \brief Specialized class based on wxSplitterWindow; used in MyChild to separate the different parts of the module
 */
 class MySplitter : public wxSplitterWindow
     {

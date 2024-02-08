@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the TOnlineTools class
+    \brief Contains the TOnlineTools class
 */
 #ifndef _ONLINE_TOOLS_H_
 #define _ONLINE_TOOLS_H_
@@ -7,7 +7,7 @@
 #include "main.h"
 
 /** \class TOnlineTools
-	\brief TOnlineTools class
+    \brief TOnlineTools class
 */
 class TOnlineTools
     {

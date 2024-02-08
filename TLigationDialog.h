@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the TLigationDialog class
+    \brief Contains the TLigationDialog class
 */
 #ifndef _TLIGATIONDIALOG_H_
 #define _TLIGATIONDIALOG_H_
@@ -14,7 +14,7 @@ class TVector ;
 class MyFrame ;
 class TStorage ;
 
-/**	\brief The ligation dialog class
+/** \brief The ligation dialog class
 */
 class TLigationDialog : public wxDialog
     {

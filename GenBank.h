@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the GenBank class and its TGenBankFeature helper class
+    \brief Contains the GenBank class and its TGenBankFeature helper class
 */
 #ifndef _GENBANK_H_
 #define _GENBANK_H_

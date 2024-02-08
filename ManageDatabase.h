@@ -17,7 +17,7 @@ class TManageDatabaseDialog ;
 #define ACTION_MODE_PROJECT 4
 #define ACTION_MODE_STARTUP 8
 
-/**	\brief Handles drag'n'drop events for items dragged between the two database lists in TManageDatabaseDialog
+/** \brief Handles drag'n'drop events for items dragged between the two database lists in TManageDatabaseDialog
 */
 class TMyDropTarget : public wxTextDropTarget
     {
@@ -144,7 +144,7 @@ class TManageDatabaseDialog : public wxDialog
     wxTextCtrl *filter_txt ;
     wxCheckBox *f_dna , *f_prot , *f_primer , *f_align , *f_twopanes ;
     wxCheckBox *f_desc , *f_seq ;
-	wxBoxSizer *v0 , *v2 ; // Sizers needed for second (right) list
+    wxBoxSizer *v0 , *v2 ; // Sizers needed for second (right) list
 
     DECLARE_EVENT_TABLE()
     } ;

@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the TVectorEditor class
+    \brief Contains the TVectorEditor class
 */
 #ifndef _TVECTOREDITOR_H_
 #define _TVECTOREDITOR_H_
@@ -16,7 +16,7 @@ class TURLtext ;
 class TEnzymeSettingsTab ;
 class TEnzymeRules ;
 
-/**	\brief The sequence edit dialog
+/** \brief The sequence edit dialog
 */
 class TVectorEditor : public wxDialog
     {

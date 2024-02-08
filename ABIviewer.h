@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the TABIviewer class
+    \brief Contains the TABIviewer class
 */
 #ifndef _ABI_VIEWER_H_
 #define _ABI_VIEWER_H_
@@ -10,7 +10,7 @@
 
 class TVector ;
 
-/**	\brief The ABI (sequencer data) viewer module class
+/** \brief The ABI (sequencer data) viewer module class
 */
 class TABIviewer : public ChildBase
     {

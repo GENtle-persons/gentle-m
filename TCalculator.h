@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the TImageDisplay class, as well as the TMyImagePanel helper class
+    \brief Contains the TImageDisplay class, as well as the TMyImagePanel helper class
 */
 #ifndef _T_CALCULATOR_H_
 #define _T_CALCULATOR_H_
@@ -12,8 +12,8 @@
 #define HTML_PRINT_PREVIEW 1
 #define HTML_PRINT 2
 
-/**	\class TGridBasic
-	\brief The base class for each calculator submodule (grid/sheet)
+/** \class TGridBasic
+    \brief The base class for each calculator submodule (grid/sheet)
 */
 class TGridBasic : public wxGrid
     {
@@ -21,7 +21,7 @@ class TGridBasic : public wxGrid
     TGridBasic ( wxWindow *parent , int id = -1 ) ; ///< Constructor
 
     virtual void recalc () ; ///< Recalculates the submodule
-	virtual void OnCellChanged(wxGridEvent& event) ; ///< Cell-has-changed event
+    virtual void OnCellChanged(wxGridEvent& event) ; ///< Cell-has-changed event
     virtual void cleanup () ; ///< Reset the submodule
     virtual void gridSetEditable ( int y , int x ) ; ///< Makes a cell editable
     virtual void gridSetEntry ( int y , int x , wxString title , wxString value = _T("0") , wxString unit = _T("") ) ; ///< Sets a cell group
@@ -34,8 +34,8 @@ class TGridBasic : public wxGrid
     bool calculating ; ///< Are we currently (re)calculating?
     } ;
 
-/**	\class TGridLigation
-	\brief The ligation calculator submodule
+/** \class TGridLigation
+    \brief The ligation calculator submodule
 */
 class TGridLigation : public TGridBasic
     {
@@ -49,8 +49,8 @@ class TGridLigation : public TGridBasic
     DECLARE_EVENT_TABLE()
     } ;
 
-/**	\class TGridDNA
-	\brief The DNA concentration/purity calculator submodule
+/** \class TGridDNA
+    \brief The DNA concentration/purity calculator submodule
 */
 class TGridDNA : public TGridBasic
     {
@@ -64,8 +64,8 @@ class TGridDNA : public TGridBasic
     DECLARE_EVENT_TABLE()
     } ;
 
-/**	\class TGridProtein
-	\brief The protein concentration calculator submodule
+/** \class TGridProtein
+    \brief The protein concentration calculator submodule
 */
 class TGridProtein : public TGridBasic
     {
@@ -79,8 +79,8 @@ class TGridProtein : public TGridBasic
     DECLARE_EVENT_TABLE()
     } ;
 
-/**	\class TGridData
-	\brief The codon table calculator submodule
+/** \class TGridData
+    \brief The codon table calculator submodule
 */
 class TGridData : public TGridBasic
     {
@@ -94,8 +94,8 @@ class TGridData : public TGridBasic
     DECLARE_EVENT_TABLE()
     } ;
 
-/**	\class TCalculator
-	\brief The calculator module
+/** \class TCalculator
+    \brief The calculator module
 */
 class TCalculator : public ChildBase
     {
@@ -106,7 +106,7 @@ class TCalculator : public ChildBase
     void initme () ; ///< Initialization
     virtual wxString getName () const ; ///< Returns the module name
 
-//    virtual void OnClose(wxCloseEvent& event) ;
+//  virtual void OnClose(wxCloseEvent& event) ;
     virtual void OnSeqPrint(wxCommandEvent& event) ; ///< Print event handler
     virtual void OnPrintPreview(wxCommandEvent& event) ; ///< Print preview event handler
     virtual void OnCopy(wxCommandEvent& event) ; ///< Copy event handler

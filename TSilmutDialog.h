@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the TSilmutDialog class, and its helper class TSilmutItem
+    \brief Contains the TSilmutDialog class, and its helper class TSilmutItem
 */
 #ifndef _TSILMUTDIALOG_H_
 #define _TSILMUTDIALOG_H_
@@ -13,7 +13,7 @@
 class TRestrictionEnzyme ;
 class TPrimerDesign ;
 
-/**	\brief Helper class for TSilmutDialog
+/** \brief Helper class for TSilmutDialog
 */
 class TSilmutItem
     {

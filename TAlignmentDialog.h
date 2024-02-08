@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the TAlignmentDialog class
+    \brief Contains the TAlignmentDialog class
 */
 #ifndef _T_ALIGNMENT_DIALOG_
 #define _T_ALIGNMENT_DIALOG_

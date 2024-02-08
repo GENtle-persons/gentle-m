@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the ProgramOptionsDialog class and its helper classes, TEnzymeSettingsTab (which is also used in TVectorEditor) and TEnzymeRules
+    \brief Contains the ProgramOptionsDialog class and its helper classes, TEnzymeSettingsTab (which is also used in TVectorEditor) and TEnzymeRules
 */
 #ifndef _ProgramOptionsDialog_h_
 #define _ProgramOptionsDialog_h_
@@ -12,7 +12,7 @@ class TVector ;
 #define EST_PROJECT 1
 #define EST_SINGLE 2
 
-/**	\brief The "tab" for global and per-sequence enzyme/methylation/etc. settings
+/** \brief The "tab" for global and per-sequence enzyme/methylation/etc. settings
 */ ;
 class TEnzymeSettingsTab : public wxPanel
     {
@@ -44,7 +44,7 @@ class TEnzymeSettingsTab : public wxPanel
     DECLARE_EVENT_TABLE()
     } ;
 
-/**	\brief The dialog containing program end enzyme global settings
+/** \brief The dialog containing program end enzyme global settings
 */
 class ProgramOptionsDialog : public wxDialog
     {
@@ -98,13 +98,13 @@ class TEnzymeRules
     virtual void setup_options ( TEnzymeSettingsTab * const est ) ; ///< Set options in the tab
     virtual void lookup_options ( TEnzymeSettingsTab * const est ) ; ///< Look up options from the tab
     virtual bool isEqual ( const TEnzymeRules &r ) const ; ///< Compare with another set of settings
-	
+
     virtual wxString to_string () const ; ///< "Compress" to storable string
     virtual void from_string ( const wxString &s ) ; ///< "Decompress" from storage string
 
     virtual void getVectorCuts ( TVector * const v ) const ;
     virtual wxColour *getColor ( const int cuts ) ; ///< Returns a pointer to a wxColour structure with the correct color for the given number of cuts
-	
+
     bool useit ;
     int min_cutoff , max_cutoff ;
     bool use_min_cutoff , use_max_cutoff ;
@@ -115,7 +115,7 @@ class TEnzymeRules
     wxColour col1 , col2 , col3 ;
     bool join_enzymes , use_color_coding ;
     int methylation ;
-	
+
     private :
     virtual wxColour scan_color ( const wxString& s ) const ; ///< Make color from string
     } ;

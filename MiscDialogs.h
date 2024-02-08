@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains several (minor) dialogs and their helper classes
+    \brief Contains several (minor) dialogs and their helper classes
 */
 #ifndef _MISCDIALOGS_H_
 #define _MISCDIALOGS_H_
@@ -29,7 +29,7 @@ class TGraphScale ;
 class TGraphData ;
 
 class TGraphDialog : public wxDialog
-	{
+    {
    public :
    TGraphDialog ( wxWindow *_parent , const wxString& title ) ; ///< Constructor
    virtual ~TGraphDialog() ;
@@ -43,35 +43,35 @@ class TGraphDialog : public wxDialog
    virtual void OnButtonScales ( wxCommandEvent &ev ) ;
    virtual void OnOK ( wxCommandEvent &ev ) ;
 
-	private :
-	virtual void add_nb_graph () ;
-	virtual void add_nb_data () ;
-	virtual void add_nb_scales () ;
-	
-	virtual void save_settings () ;
-	
-	TGraph *parent ;
-	wxNotebook *nb ;
-	wxPanel *nb_graph , *nb_data , *nb_scales ;
-	
-	wxListBox *lb_scales , *lb_data ;
-	wxTextCtrl *scales_name , *scales_min , *scales_max , *scales_unit , *scales_color ;
-	wxChoice *ch_scales_type ;
-	
-	wxTextCtrl *data_name , *data_color ;
-	wxChoice *ch_data_pointstyle , *ch_data_scalex , *ch_data_scaley ;
-	
-	int last_scale , last_data ;
-	bool set_up ;
-	
-	vector <TGraphScale*> scales ;
-	vector <TGraphData*> data ;
-	
-	DECLARE_EVENT_TABLE()
-	} ;
+    private :
+    virtual void add_nb_graph () ;
+    virtual void add_nb_data () ;
+    virtual void add_nb_scales () ;
+    
+    virtual void save_settings () ;
+    
+    TGraph *parent ;
+    wxNotebook *nb ;
+    wxPanel *nb_graph , *nb_data , *nb_scales ;
+    
+    wxListBox *lb_scales , *lb_data ;
+    wxTextCtrl *scales_name , *scales_min , *scales_max , *scales_unit , *scales_color ;
+    wxChoice *ch_scales_type ;
+    
+    wxTextCtrl *data_name , *data_color ;
+    wxChoice *ch_data_pointstyle , *ch_data_scalex , *ch_data_scaley ;
+    
+    int last_scale , last_data ;
+    bool set_up ;
+    
+    vector <TGraphScale*> scales ;
+    vector <TGraphData*> data ;
+    
+    DECLARE_EVENT_TABLE()
+    } ;
 
 class TSpeakDialog : public wxDialog
-	{
+    {
     public :
     TSpeakDialog(wxWindow *parent, const wxString& title , wxString _seq ) ; ///< Constructor
     ~TSpeakDialog () ; ///< Destructor
@@ -81,27 +81,27 @@ class TSpeakDialog : public wxDialog
     virtual void OnStop ( wxCommandEvent &ev ) ;
 
     private :
-	virtual void speakLetter ( wxString c ) ;
-	wxTextCtrl *seq ;
-	wxCheckBox *doPause ;
-	wxSpinCtrl *pause ;
-	bool doPlay ;
-	wxString sequence ;
+    virtual void speakLetter ( wxString c ) ;
+    wxTextCtrl *seq ;
+    wxCheckBox *doPause ;
+    wxSpinCtrl *pause ;
+    bool doPlay ;
+    wxString sequence ;
 
     DECLARE_EVENT_TABLE()
-	} ;
+    } ;
 
-/**	\brief The dialog handling the TIPC settings
+/** \brief The dialog handling the TIPC settings
 */
 class TIPCDialog : public wxDialog
-	{
+    {
     public :
     TIPCDialog(wxWindow *parent, const wxString& title , int _seqlen ) ; ///< Constructor
     virtual ~TIPCDialog () ; ///< Destructor
 
     void OnLimit ( wxCommandEvent &event ) ; ///< Limit update event handler
-//    void OnOK ( wxCommandEvent &ev ) ;
-//    void OnCancel ( wxCommandEvent &ev ) ;
+//  void OnOK ( wxCommandEvent &ev ) ;
+//  void OnCancel ( wxCommandEvent &ev ) ;
 
     private :
     int seqlen ; ///< The sequence length
@@ -111,7 +111,7 @@ class TIPCDialog : public wxDialog
     double estimate_time ( int f ) ; ///< Function estimating runtime
 
     DECLARE_EVENT_TABLE()
-	} ;
+    } ;
 
 /** \brief A text control highlighting URLs
 */
