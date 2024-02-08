@@ -12,7 +12,7 @@ void SeqFeature::show ( wxDC& dc )
     int cw2 , ch2 ;
     dc.SetFont(*can->smallFont);
     dc.GetTextExtent ( _T("A") , &cw2 , &ch2 ) ;
-//    dc.SetFont(*can->font);
+//  dc.SetFont(*can->font);
     wxColour tbg = dc.GetTextBackground () ;
     wxColour tfg = dc.GetTextForeground () ;
     int bm = dc.GetBackgroundMode () ;
@@ -241,9 +241,9 @@ void SeqFeature::show ( wxDC& dc )
     mylog ( "SeqFeature::show" , "END" ) ;
     }
 
-void SeqFeature::initFromTVector ( TVector *v )
+void SeqFeature::initFromTVector ( /* const */ TVector * const v )
     {
-    vec = v ;
+    vec = v ; // FIXME: Needs copy constructor - not const
 
     s = vec->getSequence() ;
     if ( can && can->getEditMode() && v->getSequenceLength() && v->getSequenceChar(v->getSequenceLength()-1) == ' ' )
@@ -256,18 +256,18 @@ void SeqFeature::initFromTVector ( TVector *v )
     for ( int a = 0 ; a < vec->items.size() ; a++ )
         {
         if ( vec->items[a].isVisible() )
-           pl.add ( a , vec->items[a].from-1 , vec->items[a].to-1 ) ;
+            pl.add ( a , vec->items[a].from-1 , vec->items[a].to-1 ) ;
         }
     pl.makeLevels () ;
     maxlayers = pl.maxlevels ;
     }
 
-bool SeqFeature::collide ( const int a , const int b )
+bool SeqFeature::collide ( const int a , const int b ) const
     {
     return false ;
     }
 
-bool SeqFeature::doesHit ( const int a , const int x )
+bool SeqFeature::doesHit ( const int a , const int x ) const
     {
     int from = pl.getFrom ( a ) ; //vr[a].width ;
     int to = pl.getTo ( a ) ; //vr[a].height ;

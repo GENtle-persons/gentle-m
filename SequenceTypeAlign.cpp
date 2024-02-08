@@ -1,11 +1,11 @@
 /** \file
-	\brief Contains the SeqAlign class members
+    \brief Contains the SeqAlign class members
 */
 #include "SequenceCanvas.h"
 
 int SeqAlign::arrange ( int n )
     {
-    int a , x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
+    int x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
     int lasta = 0 ;
 
     // Setting basic values
@@ -23,25 +23,25 @@ int SeqAlign::arrange ( int n )
     x = ox ;
     y = oy ;
     pos.add ( -(++l) , bo , y , ox-wx-bo , wy-1 ) ; // Line number
-    for ( a = 0 ; a < s.length() ; a++ )
+    for ( int a = 0 ; a < s.length() ; a++ )
         {
         pos.add ( a+1 , x , y , wx-1 , wy-1 ) ;
         can->setLowX ( x + wx*2 ) ;
         lowy = y+wy ;
         x += wx ;
         if ( (a+1) % can->blocksize == 0 )
-           {
-           x += wx-1 ;
-           if ( x+wx*(can->blocksize+1) >= w )
-              {
-              pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
-              lasta = pos.p.GetCount()+1 ;
-              x = ox ;
-              y += wy * ( can->seq.GetCount() + can->blankline ) ;
-              if ( a+1 < s.length() )
-                 pos.add ( -(++l) , bo , y , ox-wx-5 , wy-1 ) ; // Line number
-              }
-           }
+            {
+            x += wx-1 ;
+            if ( x+wx*(can->blocksize+1) >= w )
+                {
+                pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
+                lasta = pos.p.GetCount()+1 ;
+                x = ox ;
+                y += wy * ( can->seq.GetCount() + can->blankline ) ;
+                if ( a+1 < s.length() )
+                    pos.add ( -(++l) , bo , y , ox-wx-5 , wy-1 ) ; // Line number
+                }
+            }
         }
     if ( lasta != pos.p.GetCount()+1 )
         pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
@@ -56,12 +56,12 @@ void SeqAlign::show ( wxDC& dc )
     wxColour tbg = dc.GetTextBackground () ;
     wxColour tfg = dc.GetTextForeground () ;
     int bm = dc.GetBackgroundMode () ;
-    int a , b , cnt = offset+1 ;
+    int b , cnt = offset+1 ;
     wxString t ;
-//    TAlignment *win = (TAlignment*) can->child ;
+//  TAlignment *win = (TAlignment*) can->child ;
 
     wxColour nbgc ;
-    for ( a = 0 ; can->seq[a] != this ; a++ ) ;
+    for ( int a = 0 ; can->seq[a] != this ; a++ ) ;
     switch ( id%3 )
         {
         case 0 : nbgc = wxColour ( 200 , 200 , 255 ) ; break ;
@@ -70,12 +70,12 @@ void SeqAlign::show ( wxDC& dc )
         }
 
     int first = -1 , me = -1 ;
-    for ( a = 0 ; a < can->seq.GetCount() ; a++ )
+    for ( int a = 0 ; a < can->seq.GetCount() ; a++ )
         {
         if ( can->seq[a]->whatsthis() == _T("ALIGN") && first == -1 )
-           first = a ;
+            first = a ;
         if ( can->seq[a] == this )
-           me = a ;
+            me = a ;
         }
     wxColour fg = *wxBLACK , bg = *wxWHITE ;
     TAlignment *al = (TAlignment*) can->child ;
@@ -83,10 +83,14 @@ void SeqAlign::show ( wxDC& dc )
     dc.SetTextBackground ( bg ) ;
     dc.SetBackgroundMode ( wxSOLID ) ;
 
-    int n , bo = can->border ;
-    for ( n = 0 ; can->seq[n] != this ; n++ ) ;
+    int bo = can->border ;
+    int n = 0 ; // n used below
+    while ( can->seq[n] != this )
+	{
+        n++ ;
+	}
     int wx = can->charwidth , wy = can->charheight ;
-    int ox = bo + wx + wx * endnumberlength  , oy = n*wy+bo ;
+    int ox = bo + wx + wx * endnumberlength  , oy = n*wy+bo ; // n used here
 
     int xa , xb , ya , yb ;
     dc.GetDeviceOrigin ( &xa , &ya ) ;
@@ -100,7 +104,7 @@ void SeqAlign::show ( wxDC& dc )
     bool thisisidentity = ( myname == txt("t_identity") ) ;
     int last_wx = -1 ;
 
-    for ( a = 0 ; a < ppgc ; a++ )
+    for ( int a = 0 ; a < ppgc ; a++ )
         {
         if ( can->hardstop > -1 && a > can->hardstop ) break ;
         int rax , ray = oy + wy * cnol * ( a / ( itemsperline + 1 ) ) ;
@@ -108,12 +112,12 @@ void SeqAlign::show ( wxDC& dc )
         b = pos.p[a] ;
         if ( b < 0 ) rax = bo ;
         else
-           {
-           int x2 = ( b - 1 ) % itemsperline ;
-           rax = ox ;
-           rax += x2 * wx ;
-           rax += ( x2 / can->blocksize ) * ( wx - 1 ) ;
-           }
+            {
+            int x2 = ( b - 1 ) % itemsperline ;
+            rax = ox ;
+            rax += x2 * wx ;
+            rax += ( x2 / can->blocksize ) * ( wx - 1 ) ;
+            }
         if ( can->isPrinting() ) rax += xa ; // PATCH AS PATCH CAN!!!
 
         int tx = rax , ty = ray ;
@@ -127,53 +131,54 @@ void SeqAlign::show ( wxDC& dc )
         if ( !insight && tx > xb ) a = ppgc ;
         if ( b > 0 && !insight ) cnt++ ;
         if ( b > 0 && insight ) // Character
-           {
-           t = s.GetChar(b-1) ;
+            {
+            t = s.GetChar(b-1) ;
 
-           // Same as char in first sequence?
-           if ( (!thisisidentity) &&
+            // Same as char in first sequence?
+            if ( (!thisisidentity) &&
                 al->cons &&
                 first != me &&
                 t.GetChar(0) != '-' &&
                 t.GetChar(0) == can->seq[first]->s.GetChar(b-1) )
-                   t.SetChar(0,'.') ;
+                t.SetChar(0,'.') ;
 
-           SequenceCharMarkup scm ;
-           int mode = 0 ;
-           if ( !thisisidentity )
-              {
-              al->getCharMarkup ( scm , id , b-1 , first ) ;
-              if ( getMark ( a ) ) mode |= SEQUENCECHARMARKUP_MARK ;
-              if ( al->mono ) mode |= SEQUENCECHARMARKUP_MONO ;
-              if ( can->isPrinting() && !can->getPrintToColor() ) mode |= SEQUENCECHARMARKUP_MONO ;
-              if ( al->bold ) mode |= SEQUENCECHARMARKUP_BOLD ;
-              }
+            SequenceCharMarkup scm ;
+            int mode = 0 ;
+            if ( !thisisidentity )
+                {
+                al->getCharMarkup ( scm , id , b-1 , first ) ;
+                if ( getMark ( a ) ) mode |= SEQUENCECHARMARKUP_MARK ;
+                if ( al->mono ) mode |= SEQUENCECHARMARKUP_MONO ;
+                if ( can->isPrinting() && !can->getPrintToColor() ) mode |= SEQUENCECHARMARKUP_MONO ;
+                if ( al->bold ) mode |= SEQUENCECHARMARKUP_BOLD ;
+                }
 
-           scm.draw ( dc , wxRect ( rax , ray , wx , wy ) , t , mode , last_wx ) ;
-           if ( scm.ignore || getMark ( a ) ) last_wx = -1 ;
-           else last_wx = rax + wx ;
+            scm.draw ( dc , wxRect ( rax , ray , wx , wy ) , t , mode , last_wx ) ;
+            if ( scm.ignore || getMark ( a ) ) last_wx = -1 ;
+            else last_wx = rax + wx ;
 
-           cnt++ ;
-           }
+            cnt++ ;
+            }
         else if ( b < 0 && insight ) // Front number
-           {
-           last_wx = -1 ;
-           dc.SetTextForeground ( *wxBLACK ) ;
-           dc.SetTextBackground ( nbgc ) ;
-           FILLSTRING ( t , (wxChar)' ' , endnumberlength ) ;
-           dc.DrawText ( t , rax, ray ) ;
-           dc.SetFont(*can->varFont);
-           t = myname ;
-           t = _T(" ") + t ;
-           int tw , th ;
-           do {
-              t = t.substr ( 1 , t.length()-1 ) ;
-              dc.GetTextExtent ( t , &tw , &th ) ;
-              } while ( tw > endnumberlength * wx ) ;
-           dc.DrawText ( t , rax, ray ) ;
-           dc.SetTextBackground ( *wxWHITE ) ;
-           dc.SetFont(*can->font);
-           }
+            {
+            last_wx = -1 ;
+            dc.SetTextForeground ( *wxBLACK ) ;
+            dc.SetTextBackground ( nbgc ) ;
+            FILLSTRING ( t , (wxChar)' ' , endnumberlength ) ;
+            dc.DrawText ( t , rax, ray ) ;
+            dc.SetFont(*can->varFont);
+            t = myname ;
+            t = _T(" ") + t ;
+            int tw , th ;
+            do
+                {
+                t = t.substr ( 1 , t.length()-1 ) ;
+                dc.GetTextExtent ( t , &tw , &th ) ;
+                } while ( tw > endnumberlength * wx ) ;
+            dc.DrawText ( t , rax, ray ) ;
+            dc.SetTextBackground ( *wxWHITE ) ;
+            dc.SetFont(*can->font);
+            }
         }
     dc.SetBackgroundMode ( bm ) ;
     dc.SetTextBackground ( tbg ) ;

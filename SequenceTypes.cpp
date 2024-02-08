@@ -1,11 +1,11 @@
 /** \file
-	\brief Contains the SeqBasic, SeqPrimer, SeqNum, and SeqDivider class members
+    \brief Contains the SeqBasic, SeqPrimer, SeqNum, and SeqDivider class members
 */
 #include "SequenceCanvas.h"
 
 //************************************************ SeqBasic
 
-void SeqBasic::init ( SequenceCanvas *ncan )
+void SeqBasic::init ( SequenceCanvas * const ncan )
     {
     offset = 0 ;
     takesMouseActions = false ;
@@ -14,7 +14,7 @@ void SeqBasic::init ( SequenceCanvas *ncan )
     force_add_line_number = 0 ;
     }
 
-void SeqBasic::logsize ()
+void SeqBasic::logsize () const
     {
     mylog ( whatsthis() , wxString::Format ( _T("s %d") , s.length() ) ) ;
     mylog ( whatsthis() , wxString::Format ( _T("p %d") , pos.p.GetCount() * sizeof ( int ) ) ) ;
@@ -24,51 +24,51 @@ void SeqBasic::logsize ()
     mylog ( "---" , "" ) ;
     }
 
-void SeqBasic::editMode ( bool on )
-	{
-	if ( on )
-		{
-//		s += " " ;
-		}
-	else
- 		{
-		if ( !whatsthis().StartsWith ( _T("PRIMER") ) &&
- 				!s.IsEmpty() && s.GetChar ( s.length() - 1 ) == ' ' )
- 			s = s.Left ( s.length() - 1 ) ;
-   		}
-	}
-
-void SeqBasic::addHighlight ( int from , int to , wxColour c )
+void SeqBasic::editMode ( const bool on )
     {
-	if ( can && can->child )
-		{
-		if ( to < from ) to += can->child->vec->getSequenceLength() ;
-		}
-	highlight_begin.Add ( from ) ;
-	highlight_end.Add ( to ) ;
-	highlight_color.push_back ( c ) ;
+    if ( on )
+        {
+//      s += " " ;
+        }
+    else
+        {
+        if ( !whatsthis().StartsWith ( _T("PRIMER") ) && !s.IsEmpty() && s.GetChar ( s.length() - 1 ) == ' ' )
+             s = s.Left ( s.length() - 1 ) ;
+        }
     }
 
-wxColour SeqBasic::getHighlightColor ( int pos , wxColour c )
+void SeqBasic::addHighlight ( const int from , const int t , const wxColour& c )
+    {
+    int to (t) ;
+    if ( can && can->child )
+        {
+        if ( to < from ) to += can->child->vec->getSequenceLength() ;
+        }
+    highlight_begin.Add ( from ) ;
+    highlight_end.Add ( to ) ;
+    highlight_color.push_back ( c ) ;
+    }
+
+wxColour SeqBasic::getHighlightColor ( const int pos , const wxColour& c )
     {
     if ( !can || !can->child || !can->child->vec ) return c ;
-	int a , l = can->child->vec->getSequenceLength() ;
-	for ( a = 0 ; a < highlight_end.size() ; a++ )
-		{
-		if ( pos >= highlight_begin[a] && pos <= highlight_end[a] )
-			break ;
-		if ( highlight_end[a] - l >= pos )
-		   break ;
-		}
-	if ( a == highlight_end.size() ) return c ;
-	return highlight_color[a] ;
+    int a , l = can->child->vec->getSequenceLength() ;
+    for ( a = 0 ; a < highlight_end.size() ; a++ )
+        {
+        if ( pos >= highlight_begin[a] && pos <= highlight_end[a] )
+            break ;
+        if ( highlight_end[a] - l >= pos )
+            break ;
+        }
+    if ( a == highlight_end.size() ) return c ;
+    return highlight_color[a] ;
     }
 
 void SeqBasic::clearHighlights ()
     {
-	highlight_begin.Clear () ;
-	highlight_end.Clear () ;
-	highlight_color.clear () ;
+    highlight_begin.Clear () ;
+    highlight_end.Clear () ;
+    highlight_color.clear () ;
     }
 
 
@@ -79,11 +79,11 @@ SeqBasic::~SeqBasic ()
 
 //************************************************ SeqPrimer
 
-bool SeqPrimer::useDirectRoutines () { return true ; }
+bool SeqPrimer::useDirectRoutines () const { return true ; }
 
-int SeqPrimer::arrange_direct ( int n )
+int SeqPrimer::arrange_direct ( const int n )
     {
-//    arrange ( n ) ;
+//  arrange ( n ) ;
     return SeqDNA::arrange_direct ( n ) ;
     }
 
@@ -99,9 +99,9 @@ void SeqPrimer::show ( wxDC& dc )
     wxColour tbg = dc.GetTextBackground () ;
     wxColour tfg = dc.GetTextForeground () ;
     int bm = dc.GetBackgroundMode () ;
-    int a , b , cnt = offset+1 ;
+    int cnt = offset+1 ;
     wxString t ;
-	bool showLowercaseDNA = myapp()->frame->showLowercaseDNA ;
+    bool showLowercaseDNA = myapp()->frame->showLowercaseDNA ;
 
     dc.SetTextBackground ( *wxWHITE ) ;
     dc.SetTextForeground ( *wxBLACK ) ;
@@ -112,9 +112,9 @@ void SeqPrimer::show ( wxDC& dc )
     ya = -ya ;
     can->MyGetClientSize ( &xa , &yb ) ;
     yb += ya ;
-    for ( a = 0 ; a < pos.p.GetCount() ; a++ )
+    for ( int a = 0 ; a < pos.p.GetCount() ; a++ )
         {
-        b = pos.p[a] ;
+        int b = pos.p[a] ;
         int ty = pos.r[a].y ;
         int tz = ty + can->charheight ;
         bool insight = true ;
@@ -124,83 +124,82 @@ void SeqPrimer::show ( wxDC& dc )
         if ( !insight && ty > yb ) a = pos.p.GetCount() ;
         if ( b > 0 && !insight ) cnt++ ;
         if ( b > 0 && insight ) // Character
-           {
-           t = s.GetChar(b-1) ;
-           int pm = getMark ( a ) ;
-           if ( pm == 1 )
-              {
-              dc.SetTextBackground ( *wxLIGHT_GREY ) ;
-              dc.SetTextForeground ( *wxBLACK ) ;
-              }
-           else if ( pm == 2 && can->doOverwrite() )
-              {
-              dc.SetTextBackground ( *wxBLACK ) ;
-              dc.SetTextForeground ( *wxWHITE ) ;
-              }
-           if ( s.GetChar(b-1) == vec->getSequenceChar(b-1) ) dc.SetTextForeground ( *wxBLUE ) ;
-           else dc.SetTextForeground ( *wxRED ) ;
-           if ( can->isPrinting() && !can->getPrintToColor() )
-              {
-              dc.SetTextForeground ( *wxBLACK ) ;
-              dc.SetBackgroundMode ( wxTRANSPARENT ) ;
-              }
+            {
+            t = s.GetChar(b-1) ;
+            int pm = getMark ( a ) ;
+            if ( pm == 1 )
+                {
+                dc.SetTextBackground ( *wxLIGHT_GREY ) ;
+                dc.SetTextForeground ( *wxBLACK ) ;
+                }
+            else if ( pm == 2 && can->doOverwrite() )
+                {
+                dc.SetTextBackground ( *wxBLACK ) ;
+                dc.SetTextForeground ( *wxWHITE ) ;
+                }
+            if ( s.GetChar(b-1) == vec->getSequenceChar(b-1) ) dc.SetTextForeground ( *wxBLUE ) ;
+            else dc.SetTextForeground ( *wxRED ) ;
+            if ( can->isPrinting() && !can->getPrintToColor() )
+                {
+                dc.SetTextForeground ( *wxBLACK ) ;
+                dc.SetBackgroundMode ( wxTRANSPARENT ) ;
+                }
 
-		   if ( showLowercaseDNA ) dc.DrawText ( t.Lower() , pos.r[a].x, pos.r[a].y ) ;
-           else dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
+            if ( showLowercaseDNA ) dc.DrawText ( t.Lower() , pos.r[a].x, pos.r[a].y ) ;
+            else dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
 
-           if ( pm == 2 && !can->doOverwrite() )
-              {
-                 int tx = pos.r[a].x , ty = pos.r[a].y ;
-                 int tz = ty + can->charheight ;
-                 dc.SetPen(*wxBLACK_PEN);
-                 dc.DrawLine ( tx-1 , ty , tx-1 , tz ) ;
-                 dc.DrawLine ( tx-3 , ty , tx+2 , ty ) ;
-                 dc.DrawLine ( tx-3 , tz , tx+2 , tz ) ;
-              }
-           if ( pm > 0 )
-              {
-              dc.SetTextBackground ( *wxWHITE ) ;
-              dc.SetTextForeground ( *wxBLACK ) ;
-              }
-           cnt++ ;
-           }
+            if ( pm == 2 && !can->doOverwrite() )
+                {
+                int tx = pos.r[a].x , ty = pos.r[a].y ;
+                int tz = ty + can->charheight ;
+                dc.SetPen(*wxBLACK_PEN);
+                dc.DrawLine ( tx-1 , ty , tx-1 , tz ) ;
+                dc.DrawLine ( tx-3 , ty , tx+2 , ty ) ;
+                dc.DrawLine ( tx-3 , tz , tx+2 , tz ) ;
+                }
+            if ( pm > 0 )
+                {
+                dc.SetTextBackground ( *wxWHITE ) ;
+                dc.SetTextForeground ( *wxBLACK ) ;
+                }
+            cnt++ ;
+            }
         else if ( insight ) // Front number
-           {
-           dc.SetTextForeground ( *wxBLUE ) ;
-           if ( showNumbers )
-              {
-              //sprintf ( u , "%d" , cnt ) ;
-              //t = u ;
-				  t = wxString::Format ( _T("%d") , cnt ) ;
-              while ( t.length() < endnumberlength ) t = _T("0") + t ;
-              }
-           else t = alternateName ;
-           dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
-           }
+            {
+            dc.SetTextForeground ( *wxBLUE ) ;
+            if ( showNumbers )
+                {
+                //sprintf ( u , "%d" , cnt ) ;
+                //t = u ;
+                t = wxString::Format ( _T("%d") , cnt ) ;
+                while ( t.length() < endnumberlength ) t = _T("0") + t ;
+                }
+            else t = alternateName ;
+            dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
+            }
         }
     dc.SetBackgroundMode ( bm ) ;
     dc.SetTextBackground ( tbg ) ;
     dc.SetTextForeground ( tfg ) ;
     }
 
-void SeqPrimer::initFromTVector ( TVector *v )
+void SeqPrimer::initFromTVector ( /* const */ TVector * const v )
     {
-    vec = v ;
+    vec = v ; // FIXME: Needs copy constructor - not const
     s = vec->getSequence() ;
     for ( int a = 0 ; a < s.length() ; a++ ) s.SetChar(a,' ') ;
     takesMouseActions = true ;
     showNumbers = false ;
     }
 
-void SeqPrimer::addPrimer ( TPrimer *p )
+void SeqPrimer::addPrimer ( const TPrimer * const p )
     {
-    int a ;
     TVector d ;
     myass ( p , "SeqPrimer::addPrimer_0" ) ;
     myass ( vec , "SeqPrimer::addPrimer_1" ) ;
     d.setSequence ( s )  ;
     d.setCircular(vec->isCircular()) ;
-    for ( a = p->from ; a <= p->to ; a++ )
+    for ( int a = p->from ; a <= p->to ; a++ )
         {
         myass ( a-p->from >= 0 , "SeqPrimer::addPrimer_2" ) ;
         myass ( a-p->from < p->sequence.length() , "SeqPrimer::addPrimer_3" ) ;
@@ -211,9 +210,9 @@ void SeqPrimer::addPrimer ( TPrimer *p )
 
 //************************************************ SeqNum
 
-int SeqNum::arrange ( int n )
+int SeqNum::arrange ( const int n )
     {
-    int a , x , y , w , h , bo = can->border , lowy = 0 ;
+    int x , y , w , h , bo = can->border , lowy = 0 ;
     int lasta = 0 ;
 
     // Setting basic values
@@ -223,7 +222,7 @@ int SeqNum::arrange ( int n )
     int ox = bo+wx , oy = n*wy+bo ;//, endnumber = offset + s.length() ;
 
     endnumberlength = 0 ;
-    for ( a = 0 ; a < can->seq.GetCount() ; a++ )
+    for ( int a = 0 ; a < can->seq.GetCount() ; a++ )
         {
         if ( can->seq[a]->whatsthis() == _T("ALIGN") )
            {
@@ -243,24 +242,24 @@ int SeqNum::arrange ( int n )
     x = ox ;
     y = oy ;
     bool blockstart = true ;
-    for ( a = 0 ; a < s.length() ; a++ )
+    for ( int a = 0 ; a < s.length() ; a++ )
         {
         if ( blockstart ) pos.add ( a+1 , x , y , wx-1 , wy-1 ) ;
         blockstart = false ;
         lowy = y+wy ;
         x += wx ;
         if ( (a+1) % can->blocksize == 0 )
-           {
-           blockstart = true ;
-           x += wx-1 ;
-           if ( x+wx*(can->blocksize+1) >= w )
-              {
-              pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
-              lasta = pos.p.GetCount()+1 ;
-              x = ox ;
-              y += wy * ( can->seq.GetCount() + can->blankline ) ;
-              }
-           }
+            {
+            blockstart = true ;
+            x += wx-1 ;
+            if ( x+wx*(can->blocksize+1) >= w )
+                {
+                pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
+                lasta = pos.p.GetCount()+1 ;
+                x = ox ;
+                y += wy * ( can->seq.GetCount() + can->blankline ) ;
+                }
+            }
         }
     if ( lasta != pos.p.GetCount()+1 )
         pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
@@ -272,12 +271,12 @@ void SeqNum::show ( wxDC& dc )
     dc.SetFont(*can->font);
     wxColour tbg = dc.GetTextBackground () ;
     wxColour tfg = dc.GetTextForeground () ;
-    int a , bm = dc.GetBackgroundMode () ;
+    int bm = dc.GetBackgroundMode () ;
     dc.SetTextForeground ( *wxBLACK ) ;
     dc.SetTextBackground ( *wxWHITE ) ;
     dc.SetBackgroundMode ( wxSOLID ) ;
     //char tt[100] ;
-    for ( a = 0 ; a < pos.p.GetCount() ; a++ )
+    for ( int a = 0 ; a < pos.p.GetCount() ; a++ )
         {
         //sprintf ( tt , "%d" , pos.p[a]+offset ) ;
         dc.DrawText ( wxString::Format ( _T("%d") , pos.p[a]+offset ) , pos.r[a].x, pos.r[a].y ) ;
@@ -289,9 +288,9 @@ void SeqNum::show ( wxDC& dc )
 
 //************************************************ SeqDivider
 
-int SeqDivider::arrange ( int n )
+int SeqDivider::arrange ( const int n )
     {
-    int a , x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
+    int x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
     int lasta = 0 ;
 
     // Setting basic values
@@ -310,24 +309,24 @@ int SeqDivider::arrange ( int n )
     x = ox ;
     y = oy ;
     pos.add ( -(++l) , bo , y , ox-wx-bo , wy-1 ) ; // Line number
-    for ( a = 0 ; a < s.length() ; a++ )
+    for ( int a = 0 ; a < s.length() ; a++ )
         {
-//        pos.add ( a+1 , x , y , wx-1 , wy-1 ) ;
+//      pos.add ( a+1 , x , y , wx-1 , wy-1 ) ;
         lowy = y+wy ;
         x += wx ;
         if ( (a+1) % can->blocksize == 0 )
-           {
-           x += wx-1 ;
-           if ( x+wx*(can->blocksize+1) >= w )
-              {
-              pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
-              lasta = pos.p.GetCount()+1 ;
-              x = ox ;
-              y += wy * ( can->seq.GetCount() + can->blankline ) ;
-              if ( a+1 < s.length() )
-                 pos.add ( -(++l) , bo , y , ox-wx-5 , wy-1 ) ; // Line number
-              }
-           }
+            {
+            x += wx-1 ;
+            if ( x+wx*(can->blocksize+1) >= w )
+                {
+                pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
+                lasta = pos.p.GetCount()+1 ;
+                x = ox ;
+                y += wy * ( can->seq.GetCount() + can->blankline ) ;
+                if ( a+1 < s.length() )
+                    pos.add ( -(++l) , bo , y , ox-wx-5 , wy-1 ) ; // Line number
+                }
+            }
         }
     if ( lasta != pos.p.GetCount()+1 )
         pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
@@ -336,9 +335,9 @@ int SeqDivider::arrange ( int n )
 
 void SeqDivider::show ( wxDC& dc )
     {
-    int a , w , h ;
+    int w , h ;
     can->MyGetSize ( &w , &h ) ;
-    for ( a = 0 ; a < pos.p.GetCount() ; a++ )
+    for ( int a = 0 ; a < pos.p.GetCount() ; a++ )
         {
         int y = pos.r[a].y + can->charheight/2 ;
         dc.SetPen(*wxGREY_PEN);
@@ -352,9 +351,8 @@ void SeqDivider::show ( wxDC& dc )
         }
     }
 
-void SeqDivider::initFromTVector ( TVector *v )
+void SeqDivider::initFromTVector ( TVector * const v )
     {
-//    vec = v ;
+//  vec = v ;
     s = v->getSequence() ;
     }
-
