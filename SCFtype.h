@@ -11,9 +11,9 @@ class SCFtype
     public :
     SCFtype () ;
     bool parse ( const wxString& filename ) ;
-    
+
     TSequencerData sd ;
-    
+
     private :
     void read_data_block ( const void * const v , const unsigned int mode ) ;
     void read_tracer_block ( const void * const v , const unsigned int mode , const unsigned int sample_size ) ;

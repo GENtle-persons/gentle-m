@@ -56,7 +56,7 @@ class TTestSuite
     virtual void vectorAction ( ChildBase *ac ) ; ///< \brief Simulates a random action
 
     virtual void mouseEvent ( ChildBase *ac ) ; ///< \brief Simulates a mouse event
-    
+
     virtual void aaAction ( ChildBase *ac ) ; ///< \brief Simulates a random action
     int start ; ///< \brief Internal start value
     int cnt ; ///< \brief Internal counter
@@ -85,7 +85,7 @@ class TProject
 
 /** \class MyFrame
     \brief Frame class
-    
+
     This class contains the actually displayed frame, as well as several
     often-used functions.
 */
@@ -178,7 +178,7 @@ public:
     virtual void saveImage ( const wxBitmap * const bmp , const wxString& name = "" ) ;
     virtual wxChoice *AddFontsizeTool ( wxToolBar* toolBar , int id ) ;
     virtual void notifyChildrenChanged() ;
-    
+
     virtual void push_help ( const wxString& name ) ;
     virtual void pop_help () ;
     virtual wxString get_help () const ;

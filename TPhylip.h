@@ -8,7 +8,7 @@ class TPhylip
     public :
     TPhylip () ;
     ~TPhylip () ;
-    
+
     wxString protpars ( const wxString& s ) ;
     wxString dnapars ( const wxString& s ) ;
     wxString dnamove ( const wxString& s ) ;
@@ -44,13 +44,13 @@ class TPhylip
     wxString treedist ( const wxString& s ) ;
     wxString consense ( const wxString& s ) ;
     wxString retree ( const wxString& s ) ;
-    
+
     void query_phylip_dir ( bool setit = true ) ;
     bool IsOK () ;
-    
+
     private :
     wxString runapp ( const wxString& app , const wxString& s ) ;
-    
+
     wxString phylip_dir ;
     } ;
 

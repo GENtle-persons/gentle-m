@@ -13,13 +13,13 @@ class TProteolysisGel : public wxScrolledWindow
     virtual void OnEvent(wxMouseEvent& event); ///< Mouse event handler
 
     wxArrayInt screen , logical ;
-    
+
     DECLARE_EVENT_TABLE()
     } ;
 
 typedef vector <TProtease*> TProteaseArray ;
 typedef vector <TProteaseCut*> TProteaseCutArray ;
-    
+
 class TProteolysisSuggestion
     {
     public :
@@ -53,7 +53,7 @@ class TProteolysis : public wxDialog
     void OnSortResults(wxCommandEvent& event) ; ///< Sort results event handler
     void OnNumProts(wxCommandEvent& event) ; ///< Number of proteases event handler
     void OnResults ( wxCommandEvent &ev ) ; ///< Fragment list checkbox changed
-    
+
     void draw_gel ( wxDC &dc ) const ; ///< Draw the virtual gel
     void select_fragments ( const wxArrayInt &ai ) ;
 
@@ -72,7 +72,7 @@ class TProteolysis : public wxDialog
     void sort_cuts ( TProteaseCutArray &apc ) ;
     void add_final_piece ( TProteaseCutArray &apc ) ;
     void find_cutting_proteases () ;
-    
+
     TAminoAcids *parent ;
     TVector *v ;
     TStorage *ls ;
@@ -89,7 +89,7 @@ class TProteolysis : public wxDialog
     vector <TProtease*> pr_cache , cutting_proteases ;
     vector <TProteaseCutArray> pc_cache ;
     int max_dep ;
-    
+
     DECLARE_EVENT_TABLE()
     } ;
 

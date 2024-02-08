@@ -47,26 +47,26 @@ class TGraphDialog : public wxDialog
     virtual void add_nb_graph () ;
     virtual void add_nb_data () ;
     virtual void add_nb_scales () ;
-    
+
     virtual void save_settings () ;
-    
+
     TGraph *parent ;
     wxNotebook *nb ;
     wxPanel *nb_graph , *nb_data , *nb_scales ;
-    
+
     wxListBox *lb_scales , *lb_data ;
     wxTextCtrl *scales_name , *scales_min , *scales_max , *scales_unit , *scales_color ;
     wxChoice *ch_scales_type ;
-    
+
     wxTextCtrl *data_name , *data_color ;
     wxChoice *ch_data_pointstyle , *ch_data_scalex , *ch_data_scaley ;
-    
+
     int last_scale , last_data ;
     bool set_up ;
-    
+
     vector <TGraphScale*> scales ;
     vector <TGraphData*> data ;
-    
+
     DECLARE_EVENT_TABLE()
     } ;
 
