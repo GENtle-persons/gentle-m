@@ -92,15 +92,16 @@ const char nonummask[11] = "~!@#$%^&*(";
                           /* Local variables for readSeq: */
 /// Part of the ClustalW package
 struct ReadSeqVars {
-  short choice, err, nseq;
-  long  seqlen, maxseq, seqlencount;
-  short topnseq;
-  long  topseqlen;
+  short choice, err ;
+  size_t nseq;
+  size_t seqlen, maxseq, seqlencount;
+  size_t topnseq;
+  size_t topseqlen;
   const char *fname;
   char *seq, *seqid, matchchar;
   boolean allDone, done, filestart, addit;
   FILE  *f;
-  long  linestart;
+  size_t  linestart;
   char  s[256*10+42], *sp; // to reduce the chance to run into unallocated memory
 
   //int (*isseqchar)();
@@ -109,27 +110,27 @@ struct ReadSeqVars {
 
 
 
-int isSeqChar(int c)
+int isSeqChar(const int c)
 {
   return (isalpha(c) || strchr(seqsymbols,c));
 }
 
-int isSeqNumChar(int c)
+int isSeqNumChar(const int c)
 {
   return (isalnum(c) || strchr(seqsymbols,c));
 }
 
 
-int isAnyChar(int c)
+int isAnyChar(const int c)
 {
   return isascii(c); /* wrap in case isascii is macro */
 }
 
-Local void readline(FILE *f, char *s, long *linestart)
+Local void readline(FILE *f, char * const s, size_t * const linestart)
 {
   char  *cp;
 
-  *linestart= ftell(f);
+  *linestart = ftell(f);
   if (NULL == fgets(s, 256, f))
     *s = 0;
   else {
@@ -143,13 +144,13 @@ Local void mygetline(struct ReadSeqVars *V)
   readline(V->f, V->s, &V->linestart);
 }
 
-Local void ungetline(struct ReadSeqVars *V)
+Local void ungetline(const struct ReadSeqVars * const V)
 {
   fseek(V->f, V->linestart, 0);
 }
 
 
-Local void addseq(char *s, struct ReadSeqVars *V)
+Local void addseq(const char *s, struct ReadSeqVars *V)
 {
   char  *ptr;
 
@@ -170,13 +171,13 @@ Local void addseq(char *s, struct ReadSeqVars *V)
     }
 }
 
-Local void countseq(char *s, struct ReadSeqVars *V)
+Local void countseq(const char *s, /* const */ struct ReadSeqVars * const V)
  /* this must count all valid seq chars, for some formats (paup-sequential) even
     if we are skipping seq... */
 {
   while (*s != 0) {
     if ((V->isseqchar)(*s)) {
-      (V->seqlencount)++;
+      (V->seqlencount)++; // modifying V, which is unexpected
       }
     s++;
     }
@@ -190,7 +191,7 @@ Local void addinfo(const char * const s, struct ReadSeqVars * const V)
   char * const si = s2;
   const char *stmp=s;
   while (*stmp == ' ') stmp++;
-  snprintf(si, sizeof(s2)-1, " %d)  %s\n", V->nseq, stmp); // skipping prefix of spaces
+  snprintf(si, sizeof(s2)-1, " %zu)  %s\n", V->nseq, stmp); // skipping prefix of spaces
 
   const boolean saveadd = V->addit;
   V->addit = true;
@@ -525,9 +526,9 @@ Local void readUWGCG(struct ReadSeqVars *V)
 Local void readOlsen(struct ReadSeqVars *V)
 { /* G. Olsen /print output from multiple sequence editor */
 
-  char    *si, *sj, *sk, *sm, sid[40], snum[20];
+  char    *si, *sj, *sk, *sm, sid[40]="", snum[20]="";
   boolean indata = false;
-  int snumlen;
+  int snumlen=0;
 
   V->addit = (V->choice > 0);
   if (V->addit) V->seqlen = 0;
@@ -608,7 +609,7 @@ Local void readOlsen(struct ReadSeqVars *V)
 Local void readMSF(struct ReadSeqVars *V)
 { /* gcg's MSF, mult. sequence format, interleaved ! */
 
-  char    *si, *sj, sid[128];
+  char    *si, *sj, sid[128]="";
   boolean indata = false;
   int     iline= 0;
 
@@ -671,7 +672,7 @@ Local void readMSF(struct ReadSeqVars *V)
 Local void readPAUPinterleaved(struct ReadSeqVars *V)
 { /* PAUP mult. sequence format, interleaved or sequential! */
 
-  char    *si, *sj, *send, sid[40], sid1[40], saveseq[255];
+  char    *si, *sj, *send, sid[40]="", sid1[40]="", saveseq[255]="";
   boolean first = true, indata = false, domatch;
   int     iline= 0, ifmc;
   unsigned long saveseqlen=0;
@@ -929,7 +930,7 @@ Local void readPhylipSequential(struct ReadSeqVars *V)
 
 Local void readSeqMain(
       struct ReadSeqVars *V,
-      const long  skiplines_,
+      const size_t skiplines_,
       const short format_)
 {
 #define tolowerstr(s) { long Itlwr, Ntlwr= strlen(s); \
@@ -1024,12 +1025,12 @@ Local void readSeqMain(
 
 
 char *readSeqFp(
-      const short whichEntry_,  /* index to sequence in file */
+      const size_t whichEntry_,  /* index to sequence in file */
       FILE  *fp_,   /* pointer to open seq file */
-      const long  skiplines_,
+      const size_t skiplines_,
       const short format_,      /* sequence file format */
-      long  *seqlen_,     /* return seq size */
-      short *nseq_,       /* number of seqs in file, for listSeqs() */
+      size_t  *seqlen_,     /* return seq size */
+      size_t *nseq_,       /* number of seqs in file, for listSeqs() */
       short *error_,      /* return error */
       char  *seqid_)      /* return seq name/info */
 {
@@ -1072,12 +1073,12 @@ char *readSeqFp(
 }
 
 char *readSeq(
-      const short whichEntry_,  /* index to sequence in file */
+      const size_t whichEntry_,  /* index to sequence in file */
       const char  *filename_,   /* file name */
-      const long  skiplines_,
+      const size_t skiplines_,
       const short format_,      /* sequence file format */
-      long  *seqlen_,     /* return seq size */
-      short *nseq_,       /* number of seqs in file, for listSeqs() */
+      size_t  *seqlen_,     /* return seq size */
+      size_t  *nseq_,       /* number of seqs in file, for listSeqs() */
       short *error_,      /* return error */
       char  *seqid_)      /* return seq name/info */
 {
@@ -1124,16 +1125,15 @@ char *readSeq(
 
 char *listSeqs(
       const char  *filename_,   /* file name */
-      const long skiplines_,
+      const size_t skiplines_,
       const short format_,      /* sequence file format */
-      short *nseq_,       /* number of seqs in file, for listSeqs() */
+      size_t *nseq_,       /* number of seqs in file, for listSeqs() */
       short *error_)      /* return error */
 {
-  char  seqid[256];
-  long  seqlen;
+  char   seqid[256];
+  size_t seqlen;
 
-  return readSeq( kListSequences, filename_, skiplines_, format_,
-                  &seqlen, nseq_, error_, seqid);
+  return readSeq( kListSequences, filename_, skiplines_, format_, &seqlen, nseq_, error_, seqid);
 }
 
 
@@ -1141,7 +1141,7 @@ char *listSeqs(
 
 short seqFileFormat(    /* return sequence format number, see ureadseq.h */
     const char *filename,
-    long  *skiplines,   /* return #lines to skip any junk like mail header */
+    size_t *skiplines,   /* return #lines to skip any junk like mail header */
     short *error)       /* return any error value or 0 */
 {
   FILE      *fseq;
@@ -1155,18 +1155,18 @@ short seqFileFormat(    /* return sequence format number, see ureadseq.h */
 
 short seqFileFormatFp(
     FILE *fseq,
-    long  *skiplines,   /* return #lines to skip any junk like mail header */
+    size_t  *skiplines,   /* return #lines to skip any junk like mail header */
     short *error)       /* return any error value or 0 */
 {
-  boolean   foundDNA= false, foundIG= false, foundStrider= false,
-            foundGB= false, foundPIR= false, foundEMBL= false, foundNBRF= false,
-            foundPearson= false, foundFitch= false, foundPhylip= false, foundZuker= false,
-            gotolsen= false, gotpaup = false, gotasn1 = false, gotuw= false, gotMSF= false,
-            isfitch= false,  isphylip= false, done= false;
-  short     format= kUnknown;
-  int       nlines= 0, k, otherlines= 0, aminolines= 0, dnalines= 0;
-  char      sp[256];
-  long      linestart=0;
+  boolean foundDNA= false, foundIG= false, foundStrider= false,
+          foundGB= false, foundPIR= false, foundEMBL= false, foundNBRF= false,
+          foundPearson= false, foundFitch= false, foundPhylip= false, foundZuker= false,
+          gotolsen= false, gotpaup = false, gotasn1 = false, gotuw= false, gotMSF= false,
+          isfitch= false,  isphylip= false, done= false;
+  short   format= kUnknown;
+  size_t  nlines= 0, k, otherlines= 0, aminolines= 0, dnalines= 0;
+  char    sp[256];
+  size_t  linestart=0;
   size_t  splen= 0;
   int     maxlines2check=500;
 
@@ -1180,7 +1180,7 @@ short seqFileFormatFp(
   if (fseq == NULL) { *error = eFileNotFound;  return kNoformat; }
 
   while ( !done ) {
-    ReadOneLine(sp);
+    ReadOneLine(sp); // the readline function expects a long
 
     /* check for mailer head & skip past if found */
     if (nlines < 4 && !done) {
@@ -1345,7 +1345,7 @@ short seqFileFormatFp(
   if (format == kPhylip) {
     /* check for interleaved or sequential -- really messy */
     int tname, tseq;
-    long i, j, nspp= 0, nlen= 0, ilen, leaf= 0, seq= 0;
+    size_t i, j, nspp= 0, nlen= 0, ilen, leaf= 0, seq= 0;
     char  *ps;
 
     rewind(fseq);
@@ -1409,12 +1409,12 @@ short seqFileFormatFp(
 
 
 
-unsigned long GCGchecksum( const char *seq, const long seqlen, unsigned long *checktotal)
+unsigned long GCGchecksum( const char *seq, const size_t seqlen, unsigned long *checktotal)
 /* GCGchecksum */
 {
-  register long  i, check = 0, count = 0;
+  register unsigned long check = 0, count = 0;
 
-  for (i = 0; i < seqlen; i++) {
+  for (register size_t i = 0; i < seqlen; i++) {
     count++;
     check += count * to_upper(seq[i]);
     if (count == 57) count = 0;
@@ -1481,11 +1481,11 @@ const unsigned long crctab[] = {
   0x2d02ef8dL
 };
 
-unsigned long CRC32checksum(const char *seq, const long seqlen, unsigned long *checktotal)
+unsigned long CRC32checksum(const char *seq, size_t seqlen, unsigned long *checktotal)
 /*CRC32checksum: modified from CRC-32 algorithm found in ZIP compression source */
 {
   register unsigned long c = 0xffffffffL;
-  register long n = seqlen;
+  register size_t n = seqlen;
 
   while (n--) c = crctab[((int)c ^ (to_upper(*seq++))) & 0xff] ^ (c >> 8);
   c= c ^ 0xffffffffL;
@@ -1496,15 +1496,14 @@ unsigned long CRC32checksum(const char *seq, const long seqlen, unsigned long *c
 
 
 
-short getseqtype( const char *seq, const long seqlen)
+short getseqtype( const char *seq, const size_t seqlen)
 { /* return sequence kind: kDNA, kRNA, kProtein, kOtherSeq, ??? */
-  char  c;
-  short i, maxtest;
+  short maxtest;
   short na = 0, aa = 0, po = 0, nt = 0, nu = 0, ns = 0, no = 0;
 
   maxtest = min(300, seqlen);
-  for (i = 0; i < maxtest; i++) {
-    c = to_upper(seq[i]);
+  for (short i = 0; i < maxtest; i++) {
+    char c = to_upper(seq[i]);
     if (strchr(protonly, c)) po++;
     else if (strchr(primenuc,c)) {
       na++;
@@ -1530,24 +1529,35 @@ short getseqtype( const char *seq, const long seqlen)
 } /* getseqtype */
 
 
-char* compressSeq( const char gapc, const char *seq, const long seqlen, long *newlen)
+char* compressSeq( const char gapc, const char *seq, const size_t seqlen, size_t *newlen)
 {
-  register char *a, *b;
-  register long i;
+  register char *b;
+  register long i = 0 ;
   char  *newseq;
 
-  *newlen= 0;
+  *newlen = 0;
   if (!seq) return NULL;
-  newseq = (char*) malloc(seqlen+1);
-  if (!newseq) return NULL;
-  for (a= (char*)seq, b=newseq, i=0; *a!=0; a++)
+  b = newseq = (char*) malloc(seqlen+1);
+  if (!newseq)
+      {
+      fprintf(stderr,"E: compressSeq: Failed allocating memory. Trouble!\n") ;
+      return NULL;
+      }
+  for (register char *a = (char*)seq; *a!=0; a++)
     if (*a != gapc) {
-      *b++= *a;
-      i++;
+      *b = *a;
+      i++ ;
+      b++ ;
       }
   *b= '\0';
+  b = newseq ; // track original address
   newseq = (char*) realloc(newseq, i+1);
-  *newlen= i;
+  if (!newseq)
+      {
+          free(b) ; // free old memory if realloc failed
+	  fprintf(stderr,"E: compressSeq: Failed reallocating memory. Trouble.\n") ;
+      }
+  *newlen = i;
   return newseq;
 }
 
@@ -1568,8 +1578,7 @@ char *rtfhead = "{\\rtf1\\defformat\\mac\\deff2 \
 char *rtftail = "}";
 ****/
 
-short writeSeq(FILE *outf, const char *seq, const long seqlen,
-                const short outform, const char *seqid)
+size_t writeSeq(FILE *outf, const char *seq, const size_t seqlen, const short outform, const char *seqid)
 /* dump sequence to standard output */
 {
   const short kSpaceAll = -9;
@@ -1583,13 +1592,14 @@ short writeSeq(FILE *outf, const char *seq, const long seqlen,
   short   spacer = 0, width  = 50, tab = 0;
   /* new parameters: width, spacer, those above... */
 
-  short linesout = 0, seqtype = kNucleic;
+  size_t linesout = 0 ;
+  short seqtype = kNucleic;
   long  i, j, l, l1, ibase;
   char  idword[31+42], endstr[10+42];
   char  seqnamestore[128], *seqname = seqnamestore;
   char  s[kMaxseqwidth], *cp;
   char  nameform[10+42], numform[10+42], nocountsymbols[10+42];
-  unsigned long checksum = 0, checktotal = 0;
+  size_t checksum = 0, checktotal = 0;
 
   gPretty.atseq++;
   skipwhitespace(seqid);
@@ -1729,7 +1739,7 @@ short writeSeq(FILE *outf, const char *seq, const long seqlen,
       fprintf(outf,"    id { local id %d },\n", gPretty.atseq);
       fprintf(outf,"    descr { title \"%s\" },\n", seqid);
       fprintf(outf,"    inst {\n");
-      fprintf(outf,"      repr raw, mol %s, length %ld, topology linear,\n", cp, seqlen);
+      fprintf(outf,"      repr raw, mol %s, length %zu, topology linear,\n", cp, seqlen);
       fprintf(outf,"      seq-data\n");
       if (seqtype == kAmino)
         fprintf(outf,"        iupacaa \"");

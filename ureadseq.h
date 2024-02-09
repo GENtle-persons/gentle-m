@@ -123,42 +123,36 @@ extern  prettyopts  gPretty;
 extern "C" {
 #endif
 
-extern short seqFileFormat(const char *filename, long *skiplines, short *error );
-extern short seqFileFormatFp(FILE *fseq, long  *skiplines, short *error );
+extern short seqFileFormat(const char *filename, size_t *skiplines, short *error );
+extern short seqFileFormatFp(FILE *fseq, size_t  *skiplines, short *error );
 
-extern char *listSeqs(const char *filename, const long skiplines,
-                       const short format, short *nseq, short *error );
+extern char *listSeqs(const char *filename, const size_t skiplines,
+                       const short format, size_t *nseq, short *error );
 
-extern char *readSeq(const short whichEntry, const char *filename,
-                      const long skiplines, const short format,
-                      long *seqlen, short *nseq, short *error, char *seqid );
+extern char *readSeq(const size_t whichEntry, const char *filename,
+                      const size_t skiplines, const short format,
+                      size_t *seqlen, size_t *nseq, short *error, char *seqid );
 
-extern char *readSeqFp(const short whichEntry_, FILE  *fp_,
-  const long  skiplines_, const short format_,
-        long  *seqlen_,  short *nseq_, short *error_, char *seqid_ );
+extern char *readSeqFp(const size_t whichEntry_, FILE  *fp_, const size_t  skiplines_, const short format_, size_t  *seqlen_,  size_t *nseq_, short *error_, char *seqid_ );
 
-extern short writeSeq(FILE *outf, const char *seq, const long seqlen,
-                       const short outform, const char *seqid );
+extern size_t writeSeq(FILE *outf, const char *seq, const size_t seqlen, const short outform, const char *seqid );
 
-extern unsigned long CRC32checksum(const char *seq, const long seqlen, unsigned long *checktotal);
-extern unsigned long GCGchecksum(const char *seq, const long seqlen, unsigned long *checktotal);
+extern unsigned long CRC32checksum(const char *seq, const size_t seqlen, size_t *checktotal);
+extern unsigned long GCGchecksum(const char *seq, const size_t seqlen, size_t *checktotal);
 #ifdef SMALLCHECKSUM
 #define seqchecksum  GCGchecksum
 #else
 #define seqchecksum  CRC32checksum
 #endif
 
-extern short getseqtype(const char *seq, const long seqlen );
-extern char *compressSeq( const char gapc, const char *seq, const long seqlen, long *newlen);
+extern short getseqtype(const char *seq, const size_t seqlen );
+extern char *compressSeq( const char gapc, const char *seq, const size_t seqlen, size_t *newlen);
 
 #ifdef NCBI
 
-extern char *listASNSeqs(const char *filename, const long skiplines,
-                  const short format, short *nseq, short *error );
+extern char *listASNSeqs(const char *filename, const long skiplines, const short format, size_t *nseq, short *error );
 
-extern char *readASNSeq(const short whichEntry, const char *filename,
-                const long skiplines, const short format,
-                long *seqlen, short *nseq, short *error, char **seqid );
+extern char *readASNSeq(const short whichEntry, const char *filename, const size_t skiplines, const short format, size_t *seqlen, size_t *nseq, short *error, char **seqid );
 #endif
 
 

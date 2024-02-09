@@ -40,12 +40,11 @@ void TUReadSeq::getSequences () /* not const */
     seqs.Clear () ;
     for ( size_t seqIndex = 0 ; error == 0 && seqIndex < seq_names.GetCount() ; seqIndex++ )
         {
-        size_t seqlen;     /* length of seq */
+        size_t seqlen;     /* length of seq */ // expected signed by readSeq
         char  seqid[256]; /* sequence name */
         char  *seq;       /* sequence, 0 terminated, free when done */
         seqid[0] = 0 ;
-        seq = readSeq( seqIndex+1, filename.mb_str(), skiplines, format,
-                      &seqlen, &numseqs, &error, seqid);
+        seq = readSeq( seqIndex+1, filename.mb_str(), skiplines, format, &seqlen, &numseqs, &error, seqid);
         for ( char *c = seq ; *c ; c++ )
            {
            if ( *c >= 'a' && *c <= 'z' ) *c = *c - 'a' + 'A' ;
