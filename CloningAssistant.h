@@ -47,7 +47,7 @@ class TDDR // Drag'n'Drop Rect
     wxPoint getRealOffset () const ;
     void clear_children () ;
     void do_highlight ( const wxPoint& p ) ;
-    void duplicate_from ( TDDR * const b ) ;
+    void duplicate_from ( const TDDR * const b ) ;
     void insert_new_child ( TDDR *i , TDDR *t , const bool before ) ;
 
     wxRect r ;

@@ -577,12 +577,12 @@ void TDDR::do_highlight ( const wxPoint& p )
     else highlight = DDR_HIGHLIGHT_AS ;
     }
 
-void TDDR::duplicate_from ( TDDR * const b ) // FIXME: This sounds like trouble, should be a contructor
+void TDDR::duplicate_from ( const TDDR * const b ) // FIXME: This sounds like trouble, should be a contructor
     {
     TDDR *old_parent = parent ;
-    clear_children () ;
+    clear_children () ;		    // deleted the children pointed to and the vector itself
     *this = *b ;
-    children.clear () ;		    // FIXME: This would also free children of b
+    children.clear () ;		    // clears only the vector, not the objects pointed to, i.e. the copied values
 
     while ( children.size() < b->children.size() )
         {
@@ -599,7 +599,7 @@ void TDDR::insert_new_child ( TDDR *i , TDDR *t , const bool before )
     {
     VDDR c2 ;
     c2 = children ;
-    children.clear () ;
+    children.clear () ; // frees the vector, not the object it points to
     for ( unsigned int a = 0 ; a < c2.size() ; a++ )
         {
         if ( c2[a] == t )
