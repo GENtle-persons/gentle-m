@@ -18,7 +18,7 @@ wxString SeqPlot::getTip ( int pos )
 int SeqPlot::arrange ( int n )
     {
     if ( s.IsEmpty() ) return 0 ;
-    int a , x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
+    int x , y , w , h , l = 0 , bo = can->border , lowy = 0 ;
     int lasta = 0 ;
 
     // Setting basic values
@@ -44,27 +44,29 @@ int SeqPlot::arrange ( int n )
     x = ox ;
     y = oy ;
     pos.add ( -(++l) , bo , y , ox-wx-bo , wy-1 ) ; // Line number
-    for ( a = 0 ; a < s.length() ; a++ )
+    for ( int a = 0 ; a < s.length() ; a++ )
         {
         if ( can->isMiniDisplay() && can->getAA() && can->getAA()->miniDisplayOptions == MINI_DISPLAY_CONDENSED )
-           x = ox + ( w - ox ) * a / s.length() ;
+            {
+            x = ox + ( w - ox ) * a / static_cast<unsigned int>(s.length()) ;
+            }
         pos.add ( a+1 , x , y , wx-1 , wy*lines-1 ) ;
         can->setLowX ( x + wx*2 ) ;
         lowy = y+wy*lines ;
         x += wx ;
         if ( (a+1) % can->blocksize == 0 )
-           {
-           x += wx-1 ;
-           if ( x+wx*(can->blocksize+1) >= w )
-              {
-              pos.addline ( lasta , pos.p.GetCount() , y , y+wy*lines-1 ) ;
-              lasta = pos.p.GetCount()+1 ;
-              x = ox ;
-              y += wy * ( can->seq.GetCount() + can->blankline ) ;
-              if ( a+1 < s.length() )
-                 pos.add ( -(++l) , bo , y , ox-wx-5 , wy-1 ) ; // Line number
-              }
-           }
+            {
+            x += wx-1 ;
+            if ( x+wx*(can->blocksize+1) >= w )
+                {
+                pos.addline ( lasta , pos.p.GetCount() , y , y+wy*lines-1 ) ;
+                lasta = pos.p.GetCount()+1 ;
+                x = ox ;
+                y += wy * ( can->seq.GetCount() + can->blankline ) ;
+                if ( a+1 < s.length() )
+                    pos.add ( -(++l) , bo , y , ox-wx-5 , wy-1 ) ; // Line number
+                }
+            }
         }
     if ( lasta != pos.p.GetCount()+1 )
         pos.addline ( lasta , pos.p.GetCount() , y , y+wy*lines-1 ) ;
@@ -75,44 +77,47 @@ int SeqPlot::arrange ( int n )
 // Display
 
 
-void SeqPlot::drawDottedLine ( wxDC &dc , int x1 , int y1 , int x2 , int y2 )
+void SeqPlot::drawDottedLine ( wxDC &dc , const int x1 , const int y1 , const int x2 , const int y2 ) const
     {
     if ( can->isPrinting() )
         {
         dc.DrawLine ( x1 , y1 , x2 , y2 ) ;
         return ;
         }
-    int i ;
     if ( x1 == x2 )
         {
-        for ( i = y1 ; i <= y2 ; i++ )
-           if ( i & 1 ) dc.DrawPoint ( x1 , i ) ;
+        for ( int i = y1 ; i <= y2 ; i++ )
+            if ( i & 1 ) dc.DrawPoint ( x1 , i ) ;
         }
     else
         {
-        for ( i = x1 ; i <= x2 ; i++ )
-           if ( i & 1 ) dc.DrawPoint ( i , y1 ) ;
+        for ( int i = x1 ; i <= x2 ; i++ )
+            if ( i & 1 ) dc.DrawPoint ( i , y1 ) ;
         }
     }
 
-void SeqPlot::myRect ( wxDC &dc , int x , int y , int w , int h )
+void SeqPlot::myRect ( wxDC &dc , const int x , const int y , const int w , const int h ) const
     {
     if ( can->isPrinting() )
         {
         for ( int i = 0 ; i <= h ; i++ )
-           dc.DrawLine ( x , y+i , x+w , y+i ) ;
-        return ;
+            {
+            dc.DrawLine ( x , y+i , x+w , y+i ) ;
+            }
         }
-    for ( int i = 0 ; i < w ; i++ )
+    else
         {
-        for ( int j = 0 ; j < h ; j++ )
-           {
-           if ( ( x+i + y+j ) & 1 ) dc.DrawPoint ( x + i , y + j ) ;
-           }
+        for ( int i = 0 ; i < w ; i++ )
+            {
+            for ( int j = 0 ; j < h ; j++ )
+                {
+                if ( ( x+i + y+j ) & 1 ) dc.DrawPoint ( x + i , y + j ) ;
+                }
+            }
         }
     }
 
-void SeqPlot::fixMinMax ( float &f )
+void SeqPlot::fixMinMax ( float &f ) const
     {
     f = f > data_max ? data_max : f ;
     f = f < data_min ? data_min : f ;
@@ -239,12 +244,12 @@ void SeqPlot::show ( wxDC& dc )
     dc.SetTextForeground ( tfg ) ;
     }
 
-void SeqPlot::showMW ( wxDC &dc , int b , int tx , int ty , int lx )
+void SeqPlot::showMW ( wxDC &dc , const int b , const int tx , const int ty , const int lx ) /* not const */
     {
     int ch = can->charheight / 2 ;
     int cw = can->charwidth ;
     int bottom = ty + lines * can->charheight ;
-    for ( int u = 1 ; u < d1.GetCount() ; u++ )
+    for ( unsigned int u = 1 ; u < d1.GetCount() ; u++ )
         {
         int tz = ty + (u-1) * ch + 1 ;
         int tw = ( tx + cw ) - lx ;
@@ -256,33 +261,33 @@ void SeqPlot::showMW ( wxDC &dc , int b , int tx , int ty , int lx )
             }
         }
 
-    showPlot ( dc , b , tx , ty , lx , bottom - ty - ch ) ;
+        showPlot ( dc , b , tx , ty , lx , bottom - ty - ch ) ; // not const (should be)
     }
 
-void SeqPlot::showPI ( wxDC &dc , int b , int tx , int ty , int lx )
+void SeqPlot::showPI ( wxDC &dc , const int b , const int tx , const int ty , const int lx ) /* not const */
     {
     // All the same...
-    showMW ( dc , b , tx , ty , lx ) ;
+    showMW ( dc , b , tx , ty , lx ) ; // not const because of showPlot
     }
 
-void SeqPlot::showHP ( wxDC &dc , int b , int tx , int ty , int lx )
+void SeqPlot::showHP ( wxDC &dc , const int b , const int tx , const int ty , const int lx ) /* not const */
     {
     // All the same...
-    showMW ( dc , b , tx , ty , lx ) ;
+    showMW ( dc , b , tx , ty , lx ) ; // not const because of showPlot
     }
 
-void SeqPlot::showNcoils ( wxDC &dc , int b , int tx , int ty , int lx )
+void SeqPlot::showNcoils ( wxDC &dc , const int b , const int tx , const int ty , const int lx ) const
     {
     }
 
-void SeqPlot::showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx )
+void SeqPlot::showChouFasman ( wxDC &dc , const int b , const int tx , const int ty , const int lx ) /* not const */
     {
 //     mylog ( "SeqPlot::showChouFasman" , "1" ) ;
     int bottom = ty + lines * can->charheight ;
     int ch = can->charheight / 2 ;
     int cw = can->charwidth ;
 //  mylog ( "SeqPlot::showChouFasman" , "2" ) ;
-    for ( int u = 1 ; u < d1.GetCount() ; u++ )
+    for ( unsigned int u = 1 ; u < d1.GetCount() ; u++ )
         {
         const wxPen *pen = wxRED_PEN ;
         if ( u == 2 ) pen = wxGREEN_PEN ;
@@ -334,16 +339,16 @@ void SeqPlot::showChouFasman ( wxDC &dc , int b , int tx , int ty , int lx )
         }
 
 //  mylog ( "SeqPlot::showChouFasman" , "3" ) ;
-    showPlot ( dc , b , tx , ty , lx , bottom - d1.GetCount() * ch - ty ) ;
+    showPlot ( dc , b , tx , ty , lx , bottom - d1.GetCount() * ch - ty ) ; // not const
 //  mylog ( "SeqPlot::showChouFasman" , "4" ) ;
     }
 
 
-void SeqPlot::showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph )
+void SeqPlot::showPlot ( wxDC &dc , const int b , const int tx , const int ty , const int lx , const int ph ) /* not const */
     {
     mylog ( "SeqPlot::showPlot" , "1" ) ;
     if ( !can->isMiniDisplay() ) return ;
-    if ( ((int)data_h) == 0 ) data_h = 1 ;//return ; // Flat data or something...
+    if ( ((int)data_h) == 0 ) data_h = 1 ; // not const //return ; // Flat data or something...
     mylog ( "SeqPlot::showPlot" , "2" ) ;
     int ch = can->charheight ;
     int cw = can->charwidth ;
@@ -428,30 +433,29 @@ void SeqPlot::showPlot ( wxDC &dc , int b , int tx , int ty , int lx , int ph )
     mylog ( "SeqPlot::showPlot" , "8" ) ;
     }
 
-void SeqPlot::drawSymbol ( char c , wxDC &dc , int x1 , int y1 , int x2 , int y2 )
+void SeqPlot::drawSymbol ( const char c , wxDC &dc , const int x1 , const int y1 , const int x2 , const int y2 ) const
     {
     dc.SetPen(*wxBLACK_PEN);
     int w = x2 - x1 ;
     int h = y2 - y1 ;
     if ( c == 'T' )
         {
-        x2--; w--; y1++; h--;
-        int y3 = y2 - h/4 ;
-        dc.DrawLine ( x1 , y1 , x2 - w/3 , y1 ) ;
-        dc.DrawLine ( x1 , y3 , x2 - w/3 , y3 ) ;
-        dc.DrawArc ( x2 - w/3 , y3 , x2 - w/3 , y1 , x2 - w/3 , (y1+y3)/2 ) ;
+        int y3 = y2 - (h-1)/4 ;
+        dc.DrawLine ( x1 , y1+1 , (x2-1) - (w-1)/3 , y1+1 ) ;
+        dc.DrawLine ( x1 , y3 , (x2-1) - (w-1)/3 , y3 ) ;
+        dc.DrawArc ( (x2-1) - (w-1)/3 , y3 , (x2-1) - (w-1)/3 , y1+1 , (x2-1) - (w-1)/3 , (y1+1+y3)/2 ) ;
         dc.SetPen(*wxWHITE_PEN);
-        dc.DrawLine ( x2 - w/3 , y3-1 , x2 - w/3 , y1+1 ) ;
+        dc.DrawLine ( (x2-1) - (w-1)/3 , y3-1 , (x2-1) - (w-1)/3 , y1+1+1 ) ;
         dc.SetPen(*wxBLACK_PEN);
-        dc.DrawLine ( x1 , y3 , x1 + w*2/3 , y3 - h/2 ) ;
-        dc.DrawLine ( x1 , y3 , x1 + w*2/3 , y3 + h/2 ) ;
+        dc.DrawLine ( x1 , y3 , x1 + (w-1)*2/3 , y3 - (h-1)/2 ) ;
+        dc.DrawLine ( x1 , y3 , x1 + (w-1)*2/3 , y3 + (h-1)/2 ) ;
         }
     else if ( c == 'b' )
         {
-        x1 += w/2 - h/6 ;
-        dc.DrawLine ( x1 , y1 , x1 , y2 ) ;
-        dc.DrawArc ( x1 , y1+h/3 , x1 , y1 , x1 , y1+h/6 ) ;
-        dc.DrawArc ( x1 , y1+h*2/3 , x1 , y1+h/3 , x1 , y1+h*3/6 ) ;
+        int _x1 = x1 + w/2 - h/6 ;
+        dc.DrawLine ( _x1 , y1 , _x1 , y2 ) ;
+        dc.DrawArc ( _x1 , y1+h/3 , _x1 , y1 , _x1 , y1+h/6 ) ;
+        dc.DrawArc ( _x1 , y1+h*2/3 , _x1 , y1+h/3 , _x1 , y1+h*3/6 ) ;
         }
     else if ( c == 'a' )
         {
@@ -468,7 +472,7 @@ void SeqPlot::drawSymbol ( char c , wxDC &dc , int x1 , int y1 , int x2 , int y2
 
 // Communication with the outside world :-)
 
-void SeqPlot::init ( SequenceCanvas *ncan )
+void SeqPlot::init ( SequenceCanvas * const ncan )
     {
     SeqBasic::init ( ncan ) ;
     hp_window = 7 ;
@@ -690,7 +694,7 @@ void SeqPlot::scanMinMax ()
     data_h = data_max - data_min ;
     }
 
-void SeqPlot::scanChouFasman ( int x , int y , int t , int min , int seek_cnt , int seek_avg , int avg )
+void SeqPlot::scanChouFasman ( const int x , const int y , const int t , const int min , const int seek_cnt , const int seek_avg , const int avg )
     {
     for ( uint p = 0 ; p + y < s.length() ; p++ )
         {
