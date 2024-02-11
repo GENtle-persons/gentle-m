@@ -464,7 +464,7 @@ void TDDR::clear_children ()
     children.clear () ;
     }
 
-void TDDR::draw ( wxDC &dc , wxPoint off )
+void TDDR::draw ( wxDC &dc , const wxPoint& off )
     {
     if ( original )
         {
@@ -551,7 +551,7 @@ TDDR *TDDR::findItem ( const wxPoint& p , const wxPoint& ori , TDDR *match )
     return this ;
     }
 
-wxPoint TDDR::getRealOffset ()
+wxPoint TDDR::getRealOffset () const
     {
     wxPoint p ( 0 , 0 ) ;
     if ( parent ) p = parent->getRealOffset () ;
@@ -595,7 +595,7 @@ void TDDR::duplicate_from ( TDDR * const b ) // FIXME: This sounds like trouble,
     parent = old_parent ;
     }
 
-void TDDR::insert_new_child ( TDDR *i , TDDR *t , bool before )
+void TDDR::insert_new_child ( TDDR *i , TDDR *t , const bool before )
     {
     VDDR c2 ;
     c2 = children ;
