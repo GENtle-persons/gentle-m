@@ -351,12 +351,13 @@ void TVectorEditor::itemDel ( wxCommandEvent &ev )
     int i = getCurrentItem() ;
     if ( i == -1 )
         {
-        wxPrintf("W: TVectorEditor::itemDel: Nothing to delete. Why am I called?\n") ;
+        wxPrintf( "W: TVectorEditor::itemDel: Nothing to delete. Why am I called?\n" ) ;
         return ;
         }
     storeItemData () ;
     delete newitems[i] ;
-    newitems.RemoveAt ( i ) ;
+    newitems[i] = NULL ; // just to help the automated error detection
+    newitems.RemoveAt ( i ) ; // removes the pointer (now NULL) at the position i
     makeItemsList () ;
     itemClr () ;
     int j = i;
@@ -367,12 +368,20 @@ void TVectorEditor::itemDel ( wxCommandEvent &ev )
         }
     if ( j < 0 )
         {
-        wxPrintf("I: TVectorEditor::itemDel: Removed last element.\n") ;
+        wxPrintf( "I: TVectorEditor::itemDel: Removed last element.\n" ) ;
         return ;
         }
     // Choosing next element to highlight - if reaching to this point.
-    items->SetItemState ( newitems[j]->r4 , wxLIST_STATE_SELECTED , wxLIST_STATE_SELECTED ) ;
-    items->EnsureVisible ( newitems[j]->r4 ) ;
+    if (0 == newitems[j])
+        {
+	wxPrintf( "E: TVectorEditor::itemDel: newitems[j]  is NULL - should never happen.\n" ) ;
+	exit( -1 ) ;
+        }
+    else
+        {
+        items->SetItemState ( newitems[j]->r4 , wxLIST_STATE_SELECTED , wxLIST_STATE_SELECTED ) ;
+        items->EnsureVisible ( newitems[j]->r4 ) ;
+        }
     }
 
 void TVectorEditor::itemClr ()

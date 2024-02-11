@@ -43,11 +43,11 @@ class TDDR // Drag'n'Drop Rect
     ~TDDR () ;
     void resizeForText ( wxDC &dc ) ;
     void draw ( wxDC &dc , wxPoint off = wxPoint ( 0 , 0 ) ) ;
-    TDDR *findItem ( wxPoint p , wxPoint ori = wxPoint ( 0 , 0 ) , TDDR *match = NULL ) ;
+    TDDR *findItem ( const wxPoint& p , const wxPoint& ori = wxPoint ( 0 , 0 ) , TDDR *match = NULL ) ;
     wxPoint getRealOffset () ;
     void clear_children () ;
-    void do_highlight ( wxPoint p ) ;
-    void duplicate_from ( TDDR *b ) ;
+    void do_highlight ( const wxPoint& p ) ;
+    void duplicate_from ( TDDR * const b ) ;
     void insert_new_child ( TDDR *i , TDDR *t , bool before ) ;
 
     wxRect r ;
@@ -90,7 +90,7 @@ class TCloningAssistantPanel : public wxScrolledWindow
     DECLARE_EVENT_TABLE()
     } ;
 
-/**    \brief The cloning assistant module
+/** \brief The cloning assistant module
 */
 class TCloningAssistant : public ChildBase
     {

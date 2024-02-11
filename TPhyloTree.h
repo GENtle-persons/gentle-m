@@ -21,7 +21,7 @@ class TPTree
     virtual int getMaxDepth () const ;
     virtual int getCurrentDepth () const ;
     virtual int countLeafs () const ;
-    virtual int numberLeafs ( int i = 0 ) ;
+    virtual unsigned int numberLeafs ( unsigned int i = 0 ) ;
 
     virtual void filterDepth ( const int depth , vector <TPTree*> &vt ) ;
     virtual void getAll ( vector <TPTree*> &vt ) ;
@@ -38,7 +38,7 @@ class TPTree
     double weight ;
     wxString name ;
     TPTree* parent ;
-    int leafNumber ;
+    unsigned int leafNumber ;
     } ;
 
 /**    \class TPhyloTree
