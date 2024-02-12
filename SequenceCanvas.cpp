@@ -191,7 +191,7 @@ void SequenceCanvas::unmark ()
 
 SeqBasic* SequenceCanvas::findID ( const wxString& id ) const
     {
-    for ( int a = 0 ; a < seq.GetCount() ; a++ )
+    for ( unsigned int a = 0 ; a < seq.GetCount() ; a++ )
         if ( seq[a]->whatsthis() == id )
             return seq[a] ;
     return NULL ;
