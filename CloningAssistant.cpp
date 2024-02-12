@@ -313,19 +313,19 @@ void TCloningAssistantPanel::arrange ()
                             ca->vlist->r.GetTop() ,
                             cs.GetWidth() - ca->vlist->r.GetRight() - 10 ,
                             ca->vlist->r.GetHeight() ) ;
-    for ( int a = 0 ; a < ca->tlist->children.size() ; a++ )
+    for ( unsigned int a = 0 ; a < ca->tlist->children.size() ; a++ )
         {
         TDDR *i = ca->tlist->children[a] ;
         i->r = wxRect (
             5 ,
-            ca->tlist->r.GetHeight() * a / ca->tlist->children.size() + 5 ,
+            static_cast<unsigned int>(ca->tlist->r.GetHeight()) * a / static_cast<unsigned int>(ca->tlist->children.size()) + 5 ,
             ca->tlist->r.GetWidth() - 10 ,
             ca->tlist->r.GetHeight() / ca->tlist->children.size() - 10
             ) ;
         if ( a == 0 ) i->brush = wxBrush ( wxColour ( 200 , 200 , 200 ) ) ;
 
         // Sort children
-        for ( int b = 1 ; b < i->children.size() ; b++ )
+        for ( unsigned int b = 1 ; b < i->children.size() ; b++ )
             {
             if ( !i->children[b]->item ) continue ;
             if ( !i->children[b-1]->item ) continue ;
@@ -339,7 +339,7 @@ void TCloningAssistantPanel::arrange ()
             }
 
         int lastx = 5 ;
-        for ( int b = 0 ; b < i->children.size() ; b++ )
+        for ( unsigned int b = 0 ; b < i->children.size() ; b++ )
             {
             int c ;
             for ( c = b - 1 ; c >= 0 ; c-- )
@@ -353,10 +353,10 @@ void TCloningAssistantPanel::arrange ()
                  i->children[c]->item->to + 50 < i->children[b]->item->from )
                 break ;
                 }
-            if ( c >= 0 &&
-                 ( i->children[b]->item->getType() != VIT_CDS ||
-                     i->children[c]->item->getType() != VIT_CDS )
-                ) lastx += 15 ;
+            if ( c >= 0 && ( i->children[b]->item->getType() != VIT_CDS || i->children[c]->item->getType() != VIT_CDS ))
+		{
+		lastx += 15 ;
+		}
             i->children[b]->resizeForText ( dc ) ;
             i->children[b]->r.x = lastx + 5 ;
             i->children[b]->r.y = 25 ;
@@ -375,7 +375,12 @@ void TCloningAssistantPanel::do_drop ( TDDR *source , TDDR *target )
     {
     if ( ( source->dragging & target->type & DDR_AS_SEQUENCE ) > 0 ) // Sequence
         {
-        for ( int a = 0 ; a < ca->tlist->children.size() ; a++ )
+	if ( ! ca->tlist )
+	    {
+	    wxPrintf( "E: TCloningAssistantPanel::do_drop: ! ca->tlist\n" ) ;
+	    exit( -1 ) ;
+	    }
+        for ( unsigned int a = 0 ; a < ca->tlist->children.size() ; a++ )
             {
             if ( ca->tlist->children[a] != target ) continue ;
             int drag = a ? DDR_AS_ITEM : DDR_NONE ;
@@ -384,6 +389,11 @@ void TCloningAssistantPanel::do_drop ( TDDR *source , TDDR *target )
             ca->vectors[a] = nv ;
             delete ca->tlist->children[a] ;
             ca->tlist->children[a] = ca->new_from_vector ( nv , drag ) ;
+            if ( ! ca->tlist->children[a] )
+                {
+                wxPrintf("E: TCloningAssistantPanel::do_drop: could not allocate new child from vector.\n" ) ;
+                exit( -1 ) ;
+                }
             ca->tlist->children[a]->parent = ca->tlist ;
             break ;
             }
@@ -438,12 +448,23 @@ TDDR::~TDDR ()
 
 void TDDR::clear_children ()
     {
-    for ( int a = 0 ; a < children.size() ; a++ )
-        delete children[a] ;
+    for ( unsigned int a = 0 ; a < children.size() ; a++ )
+        {
+        if (children[a])
+            {
+            delete children[a] ;
+            children[a] = NULL ;
+            }
+        else
+            {
+            wxPrintf( "E: TDDR::clear_children: Found NULL amongst children.\n" ) ;
+            exit( -1 ) ;
+            }
+        }
     children.clear () ;
     }
 
-void TDDR::draw ( wxDC &dc , wxPoint off )
+void TDDR::draw ( wxDC &dc , const wxPoint& off )
     {
     if ( original )
         {
@@ -459,8 +480,7 @@ void TDDR::draw ( wxDC &dc , wxPoint off )
     if ( highlight == DDR_HIGHLIGHT_AS ) dc.SetPen ( ThickRedPen ) ;
     else dc.SetPen ( pen ) ;
     dc.SetBrush ( brush ) ;
-    dc.DrawRectangle ( r.GetLeft() + off.x , r.GetTop() + off.y ,
-                        r.GetWidth() , r.GetHeight() ) ;
+    dc.DrawRectangle ( r.GetLeft() + off.x , r.GetTop() + off.y , r.GetWidth() , r.GetHeight() ) ;
     wxPoint p = wxPoint ( r.GetLeft() + off.x , r.GetTop() + off.y ) ;
     if ( !title.IsEmpty() ) dc.DrawText ( title , p.x + 2 , p.y + 2 ) ;
 
@@ -485,7 +505,7 @@ void TDDR::draw ( wxDC &dc , wxPoint off )
         }
 
     // Update children
-    for ( int a = 0 ; a < children.size() ; a++ )
+    for ( unsigned int a = 0 ; a < children.size() ; a++ )
         {
         if ( !children[a]->dragging ) children[a]->draw ( dc , p ) ;
         }
@@ -512,7 +532,7 @@ void TDDR::resizeForText ( wxDC &dc )
     r.SetHeight ( h + 4 ) ;
     }
 
-TDDR *TDDR::findItem ( wxPoint p , wxPoint ori , TDDR *match )
+TDDR *TDDR::findItem ( const wxPoint& p , const wxPoint& ori , TDDR *match )
     {
     if ( dragging ) return NULL ;
     wxRect rr = r ;
@@ -531,7 +551,7 @@ TDDR *TDDR::findItem ( wxPoint p , wxPoint ori , TDDR *match )
     return this ;
     }
 
-wxPoint TDDR::getRealOffset ()
+wxPoint TDDR::getRealOffset () const
     {
     wxPoint p ( 0 , 0 ) ;
     if ( parent ) p = parent->getRealOffset () ;
@@ -540,7 +560,7 @@ wxPoint TDDR::getRealOffset ()
     return p ;
     }
 
-void TDDR::do_highlight ( wxPoint p )
+void TDDR::do_highlight ( const wxPoint& p )
     {
     if ( ( type & DDR_AS_SEQUENCE ) > 0 )
         {
@@ -557,12 +577,12 @@ void TDDR::do_highlight ( wxPoint p )
     else highlight = DDR_HIGHLIGHT_AS ;
     }
 
-void TDDR::duplicate_from ( TDDR *b )
+void TDDR::duplicate_from ( const TDDR * const b ) // FIXME: This sounds like trouble, should be a contructor
     {
     TDDR *old_parent = parent ;
-    clear_children () ;
+    clear_children () ;		    // deleted the children pointed to and the vector itself
     *this = *b ;
-    children.clear () ;
+    children.clear () ;		    // clears only the vector, not the objects pointed to, i.e. the copied values
 
     while ( children.size() < b->children.size() )
         {
@@ -575,11 +595,11 @@ void TDDR::duplicate_from ( TDDR *b )
     parent = old_parent ;
     }
 
-void TDDR::insert_new_child ( TDDR *i , TDDR *t , bool before )
+void TDDR::insert_new_child ( TDDR *i , TDDR *t , const bool before )
     {
     VDDR c2 ;
     c2 = children ;
-    children.clear () ;
+    children.clear () ; // frees the vector, not the object it points to
     for ( unsigned int a = 0 ; a < c2.size() ; a++ )
         {
         if ( c2[a] == t )
