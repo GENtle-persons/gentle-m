@@ -41,7 +41,7 @@ END_EVENT_TABLE()
 
 wxPen TDDR::ThickRedPen ;
 
-TCloningAssistant::TCloningAssistant(wxWindow *parent, const wxString& title)
+TCloningAssistant::TCloningAssistant(wxWindow * const parent, const wxString& title)
     : ChildBase(parent, title)
     {
     TDDR::ThickRedPen = wxPen ( *wxRED , 5 ) ;

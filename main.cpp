@@ -3,7 +3,7 @@
  */
 
 
-/**    \mainpage GENtle - the source code documentation
+/** \mainpage GENtle - the source code documentation
 
     \section players The big players
 
@@ -339,9 +339,9 @@ bool MyApp::OnInit()
         tipfile += ".txt" ;
         wxTipProvider *tipProvider = wxCreateFileTipProvider(tipfile, tip);
         showTip = wxShowTip(frame, tipProvider, showTip);
-//        showTip = tipProvider->ShowTipsOnStartup() ;
+//      showTip = tipProvider->ShowTipsOnStartup() ;
         tip = tipProvider->GetCurrentTip() ;
-//        frame->LS->setOption ( "SHOWTIP" , showTip ) ;
+//      frame->LS->setOption ( "SHOWTIP" , showTip ) ;
         frame->LS->setOption ( _T("NEXTTIP") , tip ) ;
         frame->LS->setOption ( _T("SHOWTIP") , showTip ) ;
         delete tipProvider;

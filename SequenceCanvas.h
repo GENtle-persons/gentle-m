@@ -138,7 +138,15 @@ class SeqBasic
     virtual bool useDirectRoutines () const { return false ; } ///< Do we draw directly (or do we use SeqPos)?
     virtual int getMarkSize () const { return pos.m.length() ; } ///< Returns the length of the SeqPos marked part of the sequence
     virtual int getRectSize () const { return pos.r.size() ; } ///< Returns the number of SeqPos rectangles
-    virtual wxRect getRect ( int i ) const { return pos.r[i] ; } ///< Returns the SeqPos rect for a "char"
+    virtual wxRect getRect ( const int i ) const ///< Returns the SeqPos rect for a "char"
+        {
+	if ( i < 0 || i >= pos.r.size() )
+            {
+	    wxPrintf( "E: SeqBasic::getRect: Denanded rector for position %d outside 0:r.size() = 0:%ld\n", i ,  pos.r.size() ) ;
+	    exit ( -1 ) ;
+            }
+        return pos.r[i] ;
+	}
     virtual int getMark ( int i ) const { return pos.m.GetChar(i) - ' ' ; } ///< Returns the mark value for a "char"
     virtual void setMark ( const int i , const int v ) { pos.m.SetChar ( i , v + ' ' ) ; } ///< Sets the marking of a "char"
     virtual int getPos ( int i ) const { return pos.p[i] ; } ///< Returns the internal ID of the "char"

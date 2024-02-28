@@ -30,15 +30,15 @@ class TGenBank
     void paste ( const wxString& s ) ;
     void remap ( TVector *v ) ;
     void remap ( TVector *v , const wxArrayString &vs , const wxArrayInt &vi ) ;
-    void doExport ( TVector *v , wxArrayString &ex ) ;
-    wxString trim ( wxString s ) ;
-    void itrim ( wxString &s ) ;
-    void multitrim ( wxString &s , bool quotes = true ) ;
-    wxString trimQuotes ( wxString s ) ;
-    wxString quote ( wxString pre , wxString q ) ;
-    void wrapit ( wxArrayString &ex , wxString init , wxString data , int limit = 80 ) ;
-    wxString expand ( wxString init , int to , wxString with = _T(" ") ) ;
-    int count_blanks ( wxString &s ) ;
+    void doExport ( const TVector * const sv , wxArrayString &ex ) const ;
+    wxString trim ( const wxString&  s ) const ;
+    void itrim ( wxString &s ) const ;
+    void multitrim ( wxString &s , bool quotes = true ) const ;
+    wxString trimQuotes ( wxString s ) const ;
+    wxString quote ( const wxString& pre , wxString q ) const ;
+    void wrapit ( wxArrayString &ex , const wxString& init , wxString data , const int limit = 80 ) const ;
+    wxString expand ( wxString init , const int to , const wxString& with = _T(" ") ) const ;
+    int count_blanks ( const wxString &s ) const ;
 
     bool success ; ///< Did we encounter any errors while parsing?
 
@@ -59,8 +59,8 @@ class TGenBank
 
     void parseLines () ;
     void addItem ( TVector *v , wxArrayString &va ) ;
-    void iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag = 0 ) ;
-    bool isValidSequence ( char a ) ;
+    void iterateItem ( TVector * const v , TVectorItem &i , wxString l , const int tag = 0 ) const ;
+    bool isValidSequence ( const char a ) const ;
     } ;
 
 #endif

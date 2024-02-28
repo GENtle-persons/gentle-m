@@ -412,11 +412,10 @@ void TManageDatabaseDialog::pmOnListEvent ( wxListEvent &ev , wxListCtrl *source
         ddt = pm_dd_l ;
         }
 
-    int a ;
     wxArrayInt vi ;
     wxArrayString vs ;
     vi = getSelectedListItems ( source ) ;
-    for ( a = 0 ; a < vi.GetCount() ; a++ )
+    for ( int a = 0 ; a < vi.GetCount() ; a++ )
         vs.Add ( source->GetItemText ( vi[a] ) ) ;
 
     wxTextDataObject my_data(GENTLE_DRAG_DATA);
@@ -429,7 +428,7 @@ void TManageDatabaseDialog::pmOnListEvent ( wxListEvent &ev , wxListCtrl *source
     wxString sdb = dds->GetStringSelection() ;
     wxString tdb = ddt->GetStringSelection() ;
     bool goOn = true ;
-    for ( a = 0 ; goOn && a < vs.GetCount() ; a++ )
+    for ( int a = 0 ; goOn && a < vs.GetCount() ; a++ )
         {
         if ( result == wxDragCopy ) goOn = do_copy ( vs[a] , sdb , tdb ) ;
         if ( result == wxDragMove ) goOn = do_move ( vs[a] , sdb , tdb ) ;
@@ -491,10 +490,10 @@ bool TManageDatabaseDialog::copyDNA ( const wxString& _n , const wxString& sdb ,
     for ( int a = 0 ; a < s.length() ; a++ )
         {
         if ( s.GetChar(a) == ',' )
-           {
-           if ( !t.IsEmpty() ) ve.Add ( t ) ;
-           t = "" ;
-           }
+            {
+            if ( !t.IsEmpty() ) ve.Add ( t ) ;
+            t = "" ;
+            }
         else t += s.GetChar(a) ;
         }
     if ( !t.IsEmpty() ) ve.Add ( t ) ;
@@ -584,8 +583,12 @@ void TManageDatabaseDialog::accessDB ()
     {
     wxString name = pd_db->GetStringSelection() ;
 
-    int a ;
-    for ( a = 0 ; db_name[a] != name ; a++ ) ;
+    int a = 0 ;
+    while ( db_name[a] != name )
+        {
+        a++ ;
+        }
+    
     if ( db_name[a] != name )
         {
         wxPrintf("E: TManageDatabaseDialog::accessDB: db_name[a] != name = '%s'\n" , name ) ;
@@ -1133,7 +1136,6 @@ void TManageDatabaseDialog::do_save_project ()
     TStorage *storage = getTempDB ( getFileName ( dbname ) ) ;
 
     // New name, or overwriting old one
-    int a ;
     wxString sql , s1 , s2 ;
     wxString x = fixQuotes ( name ) ;
 
@@ -1153,7 +1155,7 @@ void TManageDatabaseDialog::do_save_project ()
     sql = "INSERT INTO project (" + s1 + ") VALUES (" + s2 + ")" ;
     storage->getObject ( sql ) ;
 
-    for ( a = 0 ; a < myapp()->frame->children.GetCount() ; a++ )
+    for ( int a = 0 ; a < myapp()->frame->children.GetCount() ; a++ )
         {
         if ( myapp()->frame->children[a]->def == _T("dna") ||
              myapp()->frame->children[a]->def == _T("AminoAcids") ||
