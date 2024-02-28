@@ -230,19 +230,17 @@ void TPhyloTree::setModeStrange ()
     r.Deflate ( 10 , 10 ) ;
 
     int md = tree->getMaxDepth() ;
-    int a , b ;
-    for ( a = 0 ; a < md ; a++ )
+    for ( unsigned int a = 0 ; a < md ; a++ )
         {
         vector <TPTree*> vt ;
         tree->filterDepth ( a+1 , vt ) ;
-        for ( b = 0 ; b < vt.size() ; b++ )
+        for ( unsigned int b = 0 ; b < vt.size() ; b++ )
             {
             int tw = -5 , th = -5 ;
             if ( vt[b]->isLeaf() ) dc.GetTextExtent ( vt[b]->getName() , &tw , &th ) ;
-            wxRect r2 (    r.GetLeft() + r.GetWidth() * a / md ,
-                            r.GetTop() + r.GetHeight() * b / vt.size() ,
-                            tw + 5 ,
-                            th + 5 ) ;
+            wxRect r2 ( r.GetLeft() + static_cast<unsigned int>(r.GetWidth() * a) / md ,
+                        r.GetTop() + static_cast<unsigned int>(r.GetHeight() * b) / vt.size() ,
+                        tw + 5 , th + 5 ) ;
             vt[b]->rect = r2 ;
             }
         }
@@ -268,9 +266,10 @@ void TPhyloTree::setModeDrawgram ()
     vector <TPTree*> vt ;
     tree->getAll ( vt ) ;
 
-    int a , b , maxw = 0 ;
+    unsigned int maxw = 0 ;
     for ( int n = 0 ; n < 2 ; n++ )
         {
+        unsigned int a , b ;
         for ( a = b = 0 ; a < vt.size() ; a++ )
             {
             if ( !vt[a]->isLeaf() ) continue ;
@@ -280,9 +279,9 @@ void TPhyloTree::setModeDrawgram ()
             xf *= vt[a]->getCurrentWeight() ;
             xf /= mw ;
             wxRect r2 ( r.GetLeft() + xf ,
-                            r.GetTop() + r.GetHeight() * b / mc ,
-                            tw + border ,
-                            th + border ) ;
+                        r.GetTop() + static_cast<unsigned int>(r.GetHeight() * b) / mc ,
+                        tw + border ,
+                        th + border ) ;
             vt[a]->rect = r2 ;
             if ( r2.GetWidth() > maxw ) maxw = r2.GetWidth() ;
             b++ ;
@@ -290,7 +289,7 @@ void TPhyloTree::setModeDrawgram ()
         }
 
     tree->averageY () ;
-    for ( a = 0 ; a < vt.size() ; a++ )
+    for ( unsigned int a = 0 ; a < vt.size() ; a++ )
         {
         if ( vt[a]->isLeaf() ) continue ;
         vt[a]->rect.SetHeight ( 0 ) ;
@@ -350,8 +349,8 @@ void TPhyloTreeBox::OnEvent(wxMouseEvent& event)
 
 void TPhyloTreeBox::WriteIntoBitmap(wxBitmap &bmp)
     {
-     int w , h ;
-     GetClientSize ( &w , &h ) ;
+    int w , h ;
+    GetClientSize ( &w , &h ) ;
     bmp = wxBitmap ( w , h , wxDisplayDepth() ) ;
     wxMemoryDC memdc ;
     memdc.SelectObject ( bmp ) ;
@@ -369,12 +368,12 @@ void TPhyloTreeBox::OnSaveAsBitmap(wxCommandEvent &event)
 void TPhyloTreeBox::OnCopy(wxCommandEvent &event)
     {
     if (wxTheClipboard->Open())
-      {
-      wxBitmap bmp ;
-      WriteIntoBitmap ( bmp ) ;
-      wxTheClipboard->SetData( new wxBitmapDataObject ( bmp ) );
-      wxTheClipboard->Close();
-      }
+        {
+        wxBitmap bmp ;
+        WriteIntoBitmap ( bmp ) ;
+        wxTheClipboard->SetData( new wxBitmapDataObject ( bmp ) );
+        wxTheClipboard->Close();
+        }
     }
 
 void TPhyloTreeBox::OnPrint(wxCommandEvent &event)
@@ -392,8 +391,7 @@ TPTree::TPTree ()
 
 TPTree::~TPTree ()
     {
-    int a ;
-    for ( a = 0 ; a < children.size() ; a++ )
+    for ( unsigned int a = 0 ; a < children.size() ; a++ )
         delete children[a] ;
     }
 wxString TPTree::scanNewick ( wxString s ) /* not const */
@@ -444,8 +442,8 @@ wxString TPTree::scanNewick ( wxString s ) /* not const */
 
 double TPTree::getMaxWeight () const
     {
-    double x = 0 ;
-    for ( int a = 0 ; a < children.size() ; a++ )
+    double x = 0.0 ;
+    for ( unsigned int a = 0 ; a < children.size() ; a++ )
         {
         double y = children[a]->getMaxWeight() ;
         if ( y > x ) x = y ;
@@ -462,7 +460,7 @@ double TPTree::getCurrentWeight () const
 int TPTree::getMaxDepth () const
     {
     int r = getCurrentDepth() ;
-    for ( int a = 0 ; a < children.size() ; a++ )
+    for ( unsigned int a = 0 ; a < children.size() ; a++ )
         {
         int x = children[a]->getMaxDepth() ;
         if ( x > r ) r = x ;
@@ -484,7 +482,7 @@ int TPTree::countLeafs () const
     return cnt ;
     }
 
-int TPTree::numberLeafs ( int i ) /* not const */
+unsigned int TPTree::numberLeafs ( unsigned int i ) /* not const */
     {
     if ( isLeaf () )
         {
@@ -494,7 +492,7 @@ int TPTree::numberLeafs ( int i ) /* not const */
 
     // Not a leaf
     leafNumber = 0 ;
-    for ( int a = 0 ; a < children.size() ; a++ )
+    for ( unsigned int a = 0 ; a < children.size() ; a++ )
         i = children[a]->numberLeafs ( i ) ;
     return i ;
     }
@@ -553,7 +551,7 @@ void TPTree::filterDepth ( const int depth , vector <TPTree*> &vt ) /* const */
     if ( getCurrentDepth() == depth )
         {
         vt.push_back ( this ) ; // not const
-//        return ;
+//      return ;
         }
 
     for ( int a = 0 ; a < children.size() ; a++ )

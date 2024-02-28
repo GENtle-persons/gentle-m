@@ -12,9 +12,9 @@ class TSequencerDataTracerItem
 class TSequencerDataSequenceItem
     {
     public :
-    unsigned long peak_index ;
-    unsigned char prob_a , prob_c , prob_t , prob_g ;
-    char base ;
+    unsigned long peak_index = 0L ;
+    unsigned char prob_a = 0 , prob_c = 0 , prob_t = 0 , prob_g = 0 ;
+    char base = 0 ;
     } ;
 
 class TSequencerData

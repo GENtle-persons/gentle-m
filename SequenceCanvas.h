@@ -461,15 +461,15 @@ class SeqPlot : public SeqDNA
     private :
     virtual void scanMinMax () ; ///< Determine minimum/maximum values
     virtual void scanChouFasman ( const int x , const int y , const int t , const int min , const int seek_cnt , const int seek_avg , const int avg ) ;
-    virtual void drawSymbol ( const char c , wxDC &dc , const int x1 , const int y1 , const int x2 , const int y2 ) ;
+    virtual void drawSymbol ( const char c , wxDC &dc , const int x1 , const int y1 , const int x2 , const int y2 ) const ;
     virtual void showChouFasman ( wxDC &dc , const int b , const int tx , const int ty , const int lx ) ; ///< Display Chou-Fasman
-    virtual void showNcoils ( wxDC &dc , const int b , const int tx , const int ty , const int lx ) ; ///< Display Coiled-coil
+    virtual void showNcoils ( wxDC &dc , const int b , const int tx , const int ty , const int lx ) const ; ///< Display Coiled-coil
     virtual void showMW ( wxDC &dc , const int b , const int tx , const int ty , const int lx ) ; ///< Display molecular weight
     virtual void showPI ( wxDC &dc , const int b , const int tx , const int ty , const int lx ) ; ///< Display isoelectric point
     virtual void showHP ( wxDC &dc , const int b , const int tx , const int ty , const int lx ) ; ///< Display hydrophobicity
-    virtual void fixMinMax ( float &f ) ; ///< What the hell does this do??
-    virtual void drawDottedLine ( wxDC &dc , const int x1 , const int y1 , const int x2 , const int y2 ) ; ///< Draws a horizontal/vertical helper line
-    virtual void myRect ( wxDC &dc , const int x , const int y , const int w , const int h ) ; ///< Draws a "special" rectangle
+    virtual void fixMinMax ( float &f ) const ; ///< What the hell does this do??
+    virtual void drawDottedLine ( wxDC &dc , const int x1 , const int y1 , const int x2 , const int y2 ) const ; ///< Draws a horizontal/vertical helper line
+    virtual void myRect ( wxDC &dc , const int x , const int y , const int w , const int h ) const ; ///< Draws a "special" rectangle
     enum { CHOU_FASMAN , P_I , M_W , H_P , COILED_COIL } type ;
     int lines , l_top, l_bottom ;
     wxArrayString d1 , d2 , d3 ;

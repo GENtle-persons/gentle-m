@@ -740,7 +740,7 @@ void MyChild::initPanels ()
 
     vec->recalculateCuts () ;
 
-     SeqFeature *seqF = NULL ;
+    SeqFeature *seqF = NULL ;
     if ( !vec->getGenomeMode() ) seqF = new SeqFeature ( cSequence ) ;
     SeqDNA *seq = new SeqDNA ( cSequence ) ;
     SeqRestriction *seqR = new SeqRestriction ( cSequence ) ;

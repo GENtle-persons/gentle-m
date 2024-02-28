@@ -263,7 +263,7 @@ $(BUNDLE)/Contents/MacOS/$(bin_PROGRAMS) $(BUNDLE)/Contents/Resources/$(ICON) $(
 	mkdir -p "$(BUNDLE)/Contents/MacOS"
 	echo -n 'APPL????' > "$(BUNDLE)/Contents/PkgInfo"
 	cp "$(bin_PROGRAMS)" "$(BUNDLE)/Contents/MacOS/"
-	cp mondrian.xpm variables.csv blank.db default.tab marker.txt "$(BUNDLE)/Contents/MacOS/"
+	cp mondrian.xpm codon_catalog.csv variables.csv blank.db default.tab marker.txt "$(BUNDLE)/Contents/MacOS/"
 	cp -r bitmaps help "$(BUNDLE)/Contents/MacOS/"
 	cp Info.plist "$(BUNDLE)/Contents/"
 	mkdir -p "$(BUNDLE)/Contents/Resources"

@@ -52,7 +52,9 @@ jobs:
           path: |
             GENtle
             variables.csv
+            codon_catalog.csv
             marker.txt
+            default.tab
             docs/manual.html
             docs/images
           retention-days: 10

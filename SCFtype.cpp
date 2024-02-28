@@ -33,24 +33,24 @@ typedef struct {
     uint_4 spare[18];        ///< Unused
 } SCF_Header;
 
-/**    \typedef SCF_Samples1
+/** \typedef SCF_Samples1
     \brief Type definition for the SCF_Samples1 data
  */
 typedef struct {
-        uint_1 sample_A;           ///< Sample for A trace
-        uint_1 sample_C;           ///< Sample for C trace
-        uint_1 sample_G;           ///< Sample for G trace
-        uint_1 sample_T;           ///< Sample for T trace
+    uint_1 sample_A;           ///< Sample for A trace
+    uint_1 sample_C;           ///< Sample for C trace
+    uint_1 sample_G;           ///< Sample for G trace
+    uint_1 sample_T;           ///< Sample for T trace
 } SCF_Samples1;
 
 /**    \typedef SCF_Samples2
     \brief Type definition for the SCF_Samples2 data
  */
 typedef struct {
-        uint_2 sample_A;           ///< Sample for A trace
-        uint_2 sample_C;           ///< Sample for C trace
-        uint_2 sample_G;           ///< Sample for G trace
-        uint_2 sample_T;           ///< Sample for T trace
+    uint_2 sample_A;           ///< Sample for A trace
+    uint_2 sample_C;           ///< Sample for C trace
+    uint_2 sample_G;           ///< Sample for G trace
+    uint_2 sample_T;           ///< Sample for T trace
 } SCF_Samples2 ;
 
 /*
@@ -68,9 +68,10 @@ typedef struct {
 
 // GENtle stuff
 
-uint_4 get_real_uint4 ( const uint_4 x )
+
+static uint_4 get_real_uint4 ( const uint_4 x )
     {
-    const unsigned char *c = (const unsigned char*) (&x) ;
+    const unsigned char *c = (unsigned char*) (&x) ;
     uint_4 u = 0 ;
     u |= *(c+0) ;
     u <<= 8 ;
@@ -82,14 +83,14 @@ uint_4 get_real_uint4 ( const uint_4 x )
     return u ;
     }
 
-void make_real_uint4 ( uint_4 &x )
+static void make_real_uint4 ( uint_4 &x )
     {
     x = get_real_uint4 ( x ) ;
     }
 
-uint_2 get_real_uint2 ( const uint_2 x )
+static uint_2 get_real_uint2 ( const uint_2 x )
     {
-    const unsigned char *c = (const unsigned char*) (&x) ;
+    const unsigned char *c = (unsigned char*) (&x) ;
     uint_2 ret = 0 ;
     ret |= *(c+1) ;
     ret <<= 8 ;
@@ -126,7 +127,7 @@ bool SCFtype::parse ( const wxString& filename )
     if ( (*header).version[0] < '3' )
         {
         wxMessageBox ( _T("Cannot read SFC prior to 3.0, this is ") + version ) ;
-                delete [] t;
+        delete [] t;
         return false ;
         }
 
@@ -141,25 +142,33 @@ bool SCFtype::parse ( const wxString& filename )
 
     if ( (*header).samples == 0 || (*header).bases == 0 ) return false ; // Paranoia
 
-    unsigned char *c ;
-
     // Read comment
     sd.comment.Empty() ;
-    unsigned int a;
-    for ( a = 0 , c = t + (*header).comments_offset ; a < (*header).comments_size ; a++ , c++ )
+    {
+    unsigned int aa=0;
+    unsigned char *c = t + (*header).comments_offset ; 
+    while (aa++ < (*header).comments_size )
+        {
         sd.comment += *c ;
+        c++ ;
+        }
+    }
 
     // Preparing to read sequence information
     void *v = t + (*header).bases_offset ;
-    unsigned long *ulp ;
     sd.sequence.clear () ;
     sd.seq.Empty () ;
-    for ( a = 0 , ulp = (unsigned long*) v ; a < (*header).bases ; a++ , ulp++ )
+    {
+    unsigned long *ulp = (unsigned long*) v ;
+    unsigned int aa = 0;
+    while ( aa++  < (*header).bases )
         {
         TSequencerDataSequenceItem si ;
         si.peak_index = get_real_uint4 ( *ulp ) ;
         sd.sequence.push_back ( si ) ;
+        ulp++ ;
         }
+    }
 
     // Reading sequence data
     for ( unsigned int a = 0 ; a < 5 ; a++ )
@@ -217,10 +226,10 @@ bool SCFtype::parse ( const wxString& filename )
 
 
     wxFile out ( _T("C:\\test.txt") , wxFile::write ) ;
-    for ( unsigned int a = 0 ; a < sd.sequence.size() ; a++ )
-    {
+    for ( size_t a = 0 ; a < sd.sequence.size() ; a++ )
+        {
         out.Write ( wxString::Format ( _T("%5d: %5d %c\r\n") , a , sd.sequence[a].peak_index , sd.sequence[a].base ) ) ;
-    }
+        }
 
 /*
     // THE FOLLOWING MESS MIGHT PROVE USEFUL ONE DAY
@@ -244,8 +253,8 @@ bool SCFtype::parse ( const wxString& filename )
 
         si.base = (*base).base ;
         sd[a] = si ;
-//        sd.sequence.push_back ( si ) ;
-//        out += wxString::Format ( _T("%d:%c\n\r\n") , si.peak_index , si.base ) ;
+//      sd.sequence.push_back ( si ) ;
+//      out += wxString::Format ( _T("%d:%c\n\r\n") , si.peak_index , si.base ) ;
         }
 
     // Read samples
@@ -264,7 +273,7 @@ bool SCFtype::parse ( const wxString& filename )
         ti.c = use_word ? get_real_uint2 ( s2->sample_C ) : s1->sample_C ;
         ti.g = use_word ? get_real_uint2 ( s2->sample_G ) : s1->sample_G ;
         ti.t = use_word ? get_real_uint2 ( s2->sample_T ) : s1->sample_T ;
-//        out += wxString::Format ( _T("%d,%d,%d,%d; ") , ti.a , ti.c , ti.g , ti.t ) ;
+//      out += wxString::Format ( _T("%d,%d,%d,%d; ") , ti.a , ti.c , ti.g , ti.t ) ;
         sd.tracer.push_back ( ti ) ;
         sd.tracer2[TRACER_ID_A].push_back ( ti.a ) ;
         sd.tracer2[TRACER_ID_C].push_back ( ti.c ) ;
@@ -319,8 +328,7 @@ void SCFtype::read_data_block ( const void * const v , const unsigned int mode )
     {
     unsigned int bases = sd.sequence.size() ;
     const unsigned char * c = (unsigned char*) v ;
-    unsigned int a ;
-    for ( a = 0 ; a < bases ; a++ , c++ )
+    for ( unsigned int a = 0 ; a < bases ; a++ , c++ )
         {
         switch ( mode )
             {
@@ -337,13 +345,13 @@ void SCFtype::fix_diff ( const int mode )
     {
     signed long p_sample = 0;
     unsigned long num_samples = sd.tracer.size() ;
-    for ( unsigned long i = 0 ; i < num_samples ; i++ )
+    for ( size_t i = 0 ; i < num_samples ; i++ )
         {
         p_sample += sd.tracer[i].data[mode] ;
         sd.tracer[i].data[mode] = p_sample ;
         }
     p_sample = 0 ;
-    for ( unsigned long i = 0 ; i < num_samples ; i++ )
+    for ( size_t i = 0 ; i < num_samples ; i++ )
         {
         p_sample += sd.tracer[i].data[mode] ;
         sd.tracer[i].data[mode] = p_sample ;
