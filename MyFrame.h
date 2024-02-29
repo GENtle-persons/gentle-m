@@ -39,38 +39,38 @@ typedef wxFrame MyFrameType ;
 
 #ifdef MYTEST
 /** \class TTestSuite
-	\brief Test suite class
+    \brief Test suite class
 */
 class TTestSuite
-	{
-	public :
-	TTestSuite () ; ///< \brief Constructor
-	virtual void Step () ; ///< \brief Performs a (random) step
+    {
+    public :
+    TTestSuite () ; ///< \brief Constructor
+    virtual void Step () ; ///< \brief Performs a (random) step
 
-	private :
-	virtual void pressKey ( ChildBase *ac ) ; ///< \brief Simulates a random key pressed
-	virtual void action ( ChildBase *ac ) ; ///< \brief Simulates a random action
-	virtual void editMode ( ChildBase *ac ) ; ///< \brief Toggles edit mode
+    private :
+    virtual void pressKey ( ChildBase *ac ) ; ///< \brief Simulates a random key pressed
+    virtual void action ( ChildBase *ac ) ; ///< \brief Simulates a random action
+    virtual void editMode ( ChildBase *ac ) ; ///< \brief Toggles edit mode
 
-	virtual void vectorPressKey ( ChildBase *ac ) ; ///< \brief Simulates a random key pressed
-	virtual void vectorAction ( ChildBase *ac ) ; ///< \brief Simulates a random action
+    virtual void vectorPressKey ( ChildBase *ac ) ; ///< \brief Simulates a random key pressed
+    virtual void vectorAction ( ChildBase *ac ) ; ///< \brief Simulates a random action
 
-	virtual void mouseEvent ( ChildBase *ac ) ; ///< \brief Simulates a mouse event
-	
-	virtual void aaAction ( ChildBase *ac ) ; ///< \brief Simulates a random action
+    virtual void mouseEvent ( ChildBase *ac ) ; ///< \brief Simulates a mouse event
+
+    virtual void aaAction ( ChildBase *ac ) ; ///< \brief Simulates a random action
     int start ; ///< \brief Internal start value
     int cnt ; ///< \brief Internal counter
-	} ;
+    } ;
 #endif
 
 /** \class TProject
-	\brief Project class
+    \brief Project class
 */
 class TProject
-	{
-	public :
- 	TProject () ; ///< Constructor
-	virtual ~TProject () {} ; ///< Dummy destructor
+    {
+    public :
+     TProject () ; ///< Constructor
+    virtual ~TProject () {} ; ///< Dummy destructor
 
     virtual TEnzymeRules *getEnzymeRules () const ; ///< Returns the restriction enzyme display rules for the project
     virtual void setEnzymeRules ( TEnzymeRules *er ) ; ///< Sets the restriction enzyme display rules for the project
@@ -80,14 +80,14 @@ class TProject
     wxString db ;    ///< \brief The name of the database the project is stored in
 
     private :
-	TEnzymeRules *enzyme_rules ; ///< \brief The enzyme rules of the project
-	} ;
+    TEnzymeRules *enzyme_rules ; ///< \brief The enzyme rules of the project
+    } ;
 
 /** \class MyFrame
-	\brief Frame class
-	
-	This class contains the actually displayed frame, as well as several
-	often-used functions.
+    \brief Frame class
+
+    This class contains the actually displayed frame, as well as several
+    often-used functions.
 */
 class MyFrame : public MyFrameType
 {
@@ -144,7 +144,7 @@ public:
     virtual void OnClose(wxCloseEvent& event);
     virtual void OnSashDrag(wxSashEvent& event);
 
-	virtual void updateCCP ( ChildBase *c ) ;
+    virtual void updateCCP ( ChildBase *c ) ;
     virtual void addTool ( wxToolBar* toolBar , int id ) ;
     virtual void addDefaultTools ( wxToolBar* toolBar ) ;
     virtual void addCCPFTools(wxToolBar* toolBar, bool findbutton = false ) ;
@@ -178,7 +178,7 @@ public:
     virtual void saveImage ( const wxBitmap * const bmp , const wxString& name = "" ) ;
     virtual wxChoice *AddFontsizeTool ( wxToolBar* toolBar , int id ) ;
     virtual void notifyChildrenChanged() ;
-	
+
     virtual void push_help ( const wxString& name ) ;
     virtual void pop_help () ;
     virtual wxString get_help () const ;
@@ -188,9 +188,9 @@ public:
     TStorage *LS ; ///< \brief Pointer to the local TStorage database structure
     wxString proxy ;
     bool dying , enhancedRefresh , showVectorTitle , showVectorLength ,
-            loadLastProject , useMetafile , showSplashScreen , checkUpdate ,
-            useCoolCanvas , useInternalHelp , doRegisterStuff , showEnzymePos ,
-			useTwoToolbars , useOnlineHelp , showToolTips , showLowercaseDNA ;
+         loadLastProject , useMetafile , showSplashScreen , checkUpdate ,
+         useCoolCanvas , useInternalHelp , doRegisterStuff , showEnzymePos ,
+         useTwoToolbars , useOnlineHelp , showToolTips , showLowercaseDNA ;
     wxColour aa_color ;
     int editFeatureMode , showStopCodon , orfLength ;
     TProject project ; ///< \brief The current project
@@ -204,9 +204,9 @@ public:
     char stopcodon ;
     int nonstandard_translation_table ;
     wxArrayString dna_marker ;
-	wxToolBar *mainToolBar ; ///< The main toolbar
-	TOnlineTools *online_tools ;
-	wxArrayString language_list ;
+    wxToolBar *mainToolBar ; ///< The main toolbar
+    TOnlineTools *online_tools ;
+    wxArrayString language_list ;
     bool update_child_list ;
 
     private :
@@ -221,7 +221,7 @@ public:
     wxMenuBar *menu_bar ; ///< \brief The current menu bar
     int locked ; ///< \brief State of display locking
     bool activating ; ///< \brief In child activation?
-	vector <wxString> help_name ;
+    vector <wxString> help_name ;
 #ifdef MYTEST
     TTestSuite *test_suite ; ///< \brief The Test suite
 #endif
@@ -230,7 +230,7 @@ public:
 };
 
 /** \class MyFrameDropTarget
-	\brief The class that handles drag'n'drop events for MyFrame
+    \brief The class that handles drag'n'drop events for MyFrame
 */
 class MyFrameDropTarget : public wxFileDropTarget
    {

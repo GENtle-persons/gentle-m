@@ -31,7 +31,7 @@ class AutoAnnotate
     bool within ( const TVectorItem &i1 , const TVectorItem &i2 , const TVector * const v ) ; ///< Checks if TVectorItem i2 lies within i1 (no need to add it then)
 
     friend class TAutoAnnotateDialog ;
-     
+
     MyChild *p ; ///< Pointer to the calling MyChild
     wxArrayString alreadyin ; ///< Cache of items already added
     wxString commonVectorsDatabase , additionalDatabase ;

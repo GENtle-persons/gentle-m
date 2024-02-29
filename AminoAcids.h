@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the TAminoAcids module class
+    \brief Contains the TAminoAcids module class
 */
 #ifndef _AMINO_ACIDS_H_
 #define _AMINO_ACIDS_H_
@@ -12,7 +12,7 @@ class TVector ;
 class TURLtext ;
 class TTestSuite ;
 
-/**	\brief The amino acid sequence display module
+/** \brief The amino acid sequence display module
 */
 class TAminoAcids : public ChildBase
     {

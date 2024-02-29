@@ -5,12 +5,12 @@
 /*
  * Basic type definitions
  */
-typedef unsigned long int   uint_4;
-typedef signed   long int    int_4;
+typedef unsigned long int  uint_4;
+typedef signed   long int  int_4;
 typedef unsigned short int uint_2;
-typedef signed   short int  int_2;
-typedef unsigned char  uint_1;
-typedef signed   char   int_1;
+typedef signed   short int int_2;
+typedef unsigned char      uint_1;
+typedef signed   char      int_1;
 
 /**    \typedef SCF_Header
     \brief Type definition for the SCF_Header structure
@@ -66,9 +66,8 @@ typedef struct {
     uint_1 spare[3];          /* Spare */
 } SCF_Base;
 
-
-
 // GENtle stuff
+
 
 static uint_4 get_real_uint4 ( const uint_4 x )
     {
@@ -168,7 +167,7 @@ bool SCFtype::parse ( const wxString& filename )
         si.peak_index = get_real_uint4 ( *ulp ) ;
         sd.sequence.push_back ( si ) ;
         ulp++ ;
-	}
+        }
     }
 
     // Reading sequence data
@@ -191,7 +190,7 @@ bool SCFtype::parse ( const wxString& filename )
 /*
     // Maximum trace data
     unsigned long min = 9999 , max = 0 ;
-    for ( a = 0 ; a < sd.sequence.size() ; a++ )
+    for ( unsigned int a = 0 ; a < sd.sequence.size() ; a++ )
         {
         if ( max < sd.sequence[a].peak_index ) max = sd.sequence[a].peak_index ;
         if ( min > sd.sequence[a].peak_index ) min = sd.sequence[a].peak_index ;
@@ -254,8 +253,8 @@ bool SCFtype::parse ( const wxString& filename )
 
         si.base = (*base).base ;
         sd[a] = si ;
-//        sd.sequence.push_back ( si ) ;
-//        out += wxString::Format ( _T("%d:%c\n\r\n") , si.peak_index , si.base ) ;
+//      sd.sequence.push_back ( si ) ;
+//      out += wxString::Format ( _T("%d:%c\n\r\n") , si.peak_index , si.base ) ;
         }
 
     // Read samples
@@ -266,15 +265,15 @@ bool SCFtype::parse ( const wxString& filename )
     if ( use_word ) s2 = (SCF_Samples2 *) v ;
     else s1 = (SCF_Samples1 *) v ;
     sd.tracer.clear () ;
-    for ( a = 0 ; a < 4 ; a++ ) sd.tracer2[a].clear () ;
-    for ( a = 0 ; a < (*header).samples ; a++ )
+    for ( unsigned int a = 0 ; a < 4 ; a++ ) sd.tracer2[a].clear () ;
+    for ( unsigned int a = 0 ; a < (*header).samples ; a++ )
         {
         TSequencerDataTracerItem ti ;
         ti.a = use_word ? get_real_uint2 ( s2->sample_A ) : s1->sample_A ;
         ti.c = use_word ? get_real_uint2 ( s2->sample_C ) : s1->sample_C ;
         ti.g = use_word ? get_real_uint2 ( s2->sample_G ) : s1->sample_G ;
         ti.t = use_word ? get_real_uint2 ( s2->sample_T ) : s1->sample_T ;
-//        out += wxString::Format ( _T("%d,%d,%d,%d; ") , ti.a , ti.c , ti.g , ti.t ) ;
+//      out += wxString::Format ( _T("%d,%d,%d,%d; ") , ti.a , ti.c , ti.g , ti.t ) ;
         sd.tracer.push_back ( ti ) ;
         sd.tracer2[TRACER_ID_A].push_back ( ti.a ) ;
         sd.tracer2[TRACER_ID_C].push_back ( ti.c ) ;
@@ -284,7 +283,7 @@ bool SCFtype::parse ( const wxString& filename )
         else s1++ ;
         }
 
-    for ( a = 1 ; a < sd.sequence.size() ; a++ )
+    for ( unsigned int a = 1 ; a < sd.sequence.size() ; a++ )
         {
         if ( sd.sequence[a-1].peak_index <= sd.sequence[a].peak_index ) continue ;
         TSequencerDataSequenceItem d = sd.sequence[a-1] ;
@@ -300,12 +299,12 @@ bool SCFtype::parse ( const wxString& filename )
     return true ;
     }
 
-void SCFtype::read_tracer_block ( void *v , unsigned int mode , unsigned int sample_size )
+void SCFtype::read_tracer_block ( const void * const v , const unsigned int mode , const unsigned int sample_size )
     {
-    unsigned int samples = sd.tracer.size() ;
-    unsigned char *c = (unsigned char*) v ;
+    unsigned int a , samples = sd.tracer.size() ;
+    const unsigned char *c = (unsigned char*) v ;
     unsigned long lastx = 0 ;
-    for ( unsigned int a = 0 ; a < samples ; a++ )
+    for ( a = 0 ; a < samples ; a++ )
         {
         unsigned long x = 0 ;
         if ( sample_size == 2 )
@@ -325,10 +324,10 @@ void SCFtype::read_tracer_block ( void *v , unsigned int mode , unsigned int sam
         }
     }
 
-void SCFtype::read_data_block ( void *v , unsigned int mode )
+void SCFtype::read_data_block ( const void * const v , const unsigned int mode )
     {
     unsigned int bases = sd.sequence.size() ;
-    unsigned char *c = (unsigned char*) v ;
+    const unsigned char * c = (unsigned char*) v ;
     for ( unsigned int a = 0 ; a < bases ; a++ , c++ )
         {
         switch ( mode )

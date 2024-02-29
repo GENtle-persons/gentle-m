@@ -1,5 +1,5 @@
 /** \file
-	\brief Contains the TIMGreader class, and its TIMGitem helper class
+    \brief Contains the TIMGreader class, and its TIMGitem helper class
 */
 #ifndef _TIMGreader_H_
 #define _TIMGreader_H_
