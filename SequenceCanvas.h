@@ -142,16 +142,16 @@ class SeqBasic
         {
 	if ( i < 0 || i >= pos.r.size() )
             {
-	    wxPrintf( "E: SeqBasic::getRect: Denanded rector for position %d outside 0:r.size() = 0:%ld\n", i ,  pos.r.size() ) ;
+	    wxPrintf( "E: SeqBasic::getRect: Demanded rector for position %d outside interval [0:r.size()[ = [0:%ld[\n", i ,  pos.r.size() ) ;
 	    exit ( -1 ) ;
             }
         return pos.r[i] ;
 	}
-    virtual int getMark ( int i ) const { return pos.m.GetChar(i) - ' ' ; } ///< Returns the mark value for a "char"
+    virtual int getMark ( const int i ) const { return pos.m.GetChar(i) - ' ' ; } ///< Returns the mark value for a "char"
     virtual void setMark ( const int i , const int v ) { pos.m.SetChar ( i , v + ' ' ) ; } ///< Sets the marking of a "char"
-    virtual int getPos ( int i ) const { return pos.p[i] ; } ///< Returns the internal ID of the "char"
-    virtual void setPos ( int i , int v ) { pos.p[i] = v ; } ///< Sets the internal ID of the "char"
-    virtual int getLine ( int y ) const { return pos.getLine ( y ) ; } ///< Returns the line number for the y position
+    virtual int getPos ( const int i ) const { return pos.p[i] ; } ///< Returns the internal ID of the "char"
+    virtual void setPos ( const int i , int v ) { pos.p[i] = v ; } ///< Sets the internal ID of the "char"
+    virtual int getLine ( const int y ) const { return pos.getLine ( y ) ; } ///< Returns the line number for the y position
     virtual int getItem ( const wxPoint& pt , const int line ) const { return pos.getItem ( pt , line ) ; } ///< Returns the "char" at that position
     virtual bool isDisplayOnly () const { return false ; } ///< Do we show something?
     virtual void logsize () const ; ///< Some memory calculation for debugging, I think...
