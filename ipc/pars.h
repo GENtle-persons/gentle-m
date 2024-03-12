@@ -32,7 +32,7 @@ class TIPC_PARS
     int add_component(const char *symbol, const int number);
     int pars_amino_acid(const char *formel);
     int add_amino_acid(const char acid);
-    int print_sum(void);
+    int print_sum(void) const;
 
  	TIPC *ipc ;
     int MAX_DIGITS ;

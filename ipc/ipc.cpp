@@ -224,7 +224,7 @@ int TIPC::ipc_main2 ( const char *filename , const char *aaseq , int f )
     
     if ( verbindung )
         {
-        delete verbindung ;
+        free( verbindung );
         verbindung = NULL ;
         }
 

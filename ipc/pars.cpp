@@ -307,25 +307,25 @@ int TIPC_PARS::pars_peptid(const char *formel)
 }
 
 
-int TIPC_PARS::print_sum()
-{
-  element *el;
-  ipc_compound *co;
-
-  printf("\nChemical formula: ");
-  co=ipc->verbindung;
-
-  while(co)
+int TIPC_PARS::print_sum() const
     {
-      el=ipc->element->elements;
-      while( el && ( co->isotopes != el->isotopes) )
-	el=el->next;
+    printf("\nChemical formula: ");
+    for ( ipc_compound *co = ipc->verbindung; co ; co=co->next )
+        {
+        element *el = ipc->element->elements;
+        while( el && ( co->isotopes != el->isotopes) )
+	    {
+            el=el->next;
+	    }
 
-      if(!el) return 0;
-      printf("%s%i ",el->symbol,co->amount);
-      co=co->next;
+        if(!el)
+            {
+            //FIXME: Please leave a comment why return 0
+            return 0;
+            }
+        printf("%s%i ",el->symbol,co->amount);
+        }
+
+    printf("\n");
+    return 1;
     }
-
-  printf("\n");
-  return 1;
-}
