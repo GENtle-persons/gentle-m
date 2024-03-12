@@ -29,14 +29,14 @@ jobs:
       - name: Install Dependencies - Linux
         if: runner.os == 'linux'
         run: |
-            brew install wxwidgets m4 tinyxml zstd autoconf libtool automake
-            brew install libpng sqlite
-            brew install dylibbundler
+          sudo apt-get update
+          sudo apt install libwxgtk3.2-dev || sudo apt install wx3.2-headers
       - name: Install Dependencies - MacOS
         if: runner.os == 'macos'
         run: |
-          sudo apt-get update
-          sudo apt install libwxgtk3.2-dev || sudo apt install wx3.2-headers
+          brew install wxwidgets m4 tinyxml zstd autoconf libtool automake
+          brew install libpng sqlite
+          brew install dylibbundler
       - name: remove local redundancy to build-deps
         if: runner.os == 'linux' || runner.os == 'macOS'
         run: rm -f mysql* sqlite* && rm -rf clustalw tinyxml
