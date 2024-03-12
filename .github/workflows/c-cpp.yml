@@ -7,15 +7,15 @@ on:
     branches: ["main"]
 
 jobs:
-  env:
-    RUNNER_DEFAULT_SHELL: bash
-
   build:
     runs-on: ${{ matrix.os }}
 
+    env:
+      RUNNER_DEFAULT_SHELL: bash
+
     strategy:
       matrix:
-        os: [macos-latest,windows-latest]
+        os: [macos-latest, windows-latest]
 
     steps:
       - name: Check out repository code
@@ -25,16 +25,18 @@ jobs:
         run: |
           choco install mingw wxwidgets sqlite make
           choco install gnuwin32-m4
+          choco install bash
       - name: Install Dependencies - Linux
         if: runner.os == 'linux'
         run: |
-            brew install wxwidgets m4 tinyxml zstd autoconf libtool automake wxwidgets libpng sqlite bash
+            brew install wxwidgets m4 tinyxml zstd autoconf libtool automake
+            brew install libpng sqlite
             brew install dylibbundler
       - name: Install Dependencies - MacOS
         if: runner.os == 'macos'
         run: |
           sudo apt-get update
-          sudo apt install libwxgtk3.2-dev || sudo apt install wx3.2-headers || sudo apt install libwxgtk3.0-gtk3-dev || sudo apt install libwxgtk3.0-dev
+          sudo apt install libwxgtk3.2-dev || sudo apt install wx3.2-headers
       - name: remove local redundancy to build-deps
         if: runner.os == 'linux' || runner.os == 'macOS'
         run: rm -f mysql* sqlite* && rm -rf clustalw tinyxml
