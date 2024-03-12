@@ -7,36 +7,54 @@ on:
     branches: ["main"]
 
 jobs:
+  env:
+    RUNNER_DEFAULT_SHELL: bash
 
   build:
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        os: [macos-latest]
+        os: [macos-latest,windows-latest]
 
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - name: Install Dependencies
+      - name: Install Dependencies - Windows
+        if: runner.os == 'windows'
         run: |
-          if [ "${{ matrix.os }}" = "macos-latest" ]; then
-            #brew update
-            brew install wxwidgets m4 tinyxml zstd autoconf libtool automake wxwidgets libpng sqlite
+          choco install mingw wxwidgets sqlite make
+          choco install gnuwin32-m4
+      - name: Install Dependencies - Linux
+        if: runner.os == 'linux'
+        run: |
+            brew install wxwidgets m4 tinyxml zstd autoconf libtool automake wxwidgets libpng sqlite bash
             brew install dylibbundler
-          elif [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
-            sudo apt-get update
-            sudo apt install libwxgtk3.2-dev || sudo apt install wx3.2-headers || sudo apt install libwxgtk3.0-gtk3-dev || sudo apt install libwxgtk3.0-dev
-          fi
+      - name: Install Dependencies - MacOS
+        if: runner.os == 'macos'
+        run: |
+          sudo apt-get update
+          sudo apt install libwxgtk3.2-dev || sudo apt install wx3.2-headers || sudo apt install libwxgtk3.0-gtk3-dev || sudo apt install libwxgtk3.0-dev
       - name: remove local redundancy to build-deps
+        if: runner.os == 'linux' || runner.os == 'macOS'
         run: rm -f mysql* sqlite* && rm -rf clustalw tinyxml
       - name: autogen
+        if: runner.os == 'linux' || runner.os == 'macOS'
         run: ./autogen.sh
       - name: configure
+        if: runner.os == 'linux' || runner.os == 'macOS'
         run: ./configure
       - name: make
-        run: make
+        run: |
+          if [ "${{ matrix.os }}" = "macos-latest" ]; then
+            make
+          elif [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
+            make
+          else
+            g++ -o GENtle *.cpp ipc/*.cpp
+          fi
       - name: install asciidoc
+        if: runner.os == 'windows' || runner.os == 'macOS'
         run: |
           if [ "${{ matrix.os }}" = "macos-latest" ]; then
             brew install asciidoc
@@ -44,7 +62,12 @@ jobs:
             sudo apt install asciidoc
           fi
       - name: build manual.html
-        run: asciidoc docs/manual.adoc
+        run: |
+          if [ "${{ matrix.os }}" = "macos-latest" ]; then
+            asciidoc docs/manual.adoc
+          else
+            echo "No manual created for ${{ matrix.os }}." > docs/manual.html
+          fi
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
