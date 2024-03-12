@@ -750,11 +750,15 @@ void MyChild::OnEditMode(wxCommandEvent& event)
 void MyChild::initPanels ()
     {
 //  myapp()->frame->lockDisplay ( true ) ;
+    myass(vec, "myChild::initPanels: vec should always exist, and if empty.") ;
     if ( vec->getSequenceLength() > 100000 ) // Arbitary number, 100K
         {
         vec->setGenomeMode ( true ) ;
         }
+
+    myass(cSequence, "myChild::initPanels: The cSequence should always exist.");
 //  cSequence->seq.Clear () ;
+    myass(cSequence->seq, "myChild::initPanels: The seq vector should always exist, and if empty.") ;
     CLEAR_DELETE ( cSequence->seq ) ;
 
     vec->recalculateCuts () ;
