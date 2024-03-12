@@ -95,7 +95,7 @@ class TCloningAssistantPanel : public wxScrolledWindow
 class TCloningAssistant : public ChildBase
     {
     public :
-    TCloningAssistant(wxWindow *parent, const wxString& title) ; ///< Constructor
+    TCloningAssistant(wxWindow * const parent, const wxString& title) ; ///< Constructor
     virtual ~TCloningAssistant () ; ///< Destructor
     virtual wxString getName () const ; ///< Returns the module name
     virtual void EnforceRefesh () ; ///< Refreshes the module display

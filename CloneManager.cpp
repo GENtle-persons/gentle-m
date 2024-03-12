@@ -9,7 +9,7 @@ TCloneManager::~TCloneManager ()
     {
     }
 
-int TCloneManager::scan_item ( unsigned char *t , int a , TVector *v )
+int TCloneManager::scan_item ( unsigned char * const t , int a , TVector * const v )
     {
     int b ;
     wxString name , desc ;
@@ -17,10 +17,10 @@ int TCloneManager::scan_item ( unsigned char *t , int a , TVector *v )
 //  unsigned int strange1 = *((unsigned int*)(t+a)) ;
     a += 4 ;
     if ( t[a] == 8 )
-    {
+        {
         while ( t[a] != 255 || t[a+1] != 255 ) a += 4 ;
         return a ;
-    }
+        }
 //  unsigned int strange2 = *((unsigned int*)(t+a)) ;
     a += 4 ;
     unsigned int from = *((unsigned int*)(t+a)) ;
@@ -52,7 +52,7 @@ int TCloneManager::scan_item ( unsigned char *t , int a , TVector *v )
     return a ;
     }
 
-void TCloneManager::load ( wxString file )
+void TCloneManager::load ( const wxString& file )
     {
     wxFile f ( file , wxFile::read ) ;
     long l = f.Length() ;
@@ -67,7 +67,7 @@ void TCloneManager::load ( wxString file )
         }
 
     int a ;
-    TVector *v = new TVector ;
+    TVector * const v = new TVector ;
     wxString name = file.AfterLast('/').AfterLast('\\').BeforeLast('.') ;
     wxString seq , desc ;
 
@@ -89,11 +89,12 @@ void TCloneManager::load ( wxString file )
 
     // Rest
     for ( a = l - 1 ; t[a-1] || t[a-2] ; a-- ) ;
-    for ( ; a < l ; a++ )
+    while ( a < l )
         {
         if ( t[a] == 10 ) continue ;
         if ( t[a] == 13 || t[a] == 0 ) desc += '\n' ;
         else desc += t[a] ;
+        a++ ;
         }
 
     // Set vector

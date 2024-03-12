@@ -237,7 +237,7 @@ WX_DECLARE_OBJARRAY(float, wxArrayFloat);
 #endif
 
 /** \brief Clear wxArray of pointers and delete the not-NULL-pointer objects */
-#define CLEAR_DELETE(__x) { while ( !__x.IsEmpty() ) { if ( __x[0] ) { delete __x[0] ; } __x.RemoveAt ( 0 ) ; } }
+#define CLEAR_DELETE(__x) { while ( !__x.IsEmpty() ) { if ( __x[0] ) { delete __x[0] ; __x[0] = NULL ; } __x.RemoveAt ( 0 ) ; } }
 
 /** \brief Create a wxString of __l times the __c char */
 #define FILLSTRING(__x,__c,__l) { __x = wxString ( __c , __l ) ; }

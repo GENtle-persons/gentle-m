@@ -168,6 +168,13 @@ int ABItype::getInt4 ( const unsigned char * const t , int &from ) const
     return r ;
     }
 
+/** \brief Creates a new wxString as a substring of string t of len characters length starting from position from
+ * \param t The string to extract from
+ * \param from The position to start from, 0-based
+ * \param len The length of the substring
+ * \return The substring
+ * \note This function is not used anywhere in the code and FIXME: it could be otimized in various ways.
+*/
 wxString ABItype::getStr ( const unsigned char * const t , const int from , const int len ) const
     {
     wxString r ;
@@ -243,7 +250,7 @@ wxString TFLAG::getPascalString () const
     if ( !data )
        {
        char t[5] ;
-//       t[0] = ( value >> 24 ) & 255 ;
+//     t[0] = ( value >> 24 ) & 255 ;
        t[1] = ( value >> 16 ) & 255 ;
        t[2] = ( value >>  8 ) & 255 ;
        t[3] = ( value >>  0 ) & 255 ;
@@ -251,7 +258,7 @@ wxString TFLAG::getPascalString () const
        return wxString ( t+1 , wxConvUTF8 ) ;
        }
     wxString r ;
-    int len = (unsigned char) data[0] ;
+    const int len = (unsigned char) data[0] ;
     for ( int a = 1 ; a <= len ; a++ ) r += data[a] ;
     return r ;
     }

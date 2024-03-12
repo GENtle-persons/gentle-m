@@ -100,12 +100,12 @@ public:
     virtual void initme () ;
     virtual void rememberLastProject () ;
     virtual wxString check4update () ;
-    virtual wxString check4update_sub ( wxString text ) ;
-    virtual void update2version ( wxString ver ) ;
+    virtual wxString check4update_sub ( const wxString& text ) ;
+    virtual void update2version ( const wxString& ver ) ;
 
-    virtual wxMenu *getFileMenu ( int options = 0 ) ;
-    virtual wxMenu *getToolMenu ( bool _pcr = false ) ;
-    virtual wxMenu *getHelpMenu () ;
+    virtual wxMenu *getFileMenu ( const int options = 0 ) const ;
+    virtual wxMenu *getToolMenu ( const bool _pcr = false ) const ;
+    virtual wxMenu *getHelpMenu () const ;
 
     virtual void InitToolBar(wxToolBar* toolBar);
 
@@ -167,7 +167,7 @@ public:
     virtual TStorage *getTempDB ( const wxString& name ) ;
     virtual TAlignment *runAlignment ( wxArrayString &vs , wxArrayChildBase &vc , TVector *nv = NULL ) ;
     virtual ChildBase *GetActiveChild() ;
-    virtual void setActiveChild ( ChildBase *c ) ;
+    virtual void setActiveChild ( ChildBase * const c ) ;
     virtual wxWindow *getCommonParent() const ;
     virtual int getChildIndex ( ChildBase *c ) ;
     virtual void activateChild ( int a ) ;

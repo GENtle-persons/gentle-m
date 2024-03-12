@@ -52,7 +52,8 @@ void SeqBasic::addHighlight ( const int from , const int t , const wxColour& c )
 wxColour SeqBasic::getHighlightColor ( const int pos , const wxColour& c )
     {
     if ( !can || !can->child || !can->child->vec ) return c ;
-    int a , l = can->child->vec->getSequenceLength() ;
+    int a ;
+    size_t l = can->child->vec->getSequenceLength() ;
     for ( a = 0 ; a < highlight_end.size() ; a++ )
         {
         if ( pos >= highlight_begin[a] && pos <= highlight_end[a] )

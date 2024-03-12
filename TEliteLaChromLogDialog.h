@@ -24,7 +24,7 @@ using namespace std ;
 class TEliteLaChromLogDialog : public wxDialog
 {
     public :
-    TEliteLaChromLogDialog ( wxWindow *parent, const wxString& title , wxString basefile ) ;
+    TEliteLaChromLogDialog ( wxWindow *parent, const wxString& title , const wxString& basefile ) ;
 
     virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
     virtual void OnDatesList(wxCommandEvent &event);
@@ -32,7 +32,7 @@ class TEliteLaChromLogDialog : public wxDialog
     virtual void OnExcel(wxCommandEvent &event);
 
     private :
-    void ReadFile ( wxString filename , wxArrayString &data ) ;
+    void ReadFile ( const wxString& filename , wxArrayString &data ) ;
     void Uniquify ( wxArrayString &data , vector <wxArrayString> &tabs ) ;
     void FilterLines () ;
     void UpdateLines () ;

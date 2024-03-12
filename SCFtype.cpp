@@ -12,7 +12,7 @@ typedef signed   short int int_2;
 typedef unsigned char      uint_1;
 typedef signed   char      int_1;
 
-/**    \typedef SCF_Header
+/** \typedef SCF_Header
     \brief Type definition for the SCF_Header structure
  */
 typedef struct {

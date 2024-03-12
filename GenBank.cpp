@@ -22,15 +22,16 @@ const char * const gb_item_type[VIT_TYPES] =
     "oriT"
     } ;
 
-/// \brief Constructor
+/** \brief Constructor
+ * \details Initializes a series of hash tables to quickly check if a character is a valid sequence character, a blank, or a blank or quote
+ */
 TGenBank::TGenBank ()
     {
-    int a ;
-    for ( a = 0 ; a < 256 ; a++ ) validseq[a] = isValidSequence ( a ) ;
-    for ( a = 0 ; a < 256 ; a++ ) isblank[a] = false ;
-    for ( a = 0 ; a < 16 ; a++ ) isblank[a] = true ;
+    for ( int a = 0 ; a < 256 ; a++ ) validseq[a] = isValidSequence ( a ) ;
+    for ( int a = 0 ; a < 256 ; a++ ) isblank[a] = false ;
+    for ( int a = 0 ; a < 16 ; a++ ) isblank[a] = true ;
     isblank[' '] = true ;
-    for ( a = 0 ; a < 256 ; a++ ) isblankorquote[a] = isblank[a] ;
+    for ( int a = 0 ; a < 256 ; a++ ) isblankorquote[a] = isblank[a] ;
     isblankorquote['"'] = true ;
     success = false ;
     }
@@ -90,9 +91,8 @@ void TGenBank::parseLines ()
     if ( vs.IsEmpty () || vs[0].Left ( 5 ) != _T("LOCUS") )
         return ;
 
-    int a ;
     vi.Alloc ( vs.GetCount() ) ;
-    for ( a = 0 ; a < vs.GetCount() ; a++ )
+    for ( size_t a = 0 ; a < vs.GetCount() ; a++ )
         vi.Add ( count_blanks ( vs[a] ) ) ;
 
     // Pre-processing
@@ -101,7 +101,7 @@ void TGenBank::parseLines ()
     wxArrayInt vi2 ;
     vs2.Alloc ( vs.GetCount() ) ;
     vi2.Alloc ( vi.GetCount() ) ;
-    for ( a = 0 ; a < vs.GetCount() ; a++ )
+    for ( size_t a = 0 ; a < vs.GetCount() ; a++ )
         {
         if ( vi[a] == 12 || ( vi[a] == 21 && vs[a].GetChar(21) != '/' ) )
             {
@@ -140,7 +140,7 @@ void TGenBank::parseLines ()
     wxArrayInt ti ;
     t.Alloc ( vs.GetCount() ) ;
     ti.Alloc ( vs.GetCount() ) ;
-    for ( a = 0 ; a < vs.GetCount() ; a++ )
+    for ( size_t a = 0 ; a < vs.GetCount() ; a++ )
         {
         if ( vs[a].GetChar(vi[a]) == '/' && vs[a].GetChar(vi[a]+1) == '/' )
             {
@@ -181,20 +181,21 @@ void TGenBank::remap ( TVector *v )
     \param vs The lines
     \param vi The line indentations
 */
-void TGenBank::remap ( TVector *v , const wxArrayString &vs , const wxArrayInt &vi )
+void TGenBank::remap ( TVector * v , const wxArrayString &vs , const wxArrayInt &vi )
     {
-    int line ;
     wxString k1 ;
     vector <wxArrayString> items ;
     wxString ns ;
 
+    {
+    // ensure a is only valid in this context
     int a = 0 ;
-
-    for ( line = 0 ; line < vs.GetCount() ; line++ ) a += (vi[line]==5) ? 1 : 0 ;
+    for ( size_t line = 0 ; line < vs.GetCount() ; line++ ) a += (vi[line]==5) ? 1 : 0 ;
     items.reserve ( a*2 ) ;
+    }
 
     wxString l , l2 ;
-    for ( line = 0 ; line < vs.GetCount() ; line++ )
+    for ( size_t line = 0 ; line < vs.GetCount() ; line++ )
         {
         l = vs[line] ;
         int i = vi[line] ;
@@ -232,7 +233,11 @@ void TGenBank::remap ( TVector *v , const wxArrayString &vs , const wxArrayInt &
         else if ( k1 == _T("ORIGIN") )
             {
             if ( ns.IsEmpty() ) ns.Alloc ( ( vs.GetCount() - line ) * 60 ) ;
-            for ( a = 0 ; a < l.length() && !validseq[l.GetChar(a)] ; a++ ) ;
+            size_t a = 0 ;
+            while ( a < l.length() && !validseq[l.GetChar(a)] )
+                {
+                a++ ;
+                }
             if ( a < l.length() )
                 {
                 l2 = l.Mid ( a ) ;
@@ -248,13 +253,16 @@ void TGenBank::remap ( TVector *v , const wxArrayString &vs , const wxArrayInt &
 
     v->setSequence ( ns.MakeUpper() ) ;
     v->items.reserve ( items.size() ) ;
-    for ( a = 0 ; a < items.size() ; a++ ) addItem ( v , items[a] ) ;
+    for ( size_t a = 0 ; a < items.size() ; a++ )
+        {
+        addItem ( v , items[a] ) ;
+        }
     }
 
 /** \brief Checks if the given char is "-", A-Z, or a-z
     \param a The char to check
 */
-bool TGenBank::isValidSequence ( char a )
+bool TGenBank::isValidSequence ( const char a ) const
     {
     if ( a == '-' ) return true ;
     if ( a >= 'A' && a <= 'Z' ) return true ;
@@ -266,10 +274,9 @@ bool TGenBank::isValidSequence ( char a )
     \param v Pointer to the TVector
     \param va Array of lines containing the item, GenBank-encoded
 */
-void TGenBank::addItem ( TVector *v , wxArrayString &va )
+void TGenBank::addItem ( TVector * const v , wxArrayString &va )
     {
     TVectorItem i ( "" , "" , 1 , 1 , VIT_MISC ) ; // Dummy values
-    int a ;
 
     // Type
     if ( va[0].MakeLower() == _T("source") ) return ;
@@ -285,50 +292,51 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
 
     // Properties
     i.desc.Alloc ( 1000 ) ;
-    for ( a = 1 ; a < va.GetCount() ; a++ )
+    for ( size_t a = 1 ; a < va.GetCount() ; a++ )
         {
         if ( va[a].GetChar(0) != '/' ) continue ;
         wxString p = va[a].Mid ( 1 , va[a].First ( '=' ) - 1 ) ;
         if ( p.IsEmpty() ) continue ;
         multitrim ( p , true ) ;
         p.MakeLower() ;
-        wxString v = va[a].AfterFirst ( '=' ) ;
-        multitrim ( v , true ) ;
+        wxString vString = va[a].AfterFirst ( '=' ) ;
+        multitrim ( vString , true ) ;
         if ( p == _T("name") || p == _T("standard_name") || p == _T("gene") || p == _T("protein_id") || p == _T("region_name") )
-           i.name = v ;
+            i.name = vString ;
         else
-           {
-           if ( p == _T("product") || p == _T("organism") || p == _T("db_xref") || p == _T("note") ||
+            {
+            if ( p == _T("product") || p == _T("organism") || p == _T("db_xref") || p == _T("note") ||
                 p == _T("mol_type") || p == _T("chromosome") || p == _T("bound_moiety") )
-              {
-              if ( !i.desc.IsEmpty() ) i.desc += "\n" ;
-              if ( p == _T("chromosome") || p == _T("db_xref") )
-                 {
-                 i.desc += p ;
-                 i.desc += _T(" : ") ;
-                 }
-              wxString v2 = v ;
-              if ( p == _T("db_xref") )
-                 {
-                 v2 = v.BeforeFirst ( ':' ) . Upper () ;
-                 v2.Trim () ;
-                 if ( v2 == _T("GI") )
+                {
+                if ( !i.desc.IsEmpty() ) i.desc += "\n" ;
+                if ( p == _T("chromosome") || p == _T("db_xref") )
                     {
-                    v2 = v.AfterFirst ( ':' ) ;
-                    v2 = "http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=protein&val=" + v2 ;
-                    v2 = v + " (" + v2 + ")" ;
+                    i.desc += p ;
+                    i.desc += _T(" : ") ;
                     }
-                 else v2 = v ;
-                 }
-              i.desc += v2 ;
-              }
-           p = "/" + p ;
-           i.setParam ( p , v ) ;
-           }
+                wxString v2 = vString ;
+                if ( p == _T("db_xref") )
+                    {
+                    v2 = vString.BeforeFirst ( ':' ) . Upper () ;
+                    v2.Trim () ;
+                    if ( v2 == _T("GI") )
+                        {
+                        v2 = vString.AfterFirst ( ':' ) ;
+                        v2 = "http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=protein&val=" + v2 ;
+                        v2 = vString + " (" + v2 + ")" ;
+                        }
+                    else
+                        v2 = vString ;
+                    }
+                i.desc += v2 ;
+                }
+            p = "/" + p ;
+            i.setParam ( p , vString ) ;
+            }
         }
 
     // From / To
-    for ( a = 1 ; a < va.GetCount() ; a++ )
+    for ( int a = 1 ; a < va.GetCount() ; a++ )
         {
         if ( va[a].GetChar(0) != '/' )
            iterateItem ( v , i , va[a].Upper() ) ;
@@ -341,106 +349,113 @@ void TGenBank::addItem ( TVector *v , wxArrayString &va )
     \param l ???
     \param tag ???
 */
-void TGenBank::iterateItem ( TVector *v , TVectorItem &i , wxString l , int tag )
+void TGenBank::iterateItem ( TVector * const v , TVectorItem &i , wxString l , const int tag ) const
     {
     l.Replace ( " " , "" ) ;
-    int a ;
+
     while ( !l.IsEmpty() )
         {
         char c = l.GetChar(0) ;
         if ( c == '<' ) l = l.Mid ( 1 ) ;
         else if ( c == ',' ) l = l.Mid ( 1 ) ;
         else if ( c >= '0' && c <= '9' )
-           {
-           wxString from , to ;
-           from = l.BeforeFirst ( '.' ) ;
-           l = l.AfterFirst ( '.' ) ;
-           while ( !l.IsEmpty() && ( l.GetChar(0) < '0' || l.GetChar(0) > '9' ) ) l = l.Mid ( 1 ) ;
-           for ( a = 0 ; a < l.Length() && l.GetChar(a) >= '0' && l.GetChar(a) <= '9' ; a++ ) ;
-           to = l.Left ( a ) ;
-           l = l.Mid ( a ) ;
-           long ll ;
-           from.ToLong ( &ll ) ;
-           i.from = ll ;
-           to.ToLong ( &ll ) ;
-           i.to = ll ;
-           if ( i.to == 0 ) i.to = i.from ;
-           if ( ( tag & TAG_COMPLEMENT ) > 0 ) i.setDirection ( -1 ) ;
-           v->items.push_back ( i ) ;
-           }
+            {
+            wxString from , to ;
+            from = l.BeforeFirst ( '.' ) ;
+            l = l.AfterFirst ( '.' ) ;
+            while ( !l.IsEmpty() && ( l.GetChar(0) < '0' || l.GetChar(0) > '9' ) ) l = l.Mid ( 1 ) ;
+            int a = 0 ;
+            while ( a < l.Length() && l.GetChar(a) >= '0' && l.GetChar(a) <= '9' )
+                {
+                a++ ;
+                }
+            to = l.Left ( a ) ;
+            l = l.Mid ( a ) ;
+            long ll ;
+            from.ToLong ( &ll ) ;
+            i.from = ll ;
+            to.ToLong ( &ll ) ;
+            i.to = ll ;
+            if ( i.to == 0 ) i.to = i.from ;
+            if ( ( tag & TAG_COMPLEMENT ) > 0 ) i.setDirection ( -1 ) ;
+            v->items.push_back ( i ) ;
+            }
         else if ( l.Left ( 10 ) == _T("COMPLEMENT") )
-           {
-           l = l.AfterFirst ( '(' ) ;
-           int b , cnt , num = 0 ;
-           char c = ' ' ;
-           for ( a = b = cnt = 0 ; a < l.Length() && ( cnt >= 0 || c != ')' ) ; a++ )
-              {
-              c = l.GetChar ( a ) ;
-              if ( c == '(' ) cnt++ ;
-              if ( ( c == ')' ) && cnt == 0 )
-                 {
-                 num++ ;
-                 wxString sub = l.Mid ( b , a - b ) ;
-                 int tag2 = tag ;
-                 if ( ( tag & TAG_COMPLEMENT ) > 0 ) tag2 -= TAG_COMPLEMENT ;
-                 else tag2 += TAG_COMPLEMENT ;
-                 iterateItem ( v , i , sub , tag2 ) ;
-                 b = a+1 ;
-                 }
-              if ( c == ')' ) cnt-- ;
-              }
-           l = l.Mid ( a ) ;
-           }
+            {
+            l = l.AfterFirst ( '(' ) ;
+            int num = 0 ;
+            char c = ' ' ;
+            int a = 0 ;
+            for ( int b = 0, cnt = 0 ; a < l.Length() && ( cnt >= 0 || c != ')' ) ; a++ )
+                {
+                c = l.GetChar ( a ) ;
+                if ( c == '(' ) cnt++ ;
+                if ( ( c == ')' ) && cnt == 0 )
+                    {
+                    num++ ;
+                    wxString sub = l.Mid ( b , a - b ) ;
+                    int tag2 = tag ;
+                    if ( ( tag & TAG_COMPLEMENT ) > 0 ) tag2 -= TAG_COMPLEMENT ;
+                    else tag2 += TAG_COMPLEMENT ;
+                    iterateItem ( v , i , sub , tag2 ) ;
+                    b = a+1 ;
+                    }
+                if ( c == ')' ) cnt-- ;
+                }
+            l = l.Mid ( a ) ;
+            }
         else if ( l.Left ( 4 ) == _T("JOIN") )
            {
            l = l.AfterFirst ( '(' ) ;
-           int b , cnt , num = 0 ;
+           int num = 0 ;
            char c = ' ' ;
-           for ( a = b = cnt = 0 ; a < l.Length() && ( cnt >= 0 || c != ')' ) ; a++ )
-              {
-              c = l.GetChar ( a ) ;
-              if ( c == '(' ) cnt++ ;
-              if ( ( c == ',' || c == ')' ) && cnt == 0 )
-                 {
-                 num++ ;
-                 wxString name = i.name ;
-                 wxString newname = name + wxString::Format ( " (%d)" , num ) ;
-                 wxString sub = l.Mid ( b , a - b ) ;
-                 if ( num > 1 ) i.setParam ( _T("PREDECESSOR") , (name + wxString::Format ( " (%d)" , num-1 )) ) ;
-                 if ( c != ')' ) i.setParam ( _T("SUCCESSOR") , (name + wxString::Format ( " (%d)" , num+1 )) ) ;
-                 i.name = newname ;
-                 iterateItem ( v , i , sub ) ;
-                 b = a+1 ;
-                 i.name = name ;
-                 i.setParam ( _T("PREDECESSOR") , "" ) ;
-                 i.setParam ( _T("SUCCESSOR") , "" ) ;
-                 }
-              if ( c == ')' ) cnt-- ;
-              }
-           l = l.Mid ( a ) ;
-           }
+           int a = 0 ;
+           for ( int b = 0 , cnt = 0 ; a < l.Length() && ( cnt >= 0 || c != ')' ) ; a++ )
+               {
+               c = l.GetChar ( a ) ;
+               if ( c == '(' ) cnt++ ;
+               if ( ( c == ',' || c == ')' ) && cnt == 0 )
+                   {
+                   num++ ;
+                   wxString name = i.name ;
+                   wxString newname = name + wxString::Format ( " (%d)" , num ) ;
+                   wxString sub = l.Mid ( b , a - b ) ;
+                   if ( num > 1 ) i.setParam ( _T("PREDECESSOR") , (name + wxString::Format ( " (%d)" , num-1 )) ) ;
+                   if ( c != ')' ) i.setParam ( _T("SUCCESSOR") , (name + wxString::Format ( " (%d)" , num+1 )) ) ;
+                   i.name = newname ;
+                   iterateItem ( v , i , sub ) ;
+                   b = a+1 ;
+                   i.name = name ;
+                   i.setParam ( _T("PREDECESSOR") , "" ) ;
+                   i.setParam ( _T("SUCCESSOR") , "" ) ;
+                   }
+                if ( c == ')' ) cnt-- ;
+                }
+            l = l.Mid ( a ) ;
+            }
         else
-           {
-           return ;
-           }
+            {
+            return ;
+            }
         }
     }
 
 /** \brief Counts the leading blanks in a string
     \param s The string
 */
-int TGenBank::count_blanks ( wxString &s )
+int TGenBank::count_blanks ( const wxString &s ) const
     {
-    int a ;
-//    for ( a = 0 ; a < s.length() && ( s.GetChar(a) == ' ' || s.GetChar(a) < 15 ) ; a++ ) ;
-    for ( a = 0 ; a < s.length() && isblank[s.GetChar(a)] ; a++ ) ;
+    int a = 0 ;
+//  for ( a = 0 ; a < s.length() && ( s.GetChar(a) == ' ' || s.GetChar(a) < 15 ) ; a++ ) ;
+    while ( a < s.length() && isblank[s.GetChar(a)] )
+        a++ ;
     return a ;
     }
 
 /** \brief Removes the leading blanks from a string
     \param s The string
 */
-wxString TGenBank::trim ( wxString s )
+wxString TGenBank::trim ( const wxString& s ) const
     {
     int a ;
 //    for ( a = 0 ; a < s.length() && ( s.GetChar(a) == ' ' || s.GetChar(a) < 15 ) ; a++ ) ;
@@ -452,7 +467,7 @@ wxString TGenBank::trim ( wxString s )
 /** \brief Removes the leading blanks from a string
     \param s The string (as reference)
 */
-void TGenBank::itrim ( wxString &s )
+void TGenBank::itrim ( wxString &s ) const
     {
     int a ;
     for ( a = 0 ; a < s.length() && isblank[s.GetChar(a)] ; a++ ) ;
@@ -463,14 +478,22 @@ void TGenBank::itrim ( wxString &s )
 /** \brief Removes the leading and ending blanks and/or quotes from a string
     \param s The string (as reference)
 */
-void TGenBank::multitrim ( wxString &s , bool quotes )
+void TGenBank::multitrim ( wxString &s , bool quotes ) const
     {
-    int a , b ;
-//    for ( a = 0 ; a < s.length() && ( s.GetChar(a) == ' ' || s.GetChar(a) < 15 ||s.GetChar(a) == '"' ) ; a++ ) ;
-//    for ( b = s.length()-1 ; b > 0 && ( s.GetChar(b) == ' ' || s.GetChar(b) < 15 ||s.GetChar(b) == '"' ) ; b-- ) ;
+    size_t a = 0 ;
+//  for ( a = 0 ; a < s.length() && ( s.GetChar(a) == ' ' || s.GetChar(a) < 15 ||s.GetChar(a) == '"' ) ; a++ ) ;
+//  for ( b = s.length()-1 ; b > 0 && ( s.GetChar(b) == ' ' || s.GetChar(b) < 15 ||s.GetChar(b) == '"' ) ; b-- ) ;
 
-    for ( a = 0 ; a < s.length() && isblankorquote[s.GetChar(a)] ; a++ ) ;
-    for ( b = s.length()-1 ; b > 0 && isblankorquote[s.GetChar(b)] ; b-- ) ;
+    while ( a < s.length() && isblankorquote[s.GetChar(a)] )
+        {
+        a++ ;
+        }
+
+    size_t b = s.length()-1 ;
+    while ( b > 0 && isblankorquote[s.GetChar(b)] )
+        {
+        b-- ;
+        }
 
     if ( a == 0 && b == s.length()-1 ) return ;
     s = s.Mid ( a , b - a + 1 ) ;
@@ -479,7 +502,7 @@ void TGenBank::multitrim ( wxString &s , bool quotes )
 /** \brief Removes the leading and ending quotes from a string
     \param s The string
 */
-wxString TGenBank::trimQuotes ( wxString s )
+wxString TGenBank::trimQuotes ( wxString s ) const
     {
     if ( s.GetChar(0) == '"' ) s = s.Mid ( 1 ) ;
     if ( s.GetChar(s.Length()-1) == '"' ) s = s.Mid ( 0 , s.Length()-1 ) ;
@@ -492,7 +515,7 @@ wxString TGenBank::trimQuotes ( wxString s )
     \param data The data (to be wrapped)
     \param limit The maximum line width
 */
-void TGenBank::wrapit ( wxArrayString &ex , wxString init , wxString data , int limit )
+void TGenBank::wrapit ( wxArrayString &ex , const wxString& init , wxString data , const int limit ) const
     {
     wxString blanks = expand ( "" , init.Length() ) ;
     int allow = limit - blanks.length() ;
@@ -515,25 +538,25 @@ void TGenBank::wrapit ( wxArrayString &ex , wxString init , wxString data , int 
     \param to The desired length
     \param with To fill the string with, if needed
 */
-wxString TGenBank::expand ( wxString init , int to , wxString with )
+wxString TGenBank::expand ( wxString init , const int to , const wxString& with ) const
     {
     while ( init.length() < to ) init += with ;
     return init.substr ( 0 , to ) ;
     }
 
-/** \brief ???
-    \param pre ???
-    \param q ???
+/** \brief Substitutes non-tab whitespace with blanks and quotes with dashes, then returns the string q in double quotes
+           with the prefix pre and separated from that prefix with a "=", as if this was an assignment.
+    \param pre Prefix.
+    \param q Value that is put in quotes.
 */
-wxString TGenBank::quote ( wxString pre , wxString q )
+wxString TGenBank::quote ( const wxString& pre , wxString q ) const
     {
-    int a ;
-    for ( a = 0 ; a < q.length() ; a++ )
-       {
-       if ( q.GetChar(a) == '\n' || q.GetChar(a) == '\r' ) q.SetChar ( a , ' ' ) ;
-       else if ( q.GetChar(a) == '\"' ) q.SetChar ( a , '-' ) ;
-       }
-    for ( a = 1 ; a < q.length() ; a++ )
+    for ( size_t a = 0 ; a < q.length() ; a++ )
+        {
+        if ( q.GetChar(a) == '\n' || q.GetChar(a) == '\r' ) q.SetChar ( a , ' ' ) ;
+        else if ( q.GetChar(a) == '\"' ) q.SetChar ( a , '-' ) ;
+        }
+    for ( size_t a = 1 ; a < q.length() ; a++ )
        {
        if ( q.GetChar(a-1) == ' ' && q.GetChar(a) == ' ' )
           {
@@ -548,18 +571,18 @@ wxString TGenBank::quote ( wxString pre , wxString q )
     \param v The TVector
     \param ex The array of lines (as reference)
 */
-void TGenBank::doExport ( TVector *v , wxArrayString &ex )
+void TGenBank::doExport ( const TVector * const v , wxArrayString &ex ) const
     {
     ex.Clear () ;
-    int a , b ;
+    int b ;
     wxString s , t , u ;
-//    char z[1000] ;
+//  char z[1000] ;
 
     wxString b21 = expand ( "" , 21 ) ;
 
     // Vector
     t = expand ( v->getName() , 24 ) ;
-//    sprintf ( z , _T("%d bp") , v->getSequenceLength() ) ;
+//  sprintf ( z , _T("%d bp") , v->getSequenceLength() ) ;
     wxString z = wxString::Format ( _T("%d bp") , v->getSequenceLength() ) ;
     u = expand ( z , 11 ) ;
     s = _T("LOCUS       ") ;
@@ -580,7 +603,7 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
 
     // Features
     ex.Add ( _T("FEATURES             Location/Qualifiers") ) ;
-    for ( a = 0 ; a < v->items.size() ; a++ )
+    for ( size_t a = 0 ; a < v->items.size() ; a++ )
         {
         s = "     " ;
         wxString s2 = wxString ( gb_item_type[v->items[a].getType()] , *wxConvCurrent ) ;
@@ -600,7 +623,7 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
         wxArrayString vs ;
         wxArrayString vss ;
         vss = v->items[a].getParamKeys() ;
-        for ( b = 0 ; b < vss.GetCount() ; b++ )
+        for ( size_t b = 0 ; b < vss.GetCount() ; b++ )
             {
             vs.Add ( vss[b] ) ;
             if ( vs[b].GetChar(0) == '/' )
@@ -611,11 +634,11 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
 
     // Sequence
     int q[256] ;
-    for ( a = 0 ; a < 256 ; a++ )
+    for ( int a = 0 ; a < 256 ; a++ )
         q[a] = 0 ;
 
     t = v->getSequence() ;
-    for ( a = 0 ; a < t.length() ; a++ )
+    for ( size_t a = 0 ; a < t.length() ; a++ )
         {
         b = t.GetChar(a) ;
         if ( b >= 'A' && b <= 'Z' ) b = b - 'A' + 'a' ;
@@ -632,11 +655,11 @@ void TGenBank::doExport ( TVector *v , wxArrayString &ex )
         }
     while ( t.length() % 60 != 0 ) t += " " ;
     ex.Add ( _T("ORIGIN") ) ;
-    for ( a = 0 ; a < t.length() ; a += 60 )
+    for ( size_t a = 0 ; a < t.length() ; a += 60 )
         {
 //        sprintf ( z , "%9d" , a+1 ) ;
         s = wxString::Format ( "%9d" , a+1 ) ;
-        for ( b = 0 ; b < 6 ; b++ )
+        for ( int b = 0 ; b < 6 ; b++ )
             {
             s += " " ;
             s += t.substr ( a + b*10 , 10 ) ;

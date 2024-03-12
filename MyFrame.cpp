@@ -2,6 +2,7 @@
 #include "SendHTTP.h"
 #include <wx/sysopt.h>
 #include <wx/filename.h>
+#include <wx/filedlg.h> // wxFileDialog
 #include "TEliteLaChromLogDialog.h"
 
 // ---------------------------------------------------------------------------
@@ -296,9 +297,9 @@ void MyFrame::initme ()
     // Check for update online
     if ( checkUpdate )
         {
-//        wxMessageBox ( "A" , wxString::Format(_T("%d"),myapp()->sw.Time())); myapp()->sw.Start() ;
+//      wxMessageBox ( "A" , wxString::Format(_T("%d"),myapp()->sw.Time())); myapp()->sw.Start() ;
         wxString cur_update = check4update () ;
-//        wxMessageBox ( "B" , wxString::Format(_T("%d"),myapp()->sw.Time())); myapp()->sw.Start() ;
+//      wxMessageBox ( "B" , wxString::Format(_T("%d"),myapp()->sw.Time())); myapp()->sw.Start() ;
         if ( !cur_update.IsEmpty() )
             {
             update2version ( cur_update ) ;
@@ -480,10 +481,8 @@ void MyFrame::initme ()
     // Command line parameters?
     if ( myapp()->argc > 1 )
         {
-        int a ;
-
         // Pre-cache key-value pairs
-        for ( a = 1 ; a < myapp()->argc ; a++ )
+        for ( int a = 1 ; a < myapp()->argc ; a++ )
             {
             wxString path = myapp()->argv[a] ;
             if ( path.Left(1) != _T("-") ) continue ; // No key/value pair
@@ -494,36 +493,36 @@ void MyFrame::initme ()
             myapp()->clp[key] = value ;
             }
 
-            // Try to import images
-            wxProgressDialog pd ( txt("t_loading") , _T("") , myapp()->argc-1 , NULL , wxPD_ALL ) ;
-            for ( a = 1 ; a < myapp()->argc ; a++ )
+        // Try to import images
+        wxProgressDialog pd ( txt("t_loading") , _T("") , myapp()->argc-1 , NULL , wxPD_ALL ) ;
+        for ( int a = 1 ; a < myapp()->argc ; a++ )
+            {
+            wxString path = myapp()->argv[a] ;
+            if ( !pd.Update ( a-1 , path ) ) break ;
+            if ( path.Left(1) == _T("-") ) continue ; // key/value pair, did these already
+            if ( path.Left(9).Upper() == _T("GENTLE://") )
                 {
-                wxString path = myapp()->argv[a] ;
-                if ( !pd.Update ( a-1 , path ) ) break ;
-                if ( path.Left(1) == _T("-") ) continue ; // key/value pair, did these already
-                if ( path.Left(9).Upper() == _T("GENTLE://") )
+                path = path.Mid ( 9 ) ;
+                if ( path.GetChar ( path.length()-1 ) == '/' ) // Trailing '/'
                     {
-                    path = path.Mid ( 9 ) ;
-                    if ( path.GetChar ( path.length()-1 ) == '/' ) // Trailing '/'
-                        {
-                        path = path.Mid ( 0 , path.length() - 1 ) ;
-                        }
-                    wxString db = path.BeforeFirst ( ':' ) ;
-                    wxString name = path.AfterFirst ( ':' ) ;
-                    TManageDatabaseDialog mdb ( this , _T("dummy") , ACTION_MODE_STARTUP ) ;
-                    if ( !mdb.do_load_DNA ( name , db ) ) wxMessageBox ( txt("t_not_all_files_imported") ) ;
-                    mainTree->Refresh () ;
+                    path = path.Mid ( 0 , path.length() - 1 ) ;
                     }
-                else
-                    {
-                    if ( !wxFileExists ( path ) ) continue ; // No such file
-                    wxString file = path.AfterLast ( '/' ) ;
-                    file = file.AfterLast ( '\\' ) ;
-                    importFile ( file , path , -1 ) ;
-                    wxSetWorkingDirectory ( myapp()->homedir.GetFullPath() ) ;
-                    }
+                wxString db = path.BeforeFirst ( ':' ) ;
+                wxString name = path.AfterFirst ( ':' ) ;
+                TManageDatabaseDialog mdb ( this , _T("dummy") , ACTION_MODE_STARTUP ) ;
+                if ( !mdb.do_load_DNA ( name , db ) ) wxMessageBox ( txt("t_not_all_files_imported") ) ;
+                mainTree->Refresh () ;
                 }
+            else
+                {
+                if ( !wxFileExists ( path ) ) continue ; // No such file
+                wxString file = path.AfterLast ( '/' ) ;
+                file = file.AfterLast ( '\\' ) ;
+                importFile ( file , path , -1 ) ;
+                wxSetWorkingDirectory ( myapp()->homedir.GetFullPath() ) ;
             }
+        }
+    }
 
     wxEndBusyCursor() ;
     Raise () ;
@@ -577,7 +576,9 @@ void MyFrame::OnClose(wxCloseEvent& event)
     {
     bool canclose = true ;
     for ( unsigned int a = 0 ; canclose && a < children.GetCount() ; a++ )
+        {
         canclose = ! ( children[a]->vec && children[a]->vec->isChanged() ) ;
+        }
     if ( LS->getOption ( _T("DEBUGGING") , _T("") ) == _T("1") ) canclose = true ; // For debugging
     if ( !canclose )
         {
@@ -689,7 +690,7 @@ void MyFrame::OnEnzymeEditor(wxCommandEvent& event )
  */
 void MyFrame::OnFileOpen(wxCommandEvent& event )
     {
-     unsigned int i = children.GetCount() ;
+    unsigned int i = children.GetCount() ;
     TManageDatabaseDialog dbd ( this , txt("t_open") , ACTION_MODE_LOAD ) ;
     dbd.ShowModal () ;
     if ( i != children.GetCount() )
@@ -803,7 +804,8 @@ void MyFrame::OnFileImport(wxCommandEvent& event )
                         "|" + wcCSVformat +
                         "|" + wcCM5format ;
     wxString lastdir = LS->getOption ( _T("LAST_IMPORT_DIR") , _T("C:") ) ;
-    wxFileDialog d ( this , txt("import_file") , lastdir , "" , wildcard , wxFD_OPEN | wxFD_MULTIPLE ) ;
+    wxFileDialog d ( this , txt("import_file") , lastdir , "" , wildcard , wxFD_OPEN | wxFD_MULTIPLE | wxFD_FILE_MUST_EXIST) ;
+    
     int x = d.ShowModal() ;
     if ( x != wxID_OK ) return ;
 
@@ -874,7 +876,7 @@ bool MyFrame::importFile ( const wxString& file , const wxString& path , const i
     // Trying GenBank format
     if ( filter == 1 || filter == -1 )
         {
-//       wxStartTimer () ;
+//      wxStartTimer () ;
         TGenBank gb ;
         gb.load ( path ) ;
         mylog ( "GenBank import" , "loaded" ) ;
@@ -1018,16 +1020,20 @@ TPhyloTree *MyFrame::newPhyloTree ( const wxString& title )
 void MyFrame::newXML (  TXMLfile &xml , const wxString& title ) /* not const */
     {
     for ( int n = 0 ; n < xml.countVectors() ; n++ )
-    {
+        {
         TVector *nv = xml.getVector ( n ) ;
         short type = nv->getType() ;
         if ( !title.IsEmpty() ) nv->setName ( title ) ;
         nv->addDescription ( "\n" + wxGetUserName() ) ;
         if ( type == TYPE_AMINO_ACIDS )
+            {
             newAminoAcids ( nv , nv->getName() ) ; // not const
+            }
         else
+            {
             newFromVector ( nv , type ) ;
-    }
+            }
+        }
     }
 
 /** \brief Creates a new entry from a CLONE import
@@ -1047,7 +1053,6 @@ MyChild *MyFrame::newCLONE ( TClone &clone )
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
 
-
     subframe->initme() ;
     int type = TYPE_VECTOR ;
     clone.remap ( subframe->vec ) ;
@@ -1064,11 +1069,11 @@ MyChild *MyFrame::newCLONE ( TClone &clone )
 void MyFrame::newPDB ( TPDB &pdb , const wxString& title ) /* not const */
     {
     pdb.remap () ;
-    for ( int a = 0 ; a < pdb.seqres.size() ; a++ )
-    {
+    for ( unsigned int a = 0 ; a < pdb.seqres.size() ; a++ )
+        {
         newAminoAcids ( pdb.seqres[a].v , pdb.seqres[a].v->getName() ) -> Activate () ; // not const
         delete pdb.seqres[a].v ;
-    }
+        }
     }
 
 /** \brief Creates a new entry from a GenBank import
@@ -1206,22 +1211,22 @@ void MyFrame::InitToolBar(wxToolBar* toolBar)
     {
     wxSize ns ;
     if ( useTwoToolbars )
-    {
+        {
 #ifdef __WXMSW__
         ns = wxSize ( 22 , 22 ) ;
 #else
         if ( toolBar == mainToolBar ) ns = wxSize ( 48 , 48 ) ;
         else ns = wxSize ( 36 , 36 ) ;
 #endif
-    }
+        }
     else
-    {
+        {
 #ifdef __WXMSW__
         ns = wxSize ( 22 , 22 ) ;
 #else
         ns = wxSize ( 32 , 32 ) ;
 #endif
-    }
+        }
 
     toolBar->SetToolBitmapSize ( ns ) ;
     }
@@ -1454,10 +1459,10 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
     stopcodon = showStopCodon == 0 ? '|' : '*' ;
     wxString lang = pod.language->GetStringSelection() ;
     if ( lang != lang_string || useTwoToolbars != useTwoToolbarsBefore )
-    {
+        {
         wxMessageDialog md ( this , txt("t_effect_after_restart" ) ) ;
         md.ShowModal () ;
-    }
+        }
 
     // Storing options
     LS->startRecord() ;
@@ -1503,16 +1508,15 @@ void MyFrame::OnProgramOptions(wxCommandEvent& event)
 void MyFrame::OnProjectLoad(wxCommandEvent& event)
     {
     // Are all objects stored in a database?
-    int a ;
     wxString notindb ;
-    for ( a = 0 ; a < children.GetCount() ; a++ )
+    for ( int a = 0 ; a < children.GetCount() ; a++ )
         {
         if ( children[a]->def == _T("dna") )
            {
            MyChild *c = (MyChild*) children[a] ;
            if ( c->vec->getDatabase().IsEmpty() )
            notindb += _T("\n") + c->getName() ;
-       }
+           }
         }
     if ( !notindb.IsEmpty() )
         {
@@ -1531,23 +1535,24 @@ void MyFrame::OnProjectLoad(wxCommandEvent& event)
 void MyFrame::OnProjectSave(wxCommandEvent& event)
     {
     // Are all objects stored in a database?
-    int a ;
     wxString notindb ;
-    for ( a = 0 ; a < children.GetCount() ; a++ )
+    for ( int a = 0 ; a < children.GetCount() ; a++ )
         {
         if ( children[a]->def == _T("dna") )
-           {
-           MyChild *c = (MyChild*) children[a] ;
-           if ( c->vec->getDatabase().IsEmpty() )
-           notindb += _T("\n") + c->getName() ;
-           }
-    }
+            {
+            MyChild *c = (MyChild*) children[a] ;
+            if ( c->vec->getDatabase().IsEmpty() )
+                {
+                notindb += _T("\n") + c->getName() ;
+                } 
+            }
+        }
     if ( !notindb.IsEmpty() )
-    {
+        {
         notindb = txt("t_following_not_in_db") + notindb + txt("t_following_end") ;
         wxMessageDialog md ( this , notindb , txt("msg_box") , wxICON_EXCLAMATION|wxYES|wxNO ) ;
         if ( md.ShowModal() != wxID_YES ) return ;
-    }
+        }
 
     // All are stored, or saving anyway
     TManageDatabaseDialog mdd ( this , txt("m_project_savetxt") , ACTION_MODE_SAVE|ACTION_MODE_PROJECT ) ;
@@ -1558,19 +1563,19 @@ void MyFrame::OnProjectSave(wxCommandEvent& event)
  */
 void MyFrame::OnProjectClose(wxCommandEvent& event)
     {
-    int a ;
     if ( tb_mychild )
-    {
+        {
         tb_mychild->Close ( TRUE ) ;
         delete tb_mychild ;
         tb_mychild = NULL ;
-    }
+        }
     lastChild = NULL ;
-    for ( a = 0 ; a < children.GetCount() ; a++ )
-    {
-    // children[a]->Close() ;
+    for ( int a = 0 ; a < children.GetCount() ; a++ )
+        {
+        // children[a]->Close() ;
         delete children[a] ;
-    }
+        children[a] = NULL ;
+        }
     children.Clear() ;
     project.name = txt("project") ;
     project.desc = "" ;
@@ -1583,9 +1588,7 @@ void MyFrame::OnProjectClose(wxCommandEvent& event)
  */
 void MyFrame::rememberLastProject ()
     {
-    wxString sql ;
-
-    sql = "DELETE FROM stuff WHERE s_type='LASTPROJECT'" ;
+    wxString sql = "DELETE FROM stuff WHERE s_type='LASTPROJECT'" ;
     LS->getObject ( sql ) ;
     LS->getObject ( wxString::Format ( "INSERT INTO stuff (s_type,s_name,s_value) VALUES ('LASTPROJECT','NAME','%s')" , project.name.c_str() ) ) ;
     LS->getObject ( wxString::Format ( "INSERT INTO stuff (s_type,s_name,s_value) VALUES ('LASTPROJECT','DATABASE','%s')" , project.db.c_str() ) ) ;
@@ -1952,7 +1955,7 @@ TGraph *MyFrame::RunGraph ()
  \param _exp Include "Export" menu option
  \param _print Include "Print" menu option
  */
-wxMenu *MyFrame::getFileMenu ( int options )
+wxMenu *MyFrame::getFileMenu ( const int options ) const
     {
     wxMenu *file_menu = new wxMenu;
     file_menu->Append(MDI_FILE_OPEN, txt("m_open") , txt("m_opentxt") );
@@ -1978,7 +1981,7 @@ wxMenu *MyFrame::getFileMenu ( int options )
 /** \brief Returns the standard Tools menu, with variations
  \param _pcr Include PCR menu option
  */
-wxMenu *MyFrame::getToolMenu ( bool _pcr )
+wxMenu *MyFrame::getToolMenu ( const bool _pcr ) const
     {
     wxMenu *tool_menu = new wxMenu;
     tool_menu->Append(MDI_ENZYME_EDITOR, txt("m_enzyme") ) ;
@@ -2001,7 +2004,7 @@ wxMenu *MyFrame::getToolMenu ( bool _pcr )
 
 /** \brief Returns the standard Help menu
  */
-wxMenu *MyFrame::getHelpMenu ()
+wxMenu *MyFrame::getHelpMenu () const
     {
     wxMenu *help_menu = new wxMenu;
     help_menu->Append(MDI_HELP, txt("m_help_content") ) ;
@@ -2112,7 +2115,7 @@ bool MyFrame::isActivating () const
  */
 wxString MyFrame::check4update ()
     {
-    wxString text , file ;
+    wxString file ;
     myExternal ex ;
 
 #ifdef __WXMSW__
@@ -2123,7 +2126,7 @@ wxString MyFrame::check4update ()
     file = "mac_currentversion.txt" ;
 #endif
 
-    text = check4update_sub ( ex.getText ( "http://gentle.magnusmanske.de/" + file ) ) ;
+    wxString text = check4update_sub ( ex.getText ( "http://gentle.magnusmanske.de/" + file ) ) ;
 //    if ( text.IsEmpty() ) // Fallback
 //        text = check4update_sub ( ex.getText ( _T("http://www.uni-koeln.de/math-nat-fak/biochemie/klein/gentle/") + file ) ) ;
 
@@ -2131,7 +2134,7 @@ wxString MyFrame::check4update ()
     return text ;
     }
 
-wxString MyFrame::check4update_sub ( wxString text )
+wxString MyFrame::check4update_sub ( const wxString& text )
     {
     bool error = true ;
     if ( !text.IsEmpty() ) error = false ;
@@ -2174,7 +2177,7 @@ wxString MyFrame::check4update_sub ( wxString text )
 /** \brief Download the new version of GENtle
  \param ver New version
  */
-void MyFrame::update2version ( wxString ver )
+void MyFrame::update2version ( const wxString& ver )
     {
     wxString do_run ;
     wxProgressDialog pd ( _T("Updating...") , _T("Downloading installer...") , 2 , NULL , 0 ) ;
@@ -2196,13 +2199,13 @@ void MyFrame::update2version ( wxString ver )
 #endif
 
     if ( ex.copyFile ( sourcefile , localfile ) > 0 )
-    {
+        {
         if ( ex.copyFile ( sourcefile2 , localfile ) > 0 )
             {
             wxMessageBox ( _T("Couldn't read setup file") ) ;
             wxExit() ; // Hard exit
             }
-    }
+        }
 
 #ifdef __WXMSW__
     do_run = "\"" + localfile + "\" /D=\"" ;
@@ -2273,14 +2276,16 @@ TStorage *MyFrame::getTempDB ( const wxString& name )
     unsigned int a ;
     for ( a = 0 ; a < dbcache.GetCount() && dbcache[a]->getDBname() != name ; a++ ) ;
     if ( a == dbcache.GetCount() )
+        {
         dbcache.Add ( new TStorage ( TEMP_STORAGE , name ) ) ;
+        }
     return dbcache[a] ;
     }
 
 /** \brief Sets the active child
  \param c Pointer to the child
  */
-void MyFrame::setActiveChild ( ChildBase *c )
+void MyFrame::setActiveChild ( ChildBase * const c )
     {
     lastChild = c ;
     if ( !IsShown() ) return ;
