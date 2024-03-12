@@ -802,9 +802,9 @@ void MyChild::initPanels ()
 
 //#ifdef __WXMSW__ // LINUX
     GetToolBar()->ToggleTool(MDI_CIRCULAR_LINEAR,vec->isCircular());
-    if ( !vec->getGenomeMode() ) GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,cSequence ? cSequence->findID ( _T("FEATURE" ) ) : false) ;
+    if ( !vec->getGenomeMode() ) GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,cSequence ? cSequence->findID ( _T("FEATURE" ) ) : (SeqBasic*) NULL ) ;
     else aa_offset = 0 ;
-    GetToolBar()->ToggleTool(MDI_TOGGLE_RESTRICTION,cSequence ? cSequence->findID ( _T("RESTRICTION" ) ) : false ) ;
+    GetToolBar()->ToggleTool(MDI_TOGGLE_RESTRICTION,cSequence ? cSequence->findID ( _T("RESTRICTION" ) ) : (SeqBasic*) NULL ) ;
 //#endif
 
 //  if ( aa_state != b ) OnAA_setit ( b ) ;
