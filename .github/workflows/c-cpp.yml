@@ -47,7 +47,9 @@ jobs:
         run: ./configure
       - name: make - Windows
         if: runner.os == 'windows'
-        run: g++ -I\\wxWidgets-3.1.2\\include -I\\wxWidgets-3.1.2\\include\\msvc -o GENtle *.cpp ipc/*.cpp
+        run: |
+          pwd
+          g++ -D__WXMSW__ -IC:\wxWidgets-3.1.2\include -IC:\wxWidgets-3.1.2\include\msvc -o GENtle *.cpp ipc/*.cpp
       - name: make - Linux or MacOS
         if: runner.os == 'linux' || runner.os == 'macOS'
         run: |
