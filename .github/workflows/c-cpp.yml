@@ -47,8 +47,7 @@ jobs:
         run: ./configure
       - name: make - Windows
         if: runner.os == 'windows'
-        run: |
-            g++ -o GENtle *.cpp ipc/*.cpp
+        run: g++ -I\\wxWidgets-3.1.2\\include -I\\wxWidgets-3.1.2\\include\\msvc -o GENtle *.cpp ipc/*.cpp
       - name: make - Linux or MacOS
         if: runner.os == 'linux' || runner.os == 'macOS'
         run: |
@@ -57,8 +56,8 @@ jobs:
           elif [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
             make
           else
-           echo "Unexpected runer.os: ${{ runner.os }}"
-           exit
+            echo "Unexpected runer.os: ${{ runner.os }}"
+            exit
           fi
       - name: install asciidoc
         if: runner.os == 'linux' || runner.os == 'macOS'
