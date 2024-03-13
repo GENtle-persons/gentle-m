@@ -191,9 +191,14 @@ void SequenceCanvas::unmark ()
 
 SeqBasic* SequenceCanvas::findID ( const wxString& id ) const
     {
-    for ( int a = 0 ; a < seq.GetCount() ; a++ )
+    for ( size_t a = 0 ; a < seq.GetCount() ; a++ )
+        {
+        myass( seq[a] , wxString::Format("SequenceCanvas::findID: Missing value for a=%u\n", a ) ) ;
         if ( seq[a]->whatsthis() == id )
+            {
             return seq[a] ;
+            }
+        }
     return NULL ;
     }
 
@@ -322,7 +327,7 @@ void SequenceCanvas::editSequence ( const int _k , wxKeyEvent& event )
             {
             edit_valid = _T("ABCDEFGHIJKLMNOPQRSTUVWXYZ|-") ;
             valid = edit_valid ;
-	    // FIXME: Some comment should go here on why this loop is required that affects variable a
+            // FIXME: Some comment should go here on why this loop is required that affects variable a
             for ( a = 0 ; a < valid.length() && valid.GetChar(a) != k ; a++ ) ;
             }
         }
@@ -722,11 +727,11 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
             {
             _f -= charheight * ( lastmarked ) ;
             beginning += _f ;
- 
+
             _t -= charheight * ( lastmarked ) ;
            _t += charheight * ( seq.GetCount() + blankline + 1 ) ;
             lowy = _t ;
- 
+
             hardstop = _fin ;
 //          mm.unmark() ;
             }
@@ -1480,11 +1485,15 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         else if ( al->s.GetChar(pos-1) == '-' ) wxLogStatus ( al->myname ) ;
         else
             {
-            int a , b ;
-            for ( a = b = 0 ; a < pos ; a++ )
+            int b = 0 ;
+            for ( unsigned int a = 0 ; a < pos ; a++ )
+               {
                if ( al->s.GetChar(a) != '-' )
-                 b++ ;
- 
+                   {
+                   b++ ;
+                   }
+               }
+
             newToolTip = al->myname ;
             newToolTip += _T(", ") ;
             newToolTip += wxString::Format(txt("seq_loc"),b) ;
@@ -1553,9 +1562,9 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
                 if ( myapp()->frame->showToolTips ) SetToolTip ( _T("") ) ;
                 int a , b ;
                 for ( a = b = 0 ; a < pos ; a++ )
-		    {
+                    {
                     if ( al->s.GetChar(a) != '-' ) b++ ;
-		    }
+                    }
                 TAlignment *ali = (TAlignment*) child ;
                 ali->invokeOriginal ( al->id , b ) ;
                 }
@@ -1851,9 +1860,9 @@ void SequenceCanvas::OnCopyResultDNA ( wxCommandEvent &ev )
     TVector *nv = getPCR_DNA_vector() ;
     if ( !nv )
         {
-	wxPrintf( "E: Could not created PCR_DNA_vector - ignored.\n" ) ;
-	return ;
-	}
+        wxPrintf( "E: Could not created PCR_DNA_vector - ignored.\n" ) ;
+        return ;
+        }
 
     wxString s = nv->getSequence() ;
     delete nv ;
@@ -1877,13 +1886,13 @@ void SequenceCanvas::OnCopyResultAA ( wxCommandEvent &ev )
             if ( getPD()->aa_state == AA_THREE_1 ||
                  getPD()->aa_state == AA_THREE_2 ||
                  getPD()->aa_state == AA_THREE_3 )
-	        {
+                {
                 s += sa ;
-		}
+                }
             else
-	        {
-	        s = sa + s ;
-		}
+                {
+                s = sa + s ;
+                }
             }
         }
     if ( s.IsEmpty() ) return ;

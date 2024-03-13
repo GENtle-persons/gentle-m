@@ -122,13 +122,12 @@ isotope *TIPC::add_peak(isotope *base,isotope *peak)
 
 int TIPC::calculate_peaks()
     {
-    isotope *npeaks,*p,*i,*np1;
-    int anzahl;
+    isotope *npeaks,*np1;
 
     if(!(peaks=(isotope*)malloc(sizeof(isotope))))
         {
         return 0;
-	}
+        }
 
     peaks->mass=0;
     peaks->p=1;
@@ -137,17 +136,21 @@ int TIPC::calculate_peaks()
 
     for(ipc_compound * c = verbindung ; c; c=c->next )
         {
-        for(anzahl=0;anzahl < c->amount;anzahl++)
-	    {
+        for(int anzahl=0;anzahl < c->amount;anzahl++)
+            {
 
-            if(!(npeaks=(isotope*)malloc(sizeof(isotope))))
+            isotope *npeaks = (isotope*)malloc(sizeof(isotope)) ;
+            if( ! npeaks )
+                {
+                // FIXME: Memory leak for all the prior ipc_compound and anzahl mallocs
                 return 0;
+                }
             npeaks->mass=0;
 
-            for(p=peaks;p;p=p->next)
-	        {
-                for(i=c->isotopes;i;i=i->next)
-	            {
+            for(isotope *p = peaks; p; p = p->next)
+                {
+                for(isotope *i=c->isotopes;i;i=i->next)
+                    {
                     if(!(np1=(isotope*)malloc(sizeof(isotope))))
                         return 0;
 
@@ -168,30 +171,29 @@ int TIPC::calculate_peaks()
 
 
 void TIPC::print_result(int digits,int charge){
-   isotope *d;
-   double maxp=0,relint=0,sump=0;
-   int permutationen=0;
+    isotope *d;
+    double maxp=0,relint=0,sump=0;
+    int permutationen=0;
 
-   printf("\n");
+    printf("\n");
  
-   for(d=peaks;d;d=d->next)
-      {
-      permutationen++;
-      sump+=d->p;
-      d->mass=d->mass / charge;
-      d->mass=(rint( d->mass * pow(10,digits) ) / pow(10,digits) );
-     }
+    for(d=peaks;d;d=d->next)
+        {
+        permutationen++;
+        sump+=d->p;
+        d->mass=d->mass / charge;
+        d->mass=(rint( d->mass * pow(10,digits) ) / pow(10,digits) );
+        }
 
-   summarize_peaks();
-   for(d=peaks;d;d=d->next)
-       if(d->p > maxp)
-       maxp=d->p;
+    summarize_peaks();
+    for(d=peaks;d;d=d->next)
+        if(d->p > maxp)
+        maxp=d->p;
 
-   for(d=peaks;d;d=d->next)
+    for(d=peaks;d;d=d->next)
        {
        if( ( relint=(d->p/maxp)*100) > MIN_INT )
-       printf("M= %f, p= %e, rel. Int.= %f%%\n",
-           d->mass,d->p,relint);
+           printf("M= %f, p= %e, rel. Int.= %f%%\n", d->mass,d->p,relint);
        }
     if(!(fast_calc))
         printf("\nNumber of  permutations: %i\n",permutationen);
@@ -220,12 +222,17 @@ int TIPC::ipc_main2 ( const char *filename , const char *aaseq , int f )
     
     if(!(gpout->make_gnuplot_output(gnuplotfile))) return 4 ;
     
-    if ( verbindung ) delete verbindung ;
+    if ( verbindung )
+        {
+        free( verbindung );
+        verbindung = NULL ;
+        }
+
     if ( peaks )
         {
-	free( peaks ) ; // allocated by malloc
-	peaks = NULL ;
-	}
+        free( peaks ) ; // allocated by malloc
+        peaks = NULL ;
+        }
 
     return 0 ;
     }    

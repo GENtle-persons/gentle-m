@@ -6,8 +6,16 @@
 
 TIMGreader::~TIMGreader ()
     {
-    if ( buffer ) delete buffer ;
-    if ( output ) delete output ;
+    if ( buffer )
+        {
+        delete buffer ;
+	buffer = NULL ;
+        }
+    if ( output )
+        {
+	free( output ) ;
+	output = NULL ;
+        }
     }
 
 int TIMGreader::getInt ( const int adr ) const
@@ -29,19 +37,21 @@ void TIMGreader::readFile ( const wxString& fn )
 
 wxImage TIMGreader::makeImage()
     {
-    int w_adr = 3549 ;
-    int h_adr = w_adr + 2 ;
-    int xoff = 0 , yoff = 0 ;
+    unsigned int w_adr = 3549 ;
+    unsigned int h_adr = w_adr + 2 ;
+    unsigned int xoff = 0 , yoff = 0 ;
 
     w = getInt ( w_adr ) ;
     h = getInt ( h_adr ) ;
 
-//    xoff = -getInt ( 3577 ) ;
-//    yoff = -getInt ( 3577 ) ;
-//    yoff = -buffer[3577] ;
+//  xoff = -getInt ( 3577 ) ;
+//  yoff = -getInt ( 3577 ) ;
+//  yoff = -buffer[3577] ;
 
     int cur = 4089 ;
-    output = (unsigned char*) malloc ( w * h * 3 ) ;
+    size_t s =  (size_t) w * (size_t) h * 3 ;
+    myass( s < 1024*1024*1024*3, "TIMGreader::makeImage: Should not require 3 GB of memory." ) ;
+    output = (unsigned char*) malloc ( s ) ;
     int offset = 0 , x , y ;
     for ( y = 0 ; y < h ; y++ )
        {
@@ -81,7 +91,7 @@ wxImage TIMGreader::makeImage()
 
           it.orig = wxSize ( w , h ) ;
           for ( x = 7 ; x < 50 && buffer[y+x] ; x++ )
-             it.s += buffer[y+x] ;
+              it.s += buffer[y+x] ;
 
           it.font_size = ( 243 - buffer[y-61] ) / 3 + 10 ;
           it.font_name = wxString ( (char*) buffer + y - 43 , *wxConvCurrent ) ;
