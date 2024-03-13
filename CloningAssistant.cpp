@@ -354,9 +354,9 @@ void TCloningAssistantPanel::arrange ()
                 break ;
                 }
             if ( c >= 0 && ( i->children[b]->item->getType() != VIT_CDS || i->children[c]->item->getType() != VIT_CDS ))
-		{
-		lastx += 15 ;
-		}
+                {
+                lastx += 15 ;
+                }
             i->children[b]->resizeForText ( dc ) ;
             i->children[b]->r.x = lastx + 5 ;
             i->children[b]->r.y = 25 ;
@@ -371,20 +371,31 @@ void TCloningAssistantPanel::OnSize (wxSizeEvent& event)
     Refresh () ;
     }
 
+/**
+ * \brief Remove child target from list of children provided by source
+ */
 void TCloningAssistantPanel::do_drop ( TDDR *source , TDDR *target )
     {
+
+    myass( target, "TCloningAssistantPanel::do_drop: Request to remove target 'NULL'." ) ;
+
     if ( ( source->dragging & target->type & DDR_AS_SEQUENCE ) > 0 ) // Sequence
         {
-	if ( ! ca->tlist )
-	    {
-	    wxPrintf( "E: TCloningAssistantPanel::do_drop: ! ca->tlist\n" ) ;
-	    exit( -1 ) ;
-	    }
+        if ( ! ca->tlist )
+            {
+            wxPrintf( "E: TCloningAssistantPanel::do_drop: ! ca->tlist\n" ) ;
+            abort() ;
+            }
+
+        myass( ca->tlist->children , "TCloningAssistantPanel::do_drop: ca->tlist->children was found to be NULL." ) ;
+
         for ( unsigned int a = 0 ; a < ca->tlist->children.size() ; a++ )
             {
+            myass( ca->tlist->children[a] , wxString::Format("TCloningAssistantPanel::do_drop: ca->tlist->children[%u] was found to be NULL." , a ) ) ;
             if ( ca->tlist->children[a] != target ) continue ;
             int drag = a ? DDR_AS_ITEM : DDR_NONE ;
             TVector *nv = new TVector ;
+            myass( nv , "TCloningAssistantPanel::do_drop: Could not create new objection 'nv'" ) ;
             nv->setFromVector ( *(source->vector) ) ;
             ca->vectors[a] = nv ;
             delete ca->tlist->children[a] ;
@@ -392,7 +403,7 @@ void TCloningAssistantPanel::do_drop ( TDDR *source , TDDR *target )
             if ( ! ca->tlist->children[a] )
                 {
                 wxPrintf("E: TCloningAssistantPanel::do_drop: could not allocate new child from vector.\n" ) ;
-                exit( -1 ) ;
+                abort() ;
                 }
             ca->tlist->children[a]->parent = ca->tlist ;
             break ;
@@ -427,7 +438,7 @@ void TCloningAssistantPanel::do_drop ( TDDR *source , TDDR *target )
 
 //______________________________________________________________________________
 
-TDDR::TDDR ( int _type )
+TDDR::TDDR ( const int _type )
     {
     draggable = DDR_NONE ;
     pen = *wxBLACK_PEN ;
@@ -580,9 +591,9 @@ void TDDR::do_highlight ( const wxPoint& p )
 void TDDR::duplicate_from ( const TDDR * const b ) // FIXME: This sounds like trouble, should be a contructor
     {
     TDDR *old_parent = parent ;
-    clear_children () ;		    // deleted the children pointed to and the vector itself
+    clear_children () ;                    // deleted the children pointed to and the vector itself
     *this = *b ;
-    children.clear () ;		    // clears only the vector, not the objects pointed to, i.e. the copied values
+    children.clear () ;                    // clears only the vector, not the objects pointed to, i.e. the copied values
 
     while ( children.size() < b->children.size() )
         {
@@ -595,7 +606,7 @@ void TDDR::duplicate_from ( const TDDR * const b ) // FIXME: This sounds like tr
     parent = old_parent ;
     }
 
-void TDDR::insert_new_child ( TDDR *i , TDDR *t , const bool before )
+void TDDR::insert_new_child ( TDDR * const i , TDDR * const t , const bool before )
     {
     VDDR c2 ;
     c2 = children ;
@@ -632,7 +643,7 @@ void TDDR_Timer::Notify ()
     wxPoint p = cap->dragging->getRealOffset() ;
     p.x -= cap->dragging->r.x ;
     p.y -= cap->dragging->r.y ;
-    int a = max - move_back ;
+    const int a = max - move_back ;
     p.x = ( p.x * a + cap->last_dragged_point.x * ( max - a ) ) / max ;
     p.y = ( p.y * a + cap->last_dragged_point.y * ( max - a ) ) / max ;
     cap->OnDraw ( dc2 ) ;
