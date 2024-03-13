@@ -39,7 +39,7 @@ typedef vector <TDDR*> VDDR ;
 class TDDR // Drag'n'Drop Rect
     {
     public :
-    TDDR ( int _type = DDR_NONE ) ;
+    TDDR ( const int _type = DDR_NONE ) ;
     ~TDDR () ;
     void resizeForText ( wxDC &dc ) ;
     void draw ( wxDC &dc , const wxPoint& off = wxPoint ( 0 , 0 ) ) ;
@@ -48,7 +48,7 @@ class TDDR // Drag'n'Drop Rect
     void clear_children () ;
     void do_highlight ( const wxPoint& p ) ;
     void duplicate_from ( const TDDR * const b ) ;
-    void insert_new_child ( TDDR *i , TDDR *t , const bool before ) ;
+    void insert_new_child ( TDDR * const i , TDDR * const t , const bool before ) ;
 
     wxRect r ;
     int draggable ;
