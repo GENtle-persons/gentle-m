@@ -345,13 +345,15 @@ void TCloningAssistantPanel::arrange ()
             for ( c = b - 1 ; c >= 0 ; c-- )
                 {
                 if ( b > 0 && c >= 0 &&
-                 i->children[c]->vector == i->children[b]->vector &&
-                 i->children[b]->original == NULL &&
-                 i->children[c]->original == NULL &&
+                   i->children[c]->vector == i->children[b]->vector &&
+                   i->children[b]->original == NULL &&
+                   i->children[c]->original == NULL &&
 //                 i->children[c]->item &&
 //                 i->children[b]->item &&
-                 i->children[c]->item->to + 50 < i->children[b]->item->from )
-                break ;
+                   i->children[c]->item->to + 50 < i->children[b]->item->from )
+                    {
+                    break ;
+                    }
                 }
             if ( c >= 0 && ( i->children[b]->item->getType() != VIT_CDS || i->children[c]->item->getType() != VIT_CDS ))
                 {
