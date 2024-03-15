@@ -14,13 +14,13 @@ m4_include([m4/mysql.m4])
 
 dnl generic init
 AC_INIT([GENtle],[1.9.4.99.2],[https://github.com/GENtle-persons/gentle-m/issues],[https://github.com/GENtle-persons/gentle-m])
-AC_CONFIG_SRCDIR([main.cpp])
-dnl AM_CONFIG_HEADER(config.h:config.h.in)
-AM_INIT_AUTOMAKE
-dnl AC_PROG_MAKE_SET
-dnl AC_ARG_PROGRAM
-dnl AC_PROG_INSTALL
-dnl AC_PROG_LIBTOOL
+AC_CONFIG_SRCDIR([src/main.cpp])
+AC_CONFIG_HEADERS(config.h)
+AM_INIT_AUTOMAKE([foreign subdir-objects])
+AC_CONFIG_MACRO_DIRS([m4])
+AC_ARG_PROGRAM
+# Initialisation of libtool - not sure if this is about to be required - likely not
+LT_INIT
 
 dnl check for programs we use
 AC_PROG_CXX
@@ -79,7 +79,7 @@ AC_ARG_ENABLE(debug,AS_HELP_STRING([--enable-debug],[Enable debug build]),
 ])
 
 dnl That's all, folks!
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile tests/Makefile])
 AC_OUTPUT
 
 dnl Summarized output

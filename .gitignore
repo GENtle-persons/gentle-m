@@ -1,6 +1,10 @@
 *~
 *.o
 .deps
+.dirstamp
+.DS_Store
+.vscode
+libtool
 GENtle
 Makefile
 Makefile.in
