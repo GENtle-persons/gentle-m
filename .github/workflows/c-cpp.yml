@@ -23,15 +23,16 @@ jobs:
       - name: Install Dependencies - Windows
         if: runner.os == 'windows'
         run: |
-          choco install mingw wxwidgets sqlite make
-          choco install gnuwin32-m4
+          choco install --no-progress mingw wxwidgets sqlite make
+          choco install --no-progress gnuwin32-m4
           echo "I: This is where our home is"
           pwd
           echo "I: Changing to wxWidgets install directory"
           cd C:\wxWidgets-3.1.2
           pwd
           echo "I: Now compiling wxWidgets"
-          mingw32-make -f makefile.gcc SHARED=1 MONOLITHIC=1 UNICODE=1 BUILD=release mswu
+          #mingw32-make -f makefile.gcc SHARED=1 MONOLITHIC=1 UNICODE=1 BUILD=release mswu
+          mingw32-make
       - name: Install Dependencies - Linux
         if: runner.os == 'linux'
         run: |
