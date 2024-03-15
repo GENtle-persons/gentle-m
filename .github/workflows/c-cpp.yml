@@ -25,13 +25,13 @@ jobs:
         run: |
           choco install mingw wxwidgets sqlite make
           choco install gnuwin32-m4
-	  echo "I: This is where our home is"
-	  pwd
-	  echo "I: Changing to wxWidgets install directory"
-	  cd C:\wxWidgets-3.1.2
+          echo "I: This is where our home is"
           pwd
-	  echo "I: Now compiling wxWidgets"
-	  mingw32-make -f makefile.gcc SHARED=1 MONOLITHIC=1 UNICODE=1 BUILD=release mswu
+          echo "I: Changing to wxWidgets install directory"
+          cd C:\wxWidgets-3.1.2
+          pwd
+          echo "I: Now compiling wxWidgets"
+          mingw32-make -f makefile.gcc SHARED=1 MONOLITHIC=1 UNICODE=1 BUILD=release mswu
       - name: Install Dependencies - Linux
         if: runner.os == 'linux'
         run: |

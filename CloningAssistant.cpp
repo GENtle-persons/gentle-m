@@ -345,18 +345,20 @@ void TCloningAssistantPanel::arrange ()
             for ( c = b - 1 ; c >= 0 ; c-- )
                 {
                 if ( b > 0 && c >= 0 &&
-                 i->children[c]->vector == i->children[b]->vector &&
-                 i->children[b]->original == NULL &&
-                 i->children[c]->original == NULL &&
+                   i->children[c]->vector == i->children[b]->vector &&
+                   i->children[b]->original == NULL &&
+                   i->children[c]->original == NULL &&
 //                 i->children[c]->item &&
 //                 i->children[b]->item &&
-                 i->children[c]->item->to + 50 < i->children[b]->item->from )
-                break ;
+                   i->children[c]->item->to + 50 < i->children[b]->item->from )
+                    {
+                    break ;
+                    }
                 }
             if ( c >= 0 && ( i->children[b]->item->getType() != VIT_CDS || i->children[c]->item->getType() != VIT_CDS ))
-		{
-		lastx += 15 ;
-		}
+                {
+                lastx += 15 ;
+                }
             i->children[b]->resizeForText ( dc ) ;
             i->children[b]->r.x = lastx + 5 ;
             i->children[b]->r.y = 25 ;
@@ -375,11 +377,11 @@ void TCloningAssistantPanel::do_drop ( TDDR *source , TDDR *target )
     {
     if ( ( source->dragging & target->type & DDR_AS_SEQUENCE ) > 0 ) // Sequence
         {
-	if ( ! ca->tlist )
-	    {
-	    wxPrintf( "E: TCloningAssistantPanel::do_drop: ! ca->tlist\n" ) ;
-	    exit( -1 ) ;
-	    }
+        if ( ! ca->tlist )
+            {
+            wxPrintf( "E: TCloningAssistantPanel::do_drop: ! ca->tlist\n" ) ;
+            exit( -1 ) ;
+            }
         for ( unsigned int a = 0 ; a < ca->tlist->children.size() ; a++ )
             {
             if ( ca->tlist->children[a] != target ) continue ;
@@ -580,9 +582,9 @@ void TDDR::do_highlight ( const wxPoint& p )
 void TDDR::duplicate_from ( const TDDR * const b ) // FIXME: This sounds like trouble, should be a contructor
     {
     TDDR *old_parent = parent ;
-    clear_children () ;		    // deleted the children pointed to and the vector itself
+    clear_children () ;                    // deleted the children pointed to and the vector itself
     *this = *b ;
-    children.clear () ;		    // clears only the vector, not the objects pointed to, i.e. the copied values
+    children.clear () ;                    // clears only the vector, not the objects pointed to, i.e. the copied values
 
     while ( children.size() < b->children.size() )
         {
