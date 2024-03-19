@@ -13,6 +13,8 @@ autom4te.cache/
 compile
 config.log
 config.status
+config.guess
+config.sub
 local.db
 ltmain.sh
 GENtle.app
