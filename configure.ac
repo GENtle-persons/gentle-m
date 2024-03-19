@@ -20,10 +20,9 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign subdir-objects])
 AC_CONFIG_MACRO_DIRS([m4])
 AC_ARG_PROGRAM
 dnl Initialisation of libtool - not sure if this is about to be required - likely not
-dnl LT_INIT
+LT_INIT
 
 dnl check for programs we use
-
 
 AC_PROG_CC
 echo "CC: $CC"
