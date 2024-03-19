@@ -60,7 +60,9 @@
 
 using namespace std ;
 
+#ifndef TESTING
 IMPLEMENT_APP(MyApp)
+#endif
 
 void MyApp::registerFileExtension ( const wxString& extension )
     {
