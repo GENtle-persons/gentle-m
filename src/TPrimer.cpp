@@ -85,18 +85,18 @@ void TPrimer::evaluate ( const float tm_opt ) /* not const */
     if ( upper )
         {
         for ( int a = 0 ; a < s.length() ; a++ )
-           {
-           if ( s.GetChar(a) == 'G' || s.GetChar(a) == 'C' ) gc *= 2 ;
-           else gc = 1 ;
-           }
+            {
+            if ( s.GetChar(a) == 'G' || s.GetChar(a) == 'C' ) gc *= 2 ;
+            else gc = 1 ;
+            }
         }
     else
         {
         for ( int a = s.length()-1 ; a >= 0 ; a-- )
-           {
-           if ( s.GetChar(a) == 'G' || s.GetChar(a) == 'C' ) gc *= 2 ;
-           else gc = 1 ;
-           }
+            {
+            if ( s.GetChar(a) == 'G' || s.GetChar(a) == 'C' ) gc *= 2 ;
+            else gc = 1 ;
+            }
         }
     if ( gc > 1 ) evaluation += gc ;
 
@@ -128,10 +128,10 @@ float TPrimer::evaluateTm ( const double& conc_nm , const double& Na_mm ) /* not
     double ATCG = AT + CG ;
 
     if ( ATCG > 0 && AT > 0 )
-       {
-       tm_salt = 100.5 + ( 41.0 * CG / ATCG ) - ( 820.0 / ATCG ) + 16.6 * log ( Na_mm / 1000.0 ) / log ( 10.0 ) ;
-       tm_gc = 64 + ( CG + 16.4 ) / ( AT ) ;
-       }
+        {
+        tm_salt = 100.5 + ( 41.0 * CG / ATCG ) - ( 820.0 / ATCG ) + 16.6 * log ( Na_mm / 1000.0 ) / log ( 10.0 ) ;
+        tm_gc = 64 + ( CG + 16.4 ) / ( AT ) ;
+        }
 
     OligoCount () ;
 
@@ -189,12 +189,12 @@ double TPrimer::NeighbourTM ( const bool max , const double& pconc , const doubl
             theReturn = 1000*((deltaHValmin-3.4)/(deltaSValmin+RlnK));
             theReturn += -272.9;
             theReturn += 7.21*log (saltconc/1000.0);
-//            theReturn = Math.round(theReturn);
+//          theReturn = Math.round(theReturn);
         } else {
             theReturn = 1000*((deltaHValmax-3.4)/(deltaSValmax+RlnK));
             theReturn += -272.9;
             theReturn += 7.21*log (saltconc/1000.0);
-//            theReturn = Math.round(theReturn);
+//          theReturn = Math.round(theReturn);
         }
     } else {
 //        RlogK ="";
@@ -229,7 +229,11 @@ void TPrimer::OligoCount () /* not const */
     gcCount = CountNeighbors(_T("GC"));
     ggCount = CountNeighbors(_T("GG"))+CountNeighbors(_T("CC"));
 
-    for ( int j = 0 ; j < 3 ; j++ ) IUpairVals_min[j] = IUpairVals_max[j] = 0 ;
+    for ( int j = 0 ; j < 3 ; j++ )
+        {
+        IUpairVals_min[j] = IUpairVals_max[j] = 0 ;
+        }
+
     for ( int i = 1 ; i < seq.length() ; i++ ) //first base can not be IUpacbase
         {
         wxString base , base0 ;
@@ -249,12 +253,10 @@ void TPrimer::OligoCount () /* not const */
 
 bool TPrimer::IsBase ( const wxString& theBase ) const
     {
-    if ((theBase == _T("A")) ||
-        (theBase == _T("G")) ||
-        (theBase == _T("C")) ||
-        (theBase == _T("T"))) {
+    if ((theBase == _T("A")) || (theBase == _T("G")) || (theBase == _T("C")) || (theBase == _T("T")))
+            {
             return true;
-    }
+            }
     return false;
     }
 
@@ -271,9 +273,9 @@ bool TPrimer::IsIUpacBase ( const wxString& theBase ) const
         (theBase == _T("D")) ||
         (theBase == _T("B")) ||
         (theBase == _T("N")))
-    {
-            return true;
-    }
+        {
+        return true;
+        }
     return false;
     }
 
@@ -312,7 +314,7 @@ double *TPrimer::CalcIUpair ( wxString base0 , wxString base , int i , const boo
 //        while(IUpacBase.charAt(j)!="")
         while ( j < IUpacBase.length() )
         {
-//            base=IUpacBase.charAt(j);
+//          base=IUpacBase.charAt(j);
             base=IUpacBase.GetChar(j);
 
             pair1=base0+base;
@@ -328,11 +330,16 @@ double *TPrimer::CalcIUpair ( wxString base0 , wxString base , int i , const boo
             else if(pair1==_T("GC")){temp1[0]=2.3  ;temp1[1]=10.5; temp1[2]=26.4  ;}
             else if(pair1==_T("GG")){temp1[0]=2.1  ;temp1[1]=10.9; temp1[2]=28.4  ;}
 
-            if(base2.IsEmpty()){
+            if(base2.IsEmpty())
+                {
                 for(int k=0; k<2; k++)
-                {    temp2[k]=0.0;    }
+                    {
+                    temp2[k]=0.0;
+                    }
 
-            }else if(!IsIUpacBase(base2)){
+                }
+            else if(!IsIUpacBase(base2))
+                {
                 pair2=base+base2;
                 if(pair2==_T("AA")){temp2[0]= 1.2 ;temp2[1]=8.0; temp2[2]=21.9 ;}
                 else if(pair2==_T("AT")){temp2[0]= 0.9 ;temp2[1]=5.6; temp2[2]=15.2  ;}
@@ -344,7 +351,9 @@ double *TPrimer::CalcIUpair ( wxString base0 , wxString base , int i , const boo
                 else if(pair2==_T("CG")){temp2[0]= 2.8 ;temp2[1]=11.8; temp2[2]=29.0  ;}
                 else if(pair2==_T("GC")){temp2[0]=2.3  ;temp2[1]=10.5; temp2[2]=26.4  ;}
                 else if(pair2==_T("GG")){temp2[0]=2.1  ;temp2[1]=10.9; temp2[2]=28.4  ;}
-            }else if(IsIUpacBase(base2)){
+                }
+            else if(IsIUpacBase(base2))
+                {
                 base0=base;
                 base=base2;
                 i++;
@@ -352,26 +361,30 @@ double *TPrimer::CalcIUpair ( wxString base0 , wxString base , int i , const boo
                 for ( int a = 0 ; a < 3 ; a++ ) temp2[a] = tempp[a] ;
                 delete tempp ;
                 i--;
-            }
+                }
 
             for(int k=0;k<3;k++)
-            {
-                if(j==0){
+                {
+                if(j==0)
+                    {
                     reValue[k]=temp1[k]+temp2[k];
-                }else{
-                    if ((max)&&(reValue[k]<temp1[k]+temp2[k]))
-                    {    reValue[k]=temp1[k]+temp2[k];
-                    }else if((!max)&&(reValue[k]>temp1[k]+temp2[k]))
-                    {    reValue[k]=temp1[k]+temp2[k];
                     }
-                }
+                    else
+                        {
+                        if ((max)&&(reValue[k]<temp1[k]+temp2[k]))
+                            {
+                            reValue[k]=temp1[k]+temp2[k];
+                            }
+                        else if((!max)&&(reValue[k]>temp1[k]+temp2[k]))
+                            {
+                            reValue[k]=temp1[k]+temp2[k];
+                            }
+                        }
+                    }
+                j++;
             }
-            j++;
         }
-    }
     return reValue;
-
-
     }
 
 double TPrimer::DeltaG ( const bool max ) const
@@ -459,41 +472,45 @@ void TPrimer::evaluateSelfAnnealing () /* not const */
     {
     wxString s = sequence ;
     wxString t ;
-    int a , b , l = s.length() ;
+    int l = s.length() ;
     annScore = 0 ; // not const
     ann1 = _T("") ;
     ann2 = _T("") ;
     annm = _T("") ;
-    for ( a = 0 ; a < l ; a++ ) t = s.GetChar(a) + t ;
-    for ( a = -(l-1) ; a < l ; a++ )
+    for ( int a = 0 ; a < l ; a++ ) t = s.GetChar(a) + t ;
+    for ( int a = -(l-1) ; a < l ; a++ )
         {
         int lm = 0 ;
         wxString ann_tmp ;
-        for ( b = 0 ; b < l ; b++ )
-           {
-           if ( a+b >= 0 && a+b < l )
-              {
-              char c = '|' ;
-              if ( s.GetChar(a+b) == 'A' && t.GetChar(b) == 'T' ) lm += 2 ;
-              else if ( s.GetChar(a+b) == 'T' && t.GetChar(b) == 'A' ) lm += 2 ;
-              else if ( s.GetChar(a+b) == 'G' && t.GetChar(b) == 'C' ) lm += 4 ;
-              else if ( s.GetChar(a+b) == 'C' && t.GetChar(b) == 'G' ) lm += 4 ;
-              else c = ' ' ;
-              ann_tmp += c ;
-              }
-           }
+        for ( int b = 0 ; b < l ; b++ )
+            {
+            if ( a+b >= 0 && a+b < l )
+                {
+                char c = '|' ;
+                if ( s.GetChar(a+b) == 'A' && t.GetChar(b) == 'T' ) lm += 2 ;
+                else if ( s.GetChar(a+b) == 'T' && t.GetChar(b) == 'A' ) lm += 2 ;
+                else if ( s.GetChar(a+b) == 'G' && t.GetChar(b) == 'C' ) lm += 4 ;
+                else if ( s.GetChar(a+b) == 'C' && t.GetChar(b) == 'G' ) lm += 4 ;
+                else c = ' ' ;
+                ann_tmp += c ;
+                }
+            }
         if ( lm > annScore )
-           {
-           annScore = lm ;
-           ann1 = s ;
-           ann2 = t ;
-           annm = ann_tmp ;
-           if ( a < 0 )
-              for ( b = a ; b < 0 ; b++ ) ann1 = _T(" ") + ann1 ;
-           if ( a > 0 )
-              for ( b = a ; b < 0 ; b++ ) ann2 = _T(" ") + ann2 ;
-           for ( b = 0 ; b < abs(a) ; b++ ) annm = _T(" ") + annm ;
-           }
+            {
+            annScore = lm ;
+            ann1 = s ;
+            ann2 = t ;
+            annm = ann_tmp ;
+            if ( a < 0 )
+                {
+                for ( int b = a ; b < 0 ; b++ ) ann1 = _T(" ") + ann1 ;
+                }
+            if ( a > 0 )
+                {
+                for ( int b = a ; b < 0 ; b++ ) ann2 = _T(" ") + ann2 ;
+                }
+            for ( int b = 0 ; b < abs(a) ; b++ ) annm = _T(" ") + annm ;
+            }
         }
     }
 
@@ -509,11 +526,11 @@ int TPrimer::checkFit ( const TVector * const v , const bool justCount ) const
         if ( upper ) c = v->getNucleotide ( a + from - 1 ) ;
         else c = v->getNucleotide ( to - a - 1 , true ) ;
         if ( c == s.GetChar(a) )
-           {
-           match++ ;
-           match3 += 2 ;
-           count++ ;
-           }
+            {
+            match++ ;
+            match3 += 2 ;
+            count++ ;
+            }
         else match3 = count = 0 ;
         }
     if ( justCount ) return count ;

@@ -355,7 +355,19 @@ void TVectorEditor::itemDel ( wxCommandEvent &ev )
         return ;
         }
     storeItemData () ;
+    if ( i >= newitems.GetCount() )
+        {
+        wxPrintf( "E: TVectorEditor::itemDel called iwth getCurrentItem() returning %d, but only %u items are in the list.\n" , i , newitems.GetCount() ) ;
+        abort() ; // FIXME: Maybe a bit harsh, a return would do, but shall find locating this issue.
+        }
+    if ( ! newitems[i] )
+        {
+        wxPrintf( "E: TVectorEditor::itemDel on getCurrentItem() %d but newitems at that position is NULL.\n" , i ) ;
+        abort() ; // FIXME: Maybe a bit harsh, a return would do, but shall find locating this issue.
+        }
+
     delete newitems[i] ;
+
     newitems[i] = NULL ; // just to help the automated error detection
     newitems.RemoveAt ( i ) ; // removes the pointer (now NULL) at the position i
     makeItemsList () ;
@@ -372,10 +384,10 @@ void TVectorEditor::itemDel ( wxCommandEvent &ev )
         return ;
         }
     // Choosing next element to highlight - if reaching to this point.
-    if (0 == newitems[j])
+    if (NULL == newitems[j])
         {
-	wxPrintf( "E: TVectorEditor::itemDel: newitems[j]  is NULL - should never happen.\n" ) ;
-	exit( -1 ) ;
+        wxPrintf( "E: TVectorEditor::itemDel: newitems[j]  is NULL - should never happen.\n" ) ;
+        abort() ;
         }
     else
         {

@@ -216,7 +216,7 @@ void TGridData::init ()
     for ( char a = 'A' ; a <= 'Z' && a != '|'+1 ; a++ )
         {
        if ( a == 'Z' ) a = '|' ;
-        TAAProp p = d.getAAprop ( a ) ;
+        TAAProp p = TVector::getAAprop ( a ) ;
         if ( p.tla == _T("") ) continue ;
         if ( p.tla == _T("???") ) continue ;
         s = _T("t_aa_ ") ;
@@ -270,7 +270,7 @@ void TGridData::init ()
                 s += iu.GetChar(b) ;
                 s += iu.GetChar(c) ;
                 s = d.dna2aa ( s ) . GetChar ( 0 ) ;
-                TAAProp p = d.getAAprop ( s.GetChar(0) ) ;
+                TAAProp p = TVector::getAAprop ( s.GetChar(0) ) ;
                 s = wxString ( txt(_T("t_aa_")+s) ) + _T(" (") + p.tla + _T("; ") + s + _T(")") ;
                 if ( p.tla == _T("STP") ) s = _T("STOP") + s ;
                 SetCellValue ( row+1+a*4+c , 1+b , s ) ;
