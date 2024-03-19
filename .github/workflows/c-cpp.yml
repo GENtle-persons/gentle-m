@@ -22,10 +22,12 @@ jobs:
         run: |
           if [ "${{ matrix.os }}" = "macos-latest" ]; then
             #brew update
-            brew install wxwidgets m4 tinyxml zstd autoconf libtool automake wxwidgets libpng sqlite
-            brew install dylibbundler
+            brew install autoconf-archive autoconf automake libtool m4
+            brew install wxwidgets tinyxml zstd libpng sqlite
+            brew install dylibbundler pkg-config
           elif [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
             sudo apt-get update
+            sudo apt-get install autoconf-archive
             sudo apt install libwxgtk3.2-dev || sudo apt install wx3.2-headers || sudo apt install libwxgtk3.0-gtk3-dev || sudo apt install libwxgtk3.0-dev
           fi
       - name: remove local redundancy to build-deps
@@ -36,6 +38,10 @@ jobs:
         run: ./configure
       - name: make
         run: make
+      - name: Install googletest
+        run: brew install googletest
+      - name: running tests
+        run: make check
       - name: install asciidoc
         run: |
           if [ "${{ matrix.os }}" = "macos-latest" ]; then

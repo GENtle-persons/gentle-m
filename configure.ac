@@ -16,15 +16,24 @@ dnl generic init
 AC_INIT([GENtle],[1.9.4.99.2],[https://github.com/GENtle-persons/gentle-m/issues],[https://github.com/GENtle-persons/gentle-m])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS(config.h)
-AM_INIT_AUTOMAKE([foreign subdir-objects])
+AM_INIT_AUTOMAKE([-Wall -Werror foreign subdir-objects])
 AC_CONFIG_MACRO_DIRS([m4])
 AC_ARG_PROGRAM
 # Initialisation of libtool - not sure if this is about to be required - likely not
 LT_INIT
 
 dnl check for programs we use
-AC_PROG_CXX
+
+
 AC_PROG_CC
+echo "CC: $CC"
+echo "CXX: $CXX"
+AC_PROG_CXX
+dnl AC_PROG_INSTALL
+AC_PROG_MAKE_SET
+AX_CXX_COMPILE_STDCXX_17([noext], [mandatory])
+echo "CC: $CC"
+echo "CXX: $CXX"
 
 dnl Finds linker and sets $LD
 dnl LT_PATH_LD # needs libtool
@@ -47,11 +56,19 @@ else
 fi
 
 WX_CPPFLAGS="`$WXCONFIG --cppflags`"
-WX_CXXFLAGS="-std=c++11 `$WXCONFIG --cxxflags | sed -e 's/-fno-exceptions//'`"
+WX_CXXFLAGS="`$WXCONFIG --cxxflags | sed -e 's/-fno-exceptions//'`"
 WX_LIBS="`$WXCONFIG --libs`"
 
-CPPFLAGS="$CPPFLAGS $WX_CPPFLAGS"
-CXXFLAGS="$CXXFLAGS $WX_CXXFLAGS"
+#TINYXML_CPPFLAGS="`pkg-config --cppflags tinyxml`"
+TINYXML_CXXFLAGS="`pkg-config --cflags tinyxml`"
+TINYXML_LIBS="`pkg-config --libs tinyxml`"
+
+GTEST_INCLUDE="`pkg-config --cflags gtest`"
+GTEST_LIBS="`pkg-config --libs gtest`"
+
+CPPFLAGS="$CPPFLAGS $WX_CPPFLAGS $TINYXML_CPPFLAGS"
+CXXFLAGS="$CXXFLAGS $WX_CXXFLAGS $TINYXML_CXXFLAGS"
+LDFLAGS="$LDFLAGS $TINYXML_LIBS"
 
 if [[ "x" != "x$PREFIX" ]]; then
   CPPFLAGS="$CPPFLAGS -I$PREFIX/include"
@@ -60,6 +77,10 @@ if [[ "x" != "x$PREFIX" ]]; then
 fi
 
 AC_SUBST(WX_LIBS)
+AC_SUBST(TINYXML_LIBS)
+AC_SUBST(TINYXML_INCLUDE)
+AC_SUBST(GTEST_LIBS)
+AC_SUBST(GTEST_INCLUDE)
 AC_SUBST(LDFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(CXXFLAGS)
@@ -109,3 +130,5 @@ echo "CPPFLAGS=$CPPFLAGS"
 echo "CXXFLAGS=$CXXFLAGS"
 echo "WX_LIBS=$WX_LIBS"
 echo "LDFLAGS=$LDFLAGS"
+echo "GTEST_INCLUDE=$GTEST_INCLUDE"
+echo "GTEST_LIBS=$GTEST_LIBS"
