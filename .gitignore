@@ -5,17 +5,25 @@
 .DS_Store
 .vscode
 libtool
-GENtle
+# Created by configure.ac and/or automake
 Makefile
 Makefile.in
 aclocal.m4
 autom4te.cache/
-compile
+# Created by configure
 config.log
 config.status
 config.guess
 config.sub
-local.db
 ltmain.sh
+# Created during compilation
 GENtle.app
+GENtle
 docs/manual.html
+# Created by libtoolize
+compile
+missing
+depcomp
+# Created running in situ
+local.db
+
