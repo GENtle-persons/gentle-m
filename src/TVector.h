@@ -190,7 +190,7 @@ class TVector
     void setIUPAC ( const char b , const wxString& s , char * pac = NULL ) const ;
     char getNucleotide ( const int pos , const bool complement = false ) const ; ///< Returns the base at a certain position, or its complement
     void setNucleotide ( const int pos , const char t ) ; ///< Sets a base at a certain position
-    char getComplement ( const char c ) const ; ///< Returns the complement of a given base
+    static char getComplement ( const char c ) ; ///< Returns the complement of a given base
 
     // Vector/sequence access
     void ligate_right ( TVector &v , const bool inverted = false ) ; ///< Adds another TVector to the right of this one

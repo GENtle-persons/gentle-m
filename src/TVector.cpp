@@ -23,7 +23,7 @@ bool TVector::isLinear () const { return !circular ; }
 bool TVector::hasStickyEnds () const { return (_lu+_ll+_ru+_rl!=_T("")) ; }
 float TVector::getAAmw ( const char aa ) const { return aaprop[aa].mw ; }
 float TVector::getAApi ( const char aa ) const { return aaprop[aa].pi ; }
-char TVector::getComplement ( const char c ) const { return COMPLEMENT[c] ; }
+char TVector::getComplement ( const char c ) { return COMPLEMENT[c] ; }
 TAAProp TVector::getAAprop ( const char a ) const { return aaprop[a] ; }
 void TVector::setGenomeMode ( const bool gm ) { genomeMode = gm ; }
 bool TVector::getGenomeMode () const { return genomeMode ; }
@@ -137,7 +137,7 @@ wxString TVector::getStrand35 () const
     {
     wxString t1 , t2 , t3 ;
     for ( int a = 0 ; a < _rl.length() ; a++ ) t1 = _rl.GetChar(a) + t1 ;
-    for ( int a = 0 ; a < sequence.length() ; a++ ) t2 = ((wxChar) getComplement ( sequence.GetChar(a) )) + t2 ;
+    for ( int a = 0 ; a < sequence.length() ; a++ ) t2 = ((wxChar) TVector::getComplement ( sequence.GetChar(a) )) + t2 ;
     for ( int a = 0 ; a < _ll.length() ; a++ ) t3 = _ll.GetChar(a) + t3 ;
     return t1 + t2 + t3 ;
     }
@@ -1013,7 +1013,7 @@ char TVector::getNucleotide ( const int _pos ,  const bool complement ) const
     int pos = _pos;
     while ( pos < 0 ) pos += sl ;
     while ( pos >= sl ) pos -= sl ;
-    if ( complement ) return getComplement ( sequence.GetChar(pos) ) ;
+    if ( complement ) return TVector::getComplement ( sequence.GetChar(pos) ) ;
     return sequence.GetChar(pos) ;
     }
 
@@ -1023,7 +1023,7 @@ wxString TVector::transformSequence ( const bool inverse , const bool reverse ) 
     if ( inverse )
         {
         for ( int a = 0 ; a < r.length() ; a++ )
-           r.SetChar ( a , getComplement ( r.GetChar(a) ) ) ;
+           r.SetChar ( a , TVector::getComplement ( r.GetChar(a) ) ) ;
         }
     if ( reverse )
         {

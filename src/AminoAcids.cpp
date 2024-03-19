@@ -287,10 +287,10 @@ void TAminoAcids::showStat () const
         if ( c != '|' && c != ' ' ) noaa++ ;
         float ppi = vec->getAApi ( c ) ;
         if ( ppi != 0 )
-           {
-           pI += ppi ;
-           piaa ++ ;
-           }
+            {
+            pI += ppi ;
+            piaa ++ ;
+            }
 
         num[c]++ ;
         mW += vec->getAAmw ( c ) ;
@@ -346,16 +346,16 @@ void TAminoAcids::showStat () const
 
     // Half-life
     if ( vec->getSequenceLength() > 0 )
-       {
-       unsigned char c = (unsigned char)vec->getSequenceChar ( 0 ) ;
-       TAAProp p = vec->getAAprop ( c ) ;
-       wxString hl_mammal = p.get_halflife_text ( p.hl_mammal ) ;
-       wxString hl_yeast = p.get_halflife_text ( p.hl_yeast ) ;
-       wxString hl_ecoli = p.get_halflife_text ( p.hl_ecoli ) ;
-       t += _T("\n\n") + wxString::Format ( txt("aa_info4") , hl_mammal.c_str() , hl_yeast.c_str() , hl_ecoli.c_str() ) ;
-       hydropathicity /= vec->getSequenceLength() ;
-       t += _T("\n") + wxString::Format ( txt("aa_info5") , hydropathicity ) ;
-       }
+        {
+        unsigned char c = (unsigned char)vec->getSequenceChar ( 0 ) ;
+        TAAProp p = vec->getAAprop ( c ) ;
+        wxString hl_mammal = p.get_halflife_text ( p.hl_mammal ) ;
+        wxString hl_yeast = p.get_halflife_text ( p.hl_yeast ) ;
+        wxString hl_ecoli = p.get_halflife_text ( p.hl_ecoli ) ;
+        t += _T("\n\n") + wxString::Format ( txt("aa_info4") , hl_mammal.c_str() , hl_yeast.c_str() , hl_ecoli.c_str() ) ;
+        hydropathicity /= vec->getSequenceLength() ;
+        t += _T("\n") + wxString::Format ( txt("aa_info5") , hydropathicity ) ;
+        }
 
     stat->SetValue ( t ) ;
     stat->SetFont ( *MYFONT ( MYFONTSIZE , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
