@@ -19,8 +19,8 @@ AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE([-Wall -Werror foreign subdir-objects])
 AC_CONFIG_MACRO_DIRS([m4])
 AC_ARG_PROGRAM
-# Initialisation of libtool - not sure if this is about to be required - likely not
-#LT_INIT
+dnl Initialisation of libtool - not sure if this is about to be required - likely not
+dnl LT_INIT
 
 dnl check for programs we use
 
