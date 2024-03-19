@@ -186,7 +186,7 @@ class TVector
     void methylationSites ( wxArrayInt &vi , int what = ALL_METHYLATION_ENZYMES ) ; ///< Finds methylation sites
 
     // Nucleotide access/conversion
-    bool basematch ( const char b1 , const char b2 ) const ; ///< matches DNA bases; b1 in IUPAC, b2 in SIUPAC. This is superior to the "=" operator :-)
+    static bool basematch ( const char& b1 , const char& b2 ) ; ///< matches DNA bases; b1 in IUPAC, b2 in SIUPAC. This is superior to the "=" operator :-)
     void setIUPAC ( const char b , const wxString& s , char * pac = NULL ) const ;
     char getNucleotide ( const int pos , const bool complement = false ) const ; ///< Returns the base at a certain position, or its complement
     void setNucleotide ( const int pos , const char t ) ; ///< Sets a base at a certain position
@@ -202,8 +202,8 @@ class TVector
     void doRemove ( const int from , const int to , const bool update = true , const bool enableUndo = true ) ; ///< Removes part of the sequence
     void insert_char ( const char x , const int pos , const bool overwrite = false ) ; ///< Inserts a character into the sequence
 
-    float getAAmw ( const char aa ) const ; ///< Returns the molecular weight of an amino acid
-    float getAApi ( const char aa ) const ; ///< Returns the isoelectric point of an amino acid
+    static float getAAmw ( const char& aa ) ; ///< Returns the molecular weight of an amino acid
+    static float getAApi ( const char& aa ) ; ///< Returns the isoelectric point of an amino acid
     wxString dna2aa ( const wxString& codon , const int translation_table = -1 ) const ; ///< Translates a codon into an amino acid
     void setAction ( const wxString& _action , int _action_value = 0 ) ; ///< Sets the action for doAction()
     void setDatabase ( const wxString& s ) { database = s ; } ///< Sets the database in which the sequence is stored
@@ -240,7 +240,7 @@ class TVector
     wxString getStrand53 () const ; ///< Returns the 5'->3' strand of the sequence
     wxString getStrand35 () const ; ///< Returns the 3'->5' strand of the sequence, as 5'->3'
 
-    TAAProp getAAprop ( const char a ) const ; ///< Returns the properties of the one-letter code amino acid
+    static TAAProp getAAprop ( const char& a ) ; ///< Returns the properties of the one-letter code amino acid
     int find_item ( const wxString& s ) const ; ///< Finds an item with that name
     bool isEnzymeHidden ( const wxString& s ) const ; ///< Is enzyme "s" hidden?
     void hideEnzyme ( const wxString& s , const bool hideit = true ) ; ///< Set enzyme hidden state
@@ -301,7 +301,7 @@ class TVector
 
   private :
     wxString invert ( const wxString& s ) const ; ///< Inverts a string
-    wxString vary_base ( const char b ) const ; ///< Turns a SIUPAC into a string of A, C, G, T
+    static wxString vary_base ( const char& b ) ; ///< Turns a SIUPAC into a string of A, C, G, T
     void makeAA2DNA ( const wxString& mode = _T("") ) ; ///< "Translate" amino acid sequence into DNA; can be specified for an organism
     wxString mergeCodons ( wxString c1 , wxString c2 ) const ; ///< Used by makeAA2DNA for generating "abstract" (SIUPAC) DNA
     void setCodonTable ( const int table , const wxString& sequence , const wxString& name ) ; ///< Sets up the codon_tables variable

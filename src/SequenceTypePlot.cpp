@@ -559,7 +559,7 @@ void SeqPlot::useNcoils ()
     mylog ( "SeqPlot::useNcoils" , "4" ) ;
     for ( int a = 0 ; a < s.length() ; a++ )
         {
-        prop.push_back ( vec->getAAprop ( (char) s.GetChar(a) ) ) ;
+        prop.push_back ( TVector::getAAprop ( (char) s.GetChar(a) ) ) ;
         prop[a].data.clear() ;
         prop[a].data.push_back ( af[0][a] ) ;
         prop[a].data.push_back ( af[1][a] ) ;
@@ -591,7 +591,7 @@ void SeqPlot::useChouFasman ()
     prop.clear () ;
     for ( size_t a = 0 ; a < s.length() ; a++ )
         {
-        prop.push_back ( vec->getAAprop ( s[a] ) ) ;
+        prop.push_back ( TVector::getAAprop ( s[a] ) ) ;
         prop[a].data.clear() ;
         while ( prop[a].data.size() < 3 ) prop[a].data.push_back ( 0 ) ;
         }
@@ -751,7 +751,7 @@ void SeqPlot::useMW ()
     prop.clear () ;
     for ( int a = 0 ; a < s.length() ; a++ )
         {
-        prop.push_back ( vec->getAAprop ( s.GetChar(a) ) ) ;
+        prop.push_back ( TVector::getAAprop ( s.GetChar(a) ) ) ;
         prop[a].data.clear() ;
         prop[a].data.push_back ( prop[a].mw ) ;
 //      while ( prop[a].data.size() < 3 ) prop[a].data.push_back ( 0 ) ;
@@ -775,7 +775,7 @@ void SeqPlot::usePI ()
     prop.clear () ;
     for ( int a = 0 ; a < s.length() ; a++ )
         {
-        prop.push_back ( vec->getAAprop ( s.GetChar(a) ) ) ;
+        prop.push_back ( TVector::getAAprop ( s.GetChar(a) ) ) ;
         prop[a].data.clear() ;
         prop[a].data.push_back ( prop[a].pi ) ;
 //      while ( prop[a].data.size() < 3 ) prop[a].data.push_back ( 0 ) ;
@@ -799,7 +799,7 @@ void SeqPlot::useHP ()
     prop.clear () ;
     for ( int a = 0 ; a < s.length() ; a++ )
         {
-        prop.push_back ( vec->getAAprop ( s.GetChar(a) ) ) ;
+        prop.push_back ( TVector::getAAprop ( s.GetChar(a) ) ) ;
         prop[a].data.clear() ;
         }
 

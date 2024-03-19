@@ -635,7 +635,7 @@ double TProteolysis::get_weight ( const int from , const int to ) const
     for ( int a = from ; a <= to ; a++ )
         {
         char c = v->getSequenceChar ( a-1 ) ;
-        w += v->getAAmw ( c ) ;
+        w += TVector::getAAmw ( c ) ;
         }
     return w / 1000 ;
     }

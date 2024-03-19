@@ -285,7 +285,7 @@ void TAminoAcids::showStat () const
         {
         unsigned char c = (unsigned char)vec->getSequenceChar ( a ) ;
         if ( c != '|' && c != ' ' ) noaa++ ;
-        float ppi = vec->getAApi ( c ) ;
+        float ppi = TVector::getAApi ( c ) ;
         if ( ppi != 0 )
             {
             pI += ppi ;
@@ -293,7 +293,7 @@ void TAminoAcids::showStat () const
             }
 
         num[c]++ ;
-        mW += vec->getAAmw ( c ) ;
+        mW += TVector::getAAmw ( c ) ;
         }
     if ( piaa > 0 ) pI /= piaa ;
     ext = num[(unsigned int)'W']*5500 + num[(unsigned int)'Y']*1490 + (num[(unsigned int)'C']*125)/2 ;
@@ -315,7 +315,7 @@ void TAminoAcids::showStat () const
         {
         if ( num[a] == 0 ) continue ;
         b++ ;
-        TAAProp p = vec->getAAprop ( a ) ;
+        TAAProp p = TVector::getAAprop ( a ) ;
         t2 += a ;
         t2 += _T("/") ;
         t2 += p.tla ;
@@ -333,7 +333,7 @@ void TAminoAcids::showStat () const
     for ( size_t a = 0 ; a < vec->getSequenceLength() ; a++ )
         {
         unsigned char c = (unsigned char)vec->getSequenceChar ( a ) ;
-        TAAProp p = vec->getAAprop ( c ) ;
+        TAAProp p = TVector::getAAprop ( c ) ;
         carbon += p.carbon ;
         hydrogen += p.hydrogen ;
         nitrogen += p.nitrogen ;
@@ -348,7 +348,7 @@ void TAminoAcids::showStat () const
     if ( vec->getSequenceLength() > 0 )
         {
         unsigned char c = (unsigned char)vec->getSequenceChar ( 0 ) ;
-        TAAProp p = vec->getAAprop ( c ) ;
+        TAAProp p = TVector::getAAprop ( c ) ;
         wxString hl_mammal = p.get_halflife_text ( p.hl_mammal ) ;
         wxString hl_yeast = p.get_halflife_text ( p.hl_yeast ) ;
         wxString hl_ecoli = p.get_halflife_text ( p.hl_ecoli ) ;
@@ -557,7 +557,7 @@ void TAminoAcids::OnPhotometer(wxCommandEvent& event)
     wxString seq = vec->getSequence() ;
     float mW = 0 ;
     for ( int a = 0 ; a < vec->getSequenceLength() ; a++ )
-        mW += vec->getAAmw ( vec->getSequenceChar ( a ) ) ;
+        mW += TVector::getAAmw ( vec->getSequenceChar ( a ) ) ;
     c->prot->SetCellValue ( 2 , 1 , wxString::Format ( _T("%d") , (int)seq.Replace ( _T("W") , _T("") , true ) ) ) ;
     c->prot->SetCellValue ( 3 , 1 , wxString::Format ( _T("%d") , (int)seq.Replace ( _T("Y") , _T("") , true ) ) ) ;
     c->prot->SetCellValue ( 4 , 1 , wxString::Format ( _T("%d") , (int)seq.Replace ( _T("C") , _T("") , true ) ) ) ;

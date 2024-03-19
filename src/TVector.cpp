@@ -8,6 +8,7 @@
 // TVector
 // ***************************************************************************************
 
+/* class (static) variables */
 char TVector::ACGT[256] ;
 char TVector::IUPAC[256] ;
 char TVector::SIUPAC[256] ;
@@ -21,10 +22,10 @@ void TVector::setCircular ( const bool c ) { circular = c ; }
 bool TVector::isCircular () const { return circular ; }
 bool TVector::isLinear () const { return !circular ; }
 bool TVector::hasStickyEnds () const { return (_lu+_ll+_ru+_rl!=_T("")) ; }
-float TVector::getAAmw ( const char aa ) const { return aaprop[aa].mw ; }
-float TVector::getAApi ( const char aa ) const { return aaprop[aa].pi ; }
+float TVector::getAAmw ( const char& aa ) { return aaprop[aa].mw ; }
+float TVector::getAApi ( const char& aa ) { return aaprop[aa].pi ; }
 char TVector::getComplement ( const char c ) { return COMPLEMENT[c] ; }
-TAAProp TVector::getAAprop ( const char a ) const { return aaprop[a] ; }
+TAAProp TVector::getAAprop ( const char& a ) { return aaprop[a] ; }
 void TVector::setGenomeMode ( const bool gm ) { genomeMode = gm ; }
 bool TVector::getGenomeMode () const { return genomeMode ; }
 wxString *TVector::getSequencePointer () { return &sequence ; }
@@ -339,18 +340,18 @@ void TVector::setNucleotide ( const int _pos , const char t ) /* not const */
     sequence.SetChar(pos,t); // not const
     }
 
-bool TVector::basematch ( const char b1 , const char b2 ) const // b1 in IUPAC, b2 in SIUPAC
+bool TVector::basematch ( const char& b1 , const char& b2 ) // b1 in IUPAC, b2 in SIUPAC
    {
    return b1 == b2 || ( ( IUPAC[b1] & SIUPAC[b2] ) > 0 ) ;
    }
 
-wxString TVector::vary_base ( const char b ) const
+wxString TVector::vary_base ( const char& b ) 
     {
     wxString ret ;
-    if ( basematch ( 'A' , b ) ) ret += 'A' ;
-    if ( basematch ( 'C' , b ) ) ret += 'C' ;
-    if ( basematch ( 'G' , b ) ) ret += 'G' ;
-    if ( basematch ( 'T' , b ) ) ret += 'T' ;
+    if ( TVector::basematch ( 'A' , b ) ) ret += 'A' ;
+    if ( TVector::basematch ( 'C' , b ) ) ret += 'C' ;
+    if ( TVector::basematch ( 'G' , b ) ) ret += 'G' ;
+    if ( TVector::basematch ( 'T' , b ) ) ret += 'T' ;
     return ret ;
     }
 
@@ -791,7 +792,7 @@ void TVector::getCuts ( const TRestrictionEnzyme * const e , vector <TRestrictio
     for ( int b = 0 ; b < sequence_length ; b++ )
         {
         int c ;
-        for ( c = 0 ; b+c < t_length && c < rs_length && basematch ( t.GetChar(b+c) , rs.GetChar(c) ) ; c++ ) ;
+        for ( c = 0 ; b+c < t_length && c < rs_length && TVector::basematch ( t.GetChar(b+c) , rs.GetChar(c) ) ; c++ ) ;
         if ( c == rs_length )
             {
             int thecut = (b+e->getCut()) % sequence_length ;
@@ -813,7 +814,7 @@ void TVector::getCuts ( const TRestrictionEnzyme * const e , vector <TRestrictio
     for ( int b = 0 ; b < sequence_length ; b++ )
         {
         int c ;
-        for ( c = 0 ; b+c < t_length && c < rs_length && basematch ( t.GetChar(b+c) , rs.GetChar(c) ) ; c++ ) ;
+        for ( c = 0 ; b+c < t_length && c < rs_length && TVector::basematch ( t.GetChar(b+c) , rs.GetChar(c) ) ; c++ ) ;
         if ( c == rs_length )
             {
             int thecut = (b+e->getCut()) % sequence_length ;
@@ -1353,9 +1354,9 @@ wxString TVector::dna2aa ( const wxString& codon , const int translation_table )
     else
        {
        char u = ' ' ;
-       wxString s0 = vary_base ( c0 ) ;
-       wxString s1 = vary_base ( c1 ) ;
-       wxString s2 = vary_base ( c2 ) ;
+       wxString s0 = TVector::vary_base ( c0 ) ;
+       wxString s1 = TVector::vary_base ( c1 ) ;
+       wxString s2 = TVector::vary_base ( c2 ) ;
        for ( int a0 = 0 ; a0 < s0.length() ; a0++ )
            for ( int a1 = 0 ; a1 < s1.length() ; a1++ )
                for ( int a2 = 0 ; a2 < s2.length() ; a2++ )
