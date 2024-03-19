@@ -25,6 +25,7 @@ jobs:
             brew install autoconf-archive autoconf automake libtool m4
             brew install wxwidgets tinyxml zstd libpng sqlite
             brew install dylibbundler pkg-config
+            brew install googletest
           elif [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
             sudo apt-get update
             sudo apt-get install autoconf-archive
@@ -38,8 +39,6 @@ jobs:
         run: ./configure
       - name: make
         run: make
-      - name: Install googletest
-        run: brew install googletest
       - name: running tests
         run: make check
       - name: install asciidoc
