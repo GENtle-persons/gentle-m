@@ -49,8 +49,8 @@ wxImage TIMGreader::makeImage()
 //  yoff = -buffer[3577] ;
 
     int cur = 4089 ;
-    size_t s =  (size_t) w * (size_t) h * 3 ;
-    myass( s < 1024*1024*1024*3, "TIMGreader::makeImage: Should not require 3 GB of memory." ) ;
+    size_t s =  (size_t) w * (size_t) h * 3L ;
+    myass( s < 1024L*1024L*1024L*3L, "TIMGreader::makeImage: Should not require 3 GB of memory." ) ;
     output = (unsigned char*) malloc ( s ) ;
     int offset = 0 , x , y ;
     for ( y = 0 ; y < h ; y++ )
