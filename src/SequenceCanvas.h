@@ -140,13 +140,13 @@ class SeqBasic
     virtual int getRectSize () const { return pos.r.size() ; } ///< Returns the number of SeqPos rectangles
     virtual wxRect getRect ( const int i ) const ///< Returns the SeqPos rect for a "char"
         {
-	if ( i < 0 || i >= pos.r.size() )
+        if ( i < 0 || i >= pos.r.size() )
             {
-	    wxPrintf( "E: SeqBasic::getRect: Demanded rector for position %d outside interval [0:r.size()[ = [0:%ld[\n", i ,  pos.r.size() ) ;
-	    exit ( -1 ) ;
+            wxPrintf( "E: SeqBasic::getRect: Demanded rect for position %d outside interval [0:r.size()[ = [0:%ld[\n", i ,  pos.r.size() ) ;
+            abort () ;
             }
         return pos.r[i] ;
-	}
+        }
     virtual int getMark ( const int i ) const { return pos.m.GetChar(i) - ' ' ; } ///< Returns the mark value for a "char"
     virtual void setMark ( const int i , const int v ) { pos.m.SetChar ( i , v + ' ' ) ; } ///< Sets the marking of a "char"
     virtual int getPos ( const int i ) const { return pos.p[i] ; } ///< Returns the internal ID of the "char"
