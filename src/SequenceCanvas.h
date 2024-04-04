@@ -130,7 +130,7 @@ class SeqBasic
     virtual void initFromTVector ( TVector * const v ) {} ///< Set from a TVector class
     virtual int  arrange ( const int n ) { return 0 ; } ; ///< Arrange "chars" as line n
     virtual void show ( wxDC& dc ) {} ; ///< Show
-    virtual wxPoint showText ( int ystart , wxArrayString &tout ) const
+    virtual wxPoint showText ( const int ystart , const wxArrayString &tout ) const
         { return wxPoint ( -1 , -1 ) ; } ; ///< Show as text (rarely used)
     virtual wxString whatsthis () const { return _T("BASIC") ; } ///< Returns the linetype
     virtual void makeEndnumberLength() { endnumberlength = 0 ; } ; ///< Calculates the width needed for the leading numbers
@@ -232,7 +232,7 @@ class SeqDNA : public SeqBasic
     virtual bool useDirectRoutines () const ; ///< Do we draw directly (or do we use SeqPos)?
     virtual int getMarkSize () const ; ///< Returns the length of the SeqPos marked part of the sequence
     virtual int getRectSize () const ; ///< Returns the number of SeqPos rectangles
-    virtual wxRect getRect ( const int i ) ; ///< Returns the SeqPos rect for a "char"
+    virtual wxRect getRect ( const int i ) const ; ///< Returns the SeqPos rect for a "char"
     virtual int getMark ( const int i ) const ; ///< Returns the mark value for a "char"
     virtual void setMark ( const int i , const int v ) ; ///< Sets the marking of a "char"
     virtual int getPos ( const int i ) const ; ///< Returns the internal ID of the "char"

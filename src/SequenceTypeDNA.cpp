@@ -508,7 +508,7 @@ int SeqDNA::getRectSize () const
     return 0 ;
     }
 
-wxRect SeqDNA::getRect ( const int i )
+wxRect SeqDNA::getRect ( const int i ) const
     {
     if ( !useDirectRoutines() ) return pos.r[i] ;
 

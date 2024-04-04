@@ -119,7 +119,7 @@ END_EVENT_TABLE()
 // Define a constructor for my canvas
 SequenceCanvas::SequenceCanvas(wxWindow * const parent, const wxPoint& pos, const wxSize& size)
         : wxScrolledWindow(parent, -1, pos, size, wxSUNKEN_BORDER|wxHSCROLL|wxFULL_REPAINT_ON_RESIZE)
-{
+    {
     SetBackgroundColour(wxColour(_T("WHITE")));
     set_font_size ( 12 ) ;
     mark_firstrow = mark_lastrow = -1 ;
@@ -249,14 +249,14 @@ void SequenceCanvas::MyGetSize ( int *w , int *h ) const
 void SequenceCanvas::MyGetViewStart ( int *x , int *y )
     {
     if ( printing )
-       {
-       *x = 0 ;
-       *y = 0 ;
-       }
+        {
+        *x = 0 ;
+        *y = 0 ;
+        }
     else
-       {
-       GetViewStart ( x , y ) ;
-       }
+        {
+        GetViewStart ( x , y ) ;
+        }
     }
 
 void SequenceCanvas::updateEdit ( TVector *v , wxString id , int from )
@@ -370,8 +370,13 @@ void SequenceCanvas::editSpecialKeyPressed ( const int k , TVector * const v , w
             mark ( id , from+1 , from+1 , 2 ) ;
             }
         else if ( from < the_sequence->length() )
+            {
             mark ( id , from+1 , from+1 , 2 ) ;
-        else mark ( id , the_sequence->length() , the_sequence->length() , 2 ) ;
+            }
+        else
+            {
+            mark ( id , the_sequence->length() , the_sequence->length() , 2 ) ;
+            }
         }
     else if ( k == WXK_LEFT )
         {
@@ -487,7 +492,9 @@ void SequenceCanvas::editCharPressed ( const int _k , TVector * const v , wxStri
             if ( doOverwrite() ) the_sequence->erase ( from-1 , 1 ) ;
             the_sequence->insert( from-1 , dummy ) ;
             if ( forceoverwrite && from == the_sequence->length() )
+                {
                 new_from = from ;
+                }
             }
         else
             {
@@ -596,7 +603,7 @@ void SequenceCanvas::OnCut ( wxCommandEvent &ev )
     if ( !getAA() || _from == -1 ) return ;
     wxString s = getSelection () ;
     if ( s.IsEmpty() ) return ;
-    if (!wxTheClipboard->Open()) return ;
+    if ( !wxTheClipboard->Open() ) return ;
 
     wxTheClipboard->SetData( new wxTextDataObject(s) );
     wxTheClipboard->Close();
@@ -729,7 +736,7 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
             beginning += _f ;
 
             _t -= charheight * ( lastmarked ) ;
-           _t += charheight * ( seq.GetCount() + blankline + 1 ) ;
+            _t += charheight * ( seq.GetCount() + blankline + 1 ) ;
             lowy = _t ;
 
             hardstop = _fin ;
@@ -1001,26 +1008,28 @@ void SequenceCanvas::mark ( const SeqBasic * const where , const int from , cons
         {
         if ( seq[a] != where ) continue ;
         if ( !getAln() )
-           {
-             mark ( seq[a]->whatsthis() , from , to , value , a ) ;
-             return ;
-           }
-        int b , last = -1 ;
+            {
+            mark ( seq[a]->whatsthis() , from , to , value , a ) ;
+            return ;
+            }
         preventUpdate = true ;
         for ( int c = 0 ; c < seq.size() ; c++ )
             {
-            for ( b = 0 ; b < seq[c]->s.length() ; b++ )
+            for ( int b = 0 ; b < seq[c]->s.length() ; b++ )
                 {
                 if ( seq[c]->takesMouseActions )
                     seq[c]->setMark ( b , 0 ) ;
                 }
             }
         preventUpdate = false ;
+        int b ;
         for ( b = 0 ; b < seq.size() && seq[b] != getLastWhere() ; b++ ) ;
         if ( b == seq.size() ) b = a ;
         if ( b < a ) { const int c = a ; a = b ; b = c ; }
         preventUpdate = true ;
         mark_firstrow = mark_lastrow = -1 ;
+
+        int last = -1 ;
         for ( int c = 0 ; c < seq.size() ; c++ )
             {
             if ( !seq[c]->takesMouseActions ) continue ;
@@ -1110,14 +1119,20 @@ void SequenceCanvas::mark ( /* not const, but should be  */ wxString /* & */ id 
     for ( int a = 0 ; a < seq[b]->getMarkSize() ; a++ )
         {
         if ( inMarkRange ( seq[b]->getPos(a) , from , to , l ) )
-           {
-           seq[b]->setMark ( a , value ) ;
-           cnt += value ;
-           if ( vpx == -1 ) vpx = seq[b]->getRect(a).x / charwidth ;
-           if ( vpy == -1 ) vpy = seq[b]->getRect(a).y / charheight ;
-           }
+            {
+            //wxPrintf("I: seq[%d]->getPos(%d): %d\n", b, a, seq[b]->getPos(a) ) ;
+            seq[b]->setMark ( a , value ) ;
+            cnt += value ;
+            if (-1 == vpx || -1 == vpy )
+                {
+                //wxPrintf("I: Invoking getRect at %d for seq[%d] (%s): %s\n", a , b , seq[b]->whatsthis() , seq[b]->s ) ;
+                wxRect seq_b_rect_a = seq[b]->getRect(a) ;
+                if ( vpx == -1 ) vpx = seq_b_rect_a.x / charwidth ;
+                if ( vpy == -1 ) vpy = seq_b_rect_a.y / charheight ;
+                }
+            }
         else
-           seq[b]->setMark ( a , 0 ) ;
+            seq[b]->setMark ( a , 0 ) ;
         }
 
     // Unmark all other lines
@@ -1338,7 +1353,9 @@ void SequenceCanvas::OnDraw(wxDC& dc)
                     {
                     mylog ( "SequenceCanvas::OnDraw" , "2b1 COUNT" ) ;
                     if ( seq[a]->getRect(b).GetRight() > print_maxx )
-                       print_maxx = seq[a]->getRect(b).GetRight() ;
+                        {
+                        print_maxx = seq[a]->getRect(b).GetRight() ;
+                        }
                     }
                 }
             mylog ( "SequenceCanvas::OnDraw" , "2b2" ) ;
@@ -2594,28 +2611,28 @@ void SeqPos::mark ( const int where , const int value )
     if ( value < 1 )
         {
         for ( int a = 0 ; a < mark_from.GetCount() ; a++ )
-           {
-           if ( where >= mark_from[a] && where <= mark_to[a] )
-              {
-              if ( where == mark_from[a] ) mark_from[a]++ ;
-              else if ( where == mark_to[a] ) mark_to[a]-- ;
-              else
-                 {
-                 mark_from.Add ( where + 1 ) ;
-                 mark_to.Add ( mark_to[a] ) ;
-                 mark_to[a] = where - 1 ;
-                 }
-              }
-           }
+            {
+            if ( where >= mark_from[a] && where <= mark_to[a] )
+                {
+                if ( where == mark_from[a] ) mark_from[a]++ ;
+                else if ( where == mark_to[a] ) mark_to[a]-- ;
+                else
+                    {
+                    mark_from.Add ( where + 1 ) ;
+                    mark_to.Add ( mark_to[a] ) ;
+                    mark_to[a] = where - 1 ;
+                    }
+                }
+            }
         for ( int a = 0 ; a < mark_from.GetCount() ; a++ )
-           {
-           if ( mark_from[a] > mark_to[a] )
-              {
-              mark_from.RemoveAt ( a ) ;
-              mark_to.RemoveAt ( a ) ;
-              a-- ;
-              }
-           }
+            {
+            if ( mark_from[a] > mark_to[a] )
+                {
+                mark_from.RemoveAt ( a ) ;
+                mark_to.RemoveAt ( a ) ;
+                a-- ;
+                }
+            }
         return ;
         }
     mark_value = value ;
