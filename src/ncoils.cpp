@@ -44,7 +44,7 @@ string ncoils_function( const char *_sequence , int window ) {
 	int t,tc;
 	size_t seqlen;
 	int mode;
-	int min_seg; //FIXME: undef when used
+	int min_seg=0; //FIXME: set to 0 to avoid access of uninitialized value
 
 	char heptfile[1000];
 	char *buff;
