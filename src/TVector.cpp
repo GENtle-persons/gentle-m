@@ -1045,12 +1045,12 @@ void TVector::doRestriction ()
     myass ( myapp() , "Oh no! No application defined!" ) ;
     myapp()->frame->lastCocktail = cocktail ;
 
-    TRestrictionEnzyme blankEnzyme ;
-    blankEnzyme.setCut ( 0 ) ;
-    blankEnzyme.setSequence ( _T("") ) ;
-    blankEnzyme.setOverlap ( 0 ) ;
+    TRestrictionEnzyme *blankEnzyme = new TRestrictionEnzyme;
+    blankEnzyme->setCut ( 0 ) ;
+    blankEnzyme->setSequence ( _T("") ) ;
+    blankEnzyme->setOverlap ( 0 ) ;
     if ( !circular )
-        cl.push_back ( TRestrictionCut ( 0 , &blankEnzyme ) ) ;
+        cl.push_back ( TRestrictionCut ( 0 , blankEnzyme ) ) ;
 
     mylog ( "TVector::doRestriction" , "3" ) ;
     for ( int a = 0 ; a < cocktail.GetCount() ; a++ )
@@ -1097,7 +1097,7 @@ void TVector::doRestriction ()
     if ( circular )
         cl.push_back ( cl[0] ) ;
     else
-        cl.push_back ( TRestrictionCut ( sequence.length()-1 , &blankEnzyme ) ) ;
+        cl.push_back ( TRestrictionCut ( sequence.length()-1 , blankEnzyme ) ) ;
 
     myapp()->frame->lockDisplay ( true ) ;
 
