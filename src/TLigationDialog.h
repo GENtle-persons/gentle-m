@@ -25,7 +25,7 @@ class TLigationDialog : public wxDialog
     virtual void init () ; ///< Initialize
     virtual void generateTargets () ; ///< Generate the target list
     virtual void curseTargets ( vector <bool> &vc , vector <bool> &used , wxArrayInt &vi ) ; ///< Recurse through targets
-    virtual bool doMatch ( int l , int r , bool invertSecond = false ) ; ///< Do these match?
+    virtual bool doMatch ( const int& l , const int& r , const bool& invertSecond = false ) const ; ///< Do these match?
     virtual wxString getVIName ( const wxArrayInt &vi ) const ; ///< Generate a name
     virtual void addVTname ( const wxString& name , wxArrayInt &vi , const bool circular ) ; ///< Add this one
 

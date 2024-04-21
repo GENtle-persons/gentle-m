@@ -1124,7 +1124,7 @@ char *readSeq(
 
 
 char *listSeqs(
-      const char  *filename_,   /* file name */
+      const char  * const filename_,   /* file name */
       const size_t skiplines_,
       const short format_,      /* sequence file format */
       size_t *nseq_,       /* number of seqs in file, for listSeqs() */
@@ -1345,17 +1345,18 @@ short seqFileFormatFp(
   if (format == kPhylip) {
     /* check for interleaved or sequential -- really messy */
     int tname, tseq;
-    size_t i, j, nspp= 0, nlen= 0, ilen, leaf= 0, seq= 0;
+    size_t j, nspp= 0, nlen= 0, ilen, leaf= 0, seq= 0;
     char  *ps;
 
     rewind(fseq);
-    for (i=0; i < *skiplines; i++) ReadOneLine(sp);
+    for (size_t i=0; i < *skiplines; i++) ReadOneLine(sp);
     nlines= 0;
     ReadOneLine(sp);
     sscanf( sp, "%ld%ld", &nspp, &nlen);
     ReadOneLine(sp); /* 1st seq line */
     for (ps= sp+10, ilen=0; *ps!=0; ps++) if (isprint(*ps)) ilen++;
 
+    size_t i;
     for (i= 1; i<nspp; i++) {
       ReadOneLine(sp);
 
@@ -1379,6 +1380,8 @@ short seqFileFormatFp(
         ilen= 0;
         }
       }
+
+    // value of i reused here, which should be nspp
     for ( nspp *= 2 ; i<nspp; i++) {  /* this should be only bases if interleaf */
       ReadOneLine(sp);
 

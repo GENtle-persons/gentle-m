@@ -126,8 +126,7 @@ extern "C" {
 extern short seqFileFormat(const char *filename, size_t *skiplines, short *error );
 extern short seqFileFormatFp(FILE *fseq, size_t  *skiplines, short *error );
 
-extern char *listSeqs(const char *filename, const size_t skiplines,
-                       const short format, size_t *nseq, short *error );
+extern char *listSeqs(const char * const filename, const size_t skiplines, const short format, size_t *nseq, short *error );
 
 extern char *readSeq(const size_t whichEntry, const char *filename,
                       const size_t skiplines, const short format,
