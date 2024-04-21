@@ -356,6 +356,11 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , const int _r1 , const int _r2 , 
     // Drawing polygon
     wxPoint *wp ;
     wp = (wxPoint*) malloc ( sizeof ( wxPoint ) * (pt.size()+1) ) ;
+    if (!wp)
+        {
+            wxPrintf("E: Out of memory.\n") ;
+            abort() ;
+        }
     for ( unsigned int b = 0 ; b < pt.size() ; b++ ) wp[b] = pt[b] ;
     if ( !this->p->vec->getGenomeMode() ) dc.SetPen(*wxBLACK_PEN);
     else dc.SetPen ( *MYPEN((wxColour)i->getBrush()->GetColour()) ) ;
