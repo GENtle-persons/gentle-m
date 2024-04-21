@@ -236,9 +236,8 @@ void TPrimer::OligoCount () /* not const */
 
     for ( int i = 1 ; i < seq.length() ; i++ ) //first base can not be IUpacbase
         {
-        wxString base , base0 ;
-        base0 += seq.GetChar(i-1) ;
-        base += seq.GetChar(i) ;
+        wxString base0 = seq.GetChar(i-1) ;
+        wxString base = seq.GetChar(i) ;
         double *temp ;
 
         temp=CalcIUpair(base0, base, i, false );

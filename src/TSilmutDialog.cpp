@@ -178,8 +178,8 @@ void TSilmutDialog::OnCancel ( wxCommandEvent &ev )
 
 void TSilmutDialog::OnSpin ( wxSpinEvent &event )
     {
- wxCommandEvent event2 ;
- OnSpin2 ( event2 ) ;
+    wxCommandEvent event2 ;
+    OnSpin2 ( event2 ) ;
     }
 
 void TSilmutDialog::OnSpin2 ( wxCommandEvent &event )
