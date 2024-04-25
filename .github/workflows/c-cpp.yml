@@ -21,11 +21,11 @@ jobs:
       - name: Install Dependencies
         run: |
           if [ "${{ matrix.os }}" = "macos-latest" ]; then
-            #brew update
-            brew install autoconf-archive autoconf automake libtool m4
-            brew install wxwidgets tinyxml zstd libpng sqlite
-            brew install dylibbundler pkg-config
-            brew install googletest
+            arch -arm64 brew update
+            arch -arm64 brew install autoconf-archive autoconf automake libtool m4
+            arch -arm64 brew install wxwidgets tinyxml zstd libpng sqlite
+            arch -arm64 brew install dylibbundler pkg-config
+            arch -arm64 brew install googletest
           elif [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
             sudo apt-get update
             sudo apt-get install autoconf-archive
@@ -44,7 +44,7 @@ jobs:
       - name: install asciidoc
         run: |
           if [ "${{ matrix.os }}" = "macos-latest" ]; then
-            brew install asciidoc
+            arch -arm64 brew install asciidoc
           elif [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
             sudo apt install asciidoc
           fi
