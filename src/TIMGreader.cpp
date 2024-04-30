@@ -9,12 +9,12 @@ TIMGreader::~TIMGreader ()
     if ( buffer )
         {
         delete buffer ;
-	buffer = NULL ;
+        buffer = NULL ;
         }
     if ( output )
         {
-	free( output ) ;
-	output = NULL ;
+        free( output ) ;
+        output = NULL ;
         }
     }
 
@@ -134,12 +134,12 @@ void TIMGitem::draw ( wxDC &dc , int x1 , int y1 , int x2 , int y2 )
         }
     }
 
-int TIMGitem::xx ( int x )
+int TIMGitem::xx ( const int x ) const
     {
     return off.x + x * 19 / 24 ;
     }
 
-int TIMGitem::yy ( int y )
+int TIMGitem::yy ( const int y ) const
     {
     return off.y + y * 9 / 12 ;
     }

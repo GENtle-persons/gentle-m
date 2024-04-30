@@ -14,8 +14,8 @@ class TIMGitem
     {
     public :
     void draw ( wxDC &dc , int x1 , int y1 , int x2 , int y2 ) ; ///< Draws the annotation
-    int xx ( int x ) ; ///< X-coordinate conversion
-    int yy ( int y ) ; ///< Y-coordinate conversion
+    int xx ( const int x ) const ; ///< X-coordinate conversion
+    int yy ( const int y ) const ; ///< Y-coordinate conversion
 
     int type ; ///< Annotation type
     wxPoint p1 , p2 ;

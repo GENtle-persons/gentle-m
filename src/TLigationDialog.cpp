@@ -87,7 +87,7 @@ void TLigationDialog::init ()
         {
         bool state = true ;
         if ( !vv[a]->hasStickyEnds() )
-           state = false ; // blunt ends are not ligated by default...
+            state = false ; // blunt ends are not ligated by default...
         l_sources->Append ( vv[a]->getName() ) ;
         l_sources->Check ( a , state ) ;
         }
@@ -98,11 +98,10 @@ void TLigationDialog::init ()
 
 void TLigationDialog::generateTargets ()
     {
-    int a ;
     int cnt = l_sources->GetCount() ;
     vector <bool> vc , used ;
     wxArrayInt vi ;
-    for ( a = 0 ; a < cnt ; a++ )
+    for ( int a = 0 ; a < cnt ; a++ )
         {
         vc.push_back ( l_sources->IsChecked ( a ) ) ;
         used.push_back ( !l_sources->IsChecked ( a ) ) ;
@@ -113,7 +112,7 @@ void TLigationDialog::generateTargets ()
     l_targets->Clear () ;
 
     // Using each selected item as a starter
-    for ( a = 0 ; a < cnt ; a++ )
+    for ( int a = 0 ; a < cnt ; a++ )
         {
         if ( vc[a] )
            {
@@ -129,7 +128,7 @@ void TLigationDialog::generateTargets ()
            }
         }
 
-    for ( a = 0 ; a < vt.GetCount() ; a++ )
+    for ( int a = 0 ; a < vt.GetCount() ; a++ )
         {
         l_targets->Append ( vt[a] ) ;
         l_targets->Check ( a , true ) ;
@@ -191,15 +190,15 @@ void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , w
         myass ( a >= 0 && a < vc.size() , "TLigationDialog::curseTargets:4b" ) ;
         myass ( a >= 0 && a < used.size() , "TLigationDialog::curseTargets:4c" ) ;
         if ( vc[a] && !used[a] && doMatch ( vi[cnt-1] , a , true ) ) // Turned around
-           {
-           used[a] = true ;
-           vi.Add ( a ) ;
-           orientation.push_back ( true ) ;
-           curseTargets ( vc , used , vi ) ;
-           orientation.pop_back () ;
-           vi.RemoveAt ( vi.GetCount() - 1 ) ;
-           used[a] = false ;
-           }
+            {
+            used[a] = true ;
+            vi.Add ( a ) ;
+            orientation.push_back ( true ) ;
+            curseTargets ( vc , used , vi ) ;
+            orientation.pop_back () ;
+            vi.RemoveAt ( vi.GetCount() - 1 ) ;
+            used[a] = false ;
+            }
         }
     }
 
@@ -210,7 +209,7 @@ wxString TLigationDialog::invert ( const wxString& s ) const
     return t ;
     }
 
-bool TLigationDialog::doMatch ( int l , int r , bool invertSecond )
+bool TLigationDialog::doMatch ( const int& l , const int& r , const bool& invertSecond ) const
     {
     wxString s1 , s2 ;
 
@@ -219,15 +218,15 @@ bool TLigationDialog::doMatch ( int l , int r , bool invertSecond )
     myass ( r >= 0 && r < vv.GetCount() , "TLigationDialog::doMatch:3" ) ;
     myass ( vv[r] , "TLigationDialog::doMatch:4" ) ;
     if ( invertSecond )
-       {
-       s1 = vv[l]->getStickyEnd(false,true) + invert ( vv[r]->getStickyEnd(false,false) ) ;
-       s2 = vv[l]->getStickyEnd(false,false) + invert ( vv[r]->getStickyEnd(false,true) ) ;
-       }
+        {
+        s1 = vv[l]->getStickyEnd(false,true) + invert ( vv[r]->getStickyEnd(false,false) ) ;
+        s2 = vv[l]->getStickyEnd(false,false) + invert ( vv[r]->getStickyEnd(false,true) ) ;
+        }
     else
-       {
-       s1 = vv[l]->getStickyEnd(false,true) + vv[r]->getStickyEnd(true,true) ;
-       s2 = vv[l]->getStickyEnd(false,false) + vv[r]->getStickyEnd(true,false) ;
-       }
+        {
+        s1 = vv[l]->getStickyEnd(false,true) + vv[r]->getStickyEnd(true,true) ;
+        s2 = vv[l]->getStickyEnd(false,false) + vv[r]->getStickyEnd(true,false) ;
+        }
 
     TVector v ;
     v.setSequence ( s1 ) ;
