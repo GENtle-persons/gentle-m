@@ -1,20 +1,5 @@
 GENtle install hints
 
-COMMON:
-
-Good luck! You'll need it...
-
-WINDOWS:
-
-We would welcome volunteers to step forward for whom Windows is their
-regular development environment to help with providing executables for
-that platform.
-
-From what we remember:
-You can use Dev-C++ as development environment. ".dev" files are
-included in the source. You'll need the latest wxWindows package (look
-on the wxWindows site rather than the Dev-C++ site).
-
 MAC OS:
 
 This software was initially developed for the MacOS, at a time when the
@@ -36,7 +21,8 @@ The Linux OS offers several routes to install GENtle:
 
  * Your Distributions's Package manager
    We are working closely with the Debian Linux distribution, try
-   "sudo apt install gentle"
+   "sudo apt install gentle". The state of the packaging can be
+   inspected on https://tracker.debian.org/pkg/gentle
 
  * Conda
    We have also provided a package for conda, add their channel
@@ -65,3 +51,21 @@ To build your package from source, try
    - make -j10
 
 Upon successful compilation, the executable "GENtle" can be started in situ.
+
+WINDOWS:
+
+We would welcome volunteers to step forward for whom Windows is their
+regular development environment to help with providing executables for
+that platform.
+
+From what we remember:
+You can use Dev-C++ as development environment. ".dev" files are
+included in the source. You'll need the latest wxWindows package (look
+on the wxWindows site rather than the Dev-C++ site).
+
+You do not want to wait for an official Windows release:
+GENtle works nicely with the Windows Subsystem for Linux (WSL). This
+is surprisingly easy to install. If installing only for GENtle, use
+Debian testing (bookworm) and install the regular Debian package.
+
+

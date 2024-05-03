@@ -47,4 +47,4 @@ Please also inspect the
 GENtle is released as free and open-source software under the GPLv2+ license.
 You can access the source code in the repository [here](https://github.com/GENtle-persons/gentle-m).
 
-<img src="https://github.com/GENtle-persons/gentle-m/blob/main/docs/images/GENtle_DNA_forming_image.png">
+<img src="docs/images/GENtle_DNA_forming_image.png">
