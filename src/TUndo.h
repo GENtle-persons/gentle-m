@@ -22,13 +22,13 @@ class TUndo
     TUndo () ; ///< Constructor
     ~TUndo () {} ; ///< Destructor (empty)
     void setbase ( TVector *_base ) ; ///< Set the base TVector
-    void start ( wxString _msg = _T("") ) ; ///< Start the undo record, with action name
+    void start ( const wxString& _msg = _T("") ) ; ///< Start the undo record, with action name
     void stop () ; ///< End the undo record
     void abort () ; ///< Abort the undo record
     void pop () ; ///< Remove the last undo record
     bool canUndo () ; ///< Is there undo information available?
     wxString getLastMessage () ; ///< Returns the name of the last action with undo information
-    void remember ( wxString _msg ) ; ///< Remember the current state and action name
+    void remember ( const wxString& _msg ) ; ///< Remember the current state and action name
     void clear () ; ///< Remove all undo information
 
     TUndo & operator = ( const TUndo &u ) ;

@@ -26,6 +26,4 @@ class TStoreAllDialog : public wxDialog
     DECLARE_EVENT_TABLE()
     } ;
 
-
-
 #endif

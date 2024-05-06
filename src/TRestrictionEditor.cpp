@@ -92,7 +92,7 @@ TRestrictionEditor::~TRestrictionEditor ()
     myapp()->frame->pop_help () ;
     }
 
-void TRestrictionEditor::initme ( TVector *_v )
+void TRestrictionEditor::initme ( TVector * const _v )
     {
     _w = 600 ;
     _h = 550 ;
@@ -339,6 +339,7 @@ void TRestrictionEditor::pR_showGroupEnzymes ( const wxString& gr )
 wxArrayInt TRestrictionEditor::getcuts ( const wxString& enzyme )
     {
     wxArrayInt ret ;
+    { // block constraining use of variable j
     int j ;
     for ( j = 0 ; j < nocut.GetCount() && nocut[j] != enzyme ; j++ ) ;
     if ( j < nocut.GetCount() ) return ret ; // No cuts, returning empty list
@@ -347,6 +348,7 @@ wxArrayInt TRestrictionEditor::getcuts ( const wxString& enzyme )
     for ( j = 0 ; j < cutcache.size() ; j++ )
         if ( cutcache[j].enzyme == enzyme )
             ret.Add ( cutcache[j].cut ) ;
+    }
 
     if ( ret.GetCount() == 0 ) // Determine cuts
         {
@@ -358,10 +360,10 @@ wxArrayInt TRestrictionEditor::getcuts ( const wxString& enzyme )
             nocut.Add ( enzyme ) ;
             return ret ;
             }
-        for ( j = 0 ; j < x.size() ; j++ )
+        for ( int k = 0 ; k < x.size() ; k++ )
             {
-            cutcache.push_back ( TREcache ( enzyme , x[j].getPos() ) ) ;
-            ret.Add ( x[j].getPos() ) ;
+            cutcache.push_back ( TREcache ( enzyme , x[k].getPos() ) ) ;
+            ret.Add ( x[k].getPos() ) ;
             }
         }
     return ret ;

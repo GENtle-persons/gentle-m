@@ -1,5 +1,5 @@
 /** \file
-	\brief The TUndo class
+    \brief The TUndo class
 */
 #include "TUndo.h"
 #include "TVector.h"
@@ -23,7 +23,7 @@ void TUndo::setbase ( TVector *_base )
 // To avoid having multiple "undos" for a (for the user) single action,
 // only the first one is stored, the other in-between steps
 // are ignored. Each undo-worthy function calls "start" and "stop"/"abort".
-void TUndo::start ( wxString _msg )
+void TUndo::start ( const wxString& _msg )
     {
     IS_UNDO_OFF
     cnt++ ;
@@ -56,7 +56,7 @@ void TUndo::abort ()
     if ( base ) base->callUpdateUndoMenu() ;
     }
 
-void TUndo::remember ( wxString _msg )
+void TUndo::remember ( const wxString& _msg )
     {
     IS_UNDO_OFF
     start ( _msg ) ;

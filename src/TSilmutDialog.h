@@ -34,7 +34,7 @@ class TSilmutDialog : public wxDialog
                     int _mut_pos = -1 , int _mut_dir = 1 ) ; ///< Constructor
     ~TSilmutDialog () ; ///< Destructor
 
-    virtual void initme ( TVector *vec , int _from , int _to ) ; ///< Initialization
+    virtual void initme ( TVector * const vec , const int _from ,  const int _to ) ; ///< Initialization
     virtual void calc () ; ///< Calculate new cuts through mutation
     virtual void calc_acr () ; ///< Calculate cuts that go away through mutation
     virtual void showit () ; ///< Show results
