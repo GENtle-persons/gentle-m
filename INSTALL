@@ -1,31 +1,16 @@
 GENtle install hints
 
-COMMON:
-
-Good luck! You'll need it...
-
-WINDOWS:
-
-We would welcome volunteers to step forward for whom Windows is their
-regular development environment to help with providing executables for
-that platform.
-
-From what we remember:
-You can use Dev-C++ as development environment. ".dev" files are
-included in the source. You'll need the latest wxWindows package (look
-on the wxWindows site rather than the Dev-C++ site).
-
 MAC OS:
 
-This software was initially developed for the MacOS, at a time when the
+This software was initially developed for the macOS, at a time when the
 PowerPC was a thing, still. We recently had success with Xcode, but that
 requires much tinkering to adapt to local install paths of the build-dependencies.
 We find it much easier to work with conda or homebrew (https://brew.sh).
-For details, see the respective description of homebrew/conda below, i.e.
+For details, see the respective description of homebrew/conda below
 in the Linux section.
 
 The application runs fine when started in situ directly after the compilation.
-To facilitate the deployment on MacOS, we are providing the target "macos_bundle"
+To facilitate the deployment on macOS, we are providing the target "macos_bundle"
 that, with the help of the additional package "dylibbundler" (provided by homebrew),
 assembles a folder named "GENtle.app" that can be copied as it is into the
 "Applications" folder on any Mac of the same architecture for a complete deployment.
@@ -36,7 +21,8 @@ The Linux OS offers several routes to install GENtle:
 
  * Your Distributions's Package manager
    We are working closely with the Debian Linux distribution, try
-   "sudo apt install gentle"
+   "sudo apt install gentle". The state of the packaging can be
+   inspected on https://tracker.debian.org/pkg/gentle
 
  * Conda
    We have also provided a package for conda, add their channel
@@ -64,4 +50,22 @@ To build your package from source, try
    - CXXFLAGS="-I/opt/homebrew/include" ./configure
    - make -j10
 
-Upon successful compilation, the executable "GENtle" can be started in situ.
+Upon successful compilation, the executable "GENtle" can be started in the "src" folder.
+
+WINDOWS:
+
+We would welcome volunteers to step forward for whom Windows is their
+regular development environment to help with providing executables for
+that platform.
+
+From what we remember:
+You can use Dev-C++ as development environment. ".dev" files are
+included in the source. You'll need the latest wxWindows package (look
+on the wxWindows site rather than the Dev-C++ site).
+
+You do not want to wait for an official Windows release:
+GENtle works nicely with the Windows Subsystem for Linux (WSL). This
+is surprisingly easy to install. If installing only for GENtle, use
+Debian testing (bookworm) and install the regular Debian package.
+
+
