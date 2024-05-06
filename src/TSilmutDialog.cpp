@@ -118,7 +118,7 @@ TSilmutDialog::~TSilmutDialog ()
     myapp()->frame->pop_help () ;
     }
 
-void TSilmutDialog::initme ( TVector *vec , int _from , int _to )
+void TSilmutDialog::initme ( TVector * const vec , const int _from , const int _to )
     {
     v = vec ;
     from = _from ;
@@ -231,7 +231,6 @@ void TSilmutDialog::calc ()
 
     wxString vseq = v->getSequence() ; // Marked sequence, uppercase
     wxString vseq_l = vseq.Lower() ; // Marked sequence, lowercase
-
 
 
     // Check each restriction enzyme
@@ -384,7 +383,7 @@ void TSilmutDialog::calc_acr ()
         if ( vc_base.size() > limit_cuts ) continue ;
 
         for ( int b = from-1 ; b <= to ; b++ )
-           {
+            {
             for ( int base = 0 ; base < 4 ; base++ )
                 {
                 wxString new_dna = v->getSequence() ;
@@ -471,29 +470,29 @@ void TSilmutDialog::showit ()
 
         wxString fragments ;
         for ( int b = 0 ; b < vs[a].fragments.GetCount() ; b++ )
-           {
-           if ( b > 0 ) fragments += _T(", ") ;
-           fragments += wxString::Format ( _T("%d") , vs[a].fragments[b] ) ;
-           }
+            {
+            if ( b > 0 ) fragments += _T(", ") ;
+            fragments += wxString::Format ( _T("%d") , vs[a].fragments[b] ) ;
+            }
 
         wxString s ;
         if ( mode == M_SILMUT )
-           {
-           s = wxString::Format ( _T("%2d %s %s (%2d=>%2d) [%s]") ,
+            {
+            s = wxString::Format ( _T("%2d %s %s (%2d=>%2d) [%s]") ,
                         vs[a].changes ,
                         e_name.c_str() ,
                         vs[a].mut.c_str() ,
                         cuts_before ,
                         vs[a].cuts ,
                         fragments.c_str() ) ;
-           }
+            }
         else if ( mode == M_WHATCUTS )
-           {
-           s = wxString::Format ( txt("t_whatcuts_format") ,
+            {
+            s = wxString::Format ( txt("t_whatcuts_format") ,
                         e_name.c_str() ,
                         vs[a].cuts ,
                         fragments.c_str() ) ;
-           }
+            }
 
         lb->Append ( s ) ;
         list.Add ( s ) ;

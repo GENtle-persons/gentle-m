@@ -41,7 +41,7 @@ class TRestrictionEditor : public wxDialog
                        const wxSize& size, const long style); ///< Constructor
     ~TRestrictionEditor () ; ///< Destructor
 
-    virtual void initme ( TVector *_v ) ; ///< Initialization
+    virtual void initme ( TVector * const _v ) ; ///< Initialization
     virtual void initRestrictionPage () ; ///< Sets up the page
     virtual void pR_showGroupEnzymes ( const wxString& gr ) ; ///< Shows enzymes in selected enzyme group
     virtual wxArrayInt getcuts ( const wxString& enzyme ) ; ///< Returns the cut positions for the given enzyme
