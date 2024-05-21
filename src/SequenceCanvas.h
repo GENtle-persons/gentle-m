@@ -127,7 +127,7 @@ class SeqBasic
     SeqBasic ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; } ///< Constructor
     virtual ~SeqBasic () ; ///< Destructor
     virtual void init ( SequenceCanvas * const ncan = NULL ) ; ///< Initialization
-    virtual void initFromTVector ( TVector * const v ) {} ///< Set from a TVector class
+    virtual void initFromTVector ( const TVector * const v ) {} ///< Set from a TVector class
     virtual int  arrange ( const int n ) { return 0 ; } ; ///< Arrange "chars" as line n
     virtual void show ( wxDC& dc ) {} ; ///< Show
     virtual wxPoint showText ( const int ystart , const wxArrayString &tout ) const
@@ -196,7 +196,7 @@ class SeqDivider : public SeqBasic
     public :
     SeqDivider ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; offset = 0 ; } ///< Constructor
     virtual wxString whatsthis () const { return _T("DIVIDER") ; } ///< Returns the linetype
-    virtual void initFromTVector ( TVector * const v ) ; ///< Set from a TVector class
+    virtual void initFromTVector ( const TVector * const v ) ; ///< Set from a TVector class
     virtual int  arrange ( const int n ) ; ///< Arrange "chars" as line n
     virtual void show ( wxDC& dc ) ; ///< Show
     virtual bool isDisplayOnly () const { return true ; } ///< Do we show something?
@@ -221,7 +221,7 @@ class SeqDNA : public SeqBasic
     SeqDNA ( SequenceCanvas *ncan = NULL ) { vec = NULL ; invers = false ; init ( ncan ) ; } ///< Constructor
     virtual int  arrange ( const int n ) ; ///< Arrange "chars" as line n
     virtual void show ( wxDC& dc ) ;
-    virtual void initFromTVector ( TVector * const v ) ; ///< Set from a TVector class
+    virtual void initFromTVector ( const TVector * const v ) ; ///< Set from a TVector class
     virtual wxString whatsthis () const { return invers ? _T("IDNA") : _T("DNA") ; } ///< Returns the linetype
     virtual wxPoint showText ( const int ystart , wxArrayString &tout ) ; ///< Show as text (rarely used)
     virtual wxColor getBaseColor ( const char b ) const ; ///< Returns the color to draw a base/nucleotide in
@@ -260,7 +260,7 @@ class SeqPrimer : public SeqDNA
         myname = _T("PRIMER") ;
         } ///< Constructor
     virtual void show ( wxDC& dc ) ; ///< Show
-    virtual void initFromTVector ( TVector * const v ) ; ///< Set from a TVector class
+    virtual void initFromTVector ( const TVector * const v ) ; ///< Set from a TVector class
     virtual void addPrimer ( const TPrimer * const p ) ; ///< Adds a primer to the sequence
     virtual wxString whatsthis () const { return myname ; } ///< Returns the linetype
     virtual int arrange_direct ( const int n ) ; ///< Arrange quickly (bypassing SeqPos)
@@ -295,7 +295,7 @@ class SeqRestriction : public SeqBasic
     SeqRestriction ( SequenceCanvas *ncan = NULL ) { vec = NULL ; init ( ncan ) ; } ///< Constructor
     virtual int  arrange ( const int n ) ; ///< Arrange "chars" as line n
     virtual void show ( wxDC& dc ) ; ///< Show
-    virtual void initFromTVector ( TVector * const v ) ; ///< Set from a TVector class
+    virtual void initFromTVector ( const TVector * const v ) ; ///< Set from a TVector class
     virtual wxString whatsthis () const { return _T("RESTRICTION") ; } ///< Returns the linetype
     virtual bool isDisplayOnly () const { return true ; } ///< The hell if I know what this does!
     virtual bool useDirectRoutines () const ; ///< Do we draw directly (or do we use SeqPos)?
@@ -324,7 +324,7 @@ class SeqAA : public SeqBasic
     virtual int  arrange ( const int n ) ; ///< Arrange "chars" as line n
     virtual void show ( wxDC& dc ) ; ///< Show
     virtual wxPoint showText ( const int ystart , wxArrayString &tout ) const ; ///< Show as text (rarely used)
-    virtual void initFromTVector ( TVector * const v ) ; ///< Set from a TVector class
+    virtual void initFromTVector ( const TVector * const v ) ; ///< Set from a TVector class
     virtual void initFromString ( const wxString& t ) ; ///< Set from a string
     virtual void analyzeProteases () ; ///< Find protease cuts
     virtual void updateProteases () ; ///< Set protease cuts in display
@@ -346,7 +346,8 @@ class SeqAA : public SeqBasic
 
     // Variables
     TVector *vec ; ///< Pointer to the original sequence data
-    int mode , disp ;
+    int mode ;
+    int  disp ;
     bool primaryMode , showNumbers ;
     char unknownAA ;
     wxArrayTProteaseCut pc ; ///< List of protease cuts
@@ -426,7 +427,7 @@ class SeqFeature : public SeqDNA
     SeqFeature ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; aaa = NULL ; } ///< Constructor
     virtual void show ( wxDC& dc ) ; ///< Show
     virtual wxString whatsthis () const { return _T("FEATURE") ; } ///< Returns the linetype
-    virtual void initFromTVector ( TVector * const v ) ; ///< Set from a TVector class
+    virtual void initFromTVector ( const TVector * const v ) ; ///< Set from a TVector class
     virtual bool collide ( const int a , const int b ) const ; ///< Do features #a and #b overlap?
     virtual bool doesHit ( const int a , const int x ) const ; ///< Is position x within feature #a
     virtual int arrange_direct ( const int n ) { return arrange ( n ) ; } ///< Arrange quickly (bypassing SeqPos)
@@ -451,7 +452,7 @@ class SeqPlot : public SeqDNA
     SeqPlot ( SequenceCanvas *ncan = NULL ) { init ( ncan ) ; lines = 0 ; } ///< Constructor
     virtual void show ( wxDC& dc ) ; ///< Show
     virtual wxString whatsthis () const { return _T("PLOT") ; } ///< Returns the linetype
-    virtual void initFromTVector ( TVector * const v ) ; ///< Set from a TVector class
+    virtual void initFromTVector ( const TVector * const v ) ; ///< Set from a TVector class
     virtual int  arrange ( const int n ) ; ///< Arrange "chars" as line n
     virtual void setLines ( const int l ) ; ///< What line(s) this spans
     virtual void useChouFasman () ; ///< Chou-Fasman-Plot
@@ -566,7 +567,7 @@ class SequenceCanvas : public wxScrolledWindow
 
     virtual wxString getSelection () const ; ///< Returns the current selection as a wxString
 
-    virtual void updateEdit ( TVector *v , wxString id , int from ) ; ///< Updates the sequences and display once a key was pressed and, thus, the sequence altered
+    virtual void updateEdit ( TVector * const v , const wxString& id , const int from ) ; ///< Updates the sequences and display once a key was pressed and, thus, the sequence altered
     virtual void arrange () ; ///< Arranges the layout for all the seq structures
     virtual SeqBasic* findMouseTarget ( const wxPoint& pt , int &pos ) const ; ///< Returns a pointer to the seq structure (and the position inside) the given point is within
     virtual int findMouseTargetItem ( const wxPoint& pt ) const ; ///< Returns the ID of the seq structure the given point is within
@@ -612,7 +613,7 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void unmark () ; ///< Removes any marking
     virtual int NumberOfLines() const { return seq.GetCount() + blankline ; } ///< Returns the number of seq struntures AND blank lines
     virtual void set_font_size ( const int size = 12 ) ;
-    virtual TVector *getPCR_DNA_vector() ; ///< Returns a pointer to the DNA vector in PCR mode; otherwise, NULL
+    virtual TVector *getPCR_DNA_vector() const ; ///< Returns a pointer to the DNA vector in PCR mode; otherwise, NULL
 
     ChildBase *child ; ///< Wanna-be universal pointer to the containing module
     MyChild *p ; ///< Pointer to the containing MyChild; if this is not within the DNA module, NULL
@@ -627,8 +628,8 @@ class SequenceCanvas : public wxScrolledWindow
     virtual void showContextMenu ( SeqBasic * const where , const int pos , const wxPoint& pt ) ; ///< Generates the context menu
     virtual void insertRestrictionSite ( bool left ) ; ///< Creates a new restriction site via simulated editing, left or right of the current mark
     virtual void editSequence ( const int k , wxKeyEvent& event ) ;
-    virtual void editCharPressed ( const int k , TVector *v , wxString *the_sequence ) ;
-    virtual void editSpecialKeyPressed ( const int k , TVector *v , wxString *the_sequence , int wy , wxKeyEvent& event ) ;
+    virtual void editCharPressed ( const int k , TVector * const v , wxString * const the_sequence ) ;
+    virtual void editSpecialKeyPressed ( const int k , TVector * const v ,  wxString * const the_sequence , int wy , wxKeyEvent& event ) ;
 
     bool printToColor , drawall , horizontal , hide , miniDisplay , preventUpdate ;
     bool marking , drawing , printing , wantOverwrite , forceoverwrite ;

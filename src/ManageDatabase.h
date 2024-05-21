@@ -22,7 +22,7 @@ class TManageDatabaseDialog ;
 class TMyDropTarget : public wxTextDropTarget
     {
     public :
-    TMyDropTarget ( TManageDatabaseDialog *_d , wxListCtrl *_me ) ; ///< Constructor
+    TMyDropTarget ( TManageDatabaseDialog * const _d , wxListCtrl * const _me ) ; ///< Constructor
     virtual bool OnDropText(int x, int y, const wxString &data) ; ///< Drop event handler
     TManageDatabaseDialog *d ; ///< Pointer to the calling structure
     wxListCtrl *me ; ///< Pointer to the list control in question

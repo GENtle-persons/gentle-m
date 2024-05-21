@@ -12,8 +12,7 @@ BEGIN_EVENT_TABLE(TItemEditDialog, wxDialog )
     EVT_LISTBOX_DCLICK(IED_LIST,TItemEditDialog::OnList)
 END_EVENT_TABLE()
 
-TItemEditDialog::TItemEditDialog ( wxWindow *parent, const wxString& title ,
-                        TVectorItem &_vi )
+TItemEditDialog::TItemEditDialog ( wxWindow *parent, const wxString& title , const TVectorItem &_vi )
    : wxDialog ( parent , -1 , title )
    {
    myapp()->frame->push_help ( _T("GENtle:Sequence_editor#Features") ) ;

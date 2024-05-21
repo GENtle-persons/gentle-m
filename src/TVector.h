@@ -125,10 +125,10 @@ class TVectorItem
     void setParam ( const wxString& p , const int v ) ; ///< Set a parameter key/value pair
 
     // dna2aa stuff
-    void translate ( TVector * const v , SeqAA * const aa , vector <Tdna2aa> &dna2aa ) ; ///< Translate DNA to amino acids
-    void getArrangedAA ( TVector * const v , wxString &s , const int disp , SeqAA *aa = NULL ) ; ///< Generate the amino acid sequence in place, not const
+    void translate ( const TVector * const v , SeqAA * const aa , vector <Tdna2aa> &dna2aa ) ; ///< Translate DNA to amino acids
+    void getArrangedAA ( const TVector * const v , wxString &s , const int disp , SeqAA *aa = NULL ) ; ///< Generate the amino acid sequence in place, not const
     wxString getAminoAcidSequence () ; ///< Return the amino acid sequence
-    void setLastVector ( TVector * const v) ; ///< Set the last TVector to own this item
+    void setLastVector ( const TVector * const v) ; ///< Set the last TVector to own this item
 
     // Variables
     /// \brief Item description
@@ -149,7 +149,7 @@ class TVectorItem
     /// \brief Parameter keys
     wxArrayString pname , pvalue ; ///< Parameter values
     vector <Tdna2aa> dna2aa_item ; ///< The cache of the translated amino acids
-    TVector *lastVector ; ///< The last TVector to own this item
+    const TVector * lastVector ; ///< The last TVector to own this item
 
     // Visual information
     friend class TVectorEditor ;
@@ -175,6 +175,7 @@ class TVector
     ~TVector () ; ///< Destructor
     void init () ; ///< Set up basic values
     void clear () ; ///< Reset internal state
+    void copy ( const TVector &v ) ;
 
     // Restriction enzymes
     void recalculateCuts () ; ///< Recalculate restriction enzyme cuts
@@ -233,7 +234,7 @@ class TVector
     wxString getStickyEnd ( const bool left , const bool upper ) const ; ///< Returns one of the possible sticky ends
     bool hasStickyEnds () const ; ///< Does this sequence have sticky ends?
     void callUpdateUndoMenu () ; ///< Refreshes the Undo menu
-    void setFromVector ( TVector v ) ; ///< Makes this sequence a copy of another one (v)
+    void setFromVector ( const TVector& v ) ; ///< Makes this sequence a copy of another one (v)
     void doRemoveNucleotide ( const int x ) ; ///<Removes single base at position x
     int getItemLength ( const int a ) const ; ///< Return the length of item a
     TVector *backtranslate ( const wxString& mode = _T("") ) ; ///< Generate a new DNA sequence from this amino acid sequence
@@ -248,7 +249,8 @@ class TVector
     wxString getSubstring ( const int mf , const int mt ) ; ///< Returns a sequence substring
     wxString transformSequence ( const bool inverse , const bool reverse ) const ; ///< Transforms the sequence
     wxString getSequence () const ; ///< Returns the sequence
-    wxString *getSequencePointer () ; ///< Internal use; only used by SequenceCanvas::OnCharHook
+    wxString * getSequencePointer () ; ///< Internal use; only used by SequenceCanvas::OnCharHook
+    const wxString * getSequencePointerConst () const ; ///< Internal use; only used by SequenceCanvas::OnCharHook
     char getSequenceChar ( const int x ) const; ///< Gets base at position x
     void setSequence ( const wxString& ns ) ; ///< Sets the sequence
     void addToSequence ( const wxString& x ) ; ///< Appends to the sequence
@@ -303,7 +305,7 @@ class TVector
     wxString invert ( const wxString& s ) const ; ///< Inverts a string
     static wxString vary_base ( const char& b ) ; ///< Turns a SIUPAC into a string of A, C, G, T
     void makeAA2DNA ( const wxString& mode = _T("") ) ; ///< "Translate" amino acid sequence into DNA; can be specified for an organism
-    wxString mergeCodons ( wxString c1 , wxString c2 ) const ; ///< Used by makeAA2DNA for generating "abstract" (SIUPAC) DNA
+    wxString mergeCodons ( const wxString& c1 , const wxString& c2 ) const ; ///< Used by makeAA2DNA for generating "abstract" (SIUPAC) DNA
     void setCodonTable ( const int table , const wxString& sequence , const wxString& name ) ; ///< Sets up the codon_tables variable
     void evaluate_key_value ( const wxString& key , const wxString& value ) ; ///< Used in setParam() and setParams()
     wxString get_translation_table ( const int translation_table ) const ;
@@ -338,6 +340,7 @@ class TVector
     static char SIUPAC[256] ; ///< The extended IUPAC codes in binary encoding
     static char COMPLEMENT[256] ; ///< The complement to each SIUPAC base
     static char ACGT[256] ; ///< Different values for A, C, G, T; used in dna2aa()
+    static bool initialized ; ///< status flag indicating if the initialisation have already been performed
     static vector <TAAProp> aaprop ; ///< The 20 amino acids and their properties
     static wxArrayString codon_tables ; ///< The codon tables for different organisms
     static wxArrayString codon_table_names ; ///< The names of these codon tables

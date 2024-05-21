@@ -265,9 +265,9 @@ void TManageDatabaseDialog::pm_init_lists ()
         {
         wxString db = defdb ;
         if ( isProject && !myapp()->frame->project.db.IsEmpty() )
-           db = myapp()->frame->project.db ;
+            db = myapp()->frame->project.db ;
         else if ( !isProject )
-           db = v->getDatabase() ;
+            db = v->getDatabase() ;
         if ( db.IsEmpty() ) db = defdb ;
         pm_dd_save->SetStringSelection ( db ) ;
         }
@@ -308,10 +308,10 @@ void TManageDatabaseDialog::pm_list_items ( const int x )
         wxString sql = "SELECT pr_name FROM project" ;
         r = st->getObject ( sql ) ;
         for ( int a = 0 ; a < r.rows() ; a++ )
-           {
-           wxString s = r[a][r["pr_name"]] ;
-           l->InsertItem ( a , s , 1 ) ;
-           }
+            {
+            wxString s = r[a][r["pr_name"]] ;
+            l->InsertItem ( a , s , 1 ) ;
+            }
         }
     else
         {
@@ -462,7 +462,6 @@ bool TManageDatabaseDialog::copyDNA ( const wxString& _n , const wxString& sdb ,
     SetCursor ( *wxHOURGLASS_CURSOR ) ;
     TStorage *source = getTempDB ( getFileName ( sdb ) ) ;
     TStorage *target = getTempDB ( getFileName ( tdb ) ) ;
-    wxString s , t ;
 
     wxString name = source->fixDNAname ( _n ) ;
 
@@ -484,8 +483,9 @@ bool TManageDatabaseDialog::copyDNA ( const wxString& _n , const wxString& sdb ,
     sql = "SELECT dna_restriction_enzymes FROM dna WHERE dna_name=\"" + name + "\"" ;
     r = source->getObject ( sql ) ;
     if ( r.rows() == 0 ) return false ;
-    s = r[0][0] ;
-    t = "" ;
+
+    wxString s = r[0][0] ;
+    wxString t = "" ;
     wxArrayString ve ;
     for ( int a = 0 ; a < s.length() ; a++ )
         {
@@ -588,7 +588,7 @@ void TManageDatabaseDialog::accessDB ()
         {
         a++ ;
         }
-    
+
     if ( db_name[a] != name )
         {
         wxPrintf("E: TManageDatabaseDialog::accessDB: db_name[a] != name = '%s'\n" , name ) ;
@@ -1495,7 +1495,7 @@ void TManageDatabaseDialog::pmNewSQL ( wxCommandEvent &ev )
 
 // **************************************************************
 
-TMyDropTarget::TMyDropTarget ( TManageDatabaseDialog *_d , wxListCtrl *_me )
+TMyDropTarget::TMyDropTarget ( TManageDatabaseDialog * const _d , wxListCtrl * const _me )
     : wxTextDropTarget()
     {
     d = _d ;

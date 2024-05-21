@@ -1,5 +1,5 @@
 /** \file
-    \brief Contains the GenBank class and its TGenBankFeature helper class
+    \brief Contains the GenBank claconst ss and its TGenBankFeature helper class
 */
 #ifndef _GENBANK_H_
 #define _GENBANK_H_
@@ -33,7 +33,7 @@ class TGenBank
     void doExport ( const TVector * const sv , wxArrayString &ex ) const ;
     wxString trim ( const wxString&  s ) const ;
     void itrim ( wxString &s ) const ;
-    void multitrim ( wxString &s , bool quotes = true ) const ;
+    void multitrim ( wxString &s , const bool quotes = true ) const ;
     wxString trimQuotes ( wxString s ) const ;
     wxString quote ( const wxString& pre , wxString q ) const ;
     void wrapit ( wxArrayString &ex , const wxString& init , wxString data , const int limit = 80 ) const ;

@@ -34,8 +34,8 @@ class TGraphDialog : public wxDialog
    TGraphDialog ( wxWindow *_parent , const wxString& title ) ; ///< Constructor
    virtual ~TGraphDialog() ;
 
-   virtual void ShowScale ( TGraphScale *s ) ;
-   virtual void ShowData ( TGraphData *d ) ;
+   virtual void ShowScale ( const TGraphScale * const s ) ;
+   virtual void ShowData ( const TGraphData * const d ) ;
 
    virtual void OnScalesList ( wxCommandEvent &ev ) ;
    virtual void OnDataList ( wxCommandEvent &ev ) ;
@@ -73,7 +73,7 @@ class TGraphDialog : public wxDialog
 class TSpeakDialog : public wxDialog
     {
     public :
-    TSpeakDialog(wxWindow *parent, const wxString& title , wxString _seq ) ; ///< Constructor
+    TSpeakDialog(wxWindow *parent, const wxString& title , const wxString& _seq ) ; ///< Constructor
     ~TSpeakDialog () ; ///< Destructor
 
     virtual void OnCharHook(wxKeyEvent& event) ; ///< Cancel button event handler
@@ -81,7 +81,7 @@ class TSpeakDialog : public wxDialog
     virtual void OnStop ( wxCommandEvent &ev ) ;
 
     private :
-    virtual void speakLetter ( wxString c ) ;
+    virtual void speakLetter ( const wxString& c ) const ;
     wxTextCtrl *seq ;
     wxCheckBox *doPause ;
     wxSpinCtrl *pause ;
@@ -156,7 +156,7 @@ class TEnzymeDialog : public wxDialog
     TEnzymeDialog(wxWindow *parent, const wxString& title, const wxPoint& pos ,
                         const wxSize& size , const long style ) ; ///< Constructor
     ~TEnzymeDialog () ; ///< Destructor
-    void initme ( TRestrictionEnzyme *_e = NULL , bool ro = false ) ; ///< Initialization
+    void initme ( TRestrictionEnzyme * const _e = NULL , const bool ro = false ) ; ///< Initialization
     void OnOK ( wxCommandEvent &ev ) ; ///< OK button event handler
     void OnCharHook(wxKeyEvent& event) ; ///< Cancel button event handler
 
@@ -180,13 +180,13 @@ class TSequencingPrimerDialog : public wxDialog
     virtual void OnDB ( wxCommandEvent& event ) ; ///< Second database event handler
 
     virtual void getPrimerList ( wxArrayString &p_name , wxArrayString &p_seq ) ; ///< Retrieve a list of primers
-    virtual bool matchToVector ( TVector *v , wxString name , wxString seq ) ; ///< Match the primers to the vector
+    virtual bool matchToVector ( TVector * const v , const wxString& name , const wxString& seq ) const ; ///< Match the primers to the vector
     virtual bool getClear() { return cb_clear->GetValue() ; } ///< Clear existing sequencing primer items from vecotr?
 
     private :
-    virtual int findBestMatch ( wxString &s , wxString seq , int &pos , int ml ) ; ///< Finds the best match for a primer in the vector
+    virtual int findBestMatch ( wxString &s , const wxString& seq , int &pos , const int ml ) const ; ///< Finds the best match for a primer in the vector
     virtual void addSequencingPrimer ( TVector * const v ,  const wxString& name ,  const wxString& seq ,
-                                       const int best_pos ,  const int best_score ,  const int dir ) ; ///< Add the primer as an item to the vector
+                                       const int best_pos ,  const int best_score ,  const int dir ) const ; ///< Add the primer as an item to the vector
 
     wxSpinCtrl *t_ma ; ///< Minimum number of aligning bases
     wxChoice *c_db , *c_pj ;

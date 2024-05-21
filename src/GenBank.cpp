@@ -296,10 +296,20 @@ void TGenBank::addItem ( TVector * const v , wxArrayString &va )
         {
         if ( va[a].GetChar(0) != '/' ) continue ;
         wxString p = va[a].Mid ( 1 , va[a].First ( '=' ) - 1 ) ;
+        if ( ! p )
+            {
+            wxPrintf( "D: GenBank::addItem - !p\n" ) ;
+            abort() ;
+            }
         if ( p.IsEmpty() ) continue ;
         multitrim ( p , true ) ;
         p.MakeLower() ;
         wxString vString = va[a].AfterFirst ( '=' ) ;
+        if ( ! vString )
+            {
+            wxPrintf( "DW: GenBank::addItem - !vString after '=' in '%s'.\n" , va[a] ) ;
+            continue ;
+            }
         multitrim ( vString , true ) ;
         if ( p == _T("name") || p == _T("standard_name") || p == _T("gene") || p == _T("protein_id") || p == _T("region_name") )
             i.name = vString ;
@@ -478,7 +488,7 @@ void TGenBank::itrim ( wxString &s ) const
 /** \brief Removes the leading and ending blanks and/or quotes from a string
     \param s The string (as reference)
 */
-void TGenBank::multitrim ( wxString &s , bool quotes ) const
+void TGenBank::multitrim ( wxString &s , const bool quotes ) const
     {
     size_t a = 0 ;
 //  for ( a = 0 ; a < s.length() && ( s.GetChar(a) == ' ' || s.GetChar(a) < 15 ||s.GetChar(a) == '"' ) ; a++ ) ;

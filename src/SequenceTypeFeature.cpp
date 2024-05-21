@@ -241,12 +241,15 @@ void SeqFeature::show ( wxDC& dc )
     mylog ( "SeqFeature::show" , "END" ) ;
     }
 
-void SeqFeature::initFromTVector ( /* const */ TVector * const v )
+void SeqFeature::initFromTVector ( const TVector * const v )
     {
-    vec = v ; // FIXME: Needs copy constructor - not const
+    if (! vec ) {
+        vec = new TVector ( NULL ) ;
+    }
+    vec->copy ( *v ) ;
 
     s = vec->getSequence() ;
-    if ( can && can->getEditMode() && v->getSequenceLength() && v->getSequenceChar(v->getSequenceLength()-1) == ' ' )
+    if ( can && can->getEditMode() && vec->getSequenceLength() && vec->getSequenceChar(vec->getSequenceLength()-1) == ' ' )
         {
         s.Truncate ( s.length()-1 ) ;
         }

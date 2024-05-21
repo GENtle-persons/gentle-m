@@ -303,7 +303,7 @@ void TEliteLaChromLogDialog::SortTabs ( vector <wxArrayString> &tabs )
         if ( a == 0 ) n.push_back ( tabs[a] ) ;
         else
             {
-            int b = 0 ; 
+            int b = 0 ;
             while ( b < tabs[a-1].GetCount() && b < tabs[a].GetCount() && tabs[a-1][b] == tabs[a][b] )
                 {
                 b++ ;
