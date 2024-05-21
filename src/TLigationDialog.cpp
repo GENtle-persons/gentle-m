@@ -61,9 +61,9 @@ void TLigationDialog::init ()
     v0->Add ( h0 , 0 , wxEXPAND , 5 ) ;
 
     this->SetSizer ( v0 ) ;
-//    v0->Fit ( this ) ;
+//  v0->Fit ( this ) ;
 
-/*    int w , h ;
+/*  int w , h ;
     int bo = 5 ;
     int lh = 2 * bo ;
     GetClientSize ( &w , &h ) ;
@@ -150,18 +150,17 @@ void TLigationDialog::generateTargets ()
 void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , wxArrayInt &vi  )
     {
     int cnt = vi.GetCount() ;
-    wxString name ;
     myass ( cnt-1 >= 0 && cnt-1 < orientation.size() , _T("TLigationDialog::curseTargets:1") ) ;
     myass ( cnt-1 >= 0 && cnt-1 < vi.GetCount() , _T("TLigationDialog::curseTargets:2") ) ;
     bool o = orientation[cnt-1] ;
     if ( doMatch ( vi[cnt-1] , vi[0] , o ) )
         {
-        name = getVIName ( vi ) + txt("_circ") ;
+        wxString name = getVIName ( vi ) + txt("_circ") ;
         addVTname ( name , vi , true ) ;
         }
     else if ( cnt > 1 )
         {
-        name = getVIName ( vi ) ;
+        wxString name = getVIName ( vi ) ;
         addVTname ( name , vi , false ) ;
         }
 
@@ -231,8 +230,7 @@ bool TLigationDialog::doMatch ( const int& l , const int& r , const bool& invert
     TVector v ;
     v.setSequence ( s1 ) ;
     wxString s3 = v.transformSequence ( true , false ) ;
-    if ( s2 == s3 ) return true ;
-    return false ;
+    return ( s2 == s3 ) ;
     }
 
 wxString TLigationDialog::getVIName ( const wxArrayInt &vi ) const

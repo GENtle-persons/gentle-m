@@ -301,11 +301,10 @@ void TGraphDialog::OnDataList ( wxCommandEvent &ev )
     last_data = i ;
     }
 
-void TGraphDialog::ShowScale ( TGraphScale *s )
+void TGraphDialog::ShowScale ( const TGraphScale * const s )
     {
     nb->SetSelection ( 2 ) ;
-    int a ;
-    for ( a = 0 ; a < parent->gd->scales.size() ; a++ )
+    for ( int a = 0 ; a < parent->gd->scales.size() ; a++ )
         {
         if ( parent->gd->scales[a] == s )
             lb_scales->SetSelection ( a ) ;
@@ -314,7 +313,7 @@ void TGraphDialog::ShowScale ( TGraphScale *s )
     OnScalesList ( ev ) ;
     }
 
-void TGraphDialog::ShowData ( TGraphData *d )
+void TGraphDialog::ShowData ( const TGraphData * const d )
     {
     nb->SetSelection ( 1 ) ;
     for ( int a = 0 ; a < parent->gd->data.size() ; a++ )
@@ -348,7 +347,7 @@ void TGraphDialog::OnButtonScales ( wxCommandEvent &ev )
 
 // ******************************************* TSpeakDialog
 
-TSpeakDialog::TSpeakDialog(wxWindow *parent, const wxString& title , wxString _seq )
+TSpeakDialog::TSpeakDialog(wxWindow *parent, const wxString& title , const wxString& _seq )
     : wxDialog ( parent , -1 , title )
     {
     myapp()->frame->push_help ( _T("GENtle:Speak") ) ;
@@ -359,12 +358,11 @@ TSpeakDialog::TSpeakDialog(wxWindow *parent, const wxString& title , wxString _s
     wxBoxSizer *h0 = new wxBoxSizer ( wxHORIZONTAL ) ;
     wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
 
-    seq = new wxTextCtrl ( this , -1 , sequence ,
-                       wxDefaultPosition , wxDefaultSize ,
+    seq = new wxTextCtrl ( this , -1 , sequence , wxDefaultPosition , wxDefaultSize ,
 #ifndef __WXMAC__
-                    wxTE_READONLY|
+                           wxTE_READONLY|
 #endif
-                       wxTE_NOHIDESEL ) ;
+                           wxTE_NOHIDESEL ) ;
 
     wxButton *b1 = new wxButton ( this , SPEAK_PLAY , txt("b_speak_play") ) ;
     wxButton *b2 = new wxButton ( this , SPEAK_STOP , txt("b_speak_stop") ) ;
@@ -386,13 +384,11 @@ TSpeakDialog::TSpeakDialog(wxWindow *parent, const wxString& title , wxString _s
     v0->Add ( h1 , 0 , wxEXPAND , 5 ) ;
     v0->Add ( h0 , 0 , wxEXPAND , 5 ) ;
 
-
-
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;
 
     seq->SetSelection ( -1 , -1 ) ;
-//    seq->ShowPosition ( 0 ) ;
+//  seq->ShowPosition ( 0 ) ;
     }
 
 TSpeakDialog::~TSpeakDialog ()
@@ -403,15 +399,14 @@ TSpeakDialog::~TSpeakDialog ()
 
 void TSpeakDialog::OnPlay ( wxCommandEvent &ev )
      {
-     long from , to ;
-     wxString s ;
      int cnt = 0 ;
      doPlay = true ;
 
      while ( doPlay )
          {
+         long from , to ;
          seq->GetSelection ( &from , &to ) ;
-         s = seq->GetStringSelection () ;
+         wxString s = seq->GetStringSelection () ;
 
          if ( s == _T("") )
              {
@@ -445,7 +440,7 @@ void TSpeakDialog::OnCharHook ( wxKeyEvent& event )
     else event.Skip() ;
     }
 
-void TSpeakDialog::speakLetter ( wxString c )
+void TSpeakDialog::speakLetter ( const wxString& c ) const
     {
     wxString file = myapp()->homedir.GetFullPath() + wxFileName::GetPathSeparator() ;
 #ifndef __WXMAC__
@@ -662,7 +657,7 @@ void TSequencingPrimerDialog::getPrimerList ( wxArrayString &p_name , wxArrayStr
     myapp()->frame->LS->setOption ( _T("SEQUENCINGPRIMER_USE_PJ") , cb_pj->GetValue() ) ;
     }
 
-bool TSequencingPrimerDialog::matchToVector ( TVector *v , wxString name , wxString seq )
+bool TSequencingPrimerDialog::matchToVector ( TVector * const v , const wxString& name , const wxString& seq ) const
     {
     bool ret = false ;
     long ml = t_ma->GetValue() ; // Minimum length
@@ -692,7 +687,7 @@ bool TSequencingPrimerDialog::matchToVector ( TVector *v , wxString name , wxStr
     return ret ;
     }
 
-void TSequencingPrimerDialog::addSequencingPrimer ( TVector * const v , const wxString& name , const wxString& seq , const int best_pos , const int best_score , const int dir )
+void TSequencingPrimerDialog::addSequencingPrimer ( TVector * const v , const wxString& name , const wxString& seq , const int best_pos , const int best_score , const int dir ) const
     {
     int from = best_pos + 1 ;
     int to = best_pos + seq.length() ;
@@ -720,7 +715,7 @@ void TSequencingPrimerDialog::addSequencingPrimer ( TVector * const v , const wx
     }
 
 
-int TSequencingPrimerDialog::findBestMatch ( wxString &s , wxString seq , int &pos , int ml )
+int TSequencingPrimerDialog::findBestMatch ( wxString &s , const wxString& seq , int &pos , const int ml ) const
     {
     int cnt ;
     int best_score = 0 ;
@@ -929,7 +924,7 @@ TEnzymeDialog::~TEnzymeDialog ()
     myapp()->frame->pop_help () ;
     }
 
-void TEnzymeDialog::initme ( TRestrictionEnzyme *_e , bool ro )
+void TEnzymeDialog::initme ( TRestrictionEnzyme * const _e , const bool ro )
     {
     readonly = ro ;
     e = new TRestrictionEnzyme ;

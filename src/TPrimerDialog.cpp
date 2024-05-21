@@ -25,16 +25,12 @@ END_EVENT_TABLE()
 
 bool operator < ( const TPrimer &p1 , const TPrimer &p2 )
     {
-    TPrimer *x1 = (TPrimer*) &p1 ;
-    TPrimer *x2 = (TPrimer*) &p2 ;
-    return x1->getEvaluation() > x2->getEvaluation() ;
+    return p1.getEvaluation() > p2.getEvaluation() ;
     }
 
 bool operator == ( const TPrimer &p1 , const TPrimer &p2 )
     {
-    TPrimer *x1 = (TPrimer*) &p1 ;
-    TPrimer *x2 = (TPrimer*) &p2 ;
-    return x1->getEvaluation() == x2->getEvaluation() ;
+    return p1.getEvaluation() == p2.getEvaluation() ;
     }
 
 
@@ -104,10 +100,10 @@ void TPrimerDialog::initme ( TPrimer * const _p , const TPrimerDesign * const _p
     lmin->SetRange ( 1 , 99 ) ;
     lmax->SetRange ( 1 , 99 ) ;
 
-//    wxButton *bs = new wxButton ( this , PD_SEARCH , txt("t_recalc") , wxPoint ( 300 , 10 ) ) ;
-//    wxButton *br = new wxButton ( this , PD_RESET , txt("t_reset") , wxPoint ( 5 , 150 ) ) ;
+//  wxButton *bs = new wxButton ( this , PD_SEARCH , txt("t_recalc") , wxPoint ( 300 , 10 ) ) ;
+//  wxButton *br = new wxButton ( this , PD_RESET , txt("t_reset") , wxPoint ( 5 , 150 ) ) ;
     wxButton *bo = new wxButton ( this , PD_OK , txt("b_ok") , wxPoint ( 105 , 150 ) ) ;
-//    wxButton *bc = new wxButton ( this , PD_CANCEL , txt("b_cancel") , wxPoint ( 205 , 150 ) ) ;
+//  wxButton *bc = new wxButton ( this , PD_CANCEL , txt("b_cancel") , wxPoint ( 205 , 150 ) ) ;
 
     seq = new wxTextCtrl ( this , -1 , _T("") ,
                         wxPoint ( 0 , 180 ) ,
@@ -172,7 +168,7 @@ void TPrimerDialog::updateList ()
     {
     while ( pl.size() ) pl.pop_back () ;
 
-    wxString s , t ;
+    wxString s;
     int l1 , l2 , r1 , r2 ;
     int minlen = lmin->GetValue() ;
     int maxlen = lmax->GetValue() ;
@@ -180,7 +176,7 @@ void TPrimerDialog::updateList ()
     int maxtmp = tmax->GetValue() ;
     if ( p->upper )
         {
-        t = pd->vec->getSequence() ;
+        wxString t = pd->vec->getSequence() ;
         s = t ;
         for ( int a = 0 ; a < p->sequence.length() ; a++ )
             {
@@ -193,7 +189,7 @@ void TPrimerDialog::updateList ()
         }
     else // !!!! incomplete!
         {
-        t = pd->inverse_template_vector->getSequence() ;
+        wxString t = pd->inverse_template_vector->getSequence() ;
         s = t ;
         for ( int a = 0 ; a < p->sequence.length() ; a++ )
             {
@@ -206,22 +202,22 @@ void TPrimerDialog::updateList ()
         }
 
     for ( int a = l1 ; a <= l2 ; a++ )
-       {
-       for ( int b = r1 ; b <= r2 ; b++ )
-          {
-          int len = b - a + 1 ;
-          if ( a >= 0 && len >= minlen && len <= maxlen )
-             {
-             TPrimer np ( a+1 , b+1 , p->upper ) ;
-             np.sequence = s.substr ( a , b-a+1 ) ;
-             np.annealingVector = pd->vec ;
-             np.makeStats() ;
-             np.evaluate ( ( mintmp + maxtmp ) / 2 ) ;
-             if ( np.getTm() >= mintmp && np.getTm() <= maxtmp )
-                pl.push_back ( np ) ;
-             }
-          }
-       }
+        {
+        for ( int b = r1 ; b <= r2 ; b++ )
+            {
+            int len = b - a + 1 ;
+            if ( a >= 0 && len >= minlen && len <= maxlen )
+                {
+                TPrimer np ( a+1 , b+1 , p->upper ) ;
+                np.sequence = s.substr ( a , b-a+1 ) ;
+                np.annealingVector = pd->vec ;
+                np.makeStats() ;
+                np.evaluate ( ( mintmp + maxtmp ) / 2 ) ;
+                if ( np.getTm() >= mintmp && np.getTm() <= maxtmp )
+                    pl.push_back ( np ) ;
+                }
+            }
+        }
 
     sort ( pl.begin() , pl.end() ) ;
     ShowLC() ;

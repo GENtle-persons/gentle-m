@@ -146,7 +146,7 @@ bool SCFtype::parse ( const wxString& filename )
     sd.comment.Empty() ;
     {
     unsigned int aa=0;
-    unsigned char *c = t + (*header).comments_offset ; 
+    unsigned char *c = t + (*header).comments_offset ;
     while (aa++ < (*header).comments_size )
         {
         sd.comment += *c ;

@@ -218,9 +218,12 @@ wxColor SeqDNA::getBaseColor ( const char b ) const
     return fontColor ;
     }
 
-void SeqDNA::initFromTVector ( /* const */ TVector * const v )
+void SeqDNA::initFromTVector ( const TVector * const v )
     {
-    vec = v ; // FIXME: Needs copy constructor, not const
+    if (! vec) {
+        vec = new TVector ( NULL ) ;
+    }
+    vec->copy ( *v ) ;
     s = vec->getSequence() ;
     takesMouseActions = true ;
     showNumbers = true ;
@@ -445,7 +448,7 @@ int SeqDNA::getLine ( const int _y ) const
     if ( !useDirectRoutines() ) return SeqBasic::getLine ( _y ) ;
     if ( can->charheight == 0 ) return -1 ;
 
-    int n ; 
+    int n ;
     for ( n = 0 ; can->seq[n] != this ; n++ ) ;
     int y (_y) ;
     y -= can->border ;

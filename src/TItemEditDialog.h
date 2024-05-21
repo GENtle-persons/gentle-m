@@ -13,8 +13,7 @@ class TVectorItem ;
 class TItemEditDialog : public wxDialog
     {
     public :
-    TItemEditDialog ( wxWindow *parent, const wxString& title ,
-                        TVectorItem &_vi ) ; ///< Constructor
+    TItemEditDialog ( wxWindow *parent, const wxString& title , const TVectorItem &_vi ) ; ///< Constructor
     virtual ~TItemEditDialog () ; ///< Destructor
 
     virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler

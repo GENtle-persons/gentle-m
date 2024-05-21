@@ -220,10 +220,13 @@ void SeqRestriction::show ( wxDC& dc )
     mylog ( "SeqRestriction::show" , "fin" ) ;
     }
 
-void SeqRestriction::initFromTVector ( /* const */ TVector * const v )
+void SeqRestriction::initFromTVector ( const TVector * const v )
     {
-    vec = v ; // FIXME: not const
-//  s = vec->getSequence() ;
+    if (! vec) {
+        vec = new TVector ( NULL ) ;
+    }
+    vec->copy ( *v ) ;
+    s = vec->getSequence() ;
     down = false ;
     }
 

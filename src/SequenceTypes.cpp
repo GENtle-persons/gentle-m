@@ -184,9 +184,12 @@ void SeqPrimer::show ( wxDC& dc )
     dc.SetTextForeground ( tfg ) ;
     }
 
-void SeqPrimer::initFromTVector ( /* const */ TVector * const v )
+void SeqPrimer::initFromTVector ( const TVector * const v )
     {
-    vec = v ; // FIXME: Needs copy constructor - not const
+    if (! vec ) {
+        vec = new TVector ( NULL ) ;
+    }
+    vec->copy( *v );
     s = vec->getSequence() ;
     for ( int a = 0 ; a < s.length() ; a++ ) s.SetChar(a,' ') ;
     takesMouseActions = true ;
@@ -352,8 +355,8 @@ void SeqDivider::show ( wxDC& dc )
         }
     }
 
-void SeqDivider::initFromTVector ( TVector * const v )
+void SeqDivider::initFromTVector ( const TVector * const v )
     {
-//  vec = v ;
+    //vec->copy ( *v ) ;
     s = v->getSequence() ;
     }

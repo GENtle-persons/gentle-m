@@ -805,7 +805,7 @@ void MyFrame::OnFileImport(wxCommandEvent& event )
                         "|" + wcCM5format ;
     wxString lastdir = LS->getOption ( _T("LAST_IMPORT_DIR") , _T("C:") ) ;
     wxFileDialog d ( this , txt("import_file") , lastdir , "" , wildcard , wxFD_OPEN | wxFD_MULTIPLE | wxFD_FILE_MUST_EXIST) ;
-    
+
     int x = d.ShowModal() ;
     if ( x != wxID_OK ) return ;
 
@@ -1544,7 +1544,7 @@ void MyFrame::OnProjectSave(wxCommandEvent& event)
             if ( c->vec->getDatabase().IsEmpty() )
                 {
                 notindb += _T("\n") + c->getName() ;
-                } 
+                }
             }
         }
     if ( !notindb.IsEmpty() )

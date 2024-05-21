@@ -259,7 +259,7 @@ void SequenceCanvas::MyGetViewStart ( int *x , int *y )
         }
     }
 
-void SequenceCanvas::updateEdit ( TVector *v , wxString id , int from )
+void SequenceCanvas::updateEdit ( TVector * const v , const wxString& id , const int from )
     {
     if ( getAA() )
         {
@@ -454,7 +454,7 @@ void SequenceCanvas::editSpecialKeyPressed ( const int k , TVector * const v , w
         }
     }
 
-void SequenceCanvas::editCharPressed ( const int _k , TVector * const v , wxString *the_sequence )
+void SequenceCanvas::editCharPressed ( const int _k , TVector * const v , wxString * const the_sequence )
     {
     wxString id = edit_id ;
     int from = markedFrom () ;
@@ -1926,7 +1926,7 @@ void SequenceCanvas::OnSilmut ( wxCommandEvent &ev )
     getPD()->OnSilmut ( ev ) ;
     }
 
-TVector *SequenceCanvas::getPCR_DNA_vector()
+TVector *SequenceCanvas::getPCR_DNA_vector() const
     {
     myass ( getPD() , "SequenceCanvas::OnNewFromResultDNA_0" ) ;
     myass ( getPD()->w , "SequenceCanvas::OnNewFromResultDNA_1" ) ;
@@ -1972,7 +1972,7 @@ void SequenceCanvas::OnNewFromResultAA ( wxCommandEvent &ev )
           if ( getPD()->aa_state == AA_THREE_1 ||
                getPD()->aa_state == AA_THREE_2 ||
                getPD()->aa_state == AA_THREE_3 )
-                      s += sa ;
+                   s += sa ;
           else s = wxString ( sa ) + s ;
           }
        }
