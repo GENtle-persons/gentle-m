@@ -20,8 +20,8 @@ class CGdialog : public wxDialog
     } ;
 
 BEGIN_EVENT_TABLE(CGdialog, wxDialog )
-//    EVT_BUTTON(wxID_OK,CGdialog::OnOK)
-//    EVT_BUTTON(wxID_CANCEL,CGdialog::OnCancel)
+//  EVT_BUTTON(wxID_OK,CGdialog::OnOK)
+//  EVT_BUTTON(wxID_CANCEL,CGdialog::OnCancel)
     EVT_BUTTON(CGVIEW_CHOOSE_JAR,CGdialog::OnChooseJar)
     EVT_BUTTON(CGVIEW_CHOOSE_BACKGROUND_COLOR,CGdialog::OnChooseBackgroundColor)
     EVT_CHECKBOX(CGVIEW_RUN_CGVIEWER,CGdialog::OnRunCGviewer)
@@ -235,7 +235,7 @@ wxString CGview::getXML()
     if ( useDefaultColors && itemsShown ) // Only if there is a true match between type and feature
         {
         ret += _T(" <legend position='upper-right'>\n") ;
-        for ( a = 0 ; a < used_types.size() ; a++ )
+        for ( int a = 0 ; a < used_types.size() ; a++ )
             {
             if ( used_types[a] == 0 ) continue ; // Not used
             wxString text = txt(wxString::Format ( _T("itemtype%d") ,a)) ;
@@ -271,9 +271,9 @@ wxString CGview::addXMLfeatureSlot ( int dir )
         {
         if ( v->getItemLength ( i2[a] ) > v->getItemLength ( i2[a-1] ) )
             {
-            b = i2[a] ;
+            int tmp = i2[a] ;
             i2[a] = i2[a-1] ;
-            i2[a-1] = b ;
+            i2[a-1] = tmp ;
             a-= 2 ;
             if ( a < 0 ) a = 0 ;
             }
@@ -339,7 +339,7 @@ wxString CGview::addXMLfeatureSlot ( int dir )
     return ret ;
     }
 
-wxString CGview::getColorName ( int type )
+wxString CGview::getColorName ( const int type )
     {
     if ( type == VIT_GENE ) return _T("purple") ;
     if ( type == VIT_CDS ) return _T("blue") ;
@@ -353,16 +353,16 @@ wxString CGview::getColorName ( int type )
     return _T("grey") ;
     }
 
-wxString CGview::getColorName ( TVectorItem *i )
+wxString CGview::getColorName ( const TVectorItem * const i )
     {
     return RGB2string ( i->getFontColor() ) ;
     }
 
-bool CGview::itemOverlap ( TVectorItem &i1 , TVectorItem &i2 )
+bool CGview::itemOverlap ( const TVectorItem &i1 , const TVectorItem &i2 ) const // not static
     {
     int f1 = i1.from , f2 = i2.from ;
     int t1 = i1.to , t2 = i2.to ;
-    if ( f1 > t1 ) t1 += v->getSequenceLength() ;
+    if ( f1 > t1 ) t1 += v->getSequenceLength() ; // not static because of access to v
     if ( f2 > t2 ) t2 += v->getSequenceLength() ;
     if ( t2 < f1 ) return false ;
     if ( f2 > t1 ) return false ;
@@ -429,9 +429,11 @@ void CGview::postProcess ( wxString filename )
     wxExecute ( command ) ;
     }
 
-void CGview::makeGCcolor ( int percent , wxColour &col )
+void CGview::makeGCcolor ( const int _percent , wxColour &col )
     {
     int red , green , blue ;
+    int percent ( _percent ) ;
+
     if ( percent < 50 )
         {
         red = 255 * ( 50 - percent ) / 50 ;
@@ -448,12 +450,12 @@ void CGview::makeGCcolor ( int percent , wxColour &col )
     col.Set ( red , green , blue ) ;
     }
 
-wxString CGview::RGB2string ( wxColour col )
+wxString CGview::RGB2string ( const wxColour& col )
     {
     return RGB2string ( col.Red() , col.Green() , col.Blue() ) ;
     }
 
-wxString CGview::RGB2string ( int red , int green , int blue )
+wxString CGview::RGB2string ( const int red , const int green , const int blue )
     {
     return wxString::Format ( _T("rgb(%d,%d,%d)") , red , green , blue ) ;
     }

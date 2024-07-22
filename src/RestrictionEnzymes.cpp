@@ -88,7 +88,7 @@ int TRestrictionEnzyme::getCut ( const bool first_strand ) const
     return first_strand ? cut : sequence.length() - cut - overlap ;
     }
 
-int TRestrictionEnzyme::getOverlap ( const bool first_strand ) const
+int TRestrictionEnzyme::getOverlap ( const bool& first_strand ) const
     {
     return overlap ;
     }

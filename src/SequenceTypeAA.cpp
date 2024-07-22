@@ -156,19 +156,24 @@ void SeqAA::fixOffsets ( TVector * const v )
 
 void SeqAA::initFromTVector ( const TVector * const v )
     {
-    if ( ! v ) {
+
+    if ( ! v )
+        {
         wxPrintf ( " SeqAA::initFromTVector ( NULL )\n" ) ;
         abort() ;
-    }
+        }
     showNumbers = true ;
-    if ( ! vec ) {
+    if ( ! vec )
+        {
         wxPrintf ( "D: SeqAA::initFromTVector: allocating new vector.\n" ) ;
         vec = new TVector ( ) ;
-    }
-    else {
+        }
+    else
+        {
         wxPrintf ( "D: SeqAA::initFromTVector: reusing existing vector - why?\n" ) ;
-    }
+        }
     vec->copy ( *v ) ;
+
     bool truncateEditSequence = false ;
     if ( can && can->getEditMode() && vec->getSequenceLength() && vec->getSequenceChar(vec->getSequenceLength()-1) == ' ' )
         {
@@ -177,17 +182,32 @@ void SeqAA::initFromTVector ( const TVector * const v )
         truncateEditSequence = true ;
         }
     wxString t = vec->getSequence() ;
-    s.Alloc ( t.length() ) ;
-    FILLSTRING ( s , ' ' , t.length() ) ;
+    if (0 == t.length())
+        {
+        wxPrintf("D: SeqAA::initFromTVector: Assigned the empty string.\n" ) ;
+        s="";
+        }
+    else
+        {
+        wxPrintf("D: SeqAA::initFromTVector: Assigning blanks of length %ld\n", t.length() ) ;
+        wxString empty(' ', t.length() ) ;
+        s = empty ; 
+        }
+    wxPrintf("D: String s is regular: '%s'\n", s ) ;
 //  offsets.Clear() ;
     offset_items.Clear() ;
 //  offsets.Alloc ( s.length() ) ;
 //  while ( offsets.GetCount() < s.length() ) offsets.Add ( -1 ) ;
     updateProteases () ;
+
     if ( vec->isCircular() )
+        {
         t += t.substr ( 0 , 2 ) ;
+        }
     else
+        {
         t += _T("  ") ;
+        }
 
     int sl = s.length() ;
     s += _T("  ") ;
@@ -195,14 +215,17 @@ void SeqAA::initFromTVector ( const TVector * const v )
     if ( mode == AA_ALL )
         {
         for ( int a = 0 ; a < sl ; a++ )
+            {
             s.SetChar(a,vec->dna2aa ( t.substr(a,3) ).GetChar(0)) ;
+            }
         }
     else if ( mode == AA_KNOWN )
         {
         for ( int a = 0 ; a < vec->items.size() ; a++ )
             {
 //          vec->items[a].translate ( vec , this ) ; // TESTING!!!
-            //wxPrintf( "D: getArrangedAA %d of %ld with disp=%d\n", a, vec->items.size(), disp ) ;
+            wxPrintf( "D: SeqAA::initFromTVector invoking getArrangedAA @  %d of %ld with disp=%d\n", a, vec->items.size(), disp ) ;
+        //    wxPrintf( "D: SeqAA::initFromTVector invoking getArrangedAA @  s=%s\n", s ) ;
             vec->items[a].getArrangedAA ( vec , s , disp , this ) ;
             }
         }
