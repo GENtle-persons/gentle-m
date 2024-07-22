@@ -1,6 +1,7 @@
 #include "TVector.h"
 
 #include <wx/debug.h>
+#include <wx/string.h>
 
 #define MAXCUTS_PER_1K 30
 
@@ -13,6 +14,10 @@ char TVector::ACGT[256] ;
 char TVector::IUPAC[256] ;
 char TVector::SIUPAC[256] ;
 char TVector::COMPLEMENT[256] ;
+
+//FIXME: Unhappy
+wxString TVector::aa ; ///< Translation table string representation as returned by get_translation_table (set in dna2aa, used in get_translation_table as cache)
+
 vector <TAAProp> TVector::aaprop ;
 wxArrayString TVector::codon_tables ;
 wxArrayString TVector::codon_table_names ;
@@ -283,23 +288,27 @@ void TVector::methylationSites ( wxArrayInt &vi , const int what )
         {
         for ( int a = 0 ; a < sequence.length() ; a++ )
             {
-               if ( getNucleotide ( a ) == 'G' &&
-                    getNucleotide ( a + 1 ) == 'A' &&
-                    getNucleotide ( a + 2 ) == 'T' &&
-                    getNucleotide ( a + 3 ) == 'C' )
-                vi.Add ( a + 1 ) ;
+                if ( getNucleotide ( a ) == 'G' &&
+                     getNucleotide ( a + 1 ) == 'A' &&
+                     getNucleotide ( a + 2 ) == 'T' &&
+                     getNucleotide ( a + 3 ) == 'C' )
+                    {
+                    vi.Add ( a + 1 ) ;
+                    }
             }
         }
     if ( what & DCM_METHYLATION )
         {
         for ( int a = 0 ; a < sequence.length() ; a++ )
             {
-               if ( getNucleotide ( a ) == 'C' &&
-                    getNucleotide ( a + 1 ) == 'C' &&
-                    getNucleotide ( a + 3 ) == 'G' &&
-                    getNucleotide ( a + 4 ) == 'G' &&
-                 basematch ( getNucleotide ( a + 2 ) , 'W' ) )
-                vi.Add ( a + 1 ) ;
+                if ( getNucleotide ( a ) == 'C' &&
+                     getNucleotide ( a + 1 ) == 'C' &&
+                     getNucleotide ( a + 3 ) == 'G' &&
+                     getNucleotide ( a + 4 ) == 'G' &&
+                     basematch ( getNucleotide ( a + 2 ) , 'W' ) )
+                    {
+                    vi.Add ( a + 1 ) ;
+                    }
             }
         }
     }
@@ -669,34 +678,40 @@ void TVector::init ()
     aaprop['W'].set_hp ( -0.9 , -3.4 ) ;
     aaprop['Y'].set_hp ( -1.3 , -2.3 ) ;
 
-    for ( char a = 'a' ; a <= 'z' ; a++ ) aaprop[a] = aaprop[a-'a'+'A'] ;
+    for ( char a = 'a' ; a <= 'z' ; a++ )
+        {
+        aaprop[a] = aaprop[a-'a'+'A'] ;
+        }
 
-    initialized = true ;
+    TVector::initialized = true ; // flag indicating that all static data was initialized
 
     }
 
-void TVector::makeAA2DNA ( const wxString& mode ) // not const
+/*
+ * Expects dna2aa function to be available and derives inversion AA2DNA.
+ * Condon frequencies / speed of translation is ignored.
+ */
+void TVector::makeAA2DNA ( TVector *  const v , const wxString& mode ) // static
     {
     wxString iu = _T("ACGT") ;
-    for ( int a = 0 ; a < 256 ; a++ ) AA2DNA[a] = _T("") ;
+    for ( int a = 0 ; a < 256 ; a++ ) v -> AA2DNA[ a ] = _T("") ;
 
     if ( mode == _T("") ) // Default, abstract code
         {
         for ( int a = 0 ; a < iu.length() ; a++ )
-           {
-           for ( int b = 0 ; b < iu.length() ; b++ )
-              {
-              for ( int c = 0 ; c < iu.length() ; c++ )
-                 {
-                 wxString codon ;
-                 codon += iu.GetChar(a) ;
-                 codon += iu.GetChar(b) ;
-                 codon += iu.GetChar(c) ;
-                 unsigned char z = dna2aa ( codon ) . GetChar ( 0 ) ;
-                 AA2DNA[z] = mergeCodons ( codon , AA2DNA[z] ) ;
-                 }
-              }
-           }
+            {
+            for ( int b = 0 ; b < iu.length() ; b++ )
+                {
+                for ( int c = 0 ; c < iu.length() ; c++ )
+                    {
+                    wxString codon = iu.GetChar(a) ;
+                    codon += iu.GetChar(b) ;
+                    codon += iu.GetChar(c) ;
+                    const unsigned char z = v -> dna2aa ( codon ) . GetChar ( 0 ) ;
+                    v -> AA2DNA[z] = mergeCodons ( codon , v -> AA2DNA[z] ) ;
+                    }
+                }
+            }
         }
     else // Species-specific
         {
@@ -710,16 +725,16 @@ void TVector::makeAA2DNA ( const wxString& mode ) // not const
             {
              unsigned char c = aas.GetChar(a) ;
              wxString cs = wxString ( aas.GetChar(a) ) ;
-             if ( cc_spec.count(cs) > 0 ) AA2DNA[c] = cc_spec[cs] ;
-             else AA2DNA[c] = cc[cs] ;
+             if ( cc_spec.count(cs) > 0 ) v -> AA2DNA[c] = cc_spec[cs] ;
+             else v -> AA2DNA[c] = cc[cs] ;
             }
         }
     for ( int a = 0 ; a < 256 ; a++ )
-        if ( AA2DNA[a].IsEmpty() )
-           AA2DNA[a] = _T("NNN") ;
+        if ( v->AA2DNA[a].IsEmpty() )
+           v->AA2DNA[a] = _T("NNN") ;
     }
 
-wxString TVector::mergeCodons ( const wxString& _c1 , const wxString& _c2 ) const
+wxString TVector::mergeCodons ( const wxString& _c1 , const wxString& _c2 ) // static
     {
     wxString c1 ( _c1 ) ;
     wxString c2 ( _c2 ) ;
@@ -1383,7 +1398,7 @@ void TVector::doRemove ( const int from , const int _to , const bool update , co
     else if ( enableUndo ) undo.abort () ;
     }
 
-wxString TVector::get_translation_table ( const int translation_table ) const
+wxString TVector::get_translation_table ( const int translation_table )
     {
     wxString ret ;
     if ( myapp()->frame->nonstandard_translation_table != -1 ) // Forced translation table
@@ -1397,11 +1412,11 @@ wxString TVector::get_translation_table ( const int translation_table ) const
 
 // Currently returns only the direct encoding (a single char) or 'X'
 // Could return all possible AAs (see IUPAC) in the future
-wxString TVector::dna2aa ( const wxString& codon , const int translation_table ) const
+wxString TVector::dna2aa ( const wxString& codon , const int translation_table )
     {
     if ( codon.length() != 3 ) return _T("?") ;
     wxString r;
-    const wxString aa = get_translation_table ( translation_table ) ;
+    aa = get_translation_table ( translation_table ) ;
     char c0 = codon.GetChar(0) ;
     char c1 = codon.GetChar(1) ;
     char c2 = codon.GetChar(2) ;
@@ -1587,7 +1602,7 @@ TVector *TVector::getAAvector ( const int _from , const int _to , const int dir 
     v->setFromVector ( *this ) ;
     v->setType ( TYPE_AMINO_ACIDS ) ;
 
-    // FIXME: Should be const but is not, maybe be more restrictive with from<to ?
+    // FIXME: Maybe be more restrictive with from<to ?
     int to = _to;
     int from = _from;
 
@@ -1687,10 +1702,10 @@ void TVector::setFromVector ( const TVector& v )
     undo.clear () ;
     }
 
-int TVector::getItemLength ( const int a ) const
+int TVector::getItemLength ( const int itemno ) const
     {
-    if ( items[a].to >= items[a].from ) return items[a].to - items[a].from + 1 ;
-    return items[a].to + sequence.length() - items[a].from + 1 ;
+    if ( items[itemno].to >= items[itemno].from ) return items[itemno].to - items[itemno].from + 1 ;
+    return items[itemno].to + sequence.length() - items[itemno].from + 1 ;
     }
 
 void TVector::clear ()
@@ -1865,11 +1880,11 @@ TVector *TVector::backtranslate ( const wxString& mode ) // not const becaues of
     nv->setFromVector ( *this ) ;
     nv->type = TYPE_VECTOR ;
     wxString ns ;
-    makeAA2DNA ( mode ) ;
-    for ( int a = 0 ; a < sequence.length() ; a++ )
+    TVector::makeAA2DNA ( nv, mode ) ;
+    for ( int a = 0 ; a < nv -> sequence.length() ; a++ )
         {
         unsigned char c = sequence.GetChar ( a ) ;
-        ns += AA2DNA[c] ;
+        ns += nv->AA2DNA[c] ;
         }
     nv->sequence = ns ;
     for ( int a = 0 ; a < nv->items.size() ; a++ )
@@ -2203,16 +2218,29 @@ void TVectorItem::setType ( const wxString& _s )
     }
 
 
-void TVectorItem::translate ( const TVector * const v , SeqAA * const aa , vector <Tdna2aa> &dna2aa ) // not const
+/*
+ * Translates DNA sequence of vector v and pushes it to the dna2aa vector of Tdna2aa objects
+ * \param @vectorToTranslate The vector providing the DNA to translate. Defaults to lastVector if NULL.
+ * \param @aa ?
+ * \param @dna2aa Address of an array of dna2aa instances into which the translation is written.
+ */
+void TVectorItem::translate ( const TVector * const vectorToTranslate , SeqAA * const aa , vector <Tdna2aa> &dna2aa ) const
     {
-    lastVector = v ; // -> not const
+    const TVector * v = vectorToTranslate ;
+    if (!v) v = lastVector ;
+    if (!v) {
+        wxPrintf("E: TVectorItem::translate: Do not have vector to work on.") ;
+        abort() ;
+    }
+
 //  dna2aa.clear () ;
     if ( type != VIT_CDS ) return ;
+    int rf = getRF() ;//, voff = getOffset() ;
     if ( getRF() == 0 ) return ;
 
     char c = ' ' ;
     bool complement , roundOnce = false ;
-    int b , coff , rf = getRF () ;//, voff = getOffset() ;
+    int b , coff ;
 
     if ( direction == 1 )
         {
@@ -2286,26 +2314,40 @@ void TVectorItem::translate ( const TVector * const v , SeqAA * const aa , vecto
         }
     }
 
-wxString TVectorItem::getAminoAcidSequence () // not const because of translate
+/**
+ * \brief gets amino acid sequence for the region of the vector assigned to this item
+ *
+ * The item should be a coding sequence.
+ *
+ * \return wxString with amino acids derived for this item.
+ */
+wxString TVectorItem::getAminoAcidSequence () const // not const because of translate
     {
+
     wxString s ;
     vector <Tdna2aa> dna2aa ;
-    translate ( lastVector , NULL , dna2aa ) ;
+    translate ( NULL /* defaults to last vector */ , NULL , dna2aa ) ; //, from , to , direction 
+
     for ( int a = 0 ; a < dna2aa.size() ; a++ )
         {
         s += dna2aa[a].aa ;
         }
     return s ;
+
     }
 
-void TVectorItem::getArrangedAA ( const TVector * const v , wxString &s , const int disp , SeqAA * const aa ) // not const
+void TVectorItem::getArrangedAA ( const TVector * const vectorToTranslate , wxString &s , const int disp , SeqAA * const aa ) /* not const */
     {
+
+    const TVector * v = vectorToTranslate ;
+    if ( ! v ) v = lastVector ;
 
     if ( ! v )
         {
         wxPrintf( "TVectorItem::getArrangedAA - !v\n" ) ;
         abort() ;
         }
+
     if ( ! aa )
         {
         wxPrintf( "TVectorItem::getArrangedAA - !aa\n" ) ;
@@ -2313,18 +2355,22 @@ void TVectorItem::getArrangedAA ( const TVector * const v , wxString &s , const 
         }
 
     vector <Tdna2aa> dna2aa_temp , *dna2aa ;
-    if ( v->getGenomeMode() ) dna2aa = &dna2aa_temp ;
+    if ( v->getGenomeMode() )
+        {
+        dna2aa = &dna2aa_temp ;
+        }
     else
         {
         dna2aa_item.clear() ;
-        dna2aa = &dna2aa_item ;
+        dna2aa = &dna2aa_item ; // not const
         }
 
-    translate ( v , aa , *dna2aa ) ;
+    translate ( v , aa , *dna2aa ) ; //, from , to , direction ) ;
 
     //wxPrintf( "D: TVectorItem::getArrangedAA: aa='%s'\n" , aa ) ;
 
-    for ( int a = 0 ; a < dna2aa->size() ; a++ )
+    size_t dna2aa_size = dna2aa->size() ;
+    for ( int a = 0 ; a < dna2aa_size ; a++ )
         {
         if (!(*dna2aa)[a].dna[0])
             {
@@ -2336,7 +2382,13 @@ void TVectorItem::getArrangedAA ( const TVector * const v , wxString &s , const 
             wxPrintf( "TVectorItem::getArrangedAA - !(*dna2aa)[%d].aa\n" , a ) ;
             abort() ;
             }
-        if ( disp == AA_ONE ) s.SetChar((*dna2aa)[a].dna[0],(*dna2aa)[a].aa) ;
+        if ( disp == AA_ONE )
+            {
+            const char c = (*dna2aa)[a].aa ;
+            //wxPrintf("D: TVectorItem::getArrangedAA @ %d : '%c'\n", a, c ) ;
+            //wxPrintf("D: TVectorItem::getArrangedAA @ %d : s='%s'\n", a, s ) ;
+            s.SetChar((*dna2aa)[a].dna[0] , c ) ;
+            }
         else
             {
             wxPrintf( "TVectorItem::getArrangedAA - else\n" ) ;

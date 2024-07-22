@@ -1,6 +1,9 @@
 #ifndef _ENUMS_H_
 #define _ENUMS_H_
 
+/** \file
+ * \brief Identifiers for elements in dialog boxes and menus, all collected in single enum.
+ */
 enum {
     A___ = 6000,
     // Amino acid display menu

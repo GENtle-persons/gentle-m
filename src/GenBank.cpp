@@ -9,7 +9,7 @@
 #define TAG_COMPLEMENT 1
 
 /// \brief The item type names
-const char * const gb_item_type[VIT_TYPES] =
+const char * const TGenBank::gb_item_type[VIT_TYPES] =
     {
     "",
     "gene",
@@ -22,18 +22,32 @@ const char * const gb_item_type[VIT_TYPES] =
     "oriT"
     } ;
 
+bool TGenBank::perm[256] ; ///< Allowed chars
+bool TGenBank::validseq[256] ; ///< Allowed sequence chars
+bool TGenBank::isblank[256] ; ///< Blank chars
+bool TGenBank::isblankorquote[256] ; ///< Blank or quote chars
+
 /** \brief Constructor
  * \details Initializes a series of hash tables to quickly check if a character is a valid sequence character, a blank, or a blank or quote
  */
 TGenBank::TGenBank ()
     {
-    for ( int a = 0 ; a < 256 ; a++ ) validseq[a] = isValidSequence ( a ) ;
-    for ( int a = 0 ; a < 256 ; a++ ) isblank[a] = false ;
-    for ( int a = 0 ; a < 16 ; a++ ) isblank[a] = true ;
-    isblank[' '] = true ;
-    for ( int a = 0 ; a < 256 ; a++ ) isblankorquote[a] = isblank[a] ;
-    isblankorquote['"'] = true ;
     success = false ;
+    if (TGenBank::isblankorquote['"'])
+        {
+        // static variables are already initialized
+        return;
+        }
+
+    //
+    // static class variables
+    //
+    for ( int a = 0 ; a < 256 ; a++ ) TGenBank::validseq[a] = isValidSequence ( a ) ;
+    for ( int a = 0 ; a < 256 ; a++ ) TGenBank::isblank[a] = false ;
+    for ( int a = 0 ; a < 16 ; a++ ) TGenBank::isblank[a] = true ;
+    TGenBank::isblank[' '] = true ;
+    for ( int a = 0 ; a < 256 ; a++ ) TGenBank::isblankorquote[a] = TGenBank::isblank[a] ;
+    TGenBank::isblankorquote['"'] = true ;
     }
 
 /** \brief Loads text from file, calles parser
@@ -194,19 +208,19 @@ void TGenBank::remap ( TVector * v , const wxArrayString &vs , const wxArrayInt 
     items.reserve ( a*2 ) ;
     }
 
-    wxString l , l2 ;
     for ( size_t line = 0 ; line < vs.GetCount() ; line++ )
         {
-        l = vs[line] ;
+        wxString l = vs[line] ;
         int i = vi[line] ;
         if ( i == 0 ) // New main level keyword
             {
             l += " " ;
             k1 = l.BeforeFirst ( ' ' ) . Upper() ;
-            l2 = trim ( l.AfterFirst ( ' ' ) ) ;
+            wxString l2 = trim ( l.AfterFirst ( ' ' ) ) ;
             i += l.Length() - l2.Length() ;
             l = l2 ;
             }
+
         if ( k1 == _T("LOCUS") )
             {
             v->setName ( l.BeforeFirst ( ' ' ) ) ;
@@ -224,7 +238,7 @@ void TGenBank::remap ( TVector * v , const wxArrayString &vs , const wxArrayInt 
                 {
                 items.push_back ( wxArrayString() ) ;
                 items[items.size()-1].Add ( l.BeforeFirst ( ' ' ) ) ;
-                l2 = l.AfterFirst ( ' ' ) ;
+                wxString l2 = l.AfterFirst ( ' ' ) ;
                 i += l.Length() - l2.Length() ;
                 l = l2 ;
                 }
@@ -234,13 +248,13 @@ void TGenBank::remap ( TVector * v , const wxArrayString &vs , const wxArrayInt 
             {
             if ( ns.IsEmpty() ) ns.Alloc ( ( vs.GetCount() - line ) * 60 ) ;
             size_t a = 0 ;
-            while ( a < l.length() && !validseq[l.GetChar(a)] )
+            while ( a < l.length() && ! TGenBank::validseq[l.GetChar(a)] )
                 {
                 a++ ;
                 }
             if ( a < l.length() )
                 {
-                l2 = l.Mid ( a ) ;
+                wxString l2 = l.Mid ( a ) ;
                 l2.Replace ( " " , "" ) ;
                 ns += l2 ;
                 }
@@ -262,7 +276,7 @@ void TGenBank::remap ( TVector * v , const wxArrayString &vs , const wxArrayInt 
 /** \brief Checks if the given char is "-", A-Z, or a-z
     \param a The char to check
 */
-bool TGenBank::isValidSequence ( const char a ) const
+bool TGenBank::isValidSequence ( const char& a )
     {
     if ( a == '-' ) return true ;
     if ( a >= 'A' && a <= 'Z' ) return true ;
@@ -302,7 +316,7 @@ void TGenBank::addItem ( TVector * const v , wxArrayString &va )
             abort() ;
             }
         if ( p.IsEmpty() ) continue ;
-        multitrim ( p , true ) ;
+        TGenBank::multitrim ( p , true ) ;
         p.MakeLower() ;
         wxString vString = va[a].AfterFirst ( '=' ) ;
         if ( ! vString )
@@ -310,7 +324,7 @@ void TGenBank::addItem ( TVector * const v , wxArrayString &va )
             wxPrintf( "DW: GenBank::addItem - !vString after '=' in '%s'.\n" , va[a] ) ;
             continue ;
             }
-        multitrim ( vString , true ) ;
+        TGenBank::multitrim ( vString , true ) ;
         if ( p == _T("name") || p == _T("standard_name") || p == _T("gene") || p == _T("protein_id") || p == _T("region_name") )
             i.name = vString ;
         else
@@ -457,7 +471,7 @@ int TGenBank::count_blanks ( const wxString &s ) const
     {
     int a = 0 ;
 //  for ( a = 0 ; a < s.length() && ( s.GetChar(a) == ' ' || s.GetChar(a) < 15 ) ; a++ ) ;
-    while ( a < s.length() && isblank[s.GetChar(a)] )
+    while ( a < s.length() && TGenBank::isblank[s.GetChar(a)] )
         a++ ;
     return a ;
     }
@@ -465,11 +479,11 @@ int TGenBank::count_blanks ( const wxString &s ) const
 /** \brief Removes the leading blanks from a string
     \param s The string
 */
-wxString TGenBank::trim ( const wxString& s ) const
+wxString TGenBank::trim ( const wxString& s )
     {
     int a ;
 //    for ( a = 0 ; a < s.length() && ( s.GetChar(a) == ' ' || s.GetChar(a) < 15 ) ; a++ ) ;
-    for ( a = 0 ; a < s.length() && isblank[s.GetChar(a)] ; a++ ) ;
+    for ( a = 0 ; a < s.length() && TGenBank::isblank[s.GetChar(a)] ; a++ ) ;
     if ( a ) return s.Mid ( a ) ;
     else return s ;
     }
@@ -477,10 +491,10 @@ wxString TGenBank::trim ( const wxString& s ) const
 /** \brief Removes the leading blanks from a string
     \param s The string (as reference)
 */
-void TGenBank::itrim ( wxString &s ) const
+void TGenBank::itrim ( wxString &s )
     {
     int a ;
-    for ( a = 0 ; a < s.length() && isblank[s.GetChar(a)] ; a++ ) ;
+    for ( a = 0 ; a < s.length() && TGenBank::isblank[s.GetChar(a)] ; a++ ) ;
 //    for ( a = 0 ; a < s.length() && ( s.GetChar(a) == ' ' || s.GetChar(a) < 15 ) ; a++ ) ;
     if ( a ) s = s.Mid ( a ) ;
     }
@@ -488,19 +502,19 @@ void TGenBank::itrim ( wxString &s ) const
 /** \brief Removes the leading and ending blanks and/or quotes from a string
     \param s The string (as reference)
 */
-void TGenBank::multitrim ( wxString &s , const bool quotes ) const
+void TGenBank::multitrim ( wxString &s , const bool quotes )
     {
     size_t a = 0 ;
 //  for ( a = 0 ; a < s.length() && ( s.GetChar(a) == ' ' || s.GetChar(a) < 15 ||s.GetChar(a) == '"' ) ; a++ ) ;
 //  for ( b = s.length()-1 ; b > 0 && ( s.GetChar(b) == ' ' || s.GetChar(b) < 15 ||s.GetChar(b) == '"' ) ; b-- ) ;
 
-    while ( a < s.length() && isblankorquote[s.GetChar(a)] )
+    while ( a < s.length() && TGenBank::isblankorquote[s.GetChar(a)] )
         {
         a++ ;
         }
 
     size_t b = s.length()-1 ;
-    while ( b > 0 && isblankorquote[s.GetChar(b)] )
+    while ( b > 0 && TGenBank::isblankorquote[s.GetChar(b)] )
         {
         b-- ;
         }
@@ -512,7 +526,7 @@ void TGenBank::multitrim ( wxString &s , const bool quotes ) const
 /** \brief Removes the leading and ending quotes from a string
     \param s The string
 */
-wxString TGenBank::trimQuotes ( wxString s ) const
+wxString TGenBank::trimQuotes ( wxString s )
     {
     if ( s.GetChar(0) == '"' ) s = s.Mid ( 1 ) ;
     if ( s.GetChar(s.Length()-1) == '"' ) s = s.Mid ( 0 , s.Length()-1 ) ;
@@ -548,8 +562,9 @@ void TGenBank::wrapit ( wxArrayString &ex , const wxString& init , wxString data
     \param to The desired length
     \param with To fill the string with, if needed
 */
-wxString TGenBank::expand ( wxString init , const int to , const wxString& with ) const
+wxString TGenBank::expand ( const wxString& _init , const int to , const wxString& with )
     {
+    wxString init ( _init ) ;
     while ( init.length() < to ) init += with ;
     return init.substr ( 0 , to ) ;
     }

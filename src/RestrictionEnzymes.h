@@ -24,8 +24,8 @@ class TRestrictionEnzyme
 
     int getCut ( const bool first_strand = true ) const ;
     void setCut ( const int c ) ;
-    int getOverlap ( const bool first_strand = true ) const ;
-    void setOverlap ( int o ) ;
+    int getOverlap ( const bool& first_strand = true ) const ;
+    void setOverlap ( const int o ) ;
     wxString getName () const ;
     void setName ( const wxString& _name ) ;
     wxString getSequence () const ;

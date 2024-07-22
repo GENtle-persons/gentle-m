@@ -5,10 +5,7 @@
 #define _GENBANK_H_
 
 #include "main.h"
-
-class TVector ;
-class TVectorItem ;
-class TVectorTree ;
+#include "TVector.h"
 
 /// \brief Helper class for TGenBank
 class TGenBankFeature
@@ -31,13 +28,8 @@ class TGenBank
     void remap ( TVector *v ) ;
     void remap ( TVector *v , const wxArrayString &vs , const wxArrayInt &vi ) ;
     void doExport ( const TVector * const sv , wxArrayString &ex ) const ;
-    wxString trim ( const wxString&  s ) const ;
-    void itrim ( wxString &s ) const ;
-    void multitrim ( wxString &s , const bool quotes = true ) const ;
-    wxString trimQuotes ( wxString s ) const ;
     wxString quote ( const wxString& pre , wxString q ) const ;
     void wrapit ( wxArrayString &ex , const wxString& init , wxString data , const int limit = 80 ) const ;
-    wxString expand ( wxString init , const int to , const wxString& with = _T(" ") ) const ;
     int count_blanks ( const wxString &s ) const ;
 
     bool success ; ///< Did we encounter any errors while parsing?
@@ -52,15 +44,22 @@ class TGenBank
     wxString params ; ///< ???
     wxString title ; ///< Sequence title
     wxString description ; ///< Sequence description
-    bool perm[256] ; ///< Allowed chars
-    bool validseq[256] ; ///< Allowed sequence chars
-    bool isblank[256] ; ///< Blank chars
-    bool isblankorquote[256] ; ///< Blank or quote chars
 
     void parseLines () ;
     void addItem ( TVector *v , wxArrayString &va ) ;
     void iterateItem ( TVector * const v , TVectorItem &i , wxString l , const int tag = 0 ) const ;
-    bool isValidSequence ( const char a ) const ;
+
+    static const char * const gb_item_type[VIT_TYPES] ;
+    static bool perm[256] ; ///< Allowed chars
+    static bool validseq[256] ; ///< Allowed sequence chars
+    static bool isblank[256] ; ///< Blank chars
+    static bool isblankorquote[256] ; ///< Blank or quote chars
+    static bool isValidSequence ( const char& a ) ;
+    static void itrim ( wxString &s ) ;
+    static wxString expand ( const wxString& init , const int to , const wxString& with = _T(" ") ) ;
+    static wxString trim ( const wxString&  s ) ;
+    static wxString trimQuotes ( wxString s ) ;
+    static void multitrim ( wxString &s , const bool quotes = true ) ;
     } ;
 
 #endif

@@ -270,7 +270,6 @@ WX_DECLARE_OBJARRAY(float, wxArrayFloat);
 #include "MyChild.h"
 #include "TRestrictionEditor.h"
 #include "TClone.h"
-#include "GenBank.h"
 #include "TPDB.h"
 #include "CloneManager.h"
 #include "TXMLfile.h"
@@ -289,6 +288,7 @@ WX_DECLARE_OBJARRAY(float, wxArrayFloat);
 #include "ExternalInterface.h"
 #include "TItemEditDialog.h"
 #include "PrimerDesign.h"
+#include "GenBank.h"
 
 #define PI 3.14 /**< \brief Just PI */
 #define IUPAC_A 1 /**< \brief IUPAC bit for A */

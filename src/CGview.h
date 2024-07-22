@@ -20,13 +20,13 @@ class CGview
     private :
     friend class CGdialog ;
     wxString addXMLfeatureSlot ( int dir ) ; ///< Adds the features for the given direction to the XML
-    wxString getColorName ( int type ) ; ///< Returns XML item comor, based on the item type
-    wxString getColorName ( TVectorItem *i ) ; ///< Returns XML item color, based on the item color used in GENtle
-    bool itemOverlap ( TVectorItem &i1 , TVectorItem &i2 ) ; ///< Checks if two items overlap
-    void wellform ( wxString &s ) ; ///< Fixes quotes and &amp; prior to XML generation
-    void makeGCcolor ( int percent , wxColour &col ) ;
-    wxString RGB2string ( wxColour col ) ;
-    wxString RGB2string ( int red , int green , int blue ) ;
+    static wxString getColorName ( const int type ) ; ///< Returns XML item comor, based on the item type
+    static wxString getColorName ( const TVectorItem * const i ) ; ///< Returns XML item color, based on the item color used in GENtle
+    bool itemOverlap ( const TVectorItem &i1 , const TVectorItem &i2 ) const ; ///< Checks if two items overlap
+    static void wellform ( wxString &s ) ; ///< Fixes quotes and &amp; prior to XML generation
+    static void makeGCcolor ( int percent , wxColour &col ) ;
+    static wxString RGB2string ( const wxColour& col ) ;
+    static wxString RGB2string ( const int red , const int green , const int blue ) ;
 
     TVector *v ; ///< Pointer to the TVector structure to export
     int width , height , radius ;

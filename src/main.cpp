@@ -10,14 +10,14 @@
     There are some classes that are of fundamental importance to understanding the GENtle code.
     <ul>
     <li>MyFrame - The base window of the whole application
-     <li>ChildBase - The "mother" of all modules, including the oddly named DNA module, MyChild
-    <ul>
-    <li>PlasmidCanvas - The colorful map used in the DNA and, partially, amino acid modules
-    <li>SequenceCanvas - The universal sequence text class, used in most of the modules
-    <ul>
-    <li>SeqBasic - The base class for each "line type" in a SequenceCanvas, including DNA, amino acids, features, restriction enzymes, ABI peaks, etc.
-    </ul>
-    </ul>
+    <li>ChildBase - The "mother" of all modules, including the oddly named DNA module, MyChild
+     <ul>
+     <li>PlasmidCanvas - The colorful map used in the DNA and, partially, amino acid modules
+     <li>SequenceCanvas - The universal sequence text class, used in most of the modules
+      <ul>
+      <li>SeqBasic - The base class for each "line type" in a SequenceCanvas, including DNA, amino acids, features, restriction enzymes, ABI peaks, etc.
+      </ul>
+     </ul>
     <li>TStorage - The class to communicate with databases
     <li>TVector - The class to store all sequence information, be it DNA or amino acids
     </ul>

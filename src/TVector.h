@@ -4,9 +4,6 @@
 #ifndef _TVECTOR_H_
 #define _TVECTOR_H_
 
-#include "main.h"
-#include "TUndo.h"
-
 class MyChild ;
 class TRestrictionEnzyme ;
 class TRestrictionCut ;
@@ -19,17 +16,22 @@ class SeqAA ;
 class TEnzymeRules ;
 
 //number of possible types
-#define VIT_TYPES     10
 
-#define VIT_GENE       1
-#define VIT_CDS        2
-#define VIT_REP_ORI    3
-#define VIT_PROMOTER   4
-#define VIT_TERMINATOR 5
-#define VIT_MISC       6
-#define VIT_PROT_BIND  7
-#define VIT_ORI_T      8
-#define VIT_SEQUENCING 9
+enum {
+   VIT_GENE=1,
+   VIT_CDS,
+   VIT_REP_ORI,
+   VIT_PROMOTER,
+   VIT_TERMINATOR,
+   VIT_MISC,
+   VIT_PROT_BIND,
+   VIT_ORI_T,
+   VIT_SEQUENCING,
+   VIT_TYPES // number of possible types
+} ;
+
+#include "main.h"
+#include "TUndo.h"
 
 /// This class manages amino acid properties; so 20 total. Used by the static part of TVector
 class TAAProp
@@ -77,7 +79,14 @@ class TORF
 
     } ;
 
-/// This class stores a codon and the corresponding amino acid. Used by TVector
+/** This class stores a codon and the corresponding amino acid. Used by TVector.
+ *
+ * It does not represent an abstract translation table but is the result of applying
+ * the translation table at a particular position of the sequence. The positions
+ * constituting to the codon are stored in the "dna" array. Those positions do not
+ * necessarily need to be consecutive, e.g. when spanning an exon/intron boundary,
+ * but these should be strictly ordered with i1 < i2 < i3.
+ */
 class Tdna2aa
     {
     public :
@@ -125,9 +134,8 @@ class TVectorItem
     void setParam ( const wxString& p , const int v ) ; ///< Set a parameter key/value pair
 
     // dna2aa stuff
-    void translate ( const TVector * const v , SeqAA * const aa , vector <Tdna2aa> &dna2aa ) ; ///< Translate DNA to amino acids
-    void getArrangedAA ( const TVector * const v , wxString &s , const int disp , SeqAA *aa = NULL ) ; ///< Generate the amino acid sequence in place, not const
-    wxString getAminoAcidSequence () ; ///< Return the amino acid sequence
+    void translate ( const TVector * const v , SeqAA * const aa , vector <Tdna2aa> &dna2aa ) const ;
+    wxString getAminoAcidSequence () const ; ///< Return the amino acid sequence
     void setLastVector ( const TVector * const v) ; ///< Set the last TVector to own this item
 
     // Variables
@@ -138,6 +146,8 @@ class TVectorItem
         to ; ///< Item end
 
     wxString toString() const ;
+
+    void getArrangedAA ( const TVector * const v , wxString &s , const int disp , SeqAA *aa = NULL ) ; ///< Generate the amino acid sequence in place, not const
 
   private:
     void initParams () ; ///< Reset parameters
@@ -164,7 +174,7 @@ class TVectorItem
 /** \brief This class stores all sequence information, both DNA and amino acids
 
     This class is of extreme importance. It carries sequence data, annotated items,
-    methods for sequence manipulation, and static data, e.e., about amino acid
+    methods for sequence manipulation, and static data, e.g., about amino acid
     properties and translation tables. So don't let the name fool you, this class
     does much more than storing vectors.
 */
@@ -205,7 +215,7 @@ class TVector
 
     static float getAAmw ( const char& aa ) ; ///< Returns the molecular weight of an amino acid
     static float getAApi ( const char& aa ) ; ///< Returns the isoelectric point of an amino acid
-    wxString dna2aa ( const wxString& codon , const int translation_table = -1 ) const ; ///< Translates a codon into an amino acid
+    static wxString dna2aa ( const wxString& codon , const int translation_table = -1 ) ; ///< Translates a codon into an amino acid
     void setAction ( const wxString& _action , int _action_value = 0 ) ; ///< Sets the action for doAction()
     void setDatabase ( const wxString& s ) { database = s ; } ///< Sets the database in which the sequence is stored
     const wxString getDatabase () const { return database ; } ///< Returns the database name in which the sequence is stored
@@ -304,11 +314,11 @@ class TVector
   private :
     wxString invert ( const wxString& s ) const ; ///< Inverts a string
     static wxString vary_base ( const char& b ) ; ///< Turns a SIUPAC into a string of A, C, G, T
-    void makeAA2DNA ( const wxString& mode = _T("") ) ; ///< "Translate" amino acid sequence into DNA; can be specified for an organism
-    wxString mergeCodons ( const wxString& c1 , const wxString& c2 ) const ; ///< Used by makeAA2DNA for generating "abstract" (SIUPAC) DNA
+    static void makeAA2DNA ( TVector * const v , const wxString& mode = _T("") ) ; ///< "Translate" amino acid sequence into DNA; can be specified for an organism
+    static wxString mergeCodons ( const wxString& c1 , const wxString& c2 ) ; ///< Used by makeAA2DNA for generating "abstract" (SIUPAC) DNA
     void setCodonTable ( const int table , const wxString& sequence , const wxString& name ) ; ///< Sets up the codon_tables variable
     void evaluate_key_value ( const wxString& key , const wxString& value ) ; ///< Used in setParam() and setParams()
-    wxString get_translation_table ( const int translation_table ) const ;
+    static wxString get_translation_table ( const int translation_table ) ;
 
     int type ; ///< The sequence type
     TEnzymeRules *enzyme_rules ; ///< Pointer to the restriction enzyme display rules
@@ -331,7 +341,7 @@ class TVector
     int action_value ; ///< Used by doAction()
     wxString database ; ///< The database this vector was loaded from
     wxString action ; ///< Used by doAction()
-    wxString aa ; ///< Hell if I remember what this is for
+    static wxString aa ; ///< Translation table string representation as returned by get_translation_table (set in dna2aa, used in get_translation_table as cache)
     wxString AA2DNA[256] ; ///< AA-to-DNA "translation" table; used by makeAA2DNA()
     wxArrayString paramk ; ///< Parameter keys
     wxArrayString paramv ; ///< Parameter values
