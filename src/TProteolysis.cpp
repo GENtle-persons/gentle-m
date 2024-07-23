@@ -90,8 +90,7 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
                                 4 , rb_np , wxRA_SPECIFY_COLS ) ;
     sep_num_prot->SetSelection ( 1 ) ;
 
-    sep_desc = new wxTextCtrl ( this , -1 , _T("") , wxDefaultPosition ,
-                            wxDefaultSize , wxTE_MULTILINE|wxTE_READONLY ) ;
+    sep_desc = new wxTextCtrl ( this , -1 , _T("") , wxDefaultPosition , wxDefaultSize , wxTE_MULTILINE|wxTE_READONLY ) ;
     sep_desc->SetBackgroundColour ( GetBackgroundColour() ) ;
     sep_desc->SetFont ( *MYFONT ( 8 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
 
@@ -176,10 +175,14 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
     // Initialize protease list
     wxArrayString as ;
     for ( int a = 0 ; a < cutting_proteases.size() ; a++ )
+        {
         as.Add ( cutting_proteases[a]->name ) ;
+        }
     as.Sort () ;
     for ( int a = 0 ; a < as.GetCount() ; a++ )
+        {
         proteases->Append ( as[a] ) ;
+        }
 
     // Initialize feature list
     for ( int a = 0 ; a < v->items.size() ; a++ )
@@ -211,7 +214,9 @@ TProteolysis::~TProteolysis ()
     for ( int a = 0 ; a < pc_cache.size() ; a++ )
         {
         for ( int b = 0 ; b < pc_cache[a].size() ; b++ )
+            {
             delete pc_cache[a][b] ;
+            }
         }
     }
 
@@ -268,7 +273,9 @@ void TProteolysis::calc_spearation ()
     wxBeginBusyCursor () ;
     TProteaseArray prop ;
     for ( max_dep = 0 ; max_dep < sep_num_prot->GetSelection() + 1 ; max_dep++ )
+        {
         calc_spearation_sub ( max_dep + 1 , prop , tobe ) ;
+        }
     sort ( suggestions.begin() , suggestions.end() ) ;
     for ( int a = 0 ; a < 20 && a < suggestions.size() ; a++ ) // Show only the best 20
         {
