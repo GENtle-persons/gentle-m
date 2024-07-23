@@ -94,16 +94,16 @@ void TAlignment::OnFontsize ( wxCommandEvent& event )
 //    updateSequenceCanvas ( true ) ;
     }
 
-bool TAlignment::isDNA ()
+bool TAlignment::isDNA () const
     {
     wxString s ;
-    int a , b = 0 ;
-    for ( a = 0 ; a < lines.size() ; a++ )
+    for ( int a = 0 ; a < lines.size() ; a++ )
         {
         if ( !lines[a].isIdentity ) s += lines[a].s ;
         }
 
-    for ( a = 0 ; a < s.length() ; a++ )
+    int b = 0 ;
+    for ( int a = 0 ; a < s.length() ; a++ )
         {
         wxChar c = s.GetChar ( a ) ;
         if ( c == 'N' || c == ' ' || c == '-' ) continue ;
@@ -116,16 +116,15 @@ bool TAlignment::isDNA ()
     return true ;
     }
 
-bool TAlignment::isAA ()
+bool TAlignment::isAA () const
     {
     return !isDNA() ;
     }
 
-void TAlignment::readTabColors ( wxString filename )
+void TAlignment::readTabColors ( const wxString& filename )
     {
     // Now we read a color scheme in BioEdit format
-    wxString fn = filename ;
-    wxTextFile in ( fn ) ;
+    wxTextFile in ( filename ) ;
     in.Open ( *(myapp()->isoconv) ) ;
     int a ;
     wxColour *c = NULL ;
@@ -168,16 +167,27 @@ void TAlignment::readTabColors ( wxString filename )
     }
 
 
-wxColour TAlignment::findColors ( char c1 , char c2 , bool fg )
+/**
+ * Finds color from array of colors to use.
+ * \param c1 - position of color in colCur array to return
+ * \param c2 - ignored.
+ * \param fg - return white if not meant as foreground color
+ * \return colork
+ */
+wxColour TAlignment::findColors ( const unsigned char& c1 , const unsigned char& c2 , bool fg ) const
     {
     wxColour r ;
     if ( invs && c1 != '-' ) fg = !fg ;
     if ( fg )
         {
-        int cc = (unsigned char) c1 ;
-        if ( !colCur ) r = *wxBLACK ;
-        else if ( cc < 0 || cc >= 256 ) r = *wxBLACK ;
-        else r = colCur[cc] ;
+        if ( !colCur )
+            {
+            r = *wxBLACK ;
+            }
+        else
+            {
+            r = colCur[c1] ;
+            }
         }
     else r = *wxWHITE ;
 
@@ -292,7 +302,6 @@ void TAlignment::initme ()
 
 void* TAlignment::Entry()
     {
-    int a ;
     TAlignLine line ;
     wxString cwt = "clustalw.txt" ;
     wxString hd = myapp()->homedir.GetFullPath() ;
@@ -307,7 +316,7 @@ void* TAlignment::Entry()
     wxSetWorkingDirectory ( tmpdir ) ;
 
     wxFile out ( tx , wxFile::write ) ;
-    for ( a = 0 ; a < lines.size() ; a++ )
+    for ( int a = 0 ; a < lines.size() ; a++ )
         {
         out.Write ( wxString::Format ( ">%d\n" , a ) ) ;
         out.Write ( lines[a].v->getSequence() + "\n" ) ;
@@ -347,10 +356,10 @@ void* TAlignment::Entry()
     line.name = txt("t_identity") ;
     lines.push_back ( line ) ;
     bool first = true ;
-    for ( a = 0 ; a < lines.size() ; a++ ) lines[a].s = "" ;
+    for ( int a = 0 ; a < lines.size() ; a++ ) lines[a].s = "" ;
     while ( !in.Eof() )
         {
-        for ( a = 0 ; a < lines.size() ; a++ )
+        for ( int a = 0 ; a < lines.size() ; a++ )
             {
             if ( !first ) s = in.GetNextLine() ;
             else first = false ;
@@ -468,7 +477,7 @@ void TAlignment::recalcAlignments ()
     SetCursor ( *wxSTANDARD_CURSOR ) ;
     }
 
-void TAlignment::redoAlignments ( bool doRecalc )
+void TAlignment::redoAlignments ( const bool& doRecalc )
     {
     // Cleaning up
     CLEAR_DELETE ( sc->seq ) ;
@@ -573,11 +582,16 @@ void TAlignment::myDelete ( int line , int pos )
     else lines[line].s.erase ( pos-1 , 1 ) ;
     }
 
-void TAlignment::callMiddleMouseButton ( int id , int pos , wxString _mode )
+void TAlignment::callMiddleMouseButton ( const int id , int pos , wxString _mode )
     {
+    if (id < 0 )
+        {
+        wxPrintf("TAlignment::callMiddleMouseButton: id = %d < 0\n" , id ) ;
+        abort() ;
+        } 
     wxString mode = mmb->GetStringSelection () ;
     if ( !_mode.IsEmpty() ) mode = txt(_mode) ;
-    unsigned int a , line = id ;
+    unsigned int line = id ;
     if ( lines[line].s.GetChar(pos-1) != '-' && mode == txt("t_mmb_delete_gap") )
        {
        wxBell() ;
@@ -587,7 +601,7 @@ void TAlignment::callMiddleMouseButton ( int id , int pos , wxString _mode )
     wxArrayInt l2s ;
     l2s.Alloc ( lines.size() ) ;
     while ( l2s.GetCount() < lines.size() ) l2s.Add ( 0 ) ;
-    for ( a = 0 ; a < sc->seq.GetCount() ; a++ )
+    for ( int a = 0 ; a < sc->seq.GetCount() ; a++ )
         {
         if ( sc->seq[a]->whatsthis() == _T("ALIGN") )
             {
@@ -596,7 +610,7 @@ void TAlignment::callMiddleMouseButton ( int id , int pos , wxString _mode )
             }
         }
 
-    for ( a = 0 ; a < lines.size() ; a++ )
+    for ( int a = 0 ; a < lines.size() ; a++ )
         {
         if ( lines[a].isIdentity ) {}
         else if ( mode == txt("t_mmb_insert_gap") )
@@ -635,6 +649,7 @@ void TAlignment::callMiddleMouseButton ( int id , int pos , wxString _mode )
     while ( again )
         {
         int max = 0 ;
+        int a = 0 ;
         for ( a = 0 ; a < lines.size() && !lines[a].isIdentity ; a++ ) max++ ;
         for ( a = 0 ; a < lines.size() && !lines[a].isIdentity && lines[a].s[lines[a].s.length()-1] == '-' ; a++ ) ;
         if ( a == max )
@@ -763,17 +778,35 @@ void TAlignment::prealigned ( wxArrayString &vs , wxArrayChildBase &vc )
 
 // HOMEMADE ALIGNMENT ALGORITHMS
 
-int TAlignment::NeedlemanWunsch ( wxString &s1 , wxString &s2 )
+/**
+ * Implements global alignment of DNA sequences
+ * 
+ * The sequences are passed as arguments and are returned in a mutually aigned way.
+ *
+ * \param[in,out] s1 First sequence to be aligned
+ * \param[in,out] s2 Second sequence to be aligned
+ * \return alignment score
+ */
+int TAlignment::NeedlemanWunsch ( wxString& s1 , wxString& s2 )
     {
     return MatrixAlignment ( s1 , s2 , false ) ;
     }
 
+/**
+ * Implements local alignment of DNA sequences
+ * 
+ * The sequences are passed as arguments and are returned in a mutually aigned way.
+ *
+ * \param[in,out] s1 First sequence to be aligned
+ * \param[in,out] s2 Second sequence to be aligned
+ * \return alignment score
+ */
 int TAlignment::SmithWaterman ( wxString &s1 , wxString &s2 )
     {
     return MatrixAlignment ( s1 , s2 , true ) ;
     }
 
-int TAlignment::MatrixAlignment ( wxString &_s1 , wxString &_s2 , bool local )
+int TAlignment::MatrixAlignment ( wxString &_s1 , wxString &_s2 , const bool local ) const
     {
     wxString s1 = _s1 ;
     wxString s2 = _s2 ;
@@ -791,23 +824,26 @@ int TAlignment::MatrixAlignment ( wxString &_s1 , wxString &_s2 , bool local )
     while ( back.size() < M+1 ) back.push_back ( blank_b ) ;
 
     // Initializing pseudo-matrix (simulated by two altering lines)
-    int *matrix0 , *matrix1 , *matrix2 ;
+    int *matrix0 , *matrix1 ;
     matrix0 = new int[N+1] ;
     matrix1 = new int[N+1] ;
-    for ( a = 0 ; a < N+1 ; a++ ) matrix1[a] = 0 ;
+    for ( int a = 0 ; a < N+1 ; a++ )
+        {
+        matrix0[a] = 0 ;
+        matrix1[a] = 0 ;
+        }
 
     // Filling
-    int i , j ;
     int max = -999999 ;
     wxArrayInt vi , vj ;
     int mi = M , mj = N ;
-    for ( i = 0 ; i < M ; i++ )
+    for ( int i = 0 ; i < M ; i++ )
         {
-        matrix2 = matrix0 ;
+        int *matrix2 = matrix0 ;
         matrix0 = matrix1 ;
         matrix1 = matrix2 ;
         *matrix1 = 0 ;
-        for ( j = 0 ; j < N ; j++ )
+        for ( int j = 0 ; j < N ; j++ )
            {
            int x = i+1 ;
            int y = j+1 ;
@@ -869,15 +905,19 @@ int TAlignment::MatrixAlignment ( wxString &_s1 , wxString &_s2 , bool local )
         }
 
     MatrixBacktrack ( back , s1 , s2 , t1 , t2 , mi , mj ) ;
-    wxString k1 , k2 ;
+
     // The beginning
     char gap0 = gap.GetChar(0) ;
     for ( a = b = 0 ; a < t1.size() ; a++ )
+        {
         if ( t1.GetChar(a) != gap0 ) b++ ;
-    k1 = s1.substr ( 0 , mi - b ) ;
+        }
+    wxString k1 = s1.substr ( 0 , mi - b ) ;
     for ( a = b = 0 ; a < t2.size() ; a++ )
+        {
         if ( t2.GetChar(a) != gap0 ) b++ ;
-    k2 = s2.substr ( 0 , mj - b ) ;
+        }
+    wxString k2 = s2.substr ( 0 , mj - b ) ;
     while ( k1.length() < k2.length() ) k1 = "-" + k1 ;
     while ( k2.length() < k1.length() ) k2 = "-" + k2 ;
     t1 = k1 + t1 ;
@@ -893,43 +933,62 @@ int TAlignment::MatrixAlignment ( wxString &_s1 , wxString &_s2 , bool local )
 
     _s1 = t1 ;
     _s2 = t2 ;
+
+    delete [] matrix0 ;
+    delete [] matrix1 ;
+
     return max ;
     }
 
-void TAlignment::MatrixBacktrack ( vector <wxArrayInt> &back ,
-                                    wxString s1 , wxString s2 ,
-                                    wxString &t1 , wxString &t2 ,
-                                    int i , int j )
+/**
+ * Backtracking along "shortest" path in evaluation matrix.
+ *
+ * \param[in] back
+ * \param[in] s1
+ * \param[in] s2
+ * \param[out] t1 
+ * \param[out] t2 
+ */
+void TAlignment::MatrixBacktrack ( const vector <wxArrayInt> &back ,
+                                   const wxString& s1 , const wxString& s2 ,
+                                   wxString& t1 , wxString& t2 ,
+                                   int i , int j ) const
     {
     t1 = "" ;
     t2 = "" ;
     while ( i > 0 || j > 0 )
         {
         if ( (back[i][j]&BACK_LU) == BACK_LU ) // upper left
-           {
-           t1 = s1.GetChar(--i) + t1 ;
-           t2 = s2.GetChar(--j) + t2 ;
-           }
+            {
+            t1 = s1.GetChar(--i) + t1 ;
+            t2 = s2.GetChar(--j) + t2 ;
+            }
         else if ( (back[i][j]&BACK_LEFT) > 0 ) // left
-           {
-           t1 = s1.GetChar(--i) + t1 ;
-           t2 = gap + t2 ;
-           }
+            {
+            t1 = s1.GetChar(--i) + t1 ;
+            t2 = gap + t2 ;
+            }
         else if ( ( back[i][j]&BACK_UP ) > 0 ) // up
-           {
-           t1 = gap + t1 ;
-           t2 = s2.GetChar(--j) + t2 ;
-           }
-        else break ;
+            {
+            t1 = gap + t1 ;
+            t2 = s2.GetChar(--j) + t2 ;
+            }
+        else
+            {
+            break ;
+            }
         }
     }
 
 
-void TAlignment::invokeOriginal ( int id , int pos )
+void TAlignment::invokeOriginal ( const int id , const int pos ) const
     {
-    ChildBase *c = NULL ;
-    c = lines[id].FindOrigin() ;
-    if ( !c ) return ;
+    ChildBase* c = lines[id].FindOrigin() ;
+    if ( !c )
+        {
+        wxPrintf( "TAlignment::invokeOriginal: !c\n" ) ;
+        return ;
+        }
 
     myapp()->frame->mainTree->SelectItem ( c->inMainTree ) ;
     if ( c->def == _T("dna") )
@@ -952,7 +1011,7 @@ void TAlignment::invokeOriginal ( int id , int pos )
         }
     }
 
-void TAlignment::fixMenus ( int i )
+void TAlignment::fixMenus ( const int i )
     {
     wxMenuBar *mb = GetMenuBar () ;
     mb->FindItem(ALIGN_BOLD)->Check ( bold ) ;
@@ -1087,11 +1146,11 @@ void TAlignment::OnHorizontal ( wxCommandEvent& event )
     sc->SilentRefresh() ;
     }
 
-void TAlignment::MoveUpDown ( int what , int where )
+void TAlignment::MoveUpDown ( const int _what , const int where )
     {
-    while ( what != where )
+    int a = 1 ;
+    for ( int what = _what ; what != where ; what += a )
         {
-        int a = 1 ;
         if ( what > where ) a = -1 ;
         TAlignLine dummy = lines[what] ;
         lines[what] = lines[what+a] ;
@@ -1149,11 +1208,10 @@ void TAlignment::OnFileSave ( wxCommandEvent &ev )
     dbd.ShowModal () ;
     }
 
-void TAlignment::doExport ( wxString filename , int filter )
+void TAlignment::doExport ( const wxString& filename , const int filter ) const
     {
     wxFile out ( filename , wxFile::write ) ;
 
-    int a , b ;
     if ( filter == 0 ) // GenBank
         {
         TGenBank gb ;
@@ -1162,7 +1220,7 @@ void TAlignment::doExport ( wxString filename , int filter )
         for ( unsigned int a = 0 ; a < ex.GetCount() ; a++ )
             out.Write ( ex[a] + "\n" ) ;
 */
-        for ( a = 0 ; a < lines.size() ; a++ )
+        for ( int a = 0 ; a < lines.size() ; a++ )
             {
             if ( !lines[a].v ) continue ;
             wxArrayString ex ;
@@ -1170,17 +1228,18 @@ void TAlignment::doExport ( wxString filename , int filter )
             tmpvec.setFromVector ( *lines[a].v ) ;
             tmpvec.setSequence ( lines[a].s ) ;
             gb.doExport ( &tmpvec , ex ) ;
-            for ( b = 0 ; b < ex.GetCount() ; b++ )
+            for ( int b = 0 ; b < ex.GetCount() ; b++ )
                 out.Write ( ex[b] + "\n" ) ;
             }
 
         }
     else if ( filter == 1 ) // Plain text
         {
-        for ( a = b = 0 ; a < lines.size() ; a++ )
+        int b ;
+        for ( int a = 0 ; a < lines.size() ; a++ )
             if ( lines[a].name.length() > b )
                  b = lines[a].name.length() ;
-        for ( a = 0 ; a < lines.size() ; a++ )
+        for ( int a = 0 ; a < lines.size() ; a++ )
             {
             wxString name = lines[a].name ;
             name.Pad ( b - name.length() , ' ' , false ) ;
@@ -1192,14 +1251,13 @@ void TAlignment::doExport ( wxString filename , int filter )
         }
     else if ( filter == 2 ) // CSV
         {
-        int offset ;
         int inc = wxGetNumberFromUser ( txt("t_number_csv_columns") , "" , "" , 100 , 10 , 200 ) ;
-        for ( offset = 0 ; offset < lines[0].s.length() ; offset += inc )
+        for ( int offset = 0 ; offset < lines[0].s.length() ; offset += inc )
             {
-            for ( a = 0 ; a < lines.size() ; a++ )
+            for ( int a = 0 ; a < lines.size() ; a++ )
                 {
                 out.Write ( "\"" + lines[a].name + "\"" ) ;
-                for ( b = 0 ; b < inc && b + offset < lines[a].s.length() ; b++ )
+                for ( int b = 0 ; b < inc && b + offset < lines[a].s.length() ; b++ )
                     {
                     out.Write ( ";" ) ;
                     out.Write ( "\"" + wxString ( lines[a].s.GetChar ( b+offset ) ) + "\"" ) ;
@@ -1211,7 +1269,7 @@ void TAlignment::doExport ( wxString filename , int filter )
         }
     else if ( filter == 3 || filter == 4 ) // FASTA
         {
-        for ( a = 0 ; a < lines.size() ; a++ )
+        for ( int a = 0 ; a < lines.size() ; a++ )
             {
             if ( !lines[a].v ) continue ;
             wxString name = lines[a].name.Upper() ;
@@ -1232,12 +1290,12 @@ void TAlignment::doExport ( wxString filename , int filter )
     else if ( filter == 5 ) // MSF
         {
         int namelimit = 50 ;
-        int a , firstseq ;
+        int firstseq ;
         for ( firstseq = 0 ; firstseq < lines.size() && !lines[firstseq].v ; firstseq++ ) ;
         int maxlen = lines[firstseq].s.length() ;
         int type = lines[firstseq].v->getType() == TYPE_AMINO_ACIDS ? 'P' : 'N' ;
         int maxname = 0 ;
-        for ( a = 0 ; a < lines.size() ; a++ )
+        for ( int a = 0 ; a < lines.size() ; a++ )
             {
             if ( !lines[a].v ) continue ;
             maxname = lines[a].name.length() > maxname ? lines[a].name.length() : maxname ;
@@ -1245,7 +1303,7 @@ void TAlignment::doExport ( wxString filename , int filter )
         if ( maxname > namelimit ) maxname = namelimit ;
 
         out.Write ( wxString::Format ( _T("MSF:%d  Type:%c Check:0 ..\n\n") , maxlen , type ) ) ;
-        for ( a = 0 ; a < lines.size() ; a++ )
+        for ( int a = 0 ; a < lines.size() ; a++ )
             {
             if ( !lines[a].v ) continue ;
             wxString name = lines[a].name ;
@@ -1261,7 +1319,7 @@ void TAlignment::doExport ( wxString filename , int filter )
         int perline = ( 80 - maxname - 1 ) / 11 ;
         for ( int pos = 1 ; pos <= maxlen ; pos += perline * 10 )
             {
-            for ( a = 0 ; a < lines.size() ; a++ )
+            for ( int a = 0 ; a < lines.size() ; a++ )
                 {
                 if ( !lines[a].v ) continue ;
                 wxString x = lines[a].name ;
@@ -1300,20 +1358,20 @@ wxString TAlignment::getExportFilters ()
     }
 
 
-void TAlignment::fromVector ( TVector *nv )
+void TAlignment::fromVector ( const TVector * const nv )
     {
     TGenBank gb ;
-    vec = nv ;
-    gb.paste ( vec->getSequence() ) ;
-    wxString vdesc = vec->getDescription() ;
+    name = nv->getName() ;
+    database = nv->getDatabase() ;
+    gb.paste ( nv->getSequence() ) ;
+    wxString vdesc = nv->getDescription() ;
     wxArrayString vs ;
     explode ( "\n" , vdesc , vs ) ;
     int nol = atoi ( vs[0].mb_str() ) ; // Number of lines
-    int n ;
     wxString broken ;
     TManageDatabaseDialog mdb ( this , _T("dummy") , ACTION_MODE_STARTUP ) ;
     lines.clear () ;
-    for ( n = 0 ; n < nol ; n++ )
+    for ( int n = 0 ; n < nol ; n++ )
         {
         wxString name = vs[1+n*3] ;
         wxString db = vs[2+n*3] ;
@@ -1351,8 +1409,6 @@ void TAlignment::fromVector ( TVector *nv )
         lines.push_back ( line ) ;
         }
 
-    name = vec->getName() ;
-    database = vec->getDatabase() ;
     vec = NULL ;
     generateConsensusSequence ( true ) ;
     if ( !broken.IsEmpty() )
@@ -1363,7 +1419,7 @@ void TAlignment::fromVector ( TVector *nv )
 
     // Read markup XML
     int l = 0 ;
-    for ( n = nol*3+2 ; n < vs.size() ; n++ )
+    for ( int n = nol*3+2 ; n < vs.size() ; n++ )
         {
         wxString t = vs[n].Lower() ;
         if ( t.Left ( 8 ) != "<layout>" ) continue ;
@@ -1373,10 +1429,8 @@ void TAlignment::fromVector ( TVector *nv )
         if ( doc.Error() ) continue ;
         if ( !doc.FirstChild ( "layout" ) ) continue ;
 
-        TiXmlNode *n ;
         TiXmlHandle h ( doc.FirstChild ( "layout" ) ) ;
-        for ( n = h.FirstChild("scm").Node() ; n ;
-            n = n->NextSibling("scm") )
+        for ( TiXmlNode *n = h.FirstChild("scm").Node() ; n ; n = n->NextSibling("scm") )
             {
             SequenceCharMarkup scm ;
             getCharMarkup ( scm , l , lines[l].markup.size() , 0 ) ;
@@ -1407,14 +1461,13 @@ void TAlignment::RunPhylip ( int cmd )
 
     wxString data ;
 
-    unsigned int a , b ;
+    unsigned int b ;
     int seqlen = 0 ;
     wxArrayString vs ;
-    for ( a = b = 0 ; a < lines.size() ; a++ )
+    for ( int a = 0 ; a < lines.size() ; a++ )
         {
         if ( lines[a].isIdentity ) continue ;
-        wxString t ;
-        t = wxString::Format ( "%d " , ++b ) ;
+        wxString t = wxString::Format ( "%d " , ++b ) ;
         lines[a].phylip_id = t.Trim().Trim(false) ;
         while ( t.length() < 20 ) t += " " ;
         t = t.Mid ( 0 , 20 ) ;
@@ -1424,7 +1477,7 @@ void TAlignment::RunPhylip ( int cmd )
         }
 
     data += wxString::Format ( "%3d%7d\n" , (int) vs.GetCount() , seqlen ) ;
-    for ( a = 0 ; a < vs.GetCount() ; a++ )
+    for ( int a = 0 ; a < vs.GetCount() ; a++ )
         data += vs[a] + "\n" ;
 
     wxString out ;
@@ -1455,7 +1508,7 @@ void TAlignment::RunPhylip ( int cmd )
     tree->setModeDrawgram () ;
     }
 
-void TAlignment::getCharMarkup ( SequenceCharMarkup &scm , int vline , int pos , int vfirst )
+void TAlignment::getCharMarkup ( SequenceCharMarkup &scm , const int vline , const int pos , const int vfirst ) const
     {
     if ( vline < 0 || lines[vline].markup.size() <= pos || lines[vline].markup[pos].ignore )
        {
@@ -1466,13 +1519,7 @@ void TAlignment::getCharMarkup ( SequenceCharMarkup &scm , int vline , int pos ,
     }
 
 
-
-
-
-
-
-
-void TAlignment::editAppearance ( int from , int to , int firstline , int lastline )
+void TAlignment::editAppearance ( const int from , const int to , const int firstline , const int lastline )
     {
     AlignmentAppearanceDialog aad ( this , "!!" ) ;
     aad.setup ( from , to , firstline , lastline , this ) ;
@@ -1505,10 +1552,9 @@ void TAlignLine::ResetSequence ()
     else s = "" ;
     }
 
-ChildBase *TAlignLine::FindOrigin ()
+ChildBase *TAlignLine::FindOrigin () const
     {
-    unsigned int a ;
-    for ( a = 0 ; a < myapp()->frame->children.GetCount() ; a++ )
+    for ( size_t a = 0 ; a < myapp()->frame->children.GetCount() ; a++ )
         {
         if ( myapp()->frame->children[a]->vec == v )
            return myapp()->frame->children[a] ;

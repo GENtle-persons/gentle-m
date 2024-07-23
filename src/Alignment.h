@@ -29,7 +29,7 @@ class TAlignLine // pun intended
     TAlignLine () ; ///< Constructor
     ~TAlignLine () ; ///< Destructor
     void ResetSequence () ; ///< Resets the settings to default
-    ChildBase *FindOrigin () ; ///< Returns a pointer to the ChildBase structure containing the original sequence, or NULL
+    ChildBase *FindOrigin () const ; ///< Returns a pointer to the ChildBase structure containing the original sequence, or NULL
     void showFeatures () ; ///< Display the features of this sequence
     void hideFeatures () ; ///< Hide the features of this sequence
     TVector *getFeatures () ; ///< Returns a pointer to the TVector structure, so the features can be accessed
@@ -60,14 +60,14 @@ class TAlignment : public ChildBase,wxThreadHelper
 
     virtual int NeedlemanWunsch ( wxString &s1 , wxString &s2 )  ; ///< Needleman-Wunsch-align two sequences
     virtual int SmithWaterman ( wxString &s1 , wxString &s2 )  ; ///< Smith-Waterman-align two sequences
-    virtual int MatrixAlignment ( wxString &_s1 , wxString &_s2 , bool local ) ; ///< Part of NW/SW alignment algorithm
-    virtual void MatrixBacktrack ( vector <wxArrayInt> &back ,
-                                   wxString s1 , wxString s2 , wxString &t1 , wxString &t2 ,
-                                   int i , int j ) ; ///< Part of NW/SW alignment algorithm
+    virtual int MatrixAlignment ( wxString& _s1 , wxString& _s2 , const bool local ) const ; ///< Part of NW/SW alignment algorithm
+    virtual void MatrixBacktrack ( const vector <wxArrayInt> &back ,
+                                   const wxString& s1 , const wxString& s2 , wxString& t1 , wxString& t2 ,
+                                   int i , int j ) const ; ///< Part of NW/SW alignment algorithm
 
-    virtual void redoAlignments ( bool doRecalc = true ) ; ///< Repaint and (maybe) recalculate the alignment
+    virtual void redoAlignments ( const bool& doRecalc = true ) ; ///< Repaint and (maybe) recalculate the alignment
     virtual void recalcAlignments () ; ///< Recalculate the alignment
-    virtual wxColour findColors ( char c1 , char c2 , bool fg ) ; ///< Generate the appropriate foreground/background color, using current settings
+    virtual wxColour findColors ( const unsigned char& c1 , const unsigned char& c2 , bool fg ) const ; ///< Generate the appropriate foreground/background color, using current settings
 
     virtual void OnSettings ( wxCommandEvent &ev ) ; ///< Settings button event handler
     virtual void OnMarkAll ( wxCommandEvent &ev ) ; ///< "Mark all" event handler
@@ -89,18 +89,18 @@ class TAlignment : public ChildBase,wxThreadHelper
     virtual void OnCopy ( wxCommandEvent& event ) ; ///< Copy event handler
     virtual void OnFontsize(wxCommandEvent& event); ///< Fontsize event handler
 
-    virtual void invokeOriginal ( int id , int pos ) ; ///< Open the original sequence at the given position
+    virtual void invokeOriginal ( const int id , const int pos ) const ; ///< Open the original sequence at the given position
     virtual void callMiddleMouseButton ( int id , int pos , wxString _mode = _T("") ) ; ///< Perform the middle mouse button function (the gap orgy)
     virtual void MoveUpDown ( int what , int where ) ; ///< Move a line into the given direction
     virtual void prealigned ( wxArrayString &vs , wxArrayChildBase &vc ) ; ///< Initialize with a prealigned list of sequences (for example, from a multi-sequence genbank file)
-    virtual void fromVector ( TVector *nv ) ; ///< Initialize from a single vector (???)
-    virtual bool isDNA () ; ///< Tries to determine wether this is a DNA or an amino acid alignment
-    virtual bool isAA () ; ///< Tries to determine wether this is a DNA or an amino acid alignment
+    virtual void fromVector ( const TVector * const nv ) ; ///< Initialize from a single vector (???)
+    virtual bool isDNA () const ; ///< Tries to determine wether this is a DNA or an amino acid alignment
+    virtual bool isAA () const ; ///< Tries to determine wether this is a DNA or an amino acid alignment
 
     virtual void RunPhylip ( int cmd ) ; ///< Takes Phylip commands (invoked from SequenceCanvas)
     virtual bool isThreadRunning() { return threadRunning ; } ///< Is a thread (alignment calculation) currently running?
-    void getCharMarkup ( SequenceCharMarkup &scm , int vline , int pos , int vfirst ) ;
-    void editAppearance ( int from , int to , int firstline , int lastline ) ;
+    void getCharMarkup ( SequenceCharMarkup &scm , const int vline , const int pos , const int vfirst ) const ;
+    void editAppearance ( const int from , const int to , const int firstline , const int lastline ) ;
 
     // Variables
     SequenceCanvas *sc ; ///< Pointer to the sequence canvas
@@ -121,12 +121,12 @@ class TAlignment : public ChildBase,wxThreadHelper
     virtual void myDelete ( int line , int pos ) ;
     virtual void updateSequence () ;
     virtual void generateConsensusSequence ( bool addit = true ) ;
-    virtual void fixMenus ( int i ) ;
+    virtual void fixMenus ( const int i ) ;
 
     protected :
     virtual wxString getExportFilters () ;
-    virtual void doExport ( wxString filename , int filter ) ; ///< Export data, depending on filename and export type
-    virtual void readTabColors ( wxString filename ) ;
+    virtual void doExport ( const wxString& filename , const int filter ) const ; ///< Export data, depending on filename and export type
+    virtual void readTabColors ( const wxString& filename ) ;
 
     DECLARE_EVENT_TABLE()
     } ;

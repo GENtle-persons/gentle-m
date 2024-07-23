@@ -439,9 +439,9 @@ void SeqABI::show ( wxDC& dc )
 
     }
 
-void SeqABI::drawTopLine ( wxDC &dc , int y )
+void SeqABI::drawTopLine ( wxDC &dc , const int& y ) const
     {
-    wxPen p = dc.GetPen () ;
+    const wxPen p = dc.GetPen () ;
     dc.SetPen(*wxLIGHT_GREY_PEN);
     dc.DrawLine ( 4 , y , minx + maxx , y ) ;
     dc.SetPen(p);
@@ -475,7 +475,7 @@ void SeqABI::initFromFile ( const wxString& filename )
     fontColor.Set ( 0 , 0 , 0 ) ;
     }
 
-wxColor SeqABI::getBaseColor ( const char b )
+wxColor SeqABI::getBaseColor ( const char& b ) const
     {
     for ( int a = 0 ; a < 4 ; a++ )
         {
