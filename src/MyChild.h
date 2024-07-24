@@ -37,7 +37,7 @@ class MySplitter : public wxSplitterWindow
 class MyChild: public ChildBase
 {
 public:
-    MyChild(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style); ///< Constructor
+    MyChild(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long& style); ///< Constructor
     ~MyChild(); ///< Destructor
 
     virtual void OnAA_none(wxCommandEvent& event); ///< "Display no amino acids" event handler
@@ -95,7 +95,7 @@ public:
     virtual void OnFontsize(wxCommandEvent& event); ///< Fontsize event handler
     virtual void OnDummy(wxCommandEvent& WXUNUSED(event)){}; ///< Dummy event handler (to catch weird messages)
 
-    virtual void initme () ; ///< Initializes the module
+    virtual void initme ( TVector * const newVector = (TVector *) NULL ) ; ///< Initializes the module
     virtual void initPanels () ; ///< Initializes the panels
     virtual wxString getName () const ; ///< Returns the module name
     virtual void EnforceRefesh () ; ///< Force display refresh
@@ -103,7 +103,7 @@ public:
     virtual wxString doExtractAA ( const bool& coding = true ) ; ///< Extract amino acid sequence from DNA
     virtual bool runRestriction ( const wxString& s ) ; ///< Run the restriction
     virtual void addFragmentsToGel ( const wxString& title , wxArrayInt &cuts , TVirtualGel * const gel , const TRestrictionEditor& ed , const bool partial ) const ; ///< Add restriction fragments to gel
-    virtual MyChild *doTransformSequence ( const bool inNewVector , const bool complement , const bool invers ) ; ///< Transform the sequence
+    virtual MyChild *doTransformSequence ( const bool inNewVector , const bool complement , const bool invert ) ; ///< Transform the sequence
     virtual bool HasUndoData () const ;
 
     TVectorTree *treeBox ; ///< Pointer to the sequence properties tree structure

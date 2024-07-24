@@ -80,7 +80,7 @@ void MyChild::OnFileSave(wxCommandEvent& WXUNUSED(event) )
 
 MyChild::MyChild(wxWindow *parent, const wxString& title,
                  const wxPoint& pos, const wxSize& size,
-                 const long style)
+                 const long& style)
        : ChildBase(parent, title)
 {
     cPlasmid = (PlasmidCanvas *) NULL;
@@ -479,14 +479,26 @@ void MyChild::initToolbar ()
 #endif
     }
 
-void MyChild::initme ()
+/**
+ * \brief Prepares new subwindow to handle a new vector.
+ *
+ * \param[in] newVector - may be NULL, in which case a new empty TVector is created.
+ */
+void MyChild::initme (TVector * const newVector )
     {
     initMenus () ;
     initToolbar () ;
 
-    // Vector
-    vec = new TVector ;
-    vec->init () ;
+    if ( newVector )
+        {
+        vec = newVector ;
+        }
+    else
+        {
+        // Vector
+        vec = new TVector ;
+        vec->init () ;
+        }
 
     // Canvas
     int width, height;
