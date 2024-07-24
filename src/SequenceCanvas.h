@@ -394,8 +394,8 @@ class SeqABI : public SeqDNA
     virtual void show_sd ( wxDC& dc ) ; ///< Show, for data in sd
     virtual void initFromFile ( const wxString& filename ) ; ///< Setup sequence from ABI file
     virtual wxString whatsthis () const { return _T("ABI") ; } ///< Returns the linetype
-    virtual void drawTopLine ( wxDC &dc , int y ) ; ///< Some layout thingy
-    virtual wxColor getBaseColor ( char b ) ; ///< Returns the color to draw the base in
+    virtual void drawTopLine ( wxDC &dc , const int& y ) const ; ///< Some layout thingy
+    virtual wxColor getBaseColor ( const char& b ) const ; ///< Returns the color to draw the base in
     virtual void setInvCompl ( bool x ) ; ///< Display inverse/complement sequence
     virtual int arrange_direct ( const int n ) { return arrange ( n ) ; } ///< Arrange quickly (bypassing SeqPos)
     virtual void show_direct ( wxDC& dc ) { show ( dc ) ; } ; ///< Show quickly
