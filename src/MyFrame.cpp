@@ -5,9 +5,10 @@
 #include <wx/filedlg.h> // wxFileDialog
 #include "TEliteLaChromLogDialog.h"
 
-// ---------------------------------------------------------------------------
-// MyFrame
-// ---------------------------------------------------------------------------
+/**
+ * \file MyFrame.cpp
+ * \brief Implements wxWidgets basic event handling.
+ */
 
 BEGIN_EVENT_TABLE(MyFrame, MyFrameType)
 EVT_MENU(MDI_ABOUT, MyFrame::OnAbout)
@@ -533,7 +534,7 @@ void MyFrame::initme ()
     m_leftWindow2->SetFocus () ;
     }
 
-wxBitmap MyFrame::to_grey ( const wxBitmap &bmp1 ) const
+wxBitmap MyFrame::to_grey ( const wxBitmap& bmp1 ) const
     {
      /*#ifndef __WXMSW__
      return wxNullBitmap ;
@@ -1176,9 +1177,7 @@ MyChild* MyFrame::newFromVector ( TVector * const nv , const int type )
     subframe->SetIcon(wxIcon( mondrian_xpm ));
 #endif
 
-    subframe->initme() ;
-    delete subframe->vec ;
-    subframe->vec = nv ;
+    subframe->initme( nv ) ;
     subframe->vec->setWindow ( subframe ) ;
 
     subframe->initPanels() ;
