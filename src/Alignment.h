@@ -117,10 +117,10 @@ class TAlignment : public ChildBase,wxThreadHelper
     bool keepIdentity ;
     wxChoice *fontsize ;
 
-    virtual void myInsert ( int line , int pos , char what ) ;
-    virtual void myDelete ( int line , int pos ) ;
+    virtual void myInsert ( const int line , const int pos , const char what ) ;
+    virtual void myDelete ( const int line , const int pos ) ;
     virtual void updateSequence () ;
-    virtual void generateConsensusSequence ( bool addit = true ) ;
+    virtual void generateConsensusSequence ( const bool addit = true ) ;
     virtual void fixMenus ( const int i ) ;
 
     protected :
