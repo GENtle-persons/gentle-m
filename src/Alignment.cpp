@@ -72,7 +72,7 @@ TAlignment::TAlignment(wxWindow *parent, const wxString& title)
     gap_penalty = -2 ; // Gap penalty
     matrix = _T("BLOSUM") ;
     gap = "-" ;
-    algorithm = ALG_CW ;
+    algorithm = ALG_SW ;
     vec = NULL ;
     aaa = NULL ;
     colCur = NULL ;
@@ -471,7 +471,9 @@ void TAlignment::recalcAlignments ()
     for ( int a = 0 ; a < 1 ; a++ )
         {
         if ( !lines[a].isIdentity && lines[a].v->items.size() > 0 )
-           lines[a].showFeatures () ;
+            {
+            lines[a].showFeatures () ;
+            }
         }
 
     SetCursor ( *wxSTANDARD_CURSOR ) ;
@@ -500,7 +502,9 @@ void TAlignment::redoAlignments ( const bool& doRecalc )
         SeqAlign *d = new SeqAlign ( sc ) ;
         sc->seq.Add ( d ) ;
         if ( lines[a].isIdentity )
+            {
             d->takesMouseActions = false ;
+            }
         d->id = a ;
         d->s = lines[a].s ;
         d->myname = lines[a].name ;
@@ -515,7 +519,9 @@ void TAlignment::redoAlignments ( const bool& doRecalc )
             for ( int a = 0 ; a < lines[g].s.length() ; a++ )
                 {
                 if ( lines[g].s.GetChar(a) == '-' )
-                   lines[g].getFeatures()->insert_char ( '-' , a+1 , false ) ;
+                    {
+                    lines[g].getFeatures()->insert_char ( '-' , a+1 , false ) ;
+                    }
                 }
             }
         }
@@ -523,7 +529,7 @@ void TAlignment::redoAlignments ( const bool& doRecalc )
     updateSequence () ;
     }
 
-void TAlignment::generateConsensusSequence ( bool addit )
+void TAlignment::generateConsensusSequence ( const bool addit )
     {
     // The stars'n'stripes sequence ;-)
     TAlignLine line ;
@@ -562,7 +568,7 @@ void TAlignment::generateConsensusSequence ( bool addit )
         }
     }
 
-void TAlignment::myInsert ( int line , int pos , char what )
+void TAlignment::myInsert ( const int line , const int pos , const char what )
     {
     if ( lines[line].hasFeatures() )
         {
@@ -572,7 +578,7 @@ void TAlignment::myInsert ( int line , int pos , char what )
     else lines[line].s.insert ( pos-1 , wxString ( (wxChar) what ) ) ;
     }
 
-void TAlignment::myDelete ( int line , int pos )
+void TAlignment::myDelete ( const int line , const int pos )
     {
     if ( lines[line].hasFeatures() )
         {
