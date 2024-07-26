@@ -54,10 +54,10 @@ class TClone
     public :
     TClone () ; ///< Constructor
     ~TClone(); ///< Destructor
-    void remap ( TVector *v ) const ; ///< Convert parsed information to TVector
+    void remap ( TVector * const v ) const ; ///< Convert parsed information to TVector
     void load ( const wxString& s ) ; ///< Load CLONE format file
     void save ( const wxString& s = _T("") ) ; ///< Save CLONE format file (currently deactivated)
-    void loadEnzymeList ( TStorage *st , const wxString& filename ) ; ///< Load the CLONE format enzyme list
+    void loadEnzymeList ( TStorage * const st , const wxString& filename ) ; ///< Load the CLONE format enzyme list
     TStorage *LS ; ///< Pointer to the local database
     bool success ; ///< Errors during parsing?
 

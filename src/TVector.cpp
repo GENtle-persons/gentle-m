@@ -2364,8 +2364,7 @@ void TVectorItem::getArrangedAA ( const TVector * const vectorToTranslate , wxSt
         dna2aa_item.clear() ;
         dna2aa = &dna2aa_item ; // not const
         }
-
-    translate ( v , aa , *dna2aa ) ; //, from , to , direction ) ;
+    translate ( v , aa , *dna2aa ) ;
 
     //wxPrintf( "D: TVectorItem::getArrangedAA: aa='%s'\n" , aa ) ;
 

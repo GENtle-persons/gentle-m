@@ -1639,7 +1639,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
             }
         else
             {
-            wxPrintf( "I: Prevented SequenceCanvase to release mouse that was not captured.\n" ) ;
+            wxPrintf( "I: Prevented SequenceCanvas to release mouse that was not captured.\n" ) ;
             }
         lastpos = -1 ;
         }

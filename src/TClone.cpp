@@ -19,7 +19,7 @@ int TClone_Gene::cmp ( const wxString &s1 , const wxString &s2 ) const
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-void TClone::loadEnzymeList ( TStorage *st , const wxString& filename )
+void TClone::loadEnzymeList ( TStorage * const st , const wxString& filename )
     {
     wxFile f ( filename , wxFile::read ) ;
     long l = f.Length() ;
@@ -65,7 +65,7 @@ void TClone::loadEnzymeList ( TStorage *st , const wxString& filename )
        }
     }
 
-void TClone::remap ( TVector *v ) const
+void TClone::remap ( TVector * const v ) const
     {
     v->updateDisplay() ;
 
@@ -86,7 +86,10 @@ void TClone::remap ( TVector *v ) const
         if ( genes[a].getCCW() ) { long gg = gf ; gf = gt ; gt = gg ; }
 
         wxString sname = genes[a].shortname ;
-        if ( sname.IsEmpty() ) sname = genes[a].fullname ;
+        if ( sname.IsEmpty() )
+            {
+            sname = genes[a].fullname ;
+            }
         TVectorItem vi ( sname ,
                          genes[a].fullname ,
                          gf ,
@@ -164,6 +167,10 @@ void TClone::separateNames ( wxString &s1 , wxString &s2 ) const
         *c = 0 ;
         s1 = wxString ( c+1 , *wxConvCurrent ) ;
         s2 = wxString ( t , *wxConvCurrent ) ;
+        }
+    else
+        {
+        wxPrintf( "W: TClone::separateNames: Not performing actual separation (s1='%s').\n" , s1 ) ;
         }
 
     delete t ;

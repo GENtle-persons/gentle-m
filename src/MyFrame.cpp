@@ -2338,11 +2338,10 @@ void MyFrame::BollocksMenu(wxCommandEvent& event)
     if ( !lastChild )
         {
         wxPrintf("MyFrame::BollocksMenu - return - !lastChild\n") ;
-    return ;
-    }
-    if ( event.GetId() == MDI_NEXT_WINDOW ||
-        event.GetId() == MDI_PREV_WINDOW )
-    {
+        return ;
+        }
+    if ( event.GetId() == MDI_NEXT_WINDOW || event.GetId() == MDI_PREV_WINDOW )
+        {
         int a = getChildIndex ( lastChild ) ;
         if ( event.GetId() == MDI_NEXT_WINDOW ) a++ ;
         else a-- ;
@@ -2356,12 +2355,12 @@ void MyFrame::BollocksMenu(wxCommandEvent& event)
             }
         wxPrintf("MyFrame::BollocksMenu - return - NEXT_WINDOW\n") ;
         return ;
-    }
+        }
     if ( lastChild->def != _T("dna") )
         {
         wxPrintf("MyFrame::BollocksMenu - return - dna != lastChild->def\n") ;
         return ;
-    }
+        }
     lastChild->ProcessEvent ( event ) ;
     }
 
