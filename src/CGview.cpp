@@ -132,7 +132,7 @@ void CGdialog::OnCharHook ( wxKeyEvent& event )
 
 //*********
 
-CGview::CGview ( TVector *_v )
+CGview::CGview ( TVector const *_v )
     {
     v = _v ;
     itemsShown = false ;
@@ -156,9 +156,8 @@ CGview::CGview ( TVector *_v )
 wxString CGview::getXML()
     {
     wxBeginBusyCursor() ;
-    wxString ret ;
     wxString bgcol = RGB2string ( backgroundColor ) ;
-    ret += _T("<?xml version='1.0' encoding='ISO-8859-1'?>\n") ;
+    wxString ret = _T("<?xml version='1.0' encoding='ISO-8859-1'?>\n") ;
     ret += wxString::Format ( _T("<cgview backgroundColor='%s' sequenceLength='%d' height='%d' width='%d'>\n\n") , //backboneRadius='%d'
 //                            radius ,
                               bgcol.c_str() , v->getSequenceLength() , height , width ) ;
@@ -304,7 +303,7 @@ wxString CGview::addXMLfeatureSlot ( int dir )
         ret = _T("") ;
         for ( int b = 0 ; b < vvi[a].size() ; b++ )
             {
-            TVectorItem *i = &v->items[vvi[a][b]] ;
+            const TVectorItem *i = &v->items[vvi[a][b]] ;
             if ( i->getDirection() != dir ) continue ; // Wrong direction
             wxString label = i->name ;
             if ( label.IsEmpty() ) label = i->desc ;

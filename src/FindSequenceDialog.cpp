@@ -186,6 +186,7 @@ SequenceCanvas *FindSequenceDialog::getMarkSequence ( wxString &mark ) const
         }
     return canvas ;
     }
+
 void FindSequenceDialog::doAction ( const bool doubleclick )
     {
     int idx = lb->GetSelection () ;
@@ -233,6 +234,7 @@ void FindSequenceDialog::doAction ( const bool doubleclick )
             }
         }
     }
+
 void FindSequenceDialog::OnCharHook(wxKeyEvent& event)
     {
     int k = event.GetKeyCode () ;
@@ -241,17 +243,17 @@ void FindSequenceDialog::OnCharHook(wxKeyEvent& event)
     else if ( k == WXK_F1 ) myapp()->frame->OnHelp ( ev ) ;
     else event.Skip() ;
     }
+
 int FindSequenceDialog::subsearch ( const wxString &s , const wxRegEx &regex , int start, int& len ) const
     {
     int a;
-
-    if ((regex.Matches(s.Mid(start)))&&
-            (regex.GetMatch((size_t*)&a,(size_t*)&len)))
+    if (regex.Matches(s.Mid(start)) && regex.GetMatch((size_t*) &a, (size_t*)&len))
         {
         return start+a;
         }
     return -1;
     }
+
 void FindSequenceDialog::OnSearch ( wxCommandEvent &ev )
     {
     status->SetLabel ( txt("t_searching") ) ;
@@ -261,35 +263,35 @@ void FindSequenceDialog::OnSearch ( wxCommandEvent &ev )
     lb->Clear () ;
     vi.Clear () ;
     if ( cb_sequence && cb_sequence->GetValue() )
-    {
+        {
         sequenceSearch();
         if ( c->def == _T("dna") || c->def == _T("ABIviewer") || c->def == _T("PrimerDesign") )
             sequenceSearch ( true );
-    }
+        }
     //if ( c->def == _T("dna") || c->def == _T("PrimerDesign") )
     if ( cb_translation && cb_translation->GetValue() ) aaSearch () ;
     if ( cb_items && cb_items->GetValue() ) itemSearch() ;
     if ( cb_enzymes && cb_enzymes->GetValue() ) restrictionSearch() ;
     if ( !vi.IsEmpty() )
-    {
+        {
         lb->SetSelection ( 0 ) ;
         OnLB ( ev ) ;
-    }
+        }
     // Status text
     if ( lb->GetCount() > FIND_MAX )
-    {
+        {
         status->SetLabel ( wxString::Format ( txt("t_too_many_search_results") , FIND_MAX ) ) ;
         do_highlight->Enable() ;
-    }
+        }
     else if ( lb->GetCount() == 0 )
-    {
+        {
         status->SetLabel ( txt("t_no_matches_found") ) ;
-    }
+        }
     else
-    {
+        {
         status->SetLabel ( wxString::Format ( txt("t_matches_found") , lb->GetCount() ) ) ;
         do_highlight->Enable() ;
-    }
+        }
     Thaw () ;
     wxEndBusyCursor() ;
     }
@@ -320,7 +322,7 @@ void FindSequenceDialog::aaSearch ()
 
 void FindSequenceDialog::aaSubSearch ( const wxString &s , int start , int dir , const wxString& rf )
     {
-    int a, len ;
+    int len ;
     wxChar codon[4] ;
     codon[3] = 0 ;
     wxString res ;
@@ -334,7 +336,7 @@ void FindSequenceDialog::aaSubSearch ( const wxString &s , int start , int dir ,
         {
         for ( start = -start ; start + 3 < s.length() ; start += 3 ) ;
         }
-    for ( a = start ; a + dir * 2 >= 0 && a + dir * 2 < s.length() ; a += dir * 3 )
+    for ( int a = start ; a + dir * 2 >= 0 && a + dir * 2 < s.length() ; a += dir * 3 )
         {
         codon[0] = s.GetChar ( a ) ;
         codon[1] = s.GetChar ( a + dir ) ;
@@ -345,13 +347,17 @@ void FindSequenceDialog::aaSubSearch ( const wxString &s , int start , int dir ,
         ai.Add ( a ) ;
         }
     for (int i=0;i<sizeof(AA_SUBS)/(2*sizeof(wxChar*));i++)
+        {
         sub.Replace(AA_SUBS[i][0],AA_SUBS[i][1]);
+        }
     wxLogNull noLog; // Supresses Message Box showing malformed regular expressions
     wxRegEx regex(sub);
     if (!regex.IsValid())
+        {
         return;
+        }
 
-    a = 0 ;
+    int a = 0 ;
     while ( (a = subsearch ( res , regex , a , len)) != -1 )
         {
         if ( lb->GetCount() > FIND_MAX ) return ;
@@ -369,17 +375,17 @@ void FindSequenceDialog::aaSubSearch ( const wxString &s , int start , int dir ,
         res.SetChar ( a , '_' ) ; // Invalidating
         a++;
         }
+
     }
 
 void FindSequenceDialog::itemSearch ()
     {
-    TVector *v = c->vec ;
+    const TVector * const v = c->vec ;
     wxString s = t->GetValue().Upper() ; // Using original input instead of filtered query
     for ( int a = 0 ; a < v->items.size() ; a++ )
         {
         if ( lb->GetCount() > FIND_MAX ) return ;
-        if ( v->items[a].name.Upper().Find(s) != -1 ||
-                v->items[a].desc.Upper().Find(s) != -1 )
+        if ( v->items[a].name.Upper().Find(s) != -1 || v->items[a].desc.Upper().Find(s) != -1 )
             {
             lb->Append ( wxString::Format ( _T("%s: %s (%d-%d)") ,
                                             txt("t_vec_item").c_str() ,
@@ -392,7 +398,7 @@ void FindSequenceDialog::itemSearch ()
     }
 void FindSequenceDialog::restrictionSearch ()
     {
-    TVector *v = c->vec ;
+    const TVector * const v = c->vec ;
     wxString s = getQuery() ;
     for ( int a = 0 ; a < v->rc.size() ; a++ )
         {
@@ -411,7 +417,7 @@ void FindSequenceDialog::restrictionSearch ()
 
 void FindSequenceDialog::sequenceSearch ( bool invers )
     {
-    int a, len ;
+    int len ;
     wxString sub = getQuery() ;
     if ( sub.IsEmpty() ) return ;
     // Preparing sequence
@@ -445,8 +451,9 @@ void FindSequenceDialog::sequenceSearch ( bool invers )
     wxRegEx regex(sub);
     if (!regex.IsValid())
         return;
+ 
     // Now we search...
-    a = 0 ;
+    int a = 0 ;
     while ( (a = subsearch ( s , sub , a, len )) > -1 )
         {
         if ( lb->GetCount() > FIND_MAX ) return ;
@@ -476,11 +483,11 @@ void FindSequenceDialog::OnTextChange ( wxCommandEvent &ev )
     if ( c->vec->getGenomeMode() ) return ;
     int ql = getQuery().length() ;
     if ( ql < 3 )
-    {
+        {
         lb->Clear () ;
         vi.Clear () ;
         return ;
-    }
+        }
     find_button->Disable () ;
     OnSearch ( ev ) ;
 #ifdef __WXMAC__

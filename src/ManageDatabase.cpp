@@ -1019,7 +1019,7 @@ bool TManageDatabaseDialog::do_load_DNA ( const wxString& name , const wxString&
         }
 
     // Sorting by size, largest first
-    wxPrintf("D: retrieved %u elements \n", v->items.size() ) ;
+    wxPrintf("D: retrieved %lu elements \n", v->items.size() ) ;
     if ( v->items.size() < 100 ) // Don't do that for genomes!
         {
         for ( int a = 1 ; a < v->items.size() ; a++ )

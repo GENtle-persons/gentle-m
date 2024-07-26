@@ -55,11 +55,11 @@ class ChildBase : public MyChildBase
     virtual wxToolBar *CreateToolBar ( const int i , const int j , const wxString& s ) ; ///< Generates the tool bar
     virtual void SetMenuBar ( wxMenuBar *menu_bar ) ; ///< Sets the menu bar for the window
     virtual wxMenuBar *GetMenuBar () ; ///< Returns a pointer to the menu bar
-    virtual wxToolBar *GetToolBar () ; ///< Returns a pointer to the tool bar
+    virtual wxToolBar *GetToolBar () const ; ///< Returns a pointer to the tool bar
     virtual void Activate () ; ///< Activates the module (in foreground etc.)
     virtual void SetIcon ( const wxIcon& icon ) ; ///< Sets the module icon (unused)
     virtual void SetMyMenuBar () ; ///< Sets the menu bar (used for mac version primarily)
-    virtual bool HasUndoData () ; ///< TRUE if undo button available and active (undo data present)
+    virtual bool HasUndoData () const ; ///< TRUE if undo button available and active (undo data present)
 
     bool allow_cut , allow_copy , allow_paste , allow_find , allow_save , allow_print , allow_undo ;
 
@@ -69,9 +69,9 @@ class ChildBase : public MyChildBase
     wxToolBar *toolbar ; ///< Pointer to the window too bar
 
     virtual wxString getExportFilters () const ;
-    virtual void doExport ( const wxString& filename , int filter ) ; ///< Export data, depending on filename and export type
-    virtual void exportVector ( TVector *vec , wxFile &out , int filter , const wxString& filename = _T("") ) ; ///< Exports a TVector
-    virtual void arrangedExport ( wxFile &out , const wxString& n , const wxString& s , int l ) ;
+    virtual void doExport ( const wxString& filename , const int filter ) const ; ///< Export data, depending on filename and export type
+    virtual void exportVector ( const TVector * const vec , wxFile &out , const int filter , const wxString& filename = _T("") ) const ; ///< Exports a TVector
+    virtual void arrangedExport ( wxFile &out , const wxString& n , const wxString& s , int l ) const ;
     virtual void updateToolbar () ; ///< Sets the tool bar
     } ;
 

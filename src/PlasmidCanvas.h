@@ -42,12 +42,12 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void invokeORFpopup ( const int item , const wxPoint& pt ) ; ///< Generates the open reading frame context menu
 
 
-    virtual void OnPrimerForward ( wxCommandEvent &ev ) ; ///< "Run PCR with primer forward" event handler
-    virtual void OnPrimerBackward ( wxCommandEvent &ev ) ; ///< "Run PCR with primer backwards" event handler
-    virtual void OnPrimerBoth ( wxCommandEvent &ev ) ; ///< "Run PCR with both primers" event handler
-    virtual void OnPrimerMutation ( wxCommandEvent &ev ) ; ///< "Run PCR with mutation primers" event handler
+    virtual void OnPrimerForward ( wxCommandEvent& ev ) ; ///< "Run PCR with primer forward" event handler
+    virtual void OnPrimerBackward ( wxCommandEvent& ev ) ; ///< "Run PCR with primer backwards" event handler
+    virtual void OnPrimerBoth ( wxCommandEvent& ev ) ; ///< "Run PCR with both primers" event handler
+    virtual void OnPrimerMutation ( wxCommandEvent& ev ) ; ///< "Run PCR with mutation primers" event handler
     virtual void OnPaint(wxPaintEvent& event) ; ///< Paint event handler
-    virtual void OnSaveImage ( wxCommandEvent &ev ) ; ///< "Save as image" event handler
+    virtual void OnSaveImage ( wxCommandEvent& ev ) ; ///< "Save as image" event handler
 
     virtual void OnStrandCopy35(wxCommandEvent& event); ///< "Copy 3'->5' strand" event handler
     virtual void OnStrandCopy53(wxCommandEvent& event); ///< "Copy 5'->3' strand" event handler
@@ -136,7 +136,7 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual bool intersects ( const wxRect &a , const wxRect &b ) const ; ///< Does the point lie within the rectangle?
     virtual bool pointinrect ( const int x , const int y , const wxRect &a ) const ; ///< Does the point lie within the rectangle?
     virtual bool isEnzymeVisible ( const wxString& s ) const ; ///< Is the enzyme visible (or was it set to "hidden")?
-    virtual void updateLinkedItems ( TVector *vec , int in ) ; ///< Update items that belong together (like exons)
+    virtual void updateLinkedItems ( TVector * const vec , const int in ) ; ///< Update items that belong together (like exons)
 
     // Misc internal methods
     virtual void SetMyToolTip ( const wxString& s , const int mode ) ; ///< Sets the tool tip

@@ -33,6 +33,9 @@ enum {
 #include "main.h"
 #include "TUndo.h"
 
+#include "main.h"
+#include "TUndo.h"
+
 /// This class manages amino acid properties; so 20 total. Used by the static part of TVector
 class TAAProp
 {

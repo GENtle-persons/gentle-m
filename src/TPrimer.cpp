@@ -30,11 +30,10 @@ float TPrimer::getGCcontents () const { return pgc ; }
 
 void TPrimer::getSequenceFromVector ( const TVector * const v , const bool from3 )
     {
-    int a ;
     sequence = _T("") ;
     bool invert = !upper ;
     if ( from3 ) invert = !invert ;
-    for ( a = from ; a <= to ; a++ )
+    for ( int a = from ; a <= to ; a++ )
         sequence += v->getNucleotide ( a-1 , invert ) ;
     }
 
@@ -113,8 +112,6 @@ float TPrimer::evaluateTm ( const double& conc_nm , const double& Na_mm ) /* not
     double R = 1.987 ; // Molar gas constant
     double y = 50.0 / 1000000000.0 ;
 */
-    double ret ;
-
     wxString s = getAnnealingSequence() ;
 
     // Salt
@@ -145,7 +142,7 @@ float TPrimer::evaluateTm ( const double& conc_nm , const double& Na_mm ) /* not
     H = deltaHValmin ;
     S = deltaSValmin ;
 
-    ret = NeighbourTM ( false , 50 , 50 ) ;
+    double ret = NeighbourTM ( false , 50 , 50 ) ;
 
     return ret ;
     }
@@ -153,7 +150,10 @@ float TPrimer::evaluateTm ( const double& conc_nm , const double& Na_mm ) /* not
 void TPrimer::invertSequence() /* not const */
     {
     wxString t ;
-    for ( int a = 0 ; a < sequence.length() ; a++ ) t = sequence.GetChar(a) + t ;
+    for ( int a = 0 ; a < sequence.length() ; a++ )
+        {
+        t = sequence.GetChar(a) + t ;
+        }
     sequence = t ;
     }
 
@@ -161,14 +161,21 @@ wxString TPrimer::get53sequence () const
     {
     if ( upper ) return sequence ;
     wxString t ;
-    for ( int a = 0 ; a < sequence.length() ; a++ ) t = sequence.GetChar(a) + t ;
+    for ( int a = 0 ; a < sequence.length() ; a++ )
+        {
+        t = sequence.GetChar(a) + t ;
+        }
     return t ;
     }
 
 wxString TPrimer::get35sequence () const
     {
-    wxString s , t = get53sequence () ;
-    for ( int a = 0 ; a < t.length() ; a++ ) s = t.GetChar(a) + s ;
+    wxString s ;
+    wxString t = get53sequence () ;
+    for ( int a = 0 ; a < t.length() ; a++ )
+        {
+        s = t.GetChar(a) + s ;
+        }
     return s ;
     }
 
@@ -177,29 +184,38 @@ double TPrimer::NeighbourTM ( const bool max , const double& pconc , const doubl
     double theReturn = 0 ;
     double RlogK = 0 ;
     wxString s = getAnnealingSequence() ;
-    if ( s.length() > 7) {
+    if ( s.length() > 7)
+        {
         //
-        double K = 1/(pconc/1000000000.0);  // Convert from nanomoles to moles
-        double R = 1.987;  //cal/(mole*K);
-        double RlnK = R*log(K);
-        RlogK =RlnK ;
+        const double K = 1/(pconc/1000000000.0);  // Convert from nanomoles to moles
+        const double R = 1.987;  //cal/(mole*K);
+        const double RlnK = R*log(K);
+        RlogK = RlnK ;
         // Helix initiation Free Energy of 3.4 kcal (Sugimoto et al, 1996)
         // symmetry function: if symmetrical, subtract another 0.4
-        if (!max) {
+        if (!max)
+            {
             theReturn = 1000*((deltaHValmin-3.4)/(deltaSValmin+RlnK));
             theReturn += -272.9;
             theReturn += 7.21*log (saltconc/1000.0);
 //          theReturn = Math.round(theReturn);
-        } else {
+            }
+        else
+            {
             theReturn = 1000*((deltaHValmax-3.4)/(deltaSValmax+RlnK));
             theReturn += -272.9;
             theReturn += 7.21*log (saltconc/1000.0);
 //          theReturn = Math.round(theReturn);
+            }
         }
-    } else {
+    else
+        {
 //        RlogK ="";
-    }
+        wxPrintf( "I: TPrimer::NeighbourTM: Not performing any compute since length(s) = %lu <= 7\n" , s.length() ) ;
+        }
+
     return theReturn;
+
     }
 
 double TPrimer::CountNeighbors ( const wxString& s ) const
@@ -287,16 +303,23 @@ double *TPrimer::CalcIUpair ( wxString base0 , wxString base , int i , const boo
 
     // Init
     for ( int a = 0 ; a < 3 ; a++ )
-       reValue[a] = temp1[a] = temp2[a] = 0 ;
-    if ( i+1 < seq.length() ) base2 += seq.GetChar(i+1) ;
+        {
+        reValue[a] = temp1[a] = temp2[a] = 0 ;
+        }
+    if ( i+1 < seq.length() )
+        {
+        base2 += seq.GetChar(i+1) ;
+        }
 
 
     // JavaScript dump
     if(IsIUpacBase(base0))    //if previous base is IUpacBase, do nothing
-    {    return reValue;    }
+        {
+        return reValue;
+        }
 
     if(IsIUpacBase(base) )
-    {
+        {
         if(base==_T("M")){IUpacBase=_T("AC");}
         else if(base==_T("R")){IUpacBase=_T("AG");}
         else if(base==_T("W")){IUpacBase=_T("AT");}
@@ -312,7 +335,7 @@ double *TPrimer::CalcIUpair ( wxString base0 , wxString base , int i , const boo
         int j=0;
 //        while(IUpacBase.charAt(j)!="")
         while ( j < IUpacBase.length() )
-        {
+            {
 //          base=IUpacBase.charAt(j);
             base=IUpacBase.GetChar(j);
 
@@ -387,9 +410,10 @@ double *TPrimer::CalcIUpair ( wxString base0 , wxString base , int i , const boo
     }
 
 double TPrimer::DeltaG ( const bool max ) const
-{
+    {
     wxString seq = getAnnealingSequence() ;
-    if (seq.length() > 7) {
+    if (seq.length() > 7)
+        {
         double val= -5.0;
         // Helix initiation Free Energy of 5 kcal.
         // symmetry function: if symmetrical, subtract another 0.4
@@ -403,20 +427,24 @@ double TPrimer::DeltaG ( const bool max ) const
         val+=2.8*cgCount;
         val+=2.3*gcCount;
         val+=2.1*ggCount;
-        if(!max){
+        if(!max)
+            {
             val+=IUpairVals_min[0];
-        }else{
+            }
+        else
+            {
             val+=IUpairVals_max[0];
-        }
+            }
         return val ;
-    }
+        }
     return 0;
-}
+    }
 
 double TPrimer::DeltaH ( const bool max ) const
-{
+    {
     wxString seq = getAnnealingSequence() ;
-    if (seq.length() > 7) {
+    if (seq.length() > 7)
+        {
         double val= 0.0;
         val+=8.0*aaCount;
         val+=5.6*atCount;
@@ -428,22 +456,25 @@ double TPrimer::DeltaH ( const bool max ) const
         val+=11.8*cgCount;
         val+=10.5*gcCount;
         val+=10.9*ggCount;
-        if(!max){
+        if(!max)
+            {
             val+=IUpairVals_min[1];
-        }else{
+            }
+        else
+            {
             val+=IUpairVals_max[1];
-        }
+            }
         return val ;
-    }
+        }
     return 0;
-}
+    }
 
 double TPrimer::DeltaS ( const bool max ) const
-{
+    {
     wxString seq = getAnnealingSequence() ;
-    if (seq.length() > 7) {
+    if (seq.length() > 7)
+        {
         double val=0;
-
         val+=21.9*aaCount;
         val+=15.2*atCount;
         val+=18.4*taCount;
@@ -454,15 +485,18 @@ double TPrimer::DeltaS ( const bool max ) const
         val+=29.0*cgCount;
         val+=26.4*gcCount;
         val+=28.4*ggCount;
-        if(!max){
+        if(!max)
+            {
             val+=IUpairVals_min[2];
-        }else{
+            }
+        else
+            {
             val+=IUpairVals_max[2];
-        }
+            }
         return val;
-    }
+        }
     return 0;
-}
+    }
 
 
 // ***
@@ -543,7 +577,7 @@ wxString TPrimer::getAnnealingSequence() const
     return s.substr ( s.length() - checkFit ( annealingVector , true ) ) ;
     }
 
-bool TPrimer::overlap ( const TPrimer &op ) const
+bool TPrimer::overlap ( const TPrimer& op ) const
     {
     if ( op.from <= to && op.to >= from ) return true ;
     return false ;

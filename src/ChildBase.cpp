@@ -114,10 +114,16 @@ wxMenuBar *ChildBase::GetMenuBar ()
     }
 
 
+/**
+ * Not implemented.
+ */
 void ChildBase::updateToolbar ()
     {
     }
 
+/**
+ * Not implemented.
+ */
 void ChildBase::updateSequenceCanvas ( bool remember ) // Dummy
     {
     }
@@ -190,14 +196,17 @@ void ChildBase::Activate ()
         myapp()->frame->notifyChildrenChanged() ;
         }
 
-//  Refresh () ;
+    // Refresh () ;
     }
 
-wxToolBar *ChildBase::GetToolBar ()
+wxToolBar *ChildBase::GetToolBar () const
     {
     return toolbar ;
     }
 
+/**
+ * Not implemented.
+ */
 void ChildBase::SetIcon ( const wxIcon& icon )
     {
     }
@@ -249,16 +258,29 @@ wxString ChildBase::getExportFilters () const
     return wildcard ;
     }
 
-void ChildBase::doExport ( const wxString& filename , int filter )
+/**
+ * Writes the vector 'vec' to a file.
+ *
+ * @param[in] filename - Name/Path to file to write to.
+ * @param[in] filter
+ */
+void ChildBase::doExport ( const wxString& filename , const int filter ) const
     {
     wxFile out ( filename , wxFile::write ) ;
     exportVector ( vec , out , filter , filename ) ;
     out.Close () ;
     }
 
-void ChildBase::exportVector ( TVector *vec , wxFile &out , int filter , const wxString& filename )
+/**
+ * Writes vector 'vec' that is passed as an argument to the file out
+ *
+ * @param[in] out - reference to wxFile to which should be written
+ * @param[in] filter - 0 for GenBank, 1 for plain text, 2 for FASTA, 3 for EMBL, 4 IG, 5 GCview XML
+ * @filename[in] filename - ignored, except for GCview XML
+ */
+void ChildBase::exportVector ( const TVector * const vec , wxFile &out , const int filter , const wxString& filename ) const
     {
-    if ( filter == 0 ) // GeneBank
+    if ( filter == 0 ) // GenBank
         {
         TGenBank gb ;
         wxArrayString ex ;
@@ -311,7 +333,7 @@ void ChildBase::exportVector ( TVector *vec , wxFile &out , int filter , const w
         }
     }
 
-void ChildBase::arrangedExport ( wxFile &out , const wxString& n , const wxString& _s , int l )
+void ChildBase::arrangedExport ( wxFile &out , const wxString& n , const wxString& _s , int l ) const
     {
     int sl = l - n.length() ;
     wxString s (_s) ;
@@ -325,7 +347,10 @@ void ChildBase::arrangedExport ( wxFile &out , const wxString& n , const wxStrin
         }
     }
 
-bool ChildBase::HasUndoData ()
+/**
+ * Returns always false
+ */
+bool ChildBase::HasUndoData () const
     {
     return false ;
     }

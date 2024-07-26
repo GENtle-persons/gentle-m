@@ -67,7 +67,11 @@ void PlasmidCanvas::OnPaint(wxPaintEvent& event)
     OnDraw ( dc ) ;*/
     }
 
-void PlasmidCanvas::setPrinting ( const bool _b ) { printing = _b ; }
+void PlasmidCanvas::setPrinting ( const bool b )
+    {
+    printing = b ;
+    wxPrintf( "PlasmidCanvas::setPrinting ( %d )\n" , b ) ;
+    }
 void PlasmidCanvas::setLastContextItem ( const long _l ) { context_last_item = _l ; }
 void PlasmidCanvas::getMark ( int &i1 , int &i2 ) const { i1 = getMarkFrom() ; i2 = getMarkTo() ; }
 void PlasmidCanvas::setRootChild ( MyChild * const _p ) { p = _p ; }
@@ -99,8 +103,7 @@ void PlasmidCanvas::setMark ( const int i1 , const int i2 )
 
 // Define a constructor for my canvas
 PlasmidCanvas::PlasmidCanvas(wxWindow *parent, const wxPoint& pos, const wxSize& size)
-        : wxScrolledWindow(parent, -1, pos, size,
-                           wxSUNKEN_BORDER|wxVSCROLL|wxHSCROLL|wxFULL_REPAINT_ON_RESIZE)
+        : wxScrolledWindow(parent, -1, pos, size, wxSUNKEN_BORDER|wxVSCROLL|wxHSCROLL|wxFULL_REPAINT_ON_RESIZE)
     {
     SetBackgroundColour(wxColour(_T("WHITE")));
 
@@ -206,7 +209,7 @@ void PlasmidCanvas::OnDraw(wxDC& pdc) /* not const */
         }
 }
 
-void PlasmidCanvas::OnCopyImage ( wxCommandEvent &ev )
+void PlasmidCanvas::OnCopyImage ( wxCommandEvent& ev )
     {
     if ( !p || !p->vec ) return ;
 
@@ -258,7 +261,7 @@ void PlasmidCanvas::OnCopyImage ( wxCommandEvent &ev )
         }
     }
 
-void PlasmidCanvas::OnSaveImage ( wxCommandEvent &ev )
+void PlasmidCanvas::OnSaveImage ( wxCommandEvent& ev )
     {
     w = 2000 ;
     h = 1600 ;
@@ -646,18 +649,16 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
         }
     }
 
-void PlasmidCanvas::updateLinkedItems ( TVector *vec , int in )
+void PlasmidCanvas::updateLinkedItems ( TVector * const vec , const int in )
     {
-    TVectorItem *i , *orig = &vec->items[in] ;
+    TVectorItem *i , *orig = & ( vec->items[in] ) ;
     i = orig ;
-    wxString s ;
-    int cur ;
-    s = i->getParam ( _T("PREDECESSOR") ) ;
+    wxString s = i->getParam ( _T("PREDECESSOR") ) ;
     while ( !s.IsEmpty() )
         {
-        cur = vec->find_item( s ) ;
+        int cur = vec->find_item( s ) ;
         if ( cur == -1 ) return ; // Not found
-        i = &vec->items[cur] ;
+        i = & ( vec->items[cur] ) ;
         s = i->getParam ( _T("PREDECESSOR") ) ;
         }
     if ( i->getParam ( _T("SUCCESSOR") ).IsEmpty() ) return ;
@@ -673,7 +674,7 @@ void PlasmidCanvas::updateLinkedItems ( TVector *vec , int in )
            i->r1 = orig->r1 ;
            i->r2 = orig->r2 ;
            }
-        cur = vec->find_item( s ) ;
+        int cur = vec->find_item( s ) ;
         if ( cur == -1 ) return ; // Not found
         i = &vec->items[cur] ;
         } while ( !s.IsEmpty() ) ;
@@ -729,9 +730,9 @@ int PlasmidCanvas::findVectorObjectCircular ( const float& angle , const float& 
             {
             if ( ( angle >= p->vec->items[a].a1 && angle <= p->vec->items[a].a2 ) ||
                   ( angle+a2 >= p->vec->items[a].a1 && angle+a2 <= p->vec->items[a].a2 ) )
-               {
-               return a ;
-               }
+                {
+                return a ;
+                }
             }
         }
     return -1 ;
@@ -803,14 +804,18 @@ void PlasmidCanvas::print ()
     int r = pd.ShowModal () ;
     if ( r != wxID_OK ) return ;
 
+    wxPrintf( "D: PlasmidCanvas::print A\n" ) ;
     wxDC *pdc = pd.GetPrintDC () ;
     pdc->StartDoc ( p->vec->getName() ) ;
     pdc->StartPage () ;
     printing = true ;
+    wxPrintf( "D: PlasmidCanvas::print B\n" ) ;
     OnDraw ( *pdc ) ;
+    wxPrintf( "D: PlasmidCanvas::print C\n" ) ;
     printing = false ;
     pdc->EndPage () ;
     pdc->EndDoc () ;
+    wxPrintf( "D: PlasmidCanvas::print E\n" ) ;
     }
 
 void PlasmidCanvas::makeGCcolor ( const int percent , wxColour &col ) const
@@ -834,37 +839,32 @@ void PlasmidCanvas::makeGCcolor ( const int percent , wxColour &col ) const
 void PlasmidCanvas::showGClegend ( wxDC &dc ) const
     {
     int fontfactor = 10 ;
-    // a comment would be nice on what this line is about
     if ( printing ) fontfactor = (w>h?h:w)/70 ;
     wxFont smallFont ( wxFontInfo ( fontfactor*2/3 ).Family( wxFONTFAMILY_SWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
     wxFont normalFont( wxFontInfo ( fontfactor*6/5 ).Family( wxFONTFAMILY_SWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
     int nw = w / 5 ;
-    wxPrintf( "D: PlasmidCanvas::showGClegend (w=%d, h=%d, fontfactor=%d) A\n" , w, h, fontfactor ) ;
     dc.SetFont( normalFont );
-    wxPrintf( "D: PlasmidCanvas::showGClegend B\n" ) ;
     wxString t = wxString::Format ( txt("t_gc_blocks") , p->vec->getSequenceLength() / p->vec->showGC() ) ;
     int tw , th ;
     dc.GetTextExtent ( t , &tw , &th ) ;
 
     wxRect r ;
     if ( tw * 11 / 10 > nw ) nw = tw ;
-        if ( p->vec->isLinear() )
-            {
-            r = wxRect ( w/2 - nw/2 , h / 40 , nw , th*5/2 ) ;
-            }
-        else
-            {
-            r = wxRect ( w/40 , h - h/40 - th*5/2 , nw , th*5/2 ) ;
-            }
+    if ( p->vec->isLinear() )
+        {
+        r = wxRect ( w/2 - nw/2 , h / 40 , nw , th*5/2 ) ;
+        }
+    else
+        {
+        r = wxRect ( w/40 , h - h/40 - th*5/2 , nw , th*5/2 ) ;
+        }
 
     dc.SetPen(*wxBLACK_PEN);
     dc.SetBrush(*wxWHITE_BRUSH);
     dc.DrawRectangle ( r ) ;
     dc.SetTextForeground ( *wxBLACK ) ;
     dc.DrawText ( t , r.GetLeft() + th/10 , r.GetTop() + th/10 ) ;
-    wxPrintf( "D: PlasmidCanvas::showGClegend S\n" ) ;
     dc.SetFont( smallFont );
-    wxPrintf( "D: PlasmidCanvas::showGClegend T\n" ) ;
     for ( int a = 0 ; a < 11 ; a++ )
         {
         wxColour col ;

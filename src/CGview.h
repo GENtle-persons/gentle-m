@@ -10,7 +10,7 @@
 class CGview
     {
     public :
-    CGview ( TVector *_v = NULL ) ; ///< Constructor
+    CGview ( TVector const *_v = NULL ) ; ///< Constructor
     ~CGview () {} ; ///< Destructor (empty)
 
     wxString getXML () ; ///< Generates the XML for the vector v and returns it as a wxString
@@ -28,7 +28,7 @@ class CGview
     static wxString RGB2string ( const wxColour& col ) ;
     static wxString RGB2string ( const int red , const int green , const int blue ) ;
 
-    TVector *v ; ///< Pointer to the TVector structure to export
+    const TVector * v ; ///< Pointer to the TVector structure to export
     int width , height , radius ;
     bool useDefaultColors , runCGview , runimageapp , showrestrictionsites , showgc ;
     bool itemsShown ;

@@ -43,7 +43,6 @@ BEGIN_EVENT_TABLE(TGraph, MyChildBase)
 END_EVENT_TABLE()
 
 
-
 TGraph::TGraph(wxWindow *parent, const wxString& title)
     : ChildBase(parent, title)
     {

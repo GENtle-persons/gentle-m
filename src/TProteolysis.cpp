@@ -56,7 +56,6 @@ bool operator == ( const TProteolysisSuggestion &c1 , const TProteolysisSuggesti
     }
 
 
-
 TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
     : wxDialog ( (wxWindow*) _parent , -1 , title , wxDefaultPosition , wxSize ( 710 , 550 ) )
     {
