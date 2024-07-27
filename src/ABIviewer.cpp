@@ -272,7 +272,8 @@ void TABIviewer::initme ()
                             wxDefaultPosition ,
                             wxSize ( -1 , 150 ) ,
                             wxTE_MULTILINE | wxTE_READONLY ) ;
-    stat->SetFont ( *MYFONT ( 8 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
+    wxFont font( wxFontInfo ( 8 ).Family( wxFONTFAMILY_MODERN ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    stat->SetFont ( font ) ;
 
     wxBoxSizer *v1 = new wxBoxSizer ( wxVERTICAL ) ;
     wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;

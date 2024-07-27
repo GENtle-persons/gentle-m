@@ -121,7 +121,11 @@ SequenceCanvas::SequenceCanvas(wxWindow * const parent, const wxPoint& pos, cons
         : wxScrolledWindow(parent, -1, pos, size, wxSUNKEN_BORDER|wxHSCROLL|wxFULL_REPAINT_ON_RESIZE)
     {
     SetBackgroundColour(wxColour(_T("WHITE")));
-    set_font_size ( 12 ) ;
+
+    font = NULL ;
+    smallFont = NULL ;
+    varFont = NULL ; // needed by set_font_size
+
     mark_firstrow = mark_lastrow = -1 ;
     charwidth = 0 ;
     charheight = 0 ;
@@ -130,7 +134,6 @@ SequenceCanvas::SequenceCanvas(wxWindow * const parent, const wxPoint& pos, cons
     lastmarked = -1 ;
     p = NULL ;
     doHide ( false ) ;
-    forceOverwrite ( false ) ;
     wantOverwrite = false ;
     maxendnumberlength = 9 ;
     lastyoffset = 0 ;
@@ -144,17 +147,23 @@ SequenceCanvas::SequenceCanvas(wxWindow * const parent, const wxPoint& pos, cons
     preventUpdate = false ;
     last_font_size = 12 ;
 
-    setMiniDisplay ( false ) ;
-    editMode = false ;
-    captured = false ;
-    edit_id = _T("DNA") ;
-    edit_valid = _T("ACTG") ;
-    _from = -1 ;
-    setDrawAll ( false ) ;
     printing = false ;
     print_dc = NULL ;
     child = NULL ;
+
+    edit_id = _T("DNA") ;
+    edit_valid = _T("ACTG") ;
+
+    editMode = false ;
+    captured = false ;
+    _from = -1 ;
+
+    set_font_size ( 12 ) ;
+    forceOverwrite ( false ) ;
+    setMiniDisplay ( false ) ;
+    setDrawAll ( false ) ;
     setHorizontal ( false ) ;
+
     }
 
 SequenceCanvas::~SequenceCanvas()
@@ -165,9 +174,12 @@ SequenceCanvas::~SequenceCanvas()
 void SequenceCanvas::set_font_size ( const int size )
     {
     last_font_size = size ;
-    font = MYFONT ( size , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
-    smallFont = MYFONT ( MYFONTSIZE * size / 12 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
-    varFont = MYFONT ( size-1 , wxFONTFAMILY_ROMAN  , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
+    if (font) delete font ;
+    font = new wxFont( wxFontInfo( MYFONTSIZE ).Family(wxFONTFAMILY_MODERN).Style(wxFONTSTYLE_NORMAL).Weight(wxFONTWEIGHT_NORMAL) );
+    if (smallFont) delete smallFont ;
+    smallFont = new wxFont( wxFontInfo(MYFONTSIZE * size / 12).Family(wxFONTFAMILY_SWISS).Style(wxFONTSTYLE_NORMAL).Weight(wxFONTWEIGHT_NORMAL) );
+    if (varFont) delete varFont ;
+    varFont = new wxFont( wxFontInfo( size-1 ).Family(wxFONTFAMILY_ROMAN).Style(wxFONTSTYLE_NORMAL).Weight(wxFONTWEIGHT_NORMAL) );
     }
 
 void SequenceCanvas::unmark ()
@@ -701,11 +713,12 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
     wxFont *oldfont = font ;
     wxFont *oldvarfont = varFont ;
     wxFont *oldsmallFont = smallFont ;
-    wxFont *bigfont = MYFONT ( w/30 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
-    wxFont *medfont = MYFONT ( w/80 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
-    font = MYFONT ( fs*last_font_size/10/12 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
-    smallFont = MYFONT ( fs*last_font_size/15/12 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
-    varFont = MYFONT ( fs*last_font_size/11/12 , wxFONTFAMILY_ROMAN  , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
+    wxFont bigfont ( wxFontInfo( w/30 ).Family(  wxFONTFAMILY_MODERN ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    wxFont medfont ( wxFontInfo( w/80 ).Family(  wxFONTFAMILY_MODERN ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+
+    font = new wxFont ( wxFontInfo ( fs*last_font_size/10/12 ).Family( wxFONTFAMILY_MODERN ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    smallFont = new wxFont ( wxFontInfo ( fs*last_font_size/15/12 ).Family( wxFONTFAMILY_SWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    varFont = new wxFont ( wxFontInfo ( fs*last_font_size/11/12 ).Family( wxFONTFAMILY_ROMAN  ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
 
     print_maxx = -w ;
 
@@ -786,19 +799,19 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
        else if ( getAA() ) s = getAA()->vec->getName() ;
        else if ( child ) s = child->getName() ;
        print_dc->SetTextBackground ( *wxWHITE ) ;
-       print_dc->SetFont (* bigfont ) ;
+       print_dc->SetFont ( bigfont ) ;
        print_dc->GetTextExtent ( s , &tw , &th ) ;
        print_dc->DrawText ( s , ( w - tw ) / 2 - xoff , yoff + ( pagetop - th ) / 2 ) ;
        print_dc->SetTextBackground ( *wxWHITE ) ;
 
        // Page number
        wxString t = wxString::Format ( txt("t_page_of") , page , totalpages ) ;
-       print_dc->SetFont ( *medfont ) ;
+       print_dc->SetFont ( medfont ) ;
        print_dc->GetTextExtent ( t , &tw , &th ) ;
        print_dc->DrawText ( t , w - tw - xoff * 2 , yoff + h - ( pagebottom + dummy + th ) / 2 ) ;
 
        // Date
-       print_dc->SetFont ( *medfont ) ;
+       print_dc->SetFont ( medfont ) ;
        print_dc->GetTextExtent ( printtime , &tw , &th ) ;
        print_dc->DrawText ( printtime , 0 , yoff + h - ( pagebottom + dummy + th ) / 2 ) ;
 

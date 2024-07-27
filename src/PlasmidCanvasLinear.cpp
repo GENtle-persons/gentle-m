@@ -6,9 +6,9 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc) /* not const */
 {
     if ( printing ) h = h * 2 / 3 ; // not const
     int fontfactor = MYFONTSIZE * 10 / 8 ;
-    if ( printing ) fontfactor = (w>h?h:w)/10000 ;
-    wxFont *tinyFont = MYFONT ( fontfactor*4/5 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
-    wxFont *smallFont = MYFONT ( fontfactor , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
+    if ( printing ) fontfactor = (w>h?h:w)/70 ;
+    wxFont tinyFont ( wxFontInfo( fontfactor*4/5 ).Family(  wxFONTFAMILY_SWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    wxFont smallFont ( wxFontInfo( fontfactor ).Family(  wxFONTFAMILY_SWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
 
     // Initial calculations
     int l = p->vec->getSequenceLength() - 1 ;
@@ -114,7 +114,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc) /* not const */
     else dc.DrawLine ( lineOff , lineH , w - lineOff , lineH ) ;
 
     // Numbers
-    dc.SetFont(*smallFont);
+    dc.SetFont( smallFont );
     for ( int a = 0 ; a < l ; a += d ) // defined at function entry
         {
         dc.DrawLine ( lineOff + lineLen * a / (l+1) ,
@@ -174,7 +174,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc) /* not const */
             }
 
         // Restriction sites
-        dc.SetFont(*tinyFont);
+        dc.SetFont(tinyFont);
         for ( int a = 0 ; a < p->vec->rc.size() ; a++ )
             {
             TRestrictionCut *c = &p->vec->rc[a] ;
@@ -188,7 +188,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc) /* not const */
             c->lp.x = c->p.x * STANDARDRADIUS / w ;
             c->lp.y = c->p.y * STANDARDRADIUS / h ;
             }
-        dc.SetFont(*smallFont);
+        dc.SetFont( smallFont );
 
         // ORFs
         if ( p->def == _T("dna") && p->showORFs )
@@ -227,7 +227,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc) /* not const */
         }
 
     // Drawing Restriction Sites
-    dc.SetFont(*tinyFont);
+    dc.SetFont(tinyFont);
     for ( int a = 0 ; a < p->vec->rc.size() ; a++ )
         {
         TRestrictionCut *c = &p->vec->rc[a] ;
@@ -243,7 +243,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc) /* not const */
             dc.DrawText ( c->getNameAndPosition() , c->lastrect.x , c->lastrect.y ) ;
             }
         }
-    dc.SetFont(*smallFont);
+    dc.SetFont( smallFont );
     dc.SetPen ( *wxBLACK_PEN ) ;
     dc.SetTextForeground ( *wxBLACK ) ;
 }
@@ -339,8 +339,8 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , const int _r1 , const int _r2 , 
     int r2 = _r2;
     if ( i->direction == -1 ) { r1 = _r2 ; r2 = _r1 ; }
 
-    wxFont *normalFont = MYFONT ( 12 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
-    wxFont *smallFont = MYFONT ( 8 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
+    wxFont normalFont ( wxFontInfo( 12 ).Family( wxFONTFAMILY_SWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    wxFont smallFont ( wxFontInfo( 8 ).Family( wxFONTFAMILY_SWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
     int r1b = r2 - ( r2 - r1 ) / 10 ;
     int y1 = (int) ( a2 - a1 ) / 3 ;
     int y2 = (int) ( a1 + a2 ) / 2 ;
@@ -354,15 +354,20 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , const int _r1 , const int _r2 , 
     pt.push_back ( wxPoint ( r1  , y2 + y1 ) ) ;
 
     // Drawing polygon
-    wxPoint *wp ;
-    wp = (wxPoint*) malloc ( sizeof ( wxPoint ) * (pt.size()+1) ) ;
+    wxPoint *wp = (wxPoint*) malloc ( sizeof ( wxPoint ) * (pt.size()+1) ) ;
     if (!wp)
         {
-            wxPrintf("E: Out of memory.\n") ;
-            abort() ;
+        wxPrintf("E: Out of memory.\n") ;
+        abort() ;
         }
-    for ( unsigned int b = 0 ; b < pt.size() ; b++ ) wp[b] = pt[b] ;
-    if ( !this->p->vec->getGenomeMode() ) dc.SetPen(*wxBLACK_PEN);
+    for ( unsigned int b = 0 ; b < pt.size() ; b++ )
+        {
+        wp[b] = pt[b] ;
+        }
+    if ( !this->p->vec->getGenomeMode() )
+        {
+        dc.SetPen(*wxBLACK_PEN);
+        }
     else dc.SetPen ( *MYPEN((wxColour)i->getBrush()->GetColour()) ) ;
     dc.SetBrush ( *i->getBrush() ) ;
     dc.DrawPolygon ( pt.size() , wp , 0 , 0 ) ;
@@ -373,8 +378,14 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , const int _r1 , const int _r2 , 
     wxCoord dx , dy ;
     wxColor fc = dc.GetTextForeground () ;
     dc.SetTextForeground ( i->getFontColor() ) ;
-    if ( p->def == _T("dna") ) dc.SetFont(*normalFont);
-    else if ( p->def == _T("AminoAcids") ) dc.SetFont(*smallFont);
+    if ( p->def == _T("dna") )
+        {
+        dc.SetFont( normalFont ) ;
+        }
+    else if ( p->def == _T("AminoAcids") )
+        {
+        dc.SetFont( smallFont );
+        }
 
     if ( !p->vec->getGenomeMode() )
         {

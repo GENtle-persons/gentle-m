@@ -191,7 +191,8 @@ void MyFrame::initme ()
 //  myapp()->sw.Start() ;
 
 #ifdef __WXGTK__
-    SetFont ( *MYFONT ( 8 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
+    wxFont f ( wxFontInfo ( 8 ).Family( wxFONTFAMILY_SWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONWEIGHT_NORMAL ) ) ;
+    SetFont ( f ) ;
 #endif
 
     int borders = wxNO_BORDER ;

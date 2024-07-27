@@ -288,25 +288,27 @@ void MyChild::OnToggleFeatures(wxCommandEvent& event)
     }
 
 void MyChild::OnQuit(wxCommandEvent& WXUNUSED(event))
-{
+    {
     Close(TRUE);
-}
+    }
 
 void MyChild::OnUpdateRefresh(wxUpdateUIEvent& event)
-{
+    {
     event.Enable( cPlasmid );
-}
+    }
 
 
 void MyChild::OnActivate(wxActivateEvent& event)
-{
+    {
     mylog ( "MyChild::OnActivate" , "1" ) ;
     ChildBase::Activate () ;
     mylog ( "MyChild::OnActivate" , "2" ) ;
     if ( event.GetActive() && cSequence )
-       cSequence->SetFocus();
+        {
+        cSequence->SetFocus();
+        }
     mylog ( "MyChild::OnActivate" , "3" ) ;
-}
+    }
 
 
 void MyChild::OnCircularLinear(wxCommandEvent& event)
@@ -526,9 +528,10 @@ void MyChild::initme (TVector * const newVector )
     treeBox->textWindow = propBox ;
     treeBox->p = this ;
 
+    wxFont font( wxFontInfo( MYFONTSIZE ).Family( wxFONTFAMILY_MODERN ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ));
 #ifdef __WXMAC__
-    treeBox->SetFont ( *MYFONT ( MYFONTSIZE , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
-    propBox->SetFont ( *MYFONT ( MYFONTSIZE , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
+    treeBox->SetFont ( font ) ;
+    propBox->SetFont ( font ) ;
 #endif
 
     sw->SplitHorizontally ( swu , cSequence , height/2 ) ;
@@ -577,6 +580,7 @@ void MyChild::OnLigation(wxCommandEvent& event)
     myapp()->frame->lastCocktail.Clear () ;
     }
 */
+
 wxString MyChild::getName () const
     {
     return vec->getName() ;
@@ -602,7 +606,9 @@ void MyChild::OnCut(wxCommandEvent& event)
 
     mylog ( "MyChild::OnCut" , "3" ) ;
     for ( int a = 0 ; a < cSequence->seq.GetCount() ; a++ )
-       cSequence->seq[a]->initFromTVector ( vec ) ;
+        {
+        cSequence->seq[a]->initFromTVector ( vec ) ;
+        }
 
     mylog ( "MyChild::OnCut" , "4" ) ;
     cSequence->arrange() ;
@@ -1398,10 +1404,12 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
     // Feature list
     pdc->SetDeviceOrigin ( 0 , h/2 ) ;
     int cw , ch ;
-    wxFont *font = MYFONT ( w/80 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
-    wxFont *sfont = MYFONT ( w/120 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
-    wxFont *bfont = MYFONT ( w/40 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
-    pdc->SetFont ( *font ) ;
+
+    wxFont font = (wxFontInfo(w/80).Family(wxFONTFAMILY_MODERN).Style(wxFONTSTYLE_NORMAL).Weight(wxFONTWEIGHT_NORMAL));
+    wxFont sfont = (wxFontInfo(w/120).Family(wxFONTFAMILY_MODERN).Style(wxFONTSTYLE_NORMAL).Weight(wxFONTWEIGHT_NORMAL));
+    wxFont bfont = (wxFontInfo(w/40).Family(wxFONTFAMILY_MODERN).Style(wxFONTSTYLE_NORMAL).Weight(wxFONTWEIGHT_NORMAL));
+    pdc->SetFont ( font ) ;
+
     pdc->GetTextExtent ( _T("A") , &cw , &ch ) ;
 
     int y ;
@@ -1475,7 +1483,8 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
            if ( !s.IsEmpty() ) vs.Add ( s ) ;
            int dx , dy ;
            y += ch ;
-           pdc->SetFont ( *sfont ) ;
+           //pdc->SetFont ( *sfont ) ;
+           pdc->SetFont ( sfont ) ;
            for ( int b = 0 ; b < vs.GetCount() ; b++ )
                {
                pdc->GetTextExtent ( vs[b] , &dx , &dy ) ;
@@ -1483,7 +1492,8 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
                y += dy ;
                }
            y -= ch ;
-           pdc->SetFont ( *font ) ;
+           //pdc->SetFont ( *font ) ;
+           pdc->SetFont ( font ) ;
            }
 
         pdc->DrawLine ( x0 , y + ch + 2 , w - x0 , y + ch + 2 ) ;
@@ -1499,7 +1509,8 @@ void MyChild::OnPrintReport(wxCommandEvent& event)
     wxString printtime = now.Format ( _T("%c") , wxDateTime::Local ) ;
     pdc->GetTextExtent ( printtime , &tw , &th ) ;
     pdc->DrawText ( printtime , w - x0 - tw , 0 ) ;
-    pdc->SetFont ( *bfont ) ;
+    //pdc->SetFont ( *bfont ) ;
+    pdc->SetFont ( bfont ) ;
     pdc->DrawText ( vec->getName() , x0 , 0 ) ;
 
     pdc->EndPage () ;

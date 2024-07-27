@@ -84,9 +84,9 @@ void TPrimerDialog::initme ( TPrimer * const _p , const TPrimerDesign * const _p
 
     new wxStaticBox ( this , -1 , txt("t_limits") , wxPoint ( 5 , 5 ) , wxSize ( 290 , 135 ) ) ;
 
-    int mintmp = 45 , maxtmp = 65 ;
-    int minlen = 20 , maxlen = 40 ;
-    int varlen = 5 ;
+    const int mintmp = 45 , maxtmp = 65 ;
+    const int minlen = 20 , maxlen = 40 ;
+    const int varlen = 5 ;
 
     l5 = addSpinCtrl ( PD_DIAG_5L , txt("t_5_l") , 0 , 1 , varlen ) ;
     r5 = addSpinCtrl ( PD_DIAG_5R , txt("t_5_r") , 1 , 1 , varlen ) ;
@@ -120,7 +120,8 @@ void TPrimerDialog::initme ( TPrimer * const _p , const TPrimerDesign * const _p
                             wxSize ( w , h-210 ) ,
                             wxLC_REPORT|wxLC_SINGLE_SEL ) ;
 
-    rep->SetFont ( *MYFONT ( 8 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
+    wxFont font( wxFontInfo ( 8 ).Family( wxFONTFAMILY_MODERN ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    rep->SetFont ( font ) ;
 
     bo->SetDefault() ;
 

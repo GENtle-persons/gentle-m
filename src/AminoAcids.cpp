@@ -358,7 +358,8 @@ void TAminoAcids::showStat () const
         }
 
     stat->SetValue ( t ) ;
-    stat->SetFont ( *MYFONT ( MYFONTSIZE , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
+    wxFont font ( wxFontInfo ( MYFONTSIZE ).Family( wxFONTFAMILY_MODERN ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    stat->SetFont ( font ) ;
     }
 
 void TAminoAcids::showSequence () const
