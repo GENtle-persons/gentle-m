@@ -266,14 +266,14 @@ void TMyGelControl::OnDraw(wxDC& dc)
     // Drawing gel
     int fontfactor = 10 ;
     if ( printing ) fontfactor = w/5000 ;
-    wxFont *normalFont = MYFONT ( fontfactor * 11 / 10 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
-    wxFont *bigFont = MYFONT ( fontfactor * 14 / 10 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
+    wxFont normalFont ( wxFontInfo( fontfactor * 11 / 10 ).Family( wxFONTFAMILY_SWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    wxFont bigFont ( wxFontInfo( fontfactor * 14 / 10 ).Family( wxFONTFAMILY_SWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
 
     int tw , th ;
     wxString title = _T("t_gelname_") + vg->type ;
     title = wxString::Format ( txt(title) , vg->percent ) ;
     dc.SetTextForeground ( *wxBLACK ) ;
-    dc.SetFont ( *bigFont ) ;
+    dc.SetFont ( bigFont ) ;
     dc.GetTextExtent ( title , &tw , &th ) ;
     dc.DrawText ( title , ( w - tw ) / 2 , 2 ) ;
 
@@ -289,7 +289,7 @@ void TMyGelControl::OnDraw(wxDC& dc)
         {
         title = vg->lanes[a].name ;
         dc.SetTextForeground ( *wxBLACK ) ;
-        dc.SetFont ( *normalFont ) ;
+        dc.SetFont ( normalFont ) ;
 
         int n = title.Freq ( ' ' ) + 1 ;
         if ( n > 3 ) n = 3 ; // Three lines max
@@ -300,22 +300,19 @@ void TMyGelControl::OnDraw(wxDC& dc)
                 wxString t = title.BeforeFirst ( ' ' ) ;
                 title = title.AfterFirst ( ' ' ) ;
                 dc.GetTextExtent ( t , &tw , &th ) ;
-                dc.DrawText ( t ,
-                              ( vg->lanes[a].pos.GetLeft() + vg->lanes[a].pos.GetRight() - tw ) / 2 ,
-                              vg->lanes[a].pos.GetTop() - ( n - m ) * th ) ;
+                dc.DrawText ( t , ( vg->lanes[a].pos.GetLeft() + vg->lanes[a].pos.GetRight() - tw ) / 2 , vg->lanes[a].pos.GetTop() - ( n - m ) * th ) ;
                 }
             }
         else
             {
             dc.GetTextExtent ( title , &tw , &th ) ;
-            dc.DrawText ( title ,
-                          ( vg->lanes[a].pos.GetLeft() + vg->lanes[a].pos.GetRight() - tw ) / 2 ,
-                          vg->lanes[a].pos.GetTop() - th * 3 / 2 ) ;
+            dc.DrawText ( title , ( vg->lanes[a].pos.GetLeft() + vg->lanes[a].pos.GetRight() - tw ) / 2 , vg->lanes[a].pos.GetTop() - th * 3 / 2 ) ;
             }
 
         for ( int b = 0 ; b < vg->lanes[a].vi.GetCount() ; b++ )
+            {
             drawBand ( dc , vg->lanes[a] , b ) ;
-
+            }
         }
     }
 
@@ -352,16 +349,19 @@ void TMyGelControl::drawBand ( wxDC &dc , TGelLane &lane , const int band )
 
     int ps = 1000 ;
     int bw = lane.pos.GetRight() - lane.pos.GetLeft() ;
-    dc.SetFont ( *MYFONT ( ps , wxFONTFAMILY_ROMAN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
+    wxFont font1( wxFontInfo( ps ).Family( wxFONTFAMILY_ROMAN ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    dc.SetFont ( font1 ) ;
     dc.GetTextExtent ( title , &tw , &th ) ;
     ps = ps * bw / tw ;
-    dc.SetFont ( *MYFONT ( ps , wxFONTFAMILY_ROMAN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
+    wxFont font2( wxFontInfo( ps ).Family( wxFONTFAMILY_ROMAN ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    dc.SetFont ( font2 ) ;
     dc.GetTextExtent ( title , &tw , &th ) ;
 
     if ( th > bw / 5 )
        {
        ps = ps * ( bw / 5 ) / th ;
-       dc.SetFont ( *MYFONT ( ps , wxFONTFAMILY_ROMAN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
+       wxFont font3 ( wxFontInfo( ps ).Family( wxFONTFAMILY_ROMAN ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+       dc.SetFont ( font3 ) ;
        dc.GetTextExtent ( title , &tw , &th ) ;
        }
 

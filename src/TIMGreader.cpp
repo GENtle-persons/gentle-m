@@ -70,35 +70,37 @@ wxImage TIMGreader::makeImage()
     items.clear() ;
     x = 0 ;
     for ( y = size - 1 ; y > 5 && x < 5 ; y-- )
-       {
-       for ( x = 0 ; y-x > 0 && x < 5 && buffer[y-x] == 255 ; x++ ) ;
-       }
+        {
+        for ( x = 0 ; y-x > 0 && x < 5 && buffer[y-x] == 255 ; x++ ) ;
+        }
     for ( y++ ; y > 10 && y + 3 < size ; y++ )
-       {
-       if ( buffer[y] == 0 && buffer[y+1] == buffer[y-1] &&
+        {
+        if ( buffer[y] == 0 && buffer[y+1] == buffer[y-1] &&
               buffer[y+2] == buffer[y-2] && buffer[y+3] == buffer[y-3] &&
               buffer[y+1] == buffer[y+2] && buffer[y+2] == buffer[y+3] &&
               buffer[y+1] == 255 )
-          { // "FF FF FF 00 FF FF FF" | y at 00
-          TIMGitem it ;
-          it.type = IMGTYPE_TEXT ;
+            { // "FF FF FF 00 FF FF FF" | y at 00
+            TIMGitem it ;
+            it.type = IMGTYPE_TEXT ;
 
-          for ( x = y + 7 ; buffer[x] ; x++ ) ;
-          for ( x++ ; buffer[x] == 0 ; x++ ) ;
+            for ( x = y + 7 ; buffer[x] ; x++ ) ;
+            for ( x++ ; buffer[x] == 0 ; x++ ) ;
 
-          it.p1.x = getInt ( x + 1 ) + xoff ;
-          it.p1.y = getInt ( x + 5 ) + yoff ;
+            it.p1.x = getInt ( x + 1 ) + xoff ;
+            it.p1.y = getInt ( x + 5 ) + yoff ;
 
-          it.orig = wxSize ( w , h ) ;
-          for ( x = 7 ; x < 50 && buffer[y+x] ; x++ )
-              it.s += buffer[y+x] ;
+            it.orig = wxSize ( w , h ) ;
+            for ( x = 7 ; x < 50 && buffer[y+x] ; x++ )
+                {
+                it.s += buffer[y+x] ;
+                }
 
-          it.font_size = ( 243 - buffer[y-61] ) / 3 + 10 ;
-          it.font_name = wxString ( (char*) buffer + y - 43 , *wxConvCurrent ) ;
+            it.font_size = ( 243 - buffer[y-61] ) / 3 + 10 ;
+            it.font_name = wxString ( (char*) buffer + y - 43 , *wxConvCurrent ) ;
 
-          items.push_back ( it ) ;
-          }
-       }
+            items.push_back ( it ) ;
+            }
+        }
 
     return i ;
     }
@@ -117,7 +119,8 @@ void TIMGitem::draw ( wxDC &dc , int x1 , int y1 , int x2 , int y2 )
     if ( type == IMGTYPE_TEXT )
         {
         wxFont oldfont = dc.GetFont() ;
-        dc.SetFont ( *MYFONT ( font_size*2/3 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL /*, false , font_name.c_str()*/ ) ) ;
+        wxFont newfont ( wxFontInfo ( font_size*2/3 ).Family( wxFONTFAMILY_MODERN ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL /*, false , font_name.c_str()*/ ) ) ;
+        dc.SetFont ( newfont ) ;
 
         int px = xx ( p1.x ) ;
         int py = yy ( p1.y ) ;

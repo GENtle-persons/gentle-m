@@ -35,7 +35,8 @@ PCR_troubleshoot_dialog::PCR_troubleshoot_dialog(TPrimerDesign *_parent, const w
 
     list = new wxListBox ( this , PCR_TROUBLESHOOT_LIST ) ;
     text = new wxTextCtrl ( this , -1 , _T("") , wxDefaultPosition , wxDefaultSize , wxTE_MULTILINE ) ;
-    text->SetFont ( *MYFONT ( MYFONTSIZE , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
+    wxFont font ( wxFontInfo ( MYFONTSIZE ).Family( wxFONTFAMILY_MODERN ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    text->SetFont ( font ) ;
 
     h0->Add ( new wxStaticText ( this , -1 , _T("")) , 1 , wxEXPAND , 5 ) ;
     h0->Add ( new wxButton ( this , POD_OK , txt("b_ok") ) , 1 , wxEXPAND , 5 ) ;

@@ -430,9 +430,9 @@ void TPrimerDesign::initme ()
     toolbar = toolBar ;
 
     guessOptNuc () ;
+    Maximize () ;
 
     int w , h ;
-    Maximize () ;
     GetClientSize ( &w , &h ) ;
 
     // Upper panel
@@ -452,7 +452,8 @@ void TPrimerDesign::initme ()
                             wxDefaultSize,//wxSize ( w*2/3 - 70 , h ) ,
                             wxTE_MULTILINE | wxTE_READONLY ) ;
 
-    stat->SetFont ( *MYFONT ( MYFONTSIZE , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
+    wxFont font ( wxFontInfo( MYFONTSIZE ).Family( wxFONTFAMILY_MODERN ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    stat->SetFont ( font ) ;
 
     GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,show_features);
 

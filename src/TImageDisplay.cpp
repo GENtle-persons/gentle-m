@@ -266,7 +266,8 @@ void TMyImagePanel::OnDraw(wxDC& pdc)
     {
     if ( !bmp ) return ;
 
-    pdc.SetFont ( *MYFONT ( 8 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
+    wxFont font( wxFontInfo( 8 ).Family( wxFONTFAMILY_MODERN ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    pdc.SetFont ( font ) ;
 
     int w , h , iw , ih ;
     pdc.GetSize ( &w , &h ) ;

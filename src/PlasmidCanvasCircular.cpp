@@ -3,31 +3,31 @@
 // DRAWING
 
 int PlasmidCanvas::deg2x ( const float& deg , const int& r ) const
-{
+    {
     float f = sin ( (180-deg)*PI/180 ) * r ;
     return int ( f ) ;
-}
+    }
 
 int PlasmidCanvas::deg2y ( const float& deg , const int& r ) const
-{
+    {
     float f = cos ( (180-deg)*PI/180 ) * r ;
     return int ( f ) ;
-}
+    }
 
 float PlasmidCanvas::xy2deg ( const float& x , const float& y ) const
-{
+    {
     float f ;
     f = atan2(x,y) ;
     f = 180-f*180/PI ;
     return f ;
-}
+    }
 
 float PlasmidCanvas::xy2r ( const float& x , const float& y ) const
-{
+    {
     float f ;
     f = sqrt(x*x+y*y) ;
     return f ;
-}
+    }
 
 void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc ) const
     {
@@ -39,12 +39,12 @@ void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc ) const
     for ( int a = 0 ; a < p->vec->rc.size() ; a++ ) // Removing invisible
         {
         if ( p->vec->rc[a].isHidden ( p->vec ) )
-           {
-           trc.push_back ( p->vec->rc[a] ) ;
-           p->vec->rc[a] = p->vec->rc[p->vec->rc.size()-1] ;
-           p->vec->rc.pop_back() ;
-           a-- ;
-           }
+            {
+            trc.push_back ( p->vec->rc[a] ) ;
+            p->vec->rc[a] = p->vec->rc[p->vec->rc.size()-1] ;
+            p->vec->rc.pop_back() ;
+            a-- ;
+            }
         }
 
     p->vec->sortRestrictionSites() ;
@@ -68,7 +68,9 @@ void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc ) const
         if ( p->vec->rc[a].isHidden ( p->vec ) ) continue ;
         if ( p->vec->rc[a-1].isHidden ( p->vec ) ) continue ;
         while ( p->vec->rc[a].angle3 <= p->vec->rc[a-1].angle3 )
-           p->vec->rc[a].angle3 += 0.001 ;
+            {
+            p->vec->rc[a].angle3 += 0.001 ;
+            }
         }
 
     bool redo = true ;
@@ -77,14 +79,18 @@ void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc ) const
         {
         redo = false ;
         for ( int a = 0 ; a < p->vec->rc.size() ; a++ ) // Optimize
-           redo |= optimizeCircularRestrictionSites ( a , dc ) ;
+            {
+            redo |= optimizeCircularRestrictionSites ( a , dc ) ;
+            }
         cnt-- ;
         }
 
     // Appending hidden ones
     p->vec->rc.reserve ( trc.size() ) ;
     for ( int a = 0 ; a < trc.size() ; a++ )
+        {
         p->vec->rc.push_back ( trc[a] ) ;
+        }
     p->vec->sortRestrictionSites() ;
     }
 
@@ -155,9 +161,9 @@ void PlasmidCanvas::drawCircularORFs ( wxDC &dc ) const
         int rf = p->vec->getORF(a)->get_rf() ;
 
         if ( mf > mt )
-        {
-        mt += l ;
-        }
+            {
+            mt += l ;
+            }
 
         float ro , roi = r / 10 ;
         ro = roi * 7 + roi * rf ;
@@ -178,17 +184,17 @@ void PlasmidCanvas::drawCircularORFs ( wxDC &dc ) const
         int dir ;
         float mm , mn ;
         if ( rf < 0 )
-           {
-           dir = -1 ;
-           mm = mf ;
-           mn = mt ;
-           }
+            {
+            dir = -1 ;
+            mm = mf ;
+            mn = mt ;
+            }
         else
-           {
-           dir = 1 ;
-           mm = mt ;
-           mn = mf ;
-           }
+            {
+            dir = 1 ;
+            mm = mt ;
+            mn = mf ;
+            }
         dc.DrawCircle ( deg2x ( mn , (int)(r+ro/2) ) + w/2 ,
                         deg2y ( mn , (int)(r+ro/2) ) + h/2 ,
                         4 ) ;
@@ -218,8 +224,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc) /* not const */
 {
     // Initial calculations
     char t[10000] ;
-    wxCoord dx , dy ;
-    int l = p->vec->getSequenceLength();
+    const int l = p->vec->getSequenceLength();
     int mwh ;
     mwh = w<h?w:h ;
 
@@ -227,14 +232,12 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc) /* not const */
 
     int fontfactor = MYFONTSIZE * 10 / 8 ;
     if ( printing ) fontfactor = mwh/80;
-    wxFont *tinyFont = MYFONT ( fontfactor*4/5 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
-    wxFont *smallFont = MYFONT ( fontfactor , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
-    wxFont *normalFont = MYFONT ( fontfactor*6/5 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
-    wxFont *bigFont = MYFONT ( fontfactor*7/5 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
-//    wxFont *hugeFont = MYFONT ( fontfactor*9/5 , wxSWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_BOLD ) ;
+    wxFont tinyFont ( wxFontInfo( fontfactor*4/5 ).Family( wxFONTFAMILY_SWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    wxFont smallFont ( wxFontInfo( fontfactor ).Family( wxFONTFAMILY_SWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    wxFont normalFont ( wxFontInfo( fontfactor*6/5 ).Family( wxFONTFAMILY_SWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    wxFont bigFont ( wxFontInfo( fontfactor*7/5 ).Family( wxFONTFAMILY_SWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    // wxFont hugeFont ( wxFontInfo( fontfactor*9/5 ).Family( wxSWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_BOLD ) ) ;
 
-    int d;
-    for ( d = 1 ; d*10 < l ; d *= 10 ) ;
     r = (mwh*2/3)/2 ; // not const
 
     // Basic elements
@@ -336,6 +339,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc) /* not const */
         dc.SetBackgroundMode ( wxTRANSPARENT ) ;
         }
 
+
     // Show title
     if ( myapp()->frame->showVectorTitle )
         {
@@ -343,7 +347,9 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc) /* not const */
         strcpy ( t , p->vec->getName().mb_str() ) ;
         strcat ( t , " " ) ;
         int a = 0 ;
-        dc.SetFont ( *bigFont ) ;
+        dc.SetFont ( bigFont ) ;
+
+        wxCoord dx , dy ;
         dc.GetTextExtent ( wxString ( t , *wxConvCurrent ) , &dx , &dy ) ;
         for ( c1 = t ; *c1 ; c1++ )
             {
@@ -355,6 +361,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc) /* not const */
                 {
                 *c1 = 0 ;
                 wxString t2 ( c2 , *wxConvCurrent ) ;
+                wxCoord dx , dy ;
                 dc.GetTextExtent ( t2 , &dx , &dy ) ;
                 dc.DrawText ( t2 , w/2-dx/2 , h/2-dy/2+a ) ;
                 c2 = c1+1 ;
@@ -363,22 +370,25 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc) /* not const */
             }
         }
 
-    wxString t2 ;
     // Show length
     if ( myapp()->frame->showVectorLength )
         {
-        t2 = wxString::Format ( txt("#bp") , p->vec->getSequenceLength() ) ;
+        wxString t2 = wxString::Format ( txt("#bp") , p->vec->getSequenceLength() ) ;
 //      sprintf ( t , txt("#bp") , p->vec->getSequenceLength() ) ;
-        dc.SetFont ( *normalFont ) ;
+        dc.SetFont ( normalFont ) ;
+        wxCoord dx , dy ;
         dc.GetTextExtent ( t2 , &dx , &dy ) ;
         dc.DrawText ( t2 , w/2-dx/2 , h/2-dy/2 ) ;
         }
 
     // Numbers
-    dc.SetFont(*smallFont);
+    dc.SetFont( smallFont );
     dc.SetBackgroundMode ( wxTRANSPARENT ) ;
 
-    for ( int a = 0 ; a <= l ; a += d ) // d initialized at very beginning of function
+    int d;
+    for ( d = 1 ; d*10 < l ; d *= 10 ) ;
+
+    for ( int a = 0 ; a <= l ; a += d )
         {
         float deg = a*360/l ;
         int r1 = r*17/20 ;
@@ -389,8 +399,9 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc) /* not const */
                       deg2y ( deg , r2 ) + h/2 ) ;
 
         // Numbers
-        t2 = wxString::Format ( _T("%d") , a ) ;
+        wxString t2 = wxString::Format ( _T("%d") , a ) ;
 //      sprintf ( t , "%d" , a ) ;
+        wxCoord dx , dy ;
         dc.GetTextExtent ( t2 , &dx , &dy ) ;
         if ( deg > 180 && deg < 350 ) dx = 0 ;
         if ( deg < 15 ) dx = 0 ;
@@ -437,9 +448,9 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc) /* not const */
             }
 
         // Restriction sites
-        dc.SetFont ( *tinyFont ) ;
+        dc.SetFont ( tinyFont ) ;
         arrangeRestrictionSitesCircular ( dc ) ;
-        dc.SetFont ( *smallFont ) ;
+        dc.SetFont ( smallFont ) ;
 
         // ORFs
         if ( p->showORFs )
@@ -535,7 +546,8 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc) /* not const */
             // Drawing name
             wxColor fc = dc.GetTextForeground () ;
             dc.SetTextForeground ( i->getFontColor() ) ;
-            dc.SetFont(*normalFont);
+            dc.SetFont( normalFont );
+            wxCoord dx , dy ;
             dc.GetTextExtent ( i->name , &dx , &dy ) ;
             dd = (df+(dt-df)/2) ;
             while ( dd >= 360 ) dd -= 360 ;
@@ -550,7 +562,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc) /* not const */
         }
 
     // Restriction sites
-    dc.SetFont ( *tinyFont ) ;
+    dc.SetFont ( tinyFont ) ;
     for ( int a = 0 ; a < p->vec->rc.size() ; a++ )
         {
         TRestrictionCut c = p->vec->rc[a] ;
@@ -582,7 +594,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc) /* not const */
            dc.DrawText ( u , p3.x , p3.y ) ;
            }
         }
-    dc.SetFont(*smallFont);
+    dc.SetFont( smallFont );
     dc.SetPen ( *wxBLACK_PEN ) ;
     dc.SetTextForeground ( *wxBLACK ) ;
     }

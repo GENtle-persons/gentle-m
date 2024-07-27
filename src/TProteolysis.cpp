@@ -92,7 +92,8 @@ TProteolysis::TProteolysis(TAminoAcids *_parent, const wxString& title )
 
     sep_desc = new wxTextCtrl ( this , -1 , _T("") , wxDefaultPosition , wxDefaultSize , wxTE_MULTILINE|wxTE_READONLY ) ;
     sep_desc->SetBackgroundColour ( GetBackgroundColour() ) ;
-    sep_desc->SetFont ( *MYFONT ( 8 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
+    wxFont font( wxFontInfo ( 8 ).Family( wxFONTFAMILY_SWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    sep_desc->SetFont( font ) ;
 
     wxString rb_sr[3] ;
     rb_sr[0] = txt("t_pro_sort_results_1" ) ;
@@ -562,7 +563,8 @@ void TProteolysis::draw_gel ( wxDC &dc ) const
     int y , tw , th , w , h ;
     dc.GetSize ( &w , &h ) ;
 
-    dc.SetFont( *MYFONT ( 8 , wxFONTFAMILY_MODERN , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
+    wxFont font ( wxFontInfo ( 8 ).Family( wxFONTFAMILY_MODERN ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    dc.SetFont( font ) ;
 
     dc.SetBrush ( *wxWHITE_BRUSH ) ;
     dc.SetPen ( *wxBLACK_PEN ) ;
@@ -631,8 +633,7 @@ int TProteolysis::get_y ( const double y , const int _h , const double min , con
     {
     int h = _h - 20 ;
     double a = -((double)h) / (log(min)-log(max)) ;
-    double r ;
-    r = a * log ( y ) ;
+    double r = a * log ( y ) ;
     return h - ((int) r) + 10 ;
     }
 

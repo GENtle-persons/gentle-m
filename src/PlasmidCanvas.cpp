@@ -834,16 +834,19 @@ void PlasmidCanvas::makeGCcolor ( const int percent , wxColour &col ) const
 void PlasmidCanvas::showGClegend ( wxDC &dc ) const
     {
     int fontfactor = 10 ;
-    if ( printing ) fontfactor = (w>h?h:w)/10000 ;
-    wxFont *smallFont = MYFONT ( fontfactor*2/3 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
-    wxFont *normalFont = MYFONT ( fontfactor*6/5 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ;
-    wxRect r ;
+    // a comment would be nice on what this line is about
+    if ( printing ) fontfactor = (w>h?h:w)/70 ;
+    wxFont smallFont ( wxFontInfo ( fontfactor*2/3 ).Family( wxFONTFAMILY_SWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    wxFont normalFont( wxFontInfo ( fontfactor*6/5 ).Family( wxFONTFAMILY_SWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
     int nw = w / 5 ;
-    dc.SetFont(*normalFont);
-    wxString t ;
-    t = wxString::Format ( txt("t_gc_blocks") , p->vec->getSequenceLength() / p->vec->showGC() ) ;
+    wxPrintf( "D: PlasmidCanvas::showGClegend (w=%d, h=%d, fontfactor=%d) A\n" , w, h, fontfactor ) ;
+    dc.SetFont( normalFont );
+    wxPrintf( "D: PlasmidCanvas::showGClegend B\n" ) ;
+    wxString t = wxString::Format ( txt("t_gc_blocks") , p->vec->getSequenceLength() / p->vec->showGC() ) ;
     int tw , th ;
     dc.GetTextExtent ( t , &tw , &th ) ;
+
+    wxRect r ;
     if ( tw * 11 / 10 > nw ) nw = tw ;
         if ( p->vec->isLinear() )
             {
@@ -859,7 +862,9 @@ void PlasmidCanvas::showGClegend ( wxDC &dc ) const
     dc.DrawRectangle ( r ) ;
     dc.SetTextForeground ( *wxBLACK ) ;
     dc.DrawText ( t , r.GetLeft() + th/10 , r.GetTop() + th/10 ) ;
-    dc.SetFont(*smallFont);
+    wxPrintf( "D: PlasmidCanvas::showGClegend S\n" ) ;
+    dc.SetFont( smallFont );
+    wxPrintf( "D: PlasmidCanvas::showGClegend T\n" ) ;
     for ( int a = 0 ; a < 11 ; a++ )
         {
         wxColour col ;
@@ -871,5 +876,6 @@ void PlasmidCanvas::showGClegend ( wxDC &dc ) const
         dc.GetTextExtent ( t , &tw , &th ) ;
         dc.DrawText ( t , r.GetLeft() + nw2 * a + nw2/2 - tw/2 , r.GetBottom() - nw2*9/10 - th ) ;
         }
+    wxPrintf( "D: PlasmidCanvas::showGClegend Z\n" ) ;
     }
 

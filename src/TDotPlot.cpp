@@ -313,12 +313,12 @@ void TDotPlotPanel::Draw2Memory ()
     memdc.SetBackground ( *wxWHITE_BRUSH ) ;
     memdc.Clear() ;
     memdc.SetPen ( *wxBLACK_PEN ) ;
-    memdc.SetFont ( *MYFONT ( 10 , wxFONTFAMILY_SWISS , wxFONTSTYLE_NORMAL , wxFONTWEIGHT_NORMAL ) ) ;
+    wxFont font ( wxFontInfo ( 10 ).Family( wxFONTFAMILY_SWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
+    memdc.SetFont ( font ) ;
 
-    int x , y ;
-    for ( x = 0 ; x < len1 ; x++ )
+    for ( int x = 0 ; x < len1 ; x++ )
         {
-        for ( y = 0 ; y < len2 ; y++ )
+        for ( int y = 0 ; y < len2 ; y++ )
              {
              if ( data[dppos(x,y)] ) memdc.DrawPoint ( x+offx , y+offy ) ;
              }
@@ -328,7 +328,7 @@ void TDotPlotPanel::Draw2Memory ()
     int step = 50 ;
     wxCoord w , h ;
     memdc.SetPen ( *wxBLACK_DASHED_PEN ) ;
-    for ( x = step-1 ; x < len1 ; x += step )
+    for ( int x = step-1 ; x < len1 ; x += step )
         {
         wxString s = wxString::Format ( _T("%d") , x+1 ) ;
         memdc.GetTextExtent ( s , &w , &h ) ;
@@ -336,7 +336,7 @@ void TDotPlotPanel::Draw2Memory ()
         memdc.DrawLine ( x + offx , 2 + h , x + offx , offy - 1 ) ;
         }
 
-    for ( y = step-1 ; y < len2 ; y += step )
+    for ( int y = step-1 ; y < len2 ; y += step )
         {
         wxString s = wxString::Format ( _T("%d") , y+1 ) ;
         memdc.GetTextExtent ( s , &w , &h ) ;
