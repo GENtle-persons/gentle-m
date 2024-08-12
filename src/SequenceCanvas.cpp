@@ -768,7 +768,6 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
     wxDateTime now = wxDateTime::Now();
     wxString printtime = now.Format( _T("%c") , wxDateTime::Local) ;
 
-
     do {
        totalpages++ ;
        yoff += vish - dummy ;
@@ -791,7 +790,6 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
        if ( printSelection && yoff + h - pagebottom - dummy > lowy )
            print_dc->DrawRectangle ( -xoff , lowy , w , yoff + h - pagebottom - dummy - lowy ) ;
 
-       int tw , th ;
        wxString s ;
 
        // Title
@@ -800,6 +798,7 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
        else if ( child ) s = child->getName() ;
        print_dc->SetTextBackground ( *wxWHITE ) ;
        print_dc->SetFont ( bigfont ) ;
+       int tw , th ;
        print_dc->GetTextExtent ( s , &tw , &th ) ;
        print_dc->DrawText ( s , ( w - tw ) / 2 - xoff , yoff + ( pagetop - th ) / 2 ) ;
        print_dc->SetTextBackground ( *wxWHITE ) ;
@@ -814,7 +813,6 @@ void SequenceCanvas::OnPrint ( wxCommandEvent &ev )
        print_dc->SetFont ( medfont ) ;
        print_dc->GetTextExtent ( printtime , &tw , &th ) ;
        print_dc->DrawText ( printtime , 0 , yoff + h - ( pagebottom + dummy + th ) / 2 ) ;
-
 
        print_dc->EndPage () ;
 
@@ -1301,7 +1299,11 @@ void SequenceCanvas::arrange ()
     if ( isMiniDisplay() ) lowx += charwidth*2 ;
     mylog ( "SequenceCanvas::arrange" , "3" ) ;
 
-    if ( printing ) return ;
+    if ( printing )
+        {
+        wxEndBusyCursor() ;
+        return ;
+        }
 
     MyGetViewStart ( &vx , &vy ) ;
     if ( !isHorizontal() && lowy != oldlowy )

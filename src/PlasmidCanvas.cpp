@@ -128,6 +128,7 @@ PlasmidCanvas::~PlasmidCanvas ()
 
 void PlasmidCanvas::Refresh ()
     {
+    wxPrintf( "D: PlasmidCanvas::Refresh - start\n" ) ;
     if ( p && p->cSequence->getEditMode() && p->def == _T("DNA") ) return ;
 //  if ( painting ) return ;
 //  painting = true ;
@@ -135,6 +136,7 @@ void PlasmidCanvas::Refresh ()
     PrepareDC ( dc ) ;
     OnDraw ( dc ) ;
 //  painting = false ;
+    wxPrintf( "D: PlasmidCanvas::Refresh - end\n" ) ;
     }
 
 bool PlasmidCanvas::isEnzymeVisible ( const wxString& s ) const
@@ -154,13 +156,31 @@ bool PlasmidCanvas::intersects ( const wxRect &a , const wxRect &b ) const
 // Define the repainting behaviour
 void PlasmidCanvas::OnDraw(wxDC& pdc) /* not const */
 {
-    if ( !p || !p->vec ) return ;
-    if ( myapp()->frame->isLocked() ) return ;
-    if ( !p->IsShown() ) return ;
-    if ( !p->IsEnabled() ) return ;
+    wxPrintf( "D: PlasmidCanvas::OnDraw - start\n" ) ;
+    if ( !p || !p->vec )
+        {
+        wxPrintf( "D: PlasmidCanvas::OnDraw - ret !p || !p->vec\n" ) ;
+        return ;
+        }
+    if ( myapp()->frame->isLocked() )
+        {
+        wxPrintf( "D: PlasmidCanvas::OnDraw - ret locked\n" ) ;
+        return ;
+        }
+    if ( !p->IsShown() )
+        {
+        wxPrintf( "D: PlasmidCanvas::OnDraw - ret !shown\n" ) ;
+        return ;
+        }
+    if ( !p->IsEnabled() )
+        {
+        wxPrintf( "D: PlasmidCanvas::OnDraw - ret !enabled\n" ) ;
+        return ;
+        }
     if ( p->vec->getSequenceLength() == 0 )
         {
         pdc.Clear () ;
+        wxPrintf( "D: PlasmidCanvas::OnDraw - ret 0==length\n" ) ;
         return ;
         }
     if ( printing )
@@ -172,7 +192,10 @@ void PlasmidCanvas::OnDraw(wxDC& pdc) /* not const */
             {
             OnDrawCircular ( pdc ) ;
             }
-        else OnDrawLinear ( pdc ) ;
+        else
+            {
+            OnDrawLinear ( pdc ) ;
+            }
         }
     else
         {
@@ -201,17 +224,30 @@ void PlasmidCanvas::OnDraw(wxDC& pdc) /* not const */
         dc.SelectObject ( bmp ) ;
         dc.Clear() ;
         dc.SetDeviceOrigin ( -vx , -vy ) ;
-        if ( p->vec->isCircular() ) OnDrawCircular ( dc ) ;
-        else OnDrawLinear ( dc ) ;
+        if ( p->vec->isCircular() )
+            {
+            OnDrawCircular ( dc ) ;
+            }
+        else
+            {
+            OnDrawLinear ( dc ) ;
+            }
         dc.SetDeviceOrigin ( 0 , 0 ) ;
         pdc.Blit ( vx , vy , w , h , &dc , 0 , 0 ) ;
         painting = false ;
         }
+        wxPrintf( "D: PlasmidCanvas::OnDraw - end\n" ) ;
 }
 
 void PlasmidCanvas::OnCopyImage ( wxCommandEvent& ev )
     {
-    if ( !p || !p->vec ) return ;
+    wxPrintf( "D: PlasmidCanvas::OnCopyImage - start\n" ) ;
+
+    if ( !p || !p->vec )
+        {
+        wxPrintf( "D: PlasmidCanvas::OnCopyImage - ret !p || !p->vec\n" ) ;
+        return ;
+        }
 
 // Metafile support only exists for windows, so...
 #ifdef __WXMSW__
@@ -259,6 +295,7 @@ void PlasmidCanvas::OnCopyImage ( wxCommandEvent& ev )
 
         GetClientSize(&w, &h);
         }
+    wxPrintf( "D: PlasmidCanvas::OnCopyImage - end\n" ) ;
     }
 
 void PlasmidCanvas::OnSaveImage ( wxCommandEvent& ev )
@@ -800,6 +837,7 @@ void PlasmidCanvas::invokeVectorEditor ( const wxString& what , const int num , 
 
 void PlasmidCanvas::print ()
     {
+    wxPrintf( "D: PlasmidCanvas::print - start\n" ) ;
     wxPrintDialog pd ( this ) ;
     int r = pd.ShowModal () ;
     if ( r != wxID_OK ) return ;
@@ -815,7 +853,7 @@ void PlasmidCanvas::print ()
     printing = false ;
     pdc->EndPage () ;
     pdc->EndDoc () ;
-    wxPrintf( "D: PlasmidCanvas::print E\n" ) ;
+    wxPrintf( "D: PlasmidCanvas::print - end\n" ) ;
     }
 
 void PlasmidCanvas::makeGCcolor ( const int percent , wxColour &col ) const

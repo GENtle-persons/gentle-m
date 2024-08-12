@@ -221,18 +221,22 @@ void TSilmutDialog::calc ()
     // List of restriction enzymes to check
     wxArrayTRestrictionEnzyme re ;
     wxString group = egr->GetStringSelection() ;
-    if ( group == txt("Current") ) re = v->re ;
+    if ( group == txt("Current") )
+        {
+        re = v->re ;
+        }
     else
         {
         wxArrayString z ;
         myapp()->frame->LS->getEnzymesInGroup ( group , z ) ;
         for ( int a = 0 ; a < z.GetCount() ; a++ )
+            {
             re.Add ( myapp()->frame->LS->getRestrictionEnzyme ( z[a] ) ) ;
+            }
         }
 
     wxString vseq = v->getSequence() ; // Marked sequence, uppercase
     wxString vseq_l = vseq.Lower() ; // Marked sequence, lowercase
-
 
     // Check each restriction enzyme
     for ( int a = 0 ; a < re.GetCount() ; a++ )
@@ -275,7 +279,9 @@ void TSilmutDialog::calc ()
                 for ( int c = 0 ; c < new_dna.length() ; c++ )
                     {
                     if ( c >= b && c < b + s.length() && c-b >= 0 && c-b <= x.length() && x.GetChar(c-b) >= 'A' && x.GetChar(c-b) <= 'Z' )
+                        {
                         new_dna.SetChar ( c ,  x.GetChar(c-b) ) ;
+                        }
                     }
                 wxString new_aa = getAAresult ( new_dna ) ;
                 if ( new_aa == orig_aa ) useit = true ;
@@ -359,7 +365,10 @@ void TSilmutDialog::calc_acr ()
     // List of restriction enzymes to check
     // Only those which already exist from previous run ("first stage")
     wxArrayTRestrictionEnzyme re ;
-    for ( int a = 0 ; a < vs.size() ; a++ ) re.Add ( vs[a].e ) ;
+    for ( int a = 0 ; a < vs.size() ; a++ )
+        {
+        re.Add ( vs[a].e ) ;
+        }
     vs.clear() ;
 
     wxString vseq = v->getSequence() ; // Marked sequence, uppercase
@@ -367,7 +376,9 @@ void TSilmutDialog::calc_acr ()
     for ( int a = 0 ; a < vseq.length() ; a++ )
         {
         if ( vseq.GetChar(a) >= 'A' && vseq.GetChar(a) <= 'Z' )
-           vseq_l.SetChar ( a , vseq.GetChar(a) - 'A' + 'a' ) ;
+            {
+            vseq_l.SetChar ( a , vseq.GetChar(a) - 'A' + 'a' ) ;
+            }
         }
 
     wxString bases = _T("ACTG") ;

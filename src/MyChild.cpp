@@ -540,7 +540,7 @@ void MyChild::initme (TVector * const newVector )
 
     cSequence->SetScrollbars(0, 20, 0, 50);
 
-    wxSafeYield() ;
+    //wxSafeYield() ;
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     v0->Add ( toolbar , 0 , wxEXPAND , 2 ) ;
     v0->Add ( sw , 1 , wxEXPAND , 2 ) ;
@@ -767,7 +767,8 @@ void MyChild::OnEditMode(wxCommandEvent& event)
 
 void MyChild::initPanels ()
     {
-//  myapp()->frame->lockDisplay ( true ) ;
+    wxPrintf( "D: MyChild::initPanels - start\n" ) ;
+    myapp()->frame->lockDisplay ( true ) ;
     myass(vec, "myChild::initPanels: vec should always exist, and if empty.") ;
     if ( vec->getSequenceLength() > 100000 ) // Arbitary number, 100K
         {
@@ -820,8 +821,14 @@ void MyChild::initPanels ()
 
 //#ifdef __WXMSW__ // LINUX
     GetToolBar()->ToggleTool(MDI_CIRCULAR_LINEAR,vec->isCircular());
-    if ( !vec->getGenomeMode() ) GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,cSequence ? cSequence->findID ( _T("FEATURE" ) ) : (SeqBasic*) NULL ) ;
-    else aa_offset = 0 ;
+    if ( !vec->getGenomeMode() )
+        {
+        GetToolBar()->ToggleTool(MDI_TOGGLE_FEATURES,cSequence ? cSequence->findID ( _T("FEATURE" ) ) : (SeqBasic*) NULL ) ;
+        }
+    else
+        {
+        aa_offset = 0 ;
+        }
     GetToolBar()->ToggleTool(MDI_TOGGLE_RESTRICTION,cSequence ? cSequence->findID ( _T("RESTRICTION" ) ) : (SeqBasic*) NULL ) ;
 //#endif
 
@@ -837,8 +844,12 @@ void MyChild::initPanels ()
     swl->SetSashPosition ( 200 ) ;
     swu->SetSashPosition ( 200 ) ;
 #endif
-//    myapp()->frame->lockDisplay ( false ) ;
-    if ( myapp()->frame->isLocked() ) return ;
+    myapp()->frame->lockDisplay ( false ) ;
+    if ( myapp()->frame->isLocked() )
+        {
+        wxPrintf( "D: MyChild::initPanels - ret isLocked\n" ) ;
+        return ;
+        }
     Show() ;
     mylog ( "MyChild" , "shown" ) ;
     SetFocus () ;
@@ -847,6 +858,7 @@ void MyChild::initPanels ()
     OnFocus(fev) ;
 
     Activate () ;
+    wxPrintf( "D: MyChild::initPanels - end\n" ) ;
     }
 
 void MyChild::OnHelp(wxCommandEvent& event)

@@ -4,6 +4,7 @@
 
 void PlasmidCanvas::OnDrawLinear(wxDC& dc) /* not const */
 {
+    wxPrintf( "D: PlasmidCanvas::OnDrawLinear - start\n" ) ;
     if ( printing ) h = h * 2 / 3 ; // not const
     int fontfactor = MYFONTSIZE * 10 / 8 ;
     if ( printing ) fontfactor = (w>h?h:w)/70 ;
@@ -81,6 +82,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc) /* not const */
         }
 
     // Baseline
+    wxPrintf( "D: PlasmidCanvas::OnDrawLinear - Baseline\n" ) ;
     if ( p->vec->showGC() > 0 ) // %GC
         {
         int dh = h / 80 ;
@@ -114,6 +116,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc) /* not const */
     else dc.DrawLine ( lineOff , lineH , w - lineOff , lineH ) ;
 
     // Numbers
+    wxPrintf( "D: PlasmidCanvas::OnDrawLinear - Numbers\n" ) ;
     dc.SetFont( smallFont );
     for ( int a = 0 ; a < l ; a += d ) // defined at function entry
         {
@@ -128,6 +131,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc) /* not const */
         }
 
     // Methylation sites
+    wxPrintf( "D: PlasmidCanvas::OnDrawLinear - Methylation\n" ) ;
     dc.SetPen(*wxRED_PEN);
     for ( int a = 0 ; a < p->vec->countMethylationSites() ; a++ )
         {
@@ -139,6 +143,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc) /* not const */
     dc.SetPen(*wxBLACK_PEN);
 
     // Recalc
+    wxPrintf( "D: PlasmidCanvas::OnDrawLinear - Recalc\n" ) ;
     if ( p->vec->displayUpdate() )
         {
         // Genes, items, etc.
@@ -202,9 +207,11 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc) /* not const */
         }
 
     // ORFs
+    wxPrintf( "D: PlasmidCanvas::OnDrawLinear - ORF\n" ) ;
     drawLinearORFs ( dc ) ;
 
     // Drawing items
+    wxPrintf( "D: PlasmidCanvas::OnDrawLinear - Items\n" ) ;
     for ( int a = 0 ; a < p->vec->items.size() ; a++ )
         {
         TVectorItem i = p->vec->items[a] ;
@@ -227,6 +234,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc) /* not const */
         }
 
     // Drawing Restriction Sites
+    wxPrintf( "D: PlasmidCanvas::OnDrawLinear - Restrictions\n" ) ;
     dc.SetFont(tinyFont);
     for ( int a = 0 ; a < p->vec->rc.size() ; a++ )
         {
@@ -246,6 +254,7 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc) /* not const */
     dc.SetFont( smallFont );
     dc.SetPen ( *wxBLACK_PEN ) ;
     dc.SetTextForeground ( *wxBLACK ) ;
+    wxPrintf( "D: PlasmidCanvas::OnDrawLinear - end\n" ) ;
 }
 
 void PlasmidCanvas::drawLinearORFs ( wxDC &dc ) const

@@ -134,7 +134,10 @@ void TImageDisplay::ShowDir ( wxString s )
     bu->SetLabel ( s ) ;
 
     if ( !dir.IsOpened() )
+        {
+        wxEndBusyCursor() ;
         return;
+        }
 
     myapp()->frame->LS->setOption ( _T("IMGDIR") , s ) ;
     wxString filename;
@@ -152,18 +155,21 @@ void TImageDisplay::ShowDir ( wxString s )
     dir.GetAllFiles ( s , &vs , "*.pcx" ) ;
     dir.GetAllFiles ( s , &vs , "*.pnm" ) ;
 */
-    int a ;
-    for ( a = 0 ; a < vs.GetCount() ; a++ )
+
+    for ( int a = 0 ; a < vs.GetCount() ; a++ )
         {
         vs[a] = vs[a].AfterLast ( '/' ) ;
         vs[a] = vs[a].AfterLast ( '\\' ) ;
         }
     vs.Sort () ;
 
-    for ( a = 0 ; a < vs.GetCount() ; a++ )
+    for ( int a = 0 ; a < vs.GetCount() ; a++ )
+        {
         lb->Append ( vs[a] ) ;
-       wxEndBusyCursor() ;
-       }
+        }
+
+    wxEndBusyCursor() ;
+    }
 
 void TImageDisplay::OnCopy ( wxCommandEvent &event )
     {

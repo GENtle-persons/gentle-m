@@ -45,6 +45,7 @@ END_EVENT_TABLE()
 TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , const wxString& title , const int mode , TVector * const _v )
     : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 700 , 550 ) )
     {
+    wxPrintf( "D: TManageDatabaseDialog::TManageDatabaseDialog - start\n" ) ;
     pm_dd_l = pm_dd_r = NULL ;
     filter_txt = NULL ;
     pm_name = NULL ;
@@ -70,25 +71,28 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , const wxString
     dc.GetTextExtent ( "X" , &bo , &th ) ;
     th = th * 3 / 2 ;
     bo = th / 4 ;
-    wxBeginBusyCursor() ;
-    nb = new wxNotebook ( (wxWindow*) this ,
-                          -1 ,
-                          wxPoint ( 0 , 0 ) ,
-                          wxSize ( w , h ) ) ;
+    nb = new wxNotebook ( (wxWindow*) this , -1 , wxPoint ( 0 , 0 ) , wxSize ( w , h ) ) ;
 
     pDatabases = new wxPanel ( nb , -1 ) ;
     pCopynMove = new wxPanel ( nb , -1 ) ;
 
+    wxBeginBusyCursor() ;
     initDatabases () ;
     initCopynMove () ;
 
-    if ( startup ) f_twopanes->SetValue ( 0 ) ;
+    if ( startup )
+        {
+        f_twopanes->SetValue ( 0 ) ;
+        }
     else if ( doLoad || doSave )
         {
         int tp = myapp()->frame->LS->getOption ( _T("TWOPANES") , 0 ) ;
         f_twopanes->SetValue ( tp ) ;
         }
-    else  f_twopanes->SetValue ( 1 ) ;
+    else
+        {
+        f_twopanes->SetValue ( 1 ) ;
+        }
     updateTwoLists () ;
 
     nb->SetSelection ( 1 ) ;
@@ -98,16 +102,20 @@ TManageDatabaseDialog::TManageDatabaseDialog ( wxWindow *parent , const wxString
 
     Center () ;
     wxEndBusyCursor() ;
+    wxPrintf( "D: TManageDatabaseDialog::TManageDatabaseDialog - end\n" ) ;
     }
 
 TManageDatabaseDialog::~TManageDatabaseDialog ()
     {
+    wxPrintf( "D: TManageDatabaseDialog::~TManageDatabaseDialog - start\n" ) ;
     nb->DeleteAllPages() ;
     if ( il ) delete il ;
+    wxPrintf( "D: TManageDatabaseDialog::~TManageDatabaseDialog - end\n" ) ;
     }
 
 void TManageDatabaseDialog::initCopynMove ()
     {
+    wxPrintf( "D: TManageDatabaseDialog::initCopynMove - start\n" ) ;
     v0 = new wxBoxSizer ( wxVERTICAL ) ;
     wxBoxSizer *v1 = new wxBoxSizer ( wxVERTICAL ) ;
     v2 = new wxBoxSizer ( wxVERTICAL ) ;
@@ -128,19 +136,14 @@ void TManageDatabaseDialog::initCopynMove ()
     pm_dd_l = new wxChoice ( p , MD_PM_DD_L ) ;
     pm_dd_r = new wxChoice ( p , MD_PM_DD_R ) ;
 
-    pm_left = new wxListCtrl ( p , MD_PM_LEFT , wxDefaultPosition ,
-                                wxDefaultSize ,
-                                lbstyle ) ;
-    pm_right = new wxListCtrl ( p , MD_PM_RIGHT , wxDefaultPosition ,
-                                wxDefaultSize ,
-                                lbstyle ) ;
+    pm_left  = new wxListCtrl ( p , MD_PM_LEFT ,  wxDefaultPosition , wxDefaultSize , lbstyle ) ;
+    pm_right = new wxListCtrl ( p , MD_PM_RIGHT , wxDefaultPosition , wxDefaultSize , lbstyle ) ;
 
     TMyDropTarget *rdt = new TMyDropTarget ( this , pm_right ) ;
     pm_right->SetDropTarget ( (wxDropTarget*) rdt ) ;
 
     TMyDropTarget *ldt = new TMyDropTarget ( this , pm_left ) ;
     pm_left->SetDropTarget ( (wxDropTarget*) ldt ) ;
-
 
     wxBitmap bmp_helix ( myapp()->bmpdir.GetFullPath() + wxFileName::GetPathSeparator() + "Helix.bmp" , wxBITMAP_TYPE_BMP ) ;
     wxBitmap bmp_project ( myapp()->bmpdir.GetFullPath() + wxFileName::GetPathSeparator() + "project.bmp" , wxBITMAP_TYPE_BMP ) ;
@@ -218,6 +221,7 @@ void TManageDatabaseDialog::initCopynMove ()
 
     p->SetSizer ( v0 ) ;
     p->Layout () ;
+    wxPrintf( "D: TManageDatabaseDialog::initCopynMove - end\n" ) ;
     }
 
 void TManageDatabaseDialog::updateTwoLists ()
@@ -265,15 +269,22 @@ void TManageDatabaseDialog::pm_init_lists ()
         {
         wxString db = defdb ;
         if ( isProject && !myapp()->frame->project.db.IsEmpty() )
+            {
             db = myapp()->frame->project.db ;
+            }
         else if ( !isProject )
+            {
             db = v->getDatabase() ;
-        if ( db.IsEmpty() ) db = defdb ;
+            }
+        if ( db.IsEmpty() )
+            {
+            db = defdb ;
+            }
         pm_dd_save->SetStringSelection ( db ) ;
         }
 
     pm_list_items ( PM_LEFT ) ;
-//    pm_list_items ( PM_RIGHT ) ;
+//  pm_list_items ( PM_RIGHT ) ;
     pm_left->SetFocus() ;
     }
 
@@ -319,8 +330,12 @@ void TManageDatabaseDialog::pm_list_items ( const int x )
 
         // Filtering
         for ( int a = 0 ; a < filter.length() ; a++ )
+            {
             if ( filter.GetChar(a) == '\"' )
+                {
                 filter.SetChar ( a , '\'' ) ;
+                }
+            }
         wxArrayString vf ;
         explode ( " " , filter , vf ) ;
         wxString sql2 , sql3 ;
@@ -328,12 +343,19 @@ void TManageDatabaseDialog::pm_list_items ( const int x )
             {
             if ( !vf[a].IsEmpty() )
                 {
-                if ( !sql2.IsEmpty() ) sql2 += " AND" ;
+                if ( !sql2.IsEmpty() )
+                    {
+                    sql2 += " AND" ;
+                    }
                 sql2 += " (dna_name LIKE \"%" + vf[a] + "%\"" ;
                 if ( f_desc->GetValue() )
+                    {
                     sql2 += " OR dna_description LIKE \"%" + vf[a] + "%\"" ;
+                    }
                 if ( f_seq->GetValue() )
+                    {
                     sql2 += " OR dna_sequence LIKE \"%" + vf[a] + "%\"" ;
+                    }
                 sql2 += ")" ;
                 }
             }
@@ -416,14 +438,18 @@ void TManageDatabaseDialog::pmOnListEvent ( wxListEvent &ev , wxListCtrl *source
     wxArrayString vs ;
     vi = getSelectedListItems ( source ) ;
     for ( int a = 0 ; a < vi.GetCount() ; a++ )
+        {
         vs.Add ( source->GetItemText ( vi[a] ) ) ;
+        }
 
     wxTextDataObject my_data(GENTLE_DRAG_DATA);
     wxDropSource dragSource( this );
     dragSource.SetData( my_data );
     wxDragResult result = dragSource.DoDragDrop( TRUE );
     if ( result != wxDragCopy && result != wxDragMove )
+        {
         return ;
+        }
 
     wxString sdb = dds->GetStringSelection() ;
     wxString tdb = ddt->GetStringSelection() ;
@@ -439,6 +465,7 @@ void TManageDatabaseDialog::pmOnListEvent ( wxListEvent &ev , wxListCtrl *source
 
 bool TManageDatabaseDialog::do_copy ( const wxString& name , const wxString& sdb , const wxString& tdb )
     {
+    wxPrintf( "D: TManageDatabaseDialog::do_copy (%a, db, tdb)\n" ) ;
     if ( isProject ) return false ;
     else return copyDNA ( name , sdb , tdb ) ;
     }
@@ -451,40 +478,56 @@ bool TManageDatabaseDialog::do_move ( const wxString& name , const wxString& sdb
 
 void TManageDatabaseDialog::do_del  ( const wxString& name , const wxString& db )
     {
-    if ( isProject ) return ;
-    else delDNA ( name , db ) ;
+    if ( isProject )
+        {
+        return ;
+        }
+    else
+        {
+        delDNA ( name , db ) ;
+        }
     }
 
 
-bool TManageDatabaseDialog::copyDNA ( const wxString& _n , const wxString& sdb , const wxString& tdb )
+bool TManageDatabaseDialog::copyDNA ( const wxString& _name , const wxString& sdb , const wxString& tdb )
     {
     if ( sdb == tdb ) return false ;
     SetCursor ( *wxHOURGLASS_CURSOR ) ;
     TStorage *source = getTempDB ( getFileName ( sdb ) ) ;
     TStorage *target = getTempDB ( getFileName ( tdb ) ) ;
+    const wxString name = source->fixDNAname ( _name ) ;
 
-    wxString name = source->fixDNAname ( _n ) ;
+    TSQLresult r ;
 
     // Already there?
-    wxString sql = "SELECT dna_name FROM dna WHERE dna_name=\"" + name + "\"" ;
-    TSQLresult r = target->getObject ( sql ) ;
-    if ( r.rows() > 0 )
         {
-        wxMessageDialog md ( this , txt("t_entry_exists_brief") , txt("msg_box") ) ;
-        md.ShowModal() ;
-        return false ;
+        const wxString sql = "SELECT dna_name FROM dna WHERE dna_name=\"" + name + "\"" ;
+        r = target->getObject ( sql ) ;
+        if ( r.rows() > 0 )
+            {
+            SetCursor ( *wxSTANDARD_CURSOR ) ;
+            wxMessageDialog md ( this , txt("t_entry_exists_brief") , txt("msg_box") ) ;
+            md.ShowModal() ;
+            return false ;
+            }
         }
-
     // Copy DNA and items
     source->copySQLfields ( *target , "dna" , "dna_name=\"" + name + "\"" ) ;
     source->copySQLfields ( *target , "dna_item" , "di_dna=\"" + name + "\"" ) ;
 
     // Enzymes
-    sql = "SELECT dna_restriction_enzymes FROM dna WHERE dna_name=\"" + name + "\"" ;
-    r = source->getObject ( sql ) ;
-    if ( r.rows() == 0 ) return false ;
+        {
+        const wxString sql = "SELECT dna_restriction_enzymes FROM dna WHERE dna_name=\"" + name + "\"" ;
+        r = source->getObject ( sql ) ;
+        if ( r.rows() == 0 )
+            {
+            SetCursor ( *wxSTANDARD_CURSOR ) ;
+            wxPrintf("I: TManageDatabaseDialog::copyDNA: ret - No enzymes found for '%s'\n" , name ) ;
+            return false ;
+            }
+        }
 
-    wxString s = r[0][0] ;
+    const wxString s = r[0][0] ;
     wxString t = "" ;
     wxArrayString ve ;
     for ( int a = 0 ; a < s.length() ; a++ )
@@ -500,7 +543,7 @@ bool TManageDatabaseDialog::copyDNA ( const wxString& _n , const wxString& sdb ,
 
     for ( int a = 0 ; a < ve.GetCount() ; a++ )
         {
-        sql = "SELECT e_name FROM enzyme WHERE e_name=\"" + ve[a] + "\"" ;
+        const wxString sql = "SELECT e_name FROM enzyme WHERE e_name=\"" + ve[a] + "\"" ;
         r = target->getObject ( sql ) ;
         if ( r.rows() == 0 )
            source->copySQLfields ( *target , "enzyme" , "e_name=\"" + ve[a] + "\"" ) ;
@@ -519,8 +562,8 @@ bool TManageDatabaseDialog::moveDNA ( const wxString& name , const wxString& sdb
 
 void TManageDatabaseDialog::delDNA ( const wxString& _n, const wxString& db )
     {
-    TStorage *source = getTempDB ( getFileName ( db ) ) ;
-    wxString name = source->fixDNAname ( _n ) ;
+    TStorage * const source = getTempDB ( getFileName ( db ) ) ;
+    const wxString name = source->fixDNAname ( _n ) ;
     source->getObject ( "DELETE FROM dna WHERE dna_name=\"" + name + "\"" ) ;
     source->getObject ( "DELETE FROM dna_item WHERE di_dna=\"" + name + "\"" ) ;
     }
@@ -530,6 +573,7 @@ wxString TManageDatabaseDialog::getFileName ( const wxString& dbname ) const
     for ( int a = 0 ; a < db_name.GetCount() ; a++ )
         if ( db_name[a] == dbname )
            return db_file[a] ;
+    wxPrintf("I: TManageDatabaseDialog::getFileName: Could not find database '%s'\n" , dbname ) ;
     return "" ;
     }
 
@@ -610,7 +654,7 @@ void TManageDatabaseDialog::pd_loadList ()
 
 // Event handlers
 
-void TManageDatabaseDialog::OnCharHook(wxKeyEvent& event)
+void TManageDatabaseDialog::OnCharHook ( wxKeyEvent& event )
     {
     int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
@@ -638,16 +682,15 @@ void TManageDatabaseDialog::pdOnDBchange ( wxCommandEvent &ev )
 
 void TManageDatabaseDialog::pdOnNew ( wxCommandEvent &ev )
     {
-    wxString wildcard = "GENtle database (*.db)|*.db" ;
+    const wxString wildcard = "GENtle database (*.db)|*.db" ;
     wxFileDialog d ( this , txt("t_add_new_db") , "" , "" , wildcard , wxFD_SAVE|wxFD_OVERWRITE_PROMPT ) ;
     int x = d.ShowModal() ;
     if ( x != wxID_OK ) return ;
 
-    wxString fn = d.GetPath() ;
-    wxString blank = myapp()->homedir.GetFullPath() + wxFileName::GetPathSeparator() ;
-    blank += "blank.db" ;
+    const wxString fn = d.GetPath() ;
+    const wxString blank = myapp()->homedir.GetFullPath() + wxFileName::GetPathSeparator() + "blank.db" ;
 
-    bool b = wxCopyFile ( blank , fn , true ) ;
+    const bool b = wxCopyFile ( blank , fn , true ) ;
     if ( !b )
         {
         wxMessageBox ( fn , txt("t_db_already_exists") ) ;
@@ -659,13 +702,17 @@ void TManageDatabaseDialog::pdOnNew ( wxCommandEvent &ev )
 
 void TManageDatabaseDialog::pdOnAdd ( wxCommandEvent &ev )
     {
-    wxString wildcard = "GENtle database (*.db)|*.db" ;
+    const wxString wildcard = "GENtle database (*.db)|*.db" ;
     wxFileDialog d ( this , txt("t_choose_db") , "" , "" , wildcard , wxFD_OPEN ) ;
     int x = d.ShowModal() ;
     if ( x != wxID_OK ) return ;
 
-    wxString fn = d.GetPath() ;
-    if ( !wxFileExists ( fn ) ) return ;
+    const wxString fn = d.GetPath() ;
+    if ( !wxFileExists ( fn ) )
+       {
+       wxPrintf("I: TManageDatabaseDialog::pdOnAdd: File '%s' does not exist. Not adding database.\n" , fn ) ;
+       return ;
+       }
     addDatabase ( fn ) ;
     }
 
@@ -701,21 +748,26 @@ void TManageDatabaseDialog::addDatabase ( const wxString& fn )
 
     // Avoiding double names
     if ( t.GetChar(0) >= 'a' && t.GetChar(0) <= 'z' )
+        {
         t.SetChar ( 0 , t.GetChar(0) - 'a' + 'A' ) ; // Uppercase
+        }
     wxString s = t ;
     b = 1 ;
     do {
+
         if ( b > 1 )
-           s = t + wxString::Format ( " (%d)" , b ) ;
+            {
+            s = t + wxString::Format ( " (%d)" , b ) ;
+            }
         b++ ;
         for ( a = 0 ; a < db_name.GetCount() && db_name[a] != s ; a++ ) ;
+
         } while ( a < db_name.GetCount() ) ;
     t = s ;
 
     // Saving in database
-    TSQLresult r ;
-    wxString sql = "INSERT INTO stuff (s_type,s_name,s_value) VALUES (\"DATABASE\",\"" + t + "\",\"" + fn + "\")" ;
-    r = myapp()->frame->LS->getObject ( sql ) ;
+    const wxString sql = "INSERT INTO stuff (s_type,s_name,s_value) VALUES (\"DATABASE\",\"" + t + "\",\"" + fn + "\")" ;
+    TSQLresult r = myapp()->frame->LS->getObject ( sql ) ;
     pd_loadList () ;
     pd_db->SetStringSelection ( t ) ;
     pm_init_lists () ;
@@ -824,34 +876,61 @@ void TManageDatabaseDialog::pmOnActivate ( wxListEvent &ev , wxListCtrl *side )
 
 void TManageDatabaseDialog::pmOpenFiles ( const wxArrayString & _names , const wxString& _db )
     {
-    if ( _names.GetCount() == 0 ) return ;
+    wxPrintf( "D: TManageDatabaseDialog::pmOpenFiles - start - _names.Count()=%ld\n" , _names.Count() ) ;
+    if ( _names.GetCount() == 0 )
+        {
+        wxPrintf( "D: TManageDatabaseDialog::pmOpenFiles - start-check - _names.GetCount() == 0 returning without ending modal.\n" ) ;
+        return ;
+        }
     myapp()->frame->pop_help () ;
+    wxPrintf( "D: TManageDatabaseDialog::pmOpenFiles - A\n" ) ;
     if ( doLoad || doSave )
+        {
+        wxPrintf( "D: TManageDatabaseDialog::pmOpenFiles - A2 - doLoad || doSave\n" ) ;
         myapp()->frame->LS->setOption ( _T("TWOPANES") , f_twopanes->GetValue() ) ;
+        }
 
+    wxPrintf( "D: TManageDatabaseDialog::pmOpenFiles - B1 - setting return code to wxID_OK\n" ) ;
     SetReturnCode ( wxID_OK ) ;
+    wxPrintf( "D: TManageDatabaseDialog::pmOpenFiles - B2 - ending modal\n" ) ;
     EndModal ( true ) ;
 
     wxBeginBusyCursor () ;
-    myapp()->frame->lockDisplay ( true ) ;
+    wxPrintf( "D: TManageDatabaseDialog::pmOpenFiles - C\n" ) ;
+    //myapp()->frame->lockDisplay ( true ) ;
+    wxPrintf( "D: TManageDatabaseDialog::pmOpenFiles - D\n" ) ;
 
-    wxProgressDialog pd ( txt("t_loading") , "" , _names.GetCount() , NULL , wxPD_ALL ) ;
+    //wxProgressDialog pd ( txt("t_loading") , "" , _names.GetCount() , NULL , wxPD_ALL ) ;
+    wxPrintf( "D: TManageDatabaseDialog::pmOpenFiles - E\n" ) ;
     for ( int a = 0 ; a < _names.GetCount() ; a++ )
         {
+        /*
+        wxPrintf( "D: TManageDatabaseDialog::pmOpenFiles - F - update progress box\n" ) ;
         if ( !pd.Update ( a , _names[a] ) )
+            {
+            wxPrintf( "D: TManageDatabaseDialog::pmOpenFiles - F - break\n" ) ;
             break ;
+            }
+        */
+        wxPrintf( "D: TManageDatabaseDialog::pmOpenFiles - G - invoking do_load(%s,%s)\n" , _names[a] , _db ) ;
         do_load ( _names[a] , _db ) ;
+        wxPrintf( "D: TManageDatabaseDialog::pmOpenFiles - H\n" ) ;
         }
-
-    myapp()->frame->lockDisplay ( false ) ;
+    wxPrintf( "D: TManageDatabaseDialog::pmOpenFiles - I - EndBusyCursor\n" ) ;
     wxEndBusyCursor () ;
+
+    wxPrintf( "D: TManageDatabaseDialog::pmOpenFiles - J - UnlockDisplay\n" ) ;
+    //myapp()->frame->lockDisplay ( false ) ;
+    wxPrintf( "D: TManageDatabaseDialog::pmOpenFiles - K - MainTreeRefresh\n" ) ;
     myapp()->frame->mainTree->Refresh () ;
+    wxPrintf( "D: TManageDatabaseDialog::pmOpenFiles - end\n" ) ;
     }
 
 // --------------------------------
 
 bool TManageDatabaseDialog::do_load ( const wxString& name , const wxString& db )
     {
+    wxPrintf( "D: TManageDatabaseDialog::do_load (%s,%s)\n" , name, db ) ;
     if ( isProject ) return do_load_project ( name , db ) ;
     else return do_load_DNA ( name , db ) ;
     }
@@ -914,19 +993,18 @@ bool TManageDatabaseDialog::do_load_project ( const wxString& _n , const wxStrin
 
 bool TManageDatabaseDialog::do_load_DNA ( const wxString& name , const wxString& db )
     {
-    wxString sql ;
-    TStorage *tstorage = getTempDB ( getFileName ( db ) ) ;
-    TSQLresult sr ;
-    v = new TVector () ;
-
     wxPrintf("D: TManageDatabaseDialog::do_load_DNA (name = %s, db = %s)\n", name, db ) ;
+
+    TStorage *tstorage = getTempDB ( getFileName ( db ) ) ;
+    v = new TVector () ;
 
     if ( name.IsEmpty() ) return false ;
     // Loading vector
-    sql = "SELECT * FROM dna WHERE dna_name=\"" ;
+    wxString sql = "SELECT * FROM dna WHERE dna_name=\"" ;
     sql += name ;
     sql += "\"" ;
-    sr = tstorage->getObject ( sql ) ;
+
+    TSQLresult sr = tstorage->getObject ( sql ) ;
     if( sr.rows() == 0 )
         {
         wxMessageBox ( name , txt("t_could_not_load") ) ;
@@ -1019,7 +1097,8 @@ bool TManageDatabaseDialog::do_load_DNA ( const wxString& name , const wxString&
         }
 
     // Sorting by size, largest first
-    wxPrintf("D: retrieved %lu elements \n", v->items.size() ) ;
+    wxPrintf("D: TManageDatabaseDialog::do_load_DNA: retrieved %ld elements \n", v->items.size() ) ;
+    //wxPrintf( "D: TManageDatabaseDialog::do_load_DNA: retrieved elements \n" ) ;
     if ( v->items.size() < 100 ) // Don't do that for genomes!
         {
         for ( int a = 1 ; a < v->items.size() ; a++ )
@@ -1037,6 +1116,8 @@ bool TManageDatabaseDialog::do_load_DNA ( const wxString& name , const wxString&
                 }
             }
         }
+
+    wxPrintf( "D: TManageDatabaseDialog::do_load_DNA: mostly done\n" ) ;
 
     v->updateDisplay() ;
     v->undo.clear() ;
@@ -1068,6 +1149,7 @@ bool TManageDatabaseDialog::do_load_DNA ( const wxString& name , const wxString&
         n->vec->setDatabase ( db1 ) ;
         }
 
+    wxPrintf( "D: TManageDatabaseDialog::do_load_DNA: returning\n" ) ;
     return true ;
     }
 
@@ -1185,8 +1267,8 @@ void TManageDatabaseDialog::do_save_project ()
               }
             else
                {
-//               wxMessageDialog md ( this , "Not saved" , myapp()->frame->children[a]->def ) ;
-//               md.ShowModal() ;
+//             wxMessageDialog md ( this , "Not saved" , myapp()->frame->children[a]->def ) ;
+//             md.ShowModal() ;
                }
            }
         }
@@ -1365,9 +1447,7 @@ void TManageDatabaseDialog::pmOnRename ( wxCommandEvent &ev )
 
         if ( sr.rows() > 0 )
             {
-            wxMessageDialog md ( this , txt("t_entry_exists_del_target") ,
-                                    txt("t_entry_exists_brief") ,
-                                    wxYES|wxNO ) ;
+            wxMessageDialog md ( this , txt("t_entry_exists_del_target") , txt("t_entry_exists_brief") , wxYES|wxNO ) ;
             if ( wxID_YES != md.ShowModal() ) return ;
             delDNA ( newname , context_db ) ;
             }
