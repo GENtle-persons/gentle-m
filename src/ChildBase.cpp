@@ -58,7 +58,7 @@ void ChildBase::showName ( const wxString& _x ) const
 
 void ChildBase::OnFocus(wxFocusEvent& event)
     {
-    wxPrintf( "D: ChildBase::OnFocus - start\n" ) ;
+    //wxPrintf( "D: ChildBase::OnFocus - start\n" ) ;
     myass ( myapp() , "Oh no! No application defined!" ) ;
     myass ( myapp()->frame , "Oh no! No frame defined!" ) ;
     if ( myapp()->frame->dying )
@@ -74,10 +74,10 @@ void ChildBase::OnFocus(wxFocusEvent& event)
 
     if ( cSequence )
         {
-        wxPrintf( "D: ChildBase::OnFocus - cSequence\n" ) ;
+        //wxPrintf( "D: ChildBase::OnFocus - cSequence\n" ) ;
         cSequence->SetFocus() ;
         }
-    wxPrintf( "D: ChildBase::OnFocus - start\n" ) ;
+    //wxPrintf( "D: ChildBase::OnFocus - end\n" ) ;
     }
 
 bool ChildBase::caniclose(wxCloseEvent& event)

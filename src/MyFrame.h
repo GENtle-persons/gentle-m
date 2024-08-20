@@ -169,8 +169,8 @@ public:
     virtual ChildBase* GetActiveChild() ;
     virtual void setActiveChild ( ChildBase * const c ) ;
     virtual wxWindow* getCommonParent() const ;
-    virtual int getChildIndex ( ChildBase *c ) ;
-    virtual void activateChild ( int a ) ;
+    virtual int getChildIndex ( const ChildBase * const c ) const ;
+    virtual void activateChild ( const int childno ) ;
     virtual void lockDisplay ( const bool lock = true ) ;
     virtual bool isLocked () const ;
     virtual bool isActivating () const ;

@@ -767,7 +767,7 @@ void MyChild::OnEditMode(wxCommandEvent& event)
 
 void MyChild::initPanels ()
     {
-    wxPrintf( "D: MyChild::initPanels - start\n" ) ;
+    //wxPrintf( "D: MyChild::initPanels - start\n" ) ;
     myapp()->frame->lockDisplay ( true ) ;
     myass(vec, "myChild::initPanels: vec should always exist, and if empty.") ;
     if ( vec->getSequenceLength() > 100000 ) // Arbitary number, 100K
@@ -858,7 +858,7 @@ void MyChild::initPanels ()
     OnFocus(fev) ;
 
     Activate () ;
-    wxPrintf( "D: MyChild::initPanels - end\n" ) ;
+    //wxPrintf( "D: MyChild::initPanels - end\n" ) ;
     }
 
 void MyChild::OnHelp(wxCommandEvent& event)
