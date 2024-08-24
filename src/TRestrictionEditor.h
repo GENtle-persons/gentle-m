@@ -37,11 +37,10 @@ bool operator == ( const TFragment &f1 , const TFragment &f2 ) ;
 class TRestrictionEditor : public wxDialog
     {
     public :
-    TRestrictionEditor(MyFrame *parent, const wxString& title, const wxPoint& pos,
-                       const wxSize& size, const long style); ///< Constructor
+    TRestrictionEditor(MyFrame * const parent, const wxString& title, const wxPoint& pos, const wxSize& size, const long style); ///< Constructor
     ~TRestrictionEditor () ; ///< Destructor
 
-    virtual void initme ( TVector * const _v ) ; ///< Initialization
+    virtual void initme ( /* not const*/ TVector * const _v ) ; ///< Initialization
     virtual void initRestrictionPage () ; ///< Sets up the page
     virtual void pR_showGroupEnzymes ( const wxString& gr ) ; ///< Shows enzymes in selected enzyme group
     virtual wxArrayInt getcuts ( const wxString& enzyme ) ; ///< Returns the cut positions for the given enzyme
@@ -79,12 +78,18 @@ class TRestrictionEditor : public wxDialog
     wxSpinCtrl *nfstv ;
     wxBitmapButton *bb , *bb2 ;
     wxButton *btOK , *btCC ;
-    TVector *v ;
+
+    TVector *v ; ///< Vector operated on, not const because of invocation of setAction
+
     int _w , _h ;
     int numberoffragments ;
     vector <TREcache> cutcache ;
-    wxArrayString nocut , cocktail , *remoteCocktail ;
-    wxString pre , last_enzyme_selected , last_enzyme_selected_coc ;
+    wxArrayString nocut ; ///< List of enzymes already known not to cut Vector v
+    wxArrayString cocktail ;
+    wxArrayString *remoteCocktail ;
+    wxString pre ;
+    wxString last_enzyme_selected ;
+    wxString last_enzyme_selected_coc ;
     wxArrayInt cocktailFragments ;
 
     DECLARE_EVENT_TABLE()

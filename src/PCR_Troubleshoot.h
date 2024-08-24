@@ -1,5 +1,5 @@
 /** \file
-    \brief Contains the FindSequenceDialog class
+    \brief Contains the PCR_troubleshoot_dialog class
 */
 #ifndef _PCRTROUBLESHOOT_H_
 #define _PCRTROUBLESHOOT_H_

@@ -51,9 +51,10 @@ class TVectorEditor : public wxDialog
     virtual void commitEnzymes () ; ///< Do changes to the original enzyme settings
     virtual void commitProteases () ; ///< Do changes to the original proteases list
 
-    virtual void showGroupEnzymes ( wxString gr ) ; ///< Slow list of enzymes in group gr
+    virtual void showGroupEnzymes ( const wxString& gr ) ; ///< Slow list of enzymes in group gr
     virtual void showEnzymeGroups () ; ///< Show list of available enzyme groups
     void showProteases () ; ///< Lists the proteases
+    void debugStdout(const wxString& whatToPrint ) const ; ///< Prints content of interest to stdout
 
     virtual void enzymeSelChange ( wxCommandEvent& WXUNUSED(event) ) ; ///< "A different enzyme was selected" event handler
     virtual void enzymeListDlbClick ( wxCommandEvent& WXUNUSED(event) ) ; ///< "Double-click on enzyme" event handler
@@ -89,7 +90,8 @@ class TVectorEditor : public wxDialog
 
 
     wxListBox *listCE , *listGroups , *listGE ;
-    wxArrayString eig , ce ;
+    wxArrayString eig ;
+    wxArrayString ce ; ///< Holds current enzymes
 
     TVector *v ;
     int bo , th ;

@@ -53,7 +53,6 @@ void TRestrictionIdentifier::initme ()
     {
     TVirtualGel::initme () ;
 
-
     dna_list     = new wxCheckListBox ( this , RI_DNA_LIST ) ;
     bp_list      = new wxChoice ( this , RI_MIN_BP ) ;
     percent_list = new wxChoice ( this , RI_MIN_PERCENT ) ;
@@ -248,7 +247,11 @@ bool TRestrictionIdentifier::check4separation ( const wxString& en ) const
         {
         if ( !dna_list->IsChecked ( a ) ) continue ; // Not checked
         TVector *v = dna_items[a]->vec ;
-        if ( !v ) continue ; // Paranoia
+        if ( !v )
+            {
+            wxPrintf("D: dna_items[%d]->vec is NULL\n" , a ) ;
+            abort() ; // Paranoia
+            }
         wxArrayInt ai = getRestrictionFragments ( en , v ) ;
         for ( int b = 0 ; b < vai.size() ; b++ )
             {
@@ -259,6 +262,13 @@ bool TRestrictionIdentifier::check4separation ( const wxString& en ) const
     return true ;
     }
 
+/** \brief ensures that elements in a1 and a2 are mutually different.
+ * How different is determined from the bp_list and percent_list attributes.
+ * Nothing is said about a1 and a2 being similar to themselves.
+ * @param a1 - first array to compare
+ * @param a2 - second array to be mutually compared with
+ * @return true iff a value in a1 has no match in a2 or a value of a2 has no match in a1
+ */
 bool TRestrictionIdentifier::arrays_are_separate ( const wxArrayInt &a1 , const wxArrayInt &a2 ) const
     {
     long bp , percent ;
@@ -270,6 +280,16 @@ bool TRestrictionIdentifier::arrays_are_separate ( const wxArrayInt &a1 , const 
     return false ;
     }
 
+/**
+ * \brief see if every element in a1 has a value within percent and minimal differencce in a2
+ * Nothing is said about an element a2 being too different to be matched.
+ * Also the size of the arrays are not compared.
+ * @param a1 - Array of ints to be checked against a2
+ * @param a2 - Array of ints to be checked against
+ * @param bp - maximal difference to be tolerated for "equality"
+ * @param percent - difference in percent tolerated for "equality"
+ * @returns true iff a value in a1 does not have a match in a2
+ */
 bool TRestrictionIdentifier::arrays_differ ( const wxArrayInt &a1 , const wxArrayInt &a2 , const int bp , const int percent ) const
     {
     for ( int a = 0 ; a < a1.GetCount() ; a++ )
@@ -283,9 +303,12 @@ bool TRestrictionIdentifier::arrays_differ ( const wxArrayInt &a1 , const wxArra
 
         for ( int b = 0 ; b < a2.GetCount() ; b++ )
             {
-            if ( a2[b] < low || a2[b] > high ) continue ;
-            dupe = true ;
-            break ;
+            if ( a2[b] >= low && a2[b] <= high )
+                {
+                // value of a2[b] is sufficiently equal to value of a1[a]
+                dupe = true ;
+                break ;
+                }
             }
 
         if ( !dupe ) return true ;

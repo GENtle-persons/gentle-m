@@ -27,9 +27,9 @@ class TRestrictionEnzyme
     int getOverlap ( const bool& first_strand = true ) const ;
     void setOverlap ( const int o ) ;
     wxString getName () const ;
-    void setName ( const wxString& _name ) ;
+    void setName ( const wxString& name ) ;
     wxString getSequence () const ;
-    void setSequence ( const wxString& _seq ) ;
+    void setSequence ( const wxString& seq ) ;
     bool isPalindromic () const ;
 
     /// The physical location of the vial containing the enzyme, if entered
@@ -38,10 +38,12 @@ class TRestrictionEnzyme
 
   private :
     /// The enzyme name
-    wxString name , sequence ; ///< The recognition sequence
+    wxString name ;
+    wxString sequence ; ///< The recognition sequence
     bool palindromic ;
-    /// Where the cut occurs
-    int cut , overlap ; ///< Length of the sticky ends (negative=<--)
+
+    int cut ; ///< Where the cut occurs
+    int overlap ; ///< Length of the sticky ends (negative=<--)
 } ;
 
 /// \brief Stores a specific cut of a restriction enzyme

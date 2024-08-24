@@ -65,7 +65,7 @@ class TClone
 //  void setGeneSequence ( int i , wxString s );
 //  wxString getGeneSequence ( int i );
     void cleanup () ; ///< Reset internal state
-    void parseLines ( wxArrayString &v , char *t , long l ) const ; ///< Breaks text into lines
+    void parseLines ( wxArrayString &v , char * const t , const long l ) const ; ///< Breaks text into lines
     void separateNames ( wxString &s1 , wxString &s2 ) const ; ///< ???
     int cmp ( const wxString &s1 , const wxString &s2 ) const ; ///< String comparison
     int a2i ( const wxString &s ) const { return atoi ( (const char*) s.c_str() ) ; }  ///< Converts string to integer

@@ -36,6 +36,9 @@ enum {
 #include "main.h"
 #include "TUndo.h"
 
+#include "main.h"
+#include "TUndo.h"
+
 /// This class manages amino acid properties; so 20 total. Used by the static part of TVector
 class TAAProp
 {
@@ -49,7 +52,8 @@ class TAAProp
     void set_halflife ( const int mammal , const int yeast , const int ecoli ) ; ///< Half-life (not the game!)
     wxString get_halflife_text ( const int hl ) const ; ///< Returns half-life estimation
     wxString tla ; ///< Three-letter acronym
-    float mw , pi ;
+    float mw ; ///< molecular weight
+    float pi ; ///< isoelectric point
     float cf_f[4] ; ///< Some data
     int cf_pa , cf_pb , cf_pt ;
     int carbon , hydrogen , nitrogen , oxygen , sulfur ;
@@ -160,7 +164,8 @@ class TVectorItem
     wxTreeItemId treeid ; ///< The item ID in the TVectorTree
 
     /// \brief Parameter keys
-    wxArrayString pname , pvalue ; ///< Parameter values
+    wxArrayString pname ; ///< Parameter names
+    wxArrayString pvalue ; ///< Parameter values
     vector <Tdna2aa> dna2aa_item ; ///< The cache of the translated amino acids
     const TVector * lastVector ; ///< The last TVector to own this item
 
@@ -193,7 +198,7 @@ class TVector
     // Restriction enzymes
     void recalculateCuts () ; ///< Recalculate restriction enzyme cuts
     void getCuts ( const TRestrictionEnzyme * const e , vector <TRestrictionCut> &ret , const bool clear_vector = true , const int max = 10000000 ) const ; ///< Gets the cuts of restriction enzyme in this sequence
-    bool reduceToFragment ( TRestrictionCut left , TRestrictionCut right ) ; ///< Cuts off everything except what is betreen these two cuts
+    bool reduceToFragment ( const TRestrictionCut& left , const TRestrictionCut& right ) ; ///< Cuts off everything except what is betreen these two cuts
     void doRestriction () ; ///< Performs restriction. See TRestrictionEditor
     void sortRestrictionSites () ; ///< Sorts the restriction sites by point of cut
     int countCuts ( const wxString& enzyme ) const ; ///< Counts the number of cuts for an enzyme in this sequence
@@ -260,7 +265,8 @@ class TVector
     void hideEnzyme ( const wxString& s , const bool hideit = true ) ; ///< Set enzyme hidden state
 
     wxString getSubstring ( const int mf , const int mt ) ; ///< Returns a sequence substring
-    wxString transformSequence ( const bool inverse , const bool reverse ) const ; ///< Transforms the sequence
+    wxString transformSequence ( const bool inverse , const bool reverse ) const ; ///< Transforms the Vector's sequence
+    static wxString transformSequence ( const wxString& sequence, const bool inverse , const bool reverse ) ; ///< Transforms the sequence passed as argument
     wxString getSequence () const ; ///< Returns the sequence
     wxString * getSequencePointer () ; ///< Internal use; only used by SequenceCanvas::OnCharHook
     const wxString * getSequencePointerConst () const ; ///< Internal use; only used by SequenceCanvas::OnCharHook
@@ -281,11 +287,11 @@ class TVector
     void setGenomeMode ( const bool gm = true ) ; ///< Turns genome mode on/off
     bool getGenomeMode () const ; ///< Returns the genome mode
     int getMem () const ; ///< Returns memory usage estimate for this sequence. Debugging use only
-    bool getVectorCuts ( const TVector * const v ) ; ///< Returns wether or not isoenzymes should be joined
+    bool getVectorCuts ( ) ; ///< Returns wether or not isoenzymes should be joined
     TEnzymeRules *getEnzymeRule () const ; ///< Gets the enzyme rules to follow
     int showGC () const ; ///< Returns 0 for "no", otherwise the number of blocks
     TORF *getORF ( const int a ) ; ///< Returns an open reading frame
-    int countORFs () ; ///< Returns the number of found open reading frames
+    int countORFs () const ; ///< Returns the number of found open reading frames
     void updateDisplay ( const bool update = true ) ; ///< Recalc visual information on next draw
     bool displayUpdate () const ; ///< Update the display?
     void setType ( const int newtype ) ; ///< Set the sequence type

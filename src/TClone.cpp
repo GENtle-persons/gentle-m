@@ -21,9 +21,15 @@ int TClone_Gene::cmp ( const wxString &s1 , const wxString &s2 ) const
 
 void TClone::loadEnzymeList ( TStorage * const st , const wxString& filename )
     {
+    wxPrintf( "D: TClone::loadEnzymeList - start (filename: %s)\n" , filename ) ;
     wxFile f ( filename , wxFile::read ) ;
-    long l = f.Length() ;
+    size_t l = f.Length() ;
     char *t = new char [l+15] ;
+    if (! t)
+        {
+        wxPrintf( "E: TClone::loadEnzymeList: Could not allocate %lu bytes of memory.\n" , l ) ;
+        abort() ;
+        }
     f.Read ( t , l ) ;
     f.Close() ;
 
@@ -33,14 +39,22 @@ void TClone::loadEnzymeList ( TStorage * const st , const wxString& filename )
         TRestrictionEnzyme r ;
         wxString r_name , r_sequence ;
         for ( int a = 0 ; a < 8 ; a++ )
-          if ( *d ) r_name += *d++ ;
-          else d++ ;
+            {
+            if ( *d )
+                {
+                r_name += *d ;
+                }
+            d++ ;
+            }
         r.setName ( r_name ) ;
         for ( int a = 0 ; a < 16 ; a++ )
-          {
-          if ( *d >= '0' && *d <= 'z' ) r_sequence += *d++ ;
-          else d++ ;
-          }
+            {
+            if ( *d >= '0' && *d <= 'z' )
+                {
+                r_sequence += *d ;
+                }
+            d++ ;
+            }
         r.setSequence ( r_sequence ) ;
 
         r.setOverlap ( (int) *d++ ) ;
@@ -50,23 +64,51 @@ void TClone::loadEnzymeList ( TStorage * const st , const wxString& filename )
         r.setCut ( (int) *d++ ) ;
         if ( r.getOverlap() < 0 ) r.setCut ( r.getCut() - r.getOverlap() ) ;
 
+        if ( r_sequence.IsEmpty() )
+            {
+            wxPrintf( "D: TClone::loadEnzymeList - empty sequence, skipping enzyme '%s'\n" , r_name ) ;
+            abort() ;
+            }
         vr.push_back ( r ) ;
         }
     delete [] t ;
 
-    for ( int i = 0 ; i < vr.size() ; i++ )
+    for ( unsigned int i = 0 ; i < vr.size() ; i++ )
      {
        if ( !st->getRestrictionEnzyme(vr[i].getName()) )
            {
+
+           if ( vr[i].getName().IsEmpty() )
+               {
+               wxPrintf( "D: TClone::loadEnzymeList - Not copying restriction enzyme with no name at position i=%u\n" , i ) ;
+               continue ;
+               }
+
+           if ( vr[i].getSequence().IsEmpty() )
+               {
+               wxPrintf( "D: TClone::loadEnzymeList - Not copying restriction enzyme '%s' with no sequence at position i=%u\n" , vr[i].getName() , i ) ;
+               abort() ;
+               }
+
            TRestrictionEnzyme *r = new TRestrictionEnzyme ;
+
            *r = vr[i] ;
+
+           if ( r->getSequence().IsEmpty() )
+               {
+               wxPrintf( "D: TClone::loadEnzymeList - Restriction enzyme '%s' lost sequence after copying at position i=%u\n" , vr[i].getName() , i ) ;
+               abort() ;
+               }
+
            st->addRestrictionEnzyme ( r ) ;
            }
        }
+    wxPrintf( "D: TClone::loadEnzymeList - end (filename: %s)\n" , filename ) ;
     }
 
 void TClone::remap ( TVector * const v ) const
     {
+    wxPrintf( "D: TClone::remap (vector %s) - start\n" , v->getName() ) ;
     v->updateDisplay() ;
 
     v->setSequence ( sequence ) ;
@@ -90,11 +132,7 @@ void TClone::remap ( TVector * const v ) const
             {
             sname = genes[a].fullname ;
             }
-        TVectorItem vi ( sname ,
-                         genes[a].fullname ,
-                         gf ,
-                         gt ,
-                         ty ) ;
+        TVectorItem vi ( sname , genes[a].fullname , gf , gt , ty ) ;
         vi.setDirection ( genes[a].getCCW()?-1:1 );
         v->items.push_back ( vi ) ;
         }
@@ -110,11 +148,18 @@ void TClone::remap ( TVector * const v ) const
         }
     for ( int a = 0 ; a < vs.GetCount() ; a++ )
         {
-        TRestrictionEnzyme *e = LS->getRestrictionEnzyme(vs[a]) ;
+        wxString n = vs[a] ;
+        TRestrictionEnzyme *e = LS->getRestrictionEnzyme( n ) ;
+        if ( e->getSequence().IsEmpty() )
+            {
+            wxPrintf( "D: TClone::remap enzyme %s from LS->getRestrictionEnzyme(%s) has no sequence\n" , e->getName() , n ) ;
+            abort() ; 
+            }
         if ( e )
            v->re.Add ( e ) ;
         }
     v->recalculateCuts () ;
+    wxPrintf( "D: TClone::remap (vector %s) - end\n" , v->getName() ) ;
     }
 
 TClone::TClone()
@@ -139,7 +184,7 @@ void TClone::cleanup ()
     enzymes.clear () ;
     }
 
-void TClone::parseLines ( wxArrayString &v , char *t , long l ) const
+void TClone::parseLines ( wxArrayString &v , char * const t , const long l ) const
     {
     for ( char *c=t, *d=t ; c-t < l ; c++ )
         {
@@ -157,11 +202,11 @@ void TClone::parseLines ( wxArrayString &v , char *t , long l ) const
 
 void TClone::separateNames ( wxString &s1 , wxString &s2 ) const
     {
-    char *t , *c ;
-    t = new char [ s1.length() + 5 ] ;
+    char * t = new char [ s1.length() + 5 ] ;
     strcpy ( t , s1.mb_str() ) ;
 
-    for ( c = t ; *c && *c != 1 ; c++ ) ;
+    char* c ;
+    for (c = t ; *c && *c != 1 ; c++ ) ;
     if ( *c )
         {
         *c = 0 ;
@@ -173,11 +218,13 @@ void TClone::separateNames ( wxString &s1 , wxString &s2 ) const
         wxPrintf( "W: TClone::separateNames: Not performing actual separation (s1='%s').\n" , s1 ) ;
         }
 
-    delete t ;
+    delete [] t ;
     }
 
 void TClone::load ( const wxString& s )
-{
+    {
+    wxPrintf( "D: TClone::load(%s) - start\n" , s ) ;
+   
     wxFile f ( s , wxFile::read ) ;
     long l = f.Length() ;
     char *t = new char [l+15] ;
@@ -268,6 +315,7 @@ void TClone::load ( const wxString& s )
 //    sort ( enzymes.begin() , enzymes.end() ) ;
     if ( sequence.IsEmpty() ) success = false ;
 
+    wxPrintf( "D: TClone::load(%s) - end\n" , s ) ;
     }
 
 void TClone::save ( const wxString& s )
