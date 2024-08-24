@@ -227,9 +227,7 @@ bool TLigationDialog::doMatch ( const int& l , const int& r , const bool& invert
         s2 = vv[l]->getStickyEnd(false,false) + vv[r]->getStickyEnd(true,false) ;
         }
 
-    TVector v ;
-    v.setSequence ( s1 ) ;
-    wxString s3 = v.transformSequence ( true , false ) ;
+    wxString s3 = TVector::transformSequence ( s1 , true , false ) ;
     return ( s2 == s3 ) ;
     }
 

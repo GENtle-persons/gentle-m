@@ -191,7 +191,7 @@ void MyFrame::initme ()
 //  myapp()->sw.Start() ;
 
 #ifdef __WXGTK__
-    wxFont f ( wxFontInfo ( 8 ).Family( wxFONTFAMILY_SWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONWEIGHT_NORMAL ) ) ;
+    wxFont f ( wxFontInfo ( 8 ).Family( wxFONTFAMILY_SWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;
     SetFont ( f ) ;
 #endif
 
@@ -2075,25 +2075,26 @@ void MyFrame::removeChild ( ChildBase *ch )
 /** \brief Activates a child (brings to front, makes visible, etc.)
  \param childno - position of child in children list, starts with 0
  */
-void MyFrame::activateChild ( const int childno )
+void MyFrame::activateChild ( const unsigned int childno )
     {
     //wxPrintf( "D: MyFrame::activateChild( %d ) - start\n" , childno) ;
     size_t numberOfChildren = children.GetCount() ;
     if ( ! numberOfChildren )
         {
-            //wxPrintf( "D: MyFrame::activateChild( %d ) - beyond number of children ( = %d), choosing NULL\n" , childno, children.GetCount() ) ;
+            wxPrintf( "D: MyFrame::activateChild( %u ) - beyond number of children ( = %lu), choosing NULL\n" , childno, children.GetCount() ) ;
             setActiveChild ( NULL ) ;
         }
     else
         {
-        if ( childno >= children.GetCount() )
+        int childtoactivate = childno ;
+        if ( childtoactivate >= children.GetCount() )
             {
-            //wxPrintf( "D: MyFrame::activateChild( %d ) - beyond number of children ( = %d), choosing first\n" , childno, children.GetCount() ) ;
-            childno = 0 ;
+            wxPrintf( "W: MyFrame::activateChild( %u ) - beyond number of children ( = %lu), choosing first\n" , childno, children.GetCount() ) ;
+            childtoactivate = 0 ; // not const
             }
-        children[childno]->Activate () ;
-        mainTree->EnsureVisible ( children[childno]->inMainTree ) ;
-        mainTree->SelectItem ( children[childno]->inMainTree ) ;
+        children[childtoactivate]->Activate () ;
+        mainTree->EnsureVisible ( children[childtoactivate]->inMainTree ) ;
+        mainTree->SelectItem ( children[childtoactivate]->inMainTree ) ;
         }
     //wxSafeYield () ;
     //wxPrintf( "D: MyFrame::activateChild( %d ) - end\n" ) ;
@@ -2167,7 +2168,7 @@ wxString MyFrame::check4update ()
     return text ;
     }
 
-wxString MyFrame::check4update_sub ( const wxString& text ) const
+wxString MyFrame::check4update_sub ( const wxString& text ) /* not const */
     {
     bool error = true ;
     if ( !text.IsEmpty() ) error = false ;
@@ -2190,7 +2191,7 @@ wxString MyFrame::check4update_sub ( const wxString& text ) const
             {
             wxString msg = it.AfterFirst ( '\n' ) ;
             msg += "\n(" + wxString ( txt("t_you_use_version") ) + myapp()->get_GENtle_version() + ")" ;
-            wxMessageDialog md ( this , msg , txt("t_new_version" ) , wxOK | wxCANCEL | wxCENTRE | wxICON_INFORMATION ) ;
+            wxMessageDialog md ( /* not const */ this , msg , txt("t_new_version" ) , wxOK | wxCANCEL | wxCENTRE | wxICON_INFORMATION ) ;
             if ( wxID_OK != md.ShowModal() )
                 {
                 return "-" ;

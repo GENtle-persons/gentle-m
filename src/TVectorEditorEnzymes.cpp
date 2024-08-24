@@ -5,6 +5,7 @@
 
 void TVectorEditor::initPanEnzym ()
     {
+    wxPrintf( "D: TVectorEditor::initPanEnzym - start\n" ) ;
     nb->AddPage ( panEnzym , txt("t_vec_enzym") ) ;
     if ( v ) initPanEnzym2 () ;
 
@@ -90,24 +91,49 @@ void TVectorEditor::initPanEnzym ()
     for ( int a = 0 ; v && a < v->re.GetCount() ; a++ )
         {
         wxString s = v->re[a]->getName() ;
+        if ( v->re[a]->getSequence().IsEmpty() )
+            {
+            wxPrintf( "E: TVectorEditor::initPanEnzym - enzyme %s = re[%d]->getSequence.IsEmpty()\n" , v->re[a]->getName(), a ) ;
+            abort() ;
+            }
         listCE->Append ( s ) ;
         ce.Add ( s ) ;
         }
+
+    debugStdout("ce") ;
+
+    wxPrintf( "D: TVectorEditor::initPanEnzym - end\n" ) ;
+    }
+
+/** \brief prints state of TVectorEditor to stdout
+ * @param whatToPrint - blank-separated list indicating what to print, only ce at the moment
+ */
+void TVectorEditor::debugStdout(const wxString &whatToPrint ) const
+    {
+    wxPrintf( "D: TVectorEditor::debugStdout - ce: " );
+    for( int a = 0 ; a < ce.GetCount() ; a++ )
+        {
+        wxPrintf( " %s" , ce[a] ) ;
+        }
+    wxPrintf( "\n" );
     }
 
 // Handlers "enzyme"
 
 void TVectorEditor::enzymeSelChange ( wxCommandEvent &ev )
     {
+    wxPrintf( "D: TVectorEditor::enzymeSelChange - start\n" ) ;
     wxListBox *lb = (wxListBox*) ev.GetEventObject() ;
     if ( lb == listGroups )
         {
         showGroupEnzymes ( lb->GetString ( lb->GetSelection() ) ) ;
         }
+    wxPrintf( "D: TVectorEditor::enzymeSelChange - end\n" ) ;
     }
 
 void TVectorEditor::enzymeListDlbClick ( wxCommandEvent &ev )
     {
+    wxPrintf( "D: TVectorEditor::enzymeListDlbClick - start\n" ) ;
     wxListBox *lb = (wxListBox*) ev.GetEventObject() ;
     if ( lb == listGE )
         {
@@ -149,27 +175,37 @@ void TVectorEditor::enzymeListDlbClick ( wxCommandEvent &ev )
         if ( n != 1 ) return ;
         wxString s = lb->GetString ( vi[0] ) ;
         TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( s ) ;
+        if ( e->getSequence().IsEmpty() )
+            {
+            wxPrintf( "W: TVectorEditor::enzymeListDlbClick: myapp()->frame->LS->getRestrictionEnzyme (%s) retrieved empty sequence.\n" , s ) ;
+            }
         TEnzymeDialog ed ( this , s , wxPoint(-1,-1) , wxSize(600,400) , wxDEFAULT_DIALOG_STYLE|wxCENTRE ) ;
         ed.initme ( e ) ;
         ed.ShowModal() ;
         }
+    wxPrintf( "D: TVectorEditor::enzymeListDlbClick - end\n" ) ;
     }
 
 void TVectorEditor::showEnzymeGroups ()
     {
+    wxPrintf( "D: TVectorEditor::showEnzymeGroups - start\n" ) ;
     wxString all = txt("All") ;
     listGroups->Clear() ;
     listGroups->Append ( all ) ;
     wxArrayString vs ;
     myapp()->frame->LS->getEnzymeGroups ( vs ) ;
     for ( int i = 0 ; i < vs.GetCount() ; i++ )
+        {
         listGroups->Append ( vs[i] ) ;
+        }
     showGroupEnzymes ( all ) ;
     listGroups->SetStringSelection ( all ) ;
+    wxPrintf( "D: TVectorEditor::showEnzymeGroups - end\n" ) ;
     }
 
-void TVectorEditor::showGroupEnzymes ( wxString gr )
+void TVectorEditor::showGroupEnzymes ( const wxString& gr )
     {
+    wxPrintf( "D: TVectorEditor::showGroupEnzymes (%s) - start\n" , gr ) ;
     wxArrayString vs ;
     listGE->Clear() ;
     wxString gr2 = myapp()->frame->LS->UCfirst ( gr ) ;
@@ -194,10 +230,12 @@ void TVectorEditor::showGroupEnzymes ( wxString gr )
         b_dfg->Enable() ;
         delete_enzyme_button->Disable() ;
         }
+    wxPrintf( "D: TVectorEditor::showGroupEnzymes (%s -> %s) - end\n" , gr , gr2 ) ;
     }
 
 void TVectorEditor::enzymeAddEn ( wxCommandEvent &ev )
     {
+    wxPrintf( "D: TVectorEditor::enzymeAddEn - start\n" ) ;
     wxArrayInt vi ;
     int n = listGE->GetSelections ( vi ) ;
     for ( int k = 0 ; k < n ; k++ )
@@ -212,10 +250,12 @@ void TVectorEditor::enzymeAddEn ( wxCommandEvent &ev )
             ce.Add ( s ) ;
             }
         }
+    wxPrintf( "D: TVectorEditor::enzymeAddEn - end\n" ) ;
     }
 
 void TVectorEditor::enzymeAddGr ( wxCommandEvent &ev )
     {
+    wxPrintf( "D: TVectorEditor::enzymeAddGr - start\n" ) ;
     wxString s ;
     for ( int a = 0 ; a < eig.GetCount() ; a++ )
         {
@@ -227,13 +267,16 @@ void TVectorEditor::enzymeAddGr ( wxCommandEvent &ev )
            ce.Add ( s ) ;
            }
         }
+    wxPrintf( "D: TVectorEditor::enzymeAddGr - end\n" ) ;
     }
 
 void TVectorEditor::enzymeAddToGr ( wxCommandEvent &ev )
     {
+    wxPrintf( "D: TVectorEditor::enzymeAddToGr - start\n" ) ;
     wxString group = listGroups->GetStringSelection() ;
     group = myapp()->frame->LS->UCfirst ( group ) ;
     if ( group == txt("All") ) return ;
+
     wxArrayInt vi ;
     int n = listCE->GetSelections ( vi ) ;
 
@@ -253,23 +296,31 @@ void TVectorEditor::enzymeAddToGr ( wxCommandEvent &ev )
         myapp()->frame->LS->addEnzymeToGroup ( s , group ) ;
         }
     showGroupEnzymes ( group ) ;
+    wxPrintf( "D: TVectorEditor::enzymeAddToGr - end\n" ) ;
     }
 
 void TVectorEditor::enzymeAddToNewGr ( wxCommandEvent &ev )
     {
+    wxPrintf( "D: TVectorEditor::enzymeAddToNewGr - start\n" ) ;
     wxTextEntryDialog ted ( this , txt("b_add_as_new_group") , txt("t_new_enzyme_group_name") ) ;
     if ( wxID_OK != ted.ShowModal () ) return ;
     wxString ng = ted.GetValue() ;
     ng = myapp()->frame->LS->UCfirst ( ng ) ;
-    if ( !myapp()->frame->LS->addEnzymeGroup ( ng ) ) return ;
+    if ( !myapp()->frame->LS->addEnzymeGroup ( ng ) )
+        {
+        wxPrintf( "W: TVectorEditor::enzymeAddToNewGr: Failure to add enzyme group '%s'\n" , ng ) ;
+        return ;
+        }
 
     listGroups->Append ( ng ) ;
     listGroups->SetStringSelection ( ng ) ;
     enzymeAddToGr ( ev ) ;
+    wxPrintf( "D: TVectorEditor::enzymeAddToNewGr - end\n" ) ;
     }
 
 void TVectorEditor::enzymeReallyDeleteEnzyme ( wxCommandEvent &ev )
     {
+    wxPrintf( "D: TVectorEditor::enzymeReallyDeleteEnzyme - start\n" ) ;
     wxArrayInt vi ;
     int n = listGE->GetSelections ( vi ) ;
     if ( n == 0 ) return ;
@@ -280,10 +331,12 @@ void TVectorEditor::enzymeReallyDeleteEnzyme ( wxCommandEvent &ev )
         myapp()->frame->LS->markEnzymeForDeletion ( name ) ;
         }
     wxMessageBox ( txt("t_enzymes_marked_for_deletion") ) ;
+    wxPrintf( "D: TVectorEditor::enzymeReallyDeleteEnzyme - end\n" ) ;
     }
 
 void TVectorEditor::enzymeDelEn ( wxCommandEvent &ev )
     {
+    wxPrintf( "D: TVectorEditor::enzymeDelEn - start\n" ) ;
     wxArrayInt vi ;
     int n = listCE->GetSelections ( vi ) ;
     for ( int k = n-1 ; k >= 0 ; k-- )
@@ -291,57 +344,89 @@ void TVectorEditor::enzymeDelEn ( wxCommandEvent &ev )
         int i = vi[k] ;
         wxString s = listCE->GetString ( i ) ;
         listCE->Delete ( i ) ;
-        for ( i = 0 ; i < ce.GetCount() ; i++ )
+
+        int numDeleted = 0 ;
+        for ( int j = 0 ; j < ce.GetCount() ; j++ )
             {
             if ( ce[i] == s )
                {
-               ce.RemoveAt ( i ) ;
+               ce.RemoveAt ( j ) ;
+               numDeleted++ ;
                /*
                ce[i] = ce[ce.size()-1] ;
                ce.pop_back () ;
                */
                }
             }
+        if (0 == numDeleted)
+            {
+            wxPrintf( "W: TVectorEditor::enzymeDelEn: Did not delete from CE - expected '%s'\n" , s ) ;
+            }
+        else if (1 < numDeleted )
+            {
+            wxPrintf( "W: TVectorEditor::enzymeDelEn: Deleted '%s' multiple (%d) times from CE\n" , s , numDeleted ) ;
+            }
         }
+
+    wxPrintf( "D: TVectorEditor::enzymeDelEn - end\n" ) ;
     }
 
 void TVectorEditor::initialViewEnzyme ( const wxString& e )
     {
+    wxPrintf( "D: TVectorEditor::initialViewEnzyme(%s) - start\n" , e ) ;
     nb->SetSelection ( 2 ) ;
     listCE->SetStringSelection ( e ) ;
+    wxPrintf( "D: TVectorEditor::initialViewEnzyme(%s) - end\n" , e ) ;
     }
 
 void TVectorEditor::importCloneEnzymes ( wxCommandEvent &ev )
     {
+    wxPrintf( "D: TVectorEditor::importCloneEnzymes - start\n" ) ;
     TStorage TS ( TEMP_STORAGE ) ;
     TClone clone ;
     clone.loadEnzymeList ( &TS , "./CLONE.ENZ" ) ;
+    wxPrintf(" I: TVectorEditor::importCloneEnzymes: Loaded %lu CEs\n" , TS.re.GetCount() ) ;
     for ( int a = 0 ; a < TS.re.GetCount() ; a++ )
-       {
-       listCE->Append ( TS.re[a]->getName() ) ;
-       myapp()->frame->LS->re.Add ( TS.re[a] ) ;
-       myapp()->frame->LS->updateRestrictionEnzyme ( TS.re[a] ) ;
-       TS.re[a] = NULL ; // avoid deletion
-       }
+        {
+        TRestrictionEnzyme *rea = TS.re[a] ;
+        if ( rea->getSequence().empty() )
+            {
+            wxPrintf( "W: TVectorEditor::importCloneEnzymes - Enzyme '%s' has empty sequence - abort.\n" , rea->getName() ) ;
+            abort() ;
+            }
+        listCE->Append ( rea->getName() ) ;
+        myapp()->frame->LS->re.Add ( rea ) ;
+        myapp()->frame->LS->updateRestrictionEnzyme ( rea ) ;
+        TS.re[a] = NULL ; // avoid deletion of re[a]
+        }
     wxString group = listGroups->GetStringSelection() ;
     showGroupEnzymes ( group ) ;
+    wxPrintf( "D: TVectorEditor::importCloneEnzymes - end\n" ) ;
     }
 
 
 void TVectorEditor::newEnzyme ( wxCommandEvent &ev )
     {
+    wxPrintf( "D: TVectorEditor::newEnzyme - start\n" ) ;
     TRestrictionEnzyme *e = new TRestrictionEnzyme ;
     e->setCut ( 0 ) ;
     e->setOverlap ( 0 ) ;
-    TEnzymeDialog ed ( this , txt("t_new_enzyme") , wxPoint(-1,-1) , wxSize(600,400) ,
-                    wxDEFAULT_DIALOG_STYLE|wxCENTRE ) ;
+    TEnzymeDialog ed ( this , txt("t_new_enzyme") , wxPoint(-1,-1) , wxSize(600,400) , wxDEFAULT_DIALOG_STYLE|wxCENTRE ) ;
     ed.initme ( e ) ;
     if ( ed.ShowModal() == wxID_OK )
-       {
-       myapp()->frame->LS->re.Add ( ed.e ) ;
-       myapp()->frame->LS->updateRestrictionEnzyme ( ed.e ) ;
-       }
+        {
+        if ( ed.e->getSequence().IsEmpty() )
+            {
+            wxPrintf( "D: TVectorEditor::newEnzyme - Not accepting new enzyme since sequence is empty.\n" ) ;
+            }
+        else
+            {
+            myapp()->frame->LS->re.Add ( ed.e ) ;
+            myapp()->frame->LS->updateRestrictionEnzyme ( ed.e ) ;
+            }
+        }
     showEnzymeGroups () ;
+    wxPrintf( "D: TVectorEditor::newEnzyme - end\n" ) ;
     }
 
 void TVectorEditor::enzymeDelGr ( wxCommandEvent &ev )
@@ -362,7 +447,7 @@ void TVectorEditor::enzymeImportRebase ( wxCommandEvent &ev )
     if ( wxYES != wxMessageBox ( txt("t_import_rebase_warning") , txt("t_attention") , wxYES_NO ) )
         return ;
     wxString filename = wxFileName::CreateTempFileName ( "GENtle_rebase_" ) ;
-    wxPrintf("D: enzymeImportRebase created temp filename '%s'.\n",filename ) ;
+    wxPrintf("D: TVectorEditor::enzymeImportRebase created temp filename '%s'.\n",filename ) ;
 
     // Read file
     wxBeginBusyCursor () ;
@@ -419,7 +504,15 @@ void TVectorEditor::enzymeImportRebase ( wxCommandEvent &ev )
             wxString cut1 = p1.AfterFirst(',').Trim().Trim(false) ;
             wxString cut2 = p2.AfterFirst(',').Trim().Trim(false) ;
 
-            if ( enzyme_name.IsEmpty() || seq1.IsEmpty() || cut1.IsEmpty() ) continue ; // Paranoia
+            if ( enzyme_name.IsEmpty() )
+                {
+                wxPrintf( "W: Could not read name prior to sequence '%s' - ignoring.\n" , seq1 ) ;
+                continue ; // Paranoia
+                }
+            if ( seq1.IsEmpty() || cut1.IsEmpty() )
+                {
+                continue ; // Paranoia
+                }
             if ( !seq2.IsEmpty() && seq1.length() != seq2.length() ) continue ; // Paranoia
             if ( enzyme_name.StartsWith ( "M." ) ) continue ; // Strange things, ignore
             if ( cut1 == "?" ) continue ; // Unknown cut, ignore
@@ -440,6 +533,8 @@ void TVectorEditor::enzymeImportRebase ( wxCommandEvent &ev )
                 seq1 = "N" + seq1 ;
                 }
 
+            
+
             TRestrictionEnzyme *re = myapp()->frame->LS->getRestrictionEnzyme ( enzyme_name ) ;
             if ( re == NULL ) // Add new enzyme
                 {
@@ -459,14 +554,22 @@ void TVectorEditor::enzymeImportRebase ( wxCommandEvent &ev )
                     }
 
                 // A real new enzyme!
-                added++ ;
                 re = new TRestrictionEnzyme ;
                 re->setName ( enzyme_name ) ;
                 re->setCut ( lcut1 ) ;
                 re->setOverlap ( lcut2 ) ;
                 re->setSequence ( seq1 ) ;
-                myapp()->frame->LS->addRestrictionEnzyme ( re ) ;
-                myapp()->frame->LS->updateRestrictionEnzyme ( re ) ;
+                if ( re->getSequence().IsEmpty() )
+                    {
+                    wxPrintf( "W: TVectorEditor::enzymeImportRebase: Not adding new enzyme '%s' with empty sequence\n" , re->getName() ) ;
+                    delete re ;
+                    }
+                else
+                    {
+                    added++ ;
+                    myapp()->frame->LS->addRestrictionEnzyme ( re ) ;
+                    myapp()->frame->LS->updateRestrictionEnzyme ( re ) ;
+                    }
                 //wxMessageBox ( enzyme_name , "New enzyme!" ) ;
                 }
             else if ( re->getCut() != lcut1 || re->getOverlap() != lcut2 || re->getSequence() != seq1 ) // Update enzyme
@@ -475,7 +578,14 @@ void TVectorEditor::enzymeImportRebase ( wxCommandEvent &ev )
                 re->setCut ( lcut1 ) ;
                 re->setOverlap ( lcut2 ) ;
                 re->setSequence ( seq1 ) ;
-                myapp()->frame->LS->updateRestrictionEnzyme ( re ) ;
+                if ( re->getSequence().IsEmpty() )
+                    {
+                    wxPrintf( "W: TVectorEditor::enzymeImportRebase: Not updating enzyme '%s' with empty sequence\n" , re->getName() ) ;
+                    }
+                else
+                    {
+                    myapp()->frame->LS->updateRestrictionEnzyme ( re ) ;
+                    }
                 //wxMessageBox ( wxString::Format ( "%d:%d ; %d:%d / " , lcut1 , lcut2 , re->getCut() , re->getOverlap() ) + seq1 + ":" + re->getSequence() , enzyme_name ) ;
                 }
             }

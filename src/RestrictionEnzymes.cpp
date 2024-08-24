@@ -48,7 +48,9 @@ wxString TRestrictionEnzyme::getEndUpperLeft ( const bool first_strand ) const
     {
     wxString r ;
     for ( int a = 0 ; a < getCut(first_strand) ; a++ )
+        {
         r += sequence.GetChar(a) ;
+        }
     return r ;
     }
 
@@ -56,7 +58,9 @@ wxString TRestrictionEnzyme::getEndLowerLeft ( const bool first_strand ) const
     {
     wxString r , s = invertSequence () ;
     for ( int a = 0 ; a < getCut(first_strand)+getOverlap(first_strand) ; a++ )
+        {
         r += s.GetChar(a) ;
+        }
     return r ;
     }
 
@@ -64,7 +68,9 @@ wxString TRestrictionEnzyme::getEndUpperRight ( const bool first_strand ) const
     {
     wxString r ;
     for ( int a = getCut(first_strand) ; a < sequence.length() ; a++ )
+        {
         r += sequence.GetChar(a) ;
+        }
     return r ;
     }
 
@@ -72,15 +78,15 @@ wxString TRestrictionEnzyme::getEndLowerRight ( const bool first_strand ) const
     {
     wxString r , s = invertSequence () ;
     for ( int a = getCut(first_strand)+getOverlap(first_strand) ; a < s.length() ; a++ )
+        {
         r += s.GetChar(a) ;
+        }
     return r ;
     }
 
 wxString TRestrictionEnzyme::invertSequence () const
     {
-    TVector v ;
-    v.setSequence ( sequence ) ;
-    return v.transformSequence ( true , false ) . c_str() ;
+    return TVector::transformSequence ( sequence , true , false ) ;
     }
 
 int TRestrictionEnzyme::getCut ( const bool first_strand ) const
@@ -100,11 +106,14 @@ void TRestrictionEnzyme::setName ( const wxString& _name ) { name = _name ; }
 wxString TRestrictionEnzyme::getSequence () const { return sequence ; }
 bool TRestrictionEnzyme::isPalindromic () const { return palindromic ; }
 
-void TRestrictionEnzyme::setSequence ( const wxString& sequence )
+/** sets the recognition sequence of the enzyme
+ * also determines if the sequence is palindromic
+ * @param seq - sequence to be assigned
+ */
+void TRestrictionEnzyme::setSequence ( const wxString& seq )
     {
-    TVector v ;
-    v.setSequence ( sequence ) ;
-    wxString tmpSeq = v.transformSequence ( true , true ) . c_str() ;
+    sequence = seq ;
+    wxString tmpSeq = TVector::transformSequence ( sequence , true , true ) ;
     palindromic = (tmpSeq == sequence) ;
     }
 
@@ -198,11 +207,11 @@ TProtease::TProtease ( const wxString& _name , const wxString& m , const wxStrin
         {
         char ma = m.GetChar(a) ;
         if ( ma == ',' || ma == ' ' || ma == '|' )
-           {
-           if ( !s.IsEmpty() ) match.Add ( s ) ;
-           s = _T("") ;
-           if ( ma == '|' ) cut = match.GetCount() - 1 ;
-           }
+            {
+            if ( !s.IsEmpty() ) match.Add ( s ) ;
+            s = _T("") ;
+            if ( ma == '|' ) cut = match.GetCount() - 1 ;
+            }
         else s += m.GetChar(a) ;
         }
     if ( !s.IsEmpty() ) match.Add ( s ) ;
@@ -219,11 +228,11 @@ bool TProtease::does_match ( const wxString& s ) const
         bool yes = true , found = false ;
         wxString m = match[a] ;
         for ( int b = 0 ; b < m.length() && !found ; b++ )
-           {
-           if ( m.GetChar(b) == '!' ) yes = !yes ;
-           else if ( !yes && s.GetChar(a) == m.GetChar(b) ) return false ;
-           else if ( yes && ( s.GetChar(a) == m.GetChar(b) || m.GetChar(b) == '*' ) ) found = true ;
-           }
+            {
+            if ( m.GetChar(b) == '!' ) yes = !yes ;
+            else if ( !yes && s.GetChar(a) == m.GetChar(b) ) return false ;
+            else if ( yes && ( s.GetChar(a) == m.GetChar(b) || m.GetChar(b) == '*' ) ) found = true ;
+            }
         if ( !found && yes ) return false ;
         }
     return true ;

@@ -170,6 +170,9 @@ void SeqAA::initFromTVector ( const TVector * const v )
         wxPrintf ( " SeqAA::initFromTVector ( NULL ) - abort\n" ) ;
         abort() ;
         }
+
+    wxPrintf( "D: SeqAA::initFromTVector( %s ) - start\n" , v->getName() ) ;
+
     showNumbers = true ;
     if ( ! vec )
         {
@@ -191,6 +194,7 @@ void SeqAA::initFromTVector ( const TVector * const v )
         vec->eraseSequence ( vec->getSequenceLength()-1 , 1 ) ;
         truncateEditSequence = true ;
         }
+
     wxString t = vec->getSequence() ;
     if (0 >= t.length())
         {
@@ -203,7 +207,8 @@ void SeqAA::initFromTVector ( const TVector * const v )
         wxString empty(' ', t.length() ) ;
         s = empty ; 
         }
-    wxPrintf("D: String s is regular: '%s'\n", s ) ;
+
+    //wxPrintf("D: String s is regular: '%s'\n", s ) ;
 //  offsets.Clear() ;
     offset_items.Clear() ;
 //  offsets.Alloc ( s.length() ) ;

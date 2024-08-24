@@ -69,16 +69,24 @@ void TRestrictionEditor::OnCharHook(wxKeyEvent& event)
 void TRestrictionEditor::res_ll_col ( wxListEvent &event )
     {
     int item = el->GetNextItem ( -1 , wxLIST_NEXT_ALL , wxLIST_STATE_SELECTED) ;
-    if ( item != -1 ) pre = el->GetItemText(item) ;
+    if ( item != -1 )
+        {
+        pre = el->GetItemText(item) ;
+        }
 
     int col = event.GetColumn() ;
     if ( col == global_sort_mode )
+        {
         global_sort_ascending = !global_sort_ascending ;
-    else global_sort_mode = col ;
+        }
+    else
+        {
+        global_sort_mode = col ;
+        }
     pR_showGroupEnzymes ( gl->GetStringSelection() ) ;
     }
 
-TRestrictionEditor::TRestrictionEditor(MyFrame *parent, const wxString& title, const wxPoint& pos , const wxSize& size , const long style )
+TRestrictionEditor::TRestrictionEditor(MyFrame * const parent, const wxString& title, const wxPoint& pos , const wxSize& size , const long style )
 : wxDialog ( parent , -1 , title , pos , size , style )
     {
     myapp()->frame->push_help ( _T("GENtle:Restriction_Assistant") ) ;
@@ -92,7 +100,7 @@ TRestrictionEditor::~TRestrictionEditor ()
     myapp()->frame->pop_help () ;
     }
 
-void TRestrictionEditor::initme ( TVector * const _v )
+void TRestrictionEditor::initme ( /* not const*/ TVector * const _v )
     {
     _w = 600 ;
     _h = 550 ;
@@ -134,7 +142,6 @@ void TRestrictionEditor::initRestrictionPage ()
     v2c->Add ( new wxStaticText ( this , -1 , txt("Cocktail") ) , 0 , wxEXPAND , 5 ) ;
     v2c->Add ( el2 , 1 , wxEXPAND , 5 ) ;
 
-
     wxFlexGridSizer *h1a = new wxFlexGridSizer ( 1 , 2 , 5 , 5 ) ;
     wxFlexGridSizer *h1d = new wxFlexGridSizer ( 1 , 2 , 5 , 5 ) ;
     wxBoxSizer *h1e = new wxBoxSizer ( wxHORIZONTAL ) ;
@@ -174,17 +181,11 @@ void TRestrictionEditor::initRestrictionPage ()
 
     bb = new wxBitmapButton ( this , RSE_RES_AC ,
                               wxBitmap (myapp()->bmpdir.GetFullPath() + wxFileName::GetPathSeparator()+"/cocktail.bmp", wxBITMAP_TYPE_BMP),
-                              wxDefaultPosition ,
-                              wxDefaultSize ,
-                              wxBU_AUTODRAW ,
-                              wxDefaultValidator ,
+                              wxDefaultPosition , wxDefaultSize , wxBU_AUTODRAW , wxDefaultValidator ,
                               txt("add2cocktail") ) ;
     wxBitmapButton *bib = new wxBitmapButton ( this , RSE_COC_CT ,
                               wxBitmap (myapp()->bmpdir.GetFullPath() + wxFileName::GetPathSeparator()+"/scissors.bmp", wxBITMAP_TYPE_BMP),
-                              wxDefaultPosition ,
-                              wxDefaultSize ,
-                              wxBU_AUTODRAW ,
-                              wxDefaultValidator ,
+                              wxDefaultPosition , wxDefaultSize , wxBU_AUTODRAW , wxDefaultValidator ,
                               txt("start_res") ) ;
 
     v3a->Add ( bb , 1 , wxEXPAND , 5 ) ;
@@ -281,18 +282,49 @@ void TRestrictionEditor::initRestrictionPage ()
 
 void TRestrictionEditor::listEnzymesInGroup ( const wxString& gr , wxArrayString &vs ) const
     {
+    wxPrintf( "D: TRestrictionEditor::listEnzymesInGroup (gr: %s, vs.GetCount: %lu)\n" , gr, vs.GetCount() ) ;
     if ( gr == txt("Current") )
         {
-        for ( int i = 0 ; i < v->re.GetCount() ; i++ )
+        if (!v)
+            {
+            wxPrintf( "D: TRestrictionEditor::listEnzymesInGroup(%s) - v is NULL\n" , gr ) ;
+            abort() ;
+            }
+        else
+            {
+            wxPrintf( "D: TRestrictionEditor::listEnzymesInGroup(%s) - (%s: %s) " , gr , v->getName() , v->getDescription() ) ;
+            wxPrintf( " re:%lu" , v->re.GetCount() ) ;
+            wxPrintf( ", re2:%lu\n" , v->re2.GetCount() ) ;
+            }
+        for ( unsigned int i = 0 ; i < v->re.GetCount() ; i++ )
+            {
+            if ( v->re[i]->getSequence().IsEmpty() )
+                {
+                wxPrintf( "D: TRestrictionEditor::listEnzymesInGroup(%s) - re[%u] (%s) has no sequence - abort\n" , gr , i , v->getName() ) ;
+                abort() ;
+                }
             vs.Add ( v->re[i]->getName() ) ;
-        for ( int i = 0 ; i < v->re2.GetCount() ; i++ )
+            }
+        for ( unsigned int i = 0 ; i < v->re2.GetCount() ; i++ )
+            {
+            if ( v->re2[i]->getSequence().IsEmpty() )
+                {
+                wxPrintf( "D: TRestrictionEditor::listEnzymesInGroup(%s) - re[%u] (%s) has no sequence - abort\n" , gr , i , v->getName() ) ;
+                continue ;
+                }
             vs.Add ( v->re2[i]->getName() ) ;
+            }
         }
-    else myapp()->frame->LS->getEnzymesInGroup ( gr , vs ) ;
+    else
+        {
+        myapp()->frame->LS->getEnzymesInGroup ( gr , vs ) ;
+        }
+    wxPrintf( "D: TRestrictionEditor::listEnzymesInGroup (gr: %s, vs.GetCount: %lu)\n" , gr, vs.GetCount() ) ;
     }
 
 void TRestrictionEditor::pR_showGroupEnzymes ( const wxString& gr )
     {
+    wxPrintf( "D: TRestrictionEditor::pR_showGroupEnzymes(%s) - start\n" , gr ) ;
     el->DeleteAllItems() ;
     rsl->DeleteAllItems() ;
 
@@ -334,38 +366,59 @@ void TRestrictionEditor::pR_showGroupEnzymes ( const wxString& gr )
         el->SetFocus() ;
         pre = _T("") ;
         }
+    wxPrintf( "D: TRestrictionEditor::pR_showGroupEnzymes(%s) - end\n" , gr ) ;
     }
 
 wxArrayInt TRestrictionEditor::getcuts ( const wxString& enzyme )
     {
+    wxPrintf ( "D: TRestrictionEditor::getcuts(%s) - start\n" , enzyme ) ;
     wxArrayInt ret ;
     { // block constraining use of variable j
     int j ;
     for ( j = 0 ; j < nocut.GetCount() && nocut[j] != enzyme ; j++ ) ;
-    if ( j < nocut.GetCount() ) return ret ; // No cuts, returning empty list
+    if ( j < nocut.GetCount() )
+        {
+        wxPrintf ( "D: TRestrictionEditor::getcuts(%s) - ret empty since known nocut\n" , enzyme ) ;
+        return ret ; // No cuts, returning empty list
+        }
+    }
 
     // Looking for cuts in cache
-    for ( j = 0 ; j < cutcache.size() ; j++ )
+    for ( int j = 0 ; j < cutcache.size() ; j++ )
+        {
         if ( cutcache[j].enzyme == enzyme )
+            {
             ret.Add ( cutcache[j].cut ) ;
-    }
+            }
+        }
 
     if ( ret.GetCount() == 0 ) // Determine cuts
         {
         TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( enzyme );
-        vector <TRestrictionCut> x ;
-        v->getCuts ( e , x ) ;
-        if ( x.size() == 0 ) // No cuts
+        if ( e->getSequence().length() < 3 )
             {
-            nocut.Add ( enzyme ) ;
+            wxPrintf ( "D: TRestrictionEditor::getcuts(%s) - ret invalid sequence '%s' -> notcut\n" , enzyme , e->getSequence() ) ;
             return ret ;
             }
-        for ( int k = 0 ; k < x.size() ; k++ )
+        else
             {
-            cutcache.push_back ( TREcache ( enzyme , x[k].getPos() ) ) ;
-            ret.Add ( x[k].getPos() ) ;
+            vector <TRestrictionCut> x ;
+            v->getCuts ( e , x ) ;
+            if ( x.size() == 0 ) // No cuts
+                {
+                nocut.Add ( enzyme ) ;
+                wxPrintf ( "D: TRestrictionEditor::getcuts(%s) - ret notcut\n" , enzyme ) ;
+                return ret ;
+                }
+            for ( int k = 0 ; k < x.size() ; k++ )
+                {
+                wxPrintf ( "D: TRestrictionEditor::getcuts(%s) - adds cut at %d\n" , enzyme , x[k].getPos() ) ;
+                cutcache.push_back ( TREcache ( enzyme , x[k].getPos() ) ) ;
+                ret.Add ( x[k].getPos() ) ;
+                }
             }
         }
+    wxPrintf( "D: TRestrictionEditor::getcuts(%s) - end - Found %lu cuts\n" , enzyme , ret.GetCount()) ;
     return ret ;
     }
 
@@ -388,13 +441,23 @@ void TRestrictionEditor::res_ll ( wxListEvent &event )
 
 void TRestrictionEditor::pR_showFragments ( int i )
     {
+    wxPrintf( "D: TRestrictionEditor::pR_showFragments(%d) - start\n" , i ) ;
     wxString enzyme = el->GetItemText ( i ) ;
     wxArrayInt vi = getcuts ( enzyme ) ;
     listFragments ( rsl , vi ) ;
+    wxPrintf( "D: TRestrictionEditor::pR_showFragments(%d) - end\n" , i ) ;
     }
 
 void TRestrictionEditor::getFragmentList ( wxArrayInt& cuts , vector <TFragment>& fragments , const bool clear ) const
     {
+    wxPrintf( "D: TRestrictionEditor::getFragmentList - start - cuts.GetCount=%d\n" , cuts.GetCount() ) ;
+
+    if (!v)
+        {
+        wxPrintf( "D: TRestrictionEditor::getFragmentList - v is NULL\n" ) ;
+        abort() ;
+        }
+
     if ( clear ) fragments.clear () ;
     if ( cuts.GetCount() == 0 ) return ;
     if ( !v->isCircular() ) // Adding last fragment for linear DNA
@@ -420,12 +483,30 @@ void TRestrictionEditor::getFragmentList ( wxArrayInt& cuts , vector <TFragment>
         fr.length = len ;
         fragments.push_back ( fr ) ;
         }
+    wxPrintf( "D: TRestrictionEditor::getFragmentList - end\n" ) ;
     }
 
 void TRestrictionEditor::listFragments ( wxListCtrl * const list , wxArrayInt &vi ) /* not const */
     {
+    wxPrintf( "D: TRestrictionEditor::listFragments - start\n" ) ;
+    if (!v)
+        {
+        wxPrintf( "E: TRestrictionEditor::listFragments - v is NULL\n" ) ;
+        abort() ;
+        }
+    if (!list)
+        {
+        wxPrintf( "E: TRestrictionEditor::listFragments - list is NULL\n" ) ;
+        abort() ;
+        }
+
     list->DeleteAllItems() ;
-    if ( vi.GetCount() == 0 ) return ;
+    if ( vi.GetCount() == 0 )
+        {
+        wxPrintf( "D: TRestrictionEditor::listFragments - ret vi.GetCount() == 0\n" ) ;
+        return ;
+        }
+
     if ( !v->isCircular() ) // Adding last fragment for linear DNA
         {
         int from = vi.Last() ;
@@ -454,10 +535,12 @@ void TRestrictionEditor::listFragments ( wxListCtrl * const list , wxArrayInt &v
         //sprintf ( u , "%d" , len ) ; // Length
         list->SetItem ( k , 3 , wxString::Format ( _T("%d") , len ) ) ;
         }
+    wxPrintf( "D: TRestrictionEditor::listFragments - end\n" ) ;
     }
 
 void TRestrictionEditor::refreshCocktail () /* not const */
     {
+    wxPrintf( "D: TRestrictionEditor::refreshCocktail - start\n" ) ;
     wxArrayString vs = cocktail ;
     el2->DeleteAllItems() ;
     // char t[100] ;
@@ -488,27 +571,47 @@ void TRestrictionEditor::refreshCocktail () /* not const */
         }
     cocktailFragments = vi ; // not const
     listFragments ( rsl2 , vi ) ;
+    wxPrintf( "D: TRestrictionEditor::refreshCocktail - end\n" ) ;
     }
 
 void TRestrictionEditor::add2cocktail ( const wxString& s ) /* not const */
     {
-    if ( s.IsEmpty() ) return ;
-    wxString s2 = s ;
-    int i ;
-    for ( i = 0 ; i < cocktail.GetCount() && cocktail[i] != s2 ; i++ ) ;
-    if ( i < cocktail.GetCount() ) return ; // Already in there
-    cocktail.Add ( s2 ) ;
+    wxPrintf( "D: TRestrictionEditor::add2cocktail(%s) - start\n" , s ) ;
+    if ( s.IsEmpty() )
+        {
+        wxPrintf( "D: TRestrictionEditor::add2cocktail(%s) - ret s empty\n" , s ) ;
+        return ;
+        }
+    int i = 0 ;
+    while ( i < cocktail.GetCount() && cocktail[i] != s )
+        {
+        i++ ;
+        }
+    if ( i < cocktail.GetCount() )
+        {
+        wxPrintf( "D: TRestrictionEditor::add2cocktail(%s) - enzyme already added to cocktail\n" , s ) ;
+        return ; // Already in there
+        }
+    cocktail.Add ( s ) ;
     cocktail.Sort() ;
     refreshCocktail () ;
+    wxPrintf( "D: TRestrictionEditor::add2cocktail(%s) - end\n" , s ) ;
     }
 
 void TRestrictionEditor::del_from_cocktail ( const wxString& s ) /* not const */
     {
-    int i ;
-    for ( i = 0 ; i < cocktail.GetCount() && cocktail[i] != s ; i++ ) ;
-    if ( i == cocktail.GetCount() ) return ; // Not there
+    wxPrintf( "W: TRestrictionEditor::del_from_cocktail(%s) - start\n" , s ) ;
+    int i = 0 ;
+    while ( i < cocktail.GetCount() && cocktail[i] != s )
+        i++ ;
+    if ( i == cocktail.GetCount() )
+        {
+        wxPrintf( "W: TRestrictionEditor::del_from_cocktail(%s) - ret enzyme not in cocktail\n" , s ) ;
+        return ; // Not there
+        }
     cocktail.RemoveAt ( i ) ;
     refreshCocktail () ;
+    wxPrintf( "W: TRestrictionEditor::del_from_cocktail(%s) - end\n" , s ) ;
     }
 
 // "Restriction" handlers
@@ -589,11 +692,14 @@ void TRestrictionEditor::onAddAll ( wxCommandEvent &event )
     wxString s = gl->GetStringSelection() ;
     listEnzymesInGroup ( s , vs ) ;
     for ( int a = 0 ; a < vs.GetCount() ; a++ )
+        {
         add2cocktail ( vs[a] ) ;
+        }
     }
 
 void TRestrictionEditor::iterateFragments ( const wxArrayInt& cuts , vector <TFragment> &fragments , const int depth ) const
     {
+    wxPrintf( "D: TRestrictionEditor::iterateFragments - end\n" ) ;
     if ( cuts.size() == 0 ) return ;
     wxArrayInt cuts2 = cuts ;
     getFragmentList ( cuts2 , fragments , false ) ;
@@ -622,4 +728,5 @@ void TRestrictionEditor::iterateFragments ( const wxArrayInt& cuts , vector <TFr
         }
 
     global_sort_mode = gsm ;
+    wxPrintf( "D: TRestrictionEditor::iterateFragments - end\n" ) ;
     }

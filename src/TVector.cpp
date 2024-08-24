@@ -37,7 +37,7 @@ bool TVector::getGenomeMode () const { return genomeMode ; }
 wxString * TVector::getSequencePointer () { return &sequence ; }
 const wxString * TVector::getSequencePointerConst () const { return &sequence ; }
 TORF *TVector::getORF ( const int a ) { return &worf[a] ; }
-int TVector::countORFs () { return worf.size() ; }
+int TVector::countORFs () const { return worf.size() ; }
 void TVector::updateDisplay ( const bool update ) { recalcvisual = update ; }
 bool TVector::displayUpdate () const { return recalcvisual ; }
 void TVector::setType ( const int newtype ) { type = newtype ; }
@@ -51,9 +51,13 @@ int TVector::countCodonTables () const { return codon_table_names.size() ; }
 wxString TVector::getCodonTableName ( const int x ) const { return codon_table_names[x] ; }
 void TVector::resetTurn () { turned = 0 ; }
 
+/** \brief Copyies all data from existing TVector to new one
+ * Not set is the value for "window".
+ * @param v - TVector to copy values from
+ */
 void TVector::copy ( const TVector &v )
 {
-    wxPrintf( "I: Copying from sequence '%s' (%s)\n" , v.name, v.desc ) ;
+    wxPrintf( "D: TVector::copy - Copying from '%s' (%s)\n" , v.name, v.desc ) ;
     window = NULL ; ///< The window this TVector belongs to (might be NULL for most methods)
 
     items = v.items ; ///< Items/features/annotations
@@ -90,7 +94,7 @@ void TVector::copy ( const TVector &v )
     desc = v.desc ; ///< The sequence description
     sequence = v.sequence ; ///< The sequence that all this fuss is about
 
-    _lu = v._lu ;  ///< Left upper sticky end
+    _lu = v._lu ; ///< Left upper sticky end
     _ll = v._ll ; ///< Left lower sticky end
     _ru = v._ru ; ///< Right upper sticky end
     _rl = v._rl ; ///< Right lower sticky end
@@ -919,7 +923,7 @@ void TVector::recalculateCuts ()
         eraseSequence ( getSequenceLength()-1 , 1 ) ;
         truncate = true ;
         }
-    bool join = getVectorCuts ( this ) ;
+    bool join = getVectorCuts ( ) ;
     if ( action == _T("RESTRICTION") ) join = false ;
     if ( truncate ) sequence += _T(" ") ;
 
@@ -965,16 +969,19 @@ void TVector::recalculateCuts ()
     }
 
 // Returns wether or not "equal" enzymes should be joined
-bool TVector::getVectorCuts ( const TVector * const v ) //FIXME: v not used.
+bool TVector::getVectorCuts ()
     {
+    wxPrintf( "D: TVector::getVectorCuts - start\n" ) ;
     TEnzymeRules *er = getEnzymeRule () ;
     er->getVectorCuts ( this ) ;
+    wxPrintf( "D: TVector::getVectorCuts - end - returning %d\n" , er->join_enzymes ) ;
     return er->join_enzymes ;
     }
 
 // Gets the enzyme rules to follow
-TEnzymeRules *TVector::getEnzymeRule () const
+TEnzymeRules* TVector::getEnzymeRule () const
     {
+    wxPrintf( "D: TVector::getEnzymeRule - start\n" ) ;
     TEnzymeRules *er ;
     if ( enzyme_rules ) // Vector settings
         {
@@ -989,6 +996,7 @@ TEnzymeRules *TVector::getEnzymeRule () const
         }
 
     er = myapp()->frame->global_enzyme_rules ; // Global settings
+    wxPrintf( "D: TVector::getEnzymeRule - end\n" ) ;
     return er ;
     }
 
@@ -999,13 +1007,11 @@ TEnzymeRules *TVector::getEnzymeRule () const
 
 // This function reduces the sequence of the vector and the associated objects
 // to the fragment between two cuts of restriction enzymes
-bool TVector::reduceToFragment ( TRestrictionCut left , TRestrictionCut right )
+bool TVector::reduceToFragment ( const TRestrictionCut& left , const TRestrictionCut& right )
     {
-    int from , to ;
-    wxString s ;
 
-    from = left.getPos() ;
-    to = right.getPos() ;
+    int from = left.getPos() ;
+    int to = right.getPos() ;
     if ( to <= from ) to += sequence.length() ;
 
     from -= left.getCut() ;
@@ -1014,6 +1020,7 @@ bool TVector::reduceToFragment ( TRestrictionCut left , TRestrictionCut right )
     int from2 = from + left.getSequence().length() ;
     int to2 = to - right.getSequence().length() + 1 ;
 
+    wxString s ;
     for ( int a = from ; a <= to ; a++ )
         {
         s += getNucleotide ( a ) ;
@@ -1087,6 +1094,10 @@ bool TVector::reduceToFragment ( TRestrictionCut left , TRestrictionCut right )
     return true ; // Success; actually, no "return false" yet.
     }
 
+/** \brief Returns the nucleotide at a particular position
+ * @param _pos - position of nucleotide, first nucleotide is 0, max at length-1
+ * @param complement - if the nucleotide on the reverse strand should be returned
+ */
 char TVector::getNucleotide ( const int _pos ,  const bool complement ) const
     {
     int sl = sequence.length() ;
@@ -1100,23 +1111,33 @@ char TVector::getNucleotide ( const int _pos ,  const bool complement ) const
 
 wxString TVector::transformSequence ( const bool inverse , const bool reverse ) const
     {
+        return TVector::transformSequence ( sequence , inverse, reverse ) ;
+    }
+
+wxString TVector::transformSequence ( const wxString& sequence, const bool inverse , const bool reverse )
+    {
     wxString r = sequence ;
     if ( inverse )
         {
         for ( int a = 0 ; a < r.length() ; a++ )
-           r.SetChar ( a , TVector::getComplement ( r.GetChar(a) ) ) ;
+            {
+            r.SetChar ( a , TVector::getComplement ( r.GetChar(a) ) ) ;
+            }
         }
     if ( reverse )
         {
         wxString s = r ;
         for ( int a = 0 ; a < r.length() ; a++ )
-           r.SetChar ( a , s.GetChar(s.length()-a-1) ) ;
+            {
+            r.SetChar ( a , s.GetChar(s.length()-a-1) ) ;
+            }
         }
     return r ;
     }
 
 void TVector::doRestriction ()
     {
+    wxPrintf( "D: TVector::doRestriction - start\n" ) ;
     vector <TRestrictionCut> cl ;
 
     mylog ( "TVector::doRestriction" , "1" ) ;
@@ -1130,7 +1151,9 @@ void TVector::doRestriction ()
     blankEnzyme->setSequence ( _T("") ) ;
     blankEnzyme->setOverlap ( 0 ) ;
     if ( !circular )
+        {
         cl.push_back ( TRestrictionCut ( 0 , blankEnzyme ) ) ;
+        }
 
     mylog ( "TVector::doRestriction" , "3" ) ;
     for ( int a = 0 ; a < cocktail.GetCount() ; a++ )
@@ -1138,11 +1161,17 @@ void TVector::doRestriction ()
        int b ;
        for ( b = 0 ; b < re.GetCount() && re[b]->getName() != cocktail[a] ; b++ ) ;
        if ( b == re.GetCount() )
-          {
-          recalcvisual = true ;
-          re.Add ( myapp()->frame->LS->getRestrictionEnzyme ( cocktail[a] ) ) ;
-          myass ( re[re.GetCount()-1] , "Oh no! Unknown enzyme!" ) ;
-          }
+           {
+           recalcvisual = true ;
+           TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( cocktail[a] ) ;
+           if ( e->getSequence().IsEmpty() )
+               {
+               wxPrintf( "D: TVector::doRestriction: e->getSequence() is empty for '%s'\n" , cocktail[a] ) ;
+               abort() ;
+               }
+           re.Add ( e ) ;
+           myass ( re[re.GetCount()-1] , "Oh no! Unknown enzyme!" ) ;
+           }
        }
     mylog ( "TVector::doRestriction" , "4" ) ;
     recalculateCuts() ;
@@ -1165,12 +1194,12 @@ void TVector::doRestriction ()
     for ( int a = 1 ; a < cl.size() ; a++ )
         {
         if ( cl[a-1].getPos() > cl[a].getPos() )
-           {
-           TRestrictionCut ct = cl[a] ;
-           cl[a] = cl[a-1] ;
-           cl[a-1] = ct ;
-           a = 0 ;
-           }
+            {
+            TRestrictionCut ct = cl[a] ;
+            cl[a] = cl[a-1] ;
+            cl[a-1] = ct ;
+            a = 0 ;
+            }
         }
     mylog ( "TVector::doRestriction" , "7" ) ;
 
@@ -1192,21 +1221,23 @@ void TVector::doRestriction ()
         nv->recalculateCuts () ;
         nv->recalcvisual = true ;
         if ( !nv->getDescription().IsEmpty() ) nv->addDescription ( _T("\n") ) ;
-          wxString tx = wxString::Format ( txt("res_desc").c_str() , nv->getName().c_str() , cl[a].e->getName().c_str() , t1.c_str() ) ;
+        wxString tx = wxString::Format ( txt("res_desc").c_str() , nv->getName().c_str() , cl[a].e->getName().c_str() , t1.c_str() ) ;
         nv->addDescription ( tx ) ;
         if ( cl[a].e->getName() == cl[a+1].e->getName() )
-           {
-           nv->addDescription ( _T(".") ) ;
-           nv->addName ( _T(" (") + cl[a].e->getName() + _T(")") ) ;
-           }
+            {
+            nv->addDescription ( _T(".") ) ;
+            nv->addName ( _T(" (") + cl[a].e->getName() + _T(")") ) ;
+            }
         else
-           {
-           tx = wxString::Format ( txt("res_desc2").c_str() , cl[a+1].e->getName().c_str() , t2.c_str() ) ;
-           nv->addName ( _T(" (") + cl[a].e->getName() + _T("/") + cl[a+1].e->getName() +_T(")") ) ;
-           }
+            {
+            tx = wxString::Format ( txt("res_desc2").c_str() , cl[a+1].e->getName().c_str() , t2.c_str() ) ;
+            nv->addName ( _T(" (") + cl[a].e->getName() + _T("/") + cl[a+1].e->getName() +_T(")") ) ;
+            }
         nv->cocktail.Clear() ; // Cleaning up cocktail
         if ( nv->sequence.length() >= action_value ) // "No fragments smaller than XX base pairs"
-           myapp()->frame->newFromVector ( nv , TYPE_FRAGMENT ) ;
+            {
+            myapp()->frame->newFromVector ( nv , TYPE_FRAGMENT ) ;
+            }
         else delete nv ;
         }
     myapp()->frame->lockDisplay ( false ) ;
@@ -1214,6 +1245,7 @@ void TVector::doRestriction ()
     cocktail.Clear() ;
     mylog ( "TVector::doRestriction" , "10" ) ;
     updateDisplay ( true ) ;
+    wxPrintf( "D: TVector::doRestriction - end\n" ) ;
     }
 
 void TVector::doAction ()
@@ -1275,13 +1307,13 @@ void TVector::ligate_right ( TVector &v , const bool inverted )
         wxASSERT_MSG(i.to > 0, wxString::Format("TVector::ligate_right: item.to = %d <= 0\n" , i.to ) ) ;
 
         for ( int b = 0 ; b < items.size() ; b++ )
-           {
-           if ( items[b].name == i.name && items[b].getType() == i.getType() )
-              {
-              b = -1 ;
-              i.name += _T("*") ;
-              }
-           }
+            {
+            if ( items[b].name == i.name && items[b].getType() == i.getType() )
+                {
+                b = -1 ;
+                i.name += _T("*") ;
+                }
+            }
         items.push_back ( i ) ;
         }
 
@@ -1290,6 +1322,11 @@ void TVector::ligate_right ( TVector &v , const bool inverted )
         {
         if ( wxNOT_FOUND == re.Index ( v.re[a] ) )
             {
+            if ( v.re[a]->getSequence().IsEmpty() )
+                {
+                wxPrintf( "D: TVector::ligate_right: v.re[%d]->getSequence().IsEmpty()\n" , a ) ;
+                abort() ;
+                }
             re.Add ( v.re[a] ) ;
             }
         }
@@ -1754,11 +1791,11 @@ void TVector::hideEnzyme ( const wxString& s , const bool hideit )
     bool isHidden = isEnzymeHidden ( s ) ;
     if ( hideit && !isHidden ) // Add enzymes to hidden enzyme list
         {
-            hiddenEnzymes.Add ( s ) ;
+        hiddenEnzymes.Add ( s ) ;
         }
     else if ( !hideit && isHidden ) // Remove enzyme from hidden enzyme list
         {
-            hiddenEnzymes.Remove ( s ) ;
+        hiddenEnzymes.Remove ( s ) ;
         }
     }
 
@@ -1913,6 +1950,18 @@ int TVector::getMem () const
 
 void TVector::addRestrictionEnzyme ( TRestrictionEnzyme * const e )
     {
+    if ( e->getName().IsEmpty() )
+        {
+        wxPrintf( "D: TVector::addRestrictionEnzyme - attempt to add enzyme with empty name\n" ) ;
+        abort() ;
+        }
+
+    if ( e->getSequence().IsEmpty() )
+        {
+        wxPrintf( "D: TVector::addRestrictionEnzyme - attempt to add enzyme %s with empty sequence\n" , e->getName() ) ;
+        abort() ;
+        }
+
     for ( int a = 0 ; a < re.size() ; a++ )
         {
         if ( re[a] == e ) return ;
@@ -1978,7 +2027,9 @@ wxColour TVectorItem::getFontColor () const
     myass ( b , "Brush is NULL!" ) ;
     wxColour c = b->GetColour() ;
     if ( b == wxTRANSPARENT_BRUSH || b == wxWHITE_BRUSH )
+        {
         c = wxColour ( 255 , 255 , 255 ) ;
+        }
     return c ;
     }
 
@@ -2058,8 +2109,8 @@ void TVectorItem::explodeParams ( const wxString& _s )
         for ( int a = 0 ; s.GetChar(a) != '\n' ; a++ ) ; // proceed until end of line
         wxString v = s.substr ( 0 , a ) ;
         for ( int a = 0 ; a < v.length() ; a++ )
-           if ( v.GetChar(a) == 2 )
-              v.SetChar ( a , '\n' ) ;
+            if ( v.GetChar(a) == 2 )
+                v.SetChar ( a , '\n' ) ;
         s = s.substr ( a + 1 ) ;
         setParam ( n , v ) ;
         }
@@ -2228,10 +2279,11 @@ void TVectorItem::translate ( const TVector * const vectorToTranslate , SeqAA * 
     {
     const TVector * v = vectorToTranslate ;
     if (!v) v = lastVector ;
-    if (!v) {
+    if (!v)
+        {
         wxPrintf("E: TVectorItem::translate: Do not have vector to work on.") ;
         abort() ;
-    }
+        }
 
 //  dna2aa.clear () ;
     if ( type != VIT_CDS ) return ;

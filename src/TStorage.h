@@ -89,16 +89,16 @@ class TStorage
     TSQLresult getObject ( const wxString &query ) ; ///< Runs a query
 
     // Access
-    void sqlAdd ( wxString &s1 , wxString &s2 , const wxString& key , const wxString& value ) ;  ///< Query construction helper method
-    void sqlAdd ( wxString &s1 , wxString &s2 , const wxString& key , const char * const value ) ;  ///< Query construction helper method
-    void sqlAdd ( wxString &s1 , wxString &s2 , const wxString& key , const int value ) ;  ///< Query construction helper method
+    void sqlAdd ( wxString &s1 , wxString &s2 , const wxString& key , const wxString& value ) const ;  ///< Query construction helper method
+    void sqlAdd ( wxString &s1 , wxString &s2 , const wxString& key , const char * const value ) const ;  ///< Query construction helper method
+    void sqlAdd ( wxString &s1 , wxString &s2 , const wxString& key , const int value ) const ;  ///< Query construction helper method
 
     // Restriction enzymes
     void import () ; ///< Import enzymes from database
     TRestrictionEnzyme* getRestrictionEnzyme ( const wxString& s ) ; ///< Pointer to TRestrictionEnzyme from re
     void getEnzymeGroups ( wxArrayString &vs ) ; ///< List of enzyme groups in this database
     void getEnzymesInGroup ( const wxString& gn , wxArrayString &vs ) ; ///< List of enzymes in a specific group
-    void updateRestrictionEnzyme ( TRestrictionEnzyme * const e ) ; ///< Write enzyme information back to database
+    void updateRestrictionEnzyme ( /* not const */ TRestrictionEnzyme * const e ) ; ///< Write enzyme information back to database
     void addRestrictionEnzyme ( TRestrictionEnzyme * const r ) ; ///< Add new restriction enzyme
     bool addEnzymeGroup (  const wxString& s ) ; ///< Add new enzyme group
     void markEnzymeForDeletion (  const wxString& s ) ; ///< Mark an enzyme for deletion
@@ -106,7 +106,7 @@ class TStorage
     TProtease *getProtease ( const wxString& s ) const ; ///< Pointer to a TProtease from pr
     void updateProtease ( TProtease * const p ) ; ///< Write protease information back to database
 
-    wxString getDatabaseList ( wxArrayString &name , wxArrayString &file ) ; ///< List of all known databases
+    wxString getDatabaseList ( /* not const */ wxArrayString &name , /* not const */ wxArrayString &file ) ; ///< List of all known databases
     void setOption ( const wxString& oname , const int value ) ; ///< Set option in local database
     void setOption ( const wxString& oname , const wxString& vname ) ; ///< Set option in local database
     int getOption ( const wxString& oname , const int def ) ; ///< Get option from local database
@@ -138,7 +138,7 @@ class TStorage
     private :
     wxString getSingleField ( const wxString& query , const wxString& field , const wxString& def = "" ) ; ///< Get a single field from a query, with default value
     int getSingleField ( const wxString& query , const wxString& field , int def = 0 ) ; ///< Get a single field from a query, with default value
-    wxString makeInsert ( const wxString& table , wxArrayString &field , wxArrayString &data ) ; ///< Insert all the fields with their data into a table
+    wxString makeInsert ( const wxString& table , const wxArrayString &field , const wxArrayString &data ) const ; ///< Insert all the fields with their data into a table
     void replaceTable ( const wxString& table , wxArrayString &f , wxArrayString &t ) ; ///< ???
     void tableInfoSet ( wxArrayString &f , wxArrayString &t , const wxString& nf , const wxString& nt ) ; ///< ???
     TStorage *getDBfromEnzymeGroup ( const wxString& group ) ; ///< Returns the database of the enzyme group

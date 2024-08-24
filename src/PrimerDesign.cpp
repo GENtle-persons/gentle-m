@@ -91,7 +91,9 @@ TPrimerDesign::TPrimerDesign(wxWindow *parent, const wxString& title, TVector *_
         }
 
     for ( int a = 0 ; a < primer.size() ; a++ )
+        {
         primer[a].getSequenceFromVector ( vec ) ;
+        }
 
     def = _T("PrimerDesign") ;
     from = -1 ;
@@ -161,8 +163,12 @@ void TPrimerDesign::OnImportPrimer ( wxCommandEvent &ev )
     wxArrayChildBase cbl ;
 
     for ( int a = 0 ; a < myapp()->frame->children.GetCount() ; a++ )
+        {
         if ( myapp()->frame->children[a] && myapp()->frame->children[a]->vec && myapp()->frame->children[a]->vec->getType() == TYPE_PRIMER )
+            {
             cbl.Add ( myapp()->frame->children[a] ) ;
+            }
+        }
 
     if ( cbl.GetCount() == 0 )
         {
@@ -172,7 +178,9 @@ void TPrimerDesign::OnImportPrimer ( wxCommandEvent &ev )
 
     wxString *sl = new wxString[cbl.GetCount()] ;
     for ( int a = 0 ; a < cbl.GetCount() ; a++ )
+        {
         sl[a] = cbl[a]->getName() ;
+        }
 
     TMyMultipleChoiceDialog scd ( this , txt("t_chose_primer_txt") , txt("t_chose_primer") , cbl.GetCount() , sl) ;
 
@@ -324,7 +332,9 @@ void TPrimerDesign::updatePrimerStats ()
         lc->SetItem ( l , 6 , wxString::Format ( _T("%d") , primer[a].from ) ) ;
         }
     for ( int a = 0 ; a <= 6 ; a++ )
+        {
         lc->SetColumnWidth ( a , wxLIST_AUTOSIZE_USEHEADER ) ;
+        }
     stat->SetValue ( _T("") ) ;
     lastPrimerActivated = -1 ;
     }
@@ -473,7 +483,9 @@ void TPrimerDesign::initme ()
     spinTextEnabeled = true ;
     sc->SetFocus() ;
     for ( int a = 0 ; a < lc->GetColumnCount() ; a++ )
+        {
         lc->SetColumnWidth ( a , wxLIST_AUTOSIZE_USEHEADER ) ;
+        }
     }
 
 void TPrimerDesign::OnEditPrimer ( wxCommandEvent &ev )
@@ -492,7 +504,9 @@ void TPrimerDesign::OnDeletePrimer ( wxCommandEvent &ev )
     if ( lastPrimerActivated == -1 ) return ;
     if ( primer.size() == 0 ) return ;
     for ( int a = lastPrimerActivated ; a + 1 < primer.size() ; a++ )
+        {
         primer[a] = primer[a+1] ;
+        }
     primer.pop_back () ;
     lastPrimerActivated = -1 ;
     showSequence () ;
@@ -540,8 +554,12 @@ void TPrimerDesign::showSequence ()
     p1->myname = _T("PRIMER_UP") ;
     p1->alternateName = txt("t_primer_up") ;
     for ( int a = 0 ; a < primer.size() ; a++ )
+        {
         if ( primer[a].upper )
+            {
             p1->addPrimer ( &primer[a] ) ;
+            }
+        }
 
     // Upper template sequence
     SeqDNA *s1 = new SeqDNA ( sc ) ;

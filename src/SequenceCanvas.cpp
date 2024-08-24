@@ -2025,9 +2025,18 @@ void SequenceCanvas::OnWhatCuts(wxCommandEvent& event)
     sd.initme ( p->vec , _from , _to ) ;
     if ( wxID_OK != sd.ShowModal () ) return ;
 
-    int a ;
     TRestrictionEnzyme *e = sd.getEnzyme() ;
-    for ( a = 0 ; a < p->vec->re.GetCount() && p->vec->re[a] != e ; a++ ) ;
+    if (e->getSequence().IsEmpty() )
+        {
+        wxPrintf( "E: SequenceCanvas::OnWhatCuts - e.getSequence().IsEmpty with e.getName=%s\n" , e->getName() ) ;
+        abort() ;
+        }
+
+    int a = 0 ;
+    while ( a < p->vec->re.GetCount() && p->vec->re[a] != e )
+        {
+        a++ ;
+        }
     if ( a == p->vec->re.GetCount() )
         {
         p->vec->undo.start ( txt("u_what_cuts") ) ;
@@ -2224,9 +2233,13 @@ void SequenceCanvas::rsHideLimit ( wxCommandEvent &ev )
         {
         int cnt = 0 ;
         for ( int b = 0 ; b < p->vec->rc.size() ; b++ )
+            {
             if ( p->vec->rc[b].e == p->vec->re[a] ) cnt++ ;
+            }
         if ( cnt > limit && !p->vec->isEnzymeHidden ( p->vec->re[a]->getName() ) )
+            {
             p->treeBox->ToggleEnzymeVisibility ( p->vec->re[a] ) ;
+            }
         }
     p->vec->recalculateCuts() ;
     p->vec->updateDisplay() ;
@@ -2334,6 +2347,12 @@ void SequenceCanvas::insertRestrictionSite ( const bool left )
 
     // Insert sequence
     TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme(scd.GetStringSelection()) ;
+
+    if ( e->getSequence().IsEmpty() )
+        {
+        wxPrintf( "E: SequenceCanvas::insertRestrictionSite: e->getSequence().IsEmpty() for e->getName=%s\n" , e->getName() ) ;
+        abort() ;
+        }
     wxString se = e->getSequence() ;
 
     int p1 = _from - se.length() - 1 ;
@@ -2365,9 +2384,13 @@ void SequenceCanvas::insertRestrictionSite ( const bool left )
     seq[lastmarked]->s = tv.getSequence() ;
 
 
-    int a ;
-    for ( a = 0 ; a < v->re.GetCount() && v->re[a] != e ; a++ ) ;
-    if ( a == v->re.GetCount() ) v->re.Add ( e ) ;
+    int a=0 ;
+    while ( a < v->re.GetCount() && v->re[a] != e )
+        a++ ;
+    if ( a == v->re.GetCount() )
+        {
+        v->re.Add ( e ) ;
+        }
 
     if ( getPD() ) v = NULL ;
     wxString id = seq[lastmarked]->whatsthis() ;

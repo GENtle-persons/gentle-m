@@ -106,8 +106,10 @@ class TEnzymeRules
     virtual wxColour *getColor ( const int cuts ) ; ///< Returns a pointer to a wxColour structure with the correct color for the given number of cuts
 
     bool useit ;
-    int min_cutoff , max_cutoff ;
-    bool use_min_cutoff , use_max_cutoff ;
+    int min_cutoff ;
+    int max_cutoff ; ///< limits the maximal number of cuts for an enzyme on a single sequence to be accepted
+    bool use_min_cutoff ;
+    bool use_max_cutoff ; ///< flag to enforce maximal number of cuts for an enzyme on a single sequence
     bool recog4 , recog5 , recog6 , recog_longer ;
     bool pattern3 , pattern5 , pattern_blunt ;
     bool showgc ;

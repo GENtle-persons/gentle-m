@@ -23,6 +23,7 @@ END_EVENT_TABLE()
 
 TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent , const int _mode ) : wxPanel ( parent )
     {
+    wxPrintf( "D: TEnzymeSettingsTab::TEnzymeSettingsTab - start\n" ) ;
     myapp()->frame->push_help ( _T("GENtle:Options") ) ;
     mode = _mode ;
     int w , h ;
@@ -129,6 +130,8 @@ TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent , const int _mode ) : 
     this->Show () ;
     updateGlobalEnzymes () ;
     vs->Fit ( this ) ;
+
+    wxPrintf( "D: TEnzymeSettingsTab::TEnzymeSettingsTab - end\n" ) ;
     }
 
 ProgramOptionsDialog::~ProgramOptionsDialog ()
@@ -138,6 +141,7 @@ ProgramOptionsDialog::~ProgramOptionsDialog ()
 
 void TEnzymeSettingsTab::updateGlobalEnzymes ()
     {
+    wxPrintf( "D: TEnzymeSettingsTab::updateGlobalEnzymes - start\n" ) ;
     bool use = useSettings->GetValue() ;
     useMinCutoff->Enable ( use ) ;
     useMaxCutoff->Enable ( use ) ;
@@ -159,6 +163,7 @@ void TEnzymeSettingsTab::updateGlobalEnzymes ()
     updateColorButton ( bcol1 , col1 ) ;
     updateColorButton ( bcol2 , col2 ) ;
     updateColorButton ( bcol3 , col3 ) ;
+    wxPrintf( "D: TEnzymeSettingsTab::updateGlobalEnzymes - end - useMaxCutoff:%d\n" , useMaxCutoff ) ;
     }
 
 void TEnzymeSettingsTab::updateColorButton ( wxButton *b , const wxColour &c )
@@ -202,14 +207,19 @@ void TEnzymeSettingsTab::OnButton3 ( wxCommandEvent &event )
 
 void TEnzymeSettingsTab::updateColor ( wxColour &c )
     {
-    wxPrintf("D: TEnzymeSettingsTab::updateColor(%s)\n",c.GetAsString()) ;
+    wxPrintf("D: TEnzymeSettingsTab::updateColor(%s) - start\n",c.GetAsString()) ;
 
     wxColour c2 = wxGetColourFromUser ( this , c ) ;
-    wxPrintf("D: TEnzymeSettingsTab  wxGetColourFromUser -> %s\n",c2.GetAsString()) ;
+    wxPrintf("D: TEnzymeSettingsTab::updateColor(%s)  wxGetColourFromUser -> %s\n" , c.GetAsString() , c2.GetAsString()) ;
 
-    if ( !c2.Ok() ) return ;
+    if ( !c2.Ok() )
+        {
+        wxPrintf("D: TEnzymeSettingsTab::updateColor(%s) -> ret !c2.Ok()" ,c.GetAsString() , c2.GetAsString()) ;
+        return ;
+        }
     c = c2 ;
     updateGlobalEnzymes () ;
+    wxPrintf("D: TEnzymeSettingsTab::updateColor(%s) - end\n",c.GetAsString()) ;
     }
 
 
@@ -449,9 +459,11 @@ void TEnzymeRules::init () // Default settings
 
 void TEnzymeRules::load_global_settings () /* not const */
     {
+    wxPrintf( "D: TEnzymeRules::load_global_settings - start\n" ) ;
     init () ;
     wxString s = myapp()->frame->LS->getOption ( _T("GLOBALENZYMESETTINGS") , _T("") ) ;
     from_string ( s ) ;
+    wxPrintf( "D: TEnzymeRules::load_global_settings - end\n" ) ;
     }
 
 void TEnzymeRules::save_global_settings () const
@@ -543,8 +555,9 @@ wxString TEnzymeRules::to_string () const
     return ret ;
     }
 
-void TEnzymeRules::from_string ( const wxString &s )
+void TEnzymeRules::from_string ( const wxString& s )
     {
+    wxPrintf( "D: TEnzymeRules::from_string - start\n" ) ;
     init () ;
     wxArrayString as ;
     explode ( _T("\r") , s , as ) ;
@@ -576,6 +589,7 @@ void TEnzymeRules::from_string ( const wxString &s )
         else if ( key == _T("methylation") ) methylation = l ;
         else if ( key == _T("showgc") ) showgc = l ;
         }
+    wxPrintf( "D: TEnzymeRules::from_string - end\n" ) ;
     }
 
 wxColour TEnzymeRules::scan_color ( const wxString& s ) const
@@ -600,9 +614,26 @@ wxColour *TEnzymeRules::getColor ( const int cuts )
 
 void TEnzymeRules::getVectorCuts ( /* not const */ TVector * const v ) const
     {
+    wxPrintf( "D: TEnzymeRules::getVectorCuts - start ( on %s )\n" , v->getName() ) ;
     for ( int a = 0 ; a < v->re.GetCount() ; a++ )
+        {
+        if ( NULL == v->re[a] )
+            {
+            wxPrintf( "E: Found first restriction enzyme re[%d] that is NULL.\n" , a ) ;
+            abort() ;
+            }
+        if ( v->re[a]->getSequence().IsEmpty() )
+            {
+            wxPrintf( "E: Found first restriction enzyme (%s) with empty sequence.\n" , v->re[a]->getName() ) ;
+            abort() ;
+            }
         v->getCuts ( v->re[a] , /* not const */ v->rc , false ) ;
-    if ( !useit ) return ;
+        }
+    if ( !useit )
+        {
+        wxPrintf( "D: TEnzymeRules::getVectorCuts - ret !useit ( on %s )\n" , v->getName() ) ;
+        return ;
+        }
 
     // Getting the default list of enzymes
     wxArrayTRestrictionEnzyme ve ;
@@ -640,17 +671,31 @@ void TEnzymeRules::getVectorCuts ( /* not const */ TVector * const v ) const
 
     // Add what has the correct number of cuts
     v->re2.Clear () ; // The list of used enzymes that were *not* added manually
-    int max = 10000000 ; // Ridiculously high number
+    int max = 500 ; // Upper limit of what GENtle can display as it seems
     if ( use_max_cutoff ) max = max_cutoff ;
     for ( int a = 0 ; a < ve.GetCount() ; a++ )
         {
         vector <TRestrictionCut> vc ;
         v->getCuts ( ve[a] , vc , false , max ) ;
-        if ( ( !use_min_cutoff || min_cutoff <= vc.size() ) && ( !use_max_cutoff || max_cutoff >= vc.size() ) )
+        if ( use_min_cutoff &&  min_cutoff <= vc.size() )
             {
+            wxPrintf( "D: TEnzymeRules::getVectorCuts - min cutoff - enzyme:%s vc.size():%lu\n" , ve[a]->getName() , vc.size() ) ;
+            }
+        else if ( use_max_cutoff && max_cutoff >= vc.size() )
+            {
+            wxPrintf( "D: TEnzymeRules::getVectorCuts - max cutoff - enzyme:%s vc.size():%lu\n" , ve[a]->getName() , vc.size() ) ;
+            }
+        else
+            {
+            wxPrintf( "D: TEnzymeRules::getVectorCuts - accepting - enzyme:%s vc.size():%lu\n" , ve[a]->getName() , vc.size() ) ;
             v->re2.Add ( ve[a] ) ;
-            for ( int b = 0 ; b < vc.size() ; b++ ) v->rc.push_back ( vc[b] ) ;
+            for ( int b = 0 ; b < vc.size() ; b++ )
+                {
+                v->rc.push_back ( vc[b] ) ;
+                }
             }
         }
+
+    wxPrintf( "D: TEnzymeRules::getVectorCuts - end - (for %s, v->re2.GetCount(): %lu)\n" , v->getName(), v->re2.GetCount() ) ;
     }
 
