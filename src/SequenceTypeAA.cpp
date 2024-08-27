@@ -32,35 +32,42 @@ void SeqAA::show ( wxDC& dc )
 wxPoint SeqAA::showText ( const int ystart , wxArrayString &tout ) const
     {
     wxPoint p ( -1 , -1 ) ;
-    int a , b ;
     wxString t ;
     int x = 0 , y = ystart-can->seq.GetCount() , ly = -1 ;
-    for ( a = 0 ; a < pos.p.GetCount() ; a++ )
+    for ( int a = 0 ; a < pos.p.GetCount() ; a++ )
         {
-        b = pos.p[a] ;
+        int b = pos.p[a] ;
         if ( b > 0 ) // Character
-           {
-           t = s.GetChar(b-1) ;
-           if ( pos.r[a].y != ly )
-              {
-              ly = pos.r[a].y ;
-              y += can->seq.GetCount() ;
-              x = 0 ;
-              while ( y >= tout.GetCount() ) tout.Add ( _T("") ) ;
-              }
+            {
+            t = s.GetChar(b-1) ;
+            if ( pos.r[a].y != ly )
+               {
+               ly = pos.r[a].y ;
+               y += can->seq.GetCount() ;
+               x = 0 ;
+               while ( y >= tout.GetCount() ) tout.Add ( _T("") ) ;
+               }
            else x++ ;
            if ( (x) % (can->blocksize+1) == 0 ) x++ ;
            if ( !t.IsEmpty() )
-              {
-              if ( b >= can->markedFrom() && p.x == -1 ) p.x = y ;
-              if ( b <= can->markedTo() ) p.y = y ;
-              while ( tout[y].length() < x ) tout[y] += _T(" ") ;
-              tout[y].SetChar ( x-1 , t.GetChar(0) ) ;
-              }
+               {
+               if ( b >= can->markedFrom() && p.x == -1 )
+                   {
+                   p.x = y ;
+                   }
+               if ( b <= can->markedTo() )
+                   {
+                   p.y = y ;
+                   }
+               while ( tout[y].length() < x ) tout[y] += _T(" ") ;
+               tout[y].SetChar ( x-1 , t.GetChar(0) ) ;
+               }
            }
         }
     if ( can->getLastWhere() != this || can->markedFrom() == -1 || can->markedTo() < can->markedFrom() )
-       p = wxPoint ( -1 , -1 ) ;
+        {
+        p = wxPoint ( -1 , -1 ) ;
+        }
     return p ;
     }
 
@@ -78,11 +85,11 @@ void SeqAA::initFromString ( const wxString& s )
     pa_wa.Clear() ;
     pa_wa.Alloc ( s.length() ) ;
     while ( pa_w != s )
-       {
-       pa_w += s.GetChar(pa_w.length()) ;
-       pa_wa.Add ( pa_w.length() ) ;
-       analyzeProteases () ;
-       }
+        {
+        pa_w += s.GetChar(pa_w.length()) ;
+        pa_wa.Add ( pa_w.length() ) ;
+        analyzeProteases () ;
+        }
     }
 
 void SeqAA::updateProteases () /* not const */
@@ -109,21 +116,21 @@ void SeqAA::analyzeProteases () /* not const */
     if ( !can ) return ;
     int compensator = primaryMode ? 0 : 1 ;
     for ( int q = 0 ; q < proteases.GetCount() ; q++ )
-       {
-       TProtease *pr = proteases[q] ;
-       if ( pr->len() <= pa_w.length() )
-          {
-          wxString w2 = pa_w.substr ( pa_w.length() - pr->len() , pr->len() ) ;
-          if ( pr->does_match ( w2 ) )
-             {
-             TProteaseCut *cut = new TProteaseCut ;
-             cut->protease = pr ;
-             cut->cut = pa_wa[pa_w.length()-pr->len()+pr->cut+1] + compensator ;
-             cut->left = true ;
-             pc.Add ( cut ) ; // not const
-             }
-          }
-       }
+        {
+        TProtease *pr = proteases[q] ;
+        if ( pr->len() <= pa_w.length() )
+            {
+            wxString w2 = pa_w.substr ( pa_w.length() - pr->len() , pr->len() ) ;
+            if ( pr->does_match ( w2 ) )
+                {
+                TProteaseCut *cut = new TProteaseCut ;
+                cut->protease = pr ;
+                cut->cut = pa_wa[pa_w.length()-pr->len()+pr->cut+1] + compensator ;
+                cut->left = true ;
+                pc.Add ( cut ) ; // not const
+                }
+            }
+        }
     }
 
 // Seems to be obsolete
@@ -132,7 +139,7 @@ void SeqAA::fixOffsets ( TVector * const v )
     offset_items.Clear() ;
     for ( int a = 0 ; a < v->items.size() ; a++ )
         {
-        int off = v->items[a].getOffset () ;
+        const int off = v->items[a].getOffset () ;
         int c = 0 ;
         for ( int b = v->items[a].from ; off != -1 && b < v->items[a].to ; b++ )
            {
@@ -156,10 +163,11 @@ void SeqAA::fixOffsets ( TVector * const v )
 
 void SeqAA::initFromTVector ( const TVector * const v )
     {
+    wxPrintf( "D: SeqAA::initFromTVector - start\n" ) ;
 
     if ( ! v )
         {
-        wxPrintf ( " SeqAA::initFromTVector ( NULL )\n" ) ;
+        wxPrintf ( " SeqAA::initFromTVector ( NULL ) - abort\n" ) ;
         abort() ;
         }
     showNumbers = true ;
@@ -172,7 +180,9 @@ void SeqAA::initFromTVector ( const TVector * const v )
         {
         wxPrintf ( "D: SeqAA::initFromTVector: reusing existing vector - why?\n" ) ;
         }
+    wxPrintf ( "D: SeqAA::initFromTVector: pre vec->copy()\n" ) ;
     vec->copy ( *v ) ;
+    wxPrintf ( "D: SeqAA::initFromTVector: post vec->copy()\n" ) ;
 
     bool truncateEditSequence = false ;
     if ( can && can->getEditMode() && vec->getSequenceLength() && vec->getSequenceChar(vec->getSequenceLength()-1) == ' ' )
@@ -182,9 +192,9 @@ void SeqAA::initFromTVector ( const TVector * const v )
         truncateEditSequence = true ;
         }
     wxString t = vec->getSequence() ;
-    if (0 == t.length())
+    if (0 >= t.length())
         {
-        wxPrintf("D: SeqAA::initFromTVector: Assigned the empty string.\n" ) ;
+        wxPrintf("D: SeqAA::initFromTVector: Assigned the empty string with t=%ld.\n" , t.length() ) ;
         s="";
         }
     else
@@ -209,7 +219,7 @@ void SeqAA::initFromTVector ( const TVector * const v )
         t += _T("  ") ;
         }
 
-    int sl = s.length() ;
+    const int sl = s.length() ;
     s += _T("  ") ;
 
     if ( mode == AA_ALL )
@@ -225,7 +235,7 @@ void SeqAA::initFromTVector ( const TVector * const v )
             {
 //          vec->items[a].translate ( vec , this ) ; // TESTING!!!
             wxPrintf( "D: SeqAA::initFromTVector invoking getArrangedAA @  %d of %ld with disp=%d\n", a, vec->items.size(), disp ) ;
-        //    wxPrintf( "D: SeqAA::initFromTVector invoking getArrangedAA @  s=%s\n", s ) ;
+//          wxPrintf( "D: SeqAA::initFromTVector invoking getArrangedAA @  s=%s\n", s ) ;
             vec->items[a].getArrangedAA ( vec , s , disp , this ) ;
             }
         }
@@ -273,7 +283,12 @@ void SeqAA::initFromTVector ( const TVector * const v )
 
     s = s.substr ( 0 , sl ) ;
     for ( int a = 0 ; a < s.length() ; a++ )
-        if ( s.GetChar(a) == '?' ) s.SetChar(a, unknownAA) ;
+        {
+        if ( s.GetChar(a) == '?' )
+            {
+            s.SetChar(a, unknownAA) ;
+            }
+        }
     if ( truncateEditSequence )
        {
        wxPrintf ( "D; SeqAA::initFromTVector: truncateEditSequence\n" ) ;
@@ -287,6 +302,8 @@ void SeqAA::initFromTVector ( const TVector * const v )
 //  mem += pa_wa.GetCount() * sizeof ( int ) ;
 //  mem += sizeof ( wxArrayTProteaseCut ) + sizeof ( wxArrayTProtease ) + sizeof ( wxArrayTVectorItem ) ;
     mylog ( "AA_mem" , wxString::Format ( "%d" , mem ) ) ;
+
+    wxPrintf( "D: SeqAA::initFromTVector - end\n" ) ;
     }
 
 // direct
@@ -299,12 +316,12 @@ bool SeqAA::useDirectRoutines () const
 
 int SeqAA::arrange_direct ( const int n ) /* not const */
     {
-    int w , h , bo = can->border ;
-
     // Setting basic values
     can->SetFont(*can->font);
     int wx = can->charwidth ; //, wy = can->charheight ;
+    int bo = can->border ;
     int ox = bo + wx + wx * endnumberlength ;//, oy = n*wy+bo ;
+    int w , h ;
     can->MyGetClientSize ( &w , &h ) ;
     itemsperline = ( w - ox ) / ( ( can->blocksize + 1 ) * wx - 1 ) ;
     if ( itemsperline == 0 ) itemsperline = 1 ;
@@ -313,12 +330,13 @@ int SeqAA::arrange_direct ( const int n ) /* not const */
 //  pos.m.Alloc ( s.length() ) ;
     if ( can->isHorizontal() ) can->setLowX ( ox + ( s.length() ) * can->charwidth ) ;
     int ret = ( s.length() + itemsperline - 1 ) / itemsperline ;
-    ret = can->NumberOfLines() * ret * can->charheight + 1 ;
+    ret *= can->NumberOfLines() * can->charheight + 1 ;
     return ret ;
     }
 
 void SeqAA::show_direct ( wxDC& dc )
     {
+    wxPrintf("D: SeqAA::show_direct - start\n" ) ;
     myass ( itemsperline , "AA:show_direct_ipl" ) ;
     if ( !itemsperline ) return ;
     mylog ( "SeqAA::show_direct" , "0" ) ;
@@ -454,8 +472,12 @@ void SeqAA::show_direct ( wxDC& dc )
 
                 wxString pn = pc[q]->protease->name ;
                 for ( int w = 0 ; w+1 < pn.length() ; w++ )
+                    {
                     if ( pn.GetChar(w) == ' ' && pn.GetChar(w+1) == '(' )
+                        {
                         pn = pn.substr ( 0 , w ) ;
+                        }
+                    }
                 dc.SetFont(*can->smallFont);
                 int u1 , u2 ;
                 dc.GetTextExtent ( pn , &u1 , &u2 ) ;
@@ -479,6 +501,7 @@ void SeqAA::show_direct ( wxDC& dc )
     dc.SetBackgroundMode ( bm ) ;
     dc.SetTextBackground ( tbg ) ;
     dc.SetTextForeground ( tfg ) ;
+    wxPrintf("D: SeqAA::show_direct - end\n" ) ;
     }
 
 int SeqAA::getLine ( const int _y ) const

@@ -150,7 +150,7 @@ MyFrame::MyFrame(wxWindow *parent,
             if ( s.Left ( 1 ) == "#" ) continue ; // Skip comments
             dna_marker.Add ( s ) ;
             }
-        wxPrintf("I: Successfully opened marker file on '%s'\n",marker_file);
+        //wxPrintf("I: Successfully opened marker file on '%s'\n",marker_file);
         }
     else
         {
@@ -683,7 +683,7 @@ ChildBase *MyFrame::GetActiveChild() //SDI
  */
 void MyFrame::OnEnzymeEditor(wxCommandEvent& event )
     {
-    wxPrintf("MyFrame::OnEnzymeEditor\n");
+    //wxPrintf("MyFrame::OnEnzymeEditor\n");
     TVectorEditor ee ( this , txt("t_enzymeeditor") , NULL ) ;
     ee.ShowModal () ;
     }
@@ -692,12 +692,27 @@ void MyFrame::OnEnzymeEditor(wxCommandEvent& event )
  */
 void MyFrame::OnFileOpen(wxCommandEvent& event )
     {
-    unsigned int i = children.GetCount() ;
+    //wxPrintf( "D: MyFrame::OnFileOpen - start\n" );
+    const unsigned int i = children.GetCount() ;
     TManageDatabaseDialog dbd ( this , txt("t_open") , ACTION_MODE_LOAD ) ;
-    dbd.ShowModal () ;
+    //wxPrintf( "D: MyFrame::OnFileOpen - B\n" );
+    int ret = dbd.ShowModal () ;
+    //wxPrintf( "D: MyFrame::OnFileOpen - C (dbd.ShowModal() returned %d\n" , ret );
     if ( i != children.GetCount() )
+        {
+        //wxPrintf( "D: MyFrame::OnFileOpen - setting focus on child with largest count.\n" , i );
         setActiveChild ( children[children.GetCount()-1] ) ;
-    if ( GetActiveChild() ) GetActiveChild()->SetFocus() ;
+        }
+    //wxPrintf( "D: MyFrame::OnFileOpen - D\n" );
+    if ( GetActiveChild() )
+        {
+        GetActiveChild()->SetFocus() ;
+        }
+    else
+        {
+        //wxPrintf( "D: MyFrame::OnFileOpen - none of the %d children is active.\n" , i );
+        }
+    //wxPrintf( "D: MyFrame::OnFileOpen - end\n" );
     }
 
 /** \brief Invokes the "enter sequence manually" dialog and calls the appropriate creation function
@@ -818,7 +833,7 @@ void MyFrame::OnFileImport(wxCommandEvent& event )
     d.GetFilenames ( files ) ;
     d.GetPaths ( paths ) ;
     wxBeginBusyCursor();
-    wxSafeYield() ;
+    //wxSafeYield() ;
     wxProgressDialog pd ( txt("t_loading") , "" , files.GetCount() , NULL , wxPD_ALL ) ;
     //    lockDisplay ( true ) ;
     wxString unknown ;
@@ -832,9 +847,14 @@ void MyFrame::OnFileImport(wxCommandEvent& event )
             unknown += files[a] ;
             }
         }
-    if ( a == files.GetCount() ) pd.Update ( a ) ; // Hide progress dialog
+    if ( a == files.GetCount() )
+        {
+        pd.Update ( a ) ; // Hide progress dialog
+        }
     if ( !unknown.IsEmpty() )
+        {
         wxMessageBox ( unknown , txt("t_unable_to_detect_file_type") ) ;
+        }
     //    lockDisplay ( false ) ;
     SetFocus () ;
     wxEndBusyCursor();
@@ -1600,7 +1620,7 @@ TAminoAcids *MyFrame::newAminoAcids ( const wxString& aa , const wxString& title
     {
     TVector nv ;
     nv.setSequence ( aa ) ;
-    return newAminoAcids ( &nv , title ) ; // not const
+    return newAminoAcids ( &nv , title ) ; // not const, calling setChild
     }
 
 /** \brief Creates a new amino acid entry from a TVector structure
@@ -2053,19 +2073,30 @@ void MyFrame::removeChild ( ChildBase *ch )
     }
 
 /** \brief Activates a child (brings to front, makes visible, etc.)
- \param a Number of child in children list
+ \param childno - position of child in children list, starts with 0
  */
-void MyFrame::activateChild ( int a )
+void MyFrame::activateChild ( const int childno )
     {
-    if ( a >= children.GetCount() ) a = 0 ;
-    if ( children.GetCount() )
+    //wxPrintf( "D: MyFrame::activateChild( %d ) - start\n" , childno) ;
+    size_t numberOfChildren = children.GetCount() ;
+    if ( ! numberOfChildren )
         {
-        children[a]->Activate () ;
-        mainTree->EnsureVisible ( children[a]->inMainTree ) ;
-        mainTree->SelectItem ( children[a]->inMainTree ) ;
+            //wxPrintf( "D: MyFrame::activateChild( %d ) - beyond number of children ( = %d), choosing NULL\n" , childno, children.GetCount() ) ;
+            setActiveChild ( NULL ) ;
         }
-    else setActiveChild ( NULL ) ;
-    wxSafeYield () ;
+    else
+        {
+        if ( childno >= children.GetCount() )
+            {
+            //wxPrintf( "D: MyFrame::activateChild( %d ) - beyond number of children ( = %d), choosing first\n" , childno, children.GetCount() ) ;
+            childno = 0 ;
+            }
+        children[childno]->Activate () ;
+        mainTree->EnsureVisible ( children[childno]->inMainTree ) ;
+        mainTree->SelectItem ( children[childno]->inMainTree ) ;
+        }
+    //wxSafeYield () ;
+    //wxPrintf( "D: MyFrame::activateChild( %d ) - end\n" ) ;
     }
 
 /** \brief Locks/unlocks display, counts (un)lock requests
@@ -2073,6 +2104,7 @@ void MyFrame::activateChild ( int a )
  */
 void MyFrame::lockDisplay ( const bool lock )
     {
+    //wxPrintf("D: MyFrame::lockDisplay ( %d ) with locked counter at %d\n" , lock , locked) ;
     if ( lock )
         {
         if ( locked == 0 ) { mainTree->Freeze() ; Freeze() ; }
@@ -2092,6 +2124,7 @@ void MyFrame::lockDisplay ( const bool lock )
                 }
             }
         }
+    //wxPrintf("D: MyFrame::lockDisplay - end - now with locked counter at %d\n" , locked) ;
     }
 
 /** \brief Is display locked?
@@ -2134,7 +2167,7 @@ wxString MyFrame::check4update ()
     return text ;
     }
 
-wxString MyFrame::check4update_sub ( const wxString& text )
+wxString MyFrame::check4update_sub ( const wxString& text ) const
     {
     bool error = true ;
     if ( !text.IsEmpty() ) error = false ;
@@ -2148,29 +2181,30 @@ wxString MyFrame::check4update_sub ( const wxString& text )
 
         wxString lu = LS->getOption ( _T("LAST_UPDATE") , "" ) ;
         if ( lu.IsEmpty() ) // Assuming new installation of the latest version, so no update
-        {
+            {
             lu = td ;
             LS->setOption ( _T("LAST_UPDATE") , lu ) ;
-        }
+            }
 
         if ( td > lu )
-        {
+            {
             wxString msg = it.AfterFirst ( '\n' ) ;
             msg += "\n(" + wxString ( txt("t_you_use_version") ) + myapp()->get_GENtle_version() + ")" ;
-            wxMessageDialog md ( this , msg , txt("t_new_version" ) ,
-                                wxOK | wxCANCEL | wxCENTRE | wxICON_INFORMATION ) ;
+            wxMessageDialog md ( this , msg , txt("t_new_version" ) , wxOK | wxCANCEL | wxCENTRE | wxICON_INFORMATION ) ;
             if ( wxID_OK != md.ShowModal() )
+                {
                 return "-" ;
+                }
 
             return td ;
-        }
+            }
         }
     else
-    {
+        {
         // Cannot connect to check for update
         // SetStatusText ( txt("t_update_warning") , 1 ) ;
         // wxMessageBox ( "Error" , text ) ;
-    }
+        }
     return "" ;
     }
 
@@ -2287,40 +2321,78 @@ TStorage *MyFrame::getTempDB ( const wxString& name )
  */
 void MyFrame::setActiveChild ( ChildBase * const c )
     {
+    //wxPrintf( "D: MyFrame::setActiveChild - start\n" ) ;
     lastChild = c ;
-    if ( !IsShown() ) return ;
-    if ( locked != 0 ) return ;
-    if ( activating ) return ;
-    unsigned int a ;
-    for ( a = 0 ; a < children.GetCount() ; a++ )
-    {
+    if ( !IsShown() )
+        {
+        wxPrintf( "D: MyFrame::setActiveChild - ret !IsShown\n" ) ;
+        return ;
+        }
+    if ( locked != 0 )
+        {
+        wxPrintf( "D: MyFrame::setActiveChild - ret locked\n" ) ;
+        return ;
+        }
+    if ( activating )
+        {
+        wxPrintf( "D: MyFrame::setActiveChild - ret activating\n" ) ;
+        return ;
+        }
+
+    for ( unsigned int a = 0 ; a < children.GetCount() ; a++ )
+        {
         ChildBase *d = children[a] ;
         if ( d != c )
-        {
+            {
             if ( d->IsShown() ) d->Hide () ;
             if ( d->IsEnabled() ) d->Disable () ;
+            }
         }
-    }
-    if ( children.GetCount() == 0 && GetMenuBar() != menu_bar ) SetMenuBar ( menu_bar ) ;
-    if ( !c ) return ;
+    if ( children.GetCount() == 0 && GetMenuBar() != menu_bar )
+        {
+        //wxPrintf( "D: MyFrame::setActiveChild - setting menu bar for 0 children\n" ) ;
+        SetMenuBar ( menu_bar ) ;
+        }
+    if ( !c )
+        {
+        wxPrintf( "D: MyFrame::setActiveChild - ret !c\n" ) ;
+        return ;
+        }
     activating = true ;
     //    wxSafeYield() ;
-    if ( !c->IsEnabled() ) c->Enable() ;
-        if ( c->menubar && GetMenuBar() != c->menubar )
+    if ( !c->IsEnabled() )
+        {
+        //wxPrintf( "D: MyFrame::setActiveChild - enabling c\n" ) ;
+        c->Enable() ;
+        }
+    if ( c->menubar && GetMenuBar() != c->menubar )
+        {
+        //wxPrintf( "D: MyFrame::setActiveChild - setting menu bar c\n" ) ;
         c->SetMyMenuBar () ;
+        }
     //SetMenuBar ( c->menubar ) ;
+    //wxPrintf( "D: MyFrame::setActiveChild - was here B\n" ) ;
     wxSize s = c->GetParent()->GetClientSize() ;
     if ( c->GetSize() != s )
         {
         if ( c->vec ) c->vec->updateDisplay() ;
         c->SetSize ( s ) ;
         }
+    //wxPrintf( "D: MyFrame::setActiveChild - was here C\n" ) ;
     if ( mainTree && c->inMainTree.IsOk() && mainTree->GetSelection() != c->inMainTree )
         mainTree->SelectItem ( c->inMainTree ) ;
-    if ( !c->IsShown() ) c->Show() ;
+    //wxPrintf( "D: MyFrame::setActiveChild - was here D\n" ) ;
+    if ( !c->IsShown() )
+        {
+        //wxPrintf( "D: MyFrame::setActiveChild - showing what is not shown\n" ) ;
+        c->Show() ;
+        }
         //    c->Refresh () ;
-    wxSafeYield () ;
+    //wxPrintf( "D: MyFrame::setActiveChild - was here E\n" ) ;
+    //wxSafeYield () ;
+    //wxPrintf( "D: MyFrame::setActiveChild - was here F\n" ) ;
     activating = false ;
+    //wxPrintf( "D: MyFrame::setActiveChild - end\n" ) ;
     }
 
 /** \brief Returns the base window for all children
@@ -2334,10 +2406,10 @@ wxWindow *MyFrame::getCommonParent() const
  */
 void MyFrame::BollocksMenu(wxCommandEvent& event)
     {
-    wxPrintf("MyFrame::BollocksMenu\n") ;
+    //wxPrintf("MyFrame::BollocksMenu\n") ;
     if ( !lastChild )
         {
-        wxPrintf("MyFrame::BollocksMenu - return - !lastChild\n") ;
+        wxPrintf("D: MyFrame::BollocksMenu - return - !lastChild\n") ;
         return ;
         }
     if ( event.GetId() == MDI_NEXT_WINDOW || event.GetId() == MDI_PREV_WINDOW )
@@ -2353,12 +2425,12 @@ void MyFrame::BollocksMenu(wxCommandEvent& event)
             mainTree->SelectItem ( children[a]->inMainTree ) ;
             children[a]->EnforceRefesh () ;
             }
-        wxPrintf("MyFrame::BollocksMenu - return - NEXT_WINDOW\n") ;
+        //wxPrintf("D: MyFrame::BollocksMenu - return - NEXT_WINDOW\n") ;
         return ;
         }
     if ( lastChild->def != _T("dna") )
         {
-        wxPrintf("MyFrame::BollocksMenu - return - dna != lastChild->def\n") ;
+        wxPrintf("D: MyFrame::BollocksMenu - return - dna != lastChild->def\n") ;
         return ;
         }
     lastChild->ProcessEvent ( event ) ;
@@ -2383,10 +2455,13 @@ void MyFrame::RerouteMenu(wxCommandEvent& event)
 /** \brief Gets the number of a child in the children list
  \param c Pointer to child
  */
-int MyFrame::getChildIndex ( ChildBase *c )
+int MyFrame::getChildIndex ( const ChildBase * const c ) const
     {
-    int a ;
-    for ( a = 0 ; a < children.GetCount() && children[a] != c ; a++ ) ;
+    int a = 0 ;
+    while ( a < children.GetCount() && children[a] != c )
+        {
+        a++ ;
+        }
     return a ;
     }
 
