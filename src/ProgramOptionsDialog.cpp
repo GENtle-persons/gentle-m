@@ -638,6 +638,7 @@ void TEnzymeRules::getVectorCuts ( /* not const */ TVector * const v ) const
     // Getting the default list of enzymes
     wxArrayTRestrictionEnzyme ve ;
     wxArrayString vs ;
+    wxPrintf( "D: TEnzymeRules::getVectorCuts - requesting Enzymes for default group '%s'\n" , default_group ) ;
     myapp()->frame->LS->getEnzymesInGroup ( default_group , vs ) ;
     ve.Alloc ( vs.GetCount() ) ;
 
@@ -677,17 +678,17 @@ void TEnzymeRules::getVectorCuts ( /* not const */ TVector * const v ) const
         {
         vector <TRestrictionCut> vc ;
         v->getCuts ( ve[a] , vc , false , max ) ;
-        if ( use_min_cutoff &&  min_cutoff <= vc.size() )
+        if ( use_min_cutoff &&  min_cutoff > vc.size() )
             {
-            wxPrintf( "D: TEnzymeRules::getVectorCuts - min cutoff - enzyme:%s vc.size():%lu\n" , ve[a]->getName() , vc.size() ) ;
+            wxPrintf( "D: TEnzymeRules::getVectorCuts - min cutoff: %d - skipping enzyme:%s - too few cuts - vc.size():%lu\n" , min_cutoff, ve[a]->getName() , vc.size() ) ;
             }
-        else if ( use_max_cutoff && max_cutoff >= vc.size() )
+        else if ( use_max_cutoff && max_cutoff < vc.size() )
             {
-            wxPrintf( "D: TEnzymeRules::getVectorCuts - max cutoff - enzyme:%s vc.size():%lu\n" , ve[a]->getName() , vc.size() ) ;
+            wxPrintf( "D: TEnzymeRules::getVectorCuts - max cutoff: %d - skipping enzyme:%s - too many cuts - vc.size():%lu\n" , max_cutoff, ve[a]->getName() , vc.size() ) ;
             }
         else
             {
-            wxPrintf( "D: TEnzymeRules::getVectorCuts - accepting - enzyme:%s vc.size():%lu\n" , ve[a]->getName() , vc.size() ) ;
+            wxPrintf( "D: TEnzymeRules::getVectorCuts - accepting - accepting enzyme:%s vc.size():%lu\n" , ve[a]->getName() , vc.size() ) ;
             v->re2.Add ( ve[a] ) ;
             for ( int b = 0 ; b < vc.size() ; b++ )
                 {

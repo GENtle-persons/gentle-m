@@ -87,7 +87,16 @@ void TVectorEditor::initPanEnzym ()
     listGroups->Clear() ;
     showEnzymeGroups () ;
 
-    ce.Clear() ;
+    wxPrintf( "I: Before clearing ce, ce contains:\n" ) ;
+    debugStdout("ce") ;
+    for ( int a = 0 ; a < TVectorEditor::ce.GetCount() ; a++ )
+        {
+        wxString s = TVectorEditor::ce[a] ;
+        wxPrintf( "D: TVectorEditor::initPanEnzym - Adding '%s' from ce list to widget\n" , s ) ;
+        listCE->Append ( s ) ;
+        }
+
+    //TVectorEditor::ce.Clear() ; // not loosing previously used settings in "current" list
     for ( int a = 0 ; v && a < v->re.GetCount() ; a++ )
         {
         wxString s = v->re[a]->getName() ;
@@ -96,8 +105,19 @@ void TVectorEditor::initPanEnzym ()
             wxPrintf( "E: TVectorEditor::initPanEnzym - enzyme %s = re[%d]->getSequence.IsEmpty()\n" , v->re[a]->getName(), a ) ;
             abort() ;
             }
-        listCE->Append ( s ) ;
-        ce.Add ( s ) ;
+        int foundInCE=0 ;
+        for(int a = 0; a < TVectorEditor::ce.GetCount() ; a++ )
+            {
+            if (s == ce[a] )
+                {
+                foundInCE = 1 ;
+                }
+            }
+        if ( ! foundInCE )
+            {
+            listCE->Append ( s ) ;
+            TVectorEditor::ce.Add ( s ) ;
+            }
         }
 
     debugStdout("ce") ;
@@ -111,9 +131,9 @@ void TVectorEditor::initPanEnzym ()
 void TVectorEditor::debugStdout(const wxString &whatToPrint ) const
     {
     wxPrintf( "D: TVectorEditor::debugStdout - ce: " );
-    for( int a = 0 ; a < ce.GetCount() ; a++ )
+    for( int a = 0 ; a < TVectorEditor::ce.GetCount() ; a++ )
         {
-        wxPrintf( " %s" , ce[a] ) ;
+        wxPrintf( " %s" , TVectorEditor::ce[a] ) ;
         }
     wxPrintf( "\n" );
     }
@@ -196,6 +216,7 @@ void TVectorEditor::showEnzymeGroups ()
     myapp()->frame->LS->getEnzymeGroups ( vs ) ;
     for ( int i = 0 ; i < vs.GetCount() ; i++ )
         {
+        wxPrintf( "D: TVectorEditor::showEnzymeGroups - appending '%s'\n" , vs[i] ) ;
         listGroups->Append ( vs[i] ) ;
         }
     showGroupEnzymes ( all ) ;
@@ -247,7 +268,7 @@ void TVectorEditor::enzymeAddEn ( wxCommandEvent &ev )
         if ( p == wxNOT_FOUND )
             {
             listCE->Append ( s ) ;
-            ce.Add ( s ) ;
+            TVectorEditor::ce.Add ( s ) ;
             }
         }
     wxPrintf( "D: TVectorEditor::enzymeAddEn - end\n" ) ;
@@ -264,7 +285,7 @@ void TVectorEditor::enzymeAddGr ( wxCommandEvent &ev )
         if ( b == wxNOT_FOUND )
            {
            listCE->Append ( s ) ;
-           ce.Add ( s ) ;
+           TVectorEditor::ce.Add ( s ) ;
            }
         }
     wxPrintf( "D: TVectorEditor::enzymeAddGr - end\n" ) ;
@@ -346,15 +367,15 @@ void TVectorEditor::enzymeDelEn ( wxCommandEvent &ev )
         listCE->Delete ( i ) ;
 
         int numDeleted = 0 ;
-        for ( int j = 0 ; j < ce.GetCount() ; j++ )
+        for ( int j = 0 ; j < TVectorEditor::ce.GetCount() ; j++ )
             {
-            if ( ce[i] == s )
+            if ( TVectorEditor::ce[i] == s )
                {
-               ce.RemoveAt ( j ) ;
+               TVectorEditor::ce.RemoveAt ( j ) ;
                numDeleted++ ;
                /*
-               ce[i] = ce[ce.size()-1] ;
-               ce.pop_back () ;
+               TVectorEditor::ce[i] = TVectorEditor::ce[TVectorEditor::ce.size()-1] ;
+               TVectorEditor::ce.pop_back () ;
                */
                }
             }

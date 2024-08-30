@@ -41,6 +41,8 @@ BEGIN_EVENT_TABLE(TVectorEditor, wxDialog )
     EVT_CHAR_HOOK(TVectorEditor::OnCharHook)
 END_EVENT_TABLE()
 
+wxArrayString TVectorEditor::ce ;
+
 void TVectorEditor::OnCharHook(wxKeyEvent& event)
     {
     int k = event.GetKeyCode () ;
@@ -53,7 +55,7 @@ void TVectorEditor::OnCharHook(wxKeyEvent& event)
 TVectorEditor::TVectorEditor(wxWindow *parent, const wxString& title , TVector *_v )
          : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 620 , 550 ) )
     {
-    wxPrintf("TVectorEditor::TVectorEditor - start\n");
+    wxPrintf( "D: TVectorEditor::TVectorEditor - start\n" ) ;
     myapp()->frame->push_help ( _T("GENtle:Sequence_editor") ) ;
     lastSelection = -1 ;
     v = _v ;
@@ -82,7 +84,7 @@ TVectorEditor::TVectorEditor(wxWindow *parent, const wxString& title , TVector *
     if ( v ) name->SetFocus() ;
     addOkCancel ( this ) ;
     Center () ;
-    wxPrintf("TVectorEditor::TVectorEditor - end\n");
+    wxPrintf( "D: TVectorEditor::TVectorEditor - end\n" ) ;
     }
 
 TVectorEditor::~TVectorEditor ()
@@ -118,8 +120,8 @@ void TVectorEditor::initPanProt ()
 
     wxRect r = b->GetRect() ;
     pro_txt = new TURLtext ( panProt , URLTEXT_DUMMY , _T("") , wxPoint ( r.GetRight() + bo , r.GetTop() ) ,
-                                wxSize ( w - th - bo - r.GetRight() , h - th*2 - r.GetTop() ) ,
-                                wxTE_MULTILINE|wxTE_READONLY ) ;
+                             wxSize ( w - th - bo - r.GetRight() , h - th*2 - r.GetTop() ) ,
+                             wxTE_MULTILINE|wxTE_READONLY ) ;
     pro_txt->SetBackgroundColour ( wxSystemSettings::GetColour ( wxSYS_COLOUR_BTNFACE ) ) ;
 
 //    addOkCancel ( panProt ) ;
@@ -165,12 +167,10 @@ void TVectorEditor::initPanProp ()
         {
         // Sticky ends
         r = (new wxStaticText(panProp,-1,_T("5'-"),wxPoint(bo,th*8)))->GetRect() ;
-        lu = new wxTextCtrl(panProp,-1,v->getStickyEnd(true,true),
-                                wxPoint(r.GetRight()+bo,r.GetTop()-bo),wxSize(w/5,th));
+        lu = new wxTextCtrl(panProp,-1,v->getStickyEnd(true,true), wxPoint(r.GetRight()+bo,r.GetTop()-bo),wxSize(w/5,th));
 
         r = (new wxStaticText(panProp,-1,_T("-3'"),wxPoint(w-r.GetRight(),r.GetTop())))->GetRect() ;
-        ru = new wxTextCtrl(panProp,-1,v->getStickyEnd(false,true),
-                                wxPoint(r.GetLeft()-bo-w/5,r.GetTop()-bo),wxSize(w/5,th));
+        ru = new wxTextCtrl(panProp,-1,v->getStickyEnd(false,true), wxPoint(r.GetLeft()-bo-w/5,r.GetTop()-bo),wxSize(w/5,th));
 
         wxString k ;
         while ( k.length() * (r.GetWidth()/3) < w/2 )
@@ -180,12 +180,10 @@ void TVectorEditor::initPanProp ()
         new wxStaticText(panProp,-1,k,wxPoint(lu->GetRect().GetRight()+bo,r.GetTop())) ;
 
         r = (new wxStaticText(panProp,-1,_T("3'-"),wxPoint(bo,r.GetBottom()+th)))->GetRect() ;
-        ll = new wxTextCtrl(panProp,-1,v->getStickyEnd(true,false),
-                                wxPoint(r.GetRight()+bo,r.GetTop()-bo),wxSize(w/5,th));
+        ll = new wxTextCtrl(panProp,-1,v->getStickyEnd(true,false), wxPoint(r.GetRight()+bo,r.GetTop()-bo),wxSize(w/5,th));
 
         r = (new wxStaticText(panProp,-1,_T("-5'"),wxPoint(w-r.GetRight(),r.GetTop())))->GetRect() ;
-        rl = new wxTextCtrl(panProp,-1,v->getStickyEnd(false,false),
-                                wxPoint(r.GetLeft()-bo-w/5,r.GetTop()-bo),wxSize(w/5,th));
+        rl = new wxTextCtrl(panProp,-1,v->getStickyEnd(false,false), wxPoint(r.GetLeft()-bo-w/5,r.GetTop()-bo),wxSize(w/5,th));
 
         new wxStaticText(panProp,-1,k,wxPoint(lu->GetRect().GetRight()+bo,r.GetTop())) ;
         }
@@ -283,12 +281,13 @@ void TVectorEditor::commitEnzymes ()
     for ( int a = 0 ; a < v->re.GetCount() ; a++ )
         {
         int b = 0 ;
-        while ( b < ce.GetCount() && ce[b] != v->re[a]->getName() )
+        while ( b < TVectorEditor::ce.GetCount() && TVectorEditor::ce[b] != v->re[a]->getName() )
             {
             b++ ;
             }
-        if ( b == ce.GetCount() )
+        if ( b == TVectorEditor::ce.GetCount() )
             {
+            // Enzyme in re is not in ce, so it must have been removed in ce, so we remove it from re now
             changed = true ;
             v->re.RemoveAt ( a ) ;
             a-- ;
@@ -296,15 +295,16 @@ void TVectorEditor::commitEnzymes ()
         }
 
     // Added enzymes
-    for ( int b = 0 ; b < ce.GetCount() ; b++ )
+    for ( int b = 0 ; b < TVectorEditor::ce.GetCount() ; b++ )
         {
         int a ;
-        for ( a = 0 ; a < v->re.GetCount() && ce[b] != v->re[a]->getName() ; a++ )
+        for ( a = 0 ; a < v->re.GetCount() && TVectorEditor::ce[b] != v->re[a]->getName() ; a++ )
             ;
         if ( a == v->re.GetCount() )
             {
+            // Enzyme in ce is not in re, so it must have been added to ce, so we also add it to re
             changed = true ;
-            v->re.Add ( myapp()->frame->LS->getRestrictionEnzyme ( ce[b] )  ) ;
+            v->re.Add ( myapp()->frame->LS->getRestrictionEnzyme ( TVectorEditor::ce[b] )  ) ;
             }
         }
 
