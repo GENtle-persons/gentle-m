@@ -282,7 +282,7 @@ void TRestrictionEditor::initRestrictionPage ()
 
 void TRestrictionEditor::listEnzymesInGroup ( const wxString& gr , wxArrayString &vs ) const
     {
-    wxPrintf( "D: TRestrictionEditor::listEnzymesInGroup (gr: %s, vs.GetCount: %lu)\n" , gr, vs.GetCount() ) ;
+    //wxPrintf( "D: TRestrictionEditor::listEnzymesInGroup (gr: %s, vs.GetCount: %lu)\n" , gr, vs.GetCount() ) ;
     if ( gr == txt("Current") )
         {
         if (!v)
@@ -319,12 +319,12 @@ void TRestrictionEditor::listEnzymesInGroup ( const wxString& gr , wxArrayString
         {
         myapp()->frame->LS->getEnzymesInGroup ( gr , vs ) ;
         }
-    wxPrintf( "D: TRestrictionEditor::listEnzymesInGroup (gr: %s, vs.GetCount: %lu)\n" , gr, vs.GetCount() ) ;
+    //wxPrintf( "D: TRestrictionEditor::listEnzymesInGroup (gr: %s, vs.GetCount: %lu)\n" , gr, vs.GetCount() ) ;
     }
 
 void TRestrictionEditor::pR_showGroupEnzymes ( const wxString& gr )
     {
-    wxPrintf( "D: TRestrictionEditor::pR_showGroupEnzymes(%s) - start\n" , gr ) ;
+    //wxPrintf( "D: TRestrictionEditor::pR_showGroupEnzymes(%s) - start\n" , gr ) ;
     el->DeleteAllItems() ;
     rsl->DeleteAllItems() ;
 
@@ -366,19 +366,19 @@ void TRestrictionEditor::pR_showGroupEnzymes ( const wxString& gr )
         el->SetFocus() ;
         pre = _T("") ;
         }
-    wxPrintf( "D: TRestrictionEditor::pR_showGroupEnzymes(%s) - end\n" , gr ) ;
+    //wxPrintf( "D: TRestrictionEditor::pR_showGroupEnzymes(%s) - end\n" , gr ) ;
     }
 
 wxArrayInt TRestrictionEditor::getcuts ( const wxString& enzyme )
     {
-    wxPrintf ( "D: TRestrictionEditor::getcuts(%s) - start\n" , enzyme ) ;
+    //wxPrintf ( "D: TRestrictionEditor::getcuts(%s) - start\n" , enzyme ) ;
     wxArrayInt ret ;
     { // block constraining use of variable j
     int j ;
     for ( j = 0 ; j < nocut.GetCount() && nocut[j] != enzyme ; j++ ) ;
     if ( j < nocut.GetCount() )
         {
-        wxPrintf ( "D: TRestrictionEditor::getcuts(%s) - ret empty since known nocut\n" , enzyme ) ;
+        //wxPrintf ( "D: TRestrictionEditor::getcuts(%s) - ret empty since known nocut\n" , enzyme ) ;
         return ret ; // No cuts, returning empty list
         }
     }
@@ -397,7 +397,7 @@ wxArrayInt TRestrictionEditor::getcuts ( const wxString& enzyme )
         TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( enzyme );
         if ( e->getSequence().length() < 3 )
             {
-            wxPrintf ( "D: TRestrictionEditor::getcuts(%s) - ret invalid sequence '%s' -> notcut\n" , enzyme , e->getSequence() ) ;
+            //wxPrintf ( "D: TRestrictionEditor::getcuts(%s) - ret invalid sequence '%s' -> notcut\n" , enzyme , e->getSequence() ) ;
             return ret ;
             }
         else
@@ -407,18 +407,18 @@ wxArrayInt TRestrictionEditor::getcuts ( const wxString& enzyme )
             if ( x.size() == 0 ) // No cuts
                 {
                 nocut.Add ( enzyme ) ;
-                wxPrintf ( "D: TRestrictionEditor::getcuts(%s) - ret notcut\n" , enzyme ) ;
+                //wxPrintf ( "D: TRestrictionEditor::getcuts(%s) - ret notcut\n" , enzyme ) ;
                 return ret ;
                 }
             for ( int k = 0 ; k < x.size() ; k++ )
                 {
-                wxPrintf ( "D: TRestrictionEditor::getcuts(%s) - adds cut at %d\n" , enzyme , x[k].getPos() ) ;
+                //wxPrintf ( "D: TRestrictionEditor::getcuts(%s) - adds cut at %d\n" , enzyme , x[k].getPos() ) ;
                 cutcache.push_back ( TREcache ( enzyme , x[k].getPos() ) ) ;
                 ret.Add ( x[k].getPos() ) ;
                 }
             }
         }
-    wxPrintf( "D: TRestrictionEditor::getcuts(%s) - end - Found %lu cuts\n" , enzyme , ret.GetCount()) ;
+    //wxPrintf( "D: TRestrictionEditor::getcuts(%s) - end - Found %lu cuts\n" , enzyme , ret.GetCount()) ;
     return ret ;
     }
 
@@ -441,16 +441,16 @@ void TRestrictionEditor::res_ll ( wxListEvent &event )
 
 void TRestrictionEditor::pR_showFragments ( int i )
     {
-    wxPrintf( "D: TRestrictionEditor::pR_showFragments(%d) - start\n" , i ) ;
+    //wxPrintf( "D: TRestrictionEditor::pR_showFragments(%d) - start\n" , i ) ;
     wxString enzyme = el->GetItemText ( i ) ;
     wxArrayInt vi = getcuts ( enzyme ) ;
     listFragments ( rsl , vi ) ;
-    wxPrintf( "D: TRestrictionEditor::pR_showFragments(%d) - end\n" , i ) ;
+    //wxPrintf( "D: TRestrictionEditor::pR_showFragments(%d) - end\n" , i ) ;
     }
 
 void TRestrictionEditor::getFragmentList ( wxArrayInt& cuts , vector <TFragment>& fragments , const bool clear ) const
     {
-    wxPrintf( "D: TRestrictionEditor::getFragmentList - start - cuts.GetCount=%d\n" , cuts.GetCount() ) ;
+    //wxPrintf( "D: TRestrictionEditor::getFragmentList - start - cuts.GetCount=%d\n" , cuts.GetCount() ) ;
 
     if (!v)
         {
@@ -483,12 +483,12 @@ void TRestrictionEditor::getFragmentList ( wxArrayInt& cuts , vector <TFragment>
         fr.length = len ;
         fragments.push_back ( fr ) ;
         }
-    wxPrintf( "D: TRestrictionEditor::getFragmentList - end\n" ) ;
+    //wxPrintf( "D: TRestrictionEditor::getFragmentList - end\n" ) ;
     }
 
 void TRestrictionEditor::listFragments ( wxListCtrl * const list , wxArrayInt &vi ) /* not const */
     {
-    wxPrintf( "D: TRestrictionEditor::listFragments - start\n" ) ;
+    //wxPrintf( "D: TRestrictionEditor::listFragments - start\n" ) ;
     if (!v)
         {
         wxPrintf( "E: TRestrictionEditor::listFragments - v is NULL\n" ) ;
@@ -535,12 +535,12 @@ void TRestrictionEditor::listFragments ( wxListCtrl * const list , wxArrayInt &v
         //sprintf ( u , "%d" , len ) ; // Length
         list->SetItem ( k , 3 , wxString::Format ( _T("%d") , len ) ) ;
         }
-    wxPrintf( "D: TRestrictionEditor::listFragments - end\n" ) ;
+    //wxPrintf( "D: TRestrictionEditor::listFragments - end\n" ) ;
     }
 
 void TRestrictionEditor::refreshCocktail () /* not const */
     {
-    wxPrintf( "D: TRestrictionEditor::refreshCocktail - start\n" ) ;
+    //wxPrintf( "D: TRestrictionEditor::refreshCocktail - start\n" ) ;
     wxArrayString vs = cocktail ;
     el2->DeleteAllItems() ;
     // char t[100] ;
@@ -571,12 +571,12 @@ void TRestrictionEditor::refreshCocktail () /* not const */
         }
     cocktailFragments = vi ; // not const
     listFragments ( rsl2 , vi ) ;
-    wxPrintf( "D: TRestrictionEditor::refreshCocktail - end\n" ) ;
+    //wxPrintf( "D: TRestrictionEditor::refreshCocktail - end\n" ) ;
     }
 
 void TRestrictionEditor::add2cocktail ( const wxString& s ) /* not const */
     {
-    wxPrintf( "D: TRestrictionEditor::add2cocktail(%s) - start\n" , s ) ;
+    //wxPrintf( "D: TRestrictionEditor::add2cocktail(%s) - start\n" , s ) ;
     if ( s.IsEmpty() )
         {
         wxPrintf( "D: TRestrictionEditor::add2cocktail(%s) - ret s empty\n" , s ) ;
@@ -595,15 +595,17 @@ void TRestrictionEditor::add2cocktail ( const wxString& s ) /* not const */
     cocktail.Add ( s ) ;
     cocktail.Sort() ;
     refreshCocktail () ;
-    wxPrintf( "D: TRestrictionEditor::add2cocktail(%s) - end\n" , s ) ;
+    //wxPrintf( "D: TRestrictionEditor::add2cocktail(%s) - end\n" , s ) ;
     }
 
 void TRestrictionEditor::del_from_cocktail ( const wxString& s ) /* not const */
     {
-    wxPrintf( "W: TRestrictionEditor::del_from_cocktail(%s) - start\n" , s ) ;
+    //wxPrintf( "W: TRestrictionEditor::del_from_cocktail(%s) - start\n" , s ) ;
     int i = 0 ;
     while ( i < cocktail.GetCount() && cocktail[i] != s )
+        {
         i++ ;
+        }
     if ( i == cocktail.GetCount() )
         {
         wxPrintf( "W: TRestrictionEditor::del_from_cocktail(%s) - ret enzyme not in cocktail\n" , s ) ;
@@ -611,7 +613,7 @@ void TRestrictionEditor::del_from_cocktail ( const wxString& s ) /* not const */
         }
     cocktail.RemoveAt ( i ) ;
     refreshCocktail () ;
-    wxPrintf( "W: TRestrictionEditor::del_from_cocktail(%s) - end\n" , s ) ;
+    //wxPrintf( "W: TRestrictionEditor::del_from_cocktail(%s) - end\n" , s ) ;
     }
 
 // "Restriction" handlers
@@ -699,7 +701,7 @@ void TRestrictionEditor::onAddAll ( wxCommandEvent &event )
 
 void TRestrictionEditor::iterateFragments ( const wxArrayInt& cuts , vector <TFragment> &fragments , const int depth ) const
     {
-    wxPrintf( "D: TRestrictionEditor::iterateFragments - end\n" ) ;
+    //wxPrintf( "D: TRestrictionEditor::iterateFragments - start\n" ) ;
     if ( cuts.size() == 0 ) return ;
     wxArrayInt cuts2 = cuts ;
     getFragmentList ( cuts2 , fragments , false ) ;
@@ -718,7 +720,10 @@ void TRestrictionEditor::iterateFragments ( const wxArrayInt& cuts , vector <TFr
 
     for ( int a = 1 ; a < fragments.size() ; a++ )
         {
-        if ( ! ( fragments[a-1] == fragments[a] ) ) continue ;
+        if ( ! ( fragments[a-1] == fragments[a] ) )
+            {
+            continue ;
+            }
         for ( int b = a ; b + 1 < fragments.size() ; b++ )
             {
             fragments[b] = fragments[b+1] ;
@@ -728,5 +733,5 @@ void TRestrictionEditor::iterateFragments ( const wxArrayInt& cuts , vector <TFr
         }
 
     global_sort_mode = gsm ;
-    wxPrintf( "D: TRestrictionEditor::iterateFragments - end\n" ) ;
+    //wxPrintf( "D: TRestrictionEditor::iterateFragments - end\n" ) ;
     }

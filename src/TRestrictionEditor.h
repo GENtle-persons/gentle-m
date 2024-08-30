@@ -11,7 +11,8 @@ class wxNotebook ;
 class TRestrictionEnzyme ;
 
 /** \brief Restriction enzyme site cache
-*/
+ * In the context of a particular sequence, an object of this class remembers what enzyme cuts at which position.
+ */
 class TREcache
     {
     public :
@@ -21,7 +22,10 @@ class TREcache
     } ;
 
 /** \brief A restriction fragment (from, to, length)
-*/
+ * In the context of a particular sequence, this class brings together the specification of
+ * a subsequence, i.e. technically typically a fragment, and also knows the length and weight
+ * as derivative values beyond from and to.
+ */
 class TFragment
     {
     public :
@@ -33,7 +37,9 @@ bool operator < ( const TFragment &f1 , const TFragment &f2 ) ;
 bool operator == ( const TFragment &f1 , const TFragment &f2 ) ;
 
 /** \brief The restriction editor dialog class
-*/
+ * This class maintains the window from which the actual restriction is triggered in silico.
+ * Users select the enzymes to be applied together as a cocktail and press "Done".
+ */
 class TRestrictionEditor : public wxDialog
     {
     public :

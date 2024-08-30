@@ -16,8 +16,10 @@ class TURLtext ;
 class TEnzymeSettingsTab ;
 class TEnzymeRules ;
 
-/** \brief The sequence edit dialog
-*/
+/** \brief The enzyme management dialog
+ * Opened as a modal box to update the list of known enzymes and specify subgroups of enzymes of interest
+ * that can then be summoned in another dialog box for sequence-specific contexts.
+ */
 class TVectorEditor : public wxDialog
     {
     public :
@@ -83,6 +85,9 @@ class TVectorEditor : public wxDialog
 
     bool hideProp , hideItem , hideEnzym ;
 
+    protected:
+    static wxArrayString ce ; ///< Holds current enzymes
+
     private :
     virtual int getCurrentItem () const ; ///< Returns the ID of the currently selected item
     virtual void clearItemSelection () ; ///< Clears the current item selection
@@ -91,7 +96,7 @@ class TVectorEditor : public wxDialog
 
     wxListBox *listCE , *listGroups , *listGE ;
     wxArrayString eig ;
-    wxArrayString ce ; ///< Holds current enzymes
+
 
     TVector *v ;
     int bo , th ;

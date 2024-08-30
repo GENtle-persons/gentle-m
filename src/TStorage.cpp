@@ -365,7 +365,7 @@ TSQLresult TStorage::getObjectSqlite2 ( const wxString &query )
 
 void TStorage::import ()
     {
-    wxPrintf( "TStorage::import - start\n" ) ;
+    //wxPrintf( "TStorage::import - start\n" ) ;
     // Importing restriction enzymes
     TSQLresult sr = getObject ( _T("SELECT * FROM enzyme") ) ;
     for ( int a = 0 ; a < sr.content.size() ; a++ )
@@ -403,10 +403,10 @@ void TStorage::import ()
                 wxPrintf( "E: TStorage::import - e->getSequence().IsEmpty() for %s\n" , e->getName() ) ;
                 }
             re.Add ( e ) ;
-            wxPrintf ( "D: TStorage::import: Imported '%s' with sequence '%s'\n" , e->getName() , e->getSequence() ) ;
+            //wxPrintf ( "D: TStorage::import: Imported '%s' with sequence '%s'\n" , e->getName() , e->getSequence() ) ;
             }
         }
-    wxPrintf( "TStorage::import - end\n" ) ;
+    //wxPrintf( "TStorage::import - end\n" ) ;
     }
 
 void TStorage::sqlAdd ( wxString &s1 , wxString &s2 , const wxString& key , const wxString& _value ) const
@@ -534,7 +534,7 @@ wxString TStorage::UCfirst ( const wxString& _s ) const
 */
 bool TStorage::copySQLfields ( TStorage &target , const wxString& table , const wxString& cond )
     {
-    wxPrintf( "D: TStorage::copySQLfields - start (table: %s, cond: %s)\n" , table , cond ) ;
+    //wxPrintf( "D: TStorage::copySQLfields - start (table: %s, cond: %s)\n" , table , cond ) ;
     wxString sql , s1 , s2 ;
     sql = _T("SELECT * FROM ") + table + _T(" WHERE ") + cond ;
     TSQLresult r = getObject ( sql ) ;
@@ -551,7 +551,7 @@ bool TStorage::copySQLfields ( TStorage &target , const wxString& table , const 
         target.getObject ( sql ) ;
         }
     return true ;
-    wxPrintf( "D: TStorage::copySQLfields - start (table: %s, cond: %s)\n" , table , cond ) ;
+    //wxPrintf( "D: TStorage::copySQLfields - start (table: %s, cond: %s)\n" , table , cond ) ;
     }
 
 
@@ -768,7 +768,7 @@ void TStorage::autoUpdateSchema ()
 // It synchronizes the enzyme lists between known databases
 void TStorage::synchronize ()
     {
-    wxPrintf( "D: TStorage::synchronize - start\n" ) ;
+    //wxPrintf( "D: TStorage::synchronize - start\n" ) ;
     bool changed ;
 
     // Sync only once a day
@@ -827,7 +827,7 @@ void TStorage::synchronize ()
                 }
            }
         } while ( changed ) ;
-    wxPrintf( "D: TStorage::synchronize - end\n" ) ;
+    //wxPrintf( "D: TStorage::synchronize - end\n" ) ;
     }
 
 wxString TStorage::makeInsert ( const wxString& table , const wxArrayString& field , const wxArrayString& data ) const
@@ -1029,7 +1029,7 @@ void TStorage::addRestrictionEnzyme ( TRestrictionEnzyme * const r )
 
 TRestrictionEnzyme* TStorage::getRestrictionEnzyme ( const wxString& s )
     {
-    wxPrintf( "D: TStorage::getRestrictionEnzyme (%s) - start\n" , s ) ;
+    //wxPrintf( "D: TStorage::getRestrictionEnzyme (%s) - start\n" , s ) ;
     TRestrictionEnzyme *ret = NULL , *ret2 ;
     if ( storagetype == TEMP_STORAGE )
         {
@@ -1074,18 +1074,18 @@ TRestrictionEnzyme* TStorage::getRestrictionEnzyme ( const wxString& s )
         ret = ret2 ;
         }
 
-    wxPrintf( "D: TStorage::getRestrictionEnzyme (%s) - end\n" ) ;
+    //wxPrintf( "D: TStorage::getRestrictionEnzyme (%s) - end\n" , s ) ;
     return ret ;
     }
 
 void TStorage::getEnzymesInGroup ( const wxString& _gn , wxArrayString &vs )
     {
-    wxPrintf( "D: TStorage::getEnzymesInGroup - start (%s)\n" , _gn ) ;
+    //wxPrintf( "D: TStorage::getEnzymesInGroup - start (%s)\n" , _gn ) ;
     TStorage *t = getDBfromEnzymeGroup ( _gn ) ;
     if ( t )
         {
         wxString tstripped = stripGroupName ( _gn ) ;
-        wxPrintf( "D: TStorage::getEnzymesInGroup - ret found DB getDBfromEnzymeGroup (%s)\n" , _gn ) ;
+        wxPrintf( "D: TStorage::getEnzymesInGroup(%s) - ret found DB getDBfromEnzymeGroup (%s)\n" , _gn , tstripped) ;
         t->getEnzymesInGroup ( tstripped , vs ) ;
         return ;
         }
@@ -1093,7 +1093,11 @@ void TStorage::getEnzymesInGroup ( const wxString& _gn , wxArrayString &vs )
     if ( !isLocalDB() ) // Use cache
         {
         getEnzymeCache ( _gn , vs ) ;
-        if ( vs.GetCount() ) return ;
+        if ( vs.GetCount() )
+            {
+            wxPrintf( "D: TStorage::getEnzymesInGroup(%s) - ret !isLocalDB & getEnzymeCache was successful\n" , _gn ) ;
+            return ;
+            }
         }
 
     vs.Clear() ;
@@ -1124,16 +1128,25 @@ void TStorage::getEnzymesInGroup ( const wxString& _gn , wxArrayString &vs )
             }
         }
 
-    for ( int a = 0 ; a < vs.GetCount() ; a++ )
+    int a = 0 ;
+    while ( a < vs.GetCount() )
         {
         if ( vs[a].IsEmpty() )
-           {
-           vs.RemoveAt ( a ) ;
-           a-- ;
-           }
+            {
+            wxPrintf( "D: TStorage::getEnzymesInGroup: Removing empty enzyme\n" ) ;
+            vs.RemoveAt ( a ) ;
+            }
+        else
+            {
+            a++ ;
+            }
         }
 
-    if ( !isLocalDB() ) setEnzymeCache ( gn , vs ) ;
+
+    if ( !isLocalDB() )
+        {
+        setEnzymeCache ( gn , vs ) ;
+        }
     }
 
 void TStorage::getEnzymeGroups ( wxArrayString &vs )
@@ -1143,33 +1156,54 @@ void TStorage::getEnzymeGroups ( wxArrayString &vs )
     if ( t && isLocalDB() && t != this )
         {
         t->getEnzymeGroups ( vs ) ;
+        wxPrintf( "D: TStorage::getEnzymeGroups: Seeding with local groups:" ) ;
         for ( int a = 0 ; a < vs.GetCount() ; a++ )
+            {
             vs[a] = defdb + _T(":") + vs[a] ;
+            wxPrintf( " %s" , vs[a] ) ;
+            }
+        wxPrintf( "\n" ) ;
         }
-    else vs.Clear() ;
+    else
+        {
+        wxPrintf( "D: TStorage::getEnzymeGroups: Nothing from local groups.\n" ) ;
+        vs.Clear() ;
+        }
 
     if ( !isLocalDB() && enzymeGroupNameCache.GetCount() ) // Use cache
         {
+        wxPrintf( "D: TStorage::getEnzymeGroups: Returning with the following extra enzyme groups:" ) ;
         for ( int a = 0 ; a < enzymeGroupNameCache.GetCount() ; a++ )
             {
+            wxPrintf( " %s" , enzymeGroupNameCache[a] ) ;
             vs.Add ( enzymeGroupNameCache[a] ) ;
             }
+        wxPrintf( "\n" ) ;
         return ;
         }
 
-    if ( !isLocalDB() ) cleanEnzymeGroupCache () ;
+    if ( !isLocalDB() )
+        {
+        wxPrintf( "D: TStorage::getEnzymeGroups: Cleaning enzyme group cache.\n" ) ;
+        vs.Clear() ;
+        cleanEnzymeGroupCache () ;
+        }
+
+    wxPrintf( "D: TStorage::getEnzymeGroups: Retrieving via SQL query:" ) ;
     wxString sql = "SELECT eg_name FROM enzyme_group" ;
     TSQLresult sr = getObject ( sql ) ;
     for ( int a = 0 ; a < sr.content.size() ; a++ )
         {
         wxString groupname = UCfirst ( sr[a][sr["eg_name"]] ) ;
         vs.Add ( groupname ) ;
+        wxPrintf( " %s" , groupname ) ;
         if ( !isLocalDB() )
             {
             enzymeGroupNameCache.Add ( groupname ) ; // Add to cache
             enzymeGroupCache.Add ( _T("") ) ; // Add blank dummy to cache
             }
         }
+    wxPrintf( "\n" ) ;
     }
 
 void TStorage::updateRestrictionEnzyme ( /* not const*/ TRestrictionEnzyme * const e ) /* not const */
@@ -1255,7 +1289,7 @@ TStorage* TStorage::getDBfromEnzymeGroup ( const wxString& group )
     wxString s = group.BeforeLast ( ':' ) ;
     if ( s.IsEmpty() )
         {
-        wxPrintf( "D: TStorage::getDBfromEnzymeGroup(%s) -> NULL - no colon\n" , group ) ;
+        //wxPrintf( "D: TStorage::getDBfromEnzymeGroup(%s) -> NULL - no colon\n" , group ) ;
         return NULL ;
         }
 
@@ -1265,11 +1299,11 @@ TStorage* TStorage::getDBfromEnzymeGroup ( const wxString& group )
         {
         if ( db_name[a] == s )
             {
-            wxPrintf( "D: TStorage::getDBfromEnzymeGroup(%s) -> found database '%s'\n" , group  , s ) ;
+            //wxPrintf( "D: TStorage::getDBfromEnzymeGroup(%s) -> found database '%s'\n" , group  , s ) ;
             return myapp()->frame->getTempDB ( db_file[a] ) ;
             }
         }
-    wxPrintf( "D: TStorage::getDBfromEnzymeGroup(%s) -> no database or not colon found\n" , group  , s ) ;
+    //wxPrintf( "D: TStorage::getDBfromEnzymeGroup(%s) -> no database or not colon found\n" , group  , s ) ;
     return NULL ;
     }
 
@@ -1281,7 +1315,7 @@ TStorage* TStorage::getDBfromEnzymeGroup ( const wxString& group )
 wxString TStorage::stripGroupName ( const wxString& enzyme ) const
     {
     wxString s = enzyme.AfterLast ( ':' )  ;
-    wxPrintf( "D: TStorage::stripGroupName: '%s' -> '%s'\n" , enzyme , s ) ;
+    //wxPrintf( "D: TStorage::stripGroupName: '%s' -> '%s'\n" , enzyme , s ) ;
     return UCfirst ( s ) ;
     }
 
@@ -1394,13 +1428,13 @@ bool TStorage::convertSqlite2to3 ()
 
 void TStorage::syncEnzymes ( TStorage* to )
     {
-    wxPrintf( "D: TStorage::syncEnzymes - start\n" ) ;
+    //wxPrintf( "D: TStorage::syncEnzymes - start\n" ) ;
     bool useBlank = false ;
     if ( to == NULL )
         {
         wxString dbPath = myapp()->homedir.GetFullPath() + wxFileName::GetPathSeparator() + "blank.db" ;
         to = new TStorage ( TEMP_STORAGE , dbPath ) ;
-        wxPrintf( "D: TStorage::syncEnzymes - creating new blank storage.\n" ) ;
+        wxPrintf( "I: TStorage::syncEnzymes - creating new blank storage.\n" ) ;
         useBlank = true ;
         }
 
@@ -1438,5 +1472,5 @@ void TStorage::syncEnzymes ( TStorage* to )
     endRecord() ;
 
     if ( useBlank ) delete to ;
-    wxPrintf( "D: TStorage::syncEnzymes - end\n" ) ;
+    //wxPrintf( "D: TStorage::syncEnzymes - end\n" ) ;
     }
