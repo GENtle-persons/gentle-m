@@ -55,7 +55,7 @@ void TVectorEditor::OnCharHook(wxKeyEvent& event)
 TVectorEditor::TVectorEditor(wxWindow *parent, const wxString& title , TVector *_v )
          : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 620 , 550 ) )
     {
-    wxPrintf( "D: TVectorEditor::TVectorEditor - start\n" ) ;
+    ////wxPrintf( "D: TVectorEditor::TVectorEditor - start\n" ) ;
     myapp()->frame->push_help ( _T("GENtle:Sequence_editor") ) ;
     lastSelection = -1 ;
     v = _v ;
@@ -84,7 +84,7 @@ TVectorEditor::TVectorEditor(wxWindow *parent, const wxString& title , TVector *
     if ( v ) name->SetFocus() ;
     addOkCancel ( this ) ;
     Center () ;
-    wxPrintf( "D: TVectorEditor::TVectorEditor - end\n" ) ;
+    //wxPrintf( "D: TVectorEditor::TVectorEditor - end\n" ) ;
     }
 
 TVectorEditor::~TVectorEditor ()
@@ -106,7 +106,7 @@ void TVectorEditor::GetMyClientSize ( int *w , int *h , wxPanel *pan )
 
 void TVectorEditor::initPanProt ()
     {
-    wxPrintf( "D: TVectorEditor::initPanProt - start\n" ) ;
+    //wxPrintf( "D: TVectorEditor::initPanProt - start\n" ) ;
     nb->AddPage ( panProt , txt("t_vec_prot") ) ;
     int w , h ;
     GetMyClientSize ( &w , &h , panProt ) ;
@@ -125,12 +125,12 @@ void TVectorEditor::initPanProt ()
     pro_txt->SetBackgroundColour ( wxSystemSettings::GetColour ( wxSYS_COLOUR_BTNFACE ) ) ;
 
 //    addOkCancel ( panProt ) ;
-    wxPrintf( "D: TVectorEditor::initPanProt - end\n" ) ;
+    //wxPrintf( "D: TVectorEditor::initPanProt - end\n" ) ;
     }
 
 void TVectorEditor::showProteases ()
     {
-    wxPrintf( "D: TVectorEditor::showProteases - start\n" ) ;
+    //wxPrintf( "D: TVectorEditor::showProteases - start\n" ) ;
     wxArrayString vs ;
     for ( int a = 0 ; a < myapp()->frame->LS->pr.GetCount() ; a++ )
         {
@@ -146,12 +146,12 @@ void TVectorEditor::showProteases ()
         for ( b = 0 ; b < v->proteases.GetCount() && v->proteases[b] != n ; b++ ) ;
         if ( b < v->proteases.GetCount() ) prots->Check ( prots->FindString ( n ) ) ;
         }
-    wxPrintf( "D: TVectorEditor::showProteases - end\n" ) ;
+    //wxPrintf( "D: TVectorEditor::showProteases - end\n" ) ;
     }
 
 void TVectorEditor::initPanProp ()
     {
-    wxPrintf( "D: TVectorEditor::initPanProp - start\n" ) ;
+    //wxPrintf( "D: TVectorEditor::initPanProp - start\n" ) ;
     nb->AddPage ( panProp , txt("t_vec_prop") ) ;
     int w , h ;
     GetMyClientSize ( &w , &h , panProp ) ;
@@ -189,12 +189,12 @@ void TVectorEditor::initPanProp ()
         }
 
 //    addOkCancel ( panProp ) ;
-    wxPrintf( "D: TVectorEditor::initPanProp - end\n" ) ;
+    //wxPrintf( "D: TVectorEditor::initPanProp - end\n" ) ;
     }
 
 void TVectorEditor::initPanEnzym2 ()
     {
-    wxPrintf( "D: TVectorEditor::initPanEnzym2 - start\n" ) ;
+    //wxPrintf( "D: TVectorEditor::initPanEnzym2 - start\n" ) ;
     oldEnzymeRules = new TEnzymeRules ;
     *oldEnzymeRules = *v->getEnzymeRule() ;
     e_diduseit = oldEnzymeRules->useit ;
@@ -208,7 +208,7 @@ void TVectorEditor::initPanEnzym2 ()
     v->getEnzymeRules()->setup_options ( panEnzyme2 ) ;
     nb->AddPage ( panEnzyme2 , txt("t_enzymes_2") ) ;
 //    addOkCancel ( panEnzyme2 ) ;
-    wxPrintf( "D: TVectorEditor::initPanEnzym2 - end\n" ) ;
+    //wxPrintf( "D: TVectorEditor::initPanEnzym2 - end\n" ) ;
     }
 
 
@@ -216,7 +216,7 @@ void TVectorEditor::initPanEnzym2 ()
 
 void TVectorEditor::addOkCancel ( wxWindow *p )
     {
-    wxPrintf( "D: TVectorEditor::addOkCancel - start\n" ) ;
+    //wxPrintf( "D: TVectorEditor::addOkCancel - start\n" ) ;
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
 
@@ -242,7 +242,7 @@ void TVectorEditor::addOkCancel ( wxWindow *p )
     this->SetSizer ( v0 ) ;
     v0->Fit ( this ) ;
     Center () ;
-    wxPrintf( "D: TVectorEditor::addOkCancel - end\n" ) ;
+    //wxPrintf( "D: TVectorEditor::addOkCancel - end\n" ) ;
     }
 
 #define VCOMMIT(_p1,_p2) if(_p1!=v->_p2){v->_p2=_p1;v->setChanged();}
@@ -251,7 +251,7 @@ void TVectorEditor::addOkCancel ( wxWindow *p )
 
 void TVectorEditor::commitVector ()
     {
-    wxPrintf( "D: TVectorEditor::commitVector - start\n" ) ;
+    //wxPrintf( "D: TVectorEditor::commitVector - start\n" ) ;
     wxString n = name->GetValue() ;
     wxString d = desc->GetValue() ;
     if(n!=v->getName()){v->setName(n);v->setChanged();}
@@ -268,13 +268,13 @@ void TVectorEditor::commitVector ()
         VCOMMIT_STICKY(_ru,false,true);
         VCOMMIT_STICKY(_rl,false,false);
         }
-    wxPrintf( "D: TVectorEditor::commitVector - end\n" ) ;
+    //wxPrintf( "D: TVectorEditor::commitVector - end\n" ) ;
     }
 
 
 void TVectorEditor::commitEnzymes ()
     {
-    wxPrintf( "D: TVectorEditor::commitEnzymes - start\n" ) ;
+    //wxPrintf( "D: TVectorEditor::commitEnzymes - start\n" ) ;
     bool changed = false ;
 
     // Removed enzymes
@@ -325,12 +325,12 @@ void TVectorEditor::commitEnzymes ()
         {
         delete oldEnzymeRules ;
         }
-    wxPrintf( "D: TVectorEditor::commitEnzymes - end\n" ) ;
+    //wxPrintf( "D: TVectorEditor::commitEnzymes - end\n" ) ;
     }
 
 void TVectorEditor::commitProteases ()
     {
-    wxPrintf( "D: TVectorEditor::commitProteases - start\n" ) ;
+    //wxPrintf( "D: TVectorEditor::commitProteases - start\n" ) ;
     bool changed = false ;
 
     wxArrayString v1 , v2 ;
@@ -357,15 +357,15 @@ void TVectorEditor::commitProteases ()
         }
 
     v->setChanged ( changed | v->isChanged() ) ;
-    wxPrintf( "D: TVectorEditor::commitProteases - end\n" ) ;
+    //wxPrintf( "D: TVectorEditor::commitProteases - end\n" ) ;
     }
 
 void TVectorEditor::OnOK ( wxCommandEvent &ev )
     {
-    wxPrintf( "D: TVectorEditor::OnOK - start\n" ) ;
+    //wxPrintf( "D: TVectorEditor::OnOK - start\n" ) ;
     if ( v )
         {
-        wxPrintf( "D: TVectorEditor::OnOK - v != NULL\n" ) ;
+        //wxPrintf( "D: TVectorEditor::OnOK - v != NULL\n" ) ;
         if ( panProp ) commitVector () ;
         if ( panItem ) commitItems () ;
         if ( panEnzym ) commitEnzymes () ;
@@ -373,7 +373,7 @@ void TVectorEditor::OnOK ( wxCommandEvent &ev )
         }
     EndModal ( wxID_OK ) ; //wxDialog::OnOK ( ev ) ;
     debugStdout( "ce" ) ;
-    wxPrintf( "D: TVectorEditor::OnOK - end\n" ) ;
+    //wxPrintf( "D: TVectorEditor::OnOK - end\n" ) ;
     }
 
 void TVectorEditor::OnCancel ( wxCommandEvent &ev )
@@ -389,7 +389,7 @@ void TVectorEditor::cleanup ()
 
 void TVectorEditor::hideEm ()
     {
-    wxPrintf( "D: TVectorEditor::hideEm - start\n" ) ;
+    //wxPrintf( "D: TVectorEditor::hideEm - start\n" ) ;
     if ( hideEnzym )
         {
         nb->DeletePage ( 3 ) ;
@@ -412,7 +412,7 @@ void TVectorEditor::hideEm ()
         nb->SetSelection ( 1 ) ;
         nb->SetSelection ( 0 ) ;
         }
-    wxPrintf( "D: TVectorEditor::hideEm - end\n" ) ;
+    //wxPrintf( "D: TVectorEditor::hideEm - end\n" ) ;
     }
 
 // *************************
@@ -422,7 +422,7 @@ void TVectorEditor::hideEm ()
 
 void TVectorEditor::newProtease ( wxCommandEvent &ev )
     {
-    wxPrintf( "D: TVectorEditor::newProtease - start\n" ) ;
+    //wxPrintf( "D: TVectorEditor::newProtease - start\n" ) ;
     TRestrictionEnzyme *e = new TRestrictionEnzyme ;
     e->setCut ( 0 ) ;
     e->setOverlap ( 0 ) ;
@@ -435,7 +435,7 @@ void TVectorEditor::newProtease ( wxCommandEvent &ev )
        myapp()->frame->LS->updateProtease ( pr ) ;
        }
     showProteases () ;
-    wxPrintf( "D: TVectorEditor::newProtease - end\n" ) ;
+    //wxPrintf( "D: TVectorEditor::newProtease - end\n" ) ;
     }
 
 void TVectorEditor::editProtease ( wxCommandEvent &ev )
@@ -445,7 +445,7 @@ void TVectorEditor::editProtease ( wxCommandEvent &ev )
 
 void TVectorEditor::proteaseSelChange ( wxCommandEvent &ev )
     {
-    wxPrintf( "D: TVectorEditor::proteaseSelChange - start\n" ) ;
+    //wxPrintf( "D: TVectorEditor::proteaseSelChange - start\n" ) ;
     wxString s = prots->GetStringSelection() ;
     TProtease *pro = myapp()->frame->LS->getProtease ( s ) ;
 
@@ -454,7 +454,7 @@ void TVectorEditor::proteaseSelChange ( wxCommandEvent &ev )
     t += pro->str_match + _T("\n") ;
     t += pro->note ;
     pro_txt->SetValue ( t ) ;
-    wxPrintf( "D: TVectorEditor::proteaseSelChange - end\n" ) ;
+    //wxPrintf( "D: TVectorEditor::proteaseSelChange - end\n" ) ;
     }
 
 
