@@ -163,34 +163,34 @@ void SeqAA::fixOffsets ( TVector * const v )
 
 void SeqAA::initFromTVector ( const TVector * const v )
     {
-    wxPrintf( "D: SeqAA::initFromTVector - start\n" ) ;
+    //wxPrintf( "D: SeqAA::initFromTVector - start\n" ) ;
 
     if ( ! v )
         {
-        wxPrintf ( " SeqAA::initFromTVector ( NULL ) - abort\n" ) ;
+        wxPrintf ( "E: SeqAA::initFromTVector ( NULL ) - abort\n" ) ;
         abort() ;
         }
 
-    wxPrintf( "D: SeqAA::initFromTVector( %s ) - start\n" , v->getName() ) ;
+    //wxPrintf( "D: SeqAA::initFromTVector( %s ) - start\n" , v->getName() ) ;
 
     showNumbers = true ;
     if ( ! vec )
         {
-        wxPrintf ( "D: SeqAA::initFromTVector: allocating new vector.\n" ) ;
+        //wxPrintf ( "D: SeqAA::initFromTVector: allocating new vector.\n" ) ;
         vec = new TVector ( ) ;
         }
     else
         {
-        wxPrintf ( "D: SeqAA::initFromTVector: reusing existing vector - why?\n" ) ;
+        //wxPrintf ( "D: SeqAA::initFromTVector: reusing existing vector - why?\n" ) ;
         }
-    wxPrintf ( "D: SeqAA::initFromTVector: pre vec->copy()\n" ) ;
+    //wxPrintf ( "D: SeqAA::initFromTVector: pre vec->copy()\n" ) ;
     vec->copy ( *v ) ;
-    wxPrintf ( "D: SeqAA::initFromTVector: post vec->copy()\n" ) ;
+    //wxPrintf ( "D: SeqAA::initFromTVector: post vec->copy()\n" ) ;
 
     bool truncateEditSequence = false ;
     if ( can && can->getEditMode() && vec->getSequenceLength() && vec->getSequenceChar(vec->getSequenceLength()-1) == ' ' )
         {
-        wxPrintf ( "D: SeqAA::initFromTVector: can && can->getEditMode() && vec->getSequenceLength() && vec->getSequenceChar(vec->getSequenceLength()-1) == ' '\n" ) ;
+        //wxPrintf ( "D: SeqAA::initFromTVector: can && can->getEditMode() && vec->getSequenceLength() && vec->getSequenceChar(vec->getSequenceLength()-1) == ' '\n" ) ;
         vec->eraseSequence ( vec->getSequenceLength()-1 , 1 ) ;
         truncateEditSequence = true ;
         }
@@ -198,12 +198,12 @@ void SeqAA::initFromTVector ( const TVector * const v )
     wxString t = vec->getSequence() ;
     if (0 >= t.length())
         {
-        wxPrintf("D: SeqAA::initFromTVector: Assigned the empty string with t=%ld.\n" , t.length() ) ;
+        //wxPrintf("D: SeqAA::initFromTVector: Assigned the empty string with t=%ld.\n" , t.length() ) ;
         s="";
         }
     else
         {
-        wxPrintf("D: SeqAA::initFromTVector: Assigning blanks of length %ld\n", t.length() ) ;
+        //wxPrintf("D: SeqAA::initFromTVector: Assigning blanks of length %ld\n", t.length() ) ;
         wxString empty(' ', t.length() ) ;
         s = empty ; 
         }
@@ -296,7 +296,7 @@ void SeqAA::initFromTVector ( const TVector * const v )
         }
     if ( truncateEditSequence )
        {
-       wxPrintf ( "D; SeqAA::initFromTVector: truncateEditSequence\n" ) ;
+       //wxPrintf ( "D; SeqAA::initFromTVector: truncateEditSequence\n" ) ;
        vec->addToSequence ( _T(" ") ) ;
        s += _T(" ") ;
        }
@@ -308,7 +308,7 @@ void SeqAA::initFromTVector ( const TVector * const v )
 //  mem += sizeof ( wxArrayTProteaseCut ) + sizeof ( wxArrayTProtease ) + sizeof ( wxArrayTVectorItem ) ;
     mylog ( "AA_mem" , wxString::Format ( "%d" , mem ) ) ;
 
-    wxPrintf( "D: SeqAA::initFromTVector - end\n" ) ;
+    //wxPrintf( "D: SeqAA::initFromTVector - end\n" ) ;
     }
 
 // direct
@@ -341,7 +341,7 @@ int SeqAA::arrange_direct ( const int n ) /* not const */
 
 void SeqAA::show_direct ( wxDC& dc )
     {
-    wxPrintf("D: SeqAA::show_direct - start\n" ) ;
+    //wxPrintf("D: SeqAA::show_direct - start\n" ) ;
     myass ( itemsperline , "AA:show_direct_ipl" ) ;
     if ( !itemsperline ) return ;
     mylog ( "SeqAA::show_direct" , "0" ) ;
@@ -506,7 +506,7 @@ void SeqAA::show_direct ( wxDC& dc )
     dc.SetBackgroundMode ( bm ) ;
     dc.SetTextBackground ( tbg ) ;
     dc.SetTextForeground ( tfg ) ;
-    wxPrintf("D: SeqAA::show_direct - end\n" ) ;
+    //wxPrintf("D: SeqAA::show_direct - end\n" ) ;
     }
 
 int SeqAA::getLine ( const int _y ) const
