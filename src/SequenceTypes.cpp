@@ -115,9 +115,9 @@ void SeqPrimer::show ( wxDC& dc )
     yb += ya ;
     for ( int a = 0 ; a < pos.p.GetCount() ; a++ )
         {
-        int b = pos.p[a] ;
-        int ty = pos.r[a].y ;
-        int tz = ty + can->charheight ;
+        const int b = pos.p[a] ;
+        const int ty = pos.r[a].y ;
+        const int tz = ty + can->charheight ;
         bool insight = true ;
         if ( tz < ya ) insight = false ;
         if ( ty > yb ) insight = false ;
@@ -126,8 +126,8 @@ void SeqPrimer::show ( wxDC& dc )
         if ( b > 0 && !insight ) cnt++ ;
         if ( b > 0 && insight ) // Character
             {
-            t = s.GetChar(b-1) ;
-            int pm = getMark ( a ) ;
+            wxString t = s.GetChar(b-1) ;
+            const int pm = getMark ( a ) ;
             if ( pm == 1 )
                 {
                 dc.SetTextBackground ( *wxLIGHT_GREY ) ;
@@ -151,8 +151,8 @@ void SeqPrimer::show ( wxDC& dc )
 
             if ( pm == 2 && !can->doOverwrite() )
                 {
-                int tx = pos.r[a].x , ty = pos.r[a].y ;
-                int tz = ty + can->charheight ;
+                const int tx = pos.r[a].x , ty = pos.r[a].y ;
+                const int tz = ty + can->charheight ;
                 dc.SetPen(*wxBLACK_PEN);
                 dc.DrawLine ( tx-1 , ty , tx-1 , tz ) ;
                 dc.DrawLine ( tx-3 , ty , tx+2 , ty ) ;
@@ -168,15 +168,16 @@ void SeqPrimer::show ( wxDC& dc )
         else if ( insight ) // Front number
             {
             dc.SetTextForeground ( *wxBLUE ) ;
+            wxString tt;
             if ( showNumbers )
                 {
                 //sprintf ( u , "%d" , cnt ) ;
-                //t = u ;
-                t = wxString::Format ( _T("%d") , cnt ) ;
-                while ( t.length() < endnumberlength ) t = _T("0") + t ;
+                //tt = u ;
+                tt = wxString::Format ( _T("%d") , cnt ) ;
+                while ( tt.length() < endnumberlength ) t = _T("0") + t ;
                 }
-            else t = alternateName ;
-            dc.DrawText ( t , pos.r[a].x, pos.r[a].y ) ;
+            else tt = alternateName ;
+            dc.DrawText ( tt , pos.r[a].x, pos.r[a].y ) ;
             }
         }
     dc.SetBackgroundMode ( bm ) ;
@@ -222,7 +223,6 @@ int SeqNum::arrange ( const int n )
     // Setting basic values
     can->SetFont(*can->font);
     int wx = can->charwidth , wy = can->charheight ;
-    endnumberlength = 0 ;
     int ox = bo+wx , oy = n*wy+bo ;//, endnumber = offset + s.length() ;
 
     endnumberlength = 0 ;
@@ -272,7 +272,7 @@ int SeqNum::arrange ( const int n )
 
 void SeqNum::show ( wxDC& dc )
     {
-    dc.SetFont(*can->font);
+    dc.SetFont(*can->font) ;
     wxColour tbg = dc.GetTextBackground () ;
     wxColour tfg = dc.GetTextForeground () ;
     int bm = dc.GetBackgroundMode () ;
@@ -328,12 +328,18 @@ int SeqDivider::arrange ( const int n )
                 x = ox ;
                 y += wy * ( can->seq.GetCount() + can->blankline ) ;
                 if ( a+1 < s.length() )
+                    {
                     pos.add ( -(++l) , bo , y , ox-wx-5 , wy-1 ) ; // Line number
+                    }
                 }
             }
         }
+
     if ( lasta != pos.p.GetCount()+1 )
+        {
         pos.addline ( lasta , pos.p.GetCount() , y , y+wy-1 ) ;
+        }
+
     return lowy + bo*2 ;
     }
 
