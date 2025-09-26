@@ -1483,9 +1483,11 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
     int pos ;
     SeqBasic *where ;
     where = findMouseTarget ( pt , pos ) ;
-    if ( pos <= 0 ) pos = -1 ;
+    if ( !where) pos = -1 ;
+    else if ( pos <= 0 ) pos = -1 ;
     else pos = where->getPos(pos) ;
-    if ( pos != -1 && where && where->takesMouseActions )
+
+    if ( -1 != pos && where->takesMouseActions )
         {
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
         if ( where->whatsthis() == _T("PLOT") && isMiniDisplay() )
@@ -1509,7 +1511,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
             newToolTip = q ;
             }
         }
-    else if ( where && child && child->def == _T("alignment") )
+    else if ( -1 != pos && child && child->def == _T("alignment") )
         {
         SeqAlign *al = (SeqAlign*)where ;
         if ( al->myname == txt("t_identity") ) {} // Do nothing
@@ -1534,7 +1536,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         }
     else
         {
-        wxLogStatus ( _T("") ) ;
+        wxLogStatus ( _T("SequenceCanvas::OnEvent: final else") ) ;
         SetCursor(wxCursor(*wxSTANDARD_CURSOR)) ;
         }
 
@@ -1991,13 +1993,13 @@ void SequenceCanvas::OnNewFromResultAA ( wxCommandEvent &ev )
           else s = wxString ( sa ) + s ;
           }
        }
+    // s now holds the amino acid sequence
     if ( s.IsEmpty() ) return ;
 
-    wxString seq = s ;
     wxString n = getPD()->vec->getName() + _T(" (") ;
     n += txt ("t_pcr_result") ;
     n += _T(")") ;
-    myapp()->frame->newAminoAcids ( seq , n ) ;
+    myapp()->frame->newAminoAcids ( s , n ) ;
     }
 
 void SequenceCanvas::SilentRefresh ()
@@ -2050,7 +2052,6 @@ void SequenceCanvas::OnWhatCuts(wxCommandEvent& event)
         p->Refresh () ;
         }
     }
-
 
 void SequenceCanvas::OnSeqUp ( wxCommandEvent &ev )
     {

@@ -52,6 +52,10 @@ wxImage TIMGreader::makeImage()
     size_t s =  (size_t) w * (size_t) h * 3L ;
     myass( s < 1024L*1024L*1024L*3L, "TIMGreader::makeImage: Should not require 3 GB of memory." ) ;
     output = (unsigned char*) malloc ( s ) ;
+    if ( !output )  {
+        wxPrintf("E: TIMGreader::makeImage: Cannot allocate %u bytes for image data\n", (unsigned int)s ) ;
+        return wxImage() ;
+    }
     int offset = 0 , x , y ;
     for ( y = 0 ; y < h ; y++ )
        {

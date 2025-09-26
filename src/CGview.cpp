@@ -10,11 +10,11 @@ class CGdialog : public wxDialog
     virtual void OnChooseJar ( wxCommandEvent &event ) ; ///< Button "Choose CGviewer JAR file" handler
     virtual void OnChooseBackgroundColor  ( wxCommandEvent &event ) ; ///< Button "Background color" handler
 
-    wxTextCtrl *width , *height , *cgviewapp ;
-    wxCheckBox *useDefaultColors , *runcgview , *runimageapp , *showrestrictionsites , *showgc ;
-    wxButton *choosejar ;
-    wxChoice *imagetypes ;
-    CGview *p ; ///< The calling (parent) CGview class
+    wxTextCtrl *width = nullptr, *height = nullptr, *cgviewapp = nullptr;
+    wxCheckBox *useDefaultColors = nullptr, *runcgview = nullptr, *runimageapp = nullptr, *showrestrictionsites = nullptr, *showgc = nullptr;
+    wxButton *choosejar = nullptr;
+    wxChoice *imagetypes = nullptr;
+    CGview *p = nullptr; ///< The calling (parent) CGview class
 
     DECLARE_EVENT_TABLE()
     } ;
@@ -251,7 +251,7 @@ wxString CGview::getXML()
     return ret ;
     }
 
-wxString CGview::addXMLfeatureSlot ( int dir )
+wxString CGview::addXMLfeatureSlot ( const int dir )
     {
     wxString ret ;
     vector <int> i2 ;

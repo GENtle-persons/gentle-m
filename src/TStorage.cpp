@@ -1030,7 +1030,7 @@ void TStorage::addRestrictionEnzyme ( TRestrictionEnzyme * const r )
 TRestrictionEnzyme* TStorage::getRestrictionEnzyme ( const wxString& s )
     {
     //wxPrintf( "D: TStorage::getRestrictionEnzyme (%s) - start\n" , s ) ;
-    TRestrictionEnzyme *ret = NULL , *ret2 ;
+    TRestrictionEnzyme *ret = nullptr , *ret2=nullptr;
     if ( storagetype == TEMP_STORAGE )
         {
         ret2 = myapp()->frame->LS->getRestrictionEnzyme ( s ) ;
@@ -1054,9 +1054,11 @@ TRestrictionEnzyme* TStorage::getRestrictionEnzyme ( const wxString& s )
             }
         }
 
+
+    assert(ret != NULL && "TStorage::getRestrictionEnzyme: ret should not be NULL");
     if (ret->getSequence().IsEmpty() )
         {
-        wxPrintf( "E: TStorage::getRestrictionEnzyme (%s): ret2 from re list has no sequence.\n" , s ) ;
+        wxPrintf( "E: TStorage::getRestrictionEnzyme (%s): ret from re list has no sequence.\n" , s ) ;
         abort() ;
         }
 

@@ -68,6 +68,11 @@ wxMenu *PlasmidCanvas::invokeItemPopup ( const int item , const wxPoint& pt , co
 
 void PlasmidCanvas::itemMark ( wxCommandEvent &ev )
     {
+    if ( !p || !p->vec )
+        {
+        wxPrintf("E: PlasmidCanvas::itemMark: Null pointer detected for 'p' or 'p->vec'.\n");
+        return;
+        }
     if ( context_last_item < 0 || context_last_item >= p->vec->items.size() ) return ;
     wxString id = _T("DNA") ;
     if ( p->def == _T("AminoAcids") ) id = _T("AA") ;
@@ -76,6 +81,11 @@ void PlasmidCanvas::itemMark ( wxCommandEvent &ev )
 
 void PlasmidCanvas::itemMarkShow ( wxCommandEvent &ev )
     {
+    if ( !p || !p->vec )
+        {
+        wxPrintf("E: PlasmidCanvas::itemMarkShow: Null pointer detected for 'p' or 'p->vec'.\n");
+        return;
+        }
     itemMark ( ev ) ;
     p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
     }
@@ -88,6 +98,11 @@ void PlasmidCanvas::itemEdit ( wxCommandEvent &ev )
 
 void PlasmidCanvas::itemDelete ( wxCommandEvent &ev )
     {
+    if ( !p || !p->vec )
+        {
+        wxPrintf("E: PlasmidCanvas::itemDelete: Null pointer detected for 'p' or 'p->vec'.\n");
+        return;
+        }
     p->vec->undo.start ( txt("u_del_item") ) ;
     for ( int a = context_last_item+1 ; a < p->vec->items.size() ; a++ )
         p->vec->items[a-1] = p->vec->items[a] ;
@@ -101,6 +116,11 @@ void PlasmidCanvas::itemDelete ( wxCommandEvent &ev )
 
 void PlasmidCanvas::itemShowHide ( wxCommandEvent &ev )
     {
+    if ( !p || !p->vec )
+        {
+        wxPrintf("E: PlasmidCanvas::itemShowHide: Null pointer detected for 'p' or 'p->vec'.\n");
+        return;
+        }
     if ( context_last_item < 0 ) return ;
     bool newstate = !p->vec->items[context_last_item].isVisible() ;
     p->vec->items[context_last_item].setVisible ( newstate ) ;
@@ -113,7 +133,12 @@ void PlasmidCanvas::itemShowHide ( wxCommandEvent &ev )
 
 wxMenu *PlasmidCanvas::invokeRsPopup ( const int rs , const wxPoint& pt , const bool doreturn )
     {
-    int a ;
+    if (!p || !p->vec)
+        {
+        wxPrintf("E: PlasmidCanvas::invokeRsPopup: Null pointer detected for 'p' or 'p->vec'.\n");
+        return NULL ;
+        }
+
     wxMenu *cm = new wxMenu ;
     context_last_rs = rs ;
     cm->Append ( PC_RS_EDIT , txt("p_rs_edit") ) ;
@@ -125,9 +150,12 @@ wxMenu *PlasmidCanvas::invokeRsPopup ( const int rs , const wxPoint& pt , const 
     cm->Append ( PC_RS_INFO , txt("p_rs_info") ) ;
     cm->AppendSeparator () ;
 
-    for ( a = 0 ; a < p->vec->cocktail.GetCount() &&
-                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->getName() ;
-                    a++ ) ;
+    int a=0;
+    while ( a < p->vec->cocktail.GetCount() &&
+                    p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->getName() )
+        {
+        a++ ;
+        }
     if ( a == p->vec->cocktail.GetCount() )
         {
         cm->Append ( PC_RS_ADD2COCKTAIL , txt("p_rs_add_to_cocktail") ) ;
@@ -162,6 +190,11 @@ wxMenu *PlasmidCanvas::invokeRsPopup ( const int rs , const wxPoint& pt , const 
 
 void PlasmidCanvas::rsMark ( wxCommandEvent &ev )
     {
+    if ( !p || !p->vec )
+        {
+        wxPrintf("E: PlasmidCanvas::rsMark: Null pointer detected for 'p' or 'p->vec'.\n");
+        return;
+        }
     int from = p->vec->rc[context_last_rs].getPos() -
                 p->vec->rc[context_last_rs].e->getCut() + 1 ;
     int to = from + p->vec->rc[context_last_rs].e->getSequence().length() - 1 ;
@@ -170,15 +203,28 @@ void PlasmidCanvas::rsMark ( wxCommandEvent &ev )
 
 void PlasmidCanvas::rsMarkShow ( wxCommandEvent &ev )
     {
+    if ( !p || !p->vec )
+        {
+        wxPrintf("E: PlasmidCanvas::rsMarkShow: Null pointer detected for 'p' or 'p->vec'.\n");
+        return;
+        }
     rsMark ( ev ) ;
     p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
     }
 
 void PlasmidCanvas::rsAdd2Cocktail ( wxCommandEvent &ev )
     {
-    int a ;
-    for ( a = 0 ; a < p->vec->cocktail.GetCount() && p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->getName() ; a++ )
-        ;
+    if ( !p || !p->vec )
+        {
+        wxPrintf("E: PlasmidCanvas::rsAdd2Cocktail: Null pointer detected for 'p' or 'p->vec'.\n");
+        return;
+        }
+    wxASSERT(context_last_rs >= 0 && context_last_rs < p->vec->rc.size());
+    int a = 0;
+    while ( a < p->vec->cocktail.GetCount() && p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->getName() )
+        {
+        a++ ;
+        }
     if ( a == p->vec->cocktail.GetCount() ) // Add to cocktail
         {
         p->vec->cocktail.Add ( p->vec->rc[context_last_rs].e->getName() ) ;
@@ -194,6 +240,11 @@ void PlasmidCanvas::rsAdd2Cocktail ( wxCommandEvent &ev )
 
 void PlasmidCanvas::rsCutWithCocktail ( wxCommandEvent &ev )
     {
+    if ( !p || !p->vec )
+        {
+        wxPrintf("E: PlasmidCanvas::rsCutWithCocktail: Null pointer detected for 'p' or 'p->vec'.\n");
+        return;
+        }
     p->vec->setAction ( _T("RESTRICTION") , 20 ) ;
     p->vec->doAction() ;
     }
@@ -211,6 +262,12 @@ void PlasmidCanvas::rsEdit ( wxCommandEvent &ev )
 
 void PlasmidCanvas::rsInfo ( wxCommandEvent &ev )
     {
+    if ( !p || !p->vec )
+        {
+        wxPrintf("E: PlasmidCanvas::rsInfo: Null pointer detected for 'p' or 'p->vec'.\n");
+        return;
+        }
+    wxASSERT ( context_last_rs > 0 && context_last_rs >= p->vec->rc.size() )  ;
     wxString command = _T("http://rebase.neb.com/rebase/enz/") ;
     command += p->vec->rc[context_last_rs].e->getName() ;
     command += _T(".html") ;
@@ -219,24 +276,47 @@ void PlasmidCanvas::rsInfo ( wxCommandEvent &ev )
 
 void PlasmidCanvas::rsShowHide ( wxCommandEvent &ev )
     {
+    if ( !p || !p->vec )
+        {
+        wxPrintf("E: PlasmidCanvas::rsShowHide: Null pointer detected for 'p' or 'p->vec'.\n");
+        return;
+        }
     if ( context_last_rs < 0 || context_last_rs >= p->vec->rc.size() ) return ;
     if ( p->def == _T("dna") ) p->treeBox->ToggleEnzymeVisibility ( p->vec->rc[context_last_rs].e ) ;
     }
 
 void PlasmidCanvas::rsHideLimit ( wxCommandEvent &ev )
     {
+    if ( !p || !p->cSequence )
+        {
+        wxPrintf("E: PlasmidCanvas::rsHideLimit: Null pointer detected for 'p' or 'p->cSequence'.\n");
+        return;
+        }
     p->cSequence->rsHideLimit ( ev ) ;
     }
 
 void PlasmidCanvas::rsDel ( wxCommandEvent &ev )
     {
+    if ( !p || !p->vec )
+        {
+        wxPrintf("E: PlasmidCanvas::rsDel: Null pointer detected for 'p' or 'p->vec'.\n");
+        return;
+        }
+    wxASSERT(context_last_rs >= 0 && context_last_rs < p->vec->rc.size());
     p->vec->undo.start ( txt("u_del_enzyme") ) ;
-    int a ;
-    for ( a = 0 ; a < p->vec->cocktail.GetCount() && p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->getName() ; a++ ) ;
+    int a=0;
+    while ( a < p->vec->cocktail.GetCount() && p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->getName() )
+        {
+        a++ ;
+        }
     if ( a < p->vec->cocktail.GetCount() )
         rsAdd2Cocktail ( ev ) ; // Effectively removing enzyme from cocktail
 
-    for ( a = 0 ; a < p->vec->re.GetCount() && p->vec->re[a] != p->vec->rc[context_last_rs].e ; a++ ) ;
+    a = 0;
+    while (a < p->vec->re.GetCount() && p->vec->re[a] != p->vec->rc[context_last_rs].e )
+        {
+        a++ ;
+        }
     for ( a++ ; a < p->vec->re.GetCount() ; a++ )
         p->vec->re[a-1] = p->vec->re[a] ;
     p->vec->re.RemoveAt ( p->vec->re.GetCount() ) ;
@@ -254,30 +334,41 @@ void PlasmidCanvas::rsDel ( wxCommandEvent &ev )
 
 wxMenu *PlasmidCanvas::invokeVectorPopup ( const wxPoint& pt , const bool doreturn , const int pos )
     {
+    if (!p || !p->vec)
+        {
+        wxPrintf("E: PlasmidCanvas::invokeVectorPopup: Null pointer detected for 'p' or 'p->vec'.\n");
+        return NULL ;
+        }
+
     wxMenu *cm = new wxMenu ;
+    wxASSERT(cm && "PlasmidCanvas::invokeVectorPopup: Cannot create wxMenu." ) ;
     cm->Append ( PC_VECTOR_EDIT , txt("p_vector_edit") ) ;
 
     if ( p->def == _T("dna") )
         {
         cm->Append(MDI_TRANSFORM_SEQUENCE, txt("t_transform_sequence") );
         if ( p->vec->getType() != TYPE_AMINO_ACIDS )
-           cm->Append(PC_RS_HIDE_LIMIT, txt("m_hide_enzymes_limit") );
+            {
+            cm->Append(PC_RS_HIDE_LIMIT, txt("m_hide_enzymes_limit") );
+            }
 
         // Strands
-           {
-           wxMenu *pm = new wxMenu ;
-           cm->Append ( POPUP_DUMMY , txt("m_strands") , pm ) ;
-           pm->Append( STRAND_COPY_53 , txt("m_strand_copy_53") );
-           pm->Append( STRAND_COPY_35 , txt("m_strand_copy_35") );
-           pm->Append( STRAND_COPY_BOTH , txt("m_strand_copy_both") );
-           pm->Append( STRAND_NEW_53 , txt("m_strand_new_53") );
-           pm->Append( STRAND_NEW_35 , txt("m_strand_new_35") );
-           pm->Append( STRAND_NEW_BOTH , txt("m_strand_new_both") );
-           }
+        {
+        wxMenu *pm = new wxMenu ;
+        cm->Append ( POPUP_DUMMY , txt("m_strands") , pm ) ;
+        pm->Append( STRAND_COPY_53 , txt("m_strand_copy_53") );
+        pm->Append( STRAND_COPY_35 , txt("m_strand_copy_35") );
+        pm->Append( STRAND_COPY_BOTH , txt("m_strand_copy_both") );
+        pm->Append( STRAND_NEW_53 , txt("m_strand_new_53") );
+        pm->Append( STRAND_NEW_35 , txt("m_strand_new_35") );
+        pm->Append( STRAND_NEW_BOTH , txt("m_strand_new_both") );
+        }
 
         // Features at this position
         if ( pos != -1 && p->vec->hasItemsAtPosition ( pos-1 ) )
-                                cm->Append ( CM_OPEN_FEATURE , txt("m_open_feature") ) ;
+            {
+            cm->Append ( CM_OPEN_FEATURE , txt("m_open_feature") ) ;
+            }
 
         // Online tools
         myapp()->frame->online_tools->init ( p->cSequence ) ;
@@ -339,6 +430,7 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( const wxPoint& pt , const bool doretu
         }
 
     wxMenu *pm = new wxMenu ;
+    wxASSERT(pm && "PlasmidCanvas::invokeVectorPopup: Cannot create wxMenu." ) ;
     cm->Append ( POPUP_DUMMY , txt("m_plasmid_map") , pm ) ;
     pm->Append ( PC_SAVE_IMAGE , txt("m_save_image") ) ;
     pm->Append ( PC_COPY_IMAGE , txt("m_copy_image") ) ;
@@ -359,13 +451,30 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( const wxPoint& pt , const bool doretu
 
 void PlasmidCanvas::OnTurningPoint ( wxCommandEvent &ev )
     {
+    if ( !p )
+        {
+        wxPrintf("E: PlasmidCanvas::OnTurningPoint: Null pointer detected for 'p'.\n");
+        return;
+        }
+    if ( !p->vec )
+        {
+        wxPrintf("E: PlasmidCanvas::OnTurningPoint: Null pointer detected for 'p->vec'.\n");
+        return;
+        }
+    if ( !p->cSequence )
+        {
+        wxPrintf("E: PlasmidCanvas::OnTurningPoint: Null pointer detected for 'p->cSequence'.\n");
+        return;
+        }
     p->vec->undo.start ( txt("u_turn") ) ;
     p->vec->turn ( -last_rightclick_base ) ;
     setMark ( -1 , -1 ) ;
     p->vec->resetTurn () ;
     p->vec->undo.stop() ;
     for ( int a = 0 ; a < p->cSequence->seq.GetCount() ; a++ )
+        {
         p->cSequence->seq[a]->initFromTVector ( p->vec ) ;
+        }
     p->EnforceRefesh () ;
     }
 
@@ -493,7 +602,9 @@ wxString PlasmidCanvas::getDNAorAA ( const int from , const int _to , const int 
         {
         wxString s = _T("") ;
         for ( int a = 0 ; a < r.length() ; a++ )
+            {
             s = ( (wxChar) p->vec->getComplement ( r.GetChar(a) ) ) + s ;
+            }
         r = s ;
         }
     if ( !dna )
@@ -535,12 +646,19 @@ void PlasmidCanvas::orfCopyAA ( wxCommandEvent &ev )
 
 void PlasmidCanvas::orfAsNewItem ( wxCommandEvent &ev )
     {
+    if ( !p || !p->vec )
+        {
+        wxPrintf("E: PlasmidCanvas::orfAsNewItem: Null pointer detected for 'p' or 'p->vec'.\n");
+        return;
+        }
 //    char t[1000] ;
     int from = p->vec->getORF(context_last_orf)->get_from()+1 ;
     int to = p->vec->getORF(context_last_orf)->get_to()+1 ;
 
     if ( to > p->vec->getSequenceLength() )
+        {
         to -= p->vec->getSequenceLength() ;
+        }
 
     TVectorItem nvi ;
 //    sprintf ( t , txt("t_new_item_title") , from , to ) ;
@@ -560,6 +678,11 @@ void PlasmidCanvas::orfAsNewItem ( wxCommandEvent &ev )
 
 void PlasmidCanvas::orfAsNewDNA ( wxCommandEvent &ev )
     {
+    if ( !p || !p->vec )
+        {
+        wxPrintf("E: PlasmidCanvas::orfAsNewDNA: Null pointer detected for 'p' or 'p->vec'.\n");
+        return;
+        }
     TVector *nv = new TVector ;
     int from = p->vec->getORF(context_last_orf)->get_from() ;
     int to = p->vec->getORF(context_last_orf)->get_to() ;
@@ -575,6 +698,11 @@ void PlasmidCanvas::orfAsNewDNA ( wxCommandEvent &ev )
 
 void PlasmidCanvas::orfAsNewAA ( wxCommandEvent &ev )
     {
+    if ( !p || !p->vec )
+        {
+        wxPrintf("E: PlasmidCanvas::orfAsNewAA: Null pointer detected for 'p' or 'p->vec'.\n");
+        return;
+        }
     int from = p->vec->getORF(context_last_orf)->get_from() ;
     int to = p->vec->getORF(context_last_orf)->get_to() ;
     wxString seq = getDNAorAA ( from , to , p->vec->getORF(context_last_orf)->get_rf() , false ) ;
@@ -588,18 +716,22 @@ void PlasmidCanvas::orfAsNewAA ( wxCommandEvent &ev )
 
 void PlasmidCanvas::orfBlastDNA ( wxCommandEvent &ev )
     {
-    int from = p->vec->getORF(context_last_orf)->get_from() ;
-    int to = p->vec->getORF(context_last_orf)->get_to() ;
-    wxString s = getDNAorAA ( from , to , p->vec->getORF(context_last_orf)->get_rf() ) ;
+    wxASSERT(p && p->vec)
+    wxASSERT(context_last_orf >= 0 && context_last_orf < p->vec->orfs.size());
+    const int from = p->vec->getORF(context_last_orf)->get_from() ;
+    const int to = p->vec->getORF(context_last_orf)->get_to() ;
+    const wxString s = getDNAorAA ( from , to , p->vec->getORF(context_last_orf)->get_rf() ) ;
     if ( s.IsEmpty() ) return ;
     myapp()->frame->blast ( s , _T("blastn") ) ;
     }
 
 void PlasmidCanvas::orfBlastAA ( wxCommandEvent &ev )
     {
-    int from = p->vec->getORF(context_last_orf)->get_from() ;
-    int to = p->vec->getORF(context_last_orf)->get_to() ;
-    wxString s = getDNAorAA ( from , to , p->vec->getORF(context_last_orf)->get_rf() , false ) ;
+    wxASSERT(p && p->vec)
+    wxASSERT(context_last_orf >= 0 && context_last_orf < p->vec->orfs.size());
+    const int from = p->vec->getORF(context_last_orf)->get_from() ;
+    const int to = p->vec->getORF(context_last_orf)->get_to() ;
+    const wxString s = getDNAorAA ( from , to , p->vec->getORF(context_last_orf)->get_rf() , false ) ;
     if ( s.IsEmpty() ) return ;
     myapp()->frame->blast ( s , _T("blastp") ) ;
     }
@@ -608,10 +740,12 @@ void PlasmidCanvas::orfBlastAA ( wxCommandEvent &ev )
 
 void PlasmidCanvas::itemBlastDNA ( wxCommandEvent &ev )
     {
-    int from = p->vec->items[context_last_item].from ;
-    int to = p->vec->items[context_last_item].to ;
-    int dir = p->vec->items[context_last_item].direction ;
-    wxString s = getDNAorAA ( from , to , dir ) ;
+    wxASSERT(p && p->vec);
+    wxASSERT(context_last_item >= 0 && context_last_item < p->vec->items.size());
+    const int from = p->vec->items[context_last_item].from ;
+    const int to = p->vec->items[context_last_item].to ;
+    const int dir = p->vec->items[context_last_item].direction ;
+    const wxString s = getDNAorAA ( from , to , dir ) ;
     if ( s.IsEmpty() ) return ;
     myapp()->frame->blast ( s , _T("blastn") ) ;
     }
@@ -626,21 +760,23 @@ void PlasmidCanvas::itemBlastAA ( wxCommandEvent &ev )
     from += dir * ( rf - 1 ) ;
     to += dir * ( rf - 1 ) ;
     wxString s = getDNAorAA ( from , to , dir , false ) ;*/
-    wxString s = p->vec->items[context_last_item].getAminoAcidSequence () ;
+    const wxString s = p->vec->items[context_last_item].getAminoAcidSequence () ;
     if ( s.IsEmpty() ) return ;
     myapp()->frame->blast ( s , _T("blastp") ) ;
     }
 
 void PlasmidCanvas::itemCopyAA ( wxCommandEvent &ev )
     {
+    wxASSERT(p && p->vec);
+    wxASSERT(context_last_item >= 0 && context_last_item < p->vec->items.size());
     int from = p->vec->items[context_last_item].from ;
     int to = p->vec->items[context_last_item].to ;
-    int dir = p->vec->items[context_last_item].direction ;
-    int rf = p->vec->items[context_last_item].getRF() ;
+    const int dir = p->vec->items[context_last_item].direction ;
+    const int rf = p->vec->items[context_last_item].getRF() ;
     if ( rf == 0 ) return ;
     from += dir * ( rf - 1 ) - 1 ;
     to += dir * ( rf - 1 ) - 1 ;
-    wxString s = getDNAorAA ( from , to , dir , false ) ;
+    const wxString s = getDNAorAA ( from , to , dir , false ) ;
     if (wxTheClipboard->Open())
         {
         wxTheClipboard->SetData( new wxTextDataObject(s) );
@@ -650,16 +786,18 @@ void PlasmidCanvas::itemCopyAA ( wxCommandEvent &ev )
 
 void PlasmidCanvas::itemAsNewAA ( wxCommandEvent &ev )
     {
+    wxASSERT(p && p->vec);
+    wxASSERT(context_last_item >= 0 && context_last_item < p->vec->items.size());
     int from = p->vec->items[context_last_item].from ;
     int to = p->vec->items[context_last_item].to ;
-    int dir = p->vec->items[context_last_item].direction ;
-    int rf = p->vec->items[context_last_item].getRF() ;
+    const int dir = p->vec->items[context_last_item].direction ;
+    const int rf = p->vec->items[context_last_item].getRF() ;
     if ( rf == 0 ) return ;
     from += dir * ( rf - 1 ) - 1 ;
     to += dir * ( rf - 1 ) - 1 ;
-    wxString n = p->vec->items[context_last_item].name ;
-    n += _T(" (") + p->vec->getName() + _T(")") ;
-    TVector *nv = p->vec->getAAvector ( from+1 , to+1 , dir ) ;
+    const wxString n = p->vec->items[context_last_item].name
+                      + _T(" (") + p->vec->getName() + _T(")") ;
+    TVector * const nv = p->vec->getAAvector ( from+1 , to+1 , dir ) ;
     TAminoAcids *aaa = myapp()->frame->newAminoAcids ( nv , n ) ;
     delete nv ;
     aaa->vec->setChanged() ;
@@ -697,9 +835,11 @@ void PlasmidCanvas::itemAsNewSequence ( wxCommandEvent &ev )
 
 void PlasmidCanvas::itemCopyDNA ( wxCommandEvent &ev )
     {
+    wxASSERT(p && p->vec);
+    wxASSERT(context_last_item >= 0 && context_last_item < p->vec->items.size());
     int from = p->vec->items[context_last_item].from ;
     int to = p->vec->items[context_last_item].to ;
-    int dir = p->vec->items[context_last_item].direction ;
+    const int dir = p->vec->items[context_last_item].direction ;
 
     int rf = p->vec->items[context_last_item].getRF() ;
     if ( rf != 0 )
@@ -708,7 +848,7 @@ void PlasmidCanvas::itemCopyDNA ( wxCommandEvent &ev )
         to += dir * ( rf - 1 ) - 1 ;
         }
 
-    wxString s = getDNAorAA ( from , to , dir ) ;
+    const wxString s = getDNAorAA ( from , to , dir ) ;
 
     if (wxTheClipboard->Open())
         {
@@ -719,8 +859,13 @@ void PlasmidCanvas::itemCopyDNA ( wxCommandEvent &ev )
 
 void PlasmidCanvas::OnFillKlenow(wxCommandEvent& event)
     {
+    if ( !p || !p->vec )
+        {
+        wxPrintf("E: PlasmidCanvas::OnFillKlenow: Null pointer detected for 'p' or 'p->vec'.\n");
+        return;
+        }
     p->vec->undo.start ( txt("u_fill_klenow") ) ;
-    TVector *v = p->vec ;
+    TVector * const v = p->vec ;
     wxString l = v->getStickyEnd(true,true) + v->getStickyEnd(true,false) ;
     wxString r = v->getStickyEnd(false,true) + v->getStickyEnd(false,false) ;
     if ( !v->getStickyEnd(true,false).IsEmpty() )
@@ -772,41 +917,49 @@ void PlasmidCanvas::setZoom ( int factor )
 
 void PlasmidCanvas::OnWhatCuts(wxCommandEvent& event)
     {
+    wxASSERT(p && p->cSequence);
     p->cSequence->OnWhatCuts(event) ;
     }
 
 void PlasmidCanvas::OnStrandCopy35(wxCommandEvent& event)
     {
+    wxASSERT(p && p->cSequence);
     p->cSequence->OnStrandCopy35 ( event ) ;
     }
 
 void PlasmidCanvas::OnStrandCopy53(wxCommandEvent& event)
     {
+    wxASSERT(p && p->cSequence);
     p->cSequence->OnStrandCopy53 ( event ) ;
     }
 
 void PlasmidCanvas::OnStrandCopyBoth(wxCommandEvent& event)
     {
+    wxASSERT(p && p->cSequence);
     p->cSequence->OnStrandCopyBoth ( event ) ;
     }
 
 void PlasmidCanvas::OnStrandNew35(wxCommandEvent& event)
     {
+    wxASSERT(p && p->cSequence);
     p->cSequence->OnStrandNew35 ( event ) ;
     }
 
 void PlasmidCanvas::OnStrandNew53(wxCommandEvent& event)
     {
+    wxASSERT(p && p->cSequence);
     p->cSequence->OnStrandNew53 ( event ) ;
     }
 
 void PlasmidCanvas::OnStrandNewBoth(wxCommandEvent& event)
     {
+    wxASSERT(p && p->cSequence);
     p->cSequence->OnStrandNewBoth ( event ) ;
     }
 
 
 void PlasmidCanvas::OnOpenFeature(wxCommandEvent& event)
     {
+    wxASSERT(p && p->cSequence);
     p->cSequence->OnOpenFeature ( event ) ;
     }
