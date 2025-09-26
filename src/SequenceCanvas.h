@@ -462,7 +462,7 @@ class SeqPlot : public SeqDNA
     virtual void useHP () ; ///< Hydrophobicity plot
     virtual void showPlot ( wxDC &dc , const int b , const int tx , const int ty , const int lx , const int ph ) ; ///< Draws the plot
     virtual void init ( SequenceCanvas * const ncan = NULL ) ; ///< Initialization
-    virtual wxString getTip ( const int pos ) ; ///< Returns the tooltip text for this position in the sequence
+    virtual wxString getTip ( const int pos ) const ; ///< Returns the tooltip text for this position in the sequence
     virtual int arrange_direct ( const int n ) { return arrange ( n ) ; } ///< Arrange quickly (bypassing SeqPos)
     virtual void show_direct ( wxDC& dc ) { show ( dc ) ; } ; ///< Show quickly
     virtual bool useDirectRoutines () const { return false ; } ///< Do we draw directly (or do we use SeqPos)?

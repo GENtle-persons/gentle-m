@@ -1449,8 +1449,16 @@ void SequenceCanvas::safeShow ( wxDC &dc )
 
 void SequenceCanvas::OnEvent(wxMouseEvent& event)
     {
-    if ( drawing ) return ;
-    if ( getAln() && getAln()->isThreadRunning() ) return ;
+    if ( drawing )
+        {
+        wxPrintf("D: SequenceCanvas::OnEvent: early return since drawing.\n") ;
+        return ;
+        }
+    if ( getAln() && getAln()->isThreadRunning() )
+        {
+        wxPrintf("I: SequenceCanvas::OnEvent: early return since alignment not yet complete.\n") ;
+        return ;
+        }
     wxClientDC dc(this);
     PrepareDC(dc);
 
@@ -1474,6 +1482,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         {
         int vx , vy ;
         MyGetViewStart ( &vx , &vy ) ;
+        wxPrintf("D: SequenceCanvas::OnEvent: Reacting to wheel: %d\n", wr) ;
         if ( isHorizontal() ) Scroll ( vx-wr , -1 ) ;
         else Scroll ( -1 , vy-wr ) ;
         return ;
@@ -1492,7 +1501,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
         if ( where->whatsthis() == _T("PLOT") && isMiniDisplay() )
             {
-            SeqPlot *plot = (SeqPlot*) where ;
+            const SeqPlot * const plot = ( const SeqPlot * const ) where ;
             wxString q = plot->getTip ( pos-1 ) ;
             wxLogStatus ( q ) ;
             newToolTip = q ;
@@ -1606,10 +1615,10 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         }
     else if ( event.LeftDown() )
         {
+        CaptureMouse() ;
+        captured = true ;
         if ( where && where->takesMouseActions )
            {
-            CaptureMouse() ;
-            captured = true ;
             if ( pos != -1 && lastpos == -1 )
                {
                lastpos = pos ;
@@ -1636,7 +1645,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         }
     else if ( event.LeftUp() )
         {
-        if (captured)
+        if (captured && HasCapture())
             {
             ReleaseMouse() ;
             captured = false ;
