@@ -398,9 +398,10 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
         {
         lastbp = -1 ;
         initialclick = false ;
-        if (captured)
+        if (captured && HasCapture())
             {
             ReleaseMouse() ;
+            captured = false ;
             }
         else
             {

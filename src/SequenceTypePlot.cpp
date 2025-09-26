@@ -3,7 +3,7 @@
 */
 #include "SequenceCanvas.h"
 
-wxString SeqPlot::getTip ( int pos )
+wxString SeqPlot::getTip ( int pos ) const
     {
     if ( pos < 0 ) return _T("") ;
     if ( pos >= s.length() ) return _T("") ;
@@ -23,9 +23,12 @@ int SeqPlot::arrange ( int n )
 
     // Setting basic values
     can->SetFont(*can->font);
-    int wx = can->charwidth , wy = can->charheight ;
+    /* not const */ int wx = can->charwidth ;
+    const int wy = can->charheight ;
     endnumberlength = 0 ;
-    int ox = bo+wx , oy = n*wy+bo , endnumber = offset + s.length() ;
+    /* not const */ int ox = bo+wx ;
+    const int oy = n*wy+bo ;
+    int endnumber = offset + s.length() ;
     while ( endnumber > 0 ) { endnumber /= 10 ; ox += wx ; endnumberlength++ ; }
 
     if ( can->isMiniDisplay() ) can->MyGetClientSize ( &w , &h ) ;
@@ -69,7 +72,9 @@ int SeqPlot::arrange ( int n )
             }
         }
     if ( lasta != pos.p.GetCount()+1 )
+        {
         pos.addline ( lasta , pos.p.GetCount() , y , y+wy*lines-1 ) ;
+        }
     return lowy + bo*2 ;
     }
 
