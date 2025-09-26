@@ -4,6 +4,7 @@
 
 void PlasmidCanvas::OnDrawLinear(wxDC& dc) /* not const */
 {
+    wxASSERT(p && p->vec);
     //wxPrintf( "D: PlasmidCanvas::OnDrawLinear - start\n" ) ;
     if ( printing ) h = h * 2 / 3 ; // not const
     int fontfactor = MYFONTSIZE * 10 / 8 ;
@@ -259,9 +260,14 @@ void PlasmidCanvas::OnDrawLinear(wxDC& dc) /* not const */
 
 void PlasmidCanvas::drawLinearORFs ( wxDC &dc ) const
     {
-    int a ;
+    wxASSERT(p && p->vec);
+    if ( p->def != _T("dna") )
+        {
+        wxPrintf ( "E: PlasmidCanvas::drawLinearORFs: ORFs can only be displayed for DNA sequences, found: '%s'.\n" , p->def ) ;
+        return ;
+        }
     int l = p->vec->getSequenceLength() ;
-    for ( a = 0 ; a < p->vec->countORFs() ; a++ )
+    for ( int a = 0 ; a < p->vec->countORFs() ; a++ )
         {
         float mf = p->vec->getORF(a)->get_from() ;
         float mt = p->vec->getORF(a)->get_to() ;
@@ -363,10 +369,10 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , const int _r1 , const int _r2 , 
     pt.push_back ( wxPoint ( r1  , y2 + y1 ) ) ;
 
     // Drawing polygon
-    wxPoint *wp = (wxPoint*) malloc ( sizeof ( wxPoint ) * (pt.size()+1) ) ;
+    wxPoint * const wp = (wxPoint*) malloc ( sizeof ( wxPoint ) * (pt.size()+1) ) ;
     if (!wp)
         {
-        wxPrintf("E: Out of memory.\n") ;
+        wxPrintf("E: PlasmidCanvas::drawLinearItem:  Not enough memory for wxPoint array of length %d.\n", pt.size()+1 ) ;
         abort() ;
         }
     for ( unsigned int b = 0 ; b < pt.size() ; b++ )
@@ -411,12 +417,21 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , const int _r1 , const int _r2 , 
 
 int PlasmidCanvas::findORFlinear ( const int x , const int y ) const
     {
+    wxASSERT(p && p->vec);
     int found = -1 ;
     for ( int a = 0 ; a < p->vec->countORFs() ; a++ )
         {
+        if (!p->vec->getORF(a))
+            {
+            wxPrintf ( "E: PlasmidCanvas::findORFlinear: ORF %d is NULL.\n" , a ) ;
+            continue ;
+            }
         if ( x >= p->vec->getORF(a)->deg1 && x <= p->vec->getORF(a)->deg2 && y >= p->vec->getORF(a)->dist1 && y <= p->vec->getORF(a)->dist2 )
+            {
             found = a ;
+            break;
+            }
         }
-    return found ;
+        return found ;
     }
 

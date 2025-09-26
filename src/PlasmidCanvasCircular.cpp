@@ -31,6 +31,11 @@ float PlasmidCanvas::xy2r ( const float& x , const float& y ) const
 
 void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc ) const
     {
+    if (!p || !p->vec)
+        {
+        wxPrintf("E: PlasmidCanvas::arrangeRestrictionSitesCircular: Null pointer detected for 'p' or 'p->vec'.\n");
+        return;
+        }
     int l = p->vec->getSequenceLength() ;
     if ( p->vec->rc.size() == 0 ) return ;
 
@@ -96,7 +101,12 @@ void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc ) const
 
 bool PlasmidCanvas::optimizeCircularRestrictionSites ( const int a , wxDC &dc ) const
     {
-    TRestrictionCut *c = &p->vec->rc[a] ;
+    if (!p || !p->vec)
+        {
+        wxPrintf("E: PlasmidCanvas::optimizeCircularRestrictionSites: Null pointer detected for 'p' or 'p->vec'.\n");
+        return false;
+        }
+    TRestrictionCut *c = &(p->vec->rc[a]) ;
     if ( p->vec->rc[a].isHidden ( p->vec ) ) return false ;
     bool ret = false ;
     if ( a > 0 && !p->vec->rc[a-1].isHidden ( p->vec ) &&
@@ -118,6 +128,11 @@ bool PlasmidCanvas::optimizeCircularRestrictionSites ( const int a , wxDC &dc ) 
 
 void PlasmidCanvas::push_rc_left ( const int a , wxDC &dc ) const
     {
+    if (!p || !p->vec)
+        {
+        wxPrintf("E: PlasmidCanvas::push_rc_left: Null pointer detected for 'p' or 'p->vec'.\n");
+        return;
+        }
     if ( p->vec->rc.size() < 2 ) return ;
     TRestrictionCut *c = &p->vec->rc[a] ;
     c->angle3 -= 1 ;
@@ -131,6 +146,11 @@ void PlasmidCanvas::push_rc_left ( const int a , wxDC &dc ) const
 
 void PlasmidCanvas::push_rc_right ( const int a , wxDC &dc ) const
     {
+    if (!p || !p->vec)
+        {
+        wxPrintf("E: PlasmidCanvas::push_rc_right: Null pointer detected for 'p' or 'p->vec'.\n");
+        return;
+        }
     if ( p->vec->rc.size() < 2 ) return ;
     TRestrictionCut *c = &p->vec->rc[a] ;
     c->angle3 += 1 ;
@@ -144,7 +164,12 @@ void PlasmidCanvas::push_rc_right ( const int a , wxDC &dc ) const
 
 void PlasmidCanvas::recalc_rc ( const int a, wxDC &dc ) const
     {
-    TRestrictionCut *c = &p->vec->rc[a] ;
+    if (!p || !p->vec)
+        {
+        wxPrintf("E: PlasmidCanvas::recalc_rc: Null pointer detected for 'p' or 'p->vec'.\n");
+        return;
+        }
+    TRestrictionCut *c = &(p->vec->rc[a]) ;
     wxPoint p2 ( deg2x ( c->angle , (int)c->r2 )+w/2 , deg2y ( c->angle , (int)c->r2 )+h/2 ) ;
     wxPoint p3 ( deg2x ( c->angle3 , (int)c->r3 )+w/2 , deg2y ( c->angle3 , (int)c->r3 )+h/2 ) ;
     c->lp = p3 ;
@@ -153,6 +178,11 @@ void PlasmidCanvas::recalc_rc ( const int a, wxDC &dc ) const
 
 void PlasmidCanvas::drawCircularORFs ( wxDC &dc ) const
     {
+    if (!p || !p->vec)
+        {
+        wxPrintf("E: PlasmidCanvas::drawCircularORFs: Null pointer detected for 'p' or 'p->vec'.\n");
+        return;
+        }
     int l = p->vec->getSequenceLength() ;
     for ( int a = 0 ; a < p->vec->countORFs() ; a++ )
         {
@@ -224,6 +254,11 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc) /* not const */
 {
     // Initial calculations
     char t[10000] ;
+    if (!p || !p->vec)
+    {
+        wxPrintf("E: PlasmidCanvas::OnDrawCircular: Null pointer detected for 'p' or 'p->vec'.\n");
+        return;
+        }
     const int l = p->vec->getSequenceLength();
     int mwh ;
     mwh = w<h?w:h ;
@@ -287,8 +322,12 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc) /* not const */
                 }
             p.push_back ( wxPoint ( deg2x ( 360*a/nob , r2 ) , deg2y ( 360*a/nob , r2 ) ) ) ;
             p.push_back ( wxPoint ( deg2x ( 360*a/nob , r1 ) , deg2y ( 360*a/nob , r1 ) ) ) ;
-            wxPoint *wp ;
-            wp = (wxPoint*) malloc ( sizeof ( wxPoint ) * (p.size()+1) ) ;
+            wxPoint * const wp = (wxPoint*) malloc ( sizeof ( wxPoint ) * (p.size()+1) ) ;
+            if ( !wp )
+                {
+                wxPrintf("E: Not enough memory for polygon with %u corners\n", (unsigned int)(p.size()+1) ) ;
+                return ;
+                }
             for ( int b = 0 ; b < p.size() ; b++ ) wp[b] = p[b] ;
             if (p.size()<2)
                 {
@@ -513,8 +552,12 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc) /* not const */
                     p.push_back ( wxPoint ( deg2x ( b , r2 ) , deg2y ( b , r2 ) ) ) ;
 
             // Drawing polygon
-            wxPoint *wp ;
-            wp = (wxPoint*) malloc ( sizeof ( wxPoint ) * (p.size()+1) ) ;
+            wxPoint * const wp = (wxPoint*) malloc ( sizeof ( wxPoint ) * (p.size()+1) ) ;
+            if ( !wp )
+                {
+                wxPrintf("E: Not enough memory for polygon with %u corners\n", (unsigned int)(p.size()+1) ) ;
+                return ;
+                }
             for ( int b = 0 ; b < p.size() ; b++ ) wp[b] = p[b] ;
             if ( !this->p->vec->getGenomeMode() ) dc.SetPen(*wxBLACK_PEN);
             else dc.SetPen ( *MYPEN((wxColour)i->getBrush()->GetColour()) ) ;
@@ -601,6 +644,11 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc) /* not const */
 
 int PlasmidCanvas::findORFcircular ( const float& angle , const float& radius ) const
     {
+    if (!p || !p->vec)
+        {
+        wxPrintf("E: PlasmidCanvas::findORFcircular: Null pointer detected for 'p' or 'p->vec'.\n");
+        return -1;
+        }
     int found = -1 ;
     for ( int a = 0 ; a < p->vec->countORFs() ; a++ )
         {
@@ -620,13 +668,18 @@ int PlasmidCanvas::findORFcircular ( const float& angle , const float& radius ) 
 
 wxPoint PlasmidCanvas::makeLastRect ( const int a , wxDC &dc ) const
     {
+    if (!p || !p->vec)
+        {
+        wxPrintf("E: PlasmidCanvas::makeLastRect: Null pointer detected for 'p' or 'p->vec'.\n");
+        return wxPoint();
+        }
     wxPoint p3 = p->vec->rc[a].lp ;
     p3.x = p3.x * 100 * r / ( STANDARDRADIUS * 100 ) + w/2 ;
     p3.y = p3.y * 100 * r / ( STANDARDRADIUS * 100 ) + h/2 ;
 
 //  char u[100] ;
 //  sprintf ( u , "%s (%d)" , p->vec->rc[a].e->name.c_str() , p->vec->rc[a].pos ) ;
-    wxString u = p->vec->rc[a].getNameAndPosition () ;
+    const wxString u = p->vec->rc[a].getNameAndPosition () ;
     int te_x , te_y ;
     dc.GetTextExtent ( u , &te_x , &te_y ) ;
     p3.y -= te_y / 2 ;
@@ -640,6 +693,11 @@ wxPoint PlasmidCanvas::makeLastRect ( const int a , wxDC &dc ) const
 
 int PlasmidCanvas::circular_pos ( const float& angle ) const
     {
+    if (!p || !p->vec)
+        {
+        wxPrintf("E: PlasmidCanvas::circular_pos: Null pointer detected for 'p' or 'p->vec'.\n");
+        return(-1);
+        }
     int l = p->vec->getSequenceLength() ;
     float a = l ;
     a /= 360.0 ;
