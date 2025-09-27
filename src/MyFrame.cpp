@@ -235,14 +235,16 @@ void MyFrame::initme ()
     // Import enzymes from local database
     LS->import() ;
 
-#ifndef MISER_MODE
-    bool default_update = false ;
+#ifdef __WXMAC__
+    const bool default_update = true ;
 #else
-    bool default_update = true ;
+
+#ifndef MISER_MODE
+    const bool default_update = false ;
+#else
+    const bool default_update = true ;
 #endif
 
-#ifdef __WXMAC__
-    default_update = true ;
 #endif
 
     // Loading program options from database
@@ -300,7 +302,7 @@ void MyFrame::initme ()
     if ( checkUpdate )
         {
 //      wxMessageBox ( "A" , wxString::Format(_T("%d"),myapp()->sw.Time())); myapp()->sw.Start() ;
-        wxString cur_update = check4update () ;
+        const wxString cur_update = check4update () ;
 //      wxMessageBox ( "B" , wxString::Format(_T("%d"),myapp()->sw.Time())); myapp()->sw.Start() ;
         if ( !cur_update.IsEmpty() )
             {
@@ -624,7 +626,7 @@ void MyFrame::OnHelp(wxCommandEvent& event )
     wxString helpfile ;
     if ( useInternalHelp )
         {
-        wxHtmlHelpController *hc = new wxHtmlHelpController ( wxHF_DEFAULT_STYLE|wxHF_OPEN_FILES ) ;
+        wxHtmlHelpController * const hc = new wxHtmlHelpController ( wxHF_DEFAULT_STYLE|wxHF_OPEN_FILES ) ;
         helpfile += myapp()->homedir.GetFullPath() + wxFileName::GetPathSeparator() ;
         helpfile += "help" ;
         helpfile += wxFileName::GetPathSeparator() ;
@@ -674,7 +676,7 @@ void MyFrame::OnHelp(wxCommandEvent& event )
 
 /** \brief Returns pointer to last (active) child
  */
-ChildBase *MyFrame::GetActiveChild() //SDI
+ChildBase *MyFrame::GetActiveChild() const //SDI
     {
     return lastChild ;
     }
