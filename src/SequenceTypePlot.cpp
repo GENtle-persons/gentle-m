@@ -133,10 +133,10 @@ void SeqPlot::show ( wxDC& dc )
     if ( s.IsEmpty() ) return ;
     mylog ( "SeqPlot::show" , "1" ) ;
     dc.SetFont(*can->font);
-    wxColour tbg = dc.GetTextBackground () ;
-    wxColour tfg = dc.GetTextForeground () ;
-    int bm = dc.GetBackgroundMode () ;
-    int cnt = offset+1 ;
+    const wxColour tbg = dc.GetTextBackground () ;
+    const wxColour tfg = dc.GetTextForeground () ;
+    const int bm = dc.GetBackgroundMode () ;
+    /* not const */ int cnt = offset+1 ;
     wxString t ;
     char valid[256] ;
     for ( int a = 0 ; a < 256 ; a++ ) valid[a] = 0 ;
@@ -160,9 +160,9 @@ void SeqPlot::show ( wxDC& dc )
         mylog ( "SeqPlot::show" , "2a" ) ;
         if ( can->hardstop > -1 && a > can->hardstop ) break ;
         mylog ( "SeqPlot::show" , "2b" ) ;
-        int b = pos.p[a] ;
-        int tx = pos.r[a].x , ty = pos.r[a].y ;
-        int tz = ty + can->charheight * lines ;
+        const int b = pos.p[a] ;
+        const int tx = pos.r[a].x , ty = pos.r[a].y ;
+        const int tz = ty + can->charheight * lines ;
         bool insight = true ; // Meaning "is this part visible"
         if ( tz < ya ) insight = false ;
         if ( ty > yb ) insight = false ;
@@ -256,8 +256,8 @@ void SeqPlot::showMW ( wxDC &dc , const int b , const int tx , const int ty , co
     int bottom = ty + lines * can->charheight ;
     for ( unsigned int u = 1 ; u < d1.GetCount() ; u++ )
         {
-        int tz = ty + (u-1) * ch + 1 ;
-        int tw = ( tx + cw ) - lx ;
+        const int tz = ty + (u-1) * ch + 1 ;
+        const int tw = ( tx + cw ) - lx ;
 
         if ( getMark ( b+1 ) > 0 )
             {
@@ -288,17 +288,17 @@ void SeqPlot::showNcoils ( wxDC &dc , const int b , const int tx , const int ty 
 void SeqPlot::showChouFasman ( wxDC &dc , const int b , const int tx , const int ty , const int lx ) /* not const */
     {
 //     mylog ( "SeqPlot::showChouFasman" , "1" ) ;
-    int bottom = ty + lines * can->charheight ;
-    int ch = can->charheight / 2 ;
-    int cw = can->charwidth ;
+    const int bottom = ty + lines * can->charheight ;
+    const int ch = can->charheight / 2 ;
+    const int cw = can->charwidth ;
 //  mylog ( "SeqPlot::showChouFasman" , "2" ) ;
     for ( unsigned int u = 1 ; u < d1.GetCount() ; u++ )
         {
         const wxPen *pen = wxRED_PEN ;
         if ( u == 2 ) pen = wxGREEN_PEN ;
         if ( u == 3 ) pen = wxBLUE_PEN ;
-        int tz = ty + (u-1) * ch + 1 ;
-        int tw = ( tx + cw ) - lx ;
+        const int tz = ty + (u-1) * ch + 1 ;
+        const int tw = ( tx + cw ) - lx ;
 
         if ( getMark ( b+1 ) > 0 )
             {
@@ -355,9 +355,9 @@ void SeqPlot::showPlot ( wxDC &dc , const int b , const int tx , const int ty , 
     if ( !can->isMiniDisplay() ) return ;
     if ( ((int)data_h) == 0 ) data_h = 1 ; // not const //return ; // Flat data or something...
     mylog ( "SeqPlot::showPlot" , "2" ) ;
-    int ch = can->charheight ;
-    int cw = can->charwidth ;
-    int bottom = ty + lines * can->charheight ;
+    const int ch = can->charheight ;
+    const int cw = can->charwidth ;
+    const int bottom = ty + lines * can->charheight ;
 
     if ( can->isMiniDisplay() )
         {
@@ -372,7 +372,7 @@ void SeqPlot::showPlot ( wxDC &dc , const int b , const int tx , const int ty , 
     for ( float j = data_min + data_step ; j + data_step <= data_max ; j += data_step )
         {
         myass ( ((int)data_h) != 0 , "SeqPlot::showPlot divides by 0!" ) ;
-        int k = bottom - ( (int)(j - data_min) ) * ph / ((int)data_h) ;
+        const int k = bottom - ( (int)(j - data_min) ) * ph / ((int)data_h) ;
         drawDottedLine ( dc , lx , k , tx + cw , k ) ;
         }
 
@@ -382,8 +382,7 @@ void SeqPlot::showPlot ( wxDC &dc , const int b , const int tx , const int ty , 
         drawDottedLine ( dc , lx , bottom - ph , lx , bottom + ch/2 ) ;
         dc.SetFont ( *can->smallFont ) ;
         int qx , qy ;
-        wxString ws ;
-        ws = wxString::Format ( _T("%d") , b ) ;
+        const wxString ws = wxString::Format ( _T("%d") , b ) ;
         dc.GetTextExtent ( ws , &qx , &qy ) ;
         dc.DrawText ( ws , lx - qx/2 , bottom + ch/2 ) ;
         }

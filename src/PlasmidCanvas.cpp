@@ -494,9 +494,13 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
             return ;
             }
         else if ( event.RightDown() )
+            {
             invokeRsPopup ( rs , pt_abs ) ;
+            }
         else if ( event.LeftDClick() )
+            {
             invokeVectorEditor ( _T("enzyme") , rs ) ;
+            }
         }
     else if ( vo != -1 ) // Passing over feature
         {
@@ -549,12 +553,14 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
         }
     else if ( orf != -1 )
         {
-        wxString ttt = p->vec->getORF(orf)->getText() ;
+        const wxString ttt = p->vec->getORF(orf)->getText() ;
         SetMyToolTip ( ttt , TT_ORF ) ;
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
         wxLogStatus(txt("item_status_bar") , ttt.c_str() ) ;
         if ( event.LeftDClick() )
+            {
             p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
+            }
         }
     else
         {

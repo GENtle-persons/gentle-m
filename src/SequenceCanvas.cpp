@@ -1482,7 +1482,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         {
         int vx , vy ;
         MyGetViewStart ( &vx , &vy ) ;
-        wxPrintf("D: SequenceCanvas::OnEvent: Reacting to wheel: %d\n", wr) ;
+        //wxPrintf("D: SequenceCanvas::OnEvent: Reacting to wheel: %d\n", wr) ;
         if ( isHorizontal() ) Scroll ( vx-wr , -1 ) ;
         else Scroll ( -1 , vy-wr ) ;
         return ;
@@ -1553,7 +1553,9 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         {
         lastToolTip = newToolTip ;
         if ( newToolTip.IsEmpty() )
+            {
             SetToolTip ( NULL ) ;
+            }
         else
             {
             wxToolTip::Enable ( true ) ;
@@ -1658,14 +1660,16 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         }
 
     if ( event.RightDown() )
+        {
         showContextMenu ( where , pos , event.GetPosition() ) ;
+        }
 
     if ( event.Dragging() || ( event.LeftDown() && where && where->takesMouseActions ) )
         {
         wxSize cs = MyGetClientSize () ;
         int qx , qy ;
         MyGetViewStart ( &qx , &qy ) ;
-        int nol = 1 ;
+        const int nol = 1 ;
         if ( my > cs.y ) Scroll ( 0 , qy+nol ) ;
         else if ( my < 0 ) Scroll ( 0 , qy-nol ) ;
 
