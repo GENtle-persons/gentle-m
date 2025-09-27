@@ -45,7 +45,7 @@ wxArrayString TVectorEditor::ce ;
 
 void TVectorEditor::OnCharHook(wxKeyEvent& event)
     {
-    int k = event.GetKeyCode () ;
+    const int k = event.GetKeyCode () ;
     wxCommandEvent ev ;
     if ( k == WXK_ESCAPE ) OnCancel ( ev ) ;
     else if ( k == WXK_F1 ) myapp()->frame->OnHelp(ev) ;
@@ -55,33 +55,75 @@ void TVectorEditor::OnCharHook(wxKeyEvent& event)
 TVectorEditor::TVectorEditor(wxWindow *parent, const wxString& title , TVector *_v )
          : wxDialog ( parent , -1 , title , wxDefaultPosition , wxSize ( 620 , 550 ) )
     {
+
+    name = lu = ll =ru = rl = nullptr;
+    desc = idesc = pro_txt = nullptr;
+    iname = ifrom = ito = nullptr;
+    items = nullptr;
+    irb = nullptr;
+    ichoice = nullptr;
+    icb = icv = nullptr;
+    prots = nullptr;
+    oldEnzymeRules = nullptr;
+    delete_enzyme_button = nullptr;
+
     ////wxPrintf( "D: TVectorEditor::TVectorEditor - start\n" ) ;
     myapp()->frame->push_help ( _T("GENtle:Sequence_editor") ) ;
     lastSelection = -1 ;
     v = _v ;
-    panProp = panItem = panEnzym = NULL ;
-    panEnzyme2 = NULL ;
+    panProp = panItem = panEnzym = nullptr ;
+    panEnzyme2 = nullptr ;
 
     int w , h ;
     GetClientSize ( &w , &h ) ;
     bo = 5 ;
     th = 22 ;
-    oldEnzymeRules = NULL ;
 
     nb = new wxNotebook ( (wxWindow*) this , -1 , wxPoint ( 0 , 0 ) , wxSize ( w , h - th - bo*2 ) ) ;
 
     hideProp = hideItem = hideEnzym = false ;
 
-    if ( v ) panProp = new wxPanel ( nb , -1 ) ;
-    if ( v ) panItem = new wxPanel ( nb , -1 ) ;
-    if ( v ) panProt = new wxPanel ( nb , -1 ) ;
+    if ( v )
+        {
+        panProp = new wxPanel ( nb , -1 ) ;
+        panItem = new wxPanel ( nb , -1 ) ;
+        panProt = new wxPanel ( nb , -1 ) ;
+        }
+
     panEnzym = new wxPanel ( nb , -1 ) ;
 
-    if ( v ) initPanProp () ;
-    if ( v ) initPanItem () ;
+    if ( v )
+        {
+        initPanProp () ;
+        initPanItem () ;
+        }
+    
     initPanEnzym () ;
-    if ( v ) initPanProt () ;
-    if ( v ) name->SetFocus() ;
+
+    wxCHECK_RET(name, "name is null");
+    wxCHECK_RET(name->IsBeingDeleted() == false, "name is being deleted");
+
+    if ( v )
+        {
+        initPanProt () ;
+        if ( name )
+            {
+            if ( name->IsShownOnScreen() )
+                {
+                wxPrintf ( "D: TVectorEditor::TVectorEditor: About to set focus on wxWidgets text field name.\n" ) ;
+                name->SetFocus() ;
+                }
+            else
+                {
+                wxPrintf ( "D: TVectorEditor::TVectorEditor: Prevented crash as name is not visible.\n" ) ;
+                }
+            }
+        else
+            {
+            wxPrintf ( "D: TVectorEditor::TVectorEditor: Prevented crash for name == nullptr\n" ) ;
+            }
+        }
+    
     addOkCancel ( this ) ;
     Center () ;
     //wxPrintf( "D: TVectorEditor::TVectorEditor - end\n" ) ;
@@ -115,13 +157,16 @@ void TVectorEditor::initPanProt ()
 
     showProteases () ;
 
-    wxButton* b = new wxButton ( panProt , TVE_EDIT_PROTEASE , txt("t_vec_edit_prot") , wxPoint ( th , h * 2 / 3 + th * 2 ) ) ;
-    new wxButton ( panProt , TVE_NEW_PROTEASE , txt("t_vec_new_prot") , wxPoint ( th , h * 2 / 3 + th * 4 ) ) ;
+    const wxButton* const b = new wxButton ( panProt , TVE_EDIT_PROTEASE , txt("t_vec_edit_prot") , wxPoint ( th , h * 2 / 3 + th * 2 ) ) ;
+    const wxButton* const b2 = new wxButton ( panProt , TVE_NEW_PROTEASE , txt("t_vec_new_prot") , wxPoint ( th , h * 2 / 3 + th * 4 ) ) ;
+    
+    wxASSERT( b && b2 && "TVectorEditor::initPanProt: Failed to create buttons b/b2\n" ) ;
 
-    wxRect r = b->GetRect() ;
+    const wxRect r = b->GetRect() ;
     pro_txt = new TURLtext ( panProt , URLTEXT_DUMMY , _T("") , wxPoint ( r.GetRight() + bo , r.GetTop() ) ,
                              wxSize ( w - th - bo - r.GetRight() , h - th*2 - r.GetTop() ) ,
                              wxTE_MULTILINE|wxTE_READONLY ) ;
+    wxASSERT( pro_txt )
     pro_txt->SetBackgroundColour ( wxSystemSettings::GetColour ( wxSYS_COLOUR_BTNFACE ) ) ;
 
 //    addOkCancel ( panProt ) ;
@@ -140,10 +185,13 @@ void TVectorEditor::showProteases ()
     prots->Clear () ;
     for ( int a = 0 ; a < vs.GetCount() ; a++ )
         {
-        wxString n = vs[a] ;
+        const wxString n = vs[a] ;
         prots->Append ( n ) ;
-        int b ;
-        for ( b = 0 ; b < v->proteases.GetCount() && v->proteases[b] != n ; b++ ) ;
+        int b = 0 ;
+        while ( b < v->proteases.GetCount() && v->proteases[b] != n )
+            {
+            b++ ;
+            }
         if ( b < v->proteases.GetCount() ) prots->Check ( prots->FindString ( n ) ) ;
         }
     //wxPrintf( "D: TVectorEditor::showProteases - end\n" ) ;
@@ -152,40 +200,59 @@ void TVectorEditor::showProteases ()
 void TVectorEditor::initPanProp ()
     {
     //wxPrintf( "D: TVectorEditor::initPanProp - start\n" ) ;
+    wxASSERT( nb ) ;
     nb->AddPage ( panProp , txt("t_vec_prop") ) ;
     int w , h ;
     GetMyClientSize ( &w , &h , panProp ) ;
 
     // Name and description
-    wxRect r = (new wxStaticText(panProp,-1,txt("name"),wxPoint(bo,bo*2)))->GetRect() ;
-    name = new wxTextCtrl(panProp,-1,v->getName(),wxPoint(r.GetRight()+bo,bo), wxSize(w-r.GetRight()-bo*2,th)) ;
+    const wxRect r1 = (new wxStaticText(panProp,-1,txt("name"),wxPoint(bo,bo*2)))->GetRect() ;
+    if ( name )
+        {
+        delete name ;
+        name = nullptr ;
+        }
+    /* const wxTextCtrl * const */ name = new wxTextCtrl(panProp,-1,v->getName(),wxPoint(r1.GetRight()+bo,bo), wxSize(w-r1.GetRight()-bo*2,th)) ;
+    wxASSERT ( name ) ;
 
-    r = (new wxStaticText(panProp,-1,txt("desc"),wxPoint(bo,bo*2+th)))->GetRect() ;
-    desc = new TURLtext(panProp,URLTEXT_DUMMY,v->getDescription(),wxPoint(bo,r.GetBottom()+bo), wxSize(w-bo*2,th*5),wxTE_MULTILINE);
+    const wxRect rusage_info_v2 = (new wxStaticText(panProp,-1,txt("desc"),wxPoint(bo,bo*2+th)))->GetRect() ;
+    if ( desc )
+        {
+        delete desc;
+        desc = nullptr;
+        }
+    desc = new TURLtext(panProp,URLTEXT_DUMMY,v->getDescription(),wxPoint(bo,r1.GetBottom()+bo), wxSize(w-bo*2,th*5),wxTE_MULTILINE);
+    wxASSERT ( desc ) ;
 
     if ( v->getType() != TYPE_AMINO_ACIDS )
         {
         // Sticky ends
-        r = (new wxStaticText(panProp,-1,_T("5'-"),wxPoint(bo,th*8)))->GetRect() ;
-        lu = new wxTextCtrl(panProp,-1,v->getStickyEnd(true,true), wxPoint(r.GetRight()+bo,r.GetTop()-bo),wxSize(w/5,th));
+        const wxRect r3 = (new wxStaticText(panProp,-1,_T("5'-"),wxPoint(bo,th*8)))->GetRect() ;
+        lu = new wxTextCtrl(panProp,-1,v->getStickyEnd(true,true), wxPoint(r1.GetRight()+bo,r1.GetTop()-bo),wxSize(w/5,th));
+        wxASSERT ( lu ) ;
 
-        r = (new wxStaticText(panProp,-1,_T("-3'"),wxPoint(w-r.GetRight(),r.GetTop())))->GetRect() ;
-        ru = new wxTextCtrl(panProp,-1,v->getStickyEnd(false,true), wxPoint(r.GetLeft()-bo-w/5,r.GetTop()-bo),wxSize(w/5,th));
+        const wxRect r4 = (new wxStaticText(panProp,-1,_T("-3'"),wxPoint(w-r3.GetRight(),r3.GetTop())))->GetRect() ;
+        ru = new wxTextCtrl(panProp,-1,v->getStickyEnd(false,true), wxPoint(r1.GetLeft()-bo-w/5,r4.GetTop()-bo),wxSize(w/5,th));
+        wxASSERT ( ru ) ;
 
         wxString k ;
-        while ( k.length() * (r.GetWidth()/3) < w/2 )
+        while ( k.length() * (r4.GetWidth()/3) < w/2 )
             {
             k += _T("-") ;
             }
-        new wxStaticText(panProp,-1,k,wxPoint(lu->GetRect().GetRight()+bo,r.GetTop())) ;
+        const wxStaticText * const wsl1 = new wxStaticText(panProp,-1,k,wxPoint(lu->GetRect().GetRight()+bo,r4.GetTop())) ;
+        wxASSERT ( wsl1 ) ;
 
-        r = (new wxStaticText(panProp,-1,_T("3'-"),wxPoint(bo,r.GetBottom()+th)))->GetRect() ;
-        ll = new wxTextCtrl(panProp,-1,v->getStickyEnd(true,false), wxPoint(r.GetRight()+bo,r.GetTop()-bo),wxSize(w/5,th));
+        wxRect r5 = (new wxStaticText(panProp,-1,_T("3'-"),wxPoint(bo,r4.GetBottom()+th)))->GetRect() ;
+        ll = new wxTextCtrl(panProp,-1,v->getStickyEnd(true,false), wxPoint(r4.GetRight()+bo,r4.GetTop()-bo),wxSize(w/5,th));
+        wxASSERT( ll ) ;
 
-        r = (new wxStaticText(panProp,-1,_T("-5'"),wxPoint(w-r.GetRight(),r.GetTop())))->GetRect() ;
-        rl = new wxTextCtrl(panProp,-1,v->getStickyEnd(false,false), wxPoint(r.GetLeft()-bo-w/5,r.GetTop()-bo),wxSize(w/5,th));
+        wxRect r6 = (new wxStaticText(panProp,-1,_T("-5'"),wxPoint(w-r5.GetRight(),r5.GetTop())))->GetRect() ;
+        rl = new wxTextCtrl(panProp,-1,v->getStickyEnd(false,false), wxPoint(r5.GetLeft()-bo-w/5,r5.GetTop()-bo),wxSize(w/5,th));
+        wxASSERT ( rl ) ;
 
-        new wxStaticText(panProp,-1,k,wxPoint(lu->GetRect().GetRight()+bo,r.GetTop())) ;
+        const wxStaticText * const wst2 = new wxStaticText(panProp,-1,k,wxPoint(lu->GetRect().GetRight()+bo,r6.GetTop())) ;
+        wxASSERT ( wsl2 ) ;
         }
 
 //    addOkCancel ( panProp ) ;
@@ -217,12 +284,12 @@ void TVectorEditor::initPanEnzym2 ()
 void TVectorEditor::addOkCancel ( wxWindow *p )
     {
     //wxPrintf( "D: TVectorEditor::addOkCancel - start\n" ) ;
-    wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
-    wxBoxSizer *h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
+    wxBoxSizer * const v0 = new wxBoxSizer ( wxVERTICAL ) ;
+    wxBoxSizer * const h1 = new wxBoxSizer ( wxHORIZONTAL ) ;
 
-    wxButton *b1 = new wxButton ( p , TVE_OK , txt("b_ok") ) ;
-    wxButton *b2 = new wxButton ( p , TVE_CANCEL , txt("b_cancel") ) ;
-    wxButton *b3 = b1 ;
+    wxButton * /* not const */ b1 = new wxButton ( p , TVE_OK , txt("b_ok") ) ;
+    wxButton * /* not const */ b2 = new wxButton ( p , TVE_CANCEL , txt("b_cancel") ) ;
+    wxButton * const b3 = b1 ;
 
 #ifdef __WXMAC__
     b1 = b2 ;
@@ -252,17 +319,17 @@ void TVectorEditor::addOkCancel ( wxWindow *p )
 void TVectorEditor::commitVector ()
     {
     //wxPrintf( "D: TVectorEditor::commitVector - start\n" ) ;
-    wxString n = name->GetValue() ;
-    wxString d = desc->GetValue() ;
+    const wxString n = name->GetValue() ;
+    const wxString d = desc->GetValue() ;
     if(n!=v->getName()){v->setName(n);v->setChanged();}
     if(d!=v->getDescription()){v->setDescription(d);v->setChanged();}
 
     if ( v->getType() != TYPE_AMINO_ACIDS )
         {
-        wxString _lu = lu->GetValue().MakeUpper() ;
-        wxString _ll = ll->GetValue().MakeUpper() ;
-        wxString _ru = ru->GetValue().MakeUpper() ;
-        wxString _rl = rl->GetValue().MakeUpper() ;
+        const wxString _lu = lu->GetValue().MakeUpper() ;
+        const wxString _ll = ll->GetValue().MakeUpper() ;
+        const wxString _ru = ru->GetValue().MakeUpper() ;
+        const wxString _rl = rl->GetValue().MakeUpper() ;
         VCOMMIT_STICKY(_lu,true,true);
         VCOMMIT_STICKY(_ll,true,false);
         VCOMMIT_STICKY(_ru,false,true);
@@ -297,9 +364,11 @@ void TVectorEditor::commitEnzymes ()
     // Added enzymes
     for ( int b = 0 ; b < TVectorEditor::ce.GetCount() ; b++ )
         {
-        int a ;
-        for ( a = 0 ; a < v->re.GetCount() && TVectorEditor::ce[b] != v->re[a]->getName() ; a++ )
-            ;
+        int a = 0;
+        while ( a < v->re.GetCount() && TVectorEditor::ce[b] != v->re[a]->getName() )
+            {
+            a++ ;
+            }
         if ( a == v->re.GetCount() )
             {
             // Enzyme in ce is not in re, so it must have been added to ce, so we also add it to re
@@ -347,13 +416,17 @@ void TVectorEditor::commitProteases ()
     if ( v1.GetCount() != v2.GetCount() ) changed = true ;
     for ( int a = 0 ; !changed && a < v1.GetCount() ; a++ )
         if ( v1[a] != v2[a] )
+            {
             changed = true ;
+            }
 
     if ( changed )
         {
         v->proteases.Clear() ;
         for ( int a = 0 ; a < v2.GetCount() ; a++ )
+            {
             v->proteases.Add ( v2[a] ) ;
+            }
         }
 
     v->setChanged ( changed | v->isChanged() ) ;
@@ -423,14 +496,14 @@ void TVectorEditor::hideEm ()
 void TVectorEditor::newProtease ( wxCommandEvent &ev )
     {
     //wxPrintf( "D: TVectorEditor::newProtease - start\n" ) ;
-    TRestrictionEnzyme *e = new TRestrictionEnzyme ;
+    TRestrictionEnzyme * const e = new TRestrictionEnzyme ;
     e->setCut ( 0 ) ;
     e->setOverlap ( 0 ) ;
     TEnzymeDialog ed ( this , txt("t_new_protease") , wxPoint(-1,-1) , wxSize(600,400) , wxDEFAULT_DIALOG_STYLE|wxCENTRE ) ;
     ed.initme ( e ) ;
     if ( ed.ShowModal() == wxID_OK )
        {
-       TProtease *pr = new TProtease ( ed.e->getName() , ed.e->getSequence() , ed.e->note ) ;
+       TProtease * const pr = new TProtease ( ed.e->getName() , ed.e->getSequence() , ed.e->note ) ;
        myapp()->frame->LS->pr.Add ( pr ) ;
        myapp()->frame->LS->updateProtease ( pr ) ;
        }
@@ -446,8 +519,8 @@ void TVectorEditor::editProtease ( wxCommandEvent &ev )
 void TVectorEditor::proteaseSelChange ( wxCommandEvent &ev )
     {
     //wxPrintf( "D: TVectorEditor::proteaseSelChange - start\n" ) ;
-    wxString s = prots->GetStringSelection() ;
-    TProtease *pro = myapp()->frame->LS->getProtease ( s ) ;
+    const wxString s = prots->GetStringSelection() ;
+    const TProtease * const pro = myapp()->frame->LS->getProtease ( s ) ;
 
     wxString t ;
     t += s + _T("\n") ;
