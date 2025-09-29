@@ -51,7 +51,7 @@ jobs:
       - name: build manual.html
         run: asciidoc docs/manual.adoc
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: GENtle_${{ matrix.os }}
           path: |
