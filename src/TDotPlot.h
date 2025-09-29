@@ -16,7 +16,7 @@ class TDotPlotPanel : public wxScrolledWindow
     void Run () ;
     void Update () ;
     virtual void OnDraw(wxDC& dc) ; ///< Draw routine
-    virtual void OnPaint ( wxPaintEvent &event ) ; ///< Paint event handler
+    virtual void OnPaint (wxPaintEvent &event ) ; ///< Paint event handler
     virtual void OnMouse(wxMouseEvent& event) ; ///< Mouse event handler
     virtual void OnOpenSequence1(wxCommandEvent& event) ; ///< Open sequence 1 event handler
     virtual void OnOpenSequence2(wxCommandEvent& event) ; ///< Open sequence 2 event handler
@@ -33,7 +33,7 @@ class TDotPlotPanel : public wxScrolledWindow
     MyChild *seq1 , *seq2 ;
     long window , mismatch ;
     vector <char> data ;
-    int len1 , len2 ;
+    unsigned long len1 , len2 ;
     int x1 , y1 , offx , offy ;
     wxPoint last_mouse_logical_position ;
     wxMemoryDC memdc ;

@@ -58,6 +58,13 @@ TDotPlot::TDotPlot(wxWindow *parent, const wxString& title)
     def = _T("DOTPLOT") ;
     vec = NULL ;
     allow_save = allow_copy = true ;
+
+    panel = nullptr;
+    zoom = nullptr;
+    seq1 = seq2 = window_size = mismatch_limit = nullptr;
+    open_seq1 = nullptr;
+    toolbar = nullptr;
+
     }
 
 TDotPlot::~TDotPlot ()
@@ -66,19 +73,22 @@ TDotPlot::~TDotPlot ()
 
 void TDotPlot::initme ()
     {
+    //wxPrintf("D: TDotPlot::initme - before Menus\n") ;
     // Menus
-    wxMenuBar *menu_bar = new wxMenuBar;
-    wxMenu *file_menu = myapp()->frame->getFileMenu () ;
-    wxMenu *tool_menu = myapp()->frame->getToolMenu () ;
-    wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
+    wxMenuBar * const menu_bar = new wxMenuBar;
+    wxMenu * const file_menu = myapp()->frame->getFileMenu () ;
+    wxMenu * const tool_menu = myapp()->frame->getToolMenu () ;
+    wxMenu * const help_menu = myapp()->frame->getHelpMenu () ;
     menu_bar->Append(file_menu, txt("m_file") );
     menu_bar->Append(tool_menu, txt("m_tools") );
     menu_bar->Append(help_menu, txt("m_help") );
     SetMenuBar(menu_bar);
 
+    //wxPrintf("D: TDotPlot::initme - before Toolbar\n") ;
+
     // Toolbar
-    wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
-    toolBar->Reparent ( this ) ;
+    wxToolBar * const toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
+    // toolBar->Reparent ( this ) ; // not needed!
     toolbar = toolBar ;
     myapp()->frame->InitToolBar(toolBar);
 /*
@@ -93,12 +103,15 @@ void TDotPlot::initme ()
     mismatch_limit = new wxChoice ( toolBar , DP_MISMATCH_LIMIT , wxDefaultPosition , wxSize ( 40 , -1 ) ) ;
     open_seq1 = new wxCheckBox ( toolBar , DP_OPEN_SEQ1 , txt("t_open_seq1") ) ;
 
+    //wxPrintf("D: TDotPlot::initme - before addTool\n") ;
+
     myapp()->frame->addTool ( toolBar , MDI_TEXT_IMPORT ) ;
     myapp()->frame->addTool ( toolBar , MDI_FILE_OPEN ) ;
 //  toolBar->AddControl ( new wxStaticText ( toolBar , -1 , _T("Zoom") ) ) ;
 //  toolBar->AddControl ( zoom ) ;
 //  toolBar->AddSeparator() ;
 
+    //wxPrintf("D: TDotPlot::initme - before add controls\n") ;
 //  toolBar->AddControl ( new wxStaticText ( toolBar , -1 , txt("t_sequence1") ) ) ;
     toolBar->AddControl ( seq1 ) ;
 //  toolBar->AddSeparator() ;
@@ -114,18 +127,25 @@ void TDotPlot::initme ()
 //  toolBar->AddSeparator() ;
     toolBar->AddControl ( open_seq1 ) ;
 
+    //wxPrintf("D: TDotPlot::initme - before add default tools\n") ;
     myapp()->frame->addDefaultTools ( toolBar ) ;
     toolBar->Realize() ;
 
+    //wxPrintf("D: TDotPlot::initme - before new TDotPlotPanel\n") ;
     // Misc
     panel = new TDotPlotPanel ( this ) ;
     for ( int a = 1 ; a < 20 ; a += 2 )
+        {
         window_size->Append ( wxString::Format ( _T("%d") , a ) ) ;
+        }
     for ( int a = 0 ; a < 10 ; a++ )
+        {
         mismatch_limit->Append ( wxString::Format ( _T("%d") , a ) ) ;
+        }
     window_size->SetStringSelection ( _T("9") ) ;
     mismatch_limit->SetStringSelection ( _T("2") ) ;
 
+    //wxPrintf("D: TDotPlot::initme - before new wxBoxSizer\n") ;
     // Layout
     wxBoxSizer *v0 = new wxBoxSizer ( wxVERTICAL ) ;
     v0->Add ( toolbar , 0 , wxEXPAND , 5 ) ;
@@ -133,11 +153,23 @@ void TDotPlot::initme ()
     SetSizer ( v0 ) ;
     v0->Fit ( this ) ;
 
+    //wxPrintf("D: TDotPlot::initme - before new setChild\n") ;
     // Finalize
-    myapp()->frame->setChild ( this ) ;
-    Maximize () ;
+    if (myapp() && myapp()->frame)
+        {
+        //wxPrintf("D: TDotPlot::initme - before new setChild with myapp and frame ok\n") ;
+        myapp()->frame->setChild(this);
+        }
+        else
+        {
+        wxPrintf("Error: myapp() or myapp()->frame is not initialized.\n");
+        }
+    Maximize();
+    //wxPrintf("D: TDotPlot::initme - before new Activate\n") ;
     Activate () ;
+    //wxPrintf("D: TDotPlot::initme - before new update_sequence_lists\n") ;
     update_sequence_lists() ;
+    //wxPrintf("D: TDotPlot::initme - end\n") ;
     }
 
 wxString TDotPlot::getName () const
@@ -147,22 +179,38 @@ wxString TDotPlot::getName () const
 
 void TDotPlot::update_sequence_lists ()
     {
+    //wxPrintf("D: TDotPlot::update_sequence_lists - start\n") ;
+    wxASSERT( seq1 ) ;
+    wxASSERT( seq2 ) ;
     wxString s1 = seq1->GetStringSelection() ;
     wxString s2 = seq2->GetStringSelection() ;
     seq1->Clear() ;
     seq2->Clear() ;
-    int a ;
+    //wxPrintf("D: TDotPlot::update_sequence_lists - before loop with %d children\n", myapp()->frame->children.GetCount()) ;
     for ( int a = 0 ; a < myapp()->frame->children.GetCount() ; a++ )
-    {
+        {
         if ( myapp()->frame->children[a]->def != _T("dna") ) continue ;
+        wxPrintf("D: TDotPlot::update_sequence_lists - found child %d: %s\n", a, myapp()->frame->children[a]->getName());
         seq1->Append ( myapp()->frame->children[a]->getName() ) ;
         seq2->Append ( myapp()->frame->children[a]->getName() ) ;
-    }
-    if ( !s1.IsEmpty() ) seq1->SetStringSelection ( s1 ) ;
-    if ( !s2.IsEmpty() ) seq2->SetStringSelection ( s2 ) ;
+        }
+    if ( !s1.IsEmpty() )
+        {
+        //wxPrintf("D: TDotPlot::update_sequence_lists - restoring seq1 selection to %s\n", s1);
+        seq1->SetStringSelection ( s1 ) ;
+        }
+    if ( !s2.IsEmpty() )
+        {
+        //wxPrintf("D: TDotPlot::update_sequence_lists - restoring seq2 selection to %s\n", s2);
+        seq2->SetStringSelection ( s2 ) ;
+        }   
 //   if ( seq1->GetSelection() == wxNOT_FOUND && seq1->GetCount() > 0 ) seq1->SetSelection ( 0 ) ;
 //   if ( seq2->GetSelection() == wxNOT_FOUND && seq2->GetCount() > 0 ) seq2->SetSelection ( 0 ) ;
+
+    wxASSERT(panel) ;
+    //wxPrintf("D: TDotPlot::update_sequence_lists - panel->Run\n") ;
     panel->Run () ;
+    //wxPrintf("D: TDotPlot::update_sequence_lists - end\n") ;
     }
 
 void TDotPlot::OnZoom(wxScrollEvent& event)
@@ -203,15 +251,20 @@ TDotPlotPanel::TDotPlotPanel ( wxWindow *_parent )
     parent = (TDotPlot*) _parent ;
     offx = 40 ;
     offy = 40 ;
-    seq1 = seq2 = NULL ;
+    seq1 = seq2 = nullptr ;
     }
 
 void TDotPlotPanel::Run ()
     {
-    seq1 = seq2 = NULL ;
+    //wxPrintf("D: TDotPlotPanel::Run - start\n") ;
+    seq1 = seq2 = nullptr ;
+    len1 = len2 = 0UL ;
+    wxASSERT(parent) ;
+    wxASSERT(parent->window_size) ;
     parent->window_size->GetStringSelection().ToLong ( &window ) ;
 //  wxMessageBox ( parent->window_size->GetStringSelection() ) ; ;
 //  return ;
+    wxASSERT(parent->mismatch_limit) ;
     parent->mismatch_limit->GetStringSelection().ToLong ( &mismatch ) ;
 
     for ( unsigned int a = 0 ; a < myapp()->frame->children.GetCount() ; a++ )
@@ -222,29 +275,52 @@ void TDotPlotPanel::Run ()
         if ( !seq2 && parent->seq2->GetStringSelection() == name ) seq2 = (MyChild*) myapp()->frame->children[a] ;
         }
 
+    if ( !seq1 || !seq2 )
+        {
+        wxPrintf("D: TDotPlotPanel::Run - one or both sequences not selected\n") ;
+        }
     Recalc() ;
     Update() ;
     wxMouseEvent ev ;
     OnMouse ( ev ) ;
+    //wxPrintf("D: TDotPlotPanel::Run - end\n") ;
     }
 
 void TDotPlotPanel::Update ()
     {
+    //wxPrintf("D: TDotPlotPanel::Update - start\n") ;
     GetViewStart ( &x1 , &y1 ) ;
     wxClientDC dc ( this ) ;
     wxBufferedDC dcb ( &dc , dc.GetSize() ) ;
     Redraw ( dcb ) ;
+    //wxPrintf("D: TDotPlotPanel::Update - end\n") ;
     }
 
 #define dppos(X,Y) (Y*len1+X)
 
 void TDotPlotPanel::Recalc ()
     {
-    if ( !seq1 || !seq2 ) return ;
+    //wxPrintf("D: TDotPlotPanel::Recalc - start\n") ;
+    if ( !seq1 || !seq2 )
+        {
+        wxPrintf("D: TDotPlotPanel::Recalc - no sequences, returning\n") ;
+        return ;
+        }
     wxBeginBusyCursor() ;
+    wxASSERT( seq1->vec ) ;
+    wxASSERT( seq2->vec ) ;
     len1 = seq1->vec->getSequenceLength() ;
     len2 = seq2->vec->getSequenceLength() ;
+    wxPrintf("D: TDotPlotPanel::Recalc - seq1 len: %ld, seq2 len: %ld, len1*len2: %ld\n" , len1 , len2 , len1*len2 ) ;
+    if ( len1 * len2 > 1024UL * 1024UL * 100UL ) // testing if size > 100 MB
+        {
+        wxPrintf("D: TDotPlotPanel::Recalc - dotplot too large at %lu MB, limit at 50MB,returning\n", len1 * len2 / (1024UL * 1024UL)) ;
+        wxEndBusyCursor() ;
+        //wxPrintf("D: TDotPlotPanel::Recalc - end - early\n") ;
+        return ;
+        }
     data = vector <char> ( len1 * len2 + 1 ) ;
+    //wxPrintf("D: TDotPlotPanel::Recalc - data size: %d\n", data.size() ) ;
 
     for ( unsigned long a = 0 ; a < len1 ; a++ )
         {
@@ -256,11 +332,13 @@ void TDotPlotPanel::Recalc ()
        }
 
     x1 = y1 = 0 ;
+    //wxPrintf("D: TDotPlotPanel::Recalc - setting virtual size to %d x %d\n" , offx + len1 , offy + len2 ) ;
     SetVirtualSize ( offx + len1 , offy + len2 ) ;
     SetScrollRate ( 1 , 1 ) ;
     Draw2Memory () ;
 //  SetScrollbars ( 1 , 1 , len1 , len2 ) ;
     wxEndBusyCursor() ;
+    //wxPrintf("D: TDotPlotPanel::Recalc - end\n") ;
     }
 
 int TDotPlotPanel::CheckWindow ( int x , int y )
@@ -386,7 +464,7 @@ void TDotPlotPanel::OnMouse(wxMouseEvent& event)
     // Context menu
     if ( event.RightIsDown() )
         {
-        wxMenu *cm = new wxMenu ;
+        wxMenu * const cm = new wxMenu ;
         cm->Append ( SAD_OPEN_SEQUENCE_1 , txt("m_sad_open_sequence_1") ) ;
         cm->Append ( SAD_OPEN_SEQUENCE_2 , txt("m_sad_open_sequence_2") ) ;
         cm->AppendSeparator () ;
@@ -400,7 +478,7 @@ void TDotPlotPanel::OnMouse(wxMouseEvent& event)
 void TDotPlotPanel::OnOpenSequence1(wxCommandEvent& event)
     {
     myapp()->frame->mainTree->SelectItem ( seq1->inMainTree ) ;
-    int pos = last_mouse_logical_position.x ;
+    const int pos = last_mouse_logical_position.x ;
     seq1->cSequence->mark ( _T("DNA") , pos , pos , 1 ) ;
     seq1->cSequence->ensureVisible ( pos ) ;
     }
@@ -426,9 +504,8 @@ void TDotPlotPanel::OnCopy(wxCommandEvent& event)
         }
     }
 
-
 void TDotPlotPanel::OnSave(wxCommandEvent& event)
     {
-    wxBitmap *bmp = new wxBitmap ( membmp ) ;//getSequenceBitmap () ;
-    myapp()->frame->saveImage ( bmp , txt("t_dotplot") ) ;
+    const wxBitmap bmp(membmp); // Ensure const correctness
+    myapp()->frame->saveImage(&bmp, txt("t_dotplot"));
     }

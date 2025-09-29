@@ -166,7 +166,7 @@ public:
     virtual void removeChild ( ChildBase *ch ) ;
     virtual TStorage* getTempDB ( const wxString& name ) ;
     virtual TAlignment* runAlignment ( wxArrayString &vs , wxArrayChildBase &vc , TVector *nv = NULL ) ;
-    virtual ChildBase* GetActiveChild() ;
+    virtual ChildBase* GetActiveChild() const ;
     virtual void setActiveChild ( ChildBase * const c ) ;
     virtual wxWindow* getCommonParent() const ;
     virtual int getChildIndex ( const ChildBase * const c ) const ;

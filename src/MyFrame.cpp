@@ -235,14 +235,16 @@ void MyFrame::initme ()
     // Import enzymes from local database
     LS->import() ;
 
-#ifndef MISER_MODE
-    bool default_update = false ;
+#ifdef __WXMAC__
+    const bool default_update = true ;
 #else
-    bool default_update = true ;
+
+#ifndef MISER_MODE
+    const bool default_update = false ;
+#else
+    const bool default_update = true ;
 #endif
 
-#ifdef __WXMAC__
-    default_update = true ;
 #endif
 
     // Loading program options from database
@@ -300,7 +302,7 @@ void MyFrame::initme ()
     if ( checkUpdate )
         {
 //      wxMessageBox ( "A" , wxString::Format(_T("%d"),myapp()->sw.Time())); myapp()->sw.Start() ;
-        wxString cur_update = check4update () ;
+        const wxString cur_update = check4update () ;
 //      wxMessageBox ( "B" , wxString::Format(_T("%d"),myapp()->sw.Time())); myapp()->sw.Start() ;
         if ( !cur_update.IsEmpty() )
             {
@@ -624,7 +626,7 @@ void MyFrame::OnHelp(wxCommandEvent& event )
     wxString helpfile ;
     if ( useInternalHelp )
         {
-        wxHtmlHelpController *hc = new wxHtmlHelpController ( wxHF_DEFAULT_STYLE|wxHF_OPEN_FILES ) ;
+        wxHtmlHelpController * const hc = new wxHtmlHelpController ( wxHF_DEFAULT_STYLE|wxHF_OPEN_FILES ) ;
         helpfile += myapp()->homedir.GetFullPath() + wxFileName::GetPathSeparator() ;
         helpfile += "help" ;
         helpfile += wxFileName::GetPathSeparator() ;
@@ -674,7 +676,7 @@ void MyFrame::OnHelp(wxCommandEvent& event )
 
 /** \brief Returns pointer to last (active) child
  */
-ChildBase *MyFrame::GetActiveChild() //SDI
+ChildBase *MyFrame::GetActiveChild() const //SDI
     {
     return lastChild ;
     }
@@ -1857,26 +1859,46 @@ void MyFrame::OnCalculator(wxCommandEvent& event)
  */
 void MyFrame::OnDotPlot(wxCommandEvent& event)
     {
-    TDotPlot *subframe = new TDotPlot ( getCommonParent() , txt("t_dotplot") ) ;
+    wxPrintf("D: MyFrame::OnDotPlot - start\n") ;
+    wxWindow * const parent = getCommonParent() ;
+    if ( parent )
+        {
+        wxPrintf("D: MyFrame::OnDotPlot: parent exists\n") ;
+        }
+        else
+        {
+        wxPrintf("D: MyFrame::OnDotPlot: parent is NULL\n") ;
+        }
 
+    TDotPlot *subframe = new TDotPlot ( parent , txt("t_dotplot") ) ;
+    if ( !subframe )
+        {
+        wxPrintf("E: MyFrame::OnDotPlot: err_cannot_create_dotplot") ;
+        wxAbort();
+        }
     // Give it an icon
 #ifdef __WXMSW__
-    subframe->SetIcon(wxIcon(_T("chrt_icn")));
+    subframe->SetIcon(wxIcon(_T("chrt_icn"))) ;
 #elif __WXMAC__
 #else
-    subframe->SetIcon(wxIcon( mondrian_xpm ));
+    subframe->SetIcon(wxIcon( mondrian_xpm )) ;
 #endif
 
+    wxPrintf("D: MyFrame::OnDotPlot - before initme\n") ;
     subframe->initme () ;
 
+    wxPrintf("D: MyFrame::OnDotPlot - before Show\n") ;
     subframe->Show() ;
     subframe->Maximize() ;
     subframe->showName() ;
 
+    wxPrintf("D: MyFrame::OnDotPlot - before addChild\n") ;
     mainTree->addChild ( subframe , TYPE_MISC ) ;
     setChild ( subframe ) ;
+    wxPrintf("D: MyFrame::OnDotPlot - before activateChild\n") ;
     activateChild ( children.GetCount()-1 ) ;
 
+    wxPrintf("D: MyFrame::OnDotPlot - end\n") ;
     //    return subframe ;
     }
 
@@ -1894,17 +1916,16 @@ void MyFrame::OnGraph(wxCommandEvent& event)
     wxArrayFloat af[3] ;
     for ( int a = 0 ; a < 3 ; a++ )
         {
-        int b = a==0?14:(a==1?21:28) ;
-        string s = ncoils_function ( seq.mb_str() , b ) ;
-        wxString t ( s.c_str() , wxConvUTF8 ) ;
+        const int b = a==0?14:(a==1?21:28) ;
+        const string s = ncoils_function ( seq.mb_str() , b ) ;
+        const wxString t ( s.c_str() , wxConvUTF8 ) ;
         wxArrayString ta ;
         explode ( "\n" , t , ta ) ;
-        for ( b = 0 ; b < seq.length() ; b++ )
+        for ( int c = 0 ; c < seq.length() && c < ta.GetCount(); c++ )
             {
-            if ( b >= ta.GetCount() ) break ;
-            t = ta[b].Mid ( 18 ) ;
+            const wxString tt = ta[c].Mid ( 18 ) ;
             double prob ;
-            t.ToDouble ( &prob ) ;
+            tt.ToDouble ( &prob ) ;
             af[a].Add ( (float) prob ) ;
             ret += wxString::Format ( "%1.4f, " , (float) prob ) ;
             }
@@ -1922,7 +1943,16 @@ void MyFrame::OnGraph(wxCommandEvent& event)
  */
 TCalculator *MyFrame::RunCalculator ()
     {
-    TCalculator *subframe = new TCalculator ( getCommonParent() , txt("t_calculator") ) ;
+    wxWindow * const parent = getCommonParent() ;
+    if ( parent )
+        {
+        wxPrintf("D: MyFrame::RunCalculator: parent exists\n") ;
+        }
+        else
+        {
+        wxPrintf("D: MyFrame::RunCalculator: parent is NULL\n") ;
+        }
+    TCalculator *subframe = new TCalculator ( parent , txt("t_calculator") ) ;
 
     // Give it an icon
 #ifdef __WXMSW__
@@ -1948,6 +1978,15 @@ TCalculator *MyFrame::RunCalculator ()
  */
 TGraph *MyFrame::RunGraph ()
     {
+    wxWindow * const parent = getCommonParent() ;
+    if ( parent )
+        {
+        wxPrintf("D: MyFrame::RunGraph: parent exists\n") ;
+        }
+        else
+        {
+        wxPrintf("D: MyFrame::RunGraph: parent is NULL\n") ;
+        }
     TGraph *subframe = new TGraph ( getCommonParent() , txt("t_graph") ) ;
 
     // Give it an icon
@@ -2003,7 +2042,7 @@ wxMenu *MyFrame::getFileMenu ( const int options ) const
  */
 wxMenu *MyFrame::getToolMenu ( const bool _pcr ) const
     {
-    wxMenu *tool_menu = new wxMenu;
+    wxMenu * const tool_menu = new wxMenu;
     tool_menu->Append(MDI_ENZYME_EDITOR, txt("m_enzyme") ) ;
     tool_menu->Append(MDI_ALIGNMENT, txt("m_alignment") , txt("m_alignmenttxt") ) ;
     tool_menu->Append(MDI_RESTRICTION, txt("m_enzymeeditor") , txt("m_enzymeeditortxt") ) ;
@@ -2026,7 +2065,7 @@ wxMenu *MyFrame::getToolMenu ( const bool _pcr ) const
  */
 wxMenu *MyFrame::getHelpMenu () const
     {
-    wxMenu *help_menu = new wxMenu;
+    wxMenu * const help_menu = new wxMenu;
     help_menu->Append(MDI_HELP, txt("m_help_content") ) ;
     help_menu->Append(MDI_ABOUT, txt("m_about") );
     help_menu->Append(MDI_HOMEPAGE, txt("m_homepage") );
@@ -2038,13 +2077,17 @@ wxMenu *MyFrame::getHelpMenu () const
  */
 void MyFrame::setChild ( ChildBase * const ch ) /* not const */
     {
-    int a ;
-    for ( a = 0 ; a < children.GetCount() && children[a] != ch ; a++ ) ;
+    wxPrintf("D: MyFrame::setChild ( %p ) - start - children.count: %lu\n" , ch , children.GetCount() ) ;
+    int a = 0;
+    while ( a < children.GetCount() && children[a] != ch )
+        a++ ;
     if ( a == children.GetCount() )
         {
+        wxPrintf("D: MyFrame::setChild - Adding %p\n" , ch ) ;
         children.Add ( ch ) ; // not const
         update_child_list = true ;
         }
+    wxPrintf("D: MyFrame::setChild - end\n" ) ;
     }
 
 /** \brief Safely removes a child from the children list
@@ -2052,8 +2095,9 @@ void MyFrame::setChild ( ChildBase * const ch ) /* not const */
  */
 void MyFrame::removeChild ( ChildBase *ch )
     {
-    unsigned int a ;
-    for ( a = 0 ; a < children.GetCount() && children[a] != ch ; a++ ) ;
+    unsigned int a = 0 ;
+    while ( a < children.GetCount() && children[a] != ch )
+        a++ ;
     if ( a == children.GetCount() ) return ;
     children[a]->Disable () ;
     children[a]->Hide() ;
@@ -2064,11 +2108,11 @@ void MyFrame::removeChild ( ChildBase *ch )
     activateChild ( 0 ) ;
 
     if ( children.size() == 0 )
-    {
+        {
         while ( count_help () > 1 ) pop_help() ;
         ChildBase c ;
         updateCCP ( &c ) ;
-    }
+        }
     notifyChildrenChanged() ;
     }
 
@@ -2308,8 +2352,9 @@ void MyFrame::OnSashDrag(wxSashEvent& event)
  */
 TStorage *MyFrame::getTempDB ( const wxString& name )
     {
-    unsigned int a ;
-    for ( a = 0 ; a < dbcache.GetCount() && dbcache[a]->getDBname() != name ; a++ ) ;
+    unsigned int a = 0;
+    while ( a < dbcache.GetCount() && dbcache[a]->getDBname() != name )
+        a++ ;
     if ( a == dbcache.GetCount() )
         {
         dbcache.Add ( new TStorage ( TEMP_STORAGE , name ) ) ;

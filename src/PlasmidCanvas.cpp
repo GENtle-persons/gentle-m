@@ -300,6 +300,7 @@ void PlasmidCanvas::OnCopyImage ( wxCommandEvent& ev )
 
 void PlasmidCanvas::OnSaveImage ( wxCommandEvent& ev )
     {
+    wxASSERT( p && p->vec ) ;
     w = 2000 ;
     h = 1600 ;
     wxBitmap bmp ( w , h , -1 ) ;
@@ -316,16 +317,21 @@ void PlasmidCanvas::OnSaveImage ( wxCommandEvent& ev )
 
 wxString PlasmidCanvas::getSelection() const
     {
+    wxASSERT( p && p->cSequence ) ;
     if ( !p || !p->cSequence || p->cSequence->getEditMode() || p->def != _T("dna") ) return _T("") ;
     return p->cSequence->getSelection() ;
 //    if ( getMarkFrom() == -1 ) return "" ;
 //    return p->vec->getSubstring ( getMarkFrom() , getMarkTo() ) ;
     }
 
-
 void PlasmidCanvas::OnEvent(wxMouseEvent& event)
     {
-    if ( !p || !p->vec ) return ;
+    if ( !p || !p->vec || !p->cSequence )
+        {
+        wxPrintf("E: PlasmidCanvas::OnEvent: No plasmid/vector/sequence.\n") ;
+        SetCursor(*wxSTANDARD_CURSOR);
+        return;
+        }
     if ( !hasBeenPainted ) return ;
     if ( w == 0 || h == 0 ) return ;
 
@@ -353,31 +359,31 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
     if ( p->def == _T("AminoAcids") ) id = _T("AA") ;
 
     // Preparations
-    if ( mode == MODE_CIRCULAR )
+    switch(mode)
         {
-        pt2.x = pt.x-w/2 ;
-        pt2.y = pt.y-h/2 ;
-        angle  = xy2deg ( pt2.x , pt2.y ) ;
-        radius = xy2r ( pt2.x , pt2.y ) ;
-        pt.x = deg2x ( angle , (int)radius ) + w/2 ;
-        pt.y = deg2y ( angle , (int)radius ) + h/2 ;
-        vo = findVectorObjectCircular ( angle , radius ) ;
-        rs = findRestrictionSite ( pt.x , pt.y ) ;
-        orf = findORFcircular ( angle , radius ) ;
-        }
-    else if ( mode == MODE_LINEAR )
-        {
-        vo = -1 ;
-        rs = findRestrictionSite ( pt.x , pt.y ) ;
-        orf = findORFlinear ( pt.x , pt.y ) ;
-        pt2.x = pt.x * STANDARDRADIUS / w ;
-        pt2.y = pt.y * STANDARDRADIUS / h ;
-        vo = findVectorObjectLinear ( pt2 ) ;
-        }
-    else
-        {
-        wxPrintf("E: Unknown mode: %d", mode ) ;
-        return ;
+        case MODE_CIRCULAR:
+            pt2.x = pt.x-w/2 ;
+            pt2.y = pt.y-h/2 ;
+            angle  = xy2deg ( pt2.x , pt2.y ) ;
+            radius = xy2r ( pt2.x , pt2.y ) ;
+            pt.x = deg2x ( angle , (int)radius ) + w/2 ;
+            pt.y = deg2y ( angle , (int)radius ) + h/2 ;
+            vo = findVectorObjectCircular ( angle , radius ) ;
+            rs = findRestrictionSite ( pt.x , pt.y ) ;
+            orf = findORFcircular ( angle , radius ) ;
+            break;
+        case MODE_LINEAR:
+            vo = -1 ;
+            rs = findRestrictionSite ( pt.x , pt.y ) ;
+            orf = findORFlinear ( pt.x , pt.y ) ;
+            pt2.x = pt.x * STANDARDRADIUS / w ;
+            pt2.y = pt.y * STANDARDRADIUS / h ;
+            vo = findVectorObjectLinear ( pt2 ) ;
+            break;
+        default:
+            wxPrintf("E: Unknown mode: %d", mode ) ;
+            return ;
+            break;
         }
 
     // Capturing/releasing mouse for left click
@@ -392,9 +398,10 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
         {
         lastbp = -1 ;
         initialclick = false ;
-        if (captured)
+        if (captured && HasCapture())
             {
             ReleaseMouse() ;
+            captured = false ;
             }
         else
             {
@@ -421,7 +428,6 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
         GetViewStart ( &nx , &ny ) ;
         Scroll ( nx + wrx , ny + wry ) ;
         }
-
 
    // Moving canvas in zoom mode
    if ( event.CmdDown() && zoom != 100 )
@@ -462,6 +468,7 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
     // Passing over
     if ( rs != -1 ) // Passing over restriction site
         {
+        wxASSERT(rs >= 0 && rs < p->vec->countRCs());
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
         s = p->vec->rc[rs].e->getName() ;
         wxLogStatus(txt("rsite_status_bar") , s.c_str() ) ;
@@ -487,9 +494,13 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
             return ;
             }
         else if ( event.RightDown() )
+            {
             invokeRsPopup ( rs , pt_abs ) ;
+            }
         else if ( event.LeftDClick() )
+            {
             invokeVectorEditor ( _T("enzyme") , rs ) ;
+            }
         }
     else if ( vo != -1 ) // Passing over feature
         {
@@ -542,12 +553,14 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
         }
     else if ( orf != -1 )
         {
-        wxString ttt = p->vec->getORF(orf)->getText() ;
+        const wxString ttt = p->vec->getORF(orf)->getText() ;
         SetMyToolTip ( ttt , TT_ORF ) ;
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
         wxLogStatus(txt("item_status_bar") , ttt.c_str() ) ;
         if ( event.LeftDClick() )
+            {
             p->cSequence->Scroll ( 0 , p->cSequence->getBatchMark() ) ;
+            }
         }
     else
         {
@@ -690,6 +703,7 @@ void PlasmidCanvas::updateLinkedItems ( TVector * const vec , const int in )
     {
     TVectorItem *i , *orig = & ( vec->items[in] ) ;
     i = orig ;
+    wxASSERT(i);
     wxString s = i->getParam ( _T("PREDECESSOR") ) ;
     while ( !s.IsEmpty() )
         {
@@ -741,12 +755,13 @@ void PlasmidCanvas::SetMyToolTip ( const wxString& s , const int mode ) /* not c
 
 int PlasmidCanvas::findVectorObjectLinear ( const wxPoint& pp ) const
     {
+    wxASSERT( p && p->vec ) ;
     int vo = -1 ;
     for ( int a = 0 ; a < p->vec->items.size() ; a++ )
         {
-        TVectorItem i = p->vec->items[a] ;
-        wxRect rra ( (int)i.r1 , (int)i.a1 , (int)(i.r2-i.r1) , (int)(i.a2-i.a1) ) ;
-        wxRect rrb ( (int)i.r3 , (int)i.a1 , (int)(i.r4-i.r3) , (int)(i.a2-i.a1) ) ;
+        const TVectorItem i = p->vec->items[a] ;
+        const wxRect rra ( (int)i.r1 , (int)i.a1 , (int)(i.r2-i.r1) , (int)(i.a2-i.a1) ) ;
+        const wxRect rrb ( (int)i.r3 , (int)i.a1 , (int)(i.r4-i.r3) , (int)(i.a2-i.a1) ) ;
         if ( pointinrect ( pp.x , pp.y , rra ) && p->vec->items[a].isVisible() ) vo = a ;
         if ( i.r3 != -1 && pointinrect ( pp.x , pp.y , rrb ) ) vo = a ;
         }
@@ -755,6 +770,7 @@ int PlasmidCanvas::findVectorObjectLinear ( const wxPoint& pp ) const
 
 int PlasmidCanvas::findVectorObjectCircular ( const float& angle , const float& _radius ) const
     {
+    wxASSERT( p && p->vec ) ;
     float radius = STANDARDRADIUS * _radius / r ;
     for ( int a = p->vec->items.size() -1 ; a >= 0 ; a-- )
         {
@@ -777,6 +793,7 @@ int PlasmidCanvas::findVectorObjectCircular ( const float& angle , const float& 
 
 int PlasmidCanvas::findRestrictionSite ( const int x , const int y ) const
     {
+    wxASSERT( p && p->vec ) ;
     for ( int a = 0 ; a < p->vec->rc.size() ; a++ )
         {
         if ( pointinrect ( x , y , p->vec->rc[a].lastrect ) )
@@ -798,6 +815,7 @@ bool PlasmidCanvas::pointinrect ( const int x , const int y , const wxRect &a ) 
 
 void PlasmidCanvas::invokeVectorEditor ( const wxString& what , const int num , const bool forceUpdate )
     {
+    wxASSERT( p && p->vec && p->cSequence ) ;
     if ( p->def == _T("AminoAcids") )
         {
         wxCommandEvent ce ;
@@ -837,6 +855,7 @@ void PlasmidCanvas::invokeVectorEditor ( const wxString& what , const int num , 
 
 void PlasmidCanvas::print ()
     {
+    wxASSERT( p && p->vec ) ;
     //wxPrintf( "D: PlasmidCanvas::print - start\n" ) ;
     wxPrintDialog pd ( this ) ;
     int r = pd.ShowModal () ;
@@ -844,6 +863,11 @@ void PlasmidCanvas::print ()
 
     //wxPrintf( "D: PlasmidCanvas::print A\n" ) ;
     wxDC *pdc = pd.GetPrintDC () ;
+    if ( !pdc )
+        {
+        wxPrintf("E: PlasmidCanvas::print: No print DC available.\n");
+        return ;
+        }
     pdc->StartDoc ( p->vec->getName() ) ;
     pdc->StartPage () ;
     printing = true ;
@@ -876,6 +900,7 @@ void PlasmidCanvas::makeGCcolor ( const int percent , wxColour &col ) const
 
 void PlasmidCanvas::showGClegend ( wxDC &dc ) const
     {
+    wxASSERT( p && p->vec ) ;
     int fontfactor = 10 ;
     if ( printing ) fontfactor = (w>h?h:w)/70 ;
     wxFont smallFont ( wxFontInfo ( fontfactor*2/3 ).Family( wxFONTFAMILY_SWISS ).Style( wxFONTSTYLE_NORMAL ).Weight( wxFONTWEIGHT_NORMAL ) ) ;

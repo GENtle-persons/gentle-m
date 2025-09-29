@@ -19,7 +19,7 @@ class CGview
 
     private :
     friend class CGdialog ;
-    wxString addXMLfeatureSlot ( int dir ) ; ///< Adds the features for the given direction to the XML
+    wxString addXMLfeatureSlot ( const int dir ) ; ///< Adds the features for the given direction to the XML
     static wxString getColorName ( const int type ) ; ///< Returns XML item comor, based on the item type
     static wxString getColorName ( const TVectorItem * const i ) ; ///< Returns XML item color, based on the item color used in GENtle
     bool itemOverlap ( const TVectorItem &i1 , const TVectorItem &i2 ) const ; ///< Checks if two items overlap

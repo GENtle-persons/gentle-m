@@ -1449,8 +1449,16 @@ void SequenceCanvas::safeShow ( wxDC &dc )
 
 void SequenceCanvas::OnEvent(wxMouseEvent& event)
     {
-    if ( drawing ) return ;
-    if ( getAln() && getAln()->isThreadRunning() ) return ;
+    if ( drawing )
+        {
+        wxPrintf("D: SequenceCanvas::OnEvent: early return since drawing.\n") ;
+        return ;
+        }
+    if ( getAln() && getAln()->isThreadRunning() )
+        {
+        wxPrintf("I: SequenceCanvas::OnEvent: early return since alignment not yet complete.\n") ;
+        return ;
+        }
     wxClientDC dc(this);
     PrepareDC(dc);
 
@@ -1474,6 +1482,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         {
         int vx , vy ;
         MyGetViewStart ( &vx , &vy ) ;
+        //wxPrintf("D: SequenceCanvas::OnEvent: Reacting to wheel: %d\n", wr) ;
         if ( isHorizontal() ) Scroll ( vx-wr , -1 ) ;
         else Scroll ( -1 , vy-wr ) ;
         return ;
@@ -1483,14 +1492,16 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
     int pos ;
     SeqBasic *where ;
     where = findMouseTarget ( pt , pos ) ;
-    if ( pos <= 0 ) pos = -1 ;
+    if ( !where) pos = -1 ;
+    else if ( pos <= 0 ) pos = -1 ;
     else pos = where->getPos(pos) ;
-    if ( pos != -1 && where && where->takesMouseActions )
+
+    if ( -1 != pos && where->takesMouseActions )
         {
         SetCursor(wxCursor(wxCURSOR_HAND)) ;
         if ( where->whatsthis() == _T("PLOT") && isMiniDisplay() )
             {
-            SeqPlot *plot = (SeqPlot*) where ;
+            const SeqPlot * const plot = ( const SeqPlot * const ) where ;
             wxString q = plot->getTip ( pos-1 ) ;
             wxLogStatus ( q ) ;
             newToolTip = q ;
@@ -1509,7 +1520,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
             newToolTip = q ;
             }
         }
-    else if ( where && child && child->def == _T("alignment") )
+    else if ( -1 != pos && child && child->def == _T("alignment") )
         {
         SeqAlign *al = (SeqAlign*)where ;
         if ( al->myname == txt("t_identity") ) {} // Do nothing
@@ -1534,7 +1545,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         }
     else
         {
-        wxLogStatus ( _T("") ) ;
+        wxLogStatus ( _T("SequenceCanvas::OnEvent: final else") ) ;
         SetCursor(wxCursor(*wxSTANDARD_CURSOR)) ;
         }
 
@@ -1542,7 +1553,9 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         {
         lastToolTip = newToolTip ;
         if ( newToolTip.IsEmpty() )
+            {
             SetToolTip ( NULL ) ;
+            }
         else
             {
             wxToolTip::Enable ( true ) ;
@@ -1604,10 +1617,10 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         }
     else if ( event.LeftDown() )
         {
+        CaptureMouse() ;
+        captured = true ;
         if ( where && where->takesMouseActions )
            {
-            CaptureMouse() ;
-            captured = true ;
             if ( pos != -1 && lastpos == -1 )
                {
                lastpos = pos ;
@@ -1634,7 +1647,7 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         }
     else if ( event.LeftUp() )
         {
-        if (captured)
+        if (captured && HasCapture())
             {
             ReleaseMouse() ;
             captured = false ;
@@ -1647,14 +1660,16 @@ void SequenceCanvas::OnEvent(wxMouseEvent& event)
         }
 
     if ( event.RightDown() )
+        {
         showContextMenu ( where , pos , event.GetPosition() ) ;
+        }
 
     if ( event.Dragging() || ( event.LeftDown() && where && where->takesMouseActions ) )
         {
         wxSize cs = MyGetClientSize () ;
         int qx , qy ;
         MyGetViewStart ( &qx , &qy ) ;
-        int nol = 1 ;
+        const int nol = 1 ;
         if ( my > cs.y ) Scroll ( 0 , qy+nol ) ;
         else if ( my < 0 ) Scroll ( 0 , qy-nol ) ;
 
@@ -1991,13 +2006,13 @@ void SequenceCanvas::OnNewFromResultAA ( wxCommandEvent &ev )
           else s = wxString ( sa ) + s ;
           }
        }
+    // s now holds the amino acid sequence
     if ( s.IsEmpty() ) return ;
 
-    wxString seq = s ;
     wxString n = getPD()->vec->getName() + _T(" (") ;
     n += txt ("t_pcr_result") ;
     n += _T(")") ;
-    myapp()->frame->newAminoAcids ( seq , n ) ;
+    myapp()->frame->newAminoAcids ( s , n ) ;
     }
 
 void SequenceCanvas::SilentRefresh ()
@@ -2050,7 +2065,6 @@ void SequenceCanvas::OnWhatCuts(wxCommandEvent& event)
         p->Refresh () ;
         }
     }
-
 
 void SequenceCanvas::OnSeqUp ( wxCommandEvent &ev )
     {
