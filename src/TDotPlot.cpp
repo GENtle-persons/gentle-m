@@ -67,18 +67,18 @@ TDotPlot::~TDotPlot ()
 void TDotPlot::initme ()
     {
     // Menus
-    wxMenuBar *menu_bar = new wxMenuBar;
-    wxMenu *file_menu = myapp()->frame->getFileMenu () ;
-    wxMenu *tool_menu = myapp()->frame->getToolMenu () ;
-    wxMenu *help_menu = myapp()->frame->getHelpMenu () ;
+    wxMenuBar * const menu_bar = new wxMenuBar;
+    wxMenu * const file_menu = myapp()->frame->getFileMenu () ;
+    wxMenu * const tool_menu = myapp()->frame->getToolMenu () ;
+    wxMenu * const help_menu = myapp()->frame->getHelpMenu () ;
     menu_bar->Append(file_menu, txt("m_file") );
     menu_bar->Append(tool_menu, txt("m_tools") );
     menu_bar->Append(help_menu, txt("m_help") );
     SetMenuBar(menu_bar);
 
     // Toolbar
-    wxToolBar *toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
-    toolBar->Reparent ( this ) ;
+    wxToolBar * const toolBar = CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL |wxTB_DOCKABLE);
+    // toolBar->Reparent ( this ) ; // not needed!
     toolbar = toolBar ;
     myapp()->frame->InitToolBar(toolBar);
 /*
@@ -386,7 +386,7 @@ void TDotPlotPanel::OnMouse(wxMouseEvent& event)
     // Context menu
     if ( event.RightIsDown() )
         {
-        wxMenu *cm = new wxMenu ;
+        wxMenu * const cm = new wxMenu ;
         cm->Append ( SAD_OPEN_SEQUENCE_1 , txt("m_sad_open_sequence_1") ) ;
         cm->Append ( SAD_OPEN_SEQUENCE_2 , txt("m_sad_open_sequence_2") ) ;
         cm->AppendSeparator () ;
@@ -400,7 +400,7 @@ void TDotPlotPanel::OnMouse(wxMouseEvent& event)
 void TDotPlotPanel::OnOpenSequence1(wxCommandEvent& event)
     {
     myapp()->frame->mainTree->SelectItem ( seq1->inMainTree ) ;
-    int pos = last_mouse_logical_position.x ;
+    const int pos = last_mouse_logical_position.x ;
     seq1->cSequence->mark ( _T("DNA") , pos , pos , 1 ) ;
     seq1->cSequence->ensureVisible ( pos ) ;
     }
@@ -426,9 +426,8 @@ void TDotPlotPanel::OnCopy(wxCommandEvent& event)
         }
     }
 
-
 void TDotPlotPanel::OnSave(wxCommandEvent& event)
     {
-    wxBitmap *bmp = new wxBitmap ( membmp ) ;//getSequenceBitmap () ;
-    myapp()->frame->saveImage ( bmp , txt("t_dotplot") ) ;
+    const wxBitmap bmp(membmp); // Ensure const correctness
+    myapp()->frame->saveImage(&bmp, txt("t_dotplot"));
     }
