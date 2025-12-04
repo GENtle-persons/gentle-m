@@ -2,6 +2,17 @@
     \brief Contains the methods of the TAlignmentDialog class
 */
 #include "TAlignmentDialog.h"
+#include "Alignment.h"
+#include "MyChild.h"
+#include "enums.h"
+#include "myapp.h" // myapp
+#include "txt.h" // txt
+#include "MyFrame.h"
+#include "MyApp-class.h"
+
+#include <wx/wx.h> // wxString
+#include <wx/dialog.h> // wxDialog
+#include <wx/spinctrl.h> // for wxSpinCtrl
 
 BEGIN_EVENT_TABLE(TAlignmentDialog, wxDialog)
     EVT_BUTTON(AL_ADD,TAlignmentDialog::OnAdd)

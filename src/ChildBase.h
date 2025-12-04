@@ -4,8 +4,8 @@
 #ifndef _CHILDBASE_H_
 #define _CHILDBASE_H_
 
-//#include "main.h"
 #include <wx/wx.h>
+#include <wx/file.h>
 #include <wx/treectrl.h>
 #include <wx/docview.h>
 

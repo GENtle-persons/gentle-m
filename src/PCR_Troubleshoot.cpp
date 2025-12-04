@@ -1,4 +1,13 @@
 #include "PCR_Troubleshoot.h"
+#include "PrimerDesign.h"
+#include "MyApp-class.h"
+#include "txt.h"
+#include "enums.h"
+#include "myapp.h"
+#include "MyFrame.h"
+#include "TPrimer.h"
+#include "TVector.h"
+
 
 // WHILE DEVELOPING
 void TPrimerDesign::OnTroubleshoot ( wxCommandEvent &ev )

@@ -2,6 +2,22 @@
     \brief Contains the FindSequenceDialog class members
 */
 #include "FindSequenceDialog.h"
+#include "SequenceCanvas.h"
+#include "ABIviewer.h"
+#include "PrimerDesign.h"
+#include "RestrictionEnzymes.h"
+#include "PlasmidCanvas.h"
+#include "TVector.h"
+#include "AminoAcids.h"
+#include "enums.h"
+#include "myapp.h"
+#include <wx/colordlg.h>
+#include "MyChild.h"
+#include "txt.h" // txt
+#include "myapp.h"
+#include "MyFrame.h"
+#include "MyApp-class.h"
+
 const wxChar* DNA_SUBS[][2] =
     {
         {_T("*"),_T(".+")},

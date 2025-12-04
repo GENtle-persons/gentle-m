@@ -4,7 +4,6 @@
 #ifndef _MYCHILD_H_
 #define _MYCHILD_H_
 
-#include "main.h"
 #include "ChildBase.h"
 #include <wx/clipbrd.h>
 #include <wx/splitter.h>

@@ -1,5 +1,20 @@
 #include "PlasmidCanvas.h"
 #include <wx/window.h>
+#include "txt.h" // txt
+#include "MyChild.h"
+#include "enums.h"
+#include "MyApp-class.h"
+#include "TVector.h"
+#include "SequenceCanvas.h"
+#include "TVectorTree.h"
+#include "myapp.h"
+#include "txt.h"
+#include "PrimerDesign.h"
+#include "TPrimer.h"
+#include "RestrictionEnzymes.h"
+#include "OnlineTools.h"
+#include "AminoAcids.h"
+#include "TMainTree.h"
 
 // Popup menu handlers
 

@@ -1,4 +1,11 @@
 #include "PlasmidCanvas.h"
+#include "MyChild.h"
+#include "mywx.h"
+#include "MyApp-class.h"
+#include "TVector.h"
+#include "RestrictionEnzymes.h"
+#include "ProgramOptionsDialog.h" // for EnzymeRules
+
 
 // DRAWING
 

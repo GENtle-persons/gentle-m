@@ -3,6 +3,10 @@
 */
 #include "ABItype.h"
 
+#include <wx/file.h>
+
+#include "myapp.h"
+
 /** \brief Constructor
 */
 ABItype::ABItype ()

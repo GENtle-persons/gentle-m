@@ -1,4 +1,16 @@
 #include "TStoreAllDialog.h"
+#include "MyApp-class.h"
+#include <wx/wx.h>
+#include <wx/choice.h>
+#include "ChildBase.h"
+#include "txt.h"
+#include "myapp.h"
+#include "MyFrame.h"
+#include "enums.h"
+#include "TStorage.h"
+#include "TVector.h"
+#include "ManageDatabase.h" // TManageDatabaseDialog
+
 
 BEGIN_EVENT_TABLE(TStoreAllDialog, wxDialog )
     EVT_BUTTON(wxID_OK,TStoreAllDialog::OnOK)

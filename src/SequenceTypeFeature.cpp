@@ -2,6 +2,9 @@
     \brief Contains the SeqFeature class members
 */
 #include "SequenceCanvas.h"
+#include "TVector.h"
+#include "myapp.h"
+#include <math.h>
 
 void SeqFeature::show ( wxDC& dc )
     {
@@ -139,7 +142,7 @@ void SeqFeature::show ( wxDC& dc )
                             for ( int px = x_from ; px <= x_to ; px++ )
                                 {
                                  int npy ;
-                                npy = (int)((float) sin ( (float) ( px - x_from ) * PI * 4 / can->charwidth ) * lh / 2 );
+                                npy = (int)((float) sin ( (float) ( px - x_from ) * M_PI * 4 / can->charwidth ) * lh / 2 );
                                 dc.DrawLine ( px , level + py , px , level + npy ) ;
                                 py = npy ;
                                 }

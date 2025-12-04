@@ -4,14 +4,17 @@
 #ifndef _TCLONE_H_
 #define _TCLONE_H_
 
-#include "main.h"
-
+#include <wx/wx.h> // wxString
+#include <wx/file.h> // wxFile
 #include <math.h>
 #include <fcntl.h>
 #include <iostream>
 #include <algorithm>
 
 class TStorage ;
+class TVector ;
+
+using namespace std;
 
 /// Temporarily stores an enzyme
 class TClone_Enzyme

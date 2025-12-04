@@ -2,6 +2,12 @@
     \brief Contains the SeqABI class members
 */
 #include "SequenceCanvas.h"
+#include "ABItype.h"
+#include "myapp.h"
+#include "TVector.h"
+#include "SCFtype.h"
+#include "txt.h"
+
 
 SeqABI::~SeqABI ()
     {

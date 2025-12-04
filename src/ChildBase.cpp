@@ -1,9 +1,18 @@
 /** \file
     \brief Contains the ChildBase class
 */
-#include "main.h"
 #include "ChildBase.h"
 #include <wx/treectrl.h>
+#include "SequenceCanvas.h"
+#include "TVector.h"
+#include "TMainTree.h"
+#include "TStorage.h"
+#include "GenBank.h"
+#include "CGview.h"
+#include "MyApp-class.h"
+#include "myapp.h"
+#include "txt.h" // txt
+#include "enums.h"
 
 ChildBase::ChildBase ()
     {

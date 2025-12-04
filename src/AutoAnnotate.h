@@ -4,9 +4,12 @@
 #ifndef __AUTOANNOTATE__
 #define __AUTOANNOTATE__
 
-#include "main.h"
+#include <wx/wx.h>
+
 
 class MyChild ;
+class TVector ;
+class TVectorItem ;
 /** \brief The AutoAnnotate class scans database(s) for known features in the current sequence
 
     It uses the TAutoAnnotateDialog class to display a settings dialog, then runs through one or

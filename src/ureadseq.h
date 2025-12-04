@@ -6,6 +6,8 @@
 #ifndef UREADSEQ_H
 #define UREADSEQ_H
 
+#include <stddef.h> // size_t
+#include <stdio.h> // FILE
 
 #ifndef __WXMSW__
 typedef char  boolean;

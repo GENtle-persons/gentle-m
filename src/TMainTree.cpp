@@ -1,4 +1,11 @@
 #include "TMainTree.h"
+#include "enums.h"
+#include "txt.h" // for txt()
+#include "myapp.h" // myapp
+#include "MyFrame.h"
+#include "TVector.h"
+#include "txt.h"
+#include "MyApp-class.h"
 
 BEGIN_EVENT_TABLE(TMainTree, wxTreeCtrl)
     EVT_TREE_ITEM_RIGHT_CLICK(MAIN_TREE_DUMMY,TMainTree::OnRightClick)

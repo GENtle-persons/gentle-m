@@ -2,6 +2,21 @@
     \brief Contains the TVectorEditor class methods
 */
 #include "TVectorEditor.h"
+#include <wx/notebook.h>
+#include <wx/choice.h>
+#include <wx/listctrl.h>
+#include <wx/checkbox.h>
+#include <wx/textctrl.h>
+#include "MyApp-class.h"
+#include "enums.h"
+#include "txt.h"
+#include "myapp.h"
+#include "TVector.h"
+#include "TStorage.h"
+#include "MiscDialogs.h" // for TEnzymeDialog
+#include "RestrictionEnzymes.h"
+#include "MiscDialogs.h"
+#include "MyFrame.h"
 
 BEGIN_EVENT_TABLE(TVectorEditor, wxDialog )
     EVT_BUTTON(TVE_OK,TVectorEditor::OnOK)

@@ -5,6 +5,11 @@
 #include <wx/textfile.h>
 #include <wx/filename.h>
 #include <wx/filefn.h>  // wxCopyFile
+#include "MyApp-class.h"
+#include "txt.h"
+#include "myapp.h"
+#include "RestrictionEnzymes.h"
+#include "MyFrame.h"
 
 using namespace std ;
 
@@ -1441,7 +1446,9 @@ void TStorage::syncEnzymes ( TStorage* to )
         }
 
     TSQLresult r1 = getObject ( _T("SELECT * FROM enzyme") ) ;
+    wxASSERT(r1)
     TSQLresult r2 = to->getObject ( _T("SELECT * FROM enzyme") ) ;
+    wxASSERT(r2)
 
     wxArrayString s1 , s2 ;
     for ( int a = 0 ; a < r1.rows() ; a++ ) s1.Add ( r1[a][r1["e_name"]] ) ;
@@ -1474,5 +1481,5 @@ void TStorage::syncEnzymes ( TStorage* to )
     endRecord() ;
 
     if ( useBlank ) delete to ;
-    //wxPrintf( "D: TStorage::syncEnzymes - end\n" ) ;
+    wxPrintf( "D: TStorage::syncEnzymes - end\n" ) ;
     }

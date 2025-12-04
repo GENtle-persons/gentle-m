@@ -4,8 +4,11 @@
 #ifndef _TRESTRICTIONEDITOR_H_
 #define _TRESTRICTIONEDITOR_H_
 
-#include "main.h"
+#include <vector>
+#include "mywx.h" // FIXME: Should be eliminated by explicit inclusion
 #include <wx/spinctrl.h>
+
+#include "TVector.h"
 
 class wxNotebook ;
 class TRestrictionEnzyme ;
@@ -89,7 +92,7 @@ class TRestrictionEditor : public wxDialog
 
     int _w , _h ;
     int numberoffragments ;
-    vector <TREcache> cutcache ;
+    std::vector <TREcache> cutcache ;
     wxArrayString nocut ; ///< List of enzymes already known not to cut Vector v
     wxArrayString cocktail ;
     wxArrayString *remoteCocktail ;

@@ -4,11 +4,14 @@
 #ifndef _MANAGE_DATABASE_H_
 #define _MANAGE_DATABASE_H_
 
-#include "main.h"
+#include <wx/wx.h> // wxString
 #include <wx/dnd.h>
+#include <wx/event.h>
 
 class TStorage ;
 class TManageDatabaseDialog ;
+class TVector ;
+class TStorage ;
 
 #define GENTLE_DRAG_DATA _T("GENTLE_DRAG_DATA")
 #define ACTION_MODE_MANAGE 0
@@ -16,6 +19,10 @@ class TManageDatabaseDialog ;
 #define ACTION_MODE_LOAD 2
 #define ACTION_MODE_PROJECT 4
 #define ACTION_MODE_STARTUP 8
+
+class wxListCtrl ;
+class wxListEvent ;
+class wxNotebook ;
 
 /** \brief Handles drag'n'drop events for items dragged between the two database lists in TManageDatabaseDialog
 */

@@ -1,7 +1,10 @@
 #ifndef __TEliteLaChromLogDialog__H__
 #define __TEliteLaChromLogDialog__H__
 
-#include "main.h"
+#include <wx/wx.h>
+#include <wx/listctrl.h> // wxListCtrl
+#include <wx/dialog.h> // wxDialog
+
 
 #define ELL_DATE 0
 #define ELL_TIME 1

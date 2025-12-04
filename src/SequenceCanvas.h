@@ -4,7 +4,12 @@
 #ifndef _SequenceCanvas_H_
 #define _SequenceCanvas_H_
 
-#include "main.h"
+#include "main_definitions.h"
+#include "mywx.h"
+#include "enums.h"
+#include "TSequencerData.h"
+#include "util.h"
+#include "Alignment.h"
 
 class MyApp ;
 class MyChild ;
@@ -19,10 +24,17 @@ class TProteaseCut ;
 class TAAProp ;
 class TAlignment ;
 
+class TiXmlNode ;
+class TiXmlElement ;
+
 #define SEQUENCECHARMARKUP_MARK 1
 #define SEQUENCECHARMARKUP_MONO 2
 #define SEQUENCECHARMARKUP_BOLD 4
 #define SEQUENCECHARMARKUP_INVERT 8
+
+#define MINI_DISPLAY_ORIGINAL 0 /**< \brief Display mini-canvas at original width */
+#define MINI_DISPLAY_REAL 1 /**< \brief Display mini-canvas at real width */
+#define MINI_DISPLAY_CONDENSED 2 /**< \brief Display mini-canvas as condensed width */
 
 /** \brief This class contains the markup of a single character (borders, fore- and background)
 */

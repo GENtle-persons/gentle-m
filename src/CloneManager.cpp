@@ -1,4 +1,9 @@
 #include "CloneManager.h"
+#include <wx/wx.h>
+#include <wx/file.h>
+
+#include "TVector.h"
+#include "enums.h"
 
 TCloneManager::TCloneManager ()
     {

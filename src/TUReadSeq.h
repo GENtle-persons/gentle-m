@@ -4,7 +4,10 @@
 #ifndef _TUREADSEQ_H_
 #define _TUREADSEQ_H_
 
-#include "main.h"
+#include "ureadseq.h" // for seqFileFormat
+#include "GenBank.h"
+
+#include <wx/wx.h>
 
 class TGenBank ;
 

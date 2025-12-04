@@ -5,6 +5,24 @@
 #include <wx/printdlg.h>
 #include <wx/datetime.h>
 #include <wx/choicdlg.h>
+#include "MyApp-class.h"
+#include "myapp.h"
+#include "AminoAcids.h"
+#include "TVector.h"
+#include "txt.h"
+#include "MyChild.h"
+#include "PlasmidCanvas.h"
+#include "TVectorEditor.h"
+#include "PrimerDesign.h"
+#include "PlasmidCanvas.h"
+#include "ABIviewer.h"
+#include "RestrictionEnzymes.h"
+#include "TStorage.h"
+#include "RestrictionEnzymes.h"
+#include "TVectorTree.h"
+#include "OnlineTools.h"
+#include "TSilmutDialog.h"
+#include <tinyxml.h>
 
 #define SCROLL_TO_END (-100)
 

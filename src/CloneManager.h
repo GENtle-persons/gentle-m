@@ -1,11 +1,12 @@
 #ifndef __CLONE_MANAGER_5_H_
 #define __CLONE_MANAGER_5_H_
 
-#include "main.h"
-
+#include <wx/wx.h> // wxString
 
 class TVector ;
 class TVectorItem ;
+
+using namespace std ;
 
 class TCloneManager
     {
@@ -22,7 +23,7 @@ class TCloneManager
     int scan_item ( unsigned char *t , int a , TVector *v ) ;
 
     bool _success ; ///< Internal success marker
-    vector <TVector*> _v ; ///< The generated vectors
+    std::vector <TVector*> _v ; ///< The generated vectors
     } ;
 
 

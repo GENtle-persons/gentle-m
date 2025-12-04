@@ -4,7 +4,8 @@
 #ifndef _TSILMUTDIALOG_H_
 #define _TSILMUTDIALOG_H_
 
-#include "main.h"
+#include <wx/wx.h>
+#include <wx/dialog.h>
 #include <wx/spinctrl.h>
 
 #define M_SILMUT 0
@@ -12,6 +13,9 @@
 
 class TRestrictionEnzyme ;
 class TPrimerDesign ;
+class TVector ;
+
+using namespace std ;
 
 /** \brief Helper class for TSilmutDialog
 */

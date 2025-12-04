@@ -2,6 +2,17 @@
     \brief Contains the AutoAnnotate class members, as well as the complete TAutoAnnotateDialog class
 */
 #include "AutoAnnotate.h"
+#include "MyApp-class.h"
+#include "TVector.h"
+#include "txt.h"
+#include "MyFrame.h"
+#include "MyChild.h"
+#include "TStorage.h"
+#include "PlasmidCanvas.h"
+#include "TVectorTree.h"
+#include "ManageDatabase.h" // TManageDatabaseDialog
+#include "myapp.h"
+#include "enums.h"
 
 /** \brief The dialog class for the AutoAnnotate class/function
 */

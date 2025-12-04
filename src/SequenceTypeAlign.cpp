@@ -2,6 +2,9 @@
     \brief Contains the SeqAlign class members
 */
 #include "SequenceCanvas.h"
+#include "TVector.h"
+#include "Alignment.h"
+#include "txt.h"
 
 int SeqAlign::arrange ( int n )
     {

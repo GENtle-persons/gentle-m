@@ -23,7 +23,10 @@
 // For compilers that support precompilation, includes "wx/wx.h".
 
 
-#include "main.h"
+#include "util.h"
+#include "MyApp-class.h"
+#include "myapp.h"
+
 #include <wx/tipdlg.h>
 #include <wx/splash.h>
 #include <wx/filesys.h>
@@ -35,8 +38,7 @@
 
 
 using namespace std ;
-
-#include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
+#include <wx/arrimpl.cpp> // required for WX_DEFINE_OBJARRAY implementation
 WX_DEFINE_OBJARRAY(wxArrayFloat);
 
 // GLOBAL FUNCTIONS
@@ -75,26 +77,6 @@ wxString implode ( const wxString& sep , wxArrayString &r )
     for ( int a = 1 ; a < r.GetCount() ; a++ )
         ret += sep + r[a] ;
     return ret ;
-    }
-
-const wxString txt ( const char * const item )
-    {
-    return txt ( wxString(item,wxConvUTF8) ) ;
-    }
-
-const wxString txt ( wxString item )
-    {
-#ifndef __WXMSW__
-    if ( item.MakeUpper().Left(2) == _T("M_") )
-        {
-        wxString s = myapp()->_text[item.MakeUpper()].Trim() ;
-#ifdef __WXMAC__
-        s.Replace ( _T("\tStrg-") , _T("\tCtrl-") ) ; // DE fix
-#endif
-        return s ;
-        }
-#endif
-    return myapp()->_text[item.MakeUpper()] ;
     }
 
 // END GLOBAL FUNCTIONS

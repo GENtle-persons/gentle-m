@@ -2,6 +2,11 @@
     \brief Contains the SeqDNA class members
 */
 #include "SequenceCanvas.h"
+#include "MyApp-class.h"
+#include "txt.h"
+#include "myapp.h"
+#include "TVector.h"
+
 
 int SeqDNA::arrange ( const int n )
     {

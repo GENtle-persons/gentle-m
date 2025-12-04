@@ -4,10 +4,19 @@
 #ifndef _TVECTOREDITOR_H_
 #define _TVECTOREDITOR_H_
 
-#include "main.h"
 #include <wx/app.h>
 #include <wx/colordlg.h>
 #include <wx/checklst.h>
+#include "mywx.h"
+
+class wxRadioBox ;
+class wxChoice ;
+class wxListBox ;
+class wxListCtrl ;
+class wxTextCtrl ;
+class wxNotebook ;
+class wxListEvent ;
+class wxCheckBox ;
 
 class TVector ;
 class TVectorItem ;

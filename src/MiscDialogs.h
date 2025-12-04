@@ -4,7 +4,6 @@
 #ifndef _MISCDIALOGS_H_
 #define _MISCDIALOGS_H_
 
-#include "main.h"
 #include "TLigationDialog.h"
 #include "TVectorEditor.h"
 #include "ManageDatabase.h"
@@ -14,7 +13,9 @@
 #include "ProgramOptionsDialog.h"
 #include "FindSequenceDialog.h"
 #include "TAlignmentDialog.h"
+#include <wx/wx.h>
 #include <wx/spinctrl.h>
+#include <wx/listbox.h>
 
 class TStorage ;
 class MyFrame ;

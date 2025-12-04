@@ -2,6 +2,17 @@
     \brief Contains the TABIviewer class members
 */
 #include "AminoAcids.h"
+#include "ABIviewer.h"
+#include "SequenceCanvas.h"
+#include "MyFrame.h"
+#include "TStorage.h"
+#include "ABItype.h"
+#include "ManageDatabase.h" // TManageDatabaseDialog
+#include "FindSequenceDialog.h" // FindSequenceDialog
+#include "MiscDialogs.h" // TSpeakDialog
+#include "TMainTree.h" // TMainTree
+#include "MyApp-class.h"
+#include "enums.h"
 
 BEGIN_EVENT_TABLE(TABIviewer, MyChildBase)
     EVT_MENU(MDI_EDIT_MODE, TABIviewer::OnEditMode)

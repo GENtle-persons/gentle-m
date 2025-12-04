@@ -5,7 +5,6 @@
 #define _TSTORAGE_H_
 
 #include <stdio.h>
-#include "main.h"
 
 #ifdef USEMYSQL
  #ifdef __WXMSW__
@@ -35,6 +34,7 @@
 #define SHARED_STORAGE 2
 #define TEMP_STORAGE 3
 
+#include "mywx.h"
 class TRestrictionEnzyme ;
 class MyApp ;
 class TProtease ;

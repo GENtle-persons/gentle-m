@@ -4,7 +4,6 @@
 #ifndef _TPRIMER_H_
 #define _TPRIMER_H_
 
-#include "main.h"
 #include "ChildBase.h"
 #include <wx/splitter.h>
 

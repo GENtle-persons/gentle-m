@@ -3,6 +3,8 @@
 */
 #ifndef _TVECTOR_H_
 #define _TVECTOR_H_
+#include "mywx.h" // wxArrayTRestrictionEnzyme
+#include "main_definitions.h"
 
 class MyChild ;
 class TRestrictionEnzyme ;
@@ -30,13 +32,11 @@ enum {
    VIT_TYPES // number of possible types
 } ;
 
-#include "main.h"
-#include "TUndo.h"
+#define IUPAC_A 1 /**< \brief IUPAC bit for A */
+#define IUPAC_C 2 /**< \brief IUPAC bit for C */
+#define IUPAC_G 4 /**< \brief IUPAC bit for G */
+#define IUPAC_T 8 /**< \brief IUPAC bit for T */
 
-#include "main.h"
-#include "TUndo.h"
-
-#include "main.h"
 #include "TUndo.h"
 
 /// This class manages amino acid properties; so 20 total. Used by the static part of TVector

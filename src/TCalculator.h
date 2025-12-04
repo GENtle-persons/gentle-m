@@ -4,8 +4,9 @@
 #ifndef _T_CALCULATOR_H_
 #define _T_CALCULATOR_H_
 
-#include "main.h"
-#include "ChildBase.h"
+#include "ChildBase.h" // TCalculator is specialization
+#include <wx/wx.h> // wxString
+#include <wx/event.h>
 #include <wx/notebook.h>
 #include <wx/grid.h>
 

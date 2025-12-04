@@ -1,5 +1,13 @@
-#include "TGraph.h"
+#include <wx/clipbrd.h> // wxTheClipboard
 #include <wx/dcbuffer.h>
+#include <wx/file.h>
+#include "MiscDialogs.h" // TGraphDialog
+#include "TGraph.h"
+#include "MyFrame.h"
+#include "enums.h"
+#include "myapp.h"
+#include "txt.h" // for txt()
+#include "MyApp-class.h"
 
 BEGIN_EVENT_TABLE(TGraphDisplay, wxPanel)
     EVT_KEY_DOWN(TGraphDisplay::OnCharHook)

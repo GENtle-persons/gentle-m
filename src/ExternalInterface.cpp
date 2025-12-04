@@ -2,7 +2,15 @@
     \brief Contains the ExternalInterface, EIpanel and EILB class members
 */
 #include "ExternalInterface.h"
-
+#include <tinyxml.h>
+#include <wx/event.h>
+#include "mywx.h" // wxHashString
+#include "MyApp-class.h"
+#include "ABIviewer.h"
+#include "myapp.h"
+#include "txt.h" // txt
+#include "MyFrame.h"
+#include "enums.h"
 
 BEGIN_EVENT_TABLE(ExternalInterface, MyChildBase)
     EVT_CLOSE(ChildBase::OnClose)

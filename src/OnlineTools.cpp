@@ -1,4 +1,12 @@
 #include "OnlineTools.h"
+#include <wx/clipbrd.h> // for wxTheClipboard
+#include "SequenceCanvas.h"
+#include "ChildBase.h"
+#include "MyApp-class.h"
+#include "myapp.h"
+#include "txt.h" // txt
+#include "TVector.h"
+#include "enums.h" // ONLINE_TOOLS_*
 
 TOnlineTools::TOnlineTools ()
     {

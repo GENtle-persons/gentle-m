@@ -4,6 +4,24 @@
 #include "MyChild.h"
 #include <wx/datetime.h>
 #include <wx/printdlg.h>
+#include "MyApp-class.h"
+#include "TGraph.h"
+#include "TVector.h"
+#include "PlasmidCanvas.h"
+#include "SequenceCanvas.h"
+#include "TVectorTree.h"
+#include "TRestrictionEditor.h"
+#include "ChildBase.h"
+#include "TCalculator.h" // for HTML_PRINT_PREVIEW
+#include "RestrictionEnzymes.h"
+#include "ManageDatabase.h" // for TManageDatabaseDialog
+#include "TVirtualGel.h"
+#include "MiscDialogs.h" // for TSequencingPrimerDialog, TransformSequenceDialog
+#include "FindSequenceDialog.h"
+#include "AutoAnnotate.h"
+#include "txt.h"
+#include "myapp.h"
+#include "enums.h"
 
 BEGIN_EVENT_TABLE(MyChild, MyChildBase)
     EVT_MENU(AA_NONE, MyChild::OnAA_none)

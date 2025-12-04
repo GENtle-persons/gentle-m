@@ -1,4 +1,10 @@
 #include "TEliteLaChromLogDialog.h"
+#include <wx/file.h>
+#include <wx/filename.h>
+#include "myapp.h"
+#include "enums.h"
+#include "txt.h" // for txt()
+#include "MyApp-class.h"
 
 BEGIN_EVENT_TABLE(TEliteLaChromLogDialog, wxDialog )
     EVT_CHAR_HOOK(TEliteLaChromLogDialog::OnCharHook)

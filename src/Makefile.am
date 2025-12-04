@@ -67,7 +67,7 @@ GENtle_CXXFLAGS = $(CXXFLAGS)
 GENtle_CPPFLAGS = $(CPPFLAGS)
 GENtle_LDADD = $(WX_LIBS) $(LDFLAGS) -L/usr/lib -lsqlite3
 GENtle_LDFLAGS = $(LDFLAGS)
-GENtle_SOURCES = $(common_sources) main.cpp
+GENtle_SOURCES = $(common_sources)
 
 common_sources = \
 	ABItype.cpp \
@@ -92,6 +92,7 @@ common_sources = \
 	CloningAssistant.h \
 	CoolCanvas.cpp \
 	CoolCanvas.h \
+	enums.h \
 	ExternalBLAST.cpp \
 	ExternalInterface.cpp \
 	ExternalInterface.h \
@@ -104,10 +105,14 @@ common_sources = \
 	ManageDatabase.h \
 	MiscDialogs.cpp \
 	MiscDialogs.h \
+	myapp.cpp \
+	myapp.h \
 	MyChild.cpp \
 	MyChild.h \
 	MyFrame.cpp \
 	MyFrame.h \
+    MyApp-class.cpp \
+    MyApp-class.h \
 	OnlineTools.cpp \
 	OnlineTools.h \
 	PCR_Troubleshoot.cpp \
@@ -215,9 +220,12 @@ common_sources = \
 	ncoils.cpp \
 	ncoils.h \
 	todo.cpp \
+	txt.h \
+	txt.cpp \
 	ureadseq.c \
 	ureadseq.h \
 	util.cpp \
+	util.h \
 	ipc/element.h \
 	ipc/global.h \
 	ipc/gp_out.h \

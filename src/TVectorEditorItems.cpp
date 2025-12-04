@@ -2,6 +2,11 @@
     \brief Contains the TVectorEditor class methods concerning items
 */
 #include "TVectorEditor.h"
+#include "TVector.h"
+#include "TItemEditDialog.h"
+#include "enums.h"
+#include "txt.h"
+#include "MiscDialogs.h" // for TURLtext
 
 void TVectorEditor::commitItems ()
     {

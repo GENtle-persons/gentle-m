@@ -1,7 +1,11 @@
 #include "TPhylip.h"
 
-#include "main.h"
 #include <wx/file.h>
+#include "MyFrame.h"
+#include "MyApp-class.h"
+#include "myapp.h"
+#include "TStorage.h"
+#include "txt.h"
 
 TPhylip::TPhylip ()
     {

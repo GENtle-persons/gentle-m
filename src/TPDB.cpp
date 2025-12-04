@@ -3,6 +3,10 @@
 */
 #include "TPDB.h"
 #include <wx/textfile.h>
+#include "MyApp-class.h"
+#include "TVector.h"
+#include "txt.h"
+#include "myapp.h"
 
 TPDB::TPDB ()
     {

@@ -2,6 +2,11 @@
     \brief The TXMLfile class
 */
 #include "TXMLfile.h"
+#include <tinyxml.h>
+#include "TVector.h"
+#include <wx/wx.h> // wxString
+#include "myapp.h"
+#include "txt.h"
 
 TXMLfile::TXMLfile ()
     {
@@ -133,7 +138,7 @@ void TXMLfile::readGBSeq ( TiXmlNode * const base )
         i.setType ( s ) ;
         readGBqualifiers ( i , n ) ;
 
-        vector <TVectorItem> vi ;
+        std::vector <TVectorItem> vi ;
         readGBintervals ( vi , i , n ) ;
         for ( int a = 0 ; a < vi.size() ; a++ ) v->items.push_back ( vi[a] ) ;
         }
@@ -232,7 +237,7 @@ void TXMLfile::readGBqualifiers ( TVectorItem &i , TiXmlNode *n )
         }
     }
 
-void TXMLfile::readGBintervals ( vector <TVectorItem> &vi , const TVectorItem &i , TiXmlNode * const n )
+void TXMLfile::readGBintervals ( std::vector <TVectorItem> &vi , const TVectorItem &i , TiXmlNode * const n )
     {
     TiXmlNode *n2 = n->FirstChild("GBFeature_intervals") ;
     if ( !n2 ) return ;

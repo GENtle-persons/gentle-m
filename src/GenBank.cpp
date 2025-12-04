@@ -3,8 +3,9 @@
 */
 #include "GenBank.h"
 #include <wx/textfile.h>
-
-#include "main.h"
+#include "myapp.h" //mylog
+#include "enums.h"
+#include "myapp.h"
 
 #define TAG_COMPLEMENT 1
 

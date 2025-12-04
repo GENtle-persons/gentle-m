@@ -1,7 +1,15 @@
 /** \file
     \brief Contains the methods of the TPrimerDialog class
 */
+#include "TPrimer.h"
 #include "TPrimerDialog.h"
+#include "PrimerDesign.h"
+#include "TVector.h"
+#include "MyApp-class.h"
+#include "myapp.h"
+#include "MyFrame.h"
+#include "txt.h" // txt()
+#include "enums.h"
 
 BEGIN_EVENT_TABLE(TPrimerDialog, wxDialog )
     EVT_BUTTON(PD_OK,TPrimerDialog::OnOK)

@@ -2,6 +2,8 @@
     \brief The TPrimer class
 */
 #include "TPrimer.h"
+#include "TVector.h"
+#include "txt.h"
 
 //********************************************************************** TPrimer
 

@@ -1,5 +1,9 @@
 #include "TGraph.h"
+#include "ABIviewer.h"
 #include <wx/dcbuffer.h>
+#include "enums.h"
+#include "MyApp-class.h"
+#include "MyFrame.h"
 
 wxColour TGraphDisplay::prettyColor = wxColour ( 0x99 , 0xCC , 0xFF ) ;
 

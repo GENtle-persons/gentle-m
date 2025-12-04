@@ -4,7 +4,10 @@
 #ifndef _T_ITEM_EDIT_DIALOG_
 #define _T_ITEM_EDIT_DIALOG_
 
-#include "main.h"
+#include <wx/wx.h> // wxString
+#include <wx/event.h> // wxCommandEvent
+#include <wx/listctrl.h> // wxListBox
+#include <wx/textctrl.h> // wxTextCtrl
 
 class TVectorItem ;
 

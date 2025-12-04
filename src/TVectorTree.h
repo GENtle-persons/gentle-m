@@ -4,8 +4,12 @@
 #ifndef _TVECTORTREE_H_
 #define _TVECTORTREE_H_
 
-#include "main.h"
 #include <wx/imaglist.h>
+#include <wx/treectrl.h>
+
+class TTreeItem ;
+class ChildBase ;
+class TRestrictionEnzyme ;
 
 class MyChild ;
 

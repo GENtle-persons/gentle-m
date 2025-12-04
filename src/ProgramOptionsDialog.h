@@ -4,9 +4,11 @@
 #ifndef _ProgramOptionsDialog_h_
 #define _ProgramOptionsDialog_h_
 
-#include "main.h"
+#include <wx/wx.h>
 
 class TVector ;
+class wxSpinCtrl ;
+class wxNotebook ;
 
 #define EST_GLOBAL 0
 #define EST_PROJECT 1
@@ -57,7 +59,7 @@ class ProgramOptionsDialog : public wxDialog
     virtual void OnAACol ( wxCommandEvent &ev ) ; ///< Amino acid color event handler
     virtual void OnCharHook(wxKeyEvent& event) ; ///< Key event handler
 
-    vector <int> translation_tables ;
+    std::vector <int> translation_tables ;
     wxNotebook *nb ; ///< Pointer to the wxNotebook structure containing the tabs
     TEnzymeSettingsTab *globalEnzymesPanel ;
     wxPanel *globalSettingsPanel ;

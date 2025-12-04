@@ -4,7 +4,10 @@
 #ifndef _RESTRICTIONENZYMES_H_
 #define _RESTRICTIONENZYMES_H_
 
-#include "main.h"
+#include <wx/wx.h>
+#include "TVector.h"
+
+class TFragment ;
 
 /// \brief Stores a restriction enzyme
 class TRestrictionEnzyme

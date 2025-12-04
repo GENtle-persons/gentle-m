@@ -1,7 +1,15 @@
 #include "TImageDisplay.h"
 #include <wx/dir.h>
+#include <wx/file.h>
 #include <wx/clipbrd.h>
 #include <wx/printdlg.h>
+#include "TStorage.h"
+#include "TIMGreader.h"
+#include "enums.h"
+#include "myapp.h" // myapp
+#include "MyFrame.h"
+#include "txt.h"
+#include "MyApp-class.h"
 
 BEGIN_EVENT_TABLE(TImageDisplay, MyChildBase)
     EVT_BUTTON(IV_BUTTON,TImageDisplay::OnDir)

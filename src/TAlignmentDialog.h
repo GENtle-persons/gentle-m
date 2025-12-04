@@ -4,7 +4,9 @@
 #ifndef _T_ALIGNMENT_DIALOG_
 #define _T_ALIGNMENT_DIALOG_
 
-#include "main.h"
+#include <wx/wx.h> // wxString
+#include <wx/event.h> // wxKeyEvent
+#include "mywx.h" // wxArrayTVector
 
 class TAlignment ;
 

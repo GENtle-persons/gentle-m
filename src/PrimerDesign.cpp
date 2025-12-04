@@ -2,8 +2,20 @@
     \brief Contains the methods of the TPrimerDesign module class
 */
 #include "PrimerDesign.h"
-#include "PCR_Troubleshoot.h"
 #include <wx/debug.h>
+#include <wx/spinctrl.h>
+#include "MiscDialogs.h" // for TMyMultipleChoiceDialog
+#include "PCR_Troubleshoot.h"
+#include "TPrimer.h"
+#include "MyApp-class.h"
+#include "TVector.h"
+#include "SequenceCanvas.h"
+#include "FindSequenceDialog.h"
+#include "TSilmutDialog.h"
+#include "TPrimerDialog.h"
+#include "enums.h"
+#include "myapp.h"
+#include "txt.h"
 
 BEGIN_EVENT_TABLE(TPrimerDesign, MyChildBase)
     EVT_MENU(AA_ALL, TPrimerDesign::OnAA_all)
