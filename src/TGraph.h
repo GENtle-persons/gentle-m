@@ -4,14 +4,15 @@
 #ifndef _T_GRAPH_H_
 #define _T_GRAPH_H_
 
-#include "main.h"
-#include "ChildBase.h"
+#include "ChildBase.h" // TGraph is specialization
+
+#include <wx/wx.h> // wxString
 #include <wx/notebook.h>
 #include <wx/grid.h>
 
-typedef vector <string> TVS ;
-typedef vector <float> floatArray ;
-typedef vector <TVS> stringField ;
+typedef std::vector <std::string> TVS ;
+typedef std::vector <float> floatArray ;
+typedef std::vector <TVS> stringField ;
 
 class TGraph ;
 class TGraphData ;
@@ -44,7 +45,7 @@ class TGraphData
     TGraphDisplay *display ;
     TGraphScale *sx , *sy ;
     wxColour col ; ///< The color of this graph
-    vector <wxPoint> drawn ; ///< Cache of last drawn points in pixels
+    std::vector <wxPoint> drawn ; ///< Cache of last drawn points in pixels
     bool selected ; ///< Is this graph selected (by mouse)?
     } ;
 
@@ -123,8 +124,8 @@ class TGraphDisplay : public wxPanel
     virtual void OnCopyAsImage(wxCommandEvent &event) ; ///< "Copy as image" event handler
     virtual void OnSaveAsImage(wxCommandEvent &event) ; ///< "Save as image" event handler
 
-    vector <TGraphScale*> scales ; ///< The scales
-    vector <TGraphData*> data ; ///< The graphs (data)
+    std::vector <TGraphScale*> scales ; ///< The scales
+    std::vector <TGraphData*> data ; ///< The graphs (data)
     TGraph *g ; ///< The calling TGraph
     static wxColour prettyColor ; ///< A pretty blue
     wxArrayString scaleTypes ;

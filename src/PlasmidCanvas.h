@@ -4,9 +4,12 @@
 #ifndef _PlasmidCanvas_H_
 #define _PlasmidCanvas_H_
 
-#include "main.h"
+#include <wx/wx.h>
+#include <wx/event.h>
 #include <wx/tooltip.h>
 #include <wx/metafile.h>
+
+#include "enums.h"
 
 #define STANDARDRADIUS 10000
 
@@ -21,6 +24,9 @@
 class MyChild ;
 class TVectorItem ;
 class TPrimer ;
+class TVector ;
+
+using namespace std ;
 
 /**  \brief The class to draw the DNA map, as well as the mini-map in the amino acid module
 */

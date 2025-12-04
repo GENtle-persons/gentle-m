@@ -3,25 +3,30 @@
 
 #include "TGraph.h"
 #include <wx/dcmemory.h>
+#include <wx/event.h>
+#include "ChildBase.h" // TDotPlot is specialization
 
 class TDotPlot ;
 
 /** \class TDotPlotPanel
     \brief The dot plot drawing panel
 */
+
+class MyChild ;
+
 class TDotPlotPanel : public wxScrolledWindow
     {
     public :
     TDotPlotPanel ( wxWindow *_parent ) ;
     void Run () ;
     void Update () ;
-    virtual void OnDraw(wxDC& dc) ; ///< Draw routine
-    virtual void OnPaint (wxPaintEvent &event ) ; ///< Paint event handler
-    virtual void OnMouse(wxMouseEvent& event) ; ///< Mouse event handler
-    virtual void OnOpenSequence1(wxCommandEvent& event) ; ///< Open sequence 1 event handler
-    virtual void OnOpenSequence2(wxCommandEvent& event) ; ///< Open sequence 2 event handler
-    virtual void OnCopy(wxCommandEvent& event) ; ///< Copy event handler
-    virtual void OnSave(wxCommandEvent& event) ; ///< Save event handler
+    virtual void OnDraw ( wxDC& dc) ; ///< Draw routine
+    virtual void OnPaint ( wxPaintEvent &event ) ; ///< Paint event handler
+    virtual void OnMouse ( wxMouseEvent& event ) ; ///< Mouse event handler
+    virtual void OnOpenSequence1 ( wxCommandEvent& event ) ; ///< Open sequence 1 event handler
+    virtual void OnOpenSequence2 ( wxCommandEvent& event ) ; ///< Open sequence 2 event handler
+    virtual void OnCopy ( wxCommandEvent& event ) ; ///< Copy event handler
+    virtual void OnSave ( wxCommandEvent& event ) ; ///< Save event handler
 
     private :
     void Recalc () ; ///< Recalculate dot-plot

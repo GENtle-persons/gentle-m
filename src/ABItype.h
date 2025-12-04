@@ -4,13 +4,15 @@
 #ifndef _ABI_TYPE_H_
 #define _ABI_TYPE_H_
 
-#include "main.h"
+#include <wx/wx.h> // wxString
 
 #include <math.h>
 #include <fcntl.h>
 #include <vector>
 #include <iostream>
 #include <algorithm>
+
+using namespace std;
 
 /** \class TFLAG
     \brief Helper class for ABItype

@@ -1,4 +1,14 @@
 #include "TProteolysis.h"
+#include <wx/event.h>
+#include "AminoAcids.h"
+#include "MyFrame.h"
+#include "MyApp-class.h"
+#include "enums.h"
+#include "txt.h"
+#include "myapp.h"
+#include "RestrictionEnzymes.h"
+//#include "TProteolysis.h"
+#include "TStorage.h"
 
 BEGIN_EVENT_TABLE(TProteolysis, wxDialog)
     EVT_BUTTON(POD_OK,TProteolysis::OnOK)

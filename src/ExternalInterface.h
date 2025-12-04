@@ -4,10 +4,11 @@
 #ifndef _EXTERNAL_INTERFACE_H_
 #define _EXTERNAL_INTERFACE_H_
 
-#include "main.h"
 #include "ChildBase.h"
+#include <wx/wx.h>
 #include <wx/splitter.h>
 #include <wx/htmllbox.h>
+#include <wx/notebook.h>
 #include "SendHTTP.h"
 #include <wx/thread.h>
 
@@ -32,6 +33,8 @@ enum {
     } ;
 
 class blastThread ;
+
+class TiXmlNode ;
 
 /// The External Interface List Box class, a specialized wxHtmlListBox
 class EILB : public wxHtmlListBox

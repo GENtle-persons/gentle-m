@@ -3,6 +3,16 @@
 */
 #include "TVectorTree.h"
 
+#include "enums.h"
+#include "MyChild.h"
+#include "txt.h"
+#include <wx/treectrl.h>
+#include "TVector.h"
+#include "PlasmidCanvas.h"
+#include "RestrictionEnzymes.h"
+#include "SequenceCanvas.h"
+
+
 BEGIN_EVENT_TABLE(TVectorTree, wxTreeCtrl)
     EVT_TREE_SEL_CHANGED(TREE_DUMMY,TVectorTree::OnEvent)
     EVT_TREE_ITEM_ACTIVATED(TREE_DUMMY,TVectorTree::OnActivation)

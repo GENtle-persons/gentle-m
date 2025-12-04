@@ -1,7 +1,7 @@
 #ifndef _PROTEOLYSIS_H_
 #define _PROTEOLYSIS_H_
 
-#include "main.h"
+#include "TRestrictionEditor.h"
 
 class TProtease ;
 
@@ -31,6 +31,7 @@ class TProteolysisSuggestion
 bool operator < ( const TProteolysisSuggestion &c1 , const TProteolysisSuggestion &c2 ) ;
 bool operator == ( const TProteolysisSuggestion &c1 , const TProteolysisSuggestion &c2 ) ;
 
+class TAminoAcids;
 class TProteolysis : public wxDialog
     {
     public :

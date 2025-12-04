@@ -2,6 +2,19 @@
     \brief Contains the methods of the TSilmutDialog class, and its helper class TSilmutItem
 */
 #include "TSilmutDialog.h"
+#include "myapp.h"
+#include "enums.h"
+#include "mywx.h" // wxArrayTRestrictionEnzyme
+#include "myapp.h" // myapp
+#include "txt.h" // txt()
+#include "MyFrame.h"
+#include "MyApp-class.h"
+#include "TVector.h"
+#include "TStorage.h"
+#include "RestrictionEnzymes.h"
+#include "PrimerDesign.h"
+#include "SequenceCanvas.h" // SeqAA
+#include "util.h"
 
 BEGIN_EVENT_TABLE(TSilmutDialog, wxDialog )
     EVT_SPINCTRL(PD_SILMUT_MAX_XHG,TSilmutDialog::OnSpin)

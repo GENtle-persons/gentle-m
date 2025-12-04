@@ -1,4 +1,14 @@
 #include "CGview.h"
+#include "MyApp-class.h"
+#include "TVector.h"
+#include "RestrictionEnzymes.h"
+#include "TStorage.h"
+#include "MyFrame.h"
+#include "myapp.h"
+#include "enums.h"
+#include <wx/event.h>
+#include <wx/colordlg.h> // for wxGetColourFromUser
+#include "txt.h" // txt
 
 /// \brief This class contains the settings dialog for the CGviewer export function
 class CGdialog : public wxDialog

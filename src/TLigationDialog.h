@@ -4,9 +4,12 @@
 #ifndef _TLIGATIONDIALOG_H_
 #define _TLIGATIONDIALOG_H_
 
-#include "main.h"
 #include <vector>
+#include <wx/wx.h>
 #include <wx/checklst.h>
+#include <wx/dialog.h>
+#include <wx/textctrl.h>
+#include "mywx.h" // wxArrayTVector
 
 using namespace std ;
 
@@ -37,7 +40,7 @@ class TLigationDialog : public wxDialog
     wxCheckListBox *l_sources , *l_targets ;
 
     wxArrayTVector vv ;
-    vector <TVector> ligates ;
+    std::vector <TVector> ligates ;
     wxArrayString vt ;
     vector <bool> orientation ;
     bool doLigate ;

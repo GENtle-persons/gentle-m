@@ -1,6 +1,18 @@
 #include "PlasmidCanvas.h"
+#include "MyChild.h"
 #include <wx/printdlg.h>
 #include <wx/dcbuffer.h>
+#include "MyApp-class.h"
+#include "SequenceCanvas.h"
+#include "TVector.h"
+#include "RestrictionEnzymes.h"
+#include "TVectorEditor.h"
+#include "TVectorTree.h"
+#include "TMainTree.h"
+#include "txt.h"
+#include "myapp.h"
+#include "enums.h"
+
 
 // ---------------------------------------------------------------------------
 // PlasmidCanvas

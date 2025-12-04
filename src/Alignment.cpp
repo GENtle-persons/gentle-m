@@ -2,9 +2,25 @@
     \brief Contains the methods of the TAlignment class and its helper class, TAlignLine
 */
 #include "Alignment.h"
+#include "ABIviewer.h"
+#include "TAlignmentDialog.h"
 #include "AlignmentAppearanceDialog.h"
+#include "MyApp-class.h"
+#include "SequenceCanvas.h"
+#include "TVector.h"
+#include "TMainTree.h"
+#include "MyChild.h"
+#include "AminoAcids.h"
+#include "GenBank.h"
+#include "TPhyloTree.h"
+#include "TUReadSeq.h"
+#include "ManageDatabase.h" // TManageDatabaseDialog
+#include "TPhylip.h"
 #include <wx/textfile.h>
 #include <wx/filename.h>
+#include <tinyxml.h>
+#include "enums.h"
+#include "myapp.h"
 
 BEGIN_EVENT_TABLE(TAlignment, MyChildBase)
     EVT_CLOSE(ChildBase::OnClose)

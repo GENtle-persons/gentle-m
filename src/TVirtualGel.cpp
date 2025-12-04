@@ -2,6 +2,13 @@
 #include <wx/dir.h>
 #include <wx/clipbrd.h>
 #include <wx/printdlg.h>
+#include "MyFrame.h"
+#include "MyApp-class.h"
+#include "txt.h"
+#include "enums.h"
+#include "myapp.h"
+#include "ABIviewer.h"
+#include "TStorage.h"
 
 #define LOW_LIMIT 20
 

@@ -4,17 +4,22 @@
 #ifndef _MYFRAME_H_
 #define _MYFRAME_H_
 
-#include "main.h"
+#include "mywx.h"
 #include "TRestrictionIdentifier.h"
 #include <wx/utils.h>
 #include <wx/dnd.h>
 #include <wx/docview.h>
 #include <wx/html/htmprint.h>
 #include <wx/minifram.h>
+#include <wx/laywin.h> // wxSashLayoutWindow
+#include "main_definitions.h" // TYPE_VECTOR
 
 class ChildBase ;
+class MyChild ;
+class MyFrame ;
 class TStorage ;
 class TMainTree ;
+class TAlignment ;
 class TAminoAcids ;
 class TABIviewer ;
 class TClone ;
@@ -149,8 +154,8 @@ public:
     virtual void addDefaultTools ( wxToolBar* toolBar ) ;
     virtual void addCCPFTools(wxToolBar* toolBar, bool findbutton = false ) ;
     virtual void setDummyToolbar ( ChildBase *c ) ;
-    virtual TCalculator *RunCalculator () ;
-    virtual TGraph *RunGraph () ;
+    virtual TCalculator* RunCalculator () ;
+    virtual TGraph* RunGraph () ;
     virtual MyChild* newFromVector ( TVector * const nv , const int type = TYPE_VECTOR ) ;
     virtual TAminoAcids*  newAminoAcids ( const wxString& aa , const wxString& title = _T("") ) ;
     virtual TAminoAcids* newAminoAcids ( TVector* const nv , const wxString& title = _T("") ) ;
@@ -198,14 +203,14 @@ public:
     wxString lang_string ; ///< \brief The user interface language name
     wxArrayString lastCocktail ; ///< \brief Enzymes of the last restriction cocktail
     wxArrayChildBase children ; ///< \brief List of pointers to all child windows
-    wxHtmlEasyPrinting *html_ep ; ///< \brief HTML printer wrapper for TCalculator
+    wxHtmlEasyPrinting* html_ep ; ///< \brief HTML printer wrapper for TCalculator
     vector <wxBitmap> bitmaps ; ///< \brief The bitmaps in the user interface
     wxToolBar *tb_mychild ; ///< \brief The shared toolbar (?)
     char stopcodon ;
     int nonstandard_translation_table ;
     wxArrayString dna_marker ;
-    wxToolBar *mainToolBar ; ///< The main toolbar
-    TOnlineTools *online_tools ;
+    wxToolBar* mainToolBar ; ///< The main toolbar
+    TOnlineTools* online_tools ;
     wxArrayString language_list ;
     bool update_child_list ;
 

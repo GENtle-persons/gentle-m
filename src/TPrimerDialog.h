@@ -4,7 +4,9 @@
 #ifndef _T_PRIMER_DIALOG_
 #define _T_PRIMER_DIALOG_
 
-#include "main.h"
+#include <wx/wx.h> // wxString
+#include <wx/event.h> // wxCommandEvent
+#include <wx/listctrl.h> // wxListCtrl
 #include <wx/spinctrl.h>
 
 class TStorage ;

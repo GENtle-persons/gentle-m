@@ -2,6 +2,13 @@
 	\brief Contains the methods of the TItemEditDialog class
 */
 #include "TItemEditDialog.h"
+#include "TVector.h"
+#include "txt.h" // for txt()
+#include "MyApp-class.h"
+#include "enums.h"
+#include "myapp.h"
+#include "MyFrame.h"
+#include <wx/colordlg.h>
 
 BEGIN_EVENT_TABLE(TItemEditDialog, wxDialog )
     EVT_BUTTON(IED_COLOR,TItemEditDialog::OnColor)

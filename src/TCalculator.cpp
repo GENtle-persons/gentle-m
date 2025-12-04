@@ -1,4 +1,10 @@
 #include "TCalculator.h"
+#include "ABIviewer.h"
+#include "MyFrame.h"
+#include "TStorage.h"
+#include "enums.h"
+#include "MyApp-class.h"
+#include <wx/clipbrd.h> // for wxTheClipboard
 
 BEGIN_EVENT_TABLE(TCalculator, MyChildBase)
     EVT_MENU(SEQ_PRINT, TCalculator::OnSeqPrint)

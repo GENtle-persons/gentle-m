@@ -2,6 +2,20 @@
     \brief Contains the TAminoAcids module class methods
 */
 #include "AminoAcids.h"
+#include <wx/event.h>
+#include "MyApp-class.h"
+#include "enums.h"
+#include "TGraph.h"
+#include "TVector.h"
+#include "SequenceCanvas.h"
+#include "myapp.h"
+#include "MiscDialogs.h" // TIPCDialog
+#include "txt.h"
+#include "ipc/ipc.h"
+#include "PlasmidCanvas.h"
+#include "TCalculator.h"
+#include "TMainTree.h"
+#include "MiscDialogs.h"
 
 BEGIN_EVENT_TABLE(TAminoAcids, MyChildBase)
     EVT_MENU(MDI_EDIT_MODE, TAminoAcids::OnEditMode)

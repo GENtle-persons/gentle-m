@@ -3,7 +3,48 @@
 #include <wx/sysopt.h>
 #include <wx/filename.h>
 #include <wx/filedlg.h> // wxFileDialog
+#include <wx/tooltip.h> // wxToolTip
 #include "TEliteLaChromLogDialog.h"
+#include "MyApp-class.h"
+#include "TStorage.h"
+#include "TMainTree.h"
+#include "OnlineTools.h"
+#include "TVector.h"
+#include "TVectorEditor.h"
+#include "ManageDatabase.h" // for TManageDatabaseDialog
+#include "TPhyloTree.h"
+#include "TGraph.h"
+#include "TPDB.h"
+#include "MyChild.h"
+#include "AminoAcids.h"
+#include "TClone.h"
+#include "ABItype.h"
+#include "TVector.h" // for TEnzymeRules
+#include "ProgramOptionsDialog.h"
+#include "CloneManager.h"
+#include "ABIviewer.h"
+#include "Alignment.h"
+#include "ExternalInterface.h"
+#include "TextImportDialog.h"
+#include "TUReadSeq.h"
+#include "TImageDisplay.h"
+#include "TCalculator.h"
+#include "mywx.h"
+#include "TVirtualGel.h"
+#include "TDotPlot.h"
+#include "SequenceCanvas.h"
+#include "TSequencingAssistantDialog.h"
+#include "CloningAssistant.h"
+#include "TLigationDialog.h"
+#include "SCFtype.h"
+#include "GenBank.h"
+#include "TImageDisplay.h"
+#include "TStoreAllDialog.h"
+#include "TXMLfile.h"
+#include "myapp.h"
+#include "txt.h"
+#include "enums.h"
+#include "ncoils.h"
 
 /**
  * \file MyFrame.cpp

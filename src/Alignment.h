@@ -4,10 +4,14 @@
 #ifndef _ALIGNMENT_H_
 #define _ALIGNMENT_H_
 
-#include "main.h"
 #include "ChildBase.h"
+
+#include <wx/wx.h>
+#include <wx/event.h>
 #include <wx/splitter.h>
 #include <wx/spinctrl.h>
+
+#include "MyFrame.h" // wxArrayChildBase
 
 #define BACK_LEFT 1
 #define BACK_UP 2

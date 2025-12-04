@@ -1,4 +1,10 @@
 #include "TPhyloTree.h"
+#include "MyApp-class.h"
+#include "enums.h"
+#include "myapp.h"
+#include "txt.h"
+#include "Alignment.h"
+#include <wx/clipbrd.h> // for wxTheClipboard
 
 BEGIN_EVENT_TABLE(TPhyloTree, MyChildBase)
     EVT_CLOSE(ChildBase::OnClose)

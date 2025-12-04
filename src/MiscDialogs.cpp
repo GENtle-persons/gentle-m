@@ -3,6 +3,15 @@
 */
 #include "MiscDialogs.h"
 #include <wx/sound.h>
+#include "MyFrame.h"
+#include "MyApp-class.h"
+#include "enums.h"
+#include "txt.h"
+#include "myapp.h"
+#include "TGraph.h"
+#include "TVector.h"
+#include "TStorage.h"
+#include "RestrictionEnzymes.h"
 
 BEGIN_EVENT_TABLE(TMyMultipleChoiceDialog, wxDialog )
     EVT_BUTTON(MCD_OK,TMyMultipleChoiceDialog::OnOK)

@@ -4,7 +4,9 @@
 #ifndef _FindSequenceDialog_h_
 #define _FindSequenceDialog_h_
 
-#include "main.h"
+#include "mywx.h" // wxHashString
+#include <wx/button.h> // wxButton
+#include <wx/event.h>
 #include <wx/regex.h>
 
 WX_DECLARE_STRING_HASH_MAP ( wxChar , wxHashChar ) ;

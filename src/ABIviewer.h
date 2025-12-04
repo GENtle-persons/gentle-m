@@ -4,11 +4,20 @@
 #ifndef _ABI_VIEWER_H_
 #define _ABI_VIEWER_H_
 
-#include "main.h"
 #include "ChildBase.h"
+#include "ABIviewer.h"
+#include <wx/wx.h>
+#include <wx/spinctrl.h> // wxSpinCtrl
+#include <wx/event.h>
 #include <wx/splitter.h>
+#include "enums.h" // MDI_EDIT_MODE
+#include "TVector.h"
+#include "myapp.h"
+#include "txt.h"
+
 
 class TVector ;
+class SequenceCanvas ;
 
 /** \brief The ABI (sequencer data) viewer module class
 */

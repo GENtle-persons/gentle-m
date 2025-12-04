@@ -1,7 +1,16 @@
-#include "TVector.h"
 
 #include <wx/debug.h>
 #include <wx/string.h>
+
+#include "TVector.h"
+#include "MyApp-class.h"
+#include "myapp.h"
+#include "RestrictionEnzymes.h"
+#include "MyFrame.h"
+#include "ProgramOptionsDialog.h" // for TEnzymeRules.h
+#include "txt.h"
+#include "SequenceCanvas.h" // SeqAA
+#include "TStorage.h"
 
 #define MAXCUTS_PER_1K 30
 

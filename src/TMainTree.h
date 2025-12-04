@@ -5,10 +5,14 @@
 #ifndef _TMAINTREE_H_
 #define _TMAINTREE_H_
 
-#include "main.h"
+#include <wx/treebase.h>
+#include <wx/treectrl.h>
+//#include <wx/laywin.h> // for wxSashLayoutWindow
+#include "main_definitions.h"
 
 class MyFrame ;
 class ChildBase ;
+class wxSashLayoutWindow ;
 
 /** \class TMainTreeItem
     \brief Item in TMainTree

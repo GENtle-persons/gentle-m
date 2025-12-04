@@ -2,6 +2,11 @@
     \brief Contains the TRestrictionEnzyme, TRestrictionCut, TProtease, and TProteaseCut classes
 */
 #include "RestrictionEnzymes.h"
+#include "MyApp-class.h"
+#include "PlasmidCanvas.h" // for STANDARDRADIUS
+#include "TRestrictionEditor.h" // for TFragment
+#include "myapp.h"
+#include "MyFrame.h"
 
 bool operator < ( const TRestrictionCut &c1 , const TRestrictionCut &c2 )
     {

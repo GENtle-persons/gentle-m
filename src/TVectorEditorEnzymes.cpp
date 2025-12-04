@@ -2,6 +2,17 @@
     \brief Contains the TVectorEditor class methods concerning enzymes
 */
 #include "TVectorEditor.h"
+#include "MyApp-class.h"
+#include "txt.h"
+#include "enums.h"
+#include "myapp.h"
+#include "MyFrame.h"
+#include "MiscDialogs.h" // for TEnzymeDialog
+#include "RestrictionEnzymes.h"
+#include "TStorage.h"
+#include "TClone.h"
+#include "SendHTTP.h" // for myExternal
+
 
 void TVectorEditor::initPanEnzym ()
     {

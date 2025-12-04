@@ -4,10 +4,12 @@
 #ifndef _TXMLFILE_H_
 #define _TXMLFILE_H_
 
-#include "main.h"
+#include <wx/wx.h> // wxString
+#include "mywx.h" // wxArrayTVector
 
 class TVector ;
 class TiXmlNode ;
+class TiXmlText ;
 class TVectorItem ;
 class TiXmlDocument ;
 
@@ -30,7 +32,7 @@ class TXMLfile
     wxString t ( TiXmlText * const txt ) const ; ///< Safe text conversion
     wxString t ( const char * const txt ) const ; ///< Safe text conversion
     void readGBqualifiers ( TVectorItem &i , TiXmlNode * const n ) ; ///< Part of the parser
-    void readGBintervals ( vector <TVectorItem> &vi , const TVectorItem &i , TiXmlNode *n ) ; ///< Part of the parser
+    void readGBintervals ( std::vector <TVectorItem> &vi , const TVectorItem &i , TiXmlNode *n ) ; ///< Part of the parser
     wxString get_sub_desc ( TiXmlNode * const base , const int depth = 0 ) const ;
     bool _success ; ///< Internal success marker
     wxArrayTVector _v ; ///< The generated vectors

@@ -3,6 +3,11 @@
 */
 #include "TUndo.h"
 #include "TVector.h"
+#include "MyApp-class.h"
+#include "myapp.h"
+#include "MyFrame.h"
+#include "RestrictionEnzymes.h"
+
 
 //#define IS_UNDO_OFF return ;
 #define IS_UNDO_OFF if ( myapp()->frame->dying ) return ;

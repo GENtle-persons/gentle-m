@@ -1,4 +1,11 @@
 #include "AlignmentAppearanceDialog.h"
+#include "SequenceCanvas.h" // for SequenceCharMarkup
+#include "TVector.h" // for TAAProp.h
+#include "MyApp-class.h"
+#include "txt.h"
+#include "enums.h"
+#include "myapp.h"
+#include <wx/colordlg.h>
 
 BEGIN_EVENT_TABLE(AlignmentAppearanceDialog, wxDialog)
     EVT_BUTTON(ALIGN_APPEARANCE_LINE_COLOR_BUTTON1,AlignmentAppearanceDialog::OnLineColorButton)

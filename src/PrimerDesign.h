@@ -4,7 +4,6 @@
 #ifndef _PRIMER_DSEGIN_H_
 #define _PRIMER_DSEGIN_H_
 
-#include "main.h"
 #include "ChildBase.h"
 #include <wx/splitter.h>
 
@@ -12,6 +11,11 @@ class TVector ;
 class TPrimerDialog ;
 class TPrimerDesign ;
 class TPrimer ;
+
+class wxListEvent ;
+class wxSpinCtrl ;
+class wxTextCtrl ;
+class wxListCtrl ;
 
 /** \brief The virtual PCR/primer design module
 */

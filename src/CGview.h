@@ -4,7 +4,10 @@
 #ifndef __CGview__
 #define __CGview__
 
-#include "main.h"
+#include <wx/wx.h>
+
+class TVector ;
+class TVectorItem ;
 
 /// This class manages the CGview export
 class CGview
@@ -34,7 +37,7 @@ class CGview
     bool itemsShown ;
     wxColour backgroundColor ;
     wxString cgviewapp , imageformat ;
-    vector <int> used_types ; ///< The item types used in this vector (internal use only)
+    std::vector <int> used_types ; ///< The item types used in this vector (internal use only)
     } ;
 
 #endif

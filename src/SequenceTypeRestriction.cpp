@@ -2,6 +2,11 @@
     \brief Contains the SeqRestriction class members
 */
 #include "SequenceCanvas.h"
+#include "myapp.h"
+#include "TVector.h"
+#include "RestrictionEnzymes.h"
+#include "ProgramOptionsDialog.h" // for TEnzymeRules
+
 
 int SeqRestriction::arrange ( const int n )
     {

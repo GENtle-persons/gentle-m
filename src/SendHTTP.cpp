@@ -2,12 +2,14 @@
     \brief Contains the myExternal class
 */
 
-#include "main.h"
 #include "SendHTTP.h"
+#include <wx/wx.h>
+#include "mywx.h" // for wxPD_APP_MODAL...
 #include <wx/filesys.h>
 #include <wx/protocol/http.h>
 #include <wx/protocol/ftp.h>
 #include <wx/filefn.h> // wxCopyFile
+#include "txt.h"
 
 myExternal::myExternal () { pd = NULL ; } ;
 

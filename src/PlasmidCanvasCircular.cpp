@@ -1,16 +1,29 @@
+
+#include "math.h" // M_PI
+ 
 #include "PlasmidCanvas.h"
+#include "MyChild.h"
+#include "MyApp-class.h"
+#include "TVector.h"
+#include "RestrictionEnzymes.h"
+#include "TVector.h"
+#include "ProgramOptionsDialog.h" // for EnzymeRule
+#include "TVectorEditor.h" // for EnzymeRules
+#include "myapp.h"
+#include "txt.h"
+#include "MyFrame.h"
 
 // DRAWING
 
 int PlasmidCanvas::deg2x ( const float& deg , const int& r ) const
     {
-    float f = sin ( (180-deg)*PI/180 ) * r ;
+    float f = sin ( (180-deg)*M_PI/180 ) * r ;
     return int ( f ) ;
     }
 
 int PlasmidCanvas::deg2y ( const float& deg , const int& r ) const
     {
-    float f = cos ( (180-deg)*PI/180 ) * r ;
+    float f = cos ( (180-deg)*M_PI/180 ) * r ;
     return int ( f ) ;
     }
 
@@ -18,7 +31,7 @@ float PlasmidCanvas::xy2deg ( const float& x , const float& y ) const
     {
     float f ;
     f = atan2(x,y) ;
-    f = 180-f*180/PI ;
+    f = 180-f*180/M_PI ;
     return f ;
     }
 

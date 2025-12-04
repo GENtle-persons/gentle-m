@@ -1,5 +1,17 @@
 #include "TDotPlot.h"
+#include <wx/wx.h> // wxString
 #include <wx/dcbuffer.h>
+#include "MyChild.h"
+#include "ChildBase.h"
+//#include "MyChild.h"
+#include "SequenceCanvas.h"
+#include "TMainTree.h"
+#include "TVector.h"
+#include "MyFrame.h"
+#include "txt.h"
+#include "enums.h"
+#include "myapp.h"
+#include "MyApp-class.h"
 
 BEGIN_EVENT_TABLE(TDotPlot, MyChildBase)
     EVT_CHAR_HOOK(TDotPlot::OnCharHook)

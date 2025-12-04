@@ -2,6 +2,10 @@
     \brief Contains the SeqBasic, SeqPrimer, SeqNum, and SeqDivider class members
 */
 #include "SequenceCanvas.h"
+#include "MyApp-class.h"
+#include "TVector.h"
+#include "TPrimer.h"
+#include "myapp.h"
 
 //************************************************ SeqBasic
 

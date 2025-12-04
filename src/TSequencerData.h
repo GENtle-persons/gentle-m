@@ -1,7 +1,9 @@
 #ifndef __T_SEQUENCER_DATA__
 #define __T_SEQUENCER_DATA__
 
-#include "main.h"
+#include <wx/wx.h> // wxString
+
+using namespace std;
 
 class TSequencerDataTracerItem
     {

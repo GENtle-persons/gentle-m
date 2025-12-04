@@ -1,5 +1,21 @@
 #include "ManageDatabase.h"
 #include <wx/filefn.h> //wxCopyFile
+#include <wx/event.h>
+#include "AminoAcids.h"
+#include "MyFrame.h"
+#include "MyApp-class.h"
+#include "TStorage.h"
+#include "TVector.h"
+#include "MyChild.h"
+#include "TMainTree.h"
+#include "RestrictionEnzymes.h"
+#include "PlasmidCanvas.h"
+#include "SequenceCanvas.h"
+#include "TVectorTree.h"
+#include "enums.h"
+#include "txt.h"
+#include "myapp.h"
+
 
 #define PM_LEFT 1
 #define PM_RIGHT 2

@@ -14,7 +14,7 @@ m4_include([m4/mysql.m4])
 
 dnl generic init
 AC_INIT([GENtle],[1.9.4.99.2],[https://github.com/GENtle-persons/gentle-m/issues],[https://github.com/GENtle-persons/gentle-m])
-AC_CONFIG_SRCDIR([src/main.cpp])
+AC_CONFIG_SRCDIR([src/MyApp-class.cpp])
 AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE([-Wall -Werror foreign subdir-objects])
 AC_CONFIG_MACRO_DIRS([m4])

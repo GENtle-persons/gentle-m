@@ -4,7 +4,7 @@
 #ifndef _PDB_H_
 #define _PDB_H_
 
-#include "main.h"
+#include <wx/wx.h>
 
 class TVector ;
 
@@ -29,7 +29,7 @@ class TPDB
     void remap () ; ///< Parse and generate sequences
 
     bool success ; ///< Errors during parsing?
-    vector <tseqres> seqres ; ///< The resulting sequences
+    std::vector <tseqres> seqres ; ///< The resulting sequences
 
     private :
     void check4success () ; ///< Valid PDB?

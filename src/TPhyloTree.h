@@ -1,9 +1,10 @@
 #ifndef _TPHYLOTREE_
 #define _TPHYLOTREE_
 
-#include "main.h"
+#include "ChildBase.h" // parent of TPhyloTree
 
 class TPhyloTreeBox ;
+class TAlignment ;
 
 class TPTree
     {
@@ -23,17 +24,17 @@ class TPTree
     virtual int countLeafs () const ;
     virtual unsigned int numberLeafs ( unsigned int i = 0 ) ;
 
-    virtual void filterDepth ( const int depth , vector <TPTree*> &vt ) ;
-    virtual void getAll ( vector <TPTree*> &vt ) ;
+    virtual void filterDepth ( const int depth , std::vector <TPTree*> &vt ) ;
+    virtual void getAll ( std::vector <TPTree*> &vt ) ;
     virtual void averageY () ;
 
     virtual void drawRecursive ( wxDC &dc , const wxString& mode ) const ;
 
     wxRect rect ;
-    vector <TPTree*> children ;
+    std::vector <TPTree*> children ;
 
     private :
-    virtual void dedigitize ( wxString &s ) const ;
+    virtual void dedigitize ( wxString& s ) const ;
 
     double weight ;
     wxString name ;
@@ -73,7 +74,7 @@ class TPhyloTree : public ChildBase
     TPhyloTreeBox *box ;
     TPTree *tree ;
     wxListBox *treelist ;
-    vector <TPTree *> trees ;
+    std::vector <TPTree *> trees ;
     wxString mode ;
     bool directlines ;
     wxCheckBox *cb_directlines ;

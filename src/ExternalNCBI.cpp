@@ -6,6 +6,15 @@
 #include <wx/txtstrm.h>
 
 #include "ExternalInterface.h"
+#include <wx/wx.h> // wxString
+#include "MyApp-class.h"
+#include <tinyxml.h>
+#include "txt.h"
+#include "myapp.h"
+#include "MyFrame.h"
+#include "GenBank.h"
+#include "TXMLfile.h"
+
 
 wxString EIpanel::ExecuteHttpsQuery ( const wxString& url )
     {

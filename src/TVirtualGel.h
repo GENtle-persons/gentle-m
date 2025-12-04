@@ -4,10 +4,10 @@
 #ifndef _TVIRTUAL_GEL_H_
 #define _TVIRTUAL_GEL_H_
 
-#include "main.h"
 #include "ChildBase.h"
 
 class TMyGelControl ;
+class MyChild ;
 
 /** \class TGelLane
     \brief This class represents a lane on a virtual gel
@@ -114,7 +114,7 @@ class TRestrictionIdentifier : public TVirtualGel
     wxCheckListBox *dna_list ;
     wxListBox *enzymes_list ;
     wxChoice *bp_list , *percent_list , *group_list ;
-    vector <MyChild*> dna_items ;
+    std::vector <MyChild*> dna_items ;
     bool running ;
 
     DECLARE_EVENT_TABLE()

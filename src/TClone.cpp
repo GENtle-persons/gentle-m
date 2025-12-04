@@ -3,6 +3,9 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "TClone.h"
+#include "TVector.h"
+#include "RestrictionEnzymes.h"
+#include "TStorage.h"
 
 int TClone::cmp ( const wxString &s1 , const wxString &s2 ) const
     {

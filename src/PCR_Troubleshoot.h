@@ -4,10 +4,13 @@
 #ifndef _PCRTROUBLESHOOT_H_
 #define _PCRTROUBLESHOOT_H_
 
-#include "main.h"
+#include <wx/wx.h>
+#include <wx/event.h>
 
 class TPrimerDesign ;
 class TPrimer ;
+
+using namespace std ;
 
 /** \brief The class implementing a "Santa Lucia" free energy set
 */

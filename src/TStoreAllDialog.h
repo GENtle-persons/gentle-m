@@ -1,7 +1,10 @@
 #ifndef __STORE_ALL_DIALOG__
 #define __STORE_ALL_DIALOG__
 
-#include "main.h"
+#include <wx/dialog.h>
+#include <wx/wx.h>
+
+class ChildBase ;
 
 class TStoreAllDialog : public wxDialog
     {
@@ -21,7 +24,7 @@ class TStoreAllDialog : public wxDialog
     wxArrayString db_name , db_file ;
     wxCheckBox *force_db , *auto_overwrite ;
     wxString defdb ;
-    vector <ChildBase*> children ;
+    std::vector <ChildBase*> children ;
 
     DECLARE_EVENT_TABLE()
     } ;

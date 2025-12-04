@@ -1,5 +1,7 @@
 #include "TGraph.h"
 
+#include "mywx.h"
+
 //******************************************************** TGraphScale
 
 TGraphScale::TGraphScale ( const float _min , const float _max , const bool _horizontal , const bool _left ,

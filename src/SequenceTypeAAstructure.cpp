@@ -2,6 +2,8 @@
 	\brief Contains the SeqAAstructure class members
 */
 #include "SequenceCanvas.h"
+#include "TVector.h"
+#include "myapp.h"
 
 SeqAAstructure::SeqAAstructure ( SequenceCanvas *ncan , SeqAA *_aa )
     {

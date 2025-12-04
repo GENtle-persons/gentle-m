@@ -4,7 +4,7 @@
 #ifndef _TIMGreader_H_
 #define _TIMGreader_H_
 
-#include "main.h"
+#include <wx/wx.h>
 
 #define IMGTYPE_MISC 0
 #define IMGTYPE_TEXT 1
@@ -36,7 +36,7 @@ class TIMGreader
     int getInt ( const int adr ) const ; ///< Gets an integer value from a dertain adress in the buffer
     wxImage makeImage () ; ///< Returns the parsed IMG file as a wxImage
 
-    vector <TIMGitem> items ; ///< Annotation items
+    std::vector <TIMGitem> items ; ///< Annotation items
 
     private :
     unsigned char *output ; ///< Output memory

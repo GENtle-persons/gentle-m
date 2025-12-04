@@ -3,6 +3,13 @@
 */
 #include "TextImportDialog.h"
 
+#include "myapp.h" // myapp
+#include "txt.h" // txt()
+#include <wx/wx.h> // wxString
+#include "enums.h"
+#include "MyFrame.h"
+#include "MyApp-class.h"
+
 BEGIN_EVENT_TABLE(TextImportDialog, wxDialog )
     EVT_BUTTON(TID_OK,TextImportDialog::OnOK)
     EVT_BUTTON(TID_CANCEL,TextImportDialog::OnCancel)

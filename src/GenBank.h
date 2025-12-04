@@ -4,7 +4,6 @@
 #ifndef _GENBANK_H_
 #define _GENBANK_H_
 
-#include "main.h"
 #include "TVector.h"
 
 /// \brief Helper class for TGenBank

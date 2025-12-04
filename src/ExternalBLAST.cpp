@@ -2,6 +2,12 @@
     \brief Contains the EIpanel methods and the blastThread helper class
 */
 #include "ExternalInterface.h"
+#include "mywx.h"
+#include "myapp.h"
+#include "txt.h"
+#include <tinyxml.h> // for TiXmlNode
+#include "MyApp-class.h"
+#include "myapp.h"
 
 void EIpanel::init_blast()
     {

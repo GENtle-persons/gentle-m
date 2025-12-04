@@ -2,6 +2,11 @@
     \brief Contains the SeqPlot class members
 */
 #include "SequenceCanvas.h"
+#include "myapp.h"
+#include "txt.h"
+#include "AminoAcids.h"
+#include "TVector.h" // for TAAProp
+#include "ncoils.h"
 
 wxString SeqPlot::getTip ( int pos ) const
     {

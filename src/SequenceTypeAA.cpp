@@ -2,6 +2,13 @@
     \brief Contains the SeqAA class members
 */
 #include "SequenceCanvas.h"
+#include "MyApp-class.h"
+#include "TVector.h"
+#include "RestrictionEnzymes.h" // for TProteaseCut
+#include "AminoAcids.h"
+#include "MyChild.h"
+#include "TStorage.h"
+#include "myapp.h"
 
 SeqAA::~SeqAA ()
     {

@@ -1,5 +1,8 @@
 #include "SCFtype.h"
 
+#include <wx/wx.h> // wxString
+#include <wx/file.h> // wxFile
+
 // Stuff copied from staden package
 
 /*

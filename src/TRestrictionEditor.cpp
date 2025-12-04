@@ -2,6 +2,16 @@
  \brief Contains the TRestrictionEditor class members
  */
 #include "TRestrictionEditor.h"
+#include "MyFrame.h"
+#include "MyApp-class.h"
+#include "util.h" // cmpint
+#include "myapp.h"
+#include "txt.h"
+#include "enums.h"
+#include "RestrictionEnzymes.h"
+#include "TStorage.h"
+#include "MiscDialogs.h" // TEnzymeDialog
+
 
 BEGIN_EVENT_TABLE(TRestrictionEditor, wxDialog )
 EVT_LIST_ITEM_SELECTED(RSE_RES_LL, TRestrictionEditor::res_ll)

@@ -4,13 +4,16 @@
 #ifndef _AMINO_ACIDS_H_
 #define _AMINO_ACIDS_H_
 
-#include "main.h"
 #include "ChildBase.h"
+#include <wx/wx.h>
+#include <wx/event.h>
 #include <wx/splitter.h>
 
 class TVector ;
 class TURLtext ;
 class TTestSuite ;
+class PlasmidCanvas ;
+
 
 /** \brief The amino acid sequence display module
 */

@@ -2,6 +2,19 @@
     \brief Contains the members of the ProgramOptionsDialog class and its helper classes, TEnzymeSettingsTab (which is also used in TVectorEditor) and TEnzymeRules
 */
 #include "ProgramOptionsDialog.h"
+#include <wx/notebook.h>
+#include <wx/spinctrl.h>
+#include <wx/colordlg.h> // for wxGetColourFromUser
+#include "MyApp-class.h"
+#include "myapp.h"
+#include "MyFrame.h"
+#include "TVector.h"
+#include "TStorage.h"
+#include "RestrictionEnzymes.h" // for TRestrictionEnzyme
+#include "PlasmidCanvas.h" // for STANDARDRADIUS
+#include "txt.h"
+#include "enums.h"
+#include "myapp.h"
 
 BEGIN_EVENT_TABLE(ProgramOptionsDialog, wxDialog )
     EVT_BUTTON(POD_OK,ProgramOptionsDialog::OnOK)
@@ -75,7 +88,9 @@ TEnzymeSettingsTab::TEnzymeSettingsTab ( wxWindow *parent , const int _mode ) : 
     wxArrayString vs2 ;
     myapp()->frame->LS->getEnzymeGroups ( vs2 ) ;
     for ( int i = 0 ; i < vs2.GetCount() ; i++ )
+        {
         default_group->Append ( vs2[i] ) ;
+        }
     default_group->SetStringSelection ( txt("All") ) ;
 
     // Colors

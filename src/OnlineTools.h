@@ -4,7 +4,11 @@
 #ifndef _ONLINE_TOOLS_H_
 #define _ONLINE_TOOLS_H_
 
-#include "main.h"
+#include <wx/wx.h>
+#include <wx/event.h>
+
+class ChildBase ;
+class SequenceCanvas ;
 
 /** \class TOnlineTools
     \brief TOnlineTools class

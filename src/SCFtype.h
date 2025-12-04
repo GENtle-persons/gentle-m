@@ -1,7 +1,7 @@
 #ifndef __SCF_H__
 #define __SCF_H__
 
-#include "main.h"
+#include "TSequencerData.h"
 
 /** \class TSCFtype
     \brief Reads files in SCF format

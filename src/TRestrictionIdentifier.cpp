@@ -1,4 +1,15 @@
+#include "TRestrictionIdentifier.h"
 #include "TVirtualGel.h"
+#include "MyApp-class.h"
+#include "enums.h"
+#include "ABIviewer.h"
+#include "txt.h"
+#include "myapp.h"
+#include "RestrictionEnzymes.h"
+#include "MyFrame.h"
+#include "MyChild.h"
+#include "TStorage.h"
+#include "TMainTree.h"
 
 BEGIN_EVENT_TABLE(TRestrictionIdentifier, TVirtualGel)
     EVT_CHECKLISTBOX(RI_DNA_LIST,TRestrictionIdentifier::OnDNAListChange)

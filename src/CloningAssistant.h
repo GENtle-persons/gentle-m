@@ -1,8 +1,6 @@
 #ifndef __CLONING_ASSISTANT_H_
 #define __CLONING_ASSISTANT_H_
 
-#include "main.h"
-
 #include "ChildBase.h"
 
 class TVector ;
@@ -102,8 +100,8 @@ class TCloningAssistant : public ChildBase
 
     virtual void initme () ;
     virtual void Refresh (const bool eraseBackground = true, const wxRect* rect = NULL) ;
-    virtual void OnPaint(wxPaintEvent& event) ; ///< Paint event handler
-    virtual void OnDraw(wxDC& pdc) ;
+    virtual void OnPaint (wxPaintEvent& event) ; ///< Paint event handler
+    virtual void OnDraw (wxDC& pdc) ;
 
     private :
     friend class TCloningAssistantPanel ;

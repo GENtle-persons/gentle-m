@@ -1,4 +1,11 @@
 #include "TSequencingAssistantDialog.h"
+#include "MyApp-class.h"
+#include "txt.h"
+#include "enums.h"
+#include "myapp.h"
+#include "TVector.h"
+#include "MyFrame.h"
+#include "ABIviewer.h"
 
 BEGIN_EVENT_TABLE(TSequencingAssistantDialog, wxDialog )
     EVT_CHAR_HOOK(TSequencingAssistantDialog::OnCharHook)

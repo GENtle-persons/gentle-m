@@ -1,7 +1,8 @@
 #ifndef _TSEQUENCING_ASSISTANT_DIALOG_H_
 #define _TSEQUENCING_ASSISTANT_DIALOG_H_
 
-#include "main.h"
+#include <wx/dialog.h>
+#include <wx/choice.h>
 
 class TStorage ;
 class MyFrame ;
@@ -19,7 +20,7 @@ class TSequencingAssistantDialog : public wxDialog
     void fix_rev_compl ( const int sel = -2 ) ;
 
     wxChoice *sequence , *abi1 , *abi2 ;
-    vector <ChildBase*> dna , abi ;
+    std::vector <ChildBase*> dna , abi ;
 
     private :
     void OnCheckOK ( wxCommandEvent &ev ) ;

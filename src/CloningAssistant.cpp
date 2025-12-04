@@ -1,5 +1,11 @@
 #include "CloningAssistant.h"
+#include "ABIviewer.h"
 #include <wx/dcbuffer.h>
+#include <wx/event.h>
+#include "MyFrame.h"
+#include "enums.h"
+#include "txt.h" // txt
+#include "MyApp-class.h"
 
 BEGIN_EVENT_TABLE(TCloningAssistantPanel, wxScrolledWindow)
     EVT_MOUSE_EVENTS(TCloningAssistantPanel::OnEvent)

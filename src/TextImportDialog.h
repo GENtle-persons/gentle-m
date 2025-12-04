@@ -4,7 +4,9 @@
 #ifndef _TEXTIMPORTDIALOG_H_
 #define _TEXTIMPORTDIALOG_H_
 
-#include "main.h"
+#include <wx/wx.h>
+#include <wx/choice.h>
+#include <wx/textctrl.h>
 
 class TVector ;
 class TVectorItem ;

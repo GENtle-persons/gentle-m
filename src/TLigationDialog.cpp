@@ -3,6 +3,16 @@
 */
 #include "TLigationDialog.h"
 
+#include "txt.h" // txt()
+#include "myapp.h" // myapp
+#include "MyFrame.h"
+#include "MyApp-class.h"
+#include "enums.h"
+#include "TVector.h"
+#include "txt.h"
+#include "RestrictionEnzymes.h"
+
+
 BEGIN_EVENT_TABLE(TLigationDialog, wxDialog )
     EVT_CHECKLISTBOX(LD_SOURCES,TLigationDialog::OnToggleSources)
     EVT_BUTTON(LD_OK,TLigationDialog::OnOK)
