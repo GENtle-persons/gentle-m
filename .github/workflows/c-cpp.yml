@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest]
+        os: [ubuntu-latest]
 
     steps:
       - name: Check out repository code
@@ -23,16 +23,18 @@ jobs:
           if [ "${{ matrix.os }}" = "macos-latest" ]; then
             arch -arm64 brew update
             arch -arm64 brew install autoconf-archive autoconf automake libtool m4
-            arch -arm64 brew install wxwidgets tinyxml zstd libpng sqlite
+            arch -arm64 brew install wxwidgets zstd libpng sqlite
+            #arch -arm64 brew install tinyxml # disabled since 6/2025
             arch -arm64 brew install dylibbundler pkg-config
             arch -arm64 brew install googletest
           elif [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
             sudo apt-get update
             sudo apt-get install autoconf-archive
             sudo apt install libwxgtk3.2-dev || sudo apt install wx3.2-headers || sudo apt install libwxgtk3.0-gtk3-dev || sudo apt install libwxgtk3.0-dev
+            sudo apt install libtinyxml-dev
           fi
       - name: remove local redundancy to build-deps
-        run: rm -f mysql* sqlite* && rm -rf clustalw tinyxml
+        run: rm -f mysql* sqlite* && rm -rf clustalw
       - name: autogen
         run: ./autogen.sh
       - name: configure
