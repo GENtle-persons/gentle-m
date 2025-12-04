@@ -32,6 +32,7 @@ jobs:
             sudo apt-get install autoconf-archive
             sudo apt install libwxgtk3.2-dev || sudo apt install wx3.2-headers || sudo apt install libwxgtk3.0-gtk3-dev || sudo apt install libwxgtk3.0-dev
             sudo apt install libtinyxml-dev
+            sudo apt install libgtest-dev
           fi
       - name: remove local redundancy to build-deps
         run: rm -f mysql* sqlite* && rm -rf clustalw
