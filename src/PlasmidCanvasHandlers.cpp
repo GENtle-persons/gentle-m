@@ -219,7 +219,7 @@ void PlasmidCanvas::rsAdd2Cocktail ( wxCommandEvent &ev )
         wxPrintf("E: PlasmidCanvas::rsAdd2Cocktail: Null pointer detected for 'p' or 'p->vec'.\n");
         return;
         }
-    wxASSERT(context_last_rs >= 0 && context_last_rs < p->vec->rc.size());
+    wxASSERT( context_last_rs >= 0 && context_last_rs < p->vec->rc.size() ) ;
     int a = 0;
     while ( a < p->vec->cocktail.GetCount() && p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->getName() )
         {
@@ -267,7 +267,7 @@ void PlasmidCanvas::rsInfo ( wxCommandEvent &ev )
         wxPrintf("E: PlasmidCanvas::rsInfo: Null pointer detected for 'p' or 'p->vec'.\n");
         return;
         }
-    wxASSERT ( context_last_rs > 0 && context_last_rs >= p->vec->rc.size() )  ;
+    wxASSERT( context_last_rs > 0 && context_last_rs >= p->vec->rc.size() )  ;
     wxString command = _T("http://rebase.neb.com/rebase/enz/") ;
     command += p->vec->rc[context_last_rs].e->getName() ;
     command += _T(".html") ;
@@ -302,7 +302,7 @@ void PlasmidCanvas::rsDel ( wxCommandEvent &ev )
         wxPrintf("E: PlasmidCanvas::rsDel: Null pointer detected for 'p' or 'p->vec'.\n");
         return;
         }
-    wxASSERT(context_last_rs >= 0 && context_last_rs < p->vec->rc.size());
+    wxASSERT( context_last_rs >= 0 && context_last_rs < p->vec->rc.size() ) ;
     p->vec->undo.start ( txt("u_del_enzyme") ) ;
     int a=0;
     while ( a < p->vec->cocktail.GetCount() && p->vec->cocktail[a] != p->vec->rc[context_last_rs].e->getName() )
@@ -341,7 +341,7 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( const wxPoint& pt , const bool doretu
         }
 
     wxMenu *cm = new wxMenu ;
-    wxASSERT(cm && "PlasmidCanvas::invokeVectorPopup: Cannot create wxMenu." ) ;
+    wxASSERT( cm && "PlasmidCanvas::invokeVectorPopup: Cannot create wxMenu." ) ;
     cm->Append ( PC_VECTOR_EDIT , txt("p_vector_edit") ) ;
 
     if ( p->def == _T("dna") )
@@ -355,7 +355,7 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( const wxPoint& pt , const bool doretu
         // Strands
         {
         wxMenu *pm = new wxMenu ;
-        cm->Append ( POPUP_DUMMY , txt("m_strands") , pm ) ;
+        cm->Append( POPUP_DUMMY , txt("m_strands") , pm ) ;
         pm->Append( STRAND_COPY_53 , txt("m_strand_copy_53") );
         pm->Append( STRAND_COPY_35 , txt("m_strand_copy_35") );
         pm->Append( STRAND_COPY_BOTH , txt("m_strand_copy_both") );
@@ -430,7 +430,7 @@ wxMenu *PlasmidCanvas::invokeVectorPopup ( const wxPoint& pt , const bool doretu
         }
 
     wxMenu *pm = new wxMenu ;
-    wxASSERT(pm && "PlasmidCanvas::invokeVectorPopup: Cannot create wxMenu." ) ;
+    wxASSERT( pm && "PlasmidCanvas::invokeVectorPopup: Cannot create wxMenu." ) ;
     cm->Append ( POPUP_DUMMY , txt("m_plasmid_map") , pm ) ;
     pm->Append ( PC_SAVE_IMAGE , txt("m_save_image") ) ;
     pm->Append ( PC_COPY_IMAGE , txt("m_copy_image") ) ;
@@ -716,8 +716,9 @@ void PlasmidCanvas::orfAsNewAA ( wxCommandEvent &ev )
 
 void PlasmidCanvas::orfBlastDNA ( wxCommandEvent &ev )
     {
-    wxASSERT(p && p->vec)
-    wxASSERT(context_last_orf >= 0 && context_last_orf < p->vec->orfs.size());
+    wxASSERT( p && p->vec ) ;
+    wxASSERT( context_last_orf >= 0 ) ;
+    wxASSERT( context_last_orf < p->vec->countORFs() ) ;
     const int from = p->vec->getORF(context_last_orf)->get_from() ;
     const int to = p->vec->getORF(context_last_orf)->get_to() ;
     const wxString s = getDNAorAA ( from , to , p->vec->getORF(context_last_orf)->get_rf() ) ;
@@ -727,8 +728,9 @@ void PlasmidCanvas::orfBlastDNA ( wxCommandEvent &ev )
 
 void PlasmidCanvas::orfBlastAA ( wxCommandEvent &ev )
     {
-    wxASSERT(p && p->vec)
-    wxASSERT(context_last_orf >= 0 && context_last_orf < p->vec->orfs.size());
+    wxASSERT( p && p->vec ) ;
+    wxASSERT( context_last_orf >= 0 ) ;
+    wxASSERT( context_last_orf < p->vec->countORFs() ) ;
     const int from = p->vec->getORF(context_last_orf)->get_from() ;
     const int to = p->vec->getORF(context_last_orf)->get_to() ;
     const wxString s = getDNAorAA ( from , to , p->vec->getORF(context_last_orf)->get_rf() , false ) ;
@@ -740,8 +742,9 @@ void PlasmidCanvas::orfBlastAA ( wxCommandEvent &ev )
 
 void PlasmidCanvas::itemBlastDNA ( wxCommandEvent &ev )
     {
-    wxASSERT(p && p->vec);
-    wxASSERT(context_last_item >= 0 && context_last_item < p->vec->items.size());
+    wxASSERT( p && p->vec ) ;
+    wxASSERT( context_last_item >= 0 ) ;
+    wxASSERT( context_last_item < p->vec->items.size() ) ;
     const int from = p->vec->items[context_last_item].from ;
     const int to = p->vec->items[context_last_item].to ;
     const int dir = p->vec->items[context_last_item].direction ;
@@ -767,8 +770,8 @@ void PlasmidCanvas::itemBlastAA ( wxCommandEvent &ev )
 
 void PlasmidCanvas::itemCopyAA ( wxCommandEvent &ev )
     {
-    wxASSERT(p && p->vec);
-    wxASSERT(context_last_item >= 0 && context_last_item < p->vec->items.size());
+    wxASSERT( p && p->vec ) ;
+    wxASSERT( context_last_item >= 0 && context_last_item < p->vec->items.size() ) ;
     int from = p->vec->items[context_last_item].from ;
     int to = p->vec->items[context_last_item].to ;
     const int dir = p->vec->items[context_last_item].direction ;
@@ -779,15 +782,15 @@ void PlasmidCanvas::itemCopyAA ( wxCommandEvent &ev )
     const wxString s = getDNAorAA ( from , to , dir , false ) ;
     if (wxTheClipboard->Open())
         {
-        wxTheClipboard->SetData( new wxTextDataObject(s) );
-        wxTheClipboard->Close();
+        wxTheClipboard->SetData( new wxTextDataObject(s) ) ;
+        wxTheClipboard->Close() ;
         }
     }
 
 void PlasmidCanvas::itemAsNewAA ( wxCommandEvent &ev )
     {
-    wxASSERT(p && p->vec);
-    wxASSERT(context_last_item >= 0 && context_last_item < p->vec->items.size());
+    wxASSERT( p && p->vec ) ;
+    wxASSERT( context_last_item >= 0 && context_last_item < p->vec->items.size() ) ;
     int from = p->vec->items[context_last_item].from ;
     int to = p->vec->items[context_last_item].to ;
     const int dir = p->vec->items[context_last_item].direction ;
@@ -835,8 +838,9 @@ void PlasmidCanvas::itemAsNewSequence ( wxCommandEvent &ev )
 
 void PlasmidCanvas::itemCopyDNA ( wxCommandEvent &ev )
     {
-    wxASSERT(p && p->vec);
-    wxASSERT(context_last_item >= 0 && context_last_item < p->vec->items.size());
+    wxASSERT( p && p->vec ) ;
+    wxASSERT( context_last_item >= 0 ) ;
+    wxASSERT( context_last_item < p->vec->items.size() ) ;
     int from = p->vec->items[context_last_item].from ;
     int to = p->vec->items[context_last_item].to ;
     const int dir = p->vec->items[context_last_item].direction ;
