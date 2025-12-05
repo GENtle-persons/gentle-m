@@ -326,7 +326,7 @@ wxString PlasmidCanvas::getSelection() const
 
 void PlasmidCanvas::OnEvent(wxMouseEvent& event)
     {
-    if ( !p || !p->vec || !p->cSequence )
+    if ( !p || ! (p->vec) || ! (p->cSequence) )
         {
         wxPrintf("E: PlasmidCanvas::OnEvent: No plasmid/vector/sequence.\n") ;
         SetCursor(*wxSTANDARD_CURSOR);
@@ -468,8 +468,13 @@ void PlasmidCanvas::OnEvent(wxMouseEvent& event)
     // Passing over
     if ( rs != -1 ) // Passing over restriction site
         {
-        wxASSERT(rs >= 0 && rs < p->vec->countRCs());
-        SetCursor(wxCursor(wxCURSOR_HAND)) ;
+
+        wxASSERT(rs >= 0) ;
+        wxASSERT(p) ;
+        wxASSERT(p->vec) ;
+        wxASSERT(rs < p->vec->rc.size() ) ;
+
+        SetCursor( wxCursor(wxCURSOR_HAND) ) ;
         s = p->vec->rc[rs].e->getName() ;
         wxLogStatus(txt("rsite_status_bar") , s.c_str() ) ;
 //      char ttt[1000] ;

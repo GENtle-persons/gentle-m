@@ -166,7 +166,7 @@ void TVectorEditor::initPanProt ()
     pro_txt = new TURLtext ( panProt , URLTEXT_DUMMY , _T("") , wxPoint ( r.GetRight() + bo , r.GetTop() ) ,
                              wxSize ( w - th - bo - r.GetRight() , h - th*2 - r.GetTop() ) ,
                              wxTE_MULTILINE|wxTE_READONLY ) ;
-    wxASSERT( pro_txt )
+    wxASSERT( pro_txt ) ;
     pro_txt->SetBackgroundColour ( wxSystemSettings::GetColour ( wxSYS_COLOUR_BTNFACE ) ) ;
 
 //    addOkCancel ( panProt ) ;
@@ -252,7 +252,7 @@ void TVectorEditor::initPanProp ()
         wxASSERT ( rl ) ;
 
         const wxStaticText * const wst2 = new wxStaticText(panProp,-1,k,wxPoint(lu->GetRect().GetRight()+bo,r6.GetTop())) ;
-        wxASSERT ( wsl2 ) ;
+        wxASSERT ( wst2 ) ;
         }
 
 //    addOkCancel ( panProp ) ;
