@@ -5,7 +5,6 @@
 #include <wx/listctrl.h> // wxListCtrl
 #include <wx/dialog.h> // wxDialog
 
-
 #define ELL_DATE 0
 #define ELL_TIME 1
 #define ELL_SAMPLE 2
@@ -22,8 +21,6 @@
 #define ELL_DATA2 10
 #define ELL_DATA3 11
 
-using namespace std ;
-
 class TEliteLaChromLogDialog : public wxDialog
 {
     public :
@@ -36,16 +33,16 @@ class TEliteLaChromLogDialog : public wxDialog
 
     private :
     void ReadFile ( const wxString& filename , wxArrayString &data ) ;
-    void Uniquify ( wxArrayString &data , vector <wxArrayString> &tabs ) ;
+    void Uniquify ( wxArrayString &data , std::vector <wxArrayString> &tabs ) ;
     void FilterLines () ;
     void UpdateLines () ;
-    void SortTabs ( vector <wxArrayString> &tabs ) ;
-    void MergeWith ( vector <wxArrayString> &tabs , int col ) ;
+    void SortTabs ( std::vector <wxArrayString> &tabs ) ;
+    void MergeWith ( std::vector <wxArrayString> &tabs , int col ) ;
 
     wxString filename_apex , filename_area , filename_estdconc ;
     wxArrayString data_apex , data_area , data_estdconc ;
     wxArrayString unique[12] , col_headers ;
-    vector <wxArrayString> tabs_apex , tabs_area , tabs_estdconc , tabs_merged , tabs_display ;
+    std::vector <wxArrayString> tabs_apex , tabs_area , tabs_estdconc , tabs_merged , tabs_display ;
 
     wxListBox *unique_dates , *unique_users ;
     wxListCtrl *lines ;

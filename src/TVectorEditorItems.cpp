@@ -11,7 +11,7 @@
 void TVectorEditor::commitItems ()
     {
     storeItemData () ;
-    vector <bool> found ;
+    std::vector <bool> found ;
     while ( found.size() < v->items.size() ) found.push_back ( false ) ;
     for ( int a = 0 ; a < newitems.GetCount() ; a++ )
         {
@@ -47,7 +47,7 @@ void TVectorEditor::commitItems ()
             }
         }
 
-    vector <TVectorItem> ni ;
+    std::vector <TVectorItem> ni ;
     bool doUpdate = false ;
     for ( int a = 0 ; a < found.size() ; a++ )
         {

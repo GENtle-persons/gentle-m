@@ -544,7 +544,7 @@ void SeqPlot::useNcoils ()
     for ( int a = 0 ; s.length() > 0 && a < 3 ; a++ )
         {
         int b = a==0?14:(a==1?21:28) ;
-        string x ;
+        std::string x ;
         mylog ( "SeqPlot::useNcoils" , wxString::Format ( _T("BEGIN ncoils_function (%d): ") , b ) + s ) ;
         x = ncoils_function ( (const char*) s.mb_str() , b ) . c_str() ;
         mylog ( "SeqPlot::useNcoils" , "END ncoils_function" ) ;

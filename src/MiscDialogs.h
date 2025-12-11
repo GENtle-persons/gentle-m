@@ -65,8 +65,8 @@ class TGraphDialog : public wxDialog
     int last_scale , last_data ;
     bool set_up ;
 
-    vector <TGraphScale*> scales ;
-    vector <TGraphData*> data ;
+    std::vector <TGraphScale*> scales ;
+    std::vector <TGraphData*> data ;
 
     DECLARE_EVENT_TABLE()
     } ;
@@ -144,7 +144,7 @@ class TMyMultipleChoiceDialog : public wxDialog
     virtual void OnOK ( wxCommandEvent &ev ) ; ///< OK button event handler
     private :
     wxCheckListBox *clb ; ///< The checklist-box
-    vector <bool> check ;
+    std::vector <bool> check ;
 
     DECLARE_EVENT_TABLE()
     } ;

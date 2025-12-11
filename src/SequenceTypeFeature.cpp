@@ -64,7 +64,7 @@ void SeqFeature::show ( wxDC& dc )
                 int i ;
                 wxArrayInt _i ;
                 wxArrayString _name ;
-                vector <wxPoint> _point ;
+                std::vector <wxPoint> _point ;
 
                 for ( i = 0 ; i < pl.maxlevels ; i++ ) used[i] = 0 ;
                 i = pl.here ( b-1 , l ) ;

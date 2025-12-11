@@ -3,7 +3,6 @@
 #include <wx/dcbuffer.h>
 #include "MyChild.h"
 #include "ChildBase.h"
-//#include "MyChild.h"
 #include "SequenceCanvas.h"
 #include "TMainTree.h"
 #include "TVector.h"
@@ -331,7 +330,7 @@ void TDotPlotPanel::Recalc ()
         //wxPrintf("D: TDotPlotPanel::Recalc - end - early\n") ;
         return ;
         }
-    data = vector <char> ( len1 * len2 + 1 ) ;
+    data = std::vector <char> ( len1 * len2 + 1 ) ;
     //wxPrintf("D: TDotPlotPanel::Recalc - data size: %d\n", data.size() ) ;
 
     for ( unsigned long a = 0 ; a < len1 ; a++ )

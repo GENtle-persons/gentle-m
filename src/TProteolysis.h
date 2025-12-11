@@ -17,8 +17,8 @@ class TProteolysisGel : public wxScrolledWindow
     DECLARE_EVENT_TABLE()
     } ;
 
-typedef vector <TProtease*> TProteaseArray ;
-typedef vector <TProteaseCut*> TProteaseCutArray ;
+typedef std::vector <TProtease*> TProteaseArray ;
+typedef std::vector <TProteaseCut*> TProteaseCutArray ;
 
 class TProteolysisSuggestion
     {
@@ -63,7 +63,7 @@ class TProteolysis : public wxDialog
     void calc_cut_list () ;
     void calc_fragment_list () ;
     void calc_spearation () ;
-    void calc_spearation_sub ( int depth , TProteaseArray &prop , vector <TFragment> &tobe , int start = 0 ) ;
+    void calc_spearation_sub ( int depth , TProteaseArray &prop , std::vector <TFragment> &tobe , int start = 0 ) ;
     void show_gel () const ;
     void show_fragment_list () ;
     double get_weight ( int from , int to ) const ;
@@ -84,11 +84,11 @@ class TProteolysis : public wxDialog
     TProteolysisGel *gel ;
     TProteaseCutArray pc ;
     wxTextCtrl *sep_desc ;
-    vector <TFragment> fragments ;
+    std::vector <TFragment> fragments ;
     wxRadioBox *sortresults ;
-    vector <TProteolysisSuggestion> suggestions ;
-    vector <TProtease*> pr_cache , cutting_proteases ;
-    vector <TProteaseCutArray> pc_cache ;
+    std::vector <TProteolysisSuggestion> suggestions ;
+    std::vector <TProtease*> pr_cache , cutting_proteases ;
+    std::vector <TProteaseCutArray> pc_cache ;
     int max_dep ;
 
     DECLARE_EVENT_TABLE()

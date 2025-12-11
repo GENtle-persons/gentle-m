@@ -691,7 +691,7 @@ void TEnzymeRules::getVectorCuts ( /* not const */ TVector * const v ) const
     if ( use_max_cutoff ) max = max_cutoff ;
     for ( int a = 0 ; a < ve.GetCount() ; a++ )
         {
-        vector <TRestrictionCut> vc ;
+        std::vector <TRestrictionCut> vc ;
         v->getCuts ( ve[a] , vc , false , max ) ;
         if ( use_min_cutoff &&  min_cutoff > vc.size() )
             {

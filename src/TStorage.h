@@ -46,7 +46,7 @@ class TSQLresult
     TSQLresult () {} ; ///< Empty constructor
     ~TSQLresult () {} ; ///< Dummy destructor
     wxArrayString field ; ///< List of result fields (or column names)
-    vector <wxArrayString> content ; ///< The results table ([row][column])
+    std::vector <wxArrayString> content ; ///< The results table ([row][column])
 
     void clean() ; ///< Reset internal state
     int cols () const ; ///< Number of columns (fields) in the result table

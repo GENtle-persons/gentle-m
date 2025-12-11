@@ -125,7 +125,7 @@ void SeqAAstructure::draw_amino_acid ( wxDC &dc , char as , int x , int y , int 
     int point_radius = w / ( can->isPrinting() ? 8 : 6 ) ;
     wxPoint base ( x , y ) ;
 
-    vector <wxPoint> atom_pos , bonds ;
+    std::vector <wxPoint> atom_pos , bonds ;
     wxString atom_type ;
     add_atom ( atom_pos , atom_type , 'N' , w * 1 / 9 , h * 2 / 9 ) ; // 0
     add_atom ( atom_pos , atom_type , 'C' , w * 4 / 9 , h * 2 / 9 ) ; // 1
@@ -415,13 +415,13 @@ void SeqAAstructure::draw_amino_acid ( wxDC &dc , char as , int x , int y , int 
     	}
     }
 
-void SeqAAstructure::add_atom ( vector <wxPoint> &atom_pos , wxString &atom_type , char atom , int x , int y )
+void SeqAAstructure::add_atom ( std::vector <wxPoint> &atom_pos , wxString &atom_type , char atom , int x , int y )
     {
     atom_pos.push_back ( wxPoint ( x , y ) ) ;
     atom_type += atom ;
     }
 
-void SeqAAstructure::add_bond ( vector <wxPoint> &bond , int from , int to , bool double_bond )
+void SeqAAstructure::add_bond ( std::vector <wxPoint> &bond , int from , int to , bool double_bond )
     {
     bond.push_back ( wxPoint ( from , to ) ) ;
     if ( double_bond ) bond.push_back ( wxPoint ( from , to ) ) ; // Again

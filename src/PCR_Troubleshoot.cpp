@@ -25,7 +25,7 @@ BEGIN_EVENT_TABLE(PCR_troubleshoot_dialog, wxDialog )
     EVT_LISTBOX(PCR_TROUBLESHOOT_LIST,PCR_troubleshoot_dialog::OnList)
 END_EVENT_TABLE()
 
-vector <TSantaLucia> PCR_troubleshoot_dialog::santa_lucia = vector <TSantaLucia> () ;
+std::vector <TSantaLucia> PCR_troubleshoot_dialog::santa_lucia = std::vector <TSantaLucia> () ;
 
 PCR_troubleshoot_dialog::PCR_troubleshoot_dialog(TPrimerDesign *_parent, const wxString& title )
     : wxDialog ( (wxWindow*) _parent , -1 , title , wxDefaultPosition , wxSize ( 600 , 500 ) )

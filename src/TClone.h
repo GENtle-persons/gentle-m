@@ -14,8 +14,6 @@
 class TStorage ;
 class TVector ;
 
-using namespace std;
-
 /// Temporarily stores an enzyme
 class TClone_Enzyme
     {
@@ -76,8 +74,8 @@ class TClone
     wxString filename , name , sequence , description ;
     int size ; ///< Sequence length
     bool isLinear ; ///< Linear or circular
-    vector <TClone_Enzyme> enzymes ; ///< Temporary list of enzymes
-    vector <TClone_Gene> genes ; ///< Temporary list of items
+    std::vector <TClone_Enzyme> enzymes ; ///< Temporary list of enzymes
+    std::vector <TClone_Gene> genes ; ///< Temporary list of items
     wxString linear_e1 , linear_e2 , linear_s1 , linear_s2 ;
     } ;
 

@@ -10,8 +10,6 @@
 class TPrimerDesign ;
 class TPrimer ;
 
-using namespace std ;
-
 /** \brief The class implementing a "Santa Lucia" free energy set
 */
 class TSantaLucia
@@ -73,7 +71,7 @@ class PCR_troubleshoot_dialog : public wxDialog
     virtual double deltaS0 ( const TPrimer &p ) const ;
     virtual int getSLindex ( const wxString& s ) const ;
 
-    static vector <TSantaLucia> santa_lucia ;
+    static std::vector <TSantaLucia> santa_lucia ;
     TPrimerDesign *parent ;
     wxTextCtrl *text ;
     wxListBox *list ;

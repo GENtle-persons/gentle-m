@@ -8,9 +8,6 @@
 
 #include <string>
 
-using namespace std ;
-
-string ncoils_function( const char *_sequence , int window = 21 ) ;
-
+std::string ncoils_function( const char *_sequence , int window = 21 ) ;
 
 #endif

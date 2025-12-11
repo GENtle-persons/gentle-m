@@ -319,7 +319,7 @@ void TSilmutDialog::calc ()
             wxString old_dna = v->getSequence() ;
             v->setSequence ( new_dna ) ;
             int ndl = new_dna.length() ;
-            vector <TRestrictionCut> vc ;
+            std::vector <TRestrictionCut> vc ;
             v->getCuts ( e , vc , true ) ;
 
             // Calculating the resulting fragments
@@ -400,7 +400,7 @@ void TSilmutDialog::calc_acr ()
     for ( int a = 0 ; a < re.GetCount() ; a++ )
         {
         TRestrictionEnzyme *e = re[a] ;
-        vector <TRestrictionCut> vc_base ;
+        std::vector <TRestrictionCut> vc_base ;
         v->getCuts ( e , vc_base ) ;
 
         // Sanity checks
@@ -417,7 +417,7 @@ void TSilmutDialog::calc_acr ()
                 if ( new_aa != orig_aa ) continue ;
 
                 // This is a silent mutation
-                vector <TRestrictionCut> vc_new ;
+                std::vector <TRestrictionCut> vc_new ;
                 v->setSequence ( new_dna ) ;
                 v->getCuts ( e , vc_new ) ;
                 v->setSequence ( vseq ) ;
@@ -487,7 +487,7 @@ void TSilmutDialog::showit ()
     wxArrayString list ;
     for ( int a = 0 ; a < vs.size() ; a++ )
         {
-        vector <TRestrictionCut> vc ;
+        std::vector <TRestrictionCut> vc ;
         wxString e_name = vs[a].e->getName() ;
         while ( e_name.length() < 8 ) e_name += ' ' ;
         v->getCuts ( vs[a].e , vc ) ;

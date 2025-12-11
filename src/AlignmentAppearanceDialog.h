@@ -27,9 +27,9 @@ class AlignmentAppearanceDialog : public wxDialog
     void set_pen ( SequenceCharMarkup &scm , int id , int border ) ; ///< Sets a pen in the markup object; used by OnOK
     void addLine ( const wxString& name , wxArrayString &as , wxFlexGridSizer *sizer ) ; ///< Adds a line of elements (radio boxes, buttons)
 
-    vector <wxRadioBox*> radioboxes ;
-    vector <wxSpinCtrl*> thickness ;
-    vector <wxColour> colors ;
+    std::vector <wxRadioBox*> radioboxes ;
+    std::vector <wxSpinCtrl*> thickness ;
+    std::vector <wxColour> colors ;
     int line_color_buttons ;
     wxCheckBox *use_foreground , *use_background , *bold , *italics ;
     wxColour color_foreground , color_background ;

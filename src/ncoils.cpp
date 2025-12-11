@@ -25,15 +25,15 @@ struct fit_dat {
 
 struct hept_pref *read_matrix(FILE *MAT);
 void exit_error();
-string pred_coils(char *seq,char *ident,char *title,struct hept_pref *h,int win,int which,
+std::string pred_coils(char *seq,char *ident,char *title,struct hept_pref *h,int win,int which,
    int weighted,int fasta,float min_P, int *t, int *tc, int min_segs);
 
 
 /* Rob Russell's attempt to make a COILS program */
 
-string ncoils_function( const char *_sequence , int window ) {
+std::string ncoils_function( const char *_sequence , int window ) {
 
-	string ret ;
+	std::string ret ;
 
 	int i;
 	int verb;
@@ -368,9 +368,9 @@ void exit_error() {
 	exit(-1);
 }
 
-string pred_coils(char *seq,char *ident,char *title,struct hept_pref *h,int win, int which, int weighted,int mode, float min_P, int *t, int *tc, int min_seg) {
+std::string pred_coils(char *seq,char *ident,char *title,struct hept_pref *h,int win, int which, int weighted,int mode, float min_P, int *t, int *tc, int min_seg) {
 
-    string ret ;
+    std::string ret ;
 
 	int i,j;
 	int pos,aa_pt;

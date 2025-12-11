@@ -109,7 +109,7 @@ void TLigationDialog::init ()
 void TLigationDialog::generateTargets ()
     {
     int cnt = l_sources->GetCount() ;
-    vector <bool> vc , used ;
+    std::vector <bool> vc , used ;
     wxArrayInt vi ;
     for ( int a = 0 ; a < cnt ; a++ )
         {
@@ -157,7 +157,7 @@ void TLigationDialog::generateTargets ()
     GetSizer()->Layout () ;
     }
 
-void TLigationDialog::curseTargets ( vector <bool> &vc , vector <bool> &used , wxArrayInt &vi  )
+void TLigationDialog::curseTargets ( std::vector <bool> &vc , std::vector <bool> &used , wxArrayInt &vi  )
     {
     int cnt = vi.GetCount() ;
     myass ( cnt-1 >= 0 && cnt-1 < orientation.size() , _T("TLigationDialog::curseTargets:1") ) ;

@@ -2,7 +2,7 @@
 check_PROGRAMS = my_tests
 
 # Quelldateien für Testprogramm
-my_tests_SOURCES = ../src/main.cpp main_test.cpp TXMLfile_test.cpp
+my_tests_SOURCES = main_test.cpp TXMLfile_test.cpp
 
 common_OBJECTS =  \
 	../src/GENtle-MyFrame.o \
@@ -88,7 +88,9 @@ common_OBJECTS =  \
 	../src/GENtle-SequenceTypeAAstructure.o \
 	../src/GENtle-PlasmidCanvasCircular.o \
 	../src/GENtle-TVirtualGel.o \
-	../src/GENtle-TSilmutDialog.o
+	../src/GENtle-TSilmutDialog.o \
+	../src/GENtle-myapp.o \
+	../src/GENtle-txt.o
 
 #common_objects= \
 #  ../src/TXMLfile.o \

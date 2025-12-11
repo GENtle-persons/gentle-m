@@ -32,7 +32,7 @@ class TDDR_Timer : public wxTimer
     } ;
 
 class TDDR ;
-typedef vector <TDDR*> VDDR ;
+typedef std::vector <TDDR*> VDDR ;
 
 class TDDR // Drag'n'Drop Rect
     {
@@ -108,7 +108,7 @@ class TCloningAssistant : public ChildBase
 
     TDDR *new_from_vector ( TVector * const v , const int drag = DDR_NONE ) const ;
 
-    vector <TVector*> vectors ;
+    std::vector <TVector*> vectors ;
     TDDR *base , *vlist , *tlist ;
     TCloningAssistantPanel *panel ;
 

@@ -199,7 +199,7 @@ void TGenBank::remap ( TVector *v )
 void TGenBank::remap ( TVector * v , const wxArrayString &vs , const wxArrayInt &vi )
     {
     wxString k1 ;
-    vector <wxArrayString> items ;
+    std::vector <wxArrayString> items ;
     wxString ns ;
 
     {

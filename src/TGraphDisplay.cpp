@@ -95,20 +95,20 @@ stringField TGraphDisplay::readTextfile ( const wxString& filename )
             while ( s.First ( '\t' ) != -1 )
                 {
                 wxString xyz = s.BeforeFirst ( '\t' ) ;
-                as.push_back ( string ( xyz.mb_str() ) ) ;
+                as.push_back ( std::string ( xyz.mb_str() ) ) ;
                 s = s.AfterFirst ( '\t' ) ;
                 }
-            as.push_back ( string ( s.mb_str() ) ) ;
+            as.push_back ( std::string ( s.mb_str() ) ) ;
             sf.push_back ( as ) ;
             }
         else
             {
             while ( s.First ( ',' ) != -1 )
                 {
-                as.push_back ( string (s.BeforeFirst ( ',' ).mb_str()) ) ;
+                as.push_back ( std::string (s.BeforeFirst ( ',' ).mb_str()) ) ;
                 s = s.AfterFirst ( ',' ) ;
                 }
-            as.push_back ( string ( s.mb_str() ) ) ;
+            as.push_back ( std::string ( s.mb_str() ) ) ;
             sf.push_back ( as ) ;
             }
         }

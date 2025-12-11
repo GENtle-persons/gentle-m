@@ -523,7 +523,7 @@ void PlasmidCanvas::blastAA ( wxCommandEvent &ev )
     myapp()->frame->blast ( seq , _T("blastp") ) ;
     }
 
-void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl , int mut )
+void PlasmidCanvas::RunPrimerEditor ( std::vector <TPrimer> &pl , int mut )
     {
     TPrimerDesign *subframe = new TPrimerDesign ( myapp()->frame->getCommonParent() , txt("t_pcr") , p->vec , pl , mut ) ;
 
@@ -552,7 +552,7 @@ void PlasmidCanvas::RunPrimerEditor ( vector <TPrimer> &pl , int mut )
 
 void PlasmidCanvas::OnPrimerForward ( wxCommandEvent &ev )
     {
-    vector <TPrimer> pl ;
+    std::vector <TPrimer> pl ;
     int end = getMarkFrom() + 20 ;
     if ( end >= p->vec->getSequenceLength() ) end = p->vec->getSequenceLength() ;
     pl.push_back ( TPrimer ( getMarkFrom() , end , true ) ) ;
@@ -561,7 +561,7 @@ void PlasmidCanvas::OnPrimerForward ( wxCommandEvent &ev )
 
 void PlasmidCanvas::OnPrimerBackward ( wxCommandEvent &ev )
     {
-    vector <TPrimer> pl ;
+    std::vector <TPrimer> pl ;
     int start = getMarkTo() - 20 ;
     if ( start < 1 ) start = 1 ;
     pl.push_back ( TPrimer ( start , getMarkTo() , false ) ) ;
@@ -570,7 +570,7 @@ void PlasmidCanvas::OnPrimerBackward ( wxCommandEvent &ev )
 
 void PlasmidCanvas::OnPrimerBoth ( wxCommandEvent &ev )
     {
-    vector <TPrimer> pl ;
+    std::vector <TPrimer> pl ;
     int end = getMarkFrom() + 20 ;
     if ( end >= p->vec->getSequenceLength() ) end = p->vec->getSequenceLength() ;
     pl.push_back ( TPrimer ( getMarkFrom() , end , true ) ) ;
@@ -582,7 +582,7 @@ void PlasmidCanvas::OnPrimerBoth ( wxCommandEvent &ev )
 
 void PlasmidCanvas::OnPrimerMutation ( wxCommandEvent &ev )
     {
-    vector <TPrimer> pl ;
+    std::vector <TPrimer> pl ;
     int start = getMarkFrom() - 10 ;
     int end = getMarkFrom() + 20 ;
     if ( end >= p->vec->getSequenceLength() ) end = p->vec->getSequenceLength() ;
@@ -917,7 +917,7 @@ void PlasmidCanvas::OnFillKlenow(wxCommandEvent& event)
 
 void PlasmidCanvas::OnRunPCR(wxCommandEvent& event)
     {
-    vector <TPrimer> pl ;
+    std::vector <TPrimer> pl ;
     RunPrimerEditor ( pl ) ;
     }
 

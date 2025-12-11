@@ -1063,8 +1063,8 @@ void MyChild::OnPrintRestrictionList(wxCommandEvent& event)
     if ( a > 0 ) html += _T("</tr></table>") ;
 
     // Restriction cuts by enzyme and count (prep)
-    vector <int> c_count ;
-    vector <wxString> c_name , c_pos ;
+    std::vector <int> c_count ;
+    std::vector <wxString> c_name , c_pos ;
     for ( int a = 0 ; a < vec->rc.size() ; a++ )
         {
         int b;
@@ -1259,7 +1259,7 @@ void MyChild::addFragmentsToGel ( const wxString& title , wxArrayInt &cuts , TVi
     {
     TGelLane lane ;
     lane.name = title ;
-    vector <TFragment> fragments ;
+    std::vector <TFragment> fragments ;
     if ( partial ) ed.iterateFragments ( cuts , fragments ) ;
     else ed.getFragmentList ( cuts , fragments ) ;
     for ( int a = 0 ; a < fragments.size() ; a++ )
@@ -1714,7 +1714,7 @@ void MyChild::add_siRNA ( const int item )
        dir = -1 ;
    int b = 0 ;
    wxString sub ;
-   vector <TsiRNA> rna ;
+   std::vector <TsiRNA> rna ;
    for ( int a = from ; a != to ; a += dir )
        {
        if ( a < 0 ) a = l - 1 ;
