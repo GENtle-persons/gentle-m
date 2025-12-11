@@ -1504,7 +1504,7 @@ short getseqtype( const char *seq, const size_t seqlen)
   short maxtest;
   short na = 0, aa = 0, po = 0, nt = 0, nu = 0, ns = 0, no = 0;
 
-  maxtest = min(300, seqlen);
+  maxtest = (seqlen < 300) ? seqlen : 300;
   for (short i = 0; i < maxtest; i++) {
     char c = to_upper(seq[i]);
     if (strchr(protonly, c)) po++;
@@ -1606,7 +1606,8 @@ size_t writeSeq(FILE *outf, const char *seq, const size_t seqlen, const short ou
 
   gPretty.atseq++;
   skipwhitespace(seqid);
-  l = min(128, strlen(seqid));
+  l = strlen(seqid);
+  if (l > 128) l = 128; 
   strncpy( seqnamestore, seqid, l);
   seqname[l] = 0;
 
@@ -1831,7 +1832,7 @@ size_t writeSeq(FILE *outf, const char *seq, const size_t seqlen, const short ou
    *idword= 0;
    }
 
-  width = min(width,kMaxseqwidth);
+  width = (width < kMaxseqwidth) ? width : kMaxseqwidth;
   for (i=0, l=0, ibase = 1; i < seqlen; ) {
 
     if (l1 < 0) l1 = 0;

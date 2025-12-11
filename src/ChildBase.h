@@ -9,8 +9,6 @@
 #include <wx/treectrl.h>
 #include <wx/docview.h>
 
-using namespace std ;
-
 typedef wxPanel MyChildBase ;
 typedef wxFrame MyFrameType ;
 

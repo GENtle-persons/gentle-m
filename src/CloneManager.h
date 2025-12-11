@@ -6,8 +6,6 @@
 class TVector ;
 class TVectorItem ;
 
-using namespace std ;
-
 class TCloneManager
     {
     public :

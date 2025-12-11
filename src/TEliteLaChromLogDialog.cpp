@@ -133,7 +133,7 @@ void TEliteLaChromLogDialog::ReadFile ( const wxString& filename , wxArrayString
 
 #define MAKE_DATE_TIME(line) line[0].Mid(6,4) + _T("-") + line[0].Mid(3,2) + _T("-") + line[0].Mid(0,2) + _T(" ") + line[1]
 
-void TEliteLaChromLogDialog::Uniquify ( wxArrayString &data , vector <wxArrayString> &tabs )
+void TEliteLaChromLogDialog::Uniquify ( wxArrayString &data , std::vector <wxArrayString> &tabs )
     {
     tabs.clear() ;
     for ( int a = 3 ; a < data.GetCount() ; a++ )
@@ -173,7 +173,7 @@ void TEliteLaChromLogDialog::FilterLines ()
             dates.Add ( d ) ;
             times.Add ( t ) ;
             }
-        vector <wxArrayString> n ;
+        std::vector <wxArrayString> n ;
         for ( int a = 0 ; a < tabs_display.size() ; a++ )
             {
             int b = 0 ;
@@ -195,7 +195,7 @@ void TEliteLaChromLogDialog::FilterLines ()
             if ( !unique_users->IsSelected ( a ) ) continue ; // Not selected
             users.Add ( unique_users->GetString ( a ) ) ;
             }
-        vector <wxArrayString> n ;
+        std::vector <wxArrayString> n ;
         for ( int a = 0 ; a < tabs_display.size() ; a++ )
             {
             if ( wxNOT_FOUND == users.Index ( tabs_display[a][ELL_USER] ) ) continue ;
@@ -226,9 +226,9 @@ void TEliteLaChromLogDialog::UpdateLines ()
     lines->SetColumnWidth ( ELL_AUTOSAMPLER , 50 ) ;
     }
 
-void TEliteLaChromLogDialog::MergeWith ( vector <wxArrayString> &tabs , int col )
+void TEliteLaChromLogDialog::MergeWith ( std::vector <wxArrayString> &tabs , int col )
     {
-    vector <wxArrayString> nt ;
+    std::vector <wxArrayString> nt ;
 
     for ( int a = 0 ; a < tabs.size() ; a++ )
         {
@@ -274,7 +274,7 @@ void TEliteLaChromLogDialog::OnUserList(wxCommandEvent &event)
     UpdateLines() ;
     }
 
-void TEliteLaChromLogDialog::SortTabs ( vector <wxArrayString> &tabs )
+void TEliteLaChromLogDialog::SortTabs ( std::vector <wxArrayString> &tabs )
     {
     // Sorting
     for ( int a = 1 ; a < tabs.size() ; a++ )
@@ -303,7 +303,7 @@ void TEliteLaChromLogDialog::SortTabs ( vector <wxArrayString> &tabs )
         }
 
     // Removing doubles, inverting
-    vector <wxArrayString> n ;
+    std::vector <wxArrayString> n ;
     for ( int a = 0 ; a < tabs.size() ; a++ )
         {
         if ( a == 0 ) n.push_back ( tabs[a] ) ;

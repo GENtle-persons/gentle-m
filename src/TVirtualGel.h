@@ -49,7 +49,7 @@ class TVirtualGel : public ChildBase
     TMyGelControl *right ; ///< Pointer to the actual gel
     wxChoice *ch_percent , *ch_marker ; ///< Gel concentration choice box
     wxCheckBox *cb_label ; ///< Show labels check box
-    vector <TGelLane> lanes ; ///< The lanes on the gel
+    std::vector <TGelLane> lanes ; ///< The lanes on the gel
     wxString type ; ///< Gel type (unused yet)
     double percent ; ///< Gel concentration
     int cutoff , maxband ;

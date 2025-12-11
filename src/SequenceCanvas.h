@@ -81,7 +81,7 @@ class SequencePartList
 
     private :
     wxArrayInt vi , vl , vx , vy ;
-    vector <wxArrayInt> vl2 ; ///< Items per position per level
+    std::vector <wxArrayInt> vl2 ; ///< Items per position per level
     } ;
 
 /** \brief SeqPos manages the positions of all items for a single "type" (for example, DNA)
@@ -123,8 +123,8 @@ class SeqPos
 
     wxArrayInt p ; ///< The data
     wxString m ; ///< The marking data
-    vector <wxRect> r ; ///< Bounding rectangles for the data
-    vector <wxRect> l ; ///< Bounding rectangles for the lines
+    std::vector <wxRect> r ; ///< Bounding rectangles for the data
+    std::vector <wxRect> l ; ///< Bounding rectangles for the lines
 
     private :
     wxArrayInt mark_from , mark_to ;
@@ -184,7 +184,7 @@ class SeqBasic
     virtual void show_direct ( wxDC& dc ) { show ( dc ) ; } ; ///< Show quickly
 
     wxArrayInt highlight_begin , highlight_end ;
-    vector <wxColour> highlight_color ;
+    std::vector <wxColour> highlight_color ;
     SeqPos pos ; ///< Position class (empty when using direct routines)
     int force_add_line_number ; ///< Default counter to add to the line number display; usually 0
     } ;
@@ -386,8 +386,8 @@ class SeqAAstructure : public SeqBasic
 
     private:
     void draw_amino_acid ( wxDC &dc , char as , int x , int y , int w , int h ) ;
-    void add_atom ( vector <wxPoint> &atom_pos , wxString &atom_type , char atom , int x , int y ) ;
-    void add_bond ( vector <wxPoint> &bond , int from , int to , bool double_bond = false ) ;
+    void add_atom ( std::vector <wxPoint> &atom_pos , wxString &atom_type , char atom , int x , int y ) ;
+    void add_bond ( std::vector <wxPoint> &bond , int from , int to , bool double_bond = false ) ;
 
     wxBrush *brush_C , *brush_N , *brush_S , *brush_O ;
     wxPen *pen_C , *pen_N , *pen_S , *pen_O ;
@@ -448,8 +448,8 @@ class SeqFeature : public SeqDNA
     virtual bool isDisplayOnly () const { return true ; } ///< WTF??
 
     // Variables
-    vector <wxRect> vr ;
-    vector <wxPen> pens ; ///< Different pens (colors) to use
+    std::vector <wxRect> vr ;
+    std::vector <wxPen> pens ; ///< Different pens (colors) to use
     int maxlayers ; ///< Number of layers/levels
     SeqAA *aaa ; ///< Pointer to the associated amino acid sequence
     int id ; ///< Only used by TAlignment : lines[id]
@@ -494,7 +494,7 @@ class SeqPlot : public SeqDNA
     enum { CHOU_FASMAN , P_I , M_W , H_P , COILED_COIL } type ;
     int lines , l_top, l_bottom ;
     wxArrayString d1 , d2 , d3 ;
-    vector <TAAProp> prop ;
+    std::vector <TAAProp> prop ;
     bool startOfLine ;
     float data_max , data_min , data_h , data_step ;
     wxRect plotr ;

@@ -26,8 +26,6 @@ class TVectorItem ;
 class TPrimer ;
 class TVector ;
 
-using namespace std ;
-
 /**  \brief The class to draw the DNA map, as well as the mini-map in the amino acid module
 */
 class PlasmidCanvas : public wxScrolledWindow
@@ -40,7 +38,7 @@ class PlasmidCanvas : public wxScrolledWindow
     virtual void print () ; ///< Prints the map
     virtual void setZoom ( const int factor ) ; ///< Sets the display zoom factor
     virtual wxString getSelection () const ; ///< Returns the current sequence selection
-    virtual void RunPrimerEditor ( vector <TPrimer> &pl , int mut = -1 ) ; ///< Invokes the PCR/primer design module
+    virtual void RunPrimerEditor ( std::vector <TPrimer> &pl , int mut = -1 ) ; ///< Invokes the PCR/primer design module
     virtual void invokeVectorEditor ( const wxString& what = _T("") , const int num = 0 , const bool forceUpdate = false ) ; ///< Invokes the vector editor dialog
     virtual wxMenu *invokeItemPopup ( const int item , const wxPoint& pt , const bool doreturn = false ) ; ///< Generates the item/feature context menu
     virtual wxMenu *invokeRsPopup ( const int rs , const wxPoint& pt , const bool doreturn = false ) ; ///< Generates the restriction enzyme context menu

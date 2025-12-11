@@ -43,7 +43,7 @@ class TAlignLine // pun intended
     TVector *v ;
     bool isIdentity ; ///< Is this line an identity display (or a "real" sequence)?
     wxString phylip_id ;
-    vector <SequenceCharMarkup> markup ;
+    std::vector <SequenceCharMarkup> markup ;
 
     private :
     TVector *features ;
@@ -65,7 +65,7 @@ class TAlignment : public ChildBase,wxThreadHelper
     virtual int NeedlemanWunsch ( wxString &s1 , wxString &s2 )  ; ///< Needleman-Wunsch-align two sequences
     virtual int SmithWaterman ( wxString &s1 , wxString &s2 )  ; ///< Smith-Waterman-align two sequences
     virtual int MatrixAlignment ( wxString& _s1 , wxString& _s2 , const bool local ) const ; ///< Part of NW/SW alignment algorithm
-    virtual void MatrixBacktrack ( const vector <wxArrayInt> &back ,
+    virtual void MatrixBacktrack ( const std::vector <wxArrayInt> &back ,
                                    const wxString& s1 , const wxString& s2 , wxString& t1 , wxString& t2 ,
                                    int i , int j ) const ; ///< Part of NW/SW alignment algorithm
 
@@ -108,7 +108,7 @@ class TAlignment : public ChildBase,wxThreadHelper
 
     // Variables
     SequenceCanvas *sc ; ///< Pointer to the sequence canvas
-    vector <TAlignLine> lines ; ///< The list of TAlignLine structures
+    std::vector <TAlignLine> lines ; ///< The list of TAlignLine structures
     wxColour colDNA[256] , colAA[256] , *colCur ;
     wxString gap , matrix , consensusSequence , name , database ;
     int match , mismatch , gap_penalty , algorithm ;

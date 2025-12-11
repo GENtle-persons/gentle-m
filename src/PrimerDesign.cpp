@@ -73,7 +73,7 @@ BEGIN_EVENT_TABLE(TPrimerDesign, MyChildBase)
 
 END_EVENT_TABLE()
 
-TPrimerDesign::TPrimerDesign(wxWindow *parent, const wxString& title, TVector *_vec, vector <TPrimer> pl , const int _mut )
+TPrimerDesign::TPrimerDesign(wxWindow *parent, const wxString& title, TVector *_vec, std::vector <TPrimer> pl , const int _mut )
     : ChildBase(parent, title)
     {
     updating = false ;

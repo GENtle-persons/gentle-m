@@ -6,8 +6,6 @@
 
 #include <wx/wx.h>
 
-using namespace std ;
-
 class TVector ;
 
 #ifndef _wxArrayTVector

@@ -36,8 +36,8 @@ class TGenBank
     private :
     friend class TAlignment ;
     friend class MyFrame ;
-    vector <wxArrayString> vs_l ; ///< All the lines, grouped by sequences
-    vector <wxArrayInt> vi_l ; ///< All the line indentations
+    std::vector <wxArrayString> vs_l ; ///< All the lines, grouped by sequences
+    std::vector <wxArrayInt> vi_l ; ///< All the line indentations
     wxArrayString vs ; ///< Current sequence
     wxArrayInt vi ; ///< Current line indentations
     wxString params ; ///< ???

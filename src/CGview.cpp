@@ -264,7 +264,7 @@ wxString CGview::getXML()
 wxString CGview::addXMLfeatureSlot ( const int dir )
     {
     wxString ret ;
-    vector <int> i2 ;
+    std::vector <int> i2 ;
 
     // Extracting items with the right direction
     for ( int a = 0 ; a < v->items.size() ; a++ )
@@ -289,7 +289,7 @@ wxString CGview::addXMLfeatureSlot ( const int dir )
         }
 
     // Arranging in non-overlapping circles
-    vector < vector<int> > vvi ;
+    std::vector < std::vector<int> > vvi ;
     for ( int a = 0 ; a < i2.size() ; a++ )
         {
         int fits = -1 ;
@@ -302,7 +302,7 @@ wxString CGview::addXMLfeatureSlot ( const int dir )
         if ( fits == -1 )
             {
             fits = vvi.size() ;
-            vvi.push_back ( vector <int> () ) ;
+            vvi.push_back ( std::vector <int> () ) ;
             }
         vvi[fits].push_back ( i2[a] ) ;
         }

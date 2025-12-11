@@ -3,8 +3,6 @@
 
 #include <wx/wx.h> // wxString
 
-using namespace std;
-
 class TSequencerDataTracerItem
     {
     public :
@@ -23,9 +21,9 @@ class TSequencerData
     {
     public :
     wxString comment , seq ;
-    vector <TSequencerDataTracerItem> tracer ;
-    vector <TSequencerDataSequenceItem> sequence ;
-    vector <unsigned long> tracer2[4] ; // A,C,G,T
+    std::vector <TSequencerDataTracerItem> tracer ;
+    std::vector <TSequencerDataSequenceItem> sequence ;
+    std::vector <unsigned long> tracer2[4] ; // A,C,G,T
     } ;
 
 #define TRACER_ID_A 0

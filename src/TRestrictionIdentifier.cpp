@@ -158,7 +158,7 @@ wxArrayInt TRestrictionIdentifier::getRestrictionFragments ( const wxString& en 
     {
     wxArrayInt ret ;
     TRestrictionEnzyme *e = myapp()->frame->LS->getRestrictionEnzyme ( en );
-    vector <TRestrictionCut> x ;
+    std::vector <TRestrictionCut> x ;
     v->getCuts ( e , x ) ;
     if ( x.size() == 0 ) return ret ; // Empty
 
@@ -222,7 +222,7 @@ void TRestrictionIdentifier::recalcEnzymes() /* not const */
 void TRestrictionIdentifier::listDNA ()
     {
     // Remember which ones were checked
-    vector <MyChild*> was_checked ;
+    std::vector <MyChild*> was_checked ;
     for ( int a = 0 ; a < dna_items.size() ; a++ )
         {
         if ( !dna_list->IsChecked ( a ) ) continue ;
@@ -253,7 +253,7 @@ void TRestrictionIdentifier::listDNA ()
 
 bool TRestrictionIdentifier::check4separation ( const wxString& en ) const
     {
-    vector <wxArrayInt> vai ;
+    std::vector <wxArrayInt> vai ;
     for ( int a = 0 ; a < dna_list->GetCount() ; a++ )
         {
         if ( !dna_list->IsChecked ( a ) ) continue ; // Not checked

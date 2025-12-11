@@ -44,7 +44,7 @@ class TPrimerDialog : public wxDialog
 
     private :
     const TPrimerDesign *pd ;
-    vector <TPrimer> pl ; ///< The list of potential primers
+    std::vector <TPrimer> pl ; ///< The list of potential primers
 
     wxSpinCtrl *l3 , *l5 , *r3 , *r5 , *lmin , *lmax , *tmin , *tmax ;
     wxTextCtrl *seq , *rep ;

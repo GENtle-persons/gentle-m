@@ -204,7 +204,7 @@ public:
     wxArrayString lastCocktail ; ///< \brief Enzymes of the last restriction cocktail
     wxArrayChildBase children ; ///< \brief List of pointers to all child windows
     wxHtmlEasyPrinting* html_ep ; ///< \brief HTML printer wrapper for TCalculator
-    vector <wxBitmap> bitmaps ; ///< \brief The bitmaps in the user interface
+    std::vector <wxBitmap> bitmaps ; ///< \brief The bitmaps in the user interface
     wxToolBar *tb_mychild ; ///< \brief The shared toolbar (?)
     char stopcodon ;
     int nonstandard_translation_table ;
@@ -226,7 +226,7 @@ public:
     wxMenuBar *menu_bar ; ///< \brief The current menu bar
     int locked ; ///< \brief State of display locking
     bool activating ; ///< \brief In child activation?
-    vector <wxString> help_name ;
+    std::vector <wxString> help_name ;
 #ifdef MYTEST
     TTestSuite *test_suite ; ///< \brief The Test suite
 #endif

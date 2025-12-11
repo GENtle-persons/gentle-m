@@ -175,7 +175,7 @@ void TPhyloTree::setNewickTree ( wxString s )
 void TPhyloTree::setRealNames ( TAlignment *ali )
     {
     int a , b ;
-    vector <TPTree*> vt ;
+    std::vector <TPTree*> vt ;
     tree->getAll ( vt ) ;
 
     for ( a = 0 ; a < vt.size() ; a++ )
@@ -238,7 +238,7 @@ void TPhyloTree::setModeStrange ()
     int md = tree->getMaxDepth() ;
     for ( unsigned int a = 0 ; a < md ; a++ )
         {
-        vector <TPTree*> vt ;
+        std::vector <TPTree*> vt ;
         tree->filterDepth ( a+1 , vt ) ;
         for ( unsigned int b = 0 ; b < vt.size() ; b++ )
             {
@@ -269,7 +269,7 @@ void TPhyloTree::setModeDrawgram ()
     int mc = tree->countLeafs () ;
     int border = 5 ;
 
-    vector <TPTree*> vt ;
+    std::vector <TPTree*> vt ;
     tree->getAll ( vt ) ;
 
     unsigned int maxw = 0 ;
@@ -552,7 +552,7 @@ void TPTree::drawRecursive ( wxDC &dc , const wxString& mode ) const
         }
     }
 
-void TPTree::filterDepth ( const int depth , vector <TPTree*> &vt ) /* const */
+void TPTree::filterDepth ( const int depth , std::vector <TPTree*> &vt ) /* const */
     {
     if ( getCurrentDepth() == depth )
         {
@@ -564,7 +564,7 @@ void TPTree::filterDepth ( const int depth , vector <TPTree*> &vt ) /* const */
         children[a]->filterDepth ( depth , vt ) ;
     }
 
-void TPTree::getAll ( vector <TPTree*> &vt )
+void TPTree::getAll ( std::vector <TPTree*> &vt )
     {
     vt.push_back ( this ) ;
     for ( int a = 0 ; a < children.size() ; a++ )

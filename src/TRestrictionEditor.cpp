@@ -348,7 +348,7 @@ void TRestrictionEditor::pR_showGroupEnzymes ( const wxString& gr )
     if ( sel == 2 ) docut = false ;
     int cnt = 0 ;
     // bool ascending = true ;
-    vector <TREcache> list ;
+    std::vector <TREcache> list ;
     for ( int i = 0 ; i < vs.GetCount() ; i++ )
         {
         const int k = getcuts(vs[i]).GetCount() ;
@@ -412,7 +412,7 @@ wxArrayInt TRestrictionEditor::getcuts ( const wxString& enzyme )
             }
         else
             {
-            vector <TRestrictionCut> x ;
+            std::vector <TRestrictionCut> x ;
             v->getCuts ( e , x ) ;
             if ( x.size() == 0 ) // No cuts
                 {
@@ -458,7 +458,7 @@ void TRestrictionEditor::pR_showFragments ( int i )
     //wxPrintf( "D: TRestrictionEditor::pR_showFragments(%d) - end\n" , i ) ;
     }
 
-void TRestrictionEditor::getFragmentList ( wxArrayInt& cuts , vector <TFragment>& fragments , const bool clear ) const
+void TRestrictionEditor::getFragmentList ( wxArrayInt& cuts , std::vector <TFragment>& fragments , const bool clear ) const
     {
     //wxPrintf( "D: TRestrictionEditor::getFragmentList - start - cuts.GetCount=%d\n" , cuts.GetCount() ) ;
 
@@ -709,7 +709,7 @@ void TRestrictionEditor::onAddAll ( wxCommandEvent &event )
         }
     }
 
-void TRestrictionEditor::iterateFragments ( const wxArrayInt& cuts , vector <TFragment> &fragments , const int depth ) const
+void TRestrictionEditor::iterateFragments ( const wxArrayInt& cuts , std::vector <TFragment> &fragments , const int depth ) const
     {
     //wxPrintf( "D: TRestrictionEditor::iterateFragments - start\n" ) ;
     if ( cuts.size() == 0 ) return ;

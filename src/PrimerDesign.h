@@ -22,7 +22,7 @@ class wxListCtrl ;
 class TPrimerDesign : public ChildBase
     {
     public :
-    TPrimerDesign(wxWindow *parent, const wxString& title, TVector *_vec, vector <TPrimer> pl , const int _mut = -1 ) ; ///< Constructor
+    TPrimerDesign(wxWindow *parent, const wxString& title, TVector *_vec, std::vector <TPrimer> pl , const int _mut = -1 ) ; ///< Constructor
     ~TPrimerDesign () ; ///< Destructor
 
     void initme () ; ///< Initialize
@@ -75,7 +75,7 @@ class TPrimerDesign : public ChildBase
     // Variables
     SequenceCanvas *sc ;
     int from ;
-    vector <TPrimer> primer ;
+    std::vector <TPrimer> primer ;
     TVector *inverse_template_vector , *resulting_sequence_vector ;
 
     int aa_state , aa_disp ;

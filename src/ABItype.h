@@ -12,8 +12,6 @@
 #include <iostream>
 #include <algorithm>
 
-using namespace std;
-
 /** \class TFLAG
     \brief Helper class for ABItype
 */
@@ -68,7 +66,7 @@ class ABItype
     int getCMBF ( const unsigned char * const t , const int l ) const ; ///< Reads a Pascal-like string with known length
 
     // Variables
-    vector <TFLAG> vf ; ///< All the flags
+    std::vector <TFLAG> vf ; ///< All the flags
     } ;
 
 #endif

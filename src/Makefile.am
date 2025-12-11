@@ -216,7 +216,6 @@ common_sources = \
 	ipc/pars.cpp \
 	lin_sqlite.h \
 	lin_sqlite3.h \
-	main.h \
 	ncoils.cpp \
 	ncoils.h \
 	todo.cpp \

@@ -1943,8 +1943,6 @@ void MyFrame::OnDotPlot(wxCommandEvent& event)
     //    return subframe ;
     }
 
-
-
 /** \brief Handles the Graph menu event by calling MyFrame::RunGraph
  */
 void MyFrame::OnGraph(wxCommandEvent& event)
@@ -1958,7 +1956,7 @@ void MyFrame::OnGraph(wxCommandEvent& event)
     for ( int a = 0 ; a < 3 ; a++ )
         {
         const int b = a==0?14:(a==1?21:28) ;
-        const string s = ncoils_function ( seq.mb_str() , b ) ;
+        const std::string s = ncoils_function ( seq.mb_str() , b ) ;
         const wxString t ( s.c_str() , wxConvUTF8 ) ;
         wxArrayString ta ;
         explode ( "\n" , t , ta ) ;

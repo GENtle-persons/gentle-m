@@ -57,10 +57,10 @@ class TRestrictionEditor : public wxDialog
     virtual void add2cocktail ( const wxString& s ) ; ///< Add enzyme to restriction cocktail
     virtual void del_from_cocktail ( const wxString& s ) ; ///< Remove enzyme from restriction cocktail
     virtual void refreshCocktail () ; ///< Update cocktail list
-    virtual void getFragmentList ( wxArrayInt &cuts , vector <TFragment> &fragments , const bool clear = true ) const ; ///< Set list of fragments
+    virtual void getFragmentList ( wxArrayInt &cuts , std::vector <TFragment> &fragments , const bool clear = true ) const ; ///< Set list of fragments
     virtual void listFragments ( wxListCtrl * const list , wxArrayInt &vi ) ; ///< Show fragments in a list
     virtual void listEnzymesInGroup ( const wxString& gr , wxArrayString &vs ) const ; ///< List the enzymes in group
-    virtual void iterateFragments ( const wxArrayInt& cuts , vector <TFragment> &fragments , const int depth = 0 ) const ;
+    virtual void iterateFragments ( const wxArrayInt& cuts , std::vector <TFragment> &fragments , const int depth = 0 ) const ;
 
     virtual void res_ll ( wxListEvent &event ) ; ///<  event handler
     virtual void res_coc_ll ( wxListEvent &event ) ; ///<  event handler

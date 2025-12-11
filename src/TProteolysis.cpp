@@ -265,7 +265,7 @@ void TProteolysis::calc_spearation ()
     sep_results->Clear () ;
     sep_desc->Clear () ;
 
-    vector <TFragment> tobe ; // To-be parts
+    std::vector <TFragment> tobe ; // To-be parts
     for ( int a = 0 ; a < v->items.size() ; a++ )
         {
         if ( !sep_fragments->IsChecked ( a ) ) continue ;
@@ -294,7 +294,7 @@ void TProteolysis::calc_spearation ()
     wxEndBusyCursor () ;
     }
 
-void TProteolysis::calc_spearation_sub ( int depth , TProteaseArray &prop , vector <TFragment> &tobe , int start )
+void TProteolysis::calc_spearation_sub ( int depth , TProteaseArray &prop , std::vector <TFragment> &tobe , int start )
     {
     int cur = prop.size() ;
     prop.push_back ( NULL ) ;

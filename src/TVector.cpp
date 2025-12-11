@@ -27,7 +27,7 @@ char TVector::COMPLEMENT[256] ;
 //FIXME: Unhappy
 wxString TVector::aa ; ///< Translation table string representation as returned by get_translation_table (set in dna2aa, used in get_translation_table as cache)
 
-vector <TAAProp> TVector::aaprop ;
+std::vector <TAAProp> TVector::aaprop ;
 wxArrayString TVector::codon_tables ;
 wxArrayString TVector::codon_table_names ;
 bool TVector::initialized = false ; ///< status flag indicating if the initialisation have already been performed
@@ -78,7 +78,7 @@ void TVector::copy ( const TVector &v )
     re = v.re ;  ///< Manually specified restriction enzymes
     re2 = v.re2 ; ///< Automatically added restriction enzymes
 
-    worf = v.worf ; ///< Open Reading Frames (vector <TORF>)
+    worf = v.worf ; ///< Open Reading Frames (std::vector <TORF>)
 
     proteases = v.proteases ; ///< Proteases used (wxArrayString)
     cocktail = v.cocktail ;  ///< Enzymes from the last restriction (wxArrayString)
@@ -871,7 +871,7 @@ void TVector::setIUPAC ( const char b , const wxString& s , char * pac ) const
     }
 
 
-void TVector::getCuts ( const TRestrictionEnzyme * const e , vector <TRestrictionCut> &ret , const bool clear_vector , const int max ) const
+void TVector::getCuts ( const TRestrictionEnzyme * const e , std::vector <TRestrictionCut> &ret , const bool clear_vector , const int max ) const
     {
     if ( clear_vector ) ret.clear () ;
     if ( ret.empty() ) ret.reserve ( 5 ) ; // Speedup, little waste
@@ -1153,7 +1153,7 @@ wxString TVector::transformSequence ( const wxString& sequence, const bool inver
 void TVector::doRestriction ()
     {
     //wxPrintf( "D: TVector::doRestriction - start\n" ) ;
-    vector <TRestrictionCut> cl ;
+    std::vector <TRestrictionCut> cl ;
 
     mylog ( "TVector::doRestriction" , "1" ) ;
     if ( cocktail.GetCount() == 0 ) return ;
@@ -2337,7 +2337,7 @@ void TVectorItem::setType ( const wxString& _s )
  * \param @aa ?
  * \param @dna2aa Address of an array of dna2aa instances into which the translation is written.
  */
-void TVectorItem::translate ( const TVector * const vectorToTranslate , SeqAA * const aa , vector <Tdna2aa> &dna2aa ) const
+void TVectorItem::translate ( const TVector * const vectorToTranslate , SeqAA * const aa , std::vector <Tdna2aa> &dna2aa ) const
     {
     const TVector * v = vectorToTranslate ;
     if (!v) v = lastVector ;
@@ -2439,8 +2439,8 @@ wxString TVectorItem::getAminoAcidSequence () const // not const because of tran
     {
 
     wxString s ;
-    vector <Tdna2aa> dna2aa ;
-    translate ( NULL /* defaults to last vector */ , NULL , dna2aa ) ; //, from , to , direction 
+    std::vector <Tdna2aa> dna2aa ;
+    translate ( NULL /* defaults to last std::vector */ , NULL , dna2aa ) ; //, from , to , direction 
 
     for ( int a = 0 ; a < dna2aa.size() ; a++ )
         {
@@ -2468,7 +2468,7 @@ void TVectorItem::getArrangedAA ( const TVector * const vectorToTranslate , wxSt
         abort() ;
         }
 
-    vector <Tdna2aa> dna2aa_temp , *dna2aa ;
+    std::vector <Tdna2aa> dna2aa_temp , *dna2aa ;
     if ( v->getGenomeMode() )
         {
         dna2aa = &dna2aa_temp ;

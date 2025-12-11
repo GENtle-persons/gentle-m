@@ -15,8 +15,6 @@ class TRestrictionEnzyme ;
 class TPrimerDesign ;
 class TVector ;
 
-using namespace std ;
-
 /** \brief Helper class for TSilmutDialog
 */
 class TSilmutItem
@@ -60,7 +58,7 @@ class TSilmutDialog : public wxDialog
     // Variables
     TVector *v ;
     int from , to ;
-    vector <TSilmutItem> vs ;
+    std::vector <TSilmutItem> vs ;
     wxListBox *lb ;
     wxCheckBox *allow_cut_removal ;
     TPrimerDesign *pd ;

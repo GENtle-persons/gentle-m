@@ -36,7 +36,7 @@ void TClone::loadEnzymeList ( TStorage * const st , const wxString& filename )
     f.Read ( t , l ) ;
     f.Close() ;
 
-    vector <TRestrictionEnzyme> vr ;
+    std::vector <TRestrictionEnzyme> vr ;
     for ( char *d = t ; d < t+l ; )
         {
         TRestrictionEnzyme r ;
@@ -111,7 +111,7 @@ void TClone::loadEnzymeList ( TStorage * const st , const wxString& filename )
 
 void TClone::remap ( TVector * const v ) const
     {
-    wxPrintf( "D: TClone::remap (vector %s) - start\n" , v->getName() ) ;
+    wxPrintf( "D: TClone::remap (std::vector %s) - start\n" , v->getName() ) ;
     v->updateDisplay() ;
 
     v->setSequence ( sequence ) ;
@@ -162,7 +162,7 @@ void TClone::remap ( TVector * const v ) const
            v->re.Add ( e ) ;
         }
     v->recalculateCuts () ;
-    wxPrintf( "D: TClone::remap (vector %s) - end\n" , v->getName() ) ;
+    wxPrintf( "D: TClone::remap (std::vector %s) - end\n" , v->getName() ) ;
     }
 
 TClone::TClone()

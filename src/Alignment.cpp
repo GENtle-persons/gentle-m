@@ -838,7 +838,7 @@ int TAlignment::MatrixAlignment ( wxString &_s1 , wxString &_s2 , const bool loc
 
     // Initializing backlink matrix
 
-    vector <wxArrayInt> back ;
+    std::vector <wxArrayInt> back ;
     wxArrayInt blank_b ;
     blank_b.Alloc ( N+1 ) ;
     back.reserve ( M+1 ) ;
@@ -971,7 +971,7 @@ int TAlignment::MatrixAlignment ( wxString &_s1 , wxString &_s2 , const bool loc
  * \param[out] t1 
  * \param[out] t2 
  */
-void TAlignment::MatrixBacktrack ( const vector <wxArrayInt> &back ,
+void TAlignment::MatrixBacktrack ( const std::vector <wxArrayInt> &back ,
                                    const wxString& s1 , const wxString& s2 ,
                                    wxString& t1 , wxString& t2 ,
                                    int i , int j ) const

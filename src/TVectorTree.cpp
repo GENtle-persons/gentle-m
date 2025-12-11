@@ -85,7 +85,7 @@ void TVectorTree::initme ()
     AppendItem ( vroot , txt("size") + dp + u ) ;
 
     // Genes
-    vector <wxTreeItemId> irs ;
+    std::vector <wxTreeItemId> irs ;
     for ( int a = 1 ; a < VIT_TYPES ; a++ )
         {
         u = wxString::Format ( _T("itemtype%d") , a ) ;

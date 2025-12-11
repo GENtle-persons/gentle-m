@@ -52,7 +52,7 @@ void PlasmidCanvas::arrangeRestrictionSitesCircular ( wxDC &dc ) const
     int l = p->vec->getSequenceLength() ;
     if ( p->vec->rc.size() == 0 ) return ;
 
-    vector <TRestrictionCut> trc ;
+    std::vector <TRestrictionCut> trc ;
     trc.reserve ( p->vec->rc.size() ) ;
     for ( int a = 0 ; a < p->vec->rc.size() ; a++ ) // Removing invisible
         {
@@ -320,7 +320,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc) /* not const */
             dc.SetBrush(*MYBRUSH(col));
 
             // Drawing polygon
-            vector <wxPoint> p ;
+            std::vector <wxPoint> p ;
             int b = a + 1 ;
             p.push_back ( wxPoint ( deg2x ( 360*a/nob , r1 ) , deg2y ( 360*a/nob , r1 ) ) ) ;
             for ( int c = int(360*a/nob) ; c%361 != int(360*b/nob)%361 ; c++ )
@@ -535,7 +535,7 @@ void PlasmidCanvas::OnDrawCircular(wxDC& dc) /* not const */
             float ds = 1 ; // Paint steps for genes, in degrees
 
             // Calculating polygon
-            vector <wxPoint> p ;
+            std::vector <wxPoint> p ;
 
             if ( i->getParam ( _T("AUTOMATIC") ) == _T("SEQUENCING PRIMER") )
                 dd = ( dt - df ) / 2 ;

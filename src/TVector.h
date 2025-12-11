@@ -59,7 +59,7 @@ class TAAProp
     int carbon , hydrogen , nitrogen , oxygen , sulfur ;
     int hl_mammal , hl_yeast , hl_ecoli ;
     float hp_kd , hp_hw ;
-    vector <float> data ; ///< For temporary data only
+    std::vector <float> data ; ///< For temporary data only
 } ;
 
 /// This class manages open reading frames (ORFs)
@@ -141,7 +141,7 @@ class TVectorItem
     void setParam ( const wxString& p , const int v ) ; ///< Set a parameter key/value pair
 
     // dna2aa stuff
-    void translate ( const TVector * const v , SeqAA * const aa , vector <Tdna2aa> &dna2aa ) const ;
+    void translate ( const TVector * const v , SeqAA * const aa , std::vector <Tdna2aa> &dna2aa ) const ;
     wxString getAminoAcidSequence () const ; ///< Return the amino acid sequence
     void setLastVector ( const TVector * const v) ; ///< Set the last TVector to own this item
 
@@ -166,7 +166,7 @@ class TVectorItem
     /// \brief Parameter keys
     wxArrayString pname ; ///< Parameter names
     wxArrayString pvalue ; ///< Parameter values
-    vector <Tdna2aa> dna2aa_item ; ///< The cache of the translated amino acids
+    std::vector <Tdna2aa> dna2aa_item ; ///< The cache of the translated amino acids
     const TVector * lastVector ; ///< The last TVector to own this item
 
     // Visual information
@@ -197,7 +197,7 @@ class TVector
 
     // Restriction enzymes
     void recalculateCuts () ; ///< Recalculate restriction enzyme cuts
-    void getCuts ( const TRestrictionEnzyme * const e , vector <TRestrictionCut> &ret , const bool clear_vector = true , const int max = 10000000 ) const ; ///< Gets the cuts of restriction enzyme in this sequence
+    void getCuts ( const TRestrictionEnzyme * const e , std::vector <TRestrictionCut> &ret , const bool clear_vector = true , const int max = 10000000 ) const ; ///< Gets the cuts of restriction enzyme in this sequence
     bool reduceToFragment ( const TRestrictionCut& left , const TRestrictionCut& right ) ; ///< Cuts off everything except what is betreen these two cuts
     void doRestriction () ; ///< Performs restriction. See TRestrictionEditor
     void sortRestrictionSites () ; ///< Sorts the restriction sites by point of cut
@@ -310,8 +310,8 @@ class TVector
     void resetTurn () ; ///< Sets the turned variable to zero
 
     // Variables
-    vector <TVectorItem> items ; ///< Items/features/annotations
-    vector <TRestrictionCut> rc ; ///< Restriction enzyme cuts
+    std::vector <TVectorItem> items ; ///< Items/features/annotations
+    std::vector <TRestrictionCut> rc ; ///< Restriction enzyme cuts
 
     wxArrayTRestrictionEnzyme re ,  ///< Manually specified restriction enzymes
                               re2 ; ///< Automatically added restriction enzymes
@@ -332,7 +332,7 @@ class TVector
     int type ; ///< The sequence type
     TEnzymeRules *enzyme_rules ; ///< Pointer to the restriction enzyme display rules
     bool recalcvisual ; ///< Recalculate the layout of the sequence?
-    vector <TORF> worf ; ///< Open Reading Frames
+    std::vector <TORF> worf ; ///< Open Reading Frames
     wxArrayInt methyl ; ///< Methylation sites
     wxArrayString hiddenEnzymes ; ///< Enzymes that are not shown
     wxString sequence ; ///< The sequence that all this fuss is about
@@ -360,7 +360,7 @@ class TVector
     static char COMPLEMENT[256] ; ///< The complement to each SIUPAC base
     static char ACGT[256] ; ///< Different values for A, C, G, T; used in dna2aa()
     static bool initialized ; ///< status flag indicating if the initialisation have already been performed
-    static vector <TAAProp> aaprop ; ///< The 20 amino acids and their properties
+    static std::vector <TAAProp> aaprop ; ///< The 20 amino acids and their properties
     static wxArrayString codon_tables ; ///< The codon tables for different organisms
     static wxArrayString codon_table_names ; ///< The names of these codon tables
     } ;

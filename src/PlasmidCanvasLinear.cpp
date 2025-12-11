@@ -366,7 +366,7 @@ void PlasmidCanvas::drawLinearItem ( wxDC& dc , const int _r1 , const int _r2 , 
     int r1b = r2 - ( r2 - r1 ) / 10 ;
     int y1 = (int) ( a2 - a1 ) / 3 ;
     int y2 = (int) ( a1 + a2 ) / 2 ;
-    vector <wxPoint> pt ;
+    std::vector <wxPoint> pt ;
     pt.push_back ( wxPoint ( r1  , y2 - y1 ) ) ;
     pt.push_back ( wxPoint ( r1b , y2 - y1 ) ) ;
     pt.push_back ( wxPoint ( r1b , (int) a1 ) ) ;

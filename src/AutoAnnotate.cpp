@@ -330,7 +330,7 @@ bool AutoAnnotate::within ( const TVectorItem &i1 , const TVectorItem &i2 , cons
 
 void AutoAnnotate::machete ( TVector * const v )
     {
-    vector <TVectorItem> i2 ;
+    std::vector <TVectorItem> i2 ;
     for ( int a = 0 ; a < v->items.size() ; a++ )
         {
         if ( v->items[a].from == -1 ) continue ;

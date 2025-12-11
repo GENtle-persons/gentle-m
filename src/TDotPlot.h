@@ -37,7 +37,7 @@ class TDotPlotPanel : public wxScrolledWindow
     TDotPlot *parent ;
     MyChild *seq1 , *seq2 ;
     long window , mismatch ;
-    vector <char> data ;
+    std::vector <char> data ;
     unsigned long len1 , len2 ;
     int x1 , y1 , offx , offy ;
     wxPoint last_mouse_logical_position ;
